@@ -1,13 +1,13 @@
 // ==UserScript==
-// @name         Pokechill EN-CN
+// @name         [Pokechill] EN-CN
 // @namespace    https://play-pokechill.github.io/
-// @version      2.4.2
+// @version      2.5.1
 // @description  Pokechill 全页面离线简体中文汉化
 // @author       GPT-DiamondMoo
 // @license      MIT
 // @match        https://play-pokechill.github.io/*
-// @downloadURL https://update.greasyfork.org/scripts/560169/Pokechill%20EN-CN.user.js
-// @updateURL https://update.greasyfork.org/scripts/560169/Pokechill%20EN-CN.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/560169/%5BPokechill%5D%20EN-CN.user.js
+// @updateURL https://update.greasyfork.org/scripts/560169/%5BPokechill%5D%20EN-CN.meta.js
 // ==/UserScript==
 
 (function () {
@@ -45,6 +45,7 @@
         [/^Increases (.+) by (\d+)% if afflicted with a status effect, and nullifies the stat redution of the condition/i, '若受到异常状态影响，$1提升$2%，并抵消该状态造成的属性降低效果'],
         [/^Increases (.+) by (\d+)% if afflicted with a status effect/i, '$1提升$2%如果受到状态效果的影响'],
         [/^Increases (.+) and (.+) by (\d+)%/i, '$1和$2提升$3%'],
+        [/^Increases (.+) and (.+) by (\d+)%. Attacks x(\d+\.?\d*) (\w+) than usual/i, '$1和$2提升$3%。进攻速度变$5为原来的$4倍'],
         [/^Increases (.+) by (\d+)% and (.+) by (\d+)%/i, '$1提升$2%，$3提升$4%'],
         [/^Increases (.+) by (\d+)% when defeating a Pokemon/i, '击败宝可梦后，自身$1提升$2%'],
         [/^Increases (.+), (.+) and (.+) by (\d+)%/i, '$1、$2和$3提升$4%'],
@@ -63,9 +64,8 @@
         [/^(\d+)% chance to decrease enemy (.+) by (\d+)%/i, '$1%概率使敌方$2降低$3%'],
         [/^Hits (\d+)-(\d+) times/i, '攻击$1-$2次'],
         [/^Hits (\d+) times/i, '攻击$1次'],
-        [/^Attacks x([\d\.]+) faster than usual/i, '攻击速度为变快为原来的$1倍'],
-        [/^Attacks x([\d\.]+) slower than usual/i, '攻击速度为变慢为原来的$1倍'],
-        [/^(\w+) and (\w+)-type moves are x([\d\.]+) faster than usual/i, '$1和$2属性招式进攻速度变快为原来的$3倍'],
+        [/^Attacks x([\d\.]+) (\w+) than usual/i, '攻击速度为变$2为原来的$1倍'],
+        [/^(\w+) and (\w+)-type moves are x([\d\.]+) (\w+) than usual/i, '$1和$2属性招式进攻速度变$4为原来的$3倍'],
         [/^Power doubles if the user is (\w+), (\w+) or (\w+)/i, '自身$1、$2或$3时威力翻倍'],
         [/^Power doubles if the target is (\w+)/i, '目标$1时威力翻倍'],
         [/^Power randomly varies from x(\d+) to x(\d+)/i, '威力在$1倍到$2倍之间随机变化'],
@@ -74,7 +74,7 @@
         [/^"([^"]+)"-related moves have their base damage multiplied by x([\d.]+)/i, '"$1"类招式基础威力乘以$2倍'],
         [/^"([^"]+)"-related moves are executed twice as fast/i, '"$1"类招式速度变快为原来的2倍'],
         [/^Multiplies Same-Type-Attack-Bonus by x(\d+\.?\d*)/i, '属性一致加成从1.5倍提升至1.7倍'],//原文属性一致加成乘以$1倍
-        [/^Positive secondary effect of damaging moves are removed, and their damage is multiplied by x([\d\.]+)/i, '移除进攻招式的所有追加效果（不含进攻速度修正），伤害乘以$1倍'],//代码为伤害，而非招式伤害
+        [/^Positive secondary effect of damaging moves are removed, and their damage is multiplied by x([\d\.]+)/i, '移除进攻招式的正面追加效果（不含进攻速度修正），伤害乘以$1倍'],
         [/^Multiplies by x(\d+\.?\d*) the power of (\w+)-type moves of all team members/i, '我方全队$2属性招式威力乘以$1'],
         [/^Increases the Damage dealt by x(\d+\.?\d*) for every team member defeated/i, '每有一名队友倒下，造成伤害乘以$1倍'],
         [/^Increases the Damage dealt by x(\d+\.?\d*) when afflicted with (\w+), and nullifies the damage overtime caused by it/i, '处于$2状态时，造成伤害乘以$1倍，并免疫该状态的持续伤害'],
@@ -124,7 +124,7 @@
         [/^Temporarily adds (.+) to the type of the enemy. Replaces other temporary types/i, '将$1属性临时添加到敌人属性中。会替换其他临时属性。'],
         [/^Changes the type of the user to the type of the first move slot/i, '将使用者的属性改为第一个招式栏的属性'],
         [/^Power doubles under a weather condition, and type changes depending on it/i, '有天气时威力翻倍，并且招式属性随之改变'],
-        [/^Executes the first move slot. Attacks x(\d+\.?\d*) slower than usual/i, '执行第一个招式栏，进攻速度为变慢为原来的$1倍'],
+        [/^Executes the first move slot. Attacks x(\d+\.?\d*) (\w+) than usual/i, '执行第一个招式栏，进攻速度为变$2为原来的$1倍'],
         [/^Type changes based on the first type of the user/i, '招式属性会变为使用者的第一属性'],
         [/^ and increases (.+) by (\d+)%/i, '并且$1提高$2%'],
         [/^ for the entire party/i, '对我方全队'],
@@ -137,7 +137,7 @@
         [/^Once used,increases the weight of (.+) Pokemon by (\d+\.?\d*)% for the current battle. Multiple uses wont stack. Works always for everyone regardless of the user/i, '使用后，本轮次战斗中$1宝可梦出现的权重提高$2%。多次使用不会叠加。无论由谁使用，效果始终对所有人生效。'],
         [/^User performs any move at random/i, '随机施放一个招式'],
         [/^Perform the (\w+) move of the oponent, at (\w+) the power/i, '施放对手的$1个招式，威力变为原来的$2'],
-        [/^Perform the (\w+) move of the oponent. Attacks x(\d+\.?\d*) faster than usual/i, '施放对手的$1个招式，进攻速度为变慢为原来的$2倍'],
+        [/^Perform the (\w+) move of the oponent. Attacks x(\d+\.?\d*) (\w+) than usual/i, '施放对手的$1个招式，进攻速度为变$3为原来的$2倍'],
         [/^Changes the weather to /i, '将天气变为'],
         [/^ when entering or switching into the battle/i, '当进入战斗或交替进入战斗时'],
         [/^Super-effective against (\w+)-types/i, '对$1属性效果绝佳'],
@@ -171,6 +171,27 @@
         [/^Get a better Ability/i, '获取更优秀的特性'],
         [/^Modify stats with Genetics/i, '通过遗传调整能力值'],
         [/^Affected by (.+)/i, '受到 $1 特性影响'],
+        [/^Enemy damage over time from /i, '在该宝可梦登场期间敌人受到'],
+        [/^ is doubled while this Pokemon is active/i, '的持续伤害翻倍'],
+        [/^Evolve certain kinds of Pokemon \(Must be level (\d+)\+\)/i, '进化特定种类的宝可梦(必须达到$1级)'],
+        [/^/i, ''],
+
+        // 百科全书
+        [/^Obtained as a random reward in the (.+)/i, '在 $1 中作为随机奖励获得'],
+        [/^This Pokemon cannot be caught on its current stage/i, '这只宝可梦现阶段无法直接捕获'],
+        [/^Found in the (.+) \((\w+) (\d+)\)/i, '在 $1($2 $3) 中获得'],
+        [/^Found randomly in the (.+)/i, '在 $1 随机获得'],
+        [/^Obtained in the (.+) \((\w+) (\d+)\)/i, '在 $1($2 $3) 中获得'],
+        [/^([\s\S]*?)Learnable by (.+) types([\s\S]*?)/i, '$1可由 $2 属性宝可梦学习$3'],
+        [/^([\s\S]*?)Learnable by (.+) types \((\w+)\)([\s\S]*?)/i, '$1可由 $2 属性宝可梦学习($3)$4'],
+        [/^([\s\S]*?)This (.+) can only appear as the (.+) of (.+)([\s\S]*?)/i, '$1仅会作为$3出现在 $4$5'],
+        [/^([\s\S]*?)Additionally, appears as the (.+) of (.+)([\s\S]*?)/i, '$1还会作为$2出现在 $3$4'],
+        [/^([\s\S]*?)Can be dropped in the (.+) \((\w+) (\d+)\)([\s\S]*?)/i, '$1在 $2($3 $4) 中获得$5'],
+        [/^([\s\S]*?)Can be bought in the (.+)([\s\S]*?)/i, '$1在 $2 中购买$3'],
+        [/^([\s\S]*?)Obtained via (.+)([\s\S]*?)/i, '$1通过 $2 获得$3'],
+        [/^([\s\S]*?)This (.+) is currently unobtainable([\s\S]*?)/i, '$1这个$2现阶段无法获得$3'],
+        [/^Reward from the (.+) \((\w+) (\d+)\)/i, '在 $1($2 $3) 中获得'],
+        [/^Reward from (.+)/i, '在 $1 中获得'],
 
         //指南
         // 查看详情指南
@@ -192,8 +213,8 @@
         // 特性指南
         [/^Abilities are traits that a Pokemon can have\. While they are randomised, some abilities can only appear on specific typings\. Abilities are sorted in three categories; (.+)$/i,
          '特性是宝可梦拥有的特质。特性随机生成，但部分特性仅特定属性的宝可梦可拥有。特性品质分为$1'],
-        [/^Hidden abilities are innate species-dependant traits that need to be unlocked with an Ability Capsule\. Once unlocked, their effect will permanently be active alongside their other ability$/i,
-         '隐藏特性是宝可梦天生的物种专属特质，需使用特性胶囊解锁。解锁后，其效果将与其他特性永久同时生效'],
+        [/^Hidden abilities are innate species-dependant traits that need to be unlocked with an Ability Capsule\. Once unlocked, their effect will permanently be active alongside their other ability. Same Hidden Ability and Ability wont stack with eachother$/i,
+         '隐藏特性是宝可梦天生的物种专属特质，需使用特性胶囊解锁。解锁后，其效果将与其他特性永久同时生效。相同的特性与隐藏特性不会相互叠加'],
 
         // 经验值指南
         [/^Pokemon gain experience by defeating foes, and share a portion of it among the team\. This will also be the case even if the team Pokemon are defeated$/i,
@@ -212,6 +233,8 @@
          '招式的类别决定其伤害计算依赖使用者的$1/$2能力值，以及目标的$3/$4能力值'],
         [/^Some Pokemon might have Signature Moves\. Signature Moves are species-dependant moves that a Pokemon learn at level (\d+)\. Signature Moves can'?t be inherited through genetics$/i,
          '某些宝可梦可能拥有招牌技。招牌技是特定种类宝可梦的专属的招式，特定种类宝可梦在$1级时习得。招牌技无法通过遗传获得。'],
+        [/^Some moves might be restricted. Only one restricted move might be equipped at a time on the active Pokemon/i,
+         '部分招式可能属于受限制招式。每只正在上场的宝可梦同一时间只能装备一个受限制招式'],
 
         // 属性一致加成指南
         [/^If a Pokemon uses a damaging move that has the same type as one of that Pokemon'?s types, the move'?s damage is increased by x(\d+(?:\.\d+)?)$/i,
@@ -282,8 +305,6 @@
 
         // 指引
         // 螺旋塔指引
-        [/Spiraling Tower/i,
-         '螺旋塔'],
         [/The Spiraling Tower is an infinitely-scaling challenge in which every Pokemon defeated will increase the difficulty\. Type Immunities inside this challenge will be instead converted to resistances/i,
          '螺旋塔是一项无限递增的挑战，每击败一只宝可梦，难度便会随之提升。此挑战中属性免疫效果将转化为属性抗性。'],
         [/Every time you enter the tower, you will start from floor (\d+), but you can try as many times as you'd like/i,
@@ -333,6 +354,10 @@
         [/^Awarded in special occasions/i, '在特殊场合授予'],
         [/^Awarded for reaching floor (\d+) in the Spiraling Tower/i, '因抵达螺旋塔第$1层而授予'],
         [/^Awarded very rarely for spending a lot of time together/i, '极少数情况下授予，用于表彰长时间相处'],//1/100000
+
+        // 自动重战
+        [/^([\s\S]*?)Auto[- ]?Refight[- ]?Ticket[s ]?([\s\S]*?)$/i, '$1自动重战券$2'],
+        [/^([\s\S]*?)Auto[- ]?Refight([\s\S]*?)$/i, '$1自动重战$2'],
 
         // 事件道具
         [/^([\s\S]*?)Aether Keycards?([\s\S]*?)$/i,
@@ -1486,7 +1511,7 @@
         "Vivillon Modern": "彩粉蝶 摩登花纹",
         "Vivillon Monsoon": "彩粉蝶 骤雨花纹",
         "Vivillon Ocean": "彩粉蝶 大洋花纹",
-        "Vivillon Poke Ball": "彩粉蝶 球球花纹",
+        "Vivillon PokeBall": "彩粉蝶 球球花纹",
         "Vivillon Polar": "彩粉蝶 雪国花纹",
         "Vivillon River": "彩粉蝶 大河花纹",
         "Vivillon Sandstorm": "彩粉蝶 沙尘花纹",
@@ -1495,6 +1520,27 @@
         "Vivillon Tundra": "彩粉蝶 雪原花纹",
         //花叶蒂
         "Floette Eternal": "花叶蒂 永恒之花",
+        //酋雷姆
+        "Kyurem Black": "暗黑酋雷姆",
+        "Kyurem White": "焰白酋雷姆",
+        //胡帕
+        "Hoopa Unbound": "解放胡帕",
+        //奈克洛兹玛
+        "Necrozma Dusk Mane": "奈克洛兹玛 黄昏之鬃",
+        "Necrozma Dawn Wings": "奈克洛兹玛 拂晓之翼",
+        "Ultra Necrozma": "究极奈克洛兹玛",
+        //起源形态
+        "Dialga Origin": "帝牙卢卡 起源形态",
+        "Palkia Origin": "帕路奇亚 起源形态",
+        "Giratina Origin": "骑拉帝纳 起源形态",
+        //原始
+        "Kyogre Primal": "原始盖欧卡",
+        "Groudon Primal": "原始固拉多",
+        //灵兽形态
+        "Tornadus Therian": "龙卷云 灵兽形态",
+        "Thundurus Therian": "雷电云 灵兽形态",
+        "Landorus Therian": "土地云 灵兽形态",
+        "Enamorus Therian": "眷恋云 灵兽形态",
 
         //自创特性
         "Hydratation": "湿润之躯", // 拼写错误，官方正确拼写为 Hydration
@@ -1539,6 +1585,7 @@
         "Growth Absorb": "生长吸收",
         "Brittle Armor": "易碎盔甲",
         "Grassy Pelt": "草之毛皮", // 拼写错误，官方为 Grass Pelt
+        "Grass Pelt": "草之毛皮",
         "Sandy Pelt": "沙尘皮毛",
         "Moist Pelt": "湿润皮毛",
         "Fiery Pelt": "火焰皮毛",
@@ -1557,7 +1604,7 @@
         "Espilate": "超能力皮肤",
         "Verdify": "青草皮肤" ,
         "MetalHead": "铁头功" ,
-
+        "scorch": "灼热" ,
 
         //官方特性
         "Stench": "恶臭",
@@ -1869,7 +1916,7 @@
         "Teraform Zero": "归零化境",
         "Poison Puppeteer": "毒傀儡",
 
-        // 官方技能
+        // 官方招式
         "Pound": "拍击",
         "Karate Chop": "空手劈",
         "Double Slap": "连环巴掌",
@@ -2806,8 +2853,12 @@
         "Malignant Chain": "邪毒锁链",
         "Nihil Light": "归无之光",
 
-        //未有官方译名
+        //独创招式
         "Fog":"浓雾",
+        "Shark Jaws": "鲨之颚",
+        "Poison Claw": "毒爪",
+        "Aurora Punch": "极光拳",
+        "Ionise":"电离",
 
         // 野外区域
         "Verdant Forest":"翠绿森林",
@@ -2963,6 +3014,10 @@
         "VS":"对战",
         "Frontier":"开拓区",
         "Battle":"战斗",
+        "Battle Frontier":"对战开拓区",
+        "Spiraling":"螺旋",
+        "Tower":"塔",
+        "Spiraling Tower":"螺旋塔",
         "Reset":"重置",
         "Trainer":"训练家",
         "Trainers":"训练家",
@@ -3216,8 +3271,6 @@
         "Shiny Stone":"光之石",
         "Odd Rock":"楔石",
         // 消耗道具
-        "auto Refight Ticket":"自动重战券",
-        "auto-Refight Ticket":"自动重战券",
         "Rare Candy":"神奇糖果",
         "Ability Patch":"特性补丁",
         "Ability Capsule":"特性胶囊",
@@ -3242,6 +3295,10 @@
         "Eviolite":"进化奇石",
         "Light Clay":"光之黏土",
         "Mental Herb":"心灵香草",
+        //爬塔道具
+        "Time Candy":"时间糖果",
+        "Time Candy XL":"时间糖果XL",
+        "Auto Refight Ticket":"自动重战券",
 
         // 其他道具
         "Mystery Egg":"神奇蛋",
@@ -3250,12 +3307,11 @@
         "Tm":" ",
         "Nothing":"无",
         "Held":"持有",
+        "(You have":"(持有",
         "Key":"关键",
         "Items":"道具",
         "Item":"道具",
-        //爬塔道具
-        "Time Candy":"时间糖果",
-        "Time Candy XL":"时间糖果XL",
+
 
         //状态
         "Burn":"烧伤",
@@ -3400,10 +3456,15 @@
         "Game Guide":"游戏指南",
         "Guide":"指南",
         "Quick Guide":"快捷指南",
+        "Dictionary":"百科全书",
         "Inspecting":"检查",
         "Wild Areas":"旷野地带",
         "Wild Area":"旷野地带",
         "Dungeons":"迷宫",
+        "Dungeon":"迷宫",
+        "Dungeon Area":"迷宫",
+        "Dungeon Areas":"迷宫",
+        "Event":"活动",
         "Events":"活动",
         "Rotation":"轮次",
         "Stats":"能力值",
@@ -3418,8 +3479,10 @@
         "Move":"招式",
         "STAB":"属性一致加成",
         "Fatigue":"疲劳",
+        "Battle Fatigue":"战斗疲劳",
         "Shiny":"闪光",
         "Pokemon":"宝可梦",
+        "Shiny Pokemon":"闪光宝可梦",
         "Genetics":"遗传",
         "Compatibility":"兼容性",
         "Power Cost":"能量消耗",
@@ -3460,9 +3523,19 @@
         "Fairy":"妖精",
         "Bird": "鸟",//MissingNo.专属错误属性鸟
         "type":"属性",
+        "Split":"分类",
+        "Info":"详情",
         "level":"等级",
         "Banned Pokemon":"宝可梦被禁用",
         "One or more Pokemon in the current team do not met the division restrictions of the current league":"队伍中有一只或多只宝可梦不符合当前联赛的限制条件。",
+        "One or more Pokemon in the current team have multiple restricted moves (":"当前队伍中的一个或多个宝可梦装备了多个受限制(",
+        ") equipped":")的招式",
+        "Restricted moves cannot be freely switched during combat":"受限制招式无法在战斗中自由切换",
+        "Restricted":"受限制",
+        "Restricted Moves":"受限制招式",
+        "Restricted Move":"受限制招式",
+        "This move is restricted (":"该招式受限制(",
+        ") and only one of them can be present in the active moves at a time":")同一时间只能有一个受限招式被装备在当前招式中",
         "Select a Pokemon to add to the team":"选择一只宝可梦加入队伍",
         "Poke-Mart":"宝可商店",
         "How many will you buy":"你想要买多少",
@@ -3475,7 +3548,6 @@
         "Filter by :":"筛选：",
         "evolution":"进化",
         "not evolved":"未进化",
-        "shiny":"闪光",
         "is shiny":"闪光",
         "not shiny":"不闪光",
         "tag":"标签",
@@ -3498,7 +3570,7 @@
         "Can be used to automatically refight battles. Cannot refight while the browser is closed. Consumed once a battle is won":"可用于自动重新挑战战斗。浏览器关闭时无法进行重复挑战。每次赢得一场战斗后将消耗一次。",
         "Increases the level of a Pokemon by 1":"使宝可梦等级提升1级",
         "Re-rolls the ability of a Pokemon":"随机重置一只宝可梦的特性",
-        "Evolve certain kinds of Pokemon (Must be level ":"进化特定种类的宝可梦(必须达到",
+
         "Unlocks the hidden ability of a Pokemon":"解锁一只宝可梦的隐藏特性",
         "Genetics-aiding item:":"遗传辅助道具：",
         "Swaps the ability of the Pokemon with the sample. Can only be used with at least one level of compatibility":"将宿主宝可梦的特性与样本宝可梦的特性互相交换。至少具备一级兼容性才能使用。",
@@ -3577,6 +3649,7 @@
         "Settings":"设定",
         "Export":"导出",
         "Reward":"奖励",
+        "Export Reward":"导出奖励",
         "Victory":"胜利",
         "Rewards":"奖励",
         "Received":"获取",
@@ -3613,7 +3686,6 @@
         "Select a Pokemon to train":"选择要训练的宝可梦",
         "Remaining":"剩余",
         "mode":"模式",
-
 
         "and nullifies the damage overtime caused by it":"并消除其造成的持续伤害",
         "An unhatched egg. Leave combat to discover the contents":"未孵化的蛋。退出战斗看看里面有什么",
@@ -3677,11 +3749,12 @@
         "high":"高",
         "very high":"非常高",
         "extreme Power":"超级高",
+        "faster":"快",
+        "slower":"慢",
         "Auto":"自动",
         "Refight":"重战",
-        "Auto-Refight":"自动重战",
-        "(Free)":"(免费)",
-        "(Wont consume tickets)":"(不会消耗券)",
+        "Wont use":"不会使用",
+        "Wont consume":"不会使用",
         "Expand Lore":"展开世界观",
         "is active":"已激活",
         "tickets remaining":"剩余",
@@ -3699,6 +3772,7 @@
         "minutes":"分钟",
         "WIP":"开发中",
         "Not yet implemented":"尚未实装",
+        "This move can only appear as the Signature Move of":"尚未实装",
 
         // 数字
         "one": "一",
@@ -3746,8 +3820,6 @@
         "Hsn.":"洗翠",
         "Pal.":"帕底亚",
         "Clone":"克隆体",
-        //灵兽形态
-        "Therian": "灵兽形态",
         //MissingNo.
         "MissingNo": "错误宝可梦",
         //四季鹿

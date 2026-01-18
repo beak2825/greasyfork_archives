@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         种审按钮
 // @namespace    http://tampermonkey.net/
-// @version      2.3
+// @version      2.6
 // @author       您的名字
 // @match        https://springsunday.net/details.php*
 // @match        https://springsunday.net/edit.php?*
@@ -133,8 +133,10 @@
             { label: "硬字幕", action: "trumptorrent", reason: "硬字幕" },
             { label: "无中字", action: "trumptorrent", reason: "无中字" },
             { label: "音频臃肿", action: "trumptorrent", reason: "音频臃肿" },
+            { label: "音轨冗余", action: "trumptorrent", reason: "音轨冗余" },
             { label: "中性", action: "settorrenttag", tag: "neutral" },
-            { label: "已取代", action: "settorrenttag", tag: "superseded" }
+            { label: "已取代", action: "settorrenttag", tag: "superseded" },
+            { label: "CC", action: "settorrenttag", tag: "cc" }
         ];
         if (hasAllow) actions.push({ label: "通过候选", action: "allowoffer" });
         if (hasCheck) actions.push({ label: "通过审核", action: "checktorrent" });

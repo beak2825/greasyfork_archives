@@ -1,7 +1,8 @@
 // ==UserScript==
 // @name ヤフオクで非表示とメモ
 // @description q:非表示　w:アンドゥ　b:NGワード　Shift+Q:NG編集　12:メモを追加　34:自由メモ　56:定型文をメモ　Shift+!:メモを編集　Shift+":自動メモのみ全削除　Shift+#:メモを一時非表示　Shift+56:定型文を設定　.:上限価格　t:半透明モード
-// @version     0.5.129
+// @version     0.5.131
+// @inject-into content
 // @match *://auctions.yahoo.co.jp/search/*
 // @match *://page.auctions.yahoo.co.jp/jp/auction/*
 // @match *://auctions.yahoo.co.jp/seller/*
@@ -37,6 +38,7 @@
 // @match *://www.ebay.com/itm/*
 // @match *://jmty.jp/*
 // @match *://greasyfork.org/*/scripts*
+// @match *://greasyfork.org/*/users*
 // @match *://*.aliexpress.com/af/*
 // @match *://*.aliexpress.com/item/*
 // @match *://*.aliexpress.com/wholesale*
@@ -258,15 +260,15 @@
     OLD_COLOR6 = "#c03020",
     OLD_COLORVIDEOTIME = "#204020",
     OLD_COLORCPUSCORE = "#a08000",
-    COLOR1 = "#57f", //"#6080ff",
-    COLOR2 = "#c32", //"#c03020",
-    COLOR3 = "#888", //"#808080",
-    COLOR5 = "#57f", //"#6080ff",
-    COLOR6 = "#c32", //"#c03020",
-    COLORVIDEOTIME = "#242", //"#204020",
-    COLORCPUSCORE = "#970", //"#a08000",
-    COLORCPUSCOREPM = "#d71", //"#f81",//"#f48a18",
-    COLOR_ALERT_WORD = "#882", //"#a08000",
+    COLOR1 = "#57f",
+    COLOR2 = "#c32",
+    COLOR3 = "#888",
+    COLOR5 = "#57f",
+    COLOR6 = "#c32",
+    COLORVIDEOTIME = "#242",
+    COLORCPUSCORE = "#970",
+    COLORCPUSCOREPM = "#d71",
+    COLOR_ALERT_WORD = "#882",
     KEYHIDE = "q",
     KEYUNDO = "w",
     KEYBW = "b",
@@ -1535,7 +1537,7 @@
             let scale = Math.max(1, Math.min(SCALE_MAX, SCALE_MIN + (elegeta('img:not(.quoteSpeechBalloonImg)', puele).length * 0.5)))
             popup3(`z：ポップアップ(ピックアップ)を保存\n（Shift+で高画質、Alt+でメモを維持）\nScale = ${scale}`, 12)
             //            document.dispatchEvent(new CustomEvent('saveDOMAsImage', { detail: { element: puele, filename: fn, scale: scale, hd: (key.indexOf("Shift+") != -1) ? 1 : 0, eleToFlash: target == ".ftbpu" ? eleget0(".ftbpu") : eleget0("#pickbox") } }))
-            document.dispatchEvent(new CustomEvent('saveDOMAsImage', { detail: { element: puele, filename: fn, scale: scale, hd: (key.indexOf("Shift+") != -1) ? 1 : 0, eleToFlash: orgtarget == ".ftbpu" ? eleget0(".ftbpu") : eleget0("#pickbox") } }))
+            document.dispatchEvent(new CustomEvent('saveDOMAsImage', { detail: JS({ element: ".yendotsaveElement", filename: fn, scale: scale, hd: (key.indexOf("Shift+") != -1) ? 1 : 0, eleToFlash: orgtarget == ".ftbpu" ? ".ftbpu" : "#pickbox" }) }))
             $('#presentPick').remove()
             //if (orgtarget == "#pickbox") setTimeout(() => window.dispatchEvent(new Event('resize')), 1000)
           }
@@ -1635,7 +1637,7 @@
         eleget0('textarea#ftxa')?.blur()
         GF.dhash = new WeakMap();
         hoverHelp(e => e?.closest('table[border="0"]') ? "Ｑ：非表示　Ｗ：アンドゥ　１,５：○メモ　２,６：×メモ" : "")
-        document.body.addEventListener("dblclick", e => elegeta('.rtd :is(img,video)').forEach(e => e.animate([{ filter: `blur(1.1em) saturate(33%)` }, {}], { duration: 8000, easing: "ease-out" })), true); // 何もない背景をダブルクリック::すべての画像を一定時間ぼかす
+        document.body.addEventListener("dblclick", e => e?.target?.matches('img,video') === false && elegeta('.rtd :is(img,video)').forEach(e => e.animate([{ filter: `blur(1.1em) saturate(33%)` }, {}], { duration: 8000, easing: "ease-out" })), true); // 何もない背景をダブルクリック::すべての画像を一定時間ぼかす
         GF.latestReload = Date.now() - 3000;
         GF.reloadAddTime = 0;
         GF.newarticle = 1000
@@ -2303,67 +2305,75 @@
 
 
         // cd6::
-        //if (ld(/2chan\.net|futafuta|ftbucket|futabaforest/))
+        addstyle.add('a:is([href$=".gif"],[href$=".png"],[href$=".jpg"],[href$=".jpeg"],[href$=".webp"],[href$=".avif"]) > img{cursor: zoom-in;}')
         ael(document, "click", evt => {
-          if (evt?.target?.matches(':is(:is([href*=".gif"],[href*=".png"],[href*=".jpg"],[href*=".webp"],[href*=".avif"]) > img)') && (evt?.button <= 0)) {
+          if (evt?.target?.matches(':is(:is([href$=".gif"],[href$=".png"],[href$=".jpg"],[href$=".jpeg"],[href$=".webp"],[href$=".avif"]) > img)') && (evt?.button <= 0)) {
             evt.stopImmediatePropagation() + evt.preventDefault() + evt.stopPropagation();
             return false
           }
         }, true)
+        const DURACD6 = 100;
         ael(document, "mousedown", evt => {
-          if (evt?.target?.matches('a:is([href*=".mp4"],[href*=".webm"],[href*=".avi"]) > img') && (evt?.button <= 0)) return;
-          if (evt?.target?.matches(':is(:is([href*=".gif"],[href*=".png"],[href*=".jpg"],[href*=".webp"],[href*=".avif"]) > img)') && (evt?.button <= 0)) {
+          if (evt?.target?.matches('a:is([href$=".mp4"],[href$=".webm"],[href$=".avi"]) > img') && (evt?.button <= 0)) return;
+          if (evt?.target?.matches('a:is([href$=".gif"],[href$=".png"],[href$=".jpg"],[href$=".jpeg"],[href$=".webp"],[href$=".avif"]) > img , img#upfilemedia') && (evt?.button <= 0)) {
             evt.stopImmediatePropagation() + evt.preventDefault() + evt.stopPropagation();
+            GF.hideBar = addstyle.add('body {overflow:hidden !important;} #hoverHelpPopup,.phov{display:none !important;}')
 
             if (!document.fullscreenElement) {
               let p = document.documentElement.requestFullscreen();
               p.catch(() => {});
             }
-            let preSrc = GF.isFile ? evt?.target?.src : evt?.target?.closest("a")?.href;
-            GF.hideBar = addstyle.add('body {overflow:hidden !important;} #hoverHelpPopup,.phov{display:none !important;}')
+            let preSrc = (GF.isFile || evt?.target?.matches('img#upfilemedia')) ? evt?.target?.src : evt?.target?.closest("a")?.href;
+            eleget0('.ignoreMe.hzP')?.animate([{}, { opacity: 0 }], { duration: DURACD6, fill: `both` })
             let panel = preSrc.match(/(webm|mp4|avi|mkv)$/) ?
-              begin(document.body, `<video id="imgfullscreen" autoplay controls loop style="z-index:2000000021; position:fixed; top:0; left:0; width:100vw; height:100vh; object-fit: contain; background-color:#0000; box-shadow:0 0 1em #0008;"><source referrerpolicy="no-referrer" src="${preSrc}" type="video/mp4"></video>`) :
-              begin(document.body, `<img id="imgfullscreen" src="${preSrc}" style="z-index:2000000021; position:fixed; top:0; left:0; width:100%; height:100%; object-fit: contain; background-color:#0000; box-shadow:0 0 1em #0008;">`);
+              begin(document.body, `<video id="imgfullscreen" class="ignoreMe" autoplay controls loop style="z-index:${Number.MAX_SAFE_INTEGER}; position:fixed; top:0; left:0; width:100vw; height:100vh; object-fit: contain; background-color:#0000; box-shadow:0 0 1em #0008;"><source referrerpolicy="no-referrer" src="${preSrc}" type="video/mp4"></video>`) :
+              begin(document.body, `<img id="imgfullscreen" class="ignoreMe" src="${preSrc}" style="z-index:${Number.MAX_SAFE_INTEGER}; position:fixed; top:0; left:0; width:100%; height:100%; object-fit: contain; background-color:#0000; box-shadow:0 0 1em #0008;">`);
 
+            const pmaxEsc = e => (e.key == "Escape") && previewEnd();
             document.addEventListener("keydown", pmaxEsc, { capture: true, once: 1 })
-
-            function pmaxEsc(e) {
-              if (e.key == "Escape") { previewEnd() }
-            }
             document?.addEventListener("mousedown", e => {
               e.stopImmediatePropagation() + e.preventDefault() + e.stopPropagation();
               previewEnd()
             }, { capture: true, once: 1 });
-            panel?.animate([{ backgroundColor: "#0000", transform: "scale(0.9)", opacity: 0 }, { backgroundColor: "#000c", transform: "scale(1)", opacity: 1 }], { duration: 100, easing: 'ease', fill: 'both' })
+            panel?.animate([{ backgroundColor: "#0000", transform: "scale(0.9)", opacity: 0 }, { backgroundColor: "#0008", transform: "scale(1)", opacity: 1 }], { duration: DURACD6, easing: 'ease', fill: 'both' })
 
             function previewEnd() {
               addstyle.remove(GF.hideBar)
               let panel = eleget0("#imgfullscreen")
-              panel?.animate([{ backgroundColor: "#000c", opacity: 1 }, { backgroundColor: "#0000", transform: "scale(0.9)", opacity: 0, transformOrigin: "center" }], { duration: 100, easing: 'ease', fill: 'both' })
+              let s = +(panel?.style?.transform?.match0(/scale\(([\-\d+\.]+)\)/) || 1);
+              let r = panel?.style?.transform?.match0(/rotate\(([\-\d+\.]+)deg\)/) || 0;
               document.removeEventListener('mousemove', pmaxmove)
               document.removeEventListener("keydown", pmaxEsc, { capture: true, once: 1 })
-              setTimeout(() => panel?.remove(), 100);
+              if (s <= 1 && r % 360 == 0) panel.animate({ transformOrigin: "50% 50%" }, { duration: 0, easing: 'ease', fill: 'both' });
+              let ae = panel?.animate([(s <= 1 && r % 360 == 0) ? { transformOrigin: "50% 50%" } : {}, { backgroundColor: "#0000", transform: `scale(${s-0.1})`, opacity: 0 }], { duration: DURACD6, easing: 'ease', fill: 'both' })
+              ae.onfinish = () => panel?.remove()
             }
             document.addEventListener('mousemove', pmaxmove)
 
             function pmaxmove(e) {
-              let el = eleget0("#imgfullscreen")
-              let s = el?.style?.transform?.match0(/scale\(([\-\d+\.]+)\)/) || 1;
-              let to = `${Math.min(e.clientX,clientWidth())/clientWidth() *100}% ${Math.min(e.clientY,clientHeight())/clientHeight()*100}%`
-              anima(el, { "transformOrigin": to, "transform-origin": to });
+              let panel = eleget0("#imgfullscreen")
+              let s = +(panel?.style?.transform?.match0(/scale\(([\-\d+\.]+)\)/) || 1);
+              let r = panel?.style?.transform?.match0(/rotate\(([\-\d+\.]+)deg\)/) || 0;
+              let to = `${minmax(Math.min(e.clientX,clientWidth())/clientWidth() *100,0,100)}% ${minmax(Math.min(e.clientY,clientHeight())/clientHeight()*100,0,100)}%`
+              //console.log(s,r,e.clientX,clientWidth(),to)
+              anima(panel, { "transformOrigin": to, "transform-origin": to });
             }
             panel.addEventListener('wheel', e => {
+              let panel = eleget0("#imgfullscreen")
               e.stopPropagation()
               e.preventDefault()
               if (!e.shiftKey) {
-                let s = e?.target?.style?.transform?.match0(/scale\(([\-\d+\.]+)\)/) || 1;
+                let s = +(panel?.style?.transform?.match0(/scale\(([\-\d+\.]+)\)/) || 1);
+                let r = panel?.style?.transform?.match0(/rotate\(([\-\d+\.]+)deg\)/) || 0;
                 s = Math.min(50, Math.max(1, +s - (e.deltaY) / 1000));
-                let to = `${Math.min(e.clientX,clientWidth())/clientWidth() *100}% ${Math.min(e.clientY,clientHeight())/clientHeight()*100}%`
-                anima(e.target, { "transform": e.target.style.transform.replace(/initial|scale\([0-9\-\.]+\)/g, "") + `scale(${s})`, "transformOrigin": to, "transform-origin": to });
+                let to = `${minmax(Math.min(e.clientX,clientWidth())/clientWidth() *100,0,100)}% ${minmax(Math.min(e.clientY,clientHeight())/clientHeight()*100,0,100)}%`
+                anima(panel, { "transform": panel.style.transform.replace(/initial|scale\([0-9\-\.]+\)/g, "") + `scale(${s})`, "transformOrigin": to, "transform-origin": to });
               } else {
-                let r = e?.target?.style?.transform?.match0(/rotate\(([\-\d+\.]+)deg\)/) || 0;
+                let s = +(panel?.style?.transform?.match0(/scale\(([\-\d+\.]+)\)/) || 1);
+                let r = panel?.style?.transform?.match0(/rotate\(([\-\d+\.]+)deg\)/) || 0;
                 r = (Math.round(((r - (-e.deltaY) / 10)) / 10) * 10);
-                anima(e.target, { "transform": e.target.style.transform.replace(/initial|rotate\([0-9\-\.]+deg\)/g, "") + ` rotate(${r}deg)` });
+                let to = `${minmax(Math.min(e.clientX,clientWidth())/clientWidth() *100,0,100)}% ${minmax(Math.min(e.clientY,clientHeight())/clientHeight()*100,0,100)}%`
+                anima(panel, { "transform": panel.style.transform.replace(/initial|rotate\([0-9\-\.]+deg\)/g, "") + ` rotate(${r}deg)`, "transformOrigin": to, "transform-origin": to });
               }
               return false
             }, true)
@@ -2486,19 +2496,12 @@
 
           GF.nReloadSI = (function nreload() { //setInterval(() => {
             do {
-              //if (GF?.stopThre) return;
-              //            if (document.body.textContent.match("スレッドがありません|上限\d+レスに達しました") && !GF?.stopThre) {
               if (document?.body?.textContent?.match("スレッドがありません|上限\d+レスに達しました")) {
-                //clearInterval(GF?.nReloadSI) //GF.stopThre = 1
                 if (!GF?.isFile) threendAnten();
-                if (document?.visibilityState == "hidden") {
-                  document.title = `🐾${document.title}`
-                }
+                if (document?.visibilityState == "hidden") document.title = `🐾${document.title}`
                 return;
               }
               if (!GF?.reloadAndNotifyNewArrival) break;
-              //            if ((musousa.elapsed() < 30000 && document?.activeElement.tagName.match(/textarea|input/i)) || eleget0('//span[@id="thread_down"]') || GF?.stopThre) return;
-              //            if ((musousa.elapsed() < 30000 && document?.activeElement.tagName.match(/textarea|input/i)) || eleget0('#thread_down') || GF?.stopThre) return;
               if ((musousa.elapsed() < 30000 && (document.visibilityState == "visible" && document?.activeElement?.tagName?.match(/textarea|input/i))) || eleget0('#thread_down')) break;
               let r = location.protocol != "file:" && eleget0('#contres>a,#fvw_loading');
               if (!r) break;
@@ -2506,24 +2509,18 @@
               if (!GF.latestReload || Date.now() - (GF.latestReload + (GF?.reloadAddTime || 0)) >= inter) {
                 if (bcc.isBusy(10000, (interval, bcc) => {
                     GF.reloadHis.push(`skip：${gettime("hh:mm:ss")}　※（${sani(bcc?.lastReload?.src)}）の更新（${gettime("hh:mm:ss", new Date(bcc?.lastReload?.time))}）が${~~(Date.now()/1000)- ~~(bcc.lastReload.time/1000)}秒前`);
-                    //GF.reloadHis.push(`　延期：${gettime("hh:mm:ss")}　＜${gettime("hh:mm:ss", new Date(bcc?.lastReload?.time))}（${sani(bcc?.lastReload?.src)}）＋${interval/1000}秒`);
-                    //                    GF.latestReload += 5000 + Math.random() * 999;
-                    //                    GF.latestReload = Date.now()+ 5000 + Math.random() * 999;
                     GF.reloadAddTime = GF.reloadAddTime + 5000 + Math.random() * 999;
                   })) {
                   break;
                 }
-                //GF.reloadHis.push(`n)自動リロード : ${gettime("YYYY/MM/DD hh:mm:ss")} / 現在更新間隔:${~~(inter/1000)} / 新着:${GF?.newarticle} / リロード後経過秒:${~~((Date.now()-GF.latestReload)/1000)} / 無操作秒:${~~(musousa.elapsed()/1000)} / 前回:${GF.latestInterval/1000}`);
                 if (FUTABA_DEBUG >= 2) end(document.body, `<div>update : ${gettime()} / 現在更新間隔:${~~(inter/1000)} / 前回新着:${GF?.newarticle} / リロード後経過秒:${~~((Date.now()-GF.latestReload)/1000)} / 無操作秒:${~~(musousa.elapsed()/1000)} / 前回:${GF.latestInterval/1000}</div>`);
                 r?.click();
-                //GF.latestReload = Date.now()
                 GF.latestInterval = inter;
                 bcc.setBusy();
               }
               if (FUTABA_DEBUG >= 3) document.title = `${~~(inter/1000)}/${GF?.newarticle}/${~~((Date.now()-GF.latestReload)/1000)}/${~~(musousa.elapsed()/1000)} 現在更新間隔:${~~(inter/1000)} / 新着:${GF?.newarticle} / リロード後経過秒:${~~((Date.now()-GF.latestReload)/1000)} / 無操作秒:${~~(musousa.elapsed()/1000)} / 前回:${GF.latestInterval/1000}`
             } while (0);
             setTimeout(nreload, 1000)
-            //}, 1000)
           })();
         }
 
@@ -2663,6 +2660,9 @@
         }) // 隔離を薄くして右に
 
         $(document.body).append(`<script type="text/javascript">function scrRsc(n){let e=[...document.querySelectorAll('.rsc')].find(c=>c.textContent==n);if(e){e.closest(".rtd").style.outline="4px solid #0f0";setTimeout(()=>e.closest(".rtd").style.outline=null,1000)}e?.closest("table")?.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center'})}</script>`)
+
+        function scrRsc(n) { let e = [...document.querySelectorAll('.rsc')].find(c => c.textContent == n); if (e) { e.closest(".rtd").style.outline = "4px solid #0f0";
+            setTimeout(() => e.closest(".rtd").style.outline = null, 1000) } e?.closest("table")?.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' }) }
 
         //addstyle.add('#ftbl,#ftb2,.ftbl,.ftb2{margin:0px 0px 0px 1em !important; left:1em !important;}')
         //addstyle.add(`table.ftbl:nth-child(1 of table.ftbl) > tbody > tr > td:last-of-type > input[name="email"] {position:fixed; top:1em; left:1em;}`)
@@ -2993,7 +2993,7 @@
               if (!GF.isFile && !isMyres && GF?.alertWord > "" && (e.offsetHeight && awMatch) && !eleget0('.yhmMyMemo', table)) {
                 var path = eleget0('img', table)?.src
                 if (FUTABA_SET_56MEMO_TO_ANCHORED) memoElement(e, document.body, COLOR_ALERT_WORD, getDefault56memo());
-                if (awNotify++ < 3) notifyMe((eleget0("blockquote", table)?.innerText || eleget0("blockquote", table)?.textContent) + "\n", `⚠️${awMatch}⚠️ ${GF?.originalDocTitle||document.title}`, () => setTimeout(() => scrRsc(e?.closest('table')?.dataset?.rsc), 150), path || null, true)
+                if (awNotify++ < 3) notifyMe((eleget0("blockquote", table)?.innerText || eleget0("blockquote", table)?.textContent) + "\n", `⚠️${awMatch}⚠️ ${GF?.originalDocTitle||document.title}`, () => setTimeout((e) => scrRsc(e?.closest('table')?.dataset?.rsc), 150, e), path || null, true)
                 if (FUTABA_NOTIFY_NEWRES_SOUND_MEMO_QUOTED.split(" ").includes("m")) sound("sawtooth", 0.025, 440)
                 document.title = "⚠️" + document.title.replace(/^[■🔴🔵⚠️]+/g, "");
               } //else
@@ -3002,7 +3002,7 @@
                 // nキーのモードと条件にマッチすれば通知する
                 if (!isMyres && (((GF?.reloadAndNotifyNewArrival >= 2 && tomemo) || (GF?.reloadAndNotifyNewArrival >= 3 && (tomemo || (e.offsetHeight && eleget0("img:not(.quoteSpeechBalloonImg),blockquote a,blockquote video", e.closest('table'))))) || (GF?.reloadAndNotifyNewArrival >= 4 && e.offsetHeight)) && (document.visibilityState !== "visible" || tomemo))) {
                   var path = eleget0('img', e.closest('table'))?.src
-                  notifyMe(tomemo + eleget0('blockquote', e.closest('table'))?.innerText?.replace(/^>.*$/gm, "")?.trim(), tomemo.replace(/[^🔴🔵]/gm, "") + GF.originalDocTitle, () => setTimeout(() => scrRsc(e?.closest('table')?.dataset?.rsc), 150), path || null)
+                  notifyMe(tomemo + eleget0('blockquote', e.closest('table'))?.innerText?.replace(/^>.*$/gm, "")?.trim(), tomemo.replace(/[^🔴🔵]/gm, "") + GF.originalDocTitle, () => setTimeout((e) => scrRsc(e?.closest('table')?.dataset?.rsc), 150, e), path || null)
                   if (tomemo.match("🔵")) {
                     if (FUTABA_NOTIFY_NEWRES_SOUND_MEMO_QUOTED.split(" ").includes("5")) sound("square", 0.025, /indirect\:/.test(tomemo) ? 660 : 880); // type:sine, square, sawtooth, triangleがある
                     //if (FUTABA_NOTIFY_NEWRES_SOUND_MEMO_QUOTED.split(" ").includes("5")) sound("square", 0.025, 880); // type:sine, square, sawtooth, triangleがある
@@ -3580,7 +3580,7 @@
 
                 end(document.body, `<div id="fchVerticalThreadTitle" style="writing-mode: vertical-rl; top:2em; bottom:3em; right:${threR+16}px; position:fixed;z-index:-111; font-size:2.5em; opacity:0.5; color:#800;">${GF.originalDocTitle?.substr(0,63)}</div>`);
               }
-              pick2title(20)
+              pick2title()
             }
           }
           clearTimeout(GF?.pickID);
@@ -3686,8 +3686,31 @@
             }, 1, slider[2]);
           }, 2100)
         }
-
-        function pick2title(len) {
+        /*
+                function pick2title(len = 50) { //new
+                  if ((isftb || isftchan || is2chan)) { // 0とpickのレス100文字までページタイトルにする
+                    if (!GF?.arrival) {
+                      var suff = document.title.match0(/(\s-\s.*)/) || "";
+                      let threno = location?.href?.match0(/(\d{3,})/) || ""
+                      let resno = elegeta('.rsc').map(v => +v?.textContent).reduce((a, b) => Math.max(a, b), 0) || 0;
+                      if (!resno) return;
+                      //let resno = elegeta('table:last-of-type .rsc').map(v => +v?.textContent).reduce((a, b) => Math.max(a, b), 0) || 0;
+                      resno = resno ? `(${resno}) ` : "";
+                      let suffix = `${GF.originalDocTitle0?.match0(/\s-\s[\s\S]+$/)||""} ${threno}`;
+                      let lim = FILENAME_MAXLENGTH - suffix?.length - 1 - resno?.length
+                      let intro0 = [...new Set(elegeta('.thre>blockquote,table[data-reszero] blockquote,#pickbox blockquote:visible')?.slice(0, lim / 2)?.map(e => e?.innerText))]?.map(e => e?.replaceAll("ｷﾀ━━━(ﾟ∀ﾟ)━━━!!", "")?.replace(/^\>[^\n]*$/gm, "")?.replace(/\n/gm, " ")?.replace(/[　\s\u200B-\u200D\uFEFF\u2028\u2029\u200eㅤ]{1,99}/g, " "));
+                      let intro = "",
+                        max = lim //FILENAME_MAXLENGTH;
+                      do {
+                        intro = intro0.map(v => v.slice(0, max)).join(" ")
+                        max--;
+                      } while (max > 10 && intro?.length > lim)
+                      document.title = (`${intro.slice(0,FILENAME_MAXLENGTH-suffix?.length-1-resno?.length)} ${resno}${suffix}`)?.slice(0, FILENAME_MAXLENGTH)
+                    }
+                  }
+                }
+          */
+        function pick2title(len = 50) { // old
           var suff = document.title.match0(/(\s-\s.*)/) || ""
           //          let intro = [...new Set(elegeta('.thre>blockquote,table[data-reszero] blockquote,#pickbox blockquote')?.slice(0, len)?.map(e => e?.innerText))]?.map(e => e?.replaceAll("ｷﾀ━━━(ﾟ∀ﾟ)━━━!!", "")?.replace(/\n/gm, " "))
           let intro = [...new Set(elegeta('.thre>blockquote,table[data-reszero] blockquote,#pickbox blockquote')?.slice(0, len)?.map(e => e?.innerText))]?.map(e => e?.replaceAll("ｷﾀ━━━(ﾟ∀ﾟ)━━━!!", "")?.replace(/^\>[^\n]*$/gm, "")?.replace(/\n/gm, " "));
@@ -3704,6 +3727,7 @@
             }
           }
         }
+
       },
     },
     {
@@ -4587,7 +4611,7 @@ ytd-video-owner-renderer #channel-name .ytd-channel-name div yt-formatted-string
               { t: "元順", f: () => { sortdom(elegeta('ytd-playlist-panel-video-renderer:visible'), v => Number(v?.querySelector('span#index.style-scope.ytd-playlist-panel-video-renderer')?.innerText?.replace(/[^0-9]/gmi, "") || Number.MAX_SAFE_INTEGER)) } },
             ]
             //var sorttype = GF.yhmSortType % menu.length || 0
-            cyclemenu(menu) //popup2("h：ソート\n" + (menu.map((c, i) => "　" + c.t + (i == sorttype ? "　←\n" : "\n")).join("")), 6, `min-width:${menu.reduce((p,c)=>Math.max(p,c.t.length+3),0)}em;`);
+            cyclemenu(menu, "H") //popup2("h：ソート\n" + (menu.map((c, i) => "　" + c.t + (i == sorttype ? "　←\n" : "\n")).join("")), 6, `min-width:${menu.reduce((p,c)=>Math.max(p,c.t.length+3),0)}em;`);
             //menu[sorttype].f()
             //GF.yhmSortType = (++sorttype) % menu.length
           }
@@ -5023,12 +5047,25 @@ ytd-video-owner-renderer #channel-name .ytd-channel-name div yt-formatted-string
     },
     {
       id: 'GREASYFORK',
-      urlRE: '//greasyfork.org/.*?/scripts',
-      listTitleXP: `//a[@class="script-link"]|.//a[@class="script-link"]/font/font`, //'//article/h2/a',
-      listTitleSearchXP: `//a[@class="script-link"][+++]/ancestor::li|.//a[@class="script-link"]/font/font[+++]/ancestor::li`, //'//article/h2/a[+++]/../../..|//article/h2/a/font/font[+++]/../../../../..',
-      listTitleMemoSearchXP: `//a[@class="script-link"][+++]|.//a[@class="script-link"]/font/font[+++]/../..`, //'//article/h2/a[+++]|//article/h2/a/font/font[+++]/../..',
-      listGen: 7,
+      urlRE: () => lh(/\/\/greasyfork\.org\/.*?\/(?:users|scripts)/),
+      title: `article > h2 > a.script-link , section#script-info > header > h2`,
+      box: `ol#browse-script-list.script-list > li , section#script-info , ol#user-script-list > li`,
+      /*      listTitleXP: `//a[@class="script-link"]|.//a[@class="script-link"]/font/font`, //'//article/h2/a',
+            listTitleSearchXP: `//a[@class="script-link"][+++]/ancestor::li|.//a[@class="script-link"]/font/font[+++]/ancestor::li`, //'//article/h2/a[+++]/../../..|//article/h2/a/font/font[+++]/../../../../..',
+            listTitleMemoSearchXP: `//a[@class="script-link"][+++]|.//a[@class="script-link"]/font/font[+++]/../..`, //'//article/h2/a[+++]|//article/h2/a/font/font[+++]/../..',
+            listGen: 7,
+        */
+      trim: 1,
+      redoWhenReturned: 1,
       // func:(n)=>{elegeta('//h2/a[@class="script-link"]',n).forEach(e=>{$(e.parentNode.parentNode.parentNode).append(' <a style="float:right;margin:0 0 0 1em;" href="'+e.href+'/stats?period=all">統計</a>').append(' <a style="float:right;margin:0 0 0 1em;" href="'+e.href+'/feedback">フィードバック</a>')})  },
+      funcOnlyFirst: () => {
+        if (lh('/stats')) {
+          let ud = elegeta('table.stats-table > tbody > tr > td.numeric:last-child')?.slice(0, -1)?.map(e => +e?.textContent?.replace(/\,/g, ""))
+          ud = Math.round((ud?.reduce((a, b) => a + b, 0) / ud?.length) * 10) / 10
+          let title = eletext('section#script-info > header > h2')
+          if (ud > 0 && title) storeMemo(title, `アップデート確認：${ud}`, COLOR3)
+        }
+      }
     },
     {
       id: 'JMTY',
@@ -5624,7 +5661,7 @@ ytd-video-owner-renderer #channel-name .ytd-channel-name div yt-formatted-string
             { t: "作者順", f: () => domsort("", elegeta('.entry'), (v) => { return eleget0('//a[@class="autele aut autname"]', v)?.innerText?.trim() || "" }, 3) },
             { t: "サイト順", f: () => domsort("", elegeta('.entry'), (v) => { return eleget0('//div[@class="entry-site"]/a', v).innerText?.trim() || "" }, 3) },
           ]
-          cyclemenu(menu) //popup2("h：ソート\n" + (menu.map((c, i) => "　" + c.t + (i == GF.yhmSortType ? "　←\n" : "\n")).join("")), 6, `min-width:${menu.reduce((p,c)=>Math.max(p,c.t.length+3),0)}em;`);
+          cyclemenu(menu, "H") //popup2("h：ソート\n" + (menu.map((c, i) => "　" + c.t + (i == GF.yhmSortType ? "　←\n" : "\n")).join("")), 6, `min-width:${menu.reduce((p,c)=>Math.max(p,c.t.length+3),0)}em;`);
           //menu[GF.yhmSortType].f()
           //GF.yhmSortType = ((GF?.yhmSortType + 1) % menu.length)
         },
@@ -5888,6 +5925,17 @@ ytd-video-owner-renderer #channel-name .ytd-channel-name div yt-formatted-string
         observeUrlHasChanged.observe(document, { childList: true, subtree: true });
       },
       keyFunc: [{
+        key: "k", // k::
+        help: `k：紙の本以外を消す`,
+        func: e => {
+          elegeta('*[data-asin][role="listitem"]').filter(n => !(elegeta('a.a-size-base.s-underline-text[class*="null"].a-text-bold , div[class*="a-size-small"].a-color-base > a.a-link-normal.s-underline-text[class*="s-underline-link-text"].null.s-link-style', n).map(e => e.textContent).join(" ").match(/単行本|ムック本|ハードカバー|文庫|新書|雑誌/)))?.forEach(n => {
+            $(n).hide(999)
+            setTimeout(n => gmDataList_add(n, "gmHideByKindle"), 999, n)
+
+          })
+          popup3('k：紙の本以外を消しました', 1)
+        },
+      }, {
         key: "Shift+End", // Shift+End::
         help: `Shift+End:しばらく下にスクロール`,
         func: e => {
@@ -7055,7 +7103,7 @@ ytd-video-owner-renderer #channel-name .ytd-channel-name div yt-formatted-string
     return true;
   }
 
-  function storeMemo(title, memo, color = COLOR1, node = document, jumpUrl = null, site = SITE) {
+  function storeMemo(title, memo, color = COLOR1, node = document.body, jumpUrl = undefined, site = SITE) {
     if (title && memo) {
       memo = sani(memo)
       let tmp = pref(site.id + ' : SearchMyMemo') || [];
@@ -7065,12 +7113,12 @@ ytd-video-owner-renderer #channel-name .ytd-channel-name div yt-formatted-string
 
         jumpUrl ? tmp.push({ t: title, m: memo, c: color, u: jumpUrl }) : tmp.push({ t: title, m: memo, c: color })
         pref(site.id + ' : SearchMyMemo', tmp)
-        memoByTitle(title, memo, node, color, jumpUrl);
+        color != COLOR3 && memoByTitle(title, memo, node, color, jumpUrl);
       }
     }
   }
 
-  function memoByTitle(title, memo, node, color, jumpUrl = null) {
+  function memoByTitle(title, memo, node = document.body, color, jumpUrl = undefined) {
     let titleNfc = title?.normalize("NFC")
 
     if ((SITE.preventMemo && SITE.preventMemo(memo)) || (title.indexOf('"') !== -1 && SITE.listTitleSearchXP)) return; // todo:タイトルに"があると正しく検索できないので処理しない

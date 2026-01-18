@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 哔哩哔哩视频点踩
 // @namespace    https://github.com/Tsuk1ko
-// @version      2.0.0
+// @version      2.0.1
 // @description  为视频页面增加点踩选项，在视频下方工具栏最右边更多菜单中
 // @author       神代綺凛
 // @license      GPL-3.0
@@ -469,7 +469,7 @@
   const dislike = async (isCancel = false) => {
     const accessKey = GM_getValue('access_key');
     if (!accessKey) {
-      showToast('尚未获取 access_key，请点击脚本菜单中的“扫码登录”');
+      showLoginDialog();
       return;
     }
     const params = BilibiliToken.signQuery(

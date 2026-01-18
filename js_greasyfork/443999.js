@@ -1,19 +1,25 @@
 // ==UserScript==
 // @name         NoShitEmpornium
 // @namespace    http://www.empornium.me/
-// @version      2.7.12
+// @version      2.8.0
 // @license      GPLv3
 // @description  Fully featured torrent filtering solution for Empornium
 // @supportURL   https://github.com/ceodoe/noshitempornium/issues
 // @homepageURL  https://github.com/ceodoe/noshitempornium/
 // @icon         https://www.google.com/s2/favicons?domain=empornium.is
 // @author       ceodoe
-// @include      /^https?://www\.empornium\.(me|sx|is)/torrents\.php*/
-// @include      /^https?://www\.empornium\.(me|sx|is)/collage\/*
-// @include      /^https?://www\.empornium\.(me|sx|is)/top10\.php*/
-// @include      /^https?://www\.empornium\.(me|sx|is)/user\.php\?action=notify/
-// @include      /^https?://www\.empornium\.(me|sx|is)/requests\.php/
-// @exclude      /^https?://www\.empornium\.(me|sx|is)/top10\.php.*(\?|&)(type=(users|tags|taggers))/
+// @include      /^https://www\.empornium\.(me|sx|is)/torrents\.php*/
+// @include      /^https://www\.empornium\.(me|sx|is)/collage\/*
+// @include      /^https://www\.empornium\.(me|sx|is)/top10\.php*/
+// @include      /^https://www\.empornium\.(me|sx|is)/user\.php\?action=notify/
+// @include      /^https://www\.empornium\.(me|sx|is)/requests\.php/
+// @exclude      /^https://www\.empornium\.(me|sx|is)/top10\.php.*(\?|&)(type=(users|tags|taggers))/
+// @include      /^https://www\.emparadise\.rs/torrents\.php*/
+// @include      /^https://www\.emparadise\.rs/collage\/*
+// @include      /^https://www\.emparadise\.rs/top10\.php*/
+// @include      /^https://www\.emparadise\.rs/user\.php\?action=notify/
+// @include      /^https://www\.emparadise\.rs/requests\.php/
+// @exclude      /^https://www\.emparadise\.rs/top10\.php.*(\?|&)(type=(users|tags|taggers))/
 // @run-at       document-end
 // @grant        GM_getValue
 // @grant        GM_setValue
@@ -24,7 +30,7 @@
 // @updateURL https://update.greasyfork.org/scripts/443999/NoShitEmpornium.meta.js
 // ==/UserScript==
 //
-// Copyright © 2015-2024 ceodoe
+// Copyright © 2015-2026 ceodoe
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -79,6 +85,13 @@ nseBlacklistTitleList = nseBlacklistTitlePhrases.join(";");
 if(nseBlacklistTitlePhrases.length === 1 && nseBlacklistTitlePhrases[0] === "") { nseBlacklistTitlePhrases = new Array(0); }
 GM_setValue("nseBlacklistTitles", nseBlacklistTitleList);
 
+let nseHardPassTitleList = GM_getValue("nseHardPassTitles", "this is a title phrase;this is another title phrase").trim();
+let nseHardPassTitlePhrases = nseHardPassTitleList.split(";");
+nseHardPassTitlePhrases.sort();
+nseHardPassTitleList = nseHardPassTitlePhrases.join(";");
+if(nseHardPassTitlePhrases.length === 1 && nseHardPassTitlePhrases[0] === "") { nseHardPassTitlePhrases = new Array(0); }
+GM_setValue("nseHardPassTitles", nseHardPassTitleList);
+
 let nseWhitelistTitleList = GM_getValue("nseWhitelistTitles", "this is a title phrase;this is another title phrase").trim();
 let nseWhitelistTitlePhrases = nseWhitelistTitleList.split(";");
 nseWhitelistTitlePhrases.sort();
@@ -100,9 +113,9 @@ nseWhitelistUploadersList = nseWhitelistUploaders.join(" ");
 if(nseWhitelistUploaders.length === 1 && nseWhitelistUploaders[0] === "") { nseWhitelistUploaders = new Array(0); }
 GM_setValue("nseWhitelistUploaders", nseWhitelistUploadersList);
 
-
 // Delete obsolete options
 GM_deleteValue("nseEnableGCDCompatibilityMode");
+
 
 // Load saved options
 //  Filtering options
@@ -459,7 +472,7 @@ htmlContent.innerHTML = `
                 <textarea class="nseTextArea" id="nseBlacklistTaglistArea" rows=10>${nseBlacklistTaglist}</textarea>
             </div>
             <div class="nseFieldDiv${nseHardPassEnabled ? '' : ' hidden'}">
-                <span class="nseImageButton nseListHeader" id="nseTagHardPassHeader"><span class="nseEmoji">🚫</span> Hard Pass blacklist <small>(space-separated)</small></span><sup class="nseExplanationToggler" id="nseHPEToggler">[?]</sup><br />
+                <span class="nseImageButton nseListHeader" id="nseTagHardPassHeader"><span class="nseEmoji">🚫</span> Hard Pass tag blacklist <small>(space-separated)</small></span><sup class="nseExplanationToggler" id="nseHPEToggler">[?]</sup><br />
                 <div id="nseHPE" class="nseExplanationBox hidden">
                     <div class="nseExplanationNode">
                         <b>TL;DR</b>: <i>If any of these tags exist, hide the torrent <b>no matter what</b></i>
@@ -531,6 +544,26 @@ htmlContent.innerHTML = `
                     </div>
                 </div>
                 <textarea class="nseTextArea" id="nseBlacklistTitleListArea" rows=10>${nseBlacklistTitleList}</textarea>
+            </div>
+            <div class="nseFieldDiv${nseHardPassEnabled ? '' : ' hidden'}">
+                <span class="nseImageButton nseListHeader" id="nseTitleHardPassHeader"><span class="nseEmoji">🚫</span> Hard Pass title blacklist <small>(semicolon-separated)</small></span><sup class="nseExplanationToggler" id="nseHPTEToggler">[?]</sup><br />
+                <div id="nseHPTE" class="nseExplanationBox hidden">
+                    <div class="nseExplanationNode">
+                        <b>TL;DR</b>: <i>If any of these phrases exist in the title, hide the torrent <b>no matter what</b></i>
+                    </div>
+
+                    <div class="nseExplanationNode">
+                        This is where you specify title phrases you don't want to see at all. Any torrent
+                        matching any of these phrases in the title will be hidden unless overridden by individual filtering (clicking the eye icon). Character case does not matter. <b>Title phrases are separated by semicolons <span class="nseMonospace">;</span> &mdash; not spaces like tags or uploaders!</b> Hard Pass title phrases will be <span class="nseHardPassTag">highlighted</span> when viewing hidden torrents. The torrent will be removed completely from the results if the Black Hole
+                        option is enabled.
+                    </div>
+
+                    <div class="nseExplanationNode">
+                        Example:<br />
+                        <pre>sdmm;hikr;princess peach;reencode</pre>
+                    </div>
+                </div>
+                <textarea class="nseTextArea" id="nseHardPassTitleListArea" rows=10>${nseHardPassTitleList}</textarea>
             </div>
             <div class="nseFieldDiv">
                 <span class="nseImageButton nseListHeader" id="nseTitleWhitelistHeader"><span class="nseEmoji">👍</span> Title whitelist <small>(semicolon-separated)</small></span><sup class="nseExplanationToggler" id="nseTitleWLEToggler">[?]</sup><br />
@@ -725,12 +758,12 @@ htmlContent.innerHTML = `
                 <input type="checkbox" id="nseCheckHardPassEnabled"${nseHardPassEnabled ? ' checked' : ''} />
                 <label for="nseCheckHardPassEnabled" class="nseSettingsCheckbox">
                     <span class="nseEmoji">🚫</span> Hard Pass
-                </label><span class="nseExplanationSpan">(Enable the Hard Pass blacklist, found in the "Tags" tab)</span><br />
+                </label><span class="nseExplanationSpan">(Enable the Hard Pass blacklists, found in the "Tags" and "Titles" tabs)</span><br />
                 <input type="checkbox" id="nseCheckRemoveHardPassResults"${nseRemoveHardPassResults ? ' checked' : ''} />
                 <label for="nseCheckRemoveHardPassResults" class="nseSettingsCheckbox">
                     <span class="nseEmoji">⚫</span> Black Hole
                 </label><span class="nseExplanationSpan">(Remove results instead of hiding them behind the toggle)</span><br /><br />
-                <span class="nseExplanationSpan">Hard Pass enables an extra tag blacklist that will make sure that torrents with the given tags will be hidden no matter what. The only thing that can override Hard Pass is whitelisting a torrent through individual filtering when Black Hole is disabled. Enable the Black Hole option to remove results from the page entirely.</span><br /><br />
+                <span class="nseExplanationSpan">Hard Pass enables extra blacklists that will make sure that torrents with the given tags or title phrases will be hidden no matter what. The only thing that can override Hard Pass is whitelisting a torrent through individual filtering when Black Hole is disabled. Enable the Black Hole option to remove results from the page entirely.</span><br /><br />
             </section>
 
             <section id="nseSettingsContent2">
@@ -919,7 +952,7 @@ htmlContent.innerHTML = `
             <section id="nseSettingsContent4">
                 <h3 class="nseH3">About</h3>
                 <p>
-                    Copyright &copy; 2015-2022 ceodoe. NoShitEmpornium v${GM_info.script.version} was made with ${nseEmojiEnabled ? '💕' : 'love'} by <a class="nseLink" href="/user.php?id=508194">ceodoe</a> of Empornium, and its code is licensed under the <a class="nseLink" href="https://www.gnu.org/licenses/gpl-3.0.txt" target="_blank">GNU General Public License v3.0</a>.
+                    Copyright &copy; 2015-2026 ceodoe. NoShitEmpornium v${GM_info.script.version} was made with ${nseEmojiEnabled ? '💕' : 'love'} by <a class="nseLink" href="/user.php?id=508194">ceodoe</a> of Empornium, and its code is licensed under the <a class="nseLink" href="https://www.gnu.org/licenses/gpl-3.0.txt" target="_blank">GNU General Public License v3.0</a>.
                 </p>
 
                 <h3 class="nseH3">Statistics</h3>
@@ -1019,7 +1052,7 @@ if(nseScrollToNSEEnabled) {
 }
 
 // Add floating toggle button if enabled
-if(nseFloatingToggleButtonEnabled) {
+if(nseFloatingToggleButtonEnabled && !nseUnfilteredPages.includes(currentPage)) {
     document.querySelector("body").insertAdjacentHTML("afterbegin", `
         <div id="nseFloatyBoi">
             <span class="nseEmoji" alt="Toggle hidden torrents" title="Toggle hidden torrents">👁️</span>
@@ -1514,6 +1547,29 @@ if(torrents) {
                     }
                 }
             }
+
+            // Scan title for nseHardPassTitlePhrases
+            if(nseHardPassEnabled) {
+                for(let tblCount = 0; tblCount < nseHardPassTitlePhrases.length; tblCount++) {
+                    let currentTBLPhrase = nseHardPassTitlePhrases[tblCount].trim().toLowerCase();
+                    let torrentTitle = titleElement.innerHTML.trim().toLowerCase();
+        
+                    if(currentTBLPhrase != "") {
+                        if(torrentTitle.includes(currentTBLPhrase)) {
+                            currentHidden = true;
+                            currentForceHide = true;
+                            if(russianRouletteBulletInChamber == false) { 
+                                titleElement.innerHTML = titleElement.innerHTML + ` <color class="nseHardPassTitle">(${currentTBLPhrase})</color>`;
+
+                                if(nseRemoveHardPassResults) {
+                                    torrents[i].classList.add("nseHardPassRemove");
+                                    countMe = 0;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
     
             // Scan title for nseWhitelistTitlePhrases
             // ...For every whitelisted phrase:
@@ -1595,7 +1651,6 @@ if(torrents) {
             let currSeeders = seedersElement2.innerHTML;
 
             if(currSeeders.trim() === "0") {
-                console.log("unseeded");
                 seedersElement.classList.add("nseBlacklistIdentifier");
                 seedersElement2.classList.add("nseBlacklistIdentifier");
 
@@ -1658,6 +1713,19 @@ if(torrents) {
                 if(torrentTitle.includes(currentTBLPhrase)) {
                     titleElement.innerHTML = titleElement.innerHTML + ` <color class="nseHiddenTitle">(${currentTBLPhrase})</color>`;
                     titleElement2.innerHTML = titleElement2.innerHTML + ` <color class="nseHiddenTitle">(${currentTBLPhrase})</color>`;
+                }
+            }
+        }
+        
+        // Scan title for nseHardPassTitlePhrases
+        for(let tblCount = 0; tblCount < nseHardPassTitlePhrases.length; tblCount++) {
+            let currentTBLPhrase = nseHardPassTitlePhrases[tblCount].trim().toLowerCase();
+            let torrentTitle = titleElement.innerHTML.trim().toLowerCase();
+
+            if(currentTBLPhrase != "") {
+                if(torrentTitle.includes(currentTBLPhrase)) {
+                    titleElement.innerHTML = titleElement.innerHTML + ` <color class="nseHardPassTitle">(${currentTBLPhrase})</color>`;
+                    titleElement2.innerHTML = titleElement2.innerHTML + ` <color class="nseHardPassTitle">(${currentTBLPhrase})</color>`;
                 }
             }
         }
@@ -2109,7 +2177,7 @@ if(nseFilterAllButtonEnabled && nseIndividualUploadHidingEnabled && !nseUnfilter
     }
 }
 
-let nseTextAreas = new Array("nseBlacklistTaglistArea", "nseHardPassTaglistArea", "nseWhitelistTaglistArea","nseBlacklistTitleListArea","nseWhitelistTitleListArea","nseBlacklistUploadersArea","nseWhitelistUploadersArea");
+let nseTextAreas = new Array("nseBlacklistTaglistArea", "nseHardPassTaglistArea", "nseWhitelistTaglistArea","nseBlacklistTitleListArea","nseHardPassTitleListArea","nseWhitelistTitleListArea","nseBlacklistUploadersArea","nseWhitelistUploadersArea");
 
 for(let textAreaCounter = 0; textAreaCounter < nseTextAreas.length; textAreaCounter++) {
     document.getElementById(nseTextAreas[textAreaCounter]).addEventListener("keydown", function(event) {
@@ -2120,7 +2188,7 @@ for(let textAreaCounter = 0; textAreaCounter < nseTextAreas.length; textAreaCoun
      }, false);
 }
 
-let explanationTogglers = new Array("nseBLE", "nseHPE", "nseWLE","nseTitleBLE", "nseTitleWLE", "nseUBLE", "nseUWLE");
+let explanationTogglers = new Array("nseBLE", "nseHPE", "nseHPTE", "nseWLE","nseTitleBLE", "nseTitleWLE", "nseUBLE", "nseUWLE");
 
 for(let i = 0; i < explanationTogglers.length; i++) {
     document.getElementById(explanationTogglers[i] + "Toggler").onclick = function() {
@@ -2501,21 +2569,30 @@ function showRCMBox(boxType, elementValue, mouseX, mouseY) {
 
         nseRCMBoxChoices.innerHTML = `
             <span class="nseRCMButton" id="nseRCMBoxBLAdd">${nseEmojiEnabled ? '➕' : '+'} Add phrase(s) to title blacklist</span><br /><br />
+            ${nseHardPassEnabled ? `<span class="nseRCMButton" id="nseRCMBoxHPTAdd">${nseEmojiEnabled ? '➕' : '+'} Add phrase(s) to title Hard Pass</span><br /><br />` : ''}
             <span class="nseRCMButton" id="nseRCMBoxWLAdd">${nseEmojiEnabled ? '➕' : '+'} Add phrase(s) to title whitelist</span><br />
         `;
+
+        document.getElementById("nseRCMBoxBLAdd").onclick = function() {
+            let currTitlePhrase = document.getElementById("nseRCMTitlePhraseText").value;
+            
+            addItemToList("nseBlacklistTitleListArea", "nseWhitelistTitleListArea", currTitlePhrase);
+            saveData();
+            closeRCMBox();
+        };
+
+        document.getElementById("nseRCMBoxHPTAdd").onclick = function() {
+            let currTitlePhrase = document.getElementById("nseRCMTitlePhraseText").value;
+            
+            addItemToList("nseHardPassTitleListArea", "nseWhitelistTitleListArea", currTitlePhrase);
+            saveData();
+            closeRCMBox();
+        };
 
         document.getElementById("nseRCMBoxWLAdd").onclick = function() {
             let currTitlePhrase = document.getElementById("nseRCMTitlePhraseText").value;
             
             addItemToList("nseWhitelistTitleListArea", "nseBlacklistTitleListArea", currTitlePhrase);
-            saveData();
-            closeRCMBox();
-        };
-
-        document.getElementById("nseRCMBoxBLAdd").onclick = function() {
-            let currTitlePhrase = document.getElementById("nseRCMTitlePhraseText").value;
-
-            addItemToList("nseBlacklistTitleListArea", "nseWhitelistTitleListArea", currTitlePhrase);
             saveData();
             closeRCMBox();
         };
@@ -2545,7 +2622,7 @@ function removeItemFromList(tagListAreaName, tagName) {
 
 function addItemToList(tagListAreaName, oppositeTagListAreaName, filterValue) {
     let splitChar = " ";
-    if(tagListAreaName == "nseWhitelistTitleListArea" || tagListAreaName == "nseBlacklistTitleListArea") {
+    if(tagListAreaName == "nseWhitelistTitleListArea" || tagListAreaName == "nseBlacklistTitleListArea" || tagListAreaName == "nseHardPassTitleListArea") {
         splitChar = ";";
     } else {
         // Only do opposite removal for tags/uploaders
@@ -2607,9 +2684,17 @@ function exportSettings(getSize = false) {
 function importSettings(event) {
     let reader = new FileReader();
     reader.onload = function(){
-        if(confirm("Are you sure you want to import this file? Your existing settings will be overwritten!")) {
-            let settingsObject = JSON.parse(reader.result);
+        if(confirm("Are you sure you want to import this file? Your existing settings will be cleared and overwritten!")) {
 
+            // Clear old data before importing
+            let settingsNames = GM_listValues();
+
+            for(let i = 0; i < settingsNames.length; i++) {
+                GM_deleteValue(settingsNames[i]);
+            }
+            
+            // Import JSON
+            let settingsObject = JSON.parse(reader.result);
             for(let i = 0; i < Object.keys(settingsObject).length; i++) {
                 GM_setValue(Object.keys(settingsObject)[i], settingsObject[Object.keys(settingsObject)[i]]);
             }
@@ -2638,6 +2723,7 @@ function saveData() {
         nseHardPassTaglist: "nseHardPassTaglistArea",
         nseWhitelist: "nseWhitelistTaglistArea",
         nseBlacklistTitles: "nseBlacklistTitleListArea",
+        nseHardPassTitles: "nseHardPassTitleListArea",
         nseWhitelistTitles: "nseWhitelistTitleListArea",
         nseUploaders: "nseBlacklistUploadersArea",
         nseWhitelistUploaders: "nseWhitelistUploadersArea"
@@ -2651,7 +2737,7 @@ function saveData() {
         if(listsToSave[setting].includes("TitleList")) { 
             delimiter = ";";
         }
-
+        
         // Empty diff lists
         let removedList = new Array(0);
         let addedList = new Array(0);
@@ -2676,6 +2762,9 @@ function saveData() {
                 break;
             case "nseBlacklistTitles":
                 cachedList = nseBlacklistTitlePhrases;
+                break;
+            case "nseHardPassTitles":
+                cachedList = nseHardPassTitlePhrases;
                 break;
             case "nseWhitelistTitles":
                 cachedList = nseWhitelistTitlePhrases;
@@ -2745,6 +2834,10 @@ function saveData() {
             case "nseBlacklistTitles":
                 nseBlacklistTitleList = strList;
                 nseBlacklistTitlePhrases = storedList;
+                break;
+            case "nseHardPassTitles":
+                nseHardPassTitleList = strList;
+                nseHardPassTitlePhrases = storedList;
                 break;
             case "nseWhitelistTitles":
                 nseWhitelistTitleList = strList;
@@ -3061,7 +3154,7 @@ a.nseLink, a.nseLink:visited {
     display: inline;
 }
 
-.nseHardPassTag {
+.nseHardPassTag, .nseHardPassTitle {
     color: ${nseHardPassColor} !important;
     font-weight: bold !important;
 }

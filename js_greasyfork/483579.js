@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name  MyMHUI
 // @namespace  https://greasyfork.org/en/users/39779
-// @version  2.2.30.14.14
+// @version  2.2.30.15.14
 // @description  my mh ui modify
 // @author  Elie
 // @match  http://mousehuntgame.com/*
@@ -271,9 +271,9 @@ const locationAnchor = {
   claw_shot_city: isLny ? null : ['ByClassName', 'mousehuntHud-gameInfo', ''],
   train_station: ['ByClassName', 'camp', ''],
   fort_rox: null,
-  queso_river: isLny ? null : ['ByClassName', 'huntersHornView__timerState--type-countdown', 'huntersHornView__timerState--type-ready'],
-  queso_plains: ['ByClassName', 'huntersHornView__timerState--type-countdown', 'huntersHornView__timerState--type-ready'],
-  queso_quarry: ['ByClassName', 'huntersHornView__timerState--type-countdown', 'huntersHornView__timerState--type-ready'],
+  queso_river: isLny ? null : ['ByClassName', 'camp', ''],
+  queso_plains: ['ByClassName', 'camp', ''],
+  queso_quarry: ['ByClassName', 'camp', ''],
   queso_geyser: null,
   super_brie_factory: null,
   ss_huntington_ii: isLny ? null : ['ByClassName', 'mousehuntHeaderView-gameTabs', ''],
@@ -1191,9 +1191,9 @@ const functions = {
         <select id="eventLocationsSelect">
           <option value="greatWinterHunt">GWH</option>
         </select>
-        <button type="button" style="background-color: #fc0000ff;"" id="saveReloadEventLocationButton">Save(Left Click)/Reload(Right Click) settings</button>
-        <button type="button" style="background-color: #00fc00ff;"" id="reRunEventLocationButton">re-run eventLocation</button>
-        <div id="eventLocationsSettingsDiv"></div>
+        <button type="button" style="background-color: #fc0000ff;" id="saveReloadEventLocationButton">Save(Left Click)/Reload(Right Click) settings</button>
+        <button type="button" style="background-color: #00fc00ff;" id="reRunEventLocationButton">re-run eventLocation</button>
+        <div id="eventLocationsSettingsDiv" style="background-color: #beedc7ff;"></div>
     `;
     // LNY
     if (isLny) {

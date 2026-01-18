@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name    星柚助手
-// @version 20251230001
+// @version 20260108001
 // @description  杭州星柚--星柚综合业务平台 Chrome浏览器插件 对外系统扩展插件；
 // @author      沉香
 // @home-url     http://ihzxy.com
@@ -743,9 +743,11 @@
                         var nSPan = $(n).parents("tr").find("p");
                         $.each(nSPan, function (x, y) {
                             var spanText = $(y).text();
-                            if (spanText != null && spanText.indexOf("备货单号: ") == 0) {
-                                if (codes.indexOf(spanText.replace("备货单号: ", "")) == -1) {
-                                    codes.push(spanText.replace("备货单号: ", ""));
+                            if (spanText != null && spanText.indexOf("备货单号: ") != -1) {
+                                const re = /WB\d{12,13}/;
+                                var m = spanText.match(re);
+                                if (m && codes.indexOf(m[0]) == -1) {
+                                    codes.push(m[0]);
                                 }
                             }
                         });

@@ -1,12 +1,11 @@
 // ==UserScript==
 // @name        qb-fix-bilibili
-// @version     0.0.29
+// @version     0.0.30
 // @description inQ_Beta wants to fix some of bilibili problem
 // @license     Apache-2.0
 // @author      inQ_Beta
 // @match       https://*.bilibili.com/*
 // @grant       GM_addStyle
-// @grant       GM_notification
 // @grant       unsafeWindow
 // @namespace no1xsyzy
 // @downloadURL https://update.greasyfork.org/scripts/441458/qb-fix-bilibili.user.js
@@ -699,58 +698,9 @@
         return (input) => head.func(next, input);
     }
   };
-  function hijack(m) {
-    middlewares.push(m);
-  }
-  const MCDN_RE = /[xy0-9]+\.mcdn\.bilivideo\.cn:\d+/;
-  const QUALITY_SUFFIX_RE = /(\d+)_(?:minihevc|prohevc|bluray)/g;
-  const disableMcdn = define("disableMcdn", true);
-  let forceHighestQuality = true;
-  let recentErrors = 0;
+  define("disableMcdn", true);
   setInterval(() => {
-    if (recentErrors > 0) {
-      recentErrors /= 2;
-    }
   }, 1e4);
-  function healthChecker(promise) {
-    promise.then((response) => {
-      if (!response.url.match(/\.(m3u8|m4s)/))
-        return;
-      if (response.status >= 400 && response.status < 500) {
-        recentErrors++;
-        if (recentErrors >= 5 && forceHighestQuality) {
-          forceHighestQuality = false;
-          GM_notification({
-            title: "qb-fix-bilibili",
-            text: "真原画可能不可用，取消强制",
-            timeout: 3e3,
-            silent: true
-          });
-        }
-      }
-    });
-  }
-  function 真原画() {
-    hijack({
-      type: "wrap",
-      func: async (fetch2, req) => {
-        try {
-          if (MCDN_RE.test(req.url) && disableMcdn.get()) {
-            return Promise.reject(new Error());
-          }
-          if (QUALITY_SUFFIX_RE.test(req.url) && forceHighestQuality) {
-            req = new Request(req.url.replace(QUALITY_SUFFIX_RE, "$1"), req);
-          }
-          const url = req.url;
-          const promise = fetch2(req);
-          healthChecker(promise);
-          return promise;
-        } catch (e) {
-        }
-        return fetch2(req);
-      }
-    });
-  }
   function 避免被判定为不可见() {
     Object.defineProperty(document, "visibilityState", {
       value: "visible",
@@ -796,7 +746,6 @@
     直播间留言者显示粉丝数();
     通用表情框尺寸修复();
     自动刷新崩溃直播间();
-    真原画();
     避免被判定为不可见();
     直播间底部卡片悬浮标题();
   }

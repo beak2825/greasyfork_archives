@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         海角社区
-// @version      1.0.6
+// @version      1.0.7
 // @description  海角社区视频解锁观看及下载，无限制播放下载 | 官网：https://khsy.cc
 // @author       khsy.cc
 // @include      *://hj*.*/*
@@ -10,6 +10,7 @@
 // @include      *://*.h*.xyz/*
 // @include      *://*haijiao.*/*
 // @include      *://*.*haijiao.*/*
+// @match        https://*.haijiao999.com/*
 // @match        https://haijiao.com/*
 // @match        https://*.haijiao.com/*
 // @match        https://hj251101e0b.top/*
@@ -46,11 +47,14 @@
 
     const CONFIG = {
         SERVER_BASE: 'https://khsy.cc',
-        SCRIPT_VERSION: '1.0.6',
+        SCRIPT_VERSION: '1.0.7',
         SCRIPT_ID: 557267,
         UPDATE_URL: 'https://www.tampermonkey.net/script_installation.php#url=https://update.sleazyfork.org/scripts/557267/%E6%B5%B7%E8%A7%92%E7%A4%BE%E5%8C%BA.user.js',
         UPDATE_CHECK_INTERVAL: 12 * 60 * 60 * 1000,
         RESOLVE_COOLDOWN: 15000,
+
+        OFFICIAL_DOMAIN: 'haijiao.com',
+        PIRATE_DOMAIN: 'haijiao999.com',
         THEME: {
             primary: '#8b5cf6',
             secondary: '#ec4899',
@@ -68,7 +72,11 @@
     CONFIG.API_BASE = CONFIG.SERVER_BASE + '/api';
     CONFIG.SERVICE_BASE = CONFIG.SERVER_BASE + '/service';
 
-    // ==================== 版本更新检测 ====================
+
+    CONFIG.IS_OFFICIAL = window.location.hostname.includes(CONFIG.OFFICIAL_DOMAIN);
+    CONFIG.IS_PIRATE = window.location.hostname.includes(CONFIG.PIRATE_DOMAIN);
+
+
     const UpdateChecker = {
         latestVersion: null,
         hasUpdate: false,
@@ -517,14 +525,13 @@
                 }
                 const item = document.createElement('div');
                 item.style.cssText = `
-                    background: rgba(255, 255, 255, 0.95);
+                    background: rgba(255, 255, 255, 0.98);
                     color: #333;
                     padding: 12px 16px;
                     border-radius: 12px;
                     font-size: 13px;
                     box-shadow: 0 4px 16px rgba(0,0,0,0.15);
                     border: 1px solid rgba(0, 0, 0, 0.1);
-                    backdrop-filter: blur(12px);
                     animation: khsy-slide-in 0.3s ease;
                     pointer-events: auto;
                 `;
@@ -642,13 +649,13 @@
             display: flex;
             flex-direction: column;
             gap: 0;
-            background: rgba(255, 255, 255, 0.85);
+            background: rgba(255, 255, 255, 0.98);
             border: 1px solid rgba(0, 0, 0, 0.08);
             border-radius: 24px;
             padding: 8px 0;
             box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
-            backdrop-filter: blur(20px);
             transition: all 0.3s ease;
+            will-change: transform;
         }
 
         .khsy-float-panel.minimized {
@@ -742,8 +749,7 @@
         .khsy-modal-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(8px);
+            background: rgba(0, 0, 0, 0.8);
             z-index: 2147483646;
             display: flex;
             align-items: center;
@@ -757,7 +763,7 @@
         }
 
         .khsy-modal {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.98);
             border: 1px solid rgba(0, 0, 0, 0.1);
             border-radius: 20px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
@@ -767,7 +773,7 @@
             display: flex;
             flex-direction: column;
             animation: khsy-modal-in 0.3s ease;
-            backdrop-filter: blur(20px);
+            will-change: transform, opacity;
         }
 
         @keyframes khsy-modal-in {
@@ -1371,13 +1377,11 @@
                 if (m3u8Res.ok) {
                     const m3u8Text = await m3u8Res.text();
 
-
                     const lines = m3u8Text.split('\n');
                     const baseUrl = previewM3u8.substring(0, previewM3u8.lastIndexOf('/') + 1);
 
                     for (let i = 0; i < lines.length; i++) {
                         const line = lines[i].trim();
-
 
                         if (line.startsWith('#EXT-X-STREAM-INF')) {
                             const nextLine = lines[i + 1]?.trim();
@@ -1389,11 +1393,59 @@
                             }
                         }
 
-
                         if (line.endsWith('.m3u8') && !line.startsWith('#')) {
                             const fullUrl = line.startsWith('http') ? line : baseUrl + line;
                             if (!fullUrl.includes('preview')) {
                                 return fullUrl;
+                            }
+                        }
+                    }
+
+                    // 🔥 新增：从TS文件名推断完整M3U8（方法4 - 测试成功的方法）
+                    const tsLines = lines.filter(line => {
+                        const l = line.trim();
+                        return l && !l.startsWith('#') && /\.ts(\?|$)/i.test(l);
+                    });
+
+                    if (tsLines.length > 0) {
+                        const ts0 = tsLines[0].trim();
+
+                        // 构建绝对URL
+                        let absTs;
+                        try {
+                            absTs = new URL(ts0, previewM3u8).href;
+                        } catch {
+                            absTs = ts0.startsWith('http') ? ts0 : baseUrl + ts0;
+                        }
+
+                        const u = new URL(absTs);
+                        const tsBaseDir = u.href.substring(0, u.href.lastIndexOf('/') + 1);
+
+                        // 从TS文件名提取ID：4314383vpewFAVb_i0.ts => 4314383vpewFAVb_i.m3u8
+                        const mfile = /([^\/]+)_i\d+\.ts$/i.exec(u.pathname || '');
+                        if (mfile && mfile[1]) {
+                            const candA = tsBaseDir + mfile[1] + '_i.m3u8';
+                            if (await verifyM3U8(candA)) {
+                                return candA;
+                            }
+
+                            const candB = tsBaseDir + mfile[1] + '.m3u8';
+                            if (await verifyM3U8(candB)) {
+                                return candB;
+                            }
+                        }
+
+                        // 尝试纯数字ID格式
+                        const mdig = /(\d+)_i\d+\.ts$/i.exec(u.pathname || '');
+                        if (mdig && mdig[1]) {
+                            const candC = tsBaseDir + mdig[1] + '_i.m3u8';
+                            if (await verifyM3U8(candC)) {
+                                return candC;
+                            }
+
+                            const candD = tsBaseDir + mdig[1] + '.m3u8';
+                            if (await verifyM3U8(candD)) {
+                                return candD;
                             }
                         }
                     }
@@ -1497,10 +1549,114 @@
 
             try {
                 this.resolving = true;
-                this._resolveStartTime = Date.now(); // 记录开始时间
+                this._resolveStartTime = Date.now();
                 FloatPanel.updateResolveButton('解析中...');
 
+                // 🔥 盗版网站：只使用服务器解析（金币视频贴和钻石视频贴）
+                if (CONFIG.IS_PIRATE) {
+                    const m3u8FromDOM = await this.extractM3u8FromDOM();
+                    if (m3u8FromDOM) {
+                        try {
+                            const controller = new AbortController();
+                            const timeoutId = setTimeout(() => controller.abort(), 8000); // 🔥 8秒超时
 
+                            const serverRes = await Http.service('/haijiao-pirate/resolve', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'Priority': 'high'  // 🔥 高优先级请求
+                                },
+                                body: JSON.stringify({
+                                    topicId: topicId,
+                                    previewM3u8Url: m3u8FromDOM,
+                                    pageUrl: window.location.href
+                                }),
+                                signal: controller.signal
+                            });
+
+                            clearTimeout(timeoutId);
+
+                            if (serverRes.ok) {
+                                const serverData = await serverRes.json();
+                                if (serverData && serverData.success && serverData.url) {
+                                    this.resolveCache.set(topicId, {
+                                        url: serverData.url,
+                                        time: Date.now()
+                                    });
+
+                                    FloatPanel.updateResolveButton('播放');
+
+                                    await this.recordLog({
+                                        topicId,
+                                        resolved: true,
+                                        message: '视频解析成功(服务器)',
+                                        durationMs: Date.now() - (this._resolveStartTime || Date.now())
+                                    });
+
+                                    return serverData.url;
+                                }
+                            }
+
+                            UI.toast('服务器解析失败，请稍后重试');
+                            return null;
+
+                        } catch (e) {
+                            if (e.name === 'AbortError') {
+                                UI.toast('解析超时，请检查网络连接');
+                            } else {
+                                UI.toast('解析失败: ' + e.message);
+                            }
+                            return null;
+                        }
+                    }
+                }
+
+                // 🔥 官网：优先使用服务器解析（金币视频贴和钻石视频贴）
+                try {
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 8000); // 🔥 8秒超时
+
+                    const serverRes = await Http.service('/resolve', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Priority': 'high'  // 🔥 高优先级请求
+                        },
+                        body: JSON.stringify({
+                            topicId: topicId,
+                            preview: false
+                        }),
+                        signal: controller.signal
+                    });
+
+                    clearTimeout(timeoutId);
+
+                    if (serverRes.ok) {
+                        const serverData = await serverRes.json();
+                        if (serverData && serverData.success && serverData.url) {
+                            this.resolveCache.set(topicId, {
+                                url: serverData.url,
+                                time: Date.now()
+                            });
+
+                            FloatPanel.updateResolveButton('播放');
+
+                            await this.recordLog({
+                                topicId,
+                                resolved: true,
+                                message: '视频解析成功(服务器)',
+                                durationMs: Date.now() - (this._resolveStartTime || Date.now())
+                            });
+
+                            return serverData.url;
+                        }
+                    }
+
+                } catch (e) {
+                    // 服务器解析失败，继续使用本地解析
+                }
+
+                // 🔥 服务器解析失败后，尝试本地解析
                 const cached = this.contentTypeCache.get(String(topicId));
                 if (cached && cached.videoAttachment && (Date.now() - cached.timestamp < 30 * 60 * 1000)) {  // 30分钟有效
 
@@ -1788,14 +1944,57 @@
                 tip.innerHTML = '💡 支持<b>长按倍速播放</b>、<b>左右拖动快进</b>，播放速度取决于您当前的网速';
                 container.appendChild(tip);
 
+                // 🔥 创建视频容器包装器（用于放置加载动画）
+                const videoWrapper = document.createElement('div');
+                videoWrapper.style.cssText = 'position:relative;width:100%;background:#000;border-radius:12px;overflow:hidden;';
+                container.appendChild(videoWrapper);
+
                 const video = document.createElement('video');
                 video.id = 'khsy-player';
                 video.controls = true;
-                video.style.cssText = 'width:100%;max-height:50vh;height:auto;background:#000;border-radius:12px;object-fit:contain;display:block;';
+                video.style.cssText = 'width:100%;max-height:50vh;height:auto;background:#000;object-fit:contain;display:block;transform:translateZ(0);will-change:transform;';
+                video.setAttribute('playsinline', '');
+                video.setAttribute('webkit-playsinline', '');
+
+                // 🔥 创建加载动画覆盖层
+                const loadingOverlay = document.createElement('div');
+                loadingOverlay.id = 'khsy-video-loading';
+                loadingOverlay.style.cssText = 'position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);display:flex;align-items:center;justify-content:center;z-index:10;';
+                loadingOverlay.innerHTML = `
+                    <div style="text-align:center;">
+                        <svg width="60" height="60" viewBox="0 0 50 50" style="animation:khsy-spin 1s linear infinite;">
+                            <circle cx="25" cy="25" r="20" fill="none" stroke="#8b5cf6" stroke-width="4" stroke-dasharray="31.4 31.4" stroke-linecap="round"/>
+                        </svg>
+                        <div style="color:#fff;font-size:14px;margin-top:12px;">视频加载中...</div>
+                    </div>
+                `;
+
+                videoWrapper.appendChild(video);
+                videoWrapper.appendChild(loadingOverlay);
 
                 this.addDragAndLongPress(video);
-                container.appendChild(video);
                 this.currentPlayer = video;
+
+
+                const hideLoading = () => {
+                    if (loadingOverlay && loadingOverlay.parentNode) {
+                        loadingOverlay.style.opacity = '0';
+                        loadingOverlay.style.transition = 'opacity 0.3s ease';
+                        setTimeout(() => {
+                            if (loadingOverlay.parentNode) {
+                                loadingOverlay.remove();
+                            }
+                        }, 300);
+                    }
+                };
+
+                video.addEventListener('playing', hideLoading, { once: true });
+                video.addEventListener('canplay', () => {
+
+                    if (video.readyState >= 3) {
+                        hideLoading();
+                    }
+                });
 
                 this.loadVideo(videoUrl, video);
             } catch (e) {
@@ -1807,14 +2006,44 @@
             if (Hls.isSupported()) {
                 const baseUrl = url.substring(0, url.lastIndexOf('/') + 1);
 
+                // 🔥 使用最稳定的 HLS 配置
                 this.hls = new Hls({
+                    debug: false,
                     enableWorker: true,
+                    lowLatencyMode: false,
+                    backBufferLength: 90,
+                    maxBufferLength: 30,
+                    maxMaxBufferLength: 600,
+                    maxBufferSize: 60 * 1000 * 1000,
+                    maxBufferHole: 0.5,
+                    highBufferWatchdogPeriod: 2,
+                    nudgeOffset: 0.1,
+                    nudgeMaxRetry: 3,
+                    maxFragLookUpTolerance: 0.25,
+                    liveSyncDurationCount: 3,
+                    liveMaxLatencyDurationCount: Infinity,
+                    liveDurationInfinity: false,
+                    enableWebVTT: true,
+                    enableIMSC1: true,
+                    enableCEA708Captions: true,
+                    stretchShortVideoTrack: false,
+                    maxAudioFramesDrift: 1,
+                    forceKeyFrameOnDiscontinuity: true,
+                    abrEwmaFastLive: 3,
+                    abrEwmaSlowLive: 9,
+                    abrEwmaFastVoD: 3,
+                    abrEwmaSlowVoD: 9,
+                    abrEwmaDefaultEstimate: 500000,
+                    abrBandWidthFactor: 0.95,
+                    abrBandWidthUpFactor: 0.7,
+                    abrMaxWithRealBitrate: false,
+                    maxStarvationDelay: 4,
+                    maxLoadingDelay: 4,
+                    minAutoBitrate: 0,
+                    emeEnabled: false,
                     xhrSetup: function(xhr, requestUrl) {
                         if (requestUrl && !requestUrl.startsWith('http')) {
                             const absoluteUrl = baseUrl + requestUrl;
-                            // 注意：这里不能调用xhr.open，HLS.js会自己调用
-                            // 我们需要修改xhr的URL，但HLS.js在xhrSetup之后才open
-                            // 所以我们需要hook xhr.open
                             const originalOpen = xhr.open;
                             xhr.open = function(method, url, async) {
                                 originalOpen.call(this, method, absoluteUrl, async);
@@ -1823,37 +2052,41 @@
                     }
                 });
 
+                // 🔥 简单可靠的错误处理
                 this.hls.on(Hls.Events.ERROR, (event, data) => {
                     if (data.fatal) {
                         switch(data.type) {
                             case Hls.ErrorTypes.NETWORK_ERROR:
+                                // 网络错误，重新开始加载
                                 this.hls.startLoad();
                                 break;
                             case Hls.ErrorTypes.MEDIA_ERROR:
+                                // 媒体错误，尝试恢复
                                 this.hls.recoverMediaError();
                                 break;
                             default:
-                                UI.toast('播放失败: ' + data.type);
+                                // 其他错误，销毁并提示
                                 this.hls.destroy();
+                                UI.toast('播放出错，请刷新页面重试');
                                 break;
                         }
                     }
                 });
 
+                // 🔥 播放列表解析完成后自动播放
                 this.hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                    video.play().catch(err => {
-                        UI.toast('自动播放失败，请手动点击播放');
+                    video.play().catch(() => {
+                        // 自动播放失败，用户需要手动点击
                     });
                 });
 
                 this.hls.loadSource(url);
                 this.hls.attachMedia(video);
             } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                // Safari 原生支持
                 video.src = url;
                 video.addEventListener('loadedmetadata', () => {
-                    video.play().catch(err => {
-                        UI.toast('自动播放失败，请手动点击播放');
-                    });
+                    video.play().catch(() => {});
                 }, { once: true });
             }
         },
@@ -1873,11 +2106,13 @@
         enableDragSeek(video, dragState) {
             let startX = 0;
             let startTime = 0;
+            let wasPlaying = false;  // 🔥 记录开始拖动前的播放状态
 
             const handleStart = (e) => {
                 const clientX = e.clientX || (e.touches && e.touches[0].clientX);
                 startX = clientX;
                 startTime = video.currentTime;
+                wasPlaying = !video.paused;  // 🔥 保存播放状态
                 dragState.isDragging = true;
                 dragState.hasMoved = false;
             };
@@ -1902,6 +2137,12 @@
 
             const handleEnd = () => {
                 dragState.isDragging = false;
+
+                // 🔥 如果之前在播放，恢复播放
+                if (wasPlaying && video.paused) {
+                    video.play().catch(() => {});
+                }
+
                 // 延迟重置hasMoved，让倍速检测到
                 setTimeout(() => {
                     dragState.hasMoved = false;
@@ -1925,13 +2166,19 @@
         enableSpeedControl(video, dragState) {
             let speedTimer = null;
             let isSpeedMode = false;
+            let wasPlaying = false;  // 🔥 记录开始长按前的播放状态
 
             const startSpeedMode = () => {
+                wasPlaying = !video.paused;  // 🔥 保存播放状态
                 speedTimer = setTimeout(() => {
                     // 只在没有拖动时才触发倍速
                     if (!isSpeedMode && !dragState.hasMoved) {
                         video.playbackRate = 2.0;
                         isSpeedMode = true;
+                        // 🔥 如果视频暂停了，开始播放
+                        if (video.paused) {
+                            video.play().catch(() => {});
+                        }
                         UI.toast('⚡ 2倍速播放中', 1000);
                     }
                 }, 500);  // 长按500ms触发
@@ -1942,6 +2189,10 @@
                 if (isSpeedMode) {
                     video.playbackRate = 1.0;
                     isSpeedMode = false;
+                    // 🔥 如果之前在播放，继续播放；如果之前暂停，保持暂停
+                    if (wasPlaying && video.paused) {
+                        video.play().catch(() => {});
+                    }
                     UI.toast('✅ 恢复正常速度', 800);
                 }
             };
@@ -1970,7 +2221,7 @@
         }
     };
 
-    // ==================== 悬浮控制面板 ====================
+
     const FloatPanel = {
         panel: null,
         loginModalOpen: false,
@@ -2349,6 +2600,15 @@
                         this.resolving = false;
                         return;
                     }
+                }
+
+                // 🔥 检查是否已经有缓存的视频URL（绿色角标亮了说明已解析）
+                const cachedVideo = VideoResolver.resolveCache.get(topicId);
+                if (cachedVideo && cachedVideo.url && (Date.now() - cachedVideo.time < 30 * 60 * 1000)) {
+                    // 直接使用缓存的URL，立即打开播放器
+                    this.showVideoModal(cachedVideo.url);
+                    this.resolving = false;
+                    return;
                 }
 
                 UI.toast('正在解析视频...', 'info', 2000);
@@ -2841,8 +3101,7 @@
         }
     };
 
-    // ==================== 视频预加载 ====================
-    // 防重复预加载标志
+
     const preloadedVideos = new Set();
 
     async function preloadVideo() {
@@ -2858,14 +3117,19 @@
 
         const cached = VideoResolver.contentTypeCache.get(String(topicId));
 
-        if (!cached || (cached.paymentType !== 'diamond' && cached.paymentType !== 'coin')) {
+
+        const shouldPreload = CONFIG.IS_PIRATE
+            ? (cached && cached.hasVideo)
+            : (cached && (cached.paymentType === 'diamond' || cached.paymentType === 'coin'));
+
+        if (!shouldPreload) {
             return;
         }
 
         preloadedVideos.add(String(topicId));
 
         try {
-            // 调用解析接口（不打开播放器）
+
             const url = await VideoResolver.resolveFull();
 
             if (url) {
@@ -2889,6 +3153,42 @@
             }
         } catch (e) {
         }
+    }
+
+    // 🔥 显示封禁用户跳转提示弹窗
+    function showBannedUserRedirectModal(userId) {
+        const pirateUrl = `https://${CONFIG.PIRATE_DOMAIN}/user/userinfo?uid=${userId}`;
+
+        const content = `
+            <div style="text-align: center; padding: 20px 0;">
+                <div style="font-size: 48px; margin-bottom: 16px;">🚫</div>
+                <div style="font-size: 16px; font-weight: 600; color: #333; margin-bottom: 12px;">
+                    该用户已被封禁
+                </div>
+                <div style="font-size: 14px; color: #666; line-height: 1.6; margin-bottom: 20px;">
+                    该用户在官网已被封禁，无法查看其内容。<br>
+                    您可以前往盗版网站查看该用户的内容。
+                </div>
+                <div style="background: #f5f5f5; padding: 12px; border-radius: 8px; margin-bottom: 20px;">
+                    <div style="font-size: 12px; color: #999; margin-bottom: 4px;">用户ID</div>
+                    <div style="font-size: 14px; color: #333; font-weight: 600;">${userId}</div>
+                </div>
+            </div>
+        `;
+
+        UI.createModal('用户已封禁', content, [
+            {
+                text: '取消',
+                onClick: () => {}
+            },
+            {
+                text: '前往盗版网站',
+                primary: true,
+                onClick: () => {
+                    window.open(pirateUrl, '_blank');
+                }
+            }
+        ]);
     }
 
 
@@ -3098,9 +3398,7 @@
         }
     }
 
-    // ==================== HTTP拦截器：隐藏金币图片 ====================
 
-    // 处理单个帖子的付费信息
     function processSingleTopic(topic) {
         if (!topic) return;
 
@@ -3132,7 +3430,7 @@
                 }
             });
         } else {
-            // 热门列表没有attachments，使用hasVideo/hasPic字段判断
+
             if (topic.hasVideo === true || topic.hasVideo === 1) {
                 hasVideo = 0; // 假设第一个位置是视频
             }
@@ -3144,18 +3442,18 @@
             }
         }
 
-        // 判断付费类型：使用money_type字段（0=免费, 1=金币, 2=钻石）
+
         let paymentType = 'free';
         let paymentAmount = 0;
         let originalSale = null;
 
-        // 优先使用sale字段（帖子详情），因为它是真实的付费状态
+
         if (topic.sale) {
             originalSale = JSON.parse(JSON.stringify(topic.sale));
             paymentAmount = topic.sale.amount || 0;
             const moneyType = topic.sale.money_type;
 
-            // 根据money_type判断帖子类型
+
             if (moneyType === 2) {
                 paymentType = 'diamond';
             } else if (moneyType === 1) {
@@ -3164,7 +3462,7 @@
                 paymentType = 'free';
             }
         }
-        // 备用：使用顶层的money_type字段（热门帖子列表，但不太准确）
+
         else if ('money_type' in topic) {
             paymentAmount = topic.amount || 0;
             const moneyType = topic.money_type;
@@ -3178,7 +3476,7 @@
             }
         }
 
-        // 保存到缓存
+
         if (topicId) {
             const videoAttachment = (hasVideo >= 0 && topic.attachments) ? topic.attachments[hasVideo] : null;
 
@@ -3195,11 +3493,19 @@
                 timestamp: Date.now()
             });
 
-            // 如果Auth.vip已确认（API响应晚于Auth.fetchUserInfo），立即触发预加载
-            const currentTopicId = VideoResolver.getTopicId();
-            const isPaidVideo = (paymentType === 'diamond' || paymentType === 'coin');
 
-            if (String(currentTopicId) === String(topicId) && videoAttachment && Auth.vip && isPaidVideo) {
+            const currentTopicId = VideoResolver.getTopicId();
+
+
+            const shouldPreload = CONFIG.IS_PIRATE
+                ? (videoAttachment !== null && videoAttachment !== undefined)
+                : (paymentType === 'diamond' || paymentType === 'coin');
+
+
+            const needVipCheck = !CONFIG.IS_PIRATE;
+            const canPreload = needVipCheck ? (Auth.vip && shouldPreload) : shouldPreload;
+
+            if (String(currentTopicId) === String(topicId) && videoAttachment && canPreload) {
                 setTimeout(() => {
                     preloadVideo();
                 }, 500);
@@ -3223,11 +3529,13 @@
                     "response"
                 ).get;
 
-                // 🔥 拦截海角网站的用户信息API，伪造海角网站的VIP状态（不拦截khsy.cc的API）
-                const isHaijaoUserApi = (url.includes('/user/me') || url.includes('/user/current') || url.includes('/api/user/info'))
-                                        && !url.includes('khsy.cc');
 
-                if (isHaijaoUserApi) {
+                const isMyInfoPage = window.location.pathname.includes('/user/myinfo');
+                const isUserInfoApi = (url.includes('/user/me') || url.includes('/user/current') || url.includes('/api/user/info'))
+                                        && !url.includes('khsy.cc')
+                                        && CONFIG.IS_OFFICIAL;  // 🔥 只在官网拦截
+
+                if (isUserInfoApi) {
                     Object.defineProperty(xhr, "responseText", {
                         get: () => {
                             let result = getter.call(xhr);
@@ -3239,6 +3547,13 @@
                                     // 提取用户ID
                                     const uidMatch = url.match(/\/api\/user\/info\/(\d+)/);
                                     const userId = uidMatch ? parseInt(uidMatch[1]) : 0;
+
+
+                                    if (CONFIG.IS_OFFICIAL && userId) {
+                                        setTimeout(() => {
+                                            showBannedUserRedirectModal(userId);
+                                        }, 500);
+                                    }
 
                                     // 伪造一个被封禁用户的基本信息
                                     const bannedUserData = {
@@ -3253,7 +3568,9 @@
                                         favoriteCount: 0,
                                         status: 0,
                                         sex: 0,
-                                        vip: 0,
+                                        vip: CONFIG.IS_PIRATE ? 4 : 0,  // 🔥 盗版网站伪造VIP4
+                                        vipStatus: CONFIG.IS_PIRATE ? 4 : 0,
+                                        vipLevel: CONFIG.IS_PIRATE ? 4 : 0,
                                         vipExpiresTime: '0001-01-01 00:00:00',
                                         certified: false,
                                         forbidden: true,
@@ -3297,6 +3614,11 @@
                                     return JSON.stringify(res);
                                 }
 
+                                // 🔥 个人主页不拦截，直接返回原始数据
+                                if (isMyInfoPage) {
+                                    return result;
+                                }
+
                                 // 确保响应成功且有data字段
                                 if (res && res.success !== false && res.data) {
                                     // 尝试解密用户信息
@@ -3316,25 +3638,25 @@
                                         }
                                     }
 
-                                    // 🔥 伪造海角网站的VIP状态 - VIP4等级
+
                                     if (userData) {
-                                        userData.vip = 4;           // VIP等级设置为4
-                                        userData.vipStatus = 4;     // VIP状态设置为4
-                                        userData.vipLevel = 4;      // VIP级别设置为4
-                                        userData.vipGrade = 4;      // VIP档次设置为4
-                                        userData.vipType = 4;       // VIP类型设置为4
-                                        userData.memberLevel = 4;   // 会员级别设置为4
-                                        userData.isVip = true;      // VIP标志
-                                        userData.isPremium = true;  // 高级会员标志
-                                        userData.isSuper = true;    // 超级会员标志
-                                        // 设置一个很远的过期时间
+                                        userData.vip = 4;
+                                        userData.vipStatus = 4;
+                                        userData.vipLevel = 4;
+                                        userData.vipGrade = 4;
+                                        userData.vipType = 4;
+                                        userData.memberLevel = 4;
+                                        userData.isVip = true;
+                                        userData.isPremium = true;
+                                        userData.isSuper = true;
+
                                         userData.vipExpireAt = '2099-12-31 23:59:59';
                                         userData.vipExpiresTime = '2099-12-31 23:59:59';
 
-                                        // 重新加密数据
+
                                         try {
                                             const userDataStr = JSON.stringify(userData);
-                                            // 尝试原加密方式
+
                                             try {
                                                 res.data = CryptoModule.encode(userDataStr);
                                             } catch (e1) {
@@ -3366,12 +3688,12 @@
                         configurable: true
                     });
                 } else {
-                    // 处理其他API请求（帖子内容解锁）
+
                     Object.defineProperty(xhr, "responseText", {
                         get: () => {
                             let result = getter.call(xhr);
 
-                            // 安全第一：任何错误都返回原始数据
+
                             try {
                                 let res = JSON.parse(result);
 
@@ -3393,20 +3715,15 @@
                                     }
                                 }
 
-                                // 只处理详情页帖子（有attachments字段），列表数据跳过
+
                                 if (!body || !body.attachments || !Array.isArray(body.attachments)) {
                                     return result;
                                 }
 
-                                // 处理单个帖子（缓存付费信息）
+
                                 processSingleTopic(body);
 
-                                // 🔥 图片功能已禁用（避免在其他页面误显示）
-                                // setTimeout(() => {
-                                //     loadUnlockedImages();
-                                // }, 1500);
 
-                                // 准备免费化所需的数据
                                 let hasVideo = -1;
                                 let hasImages = false;
                                 let allImages = {};
@@ -3417,7 +3734,7 @@
                                     }
                                     if (attachment.category === 'images' || attachment.category === 'image') {
                                         hasImages = true;
-                                        // 🔥 尝试多个可能的图片URL字段
+
                                         const imageUrl = attachment.remoteUrl || attachment.url || attachment.src || attachment.path;
                                         if (imageUrl) {
                                             allImages[attachment.id] = imageUrl;
@@ -3425,16 +3742,16 @@
                                     }
                                 });
 
-                                // 免费化：将金币内容设置为已购买（放在检测之后）
+
                                 if (body.sale) {
                                     body.sale.money_type = 0;
                                     body.sale.amount = 0;
                                     body.sale.is_buy = true;
                                 }
 
-                                // 处理内容显示
+
                                 if (body.content && hasVideo >= 0) {
-                                    // 只处理视频，不处理图片（图片在客户端DOM处理）
+
                                     const videoAttachment = body.attachments[hasVideo];
                                     const insertDom = `<div><video style="display:none" src="" data-id="${videoAttachment.id}"></video></div>`;
 
@@ -3451,7 +3768,7 @@
                                         body.content += insertDom;
                                     }
                                 } else if (body.content && hasImages && Object.keys(allImages).length > 0) {
-                                    // 🔥 处理金币贴图片显示
+
                                     let imagesDom = '<div class="unlocked-images-container">';
                                     Object.entries(allImages).forEach(([id, url]) => {
                                         imagesDom += `<img src="${url}" data-id="${id}" style="max-width:100%; margin:10px 0;" />`;
@@ -3496,17 +3813,17 @@
             return originOpen.call(this, method, url, ...args);
         };
 
-        // 🔥 拦截fetch API（用于处理被封禁用户）
+
         const originalFetch = window.fetch;
         window.fetch = function(url, options) {
             return originalFetch.apply(this, arguments).then(async response => {
-                // 只处理用户信息API
-                if (typeof url === 'string' && url.includes('/api/user/info') && !url.includes('khsy.cc')) {
+
+                if (typeof url === 'string' && url.includes('/api/user/info') && !url.includes('khsy.cc') && CONFIG.IS_OFFICIAL) {
                     const clonedResponse = response.clone();
                     try {
                         const data = await clonedResponse.json();
 
-                        // 检测被封禁用户
+
                         if (data && data.success === false && data.message && (data.message.includes('禁') || data.message.includes('封'))) {
                             // 提取用户ID
                             const uidMatch = url.match(/\/api\/user\/info\/(\d+)/);
@@ -3525,7 +3842,9 @@
                                 favoriteCount: 0,
                                 status: 0,
                                 sex: 0,
-                                vip: 0,
+                                vip: CONFIG.IS_PIRATE ? 4 : 0,  // 🔥 盗版网站伪造VIP4
+                                vipStatus: CONFIG.IS_PIRATE ? 4 : 0,
+                                vipLevel: CONFIG.IS_PIRATE ? 4 : 0,
                                 vipExpiresTime: '0001-01-01 00:00:00',
                                 certified: false,
                                 forbidden: true,
@@ -3585,14 +3904,14 @@
         };
     }
 
-    // ==================== 脚本初始化 ====================
+
     function startUI() {
         try {
 
             FloatPanel.create();
 
             if (Auth.token) {
-                // 🔥 从你的服务器(khsy.cc)获取真实的VIP状态
+
                 Auth.fetchUserInfo().then(() => {
                     FloatPanel.updateAccountButton();
 
@@ -3608,9 +3927,16 @@
                             const videoAttachment = cached?.videoAttachment;
                             const currentTopicId = VideoResolver.currentTopicId;
 
-                            const isPaidVideo = (paymentType === 'diamond' || paymentType === 'coin');
 
-                            if (String(currentTopicId) === String(topicId) && videoAttachment && Auth.vip && isPaidVideo) {
+                            const shouldPreload = CONFIG.IS_PIRATE
+                                ? (videoAttachment !== null && videoAttachment !== undefined)
+                                : (paymentType === 'diamond' || paymentType === 'coin');
+
+
+                            const needVipCheck = !CONFIG.IS_PIRATE;
+                            const canPreload = needVipCheck ? (Auth.vip && shouldPreload) : shouldPreload;
+
+                            if (String(currentTopicId) === String(topicId) && videoAttachment && canPreload) {
                                 setTimeout(() => {
                                     preloadVideo();
                                 }, 500);
@@ -3620,7 +3946,18 @@
                                         const retryTopicId = VideoResolver.getTopicId();
                                         const retryCached = VideoResolver.contentTypeCache.get(String(retryTopicId));
 
-                                        if (retryCached && retryCached.videoAttachment && (retryCached.paymentType === 'diamond' || retryCached.paymentType === 'coin')) {
+
+                                        const retryPaymentType = retryCached?.paymentType;
+                                        const retryVideoAttachment = retryCached?.videoAttachment;
+                                        const retryShouldPreload = CONFIG.IS_PIRATE
+                                            ? (retryVideoAttachment !== null && retryVideoAttachment !== undefined)
+                                            : (retryPaymentType === 'diamond' || retryPaymentType === 'coin');
+
+
+                                        const retryNeedVipCheck = !CONFIG.IS_PIRATE;
+                                        const retryCanPreload = retryNeedVipCheck ? (Auth.vip && retryShouldPreload) : retryShouldPreload;
+
+                                        if (retryCached && retryVideoAttachment && retryCanPreload) {
                                             preloadVideo();
                                         }
                                     }, 1000);
@@ -3631,17 +3968,64 @@
                 });
             }
 
-            // 检测是否在视频详情页
+
             const isVideoPage = window.location.href.includes('/topic/') ||
                                window.location.href.includes('/post/details') ||
                                window.location.hash.includes('/topic/');
+
+
+            if (CONFIG.IS_PIRATE && isVideoPage && Auth.vip) {
+
+                setTimeout(async () => {
+                    try {
+                        const topicId = VideoResolver.getTopicId();
+                        if (!topicId) return;
+
+
+                        const btnResolve = document.getElementById('khsy-btn-resolve');
+                        if (btnResolve) {
+                            const badge = btnResolve.querySelector('.khsy-ready-badge');
+                            if (badge) return;
+                        }
+
+
+                        const url = await VideoResolver.resolveFull();
+
+                        if (url) {
+                            // 显示绿色角标
+                            if (btnResolve) {
+                                let badge = btnResolve.querySelector('.khsy-ready-badge');
+                                if (!badge) {
+                                    badge = document.createElement('div');
+                                    badge.className = 'khsy-ready-badge';
+                                    btnResolve.appendChild(badge);
+                                }
+                            }
+
+                            // 显示提示
+                            UI.toast('✅ 视频已自动解析，点击播放按钮观看', 'success', 2000);
+                        }
+                    } catch (e) {
+                        // 静默处理错误
+                    }
+                }, 800);  // 🔥 从 1500ms 减少到 800ms
+            } else if (CONFIG.IS_PIRATE && isVideoPage && !Auth.vip) {
+
+                setTimeout(() => {
+                    if (!Auth.token) {
+                        UI.toast('💡 登录 khsy.cc 账号后可自动解析视频', 'info', 3000);
+                    } else {
+                        UI.toast('💡 开通 khsy.cc VIP 后可自动解析视频', 'info', 3000);
+                    }
+                }, 2000);
+            }
 
             // 🔥 视频预加载：自动请求视频链接并显示绿色角标
         } catch (e) {
         }
     }
 
-    // 暴露到控制台便于调试
+
     if (typeof unsafeWindow !== 'undefined') {
         unsafeWindow.KHSY = {
             CONFIG,
@@ -3656,28 +4040,24 @@
         };
     }
 
-    // 🔥 注意：不在这里强制设置VIP，VIP状态由khsy.cc服务器决定
 
-    // 移除控制台输出
-
-    // 启动脚本
     init();
 
-    // 🔥 定时器：每30秒从你的服务器(khsy.cc)同步真实VIP状态
+
     setInterval(() => {
         if (Auth.token) {
             Auth.fetchUserInfo().then(() => {
-                // 更新UI显示
+
                 if (typeof FloatPanel !== 'undefined' && FloatPanel.updateAccountButton) {
                     FloatPanel.updateAccountButton();
                 }
             }).catch(() => {
-                // 忽略错误
+
             });
         }
     }, 30000);  // 30秒同步一次
 
-    // 🔥 监听URL变化，离开详情页时清除绿色角标，进入详情页时触发预加载
+
     let lastUrl = window.location.href;
     const checkUrlChange = () => {
         const currentUrl = window.location.href;
@@ -3690,12 +4070,20 @@
 
             if (isVideoPage) {
 
-                if (Auth.vip) {
+                const needVipCheck = !CONFIG.IS_PIRATE;
+                const canCheckPreload = needVipCheck ? Auth.vip : true;
+
+                if (canCheckPreload) {
                     setTimeout(() => {
                         const topicId = VideoResolver.getTopicId();
                         const cached = VideoResolver.contentTypeCache.get(String(topicId));
 
-                        if (cached && cached.videoAttachment && (cached.paymentType === 'diamond' || cached.paymentType === 'coin')) {
+
+                        const shouldPreload = CONFIG.IS_PIRATE
+                            ? (cached && cached.videoAttachment)
+                            : (cached && cached.videoAttachment && (cached.paymentType === 'diamond' || cached.paymentType === 'coin'));
+
+                        if (shouldPreload) {
                             preloadVideo();
                         }
                     }, 500);

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube Enhancer
 // @namespace    Violentmonkey Scripts
-// @version      1.1.3
+// @version      1.1.4
 // @description  Reduz uso de CPU (Smart Mode), personaliza layout, remove Shorts e adiciona relógio customizável.
 // @author       John Wiliam & IA
 // @match        *://www.youtube.com/*
@@ -18,7 +18,7 @@
 (function() {
     'use strict';
 
-    const FLAG = "__yt_enhancer_v1_1_3__";
+    const FLAG = "__yt_enhancer_v1_1_4__";
     if (window[FLAG]) return;
     window[FLAG] = true;
 
@@ -27,6 +27,7 @@
 
     const log = (msg) => console.log(`[YT Enhancer] ${msg}`);
 
+    
     // =======================================================
     // EVENT BUS SYSTEM
     // =======================================================
@@ -125,7 +126,7 @@
             return () => element.removeEventListener(event, safeHandler, options);
         },
 
-        migrateConfig(savedConfig, currentVersion = '1.1.2') {
+        migrateConfig(savedConfig, currentVersion = '1.1.4') {
             if (!savedConfig || typeof savedConfig !== 'object') {
                 return null;
             }
@@ -144,11 +145,11 @@
     // 1. CONFIG MANAGER
     // =======================================================
     const ConfigManager = {
-        CONFIG_VERSION: '1.1.3',
+        CONFIG_VERSION: '1.1.4',
         STORAGE_KEY: 'YT_ENHANCER_CONFIG',
         
         defaults: {
-            version: '1.1.3',
+            version: '1.1.4',
             VIDEOS_PER_ROW: 5,
             FEATURES: {
                 CPU_TAMER: true,
@@ -158,8 +159,8 @@
             },
             CLOCK_STYLE: {
                 color: '#ffffff',
-                bgColor: '#000000',
-                bgOpacity: 0.4,
+                bgColor: '#191919',
+                bgOpacity: 0.2,
                 fontSize: 22,
                 margin: 30,
                 borderRadius: 25,
@@ -679,7 +680,7 @@
                 const isFullscreen = document.fullscreenElement != null;
                 const areControlsVisible = !this.playerElement.classList.contains('ytp-autohide');
                 const baseMargin = this.config.CLOCK_STYLE.margin;
-                const finalBottom = (isFullscreen && areControlsVisible) ? baseMargin + 100 : baseMargin;
+                const finalBottom = (isFullscreen && areControlsVisible) ? baseMargin + 110 : baseMargin;
                 this.clockElement.style.bottom = `${finalBottom}px`;
             } catch (e) { console.error(e); }
         },
@@ -694,7 +695,7 @@
             this.clockElement.style.backgroundColor = `rgba(${hexToRgb(s.bgColor)}, ${s.bgOpacity})`;
             this.clockElement.style.color = s.color;
             this.clockElement.style.fontSize = `${s.fontSize}px`;
-            this.clockElement.style.right = `${s.margin}px`;
+            this.clockElement.style.right = `15px`;
             this.clockElement.style.borderRadius = `${s.borderRadius}px`;
             this.adjustPosition();
         },

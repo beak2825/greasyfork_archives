@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Magento 2 admin
 // @namespace    dedeman
-// @version      4.22
+// @version      4.23
 // @description  all
 // @author       Dragos
 // @icon         https://i.dedeman.ro/dedereact/design/images/small-logo.svg
@@ -17,6 +17,7 @@
 // @match        https://ecclients.btrl.ro/console/index.html*
 // @match        http*://dedeweb.dedeman.ro/*
 // @match        http*://angajat.dedeman.ro/*
+// @match        https://portal.dedeman.ro/*
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.4/jquery-confirm.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/mailcheck/1.1.2/mailcheck.min.js
@@ -69,7 +70,9 @@
         console.log('no script');
     }
     else {
-        let regExOL = /(OL[A-Z\d]{0,2}?1D\d{5,7}(?:-\d{1,2})?)/g;
+        const OL_PATTERN = '(OL[A-Z\\d]{0,2}?1D\\d{5,7}(?:-\\d{1,2})?)';
+        const regExOLTest  = new RegExp(OL_PATTERN);
+        const regExOLMatch = new RegExp(OL_PATTERN, 'g');
         let regExPayments = /\b[A-Z0-9]{40}\b|\b\d{7,}:c\b|\b[a-z0-9-]{36}\b/g;
         let regex_email = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/i;
         let regex_multiple_emails = /^((([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))(; ?)?)*$/i;
@@ -334,7 +337,7 @@
                 if (/awb|dpd/gmi.test(text) && regExDPD.test(text)) awbs = awbs.concat(text.match(regExDPD));
                 if (/awb|fan/gmi.test(text) && regExFAN.test(text)) awbs = awbs.concat(text.match(regExFAN));
                 if (/awb|gls/gmi.test(text) && regExGLS.test(text)) awbs = awbs.concat(text.match(regExGLS));
-                if (/awb|cargus/gmi.test(text) && regExCargus.test(text)) awbs = awbs.concat(text.match(regExCargus));
+                //if (/awb|cargus/gmi.test(text) && regExCargus.test(text)) awbs = awbs.concat(text.match(regExCargus));
             });
             awbs = [...new Set(awbs)]; //remove duplicates
             return awbs;
@@ -1068,7 +1071,7 @@
         }
         function link_comanda(element) {
             var data = element.html();
-            var ols = data.match(regExOL);
+            var ols = data.match(regExOLMatch);
             ols = [...new Set(ols)]; //remove duplicates
             $.each(ols, function(i, ol) {
                 data = data.replace(new RegExp(ol, 'gm'),`<span class="link_ol" data-ol="${ol}">${ol}</span>`);
@@ -3369,6 +3372,7 @@
                                         raspuns_LS.showLoading();
                                         sap_request({url:`${LS_url}?doc=${nrOL}&action=read`, method: 'GET'}).then(function(response) {
                                             let content;
+                                            let log;
                                             if (response.error) {
                                                 content = 'Comanda nu a fost inserata in LS Retail pentru a fi facturata!';
                                                 raspuns_LS.buttons.SendToLS.show();
@@ -3378,10 +3382,12 @@
                                                 if ($(`.note-list-comment:contains("[AUTOMAT] Comanda a fost facturata. Numar referinta: ${response.Read_Result.MagentoOrderList.Invoice_No}")`).length == 0) raspuns_LS.buttons.SaveInvoice.show();
                                             }
                                             else if (response.Read_Result.MagentoOrderList.Processed) {
-                                                content = `Comanda apare ca fiind procesata de LS in data de ${new Date(response.Read_Result.MagentoOrderList.Processing_DateTime).toLocaleString('ro')} dar nu exista o factura emisa!`;
+                                                log = response.Read_Result.MagentoOrderList.Log_Message || '';
+                                                if (log) log = '<br>Mesaj LS: '+log;
+                                                content = `Comanda apare ca fiind procesata de LS in data de ${new Date(response.Read_Result.MagentoOrderList.Processing_DateTime).toLocaleString('ro')} dar nu exista o factura emisa!${log}`;
                                             }
                                             else {
-                                                let log = response.Read_Result.MagentoOrderList.Log_Message || '';
+                                                log = response.Read_Result.MagentoOrderList.Log_Message || '';
                                                 if (log) log = '<br>Mesaj LS: '+log;
                                                 content = `Comanda a fost inserata in LS Retail dar nu a fost facturata inca!${log}`;
                                             }
@@ -6998,8 +7004,7 @@
                                 function generate_links() {
                                     var comenzi = [];
                                     $('.nr_ol').each(function() {
-                                        if (regExOL.test($(this).text())) comenzi.push($(this).text());
-                                        regExOL.lastIndex = 0;
+                                        if (regExOLTest.test($(this).text())) comenzi.push($(this).text());
                                     });
                                     if (comenzi.length) {
                                         magento_request({api_url:'/rest/V1/orders', search_field: 'increment_id', search_values: comenzi, condition_type: 'in', return_fields: 'entity_id,increment_id,status'}).then(function(response) {
@@ -7038,11 +7043,7 @@
                                 }
                                 $(document).on('click', '.edit_order_number', function() {
                                     let new_number = (prompt('Noul număr de comandă:') || '').trim();
-                                    if (regExOL.test(new_number.toUpperCase())) {
-                                        regExOL.lastIndex = 0;
-                                        new_number = regExOL.exec(new_number.toUpperCase())[0];
-                                        regExOL.lastIndex = 0;
-                                    }
+                                    if (regExOLTest.test(new_number.toUpperCase())) new_number = regExOLTest.exec(new_number.toUpperCase())[0];
                                     if (new_number) change_op({op_id: $(this).closest('tr').find('.op').attr('id'), data: {order: new_number}});
                                 });
                                 $(document).on('click', '.return_op', function() {
@@ -7171,11 +7172,7 @@
                                                 if (!copie_salvate.includes(value.replace(/ |\r|\n/gm,""))) {
                                                     var nrOL = "not found";
                                                     var op = value.toUpperCase().replace(/ |\r|\n/gmi,"").replace(/O/gmi,"0").replace(/0L/gmi,"OL").replace(/I/gmi,"1");
-                                                    if (regExOL.test(op)) {
-                                                        regExOL.lastIndex = 0;
-                                                        nrOL = regExOL.exec(op)[0];
-                                                        regExOL.lastIndex = 0;
-                                                    }
+                                                    if (regExOLTest.test(op)) nrOL = regExOLTest.exec(op)[0];
                                                     opuri_noi_append.push({op_date: data, order: nrOL, description: value, status: "danger"});
                                                 }
                                             });
@@ -7607,12 +7604,26 @@
                         });
                     });
                 }
-                else if (location.href.includes('/admin/admin/user/edit/user_id')) {
-                    waitForElm('.field-expires_at .ui-datepicker-trigger').then((elm) => {
+                else if (location.href.includes('/admin/user/edit/user_id') || location.href.includes('/admin/user/new')) {
+                    waitForElm('#user_current_user_verification_fieldset').then((elm) => {
+                        elm.insertBefore($('#user_base_fieldset'));
                         $('#user_expires_at').attr('autocomplete', 'off');
                         $('#user_expires_at').attr('disabled', true);
                         $('#user_expires_at').val('');
                         $('#user_is_active').val('1');
+                        $('#user_password').attr('autocomplete', 'new-password').val('');
+                        $('#user_confirmation').attr('autocomplete', 'new-password').val('');
+                        $('#user_current_password').attr('autocomplete', 'current-password');
+                        $('#user_username').attr('autocomplete', 'new-username').val('');
+                        $('#user_username').closest('.admin__field').insertBefore($('#user_password').closest('.admin__field'));
+                    });
+                }
+                else if (location.href.includes('admin/system_account/index')) {
+                    waitForElm('#current_user_verification_fieldset').then((elm) => {
+                        elm.insertBefore($('#base_fieldset'));
+                        $('#password').attr('autocomplete', 'new-password').val('');
+                        $('#confirmation').attr('autocomplete', 'new-password').val('');
+                        $('#current_password').attr('autocomplete', 'current-password');
                     });
                 }
                 else if (location.href.includes('/admin/ban/order/customerban/order_id/')) {
@@ -10599,6 +10610,19 @@
                 }
             }
             make_actions_angajat(location.href);
+        }
+        else if (window.location.href.includes('portal.dedeman.ro')) {
+            console.log('portal');
+            GM_addStyle(`
+            .py-6:nth-of-type(1) .grid > div:nth-of-type(1) .text-base {display: inline-block;}
+            .py-6:nth-of-type(1) .grid > div:nth-of-type(1) .text-base:hover {cursor: pointer; text-decoration: underline;}
+            `);
+            $(document).on('click auxclick', '.py-6:nth-of-type(1) .grid > div:nth-of-type(1) .text-base', function(e) {
+                if (e.button < 2) {
+                    let nrOL = $(this).text();
+                    if (regExOLTest.test(nrOL)) search_open_magento_order(nrOL, !e.button, $(this));
+                }
+            });
         }
     }
 

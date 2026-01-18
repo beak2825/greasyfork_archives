@@ -5,10 +5,11 @@
 // @homepageURL  https://github.com/chaofunchengfeng/AmapLoginAssist
 // @website      https://github.com/chaofunchengfeng/AmapLoginAssist
 // @source       https://github.com/chaofunchengfeng/AmapLoginAssist
-// @version      0.5
+// @version      0.6
 // @description  高德地图Web网页版支持密码登录、三方登录
 // @author       chaofunchengfeng
 // @match        https://*.amap.com/*
+// @match        https://*.gaode.com/*
 // @icon         https://www.amap.com/favicon.ico
 // @run-at       document-idle
 // @license      MIT

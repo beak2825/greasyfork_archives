@@ -6,7 +6,7 @@
 // @name:ru      Рейтинг Twitter: Плеер в стиле TikTok
 // @name:th      การจัดอันดับ Twitter: ผู้เล่นสไตล์ TikTok
 // @namespace    loadingi.local
-// @version      2.7
+// @version      2.9.1
 // @description  视频模态框播放器 - 支持TikTok风格上下滑动切换,无需跳转页面
 // @description:en Video modal player - Supports TikTok-style swipe switching without page redirection
 // @description:ja 動画モーダルプレーヤー - TikTokスタイルのスワイプ切り替え、ページ遷移なし
@@ -92,12 +92,18 @@
             position: fixed;
             top: 0;
             left: 0;
-            width: 100vw;
-            height: 100vh;
-            height: 100dvh;
+            width: 100vw !important;
+            height: 100vh !important;
+            height: 100dvh !important;
             background: #000;
             z-index: 2147483647;
             display: none;
+            flex-direction: column !important;
+            margin: 0 !important;
+            box-sizing: border-box !important;
+            max-width: none !important;
+            max-height: none !important;
+            
             font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             padding-top: env(safe-area-inset-top);
             padding-bottom: env(safe-area-inset-bottom);
@@ -105,6 +111,15 @@
             padding-right: env(safe-area-inset-right);
             opacity: 0;
             transition: opacity 0.3s var(--ease-smooth);
+            
+            /* Disable selection and touch callouts for long press speed */
+            -webkit-touch-callout: none !important;
+            -webkit-user-select: none !important;
+            -khtml-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            user-select: none !important;
+            -webkit-tap-highlight-color: transparent !important;
         }
 
         .tiktok-modal-overlay.active {
@@ -150,8 +165,12 @@
         .tiktok-video-container {
             flex: 1;
             position: relative;
-            width: 100%;
-            height: 100%;
+            width: 100% !important;
+            height: 100% !important;
+            max-width: none !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            box-sizing: border-box !important;
             background: #000;
             overflow: hidden;
             display: flex;
@@ -202,8 +221,10 @@
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            width: 100% !important;
+            height: 100% !important;
+            max-width: none !important;
+            max-height: none !important;
             object-fit: contain;
             cursor: pointer;
             z-index: 1;
@@ -220,8 +241,10 @@
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            width: 100% !important;
+            height: 100% !important;
+            max-width: none !important;
+            max-height: none !important;
             object-fit: contain;
             z-index: 2;
             pointer-events: none;
@@ -601,18 +624,361 @@
             background: rgba(255, 255, 255, 0.2); color: white;
         }
 
-        /* --- 移动端适配 (Refined) --- */
-        @media (max-width: 768px) {
-            .tiktok-close-btn { top: 12px; right: 12px; width: 36px; height: 36px; }
-            .tiktok-unread-toggle { top: 12px; right: 56px; height: 36px; padding: 0 12px; }
-            .tiktok-video-count { top: 14px; left: 14px; padding: 6px 12px; font-size: 0.75rem; }
-            .tiktok-actions { bottom: 110px; right: 10px; gap: 20px; }
-            .tiktok-video-info { bottom: 65px; left: 14px; right: 80px; }
-            .tiktok-video-info h3 { font-size: 0.95rem; }
-            .tiktok-action-icon { width: 44px; height: 44px; }
-            .tiktok-action-icon svg { width: 24px; height: 24px; }
-            .tiktok-original-link { bottom: 20px; right: 15px; }
+        /* --- 音量控制样式 (水平版) --- */
+        .tiktok-volume-control {
+            position: absolute;
+            left: 16px;
+            bottom: 140px; /* 与右侧按钮底部对齐 */
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 2147483648;
+            transition: all 0.3s var(--ease-smooth);
+            padding: 8px;
+            border-radius: 30px;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(4px);
         }
+
+        .tiktok-volume-control:hover,
+        .tiktok-volume-control.active {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+        }
+
+        .tiktok-volume-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s var(--ease-smooth);
+            flex-shrink: 0;
+        }
+
+        .tiktok-volume-control:hover .tiktok-volume-btn {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .tiktok-volume-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: #fff;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        }
+
+        .tiktok-volume-btn.muted svg {
+            fill: rgba(255, 255, 255, 0.5);
+        }
+
+        .tiktok-volume-slider-container {
+            width: 0;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            transition: width 0.3s var(--ease-smooth), opacity 0.3s var(--ease-smooth);
+            opacity: 0;
+        }
+
+        .tiktok-volume-control:hover .tiktok-volume-slider-container,
+        .tiktok-volume-control.active .tiktok-volume-slider-container {
+            width: 80px;
+            opacity: 1;
+            margin-right: 8px;
+        }
+
+        .tiktok-volume-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .tiktok-volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 14px;
+            height: 14px;
+            background: #fff;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+            transition: transform 0.2s ease;
+        }
+        
+        .tiktok-volume-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        /* --- 顶部控制栏 & 设置面板 --- */
+        .tiktok-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 16px 20px;
+            padding-top: calc(16px + env(safe-area-inset-top));
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 2147483648;
+            pointer-events: none; /* 让点击穿透到遮罩关闭 */
+        }
+
+        .tiktok-header > * {
+            pointer-events: auto; /* 恢复按钮点击 */
+        }
+
+        .tiktok-header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .tiktok-settings-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s var(--ease-smooth);
+        }
+
+        .tiktok-settings-btn:hover, .tiktok-settings-btn.active {
+            background: var(--glass-bg-hover);
+            transform: rotate(45deg);
+        }
+
+        .tiktok-settings-btn svg {
+            width: 22px;
+            height: 22px;
+            fill: white;
+        }
+        
+        /* 复用关闭按钮样式，微调位置 */
+        .tiktok-close-btn {
+            position: static; /* 由 header 管理布局 */
+            border: none;
+            width: 40px;
+            height: 40px;
+        }
+
+        /* 设置面板 */
+        .tiktok-settings-panel {
+            position: absolute;
+            top: 70px;
+            right: 20px;
+            top: calc(70px + env(safe-area-inset-top));
+            width: 240px;
+            background: rgba(20, 20, 20, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            opacity: 0;
+            transform: translateY(-10px) scale(0.95);
+            pointer-events: none;
+            transition: all 0.25s var(--ease-smooth);
+            z-index: 2147483649;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+
+        .tiktok-settings-panel.active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+
+        .tiktok-setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.2s;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .tiktok-setting-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .tiktok-setting-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tiktok-setting-label svg {
+            width: 18px;
+            height: 18px;
+            fill: rgba(255, 255, 255, 0.7);
+        }
+
+        /* 开关样式复用并微调 */
+        .setting-switch {
+            width: 40px;
+            height: 24px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            position: relative;
+            transition: background 0.3s;
+        }
+
+        .setting-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: #fff;
+            border-radius: 50%;
+            transition: transform 0.3s var(--ease-elastic);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .tiktok-setting-item.active .setting-switch {
+            background: var(--primary-cyan); /* 默认用青色，更现代 */
+        }
+        
+        .tiktok-setting-item[data-type="unread"].active .setting-switch {
+            background: var(--primary-red); /* 未读用红色强调 */
+        }
+
+        .tiktok-setting-item.active .setting-switch::after {
+            transform: translateX(16px);
+        }
+
+        /* --- 暂停图标 & 倍速提示 --- */
+        .tiktok-overlay-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.5);
+            width: 80px;
+            height: 80px;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            opacity: 0;
+            transition: all 0.2s var(--ease-elastic);
+            z-index: 2147483648;
+        }
+
+        .tiktok-overlay-icon.visible {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+        
+        .tiktok-overlay-icon svg {
+            width: 40px;
+            height: 40px;
+            fill: rgba(255, 255, 255, 0.9);
+        }
+
+        .tiktok-speed-overlay {
+            position: absolute;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 8px 16px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            opacity: 0;
+            transition: opacity 0.2s;
+            z-index: 2147483648;
+            pointer-events: none;
+        }
+
+        .tiktok-speed-overlay.visible {
+            opacity: 1;
+        }
+
+        .tiktok-speed-overlay svg {
+            width: 16px;
+            height: 16px;
+            fill: white;
+        }
+
+        .tiktok-debug-btn {
+            padding: 6px 12px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            /* 布局调整 */
+            display: flex;
+            align-items: center;
+            height: 32px;
+            margin-right: 4px;
+        }
+
+        .tiktok-debug-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: rgba(255, 255, 255, 0.9);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* --- 移动端适配调整 --- */
+        @media (max-width: 768px) {
+            .tiktok-header { padding: 12px 16px; }
+            .tiktok-settings-btn, .tiktok-close-btn { width: 36px; height: 36px; }
+            .tiktok-video-count { position: static; background: rgba(0,0,0,0.3); padding: 4px 10px; font-size: 12px; }
+            
+            /* 移动端隐藏 Log 文字，只留图标或简写，防止挤压 */
+            .tiktok-debug-btn { 
+                padding: 0 8px; 
+                font-size: 10px; 
+                background: transparent; 
+                border: none;
+            }
+            
+            .tiktok-volume-control { bottom: 110px; left: 10px; }
+            .tiktok-actions { bottom: 110px; right: 10px; }
+            
+            /* 移动端音量条展开更宽一点，方便触摸 */
+            .tiktok-volume-control.active .tiktok-volume-slider-container { width: 100px; }
+        }
+
     `;
 
 
@@ -631,39 +997,13 @@
             this.videoElement = null;
             this.isLiked = false;
 
-            // ========================================
-            // 🚀 Blob 预取系统 (iOS Safari 兼容)
-            // ========================================
-            this.blobCache = new Map(); // { realVideoUrl: { blob, objectUrl, timestamp, isPartial } }
-            this.frameCache = new Map(); // { realVideoUrl: imageDataUrl (首帧截图) }
-            this.videoUrlCache = new Map(); // { pageUrl: realVideoUrl }
-            this.PREFETCH_SIZE = 3 * 1024 * 1024; // 预下载 3MB（约10-15秒视频）
-            this.MAX_BLOB_CACHE_SIZE = 5; // Blob 缓存数量限制
-            this.prefetchQueue = []; // 预取队列
-            this.isPrefetching = false; // 预取锁
+            this.videoUrlCache = new Map();
             
-            // 平台检测 (增强版Safari/iOS检测)
             this.isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
-                         (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); // iPad Pro with iPadOS
+                         (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
             this.isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent) ||
                             (/AppleWebKit/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent));
             this.isIOSSafari = this.isIOS && this.isSafari;
-            
-            // iOS版本检测 (用于针对特定版本的workaround)
-            this.iOSVersion = (() => {
-                const match = navigator.userAgent.match(/OS (\d+)_(\d+)/);
-                return match ? parseFloat(`${match[1]}.${match[2]}`) : 0;
-            })();
-            
-            // Safari对Blob URL的支持状态
-            // iOS 15-17有严重的Blob URL问题，iOS 18+已修复
-            this.safariHasBlobIssues = this.isIOSSafari && this.iOSVersion >= 15 && this.iOSVersion < 18;
-            
-            // 旧系统兼容 (将逐步废弃)
-            this.preloadCache = new Map();
-            this.PRELOAD_BYTES = 1024 * 1024;
-            this.MAX_CACHE_SIZE = 10;
-            this.lastPreloadedIndex = -1;
 
             // 动画状态
             this.isTransitioning = false;
@@ -684,8 +1024,27 @@
             // 只看未读模式
             this.unreadOnlyMode = false;
 
+            // 循环播放模式
+            this.isLooping = false;
+
+            // 音量控制
+            this.VOLUME_STORAGE_KEY = 'tiktok_modal_volume';
+            this.currentVolume = this.loadSavedVolume();
+            this.isMuted = false;
+
+            this.PERF_MODE_KEY = 'tiktok_modal_perf_mode';
+            this.perfModeEnabled = this.loadPerfMode();
+
             // Debug模式开关
             this.debugMode = false;
+
+            // 统计数据
+            this.stats = {
+                mp4: 0,
+                failed: 0,
+                total: 0,
+                parsedHistory: []
+            };
 
             this.init();
         }
@@ -715,12 +1074,12 @@
 
             // 创建模态框DOM (立即可用)
             this.createModalDOM();
+            
+            // 创建 Debug 按钮
+            this.createDebugButton();
 
             // 绑定事件
             this.bindEvents();
-
-            // 初始化可视区域观察者 (用于智能预加载)
-            this.initViewportObserver();
 
             // 异步收集视频列表 - 不阻塞模态框初始化
             this.scheduleVideoCollection();
@@ -729,6 +1088,63 @@
             this.setupMutationObserver();
 
             console.log('🎬 TikTok Modal Player 初始化完成 - 模态框已就绪');
+        }
+
+        createDebugButton() {
+            const btn = document.createElement('div');
+            btn.className = 'tiktok-debug-btn';
+            btn.textContent = 'Log'; // 简化文字
+            btn.title = '点击复制调试日志';
+            
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.copyDebugLogs();
+            });
+
+            const modal = document.getElementById('tiktok-modal');
+            if (modal) {
+                // 尝试插入到 header 右侧容器
+                const headerRight = modal.querySelector('.tiktok-header-right');
+                if (headerRight) {
+                    // 插入到第一个位置（在设置按钮左边）
+                    headerRight.insertBefore(btn, headerRight.firstChild);
+                } else {
+                    modal.appendChild(btn);
+                }
+            }
+        }
+
+        copyDebugLogs() {
+            const report = [
+                `=== Twitter Video Player Debug Log ===`,
+                `Time: ${new Date().toLocaleString()}`,
+                `UA: ${navigator.userAgent}`,
+                `Platform: ${navigator.platform}`,
+                `Version: ${GM_info?.script?.version || 'Unknown'}`,
+                ``,
+                `=== Statistics ===`,
+                `Total Parsed: ${this.stats.total}`,
+                `MP4: ${this.stats.mp4}`,
+                `Failed: ${this.stats.failed}`,
+                `Platform: ${this.isIOS ? 'iOS' : 'Other'} / ${this.isSafari ? 'Safari' : 'Non-Safari'}`,
+                ``,
+                `=== Recent Parsed Videos (Last 20) ===`,
+                ...this.stats.parsedHistory.slice(-20).map(item => 
+                    `[${item.time}] ${item.type.toUpperCase()}: ${item.url.slice(-50)}`
+                )
+            ].join('\n');
+
+            navigator.clipboard.writeText(report).then(() => {
+                const originalText = document.querySelector('.tiktok-debug-btn').textContent;
+                document.querySelector('.tiktok-debug-btn').textContent = '✅ Copied!';
+                setTimeout(() => {
+                    if(document.querySelector('.tiktok-debug-btn')) 
+                        document.querySelector('.tiktok-debug-btn').textContent = originalText;
+                }, 2000);
+            }).catch(err => {
+                console.error('Copy failed', err);
+                alert('复制失败，请查看控制台');
+            });
         }
 
         setupMutationObserver() {
@@ -862,14 +1278,10 @@
 
                 hasNewPreload = true;
                 try {
-                    // 仅解析真实URL，存入缓存
                     const realUrl = await this.fetchRealVideoUrl(video.url);
                     if (realUrl) {
                         this.videoUrlCache.set(video.url, realUrl);
-                        // 启动 Blob 预取
-                        this.warmupVideoConnection(realUrl);
                     }
-                    // 减少间隔，加速预热队列的处理
                     await new Promise(r => setTimeout(r, 100));
                 } catch (e) {
                     console.error('列表预解析失败:', video.url, e);
@@ -879,194 +1291,6 @@
             this.isListPreloading = false;
             if (hasNewPreload) {
                 console.log('✨ 列表预解析完成 (新缓存已更新)');
-            }
-        }
-
-        // 🚀 新版预热：优先使用 GM_xmlhttpRequest 绕过 CORS
-        async warmupVideoConnection(url) {
-            if (this.videoElement && this.videoElement.readyState < 3 && this.videoElement.src) {
-                return;
-            }
-
-            if (this.blobCache.has(url)) {
-                return;
-            }
-            
-            // Safari有Blob问题时，跳过部分预取，只预热URL解析
-            if (this.safariHasBlobIssues) {
-                console.log(`📡 [Safari] 跳过Blob预取，使用流式模式: ${url.slice(-40)}`);
-                return;
-            }
-
-            console.log(`🚀 [Blob预取] 开始: ${url.slice(-40)}`);
-
-            const handleSuccess = (blob, isPartial) => {
-                const objectUrl = URL.createObjectURL(blob);
-                this.manageBlobCacheSize();
-                this.blobCache.set(url, {
-                    blob,
-                    objectUrl,
-                    timestamp: Date.now(),
-                    isPartial
-                });
-                console.log(`✅ [Blob预取] 完成: ${(blob.size / 1024 / 1024).toFixed(2)}MB${isPartial ? ' (部分)' : ''}`);
-                
-                if (!isPartial || !this.isSafari) {
-                    this.extractFirstFrame(objectUrl, url);
-                }
-            };
-
-            // 尝试使用 GM_xmlhttpRequest (最强能力)
-            if (typeof GM_xmlhttpRequest !== 'undefined') {
-                try {
-                    GM_xmlhttpRequest({
-                        method: 'GET',
-                        url: url,
-                        headers: { 'Range': `bytes=0-${this.PREFETCH_SIZE - 1}` },
-                        responseType: 'blob',
-                        onload: (response) => {
-                            if (response.status >= 200 && response.status < 300) {
-                                handleSuccess(response.response, response.status === 206);
-                            } else {
-                                console.warn(`⚠️ [GM预取] 状态码 ${response.status}, 降级到 fetch`);
-                                this.warmupWithFetch(url, handleSuccess);
-                            }
-                        },
-                        onerror: (e) => {
-                            console.warn(`⚠️ [GM预取] 错误, 降级到 fetch:`, e);
-                            this.warmupWithFetch(url, handleSuccess);
-                        },
-                        ontimeout: () => {
-                            console.log('⏱️ [GM预取] 超时');
-                        },
-                        timeout: 20000
-                    });
-                    return; // GM 请求已发送
-                } catch (e) {
-                    console.warn('⚠️ [GM预取] 异常, 降级到 fetch:', e);
-                }
-            }
-
-            // 降级方案
-            await this.warmupWithFetch(url, handleSuccess);
-        }
-
-        async warmupWithFetch(url, onSuccess) {
-            try {
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 10000);
-
-                const response = await fetch(url, {
-                    headers: { 'Range': `bytes=0-${this.PREFETCH_SIZE - 1}` },
-                    signal: controller.signal,
-                    cache: 'no-store',
-                    referrerPolicy: 'no-referrer'
-                });
-
-                clearTimeout(timeoutId);
-
-                if (!response.ok && response.status !== 206) {
-                    throw new Error(`HTTP ${response.status}`);
-                }
-
-                const blob = await response.blob();
-                onSuccess(blob, response.status === 206);
-
-            } catch (error) {
-                if (error.name === 'AbortError') {
-                    console.log(`⏱️ [Fetch预取] 超时: ${url.slice(-30)}`);
-                } else {
-                    console.error(`❌ [Fetch预取] 失败:`, error);
-                }
-            }
-        }
-
-        extractFirstFrame(videoSrc, cacheKey) {
-            return new Promise((resolve) => {
-                if (this.safariHasBlobIssues && videoSrc.startsWith('blob:')) {
-                    resolve(null);
-                    return;
-                }
-                
-                const video = document.createElement('video');
-                video.muted = true;
-                video.playsInline = true;
-                video.crossOrigin = 'anonymous';
-                video.preload = 'metadata';
-                video.setAttribute('webkit-playsinline', '');
-
-                const cleanup = () => {
-                    video.src = '';
-                    video.load();
-                };
-
-                const extractFrame = async () => {
-                    try {
-                        if (this.isSafari) {
-                            await new Promise(r => setTimeout(r, 100));
-                        }
-                        
-                        const canvas = document.createElement('canvas');
-                        canvas.width = video.videoWidth || 640;
-                        canvas.height = video.videoHeight || 360;
-
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(video, 0, 0);
-
-                        const frameDataUrl = canvas.toDataURL('image/jpeg', 0.8);
-                        this.frameCache.set(cacheKey, frameDataUrl);
-
-                        console.log(`🖼️ [首帧] 已提取: ${canvas.width}x${canvas.height}`);
-                        resolve(frameDataUrl);
-                    } catch (e) {
-                        resolve(null);
-                    }
-                    cleanup();
-                };
-
-                video.onloadeddata = extractFrame;
-
-                video.onerror = () => {
-                    cleanup();
-                    resolve(null);
-                };
-
-                setTimeout(() => {
-                    if (!this.frameCache.has(cacheKey)) {
-                        cleanup();
-                        resolve(null);
-                    }
-                }, 5000);
-
-                video.src = videoSrc;
-            });
-        }
-
-        manageBlobCacheSize() {
-            // 获取当前正在播放的真实URL (防止误删)
-            const currentVideo = this.getActiveVideoList()[this.currentVideoIndex];
-            const currentRealUrl = currentVideo ? this.videoUrlCache.get(currentVideo.url) : null;
-
-            if (this.blobCache.size >= this.MAX_BLOB_CACHE_SIZE) {
-                const entries = [...this.blobCache.entries()]
-                    .sort((a, b) => a[1].timestamp - b[1].timestamp);
-
-                // 过滤掉当前正在播放的视频
-                const candidates = entries.filter(([key]) => key !== currentRealUrl);
-
-                // 如果过滤后没有可删除的了，就暂时不删
-                if (candidates.length === 0) return;
-
-                // 计算需要删除的数量
-                const deleteCount = Math.max(0, this.blobCache.size - this.MAX_BLOB_CACHE_SIZE + 1);
-                const toRemove = candidates.slice(0, deleteCount);
-
-                for (const [key, value] of toRemove) {
-                    URL.revokeObjectURL(value.objectUrl);
-                    this.blobCache.delete(key);
-                    this.frameCache.delete(key);
-                    console.log(`🗑️ [缓存] LRU淘汰: ${key.slice(-30)}`);
-                }
             }
         }
 
@@ -1081,40 +1305,88 @@
             modal.className = 'tiktok-modal-overlay';
             modal.id = 'tiktok-modal';
 
-            modal.innerHTML = `
-                <div class="tiktok-video-count" id="tiktok-count">1 / 1</div>
+            // Disable context menu to prevent conflicts with long press
+            modal.oncontextmenu = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            };
 
-                <div class="tiktok-unread-toggle" id="tiktok-unread-toggle" title="只看未读">
-                    <span>未读</span>
-                    <div class="toggle-switch"></div>
+            modal.innerHTML = `
+                <!-- 顶部控制栏 -->
+                <div class="tiktok-header">
+                    <div class="tiktok-header-left">
+                        <div class="tiktok-video-count" id="tiktok-count">1 / 1</div>
+                    </div>
+                    <div class="tiktok-header-right">
+                        <button class="tiktok-settings-btn" id="tiktok-settings-btn" title="设置">
+                            <svg viewBox="0 0 24 24"><path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.06-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.06,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/></svg>
+                        </button>
+                        <button class="tiktok-close-btn" id="tiktok-close" aria-label="关闭">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
 
-                <button class="tiktok-close-btn" id="tiktok-close" aria-label="关闭">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-                    </svg>
-                </button>
-
-<div class="tiktok-video-container" id="tiktok-container">
-                        <div class="tiktok-loading" id="tiktok-loading">
-                            <div class="tiktok-loading-spinner"></div>
-                            <div class="tiktok-loading-text">加载中...</div>
+                <!-- 设置面板 -->
+                <div class="tiktok-settings-panel" id="tiktok-settings-panel">
+                    <div class="tiktok-setting-item" id="tiktok-perf-toggle" data-type="perf">
+                        <div class="tiktok-setting-label">
+                            <svg viewBox="0 0 24 24"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4zM11 20v-5.5H9L13 7v5.5h2L11 20z"/></svg>
+                            <span>低功耗模式</span>
                         </div>
-
-                        <div class="tiktok-error" id="tiktok-error">
-                            <svg viewBox="0 0 24 24">
-                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
-                            </svg>
-                            <h3>视频加载失败</h3>
-                            <p>无法加载视频,请尝试在原页面观看</p>
-                            <button class="tiktok-error-btn" id="tiktok-retry">重试</button>
+                        <div class="setting-switch"></div>
+                    </div>
+                    
+                    <div class="tiktok-setting-item" id="tiktok-unread-toggle" data-type="unread">
+                        <div class="tiktok-setting-label">
+                            <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                            <span>只看未读</span>
                         </div>
+                        <div class="setting-switch"></div>
+                    </div>
 
-                        <!-- 双层渲染：缩略图层（立即显示） -->
-                        <img class="tiktok-thumbnail-layer" id="tiktok-thumbnail" alt="" />
+                    <div class="tiktok-setting-item" id="tiktok-loop-toggle" data-type="loop">
+                        <div class="tiktok-setting-label">
+                            <svg viewBox="0 0 24 24"><path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/></svg>
+                            <span>循环播放</span>
+                        </div>
+                        <div class="setting-switch"></div>
+                    </div>
+                </div>
 
-                        <!-- 双层渲染：视频层（背后加载） -->
-                        <video class="tiktok-video-player" id="tiktok-player" playsinline webkit-playsinline x5-playsinline preload="metadata" muted referrerpolicy="no-referrer"></video>
+                <div class="tiktok-video-container" id="tiktok-container">
+                    <!-- 交互反馈覆盖层 -->
+                    <div class="tiktok-overlay-icon" id="tiktok-pause-icon">
+                        <svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                    </div>
+                    
+                    <div class="tiktok-speed-overlay" id="tiktok-speed-overlay">
+                        <svg viewBox="0 0 24 24"><path d="M10 8v8l6-4-6-4zm9-5H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 9.5l-2.5 1.5V11H12v2.5L9.5 12 12 10.5V13h3.5v-2.5L18 12.5z"/></svg>
+                        <span>2x 倍速中</span>
+                    </div>
+
+                    <div class="tiktok-loading" id="tiktok-loading">
+                        <div class="tiktok-loading-spinner"></div>
+                        <div class="tiktok-loading-text">加载中...</div>
+                    </div>
+
+                    <div class="tiktok-error" id="tiktok-error">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                        </svg>
+                        <h3>视频加载失败</h3>
+                        <p>无法加载视频,请尝试在原页面观看</p>
+                        <button class="tiktok-error-btn" id="tiktok-retry">重试</button>
+                    </div>
+
+                    <!-- 双层渲染：缩略图层（立即显示） -->
+                    <img class="tiktok-thumbnail-layer" id="tiktok-thumbnail" alt="" />
+
+                    <!-- 双层渲染：视频层（背后加载） -->
+                    <video class="tiktok-video-player" id="tiktok-player" playsinline webkit-playsinline x5-playsinline preload="metadata" muted referrerpolicy="no-referrer"></video>
 
                     <div class="tiktok-progress-container" id="tiktok-progress-container">
                         <div class="tiktok-progress-bar" id="tiktok-progress-bar">
@@ -1125,6 +1397,17 @@
 
                     <div class="tiktok-video-info" id="tiktok-info">
                         <h3 id="tiktok-title">视频标题</h3>
+                    </div>
+
+                    <div class="tiktok-volume-control" id="tiktok-volume-control">
+                        <div class="tiktok-volume-btn" id="tiktok-volume-btn" title="静音/取消静音">
+                            <svg id="tiktok-volume-icon" viewBox="0 0 24 24">
+                                <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+                            </svg>
+                        </div>
+                        <div class="tiktok-volume-slider-container">
+                            <input type="range" class="tiktok-volume-slider" id="tiktok-volume-slider" min="0" max="1" step="0.05" value="1">
+                        </div>
                     </div>
 
                     <div class="tiktok-actions" id="tiktok-actions">
@@ -1170,11 +1453,21 @@
                 this.closeModal();
             });
 
-            // 点击背景关闭
+            // 点击背景关闭 & 设置面板关闭逻辑
             const modal = document.getElementById('tiktok-modal');
             modal.addEventListener('click', (e) => {
                 if (e.target.id === 'tiktok-modal') {
                     this.closeModal();
+                }
+                
+                // 点击非设置区域关闭设置面板
+                const settingsPanel = document.getElementById('tiktok-settings-panel');
+                const settingsBtn = document.getElementById('tiktok-settings-btn');
+                if (settingsPanel && settingsPanel.classList.contains('active')) {
+                    if (!settingsPanel.contains(e.target) && !settingsBtn.contains(e.target)) {
+                        settingsPanel.classList.remove('active');
+                        settingsBtn.classList.remove('active');
+                    }
                 }
             });
 
@@ -1183,13 +1476,52 @@
                 this.loadVideo(this.currentVideoIndex);
             });
 
-            // 只看未读切换按钮
-            const unreadToggle = document.getElementById('tiktok-unread-toggle');
-            unreadToggle.addEventListener('click', () => this.toggleUnreadMode());
-            unreadToggle.addEventListener('touchend', (e) => {
+            // 设置按钮
+            const settingsBtn = document.getElementById('tiktok-settings-btn');
+            const settingsPanel = document.getElementById('tiktok-settings-panel');
+            
+            const toggleSettings = (e) => {
                 e.preventDefault();
-                this.toggleUnreadMode();
+                e.stopPropagation();
+                const isActive = settingsPanel.classList.toggle('active');
+                settingsBtn.classList.toggle('active', isActive);
+            };
+
+            settingsBtn.addEventListener('click', toggleSettings);
+            settingsBtn.addEventListener('touchend', toggleSettings);
+
+            // 防止点击面板内部触发关闭
+            settingsPanel.addEventListener('click', (e) => e.stopPropagation());
+            settingsPanel.addEventListener('touchend', (e) => e.stopPropagation());
+
+            // 设置项点击处理 (事件委托)
+            const handleSettingClick = (type) => {
+                switch(type) {
+                    case 'perf':
+                        this.togglePerfMode();
+                        break;
+                    case 'unread':
+                        this.toggleUnreadMode();
+                        break;
+                    case 'loop':
+                        this.toggleLoopMode();
+                        break;
+                }
+                this.updateSettingsUI();
+            };
+
+            document.querySelectorAll('.tiktok-setting-item').forEach(item => {
+                const handler = (e) => {
+                    e.preventDefault();
+                    e.stopPropagation(); // 防止冒泡关闭面板
+                    handleSettingClick(item.dataset.type);
+                };
+                item.addEventListener('click', handler);
+                item.addEventListener('touchend', handler);
             });
+
+            // 初始化设置UI状态
+            this.updateSettingsUI();
 
             // 键盘导航
             document.addEventListener('keydown', (e) => {
@@ -1200,14 +1532,20 @@
                         this.closeModal();
                         break;
                     case 'ArrowUp':
-                    case 'ArrowLeft':
                         e.preventDefault();
                         this.previousVideo();
                         break;
                     case 'ArrowDown':
-                    case 'ArrowRight':
                         e.preventDefault();
                         this.nextVideo();
+                        break;
+                    case 'ArrowLeft':
+                        e.preventDefault();
+                        this.seekBy(-5);
+                        break;
+                    case 'ArrowRight':
+                        e.preventDefault();
+                        this.seekBy(5);
                         break;
                     case ' ':
                         e.preventDefault();
@@ -1232,6 +1570,7 @@
 
             container.addEventListener('touchmove', (e) => {
                 if (!this.isDragging) return;
+                if (this.isProgressDragging) return;
 
                 const touchY = e.touches[0].clientY;
                 const touchX = e.touches[0].clientX;
@@ -1348,14 +1687,40 @@
 
             // 进度条交互
             this.setupProgressBarInteraction();
+
+            // 音量控制交互
+            this.setupVolumeControl();
+        }
+
+        updateSettingsUI() {
+            // 更新设置面板中各个开关的状态
+            const perfItem = document.querySelector('.tiktok-setting-item[data-type="perf"]');
+            const unreadItem = document.querySelector('.tiktok-setting-item[data-type="unread"]');
+            const loopItem = document.querySelector('.tiktok-setting-item[data-type="loop"]');
+
+            if (perfItem) perfItem.classList.toggle('active', this.perfModeEnabled);
+            if (unreadItem) unreadItem.classList.toggle('active', this.unreadOnlyMode);
+            if (loopItem) loopItem.classList.toggle('active', this.isLooping);
+        }
+
+        toggleLoopMode() {
+            this.isLooping = !this.isLooping;
+            console.log(`🔁 循环播放: ${this.isLooping ? '开启' : '关闭'}`);
+            if (this.videoElement) {
+                this.videoElement.loop = this.isLooping;
+            }
+        }
+
+        seekBy(seconds) {
+            if (this.videoElement && this.videoElement.duration) {
+                const newTime = Math.max(0, Math.min(this.videoElement.duration, this.videoElement.currentTime + seconds));
+                this.videoElement.currentTime = newTime;
+                this.updateProgressBar();
+            }
         }
 
         // 绑定视频播放器相关的所有事件
         bindVideoPlayerEvents(videoEl) {
-            // 清除旧的事件监听器 (如果需要完全重置，可以考虑 cloneNode，但这里我们主要依靠新元素是新的)
-            // 注意：如果传入的是已经绑定过的元素，可能会导致重复绑定，但在"换头"策略中，
-            // 预热的元素是全新的，没有任何业务逻辑绑定，所以是安全的。
-
             // 视频加载完成
             videoEl.addEventListener('loadedmetadata', () => {
                 if (this.loadStartTime) {
@@ -1363,6 +1728,12 @@
                 }
                 this.hideLoading();
                 this.updateTimeDisplay();
+                // 恢复之前的倍速设置
+                if (this.isSpeeding) {
+                    videoEl.playbackRate = 2.0;
+                }
+                // 应用循环设置
+                videoEl.loop = this.isLooping;
             });
 
             videoEl.addEventListener('loadeddata', () => {
@@ -1388,20 +1759,7 @@
                 }
 
                 const currentVideo = this.getCurrentVideo();
-                const currentSrc = videoEl.src;
                 
-                // Safari Blob URL失败时，立即回退到流式URL
-                if (this.isSafari && currentSrc && currentSrc.startsWith('blob:') && currentVideo) {
-                    const realUrl = this.videoUrlCache.get(currentVideo.url);
-                    if (realUrl && !realUrl.startsWith('blob:')) {
-                        console.log('🔄 [Safari] Blob URL失败，回退到流式URL');
-                        this.blobCache.delete(realUrl);
-                        videoEl.src = realUrl;
-                        videoEl.load();
-                        return;
-                    }
-                }
-
                 if (this.retryCount < this.MAX_RETRIES) {
                     this.retryCount++;
                     const delay = Math.pow(2, this.retryCount) * 1000;
@@ -1412,12 +1770,6 @@
                         if (this.videoUrlCache.has(currentVideo.url)) {
                             console.log('🧹 清除可能的过期URL缓存');
                             this.videoUrlCache.delete(currentVideo.url);
-                        }
-                        
-                        const cachedRealUrl = this.videoUrlCache.get(currentVideo.url);
-                        if (cachedRealUrl && this.blobCache.has(cachedRealUrl)) {
-                            console.log('🧹 清除失败的Blob缓存');
-                            this.blobCache.delete(cachedRealUrl);
                         }
 
                         if (this.retryTimeoutId) {
@@ -1430,7 +1782,7 @@
                                 return;
                             }
                             console.log('🔁 发起重试...');
-                            this.loadVideoSource(currentVideo.url);
+                            this.loadVideo(this.currentVideoIndex); // 重新加载完整流程
                         }, delay);
                         return;
                     }
@@ -1440,15 +1792,114 @@
             });
 
             videoEl.addEventListener('ended', () => {
-                // 自动播放下一个视频
-                this.nextVideo();
+                if (this.isLooping) {
+                    // 循环播放已由 video.loop 属性处理，这里作为备用
+                    videoEl.play();
+                } else {
+                    // 自动播放下一个视频
+                    this.nextVideo();
+                }
             });
 
-            // 点击视频播放/暂停
-            videoEl.addEventListener('click', (e) => {
-                e.stopPropagation();
-                this.togglePlay();
-            });
+            // 点击视频播放/暂停 (与长按逻辑区分)
+            let pressTimer = null;
+            let isLongPress = false;
+            const container = document.getElementById('tiktok-container');
+
+            const startPress = (e) => {
+                // 忽略非主按键
+                if (e.type === 'mousedown' && e.button !== 0) return;
+                
+                // 忽略控件上的点击
+                if (e.target.closest('.tiktok-volume-control, .tiktok-actions, .tiktok-progress-container, .tiktok-header')) return;
+
+                isLongPress = false;
+                pressTimer = setTimeout(() => {
+                    isLongPress = true;
+                    this.enableSpeedMode();
+                }, 500); // 长按 500ms 触发
+            };
+
+            const endPress = (e) => {
+                if (pressTimer) {
+                    clearTimeout(pressTimer);
+                    pressTimer = null;
+                }
+
+                if (isLongPress) {
+                    // 如果是长按结束，恢复倍速
+                    this.disableSpeedMode();
+                    e.preventDefault();
+                    e.stopPropagation();
+                } else {
+                    // 如果不是长按，且是在视频/容器上触发的，则切换播放
+                    // (click事件会处理，但为了防止冲突，这里不做处理，交给 click)
+                }
+            };
+
+            // 使用容器监听以覆盖整个区域
+            if (container) {
+                // 清除旧监听器（如果有）
+                // ... (简化，直接添加)
+                
+                container.addEventListener('mousedown', startPress);
+                container.addEventListener('mouseup', endPress);
+                container.addEventListener('mouseleave', endPress);
+
+                container.addEventListener('touchstart', startPress, { passive: true });
+                container.addEventListener('touchend', endPress, { passive: true });
+                container.addEventListener('touchcancel', endPress, { passive: true });
+                
+                // 点击事件：只处理非长按
+                container.addEventListener('click', (e) => {
+                    if (isLongPress) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        isLongPress = false; 
+                        return;
+                    }
+                    
+                    // 忽略控件点击
+                    if (e.target.closest('.tiktok-volume-control, .tiktok-actions, .tiktok-progress-container, .tiktok-header, .tiktok-settings-panel')) return;
+                    
+                    this.togglePlay();
+                });
+            }
+        }
+
+        enableSpeedMode() {
+            if (!this.videoElement || this.isSpeeding) return;
+            this.isSpeeding = true;
+            this.videoElement.playbackRate = 2.0;
+            this.showSpeedOverlay();
+        }
+
+        disableSpeedMode() {
+            if (!this.videoElement || !this.isSpeeding) return;
+            this.isSpeeding = false;
+            this.videoElement.playbackRate = 1.0;
+            this.hideSpeedOverlay();
+        }
+
+        showSpeedOverlay() {
+            const overlay = document.getElementById('tiktok-speed-overlay');
+            if (overlay) overlay.classList.add('visible');
+        }
+
+        hideSpeedOverlay() {
+            const overlay = document.getElementById('tiktok-speed-overlay');
+            if (overlay) overlay.classList.remove('visible');
+        }
+
+        showPauseIcon() {
+            const icon = document.getElementById('tiktok-pause-icon');
+            if (icon) {
+                icon.classList.add('visible');
+                // 动画结束后移除
+                setTimeout(() => {
+                    icon.classList.remove('visible');
+                }, 500);
+            }
         }
 
         // 进度条更新
@@ -1551,6 +2002,7 @@
             container.addEventListener('touchstart', (e) => {
                 // 阻止事件冒泡，防止触发视频切换
                 e.stopPropagation();
+                this.isDragging = false;
 
                 const touch = e.touches[0];
                 this.isProgressDragging = true;
@@ -1915,10 +2367,10 @@
             // iOS Safari: 恢复状态栏颜色
             this.restoreThemeColor();
 
-            // 停止视频播放
             if (this.videoElement) {
                 this.videoElement.pause();
                 this.videoElement.src = '';
+                this.videoElement.load();
             }
         }
 
@@ -1998,10 +2450,7 @@
             videoLayer.classList.remove('visible');
 
             const realUrl = this.videoUrlCache.get(video.url);
-            if (realUrl && this.frameCache.has(realUrl)) {
-                thumbnailLayer.src = this.frameCache.get(realUrl);
-                console.log(`⚡ [秒开] 首帧已显示: ${Date.now() - this.loadStartTime}ms`);
-            } else if (video.thumbnail) {
+            if (video.thumbnail) {
                 thumbnailLayer.src = video.thumbnail;
             } else {
                 thumbnailLayer.src = '';
@@ -2039,92 +2488,22 @@
                     return;
                 }
 
-                let videoSrc = realUrl;
-                const cached = this.blobCache.get(realUrl);
-
-                // Safari/iOS 15-17对部分Blob有严重问题，使用流式URL代替
-                const shouldUseStreamingUrl = this.safariHasBlobIssues && cached && cached.isPartial;
-                
-                if (cached && !shouldUseStreamingUrl) {
-                    videoSrc = cached.objectUrl;
-                    console.log(`💾 [Blob缓存] 命中: ${(cached.blob.size / 1024 / 1024).toFixed(2)}MB`);
-                } else if (shouldUseStreamingUrl) {
-                    console.log(`📡 [Safari兼容] 跳过部分Blob，使用流式URL`);
-                }
-
                 const videoLayer = document.getElementById('tiktok-player');
                 const thumbnailLayer = document.getElementById('tiktok-thumbnail');
                 const loadingLayer = document.getElementById('tiktok-loading');
 
-                // iOS硬重置: 强制释放解码器资源
                 videoLayer.pause();
                 videoLayer.removeAttribute('src');
                 videoLayer.load();
-                
-                // Safari需要额外等待解码器释放
-                if (this.isIOSSafari) {
-                    await new Promise(r => setTimeout(r, 50));
-                }
 
-                videoLayer.src = videoSrc;
                 this.videoElement = videoLayer;
+                videoLayer.src = realUrl;
                 
-                // Safari需要显式触发load
                 if (this.isSafari) {
                     videoLayer.load();
                 }
 
-                const FIRST_FRAME_TIMEOUT = this.isIOSSafari ? 2500 : 1500;
-                const thumbnailTimeout = setTimeout(() => {
-                    if (this.loadVersion === loadVersion) {
-                        if (videoLayer.readyState >= 3) return;
-                        
-                        console.warn('⚠️ [超时] 首帧等待过久，显示Loading...');
-                        thumbnailLayer.classList.add('hidden');
-                        loadingLayer.style.display = 'flex';
-                    }
-                }, FIRST_FRAME_TIMEOUT);
-
-                const onVideoReady = async () => {
-                    if (this.loadVersion !== loadVersion) return;
-                    
-                    videoLayer.removeEventListener('canplay', onVideoReady);
-                    videoLayer.removeEventListener('loadeddata', onVideoReady);
-                    clearTimeout(thumbnailTimeout);
-                    
-                    // Safari需要额外等待帧数据可用
-                    if (this.isIOSSafari) {
-                        await new Promise(r => setTimeout(r, 80));
-                    }
-
-                    loadingLayer.style.display = 'none';
-                    thumbnailLayer.classList.add('hidden');
-                    videoLayer.classList.add('visible');
-
-                    videoLayer.muted = false;
-                    const playPromise = videoLayer.play();
-                    if (playPromise !== undefined) {
-                        playPromise.catch(e => {
-                            console.log('自动播放被阻止，尝试静音播放', e);
-                            videoLayer.muted = true;
-                            videoLayer.play().catch(() => {});
-                        });
-                    }
-
-                    console.log(`🎬 [秒开] 视频就绪: ${Date.now() - this.loadStartTime}ms`);
-                    this.loadStartTime = null;
-                };
-
-                // Safari使用loadeddata事件更可靠
-                if (this.isSafari) {
-                    videoLayer.addEventListener('loadeddata', onVideoReady);
-                } else {
-                    videoLayer.addEventListener('canplay', onVideoReady);
-                }
-
-                if (videoLayer.readyState >= 3) {
-                    onVideoReady();
-                }
+                this.handleVideoReady(videoLayer, thumbnailLayer, loadingLayer, loadVersion);
 
             } catch (error) {
                 if (this.loadVersion !== loadVersion) return;
@@ -2133,11 +2512,65 @@
             }
         }
 
+        async handleVideoReady(videoLayer, thumbnailLayer, loadingLayer, loadVersion) {
+            const FIRST_FRAME_TIMEOUT = this.isIOSSafari ? 2500 : 1500;
+            const thumbnailTimeout = setTimeout(() => {
+                if (this.loadVersion === loadVersion) {
+                    if (videoLayer.readyState >= 3) return;
+                    console.warn('⚠️ [超时] 首帧等待过久，显示Loading...');
+                    thumbnailLayer.classList.add('hidden');
+                    loadingLayer.style.display = 'flex';
+                }
+            }, FIRST_FRAME_TIMEOUT);
+
+            const onVideoReady = async () => {
+                if (this.loadVersion !== loadVersion) return;
+                
+                videoLayer.removeEventListener('canplay', onVideoReady);
+                videoLayer.removeEventListener('loadeddata', onVideoReady);
+                clearTimeout(thumbnailTimeout);
+                
+                if (this.isIOSSafari) {
+                    await new Promise(r => setTimeout(r, 80));
+                }
+
+                loadingLayer.style.display = 'none';
+                thumbnailLayer.classList.add('hidden');
+                videoLayer.classList.add('visible');
+
+                this.applyVolumeToVideo();
+                
+                const playPromise = videoLayer.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(e => {
+                        videoLayer.muted = true;
+                        videoLayer.play().catch(() => {});
+                    });
+                }
+
+                console.log(`🎬 [就绪] 视频开始播放: ${Date.now() - this.loadStartTime}ms`);
+                this.loadStartTime = null;
+            };
+
+            if (this.isSafari) {
+                videoLayer.addEventListener('loadeddata', onVideoReady);
+            } else {
+                videoLayer.addEventListener('canplay', onVideoReady);
+            }
+
+            if (videoLayer.readyState >= 3) {
+                onVideoReady();
+            }
+        }
+
         scheduleSmartPrefetch(currentIndex, videoList) {
+            if (this.perfModeEnabled) {
+                console.log('⚡ [低功耗模式] 跳过预取');
+                return;
+            }
             const indicesToPrefetch = [
                 currentIndex + 1,
                 currentIndex - 1,
-                currentIndex + 2,
             ].filter(i => i >= 0 && i < videoList.length);
 
             this.executePrefetchQueue(indicesToPrefetch, videoList);
@@ -2157,10 +2590,6 @@
                     } catch (e) {
                         continue;
                     }
-                }
-
-                if (realUrl && !this.blobCache.has(realUrl)) {
-                    await this.warmupVideoConnection(realUrl);
                 }
 
                 if (i < indices.length - 1) {
@@ -2195,11 +2624,28 @@
                                         const data = JSON.parse(script.textContent);
                                         if (data.contentUrl) {
                                             console.log('✅ 通过LD+JSON找到视频URL:', data.contentUrl);
+                                            
+                                            this.stats.mp4++;
+                                            this.stats.total++;
+                                            this.stats.parsedHistory.push({
+                                                time: new Date().toLocaleTimeString(),
+                                                type: 'mp4 (ld+json)',
+                                                url: data.contentUrl
+                                            });
+                                            
                                             resolve(data.contentUrl);
                                             return;
                                         }
-                                        // 有时候是嵌套结构
                                         if (data['@type'] === 'VideoObject' && data.contentUrl) {
+                                            
+                                            this.stats.mp4++;
+                                            this.stats.total++;
+                                            this.stats.parsedHistory.push({
+                                                time: new Date().toLocaleTimeString(),
+                                                type: 'mp4 (ld+json-nested)',
+                                                url: data.contentUrl
+                                            });
+
                                             resolve(data.contentUrl);
                                             return;
                                         }
@@ -2210,11 +2656,19 @@
                             }
 
                             // 方法1: 查找 video.twimg.com 的链接
-                            // 方法1: 查找 video.twimg.com 的链接 (更宽松的正则)
-                            const videoMatch = html.match(/https?:\/\/video\.twimg\.com\/[^"'\s<>]+\.(?:mp4|m3u8)[^"'\s<>]*/i) ||
+                            const videoMatch = html.match(/https?:\/\/video\.twimg\.com\/[^"'\s<>]+\.mp4[^"'\s<>]*/i) ||
                                 html.match(/https?:\/\/video\.twimg\.com\/[^"'\s<>]+/);
                             if (videoMatch) {
                                 console.log('✅ 找到真实视频URL:', videoMatch[0]);
+                                
+                                this.stats.mp4++;
+                                this.stats.total++;
+                                this.stats.parsedHistory.push({
+                                    time: new Date().toLocaleTimeString(),
+                                    type: 'mp4 (regex)',
+                                    url: videoMatch[0]
+                                });
+
                                 resolve(videoMatch[0]);
                                 return;
                             }
@@ -2257,11 +2711,13 @@
 
                         } catch (error) {
                             console.error('解析视频URL失败:', error);
+                            this.stats.failed++;
                             resolve(null);
                         }
                     },
                     onerror: (error) => {
                         console.error('请求视频页面失败:', error);
+                        this.stats.failed++;
                         resolve(null);
                     },
                     timeout: 10000
@@ -2385,6 +2841,7 @@
                 this.videoElement.play();
             } else {
                 this.videoElement.pause();
+                this.showPauseIcon();
             }
         }
 
@@ -2535,8 +2992,7 @@
         // ========================================
         toggleUnreadMode() {
             this.unreadOnlyMode = !this.unreadOnlyMode;
-            const toggle = document.getElementById('tiktok-unread-toggle');
-            toggle.classList.toggle('active', this.unreadOnlyMode);
+            this.updateSettingsUI();
 
             if (this.unreadOnlyMode) {
                 // 更新过滤列表
@@ -2545,7 +3001,7 @@
                 if (this.filteredVideoList.length === 0) {
                     alert('没有未读视频了！');
                     this.unreadOnlyMode = false;
-                    toggle.classList.remove('active');
+                    this.updateSettingsUI();
                     return;
                 }
 
@@ -2562,6 +3018,128 @@
             const list = this.getActiveVideoList();
             document.getElementById('tiktok-count').textContent =
                 `${this.currentVideoIndex + 1} / ${list.length}`;
+        }
+
+        loadSavedVolume() {
+            try {
+                const saved = localStorage.getItem(this.VOLUME_STORAGE_KEY);
+                return saved !== null ? parseFloat(saved) : 1;
+            } catch (e) {
+                return 1;
+            }
+        }
+
+        saveVolume(volume) {
+            try {
+                localStorage.setItem(this.VOLUME_STORAGE_KEY, volume.toString());
+            } catch (e) {
+                console.error('保存音量失败:', e);
+            }
+        }
+
+        setupVolumeControl() {
+            const volumeBtn = document.getElementById('tiktok-volume-btn');
+            const volumeSlider = document.getElementById('tiktok-volume-slider');
+            const volumeControl = document.getElementById('tiktok-volume-control');
+            const volumeIcon = document.getElementById('tiktok-volume-icon');
+
+            volumeSlider.value = this.currentVolume;
+
+            const updateVolumeIcon = (volume, muted) => {
+                let iconPath;
+                if (muted || volume === 0) {
+                    iconPath = 'M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z';
+                } else if (volume < 0.5) {
+                    iconPath = 'M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z';
+                } else {
+                    iconPath = 'M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z';
+                }
+                volumeIcon.innerHTML = `<path d="${iconPath}"/>`;
+                volumeBtn.classList.toggle('muted', muted || volume === 0);
+            };
+
+            const applyVolume = (volume, muted) => {
+                if (this.videoElement) {
+                    this.videoElement.volume = muted ? 0 : volume;
+                    this.videoElement.muted = muted;
+                }
+                updateVolumeIcon(volume, muted);
+            };
+
+            volumeSlider.addEventListener('input', (e) => {
+                e.stopPropagation();
+                this.currentVolume = parseFloat(e.target.value);
+                this.isMuted = false;
+                applyVolume(this.currentVolume, false);
+                this.saveVolume(this.currentVolume);
+            });
+
+            volumeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.isMuted = !this.isMuted;
+                applyVolume(this.currentVolume, this.isMuted);
+            });
+
+            volumeBtn.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                this.isMuted = !this.isMuted;
+                applyVolume(this.currentVolume, this.isMuted);
+            });
+
+            let hideTimeout;
+            volumeControl.addEventListener('mouseenter', () => {
+                clearTimeout(hideTimeout);
+                volumeControl.classList.add('active');
+            });
+            volumeControl.addEventListener('mouseleave', () => {
+                hideTimeout = setTimeout(() => {
+                    volumeControl.classList.remove('active');
+                }, 300);
+            });
+
+            volumeControl.addEventListener('touchstart', (e) => {
+                e.stopPropagation();
+                volumeControl.classList.add('active');
+            }, { passive: true });
+
+            document.addEventListener('touchend', (e) => {
+                if (!volumeControl.contains(e.target)) {
+                    volumeControl.classList.remove('active');
+                }
+            }, { passive: true });
+
+            updateVolumeIcon(this.currentVolume, this.isMuted);
+        }
+
+        applyVolumeToVideo() {
+            if (this.videoElement) {
+                this.videoElement.volume = this.isMuted ? 0 : this.currentVolume;
+                this.videoElement.muted = this.isMuted;
+            }
+        }
+
+        loadPerfMode() {
+            try {
+                return localStorage.getItem(this.PERF_MODE_KEY) === 'true';
+            } catch (e) {
+                return false;
+            }
+        }
+
+        savePerfMode(enabled) {
+            try {
+                localStorage.setItem(this.PERF_MODE_KEY, enabled.toString());
+            } catch (e) {
+                console.error('保存低功耗模式失败:', e);
+            }
+        }
+
+        togglePerfMode() {
+            this.perfModeEnabled = !this.perfModeEnabled;
+            this.updateSettingsUI();
+            this.savePerfMode(this.perfModeEnabled);
+            console.log(`⚡ 低功耗模式: ${this.perfModeEnabled ? '已开启' : '已关闭'}`);
         }
     }
 
@@ -2589,29 +3167,5 @@
     } else {
         initPlayer();
     }
-
-    // 监听动态加载的内容 (Next.js的动态路由)
-    const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            mutation.addedNodes.forEach((node) => {
-                if (node.nodeType === 1) { // 元素节点
-                    // 检查是否添加了新的视频元素
-                    if (node.querySelectorAll && node.querySelectorAll('a[href]').length > 0) {
-                        // 延迟重新收集链接
-                        setTimeout(() => {
-                            if (window.tiktokModalPlayer) {
-                                window.tiktokModalPlayer.collectVideoLinks();
-                            }
-                        }, 1000);
-                    }
-                }
-            });
-        });
-    });
-
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true
-    });
 
 })();

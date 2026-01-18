@@ -1,7 +1,6 @@
 // ==UserScript==
 // @name        显示活动页渠道链接
-// @version     1.0.9
-// @author      zhuning1@corp.netease.com
+// @version     1.0.10
 // @description 预览弹窗增加渠道链接显示（会员专用）
 // @match       *://music-act.hz.netease.com/activity*
 // @match       *://*.igame.163.com/activity*

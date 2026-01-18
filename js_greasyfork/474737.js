@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         公众号替换高清图
 // @namespace    http://tampermonkey.net/
-// @version      0.2
+// @version      0.3
 // @description  公众号图片替换
 // @author       mumumi
 // @match        *://mp.weixin.qq.com/s*
@@ -13,5 +13,6 @@
 (function() {
     'use strict';
     document.querySelectorAll('img[data-src^="https://mmbiz.qpic.cn/"]').forEach(i => i.src = i.dataset.src.replace(/^([^?]+\/)\d+$/, '$1').replace(/\/\d+\?/, '/?'));
+    document.querySelectorAll('div[style*="mmbiz.qpic.cn"]').forEach(i => i.style.backgroundImage = i.style.backgroundImage.replace(/\/640\?/, '/?'));
     console.log('已替换高清图@mumumi');
 })();

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         小红书全能AI助手
 // @namespace    http://tampermonkey.net/
-// @version      2.2
+// @version      2.3
 // @description  采用API拦截技术，支持自动滚动获取全部笔记，生成带xsec_token的永久有效链接，支持导出Excel/CSV/JSON。新增AI创作模块，内置多种写作模版，支持自定义模版和AI生成人设。提升创作效率，助力内容变现！新增excel带图片导出模式，方便直观查看封面图。
 // @author       Coriander
 // @match        https://creator.xiaohongshu.com/publish/*
@@ -106,14 +106,15 @@
         // /api/sns/web/v2/note/collect/page -> 收藏夹
         // /api/sns/web/v1/note/like/page -> 点赞列表
         // /api/sns/web/v1/user/like -> 点赞列表（备选）
-        // /api/sns/web/v1/feed -> 首页推荐/搜索
+        // /api/sns/web/v1/homefeed -> 首页推荐/搜索
+        // /api/sns/web/v1/search/notes -> 搜索结果
         if (
           this._url &&
           (this._url.includes("/api/sns/web/v1/user_posted") ||
             this._url.includes("/api/sns/web/v2/note/collect/page") ||
             this._url.includes("/api/sns/web/v1/note/like/page") ||
             this._url.includes("/api/sns/web/v1/user/like") ||
-            this._url.includes("/api/sns/web/v1/feed") ||
+            this._url.includes("/api/sns/web/v1/homefeed") ||
             this._url.includes("/api/sns/web/v1/search/notes"))
         ) {
           try {
@@ -134,37 +135,80 @@
   // 处理并存储笔记数据
   function processNotes(notes) {
     let newCount = 0;
-    notes.forEach((note) => {
-      // 不同的接口返回结构可能略有不同，这里做兼容
-      // 核心目标：ID, 标题, xsec_token
-      const id = note.id || note.note_id || note.noteId;
+    // 兼容搜索结果页结构（如 /api/sns/web/v1/search/notes）及 首页推荐（/api/sns/web/v1/homefeed）
+    // notes 可能是 [{note: {...}}, ...] 或直接 [{...}]
+    notes.forEach((raw) => {
+      let note = raw;
+      // 搜索结果页结构：{note: {...}, ...}
+      if (raw && raw.note && typeof raw.note === "object") {
+        note = raw.note;
+      }
+      // 兼容 note_card 层
+      if (note && note.note_card) {
+        note = note.note_card;
+      }
+      // 兼容 note_info 层
+      if (note && note.note_info) {
+        note = note.note_info;
+      }
+      // 兼容 item 层（部分搜索结果）
+      if (note && note.item) {
+        note = note.item;
+      }
+      // 兼容 feed_note 层（部分推荐/搜索结果）
+      if (note && note.feed_note) {
+        note = note.feed_note;
+      }
+
+      // 统一提取字段
+      // 优先从深层对象取，取不到尝试从原始对象取（防止层级下钻导致外层属性丢失）
+      const id =
+        note.id || note.note_id || note.noteId || raw.id || raw.note_id;
       if (!id) return;
 
-      // 构造完整链接 (带 token)
-      // 优先使用 xsec_token，如果没有则尝试从 note_card 里找
-      const token =
-        note.xsec_token || (note.note_card && note.note_card.xsec_token) || "";
+      const token = note.xsec_token || raw.xsec_token || "";
       let link = `https://www.xiaohongshu.com/explore/${id}`;
       if (token) {
         link += `?xsec_token=${token}&xsec_source=pc_user`;
       }
 
-      const title = note.title || note.display_title || "无标题";
-      const type = note.type || "normal";
-      const user = note.user || {};
-      const authorName = user.nickname || user.name || "未知作者";
+      const title =
+        note.title ||
+        note.display_title ||
+        note.desc ||
+        raw.title ||
+        raw.display_title ||
+        "无标题";
+
+      const type = note.type || raw.type || "normal";
+
+      const user = note.user || raw.user || {};
+      const authorName =
+        user.nickname ||
+        user.name ||
+        note.author ||
+        raw.author ||
+        (raw.user && raw.user.nickname) ||
+        "未知作者";
+
       const likes =
         note.likes ||
         note.liked_count ||
-        (note.interact_info ? note.interact_info.liked_count : 0);
+        note.like_count ||
+        (note.interact_info && note.interact_info.liked_count) ||
+        raw.likes ||
+        raw.liked_count ||
+        (raw.interact_info && raw.interact_info.liked_count) ||
+        0;
 
-      // 获取封面图
       const coverUrl =
         (note.cover && note.cover.url_default) ||
         (note.images_list && note.images_list[0] && note.images_list[0].url) ||
+        note.cover_url ||
+        (raw.cover && raw.cover.url_default) ||
+        raw.cover_url ||
         "";
 
-      // 存入 Map
       if (!GLOBAL_DATA.has(id)) {
         GLOBAL_DATA.set(id, {
           笔记ID: id,
@@ -174,7 +218,7 @@
           点赞数: likes,
           封面图: coverUrl,
           类型: type,
-          xsec_token: token, // 仅作为参考，导出时不一定需要
+          xsec_token: token,
         });
         newCount++;
       }
@@ -253,6 +297,23 @@
         .data-card { background: #f4f8ff; padding: 12px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #e1eaff; }
         .export-tip { font-size: 12px; color: #666; margin-top: 10px; line-height: 1.5; background: #fffbe6; padding: 8px; border-radius: 6px; }
 
+        /* AI分析面板样式优化 */
+        .file-upload-label {
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            background: #fff; border: 1px dashed #ccc; border-radius: 8px;
+            padding: 15px; cursor: pointer; color: #666; font-size: 13px;
+            transition: all 0.2s; margin-bottom: 5px;
+        }
+        .file-upload-label:hover { border-color: #ff2442; color: #ff2442; background: #fff5f6; }
+        .analysis-result-box {
+            margin-top: 10px; font-size: 13px; line-height: 1.6;
+            background: #fff; padding: 12px; border-radius: 8px;
+            border: 1px solid #eee; max-height: 250px; overflow-y: auto;
+            color: #444; box-shadow: inset 0 2px 6px rgba(0,0,0,0.02);
+            white-space: pre-wrap; display: none;
+        }
+        .ai-compact-box { background: #fff; padding: 10px; border-radius: 6px; border: 1px solid #ebd4b5; }
+
         /* 小屏幕/副屏适配 */
         @media screen and (max-width: 500px), screen and (max-height: 600px) {
             #xhs-ai-helper {
@@ -311,6 +372,8 @@
                 <div class="ai-tabs">
                     <div class="ai-tab-item active" data-tab="data">数据导出</div>
                     <div class="ai-tab-item" data-tab="write">AI创作</div>
+                    <div class="ai-tab-item" data-tab="analysis">AI分析</div>
+                    <div class="ai-tab-item" data-tab="settings">⚙️ 设置</div>
                 </div>
                 <div class="ai-content-body">
                     <div id="panel-data" class="tab-panel active">
@@ -342,6 +405,7 @@
                         </div>
                     </div>
 
+
                     <div id="panel-write" class="tab-panel">
                         <div class="ai-input-group">
                              <select id="template-select" class="ai-select"></select>
@@ -371,25 +435,81 @@
                               </div>
                               <div id="template-manage-status" style="margin-top:6px;font-size:12px;color:#666;"></div>
                             </div>
+                            
+                            <button id="ai-gen-btn" class="ai-btn" style="margin-top:10px;">✨ 生成文案</button>
+                            <div id="ai-status" style="text-align:center;font-size:12px;margin-top:5px;color:#999;"></div>
+                        </div>
+                    </div>
+                    
+                    <div id="panel-analysis" class="tab-panel">
+                        <!-- Section 1: 智能分析 -->
+                        <div class="data-card" style="border-left: 4px solid #4a90e2; background: #f0f7ff;">
+                           <div style="font-size: 14px; font-weight: bold; margin-bottom: 5px; color:#2c3e50;">📊 智能总结与分析</div>
+                           <div style="font-size: 11px; color:#666; margin-bottom:10px;">上传导出的 CSV/JSON，让 AI 分析趋势。</div>
+                           
+                           <input type="file" id="analysis-file-input" accept=".csv,.json" style="display:none;" />
+                           <label for="analysis-file-input" class="file-upload-label" id="analysis-file-label">
+                               📂 点击选择或拖拽文件 (CSV/JSON)
+                           </label>
+                           <div id="analysis-file-name" style="font-size:11px; color:#333; margin:5px 0; padding-left: 5px; display:none;"></div>
 
-                             <div style="font-size:12px;color:#999;margin-bottom:5px;cursor:pointer;" id="config-toggle">⚙️ API 配置 (点击展开)</div>
-                             <div id="config-area" style="display:none;margin-bottom:10px;">
-                                <input id="api-base-url" class="ai-input" placeholder="Base URL" value="${GM_getValue(
-                                  "api_base_url",
-                                  "https://api.moonshot.cn/v1/chat/completions"
-                                )}">
-                                <input id="api-key" type="password" class="ai-input" placeholder="API Key" value="${GM_getValue(
-                                  "api_key",
-                                  ""
-                                )}">
-                                <input id="api-model" class="ai-input" placeholder="Model" value="${GM_getValue(
-                                  "api_model",
-                                  "moonshot-v1-8k"
-                                )}">
+                           <button id="analysis-summary-btn" class="ai-btn" style="background:#4a90e2; margin-top:8px;">🧠 开始智能分析</button>
+                           <div id="analysis-result" class="analysis-result-box"></div>
+                        </div>
+
+                        <!-- Section 2: 智能分类 -->
+                        <div class="data-card" style="margin-top:15px; border-left: 4px solid #ff9800; background: #fffaf0;">
+                           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px;">
+                              <div style="font-size: 14px; font-weight: bold; color:#2c3e50;">🏷️ 智能分类重构</div>
+                              <button id="analysis-config-btn" class="ai-btn secondary" style="width:auto; padding:4px 8px; font-size:12px; margin:0;" title="API 设置">⚙️ 配置 API</button>
+                           </div>
+                           <div style="font-size: 11px; color:#666; margin: 0 0 10px;">AI 自动分类数据并生成新文件。</div>
+                           
+                           <div class="ai-compact-box">
+                               <label style="font-size:12px;color:#888;display:block;margin-bottom:4px;">自定义分类 (可选, 逗号分隔)</label>
+                               <textarea id="analysis-categories" class="ai-textarea" style="height:40px; margin-bottom:8px; border:1px solid #eee; background:#f9f9f9; padding:5px; font-size: 12px;" placeholder="美妆, 穿搭, 美食..."></textarea>
+                               
+                               <div style="display:flex; justify-content:space-between; align-items:center;">
+                                   <div style="font-size:12px;color:#666; display:flex; align-items:center; gap:5px;">
+                                      导出格式: 
+                                      <select id="analysis-export-format" class="ai-select" style="width:auto; padding:3px 6px; margin:0; height:auto; background:#fff; border-color:#ddd;">
+                                          <option value="xls">Excel</option> // 默认Excel
+                                          <option value="csv">CSV</option>
+                                          <option value="json">JSON</option>
+                                      </select>
+                                   </div>
+                                   <button id="analysis-classify-btn" class="ai-btn" style="width:auto; padding:6px 15px; margin:0; background:#ff9800;">🚀 开始分类</button>
+                               </div>
+                           </div>
+                           
+                           <div id="classify-status" style="margin-top:8px; font-size:12px; color:#666;"></div>
+                           <div id="api-limit-tip" style="display:none; margin-top:8px; font-size:11px; color:#d35400; background:rgba(255,152,0,0.1); padding:8px; border-radius:4px; line-height: 1.4;">
+                              ⚠️ 检测到未分类数据。这通常是因为 API 速率限制或额度不足。<br>建议：<br>1. 检查 API Key 额度。<br>2. 更换更稳定的模型 (如 gpt-3.5/4)。<br>3. 每次处理需要一定时间，请耐心等待。
+                           </div>
+                        </div>
+                    </div>
+                
+                    <div id="panel-settings" class="tab-panel">
+                        <div class="data-card">
+                             <div style="font-size: 13px; font-weight: bold; margin-bottom: 8px;">⚙️ 全局 API 设置</div>
+                             <div style="font-size: 11px; color:#666; margin-bottom:8px;">此处的配置将应用于 AI 创作、分析和分类功能。</div>
+
+                             <div id="config-area" style="margin-bottom:10px;background:#f9f9f9;padding:10px;border-radius:8px;border:1px solid #eee;">
+                                <div style="display:flex;gap:5px;margin-bottom:8px;">
+                                    <select id="api-config-select" class="ai-select" style="margin:0;flex:1;"></select>
+                                    <button id="api-config-add" class="ai-btn secondary" style="width:32px;margin:0;padding:0;" title="新增配置">➕</button>
+                                    <button id="api-config-del" class="ai-btn secondary" style="width:32px;margin:0;padding:0;" title="删除配置">🗑️</button>
+                                </div>
+                                
+                                <input id="api-base-url" class="ai-input" placeholder="Base URL" style="margin-bottom:5px;">
+                                <input id="api-key" type="password" class="ai-input" placeholder="API Key" style="margin-bottom:5px;">
+                                
+                                <div style="display:flex;gap:5px;">
+                                    <input id="api-model" class="ai-input" placeholder="Model (e.g. gpt-3.5-turbo)" style="margin-bottom:0;flex:1;">
+                                    <button id="api-model-fetch-btn" class="ai-btn secondary" style="width:40px;margin:0;padding:0;" title="尝试获取模型列表">🔄</button>
+                                </div>
+                                <select id="api-model-select" class="ai-select" style="display:none;margin-top:5px;"></select>
                              </div>
-
-                             <button id="ai-gen-btn" class="ai-btn">✨ 生成文案</button>
-                             <div id="ai-status" style="text-align:center;font-size:12px;margin-top:5px;color:#999;"></div>
                         </div>
                     </div>
                 </div>
@@ -415,7 +535,7 @@
             .querySelectorAll(".tab-panel")
             .forEach((p) => p.classList.remove("active"));
           div.querySelector("#panel-" + t.dataset.tab).classList.add("active");
-        })
+        }),
     );
 
     // ==========================
@@ -431,14 +551,281 @@
     div.querySelector("#export-btn").onclick = exportData;
 
     // AI功能绑定
-    div.querySelector("#config-toggle").onclick = () => {
-      const el = document.getElementById("config-area");
-      el.style.display = el.style.display === "none" ? "block" : "none";
-    };
+    // div.querySelector("#config-toggle").onclick = ... // Removed
+
+    // ============================
+    // Config Manager Logic
+    // ============================
+    const DEFAULT_CONFIGS = [
+      {
+        id: "moonshot",
+        name: "🌙 Moonshot (Kimi)",
+        baseUrl: "https://api.moonshot.cn/v1/chat/completions",
+        key: "",
+        model: "moonshot-v1-8k",
+        builtIn: true,
+      },
+      {
+        id: "deepseek",
+        name: "🐋 DeepSeek",
+        baseUrl: "https://api.deepseek.com/chat/completions",
+        key: "",
+        model: "deepseek-chat",
+        builtIn: true,
+      },
+      {
+        id: "openai",
+        name: "🤖 OpenAI (GPT)",
+        baseUrl: "https://api.openai.com/v1/chat/completions",
+        key: "",
+        model: "gpt-3.5-turbo",
+        builtIn: true,
+      },
+      {
+        id: "custom",
+        name: "🛠️ 自定义配置",
+        baseUrl: "",
+        key: "",
+        model: "",
+        builtIn: false,
+      },
+    ];
+
+    let apiConfigs = [];
+    try {
+      apiConfigs = JSON.parse(GM_getValue("api_configs", "[]"));
+      if (!Array.isArray(apiConfigs) || apiConfigs.length === 0)
+        apiConfigs = JSON.parse(JSON.stringify(DEFAULT_CONFIGS));
+    } catch (e) {
+      apiConfigs = JSON.parse(JSON.stringify(DEFAULT_CONFIGS));
+    }
+
+    let currentConfigId = GM_getValue("current_api_config_id", "moonshot");
+
+    function renderConfigSelect() {
+      const sel = document.getElementById("api-config-select");
+      sel.innerHTML = "";
+      apiConfigs.forEach((c) => {
+        const opt = document.createElement("option");
+        opt.value = c.id;
+        opt.innerText = c.name;
+        sel.appendChild(opt);
+      });
+
+      // Ensure current ID exists
+      if (!apiConfigs.some((c) => c.id === currentConfigId)) {
+        currentConfigId = apiConfigs[0].id;
+      }
+
+      sel.value = currentConfigId;
+      loadConfigToUI(currentConfigId);
+    }
+
+    function loadConfigToUI(id) {
+      const config = apiConfigs.find((c) => c.id === id) || apiConfigs[0];
+      currentConfigId = config.id;
+      GM_setValue("current_api_config_id", currentConfigId);
+
+      const baseUrlInput = document.getElementById("api-base-url");
+      const keyInput = document.getElementById("api-key");
+      const modelInput = document.getElementById("api-model");
+      const delBtn = document.getElementById("api-config-del");
+      const modelSelect = document.getElementById("api-model-select");
+
+      baseUrlInput.value = config.baseUrl;
+      keyInput.value = config.key;
+      modelInput.value = config.model;
+
+      // Hide model select on config switch
+      modelSelect.style.display = "none";
+
+      if (config.builtIn) {
+        delBtn.style.display = "none";
+      } else {
+        delBtn.style.display = "block";
+      }
+    }
+
+    function saveCurrentConfigFromUI() {
+      const configIndex = apiConfigs.findIndex((c) => c.id === currentConfigId);
+      if (configIndex !== -1) {
+        apiConfigs[configIndex].baseUrl =
+          document.getElementById("api-base-url").value;
+        apiConfigs[configIndex].key = document.getElementById("api-key").value;
+        apiConfigs[configIndex].model =
+          document.getElementById("api-model").value;
+        GM_setValue("api_configs", JSON.stringify(apiConfigs));
+
+        // Sync legacy values for compatibility if needed elsewhere
+        GM_setValue("api_base_url", apiConfigs[configIndex].baseUrl);
+        GM_setValue("api_key", apiConfigs[configIndex].key);
+        GM_setValue("api_model", apiConfigs[configIndex].model);
+      }
+    }
+
+    // Bind Config Events
+    document.getElementById("api-config-select").onchange = (e) =>
+      loadConfigToUI(e.target.value);
+
     ["api-base-url", "api-key", "api-model"].forEach((id) => {
-      document.getElementById(id).onchange = (e) =>
-        GM_setValue(id.replace(/-/g, "_"), e.target.value);
+      const el = document.getElementById(id);
+      el.onchange = saveCurrentConfigFromUI;
+      el.oninput = saveCurrentConfigFromUI;
     });
+
+    document.getElementById("api-config-add").onclick = () => {
+      const name = prompt(
+        "请输入新配置名称",
+        "我的配置 " + (apiConfigs.length + 1),
+      );
+      if (name) {
+        const newId = "custom_" + Date.now();
+        apiConfigs.push({
+          id: newId,
+          name: name,
+          baseUrl: "https://",
+          key: "",
+          model: "",
+          builtIn: false,
+        });
+        GM_setValue("api_configs", JSON.stringify(apiConfigs));
+        renderConfigSelect();
+        // Select new
+        document.getElementById("api-config-select").value = newId;
+        loadConfigToUI(newId);
+      }
+    };
+
+    document.getElementById("api-config-del").onclick = () => {
+      if (confirm("确定删除当前配置吗？")) {
+        apiConfigs = apiConfigs.filter((c) => c.id !== currentConfigId);
+        if (apiConfigs.length === 0)
+          apiConfigs = JSON.parse(JSON.stringify(DEFAULT_CONFIGS));
+        GM_setValue("api_configs", JSON.stringify(apiConfigs));
+        currentConfigId = apiConfigs[0].id;
+        renderConfigSelect();
+      }
+    };
+
+    document.getElementById("api-model-fetch-btn").onclick = async () => {
+      const btn = document.getElementById("api-model-fetch-btn");
+      const modelSel = document.getElementById("api-model-select");
+      const originalText = btn.innerText;
+      btn.innerText = "...";
+      btn.disabled = true;
+
+      const baseUrl = document.getElementById("api-base-url").value;
+      const key = document.getElementById("api-key").value;
+
+      if (!baseUrl) {
+        alert("请先填写 Base URL");
+        btn.innerText = originalText;
+        btn.disabled = false;
+        return;
+      }
+      if (!key) {
+        alert("请先填写 API Key");
+        btn.innerText = originalText;
+        btn.disabled = false;
+        return;
+      }
+
+      // Try to deduce models endpoint
+      // Standard: .../v1/chat/completions -> .../v1/models
+      let modelsUrl = baseUrl;
+      if (modelsUrl.endsWith("/chat/completions")) {
+        modelsUrl = modelsUrl.replace("/chat/completions", "/models");
+      } else if (modelsUrl.endsWith("/")) {
+        modelsUrl = modelsUrl + "models";
+      } else {
+        // If base url is just host, add /v1/models? Not sure, user usually puts chat/completions
+        // Let's try replacing last segment if it is not models
+        // Fallback: assume user put full chat url
+        modelsUrl = modelsUrl.replace(/\/chat\/completions\/?$/, "/models");
+      }
+
+      console.log("[AI] Fetching models from:", modelsUrl);
+
+      try {
+        const res = await new Promise((resolve, reject) => {
+          GM_xmlhttpRequest({
+            method: "GET",
+            url: modelsUrl,
+            headers: {
+              Authorization: `Bearer ${key}`,
+              "Content-Type": "application/json",
+            },
+            onload: (r) => {
+              if (r.status === 200) resolve(JSON.parse(r.responseText));
+              else
+                reject(
+                  "Status " +
+                    r.status +
+                    "\n" +
+                    r.responseText.substring(0, 100),
+                );
+            },
+            onerror: (e) => reject("Network Error"),
+          });
+        });
+
+        let models = [];
+        if (res && Array.isArray(res.data)) {
+          models = res.data.map((m) => m.id);
+        } else if (Array.isArray(res)) {
+          models = res.map((m) => m.id || m); // Some APIs return array directly
+        }
+
+        if (models.length > 0) {
+          modelSel.innerHTML =
+            '<option value="" disabled selected>请选择模型 (API获取成功)</option>';
+
+          // 简单规则：包含特定关键词的模型被认为支持 AI 分析/分类 (即支持长文本或通用能力强)
+          const capableKeywords = [
+            "moonshot",
+            "gpt-4",
+            "claude-3",
+            "deepseek",
+            "128k",
+            "32k",
+            "200k",
+            "pro",
+          ];
+
+          models.forEach((m) => {
+            const opt = document.createElement("option");
+            opt.value = m;
+            let label = m;
+            if (capableKeywords.some((k) => m.toLowerCase().includes(k))) {
+              label += " (支持AI分析)";
+            }
+            opt.innerText = label;
+            modelSel.appendChild(opt);
+          });
+          modelSel.style.display = "block";
+          modelSel.onchange = () => {
+            document.getElementById("api-model").value = modelSel.value;
+            saveCurrentConfigFromUI();
+          };
+          // Auto expand?
+          modelSel.click();
+        } else {
+          alert(
+            "API请求成功，但未能解析出模型列表。请手动输入。\n" +
+              JSON.stringify(res).slice(0, 100),
+          );
+        }
+      } catch (e) {
+        alert("获取模型失败: " + e + "\n尝试URL: " + modelsUrl);
+      } finally {
+        btn.innerText = originalText;
+        btn.disabled = false;
+      }
+    };
+
+    // Initialize
+    renderConfigSelect();
+
     div.querySelector("#ai-gen-btn").onclick = handleAI;
 
     // 模版管理
@@ -449,7 +836,7 @@
     };
     document.getElementById("template-manage-select").onchange = () => {
       const t = templates.find(
-        (x) => x.id === document.getElementById("template-manage-select").value
+        (x) => x.id === document.getElementById("template-manage-select").value,
       );
       if (t) fillTemplateForm(t);
     };
@@ -506,6 +893,31 @@
       toastManage("模版已删除");
     };
     document.getElementById("persona-gen-btn").onclick = handlePersonaGenerate;
+
+    // AI分析功能绑定
+    div.querySelector("#analysis-file-input").onchange = function () {
+      const file = this.files[0];
+      const label = div.querySelector("#analysis-file-label");
+      const nameDisplay = div.querySelector("#analysis-file-name");
+      if (file) {
+        nameDisplay.textContent = "📄 已选择: " + file.name;
+        nameDisplay.style.display = "block";
+        label.style.borderColor = "#4a90e2";
+        label.style.background = "#eff6ff";
+        label.textContent = "📂 更换文件";
+      }
+    };
+
+    div.querySelector("#analysis-summary-btn").onclick = handleAnalysisSummary;
+    div.querySelector("#analysis-classify-btn").onclick =
+      handleAnalysisClassify;
+    div.querySelector("#analysis-config-btn").onclick = () => {
+      // Switch to Settings tab
+      const settingsTab = div.querySelector(
+        '.ai-tab-item[data-tab="settings"]',
+      );
+      if (settingsTab) settingsTab.click();
+    };
 
     refreshManageSelect();
     if (templates[0]) fillTemplateForm(templates[0]);
@@ -634,7 +1046,7 @@
             // 连续10次高度不变（约10-15秒），认为到底了
             toggleAutoScroll(); // 自动停止
             alert(
-              `滚动结束！共捕获 ${GLOBAL_DATA.size} 条数据。\n请点击导出。`
+              `滚动结束！共捕获 ${GLOBAL_DATA.size} 条数据。\n请点击导出。`,
             );
           }
         } else {
@@ -645,56 +1057,51 @@
     }
   }
 
-  function exportData() {
-    if (GLOBAL_DATA.size === 0) {
-      alert("数据为空！请先点击「自动滚动」或手动浏览页面。");
-      return;
-    }
-    const format = document.getElementById("export-format").value;
-    const dataList = Array.from(GLOBAL_DATA.values());
+  function exportList(dataList, format, baseName) {
+    if (!dataList || dataList.length === 0) return;
 
     if (format === "json") {
       download(
         JSON.stringify(dataList, null, 2),
-        "xhs_data_full.json",
-        "application/json"
+        `${baseName}.json`,
+        "application/json",
       );
     } else if (format === "xls") {
       // Excel (HTML Table 伪装)
       const headers = Object.keys(dataList[0]);
       let html = `
-        <html xmlns:o="urn:schemas-microsoft-com:office:office" 
-              xmlns:x="urn:schemas-microsoft-com:office:excel" 
-              xmlns="http://www.w3.org/TR/REC-html40">
-        <head>
-           <meta charset="utf-8">
-           <!--[if gte mso 9]>
-           <xml>
-            <x:ExcelWorkbook>
-             <x:ExcelWorksheets>
-              <x:ExcelWorksheet>
-               <x:Name>Sheet1</x:Name>
-               <x:WorksheetOptions>
-                <x:DisplayGridlines/>
-               </x:WorksheetOptions>
-              </x:ExcelWorksheet>
-             </x:ExcelWorksheets>
-            </x:ExcelWorkbook>
-           </xml>
-           <![endif]-->
-           <style>
-             td { vertical-align: middle; text-align: center; font-size: 11pt; }
-             .text { mso-number-format:"\@"; }
-           </style>
-        </head>
-        <body>
-        <table border="1" style="border-collapse: collapse; width: 100%;">`;
+            <html xmlns:o="urn:schemas-microsoft-com:office:office" 
+                  xmlns:x="urn:schemas-microsoft-com:office:excel" 
+                  xmlns="http://www.w3.org/TR/REC-html40">
+            <head>
+               <meta charset="utf-8">
+               <!--[if gte mso 9]>
+               <xml>
+                <x:ExcelWorkbook>
+                 <x:ExcelWorksheets>
+                  <x:ExcelWorksheet>
+                   <x:Name>Sheet1</x:Name>
+                   <x:WorksheetOptions>
+                    <x:DisplayGridlines/>
+                   </x:WorksheetOptions>
+                  </x:ExcelWorksheet>
+                 </x:ExcelWorksheets>
+                </x:ExcelWorkbook>
+               </xml>
+               <![endif]-->
+               <style>
+                 td { vertical-align: middle; text-align: center; font-size: 11pt; }
+                 .text { mso-number-format:"\@"; }
+               </style>
+            </head>
+            <body>
+            <table border="1" style="border-collapse: collapse; width: 100%;">`;
 
       // 表头
       html += "<thead><tr style='background-color:#f2f2f2; height:40px;'>";
       headers.forEach(
         (h) =>
-          (html += `<th style="padding:10px; border:1px solid #ccc;">${h}</th>`)
+          (html += `<th style="padding:10px; border:1px solid #ccc;">${h}</th>`),
       );
       html += "</tr></thead><tbody>";
 
@@ -716,7 +1123,7 @@
       });
       html += "</tbody></table></body></html>";
 
-      download(html, "xhs_data_images.xls", "application/vnd.ms-excel");
+      download(html, `${baseName}.xls`, "application/vnd.ms-excel");
     } else {
       // CSV
       const headers = Object.keys(dataList[0]);
@@ -728,15 +1135,25 @@
               v = String(v).replace(/"/g, '""');
               return `"${v}"`;
             })
-            .join(",")
+            .join(","),
         )
         .join("\n");
       download(
         "\ufeff" + headers.join(",") + "\n" + csvBody,
-        "xhs_data_full.csv",
-        "text/csv;charset=utf-8"
+        `${baseName}.csv`,
+        "text/csv;charset=utf-8",
       );
     }
+  }
+
+  function exportData() {
+    if (GLOBAL_DATA.size === 0) {
+      alert("数据为空！请先点击「自动滚动」或手动浏览页面。");
+      return;
+    }
+    const format = document.getElementById("export-format").value;
+    const dataList = Array.from(GLOBAL_DATA.values());
+    exportList(dataList, format, "xhs_data_full");
   }
 
   function download(content, name, type) {
@@ -761,16 +1178,25 @@
       initL,
       initT;
     handle.addEventListener("mousedown", (e) => {
+      // 允许在最小化状态下拖拽（可选，或者是用户可能只想点开）
+      // 这里保持原逻辑如果用户想保持最小化不拖拽
       if (div.classList.contains("minimized")) return;
+
       isDragging = true;
       startX = e.clientX;
       startY = e.clientY;
       const rect = div.getBoundingClientRect();
       initL = rect.left;
       initT = rect.top;
+
+      // 优化：拖拽开始时禁用过渡动画，防止延迟感
+      div.style.transition = "none";
+      // 防止由拖拽引起的文本选中
+      document.body.style.userSelect = "none";
     });
     document.addEventListener("mousemove", (e) => {
       if (isDragging) {
+        e.preventDefault();
         let newLeft = initL + e.clientX - startX;
         let newTop = initT + e.clientY - startY;
         // 边界保护：确保不会拖出屏幕
@@ -778,14 +1204,21 @@
         const maxTop = window.innerHeight - 60;
         newLeft = Math.max(0, Math.min(newLeft, maxLeft));
         newTop = Math.max(0, Math.min(newTop, maxTop));
-        div.style.left = newLeft + "px";
-        div.style.top = newTop + "px";
-        div.style.right = "auto";
+
+        requestAnimationFrame(() => {
+          div.style.left = newLeft + "px";
+          div.style.top = newTop + "px";
+          div.style.right = "auto";
+        });
       }
     });
     document.addEventListener("mouseup", () => {
       if (isDragging) {
         isDragging = false;
+        // 拖拽结束，恢复过渡动画和选择
+        div.style.transition = "";
+        document.body.style.userSelect = "";
+
         GM_setValue("pos", { l: div.style.left, t: div.style.top });
       }
     });
@@ -998,6 +1431,238 @@
     } finally {
       btn.disabled = false;
       btn.innerText = "✨ 生成文案";
+    }
+  }
+
+  // ==========================================
+  // 8. AI 分析与分类逻辑
+  // ==========================================
+
+  function readFileData(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => resolve(e.target.result);
+      reader.onerror = reject;
+      reader.readAsText(file);
+    });
+  }
+
+  function parseUploadedData(text, type) {
+    if (type.includes("json")) {
+      return JSON.parse(text);
+    } else {
+      // Simple CSV Parser
+      const lines = text.split("\n").filter((l) => l.trim());
+      if (lines.length < 2) return [];
+      const headers = lines[0].split(","); // 简单分割，未处理复杂CSV
+      // 这里的CSV解析较为简陋，建议使用JSON上传
+      const result = [];
+      for (let i = 1; i < lines.length; i++) {
+        const row = lines[i].split(","); // 同样简单分割
+        if (row.length === headers.length) {
+          let obj = {};
+          headers.forEach((h, idx) => {
+            obj[h.replace(/"/g, "").trim()] = row[idx]
+              ? row[idx].replace(/"/g, "").trim()
+              : "";
+          });
+          result.push(obj);
+        }
+      }
+      return result;
+    }
+  }
+
+  async function callAI(messages) {
+    return new Promise((resolve, reject) => {
+      GM_xmlhttpRequest({
+        method: "POST",
+        url: document.getElementById("api-base-url").value,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${document.getElementById("api-key").value}`,
+        },
+        data: JSON.stringify({
+          model: document.getElementById("api-model").value,
+          messages: messages,
+        }),
+        onload: (r) => {
+          try {
+            resolve(JSON.parse(r.responseText));
+          } catch (e) {
+            reject(e);
+          }
+        },
+        onerror: reject,
+      });
+    });
+  }
+
+  async function handleAnalysisSummary() {
+    const fileInput = document.getElementById("analysis-file-input");
+    const resultDiv = document.getElementById("analysis-result");
+    const btn = document.getElementById("analysis-summary-btn");
+
+    if (!fileInput.files.length) return alert("请先上传文件");
+    const file = fileInput.files[0];
+
+    btn.disabled = true;
+    btn.innerText = "分析中...";
+    resultDiv.style.display = "block";
+    resultDiv.innerText = "正在读取文件并进行 AI 分析，请稍候...";
+
+    try {
+      const text = await readFileData(file);
+      let data = parseUploadedData(text, file.name);
+
+      if (!data || data.length === 0) throw new Error("解析数据失败或数据为空");
+
+      // 截取前 50 条数据，防止 Token 溢出
+      const sample = data.slice(0, 50).map((item) => ({
+        标题: item.标题 || item.display_title,
+        点赞: item.点赞数 || item.likes,
+        作者: item.作者 || item.user?.nickname,
+      }));
+
+      const prompt = `请分析以下小红书笔记数据（仅展示前${sample.length}条）：\n${JSON.stringify(
+        sample,
+      )}\n\n请给出：\n1. 热门话题/关键词总结\n2. 高赞笔记的共同特点\n3. 内容创作建议`;
+
+      const res = await callAI([
+        {
+          role: "system",
+          content: "你是一个资深的小红书数据分析师，擅长洞察趋势。",
+        },
+        { role: "user", content: prompt },
+      ]);
+
+      const content = res.choices?.[0]?.message?.content || "AI 未返回内容";
+      resultDiv.innerText = content;
+    } catch (e) {
+      console.error(e);
+      resultDiv.innerText = "❌ 分析失败: " + e.message;
+    } finally {
+      btn.disabled = false;
+      btn.innerText = "🧠 生成总结分析";
+    }
+  }
+
+  async function handleAnalysisClassify() {
+    const fileInput = document.getElementById("analysis-file-input");
+    const statusDiv = document.getElementById("classify-status");
+    const btn = document.getElementById("analysis-classify-btn");
+    const tipDiv = document.getElementById("api-limit-tip");
+    const format = document.getElementById("analysis-export-format").value;
+    const categories = document
+      .getElementById("analysis-categories")
+      .value.trim();
+
+    if (!fileInput.files.length) return alert("请先上传文件");
+    const file = fileInput.files[0];
+
+    btn.disabled = true;
+    btn.innerText = "分类中...";
+    statusDiv.innerText = "正在读取文件...";
+    if (tipDiv) tipDiv.style.display = "none";
+
+    try {
+      const text = await readFileData(file);
+      let data = parseUploadedData(text, file.name);
+
+      if (!data || data.length === 0) throw new Error("解析数据失败或数据为空");
+
+      // 分批处理逻辑
+      const BATCH_SIZE = 20;
+      const totalItems = data.length;
+      const batches = Math.ceil(totalItems / BATCH_SIZE);
+      const classifiedMap = new Map();
+
+      // 自动生成的默认分类
+      const defaultCats = "教程,好物分享,情感,新闻,搞笑,其他";
+      const targetCats = categories || defaultCats;
+
+      for (let i = 0; i < batches; i++) {
+        const start = i * BATCH_SIZE;
+        const end = Math.min((i + 1) * BATCH_SIZE, totalItems);
+        const batchData = data.slice(start, end);
+
+        statusDiv.innerText = `正在分类第 ${i + 1}/${batches} 批数据 (${start + 1}-${end})...`;
+
+        // 构建请求数据，仅包含必要字段以节省 Token
+        const sample = batchData.map((item) => ({
+          id: item.笔记ID || item.note_id || item.id,
+          title: item.标题 || item.display_title,
+          desc: (item.desc || "").substring(0, 50),
+        }));
+
+        const prompt = `请将以下笔记归类到这些类别中：[${targetCats}]。\n输入数据：\n${JSON.stringify(
+          sample,
+        )}\n\n要求：返回 JSON 格式，数组包含对象 { "id": "...", "category": "..." }。`;
+
+        try {
+          const res = await callAI([
+            {
+              role: "system",
+              content:
+                "你是一个数据分类助手。只返回纯 JSON，不要 Markdown 格式。",
+            },
+            { role: "user", content: prompt },
+          ]);
+
+          let content = res.choices?.[0]?.message?.content || "[]";
+          content = content.replace(/```json|```/g, "").trim();
+          let batchResult = [];
+          try {
+            batchResult = JSON.parse(content);
+          } catch (e) {
+            console.warn(`Batch ${i + 1} JSON parse failed`, content);
+          }
+
+          if (Array.isArray(batchResult)) {
+            batchResult.forEach((item) => {
+              if (item && item.id) {
+                classifiedMap.set(String(item.id), item.category);
+              }
+            });
+          }
+        } catch (apiError) {
+          console.error(`Batch ${i + 1} API failed`, apiError);
+          if (tipDiv) tipDiv.style.display = "block";
+        }
+
+        // 简单延时，避免 QPS 限制
+        if (i < batches - 1) {
+          await new Promise((r) => setTimeout(r, 1000));
+        }
+      }
+
+      data.forEach((item) => {
+        const id = item.笔记ID || item.note_id || item.id;
+        if (id && classifiedMap.has(String(id))) {
+          item["智能分类"] = classifiedMap.get(String(id));
+        } else {
+          item["智能分类"] = "未分类/API限制";
+        }
+      });
+
+      const unclassifiedCount = data.filter(
+        (x) => x["智能分类"] === "未分类/API限制",
+      ).length;
+      if (unclassifiedCount > 0 && tipDiv) {
+        tipDiv.innerHTML = `⚠️ 完成，但有 ${unclassifiedCount} 条数据未成功分类。<br>可能是API超时或额度限制，建议检查API设置。`;
+        tipDiv.style.display = "block";
+      }
+
+      // 导出新文件
+      exportList(data, format, "classified_xhs_data");
+
+      statusDiv.innerText = "✅ 分类完成！已自动下载新文件。";
+    } catch (e) {
+      console.error(e);
+      statusDiv.innerText = "❌ 分类失败: " + e.message;
+    } finally {
+      btn.disabled = false;
+      btn.innerText = "📂 智能分类并导出";
     }
   }
 

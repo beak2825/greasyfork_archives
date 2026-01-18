@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         元元大王直播间弹幕布局
-// @version      1.4
-// @description  自适应弹幕布局、弹幕画板可拖移。
+// @version      1.5
+// @description  1、自适应弹幕布局（按键 'B' 复位弹幕位置、按键 '0' 关闭或打开自适应功能）；2、弹幕画板可拖移；
 // @match        https://live.douyin.com/*
 // @match        https://www.douyin.com/follow/live/*
 // @match        https://www.douyin.com/root/live/*
@@ -71,8 +71,11 @@
         applyStyle(ElCanvasDanmakuStyleID, `div.CanvasDanmakuPlugin { left: ${left}%; top: ${top}%; }`)
     }
 
+    let RESPONSIVE=true
+
     function evaluateLayout(e) {
-        console.log(e)
+        if (!RESPONSIVE) return;
+
         const container = getLinkMicLayoutContainer();
         if (!container) return;
 
@@ -164,7 +167,7 @@
 
     function onLinkMicLayoutChange() {
         evaluateLayout();
-        setTimeout(evaluateLayout, 1500);
+        setTimeout(evaluateLayout, 500);
 
         let count = getLinkMicLayoutContainer().querySelectorAll(':scope div.LGzZT73_').length;
         let now = Date.now();
@@ -308,13 +311,28 @@
 
     let danmakuOn = true
     document.addEventListener('keydown', (event) => {
-        if (event.key.toLowerCase() === 'b') {
+        let key = event.key.toLowerCase()
+        if (key === 'b') {
             danmakuOn = !danmakuOn
             console.log('DYLIVELAYOUT: Danmaku',danmakuOn);
-            moveCanvasDanmaku(0, 0);
-            moveVideo(0, 0);
-            moveLinkMicLayout(0, 0);
+            if (danmakuOn)
+                onLinkMicLayoutChange();
+            else {
+                moveCanvasDanmaku(0, 0);
+                moveVideo(0, 0);
+                moveLinkMicLayout(0, 0);
+            }
+        } else if (key === '0') {
+            RESPONSIVE = !RESPONSIVE;
+            if (RESPONSIVE)
+                onLinkMicLayoutChange();
+            else {
+                moveCanvasDanmaku(0, 0);
+                moveVideo(0, 0);
+                moveLinkMicLayout(0, 0);
+            }
         }
+
     });
 
 

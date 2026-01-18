@@ -1,15 +1,15 @@
 // ==UserScript==
-// @name         IYF.tv 网页全屏播放器（无 GM_addStyle）
+// @name         IYF网页全屏播放器（无 GM_addStyle）
 // @license MIT
 // @namespace    https://github.com/justfunc/
-// @version      1.2
+// @version      1.7
 // @description  实现对 #video_player 的网页全屏支持，兼容 Safari/Edge 等环境
 // @match        *://*.wyav.tv/*
 // @match        *://*.iyf.tv/*
 // @match        *://*.yfsp.tv/*
 // @grant        none
-// @downloadURL https://update.greasyfork.org/scripts/541519/IYFtv%20%E7%BD%91%E9%A1%B5%E5%85%A8%E5%B1%8F%E6%92%AD%E6%94%BE%E5%99%A8%EF%BC%88%E6%97%A0%20GM_addStyle%EF%BC%89.user.js
-// @updateURL https://update.greasyfork.org/scripts/541519/IYFtv%20%E7%BD%91%E9%A1%B5%E5%85%A8%E5%B1%8F%E6%92%AD%E6%94%BE%E5%99%A8%EF%BC%88%E6%97%A0%20GM_addStyle%EF%BC%89.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/541519/IYF%E7%BD%91%E9%A1%B5%E5%85%A8%E5%B1%8F%E6%92%AD%E6%94%BE%E5%99%A8%EF%BC%88%E6%97%A0%20GM_addStyle%EF%BC%89.user.js
+// @updateURL https://update.greasyfork.org/scripts/541519/IYF%E7%BD%91%E9%A1%B5%E5%85%A8%E5%B1%8F%E6%92%AD%E6%94%BE%E5%99%A8%EF%BC%88%E6%97%A0%20GM_addStyle%EF%BC%89.meta.js
 // ==/UserScript==
 
 (function () {
@@ -50,6 +50,24 @@
             font-size: 14px;
         }
     `);
+    
+    function preventElementPopup(selector) {
+        const element = document.querySelector(selector);
+        if (element) {
+            element.style.display = 'none';
+            element.style.visibility = 'hidden';
+            element.style.opacity = '0';
+            element.style.pointerEvents = 'none';
+            element.setAttribute('data-blocked', 'true');
+        }
+    }
+
+    function removeElement(selector) {
+        const elements = document.querySelectorAll(selector);
+        elements.forEach(element => {
+            element.remove();
+        });
+    }
 
     function addFullscreenButton(video) {
         const wrapper = video.closest('div') || video.parentElement;
@@ -82,10 +100,50 @@
 
         wrapper.appendChild(button);
     }
+    
+    function hideDualClassDivs() {
+        const vgPauseElements = document.querySelectorAll('.vg-pause-f');
+        vgPauseElements.forEach(element => {
+            // 阻止点击事件
+            element.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            }, true);
+
+            // 阻止右键菜单
+            element.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                return false;
+            }, true);
+
+            // 设置样式使其不可见且不可交互
+            element.style.display = 'none';
+            element.style.visibility = 'hidden';
+            element.style.pointerEvents = 'none';
+        });
+
+        removeElement('div.ps.pggf');
+
+        document.querySelectorAll('div.page-container.video-player').forEach(div => {
+            div.style.width = '100%';
+            div.style.height= 'auto';
+        });
+        document.querySelectorAll('div.aa-videoplayer-wrap').forEach(div => {
+            div.style.setProperty('height', 'auto','important');
+        });
+        document.querySelectorAll('div.video-box.ng-star-inserted').forEach(div => {
+            div.style.height = 'auto';
+        });
+        
+        preventElementPopup('.publicbox.ng-star-inserted');
+        removeElement('.publicbox.ng-star-inserted');
+    }
 
     function waitForVideo() {
         const video = document.getElementById('video_player');
         if (video) {
+            hideDualClassDivs();
             addFullscreenButton(video);
         } else {
             setTimeout(waitForVideo, 500);

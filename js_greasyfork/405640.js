@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        sht视频预览
 // @namespace    http://tampermonkey.net/
-// @version      0.12
+// @version      0.22
 // @description  预加载视频图片
 // @author       sht
 // @match        https://www.qwewqq.xyz/*
@@ -14,39 +14,25 @@
 //注入页面的脚本文件
 
 jQuery(function() {
-    var res = '';
-    var urls = jQuery('a.s.xst');
-    var s_urls = [];
+    var urls = jQuery('a.s.xst').map(function() { return this.href; }).get();
     var defer = jQuery.Deferred();
-
-    for (i = 0; i < urls.length; i++) {
-        console.log(i);
-        var url = urls[i].href;
-        s_urls.push(url);
-    }
-    //这一步必须要写，要不然下面的then无法使用
-    defer.resolve(jQuery("#content_2015195").append(""));
-    jQuery.each(s_urls, function(i, e) { //i 是序列，e是数值
+   defer.resolve(jQuery("#content_2015195").append(""));
+    urls.forEach(function(url, i) {
         defer = defer.then(function() {
             return jQuery.ajax({
-                url: e,
+                url: url,
                 method: 'get',
                 success: function(data) {
-                    res = data.match(/\[img\](.*?)\[\/img\]/i);
-                    if (res !== null) {
-                        console.log(e + '------' + res[1]);
-                   jQuery('a.s.xst').eq(i).append('<img src="'+res[1]+'" width=500 />');
-                    } else {
-                        res = data.match('file="(.*?)" onmouseover');
-                        if (res !== null) {
-                            jQuery('a.s.xst').eq(i).append('<img src="'+res[1]+'" width=500 />');
-                        }
+                    var imgSrc = data.match(/\[img\](.*?)\[\/img\]/i) || data.match(/file="(.*?)" onmouseover/);
+                    if (imgSrc) {
+                        jQuery('a.s.xst').eq(i).append('<img src="' + imgSrc[1] + '" width=500 />');
                     }
                 }
-            })
+            });
         });
     });
+
     defer.done(function() {
-        jQuery("#content_2015195").append("ajax全部执行完成<br/>")
+        jQuery("#content_2015195").append("AJAX全部执行完成<br/>");
     });
-})
+});

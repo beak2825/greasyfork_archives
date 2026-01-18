@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Forums Fav
 // @namespace    Forums Fav
-// @version      0.24.1
+// @version      0.25.0
 // @description  Modification Forum Ajax + Set local Storage
 // @author       Test
 // @icon         https://images.emojiterra.com/google/noto-emoji/unicode-15/color/128px/1f6e1.png
@@ -46,7 +46,7 @@ if (location.hostname.endsWith("jeuxvideo.com") && (location.pathname === "/")) 
 
         //RISIBANK TEMP
         const iframe = document.createElement("iframe");
-        iframe.src = `https://risibank.fr/embed`;
+        iframe.src = `https://risibank.fr/embed?setPseudoPerso=${pseudoRisibank}`;
         iframe.style.cssText = "display : none;";
         document.body.appendChild(iframe);
 
@@ -59,8 +59,8 @@ if (location.hostname.endsWith("jeuxvideo.com") && (location.pathname === "/")) 
 
 
 if (location.href.includes('https://risibank.fr/embed')) {
-    (async () => {
-        const promptSet = prompt("Entrer un pseudo risibank :", pseudoRisibank);
+    async function initializeIframeAuth(pseudo) {
+        const promptSet = prompt("Entrer un pseudo risibank :", pseudo);
         if (!promptSet) return;
         const reponse = await fetch(`https://risibank.fr/api/v1/users/by-username/${promptSet}`);
         const fetchUser = await reponse.json();
@@ -84,5 +84,31 @@ if (location.href.includes('https://risibank.fr/embed')) {
                 user: fetchUser
             })
         );
-    })();
+    }
+
+    const pseudo = new URL(location.href).searchParams.get("setPseudoPerso");
+    const auth = localStorage.getItem("auth");
+
+    if (pseudo) {
+        initializeIframeAuth(pseudo);
+    } else if (!pseudo && !auth) {
+         document.addEventListener("click", async e => {
+             const btn = e.target.closest('.btn-primary');
+             if (btn?.textContent.trim() === "Connexion") {
+                 e.preventDefault(); e.stopPropagation();
+                 await initializeIframeAuth("");
+                 location.reload();
+             }
+         }, { capture: true });
+    }
+    else {
+       document.addEventListener("click", async e => {
+           const btn = e.target.closest('.btn-outline-primary');
+           if (btn?.title?.trim() === "Se deconnecter") {
+               e.preventDefault(); e.stopPropagation();
+               localStorage.removeItem("auth"); localStorage.removeItem("recentMedias");
+               location.reload();
+           }
+       }, { capture: true });
+    }
 }

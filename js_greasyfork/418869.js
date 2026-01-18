@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name Xhamster Widescreen - New Design - PlayList v.565
+// @name Xhamster Widescreen - New Design - PlayList v.567
 // @namespace xhamster.com
-// @version 5.650000.0
+// @version 5.670000.0
 // @description Wide Xhamster on large screen (1920x1080) ONLY...
 // @author janvier56
 // @license unlicense
@@ -51,8 +51,8 @@
 // @match https:/nl.xhamster.com/creators/*
 // @include /^(?:^https?:\/\/(?:[^\.]+\.)*xhamster\.[a-z]+\/videos\/?.*$)$/
 // @include /^(?:^https?:\/\/(?:[^\.]+\.)*xhvid\.[a-z]+\/videos\/?.*$)$/
-// @downloadURL https://update.greasyfork.org/scripts/418869/Xhamster%20Widescreen%20-%20New%20Design%20-%20PlayList%20v565.user.js
-// @updateURL https://update.greasyfork.org/scripts/418869/Xhamster%20Widescreen%20-%20New%20Design%20-%20PlayList%20v565.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/418869/Xhamster%20Widescreen%20-%20New%20Design%20-%20PlayList%20v567.user.js
+// @updateURL https://update.greasyfork.org/scripts/418869/Xhamster%20Widescreen%20-%20New%20Design%20-%20PlayList%20v567.meta.js
 // ==/UserScript==
 
 (function() {
@@ -60,7 +60,8 @@ let css = "";
 if ((location.hostname === "xhamster.com" || location.hostname.endsWith(".xhamster.com")) || (location.hostname === "xhamster19.com" || location.hostname.endsWith(".xhamster19.com")) || (location.hostname === "xhamster.desi" || location.hostname.endsWith(".xhamster.desi")) || (location.hostname === "fr.xhamster.com" || location.hostname.endsWith(".fr.xhamster.com")) || (location.hostname === "de.xhamster.com" || location.hostname.endsWith(".de.xhamster.com")) || (location.hostname === "nl.xhamster.com" || location.hostname.endsWith(".nl.xhamster.com")) || (location.hostname === "es.xhamster.com" || location.hostname.endsWith(".es.xhamster.com")) || (location.hostname === "it.xhamster.com" || location.hostname.endsWith(".it.xhamster.com")) || (location.hostname === "ru.xhamster.com" || location.hostname.endsWith(".ru.xhamster.com")) || (location.hostname === "pl.xhamster.com" || location.hostname.endsWith(".pl.xhamster.com")) || (location.hostname === "jp.xhamster.com" || location.hostname.endsWith(".jp.xhamster.com")) || (location.hostname === "ge.xhamster.com" || location.hostname.endsWith(".ge.xhamster.com")) || (location.hostname === "br.xhamster.com" || location.hostname.endsWith(".br.xhamster.com")) || (location.hostname === "cz.xhamster.com" || location.hostname.endsWith(".cz.xhamster.com")) || (location.hostname === "vi.xhamster.com" || location.hostname.endsWith(".vi.xhamster.com")) || (location.hostname === "tr.xhamster.com" || location.hostname.endsWith(".tr.xhamster.com")) || (location.hostname === "ua.xhamster.com" || location.hostname.endsWith(".ua.xhamster.com")) || (location.hostname === "hi.xhamster.com" || location.hostname.endsWith(".hi.xhamster.com")) || (location.hostname === "th.xhamster.com" || location.hostname.endsWith(".th.xhamster.com")) || (location.hostname === "ko.xhamster.com" || location.hostname.endsWith(".ko.xhamster.com")) || (location.hostname === "ro.xhamster.com" || location.hostname.endsWith(".ro.xhamster.com")) || (location.hostname === "pt.xhamster.com" || location.hostname.endsWith(".pt.xhamster.com")) || (location.hostname === "my.xhamster.com" || location.hostname.endsWith(".my.xhamster.com")) || (location.hostname === "id.xhamster.com" || location.hostname.endsWith(".id.xhamster.com")) || (location.hostname === "thumb-v.xhcdn.com" || location.hostname.endsWith(".thumb-v.xhcdn.com")) || (location.hostname === "thumb-v-ec.xhcdn.com" || location.hostname.endsWith(".thumb-v-ec.xhcdn.com")) || (location.hostname === "http://ept.xhcdn.com" || location.hostname.endsWith(".http://ept.xhcdn.com")) || (location.hostname === "http://ep0.xhcdn.com" || location.hostname.endsWith(".http://ep0.xhcdn.com")) || (location.hostname === "http://ep1.xhcdn.com" || location.hostname.endsWith(".http://ep1.xhcdn.com")) || (location.hostname === "http://ep3.xhcdn.com" || location.hostname.endsWith(".http://ep3.xhcdn.com")) || (location.hostname === "http://ep4.xhcdn.com" || location.hostname.endsWith(".http://ep4.xhcdn.com")) || (location.hostname === "http://ep4.xhcdn.com" || location.hostname.endsWith(".http://ep4.xhcdn.com")) || (location.hostname === "http://ep5.xhcdn.com" || location.hostname.endsWith(".http://ep5.xhcdn.com")) || (location.hostname === "http://ep6.xhcdn.com" || location.hostname.endsWith(".http://ep6.xhcdn.com")) || (location.hostname === "http://ep7.xhcdn.com" || location.hostname.endsWith(".http://ep7.xhcdn.com")) || (location.hostname === "http://ep8.xhcdn.com" || location.hostname.endsWith(".http://ep8.xhcdn.com")) || (location.hostname === "http://ep9.xhcdn.com" || location.hostname.endsWith(".http://ep9.xhcdn.com")) || (location.hostname === "xhvid.com" || location.hostname.endsWith(".xhvid.com"))) {
 		css += `
 
-		/* ==== X Xhamster Widescreen - New Design - PLAYLIST - v.565 (new565)  - NO MOBILE - ADD xhvid.com == CHROME DEV ==== */
+		/* ==== X Xhamster Widescreen - New Design - PLAYLIST - v.567 (new567)  - NO MOBILE - ADD xhvid.com == CHROME DEV ==== */
+
 		/* (nrw550) MY UBLOCK ORIGIN RULES  =====
 
 		! 2023-09-15 https://xhamster.com
@@ -76,7 +77,7 @@ if ((location.hostname === "xhamster.com" || location.hostname.endsWith(".xhamst
 		||xhchannel.com/embedded_video.php$subdocument,domain=xhamster.com,important
 		@@||xhchannel.com/embedded_video.php$subdocument,domain=xhamster.com
 		@@||xhchannel.com/embedded_video.php?v=xh7ltoL$subdocument,domain=xhamster.com
-
+		.favorites-control.positioned.xh-dropdown:has(.xh-button.trigger.no-arrow.active) .dropdown.position-left.favorites-dropdown[style="opacity: 1; display: block;"] .favorites-dropdown__list .favorites-dropdown__list-header + [data-role="playlist-picker-container"] ul[class^="root-"] li:has([class*="stateIcon-"][class*="extra-green-"])
 
 		==== */
 
@@ -127,7 +128,7 @@ if ((location.hostname === "xhamster.com" || location.hostname.endsWith(".xhamst
 		/*.video-page .ab-info.controls-info__item.xh-helper-hidden > p:not(:empty):after , */
 		.video-page .width-wrap.with-player-container + div .width-wrap [class^="noTabs-"]:after,
 		.video-page .width-wrap.with-player-container + div .width-wrap [class^="tabSet-"]:after {
-			content: "565" !important;
+			content: "567" !important;
 			position: fixed;
 			display: inline-block !important;
 			height: 100% !important;
@@ -156,7 +157,7 @@ if ((location.hostname === "xhamster.com" || location.hostname.endsWith(".xhamst
 		/* (new558) PERSO INDICATOR - TOP - HOVER ICON */
 		.video-page .width-wrap.with-player-container + div .width-wrap [class^="noTabs-"]:hover:after,
 		.video-page .width-wrap.with-player-container + div .width-wrap [class^="tabSet-"]:hover:after {
-			content: "565" !important;
+			content: "567" !important;
 			position: fixed;
 			display: inline-block !important;
 			height: 100% !important;
@@ -1054,9 +1055,9 @@ if ((location.hostname === "xhamster.com" || location.hostname.endsWith(".xhamst
 			overflow: visible !important;
 		}
 		html.pornstar-page .landing-info__user {
-			display: flex;
-			flex: 1 1 0;
-			flex-direction: column;
+			display: inline-block !important;
+			flex: unset !important;
+			flex-direction: unset !important;
 			height: 100%;
 			width: 100% !important;
 			min-width: 1145px !important;
@@ -1069,6 +1070,7 @@ if ((location.hostname === "xhamster.com" || location.hostname.endsWith(".xhamst
 		.landing-info__user-name, .landing-info__user-wrapper {
 		    position: relative !important;
 			display: inline-block !important;
+			width: 100% !important;
 			white-space: nowrap !important;
 		}
 		html.pornstar-page .landing-info__user .landing-info__user-name h1.landing-info__user-title{
@@ -1081,6 +1083,22 @@ if ((location.hostname === "xhamster.com" || location.hostname.endsWith(".xhamst
 			user-select: text !important;
 		}
 
+		/* (new565) INFO USER SITES */
+		.landing-info__user-wrapper +  .landing-info__action-block{
+			position: relative !important;
+			display: inline-block !important;
+			height: 2.2vh !important;
+			top: -1vh !important;
+		border-left: 1px solid red !important;
+		}
+		.landing-info__user-wrapper +  .landing-info__action-block .landing-info__join-button {
+			height: 2vh !important;
+		    padding: 0 10px !important;
+			margin: 0 0 0 5px !important;
+		}
+
+
+		/* (new565) */
 		html.pornstar-page .landing-info__counters {
 			position: relative !important;
 			display: inline-block !important;
@@ -3718,12 +3736,12 @@ if ((location.hostname === "xhamster.com" || location.hostname.endsWith(".xhamst
 			outline: 1px dashed yellow !important;
 		}
 
-		/* USER PROF - FAV VIDEOS - SHOW BUTTON  */
+		/* (new565) USER PROF - FAV VIDEOS - SHOW BUTTON  */
 		.favorite-videos-block.column-block.xh-tabbed .mixed-section > div:last-of-type a {
 			position: absolute !important;
 			margin: 0 !important;
 			top: 0px !important;
-			left: 434px !important;
+			left: 534px !important;
 		}
 		/* MY POSTS */
 		.favorite-stories-block.column-block.xh-tabbed {
@@ -5411,22 +5429,23 @@ if ((location.hostname === "xhamster.com" || location.hostname.endsWith(".xhamst
 			border: 1px solid aqua !important;
 		}
 
-		/* ALL - ALERTE BOX - === */
+		/* (new565) ALL - ALERTE BOX - === */
 		.alert-box:not(:empty) {
 			position: fixed;
 			display: inline-block !important;
 			width: 530px !important;
 			/* min-height: 2.5vh !important; */
 			max-height: 3vh !important;
+			line-height: 3vh !important;
 			left: 10px;
-			bottom: 0vh;
+			bottom: -0.2vh;
 			transform: translateZ(0px);
-			overflow: hidden !important;
-			overflow-y: auto !important;
+			overflow: hidden auto !important;
 			z-index: 10005;
-			background: #111 !important;
-			border: 1px solid red !important;
+		background: #111 !important;
+		border: 1px solid yellow !important;
 		}
+
 		.alert-box .alert-box__item.alert-item {
 			display: none !important;
 		}
@@ -5436,7 +5455,7 @@ if ((location.hostname === "xhamster.com" || location.hostname.endsWith(".xhamst
 			height: 100% !important;
 			min-height: 3vh !important;
 			max-height: 3vh !important;
-			margin: 0 0 2px 0 !important;
+			margin: 2vh 0 2px 0 !important;
 			transform: scale(1) !important;
 			transform-origin: left top !important;
 			opacity: 0.7 !important;
@@ -5452,12 +5471,29 @@ if ((location.hostname === "xhamster.com" || location.hostname.endsWith(".xhamst
 			height: 100% !important;
 			min-height: 3vh !important;
 			max-height: 3vh !important;
-			margin: 0 0 2px 0 !important;
+			margin: 0px 0 2px 0 !important;
 			opacity: 0.7 !important;
 			transform: scale(0.7) !important;
-			transform-origin: left -1vh !important;
-			border: 1px solid green !important;
+			transform-origin: left 0vh !important;
+		border: 1px solid green !important;
 		}
+		.alert-box .alert-box__item.alert-item:nth-last-child(-n + 1) .alert-item__content {
+			position: relative;
+			display: inline-block !important;
+
+			height: 100% !important;
+			min-height: 3vh !important;
+			max-height: 3vh !important;
+			line-height: 3vh !important;
+		    align-items: center;
+		    
+		    padding: 0px 0 15px 40px !important;
+		    
+		    will-change: transform;
+			animation: alert-content-appear .95s ease 1 !important;
+			background-color: blue !important;
+		}
+
 		/* ALERTE - ICON */
 		.alert-item__result--error {
 			display: inline-block !important;
@@ -5476,13 +5512,13 @@ if ((location.hostname === "xhamster.com" || location.hostname.endsWith(".xhamst
 			width: 100% !important;
 			min-width: 650px !important;
 			max-width: 650px !important;
-			margin: 0.3vh 0 0 0px !important;
-			top: -1vh !important;
+			margin: 0vh 0 0 0px !important;
+			top: 0vh !important;
 			padding: 0 43px 0 2px !important;
 			font-size: 14px;
 			color: gold !important;
-			background: #111 !important;
-			border: 1px solid red !important;
+			background: gold !important;
+		border: 1px solid red !important;
 		}
 		.alert-item__close {
 			position: absolute !important;
@@ -6798,7 +6834,8 @@ if ((location.hostname === "xhamster.com" || location.hostname.endsWith(".xhamst
 			text-align: center !important;
 		}
 
-		/* TAGS - GM "	XHamster - IA 04 - Retired User Search (DuckDuckGo: In site search)" */
+		/* (new565) TAGS - GM "	XHamster - IA 04 - Retired User Search (DuckDuckGo: In site search)
+		"https://xhamster.com/videos/do-what-ever-you-want-to-me-xha7sCy */
 		button.search-button {
 			position: absolute !important;
 			display: inline-block !important;
@@ -6815,6 +6852,24 @@ if ((location.hostname === "xhamster.com" || location.hostname.endsWith(".xhamst
 			color: white;
 			background: green;
 		}
+		/* V.4 - TEST - for only USER RETIRED NAME (not in tag list) == https://xhamster.com/videos/do-what-ever-you-want-to-me-xha7sCy  */
+		button.search-button2 {
+			position: fixed !important;
+			display: inline-block !important;
+			align-items: center;
+			height: 1.8vh !important;
+			line-height: 1.8vh !important;
+			margin: 0vh 0px 0 0px !important;
+			left: 1000px !important;
+			padding: 1px 3px !important;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			z-index: 50000000 !important;
+			color: white;
+			background: green;
+		}
+		button.search-button2 i.fa ,
 		button.search-button i.fa {
 			position: absolute !important;
 			display: inline-block !important;
@@ -6828,6 +6883,7 @@ if ((location.hostname === "xhamster.com" || location.hostname.endsWith(".xhamst
 			color: white;
 			background: #111 !important;
 		}
+		button.search-button2:hover i.fa ,
 		button.search-button:hover i.fa {
 			position: absolute !important;
 			display: inline-block !important;
@@ -6944,7 +7000,7 @@ if ((location.hostname === "xhamster.com" || location.hostname.endsWith(".xhamst
 			text-align: center !important;
 		}
 
-		/* (new558) HOVER - TAG - HOVER - BIG AVATAR PREVIEW */
+		/* (new565) HOVER - TAG - HOVER - BIG AVATAR PREVIEW */
 		.video-page #video-tags-list-container > [class^="container-"] > [class^="list-"] [class^="item-"]:hover a[href*="/channels/"] img:not([src="https://duckduckgo.com/favicon.ico"]),
 		.video-page #video-tags-list-container > [class^="container-"] > [class^="list-"] [class^="item-"]:hover a[href*="/users/"] img:not([src="https://duckduckgo.com/favicon.ico"]),
 		.video-page #video-tags-list-container > [class^="container-"] > [class^="list-"] [class^="item-"]:hover a[href*="/celebrities/"] img:not([src="https://duckduckgo.com/favicon.ico"]),
@@ -6955,6 +7011,7 @@ if ((location.hostname === "xhamster.com" || location.hostname.endsWith(".xhamst
 			display: inline-block;
 			vertical-align: middle;
 			height: auto !important;
+			    height: 22vh !important;
 			line-height: 92px !important;
 			min-width: 202px !important;
 			max-width: 202px !important;
@@ -9709,6 +9766,10 @@ if ((location.hostname === "xhamster.com" || location.hostname.endsWith(".xhamst
 		color: gold  !important;
 		background: red !important;
 		}
+		/* (new565) VID - COMM - NO PREMESS - SUPP BUTT - TEST - A VOIR  */
+		/*.video-page .width-wrap [class^="commentTabs-"] [class^="heading-"].comments-heading + div:has([class^="inputArea-"]) > [class^="root-"] [class^="inputArea-"]:has(.premessage.xh-helper-hidden) [class^="submitWrapper-"] {
+			display: none  !important;
+		}*/
 
 		/* ADD COM - AVATAR */
 		.video-page .width-wrap [class^="commentTabs-"] [class^="heading-"].comments-heading + div:has([class^="inputArea-"]) > [class^="root-"] [class^="user-"] [class^="avatar-"] {
@@ -9766,6 +9827,9 @@ if ((location.hostname === "xhamster.com" || location.hostname.endsWith(".xhamst
 			opacity: 1 !important;
 			visibility: visible !important;
 		}
+
+
+
 
 		/* (new558) ADD COM - TEXTRERA - WHEN HOVER A COMMENT */
 		.video-page .width-wrap #commentBox:has([class^="commentsList-"] [class^="commentItem-"]:hover) [class^="heading-"].comments-heading + [class^="form-"]  {
@@ -9898,16 +9962,16 @@ if ((location.hostname === "xhamster.com" || location.hostname.endsWith(".xhamst
 		border-bottom: 1px solid red !important;
 		}
 
-		/* VID - RELATED -  */
+		/* (new567) VID - RELATED -  */
 		.video-page .width-wrap.with-player-container + div,
 		.video-page .width-wrap.with-player-container + .width-wrap {
 			position: fixed;
 			display: inline-block !important;
 			min-height: 96vh !important;
 			max-height: 96vh !important;
-			max-width: 893px;
-			min-width: 893px;
-			right: 0;
+			max-width: 883px;
+			min-width: 883px;
+			right: 0px !important;
 			top: 3.1vh !important;
 			margin: 0 !important;
 			padding: 0px 0 0vh 0 !important;
@@ -13242,16 +13306,19 @@ if ((location.hostname === "xhamster.com" || location.hostname.endsWith(".xhamst
 			overflow: hidden !important;
 			overflow-y: auto !important;
 		}
-		/* CAT - TAGS  ?? */
-		.category-page body > .main-wrap[data-role="main-wrap"] .layoutPage section:not(#messages-main-view,
-		[data-block="extension"]) {
+		/* (new565) CAT - TAGS  / CHANNEL ?? 
+		https://xhamster.com/channels/mia-sonne
+		https://xhamster.com/channels/hoobe
+		=== */
+		.category-page body > .main-wrap[data-role="main-wrap"] .layoutPage section:not(#messages-main-view, [data-block="extension"]) {
 			display: inline-block !important;
 			height: 100% !important;
 			min-height: unset !important;
 			max-height: 87vh !important;
-			top: 14.5vh !important;
+			top: 10.5vh !important;
 			padding: 0;
 		}
+
 		.category-page body > .main-wrap[data-role="main-wrap"] .layoutPage section:not(#messages-main-view,
 		[data-block="extension"]) div[data-role="video-section-content-role"] .thumb-list.thumb-list--sidebar.thumb-list--small-with-cube {
 			display: inline-block !important;
@@ -13313,15 +13380,18 @@ if ((location.hostname === "xhamster.com" || location.hostname.endsWith(".xhamst
 			top: 0px;
 			padding: 0;
 		}
-		.best-page .width-wrap > aside,
-		.category-page .pages-category.width-wrap aside,
-		.category-page main > .width-wrap aside {
+		/* (new565) */
+		.best-page .width-wrap > aside:not([class^="prePopunderLabel-"]),
+		.category-page .pages-category.width-wrap aside:not([class^="prePopunderLabel-"]),
+		.category-page main > .width-wrap aside:not([class^="prePopunderLabel-"]) {
 			position: absolute !important;
 			margin: 0 !important;
 			z-index: 0 !important;
 		background: #111 !important;
 		}
-		html.category-page body .sp-separator ~ .main-wrap main aside {
+		/* (new565) SUPP == [class^="prePopunderLabel-"] */
+		aside[class^="prePopunderLabel-"] ,
+		html.category-page body .sp-separator ~ .main-wrap main aside  {
 			display: none !important;
 		}
 		.category-page h1.category-title {
@@ -13929,7 +13999,7 @@ if ((location.hostname === "xhamster.com" || location.hostname.endsWith(".xhamst
 			margin-top: -10px !important;
 		}
 
-		/* CAT INFO - NOT PORNSTAR INFO + ALL - FIXED  - ALL TEMPLATE */
+		/* (new565) CAT INFO - NOT PORNSTAR INFO + ALL - FIXED  - ALL TEMPLATE */
 		.category-page .pages-category .false,
 		.category-page .main-wrap main article .category-info,
 		.category-page .main-wrap .pages-category article > div[class^="root-"]:first-of-type,
@@ -13947,7 +14017,7 @@ if ((location.hostname === "xhamster.com" || location.hostname.endsWith(".xhamst
 			top: 2.7vh !important;
 			left: 190px !important;
 			overflow: visible !important;
-			z-index: 50000 !important;
+			z-index: 5000000 !important;
 			visibility: visible !important;
 		background: #111 !important;
 		border-bottom: 1px solid red !important;
@@ -14506,660 +14576,24 @@ if ((location.hostname === "xhamster.com" || location.hostname.endsWith(".xhamst
 			z-index: 50000 !important;
 		}
 
-		/* (new399) PORNSTARS INFOS  / USER COUNTRY FLAGS INDICATOR */
-		/* AL - Albanian */
-		.pornstar-page .pornstar-country .xh-flag.al:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.al:after {
-			content: "Albanian";
-		}
-		/* DZ - Algerian */
-		.pornstar-page .pornstar-country .xh-flag.dz:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.dz:after {
-			content: "Algerian";
-		}
 
-		/* AR - Argentinian */
-		.pornstar-page .pornstar-country .xh-flag.ar:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.ar:after {
-			content: "Argentinian";
-		}
-		/* AM - Armeninian */
-		.pornstar-page .pornstar-country .xh-flag.am:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.am:after {
-			content: "Armeninian";
-		}
-		/* AO - Angolan */
-		.pornstar-page .pornstar-country .xh-flag.ao:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.ao:after {
-			content: "Angolan";
-		}
-		/* AS - American Samoan  */
-		.pornstar-page .pornstar-country .xh-flag.as:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.as:after {
-			content: "American Samoan";
-		}
-		/* AT - Austrian  */
-		.pornstar-page .pornstar-country .xh-flag.at:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.at:after {
-			content: "Austrian";
-		}
-		/* AU - Australian  */
-		.pornstar-page .pornstar-country .xh-flag.au:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.au:after {
-			content: "Australian";
-		}
-		/* AZ - Azeri  */
-		.pornstar-page .pornstar-country .xh-flag.az:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.az:after {
-			content: "Azeri";
+		/* (new565) PORNSTARS INFOS  / USER COUNTRY FLAGS INDICATOR */
+		html.pornstar-page .landing-info__user a[class$="pornstar-country"]:before {
+			content: attr(data-tooltip)  !important;
+			position: absolute !important;
+			display: inline-block !important;
+			height: 1.2vh !important;
+			line-height: 1.3vh !important;
+			margin: 7.3vh 0 0 25px !important;
+			left: 5px  !important;
+			padding: 0 5px !important;
+			font-size: 12px  !important;
+		color: white !important;
+		background: #111;
+		border: 1px solid red !important;
 		}
 
 
-		/* BA - Bosnian */
-		.pornstar-page .pornstar-country .xh-flag.ba:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.ba:after {
-			content: "Bosnian";
-		}
-		/* BB - Barbadian */
-		.pornstar-page .pornstar-country .xh-flag.bb:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.bb:after {
-			content: "Barbadian";
-		}
-		/* BD - Bangladeshi */
-		.pornstar-page .pornstar-country .xh-flag.bd:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.bd:after {
-			content: "Bangladeshi";
-		}
-		/* BE - Belgian */
-		.pornstar-page .pornstar-country .xh-flag.be:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.be:after {
-			content: "Belgian";
-		}
-		/* BG - Bulgarian */
-		.pornstar-page .pornstar-country .xh-flag.bg:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.bg:after {
-			content: "Bulgarian";
-		}
-		/* BM - Bermudian */
-		.pornstar-page .pornstar-country .xh-flag.bm:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.bn:after {
-			content: "Bermudian";
-		}
-		/* BN - Bruneian */
-		.pornstar-page .pornstar-country .xh-flag.bn:after,
-		.pornstar-page .pornstar-country .xh-flag.BN:after {
-			content: "Bruneian";
-		}
-		/* BO - Bolivian */
-		.pornstar-page .pornstar-country .xh-flag.bo:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.bo:after {
-			content: "Bolivian";
-		}
-		/* BR - Brazilian */
-		.pornstar-page .pornstar-country .xh-flag.br:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.br:after {
-			content: "Brazilian";
-		}
-		/* BS - Bahamian */
-		.pornstar-page .pornstar-country .xh-flag.bs:after,
-		.pornstar-page .pornstar-country .xh-flag.BS:after {
-			content: "Bahamian";
-		}
-		/* BY - Belarusian */
-		.pornstar-page .pornstar-country .xh-flag.by:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.by:after {
-			content: "Belarusian";
-		}
-
-
-		/* CA - Canadian */
-		.pornstar-page .pornstar-country .xh-flag.ca:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.ca:after {
-			content: "Canadian";
-		}
-		/* CH - Swiss */
-		.pornstar-page .pornstar-country .xh-flag.ch:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.ch:after {
-			content: "Swiss";
-		}
-		/* CL - Chilean */
-		.pornstar-page .pornstar-country .xh-flag.cl:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.cl:after {
-			content: "Chilean";
-		}
-		/* CM - Cameroonian */
-		.pornstar-page .pornstar-country .xh-flag.cm:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.cm:after {
-			content: "Cameroonian";
-		}
-		/* CN - Chinese */
-		.pornstar-page .pornstar-country .xh-flag.cn:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.cn:after {
-			content: "Chinese";
-		}
-		/* CO - Colombian */
-		.pornstar-page .pornstar-country .xh-flag.co:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.co:after {
-			content: "Colombian";
-		}
-		/* CR - Costa Rican */
-		.pornstar-page .pornstar-country .xh-flag.cr:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.cr:after {
-			content: "Costa Rican";
-		}
-		/* CU - Czech */
-		.pornstar-page .pornstar-country .xh-flag.cu:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.cu:after {
-			content: "Cuban";
-		}
-		/* CY - Cypriot */
-		.pornstar-page .pornstar-country .xh-flag.cy:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.cy:after {
-			content: "Cypriot";
-		}
-		/* CZ - Czech */
-		.pornstar-page .pornstar-country .xh-flag.cz:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.cz:after {
-			content: "Czech";
-		}
-
-
-
-		/* DE - German */
-		.pornstar-page .pornstar-country .xh-flag.de:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.de:after {
-			content: "German";
-		}
-		/* DK - Danish */
-		.pornstar-page .pornstar-country .xh-flag.dk:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.dk:after {
-			content: "Danish";
-		}
-		/* DO - Dominican (Spanish)*/
-		.pornstar-page .pornstar-country .xh-flag.do:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.do:after {
-			content: "Dominican (Spanish)";
-			width: 180px !important;
-		}
-
-
-		/* EC - Ecuadorian */
-		.pornstar-page .pornstar-country .xh-flag.ec:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.ec:after {
-			content: "Ecuadorian";
-		}
-		/* EE - Estonian */
-		.pornstar-page .pornstar-country .xh-flag.ee:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.ee:after {
-			content: "Estonian";
-		}
-		/* EG - Egyptian */
-		.pornstar-page .pornstar-country .xh-flag.eg:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.eg:after {
-			content: "Egyptian";
-		}
-		/* ES - Spanish */
-		.pornstar-page .pornstar-country .xh-flag.es:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.es:after {
-			content: "Spanish";
-		}
-
-
-
-		/* FI - Finnish */
-		.pornstar-page .pornstar-country .xh-flag.fi:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.fiI:after {
-			content: "Finnish";
-		}
-		/* FR - French */
-		.pornstar-page .pornstar-country .xh-flag.fr:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.fr:after {
-			content: "French";
-		}
-
-
-		/* GB - British */
-		.pornstar-page .pornstar-country .xh-flag.gb:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.gb:after {
-			content: "British";
-		}
-		/* GD - Grenadian */
-		.pornstar-page .pornstar-country .xh-flag.gd:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.gd:after {
-			content: "Grenadian";
-		}
-		/* GH - Ghanaian */
-		.pornstar-page .pornstar-country .xh-flag.gh:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.gh:after {
-			content: "Ghanaian";
-		}
-		/* GE - Greenlander */
-		.pornstar-page .pornstar-country .xh-flag.gl:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.gl:after {
-			content: "Greenlander";
-		}
-		/* GL - Georgian */
-		.pornstar-page .pornstar-country .xh-flag.ge:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.ge:after {
-			content: "Georgian";
-		}
-		/* GP - Guadeloupean */
-		.pornstar-page .pornstar-country .xh-flag.gp:after,
-		.pornstar-page .pornstar-country .xh-flag.GP:after {
-			content: "Guadeloupean";
-		}
-		/* GQ - Equatoguinean */
-		.pornstar-page .pornstar-country .xh-flag.gq:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.gq:after {
-			content: "Equatoguinean";
-		}
-		/* GR - Greek */
-		.pornstar-page .pornstar-country .xh-flag.gr:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.gr:after {
-			content: "Greek";
-		}
-		/* GT - Guatemalan */
-		.pornstar-page .pornstar-country .xh-flag.gt:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.gt:after {
-			content: "Guatemalan";
-		}
-
-
-		/* HK - Hong Kongese */
-		.pornstar-page .pornstar-country .xh-flag.hk:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.hk:after {
-			content: "Hong Kongese";
-		}
-		/* HN - Hondurian */
-		.pornstar-page .pornstar-country .xh-flag.hn:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.hn:after {
-			content: "Hondurian";
-		}
-		/* HR - Croatian*/
-		.pornstar-page .pornstar-country .xh-flag.hr:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.hr:after {
-			content: "Croatian";
-		}
-		/* HU - Hungarian */
-		.pornstar-page .pornstar-country .xh-flag.hu:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.hu:after {
-			content: "Hungarian";
-		}
-
-
-
-		/* IN - Indian */
-		.pornstar-page .pornstar-country .xh-flag.in:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.in:after {
-			content: "Indian";
-		}
-		/* ID - Indonesian */
-		.pornstar-page .pornstar-country .xh-flag.id:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.id:after {
-			content: "Indonesian";
-		}
-		/* IR - Iranian */
-		.pornstar-page .pornstar-country .xh-flag.ir:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.r:after {
-			content: "Iranian";
-		}
-		/* IE - Irish */
-		.pornstar-page .pornstar-country .xh-flag.ie:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.ie:after {
-			content: "Irish";
-		}
-		/* IL - Israeli */
-		.pornstar-page .pornstar-country .xh-flag.il:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.il:after {
-			content: "Israeli";
-		}
-		/* IS - Icelander */
-		.pornstar-page .pornstar-country .xh-flag.is:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.is:after {
-			content: "Icelander";
-		}
-		/* IT - Italian */
-		.pornstar-page .pornstar-country .xh-flag.it:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.it:after {
-			content: "Italian";
-		}
-
-
-		/* JM - Jamaican */
-		.pornstar-page .pornstar-country .xh-flag.jm:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.jm:after {
-			content: "Jamaican";
-		}
-		/* JO - Japanese */
-		.pornstar-page .pornstar-country .xh-flag.jo:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.jo:after {
-			content: "Jordanian";
-		}
-		/* JP - Japanese */
-		.pornstar-page .pornstar-country .xh-flag.jp:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.jp:after {
-			content: "Japanese";
-		}
-
-
-		/* KE - Keynian */
-		.pornstar-page .pornstar-country .xh-flag.ke:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.kh:after {
-			content: "Keynian";
-		}
-		/* KG - Kyrgyz */
-		.pornstar-page .pornstar-country .xh-flag.kg:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.kg:after {
-			content: "Kyrgyz";
-		}
-		/* KH - Cambodian */
-		.pornstar-page .pornstar-country .xh-flag.kh:after,
-		.pornstar-page .pornstar-country .xh-flag.KH:after {
-			content: "Cambodian";
-		}
-		/* KP - North Korean */
-		.pornstar-page .pornstar-country .xh-flag.kp:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.kp:after {
-			content: "North Korean";
-		}
-		/* KR - Korean */
-		.pornstar-page .pornstar-country .xh-flag.kr:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.kr:after {
-			content: "Korean";
-		}
-		/* KZ - Kazakhstani */
-		.pornstar-page .pornstar-country .xh-flag.kz:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.kz:after {
-			content: "Kazakhstani";
-		}
-
-		/* LB - Lebanese */
-		.pornstar-page .pornstar-country .xh-flag.lb:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.lb:after {
-			content: "Lebanese";
-		}
-		/* LK - Sri Lanka */
-		.pornstar-page .pornstar-country .xh-flag.lk:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.lk:after {
-			content: "Sri Lanka";
-		}
-		/* LT - Lithuanian */
-		.pornstar-page .pornstar-country .xh-flag.lt:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.lt:after {
-			content: "Lithuanian";
-		}
-		/* LV - Latvia */
-		.pornstar-page .pornstar-country .xh-flag.lv:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.lv:after {
-			content: "Latvia";
-		}
-		/* LY - Libyan */
-		.pornstar-page .pornstar-country .xh-flag.ly:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.ly:after {
-			content: "Libyan";
-		}
-
-
-		/* MA - Morocan */
-		.pornstar-page .pornstar-country .xh-flag.ma:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.ma:after {
-			content: "Morocan";
-		}
-		/* MC - Monégasque */
-		.pornstar-page .pornstar-country .xh-flag.mc:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.mc:after {
-			content: "Monégasque";
-		}
-		/* MD - Moldovan */
-		.pornstar-page .pornstar-country .xh-flag.md:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.md:after {
-			content: "Moldovan";
-		}
-		/* ME - Montenegrin */
-		.pornstar-page .pornstar-country .xh-flag.me:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.me:after {
-			content: "Montenegrin";
-		}
-		/* MG - Malagasy / Malgache */
-		.pornstar-page .pornstar-country .xh-flag.mg:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.me:after {
-			content: "Malagasy / Malgache";
-			width: 180px !important;
-		}
-		/* MN - Mongolian */
-		.pornstar-page .pornstar-country .xh-flag.mn:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.mn:after {
-			content: "Mongolian";
-		}
-		/* MT - Maltese */
-		.pornstar-page .pornstar-country .xh-flag.mt:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.mt:after {
-			content: "Maltese";
-		}
-		/* MY - Malaysian */
-		.pornstar-page .pornstar-country .xh-flag.my:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.my:after {
-			content: "Malaysian";
-		}
-		/* MX - Mexican */
-		.pornstar-page .pornstar-country .xh-flag.mx:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.mx:after {
-			content: "Mexican";
-		}
-
-
-		/* NE - Nigerian */
-		.pornstar-page .pornstar-country .xh-flag.ne:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.ne:after {
-			content: "Nigerian";
-		}
-		/* NI - Nicaraguan */
-		.pornstar-page .pornstar-country .xh-flag.ni:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.ni:after {
-			content: "Nicaraguan";
-		}
-		/* NL - Netherlands (Dutch) */
-		.pornstar-page .pornstar-country .xh-flag.nl:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.nl:after {
-			content: "Netherlands (Dutch)";
-			width: 180px !important;
-		}
-		/* NO - Norvegian */
-		.pornstar-page .pornstar-country .xh-flag.no:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.no:after {
-			content: "Norvegian";
-		}
-		/* NZ - New Zealander */
-		.pornstar-page .pornstar-country .xh-flag.nz:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.nz:after {
-			content: "New Zealander";
-		}
-
-		/* PA - Panamanian */
-		.pornstar-page .pornstar-country .xh-flag.pa:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.pa:after {
-			content: "Panamanian";
-		}
-		/* PE - Peruvian */
-		.pornstar-page .pornstar-country .xh-flag.pe:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.pe:after {
-			content: "Peruvian";
-		}
-		/* PH - Filipina */
-		.pornstar-page .pornstar-country .xh-flag.ph:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.ph:after {
-			content: "Filipina";
-		}
-		/* PK - Pakistani */
-		.pornstar-page .pornstar-country .xh-flag.pk:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.pk:after {
-			content: "Pakistani";
-		}
-		/* PL - Polish */
-		.pornstar-page .pornstar-country .xh-flag.pl:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.pl:after {
-			content: "Polish";
-		}
-		/* PR - Puerto Rican */
-		.pornstar-page .pornstar-country .xh-flag.pr:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.pr:after {
-			content: "Puerto Rican";
-		}
-		/* PT - Portuguese */
-		.pornstar-page .pornstar-country .xh-flag.pt:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.pt:after {
-			content: "Portuguese";
-		}
-		/* PY - Paraguayan */
-		.pornstar-page .pornstar-country .xh-flag.py:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.py:after {
-			content: "Paraguayan";
-		}
-
-		/* RE - Réunionese */
-		.pornstar-page .pornstar-country .xh-flag.re:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.re:after {
-			content: "Réunionese";
-		}
-		/* RO - Romanian */
-		.pornstar-page .pornstar-country .xh-flag.ro:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.ro:after {
-			content: "Romanian";
-		}
-		/* RS - Serbian */
-		.pornstar-page .pornstar-country .xh-flag.rs:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.rs:after {
-			content: "Serbian";
-		}
-		/* RU - Russian */
-		.pornstar-page .pornstar-country .xh-flag.ru:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.ru:after {
-			content: "Russian";
-		}
-
-
-		/* SA - Saudi Arabian */
-		.pornstar-page .pornstar-country .xh-flag.sa:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.sa:after {
-			content: "Saudi Arabian";
-		}
-		/* SE - Sweden */
-		.pornstar-page .pornstar-country .xh-flag.se:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.se:after {
-			content: "Sweden";
-		}
-		/* SI - Slovenian */
-		.pornstar-page .pornstar-country .xh-flag.si:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.si:after {
-			content: "Slovenian";
-		}
-		/* SG - Singaporean */
-		.pornstar-page .pornstar-country .xh-flag.sg:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.sg:after {
-			content: "Singaporean";
-		}
-		/* SK - Slovak */
-		.pornstar-page .pornstar-country .xh-flag.sk:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.sk:after {
-			content: "Slovak";
-		}
-		/* SN - Senegalese */
-		.pornstar-page .pornstar-country .xh-flag.sn:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.sn:after {
-			content: "Senegalese";
-		}
-		/* SR - Surinian */
-		.pornstar-page .pornstar-country .xh-flag.sr:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.sr:after {
-			content: "Surinian";
-		}
-		/* SV - Salvadorian (Spanish) */
-		.pornstar-page .pornstar-country .xh-flag.sv:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.sv:after {
-			content: "Salvadorian (Spanish)";
-			width: 180px !important;
-		}
-		/* SY - Syrian */
-		.pornstar-page .pornstar-country .xh-flag.sy:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.sy:after {
-			content: "Syrian";
-		}
-
-		/* TH - Thai */
-		.pornstar-page .pornstar-country .xh-flag.th:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.th:after {
-			content: "Thai";
-		}
-		/* TN - Tunisian */
-		.pornstar-page .pornstar-country .xh-flag.tn:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.tn:after {
-			content: "Tunisian";
-		}
-		/* TR - Turkish */
-		.pornstar-page .pornstar-country .xh-flag.tr:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.tr:after {
-			content: "Turkish";
-		}
-		/* TT - Trinidadian */
-		.pornstar-page .pornstar-country .xh-flag.tt:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.tt:after {
-			content: "Trinidadian";
-		}
-		/* TW - Taiwanese */
-		.pornstar-page .pornstar-country .xh-flag.tw:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.tw:after {
-			content: "Taiwanese";
-		}
-
-		/* UA - Ukranian */
-		.pornstar-page .pornstar-country .xh-flag.ua:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.ua:after {
-			content: "Ukranian";
-		}
-		/* US - American */
-		.pornstar-page .pornstar-country .xh-flag.us:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.us:after {
-			content: "American";
-		}
-		/* UZ - Uzbek */
-		.pornstar-page .pornstar-country .xh-flag.uz:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.uz:after {
-			content: "Uzbek";
-		}
-		/* UY - Uruguay */
-		.pornstar-page .pornstar-country .xh-flag.uy:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.uy:after {
-			content: "Uruguay";
-		}
-
-
-		/* VE - Venezuelan */
-		.pornstar-page .pornstar-country .xh-flag.ve:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.ve:after {
-			content: "Venezuelan";
-		}
-		/* VI - American Virgin Islander */
-		.pornstar-page .pornstar-country .xh-flag.vi:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.vi:after {
-			content: "American Virgin Islander";
-			width: 180px !important;
-		}
-		/* VN - Vietnamese */
-		.pornstar-page .pornstar-country .xh-flag.vn:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.vn:after {
-			content: "Vietnamese";
-		}
-
-		/* ZA - South Afican */
-		.pornstar-page .pornstar-country .xh-flag.za:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.za:after {
-			content: "South Afican";
-		}
-		/* ZW - Zimbabwean */
-		.pornstar-page .pornstar-country .xh-flag.zw:after,
-		.user-page .channels-list .pornstar-logo-container__info .xh-flag.zw:after {
-			content: "Zimbabwean";
-		}
 
 		/* CAT - SUBSCRIB BUTTON */
 		.category-page .pornstar-info-block-header .sub-button[data-tooltip="Subscribe"] {
@@ -15396,7 +14830,9 @@ if ((location.hostname === "xhamster.com" || location.hostname.endsWith(".xhamst
 			top: 0px !important;
 			padding-top: 0;
 		}
+		.category-page .sidebar-hidden article ,
 		html.category-page article {
+			display: inline-block !important;
 			padding: 0 !important;
 			z-index: 500000 !important;
 		}
@@ -15541,8 +14977,7 @@ if ((location.hostname === "xhamster.com" || location.hostname.endsWith(".xhamst
 			top: 2.8vh !important;
 			left: 0px !important;
 			padding: 0 0 0 0 !important;
-			overflow: hidden !important;
-			overflow-y: auto !important;
+			overflow: hidden  auto !important;
 			z-index: 50 !important;
 		background: #111 !important;
 		border-bottom: 1px solid red !important;
@@ -15923,14 +15358,7 @@ if ((location.hostname === "xhamster.com" || location.hostname.endsWith(".xhamst
 		html.category-page body > .main-wrap:first-of-type article .top-video-block.top-video-block--recommendations {
 			z-index: 5147483647 !important;
 		}
-		html.category-page > body > .main-wrap:not(:first-of-type) .index-videos {
-			position: relative;
-			display: inline-block !important;
-			height: 83vh !important;
-			left: 0;
-			margin-top: -49px !important;
-			z-index: 0 !important;
-		}
+
 		.category-page .category-info.pornstar + ul.categories-container + .index-videos.mixed-section {
 			display: inline-block !important;
 			height: 100% !important;
@@ -24606,8 +24034,11 @@ if ((location.hostname === "xhamster.com" || location.hostname.endsWith(".xhamst
 			min-width: 100% !important;
 			max-width: 100% !important;
 		}
-		/* (new558) NEW SIZE OF THUMB IMAGES */
-		/* IN TAGS PAGES */
+
+
+		/* (new565) NEW SIZE OF THUMB IMAGES */
+
+		/* IN TAGS / CHANNELS  PAGES */
 		.category-page .thumb-list--sidebar .thumb-list__item .thumb-image-container:not(.gallery-thumb__link, .video-thumb__moment) .thumb-image-container__image {
 			min-width: 162px !important;
 			max-width: 162px !important;
@@ -24619,6 +24050,20 @@ if ((location.hostname === "xhamster.com" || location.hostname.endsWith(".xhamst
 			object-fit: contain !important;
 			overflow: visible !important;
 		}
+		/* (new565) HOVER  - VID PREV */
+		.category-page .thumb-list--sidebar .thumb-list__item:hover .thumb-image-container:not(.gallery-thumb__link, .video-thumb__moment) video ,
+		.category-page .thumb-list--sidebar .thumb-list__item:hover .thumb-image-container:not(.gallery-thumb__link, .video-thumb__moment) img.thumb-image-container__image {
+			min-width: 162px !important;
+			max-width: 162px !important;
+			height: 100% !important;
+			max-height: 93px !important;
+			min-height: 93px !important;
+			margin-bottom: 0 !important;
+			border-radius: 3px 3px 0 0 !important;
+			object-fit: contain !important;
+			overflow: visible !important;
+		}
+
 		/* (new558) A VOIR - IN HOME */
 		html.main-page.hub-page img.thumb-image-container__image {
 			height: 100% !important;
@@ -25642,12 +25087,10 @@ if ((location.hostname === "xhamster.com" || location.hostname.endsWith(".xhamst
 			background: transparent !important;
 		}
 
-		/* (new558) PAGER - FAVORIS / CATEGORY / PORNSTAR / STORY-BLOG / MY UPLOADS ====  */
+		/* (new565) PAGER - FAVORIS / PORNSTAR / STORY-BLOG / MY UPLOADS ====  */
 		.user-page.friends-page .pager-section,
-		.categories-container + .thumb-list.thumb-list--sidebar.thumb-list--recent + .pager-section,
-		.categories-container.categories-container--page + .thumb-list.thumb-list--sidebar.thumb-list--recent + .pager-section,
+
 		.user-page.my-uploads-page .stories-block .pager-section,
-		.category-page .pager-section,
 		.user-page.friends-page .pager-section {
 			position: fixed !important;
 			display: inline-block !important;
@@ -25657,10 +25100,56 @@ if ((location.hostname === "xhamster.com" || location.hostname.endsWith(".xhamst
 			right: 0 !important;
 			letter-spacing: 0;
 			transform: scale(1);
-			z-index: 50000000 !important;
+			z-index: 5000000000 !important;
 		background: #111 !important;
 		border-bottom: 1px solid red !important;
 		}
+
+		/* (new565) PAGER - CATEGORY / CHANNEL
+		PB https://xhamster.com/channels/double-x
+		==== */
+		.categories-container + .thumb-list.thumb-list--sidebar.thumb-list--recent + .pager-section,
+		.categories-container.categories-container--page + .thumb-list.thumb-list--sidebar.thumb-list--recent + .pager-section,
+		.category-page .pager-section {
+			position: fixed !important;
+			display: inline-block !important;
+			height: 30px !important;
+			width: 100% !important;
+			/*top: 2.5vh !important;*/
+			bottom: 0 !important;
+			right: 0 !important;
+			letter-spacing: 0;
+			transform: scale(1);
+			text-align: center !important;
+			z-index: 5000000000 !important;
+		background: brown !important;
+		border-bottom: 1px solid red !important;
+		}
+		/* (new565) */
+		.category-page .pager-section[data-role="pagination-cleaner"] .prev-next-list {
+			display: inline-block;
+			width: 100% !important;
+			min-height: 3vh !important;
+			max-height: 3vh !important;
+			line-height: 3vh !important;
+			padding: 3px 3px 0 3px !important;
+			overflow: hidden !important;
+		}
+		.category-page nav[class^="desktop-pagination"][data-role="pagination-cleaner"] > .prev-next-list .prev-next-list-button:has(.prev-next-list-link--previous){
+			display: inline-block !important;
+		    height: 2vh !important;
+		}
+		.category-page nav[class^="desktop-pagination"][data-role="pagination-cleaner"] .prev-next-list .page-list-wrapper {
+			display: inline-block;
+		    height: 2vh !important;
+		}
+		.category-page nav[class^="desktop-pagination"][data-role="pagination-cleaner"] > .prev-next-list .prev-next-list-button:has(.prev-next-list-link--next){
+			display: inline-block !important;
+		    height: 2vh !important;
+		}
+
+
+		/* (new565) PAGER - BLOG / STORIES */
 		.user-page.my-uploads-page .stories-block .pager-section {
 			position: fixed !important;
 			width: 700px !important;
@@ -25670,8 +25159,7 @@ if ((location.hostname === "xhamster.com" || location.hostname.endsWith(".xhamst
 		background: #111 !important;
 		}
 
-		html.best-page .pager-section .pager-container,
-		.category-page .pager-section .pager-container {
+		html.best-page .pager-section .pager-container {
 			position: fixed !important;
 			display: inline-block !important;
 			height: 29px !important;
@@ -25732,8 +25220,7 @@ if ((location.hostname === "xhamster.com" || location.hostname.endsWith(".xhamst
 
 		/* (new391) */
 		html.best-page .pager-section,
-		.category-page .category-info.pornstar + .top-video-block--banner + .index-videos.mixed-section .pager-section,
-		.category-page .pager-section {
+		.category-page .category-info.pornstar + .top-video-block--banner + .index-videos.mixed-section .pager-section {
 			position: fixed !important;
 			display: inline-block !important;
 			height: 100% !important;
@@ -25764,14 +25251,6 @@ if ((location.hostname === "xhamster.com" || location.hostname.endsWith(".xhamst
 			text-align: center !important;
 		}
 
-		/* (new328) */
-		.category-page .pager-section[data-role="pagination-cleaner"] .prev-next-list {
-			min-height: 27px !important;
-			max-height: 27px !important;
-			line-height: 30px !important;
-			padding: 3px 3px 0 3px !important;
-			overflow: hidden !important;
-		}
 
 
 		/* (new279) CAT - PAG - NO BUDDY */
@@ -37190,7 +36669,7 @@ if ((location.hostname === "xhamsterlive.com" || location.hostname.endsWith(".xh
 		/* ON TOP */
 		/* (new558) CHROME -TOP */
 		.header-top-wrapper .model-search__input-wrapper:after {
-			content: "565" !important;
+			content: "567" !important;
 			position: fixed;
 			display: inline-block !important;
 			height: 100% !important;
@@ -37241,7 +36720,7 @@ if ((location.hostname === "xhamsterlive.com" || location.hostname.endsWith(".xh
 
 		/* HOVER ICON */
 		.header-top-wrapper .model-search__input-wrapper:hover:after {
-			content: "565" !important;
+			content: "567" !important;
 			position: fixed;
 			display: inline-block !important;
 			height: 100% !important;
@@ -37658,11 +37137,13 @@ if ((location.hostname === "xhamsterlive.com" || location.hostname.endsWith(".xh
 			margin-left: 0px !important;
 			padding: 4px 5px !important;
 		}
-		/* Xhamsterlive - CAMS - VIDEO CAM PLAYER - PAGINATION */
+		/* (new565) Xhamsterlive - CAMS - VIDEO CAM PLAYER - PAGINATION */
 		.page-button.page-button-beginning {
 			position: absolute !important;
-			right: -5px !important;
+			right: -85px !important;
 			padding: 0 10px !important;
+		background: #111 !important;
+		border: 1px solid yellow !important;
 		}
 		/* Xhamsterlive - CAMS - VIDEO CAM PLAYER - MODELS LIST THUMBNAIL - === */
 		.main-layout.viewcampage .view-cam-page-wrapper .model-list-wrapper {
@@ -37801,7 +37282,7 @@ if ((location.hostname === "xhamsterlive.com" || location.hostname.endsWith(".xh
 		}
 
 
-		/* (new564) Xhamsterlive - CAMS - VIDEO CAM PLAYER - TWO MODELS LIST THUMBNAIL - PAGI */
+		/* (new565) Xhamsterlive - CAMS - VIDEO CAM PLAYER - TWO MODELS LIST THUMBNAIL - PAGI */
 		.main-layout.viewcampage .view-cam-page-wrapper .model-list-wrapper.widescreen-container .model-list-container .model-list .paginated-list-wrapper .paginated-list + .pagination {
 			display: flex;
 			justify-content: center;
@@ -37827,8 +37308,7 @@ if ((location.hostname === "xhamsterlive.com" || location.hostname.endsWith(".xh
 			background: #67a52c;
 		}
 
-
-		/* Xhamsterlive - ACCT DELETED */
+		/* Xhamsterlive - ACT DELETED */
 		.main-layout.viewcampage .view-cam-page-wrapper .account-disabled-page.model-deleted-page.container.page .model-list-wrapper {
 			width: 730px !important;
 			left: 1180px !important;
@@ -40798,15 +40278,15 @@ if (location.href.startsWith("https://xhamster.com/channels/") || location.href.
 
 
 
-		/* (new511) CAT - CHANNEL - FILTERS - CLEAR BUTTON */
+		/* (new565) CAT - CHANNEL - FILTERS - CLEAR BUTTON */
 		.category-page .pages-category .false .landing-info__filters [class^="videoFilters-"] .xh-tabset {
 			position: fixed !important;
 			display: inline-block !important;
 			height: 2.3vh !important;
 			line-height: 2vh !important;
 			margin: 0 0 0 0 !important;
-			top: 3.1vh !important;
-			right: 29% !important;
+			top: 9.5vh !important;
+			right: 36% !important;
 			padding: 0 3px !important;
 			border-radius: 8px !important;
 		background: red !important;
@@ -40885,11 +40365,12 @@ if (location.href.startsWith("https://xhamster.com/channels/") || location.href.
 		.category-page .pages-category.sidebar-hidden .thumb-list {
 			display: inline-block !important;
 			width: 100% !important;
-			min-width: 100% !important;
-			max-width: 100% !important;
+			min-width: 100vw !important;
+			max-width: 100vw !important;
 			min-height: 80vh !important;
 			margin:  0 0 0 0 !important;
 			padding: 0 0 0 100px  !important;
+		/*border: 1px solid fuchsia !important;*/
 		}
 
 		html.category-page .sp-separator ~ .main-wrap .popular-title {
@@ -41506,7 +40987,15 @@ if ((location.hostname === "xhamster.com" || location.hostname.endsWith(".xhamst
 		border: 1px solid red;
 		}
 
-
+		/* PRIVATE */
+		.favorites-control.positioned.xh-dropdown .dropdown.position-left.favorites-dropdown .favorites-dropdown__list [data-role="playlist-picker-container"] li [class*="privateIcon-"] {
+			padding: 2px !important;
+			border-radius: 100% !important;
+		background: red !important;
+		}
+		.favorites-control.positioned.xh-dropdown .dropdown.position-left.favorites-dropdown .favorites-dropdown__list [data-role="playlist-picker-container"] li [class*="privateIcon-"] #lock svg {
+			fill: #111 !important;
+		}
 		/* (new558) PLAYLIST - VIDEO PAGE - JUST LIST of PLAYLIST - ITEMS - HOVER */
 		.favorites-control.positioned.xh-dropdown:has(.xh-button.trigger.no-arrow.active) .dropdown.position-left.favorites-dropdown[style="opacity: 1; display: block;"] .favorites-dropdown__list .favorites-dropdown__list-header + [data-role="playlist-picker-container"] ul[class^="root-"] li:hover ,
 
@@ -42548,6 +42037,24 @@ if ((location.hostname === "xhamster.com" || location.hostname.endsWith(".xhamst
   background: brown !important;
   border: 1px solid lime  !important;
   }
+  /* MY - SEE ALL - BUT */
+  .user-content-section .user-content-body .favorites-nav-container + .content-column [data-role="favorites-video-collections"]:has([class^="userCollection-"]) > [class^="root-"][class*="isDesktop-"] > [class^="root-"]:not(:has([class^="userCollection-"])) a[class*="size-small-"] {
+  	position: absolute !important;
+  	display: inline-block !important;
+  	top: 10vh !important;
+  	right: 30px  !important;
+  }
+  /* OTHERS - SEE ALL - BUT */
+  .user-page.user-videos-page.my-uploads-page .user-content-section .user-content-body .favorites-nav-container + .content-column [data-role="favorites-video-collections"] [class^="root"][class*="isDesktop-"] > [class^="root-"]:not(:has(.playlists2)):not(:has(.playlists2)) a[class*="size-small-"] ,
+
+  .user-page.user-videos-page.my-uploads-page .user-content-section .user-content-body .favorites-nav-container + .content-column [data-role="favorites-video-collections"]:has([class^="userCollection-"]) > [class^="root-"][class*="isDesktop-"] > [class^="root-"]:not(:has([class^="userCollection-"])) a[class*="size-small-"] {
+  	position: absolute !important;
+  	display: inline-block !important;
+  	top: 10vh !important;
+  	right: unset  !important;
+  	margin-left: 40px !important;
+  }
+
   /* LIST of PLAYLISTS - MY - MY LIST of PLAYLISTS - TWO FIRST - 2nd  */
   .user-page.favorites-page .user-content-section .user-content-body .favorites-nav-container + .content-column [data-role="favorites-video-collections"]:has([class^="userCollection-"]) > [class^="root-"][class*="isDesktop-"] > [class^="root-"]:not(:has([class^="userCollection-"])) ~ [class^="root-"]:not(:has([class^="userCollection-"])) {
   	position: fixed !important;
@@ -42685,6 +42192,7 @@ if ((location.hostname === "xhamster.com" || location.hostname.endsWith(".xhamst
   	background-color: #111 !important;
   border: 1px solid siver !important;
   }
+
   [data-role="favorites-video-collections"] header:has(.xh-icon.playlists2) + div:has([class^="userCollection-"]) [class^="userCollection-"] > [class^="root-"] a[class^="root-"] [class*="title-"] ,
   .favorites-nav-container + .xh-tabs.content-column .tab-favorite.current-tab [data-role="favorites-video-collections"] header:has(.xh-icon.playlists2) + div:has([class^="userCollection-"]) [class^="userCollection-"] > [class^="root-"] a[class^="root-"] [class*="title-"] {
   	position: relative !important;
@@ -42709,6 +42217,41 @@ if ((location.hostname === "xhamster.com" || location.hostname.endsWith(".xhamst
   [data-role="favorites-video-collections"] header:has(.xh-icon.playlists2) + div:has([class^="userCollection-"]) [class^="userCollection-"] > [class^="root-"] a[class^="root-"][class*=withLink-] ,
   .favorites-nav-container + .xh-tabs.content-column .tab-favorite.current-tab [data-role="favorites-video-collections"] header:has(.xh-icon.playlists2) + div:has([class^="userCollection-"]) [class^="userCollection-"] > [class^="root-"] a[class^="root-"][class*=withLink-] {
   	display: none !important;
+  }
+
+  /* HOVER */
+  [data-role="favorites-video-collections"] header:has(.xh-icon.playlists2) + div:has([class^="userCollection-"]) [class^="userCollection-"] > [class^="root-"] [class^="list-"] [class^="root-"] [class^="preview-"]:hover, 
+  .favorites-nav-container + .xh-tabs.content-column .tab-favorite.current-tab [data-role="favorites-video-collections"] header:has(.xh-icon.playlists2) + div:has([class^="userCollection-"]) [class^="userCollection-"] > [class^="root-"] [class^="preview-"]:hover {
+      position: relative;
+      height: 10vh !important;
+      width: 100% !important;
+  }
+
+  [data-role="favorites-video-collections"] header:has(.xh-icon.playlists2) + div:has([class^="userCollection-"]) [class^="userCollection-"] > [class^="root-"] [class^="preview-"]:hover img ,
+  .favorites-nav-container + .xh-tabs.content-column .tab-favorite.current-tab [data-role="favorites-video-collections"] header:has(.xh-icon.playlists2) + div:has([class^="userCollection-"]) [class^="userCollection-"] > [class^="root-"] [class^="preview-"]:hover img {
+      aspect-ratio: inherit;
+      display: block;
+  	width: 100%;
+  	height: 10vh !important;
+  	margin: 0vh 0 0 0 !important;
+      object-fit: contain;
+      object-position: center let;
+  background-color: #111 !important;
+
+  }
+  [data-role="favorites-video-collections"] header:has(.xh-icon.playlists2) + div:has([class^="userCollection-"]) [class^="userCollection-"] > [class^="root-"] [class^="list-"] [class^="root-"] [class^="preview-"]:hover [class^="overlay-"], 
+  .favorites-nav-container + .xh-tabs.content-column .tab-favorite.current-tab [data-role="favorites-video-collections"] header:has(.xh-icon.playlists2) + div:has([class^="userCollection-"]) [class^="userCollection-"] > [class^="root-"] [class^="preview-"]:hover [class^="overlay-"] {
+      font-size: 12px !important;
+      height: 2.5vh !important;
+      width: 47% !important;
+      top: 2px !important;
+      left: 52% !important;
+  	opacity: 0.5 !important;
+  }
+  [data-role="favorites-video-collections"] header:has(.xh-icon.playlists2) + div:has([class^="userCollection-"]) [class^="userCollection-"] > [class^="root-"] a[class^="root-"] [class^="preview-"]:hover + [class*="title-"],
+  .favorites-nav-container + .xh-tabs.content-column .tab-favorite.current-tab [data-role="favorites-video-collections"] header:has(.xh-icon.playlists2) + div:has([class^="userCollection-"]) [class^="userCollection-"] > [class^="root-"] a[class^="root-"] [class^="preview-"]:hover + [class*="title-"] {
+  	background: #1111118a !important;
+  border: 1px solid #1111118a  !important;
   }
 
   /* PLAYLIST - EDIT BUTTON*/
@@ -42748,90 +42291,6 @@ if ((location.hostname === "xhamster.com" || location.hostname.endsWith(".xhamst
 
   }
   `;
-}
-if ((location.hostname === "xhamster.com" || location.hostname.endsWith(".xhamster.com")) || (location.hostname === "xhvid.com" || location.hostname.endsWith(".xhvid.com"))) {
-		css += `
-		/* LIST of PLAYLISTS - MY - MENU LIST OF PLAYSLISTS - VIDEO - MENU LIST PLAYLISTS  */
-		.user-page.favorites-page .user-content-section .user-content-body:has(.favorites-nav-container) .favorites-nav-container > ul > li:has(ul[class^="subnav-"]){
-			position: fixed !important;
-			display: inline-block !important;
-			width: 100% !important;
-			min-width: 1200px !important;
-			max-width: 1200px !important;
-			max-height: 70vh !important;
-			line-height: 3vh !important;
-			margin: 0px 0px 0 0px !important;
-			top: 6vh !important;
-			right:  0 !important;
-			overflow: hidden auto !important;
-			z-index: 5000000 !important;
-			visibility: hidden !important;
-		}
-		/* HOVER */
-		.user-page.favorites-page .user-content-section .user-content-body:has(.favorites-nav-container) .favorites-nav-container > ul > li:has(ul[class^="subnav-"]):has(ul[class^="subnav-"]:hover) ,
-		.user-page.favorites-page .user-content-section .user-content-body:has(.favorites-nav-container) .favorites-nav-container > ul > li:has(ul[class^="subnav-"]):hover{
-			visibility: visible !important;
-			z-index: 50000000 !important;
-		background: #111 !important;
-		border: 1px solid red  !important;
-		}
-
-		.user-page.favorites-page .user-content-section .user-content-body:has(.favorites-nav-container) .favorites-nav-container > ul > li:has(ul[class^="subnav-"]) [class^="body-"] a:before {
-			content: "🤍"  !important;
-			position: fixed !important;
-			display: inline-block !important;
-			width: 30px !important;
-			height: 3vh !important;
-			line-height: 3vh !important;
-			margin: 0vh 0 0 0px !important;
-			right: 0 !important;
-			top: 2.5vh !important;
-			padding: 0px 0 0 0 !important;
-			text-align: center !important;
-			z-index:  5000000 !important;
-			visibility: visible !important;
-		color: white !important;
-		background: red !important;
-		border: 1px solid yellow !important;
-		}
-
-		.user-page.favorites-page .user-content-section .user-content-body:has(.favorites-nav-container) .favorites-nav-container > ul > li:has(ul[class^="subnav-"]) ul[class^="subnav-"]{
-		}
-		.user-page.favorites-page .user-content-section .user-content-body:has(.favorites-nav-container) .favorites-nav-container > ul > li:has(ul[class^="subnav-"]):hover ul[class^="subnav-"]{
-		/*	position: fixed !important;*/
-			display: inline-block !important;
-			width: 100% !important;
-			min-width: 99% !important;
-			max-width: 99% !important;
-			max-height: 70vh !important;
-			line-height: 3vh !important;
-			margin: 0px 0px 0 0px !important;
-			/*overflow: hidden auto !important;*/
-			z-index: 5000000 !important;
-		}
-
-		/* LIST of PLAYLISTS - MY - MENU LIST OF PLAYSLISTS - CLEAR BUTTON*/
-		.user-page.favorites-page .user-content-section .user-content-body:has(.favorites-nav-container) .favorites-nav-container > ul > li:has([class*="isSecondary-"]) {
-			position: fixed !important;
-			display: inline-block !important;
-			width: 10% !important;
-			height: 2.8vh !important;
-			line-height: 2.8vh !important;
-			margin: 0px 0px 0 0 !important;
-			top: 2.8vh !important;
-			right: 0 !important;
-			border:  5px
-		background: #222 !important;
-		border: 1px solid silver  !important;
-		}
-		.user-page.favorites-page .user-content-section .user-content-body:has(.favorites-nav-container) .favorites-nav-container > ul > li:has([class*="isSecondary-"]) [class^="body-"] {
-			display: inline-block !important;
-			width: 100% !important;
-			height: 2.8vh !important;
-			line-height: 2.8vh !important;
-			text-align: center !important;
-		}
-		`;
 }
 if ((location.hostname === "xhamster.com" || location.hostname.endsWith(".xhamster.com")) || (location.hostname === "xhvid.com" || location.hostname.endsWith(".xhvid.com"))) {
 		css += `
@@ -43139,65 +42598,6 @@ if ((location.hostname === "xhamster.com" || location.hostname.endsWith(".xhamst
 			max-height: 89.5px !important;
 			overflow: hidden !important;
 		}
-		`;
-}
-if ((location.hostname === "xhamster.com" || location.hostname.endsWith(".xhamster.com")) || (location.hostname === "xhvid.com" || location.hostname.endsWith(".xhvid.com"))) {
-		css += `
-		/* PLAYLIST - MY - LEFT SIDE PANEL of LIST OF PLAyLISTS 
-		.user-page.favorites-page main .width-wrap .user-content-section .user-content-body .favorites-nav-container + .content-column
-		=== */
-
-		/* PLAYLIST / LIST of PLAYLISTS - MY / OTHERS - MENU FAVS VID / PHO / USERS   */
-		.user-page.user-videos-page.my-uploads-page .user-content-section .user-content-body:not(:has(hr)) .favorites-nav-container ,
-		.user-page.favorites-page .user-content-section .user-content-body:has(.favorites-nav-container) .favorites-nav-container {
-			position: fixed !important;
-			display: inline-block !important;
-			width: 20% !important;
-			min-height: 3vh !important;
-			max-height: 3vh !important;
-			line-height: 3vh !important;
-			margin: 0vh 0 -600px !important;
-			top: 97vh !important;
-			padding: 0px 0 0 0 !important;
-			overflow: hidden !important;
-			z-index:  500000000 !important;
-		background: brown !important;
-		}
-		.user-page.user-videos-page.my-uploads-page .user-content-section .user-content-body:not(:has(hr)) .favorites-nav-container ul ,
-		.user-page.favorites-page .user-content-section .user-content-body:has(.favorites-nav-container) .favorites-nav-container > ul {
-			display: inline-block !important;
-			width: 100% !important;
-			min-height: 3vh !important;
-			max-height: 3vh !important;
-			line-height: 3vh !important;
-			margin: 0vh 0 0px !important;
-			padding: 0px 0 0 0 !important;
-			z-index:  500000000 !important;
-		}
-		/* PLAYLIST / LIST of PLAYLISTS - MY / OTHERS - MENU not VIDEOS LIST */
-		.user-page.user-videos-page.my-uploads-page .user-content-section .user-content-body:not(:has(hr)) .favorites-nav-container ul > li:not(:has(ul[class^="subnav-"])) ,
-		.user-page.favorites-page .user-content-section .user-content-body:has(.favorites-nav-container) .favorites-nav-container ul > li:not(:has(ul[class^="subnav-"])) {
-			display: block !important;
-			float: left !important;
-			width: 30% !important;
-			min-height: 3vh !important;
-			max-height: 3vh !important;
-			line-height: 3vh !important;
-			margin:  0 5px 0 0 !important;
-		background: brown !important;
-		border: 1px solid silver  !important;
-		}
-		.user-page.favorites-page .user-content-section .user-content-body:has(.favorites-nav-container) .favorites-nav-container ul > li:not(:has(ul[class^="subnav-"])) + hr {
-			display: none  !important;
-		}
-
-		.user-page.user-videos-page.my-uploads-page .user-content-section .user-content-body:not(:has(hr)) .favorites-nav-container ul > li:not(:has(ul[class^="subnav-"])) span[class^="disabled-"]  ,
-		.user-page.favorites-page .user-content-section .user-content-body:has(.favorites-nav-container) .favorites-nav-container ul > li:not(:has(ul[class^="subnav-"])) span[class^="disabled-"] {
-			color: white !important;
-		}
-
-		/* PLAYLIST - OTHERS - MENU VID / PHO / USERS */
-
 		`;
 }
 if (typeof GM_addStyle !== "undefined") {

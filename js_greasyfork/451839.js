@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AllInOneDownloader
 // @namespace    https://github.com/Timesient/manga-download-scripts
-// @version      6.2
+// @version      6.3
 // @license      GPL-3.0
 // @author       Timesient
 // @description  Match and then run a proper script
@@ -35,21 +35,23 @@
 // @match        https://comic-earthstar.com/*/*
 // @match        https://comic-seasons.com/*/*
 // @match        https://ichicomi.com/*/*
+// @match        https://comic-y-ours.com/*/*
 // @match        https://comic-fuz.com/*
 // @match        https://comici.jp/*/episodes/*
 // @match        https://cdn.comici.jp/*/episodes/*
 // @match        https://youngchampion.jp/episodes/*
 // @match        https://younganimal.com/episodes/*
 // @match        https://bigcomics.jp/episodes/*
-// @match        https://comicride.jp/episodes/*
 // @match        https://kansai.mag-garden.co.jp/episodes/*
 // @match        https://championcross.jp/episodes/*
-// @match        https://comic.j-nbooks.jp/episodes/*
 // @match        https://comic-growl.com/episodes/*
 // @match        https://comicpash.jp/episodes/*
 // @match        https://rimacomiplus.jp/*/episodes/*
 // @match        https://kimicomi.com/episodes/*
 // @match        https://comic-medu.com/episodes/*
+// @match        https://comicride.jp/*
+// @match        https://comic.j-nbooks.jp/*
+// @match        https://takecomic.jp/*
 // @match        https://www.comico.jp/*
 // @match        https://www.comico.kr/*
 // @match        https://www.pocketcomics.com/*
@@ -60,12 +62,15 @@
 // @match        https://cycomi.com/*
 // @match        https://play.dlsite.com/*
 // @match        https://book.dmm.com/*
+// @match        https://book.dmm.co.jp/*
+// @match        https://animestore.docomo.ne.jp/animestore/comic_viewer/viewer.html*
 // @match        https://drecom-media.jp/viewer/e/*
 // @match        https://*.ebookrenta.com/sc/view_*
 // @match        https://firecross.jp/reader/*
 // @match        https://gaugau.futabanet.jp/list/work/*/episodes/*
 // @match        https://www.ganganonline.com/*
 // @match        https://ganma.jp/*
+// @match        https://gorakuweb.com/*
 // @match        https://jumptoon.com/*
 // @match        https://read.amazon.co.jp/manga/*
 // @match        https://manga.line.me/*/viewer*
@@ -93,7 +98,6 @@
 // @match        https://www.comic-valkyrie.com/samplebook/*
 // @match        https://televikun-super-hero-comics.com/*/*/*
 // @match        https://kirapo.jp/pt/*
-// @match        https://takecomic.jp/*
 // @match        https://to-corona-ex.com/episodes/*
 // @match        https://ebook.tongli.com.tw/reader/*
 // @match        https://voltage-comics.com/viewer/speed.html*
@@ -155,21 +159,23 @@
     'comic-earthstar.com': 'https://update.greasyfork.org/scripts/451861/comicdaysdownloader.js',
     'comic-seasons.com': 'https://update.greasyfork.org/scripts/451861/comicdaysdownloader.js',
     'ichicomi.com': 'https://update.greasyfork.org/scripts/451861/comicdaysdownloader.js',
+    'comic-y-ours.com': 'https://update.greasyfork.org/scripts/451861/comicdaysdownloader.js',
     'comic-fuz.com': 'https://update.greasyfork.org/scripts/451863/comicfuzdownloader.js',
     'comici.jp': 'https://update.greasyfork.org/scripts/478339/comicidownloader.js',
     'cdn.comici.jp': 'https://update.greasyfork.org/scripts/478339/comicidownloader.js',
     'youngchampion.jp': 'https://update.greasyfork.org/scripts/463181/comiciviewerdownloader.js',
     'younganimal.com': 'https://update.greasyfork.org/scripts/463181/comiciviewerdownloader.js',
     'bigcomics.jp': 'https://update.greasyfork.org/scripts/463181/comiciviewerdownloader.js',
-    'comicride.jp': 'https://update.greasyfork.org/scripts/463181/comiciviewerdownloader.js',
     'kansai.mag-garden.co.jp': 'https://update.greasyfork.org/scripts/463181/comiciviewerdownloader.js',
     'championcross.jp': 'https://update.greasyfork.org/scripts/463181/comiciviewerdownloader.js',
-    'comic.j-nbooks.jp': 'https://update.greasyfork.org/scripts/463181/comiciviewerdownloader.js',
     'comic-growl.com': 'https://update.greasyfork.org/scripts/463181/comiciviewerdownloader.js',
     'comicpash.jp': 'https://update.greasyfork.org/scripts/463181/comiciviewerdownloader.js',
     'rimacomiplus.jp': 'https://update.greasyfork.org/scripts/463181/comiciviewerdownloader.js',
     'kimicomi.com': 'https://update.greasyfork.org/scripts/463181/comiciviewerdownloader.js',
     'comic-medu.com': 'https://update.greasyfork.org/scripts/463181/comiciviewerdownloader.js',
+    'comicride.jp': 'https://update.greasyfork.org/scripts/463181/comiciviewerdownloader.js',
+    'comic.j-nbooks.jp': 'https://update.greasyfork.org/scripts/463181/comiciviewerdownloader.js',
+    'takecomic.jp': 'https://update.greasyfork.org/scripts/463181/comiciviewerdownloader.js',
     'www.comico.jp': 'https://update.greasyfork.org/scripts/451865/comicodownloader.js',
     'www.comico.kr': 'https://update.greasyfork.org/scripts/451865/comicodownloader.js',
     'www.pocketcomics.com': 'https://update.greasyfork.org/scripts/451865/comicodownloader.js',
@@ -179,11 +185,14 @@
     'cycomi.com': 'https://update.greasyfork.org/scripts/467898/cycomidownloader.js',
     'play.dlsite.com': 'https://update.greasyfork.org/scripts/485728/dlsitedownloader.js',
     'book.dmm.com': 'https://update.greasyfork.org/scripts/451867/dmmdownloader.js',
+    'book.dmm.co.jp': 'https://update.greasyfork.org/scripts/451867/dmmdownloader.js',
+    'animestore.docomo.ne.jp': 'https://update.greasyfork.org/scripts/562757/docomoanimestoredownloader.js',
     'drecom-media.jp': 'https://update.greasyfork.org/scripts/513082/drecommangadownloader.js',
     'firecross.jp': 'https://update.greasyfork.org/scripts/451868/firecrossdownloader.js',
     'gaugau.futabanet.jp': 'https://update.greasyfork.org/scripts/478408/futabanetdownloader.js',
     'www.ganganonline.com': 'https://update.greasyfork.org/scripts/455948/ganganonlinedownloader.js',
     'ganma.jp': 'https://update.greasyfork.org/scripts/451869/ganmadownloader.js',
+    'gorakuweb.com': 'https://update.greasyfork.org/scripts/562756/gorakuwebdownloader.js',
     'jumptoon.com': 'https://update.greasyfork.org/scripts/497457/jumptoondownloader.js',
     'read.amazon.co.jp': 'https://update.greasyfork.org/scripts/451870/kindlemangadownloader.js',
     'manga.line.me': 'https://update.greasyfork.org/scripts/452814/linemangadownloader.js',
@@ -209,7 +218,6 @@
     'www.comic-valkyrie.com': 'https://update.greasyfork.org/scripts/451879/speedbinbdownloader.js',
     'televikun-super-hero-comics.com': 'https://update.greasyfork.org/scripts/451879/speedbinbdownloader.js',
     'kirapo.jp': 'https://update.greasyfork.org/scripts/451879/speedbinbdownloader.js',
-    'takecomic.jp': 'https://update.greasyfork.org/scripts/555270/takecomicdownloader.js',
     'to-corona-ex.com': 'https://update.greasyfork.org/scripts/451880/tocoronaexdownloader.js',
     'ebook.tongli.com.tw': 'https://update.greasyfork.org/scripts/490917/tonglidownloader.js',
     'voltage-comics.com': 'https://update.greasyfork.org/scripts/555268/voltagecomicsdownloader.js',

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube mods
 // @namespace    sami@kankaristo.fi
-// @version      25.14.6
+// @version      25.16.6
 // @description  YouTube modifications.
 // @author       sami@kankaristo.fi
 // @match        https://www.youtube.com/*
@@ -34,19 +34,12 @@ var notificationButtonListenerSet = false;
 /**
  * List of YouTube playlists.
  *
- * Tooltips last updated on: 2026-01-04
+ * Tooltips last updated on: 2026-01-17
  */
 var sidebarButtons = [
     {
-        "text": "Cinemassacre",
-        "tooltip": "184 videos = 84:38",
-        "href": "https://www.youtube.com/playlist?list=PLuEqX5XqgpJff668DJjHI6448HPB_MZxx",
-        "highlight": true,
-        "cssText": "background-color: black;"
-    },
-    {
         "text": "Rick Beato",
-        "tooltip": "183 videos = 90:44",
+        "tooltip": "160 videos = 84:48",
         "href": "https://www.youtube.com/playlist?list=PLuEqX5XqgpJfMOz4LCbrXSGHZcxUMBOJU",
         "highlight": true,
         "cssText": "background-color: black;"
@@ -60,7 +53,7 @@ var sidebarButtons = [
     },
     {
         "text": "MrSteele",
-        "tooltip": "608 videos = 93:49",
+        "tooltip": "600 videos = 92:28",
         "href": "https://www.youtube.com/playlist?list=PLuEqX5XqgpJc93bsImcy3_JqGUgDfXR27",
         "highlight": true,
         "cssText": "background-color: black;"
@@ -74,7 +67,7 @@ var sidebarButtons = [
     },
     {
         "text": "Brady's",
-        "tooltip": "1754 videos = 355:48",
+        "tooltip": "1757 videos = 356:28",
         "href": "https://www.youtube.com/playlist?list=PLuEqX5XqgpJfiZIKrRdppnpdvyqOPVpvr",
         "highlight": true,
         "cssText": "color: grey;"
@@ -88,20 +81,21 @@ var sidebarButtons = [
     },
     {
         "text": "DYKG?",
-        "tooltip": "646 videos = 149:04",
+        "tooltip": "640 videos = 146:02",
         "href": "https://www.youtube.com/playlist?list=PLuEqX5XqgpJdKUn0fPtqP_7n8aWlpxRcH",
-        "highlight": true
+        "highlight": true,
+        "cssText": "background-color: black;"
     },
     {
         "text": "ExtraCredits",
-        "tooltip": "1113 videos = 242:55",
+        "tooltip": "1115 videos = 244:04",
         "href": "https://www.youtube.com/playlist?list=PLuEqX5XqgpJemjERwfoxZ8O4ZkMUdtR7M",
         "highlight": true,
         "cssText": "color: grey;"
     },
     {
         "text": "JDiResta",
-        "tooltip": "537 videos = 137:54",
+        "tooltip": "539 videos = 138:19",
         "href": "https://www.youtube.com/playlist?list=PLuEqX5XqgpJepkvkkhwsi74mMJVwUVqWP",
         "highlight": true
     },
@@ -120,49 +114,49 @@ var sidebarButtons = [
     },
     {
         "text": "MKBHD",
-        "tooltip": "989 videos = 167:59",
+        "tooltip": "989 videos = 168:03",
         "href": "https://www.youtube.com/playlist?list=PLuEqX5XqgpJeqTgBdsnC0jx79xu4U3vuQ",
         "highlight": true
     },
     {
         "text": "MusicIsWin",
-        "tooltip": "1023 videos = 190:22",
+        "tooltip": "1025 videos = 190:42",
         "href": "https://www.youtube.com/playlist?list=PLuEqX5XqgpJf3jaKjUlJb0EdIpav6eBt3",
         "highlight": true
     },
     {
         "text": "RiffsBeards",
-        "tooltip": "1755 videos = 309:05",
+        "tooltip": "1759 videos = 310:26",
         "href": "https://www.youtube.com/playlist?list=PLuEqX5XqgpJfVD5ZItAeDwGXvxVPBRm6e",
         "highlight": true
     },
     {
         "text": "RobChapman",
-        "tooltip": "1063 videos = 333:20",
+        "tooltip": "1066 videos = 333:34",
         "href": "https://www.youtube.com/playlist?list=PLuEqX5XqgpJdNhsoP4xP4M7YpMqwF1oZm",
         "highlight": true
     },
     {
         "text": "SciShow",
-        "tooltip": "2589 videos = 419:11",
+        "tooltip": "2593 videos = 419:59",
         "href": "https://www.youtube.com/playlist?list=PLuEqX5XqgpJeQ7JYNlifDiEwAG0WYJRyi",
         "highlight": true
     },
     {
         "text": "SpectreSound",
-        "tooltip": "1218 videos = 341:58",
+        "tooltip": "1221 videos = 342:50",
         "href": "https://www.youtube.com/playlist?list=PLuEqX5XqgpJfsRpDhdJ6qvKAXpnHYjrk9",
         "highlight": true
     },
     {
         "text": "SteveRamsey",
-        "tooltip": "494 videos = 97:38",
+        "tooltip": "493 videos = 97:26",
         "href": "https://www.youtube.com/playlist?list=PLuEqX5XqgpJdvvVQ373b6229qcApVqu_3",
         "highlight": true
     },
     {
         "text": "ThatPedalSh",
-        "tooltip": "614 videos = 622:49",
+        "tooltip": "616 videos = 624:52",
         "href": "https://www.youtube.com/playlist?list=PLuEqX5XqgpJfyfF6g87by5Wxee1BuGwOU",
         "highlight": true
     },
@@ -181,27 +175,27 @@ var sidebarButtons = [
     },
     {
         "text": "Wisecrack",
-        "tooltip": "731 videos = 208:23",
+        "tooltip": "730 videos = 208:21",
         "href": "https://www.youtube.com/playlist?list=PLuEqX5XqgpJdDUaYQjNthhpdncOIeQ1jl",
         "highlight": true,
         "cssText": "background-color: black;"
     },
     {
         "text": "Yogs",
-        "tooltip": "1184 videos = 746:55",
+        "tooltip": "1191 videos = 751:26",
         "href": "https://www.youtube.com/playlist?list=PLuEqX5XqgpJfOFR_tyk80nOHqVuXuDoVh",
         "highlight": true,
         "cssText": "font-weight: bold; margin: 5px 0 0 0;"
     },
     {
         "text": "Hat Films",
-        "tooltip": "1841 videos = 1214:07",
+        "tooltip": "1859 videos = 1234:16",
         "href": "https://www.youtube.com/playlist?list=PLuEqX5XqgpJdC0yw1XlWKFaW9O2BIqeCN",
         "highlight": true
     },
     {
         "text": "Hat series",
-        "tooltip": "743 videos = 221:18",
+        "tooltip": "745 videos = 223:03",
         "href": "https://www.youtube.com/playlist?list=PLuEqX5XqgpJd_DvX_TzYrVW33cL7HBh8U",
         "highlight": true,
         "cssText": "background-color: black;"
@@ -215,7 +209,7 @@ var sidebarButtons = [
     },
     {
         "text": "Tom",
-        "tooltip": "2074 videos = 805:48",
+        "tooltip": "2088 videos = 811:59",
         "href": "https://www.youtube.com/playlist?list=PLuEqX5XqgpJe4Zout6ifo0uebISiFc5im",
         "highlight": true
     },

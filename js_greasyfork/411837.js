@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Greasyfork优化
 // @namespace    http://tampermonkey.net/
-// @version      2025.12.16
+// @version      2026.1.9
 // @description  1.代码页添加"复制源码"按钮 2.发布时间显示到秒 3.未汉化部分增加汉化 4.脚本链接后面显示源码链接
 // @author       AN drew
 // @match        https://gf.qytechs.cn/*
@@ -148,6 +148,7 @@ function execCopy() {
     translate.set("Injection of external scripts on the same domain as where they came from is allowed. If a script runs on https://example.com, and downloads https://example.com/script.js, modifies it, and injects back on https://example.com/, this would be allowed."
                   ,"Greasy Fork允许将相同域名的外部脚本注入。如果一个脚本在 https://example.com 上运行，那么允许其并下载并修改 https://example.com/script.js，然后注入到 https://example.com/。");
     translate.set("If https://example.com/script.js is injected onto https://differentsite.com, this would be disallowed.","如果试图将 https://example.com/script.js 注入到 https://differentsite.com 是不被允许的。");
+    translate.set("Unlisted user script - a user script not linked to from anywhere on Greasy Fork. For scripts that are works in progress or those that would not be generally useful to others. Does not prevent others from accessing it if they know the URL.","未公开的用户脚本 - 不会在 Greasy Fork 的任何地方展示。适用于仍在开发中的脚本或自用的脚本。如果其他人知道其 URL，仍可访问。");
 
 
     if(window.location.href.indexOf("https://greasyfork.org/zh-CN/users/webhook-info")!= -1) //webhook

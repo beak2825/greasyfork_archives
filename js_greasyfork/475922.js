@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          Otoy 自动操作脚本
 // @namespace     http://tampermonkey.net/
-// @version       3.7
+// @version       3.7.2
 // @description   自动填充账号和密码并登录，检查订阅状态，显示状态信息及欧元汇率(每日10点后更新)
 // @author        wxm
 // @match         https://*.otoy.com/*
@@ -1978,13 +1978,89 @@
                     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08), 0 2px 10px rgba(0, 0, 0, 0.06);
                     padding: 24px;
                     width: 320px;
+                    max-height: 800px;
                     z-index: 10001;
                     font-family: var(--otoy-font-family, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Microsoft YaHei", sans-serif);
                     font-size: 14px;
                     color: var(--otoy-neutral-800, #424242);
                     line-height: 1.6;
-                    animation: otoyPanelSlideIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                    animation: otoyPanelSlideIn 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+                    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+                    overflow: hidden;
+                    transform-origin: left bottom;
+                }
+
+                #otoy-user-info-panel.collapsed {
+                    max-height: 48px;
+                    width: 180px;
+                    padding: 10px 16px;
+                    border-radius: var(--otoy-radius-lg, 12px);
+                    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(245, 245, 250, 0.95) 100%);
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+                }
+
+                .panel-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: 16px;
+                    height: 28px;
+                    transition: margin 0.4s ease;
+                }
+
+                #otoy-user-info-panel.collapsed .panel-header {
+                    margin-bottom: 0;
+                }
+
+                .panel-title {
+                    font-weight: 700;
+                    font-size: 14px;
+                    color: var(--otoy-primary, #1E88E5);
+                    margin: 0;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    transition: all 0.4s ease;
+                }
+
+                .panel-toggle-btn {
+                    background: rgba(30, 136, 229, 0.08);
+                    border: none;
+                    color: var(--otoy-primary, #1E88E5);
+                    cursor: pointer;
+                    width: 28px;
+                    height: 28px;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                    flex-shrink: 0;
+                }
+
+                .panel-toggle-btn:hover {
+                    background: rgba(30, 136, 229, 0.15);
+                    transform: scale(1.1);
+                }
+
+                .panel-toggle-btn svg {
+                    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+                }
+
+                #otoy-user-info-panel.collapsed .panel-toggle-btn svg {
+                    transform: rotate(180deg);
+                }
+
+                .panel-content {
+                    transition: opacity 0.3s ease, transform 0.4s ease;
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+
+                #otoy-user-info-panel.collapsed .panel-content {
+                    opacity: 0;
+                    transform: translateY(10px);
+                    pointer-events: none;
                 }
 
                 @keyframes otoyPanelSlideIn {
@@ -2533,35 +2609,44 @@
         const isDateValid = displayExpiryDate !== '加载中...' && displayExpiryDate !== '无有效订阅';
 
         let contentHTML = `
-            <div class="panel-section">
-                <!-- 用户信息 -->
-                <div class="info-line">
-                    <span class="info-label">用户:</span>
-                    <span class="info-value">${username}</span>
-                </div>
-                <div class="info-line">
-                    <span class="info-label">邮箱:</span>
-                    <span class="info-value">${email}</span>
-                </div>
+            <div class="panel-header">
+                <h3 class="panel-title">Otoy 自动操作助手</h3>
+                <button id="otoy-panel-toggle-btn" class="panel-toggle-btn" title="折叠/展开面板">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </button>
             </div>
-
-            <div class="panel-section">
-                <!-- 订阅信息 -->
-                <div class="info-line">
-                    <span class="info-label">支付时间:</span>
-                    <span class="info-value">${displayPaymentDate}</span>
+            <div class="panel-content">
+                <div class="panel-section">
+                    <!-- 用户信息 -->
+                    <div class="info-line">
+                        <span class="info-label">用户:</span>
+                        <span class="info-value">${username}</span>
+                    </div>
+                    <div class="info-line">
+                        <span class="info-label">邮箱:</span>
+                        <span class="info-value">${email}</span>
+                    </div>
                 </div>
-                <div class="expiry-line">
-                    <span class="info-label">到期时间:</span>
-                    <span id="panel-expiry-date-text" class="info-value">${displayExpiryDate}</span>`;
+
+                <div class="panel-section">
+                    <!-- 订阅信息 -->
+                    <div class="info-line">
+                        <span class="info-label">支付时间:</span>
+                        <span class="info-value">${displayPaymentDate}</span>
+                    </div>
+                    <div class="expiry-line">
+                        <span class="info-label">到期时间:</span>
+                        <span id="panel-expiry-date-text" class="info-value">${displayExpiryDate}</span>`;
 
         if (isDateValid) {
             contentHTML += `<button id="copy-expiry-btn" title="复制到期信息">复制</button>`;
         }
 
         contentHTML += `
-                </div>
-            </div>`;
+                    </div>
+                </div>`;
 
         // 状态消息
         if (statusMessage && statusMessage !== '支付处理中，请等待冷却结束') {
@@ -2570,51 +2655,52 @@
 
         // ToDo列表
         contentHTML += `
-            <div class="panel-section">
-                <ul class="todo-list">
-                    <li class="todo-item${cardDeleted ? ' completed' : ''}">
-                        <span class="todo-icon">${cardDeleted ? '✅' : '⏳'}</span>
-                        <a href="${CONFIG.URLS.CARDS}" class="todo-link">删除绑定的信用卡</a>
-                    </li>
-                    <li class="todo-item${subscriptionCancelled ? ' completed' : ''}">
-                        <span class="todo-icon">${subscriptionCancelled ? '✅' : '⏳'}</span>
-                        <a href="${CONFIG.URLS.SUBSCRIPTIONS}" class="todo-link">取消自动续费</a>
-                    </li>
-                </ul>
-            </div>
+                <div class="panel-section">
+                    <ul class="todo-list">
+                        <li class="todo-item${cardDeleted ? ' completed' : ''}">
+                            <span class="todo-icon">${cardDeleted ? '✅' : '⏳'}</span>
+                            <a href="${CONFIG.URLS.CARDS}" class="todo-link">删除绑定的信用卡</a>
+                        </li>
+                        <li class="todo-item${subscriptionCancelled ? ' completed' : ''}">
+                            <span class="todo-icon">${subscriptionCancelled ? '✅' : '⏳'}</span>
+                            <a href="${CONFIG.URLS.SUBSCRIPTIONS}" class="todo-link">取消自动续费</a>
+                        </li>
+                    </ul>
+                </div>
         `;
 
         // 汇率和冷却计时器
         contentHTML += `
-            <div class="panel-section">
-                 <div class="rate-line">
-                    <span class="rate-label">${CONSTANTS.EUR_AMOUNTS.SMALL} EUR ≈</span>
-                    <span id="eur-rmb-value-1" class="rate-value" title="汇率来源: exchangerate.host">计算中...</span>
+                <div class="panel-section">
+                    <div class="rate-line">
+                        <span class="rate-label">${CONSTANTS.EUR_AMOUNTS.SMALL} EUR ≈</span>
+                        <span id="eur-rmb-value-1" class="rate-value" title="汇率来源: exchangerate.host">计算中...</span>
+                    </div>
+                    <div class="rate-line">
+                        <span class="rate-label">${CONSTANTS.EUR_AMOUNTS.LARGE} EUR ≈</span>
+                        <span id="eur-rmb-value-2" class="rate-value" title="汇率来源: exchangerate.host">计算中...</span>
+                    </div>
+                    <div id="cooldown-timers-list" style="margin-top: 10px;"></div>
                 </div>
-                <div class="rate-line">
-                    <span class="rate-label">${CONSTANTS.EUR_AMOUNTS.LARGE} EUR ≈</span>
-                    <span id="eur-rmb-value-2" class="rate-value" title="汇率来源: exchangerate.host">计算中...</span>
-                </div>
-                <div id="cooldown-timers-list" style="margin-top: 10px;"></div>
-            </div>
         `;
 
         // 同步状态
         contentHTML += `
-            <div class="sync-status-section">
-                <span class="sync-status-text" id="sync-status-text">读取中...</span>
-                <button
-                    type="button"
-                    class="manual-sync-btn hidden"
-                    id="manual-sync-btn"
-                    title="手动重试同步"
-                    aria-label="手动重试同步"
-                    role="button">
-                    <svg class="manual-sync-btn-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/>
-                    </svg>
-                </button>
-            </div>
+                <div class="sync-status-section">
+                    <span class="sync-status-text" id="sync-status-text">读取中...</span>
+                    <button
+                        type="button"
+                        class="manual-sync-btn hidden"
+                        id="manual-sync-btn"
+                        title="手动重试同步"
+                        aria-label="手动重试同步"
+                        role="button">
+                        <svg class="manual-sync-btn-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div> <!-- End of panel-content -->
         `;
 
         return contentHTML;
@@ -2646,6 +2732,22 @@
         const panel = document.createElement('div');
         panel.id = 'otoy-user-info-panel';
         panel.innerHTML = buildPanelHTML(panelData);
+
+        // --- 面板折叠/展开逻辑 ---
+        const toggleBtn = panel.querySelector('#otoy-panel-toggle-btn');
+        const isCollapsed = GM_getValue('otoy_panel_collapsed', false);
+
+        if (isCollapsed) {
+            panel.classList.add('collapsed');
+        }
+
+        if (toggleBtn) {
+            toggleBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const nowCollapsed = panel.classList.toggle('collapsed');
+                GM_setValue('otoy_panel_collapsed', nowCollapsed);
+            });
+        }
 
         // --- 冷却计时器、复制按钮事件监听器等逻辑保持不变 ---
         // ... (Existing logic for cooldown timer display) ...

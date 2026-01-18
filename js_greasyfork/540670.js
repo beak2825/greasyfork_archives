@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         腾讯会议转写纪要导出神器 (Tencent Meeting Transcript Exporter)
 // @namespace    https://github.com/awesome-tampermonkey
-// @version      1.1.0
+// @version      1.1.1
 // @description  一键导出腾讯会议录制视频和纯文字转写的内容和纪要，支持Markdown、HTML、TXT格式导出和复制
 // @author       东哥说AI
 // @match        https://meeting.tencent.com/cw/*
@@ -218,8 +218,77 @@
             return content;
         },
 
-        // 获取纯文字转写页面的转写内容
-        getTranscriptContentForTextPage() {
+        // 获取纯文字转写页面的转写内容（支持虚拟滚动）
+        async getTranscriptContentForTextPage() {
+            // 查找虚拟滚动容器
+            const scrollContainer = document.querySelector('.minutes-module-paragraphs .minutes-module-list');
+
+            // 如果没有滚动容器或内容不需要滚动，直接获取可见内容
+            if (!scrollContainer || scrollContainer.scrollHeight <= scrollContainer.clientHeight) {
+                return this.getTranscriptContentForTextPageFallback();
+            }
+
+            const originalScrollTop = scrollContainer.scrollTop;
+            let lastScrollTop = -1;
+            let allContent = new Map();
+
+            try {
+                scrollContainer.scrollTop = 0;
+                await this.sleep(200);
+
+                while (scrollContainer.scrollTop !== lastScrollTop) {
+                    lastScrollTop = scrollContainer.scrollTop;
+
+                    const currentRows = scrollContainer.querySelectorAll('.minutes-module-row');
+                    currentRows.forEach(row => {
+                        const pidAttr = row.getAttribute('data-pid') || row.querySelector('[data-pid]')?.getAttribute('data-pid');
+                        const speakerElement = row.querySelector('.paragraph-module_speaker-name__afSbd');
+                        const nameTimeElement = row.querySelector('.minutes-module-name-time');
+                        const textElement = row.querySelector('.paragraph-module_sentences__zK2oL, .minutes-module-sentences');
+
+                        if (textElement && textElement.textContent.trim()) {
+                            const speaker = speakerElement ? speakerElement.textContent.trim() : '未知发言人';
+                            let time = '';
+                            if (nameTimeElement) {
+                                const timeMatch = nameTimeElement.textContent.match(/\d{2}:\d{2}/);
+                                time = timeMatch ? timeMatch[0] : '';
+                            }
+                            const text = textElement.textContent.trim();
+
+                            const uniqueKey = pidAttr || `${time}_${speaker}_${text.substring(0, 20)}`;
+
+                            if (!allContent.has(uniqueKey)) {
+                                allContent.set(uniqueKey, {
+                                    pid: pidAttr ? parseInt(pidAttr) : null,
+                                    time,
+                                    speaker,
+                                    text
+                                });
+                            }
+                        }
+                    });
+
+                    scrollContainer.scrollTop += scrollContainer.clientHeight;
+                    await this.sleep(100);
+                }
+
+                scrollContainer.scrollTop = originalScrollTop;
+
+                const contentArray = Array.from(allContent.values());
+                return contentArray.sort((a, b) => {
+                    if (a.pid !== null && b.pid !== null) return a.pid - b.pid;
+                    return a.time.localeCompare(b.time);
+                });
+
+            } catch (error) {
+                console.error('获取转写内容时出错:', error);
+                scrollContainer.scrollTop = originalScrollTop;
+                return this.getTranscriptContentForTextPageFallback();
+            }
+        },
+
+        // 降级方法：获取当前可见的转写内容
+        getTranscriptContentForTextPageFallback() {
             const transcriptRows = document.querySelectorAll('.minutes-module-row');
             let content = [];
 
@@ -230,7 +299,6 @@
 
                 if (textElement && textElement.textContent.trim()) {
                     const speaker = speakerElement ? speakerElement.textContent.trim() : '未知发言人';
-                    // 从nameTimeElement中提取时间（格式如 "00:01"）
                     let time = '';
                     if (nameTimeElement) {
                         const timeMatch = nameTimeElement.textContent.match(/\d{2}:\d{2}/);

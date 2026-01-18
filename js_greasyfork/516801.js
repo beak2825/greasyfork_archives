@@ -1,11 +1,28 @@
 // ==UserScript==
 // @name         [哔哩哔哩直播]---弹幕反诈与防河蟹
-// @version      3.6.1
+// @version      3.7.1
 // @description  本脚本会提示你在直播间发送的弹幕是否被秒删，被什么秒删，有助于用户规避河蟹词，避免看似发了弹幕结果主播根本看不到，不被发送成功的谎言所欺骗！
 // @author       Asuna
 // @icon         https://www.bilibili.com/favicon.ico
 // @license      GPL 3.0
-// @match        https://live.bilibili.com/*
+// @match        *://live.bilibili.com/1*
+// @match        *://live.bilibili.com/2*
+// @match        *://live.bilibili.com/3*
+// @match        *://live.bilibili.com/4*
+// @match        *://live.bilibili.com/5*
+// @match        *://live.bilibili.com/6*
+// @match        *://live.bilibili.com/7*
+// @match        *://live.bilibili.com/8*
+// @match        *://live.bilibili.com/9*
+// @match        *://live.bilibili.com/blanc/1*
+// @match        *://live.bilibili.com/blanc/2*
+// @match        *://live.bilibili.com/blanc/3*
+// @match        *://live.bilibili.com/blanc/4*
+// @match        *://live.bilibili.com/blanc/5*
+// @match        *://live.bilibili.com/blanc/6*
+// @match        *://live.bilibili.com/blanc/7*
+// @match        *://live.bilibili.com/blanc/8*
+// @match        *://live.bilibili.com/blanc/9*
 // @run-at       document-start
 // @grant        unsafeWindow
 // @require      https://cdn.jsdelivr.net/npm/segmentit@2.0.3/dist/umd/segmentit.min.js
@@ -21,23 +38,23 @@
     const globalConfig = {
         // 高级功能开关：true=启用所有功能，false=仅基础检测
         advancedFeaturesEnabled: true,
-        
+
         // 脚本配置
         msgTime: 7000,              // 脚本加载消息计时器
         exp: 1,                      // 弹幕同屏发送次数，默认为1
         successSend: true,           // 发送成功的回调开关，如不需要启用则填写false
-        
+
         // 弹幕样式配置
         banColorSystem: "#90EE90",   // 系统屏蔽弹幕颜色
         banColorUser: "deepskyblue", // 主播屏蔽弹幕颜色
         successColor: "DarkCyan",    // 成功颜色
         errorColor: "Crimson",       // 错误颜色
-        
+
         // 弹幕显示位置
         dmLeft: '-16%',              // 默认固定从左侧开始滚动的位置
         dmTop: '50%',                // 弹幕距离顶部的位置，如果想要随机可以替换为：${Math.random() * 100}%
         dmFontSize: '36px',          // 弹幕字号
-        
+
         // 弹幕提示消息
         banSystemMsg: "发送失败：你的弹幕被系统秒删，修改关键词后重新发吧",
         banUserMsg: "发送失败：你的弹幕被主播删除，看来主播不喜欢某些关键词",
@@ -244,18 +261,18 @@
         addWord(word) {
             const words = this.getWords();
             const maxCapacity = sensitiveWordsConfig.defaultConfig.maxWordsCapacity;
-            
+
             // 检查是否已存在
             if (words.includes(word)) {
                 return false;
             }
-            
+
             // 检查容量限制并打印到控制台日志
             if (words.length >= maxCapacity) {
                 consoleStyle.warning(`敏感词库已达到最大容量限制 (${maxCapacity}个)，无法添加更多敏感词`);
                 return false;
             }
-            
+
             words.push(word);
             this.saveWords(words);
             return true;
@@ -290,23 +307,23 @@
                 words.forEach(word => {
                     const wordToCheck = sensitiveWordsConfig.caseSensitive ? word : word.toLowerCase();
                     let searchIndex = 0;
-                    
+
                     // 查找所有匹配的位置，限制检测数量最多为8个
                     while (searchIndex < textToCheck.length && detectedWords.length < 8) {
                         const foundIndex = textToCheck.indexOf(wordToCheck, searchIndex);
                         if (foundIndex === -1) break;
-                        
+
                         detectedWords.push({
                             word: word,
                             originalWord: word,
                             startIndex: foundIndex,
                             endIndex: foundIndex + wordToCheck.length
                         });
-                        
+
                         searchIndex = foundIndex + 1;
                     }
                 });
-                
+
                 // 去重：移除重叠的检测结果，保留较长的敏感词
                 const filteredWords = this.removeOverlappingDetections(detectedWords);
                 detectedWords.length = 0; // 清空原数组
@@ -317,13 +334,13 @@
                     try {
                         const segments = segmentit.doSegment(text);
                         console.log("精确匹配模式 - 分词结果:", segments.map(s => s.w));
-                        
+
                         // 对每个敏感词检查是否在分词结果中
                         words.forEach(word => {
                             const wordToCheck = sensitiveWordsConfig.caseSensitive ? word : word.toLowerCase();
                             segments.forEach((segment, index) => {
                                 const segmentToCheck = sensitiveWordsConfig.caseSensitive ? segment.w : segment.w.toLowerCase();
-                                
+
                                 // 精确匹配：分词结果必须完全等于敏感词
                                 if (segmentToCheck === wordToCheck) {
                                     console.log(`精确匹配检测到敏感词: "${word}" 在分词: "${segment.w}"`);
@@ -352,16 +369,16 @@
         // 移除重叠的检测结果，保留较长的敏感词
         removeOverlappingDetections(detectedWords) {
             if (detectedWords.length <= 1) return [...detectedWords];
-            
+
             // 按开始位置排序
             detectedWords.sort((a, b) => a.startIndex - b.startIndex);
-            
+
             const result = [detectedWords[0]]; // 直接添加第一个
-            
+
             for (let i = 1; i < detectedWords.length; i++) {
                 const current = detectedWords[i];
                 const last = result[result.length - 1];
-                
+
                 // 检查是否重叠
                 if (current.startIndex >= last.endIndex) {
                     // 不重叠：直接添加
@@ -373,7 +390,7 @@
                     }
                 }
             }
-            
+
             return result;
         },
 
@@ -402,6 +419,49 @@
 
     // 创建浮动文本框用于记录被拦截的弹幕
     function createDanmuLogBox() {
+        // 防止重复创建：检查是否已经存在记录板
+        const existingLogBox = document.getElementById('danmu-log-box');
+        if (existingLogBox) {
+            // 如果记录板已存在，直接返回现有实例
+            return existingLogBox;
+        }
+
+        // 检查页面环境：确保 document.body 存在（页面已加载）
+        if (!document.body) {
+            consoleStyle.warning('页面未加载完成，延迟创建记录板');
+            // 如果 body 不存在，延迟创建
+            setTimeout(() => {
+                if (document.body && !document.getElementById('danmu-log-box')) {
+                    createDanmuLogBox();
+                }
+            }, 500);
+            return null;
+        }
+
+        // 检查是否存在 #live-player 元素，这是真实直播间的标识
+        // 如果不存在，说明可能是活动页（外层页面），不创建记录板
+        const livePlayerDiv = document.getElementById('live-player');
+        if (!livePlayerDiv) {
+            // 检查是否在 iframe 中
+            try {
+                // 如果在 iframe 中且顶层窗口也有 live-player，说明是嵌套场景
+                // 此时只在 iframe 内的真实直播间创建记录板
+                if (window.self !== window.top) {
+                    // 在 iframe 中，但没有 live-player，说明不是真实直播间，不创建
+                    consoleStyle.info('检测到 iframe 嵌套，但当前页面不是真实直播间，跳过创建记录板');
+                    return null;
+                } else {
+                    // 不在 iframe 中，但没有 live-player，可能是活动页，不创建
+                    consoleStyle.info('当前页面没有 live-player 元素，跳过创建记录板（可能是活动页）');
+                    return null;
+                }
+            } catch (e) {
+                // 跨域限制，无法访问 window.top，保守处理：不创建
+                consoleStyle.warning('无法判断页面环境，跳过创建记录板');
+                return null;
+            }
+        }
+
         const logBox = document.createElement('div');
         logBox.id = 'danmu-log-box';
         logBox.style.cssText = `
@@ -1391,16 +1451,16 @@
             const maxCapacity = sensitiveWordsConfig.defaultConfig.maxWordsCapacity;
             const currentCount = words.length;
             const remainingCount = maxCapacity - currentCount;
-            
+
             wordList.innerHTML = '';
 
             // 添加容量信息显示
             const capacityInfo = document.createElement('div');
-            
+
             // 动态计算容量阈值
             const warningThreshold = Math.ceil(maxCapacity * 0.3);  // 剩余30%
             const alertThreshold = Math.ceil(maxCapacity * 0.05);  // 剩余5%
-            
+
             capacityInfo.style.cssText = `
                 padding: 8px 15px;
                 margin-bottom: 10px;
@@ -1411,7 +1471,7 @@
                 color: #2196F3;
                 text-align: center;
             `;
-            
+
             if (remainingCount <= alertThreshold) {
                 // 空间严重不足，红色严重警告
                 capacityInfo.style.color = '#f44336';
@@ -1423,7 +1483,7 @@
                 capacityInfo.style.background = 'linear-gradient(135deg, rgba(255, 152, 0, 0.1), rgba(255, 152, 0, 0.05))';
                 capacityInfo.style.borderColor = 'rgba(255, 152, 0, 0.3)';
             }
-            
+
             capacityInfo.textContent = `词库容量: ${currentCount}/${maxCapacity} (剩余 ${remainingCount} 个)`;
             wordList.appendChild(capacityInfo);
 
@@ -1657,9 +1717,14 @@
             // 如果弹幕记录板显示配置发生变化，需要重新创建或隐藏弹幕记录板
             const logBox = document.getElementById('danmu-log-box');
             if (sensitiveWordsConfig.showLogBoxByDefault) {
-                // 如果启用默认显示，确保弹幕记录板存在并显示
+                // 如果启用默认显示，确保弹幕记录板存在并显示，只有在真实直播间页面（有 live-player）才创建
                 if (!logBox) {
-                    createDanmuLogBox();
+                    const livePlayerDiv = document.getElementById('live-player');
+                    if (livePlayerDiv) {
+                        createDanmuLogBox();
+                    } else {
+                        showNotification('当前页面不是真实直播间，无法创建记录板', 'warning', 3000);
+                    }
                 } else {
                     logBox.style.display = 'block';
                     logBox.removeAttribute('data-closed');
@@ -2391,9 +2456,18 @@
         logBox: null,
         contentArea: null,
         getLogBox() {
-            if (!this.logBox) {
-                this.logBox = document.getElementById('danmu-log-box') || createDanmuLogBox();
+            // 首先检查DOM中是否已存在记录板
+            const existingLogBox = document.getElementById('danmu-log-box');
+            if (existingLogBox) {
+                this.logBox = existingLogBox;
+                return this.logBox;
             }
+
+            // 如果缓存中没有且DOM中也没有，尝试创建
+            if (!this.logBox) {
+                this.logBox = createDanmuLogBox();
+            }
+
             return this.logBox;
         },
         getContentArea() {
@@ -2419,8 +2493,13 @@
     function logDanmuToBox(content, type) {
         // 检查全局开关
         if (!globalConfig.advancedFeaturesEnabled) return;
-        
+
         const logBox = domCache.getLogBox();
+
+        // 如果记录板不存在，直接返回（可能页面未加载完成）
+        if (!logBox) {
+            return;
+        }
 
         if (logBox.getAttribute('data-closed') === 'true') {
             // 如果弹幕框被关闭，重新显示
@@ -2511,7 +2590,7 @@
             consoleStyle.info('检测到高级功能关闭，使用基础检测模式')
             return;
         }
-        
+
         const saved = localStorage.getItem('danmu_sensitive_words');
         if (saved) {
             try {
@@ -2543,23 +2622,60 @@
     // 根据全局开关和配置决定是否默认显示弹幕记录板
     if (globalConfig.advancedFeaturesEnabled && sensitiveWordsConfig.showLogBoxByDefault) {
         // 延迟创建弹幕记录板，确保页面加载完成
-        setTimeout(() => {
-            createDanmuLogBox();
-        }, 1000);
+        // 使用 DOMContentLoaded 或延迟执行，确保页面元素已加载
+        const initLogBox = () => {
+            // 再次检查是否应该创建（检查 live-player 元素）
+            const livePlayerDiv = document.getElementById('live-player');
+            if (livePlayerDiv) {
+                createDanmuLogBox();
+            } else {
+                // 如果页面还在加载，再等待一段时间
+                if (document.readyState === 'loading') {
+                    setTimeout(initLogBox, 500);
+                }
+            }
+        };
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initLogBox);
+        } else {
+            setTimeout(initLogBox, 1000);
+        }
+    }
+
+    // 检查是否在正确的页面环境（有 #live-player 元素）
+    // 避免在天选时刻弹窗等 iframe 中显示加载消息和处理弹幕
+    function isInValidLiveRoom() {
+        try {
+            // 检查是否存在 #live-player 元素
+            const livePlayerDiv = document.getElementById('live-player');
+            if (!livePlayerDiv) {
+                return false;
+            }
+            return true;
+        } catch (e) {
+            return false;
+        }
     }
 
     let windowCtx = self.window;
     if (self.unsafeWindow) {
         consoleStyle.success(`弹幕反诈脚本已加载 | ${globalConfig.successLoadMsg}`);
-        setTimeout(() => {
-           showFloatingMessage(globalConfig.successLoadMsg, globalConfig.successColor);
-        }, globalConfig.msgTime);
+        // 只在真实直播间页面显示加载成功消息
+        if (isInValidLiveRoom()) {
+            setTimeout(() => {
+               showFloatingMessage(globalConfig.successLoadMsg, globalConfig.successColor);
+            }, globalConfig.msgTime);
+        }
         windowCtx = self.unsafeWindow;
     } else {
         consoleStyle.error(`unsafeWindow模式不可用 | ${globalConfig.errorMsg}`);
-        setTimeout(() => {
-           showFloatingMessage(globalConfig.errorMsg, globalConfig.errorColor);
-        }, globalConfig.msgTime);
+        // 只在真实直播间页面显示错误消息
+        if (isInValidLiveRoom()) {
+            setTimeout(() => {
+               showFloatingMessage(globalConfig.errorMsg, globalConfig.errorColor);
+            }, globalConfig.msgTime);
+        }
     }
 
     // 初始化segmentit分词器
@@ -2648,6 +2764,13 @@
     // 异步处理弹幕响应数据
     async function processDanmuResponse(data, originalResponse, resolve, reject) {
         try {
+            // 检查是否在正确的页面环境
+            if (!isInValidLiveRoom()) {
+                // 不在真实直播间页面，不处理
+                resolve(originalResponse);
+                return;
+            }
+
             // 在修改数据前提取弹幕内容
             if (data.data && data.data.mode_info && data.data.mode_info.extra) {
                 try {
@@ -2655,7 +2778,7 @@
                     if (extraData.content) {
                         // 对所有弹幕进行segmentit分词测试
                         testSegmentitSegmentation(extraData.content);
-                        
+
                         // 根据屏蔽类型进行针对性输出
                         if (data.msg === "f") {
                             console.log("系统屏蔽弹幕:", extraData.content);
@@ -2715,6 +2838,12 @@
 
     const originFetchBLDMAF = windowCtx.fetch;
     windowCtx.fetch = (...arg) => {
+        // 检查是否在正确的页面环境
+        if (!isInValidLiveRoom()) {
+            // 不在真实直播间页面，直接调用原始 fetch
+            return originFetchBLDMAF(...arg);
+        }
+
         let arg0 = arg[0];
         let url = "";
         switch (typeof arg0) {

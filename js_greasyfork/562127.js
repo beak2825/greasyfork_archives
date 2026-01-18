@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Faction Vault - Member & Management
 // @namespace    http://tampermonkey.net/
-// @version      4.9
+// @version      5.0
 // @description  Faction vault requests with management dashboard for bankers.
 // @author       Deviyl[3722358]
 // @icon         https://deviyl.github.io/icons/moneybag-green.png
@@ -9,6 +9,7 @@
 // @grant        GM_xmlhttpRequest
 // @grant        GM_setValue
 // @grant        GM_getValue
+// @grant        GM_addStyle
 // @license      MIT
 // @connect      api.torn.com
 // @connect      firebaseio.com
@@ -23,7 +24,7 @@
 // ** If you see this floating around and would like to make it work for your faction, please contact Deviyl[3722358]. =)
 //
 // API KEY USAGE
-// Your API key, and all other settings inputs, are not submitted to the database and are not stored anywhere outside of your local greasemonkey storage.
+// Your API key, and all other settings inputs, are not submitted to the database and are not stored anywhere outside of your local GM storage.
 // The only thing submitted to the database is your user id, request amount, lastaction timestamp, user name, online preference, request expiration, and submit timestamp.
 //
 // MEMBERS
@@ -40,7 +41,11 @@
 // NOTES
 // Please always be mindful of the clicks you make to ensure nothing crazy has happened.
 // TornPDA has stressed me out more than it should have during this project.
-// Submissions work fine, but pulling the data from the management side sometimes takes up to 20s. I believe this is an isse with TornPDA itself. It works perfectly and immediately on PC.
+// Most things should feel pretty snappy, but in order to keep API requests to a minimum, some things are on a timer.
+//
+// PAGES
+// Currently this vault request/fulfillment container injects into the armory page, the travel page, and the destination page.
+// So members can request money in torn through the faction armory, while traveling, and when in other cities.
 //
 // I hope everyone who uses this finds it useful and helps ease their journey through Torn. Always here to help, Deviyl[3722358]. <3
 
@@ -264,7 +269,8 @@
         });
     }
 
-    async function runHeartbeat() {
+    function runHeartbeat() {
+        if (!GM_getValue(ACTIVE_REQ_KEY, false) || !activeData) return;
         settings = getSettings();
         if (!settings.tornApiKey) { tornValid = false; updateShieldUI(); return; }
         GM_xmlhttpRequest({
@@ -282,6 +288,7 @@
                         if (dbUrl) {
                             GM_xmlhttpRequest({
                                 method: "GET", url: dbUrl, onload: (res) => {
+                                    if (!activeData || !hasActiveRequest) return;
                                     const data = JSON.parse(res.responseText);
                                     if (data && data.name) {
                                         hasActiveRequest = true; GM_setValue(ACTIVE_REQ_KEY, true); activeData = data;
@@ -312,20 +319,27 @@
 
         GM_xmlhttpRequest({
             method: "GET",
-            url: getDbUrl("/vaultRequests"),
+            url: getDbUrl("/vaultRequests") + (getDbUrl("/vaultRequests").includes('?') ? '&' : '?') + 't=' + Date.now(),
             onload: (res) => {
                 try {
-                    const raw = res.responseText || res.response;
-                    let allReqs;
-                    if (raw && typeof raw === 'object') {
-                        allReqs = raw;
-                    } else if (raw && typeof raw === 'string' && raw !== "null") {
-                        allReqs = JSON.parse(raw);
-                    }
-                    const purgeBtn = document.getElementById('vault-mgmt-purge');
+                    if (!res) return;
+                    const raw = res.responseText || res.response || res.responseData;
+                    let allReqs = {};
 
-                    if (!allReqs) {
-                        listContainer.innerHTML = '<p style="color:#888; font-size:11px; text-align:center;">No active requests.</p>';
+                    if (raw) {
+                        if (typeof raw === 'object') {
+                            allReqs = raw;
+                        } else if (typeof raw === 'string' && raw.trim() !== "" && raw !== "null") {
+                            allReqs = JSON.parse(raw);
+                        }
+                    }
+                    if (!allReqs || typeof allReqs !== 'object') allReqs = {};
+
+                    const purgeBtn = document.getElementById('vault-mgmt-purge');
+                    const keys = Object.keys(allReqs);
+
+                    if (keys.length === 0) {
+                        listContainer.innerHTML = '<p style="color:#888; font-size:11px; text-align:center; padding: 10px;">No active requests.</p>';
                         if (mgmtTimerInterval) clearInterval(mgmtTimerInterval);
                         if (purgeBtn) purgeBtn.style.display = 'none';
                         return;
@@ -340,29 +354,26 @@
                     };
 
                     let html = '';
-                    Object.keys(allReqs)
-                        .sort((a, b) => allReqs[a].timestamp - allReqs[b].timestamp)
+                    keys.sort((a, b) => (allReqs[a].timestamp || 0) - (allReqs[b].timestamp || 0))
                         .forEach(uid => {
                         const r = allReqs[uid];
                         const statusClass = getStatusClass(r.lastAction || 0);
-                        let statusTooltip = "Offline";
-                        if (statusClass === 'status-online') statusTooltip = "Online";
-                        else if (statusClass === 'status-idle') statusTooltip = "Idle";
-                        const isOnlinePref = (r.pref === true || r.pref === 1 || r.pref === "1" || r.pref === "true");
-                        const prefText = isOnlinePref ? 'Send when <span style="color:#00ff00;">Online</span>' : 'Send <span style="color:#ff4444;">Anytime</span>';
+                        const isOnlinePref = (r.pref == 1 || r.pref === true || r.pref === "true");
+                        const prefText = isOnlinePref ? '<span style="color:#00ff00;">Online</span>' : '<span style="color:#ff4444;">Anytime</span>';
+
                         const startTime = parseInt(r.timestamp);
                         const timeoutMins = parseInt(r.timeout) || 0;
                         const expiryTime = startTime + (timeoutMins * 60 * 1000);
 
                         html += `
                             <div class="mgmt-card" style="display: flex; align-items: center; justify-content: space-between; background: #222; padding: 8px; border-radius: 3px; margin-bottom: 5px; border-left: 3px solid #444;">
-                                <div style="flex: 1;">
-                                    <span class="mgmt-status-dot ${statusClass}" title="${statusTooltip}"></span>
+                                <div style="flex: 2;">
+                                    <span class="mgmt-status-dot ${statusClass}"></span>
                                     <a href="/profiles.php?XID=${r.id}" class="mgmt-user" style="color:#fff; text-decoration:none; font-size:12px; font-weight: bold;">${r.name} [${r.id}]</a>
                                     <div style="font-size:10px; color:#888; margin-top:2px; padding-left:13px;">$${formatMoney(r.amount)}</div>
                                 </div>
-                                <div style="flex: 1; text-align: center; font-size: 11px;">
-                                    <div style="font-weight: 500;">${prefText}</div>
+                                <div style="flex: 2; text-align: center; font-size: 11px;">
+                                    <div style="font-weight: 500; font-size: 10px;">${prefText}</div>
                                     <div class="mgmt-timer"
                                          data-start="${startTime}"
                                          data-expiry="${expiryTime}"
@@ -381,23 +392,22 @@
                     });
 
                     listContainer.innerHTML = html;
+                    listContainer.querySelectorAll('.mgmt-pay-btn').forEach(btn => {
+                        btn.addEventListener('click', () => fulfillRequest(btn.dataset.id, btn.dataset.name, btn.dataset.amt));
+                    });
 
                     const runTick = () => {
-                        const timers = listContainer.querySelectorAll('.mgmt-timer');
-                        if (timers.length === 0) {
-                            if (mgmtTimerInterval) clearInterval(mgmtTimerInterval);
-                            if (purgeBtn) purgeBtn.style.display = 'none';
-                            return;
-                        }
-
                         let anyExpired = false;
+                        const timers = listContainer.querySelectorAll('.mgmt-timer');
+
                         timers.forEach(t => {
-                            const isOnline = t.dataset.pref === "true";
+                            const isOnlinePref = t.dataset.pref === "true";
                             const now = Date.now();
 
-                            if (isOnline) {
+                            if (isOnlinePref) {
                                 const remaining = parseInt(t.dataset.expiry) - now;
                                 t.innerText = formatDuration(remaining);
+
                                 if (remaining <= 0) {
                                     t.style.color = "#ff4444";
                                     t.style.fontWeight = "bold";
@@ -408,7 +418,6 @@
                                 t.innerText = formatDuration(elapsed);
                             }
                         });
-
                         if (purgeBtn) {
                             purgeBtn.style.display = anyExpired ? 'inline-block' : 'none';
                         }
@@ -418,14 +427,8 @@
                     runTick();
                     mgmtTimerInterval = setInterval(runTick, 1000);
 
-                    listContainer.querySelectorAll('.mgmt-pay-btn').forEach(btn => {
-                        btn.addEventListener('click', () => {
-                            fulfillRequest(btn.dataset.id, btn.dataset.name, btn.dataset.amt);
-                        });
-                    });
-
                 } catch(e) {
-                    //console.warn("Vault Syncing...");
+                    console.error("Vault Management Refresh Error:", e);
                 }
             }
         });
@@ -481,9 +484,13 @@
                             const action = new Promise((resolve) => {
                                 GM_xmlhttpRequest({
                                     method: "POST",
-                                    url: getDbUrl(`/vaultRequests/${userId}`, "DELETE"),
+                                    url: getDbUrl(`/vaultRequests/${userId}`),
                                     headers: { "X-HTTP-Method-Override": "DELETE" },
-                                    onload: () => resolve()
+                                    onload: () => resolve(),
+                                    onerror: () => {
+                                        console.warn(`Failed to delete request for ${userId}`);
+                                        resolve();
+                                    }
                                 });
                             });
                             deleteExpired.push(action);
@@ -801,13 +808,17 @@
 
         const armoryAnchor = document.querySelector('li.clear');
         const delimiters = document.querySelectorAll('hr.delimiter-999');
-        const travelAnchor = delimiters[delimiters.length - 1];
+        const travelFlightAnchor = delimiters[delimiters.length - 1];
+        const travelLandedAnchor = document.querySelector('hr.page-head-delimiter.m-top10.m-bottom10');
 
         if (armoryAnchor) {
             armoryAnchor.after(container);
             container.after(mgmtContainer);
-        } else if (travelAnchor) {
-            travelAnchor.after(container);
+        } else if (travelLandedAnchor) {
+            travelLandedAnchor.after(container);
+            container.after(mgmtContainer);
+        } else if (travelFlightAnchor) {
+            travelFlightAnchor.after(container);
             container.after(mgmtContainer);
         }
 
@@ -933,7 +944,7 @@
         }
     }
 
-    async function submitRequest() {
+    function submitRequest() {
         const amt = parseMoney(document.getElementById('vault-amount').value);
         if (amt <= 0) return;
         const btn = document.getElementById('vault-submit');
@@ -954,8 +965,11 @@
     }
 
     function cancelRequest(isManual = false, isTimeout = false) {
-        hasActiveRequest = false; GM_setValue(ACTIVE_REQ_KEY, false); activeData = null;
-        updateStatusIcon(); resetUI();
+        hasActiveRequest = false;
+        GM_setValue(ACTIVE_REQ_KEY, false);
+        activeData = null;
+        updateStatusIcon();
+        resetUI();
         if (isManual) sendDiscordPing(null, false, true, false);
         if (isTimeout) sendDiscordPing(null, false, false, true);
         GM_xmlhttpRequest({

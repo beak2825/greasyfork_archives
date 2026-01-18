@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         模拟打印
 // @namespace    http://tampermonkey.net/
-// @version      0.4
+// @version      0.5
 // @description  模拟打印，可以在mac电脑上查看打印预览
 // @author       Juliet
 // @match        *://*/*
@@ -39,30 +39,106 @@
     var button = document.createElement('button');
     button.classList.add('dev_tools_button');
 
-    button.innerHTML = '模拟打印机';
+    button.innerHTML = '<span style="font-size: 16px;">🖨️</span> 模拟打印机';
 
     loadStyle(`
           .dev_tools_button {
-              width: 130px;
-              height: 40px;
-              border-radius: 5px;
+              width: 140px;
+              height: 44px;
+              border-radius: 12px;
               border: none;
               font-weight: 500;
-              cursor: pointer;
+              font-size: 14px;
+              cursor: move;
               display: flex;
               align-items: center;
               justify-content: center;
+              gap: 8px;
               position: fixed;
               bottom: 30px;
               right: 30px;
               color: #ffffff;
               z-index: 10000000;
-              background: rgb(0,172,238);
-              background: linear-gradient(0deg, rgba(0,172,238,1) 0%, rgba(2,126,251,1) 100%);
+              background: #1a1a2e;
+              box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15),
+                          0 1px 3px rgba(0, 0, 0, 0.1);
+              transition: box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+              backdrop-filter: blur(10px);
+              -webkit-backdrop-filter: blur(10px);
+              user-select: none;
+              -webkit-user-select: none;
+          }
+          .dev_tools_button:hover {
+              box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2),
+                          0 2px 5px rgba(0, 0, 0, 0.12);
+              background: #252540;
+          }
+          .dev_tools_button.dragging {
+              opacity: 0.9;
+              box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+              cursor: grabbing;
           }
       `);
 
-    button.onclick = function () {
+    // 拖拽功能
+    var isDragging = false;
+    var hasMoved = false;
+    var startX, startY, startLeft, startTop;
+
+    button.addEventListener('mousedown', function (e) {
+      if (e.button !== 0) return; // 只响应左键
+      isDragging = true;
+      hasMoved = false;
+      button.classList.add('dragging');
+
+      startX = e.clientX;
+      startY = e.clientY;
+      startLeft = button.offsetLeft;
+      startTop = button.offsetTop;
+
+      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('mouseup', onMouseUp);
+      e.preventDefault();
+    }, { passive: false });
+
+    function onMouseMove(e) {
+      if (!isDragging) return;
+
+      var dx = e.clientX - startX;
+      var dy = e.clientY - startY;
+
+      // 移动超过5px才认为是拖拽
+      if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
+        hasMoved = true;
+      }
+
+      if (hasMoved) {
+        var newLeft = startLeft + dx;
+        var newTop = startTop + dy;
+
+        // 边界限制
+        var maxLeft = window.innerWidth - button.offsetWidth - 20;
+        var maxTop = window.innerHeight - button.offsetHeight - 20;
+        newLeft = Math.max(20, Math.min(newLeft, maxLeft));
+        newTop = Math.max(20, Math.min(newTop, maxTop));
+
+        button.style.left = newLeft + 'px';
+        button.style.top = newTop + 'px';
+        button.style.right = 'auto';
+        button.style.bottom = 'auto';
+      }
+    }
+
+    function onMouseUp() {
+      isDragging = false;
+      button.classList.remove('dragging');
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    }
+
+    button.onclick = function (e) {
+      // 只有没有发生拖拽移动才触发点击
+      if (hasMoved) return;
       button.parentNode.removeChild(button);
       if (window.PrintManger) {
         window.PrintManger.feature.isEnablePrintV2 = true;

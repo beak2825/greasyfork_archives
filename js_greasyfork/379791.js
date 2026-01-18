@@ -6,7 +6,7 @@
 // @include       https://exhentai.org/*
 // @include       https://e-hentai.org/*
 // @grant         GM_addStyle
-// @version       2.8.16
+// @version       2.9.01
 // @downloadURL https://update.greasyfork.org/scripts/379791/Exhentai%20Highlighting.user.js
 // @updateURL https://update.greasyfork.org/scripts/379791/Exhentai%20Highlighting.meta.js
 // ==/UserScript==
@@ -87,6 +87,13 @@ var blacklist = [
     "td_male:dilf", "td_male:bbm", "td_male:smegma", "td_male:cbt", "td_male:pegging", "td_male:anal", "td_male:asphyxiation", "td_male:unbirth", "td_male:miniguy", "td_male:mind_control", "td_male:chastity_belt", "td_male:dickgirl_on_male", "td_male:prostate_massage", "td_male:piss_drinking", "td_male:bdsm", "td_male:rape", "td_male:cheating", "td_male:fisting", "td_male:toddlercon", "td_male:double_penetration", "td_male:mind_break", "td_male:yaoi", "td_male:males_only", "td_male:snuff", "td_male:blood", "td_male:vomit", "td_male:vore", "td_male:scat", "td_male:blackmail", "td_male:torture", "td_male:slave", "td_male:eyepatch", "td_male:diaper", "td_male:infantilism", "td_male:urination", "td_male:schoolgirl_uniform", "td_male:feminization", "td_male:old_man", "td_male:drugs", "td_male:bondage", "td_male:guro", "td_male:harem", "td_male:gender_bender", "td_male:orc", "td_male:monster", "td_male:netorare"
 ];
 
+var removelist = [
+    "td_incomplete", "td_other:rough_translation",
+
+    "td_female:dick_growth", "td_female:diaper", "td_female:dickgirl_on_dickgirl", "td_female:unbirth", "td_female:parasite", "td_female:vomit", "td_female:piss_drinking", "td_female:bestiality",
+
+    "td_male:miniguy", "td_male:yaoi", "td_male:guro", "td_male:diaper", "td_male:vore", "td_male:old man"
+];
 
 
 
@@ -463,6 +470,14 @@ else {  // In der Hauptseite ***************************************************
                 }
             }
 
+            for(j = 0; j < removelist.length; j++)
+            {
+                if(alle_tags[i].title == removelist[j].replace("td_", "").replace('_',' '))
+                {
+                    alle_tags[i].parentElement.parentElement.parentElement.parentElement.remove();
+                }
+            }
+
 
 
         }
@@ -542,4 +557,6 @@ function getElementsByClassName(node, classname) {
  *      Bissl was rein, damit es auf e-hentai dunkler ist
  *  2.8.x - 08.08.2023
  *      Besuchte Links sind nun dunkelgrün
+ *  2.9.x - 10.01.2025
+ *      Removelist dazu um schlimme Blacklist direkt aus der Liste zu nehmen
  */

@@ -1,12 +1,14 @@
 // ==UserScript==
 // @name         M-Team屏蔽指定关键词种子
 // @namespace    m-teamblock
-// @version      20260117
+// @version      20260118
 // @author       Badge8305@M-Team
-// @description  自动删除包含指定关键字的 <tr> 行
+// @description  默认屏蔽掉馒头成人区和“男娘”、“重口味”有关的种子，可以根据需求手动添加关键词
 // @match        https://*.m-team.cc/*
+// @match        https://*.m-team.io/*
+// @exclude      https://test-h5.m-team.cc/*
 // @grant        none
-// @icon         https://i.imgant.com/v2/czc7P0J.png
+// @icon         https://i.imgant.com/v2/EY1Xto9.jpeg
 // @license      MIT
 // @downloadURL https://update.greasyfork.org/scripts/562629/M-Team%E5%B1%8F%E8%94%BD%E6%8C%87%E5%AE%9A%E5%85%B3%E9%94%AE%E8%AF%8D%E7%A7%8D%E5%AD%90.user.js
 // @updateURL https://update.greasyfork.org/scripts/562629/M-Team%E5%B1%8F%E8%94%BD%E6%8C%87%E5%AE%9A%E5%85%B3%E9%94%AE%E8%AF%8D%E7%A7%8D%E5%AD%90.meta.js
@@ -24,6 +26,26 @@
         '男の娘',
         'HSM-',
         'hsm-',
+        'BOKD-',
+        'bokd-',
+        'OPPW-',
+        'oppw-',
+        'TIM-',
+        'timd-',
+        'TCD-',
+        'tcd-',
+        'TANP-',
+        'tanp-',
+        'SXMA-',
+        'sxma-',
+        'PMGG-',
+        'pmgg-',
+        'NVH-',
+        'nvh-',
+        'PETS-',
+        'pets-',
+        'TPNS-',
+        'tpns-',
         '伪娘人妖',
         '变性',
         '喝尿',

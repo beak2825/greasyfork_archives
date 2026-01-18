@@ -1,8 +1,9 @@
 // ==UserScript==
 // @name         5chサムネイル表示他
 // @description  r（文字列非選択時）:ホバー中のレスへのアンカーを記入(R:追記）　r（文字列選択時）:選択文字列を引用（R:追記）　m:ホバー中のレスの10番前からを表示　,:ホバー中のレス以降を表示　.:ホバー中のレス以前を表示　d:書き込み欄にスクロール　y:ホバー中の画像をyandexで画像検索　l:ホバー中のレスへのリンクをコピー　8/9:サムネイルぼかし-/+
-// @version      0.2.7
+// @version      0.2.8
 // @run-at       document-idle
+// @inject-into content
 // @match        *://*.5ch.net/test/read.cgi/*
 // @match        *://*.5ch.net/*/
 // @match        *://*.5ch.net/*/SETTING.TXT
@@ -72,6 +73,7 @@
   const isfvw = eleget0('#fvw_menu')
   const MINIMUM_ROWS = 3; //(window.navigator.userAgent.toLowerCase().indexOf('firefox') != -1) ? 2 : 3;
 
+  const ael = (ele, evts, cb, opt) => evts.split(" ").forEach(evt => ele?.addEventListener(evt, cb, opt));
   String.prototype.match0 = function(re) { let tmp = this.match(re); if (!tmp) { return null } else if (tmp.length > 1) { return tmp[1] } else return tmp[0] }
   $.fn.animate2 = function(properties, duration, ease) {
     ease = ease || 'ease';
@@ -374,7 +376,7 @@ div#followheader.hidden.maxwidth100.height2p5.stickymenu.container:hover{opacity
         let puele = eleget0(`${target}`)
         let scale = Math.max(1, Math.min(SCALE_MAX, SCALE_MIN + (elegeta('img:not(.quoteSpeechBalloonImg)', puele).length * 0.5)))
         popup3(`左クリック：ポップアップを保存\n左クリック+Ctrl：ポップアップを保存（高画質）\nScale = ${scale}`)
-        document.dispatchEvent(new CustomEvent('saveDOMAsImage', { detail: { element: puele, filename: fn, scale: scale } }))
+        document.dispatchEvent(new CustomEvent('saveDOMAsImage', { detail: JS({ element: target, filename: fn, scale: scale }) }))
       }
     }
   }
@@ -535,6 +537,93 @@ div#followheader.hidden.maxwidth100.height2p5.stickymenu.container:hover{opacity
   //if (/^https?:\/\/.+\.5ch\.net\/test\/read\.cgi\/.+/.test(location.href) == false) { return; }
   if (/^https?:\/\/.+\.5ch\.net\/test\/read\.cgi\/.+|https:\/\/kako\.5ch\.net\/test\/read\.cgi\/[^\/]+\/\d+\//.test(location.href) == false) { return; }
   // ここ以降は5chのみ
+
+  // cd6::
+  const DURACD6 = 100;
+  addstyle.add('.imgbox>img{cursor: zoom-in;}')
+  ael(document, "click", evt => {
+    if (evt?.target?.matches(':is(:is([href*=".gif"],[href*=".png"],[href*=".jpg"],[href*=".jpeg"],[href*=".webp"],[href*=".avif"]) > img)') && (evt?.button <= 0)) {
+      evt.stopImmediatePropagation() + evt.preventDefault() + evt.stopPropagation();
+      return false
+    }
+  }, true)
+  ael(document, "mousedown", evt => {
+    if (evt?.target?.matches('.imgbox > img') && (evt?.button <= 0)) {
+      evt.stopImmediatePropagation() + evt.preventDefault() + evt.stopPropagation();
+
+      if (!document.fullscreenElement) {
+        let p = document.documentElement.requestFullscreen();
+        p.catch(() => {});
+      }
+      GF.hideBar = addstyle.add('body {overflow:hidden !important;} #hoverHelpPopup,.phov{display:none !important;}')
+      let preSrc = evt?.target?.src
+      eleget0('.ignoreMe.hzP')?.animate([{}, { opacity: 0 }], { duration: 100, fill: `both` })
+      let panel = preSrc.match(/(webm|mp4|avi|mkv)$/) ?
+        begin(document.body, `<video id="imgfullscreen" class="ignoreMe" autoplay controls loop style="z-index:${Number.MAX_SAFE_INTEGER}; position:fixed; top:0; left:0; width:100vw; height:100vh; object-fit: contain; background-color:#0000; box-shadow:0 0 1em #0008;"><source referrerpolicy="no-referrer" src="${preSrc}" type="video/mp4"></video>`) :
+        begin(document.body, `<img id="imgfullscreen" class="ignoreMe" src="${preSrc}" style="z-index:${Number.MAX_SAFE_INTEGER}; position:fixed; top:0; left:0; width:100%; height:100%; object-fit: contain; background-color:#0000; box-shadow:0 0 1em #0008;">`);
+
+      const pmaxEsc = e => (e.key == "Escape") && previewEnd();
+      document.addEventListener("keydown", pmaxEsc, { capture: true, once: 1 })
+      document?.addEventListener("mousedown", e => {
+        e.stopImmediatePropagation() + e.preventDefault() + e.stopPropagation();
+        previewEnd()
+      }, { capture: true, once: 1 });
+      panel?.animate([{ backgroundColor: "#0000", transform: "scale(0.9)", opacity: 0 }, { backgroundColor: "#0008", transform: "scale(1)", opacity: 1 }], { duration: 100, easing: 'ease', fill: 'both' })
+
+      function previewEnd() {
+        addstyle.remove(GF.hideBar)
+        let panel = eleget0("#imgfullscreen")
+        let s = +(panel?.style?.transform?.match0(/scale\(([\-\d+\.]+)\)/) || 1);
+        let r = panel?.style?.transform?.match0(/rotate\(([\-\d+\.]+)deg\)/) || 0;
+        document.removeEventListener('mousemove', pmaxmove)
+        document.removeEventListener("keydown", pmaxEsc, { capture: true, once: 1 })
+        if (s <= 1 && r % 360 == 0) panel.animate({ transformOrigin: "50% 50%" }, { duration: 0, easing: 'ease', fill: 'both' });
+        let ae = panel?.animate([(s <= 1 && r % 360 == 0) ? { transformOrigin: "50% 50%" } : {}, { backgroundColor: "#0000", transform: `scale(${s-0.1})`, opacity: 0 }], { duration: DURACD6, easing: 'ease', fill: 'both' })
+        ae.onfinish = () => panel?.remove()
+      }
+      document.addEventListener('mousemove', pmaxmove)
+
+      function pmaxmove(e) {
+        let panel = eleget0("#imgfullscreen")
+        let s = +(panel?.style?.transform?.match0(/scale\(([\-\d+\.]+)\)/) || 1);
+        let r = panel?.style?.transform?.match0(/rotate\(([\-\d+\.]+)deg\)/) || 0;
+        let to = `${minmax(Math.min(e.clientX,clientWidth())/clientWidth() *100,0,100)}% ${minmax(Math.min(e.clientY,clientHeight())/clientHeight()*100,0,100)}%`
+        //console.log(s,r,e.clientX,clientWidth(),to)
+        anima(panel, { "transformOrigin": to, "transform-origin": to });
+      }
+      panel.addEventListener('wheel', e => {
+        let panel = eleget0("#imgfullscreen")
+        e.stopPropagation()
+        e.preventDefault()
+        if (!e.shiftKey) {
+          let s = +(panel?.style?.transform?.match0(/scale\(([\-\d+\.]+)\)/) || 1);
+          let r = panel?.style?.transform?.match0(/rotate\(([\-\d+\.]+)deg\)/) || 0;
+          s = Math.min(50, Math.max(1, +s - (e.deltaY) / 1000));
+          let to = `${minmax(Math.min(e.clientX,clientWidth())/clientWidth() *100,0,100)}% ${minmax(Math.min(e.clientY,clientHeight())/clientHeight()*100,0,100)}%`
+          anima(panel, { "transform": panel.style.transform.replace(/initial|scale\([0-9\-\.]+\)/g, "") + `scale(${s})`, "transformOrigin": to, "transform-origin": to });
+        } else {
+          let s = +(panel?.style?.transform?.match0(/scale\(([\-\d+\.]+)\)/) || 1);
+          let r = panel?.style?.transform?.match0(/rotate\(([\-\d+\.]+)deg\)/) || 0;
+          r = (Math.round(((r - (-e.deltaY) / 10)) / 10) * 10);
+          let to = `${minmax(Math.min(e.clientX,clientWidth())/clientWidth() *100,0,100)}% ${minmax(Math.min(e.clientY,clientHeight())/clientHeight()*100,0,100)}%`
+          anima(panel, { "transform": panel.style.transform.replace(/initial|rotate\([0-9\-\.]+deg\)/g, "") + ` rotate(${r}deg)`, "transformOrigin": to, "transform-origin": to });
+        }
+        return false
+      }, true)
+
+      function anima(e, css, dur = 16.67 * 4) {
+        //if (!SMOOTH) { for (let c in css) e.style[c] = css[c]; return }
+        GF?.anima?.finish()
+        GF?.animaF?.()
+        GF.anima = e.animate(css, { duration: dur, fill: "both" })
+        GF.animaF = (function(e, css) { return function() { for (let c in css) e.style[c] = css[c]; } })(e, css)
+        GF.anima.onfinish = GF.animaF // setTimeout(GF.animaF,dur+1)
+      }
+    }
+  }, true)
+
+
+
   addstyle.add(`.post a{word-break:break-all;}`)
 
   // videoui::
@@ -1697,5 +1786,9 @@ div#followheader.hidden.maxwidth100.height2p5.stickymenu.container:hover{opacity
   function minmax(v, min, max) {
     return Math.min(Math.max(v, min), max)
   }
+
+  function JS(v) { try { return JSON.stringify(v) } catch { return null } }
+
+  function JP(v) { try { return JSON.parse(v) } catch { return null } }
 
 })();

@@ -10,13 +10,12 @@
 // @updateURL https://update.greasyfork.org/scripts/468324/eBay%20Seller%20Hider.meta.js
 // ==/UserScript==
 
-
-
 /* jshint esversion: 6 */
 "use strict";
 (() => {
   // src/main/ebay-seller-hider/ebay-seller-hider.user.ts
-  (() => {
+  var EbaySellerHider;
+  ((EbaySellerHider2) => {
     let filterReviews = true;
     let reviewMin = 10;
     let filterFeedback = true;
@@ -28,8 +27,8 @@
       const itemRegExp = RegExp(/\((.*)\) (.*)%/).exec(seller.innerText);
       if (itemRegExp) {
         const [, reviews, feedback] = itemRegExp;
-        const reviewsNum = parseInt(reviews.replace(",", ""), 10);
-        const feedbackNum = parseFloat(feedback);
+        const reviewsNum = Number.parseInt(reviews.replace(",", ""), 10);
+        const feedbackNum = Number.parseFloat(feedback);
         let parent = seller.parentElement;
         while (parent && parent.tagName !== "LI") {
           parent = parent.parentElement;
@@ -61,15 +60,15 @@
     const createCheckboxEventListener = (valueName, checkbox) => {
       if (valueName === "reviewMin") {
         localStorage.setItem("filterReviews", checkbox.checked ? "true" : "false");
-        updateFilter();
+        (0, EbaySellerHider2.updateFilter)();
       }
       if (valueName === "feedbackMin") {
         localStorage.setItem("filterFeedback", checkbox.checked ? "true" : "false");
-        updateFilter();
+        (0, EbaySellerHider2.updateFilter)();
       }
       if (valueName === "hideSponsored") {
         localStorage.setItem("hideSponsored", checkbox.checked ? "true" : "false");
-        updateFilter();
+        (0, EbaySellerHider2.updateFilter)();
       }
     };
     const createCheckbox = (text, valueName) => {
@@ -105,7 +104,7 @@
           const target = evt.target;
           if (target) {
             localStorage.setItem(valueName, target.value);
-            updateFilter();
+            (0, EbaySellerHider2.updateFilter)();
           }
         });
         input.style.height = "22px";
@@ -133,15 +132,15 @@
       group.append(listHeader);
       return group;
     };
-    const getPresets = () => {
+    EbaySellerHider2.getPresets = () => {
       var _a, _b;
       filterReviews = localStorage.getItem("filterReviews") !== "false";
-      reviewMin = parseInt((_a = localStorage.getItem("reviewMin")) != null ? _a : "10", 10);
+      reviewMin = Number.parseInt((_a = localStorage.getItem("reviewMin")) != null ? _a : "10", 10);
       filterFeedback = localStorage.getItem("filterFeedback") !== "false";
-      feedbackMin = parseFloat((_b = localStorage.getItem("feedbackMin")) != null ? _b : "95.0");
+      feedbackMin = Number.parseFloat((_b = localStorage.getItem("feedbackMin")) != null ? _b : "95.0");
       hideSponsored = localStorage.getItem("hideSponsored") !== "false";
     };
-    const addFilter = () => {
+    EbaySellerHider2.addFilter = () => {
       const menu = document.querySelector(".x-refine__left__nav");
       if (menu) {
         const list = document.createElement("li");
@@ -151,16 +150,16 @@
         menu.prepend(list);
       }
     };
-    const updateFilter = () => {
-      getPresets();
+    EbaySellerHider2.updateFilter = () => {
+      (0, EbaySellerHider2.getPresets)();
       const sellers = document.querySelectorAll("span.s-item__seller-info-text");
       for (const seller of Array.from(sellers)) {
         hideItem(seller);
       }
     };
-    const findSponsoredClass = () => {
+    EbaySellerHider2.findSponsoredClass = () => {
       var _a;
-      const styleBlock = Array.from(document.head.getElementsByTagName("style")).find((item) => item.type === "text/css");
+      const styleBlock = Array.from(document.head.getElementsByTagName("style")).find((item) => item.sheet !== null);
       if (styleBlock) {
         const cssRuleList = (_a = styleBlock.sheet) == null ? void 0 : _a.cssRules;
         if (cssRuleList) {
@@ -175,10 +174,10 @@
         }
       }
     };
-    getPresets();
-    addFilter();
-    updateFilter();
-    findSponsoredClass();
-  })();
+  })(EbaySellerHider || (EbaySellerHider = {}));
+  EbaySellerHider.getPresets();
+  EbaySellerHider.addFilter();
+  EbaySellerHider.updateFilter();
+  EbaySellerHider.findSponsoredClass();
 })();
 //# sourceMappingURL=ebay-seller-hider.user.js.map

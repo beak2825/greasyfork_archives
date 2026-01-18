@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Sсript for KF
 // @namespace    https://forum.blackrussia.online
-// @version      1.9
+// @version      2.1
 // @description  Script KF
 // @author       emmar
 // @match        https://forum.blackrussia.online/threads/*
@@ -164,11 +164,13 @@ const buttons = [
         title: ' Самостоятельно ',
         content:
             '[SIZE=4][FONT=Arial]Приветствую,<br><br>'+
-            "Твой текст <br><br>",
+            "[SIZE=4][FONT=Arial]ТЕКСТ <br><br>"+
+        "[SIZE=4][FONT=Arial]Закрыто. <br><br>",
+            
         class: 'answer'
     },
    {
-title: 'КФ.',
+title: 'Все ответы.',
 class: 'divider'
 },
 {
@@ -182,7 +184,7 @@ status: true,
 class: 'review'
 },
 {
-title: 'СБИВ',
+title: 'Сбив анимации стрельбы',
 content:
 '[SIZE=4][FONT=Arial]Приветствую,<br><br>'+
 "[SIZE=4][FONT=Arial]Игрок получит 120 минут demorgan'a за Cбив анимации стрельбы.<br><br>"+
@@ -222,10 +224,50 @@ status: true,
 class: 'review'
 },
 {
-title: 'ДБ',
+title: 'DB',
 content:
 '[SIZE=4][FONT=Arial]Приветствую,<br><br>'+
 "[SIZE=4][FONT=Arial]Игрок получит 60 минут demorgan'a за DB.<br><br>"+
+'[SIZE=4][FONT=Arial]Закрыто.',
+prefix: ACCEPT_PREFIX,
+status: true,
+class: 'review'
+},
+{
+title: 'Работа в фрме гос.',
+content:
+'[SIZE=4][FONT=Arial]Приветствую,<br><br>'+
+"[SIZE=4][FONT=Arial]Игрок получит 30 минут demorgan'a за 1.07 ПГО.<br><br>"+
+'[SIZE=4][FONT=Arial]Закрыто.',
+prefix: ACCEPT_PREFIX,
+status: true,
+class: 'review'
+},
+{
+title: 'На капте в форме крайма',
+content:
+'[SIZE=4][FONT=Arial]Приветствую,<br><br>'+
+"[SIZE=4][FONT=Arial]Игрок получит warn за 1.13 ПГО.<br><br>"+
+'[SIZE=4][FONT=Arial]Закрыто.',
+prefix: ACCEPT_PREFIX,
+status: true,
+class: 'review'
+},
+{
+title: 'КАЗИНО | БУ | АУК в форме гос.',
+content:
+'[SIZE=4][FONT=Arial]Приветствую,<br><br>'+
+"[SIZE=4][FONT=Arial]Игрок получит 30 минут demorgan'a за 1.13 ПГО.<br><br>"+
+'[SIZE=4][FONT=Arial]Закрыто.',
+prefix: ACCEPT_PREFIX,
+status: true,
+class: 'review'
+},
+{
+title: 'Арест/Стрельба на спавне крайма',
+content:
+'[SIZE=4][FONT=Arial]Приветствую,<br><br>'+
+"[SIZE=4][FONT=Arial]Игрок получит warn за 1.16 ПГО..<br><br>"+
 '[SIZE=4][FONT=Arial]Закрыто.',
 prefix: ACCEPT_PREFIX,
 status: true,
@@ -242,7 +284,7 @@ status: true,
 class: 'review'
 },
 {
-title: 'NRP SANG',
+title: 'nRP SANG',
 content:
 '[SIZE=4][FONT=Arial]Приветствую,<br><br>'+
 "[SIZE=4][FONT=Arial]Игрок получит warn за nRP проникновение на воинскую часть.<br><br>"+
@@ -262,7 +304,7 @@ status: true,
 class: 'review'
 },
 {
-title: 'OSK PROJECT',
+title: 'Оскорбление проекта',
 content:
 '[SIZE=4][FONT=Arial]Приветствую,<br><br>'+
 "[SIZE=4][FONT=Arial]Игрок получит mute на 300 минут за оскорбление проекта.<br><br>"+
@@ -272,7 +314,7 @@ status: true,
 class: 'review'
 },
 {
-title: 'FNRD',
+title: 'Фура NRD',
 content:
 '[SIZE=4][FONT=Arial]Приветствую,<br><br>'+
 "[SIZE=4][FONT=Arial]Игрок получит 60 минут demorgan'a за nRP drive.<br><br>"+
@@ -282,7 +324,7 @@ status: true,
 class: 'review'
 },
 {
-title: 'Upom',
+title: 'Упоминание родных',
 content:
 '[SIZE=4][FONT=Arial]Приветствую,<br><br>'+
 "[SIZE=4][FONT=Arial]Игрок получит mute на 120 минут за упомнинание родных.<br><br>"+
@@ -292,7 +334,7 @@ status: true,
 class: 'review'
 },
 {
-title: 'OSK MAMY',
+title: 'Оскорбление родных',
 content:
 '[SIZE=4][FONT=Arial]Приветствую,<br><br>'+
 "[SIZE=4][FONT=Arial]Игрок получит ban на 15 дней за оскорбление родных.<br><br>"+
@@ -302,7 +344,7 @@ status: true,
 class: 'review'
 },
 {
-title: 'Pomexa IP',
+title: 'Помеха ИП',
 content:
 '[SIZE=4][FONT=Arial]Приветствую,<br><br>'+
 "[SIZE=4][FONT=Arial]Игрок получит ban на 10 дней за помеху ИП.<br><br>"+
@@ -312,7 +354,7 @@ status: true,
 class: 'review'
 },
 {
-title: 'REKLAMA',
+title: 'Реклама',
 content:
 '[SIZE=4][FONT=Arial]Приветствую,<br><br>'+
 "[SIZE=4][FONT=Arial]Игрок получит ban на 7 дней за рекламу.<br><br>"+
@@ -322,7 +364,7 @@ status: true,
 class: 'review'
 },
 {
-title: 'SEBYA ZA ADM',
+title: 'Выдача себя за Администратора',
 content:
 '[SIZE=4][FONT=Arial]Приветствую,<br><br>'+
 "[SIZE=4][FONT=Arial]Игрок получит ban на 15 дней за выдачу себя за администратора..<br><br>"+
@@ -332,7 +374,7 @@ status: true,
 class: 'review'
 },
 {
-title: 'VOICE MUSIC',
+title: 'Музыка в Voice',
 content:
 '[SIZE=4][FONT=Arial]Приветствую,<br><br>'+
 "[SIZE=4][FONT=Arial]Игрок получит mute на 60 минут за Музыку в Voice.<br><br>"+
@@ -342,7 +384,7 @@ status: true,
 class: 'review'
 },
 {
-title: 'TRANCLIT',
+title: 'Транслит',
 content:
 '[SIZE=4][FONT=Arial]Приветствую,<br><br>'+
 "[SIZE=4][FONT=Arial]Игрок получит mute на 30 минут за транслит.<br><br>"+
@@ -362,7 +404,7 @@ status: true,
 class: 'review'
 },
 {
-title: 'CAPS',
+title: 'CapsLock',
 content:
 '[SIZE=4][FONT=Arial]Приветствую,<br><br>'+
 "[SIZE=4][FONT=Arial]Игрок получит mute на 30 минут за CapsLock.<br><br>"+
@@ -372,7 +414,7 @@ status: true,
 class: 'review'
 },
 {
-title: 'FLOOD',
+title: 'Flood',
 content:
 '[SIZE=4][FONT=Arial]Приветствую,<br><br>'+
 "[SIZE=4][FONT=Arial]Игрок получит mute на 30 минут за flood.<br><br>"+
@@ -382,7 +424,7 @@ status: true,
 class: 'review'
 },
 {
-title: 'MASS DM',
+title: 'Mass DM',
 content:
 '[SIZE=4][FONT=Arial]Приветствую,<br><br>'+
 "[SIZE=4][FONT=Arial]Игрок получит ban на 3 дня за Массовый DM.<br><br>"+
@@ -392,7 +434,7 @@ status: true,
 class: 'review'
 },
 {
-title: 'CHEATS',
+title: 'cheats',
 content:
 '[SIZE=4][FONT=Arial]Приветствую,<br><br>'+
 "[SIZE=4][FONT=Arial]Игрок получит перманентную блокировку за использование ПО.<br><br>"+
@@ -402,7 +444,7 @@ status: true,
 class: 'review'
 },
 {
-title: 'OSK ADMIN',
+title: 'Оскорбление администрации',
 content:
 '[SIZE=4][FONT=Arial]Приветствую,<br><br>'+
 "[SIZE=4][FONT=Arial]Игрок получит mute на 180 минут за оскорбление администрации.<br><br>"+
@@ -416,7 +458,27 @@ title: 'ОТКАЗ',
 class: 'divider'
 },
 {
-title: 'Nety /time',
+title: 'Недостаточно доказательств',
+content:
+'[SIZE=4][FONT=Arial]Приветствую,<br><br>'+
+"[SIZE=4][FONT=Arial]Недостаточно доказательств для выдачи наказания.<br><br>"+
+'[SIZE=4][FONT=Arial]Закрыто.',
+prefix: UNACCEPT_PREFIX,
+status: true,
+class: 'review'
+},
+{
+title: 'Неработают доказательства',
+content:
+'[SIZE=4][FONT=Arial]Приветствую,<br><br>'+
+"[SIZE=4][FONT=Arial]Недостаточно доказательств для выдачи наказания.<br><br>"+
+'[SIZE=4][FONT=Arial]Закрыто.',
+prefix: UNACCEPT_PREFIX,
+status: true,
+class: 'review'
+},
+{
+title: 'Отсутствует /time',
 content:
 '[SIZE=4][FONT=Arial]Приветствую,<br><br>'+
 "[SIZE=4][FONT=Arial]На Ваших доказательствах отсутствует /time.<br><br>"+
@@ -436,11 +498,11 @@ status: true,
 class: 'review'
 },
 {
-title: 'BAN FORUM',
+title: 'FORUMNICK',
 class: 'divider'
 },
 {
-title: 'BAN FORUM NEADEKVAT',
+title: 'Бан // неадекватно',
 content:
 '[SIZE=4][FONT=Arial]Приветствую,<br><br>'+
 "[SIZE=4][FONT=Arial]Ваш форумный аккаунт будет заблокирован.<br><br>"+
@@ -450,7 +512,7 @@ status: true,
 class: 'review'
 },
 {
-title: 'NE SMOTRY NEADEKVAT',
+title: 'Не рассматривем, неадекватный состав',
 content:
 '[SIZE=4][FONT=Arial]Приветствую,<br><br>'+
 "[SIZE=4][FONT=Arial]Жалобы в таком оформлении рассматриваться не будет.<br><br>"+
@@ -460,7 +522,7 @@ status: true,
 class: 'review'
 },
 {
-title: 'CHEATS NA DOKAX',
+title: 'ПО на доказательствах',
 content:
 '[SIZE=4][FONT=Arial]Приветствую,<br><br>'+
 "[SIZE=4][FONT=Arial]На Ваших доказательствах присутствует стороннее ПО, в таком формате жалоба рассмотрена не будет.<br><br>"+
@@ -470,11 +532,11 @@ status: true,
 class: 'review'
 },
 {
-title: 'TEXY | GA | GKFY',
+title: 'Тех. спец. | ГА | зГА | ГКФУ',
 class: 'divider'
 },
 {
-title: 'GA',
+title: 'ГА',
 content:
 '[SIZE=4][FONT=Arial]Приветствую,<br><br>'+
 "[SIZE=4][FONT=Arial]Жалоба передана Главному Администратору.<br><br>"+
@@ -484,7 +546,7 @@ status: true,
 class: 'review'
 },
 {
-title: 'GKFY',
+title: 'ГКФУ',
 content:
 '[SIZE=4][FONT=Arial]Приветствую,<br><br>'+
 "[SIZE=4][FONT=Arial]Жалоба передана главным кураторам форума.<br><br>"+
@@ -494,7 +556,7 @@ status: true,
 class: 'review'
 },
 {
-title: 'ZGA',
+title: 'зГА',
 content:
 '[SIZE=4][FONT=Arial]Приветствую,<br><br>'+
 "[SIZE=4][FONT=Arial]Жалоба передана Заместителя ГА.<br><br>"+
@@ -504,7 +566,7 @@ status: true,
 class: 'review'
 },
 {
-title: 'TECHY',
+title: 'Техническому специалисту',
 content:
 '[SIZE=4][FONT=Arial]Приветствую,<br><br>'+
 "[SIZE=4][FONT=Arial]Жалоба передана техническому специалисту.<br><br>"+
@@ -524,12 +586,12 @@ $(document).ready(() => {
     $('.button--icon--reply').before(buttonContainer);
  
  
-    addButton(' Рассмотрение ', 'pin', 'review');
+    addButton(' На рассмотрение ', 'pin', 'review');
     addButton(' Одобрено ', 'accepted', 'approve');
     addButton(' Отказано ', 'unaccept', 'reject');
-    addButton(' ГА ', 'Ga', 'ga');
+    addButton(' Chief Admin ', 'Ga', 'ga');
     addButton(' Закрыто ', 'Zakrito', 'close');
-    addButton(' Ответы ', 'selectAnswer', 'answer');
+    addButton(' Доступные ответы ', 'selectAnswer', 'answer');
  
  
     const threadData = getThreadData();

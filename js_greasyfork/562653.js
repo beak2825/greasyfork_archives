@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         豆瓣影视添加影巢对应链接
 // @namespace    https://douban-to-hdhive.github.com
-// @version      0.9.2
+// @version      0.9.3
 // @description  豆瓣影视添加影巢对应链接，在IMDb ID下方
 // @author       DemoJameson
 // @match        https://movie.douban.com/subject/*
@@ -19,7 +19,8 @@
 
     const TMDB_API_KEY = 'ebb2c093078553178d5d75c6d86d7bde';
     const DOUBAN_API_KEY = '0ac44ae016490db2204ce0a042db2916';
-    const CACHE_PREFIX = 'tmdb_id_cache_';
+    const TMDB_CACHE_PREFIX = 'tmdb_id_cache_';
+    const REAL_URL_CACHE_PREFIX = 'real_hive_url_cache_';
     const CACHE_EXPIRE_DAYS = 30;
 
     let observer = null;
@@ -28,7 +29,7 @@
 
     // 缓存相关函数（不变）
     function getCacheKey(doubanId) {
-        return CACHE_PREFIX + doubanId;
+        return TMDB_CACHE_PREFIX + doubanId;
     }
 
     function getCachedTMDB(doubanId) {
@@ -55,11 +56,36 @@
         });
     }
 
-    function addNestLink(tmdbId, finalType, infoElm) {
+    function getRealUrlCacheKey(tmdbId, type) {
+        return REAL_URL_CACHE_PREFIX + type + '_' + tmdbId;
+    }
+
+    function getCachedRealUrl(tmdbId, type) {
+        const key = getRealUrlCacheKey(tmdbId, type);
+        const cached = GM_getValue(key, null);
+        if (!cached) return null;
+        const now = Date.now();
+        if (now - cached.timestamp > CACHE_EXPIRE_DAYS * 24 * 60 * 60 * 1000) {
+            GM_deleteValue(key);
+            return null;
+        }
+        return cached.realUrl;
+    }
+
+    function setRealUrlCache(tmdbId, type, realUrl) {
+        const key = getRealUrlCacheKey(tmdbId, type);
+        GM_setValue(key, {
+            realUrl: realUrl,
+            timestamp: Date.now()
+        });
+    }
+
+    async function addNestLink(tmdbId, finalType, infoElm) {
         if (processed) return;
         processed = true;
 
-        const url = `https://hdhive.com/tmdb/${finalType}/${tmdbId}`;
+        const url = await getRealHiveUrl(tmdbId, finalType);
+
         const pl = document.createElement('span');
         pl.className = 'pl';
         pl.textContent = '影巢: ';
@@ -78,13 +104,54 @@
             infoElm.appendChild(document.createElement('br'));
             console.log('影巢链接插入成功:', url);
         } catch (e) {
-            console.error('插入失败，fallback:', e);
-            infoElm.appendChild(document.createElement('br'));
-            infoElm.appendChild(line);
+            console.error('影巢链接插入失败:', e);
         }
 
         if (observer) observer.disconnect();
         if (fallbackTimer) clearTimeout(fallbackTimer);
+    }
+
+    async function getRealHiveUrl(tmdbId, finalType) {
+        const cachedUrl = getCachedRealUrl(tmdbId, finalType);
+        if (cachedUrl) {
+            console.log('[缓存命中] 影巢真实链接:', cachedUrl);
+            return cachedUrl;
+        }
+
+        const url = `https://hdhive.com/tmdb/${finalType}/${tmdbId}`;
+
+        return new Promise((resolve) => {
+            GM_xmlhttpRequest({
+                method: "GET",
+                url: url,
+                anonymous: true,           // 尽量避免带 cookie 过去
+                headers: {
+                    "User-Agent": navigator.userAgent,
+                    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+                    "Accept-Language": "zh-CN,zh;q=0.9"
+                },
+                onload: function (response) {
+                    const html = response.responseText;
+                    const regex = new RegExp(`/${finalType}/[0-9a-f]{32}`);
+                    const urlMatch = html.match(regex);
+
+                    if (urlMatch) {
+                        let realUrl = `https://hdhive.com${urlMatch[0]}`;
+                        setRealUrlCache(tmdbId, finalType, realUrl);
+                        resolve(realUrl);
+                    } else {
+                        console.warn('未解析到真实链接，使用原链接');
+                        resolve(url);
+                    }
+                },
+                onerror: function () {
+                    resolve(url);
+                },
+                ontimeout: function () {
+                    resolve(url);
+                }
+            });
+        });
     }
 
     async function fetchTMDBId(imdbId, title, year, mediaType) {
@@ -221,7 +288,7 @@
         if (result) {
             console.log('获取到 TMDB ID:', result.tmdbId);
             setCache(doubanId, result.tmdbId, result.type);
-            addNestLink(result.tmdbId, result.type, infoElm);
+            await addNestLink(result.tmdbId, result.type, infoElm);
         } else {
             console.warn('未能获取 TMDB ID');
         }

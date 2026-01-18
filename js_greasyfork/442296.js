@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         btsow磁力链接辅助
 // @namespace    http://tampermonkey.net/
-// @version      0.2
+// @version      0.3
 // @description  磁力链接辅助下载
 // @author       You
 // @match        https://btsow.*/*
@@ -15,16 +15,12 @@
 (function() {
     'use strict';
 
-    var i,urlstr,str,addstr;
-    var getclass=jQuery('div.row a');
-    for(i=0;i<getclass.length;i++)
-    {
-        console.log(i);
-        urlstr=getclass[i].href;
-        console.log(urlstr);
-        str = urlstr.match('[0-9a-zA-Z]{40}');
-        console.log(str);
-        getclass[i].innerHTML= getclass[i].innerHTML+' <a href="magnet:?xt=urn:btih:'+str+'">下载</a>';
-
-    }
+    var getclass = jQuery('div.row a');
+    getclass.each(function() {
+        var urlstr = this.href;
+        var str = urlstr.match(/[0-9a-zA-Z]{40}/);
+        if (str) {
+            this.innerHTML += ' <a href="magnet:?xt=urn:btih:' + str[0] + '">下载</a>';
+        }
+    });
 })();

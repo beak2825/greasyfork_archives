@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name		   Cam4 Clean figuccio
-// @description    cam colorato 2025
-// @version		   18.0
+// @description    cam colorato 2026
+// @version		   18.1
 // @author         figuccio
 // @match          https://*.cam4.com/*
 // @grant          GM_addStyle
@@ -179,7 +179,7 @@ GM_addStyle('.AdEmbeded__AddWrapperNoButton__28ZlR {display:none!important}');
 GM_addStyle('a[aria-current="true"] {background-color:blue!important;color:lime!important;}');
 //////////////////////////////////////////////////////////////////////////////////////
     // Click "Accedi"
-setTimeout(() => {
+setInterval(() => {
     const accediButton = document.querySelector("#root > div > div.THmE0 > header > div.LzM4W._GM7Y > button.DicDC.SCZfE.yAILi.s1855.Wg2T7");
     if (accediButton) {
         accediButton.click();

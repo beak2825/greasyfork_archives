@@ -2,7 +2,7 @@
 // @name          部分网页美化
 // @description   替换部分字体，修改间距之类的
 // @author        Sign_Up
-// @version       2.9.1
+// @version       2.9.5
 // @license       CC-BY-NC-ND-4.0
 // @namespace     https://greasyfork.org/zh-CN/scripts/411238-部分网页美化
 // @icon          https://img.icons8.com/fluency/344/physics.png
@@ -201,8 +201,8 @@
     if (location.host.includes('.acs.org') || location.host.includes('arxiv.org')) {
         css += `
             .abstract,.article_content, .articleBody_abstractText {
-                font-family: 'Bitter Medium', 'LXGW WenKai Screen', 'Sarasa Gothic SC Semibold', serif !important;
-                font-size: 20px !important;
+                font-family: Rubik, 'Bitter Medium', 'Sarasa UI SC', serif !important;
+                font-size: 19px !important;
                 font-weight:400 !important;
                 text-align: justify;
                 line-height: 1.6 !important;
@@ -210,9 +210,9 @@
             :root {
                 --main-width: 68rem;
                 --headings-font-family: "Arial";
-                --text-font-family: "Bitter Medium";
-                --toc-font-family: "Sarasa Gothic SC Semibold";
-                --other-font-family: "Bitter Medium";
+                --text-font-family: 'Bitter Medium';
+                --toc-font-family: "Sarasa UI SC";
+                --other-font-family: 'Bitter Medium';
                 --bs-font-sans-serif: Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
                 --bs-font-monospace: Consolas, "Courier New", monospace;
             }
@@ -226,11 +226,11 @@
     // ----------------------------------AIP----------------------------------
     if (location.host.includes('pubs.aip.org')) {
         css += `
-            .article-body p, .center-content .content p, em, .citation div, [data-widgetname=ArticleFulltext]{font-family: 'Bitter Medium', 'LXGW WenKai Screen', 'Sarasa UI SC Semibold', sans-serif !important; font-size: 20px !important; line-height: 1.6 !important;}
+            .article-body p, .center-content .content p, em, .citation div, [data-widgetname=ArticleFulltext]{font-family: Rubik, 'Bitter Medium', 'Sarasa UI SC', sans-serif !important; font-size: 20px !important; line-height: 1.6 !important;}
             .pg_article .article-browse_content:not(.has-jump-link-flyout) {max-width: 1600px !important; grid-template-columns: 200px auto 300px !important;}
             `;
             //  .article-body p, .block-child-p, [data-widgetname=ArticleFulltext] {
-            //     font-family: 'Bitter Medium', 'LXGW WenKai Screen', 'Sarasa UI SC Semibold' !important;
+            //     font-family: Rubik, 'Bitter Medium', 'Sarasa UI SC Semibold' !important;
             //     font-size: 20px !important;
             //     line-height: 1.6 !important;
             //     text-align: justify;
@@ -239,7 +239,7 @@
     // ----------------------------------A&A----------------------------------
     if (location.host.includes('aanda.org')) {
         css += `
-            #article p {font: 18px/1.6 'Bitter Medium', 'LXGW WenKai Screen', 'Sarasa UI SC Semibold', sans-serif !important;}
+            #article p {font: 18px/1.6 Rubik, 'Bitter Medium', 'Sarasa UI SC Semibold', sans-serif !important;}
             .wrap {max-width: 1500px !important;}
             `;
     }
@@ -251,7 +251,7 @@
     // ----------------------------------ASME----------------------------------
     if (location.host.includes('.asme.org')) {
         css += `
-            p,.block-child-p, [data-widgetname=ArticleFulltext] { font-family: 'Bitter Medium', 'LXGW WenKai Screen', 'Sarasa UI SC Semibold' !important; font-size: 20px !important;}
+            p,.block-child-p, [data-widgetname=ArticleFulltext] { font-family: Rubik, 'Bitter Medium', 'Sarasa UI SC' !important; font-size: 20px !important;}
             .article-browse_content.clearfix {max-width: 1650px !important;} .pg_articlesplitview .aside {max-width: 25%; flex:auto;} .pg_articlesplitview .article {max-width: 75%; flex:auto;}
             `;
     }
@@ -261,7 +261,7 @@
             .col-lg-9 { width: 80%; }
             .article__sections { padding-right: 20px !important; }
             .article__body .left-side-nav, .formulaLabel { width: 15% !important; }
-            .article__body { font-family: 'Bitter Medium', 'LXGW WenKai Screen', 'Sarasa UI SC Semibold' !important; font-size: 20px !important; text-align: justify; line-height: 1.6667 !important; color: #222 !important;}
+            .article__body { font-family: Rubik, 'Bitter Medium', 'Sarasa UI SC' !important; font-size: 20px !important; text-align: justify; line-height: 1.6667 !important; color: #222 !important;}
             .section-paragraph figure:first-child { text-align: center !important; }
         `;
         window.onload = function() {
@@ -287,7 +287,7 @@
     // ----------------------------------Degruyter----------------------------------
     if (location.host.includes('.degruyterbrill.com')) {
         css += `
-            p, .p {font-family: 'Bitter Medium', 'LXGW WenKai Screen', 'Sarasa UI SC Semibold' !important; color: #000 !important;}
+            p, .p {font-family: Rubik, 'Bitter Medium', 'Sarasa UI SC' !important; color: #000 !important;}
             div#docContent { max-width: 100% !important; }
             .col-lg-8 { max-width: 60% !important; }
             .col-lg-3 { flex: 0 0 15% !important; max-width: 15% !important; margin-top: 10% !important;}
@@ -324,17 +324,17 @@
     // ----------------------------------Elsevier----------------------------------
     if (location.host.includes('.sciencedirect.com')) {
         css += `
-            p { font-weight:unset; font-size: unset; line-height: 1.667 !important; }
-            body { font-family: Roboto, 'Sarasa Gothic SC Semibold', sans-serif !important; }
-            .Body, .Tail { font-size: 20px !important; }
-            .u-font-serif,.Article p { font-family: 'Bitter Medium', 'LXGW WenKai Screen', 'Sarasa Gothic SC Semibold' !important; text-align: justify !important; }
+            p { font-weight:unset; font-size: unset; line-height: 1.6 !important; }
+            body { font-family: Roboto, 'Sarasa UI SC', sans-serif !important; }
+            .Body, .Tail { font-size: 19px !important; }
+            .u-font-serif,.Article p { font-family: Rubik, 'Sarasa UI SC' !important; text-align: justify !important; }
             .Article .article-wrapper {max-width: 94vw !important;}
             .col-lg-12, .row>.col-lg-12 {width: 70% !important;}
             .col-lg-6, .row>.col-lg-6 { width: 18% !important; }
             /*.TableOfContents { display: none !important; position: fixed; top: 80px; width: 10%; overflow-y: auto; height: 70%; z-index: 3; background-color: #fff; }*/
             .text-xs { z-index: 4; }
             .Body .formula, .Tail .formula, .figure { text-align: center !important; }
-            .Abstracts { font-size: 20px !important; line-height: 1.667; }
+            .Abstracts { font-size: 19px !important; line-height: 1.667; }
             .MathJax { font-size: 92% !important; } .mjx-chtml { font-size: 110% !important; }
             `;
     }
@@ -342,7 +342,7 @@
     if (location.host.includes('github.com')) {
         css += `
             p{ font-size: unset; line-height: unset !important; font-weight: unset;}
-            body, .markdown-body { font-family: Roboto, 'Sarasa Gothic SC Semibold', sans-serif, Apple Color Emoji, Segoe UI Emoji !important; }
+            body, .markdown-body { font-family: Roboto, 'Sarasa UI SC Semibold', sans-serif, Apple Color Emoji, Segoe UI Emoji !important; }
             `;
     }
     // ----------------------------------JCR----------------------------------
@@ -371,7 +371,7 @@
             .col-3 { -ms-flex: 0 0 20% !important; flex: 0 0 20% !important; max-width: 20% !important; }
             .ng-document .document-full-text-content div.col-text { flex: 0 0 95% !important; max-width: 95% !important;}
             .col-3-24 { -ms-flex: 0 0 4% !important; flex: 0 0 4%; max-width: 4% !important; }
-            .ArticlePage #article, .u-mb-1 { font-family: Bitter Medium, 'LXGW WenKai Screen', 'Sarasa UI SC Semibold' !important; font-size: 20px !important; text-align: justify !important; line-height: 1.6 !important; }
+            .ArticlePage #article, .u-mb-1 { font-family: Rubik, 'Bitter Medium', 'Sarasa UI SC' !important; font-size: 20px !important; text-align: justify !important; line-height: 1.6 !important; }
             p { font-family: unset; font-size: unset; text-align: justify; line-height: unset; }
             .ArticlePage #article .article-hdr H2 { width: 100% !important; }
             `;
@@ -380,7 +380,7 @@
     if (location.host.includes('iop.org')) {
         css += `
             body{ color:#000 !important; }
-            p { font-family: 'Bitter Medium', 'LXGW WenKai Screen', 'Sarasa UI SC Semibold' !important; }
+            p { font-family: Rubik, 'Bitter Medium', 'Sarasa UI SC' !important; }
             .article-text, .chapter-text { font-size: 20px !important; }
             .wrapper { max-width: 1400px !important; width: 100% !important; margin: 0 auto 0 18% !important;}
             .sticky.content-nav-ul { max-width: unset; max-height: unset; font-size: 16px;}
@@ -391,7 +391,7 @@
     // ----------------------------------MATLAB----------------------------------
     if (location.host.includes('.mathworks.cn') || location.host.includes('.mathworks.com')) {
         css += `
-            p {font-family: Roboto, 'Sarasa UI SC Semibold', sans-serif; font-size: 16px !important; line-height: unset!important;}
+            p {font-family: Rubik, Roboto, 'Sarasa UI SC Semibold', sans-serif; font-size: 16px !important; line-height: unset!important;}
             .offcanvas_nav *, #doc_center_content *:not(sup):not([class*="vjs"]) { font-size: 16px !important; }
             #doc_center_content, #subnav .crux_browse>li { font-size: 16px !important; font-weight:500; }
             pre{ font-size: 15px; }
@@ -401,11 +401,11 @@
     // ----------------------------------mdpi----------------------------------
     if (location.host.includes('.mdpi.com')) {
         css += `
-            p {font-family: Roboto, 'Sarasa UI SC Semibold', sans-serif; font-size: unset; line-height: unset!important;}
+            p {font-family: Roboto, 'Sarasa UI SC', sans-serif; font-size: unset; line-height: unset!important;}
             h2 { font-size: 20px !important; font-weight: bold !important; }
             h4 { font-size: 20px !important; }
             article.bright { font-size: 16px !important; }
-            .html-p { font-size: 20px !important; line-height: 1.667 !important; font-family: Bitter Medium, 'LXGW WenKai Screen', 'Sarasa UI SC Semibold', serif !important; }
+            .html-p { font-size: 20px !important; line-height: 1.667 !important; font-family: Rubik, 'Bitter Medium', 'Sarasa UI SC', serif !important; }
             .html-fig_description,.html-caption{ font-size: 16px !important; line-height: 1.5 !important; font-family: Roboto, 'Sarasa UI SC Semibold', sans-serif !important; }
             .middle-column__main {}
             #container{max-width: 1460px !important;}
@@ -417,7 +417,7 @@
     if (location.host.includes('.nature.com')) {
         css += `
             .u-container { max-width: 90% !important; margin-left: 25% !important; margin-right: auto; }
-            .c-article-main-column { font-family: Harding, Bitter Medium, 'LXGW WenKai Screen', 'Sarasa UI SC Semibold', sans-serif !important; margin-right: 3% !important; font-size:20px; line-height: 1.6!important;} //
+            .c-article-main-column { font-family: Harding, 'Bitter Medium', 'Sarasa UI SC', sans-serif !important; margin-right: 3% !important; font-size:20px; line-height: 1.6!important;} //
             .c-article-body {font-size: 20px !important; text-align: justify; color: #000 !important; }
             .c-reading-companion__sticky { max-width: 550px !important; }
             .content { max-width: 1400px !important; }
@@ -450,7 +450,7 @@
     if (location.host.includes('.pnas.org')) {
 
         css += `
-        article { font-family: 'Bitter Medium', 'LXGW WenKai Screen', 'Sarasa UI SC Semibold', serif !important; font-size:20px !important; text-align: justify !important; }
+        article { font-family: Rubik, 'Bitter Medium', 'Sarasa UI SC', serif !important; font-size:20px !important; text-align: justify !important; }
         #abstracts, .core-container { max-width: 1000px !important; }
         article[data-design] [role=paragraph] { text-align: justify; line-height:1.6 !important; }
         .citations, .citations,.core-collateral { font-family: Roboto, 'Sarasa UI SC Semibold', sans-serif !important; font-size:17px !important; line-height:1.5 !important; text-align: justify !important; }
@@ -470,7 +470,7 @@
     if (location.host.includes('.ncbi.nlm.nih.gov')) {
         css += `
             .MathJax_Display { margin: 0 !important;}
-            article, #mc { font-family: Bitter Medium, 'LXGW WenKai Screen', 'Source Serif 4', 'Sarasa UI SC Semibold' !important;  font-size: 20px !important; }
+            article, #mc { font-family: Rubik, 'Bitter Medium', 'Sarasa UI SC' !important;  font-size: 20px !important; }
             `;
     }
     // ----------------------------------RCS----------------------------------
@@ -480,7 +480,7 @@
             .pubs-ui #wrapper p, .pubs-ui #wrapper span { text-align: justify; line-height: 1.7 !important;}
             .pubs-ui #wrapper h1, .pubs-ui #wrapper h2, .pubs-ui #wrapper h3, .pubs-ui #wrapper h1 > span, .pubs-ui #wrapper h2 > span, .pubs-ui #wrapper h3 > span { text-align: initial !important; }
             .pubs-ui .viewport, .pubs-ui.ahtml-page .viewport { max-width: 1200px !important; }
-            body.pubs-ui, .pubs-ui, body.oxy-ui { font-family: Bitter Medium, 'LXGW WenKai Screen', 'Source Serif 4', 'Sarasa UI SC Semibold' !important; font-size: 20px !important; text-align: justify; }
+            body.pubs-ui, .pubs-ui, body.oxy-ui { font-family: Rubik, 'Bitter Medium', 'Sarasa UI SC' !important; font-size: 20px !important; text-align: justify; }
             `;
     }
     // ----------------------------------ResearchGate----------------------------------
@@ -502,7 +502,7 @@
     // ----------------------------------Science----------------------------------
     if (location.host.includes('.science.org')) {
         css += `
-            article [role=paragraph] { font-family: 'Bitter Medium', 'LXGW WenKai Screen', 'Sarasa UI SC Semibold', serif !important; font-size:20px !important; line-height:1.667 !important; text-align: justify !important; }
+            article [role=paragraph] { font-family: Rubik, 'Bitter Medium', 'Sarasa UI SC', serif !important; font-size:19px !important; line-height:1.6 !important; text-align: justify !important; }
             [data-has~=right-rail] { grid-template-columns: 18% minmax(0%, 1500px) minmax(150px, 15%) 5% !important; }
             .core-container { max-width: 1000px !important; }
             [data-has~=right-rail] [data-core-wrapper=content] { max-width: 1000px !important; width: unset !important; }
@@ -546,14 +546,16 @@
     // ----------------------------------SPIE----------------------------------
     if (location.host.includes('.spiedigitallibrary.org')) {
         css += `
-            p, .ArticleContentText {font-family: Bitter Medium, 'LXGW WenKai Screen', 'Sarasa UI SC Semibold' !important; font-weight: 400; font-size: 20px !important; text-align: justify !important; line-height: 1.5 !important; }
+            p, .ArticleContentText {font-family: Rubik, 'Sarasa UI SC' !important; font-size: 18px !important; text-align: justify !important; line-height: 1.6 !important; }
             .ArticleContentRow{text-align: justify !important;}
+            main, .ArticleContentPanel, .ProceedingsArticleOpenAccessPanel,.SPIEPanel { background-color: #fff !important; }
             .container,.container.SPIEPanel { width: 1800px !important; }
             .PAHArticleCol {width: 100% !important;}
-            .col-xs-8 { width: 90% !important; padding: 0px 30px; background-color: white !important; }
+            .col-xs-8 { width: 86% !important; padding: 0px 30px; background-color: white !important; }
             .col-xs-4 { width: 40% !important; }
             .MathJax_Display { margin: 0.2em 0em !important; }
-            .SPIEPanel { width: 1500px !important; margin-right: 0; margin-left: 0;}
+            .SPIEPanel { width: 1500px !important; margin-right: 0; margin-left: 0
+            .ref-label { margin-top: 0px !important; }
             `;
     }
     // ----------------------------------Springer----------------------------------
@@ -561,7 +563,7 @@
         css += `
             .main-container { max-width: 1500px; }
             .main-body { max-width: 1050px; }
-            .FulltextWrapper .Para { font-size: 20px; font-family: 'Bitter Medium', 'LXGW WenKai Screen', 'Sarasa UI SC Semibold', serif !important; text-align: justify !important; line-height: 1.6 !important;}
+            .FulltextWrapper .Para { font-size: 20px; font-family: Rubik, 'Sarasa UI SC', serif !important; text-align: justify !important; line-height: 1.6 !important;}
             .FulltextWrapper .Equation { margin: 0.25em 0;}
             .toc a { font-family: Roboto, sans-serif !important; font-size: 16px !important; padding: 0 !important; line-height: 1.5 !important; }
             .CitationContent { font-size: 18px; font-family: Roboto, 'Sarasa UI SC Semibold' !important; text-align: justify !important;}
@@ -574,7 +576,7 @@
         css += `
             p { line-height: 1.6 !important; }
             .u-container { max-width: 85% !important; }
-            .c-article-main-column { font-family: Bitter Medium, 'LXGW WenKai Screen', 'Sarasa UI SC Semibold', sans-serif !important; font-size:20px; line-height: 1.667!important; margin-right: 2.6% !important; width: 66.2% !important; }
+            .c-article-main-column { font-family: Rubik, 'Sarasa UI SC', sans-serif !important; font-size:20px; line-height: 1.667!important; margin-right: 2.6% !important; width: 66.2% !important; }
             .c-reading-companion__sticky { max-width: 489px !important; }
             .MathJax, .c-article-section__figure-content { text-align: center !important; }
             `;
@@ -582,8 +584,8 @@
     //----------------------------------stackoverflow/stackexchange----------------------------------
     if (location.host.includes('stackoverflow.com') || location.host.includes('stackexchange.com')) {
         css += `
-            p { font-family: Bitter Medium, 'LXGW WenKai Screen', 'Sarasa UI SC Semibold', sans-serif !important; font-size: 17px !important; }
-            html, body { font-size: 17px !important; --ff-sans: Roboto,sans-serif !important; --theme-question-body-font-family: Bitter Medium, 'LXGW WenKai Screen', 'Sarasa UI SC Semibold', sans-serif !important;}
+            p { font-family: Rubik, 'Sarasa UI SC', sans-serif !important; font-size: 17px !important; }
+            html, body { font-size: 17px !important; --ff-sans: Roboto,sans-serif !important; --theme-question-body-font-family: Rubik, 'Bitter Medium', 'Sarasa UI SC', sans-serif !important;}
             .comment-text, .flag-action-card-text { font-size: 15px !important; text-align: justify; }
             #hot-network-questions a, #sidebar .related a, #sidebar .linked a { font-size: 14px; }
             .question-hyperlink { font-size: 20px; }
@@ -602,7 +604,7 @@
     // ----------------------------------Taylor & Francis----------------------------------
     if (location.host.includes('.tandfonline.com')) {
         css += `
-            p { font-family: Bitter Medium, 'LXGW WenKai Screen', serif !important; font-size: 20px; line-height: 1.55 !important; }
+            p { font-family: Rubik, serif !important; font-size: 20px; line-height: 1.55 !important; }
             .col-md-7-12 { width: 80% !important; }
             .col-md-1-6 { margin: 0 0 !important; }
             `;
@@ -630,7 +632,7 @@
     if (location.host.includes('.wiley.com')) {
         css += `
             .container {width: 83% !important; margin-right: 50px !important;}
-            .article-section__content,.article-section__full .article-section__content p {font-family: Bitter Medium, 'LXGW WenKai Screen', 'Sarasa UI SC Semibold' !important; font-weight: 400; font-size: 20px !important; text-align: justify; line-height: 1.667 !important; }
+            .article-section__content,.article-section__full .article-section__content p {font-family: Rubik, 'Bitter Medium', 'Sarasa UI SC' !important; font-weight: 400; font-size: 20px !important; text-align: justify; line-height: 1.667 !important; }
             .article-section__inline-figure figcaption .figure__caption-text {font-family: Roboto, 'Sarasa UI SC Semibold' !important; font-size: 16px !important; text-align: justify; line-height: 1.4 !important;}
             span.figure, span.figure .figure__image {display: inline-block !important;} .figure {padding:0 !important;}
             mjx-container.MathJax .MJX-TEX { font-size: 100% !important; }
@@ -645,16 +647,16 @@
     if (location.host.includes('.wolfram.com')) {
         css += `
             h1, h2, h3, h4, h5, h6{font-weight: bold !important;}
-            #monograph section .inner, #monograph .TutorialAbstract .inner, #monograph .breadcrumb, #monograph .overview-menu-items { font-family: roboto, 'Sarasa UI SC Semibold' !important; }
+            #monograph section .inner, #monograph .TutorialAbstract .inner, #monograph .breadcrumb, #monograph .overview-menu-items { font-family: Roboto, 'Sarasa UI SC Semibold' !important; }
             p.Text, ul.Text, .TechNoteText { font-size:20px !important; }
-            .MCap { font-family: Bitter Medium, 'LXGW WenKai Screen', 'Sarasa UI SC Semibold' !important; font-size:16px !important; }
+            .MCap { font-family: Rubik, 'Bitter Medium', 'Sarasa UI SC' !important; font-size:16px !important; }
         `;
     }
     // ----------------------------------x-mol----------------------------------
     if (location.host.includes('.x-mol.com')) {
         css += `
             .magazine-text-title, .magazine-text span a, p { font-size: 18px !important; line-height: 1.6 !important; color: #000 !important; }
-            .magazine-text p { font-family: 'Bitter Medium', 'LXGW WenKai Screen', 'Sarasa UI SC Semibold', serif !important; }
+            .magazine-text p { font-family: Rubik, 'Bitter Medium', 'Sarasa UI SC', serif !important; }
             .magazine-text-atten, .it12 { font-size: 15px!important; }
             .container, .col960 { max-width: 1300px !important; width: 1300px !important; }
             .magazine-model-content-new, .magazine-model-content-new ul, .magazine-model-content-new ul li, #content-new { width: 1100px !important; }
@@ -671,8 +673,8 @@
     if (location.host.includes('.iphy.ac.cn')) {
         css += `
             body { font-size: 16px; color: #222; }
-            p {font-family: 'Bitter Medium', 'LXGW WenKai Screen', 'Sarasa UI SC Semibold', sans-serif; font-size: 20px; text-align:justify; margin-bottom: 0.4rem;}
-            .article-abstract, .figure_caption { font-family: roboto, 'Sarasa UI SC Semibold' !important; font-size: 17px !important; line-height:1.6 !important; text-align: justify !important; letter-spacing: 0px !important;}
+            p {font-family: Rubik, 'Bitter Medium', 'Sarasa UI SC', sans-serif; font-size: 20px; text-align:justify; margin-bottom: 0.4rem;}
+            .article-abstract, .figure_caption { font-family: Roboto, 'Sarasa UI SC Semibold' !important; font-size: 17px !important; line-height:1.6 !important; text-align: justify !important; letter-spacing: 0px !important;}
             .container { width: 1500px !important; }
             .article-top .article-tit { font-size: 20px !important; line-height: 1.5 !important; }
             .article-box-content #abstract { width: 1100px !important; }
@@ -684,7 +686,7 @@
     // ----------------------------------微博----------------------------------
     if (location.host.includes('weibo.com')) {
         css += `
-            html { font-family: 'Sarasa Gothic SC Semibold', Roboto, sans-serif !important;}
+            html { font-family: 'Sarasa UI SC Semibold', Roboto, sans-serif !important;}
             .Frame_content_3XrxZ { max-width: 100% !important; margin: auto;} .m-main{ width: 1400px !important; }/* 总内容宽度 */
             .Main_full_1dfQX { width: 780px !important; } /* 主中间宽度 */
             .Main_side_i7Vti,.Side_sideBox_2G3FX { width: 280px; } /* 主右侧宽度 */

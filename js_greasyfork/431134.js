@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TRIT
 // @namespace    http://tampermonkey.net/
-// @version      20.3.12
+// @version      20.3.13
 // @description  make life easy
 // @author       JWCT
 // @match        http://34.87.111.75/*
@@ -1695,16 +1695,16 @@ function generateQuotaion(eleVal,notetype)
                     {
                         rtn+=count+". SSD Replacement with fresh MacOS installation\n";
                         rtn+="-"+count+"a 250GB SSD $200 or\n";
-                        rtn+="-"+count+"b 500GB SSD $260 or\n";
-                        rtn+="-"+count+"c 1TB SSD $330\n";
+                        rtn+="-"+count+"b 500GB SSD $300 or\n";
+                        rtn+="-"+count+"c 1TB SSD $420\n";
                     }
                     else
                     {
                         rtn+=count+". SSD Replacement with fresh Window installation\n";
                         rtn+="-"+count+"a 250GB SSD $180 or\n";
-                        rtn+="-"+count+"b 500GB SSD $240 or\n";
-						rtn+="-"+count+"c 1TB SSD $310 or\n";
-                        rtn+="-"+count+"d 2TB SSD $430\n";
+                        rtn+="-"+count+"b 500GB SSD $270 or\n";
+						rtn+="-"+count+"c 1TB SSD $390 or\n";
+                        rtn+="-"+count+"d 2TB SSD $720\n";
                     }
 
                     rtn+="90 days warranty included\n\n";
@@ -1712,9 +1712,9 @@ function generateQuotaion(eleVal,notetype)
 				if($(this).val()=="+Ram")
                 {
                     rtn+=count+". Ram Replacement or Add on \n";
-                    rtn+="-"+count+"a 8GB Ram $120 or\n";
-                    rtn+="-"+count+"b 16GB Ram $190 or\n";
-					rtn+="-"+count+"c 32GB Ram $350 \n";
+                    rtn+="-"+count+"a 8GB Ram $200 or\n";
+                    rtn+="-"+count+"b 16GB Ram $370 or\n";
+					rtn+="-"+count+"c 32GB Ram $650 \n";
 
                     rtn+="90 days warranty included\n\n";
                 }

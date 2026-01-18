@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CRM Calls Tracker
 // @namespace    http://tampermonkey.net/
-// @version      11
+// @version      20
 // @description  Дополнение к ЦРМ в виде статистики + мотивационные уведомления + детализация
 // @author       voodoo_lT
 // @match        https://hgh03.mamoth.club/app/*
@@ -272,16 +272,26 @@
 
         document.body.appendChild(modal);
 
-        // Закрытие модального окна
-        modal.querySelector('.modal-close').addEventListener('click', () => {
-            modal.remove();
-        });
+// Плавное появление
+requestAnimationFrame(() => {
+    modal.querySelector('.modal-overlay').classList.add('show');
+});
 
-        modal.querySelector('.modal-overlay').addEventListener('click', (e) => {
-            if (e.target.classList.contains('modal-overlay')) {
-                modal.remove();
-            }
-        });
+        // Закрытие кнопкой ✕
+modal.querySelector('.modal-close').addEventListener('click', () => {
+    const overlay = modal.querySelector('.modal-overlay');
+    overlay.classList.remove('show');
+    overlay.addEventListener('transitionend', () => modal.remove(), { once: true });
+});
+
+// Закрытие кликом по фону
+modal.querySelector('.modal-overlay').addEventListener('click', (e) => {
+    if (e.target.classList.contains('modal-overlay')) {
+        const overlay = e.target;
+        overlay.classList.remove('show');
+        overlay.addEventListener('transitionend', () => modal.remove(), { once: true });
+    }
+});
     }
 
     function createWidget() {
@@ -318,24 +328,24 @@
                 bottom: 16px;
                 right: 16px;
                 width: 260px;
-                background: rgba(20, 20, 38, 0.96);
+                background: rgba(20, 20, 38, 0);
                 color: #f0f0ff;
                 border-radius: 12px;
                 box-shadow: 0 6px 24px rgba(0,0,0,0.65);
                 font-family: system-ui, sans-serif;
                 font-size: 11.5px;
                 z-index: 999999;
-                backdrop-filter: blur(8px);
-                border: 1px solid rgba(110,130,240,0.2);
+                backdrop-filter: blur(20px);
+                border: 1px solid rgba(255,255,255,0.1);
                 overflow: hidden;
                 transition:
                     max-height 0.4s cubic-bezier(0.25, 0.1, 0.25, 1),
                     height 0.4s cubic-bezier(0.25, 0.1, 0.25, 1),
-                    opacity 0.4s ease;
+                    opacity 0.2s ease;
             }
             #calls-tracker-small.collapsed {
                 max-height: 42px !important;
-                height: 42px !important;
+                height: auto;
                 opacity: 1;
             }
             .header {
@@ -343,10 +353,10 @@
                 justify-content: space-between;
                 align-items: center;
                 padding: 8px 14px;
-                background: rgba(0,0,0,0.18);
+                background: rgba(0,0,0,0.05);
                 font-weight: 600;
                 font-size: 13px;
-                color: #d0d0ff;
+                color: #D9D9D9;
             }
             .header-buttons {
                 display: flex;
@@ -358,7 +368,7 @@
                 border: none;
                 border-radius: 25%;
                 background: rgba(255,255,255,0.07);
-                color: #aaaaff;
+                color: #D9D9D9;
                 font-size: 14px;
                 cursor: pointer;
                 opacity: 1;
@@ -386,7 +396,6 @@
             }
             #calls-tracker-small.collapsed .body-content {
                 opacity: 0;
-                transform: translateY(-16px);
                 transition:
                     opacity 0.32s ease,
                     transform 0.32s ease;
@@ -401,12 +410,15 @@
                 height: 100%;
                 border-radius: 100%;
                 box-shadow:
-                    inset 0 0 40px 5px rgba(0,0,0,0.5),
-                    inset 0 0 60px 30px rgba(0,0,0,0.35);
+                    inset 0 0 40px 5px rgba(255,255,255,0.07),
+                    inset 0 0 60px 30px rgba(255,255,255,0.2);
                 transition:
                     transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1),
                     background 0.5s ease;
                 position: relative;
+                opacity: 0.7; /* 0.0 - 1.0 */
+                mix-blend-mode: screen;
+                filter: saturate(175%);
             }
             .pie::before {
                 content: '';
@@ -439,12 +451,24 @@
                 transition: opacity 0.45s ease;
                 cursor: pointer;
                 font-size: 11.8px;
+                font-weight: 605;
                 padding: 4px;
                 border-radius: 4px;
             }
+            .legend-item {
+    transition:
+        transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+        background 0.25s ease,
+        opacity 0.45s ease;
+    transform-origin: center center;
+}
             .legend-item:hover {
                 background: rgba(255,255,255,0.05);
             }
+            .legend-item:hover,
+.legend-item.active {
+    transform: scale(1.06);
+}
             .legend-item.dimmed {
                 opacity: 0.25;
             }
@@ -474,7 +498,7 @@
                 font-weight: 600;
                 min-width: 65px;
                 text-align: right;
-                color: #e8e8ff;
+                color: #D9D9D9;
             }
             .total {
                 text-align: center;
@@ -495,14 +519,21 @@
             .modal-overlay {
                 width: 100%;
                 height: 100%;
-                background: rgba(0, 0, 0, 0.75);
+                background: rgba(0, 0, 0, 0); /* прозрачный */
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                backdrop-filter: blur(4px);
+                backdrop-filter: blur(0px);  /* старт без блюра */
+                transition: backdrop-filter 0.2s ease, background 0.2s ease, opacity 0.2s ease;
+                opacity: 0;  /* полностью прозрачный */
             }
+            .modal-overlay.show {
+                backdrop-filter: blur(40px);
+                background: rgba(0, 0, 0, 0.2);
+                opacity: 1;
+             }
             .modal-content {
-                background: rgba(20, 20, 38, 0.98);
+                background: rgba(20, 20, 38, 0.10);
                 border-radius: 12px;
                 max-width: 500px;
                 width: 90%;
@@ -510,7 +541,7 @@
                 display: flex;
                 flex-direction: column;
                 box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-                border: 1px solid rgba(110,130,240,0.3);
+                border: 1px solid rgba(255,255,255,0.1);
             }
             .modal-header {
                 display: flex;
@@ -552,7 +583,7 @@
             .details-count {
                 font-size: 14px;
                 margin-bottom: 16px;
-                color: #b0b0ff;
+                color: rgba(255, 255, 255, 0.9);
                 font-weight: 500;
             }
             .details-list {
@@ -570,17 +601,17 @@
                 font-size: 13px;
             }
             .detail-number {
-                color: #8888ff;
+                color: rgba(255, 255, 255, 0.6);
                 font-weight: 600;
                 min-width: 24px;
             }
             .detail-phone {
                 flex: 1;
-                font-family: monospace;
-                color: #e0e0ff;
+                color: rgba(255, 255, 255, 0.9);
+                font-weight: 700;
             }
             .detail-time {
-                color: #a0a0ff;
+                color: rgba(255, 255, 255, 0.6);
                 font-size: 12px;
             }
         `;
@@ -674,7 +705,10 @@
             legend.innerHTML = '<div style="text-align:center; opacity:0.6; padding:8px;">Нет данных</div>';
         } else {
             sorted.forEach(item => {
-                const percent = total > 0 ? Math.round(item.count / total * 100) : 0;
+                const percent = total > 0
+    ? (item.count / total * 100).toFixed(1)
+    : '0.0';
+
                 const color = STATUS_COLORS[item.name] || '#777';
 
                 const div = document.createElement('div');
@@ -830,7 +864,7 @@
             });
 
             pie.style.background = `conic-gradient(${parts.join(', ')})`;
-        }, 50);
+        }, 250);
     }
 
     function darkenColor(color, factor) {

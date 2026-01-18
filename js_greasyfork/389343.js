@@ -1,20 +1,18 @@
 // ==UserScript==
-
-// @name 中国知网CNKI硕博论文PDF下载
-// @version 4.0.1
-// @namespace https://greasyfork.org/users/244539
-// @icon https://www.cnki.net/favicon.ico
-// @description 知网文献、硕博论文PDF批量下载，下载硕博论文章节目录
-// @author @zoglmk
-// @match *://*.cnki.net/*
-// @run-at document-idle
-// @grant unsafeWindow
-// @grant GM_getValue
-// @grant GM_setValue
-// @grant GM_xmlhttpRequest
-// @grant GM_download
-// @grant GM_registerMenuCommand
-
+// @name         中国知网CNKI硕博论文PDF下载
+// @version      4.0.2
+// @namespace    https://greasyfork.org/users/244539
+// @icon         https://www.cnki.net/favicon.ico
+// @description  知网文献、硕博论文PDF批量下载，下载硕博论文章节目录
+// @author       @zoglmk
+// @match        *://*.cnki.net/*
+// @run-at       document-idle
+// @grant        unsafeWindow
+// @grant        GM_getValue
+// @grant        GM_setValue
+// @grant        GM_xmlhttpRequest
+// @grant        GM_download
+// @grant        GM_registerMenuCommand
 // @downloadURL https://update.greasyfork.org/scripts/389343/%E4%B8%AD%E5%9B%BD%E7%9F%A5%E7%BD%91CNKI%E7%A1%95%E5%8D%9A%E8%AE%BA%E6%96%87PDF%E4%B8%8B%E8%BD%BD.user.js
 // @updateURL https://update.greasyfork.org/scripts/389343/%E4%B8%AD%E5%9B%BD%E7%9F%A5%E7%BD%91CNKI%E7%A1%95%E5%8D%9A%E8%AE%BA%E6%96%87PDF%E4%B8%8B%E8%BD%BD.meta.js
 // ==/UserScript==
@@ -1079,43 +1077,90 @@
         }
     }
 
-    // --- DOWNLOAD LOGIC ---
-    function downloadSingleFile(url, filename, btn, statusSpan) {
+    // --- DOWNLOAD LOGIC (修复的核心部分) ---
+    function downloadSingleFile(url, filename, btn, statusSpan, isRetry = false) {
         if (!url) return;
 
-        console.log(`[CNKI-Helper] 开始下载: ${filename}, URL: ${url}`);
+        if (!isRetry) {
+            console.log(`[CNKI-Helper] 开始下载: ${filename}, URL: ${url}`);
+            btn.style.display = 'none';
+            statusSpan.style.display = 'flex';
+            statusSpan.className = 'cnki-status-loading';
+            statusSpan.textContent = '准备中...';
+        } else {
+            console.log(`[CNKI-Helper] 重试下载(HTML解析后): ${filename}, URL: ${url}`);
+            statusSpan.textContent = '跳转中...';
+        }
 
-        btn.style.display = 'none';
-        statusSpan.style.display = 'flex';
-        statusSpan.className = 'cnki-status-loading';
-        statusSpan.textContent = '准备中...';
-
-        // 1. Fetch Blob with Referer
         GM_xmlhttpRequest({
             method: 'GET',
             url: url,
             responseType: 'blob',
-            headers: { 'Referer': window.location.href },
+            headers: {
+                'Referer': window.location.href,
+                'User-Agent': navigator.userAgent // 模拟浏览器 UA
+            },
             onload: (res) => {
                 const blob = res.response;
-                // Check Content-Type header if available
-                const contentType = res.responseHeaders.match(/content-type:\s*(.*)/i)?.[1];
-                console.log(`[CNKI-Helper] 请求成功: ${filename}, Status: ${res.status}, Content-Type: ${contentType}, Size: ${blob.size}`);
+                // 获取 Content-Type
+                const contentType = res.responseHeaders.match(/content-type:\s*(.*)/i)?.[1] || '';
+                console.log(`[CNKI-Helper] 请求状态: ${res.status}, Type: ${contentType}, Size: ${blob.size}`);
 
-                // If content type is explicitly HTML, it's definitely an error
-                if (contentType && contentType.includes('text/html')) {
-                     const errorMsg = '下载失败(HTML)';
-                     console.error(`[CNKI-Helper] 错误: 返回了HTML而非PDF. URL: ${url}`);
-                     statusSpan.className = 'cnki-status-error';
-                     statusSpan.textContent = errorMsg;
-                     btn.style.display = 'inline-block';
-                     btn.textContent = '重试';
-                     return;
+                // --- 核心修复：检查是否返回了 HTML ---
+                if (contentType.includes('text/html')) {
+                    const reader = new FileReader();
+                    reader.onload = function() {
+                        const htmlText = reader.result;
+                        // 尝试在返回的 HTML 中寻找真实的下载链接
+                        // 常见情况：知网返回一个跳转页，里面有一个 id="pdfDown" 或者包含 download.aspx 的链接
+                        const hrefMatch = htmlText.match(/href=['"]([^'"]+)['"]/g);
+                        let realLink = null;
+
+                        if (hrefMatch) {
+                            for (let link of hrefMatch) {
+                                // 简单的清理 href=" 和 "
+                                let cleanLink = link.replace(/^href=['"]/, '').replace(/['"]$/, '');
+                                // 解码 HTML 实体
+                                cleanLink = cleanLink.replace(/&amp;/g, '&');
+
+                                // 特征匹配：看链接是否像下载链接
+                                if (cleanLink.includes('download.aspx') || cleanLink.includes('pdfDown') || cleanLink.toLowerCase().endsWith('.pdf')) {
+                                     // 如果是相对路径，补全
+                                     if (!cleanLink.startsWith('http')) {
+                                         const origin = new URL(url).origin;
+                                         if(cleanLink.startsWith('/')) {
+                                             realLink = origin + cleanLink;
+                                         } else {
+                                             // 简单处理，实际上可能需要更复杂的路径解析，但知网通常是根路径或同级
+                                             realLink = new URL(cleanLink, url).href;
+                                         }
+                                     } else {
+                                         realLink = cleanLink;
+                                     }
+                                     break;
+                                }
+                            }
+                        }
+
+                        if (realLink && !isRetry) {
+                            // 找到了潜在的真实链接，重试一次
+                            console.log(`[CNKI-Helper] 检测到 HTML 跳转，尝试新链接: ${realLink}`);
+                            downloadSingleFile(realLink, filename, btn, statusSpan, true);
+                        } else {
+                            // 真的失败了
+                            console.error(`[CNKI-Helper] 错误: 返回 HTML 且无法解析真实链接。可能是未登录或验证码拦截。`);
+                            statusSpan.className = 'cnki-status-error';
+                            statusSpan.textContent = '失败(需验证/登录)';
+                            btn.style.display = 'inline-block';
+                            btn.textContent = '重试';
+                        }
+                    };
+                    reader.readAsText(blob);
+                    return; // 结束当前逻辑，等待 FileReader 回调
                 }
 
-                if (blob.size < 1000) { // Check for HTML error page (fallback)
-                     const errorMsg = '文件无效(过小)';
-                     console.error(`[CNKI-Helper] 错误: 文件过小 (${blob.size} bytes). 可能不是有效的PDF. URL: ${url}`);
+                if (blob.size < 1000) {
+                     console.error(`[CNKI-Helper] 错误: 文件过小 (${blob.size} bytes). 可能无效.`);
                      statusSpan.className = 'cnki-status-error';
                      statusSpan.textContent = '文件无效';
                      btn.style.display = 'inline-block';
@@ -1123,25 +1168,23 @@
                      return;
                 }
 
-                // 2. Save via GM_download
+                // 保存文件
                 const finalName = filename.replace(/[\\/:*?"<>|]/g, '_') + '.pdf';
                 const blobUrl = URL.createObjectURL(blob);
-                console.log(`[CNKI-Helper] 准备保存: ${finalName}, BlobURL: ${blobUrl}`);
 
                 GM_download({
                     url: blobUrl,
                     name: finalName,
                     saveAs: false,
                     onload: () => {
-                         console.log(`[CNKI-Helper] 下载完成: ${finalName}`);
                          statusSpan.className = 'cnki-status-success';
                          statusSpan.textContent = '✔ 完成';
                          URL.revokeObjectURL(blobUrl);
                     },
                     onerror: (e) => {
-                         console.error(`[CNKI-Helper] GM_download 失败: ${finalName}`, e);
+                         console.error(`[CNKI-Helper] GM_download 保存失败`, e);
                          statusSpan.className = 'cnki-status-error';
-                         statusSpan.textContent = '✘ 失败';
+                         statusSpan.textContent = '✘ 保存失败';
                          btn.style.display = 'inline-block';
                          URL.revokeObjectURL(blobUrl);
                     },
@@ -1154,9 +1197,9 @@
                 });
             },
             onerror: (e) => {
-                 console.error(`[CNKI-Helper] 请求失败: ${url}`, e);
+                 console.error(`[CNKI-Helper] 网络请求失败: ${url}`, e);
                  statusSpan.className = 'cnki-status-error';
-                 statusSpan.textContent = '请求失败';
+                 statusSpan.textContent = '网络错误';
                  btn.style.display = 'inline-block';
             }
         });

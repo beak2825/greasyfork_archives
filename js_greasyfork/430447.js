@@ -1995,77 +1995,10 @@
     replaceHeader();
   }
 
-  /** @type {HTMLElement[]} */
-  var containers = [];
-  /** @type {{prepend:HTMLStyleElement,append:HTMLStyleElement}[]} */
-
-  var styleTags = [];
-  /**
-   * @param {string} css
-   * @param {object} options
-   * @param {boolean} [options.prepend]
-   * @param {boolean} [options.singleTag]
-   * @param {string} [options.container]
-   * @param {Record<string,string>} [options.attributes]
-   * @returns {void}
-   */
-
-  function injectCss (css, options) {
-    if (!css || typeof document === "undefined") return;
-    var position = options.prepend === true ? "prepend" : "append";
-    var singleTag = options.singleTag === true;
-    var container = typeof options.container === "string" ? document.querySelector(options.container) : document.getElementsByTagName("head")[0];
-
-    function createStyleTag() {
-      var styleTag = document.createElement("style");
-      styleTag.setAttribute("type", "text/css");
-
-      if (options.attributes) {
-        var k = Object.keys(options.attributes);
-
-        for (var i = 0; i < k.length; i++) {
-          styleTag.setAttribute(k[i], options.attributes[k[i]]);
-        }
-      }
-
-      var pos = position === "prepend" ? "afterbegin" : "beforeend";
-      container.insertAdjacentElement(pos, styleTag);
-      return styleTag;
-    }
-    /** @type {HTMLStyleElement} */
-
-
-    var styleTag;
-
-    if (singleTag) {
-      var id = containers.indexOf(container);
-
-      if (id === -1) {
-        id = containers.push(container) - 1;
-        styleTags[id] = {};
-      }
-
-      if (styleTags[id] && styleTags[id][position]) {
-        styleTag = styleTags[id][position];
-      } else {
-        styleTag = styleTags[id][position] = createStyleTag();
-      }
-    } else {
-      styleTag = createStyleTag();
-    } // strip potential UTF-8 BOM if css was read from a file
-
-
-    if (css.charCodeAt(0) === 0xfeff) css = css.substring(1);
-
-    if (styleTag.styleSheet) {
-      styleTag.styleSheet.cssText += css;
-    } else {
-      styleTag.appendChild(document.createTextNode(css));
-    }
-  }
+  var e=[],t=[];function n(n,r){if(n&&"undefined"!=typeof document){var a,s=!0===r.prepend?"prepend":"append",d=!0===r.singleTag,i="string"==typeof r.container?document.querySelector(r.container):document.getElementsByTagName("head")[0];if(d){var u=e.indexOf(i);-1===u&&(u=e.push(i)-1,t[u]={}),a=t[u]&&t[u][s]?t[u][s]:t[u][s]=c();}else a=c();65279===n.charCodeAt(0)&&(n=n.substring(1)),a.styleSheet?a.styleSheet.cssText+=n:a.appendChild(document.createTextNode(n));}function c(){var e=document.createElement("style");if(e.setAttribute("type","text/css"),r.attributes)for(var t=Object.keys(r.attributes),n=0;n<t.length;n++)e.setAttribute(t[n],r.attributes[t[n]]);var a="prepend"===s?"afterbegin":"beforeend";return i.insertAdjacentElement(a,e),e}}
 
   var css = ".k-copymanga .k-actions {\n  position: fixed;\n  font-size: 20px;\n  transition: all 0.2s ease;\n  transform: translateX(0);\n  border-radius: 4px;\n  opacity: 1;\n  box-sizing: border-box;\n  overflow: hidden;\n  box-shadow: rgba(0, 0, 0, 0.2) -1px 1px 10px 0px;\n  background: white;\n}\n.k-copymanga .k-actions .k-icon {\n  padding: 8px;\n}\n.k-copymanga .k-actions .k-icon svg {\n  display: block;\n  fill: currentColor;\n}\n.k-copymanga .k-actions .k-icon.active {\n  background: rgb(44, 174, 254);\n  color: white;\n}\n.k-copymanga .k-actions .k-icon + .k-icon {\n  border-top: 1px solid #eee;\n}\n.k-copymanga .k-actions .k-next {\n  padding: 16px 8px;\n}\n.k-copymanga .k-actions.left {\n  border-radius: 0 4px 4px 0;\n  --transform-x: -100%;\n}\n.k-copymanga .k-actions.right {\n  border-radius: 4px 0 0 4px;\n  --transform-x: 100%;\n}\n.k-copymanga .k-actions.hide {\n  opacity: 0;\n  pointer-events: none;\n  transform: translateX(var(--transform-x));\n}\n.k-copymanga .merge-active {\n  opacity: 0.5;\n  border: 1px solid red;\n}\n.k-copymanga .comicContentPopup .comicContentPopupImageList .comicContentPopupImageItem img {\n  display: block;\n  float: none;\n}\n.k-copymanga .comicContentPopup .comicContentPopupImageList > li[style] [role=alert],\n.k-copymanga .comicContentPopup .comicContentPopupImageList > li[style] [role=alert] + button {\n  display: none;\n}\n.k-copymanga .comicContentPopup .comicFixed {\n  position: fixed;\n  top: unset;\n  bottom: env(safe-area-inset-bottom);\n}\n.k-copymanga .comicContentPopup .comicFixed.loading {\n  width: auto;\n  min-width: 1.4rem;\n  padding: 0 1em;\n}\n.k-copymanga .comicContentPopup .comicFixed.loading::before {\n  content: \"Loading...\";\n  padding-right: 1em;\n}\n.k-copymanga .k-loading {\n  position: relative;\n}\n.k-copymanga .k-loading img {\n  position: absolute;\n  left: 0;\n  top: 0;\n  width: 100%;\n  z-index: 2;\n}\n.k-copymanga .k-loading::before {\n  content: \"\";\n  display: block;\n  width: 100%;\n  padding-top: 142.1487603306%;\n}\n.k-copymanga .k-loading::after {\n  content: attr(data-idx);\n  position: absolute;\n  left: 0;\n  top: 0;\n  width: 100%;\n  height: 100%;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  z-index: 1;\n  color: #999;\n  font-size: 80px;\n}";
-  injectCss(css,{});
+  n(css,{});
 
   document.body.classList.add("k-copymanga");
   wait(() => execInUnsafeWindow(() => !!window.aboutBlank)).then(() => {

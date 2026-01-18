@@ -1,14 +1,14 @@
 // ==UserScript==
 // @name         DLsiteに任意のリンク追加
 // @namespace    http://tampermonkey.net/
-// @version      1.1
+// @version      1.2
 // @description  DLsiteの作品ページで、カテゴリに応じて任意のリンクを追加します。お気に入りページにも対応しています。
-// @author       You 
+// @author       You
 // @match        https://www.dlsite.com/maniax/work/=/product_id/*
 // @match        https://www.dlsite.com/maniax-touch/work/=/product_id/*
 // @match        https://www.dlsite.com/maniax/mypage/wishlist*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=dlsite.com
-// @grant        none
+// @grant        GM_openInTab
 // @license      GPL-2.
 // @downloadURL https://update.greasyfork.org/scripts/546144/DLsite%E3%81%AB%E4%BB%BB%E6%84%8F%E3%81%AE%E3%83%AA%E3%83%B3%E3%82%AF%E8%BF%BD%E5%8A%A0.user.js
 // @updateURL https://update.greasyfork.org/scripts/546144/DLsite%E3%81%AB%E4%BB%BB%E6%84%8F%E3%81%AE%E3%83%AA%E3%83%B3%E3%82%AF%E8%BF%BD%E5%8A%A0.meta.js
@@ -16,6 +16,9 @@
 
 (function() {
     'use strict';
+
+    //設定：タブを開く間隔（ミリ秒） 1000 = 1秒
+    const OPEN_INTERVAL = 300;
 
     //ここにお好みのURLを
     const MangaCG_URL = "";
@@ -58,6 +61,8 @@
         setTimeout(callback, 0);
     };
 
+    // 待機用関数
+    const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
     // PC版 作品ページの処理
 
@@ -135,7 +140,83 @@
             sheet.cssRules.length
         );
 
+        // 「すべて開く」ボタンの追加処理
+        const addOpenAllButton = () => {
+            const targetBox = document.querySelector('.status_select_box');
+            // すでにボタンがある場合やターゲットがない場合は何もしない
+            if (!targetBox || document.getElementById('open-all-custom-links-btn')) return;
+
+            const openBtn = document.createElement('a');
+            openBtn.id = 'open-all-custom-links-btn';
+            openBtn.href = '#';
+            openBtn.textContent = '全Linkを開く';
+            openBtn.style.cssText = `
+                float: right;
+                margin-top: 6px;
+                margin-right: 10px;
+                padding: 4px 12px;
+                background: #666;
+                color: #fff;
+                font-size: 12px;
+                text-decoration: none;
+                border-radius: 3px;
+                cursor: pointer;
+                transition: background 0.3s;
+            `;
+
+            openBtn.addEventListener('click', async (e) => {
+                e.preventDefault();
+                const addedLinks = document.querySelectorAll('.dynamic-link-clone a');
+
+                if (addedLinks.length === 0) {
+                    alert('開くリンクが見つかりません。');
+                    return;
+                }
+
+                if(!confirm(`${addedLinks.length}個のタブを順番に開きます。\n(サーバー負荷軽減のため、1件につき${OPEN_INTERVAL}m秒待機します)`)){
+                    return;
+                }
+
+                // ボタンを無効化して連打防止
+                const originalText = "全Linkを開く";
+                openBtn.style.pointerEvents = 'none';
+                openBtn.style.background = '#aaa';
+
+                for (let i = 0; i < addedLinks.length; i++) {
+                    const link = addedLinks[i];
+                    if (link.href) {
+                        // 進捗表示
+                        openBtn.textContent = `Open... ${i + 1}/${addedLinks.length}`;
+
+                        // タブを開く
+                        GM_openInTab(link.href, { active: false, insert: true });
+
+                        // 指定時間待機 (最後の1回以外)
+                        if (i < addedLinks.length - 1) {
+                            await sleep(OPEN_INTERVAL);
+                        }
+                    }
+                }
+
+                // 完了表示
+                openBtn.textContent = '完了!';
+                openBtn.style.background = '#4caf50'; // 緑色
+
+                // 2秒後に元に戻す
+                setTimeout(() => {
+                    openBtn.textContent = originalText;
+                    openBtn.style.background = '#666';
+                    openBtn.style.pointerEvents = 'auto';
+                }, 2000);
+            });
+
+            targetBox.appendChild(openBtn);
+        };
+
         const addLinksToFavorites = () => {
+            // まず一括オープンボタンを追加
+            addOpenAllButton();
+
             const favoriteItems = document.querySelectorAll('.one_column_work_item:not(.dynamic-button-added)');
 
             favoriteItems.forEach(item => {

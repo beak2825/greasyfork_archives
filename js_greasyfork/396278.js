@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         【网购小秘】自动查询淘宝、天猫、京东等隐藏的大额优惠券和优惠活动，能省就省，不花冤枉钱！
 // @namespace    Xanthella_Coupon_Secretary_helper
-// @version      3.0.3
+// @version      3.0.4
 // @description  网购小秘，不花冤枉钱！！！支持平台：京东、淘宝、天猫、天猫超市、天猫国际、京东国际、京东图书、京东大药房、阿里大药房、唯品会等；功能：1、搜索商品时会自动查询标注有优惠券和活动的商品，无需进入详情页，方便快捷；2、浏览商品详情页时脚本会自动查询商品是否有隐藏的优惠券；简单好用，低侵入~
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAldJREFUWEfVl0FrE0EUx9+kLaQHMXgSxbqgtza2BXto2OLuJ/AoiAcVeugHyNnkJtRLC/bSUz+CJ+kpEwjU2kODiTcPQUEs9JDiwUhpnsxsN5ndmdl92yYEB4YQ5uX9f+8/b2cnDCY82IT14UoA2AIPIOdJeIZPAFkdoM9ZEXjWgjIDYCtXAYZvLEIcEKtZQMgAsmrGajHhsOLAjXAgq7Jiv0Jxgw7QZpgkEHeGLSApNykI27LyoEpE32ZxBILoQlYAzhbQT7JWgUiNlT1M2ScM7U+ofrD9SpNStiEjQHpzqc16LYDNmjvobH+6Kbv/9O/Mfmtq/m2Sa6vsy25+qv+wd5H7doCP1sPYst8wnhGaA1KYQfRx634HEFOM20WA/E0zgxpXmAMQczg4IFTjIDoAd4cdr/680wi+6YmHUSqA4+qQAUDkfDABDJ93NYVI3jsLHLANsS6mcMjiUtlrRDTpAJTHhRAzMoB7hWVN7kf3OA2Bl71G5Byh98Bl6pLzGkr3XxmF3tXXxgsQFz/sHEnBT53P8vPryUc46/2CFWfWBnJ1B4Tlzxa3B4m3+HvYru8Yhe4UZuDp0g3T2mgAROXP915a7R4LgGp/UvWCygpAOgdqbgUYaDceFeBBdT6x2R47s+Y++K8BRMlhE3pbLxId2PBumdev44Ca8UPzN/zsnmsiYu9XnLzsAeMYFcBR54+W/25h2i4cRiP46W9DSxOmHXGkdQqASLTJXfMbkaSSEEQGGI8L2ikoUK13wsubke0fEN0LhLoIjl9EwgSkSyldLXvkxAH+AbnpFjBc9Yl8AAAAAElFTkSuQmCC
 // @author       Xanthella,huahuacat
@@ -15,6 +15,7 @@
 // @match        *://detail.vip.com/detail-*
 // @match        *://*.jd.com/*
 // @match        *://*.jd.hk/*
+// @match        *://item.jingdonghealth.cn/*
 // @match        *://category.vip.com/suggest.php**
 // @match        *://item.jkcsjd.com/*
 // @match        *://*.yiyaojd.com/*
@@ -36,6 +37,7 @@
 // @exclude      *://passport.vip.com/*
 // @exclude      *://huodong.taobao.com/wow/z/guang/gg_publish/*
 // @exclude      *://passport.suning.com/*
+// @connect      jtm.pub
 // @grant        GM_info
 // @grant        GM_download
 // @grant        GM_getValue
@@ -87,7 +89,7 @@
 				platform = "taobao";
 			}else if(host.indexOf(".tmall.")!=-1){
 				platform = "tmall";
-			}else if(host.indexOf(".jd.")!=-1 || host.indexOf(".yiyaojd.")!=-1 || host.indexOf(".jkcsjd.")!=-1){
+			}else if(host.indexOf(".jd.")!=-1 || host.indexOf(".yiyaojd.")!=-1 || host.indexOf(".jkcsjd.")!=-1 || host.indexOf(".jingdonghealth.")!=-1){
 				platform = "jd";
 			}else if(host.indexOf(".vip.")!=-1 || host.indexOf(".vipglobal.")!=-1){
 				platform = "vpinhui";
@@ -139,6 +141,31 @@
 					resolve({"code":"ok", "result":text});
 				}).catch(error => {
 					reject({"code":"exception", "result":null});
+				});
+			});
+		}
+		
+		gmRequest(method, url, param){
+			if(!method){
+				method = "get";
+			}
+			if(method.toUpperCase()=="GET" || method.toUpperCase()=="HEAD"){
+				param = null;
+			}
+			return new Promise(function(resolve, reject){
+				GM_xmlhttpRequest({
+					url: url,
+					method: method,
+					data:param,
+					onload: function(response) {
+						var status = response.status;
+						if(status==200||status=='200'){
+							var responseText = response.responseText;
+							resolve({"code":"ok", "result":responseText});
+						}else{
+							reject({"code":"exception", "result":null});
+						}
+					}
 				});
 			});
 		}
@@ -292,7 +319,7 @@
 		isRun(){
 			const currentHost = window.location.host;
 			return ["detail.tmall.com", "item.taobao.com", "item.jd.com", "item.yiyaojd.com", "npcitem.jd.hk",
-				"detail.tmall.hk", "detail.vip.com", "item.jkcsjd.com", "product.suning.com"
+				"detail.tmall.hk", "detail.vip.com", "item.jkcsjd.com", "product.suning.com", "item.jingdonghealth.cn"
 			].map((host)=>currentHost.indexOf(host)!=-1).some((result)=>result);
 		}
 		
@@ -386,7 +413,7 @@
 			
 			const goodsCouponUrl = this.baseUrl+"/api/coupon/query?no=6&version=1.0.2&platform="+platform+"&id="+goodsId+"&q="+goodsName+"&addition="+addition;
 			try{
-				const data = await this.request("GET", goodsCouponUrl, null);
+				const data = await this.gmRequest("GET", goodsCouponUrl, null);
 				if(data.code=="ok" && !!data.result){
 					const json = JSON.parse(data.result);
 					await this.generateCoupon(platform, json.data);
@@ -469,7 +496,7 @@
 							this.openInTab(href);
 							couponElementA.removeAttribute(clickedTag);
 						}else{
-							this.request("GET", goodsPrivateUrl+couponId, null).then((privateResultData)=>{
+							this.gmRequest("GET", goodsPrivateUrl+couponId, null).then((privateResultData)=>{
 								if(privateResultData.code==="ok" && !!privateResultData.result){
 									let url = JSON.parse(privateResultData.result).url;
 									if(url){
@@ -488,7 +515,7 @@
 				if(!canvasElement){
 					return;
 				}
-				const qrcodeResultData = await this.request("GET", goodsPrivateUrl+couponId, null);
+				const qrcodeResultData = await this.gmRequest("GET", goodsPrivateUrl+couponId, null);
 				if(!!qrcodeResultData && qrcodeResultData.code==="ok" && !!qrcodeResultData.result){
 					let img = JSON.parse(qrcodeResultData.result).img;
 					if(!!img){

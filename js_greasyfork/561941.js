@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         stable diffusion webui提示词分组器
 // @namespace    http://tampermonkey.net/
-// @version      2026-1-11.1.6
+// @version      2026-1-11.1.8
 // @description  用来在sdwebui上附加N个提示词输入框，方便分别输入提示词（如风景、人物、衣服）同时可以将提示词保存为json文件，方便读取
 // @author       ragnaDolphin
 // @match        *://127.0.0.1:7860/*
@@ -266,6 +266,20 @@
                 titleLabel.style.borderRadius = '3px';
                 titleLabel.style.userSelect = 'text';
                 titleLabel.title = '双击编辑标题';
+
+                // 单击折叠功能
+                titleLabel.addEventListener('click', function() {
+                    const container = inputContainer;
+                    const content = container.querySelector('.new-input');
+                    const isCollapsed = container.classList.contains('collapsed');
+                    if (isCollapsed) {
+                        container.classList.remove('collapsed');
+                        content.style.display = 'block';
+                    } else {
+                        container.classList.add('collapsed');
+                        content.style.display = 'none';
+                    }
+                });
 
                 // 双击编辑标题功能
                 titleLabel.addEventListener('dblclick', function() {
@@ -560,7 +574,7 @@
                 const mergedInput = document.querySelector('.merged-input');
                 const texts = Array.from(newInputs).map(input => input.value.trim()).filter(text => text !== '');
                 if (texts.length > 0) {
-                    const mergedText = texts.join('\n');
+                    const mergedText = texts.join('\n').replace(/^\s*\/\/.*$/gm, '')
                     mergedInput.value = mergedText;
                     // copyToClipboard(mergedText);
                     mergedInput.dispatchEvent(new Event('input'));
@@ -739,42 +753,44 @@
 
                 // 使用现有的读取文件逻辑
                 const reader = new FileReader();
-                reader.onload = function(event) {
-                    try {
-                        const data = JSON.parse(event.target.result);
-
-                        if (!Array.isArray(data)) {
-                            throw new Error('JSON格式不正确，应为数组格式');
-                        }
-
-                        // 清空现有文本框（除了合并输入框）
-                        const containers = document.querySelectorAll('.resizable-input-container');
-                        containers.forEach(container => {
-                            const titleElement = container.querySelector('span');
-                            if (titleElement && titleElement.textContent !== '合并') {
-                                container.remove();
-                            }
-                        });
-
-                        // 创建新的文本框
-                        data.forEach(item => {
-                            if (item.title && item.content !== undefined) {
-                                const resizableInput = createResizableInput(item.title);
-                                resizableInput.input.value = item.content;
-                                inputsContainer.appendChild(resizableInput.container);
-                                adjustTextareaHeight(resizableInput.input);
-                            }
-                        });
-
-                        fileNameInput.value = fileName.replace('.json', '');
-                        // alert(`已成功加载 ${data.length} 个文本框！`);
-                    } catch (error) {
-                        alert('读取文件失败：' + error.message);
-                    }
-                };
+                reader.onload = loadFile;
 
                 reader.readAsText(file);
             });
+
+            function loadFile(event,fileName) {
+                try {
+                    const data = JSON.parse(event.target.result);
+
+                    if (!Array.isArray(data)) {
+                        throw new Error('JSON格式不正确，应为数组格式');
+                    }
+
+                    // 清空现有文本框（除了合并输入框）
+                    const containers = document.querySelectorAll('.resizable-input-container');
+                    containers.forEach(container => {
+                        const titleElement = container.querySelector('span');
+                        if (titleElement && titleElement.textContent !== '合并') {
+                            container.remove();
+                        }
+                    });
+
+                    // 创建新的文本框
+                    data.forEach(item => {
+                        if (item.title && item.content !== undefined) {
+                            const resizableInput = createResizableInput(item.title);
+                            resizableInput.input.value = item.content;
+                            inputsContainer.appendChild(resizableInput.container);
+                            adjustTextareaHeight(resizableInput.input);
+                        }
+                    });
+
+                    fileNameInput.value = fileName.replace('.json', '');
+                    // alert(`已成功加载 ${data.length} 个文本框！`);
+                } catch (error) {
+                    alert('读取文件失败：' + error.message);
+                }
+            };
 
             // // 添加拖拽提示文本
             // const dragHint = document.createElement('div');
@@ -800,40 +816,9 @@
                     const file = e.target.files[0];
                     const fileName = file.name;
                     if (!file) return;
-
                     const reader = new FileReader();
                     reader.onload = function(event) {
-                        try {
-                            const data = JSON.parse(event.target.result);
-
-                            if (!Array.isArray(data)) {
-                                throw new Error('JSON格式不正确，应为数组格式');
-                            }
-
-                            // 清空现有文本框（除了合并输入框）
-                            const containers = document.querySelectorAll('.resizable-input-container');
-                            containers.forEach(container => {
-                                const titleElement = container.querySelector('span');
-                                if (titleElement && titleElement.textContent !== '合并') {
-                                    container.remove();
-                                }
-                            });
-
-                            // 创建新的文本框
-                            data.forEach(item => {
-                                if (item.title && item.content !== undefined) {
-                                    const resizableInput = createResizableInput(item.title);
-                                    resizableInput.input.value = item.content;
-                                    inputsContainer.appendChild(resizableInput.container);
-                                    adjustTextareaHeight(resizableInput.input);
-                                }
-                            });
-
-                            fileNameInput.value = fileName.replace('.json', '');
-                            // alert(`已成功加载 ${data.length} 个文本框！`);
-                        } catch (error) {
-                            alert('读取文件失败：' + error.message);
-                        }
+                        loadFile(event, fileName);
                     };
 
                     reader.readAsText(file);

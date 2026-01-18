@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Burning Vocabulary类似版
 // @namespace    http://tampermonkey.net/
-// @version      71.3
+// @version      71.4
 // @description  仿真Burning Vocabulary，v71.0版本适配了bypass v4.2.6.4，可以记录单词，导出html文件，删除7天前的记录。v70.1版本适配了bypass V3.7.2.5,没有记录功能。
 // @author       TCH
 // @match        *://www.economist.com
@@ -921,7 +921,7 @@
 	// 使用 elmGetter 对象进行异步元素获取
  
   //以下是bypass v4.2.6.4 在彭博社网站新增的标签
-  elmGetter.get('style#ext1').then(div1 => {
+  elmGetter.get('div[data-component="plug-newsletter"]').then(div1 => {
  
     ////删除广告
     document.querySelector('.media-ui-FullWidthAd_fullWidthAdWrapper-fClHZteIk3k-').style.display = 'none';

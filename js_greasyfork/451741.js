@@ -633,8 +633,6 @@
 
       mark = document.createElement("span");
       mark.textContent = text;
-      // avoid screen readers from reading out loud the text
-      mark.ariaHidden = "true";
       // reset user styles for span element
       mark.style.all = "unset";
       // prevents scrolling to the end of the page
@@ -800,77 +798,10 @@
     }
   }
 
-  /** @type {HTMLElement[]} */
-  var containers = [];
-  /** @type {{prepend:HTMLStyleElement,append:HTMLStyleElement}[]} */
-
-  var styleTags = [];
-  /**
-   * @param {string} css
-   * @param {object} options
-   * @param {boolean} [options.prepend]
-   * @param {boolean} [options.singleTag]
-   * @param {string} [options.container]
-   * @param {Record<string,string>} [options.attributes]
-   * @returns {void}
-   */
-
-  function injectCss (css, options) {
-    if (!css || typeof document === "undefined") return;
-    var position = options.prepend === true ? "prepend" : "append";
-    var singleTag = options.singleTag === true;
-    var container = typeof options.container === "string" ? document.querySelector(options.container) : document.getElementsByTagName("head")[0];
-
-    function createStyleTag() {
-      var styleTag = document.createElement("style");
-      styleTag.setAttribute("type", "text/css");
-
-      if (options.attributes) {
-        var k = Object.keys(options.attributes);
-
-        for (var i = 0; i < k.length; i++) {
-          styleTag.setAttribute(k[i], options.attributes[k[i]]);
-        }
-      }
-
-      var pos = position === "prepend" ? "afterbegin" : "beforeend";
-      container.insertAdjacentElement(pos, styleTag);
-      return styleTag;
-    }
-    /** @type {HTMLStyleElement} */
-
-
-    var styleTag;
-
-    if (singleTag) {
-      var id = containers.indexOf(container);
-
-      if (id === -1) {
-        id = containers.push(container) - 1;
-        styleTags[id] = {};
-      }
-
-      if (styleTags[id] && styleTags[id][position]) {
-        styleTag = styleTags[id][position];
-      } else {
-        styleTag = styleTags[id][position] = createStyleTag();
-      }
-    } else {
-      styleTag = createStyleTag();
-    } // strip potential UTF-8 BOM if css was read from a file
-
-
-    if (css.charCodeAt(0) === 0xfeff) css = css.substring(1);
-
-    if (styleTag.styleSheet) {
-      styleTag.styleSheet.cssText += css;
-    } else {
-      styleTag.appendChild(document.createTextNode(css));
-    }
-  }
+  var e=[],t=[];function n(n,r){if(n&&"undefined"!=typeof document){var a,s=!0===r.prepend?"prepend":"append",d=!0===r.singleTag,i="string"==typeof r.container?document.querySelector(r.container):document.getElementsByTagName("head")[0];if(d){var u=e.indexOf(i);-1===u&&(u=e.push(i)-1,t[u]={}),a=t[u]&&t[u][s]?t[u][s]:t[u][s]=c();}else a=c();65279===n.charCodeAt(0)&&(n=n.substring(1)),a.styleSheet?a.styleSheet.cssText+=n:a.appendChild(document.createTextNode(n));}function c(){var e=document.createElement("style");if(e.setAttribute("type","text/css"),r.attributes)for(var t=Object.keys(r.attributes),n=0;n<t.length;n++)e.setAttribute(t[n],r.attributes[t[n]]);var a="prepend"===s?"afterbegin":"beforeend";return i.insertAdjacentElement(a,e),e}}
 
   var css = ".e-hentai-infinite-scroll.g #gd2 > * {\n  cursor: pointer;\n}\n.e-hentai-infinite-scroll.g #gd2 > *:active {\n  color: #2af;\n  text-decoration: underline;\n}\n.e-hentai-infinite-scroll.g #gdt::after {\n  content: \"\";\n  display: block;\n  clear: both;\n}\n.e-hentai-infinite-scroll.g .g-scroll-body {\n  display: grid;\n  overflow: hidden auto;\n  max-height: 80vh;\n}\n.e-hentai-infinite-scroll.g .g-scroll-body::-webkit-scrollbar {\n  width: 8px;\n}\n.e-hentai-infinite-scroll.g .g-scroll-body::-webkit-scrollbar-thumb {\n  background-color: rgba(255, 255, 255, 0.15);\n  border-radius: 2px;\n}\n.e-hentai-infinite-scroll.g .g-scroll-body.large {\n  grid-template-columns: repeat(5, 1fr);\n}\n@media screen and (max-width: 1230px) {\n  .e-hentai-infinite-scroll.g .g-scroll-body.large {\n    grid-template-columns: repeat(4, 1fr);\n  }\n}\n@media screen and (max-width: 990px) {\n  .e-hentai-infinite-scroll.g .g-scroll-body.large {\n    grid-template-columns: repeat(3, 1fr);\n  }\n}\n.e-hentai-infinite-scroll.g .g-scroll-body.normal {\n  grid-template-columns: repeat(10, 1fr);\n}\n@media screen and (max-width: 1230px) {\n  .e-hentai-infinite-scroll.g .g-scroll-body.normal {\n    grid-template-columns: repeat(8, 1fr);\n  }\n}\n@media screen and (max-width: 990px) {\n  .e-hentai-infinite-scroll.g .g-scroll-body.normal {\n    grid-template-columns: repeat(6, 1fr);\n  }\n}\n.e-hentai-infinite-scroll.g .g-scroll-page-index {\n  clear: both;\n  grid-column: 1/-1;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n}\n.e-hentai-infinite-scroll.g .g-scroll-page-index::before, .e-hentai-infinite-scroll.g .g-scroll-page-index::after {\n  display: block;\n  content: \"\";\n  width: 40px;\n  height: 1px;\n  background: #ddd;\n  margin: 0 10px;\n}\n.e-hentai-infinite-scroll.s .auto-load-img {\n  width: 100% !important;\n  max-width: 100% !important;\n  margin: 0 !important;\n  padding: 10px;\n  display: block;\n  box-sizing: border-box;\n}\n.e-hentai-infinite-scroll.s .auto-load-img-empty {\n  min-height: 1000px;\n  width: 100px !important;\n  margin: 0 auto !important;\n}\n.e-hentai-infinite-scroll.s #i3 a {\n  pointer-events: none;\n}";
-  injectCss(css,{});
+  n(css,{});
 
   const $$1 = (selector) => document.querySelector(selector);
   const $$ = (selector) => document.querySelectorAll(selector);

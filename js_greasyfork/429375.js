@@ -2,7 +2,7 @@
 // @name			Hentai Heroes++ (OCD) Season version
 // @namespace		https://sleazyfork.org/fr/scripts/415625-hentai-heroes-ocd-season-version
 // @description		Adding things here and there in the Hentai Heroes game.
-// @version			0.93.8
+// @version			0.94.1
 // @match           https://*.hentaiheroes.com/*
 // @match           https://*.haremheroes.com/*
 // @match           https://*.gayharem.com/*
@@ -25,6 +25,9 @@
 	 CHANGELOG
 	=========== */
 
+// 0.94.1: Fixed a bug with labyrinth team filter.
+// 0.94.0: Added a sort for penta drill fights according to penta drill sim. Added new parameters in lab/penta drill filters.
+// 0.93.9: Added new world and villain in Comix Harem. Fixed a few things.
 // 0.93.8: Fixed a few things.
 // 0.93.7: Added sub-menu for lust arena on home page. Added penta drill to hideClaimAllButton function. Fixed a few things.
 // 0.93.6: Fixed minor issues.
@@ -1462,6 +1465,29 @@ function localeStringToNumber(s){
     }
 }
 
+function isBetween(number, interval) {
+    // Regular expression to extract 2 numbers in the string of type "number-number"
+    const regex = /^(\d+)(?:-(\d+))?$/;
+    const match = interval.match(regex);
+
+    if (!match) {
+        return false;
+        //throw new Error("The string must be of the type 'number-number'.");
+    }
+
+    // Si the interval is only 1 number (ex: "10")
+    if (match[2] === undefined) {
+        const value = parseInt(match[1], 10);
+        return number === value;
+    }
+    // Si the interval is between 2 numbers (ex: "10-20")
+    else {
+        const min = parseInt(match[1], 10);
+        const max = parseInt(match[2], 10);
+        return number >= min && number <= max;
+    }
+}
+
 let lang = "en";
 const pageLang = $('html')[0].lang.substring(0,2);
 if(texts[pageLang]) lang=pageLang;
@@ -1703,7 +1729,7 @@ function editTrollsAndTiers() {
     }
     //Comix Harem villains and girls
     else if (['comix_c', 'nutaku_c'].some(testUniverse)) {
-        trolls = ['BodyHack', 'Grey Golem', 'The Nymph', 'Athicus Ho\'ole', 'The Mimic', 'Cockatrice', 'Pomelo', 'Alexa Sl’thor', 'D\'Klong', 'Virtue Man', 'Asmodea', 'Blueball Gremlin'];
+        trolls = ['BodyHack', 'Grey Golem', 'The Nymph', 'Athicus Ho\'ole', 'The Mimic', 'Cockatrice', 'Pomelo', 'Alexa Sl’thor', 'D\'Klong', 'Virtue Man', 'Asmodea', 'Blueball Gremlin', 'Oblivia'];
         if (lang == 'fr') {
             trolls[11] = 'Gremlin Couill\'bleues';
         }
@@ -1721,6 +1747,7 @@ function editTrollsAndTiers() {
             [['125758004', '233499841', '647307160'], [0], [0]],
             [['994555359', '705713849', '973778141'], [0], [0]],
             [['986074436', '151807422', '993438296'], [0], [0]],
+            [['629181593', '686202051', '107847932'], [0], [0]],
         ];
 
         sideTrolls = [];
@@ -2830,8 +2857,8 @@ function moduleVillain() {
     //Comix Harem
     if (['comix_c', 'nutaku_c'].some(testUniverse)) {
         //To update when a new villain is added.
-        worldID = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
-        trollsId = {2: 1, 3: 2, 4: 3, 5: 4, 6: 5, 7: 6, 8: 7, 9: 8, 10: 9, 11: 10, 12: 11, 13: 12};
+        worldID = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
+        trollsId = {2: 1, 3: 2, 4: 3, 5: 4, 6: 5, 7: 6, 8: 7, 9: 8, 10: 9, 11: 10, 12: 11, 13: 12, 14: 13};
         sideWorldID = [];
         sideTrollsId = {};
     }
@@ -7687,7 +7714,14 @@ function moduleLeague() {
 
             //League tracker script
             sheet.insertRule(`.team-theme.icon {
-                margin-left: 0 !important;
+                margin-left: 0 !important;}`
+            );
+
+            sheet.insertRule(`.button_team_synergy img {
+                margin-right: 1px !important;}`
+            );
+
+            sheet.insertRule(`.button_team_synergy img:last-child {
                 margin-right: 0 !important;}`
             );
 
@@ -10725,14 +10759,12 @@ function moduleLabyrinthFilter() {
 function moduleLabyrinthTeamFilter() {
     let arenaGirls = undefined;
     let girlsData = undefined;
-    let girlsDictionary = (!localStorage.getItem('HHS.HHPNMap')) ? new Map() : new Map(JSON.parse(localStorage.getItem('HHS.HHPNMap')));
 
     $(document).ready(() => {
         getFilterGirlData();
 
         //Remove filters from labyrinth++ script
         $('.panel-title-custom').remove();
-        //$('.panel-title').prepend($('#filter_girls'));
         $('.change-team-panel.harem-panel .square_blue_btn:not(#filter_girls):not(#labyrinth_filter):not(#reset_button)').remove();
         $('.panel-title').css('display', 'block');
 
@@ -10745,9 +10777,8 @@ function moduleLabyrinthTeamFilter() {
     function getFilterGirlData() {
         arenaGirls = $('.harem-panel-girls .harem-girl-container');
 
-        girlsData = $.map(arenaGirls, function(girl, index) {
-            let girlData = JSON.parse($(girl).find('.girl_img').attr("data-new-girl-tooltip"));
-            girlData['id'] = parseInt($(girl).attr('id_girl'), 10);
+        girlsData = $.map(arenaGirls, (girl) => {
+            let girlData = window.availableGirls.find(element => element.id_girl == parseInt($(girl).attr('id_girl'), 10));
             return girlData;
         });
     }
@@ -10762,10 +10793,12 @@ function moduleLabyrinthTeamFilter() {
         $("#filter_rarity").on('change', filterGirls);
         $("#filter_name").get(0).oninput = filterGirls;
         $("#filter_aff_category").on('change', filterGirls);
-        $("#filter_aff_lvl").on('change', filterGirls);
         $("#filter_element").on('change', filterGirls);
         $("#filter_skill5").on('change', filterGirls);
         $("#filter_role").on('change', filterGirls);
+        $("#filter_aff_limit").on('change', filterGirls);
+        $("#filter_lvl_limit").on('change', filterGirls);
+        $("#filter_lvl").get(0).oninput = filterGirls;
     }
 
     function filterGirls() {
@@ -10774,35 +10807,32 @@ function moduleLabyrinthTeamFilter() {
         let filterName = $("#filter_name").get(0).value;
         let nameRegex = new RegExp(filterName, "i");
         let filterAffCategory = $("#filter_aff_category").get(0).value;
-        let filterAffLvl = $("#filter_aff_lvl").get(0).value;
         let filterElement = $("#filter_element").get(0).value;
         let filterSkill5 = $("#filter_skill5").get(0).value;
         let filterRole = $("#filter_role").get(0).value;
+        let filterAffLimit = $("#filter_aff_limit").get(0).value;
+        let filterLvlLimit = $("#filter_lvl_limit").get(0).value;
+        let filterLvl = $("#filter_lvl").get(0).value;
 
-        let girlsFiltered = $.map(girlsData, function(girl, index) {
+        let girlsFiltered = $.map(girlsData, (girl, index) => {
             let matchesClass = (girl.class == filterClass) || (filterClass == 0);
             let matchesRarity = (girl.rarity == filterRarity) || (filterRarity == 'all');
             let matchesName = (girl.name.search(nameRegex) > -1);
             let matchesRole = (girl.role_data.id == filterRole) || (filterRole == 'all') || (girl.role_data.length == 0 && filterRole == 0);
-
-            let affectionStr = girl.graded2;
-            let affectionCategoryStr = affectionStr.split('</g>');
-            let affectionCategory = affectionCategoryStr.length-1;
-            let affectionLvlStr = affectionStr.split('<g >');
-            let affectionLvl = affectionLvlStr.length-1;
-
-            let matchesAffCategory = (affectionCategory == filterAffCategory) || (filterAffCategory == 'all');
-            let matchesAffLvl = (affectionLvl == filterAffLvl) || (filterAffLvl == 'all');
+            let matchesAffCategory = (girl.graded == filterAffCategory) || (filterAffCategory == 'all');
             let matchesElement = (girl.element == filterElement) || (filterElement == 'all');
+            let matchesAffLimit = ((girl.graded < girl.nb_grades) == filterAffLimit) || (filterAffLimit == 'all');
+            let matchesLvlLimit = ((girl.awakening_level >= parseInt(girl.level/50-4)) == filterLvlLimit) || (filterLvlLimit == 'all');
+            let matchesLvl = isBetween(girl.level, filterLvl) || (filterLvl == '');
 
             let skill5Active = 0;
-            try{skill5Active = (girlsDictionary.get(girl.id).sk[5] == 0) ? 0 : 1;} catch(err){}
+            try{skill5Active = (girl.skill_tiers_info[5].skill_points_used == 0) ? 0 : 1;} catch(err){}
             let matchesSkill5 = (skill5Active == filterSkill5) || (filterSkill5 == 'all');
 
-            return (matchesClass && matchesRarity && matchesName && matchesAffCategory && matchesAffLvl && matchesElement && matchesSkill5 && matchesRole) ? index : null;
+            return (matchesClass && matchesRarity && matchesName && matchesAffCategory && matchesAffLimit && matchesLvlLimit && matchesLvl && matchesElement && matchesSkill5 && matchesRole) ? index : null;
         });
 
-        $.each(arenaGirls, function(index, girlElem) {
+        $.each(arenaGirls, (index, girlElem) => {
             $(girlElem).css('display', $.inArray(index, girlsFiltered) > -1 ? 'block' : 'none');
         });
 
@@ -10841,8 +10871,6 @@ function moduleLabyrinthTeamFilter() {
         <option value="sun" style="color: #fff049;">${window.GT.design.sun_flavor_element}</option>
         <option value="water" style="color: #24a0ff;">${window.GT.design.water_flavor_element}</option>
         </select></div></div>
-
-
 
         <div class="form-control" style="grid-column: 1;"><div class="select-group" style="break-inside: avoid;">
         <label class="head-group" for="filter_role">${window.GT.design.girl_role}</label>
@@ -10890,16 +10918,24 @@ function moduleLabyrinthTeamFilter() {
         </select></div></div>
 
         <div class="form-control" style="grid-row:4; grid-column: 2;"><div class="select-group" style="break-inside: avoid;">
-        <label class="head-group" for="filter_aff_lvl">${labels.aff_lvl}</label>
-        <select name="filter_aff_lvl" id="filter_aff_lvl" icon="down-arrow">
+        <label class="head-group" for="filter_aff_limit">${window.GT.design.affection_cap}</label>
+        <select name="filter_aff_limit" id="filter_aff_limit" icon="down-arrow">
         <option value="all" selected="selected">${labels.all}</option>
-        <option value="0">${labels.zero_star}</option>
-        <option value="1">${labels.one_star}</option>
-        <option value="2">${labels.two_stars}</option>
-        <option value="3">${labels.three_stars}</option>
-        <option value="4">${labels.four_stars}</option>
-        <option value="5">${labels.five_stars}</option>
-        <option value="6">${labels.six_stars}</option>
+        <option value=0>${window.GT.design.Yes}</option>
+        <option value=1>${window.GT.design.No}</option>
+        </select></div></div>
+
+        <div class="form-control" style="grid-row:5; grid-column: 1;"><div class="input-group" style="break-inside: avoid;">
+        <label class="head-group" for="filter_lvl">${window.GT.design.level_range}</label>
+        <input type="text" autocomplete="off" id="filter_lvl" placeholder="1-750" icon="search">
+        </div></div>
+
+        <div class="form-control" style="grid-row:5; grid-column: 2;"><div class="select-group" style="break-inside: avoid;">
+        <label class="head-group" for="filter_lvl_limit">${window.GT.design.level_cap}</label>
+        <select name="filter_lvl_limit" id="filter_lvl_limit" icon="down-arrow">
+        <option value="all" selected="selected">${labels.all}</option>
+        <option value=0>${window.GT.design.Yes}</option>
+        <option value=1>${window.GT.design.No}</option>
         </select></div></div>
 
         </div>
@@ -11034,6 +11070,14 @@ function moduleLabyrinthTeamFilter() {
         font-size: 1rem;
         position: relative;
         left: 25%;}`
+    );
+
+    sheet.insertRule(`.page-edit-penta-drill-team .harem-panel-girls {
+        grid-row-gap: 0;}`
+    );
+
+    sheet.insertRule(`.page-edit-penta-drill-team .harem-panel-girls .harem-girl-container {
+        height: 90px;}`
     );
 }
 
@@ -14430,19 +14474,21 @@ function moduleLinks() {
 function moduleLabyrinth() {
     function displayTeamGirlClass() {
         if (['edit-labyrinth-team', 'edit-world-boss-team', 'edit-penta-drill-team'].some(testPage)) {
-            Array.from($('.player-team .girl_img')).forEach((girl) => {
-                let girl_class = JSON.parse($(girl).attr('data-new-girl-tooltip')).class;
-                $(girl).parent().parent().parent().parent().after(
-                    `<img class="classGirlTeam" src="${window.IMAGES_URL}/pictures/misc/items_icons/${girl_class}.png" carac="class${girl_class}">`
-                );
-            });
+            if($('.pdsim-class').length == 0) {
+                Array.from($('.player-team .girl_img')).forEach((girl) => {
+                    let girl_class = JSON.parse($(girl).attr('data-new-girl-tooltip')).class;
+                    $(girl).parent().parent().parent().parent().after(
+                        `<img class="classGirlTeam" src="${window.IMAGES_URL}/pictures/misc/items_icons/${girl_class}.png" carac="class${girl_class}">`
+                    );
+                });
 
-            Array.from($('.harem-panel-girls .girl_img')).forEach((girl) => {
-                let girl_class = JSON.parse($(girl).attr('data-new-girl-tooltip')).class;
-                $(girl).after(
-                    `<img class="classGirlList" src="${window.IMAGES_URL}/pictures/misc/items_icons/${girl_class}.png" carac="class${girl_class}">`
-                );
-            });
+                Array.from($('.harem-panel-girls .girl_img')).forEach((girl) => {
+                    let girl_class = JSON.parse($(girl).attr('data-new-girl-tooltip')).class;
+                    $(girl).after(
+                        `<img class="classGirlList" src="${window.IMAGES_URL}/pictures/misc/items_icons/${girl_class}.png" carac="class${girl_class}">`
+                    );
+                });
+            }
         }
         else if (['labyrinth-pre-battle', 'world-boss-pre-battle', 'penta-drill-pre-battle'].some(testPage)) {
             Array.from($('.girl_img')).forEach((girl) => {
@@ -14464,23 +14510,25 @@ function moduleLabyrinth() {
 
     function displayTeamGirlRole() {
         if (['edit-labyrinth-team', 'edit-world-boss-team', 'edit-penta-drill-team'].some(testPage)) {
-            Array.from($('.player-team .girl_img')).forEach((girl) => {
-                let girl_role = JSON.parse($(girl).attr('data-new-girl-tooltip')).role_data.id;
-                if (girl_role != undefined) {
-                    $(girl).parent().parent().parent().parent().after(
-                        `<span role-tooltip="${girl_role}" class="roleGirlTeam girl_role_${girl_role}_icn" style="background-size: 17px;"></span>`
-                    );
-                }
-            });
+            if($('.pdsim-role').length == 0) {
+                Array.from($('.player-team .girl_img')).forEach((girl) => {
+                    let girl_role = JSON.parse($(girl).attr('data-new-girl-tooltip')).role_data.id;
+                    if (girl_role != undefined) {
+                        $(girl).parent().parent().parent().parent().after(
+                            `<span role-tooltip="${girl_role}" class="roleGirlTeam girl_role_${girl_role}_icn" style="background-size: 17px;"></span>`
+                        );
+                    }
+                });
 
-            Array.from($('.harem-panel-girls .girl_img')).forEach((girl) => {
-                let girl_role = JSON.parse($(girl).attr('data-new-girl-tooltip')).role_data.id;
-                if (girl_role != undefined) {
-                    $(girl).after(
-                        `<span role-tooltip="${girl_role}" class="roleGirlList girl_role_${girl_role}_icn" style="background-size: 24px;"></span>`
-                    );
-                }
-            });
+                Array.from($('.harem-panel-girls .girl_img')).forEach((girl) => {
+                    let girl_role = JSON.parse($(girl).attr('data-new-girl-tooltip')).role_data.id;
+                    if (girl_role != undefined) {
+                        $(girl).after(
+                            `<span role-tooltip="${girl_role}" class="roleGirlList girl_role_${girl_role}_icn" style="background-size: 24px;"></span>`
+                        );
+                    }
+                });
+            }
         }
         else if (['labyrinth-pre-battle', 'world-boss-pre-battle', 'penta-drill-pre-battle'].some(testPage)) {
             Array.from($('.girl_img')).forEach((girl) => {
@@ -14582,7 +14630,7 @@ function moduleLabyrinth() {
                 $(`.${position < 7 ? 'player' : 'opponent'}-panel .team-member-container[data-girl-id="${girl_id}"]`).append(`<div class="team-order-number">${i+1}</div>`)
             })
         }
-        else if (['edit-labyrinth-team', 'edit-world-boss-team', 'edit-penta-drill-team'].some(testPage)) {
+        else if (['edit-labyrinth-team', 'edit-world-boss-team'].some(testPage)) {
             const opponent_speeds = JSON.parse(localStorage.getItem('HHS.LABYRINTH_SPEEDS')) || [];
             let girl_speeds;
             let selected;
@@ -14840,7 +14888,7 @@ function moduleLabyrinth() {
     }
 
     //CSS
-    sheet.insertRule(`.classGirlList, .classGirlTeam, .roleGirlList, .roleGirlTeam {
+    sheet.insertRule(`.classGirlTeam, .roleGirlTeam, .classGirlList, .roleGirlList {
         position: absolute;
         border: none;}`
     );
@@ -14852,10 +14900,14 @@ function moduleLabyrinth() {
         left: 0px;}`
     );
 
+    sheet.insertRule(`.container.penta-drill .classGirlList {
+        top: 40px;}`
+    );
+
     sheet.insertRule(`.roleGirlList {
         height: 24px;
         width: 24px;
-        top: 50px;
+        top: 40px;
         left: 43px;}`
     );
 
@@ -14912,7 +14964,7 @@ function moduleLabyrinth() {
     );
 
     sheet.insertRule(`.harem-panel-girls .team-order-number {
-        top: 50px;
+        top: 40px;
         left: 0px;}`
     );
 
@@ -15021,6 +15073,20 @@ function moduleLabyrinth() {
         bottom: 2rem;
         left: 24rem;
         right: auto;}`
+    );
+
+    //Compact display in labyrinth shop
+    sheet.insertRule(`.labyrinth-panel .labyrinth-container #shop_tab_container .shop-container .shop-bottom-section .shop-items-container .shop-items-list {
+        grid-template-columns: repeat(5, 1fr) !important;}`
+    );
+
+    sheet.insertRule(`#shop_tab_container .shop-section .shop-items-list {
+        grid-row-gap: 0rem;
+        grid-column-gap: 0.5rem !important;}`
+    );
+
+    sheet.insertRule(`.labyrinth-panel .labyrinth-container #shop_tab_container .shop-container .shop-bottom-section .shop-items-container {
+        width: 31rem;}`
     );
 }
 
@@ -15630,7 +15696,7 @@ function moduleCustomizedHomeScreen() {
         z-index: 2;
         transform: scale(0.7);
         position: absolute;
-        margin-left: 0rem !important;
+        margin-left: 0.2rem !important;
         top: 455px;
         left: 547px;}}`
     );
@@ -15656,7 +15722,7 @@ function moduleCustomizedHomeScreen() {
 
     sheet.insertRule(`${mediaMobile} {
             #homepage .social_links .social_links_buttons.shown .links, #homepage .social_links .social_links_games.shown .links {
-        top: 0.5rem;}}`
+        top: 0rem;}}`
     );
 
     sheet.insertRule(`${mediaMobile} {
@@ -17619,7 +17685,7 @@ function displayTopRankingTooltip() {
                 </div>`)
             );
         }, 2*timeout)
-    }).observe($('#top_ranking_tab_container')[0], {attributes: true, subtree: true, once: true});
+    }).observe($('#top_ranking_tab_container')[0], {attributes: true, subtree: true});
 
         //CSS
         sheet.insertRule(`#leaderboard_top {
@@ -17818,7 +17884,7 @@ function displayLoveRaidsInfo() {
         }
     }
 
-    $('#love-raids .head-section')[0].addEventListener('click', () => {
+    $('#love-raids .head-section .eye')[0].addEventListener('click', () => {
         let display = ($('.raid-card.hidden').css('display') == 'none') ? 'block' : 'none';
         $('.raid-card.hidden').css('display', display);
         let eye_open_display = ($('#love-raids .head-section .eye .eye_open').css('display') == 'none') ? 'block' : 'none';
@@ -17971,26 +18037,55 @@ function displayLoveRaidsInfo() {
 }
 
 function sortPentaDrillOpponents() {
+    let opps = [];
     let i=0;
     Array.from($('.opponent-info-container')).forEach((opponent) => {
         $(opponent).addClass('opponent-' + i);
+        $(opponent).attr('opp-id', i);
         i++;
     })
 
-    function compare(a, b) {
+    function comparePower(a, b) {
         if (a.power < b.power) return -1;
         else if (a.power > b.power) return 1;
         else return 0;
     }
 
-    i=0;
-    let opps = [];
-    Array.from($('.opponents-container .opponent-info-container .total-power-container .value span')).forEach((value) => {
-        opps.push({index: i, power: localeStringToNumber(value.textContent)});
-        i++;
-    })
+    function compareSim(a, b) {
+        if (a.points > b.points) return -1;
+        else if (a.points < b.points) return 1;
+        else {
+            if (a.xp > b.xp) return -1;
+            else if (a.xp < b.xp) return 1;
+            else {
+                if (a.rounds < b.rounds) return -1;
+                else if (a.rounds > b.rounds) return 1;
+                else return 0;
+            }
+        };
+    }
 
-    opps.sort(compare);
+    if ($('.pdsim-result-box').length) {
+        Array.from($('.opponents-container .opponent-info-container')).forEach((container) => {
+            opps.push({
+                index: parseInt($(container).attr('opp-id'), 10),
+                points: localeStringToNumber($(container).find('.pdsim-points')[0].textContent),
+                xp: localeStringToNumber($(container).find('.slot_season_xp_girl .amount')[0].textContent),
+                rounds: localeStringToNumber($(container).find('.pdsim-rounds')[0].textContent)
+            });
+        })
+        opps.sort(compareSim);
+    }
+    else {
+        Array.from($('.opponents-container .opponent-info-container')).forEach((container) => {
+            opps.push({
+                index: parseInt($(container).attr('opp-id'), 10),
+                power: localeStringToNumber($(container).find('.total-power .value span')[0].textContent)
+            });
+        })
+        opps.sort(comparePower);
+    }
+
     opps.forEach((opp) => {$('.opponents-container.grid-container').append($(`.opponent-info-container.opponent-${opp.index}`))});
 }
 
@@ -18009,11 +18104,6 @@ function fixCSSIssues() {
     sheet.insertRule(`${mediaMobile} {
             #homepage .social_links .social_links_buttons.shown .links > span, #homepage .social_links .social_links_games.shown .links > span {
         width: 6rem;}}`
-    );
-
-    sheet.insertRule(`${mediaMobile} {
-            #homepage .social_links {
-        margin-left: 36rem !important;}}`
     );
 
     //Hide claimed rewards

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        azusa_partner_library_bgm_tags
 // @namespace   https://greasyfork.org/users/1396048-moeruotaku
-// @version     2026.01.16.68
+// @version     2026.01.17.69
 // @description bgm_tags
 // @author      moeruotaku
 // @license     MIT
@@ -462,6 +462,7 @@ const bgm_tags = {
   7442: "みなみ恵夢|BL|BL漫画",
   7550: "漫画|小林尽|恋爱|搞笑|校园|泽近爱理|2009|讲谈社|全1巻|旗派赢了|播磨拳儿",
   7595: "四格|漫画|小島あきら|欢乐向|搞笑|校园|恋爱|百合|日常|单恋|日常系",
+  7644: "麻枝准|AngelBeats!|GDM|神曲|Monster|KSL|插入曲|INST|Angel|アニメ|Dead",
   7645: "lose|萝莉|Galgame|全CG演出|哥特|战斗|短篇|PC|loli|2010|GAL",
   7646: "平野绫|凉宫春日|神前晓|燃|团长|插入曲|神曲|2006|OST|SOS|GOD",
   7699: "漫画|小林尽|青春|恋爱|校园|校园迷糊大王|搞笑|单角恋死循环|2002|KUSO神作|催泪",
@@ -12761,7 +12762,9 @@ const bgm_tags = {
   433805: "校园|少女漫画|少女漫|女攻|青春校园，GB",
   433838: "百合|Galgame|国产|全年龄|AVG|STEAM|PC|抄袭|游戏|全通",
   433867: "",
+  433903: "",
   433908: "",
+  433931: "",
   433962: "校园|群像|辻村深月|轻小说",
   434153: "漫画",
   434176: "",

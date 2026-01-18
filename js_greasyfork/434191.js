@@ -1,8 +1,9 @@
 // ==UserScript==
 // @name 画像のホバーで拡大
 // @description 　Shift+H:オンオフ切替　ホバー中の画像を（y:GoogleLensで画像検索／d:名前を付けて保存(+Shift:suffixを指定)）　a:twitterで画像をトリミングさせない
-// @version      0.1.43
+// @version      0.1.44
 // @run-at document-end
+// @inject-into content
 // @match *://*/*
 // @match file:///*.html
 // @noframes
@@ -99,6 +100,7 @@
   var yandexUrl = "";
   var userSuffix = ""
 
+  if (lh('https://buzzweet.com/manga-tweet/')) addstyle.add('.twitter_pic1 img, .twitter_pic2 img, .twitter_pic3 img, .twitter_pic4 img { object-fit: contain;}')
   // bingのnoreferrer
   if (lh('https://www.bing.com/images/search')) setInterval(() => elegeta('a')?.forEach(e => {
     e.referrerpolicy = "no-referrer";
@@ -143,8 +145,10 @@
         //        if (!(ele?.tagName === "IMG" || (ele?.tagName === "VIDEO" && ld('2chan.net')))) return;
         url = pe(ele, 0)
         let parentA = (!url && ele?.closest(`a[href$=".mp3"] , a[href$=".jpg"] , a[href$=".png"] , a[href$=".webp"] , a[href$=".gif"]`))
-        if (parentA) { url = parentA?.href;
-          tagname = parentA?.tagName; }
+        if (parentA) {
+          url = parentA?.href;
+          tagname = parentA?.tagName;
+        }
         if (!url) return;
       }
       //if (url.match(/^blob\:/)) return;
@@ -362,13 +366,12 @@ height: 282px !important;
     hovertimer = 0;
   }, false);
 
-  hzOnInt()
-
   function getimg(d = 0) {
     //if(verbose||d){document.querySelectorAll('*').forEach(el => getComputedStyle(el).pointerEvents === 'none' && (el.style.pointerEvents = 'auto', requestAnimationFrame(()=> el.style.pointerEvents = 'none')));} // pointer-eventを強制（重いのでexpertのみ
     if (verbose || d)(addstyle.add('*{pointer-events:auto !important;}'), requestAnimationFrame(() => addstyle.remove('*{pointer-events:auto !important;}'))); // pointer-eventを強制（重いのでexpertのみ
     if (verbose && debug) { let hovers = [...document?.elementsFromPoint(mousex, mousey)].filter(v => v.matches(`img`)); if (hovers.length) console.log(hovers) }
     for (let e of [...document?.elementsFromPoint(mousex, mousey)]) {
+      if (e?.id === "imgfullscreen") return "f";
       if (window.getComputedStyle(e).position == "fixed" && !e?.dataset?.ghz) return; // 手前にfixedのものがあるなら止まる
       if (e?.matches("img#thumbnail.style-scope.ytd-moving-thumbnail-renderer")) continue; // 無視する要素（YouTubeのカバー等）
       if ("magnifierLens" === e?.id) { // amazonのレンズがあるものはやらない
@@ -384,55 +387,59 @@ height: 282px !important;
 
   ael(document, "dragstart", e => GF.isDragging = 1, 1)
   ael(document, "dragend drop", e => GF.isDragging = 0, 1)
+  hzOnInt()
+  //ael(document, "scroll mousemove", hzOnInt, 1)
 
   function hzOnInt() {
     if (!(hovertime < 1) && (document?.visibilityState == "visible")) {
       hovertimer++;
       let ele = getimg();
-      if (ele !== "s") {
-        if ((lastEle !== ele || GF?.isDragging) && (!mouseShift || !ele?.classList.contains("hzP"))) {
-          hovertimer = 0;
-          if (poppedUrl) {
-            document?.querySelectorAll('.ignoreMe.hzP')?.forEach(e => e.remove());
-            poppedUrl = "";
+      if (ele !== "f") {
+        if (ele !== "s") {
+          if ((lastEle !== ele || GF?.isDragging) && (!mouseShift || !ele?.classList.contains("hzP"))) {
+            hovertimer = 0;
+            if (poppedUrl) {
+              document?.querySelectorAll('.ignoreMe.hzP')?.forEach(e => e.remove());
+              poppedUrl = "";
+            }
           }
-        }
-        if (ele && hovertimer >= hovertime && poppedUrl == "" && (ele.clientWidth < minWidth || ele.clientHeight < minHeight)) {
-          if (HANDLE_LIST.includes(ele?.tagName) ||
-            (ele?.style?.backgroundImage?.match0(/^url\(/)) ||
-            (ele?.matches(`a[href*="imgur.com"],a[href*="pbs.twimg.com"]`) && ele?.href?.match(/.png$|.jpg$|.jpeg$|.gif$|.bmp$|.webp$/i))) {
-            if (ele?.dataset?.zoomonhover != "disable") {
-              poppedUrl = pe(ele, enablePanel);
-              //          yandexUrl = poppedUrl.match(/\;base64\,/i) ? null : "https://yandex.com/images/search?rpt=imageview&url=" + poppedUrl;
+          if (ele && hovertimer >= hovertime && poppedUrl == "" && (ele.clientWidth < minWidth || ele.clientHeight < minHeight)) {
+            if (HANDLE_LIST.includes(ele?.tagName) ||
+              (ele?.style?.backgroundImage?.match0(/^url\(/)) ||
+              (ele?.matches(`a[href*="imgur.com"],a[href*="pbs.twimg.com"]`) && ele?.href?.match(/.png$|.jpg$|.jpeg$|.gif$|.bmp$|.webp$/i))) {
+              if (ele?.dataset?.zoomonhover != "disable") {
+                poppedUrl = pe(ele, enablePanel);
+                //          yandexUrl = poppedUrl.match(/\;base64\,/i) ? null : "https://yandex.com/images/search?rpt=imageview&url=" + poppedUrl;
 
-              //              if ((verbose || replaceMode) && (isFtbucket || is2chanOrig)) {
-              if ((replaceMode) && (isFtbucket || is2chanOrig)) {
-                //                if (ele && ele.tagName === "IMG" && (verbose || (replaceMode >= 2)) ?
-                if (ele && ele.tagName === "IMG" && ((replaceMode >= 2)) ?
-                  ele?.matches(':is(.thre , td.rtd)>a:is([href*=".gif"],[href*=".png"],[href*=".jpg"],[href*=".webp"])>img:not([data-gifloaded])') :
-                  //ele?.matches(':is(#pickbox a:is([href*=".gif"],[href*=".png"],[href*=".jpg"],[href*=".webp"]) , :is(.thre>a,td.rtd>a)[href*=".gif"])>img:not([data-gifloaded])')) { // 2chanならgifを動かす
-                  ele?.matches(':is(#pickbox a:is([href*=".gif"]) , :is(.thre>a,td.rtd>a)[href*=".gif"])>img:not([data-gifloaded])')) { // 2chanならgifを動かす
-                  let a = ele?.closest("a")
-                  ele.dataset.gifloaded = 1;
-                  if (a && a?.href != ele?.src && (isFtbucket || eleget0('#contdisp')?.textContent?.indexOf("スレッドがありません") == -1)) {
-                    checkExists(a?.href, () => {
-                      elegeta(`img[src="${ele?.getAttribute("src")}"]:not(.quoteSpeechBalloonImg)`).forEach(ele => {
-                        ele.dataset.gifloaded = 1;
-                        ele.src = a.href;
-                        ele.animate([{ boxShadow: "0 0 0 0 #30cf88f0", outline: "4px solid rgba(0, 255,128,0.7)" }, { boxShadow: "0 0 10px 35px #30cf8800", outline: "4px solid rgba(0, 255,128,0.7)" }], 666)
+                //              if ((verbose || replaceMode) && (isFtbucket || is2chanOrig)) {
+                if ((replaceMode) && (isFtbucket || is2chanOrig)) {
+                  //                if (ele && ele.tagName === "IMG" && (verbose || (replaceMode >= 2)) ?
+                  if (ele && ele.tagName === "IMG" && ((replaceMode >= 2)) ?
+                    ele?.matches(':is(.thre , td.rtd)>a:is([href*=".gif"],[href*=".png"],[href*=".jpg"],[href*=".webp"])>img:not([data-gifloaded])') :
+                    //ele?.matches(':is(#pickbox a:is([href*=".gif"],[href*=".png"],[href*=".jpg"],[href*=".webp"]) , :is(.thre>a,td.rtd>a)[href*=".gif"])>img:not([data-gifloaded])')) { // 2chanならgifを動かす
+                    ele?.matches(':is(#pickbox a:is([href*=".gif"]) , :is(.thre>a,td.rtd>a)[href*=".gif"])>img:not([data-gifloaded])')) { // 2chanならgifを動かす
+                    let a = ele?.closest("a")
+                    ele.dataset.gifloaded = 1;
+                    if (a && a?.href != ele?.src && (isFtbucket || eleget0('#contdisp')?.textContent?.indexOf("スレッドがありません") == -1)) {
+                      checkExists(a?.href, () => {
+                        elegeta(`img[src="${ele?.getAttribute("src")}"]:not(.quoteSpeechBalloonImg)`).forEach(ele => {
+                          ele.dataset.gifloaded = 1;
+                          ele.src = a.href;
+                          ele.animate([{ boxShadow: "0 0 0 0 #30cf88f0", outline: "4px solid rgba(0, 255,128,0.7)" }, { boxShadow: "0 0 10px 35px #30cf8800", outline: "4px solid rgba(0, 255,128,0.7)" }], 666)
+                        })
                       })
-                    })
-                  }
+                    }
 
-                  function checkExists(url, cb) {
-                    if (url) return fetch(url, { method: 'HEAD', cache: 'reload' }).then(response => response.ok && cb()).catch(() => false);
+                    function checkExists(url, cb) {
+                      if (url) return fetch(url, { method: 'HEAD', cache: 'reload' }).then(response => response.ok && cb()).catch(() => false);
+                    }
                   }
                 }
               }
             }
           }
+          lastEle = ele;
         }
-        lastEle = ele;
       }
     }
     requestAnimationFrame(hzOnInt) // setTimeout(hzOnInt, 17);

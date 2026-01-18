@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         FMC Create/Cancelled check
 // @namespace    http://tampermonkey.net/
-// @version      0.3
+// @version      0.5
 // @description  Adds buttons and textbox to query VR audit information
 // @match        https://trans-logistics-eu.amazon.com/*
 // @grant        GM_xmlhttpRequest
@@ -57,8 +57,15 @@
         const hours = date.getHours().toString().padStart(2, '0');
         const minutes = date.getMinutes().toString().padStart(2, '0');
         const seconds = date.getSeconds().toString().padStart(2, '0');
-
         return `${month}/${day}/${year} ${hours}:${minutes}:${seconds}`;
+    }
+
+    // Function to calculate time difference in hours and minutes
+    function calculateTimeDifference(createTime, cancelTime) {
+        const diffMs = cancelTime - createTime;
+        const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+        const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+        return `${diffHours}h ${diffMinutes}m`;
     }
 
     // Function to fetch and process data for Created events
@@ -90,10 +97,10 @@
         });
     }
 
-    // Function to fetch and process data for Cancelled events
+    // Function to fetch and process data for Cancelled events with time difference
     function fetchVRAuditCancelled() {
         const elements = document.querySelectorAll('.clickable-text.vr-audit-dialog');
-        let result = '';
+        let result = 'VRID\tCzas od Created do Cancel\n'; // Nagłówki kolumn dla Excela
 
         elements.forEach(element => {
             const vrid = element.innerText;
@@ -105,13 +112,26 @@
                 onload: function(response) {
                     if (response.status === 200) {
                         const data = JSON.parse(response.responseText);
-                        // Sprawdź pierwszy (najnowszy) rekord
-                        const latestEvent = data.returnedObject[0];
-                        if (latestEvent && latestEvent.currentValue === 'CANCELLED') {
-                            const formattedDate = formatDate(latestEvent.eventTime);
-                            result += `${vrid}\t${formattedDate}\n`;
+
+                        // Znajdź event "create"
+                        const createEvent = data.returnedObject.find(event => event.eventType === 'create');
+
+                        // Znajdź event z currentValue === 'CANCELLED'
+                        const cancelEvent = data.returnedObject.find(event =>
+                            event.eventType === 'status_audit_event' &&
+                            event.currentValue === 'CANCELLED'
+                        );
+
+                        if (createEvent && cancelEvent) {
+                            const timeDiff = calculateTimeDifference(createEvent.eventTime, cancelEvent.eventTime);
+                            result += `${vrid}\t${timeDiff}\n`;
+                            textbox.value = result;
+                        } else if (cancelEvent && !createEvent) {
+                            // Jeśli nie ma create event, ale jest cancel
+                            result += `${vrid}\tBrak danych create\n`;
                             textbox.value = result;
                         }
+
                     } else {
                         console.error(`Failed to fetch data for VRID: ${vrid}`);
                     }
@@ -120,8 +140,7 @@
         });
     }
 
-
-    // Function to fetch and process data for Cancelled events
+    // Function to fetch and process data for Cancelled events vs Arrival
     function fetchVRAuditCancelledCreated() {
         const elements = document.querySelectorAll('.clickable-text.vr-audit-dialog');
         let result = '';
@@ -151,10 +170,15 @@
                 onload: function(response) {
                     if (response.status === 200) {
                         const data = JSON.parse(response.responseText);
-                        // Sprawdź pierwszy (najnowszy) rekord
-                        const latestEvent = data.returnedObject[0];
-                        if (latestEvent && latestEvent.currentValue === 'CANCELLED') {
-                            const cancelTime = new Date(latestEvent.eventTime).getTime();
+
+                        // Sprawdź czy istnieje event z currentValue === 'CANCELLED'
+                        const cancelEvent = data.returnedObject.find(event =>
+                            event.eventType === 'status_audit_event' &&
+                            event.currentValue === 'CANCELLED'
+                        );
+
+                        if (cancelEvent) {
+                            const cancelTime = new Date(cancelEvent.eventTime).getTime();
                             const timeDiff = plannedArrivalTime - cancelTime;
 
                             // Sprawdź czy anulowanie nastąpiło mniej niż 24h przed planowanym przyjazdem
@@ -163,6 +187,7 @@
                                 textbox.value = result;
                             }
                         }
+
                     } else {
                         console.error(`Failed to fetch data for VRID: ${vrid}`);
                     }
@@ -171,10 +196,9 @@
         });
     }
 
-
-
     // Add click events to the buttons
     buttonCreate.addEventListener('click', fetchVRAuditCreated);
     buttonCancel.addEventListener('click', fetchVRAuditCancelled);
     buttonCancelArrival.addEventListener('click', fetchVRAuditCancelledCreated);
+
 })();

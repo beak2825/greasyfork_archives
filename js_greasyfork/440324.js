@@ -2,17 +2,14 @@
 // @name				漫畫 鍵盤導覽(L改)
 // @description	[a / ←]前一頁，[d / →]下一頁，[e /↓ ]新一章，[q/↑ ]舊一章，[r]新一頁留言，[t]舊一頁留言，[esc]中斷載入更多留言，[v]圖片尺寸切換 整頁/實際
 // @author				Evan Tseng
-// @version				1.1
+// @version				1.2
 // @match				*://*.dm5.com/*
 // @match				*://*.dm5.cn/*
 // @match				*://*.dmzj.com/*
 // @match				*://*.mhgui.com/*
 // @match				*://*.manhuagui.com/*
-// @match				*://*.copymanga.com/*
-// @match				*://*.copymanga.info/*
-// @match				*://*.copymanga.net/*
-// @match				*://*.copymanga.org/*
-// @match				*://*.copymanga.site/*
+// @match				*://*.mangacopy.com/*
+// @match				*://*.2025copy.com/*
 // @run-at				document-idle
 // @grant				GM.setValue
 // @grant				GM.getValue
@@ -32,7 +29,7 @@
 		await GM.setValue("setting", mySetting);
 	}
 
-	let theHost = window.location.hostname.replace(/(?:[^\.]+\.)*(dm5|dmzj|manhuagui|mhgui|copymanga)\.(?:cn|com|info|net|org|site)/, "$1");
+	let theHost = window.location.hostname.replace(/(?:[^\.]+\.)*(dm5|dmzj|manhuagui|mhgui|mangacopy|2025copy)\.(?:cn|com|info|net|org|site|tv)/, "$1");
 
 	switch(theHost) {
 		case "dm5":
@@ -241,14 +238,15 @@
 				e = await (e || window.event);
 				try {
 					switch(await e.key.toLowerCase()) {
-						case 'arrowdown':
+						case 'delete':
 						case 'e': // 新一章
 							if(NextC) NextC.click();
 							break;
-						case 'arrowup':
+						case 'insert':
 						case 'q': // 舊一章
 							if(PrevC) PrevC.click();
 							break;
+            case 'arrowup':
 						case 'arrowleft':
 						case 'a': // 前一頁
 							if(document.querySelector("#comicRead[style='']")) return;
@@ -257,6 +255,7 @@
 							else if(actP) actP.parentNode.previousElementSibling.querySelector('a').click();
 							else YingdmList.self.changepager(parseInt(actP.innerText)-1)
 							break;
+						case 'arrowdown':
 						case 'arrowright':
 						case 'd': // 下一頁
 							if(document.querySelector("#comicRead[style='']")) return;
@@ -329,11 +328,11 @@
 				e = e || window.event;
 				try {
 					switch(e.key.toLowerCase()) {
-						case 'arrowdown':
+						case 'delete':
 						case 'e':
 							document.querySelector(".btmBtnBox>a.btm_chapter_btn.fr").click();
 							break;
-						case 'arrowup':
+						case 'insert':
 						case 'q':
 							document.querySelector(".btmBtnBox>a.btm_chapter_btn.fl").click();
 							break;
@@ -379,23 +378,27 @@
 				try {
 					$("#pb, #pb-mask").remove();
 					switch(e.key.toLowerCase()) {
-						case 'arrowdown':
+						case 'delete':
 						case 'e':
 							document.querySelector(".main-btn>a.nextC").click();
 							break;
-						case 'arrowup':
+						case 'insert':
 						case 'q':
 							document.querySelector(".main-btn>a.prevC").click();
 							break;
 						case 'arrowleft':
+              case 'arrowup':
 							if(view) break;
 						case 'a':
+              case 'w':
 							if(document.querySelector("#comicRead[style='']")) return;
 							if(curr && !scrollMode) curr.previousElementSibling.click();
 							break;
 						case 'arrowright':
+            case 'arrowdown':
 							if(view) break;
 						case 'd':
+              case 's':
 							if(document.querySelector("#comicRead[style='']")) return;
 							if(curr && !scrollMode) curr.nextElementSibling.click();
 							break;
@@ -409,22 +412,24 @@
 
 			//=============================================================================
 
-		case "copymanga":
+		case "2025copy":
+      case "mangacopy":
 			document.addEventListener("keydown", function(e) {
 				if(document.querySelector("input:focus, textarea:focus, [contenteditable='true']:focus") || (e.shiftKey | e.ctrlKey | e.altKey | e.metaKey | e.isComposing)) return;
 				var elm=null;
 				e = e || window.event;
 				try {
 					switch(e.key.toLowerCase()) {
-						case 'arrowdown':
+						case 'delete':
 						case 'e':
 							elm=document.querySelector(".footer .comicContent-next a:not(.prev-null)");
 							break;
-						case 'arrowup':
+						case 'insert':
 						case 'q':
 							elm=document.querySelector(".footer .comicContent-prev:not(.index):not(.list) a:not(.prev-null)");
 							break;
 						case 'arrowleft':
+              case 'w':
 						case 'a':
 							if(document.querySelector("#comicRead[style='']")) return;
 							elm=document.querySelector(".el-pagination li.active");
@@ -432,6 +437,7 @@
 							else	elm=document.querySelector(".page-all li.prev>a, .comic-detail-page li.prev>a");
 							break;
 						case 'arrowright':
+              case 's':
 						case 'd':
 							if(document.querySelector("#comicRead[style='']")) return;
 							elm=document.querySelector(".el-pagination li.active");

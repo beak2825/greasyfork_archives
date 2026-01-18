@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TMN Mobile-All-in-One Script
 // @namespace    http://tampermonkey.net/
-// @version      1.9.3
+// @version      1.10.0
 // @description  Revised version with countdown fix and GTA/Crimes integration
 // @author       Pap
 // @license      MIT
@@ -10,6 +10,7 @@
 // @grant        GM_xmlhttpRequest
 // @grant        GM_getValue
 // @grant        GM_setValue
+// @grant        GM_deleteValue
 // @grant        GM_registerMenuCommand
 // @require      https://code.jquery.com/jquery-3.6.0.min.js
 // @downloadURL https://update.greasyfork.org/scripts/556159/TMN%20Mobile-All-in-One%20Script.user.js
@@ -31,70 +32,20 @@
 
     const $ = window.jQuery;
     const page = location.href.toLowerCase();
-    const TMN_CAPTCHA_KEY = GM_getValue('TMN_CAPTCHA_KEY', '');
+    const TMN_PLAYER = JSON.parse(GM_getValue('TMN_ACCOUNT_INPUTS', '{ "Username": "TMN_PLAYER" }')).Username;
+    const TMN_PASSWORD = JSON.parse(GM_getValue('TMN_ACCOUNT_INPUTS', '{ "Password": "" }')).Password;
+    const TMN_CAPTCHA_KEY = JSON.parse(GM_getValue('TMN_ACCOUNT_INPUTS', '{ "CaptchaKey": "" }')).CaptchaKey;
+    const PRESOLVE_CAPTCHA_KEY = "6LfhsUcUAAAAANgy-ecJurYuIiSVtwDq_a9G3jUM";
     const TMN_PIC = 'Katana';
     const defaultPage = '/authenticated/default.aspx';
-    const iFramePages = [ 'crimes.aspx', 'playerproperty.aspx?p=g&cleanup', 'jail.aspx', 'travel.aspx?d=', 'trade.aspx?autoarbitrage', 'credits.aspx?autoheal', 'ocads.aspx?add' ];
-
-    GM_registerMenuCommand('Clear all data', () => {
-        if (!window.confirm('Clear all data?')) return;
-        GM_setValue('TMN_ARBITRAGE_INPUTS', '{}');
-        GM_setValue('TMN_BF_TOKEN', '');
-        //GM_setValue('TMN_CAPTCHA_KEY', '');
-        GM_setValue('TMN_EXPERIENCE', '{ "value": 0, "unit": "percent" }');
-        GM_setValue('TMN_LAST_NEW_MAIL', '{}');
-        GM_setValue('TMN_NEXT_SYDNEY_SPAWN_TIME', '0');
-        GM_setValue('TMN_NEXT_BOOZE', '');
-        GM_setValue('TMN_NEXT_CRIME', '');
-        GM_setValue('TMN_NEXT_DTM', '');
-        GM_setValue('TMN_NEXT_FLIGHT', '');
-        GM_setValue('TMN_NEXT_GTA', '');
-        GM_setValue('TMN_NEXT_JET_FLIGHT', '');
-        GM_setValue('TMN_NEXT_OC', '');
-        GM_setValue('TMN_OC_INPUTS', '{}');
-        GM_setValue('TMN_OVERLAY_SECTIONS_MINIMIZED', '{}');
-        GM_setValue('TMN_PASSWORD', '');
-        GM_setValue('TMN_PLAYER', '{"name": "TMN_PLAYER"}');
-        GM_setValue('TMN_SCRIPT_STATES', '{}');
-        GM_setValue('TMN_SENTENCE_LENGTH', '');
-    });
-
-    if (!page.endsWith('trade.aspx')) {
-        const script = document.createElement('script');
-        script.textContent = 'window.confirm = () => true;';
-        document.documentElement.appendChild(script);
-    }
-    if (page.includes('login.aspx')) DoLogin();
-    if (page.endsWith(defaultPage)) MainSetup();
-    //if (iFramePages.includes(page.split('/authenticated/')[1])) iFrameSetup();
-    if (iFramePages.some(p => page.includes(p))) iFrameSetup();
-    if (page.endsWith('jail.aspx')) JailScript();
-    if (page.endsWith('crimes.aspx')) CrimesScript();
-    if (page.endsWith('crimes.aspx?p=g')) GTAScript();
-    if (page.endsWith('crimes.aspx?p=b')) BoozeScript();
-    if (page.includes('mailbox.aspx') && page.includes('autoaccept')) AcceptInvites();
-    if (page.endsWith('organizedcrime.aspx') || page.includes('organizedcrime.aspx?act=') || page.includes('store.aspx?p=w') ) OCScript();
-    if (page.endsWith('ocads.aspx?add')) AddToClassifieds();
-    if (page.includes('organizedcrime.aspx?p=dtm')) DTMScript();
-    if (page.includes('trade.aspx?autoarbitrage')) AutoArbitrage();
-    if (page.includes('playerproperty.aspx?a=')) AutoBank();
-    if (page.includes('credits.aspx?autoheal')) AutoHeal();
-    if (page.includes('travel.aspx?d=') && page.includes('&bb=true')) SpawnCampBullets();
-    if (page.includes('travel.aspx?d=')) AutoTravel();
-    if (page.endsWith('crimes.aspx?scriptcheck')) UniversalCaptchaSolve();
-    if (page.includes('playerproperty.aspx?p=g&cleanup')) GarageCleanup();
-    if (page.includes('store.aspx?p=b')) BFScript();
-    if (page.includes('doubleup.aspx')) AutoDup();
-    if (page.includes('mailbox.aspx?p=s')) FreePhone();
-    if (page.endsWith('trade.aspx')) TradeQOL();
-    if (page.includes('statistics.aspx?p=p')) PapStats();
-    if (page.includes('players.aspx')) TwentyFourFinder();
-
-    // Run on all pages
+    const iFramePages = [ 'crimes.aspx', 'playerproperty.aspx?p=g&cleanup', 'jail.aspx', 'travel.aspx?d=', 'trade.aspx?arbitrage', 'credits.aspx?autoheal', 'ocads.aspx?add' ];
+    let checkingMailbox = false;
     const lblMsg = $('#ctl00_lblMsg').text();
     if (lblMsg.includes('You are in jail! You will stay in for')) HandleJail();
     $('#divStats').css({ height: 'unset', overflow: 'unset' });
-    //if (!isFullHealth()) window.top.location.href = 'credits.aspx?autoheal'; return;
+    // const testMail = JSON.parse(GM_getValue('TMN_LAST_NEW_MAIL'));
+    // testMail.id = 392959;
+    // GM_setValue('TMN_LAST_NEW_MAIL', JSON.stringify(testMail));
 
     (function AddOverlay() {
         if (window.self !== window.top) return;
@@ -140,12 +91,7 @@
             // Load saved values
             const savedScriptStates = Object.assign({}, defaultScriptStates, JSON.parse(GM_getValue('TMN_SCRIPT_STATES', '{}')));
             GM_setValue('TMN_SCRIPT_STATES', JSON.stringify(savedScriptStates));
-
-            const savedOverlaySectionsMinimized = Object.assign({}, defaultOverlaySectionStates, JSON.parse(GM_getValue('TMN_OVERLAY_SECTIONS_MINIMIZED', '{}')));
-            const savedUsername = JSON.parse(GM_getValue('TMN_PLAYER', '{ "name": "TMN_PLAYER" }')).name;
-            const savedPassword = GM_getValue('TMN_PASSWORD', '');
-            const savedCaptchaKey = GM_getValue('TMN_CAPTCHA_KEY', '');
-            
+            const savedOverlaySectionsMinimized = Object.assign({}, defaultOverlaySectionStates, JSON.parse(GM_getValue('TMN_OVERLAY_SECTIONS_MINIMIZED', '{}')));            
             const savedAccountInputs = JSON.parse(GM_getValue('TMN_ACCOUNT_INPUTS', '{}'));
             const savedOCInputs = Object.assign({}, defaultOCInputs, JSON.parse(GM_getValue('TMN_OC_INPUTS', '{}')));
             const savedArbitrageInputs = JSON.parse(GM_getValue('TMN_ARBITRAGE_INPUTS', '{}'));
@@ -259,14 +205,21 @@
             $accountSectionHeader.append($accountSectionToggleBtn);
 
             const $accountSectionContent = $('<div>', { class: 'section-content' }).css({ display: savedOverlaySectionsMinimized['account'] ? 'none' : 'block', marginTop: '8px' });
-
-            const $usernameLabel = $('<label>', { html: `Username: <span style='color: #AA0000; font-weight: bold;'>${savedUsername}</span>` }).css({ display: 'block', margin: '6px 0 0 0', padding: 0 });
-            const $passwordLabel = $('<label>', { text: 'Password:' }).css({ display: 'block', margin: '6px 0 0 0', padding: 0 });
-            const $passwordInput = $('<input>', { type: 'password', id: 'password-input' }).val(savedPassword).css({
+            const $usernameLabel = $('<label>', { html: 'Username:' }).css({ display: 'block', margin: '6px 0 0 0', padding: 0 });
+            const $usernameInput = $('<input>', { type: 'text', id: 'username-input' }).val(savedAccountInputs['Username']).css({
                 background: '#2a2f3a', color: '#eee', border: '1px solid #444', borderRadius: '6px',
                 padding: '6px', fontFamily: 'monospace', fontSize: '14px', margin: '4px 0 0 0', display: 'block'
             }).on('input', function () {
-                GM_setValue('TMN_PASSWORD', $(this).val());
+                savedAccountInputs['Username'] = $(this).val();
+                GM_setValue('TMN_ACCOUNT_INPUTS', JSON.stringify(savedAccountInputs));
+            });
+            const $passwordLabel = $('<label>', { text: 'Password:' }).css({ display: 'block', margin: '6px 0 0 0', padding: 0 });
+            const $passwordInput = $('<input>', { type: 'password', id: 'password-input' }).val(savedAccountInputs['Password']).css({
+                background: '#2a2f3a', color: '#eee', border: '1px solid #444', borderRadius: '6px',
+                padding: '6px', fontFamily: 'monospace', fontSize: '14px', margin: '4px 0 0 0', display: 'block'
+            }).on('input', function () {
+                savedAccountInputs['Password'] = $(this).val();
+                GM_setValue('TMN_ACCOUNT_INPUTS', JSON.stringify(savedAccountInputs));
             });
 
             const $togglePasswordButton = $('<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#ccc" viewBox="0 0 24 24"><path d="M12 5c-7.633 0-11 7-11 7s3.367 7 11 7 11-7 11-7-3.367-7-11-7zm0 12c-2.761 0-5-2.239-5-5 s2.239-5 5-5 5 2.239 5 5-2.239 5-5 5zm0-8c-1.657 0-3 1.343-3 3s1.343 3 3 3 3-1.343 3-3-1.343-3-3-3z"/></svg>')
@@ -279,14 +232,15 @@
             const $passwordWrapper = $('<div>').css({ position: 'relative', display: 'inline-block', width: '100%' }).append($passwordInput, $togglePasswordButton);
 
             const $captchaKeyLabel = $('<label>', { text: 'Captcha Key:' }).css({ display: 'block', margin: '6px 0 0 0', padding: 0 });
-            const $captchaKeyInput = $('<input>', { type: 'text', id: 'captcha-key-input' }).val(savedCaptchaKey).css({
+            const $captchaKeyInput = $('<input>', { type: 'text', id: 'captcha-key-input' }).val(savedAccountInputs['CaptchaKey']).css({
                 background: '#2a2f3a', color: '#eee', border: '1px solid #444', borderRadius: '6px',
                 padding: '6px', fontFamily: 'monospace', fontSize: '14px', margin: '4px 0 0 0', display: 'block'
             }).on('input', function () {
-                GM_setValue('TMN_CAPTCHA_KEY', $(this).val());
+                savedAccountInputs['CaptchaKey'] = $(this).val();
+                GM_setValue('TMN_ACCOUNT_INPUTS', JSON.stringify(savedAccountInputs));
             });
 
-            $accountSectionContent.append($usernameLabel, $passwordLabel, $passwordWrapper, $captchaKeyLabel, $captchaKeyInput);
+            $accountSectionContent.append($usernameLabel, $usernameInput, $passwordLabel, $passwordWrapper, $captchaKeyLabel, $captchaKeyInput);
             $accountSection.append($accountSectionHeader, $accountSectionContent);
 
             // ---------------- OC SETTINGS ----------------
@@ -779,16 +733,15 @@
         return run;
     })();
 
-    let notifyQueue = Promise.resolve();
-    function Notify(msg) {
-        notifyQueue = notifyQueue
-            .then(() => PostMsg(msg))
-            .then(() => new Promise(r => setTimeout(r, 2000)));
-        return notifyQueue;
+    async function Notify(msg) {
+        function sleep(ms) {
+            return new Promise(r => setTimeout(r, ms));
+        }
+        await PostMsg(msg);
+        await sleep(2000);
     }
 
-
-    function PostMsg(message) {
+    async function PostMsg(message) {
         fetch('https://ntfy.sh/TMN_Inbox_Alert', {
             method: 'POST',
             headers: {
@@ -796,6 +749,7 @@
             },
             body: message
         });
+        return;
     }
 
     async function FetchPage(url) {
@@ -1016,6 +970,7 @@
         GM_setValue('TMN_NEXT_GTA', lastGTA + 4 * 60 * 1000);
         GM_setValue('TMN_NEXT_JET_FLIGHT', lastTravel + 20 * 60 * 1000);
         GM_setValue('TMN_NEXT_FLIGHT', lastTravel + 45 * 60 * 1000);
+        return;
     }
 
     function ConvertToLocalTime(euroDateTimeStr) {
@@ -1101,15 +1056,8 @@
         return !!(userBox && passBox && recDiv && loginBtn);
     }
 
-    function UniversalCaptchaSolve(key) {
+    async function UniversalCaptchaSolve() {
         Log('[Captcha] Starting solve...');
-
-        const siteKey = key || $('.g-recaptcha').attr('data-sitekey');
-        if (!siteKey) {
-            Log('[Captcha] No sitekey found, aborting.');
-            location.href = defaultPage;
-            return;
-        }
 
         if (window._tmn_solving_captcha) {
             Log('[Captcha] Already solving, skipping.');
@@ -1122,12 +1070,12 @@
 
         GM_xmlhttpRequest({
             method: 'POST',
-            url: `https://2captcha.com/in.php?key=${TMN_CAPTCHA_KEY}&method=userrecaptcha&googlekey=${siteKey}&pageurl=${encodeURIComponent(pageUrl)}&json=1`,
-            onload: function(response) {
+            url: `https://2captcha.com/in.php?key=${TMN_CAPTCHA_KEY}&method=userrecaptcha&googlekey=${PRESOLVE_CAPTCHA_KEY}&pageurl=${encodeURIComponent(pageUrl)}&json=1`,
+            onload: async function(response) {
                 const json = JSON.parse(response.responseText);
                 if (json.status === 1) {
                     Log('[Captcha] Request accepted, polling for result...');
-                    pollUniversalCaptcha(json.request);
+                    await pollUniversalCaptcha(json.request);
                 } else {
                     Log('[Captcha] Request failed:', json.request);
                     console.log(json.request);
@@ -1136,7 +1084,7 @@
             }
         });
 
-        function pollUniversalCaptcha(requestId) {
+        async function pollUniversalCaptcha(requestId) {
             const poll = setInterval(() => {
                 GM_xmlhttpRequest({
                     method: 'GET',
@@ -1149,16 +1097,17 @@
                             if (pageUrl.includes('store.aspx?p=b')) {
                                 const token = json.request;
                                 const expiry = Date.now() + 110000;
-                                GM_setValue('TMN_BF_TOKEN', JSON.stringify({ 'token': token, 'expiry': expiry }));
+                                GM_setValue('TMN_CAPTCHA_TOKEN', JSON.stringify({ 'token': token, 'expiry': expiry }));
                                 window._tmn_solving_captcha = false;
                                 location.href = location.href;
                             } else if ((pageUrl.toLowerCase().includes('default.aspx') || pageUrl.toLowerCase().includes('jail.aspx')) && !pageUrl.toLowerCase().includes('returnurl')) {
                                 const token = json.request;
                                 const expiry = Date.now() + 110000;
-                                GM_setValue('TMN_BF_TOKEN', JSON.stringify({ 'token': token, 'expiry': expiry }));
+                                GM_setValue('TMN_CAPTCHA_TOKEN', JSON.stringify({ 'token': token, 'expiry': expiry }));
                                 Log('[Captcha] Token saved.');  
                                 clearInterval(poll);
                                 window._tmn_solving_captcha = false;
+                                return;
                             }
                             else injectUniversalCaptcha(json.request);
                         } else if (json.request !== 'CAPCHA_NOT_READY') {
@@ -1216,8 +1165,8 @@
             return;
         }
 
-        userBox.value = JSON.parse(GM_getValue('TMN_PLAYER', ''))?.name;
-        passBox.value = GM_getValue('TMN_PASSWORD', '');
+        userBox.value = TMN_PLAYER;
+        passBox.value = TMN_PASSWORD;
 
         loginBtn.disabled = false;
         loginBtn.removeAttribute('disabled');
@@ -1288,278 +1237,364 @@
         }
     }
 
-    async function MainSetup() {
-        const now = Date.now();
-        const savedScriptStates = JSON.parse(GM_getValue('TMN_SCRIPT_STATES', '{}'));
-        const savedOCInputs = JSON.parse(GM_getValue('TMN_OC_INPUTS', '{}'));
-        let fetchedPage = await FetchPage('players.aspx');
-        const playerLink = fetchedPage.find('a[style="color: #AA0000; font-weight: bold; "]');
-        const TMN_PLAYER = playerLink.text();
-        const TMN_PLAYER_PROFILE = playerLink.prop('href');
-        GM_setValue('TMN_PLAYER', JSON.stringify({name: TMN_PLAYER, profile: TMN_PLAYER_PROFILE}));
-        const currentCity = $('#ctl00_userInfo_lblcity').text().trim();
-        let checkingMailbox = false;
+    function GoToPage(url) {
+        if (isMobile()) location.href = url;
+        else SetupContentFrame(url);
+    }
 
-        await GetNextTimers();
-        /*const lnm = JSON.parse(GM_getValue('TMN_LAST_NEW_MAIL', '{}'));
-        lnm.id = 355676;
-        GM_setValue('TMN_LAST_NEW_MAIL', JSON.stringify(lnm));*/
+    const Pipeline = (() => {
+        const PIPELINE_STEPS = [
+            { id: 'ocads', state: 'AddToClassifieds', url: 'ocads.aspx?add' },
+            { id: 'arbitrage', state: 'Auto Arbitrage', url: 'trade.aspx?arbitrage' },
+            { id: 'bank', state: 'Auto Bank', url: 'playerproperty.aspx?a=' },
+            { id: 'travel', state: 'Auto Travel', url: 'travel.aspx?d=' }
+        ];
+        const SAFE_PAGES = [defaultPage, 'credits.aspx?autoheal'];
 
-        if (isMobile()) {
-            if (page.includes(defaultPage)) {
-                if (savedScriptStates['Auto Arbitrage']) location.href = 'trade.aspx?autoarbitrage';
-                else GoNextAction();
+        function getState() {
+            return GM_getValue('TMN_PIPELINE', null);
+        }
+
+        function setState(state) {
+            GM_setValue('TMN_PIPELINE', state);
+        }
+
+        function clear() {
+            GM_deleteValue('TMN_PIPELINE');
+        }
+
+        function isActive() {
+            return getState()?.active === true;
+        }
+
+        function detectExit(page) {
+            const state = getState();
+            if (!state?.active) return;
+
+            const onPipelinePage =
+                PIPELINE_STEPS.some(step => page.includes(step.url)) ||
+                SAFE_PAGES.some(p => page.includes(p));
+
+            if (!onPipelinePage) {
+                clear();
+            }
+        }
+
+        function init() {
+            const steps = {};
+            for (const step of PIPELINE_STEPS) {
+                steps[step.id] = 'pending';
+            }
+
+            setState({
+                active: true,
+                steps,
+                startedAt: Date.now()
+            });
+
+            run();
+        }
+
+        function completeStep(id) {
+            const state = getState();
+            if (!state?.active) return;
+
+            state.steps[id] = 'done';
+            setState(state);
+
+            run();
+        }
+
+        async function run() {
+            const now = Date.now();
+            const savedScriptStates = JSON.parse(GM_getValue('TMN_SCRIPT_STATES', '{}'));
+            const savedOCInputs = JSON.parse(GM_getValue('TMN_OC_INPUTS', '{}'));
+            const state = getState();
+            if (!state?.active) return;
+
+            const next = PIPELINE_STEPS.find(step => state.steps[step.id] === 'pending');
+
+            if (!next) {
+                clear();
+                if (isMobile()) {
+                    GoToPage('jail.aspx');
+                    return;
+                } else {
+                    SetupMainContentFrame();
+                    MainSetup();
+                }
+            }
+
+            if (savedScriptStates[next.state] || savedOCInputs[next.state]) {
+                if (next.id === 'ocads') {
+                    if (now > GM_getValue('TMN_NEXT_OC', Infinity)) {
+                        const fetchedPage = await FetchPage('ocads.aspx');
+                        const isAddedToClassifieds = fetchedPage.find('#ctl00_main_revOC a').filter(function () { return $(this).text().trim() === 'Pap' }).length;
+                        const isInHotCity = await isCurrentCityHot();
+                        if ((isAddedToClassifieds && !isInHotCity) || (!isAddedToClassifieds && isInHotCity)) {
+                            GoToPage(next.url);
+                            return;
+                        }
+                    }
+                    completeStep(next.id);
+                    return;
+                } else if (next.id === 'arbitrage') {
+                    GoToPage(next.url);
+                    return;
+                } else if (next.id === 'bank') {
+                    if (now > GM_getValue('TMN_AUTO_BANK_TIME', 0)) {
+                        const amount = 49999999;
+                        GoToPage(`playerproperty.aspx?a=${amount}`);
+                        return;
+                    }
+                    completeStep(next.id);
+                    return;
+                } else if (next.id === 'travel') {
+                    const nextFlight = GM_getValue('TMN_NEXT_FLIGHT');
+                    const isInHotCity = await isCurrentCityHot();
+                    if (nextFlight > now) {
+                        const higherPrecedenceLogPresent = $('#console:contains("precedence")').length;
+                        const nextFlightTime = new Date(nextFlight).toLocaleTimeString('en-NZ', { hour: 'numeric', minute: '2-digit', hour12: true });
+                        if (!higherPrecedenceLogPresent) Log(`Next Flight: ${nextFlightTime}`);
+                    } else {
+                        if (!isInHotCity) {
+                            const fetchedPage = await FetchPage('statistics.aspx');
+                            const hotCity = decodeURIComponent(fetchedPage.find("td:first-child span:contains('Swords')").nextAll("span[id^='City']").text().trim());
+                            GoToPage(`travel.aspx?d=${hotCity}`);
+                            return;
+                        }
+                    }
+                    completeStep(next.id);
+                    return;
+                }
             } else {
-                /* ----------- ON JAIL PAGE ----------- */
-                CheckMailbox();
-                setInterval( CheckMailbox, 5000);
-            }
-        } else {
-            // Reload page every 5 min incase it hangs
-            setTimeout(() => { location.href = defaultPage }, 5 * 60000);
-
-            if (!document.referrer.includes('trade.aspx?autoarbitrage') && savedScriptStates['Auto Arbitrage']) {
-                SetupContentFrame('trade.aspx?autoarbitrage');
-            } else {
-                window.matchMedia('(orientation: landscape)').addEventListener('change', SetupMainContentFrame);
-                SetupMainContentFrame();
-                CheckMailbox();
-                setInterval( CheckMailbox, 5000);
-            }
-        }
-
-        const isAvailableForOC = now > GM_getValue('TMN_NEXT_OC', Infinity);
-        if (savedOCInputs['AddToClassifieds'] && isAvailableForOC) {
-            const playerName = JSON.parse(GM_getValue('TMN_PLAYER', '{}')).name;
-            const fetchedPage = await FetchPage('ocads.aspx');
-            const isAddedToClassifieds = fetchedPage.find('#ctl00_main_revOC a').filter(function () { return $(this).text().trim() === playerName }).length;
-            const isInHotCity = await isCurrentCityHot();
-            if ((isAddedToClassifieds && !isInHotCity) || (!isAddedToClassifieds && isInHotCity)) {
-                if (isMobile()) location.href = 'ocads.aspx?add';
-                else SetupContentFrame('ocads.aspx?add');
-            }
-        }
-
-        if (savedScriptStates['Spawn Camp Bullets']) {
-            SpawnCampBullets();
-            setInterval( SpawnCampBullets, 5000 );
-        }
-
-        if (savedScriptStates['Auto Bank']) {
-            const AutoBankTime = GM_getValue('TMN_AUTO_BANK_TIME', 0);
-            if (now > AutoBankTime) {
-                const amount = 49999999;
-                location.href = `playerproperty.aspx?a=${amount}`;
+                completeStep(next.id);
                 return;
             }
         }
 
-        if (savedScriptStates['Auto Travel']) {
-            const nextFlight = GM_getValue('TMN_NEXT_FLIGHT');
-            const isInHotCity = await isCurrentCityHot();
-            if (nextFlight > now) {
-                const higherPrecedenceLogPresent = $('#console:contains("precedence")').length;
-                const nextFlightTime = new Date(nextFlight).toLocaleTimeString('en-NZ', { hour: 'numeric', minute: '2-digit', hour12: true });
-                if (!higherPrecedenceLogPresent) Log(`Next Flight: ${nextFlightTime}`);
-            } else {
-                if (!isInHotCity) {
-                    const fetchedPage = await FetchPage('statistics.aspx');
-                    const hotCity = decodeURIComponent(fetchedPage.find("td:first-child span:contains('Swords')").nextAll("span[id^='City']").text().trim());
-                    if (isMobile()) location.href = `travel.aspx?d=${hotCity}`
-                    else SetupContentFrame(`travel.aspx?d=${hotCity}`);
-                }
+        return { init, completeStep, detectExit, isActive, clear, getState, run };
+    })();
+
+    async function MainSetup() {
+        const savedScriptStates = JSON.parse(GM_getValue('TMN_SCRIPT_STATES', '{}'));
+        Log('Updating timers...');
+        await GetNextTimers();
+        Log('Checking for spawned bullets...');
+        if (savedScriptStates['Spawn Camp Bullets']) {
+            const bulletsSpawned = await SpawnCampBullets();
+            if (bulletsSpawned) return;
+        }
+        Log('Checking mail...');
+        await CheckMailbox();
+
+        if (page.includes(defaultPage)) {
+            console.log(page);
+            Log('Initiating pipeline...');
+            Pipeline.init();
+            if (isMobile()) return;
+        }
+        
+        if (savedScriptStates['Spawn Camp Bullets']) setInterval(SpawnCampBullets, 5000);
+        // Stagger intervals
+        setTimeout(() => { setInterval(CheckMailbox, 5000); }, 2500);
+        return;
+    }
+
+    async function CheckMailbox() {
+        if (checkingMailbox) return;
+        checkingMailbox = true;
+        try {
+            const fetchedPage = await FetchPage('mailbox.aspx');
+            const newMail = fetchedPage.find('#ctl00_main_gridMail .nomobile').map((n, e) => {
+            // const newMail = fetchedPage.find('#ctl00_main_gridMail .unread .nomobile').map((n, e) => {
+                const lines = $(e).text().split('\n').map(line => line.trim()).filter(line => line);
+                const author = lines[0];
+                const subject = lines[1];
+                const time = lines[2];
+                const link = $(e).find(`a[href*='mailbox']`).attr('href');
+                const id = link.split('id=')[1];
+                return { author, subject, time, link, id }
+            }).get().reverse();
+            // Process each mail sequentially to avoid race conditions
+            for (const mail of newMail) {
+                await ProcessMail(mail);
             }
+        } finally {
+            checkingMailbox = false;
+            return;
         }
 
-        async function CheckMailbox() {
-            if (checkingMailbox) return;
-            checkingMailbox = true;
-            try {
-                const fetchedPage = await FetchPage('mailbox.aspx');
-                // const newMail = fetchedPage.find('#ctl00_main_gridMail .nomobile').map((n, e) => {
-                const newMail = fetchedPage.find('#ctl00_main_gridMail .unreadmail .nomobile').map((n, e) => {
-                    const lines = $(e).text().split('\n').map(line => line.trim()).filter(line => line);
-                    const author = lines[0];
-                    const subject = lines[1];
-                    const time = lines[2];
-                    const link = $(e).find(`a[href*='mailbox']`).attr('href');
-                    const id = link.split('id=')[1];
-                    return { author, subject, time, link, id }
-                }).get().reverse();
-                // Process each mail sequentially to avoid race conditions
-                for (const mail of newMail) {
-                    await ProcessMail(mail);
-                }
-            } finally {
-                checkingMailbox = false;
+    }
+
+    async function ProcessMail(mail) {
+        const savedScriptStates = JSON.parse(GM_getValue('TMN_SCRIPT_STATES', '{}'));
+        const savedOCInputs = JSON.parse(GM_getValue('TMN_OC_INPUTS', '{}'));
+        const lastNewMail = JSON.parse(GM_getValue('TMN_LAST_NEW_MAIL', '{}'));
+
+        // return if old mail
+        console.log(mail);
+        if (mail.id > lastNewMail.id || !lastNewMail.id) {
+            GM_setValue('TMN_LAST_NEW_MAIL', JSON.stringify(mail));
+            // ✅ 1. NEW MAIL NOTIFICATION
+            if (mail.author !== TMN_PLAYER) { 
+                Notify(`New message from ${mail.author}\n${mail.subject}`);
+                return; 
             }
 
-        }
-
-        async function ProcessMail(mail) {
-            const savedScriptStates = JSON.parse(GM_getValue('TMN_SCRIPT_STATES', '{}'));
-            const savedOCInputs = JSON.parse(GM_getValue('TMN_OC_INPUTS', '{}'));
-            const lastNewMail = JSON.parse(GM_getValue('TMN_LAST_NEW_MAIL', '{}'));
-
-            // return if old mail
-            if (mail.id > lastNewMail.id || !lastNewMail.id) {
-                GM_setValue('TMN_LAST_NEW_MAIL', JSON.stringify(mail));
-                // ✅ 1. NEW MAIL NOTIFICATION
-                if (mail.author !== TMN_PLAYER) { 
-                    Notify(`New message from ${mail.author}\n${mail.subject}`);
-                    return; 
+            // ✅ 2. TRADE NOTIFICATIONS
+            if (mail.author === TMN_PLAYER &&
+                mail.subject === 'Trade Notification') {
+                const isLastTrade = $(`.GridRow:contains(${TMN_PLAYER}}):contains('Trade Notification')`).eq(0).has(`a[href='${mail.link}']`).length;
+                const fetchedPage = await FetchPage(mail.link);
+                const mailContent = fetchedPage.find('.GridRow').text().trim().split('\n').at(-1).trim();
+                await Notify(`${mail.author} - ${mail.subject}\n${mailContent}`);
+                if (savedScriptStates['Auto Arbitrage'] && isLastTrade) {
+                    if (isMobile()) location.href = 'trade.aspx?arbitrage';
+                    else SetupContentFrame('trade.aspx?arbitrage');
                 }
+                return;
+            }
 
-                // ✅ 2. TRADE NOTIFICATIONS
-                if (mail.author === TMN_PLAYER &&
-                    mail.subject === 'Trade Notification') {
+            // ✅ 3. ORGANIZED CRIME / DTM INVITES
+            const isOCInvite = mail.subject === 'Organized Crime Invitation!';
+            const isDTMInvite = mail.subject === 'DTM invitation';
+            if (mail.author === TMN_PLAYER && (isOCInvite || isDTMInvite)) {
+                const mailPage = await FetchPage(mail.link);
+                const text = mailPage.find('.GridHeader').next().text()
+                .replace(/\s*\n\s*/g, ' ')
+                .replace(/\s+/g, ' ')
+                .trim();
 
-                    const fetchedPage = await FetchPage(mail.link);
-                    const mailContent = fetchedPage.find('.GridRow').text().trim().split('\n').at(-1).trim();
-                    await Notify(`${mail.author} - ${mail.subject}\n${mailContent}`);
-                    if (savedScriptStates['Auto Arbitrage']) {
-                        if (isMobile()) location.href = 'trade.aspx?autoarbitrage';
-                        else SetupContentFrame('trade.aspx?autoarbitrage');
-                    }
-                    return;
-                }
+                const ocRegex = /Invitation! (.*?) has invited you to be (.*?) in .*?\((.*?)\).*? in (.*?)\./;
+                const dtmRegex = /invitation (.*?) has invited you to join his Drugs Transportation mission in (.*?)\./;
 
-                // ✅ 3. ORGANIZED CRIME / DTM INVITES
-                const isOCInvite = mail.subject === 'Organized Crime Invitation!';
-                const isDTMInvite = mail.subject === 'DTM invitation';
-                if (mail.author === TMN_PLAYER && (isOCInvite || isDTMInvite)) {
-                    const mailPage = await FetchPage(mail.link);
-                    const text = mailPage.find('.GridHeader').next().text()
-                    .replace(/\s*\n\s*/g, ' ')
-                    .replace(/\s+/g, ' ')
-                    .trim();
+                const match = text.match(ocRegex) || text.match(dtmRegex);
+                if (!match) return;
 
-                    const ocRegex = /Invitation! (.*?) has invited you to be (.*?) in .*?\((.*?)\).*? in (.*?)\./;
-                    const dtmRegex = /invitation (.*?) has invited you to join his Drugs Transportation mission in (.*?)\./;
+                const leader = match[1]?.trim().replace('!', '').replace(' ', '');
+                const position = match[2]?.trim();
+                const ocType = match[3]?.trim();
+                const inviteLocation = match[4]?.trim() || match[2]?.trim();
 
-                    const match = text.match(ocRegex) || text.match(dtmRegex);
-                    if (!match) return;
+                // ✅ OC auto-accept logic
+                if (ocType && savedScriptStates.OC && savedOCInputs['AutoOCPref'] !== 'Lead OC') {
+                    const leaderOK = savedOCInputs['AutoOCPref'] === 'Auto Accept Any' ||
+                            savedOCInputs['SpecificLeaderNames'] .includes(leader.toLowerCase());
 
-                    const leader = match[1]?.trim().replace('!', '').replace(' ', '');
-                    const position = match[2]?.trim();
-                    const ocType = match[3]?.trim();
-                    const inviteLocation = match[4]?.trim() || match[2]?.trim();
+                    const positionOK =
+                            savedOCInputs['PositionPref'] === 'Any' ||
+                            (savedOCInputs['PositionPref'] !== 'TP' && position !== 'Transporter') ||
+                            (savedOCInputs['PositionPref'] === 'TP' && position === 'Transporter');
 
-                    // ✅ OC auto-accept logic
-                    if (ocType && savedScriptStates.OC && savedOCInputs['AutoOCPref'] !== 'Lead OC') {
-                        const leaderOK = savedOCInputs['AutoOCPref'] === 'Auto Accept Any' ||
-                              savedOCInputs['SpecificLeaderNames'] .includes(leader.toLowerCase());
-
-                        const positionOK =
-                              savedOCInputs['PositionPref'] === 'Any' ||
-                              (savedOCInputs['PositionPref'] !== 'TP' && position !== 'Transporter') ||
-                              (savedOCInputs['PositionPref'] === 'TP' && position === 'Transporter');
-
-                        if (leaderOK && positionOK && inviteLocation.includes(currentCity)) {
-                            await Notify(`${mail.author} - OC Invite\n${leader} invited you as ${position} to ${ocType}`);
-                            LogCountdown(3000, 1000, 'Accepting invite ', () => { location.href = `${mail.link}&autoAccept` });
-                            return;
-                        } else if (!inviteLocation.includes(currentCity)){
-                            Notify(`${mail.author} - ${mail.subject}\nCan't accept invite to ${leader}'s OC as it's in a different city.`);
-                            return;
-                        }
-                    }
-
-                    // ✅ DTM auto-accept logic
-                    if (savedScriptStates.DTM && inviteLocation.includes(currentCity)) {
-                        await Notify(`${mail.author} - DTM Invite\n${leader} invited you to DTM`);
+                    if (leaderOK && positionOK && inviteLocation.includes(currentCity)) {
+                        await Notify(`${mail.author} - OC Invite\n${leader} invited you as ${position} to ${ocType}`);
                         LogCountdown(3000, 1000, 'Accepting invite ', () => { location.href = `${mail.link}&autoAccept` });
                         return;
                     } else if (!inviteLocation.includes(currentCity)){
-                        Notify(`${mail.author} - DTM Invite\nCan't accept invite to ${leader}'s DTM as it's in a different city.`);
+                        Notify(`${mail.author} - ${mail.subject}\nCan't accept invite to ${leader}'s OC as it's in a different city.`);
                         return;
                     }
                 }
 
-                // Rest
-                if (mail.author === TMN_PLAYER) {
-                    if (mail.subject === 'Organized Crime Notification') {
-                        FetchPage(mail.link);
-                        Notify(`${mail.author}\nOC Complete`);
-                    } else if (mail.subject === 'Drugs Transportation Mission') {
-                        FetchPage(mail.link);
-                        Notify(`${mail.author}\nDTM Complete`);
-                    } else if (mail.subject === "You've witnessed a murder!") {
-                        const fetchedPage = await FetchPage(mail.link);
-                        const mailContent = fetchedPage.find('.GridRow').text().trim().split('\n').at(-1).trim();
-                        Notify(`${mail.author} - ${mail.subject}\n${mailContent}`);
-                    } else {
-                        Notify(`${mail.author}\n${mail.subject}`);
-                    }
+                // ✅ DTM auto-accept logic
+                if (savedScriptStates.DTM && inviteLocation.includes(currentCity)) {
+                    await Notify(`${mail.author} - DTM Invite\n${leader} invited you to DTM`);
+                    LogCountdown(3000, 1000, 'Accepting invite ', () => { location.href = `${mail.link}&autoAccept` });
+                    return;
+                } else if (!inviteLocation.includes(currentCity)){
+                    Notify(`${mail.author} - DTM Invite\nCan't accept invite to ${leader}'s DTM as it's in a different city.`);
+                    return;
+                }
+            }
+
+            // Rest
+            if (mail.author === TMN_PLAYER) {
+                if (mail.subject === 'Organized Crime Notification') {
+                    FetchPage(mail.link);
+                    Notify(`${mail.author}\nOC Complete`);
+                } else if (mail.subject === 'Drugs Transportation Mission') {
+                    FetchPage(mail.link);
+                    Notify(`${mail.author}\nDTM Complete`);
+                } else if (mail.subject === "You've witnessed a murder!") {
+                    const fetchedPage = await FetchPage(mail.link);
+                    const mailContent = fetchedPage.find('.GridRow').text().trim().split('\n').at(-1).trim();
+                    Notify(`${mail.author} - ${mail.subject}\n${mailContent}`);
+                } else {
+                    Notify(`${mail.author}\n${mail.subject}`);
                 }
             }
         }
+        return;
+    }
 
-        function SetupMainContentFrame() {
-            const consoleContent = $('#console > span')?.html();
-            $('#divContent').html('').css({
-                'display': 'grid',
-                'grid-template-rows': '30px 1fr 30px',
-                'grid-template-areas': `'log' 'content' 'heal'`
-            });
-            if (window.matchMedia('(orientation: landscape)').matches) {
-                const $contentFrame = $('#content-frame').length && $('#content-frame') || $('<div>', { id: 'content-frame' });
-                $contentFrame.css({
-                    'display': 'grid',
-                    'grid-template-columns': '1fr 1fr',
-                    'grid-template-rows': '1fr 1fr',
-                    'grid-template-areas': `'a b' 'c d'`,
-                    'grid-area': 'content',
-                    'width': '100%',
-                    'height': '100%'
-                }).html(`
-                    <iframe src='/authenticated/jail.aspx' style='grid-area: a; width: 100%; height: 100%; box-sizing: border-box;'></iframe>
-                    <iframe src='/authenticated/crimes.aspx' style='grid-area: b; width: 100%; height: 100%; box-sizing: border-box;'></iframe>
-                    <iframe src='/authenticated/crimes.aspx?p=b' style='grid-area: c; width: 100%; height: 100%; box-sizing: border-box;'></iframe>
-                    <iframe src='/authenticated/crimes.aspx?p=g' style='grid-area: d; width: 100%; height: 100%; box-sizing: border-box;'></iframe>`);
-                $('#divContent').append($contentFrame, `<iframe src='/authenticated/credits.aspx?autoheal' style='grid-area: heal; width: 100%; height: 100%; box-sizing: border-box;'></iframe>`);
-            } else {
-                const $contentFrame = $('#content-frame').length && $('#content-frame') || $('<div>', { id: 'content-frame' });
-                $contentFrame.css({
-                    'display': 'grid',
-                    'grid-template-columns': '1fr',
-                    'grid-template-rows': '1fr repeat',
-                    'grid-template-areas': ` 'a' 'b' 'c' 'd'`,
-                    'grid-area': 'content',
-                    'width': '100%',
-                    'height': '100%'
-                }).html(`
-                    <iframe src='/authenticated/jail.aspx' style='grid-area: a; width: 100%; height: 100%; box-sizing: border-box;'></iframe>
-                    <iframe src='/authenticated/crimes.aspx' style='grid-area: b; width: 100%; height: 100%; box-sizing: border-box;'></iframe>
-                    <iframe src='/authenticated/crimes.aspx?p=b' style='grid-area: c; width: 100%; height: 100%; box-sizing: border-box;'></iframe>
-                    <iframe src='/authenticated/crimes.aspx?p=g' style='grid-area: d; width: 100%; height: 100%; box-sizing: border-box;'></iframe>`);
-                $('#divContent').append($contentFrame, `<iframe src='/authenticated/credits.aspx?autoheal' style='grid-area: heal; width: 100%; height: 100%; box-sizing: border-box;'></iframe>`);
-            }
-            $('#console > span').html(consoleContent);
-        }
-
-        function SetupContentFrame(url) {
-            const consoleContent = $('#console > span')?.html();
-            $('#divContent').html('').css({
-                'display': 'grid',
-                'grid-template-rows': '30px 1fr 30px',
-                'grid-template-areas': `'log' 'content' 'heal'`
-            });
-            const $contentFrame = $('#content-frame').length && $('#content-frame') || $('<div>', { id: 'content-frame' });
+    function SetupMainContentFrame() {
+        const consoleContent = window.top.$('#console > span')?.html();
+        const $divContent = window.top.$('#divContent');
+        const $contentFrame = window.top.$('#content-frame').length && window.top.$('#content-frame') || $('<div>', { id: 'content-frame' });
+        if (!$divContent.find($contentFrame).length) $divContent.html('');
+        $divContent.css({
+            'display': 'grid',
+            'grid-template-rows': '30px 1fr 30px',
+            'grid-template-areas': `'log' 'content' 'heal'`
+        });
+        if (window.matchMedia('(orientation: landscape)').matches) {
             $contentFrame.css({
                 'display': 'grid',
-                'grid-template-columns': '1fr',
-                'grid-template-rows': '1fr',
-                'grid-template-areas': `'a'`,
+                'grid-template-columns': '1fr 1fr',
+                'grid-template-rows': '1fr 1fr',
+                'grid-template-areas': `'a b' 'c d'`,
                 'grid-area': 'content',
                 'width': '100%',
                 'height': '100%'
             }).html(`
-                <iframe src='/authenticated/${url}' style='grid-area: a; width: 100%; height: 100%; box-sizing: border-box;'></iframe>
-            `);
-            $('#divContent').append($contentFrame, `<iframe src='/authenticated/credits.aspx?autoheal' style='width: 100%; height: 100%; grid-area: heal; box-sizing: border-box;'></iframe>`);
-            $('#console > span').html(consoleContent);
+                <iframe src='/authenticated/jail.aspx' style='grid-area: a; width: 100%; height: 100%; box-sizing: border-box;'></iframe>
+                <iframe src='/authenticated/crimes.aspx' style='grid-area: b; width: 100%; height: 100%; box-sizing: border-box;'></iframe>
+                <iframe src='/authenticated/crimes.aspx?p=b' style='grid-area: c; width: 100%; height: 100%; box-sizing: border-box;'></iframe>
+                <iframe src='/authenticated/crimes.aspx?p=g' style='grid-area: d; width: 100%; height: 100%; box-sizing: border-box;'></iframe>`);
+            // window.top.$('#divContent').append($contentFrame, `<iframe src='/authenticated/credits.aspx?autoheal' style='grid-area: heal; width: 100%; height: 100%; box-sizing: border-box;'></iframe>`);
+        } else {
+            $contentFrame.css({
+                'display': 'grid',
+                'grid-template-columns': '1fr',
+                'grid-template-rows': '1fr repeat',
+                'grid-template-areas': ` 'a' 'b' 'c' 'd'`,
+                'grid-area': 'content',
+                'width': '100%',
+                'height': '100%'
+            }).html(`
+                <iframe src='/authenticated/jail.aspx' style='grid-area: a; width: 100%; height: 100%; box-sizing: border-box;'></iframe>
+                <iframe src='/authenticated/crimes.aspx' style='grid-area: b; width: 100%; height: 100%; box-sizing: border-box;'></iframe>
+                <iframe src='/authenticated/crimes.aspx?p=b' style='grid-area: c; width: 100%; height: 100%; box-sizing: border-box;'></iframe>
+                <iframe src='/authenticated/crimes.aspx?p=g' style='grid-area: d; width: 100%; height: 100%; box-sizing: border-box;'></iframe>`);
+            // window.top.$('#divContent').append($contentFrame, `<iframe src='/authenticated/credits.aspx?autoheal' style='grid-area: heal; width: 100%; height: 100%; box-sizing: border-box;'></iframe>`);
         }
+        window.top.$('#console > span').html(consoleContent);
+    }
+
+    function SetupContentFrame(url) {
+        const consoleContent = window.top.$('#console > span').html();
+        const $divContent = window.top.$('#divContent');
+        const $contentFrame = window.top.$('#content-frame').length && window.top.$('#content-frame') || $('<div>', { id: 'content-frame' });
+        if (!$divContent.find($contentFrame).length) $divContent.html('');
+        $divContent.css({
+            'display': 'grid',
+            'grid-template-rows': '30px 1fr 30px',
+            'grid-template-areas': `'log' 'content' 'heal'`
+        });
+        $contentFrame.css({
+            'display': 'grid',
+            'grid-template-columns': '1fr',
+            'grid-template-rows': '1fr',
+            'grid-template-areas': `'a'`,
+            'grid-area': 'content',
+            'width': '100%',
+            'height': '100%'
+        }).html(`
+            <iframe src='/authenticated/${url}' style='grid-area: a; width: 100%; height: 100%; box-sizing: border-box;'></iframe>
+        `);
+        $divContent.append($contentFrame, `<iframe src='/authenticated/credits.aspx?autoheal' style='width: 100%; height: 100%; grid-area: heal; box-sizing: border-box;'></iframe>`);
+        window.top.$('#console > span').html(consoleContent);
     }
 
     function iFrameSetup() {
@@ -1619,7 +1654,8 @@
         const now = Date.now();
         const sentenceLength = parseInt(GM_getValue('TMN_SENTENCE_LENGTH', '')) || 0;
         const lblMsg = $('#ctl00_lblMsg').text();
-        if (lblMsg.includes('failed') || lblMsg.includes('You cannot load')) {
+        if (lblMsg == '' && isMobile()) await MainSetup();
+        else if (lblMsg.includes('failed') || lblMsg.includes('You cannot load')) {
             location.href = location.href;
         } else if (lblMsg.includes('seconds')) {
             if (isMobile()) await MainSetup();
@@ -1659,18 +1695,16 @@
             }, 1000);
         } else {
             if (savedScriptStates.Jail) {
-                const nextJetFlight = GM_getValue('TMN_NEXT_JET_FLIGHT', 0);
+                const nextJetFlight = GM_getValue('TMN_NEXT_FLIGHT', Infinity) - 25 * 60000;
                 if (savedScriptStates['Spawn Camp Bullets'] && nextJetFlight - now < 0) {
                     Log('Pausing jail script. Spawn camp bullets takes precedence.');
                     if (isMobile()) {
-                        MainSetup();
                         setInterval(GoNextAction, 1000);
                     } else return;
                 }
                 else RandomBreakClick();
             } else if (isMobile()) {
                 Log('Looping...');
-                MainSetup();
                 setInterval(GoNextAction, 1000);
             }
         }
@@ -1870,7 +1904,6 @@
 
     function OCScript() {
         //https://www.tmn2010.net/authenticated/organizedcrime.aspx?act=accept&ocid=3288&pos=WeaponMaster
-        const TMN_PLAYER = JSON.parse(GM_getValue('TMN_PLAYER', '')).name;
         const savedScriptStates = JSON.parse(GM_getValue('TMN_SCRIPT_STATES', '{}'));
         const savedOCInputs = JSON.parse(GM_getValue('TMN_OC_INPUTS', '{}'));
         const startOCBtn = savedOCInputs['LeaderInputs']['Type'] === 'National Bank' ? $('#ctl00_main_btnStartOCRobBank') : savedOCInputs['LeaderInputs']['Type'] === 'Casino' ? $('#ctl00_main_btnStartOCRobCasino') : $('#ctl00_main_btnStartOCRobArmoury');
@@ -1878,7 +1911,6 @@
         const lblMsg = $('#ctl00_lblMsg');
 
         if ($playerRow.length) GM_setValue('TMN_NEXT_OC', 'Doing One');
-        console.log(GM_getValue('TMN_NEXT_OC'));
         if (!savedScriptStates.OC) return;
 
         if (lblMsg.text().includes('jail')) {
@@ -1993,8 +2025,7 @@
 
     function DTMScript() {
         const savedScriptStates = JSON.parse(GM_getValue('TMN_SCRIPT_STATES', '{}'));
-        const savedUsername = JSON.parse(GM_getValue('TMN_PLAYER', '{ "name": "TMN_PLAYER" }')).name;
-        const $playerRow = $(`tr:contains(${savedUsername})`);
+        const $playerRow = $(`tr:contains(${TMN_PLAYER})`);
         if ($playerRow.length) GM_setValue('TMN_NEXT_DTM', 'Doing One');
         if (!savedScriptStates.DTM) return;
 
@@ -2050,20 +2081,13 @@
     }
 
     async function AddToClassifieds() {
-        const playerName = JSON.parse(GM_getValue('TMN_PLAYER', '{}')).name;
-        const isAddedToClassifieds = $('#ctl00_main_revOC a').filter(function () { return $(this).text().trim() === playerName }).length;
         const lblMsg = $('#ctl00_lblMsg');
         const addBtn = $('#ctl00_main_btnAddOC');
-        const isInHotCity = await isCurrentCityHot();
 
-        if (isAddedToClassifieds && !isInHotCity) {
-            addBtn.click();
-            //remove
-        } else if (lblMsg.text() == '') addBtn.click()
+        if (lblMsg.text() == '') addBtn.click()
         else if (lblMsg.text().includes('It seems like you are unavailable to OC right now.')) LogCountdown(5000, 1000, 'Retrying ', () => { addBtn.click() })
         else {
-            if (isMobile()) GoNextAction()
-            else window.top.location.href = defaultPage;
+            Pipeline.completeStep('ocads');
         }
     }
 
@@ -2074,18 +2098,17 @@
         await new Promise(resolve => setTimeout(resolve, 1000));
 
         const savedScriptStates = JSON.parse(GM_getValue('TMN_SCRIPT_STATES', '{}'));
-        const savedUsername = JSON.parse(GM_getValue('TMN_PLAYER', '{ "name": "TMN_PLAYER" }')).name;
         if (!savedScriptStates['Auto Arbitrage']) return;
 
         const MAX_ACTIVE_OFFERS = 5;
         const activeCreditOffers = $('#ctl00_main_pnlCreditOffers table.smallerfonttable tr').filter(function () {
-            return $(this).find('td').first().text().trim().includes(savedUsername);
+            return $(this).find('td').first().text().trim().includes(TMN_PLAYER);
         }).length;
         const activeBulletOffers = $('#ctl00_main_pnlBulletOffers table.smallerfonttable tr').filter(function () {
-            return $(this).find('td').first().text().trim().includes(savedUsername);
+            return $(this).find('td').first().text().trim().includes(TMN_PLAYER);
         }).length;
         const activeMoneyOffers = $('#ctl00_main_pnlMoneyOffers table.smallerfonttable tr').filter(function () {
-            return $(this).find('td').first().text().trim().includes(savedUsername);
+            return $(this).find('td').first().text().trim().includes(TMN_PLAYER);
         }).length;
         const totalActiveOffers = activeCreditOffers + activeBulletOffers + activeMoneyOffers;
         const savedArbitrageInputs = JSON.parse(GM_getValue('TMN_ARBITRAGE_INPUTS', '{}'));
@@ -2118,14 +2141,13 @@
             } else if (activeMoneyOffers < MAX_ACTIVE_OFFERS && activeCreditOffers > 0) {
                 // Cancel credit offer
                 const firstCancelButton = $('#ctl00_main_pnlCreditOffers table.smallerfonttable tr').filter(function () {
-                    return $(this).find('td').first().text().trim().includes(savedUsername);
+                    return $(this).find('td').first().text().trim().includes(TMN_PLAYER);
                 }).first().find('a:contains("Trade")')[0];
                 LogCountdown(3000, 1000, 'Cancelling credit offer', () => { firstCancelButton.click() });
             } else {
                 // Max money offers
                 // End arbitrage
-                if (isMobile()) location.href = 'jail.aspx'
-                else window.top.location.href = defaultPage;
+                Pipeline.completeStep('arbitrage');
             }
         } else if (activeCreditOffers < MAX_CREDIT_OFFERS && totalActiveOffers < MAX_ACTIVE_OFFERS && creditsOnHand >= sellCreditsQuantity) {
             // Create credit offer
@@ -2136,8 +2158,7 @@
             LogCountdown(3000, 1000, 'Creating credit offer', () => { $postButton.click() });
         } else {
             // end arbitrage
-            if (isMobile()) location.href = 'jail.aspx'
-            else window.top.location.href = defaultPage;
+            Pipeline.completeStep('arbitrage');
         }
     }
 
@@ -2159,7 +2180,7 @@
             LogCountdown(5000, 1000, 'Depositing money', () => depositBtn.click());
         } else {
             GM_setValue('TMN_AUTO_BANK_TIME', GetAvailableTime($('#ctl00_main_lblTimeLeft').text()));
-            LogCountdown(5000, 1000, 'Withdraw not ready. Redirecting', () => { window.top.location.href = defaultPage; } );
+            Pipeline.completeStep('bank');
         }
     }
 
@@ -2190,10 +2211,10 @@
             flyBtn.click();
         } else if (nextFlight) {
             GM_setValue('TMN_NEXT_FLIGHT', GetAvailableTime(lblMsg) - 0 * 60000);
-            window.top.location.href = defaultPage;
+            Pipeline.completeStep('travel');
         } else if (welcomeMsg.includes('Welcome')/* || lblMsg.includes('travel again')*/) {
             GM_setValue('TMN_NEXT_FLIGHT', Date.now() + 45 * 60000);
-            setTimeout(() => { window.top.location.href = defaultPage }, 500);
+            Pipeline.completeStep('travel');
         } else {
             $(`label:contains(${destination})`).click();
             //setTimeout(() => { $('#ctl00_main_btnTravelNormal').click() }, Math.random() * 2000 + 3000);
@@ -2271,20 +2292,19 @@
 
     function BFScript() {
         const now = Date.now();
-        const BF_SITE_KEY = "6LfhsUcUAAAAANgy-ecJurYuIiSVtwDq_a9G3jUM";
-        const BF_TOKEN = JSON.parse(GM_getValue('TMN_BF_TOKEN', '{}'));
+        const savedCaptchaToken = JSON.parse(GM_getValue('TMN_CAPTCHA_TOKEN', '{ "token": null, "expiry": "0" }'));
         const $divContentIn = $('#divContentIn');
         const $presolveCaptchaBtn = $('<button>', {id: 'presolve-captcha-button', text: 'Presolve Captcha' }).on('click', function(e) {
             e.preventDefault();
-            UniversalCaptchaSolve(BF_SITE_KEY);
+            UniversalCaptchaSolve();
         }).appendTo($divContentIn);
-        $divContentIn.append(`<br>Current token valid until: <span id="token-expiry" style="color:${BF_TOKEN.expiry && now > BF_TOKEN.expiry ? 'red' : '#10af10'}">${BF_TOKEN.expiry && now > BF_TOKEN.expiry ? 'EXPIRED' : BF_TOKEN.expiry && new Date(BF_TOKEN.expiry).toLocaleTimeString() || ''}<span>`);
+        $divContentIn.append(`<br>Current token valid until: <span id="token-expiry" style="color:${savedCaptchaToken.expiry && now > savedCaptchaToken.expiry ? 'red' : '#10af10'}">${savedCaptchaToken.expiry && now > savedCaptchaToken.expiry ? 'EXPIRED' : savedCaptchaToken.expiry && new Date(savedCaptchaToken.expiry).toLocaleTimeString() || ''}<span>`);
         const lblMsg = $("#ctl00_lblMsg").text();
-        const MAX_PURCHASE_AMOUNT = $('#ctl00_userInfo_lblcity').text().includes('Sydney') ? 400 : 500;
-        const PURCHASE_CD = $('#ctl00_userInfo_lblcity').text().includes('Sydney') ? 16500 : 6000;
+        const maxPurchaseAmount = $('#ctl00_userInfo_lblcity').text().includes('Sydney') ? 400 : 500;
+        const purchaseCD = $('#ctl00_userInfo_lblcity').text().includes('Sydney') ? 16500 : 6000;
         const bulletsAvailable = [ $("#ctl00_main_lblbullet1").text() * 1, $("#ctl00_main_lblbullet2").text() * 1 ];
         const bulletType = bulletsAvailable[0] > 0 ? 0 : bulletsAvailable[1] > 0 ? 1 : 0;
-        const purchaseAmount = Math.min(bulletsAvailable[bulletType], MAX_PURCHASE_AMOUNT) == 0 ? Math.min(bulletsAvailable[1 - bulletType], MAX_PURCHASE_AMOUNT) == 0 ? 0 : Math.min(bulletsAvailable[1 - bulletType], MAX_PURCHASE_AMOUNT) : Math.min(bulletsAvailable[bulletType], MAX_PURCHASE_AMOUNT);
+        const purchaseAmount = Math.min(bulletsAvailable[bulletType], maxPurchaseAmount) == 0 ? Math.min(bulletsAvailable[1 - bulletType], maxPurchaseAmount) == 0 ? 0 : Math.min(bulletsAvailable[1 - bulletType], maxPurchaseAmount) : Math.min(bulletsAvailable[bulletType], maxPurchaseAmount);
         const submit = document.querySelector('#ctl00_main_MyScriptTest_btnSubmit') || document.querySelector('#ctl00_main_btnLogin');
 
         setTimeout(() => { location.href = defaultPage }, 3 * 60000);
@@ -2296,12 +2316,12 @@
         if (!submit) {
             if (purchaseAmount == 0) {
                 // if (document.referrer.includes('store.aspx?p=b&pur=1')) location.href = defaultPage
-                if (document.referrer.includes('store.aspx?p=b') && Date.now() > BF_TOKEN.expiry) location.href = defaultPage
+                if (document.referrer.includes('store.aspx?p=b') && Date.now() > savedCaptchaToken.expiry) location.href = defaultPage
                 else pollBFTimer = setInterval( PollBF, 2000);
             } else if (lblMsg.includes("again") || lblMsg.includes("The Bullets Factory doesn't have that many")) {
                 setTimeout(() => { location.href = location.href }, 500);
             } else if (lblMsg.includes("bought")) {
-                setTimeout(() => { location.href = location.href }, PURCHASE_CD);
+                setTimeout(() => { location.href = location.href }, purchaseCD);
             } else {
                 $("#ctl00_main_txtbullets").val(purchaseAmount);
                 $("#ctl00_main_ddlbullettype").val(bulletType + 1);
@@ -2324,16 +2344,16 @@
             $presolveCaptchaBtn.click();
         }
 
-        if (now > BF_TOKEN.expiry) return;
+        if (now > savedCaptchaToken.expiry) return;
 
         const detectTextareaInterval = setInterval(() => {
             const textarea = document.querySelector('textarea[name="g-recaptcha-response"]');
             if (textarea) {
                 clearInterval(detectTextareaInterval);
-                BF_TOKEN.expiry = Date.now();
-                GM_setValue('TMN_BF_TOKEN', JSON.stringify(BF_TOKEN));
+                savedCaptchaToken.expiry = Date.now();
+                GM_setValue('TMN_CAPTCHA_TOKEN', JSON.stringify(savedCaptchaToken));
                 textarea.style.display = 'block';
-                textarea.value = BF_TOKEN.token;
+                textarea.value = savedCaptchaToken.token;
                 Log('[Captcha] Token injected, submitting...');
                 submit.click();
             }
@@ -2352,7 +2372,7 @@
         const now = Date.now()
 
         if (isWaitingForSpawningBullets() && nextSydneySpawnTime - now <= 120000 && nextSydneySpawnTime - now >= 115000) {
-            UniversalCaptchaSolve('6LfhsUcUAAAAANgy-ecJurYuIiSVtwDq_a9G3jUM');
+            await UniversalCaptchaSolve('6LfhsUcUAAAAANgy-ecJurYuIiSVtwDq_a9G3jUM');
         }
 
         if (hasFlown && document.referrer.includes("travel")) {
@@ -2383,7 +2403,6 @@
                     if (nextSydneySpawnTime == 0 || now.getTime() > nextSydneySpawnTime) {
                         if (text.includes('Sydney') && text.includes('FMJ')) {
                             Log('Next Sydney BF spawn time updated.');
-                            console.log(shoutDate.getTime() + 120 * 60000);
                             GM_setValue('TMN_NEXT_SYDNEY_SPAWN_TIME', shoutDate.getTime() + 120 * 60000);
                             break;
                         }
@@ -2404,8 +2423,10 @@
                         if (now >= nextJetFlight) window.top.location.href = `travel.aspx?d=${destCity}&bb=true`;
                         break;
                     }
+                    return true;
                 }
             }
+            return;
         }
     }
 
@@ -2626,4 +2647,57 @@
         $crimesStats.text(`${$crimesStats.text().split(' /')[0] * 1 + ADD_CRIMES} / 40`);
         $gtaStats.text(`${$gtaStats.text().split(' /')[0] * 1 + ADD_GTA} / 70`);
     }
+
+    GM_registerMenuCommand('Clear all data', () => {
+        if (!window.confirm('Clear all data?')) return;
+        GM_deleteValue('TMN_ACCOUNT_INPUTS');
+        GM_deleteValue('TMN_ARBITRAGE_INPUTS');
+        //GM_deleteValue('TMN_CAPTCHA_KEY');
+        GM_deleteValue('TMN_CAPTCHA_TOKEN');
+        GM_deleteValue('TMN_EXPERIENCE');
+        GM_deleteValue('TMN_LAST_NEW_MAIL');
+        GM_deleteValue('TMN_NEXT_SYDNEY_SPAWN_TIME');
+        GM_deleteValue('TMN_NEXT_BOOZE');
+        GM_deleteValue('TMN_NEXT_CRIME');
+        GM_deleteValue('TMN_NEXT_DTM');
+        GM_deleteValue('TMN_NEXT_FLIGHT');
+        GM_deleteValue('TMN_NEXT_GTA');
+        GM_deleteValue('TMN_NEXT_JET_FLIGHT');
+        GM_deleteValue('TMN_NEXT_OC');
+        GM_deleteValue('TMN_OC_INPUTS');
+        GM_deleteValue('TMN_OVERLAY_SECTIONS_MINIMIZED');
+        GM_deleteValue('TMN_SCRIPT_STATES');
+        GM_deleteValue('TMN_SENTENCE_LENGTH');
+    });
+
+    if (!page.endsWith('trade.aspx')) {
+        const script = document.createElement('script');
+        script.textContent = 'window.confirm = () => true;';
+        document.documentElement.appendChild(script);
+    }
+    if (page.includes('login.aspx')) DoLogin();
+    if (page.endsWith(defaultPage)) MainSetup();
+    //if (iFramePages.includes(page.split('/authenticated/')[1])) iFrameSetup();
+    if (iFramePages.some(p => page.includes(p))) iFrameSetup();
+    if (page.endsWith('jail.aspx')) JailScript();
+    if (page.endsWith('crimes.aspx')) CrimesScript();
+    if (page.endsWith('crimes.aspx?p=g')) GTAScript();
+    if (page.endsWith('crimes.aspx?p=b')) BoozeScript();
+    if (page.includes('mailbox.aspx') && page.includes('autoaccept')) AcceptInvites();
+    if (page.endsWith('organizedcrime.aspx') || page.includes('organizedcrime.aspx?act=') || page.includes('store.aspx?p=w') ) OCScript();
+    if (page.endsWith('ocads.aspx?add')) AddToClassifieds();
+    if (page.includes('organizedcrime.aspx?p=dtm')) DTMScript();
+    if (page.includes('trade.aspx?arbitrage')) AutoArbitrage();
+    if (page.includes('playerproperty.aspx?a=')) AutoBank();
+    if (page.includes('credits.aspx?autoheal')) AutoHeal();
+    if (page.includes('travel.aspx?d=') && page.includes('&bb=true')) SpawnCampBullets();
+    if (page.includes('travel.aspx?d=')) AutoTravel();
+    if (page.endsWith('crimes.aspx?scriptcheck')) UniversalCaptchaSolve();
+    if (page.includes('playerproperty.aspx?p=g&cleanup')) GarageCleanup();
+    if (page.includes('store.aspx?p=b')) BFScript();
+    if (page.includes('doubleup.aspx')) AutoDup();
+    if (page.includes('mailbox.aspx?p=s')) FreePhone();
+    if (page.endsWith('trade.aspx')) TradeQOL();
+    if (page.includes('statistics.aspx?p=p')) PapStats();
+    if (page.includes('players.aspx')) TwentyFourFinder();
 })();

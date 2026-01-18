@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name               Bilibili 解鎖杜比全景聲 & 8K & 開啟 HDR & 直播畫質PRO
 // @name:zh-CN         Bilibili 解锁杜比全景声 & 8K & 开启 HDR & 直播画质PRO
-// @version            2.7.1.0.7
+// @version            2.7.1.1.8
 // @description        為 B站 Windows 平台 解鎖杜比全景聲 & 8K &開啟 HDR &直播畫質PRO
 // @description:zh-CN  为 B站 Windows 平台 解锁杜比全景声 & 8K &开启 HDR &直播画质PRO
 // @author             AlexLI(tkp206093)
@@ -16,6 +16,7 @@
 // @match              *://www.bilibili.com/bangumi*
 // @match              *://www.bilibili.com/watchroom*
 // @match              *://www.bilibili.com/medialist*
+// @match              *://www.bilibili.com/festival*
 // @match              *://bangumi.bilibili.com*
 // @match              *://live.bilibili.com/*
 // @icon               https://www.google.com/s2/favicons?domain=bilibili.com
@@ -40,6 +41,6 @@
         return originalSetItem.apply(this,arguments);
     };
     Object.defineProperty(navigator, 'userAgent', {
-        value: "Mozilla/5.0 (Macintosh; Intel Mac OS X 15_7_2) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0 Safari/605.1.15"
+        value: "Mozilla/5.0 (Macintosh; Intel Mac OS X 15_7_3) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0 Safari/605.1.15"
     });
 })();

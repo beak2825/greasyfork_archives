@@ -8,7 +8,7 @@
 // @grant         GM_getValue
 // @resource      theList https://files.catbox.moe/idfplf.json
 // @homepageURL   https://web.archive.org/web/20210415002314/https://holocaustdeprogrammingcourse.com/
-// @version       1488.0.5
+// @version       1488.0.6
 // @license       GNU GPLv3
 // @namespace https://greasyfork.org/users/1185877
 // @downloadURL https://update.greasyfork.org/scripts/480944/%22Nonfren%20Radar%22.user.js
@@ -102,6 +102,7 @@
           nodeName === 'pre' ||
           nodeName === 'kbd' ||
           nodeName === 'samp' ||
+          nodeName === 'xmp' ||
           currentNode.isContentEditable) {
         return;
       }

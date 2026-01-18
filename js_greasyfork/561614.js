@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         gying TMDB 助手
 // @namespace    http://tampermonkey.net/
-// @version      1.2
+// @version      1.3
 // @description  在标题下方新起一行展示 {tmdbid=id}，不影响原标题样式
 // @author       Gemini
 // @match        *://www.gying.net/mv/*
@@ -54,51 +54,72 @@
 
         if (!imdbId) return;
 
-        const url = `https://api.tmdb.org/3/find/${imdbId}?api_key=${apiKey}&external_source=imdb_id&language=zh-CN`;
+        // 1. 第一次请求：通过 IMDb ID 查找对应的类型
+        const findUrl = `https://api.tmdb.org/3/find/${imdbId}?api_key=${apiKey}&external_source=imdb_id&language=zh-CN`;
 
         GM_xmlhttpRequest({
             method: "GET",
-            url: url,
+            url: findUrl,
             onload: function(res) {
                 if (res.status === 200) {
                     const data = JSON.parse(res.responseText);
-                    processData(data);
+                    processFindData(data, apiKey);
                 }
             }
         });
     };
 
-    const processData = (data) => {
-        let item = null;
+    const processFindData = (data, apiKey) => {
+        // 匹配电影
         if (data.movie_results?.length > 0) {
             const res = data.movie_results[0];
-            item = { name: res.title, date: res.release_date, id: res.id };
-        } else if (data.tv_results?.length > 0) {
-            const res = data.tv_results[0];
-            item = { name: res.name, date: res.first_air_date, id: res.id };
+            renderTag(res.title, res.release_date, res.id);
         }
-
-        if (item) {
-            const year = item.date ? item.date.split('-')[0] : '未知';
-            const text = `${item.name} (${year}) {tmdbid=${item.id}}`;
-            render(text);
+        // 匹配剧集 (直接匹配到剧集主体)
+        else if (data.tv_results?.length > 0) {
+            const res = data.tv_results[0];
+            renderTag(res.name, res.first_air_date, res.id);
+        }
+        // 关键：匹配到单集 (需要二次查询获取 show 详情)
+        else if (data.tv_episode_results?.length > 0) {
+            const showId = data.tv_episode_results[0].show_id;
+            fetchTvDetail(showId, apiKey);
         }
     };
 
-    const render = (text) => {
+    // 二次查询函数：获取剧集详情
+    const fetchTvDetail = (showId, apiKey) => {
+        const detailUrl = `https://api.tmdb.org/3/tv/${showId}?api_key=${apiKey}&language=zh-CN`;
+
+        GM_xmlhttpRequest({
+            method: "GET",
+            url: detailUrl,
+            onload: function(res) {
+                if (res.status === 200) {
+                    const data = JSON.parse(res.responseText);
+                    // 拿到剧集的中文名和首播年份
+                    renderTag(data.name, data.first_air_date, data.id);
+                }
+            }
+        });
+    };
+
+    const renderTag = (name, date, id) => {
+        const year = date ? date.split('-')[0] : '未知';
+        const text = `${name} (${year}) {tmdbid=${id}}`;
+
         const h1 = document.querySelector('.article-header h1') || document.querySelector('h1');
         if (!h1) return;
 
-        // 创建一个外层容器实现强制换行
         const container = document.createElement('div');
-        container.style.marginTop = '8px'; // 与原标题保持一点间距
-        container.style.clear = 'both';    // 清除浮动干扰
+        container.style.marginTop = '8px';
+        container.style.clear = 'both';
 
         const btn = document.createElement('span');
         btn.id = 'tmdb-copy-btn';
         btn.innerText = `[ ${text} ]`;
         btn.title = "点击复制，Ctrl+点击 重置 API Key";
-        
+
         Object.assign(btn.style, {
             display: 'inline-block',
             padding: '4px 12px',
@@ -124,7 +145,7 @@
             btn.innerText = "✅ 已复制成功！";
             btn.style.backgroundColor = '#21d07a';
             btn.style.color = 'white';
-            
+
             setTimeout(() => {
                 btn.innerText = oldText;
                 btn.style.backgroundColor = 'rgba(1, 180, 228, 0.1)';
@@ -133,8 +154,6 @@
         };
 
         container.appendChild(btn);
-        
-        // 插入到 h1 标签的后面，而不是里面，这样绝对不会影响 h1 原有的 CSS 样式
         h1.parentNode.insertBefore(container, h1.nextSibling);
     };
 

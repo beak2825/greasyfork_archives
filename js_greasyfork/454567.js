@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         快速查包
 // @namespace    fsh
-// @version      1.0.4
+// @version      1.0.13
 // @description  快速跳转至指定包或指定分支
 // @author       05128
 // @match        *://ci.meitu.city/*
@@ -14,13 +14,14 @@
 // @grant        GM_addStyle
 // @grant        GM_deleteValue
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js
-// @license MIT
+// @homepage     https://greasyfork.org/zh-CN/scripts/454567-%E5%BF%AB%E9%80%9F%E6%9F%A5%E5%8C%85
+// @license      MIT
 // @downloadURL https://update.greasyfork.org/scripts/454567/%E5%BF%AB%E9%80%9F%E6%9F%A5%E5%8C%85.user.js
 // @updateURL https://update.greasyfork.org/scripts/454567/%E5%BF%AB%E9%80%9F%E6%9F%A5%E5%8C%85.meta.js
 // ==/UserScript==
 
 // Auto-generated bundle - DO NOT EDIT DIRECTLY
-// Generated at: 2026-01-14T10:18:43.348Z
+// Generated at: 2026-01-16T11:13:22.663Z
 
 // 兼容性函数
 function sleep(ms) {
@@ -106,6 +107,33 @@ const StyleManager = {
         border-radius: 30px;
         border: 1px solid var(--primary-color);
       }
+
+      .search-btn {
+        display: inline-block;
+        margin-left: 8px;
+        padding: 2px 8px;
+        font-size: 12px;
+        font-weight: 500;
+        color: #424242;
+        background: #fff;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        outline: none;
+        vertical-align: middle;
+      }
+
+      .search-btn:hover {
+        background: #f5f5f5;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+      }
+
+      .search-btn:active {
+        background: #e0e0e0;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+      }
     `;
 
     try {
@@ -141,7 +169,7 @@ const ConfigManager = {
       CLOSE_DIALOG: "workflow-transition-21-dialog",
       REOPEN_DIALOG: "workflow-transition-31-dialog",
       COMMENT_TOOLBAR: "wiki-edit-wikiEdit0",
-      SEARCH_SPAN: "search_span_create",
+      SEARCH_BTN_CREATE: "search_btn_create",
       CHANGE_SIDE_BUTTON: "change_side_ios",
     },
     // LogWork 打卡标签类别配置
@@ -162,7 +190,16 @@ const ConfigManager = {
       "商业化",
       "社区",
       "其他"
-    ]
+    ],
+
+    // 对话框延迟（毫秒）
+    DIALOG_DELAY_SHORT: 500,    // 用于评论工具栏
+    DIALOG_DELAY_MEDIUM: 800,   // 用于关闭/重新打开对话框
+    DIALOG_DELAY_LONG: 1000,    // 用于复杂操作
+
+    // 自动填充设置
+    AUTO_FILL_DELAY: 3000,      // 自动填充分支信息前的延迟（毫秒）
+    AUTO_FILL_COUNTDOWN: 3      // 自动填充倒计时秒数
   },
 
   // 统一项目配置 - 避免Android/iOS重复定义
@@ -314,6 +351,7 @@ const ConfigManager = {
     GETTOKEN_URL: 'https://qyapi.weixin.qq.com/cgi-bin/gettoken',
     CREATE_DOC_URL: 'https://qyapi.weixin.qq.com/cgi-bin/wedoc/create_doc',
     MOD_DOC_MEMBER_URL: 'https://qyapi.weixin.qq.com/cgi-bin/wedoc/mod_doc_member',
+    MOD_DOC_JOIN_RULE_URL: 'https://qyapi.weixin.qq.com/cgi-bin/wedoc/mod_doc_join_rule',
     GET_SHEET_URL: 'https://qyapi.weixin.qq.com/cgi-bin/wedoc/smartsheet/get_sheet',
     GET_FIELDS_URL: 'https://qyapi.weixin.qq.com/cgi-bin/wedoc/smartsheet/get_fields',
     ADD_FIELDS_URL: 'https://qyapi.weixin.qq.com/cgi-bin/wedoc/smartsheet/add_fields',
@@ -323,7 +361,22 @@ const ConfigManager = {
     ACCESS_TOKEN_KEY: 'wework_access_token',
     ACCESS_TOKEN_EXPIRE_KEY: 'wework_access_token_expire',
     // token有效期（秒）
-    TOKEN_EXPIRE_TIME: 7200
+    TOKEN_EXPIRE_TIME: 7200,
+
+    // 通知人员配置（用于文档权限设置）
+    // 这些用户会被自动添加到文档的 update_file_member_list 中
+    // 支持为每个用户单独配置权限级别和类型
+    NOTICE_MEMBERS: [
+      { userid: 'hlp', type: 1, auth: 7 },      // 管理员权限
+      { userid: '13630', type: 1, auth: 7 },    // 管理员权限
+      { userid: 'ydr', type: 1, auth: 2 },      // 读写权限
+      { userid: '16093', type: 1, auth: 2 },    // 读写权限
+      // 在此处添加更多固定通知人员（可选）
+    ],
+
+    // 文档权限默认配置
+    DOC_MEMBER_DEFAULT_TYPE: 1,  // type: 1 表示企业成员
+    DOC_MEMBER_DEFAULT_AUTH: 2   // auth: 2 表示读写权限（非管理员），用于动态收集的用户
   }
 };
 
@@ -1265,28 +1318,525 @@ const VersionUtils = {
   }
 };
 
+// ======== branch-utils.js ========
+/**
+ * 分支相关功能 - 简化版本
+ * 处理分支获取和填充逻辑
+ */
+
+// 获取分支名
+async function get_branch(platform, build_id) {
+  return new Promise((resolve, reject) => {
+    const project_name = Utils.ui.getProjectName();
+    const projectConfig = ConfigManager.getProjectConfig(project_name, platform);
+
+    if (!projectConfig) {
+      const result = `未找到项目配置: ${project_name}`;
+      GM_setValue("branch_value", result);
+      resolve(result);
+      return;
+    }
+
+    const url = `https://omnibus.meitu-int.com/api/apps/${projectConfig.uid}/builds/${build_id}`;
+
+    GM_xmlhttpRequest({
+      url: url,
+      method: "GET",
+      onload: function (res) {
+        if (res.status === 200) {
+          const regex = /refs\/heads\/(.*?)B/;
+          const match = res.responseText.match(regex);
+          const branch = match ? match[1] : "";
+          const result = branch.indexOf("$") !== -1 ? "" : `${branch}#${build_id}`;
+          const finalResult = branch === "" ? `未找到该包的分支，${build_id}` : result;
+
+          GM_setValue("branch_value", finalResult);
+          console.log(GM_getValue("branch_value"));
+          resolve(GM_getValue("branch_value"));
+        } else {
+          const result = `未找到该包的分支，${build_id}`;
+          GM_setValue("branch_value", result);
+          resolve(result);
+        }
+      },
+      onerror: function (err) {
+        const result = "接口请求失败，建议重新关闭开启脚本再试试";
+        GM_setValue("branch_value", result);
+        reject(err);
+      },
+    });
+  });
+}
+
+// 填入分支到输入框
+async function fillInBranch(selector) {
+  var element = $(selector);
+  element.val("").val(GM_getValue("branch_value"));
+}
+
+// 填入分支到文本区域
+async function fillInBranchTextarea(selector) {
+  return fillInBranch(selector);
+}
+
+// 全局set_branch函数
+window.set_branch = async function set_branch(selfId, parentId) {
+  if (selfId === "get_branch_btn") {
+    switch (parentId) {
+      case "create-issue-dialog":
+      case "qf-field-customfield_10303":
+        // 手动点击按钮时，取消自动填充倒计时
+        BranchUtils.AutoFillManager.cancelAutoFill('create');
+
+        var $platform = $('input:radio[name="customfield_10301"]:checked');
+        var $buildId = $("#customfield_10303");
+
+        var id = $platform.attr("id");
+        var label = document.querySelector("label[for='" + id + "']");
+
+        try {
+          var platform = label.textContent;
+        } catch (error) {
+          GM_setValue("branch_value", "#请先选择Bug平台");
+          fillInBranch("#customfield_10303");
+          return;
+        }
+
+        var buildId = $buildId.val();
+        if (buildId === undefined || buildId === "" || buildId === null) {
+          GM_setValue("branch_value", "#请先填写Build号");
+          fillInBranch("#customfield_10303");
+          return;
+        }
+
+        await get_branch(platform, buildId);
+        await fillInBranch("#customfield_10303");
+        break;
+
+      case "issue-workflow-transition":
+      case "issue-comment-add":
+        var $platform = $("#customfield_10301-val");
+        var $buildId = parentId === "issue-workflow-transition" ? $("#build_id_close") : $("#input_text");
+
+        var platform = $platform.text().trim();
+        var buildId = $buildId.val();
+
+        await get_branch(platform, buildId);
+        await fillInBranchTextarea("div#comment-wiki-edit textarea#comment");
+
+        Utils.common.sleep(500).then(() => {
+          $("#comment-wiki-edit textarea").focus();
+        });
+        break;
+
+      default:
+    }
+  } else if (selfId === "get_branch_btn_close" || selfId === "get_branch_btn_open") {
+    // 关闭问题或重新打开问题的对话框 - 获取分支按钮
+
+    // 手动点击按钮时，取消自动填充倒计时
+    const scenario = selfId.includes("close") ? 'close' : 'reopen';
+    BranchUtils.AutoFillManager.cancelAutoFill(scenario);
+
+    var $platform = $("#customfield_10301-val");
+    var buildIdInputId = selfId === "get_branch_btn_close" ? "#build_id_close" : "#build_id_open";
+    var $buildId = $(buildIdInputId);
+
+    var platform = $platform.text().trim();
+    var buildId = $buildId.val();
+
+    if (!buildId) {
+      GM_setValue("branch_value", "#请先填写Build号");
+      await fillInBranchTextarea("div#comment-wiki-edit textarea#comment");
+      return;
+    }
+
+    await get_branch(platform, buildId);
+    await fillInBranchTextarea("div#comment-wiki-edit textarea#comment");
+
+    Utils.common.sleep(500).then(() => {
+      $("#comment-wiki-edit textarea").focus();
+    });
+  } else if (selfId === "last_branch_btn") {
+    switch (parentId) {
+      case "create-issue-dialog":
+      case "qf-field-customfield_10303":
+        await fillInBranch("#customfield_10303");
+        break;
+
+      case "issue-workflow-transition":
+      case "issue-comment-add":
+        await fillInBranchTextarea("div#comment-wiki-edit textarea#comment");
+        break;
+
+      default:
+    }
+  } else if (selfId === "last_branch_btn_close" || selfId === "last_branch_btn_open") {
+    // 关闭问题或重新打开问题的"上次分支"按钮
+
+    // 手动点击按钮时，取消自动填充倒计时
+    const scenario = selfId.includes("close") ? 'close' : 'reopen';
+    BranchUtils.AutoFillManager.cancelAutoFill(scenario);
+
+    await fillInBranchTextarea("div#comment-wiki-edit textarea#comment");
+  }
+};
+
+/**
+ * 从Jira字段值中提取build号
+ * @param {string} elementId - Jira字段ID
+ * @returns {string} build号
+ */
+function getBuildId(elementId) {
+  var buildContent = document.getElementById(elementId).textContent.trim();
+  var reg = /\d{4,}/g;
+  var buildIdArray = buildContent.match(reg);
+  var buildId = '';
+
+  if (buildIdArray == null || buildIdArray.length === 0) {
+    console.log("未识别到 build 号");
+  } else {
+    buildId = buildIdArray[0];
+    var regNum = /\d{4,}/g;
+    buildId = buildId.match(regNum)[0].replace('#', '');
+  }
+
+  return buildId;
+}
+
+/**
+ * 根据项目名和平台获取Omnibus基础URL
+ * @returns {string} Omnibus URL
+ */
+function getBaseUrl() {
+  var baseUrl = '';
+  var projectName = Utils.ui.getProjectName();
+  var platform = $("#customfield_10301-val").text().trim();
+  var projectConfig = ConfigManager.getProjectConfig(projectName, platform);
+
+  if (!projectConfig) {
+    console.error(`未找到项目配置: ${projectName} - ${platform}`);
+    return '';
+  }
+
+  // 移除URL中的平台标识符，统一使用基础URL
+  baseUrl = `https://omnibus.meitu-int.com/apps/${projectConfig.uid}/build/number/`;
+
+  return baseUrl;
+}
+
+/**
+ * 在Jira页面添加跳转到分支的按钮
+ * 在"创建build"和"解决build"字段后添加跳转按钮
+ */
+window.addButtonJira = function addButtonJira() {
+  // 检查按钮是否已经存在
+  if (document.getElementById("search_btn_create") || document.getElementById("search_btn_solved")) {
+    return;
+  }
+
+  // 创建分支按钮添加 (创建build)
+  var btnCreate = $('<button class="search-btn" id="search_btn_create">跳转</button>');
+  $("#customfield_10303-val").after(btnCreate);
+
+  // 解决分支按钮添加 (解决build)
+  var btnSolved = $('<button class="search-btn" id="search_btn_solved">跳转</button>');
+  $("#customfield_10304-val").after(btnSolved);
+
+  // 绑定点击事件
+  $("#search_btn_create").unbind("click").click(function () {
+    var buildId = getBuildId("customfield_10303-val");
+    // 存储bug平台
+    Utils.storage.setValue("platform", $("#customfield_10301-val").text().trim());
+    Utils.common.sleep(500).then(() => {
+      var targetUrl = getBaseUrl() + buildId;
+      window.open(targetUrl);
+    });
+  });
+
+  $("#search_btn_solved").unbind("click").click(function () {
+    var buildId = getBuildId("customfield_10304-val");
+    // 存储bug平台
+    Utils.storage.setValue("platform", $("#customfield_10301-val").text().trim());
+    Utils.common.sleep(500).then(() => {
+      var targetUrl = getBaseUrl() + buildId;
+      window.open(targetUrl);
+    });
+  });
+};
+
+/**
+ * 分支工具命名空间
+ * 统一管理分支相关的功能模块
+ */
+const BranchUtils = {
+  /**
+   * 自动填充管理器
+   * 统一管理创建问题、关闭问题、重新打开问题对话框中的自动填充逻辑
+   * 消除重复代码，提供统一的接口
+   */
+  AutoFillManager: {
+    // 存储每个场景的状态
+    scenarios: {},
+
+    /**
+     * 设置自动填充功能
+     * @param {Object} config - 配置对象
+     * @param {string} config.scenario - 场景标识（'create', 'close', 'reopen'）
+     * @param {string} config.inputSelector - 输入框选择器
+     * @param {string} config.buttonId - 按钮ID
+     * @param {string} config.dialogId - 对话框ID
+     */
+    setupAutoFill(config) {
+      const { scenario, inputSelector, buttonId, dialogId } = config;
+
+      // 初始化场景状态
+      if (!this.scenarios[scenario]) {
+        this.scenarios[scenario] = {
+          timer: null,
+          countdownTimer: null,
+          lastInputContent: ""
+        };
+      }
+
+      const state = this.scenarios[scenario];
+      const $input = $(inputSelector);
+
+      if ($input.length === 0) {
+        console.warn(`[AutoFillManager] 未找到输入框: ${inputSelector}`);
+        return;
+      }
+
+      // 移除旧的监听器（如果存在）
+      $input.off(`input.autofill-${scenario}`).on(`input.autofill-${scenario}`, () => {
+        const buildNum = $input.val();
+
+        // 如果内容没有变化，跳过
+        if (state.lastInputContent === buildNum) {
+          return;
+        }
+        state.lastInputContent = buildNum;
+
+        // 检查是否是有效的 build ID（4位以上数字）
+        const isValidBuildId = /^\d{4,}$/.test(buildNum);
+
+        if (isValidBuildId) {
+          this.scheduleAutoFill(scenario, buildNum, buttonId, dialogId);
+        } else {
+          this.cancelAutoFill(scenario);
+        }
+      });
+    },
+
+    /**
+     * 调度自动填充
+     * @param {string} scenario - 场景标识
+     * @param {string} buildId - Build ID
+     * @param {string} buttonId - 按钮ID
+     * @param {string} dialogId - 对话框ID
+     */
+    scheduleAutoFill(scenario, buildId, buttonId, dialogId) {
+      const state = this.scenarios[scenario];
+      if (!state) return;
+
+      // 取消之前的定时器
+      this.cancelAutoFill(scenario);
+
+      // 显示倒计时
+      this.showCountdown(scenario, ConfigManager.CONSTANTS.AUTO_FILL_COUNTDOWN);
+
+      // 设置自动填充定时器
+      state.timer = setTimeout(() => {
+        const config = this.getConfig(scenario);
+        if (!config) return;
+
+        const $input = $(config.inputSelector);
+        const currentContent = $input.val();
+
+        // 确认输入内容没有变化且仍然有效
+        if (currentContent === buildId && /^\d{4,}$/.test(currentContent)) {
+          if (typeof window.set_branch === "function") {
+            window.set_branch(buttonId, dialogId);
+
+            // 对于关闭和重新打开对话框，清空输入框
+            if (scenario === 'close' || scenario === 'reopen') {
+              $input.val('');
+            }
+          }
+        }
+        this.clearCountdown(scenario);
+      }, ConfigManager.CONSTANTS.AUTO_FILL_DELAY);
+    },
+
+    /**
+     * 取消自动填充
+     * @param {string} scenario - 场景标识
+     */
+    cancelAutoFill(scenario) {
+      const state = this.scenarios[scenario];
+      if (!state) return;
+
+      if (state.timer) {
+        clearTimeout(state.timer);
+        state.timer = null;
+      }
+      this.clearCountdown(scenario);
+    },
+
+    /**
+     * 显示倒计时提示
+     * @param {string} scenario - 场景标识
+     * @param {number} seconds - 倒计时秒数
+     */
+    showCountdown(scenario, seconds) {
+      const config = this.getConfig(scenario);
+      if (!config) return;
+
+      const state = this.scenarios[scenario];
+      const $input = $(config.inputSelector);
+
+      // 移除旧的提示
+      $(`.auto-fill-hint-${scenario}`).remove();
+
+      // 根据场景选择样式和位置
+      if (scenario === 'close' || scenario === 'reopen') {
+        // 对于关闭和重新打开对话框：使用行内样式，放在容器前面
+        const $hint = $(`
+          <div class="auto-fill-hint-${scenario}" style="
+            background: #e3f2fd;
+            border: 1px solid #2196f3;
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 12px;
+            color: #1976d2;
+            z-index: 1000;
+            white-space: nowrap;
+            display: inline-block;
+          ">
+            🔄 将在 <span class="countdown">${seconds}</span> 秒后自动获取分支
+            <span class="cancel-btn" style="margin-left: 8px; cursor: pointer; color: #f44336;">✕</span>
+          </div>
+        `);
+
+        // 绑定取消按钮
+        $hint.find(".cancel-btn").click(() => {
+          this.cancelAutoFill(scenario);
+        });
+
+        // 插入到容器的第一个元素前面
+        const $container = $input.parent();
+        $container.prepend($hint);
+      } else {
+        // 对于创建对话框：使用绝对定位，放在输入框下方
+        const $hint = $(`
+          <div class="auto-fill-hint-${scenario}" style="
+            position: absolute;
+            background: #e3f2fd;
+            border: 1px solid #2196f3;
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 12px;
+            color: #1976d2;
+            z-index: 1000;
+            margin-top: 2px;
+            white-space: nowrap;
+          ">
+            🔄 将在 <span class="countdown">${seconds}</span> 秒后自动获取分支
+            <span class="cancel-btn" style="margin-left: 8px; cursor: pointer; color: #f44336;">✕</span>
+          </div>
+        `);
+
+        // 绑定取消按钮
+        $hint.find(".cancel-btn").click(() => {
+          this.cancelAutoFill(scenario);
+        });
+
+        // 使用绝对定位在输入框下方
+        $input.parent().css("position", "relative");
+        $input.after($hint);
+      }
+
+      let remainingSeconds = seconds;
+      state.countdownTimer = setInterval(() => {
+        remainingSeconds--;
+        $(`.auto-fill-hint-${scenario} .countdown`).text(remainingSeconds);
+
+        if (remainingSeconds <= 0) {
+          this.clearCountdown(scenario);
+        }
+      }, 1000);
+    },
+
+    /**
+     * 清除倒计时
+     * @param {string} scenario - 场景标识
+     */
+    clearCountdown(scenario) {
+      const state = this.scenarios[scenario];
+      if (!state) return;
+
+      if (state.countdownTimer) {
+        clearInterval(state.countdownTimer);
+        state.countdownTimer = null;
+      }
+      $(`.auto-fill-hint-${scenario}`).fadeOut(200, function () {
+        $(this).remove();
+      });
+    },
+
+    /**
+     * 获取场景配置
+     * @param {string} scenario - 场景标识
+     * @returns {Object|null} 配置对象
+     */
+    getConfig(scenario) {
+      const configs = {
+        'create': {
+          inputSelector: "#customfield_10303"
+        },
+        'close': {
+          inputSelector: "#build_id_close"
+        },
+        'reopen': {
+          inputSelector: "#build_id_open"
+        }
+      };
+      return configs[scenario] || null;
+    }
+  }
+};
+
 // ======== jira-module.js ========
 /**
  * Jira模块核心逻辑 - 简化版本
  * 处理Jira相关的主要功能
  */
 const JiraModule = {
-  counter: 0,
   timerId: null,
-  autoFillTimer: null,
-  syncStopped: false,  // 同步停止标志
-  lastInputContent: "",
-  countdownTimer: null,
+  syncStopped: false,  // 创建停止标志
+  wechatSyncChecked: false,  // 企业微信文档创建UI是否已检查过
+  branchButtonAdded: false,  // 分支跳转按钮是否已添加
+  platformButtonsAdded: false,  // 创建问题对话框中的平台切换按钮是否已添加
 
+  /**
+   * 初始化 Jira 模块
+   * 必须在页面加载时调用，仅在 Jira 域名下运行
+   * @public
+   */
   init() {
     if (!Utils.url.isDomain(ConfigManager.CONSTANTS.DOMAINS.JIRA)) {
       console.error("❌ 不是Jira域名，退出初始化");
       return;
     }
-    console.log('[企业微信] JiraModule初始化完成，添加企业微信同步功能');
+    console.log('[企业微信] JiraModule初始化完成，添加企业微信文档创建功能');
     this.startMainLoop();
   },
 
+  /**
+   * 启动主循环，定期检查并添加页面元素
+   * 使用 setInterval 轮询，间隔由 REFRESH_INTERVAL 控制
+   * @private
+   */
   startMainLoop() {
     if (this.timerId) {
       clearInterval(this.timerId);
@@ -1297,21 +1847,49 @@ const JiraModule = {
     }, ConfigManager.CONSTANTS.REFRESH_INTERVAL);
   },
 
+  /**
+   * 检查并添加各种 UI 元素
+   * 这是主循环的核心方法，负责：
+   * 1. 重置状态标志位（当按钮/对话框消失时）
+   * 2. 添加分支跳转按钮
+   * 3. 添加创建问题对话框的平台切换按钮
+   * 4. 添加企业微信文档创建功能
+   * @private
+   */
   checkAndAddElements() {
     const elements = this.getPageElements();
 
-    if (!elements.searchSpan) {
-      this.addJiraBranchNavigationButton();
-      Utils.storage.setValue("platform", $("#customfield_10301-val").text().trim());
+    // 如果按钮已添加，但当前页面不存在按钮，重置标志位
+    if (this.branchButtonAdded && !elements.searchBtnCreate) {
+      this.branchButtonAdded = false;
     }
 
-    if (elements.createDialog) {
-      this.handleCreateDialog(elements);
+    // 重置平台按钮标志位当创建对话框关闭时
+    // 使用 :visible 选择器更准确地检测对话框状态
+    if (this.platformButtonsAdded) {
+      const $createDialog = $("#create-issue-dialog");
+      if ($createDialog.length === 0 || !$createDialog.is(":visible")) {
+        console.log('[平台按钮] Dialog已关闭或不可见，重置标志位');
+        this.platformButtonsAdded = false;
+      }
     }
 
-    if (elements.closeDialog || elements.reopenDialog) {
-      this.handleCloseReopenDialog();
+    // 如果分支按钮已经添加过，跳过分支按钮检测，但继续执行其他逻辑
+    if (!this.branchButtonAdded) {
+      if (!elements.searchBtnCreate) {
+        this.addJiraBranchNavigationButton();
+        Utils.storage.setValue("platform", $("#customfield_10301-val").text().trim());
+
+        // 标记按钮已添加
+        this.branchButtonAdded = true;
+      } else {
+        // 按钮已存在，也标记为已添加，避免后续检测
+        this.branchButtonAdded = true;
+      }
     }
+
+    // 创建问题时添加按钮（函数内部会检查对话框是否打开）
+    this.addCreateIssueButtons();
 
     if (elements.commentToolbar) {
       this.handleCommentToolbar();
@@ -1320,10 +1898,20 @@ const JiraModule = {
     // 添加LogWork标签功能
     this.addLogWorkDropdown();
 
-    // 添加企业微信同步功能（只在组件不存在时打印日志）
-    if (!document.getElementById("wechat-sync-container")) {
-      console.log('[企业微信] 正在检查是否需要添加UI组件...');
-      this.addWeChatSyncUI();
+    // 添加企业微信文档创建功能
+    // 检查控件是否真的存在，如果不存在则重新添加
+    const container = document.getElementById("wechat-sync-container");
+    if (!container) {
+      this.wechatSyncChecked = false;
+    }
+
+    if (!this.wechatSyncChecked) {
+      // 只在Jira域名下尝试添加
+      if (window.location.hostname.includes('jira.meitu.com')) {
+        this.addWeChatSyncUI();
+      }
+
+      this.wechatSyncChecked = true;
     }
 
     this.bindEvents();
@@ -1332,7 +1920,7 @@ const JiraModule = {
   getPageElements() {
     const fieldIds = ConfigManager.CONSTANTS.JIRA_FIELD_IDS;
     return {
-      searchSpan: Utils.dom.safeGetElement(fieldIds.SEARCH_SPAN),
+      searchBtnCreate: Utils.dom.safeGetElement(fieldIds.SEARCH_BTN_CREATE),
       changeSideButton: Utils.dom.safeGetElement(fieldIds.CHANGE_SIDE_BUTTON),
       buildId: Utils.dom.safeGetElement(fieldIds.BUILD_ID),
       stepText: Utils.dom.safeGetElement(fieldIds.STEP_TEXT),
@@ -1349,30 +1937,102 @@ const JiraModule = {
     }
   },
 
-  handleCreateDialog(elements) {
-    if (!elements.changeSideButton) {
-      Utils.button.addButtonsToContainer(
-        ".jira-dialog-content .form-footer",
-        [
-          { className: "ios aui-button", id: "change_side_ios", text: "iOS" },
-          { className: "android aui-button", id: "change_side_android", text: "Android" },
-          { className: "web aui-button", id: "change_side_web", text: "Web" },
-          { className: "once-again aui-button", id: "once-again", text: "再提一个" }
-        ]
-      );
+  /**
+   * 添加创建问题对话框中的平台切换按钮
+   * 使用状态跟踪避免重复添加：
+   * - 如果 platformButtonsAdded 为 true，跳过平台按钮添加，但继续执行其他逻辑
+   * - 添加成功后设置 platformButtonsAdded = true
+   * - 对话框关闭时重置标志位（在 checkAndAddElements 中）
+   *
+   * 添加的按钮：iOS, Android, Web, 再提一个
+   * @private
+   */
+  addCreateIssueButtons() {
+    // ⚠️ 关键检查：只在创建对话框真正打开时才执行
+    const $createDialog = $("#create-issue-dialog");
+    if ($createDialog.length === 0 || !$createDialog.is(":visible")) {
+      // 对话框不存在或不可见，跳过所有操作
+      return;
     }
 
-    if (elements.buildId) {
+    // 添加平台切换按钮（iOS、Android、Web、再提一个）
+    // 如果已经添加过，跳过这一部分
+    if (!this.platformButtonsAdded) {
+      console.log('[平台按钮] 创建对话框已打开，开始添加平台切换按钮...');
+
+      const iosBtn = Utils.dom.safeGetElement("change_side_ios");
+      const androidBtn = Utils.dom.safeGetElement("change_side_android");
+      const webBtn = Utils.dom.safeGetElement("change_side_web");
+      const onceAgainBtn = Utils.dom.safeGetElement("once-again");
+
+      // 检查所有按钮是否都已存在，任一不存在则重新添加
+      if (!iosBtn || !androidBtn || !webBtn || !onceAgainBtn) {
+        // 使用正确的选择器：在对话框内查找按钮容器
+        const $buttonsContainer = $createDialog.find(".buttons-container.form-footer .buttons");
+
+        if ($buttonsContainer.length > 0) {
+          console.log('[创建对话框] 找到按钮容器');
+
+          // 在"创建另一个"之前插入平台切换按钮
+          const $createAnother = $createDialog.find("#qf-create-another");
+          const buttons = [
+            { className: "ios aui-button", id: "change_side_ios", text: "iOS" },
+            { className: "android aui-button", id: "change_side_android", text: "Android" },
+            { className: "web aui-button", id: "change_side_web", text: "Web" },
+            { className: "once-again aui-button", id: "once-again", text: "再提一个" }
+          ];
+
+          buttons.forEach((btnConfig) => {
+            // 只添加不存在的按钮
+            if (!Utils.dom.safeGetElement(btnConfig.id)) {
+              const btn = $(`<button class="${btnConfig.className}" id="${btnConfig.id}" type="button">${btnConfig.text}</button>`);
+              if ($createAnother.length > 0) {
+                $createAnother.parent().before(btn);
+              } else {
+                $buttonsContainer.append(btn);
+              }
+              console.log(`[平台按钮] 添加按钮: ${btnConfig.text}`);
+            }
+          });
+
+          // 验证按钮是否成功添加，然后设置标志位
+          if (Utils.dom.safeGetElement("change_side_ios")) {
+            this.platformButtonsAdded = true;
+            console.log('[平台按钮] 所有平台切换按钮已添加');
+          }
+        } else {
+          console.warn('[创建对话框] 未找到按钮容器 .buttons-container.form-footer .buttons');
+        }
+      } else {
+        // 所有按钮已存在，标记为已添加
+        this.platformButtonsAdded = true;
+        console.log('[平台按钮] 按钮已存在，标记为已添加');
+      }
+    }
+
+    // 添加获取分支按钮（每次都检查，不使用状态跟踪）
+    // ⚠️ 关键修复：在对话框内检查按钮是否存在，避免误判
+    const buildIdField = Utils.dom.safeGetElement("customfield_10303");
+    const $getBranchBtn = $createDialog.find("#get_branch_btn");
+
+    if (buildIdField && $getBranchBtn.length === 0) {
       const branchSpan = Utils.button.addLabelAfter("#customfield_10303", "customfield_10304");
       Utils.button.addBranchButtons(branchSpan);
+      console.log('[获取分支] 已添加获取分支和上个分支按钮');
     }
 
-    if (elements.stepText) {
+    // 添加重置步骤按钮（每次都检查，不使用状态跟踪）
+    // ⚠️ 同样在对话框内检查按钮是否存在
+    const stepTextField = Utils.dom.safeGetElement("customfield_10203");
+    const $resetStepBtn = $createDialog.find("#reset_step");
+
+    if (stepTextField && $resetStepBtn.length === 0) {
       Utils.button.addLabelAfter("#customfield_10203", "customfield_10204", {
         className: "aui-button",
         text: "重置步骤",
         id: "reset_step"
       });
+      console.log('[重置步骤] 已添加重置步骤按钮');
     }
 
     this.hideUIForStarii();
@@ -1386,110 +2046,53 @@ const JiraModule = {
   },
 
   fillBuildIdAuto() {
-    const buildNum = $("#customfield_10303").val();
-
-    if (this.lastInputContent === buildNum) {
-      return;
-    }
-    this.lastInputContent = buildNum;
-
-    const isValidBuildId = /^\d{4,}$/.test(buildNum);
-
-    if (isValidBuildId) {
-      this.scheduleAutoFill(buildNum);
-    } else {
-      this.cancelAutoFill();
-    }
-  },
-
-  scheduleAutoFill(buildId) {
-    this.cancelAutoFill();
-    this.showAutoFillCountdown(3);
-
-    this.autoFillTimer = setTimeout(() => {
-      const currentContent = $("#customfield_10303").val();
-      if (currentContent === buildId && /^\d{4,}$/.test(currentContent)) {
-        if (typeof window.set_branch === "function") {
-          window.set_branch("get_branch_btn", "create-issue-dialog");
-        }
-      }
-      this.clearCountdown();
-    }, 3000);
-  },
-
-  cancelAutoFill() {
-    if (this.autoFillTimer) {
-      clearTimeout(this.autoFillTimer);
-      this.autoFillTimer = null;
-    }
-    this.clearCountdown();
-  },
-
-  showAutoFillCountdown(seconds) {
-    const $input = $("#customfield_10303");
-    const self = this;
-
-    $(".auto-fill-hint").remove();
-
-    const $hint = $(`
-      <div class="auto-fill-hint" style="
-        position: absolute;
-        background: #e3f2fd;
-        border: 1px solid #2196f3;
-        border-radius: 4px;
-        padding: 4px 8px;
-        font-size: 12px;
-        color: #1976d2;
-        z-index: 1000;
-        margin-top: 2px;
-        white-space: nowrap;
-      ">
-        🔄 将在 <span class="countdown">${seconds}</span> 秒后自动获取分支
-        <span class="cancel-btn" style="margin-left: 8px; cursor: pointer; color: #f44336;">✕</span>
-      </div>
-    `);
-
-    $hint.find(".cancel-btn").click(function () {
-      self.cancelAutoFill();
-    });
-
-    $input.parent().css("position", "relative");
-    $input.after($hint);
-
-    let remainingSeconds = seconds;
-    this.countdownTimer = setInterval(() => {
-      remainingSeconds--;
-      $(".countdown").text(remainingSeconds);
-
-      if (remainingSeconds <= 0) {
-        this.clearCountdown();
-      }
-    }, 1000);
-  },
-
-  clearCountdown() {
-    if (this.countdownTimer) {
-      clearInterval(this.countdownTimer);
-      this.countdownTimer = null;
-    }
-    $(".auto-fill-hint").fadeOut(200, function () {
-      $(this).remove();
+    BranchUtils.AutoFillManager.setupAutoFill({
+      scenario: 'create',
+      inputSelector: "#customfield_10303",
+      buttonId: "get_branch_btn",
+      dialogId: "create-issue-dialog"
     });
   },
 
   handleCloseReopenDialog() {
-    const preTextButton = $('<input class="aui-button" id="close-text" type="button" value="上次填写"></input>');
-    const preTextBtn = Utils.dom.safeGetElement("close-text");
-    const branchSpanClose = $('<span id="close_text">输入id：</span>');
-    const inputTextClose = $('<input type="text" class="text medium-field" id="build_id_close">');
-
     setTimeout(() => {
-      if (!preTextBtn) {
-        $(".jira-dialog-content .form-footer").append(branchSpanClose).append(inputTextClose);
-        Utils.button.addBranchButtons(".jira-dialog-content .form-footer");
-        $(".jira-dialog-content .form-footer").append(preTextButton);
+      // 检查按钮是否已存在
+      const isBtnClose = Utils.dom.safeGetElement("get_branch_btn_close");
+      if (isBtnClose) {
+        return;
       }
-    }, 500);
+
+      // 创建所有控件元素
+      const branchSpanClose = $('<span id="close_text">输入id：</span>');
+      const inputTextClose = $('<input type="text" class="text medium-field" id="build_id_close">');
+      const $container = $('<span></span>');
+
+      // 将所有控件添加到容器中
+      $container.append(branchSpanClose).append(inputTextClose);
+
+      // 手动添加获取分支、上次分支和上次填写按钮，使用正确的 ID
+      const getBranchBtn = $('<button class="aui-button" id="get_branch_btn_close" type="button">获取分支</button>');
+      const lastBranchBtn = $('<button class="aui-button" id="last_branch_btn_close" type="button">上次分支</button>');
+      const lastFillBtn = $('<button class="aui-button" id="last_fill_btn_close" type="button">上次填写</button>');
+      $container.append(getBranchBtn).append(lastBranchBtn).append(lastFillBtn);
+
+      // 为"上次填写"按钮添加右边距
+      lastFillBtn.css("margin-right", "20px");
+
+      // 在提交按钮之前一次性插入所有控件
+      const $submitBtn = $("#issue-workflow-transition-submit");
+      if ($submitBtn.length > 0) {
+        $submitBtn.before($container);
+      }
+
+      // 设置自动填充
+      BranchUtils.AutoFillManager.setupAutoFill({
+        scenario: 'close',
+        inputSelector: "#build_id_close",
+        buttonId: "get_branch_btn_close",
+        dialogId: "workflow-transition-21-dialog"
+      });
+    }, ConfigManager.CONSTANTS.DIALOG_DELAY_MEDIUM);
   },
 
   handleCommentToolbar() {
@@ -1504,11 +2107,70 @@ const JiraModule = {
         Utils.button.addBranchButtons(branchSpan);
         $(".security-level .current-level").after(branchSpan);
       }
-    }, 500);
+    }, ConfigManager.CONSTANTS.DIALOG_DELAY_SHORT);
   },
 
   bindEvents() {
-    // 事件绑定逻辑简化
+    const self = this;
+
+    // 绑定关闭问题按钮点击事件
+    $('#action_id_21').off('click').on('click', function() {
+      const isBtnClose = Utils.dom.safeGetElement("get_branch_btn_close");
+      if (!isBtnClose) {
+        self.handleCloseReopenDialog();
+      }
+    });
+
+    // 绑定重新打开问题按钮点击事件
+    $('#action_id_31').off('click').on('click', function() {
+      const isBtnOpen = Utils.dom.safeGetElement("get_branch_btn_open");
+      if (!isBtnOpen) {
+        self.handleReopenDialog();
+      }
+    });
+  },
+
+  /**
+   * 处理重新打开问题的 dialog
+   */
+  handleReopenDialog() {
+    setTimeout(() => {
+      // 检查按钮是否已存在
+      const isBtnOpen = Utils.dom.safeGetElement("get_branch_btn_open");
+      if (isBtnOpen) {
+        return;
+      }
+
+      // 创建所有控件元素
+      const branchSpanOpen = $('<span id="open_text">输入id：</span>');
+      const inputTextOpen = $('<input type="text" class="text medium-field" id="build_id_open">');
+      const $container = $('<span></span>');
+
+      // 将所有控件添加到容器中
+      $container.append(branchSpanOpen).append(inputTextOpen);
+
+      // 手动添加获取分支和上次分支按钮，使用正确的 ID
+      const getBranchBtn = $('<button class="aui-button" id="get_branch_btn_open" type="button">获取分支</button>');
+      const lastBranchBtn = $('<button class="aui-button" id="last_branch_btn_open" type="button">上次分支</button>');
+      $container.append(getBranchBtn).append(lastBranchBtn);
+
+      // 为"上次分支"按钮添加右边距
+      lastBranchBtn.css("margin-right", "20px");
+
+      // 在提交按钮之前一次性插入所有控件
+      const $submitBtn = $("#issue-workflow-transition-submit");
+      if ($submitBtn.length > 0) {
+        $submitBtn.before($container);
+      }
+
+      // 设置自动填充
+      BranchUtils.AutoFillManager.setupAutoFill({
+        scenario: 'reopen',
+        inputSelector: "#build_id_open",
+        buttonId: "get_branch_btn_open",
+        dialogId: "workflow-transition-31-dialog"
+      });
+    }, ConfigManager.CONSTANTS.DIALOG_DELAY_MEDIUM);
   },
 
   handleBranchButtonClick(event) {
@@ -1550,6 +2212,9 @@ const JiraModule = {
   },
 
   handlePreTextClick() {
+    // 手动点击按钮时，取消关闭问题场景的自动填充倒计时
+    BranchUtils.AutoFillManager.cancelAutoFill('close');
+
     const textArea = $(".jira-dialog-content #comment");
 
     if (!textArea.length) {
@@ -1580,7 +2245,10 @@ const JiraModule = {
   },
 
   /**
-   * 添加LogWork打卡标签下拉框
+   * 添加 LogWork 打卡标签下拉框
+   * 在记录工作时间对话框中添加类别选择下拉框
+   * 选择类别后自动插入格式化文本到评论文本框
+   * @private
    */
   addLogWorkDropdown() {
     // 查找"记录"按钮
@@ -1684,7 +2352,10 @@ const JiraModule = {
   },
 
   /**
-   * 添加企业微信同步UI组件
+   * 添加企业微信文档创建 UI 组件
+   * 在过滤器页面添加输入框和按钮，用于从 Jira 过滤器创建企业微信智能表格
+   * 组件包括：URL 输入框、创建按钮、状态显示、结果链接
+   * @private
    */
   addWeChatSyncUI() {
     // 检查是否已经添加过
@@ -1692,66 +2363,120 @@ const JiraModule = {
       return;
     }
 
-    console.log('[企业微信] 正在查找收藏按钮...');
-
-    // 查找"添加此过滤器到你的收藏过滤器中"按钮
-    const favoriteButton = document.querySelector('a.fav-link[original-title="添加此过滤器到你的收藏过滤器中"]');
-
-    console.log('[企业微信] 找到收藏按钮:', favoriteButton);
+    // 查找收藏按钮（兼容已收藏和未收藏两种状态）
+    const favoriteButton = document.querySelector('a.fav-link[original-title*="收藏过滤器"]');
 
     if (!favoriteButton) {
-      console.log('[企业微信] 未找到收藏按钮，可能不在过滤器页面');
+      // 未找到收藏按钮，静默返回（可能不在过滤器页面）
       return;
     }
 
-    console.log('[企业微信] 开始创建UI组件...');
+    console.log('[企业微信] 找到收藏按钮，开始创建UI组件...');
 
-    // 创建容器
+    // 创建容器（使用flex布局横向排列）
     const container = document.createElement('div');
     container.id = 'wechat-sync-container';
-    container.style.display = 'inline-block';
+    container.style.display = 'inline-flex';
+    container.style.alignItems = 'center';
     container.style.marginLeft = '20px';
 
-    // 创建输入框
-    const input = document.createElement('input');
-    input.type = 'text';
-    input.id = 'wecom-filter-url-input';
-    input.placeholder = '输入Jira过滤器URL';
-    input.style.width = '400px';
-    input.style.padding = '5px 10px';
-    input.style.border = '1px solid #ccc';
-
-    // 创建按钮
+    // 创建按钮（移除输入框，直接使用当前页面URL）
     const button = document.createElement('button');
     button.id = 'wecom-sync-btn';
     button.innerText = '创建智能文档';
-    button.style.marginLeft = '10px';
-    button.style.padding = '5px 15px';
-    button.style.backgroundColor = '#1976d2';
-    button.style.color = 'white';
-    button.style.border = 'none';
+    button.style.marginLeft = '0';
+    button.style.padding = '4px 10px';
+    button.style.fontSize = '12px';
+    button.style.backgroundColor = '#fff';
+    button.style.color = '#424242';
+    button.style.border = '1px solid #e0e0e0';
     button.style.borderRadius = '3px';
     button.style.cursor = 'pointer';
 
-    // 创建状态显示
+    // 创建问号提示图标
+    const helpIcon = document.createElement('span');
+    helpIcon.id = 'wecom-help-icon';
+    helpIcon.innerText = '?';
+    helpIcon.style.display = 'inline-block';
+    helpIcon.style.marginLeft = '6px';
+    helpIcon.style.width = '16px';
+    helpIcon.style.height = '16px';
+    helpIcon.style.lineHeight = '16px';
+    helpIcon.style.textAlign = 'center';
+    helpIcon.style.fontSize = '11px';
+    helpIcon.style.backgroundColor = '#e0e0e0';
+    helpIcon.style.color = '#757575';
+    helpIcon.style.borderRadius = '50%';
+    helpIcon.style.cursor = 'pointer';
+    helpIcon.style.position = 'relative';
+
+    // 创建tooltip
+    const tooltip = document.createElement('span');
+    tooltip.className = 'wecom-tooltip';
+    tooltip.innerText = '点击生成高优先bug文档, 数据取自当前页面';
+    tooltip.style.position = 'absolute';
+    tooltip.style.bottom = '100%';
+    tooltip.style.left = '50%';
+    tooltip.style.transform = 'translateX(-50%)';
+    tooltip.style.marginBottom = '8px';
+    tooltip.style.padding = '6px 10px';
+    tooltip.style.backgroundColor = 'rgba(0, 0, 0, 0.85)';
+    tooltip.style.color = '#fff';
+    tooltip.style.fontSize = '12px';
+    tooltip.style.whiteSpace = 'nowrap';
+    tooltip.style.borderRadius = '4px';
+    tooltip.style.pointerEvents = 'none';
+    tooltip.style.opacity = '0';
+    tooltip.style.visibility = 'hidden';
+    tooltip.style.transition = 'opacity 0.2s, visibility 0.2s';
+    tooltip.style.zIndex = '1000';
+
+    // 添加小箭头
+    const arrow = document.createElement('span');
+    arrow.style.position = 'absolute';
+    arrow.style.top = '100%';
+    arrow.style.left = '50%';
+    arrow.style.transform = 'translateX(-50%)';
+    arrow.style.border = '5px solid transparent';
+    arrow.style.borderTopColor = 'rgba(0, 0, 0, 0.85)';
+    tooltip.appendChild(arrow);
+
+    helpIcon.appendChild(tooltip);
+
+    // 鼠标悬停显示tooltip
+    helpIcon.addEventListener('mouseenter', function() {
+      tooltip.style.opacity = '1';
+      tooltip.style.visibility = 'visible';
+    });
+
+    helpIcon.addEventListener('mouseleave', function() {
+      tooltip.style.opacity = '0';
+      tooltip.style.visibility = 'hidden';
+    });
+
+    // 创建状态显示（显示在按钮右侧）
     const status = document.createElement('div');
     status.id = 'wecom-sync-status';
-    status.style.marginTop = '10px';
-    status.style.padding = '8px';
-    status.style.fontSize = '13px';
+    status.style.marginLeft = '10px';
+    status.style.padding = '4px 8px';
+    status.style.fontSize = '12px';
     status.style.display = 'none';
 
-    // 创建结果显示
+    // 创建结果显示（显示在状态右侧）
     const result = document.createElement('div');
     result.id = 'wecom-sync-result';
-    result.style.marginTop = '10px';
-    result.style.padding = '8px';
-    result.style.fontSize = '13px';
+    result.style.marginLeft = '10px';
+    result.style.padding = '4px 8px';
+    result.style.fontSize = '12px';
     result.style.display = 'none';
 
-    // 组装组件
-    container.appendChild(input);
-    container.appendChild(button);
+    // 组装组件（添加按钮、问号图标、状态和结果）
+    const buttonWrapper = document.createElement('span');
+    buttonWrapper.style.display = 'inline-block';
+    buttonWrapper.appendChild(button);
+    buttonWrapper.appendChild(helpIcon);
+
+    container.appendChild(buttonWrapper);
     container.appendChild(status);
     container.appendChild(result);
 
@@ -1766,7 +2491,7 @@ const JiraModule = {
   },
 
   /**
-   * 绑定企业微信同步事件
+   * 绑定企业微信文档创建事件
    */
   bindWeChatSyncEvents() {
     const self = this;
@@ -1774,10 +2499,10 @@ const JiraModule = {
     document.getElementById('wecom-sync-btn').addEventListener('click', async function() {
       var btn = document.getElementById('wecom-sync-btn');
 
-      // 如果正在同步，点击则停止
+      // 如果正在创建，点击则停止
       if (btn.innerText === '停止') {
         self.syncStopped = true;
-        self.showSyncStatus('error', '正在停止同步...');
+        self.showSyncStatus('error', '正在停止创建...');
         btn.disabled = true;
         btn.innerText = '停止中...';
         return;
@@ -1786,22 +2511,23 @@ const JiraModule = {
       // 重置停止标志
       self.syncStopped = false;
 
-      const filterUrl = document.getElementById('wecom-filter-url-input').value;
+      // 隐藏之前的打开文档链接
+      var resultDiv = document.getElementById('wecom-sync-result');
+      resultDiv.style.display = 'none';
 
-      if (!filterUrl) {
-        self.showSyncStatus('error', '请输入Jira过滤器URL');
-        return;
-      }
+      // 使用当前页面URL作为过滤器URL
+      const filterUrl = window.location.href;
 
       // 验证URL格式
       if (filterUrl.indexOf('jira.meitu.com') === -1) {
-        self.showSyncStatus('error', 'URL格式不正确，请输入有效的Jira过滤器URL');
+        self.showSyncStatus('error', '当前页面不是有效的Jira过滤器页面');
         return;
       }
 
-      // 设置按钮为停止状态
+      // 设置按钮为停止状态（使用浅红色）
       btn.innerText = '停止';
-      btn.style.backgroundColor = '#d32f2f';
+      btn.style.backgroundColor = '#ef5350';
+      btn.style.color = 'white';
 
       try {
         // 1. 爬取Bug信息
@@ -1816,7 +2542,7 @@ const JiraModule = {
         );
 
         if (self.syncStopped) {
-          throw new Error('用户取消同步');
+          throw new Error('用户取消创建');
         }
 
         if (bugs.length === 0) {
@@ -1839,34 +2565,35 @@ const JiraModule = {
         );
 
         if (self.syncStopped) {
-          throw new Error('用户取消同步');
+          throw new Error('用户取消创建');
         }
 
         // 显示成功结果
+        self.showSyncStatus('success', '创建成功！');
         self.showSyncResult(result);
-        self.showSyncStatus('success', '同步完成！');
 
       } catch (error) {
-        console.error('[企业微信同步] 错误:', error);
+        console.error('[企业微信文档创建] 错误:', error);
 
-        if (error.message === '用户取消同步') {
-          self.showSyncStatus('error', '已取消同步');
+        if (error.message === '用户取消创建') {
+          self.showSyncStatus('error', '已取消创建');
         } else {
-          self.showSyncStatus('error', '同步失败: ' + error.message);
+          self.showSyncStatus('error', '创建失败: ' + error.message);
         }
       } finally {
-        // 恢复按钮
+        // 恢复按钮到初始白色状态
         var btn = document.getElementById('wecom-sync-btn');
         btn.disabled = false;
         btn.innerText = '创建智能文档';
-        btn.style.backgroundColor = '#1976d2';
+        btn.style.backgroundColor = '#fff';
+        btn.style.color = '#424242';
         self.syncStopped = false;
       }
     });
   },
 
   /**
-   * 显示同步状态
+   * 显示创建状态
    */
   showSyncStatus(type, message) {
     var status = document.getElementById('wecom-sync-status');
@@ -1887,19 +2614,15 @@ const JiraModule = {
   },
 
   /**
-   * 显示同步结果（文档链接）
+   * 显示创建结果（文档链接）
    */
   showSyncResult(result) {
     var resultDiv = document.getElementById('wecom-sync-result');
 
-    var content = '';
-
-    if (result.web_url) {
-      content += '<strong>文档链接:</strong> <a href="' + result.web_url + '" target="_blank">' + result.web_url + '</a>';
+    if (result.url) {
+      resultDiv.innerHTML = '<a href="' + result.url + '" target="_blank" style="color: #2196f3; text-decoration: underline;">打开文档</a>';
+      resultDiv.style.display = 'block';
     }
-
-    resultDiv.innerHTML = content;
-    resultDiv.style.display = 'block';
   },
 
   /**
@@ -2311,7 +3034,8 @@ const JiraBugScraper = {
         }
       }
 
-      // 开发人员信息 - 从 customfield_10821（开发人员字段）
+      // 开发人员信息 - 先尝试从 customfield_10821（开发人员字段）获取
+      let devFound = false;
       const devContainer = doc.querySelector('[id*="' + this.DEVELOPER_FIELD_ID + '"]');
       if (devContainer) {
         const userHover = devContainer.querySelector('.user-hover');
@@ -2324,6 +3048,30 @@ const JiraBugScraper = {
 
           // 提取显示名称
           bugInfo.developerName = userHover.textContent.trim();
+
+          // 标记已找到开发者信息
+          if (bugInfo.developerAbbr || bugInfo.developerName) {
+            devFound = true;
+            console.log('[Jira爬虫] 从 customfield_10821 获取到开发者:', bugInfo.developerName, bugInfo.developerAbbr);
+          }
+        }
+      }
+
+      // 如果没有找到开发者信息，尝试从 assignee（指派人）字段获取
+      if (!devFound) {
+        const assigneeContainer = doc.getElementById('assignee-val');
+        if (assigneeContainer) {
+          const userHover = assigneeContainer.querySelector('.user-hover');
+          if (userHover) {
+            // 提取缩写（rel 属性）
+            const rel = userHover.getAttribute('rel') || '';
+            if (rel) {
+              bugInfo.developerAbbr = rel.includes('@') ? rel.split('@')[0] : rel;
+            }
+
+            // 提取显示名称
+            bugInfo.developerName = userHover.textContent.trim();
+          }
         }
       }
 
@@ -2351,7 +3099,7 @@ const JiraBugScraper = {
 /**
  * 企业微信文档API模块
  * 处理与企业微信智能表格相关的API调用
- * 完整实现：创建文档 → 删除默认字段 → 添加新字段 → 爬取Bug → 获取人员ID → 填写记录 → 删除临时字段
+ * 完整实现：创建文档 → 删除默认字段 → 添加新字段 → 获取人员ID → 填写记录 → 删除临时字段
  */
 
 const WeChatWorkAPI = {
@@ -2428,15 +3176,6 @@ const WeChatWorkAPI = {
   async getAccessToken() {
     const config = ConfigManager.WECHAT_WORK_API;
 
-    // 检查缓存
-    const cachedToken = localStorage.getItem(config.ACCESS_TOKEN_KEY);
-    const cachedExpire = localStorage.getItem(config.ACCESS_TOKEN_EXPIRE_KEY);
-
-    if (cachedToken && cachedExpire && Date.now() < parseInt(cachedExpire)) {
-      console.log('[企业微信] 使用缓存的 access_token');
-      return cachedToken;
-    }
-
     console.log('[企业微信] =======================================');
     console.log('[企业微信] 步骤 1/8: 获取 access_token');
     console.log('[企业微信] =======================================');
@@ -2460,10 +3199,8 @@ const WeChatWorkAPI = {
             console.log('[企业微信] Token:', data.access_token);
             console.log('');
 
-            // 缓存 token（提前 5 分钟过期）
-            const expireTime = Date.now() + (config.TOKEN_EXPIRE_TIME - 300) * 1000;
-            localStorage.setItem(config.ACCESS_TOKEN_KEY, data.access_token);
-            localStorage.setItem(config.ACCESS_TOKEN_EXPIRE_KEY, expireTime.toString());
+            // 返回 access_token
+            return data.access_token;
           } else {
             console.error('[企业微信] ❌ 获取access_token失败:', data.errmsg);
             throw new Error('获取access_token失败: ' + data.errmsg);
@@ -2477,9 +3214,6 @@ const WeChatWorkAPI = {
         console.error('[企业微信] ❌ 获取access_token异常:', error);
         throw error;
       }
-    }).then(() => {
-      // 返回缓存的 token
-      return localStorage.getItem(config.ACCESS_TOKEN_KEY);
     });
   },
 
@@ -2603,11 +3337,19 @@ const WeChatWorkAPI = {
       console.log('[企业微信] =======================================');
       console.log('[企业微信] 步骤 8/9: 构建 Bug 记录（' + bugs.length + ' 个）');
       console.log('[企业微信] =======================================');
-      const records = await this._buildBugRecords(bugs, shouldStopCallback);
+      const { records, collectedUserIds } = await this._buildBugRecords(bugs, shouldStopCallback);
 
       // 检查是否应该停止
       if (shouldStopCallback && shouldStopCallback()) {
         throw new Error('用户取消');
+      }
+
+      // 步骤 8.5: 二次更新文档权限（添加收集到的测试和开发人员）
+      if (collectedUserIds.length > 0) {
+        console.log('[企业微信] =======================================');
+        console.log('[企业微信] 步骤 8.5/9: 更新文档权限（添加收集到的用户）');
+        console.log('[企业微信] =======================================');
+        await this._updateDocAuthWithUsers(docid, accessToken, collectedUserIds);
       }
 
       // 步骤9: 添加记录到文档
@@ -2789,7 +3531,7 @@ const WeChatWorkAPI = {
       sheet_id: sheetId,
       fields: [
         {
-          field_title: "测试说明/漏测人员说明",
+          field_title: "测试说明/漏测人员说明（非必填）",
           field_type: "FIELD_TYPE_TEXT"
         },
         {
@@ -2899,233 +3641,6 @@ const WeChatWorkAPI = {
    * 爬取Jira Bug信息并添加到文档
    * @private
    */
-  async _crawlAndAddBugs(docid, sheetId, accessToken, jiraUrl) {
-    // 爬取Bug列表
-    const bugKeys = await this._crawlJiraBugList(jiraUrl);
-    console.log('[企业微信] 找到 ' + bugKeys.length + ' 个Bug');
-
-    if (bugKeys.length === 0) {
-      console.log('[企业微信] ⚠️  没有找到Bug，跳过记录添加');
-      return;
-    }
-
-    // 处理每个Bug
-    const records = [];
-    for (let i = 0; i < bugKeys.length; i++) {
-      const key = bugKeys[i];
-      console.log(`[企业微信] =======================================`);
-      console.log(`[企业微信] 处理 Bug ${i + 1}/${bugKeys.length}: ${key}`);
-      console.log(`[企业微信] =======================================`);
-
-      // 爬取Bug详情
-      const bugDetail = await this._crawlBugDetail(key);
-      console.log('[企业微信] Bug详情:', JSON.stringify(bugDetail, null, 2));
-
-      // 获取测试人员ID
-      const reporterId = await this._getUserId(bugDetail.reporterAbbr, bugDetail.reporterName);
-      if (reporterId) {
-        console.log('[企业微信] 测试人员ID:', reporterId);
-      } else {
-        console.log('[企业微信] ⚠️  无法获取测试人员ID');
-      }
-
-      // 获取开发人员ID
-      const developerId = await this._getUserId(bugDetail.developerAbbr, bugDetail.developerName);
-      if (developerId) {
-        console.log('[企业微信] 开发人员ID:', developerId);
-      } else {
-        console.log('[企业微信] ⚠️  无法获取开发人员ID');
-      }
-
-      // 构建记录
-      const record = await this._buildRecord(bugDetail, reporterId, developerId);
-      records.push(record);
-    }
-
-    // 批量添加记录
-    await this._addRecords(docid, sheetId, accessToken, records);
-  },
-
-  /**
-   * 爬取Jira Bug列表
-   * @private
-   */
-  async _crawlJiraBugList(jiraUrl) {
-    console.log('[企业微信] 开始爬取Jira Bug列表...');
-    console.log('[企业微信] Jira URL:', jiraUrl);
-
-    return this._makeRequest({
-      method: 'GET',
-      url: jiraUrl,
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36'
-      },
-      timeout: 30000,
-      onload: (response) => {
-        try {
-          // 提取Bug编号
-          const bugKeys = response.responseText.match(/href="\/browse\/([A-Z]+-\d+)"/g);
-          if (bugKeys) {
-            const uniqueKeys = [...new Set(bugKeys.map(k => k.replace('href="/browse/', '')))];
-            console.log('[企业微信] ✅ 找到 ' + uniqueKeys.length + ' 个Bug');
-            return uniqueKeys;
-          } else {
-            console.log('[企业微信] ⚠️  未找到Bug');
-            return [];
-          }
-        } catch (error) {
-          console.error('[企业微信] ❌ 解析Bug列表失败:', error);
-          throw error;
-        }
-      },
-      onerror: (error) => {
-        console.error('[企业微信] ❌ 爬取Bug列表失败:', error);
-        throw error;
-      }
-    });
-  },
-
-  /**
-   * 爬取单个Bug详情
-   * @private
-   */
-  async _crawlBugDetail(bugKey) {
-    const bugUrl = `https://jira.meitu.com/browse/${bugKey}`;
-    console.log('[企业微信] 爬取Bug详情:', bugUrl);
-
-    return this._makeRequest({
-      method: 'GET',
-      url: bugUrl,
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36'
-      },
-      timeout: 30000,
-      onload: (response) => {
-        try {
-          const html = response.responseText;
-
-          // 提取Bug信息
-          const detail = {
-            key: bugKey,
-            url: bugUrl,
-            created: this._extractField(html, 'created-val', 'datetime', true),
-            resolved: this._extractField(html, 'resolutiondate-val', null, false, '[0-9]{4}/[0-9]{2}/[0-9]{2} [0-9]{2}:[0-9]{2}'),
-            summary: this._extractText(html, 'summary-val', 'h1'),
-            reporterAbbr: this._extractUserAbbr(html, 'reporter-val'),
-            reporterName: this._extractUserName(html, 'reporter-val'),
-            developerAbbr: this._extractUserAbbrCustom(html, 'customfield_10821'),
-            developerName: this._extractUserNameCustom(html, 'customfield_10821')
-          };
-
-          return detail;
-        } catch (error) {
-          console.error('[企业微信] ❌ 解析Bug详情失败:', error);
-          throw error;
-        }
-      },
-      onerror: (error) => {
-        console.error('[企业微信] ❌ 爬取Bug详情失败:', error);
-        throw error;
-      }
-    });
-  },
-
-  /**
-   * 提取字段值
-   * @private
-   */
-  _extractField(html, containerId, attr, isDate = false, datePattern = null) {
-    const regex = new RegExp(`id="${containerId}"[^>]*>([\\s\\S]*?)<\\/`, 'i');
-    const match = html.match(regex);
-
-    if (!match) return '';
-
-    let content = match[1];
-
-    if (attr) {
-      const attrRegex = new RegExp(`${attr}="([^"]*)"`);
-      const attrMatch = content.match(attrRegex);
-      if (attrMatch) {
-        let value = attrMatch[1];
-        if (isDate && value.includes('T')) {
-          value = value.split('T')[0];
-        }
-        return value;
-      }
-    }
-
-    if (datePattern) {
-      const patternRegex = new RegExp(datePattern);
-      const patternMatch = content.match(patternRegex);
-      if (patternMatch) {
-        return patternMatch[0];
-      }
-    }
-
-    return '';
-  },
-
-  /**
-   * 提取文本内容
-   * @private
-   */
-  _extractText(html, containerId, tag) {
-    const regex = new RegExp(`id="${containerId}"[^>]*>[\\s\\S]*?<${tag}[^>]*>([^<]*)<\\/${tag}>`, 'i');
-    const match = html.match(regex);
-    return match ? match[1].trim() : '';
-  },
-
-  /**
-   * 提取用户缩写（从reporter-val）
-   * @private
-   */
-  _extractUserAbbr(html, containerId) {
-    const regex = new RegExp(`id="${containerId}"[^>]*>[\\s\\S]*?rel="([^@"]*)@"`, 'i');
-    const match = html.match(regex);
-    return match ? match[1] : '';
-  },
-
-  /**
-   * 提取用户姓名（从reporter-val）
-   * @private
-   */
-  _extractUserName(html, containerId) {
-    // 尝试从data-user提取
-    const dataUserRegex = new RegExp(`id="${containerId}"[^>]*>[\\s\\S]*?data-user='[^']*"displayName":"([^"]*)"`, 'i');
-    let match = html.match(dataUserRegex);
-    if (match) return match[1];
-
-    // 从<a>标签文本提取
-    const linkRegex = new RegExp(`id="${containerId}"[^>]*>[\\s\\S]*?<a class="user-hover"[^>]*>([^<]*)<`, 'i');
-    match = html.match(linkRegex);
-    return match ? match[1].trim() : '';
-  },
-
-  /**
-   * 提取用户缩写（从customfield_10821）
-   * @private
-   */
-  _extractUserAbbrCustom(html, fieldClass) {
-    const regex = new RegExp(`class="${fieldClass}"[^>]*>[\\s\\S]*?rel="([^@"]*)@"`, 'i');
-    const match = html.match(regex);
-    return match ? match[1] : '';
-  },
-
-  /**
-   * 提取用户姓名（从customfield_10821）
-   * @private
-   */
-  _extractUserNameCustom(html, fieldClass) {
-    // 从user-hover标签文本提取
-    const spanRegex = new RegExp(`class="${fieldClass}"[^>]*>[\\s\\S]*?<span class="user-hover"[^>]*>([^<]*)<`, 'i');
-    let match = html.match(spanRegex);
-    if (match) return match[1].trim();
-
-    // 从<a>标签文本提取
-    const linkRegex = new RegExp(`class="${fieldClass}"[^>]*>[\\s\\S]*?<a class="user-hover"[^>]*>([^<]*)<`, 'i');
-    match = html.match(linkRegex);
-    return match ? match[1].trim() : '';
-  },
 
   /**
    * 获取用户ID
@@ -3134,9 +3649,22 @@ const WeChatWorkAPI = {
   async _getUserId(abbr, name) {
     if (!abbr || !name) return null;
 
-    // 检查是否包含test
+    // 特殊test用户白名单
+    const testUserWhitelist = {
+      'lyltest2': 'network_1000606',
+      'zsmtest': 'network_1000540',
+      'yzq_test': 'network_1000639'
+    };
+
+    // 检查是否在白名单中
+    if (testUserWhitelist[abbr]) {
+      console.log('[企业微信] ✅ 使用白名单test用户:', abbr, '→', testUserWhitelist[abbr]);
+      return testUserWhitelist[abbr];
+    }
+
+    // 检查是否包含test（不在白名单中的test用户跳过）
     if (abbr.toLowerCase().includes('test')) {
-      console.log('[企业微信] ⚠️  缩写包含test，跳过');
+      console.log('[企业微信] ⚠️  缩写包含test但不在白名单中，跳过');
       return null;
     }
 
@@ -3180,7 +3708,7 @@ const WeChatWorkAPI = {
   async _buildRecord(bugDetail, reporterId, developerId) {
     const record = {
       values: {
-        "测试说明/漏测人员说明": [{type: "text", text: ""}],
+        "测试说明/漏测人员说明（非必填）": [{type: "text", text: ""}],
         "开发回溯": [{type: "text", text: "引入原因：\n解决方法：\n规避措施："}],
         "Bug链接": [{type: "url", text: bugDetail.summary, link: bugDetail.url}],
         "测试回溯": [{type: "text", text: `引入时间：\n发现时间：${bugDetail.resolved}\n解决时间：${bugDetail.resolved}`}]
@@ -3405,49 +3933,239 @@ const WeChatWorkAPI = {
   },
 
   /**
+   * 构建文档成员列表（动态去重）
+   * @private
+   * @param {Array} users - 用户数组，支持两种格式：
+   *   1. 字符串数组：['userid1', 'userid2'] - 使用默认type和auth
+   *   2. 对象数组：[{userid: 'id1', type: 1, auth: 7}, {userid: 'id2', type: 1, auth: 2}]
+   * @returns {Array} 去重并格式化后的成员列表
+   */
+  _buildUpdateFileMemberList(users) {
+    const config = ConfigManager.WECHAT_WORK_API;
+
+    // 判断输入格式：检查第一个元素是否为对象（有userid属性）
+    const isObjectArray = users.length > 0 && users[0] !== null && typeof users[0] === 'object' && 'userid' in users[0];
+
+    let memberList;
+
+    if (isObjectArray) {
+      // 对象数组格式：使用各自的type和auth配置
+      // 按userid去重，保留最高权限
+      const memberMap = new Map();
+      users.forEach(user => {
+        const existing = memberMap.get(user.userid);
+        const newAuth = user.auth !== undefined ? user.auth : config.DOC_MEMBER_DEFAULT_AUTH;
+        const newType = user.type !== undefined ? user.type : config.DOC_MEMBER_DEFAULT_TYPE;
+
+        if (!existing || newAuth > existing.auth) {
+          memberMap.set(user.userid, {
+            type: newType,
+            auth: newAuth,
+            userid: user.userid
+          });
+        }
+      });
+      memberList = Array.from(memberMap.values());
+
+      console.log('[企业微信] 构建文档成员列表（对象格式）:');
+      console.log('[企业微信] 原始用户数:', users.length);
+      console.log('[企业微信] 去重后用户数:', memberList.length);
+    } else {
+      // 字符串数组格式：使用默认type和auth
+      const uniqueUserIds = [...new Set(users)];
+      memberList = uniqueUserIds.map(userid => ({
+        type: config.DOC_MEMBER_DEFAULT_TYPE,
+        auth: config.DOC_MEMBER_DEFAULT_AUTH,
+        userid: userid
+      }));
+
+      console.log('[企业微信] 构建文档成员列表（字符串格式）:');
+      console.log('[企业微信] 原始用户数:', users.length);
+      console.log('[企业微信] 去重后用户数:', uniqueUserIds.length);
+    }
+
+    memberList.forEach(member => {
+      const authDesc = member.auth === 7 ? '管理员' : '读写';
+      console.log(`[企业微信] - ${member.userid} (type=${member.type}, auth=${member.auth}, ${authDesc})`);
+    });
+
+    return memberList;
+  },
+
+  /**
    * 设置文档权限
    * @private
    */
-  async _setDocAuth(docid, accessToken, userId = "15613") {
+  async _setDocAuth(docid, accessToken) {
     const config = ConfigManager.WECHAT_WORK_API;
-    const url = config.MOD_DOC_MEMBER_URL + '?access_token=' + accessToken;
 
-    const requestData = {
+    // 步骤1: 设置企业内成员可编辑权限
+    console.log('[企业微信] 设置企业内成员可编辑权限...');
+
+    const joinRuleUrl = config.MOD_DOC_JOIN_RULE_URL + '?access_token=' + accessToken;
+    const joinRuleData = {
       docid: docid,
-      update_file_member_list: [{
-        type: 1,
-        auth: 7,
-        userid: userId
-      }]
+      enable_corp_internal: true,
+      corp_internal_auth: 2, // 2-读写（企业内成员可编辑）
+      enable_corp_external: false,
+      ban_share_external: true // 禁止分享到企业外
     };
 
-    console.log('[企业微信] =======================================');
-    console.log('[企业微信] 设置文档权限 - 请求详情');
-    console.log('[企业微信] =======================================');
-    console.log('[企业微信] API URL:', url);
-    console.log('[企业微信] docid:', docid);
-    console.log('[企业微信] userId:', userId);
-    console.log('[企业微信] 请求数据:', JSON.stringify(requestData, null, 2));
-    console.log('[企业微信] =======================================');
-
-    return this._makeRequest({
+    await this._makeRequest({
       method: 'POST',
-      url: url,
+      url: joinRuleUrl,
       headers: {
         'Content-Type': 'application/json'
       },
-      data: JSON.stringify(requestData),
+      data: JSON.stringify(joinRuleData),
       timeout: 15000,
       onload: (response) => {
         try {
           const result = JSON.parse(response.responseText);
-          console.log('[企业微信] 权限设置响应:', result);
           if (result.errcode === 0) {
-            console.log('[企业微信] ✅ 权限设置成功');
+            console.log('[企业微信] ✅ 企业内成员可编辑权限设置成功');
+            return result;
+          } else {
+            throw new Error('设置企业内权限失败: ' + result.errmsg);
+          }
+        } catch (error) {
+          throw error;
+        }
+      },
+      onerror: (error) => {
+        throw error;
+      }
+    });
+
+    // 等待一下
+    await this._sleep(1000);
+
+    // 步骤2: 动态构建文档成员列表
+    console.log('[企业微信] 动态构建文档成员列表...');
+
+    const memberUrl = config.MOD_DOC_MEMBER_URL + '?access_token=' + accessToken;
+
+    // 使用配置的通知人员列表动态构建成员列表
+    const memberList = this._buildUpdateFileMemberList(config.NOTICE_MEMBERS);
+
+    const memberData = {
+      docid: docid,
+      update_file_member_list: memberList
+    };
+
+    const memberResult = await this._makeRequest({
+      method: 'POST',
+      url: memberUrl,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: JSON.stringify(memberData),
+      timeout: 15000,
+      onload: (response) => {
+        try {
+          const result = JSON.parse(response.responseText);
+          if (result.errcode === 0) {
+            console.log('[企业微信] ✅ 文档成员列表设置成功');
             console.log('');
             return result;
           } else {
-            throw new Error('权限设置失败: ' + result.errmsg);
+            throw new Error('设置管理员失败: ' + result.errmsg);
+          }
+        } catch (error) {
+          throw error;
+        }
+      },
+      onerror: (error) => {
+        throw error;
+      }
+    });
+
+    return memberResult;
+  },
+
+  /**
+   * 更新文档权限（添加收集到的用户）
+   * @private
+   * @param {string} docid - 文档ID
+   * @param {string} accessToken - 访问令牌
+   * @param {Array} collectedUserIds - 收集到的用户ID数组（字符串数组）
+   */
+  async _updateDocAuthWithUsers(docid, accessToken, collectedUserIds) {
+    const config = ConfigManager.WECHAT_WORK_API;
+
+    // NOTICE_MEMBERS 是对象数组：[{userid: 'xxx', auth: 7}, ...]
+    // collectedUserIds 是字符串数组：['userid1', 'userid2', ...]
+    // 需要合并并转换为统一的对象数组格式
+
+    // 从 NOTICE_MEMBERS 创建 Map（用于快速查找和去重）
+    const memberMap = new Map();
+    config.NOTICE_MEMBERS.forEach(member => {
+      memberMap.set(member.userid, {
+        type: member.type !== undefined ? member.type : config.DOC_MEMBER_DEFAULT_TYPE,
+        auth: member.auth !== undefined ? member.auth : config.DOC_MEMBER_DEFAULT_AUTH,
+        userid: member.userid
+      });
+    });
+
+    // 添加收集到的用户（使用默认auth，如果已存在则跳过）
+    const defaultAuth = config.DOC_MEMBER_DEFAULT_AUTH;
+    collectedUserIds.forEach(userid => {
+      if (!memberMap.has(userid)) {
+        memberMap.set(userid, {
+          type: config.DOC_MEMBER_DEFAULT_TYPE,
+          auth: defaultAuth,
+          userid: userid
+        });
+      }
+    });
+
+    // 转换为数组
+    const allMembers = Array.from(memberMap.values());
+
+    if (allMembers.length === 0) {
+      console.log('[企业微信] ⚠️  没有需要添加的用户，跳过权限更新');
+      return;
+    }
+
+    console.log('[企业微信] 准备更新文档权限...');
+    console.log('[企业微信] 配置的固定成员数:', config.NOTICE_MEMBERS.length);
+    console.log('[企业微信] 收集到的用户数:', collectedUserIds.length);
+    console.log('[企业微信] 去重后总成员数:', allMembers.length);
+
+    // 统计权限分布
+    const adminCount = allMembers.filter(m => m.auth === 7).length;
+    const rwCount = allMembers.filter(m => m.auth === 2).length;
+    console.log('[企业微信] 权限分布: 管理员 ' + adminCount + ' 人, 读写 ' + rwCount + ' 人');
+
+    // 构建成员列表
+    const memberList = this._buildUpdateFileMemberList(allMembers);
+
+    const memberUrl = config.MOD_DOC_MEMBER_URL + '?access_token=' + accessToken;
+    const memberData = {
+      docid: docid,
+      update_file_member_list: memberList
+    };
+
+    console.log('[企业微信] 更新文档成员列表...');
+    console.log('[企业微信] 请求数据:', JSON.stringify(memberData, null, 2));
+
+    return this._makeRequest({
+      method: 'POST',
+      url: memberUrl,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: JSON.stringify(memberData),
+      timeout: 15000,
+      onload: (response) => {
+        try {
+          const result = JSON.parse(response.responseText);
+          if (result.errcode === 0) {
+            console.log('[企业微信] ✅ 文档权限更新成功（已添加收集到的用户）');
+            console.log('');
+            return result;
+          } else {
+            throw new Error('更新文档权限失败: ' + result.errmsg);
           }
         } catch (error) {
           throw error;
@@ -3568,27 +4286,12 @@ const WeChatWorkAPI = {
   },
 
   /**
-   * 爬取 Jira Bug 信息
-   * @private
-   */
-  async _crawlJiraBugs(jiraUrl) {
-    console.log('[企业微信] 开始爬取 Jira Bug...');
-
-    // 使用 JiraBugScraper 爬取 Bug
-    const bugs = await JiraBugScraper.scrapeBugsFromFilter(jiraUrl, (progress) => {
-      console.log('[企业微信] ' + progress);
-    });
-
-    console.log('[企业微信] ✅ 爬取完成，共 ' + bugs.length + ' 个 Bug');
-    return bugs;
-  },
-
-  /**
    * 构建 Bug 记录数组
    * @private
    */
   async _buildBugRecords(bugs, shouldStopCallback) {
     const records = [];
+    const collectedUserIds = new Set(); // 使用 Set 自动去重
     let failedLookups = 0;
 
     for (let i = 0; i < bugs.length; i++) {
@@ -3607,6 +4310,7 @@ const WeChatWorkAPI = {
         reporterId = await this._getUserId(bug.reporterAbbr, bug.reporterName);
         if (reporterId) {
           console.log('[企业微信] 测试人员ID:', reporterId);
+          collectedUserIds.add(reporterId); // 收集测试人员ID
         } else {
           console.log('[企业微信] ⚠️  无法获取测试人员ID');
           failedLookups++;
@@ -3619,6 +4323,7 @@ const WeChatWorkAPI = {
         developerId = await this._getUserId(bug.developerAbbr, bug.developerName);
         if (developerId) {
           console.log('[企业微信] 开发人员ID:', developerId);
+          collectedUserIds.add(developerId); // 收集开发人员ID
         } else {
           console.log('[企业微信] ⚠️  无法获取开发人员ID');
           failedLookups++;
@@ -3637,7 +4342,17 @@ const WeChatWorkAPI = {
       console.warn('[企业微信] ⚠️  ' + failedLookups + ' 个用户ID查找失败');
     }
 
-    return records;
+    // 输出收集到的用户ID统计
+    const uniqueUserIds = Array.from(collectedUserIds);
+    console.log('[企业微信] =======================================');
+    console.log('[企业微信] 收集到的用户ID统计:');
+    console.log('[企业微信] 总计唯一用户数:', uniqueUserIds.length);
+    uniqueUserIds.forEach(userid => {
+      console.log('[企业微信] -', userid);
+    });
+    console.log('[企业微信] =======================================');
+
+    return { records, collectedUserIds: uniqueUserIds };
   },
 
   /**
@@ -3647,7 +4362,7 @@ const WeChatWorkAPI = {
   _buildSingleRecord(bug, reporterId, developerId) {
     const record = {
       values: {
-        "测试说明/漏测人员说明": [{type: "text", text: ""}],
+        "测试说明/漏测人员说明（非必填）": [{type: "text", text: ""}],
         "开发回溯": [{type: "text", text: "引入原因：\n解决方法：\n规避措施："}],
         "Bug链接": [{type: "url", text: bug.summary, link: bug.url}],
         "测试回溯": [{type: "text", text: "引入时间：\n发现时间：" + bug.found_time + "\n解决时间：" + bug.resolved}]
@@ -3712,9 +4427,9 @@ const EventManager = {
     Utils.events.registerPlatformCapture("#change_side_ios, .ios", "iOS");
     Utils.events.registerPlatformCapture("#change_side_web, .web", "Web");
 
-    // 获取分支按钮
+    // 获取分支按钮（包括创建、关闭、重新打开场景）
     Utils.events.addCaptureClick(
-      "#get_branch_btn, #last_branch_btn",
+      "#get_branch_btn, #last_branch_btn, #get_branch_btn_close, #last_branch_btn_close, #get_branch_btn_open, #last_branch_btn_open",
       function (target) {
         JiraModule.handleBranchButtonClick({ target: target });
       }
@@ -3725,8 +4440,8 @@ const EventManager = {
       JiraModule.handleResetStepClick();
     });
 
-    // 上次填写按钮
-    Utils.events.addCaptureClick("#close-text", function () {
+    // 上次填写按钮（评论工具栏和关闭问题对话框）
+    Utils.events.addCaptureClick("#close-text, #last_fill_btn_close", function () {
       JiraModule.handlePreTextClick();
     });
 
@@ -3779,133 +4494,6 @@ const EventManager = {
         Utils.common.showToast("未收集到表单数据", "#ff9800");
       }
     });
-  }
-};
-
-// ======== branch-utils.js ========
-/**
- * 分支相关功能 - 简化版本
- * 处理分支获取和填充逻辑
- */
-
-// 获取分支名
-async function get_branch(platform, build_id) {
-  return new Promise((resolve, reject) => {
-    const project_name = Utils.ui.getProjectName();
-    const projectConfig = ConfigManager.getProjectConfig(project_name, platform);
-
-    if (!projectConfig) {
-      const result = `未找到项目配置: ${project_name}`;
-      GM_setValue("branch_value", result);
-      resolve(result);
-      return;
-    }
-
-    const url = `https://omnibus.meitu-int.com/api/apps/${projectConfig.uid}/builds/${build_id}`;
-
-    GM_xmlhttpRequest({
-      url: url,
-      method: "GET",
-      onload: function (res) {
-        if (res.status === 200) {
-          const regex = /refs\/heads\/(.*?)B/;
-          const match = res.responseText.match(regex);
-          const branch = match ? match[1] : "";
-          const result = branch.indexOf("$") !== -1 ? "" : `${branch}#${build_id}`;
-          const finalResult = branch === "" ? `未找到该包的分支，${build_id}` : result;
-
-          GM_setValue("branch_value", finalResult);
-          console.log(GM_getValue("branch_value"));
-          resolve(GM_getValue("branch_value"));
-        } else {
-          const result = `未找到该包的分支，${build_id}`;
-          GM_setValue("branch_value", result);
-          resolve(result);
-        }
-      },
-      onerror: function (err) {
-        const result = "接口请求失败，建议重新关闭开启脚本再试试";
-        GM_setValue("branch_value", result);
-        reject(err);
-      },
-    });
-  });
-}
-
-// 填入分支到输入框
-async function fillInBranch(selector) {
-  var element = $(selector);
-  element.val("").val(GM_getValue("branch_value"));
-}
-
-// 填入分支到文本区域
-async function fillInBranchTextarea(selector) {
-  return fillInBranch(selector);
-}
-
-// 全局set_branch函数
-window.set_branch = async function set_branch(selfId, parentId) {
-  if (selfId === "get_branch_btn") {
-    switch (parentId) {
-      case "create-issue-dialog":
-      case "qf-field-customfield_10303":
-        var $platform = $('input:radio[name="customfield_10301"]:checked');
-        var $buildId = $("#customfield_10303");
-
-        var id = $platform.attr("id");
-        var label = document.querySelector("label[for='" + id + "']");
-
-        try {
-          var platform = label.textContent;
-        } catch (error) {
-          GM_setValue("branch_value", "#请先选择Bug平台");
-          fillInBranch("#customfield_10303");
-          return;
-        }
-
-        var buildId = $buildId.val();
-        if (buildId === undefined || buildId === "" || buildId === null) {
-          GM_setValue("branch_value", "#请先填写Build号");
-          fillInBranch("#customfield_10303");
-          return;
-        }
-
-        await get_branch(platform, buildId);
-        await fillInBranch("#customfield_10303");
-        break;
-
-      case "issue-workflow-transition":
-      case "issue-comment-add":
-        var $platform = $("#customfield_10301-val");
-        var $buildId = parentId === "issue-workflow-transition" ? $("#build_id_close") : $("#input_text");
-
-        var platform = $platform.text().trim();
-        var buildId = $buildId.val();
-
-        await get_branch(platform, buildId);
-        await fillInBranchTextarea("div#comment-wiki-edit textarea#comment");
-
-        Utils.common.sleep(500).then(() => {
-          $("#comment-wiki-edit textarea").focus();
-        });
-        break;
-
-      default:
-    }
-  } else if (selfId === "last_branch_btn") {
-    switch (parentId) {
-      case "create-issue-dialog":
-      case "qf-field-customfield_10303":
-        await fillInBranch("#customfield_10303");
-        break;
-
-      case "issue-workflow-transition":
-      case "issue-comment-add":
-        await fillInBranchTextarea("div#comment-wiki-edit textarea#comment");
-        break;
-
-      default:
-    }
   }
 };
 
@@ -4109,7 +4697,7 @@ function showCopySuccessMessage() {
 
   // 注册搜索按钮事件
   EventManager.bindEvent(
-    "#search_span_create",
+    "#search_btn_create",
     "click",
     () => {
       JiraModule.handleSearchSpanClick("customfield_10303-val");
@@ -4118,7 +4706,7 @@ function showCopySuccessMessage() {
   );
 
   EventManager.bindEvent(
-    "#search_span_solved",
+    "#search_btn_solved",
     "click",
     () => {
       JiraModule.handleSearchSpanClick("customfield_10304-val");

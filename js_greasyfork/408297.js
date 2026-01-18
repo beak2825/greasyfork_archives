@@ -17,14 +17,14 @@
 // @grant       GM_deleteValue
 // @grant       GM_listValues
 // @grant       GM_addStyle
-// @version 2025.12.25
+// @version 2026.01.16
 // @downloadURL https://update.greasyfork.org/scripts/408297/UnMod_varriz.user.js
 // @updateURL https://update.greasyfork.org/scripts/408297/UnMod_varriz.meta.js
 // ==/UserScript==
-var UM_VER = '2025.12.25';
+var UM_VER = '2026.01.16';
 //
 var conowego = 'Co nowego?\n\n\
-2025.12.25: Wyłączenie jednorazów w ustawieniach\n\
+2026.01.16: Licznik czasu naładowania się ataków do maxa.\n\
 ';
 
 //HackTimer
@@ -764,7 +764,7 @@ function UNMOD() {
             }
 
         } else {
-            if (a.search('msg&do=view') != - 1 || a == '?a=equip') {
+            if (GM_getValue(id + 'UM_OP_epicitemscore', true) && (a.search('msg&do=view') != - 1 || a == '?a=equip' || a == '?a=talizman&do=craftDestroy')) {
 
                 function escapeJsSingleQuoted(s) {
                     return String(s)
@@ -3317,8 +3317,97 @@ function UNMOD() {
         if (dzien == 0 || dzien == 1 || dzien == 4) {
             przyp = 'DZIŚ ARENY!<BR/><br/>Pozostało:<br/><b><div id="przyparen"></div></b><br/>';
         }
-        document.body.lastChild.innerHTML = '<div style="position: fixed;left:2px;top:2px;">' + przyp + '</b><table border=0><tr><td><small>A:</small></td><td><small>' + GM_getValue(id + 'UM_pa', '?') + '</small></td></tr><tr><td><small>W:</small></td><td><small>' + GM_getValue(id + 'UM_pw', '?') + '</small></td></tr><tr><td><small>Q:</small></td><td><small>' + GM_getValue(id + 'UM_q', '?') + '</small></td></tr></table></div>';
-        if (dzien == 0 || dzien == 1 || dzien == 4) {
+
+            // =======================
+            // MAX A -> pokazuje godzinę (HH:mm) pełnego naładowania do 32
+            // tick co 45 min, pierwszy o 00:15:00
+            // =======================
+
+            function pad2(n) { return (n < 10 ? '0' : '') + n; }
+
+            function computeFullAttacksAtDate(currentAttacks) {
+                var maxA = 32;
+                var periodMs = 45 * 60 * 1000;
+                var now = new Date();
+
+                var a = parseInt(currentAttacks, 10);
+                if (isNaN(a) || a < 0) return null;
+                if (a >= maxA) return now; // i tak ukryjemy, ale zwracamy sensowną wartość
+
+                // dzisiejsza baza ticków: 00:15:00
+                var base = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 15, 0, 0);
+
+                // jeśli teraz jest przed 00:15, baza to wczoraj 00:15
+                if (now.getTime() < base.getTime()) {
+                    base = new Date(base.getTime() - 24 * 60 * 60 * 1000);
+                }
+
+                var elapsed = now.getTime() - base.getTime();
+                var remainder = elapsed % periodMs;
+
+                // najbliższy tick (jeśli idealnie w tick, to "teraz")
+                var msToNextTick = (remainder === 0) ? 0 : (periodMs - remainder);
+
+                var missing = maxA - a; // ile brakuje do 32
+                var msToFull = msToNextTick + (missing - 1) * periodMs;
+
+                return new Date(now.getTime() + msToFull);
+            }
+
+            function formatHHmm(d) {
+                return pad2(d.getHours()) + ':' + pad2(d.getMinutes());
+            }
+
+            function attachMaxAFullTime(id) {
+                var aVal = GM_getValue(id + 'UM_pa', '?');
+                var a = parseInt(aVal, 10);
+
+                var wrap = document.getElementById('maxAwrap');
+                var el = document.getElementById('maxA');
+                if (!wrap || !el) return;
+
+                if (isNaN(a) || a >= 32) {
+                    wrap.style.display = 'none';
+                    el.textContent = '';
+                    return;
+                }
+
+                var fullAt = computeFullAttacksAtDate(a);
+                if (!fullAt) {
+                    wrap.style.display = 'none';
+                    el.textContent = '';
+                    return;
+                }
+
+                wrap.style.display = '';
+                el.textContent = formatHHmm(fullAt);
+            }
+
+
+            // =======================
+            // Twoje wpięcie w HTML
+            // (dokładnie przy A: ...)
+            // =======================
+
+            // UWAGA: dodajemy maxAwrap + maxA zaraz obok wartości A
+            document.body.lastChild.innerHTML =
+                '<div style="position: fixed;left:2px;top:2px;">' +
+                przyp + '</b>' +
+                '<table border=0>' +
+                '<tr>' +
+                '<td><small>A:</small></td>' +
+                '<td><small>' + GM_getValue(id + 'UM_pa', '?') +
+                ' <span id="maxAwrap" style="display:none;">(max a: <span id="maxA"></span>)</span>' +
+                '</small></td>' +
+                '</tr>' +
+                '<tr><td><small>W:</small></td><td><small>' + GM_getValue(id + 'UM_pw', '?') + '</small></td></tr>' +
+                '<tr><td><small>Q:</small></td><td><small>' + GM_getValue(id + 'UM_q', '?') + '</small></td></tr>' +
+                '</table>' +
+                '</div>';
+
+            attachMaxAFullTime(id);
+
+            if (dzien == 0 || dzien == 1 || dzien == 4) {
             data2 = new Date();
             data2.setHours(21);
             data2.setMinutes(20);
@@ -3720,7 +3809,7 @@ const CATEGORIES = {
 
     oneHandMelee: {
       przedmiot: [
-        'pięść', 'pałka', 'nóż', 'sztylet', 'rapier', 'miecz',
+        'pałka', 'nóż', 'sztylet', 'rapier', 'miecz',
         'topór', 'kastet', 'kama', 'pięść niebios', 'wakizashi'
       ],
       prefix: [

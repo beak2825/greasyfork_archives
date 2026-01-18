@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT-Workspace-Helper
 // @namespace    https://chatgpt.com
-// @version      1.9.0
+// @version      1.9.2
 // @description  ChatGPT Workspace 管理一体化面板
 // @author       Marx
 // @license      MIT
@@ -873,9 +873,14 @@
       selWs.appendChild(o);
     });
     const pref = store.k.sel?.account_id;
-    if (pref && accounts.find(x=>x.id===pref)) {
+    const prefAcc = pref ? accounts.find(x => x.id === pref) : null;
+    const prefNamed = !!((prefAcc?.account?.name || '').trim());
+
+    if (prefAcc && prefNamed) {
       selWs.value = pref;
     } else {
+      if (prefAcc && !prefNamed) store.upd({ sel: null });
+
       const firstNamed = accounts.find(x => ((x?.account?.name || '').trim()));
       if(firstNamed) selWs.value = firstNamed.id;
     }
@@ -896,7 +901,11 @@
     wsId.value = a.account?.account_id || '';
     orgId.value = a.account?.organization_id || '';
     selected = { account_id: a.account?.account_id, organization_id: a.account?.organization_id, name: a.account?.name || '' };
-    store.upd({ sel: { account_id: a.id, organization_id: selected.organization_id, name: selected.name } });
+    if ((selected.name || '').trim()) {
+      store.upd({ sel: { account_id: a.id, organization_id: selected.organization_id, name: selected.name } });
+    } else {
+      store.upd({ sel: null });
+    }
     enableOps(true);
     loadAllowExternal();
     loadDomains();
@@ -1450,17 +1459,25 @@
   });
 
   async function markOnboardingViewed(accountId){
-    const u = `/backend-api/settings/announcement_viewed?announcement_id=oai%2Fapps%2FhasSeenOnboarding`;
-    const init = {
-      method:'POST',
-      credentials:'include',
-      headers:{
-        'accept':'*/*',
-        'authorization':'Bearer '+token,
-        'chatgpt-account-id': accountId
-      }
-    };
-    return fetchJsonWithRetry(u, init, {retry:1});
+    const announcements = [
+      'oai/apps/hasSeenOnboarding',
+      'oai/apps/hasSeenOnboardingFlow', // 新增
+    ];
+
+    for(const ann of announcements){
+      const u = `/backend-api/settings/announcement_viewed?announcement_id=${encodeURIComponent(ann)}`;
+      const init = {
+        method:'POST',
+        credentials:'include',
+        headers:{
+          'accept':'*/*',
+          'authorization':'Bearer ' + token,
+          ...(accountId ? { 'chatgpt-account-id': accountId } : {}) // 工作空间才加
+        }
+      };
+      await fetchJsonWithRetry(u, init, {retry:1});
+    }
+    return true;
   }
 
   btnOnboardCur.addEventListener('click', async ()=>{

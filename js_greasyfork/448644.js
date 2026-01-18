@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         BV2AV + 视频统计
 // @description  支持 Safari | 干净 URL | 视频统计 | V 家成就
-// @version      3.2.0
+// @version      3.2.1
 // @license      MIT
 // @author       Joseph Chris <joseph@josephcz.xyz>
 // @icon         https://www.bilibili.com/favicon.ico
@@ -134,6 +134,7 @@ VCUtil.URL = {
     StandardizeAllUrl: function () {
         const links = Array.from(document.querySelectorAll('a[href]'));
         links.forEach(link => {
+            if (link.hostname === "tdd.bunnyxt.com") return;
             const pathname = new URL(link.href).pathname;
             if (!pathname.startsWith('/video/')) return;
             const videoId = pathname.slice('/video/'.length).replace(/\/$/, '');
@@ -255,7 +256,7 @@ VCUtil.Stat = {
             },
             AddLink: function (text, url) {
                 const linkBox = document.createElement("span");
-                linkBox.innerHTML = `<a target="_blank" href="${url}">${text}</a>`;
+                linkBox.innerHTML = `<a target="_blank" style="color: #777;" href="${url}">${text}</a>`;
                 linkBox.style.marginRight = "13px";
                 infoBox.appendChild(linkBox);
                 return builder;

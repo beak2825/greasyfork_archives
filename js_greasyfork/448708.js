@@ -3,7 +3,7 @@
 // @description  在動畫瘋中自動擷取動畫常見相關資訊，如CAST以及主題曲。
 // @namespace    nathan60107
 // @author       nathan60107(貝果)
-// @version      1.1.3
+// @version      1.2
 // @homepage     https://home.gamer.com.tw/creationCategory.php?owner=nathan60107&c=425332
 // @match        https://ani.gamer.com.tw/animeVideo.php?sn=*
 // @icon         https://ani.gamer.com.tw/apple-touch-icon-144.jpg
@@ -36,10 +36,16 @@ let dd = (...d) => {
   d.forEach((it) => { console.log(it) })
 }
 
+/**
+ * @param { string } pattern 
+ */
 function regexEscape(pattern) {
   return pattern.replace(/([.?*+^$[\]\\(){}|-])/g, '\\$1')
 }
 
+/**
+ * @returns { Promise<boolean> }
+ */
 async function isPrivateFF() {
   return new Promise((resolve) => {
     detectIncognito().then((result) => {
@@ -49,13 +55,22 @@ async function isPrivateFF() {
   })
 }
 
+/**
+ * @param { string } title 
+ */
 function titleProcess(title) {
+  if (!title) return '';
   return title.replaceAll('-', '\\-').replaceAll('#', '')
 }
 
+/**
+ * @param { string } time 
+ */
 function timeProcess(time) {
   if (!time || time === '不明') return null
-  let [, year, month] = time.match(/([0-9]{4})-([0-9]{2})-([0-9]{2})/)
+  let match = time.match(/([0-9]{4})-([0-9]{2})-([0-9]{2})/)
+  if (!match) return null;
+  let [, year, month] = match
   return [
     `${year}-${parseInt(month) - 1}～`,
     `${year}-${parseInt(month)}～`,
@@ -63,11 +78,20 @@ function timeProcess(time) {
   ]
 }
 
+function extractYearMonth(time) {
+  if (!time || time === '不明') return null;
+  let match = time.match(/([0-9]{4})-([0-9]{2})/);
+  if (!match) return null;
+  let [, year, month] = match;
+  return `${year}-${month}`;
+}
+
 async function getBahaData() {
   let bahaDbUrl = $('a:contains(作品資料)')[0].href
   let bahaHtml = $((await GET(bahaDbUrl)).responseText)
   let nameJp = bahaHtml.find('.ACG-info-container > h2')[0].innerText
   let nameEn = bahaHtml.find('.ACG-info-container > h2')[1].innerText
+  let broadcast = bahaHtml.find('.ACG-box1listA > li:contains("播映方式")')[0]?.innerText
   let urlObj = new URL(bahaHtml.find('.ACG-box1listB > li:contains("官方網站") > a')[0]?.href ?? 'https://empty')
   let fullUrl = urlObj.searchParams.get('url')
   let time = bahaHtml.find('.ACG-box1listA > li:contains("當地")')[0]?.innerText?.split('：')[1]
@@ -78,22 +102,35 @@ async function getBahaData() {
     site: fullUrl ? new URL(fullUrl).hostname.replace('www.', '') : '',
     fullUrl: fullUrl,
     time: timeProcess(time),
+    onAirMonth: extractYearMonth(time),
+    broadcast: broadcast,
   }
 }
 
+/**
+ * @param { string } url 
+ * @returns { Tampermonkey.Response<string> }
+ */
 async function GET(url) {
   return new Promise((resolve, reject) => {
     GM_xmlhttpRequest({
       method: "GET",
       url: url,
+      /** @param { Tampermonkey.Response<string> } response */
       onload: (response) => {
         resolve(response)
       },
       onerror: (response) => { reject(response) },
-    });
+    })
   })
 }
 
+/**
+ * @param { string } url 
+ * @param { Record<string, unknown> } payload 
+ * @param { Tampermonkey.RequestHeaders } headers 
+ * @returns { Tampermonkey.Response<string> }
+ */
 async function POST(url, payload, headers = {}) {
   let data = new URLSearchParams(payload).toString()
   return new Promise((resolve, reject) => {
@@ -101,9 +138,8 @@ async function POST(url, payload, headers = {}) {
       method: "POST",
       url: url,
       data: data,
-      headers: {
-        ...headers
-      },
+      headers: headers,
+      /** @param { Tampermonkey.Response<string> } response */
       onload: (response) => {
         resolve(response)
       },
@@ -122,28 +158,38 @@ function getJson(str) {
   }
 }
 
+/**
+ * @param { 'syoboi' | 'allcinema' } type 
+ * @param { string } keyword 
+ * @returns { Promise<string> }
+ */
 async function google(type, keyword) {
+  if (keyword === '') return ''
+
   let site = ''
   let match = ''
+  let fullQuery = '';
   switch (type) {
     case 'syoboi':
       site = 'https://cal.syoboi.jp/tid'
       match = 'https://cal.syoboi.jp/tid'
+      fullQuery = `intitle:${keyword} intext:${bahaData.onAirMonth}`;
       break
     case 'allcinema':
       site = 'https://www.allcinema.net/cinema/'
       match = /https:\/\/www\.allcinema\.net\/cinema\/([0-9]{1,7})/
+      fullQuery = `intitle:${keyword}`;
       break
   }
-
+  
   let googleUrlObj = new URL('https://www.google.com/search?as_qdr=all&as_occt=any')
-  googleUrlObj.searchParams.append('as_q', keyword)
+  googleUrlObj.searchParams.append('as_q', fullQuery)
   googleUrlObj.searchParams.append('as_sitesearch', site)
   let googleUrl = googleUrlObj.toString()
 
   let googleHtml = (await GET(googleUrl)).responseText
   if (googleHtml.includes('為何顯示此頁')) throw { type: 'google', url: googleUrl }
-  let googleResult = $($.parseHTML(googleHtml)).find('#res .v7W49e a')
+  let googleResult = $($.parseHTML(googleHtml)).find('#res span a')
   for (let goo of googleResult) {
     let link = goo.href.replace('http://', 'https://')
     if (link.match(match)) return link
@@ -151,6 +197,9 @@ async function google(type, keyword) {
   return ''
 }
 
+/**
+ * @returns { Promise<string> }
+ */
 async function searchSyoboi() {
   let { site, time, fullUrl } = bahaData
   if (!site || !time) return ''
@@ -182,7 +231,9 @@ async function searchSyoboi() {
   let syoboiHtml = (await GET(searchUrl)).responseText
   let syoboiResults = $($.parseHTML(syoboiHtml)).find('.tframe td')
   for (let result of syoboiResults) {
-    let resultTime = $(result).find('.findComment')[0].innerText
+    let resultTimeEl = $(result).find('.findComment')[0]
+    if (!resultTimeEl) continue
+    let resultTime = resultTimeEl.innerText
 
     if (time.some(t => resultTime.includes(t))) {
       let resultUrl = $(result).find('a').attr('href')
@@ -192,6 +243,9 @@ async function searchSyoboi() {
   return ''
 }
 
+/**
+ * @param { string } type 
+ */
 function songType(type) {
   type = type.toLowerCase().replace('section ', '')
   switch (type) {
@@ -207,21 +261,36 @@ function songType(type) {
   }
 }
 
-async function getAllcinema(jpTitle = true) {
-  changeState('allcinema')
-
-  let animeName = jpTitle ? bahaData.nameJp : bahaData.nameEn
-  if (animeName === '') return null
-  let allcinemaUrl = await google('allcinema', animeName)
+/**
+ * @typedef AniResponse
+ * @property { string } source
+ * @property { string } title
+ * @property { Record<'char' | 'cv', string> } cast
+ * @property { Record<'type' | 'title' | 'singer', string> } song
+*/
+/**
+ * @param { string } allcinemaUrl
+ * @returns { Promise<AniResponse | null> }
+ */
+async function getAllcinema(allcinemaUrl) {
   if (!allcinemaUrl) return null
 
-  let allcinemaId = allcinemaUrl.match(/https:\/\/www\.allcinema\.net\/cinema\/([0-9]{1,7})/)[1]
-  let allcinemaHtml = (await GET(allcinemaUrl))
-  let title = allcinemaHtml.responseText.match(/<title>([^<]*<\/title>)/)[1]
+  let allcinemaIdMatch = allcinemaUrl.match(/https:\/\/www\.allcinema\.net\/cinema\/([0-9]{1,7})/)
+  if (!allcinemaIdMatch) return null;
+  let allcinemaId = allcinemaIdMatch[1]
 
-  let allcinemaXsrfToken = allcinemaHtml.responseHeaders.match(/XSRF-TOKEN=([^=]*); expires/)[1]
-  let allcinemaSession = allcinemaHtml.responseHeaders.match(/allcinema_session=([^=]*); expires/)[1]
-  let allcinemaCsrfToken = allcinemaHtml.responseText.match(/var csrf_token = '([^']+)';/)[1]
+  let allcinemaHtml = (await GET(allcinemaUrl))
+  let titleMatch = allcinemaHtml.responseText.match(/<title>([^<]*<\/title>)/)
+  let title = titleMatch ? titleMatch[1] : 'allcinema.net';
+
+  let allcinemaXsrfToken = allcinemaHtml.responseHeaders.match(/XSRF-TOKEN=([^=]*); expires/)?.[1]
+  let allcinemaSession = allcinemaHtml.responseHeaders.match(/allcinema_session=([^=]*); expires/)?.[1]
+  let allcinemaCsrfToken = allcinemaHtml.responseText.match(/var csrf_token = '([^']+)';/)?.[1]
+
+  if (!allcinemaXsrfToken || !allcinemaSession || !allcinemaCsrfToken) {
+    console.warn('getAllcinema: 無法抓取 CSRF token。');
+  }
+
   let allcinemaHeader = {
     ...(await isPrivateFF()
       ? { 'Cookie': `XSRF-TOKEN=${allcinemaXsrfToken}; allcinema_session=${allcinemaSession}` }
@@ -231,27 +300,42 @@ async function getAllcinema(jpTitle = true) {
     'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
   }
 
-  let castData = allcinemaHtml.responseText.match(/"cast":(.*)};/)[1]
-  let castJson = getJson(castData)
-  let cast = castJson.jobs[0].persons.map(it => ({
-    char: it.castname,
-    cv: it.person.personnamemain.personname
-  }))
-  let songData = await POST('https://www.allcinema.net/ajax/cinema', {
-    ajax_data: 'moviesounds',
-    key: allcinemaId,
-    page_limit: 10
-  }, allcinemaHeader)
-  let songJson = getJson(songData.responseText)
-  let song = songJson.moviesounds.sounds.map(it => {
-    return {
-      type: songType(it.sound.usetype),
-      title: `「${it.sound.soundtitle}」`,
-      singer: it.sound.credit.staff.jobs.
-        filter(job => job.job.jobname.includes('歌'))
-      [0]?.persons[0].person.personnamemain.personname
+  let cast = []
+  let castDataMatch = allcinemaHtml.responseText.match(/"cast":(.*)};/)
+  if (castDataMatch && castDataMatch[1]) {
+    let castJson = getJson(castDataMatch[1])
+    if (castJson.jobs && castJson.jobs[0] && castJson.jobs[0].persons) {
+      cast = castJson.jobs[0].persons.map(it => ({
+        char: it.castname,
+        cv: it.person.personnamemain.personname
+      }))
     }
-  })
+  }
+
+  let song = []
+  if (allcinemaHeader['X-CSRF-TOKEN']) {
+    try {
+      let songData = await POST('https://www.allcinema.net/ajax/cinema', {
+        ajax_data: 'moviesounds',
+        key: allcinemaId,
+        page_limit: 10
+      }, allcinemaHeader)
+      let songJson = getJson(songData.responseText)
+      if (songJson.moviesounds && songJson.moviesounds.sounds) {
+        song = songJson.moviesounds.sounds.map(it => {
+          return {
+            type: songType(it.sound.usetype),
+            title: `「${it.sound.soundtitle}」`,
+            singer: it.sound.credit.staff.jobs.
+              filter(job => job.job.jobname.includes('歌'))
+            [0]?.persons[0].person.personnamemain.personname
+          }
+        })
+      }
+    } catch (songError) {
+      console.warn('getAllcinema: 抓取主題曲失敗', songError);
+    }
+  }
 
   return {
     source: allcinemaUrl,
@@ -259,18 +343,18 @@ async function getAllcinema(jpTitle = true) {
   }
 }
 
-async function getSyoboi(searchGoogle = false) {
-  changeState('syoboi')
-
-  let nameJp = bahaData.nameJp
-  if (nameJp === '') return null
-  let syoboiUrl = await (searchGoogle ? google('syoboi', nameJp) : searchSyoboi())
+/**
+ * @param { string } syoboiUrl 
+ * @returns { Promise<AniResponse & { relatedParts: { title: string, url: string }[] }> }
+ */
+async function getSyoboi(syoboiUrl) {
   if (!syoboiUrl) return null
-  let syoboiHtml = (await GET(syoboiUrl)).responseText
-  let title = syoboiHtml.match(/<title>([^<]*)<\/title>/)[1]
+  let dom = $($.parseHTML((await GET(syoboiUrl)).responseText));
+  let title = dom.find('h1').clone().children().remove().end().text().trim();
 
+  // Process cast
   let cast = []
-  let castData = $($.parseHTML(syoboiHtml)).find('.cast table tr')
+  let castData = dom.find('.cast table tr')
   for (let role of castData) {
     cast.push({
       char: $(role).find('th').text(),
@@ -278,22 +362,49 @@ async function getSyoboi(searchGoogle = false) {
     })
   }
 
+  // Process song
   let song = []
-  let songData = $($.parseHTML(syoboiHtml)).find('.op, .ed, .st, .section:contains("主題歌")') // https://stackoverflow.com/a/42575222
+  let songData = dom.find('.op, .ed, .st, .section:contains("主題歌")') // https://stackoverflow.com/a/42575222
   for (let sd of songData) {
+    let titleNode = $(sd).find('.title')[0]?.childNodes[2];
+    let songTitle = titleNode ? titleNode.data : $(sd).find('.title').text().trim();
     song.push({
       type: songType(sd.className),
-      title: $(sd).find('.title')[0].childNodes[2].data,
+      title: songTitle || 'N/A',
       singer: $(sd).find('th:contains("歌")').parent().children()[1]?.innerText,
     })
   }
 
+  // Process related parts
+  const relatedParts = []
+  dom.find('div.tidGroup ul.tidList li').each(function () {
+    let a = $(this).find('a')
+    if (!a.length) return
+    let linkTitle = a.text().trim()
+    if (!linkTitle.startsWith(title)) return // Find part name start with original title.
+    let url = new URL(a.attr('href'), 'https://cal.syoboi.jp/').href
+    if (relatedParts.find(p => p.url === url)) return // Prevent duplicate page
+
+    relatedParts.push({ title: linkTitle, url: url })
+  })
+
   return {
     source: syoboiUrl,
-    title, cast, song
+    title, cast, song,
+    relatedParts: relatedParts.reverse(),
   }
 }
 
+/**
+ * @param { AniResponse['cast'] } json
+ * @returns {{
+ *  query: {
+ *    pages: Record<number, { pageid: number, title: string, langlinks?: { lang: string, '*': string }[], pageprops?: { disambiguation: string }  }>
+ *    normalized: Record<number, { from: string, to: string }>
+ *    redirects: Record<number, { from: string, to: string }>
+ *  }
+ * }}
+ */
 async function searchWiki(json) {
   let searchWikiUrl = (nameList) => {
     let wikiUrlObj = new URL('https://ja.wikipedia.org/w/api.php')
@@ -335,6 +446,10 @@ async function searchWiki(json) {
   return result
 }
 
+/**
+ * @param { AniResponse['cast'] } json 
+ * @returns { string }
+ */
 async function getCastHtml(json) {
   function replaceEach(array, getFrom = (it) => it.from, getTo = (it) => it.to) {
     array?.forEach((it) => {
@@ -346,7 +461,10 @@ async function getCastHtml(json) {
     })
   }
 
-  let wikiJson = await searchWiki(json)
+  if (!json || json.length === 0) return '';
+  let castJson = _.cloneDeep(json)
+  
+  let wikiJson = await searchWiki(castJson)
   let disamb = _.filter(wikiJson.query.pages, ['pageprops', { disambiguation: '' }])
   let normalized = wikiJson.query.normalized
   let redirects = wikiJson.query.redirects
@@ -357,29 +475,34 @@ async function getCastHtml(json) {
   if (disamb.length) {
     replaceEach(disamb, (it) => it.title, (it) => `${it.title} (声優)`)
 
-    wikiJson = await searchWiki(json)
+    wikiJson = await searchWiki(castJson)
     redirects = wikiJson.query.redirects
     replaceEach(redirects)
   }
 
-  return json.map(j => {
+  return castJson.map(j => {
     let wikiPage = _.filter(wikiJson.query.pages, page =>
       page.title === j.cv || page.title === j.cvName2
     )[0]
-    let zhName = wikiPage.langlinks?.[0]['*']
+    let zhName = wikiPage?.langlinks?.[0]['*']
     let wikiUrl = zhName ? `https://zh.wikipedia.org/zh-tw/${zhName}` : `https://ja.wikipedia.org/wiki/${j.cvName2 ?? j.cv}`
     let wikiText = zhName ? 'Wiki' : 'WikiJP'
 
     return `
       <div>${j.char ?? ''}</div>
       <div>${j.cv}</div>
-      ${wikiPage.missing === ''
+      ${(wikiPage?.missing === '' || !wikiPage)
         ? '<div></div>'
         : `<a href="${wikiUrl}" target="_blank">🔗${wikiText}</a>`}
   `}).join('')
 }
 
+/**
+ * @param { AniResponse['song'] } json 
+ * @returns { string }
+ */
 function getSongHtml(json) {
+  if (!json || json.length === 0) return '';
   return json.map(j => `
     <div>${j.type}${j.title}</div>
     <div>${j.singer ?? '-'}</div>
@@ -389,6 +512,9 @@ function getSongHtml(json) {
   `).join('')
 }
 
+/**
+ * @returns { string }
+ */
 function getCss() {
   return `
     /* Old baha CSS */
@@ -414,10 +540,19 @@ function getCss() {
       border-radius: 4px;
       text-align: center;
     }
-    /* CSS for anigamerinfo+ */
-    #ani-info {
-      display: flex;
+
+    /* CSS for anigamerinfo+ content */
+    #ani-info .ani-tab-pane {
+      display: none; /* Default hidden */
+      animation: fadeIn 0.3s;
+    }
+    #ani-info .ani-tab-pane.active {
+      display: flex; /* Show active */
       flex-direction: column;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
     #ani-info .grid {
       display: grid;
@@ -436,6 +571,36 @@ function getCss() {
     #ani-info .grid.song {
       grid-template-columns: repeat(3, auto);
     }
+    
+    /* CSS for anigamerinfo+ tabs */
+    #ani-info .ani-info-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      border-bottom: 2px solid var(--btn-more);
+      margin-bottom: 10px;
+    }
+    #ani-info .ani-info-tabs:not(:has(:nth-child(2))) {
+      display: none; /* Hide the parent container if there is only one tab  */
+    }
+    #ani-info .ani-tab-btn {
+      padding: 8px 12px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      color: var(--text-secondary-color);
+      font-size: 1.1em;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+    }
+    #ani-info .ani-tab-btn:hover {
+      background: var(--btn-more);
+      color: var(--text-default-color);
+    }
+    #ani-info .ani-tab-btn.active {
+      color: var(--text-default-color);
+      border-bottom: 3px solid rgb(51, 145, 255);
+    }
+    
     /* CSS for anigamer */
     .is-hint {
       display: none;
@@ -460,6 +625,70 @@ function getCss() {
   `
 }
 
+/**
+ * 渲染分頁內容
+ * @param {jQuery} paneElement - 要填入內容的 pane div
+ * @param {AniResponse} data - 該分頁的 result data
+ */
+async function renderPaneContent(paneElement, data) {
+  if (paneElement.data('loaded')) return; // 防止重複載入
+
+  let castHtml = (data.cast && data.cast.length > 0) ? await getCastHtml(data.cast) : ''
+  let songHtml = (data.song && data.song.length > 0) ? getSongHtml(data.song) : ''
+
+  let finalHtml = ''
+
+  if (castHtml) finalHtml += `
+    <ul class="data_type">
+      <li>
+        <span>CAST</span>
+        <div class="grid cast">${castHtml}</div>
+      </li>
+    </ul>
+  `
+  else finalHtml += '<ul class="data_type"><li><span>CAST</span>(無資料)</li></ul>'
+
+  if (songHtml) finalHtml += `
+    <ul class="data_type">
+      <li>
+        <span>主題曲</span>
+        <div class="grid song">${songHtml}</div>
+      </li>
+    </ul>
+  `
+  else finalHtml += '<ul class="data_type"><li><span>主題曲</span>(無資料)</li></ul>'
+
+  finalHtml += `
+    <ul class="data_type">
+      <li>
+        <span>aniInfo+</span>
+        資料來源：<a href="${data.source}" target="_blank">${data.title}</a>
+      </li>
+    </ul>
+  `
+
+  paneElement.html(finalHtml)
+  paneElement.data('loaded', true)
+}
+
+
+/**
+ * @overload
+ * @param { 'init' | 'btn' | 'syoboi' | 'allcinema' | 'debug' } state
+ * @return { Promise<void> }
+ * @overload
+ * @param { 'google' } state
+ * @param { { url: string } } params
+ * @return { Promise<void> }
+ * @overload
+ * @param { 'fail' } state
+ * @param { { error: Error | string } } params
+ * @return { Promise<void> }
+ * @overload
+ * @param { 'result' } state
+ * @param { AniResponse[] } params
+ * @return { Promise<void> }
+ */
 async function changeState(state, params) {
   switch (state) {
     case 'init':
@@ -489,49 +718,71 @@ async function changeState(state, params) {
       $('#ani-info-msg').html(`Google搜尋失敗，請點擊<a href="${params.url}" target="_blank">連結</a>解除reCAPTCHA後重整此網頁。`)
       break
     case 'syoboi':
-      $('#ani-info-msg').html(`嘗試取得syoboi資料中...`)
+      $('#ani-info-msg').html(`嘗試取得 syoboi 資料中...`)
       break
     case 'allcinema':
-      $('#ani-info-msg').html(`嘗試取得allcinema資料中...`)
+      $('#ani-info-msg').html(`(Syoboi 失敗) 嘗試取得 allcinema 資料中...`)
       break
     case 'fail':
       $('#ani-info-msg').html(`無法取得資料 ${params.error}`)
       break
     case 'result': {
-      let castHtml = await getCastHtml(params.cast)
-      let songHtml = getSongHtml(params.song)
-      $('#ani-info').html('')
-      if (castHtml) $('#ani-info').append(`
-        <ul class="data_type">
-          <li>
-            <span>CAST</span>
-            <div class="grid cast">${castHtml}</div>
-          </li>
-        </ul>
-      `)
-      if (songHtml) $('#ani-info').append(`
-        <ul class="data_type">
-          <li>
-            <span>主題曲</span>
-            <div class="grid song">${songHtml}</div>
-          </li>
-        </ul>
-      `)
-      $('#ani-info').append(`
-        <ul class="data_type">
-          <li>
-            <span>aniInfo+</span>
-            資料來源：<a href="${params.source}" target="_blank">${params.title}</a>
-          </li>
-        </ul>
-      `)
-      break
+      $('#ani-info').html('<div class="ani-info-tabs"></div><div class="ani-info-content"></div>');
+      let tabContainer = $('#ani-info .ani-info-tabs');
+      let contentContainer = $('#ani-info .ani-info-content');
+
+      for (let i = 0; i < params.length; i++) {
+        let result = params[i];
+
+        // 抓取 tab 標題
+        let tabTitle = result.title || `Part ${i + 1}`
+        tabContainer.append(`<button class="ani-tab-btn" data-tab-id="ani-part-${i}" data-title-key="${tabTitle}">${tabTitle}</button>`);
+
+        // 建立分頁內容
+        contentContainer.append(`<div class="ani-tab-pane" id="ani-part-${i}"></div>`);
+        let pane = $(contentContainer.find(`#ani-part-${i}`));
+
+        if (result) {
+          // 資料有效
+          pane.html('<i>點擊分頁標籤以載入資料...</i>');
+        } else {
+          // 該 Part 抓取失敗
+          pane.html(`<ul class="data_type"><li><span>錯誤</span>抓取「${tabTitle}」的資料失敗。 ${result.error || ''}</li></ul>`);
+          pane.data('loaded', true);
+        }
+      }
+
+      // 綁定點擊事件
+      tabContainer.find('.ani-tab-btn').on('click', function () {
+        let tabId = $(this).data('tab-id');
+
+        tabContainer.find('.ani-tab-btn').removeClass('active');
+        $(this).addClass('active');
+
+        contentContainer.find('.ani-tab-pane').removeClass('active');
+        let targetPane = contentContainer.find(`#${tabId}`);
+        targetPane.addClass('active');
+
+        // 尋找對應的資料
+        let titleKey = $(this).data('title-key');
+        let resultData = params.find(r => r.title === titleKey);
+
+        if (resultData && !targetPane.data('loaded')) {
+          targetPane.html('<i><span class="loading"></span> 載入資料中...</i>');
+          renderPaneContent(targetPane, resultData);
+        }
+      });
+
+      // 自動點擊第一個分頁
+      tabContainer.find('.ani-tab-btn').first().click();
+
+      break;
     }
     case 'debug': {
-      let aaa = await getSyoboi()
-      let bbb = await getSyoboi(true)
-      let ccc = await getAllcinema()
-      let ddd = await getAllcinema(false)
+      const aaa = await getSyoboi(await searchSyoboi())
+      const bbb = await getSyoboi(await google('syoboi', bahaData.nameJp))
+      const ccc = await getAllcinema(await google('allcinema', bahaData.nameJp))
+      const ddd = await getAllcinema(await google('allcinema', bahaData.nameEn))
       $('#ani-info').html('')
       $('#ani-info').append(`
         <ul class="data_type">
@@ -561,19 +812,49 @@ async function main() {
       changeState('debug')
       return
     }
-    let result = null
-    result = await getSyoboi(false)
-    if (!result) result = await getAllcinema(true)
-    if (!result) result = await getAllcinema(false)
-    if (!result) result = await getSyoboi(true)
 
-    if (result) changeState('result', result)
-    else changeState('fail', { error: '' })
+    // 嘗試抓取 Syoboi
+    changeState('syoboi')
+    let initialResult
+    if (bahaData.broadcast && !bahaData.broadcast.includes('OVA')){
+      initialResult = await getSyoboi(await searchSyoboi());
+      const animeName = bahaData.nameJp ? bahaData.nameJp : bahaData.nameEn
+      if (!initialResult && animeName) {
+        initialResult = await getSyoboi(await google('syoboi', animeName));
+      }
+    }
+
+    if (initialResult) {
+      // --- Syoboi 成功路徑 ---
+      const allResults = [];
+      allResults.push(initialResult);
+      for (const part of initialResult.relatedParts) {
+        let partData = await getSyoboi(part.url);
+        allResults.push(partData);
+      }
+      changeState('result', allResults);
+    } else {
+      // --- Fallback 路徑 (allCinema) ---
+      changeState('allcinema')
+      
+      let result = await getAllcinema(await google('allcinema', bahaData.nameJp));
+      if (!result) {
+        result = await getAllcinema(await google('allcinema', bahaData.nameEn));
+      }
+
+      if (result) {
+        changeState('result', [result])
+      } else {
+        changeState('fail', { error: 'Syoboi 和 allcinema 均查無資料' });
+      }
+    }
+
   } catch (e) {
     if (e.type === 'google') {
       changeState('google', { url: e.url })
     } else {
-      changeState('fail', { error: e })
+      console.error('Main error:', e);
+      changeState('fail', { error: e.message || e })
     }
   }
 }

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Twitter/X 稳定屏蔽广告推文
 // @namespace    https://x.com
-// @version      1.8
+// @version      1.9
 // @description  避免页面崩溃的动态广告推文识别与隐藏逻辑（推荐标签识别）
 // @author       _Sure.Lee
 // @match        https://twitter.com/*
@@ -17,11 +17,26 @@
   const OBSERVER_CONFIG = { childList: true, subtree: true };
 
   function isPromoted(tweet) {
-    const labels = tweet.querySelectorAll('div[dir="ltr"]');
-    return Array.from(labels).some((el) =>
-      ['推荐', 'Promoted', '推薦', '推广'].some(keyword => el.textContent.trim().includes(keyword))
-    );
-  }
+  // 可能出现的广告关键词（可继续补）
+  const AD_KEYWORDS = [
+    '广告',
+    '推广',
+    'Promoted',
+    '推荐',
+    '推薦'
+  ];
+
+  // 扫描 tweet 内所有可读文本节点
+  const textNodes = tweet.querySelectorAll('span, div');
+
+  return Array.from(textNodes).some(node => {
+    const text = node.textContent?.trim();
+    if (!text) return false;
+
+    // 精准匹配，避免误伤正文
+    return AD_KEYWORDS.some(keyword => text === keyword);
+  });
+}
 
   function hideWithAnimation(tweet) {
     if (tweet.dataset.__adHandled) return;

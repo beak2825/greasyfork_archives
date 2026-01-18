@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         BiliScrollReverser - 哔哩哔哩触控板滚动反转
 // @namespace    http://zhangmaimai.com/
-// @version      3.0.2
+// @version      3.0.3
 // @author       MaxChang3
 // @description  优化 b 站视频音量调节在触控板上的体验。使用此脚本后，在 b 站视频全屏界面中，使用触控板向下滚动将减少音量。（未安装时为增大）
 // @license      MIT
@@ -26,7 +26,7 @@
 
   const d=new Set;const e = async e=>{d.has(e)||(d.add(e),(t=>{typeof GM_addStyle=="function"?GM_addStyle(t):(document.head||document.documentElement).appendChild(document.createElement("style")).append(t);})(e));};
 
-  e(" dialog.svelte-1p4edfu{padding:0;border:none;border-radius:16px;height:auto;max-height:90vh;width:90%;max-width:600px;overflow:auto;position:fixed;-webkit-user-select:none;user-select:none;box-shadow:0 0 10px #0000001a}dialog.svelte-1p4edfu:not([open]){display:none}dialog.svelte-1p4edfu::backdrop{background:#0009}.inner.svelte-1p4edfu{width:100%;height:auto;background:#fff;border-radius:16px}.inner.svelte-1p4edfu:focus{outline:none}@media (max-width: 768px){dialog.svelte-1p4edfu{width:95%;height:auto;max-height:95vh;border-radius:12px}.inner.svelte-1p4edfu{border-radius:12px}}main.svelte-xdgvle{--primary: #007bff;--primary-hover: #0056b3;--secondary: #6c757d;--secondary-hover: #545b62;--text: #2c3e50;--text-light: #7f8c8d;--bg-light: #f8f9fa;--border: #dee2e6;--success: #28a745;padding:20px;height:auto;font-family:system-ui,-apple-system,sans-serif;color:var(--text);line-height:1.5}.header.svelte-xdgvle{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding-bottom:16px;border-bottom:2px solid #ecf0f1}h1.svelte-xdgvle{margin:0;font-size:1.5rem;font-weight:600}.content.svelte-xdgvle{text-align:center}.option-group.svelte-xdgvle{display:flex;flex-direction:column;gap:16px;margin-bottom:16px}.option-btn.svelte-xdgvle{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:20px;background:#fff;border:2px solid var(--border);border-radius:12px;cursor:pointer;text-align:left}.option-btn.svelte-xdgvle:hover{background:var(--bg-light)}.option-btn.active.svelte-xdgvle{border-color:var(--primary);background:#f0f7ff}.badge.svelte-xdgvle{background:var(--primary);color:#fff;padding:4px 8px;border-radius:4px;font-size:.8rem;font-weight:600;white-space:nowrap}.btn-content.svelte-xdgvle{display:flex;flex-direction:column;gap:4px}.btn-title.svelte-xdgvle{font-weight:600;font-size:1.1rem}.btn-desc.svelte-xdgvle{color:var(--text-light);font-size:.9rem}.note.svelte-xdgvle{background:#fff3cd;color:#856404;padding:12px;border-radius:8px;font-size:.9rem;border:1px solid #ffeaa7}.instruction.svelte-xdgvle{background:#e3f2fd;color:#0c5460;padding:16px;border-radius:8px;margin-bottom:16px}.instruction.svelte-xdgvle p:where(.svelte-xdgvle){margin:0;font-size:1.1rem}.calibrate-wrapper.svelte-xdgvle{display:flex;flex-direction:column;gap:12px}.calibrate-panel.svelte-xdgvle{background:var(--bg-light);padding:16px;border-radius:12px;border:1px solid var(--border);animation:svelte-xdgvle-slideDown .2s ease-out}@keyframes svelte-xdgvle-slideDown{0%{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}.small-text.svelte-xdgvle{font-size:.85rem;color:var(--text-light);margin-top:8px}.calibrate-area.svelte-xdgvle{background:#e3f2fd;border:2px dashed #90caf9;border-radius:8px;padding:24px;display:flex;flex-direction:column;align-items:center;gap:12px;cursor:ns-resize;transition:all .2s;color:#1976d2;margin-bottom:16px}.calibrate-area.svelte-xdgvle:hover{background:#bbdefb;border-color:#64b5f6}.calibrate-icon.svelte-xdgvle{opacity:.8}.status.svelte-xdgvle{background:#fff;padding:16px;border-radius:8px;margin:16px 0;display:flex;flex-direction:column;gap:12px;border:1px solid var(--border)}.status-item.svelte-xdgvle{display:flex;justify-content:space-between;align-items:center}.label.svelte-xdgvle{font-weight:600;color:#495057}.value.svelte-xdgvle{font-family:monospace;background:#fff;padding:4px 8px;border-radius:4px;border:1px solid var(--border);font-size:1.1rem}.highlight.svelte-xdgvle{background:var(--success);color:#fff;border-color:var(--success)}.action-buttons.svelte-xdgvle{display:flex;justify-content:center;gap:12px}.btn.svelte-xdgvle{padding:12px 24px;border:none;border-radius:8px;cursor:pointer;font-weight:500;color:#fff;font-size:1rem}.btn.primary.svelte-xdgvle{background:var(--primary)}.btn.primary.svelte-xdgvle:hover:not(:disabled){background:var(--primary-hover)}.btn.secondary.svelte-xdgvle{background:var(--secondary)}.btn.secondary.svelte-xdgvle:hover{background:var(--secondary-hover)}.btn.svelte-xdgvle:disabled{opacity:.6;cursor:not-allowed;background:#dee2e6;color:#6c757d}.repo-link.svelte-xdgvle{display:flex;align-items:center;justify-content:center;opacity:.6;transition:opacity .2s}.repo-link.svelte-xdgvle:hover{opacity:1}.repo-link.svelte-xdgvle img:where(.svelte-xdgvle){border-radius:50%} ");
+  e(" dialog.svelte-1p4edfu{padding:0;border:none;border-radius:16px;height:auto;max-height:90vh;width:90%;max-width:600px;overflow:auto;position:fixed;-webkit-user-select:none;user-select:none;box-shadow:0 0 10px #0000001a}dialog.svelte-1p4edfu:not([open]){display:none}dialog.svelte-1p4edfu::backdrop{background:#0009}.inner.svelte-1p4edfu{width:100%;height:auto;background:#fff;border-radius:16px}.inner.svelte-1p4edfu:focus{outline:none}@media(max-width:768px){dialog.svelte-1p4edfu{width:95%;height:auto;max-height:95vh;border-radius:12px}.inner.svelte-1p4edfu{border-radius:12px}}main.svelte-xdgvle{--primary: #007bff;--primary-hover: #0056b3;--secondary: #6c757d;--secondary-hover: #545b62;--text: #2c3e50;--text-light: #7f8c8d;--bg-light: #f8f9fa;--border: #dee2e6;--success: #28a745;padding:20px;height:auto;font-family:system-ui,-apple-system,sans-serif;color:var(--text);line-height:1.5}.header.svelte-xdgvle{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding-bottom:16px;border-bottom:2px solid #ecf0f1}h1.svelte-xdgvle{margin:0;font-size:1.5rem;font-weight:600}.content.svelte-xdgvle{text-align:center}.option-group.svelte-xdgvle{display:flex;flex-direction:column;gap:16px;margin-bottom:16px}.option-btn.svelte-xdgvle{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:20px;background:#fff;border:2px solid var(--border);border-radius:12px;cursor:pointer;text-align:left}.option-btn.svelte-xdgvle:hover{background:var(--bg-light)}.option-btn.active.svelte-xdgvle{border-color:var(--primary);background:#f0f7ff}.badge.svelte-xdgvle{background:var(--primary);color:#fff;padding:4px 8px;border-radius:4px;font-size:.8rem;font-weight:600;white-space:nowrap}.btn-content.svelte-xdgvle{display:flex;flex-direction:column;gap:4px}.btn-title.svelte-xdgvle{font-weight:600;font-size:1.1rem}.btn-desc.svelte-xdgvle{color:var(--text-light);font-size:.9rem}.note.svelte-xdgvle{background:#fff3cd;color:#856404;padding:12px;border-radius:8px;font-size:.9rem;border:1px solid #ffeaa7}.instruction.svelte-xdgvle{background:#e3f2fd;color:#0c5460;padding:16px;border-radius:8px;margin-bottom:16px}.instruction.svelte-xdgvle p:where(.svelte-xdgvle){margin:0;font-size:1.1rem}.calibrate-wrapper.svelte-xdgvle{display:flex;flex-direction:column;gap:12px}.calibrate-panel.svelte-xdgvle{background:var(--bg-light);padding:16px;border-radius:12px;border:1px solid var(--border);animation:svelte-xdgvle-slideDown .2s ease-out}@keyframes svelte-xdgvle-slideDown{0%{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}.small-text.svelte-xdgvle{font-size:.85rem;color:var(--text-light);margin-top:8px}.calibrate-area.svelte-xdgvle{background:#e3f2fd;border:2px dashed #90caf9;border-radius:8px;padding:24px;display:flex;flex-direction:column;align-items:center;gap:12px;cursor:ns-resize;transition:all .2s;color:#1976d2;margin-bottom:16px}.calibrate-area.svelte-xdgvle:hover{background:#bbdefb;border-color:#64b5f6}.calibrate-icon.svelte-xdgvle{opacity:.8}.status.svelte-xdgvle{background:#fff;padding:16px;border-radius:8px;margin:16px 0;display:flex;flex-direction:column;gap:12px;border:1px solid var(--border)}.status-item.svelte-xdgvle{display:flex;justify-content:space-between;align-items:center}.label.svelte-xdgvle{font-weight:600;color:#495057}.value.svelte-xdgvle{font-family:monospace;background:#fff;padding:4px 8px;border-radius:4px;border:1px solid var(--border);font-size:1.1rem}.highlight.svelte-xdgvle{background:var(--success);color:#fff;border-color:var(--success)}.action-buttons.svelte-xdgvle{display:flex;justify-content:center;gap:12px}.btn.svelte-xdgvle{padding:12px 24px;border:none;border-radius:8px;cursor:pointer;font-weight:500;color:#fff;font-size:1rem}.btn.primary.svelte-xdgvle{background:var(--primary)}.btn.primary.svelte-xdgvle:hover:not(:disabled){background:var(--primary-hover)}.btn.secondary.svelte-xdgvle{background:var(--secondary)}.btn.secondary.svelte-xdgvle:hover{background:var(--secondary-hover)}.btn.svelte-xdgvle:disabled{opacity:.6;cursor:not-allowed;background:#dee2e6;color:#6c757d}.repo-link.svelte-xdgvle{display:flex;align-items:center;justify-content:center;opacity:.6;transition:opacity .2s}.repo-link.svelte-xdgvle:hover{opacity:1}.repo-link.svelte-xdgvle img:where(.svelte-xdgvle){border-radius:50%} ");
 
   const DEV = false;
   var is_array = Array.isArray;
@@ -236,6 +236,38 @@ component_context
     }
     throw error;
   }
+  const STATUS_MASK = -7169;
+  function set_signal_status(signal, status) {
+    signal.f = signal.f & STATUS_MASK | status;
+  }
+  function update_derived_status(derived2) {
+    if ((derived2.f & CONNECTED) !== 0 || derived2.deps === null) {
+      set_signal_status(derived2, CLEAN);
+    } else {
+      set_signal_status(derived2, MAYBE_DIRTY);
+    }
+  }
+  function clear_marked(deps) {
+    if (deps === null) return;
+    for (const dep of deps) {
+      if ((dep.f & DERIVED) === 0 || (dep.f & WAS_MARKED) === 0) {
+        continue;
+      }
+      dep.f ^= WAS_MARKED;
+      clear_marked(
+dep.deps
+      );
+    }
+  }
+  function defer_effect(effect2, dirty_effects, maybe_dirty_effects) {
+    if ((effect2.f & DIRTY) !== 0) {
+      dirty_effects.add(effect2);
+    } else if ((effect2.f & MAYBE_DIRTY) !== 0) {
+      maybe_dirty_effects.add(effect2);
+    }
+    clear_marked(effect2.deps);
+    set_signal_status(effect2, CLEAN);
+  }
   const batches = new Set();
   let current_batch = null;
   let batch_values = null;
@@ -251,8 +283,8 @@ previous = new Map();
 #pending = 0;
 #blocking_pending = 0;
 #deferred = null;
-#dirty_effects = [];
-#maybe_dirty_effects = [];
+#dirty_effects = new Set();
+#maybe_dirty_effects = new Set();
 skipped_effects = new Set();
     is_fork = false;
     is_deferred() {
@@ -261,55 +293,43 @@ skipped_effects = new Set();
 process(root_effects) {
       queued_root_effects = [];
       this.apply();
-      var target = {
-        parent: null,
-        effect: null,
-        effects: [],
-        render_effects: [],
-        block_effects: []
-      };
+      var effects = [];
+      var render_effects = [];
       for (const root2 of root_effects) {
-        this.#traverse_effect_tree(root2, target);
+        this.#traverse_effect_tree(root2, effects, render_effects);
       }
       if (!this.is_fork) {
         this.#resolve();
       }
       if (this.is_deferred()) {
-        this.#defer_effects(target.effects);
-        this.#defer_effects(target.render_effects);
-        this.#defer_effects(target.block_effects);
+        this.#defer_effects(render_effects);
+        this.#defer_effects(effects);
       } else {
         current_batch = null;
-        flush_queued_effects(target.render_effects);
-        flush_queued_effects(target.effects);
+        flush_queued_effects(render_effects);
+        flush_queued_effects(effects);
         this.#deferred?.resolve();
       }
       batch_values = null;
     }
-#traverse_effect_tree(root2, target) {
+#traverse_effect_tree(root2, effects, render_effects) {
       root2.f ^= CLEAN;
       var effect2 = root2.first;
+      var pending_boundary = null;
       while (effect2 !== null) {
         var flags2 = effect2.f;
         var is_branch = (flags2 & (BRANCH_EFFECT | ROOT_EFFECT)) !== 0;
         var is_skippable_branch = is_branch && (flags2 & CLEAN) !== 0;
         var skip = is_skippable_branch || (flags2 & INERT) !== 0 || this.skipped_effects.has(effect2);
-        if ((effect2.f & BOUNDARY_EFFECT) !== 0 && effect2.b?.is_pending()) {
-          target = {
-            parent: target,
-            effect: effect2,
-            effects: [],
-            render_effects: [],
-            block_effects: []
-          };
-        }
         if (!skip && effect2.fn !== null) {
           if (is_branch) {
             effect2.f ^= CLEAN;
+          } else if (pending_boundary !== null && (flags2 & (EFFECT | RENDER_EFFECT | MANAGED_EFFECT)) !== 0) {
+            pending_boundary.b.defer_effect(effect2);
           } else if ((flags2 & EFFECT) !== 0) {
-            target.effects.push(effect2);
+            effects.push(effect2);
           } else if (is_dirty(effect2)) {
-            if ((effect2.f & BLOCK_EFFECT) !== 0) target.block_effects.push(effect2);
+            if ((flags2 & BLOCK_EFFECT) !== 0) this.#dirty_effects.add(effect2);
             update_effect(effect2);
           }
           var child2 = effect2.first;
@@ -321,12 +341,8 @@ process(root_effects) {
         var parent = effect2.parent;
         effect2 = effect2.next;
         while (effect2 === null && parent !== null) {
-          if (parent === target.effect) {
-            this.#defer_effects(target.effects);
-            this.#defer_effects(target.render_effects);
-            this.#defer_effects(target.block_effects);
-            target =
-target.parent;
+          if (parent === pending_boundary) {
+            pending_boundary = null;
           }
           effect2 = parent.next;
           parent = parent.parent;
@@ -334,27 +350,12 @@ target.parent;
       }
     }
 #defer_effects(effects) {
-      for (const e of effects) {
-        const target = (e.f & DIRTY) !== 0 ? this.#dirty_effects : this.#maybe_dirty_effects;
-        target.push(e);
-        this.#clear_marked(e.deps);
-        set_signal_status(e, CLEAN);
-      }
-    }
-#clear_marked(deps) {
-      if (deps === null) return;
-      for (const dep of deps) {
-        if ((dep.f & DERIVED) === 0 || (dep.f & WAS_MARKED) === 0) {
-          continue;
-        }
-        dep.f ^= WAS_MARKED;
-        this.#clear_marked(
-dep.deps
-        );
+      for (var i = 0; i < effects.length; i += 1) {
+        defer_effect(effects[i], this.#dirty_effects, this.#maybe_dirty_effects);
       }
     }
 capture(source2, value) {
-      if (!this.previous.has(source2)) {
+      if (value !== UNINITIALIZED && !this.previous.has(source2)) {
         this.previous.set(source2, value);
       }
       if ((source2.f & ERROR_VALUE) === 0) {
@@ -401,13 +402,6 @@ capture(source2, value) {
         this.previous.clear();
         var previous_batch_values = batch_values;
         var is_earlier = true;
-        var dummy_target = {
-          parent: null,
-          effect: null,
-          effects: [],
-          render_effects: [],
-          block_effects: []
-        };
         for (const batch of batches) {
           if (batch === this) {
             is_earlier = false;
@@ -440,7 +434,7 @@ capture(source2, value) {
               current_batch = batch;
               batch.apply();
               for (const root2 of queued_root_effects) {
-                batch.#traverse_effect_tree(root2, dummy_target);
+                batch.#traverse_effect_tree(root2, [], []);
               }
               batch.deactivate();
             }
@@ -464,6 +458,7 @@ decrement(blocking) {
     }
     revive() {
       for (const e of this.#dirty_effects) {
+        this.#maybe_dirty_effects.delete(e);
         set_signal_status(e, DIRTY);
         schedule_effect(e);
       }
@@ -471,8 +466,6 @@ decrement(blocking) {
         set_signal_status(e, MAYBE_DIRTY);
         schedule_effect(e);
       }
-      this.#dirty_effects = [];
-      this.#maybe_dirty_effects = [];
       this.flush();
     }
 oncommit(fn) {
@@ -546,7 +539,7 @@ static enqueue(task) {
       if ((effect2.f & (DESTROYED | INERT)) === 0 && is_dirty(effect2)) {
         eager_block_effects = new Set();
         update_effect(effect2);
-        if (effect2.deps === null && effect2.first === null && effect2.nodes_start === null) {
+        if (effect2.deps === null && effect2.first === null && effect2.nodes === null) {
           if (effect2.teardown === null && effect2.ac === null) {
             unlink_effect(effect2);
           } else {
@@ -671,7 +664,7 @@ dep,
   }
   class Boundary {
 parent;
-    #pending = false;
+    is_pending = false;
 #anchor;
 #hydrate_open = null;
 #props;
@@ -685,6 +678,8 @@ parent;
     #local_pending_count = 0;
     #pending_count = 0;
     #is_creating_fallback = false;
+#dirty_effects = new Set();
+#maybe_dirty_effects = new Set();
 #effect_pending = null;
     #effect_pending_subscriber = createSubscriber(() => {
       this.#effect_pending = source(this.#local_pending_count);
@@ -698,7 +693,7 @@ constructor(node, props, children) {
       this.#children = children;
       this.parent =
 active_effect.b;
-      this.#pending = !!this.#props.pending;
+      this.is_pending = !!this.#props.pending;
       this.#effect = block(() => {
         active_effect.b = this;
         {
@@ -711,7 +706,7 @@ active_effect.b;
           if (this.#pending_count > 0) {
             this.#show_pending_snippet();
           } else {
-            this.#pending = false;
+            this.is_pending = false;
           }
         }
         return () => {
@@ -725,7 +720,6 @@ active_effect.b;
       } catch (error) {
         this.error(error);
       }
-      this.#pending = false;
     }
     #hydrate_pending_content() {
       const pending = this.#props.pending;
@@ -748,21 +742,24 @@ this.#pending_effect,
               this.#pending_effect = null;
             }
           );
-          this.#pending = false;
+          this.is_pending = false;
         }
       });
     }
     #get_anchor() {
       var anchor = this.#anchor;
-      if (this.#pending) {
+      if (this.is_pending) {
         this.#pending_anchor = create_text();
         this.#anchor.before(this.#pending_anchor);
         anchor = this.#pending_anchor;
       }
       return anchor;
     }
-is_pending() {
-      return this.#pending || !!this.parent && this.parent.is_pending();
+defer_effect(effect2) {
+      defer_effect(effect2, this.#dirty_effects, this.#maybe_dirty_effects);
+    }
+is_rendered() {
+      return !this.is_pending && (!this.parent || this.parent.is_rendered());
     }
     has_pending_snippet() {
       return !!this.#props.pending;
@@ -809,7 +806,17 @@ this.#pending_anchor
       }
       this.#pending_count += d;
       if (this.#pending_count === 0) {
-        this.#pending = false;
+        this.is_pending = false;
+        for (const e of this.#dirty_effects) {
+          set_signal_status(e, DIRTY);
+          schedule_effect(e);
+        }
+        for (const e of this.#maybe_dirty_effects) {
+          set_signal_status(e, MAYBE_DIRTY);
+          schedule_effect(e);
+        }
+        this.#dirty_effects.clear();
+        this.#maybe_dirty_effects.clear();
         if (this.#pending_effect) {
           pause_effect(this.#pending_effect, () => {
             this.#pending_effect = null;
@@ -870,7 +877,7 @@ error(error) {
             this.#failed_effect = null;
           });
         }
-        this.#pending = this.has_pending_snippet();
+        this.is_pending = this.has_pending_snippet();
         this.#main_effect = this.#run(() => {
           this.#is_creating_fallback = false;
           return branch(() => this.#children(this.#anchor));
@@ -878,7 +885,7 @@ error(error) {
         if (this.#pending_count > 0) {
           this.#show_pending_snippet();
         } else {
-          this.#pending = false;
+          this.is_pending = false;
         }
       };
       var previous_reaction = active_reaction;
@@ -1003,7 +1010,7 @@ UNINITIALIZED
     };
     return signal;
   }
-function async_derived(fn, location) {
+function async_derived(fn, label, location) {
     let parent = (
 active_effect
     );
@@ -1040,7 +1047,7 @@ UNINITIALIZED
 current_batch
       );
       if (should_suspend) {
-        var blocking = !boundary2.is_pending();
+        var blocking = boundary2.is_rendered();
         boundary2.update_pending_count(1);
         batch.increment(blocking);
         deferreds.get(batch)?.reject(STALE_REACTION);
@@ -1137,10 +1144,14 @@ parent
   function update_derived(derived2) {
     var value = execute_derived(derived2);
     if (!derived2.equals(value)) {
-      if (!current_batch?.is_fork) {
-        derived2.v = value;
-      }
       derived2.wv = increment_write_version();
+      if (!current_batch?.is_fork || derived2.deps === null) {
+        derived2.v = value;
+        if (derived2.deps === null) {
+          set_signal_status(derived2, CLEAN);
+          return;
+        }
+      }
     }
     if (is_destroying_effect) {
       return;
@@ -1150,8 +1161,7 @@ parent
         batch_values.set(derived2, value);
       }
     } else {
-      var status = (derived2.f & CONNECTED) === 0 ? MAYBE_DIRTY : CLEAN;
-      set_signal_status(derived2, status);
+      update_derived_status(derived2);
     }
   }
   let eager_effects = new Set();
@@ -1204,12 +1214,13 @@ function mutable_source(initial_value, immutable = false, trackable = true) {
       var batch = Batch.ensure();
       batch.capture(source2, old_value);
       if ((source2.f & DERIVED) !== 0) {
-        if ((source2.f & DIRTY) !== 0) {
-          execute_derived(
+        const derived2 = (
 source2
-          );
+        );
+        if ((source2.f & DIRTY) !== 0) {
+          execute_derived(derived2);
         }
-        set_signal_status(source2, (source2.f & CONNECTED) !== 0 ? CLEAN : MAYBE_DIRTY);
+        update_derived_status(derived2);
       }
       source2.wv = increment_write_version();
       mark_reactions(source2, DIRTY);
@@ -1501,10 +1512,14 @@ sources.get("length")
     return document.createTextNode(value);
   }
 function get_first_child(node) {
-    return first_child_getter.call(node);
+    return (
+first_child_getter.call(node)
+    );
   }
 function get_next_sibling(node) {
-    return next_sibling_getter.call(node);
+    return (
+next_sibling_getter.call(node)
+    );
   }
   function child(node, is_text) {
     {
@@ -1563,8 +1578,7 @@ get_next_sibling(next_sibling);
     var effect2 = {
       ctx: component_context,
       deps: null,
-      nodes_start: null,
-      nodes_end: null,
+      nodes: null,
       f: type | DIRTY | CONNECTED,
       first: null,
       fn,
@@ -1574,7 +1588,6 @@ get_next_sibling(next_sibling);
       b: parent && parent.b,
       prev: null,
       teardown: null,
-      transitions: null,
       wv: 0,
       ac: null
     };
@@ -1590,7 +1603,7 @@ get_next_sibling(next_sibling);
       schedule_effect(effect2);
     }
     var e = effect2;
-    if (sync && e.deps === null && e.teardown === null && e.nodes_start === null && e.first === e.last &&
+    if (sync && e.deps === null && e.teardown === null && e.nodes === null && e.first === e.last &&
 (e.f & EFFECT_PRESERVED) === 0) {
       e = e.first;
       if ((type & BLOCK_EFFECT) !== 0 && (type & EFFECT_TRANSPARENT) !== 0 && e !== null) {
@@ -1726,17 +1739,17 @@ component_context
   }
   function destroy_effect(effect2, remove_dom = true) {
     var removed = false;
-    if ((remove_dom || (effect2.f & HEAD_EFFECT) !== 0) && effect2.nodes_start !== null && effect2.nodes_end !== null) {
+    if ((remove_dom || (effect2.f & HEAD_EFFECT) !== 0) && effect2.nodes !== null && effect2.nodes.end !== null) {
       remove_effect_dom(
-        effect2.nodes_start,
-effect2.nodes_end
+        effect2.nodes.start,
+effect2.nodes.end
       );
       removed = true;
     }
     destroy_effect_children(effect2, remove_dom && !removed);
     remove_reactions(effect2, 0);
     set_signal_status(effect2, DESTROYED);
-    var transitions = effect2.transitions;
+    var transitions = effect2.nodes && effect2.nodes.t;
     if (transitions !== null) {
       for (const transition of transitions) {
         transition.stop();
@@ -1747,14 +1760,11 @@ effect2.nodes_end
     if (parent !== null && parent.first !== null) {
       unlink_effect(effect2);
     }
-    effect2.next = effect2.prev = effect2.teardown = effect2.ctx = effect2.deps = effect2.fn = effect2.nodes_start = effect2.nodes_end = effect2.ac = null;
+    effect2.next = effect2.prev = effect2.teardown = effect2.ctx = effect2.deps = effect2.fn = effect2.nodes = effect2.ac = null;
   }
   function remove_effect_dom(node, end) {
     while (node !== null) {
-      var next = node === end ? null : (
-
-get_next_sibling(node)
-      );
+      var next = node === end ? null : get_next_sibling(node);
       node.remove();
       node = next;
     }
@@ -1773,12 +1783,10 @@ get_next_sibling(node)
   function pause_effect(effect2, callback, destroy = true) {
     var transitions = [];
     pause_children(effect2, transitions, true);
-    run_out_transitions(transitions, () => {
+    var fn = () => {
       if (destroy) destroy_effect(effect2);
       if (callback) callback();
-    });
-  }
-  function run_out_transitions(transitions, fn) {
+    };
     var remaining = transitions.length;
     if (remaining > 0) {
       var check = () => --remaining || fn();
@@ -1792,8 +1800,9 @@ get_next_sibling(node)
   function pause_children(effect2, transitions, local) {
     if ((effect2.f & INERT) !== 0) return;
     effect2.f ^= INERT;
-    if (effect2.transitions !== null) {
-      for (const transition of effect2.transitions) {
+    var t = effect2.nodes && effect2.nodes.t;
+    if (t !== null) {
+      for (const transition of t) {
         if (transition.is_global || local) {
           transitions.push(transition);
         }
@@ -1827,8 +1836,9 @@ get_next_sibling(node)
       resume_children(child2, transparent ? local : false);
       child2 = sibling2;
     }
-    if (effect2.transitions !== null) {
-      for (const transition of effect2.transitions) {
+    var t = effect2.nodes && effect2.nodes.t;
+    if (t !== null) {
+      for (const transition of t) {
         if (transition.is_global || local) {
           transition.in();
         }
@@ -1836,13 +1846,11 @@ get_next_sibling(node)
     }
   }
   function move_effect(effect2, fragment) {
-    var node = effect2.nodes_start;
-    var end = effect2.nodes_end;
+    if (!effect2.nodes) return;
+    var node = effect2.nodes.start;
+    var end = effect2.nodes.end;
     while (node !== null) {
-      var next = node === end ? null : (
-
-get_next_sibling(node)
-      );
+      var next = node === end ? null : get_next_sibling(node);
       fragment.append(node);
       node = next;
     }
@@ -1898,21 +1906,21 @@ get_next_sibling(node)
       reaction.f &= ~WAS_MARKED;
     }
     if ((flags2 & MAYBE_DIRTY) !== 0) {
-      var dependencies = reaction.deps;
-      if (dependencies !== null) {
-        var length = dependencies.length;
-        for (var i = 0; i < length; i++) {
-          var dependency = dependencies[i];
-          if (is_dirty(
+      var dependencies = (
+reaction.deps
+      );
+      var length = dependencies.length;
+      for (var i = 0; i < length; i++) {
+        var dependency = dependencies[i];
+        if (is_dirty(
 dependency
-          )) {
-            update_derived(
+        )) {
+          update_derived(
 dependency
-            );
-          }
-          if (dependency.wv > reaction.wv) {
-            return true;
-          }
+          );
+        }
+        if (dependency.wv > reaction.wv) {
+          return true;
         }
       }
       if ((flags2 & CONNECTED) !== 0 &&
@@ -1992,7 +2000,7 @@ reaction.fn
         } else {
           reaction.deps = deps = new_deps;
         }
-        if (is_updating_effect && effect_tracking() && (reaction.f & CONNECTED) !== 0) {
+        if (effect_tracking() && (reaction.f & CONNECTED) !== 0) {
           for (i = skipped_deps; i < deps.length; i++) {
             (deps[i].reactions ??= []).push(reaction);
           }
@@ -2057,18 +2065,16 @@ untracked_writes);
 
 
 (new_deps === null || !new_deps.includes(dependency))) {
-      set_signal_status(dependency, MAYBE_DIRTY);
-      if ((dependency.f & CONNECTED) !== 0) {
-        dependency.f ^= CONNECTED;
-        dependency.f &= ~WAS_MARKED;
-      }
-      destroy_derived_effects(
+      var derived2 = (
 dependency
       );
-      remove_reactions(
-dependency,
-        0
-      );
+      if ((derived2.f & CONNECTED) !== 0) {
+        derived2.f ^= CONNECTED;
+        derived2.f &= ~WAS_MARKED;
+      }
+      update_derived_status(derived2);
+      destroy_derived_effects(derived2);
+      remove_reactions(derived2, 0);
     }
   }
   function remove_reactions(signal, start_index) {
@@ -2134,14 +2140,14 @@ dependency,
         }
       }
     }
-    if (is_destroying_effect) {
-      if (old_values.has(signal)) {
-        return old_values.get(signal);
-      }
-      if (is_derived) {
-        var derived2 = (
+    if (is_destroying_effect && old_values.has(signal)) {
+      return old_values.get(signal);
+    }
+    if (is_derived) {
+      var derived2 = (
 signal
-        );
+      );
+      if (is_destroying_effect) {
         var value = derived2.v;
         if ((derived2.f & CLEAN) === 0 && derived2.reactions !== null || depends_on_old_values(derived2)) {
           value = execute_derived(derived2);
@@ -2149,13 +2155,15 @@ signal
         old_values.set(derived2, value);
         return value;
       }
-    } else if (is_derived && (!batch_values?.has(signal) || current_batch?.is_fork && !effect_tracking())) {
-      derived2 =
-signal;
+      var should_connect = (derived2.f & CONNECTED) === 0 && !untracking && active_reaction !== null && (is_updating_effect || (active_reaction.f & CONNECTED) !== 0);
+      var is_new = derived2.deps === null;
       if (is_dirty(derived2)) {
+        if (should_connect) {
+          derived2.f |= CONNECTED;
+        }
         update_derived(derived2);
       }
-      if (is_updating_effect && effect_tracking() && (derived2.f & CONNECTED) === 0) {
+      if (should_connect && !is_new) {
         reconnect(derived2);
       }
     }
@@ -2169,7 +2177,7 @@ signal;
   }
   function reconnect(derived2) {
     if (derived2.deps === null) return;
-    derived2.f ^= CONNECTED;
+    derived2.f |= CONNECTED;
     for (const dep of derived2.deps) {
       (dep.reactions ??= []).push(derived2);
       if ((dep.f & DERIVED) !== 0 && (dep.f & CONNECTED) === 0) {
@@ -2202,10 +2210,6 @@ dep
     } finally {
       untracking = previous_untracking;
     }
-  }
-  const STATUS_MASK = -7169;
-  function set_signal_status(signal, status) {
-    signal.f = signal.f & STATUS_MASK | status;
   }
   function deep_read_state(value) {
     if (typeof value !== "object" || !value || value instanceof EventTarget) {
@@ -2380,9 +2384,8 @@ event2.target === current_target)) {
     var effect2 = (
 active_effect
     );
-    if (effect2.nodes_start === null) {
-      effect2.nodes_start = start;
-      effect2.nodes_end = end;
+    if (effect2.nodes === null) {
+      effect2.nodes = { start, end, a: null, t: null };
     }
   }
 function from_html(content, flags2) {
@@ -2864,7 +2867,7 @@ context.l
   var root_2 = from_html(`<button><div class="btn-content svelte-xdgvle"><span class="btn-title svelte-xdgvle">简单模式</span> <span class="btn-desc svelte-xdgvle">默认 deltaY &lt; 100 为触控板</span></div> <!></button>`);
   var root_7 = from_html(`<span class="badge svelte-xdgvle">已启用</span>`);
   var root_4 = from_html(`<button><div class="btn-content svelte-xdgvle"><span class="btn-title svelte-xdgvle">校验模式</span> <span class="btn-desc svelte-xdgvle"><!></span></div> <!></button>`);
-  var root_8 = from_html(`<div class="calibrate-panel svelte-xdgvle"><div class="instruction svelte-xdgvle"><p class="svelte-xdgvle">请使用<strong>最小刻度</strong>滚动<strong>鼠标滚轮</strong></p> <p class="small-text svelte-xdgvle">请不要快速连续滚动，优先选择大多数情况下出现的最小整数值。</p></div> <div class="calibrate-area svelte-xdgvle"><div class="calibrate-icon svelte-xdgvle"><svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor"><path d="M12 2C8.69 2 6 4.69 6 8v8c0 3.31 2.69 6 6 6s6-2.69 6-6V8c0-3.31-2.69-6-6-6zm0 2c2.21 0 4 1.79 4 4v8c0 2.21-1.79 4-4 4s-4-1.79-4-4V8c0-2.21 1.79-4 4-4zm-1 2v4h2V6h-2z"></path></svg></div> <span>在此区域滚动鼠标滚轮</span></div> <div class="status svelte-xdgvle"><div class="status-item svelte-xdgvle"><span class="label svelte-xdgvle">最小 deltaY 绝对值:</span> <span class="value highlight svelte-xdgvle"> </span></div> <div class="status-item svelte-xdgvle"><span class="label svelte-xdgvle">当前值:</span> <span class="value svelte-xdgvle"> </span></div></div> <div class="action-buttons svelte-xdgvle"><button class="btn secondary svelte-xdgvle">取消</button> <button class="btn secondary svelte-xdgvle">重置</button> <button class="btn primary svelte-xdgvle">确定</button></div></div>`);
+  var root_8 = from_html(`<div class="calibrate-panel svelte-xdgvle"><div class="instruction svelte-xdgvle"><p class="svelte-xdgvle">请使用<strong>最小刻度</strong>滚动<strong>鼠标滚轮</strong></p> <p class="small-text svelte-xdgvle">请不要快速连续滚动，优先选择多数情况下出现的最小整数值。</p></div> <div class="calibrate-area svelte-xdgvle"><div class="calibrate-icon svelte-xdgvle"><svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor"><path d="M12 2C8.69 2 6 4.69 6 8v8c0 3.31 2.69 6 6 6s6-2.69 6-6V8c0-3.31-2.69-6-6-6zm0 2c2.21 0 4 1.79 4 4v8c0 2.21-1.79 4-4 4s-4-1.79-4-4V8c0-2.21 1.79-4 4-4zm-1 2v4h2V6h-2z"></path></svg></div> <span>在此区域滚动鼠标滚轮</span></div> <div class="status svelte-xdgvle"><div class="status-item svelte-xdgvle"><span class="label svelte-xdgvle">最小 deltaY 绝对值:</span> <span class="value highlight svelte-xdgvle"> </span></div> <div class="status-item svelte-xdgvle"><span class="label svelte-xdgvle">当前值:</span> <span class="value svelte-xdgvle"> </span></div></div> <div class="action-buttons svelte-xdgvle"><button class="btn secondary svelte-xdgvle">取消</button> <button class="btn secondary svelte-xdgvle">重置</button> <button class="btn primary svelte-xdgvle">确定</button></div></div>`);
   var root_1 = from_html(`<main class="svelte-xdgvle"><div class="header svelte-xdgvle"><h1 class="svelte-xdgvle">BiliScrollReverser</h1> <a href="https://github.com/maxchang3/BiliScrollReverser" target="_blank" rel="noopener noreferrer" class="repo-link svelte-xdgvle" title="Github"><img src="https://github.com/favicon.ico" alt="GitHub" width="24" height="24" class="svelte-xdgvle"/></a></div> <div class="content svelte-xdgvle"><div class="option-group svelte-xdgvle"><!> <div class="calibrate-wrapper svelte-xdgvle"><!> <!></div></div> <div class="note svelte-xdgvle"><strong>注意：</strong>如果鼠标滚动均为整数值，建议选择简单模式</div></div></main>`);
   function Config($$anchor, $$props) {
     push($$props, false);
@@ -2873,8 +2876,8 @@ context.l
     let currentDelta = mutable_source();
     let popup = mutable_source();
     let existingConfig = mutable_source(getMouseMinDelta());
-    player.on("Player_Canplay", () => player.pause());
     const show = () => {
+      player.pause();
       set(existingConfig, getMouseMinDelta());
       set(openCalibrate, false);
       set(minDelta, Infinity);

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         JAV-JHS English
 // @namespace    JAV-JHS English
-// @version      3.3.6.012
+// @version      3.3.6.013
 // @author       JAV-JHS English
 // @description  Jav-JHS (Jav-Censor): Collect, Block, Mark as Downloaded; Block Tags, Block Actresses, Sync Favorite Actresses, New Work Detection; Free VIP viewing of Hot, Top250 charts, Fc2ppv, View all comments, Related lists; Cloud drive backup support; Image search; Subtitle search; JavDb|JavBus
 // @license      MIT
@@ -8579,7 +8579,7 @@ class ListPageButtonPlugin extends BasePlugin {
     }
   }
 }
-const translateText = async (text, sourceLang = 'ja', targetLang = 'zh-CN') => {
+const translateText = async (text, sourceLang = 'ja', targetLang = 'en') => {
     if (!text) throw new Error('Translation text cannot be empty');
     const url =
         'https://translate-pa.googleapis.com/v1/translate?' +

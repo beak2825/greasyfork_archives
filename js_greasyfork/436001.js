@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Facebook Ads UTM
 // @namespace    http://tampermonkey.net/
-// @version      1.1.28
+// @version      1.1.29
 // @description  Facebook Ads UTM Tool For Saker!
 // @author       Jimmy
 // @include      *.facebook.com/adsmanager/*
@@ -765,7 +765,8 @@
         let urlarr = pageURL.match("manage/(.*)[\?]act=");
         type = $.trim(urlarr[1]);
         if(type == "campaigns" || type == "adsets" || type == "ads"){
-            if(!siteadd){
+            //添加后有可能被后续分值的元素覆盖，导致内容没有，需要确保添加的元素存在
+            if(!siteadd || !$('.sakerHtmlElement').length){
                 //位于Campaigns div后, 以便小屏下UI展示
                 console.log('addhtml start')
                 if(campaignsElementClass3.length>0){
@@ -853,7 +854,10 @@
                     track();
                 }
             }
-            $('.sakerHtmlElement').slice(1).remove();
+            //显示速度如果快的话，分值元素后面也会出现开关，只需要保留一个
+            if($('.sakerHtmlElement').length>1){
+                $('.sakerHtmlElement').slice(1).remove();
+            }
         }else{
             console.log('111')
             siteadd = false;

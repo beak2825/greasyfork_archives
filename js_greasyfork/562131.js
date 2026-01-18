@@ -4,9 +4,10 @@
 // @description  Améliore l'interface de Kraland
 // @author       Somin
 // @namespace    somin
-// @version      beta.0.16
+// @version      beta.0.20
 // @match        http://www.kraland.org/*
 // @match        http://kraland.org/*
+// @match        http://test.kraland.org/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=kraland.org
 // @grant        none
 // @downloadURL https://update.greasyfork.org/scripts/562131/Eleven.user.js
@@ -120,9 +121,6 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
     //+------------ Paramétrages du Script --------------+
 
     //--- Variables Globales
-    var kdocument=document;
-    var theUrl=window.location.href;
-
     var aparam={
         pinup: EpinglerLesMenus,
         avaFora: tailleDesAvatarsForum,
@@ -158,16 +156,17 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
     var savedTxtData=[];
 
     //--- Initialisation
+    var kipath = window.location.pathname;
     const navBrand=document.querySelector('nav a.navbar-brand');
     if(navBrand){
-        switch(navBrand.href){
-            case 'http://www.kraland.org/accueil' :
+        switch(navBrand.getAttribute('href')){
+            case 'accueil' :
                 main();
                 break;
-            case 'http://www.kraland.org/map/cybermonde' :
+            case 'map/cybermonde' :
                 cybermap();
                 break;
-            case 'http://www.kraland.org/help':
+            case 'help':
                 //help();
                 break;
             default:
@@ -177,16 +176,17 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
     }else{
        // check rapport privé
         function isReportPage() {
-            return window.location.pathname === '/report'
-            || document.getElementById('myTab');
+            return kipath.startsWith('/report')
+            || kipath.startsWith('/combat');
         }
-        if (isReportPage()) {
+        if(isReportPage()){
+            console.log('rp');
             rp();
         }
     }
 
     function main(){
-        globalki();
+        mainki();
         let navbar=document.getElementById('navbar');
         var kili, lia;
         if(navbar){
@@ -231,8 +231,12 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
         }
     }
 
-    function globalki(){
-        if(!aparam.mc){document.getElementById('flap_closed').remove();}
+    function mainki(){
+        //--- minichat
+        let mc=document.getElementById('flap_closed');
+        if(mc && !aparam.mc){mc.remove();}
+
+        //--- page centrale
         var contentki=document.getElementById('content');
         contentki.style.width='auto';
         var rowki=contentki.querySelector('.row');
@@ -266,7 +270,6 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
             sessionStorage.noad=true;
         }
 
-
         var botKi=document.querySelector('footer');
         botKi.style.minHeight='auto';
         switch(slimfooter){
@@ -285,15 +288,11 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
         }
     }
 
-    function motd(){
-        let wpanels=document.querySelectorAll('#myCarousel .item');
-        for(let i=0;i<wpanels.length;i++){
-            wpanels[i].querySelector('img').style.margin='0px auto';
-        }
-    }
-
     function play(){
         pinup();
+        var cLeft=document.getElementById('col-left');
+        let cLeftBody=cLeft.querySelector('div.panel-body');
+        cLeftBody.style.padding='5px';
 
         var cRight=document.getElementById('col-right');
         var containerf=cRight.querySelector('.container-fluid');
@@ -303,26 +302,61 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
 
         //--- détection de la page
         let path = window.location.pathname;
-        switch(path) {
-            case '/jouer/plateau':
+        switch(true) {
+            case path.startsWith('/jouer/plateau'):
                 mainp();
                 break;
-            case '/jouer/materiel':
+            case path.startsWith('/jouer/materiel'):
                 matp();
                 break;
-            case '/jouer/perso':
+            case path.startsWith('/jouer/perso'):
                 persop();
                 break;
-            case '/jouer/bat':
+            case path.startsWith('/jouer/bat'):
                 batp();
                 break;
-            case '/jouer/pnj':
+            case path.startsWith('/jouer/pnj'):
                 pnjp();
                 break;
             default:
+                console.log('test56');
+        }
+
+        navseven();
+        function navseven(){
+            const nav=document.getElementById('navbar');
+            //--- close sub
+            document.querySelector('nav').style.pointerEvents = 'none';
+            setTimeout(()=>{document.querySelector('nav').style.pointerEvents = 'auto';},50);
+
+            //--- nouvelle barre de navigation
+            var pLinks=nav.querySelector('ul.dropdown-menu').querySelectorAll('a');
+            let nrowc=document.createElement('div');
+            nrowc.classList.add('row', 'center');
+            for(let i=0;i<pLinks.length;i++){
+                let nLink = pLinks[i].cloneNode(true);
+                nLink.classList.add('btn', 'btn-default', 'mini'); //btn-primary
+                //nLink.style.padding='5px';
+                //nLink.style.margin='2px';
+                nrowc.appendChild(nLink);
+            }
+            var rowc=containerf.querySelector('div.row.center map');
+            nrowc.style.width='50%';
+            nrowc.style.marginBottom='10px';
+            if(rowc){
+                nrowc.style.width='50%';
+                nrowc.style.float='left';
+                rowc.parentElement.style.verticalAlign='middle';
+                rowc.parentElement.insertBefore(nrowc,rowc);
+            }else if(path.startsWith('/jouer/perso')){
+                document.getElementById('home').insertBefore(nrowc,containerf);
+            }else {
+                cRight.insertBefore(nrowc,containerf);
+            }
         }
 
         function mainp(){
+            console.log('test55');
             //--- pj side
             let pjSide=cRight.querySelector('.dashboard');
             pjStyle(pjSide);
@@ -348,6 +382,43 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
             let bSide=cRight.querySelectorAll('.dashboard')[1];
             boxStyle(bSide);
 
+            // popup
+/*
+const observer = new MutationObserver((mutations, obs) => {
+    const modal = document.querySelector('.bootbox.modal');
+    if (!modal) return;
+
+    const textarea = modal.querySelector('textarea[name="message"]');
+    const checkbox = modal.querySelector('input[type="checkbox"][name="f[0]"]');
+
+    if (textarea) textarea.value = 'Auto message';
+    if (checkbox) checkbox.checked = true;
+
+    if (textarea && checkbox) obs.disconnect();
+});
+observer.observe(document.body, { childList: true, subtree: true });
+*/
+            /*
+            const modalObserver = new MutationObserver((mutations, obs) => {
+    const modal = document.querySelector('.bootbox.modal');
+    if (!modal) return;
+
+    const textarea = modal.querySelector('textarea[name="message"]');
+    if (textarea) textarea.value = 'Auto message';
+
+    const checkbox = modal.querySelector('input[type="checkbox"][name="f[0]"]');
+    if (checkbox) checkbox.checked = true;
+
+    const select = modal.querySelector('select[name="n[1]"]');
+    if (select) select.value = "6";
+
+    if (textarea && checkbox && select) {
+        obs.disconnect();
+    }
+});
+modalObserver.observe(document.body, { childList: true, subtree: true });
+
+            */
         }
 
         function matp(){
@@ -360,10 +431,24 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
         }
 
         function pnjp(){
-
+            let panels=containerf.querySelectorAll('.panel-default');
+            for(let i=0;i<panels.length;i++){
+                panels[i].style.marginBottom=mBottomSize;
+                let panelHeading=panels[i].querySelector('.panel-heading');
+                panelHeading.style.padding='5px';
+                let panelBody=panels[i].querySelector('.panel-body');
+                panelBody.style.padding='5px';
+            }
         }
         function batp(){
-
+            let panels=containerf.querySelectorAll('.panel-default');
+            for(let i=0;i<panels.length;i++){
+                panels[i].style.marginBottom=mBottomSize;
+                let panelHeading=panels[i].querySelector('.panel-heading');
+                panelHeading.style.padding='5px';
+                let panelBody=panels[i].querySelector('.panel-body');
+                panelBody.style.padding='5px';
+            }
         }
         function persop(){
             let panels=containerf.querySelectorAll('.panel-default');
@@ -547,6 +632,13 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
         }
     }
 
+    function motd(){
+        let wpanels=document.querySelectorAll('#myCarousel .item');
+        for(let i=0;i<wpanels.length;i++){
+            wpanels[i].querySelector('img').style.margin='0px auto';
+        }
+    }
+
     function forum(){
         var cRight=document.getElementById('col-right');
         var cLeft=document.getElementById('col-left');
@@ -561,18 +653,9 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
         }
 
         function topicSetUp(){
-            // sujet
-            /*
-            cRight.style.width=aparam.twidth+'%';
-            if(aparam.twidth<=80){
-                cLeft.remove();
-            }else{
-                cLeft.style.width='auto';
-                let fw=parseFloat(aparam.twidth);
-                let cleftWidth=(100-fw);
-                cLeft.style.maxWidth=cleftWidth+'%';
-            }*/
             pinup();
+            leftSetup();
+            cLeft.style.width = '15%';
 
             // avatar & cartouche
             var userinfo=document.querySelectorAll('div.user-info');
@@ -682,14 +765,19 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
         }
 
         function forumSetUp(){
-            if(cLeft){
+            if(cLeft && true){
                 cLeft.remove();
             }else{
-                row.style.paddingLeft="5%";
-                row.style.paddingRight="5%";
+                //pinup();
+                leftSetup();
+                row.style.marginLeft="10%";
+                row.style.marginRight="5%";
+                cLeft.style.width = '15%';
+                cLeft.style.paddingRight='5px';
+                cLeft.style.paddingLeft='5px';
             }
 
-            if(cRight){
+            if(cRight && true){
                 cRight.style.width=aparam.fwidth+'%';
                 if(aparam.fwidth==100){
                     cRight.style.paddingLeft='5%';
@@ -704,6 +792,20 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
                 }
                 let allurl=document.querySelectorAll('a');
                 allurl.forEach(u=>{u.style.textDecoration='none';})
+            }
+
+            let fbtn=cRight.querySelector('h1 a');
+            if(!fbtn){
+                cRight.querySelector('h1').remove();
+            }
+        }
+
+        function leftSetup(){
+            let cLeftTitle=cLeft.querySelector('span.list-group-item.active');
+            cLeftTitle.style.padding='5px';
+            let furl=cLeft.querySelectorAll('a');
+            for(let i=0;i<furl.length;i++){
+                furl[i].style.padding='5px';
             }
         }
     }
@@ -760,7 +862,7 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
 
     //+------------ Ergonomie des Spoiler --------------+
     function ezSpoiler(){
-        var allspoiler=kdocument.querySelectorAll(".pre-spoiler");
+        var allspoiler=document.querySelectorAll(".pre-spoiler");
         for(let i=0;i<allspoiler.length;i++){
             allspoiler[i].addEventListener("click",displayB,false);
         }
@@ -779,6 +881,10 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
     //+------------ Epingler les menus ---------------+
     function pinup(){
         var cLeft=document.getElementById('col-left');
+        cLeft.style.padding='5px';
+        let cLeftTitle=cLeft.querySelector('span.list-group-item.active');
+        cLeftTitle.style.padding='5px';
+
         var cRight=document.getElementById('col-right');
         var content=document.getElementById('content');
         content.style.width='100%';

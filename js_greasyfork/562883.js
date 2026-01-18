@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTubeからYouTubeショートの部分を非表示にするやつ
 // @namespace    http://tampermonkey.net/
-// @version      0.1
+// @version      0.3
 // @description  一覧から非表示にする。直打ちなら見れる
 // @author       You
 // @match        https://www.youtube.com/*
@@ -15,9 +15,9 @@
 (function() {
     'use strict';
     const selectors = [
-        "#contents > ytd-reel-shelf-renderer",
-        "#dismissible",
-        "#items > ytd-reel-shelf-renderer"
+        "ytd-reel-shelf-renderer",
+        "grid-shelf-view-model",
+        "#contents-container"
     ];
 
     function removeTargets() {

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         kone base64 자동복호화
 // @namespace    http://tampermonkey.net/
-// @version      1.5.2
+// @version      1.5.3
 // @description   base64코드 자동복호화
 // @author       SYJ
 // @match        https://arca.live/*
@@ -95,7 +95,7 @@ function applyAuto() {
 
 const textTagNames = 'p, span, div, a, li,' +      // 일반 컨테이너
       'h1, h2, h3, h4, h5, h6,' +    // 제목 요소
-      'em, strong, u, b, i, small, mark, ' +   // 인라인 포맷팅 요소
+      'em, strong, u, b, i, small, mark, td, ' +   // 인라인 포맷팅 요소
       'label, button, option, textarea' // 폼/인터페이스 요소
 
 // 텍스트노드에 존재하는 url을 a태그로 바꿈. (url포함 텍스트노드 -> 텍스트노드1 + a태그 + 텍스트노드2)
@@ -154,7 +154,6 @@ function doDecode(text) {
     function dec(reg, text) {
         let result = text;
         const maps = Array.from(result.match(reg) ?? []) // base64 청크
-        .filter(str=>str.length%4==0)
         .map(o=>({before:o, after:decodeNtime(o)})) // base64 to 원본 매핑
         maps.forEach(({before, after})=>{result = result.replace(before, after)}); // 적용
 

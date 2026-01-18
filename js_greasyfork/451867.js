@@ -1,14 +1,15 @@
 // ==UserScript==
 // @name         DMMDownloader
 // @namespace    https://github.com/Timesient/manga-download-scripts
-// @version      0.5
+// @version      0.6
 // @license      GPL-3.0
 // @author       Timesient
-// @description  Manga downloader for book.dmm.com
+// @description  Manga downloader for book.dmm.com and book.dmm.co.jp
 // @icon         https://p.dmm.com/p/common/pinned/general/favicon.ico
 // @homepageURL  https://greasyfork.org/scripts/451867-dmmdownloader
 // @supportURL   https://github.com/Timesient/manga-download-scripts/issues
 // @match        https://book.dmm.com/*
+// @match        https://book.dmm.co.jp/*
 // @require      https://unpkg.com/axios@0.27.2/dist/axios.min.js
 // @require      https://unpkg.com/jszip@3.7.1/dist/jszip.min.js
 // @require      https://unpkg.com/file-saver@2.0.5/dist/FileSaver.min.js
@@ -19,17 +20,6 @@
 // @downloadURL https://update.greasyfork.org/scripts/451867/DMMDownloader.user.js
 // @updateURL https://update.greasyfork.org/scripts/451867/DMMDownloader.meta.js
 // ==/UserScript==
-
-/* 
-  由于下载下来的图片普遍在最右侧有一条黑边，且各个作品的黑边宽度均不一致，暂无有效的解决方法，
-  因此需要您每次下载前手动修改下一行中的数字（默认为0），例如将 0 修改为 5，它代表着将在每张
-  下载下来的图片最右侧移除宽度为5个像素，高度为整张图片高度的区域，以此方式来准确去除黑边。
-
-  Since some downloaded image will show a black stripe on the right and there is no solution
-  by now, you will need to change the number(0 by default) in the following line, for example,
-  change it to 5, so that every image will remove a 5 pixels width, full image height area.
-*/
-const widthToRemove = 0;
 
 (async function (axios, JSZip, saveAs, ImageDownloader, PublusCoordsGenerator) {
   'use strict';
@@ -43,7 +33,7 @@ const widthToRemove = 0;
   const authData = await new Promise(resolve => {
     GM_xmlhttpRequest({
       method: 'GET',
-      url: `https://book.dmm.com/viewerapi/auth/?cid=${cid}&lin=${lin}`,
+      url: `https://${window.location.host}/viewerapi/auth/?cid=${cid}&lin=${lin}`,
       responseType: 'json',
       onload: res => resolve(res.response)
     });
@@ -51,7 +41,7 @@ const widthToRemove = 0;
 
   // get config data
   const { configData, isNeedNormalDefault } = await Promise.any([getConfigData(''), getConfigData('normal_default/')]);
-  
+
   // get data of images
   const imageData = configData.configuration.contents.map(content => {
     const filename = content.file;
@@ -60,7 +50,8 @@ const widthToRemove = 0;
       url: isNeedNormalDefault
         ? `${authData.url}${isShareFile ? '' : 'normal_default/'}${isShareFile ? filename.replace('../', '') : filename}/${index}.jpeg?${new URLSearchParams(authData.auth_info)}`
         : `${authData.url}${filename}/${index}.jpeg?${new URLSearchParams(authData.auth_info)}`,
-      pattern: Array.from(filename + `/${index}`).reduce((acc, cur) => acc + cur.charCodeAt(0), 0) % 4 + 1
+      pattern: Array.from(filename + `/${index}`).reduce((acc, cur) => acc + cur.charCodeAt(0), 0) % 4 + 1,
+			size: configData[filename].FileLinkInfo.PageLinkInfoList[index].Page.Size
     }));
   }).flat();
 
@@ -68,8 +59,7 @@ const widthToRemove = 0;
   ImageDownloader.init({
     maxImageAmount: imageData.length,
     getImagePromises,
-    title: authData.cti.replaceAll('〜', ''),
-    imageSuffix: 'jpeg'
+    title: authData.cti.replaceAll('〜', ' ')
   });
 
   // collect promises of image
@@ -100,8 +90,8 @@ const widthToRemove = 0;
         // create canvas
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
-        canvas.width = this.width - widthToRemove;
-        canvas.height = this.height;
+        canvas.width = data.size.Width;
+        canvas.height = data.size.Height;
 
         // draw pieces on correct position
         const coords = PublusCoordsGenerator(this.width, this.height, 64, 64, data.pattern);
@@ -109,7 +99,7 @@ const widthToRemove = 0;
           ctx.drawImage(this, destX, destY, width, height, srcX, srcY, width, height);
         }
 
-        canvas.toBlob(resolve);
+        canvas.toBlob(resolve, 'image/jpeg', 1);
       }
     });
   }

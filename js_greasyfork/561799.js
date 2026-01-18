@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         [Pokechill] CN-SEARCH
 // @namespace    https://play-pokechill.github.io/
-// @version      2.4.2
+// @version      2.5.0
 // @description  Pokechill 中文模糊匹配 + 提示条 + Enter / ↑↓ / 数字键 / 鼠标 选择 + 输入框左键点击清空
 // @author       GPT-DiamondMoo
 // @license      MIT
@@ -15,7 +15,6 @@
     'use strict';
 
     const EN_TO_CN = {
-
         //官方宝可梦译名
         "Bulbasaur": "妙蛙种子",
         "Ivysaur": "妙蛙草",
@@ -1105,7 +1104,7 @@
         "Vivillon Modern": "彩粉蝶 摩登花纹",
         "Vivillon Monsoon": "彩粉蝶 骤雨花纹",
         "Vivillon Ocean": "彩粉蝶 大洋花纹",
-        "Vivillon Poke Ball": "彩粉蝶 球球花纹",
+        "Vivillon PokeBall": "彩粉蝶 球球花纹",
         "Vivillon Polar": "彩粉蝶 雪国花纹",
         "Vivillon River": "彩粉蝶 大河花纹",
         "Vivillon Sandstorm": "彩粉蝶 沙尘花纹",
@@ -1114,6 +1113,27 @@
         "Vivillon Tundra": "彩粉蝶 雪原花纹",
         //花叶蒂
         "Floette Eternal": "花叶蒂 永恒之花",
+        //酋雷姆
+        "Kyurem Black": "暗黑酋雷姆",
+        "Kyurem White": "焰白酋雷姆",
+        //胡帕
+        "Hoopa Unbound": "解放胡帕",
+        //奈克洛兹玛
+        "Necrozma Dusk Mane": "奈克洛兹玛 黄昏之鬃",
+        "Necrozma Dawn Wings": "奈克洛兹玛 拂晓之翼",
+        "Ultra Necrozma": "究极奈克洛兹玛",
+        //起源形态
+        "Dialga Origin": "帝牙卢卡 起源形态",
+        "Palkia Origin": "帕路奇亚 起源形态",
+        "Giratina Origin": "骑拉帝纳 起源形态",
+        //原始
+        "Kyogre Primal": "原始盖欧卡",
+        "Groudon Primal": "原始固拉多",
+        //灵兽形态
+        "Tornadus Therian": "龙卷云 灵兽形态",
+        "Thundurus Therian": "雷电云 灵兽形态",
+        "Landorus Therian": "土地云 灵兽形态",
+        "Enamorus Therian": "眷恋云 灵兽形态",
 
         //自创特性
         "Hydratation": "湿润之躯", // 拼写错误，官方正确拼写为 Hydration
@@ -1158,6 +1178,7 @@
         "Growth Absorb": "生长吸收",
         "Brittle Armor": "易碎盔甲",
         "Grassy Pelt": "草之毛皮", // 拼写错误，官方为 Grass Pelt
+        "Grass Pelt": "草之毛皮",
         "Sandy Pelt": "沙尘皮毛",
         "Moist Pelt": "湿润皮毛",
         "Fiery Pelt": "火焰皮毛",
@@ -1176,7 +1197,7 @@
         "Espilate": "超能力皮肤",
         "Verdify": "青草皮肤" ,
         "MetalHead": "铁头功" ,
-
+        "scorch": "灼热" ,
 
         //官方特性
         "Stench": "恶臭",
@@ -1488,7 +1509,7 @@
         "Teraform Zero": "归零化境",
         "Poison Puppeteer": "毒傀儡",
 
-        // 官方技能
+        // 官方招式
         "Pound": "拍击",
         "Karate Chop": "空手劈",
         "Double Slap": "连环巴掌",
@@ -2425,9 +2446,18 @@
         "Malignant Chain": "邪毒锁链",
         "Nihil Light": "归无之光",
 
-        //未有官方译名
+        //独创招式
         "Fog":"浓雾",
+        "Shark Jaws": "鲨之颚",
+        "Poison Claw": "毒爪",
+        "Aurora Punch": "极光拳",
+        "Ionise":"电离",
 };
+
+    const SEARCH_INPUT_IDS = [
+        'pokedex-search',
+        'dictionary-search'
+    ];
 
     const CN_LIST = Object.entries(EN_TO_CN)
     .map(([en, cn]) => ({ cn, en }));
@@ -2455,10 +2485,18 @@
     }
 
     function waitForInput() {
-        const input = document.getElementById('pokedex-search');
-        if (!input) return setTimeout(waitForInput, 300);
-        bindInput(input);
+        const inputs = SEARCH_INPUT_IDS
+        .map(id => document.getElementById(id))
+        .filter(Boolean);
+
+        if (!inputs.length) {
+            setTimeout(waitForInput, 300);
+            return;
+        }
+
+        inputs.forEach(input => bindInput(input));
     }
+
 
     function bindInput(input) {
         if (!hintBox) createHintBox();

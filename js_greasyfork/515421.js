@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         芒果TV网页版弹幕增强
 // @namespace    http://tampermonkey.net/
-// @version      2.0.0
+// @version      2.1.3
 // @description  芒果TV弹幕增强脚本：自动关闭弹幕、快捷键操作（D键切换弹幕/F键全屏）、高级屏蔽词设置（不限数量、支持正则表达式、导入导出功能、本地持久化存储）
 // @author       mankaki
 // @match        *://www.mgtv.com/*
@@ -18,7 +18,9 @@
     let autoCloseDanmu = JSON.parse(localStorage.getItem('autoCloseDanmu')) ?? true;
     let networkErrorFlag = false;
     let lastUrl = window.location.href;
-    let hasAutoClosedForCurrentUrl = false; // 防止重复自动关闭
+    let isManualIntervention = false; // 标记用户本集是否手动干预过（手动开启或关闭）
+    let lastManualTime = 0; // 上次手动操作的时间戳，用于冷却锁定
+    let isScriptClicking = false; // 标记是否是脚本触发的点击，用于识别用户手动操作
 
     function createTooltip(text, direction = 'top') {
         const tooltip = document.createElement('div');
@@ -52,7 +54,7 @@
         document.body.appendChild(tooltip);
 
         button.addEventListener('mouseenter', () => {
-            // 关键修复：全屏模式下，必须将 Tooltip 移动到全屏元素内部，否则会被遮挡
+            // 全屏模式下，必须将 Tooltip 移动到全屏元素内部，否则会被遮挡
             const container = document.fullscreenElement || document.body;
             if (tooltip.parentNode !== container) {
                 container.appendChild(tooltip);
@@ -124,31 +126,44 @@
 
         document.body.appendChild(button);
 
-        // 左侧显示 tooltip（不使用 title）
+        // 左侧显示 tooltip
         addTooltip(button, '💡 是否自动关闭弹幕', 'left');
     }
 
     function closeDanmu() {
         if (!autoCloseDanmu) return;
-        // 如果当前URL已经自动关闭过，不再重复关闭（避免用户手动开启后被误关）
-        if (hasAutoClosedForCurrentUrl) return;
+        // 如果用户本集手动操作过，脚本不再干预
+        if (isManualIntervention) return;
 
-        const danmuButtonOn = document.querySelector("._danmuSwitcher_1qow5_208._on_1qow5_238");
-        if (danmuButtonOn) {
-            danmuButtonOn.click();
-            console.log("弹幕已关闭");
-            hasAutoClosedForCurrentUrl = true;
-        } else {
-            // 如果已经是关闭状态，也标记为已处理
-            hasAutoClosedForCurrentUrl = true;
+        // v2.1.2：如果 5 秒内进行过手动操作，坚决不进行自动关闭（防止竞速冲突）
+        if (Date.now() - lastManualTime < 5000) return;
+
+        const danmuBtn = document.querySelector("._danmuSwitcher_1qow5_208") ||
+            document.querySelector(".danmu-switch"); // 增加备选选择器
+
+        if (danmuBtn) {
+            const isOn = danmuBtn.classList.contains("_on_1qow5_238") ||
+                danmuBtn.classList.contains("on") ||
+                danmuBtn.getAttribute('aria-checked') === 'true';
+
+            if (isOn) {
+                // 如果是开启状态，执行关闭
+                isScriptClicking = true;
+                danmuBtn.click();
+                isScriptClicking = false;
+                // console.log("检测到弹幕开启，强制自动关闭 (v2.0.8)");
+            }
         }
     }
 
     function toggleDanmu() {
-        const btn = document.querySelector("._danmuSwitcher_1qow5_208");
+        const btn = document.querySelector("._danmuSwitcher_1qow5_208") ||
+            document.querySelector(".danmu-switch");
         if (btn) {
+            isManualIntervention = true;
+            lastManualTime = Date.now(); // 记录手动时间戳
             btn.click();
-            console.log("快捷键切换弹幕");
+            console.log("快捷键切换弹幕，触发 5s 强制停火锁定");
         }
     }
 
@@ -164,7 +179,6 @@
 
     function toggleFullscreen() {
         // 尝试寻找全屏按钮点击（以同步UI状态）
-        // 芒果TV的全屏按钮通常有 title="全屏" 或 "退出全屏"
         const fsBtn = document.querySelector('[title="全屏"]') ||
             document.querySelector('[title="退出全屏"]') ||
             document.querySelector('mango-icon[name="fullscreen"]'); // 猜测的选择器
@@ -206,6 +220,23 @@
         }
     });
 
+    // 监听全局点击，识别用户对手动操作弹幕按钮的行为
+    document.addEventListener('click', (e) => {
+        if (isScriptClicking) return;
+
+        // 检查点击目标是否是弹幕开关
+        // v2.0.8 进一步收窄范围，仅监听特定的开关类名，避免误触
+        const isDanmuBtn = e.target.closest("._danmuSwitcher_1qow5_208") ||
+            e.target.closest(".danmu-switch");
+
+        if (isDanmuBtn) {
+            // 用户手动点击了开关，记录为手动干预及时间戳
+            isManualIntervention = true;
+            lastManualTime = Date.now();
+            // console.log("检测到用户手动操作，触发 5s 强制停火锁定");
+        }
+    }, true);
+
     function addDanmuShortcutTooltip() {
         const danmuButtons = document.querySelectorAll("._danmuSwitcher_1qow5_208");
         danmuButtons.forEach(btn => {
@@ -219,13 +250,10 @@
     // 使用 mouseover + XPath 查找可见的 Tooltip 元素
     // 性能优化：使用 debounce 防抖，避免每次鼠标移动都触发昂贵的 XPath 查询
     function modifyFullscreenTooltip() {
-        // 查找所有包含 "全屏" 或 "退出全屏" 或 "弹幕" 相关文本的元素
-        const xpath = "//*[text()='全屏' or text()='退出全屏' or contains(text(), '弹幕') or text()='弹']";
+        const xpath = "//*[text()='全屏']";
         // 尝试在全屏元素内查找（如果在全屏模式下），否则查找 body
         const contextNode = document.fullscreenElement || document.body;
         const result = document.evaluate(xpath, contextNode, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null);
-
-        const danmuKeywords = new Set(['弹幕', '弹', '开启弹幕', '关闭弹幕', '显示弹幕', '隐藏弹幕']);
 
         for (let i = 0; i < result.snapshotLength; i++) {
             const node = result.snapshotItem(i);
@@ -233,19 +261,16 @@
             if (node.offsetParent !== null) {
                 const text = node.innerText.trim();
                 // 排除已处理过的
-                if (text.endsWith('(F)')) continue; // 只排除 (F)，因为我们不再加 (D) 了
+                if (text.endsWith('(F)')) continue;
 
                 if (text === '全屏') {
                     node.innerText = '全屏 (F)';
-                } else if (text === '退出全屏') {
-                    node.innerText = '退出全屏 (F)';
                 }
-                // 已移除：不再修改弹幕按钮文字
             }
         }
     }
 
-    const debouncedModifyTooltip = debounce(modifyFullscreenTooltip, 100); // 100ms 延迟，既流畅又省资源
+    const debouncedModifyTooltip = debounce(modifyFullscreenTooltip, 100); // 100ms 延迟
     document.addEventListener('mouseover', debouncedModifyTooltip);
 
     function init() {
@@ -262,8 +287,23 @@
         constructor() {
             this.storageKey = 'mgtv_custom_blocklist';
             this.blocklist = this.load();
+            this.compiledPatterns = this.compile(this.blocklist); // 预编译正则表达式
             this.initUI();
             this.startFilter();
+        }
+
+        compile(list) {
+            return list.map(pattern => {
+                const regexMatch = pattern.match(/^\/(.*?)\/([gimuy]*)$/);
+                if (regexMatch) {
+                    try {
+                        return new RegExp(regexMatch[1], regexMatch[2]);
+                    } catch (e) {
+                        return pattern;
+                    }
+                }
+                return pattern;
+            });
         }
 
         load() {
@@ -276,6 +316,7 @@
 
         save(list) {
             this.blocklist = list;
+            this.compiledPatterns = this.compile(list); // 保存时同步更新预编译列表
             localStorage.setItem(this.storageKey, JSON.stringify(list));
             // 立即刷新过滤（可选，这里暂不处理已存在的弹幕，仅对新弹幕生效）
         }
@@ -471,7 +512,6 @@
                 // 合并去重
                 const combined = [...new Set([...current, ...newItems])];
 
-                // 仅更新输入框，不自动保存
                 document.getElementById('mgtv_blocklist_input').value = combined.join('\n');
                 this.showToast('导入成功，请点击保存生效');
             };
@@ -481,70 +521,69 @@
 
         // --- 过滤核心逻辑 ---
         startFilter() {
-            // 使用 MutationObserver 监听弹幕节点
-            const observer = new MutationObserver((mutations) => {
-                mutations.forEach(mutation => {
-                    mutation.addedNodes.forEach(node => {
-                        if (node.nodeType === 1) { // 元素
+            this.container = null;
+            this.observer = new MutationObserver((mutations) => {
+                for (let i = 0; i < mutations.length; i++) {
+                    const addedNodes = mutations[i].addedNodes;
+                    for (let j = 0; j < addedNodes.length; j++) {
+                        const node = addedNodes[j];
+                        if (node.nodeType === 1) {
                             this.checkAndBlock(node);
-                            // 递归检查子元素
-                            const descendants = node.querySelectorAll('._danmuText_1qow5_77');
-                            descendants.forEach(child => this.checkAndBlock(child, true));
                         }
-                    });
-                });
+                    }
+                }
             });
 
-            // 观察 doc body，范围虽然大，但这在 SPA 中最稳妥。
-            // 也可以尝试只观察播放器，但播放器可能重建。body 是最稳的。
-            observer.observe(document.body, { childList: true, subtree: true });
+            this.reAnchorObserver();
         }
 
-        checkAndBlock(node, isChild = false) {
-            // 如果节点本身是弹幕内容 span，或者包含该 class
-            // 用户提供的结构： <span class="_danmuText_1qow5_77">text</span>
-            // 这个 span 通常被包裹在 <div class="danmu-item"> 里。
-            // 我们需要找到这个 span，检查内容，然后隐藏它的**外层容器**（不然会留空白？）。
-            // 还是直接隐藏 span？如果隐藏 span，外层 div 还在，可能会有空行。建议隐藏外层。
+        // 性能核心：尝试寻找精准的弹幕容器进行监听，若找不到则回退到 body
+        reAnchorObserver() {
+            // 芒果TV 弹幕通常渲染在特定的容器内，通过探测找到它
+            // 常见的可能容器类名（基于历史观察）
+            const target = document.querySelector(".m-danmu-container") ||
+                document.querySelector(".danmu-container") ||
+                document.body;
 
-            let textSpan = null;
-            if (node.classList && node.classList.contains('_danmuText_1qow5_77')) {
-                textSpan = node;
-            } else if (!isChild) {
-                // 如果 node 是外层容器，尝试在内部找
-                textSpan = node.querySelector ? node.querySelector('._danmuText_1qow5_77') : null;
+            if (this.container !== target) {
+                if (this.observer) this.observer.disconnect();
+                this.container = target;
+                this.observer.observe(target, { childList: true, subtree: true });
+                // console.log(`[Performance] 过滤引擎观测点已切换至: ${target === document.body ? 'body (兜底)' : target.className}`);
             }
+        }
 
-            if (!textSpan) return;
+        checkAndBlock(node) {
+            // 快速检查：如果节点本身是 span
+            if (node.classList && node.classList.contains('_danmuText_1qow5_77')) {
+                this.performBlock(node);
+                return;
+            }
+            // 否则尝试在子节点中寻找一次（不进行深度递归，仅一级 querySelector）
+            const textSpan = node.querySelector ? node.querySelector('._danmuText_1qow5_77') : null;
+            if (textSpan) {
+                this.performBlock(textSpan);
+            }
+        }
 
+        performBlock(textSpan) {
             const text = textSpan.innerText.trim();
             if (this.shouldBlock(text)) {
-                // 找到这一条弹幕的最外层容器进行隐藏
-                // 通常 span 的父级或爷级是定位元素
-                // 简单起见，隐藏 textSpan.parentNode (通常是 _danmuItem_...)
-                // 或者直接隐藏 textSpan，虽然可能留空，但最安全不误杀。
-                // 让我们尝试找一下父级，如果是 div 就隐藏父级。
+                // 尝试隐藏最外层容器（通常是 ._danmuItem...），如果找不到就隐藏 span 本身
+                // 使用 closest 可以更精准地找到弹幕条目
                 const container = textSpan.closest('div') || textSpan;
                 container.style.display = 'none';
-                // console.log(`[AutoBlock] 已屏蔽弹幕: ${text}`);
             }
         }
 
         shouldBlock(text) {
-            if (!this.blocklist || this.blocklist.length === 0) return false;
+            if (!this.compiledPatterns || this.compiledPatterns.length === 0) return false;
 
-            for (const pattern of this.blocklist) {
-                // 检查是否是正则格式 /.../flags
-                const regexMatch = pattern.match(/^\/(.*?)\/([gimuy]*)$/);
-                if (regexMatch) {
-                    try {
-                        const regex = new RegExp(regexMatch[1], regexMatch[2]);
-                        if (regex.test(text)) return true;
-                    } catch (e) {
-                        // console.warn('Invalid Regex in blocklist:', pattern);
-                    }
+            for (const pattern of this.compiledPatterns) {
+                if (pattern instanceof RegExp) {
+                    if (pattern.test(text)) return true;
                 } else {
-                    // 普通文本匹配 (包含)
+                    // 普通文本匹配
                     if (text.includes(pattern)) return true;
                 }
             }
@@ -563,6 +602,12 @@
         }
     };
 
+    // 提取芒果TV视频ID，用于精准判断切集
+    function getMgtvVideoId(url) {
+        const match = url.match(/\/b\/\d+\/(\d+)\.html/);
+        return match ? match[1] : url;
+    }
+
     const playerElement = document.querySelector(".mango-player.p-MacIntel.player-s");
     if (playerElement) {
         playerElement.addEventListener('click', () => {
@@ -576,17 +621,25 @@
     }
 
     // 优化：使用定时轮询代替点击事件监听，以更稳定地检测 URL 变化，避免频繁触发定时器
-    // 优化：使用定时轮询代替点击事件监听
     setInterval(() => {
         const currentUrl = window.location.href;
-        if (currentUrl !== lastUrl) {
+        if (getMgtvVideoId(currentUrl) !== getMgtvVideoId(lastUrl)) {
             lastUrl = currentUrl;
-            hasAutoClosedForCurrentUrl = false; // 重置标记
+            isManualIntervention = false;
+            lastManualTime = 0; // 在切集时清除锁定
             init();
+        }
+        // v2.0.8：只要没被手动干预过，就始终尝试关闭（处理异步反复开启的情况）
+        if (autoCloseDanmu && !isManualIntervention) {
+            closeDanmu();
+        }
+        // v2.1.3：持续尝试优化过滤引擎的观测点
+        if (window.blocklistManager) {
+            window.blocklistManager.reAnchorObserver();
         }
         // 持续尝试添加弹幕快捷键提示
         addDanmuShortcutTooltip();
-    }, 1000);
+    }, 1000); // v2.1.3 调低至 1s 一次，极致省电
 
     // 防抖函数，避免频繁触发
     function debounce(func, wait) {
@@ -597,7 +650,7 @@
         };
     }
 
-    const debouncedInit = debounce(init, 3000);
+    const debouncedInit = debounce(init, 1000);
 
     const titleObserver = new MutationObserver(debouncedInit);
 
@@ -607,4 +660,45 @@
     }
 
     createToggleIconButton();
+
+    // 监听视频关键事件，处理同页面重载视频（URL 不变但视频重启）的情况
+    const resetAutoClose = (e) => {
+        // v2.1.2：如果在手动操作锁定期内，忽略事件触发的重置
+        if (Date.now() - lastManualTime < 5000) return;
+
+        if (e.target.tagName === 'VIDEO') {
+            isManualIntervention = false;
+            init();
+        }
+    };
+
+    // document.addEventListener('play', resetAutoClose, true); // v2.1.1 移除 play 监听，避免暂停恢复导致手动覆盖失效
+    document.addEventListener('loadstart', resetAutoClose, true);
+    document.addEventListener('emptied', resetAutoClose, true);
+
+    // 针对同页面切集产生的视频地址变化进行监听
+    const videoSrcObserver = new MutationObserver((mutations) => {
+        // v2.1.2：如果在手动操作锁定期内，忽略 SRC 变化的重置
+        if (Date.now() - lastManualTime < 5000) return;
+
+        mutations.forEach(mutation => {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'src') {
+                isManualIntervention = false;
+                init();
+            }
+        });
+    });
+
+    let currentObservedVideo = null;
+    function startObserveVideo() {
+        const video = document.querySelector('video');
+        if (video && video !== currentObservedVideo) {
+            currentObservedVideo = video;
+            videoSrcObserver.disconnect();
+            videoSrcObserver.observe(video, { attributes: true, attributeFilter: ['src'] });
+        }
+    }
+
+    // 每秒检查一下是否需要给新的 video 元素挂载监听
+    setInterval(startObserveVideo, 2000);
 })();

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ComicDaysDownloader
 // @namespace    https://github.com/Timesient/manga-download-scripts
-// @version      1.3
+// @version      1.4
 // @license      GPL-3.0
 // @author       Timesient
 // @description  Manga downloader for comic-days.com and other sites using the same reader
@@ -24,6 +24,7 @@
 // @match        https://comic-ogyaaa.com/*/*
 // @match        https://comic-seasons.com/*/*
 // @match        https://ichicomi.com/*/*
+// @match        https://comic-y-ours.com/*/*
 // @require      https://unpkg.com/axios@0.27.2/dist/axios.min.js
 // @require      https://unpkg.com/jszip@3.7.1/dist/jszip.min.js
 // @require      https://unpkg.com/file-saver@2.0.5/dist/FileSaver.min.js

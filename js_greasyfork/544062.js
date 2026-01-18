@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         FlatMMOPlus
 // @namespace    com.dounford.flatmmo
-// @version      1.2.2
+// @version      1.3
 // @description  FlatMMO plugin framework
 // @author       Dounford adapted from Anwinity IPP
 // @match        *://flatmmo.com/play.php*
@@ -10,7 +10,7 @@
 
 (function() {
 	'use strict';
-	const VERSION = "1.2.2";
+	const VERSION = "1.3";
 
     Set.prototype.some = function(predicate) {
         for (const item of this) {
@@ -41,6 +41,7 @@
     const CONFIG_TYPES_SELECT = ["select"];
     const CONFIG_TYPES_COLOR = ["color"];
     const CONFIG_TYPES_LIST = ["list", "array"];
+    const CONFIG_TYPES_RELATION = ["relation", "key", "object"];
 
 	const CHAT_COMMAND_NO_OVERRIDE = ["help"];
 
@@ -414,6 +415,70 @@
         }
     }
 
+    FlatMMOPlus.prototype.newObjectField = function(pluginId, configId, key = "Key", value = "Value") {
+        if(typeof pluginId !== "string" || typeof configId !== "string" || typeof key !== "string") {
+            throw new TypeError("FlatMMOPlus.newObjectField takes the following arguments: (id:string, key:string, value:string)");
+        }
+        const plugin = this.plugins[pluginId];
+        const parentDiv = document.getElementById(`flatmmoplus-config-${pluginId}-${configId}`);
+
+        const item = document.createElement("div");
+        const keyDiv = document.createElement("div");
+        const valueDiv = document.createElement("div");
+        const closeSpan = document.createElement("span");
+
+        item.className = "fmp-list-item";
+        function editField(e) {
+            e.preventDefault();
+            const el = e.target;
+            el.contentEditable = true;
+            el.focus();
+        }
+        keyDiv.ondblclick = (e) => editField(e);
+        keyDiv.oncontextmenu = (e) => editField(e);
+        valueDiv.ondblclick = (e) => editField(e);
+        valueDiv.oncontextmenu = (e) => editField(e);
+
+        keyDiv.innerText = key;
+        keyDiv.spellcheck = false;
+        keyDiv.autocorrect = false;
+
+        valueDiv.innerText = value;
+        valueDiv.spellcheck = false;
+        valueDiv.autocorrect = false;
+
+        function focusOut(e) {
+            e.preventDefault();
+            const el = e.target;
+            el.contentEditable = false;
+            plugin.changedConfigs.add(configId);
+            window.FlatMMOPlus.setPluginConfigUIDirty(pluginId, true, configId)
+        }
+        keyDiv.onblur = (e) => focusOut(e);
+        valueDiv.onblur = (e) => focusOut(e);
+
+        closeSpan.innerText = "×";
+        closeSpan.className = "fmp-list-close";
+        closeSpan.addEventListener("click", function(){
+            item.remove();
+            window.FlatMMOPlus.setPluginConfigUIDirty(pluginId, true, configId)
+        })
+
+        item.appendChild(keyDiv);
+        item.appendChild(valueDiv);
+        item.appendChild(closeSpan);
+        parentDiv.appendChild(item);
+
+        parentDiv.scrollTop = parentDiv.scrollHeight;
+
+        plugin.changedConfigs.add(configId);
+        window.FlatMMOPlus.setPluginConfigUIDirty(pluginId, true, configId)
+        if(key = "Key") {
+            keyDiv.contentEditable = true;
+            keyDiv.focus();
+        }
+    }
+
     FlatMMOPlus.prototype.loadPluginConfigs = function(id) {
         if (typeof id !== "string") {
             throw new TypeError("FlatMMOPlus.reloadPluginConfigs takes the following arguments: (id:string)");
@@ -467,7 +532,12 @@
                         value.forEach(item => {
                             window.FlatMMOPlus.newListField(id, cfg.id, item);
                         })
-                    }
+                    } else if (CONFIG_TYPES_RELATION.includes(cfg.type)) {
+                        el.innerHTML = "";
+                        for(let item in value) {
+                            window.FlatMMOPlus.newObjectField(id, cfg.id, item, value[item]);
+                        }
+                    } 
                 }
             });
         }
@@ -513,6 +583,13 @@
                         const valuesSet = new Set(values);
                         values = Array.from(valuesSet);
                     }
+                    config[cfg.id] = values;
+                } else if (CONFIG_TYPES_RELATION.includes(cfg.type)) {
+                    const values = {};
+                    document.querySelectorAll(`#flatmmoplus-config-${plugin.id}-${cfg.id}>div`).forEach(el => {
+                        values[el.children[0].innerText] = el.children[1].innerText;
+                    })
+
                     config[cfg.id] = values;
                 }
             });
@@ -1109,6 +1186,11 @@
                     cursor: pointer;
                     float: right;
                 }
+                .fmp-objectLabel {
+                    display: grid;
+                    grid-template-columns: auto auto;
+                    justify-items: center;
+                }
             </style>`;
             this.forEachPlugin(plugin => {
                 let id = plugin.id;
@@ -1197,6 +1279,19 @@
                                     <label>${cfg.label || cfg.id}</label>
                                     <div class="fmp-list-div" id="flatmmoplus-config-${plugin.id}-${cfg.id}"></div>
                                     <button style="cursor:pointer;font-size: 1rem;" onclick="FlatMMOPlus.newListField('${plugin.id}', '${cfg.id}')">Add new field</button>
+                                </div>
+                                `;
+                        }
+                        else if(CONFIG_TYPES_RELATION.includes(cfg.type)) {
+                            content += `
+                                <div>
+                                    <label>${cfg.label || cfg.id}</label>
+                                    <div class="fmp-objectLabel">
+                                        <label>${cfg.key || "Key"}</label>
+                                        <label>${cfg.value || "Value"}</label>
+                                    </div>
+                                    <div class="fmp-list-div" id="flatmmoplus-config-${plugin.id}-${cfg.id}"></div>
+                                    <button style="cursor:pointer;font-size: 1rem;" onclick="FlatMMOPlus.newObjectField('${plugin.id}', '${cfg.id}')">Add new field</button>
                                 </div>
                                 `;
                         }

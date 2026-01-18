@@ -2,7 +2,7 @@
 // @name      PT站自动签到
 // @author    csf2001
 // @namespace csf2001
-// @version   1.0.5
+// @version   1.0.6
 // @license   MIT
 // @description PT站自动点击签到
 // @match     *://www.hitpt.com/*
@@ -20,7 +20,7 @@
 // @match     *://njtupt.top/*
 // @match     *://ourbits.club/*
 // @match     *://hdhome.org/*
-// @match     *://pterclub.com/*
+// @match     *://pterclub.net/*
 // @match     *://lemonhd.org/*
 // @match     *://www.pthome.net/*
 // @match     *://pt.btschool.club/*

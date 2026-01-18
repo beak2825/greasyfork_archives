@@ -1,225 +1,255 @@
 // ==UserScript==
-// @name         绍兴市继续教育
+// @name         绍兴市继续教育-新版
 // @namespace    http://tampermonkey.net/
-// @version      2.0.1
-// @description  绍兴市专业技术人员继续教育，自动播放下一个，弹窗屏蔽，允许拖动
+// @version      3.0
+// @description  绍兴市专业技术人员继续教育，自动播放下一个，弹窗屏蔽
 // @author       xiajie
 // @match        http://220.191.224.159/*
-// @match        http://jxjy.rsj.sx.gov.cn:81/*
+// @match        http://jxjy.rsj.sx.gov.cn/*
 // @icon         http://220.191.224.159/*favicon.ico
+// @require      https://code.jquery.com/jquery-3.6.0.min.js
 // @grant        none
 // @license      GPL
-// @downloadURL https://update.greasyfork.org/scripts/468837/%E7%BB%8D%E5%85%B4%E5%B8%82%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2.user.js
-// @updateURL https://update.greasyfork.org/scripts/468837/%E7%BB%8D%E5%85%B4%E5%B8%82%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/468837/%E7%BB%8D%E5%85%B4%E5%B8%82%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2-%E6%96%B0%E7%89%88.user.js
+// @updateURL https://update.greasyfork.org/scripts/468837/%E7%BB%8D%E5%85%B4%E5%B8%82%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2-%E6%96%B0%E7%89%88.meta.js
 // ==/UserScript==
 
 (function() {
     'use strict';
 
     // Your code here...
+    var vueInstances = null;
+    var vueBox = null;
+    var checkVueBox = setInterval(function(){
+        if(findVueInstances().length > 0){
+            vueInstances = findVueInstances();
+            vueBox = vueInstances[0];
+            clearInterval(checkVueBox);
+            init();
+        }
+    },500);
 
-    if(window.location.pathname == '/elms/web/viewScormCourse.action' || window.location.pathname == '/elms/web/viewAiccCourse.action'){
-        console.log('进入课程详情');
-        window.setInterval(function() {
-            console.log('学习进度：'+Progress_Arr[Curr_Index]);
-            var index = 0;
-            for (let key in Progress_Arr) {
-                if(key == Curr_Index){
-                    index++;
-                    console.log(index);
-                    break;
+    function findVueInstances() {
+        // 遍历所有元素查找 Vue 实例
+        const vueInstances = Array.from(document.querySelectorAll('*'))
+        .map(el => el.__vue__)
+        .filter(instance => instance);
+        return vueInstances;
+    }
+
+    var checkCourse = null;
+    var checkPlay = null;
+
+    function init(){
+        console.log('初始化成功');
+        let path = vueBox.$route.path;
+        console.log('初始路由===>',path);
+        switchPath(path);
+
+        vueBox.$router.afterHooks.push(()=>{
+            let tmpPath = vueBox.$route.path;
+            console.log('路由发生改变===>',tmpPath);
+            switchPath(tmpPath);
+        });
+    }
+
+    function switchPath(path){
+        clearHandler();
+        switch(path){
+            case '/personalCenter':
+                loadCourseHandler();
+                break;
+            case '/play':
+                playVideoHandler();
+                break;
+            case '/testShow':
+                examHandler();
+                break;
+            default:
+                break;
+        }
+    }
+
+    function loadCourseHandler(){
+        let secondVueBox = vueInstances[3];
+        //console.log(secondVueBox.centerData)
+        localStorage.removeItem('nowCourse');
+        let startLearn = false;
+        setInterval(function(){
+            secondVueBox.getMyCenter();
+            setTimeout(function(){
+                learnCourse();
+            },5000)
+        },1000*60)
+
+        function learnCourse(){
+            //console.log(secondVueBox.centerData)
+            if(startLearn && secondVueBox.centerData && secondVueBox.centerData.length > 0){
+                for (let i = 0; i < secondVueBox.centerData.length; i++) {
+                    let course = secondVueBox.centerData[i];
+                    let nowCourse = localStorage.getItem('nowCourse');
+                    if(course.browseScore < 100){
+                        if(nowCourse == course.name){
+                            console.log(course.name,course.browseScore);
+                            break;
+                        }else{
+                            //localStorage.setItem('nowCourse',course.name);
+                            secondVueBox.toPlay(course);
+                            break;
+                        }
+                    }
                 }
-                index++;
             }
-            if (Progress_Arr[Curr_Index] == 100 && Progress_Arr.length > index) {
-                $('.chapter-list ul li').eq(index).find('a')[0].click();
-            }
-        },5000)
+        }
 
+        function addhtml(){
+            var css = "'position:fixed;z-index:99999;top:0;left:0;right:0;margin:0 auto;width:120px;height:40px;text-align:center;line-height:40px;background:red;color:#fff;cursor:pointer;border:2px solid #fff;box-shadow:0 0 10px #999'";
+            var html = "<div id='playText' style="+css+">开始学习</div>"
+            $('body').append(html);
+        }
+        $("body").on("click", "#playText", function(){
+            $('#playText').text('学习中');
+            startLearn = true;
+            learnCourse();
+        })
+
+        addhtml();
     }
-    if(window.location.pathname == '/course/courseware/guochen-player-sx/index.htm'){
-        console.log('进入视频播放1');
-    }
-    if(window.location.pathname == '/course/courseware/guochen-player-sx/content.htm'){
-        console.log('进入视频播放2');
+
+    function playVideoHandler(){
+        let secondVueBox = vueInstances[1];
+
+        secondVueBox.handleClickOutside = function(e) {
+            console.log('修改后的 handleClickOutside 被调用了');
+        };
+        secondVueBox.handleWindowBlur = function() {
+            console.log('修改后的 handleWindowBlur 被调用了');
+        };
+        secondVueBox.handleVisibilityChange = function() {
+            console.log('修改后的 handleVisibilityChange 被调用了');
+        };
+        secondVueBox.handleTenMinuteCheck = function() {
+            console.log('修改后的 handleTenMinuteCheck 被调用了');
+        };
+        secondVueBox.showConfirmDialog = function() {
+            console.log('修改后的 showConfirmDialog 被调用');
+        };
+        secondVueBox.handleNodeClick = function(e) {
+            this.clearTenMinuteTimer(),
+                this.isPausedBySystem = !1,
+                this.url = e.url,
+                this.nodeId = e.id,
+                this.position = this.isValidTime(e.position) ? e.position : 0,
+                this.initPlayer(e),
+                this.getGetPlay(),
+                this.drawer = !1
+
+            setTimeout(function(){
+                handleXgVideo(secondVueBox);
+            },5000)
+        };
         setTimeout(function(){
-            console.log(jwplayer("container").getState().toLowerCase());
-            //禁音
-            jwplayer("container").setMute(true);
-            if (jwplayer("container").getState().toLowerCase() == "paused") {
-                console.log('立即播放');
-                jwplayer("container").play(true);
+            const obj = $('.el-icon-arrow-right');
+            if(obj){
+                $('.el-icon-arrow-right').click();
+            }
+            localStorage.setItem('nowCourse',secondVueBox.playData.name);
+            handleXgVideo(secondVueBox);
+            getNodeList(secondVueBox);
+        },3000)
+        $(window).on('beforeunload', function() {
+            // 在页面关闭前执行
+            console.log('页面即将关闭或刷新');
+            if(localStorage.getItem('nowCourse') == secondVueBox.playData.name){
+                localStorage.removeItem('nowCourse');
+            }
+            //return '您确定要离开吗？未保存的数据可能会丢失。';
+        });
+
+        checkPlay = setInterval(function(){
+            // 静音+自动播放
+            if (secondVueBox.xgVideo && secondVueBox.xgVideo.paused) {
+                secondVueBox.xgVideo.muted = true;
+                secondVueBox.xgVideo.play()
+                secondVueBox.startTenMinuteTimer()
+                secondVueBox.isPausedBySystem = false;
+            }
+            if(localStorage.getItem('nowCourse')){
+                if(localStorage.getItem('nowCourse') != secondVueBox.playData.name){
+                    window.close();
+                }
             }
         },3000)
-        setInterval(function(){
-            if (jwplayer("container").getState().toLowerCase() != "playing") {
-                console.log('恢复播放');
-                jwplayer("container").play(true);
+
+        function handleXgVideo(secondVueBox){
+            if(secondVueBox.xgVideo){
+                console.log('视频加载成功')
+                secondVueBox.xgVideo.on("ended", (function(e) {
+                    console.log('监听视频播放结束');
+                    getNodeList(secondVueBox);
+                }))
+                secondVueBox.xgVideo.on("ratechange", (function(e) {
+                    console.log('监听视频速率变化');
+                    //secondVueBox.xgVideo.playbackRate = 2;
+                }))
+                secondVueBox.xgVideo.on("seeking", (function(e) {
+                    console.log('监听视频进度变化',secondVueBox.xgVideo.currentTime);
+                    if(secondVueBox.xgVideo.currentTime == 0){
+                        goVideoLast(secondVueBox);
+                    }
+                }))
+                //secondVueBox.xgVideo.playbackRate = 2;
+                goVideoLast(secondVueBox);
             }
-        },10000)
-        window.focusIntervalNew = function(){
         }
-        window.focusIntervalOld = function(){
+
+        function goVideoLast(secondVueBox){
+            //secondVueBox.currentPlayTime = secondVueBox.xgVideo.duration;
+            //secondVueBox.xgVideo.currentTime = secondVueBox.xgVideo.duration - 5;
         }
-        window.onTime = function(e) {
-            var position = e.position;
-            var duration = e.duration;
-            var tempLessonProgress = 0;
-            var lessonStatus = "i";
 
-            secondIndex++;
-
-            //scorm:设置单个节点location、状态，课件的进度
-            //设置完成状态,增强容错性,还剩10秒时进度设为c
-            if ((duration - position) < 10) {
-                lessonStatus = "c";
-                //更新菜单中的状态图标
-                if (g_showStatus) {
-                    menuContent.$("#statusImg_" + sectionIndex).attr("src",statusImgArr[2]);
-                }
-            }
-
-            //设置书签
-            lessonLocation = position;
-            oldLessonLocation = position;
-            if (lessonLocation > maxLessonLocation) {
-                maxLessonLocation = position;
-            }
-            p_scormObj.lessonLocation = lessonLocation + "|" + maxLessonLocation;
-            p_scormObj.updateLocation();
-
-            /******计算进度开始*******/
-            var videoCount = p_courseObj.playItemListArray.length;
-            //只有一个视频,按照当前时间点/视频总时长计算进度
-            videoCount = 1;
-            if (videoCount == 1) {
-                if (Math.floor(position) == Math.floor(duration)) {	//防止进度为99%的情况发生(因为监听器最后一次执行时可能视频还未播放完成)
-                    tempLessonProgress = 100;
-                } else {
-                    tempLessonProgress = Math.floor(position*100/duration);
-                    if (tempLessonProgress > 100) {
-                        tempLessonProgress = 100;
+        function getNodeList(secondVueBox){
+            let query = secondVueBox.$route.query;
+            var nodeUrl = '/api/page/home/getNodeList';
+            $.ajax({
+                url: nodeUrl,
+                dataType: 'json',
+                data: {
+                    'courseId':query.id
+                },
+                type: 'post',
+                success: function(res) {
+                    console.log("请求成功");
+                    let nodeList = res.data;
+                    let nextNode = null;
+                    let isEnd = false;
+                    for (let i = 0; i < nodeList.length; i++) {
+                        if(nodeList[i].lastPlayFlag && nodeList[i].finishedFlag){
+                            isEnd = true;
+                            if(i+1 == nodeList.length){
+                                window.close();
+                            }
+                        }else if(nodeList[i].finishedFlag == false && nextNode == null){
+                            nextNode = nodeList[i];
+                        }
+                    }
+                    if(nextNode && isEnd){
+                        secondVueBox.handleNodeClick(nextNode);
                     }
                 }
-                if (oldLessonProgress == 0) {
-                    oldLessonProgress = tempLessonProgress;
-                    lessonProgress = tempLessonProgress;
-                } else {
-                    if (tempLessonProgress > oldLessonProgress) {
-                        oldLessonProgress = tempLessonProgress;
-                        lessonProgress = tempLessonProgress;
-                    }
-                }
-
-                //增强容错性,还剩10秒时进度设为100
-                if ((duration - position) < 10) {
-                    lessonProgress = 100;
-                }
-                //设置完成状态
-                p_scormObj.lessonProgressForSingle = lessonProgress;
-                if (secondIndex%40 ==0) {
-                    p_scormObj.updateProgress();
-                }
-            }
-            //每一分钟提交一次
-            if (secondIndex%120 == 0) {
-                p_scormObj.commit();
-            }
-
-            var tmp1 = document.getElementById("time");
-            if (tmp1) {
-                tmp1.innerHTML = "current time: " + position +
-                    "<br>total time: " + duration +
-                    "<br>progress: " + lessonProgress +
-                    "<br>lessonLocation: " + lessonLocation;
-            }
+            });
         }
+
     }
-    if(window.location.pathname.indexOf('/play/player.htm') != -1){
-        console.log('进入视频播放2');
-        setTimeout(function(){
-            console.log(jwplayer("container").getState().toLowerCase());
-            //禁音
-            jwplayer("container").setMute(true);
-            if (jwplayer("container").getState().toLowerCase() == "paused") {
-                console.log('立即播放');
-                jwplayer("container").play(true);
-            }
-        },3000)
-        setInterval(function(){
-            if (jwplayer("container").getState().toLowerCase() != "playing") {
-                console.log('恢复播放');
-                jwplayer("container").play(true);
-            }
-        },10000)
-        window.focusIntervalNew = function(){
-        }
-        window.focusIntervalOld = function(){
-        }
-        window.onTime = function(e) {
-            var position = e.position;
-            var duration = e.duration;
-            var tempLessonProgress = 0;
-            var lessonStatus = "i";
 
-            secondIndex++;
-
-            //监听每隔0.25秒执行，加入此处逻辑延长为每隔1秒执行下面的逻辑
-            if (secondIndex%4 !=0)
-            {
-                return;
-            } else {
-                //alert("onTime:" + "current position:" + position);
-            }
-
-            //计算进度
-            if (duration != 0) {
-                if (Math.floor(position) == Math.floor(duration)) {	//防止进度为99%的情况发生(因为监听器最后一次执行时可能视频还未播放完成)
-                    tempLessonProgress = 100;
-                } else {
-                    tempLessonProgress = Math.floor(position*100/duration);
-                    if (tempLessonProgress > 100) {
-                        tempLessonProgress = 100;
-                    }
-                }
-                if (oldLessonProgress == 0) {
-                    oldLessonProgress = tempLessonProgress;
-                    lessonProgress = tempLessonProgress;
-                } else {
-                    if (tempLessonProgress > oldLessonProgress) {
-                        oldLessonProgress = tempLessonProgress;
-                        lessonProgress = tempLessonProgress;
-                    }
-                }
-            }
-
-            //增强容错性,还剩10秒时进度设为100
-            if ((duration - position) < 10) {
-                lessonProgress = 100;
-            }
-            //设置完成状态
-            if (lessonProgress == 100) {
-                lessonStatus = "c";
-            }
-
-            //设置书签
-            lessonLocation = position;
-            oldLessonLocation = position;
-            if (lessonLocation > maxLessonLocation) {
-                maxLessonLocation = position;
-            }
-
-            var tmp = document.getElementById("time");
-            if (tmp) {
-                tmp.innerHTML = "secondIndex:" + secondIndex + "&current time: " + position +
-                    "&total time: " + duration +
-                    "&progress: " + lessonProgress +
-                    "&lessonLocation: " + lessonLocation +
-                    "&position: " +  jwplayer("container").getPosition() +
-                    "&oldPosition: " + oldPosition +
-                    "&state: " + jwplayer("container").getState().toLowerCase() +
-                    "&testIndex: " + testIndex;
-            }
-        }
+    function examHandler(){
+        
     }
+
+    function clearHandler(){
+        console.log('清除所有方法');
+
+        clearInterval(checkPlay);
+    }
+
 })();

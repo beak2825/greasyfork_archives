@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         mn-image-cache
 // @namespace    https://monster-nest.com/
-// @version      0.1.0
+// @version      0.3.0
 // @description  Monster Nest 图片缓存脚本
 // @license      MIT
 // @icon         https://monster-nest.com/favicon.ico
@@ -21,7 +21,8 @@ CACHE_BASE_URL: "https://test-cache.pinni.vip/",
 API_KEY: "if9r369E5ia7X1jS52KdfJK67ZrDF6o49533155A58B8l4yC36",
 MAIN_DOMAIN: "monster-nest.com",
 
-LOAD_MODE: localStorage.getItem("mn_image_cache_mode") || "race"
+LOAD_MODE: localStorage.getItem("mn_image_cache_mode") || "race",
+BLACKLIST: ["img.remit.ee"]
   };
   async function generateSaveKey(targetImageUrl) {
     try {
@@ -65,6 +66,7 @@ LOAD_MODE: localStorage.getItem("mn_image_cache_mode") || "race"
       return false;
     }
   }
+  const errorSrc = "data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20width='128'%20height='128'%20viewBox='0%200%2048%2048'%3e%3cg%20fill='none'%3e%3cpath%20fill='%23000000'%20d='M44%2023.994a2%202%200%200%200-4%200zm-20-16a2%202%200%201%200%200-4zm15%2032H9v4h30zm-31-1v-30H4v30zm32-15v15h4v-15zm-31-16h15v-4H9zm0%2032a1%201%200%200%201-1-1H4a5%205%200%200%200%205%205zm30%204a5%205%200%200%200%205-5h-4a1%201%200%200%201-1%201zm-31-35a1%201%200%200%201%201-1v-4a5%205%200%200%200-5%205z'/%3e%3cpath%20stroke='%23000000'%20stroke-linecap='round'%20stroke-linejoin='round'%20stroke-width='4'%20d='m6%2035l10.693-9.802a2%202%200%200%201%202.653-.044L32%2036m-4-5l4.773-4.773a2%202%200%200%201%202.615-.186L42%2031M33%207l8%208m0-8l-8%208'/%3e%3c/g%3e%3c/svg%3e";
   const loadingTasks = new WeakMap();
   const pendingGenerations = new Map();
   const stats = {
@@ -216,36 +218,90 @@ LOAD_MODE: localStorage.getItem("mn_image_cache_mode") || "race"
         return { url, winner: name };
       });
     };
-    if (CONFIG.LOAD_MODE === "source-first") {
-      resultPromise = wapper(
-        attemptLoadImage(originalUrl, signal),
-        "original"
-      ).catch(() => {
-        if (signal.aborted) throw new Error("Aborted");
-        console.log(
-          `[ImageCache #${traceId}] Source first failed, trying cache: ${originalUrl}`
-        );
-        return wapper(loadCachedImageFlow(originalUrl, signal, traceId), "cache");
-      });
-    } else if (CONFIG.LOAD_MODE === "cache-first") {
-      resultPromise = wapper(
-        loadCachedImageFlow(originalUrl, signal, traceId),
-        "cache"
-      ).catch((err) => {
-        if (signal.aborted) throw new Error("Aborted");
-        console.log(
-          `[ImageCache] Cache first failed, trying original: ${originalUrl}`,
-          err
-        );
-        return wapper(attemptLoadImage(originalUrl, signal), "original");
-      });
+    const isBlacklisted = CONFIG.BLACKLIST.some(
+      (domain) => originalUrl.includes(domain)
+    );
+    const restoreDimensions = () => {
+      img.removeAttribute("width");
+      img.removeAttribute("height");
+      const urlParams = new URLSearchParams(location.search);
+      const isMobile = urlParams.get("mobile") === "2";
+      img.style.width = "auto";
+      img.style.height = "auto";
+      img.style.maxWidth = isMobile ? "100%" : "80%";
+      const currentSrc = img.src;
+      img.setAttribute("data-mn-pswp-base", currentSrc);
+      img.setAttribute("data-mn-pswp-url", currentSrc);
+      img.setAttribute("data-mn-viewer-url", currentSrc);
+      delete img.dataset.layoutLocked;
+      delete img.dataset.originalWidth;
+      delete img.dataset.originalHeight;
+      if (img.dataset.originalObjectFit) {
+        img.style.objectFit = img.dataset.originalObjectFit;
+        delete img.dataset.originalObjectFit;
+      } else {
+        img.style.objectFit = "";
+      }
+    };
+    const applyErrorState = () => {
+      restoreDimensions();
+      img.src = errorSrc;
+      img.style.width = "50px";
+      img.style.height = "50px";
+      img.setAttribute("data-mn-pswp-base", errorSrc);
+      img.setAttribute("data-mn-pswp-url", errorSrc);
+      img.setAttribute("data-mn-viewer-url", errorSrc);
+    };
+    if (isBlacklisted) {
+      console.log(
+        `[ImageCache #${traceId}] Blacklisted domain detected, forcing original source.`
+      );
+      resultPromise = wapper(attemptLoadImage(originalUrl, signal), "original");
     } else {
-      const taskOriginal = attemptLoadImage(originalUrl, signal);
-      const taskCache = loadCachedImageFlow(originalUrl, signal, traceId);
-      resultPromise = Promise.any([
-        wapper(taskOriginal, "original"),
-        wapper(taskCache, "cache")
-      ]);
+      const runOriginal = () => wapper(attemptLoadImage(originalUrl, signal), "original");
+      const runCache = () => wapper(loadCachedImageFlow(originalUrl, signal, traceId), "cache");
+      let primaryFn;
+      let secondaryFn;
+      let useLaggedRace = false;
+      if (CONFIG.LOAD_MODE === "source-first") {
+        primaryFn = runOriginal;
+        secondaryFn = runCache;
+        useLaggedRace = true;
+      } else if (CONFIG.LOAD_MODE === "cache-first") {
+        primaryFn = runCache;
+        secondaryFn = runOriginal;
+        useLaggedRace = true;
+      } else {
+        primaryFn = runOriginal;
+        secondaryFn = runCache;
+      }
+      if (!useLaggedRace) {
+        resultPromise = Promise.any([runOriginal(), runCache()]);
+      } else {
+        console.log(
+          `[ImageCache #${traceId}] Starting lagged race (delay: 2000ms)`
+        );
+        const primaryTask = primaryFn();
+        const secondaryTrigger = new Promise((resolve) => {
+          const timer = setTimeout(() => {
+            console.log(
+              `[ImageCache #${traceId}] Starting secondary source after 2s delay.`
+            );
+            resolve();
+          }, 2e3);
+          primaryTask.then(() => {
+            clearTimeout(timer);
+          }).catch(() => {
+            console.log(
+              `[ImageCache #${traceId}] Primary failed, starting secondary immediately.`
+            );
+            clearTimeout(timer);
+            resolve();
+          });
+        });
+        const secondaryTask = secondaryTrigger.then(() => secondaryFn());
+        resultPromise = Promise.any([primaryTask, secondaryTask]);
+      }
     }
     resultPromise.then((result) => {
       const url = result.url;
@@ -256,31 +312,6 @@ LOAD_MODE: localStorage.getItem("mn_image_cache_mode") || "race"
         stats.cache++;
       }
       logStats();
-      const restoreDimensions = () => {
-        img.removeAttribute("width");
-        img.removeAttribute("height");
-        const urlParams = new URLSearchParams(location.search);
-        const isMobile = urlParams.get("mobile") === "2";
-        img.style.width = "auto";
-        img.style.height = "auto";
-        img.style.maxWidth = isMobile ? "100%" : "80%";
-        const currentSrc = img.src;
-        if (isMobile) {
-          img.setAttribute("data-mn-pswp-base", currentSrc);
-          img.setAttribute("data-mn-pswp-url", currentSrc);
-        } else {
-          img.setAttribute("data-mn-viewer-url", currentSrc);
-        }
-        delete img.dataset.layoutLocked;
-        delete img.dataset.originalWidth;
-        delete img.dataset.originalHeight;
-        if (img.dataset.originalObjectFit) {
-          img.style.objectFit = img.dataset.originalObjectFit;
-          delete img.dataset.originalObjectFit;
-        } else {
-          img.style.objectFit = "";
-        }
-      };
       const applyImage = (targetUrl) => {
         const onSuccess = () => {
           restoreDimensions();
@@ -295,7 +326,7 @@ LOAD_MODE: localStorage.getItem("mn_image_cache_mode") || "race"
             );
             applyImage(originalUrl);
           } else {
-            restoreDimensions();
+            applyErrorState();
           }
         };
         img.addEventListener("load", onSuccess, { once: true });
@@ -312,6 +343,7 @@ LOAD_MODE: localStorage.getItem("mn_image_cache_mode") || "race"
       controller.abort();
     }).catch((err) => {
       console.error("Both original and cache failed to load.", err);
+      applyErrorState();
     });
   }
   const placeholderSrc = "data:image/svg+xml,%3csvg%20id='octo4423'%20width='50'%20height='50'%20viewBox='0%200%20512%20512'%20fill='hsl(228,%2097%25,%2042%25)'%20xmlns='http://www.w3.org/2000/svg'%3e%3cstyle%3e%23octo4423%20.part%20{%20animation-name:%20fade4423;%20animation-duration:%201s;%20animation-iteration-count:%20infinite;%20animation-timing-function:%20ease-out;%20fill:%20currentColor;%20}%20%23octo4423%20%23part1%20{%20animation-delay:%200.000s%20}%20%23octo4423%20%23part2%20{%20animation-delay:%200.125s%20}%20%23octo4423%20%23part3%20{%20animation-delay:%200.250s%20}%20%23octo4423%20%23part4%20{%20animation-delay:%200.375s%20}%20%23octo4423%20%23part5%20{%20animation-delay:%200.500s%20}%20%23octo4423%20%23part6%20{%20animation-delay:%200.625s%20}%20%23octo4423%20%23part7%20{%20animation-delay:%200.750s%20}%20%23octo4423%20%23part8%20{%20animation-delay:%200.875s%20}%20@keyframes%20fade4423%20{%200%25,%2025%25%20{%20fill-opacity:%200;%20}%2050%25,%2075%25%20{%20fill-opacity:%201;%20}%20}%3c/style%3e%3cpath%20id='part1'%20class='part'%20d='m332.289429,87.087219c60.033295,-20.366676%20114.402222,-21.83609%20172.935547,1.047241l-11.403595,32.850952c-43.333344,-15.5%20-104.147491,-15.984329%20-148.480804,-0.734329'%20transform='rotate(45%20418.757%2096.1885)'/%3e%3cpath%20id='part2'%20class='part'%20d='m398.527466,246.388596c60.033325,-20.366684%20114.402222,-21.83609%20172.935547,1.047241l-11.403564,32.850967c-43.333374,-15.500031%20-104.147491,-15.984344%20-148.480835,-0.734344'%20transform='rotate(90%20484.995%20255.49)'/%3e%3cpath%20id='part3'%20class='part'%20d='m331.332214,404.823669c60.033325,-20.366699%20114.402252,-21.83609%20172.935547,1.047241l-11.403534,32.850952c-43.333405,-15.500031%20-104.147522,-15.984344%20-148.480865,-0.734344'%20transform='rotate(135%20417.8%20413.925)'/%3e%3cpath%20id='part4'%20class='part'%20d='m171.58223,470.323669c60.03331,-20.366699%20114.402237,-21.83609%20172.935532,1.047241l-11.403534,32.850952c-43.333405,-15.500031%20-104.147522,-15.984344%20-148.48085,-0.734344'%20transform='rotate(180%20258.05%20479.425)'/%3e%3cpath%20id='part5'%20class='part'%20d='m13.0822,406.074005c60.033301,-20.367004%20114.401801,-21.835999%20172.935805,1.046997l-11.404007,32.850983c-43.332993,-15.5%20-104.147301,-15.983978%20-148.480589,-0.733978'%20transform='rotate(-135%2099.55%20415.175)'/%3e%3cpath%20id='part6'%20class='part'%20d='m-53.713486,247.091553c60.03331,-20.367004%20114.40181,-21.835999%20172.935806,1.046997l-11.404022,32.850983c-43.332977,-15.5%20-104.147277,-15.983978%20-148.480576,-0.733978'%20transform='rotate(-90%2032.754%20256.193)'/%3e%3cpath%20id='part7'%20class='part'%20d='m12.883621,87.061485c60.033295,-20.366669%20114.402206,-21.836082%20172.935562,1.047249l-11.403595,32.850952c-43.333344,-15.5%20-104.147507,-15.984329%20-148.48082,-0.734337'%20transform='rotate(-45%2099.3514%2096.1628)'/%3e%3cpath%20id='part8'%20class='part'%20d='m172.906631,20.929741c60.03331,-20.366681%20114.402206,-21.836091%20172.935562,1.04723l-11.403595,32.85096c-43.333344,-15.5%20-104.147507,-15.984322%20-148.48082,-0.734329'/%3e%3c/svg%3e";

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SpringSunday-Torrent-Assistant
 // @namespace    http://tampermonkey.net/
-// @version      1.1.65
+// @version      1.1.67
 // @description  春天审种助手
 // @author       SSD
 // @include      http*://springsunday.net/details.php*
@@ -28,14 +28,14 @@
 
     //种审判断
     //=====================================
-    var isEditor,isTest;
+    var isEditor, isTest;
     if (GM_info.script.name === "SpringSunday-Torrent-Assistant 测试版") {
-        isEditor= GM_getValue('isEditor', true);
-    }else {
-        isEditor= GM_getValue('isEditor', false);
+        isEditor = GM_getValue('isEditor', true);
+    } else {
+        isEditor = GM_getValue('isEditor', false);
     }
     if (GM_info.script.name === "SpringSunday-Torrent-Assistant 测试版") {
-        isTest= true;
+        isTest = true;
     }
     if (window.location.href.includes("/details.php")) {
 
@@ -270,7 +270,7 @@
             title_audio = 6;
         } else if (/\.dts/.test(title_lowercase)) {
             title_audio = 3;
-        }else if (/\.ddp|\.dd\+|\.e-ac-3|\.eac3/.test(title_lowercase)) {
+        } else if (/\.ddp|\.dd\+|\.e-ac-3|\.eac3/.test(title_lowercase)) {
             title_audio = 11;
         } else if (/\.ac3|\.ac-3|\.dd2|\.dd5|\.dd\.2|\.dd\.5/.test(title_lowercase)) {
             title_audio = 4;
@@ -280,8 +280,10 @@
             title_audio = 7;
         } else if (/\.opus/.test(title_lowercase)) {
             title_audio = 12;
+        } else if (/\.av3a/.test(title_lowercase)) {
+            title_audio = 13;
         }
-        console.log("title_audio"+title_audio)
+        console.log("title_audio" + title_audio)
         // standard
         if (!/remastered/.test(title_lowercase) && (/\.2160p/.test(title_lowercase) || (/\.uhd/.test(title_lowercase) && !/\.1080p/.test(title_lowercase)) || /\.4k\./.test(title_lowercase))) {
             title_resolution = 1;
@@ -310,9 +312,9 @@
 
         var subtitle, cat, type, encode, audio, resolution, area, group, anonymous;
         var poster;
-        var fixtd, douban, imdb, mediainfo_title, mediainfo_s, torrent_extra, douban_raw,havedouban,haveimdb;
+        var fixtd, douban, imdb, mediainfo_title, mediainfo_s, torrent_extra, douban_raw, havedouban, haveimdb;
         var sub_chinese, audio_chinese, is_complete, is_chinese, is_dovi, is_hdr10, is_hdr10p, is_hlg, is_hdr_vivid,
-            is_c_dub, is_bd, is_cc,is_anime,is_contest,is_selfrelease,is_internal,is_request,externalSubtitles,embeddedSubtitles;
+            is_c_dub, is_bd, is_cc, is_anime, is_contest, is_selfrelease, is_internal, is_request, externalSubtitles, embeddedSubtitles;
         var tdlist = $('#outer table:first').find('td');
 
         // Mediainfo 信息
@@ -457,8 +459,10 @@
                     audio = 9;
                 } else if (/MP3/.test(audioText)) {
                     audio = 10;
-                }  else if (/OPUS/.test(audioText)) {
+                } else if (/OPUS/.test(audioText)) {
                     audio = 12;
+                } else if (/AV3A/.test(audioText)) {
+                    audio = 13;
                 } else if (/Other/.test(audioText)) {
                     audio = 99;
                 }
@@ -562,24 +566,24 @@
                 var firstLinkText = lastChild.find('a:first').text();
                 // 检查文本内容是否包含"chs"或"cht"
                 let sub = firstLinkText.includes('chs') || firstLinkText.includes('cht');
-                if(img.length > 0 || sub ){
+                if (img.length > 0 || sub) {
                     externalSubtitles = true;
                 }
-                if(/字\s*幕(.|\n)*?Chinese/i.test(mediainfo_s) || /字\s*幕(.|\n)*?Mandarin/i.test(mediainfo_s) || /Subtitle:\s*?Chinese/i.test(mediainfo_s)|| /字\s*幕(.|\n)*?简体中文/i.test(mediainfo_s)|| /字\s*幕(.|\n)*?繁体中文/i.test(mediainfo_s)|| /字\s*幕(.|\n)*?简体中字/i.test(mediainfo_s)|| /字\s*幕(.|\n)*?繁体中字/i.test(mediainfo_s)){
+                if (/字\s*幕(.|\n)*?Chinese/i.test(mediainfo_s) || /字\s*幕(.|\n)*?Mandarin/i.test(mediainfo_s) || /Subtitle:\s*?Chinese/i.test(mediainfo_s) || /字\s*幕(.|\n)*?简体中文/i.test(mediainfo_s) || /字\s*幕(.|\n)*?繁体中文/i.test(mediainfo_s) || /字\s*幕(.|\n)*?简体中字/i.test(mediainfo_s) || /字\s*幕(.|\n)*?繁体中字/i.test(mediainfo_s)) {
                     embeddedSubtitles = true;
                 }
-                if (embeddedSubtitles||externalSubtitles) {
+                if (embeddedSubtitles || externalSubtitles) {
                     sub_chinese = true;
                 } else {
                     sub_chinese = false;
                 }
             }
             if (td.text().trim().startsWith('豆瓣')) {
-                havedouban =true
+                havedouban = true
                 douban_raw = td.parent().children().last();
             }
             if (td.text().trim().startsWith('IMDb')) {
-                haveimdb =true
+                haveimdb = true
             }
         }
 
@@ -598,7 +602,7 @@
             audio_chinese = true;
         }
         var screenshot = '';
-        var pngCount = 0,jpgCount =0;
+        var pngCount = 0, jpgCount = 0;
         $('.screenshots-container img').each(function (index, element) {
             var src = $(element).attr('src');
             if (src !== undefined) {
@@ -630,15 +634,15 @@
             $('#assistant-tooltips').append('主标题包含中文或中文字符<br/>');
             error = true;
         }
-        if(/(-|@)(CTRLHD|SmY)/.test(title_lowercase)){
+        if (/(-|@)(CTRLHD|SmY|FZHD)/.test(title_lowercase)) {
             $('#assistant-tooltips').append('主标题包含禁发小组，请检查<br/>');
             error = true;
         }
-        if(/(-|@)(FGT|ZAX|Ubits|UBWEB|NSBC|BATWEB|GPTHD|DreamHD|BlackTV|CatWEB|Xiaomi|Huawei|MOMOWEB|DDHDTV|SeeWeb|TagWeb|SonyHD|MiniHD|BitsTV|ALT|NukeHD|ZeroTV|HotTV|EntTV|GameHD|SeeHD|VeryPSP|DWR|XLMV|XJCTV|Mp4Ba|GodDramas|FRDS|BeiTai|Ying|VCB-Studio|toothless|YTS\.MX|BMDru|ParkHD|Xunlei|BestWEB|TBMaxUB|13city)/i.test(title_lowercase)){
+        if (/(-|@)(FGT|ZAX|Ubits|UBWEB|NSBC|BATWEB|GPTHD|DreamHD|BlackTV|CatWEB|Xiaomi|Huawei|MOMOWEB|DDHDTV|SeeWeb|TagWeb|SonyHD|MiniHD|BitsTV|ALT|NukeHD|ZeroTV|HotTV|EntTV|GameHD|SeeHD|VeryPSP|DWR|XLMV|XJCTV|Mp4Ba|GodDramas|FRDS|BeiTai|Ying|VCB-Studio|toothless|YTS\.MX|BMDru|ParkHD|Xunlei|BestWEB|TBMaxUB|13city)/i.test(title_lowercase)) {
             $('#assistant-tooltips').append('主标题包含禁发小组，请检查<br/>');
             error = true;
         }
-        if(/-(.*?@)?(Eleph|HDH|HDS(?!TV)|HDHome|HDSky|HDSWEB|Dream(?!Ru)|DYZ-Movie)(@|$)/i.test(title_lowercase)){
+        if (/-(.*?@)?(Eleph|HDH|HDS(?!TV)|HDHome|HDSky|HDSWEB|Dream(?!Ru)|DYZ-Movie)(@|$)/i.test(title_lowercase)) {
             $('#assistant-tooltips').append('主标题包含不受信小组，请检查<br/>');
             error = true;
         }
@@ -704,7 +708,7 @@
             $('#assistant-tooltips').append('海报使用防盗链图床，请更换或留空<br/>');
             error = true;
         }
-        if (/論壇|论坛|公众号|微信/i.test(mediainfo_title)){
+        if (/論壇|论坛|公众号|微信/i.test(mediainfo_title)) {
             $('#assistant-tooltips').append('请检查「MediaInfo」内信息是否含有广告，请确认资源来源是否可信<br/>');
             error = true;
         }
@@ -732,12 +736,12 @@
             $('#assistant-tooltips').append('媒体信息未解析<br/>');
             error = true;
         }
-        if (type == 7 && (resolution == 4||resolution == 5)){
+        if (type == 7 && (resolution == 4 || resolution == 5)) {
             $('#assistant-tooltips').append('禁发：低于 1080p 分辨率的 WEB-DL 资源<br/>');
         }
         // 标签
         console.log(title_is_complete)
-        if (type !== 1 && is_bd){
+        if (type !== 1 && is_bd) {
             $('#assistant-tooltips').append('非原盘请勿选择「原生」标签<br/>');
             error = true;
         }
@@ -797,7 +801,7 @@
             $('#assistant-tooltips').append('选择「活动」标签，未识别到「中字」<br/>');
             error = true;
         }
-        if (is_contest && type !== 7 ) {
+        if (is_contest && type !== 7) {
             $('#assistant-tooltips').append('选择「活动」标签，未识别到「WEB-DL」<br/>');
             error = true;
         }
@@ -819,12 +823,12 @@
             error = true;
         }
 
-        let isWhiteList = ((area === 1 && /-(.*?@)?(PterWEB|CatEDU|CMCTV|HHWEB|OurBits)(@|$)/i.test(title_lowercase)) || ((type === 5 ||type === 7) && resolution === 1 && (is_hdr10 || is_hdr10p || is_hdr_vivid || is_dovi)))
+        let isWhiteList = ((area === 1 && /-(.*?@)?(PterWEB|CatEDU|CMCTV|HHWEB|OurBits)(@|$)/i.test(title_lowercase)) || ((type === 5 || type === 7) && resolution === 1 && (is_hdr10 || is_hdr10p || is_hdr_vivid || is_dovi)))
 
         if (pngCount < 3 && !isWhiteList) {
             $('#assistant-tooltips').append('PNG 格式的图片未满 3 张<br/>');
             error = true;
-        }else if((pngCount + jpgCount) < 3) {
+        } else if ((pngCount + jpgCount) < 3) {
             $('#assistant-tooltips').append('图片未满 3 张<br/>');
             error = true;
         }
@@ -853,7 +857,7 @@
             // 海报变成悬浮在海报行左侧的小图片
             // =======================================================
             // 1. 找到包含“海报”文字的单元格
-            var $posterLabelTd = $('td.rowhead').filter(function() {
+            var $posterLabelTd = $('td.rowhead').filter(function () {
                 return $(this).text().trim().includes('海报');
             });
 
@@ -917,43 +921,43 @@
         // =================================
         if (isEditor) {
             $('#editor-tooltips').append('↓以下检测需配合人工判断，误报率较高↓<br/>');
-            if (/(?<!hd)\.ma\./i.test(title_lowercase) && type === 7){
+            if (/(?<!hd)\.ma\./i.test(title_lowercase) && type === 7) {
                 $('#editor-tooltips').append('单独槽位：Movies Anywhere<br/>');
             }
-            if (/\.nf\./i.test(title_lowercase) && type === 7 && resolution === 1){
+            if (/\.nf\./i.test(title_lowercase) && type === 7 && resolution === 1) {
                 $('#editor-tooltips').append('单独槽位：Netflix 2160P<br/>');
             }
-            if(/-(.*?@)?(Nest|n!ck|lancertony|vandoge)(@|$)/i.test(title_lowercase)){
+            if (/-(.*?@)?(Nest|n!ck|lancertony|vandoge)(@|$)/i.test(title_lowercase)) {
                 $('#editor-tooltips').append('Dupe 参考：优质字幕小组<br/>');
             }
-            if(/-Breeze@Sunny/i.test(title_lowercase)){
+            if (/-Breeze@Sunny/i.test(title_lowercase)) {
                 $('#editor-tooltips').append('Dupe 参考：优质字幕小组<br/>');
             }
-            if(/-(.*?@)?(Pter|CiNEPHiLES|FraMeSToR|BLURANiUM|ZQ|ZoroSenpai|hallowed|MainFrame)(@|$)/i.test(title_lowercase)){
+            if (/-(.*?@)?(Pter|CiNEPHiLES|FraMeSToR|BLURANiUM|ZQ|ZoroSenpai|hallowed|MainFrame)(@|$)/i.test(title_lowercase)) {
                 $('#editor-tooltips').append('Dupe 参考：优质小组，必需保留附加信息否则不允许发布<br/>');
             }
-            if(type == 4){
+            if (type == 4) {
                 $('#editor-tooltips').append('Dupe 参考：REMUX 类资源必需保留附加信息否则不允许发布<br/>');
             }
-            if (is_anime && type === 7 && cat == 502){
+            if (is_anime && type === 7 && cat == 502) {
                 $('#editor-tooltips').append(`Dupe参考：平台优先级（二次元）：CR = B-Global 2160p > B-Global 1080p > AMZN > Other<br/>`);
-            }else{
-                if (title_lowercase.match(/\.(DSNP|Disney\+|MAX|AMZN|Amazon)\./i)&& type === 7 && resolution === 1){
+            } else {
+                if (title_lowercase.match(/\.(DSNP|Disney\+|MAX|AMZN|Amazon)\./i) && type === 7 && resolution === 1) {
                     $('#editor-tooltips').append(`Dupe参考：2160p 高优先级源 ${title_lowercase.match(/\.(DSNP|Disney\+|MAX|AMZN|Amazon)\./i)[0]}<br/>`);
                 }
-                if (title_lowercase.match(/\.(DSNP|Disney\+|MAX|AMZN|Amazon|CR)\./i) && type === 7 && resolution === 2){
+                if (title_lowercase.match(/\.(DSNP|Disney\+|MAX|AMZN|Amazon|CR)\./i) && type === 7 && resolution === 2) {
                     $('#editor-tooltips').append(`Dupe参考：1080P 高优先级源 ${title_lowercase.match(/\.(DSNP|Disney\+|MAX|AMZN|Amazon|CR)\./i)[0]}<br/>`);
                 }
-                if (title_lowercase.match(/\.(Paramount\+|PMTP|iTunes|HBO\.Max|HMax)\./i)&& type === 7 && resolution === 1){
+                if (title_lowercase.match(/\.(Paramount\+|PMTP|iTunes|HBO\.Max|HMax)\./i) && type === 7 && resolution === 1) {
                     $('#editor-tooltips').append(`Dupe参考：2160p 次高优先级源 ${title_lowercase.match(/\.(Paramount\+|PMTP|iTunes|HBO\.Max|HMax)\./i)[0]}<br/>`);
                 }
-                if (title.match(/\.iT\./)&& type === 7 && resolution === 1){
+                if (title.match(/\.iT\./) && type === 7 && resolution === 1) {
                     $('#editor-tooltips').append(`Dupe参考：2160p 次高优先级源 ${title.match(/\.iT\./)[0]}<br/>`);
                 }
-                if (title_lowercase.match(/\.(Netflix|NF|HBO\.Max|HMax)\./i) && type === 7 && resolution === 2){
+                if (title_lowercase.match(/\.(Netflix|NF|HBO\.Max|HMax)\./i) && type === 7 && resolution === 2) {
                     $('#editor-tooltips').append(`标题检测：1080P 次高优先级源 ${title_lowercase.match(/\.(Netflix|NF|HBO\.Max|HMax)\./i)[0]}<br/>`);
                 }
-                if (title_lowercase.match(/\.(Mytvs|MyVideo|Hami|Mytvsuper)\./i)){
+                if (title_lowercase.match(/\.(Mytvs|MyVideo|Hami|Mytvsuper)\./i)) {
                     $('#editor-tooltips').append(`Dupe参考：低优先级源 ${title_lowercase.match(/\.(Mytvs|MyVideo|Hami|Mytvsuper)\./i)[0]}<br/>`);
                 }
             }
@@ -963,26 +967,26 @@
             if (/HDR\sformat.*dvhe\.08/i.test(mediainfo_title) || /HDR\sformat.*dvhe\.07/i.test(mediainfo_title)) {
                 $('#editor-tooltips').append('DUPE参考：Dolby Vision P7 or P8（含 HDR10 数据）<br/>');
             }
-            if (externalSubtitles && !embeddedSubtitles){
+            if (externalSubtitles && !embeddedSubtitles) {
                 $('#editor-tooltips').append('Dupe参考：外挂字幕优先级低于内置字幕<br/>');
             }
-            if ( /HDR\sformat.*dvhe\.07/i.test(mediainfo_title)&& (type == 6||type == 8)){
+            if (/HDR\sformat.*dvhe\.07/i.test(mediainfo_title) && (type == 6 || type == 8)) {
                 $('#editor-tooltips').append('禁发：DV P7 压制兼容性过低<br/>');
             }
-            if (cat == 502 && is_bd && is_anime){
+            if (cat == 502 && is_bd && is_anime) {
                 $('#editor-tooltips').append('禁发：剧集形式 TV / OVA 番剧的原盘，仅允许剧场版/电影的原盘<br/>');
             }
-            if(cat == 508){
+            if (cat == 508) {
                 $('#editor-tooltips').append('除官组驻站外，禁止发布音乐类，但可发布演唱会，且演唱会分类为 MV<br/>');
             }
             const rating = parseFloat(document.querySelector('.douban_info .number')?.textContent);
-            if (rating !== undefined && rating < 4 && area == 1 ) {
+            if (rating !== undefined && rating < 4 && area == 1) {
                 $('#editor-tooltips').append('中性：国产豆瓣低分（需人工刷新豆瓣信息，并排除一个月内未出分新片）<br/>');
             }
-            if (/第\s*?[\d一二三四五六七八九十百千]*(?:-\d+)?\s*?[集期]/i.test(subtitle) && !is_complete && (cat === 502 || cat === 503 || cat === 505) && (type === 5 || type ===7)) {
+            if (/第\s*?[\d一二三四五六七八九十百千]*(?:-\d+)?\s*?[集期]/i.test(subtitle) && !is_complete && (cat === 502 || cat === 503 || cat === 505) && (type === 5 || type === 7)) {
                 $('#editor-tooltips').append('中性：识别到单集，无需审核<br/>');
             }
-            if (/第\s*?[\d一二三四五六七八九十百千]*(?:-\d+)?\s*?[集期]/i.test(subtitle) && is_complete && (cat === 502 || cat === 503 || cat === 505) && (type === 5 || type ===7)) {
+            if (/第\s*?[\d一二三四五六七八九十百千]*(?:-\d+)?\s*?[集期]/i.test(subtitle) && is_complete && (cat === 502 || cat === 503 || cat === 505) && (type === 5 || type === 7)) {
                 $('#editor-tooltips').append('疑似单集，请检查是否为合集<br/>');
             }
             if (!is_chinese && cat !== 501 && type === 7) {
@@ -997,40 +1001,40 @@
             if (!is_chinese && cat === 502 && type === 1) {
                 $('#editor-tooltips').append('中性：无「中字」的 Blu-Ray 剧集<br/>');
             }
-            if (/时　长:\s(10|[1-9])min/.test(mediainfo_s)){
+            if (/时　长:\s(10|[1-9])min/.test(mediainfo_s)) {
                 $('#editor-tooltips').append('中性：疑似短剧，时长低于 10 分钟<br/>')
             }
-            if(!/已审/.test(document.querySelector('h1').innerText) && is_request){
+            if (!/已审/.test(document.querySelector('h1').innerText) && is_request) {
                 $('#editor-tooltips').append('「应求」标签需提供对应的悬赏链接，并检查是否候选区内有重复资源，遵循先来后到原则<br/>');
             }
-            if(/(-|@)(.*PAD)/i.test(title_lowercase) || /\.(PAD|IPAD)\./i.test(title_lowercase)){
+            if (/(-|@)(.*PAD)/i.test(title_lowercase) || /\.(PAD|IPAD)\./i.test(title_lowercase)) {
                 $('#editor-tooltips').append('可替代：主标题包含 PAD，请检查<br/>');
             }
-            if (/(?<!\d)0 kbps/.test(mediainfo_s) ) {
+            if (/(?<!\d)0 kbps/.test(mediainfo_s)) {
                 $('#editor-tooltips').append('Info 内检测到 0 kbps，请检查<br/>');
             }
-            if(/-(.*?@)?(52pt)(@|$)/i.test(title_lowercase)&&is_bd){
+            if (/-(.*?@)?(52pt)(@|$)/i.test(title_lowercase) && is_bd) {
                 $('#editor-tooltips').append('52pt 作品 疑似 Remux,请检查是否为「原生」原盘<br/>');
             }
-            if (!douban  && title_group !== 8 && area == 99) {
+            if (!douban && title_group !== 8 && area == 99) {
                 $('#editor-tooltips').append('地区为 Other 且无豆瓣链接，请人工核对<br/>');
             }
-            if (!title_lowercase.match(/\.(18[8-9][0-9]|19[0-9]{2}|200[0-9]|201[0-9]|202[0-9]|2030)\./)){
+            if (!title_lowercase.match(/\.(18[8-9][0-9]|19[0-9]{2}|200[0-9]|201[0-9]|202[0-9]|2030)\./)) {
                 $('#editor-tooltips').append('标题未检测到年份，请检查<br/>');
             }
-            if (!title_audio){
+            if (!title_audio) {
                 $('#editor-tooltips').append('标题未检测到音频编码，请检查<br/>');
             }
-            if (!title_resolution){
+            if (!title_resolution) {
                 $('#editor-tooltips').append('标题未检测到分辨率，请检查<br/>');
             }
-            if (!title_encode){
+            if (!title_encode) {
                 $('#editor-tooltips').append('标题未检测到视频编码，请检查<br/>');
             }
-            if (type === 6 && (resolution === 5 || resolution === 99)){
+            if (type === 6 && (resolution === 5 || resolution === 99)) {
                 $('#editor-tooltips').append('不允许的资源：低于 720P 的 BDRip<br/>');
             }
-            if (/(https?:\/\/)([\w\-]+(\.[\w\-]+)+)(:\d+)?(\/[^\s]*)?/i.test(mediainfo_title)){
+            if (/(https?:\/\/)([\w\-]+(\.[\w\-]+)+)(:\d+)?(\/[^\s]*)?/i.test(mediainfo_title)) {
                 $('#editor-tooltips').append('检测到「Mediainfo」含有网址，请检查<br/>');
             }
             if (/^\s*(概览|概要)/i.test(mediainfo_title)) {
@@ -1072,10 +1076,10 @@
             if ((mediainfo_title.match(/(?<!\S)[ ]{2,}(?!\S)/g) || []).length < 30 && type != 1) {
                 $('#editor-tooltips').append('识别到「mediainfo」空格字符过少，请检查排版是否正确<br/>');
             }
-            if (type === 1 && /\.HK\./i.test(title_lowercase)){
+            if (type === 1 && /\.HK\./i.test(title_lowercase)) {
                 $('#editor-tooltips').append('检测到区号为「HK」，港版原盘应使用「HKG」<br/>');
             }
-            if (type === 1 && !is_bd && /\.CHN\./i.test(title_lowercase) && /DIY/i.test(subtitle)){
+            if (type === 1 && !is_bd && /\.CHN\./i.test(title_lowercase) && /DIY/i.test(subtitle)) {
                 $('#editor-tooltips').append('不接受发行地为中国大陆的蓝光原盘的 DIY<br/>');
             }
             if (!sub_chinese && is_chinese) {
@@ -1090,19 +1094,19 @@
             if (/Video:.*1080i/i.test(mediainfo_title) && resolution === 2) {
                 $('#editor-tooltips').append('分辨率为 1080i，标题为 1080p<br/>');
             }
-            if(/Size: 0/i.test(mediainfo_s) && type === 1){
+            if (/Size: 0/i.test(mediainfo_s) && type === 1) {
                 $('#editor-tooltips').append('BDINFO：Size: 0，请人工检查<br/>');
             }
             if ($('.mediainfo-short .codetop').text() === 'BDInfo' && /(?:^.+?:\s.+\n\s*\n){2,}/mi.test(mediainfo_title)) {
                 $('#editor-tooltips').append('检测到带多行空格的BDinfo，请人工检查<br/>');
             }
-            if ((/\.DVDRip/i.test(title_lowercase) || type === 10) && resolution !== 5){
+            if ((/\.DVDRip/i.test(title_lowercase) || type === 10) && resolution !== 5) {
                 $('#editor-tooltips').append('DVDRip 非 SD 分辨率，请检查是否为超分辨率<br/>');
             }
             if (/(\b(https?|ftp|file):\/\/(?!www\.blu-ray\.com|ptpimg\.me|slow\.pics)[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig.test(torrent_extra)) {
                 $('#editor-tooltips').append('请移除附加信息中的网址。<br/>');
             }
-            if(is_contest){
+            if (is_contest) {
                 const getRating = (platform) => {
                     const selector = {
                         douban: 'img[src*="douban.png"]',
@@ -1111,39 +1115,42 @@
                     const td = document.querySelector(`td.douban_info ${selector}`);
                     if (!td) return '未找到';
                     const rating = td.closest('header')
-                    .querySelector('.rating > .number:not(.votes)')
-                    ?.textContent?.trim();
+                        .querySelector('.rating > .number:not(.votes)')
+                        ?.textContent?.trim();
                     return rating || '未找到';
                 };
                 $('#editor-tooltips').append(`检测到活动标签，请检查评分。<br/>豆瓣:${getRating('douban')} IMDB:${getRating('imdb')}<br/>`);
             }
             //允许发布的版本
-            if (type === 6||type === 8||type === 9||type === 10) {
-                if (resolution===1 && encode !==1){
+            if (type === 6 || type === 8 || type === 9 || type === 10) {
+                if (resolution === 1 && encode !== 1) {
                     $('#editor-tooltips').append('Encode 分辨率为2160P，只接受x265编码版本<br/>');
                 }
-                if (!is_anime && resolution === 2 && !(is_dovi||is_hdr10||is_hdr10p||is_hlg||is_hdr_vivid) && encode !==2){
+                if (!is_anime && resolution === 2 && !(is_dovi || is_hdr10 || is_hdr10p || is_hlg || is_hdr_vivid) && encode !== 2) {
                     $('#editor-tooltips').append('Encode 分辨率为1080P且为SDR，只接受X264编码版本<br/>');
                 }
-                if (resolution === 2 && (is_dovi||is_hdr10||is_hdr10p||is_hlg||is_hdr_vivid) && !(/\.uhd\./i.test(title_lowercase) && is_anime && is_chinese && !embeddedSubtitles)){
+                if (is_anime && area !== 5 && resolution === 2 && !(is_dovi || is_hdr10 || is_hdr10p || is_hlg || is_hdr_vivid) && encode !== 2) {
+                    $('#editor-tooltips').append('Encode 分辨率为 1080P 且为 SDR，仅日本二维动画接受X265编码版本<br/>');
+                }
+                if (resolution === 2 && (is_dovi || is_hdr10 || is_hdr10p || is_hlg || is_hdr_vivid) && !(/\.uhd\./i.test(title_lowercase) && is_anime && is_chinese && !embeddedSubtitles)) {
                     $('#editor-tooltips').append('禁止发布：Encode 分辨率为1080P 且带 HDR 的版本（使用 UHD 原盘制作的日本二次元动漫，且非外挂中字的可以发布）<br/>');
                 }
                 if (!is_anime && ((/\.x264\./i.test(title_lowercase) && /\.10bit\./i.test(title_lowercase)) || (/Bit\s+depth\s*:\s*10\s+bits/i.test(mediainfo_title) && /Writing\s+library\s*:\s*x264/i.test(mediainfo_title)))) {
                     $('#editor-tooltips').append('禁止发布：Encode x264 10bit 硬件兼容性较差<br/>');
                 }
             }
-            if (is_anime === true && cat === 502 && is_bd){
+            if (is_anime === true && cat === 502 && is_bd) {
                 $('#editor-tooltips').append('禁止发布：分集形式 TV / OVA 番剧的原盘(不论单集还是合集)，仅允许剧场版/电影的原盘<br/>');
             }
             if (
                 (/^(?:Format).*?(DTS-HD|TrueHD|DTS:X|LPCM|Format\s+:\s+PCM\s+Format settings\s+:\s+Little\s+\/\s+Signed)/im.test(mediainfo_title) ||
-                 audio === 1 ||
-                 audio === 2 ||
-                 audio === 6) &&
+                    audio === 1 ||
+                    audio === 2 ||
+                    audio === 6) &&
                 (resolution === 2 ||
-                 resolution === 3 ||
-                 resolution === 4 ||
-                 resolution === 5) &&
+                    resolution === 3 ||
+                    resolution === 4 ||
+                    resolution === 5) &&
                 (type === 6 || type === 8 || type === 9 || type === 10)
             ) {
                 $("#editor-tooltips").append("可替代：音频臃肿<br/>");
@@ -1158,22 +1165,22 @@
                 $('#editor-tooltips').append('可替代：质量较差的视频<br/>');
             }
 
-            if(type != 1 && type != 3 && type != 99){
+            if (type != 1 && type != 3 && type != 99) {
                 const match = mediainfo_s.match(/文件名: (.*)/);
-                if(match && match[1]) {
+                if (match && match[1]) {
                     document.querySelector('h1').insertAdjacentHTML('beforeend', `<br><span style="color: darkgray; font-size: 1rem;">${match[1]}</span>`);
                 } else {
                     document.querySelector('h1').insertAdjacentHTML('beforeend', `<br><span style="color: red; font-size: 1rem;">未找到文件名信息</span>`);
                     $('#editor-tooltips').append('Mediainfo 未找到文件名信息<br/>');
                 }
-            }else if(type == 1){
+            } else if (type == 1) {
                 // 先尝试匹配 Disc Title:，如果为空则匹配 Disc Label:
                 const matchTitle = mediainfo_title.match(/Disc\sTitle:\s*(.*)/);
                 const matchLabel = !matchTitle ? mediainfo_title.match(/Disc\sLabel:\s*(.*)/) : null;
                 // 获取最终结果（优先取 Title，没有则取 Label）
                 const discInfo = matchTitle ? matchTitle[1] : (matchLabel ? matchLabel[1] : null);
 
-                if(discInfo) {
+                if (discInfo) {
                     document.querySelector('h1').insertAdjacentHTML('beforeend', `<br><span style="color: darkgray; font-size: 1rem;">${discInfo}</span>`);
                 } else {
                     $('#editor-tooltips').append('BDInfo 未找到Disc Title或Disc Label信息<br/>');
@@ -1231,18 +1238,20 @@
                 { areas: ['日本'], value: 5 },
                 { areas: ['韩国'], value: 6 },
                 { areas: ['泰国'], value: 9 },
-                { areas: ['阿尔巴尼亚', '爱尔兰', '爱沙尼亚', '安道尔', '奥地利', '白俄罗斯', '保加利亚',
-                          '北马其顿', '比利时', '冰岛', '波黑', '波兰', '丹麦', '德国', '法国',
-                          '梵蒂冈', '芬兰', '荷兰', '黑山', '捷克', '克罗地亚', '拉脱维亚', '立陶宛',
-                          '列支敦士登', '卢森堡', '罗马尼亚', '马耳他', '摩尔多瓦', '摩纳哥', '挪威',
-                          '葡萄牙', '瑞典', '瑞士', '塞尔维亚', '塞浦路斯', '圣马力诺', '斯洛伐克',
-                          '斯洛文尼亚', '乌克兰', '西班牙', '希腊', '匈牙利', '意大利', '英国',
-                          '安提瓜和巴布达', '巴巴多斯', '巴哈马', '巴拿马', '伯利兹', '多米尼加', '多米尼克',
-                          '格林纳达', '哥斯达黎加', '古巴', '海地', '洪都拉斯', '加拿大', '美国', '墨西哥',
-                          '尼加拉瓜', '萨尔瓦多', '圣基茨和尼维斯', '圣卢西亚', '圣文森特和格林纳丁斯',
-                          '特立尼达和多巴哥', '危地马拉', '牙买加', '阿根廷', '巴拉圭', '巴西', '秘鲁',
-                          '玻利维亚', '厄瓜多尔', '哥伦比亚', '圭亚那', '苏里南', '委内瑞拉', '乌拉圭',
-                          '智利', '捷克斯洛伐克','澳大利亚','西德','新西兰'], value: 4 },
+                {
+                    areas: ['阿尔巴尼亚', '爱尔兰', '爱沙尼亚', '安道尔', '奥地利', '白俄罗斯', '保加利亚',
+                        '北马其顿', '比利时', '冰岛', '波黑', '波兰', '丹麦', '德国', '法国',
+                        '梵蒂冈', '芬兰', '荷兰', '黑山', '捷克', '克罗地亚', '拉脱维亚', '立陶宛',
+                        '列支敦士登', '卢森堡', '罗马尼亚', '马耳他', '摩尔多瓦', '摩纳哥', '挪威',
+                        '葡萄牙', '瑞典', '瑞士', '塞尔维亚', '塞浦路斯', '圣马力诺', '斯洛伐克',
+                        '斯洛文尼亚', '乌克兰', '西班牙', '希腊', '匈牙利', '意大利', '英国',
+                        '安提瓜和巴布达', '巴巴多斯', '巴哈马', '巴拿马', '伯利兹', '多米尼加', '多米尼克',
+                        '格林纳达', '哥斯达黎加', '古巴', '海地', '洪都拉斯', '加拿大', '美国', '墨西哥',
+                        '尼加拉瓜', '萨尔瓦多', '圣基茨和尼维斯', '圣卢西亚', '圣文森特和格林纳丁斯',
+                        '特立尼达和多巴哥', '危地马拉', '牙买加', '阿根廷', '巴拉圭', '巴西', '秘鲁',
+                        '玻利维亚', '厄瓜多尔', '哥伦比亚', '圭亚那', '苏里南', '委内瑞拉', '乌拉圭',
+                        '智利', '捷克斯洛伐克', '澳大利亚', '西德', '新西兰'], value: 4
+                },
                 { areas: ['苏联', '俄罗斯'], value: 8 }
             ];
             // 遍历映射表并检查 country 是否包含任何指定地区
@@ -1278,10 +1287,10 @@
             if (language && audio_chinese && !is_c_dub && !language.includes("普通话")) {
                 $('#editor-tooltips').append('外语片或粤语片包含有普通话配音，需使用「国配」标签<br/>');
             }
-            if(language && audio_chinese && !is_c_dub && language.includes("粤语")){
+            if (language && audio_chinese && !is_c_dub && language.includes("粤语")) {
                 $('#editor-tooltips').append('种审人工检查第一语言是否为粤语，原始语言为粤语的影片如包含有普通话配音，需使用「国配」标签<br/>');
             }
-            if(!language){
+            if (!language) {
                 $('#editor-tooltips').append('豆瓣信息未检测到语言，请检查配音及豆瓣信息<br/>');
             }
             if (cat && douban_cat && douban_cat >= 501 && douban_cat <= 505 && douban_cat !== cat) {
@@ -1303,7 +1312,7 @@
             if (!year || year === "") {
                 $('#editor-tooltips').append('豆瓣未检测到年份，请检查<br/>');
             } else if (title_lowercase.match(/\.(18[8-9][0-9]|19[0-9]{2}|200[0-9]|201[0-9]|202[0-9]|2030)\./) &&
-                       year !== title_lowercase.match(/\.(18[8-9][0-9]|19[0-9]{2}|200[0-9]|201[0-9]|202[0-9]|2030)\./)[1]) {
+                year !== title_lowercase.match(/\.(18[8-9][0-9]|19[0-9]{2}|200[0-9]|201[0-9]|202[0-9]|2030)\./)[1]) {
                 $('#editor-tooltips').append('豆瓣与标题年份不匹配，请检查<br/>');
             }
             if (!isani && is_anime) {
@@ -1327,7 +1336,7 @@
     if (window.location.href.includes("/details.php?")) {
 
 
-        $(document).ready(function() {
+        $(document).ready(function () {
             // 通用函数：添加复制按钮
             function addCopyButton(targetElement, buttonText, contentGetter, errorText) {
                 if (targetElement.length === 0) {
@@ -1345,7 +1354,7 @@
 
                 targetElement.after(lineBreak).after(button);
 
-                button.on('click', function() {
+                button.on('click', function () {
                     try {
                         const content = contentGetter();
                         if (content === null || content === '') {
@@ -1406,7 +1415,7 @@
                     if (screenshotImages.length === 0) return null;
 
                     const urls = [];
-                    screenshotImages.each(function() {
+                    screenshotImages.each(function () {
                         urls.push($(this).attr('src'));
                     });
                     return urls.join('');
@@ -1433,7 +1442,9 @@
             }
 
             var resolutionRegex = /分辨率:\s*(\d+)\s*x\s*(\d+)(?:\s*\(([\d\.]+):1\))?/;
+            var bdResolutionRegex = /Video:.*?\/\s*(\d{3,4})[pi]\s*\//i; // 匹配 BDInfo 中的 1080p, 2160p 等
             var match = mediainfo_s.match(resolutionRegex);
+            var bdMatch = mediainfo_s.match(bdResolutionRegex);
             var cWidth, cHeight, amznWidth;
 
             if (match) {
@@ -1442,10 +1453,19 @@
                 if (match[3]) {
                     amznWidth = Math.round(cHeight * parseFloat(match[3]));
                 }
-            } else if ($('.mediainfo-short .codetop').text() === 'MediaInfo') {
-                $('#editor-tooltips').append("未找到 Mediainfo 分辨率信息<br>");
+            } else if (bdMatch) {
+                const resText = bdMatch[1];
+                if (resText === '1080') {
+                    cWidth = 1920;
+                    cHeight = 1080;
+                } else if (resText === '2160') {
+                    cWidth = 3840;
+                    cHeight = 2160;
+                }
+            } else if ($('.mediainfo-short .codetop').text() === 'MediaInfo' || type === 1) {
+                $('#editor-tooltips').append("未找到分辨率信息<br>");
             }
-            if (/Original height/i.test(mediainfo_title)){
+            if (/Original height/i.test(mediainfo_title)) {
                 $('#editor-tooltips').append('检测到Original height，请人工辅助判断<br>');
             }
             var error_img = false;
@@ -1523,10 +1543,10 @@
             }
 
             function checkImageResolution(details, expectedResolution, imgNum) {
-                const {width, height} = parseResolution(details.resolution);
+                const { width, height } = parseResolution(details.resolution);
                 let pswitch;
                 let is_amzn = /amzn/i.test(title_lowercase)
-                if (!/Blu-ray/i.test(typeText)) {
+                if (type != 1) {
                     let widthInvalid = width !== cWidth;
                     if (is_amzn && amznWidth) {
                         widthInvalid = width !== cWidth && width !== amznWidth;
@@ -1537,8 +1557,8 @@
                             const isDVDType = type === 10 || type === 3 || (type === 4 && /dvd/i.test(title_lowercase));
                             if (isDVDType) {
                                 const message = `DVD请人工确认截图分辨率，Mediainfo 高度为${cHeight} 宽度为${cWidth}<br>` +
-                                      `可能的正确截图宽度为 高度大于480时：${Math.floor(cWidth / 45 * 64)} 或 ${Math.floor(cWidth / 15 * 16)} ` +
-                                      `高度小等于480时：${Math.floor(cWidth / 9 * 8)} 或 ${Math.floor(cWidth / 27 * 32)}<br>`;
+                                    `可能的正确截图宽度为 高度大于480时：${Math.floor(cWidth / 45 * 64)} 或 ${Math.floor(cWidth / 15 * 16)} ` +
+                                    `高度小等于480时：${Math.floor(cWidth / 9 * 8)} 或 ${Math.floor(cWidth / 27 * 32)}<br>`;
                                 $('#editor-tooltips').append(message);
                                 error_img = true;
                             } else {
@@ -1551,38 +1571,60 @@
                 }
 
                 let size = parseFloat(details.fileSize.match(/[\d\.]+/)[0]);
-                if ((is_dovi || is_hlg || is_hdr_vivid || is_hdr10p || is_hdr10) && size < 1800){
+                if ((is_dovi || is_hlg || is_hdr_vivid || is_hdr10p || is_hdr10) && size < 1800) {
                     $('#editor-tooltips').append(`HDR影片，第${imgNum}张图片，截图体积低于1800KB：体积为${details.fileSize}<br>`);
-                }else if (resolution === 1 && size < 1800){
+                } else if (resolution === 1 && size < 1800) {
                     $('#editor-tooltips').append(`2160p影片，第${imgNum}张图片，截图体积低于1800KB：体积为${details.fileSize}<br>`);
-                }else if ((resolution === 2 || resolution === 3) && size < 1000){
+                } else if ((resolution === 2 || resolution === 3) && size < 1000) {
                     $('#editor-tooltips').append(`1080p影片，第${imgNum}张图片，截图体积低于1000KB：体积为${details.fileSize}<br>`);
                 }
 
                 if (!pswitch && !error_img && type !== 10) {
-                    switch (expectedResolution) {
-                        case '2160p':
-                            if ((height < 2120 || height > 2160) && (width < 3800 || width > 3840)) {
-                                $('#editor-tooltips').append(`第${imgNum}张图片，截图分辨率不符合 2160p 标准：实际高度为${height} 宽度${width}<br>`);
+                    // Blu-ray (type 1) 特殊逻辑
+                    if (type === 1) {
+                        if (resolution === 1 || resolution === 2 || resolution === 3) {
+                            const is1080 = resolution === 2 || resolution === 3;
+                            const is2160 = resolution === 1;
+                            const standardWidth = is2160 ? 3840 : 1920;
+                            const standardHeight = is2160 ? 2160 : 1080;
+
+                            if (width !== standardWidth || height !== standardHeight) {
+                                $('#editor-tooltips').append(`第${imgNum}张图片，Blu-ray 截图未按 16:9 标准。实际：${width}x${height}，标准：${standardWidth}x${standardHeight}<br>`);
                                 error_img = true;
                             }
-                            break;
-                        case '1080p':
-                        case '1080i':
-                            if ((height < 1040 || height > 1080) && (width < 1880 || width > 1920)) {
-                                $('#editor-tooltips').append(`第${imgNum}张图片，截图分辨率不符合 1080p/1080i 标准：实际高度为${height} 宽度${width}<br>`);
+                        } else {
+                            // 低于 1080p 的 Blu-ray
+                            if (!error_img) {
+                                $('#editor-tooltips').append(`第${imgNum}张图片，Blu-ray 分辨率特殊，需人工检查：${width}x${height}<br>`);
                                 error_img = true;
                             }
-                            break;
-                        case '720p':
-                            if ((height < 680 || height > 720) && (width !== 1280)) {
-                                $('#editor-tooltips').append(`第${imgNum}张图片，截图分辨率不符合 720p 标准：实际高度为${height} 宽度${width}<br>`);
+                        }
+                    } else {
+                        // 非原盘逻辑 (Encode/WEB/etc)
+                        switch (expectedResolution) {
+                            case '2160p':
+                                if ((height < 2120 || height > 2160) && (width < 3800 || width > 3840)) {
+                                    $('#editor-tooltips').append(`第${imgNum}张图片，截图分辨率不符合 2160p 标准：实际高度为${height} 宽度${width}<br>`);
+                                    error_img = true;
+                                }
+                                break;
+                            case '1080p':
+                            case '1080i':
+                                if ((height < 1040 || height > 1080) && (width < 1880 || width > 1920)) {
+                                    $('#editor-tooltips').append(`第${imgNum}张图片，截图分辨率不符合 1080p/1080i 标准：实际高度为${height} 宽度${width}<br>`);
+                                    error_img = true;
+                                }
+                                break;
+                            case '720p':
+                                if ((height < 680 || height > 720) && (width !== 1280)) {
+                                    $('#editor-tooltips').append(`第${imgNum}张图片，截图分辨率不符合 720p 标准：实际高度为${height} 宽度${width}<br>`);
+                                    error_img = true;
+                                }
+                                break;
+                            default:
+                                $('#editor-tooltips').append(`第${imgNum}张图片，未定义对分辨率${expectedResolution}的检查规则<br>`);
                                 error_img = true;
-                            }
-                            break;
-                        default:
-                            $('#editor-tooltips').append(`第${imgNum}张图片，未定义对分辨率${expectedResolution}的检查规则<br>`);
-                            error_img = true;
+                        }
                     }
                 }
             }
@@ -1599,11 +1641,11 @@
                 infoBox.style.zIndex = '1000';
                 document.body.appendChild(infoBox);
 
-                if (isTest){
+                if (isTest) {
                     const domain = img.src.match(/:\/\/(.[^/]+)/)[1];
                     const mainDomain = domain.split('.').slice(-2).join('.');
                     infoBox.textContent = `大小：${details.fileSize}, 分辨率：${details.resolution}, 类型：${details.fileType}, 图床：${mainDomain}`;
-                }else{
+                } else {
                     infoBox.textContent = `大小：${details.fileSize}, 分辨率：${details.resolution}, 类型：${details.fileType}`;
                 }
 
@@ -1624,7 +1666,7 @@
 
             function parseResolution(resolution) {
                 const [width, height] = resolution.split(' x ').map(Number);
-                return {width, height};
+                return { width, height };
             }
         }
 
@@ -1690,31 +1732,33 @@
         const buttons = [
             { id: 'hideReviewed', text: '隐藏已审', action: toggleHideReviewedState },
             { id: 'hideOld', text: '隐藏老种', action: toggleHideOldState },
-            { text: '显示所有', action: () => {
-                jQuery('table.torrents tr').show();
-                // 点击"显示所有"时，重置所有隐藏状态
-                if (isMatchesHidden || isReviewedHidden || isOldHidden) {
-                    isMatchesHidden = false;
-                    isReviewedHidden = false;
-                    isOldHidden = false;
-                    GM_setValue(HIDE_MATCHES_STATE_KEY, false);
-                    GM_setValue(HIDE_REVIEWED_STATE_KEY, false);
-                    GM_setValue(HIDE_OLD_STATE_KEY, false);
-                    // 更新所有按钮文本
-                    updateHideMatchesButtonText();
-                    updateHideReviewedButtonText();
-                    updateHideOldButtonText();
+            {
+                text: '显示所有', action: () => {
+                    jQuery('table.torrents tr').show();
+                    // 点击"显示所有"时，重置所有隐藏状态
+                    if (isMatchesHidden || isReviewedHidden || isOldHidden) {
+                        isMatchesHidden = false;
+                        isReviewedHidden = false;
+                        isOldHidden = false;
+                        GM_setValue(HIDE_MATCHES_STATE_KEY, false);
+                        GM_setValue(HIDE_REVIEWED_STATE_KEY, false);
+                        GM_setValue(HIDE_OLD_STATE_KEY, false);
+                        // 更新所有按钮文本
+                        updateHideMatchesButtonText();
+                        updateHideReviewedButtonText();
+                        updateHideOldButtonText();
+                    }
+                    changeFrozenRowsStyle(); // 重新应用样式
                 }
-                changeFrozenRowsStyle(); // 重新应用样式
-            }},
+            },
             { id: 'hideMatches', text: '隐藏匹配项', action: toggleHideMatchesState },
             { text: '隐藏非匹配项', action: () => toggleVisibility(false) },
             { text: '选中复选框', action: () => jQuery('table.torrents input[type="checkbox"]:visible').prop('checked', true) },
             { text: window.location.search.includes('neutral=1') ? '隐藏中性' : '显示中性', action: () => toggleParam('neutral') },
             { text: window.location.search.includes('trumpable=1') ? '隐藏可替代' : '显示可替代', action: () => toggleParam('trumpable') }
         ];
-        if (isTest){
-            buttons.push({text: '导出种子列表', action: exportList})// 新增导出按钮)
+        if (isTest) {
+            buttons.push({ text: '导出种子列表', action: exportList })// 新增导出按钮)
         }
 
         // 创建按钮和输入框
@@ -1854,7 +1898,7 @@
             const items = [];
             const rows = jQuery('table.torrents tr:visible');
 
-            rows.each(function(index) {
+            rows.each(function (index) {
                 if (index === 0 || index === rows.length - 1) return;
 
                 const titleLink = jQuery(this).find('div.torrent-title a[title]');
@@ -1922,7 +1966,7 @@
                 const row = jQuery(this).closest('tr');
                 row.find('div.torrent-title a').css('color', 'blue');
             });
-            jQuery('a[href="?cat=502"], a[href="?cat=503"], a[href="?cat=505"]').each(function() {
+            jQuery('a[href="?cat=502"], a[href="?cat=503"], a[href="?cat=505"]').each(function () {
                 const parentTd = jQuery(this).closest('td');
                 const nextTd = parentTd.next('td');
                 const hasPackLink = nextTd.find('table tbody a[href="/torrents.php?pack=1"], a[href="/torrents.php?untouched=1"]').length > 0;
@@ -1937,7 +1981,7 @@
                     }
                 }
             });
-            jQuery('td.rowfollow').each(function() {
+            jQuery('td.rowfollow').each(function () {
                 if (jQuery(this).find('span.red').text().trim() === '0') {
                     const row = jQuery(this).closest('tr');
                     const titleLink = row.find('div.torrent-title a');
@@ -1958,7 +2002,7 @@
         }
 
         function applyHideOld() {
-            jQuery('td.rowfollow.nowrap').each(function() {
+            jQuery('td.rowfollow.nowrap').each(function () {
                 if (jQuery(this).text().includes('月')) {
                     jQuery(this).closest('tr').hide();
                 }
@@ -2194,10 +2238,10 @@
                     defaultComments.forEach((comment, index) => {
                         defaultSelect.append(
                             $('<option></option>')
-                            .text(comment)
-                            .val('default_' + index)
-                            .css('background-color', '#f0f0f0')
-                            .addClass('default-item')
+                                .text(comment)
+                                .val('default_' + index)
+                                .css('background-color', '#f0f0f0')
+                                .addClass('default-item')
                         );
                     });
 
@@ -2206,9 +2250,9 @@
                     customComments.forEach((comment, index) => {
                         customSelect.append(
                             $('<option></option>')
-                            .text(comment)
-                            .val('custom_' + index)
-                            .addClass('custom-item')
+                                .text(comment)
+                                .val('custom_' + index)
+                                .addClass('custom-item')
                         );
                     });
                 }
@@ -2397,8 +2441,8 @@
         // 构建下拉选择 HTML
         function buildSelectOptions(comments) {
             let options = comments.map((comment, index) =>
-                                       `<option class="quickcomment" id="quickcomment${index}" value="${index}">${comment}</option>`
-                                      ).join('');
+                `<option class="quickcomment" id="quickcomment${index}" value="${index}">${comment}</option>`
+            ).join('');
             return `<div align="center"><select id="quickcommentselect" multiple="multiple" style="width: 450px; height: 360px; margin-top: 5px; margin-bottom: 5px">${options}</select></div>`;
         }
 
@@ -2452,8 +2496,8 @@
         function formatTextareaInput(textarea) {
             let lines = textarea.val().split('\n');
             let transformedLines = lines.map(line =>
-                                             line.trim() !== '' && !line.trim().startsWith('●') ? `● ${line}` : line
-                                            );
+                line.trim() !== '' && !line.trim().startsWith('●') ? `● ${line}` : line
+            );
             textarea.val(transformedLines.join('\n'));
         }
 
@@ -2498,7 +2542,7 @@
     //===================文件对比妙妙小工具===============
 
     if (window.location.href.includes("/details.php") && isTest) {
-        (function() {
+        (function () {
             'use strict';
 
             // 简化样式
@@ -2547,7 +2591,7 @@
             document.body.appendChild(popup);
 
             // 主点击监听
-            document.addEventListener('click', function(e) {
+            document.addEventListener('click', function (e) {
                 // 检测文件列表按钮点击
                 const btn = e.target.closest('a[role="button"]');
                 if (btn) {

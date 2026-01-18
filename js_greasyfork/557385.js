@@ -3,7 +3,7 @@
 // @namespace      https://bsky.app/profile/neon-ai.art
 // @homepage       https://neon-aiart.github.io/
 // @icon           data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌈</text></svg>
-// @version        1.4
+// @version        1.5
 // @description    Adds "Copy URL with DID" to the post menu on TOKIMEKI(Bluesky client).
 // @description:ja TOKIMEKIのポストのメニューに「DIDでURLをコピー」を追加
 // @author         ねおん
@@ -38,10 +38,11 @@
 (function() {
     'use strict';
 
-    const VERSION = '1.4';
+    const VERSION = '1.5';
     const STORE_KEY = 'tokimeki_copy_plus';
     let toastTimeoutId = null;
-    const STANDARD_TOAST_POPOVER = true; // Tokimeki標準トースト(Sonner)をPopover化
+    const STANDARD_TOAST_POPOVER = true;    // Tokimeki標準トースト(Sonner)をPopover化
+    const STANDARD_TOAST_THEMECOLOR = true; // Tokimeki標準トーストにテーマの色の適用
 
     // ========= グローバル変数 =========
     // ① メニュー要素のセレクタ
@@ -96,7 +97,7 @@
         return {
             buttonLabel: isJapanese ? 'DIDでURLをコピー' : 'Copy DID-based URL',
             successMsg: isJapanese ? 'DIDベースのURLをコピーしました！' : 'DID-based URL copied!',
-            errorMsg: isJapanese ? 'コピーに失敗しました。' : 'Failed to copy URL.'
+            errorMsg: isJapanese ? 'コピーに失敗しました。' : 'Failed to copy URL.',
         };
     };
 
@@ -128,8 +129,8 @@
         let bgColor = isSuccess
             ? '#007bff'
             : isSuccess === false
-            ? '#dc3545'
-            : '#6c757d';
+                ? '#dc3545'
+                : '#6c757d';
 
         toast.style.cssText = `
             position: fixed;
@@ -158,21 +159,21 @@
         if (toast.showPopover) {
             toast.showPopover();
         }
-            // フェードインアニメーション
-            setTimeout(() => {
-                toast.style.opacity = '1';
-                toast.style.transform = 'translate(-50%, -16px)';
-            }, 10);
+        // フェードインアニメーション
+        setTimeout(() => {
+            toast.style.opacity = '1';
+            toast.style.transform = 'translate(-50%, -16px)';
+        }, 10);
 
-            // 自動非表示
-            if (isSuccess !== null) {
-                toastTimeoutId = setTimeout(() => {
-                    toast.style.opacity = '0';
-                    toast.style.transform = 'translate(-50%, 0)';
-                    setTimeout(() => {
-                        if (document.body.contains(toast)) {
-                            toast.remove();
-                        }
+        // 自動非表示
+        if (isSuccess !== null) {
+            toastTimeoutId = setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translate(-50%, 0)';
+                setTimeout(() => {
+                    if (document.body.contains(toast)) {
+                        toast.remove();
+                    }
                     toastTimeoutId = null;
                 }, 1000);
             }, 3000);
@@ -185,11 +186,15 @@
 
     // AT URIをBlueskyの永続URLに変換
     function atUriToUrl(atUri) {
-        if (!atUri || !atUri.startsWith('at://')) return null;
+        if (!atUri || !atUri.startsWith('at://')) {
+            return null;
+        }
 
         // at://did:plc:xxxx/app.bsky.feed.post/rkey の形式を想定
         const parts = atUri.replace('at://', '').split('/');
-        if (parts.length !== 3 || parts[1] !== 'app.bsky.feed.post') return null;
+        if (parts.length !== 3 || parts[1] !== 'app.bsky.feed.post') {
+            return null;
+        }
 
         // Bluesky公式クライアントのURL形式
         return `https://bsky.app/profile/${parts[0]}/post/${parts[2]}`;
@@ -203,19 +208,27 @@
         // メニューリスト要素を取得
         const menuList = menuDialog.querySelector(MENU_LIST_SELECTOR);
         // 既にアイコンが追加されていないかチェック
-        if (!menuList || menuList.querySelector(`.${CUSTOM_BUTTON_CLASS}`)) return;
+        if (!menuList || menuList.querySelector(`.${CUSTOM_BUTTON_CLASS}`)) {
+            return;
+        }
 
         const copyUrlLi = menuList.querySelector('.timeline-menu-list__item--copy-url');
-        if (!copyUrlLi) return; // URLコピー項目がないメニューには追加しない
+        if (!copyUrlLi) {
+            return;
+        } // URLコピー項目がないメニューには追加しない
 
         // 投稿コンテナから atUri を取得
         const postContainer = menuDialog.closest(POST_CONTAINER_SELECTOR);
-        if (!postContainer) return;
+        if (!postContainer) {
+            return;
+        }
 
         // メニューの直近の content またはコンテナ内の最後の content を取得
         const contents = Array.from(postContainer.querySelectorAll('div.timeline__content[data-aturi]'));
         const atUri = contents.length > 0 ? contents[contents.length - 1].dataset.aturi : null;
-        if (!atUri) return;
+        if (!atUri) {
+            return;
+        }
 
         const urlToCopy = atUriToUrl(atUri);
 
@@ -264,10 +277,12 @@
         for (const mutation of mutations) {
             if (mutation.addedNodes.length) {
                 for (const node of mutation.addedNodes) {
-                    if (node.nodeType !== 1) continue; // 要素ノードでない場合はスキップ
+                    if (node.nodeType !== 1) {
+                        continue;
+                    } // 要素ノードでない場合はスキップ
 
                     // --- Tokimeki標準トースト(Sonner)をPopover化 ---
-                    
+
                     // セクションまたはol自体がSonner関連かチェック
                     const standardToast = node.closest('[data-sonner-toaster="true"]') ||
                                          (node.dataset && node.dataset.sonnerToaster === "true" ? node : null) ||
@@ -286,7 +301,7 @@
 
                         // 3. テーマ適用（クラスではなく「色」を直接継承させる）
                         const appEl = document.querySelector('.app');
-                        if (appEl) {
+                        if (STANDARD_TOAST_THEMECOLOR && appEl) {
                             const style = getComputedStyle(appEl);
                             // Tokimekiの背景色と文字色の変数を取得
                             const bgColor = style.getPropertyValue('--bg-color-1') || 'var(--bg-color-1)';
@@ -332,7 +347,7 @@
     });
 
     // 監視を開始
-    observer.observe(document.body, { childList: true, subtree: true });
+    observer.observe(document.body, { childList: true, subtree: true, });
 
     // GM_registerMenuCommand('キー設定', openSettings);
 

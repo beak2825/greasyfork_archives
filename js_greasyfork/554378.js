@@ -23,6 +23,35 @@
   importCSS(styleCss);
   var _GM_xmlhttpRequest = (() => typeof GM_xmlhttpRequest != "undefined" ? GM_xmlhttpRequest : void 0)();
   const MIN_IMAGE_SIZE = 50;
+  function getImageDimensionsSync(img, src) {
+    const attrW = parseInt(img.getAttribute("width") || "", 10);
+    const attrH = parseInt(img.getAttribute("height") || "", 10);
+    if (attrW > 0 && attrH > 0) {
+      return { w: attrW, h: attrH };
+    }
+    const srcset = img.getAttribute("srcset") || "";
+    if (srcset) {
+      const widths = srcset.match(/(\d+)w/g)?.map((w) => parseInt(w, 10)) || [];
+      if (widths.length > 0) {
+        const maxW = Math.max(...widths);
+        return { w: maxW, h: maxW };
+      }
+    }
+    const urlPatterns = [
+      /[/_](\d{2,4})x(\d{2,4})(?:[_./]|$)/,
+/[?&]w(?:idth)?=(\d+).*[?&]h(?:eight)?=(\d+)/i,
+/[?&]h(?:eight)?=(\d+).*[?&]w(?:idth)?=(\d+)/i
+];
+    for (const pattern of urlPatterns) {
+      const match = src.match(pattern);
+      if (match) {
+        const w = parseInt(match[1], 10);
+        const h = parseInt(match[2], 10);
+        if (w > 0 && h > 0) return { w, h };
+      }
+    }
+    return null;
+  }
   function parseParagraphs(doc) {
     let paraNodes = [];
     const articleElem = doc.querySelector("article");
@@ -46,10 +75,9 @@
       let src = img.getAttribute("src") || img.getAttribute("data-src") || "";
       if (!src) return;
       const lowerSrc = src.toLowerCase();
-      if (lowerSrc.includes("clear.gif") || lowerSrc.includes("boost_") || lowerSrc.includes("icon") || lowerSrc.startsWith("data:")) return;
-      const w = img.naturalWidth;
-      const h = img.naturalHeight;
-      if (w && w < MIN_IMAGE_SIZE || h && h < MIN_IMAGE_SIZE) return;
+      if (lowerSrc.includes("clear.gif") || lowerSrc.includes("boost_") || lowerSrc.includes("icon") || lowerSrc.includes("logo") || lowerSrc.includes("avatar") || lowerSrc.includes("emoji") || lowerSrc.startsWith("data:")) return;
+      const dims = getImageDimensionsSync(img, src);
+      if (dims && (dims.w < MIN_IMAGE_SIZE || dims.h < MIN_IMAGE_SIZE)) return;
       try {
         const urlObj = new URL(src, base);
         src = urlObj.href;
@@ -242,28 +270,36 @@
       link.parentElement?.appendChild(root);
       observer.observe(root);
     });
-    let globalHighlightIndex = -1;
+    let currentHighlight = null;
+    const isEditableElement = (target) => {
+      if (!(target instanceof HTMLElement)) return false;
+      return target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement || target.isContentEditable;
+    };
     const navigateGlobal = (direction) => {
       const allHighlights = Array.from(document.querySelectorAll(".tm-highlight"));
       if (allHighlights.length === 0) return;
       allHighlights.forEach((el) => el.classList.remove("tm-highlight--active"));
-      if (direction === "prev") {
-        globalHighlightIndex = globalHighlightIndex <= 0 ? allHighlights.length - 1 : globalHighlightIndex - 1;
-      } else {
-        globalHighlightIndex = globalHighlightIndex >= allHighlights.length - 1 ? 0 : globalHighlightIndex + 1;
+      let currentIndex = currentHighlight ? allHighlights.indexOf(currentHighlight) : -1;
+      if (currentIndex === -1) {
+        currentIndex = direction === "next" ? -1 : allHighlights.length;
       }
-      const target = allHighlights[globalHighlightIndex];
-      target.classList.add("tm-highlight--active");
-      target.scrollIntoView({ behavior: "smooth", block: "center" });
+      const newIndex = direction === "prev" ? currentIndex <= 0 ? allHighlights.length - 1 : currentIndex - 1 : currentIndex >= allHighlights.length - 1 ? 0 : currentIndex + 1;
+      currentHighlight = allHighlights[newIndex];
+      currentHighlight.classList.add("tm-highlight--active");
+      currentHighlight.scrollIntoView({ behavior: "smooth", block: "center" });
     };
     document.addEventListener("keydown", (e) => {
-      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
-      if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
-        e.preventDefault();
-        navigateGlobal("prev");
-      } else if (e.key === "ArrowDown" || e.key === "ArrowRight") {
-        e.preventDefault();
-        navigateGlobal("next");
+      if (isEditableElement(e.target)) return;
+      if (e.altKey && !e.ctrlKey && !e.metaKey) {
+        if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
+          e.preventDefault();
+          e.stopPropagation();
+          navigateGlobal("prev");
+        } else if (e.key === "ArrowDown" || e.key === "ArrowRight") {
+          e.preventDefault();
+          e.stopPropagation();
+          navigateGlobal("next");
+        }
       }
     });
   })();

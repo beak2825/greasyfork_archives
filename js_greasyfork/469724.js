@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ComiciViewerDownloader
 // @namespace    https://github.com/Timesient/manga-download-scripts
-// @version      1.2
+// @version      1.4
 // @license      GPL-3.0
 // @author       Timesient
 // @description  Manga downloader specific for Comici Viewer
@@ -11,15 +11,16 @@
 // @match        https://youngchampion.jp/episodes/*
 // @match        https://younganimal.com/episodes/*
 // @match        https://bigcomics.jp/episodes/*
-// @match        https://comicride.jp/episodes/*
 // @match        https://kansai.mag-garden.co.jp/episodes/*
 // @match        https://championcross.jp/episodes/*
-// @match        https://comic.j-nbooks.jp/episodes/*
 // @match        https://comic-growl.com/episodes/*
 // @match        https://comicpash.jp/episodes/*
 // @match        https://rimacomiplus.jp/*/episodes/*
 // @match        https://kimicomi.com/episodes/*
 // @match        https://comic-medu.com/episodes/*
+// @match        https://comicride.jp/*
+// @match        https://comic.j-nbooks.jp/*
+// @match        https://takecomic.jp/*
 // @require      https://unpkg.com/axios@0.27.2/dist/axios.min.js
 // @require      https://unpkg.com/jszip@3.7.1/dist/jszip.min.js
 // @require      https://unpkg.com/file-saver@2.0.5/dist/FileSaver.min.js
@@ -33,33 +34,43 @@
 (async function(axios, JSZip, saveAs, ImageDownloader) {
   'use strict';
 
-  // get episode id and domain
-  const { id, domain } = await new Promise(resolve => {
+  const alteredSites = ['comicride.jp', 'comic.j-nbooks.jp', 'takecomic.jp'];
+  if (alteredSites.includes(window.location.host)) {
+    // reload page when enter or leave chapter
+    const re = new RegExp(`https://${window.location.host}/episodes/.*`);
+    const oldHref = window.location.href;
+    const timer = setInterval(() => {
+      const newHref = window.location.href;
+      if (newHref === oldHref) return;
+      if (re.test(newHref) || re.test(oldHref)) {
+        clearInterval(timer);
+        window.location.reload();
+      }
+    }, 200);
+
+    // return if not reading chapter now
+    if (!re.test(oldHref)) return;
+  }
+
+  // get episode id, API domain and title
+  const { id, apiDomain, title2 } = await new Promise(resolve => {
     const timer = setInterval(() => {
       const viewerElement = document.getElementById('comici-viewer');
-      if (viewerElement) {
+      const titleElement = document.querySelector('.article-title') || document.querySelector('.ep-main > .ep-main-h > .ep-main-h-main > h1.ep-main-h-h');
+      if (viewerElement && titleElement) {
         clearInterval(timer);
         resolve({
-          id: viewerElement.getAttribute('comici-viewer-id'),
-          domain: viewerElement.dataset.apiDomain
+          id: viewerElement.getAttribute('comici-viewer-id') || viewerElement.dataset.comiciViewerId,
+          apiDomain: (viewerElement.dataset.apiDomain.startsWith('/') ? window.location.host : '') + viewerElement.dataset.apiDomain,
+          title2: titleElement.textContent.trim()
         });
       }
     }, 500);
   });
 
-  // get title and amount of pages
-  const title1 = document.querySelector('h1.series-h-title span').textContent;
-  const { title2, pageCount } = await axios({
-    method: 'GET',
-    url: `https://${domain}/book/episodeInfo?comici-viewer-id=${id}`
-  }).then(res => {
-    const episodes = res.data.result;
-    const currentEpisode = episodes.find(episode => episode.id === id);
-    return {
-      title2: currentEpisode.name,
-      pageCount: currentEpisode.page_count
-    }
-  });
+  const title1 = alteredSites.includes(window.location.host)
+    ? document.querySelector('h1.series-h-title')?.innerText?.trim() || ''
+    : document.querySelector('h1.series-h-title span')?.textContent?.trim() || '';
   const newtitle = `${title1} ${title2}`;
   let title = newtitle.replace(/(\?|\~|\/|\:)/gi,  function ($0, $1) {
         return {
@@ -71,8 +82,9 @@
             });
 
   // get data of pages
-  const userId = document.getElementById('login_user_id').textContent || '0';
-  const pages = await axios.get(`https://${domain}/book/contentsInfo?user-id=${userId}&comici-viewer-id=${id}&page-from=0&page-to=${pageCount}`).then(res => res.data.result);
+  const userId = document.getElementById('login_user_id')?.textContent || document.getElementById('xAnalyticLoggerUid')?.textContent || '0';
+  const pageCount = await axios.get(`https://${apiDomain}/book/contentsInfo?user-id=${userId}&comici-viewer-id=${id}&page-from=0&page-to=0`).then(res => res.data.totalPages);
+  const pages = await axios.get(`https://${apiDomain}/book/contentsInfo?user-id=${userId}&comici-viewer-id=${id}&page-from=0&page-to=${pageCount}`).then(res => res.data.result);
 
   // setup ImageDownloader
   ImageDownloader.init({

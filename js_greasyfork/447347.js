@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         方正教务系统期末教学评价助手
 // @namespace    http://tampermonkey.net/
-// @version      2.8
+// @version      2.9
 // @description  用于自动完成期末教学评价
 // @author       Eduarte
 // @match        *://*/xspjgl/xspj_cxXspjIndex.html*
@@ -181,7 +181,7 @@
 			style="padding: 20px 0 20px 20px"
 		>
 			<p>
-				&copy; 2022 oxdl.cn
+				&copy; 2025 oxdl.cn
 			</p>
 		</div>
         <div
@@ -189,7 +189,7 @@
             class="closeBtn"
             onclick="document.getElementById('panel_').classList.add('hidden')"
         >
-            <img src="https://ixnet.icu/statistics/cancel.png" alt="cancel" style="width:18px;height:14px;padding: 1px 4px 3px 4px" />
+            <img src="https://www.pngall.com/wp-content/uploads/4/Cancel-PNG.png" alt="cancel" style="width:18px;height:14px;padding: 1px 4px 3px 4px" />
         </div>
 	</div>
 	`

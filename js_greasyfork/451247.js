@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Attack Reload V2
 // @namespace    http://tampermonkey.net/
-// @version      1.02
+// @version      1.33
 // @description  Refresh attack screen
 // @author       olesien
 // @match        https://www.torn.com/loader.php?sid=attack&user2ID=*
@@ -18,6 +18,14 @@
     let allowHit = false;
     let mugType = "mug";
 
+    const overrideKey = null; // Where it says null, replace with your key and "" around it, like "KEYHERE";
+    let earlyJoin = true;
+    let holdAttack = false;
+    let assume = false;
+
+    const key = overrideKey ?? localStorage.getItem("ultimata-key");
+    let reduction = 300; // How much earlier it shows when u can attack.
+
     //Load type from localstorage. This is normally set in another script. Default is mug
     const typeFromLocal = localStorage.getItem("torn-attack-type");
     if (typeFromLocal) {
@@ -33,6 +41,7 @@
         }
     }
     let attackSlot = 3;
+    let firstHitSlot = null; // Leave as null if unset, 2 is secondary, 1 is primary, 3 is melee
 
     //Load slot from localstorage. Default is melee
     const slotFromLocal = localStorage.getItem("torn-attack-slot");
@@ -49,6 +58,85 @@
     });
 
     observer.observe(document, { subtree: true, childList: true });
+    let tried = false;
+
+    let t0 = performance.now();
+
+    function setAttackable(buttonEl, parentElement, userId) {
+        if (!buttonEl.innerText.includes("Refresh")) return;
+        parentElement.removeChild(buttonEl);
+
+        const buttonEl2 = document.createElement("button");
+        buttonEl2.innerText = "Start Fight";
+        buttonEl2.style.backgroundColor = "green";
+        buttonEl2.style.borderRadius = "10px";
+        buttonEl2.style.color = "white";
+        buttonEl2.style.paddingRight = "30px";
+        buttonEl2.style.paddingLeft = "30px";
+        buttonEl2.style.paddingTop = "5px";
+        buttonEl2.style.paddingBottom = "5px";
+        buttonEl2.addEventListener("click", () =>
+                                   {
+            console.log("Started via early start");
+            if (tried) return;
+            tried = true;
+            startFight(userId, buttonEl2);
+        }
+                                  );
+        parentElement.insertBefore(buttonEl2, parentElement.firstChild);
+    }
+
+    async function checkApi(userId, buttonEl) {
+        if (!key) {
+            return;
+        }
+        const now = Math.round(Date.now() / 1000);
+        const response = await fetch(`https://api.torn.com/user/${userId}?selections=profile,timestamp&key=${key}&from=${now}&comment=YHes`);
+
+        if (!response.ok) {
+            throw new Error(`Error: ${response.status}`);
+        }
+
+        const t0 = performance.now();
+
+        const data = await response.json();
+
+        console.log(data);
+
+        const until = data.status.until * 1000;
+        const timestamp = data.timestamp * 1000;
+
+        function getTime() {
+            let diff = performance.now() - t0;
+            return timestamp + Math.ceil(diff);
+        }
+
+        const ms = until - getTime();
+
+        if (until != 0 && ms < 600000) {
+            const humanUntil = until - reduction;
+            const interval = setInterval(() => {
+                if (!buttonEl.innerText.includes("Refresh")) {
+                    return;
+                }
+                const current = getTime();
+                if (current >= humanUntil) {
+                    clearInterval(interval);
+                    if (earlyJoin) setAttackable(buttonEl, buttonEl.parentElement, userId);
+                    buttonEl.innerText = `Attack!!`
+                } else {
+                    const ms = Math.round(humanUntil - current);
+                    if (ms >= 10000) {
+                        buttonEl.innerText = `Refresh (${Math.round(ms / 1000)}s)`
+                    } else {
+                        buttonEl.innerText = `Refresh (${ms}ms)`
+                    }
+                }
+            }, 30);
+        } else if (data.status.state === "Okay") {
+            setAttackable(buttonEl, buttonEl.parentElement, userId);
+        }
+    }
 
     function doIt() {
         console.log("Adding");
@@ -78,10 +166,11 @@
             if (backup) {
                 backup.insertBefore(buttonEl, backup.firstChild);
             } else {
-               console.error("Backup failed");
+                console.error("Backup failed");
             }
         }
-        
+        checkApi(userId, buttonEl);
+
     }
 
     function loadData(userId, buttonEl) {
@@ -144,6 +233,7 @@
                 //Normal
                 //Attackable
                 //buttonEl.innerText = "wee attackable"
+                console.log("User is attackable!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                 const parentElement = buttonEl.parentElement;
                 parentElement.removeChild(buttonEl);
 
@@ -172,6 +262,7 @@
     }
 
     function startFight(userId, buttonEl) {
+        console.log(buttonEl);
         if (!allowHit) return;
         allowHit = false;
         console.log("start FIGHTTT");
@@ -200,6 +291,7 @@
             .then((response) => response.json())
             .then((data) => {
             allowHit = true;
+            tried = false;
             if (data) {
                 if (
                     "currentAttackStatus" in data &&
@@ -219,6 +311,30 @@
             console.error(error);
             buttonEl.innerText = "Restart fight";
         });
+
+        if (assume) {
+            assume = false;
+            setTimeout(() => startFight(userId, buttonEl), 100);
+        }
+    }
+
+    function setStarted(userId, buttonEl) {
+        const parentElement = buttonEl.parentElement;
+        parentElement.removeChild(buttonEl);
+
+        const buttonEl2 = document.createElement("button");
+        //button styling
+        buttonEl2.innerText = "Hit [ASSUME]";
+        //buttonEl.style.width = "100%";
+        buttonEl2.style.backgroundColor = "#262626";
+        buttonEl2.style.borderRadius = "10px";
+        buttonEl2.style.color = "white";
+        buttonEl2.style.padding = "20px";
+
+        buttonEl2.addEventListener("click", () =>
+                                   doAttack(userId, buttonEl2, true)
+                                  );
+        parentElement.insertBefore(buttonEl2, parentElement.firstChild);
     }
 
     function startedFight(data, userId, buttonEl) {
@@ -230,37 +346,21 @@
         ) {
             //Fight started
             allowHit = true;
-            const parentElement = buttonEl.parentElement;
-            parentElement.removeChild(buttonEl);
-
-            const buttonEl2 = document.createElement("button");
-            //button styling
-            buttonEl2.innerText = "Hit (melee)";
-            //buttonEl.style.width = "100%";
-            buttonEl2.style.backgroundColor = "#262626";
-            buttonEl2.style.borderRadius = "10px";
-            buttonEl2.style.color = "white";
-            buttonEl2.style.padding = "20px";
-
-            // const urlParams = new URLSearchParams(window.location.search);
-            // let userId = urlParams.get("userId");
-            // let ttitemId = urlParams.get("tt_itemid");
-            // console.log("ITEM ID : -------------" + ttitemId);
-            buttonEl2.addEventListener("click", () =>
-                                       doAttack(userId, buttonEl2)
-                                      );
-            parentElement.insertBefore(buttonEl2, parentElement.firstChild);
+            setStarted(userId, buttonEl);
         } else {
             buttonEl.innerText = "Attack start attempt failed. try again";
         }
     }
 
-    function doAttack(userId, buttonEl) {
+
+    function doAttack(userId, buttonEl, firstHit = false) {
         //dO ATTACK
         console.log("trying to hit");
         if (!allowHit) return;
         buttonEl.innerText = "Hitting...";
         allowHit = false;
+
+        const slot = firstHit && firstHitSlot ? firstHitSlot : attackSlot;
         //Do a hit
         fetch("https://www.torn.com/loader.php?sid=attackData&mode=json", {
             headers: {
@@ -277,7 +377,7 @@
             },
             referrer: `https://www.torn.com/loader.php?sid=attack&user2ID=${userId}`,
             referrerPolicy: "strict-origin-when-cross-origin",
-            body: `------WebKitFormBoundaryq2BO0xBeo8QrC3cm\r\nContent-Disposition: form-data; name=\"step\"\r\n\r\nattack\r\n------WebKitFormBoundaryq2BO0xBeo8QrC3cm\r\nContent-Disposition: form-data; name=\"user2ID\"\r\n\r\n${userId}\r\n------WebKitFormBoundaryq2BO0xBeo8QrC3cm\r\nContent-Disposition: form-data; name=\"user1EquipedItemID\"\r\n\r\n${attackSlot}\r\n------WebKitFormBoundaryq2BO0xBeo8QrC3cm--\r\n`,
+            body: `------WebKitFormBoundaryq2BO0xBeo8QrC3cm\r\nContent-Disposition: form-data; name=\"step\"\r\n\r\nattack\r\n------WebKitFormBoundaryq2BO0xBeo8QrC3cm\r\nContent-Disposition: form-data; name=\"user2ID\"\r\n\r\n${userId}\r\n------WebKitFormBoundaryq2BO0xBeo8QrC3cm\r\nContent-Disposition: form-data; name=\"user1EquipedItemID\"\r\n\r\n${slot}\r\n------WebKitFormBoundaryq2BO0xBeo8QrC3cm--\r\n`,
             method: "POST",
             mode: "cors",
             credentials: "include",
@@ -300,7 +400,7 @@
 
                     const buttonEl2 = document.createElement("button");
                     //button styling
-                    buttonEl2.innerText = mugType;
+                    buttonEl2.innerText = holdAttack ? "Reload to finish" : mugType;
                     //buttonEl.style.width = "100%";
                     buttonEl2.style.backgroundColor = "#262626";
                     buttonEl2.style.borderRadius = "10px";
@@ -311,7 +411,7 @@
                     buttonEl2.style.paddingBottom = "5px";
 
                     buttonEl2.addEventListener("click", () =>
-                                               finish(userId, buttonEl2)
+                                               holdAttack ? location.reload() : finish(userId, buttonEl2)
                                               );
                     parentElement.insertBefore(
                         buttonEl2,

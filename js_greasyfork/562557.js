@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MegaLadder Stats Overlay
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.1.0
 // @description  Overlay for MegaLadder, GAZ. Supports PiP mode for overlaying on game screen.
 // @author       21twentyone
 // @license      MIT
@@ -39,7 +39,113 @@
         showBuilds: JSON.parse(localStorage.getItem('ml_pip_show_builds') ?? 'true'),
         focusRival: JSON.parse(localStorage.getItem('ml_pip_focus_rival') ?? 'false'),
         language: localStorage.getItem('ml_pip_language') || 'ru',
-        fullFocusMode: JSON.parse(localStorage.getItem('ml_pip_full_focus_mode') ?? 'false')
+        fullFocusMode: JSON.parse(localStorage.getItem('ml_pip_full_focus_mode') ?? 'false'),
+        showKills: JSON.parse(localStorage.getItem('ml_pip_show_kills') ?? 'true'),
+        showLevel: JSON.parse(localStorage.getItem('ml_pip_show_level') ?? 'true'),
+        showDiff: JSON.parse(localStorage.getItem('ml_pip_show_diff') ?? 'true')
+    }
+
+    // --- Profile System ---
+
+    const DEFAULT_PROFILES = {
+        'Full': { // Default "All On" profile
+            fullFocusMode: false,
+            focusRival: false,
+            textScale: 1.2,
+            // Explicitly set commonly used settings to ensure consistency
+            showAvatars: true, showNames: true, showMMR: true, separateTimers: true,
+            showStages: true, showEventTimers: true, showLeftBans: true, showRightBans: true,
+            showCommonBans: true, showStats: true, showMainTimer: true, showBuilds: true,
+            showKills: true, showLevel: true, showDiff: true
+        },
+        'Focus Rival': {
+            fullFocusMode: false,
+            focusRival: true,
+            separateTimers: false,
+            showLeftBans: false,
+            showRightBans: false,
+            showCommonBans: false,
+            textScale: 1.2,
+            showKills: true, showLevel: true, showDiff: true
+        },
+        'Full Focus': {
+            fullFocusMode: true,
+            focusRival: false,
+            separateTimers: false,
+            textScale: 0.9,
+            showKills: true, showLevel: true, showDiff: true
+        }
+    }
+
+    const ProfileManager = {
+        currentProfile: localStorage.getItem('ml_pip_current_profile') || 'Full',
+        customProfiles: JSON.parse(localStorage.getItem('ml_pip_custom_profiles') || '{}'),
+
+        getProfiles() {
+            return { ...DEFAULT_PROFILES, ...this.customProfiles }
+        },
+
+        loadProfile(name) {
+            const profiles = this.getProfiles()
+            const profile = profiles[name]
+            if (!profile) return
+
+            // Apply settings from profile
+            Object.keys(profile).forEach(key => {
+                if (SETTINGS.hasOwnProperty(key)) {
+                    SETTINGS[key] = profile[key]
+                    updateSetting(key, profile[key], true) // true = skip state update until end
+                }
+            })
+
+            this.currentProfile = name
+            localStorage.setItem('ml_pip_current_profile', name)
+            refreshUIValues() // Sync UI checkboxes
+            updateUIState()
+        },
+
+        saveProfile(name) {
+            if (DEFAULT_PROFILES[name]) return false // Cannot overwrite defaults
+
+            // Save current crucial settings
+            const profile = {
+                fullFocusMode: SETTINGS.fullFocusMode,
+                focusRival: SETTINGS.focusRival,
+                separateTimers: SETTINGS.separateTimers,
+                showAvatars: SETTINGS.showAvatars,
+                showNames: SETTINGS.showNames,
+                showMMR: SETTINGS.showMMR,
+                showStages: SETTINGS.showStages,
+                showEventTimers: SETTINGS.showEventTimers,
+                showLeftBans: SETTINGS.showLeftBans,
+                showRightBans: SETTINGS.showRightBans,
+                showCommonBans: SETTINGS.showCommonBans,
+                showStats: SETTINGS.showStats,
+                showMainTimer: SETTINGS.showMainTimer,
+                showBuilds: SETTINGS.showBuilds
+            }
+
+            this.customProfiles[name] = profile
+            this.currentProfile = name
+            this.saveCustomProfiles()
+            return true
+        },
+
+        deleteProfile(name) {
+            if (DEFAULT_PROFILES[name]) return false
+            delete this.customProfiles[name]
+            this.saveCustomProfiles()
+            // If deleted current, switch to default
+            if (this.currentProfile === name) {
+                this.loadProfile('Full')
+            }
+            return true
+        },
+
+        saveCustomProfiles() {
+            localStorage.setItem('ml_pip_custom_profiles', JSON.stringify(this.customProfiles))
+            localStorage.setItem('ml_pip_current_profile', this.currentProfile)
+        }
     }
 
     const TRANSLATIONS = {
@@ -83,7 +189,17 @@
             level: 'УРОВЕНЬ',
             diff: 'СЛОЖНОСТЬ',
             you: 'Вы',
-            enemy: 'Враг'
+            enemy: 'Враг',
+            // Warnings
+            warn_focus: '⚠ Некоторые настройки отключены в режиме Фокуса',
+            // Profiles
+            profile: 'ПРОФИЛЬ',
+            save: '💾',
+            del: '🗑',
+            new_profile: 'Имя нового профиля:',
+            s_kills: 'Убийства',
+            s_level: 'Уровень',
+            s_diff: 'Сложность'
         },
         en: {
             // UI
@@ -125,7 +241,18 @@
             level: 'LEVEL',
             diff: 'DIFFICULTY',
             you: 'You',
-            enemy: 'Enemy'
+            you: 'You',
+            enemy: 'Enemy',
+            // Warnings
+            warn_focus: '⚠ Some settings disabled in Focus Mode',
+            // Profiles
+            profile: 'PROFILE',
+            save: '💾',
+            del: '🗑',
+            new_profile: 'New profile name:',
+            s_kills: 'Kills',
+            s_level: 'Level',
+            s_diff: 'Diff'
         }
     }
 
@@ -161,6 +288,39 @@
         lAvatar: new Image(), rAvatar: new Image(),
         lSrc: '', rSrc: '',
         bans: new Map()
+    }
+
+    // UI Sync Logic
+    function refreshUIValues() {
+        if (!document.getElementById('ml-control-panel')) return;
+
+        // Sync checkboxes
+        const checkboxes = [
+            'fullFocusMode', 'focusRival', 'separateTimers',
+            'showAvatars', 'showNames', 'showMMR', 'showBuilds',
+            'showMainTimer', 'showStages', 'showEventTimers',
+            'showLeftBans', 'showRightBans', 'showCommonBans', 'showStats',
+            'showKills', 'showLevel', 'showDiff'
+        ]
+        checkboxes.forEach(id => {
+            const chk = document.getElementById(`ml-chk-${id}`)
+            if (chk) chk.checked = !!SETTINGS[id]
+        })
+
+        // Sync inputs
+        const inputs = [
+            'textScale', 'buildScale', 'canvasWidth',
+            'canvasHeight', 'banScale', 'opacity'
+        ]
+        inputs.forEach(key => {
+            const input = document.getElementById(`ml-val-${key}`)
+            if (input) {
+                // Formatting logic similar to createSetRow
+                let val = SETTINGS[key]
+                if (key.includes('Scale') || key === 'opacity') val = val.toFixed(1)
+                input.value = val
+            }
+        })
     }
     imgCache.lAvatar.crossOrigin = "Anonymous"
     imgCache.rAvatar.crossOrigin = "Anonymous"
@@ -248,6 +408,12 @@
             cursor: pointer; user-select: none; font-weight: bold;
         }
         .ml-mini-btn:hover { background: rgba(255,255,255,0.25); }
+
+        .ml-warning-msg {
+            color: #ff6b6b; font-size: 13px; font-weight: bold; margin-bottom: 10px; text-align: center;
+            display: none; background: rgba(255, 107, 107, 0.15); padding: 8px; border-radius: 6px;
+            grid-column: 1 / -1; /* Fix layout shift */
+        }
     `
 
 
@@ -325,35 +491,39 @@
             ctx.globalAlpha = SETTINGS.opacity
 
             const CX = sideSize / 2
-            const rowHeight = sideSize / 3
-
-            const drawMetric = (label, val, rowIndex) => {
-                const diffStr = (val > 0 ? '+' : '') + val
-                const color = val > 0 ? C.green : (val < 0 ? C.red : '#888')
-
-                const yTop = rowIndex * rowHeight
-                const yCenter = yTop + (rowHeight / 2)
-
-                ctx.textAlign = 'center'
-                ctx.fillStyle = '#666'
-                ctx.font = `bold ${5 * SETTINGS.scale * hdScale}px Segoe UI`
-                ctx.fillText(label, CX, yCenter - (4 * SETTINGS.scale * hdScale))
-                ctx.fillStyle = color
-                ctx.font = `900 ${13 * SETTINGS.scale * (SETTINGS.textScale || 1.0) * hdScale}px Segoe UI`
-                ctx.fillText(diffStr, CX, yCenter + (6 * SETTINGS.scale * hdScale))
-                if (rowIndex < 2) {
-                    ctx.fillStyle = 'rgba(255,255,255,0.1)'
-                    ctx.fillRect(10 * hdScale, yTop + rowHeight - 1, sideSize - (20 * hdScale), 1 * hdScale)
-                }
-            }
-
             const kDiff = data.lKills - data.rKills
             const lDiff = data.lLvl - data.rLvl
             const dDiff = data.lDiff - data.rDiff
 
-            drawMetric('KILL', kDiff, 0)
-            drawMetric('LEVEL', lDiff, 1)
-            drawMetric('DIFF %', dDiff, 2)
+            const activeMetrics = []
+            if (SETTINGS.showKills) activeMetrics.push({ label: 'KILL', val: kDiff })
+            if (SETTINGS.showLevel) activeMetrics.push({ label: 'LEVEL', val: lDiff })
+            if (SETTINGS.showDiff) activeMetrics.push({ label: 'DIFF %', val: dDiff })
+
+            // Recalculate rowHeight based on active count
+            const count = activeMetrics.length || 1
+            const dynRowHeight = sideSize / count
+
+            activeMetrics.forEach((m, idx) => {
+                const diffStr = (m.val > 0 ? '+' : '') + m.val
+                const color = m.val > 0 ? C.green : (m.val < 0 ? C.red : '#888')
+
+                const yTop = idx * dynRowHeight
+                const yCenter = yTop + (dynRowHeight / 2)
+
+                ctx.textAlign = 'center'
+                ctx.fillStyle = '#666'
+                ctx.font = `bold ${5 * SETTINGS.scale * hdScale}px Segoe UI`
+                ctx.fillText(m.label, CX, yCenter - (4 * SETTINGS.scale * hdScale))
+                ctx.fillStyle = color
+                ctx.font = `900 ${13 * SETTINGS.scale * (SETTINGS.textScale || 1.0) * hdScale}px Segoe UI`
+                ctx.fillText(diffStr, CX, yCenter + (6 * SETTINGS.scale * hdScale))
+
+                if (idx < count - 1) {
+                    ctx.fillStyle = 'rgba(255,255,255,0.1)'
+                    ctx.fillRect(10 * hdScale, yTop + dynRowHeight - 1, sideSize - (20 * hdScale), 1 * hdScale)
+                }
+            })
 
             return
         }
@@ -900,34 +1070,81 @@
                 if (rSub) drawText(rSub, rStatX, textY + (16 * SETTINGS.scale), 12, '#888', 'right', '600')
             }
 
-            drawRow(t('kills'), data.lKills, formatNum(data.lKpm, true) + '/м', data.rKills, formatNum(data.rKpm, true) + '/м', data.lKills - data.rKills, (v) => formatNum(v), Y_START)
-            drawSeparator(Y_START + (ROW_HEIGHT / 2) + (5 * SETTINGS.scale))
-            const Y_ROW2 = Y_START + ROW_HEIGHT
-            drawRow(t('level'), data.lLvl, formatNum(data.lLpm, true) + '/м', data.rLvl, formatNum(data.rLpm, true) + '/м', data.lLvl - data.rLvl, (v) => v, Y_ROW2)
-            drawSeparator(Y_ROW2 + (ROW_HEIGHT / 2) + (5 * SETTINGS.scale))
-            const Y_DIFF = Y_ROW2 + ROW_HEIGHT
-            drawText(t('diff'), CX, Y_DIFF - (10 * SETTINGS.scale), 10, '#666', 'center', '800')
-            const diffVal = data.lDiff - data.rDiff
-            const diffStr = (diffVal > 0 ? '+' : '') + formatNum(diffVal) + '%'
-            ctx.font = `bold ${13 * SETTINGS.scale * (SETTINGS.textScale || 1.0)}px Segoe UI`; const dW = ctx.measureText(diffStr).width + (14 * SETTINGS.scale)
-            const dH = 19 * SETTINGS.scale; const dX = CX - dW / 2; const dY = Y_DIFF
-            ctx.fillStyle = C.badgeBg; ctx.strokeStyle = C.badgeBorder; ctx.beginPath()
-            if (ctx.roundRect) ctx.roundRect(dX, dY, dW, dH, 4); else ctx.rect(dX, dY, dW, dH)
-            ctx.fill(); ctx.stroke()
-            const dColorD = diffVal > 0 ? C.green : (diffVal < 0 ? C.red : '#888')
-            drawText(diffStr, CX, dY + (14 * SETTINGS.scale), 13, dColorD, 'center', 'bold')
-            const diffTextY = Y_DIFF + (12 * SETTINGS.scale)
+            const rows = []
+            if (SETTINGS.showKills) {
+                rows.push({
+                    type: 'row',
+                    label: t('kills'),
+                    lMain: data.lKills, lSub: formatNum(data.lKpm, true) + '/м',
+                    rMain: data.rKills, rSub: formatNum(data.rKpm, true) + '/м',
+                    diff: data.lKills - data.rKills,
+                    fmt: (v) => formatNum(v)
+                })
+            }
+            if (SETTINGS.showLevel) {
+                rows.push({
+                    type: 'row',
+                    label: t('level'),
+                    lMain: data.lLvl, lSub: formatNum(data.lLpm, true) + '/м',
+                    rMain: data.rLvl, rSub: formatNum(data.rLpm, true) + '/м',
+                    diff: data.lLvl - data.rLvl,
+                    fmt: (v) => v
+                })
+            }
+            if (SETTINGS.showDiff) {
+                rows.push({
+                    type: 'diff',
+                    label: t('diff'),
+                    val: data.lDiff - data.rDiff
+                })
+            }
 
-            const centerLimitDiff = (W / 2) - (40 * SETTINGS.scale)
-            const lStatDiffX = Math.max(leftContentPad, CX - centerLimitDiff)
-            const rStatDiffX = Math.min(W - rightContentPad, CX + centerLimitDiff)
+            let currentYPos = Y_START
+            rows.forEach((row, idx) => {
+                if (row.type === 'row') {
+                    drawRow(row.label, row.lMain, row.lSub, row.rMain, row.rSub, row.diff, row.fmt, currentYPos)
 
-            const ldColor = data.lDiff > data.rDiff ? C.green : (data.rDiff > data.lDiff ? '#777' : '#fff')
-            drawText(data.lDiff + '%', lStatDiffX, diffTextY, 20, ldColor, 'left', 'bold')
-            const rdColor = data.rDiff > data.lDiff ? C.red : (data.lDiff > data.rDiff ? '#777' : '#fff')
-            drawText(data.rDiff + '%', rStatDiffX, diffTextY, 20, rdColor, 'right', 'bold')
+                    if (idx < rows.length - 1) {
+                        drawSeparator(currentYPos + (ROW_HEIGHT / 2) + (5 * SETTINGS.scale))
+                    }
+                    currentYPos += ROW_HEIGHT
 
-            currentY = Y_DIFF + (45 * SETTINGS.scale)
+                } else if (row.type === 'diff') {
+                    // Custom rendering for Diff row to match original style
+                    drawText(t('diff'), CX, currentYPos - (10 * SETTINGS.scale), 10, '#666', 'center', '800')
+                    const diffVal = row.val
+                    const diffStr = (diffVal > 0 ? '+' : '') + formatNum(diffVal) + '%'
+
+                    ctx.font = `bold ${13 * SETTINGS.scale * (SETTINGS.textScale || 1.0)}px Segoe UI`
+                    const dW = ctx.measureText(diffStr).width + (14 * SETTINGS.scale)
+                    const dH = 19 * SETTINGS.scale
+                    const dX = CX - dW / 2
+                    const dY = currentYPos
+
+                    ctx.fillStyle = C.badgeBg; ctx.strokeStyle = C.badgeBorder; ctx.lineWidth = 1
+                    ctx.beginPath()
+                    if (ctx.roundRect) ctx.roundRect(dX, dY, dW, dH, 4); else ctx.rect(dX, dY, dW, dH)
+                    ctx.fill(); ctx.stroke()
+
+                    const dColorD = diffVal > 0 ? C.green : (diffVal < 0 ? C.red : '#888')
+                    drawText(diffStr, CX, dY + (14 * SETTINGS.scale), 13, dColorD, 'center', 'bold')
+
+                    const diffTextY = currentYPos + (12 * SETTINGS.scale)
+                    const centerLimitDiff = (W / 2) - (40 * SETTINGS.scale)
+                    const lStatDiffX = Math.max(leftContentPad, CX - centerLimitDiff)
+                    const rStatDiffX = Math.min(W - rightContentPad, CX + centerLimitDiff)
+
+                    const ldColor = data.lDiff > data.rDiff ? C.green : (data.rDiff > data.lDiff ? '#777' : '#fff')
+                    drawText(data.lDiff + '%', lStatDiffX, diffTextY, 20, ldColor, 'left', 'bold')
+                    const rdColor = data.rDiff > data.lDiff ? C.red : (data.lDiff > data.rDiff ? '#777' : '#fff')
+                    drawText(data.rDiff + '%', rStatDiffX, diffTextY, 20, rdColor, 'right', 'bold')
+
+                    // Separator handled by previous row usually, or if we add more
+                    currentYPos += (45 * SETTINGS.scale)
+                }
+            })
+
+            currentY = currentYPos
         }
 
         if (SETTINGS.showCommonBans && data.commonBans && data.commonBans.length > 0) {
@@ -1007,7 +1224,15 @@
     function createPopups() {
         visibilityPanel = document.createElement('div')
         visibilityPanel.id = 'ml-vis-panel'
+        visibilityPanel.id = 'ml-vis-panel'
         visibilityPanel.className = 'ml-popup-panel'
+
+        // Warning element for Visibility Panel
+        const visWarning = document.createElement('div')
+        visWarning.id = 'ml-vis-warning'
+        visWarning.className = 'ml-warning-msg'
+        visWarning.textContent = t('warn_focus')
+        visibilityPanel.appendChild(visWarning)
 
         const toggles = [
             { id: 'fullFocusMode', label: t('full_focus') },
@@ -1021,12 +1246,16 @@
             { id: 'showLeftBans', label: t('my_bans') },
             { id: 'showRightBans', label: t('enemy_bans') },
             { id: 'showCommonBans', label: t('common_bans') },
-            { id: 'showStats', label: t('stats_table') }
+            { id: 'showStats', label: t('stats_table') },
+            { id: 'showKills', label: t('s_kills') },
+            { id: 'showLevel', label: t('s_level') },
+            { id: 'showDiff', label: t('s_diff') }
         ]
 
         toggles.forEach(t => {
             const row = document.createElement('label')
             row.className = 'ml-chk-row'
+            row.id = `ml-row-${t.id}` // Add ID for disabling
             row.innerHTML = `<input type="checkbox" id="ml-chk-${t.id}" ${SETTINGS[t.id] ? 'checked' : ''}> <span>${t.label}</span>`
             row.onchange = (e) => updateSetting(t.id, e.target.checked)
             visibilityPanel.appendChild(row)
@@ -1036,6 +1265,120 @@
         settingsPanel = document.createElement('div')
         settingsPanel.id = 'ml-set-panel'
         settingsPanel.className = 'ml-popup-panel'
+
+        // Warning element for Settings Panel
+        const setWarning = document.createElement('div')
+        setWarning.id = 'ml-set-warning'
+        setWarning.className = 'ml-warning-msg'
+        setWarning.textContent = t('warn_focus')
+        settingsPanel.appendChild(setWarning)
+
+        // --- Profile UI ---
+        const profileRow = document.createElement('div')
+        profileRow.className = 'ml-set-row'
+        profileRow.style.marginBottom = '12px'
+        profileRow.style.paddingBottom = '8px'
+        profileRow.style.borderBottom = '1px solid rgba(255,255,255,0.1)'
+
+        const profileLabel = document.createElement('div')
+        profileLabel.className = 'ml-set-label'
+        profileLabel.textContent = t('profile')
+
+        const profileCtrls = document.createElement('div')
+        profileCtrls.className = 'ml-set-ctrls'
+        profileCtrls.style.flexGrow = '1'
+        profileCtrls.style.justifyContent = 'flex-end'
+
+        const profileSel = document.createElement('select')
+        profileSel.style.background = 'rgba(255,255,255,0.05)'
+        profileSel.style.color = '#fff'
+        profileSel.style.border = '1px solid rgba(255,255,255,0.1)'
+        profileSel.style.borderRadius = '4px'
+        profileSel.style.padding = '2px 4px'
+        profileSel.style.fontSize = '12px'
+        profileSel.style.marginRight = '8px'
+        profileSel.style.outline = 'none'
+        profileSel.style.maxWidth = '100px'
+        profileSel.style.cursor = 'pointer'
+
+        const updateOptionsClick = () => {
+            // Force dark background on options for Windows
+            Array.from(profileSel.options).forEach(opt => {
+                opt.style.background = '#1e1e24'
+                opt.style.color = '#fff'
+            })
+        }
+
+        const saveBtn = document.createElement('div')
+        saveBtn.className = 'ml-mini-btn'
+        saveBtn.textContent = t('save')
+        saveBtn.title = 'Save Profile'
+
+        const delBtn = document.createElement('div')
+        delBtn.className = 'ml-mini-btn'
+        delBtn.textContent = t('del')
+        delBtn.title = 'Delete Profile'
+
+        const updateProfileSelector = () => {
+            profileSel.innerHTML = ''
+            const profiles = ProfileManager.getProfiles()
+            Object.keys(profiles).forEach(name => {
+                const opt = document.createElement('option')
+                opt.value = name
+                opt.textContent = name
+                opt.style.background = '#141419' // Dark background for options
+                opt.style.color = '#fff'
+                profileSel.appendChild(opt)
+            })
+            profileSel.value = ProfileManager.currentProfile
+
+            // Update Delete button state (disable for defaults)
+            if (DEFAULT_PROFILES[ProfileManager.currentProfile]) {
+                delBtn.style.opacity = '0.3'
+                delBtn.style.pointerEvents = 'none'
+            } else {
+                delBtn.style.opacity = '1'
+                delBtn.style.pointerEvents = 'auto'
+            }
+        }
+
+        // Expose to ProfileManager so it can trigger updates
+        ProfileManager.updateUI = updateProfileSelector
+
+        profileSel.onchange = (e) => {
+            ProfileManager.loadProfile(e.target.value)
+            updateProfileSelector()
+        }
+
+        saveBtn.onclick = () => {
+            const name = prompt(t('new_profile'), 'Custom 1')
+            if (name) {
+                if (ProfileManager.saveProfile(name)) {
+                    updateProfileSelector()
+                } else {
+                    alert('Cannot overwrite default profiles!')
+                }
+            }
+        }
+
+        delBtn.onclick = () => {
+            const name = ProfileManager.currentProfile
+            if (confirm(`Delete profile "${name}"?`)) {
+                if (ProfileManager.deleteProfile(name)) {
+                    updateProfileSelector()
+                }
+            }
+        }
+
+        updateProfileSelector() // Init
+
+        profileCtrls.appendChild(profileSel)
+        profileCtrls.appendChild(saveBtn)
+        profileCtrls.appendChild(delBtn)
+        profileRow.appendChild(profileLabel)
+        profileRow.appendChild(profileCtrls)
+        settingsPanel.appendChild(profileRow)
+
 
         const createSetRow = (label, key, step, min, max, fmt) => {
             const row = document.createElement('div')
@@ -1110,12 +1453,14 @@
                 settingsPanel.classList.add('open')
                 document.getElementById('ml-btn-set').classList.add('active-btn')
             }
+            updateUIState() // Update UI when opening
         }
     }
 
-    function updateSetting(key, value) {
+    function updateSetting(key, value, skipStateUpdate = false) {
         SETTINGS[key] = value
 
+        // Map settings to localStorage keys
         const keyMap = {
             'opacity': 'opacity',
             'scale': 'font_scale',
@@ -1127,6 +1472,9 @@
             'showAvatars': 'show_avatars',
             'showNames': 'show_names',
             'showMMR': 'show_mmr',
+            'showKills': 'show_kills',
+            'showLevel': 'show_level',
+            'showDiff': 'show_diff',
             'separateTimers': 'separate_timers',
             'showStages': 'show_stages',
             'showEventTimers': 'show_event_timers',
@@ -1143,6 +1491,127 @@
 
         const suffix = keyMap[key] || key.replace(/^show/, 'show_').toLowerCase()
         localStorage.setItem(`ml_pip_${suffix}`, value)
+
+        if (!skipStateUpdate) {
+            updateUIState()
+        }
+    }
+
+    function updateUIState() {
+        // defined elements to help with state management
+        const setOpacity = (id, enabled) => {
+            const el = document.getElementById(id)
+            if (!el) return
+            if (enabled) {
+                el.style.opacity = '1'
+                el.style.pointerEvents = 'auto'
+            } else {
+                el.style.opacity = '0.3'
+                el.style.pointerEvents = 'none'
+            }
+        }
+
+        // Helper for checkboxes
+        const setChk = (id, enabled) => setOpacity(`ml-row-${id}`, enabled)
+
+        // Helper for settings rows with controls
+        const setRow = (key, enabled) => {
+            // Find row by finding input with that ID and getting parent's parent
+            const input = document.getElementById(`ml-val-${key}`)
+            if (input) {
+                const row = input.closest('.ml-set-row')
+                if (row) {
+                    if (enabled) {
+                        row.style.opacity = '1'
+                        row.style.pointerEvents = 'auto'
+                    } else {
+                        row.style.opacity = '0.3'
+                        row.style.pointerEvents = 'none'
+                    }
+                }
+            }
+        }
+
+        const visWarn = document.getElementById('ml-vis-warning')
+        const setWarn = document.getElementById('ml-set-warning')
+        const showWarn = (show) => {
+            if (visWarn) visWarn.style.display = show ? 'block' : 'none'
+            if (setWarn) setWarn.style.display = show ? 'block' : 'none'
+        }
+
+        if (SETTINGS.fullFocusMode) {
+            // Full Focus Mode: Disable almost everything
+            showWarn(true)
+            setChk('focusRival', false)
+            setChk('separateTimers', false)
+
+            setChk('showAvatars', false)
+            setChk('showNames', false)
+            setChk('showMMR', false)
+            setChk('showBuilds', false)
+            setChk('showMainTimer', false)
+            setChk('showStages', false)
+            setChk('showEventTimers', false)
+            setChk('showLeftBans', false)
+            setChk('showRightBans', false)
+            setChk('showCommonBans', false)
+            setChk('showStats', false)
+
+            setRow('textScale', true) // Keep text scale
+            setRow('buildScale', false)
+            setRow('canvasWidth', false)
+            setRow('canvasHeight', false)
+            setRow('banScale', false)
+
+        } else if (SETTINGS.focusRival) {
+            // Focus Rival Mode: Disable Separate Timers
+            showWarn(true)
+            setChk('focusRival', true) // Ensure enabled
+            setChk('separateTimers', false)
+
+            // Enable others
+            setChk('showAvatars', true)
+            setChk('showNames', true)
+            setChk('showMMR', true)
+            setChk('showBuilds', true)
+            setChk('showMainTimer', true)
+            setChk('showStages', true)
+            setChk('showEventTimers', true)
+            setChk('showLeftBans', true)
+            setChk('showRightBans', true)
+            setChk('showCommonBans', true)
+            setChk('showStats', true)
+
+            setRow('textScale', true)
+            setRow('buildScale', true)
+            setRow('canvasWidth', true)
+            setRow('canvasHeight', true)
+            setRow('banScale', true)
+
+        } else {
+            // Normal Mode: Enable Everything
+            showWarn(false)
+            setChk('focusRival', true)
+            setChk('separateTimers', true)
+
+            setChk('showAvatars', true)
+            setChk('showNames', true)
+            setChk('showMMR', true)
+            setChk('showBuilds', true)
+            setChk('showMainTimer', true)
+            setChk('showStages', true)
+            setChk('showEventTimers', true)
+            setChk('showLeftBans', true)
+            setChk('showRightBans', true)
+            setChk('showCommonBans', true)
+            setChk('showStats', true)
+
+            setRow('textScale', true)
+            setRow('buildScale', true)
+            setRow('canvasWidth', true)
+            setRow('canvasHeight', true)
+            setRow('banScale', true)
+        }
     }
 
     async function togglePiP() {

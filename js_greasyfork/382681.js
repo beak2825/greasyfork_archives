@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         RLImgDLer
 // @description  Eases the downloading of ad pictures
-// @version      2.10
+// @version      2.11.1
 // @grant        GM_download
 // @grant        GM_addStyle
 // @grant        GM_getResourceText
@@ -17,8 +17,8 @@
 
 var NAME, PHONE, ADNO;
 var ALLPHONES = [];
-const maxImgSize = '8';
-const maxAds = "16";
+const maxImgSize = 8; // numeric size
+const maxAds = 16; // numeric limit
 
 $(function() {
     GM_addStyle(GM_getResourceText("IMPORTED_CSS"));
@@ -34,6 +34,8 @@ $(function() {
     let R = $('<div id="RLImgDLer"></div>');
 
     NAME = $('h1:first-child').html();
+
+    // Primary method: Extract from .phone-number (works for most pages)
     PHONE = $('.phone-number').first().find('a').first().html();
     if (PHONE) PHONE = PHONE.replace(/ \/ /,'-');
 
@@ -43,34 +45,58 @@ $(function() {
         ALLPHONES.push(phone);
     });
 
+    // Fallback method: If no phone number found, try extracting from .whatsapp-number (which is used on some pages)
+    if (!PHONE) {
+        PHONE = $('.whatsapp-number').first().find('a').first().html();
+        if (PHONE) PHONE = PHONE.replace(/ \/ /,'-');
+
+        $('.whatsapp-number').first().find('a').each(function(i,el) {
+            let phone = $(el).text().trim();
+            if (phone) phone = phone.replace(/ \/ /,'-');
+            ALLPHONES.push(phone);
+        });
+    }
+
     $('.phone-number').clone().appendTo('#contact');
 
     // let allphoneshtml = ALLPHONES.join("<br/>\n");
     // $("<div class=\"phone-numbers\"></div>").html(allphoneshtml).appendTo("#contact");
 
     var adlist = $('#sedcard-mobile-gallery a');
-    if (adlist.length == 0) return;
-    var admatch = adlist.first().attr('href').match(/\/(\d+)\/images\/\d\/(\d{8}\.\w+)$/);
+    if (adlist.length === 0) {
+        console.warn('RLImgDLer: No gallery found on this page');
+        return;
+    }
+    var firstHref = adlist.first().attr('href');
+    if (!firstHref) {
+        console.warn('RLImgDLer: Gallery links have no href');
+        return;
+    }
+    var admatch = firstHref.match(/\/(\d+)\/images\/\d\/(\d{8}\.\w+)$/);
+    if (!admatch || admatch.length < 2) {
+        console.warn('RLImgDLer: Could not parse ad number from gallery');
+        return;
+    }
     var adno = admatch[1];
-    ADNO=adno;
+    ADNO = adno;
     var imgHi = 0;
-    var imgPath;
+    var imgPath = '';
     let buttons = $('<div class="RLDLbuttongroup"></div>');
 
     $('<button class="RLDLbutton" id="onePage" title="alle Bilder auf einer Seite zeigen"><span class="material-icons md-18">grid_on</span> all</button>').on('click', function() {
         showall(adno,imgHi,imgPath);
     }).appendTo(buttons);
-    
+
     $('<button class="RLDLbutton" id="dl-all" title="alle Bilder herunterladen, max. 729x729px"><span class="material-icons md-18">photo_library</span> <span class="material-icons md-18">download</span></button>').on('click', function() {
         var path = NAME+' - '+PHONE+' ('+adno+')';
         path = path.replace(/[^\w\s-\(\)]/g,'');
         dlAll(adno,imgHi,imgPath,path,'8');
     }).appendTo(buttons);
-    $('<button class="RLDLbutton" id="copyData" title="Anzeigendaten für Forum kopieren (BBCode)"><span class="material-icons md-18">content_copy</span> LH</button>').on('click', function() {
+    $('<button class="RLDLbutton copy-data-bb" title="Anzeigendaten für Forum kopieren (BBCode)"><span class="material-icons md-18">content_copy</span> LH</button>').on('click', function() {
         navigator.clipboard.writeText(adData('BB'));
         copied(this);
     }).appendTo(buttons);
-    $('<button class="RLDLbutton" id="copyData" title="Anzeigendaten als Text kopieren"><span class="material-icons md-18">content_copy</span> txt</button>').on('click', function() {
+    $('<button class="RLDLbutton copy-data-txt" title="Anzeigendaten als Text kopieren"><span class="material-icons md-18">content_copy</span> txt</button>').on('click', function() {
         navigator.clipboard.writeText(adData());
         copied(this);
     }).appendTo(buttons);
@@ -81,11 +107,12 @@ $(function() {
     $(buttons).appendTo(R);
     $('#sedcard-gallery li img').each(function() {
         let src = $(this).attr('src');
-        let targetnew = src.replace(/(\/\d+\/images)\/\d\/(\d{8}\.\w+)$/, '$1/'+maxImgSize+'/$2');
-        let imgnum = src.replace(/^.*(\/\d+\/images)\/\d\/(\d{8})\.\w+$/, '$2');
+        if (!src) return; // skip if no src
+        let targetnew = src.replace(/(\/(\d+)\/images)\/\d\/(\d{8}\.\w+)$/, '$1/'+maxImgSize+'/$2');
+        let imgnum = src.replace(/^.*(\d{8})\.\w+$/, '$1');
         $(this).css("position","relative");
         imgPath = src.substr(0,src.length-15);
-        if (imgnum > imgHi) imgHi = imgnum;
+        if (parseInt(imgnum) > imgHi) imgHi = parseInt(imgnum);
         $('<a>').prependTo($(this).parent()).attr({
             'href' : targetnew,
             'class' : 'imgdl',
@@ -141,24 +168,25 @@ function adData(format) {
         })
         .map(function() {
             return $.trim(this.textContent);
-        });  
+        });
     text = ($.makeArray(text).join("\n")).trim();
     let times = $('.times').first().text().trim();
     if (times) {
         times = times.replace(/ +/g, " ").replace(/\n\s*(\r?\n)+/g, "\n")
             .replace(/:\n/g,': ').replace(/\n/g,', ');
     }
-    let clublink = $('#address a').attr('href');
-    let clubname = $('#address a').text().replace(/\s*>/,'');
+    let clublink = $('#address a').attr('href') || '';
+    let clubnameEl = $('#address a').first();
+    let clubname = clubnameEl.length ? clubnameEl.text().replace(/\s*>/,'') : '';
     let club = '';
-    if (clubname) {
+    if (clubname && clublink) {
         club = `[URL=https://www.rotelaterne.de${clublink}]${clubname}[/URL], `;
     }
     let URL = window.location.href;
     let adPath = URL.replace(/.*\//,'');
     let address = $('#address').text().replace(/Adresse/,'').replace(/\n/g,' ');
     let addresslines = $('#address').contents().filter(function() {
-        return this.nodeType == Node.TEXT_NODE && $.trim(this.nodeValue) !== '';
+        return this.nodeType === Node.TEXT_NODE && $.trim(this.nodeValue) !== '';
     });
     let gmap_address;
     // console.info(addresslines);
@@ -208,7 +236,7 @@ function adData(format) {
         +`Telefon: ` + ALLPHONES.join(", ") + `\n`
         + (times ? `Zeiten: ${times}\n` : "")
         +`\n${URL}\n`;
-    return format == "BB" ? dataHTML : dataTXT;
+    return format === "BB" ? dataHTML : dataTXT;
 }
 function dlAll(adno,imgHi,imgPath,path,size=maxImgSize) {
     var URLs = allImgURLs(adno,imgPath,size);
@@ -230,34 +258,29 @@ function dlAll(adno,imgHi,imgPath,path,size=maxImgSize) {
                 url: url,
                 name: filepath,
                 saveAs: false,
-                onerror: function(){
-                    $(linediv).append('<span class="download_error">ERROR: '+err.error+'<br>'+err.details+'</span>');
+                onerror: function(error){
+                    var errorMsg = error && error.error ? error.error : 'Unknown error';
+                    var details = error && error.details ? error.details : '';
+                    $(linediv).append('<span class="download_error">ERROR: '+errorMsg+(details ? '<br>'+details : '')+'</span>');
                 },
                 onload: function() {
                     $(linediv).append('<span class="download_ok">✓</span>');
                 }
             });
-            downloads.push(dl);
+            if (dl) downloads.push(dl);
         })(URL,file,name,line);
     }
 }
 
-var GM_download_emu = function(url, name) {
-    GM_xmlhttpRequest({
-    	method: 'GET',
-    	url: url,
-    	onload: function(r) {
-            var bb = new Blob([r.responseText], {type: 'text/plain'});
-	    saveAs(bb, name);
-    	}
-    });
-};
+// Removed: GM_download_emu - not used and requires undefined functions (GM_xmlhttpRequest, saveAs)
 
 function allImgURLs(adno,imgPath,size=maxImgSize) {
     let URLs = [];
     $('#sedcard-gallery img').each(function(id,el) {
         let url = $(el).attr('src');
-        URLs.push(url.replace(/(\/images)\/\d\//,'$1/8/'));
+        if (url) {
+            URLs.push(url.replace(/(\/(images))\/\d\//,'$1/'+size+'/'));
+        }
     });
     return [...new Set(URLs)];
 }
@@ -265,7 +288,7 @@ function showall(adno,imgHi,imgPath) {
     $(".bigcanvas").remove();
     var bigcanvas = $("<div class=\"bigcanvas\"></div>");
     var buttonsdiv = $('<div class="buttons"><span>'+NAME+' '+(PHONE ? PHONE : ' ') + ' (' + ADNO + ')<span> <button class="RLDLbutton">close (ESC)</button></div>').on('click', removebigcanvas).appendTo(bigcanvas);
-    $('#dl-all').clone(true).appendTo(buttonsdiv);
+    $('#dl-all').clone().appendTo(buttonsdiv);
     $(bigcanvas).appendTo('body');
 
     var URLs = allImgURLs(adno,imgPath);
@@ -281,7 +304,8 @@ function removebigcanvas() {
     window.scrollTo(0, 0);
 }
 
-unsafeWindow.allImgURLs=allImgURLs;
+// Expose function for external use if needed
+unsafeWindow.allImgURLs = allImgURLs;
 
 function addStyle() {
         GM_addStyle(`

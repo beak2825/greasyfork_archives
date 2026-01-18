@@ -1,50 +1,593 @@
 // ==UserScript==
-// @name         WatchPorn Auto Filter Preset Manager
+// @name         WatchPorn Auto Filter Preset Manager and Wicked Tab
 // @namespace    http://tampermonkey.net/
-// @version      1.5
-// @description  Visually select categories, save presets with file download/upload, glassmorphism UI theme, auto-remove promotional headers, seamless home page integration
+// @version      1.6
+// @description  Filter presets with Multi-select videos and open them all in one Wicked Tab!
 // @author       6969RandomGuy6969
 // @match        https://watchporn.to/*
 // @icon         https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://watchporn.to/&size=256
 // @grant        GM_registerMenuCommand
-// @downloadURL https://update.greasyfork.org/scripts/541718/WatchPorn%20Auto%20Filter%20Preset%20Manager.user.js
-// @updateURL https://update.greasyfork.org/scripts/541718/WatchPorn%20Auto%20Filter%20Preset%20Manager.meta.js
+// @grant        GM_xmlhttpRequest
+// @grant        GM_openInTab
+// @grant        GM_setClipboard
+// @connect      watchporn.to
+// @downloadURL https://update.greasyfork.org/scripts/541718/WatchPorn%20Auto%20Filter%20Preset%20Manager%20and%20Wicked%20Tab.user.js
+// @updateURL https://update.greasyfork.org/scripts/541718/WatchPorn%20Auto%20Filter%20Preset%20Manager%20and%20Wicked%20Tab.meta.js
 // ==/UserScript==
 
 (function () {
     'use strict';
 
+    // Storage keys
     const STORAGE_KEY = 'wp_saved_presets';
     const FAVORITES_KEY = 'wp_favorite_categories';
     const ACTIVE_PRESET_KEY = 'wp_active_preset';
+    const WICKED_KEY = 'wp_wicked_videos';
+    const WICKED_SEL_KEY = 'wp_wicked_selections';
 
     let filterButton = null;
     let categoryCheckboxes = [];
 
-    // Determine if we're on search page or home page
+    // Page detection
+    const params = new URLSearchParams(window.location.search);
+    const isWickedTab = params.get('wickedview') === 'true';
     const isSearchPage = window.location.pathname.includes('/search/');
-    const isHomePage = window.location.pathname === '/' || window.location.pathname === '';
+    const isHomePage = window.location.pathname === '/' || window.location.pathname === '' || window.location.pathname.includes('/latest-updates/');
 
-    // Home Page Integration - Seamless Button Replacement
-    if (isHomePage) {
+    // Check if page has video listings (for Wicked Tab feature)
+    const hasVideoListings = () => document.querySelector('.item a[href*="/video/"]') !== null;
+
+    // Wicked Tab state
+    const wickedState = {
+        sel: [],
+        obs: null,
+        vis: false
+    };
+
+    // Wicked Tab storage utilities
+    const wickedStore = {
+        get: () => {
+            try { return JSON.parse(localStorage[WICKED_KEY] || '[]') }
+            catch { return [] }
+        },
+        set: d => {
+            try { localStorage[WICKED_KEY] = JSON.stringify(d); return 1 }
+            catch { return 0 }
+        },
+        clr: () => delete localStorage[WICKED_KEY],
+        getSel: () => {
+            try { return JSON.parse(localStorage[WICKED_SEL_KEY] || '[]') }
+            catch { return [] }
+        },
+        setSel: d => {
+            try { localStorage[WICKED_SEL_KEY] = JSON.stringify(d); return 1 }
+            catch { return 0 }
+        },
+        clrSel: () => delete localStorage[WICKED_SEL_KEY]
+    };
+
+    // Share utilities
+    const share = {
+        encode: videos => btoa(unescape(encodeURIComponent(JSON.stringify(videos)))),
+        decode: code => {
+            try { return JSON.parse(decodeURIComponent(escape(atob(code)))) }
+            catch { return null }
+        },
+        getUrl: code => `${location.origin}/?wickedview=true&share=${encodeURIComponent(code)}&t=${Date.now()}`
+    };
+
+    // ============================================
+    // WICKED TAB GRID VIEWER
+    // ============================================
+    if (isWickedTab) {
+        const wickedStyles = document.createElement('style');
+        wickedStyles.textContent = `
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            body {
+                background: #1a1a1e !important;
+                font-family: Roboto, Helvetica, sans-serif;
+                overflow-x: hidden;
+                color: #fff;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+            ::-webkit-scrollbar { width: 12px; height: 12px; }
+            ::-webkit-scrollbar-track { background: #1a1d24; }
+            ::-webkit-scrollbar-thumb { background: #4a4d55; border-radius: 6px; }
+            ::-webkit-scrollbar-thumb:hover { background: #5a5d65; }
+
+            #grid-header {
+                background: linear-gradient(135deg, rgba(33, 33, 33, 0.98) 0%, rgba(28, 28, 32, 0.95) 100%);
+                backdrop-filter: blur(20px);
+                border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+                padding: 24px 40px;
+                color: #fff;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2);
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+            .grid-header-left {
+                display: flex;
+                align-items: center;
+                gap: 16px;
+            }
+            .grid-logo {
+                height: 36px;
+                width: auto;
+                filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+            }
+            #grid-header h2 {
+                font-size: 22px;
+                font-family: Roboto, Helvetica, sans-serif;
+                font-weight: 500;
+                color: rgb(255, 255, 255);
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                letter-spacing: 0.3px;
+                text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+                margin: 0;
+            }
+            .video-count {
+                font-size: 16px;
+                font-weight: 400;
+                color: rgba(255, 255, 255, 0.7);
+                letter-spacing: 0.2px;
+            }
+
+            .grid-header-btn {
+                background: rgba(255, 255, 255, 0.08);
+                backdrop-filter: blur(10px);
+                color: #fff;
+                border: 1px solid rgba(255, 255, 255, 0.12);
+                padding: 10px 20px;
+                border-radius: 8px;
+                cursor: pointer;
+                font-family: Roboto, Helvetica, sans-serif;
+                font-size: 13px;
+                font-weight: 500;
+                letter-spacing: 0.3px;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                outline: none;
+                margin-left: 12px;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            }
+            .grid-header-btn:hover {
+                background: rgba(255, 255, 255, 0.15);
+                border-color: rgba(255, 255, 255, 0.25);
+                transform: translateY(-2px);
+                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+            }
+            .grid-header-btn:active {
+                transform: translateY(0);
+            }
+            #refresh-all-btn {
+                background: linear-gradient(135deg, rgba(74, 144, 226, 0.2) 0%, rgba(53, 122, 189, 0.2) 100%);
+                border-color: rgba(74, 144, 226, 0.3);
+            }
+            #refresh-all-btn:hover {
+                background: linear-gradient(135deg, rgba(74, 144, 226, 0.35) 0%, rgba(53, 122, 189, 0.35) 100%);
+                border-color: rgba(74, 144, 226, 0.5);
+            }
+            #share-tab-btn {
+                background: linear-gradient(135deg, rgba(76, 175, 80, 0.2) 0%, rgba(56, 142, 60, 0.2) 100%);
+                border-color: rgba(76, 175, 80, 0.3);
+            }
+            #share-tab-btn:hover {
+                background: linear-gradient(135deg, rgba(76, 175, 80, 0.35) 0%, rgba(56, 142, 60, 0.35) 100%);
+                border-color: rgba(76, 175, 80, 0.5);
+            }
+
+            #grid-viewer-container {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(440px, 1fr));
+                gap: 32px;
+                padding: 40px;
+                max-width: 1920px;
+                margin: 0 auto;
+            }
+
+            .video-grid-item {
+                background: linear-gradient(145deg, rgba(28, 28, 32, 0.98) 0%, rgba(24, 24, 28, 0.95) 100%);
+                border: 1px solid rgba(255, 255, 255, .06);
+                border-radius: 12px;
+                overflow: hidden;
+                box-shadow: 0 8px 24px rgba(0, 0, 0, .5), 0 2px 8px rgba(0, 0, 0, .3);
+                transition: all .4s cubic-bezier(0.4, 0, 0.2, 1);
+                position: relative;
+                backdrop-filter: blur(10px);
+                animation: fadeInUp 0.5s ease-out backwards;
+            }
+            @keyframes fadeInUp {
+                from { opacity: 0; transform: translateY(30px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            .video-grid-item:hover {
+                transform: translateY(-6px) scale(1.01);
+                box-shadow: 0 16px 48px rgba(0, 0, 0, .7), 0 4px 16px rgba(74, 144, 226, .2);
+                border-color: rgba(74, 144, 226, .3);
+            }
+
+            .video-refresh-btn, .video-close-btn {
+                position: absolute;
+                top: 12px;
+                background: rgba(0, 0, 0, .85);
+                backdrop-filter: blur(12px);
+                color: #fff;
+                border: 1px solid rgba(255, 255, 255, .15);
+                padding: 8px 14px;
+                border-radius: 8px;
+                cursor: pointer;
+                font-family: Roboto, Helvetica, sans-serif;
+                font-size: 12px;
+                font-weight: 500;
+                z-index: 10;
+                transition: all .3s cubic-bezier(0.4, 0, 0.2, 1);
+                display: none;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, .5);
+            }
+            .video-refresh-btn {
+                right: 12px;
+                background: linear-gradient(135deg, rgba(74, 144, 226, .9) 0%, rgba(53, 122, 189, .9) 100%);
+                border-color: rgba(74, 144, 226, .4);
+            }
+            .video-close-btn {
+                right: 120px;
+                background: linear-gradient(135deg, rgba(244, 67, 54, .9) 0%, rgba(211, 47, 47, .9) 100%);
+                border-color: rgba(244, 67, 54, .4);
+            }
+            .video-close-btn:hover {
+                background: linear-gradient(135deg, rgba(244, 67, 54, 1) 0%, rgba(211, 47, 47, 1) 100%);
+                transform: scale(1.08) translateY(-2px);
+                box-shadow: 0 6px 20px rgba(244, 67, 54, .4);
+            }
+            .video-grid-item.has-error .video-refresh-btn { display: block; }
+            .video-grid-item:hover .video-close-btn { display: block; }
+            .video-refresh-btn:hover {
+                background: linear-gradient(135deg, rgba(74, 144, 226, 1) 0%, rgba(53, 122, 189, 1) 100%);
+                transform: scale(1.08) translateY(-2px);
+                box-shadow: 0 6px 20px rgba(74, 144, 226, .4);
+            }
+
+            .video-grid-item video, .video-grid-item iframe {
+                width: 100%;
+                height: auto;
+                aspect-ratio: 16/9;
+                background: #000;
+                display: block;
+            }
+
+            .video-grid-loading {
+                width: 100%;
+                aspect-ratio: 16/9;
+                background: rgba(36, 39, 47, .95);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                color: #888;
+                gap: 16px;
+                font-family: monospace;
+            }
+            .video-grid-loading::before {
+                content: "";
+                width: 40px;
+                height: 40px;
+                border: 3px solid rgba(0, 0, 238, .2);
+                border-top-color: #00e;
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+            }
+
+            .video-grid-error {
+                width: 100%;
+                aspect-ratio: 16/9;
+                background: rgba(36, 39, 47, .95);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                color: #f44;
+                gap: 12px;
+                font-family: monospace;
+                padding: 20px;
+                text-align: center;
+            }
+            .video-grid-error::before {
+                content: "⚠";
+                font-size: 48px;
+                color: #f44;
+            }
+
+            @keyframes spin {
+                to { transform: rotate(360deg); }
+            }
+
+            .video-grid-title {
+                padding: 18px 24px;
+                color: rgba(255, 255, 255, 0.95);
+                font-size: 14px;
+                font-family: Roboto, Helvetica, sans-serif;
+                font-weight: 400;
+                letter-spacing: 0.2px;
+                line-height: 1.6;
+                transition: all .3s cubic-bezier(0.4, 0, 0.2, 1);
+                cursor: pointer;
+                text-decoration: none;
+                display: block;
+                background: linear-gradient(180deg, rgba(255, 255, 255, .02) 0%, rgba(255, 255, 255, .01) 100%);
+                border-top: 1px solid rgba(255, 255, 255, .04);
+            }
+            .video-grid-title:hover {
+                color: #4A90E2;
+                background: linear-gradient(180deg, rgba(74, 144, 226, .08) 0%, rgba(74, 144, 226, .04) 100%);
+                padding-left: 28px;
+            }
+
+            #share-modal {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, .85);
+                z-index: 10000;
+                display: none;
+                align-items: center;
+                justify-content: center;
+            }
+            #share-modal.visible { display: flex; }
+
+            .share-content {
+                background: #24272f;
+                border: 1px solid rgba(255, 255, 255, .2);
+                padding: 30px;
+                border-radius: 8px;
+                max-width: 600px;
+                width: 90%;
+                box-shadow: 0 20px 60px rgba(0, 0, 0, .8);
+            }
+            .share-content h3 { margin-bottom: 20px; color: #fff; font-size: 18px; }
+            .share-content textarea {
+                width: 100%;
+                background: #1a1d24;
+                color: #fff;
+                border: 1px solid rgba(255, 255, 255, .2);
+                padding: 12px;
+                font-family: monospace;
+                font-size: 12px;
+                border-radius: 4px;
+                resize: vertical;
+                min-height: 120px;
+                margin-bottom: 15px;
+            }
+            .share-content button {
+                background: #1a7a4d;
+                color: #fff;
+                border: 1px solid rgba(255, 255, 255, .2);
+                padding: 10px 20px;
+                border-radius: 4px;
+                cursor: pointer;
+                font-family: monospace;
+                font-size: 13px;
+                margin-right: 10px;
+                transition: all .2s;
+            }
+            .share-content button:hover { background: #25a863; transform: translateY(-2px); }
+            .share-content button.secondary { background: #24272f; }
+            .share-content button.secondary:hover { background: #34373f; }
+            .share-info { color: #888; font-size: 11px; margin-top: 10px; line-height: 1.5; }
+
+            @media (max-width: 599px) {
+                #grid-viewer-container { grid-template-columns: 1fr; padding: 20px; gap: 16px; }
+                #grid-header { padding: 16px 20px; }
+            }
+        `;
+        document.head.appendChild(wickedStyles);
+
+        function initWickedGrid() {
+            const sharedCode = params.get('share');
+            let videos = sharedCode ? share.decode(sharedCode) || wickedStore.get() : wickedStore.get();
+
+            document.body.innerHTML = '<div style="padding:80px 40px;text-align:center;color:#fff;font-family:Roboto,Helvetica,sans-serif"><div style="width:50px;height:50px;border:4px solid rgba(74,144,226,0.2);border-top-color:#4A90E2;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 24px"></div><h2 style="font-size:24px;font-weight:500;color:rgba(255,255,255,0.9)">Loading your wicked collection...</h2><style>@keyframes spin{to{transform:rotate(360deg)}}</style></div>';
+
+            if (!videos.length) {
+                document.body.innerHTML = '<div style="padding:80px 40px;text-align:center;color:#fff;font-family:Roboto,Helvetica,sans-serif;max-width:600px;margin:0 auto"><h2 style="font-size:32px;font-weight:500;margin-bottom:16px;color:rgba(255,255,255,0.95)">Nothing here… yet</h2><p style="font-size:16px;color:rgba(255,255,255,0.7);margin-bottom:32px;line-height:1.6">Go back and select some wicked videos first! Use Ctrl+Click or Right-Click to add videos to your collection.</p><button onclick="window.close()" style="margin-top:20px;padding:12px 28px;background:linear-gradient(135deg,rgba(74,144,226,0.2) 0%,rgba(53,122,189,0.2) 100%);color:#fff;border:1px solid rgba(74,144,226,0.3);cursor:pointer;font-family:Roboto,Helvetica,sans-serif;border-radius:8px;font-size:14px;font-weight:500;transition:all 0.3s;outline:none" onmouseover="this.style.background=\'linear-gradient(135deg,rgba(74,144,226,0.35) 0%,rgba(53,122,189,0.35) 100%)\'" onmouseout="this.style.background=\'linear-gradient(135deg,rgba(74,144,226,0.2) 0%,rgba(53,122,189,0.2) 100%)\'">Close Tab</button></div>';
+                return;
+            }
+
+            if (sharedCode && !share.decode(sharedCode)) {
+                alert('Invalid share code!');
+            }
+
+            document.body.innerHTML = `
+                <div id="grid-header">
+                    <div class="grid-header-left">
+                        <img src="https://watchporn.to/contents/djifbwwmsrbs/theme/logo.png" alt="WatchPorn" class="grid-logo">
+                        <h2>Wicked Tab <span class="video-count">(${videos.length} Videos)</span></h2>
+                    </div>
+                    <div>
+                        <button class="grid-header-btn" id="share-tab-btn">Share Tab</button>
+                        <button class="grid-header-btn" id="refresh-all-btn">Refresh All</button>
+                        <button class="grid-header-btn" id="close-grid-btn">Close Tab</button>
+                    </div>
+                </div>
+                <div id="grid-viewer-container"></div>
+            `;
+
+            document.getElementById('close-grid-btn').onclick = () => window.close();
+            document.getElementById('refresh-all-btn').onclick = () => location.reload();
+            document.getElementById('share-tab-btn').onclick = handleShare;
+
+            createShareModal();
+
+            const container = document.getElementById('grid-viewer-container');
+
+            const loadVideo = (vid, idx, item) => {
+                GM_xmlhttpRequest({
+                    method: 'GET',
+                    url: vid.url,
+                    timeout: 15000,
+                    onload: response => {
+                        try {
+                            const doc = new DOMParser().parseFromString(response.responseText, 'text/html');
+                            const video = doc.querySelector('video source') || doc.querySelector('video');
+                            const src = video?.src || video?.getAttribute('src');
+
+                            if (src) {
+                                const videoEl = document.createElement('video');
+                                videoEl.controls = true;
+                                videoEl.style.cssText = 'width:100%;height:auto;aspect-ratio:16/9;background:#000';
+                                videoEl.innerHTML = `<source src="${src}">`;
+                                item.querySelector('div').replaceWith(videoEl);
+                                item.classList.remove('has-error');
+                                return;
+                            }
+                        } catch (e) {
+                            // Video parsing error - fallback to iframe
+                        }
+
+                        const iframe = document.createElement('iframe');
+                        iframe.src = vid.url;
+                        iframe.style.cssText = 'width:100%;height:auto;aspect-ratio:16/9;border:none;background:#000';
+                        iframe.allowFullscreen = true;
+                        iframe.allow = 'autoplay';
+                        item.querySelector('div').replaceWith(iframe);
+                        item.classList.remove('has-error');
+                    },
+                    onerror: () => {
+                        const error = document.createElement('div');
+                        error.className = 'video-grid-error';
+                        error.innerHTML = `<span>Failed to load video</span><small style="color:#888">Network error</small>`;
+                        item.querySelector('div').replaceWith(error);
+                        item.classList.add('has-error');
+                    },
+                    ontimeout: () => {
+                        const error = document.createElement('div');
+                        error.className = 'video-grid-error';
+                        error.innerHTML = `<span>Request timed out</span><small style="color:#888">Try refreshing</small>`;
+                        item.querySelector('div').replaceWith(error);
+                        item.classList.add('has-error');
+                    }
+                });
+            };
+
+            videos.forEach((vid, idx) => {
+                const item = document.createElement('div');
+                item.className = 'video-grid-item';
+                item.style.animationDelay = `${idx * 0.05}s`;
+                item.innerHTML = `
+                    <button class="video-close-btn" data-idx="${idx}">✕ Remove</button>
+                    <button class="video-refresh-btn">↻ Reload</button>
+                    <div class="video-grid-loading"><span>Loading video ${idx + 1}...</span></div>
+                    <a href="${vid.url}" target="_blank" class="video-grid-title">${vid.title}</a>
+                `;
+                container.appendChild(item);
+
+                item.querySelector('.video-close-btn').onclick = (e) => {
+                    e.stopPropagation();
+                    if (confirm('Remove this video from the collection?')) {
+                        removeVideo(idx);
+                    }
+                };
+
+                item.querySelector('.video-refresh-btn').onclick = () => {
+                    const loading = document.createElement('div');
+                    loading.className = 'video-grid-loading';
+                    loading.innerHTML = `<span>Reloading video ${idx + 1}...</span>`;
+                    item.querySelector('div').replaceWith(loading);
+                    item.classList.remove('has-error');
+                    loadVideo(vid, idx, item);
+                };
+
+                loadVideo(vid, idx, item);
+            });
+        }
+
+        function createShareModal() {
+            const modal = document.createElement('div');
+            modal.id = 'share-modal';
+            modal.innerHTML = `
+                <div class="share-content">
+                    <h3>Share Your Collection</h3>
+                    <textarea id="share-code" readonly placeholder="Your share link will appear here..."></textarea>
+                    <div>
+                        <button id="copy-url-btn">Copy Link</button>
+                        <button class="secondary" id="close-share-btn">Close</button>
+                    </div>
+                    <div class="share-info">Share this link with friends. They can open it to load your collection!</div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+
+            modal.onclick = e => {
+                if (e.target === modal) modal.classList.remove('visible');
+            };
+
+            modal.querySelector('#close-share-btn').onclick = () => modal.classList.remove('visible');
+            modal.querySelector('#copy-url-btn').onclick = () => {
+                const textarea = document.getElementById('share-code');
+                const url = textarea.value;
+                try {
+                    if (GM_setClipboard) {
+                        GM_setClipboard(url);
+                    } else {
+                        navigator.clipboard.writeText(url);
+                    }
+                    alert('Share link copied to clipboard!');
+                } catch {
+                    textarea.select();
+                    document.execCommand('copy');
+                    alert('Share link copied to clipboard!');
+                }
+            };
+        }
+
+        function handleShare() {
+            const videos = wickedStore.get();
+            if (!videos.length) {
+                alert('No videos in current tab to share!');
+                return;
+            }
+            const code = share.encode(videos);
+            const url = share.getUrl(code);
+            document.getElementById('share-code').value = url;
+            document.getElementById('share-modal').classList.add('visible');
+        }
+
+        function removeVideo(idx) {
+            const videos = wickedStore.get();
+            videos.splice(idx, 1);
+            wickedStore.set(videos);
+            location.reload();
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initWickedGrid);
+        } else {
+            initWickedGrid();
+        }
+        return;
+    }
+
+    // ============================================
+    // FILTER PRESET BUTTON (ALL PAGES EXCEPT SEARCH)
+    // ============================================
+    if (!isSearchPage && !isWickedTab) {
         const CONFIG = {
             buttonText: "Filter Preset",
             searchUrl: "https://watchporn.to/search/",
-            fallbackSelectors: [
-                'a[href*="go.lnkpth.com"]',
-                'a[href*="hotdates"]',
-                'a[href*="dates"]',
-                '.promo-link',
-                '.affiliate-link'
-            ]
         };
 
-        // Inject seamless styles immediately
-        function injectHomePageStyles() {
-            if (document.getElementById('home-filter-styles')) return;
+        function injectFilterButtonStyles() {
+            if (document.getElementById('filter-preset-btn-styles')) return;
 
             const styleSheet = document.createElement('style');
-            styleSheet.id = 'home-filter-styles';
+            styleSheet.id = 'filter-preset-btn-styles';
             styleSheet.textContent = `
                 .filter-preset-btn {
                     background: rgba(255, 255, 255, 0.1) !important;
@@ -59,123 +602,45 @@
                     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
                     display: inline-block !important;
                 }
-
                 .filter-preset-btn:hover {
                     background: rgba(255, 255, 255, 0.2) !important;
                     transform: translateY(-2px) !important;
                     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3) !important;
                 }
-
                 .filter-preset-container {
                     opacity: 0;
                     animation: fadeInSmooth 0.5s ease-in-out forwards;
                 }
-
                 @keyframes fadeInSmooth {
                     from { opacity: 0; transform: translateY(10px); }
                     to { opacity: 1; transform: translateY(0); }
-                }
-
-                .promo-hiding {
-                    opacity: 0 !important;
-                    transition: opacity 0.2s ease-out !important;
                 }
             `;
             (document.head || document.documentElement).appendChild(styleSheet);
         }
 
-        function findPromoTarget() {
-            // Try specific selector first
-            let target = document.querySelector('a[href^="https://go.lnkpth.com/aff_f?h=SEJeqF"]');
-            if (target) return target;
+        function initFilterPresetButton() {
+            injectFilterButtonStyles();
 
-            // Try fallback selectors
-            for (const selector of CONFIG.fallbackSelectors) {
-                target = document.querySelector(selector);
-                if (target) return target;
+            const homeLinkLi = document.querySelector('a#item1')?.parentElement;
+            if (homeLinkLi && !document.querySelector('#filter-preset-li')) {
+                const li = document.createElement('li');
+                li.id = 'filter-preset-li';
+
+                const button = document.createElement('a');
+                button.href = CONFIG.searchUrl;
+                button.textContent = CONFIG.buttonText;
+                button.className = 'filter-preset-btn';
+                button.style.cursor = 'pointer';
+
+                li.appendChild(button);
+                homeLinkLi.parentNode.insertBefore(li, homeLinkLi.nextSibling);
+
+                // console.log('✅ Filter Preset button added next to Home link');
             }
-
-            // Try finding by text content
-            const links = document.querySelectorAll('a');
-            for (const link of links) {
-                const text = link.textContent.toLowerCase();
-                if (text.includes('hot dates') || text.includes('dates') || text.includes('❤️')) {
-                    return link;
-                }
-            }
-
-            return null;
         }
 
-        function createFallbackHomeButton() {
-            const container = document.createElement('div');
-            container.className = 'filter-preset-container';
-            container.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                z-index: 10000;
-            `;
-
-            const button = document.createElement('a');
-            button.href = CONFIG.searchUrl;
-            button.target = '_self';
-            button.textContent = CONFIG.buttonText;
-            button.className = 'filter-preset-btn';
-
-            container.appendChild(button);
-            document.body.appendChild(container);
-
-            return button;
-        }
-
-        function replacePromoTarget(target) {
-            target.classList.add('promo-hiding');
-
-            setTimeout(() => {
-                const container = document.createElement('div');
-                container.className = 'filter-preset-container';
-
-                const newButton = target.cloneNode(true);
-                newButton.textContent = CONFIG.buttonText;
-                newButton.href = CONFIG.searchUrl;
-                newButton.target = '_self';
-                newButton.className = (newButton.className || '') + ' filter-preset-btn';
-                newButton.classList.remove('promo-hiding');
-
-                container.appendChild(newButton);
-                target.parentNode.replaceChild(container, target);
-
-                console.log('✅ Filter Preset button created on home page');
-            }, 200);
-        }
-
-function initHomePage() {
-    injectHomePageStyles();
-
-    // --- Add Filter Preset button next to Home link (NEW, standalone) ---
-    const homeLinkLi = document.querySelector('a#item1')?.parentElement;
-    if (homeLinkLi && !document.querySelector('#filter-preset-li')) {
-        const li = document.createElement('li');
-        li.id = 'filter-preset-li';
-
-        const button = document.createElement('a');
-        button.href = CONFIG.searchUrl;
-        button.textContent = CONFIG.buttonText;
-        button.className = 'filter-preset-btn';
-        button.style.cursor = 'pointer';
-
-        li.appendChild(button);
-        homeLinkLi.parentNode.insertBefore(li, homeLinkLi.nextSibling);
-
-        console.log('✅ Filter Preset button added next to Home link (independent)');
-
-    }
-}
-
-
-        // Initialize home page functionality
-        function homePageReady(fn) {
+        function filterButtonReady(fn) {
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', fn);
             } else {
@@ -183,10 +648,9 @@ function initHomePage() {
             }
         }
 
-        homePageReady(() => {
-            initHomePage();
+        filterButtonReady(() => {
+            initFilterPresetButton();
 
-            // Watch for dynamic content changes
             const observer = new MutationObserver((mutations) => {
                 let shouldReinit = false;
 
@@ -205,7 +669,7 @@ function initHomePage() {
                 });
 
                 if (shouldReinit && !document.querySelector('.filter-preset-btn')) {
-                    setTimeout(initHomePage, 100);
+                    setTimeout(initFilterPresetButton, 100);
                 }
             });
 
@@ -215,24 +679,500 @@ function initHomePage() {
             });
         });
 
-        // Backup initialization
         setTimeout(() => {
             if (!document.querySelector('.filter-preset-btn')) {
-                console.log('🔄 Home page backup initialization triggered');
-                initHomePage();
+                // console.log('🔄 Filter Preset button backup initialization triggered');
+                initFilterPresetButton();
             }
         }, 2000);
     }
 
-    // Search Page Functionality - Original Script
+    // ============================================
+    // WICKED TAB FEATURES (SHARED ACROSS PAGES)
+    // ============================================
+    function initWickedFeatures() {
+        if (document.getElementById('wicked-toggle-btn')) {
+            // console.log('⚠️ Wicked features already initialized');
+            return;
+        }
+
+        // console.log('🚀 Initializing Wicked Tab features...');
+
+        const wickedSelectionStyles = document.createElement('style');
+        wickedSelectionStyles.textContent = `
+            .wicked-select-overlay {
+                position: absolute;
+                top: 10px;
+                left: 10px;
+                width: 28px;
+                height: 28px;
+                background: rgba(0, 0, 0, .8);
+                backdrop-filter: blur(10px);
+                border: 2px solid rgba(255, 255, 255, .2);
+                border-radius: 6px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 16px;
+                opacity: 0;
+                transition: all .2s;
+                z-index: 10;
+                pointer-events: none;
+            }
+            body.wicked-active .item:hover .wicked-select-overlay {
+                opacity: 1;
+            }
+            body.wicked-active .item.wicked-selected .wicked-select-overlay {
+                opacity: 1;
+                background: rgba(74, 144, 226, .9);
+                border-color: #4A90E2;
+                color: #fff;
+                box-shadow: 0 4px 15px rgba(74, 144, 226, .4);
+            }
+            .item.wicked-selected::before {
+                content: "";
+                position: absolute;
+                inset: 0;
+                border: 3px solid #4A90E2;
+                pointer-events: none;
+                z-index: 5;
+                box-shadow: 0 0 20px rgba(74, 144, 226, .3);
+            }
+            .item { position: relative; }
+
+            .wp-wicked-dropdown {
+                position: relative;
+                display: inline-block;
+                margin-right: 10px;
+                vertical-align: top;
+            }
+            .wp-wicked-dropdown .sort {
+                position: relative;
+                border-radius: 15px;
+                background-color: #212121;
+                color: #fff;
+                font-size: 12px;
+                font-weight: 500;
+                letter-spacing: 0.3px;
+                padding: 8px 10px;
+                margin: 0 15px 0 0;
+                min-width: 140px;
+                transition: background-color 0.3s, border-radius 0.3s;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            .wp-wicked-dropdown .sort:hover {
+    background-color: #276fdb;
+}
+.wp-wicked-dropdown .sort::before {
+    display: none !important;
+}
+.wp-wicked-dropdown .wicked-icon {
+                background: linear-gradient(90deg, #fff, #e0e0e0, #fff, #f0f0f0, #fff);
+                background-size: 200% 100%;
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                animation: wickedRgb 3s linear infinite;
+                font-weight: 900;
+                filter: drop-shadow(0 0 3px rgba(255, 255, 255, .6));
+            }
+            @keyframes wickedRgb {
+                to { background-position: 200% 50%; }
+            }
+            .wp-wicked-dropdown .sort:hover .wicked-icon {
+                filter: drop-shadow(0 0 10px rgba(255, 255, 255, .9));
+                animation: wickedRgb 1.5s linear infinite;
+            }
+            .wp-wicked-dropdown .badge {
+                background: rgba(74, 144, 226, .9);
+                color: #fff;
+                padding: 2px 8px;
+                border-radius: 10px;
+                font-size: 11px;
+                font-weight: 700;
+                min-width: 18px;
+                text-align: center;
+                display: none;
+            }
+            .wp-wicked-dropdown.has-selection .badge {
+                display: inline-block;
+                animation: wickedPulse 2s ease-in-out infinite;
+            }
+            @keyframes wickedPulse {
+                50% { transform: scale(1.15); }
+            }
+
+            #wicked-control-panel {
+                position: fixed;
+                bottom: 30px;
+                right: 30px;
+                background: rgba(31, 33, 41, .95);
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, .1);
+                border-radius: 12px;
+                padding: 16px 20px;
+                box-shadow: 0 20px 40px rgba(0, 0, 0, .6);
+                z-index: 10000;
+                display: none !important;
+                flex-direction: column;
+                gap: 10px;
+                min-width: 200px;
+            }
+            #wicked-control-panel.visible {
+                display: flex !important;
+                animation: slideUp .3s;
+            }
+            @keyframes slideUp {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            .wicked-btn {
+                background: rgba(40, 40, 40, .8);
+                backdrop-filter: blur(10px);
+                color: #e0e0e0;
+                border: 1px solid rgba(255, 255, 255, .15);
+                padding: 10px 16px;
+                border-radius: 6px;
+                cursor: pointer;
+                font-weight: 500;
+                font-size: 13px;
+                transition: all .2s;
+                outline: none;
+            }
+            .wicked-btn:hover {
+                background: rgba(60, 60, 60, .9);
+                border-color: rgba(255, 255, 255, .25);
+                transform: translateY(-2px);
+            }
+            .wicked-btn.primary {
+                background: rgba(74, 144, 226, .8);
+                border-color: rgba(74, 144, 226, .6);
+            }
+            .wicked-btn.primary:hover {
+                background: rgba(74, 144, 226, 1);
+                box-shadow: 0 4px 15px rgba(74, 144, 226, .4);
+            }
+            .wicked-counter {
+                text-align: center;
+                color: #fff;
+                font-size: 14px;
+                padding: 8px;
+                font-weight: 600;
+                margin-bottom: 4px;
+                background: rgba(74, 144, 226, .1);
+                border-radius: 6px;
+            }
+
+            /* Logo Badge for non-search pages */
+            .wicked-logo-badge {
+                position: absolute;
+                top: -5px;
+                right: -10px;
+                background: rgba(74, 144, 226, .95);
+                color: #fff;
+                padding: 4px 8px;
+                border-radius: 12px;
+                font-size: 11px;
+                font-weight: 700;
+                min-width: 20px;
+                text-align: center;
+                box-shadow: 0 2px 8px rgba(74, 144, 226, .4);
+                cursor: pointer;
+                z-index: 1000;
+                animation: wickedPulse 2s ease-in-out infinite;
+                transition: all .2s;
+            }
+            .wicked-logo-badge:hover {
+                transform: scale(1.1);
+                box-shadow: 0 4px 15px rgba(74, 144, 226, .6);
+            }
+            .wicked-logo-container {
+                position: relative;
+                display: inline-block;
+            }
+        `;
+        document.head.appendChild(wickedSelectionStyles);
+
+        wickedState.sel = wickedStore.getSel();
+
+        // Determine if we should use logo badge or button
+        const useLogoBadge = !isSearchPage;
+
+        function createLogoBadge() {
+            const logo = document.querySelector('img[src*="logo.png"]');
+            if (!logo || document.querySelector('.wicked-logo-badge')) return;
+
+            // Wrap logo in container if not already wrapped
+            if (!logo.parentElement.classList.contains('wicked-logo-container')) {
+                const container = document.createElement('div');
+                container.className = 'wicked-logo-container';
+                logo.parentNode.insertBefore(container, logo);
+                container.appendChild(logo);
+            }
+
+            const badge = document.createElement('div');
+            badge.className = 'wicked-logo-badge';
+            badge.textContent = wickedState.sel.length;
+            badge.style.display = wickedState.sel.length > 0 ? 'block' : 'none';
+            badge.onclick = toggleWickedPanel;
+
+            logo.parentElement.appendChild(badge);
+            // console.log('✅ Wicked logo badge created');
+        }
+
+      function createWickedButton() {
+    if (document.getElementById('wicked-toggle-btn')) return;
+
+    // WAIT for Filters to be created first
+    const filterDropdown = document.querySelector('.wp-filter-dropdown');
+    if (!filterDropdown) {
+        // console.log('⏳ Filters not ready yet, will retry...');
+        return; // Let the observer retry
+    }
+
+    const dropdown = document.createElement('div');
+    dropdown.className = 'wp-wicked-dropdown';
+    dropdown.id = 'wicked-toggle-btn';
+    dropdown.innerHTML = `
+        <div class="sort">
+            <span></span>
+            <strong class="wicked-icon">Wicked Tab</strong>
+            <span class="badge">0</span>
+        </div>
+    `;
+
+    // Insert AFTER Filters - using nextSibling or nextElementSibling
+    const nextElement = filterDropdown.nextElementSibling || filterDropdown.nextSibling;
+    if (nextElement) {
+        filterDropdown.parentNode.insertBefore(dropdown, nextElement);
+    } else {
+        // Filters is the last child, append after it
+        filterDropdown.parentNode.appendChild(dropdown);
+    }
+
+    // console.log('✅ Wicked button inserted after Filters');
+
+    dropdown.onclick = toggleWickedPanel;
+    updateWickedUI();
+}
+
+        function createWickedPanel() {
+            if (document.getElementById('wicked-control-panel')) return;
+
+            const panel = document.createElement('div');
+            panel.id = 'wicked-control-panel';
+            panel.innerHTML = `
+                <div class="wicked-counter">Selected: <span id="wicked-count">0</span></div>
+                <button class="wicked-btn primary" id="open-wicked-btn">Open Wicked Tab</button>
+                <button class="wicked-btn" id="clear-wicked-btn">Clear Selection</button>
+            `;
+            document.body.appendChild(panel);
+
+            panel.querySelector('#open-wicked-btn').onclick = openWickedTab;
+            panel.querySelector('#clear-wicked-btn').onclick = clearWickedSelection;
+        }
+
+        function updateWickedUI() {
+            if (useLogoBadge) {
+                // Update logo badge
+                const badge = document.querySelector('.wicked-logo-badge');
+                if (badge) {
+                    badge.textContent = wickedState.sel.length;
+                    badge.style.display = wickedState.sel.length > 0 ? 'block' : 'none';
+                }
+            } else {
+                // Update button badge
+                const btn = document.getElementById('wicked-toggle-btn');
+                const badge = btn?.querySelector('.badge');
+                if (!btn || !badge) return;
+
+                badge.textContent = wickedState.sel.length;
+                if (wickedState.sel.length > 0) {
+                    btn.classList.add('has-selection');
+                } else {
+                    btn.classList.remove('has-selection');
+                }
+            }
+        }
+
+        function toggleWickedPanel() {
+            const panel = document.getElementById('wicked-control-panel');
+            if (!panel) return;
+
+            wickedState.vis = !wickedState.vis;
+            panel.classList.toggle('visible', wickedState.vis);
+            document.body.classList.toggle('wicked-active', wickedState.vis);
+
+            if (wickedState.vis) {
+                const count = document.getElementById('wicked-count');
+                if (count) count.textContent = wickedState.sel.length;
+            }
+        }
+
+        function toggleVideoSelection(card, url, title, event) {
+            event?.preventDefault();
+            event?.stopPropagation();
+
+            const idx = wickedState.sel.findIndex(v => v.url === url);
+            if (idx > -1) {
+                wickedState.sel.splice(idx, 1);
+                card.classList.remove('wicked-selected');
+            } else {
+                wickedState.sel.push({ url, title });
+                card.classList.add('wicked-selected');
+            }
+
+            wickedStore.setSel(wickedState.sel);
+            updateWickedUI();
+
+            if (wickedState.vis) {
+                const count = document.getElementById('wicked-count');
+                if (count) count.textContent = wickedState.sel.length;
+            }
+        }
+
+        function openWickedTab() {
+            if (!wickedState.sel.length) {
+                alert('No videos selected! Right-click or Ctrl+Click videos to add them to your Wicked Tab.');
+                return;
+            }
+
+            const uniqueVideos = [...new Map(wickedState.sel.map(v => [v.url, v])).values()];
+            if (!wickedStore.set(uniqueVideos)) {
+                alert('Failed to save videos');
+                return;
+            }
+
+            try {
+                GM_openInTab(`${location.origin}/?wickedview=true&t=${Date.now()}`, { active: true, insert: true });
+            } catch {
+                window.open(`${location.origin}/?wickedview=true&t=${Date.now()}`, '_blank');
+            }
+        }
+
+        function clearWickedSelection() {
+            wickedState.sel = [];
+            wickedStore.clrSel();
+            updateWickedUI();
+
+            if (wickedState.vis) {
+                const count = document.getElementById('wicked-count');
+                if (count) count.textContent = '0';
+            }
+
+            document.querySelectorAll('.item.wicked-selected').forEach(card => {
+                card.classList.remove('wicked-selected');
+            });
+        }
+
+        function processVideoThumbnails() {
+            document.querySelectorAll('.item:not([data-wicked-processed])').forEach(card => {
+                card.dataset.wickedProcessed = '1';
+
+                const link = card.querySelector('a[href*="/video/"]');
+                if (!link?.href.includes('/video/')) return;
+
+                const url = link.href;
+                const titleEl = card.querySelector('.title, strong.title');
+                const title = titleEl ? titleEl.textContent.trim().substring(0, 80) || 'Untitled' : 'Untitled';
+
+                const overlay = document.createElement('div');
+                overlay.className = 'wicked-select-overlay';
+                overlay.innerHTML = '✓';
+
+                const imgDiv = card.querySelector('.img');
+                if (imgDiv) {
+                    imgDiv.appendChild(overlay);
+                } else {
+                    card.appendChild(overlay);
+                }
+
+                if (wickedState.sel.some(v => v.url === url)) {
+                    card.classList.add('wicked-selected');
+                }
+
+                card.addEventListener('click', (e) => {
+                    if (!wickedState.vis) return;
+                    if (e.ctrlKey || e.metaKey) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        toggleVideoSelection(card, url, title, e);
+                        return false;
+                    }
+                }, true);
+
+                card.addEventListener('contextmenu', (e) => {
+                    if (wickedState.vis) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        toggleVideoSelection(card, url, title, e);
+                        return false;
+                    }
+                }, true);
+            });
+        }
+
+        function handleKeyboard(e) {
+            if ((e.key === 'g' || e.key === 'G') && !e.ctrlKey && !e.metaKey && wickedState.sel.length > 0) {
+                e.preventDefault();
+                openWickedTab();
+            }
+            if ((e.key === 'w' || e.key === 'W') && !e.ctrlKey && !e.metaKey) {
+                e.preventDefault();
+                toggleWickedPanel();
+            }
+            if (e.key === 'Escape' && wickedState.vis) {
+                e.preventDefault();
+                toggleWickedPanel();
+            }
+        }
+
+        // Initialize appropriate UI based on page type
+        if (useLogoBadge) {
+            createLogoBadge();
+        } else {
+            createWickedButton();
+        }
+        createWickedPanel();
+        processVideoThumbnails();
+
+        const observer = new MutationObserver(() => {
+            processVideoThumbnails();
+            if (useLogoBadge) {
+                if (!document.querySelector('.wicked-logo-badge')) {
+                    createLogoBadge();
+                }
+            } else {
+                if (!document.getElementById('wicked-toggle-btn')) {
+                    createWickedButton();
+                }
+            }
+        });
+
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+
+        document.addEventListener('keydown', handleKeyboard);
+        // console.log('✅ Wicked Tab features initialized successfully!');
+    }
+
+    // ============================================
+    // SEARCH PAGE - INITIALIZE WICKED + FILTER
+    // ============================================
     if (isSearchPage) {
-        // Function to remove promotional headers
+        initWickedFeatures();
+
         function removePromotionalHeaders() {
             const h1Elements = document.querySelectorAll('h1');
             h1Elements.forEach(h1 => {
                 const text = h1.textContent.trim();
                 if (text.toLowerCase().includes('videos in') && text.includes(',')) {
-                    console.log('Removing promotional header:', text.substring(0, 50) + '...');
+                    // console.log('Removing promotional header:', text.substring(0, 50) + '...');
                     h1.remove();
                 }
             });
@@ -308,6 +1248,7 @@ function initHomePage() {
 
             setTimeout(() => {
                 removePromotionalHeaders();
+                processVideoThumbnails();
             }, 500);
         }
 
@@ -332,11 +1273,11 @@ function initHomePage() {
             filterButton = filterDropdown;
 
             if (!document.getElementById('wp-persistent-styles')) {
-                const style = document.createElement('style');
-                style.id = 'wp-persistent-styles';
-                style.textContent = `.wp-filter-dropdown{position:relative;display:inline-block;margin-right:10px}.wp-filter-dropdown .sort{position:relative;border-radius:15px;background-color:#212121;color:#fff;font-size:12px;font-weight:500;letter-spacing:0.3px;padding:8px 10px;margin:0 15px 0 0;min-width:140px;transition:background-color 0.3s,border-radius 0.3s;cursor:pointer}.wp-filter-dropdown .sort:hover{background-color:#276fdb}`;
-                document.head.appendChild(style);
-            }
+    const style = document.createElement('style');
+    style.id = 'wp-persistent-styles';
+    style.textContent = `.wp-filter-dropdown{position:relative;display:inline-block;margin-right:10px;vertical-align:top}.wp-filter-dropdown .sort{position:relative;border-radius:15px;background-color:#212121;color:#fff;font-size:12px;font-weight:500;letter-spacing:0.3px;padding:8px 10px;margin:0 15px 0 0;min-width:140px;transition:background-color 0.3s,border-radius 0.3s;cursor:pointer}.wp-filter-dropdown .sort::before{display:none !important}.wp-filter-dropdown .sort:hover{background-color:#276fdb}`;
+    document.head.appendChild(style);
+}
         }
 
         function createUI(categoryCheckboxes) {
@@ -500,7 +1441,7 @@ function initHomePage() {
 
                 sorted.forEach(checkbox => {
                     const labelText = checkbox.nextElementSibling?.textContent.trim() ||
-                                    checkbox.id.replace('category_filter_', '');
+                        checkbox.id.replace('category_filter_', '');
 
                     const container = document.createElement('label');
                     container.innerHTML = `
@@ -523,7 +1464,6 @@ function initHomePage() {
             rebuildPresetSelect();
             buildCategoryList();
 
-            // All event listeners from original script...
             panel.querySelector('.wp-select-visible-btn').addEventListener('click', () => {
                 form.querySelectorAll('label').forEach(label => {
                     if (label.style.display !== 'none') {
@@ -710,7 +1650,6 @@ function initHomePage() {
             document.body.appendChild(overlay);
             setTimeout(() => overlay.classList.add('show'), 10);
 
-            // Auto-apply active preset if exists
             if (activePreset) {
                 const currentPresets = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
                 if (currentPresets[activePreset]) {
@@ -719,7 +1658,6 @@ function initHomePage() {
             }
         }
 
-        // Enhanced initialization for search page
         function initializeSearchPage() {
             removePromotionalHeaders();
 
@@ -729,22 +1667,21 @@ function initHomePage() {
                     categoryCheckboxes = allCheckboxes;
                     createFilterButton();
 
-                    // Re-create button on page changes (AJAX updates)
                     const observer = new MutationObserver((mutations) => {
                         mutations.forEach((mutation) => {
                             if (mutation.addedNodes.length > 0) {
-                                // Check if sort elements were added/changed
                                 const hasSortElements = Array.from(mutation.addedNodes).some(node =>
                                     node.nodeType === 1 && (node.querySelector?.('.sort') || node.classList?.contains('sort'))
                                 );
-                                if (hasSortElements && !document.querySelector('.wp-filter-dropdown')) {
-                                    setTimeout(() => {
-                                        filterButton = null; // Reset reference
-                                        createFilterButton();
-                                    }, 100);
+                                if (hasSortElements) {
+                                    if (!document.querySelector('.wp-filter-dropdown')) {
+                                        setTimeout(() => {
+                                            filterButton = null;
+                                            createFilterButton();
+                                        }, 100);
+                                    }
                                 }
 
-                                // Check for new promotional headers and remove them
                                 const hasNewHeaders = Array.from(mutation.addedNodes).some(node =>
                                     node.nodeType === 1 && (node.tagName === 'H1' || node.querySelector?.('h1'))
                                 );
@@ -762,11 +1699,9 @@ function initHomePage() {
                 }
             });
 
-            // Set up periodic cleanup for promotional headers
             setInterval(removePromotionalHeaders, 2000);
         }
 
-        // Initialize search page when ready
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', initializeSearchPage);
         } else {
@@ -774,9 +1709,34 @@ function initHomePage() {
         }
     }
 
-    // Universal initialization for any page not specifically handled
-    if (!isSearchPage && !isHomePage) {
-        console.log('🔧 WatchPorn Filter Manager loaded on:', window.location.pathname);
+    // ============================================
+    // UNIVERSAL PAGES - WICKED TAB ON ALL VIDEO PAGES
+    // ============================================
+    if (!isWickedTab && !isSearchPage) {
+        const initUniversalWicked = () => {
+            // console.log('🔍 Checking for videos on:', window.location.pathname);
+
+            if (hasVideoListings()) {
+                // console.log('✅ Videos found! Initializing Wicked Tab...');
+                initWickedFeatures();
+            } else {
+                // console.log('⏳ No videos found yet, waiting...');
+                setTimeout(() => {
+                    if (hasVideoListings()) {
+                        // console.log('✅ Videos found after delay! Initializing Wicked Tab...');
+                        initWickedFeatures();
+                    } else {
+                        // console.log('❌ No videos found on this page');
+                    }
+                }, 2000);
+            }
+        };
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initUniversalWicked);
+        } else {
+            initUniversalWicked();
+        }
     }
 
 })();

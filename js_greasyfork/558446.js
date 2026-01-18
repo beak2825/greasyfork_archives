@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         汉化脚本
 // @description  自动翻译网页中的英文内容为中文
-// @icon         https://images.icon-icons.com/3915/PNG/512/tampermonkey_logo_icon_249448.png
+// @icon         https://raw.githubusercontent.com/tianxing-ovo/Tampermonkey/master/translate-icon.png?v=1
 // @version      1.2
 // @author       tianxing
 // @match        https://aistudio.google.com/*
@@ -16,6 +16,8 @@
 // @run-at       document-start
 // @license      Apache-2.0
 // @namespace    https://greasyfork.org/users/1203191
+// @homepageURL  https://github.com/tianxing-ovo/Tampermonkey
+// @supportURL   https://github.com/tianxing-ovo/Tampermonkey/issues
 // @downloadURL https://update.greasyfork.org/scripts/558446/%E6%B1%89%E5%8C%96%E8%84%9A%E6%9C%AC.user.js
 // @updateURL https://update.greasyfork.org/scripts/558446/%E6%B1%89%E5%8C%96%E8%84%9A%E6%9C%AC.meta.js
 // ==/UserScript==
@@ -104,6 +106,8 @@
         "By API Key": "按 API 密钥",
         "Cash Out": "提现",
         "Cancel": "取消",
+        "Cancel changes": "取消更改",
+        "Commit changes...": "提交更改",
         "Camera": "相机",
         "Can be sponsored": "可接受赞助",
         "Careers": "招聘",
@@ -185,6 +189,7 @@
         "Date pushed": "推送日期",
         "Datasets": "数据集",
         "Default": "默认",
+        "Default branch": "默认分支",
         "💬 Default": "默认",
         "Delete": "删除",
         "Delete issue": "删除议题",
@@ -199,6 +204,7 @@
         "Discussions": "讨论",
         "Developer settings": "开发者设置",
         "Distillable": "可蒸馏",
+        "Discard": "放弃",
         "Disabled": "已禁用",
         "Do not share my personal information": "不要分享我的个人信息",
         "Do not run safety filters": "不要运行安全筛选器",
@@ -206,7 +212,9 @@
         "Documentation": "文档",
         "Done, closed, fixed, resolved": "完成、关闭、修复、解决",
         "Download for": "下载",
+        "Download template": "下载模板",
         "Download ZIP": "下载 ZIP",
+        "Disallow assets and tags from being modified once a release is published.": "禁止在发布版本后修改资源和标签",
         "Drive": "云端硬盘",
         "Duplicate of another issue": "另一个议题的重复项",
         "Duplicate issue": "复制议题",
@@ -225,6 +233,7 @@
         "Email notifications": "邮件通知",
         "Embeddings": "嵌入",
         "Enabled": "已启用",
+        "Enable release immutability": "启用版本不可变性",
         "Environments": "环境",
         "Enter a valid URL": "输入有效的网址",
         "Enterprise": "企业",
@@ -298,6 +307,7 @@
         "Hour": "小时",
         "Image": "图片",
         "Images": "图片",
+        "Images should be at least 640×320px (1280×640px for best display).": "图片尺寸应至少为 640×320px（1280×640px 显示效果最佳）",
         "Image Edit": "图片编辑",
         "Image Edit Arena": "图片编辑竞技场",
         "Compare models based on their ability to generate and edit images": "比较模型生成和编辑图片的能力",
@@ -454,6 +464,7 @@
         "Polls": "投票",
         "Pricing": "定价",
         "Private": "私有",
+        "Preserve this repository": "保留此仓库",
         "Privacy": "隐私",
         "Privacy Policy": "隐私政策",
         "Provisioning Keys": "配置密钥",
@@ -470,6 +481,7 @@
         "Publish your first package": "发布你的第一个包",
         "Projects": "项目",
         "Prompt gallery": "提示库",
+        "Propose changes": "建议更改",
         "Prompt pricing": "提示词定价",
         "Providers": "提供商",
         "Provider / Model": "提供商 / 模型",
@@ -489,8 +501,11 @@
         "Reasoning": "推理",
         "Reply": "回复",
         "Releases": "版本",
+        "Rename": "重命名",
         "Report Issue": "报告问题",
         "Repositories": "仓库",
+        "Repository name": "仓库名称",
+        "Require contributors to sign off on web-based commits": "要求贡献者对基于Web的提交进行签名",
         "repo:": "仓库:",
         "Reputation": "声望",
         "Release title": "发布标题",
@@ -501,6 +516,7 @@
         "Recently active": "最近活跃",
         "Recently starred": "最近星标",
         "Recently updated": "最近更新",
+        "Restore": "恢复",
         "Record Audio": "录制音频",
         "Response": "响应",
         "Responses": "回复",
@@ -552,6 +568,9 @@
         "Send message": "发送消息",
         "(separate with spaces)": "(用空格分隔)",
         "Set thinking budget": "设置思考预算",
+        "Set up discussions": "设置讨论",
+        "Set up sponsor button": "设置赞助按钮",
+        "Set up templates": "设置模板",
         "Setting": "设置",
         "Settings": "设置",
         "Sexually Explicit": "性暴露",
@@ -572,10 +591,13 @@
         "Sort": "排序",
         "Sort by:": "排序方式:",
         "Social accounts": "社交账号",
+        "Social preview": "社交预览",
         "Spaces": "空间",
         "Sponsor": "赞助",
         "Sponsors": "赞助",
         "Sponsorship log": "赞助日志",
+        "Sponsorships": "赞助",
+        "Sponsorships help your community know how to financially support this repository.": "赞助可帮助您的社区了解如何在财务上支持此仓库",
         "SSH and GPG keys": "SSH 和 GPG 密钥",
         "Start a message...": "开始一条消息...",
         "Start a new Copilot thread": "开始新的 Copilot 会话",
@@ -615,6 +637,7 @@
         "Technology": "技术",
         "Temperature": "温度",
         "Templates": "模板",
+        "Template repository": "模板仓库",
         "Terms": "条款",
         "Terms of Use": "使用条款",
         "Terms of Service": "服务条款",
@@ -666,6 +689,7 @@
         "Upload files": "上传文件",
         "Upload Image": "上传图片",
         "Upload a file": "上传文件",
+        "Upload an image to customize your repository’s social media preview.": "上传图片以自定义仓库的社交媒体预览",
         "Uptime": "运行时间",
         "Usage": "用量",
         "Upgrade": "升级",
@@ -751,26 +775,7 @@
             return false;
         }
         // 跳过代码区域(textarea / pre / code / GitHub特有的代码视图类 / 其他常用编辑器)
-        const codeSelectors = [
-            'pre',
-            'code',
-            '.blob-code',
-            '.blob-code-inner',
-            '.blob-wrapper',
-            '.react-blob-print-hide',
-            '.react-code-text',
-            '.react-file-line',
-            '.react-code-file-contents',
-            '.highlight',
-            '.CodeMirror',
-            '.monaco-editor',
-            '.notranslate',
-            '.markdown-body pre',
-            '.markdown-body code',
-            '[data-testid="read-only-cursor-text-area"]',
-            '[data-testid="code-cell"]',
-            '[data-testid="code-lines-container"]'
-        ];
+        const codeSelectors = ['pre', 'code', '.blob-code', '.blob-code-inner', '.blob-wrapper', '.react-blob-print-hide', '.react-code-text', '.react-file-line', '.react-code-file-contents', '.highlight', '.CodeMirror', '.monaco-editor', '.notranslate', '.markdown-body pre', '.markdown-body code', '[data-testid="read-only-cursor-text-area"]', '[data-testid="code-cell"]', '[data-testid="code-lines-container"]'];
         if (element.closest(codeSelectors.join(', '))) {
             return true;
         }
@@ -869,7 +874,7 @@
             if (shouldSkipElement(node)) {
                 return;
             }
-            const attributes = ['aria-label', 'placeholder', 'mattooltip', 'title'];
+            const attributes = ['aria-label', 'placeholder', 'mattooltip', 'title', 'value'];
             for (const attr of attributes) {
                 const value = node.getAttribute(attr);
                 if (value) {

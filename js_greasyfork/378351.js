@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         「CSDNGreener」🍃CSDN广告完全过滤|免登录|个性化排版|最强老牌脚本|持续更新
 // @namespace    https://github.com/adlered
-// @version      4.2.6
-// @description  ⚡️全新4.0版本！拥有数项独家功能的最强CSDN脚本，不服比一比⚡️|🕶无需登录CSDN，获得比会员更佳的体验|🖥自定义背景图，分辨率自适配，分屏不用滚动|💾超级预优化|🏷原创文章免登录展开|🔌独家推荐内容自由开关|📠免登录复制|🔗防外链重定向|📝独家论坛未登录自动展开文章、评论|🌵全面净化|📈沉浸阅读|🧴净化剪贴板|📕作者信息文章顶部展示
+// @version      5.0.1
+// @description  ⚡️全新5.0版本！模块化重构+AI智能模式+HD版式⚡️|🤖智能自适应布局，完美适配各种分辨率|🖥HD高分辨率优化，1920px+屏幕体验更佳|⚙️实时预览配置，修改立即生效|🕶无需登录CSDN，获得比会员更佳的体验|📠免登录复制|🌵全面净化广告|🔗防外链重定向|📈沉浸阅读体验
 // @author       Adler
 // @connect      www.csdn.net
 // @include      *://*.csdn.net/*
@@ -15,7 +15,10 @@
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_setClipboard
+// @grant        unsafeWindow
 // @license      AGPL-3.0-or-later
+// @note         26-01-16 5.0.1 博客页AI相关内容屏蔽
+// @note         26-01-15 5.0.0 新增：模块化重构+新增HD版式+实时预览功能+AI智能模式（基于CSDN官方CSS断点优化），自适应居中布局，默认推荐使用
 // @note         25-09-03 4.2.6 修复无法正常使用的问题，更新jslib
 // @note         25-08-04 4.2.5 更新免登录复制
 // @note         24-07-18 4.2.4 描述更改
@@ -167,12 +170,12 @@
 // @downloadURL https://update.greasyfork.org/scripts/378351/%E3%80%8CCSDNGreener%E3%80%8D%F0%9F%8D%83CSDN%E5%B9%BF%E5%91%8A%E5%AE%8C%E5%85%A8%E8%BF%87%E6%BB%A4%7C%E5%85%8D%E7%99%BB%E5%BD%95%7C%E4%B8%AA%E6%80%A7%E5%8C%96%E6%8E%92%E7%89%88%7C%E6%9C%80%E5%BC%BA%E8%80%81%E7%89%8C%E8%84%9A%E6%9C%AC%7C%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0.user.js
 // @updateURL https://update.greasyfork.org/scripts/378351/%E3%80%8CCSDNGreener%E3%80%8D%F0%9F%8D%83CSDN%E5%B9%BF%E5%91%8A%E5%AE%8C%E5%85%A8%E8%BF%87%E6%BB%A4%7C%E5%85%8D%E7%99%BB%E5%BD%95%7C%E4%B8%AA%E6%80%A7%E5%8C%96%E6%8E%92%E7%89%88%7C%E6%9C%80%E5%BC%BA%E8%80%81%E7%89%8C%E8%84%9A%E6%9C%AC%7C%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0.meta.js
 // ==/UserScript==
-var version = "4.2.6";
+var version = "5.0.1";
 var currentURL = window.location.href;
 if (currentURL.indexOf("?") !== -1) {
     currentURL = currentURL.substring(0, currentURL.indexOf("?"));
 }
-var list;
+
 var windowTop = 0;
 var startTimeMilli = Date.now();
 var stopTimeMilli = 0;
@@ -240,7 +243,7 @@ class Config {
         });
     }
 }
-var config = new Config();
+
 var progress = 0;
 class Progress {
     init() {
@@ -275,11 +278,11 @@ class Progress {
                 $(".toolbar-search").fadeIn(500);
                 if (!isFirefox()) {
                     // 提示
-                    let tipsCookie = config.get("showTip", true);
+                    let tipsCookie = GM_getValue("showTip", true);
                     if (tipsCookie) {
                         showTips();
                     }
-                    config.set("showTip", false);
+                    GM_setValue("showTip", false);
                 }
             }, 500);
         }, 1500);
@@ -287,27 +290,1872 @@ class Progress {
 }
 var progressor = new Progress();
 
-// 自定义 CSS
-// 进度条
-$('head').append("<style>#nprogress{pointer-events:none}#nprogress .bar{background:#f44444;position:fixed;z-index:1031;top:0;left:0;width:100%;height:2px}#nprogress .peg{display:block;position:absolute;right:0;width:100px;height:100%;box-shadow:0 0 10px #f44444,0 0 5px #f44444;opacity:1;-webkit-transform:rotate(3deg) translate(0,-4px);-ms-transform:rotate(3deg) translate(0,-4px);transform:rotate(3deg) translate(0,-4px)}#nprogress .spinner{display:block;position:fixed;z-index:1031;top:15px;right:15px}#nprogress .spinner-icon{width:18px;height:18px;box-sizing:border-box;border:solid 2px transparent;border-top-color:#f44444;border-left-color:#f44444;border-radius:50%;-webkit-animation:nprogress-spinner .4s linear infinite;animation:nprogress-spinner .4s linear infinite}.nprogress-custom-parent{overflow:hidden;position:relative}.nprogress-custom-parent #nprogress .bar,.nprogress-custom-parent #nprogress .spinner{position:absolute}@-webkit-keyframes nprogress-spinner{0%{-webkit-transform:rotate(0)}100%{-webkit-transform:rotate(360deg)}}@keyframes nprogress-spinner{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}</style>");
-// 设置窗口
-$('head').append("<style>.black_overlay{top:0%;left:0%;width:100%;height:100%;background-color:#000;z-index:1001;-moz-opacity:0.8;opacity:.10;filter:alpha(opacity=88)}.black_overlay,.white_content{display:none;position:absolute}.white_content{z-index:9999!important;top:25%;left:25%;width:650px;height:60%;padding:20px;border:0px;background-color:rgba(255,255,255,0.9);z-index:1002;overflow:auto}</style>");
-// 提示条
-$('head').append("<style>.tripscon{padding:10px}</style>");
-// 按钮（旧）
-$('head').append("<style>#toggle-button{display:none}.button-label{position:relative;display:inline-block;width:82px;background-color:#ccc;border:1px solid #ccc;border-radius:30px;cursor:pointer}.circle{position:absolute;top:0;left:0;width:30px;height:30px;border-radius:50%;background-color:#fff}.button-label .text{line-height:30px;font-size:18px;-webkit-user-select:none;user-select:none}.on{color:#fff;display:none;text-indent:10px}.off{color:#fff;display:inline-block;text-indent:53px}.button-label .circle{left:0;transition:all .3s}#toggle-button:checked+label.button-label .circle{left:50px}#toggle-button:checked+label.button-label .on{display:inline-block}#toggle-button:checked+label.button-label .off{display:none}#toggle-button:checked+label.button-label{background-color:#78d690}</style>");
-// 保存按钮
-$('head').append("<style>.saveButton{background-color:#19a4ed;border:none;color:#fff;padding:5px 15px;text-align:center;text-decoration:none;display:inline-block;font-size:14px;cursor:pointer}</style>");
-// Star 样式
-$('head').append("<style>.giveMeOneStar:hover{color:#FF69B4;}</style>");
-// 设置窗口文字效果
-if (isFirefox()) {
-    $('head').append("<style>.configContainer label{font-size:15px}.configContainer p{font-size:15px}.giveMeOneStar{font-size:15px}.configContainer .title{font-size:20px}.configContainer .bold{font-weight:bold;margin-bottom:5px}</style>");
-} else {
-    $('head').append("<style>.configContainer label{font-size:12px}.configContainer p{font-size:12px}.giveMeOneStar{font-size:15px}.configContainer .title{font-size:20px}.configContainer .bold{font-weight:bold;margin-bottom:5px}</style>");
+// ============================================
+// 5.0.0 新增核心类 - 模块化架构
+// ============================================
+
+// 工具函数：防抖
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
 }
-// SVG
-//var save_svg = '<svg t="1595082650173" class="icon" viewBox="0 0 1075 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2078" width="140" height="140"><path d="M753.763902 685.830244a48.952195 48.952195 0 0 1 49.152-48.702439c81.420488 0 141.162146-65.386146 141.162147-146.057366 0-43.507512-13.037268-82.419512-43.457561-109.243317a142.360976 142.360976 0 0 0-20.280195-14.935415 158.045659 158.045659 0 0 0-11.239025-6.243902l-2.747317-1.298732a155.847805 155.847805 0 0 0-9.191024-3.996097c-1.348683-0.549463-2.697366-0.999024-4.096-1.498537a152.35122 152.35122 0 0 0-8.491707-2.847219c-1.948098-0.599415-3.896195-0.999024-5.844293-1.498537-2.497561-0.599415-4.945171-1.24878-7.492683-1.748293-2.597463-0.499512-5.34478-0.899122-8.042146-1.24878-1.948098-0.249756-3.846244-0.599415-5.844293-0.79922a153.150439 153.150439 0 0 0-14.435903-0.749268c-1.498537 0-2.997073 0.199805-4.545561 0.249756a265.390829 265.390829 0 0 0-5.594536-24.526049c-0.499512-1.998049-1.298732-3.846244-1.898146-5.844292a267.438829 267.438829 0 0 0-5.944196-17.982439c-0.649366-1.798244-1.498537-3.496585-2.197853-5.29483a283.123512 283.123512 0 0 0-7.742439-17.732683L772.745366 269.736585a282.973659 282.973659 0 0 0-9.790439-17.832585C714.302439 171.582439 625.88878 124.878049 524.487805 124.878049c-101.400976 0-189.914537 46.654439-238.517073 126.976-3.496585 5.794341-6.693463 11.788488-9.790439 17.832585l-2.197854 4.096a283.523122 283.523122 0 0 0-7.742439 17.732683l-2.197854 5.244878c-2.247805 5.894244-4.145951 11.988293-5.994146 18.03239-0.549463 1.998049-1.298732 3.846244-1.848195 5.844293a266.739512 266.739512 0 0 0-5.594537 24.476098c-1.498537 0-2.997073-0.199805-4.545561-0.199805-4.89522 0-9.690537 0.299707-14.485853 0.749268-1.998049 0.199805-3.846244 0.499512-5.794342 0.79922-2.697366 0.349659-5.444683 0.699317-8.092097 1.24878-2.497561 0.499512-4.995122 1.148878-7.492683 1.748293-1.898146 0.499512-3.846244 0.899122-5.794342 1.498536a153.649951 153.649951 0 0 0-8.491707 2.797269l-4.096 1.498536a164.289561 164.289561 0 0 0-9.240976 3.996098l-2.697366 1.348683a145.557854 145.557854 0 0 0-31.469268 21.179317C117.884878 408.600976 104.897561 447.562927 104.897561 491.070439c0 80.67122 59.741659 146.057366 141.162146 146.057366a48.952195 48.952195 0 0 1 49.152 48.702439 48.952195 48.952195 0 0 1-49.152 48.702439c-135.717463 0-245.710049-108.993561-245.710048-243.462244 0-109.692878 73.228488-202.402341 173.830243-232.872585A375.832976 375.832976 0 0 1 524.487805 20.330146a375.882927 375.882927 0 0 1 350.307902 237.867708c100.601756 30.470244 173.830244 123.179707 173.830244 232.872585 0 134.468683-109.992585 243.462244-245.710049 243.462244a48.952195 48.952195 0 0 1-49.102048-48.702439z" p-id="2079"></path><path d="M487.973463 386.122927a49.102049 49.102049 0 0 1 72.928781 0.099902l147.356097 162.041756c6.993171 7.742439 11.48878 19.431024 12.537757 30.120586l0.249756 12.937366c0 19.480976-20.48 39.661268-39.211708 39.661268h-104.897561v262.993171a52.44878 52.44878 0 1 1-104.897561 0v-262.993171h-104.897561c-13.886439 0-39.211707-21.72878-39.211707-39.661268v-12.987317c0-12.487805 4.795317-21.27922 12.637659-29.920781l147.356097-162.291512z" p-id="2080"></path></svg>';
+
+// 日志工具
+const Logger = {
+    prefix: '[CSDNGreener]',
+    log: function(msg) {
+        console.log(this.prefix, msg);
+    },
+    debug: function(msg) {
+        console.debug(this.prefix, msg);
+    },
+    warn: function(msg) {
+        console.warn(this.prefix, msg);
+    },
+    error: function(msg) {
+        console.error(this.prefix, msg);
+    }
+};
+
+// 1. ConfigManager - 配置管理器（使用GM_setValue/GM_getValue）
+class ConfigManager {
+    constructor() {
+        this.storageKey = 'csdngreener_config_v5';
+        this.defaultConfig = {
+            version: '5.0.0',
+            layout: 'ai', // ai | sm | md | lg | fo | hd (ai为智能默认模式)
+            display: {
+                recommend: false,
+                shop: false,
+                whiteTheme: false,
+                autoResize: true,
+            },
+            toolbar: {
+                autoHide: false,
+                showWrite: true,
+            },
+            sidebar: {
+                authorCard: false,
+                searchBlog: false,
+                newArticle: false,
+                hotArticle: false,
+                newComments: false,
+                category: false,
+                recommendArticle: false,
+                archive: false,
+                content: true,
+            },
+            bottomBar: {
+                alwaysHide: true,
+            },
+            custom: {
+                backgroundImage: '',
+            },
+        };
+    }
+
+    // 获取单个配置
+    get(key) {
+        const config = this.getAll();
+        return key ? this._getNestedValue(config, key) : config;
+    }
+
+    // 获取所有配置
+    getAll() {
+        try {
+            const stored = GM_getValue(this.storageKey, null);
+            if (!stored) {
+                Logger.log('初始化默认配置');
+                this.setAll(this.defaultConfig);
+                return this.defaultConfig;
+            }
+            const config = JSON.parse(stored);
+            // 合并默认配置（处理新增字段）
+            return this._mergeConfig(this.defaultConfig, config);
+        } catch (e) {
+            Logger.error('读取配置失败: ' + e.message);
+            return this.defaultConfig;
+        }
+    }
+
+    // 设置单个配置
+    set(key, value) {
+        const config = this.getAll();
+        this._setNestedValue(config, key, value);
+        this.setAll(config);
+    }
+
+    // 设置所有配置
+    setAll(config) {
+        try {
+            GM_setValue(this.storageKey, JSON.stringify(config));
+            Logger.debug('配置已保存');
+        } catch (e) {
+            Logger.error('保存配置失败: ' + e.message);
+        }
+    }
+
+    // 导出配置为JSON字符串
+    export() {
+        return JSON.stringify(this.getAll(), null, 2);
+    }
+
+    // 从JSON字符串导入配置
+    import(jsonString) {
+        try {
+            const config = JSON.parse(jsonString);
+            this.setAll(config);
+            Logger.log('配置导入成功');
+            return true;
+        } catch (e) {
+            Logger.error('配置导入失败: ' + e.message);
+            return false;
+        }
+    }
+
+    // 重置为默认配置
+    reset() {
+        this.setAll(this.defaultConfig);
+        Logger.log('配置已重置');
+    }
+
+    // 辅助方法：获取嵌套值
+    _getNestedValue(obj, path) {
+        const keys = path.split('.');
+        let value = obj;
+        for (let key of keys) {
+            value = value?.[key];
+        }
+        return value;
+    }
+
+    // 辅助方法：设置嵌套值
+    _setNestedValue(obj, path, value) {
+        const keys = path.split('.');
+        const lastKey = keys.pop();
+        let target = obj;
+        for (let key of keys) {
+            if (!(key in target)) {
+                target[key] = {};
+            }
+            target = target[key];
+        }
+        target[lastKey] = value;
+    }
+
+    // 辅助方法：合并配置
+    _mergeConfig(defaultConfig, userConfig) {
+        const merged = JSON.parse(JSON.stringify(defaultConfig));
+        const merge = (target, source) => {
+            for (let key in source) {
+                if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])) {
+                    if (!target[key]) target[key] = {};
+                    merge(target[key], source[key]);
+                } else {
+                    target[key] = source[key];
+                }
+            }
+        };
+        merge(merged, userConfig);
+        return merged;
+    }
+}
+
+// 2. StyleManager - 样式管理器（改进版，支持真正的移除和替换）
+class StyleManager {
+    constructor() {
+        this.injectedStyles = new Map();
+        this.stylePrefix = 'csdngreener-style';
+    }
+
+    // 注入样式
+    inject(id, cssString, replace = false) {
+        const styleId = `${this.stylePrefix}-${id}`;
+
+        // 检查是否已存在
+        const existingStyle = document.getElementById(styleId);
+        if (existingStyle && !replace) {
+            return; // 已存在且不替换
+        }
+
+        // 移除旧样式
+        if (existingStyle) {
+            existingStyle.remove();
+            Logger.debug(`移除旧样式: ${id}`);
+        }
+
+        // 创建新的style标签
+        const styleElement = document.createElement('style');
+        styleElement.id = styleId;
+        styleElement.textContent = cssString;
+        document.head.appendChild(styleElement);
+
+        this.injectedStyles.set(id, styleElement);
+        Logger.debug(`样式已注入: ${id}`);
+    }
+
+    // 移除样式
+    remove(id) {
+        const styleElement = this.injectedStyles.get(id);
+        if (styleElement && styleElement.parentNode) {
+            styleElement.remove();
+            this.injectedStyles.delete(id);
+            Logger.debug(`样式已移除: ${id}`);
+        }
+    }
+
+    // 清空所有样式
+    clear() {
+        this.injectedStyles.forEach((styleElement, id) => {
+            if (styleElement && styleElement.parentNode) {
+                styleElement.remove();
+            }
+        });
+        this.injectedStyles.clear();
+        Logger.debug('所有样式已清空');
+    }
+}
+
+// 3. LayoutEngine - 布局引擎
+class LayoutEngine {
+    constructor(configManager, styleManager) {
+        this.config = configManager;
+        this.style = styleManager;
+        this.currentLayout = null;
+        this.layouts = {}; // 将在后续初始化版式类
+    }
+
+    // 注册版式
+    registerLayout(name, layoutInstance) {
+        this.layouts[name] = layoutInstance;
+        Logger.debug(`版式已注册: ${name}`);
+    }
+
+    // 应用版式
+    apply(layoutType) {
+        const layout = this.layouts[layoutType];
+        if (!layout) {
+            Logger.error(`未知版式: ${layoutType}`);
+            return false;
+        }
+
+        Logger.log(`应用版式: ${layoutType}`);
+
+        // 清除当前版式
+        if (this.currentLayout) {
+            this.currentLayout.cleanup();
+        }
+
+        // 应用新版式
+        layout.apply(this.style);
+        this.currentLayout = layout;
+
+        // 保存配置
+        this.config.set('layout', layoutType);
+
+        return true;
+    }
+
+    // 获取当前版式
+    getCurrent() {
+        return this.currentLayout;
+    }
+
+    // 获取当前版式名称
+    getCurrentName() {
+        const currentConfig = this.config.get('layout');
+        return currentConfig || 'sm';
+    }
+}
+
+// 初始化核心实例
+const configManager = new ConfigManager();
+const styleManager = new StyleManager();
+const layoutEngine = new LayoutEngine(configManager, styleManager);
+
+// 暴露到window供全局访问（用于设置面板）
+// 使用 unsafeWindow 确保页面脚本可以访问
+if (typeof unsafeWindow !== 'undefined') {
+    unsafeWindow.layoutEngine = layoutEngine;
+    unsafeWindow.configManager = configManager;
+} else {
+    window.layoutEngine = layoutEngine;
+    window.configManager = configManager;
+}
+
+Logger.log('核心类初始化完成 V' + version);
+
+// ============================================
+// 5.0.0 核心类结束
+// ============================================
+
+// ============================================
+// CSS样式常量定义
+// ============================================
+
+// 基础样式
+const BASE_STYLES = {
+    // 进度条样式
+    nprogress: `
+        #nprogress {
+            pointer-events: none;
+        }
+        #nprogress .bar {
+            background: #f44444;
+            position: fixed;
+            z-index: 1031;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+        }
+        #nprogress .peg {
+            display: block;
+            position: absolute;
+            right: 0;
+            width: 100px;
+            height: 100%;
+            box-shadow: 0 0 10px #f44444, 0 0 5px #f44444;
+            opacity: 1;
+            -webkit-transform: rotate(3deg) translate(0, -4px);
+            -ms-transform: rotate(3deg) translate(0, -4px);
+            transform: rotate(3deg) translate(0, -4px);
+        }
+        #nprogress .spinner {
+            display: block;
+            position: fixed;
+            z-index: 1031;
+            top: 15px;
+            right: 15px;
+        }
+        #nprogress .spinner-icon {
+            width: 18px;
+            height: 18px;
+            box-sizing: border-box;
+            border: solid 2px transparent;
+            border-top-color: #f44444;
+            border-left-color: #f44444;
+            border-radius: 50%;
+            -webkit-animation: nprogress-spinner .4s linear infinite;
+            animation: nprogress-spinner .4s linear infinite;
+        }
+        .nprogress-custom-parent {
+            overflow: hidden;
+            position: relative;
+        }
+        .nprogress-custom-parent #nprogress .bar,
+        .nprogress-custom-parent #nprogress .spinner {
+            position: absolute;
+        }
+        @-webkit-keyframes nprogress-spinner {
+            0% { -webkit-transform: rotate(0); }
+            100% { -webkit-transform: rotate(360deg); }
+        }
+        @keyframes nprogress-spinner {
+            0% { transform: rotate(0); }
+            100% { transform: rotate(360deg); }
+        }
+    `,
+
+    // 设置窗口样式 - 现代化冷色毛玻璃设计
+    modal: `
+        .black_overlay {
+            position: fixed;
+            inset: 0;
+            display: none;
+            background: radial-gradient(circle at 25% 20%, rgba(59, 130, 246, 0.15), transparent 50%),
+                        radial-gradient(circle at 75% 80%, rgba(14, 165, 233, 0.12), transparent 50%),
+                        rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 1001;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -45%) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        .white_content {
+            display: none;
+            position: fixed;
+            z-index: 9999 !important;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 750px;
+            max-width: 92vw;
+            max-height: 90vh;
+            padding: 0;
+            border: 1px solid rgba(148, 163, 184, 0.15);
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25),
+                        0 0 0 1px rgba(59, 130, 246, 0.1),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+            overflow: hidden;
+            animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .white_content .configContainer {
+            padding: 32px 24px 90px 24px;
+            overflow-y: auto;
+            max-height: calc(90vh - 140px);
+            background: linear-gradient(180deg,
+                rgba(240, 249, 255, 0.4) 0%,
+                rgba(224, 242, 254, 0.2) 100%);
+        }
+
+        .config-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        @media screen and (max-width: 768px) {
+            .config-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .white_content .configContainer::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .white_content .configContainer::-webkit-scrollbar-track {
+            background: rgba(226, 232, 240, 0.3);
+            border-radius: 4px;
+            margin: 8px 0;
+        }
+
+        .white_content .configContainer::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #60a5fa 0%, #3b82f6 100%);
+            border-radius: 4px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .white_content .configContainer::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%);
+        }
+
+        .config-header {
+            background: linear-gradient(135deg,
+                #0ea5e9 0%,
+                #3b82f6 50%,
+                #6366f1 100%);
+            color: #ffffff;
+            padding: 28px 28px 24px 28px;
+            border-radius: 20px 20px 0 0;
+            margin: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .config-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 50%, rgba(255, 255, 255, 0.15) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .config-header .title {
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0 0 6px 0;
+            color: #ffffff !important;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            position: relative;
+            z-index: 1;
+        }
+
+        .config-header p {
+            margin: 0;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.9);
+            position: relative;
+            z-index: 1;
+        }
+
+        .config-header a {
+            color: #ffffff !important;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+            transition: border-color 0.2s;
+        }
+
+        .config-header a:hover {
+            border-bottom-color: #ffffff;
+        }
+
+        .config-footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top,
+                rgba(248, 250, 252, 0.98) 0%,
+                rgba(248, 250, 252, 0.95) 100%);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 18px 28px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            border-top: 1px solid rgba(226, 232, 240, 0.6);
+            z-index: 100;
+        }
+
+        .config-section {
+            margin-bottom: 18px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 14px;
+            border: 1px solid rgba(203, 213, 225, 0.5);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+            transition: all 0.3s;
+        }
+
+        .config-section:hover {
+            border-color: rgba(147, 197, 253, 0.6);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        }
+
+        .config-section .bold {
+            font-size: 16px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 14px;
+            display: block;
+            letter-spacing: 0.3px;
+        }
+
+        .config-section p {
+            margin: 0 0 10px 0;
+            line-height: 1.5;
+            color: #475569;
+            font-size: 13px;
+        }
+
+        .config-section label {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            margin: 4px 0;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+            color: #334155;
+            line-height: 1.4;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .config-section label:hover {
+            background: rgba(59, 130, 246, 0.08);
+            color: #1e40af;
+            transform: translateX(4px);
+        }
+
+        .config-section input[type="checkbox"],
+        .config-section input[type="radio"] {
+            margin-right: 12px;
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+            accent-color: #3b82f6;
+        }
+
+        .config-section input[type="text"],
+        .config-section input[type="file"] {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid rgba(203, 213, 225, 0.8);
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+
+        .config-section input[type="text"]:focus {
+            outline: none;
+            border-color: #3b82f6;
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1),
+                        0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .giveMeOneStar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5) !important;
+        }
+    `,
+
+    // 提示条样式
+    tips: `
+        .tripscon {
+            padding: 10px;
+        }
+    `,
+
+    toggleButton: `
+        #toggle-button {
+            display: none;
+        }
+        .button-label {
+            position: relative;
+            display: inline-block;
+            width: 82px;
+            background-color: #ccc;
+            border: 1px solid #ccc;
+            border-radius: 30px;
+            cursor: pointer;
+        }
+        .circle {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #fff;
+        }
+        .button-label .text {
+            line-height: 30px;
+            font-size: 18px;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        .on {
+            color: #fff;
+            display: none;
+            text-indent: 10px;
+        }
+        .off {
+            color: #fff;
+            display: inline-block;
+            text-indent: 53px;
+        }
+        .button-label .circle {
+            left: 0;
+            transition: all .3s;
+        }
+        #toggle-button:checked + label.button-label .circle {
+            left: 50px;
+        }
+        #toggle-button:checked + label.button-label .on {
+            display: inline-block;
+        }
+        #toggle-button:checked + label.button-label .off {
+            display: none;
+        }
+        #toggle-button:checked + label.button-label {
+            background-color: #78d690;
+        }
+    `,
+
+    // 保存按钮样式 - 白绿配色版
+    saveButton: `
+        .saveButton {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            border: none;
+            color: #fff;
+            padding: 9px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 6px rgba(34, 197, 94, 0.25);
+        }
+        .saveButton:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.35);
+            background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+        }
+        .saveButton:active {
+            transform: translateY(0);
+        }
+        .saveButton.cancel {
+            background: #9ca3af;
+            box-shadow: 0 2px 6px rgba(107, 114, 128, 0.2);
+        }
+        .saveButton.cancel:hover {
+            background: #6b7280;
+            box-shadow: 0 4px 12px rgba(107, 114, 128, 0.3);
+        }
+        .saveButton.danger {
+            background: #ef4444;
+            box-shadow: 0 2px 6px rgba(239, 68, 68, 0.25);
+        }
+        .saveButton.danger:hover {
+            background: #dc2626;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.35);
+        }
+    `,
+
+    // Star样式
+    star: `
+        .giveMeOneStar:hover {
+            color: #FF69B4;
+        }
+    `,
+
+    // 设置窗口文字样式（Firefox）
+    configTextFirefox: `
+        .configContainer label {
+            font-size: 15px;
+        }
+        .configContainer p {
+            font-size: 15px;
+        }
+        .giveMeOneStar {
+            font-size: 15px;
+        }
+        .configContainer .title {
+            font-size: 20px;
+        }
+        .configContainer .bold {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+    `,
+
+    // 设置窗口文字样式（Chrome）
+    configTextChrome: `
+        .configContainer label {
+            font-size: 12px;
+        }
+        .configContainer p {
+            font-size: 12px;
+        }
+        .giveMeOneStar {
+            font-size: 15px;
+        }
+        .configContainer .title {
+            font-size: 20px;
+        }
+        .configContainer .bold {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+    `
+};
+
+// 注入基础样式
+styleManager.inject('nprogress', BASE_STYLES.nprogress);
+styleManager.inject('modal', BASE_STYLES.modal);
+styleManager.inject('tips', BASE_STYLES.tips);
+styleManager.inject('toggle-button', BASE_STYLES.toggleButton);
+styleManager.inject('save-button', BASE_STYLES.saveButton);
+styleManager.inject('star', BASE_STYLES.star);
+
+// 根据浏览器类型注入配置文字样式
+if (isFirefox()) {
+    styleManager.inject('config-text', BASE_STYLES.configTextFirefox);
+} else {
+    styleManager.inject('config-text', BASE_STYLES.configTextChrome);
+}
+
+Logger.log('基础样式已注入');
+
+// ============================================
+// CSS样式常量结束
+// ============================================
+
+// ============================================
+// 广告清理系统 - AdCleaner
+// ============================================
+
+// 广告选择器配置 - 按功能分类
+const AD_SELECTORS = {
+    // 头部和导航栏
+    header: [
+        ".vip-caise",               // VIP按钮
+        "#writeGuide",              // 写作引导
+        ".adsbygoogle",             // 谷歌广告
+        ".appControl",              // 悬浮二维码
+        ".advert-bg",               // 顶部广告背景
+        ".toolbar-advert",          // 工具栏横幅广告
+        ".toolbar-notice-bubble",   // 顶部通知气泡
+        ".icon-fire"                // 搜索框fire emoji
+    ],
+
+    // 右侧栏广告
+    sidebar: [
+        "#addAdBox",                    // 右侧广告盒子
+        ".recommend-top-adbox",         // 右侧顶部广告
+        ".indexSuperise",               // 右侧广告
+        "#6527",                        // 右侧栏广告ID
+        "#recommendAdBox",              // 推荐广告盒子
+        ".programmer1Box",              // 右侧四个广告
+        ".programmer2Box",
+        ".programmer3Box",
+        ".programmer4Box",
+        ".blog-expert-recommend-box",   // 推荐关注用户
+        ".recommend-recommend-box",     // 推荐内容广告
+        ".meau-gotop-box",              // 右下角VIP
+        ".to-reward",                   // 右侧打赏按钮
+        ".sidetool-writeguide-box",     // 右侧toolbar创作提示
+        '.option-box[data-type="guide"],.option-box[data-type="cs"],.option-box[data-type="app"],.csdn-common-logo-advert', // 右侧悬浮栏按钮（保留gotop）
+        ".sidecolumn-deepseek",         // DeepSeek广告
+        ".option-box.sidecolumn.sidecolumn-deepseek", // DeepSeek广告选项盒子
+        ".gitcode-qc-right-box.aside-box", // GitCode广告盒子
+        ".csdn-toolbar-creative-mp", // 2025年终总结广告
+        "#blogAiChat", // AI聊天
+        ".runner-box.box3.ins-code-runner-btn" // 本项目已经生成可运行文件
+    ],
+
+    // 文章内容区广告
+    article: [
+        ".blog_tip_box",                // 快来写博客吧
+        ".mediav_ad",                   // mediav广告
+        ".recommend-ad-box",            // 推荐广告
+        ".box-shadow",                  // 阴影广告
+        ".type_hot_word",               // 热词提示
+        ".fourth_column",               // 第四栏
+        "#asideFooter",                 // 侧边栏底部
+        "#ad-div",                      // 广告div
+        "#479", "#480",                 // 广告ID
+        "div#dmp_ad_58",                // 评论区广告
+        ".postTime",                    // 打赏（文章底部）
+        ".reward-user-box",             // 打赏用户盒子
+        ".t0",                          // 课程推荐
+        ".shareSuggest",                // 分享海报
+        ".template-box",                // 底部主题
+        ".comment-sofa-flag",           // 抢沙发角标
+        ".triplet-prompt",              // 点赞气泡
+        ".recommend-tit-mod",           // 推荐内容标题
+        ".tool-active-list",            // 底栏"觉得还不错"
+        "#treeSkill",                   // 文章底部archive推荐
+        "#recommendNps"                 // 推荐问卷调查
+    ],
+
+    // 底部广告
+    footer: [
+        ".blog-footer-bottom",          // 底部信息
+        ".bottom-pub-footer",           // 页脚
+        "#post_feed_wrap",              // 底部推荐（BBS）
+        ".bbs_feed_ad_box"              // 底部相关文章广告（BBS）
+    ],
+
+    // 弹窗和浮层（注意：不删除真正的登录框，保留给用户主动登录使用）
+    modal: [
+        "#csdn-redpack",                    // 红包雨
+        ".passport-login-tip-container",    // 登录后权益提示
+        ".csdn-redpack-lottery-btn-box",    // 红包提醒
+        ".csdn-highschool-window",          // 学生认证
+        ".leftPop",                         // 缩放提示
+        ".totast-box",                      // 发帖减半提示（BBS）
+        ".fouce_close_btn"                  // 学院弹出广告（需点击）
+    ],
+
+    // 主页专用
+    homepage: [
+        ".banner-ad-box",               // 头部广告
+        "#kp_box_211",                  // 嵌入广告
+        ".slide-outer",                 // 右侧广告
+        ".persion_article",             // 右侧详情
+        ".el-carousel__container",      // 广告轮播
+        "#floor-ad_64",                 // CSDN工具广告
+        ".J_adv",                       // 主页中间广告（动态）
+        ".feed-fix-box",                // 主页新内容横条（动态）
+        ".feed_company"                 // 右侧推荐（需parent.remove）
+    ],
+
+    // 博客主页专用
+    blogHome: [
+        ".mb8",                         // 左侧广告
+        "#kp_box_503",                  // 左侧广告ID
+        "#kp_box_214"                   // 左侧广告ID
+    ],
+
+    // 论坛BBS专用
+    bbs: [
+        ".post_recommend",              // 评论嵌入小广告
+        ".personalized-recommend-box",  // 猜你喜欢
+        ".ad_top",                      // 顶部广告
+        ".ad_1"                         // 右侧广告
+    ],
+
+    // 下载页专用
+    download: [
+        ".fixed_dl",                    // 固定下载框
+        "indexSuperise",                // 注意：这里原代码没有.或#前缀
+        ".content_recom"                // 右侧推荐
+    ],
+
+    // 登录页专用
+    login: [
+        ".main-tu"                      // 登录界面大图广告
+    ],
+
+    // Cloud页面专用
+    cloud: [
+        "#kp_box_118"                   // cloud.csdn.net头部广告
+    ]
+};
+
+// 广告清理类
+class AdCleaner {
+    constructor() {
+        this.selectors = [];            // 当前页面待清理选择器
+        this.cleanInterval = null;      // 清理定时器
+        this.loopIntervals = [];        // 持续清理定时器数组
+        Logger.log('AdCleaner 已初始化');
+    }
+
+    /**
+     * 清空选择器列表
+     */
+    clear() {
+        this.selectors = [];
+        Logger.debug('AdCleaner: 选择器列表已清空');
+    }
+
+    /**
+     * 添加单个选择器
+     * @param {string} selector - CSS选择器
+     */
+    add(selector) {
+        if (selector && typeof selector === 'string') {
+            this.selectors.push(selector);
+        }
+    }
+
+    /**
+     * 添加多个选择器（从预定义分类）
+     * @param {string|Array} category - 分类名称或选择器数组
+     */
+    addCategory(category) {
+        if (typeof category === 'string' && AD_SELECTORS[category]) {
+            this.selectors.push(...AD_SELECTORS[category]);
+            Logger.debug(`AdCleaner: 已添加 ${category} 分类，共 ${AD_SELECTORS[category].length} 个选择器`);
+        } else if (Array.isArray(category)) {
+            this.selectors.push(...category);
+        }
+    }
+
+    /**
+     * 批量添加多个分类
+     * @param {Array<string>} categories - 分类名称数组
+     */
+    addCategories(categories) {
+        categories.forEach(cat => this.addCategory(cat));
+    }
+
+    /**
+     * 执行清理 - 定时重复清理times次
+     * @param {number} times - 重复次数，默认10次
+     * @param {number} interval - 间隔时间（毫秒），默认100ms
+     */
+    clean(times = 10, interval = 100) {
+        if (this.selectors.length === 0) {
+            Logger.warn('AdCleaner: 没有选择器需要清理');
+            return;
+        }
+
+        let count = 0;
+        this.cleanInterval = setInterval(() => {
+            count++;
+            if (count >= times) {
+                clearInterval(this.cleanInterval);
+                Logger.log(`AdCleaner: 清理完成，共清理 ${times} 次，移除 ${this.selectors.length} 种广告`);
+            }
+
+            // 执行清理
+            this.selectors.forEach(selector => {
+                try {
+                    $(selector).remove();
+                } catch (e) {
+                    // 忽略无效选择器错误
+                }
+            });
+        }, interval);
+
+        // 增加进度条
+        if (window.progressor && typeof progressor.incProgress === 'function') {
+            progressor.incProgress(10);
+        }
+    }
+
+    /**
+     * 启动持续清理（针对动态加载的广告）
+     * @param {number} type - 清理类型
+     *   1: 主页动态广告
+     *   2: 文章页动态广告
+     *   3: 通用动态广告（登录框、红包雨等）
+     */
+    startContinuousCleaning(type) {
+        const interval = setInterval(() => {
+            if (type === 1) {
+                // 主页中间的广告
+                $(".J_adv").remove();
+                // 主页有新的内容横条
+                $(".feed-fix-box").remove();
+                // 主页广告 iframe
+                if (currentURL === "https://www.csdn.net/") {
+                    $("iframe").remove();
+                }
+                // 删除 CSDN 官方在主页的文章（大多是广告）
+                $("li.clearfix").each(function(_index, ele) {
+                    var banned = /csdn<\/a>/;
+                    var aMark = $(ele).find(".name").html();
+                    if (banned.test(aMark)) {
+                        $(ele).remove();
+                    }
+                });
+                // 主页广告 - data-type='ad'
+                $("li").each(function() {
+                    let self = $(this);
+                    let dataType = self.attr('data-type');
+                    if (dataType === 'ad') {
+                        self.remove();
+                    }
+                });
+                // 主页广告 - 教育和营销链接
+                $("li > div > div > h2 > a[href*='https://edu.csdn.net']").parent().parent().parent().parent().remove();
+                $("li > div > div > h2 > a[href*='https://marketing.csdn.net']").parent().parent().parent().parent().remove();
+                // 官方脚本横幅
+                $(".toolbar-advert").remove();
+
+            } else if (type === 2) {
+                // 评论查看更多展开监听
+                $("div.comment-list-box").css("max-height", "none");
+                // 屏蔽您的缩放不是100%的提示
+                $('.leftPop').remove();
+                // 官方脚本横幅
+                $(".toolbar-advert").remove();
+
+            } else if (type === 3) {
+                // 循环删除登录提示框（前15秒屏蔽自动弹窗，之后允许用户主动登录）
+                if ($($(".passport-login-container")[0]).length === 1 && !window.deletedLogin) {
+                    let passInterval = setInterval(function() {
+                        $('.passport-login-container').hide();
+                        console.log("hide login container");
+                    }, 10);
+                    setTimeout(function() {
+                        clearInterval(passInterval);
+                        setTimeout(function() {
+                            $("#passportbox").find("img").click();
+                        }, 500);
+                    }, 15000);
+                    window.deletedLogin = true;
+                }
+                // 红包雨
+                $("#csdn-redpack").remove();
+            }
+        }, 500);
+
+        this.loopIntervals.push(interval);
+        Logger.debug(`AdCleaner: 启动持续清理，类型=${type}`);
+    }
+
+    /**
+     * 停止所有持续清理
+     */
+    stopContinuousCleaning() {
+        this.loopIntervals.forEach(interval => clearInterval(interval));
+        this.loopIntervals = [];
+        Logger.log('AdCleaner: 已停止所有持续清理');
+    }
+}
+
+// 创建全局广告清理器实例
+const adCleaner = new AdCleaner();
+
+// ============================================
+// 复制增强系统 - CopyEnhancer
+// ============================================
+
+class CopyEnhancer {
+    constructor() {
+        Logger.log('CopyEnhancer 已初始化');
+    }
+
+    /**
+     * 启用免登录复制功能
+     */
+    enableFreeLoginCopy() {
+        // 移除登录要求class
+        $(".hljs-button").removeClass("signin");
+        $(".hljs-button").addClass("{2}");
+
+        // 修改按钮提示文字
+        $(".hljs-button").attr("data-title", "免登录复制");
+
+        // 修改点击事件，显示复制成功提示
+        $(".hljs-button").attr("onclick",
+            "$(this).attr('data-title', '复制成功');setTimeout(function(){$('.hljs-button').attr('data-title', '免登录复制');},3500);");
+
+        // 解除content_views的copy事件绑定
+        $("#content_views").unbind("copy");
+
+        Logger.debug('CopyEnhancer: 免登录复制已启用');
+    }
+
+    /**
+     * 去除剪贴板劫持
+     */
+    removeClipboardHijacking() {
+        // 恢复code元素的原生复制功能
+        $("code").attr("onclick", "mdcp.copyCode(event)");
+
+        try {
+            // 复制时保留原文格式
+            // 参考：https://greasyfork.org/en/scripts/390502-csdnremovecopyright/code
+            Object.defineProperty(window, "articleType", {
+                value: 0,
+                writable: false,
+                configurable: false
+            });
+        } catch (err) {
+            Logger.warn('CopyEnhancer: 无法设置articleType属性');
+        }
+
+        // 初始化CSDN版权信息为空
+        if (typeof csdn !== 'undefined' && csdn.copyright && typeof csdn.copyright.init === 'function') {
+            csdn.copyright.init("", "", "");
+        }
+
+        Logger.debug('CopyEnhancer: 剪贴板劫持已移除');
+    }
+
+    /**
+     * 增强代码复制功能
+     * 为hljs-button按钮添加直接复制功能（使用GM_setClipboard）
+     */
+    enhanceCodeCopy() {
+        $(".hljs-button").click(function() {
+            var code = $(this).closest('.opt-box').siblings('code').text();
+            GM_setClipboard(code);
+        });
+
+        Logger.debug('CopyEnhancer: 代码复制功能已增强');
+    }
+
+    /**
+     * 修复复制限制
+     * 允许选择和复制代码
+     */
+    fixCopyRestrictions() {
+        $("code").css("user-select", "auto");
+        $("#content_views").css("user-select", "auto");
+        $("pre").css("user-select", "auto");
+
+        Logger.debug('CopyEnhancer: 复制限制已修复');
+    }
+
+    /**
+     * 应用所有复制增强功能
+     * @param {Object} options - 可选配置
+     *   - freeLoginCopy: 是否启用免登录复制（默认true）
+     *   - removeHijacking: 是否移除剪贴板劫持（默认true）
+     *   - enhanceCode: 是否增强代码复制（默认true）
+     *   - fixRestrictions: 是否修复复制限制（默认true）
+     */
+    applyAll(options = {}) {
+        const defaultOptions = {
+            freeLoginCopy: true,
+            removeHijacking: true,
+            enhanceCode: true,
+            fixRestrictions: true
+        };
+
+        const opts = { ...defaultOptions, ...options };
+
+        if (opts.freeLoginCopy) {
+            this.enableFreeLoginCopy();
+        }
+
+        if (opts.removeHijacking) {
+            this.removeClipboardHijacking();
+        }
+
+        if (opts.enhanceCode) {
+            this.enhanceCodeCopy();
+        }
+
+        if (opts.fixRestrictions) {
+            this.fixCopyRestrictions();
+        }
+
+        Logger.log('CopyEnhancer: 所有复制增强功能已应用');
+    }
+}
+
+// 创建全局复制增强器实例
+const copyEnhancer = new CopyEnhancer();
+
+// ============================================
+// 版式系统 - Layout Classes
+// ============================================
+
+// 版式基类
+class BaseLayout {
+    constructor() {
+        this.name = 'base';
+        this.breakpoint = null;
+    }
+
+    apply(styleManager) {
+        const css = this.getCSS();
+        styleManager.inject(`layout-${this.name}`, css, true);
+        this.applyDOM();
+        Logger.log(`应用版式: ${this.name}`);
+    }
+
+    cleanup() {
+        // 通用清理：移除所有可能的inline style
+        $('.recommend-right').css('display', '');
+        $('#rightAside').css('display', '');
+        $('.container').css('width', '').css('margin', '');
+        $('.container > main').css('width', '');
+        $('#mainBox').css('width', '');
+        $('.main_father').removeClass('justify-content-center');
+    }
+
+    getCSS() {
+        return ''; // 子类实现
+    }
+
+    applyDOM() {
+        // 子类实现DOM操作
+    }
+}
+
+// 1. SmallLayout - 平铺模式（<1200px）
+class SmallLayout extends BaseLayout {
+    constructor() {
+        super();
+        this.name = 'sm';
+        this.breakpoint = 1200;
+    }
+
+    getCSS() {
+        return `
+            /* CSDNGreener - SmallLayout 平铺模式 */
+            .main_father {
+                justify-content: flex-start !important;
+            }
+
+            main {
+                width: auto !important;
+                max-width: 90vw !important;
+                float: none !important;
+            }
+
+            #mainBox {
+                width: 100% !important;
+            }
+
+            main article img {
+                margin: 0 auto;
+                max-width: 100%;
+                object-fit: cover;
+            }
+
+            .recommend-right {
+                width: 100% !important;
+                margin-top: 20px;
+            }
+
+            @media screen and (max-width: 768px) {
+                main {
+                    max-width: 100vw !important;
+                    padding: 0 10px;
+                }
+            }
+        `;
+    }
+
+    applyDOM() {
+        $('.main_father').removeClass('justify-content-center');
+        $('#mainBox').css('width', '100%');
+    }
+}
+
+// 2. MediumLayout - 适应模式（1200-1380px）
+class MediumLayout extends BaseLayout {
+    constructor() {
+        super();
+        this.name = 'md';
+        this.breakpoint = 1380;
+    }
+
+    getCSS() {
+        return `
+            /* CSDNGreener - MediumLayout 适应模式 */
+            .main_father {
+                justify-content: flex-start !important;
+            }
+
+            .container {
+                max-width: 1200px !important;
+                margin: 0 auto;
+            }
+
+            main {
+                width: 768px !important;
+            }
+
+            .recommend-right {
+                width: 300px !important;
+                max-height: calc(100vh - 80px) !important;
+                overflow-y: auto !important;
+                overflow-x: hidden !important;
+                position: sticky !important;
+                top: 70px !important;
+            }
+
+            .recommend-right aside,
+            .recommend-right .aside-box {
+                max-height: none !important;
+                overflow: visible !important;
+            }
+
+            .recommend-right::-webkit-scrollbar {
+                width: 6px !important;
+            }
+
+            .recommend-right::-webkit-scrollbar-thumb {
+                background-color: rgba(0, 0, 0, 0.2) !important;
+                border-radius: 3px !important;
+            }
+
+            .recommend-right::-webkit-scrollbar-thumb:hover {
+                background-color: rgba(0, 0, 0, 0.4) !important;
+            }
+
+            .recommend-right::-webkit-scrollbar-track {
+                background: transparent !important;
+            }
+
+            #content_views {
+                width: 100% !important;
+            }
+        `;
+    }
+
+    applyDOM() {
+        $('.main_father').removeClass('justify-content-center');
+    }
+}
+
+// 3. LargeLayout - 居中模式（1380-1550px）
+class LargeLayout extends BaseLayout {
+    constructor() {
+        super();
+        this.name = 'lg';
+        this.breakpoint = 1550;
+    }
+
+    getCSS() {
+        return `
+            /* CSDNGreener - LargeLayout 居中模式 */
+            .main_father {
+                justify-content: center !important;
+            }
+
+            .container {
+                max-width: 1318px !important;
+                margin: 0 auto !important;
+            }
+
+            main {
+                width: 1010px !important;
+            }
+
+            .recommend-right {
+                width: 300px !important;
+                max-height: calc(100vh - 80px) !important;
+                overflow-y: auto !important;
+                overflow-x: hidden !important;
+                position: sticky !important;
+                top: 70px !important;
+            }
+
+            .recommend-right aside,
+            .recommend-right .aside-box {
+                max-height: none !important;
+                overflow: visible !important;
+            }
+
+            .recommend-right::-webkit-scrollbar {
+                width: 6px !important;
+            }
+
+            .recommend-right::-webkit-scrollbar-thumb {
+                background-color: rgba(0, 0, 0, 0.2) !important;
+                border-radius: 3px !important;
+            }
+
+            .recommend-right::-webkit-scrollbar-thumb:hover {
+                background-color: rgba(0, 0, 0, 0.4) !important;
+            }
+
+            .recommend-right::-webkit-scrollbar-track {
+                background: transparent !important;
+            }
+        `;
+    }
+
+    applyDOM() {
+        $('.container').css('margin', '0 auto');
+    }
+}
+
+// 4. FocusLayout - 沉浸模式（无侧边栏，任意分辨率）
+class FocusLayout extends BaseLayout {
+    constructor() {
+        super();
+        this.name = 'fo';
+        this.breakpoint = null;
+    }
+
+    getCSS() {
+        return `
+            /* CSDNGreener - FocusLayout 沉浸模式 */
+            .recommend-right,
+            #rightAside {
+                display: none !important;
+            }
+
+            .container {
+                width: 100% !important;
+                max-width: 1400px !important;
+                margin: 0 auto !important;
+            }
+
+            .container > main {
+                width: 100% !important;
+                max-width: 1200px !important;
+                margin: 0 auto !important;
+            }
+
+            #article_content,
+            #content_views {
+                max-width: 900px !important;
+                margin: 0 auto !important;
+            }
+        `;
+    }
+
+    applyDOM() {
+        // 清空inline style，让CSS接管
+        $('.recommend-right').css('display', '');
+        $('#rightAside').css('display', '');
+        $('.container').css('width', '');
+        $('.container > main').css('width', '');
+    }
+}
+
+// 5. HDLayout - 高分辨率模式（1920px+，新增⭐）
+class HDLayout extends BaseLayout {
+    constructor() {
+        super();
+        this.name = 'hd';
+        this.breakpoint = 1920;
+    }
+
+    getCSS() {
+        return `
+            /* CSDNGreener - HDLayout 高分辨率模式（新增） */
+            .main_father {
+                justify-content: center !important;
+            }
+
+            .container {
+                max-width: 1600px !important;
+                margin: 0 auto !important;
+                display: flex !important;
+                justify-content: space-between !important;
+            }
+
+            main {
+                width: 1200px !important;
+                flex: 0 0 1200px !important;
+            }
+
+            .recommend-right {
+                width: 380px !important;
+                flex: 0 0 380px !important;
+                max-height: calc(100vh - 80px) !important;
+                overflow-y: auto !important;
+                overflow-x: hidden !important;
+                position: sticky !important;
+                top: 70px !important;
+            }
+
+            .recommend-right aside,
+            .recommend-right .aside-box {
+                max-height: none !important;
+                overflow: visible !important;
+            }
+
+            .recommend-right::-webkit-scrollbar {
+                width: 6px !important;
+            }
+
+            .recommend-right::-webkit-scrollbar-thumb {
+                background-color: rgba(0, 0, 0, 0.2) !important;
+                border-radius: 3px !important;
+            }
+
+            .recommend-right::-webkit-scrollbar-thumb:hover {
+                background-color: rgba(0, 0, 0, 0.4) !important;
+            }
+
+            .recommend-right::-webkit-scrollbar-track {
+                background: transparent !important;
+            }
+
+            #article_content,
+            #content_views {
+                max-width: 100% !important;
+            }
+
+            pre {
+                max-width: 100% !important;
+            }
+
+            main article img {
+                max-width: 100% !important;
+                height: auto !important;
+            }
+
+            .recommend-right .aside-box {
+                width: 100% !important;
+            }
+
+            /* 4K优化 (2560px+) */
+            @media screen and (min-width: 2560px) {
+                .container {
+                    max-width: 2000px !important;
+                }
+
+                main {
+                    width: 1500px !important;
+                    flex: 0 0 1500px !important;
+                }
+
+                .recommend-right {
+                    width: 480px !important;
+                    flex: 0 0 480px !important;
+                }
+            }
+        `;
+    }
+
+    applyDOM() {
+        // 确保侧边栏存在
+        if (!$('#rightAside').length && $('.recommend-right').length === 0) {
+            $('#mainBox').after(
+                '<div class="recommend-right align-items-stretch clearfix" id="rightAside">' +
+                '<aside class="recommend-right_aside">' +
+                '<div id="recommend-right" style="width: 100%;"></div>' +
+                '</aside></div>'
+            );
+        }
+        $('.recommend-right').show();
+    }
+
+    cleanup() {
+        // 清理时不移除侧边栏，保持兼容
+    }
+}
+
+// 6. AILayout - 智能模式（全新默认模式⭐⭐⭐，基于CSDN官方CSS断点优化）
+class AILayout extends BaseLayout {
+    constructor() {
+        super();
+        this.name = 'ai';
+        this.breakpoint = null; // 自适应所有分辨率
+    }
+
+    getCSS() {
+        return `
+            /* CSDNGreener - AILayout 智能模式（基于CSDN官方CSS断点优化） */
+
+            /* 核心布局 - 内容始终居中，侧边栏和谐展示 */
+            .main_father {
+                display: flex !important;
+                justify-content: center !important;
+                align-items: flex-start !important;
+                padding: 8px 12px 0 12px !important;
+            }
+
+            .container {
+                display: flex !important;
+                justify-content: center !important;
+                align-items: flex-start !important;
+                gap: 20px !important;
+                margin: 0 auto !important;
+            }
+
+            main {
+                flex-shrink: 1 !important;
+                flex-grow: 0 !important;
+                min-width: 0 !important;
+            }
+
+            .recommend-right,
+            #rightAside {
+                flex-shrink: 0 !important;
+                flex-grow: 0 !important;
+                display: block !important;
+                float: none !important;
+                margin-left: 0 !important;
+                max-height: calc(100vh - 80px) !important;
+                overflow-y: auto !important;
+                overflow-x: hidden !important;
+                position: sticky !important;
+                top: 70px !important;
+            }
+
+            /* 确保侧边栏内部子元素不阻止滚动 */
+            .recommend-right aside,
+            .recommend-right_aside,
+            #rightAside aside {
+                max-height: none !important;
+                overflow: visible !important;
+            }
+
+            .recommend-right .aside-box,
+            #rightAside .aside-box {
+                max-height: none !important;
+                height: auto !important;
+            }
+
+            /* 优化侧边栏滚动条样式 */
+            .recommend-right::-webkit-scrollbar,
+            #rightAside::-webkit-scrollbar {
+                width: 6px !important;
+            }
+
+            .recommend-right::-webkit-scrollbar-thumb,
+            #rightAside::-webkit-scrollbar-thumb {
+                background-color: rgba(0, 0, 0, 0.2) !important;
+                border-radius: 3px !important;
+            }
+
+            .recommend-right::-webkit-scrollbar-thumb:hover,
+            #rightAside::-webkit-scrollbar-thumb:hover {
+                background-color: rgba(0, 0, 0, 0.4) !important;
+            }
+
+            .recommend-right::-webkit-scrollbar-track,
+            #rightAside::-webkit-scrollbar-track {
+                background: transparent !important;
+            }
+
+            #article_content,
+            #content_views {
+                max-width: 100% !important;
+            }
+
+            main article img {
+                max-width: 100% !important;
+                height: auto !important;
+            }
+
+            .recommend-right .aside-box {
+                width: 100% !important;
+            }
+
+            /* 小屏幕 (< 1320px) - 基于CSDN官方断点 */
+            @media screen and (max-width: 1319px) {
+                .container {
+                    max-width: 1100px !important;
+                    flex-direction: column !important;
+                    align-items: center !important;
+                }
+                main {
+                    width: 100% !important;
+                    max-width: 780px !important;
+                }
+                .recommend-right,
+                #rightAside {
+                    width: 100% !important;
+                    max-width: 780px !important;
+                    margin-top: 16px !important;
+                    position: static !important;
+                    max-height: none !important;
+                }
+            }
+
+            /* 中等屏幕 (1320px - 1379px) - 基于CSDN官方断点 */
+            @media screen and (min-width: 1320px) and (max-width: 1379px) {
+                .container {
+                    max-width: 1260px !important;
+                }
+                main {
+                    width: 920px !important;
+                    flex: 0 0 920px !important;
+                }
+                .recommend-right,
+                #rightAside {
+                    width: 300px !important;
+                    flex: 0 0 300px !important;
+                }
+            }
+
+            /* 标准屏幕 (1380px - 1549px) - 基于CSDN官方断点 */
+            @media screen and (min-width: 1380px) and (max-width: 1549px) {
+                .container {
+                    max-width: 1380px !important;
+                }
+                main {
+                    width: 1040px !important;
+                    flex: 0 0 1040px !important;
+                }
+                .recommend-right,
+                #rightAside {
+                    width: 300px !important;
+                    flex: 0 0 300px !important;
+                }
+            }
+
+            /* 大屏幕 (1550px - 1699px) - 基于CSDN官方断点 */
+            @media screen and (min-width: 1550px) and (max-width: 1699px) {
+                .container {
+                    max-width: 1200px !important;
+                }
+                main {
+                    width: 860px !important;
+                    flex: 0 0 860px !important;
+                }
+                .recommend-right,
+                #rightAside {
+                    width: 300px !important;
+                    flex: 0 0 300px !important;
+                }
+            }
+
+            /* 超大屏幕 (1700px - 1919px) - 基于CSDN官方断点优化 */
+            @media screen and (min-width: 1700px) and (max-width: 1919px) {
+                .container {
+                    max-width: 1400px !important;
+                }
+                main {
+                    width: 1060px !important;
+                    flex: 0 0 1060px !important;
+                }
+                .recommend-right,
+                #rightAside {
+                    width: 300px !important;
+                    flex: 0 0 300px !important;
+                }
+            }
+
+            /* 全高清屏幕 (1920px - 2559px) - HD优化 */
+            @media screen and (min-width: 1920px) and (max-width: 2559px) {
+                .container {
+                    max-width: 1680px !important;
+                }
+                main {
+                    width: 1320px !important;
+                    flex: 0 0 1320px !important;
+                }
+                .recommend-right,
+                #rightAside {
+                    width: 320px !important;
+                    flex: 0 0 320px !important;
+                }
+            }
+
+            /* 4K屏幕 (>= 2560px) */
+            @media screen and (min-width: 2560px) {
+                .container {
+                    max-width: 2100px !important;
+                }
+                main {
+                    width: 1700px !important;
+                    flex: 0 0 1700px !important;
+                }
+                .recommend-right,
+                #rightAside {
+                    width: 360px !important;
+                    flex: 0 0 360px !important;
+                }
+            }
+        `;
+    }
+
+    applyDOM() {
+        // 确保侧边栏存在
+        if (!$('#rightAside').length && $('.recommend-right').length === 0) {
+            $('#mainBox').after(
+                '<div class="recommend-right align-items-stretch clearfix" id="rightAside">' +
+                '<aside class="recommend-right_aside">' +
+                '<div id="recommend-right" style="width: 100%;"></div>' +
+                '</aside></div>'
+            );
+        }
+        $('.recommend-right').show();
+        $('.container').css('margin', '0 auto');
+    }
+
+    cleanup() {
+        // 清理时不移除侧边栏，保持兼容
+    }
+}
+
+// 注册所有版式到LayoutEngine
+layoutEngine.registerLayout('ai', new AILayout()); // 智能模式优先注册
+layoutEngine.registerLayout('sm', new SmallLayout());
+layoutEngine.registerLayout('md', new MediumLayout());
+layoutEngine.registerLayout('lg', new LargeLayout());
+layoutEngine.registerLayout('fo', new FocusLayout());
+layoutEngine.registerLayout('hd', new HDLayout());
+
+Logger.log('版式系统已初始化：ai（智能默认）, sm, md, lg, fo, hd');
+
+// 应用默认版式或用户配置的版式 - 默认使用AI智能模式
+const currentLayout = configManager.get('layout') || 'ai';
+layoutEngine.apply(currentLayout);
+
+// ============================================
+// 版式系统结束
+// ============================================
+
 var star_svg_1 = '<svg t="1595083631685" class="icon" viewBox="0 0 1051 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2173" width="140" height="140"><path d="M525.837838 852.410811L199.264865 1001.859459l41.513513-357.016216L0 381.924324l351.481081-69.189189L525.837838 0l174.356757 312.735135L1051.675676 381.924324l-240.778379 262.918919 41.513514 357.016216z" fill="#FFD566" p-id="2174"></path></svg>';
 var star_svg_2 = ' <svg t="1595083715312" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7848" width="140" height="140"><path d="M1014.001347 866.090236L810.23569 662.324579l145.497643-84.126599c11.377778-6.550842 17.92862-18.962963 16.894276-32.064647-1.034343-13.101684-9.309091-24.479461-21.376431-29.306397l-648.188552-258.585859c-12.756902-5.171717-27.23771-2.068687-36.891582 7.585186-9.653872 9.653872-12.756902 24.13468-7.585185 36.891582l258.585858 648.533333c4.826936 12.06734 16.204714 20.686869 29.306397 21.376431 13.101684 1.034343 25.513805-5.516498 32.064647-16.894276l84.126599-145.497643 203.765657 203.765657c6.550842 6.550842 15.17037 9.998653 24.13468 9.998653 8.96431 0 17.92862-3.447811 24.13468-9.998653l99.29697-99.29697c13.446465-13.446465 13.446465-35.167677 0-48.614141zM150.324579 102.055219c-13.446465-13.446465-35.167677-13.446465-48.26936 0-13.446465 13.446465-13.446465 35.167677 0 48.26936l76.196633 76.196633c6.550842 6.550842 15.515152 9.998653 24.13468 9.998653s17.583838-3.447811 24.13468-9.998653c13.446465-13.446465 13.446465-35.167677 0-48.26936L150.324579 102.055219zM176.183165 338.575084c0-18.962963-15.17037-34.133333-34.133333-34.133333H34.133333c-18.962963 0-34.133333 15.17037-34.133333 34.133333s15.17037 34.133333 34.133333 34.133334h107.571718c18.962963 0 34.478114-15.17037 34.478114-34.133334zM162.391919 444.422896l-76.196633 75.851851c-13.446465 13.446465-13.446465 35.167677 0 48.269361 6.550842 6.550842 15.515152 9.998653 24.13468 9.998653s17.583838-3.447811 24.13468-9.998653l76.196633-76.196633c13.446465-13.446465 13.446465-35.167677 0-48.269361-13.446465-13.101684-35.167677-13.101684-48.26936 0.344782zM338.575084 176.183165c18.962963 0 34.133333-15.17037 34.133334-34.133333V34.133333c0-18.962963-15.17037-34.133333-34.133334-34.133333s-34.133333 15.17037-34.133333 34.133333v107.571718c0 18.962963 15.17037 34.478114 34.133333 34.478114zM468.557576 220.659933c8.619529 0 17.583838-3.447811 24.13468-9.998654L568.888889 134.464646c13.446465-13.446465 13.446465-35.167677 0-48.26936-13.446465-13.446465-35.167677-13.446465-48.26936 0l-76.196633 76.196633c-13.446465 13.446465-13.446465 35.167677 0 48.26936 6.550842 6.550842 15.515152 9.998653 24.13468 9.998654z" fill="#2c2c2c" p-id="7849"></path></svg>';
 var star_svg_3 = ' <svg t="1595083925438" class="icon" viewBox="0 0 1204 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4809" width="140" height="140"><path d="M1088.864348 618.13701a1555.009384 1555.009384 0 0 1-150.273004 167.137308c-52.881642 51.195212-107.931552 101.18583-163.643989 147.261521-33.849069 27.524955-60.229661 48.665566-76.190521 60.229661a162.981462 162.981462 0 0 1-191.891699 0c-15.539253-12.045932-42.160763-32.644476-76.190521-60.831957a2638.480754 2638.480754 0 0 1-164.366745-147.261521 1579.101249 1579.101249 0 0 1-150.273004-165.812257A468.104924 468.104924 0 0 1 0.152998 344.754579 315.543193 315.543193 0 0 1 109.048225 96.367457a399.443111 399.443111 0 0 1 493.883219-20.478084 398.660125 398.660125 0 0 1 493.883219 20.478084A315.482964 315.482964 0 0 1 1204.746215 343.309067a466.840101 466.840101 0 0 1-115.701178 274.647254z" fill="#FE4B83" p-id="4810"></path></svg>';
@@ -469,11 +2317,49 @@ var protect_svg = '<svg t="1629560538805" class="icon" viewBox="0 0 1024 1024" v
     jss += "}</script>";
     $("body").append(jss);
 
-    // 保存按钮点击事件
+    // 设置面板按钮点击事件
     let saveJss = "";
-    saveJss += "<script>function saveAndReload() {";
+    // 保存配置（统一读取所有UI元素的值并保存到ConfigManager，然后刷新页面）
+    saveJss += "<script>function saveConfig() {";
+    saveJss += "try {";
+    // 读取版式选择
+    saveJss += "const selectedLayout = $('input[name=\"displayMode\"]:checked').val() || 'ai';";
+    saveJss += "window.configManager.set('layout', selectedLayout);";
+    // 读取通用设定
+    saveJss += "window.configManager.set('display.recommend', $('#toggle-recommend-button').prop('checked'));";
+    saveJss += "window.configManager.set('display.shop', $('#toggle-shop-button').prop('checked'));";
+    saveJss += "window.configManager.set('display.whiteTheme', $('#toggle-whitetheme-button').prop('checked'));";
+    saveJss += "window.configManager.set('display.autoResize', $('#toggle-autosize-button').prop('checked'));";
+    saveJss += "window.configManager.set('toolbar.autoHide', $('#toggle-autohidetoolbar-button').prop('checked'));";
+    saveJss += "window.configManager.set('bottomBar.alwaysHide', $('#toggle-autohidebottombar-button').prop('checked'));";
+    saveJss += "window.configManager.set('toolbar.showWrite', $('#toggle-writeblog-button').prop('checked'));";
+    // 读取右侧栏定制
+    saveJss += "window.configManager.set('sidebar.authorCard', $('#toggle-authorcard-button').prop('checked'));";
+    saveJss += "window.configManager.set('sidebar.searchBlog', $('#toggle-searchblog-button').prop('checked'));";
+    saveJss += "window.configManager.set('sidebar.newArticle', $('#toggle-newarticle-button').prop('checked'));";
+    saveJss += "window.configManager.set('sidebar.hotArticle', $('#toggle-hotarticle-button').prop('checked'));";
+    saveJss += "window.configManager.set('sidebar.newComments', $('#toggle-newcomments-button').prop('checked'));";
+    saveJss += "window.configManager.set('sidebar.category', $('#toggle-kindperson-button').prop('checked'));";
+    saveJss += "window.configManager.set('sidebar.recommendArticle', $('#toggle-recommendarticle-button').prop('checked'));";
+    saveJss += "window.configManager.set('sidebar.archive', $('#toggle-archive-button').prop('checked'));";
+    saveJss += "window.configManager.set('sidebar.content', $('#toggle-content-button').prop('checked'));";
+    // 读取背景图（如果为空或只有空格，保存为空字符串，不设置背景）
+    saveJss += "const bgImgValue = ($('#backgroundImgUrl').val() || '').trim();";
+    saveJss += "window.configManager.set('custom.backgroundImage', bgImgValue);";
+    saveJss += "} catch(err) { console.error('保存配置失败:', err); }";
+    // 刷新页面
+    saveJss += "location.reload();";
+    saveJss += "}</script>";
+    // 取消配置（直接关闭面板）
+    saveJss += "<script>function cancelConfig() {";
+    saveJss += "closeConfigPanel();";
+    saveJss += "}</script>";
+    // 关闭面板
+    saveJss += "<script>function closeConfigPanel() {";
     saveJss += "$('#configContent').fadeOut(200);";
-    saveJss += "setTimeout(function() {location.reload();},200)";
+    saveJss += "$('body').css('overflow', '');";
+    saveJss += "$('body').css('filter','');";
+    saveJss += "$('body').css('pointer-events','')";
     saveJss += "}</script>";
     $("body").append(saveJss);
 
@@ -494,70 +2380,62 @@ var protect_svg = '<svg t="1629560538805" class="icon" viewBox="0 0 1024 1024" v
         var link = /link\.csdn\.net/;
         var blink = /blink\.csdn\.net/;
 
-        // 数组初始化
-        list = [];
-        // 头部分
-        // APP
-        // put(".app-app");
-        // VIP
-        put(".vip-caise");
-        // 记录你的成长历程（记个毛）
-        put("#writeGuide");
+        // 初始化广告清理器
+        adCleaner.clear();
+
+        // 添加通用头部广告
+        adCleaner.addCategory('header');
+
         // 新通知小圆点（未登录才消掉）
         if ($(".userinfo a").text() === '登录/注册') {
-            put("#msg-circle");
+            adCleaner.add("#msg-circle");
         }
-        // 顶部谷歌广告
-        put(".adsbygoogle");
-        // 悬浮在顶栏按钮上出现的二维码
-        put(".appControl");
-        // 顶部广告
-        put(".advert-bg");
 
         if (main.test(currentURL) || mainNav.test(currentURL)) {
             l("正在优化主页体验...");
-            // 常规
-            // 头部广告
-            put(".banner-ad-box");
-            // 嵌入广告
-            put("#kp_box_211");
-            // 右侧广告
-            put(".slide-outer");
-            // 右侧详情
-            put(".persion_article");
-            // 右侧推荐
+
+            // 添加主页专用广告
+            adCleaner.addCategory('homepage');
+
+            // 特殊处理：需要parent().remove()的元素
             $(".feed_company").parent().remove();
-            // 广告轮播
-            put(".el-carousel__container");
-            // 顶部横幅
-            put(".toolbar-advert");
-            // 顶栏VIP选项
             $('.toolbar-subMenu-box').find("[href='https://mall.csdn.net/vip']").parent().remove();
-            // CSDN工具广告
-            put("#floor-ad_64");
-            clean(10);
-            // common(5, 10);
+
+            // 执行清理
+            adCleaner.clean(10);
+
+            // 清理顶部导航栏，只保留"博客"和"社区"
+            setTimeout(function() {
+                $('.toolbar-menus.csdn-toolbar-fl > li').each(function() {
+                    const $li = $(this);
+                    const title = $li.attr('title') || '';
+                    const text = $li.text().trim();
+
+                    // 保留"博客"，删除其他所有项
+                    if (text.indexOf('博客') === -1) {
+                        $li.remove();
+                    }
+                });
+            }, 500);
+
             // 博客及主页优化
             common(9, 10);
-            loop(3);
-            loop(1);
+
+            // 启动持续清理
+            adCleaner.startContinuousCleaning(3); // 通用动态广告
+            adCleaner.startContinuousCleaning(1); // 主页动态广告
         } else if ((blog.test(currentURL) && blockURL === 4) || blog2.test(currentURL)) {
             l("正在优化个人博客主页体验...");
-            // 常规
-            // 头部广告
-            put(".banner-ad-box");
-            // 右侧广告
-            put(".slide-outer");
-            // 右侧详情
-            put(".persion_article");
-            // 左侧广告
-            put(".mb8");
-            put("#kp_box_503");
-            put("#kp_box_214");
-            clean(10);
-            // common(5, 10);
-            loop(3);
-            loop(1);
+
+            // 添加博客主页专用广告
+            adCleaner.addCategories(['homepage', 'blogHome']);
+
+            // 执行清理
+            adCleaner.clean(10);
+
+            // 启动持续清理
+            adCleaner.startContinuousCleaning(3); // 通用动态广告
+            adCleaner.startContinuousCleaning(1); // 主页动态广告
         } else if (article.test(currentURL) && !mp.test(currentURL) && !article_month.test(currentURL)) {
             l("正在优化阅读体验...");
             // 绿化设定
@@ -568,11 +2446,11 @@ var protect_svg = '<svg t="1629560538805" class="icon" viewBox="0 0 1024 1024" v
                     $(".toolbar-btns").prepend(htmlOf0);
                     if (isFirefox()) {
                         // 提示
-                        let tipsCookie = config.get("showTip", true);
+                        let tipsCookie = GM_getValue("showTip", true);
                         if (tipsCookie) {
                             showTips();
                         }
-                        config.set("showTip", false);
+                        GM_setValue("showTip", false);
                     }
                 }, 3000);
             } else {
@@ -580,92 +2458,12 @@ var protect_svg = '<svg t="1629560538805" class="icon" viewBox="0 0 1024 1024" v
                 let htmlOf0 = '<div class="toolbar-btn csdn-toolbar-fl"><a id="greenerSettings" title="点击打开 CSDNGreener 绿化设定" href="javascript:void(0)" onclick="showConfig();">' + settings_svg + '</a></div>';
                 $(".toolbar-btns").prepend(htmlOf0);
             }
-            // 常规
-            // 右侧广告，放到第一个清除
-            // put(".recommend-right");
-            put("#addAdBox");
-            // put(".aside-box.kind_person.d-flex.flex-column");
-            put(".recommend-top-adbox");
-            // put(".recommend-list-box.d-flex.flex-column.aside-box");
-            // 左侧广告
-            // put("#container");
-            // 快来写博客吧
-            put(".blog_tip_box");
-            // 推荐关注用户
-            put(".blog-expert-recommend-box");
-            // 右下角VIP
-            put(".meau-gotop-box");
-            // 广告
-            put(".mediav_ad");
-            put(".pulllog-box");
-            put(".recommend-ad-box");
-            put(".box-shadow");
-            put(".type_hot_word");
-            put(".fourth_column");
-            // 高分辨率时右侧文章推荐
-            // put(".right-item");
-            // 广告
-            put("#asideFooter");
-            put("#ad-div");
-            put("#479");
-            put("#480");
-            // 打赏
-            put(".postTime");
-            // 课程推荐
-            put(".t0");
-            // 分享海报
-            put(".shareSuggest");
-            // 底部主题
-            put(".template-box");
-            // 评论区广告
-            put("div#dmp_ad_58");
-            // 打赏
-            put(".reward-user-box");
-            // 右侧打赏按钮
-            put(".to-reward");
-            // 推荐内容广告
-            put(".recommend-recommend-box");
-            // 右侧广告
-            put(".indexSuperise");
-            // 抢沙发角标
-            put(".comment-sofa-flag");
-            // 页jio
-            put(".bottom-pub-footer");
-            // 登录查看未读消息
-            put(".toolbar-notice-bubble");
-            // 右侧广告
-            put(".recommend-top-adbox");
-            // 右侧四个广告
-            put(".programmer1Box");
-            put(".programmer2Box");
-            put(".programmer3Box");
-            put(".programmer4Box");
-            // 点赞气泡
-            put(".triplet-prompt");
-            // 顶部横幅
-            put(".toolbar-advert");
-            // 底部信息
-            put(".blog-footer-bottom");
-            // 右侧栏广告
-            put("#6527");
-            put("#recommendAdBox");
-            // 推荐内容Title
-            put(".recommend-tit-mod");
-            // 红包提醒
-            put(".csdn-redpack-lottery-btn-box");
-            // 学生认证
-            put(".csdn-highschool-window");
-            // 右侧悬浮栏除置顶以外的按钮
-            put(".option-box[data-type='guide'],.option-box[data-type='cs'],.csdn-common-logo-advert");
-            // 登录后您可以享受以下权益
-            put(".passport-login-tip-container");
-            // 底栏“觉得还不错？立即收藏”你在教我做事？
-            put(".tool-active-list");
-            // 文章底部 archive推荐
-            put("#treeSkill");
-            // 搜索框fire emoji
-            put(".icon-fire");
-            clean(10);
+
+            // 添加文章页广告
+            adCleaner.addCategories(['sidebar', 'article', 'footer', 'modal']);
+
+            // 执行清理
+            adCleaner.clean(10);
             setTimeout(function() {
                // 展开评论的所有回复
                $('.btn-read-reply').click();
@@ -680,10 +2478,10 @@ var protect_svg = '<svg t="1629560538805" class="icon" viewBox="0 0 1024 1024" v
             $(".toolbar-menus > li > a:contains('专栏课程')").parent().remove();
             $(".toolbar-menus > li > a:contains('插件')").parent().remove();
             $(".toolbar-menus > li > a:contains('认证')").parent().remove();
-            // 修复无法选择复制
-            $("code").css("user-select","auto");
-            $("#content_views").css("user-select","auto");
-            $("pre").css("user-select","auto");7
+
+            // 应用复制增强功能（修复复制限制在这里直接应用）
+            copyEnhancer.fixCopyRestrictions();
+
             // 图片混文字时，无法完整复制，图片不会被复制下来 https://github.com/adlered/CSDNGreener/issues/87
             //let el = $("main .blog-content-box")[0];
             //let elClone = el.cloneNode(true);
@@ -704,69 +2502,66 @@ var protect_svg = '<svg t="1629560538805" class="icon" viewBox="0 0 1024 1024" v
             common(4, 1);
             // 评论
             common(1, 30);
-            // 其它
+            // 其它（包括复制增强）
             common(2, 20);
             // 顶部显示作者信息
             common(8, 1);
             // 博客及主页优化
             common(9, 10);
-            // 循环线程开始
-            loop(2);
-            loop(3);
+
+            // 启动持续清理
+            adCleaner.startContinuousCleaning(2); // 文章页动态广告
+            adCleaner.startContinuousCleaning(3); // 通用动态广告
+
         } else if (bbs.test(currentURL)) {
             l("正在优化论坛体验...");
-            // 常规
-            // 评论嵌入小广告
-            put(".post_recommend");
-            // 底部推荐
-            put("#post_feed_wrap");
-            // 底部相关文章里面的广告
-            put(".bbs_feed_ad_box");
-            put(".recommend-ad-box");
-            // 底部相关文字里面的热词提示
-            put(".type_hot_word");
-            // 底部蓝色flex属性的广告栏+登录注册框
-            put(".pulllog-box");
-            // 猜你喜欢
-            put(".personalized-recommend-box");
-            // 发帖减半提示
-            put(".totast-box");
-            // 顶部广告
-            put(".recommend-right");
-            // 顶部广告
-            put(".ad_top");
-            // 右侧广告
-            put(".ad_1");
-            clean(10);
+
+            // 添加BBS论坛专用广告
+            adCleaner.addCategories(['bbs', 'footer', 'modal']);
+
+            // 执行清理
+            adCleaner.clean(10);
+
             // 展开
             common(3, 50);
-            // common(5, 10);
-            loop(3);
+
+            // 启动持续清理
+            adCleaner.startContinuousCleaning(3); // 通用动态广告
+
         } else if (download.test(currentURL)) {
             l("正在优化下载页体验...");
-            // 常规
-            put(".fixed_dl");
-            put("indexSuperise");
-            // 右侧推荐
-            put(".content_recom");
-            clean(10);
-            // common(5, 10);
-            loop(3);
+
+            // 添加下载页专用广告
+            adCleaner.addCategory('download');
+
+            // 执行清理
+            adCleaner.clean(10);
+
+            // 启动持续清理
+            adCleaner.startContinuousCleaning(3); // 通用动态广告
+
         } else if (login.test(currentURL)) {
             l("正在优化登录页体验...");
-            // 常规
-            // 登录界面大图广告
-            put(".main-tu");
-            clean(10);
-            // common(5, 10);
-            loop(3);
+
+            // 添加登录页专用广告
+            adCleaner.addCategory('login');
+
+            // 执行清理
+            adCleaner.clean(10);
+
+            // 启动持续清理
+            adCleaner.startContinuousCleaning(3); // 通用动态广告
+
         } else if (zone.test(currentURL)) {
             l("正在优化个人空间体验...");
-            // 常规
-            clean(10);
+
+            // 执行清理（只清理通用头部广告）
+            adCleaner.clean(10);
+
             common(7, 10);
-            // common(5, 10);
-            loop(3);
+
+            // 启动持续清理
+            adCleaner.startContinuousCleaning(3); // 通用动态广告
         } else if (blink.test(currentURL)) {
             l("正在优化个人动态体验...");
         } else if (link.test(currentURL)) {
@@ -776,117 +2571,27 @@ var protect_svg = '<svg t="1629560538805" class="icon" viewBox="0 0 1024 1024" v
             window.location.href = target
         } else {
             l("哦豁，好偏门的页面，我来试着优化一下哦...");
-            // 常规
+
             // 展开全文
             $('.readmore_btn').click();
-            // *** index ***
-            // 头部广告
-            put(".banner-ad-box");
-            // 嵌入广告
-            put("#kp_box_211");
-            // 右侧广告
-            put(".slide-outer");
-            // 右侧详情
-            put(".persion_article");
-            // 右侧推荐
+
+            // 添加多种页面的广告
+            adCleaner.addCategories(['homepage', 'sidebar', 'article', 'footer', 'blogHome', 'bbs', 'download', 'cloud']);
+
+            // 特殊处理
             $(".feed_company").parent().remove();
-            // *** article ***
-            // 常规
-            // 右侧广告，放到第一个清除
-            put("#addAdBox");
-            put(".recommend-top-adbox");
-            // 快来写博客吧
-            put(".blog_tip_box");
-            // 推荐关注用户
-            put(".blog-expert-recommend-box");
-            // 右下角VIP
-            put(".meau-gotop-box");
-            // 广告
-            put(".mediav_ad");
-            put(".pulllog-box");
-            put(".recommend-ad-box");
-            //put(".box-shadow"); 某些页面异常，例如cloud.csdn.net
-            put(".type_hot_word");
-            put(".fourth_column");
-            // cloud.csdn.net 头部广告
-            put("#kp_box_118");
-            // 广告
-            put("#asideFooter");
-            put("#ad-div");
-            put("#479");
-            put("#480");
-            // 打赏
-            put(".postTime");
-            // 课程推荐
-            put(".t0");
-            // 分享海报
-            put(".shareSuggest");
-            // 底部主题
-            put(".template-box");
-            // 评论区广告
-            put("div#dmp_ad_58");
-            // 打赏
-            put(".reward-user-box");
-            // 右侧打赏按钮
-            put(".to-reward");
-            // 推荐内容广告
-            put(".recommend-recommend-box");
-            // 右侧广告
-            put(".indexSuperise");
-            // 抢沙发角标
-            put(".comment-sofa-flag");
-            // 页jio
-            put(".bottom-pub-footer");
-            // 登录查看未读消息
-            put(".toolbar-notice-bubble");
-            // 右侧广告
-            put(".recommend-top-adbox");
-            // 学院弹出广告
             $(".fouce_close_btn").click();
-            // 其它
-            // 头部广告
-            put(".banner-ad-box");
-            // 右侧广告
-            put(".slide-outer");
-            // 右侧详情
-            put(".persion_article");
-            // 左侧广告
-            put("#kp_box_503");
-            put("#kp_box_214");
-            // *** bbs ***
-            // 评论嵌入小广告
-            put(".post_recommend");
-            // 底部推荐
-            put("#post_feed_wrap");
-            // 底部相关文章里面的广告
-            put(".bbs_feed_ad_box");
-            put(".recommend-ad-box");
-            // 底部相关文字里面的热词提示
-            put(".type_hot_word");
-            // 底部蓝色flex属性的广告栏+登录注册框
-            put(".pulllog-box");
-            // 猜你喜欢
-            put(".personalized-recommend-box");
-            // 发帖减半提示
-            put(".totast-box");
-            // 顶部广告
-            put(".recommend-right");
-            // 顶部广告
-            put(".ad_top");
-            // *** download ***
-            put(".fixed_dl");
-            put("indexSuperise");
-            // 右侧推荐
-            put(".content_recom");
-            clean(10);
+
+            // 执行清理
+            adCleaner.clean(10);
         }
         setTimeout(function() {
             progressor.done();
         }, 0);
-        $(".hljs-button").click(function(){
-            var code = $(this).closest('.opt-box').siblings('code').text();
-            GM_setClipboard(code);
-        });
+
+        // 使用CopyEnhancer增强代码复制功能
+        copyEnhancer.enhanceCodeCopy();
+
         stopTimeMilli = Date.now();
         l("优化完毕! 耗时 " + (stopTimeMilli - startTimeMilli) + "ms");
     }, 0);
@@ -898,89 +2603,6 @@ function l(log) {
 
 function e(error) {
     console.error("[CSDNGreener] " + error);
-}
-
-function clear() {
-    list = [];
-}
-
-function put(tag) {
-    list.push(tag);
-}
-
-function clean(times) {
-    var loop = setInterval(function () {
-        --times;
-        if (times <= 0) {
-            clearInterval(loop);
-        }
-        for (var k = 0; k < list.length; k++) {
-            $(list[k]).remove();
-        }
-    }, 100);
-    progressor.incProgress(10);
-}
-
-var deletedLogin = false;
-
-function loop(num) {
-    setInterval(function () {
-        if (num === 1) {
-            // 主页中间的广告
-            $(".J_adv").remove();
-            // 主页有新的内容横条
-            $(".feed-fix-box").remove();
-            // 主页广告 iframe
-            if (currentURL == "https://www.csdn.net/") {
-                $("iframe").remove();
-            }
-            // 删除 CSDN 官方在主页的文章（大多是广告）
-            $("li.clearfix").each(function(index, ele) {
-                var banned = /csdn<\/a>/;
-                var aMark = $(ele).find(".name").html();
-                if (banned.test(aMark)) {
-                    $(ele).remove();
-                }
-            });
-            // 主页广告
-            $("li").each(function(){
-                let self = $(this);
-                let dataType = self.attr('data-type');
-                if (dataType === 'ad') {
-                    self.remove();
-                }
-            });
-            // 主页广告
-            $("li > div > div > h2 > a[href*='https://edu.csdn.net']").parent().parent().parent().parent().remove();
-            $("li > div > div > h2 > a[href*='https://marketing.csdn.net']").parent().parent().parent().parent().remove();
-            // 官方脚本横幅
-            $(".toolbar-advert").remove();
-        } else if (num === 2) {
-            // 评论查看更多展开监听
-            $("div.comment-list-box").css("max-height", "none");
-            // 屏蔽您的缩放不是100%的提示
-            $('.leftPop').remove();
-            // 官方脚本横幅
-            $(".toolbar-advert").remove();
-        } else if (num == 3) {
-            // 循环删除登录提示框
-            if ($($(".passport-login-container")[0]).length == 1 && deletedLogin == false) {
-                let passInterval = setInterval(function() {
-                    $('.passport-login-container').hide();
-                    console.log("hide");
-                }, 10);
-                setTimeout(function() {
-                    clearInterval(passInterval);
-                    setTimeout(function() {
-                        $("#passportbox").find("img").click();
-                    }, 500)
-                }, 5000);
-                deletedLogin = true;
-            }
-            // 红包雨
-            $("#csdn-redpack").remove();
-        }
-    }, 500);
 }
 
 function common(num, times) {
@@ -1005,35 +2627,20 @@ function common(num, times) {
             $("#btnMoreComment").parent("div.opt-box").remove();
             // 展开内容
             $("div.comment-list-box").css("max-height", "none");
-            // 改回背景颜色
-            $(".login-mark").remove();
-            // 删除登录框
-            $(".login-box").remove();
+            // 隐藏登录遮罩层和登录框（使用hide而不是remove，保留给用户主动登录）
+            $(".login-mark").hide();
+            $(".login-box").hide();
         } else if (num === 2) {
-            // 挡住评论的“出头推荐”
+            // 挡住评论的"出头推荐"
             if ($(".recommend-box").length > 1) {
                 $(".recommend-box")[0].remove();
             }
             // 去除推广广告
             $("li[data-type='ad']").remove();
-            // 免登录复制
-            $(".hljs-button").removeClass("signin");
-            $(".hljs-button").addClass("{2}");
-            $(".hljs-button").attr("data-title", "免登录复制");
-            $(".hljs-button").attr("onclick", "$(this).attr('data-title', '复制成功');setTimeout(function(){$('.hljs-button').attr('data-title', '免登录复制');},3500);");
-            $("#content_views").unbind("copy");
-            // 去除剪贴板劫持
-            $("code").attr("onclick", "mdcp.copyCode(event)");
-            try {
-                // 复制时保留原文格式，参考 https://greasyfork.org/en/scripts/390502-csdnremovecopyright/code
-                Object.defineProperty(window, "articleType", {
-                    value: 0,
-                    writable: false,
-                    configurable: false
-                });
-            } catch (err) {
-            }
-            csdn.copyright.init("", "", "");
+
+            // 使用CopyEnhancer模块应用所有复制增强功能
+            copyEnhancer.applyAll();
+
             // 页头广告
             try {
                 document.getElementsByClassName("column-advert-box")[0].style.display="none";
@@ -1064,76 +2671,40 @@ function common(num, times) {
             });
             // 顶栏VIP选项
             $('.toolbar-subMenu-box').find("[href='https://mall.csdn.net/vip']").parent().remove();
+
+            // 清理顶部导航栏，只保留"博客"和"社区"
+            $('.toolbar-menus.csdn-toolbar-fl > li').each(function() {
+                const $li = $(this);
+                const title = $li.attr('title') || '';
+                const text = $li.text().trim();
+
+                // 保留"博客"，删除其他所有项
+                if (text.indexOf('博客') === -1) {
+                    $li.remove();
+                }
+            });
         } else if (num == 3) {
             //论坛自动展开
             $(".js_show_topic").click();
         } else if (num == 4) {
-            /** 配置控制 **/
-            let config = new Config();
-            let smCookie = config.get("scr-sm", true);
-            let mdCookie = config.get("scr-md", false);
-            let lgCookie = config.get("scr-lg", false);
-            let foCookie = config.get("scr-fo", false)
+            /** 配置控制 - 使用新的ConfigManager **/
+            // 从新的ConfigManager读取当前版式
+            const currentLayout = configManager.get('layout') || 'ai';
 
-            $("#scr-sm").prop("checked", smCookie);
-            $("#scr-md").prop("checked", mdCookie);
-            $("#scr-lg").prop("checked", lgCookie);
-            $("#scr-fo").prop("checked", foCookie);
+            // 设置单选框状态
+            $("#scr-ai").prop("checked", currentLayout === 'ai');
+            $("#scr-sm").prop("checked", currentLayout === 'sm');
+            $("#scr-md").prop("checked", currentLayout === 'md');
+            $("#scr-lg").prop("checked", currentLayout === 'lg');
+            $("#scr-fo").prop("checked", currentLayout === 'fo');
+            $("#scr-hd").prop("checked", currentLayout === 'hd');
 
-            if (smCookie) {
-                // Small Screen Mode
-                $(".main_father").removeClass("justify-content-center");
-                GM_addStyle(`
-                main{
-                    width: auto!important;
-                    float: none!important;
-                    max-width: 90vw;
-                }
-                main article img{
-                    margin: 0 auto;
-                    max-width: 100%;
-                    object-fit: cover;
-                }
-                `);
-                $("#mainBox").css("width", "100%");
-            } else if (mdCookie) {
-                // Middle Screen Mode
-                $(".main_father").removeClass("justify-content-center");
-            } else if (lgCookie) {
-                // Large Screen Mode
-                $(".container").css("margin", "0 auto")
-            } else if (foCookie) {
-                // Focus mode
-                $(".recommend-right").remove();
-                $(".container").css("width", "100%");
-                $(".container > main").css("width", "100%");
-            }
+            // 版式已在初始化时应用，这里不需要重复应用CSS
+            // layoutEngine.apply() 已在脚本加载时执行
 
-            // 屏幕尺寸单选监听
-            $("#scr-sm").click(function () {
-                new Config().set("scr-sm", true);
-                new Config().set("scr-md", false);
-                new Config().set("scr-lg", false);
-                new Config().set("scr-fo", false);
-            });
-            $("#scr-md").click(function () {
-                new Config().set("scr-md", true);
-                new Config().set("scr-sm", false);
-                new Config().set("scr-lg", false);
-                new Config().set("scr-fo", false);
-            });
-            $("#scr-lg").click(function () {
-                new Config().set("scr-lg", true);
-                new Config().set("scr-sm", false);
-                new Config().set("scr-md", false);
-                new Config().set("scr-fo", false);
-            });
-            $("#scr-fo").click(function () {
-                new Config().set("scr-fo", true);
-                new Config().set("scr-sm", false);
-                new Config().set("scr-md", false);
-                new Config().set("scr-lg", false);
-            });
+            // 屏幕尺寸单选监听 - 移除实时预览，只在点击保存时才应用
+            // 版式单选按钮不需要额外的事件处理，点击时会自动改变checked状态
+            // 统一在saveConfig()中读取并保存
             // 判断是否为登录状态
             if ($('.toolbar-btn-loginfun').text() === '登录') {
                     // 未登录删除无用按钮
@@ -1145,147 +2716,170 @@ function common(num, times) {
             $("a:contains('会员12.12')").parent().remove();
             $(".toolbar-btn-vip").remove();
         } else if (num == 5) {
-            // 改回背景颜色
-            $(".login-mark").remove();
-            // 删除登录框
-            $(".login-box").remove();
+            // 隐藏登录遮罩层和登录框（使用hide而不是remove，保留给用户主动登录）
+            $(".login-mark").hide();
+            $(".login-box").hide();
         } else if (num == 6) {
             let did = false;
             let configHTML = '';
-            configHTML += '<div class="configContainer"><p><a class="title" href="https://github.com/adlered/CSDNGreener" target="_blank">CSDNGreener</a> <sup>V' + version + ' ' + settings_svg + '</sup></p>';
-            configHTML += '<p><a href="//shang.qq.com/wpa/qunwpa?idkey=d7ad6ead3f57722e7f00a4281ae75dbac2132c5a8cf321992d57309037fcaf63" target="_blank">官方 QQ 交流群：1042370453</a></p><br>';
 
-            // 设定：推荐内容按钮
-            configHTML += '<p class="bold">根据屏幕尺寸，适配版式</p><p>建议逐个尝试后选择适合你的版式，屏幕过小或者版式选择不正确右侧栏可能没有空间显示，导致侧栏定制无效（请尝试调节浏览器缩放，快捷键 Ctrl+鼠标滚轮）。</p>';
-            configHTML += '<label><input name="displayMode" type="radio" value="" id="scr-sm" /> 平铺模式(优化版) </label>';
-            configHTML += '<label><input name="displayMode" type="radio" value="" id="scr-md" /> 适应模式 </label>';
-            configHTML += '<label><input name="displayMode" type="radio" value="" id="scr-lg" /> 居中模式 </label>';
-            configHTML += '<label><input name="displayMode" type="radio" value="" id="scr-fo" /> 沉浸模式(无侧栏)</label>';
-            configHTML += '<hr style="height:1px;border:none;border-top:1px solid #cccccc;margin: 5px 0px 5px 0px;" />';
-            configHTML += '<p class="bold">通用设定</p>';
-            configHTML += '<p>自定义背景图： <input type="text" id="backgroundImgUrl" placeholder="图片所在网址或Base64" style="border-radius: 2px;border: 1px solid #f0f0f0;padding:5px;width:100%;margin-bottom:5px;"> <input style="margin-bottom:5px;" accept="image/*" id="upload_bg" type="file"></p>';
-            configHTML += '<input type="checkbox" id="toggle-recommend-button"> <label for="toggle-recommend-button" class="modeLabel">显示推荐内容</label>';
-            configHTML += '<br>';
-            configHTML += '<input type="checkbox" id="toggle-shop-button"> <label for="toggle-shop-button" class="modeLabel">显示小店</label>';
-            configHTML += '<br>';
-            configHTML += '<input type="checkbox" id="toggle-whitetheme-button"> <label for="toggle-whitetheme-button" class="modeLabel">白色主题&Dark Reader兼容模式<br><span style="color: #808080;"># 选项作用：开启后可通过Dark Reader插件灵活控制白色与黑暗模式，<a style="color: green;" href="https://chrome.zzzmh.cn/info?token=eimadpbcbfnmbkopoojfekhnkhdbieeh" target="_blank">插件下载地址点我</a></span></label>';
-            configHTML += '<br>';
-            configHTML += '<input type="checkbox" id="toggle-autosize-button"> <label for="toggle-autosize-button" class="modeLabel">宽度自动适应<br><span style="color: #808080;"># 选项作用：开启此选项可以在页面宽度缩小时自动切换至小屏模式</span></label>';
-            configHTML += '<br>';
-            configHTML += '<input type="checkbox" id="toggle-autohidetoolbar-button"> <label for="toggle-autohidetoolbar-button" class="modeLabel">向下滚动自动隐藏顶栏</label>';
-            configHTML += '<br>';
-            configHTML += '<input type="checkbox" id="toggle-autohidebottombar-button"> <label for="toggle-autohidebottombar-button" class="modeLabel">始终隐藏底栏</label>';
-            configHTML += '<br>';
-            configHTML += '<input type="checkbox" id="toggle-writeblog-button"> <label for="toggle-writeblog-button" class="modeLabel">显示发布按钮</label>';
-            configHTML += '<br>';
-            configHTML += '<hr style="height:1px;border:none;border-top:1px solid #cccccc;margin: 5px 0px 5px 0px;" />';
-            configHTML += '<p class="bold"><b>右侧栏定制</b></p>';
-            configHTML += '<input type="checkbox" id="toggle-ad-button"> <label for="toggle-ad-button" class="modeLabel">显示来自脚本的小广告（暂无）</label>';
-            configHTML += '<br>';
-            configHTML += '<input type="checkbox" id="toggle-authorcard-button"> <label for="toggle-authorcard-button" class="modeLabel">显示作者名片</label>';
-            configHTML += '<br>';
-            configHTML += '<input type="checkbox" id="toggle-searchblog-button"> <label for="toggle-searchblog-button" class="modeLabel">显示搜博主文章</label>';
-            configHTML += '<br>';
-            configHTML += '<input type="checkbox" id="toggle-newarticle-button"> <label for="toggle-newarticle-button" class="modeLabel">显示最新文章</label>';
-            configHTML += '<br>';
-            configHTML += '<input type="checkbox" id="toggle-hotarticle-button"> <label for="toggle-hotarticle-button" class="modeLabel">显示热门文章</label>';
-            configHTML += '<br>';
-            configHTML += '<input type="checkbox" id="toggle-newcomments-button"> <label for="toggle-newcomments-button" class="modeLabel">显示最新评论</label>';
-            configHTML += '<br>';
-            configHTML += '<input type="checkbox" id="toggle-kindperson-button"> <label for="toggle-kindperson-button" class="modeLabel">显示分类专栏</label>';
-            configHTML += '<br>';
-            configHTML += '<input type="checkbox" id="toggle-recommendarticle-button"> <label for="toggle-recommendarticle-button" class="modeLabel">显示推荐文章</label>';
-            configHTML += '<br>';
-            configHTML += '<input type="checkbox" id="toggle-archive-button"> <label for="toggle-archive-button" class="modeLabel">显示归档</label>';
-            configHTML += '<br>';
-            configHTML += '<input type="checkbox" id="toggle-content-button"> <label for="toggle-content-button" class="modeLabel">显示目录</label>';
-            configHTML += '<br><br>';
-            configHTML += '<div><b>要不要来看看 :)</b><p>（作者本人建设的社区～</p><p>社区中聚集了同行业的大佬小白，欢迎小伙伴们一起摸鱼！</p><a href="https://fishpi.cn" target="_blank"><img src="https://s2.loli.net/2022/01/05/1HpBZUraMcR8ist.png" style="width:100%;height:100%;"/></a></div>';
-            configHTML += '<br><a href="https://doc.stackoverflow.wiki/web/#/21?page_id=138" target="_blank" class="giveMeOneStar">☕ 如果您觉得脚本好用，欢迎请我喝杯咖啡，我将努力更新脚本功能 ❤️</a><br>';
-            configHTML += '<a href="https://github.com/adlered/CSDNGreener" target="_blank" class="giveMeOneStar">' + star_svg + ' <b>点我~</b> 动动小手在 GitHub 点个 Star 和关注，支持我继续维护脚本 :)</a><br><br>';
-            configHTML += '<p>特别提示：CSDNGreener 脚本不提供任何会员文章破解、会员资源下载功能，仅适用于前端优化，请在CSDN官方渠道购买CSDN会员体验付费功能。</p>';
-            configHTML += '<hr style="height:1px;border:none;border-top:1px solid #cccccc;margin: 5px 0px 5px 0px;" />';
-            configHTML += '<br>';
+            // 新UI结构 - 标题头部
+            configHTML += '<div class="configContainer">';
+            configHTML += '<div class="config-header">';
+            configHTML += '<p class="title">⚙️ CSDNGreener 设置面板</p>';
+            configHTML += '<p style="margin: 5px 0 0 0; font-size: 13px; opacity: 0.9;">V' + version + ' | <a href="https://github.com/adlered/CSDNGreener" target="_blank" style="color: white;">GitHub</a> | <a href="//shang.qq.com/wpa/qunwpa?idkey=d7ad6ead3f57722e7f00a4281ae75dbac2132c5a8cf321992d57309037fcaf63" target="_blank" style="color: white;">QQ群:1042370453</a></p>';
+            configHTML += '</div>';
 
-            // configHTML += '<a href="https://doc.stackoverflow.wiki/web/#/21?page_id=138" target="_blank" style="margin-top: 5px; display: block;">' + donate_svg + ' 我是老板，投币打赏</a>';
-            configHTML += '</div></div><div id="fade" class="black_overlay"></div>';
-            let saveButton = '<button class="saveButton" style="position: sticky;top: 5px;left: calc(100% - 80px);" onclick="saveAndReload();">' + save_svg + ' 应用</button>';
+            configHTML += '<div class="config-grid">';
+
+            // 版式设置区域 - 第一行，上边直角
+            configHTML += '<div class="config-section" style="border-radius: 0 0 14px 14px;">';
+            configHTML += '<span class="bold">📐 屏幕版式适配</span>';
+            configHTML += '<div style="display: grid; gap: 8px;">';
+            configHTML += '<label style="color: #22c55e; font-weight: bold;"><input name="displayMode" type="radio" value="ai" id="scr-ai" /> ⭐⭐⭐ 智能模式 (推荐默认)</label>';
+            configHTML += '<label><input name="displayMode" type="radio" value="sm" id="scr-sm" /> 平铺模式 (< 1200px)</label>';
+            configHTML += '<label><input name="displayMode" type="radio" value="md" id="scr-md" /> 适应模式 (1200-1380px)</label>';
+            configHTML += '<label><input name="displayMode" type="radio" value="lg" id="scr-lg" /> 居中模式 (1380-1550px)</label>';
+            configHTML += '<label><input name="displayMode" type="radio" value="fo" id="scr-fo" /> 沉浸模式 (无侧栏)</label>';
+            configHTML += '<label style="color: #ff6b35; font-weight: bold;"><input name="displayMode" type="radio" value="hd" id="scr-hd" /> ⭐ 高分辨率模式 (1920px+)</label>';
+            configHTML += '</div>';
+            configHTML += '</div>';
+
+            // 通用设定 - 第一行，上边直角
+            configHTML += '<div class="config-section" style="border-radius: 0 0 14px 14px;">';
+            configHTML += '<span class="bold">🎨 通用设定</span>';
+            configHTML += '<p style="margin-bottom: 10px; font-size: 13px;"><strong>自定义背景图：</strong></p>';
+            configHTML += '<input type="text" id="backgroundImgUrl" placeholder="图片URL或Base64" style="border-radius: 4px; border: 1px solid #d1d5db; padding: 8px; width: 100%; margin-bottom: 8px; font-size: 13px;">';
+            configHTML += '<input accept="image/*" id="upload_bg" type="file" style="margin-bottom: 15px; font-size: 12px;">';
+            configHTML += '<label><input type="checkbox" id="toggle-recommend-button"> 显示推荐内容</label>';
+            configHTML += '<label><input type="checkbox" id="toggle-shop-button"> 显示小店</label>';
+            configHTML += '<label><input type="checkbox" id="toggle-whitetheme-button"> 白色主题 & Dark Reader兼容</label>';
+            configHTML += '<label><input type="checkbox" id="toggle-autosize-button"> 宽度自动适应</label>';
+            configHTML += '<label><input type="checkbox" id="toggle-autohidetoolbar-button"> 向下滚动自动隐藏顶栏</label>';
+            configHTML += '<label><input type="checkbox" id="toggle-autohidebottombar-button"> 始终隐藏底栏</label>';
+            configHTML += '<label><input type="checkbox" id="toggle-writeblog-button"> 显示发布按钮</label>';
+            configHTML += '</div>';
+
+            // 右侧栏定制 - 横向多列布局
+            configHTML += '<div class="config-section">';
+            configHTML += '<span class="bold">📌 右侧栏定制</span>';
+            configHTML += '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px 15px; margin-top: 10px;">';
+            configHTML += '<label><input type="checkbox" id="toggle-authorcard-button"> 显示作者名片</label>';
+            configHTML += '<label><input type="checkbox" id="toggle-searchblog-button"> 显示搜博主文章</label>';
+            configHTML += '<label><input type="checkbox" id="toggle-newarticle-button"> 显示最新文章</label>';
+            configHTML += '<label><input type="checkbox" id="toggle-hotarticle-button"> 显示热门文章</label>';
+            configHTML += '<label><input type="checkbox" id="toggle-newcomments-button"> 显示最新评论</label>';
+            configHTML += '<label><input type="checkbox" id="toggle-kindperson-button"> 显示分类专栏</label>';
+            configHTML += '<label><input type="checkbox" id="toggle-recommendarticle-button"> 显示推荐文章</label>';
+            configHTML += '<label><input type="checkbox" id="toggle-archive-button"> 显示归档</label>';
+            configHTML += '<label style="grid-column: 1 / -1;"><input type="checkbox" id="toggle-content-button"> 显示目录</label>';
+            configHTML += '</div>';
+            configHTML += '</div>';
+
+            // 配置管理
+            configHTML += '<div class="config-section" style="border-left-color: #8b5cf6;">';
+            configHTML += '<span class="bold">💾 配置管理</span>';
+            configHTML += '<p style="font-size: 12px; color: #6b7280; margin-bottom: 10px;">备份和恢复您的个性化设置</p>';
+            configHTML += '<div style="display: flex; flex-direction: column; gap: 10px;">';
+            configHTML += '<button id="exportConfigBtn" class="saveButton" style="width: 100%;">📥 导出配置</button>';
+            configHTML += '<button id="importConfigBtn" class="saveButton" style="width: 100%;">📤 导入配置</button>';
+            configHTML += '<button id="resetConfigBtn" class="saveButton danger" style="width: 100%;">🔄 重置配置</button>';
+            configHTML += '</div>';
+            configHTML += '<input type="file" id="importConfigFile" accept=".json" style="display: none;">';
+            configHTML += '</div>';
+
+            configHTML += '</div>';
+
+            // 社区推广和支持作者 - 横向布局
+            configHTML += '<div class="config-section" style="text-align: center;">';
+            configHTML += '<div style="display: flex; gap: 20px; align-items: center; justify-content: center;">';
+
+            // 摸鱼社区
+            configHTML += '<div style="flex: 1; max-width: 45%;">';
+            configHTML += '<p style="font-size: 16px; font-weight: bold; margin-bottom: 8px;">💬 摸鱼社区</p>';
+            configHTML += '<p style="font-size: 12px; color: #6b7280; margin-bottom: 12px;">欢迎加入作者建设的技术社区</p>';
+            configHTML += '<a href="https://fishpi.cn" target="_blank"><img src="https://s2.loli.net/2022/01/05/1HpBZUraMcR8ist.png" style="width:100%; border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);"/></a>';
+            configHTML += '</div>';
+
+            // 给个Star
+            configHTML += '<div style="flex: 1; max-width: 45%;">';
+            configHTML += '<p style="font-size: 16px; font-weight: bold; margin-bottom: 8px;">⭐ 支持作者</p>';
+            configHTML += '<p style="font-size: 12px; color: #6b7280; margin-bottom: 12px;">您的支持是我们最大的动力</p>';
+            configHTML += '<a href="https://github.com/adlered/CSDNGreener" target="_blank" class="giveMeOneStar" style="display: flex; align-items: center; justify-content: center; padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; color: white; text-decoration: none; font-size: 18px; font-weight: bold; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4); transition: all 0.3s;">' + star_svg_1 + ' <span style="margin-left: 10px;">在 GitHub 给个 Star</span></a>';
+            configHTML += '</div>';
+
+            configHTML += '</div>';
+            configHTML += '<p style="font-size: 11px; color: #9ca3af; margin-top: 15px;">CSDNGreener 不提供会员破解功能，仅用于前端优化</p>';
+            configHTML += '</div>';
+
+            // 底部按钮栏
+            configHTML += '<div class="config-footer">';
+            configHTML += '<button class="saveButton cancel" onclick="cancelConfig();">取消</button>';
+            configHTML += '<button class="saveButton" onclick="saveConfig();">💾 保存设置</button>';
+            configHTML += '</div>';
+
+            configHTML += '</div><div id="fade" class="black_overlay"></div>';
+
             // 绿化器设定
-            $("body").after('<div id="configContent" class="white_content">' + saveButton + configHTML);
+            $("body").after('<div id="configContent" class="white_content">' + configHTML);
 
             /** 配置控制 **/
             // 推荐内容
             $(".blog-content-box").append("<br><div class='blog-content-box' id='recommendSwitch' style='text-align: right;'></div>");
             $("#recommendSwitch:last").append('<input type="checkbox" id="toggle-button"> <label for="toggle-button" class="button-label"> <span class="circle"></span> <span class="text on">&nbsp;</span> <span class="text off">&nbsp;</span> </label>' +
                                '<p style="margin-top: 5px; font-size: 13px;">显示推荐内容</p>');
-            let recommendCookie = config.get("recommend", false);
-            if (!recommendCookie) {
+            let recommendValue = configManager.get("display.recommend");
+            if (!recommendValue) {
                 $(".recommend-box").hide();
             }
-            if (recommendCookie) {
+            if (recommendValue) {
                 $("#toggle-recommend-button").prop("checked", true);
                 $("#toggle-button").prop("checked", true);
             } else {
                 $("#toggle-recommend-button").prop("checked", false);
                 $("#toggle-button").prop("checked", false);
             }
-            config.listenButton("#toggle-recommend-button", "recommend",
-                               function() {$(".recommend-box").slideDown(200);},
-                               function() {$(".recommend-box").slideUp(200);});
-            config.listenButtonAndAction("#toggle-button", "recommend",
-                                function() {$(".recommend-box").slideDown(200);},
-                               function() {$(".recommend-box").slideUp(200);});
+
+            // 推荐内容按钮点击事件 - 切换显示并保存状态
+            $("#toggle-button").off("change").on("change", function() {
+                const isChecked = $(this).prop("checked");
+                configManager.set("display.recommend", isChecked);
+                if (isChecked) {
+                    $(".recommend-box").fadeIn(300);
+                } else {
+                    $(".recommend-box").fadeOut(300);
+                }
+            });
 
             // 显示小店
-            let shopCookie = config.get('shop',false);
-            if(!shopCookie){
+            let shopValue = configManager.get('display.shop');
+            if(!shopValue){
                 $("#csdn-shop-window").hide();
                 $("#csdn-shop-window-top").hide();
             }
-            if (shopCookie) {
+            if (shopValue) {
                 $("#toggle-shop-button").prop("checked", true);
             } else {
                 $("#toggle-shop-button").prop("checked", false);
             }
-            config.listenButton("#toggle-shop-button", "shop",
-                                function() {location.reload();},
-                                function() {location.reload();});
-            // 侧栏小广告
-            let adCookie = config.get("ad", true);
-            if (adCookie) {
-                setTimeout(function() {
-                    // $("#recommend-right").append('<div id="asideArchive" class="aside-box" style="margin-top: 8px; width: 300px; display:block !important;"><h3 class="aside-title">来自 CSDN 脚本的小广告</h3><div class="aside-content"><ul class="inf_list clearfix"><li class="clearfix"><b>您可在 <a onclick="showConfig()" style="display: inline-block;">脚本设置</a> 中永久关闭小广告<br>感谢您的支持 ❤️</b><br><p style="font-size: 4px;margin-top: 10px;"><b>29元每月！</b>CTGNet GIA 回程五网高端CN2 GIA/GT网络，支持VPC高级网络<br>拒绝绕路，拒绝不稳定，助力企业拓展全球业务<br>安全，稳定，高性能</p></li><li class="clearfix"><a href="https://www.tsyvps.com/aff/HEHTPGYL" target="_blank"><img src="https://www.tsyvps.com/img/gg.png" style="width: 265px;height:149px"></a></li></ul></div></div>');
-                }, 500);
-            }
-            if (adCookie) {
-                $("#toggle-ad-button").prop("checked", true);
-            } else {
-                $("#toggle-ad-button").prop("checked", false);
-            }
-            config.listenButton("#toggle-ad-button", "ad",
-                               function() {location.reload();},
-                               function() {location.reload();});
             // 显示作者名片
-            let authorCardCookie = config.get("authorCard", true);
-            if (authorCardCookie) {
+            let authorCardValue = configManager.get("sidebar.authorCard");
+            if (authorCardValue) {
                 // 博主信息
                 $('#recommend-right').append($('#asideProfile').prop("outerHTML"));
                 setTimeout(function() {
                     $('#asideProfile').attr("style", "margin-top: 8px; width: 300px;");
                 }, 500);
             }
-            if (authorCardCookie) {
+            if (authorCardValue) {
                 $("#toggle-authorcard-button").prop("checked", true);
             } else {
                 $("#toggle-authorcard-button").prop("checked", false);
             }
-            config.listenButton("#toggle-authorcard-button", "authorCard",
-                               function() {location.reload();},
-                               function() {location.reload();});
 
             // 强制白色主题
-            let whiteThemeCookie = config.get("whiteTheme", false);
-            if (whiteThemeCookie) {
+            let whiteThemeValue = configManager.get("display.whiteTheme");
+            if (whiteThemeValue) {
                 // 背景删除
                 $('.main_father').attr('style', 'background-image: none !important; background-color: #f5f6f7; background: #f5f6f7;');
                 $('[href^="https://csdnimg.cn/release/phoenix/template/themes_skin/"]').attr('href', 'https://csdnimg.cn/release/phoenix/template/themes_skin/skin-technology/skin-technology-6336549557.min.css');
@@ -1293,27 +2887,18 @@ function common(num, times) {
                 $('.csdn-logo').attr('src', '//csdnimg.cn/cdn/content-toolbar/csdn-logo.png?v=20200416.1');
                 $('html').css('background-color', '#f5f6f7');
             }
-            if (whiteThemeCookie) {
+            if (whiteThemeValue) {
                 $("#toggle-whitetheme-button").prop("checked", true);
             } else {
                 $("#toggle-whitetheme-button").prop("checked", false);
             }
-            config.listenButton("#toggle-whitetheme-button", "whiteTheme",
-                               function() {location.reload();},
-                               function() {location.reload();});
 
             // 背景图
-            let backgroundImage = GM_getValue("backgroundImage", "");
+            let backgroundImage = configManager.get("custom.backgroundImage");
             if (backgroundImage !== "") {
                 $("#backgroundImgUrl").val(backgroundImage);
                 $(".main_father").attr('style', 'background-image:url(' + backgroundImage + ');background-attachment:fixed;background-size:100%;');
             }
-            $('#backgroundImgUrl').on('input', function() {
-                GM_setValue("backgroundImage", $("#backgroundImgUrl").val());
-            });
-            $('#backgroundImgUrl').on('change', function() {
-                GM_setValue("backgroundImage", $("#backgroundImgUrl").val());
-            });
             $("#upload_bg").on('change', function() {
                 let file = $("#upload_bg")[0].files[0];
                 let reader = new FileReader();
@@ -1326,8 +2911,8 @@ function common(num, times) {
             });
 
             // 搜博主文章
-            let searchBlogCookie = config.get("searchBlog", false);
-            if(searchBlogCookie) {
+            let searchBlogValue = configManager.get("sidebar.searchBlog");
+            if(searchBlogValue) {
                 $('#recommend-right').append($('#asideSearchArticle').prop("outerHTML"));
                 setTimeout(function() {
                     $('#asideSearchArticle').attr("style", "margin-top: 8px; width: 300px;");
@@ -1353,53 +2938,44 @@ function common(num, times) {
                     });
                 }, 500);
             }
-            if (searchBlogCookie) {
+            if (searchBlogValue) {
                 $("#toggle-searchblog-button").prop("checked", true);
             } else {
                 $("#toggle-searchblog-button").prop("checked", false);
             }
-            config.listenButton("#toggle-searchblog-button", "searchBlog",
-                               function() {location.reload();},
-                               function() {location.reload();});
 
             // 最新文章
-            let newArticleCookie = config.get("newArticle", false);
-            if (newArticleCookie) {
+            let newArticleValue = configManager.get("sidebar.newArticle");
+            if (newArticleValue) {
                 $('#recommend-right').append($('#asideNewArticle').prop("outerHTML"));
                 setTimeout(function() {
                     $('#asideNewArticle').attr("style", "margin-top: 8px; width: 300px;");
                 }, 0);
             }
-            if (newArticleCookie) {
+            if (newArticleValue) {
                 $("#toggle-newarticle-button").prop("checked", true);
             } else {
                 $("#toggle-newarticle-button").prop("checked", false);
             }
-            config.listenButton("#toggle-newarticle-button", "newArticle",
-                               function() {location.reload();},
-                               function() {location.reload();});
 
             // 热门文章
-            let hotArticleCookie = config.get("hotArticle", false);
-            if (hotArticleCookie) {
+            let hotArticleValue = configManager.get("sidebar.hotArticle");
+            if (hotArticleValue) {
                 $('#recommend-right').append($("#asideHotArticle").prop("outerHTML"));
                 setTimeout(function() {
                     $('#asideHotArticle').attr("style", "margin-top: 8px; width: 300px;");
                     $('#asideHotArticle img').remove();
                 }, 0);
             }
-            if (hotArticleCookie) {
+            if (hotArticleValue) {
                 $("#toggle-hotarticle-button").prop("checked", true);
             } else {
                 $("#toggle-hotarticle-button").prop("checked", false);
             }
-            config.listenButton("#toggle-hotarticle-button", "hotArticle",
-                               function() {location.reload();},
-                               function() {location.reload();});
 
             // 最新评论
-            let newCommentsCookie = config.get("newComments", false);
-            if (newCommentsCookie) {
+            let newCommentsValue = configManager.get("sidebar.newComments");
+            if (newCommentsValue) {
                 $('#recommend-right').append($("#asideNewComments").prop("outerHTML"));
                 setTimeout(function() {
                     $('#asideNewComments').attr("style", "margin-top: 8px; width: 300px;");
@@ -1407,18 +2983,15 @@ function common(num, times) {
                     $(".title.text-truncate").attr("style", "padding: 0");
                 }, 0);
             }
-            if (newCommentsCookie) {
+            if (newCommentsValue) {
                 $("#toggle-newcomments-button").prop("checked", true);
             } else {
                 $("#toggle-newcomments-button").prop("checked", false);
             }
-            config.listenButton("#toggle-newcomments-button", "newComments",
-                               function() {location.reload();},
-                               function() {location.reload();});
 
             // 分类专栏
-            let kindPersonCookie = config.get("kindPerson", false);
-            if (!kindPersonCookie) {
+            let categoryValue = configManager.get("sidebar.category");
+            if (!categoryValue) {
                 setTimeout(function() {
                     $('#asideCategory').remove();
                     $('.kind_person').remove();
@@ -1438,34 +3011,28 @@ function common(num, times) {
                     })
                 }, 500);
             }
-            if (kindPersonCookie) {
+            if (categoryValue) {
                 $("#toggle-kindperson-button").prop("checked", true);
             } else {
                 $("#toggle-kindperson-button").prop("checked", false);
             }
-            config.listenButton("#toggle-kindperson-button", "kindPerson",
-                               function() {location.reload();},
-                               function() {location.reload();});
 
             // 目录
-            let contentCookie = config.get("content", true);
-            if (!contentCookie) {
+            let contentValue = configManager.get("sidebar.content");
+            if (!contentValue) {
                 setTimeout(function() {
                     $('.align-items-stretch.group_item').parent().remove();
                 }, 0);
             }
-            if (contentCookie) {
+            if (contentValue) {
                 $("#toggle-content-button").prop("checked", true);
             } else {
                 $("#toggle-content-button").prop("checked", false);
             }
-            config.listenButton("#toggle-content-button", "content",
-                               function() {location.reload();},
-                               function() {location.reload();});
 
             // 推荐文章
-            let recommendArticleCookie = config.get("recommendArticle", false);
-            if (!recommendArticleCookie) {
+            let recommendArticleValue = configManager.get("sidebar.recommendArticle");
+            if (!recommendArticleValue) {
                 setTimeout(function() {
                     $('.recommend-list-box').remove();
                 }, 0);
@@ -1474,18 +3041,15 @@ function common(num, times) {
                     $('.recommend-list-box').attr("style", "margin-top: 8px; width: 300px; height:255px;");
                 }, 0);
             }
-            if (recommendArticleCookie) {
+            if (recommendArticleValue) {
                 $("#toggle-recommendarticle-button").prop("checked", true);
             } else {
                 $("#toggle-recommendarticle-button").prop("checked", false);
             }
-            config.listenButton("#toggle-recommendarticle-button", "recommendArticle",
-                               function() {location.reload();},
-                               function() {location.reload();});
 
             // 归档
-            let archiveCookie = config.get("archive", false);
-            if (!archiveCookie) {
+            let archiveValue = configManager.get("sidebar.archive");
+            if (!archiveValue) {
                 setTimeout(function() {
                     $('#asideArchive').remove();
                 }, 0);
@@ -1495,18 +3059,15 @@ function common(num, times) {
                     $('#asideArchive').attr("style", "margin-top: 8px; width: 300px; display:block !important;");
                 }, 500);
             }
-            if (archiveCookie) {
+            if (archiveValue) {
                 $("#toggle-archive-button").prop("checked", true);
             } else {
                 $("#toggle-archive-button").prop("checked", false);
             }
-            config.listenButton("#toggle-archive-button", "archive",
-                               function() {location.reload();},
-                               function() {location.reload();});
 
             // 自动靠左平铺
-            let autoSizeCookie = config.get("autoSize", false);
-            if (autoSizeCookie) {
+            let autoResizeValue = configManager.get("display.autoResize");
+            if (autoResizeValue) {
                 setInterval(function () {
                     // 文章宽度自适应
                     if (window.innerWidth < 1100) {
@@ -1534,18 +3095,15 @@ function common(num, times) {
                     }
                 }, 500);
             }
-            if (autoSizeCookie) {
+            if (autoResizeValue) {
                 $("#toggle-autosize-button").prop("checked", true);
             } else {
                 $("#toggle-autosize-button").prop("checked", false);
             }
-            config.listenButton("#toggle-autosize-button", "autoSize",
-                               function() {location.reload();},
-                               function() {location.reload();});
 
             // 自动隐藏顶栏
-            let autoHideToolbarCookie = config.get("autoHideToolbar", true);
-            if (autoHideToolbarCookie) {
+            let autoHideToolbarValue = configManager.get("toolbar.autoHide");
+            if (autoHideToolbarValue) {
                 $(window).scroll(function() {
                     if (document.documentElement.scrollTop > 100) {
                 	    let scrollS = $(this).scrollTop();
@@ -1559,18 +3117,15 @@ function common(num, times) {
                     }
                 });
             }
-            if (autoHideToolbarCookie) {
+            if (autoHideToolbarValue) {
                 $("#toggle-autohidetoolbar-button").prop("checked", true);
             } else {
                 $("#toggle-autohidetoolbar-button").prop("checked", false);
             }
-            config.listenButton("#toggle-autohidetoolbar-button", "autoHideToolbar",
-                               function() {location.reload();},
-                               function() {location.reload();});
 
             // 自动隐藏底栏
-            let autoHideBottomBarCookie = config.get("autoHideBottomBar", true);
-            if (autoHideBottomBarCookie) {
+            let autoHideBottomBarValue = configManager.get("bottomBar.alwaysHide");
+            if (autoHideBottomBarValue) {
                 $("#toolBarBox .left-toolbox").css({
                 	position: "relative",
                 	left: "0px",
@@ -1586,28 +3141,22 @@ function common(num, times) {
                 	})
                 });
             }
-            if (autoHideBottomBarCookie) {
+            if (autoHideBottomBarValue) {
                 $("#toggle-autohidebottombar-button").prop("checked", true);
             } else {
                 $("#toggle-autohidebottombar-button").prop("checked", false);
             }
-            config.listenButton("#toggle-autohidebottombar-button", "autoHideBottomBar",
-                               function() {location.reload();},
-                               function() {location.reload();});
 
             // 创作中心按钮
-            let writeBlogCookie = config.get("writeBlog", true);
-            if (!writeBlogCookie) {
+            let writeBlogValue = configManager.get("toolbar.showWrite");
+            if (!writeBlogValue) {
                 $(".toolbar-btn-write").remove();
             }
-            if (writeBlogCookie) {
+            if (writeBlogValue) {
                 $("#toggle-writeblog-button").prop("checked", true);
             } else {
                 $("#toggle-writeblog-button").prop("checked", false);
             }
-            config.listenButton("#toggle-writeblog-button", "writeBlog",
-                               function() {location.reload();},
-                               function() {location.reload();});
 
             // 右侧滚动条
             /** setTimeout(function () {
@@ -1627,6 +3176,80 @@ function common(num, times) {
                     $('#recommend-right').css("overflow", "scroll");
                 }
             }, 1500); */
+
+            // ==================== V5.0.0新增：配置导入/导出功能 ====================
+            // 导出配置
+            $("#exportConfigBtn").click(function() {
+                try {
+                    const configJSON = configManager.export();
+                    const blob = new Blob([configJSON], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `csdngreener-config-${new Date().toISOString().slice(0,10)}.json`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    alert('✅ 配置导出成功！');
+                    Logger.log('配置已导出');
+                } catch (err) {
+                    alert('❌ 配置导出失败：' + err.message);
+                    Logger.error('配置导出失败：' + err);
+                }
+            });
+
+            // 导入配置
+            $("#importConfigBtn").click(function() {
+                $("#importConfigFile").click();
+            });
+
+            $("#importConfigFile").change(function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    try {
+                        const jsonString = event.target.result;
+                        configManager.import(jsonString);
+                        alert('✅ 配置导入成功！页面将刷新以应用新配置。');
+                        Logger.log('配置已导入');
+                        setTimeout(function() {
+                            location.reload();
+                        }, 500);
+                    } catch (err) {
+                        alert('❌ 配置导入失败：' + err.message + '\n请确保选择的是有效的配置文件。');
+                        Logger.error('配置导入失败：' + err);
+                    }
+                };
+                reader.onerror = function() {
+                    alert('❌ 文件读取失败，请重试。');
+                };
+                reader.readAsText(file);
+
+                // 重置file input以允许重复导入同一文件
+                $(this).val('');
+            });
+
+            // 重置配置
+            $("#resetConfigBtn").click(function() {
+                if (confirm('⚠️ 确定要重置所有配置吗？\n这将恢复到默认设置，无法撤销！')) {
+                    try {
+                        configManager.reset();
+                        alert('✅ 配置已重置！页面将刷新。');
+                        Logger.log('配置已重置');
+                        setTimeout(function() {
+                            location.reload();
+                        }, 500);
+                    } catch (err) {
+                        alert('❌ 配置重置失败：' + err.message);
+                        Logger.error('配置重置失败：' + err);
+                    }
+                }
+            });
+            // ==================== 配置导入/导出功能结束 ====================
+
         } else if (num === 7) {
             $(".me_r")[1].remove();
         } else if (num === 8) {

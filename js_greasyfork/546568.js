@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Stats, Shards, XP, Dust, Quest, Res, Loot and Level tracker v2
 // @namespace    http://tampermonkey.net/
-// @version      4.5.7
+// @version      4.5.8
 // @description  Tracks XP, Dust, leveling speed, quest time, as well as shards, stats, farm output, potion profitability and overhauls items entirely
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=manarion.com
 // @match        *://manarion.com/*
@@ -14,6 +14,8 @@
 
 /*
      ======= Changelog =======
+     v4.5.8
+     Fixed show lootTrackerElement bug
      v4.5.7
      Updated resonance tier calculation (not sure if correct would appreciate feedback)
 
@@ -3287,9 +3289,7 @@ const ui = {
     }
 
     // find the native game UI loot tracker
-    const lootTrackerElement = document.querySelector(
-      "div.scrollbar-none.scrollbar-track-transparent.h-60.grow-1.overflow-x-hidden.overflow-y-auto"
-    );
+const lootTrackerElement = document.querySelector("div.scrollbar-thin.scrollbar-track-transparent.h-60.grow-1.overflow-x-hidden.overflow-y-auto");
     if (!lootTrackerElement) return;
 
     // add the main tracker container on the left menu

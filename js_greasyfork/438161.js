@@ -17,7 +17,7 @@ let ev = null;
 var text = window.getSelection().toString().trim();
 
 document.addEventListener('mouseup', function (e) {
-    ev = e;//划词鼠标结束位置
+   ev = e;//划词鼠标结束位置
 });
 
 const SettingOptions = {
@@ -28,7 +28,8 @@ const SettingOptions = {
     selectIconPosition: "right",    // 划词图标位置
 };
 
-// 图标
+    // 图标
+
 const Images = {
     IconBase64: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJAAAACQCAIAAABoJHXvAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyRpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoTWFjaW50b3NoKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDoyQjkwRDlGOTgyM0YxMUUyOTYyNEE4NkVDQjBDRTBENSIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDoyQjkwRDlGQTgyM0YxMUUyOTYyNEE4NkVDQjBDRTBENSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjJCOTBEOUY3ODIzRjExRTI5NjI0QTg2RUNCMENFMEQ1IiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjJCOTBEOUY4ODIzRjExRTI5NjI0QTg2RUNCMENFMEQ1Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+EQTxdwAAEetJREFUeNrsXQt4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',
     DbSvg: '<svg t="1634541962091" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2799" width="16" height="16"><path d="M701.44 519.168l-382.976 0 0-191.488 382.976 0 0 191.488zM877.568 69.632q34.816 0 59.392 24.064t24.576 59.904l0 731.136q0 34.816-24.576 59.392t-59.392 24.576l-732.16 0q-34.816 0-58.88-24.576t-24.064-59.392l0-731.136q0-35.84 24.064-59.904t58.88-24.064l732.16 0zM187.392 197.632l648.192 0 0-63.488-648.192 0 0 63.488zM253.952 263.168l0 318.464 512 0 0-318.464-512 0zM857.088 774.144l-176.128 0 62.464-111.616-70.656-53.248q-5.12 12.288-9.216 23.552t-9.728 23.552-11.776 23.552q-17.408 29.696-31.744 57.856t-19.456 36.352l-158.72 0q-4.096-8.192-18.432-36.352t-31.744-57.856q-7.168-11.264-12.288-23.552t-9.216-23.552-9.216-23.552l-70.656 53.248 62.464 111.616-176.128 0 0 65.536 690.176 0 0-65.536z" p-id="2800" fill="#4da64d"></path></svg>',
@@ -64,6 +65,7 @@ const Logger = {
     warn: console.warn,
     error: console.error
 }
+
 
 const Utils = {
     /**
@@ -164,16 +166,17 @@ const Utils = {
          * 解析视频列表 dom 元素
          * @param {Document} htmlDoc - 视频列表dom
          * @param {String} selector - 选择器
-         * @returns {[VideoInfo]} 视频列表数组
+         * @returns {Promise<Array>} 视频列表数组
          * @example
          * Utils.ParseVideoListDom(document.getElementById('a'),'li') output [{videoInfo},{videoInfo},...]
          */
-    ParseVideoListDom: function (htmlDoc, selector) {
+    ParseVideoListDom: async function (htmlDoc, selector) {
         let videoList = [];
         let bookList = [];
         if (htmlDoc) {
             let liDoc = $(htmlDoc).find(selector);
-            liDoc.each((index, item) => {
+            for (let index = 0; index < liDoc.length; index++) {
+                let item = liDoc[index];
                 let titleADom = $(item).find('.title a');
                 let title = titleADom.html() || '';
                 let onclickStr = titleADom.attr("onclick"); // moreurl(this,{i: '14', query: 'hh', from: 'dou_search_movie', sid: 25741647, qcat: '1002'})
@@ -181,36 +184,33 @@ const Utils = {
                 if (onclickStr) {
                     id = onclickStr.split(',')[4].replace(/[^0-9]/ig, '');
                 }
-                let image = $(item).find('img').attr("src");
-                let cast = ($(item).find('.subject-cast').html() || '').replace('/  / ', '/').replace(/原名:(.*?)\//g, '');
-                let socreDoc = $(item).find('.rating_nums');
-                let score = socreDoc.html() || '';
-                let ratingCount = '';
-                if (score && socreDoc.next() && socreDoc.next().html()) {
-                    let count = socreDoc.next().html().replace(/[^0-9]/ig, '');
-                    if (count) {
-                        ratingCount = `${count} 人参与评分`;
-                    }
-                }
+                let src = $(item).find('img').attr("src");
+                    let imageUrl;
+                if(src.indexOf('s_ratio_poster') > -1) imageUrl = src.split('.jpg')[0] + '.webp';
+                else imageUrl = src;
+                
+                // 这里不再立即转换为base64，只返回URL
                 let videoInfo = {
                     subjectId: id,
-                    image: Urls.ImgHandleUrl.replace('{url}', encodeURIComponent(image)),
+                    image: imageUrl, // 改为存储URL
+                    defaultImage: Images.VideoDefaultImg, // 添加默认图片
                     url: Urls.DbVideoInfoPageUrl.replace('{subjectId}', id),
                     description: $(item).find('p').html() || '',
-                    title, score, ratingCount, cast: cast,
+                    title, score: '', ratingCount: '', cast: '',
                 }
                 videoList.push(videoInfo);
                 let bookInfo = {
                     subjectId: id,
-                    image: Urls.ImgHandleUrl.replace('{url}', encodeURIComponent(image)),
+                    image: imageUrl, // 改为存储URL
+                    defaultImage: Images.VideoDefaultImg, // 添加默认图片
                     url: Urls.DbBookInfoPageUrl.replace('{subjectId}', id),
                     description: $(item).find('p').html() || '',
-                    title, score, ratingCount, cast: cast,
+                    title, score: '', ratingCount: '', cast: '',
                 }
                 bookList.push(bookInfo);
-            });
+            }
         }
-        return videoList;
+        return { videoList, bookList };
     },
 
     /**
@@ -236,6 +236,104 @@ const Utils = {
         }
         return x;
     },
+    
+    // 获取图片base64
+    getImageAsBase64: function(url) {
+        return new Promise((resolve, reject) => {
+            GM_xmlhttpRequest({
+                method: "GET",
+                url: url,
+                headers: {
+                    "Referer": "https://www.douban.com/"
+                },
+                responseType: "arraybuffer",
+                onload: function (resp) {
+                    if (resp.status === 200) {
+                        let u8arr = new Uint8Array(resp.response);
+                        let mime = url.match(/\.webp$/) ? 'image/webp' : 'image/jpeg';
+                        let raw = '';
+                        for (let i = 0; i < u8arr.length; i++) raw += String.fromCharCode(u8arr[i]);
+                        let b64 = btoa(raw); // base64编码
+                        resolve(`data:${mime};base64,${b64}`);
+                    } else {
+                        reject('图片下载失败: ' + url);
+                    }
+                },
+                onerror: function (err) {
+                    reject(err);
+                }
+            });
+        });
+    },
+    
+    // 异步转换图片URL为base64，并在转换后替换图片
+    async convertAndUpdateImages() {
+        // 转换电影搜索结果列表图片
+        if (SearchMovie.searchVideoList && SearchMovie.searchVideoList.length > 0) {
+            for (let video of SearchMovie.searchVideoList) {
+                if (video.image && !video.image.startsWith('data:')) {
+                    try {
+                        const base64Img = await this.getImageAsBase64(video.image);
+                        video.image = base64Img;
+                        
+                        // 更新DOM中的图片
+                        $(`.listItem${randomCode}[data-id="${video.subjectId}"] img`).attr('src', base64Img);
+                    } catch (e) {
+                        console.warn('电影列表图片转换失败：', e);
+                        video.image = Images.VideoDefaultImg;
+                    }
+                }
+            }
+        }
+        
+        // 转换电影详情图片
+        if (SearchMovie.searchVideoInfo && SearchMovie.searchVideoInfo.image && 
+            !SearchMovie.searchVideoInfo.image.startsWith('data:')) {
+            try {
+                const base64Img = await this.getImageAsBase64(SearchMovie.searchVideoInfo.image);
+                SearchMovie.searchVideoInfo.image = base64Img;
+                
+                // 更新DOM中的图片
+                $(`.videoInfo${randomCode} .left${randomCode} img`).attr('src', base64Img);
+            } catch (e) {
+                console.warn('电影详情图片转换失败：', e);
+                SearchMovie.searchVideoInfo.image = Images.VideoDefaultImg;
+            }
+        }
+        
+        // 转换读书搜索结果列表图片
+        if (SearchBook.searchBookList && SearchBook.searchBookList.length > 0) {
+            for (let book of SearchBook.searchBookList) {
+                if (book.image && !book.image.startsWith('data:')) {
+                    try {
+                        const base64Img = await this.getImageAsBase64(book.image);
+                        book.image = base64Img;
+                        
+                        // 更新DOM中的图片
+                        $(`.listItem${randomCode}[data-id="${book.subjectId}"] img`).attr('src', base64Img);
+                    } catch (e) {
+                        console.warn('读书列表图片转换失败：', e);
+                        book.image = Images.VideoDefaultImg;
+                    }
+                }
+            }
+        }
+        
+        // 转换读书详情图片
+        if (SearchBook.searchBookInfo && SearchBook.searchBookInfo.image && 
+            !SearchBook.searchBookInfo.image.startsWith('data:')) {
+            try {
+                const base64Img = await this.getImageAsBase64(SearchBook.searchBookInfo.image);
+                SearchBook.searchBookInfo.image = base64Img;
+                
+                // 更新DOM中的图片
+                $(`.videoInfo${randomCode} .left${randomCode} img`).attr('src', base64Img);
+            } catch (e) {
+                console.warn('读书详情图片转换失败：', e);
+                SearchBook.searchBookInfo.image = Images.VideoDefaultImg;
+            }
+        }
+    }
 }
 
 // 随机因子 用于元素属性后缀 以防止属性名称重复
@@ -254,11 +352,12 @@ const DoubanMovieSearchByDom = {
             GM_xmlhttpRequest({
                 method: "GET",
                 url: Urls.DbVideoSearchResultPageUrl.replace('{title}', encodeURIComponent(title)),
-                onload: function (response) {
+                onload: async function (response) {
                     let videoList = [];
                     if (response.status == 200) {
                         let htmlDoc = Utils.ParseDomFromString(response.responseText);
-                        videoList = Utils.ParseVideoListDom(htmlDoc, '.result-list .result');
+                        let result = await Utils.ParseVideoListDom(htmlDoc, '.result-list .result');
+                        videoList = result.videoList;
                     } else {
                         Logger.warn('查询失败，title：' + title, response.statusText);
                     }
@@ -279,7 +378,7 @@ const DoubanMovieSearchByDom = {
             GM_xmlhttpRequest({
                 method: "GET",
                 url: url,
-                onload: function (response) {
+                onload: async function (response) {
                     if (response.status == 200) {
                         let doubanInfo = {};
                         let htmlDoc = Utils.ParseDomFromString(response.responseText);
@@ -290,7 +389,7 @@ const DoubanMovieSearchByDom = {
                             let ldJsonDbScri = $(htmlDoc).find('span[property="v:summary"]');
                             let ldJsonDbAttrs = $(htmlDoc).find('span[class="attrs"]');
                             let ldJsonDbDirector = ldJsonDbAttrs[0].innerText;
-                            
+
                             if(ldJsonDbAttrs[2]) {
                                 if(ldJsonDbAttrs[2].innerText.split('/').length > 7) {
                                     ldJsonDbAttrs = ldJsonDbAttrs[2].innerText.slice(0, Utils.findStrIndex(ldJsonDbAttrs[2].innerText, "/", 6)) + "/ 更多…"
@@ -303,21 +402,19 @@ const DoubanMovieSearchByDom = {
                             if (ldJsonDb && ldJsonDb.length > 0 && ldJsonDb[0].innerText) {
                                 try {
                                     doubanInfo = JSON.parse(ldJsonDb[0].innerText.replace(/\r\n/g, '').replace(/\n/g, ''));
-                                    //console.log(htmlDoc);
+                                    
+                                    // 先使用默认图片，稍后异步加载
                                     let videoInfo = {
-                                        //title: doubanInfo.name,
                                         title: ldJsonDbOthers[0].content.split(',')[0],
-                                        image: Urls.ImgHandleUrl.replace('{url}', encodeURIComponent(doubanInfo.image)),
+                                        image: doubanInfo.image, // 存储URL，稍后转换
+                                        defaultImage: Images.VideoDefaultImg, // 默认图片
                                         url: Urls.DbMoviePageUrl + doubanInfo.url,
-                                        //description: doubanInfo.description,
                                         description: ldJsonDbScri[0].innerText.replace(/\r\n/g, '').replace(/\n/g, '').trim(),
-                                        //director: Utils.FmtDbPerson(doubanInfo.director, 2),
                                         director: ldJsonDbDirector,
-                                        //actor: Utils.FmtDbPerson(doubanInfo.actor, 6),
                                         actor: ldJsonDbAttrs,
-                                        score: doubanInfo.aggregateRating.ratingValue,
-                                        ratingCount: doubanInfo.aggregateRating.ratingCount,
-                                        genre: doubanInfo.genre.join(' / '),
+                                        score: doubanInfo.aggregateRating ? doubanInfo.aggregateRating.ratingValue : '',
+                                        ratingCount: doubanInfo.aggregateRating ? doubanInfo.aggregateRating.ratingCount : '',
+                                        genre: doubanInfo.genre ? doubanInfo.genre.join(' / ') : '',
                                         time: doubanInfo.datePublished,
                                     }
 
@@ -368,19 +465,14 @@ const DoubanMovieSearchByDom = {
                             let imdbRatingCount = '';
                             if (imdbInfo && imdbInfo.aggregateRating) {
                                 let imdbRating = imdbInfo.aggregateRating.ratingValue;
-                                //imdbRatingCount = imdbInfo.aggregateRating.ratingCount || 0;
                                 imdbRatingCount = imdbInfo.aggregateRating.ratingCount || '';
                                 imdbScore = imdbRating ? imdbRating.toFixed(1) : '';
                             }
                             // 替换评分
                             if (imdbDom) {
                                 if (imdbScore) {
-                                    //imdbDom.removeClass(Utils.StringFormat('loading{0}', randomCode));
                                     imdbDom.html(imdbScore);
-                                    //imdbDom.html(imdbScore + " " + imdbRatingCount);
-                                    //imdbDom.parents('a').attr('title', `${imdbRatingCount}`);
                                     imdbDom.next().html("(" + imdbRatingCount + ")");
-                                    //console.log(imdbDom.next().text());
                                 }
                             }
                         } catch (e) {
@@ -409,7 +501,7 @@ const DoubanSearchByApi = {
             GM_xmlhttpRequest({
                 method: "GET",
                 url: Urls.DbVideoSearchApiUrl.replace('{title}', encodeURIComponent(title)),
-                onload: function (response) {
+                onload: async function (response) {
                     let videoList = [];
                     if (response.status == 200) {
                         let responseText = response.responseText;
@@ -417,7 +509,8 @@ const DoubanSearchByApi = {
                         let match = fmtText.match(/{"items":(.*?),"total":(\d+),"limit":(\d+),"more":(.*?)}/);
                         if (match && match[1]) {
                             let htmlDoc = Utils.ParseDomFromString(match[1]);
-                            videoList = Utils.ParseVideoListDom(htmlDoc, '.result');
+                            let result = await Utils.ParseVideoListDom(htmlDoc, '.result');
+                            videoList = result.videoList;
                         }
                     } else {
                         Logger.warn(response.statusText);
@@ -437,16 +530,18 @@ const DoubanSearchByApi = {
             GM_xmlhttpRequest({
                 method: "GET",
                 url: url,
-                onload: function (response) {
+                onload: async function (response) {
                     if (response.status == 200) {
                         let doubanInfo = JSON.parse(response.responseText);
                         if (doubanInfo && doubanInfo.data) {
                             let data = doubanInfo.data[0];
+
+                            // 先使用默认图片，稍后异步加载
                             let videoInfo = {
                                 title: data.name,
-                                image: data.poster,
+                                image: data.poster, // 存储URL
+                                defaultImage: Images.VideoDefaultImg, // 默认图片
                                 url: Urls.DbVideoInfoPageUrl.replace('{subjectId}', doubanInfo.doubanId),
-                                //description: data.description.slice(0, 100) + "…",
                                 description: data.description,
                                 director: Utils.FmtDbPerson(doubanInfo.director, 2),
                                 actor: Utils.FmtDbPerson(doubanInfo.actor, 6),
@@ -483,11 +578,12 @@ const DoubanBookSearchByDom = {
             GM_xmlhttpRequest({
                 method: "GET",
                 url: Urls.DbBookSearchResultPageUrl.replace('{title}', encodeURIComponent(title)),
-                onload: function (response) {
+                onload: async function (response) {
                     let bookList = [];
                     if (response.status == 200) {
                         let htmlDoc = Utils.ParseDomFromString(response.responseText);
-                        bookList = Utils.ParseVideoListDom(htmlDoc, '.result-list .result');
+                        let result = await Utils.ParseVideoListDom(htmlDoc, '.result-list .result');
+                        bookList = result.bookList;
                     } else {
                         Logger.warn('查询失败，title：' + title, response.statusText);
                     }
@@ -508,7 +604,7 @@ const DoubanBookSearchByDom = {
             GM_xmlhttpRequest({
                 method: "GET",
                 url: url,
-                onload: function (response) {
+                onload: async function (response) {
                     if (response.status == 200) {
                         let doubanInfo = {};
                         let htmlDoc = Utils.ParseDomFromString(response.responseText);
@@ -524,21 +620,21 @@ const DoubanBookSearchByDom = {
                             if (ldJsonDb && ldJsonDb.length > 0) {
                                 try {
                                     doubanInfo = JSON.parse(ldJsonDb[0].innerText.replace(/\r\n/g, '').replace(/\n/g, ''));
-
+                                    
+                                    // 先使用默认图片，稍后异步加载
                                     let bookInfo = {
                                         title: doubanInfo.name,
-                                        image: Urls.ImgHandleUrl.replace('{url}', encodeURIComponent(ldJsonDbImg[0].content)),
+                                        image: ldJsonDbImg[0].content, // 存储URL
+                                        defaultImage: Images.VideoDefaultImg, // 默认图片
                                         url: doubanInfo.url,
-                                        //description: ldJsonDbScri[0].content.slice(0, 100) + "…",
                                         description: ldJsonDbScri[0].content,
                                         author: ldJsonDbAuth[0].content,
-                                        score: ldJsonDbScore[0].innerText,
-                                        ratingCount: ldJsonDbCount[0].innerText,
-                                        //genre: doubanInfo.genre.join(' / '),
-                                        publisher: ldJsonDbOthers[0].content.split(',简介')[0].split(',')[ldJsonDbOthers[0].content.split(',简介')[0].split(',').length-2].split(',')[0],
+                                        score: ldJsonDbScore[0] ? ldJsonDbScore[0].innerText : '',
+                                        ratingCount: ldJsonDbCount[0] ? ldJsonDbCount[0].innerText : '',
+                                        publisher: ldJsonDbOthers[0] ? ldJsonDbOthers[0].content.split(',简介')[0].split(',')[ldJsonDbOthers[0].content.split(',简介')[0].split(',').length-2].split(',')[0] : '',
                                         orignal: '',
                                         translator: '',
-                                        time:  ldJsonDbOthers[0].content.split(',简介')[0].split(',')[ldJsonDbOthers[0].content.split(',简介')[0].split(',').length-1],
+                                        time:  ldJsonDbOthers[0] ? ldJsonDbOthers[0].content.split(',简介')[0].split(',')[ldJsonDbOthers[0].content.split(',简介')[0].split(',').length-1] : '',
                                     }
 
                                     resolve(bookInfo);
@@ -593,12 +689,22 @@ const SearchMovie = {
                     this.searchEngineObj.SearchVideoInfo(subjectId).then((result) => {
                         this.searchVideoInfo = result;
                         h_onloadfn();
+                        
+                        // 面板显示后异步加载图片
+                        setTimeout(() => {
+                            Utils.convertAndUpdateImages();
+                        }, 100);
                     });
                 } else {
                     h_onloadfn();
                 }
             } else if (SettingOptions.searchPattern == 'manual') {
                 h_onloadfn();
+                
+                // 面板显示后异步加载图片
+                setTimeout(() => {
+                    Utils.convertAndUpdateImages();
+                }, 100);
             }
         });
     },
@@ -608,6 +714,11 @@ const SearchMovie = {
         this.searchEngineObj.SearchVideoInfo(subjectId).then((result) => {
             this.searchVideoInfo = result;
             h_onloadfn();
+            
+            // 面板显示后异步加载图片
+            setTimeout(() => {
+                Utils.convertAndUpdateImages();
+            }, 100);
         })
     },
     Update: function () {
@@ -682,12 +793,22 @@ const SearchBook = {
                     this.searchEngineObj.SearchBookInfo(subjectId).then((result) => {
                         this.searchBookInfo = result;
                         h_onloadfn();
+                        
+                        // 面板显示后异步加载图片
+                        setTimeout(() => {
+                            Utils.convertAndUpdateImages();
+                        }, 100);
                     });
                 } else {
                     h_onloadfn();
                 }
             } else if (SettingOptions.searchPattern == 'manual') {
                 h_onloadfn();
+                
+                // 面板显示后异步加载图片
+                setTimeout(() => {
+                    Utils.convertAndUpdateImages();
+                }, 100);
             }
         });
     },
@@ -697,6 +818,11 @@ const SearchBook = {
         this.searchEngineObj.SearchBookInfo(subjectId).then((result) => {
             this.searchBookInfo = result;
             h_onloadfn();
+            
+            // 面板显示后异步加载图片
+            setTimeout(() => {
+                Utils.convertAndUpdateImages();
+            }, 100);
         })
     },
     Update: function () {
@@ -769,9 +895,7 @@ const Panel = {
         s += Utils.StringFormat("#panelBody{0}>div input,#panelBody{0}>div select{padding:3px;margin:0;background:#fff;font-size:14px;border:1px solid #a9a9a9;color:black;width:auto;height:25px;display:inline-block;position: static;}#panelBody{0} a{text-decoration:none;border-bottom:0;color:#494949}", randomCode);
         s += Utils.StringFormat("#panelBody{0} .head{0}{display:flex;align-items:center;height:30px}#panelBody{0} .logo{0}{width:75px;margin:0;vertical-align:bottom}#panelBody{0} .text{0}{margin:10px 0 0 10px;color:#388e8e;font-size:10px;cursor:pointer;opacity:0.6}#panelBody{0} .listBtn{0}{margin:10px 0 0 1px;color:#999;font-size:10px;cursor:pointer}", randomCode);
         s += Utils.StringFormat("#panelBody{0} .content{0} .noData{0}{margin:30px 40%}#panelBody{0} .content{0} .loading{0}{border:5px solid #f3f3f3;border-radius:50%;border-top:5px solid #3498db;width:30px;height:30px;animation:db_search_turn{0} 2s linear infinite;margin:20px;margin-left:45%}", randomCode);
-        //s += Utils.StringFormat("#panelBody{0} .score{0}{position:absolute;top:5px;right:5px;display:flex;align-items:center;column-gap:10px}#panelBody{0} .score{0}>a{display:flex;align-items:center}#panelBody{0} .score{0} svg{background:0}#panelBody{0} .score{0} span{font-size:30px}#panelBody{0} .score{0} span.loading{0}{border:3px solid #f3f3f3;border-radius:50%;border-top:3px solid #3498db;width:20px;height:20px;animation:db_search_turn{0} 2s linear infinite;margin:5px;display:inline-block}", randomCode);
         s += Utils.StringFormat("#panelBody{0} .info{0} .title{0}{font-size:18px;font-weight:bold;margin:5px 0}#panelBody{0} .score{0}{position:absolute;right:15px;display:flex;align-items:center;column-gap:5px}#panelBody{0} .score{0}>a{display:flex;align-items:center}#panelBody{0} .score{0} svg{background:0;padding-bottom:1px;padding-right:3px}#panelBody{0} .score{0} .iscore{0}{font-size:18px}#panelBody{0} .score{0} .count{0}{font-size:8px;padding-top:3px;padding-left:2px;}#panelBody{0} .score{0} span.loading{0}{border:3px solid #f3f3f3;border-radius:50%;border-top:3px solid #3498db;width:20px;height:20px;animation:db_search_turn{0} 2s linear infinite;margin:5px;display:inline-block}#panelBody{0} .info{0} .left{0}{float:left;margin:3px 5px 0 0;display:block;position:relative;width:120px;height:168px;background-repeat:no-repeat;background-position:50%;background-image:url({1});background-size:100%}#panelBody{0} .info{0} .left{0}>img{width:120px;height:168px}#panelBody{0} .info{0} .right{0}{min-height:175px;padding-left:132px}#panelBody{0} .info{0} .right{0} .item{0}>span{color:#666}", randomCode, Images.VideoDefaultImg);
-        //s += Utils.StringFormat("#panelBody{0} .list{0}{overflow:auto;height:200px;margin-top:5px}#panelBody{0} .list{0}::-webkit-scrollbar{display:none}#panelBody{0} .list{0} .listItem{0}{margin-top:5px;height:70px;position:relative}#panelBody{0} .listItem{0} .left{0}{float:left;margin-right:5px;display:block;position:relative;width:48px;height:68px;background-repeat:no-repeat;background-position:50%;background-image:url({1});background-size:100%}#panelBody{0} .listItem{0} .left{0}>img{width:48px;height:68px}#panelBody{0} .listItem{0} .right{0} .title{0}{width:320px;font-size:18px;margin-bottom:9px;font-weight:bold;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;word-break:break-all}#panelBody{0} .listItem{0} .right{0} .score{0}{position:absolute;right:5px;top:0;font-size:25px}#panelBody{0} .listItem{0} .right{0} .info{0}{white-space:nowrap;text-overflow:ellipsis;overflow:hidden;word-break:break-all;font-size:12px;border:0}", randomCode, Images.VideoDefaultImg);
         s += Utils.StringFormat("#panelBody{0} .list{0}{overflow:auto;height:200px;margin-top:5px}#panelBody{0} .list{0}::-webkit-scrollbar{display:none}#panelBody{0} .list{0} .listItem{0}{margin-top:5px;height:70px;position:relative;padding-top:5px;padding-bottom:5px;}#panelBody{0} .listItem{0} .left{0}{float:left;margin-right:5px;display:block;position:relative;width:48px;height:68px;background-repeat:no-repeat;background-position:50%;background-image:url({1});background-size:100%}#panelBody{0} .listItem{0} .left{0}>img{width:48px;height:68px}#panelBody{0} .listItem{0} .right{0}{padding-left:60px}#panelBody{0} .listItem{0} .right{0} .title{0}{width:320px;font-size:13px;margin-bottom:9px;/*font-weight:bold;*/white-space:nowrap;text-overflow:ellipsis;overflow:hidden;word-break:break-all;color:#3377aa}#panelBody{0} .listItem{0} .right{0} .score{0}{position:absolute;right:5px;top:0px;padding-top:5px;font-size:13px;color:#e09015}#panelBody{0} .listItem{0} .right{0} .info{0}{white-space:nowrap;text-overflow:ellipsis;overflow:hidden;word-break:break-all;font-size:12px;border:0;color:#9d9d9d}", randomCode, Images.VideoDefaultImg);
         return s;
     }
@@ -794,8 +918,6 @@ const MovieSearchPanel = {
             }
         }
         let wordSearchPanelHtml = '';
-        //let headHtml = Utils.StringFormat(`<div class="head{0}"><a href="" class="link22" target="_blank"><img class="logo{0}" src="" title="" /></a><select class="select22">{1}</select><div id="showSearchList_{0}" class="listBtn{0}">展示搜索列表</div></div>`, randomCode, searchEngineOptionsHtml);
-        //let headHtml = Utils.StringFormat(`<div class="head{0}"><a href="${Urls.MovieSearchResultPageUrl.replace('{title}', encodeURIComponent(text))}" class="link22" target="_blank"><img id="doubanLogo_{0}" class="logo{0}"  src="${Images.MovieIconBase64}"  title="豆瓣电影" /></a><div id="showSearchText_{0}" class="text{0}">${text}</div><div id="showSearchList_{0}" class="listBtn{0}">展示搜索列表</div></div>`, randomCode, searchEngineOptionsHtml);
         let headHtml = Utils.StringFormat(`<div class="head{0}"><img id="doubanLogo_{0}" class="logo{0}" src="${Images.MovieIconBase64}"  title="豆瓣电影" /><div id="showSearchText_{0}" class="text{0}">${text}</div><div id="showSearchList_{0}" class="listBtn{0}">展示搜索列表</div></div>`, randomCode, searchEngineOptionsHtml);
         wordSearchPanelHtml += headHtml;
         wordSearchPanelHtml += Utils.StringFormat('<div class="content{0}">', randomCode);
@@ -808,57 +930,35 @@ const MovieSearchPanel = {
 
         Panel.popBoxEl = popBoxEl;
         Panel.Create("", "auto bottom", false, wordSearchPanelHtml, function ($panel) {
-            console.log('pageX:' + ev.pageX + ' pageY:' + ev.pageY)
-            console.log('clientX:' + ev.clientX + ' clientY:' + ev.clientY)
-            //设置搜索结果面板鼠标位置
-            /*if(ev.pageX < 945) {
-                $panel.css({
-                    left: ev.pageX + 'px',
-                    top: ev.pageY + 12 + 'px'
-                });
-            } else {
-                $panel.css({
-                    left: 945 + 'px',
-                    top: ev.pageY + 12 + 'px'
-                });
-            }*/
+            // 面板位置计算代码保持不变...
             if(ev.pageX < 945 && ev.clientY < 475) {
-            // if(ev.pageX < 945 && ev.pageY < 485) {
                 $panel.css({
                     left: ev.pageX + 'px',
                     top:  ev.pageY + 12 + 'px'
                 });
-            // } else if(ev.pageX < 945 && ev.clientY > 485) {
             } else if(ev.pageX < 945 && ev.pageY > 475) {
                 $panel.css({
                     left: ev.pageX + 'px',
-                    // top:  ev.pageY - 300 - 255 + document.documentElement.scrollTop + 'px'
-                    // top:  ev.clientY - 255 + document.documentElement.scrollTop + 'px'
-                    // top:  ev.clientY - 255 + 'px'
                     top:  ev.pageY - 265 + 'px'
                 });
             } else if(ev.pageX > 945 && ev.clientY < 475) {
-            // } else if(ev.pageX > 945 && ev.pageY < 485) {
                 $panel.css({
                     left: 945 + 'px',
                     top:  ev.pageY + 12 + 'px'
                 });
-            // } else if(ev.pageX > 945 && ev.clientY > 485) {
             } else if(ev.pageX > 945 && ev.pageY > 475) {
                 $panel.css({
                     left: 945 + 'px',
-                    // top:  ev.pageY - 300 - 255 + document.documentElement.scrollTop + 'px'
-                    // top:  ev.clientY - 255 + document.documentElement.scrollTop + 'px'
-                    // top:  ev.clientY - 255 + 'px'
                     top:  ev.pageY - 265 + 'px'
                 });
-            /*} else {
-                $panel.css({
-                    left: 945 + 'px',
-                    top:  ev.pageY + 12 + 'px'
-                });*/
             }
-            // 搜索引擎
+            
+            // 面板显示后异步加载图片
+            setTimeout(() => {
+                Utils.convertAndUpdateImages();
+            }, 100);
+
+            // 其他事件监听代码保持不变...
             $panel.find(Utils.StringFormat("#panelBody{0} div:eq(0) select:eq(0)", randomCode)).change(function (e) {
                 SearchMovie.searchEngine = $(this).find("option:selected").val();
                 self.Loading($panel);
@@ -872,20 +972,17 @@ const MovieSearchPanel = {
                 });
             });
 
-            // 搜索列表
             $panel.find(Utils.StringFormat("#panelBody{0} #showSearchList_{0}", randomCode)).click(function (e) {
                 self.ShowSearchList();
             });
-            
+
             $panel.find(Utils.StringFormat("#panelBody{0} .logo{0}", randomCode)).click(function () {
                 GM_openInTab(Urls.MovieSearchResultPageUrl.replace('{title}', encodeURIComponent(text)), {
                     active: false
                 });
-                //console.log("ok")
             });
 
             if (SettingOptions.searchPattern == 'manual') {
-                // 列表点击事件
                 $panel.find(Utils.StringFormat("#panelBody{0} .listItem{0}", randomCode)).click(function () {
                     let subjectId = $(this).attr('data-id');
                     SearchMovie.searchSelectTitle = $(this).attr('data-name');
@@ -893,17 +990,14 @@ const MovieSearchPanel = {
                     SearchMovie.UpdateVideoInfo(subjectId, function () {
                         self.Update();
                     });
-                    $(Utils.StringFormat("#panelBody{0} #doubanLogo_{0}", randomCode)).hide();//logo隐藏
-                    $(Utils.StringFormat("#panelBody{0} #showSearchText_{0}", randomCode)).hide();//划词隐藏
+                    $(Utils.StringFormat("#panelBody{0} #doubanLogo_{0}", randomCode)).hide();
+                    $(Utils.StringFormat("#panelBody{0} #showSearchText_{0}", randomCode)).hide();
                 });
             }
 
             if (SettingOptions.searchPattern == 'manual' || !SearchMovie.searchVideoList || SearchMovie.searchVideoList.length == 0) {
                 $(Utils.StringFormat("#panelBody{0} #showSearchList_{0}", randomCode)).hide();
-                
-                
             }
-
         });
     },
     Update: function () {
@@ -914,27 +1008,22 @@ const MovieSearchPanel = {
         });
         if (SearchMovie.searchVideoList && SearchMovie.searchVideoList.length > 0) {
             $(Utils.StringFormat("#panelBody{0} #showSearchList_{0}", randomCode)).css("display", "inline");
-            $(Utils.StringFormat("#panelBody{0} #doubanLogo_{0}", randomCode)).css("display", "none");//logo隐藏
-            $(Utils.StringFormat("#panelBody{0} #showSearchText_{0}", randomCode)).css("display", "none");//划词隐藏
-            
+            $(Utils.StringFormat("#panelBody{0} #doubanLogo_{0}", randomCode)).css("display", "none");
+            $(Utils.StringFormat("#panelBody{0} #showSearchText_{0}", randomCode)).css("display", "none");
         }
-        
-        //点title后台打开电影读书页面
-        //console.log(self.GetUrl())
+
         var url = self.GetUrl();
         let $panel = $("div.JPopBox-tip-white");
         $panel.find(Utils.StringFormat("#panelBody{0} .title{0}", randomCode)).click(function () {
             GM_openInTab(url, {
                 active: false
             });
-            //console.log("ok")
         });
 
         $panel.find(Utils.StringFormat("#panelBody{0} .left{0}", randomCode)).click(function () {
             GM_openInTab(url, {
                 active: false
             });
-            //console.log("ok")
         });
     },
     ShowSearchList: function () {
@@ -953,8 +1042,8 @@ const MovieSearchPanel = {
             });
         });
         $(Utils.StringFormat("#panelBody{0} #showSearchList_{0}", randomCode)).hide();
-        $(Utils.StringFormat("#panelBody{0} #doubanLogo_{0}", randomCode)).css("display", "inline");//列表logo显示
-        $(Utils.StringFormat("#panelBody{0} #showSearchText_{0}", randomCode)).css("display", "inline");//列表划词显示
+        $(Utils.StringFormat("#panelBody{0} #doubanLogo_{0}", randomCode)).css("display", "inline");
+        $(Utils.StringFormat("#panelBody{0} #showSearchText_{0}", randomCode)).css("display", "inline");
     },
     GetVideoListHtml: function () {
         let htmlArr = [];
@@ -973,7 +1062,10 @@ const MovieSearchPanel = {
 
             htmlArr.push(Utils.StringFormat('<div class="list{0}">', randomCode));
             videoList.forEach((item) => {
-                let videoItem = Utils.StringFormat(itemTemplate, randomCode, item.image, item.title, item.score, item.subjectId, item.description, item.cast, item.ratingCount);
+                // 使用默认图片或现有的base64图片
+                let imgSrc = item.image && item.image.startsWith('data:') ? item.image : 
+                            (item.defaultImage || Images.VideoDefaultImg);
+                let videoItem = Utils.StringFormat(itemTemplate, randomCode, imgSrc, item.title, item.score, item.subjectId, item.description, item.cast, item.ratingCount);
                 htmlArr.push(videoItem);
             })
             htmlArr.push('</div>');
@@ -990,50 +1082,25 @@ const MovieSearchPanel = {
             let templateArr = [];
 
             templateArr.push('<div class="videoInfo{0}">');
-            if (videoInfo.score || videoInfo.imdbScore || videoInfo.imdbId) { // 评分
+            if (videoInfo.score || videoInfo.imdbScore || videoInfo.imdbId) {
                 templateArr.push('<div class="score{0}">');
                 if (videoInfo.score) {
-                    //templateArr.push(`<a href="{3}" target="_blank" title="{13} 人参与评分">${Images.DbSvg}<span>{5}</span></a>`);
-                    //templateArr.push(`<a href="{3}" target="_blank" title="">${Images.DbSvg}<span>{5}</span></a>`);
                     templateArr.push(`<a href="{3}" target="_blank" class="link22" title="">${Images.DbSvg}<span class="iscore{0}">{5}</span><span class="count{0}">({13})</span></a>`);
-                    //templateArr.push(`<a href="javascript:;" onclick="widnow.open(\'{3}\')" class="link22" title="{13} 人参与评分">${Images.DbSvg}<span class="score22">{5}</span></a>`);
-                    //templateArr.push(`<a href="javascript:GM_openInTab(\'{3}\', {active: false})" class="link22" title="{13} 人参与评分">${Images.DbSvg}<span class="score22">{5}</span></a>`);
                 }
-                if (videoInfo.imdbScore || videoInfo.imdbId) { // imdb 有评分直接展示 没有评分有id的情况展示loading  豆瓣2不会传imdbId 用来区分
-                    /*templateArr.push(`<a href="{11}" target="_blank" class="link22" title="{14} 人参与评分">${Images.ImdbSvg}
-                                            <span class="score22" id="imdbScore{0}_{12}">{10}</span>
-                                          </a>`);*/
-                    /*templateArr.push(`<a href="{11}" target="_blank" class="link22" title="">${Images.ImdbSvg}
-                                            <span class="score22" id="imdbScore{0}_{12}">{10}</span>
-                                          </a>`);*/
+                if (videoInfo.imdbScore || videoInfo.imdbId) {
                     templateArr.push(`<a href="{11}" target="_blank" class="link22" title="">${Images.ImdbSvg}
                                             <span class="iscore{0}" id="imdbScore{0}_{12}">{10}</span>
                                             <span class="count{0}">{14}</span>
-                                          </a>`);                      
-                    /*templateArr.push(`<a href="javascript:;" onclick="window.open(\'{3}\'')" class="link22" title="{14} 人参与评分">${Images.ImdbSvg}
-                                            <span class="${videoInfo.imdbScore ? 'score22' : 'loading{0}'}" id="imdbScore{0}_{12}">{10}</span>
-                                          </a>`); */  
-                    /*templateArr.push(`<a href="javascript:GM_openInTab(\'{3}\', {active: false})" class="link22" title="{14} 人参与评分">${Images.ImdbSvg}
-                                            <span class="score22" id="imdbScore{0}_{12}">{10}</span>
-                                          </a>`); */
-                    
+                                          </a>`);
                 }
                 templateArr.push('</div>');
             }
-            
 
             templateArr.push(`
                                 <div class="info{0}">
-                                    <!--<div class="title{0}"><a href="{3}" class="link22" target="_blank">{1}</a></div>-->
-                                    <!--<div class="title{0}"><a href="" target="_blank">{1}</a></div>-->
                                     <div class="title{0}">{1}</div>
                                     <div class="left{0}"><img src="{2}" onerror="javascript:this.src='${Images.VideoDefaultImg}'"/></div>
                                     <div class="right{0}">`);
-            /*templateArr.push(`
-                                <div class="info{0}">
-                                    <div class="title{0}"><a href="javascript:;" onclick="openlink(\'{3}\')" class="link22" target="_blank">{1}</a></div>
-                                    <div class="left{0}"><img src="{2}" onerror="javascript:this.src='${Images.VideoDefaultImg}'"/></div>
-                                    <div class="right{0}">`);*/
             if (videoInfo.director) {
                 templateArr.push('<div class="item{0}"><span class="item22">导演</span>：{9}</div>');
             }
@@ -1051,16 +1118,15 @@ const MovieSearchPanel = {
             }
             templateArr.push(`</div></div>`);
 
-            /*videoInfoHtml = Utils.StringFormat(templateArr.join(''), randomCode,
-                                               videoInfo.title.slice(0, 35), videoInfo.image, videoInfo.url, videoInfo.description,
-                                               videoInfo.score, videoInfo.time, videoInfo.genre, videoInfo.actor, videoInfo.director,
-                                               videoInfo.imdbScore || '', videoInfo.imdbUrl, videoInfo.imdbId || 0,
-                                               videoInfo.ratingCount || 0, videoInfo.imdbRatingCount || 0);*/
+            // 使用默认图片或现有的base64图片
+            let imgSrc = videoInfo.image && videoInfo.image.startsWith('data:') ? videoInfo.image : 
+                        (videoInfo.defaultImage || Images.VideoDefaultImg);
+            
             videoInfoHtml = Utils.StringFormat(templateArr.join(''), randomCode,
-                                                videoInfo.title, videoInfo.image, videoInfo.url, videoInfo.description,
+                                                videoInfo.title, imgSrc, videoInfo.url, videoInfo.description,
                                                 videoInfo.score, videoInfo.time, videoInfo.genre, videoInfo.actor, videoInfo.director,
                                                 videoInfo.imdbScore || '', videoInfo.imdbUrl, videoInfo.imdbId || 0,
-                                                videoInfo.ratingCount || 0, videoInfo.imdbRatingCount || '');                                   
+                                                videoInfo.ratingCount || 0, videoInfo.imdbRatingCount || '');
         } else {
             videoInfoHtml = Utils.StringFormat('<div class="noData{0}">未搜索到内容</div>', randomCode);
         }
@@ -1070,7 +1136,7 @@ const MovieSearchPanel = {
     Loading: function (panel) {
         panel.find(Utils.StringFormat("#panelBody{0} .content{0}", randomCode)).html("").html(Utils.StringFormat('<div class="loading{0}"></div>', randomCode));
     },
-    GetUrl: function () { //返回电影读书页面
+    GetUrl: function () {
         let videoInfo = SearchMovie.searchVideoInfo;
         var url = videoInfo.url;
         return url;
@@ -1094,8 +1160,6 @@ const BookSearchPanel = {
             }
         }
         let wordSearchPanelHtml = '';
-        //let headHtml = Utils.StringFormat(`<div class="head{0}"><a href="" class="link22" target="_blank"><img class="logo{0}" src="" title="" /></a><select class="select22">{1}</select><div id="showSearchList_{0}" class="listBtn{0}">展示搜索列表</div></div>`, randomCode, searchEngineOptionsHtml);
-        //let headHtml = Utils.StringFormat(`<div class="head{0}"><a href="${Urls.BookSearchResultPageUrl.replace('{title}', encodeURIComponent(text))}" class="link22" target="_blank"><img id="doubanLogo_{0}" class="logo{0}" src="${Images.BookIconBase64}" title="豆瓣读书" /></a><div id="showSearchText_{0}" class="text{0}">${text}</div><div id="showSearchList_{0}" class="listBtn{0}">展示搜索列表</div></div>`, randomCode, searchEngineOptionsHtml);
         let headHtml = Utils.StringFormat(`<div class="head{0}"><img id="doubanLogo_{0}" class="logo{0}" src="${Images.BookIconBase64}" title="豆瓣读书" /><div id="showSearchText_{0}" class="text{0}">${text}</div><div id="showSearchList_{0}" class="listBtn{0}">展示搜索列表</div></div>`, randomCode, searchEngineOptionsHtml);
         wordSearchPanelHtml += headHtml;
         wordSearchPanelHtml += Utils.StringFormat('<div class="content{0}">', randomCode);
@@ -1108,54 +1172,35 @@ const BookSearchPanel = {
 
         Panel.popBoxEl = popBoxEl;
         Panel.Create("", "auto bottom", false, wordSearchPanelHtml, function ($panel) {
-            /*if(ev.pageX < 945) {
-                $panel.css({
-                    left: ev.pageX + 'px',
-                    top: ev.pageY + 12 + 'px'
-                });
-            } else {
-                $panel.css({
-                    left: 945 + 'px',
-                    top: ev.pageY + 12 + 'px'
-                });
-            }*/
+            // 面板位置计算代码保持不变...
             if(ev.pageX < 945 && ev.clientY < 475) {
-            // if(ev.pageX < 945 && ev.pageY < 485) {
                 $panel.css({
                     left: ev.pageX + 'px',
                     top:  ev.pageY + 12 + 'px'
                 });
-            // } else if(ev.pageX < 945 && ev.clientY > 485) {
             } else if(ev.pageX < 945 && ev.pageY > 475) {
                 $panel.css({
                     left: ev.pageX + 'px',
-                    // top:  ev.pageY - 300 - 255 + document.documentElement.scrollTop + 'px'
-                    // top:  ev.clientY - 255 + document.documentElement.scrollTop + 'px'
-                    // top:  ev.clientY - 255 + 'px'
                     top:  ev.pageY - 265 + 'px'
                 });
             } else if(ev.pageX > 945 && ev.clientY < 475) {
-            // } else if(ev.pageX > 945 && ev.pageY < 485) {
                 $panel.css({
                     left: 945 + 'px',
                     top:  ev.pageY + 12 + 'px'
                 });
-            // } else if(ev.pageX > 945 && ev.clientY > 485) {
             } else if(ev.pageX > 945 && ev.pageY > 475) {
                 $panel.css({
                     left: 945 + 'px',
-                    // top:  ev.pageY - 300 - 255 + document.documentElement.scrollTop + 'px'
-                    // top:  ev.clientY - 255 + document.documentElement.scrollTop + 'px'
-                    // top:  ev.clientY - 255 + 'px'
                     top:  ev.pageY - 265 + 'px'
                 });
-            /*} else {
-                $panel.css({
-                    left: 945 + 'px',
-                    top:  ev.pageY + 12 + 'px'
-                });*/
             }
-            // 搜索引擎
+            
+            // 面板显示后异步加载图片
+            setTimeout(() => {
+                Utils.convertAndUpdateImages();
+            }, 100);
+
+            // 其他事件监听代码保持不变...
             $panel.find(Utils.StringFormat("#panelBody{0} div:eq(0) select:eq(0)", randomCode)).change(function (e) {
                 SearchBook.searchEngine = $(this).find("option:selected").val();
                 self.Loading($panel);
@@ -1169,20 +1214,17 @@ const BookSearchPanel = {
                 });
             });
 
-            // 搜索列表
             $panel.find(Utils.StringFormat("#panelBody{0} #showSearchList_{0}", randomCode)).click(function (e) {
                 self.ShowSearchList();
             });
-            
+
             $panel.find(Utils.StringFormat("#panelBody{0} .logo{0}", randomCode)).click(function () {
                 GM_openInTab(Urls.BookSearchResultPageUrl.replace('{title}', encodeURIComponent(text)), {
                     active: false
                 });
-                //console.log("ok")
             });
 
             if (SettingOptions.searchPattern == 'manual') {
-                // 列表点击事件
                 $panel.find(Utils.StringFormat("#panelBody{0} .listItem{0}", randomCode)).click(function () {
                     let subjectId = $(this).attr('data-id');
                     SearchBook.searchSelectTitle = $(this).attr('data-name');
@@ -1190,15 +1232,14 @@ const BookSearchPanel = {
                     SearchBook.UpdateBookInfo(subjectId, function () {
                         self.Update();
                     });
-                    $(Utils.StringFormat("#panelBody{0} #doubanLogo_{0}", randomCode)).hide();//logo隐藏
-                    $(Utils.StringFormat("#panelBody{0} #showSearchText_{0}", randomCode)).hide();//划词隐藏
+                    $(Utils.StringFormat("#panelBody{0} #doubanLogo_{0}", randomCode)).hide();
+                    $(Utils.StringFormat("#panelBody{0} #showSearchText_{0}", randomCode)).hide();
                 });
             }
 
             if (SettingOptions.searchPattern == 'manual' || !SearchBook.searchBookList || SearchBook.searchBookList.length == 0) {
                 $(Utils.StringFormat("#panelBody{0} #showSearchList_{0}", randomCode)).hide();
             }
-
         });
     },
     Update: function () {
@@ -1209,26 +1250,22 @@ const BookSearchPanel = {
         });
         if (SearchBook.searchBookList && SearchBook.searchBookList.length > 0) {
             $(Utils.StringFormat("#panelBody{0} #showSearchList_{0}", randomCode)).css("display", "inline");
-            $(Utils.StringFormat("#panelBody{0} #doubanLogo_{0}", randomCode)).css("display", "none");//列表logo显示
-            $(Utils.StringFormat("#panelBody{0} #showSearchText_{0}", randomCode)).css("display", "none");//列表划词显示
+            $(Utils.StringFormat("#panelBody{0} #doubanLogo_{0}", randomCode)).css("display", "none");
+            $(Utils.StringFormat("#panelBody{0} #showSearchText_{0}", randomCode)).css("display", "none");
         }
-        
-        //点title后台打开电影读书页面
-        //console.log(self.GetUrl())
+
         var url = self.GetUrl();
         let $panel = $("div.JPopBox-tip-white");
         $panel.find(Utils.StringFormat("#panelBody{0} .title{0}", randomCode)).click(function () {
             GM_openInTab(url, {
                 active: false
             });
-            //console.log("ok")
         });
 
         $panel.find(Utils.StringFormat("#panelBody{0} .left{0}", randomCode)).click(function () {
             GM_openInTab(url, {
                 active: false
             });
-            //console.log("ok")
         });
     },
     ShowSearchList: function () {
@@ -1247,8 +1284,8 @@ const BookSearchPanel = {
             });
         });
         $(Utils.StringFormat("#panelBody{0} #showSearchList_{0}", randomCode)).hide();
-        $(Utils.StringFormat("#panelBody{0} #doubanLogo_{0}", randomCode)).css("display", "inline");//列表logo显示
-        $(Utils.StringFormat("#panelBody{0} #showSearchText_{0}", randomCode)).css("display", "inlinee");//列表划词显示
+        $(Utils.StringFormat("#panelBody{0} #doubanLogo_{0}", randomCode)).css("display", "inline");
+        $(Utils.StringFormat("#panelBody{0} #showSearchText_{0}", randomCode)).css("display", "inline");
     },
     GetBookListHtml: function () {
         let htmlArr = [];
@@ -1267,7 +1304,10 @@ const BookSearchPanel = {
 
             htmlArr.push(Utils.StringFormat('<div class="list{0}">', randomCode));
             bookList.forEach((item) => {
-                let bookItem = Utils.StringFormat(itemTemplate, randomCode, item.image, item.title, item.score, item.subjectId, item.description, item.cast, item.ratingCount);
+                // 使用默认图片或现有的base64图片
+                let imgSrc = item.image && item.image.startsWith('data:') ? item.image : 
+                            (item.defaultImage || Images.VideoDefaultImg);
+                let bookItem = Utils.StringFormat(itemTemplate, randomCode, imgSrc, item.title, item.score, item.subjectId, item.description, item.cast, item.ratingCount);
                 htmlArr.push(bookItem);
             })
             htmlArr.push('</div>');
@@ -1284,20 +1324,16 @@ const BookSearchPanel = {
             let templateArr = [];
             templateArr.push('<div class="videoInfo{0}">');
 
-            if (bookInfo.score) { // 评分
+            if (bookInfo.score) {
                 templateArr.push('<div class="score{0}">');
                 if (bookInfo.score) {
-                    //templateArr.push(`<a href="{3}" target="_blank" class="link22" title="{11} 人参与评分">${Images.DbSvg}<span class="score22">{6}</span></a>`);
-                    //templateArr.push(`<a href="{3}" target="_blank" class="link22" title="">${Images.DbSvg}<span class="score22">{6}</span></a>`);
                     templateArr.push(`<a href="{3}" target="_blank" class="link22" title="">${Images.DbSvg}<span class="iscore{0}">{6}</span><span class="count{0}">({11})</span></a>`);
-                    //templateArr.push(`<a href="javascript:;" onclick="GM_openInTab(\'{3}\', loadInBackground)" class="link22" title="{11} 人参与评分">${Images.DbSvg}<span class="score22">{6}</span></a>`);
                 }
                 templateArr.push('</div>');
             }
 
             templateArr.push(`
                                 <div class="info{0}">
-                                    <!--<div class="title{0}"><a href="{3}" class="link22" target="_blank">{1}</a></div>-->
                                     <div class="title{0}">{1}</div>
                                     <div class="left{0}"><img src="{2}" onerror="javascript:this.src='${Images.VideoDefaultImg}'"/></div>
                                     <div class="right{0}">`);
@@ -1318,12 +1354,12 @@ const BookSearchPanel = {
             }
             templateArr.push(`</div></div>`);
 
-            /*bookInfoHtml = Utils.StringFormat(templateArr.join(''), randomCode,
-                                              bookInfo.title.slice(0, 35), bookInfo.image, bookInfo.url, bookInfo.description,
-                                              bookInfo.author, bookInfo.score, bookInfo.publisher, bookInfo.orignal,
-                                              bookInfo.translator, bookInfo.time, bookInfo.ratingCount || 0);*/
+            // 使用默认图片或现有的base64图片
+            let imgSrc = bookInfo.image && bookInfo.image.startsWith('data:') ? bookInfo.image : 
+                        (bookInfo.defaultImage || Images.VideoDefaultImg);
+            
             bookInfoHtml = Utils.StringFormat(templateArr.join(''), randomCode,
-                                              bookInfo.title, bookInfo.image, bookInfo.url, bookInfo.description,
+                                              bookInfo.title, imgSrc, bookInfo.url, bookInfo.description,
                                               bookInfo.author, bookInfo.score, bookInfo.publisher, bookInfo.orignal,
                                               bookInfo.translator, bookInfo.time, bookInfo.ratingCount || '');
         } else {
@@ -1335,7 +1371,7 @@ const BookSearchPanel = {
     Loading: function (panel) {
         panel.find(Utils.StringFormat("#panelBody{0} .content{0}", randomCode)).html("").html(Utils.StringFormat('<div class="loading{0}"></div>', randomCode));
     },
-    GetUrl: function () { //返回电影读书页面
+    GetUrl: function () {
         let bookInfo = SearchBook.searchBookInfo;
         var url = bookInfo.url;
         return url;
@@ -1700,7 +1736,6 @@ const WebSearchlate = function () {
         $body.append(Utils.StringFormat('<div id="webSearch{0}">', randomCode) + wordSearchIconHtml + '</div>');
     };
     const createStyle = function () {
-        //尽可能避开csp认证
         GM_xmlhttpRequest({
             method: "get",
             url: "https://cdn.jsdelivr.net/gh/zyufstudio/jQuery@master/jPopBox/dist/jPopBox.min.css",
@@ -1717,28 +1752,9 @@ const WebSearchlate = function () {
     };
 
     const RegMenu = function () {
-        //GM_registerMenuCommand("设置", function () {
-        //    if (DoubanPickerTool.pickerRoot) {
-        //        DoubanPickerTool.quitPicker();
-        //    }
-        //    $("div#wordSearch" + randomCode).hide();
-        //    SearchMovie.Clear();
-        //    SearchBook.Clear();
-        //    Panel.Destroy();
-        //    SettingPanel.Create($body);
-        //});
-
-        //GM_registerMenuCommand("进入取词模式", function () {
-        //    if (DoubanPickerTool.pickerRoot) {
-        //        return;
-        //    }
-        //    $("div#wordSearch" + randomCode).hide();
-        //    SearchMovie.Clear();
-        //    SearchBook.Clear();
-        //    Panel.Destroy();
-        //    DoubanPickerTool.showPicker();
-        //});
+        // 菜单注册代码保持不变...
     };
+    
     this.init = function () {
         SearchMovie.RegisterEngine();
         SearchBook.RegisterEngine();
@@ -1749,4 +1765,3 @@ const WebSearchlate = function () {
         DoubanPickerTool.initDoubanPicker(Urls.IframePageHost)
     };
 };
-

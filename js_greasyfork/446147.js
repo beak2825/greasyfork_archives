@@ -3,7 +3,7 @@
 // @description b站评论过滤器
 // @license MIT
 // @namespace dreamcenter
-// @version 3.1.0.3
+// @version 3.4.0.1
 // @match *://*.bilibili.com/video/*
 // @match *://*.bilibili.com/opus/*
 // @match *://space.bilibili.com/*/dynamic
@@ -31,13 +31,17 @@ let banAt = [
     "LexBurner"
 ]
 
+// 是否屏蔽全部笔记 [true/false]
+let banExpand = false
+
+/** ❀❀ 以下是可选调试项 ❀❀  **/
+
 // 控制台日志模式，F12控制台日志记录被屏蔽的内容【注意，正式使用时，务必改成false，否则会影响性能】 [true/false]
 let logMode = false
 // 即将被屏蔽的内容用红字体，而不隐藏 [true/false]
 let redLine = false
 
 /*******************************下方内容不要修改***************************************/
-
 const filterFunction = {
     bySpan (raw) {
         for(var key of banMap) {
@@ -56,6 +60,7 @@ const filterFunction = {
     }
 }
 
+// 判断通用评论屏蔽
 function judgeIfBanned(raw) {
     // 获取完整文本
     const fullText = (raw.innerText || raw.textContent || '').trim();
@@ -95,11 +100,17 @@ function judgeIfBanned(raw) {
     return false;
 }
 
+// 判断用户等级屏蔽
 function judgeIfLevelBanned(levelImg) {
     for(var key of banLevel) {
         if (levelImg.includes(key)) return true;
     }
     return false;
+}
+
+// 判断扩展内容屏蔽（目前只有笔记功能）
+function judgeIfExpandBanned(expandEL) {
+    return banExpand && expandEL
 }
 
 (function() {
@@ -135,10 +146,12 @@ function judgeIfLevelBanned(levelImg) {
                 var level = comment.shadowRoot.querySelector("#header > bili-comment-user-info").shadowRoot.querySelector("#user-level > img").src
                 // 获取楼主评论内容
                 var commentText = comment.shadowRoot.querySelector("#content > bili-rich-text").shadowRoot.querySelector("#contents");
+                // 含扩展内容评论
+                var expandEL = comment.shadowRoot.querySelector("#expand")
                 // 状态设置成已经过滤判断过
                 review.setAttribute('filtered',true)
                 // 过滤判断
-                if(judgeIfLevelBanned(level) || judgeIfBanned(commentText)) {
+                if(judgeIfLevelBanned(level) || judgeIfBanned(commentText) || judgeIfExpandBanned(expandEL)) {
                     if (logMode) console.log(commentText.innerText)
                     if (redLine) commentText.style.color = "red";
                     else review.style.display = "none";
@@ -158,7 +171,7 @@ function judgeIfLevelBanned(levelImg) {
                 if(judgeIfLevelBanned(replyLevel) || judgeIfBanned(replyCommentText)) {
                     if (logMode) console.log(replyCommentText.innerText)
                     if (redLine) replyCommentText.style.color = "red";
-                    else review.style.display = "none";
+                    else reply.style.display = "none";
                 }
             }
         }

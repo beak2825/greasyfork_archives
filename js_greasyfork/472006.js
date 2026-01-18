@@ -4,7 +4,7 @@
 // @author         Blaff, Blatomi, Atlantis, Rand0max
 // @namespace      JV_Chat_MP
 // @license        MIT
-// @version        0.1.112.v635_MP
+// @version        0.1.112.v650_MP
 // @icon           https://images.emojiterra.com/google/noto-emoji/unicode-15/color/128px/2709.png
 // @match          https://*.jeuxvideo.com/messages-prives/message.php*
 // @grant          none
@@ -3007,52 +3007,44 @@ function main() {
 
 
 //main();
-waittext2(main);
+
 
 /* ATTENDRE ZONE DE TEXTE JS */
-function waittext2(callback) {
-    const container = document.querySelector('#forums-post-message-editor, #forums-post-topic-editor, .jv-editor');
-    if (!container) return void console.warn("Pas de zone de texte"); // exit
-    const editor = container.querySelector('.messageEditor__containerEdit');
-    if (editor) return callback(); // trouve au chargement du script exit
-    const observer = new MutationObserver(() => {
-        if (container.querySelector('.messageEditor__containerEdit')) {
+(function() {
+    const container = document.querySelector('#bloc-formulaire-forum form, #repondre-mp form');
+    if (!container) return console.warn("Pas de zone de texte"); // exit
+    const textReact = '.messageEditor__containerEdit';
+    if (container.querySelector(textReact)) return main(); //déjà là => start et exit
+    const observer = new MutationObserver((muts) => {
+        if (container.querySelector(textReact)) {
             observer.disconnect();
             clearTimeout(timeout);
-            callback();
+            main();
         }
     });
     observer.observe(container, { childList: true, subtree: true });
     const timeout = setTimeout(() => observer.disconnect(), 4000); // abandon après 4 sec  exit
-}
+})();
 /* ATTENDRE ZONE DE TEXTE JS */
 
 //////////////////////// TEMPORAIRE BONUS /////////////////////////////////
 
 //FIX MAJ 2025 MP CITATION OPEN
-function correctOpenQuotes() {
-    const scopeMP = document.querySelector(".mp-page .conteneur-messages-pagi"); // Limite le scopeMP pour éviter les effets de bord
+(function () {
+    const scopeMP = document.querySelector(".mp-page .conteneur-messages-pagi"); // Limite le scope aux blocs MP pour ajout des balises et clicks
 
     if (!scopeMP) return; // Sécurité si l'élément n'existe pas
 
-    const allBlocsFo = scopeMP.querySelectorAll(".bloc-contenu");
-    for (const BlocsFo of allBlocsFo) {
-        const togglableQuotes = [...BlocsFo.querySelectorAll(".text-enrichi-forum > blockquote > blockquote")];
-        for (const togglableQuote of togglableQuotes) {
-            if (togglableQuote.querySelector(".nested-quote-toggle-box")) break; //Déjà ajouté on touche pas
-            togglableQuote.insertAdjacentHTML('afterbegin', `<div class="nested-quote-toggle-box fixed-quote"></div>`);
-        }
+    const togglableQuotes = scopeMP.querySelectorAll(".text-enrichi-forum > blockquote > blockquote");
+    for (const togglableQuote of togglableQuotes) {
+        if (togglableQuote.querySelector(".nested-quote-toggle-box")) continue; //Déjà ajouté on touche pas
+        togglableQuote.insertAdjacentHTML('afterbegin', `<div class="nested-quote-toggle-box fixed-quote"></div>`);
     }
-
-    scopeMP.querySelectorAll(".nested-quote-toggle-box.fixed-quote").forEach(button => {
-        button.addEventListener("click", () => {
-            const blockQuote = button.closest(".blockquote-jv");
-            if (!blockQuote) return;
-            const visibilityBeforeClick = blockQuote.getAttribute("data-visible");
-            blockQuote.setAttribute("data-visible", visibilityBeforeClick === "1" ? "" : "1");
-        });
+    scopeMP.addEventListener("click", e => {
+        const eventQuotes = e.target.closest(".nested-quote-toggle-box.fixed-quote");
+        if (!eventQuotes) return;
+        const blockQuote = eventQuotes.closest(".blockquote-jv");
+        const visibilityBeforeClick = blockQuote.dataset.visible;
+        blockQuote.dataset.visible = visibilityBeforeClick === "1" ? "" : "1";
     });
-}
-
-
-correctOpenQuotes();
+})();

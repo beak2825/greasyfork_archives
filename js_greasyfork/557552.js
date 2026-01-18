@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AnimeStars Card Master (fork)
 // @namespace    AnimeStars.org
-// @version      1.32
+// @version      1.33
 // @description  1) Показывает спрос на карты.
 // @description  2) Показывает дубликаты карт.
 // @description  3) Отправляет карты в "Не нужное".
@@ -21,12 +21,13 @@
 
 // @author       Jericho (Forked/Modified by RUSViRTuE)
 
-// @match        http*://*.animestars.org/*
-// @match        http*://*.animesss.com/*
-// @match        http*://*.animesss.tv/*
-// @match        http*://*.asstars.tv/*
-// @match        http*://*.astars.club/*
-// @match        http*://*.asstars.online/*
+// @match        *://*.animestars.org/*
+// @match        *://*.animesss.com/*
+// @match        *://*.animesss.tv/*
+// @match        *://*.asstars.tv/*
+// @match        *://*.asstars.onl/*
+// @match        *://*.asstars.online/*
+// @match        *://*.astars.club/*
 
 // @grant        GM_getValue
 // @grant        GM_setValue
@@ -63,6 +64,9 @@ async function runMainScript() {
 	const tabIdWatch = tabSession.id;
 	const tabTimestamp = tabSession.ts;
 	unsafeWindow.tabIdWatch = tabIdWatch;
+
+	var smartObservers = []; 
+	var smartObserverTimeout = null;
 
 // ##################################################
 // БЛОК ГЛОБАЛЬНЫХ ПЕРЕМЕННЫХ И НАСТРОЕК СКРИПТА!
@@ -149,8 +153,10 @@ async function runMainScript() {
 
     // -------------------- ОБЩИЕ ПЕРЕМЕННЫЕ СОСТОЯНИЯ --------------------
     let scriptInitialized = false; // Флаг, предотвращающий повторную инициализацию всего скрипта, если он уже был запущен.
-    let isLeaderWatch = false; // Флаг, показывающий, является ли текущая вкладка "лидером" для выполнения фоновых задач (например, автосбора карт с просмотра видео).
-    const currentUrlParams = new URLSearchParams(window.location.search); // Объект для удобного доступа к GET-параметрам текущего URL.
+	let isLeaderWatch = false; // Флаг, показывающий, является ли текущая вкладка "лидером" для выполнения фоновых задач (например, автосбора карт с просмотра видео).
+	let clickerIntervalId = null; // ID таймера для цикличных кликов в шахте (Турбо-вклад)
+	let controlButton = null; // Ссылка на DOM-элемент кнопки управления Турбо-вкладом
+	const currentUrlParams = new URLSearchParams(window.location.search); // Объект для удобного доступа к GET-параметрам текущего URL.
     const isTradePreviewIframe = currentUrlParams.get('as_preview_iframe') === 'true'; // Флаг, определяющий, является ли страница специальным iframe для предпросмотра трейда.
 
     // -------------------- РАЗРЕШЕНИЕ ДЛЯ АУДИО --------------------
@@ -170,7 +176,7 @@ async function runMainScript() {
 	let autoDuplicateTradeEnabled = GM_getValue('autoDuplicateTradeEnabledState', false);
 	let autoDuplicateOffersEnabled = GM_getValue('autoDuplicateOffersEnabledState', false);
     let lastProcessedPackIdForAutoCheck = null;
-    let lastProcessedPackIdForDemandCheck = null;
+
     let autoPackCheckButtonElement = null;
     let packPageObserver = null;
     let isProcessingBuyClick = false;
@@ -190,12 +196,8 @@ async function runMainScript() {
     const DEMAND_TASK_STACK_KEY = 'demand_check_task_stack_v2';
 
     // -------------------- МОДУЛЬ: МАССОВАЯ ПРОВЕРКА ДУБЛИКАТОВ --------------------
-    let массоваяПроверкаДублейЗапущена = false; // Флаг, показывающий, что запущена массовая проверка дубликатов.
-    let массоваяПроверкаДублейНаПаузе = false; // Флаг для постановки на паузу массовой проверки дубликатов.
-    let индексПоследнейПровереннойКарты = 0; // Счетчик, отслеживающий, сколько карт уже было проверено в текущей сессии.
-    let массивКартДляПроверки = []; // Массив DOM-элементов карт, которые нужно проверить на дубликаты.
-    let idТаймаутаСледующегоБатча = null; // ID таймера для запуска проверки следующей порции (batch) карт.
-    let isProcessingAutoPackCheck = false; // Флаг, который указывает, что проверка дублей была вызвана автоматически на странице паков.
+
+
 
     // -------------------- МОДУЛЬ: ОТПРАВКА В "НЕ НУЖНОЕ" --------------------
     let isAutoChargeRunning = false; // Флаг, показывающий, что в данный момент запущена массовая отправка карт в "Не нужное".
@@ -455,6 +457,14 @@ async function runMainScript() {
 
 	// Здесь располагаются все константы (URL, Ключи хранилищ, TTL)
 	// и глобальные переменные (флаги состояния, ссылки на DOM-элементы).
+	
+	// --- [Sub-Module] Массовая проверка дубликатов (Состояние) ---
+	var isMassDupCheckRunning = false;     // Флаг: работает ли двигатель в данный момент
+	var isMassDupCheckPaused = false;      // Флаг: пауза (только для ручного режима)
+	var isManualDupCheckActive = false;    // Флаг: был ли запуск нажат вручную
+	var dupEngineInstanceId = 0;           // Идентификатор текущей сессии двигателя
+	var dupQueueTimeoutId = null;          // ID таймера очереди
+	var lastProcessedPackIdForDemandCheck = null; // Для синхронизации со спросом
 
 
 	// ##################################################################################
@@ -479,27 +489,14 @@ async function runMainScript() {
 	 */
 	(async () => {
 		const SCRIPT_VERSION_KEY = 'ascm_script_version_v2';
-		const currentVersion = (typeof GM_info !== 'undefined' ? GM_info.script.version : 'dev');
+		const currentVersion = GM_info?.script?.version || 'dev';
 		const lastRunVersion = await GM_getValue(SCRIPT_VERSION_KEY, null);
 
 		if (currentVersion !== lastRunVersion) {
-			const notificationEl = document.createElement('div');
-			Object.assign(notificationEl.style, {
-				position: 'fixed', top: '20px', left: '50%', transform: 'translateX(-50%)',
-				padding: '12px 28px', color: 'white', borderRadius: '10px',
-				background: 'linear-gradient(145deg, #007bff, #0056b3)',
-				boxShadow: '0 8px 20px rgba(0,0,0,0.5)', zIndex: '2147483639',
-				fontSize: '15px', fontWeight: 'bold', textAlign: 'center',
-				transition: 'opacity 0.5s ease',
-				whiteSpace: 'pre-line'
-			});
-			notificationEl.textContent = 'AnimeStars Card Master\nСкрипт обновлен до версии ' + currentVersion + '!';
-			document.body.appendChild(notificationEl);
-
-			setTimeout(() => {
-				notificationEl.style.opacity = '0';
-				setTimeout(() => notificationEl.remove(), 500);
-			}, 10000);
+			const updateMsg = `<b>AnimeStars Card Master</b>\nСкрипт обновлен до версии <b>${currentVersion}</b>!`;
+			
+			// Используем новый объект настроек: закрываем через 12 секунд
+			showNotification(updateMsg, 'info', { timeout: 12000 });
 
 			console.log(`[ACM] Обнаружено обновление скрипта с версии ${lastRunVersion || 'N/A'} до ${currentVersion}.`);
 			await GM_setValue(SCRIPT_VERSION_KEY, currentVersion);
@@ -571,6 +568,96 @@ async function runMainScript() {
 			console.log(`%c[ACM Log] ${message}`, `color: ${colors[type] || '#fff'}; font-weight: bold;`);
 		}
 		if (type !== 'debug') safeDLEPushCall(type === 'warning' ? 'warn' : type, message);
+	}
+	
+	/**
+	 * Создает и отображает интерактивное всплывающее уведомление в глобальном стеке. 
+	 * Система поддерживает автоматическое позиционирование через Flexbox и обновление контента 
+	 * по уникальному ID, что предотвращает дублирование при работе таймеров. 
+	 * Позволяет настраивать индивидуальное время жизни и делать сообщения «липкими».
+	 * [message] - текст или HTML контент уведомления
+	 * [type] - тип оформления (info, success, error, warning, custom)
+	 * [options] - объект расширенных настроек
+	 */
+	function showNotification(message, type = 'info', options = {}) {
+		let container = document.getElementById('acm-notification-container');
+		if (!container) {
+			container = document.createElement('div');
+			container.id = 'acm-notification-container';
+			Object.assign(container.style, {
+				position: 'fixed', top: '20px', left: '50%', transform: 'translateX(-50%)',
+				display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px',
+				zIndex: '2147483647', pointerEvents: 'none', width: '100%', maxWidth: '500px'
+			});
+			document.body.appendChild(container);
+		}
+
+		if (options.id) {
+			const existing = document.getElementById(options.id);
+			if (existing) {
+				existing.innerHTML = String(message);
+				return;
+			}
+		}
+
+		const notif = document.createElement('div');
+		notif.className = 'acm-push-item';
+		if (options.id) notif.id = options.id;
+		
+		let bgColor = options.bg;
+		if (!bgColor) {
+			const themes = {
+				success: 'linear-gradient(145deg, #43b581, #2e7d32)',
+				error: 'linear-gradient(145deg, #f44336, #c62828)',
+				warning: 'linear-gradient(145deg, #faa61a, #f57c00)',
+				custom: 'linear-gradient(145deg, #a35f19, #b36a1e)',
+				info: 'linear-gradient(145deg, #00bcd4, #0097a7)'
+			};
+			bgColor = themes[type] || themes.info;
+		}
+
+		Object.assign(notif.style, {
+			background: bgColor, color: 'white', padding: '10px 20px', borderRadius: '10px',
+			boxShadow: '0 5px 15px rgba(0,0,0,0.4)', fontSize: '14px', fontWeight: 'bold',
+			textAlign: 'center', width: 'fit-content', minWidth: '180px', maxWidth: '95%',
+			whiteSpace: 'pre-wrap', pointerEvents: 'auto', cursor: 'pointer',
+			opacity: '0', transform: 'scale(0.8) translateY(-20px)', position: 'relative',
+			transition: 'all 0.3s cubic-bezier(0.23, 1, 0.32, 1)', flexShrink: '0'
+		});
+
+		notif.innerHTML = String(message);
+		container.prepend(notif);
+
+		requestAnimationFrame(() => {
+			notif.style.opacity = '1';
+			notif.style.transform = 'scale(1) translateY(0)';
+		});
+
+		const removeNotif = () => {
+			if (!notif.parentNode || notif.classList.contains('acm-removing')) return;
+			notif.classList.add('acm-removing');
+			notif.style.opacity = '0';
+			notif.style.transform = 'scale(0.9) translateY(-10px)';
+			notif.style.height = '0';
+			notif.style.margin = '0';
+			notif.style.padding = '0';
+			setTimeout(() => notif.remove(), 300);
+		};
+
+		notif.onclick = removeNotif;
+
+		if (!options.sticky) {
+			const duration = options.timeout || (type === 'error' ? 8000 : (type === 'warning' ? 6000 : 4500));
+			setTimeout(removeNotif, duration);
+		}
+
+		const activeNotifications = Array.from(container.querySelectorAll('.acm-push-item:not(.acm-removing)'));
+		if (activeNotifications.length > 5) {
+			activeNotifications.slice(5).forEach(old => {
+				if (typeof removeNotif === 'function') removeNotif.call(old); 
+				else old.remove();
+			});
+		}
 	}
 
 	// --- [Sub-Module] Работа со временем и задержками ---
@@ -656,6 +743,22 @@ async function runMainScript() {
 		return null;
 	}
 	unsafeWindow.asbm_getUsername = asbm_getUsername;
+	
+	/**
+	 * Анализирует структуру навигационного меню пользователя для извлечения идентификатора клуба, 
+	 * к которому принадлежит текущий аккаунт. Выполняет поиск ссылки «Мой клуб» и извлекает 
+	 * из её адреса числовой ID с помощью регулярного выражения, обеспечивая корректную 
+	 * работу модулей автоматизации вносов.
+	 * [нет аргументов]
+	 */
+	function getMyClubIdFromMenu() {
+		const clubLink = Array.from(document.querySelectorAll('.lgn__menu a')).find(a => a.textContent.includes('Мой клуб'));
+		if (clubLink) {
+			const match = clubLink.getAttribute('href').match(/\/clubs\/(\d+)\//);
+			return match ? match[1] : null;
+		}
+		return null;
+	}
 
 	/**
 	 * Очищает название аниме от приписок сезонов, фильмов, OVA и номеров.
@@ -687,6 +790,29 @@ async function runMainScript() {
 		} catch (e) { return imageUrl; }
 	}
 	unsafeWindow.normalizeImagePath = normalizeImagePath;
+	
+	/**
+	 * Выполняет сетевой запрос к инвентарю пользователя для подсчета количества конкретных карт.
+	 * [searchUrl] - сформированный URL поиска с параметрами (имя, ID карты).
+	 * [targetCardId] - ID типа карты для проверки в DOM ответа (резервный метод).
+	 */
+	async function ascm_fetchInventoryCount(searchUrl, targetCardId) {
+		try {
+			const res = await fetch(searchUrl, { credentials: 'include' });
+			if (!res.ok) return null;
+			const html = await res.text();
+			const doc = new DOMParser().parseFromString(html, 'text/html');
+			const titleEl = doc.querySelector('.ncard__main-title-2.as-center span');
+			if (titleEl?.textContent) {
+				const match = titleEl.textContent.match(/\((\d+)\s+шт\.\)/);
+				if (match) return parseInt(match[1], 10);
+			}
+			return doc.querySelectorAll(`.anime-cards__item[data-id="${targetCardId}"], .lootbox__card[data-id="${targetCardId}"]`).length;
+		} catch (err) {
+			sccLog(`Ошибка подсчета инвентаря: ${err.message}`, 'error');
+			return null;
+		}
+	}
 	
 	/**
 	 * Читает значение Cookie по имени.
@@ -758,8 +884,49 @@ async function runMainScript() {
 		return parts.join(' и ');
 	}
 	unsafeWindow.convertHoursToReadableString = convertHoursToReadableString;
-	
+		
 	// --- [Sub-Module] Интерфейс и Взаимодействие ---
+	
+	/**
+	 * Универсальный менеджер бейджей-счетчиков для кнопок управления.
+	 * Создает, обновляет или скрывает красный кружок с числом в углах кнопок.
+	 * [parentId] - идентификатор родительской кнопки.
+	 * [value] - числовое значение для отображения (0 или null скрывает бейдж).
+	 * [position] - положение бейджа ('left' или 'right').
+	 */
+	function ascm_setButtonBadge(parentId, value, position = 'right') {
+		const parent = document.getElementById(parentId);
+		if (!parent) return;
+
+		let badge = parent.querySelector('.ascm-badge-counter');
+		if (!badge) {
+			badge = document.createElement('span');
+			badge.className = 'ascm-badge-counter';
+			Object.assign(badge.style, {
+				position: 'absolute', top: '-5px', background: 'red',
+				color: 'white', borderRadius: '50%', padding: '2px 5px',
+				fontSize: '10px', lineHeight: '1', minWidth: '16px',
+				textAlign: 'center', fontWeight: 'bold', zIndex: '5',
+				boxShadow: '0 0 5px rgba(0,0,0,0.5)', pointerEvents: 'none'
+			});
+			parent.appendChild(badge);
+		}
+
+		if (position === 'left') {
+			badge.style.left = '-5px';
+			badge.style.right = 'auto';
+		} else {
+			badge.style.right = '-5px';
+			badge.style.left = 'auto';
+		}
+
+		if (value && value > 0) {
+			badge.textContent = value;
+			badge.style.display = 'block';
+		} else {
+			badge.style.display = 'none';
+		}
+	}
 
 	/**
 	 * Отображает кастомное модальное окно с кнопками Да/Нет.
@@ -1431,18 +1598,6 @@ async function runMainScript() {
 	
 	// --- [Sub-Module] Остановка фоновых процессов ---
 
-	/**
-	 * Принудительно останавливает цикл проверки/получения карт (очищает таймер).
-	 * Позволяет системе Лидерства корректно завершать задачи при перевыборах.
-	 */
-	function stopMainCardCheckLogic() {
-		if (checkNewCardTimeoutId) {
-			clearTimeout(checkNewCardTimeoutId);
-			checkNewCardTimeoutId = null;
-		}
-		console.log("%c[AutoWatch] Цикл проверки карт остановлен.", "color: #72767d; font-style: italic;");
-	}
-	unsafeWindow.stopMainCardCheckLogic = stopMainCardCheckLogic;
 
 	// --- [Sub-Module] Визуализация и Сигналы ---
 	
@@ -2014,219 +2169,465 @@ async function runMainScript() {
 	}
 
 	// --- [Sub-Module] Модуль Дубликатов ---
-
+	
 	/**
-	 * Инициализирует логику поиска дубликатов, создавая необходимые кэши и регистрируя наблюдатели за DOM. 
-	 * Настраивает внутренние функции для парсинга имен персонажей и ссылок на аниме, а также 
-	 * инициализирует главную кнопку массовой проверки и индивидуальные маркеры на карточках.
-	 * [нет аргументов]
+	 * Определяет, можно ли для данной карты мгновенно проставить "0" без запроса к серверу.
+	 * Основывается на CSS-классах сайта, специфичных для паков и предложений обмена.
+	 * [cardEl] - DOM-элемент карты.
 	 */
-	async function initDuplicateChecker() {
-		const ALL_CARD_SELECTORS_ARRAY = ['.anime-cards__item', '.card-item', '.card', 'a.trade__main-item[href^="/cards/"]', '.history__body-item a[href^="/cards/"]', '.lootbox__card'];
-		const getLoggedUserName = () => document.querySelector('.lgn__name span')?.textContent.trim() || null; // Получение никнейма текущего пользователя
+	function ascm_getInstantContextResult(cardEl) {
+		const isPacks = isCardPackPage();
+		const isOffer = window.location.pathname.startsWith('/trades/');
+		const isRemelt = isRemeltPage();
+		const tradeBlocks = document.querySelectorAll('.trade__main-items');
+		const hasOwnedClass = cardEl.classList.contains('anime-cards__owned-by-user');
 
-		const createDupBtn = () => {
-			const btn = document.createElement('div');
-			btn.textContent = '🔍';
-			btn.className = 'check-duplicates-btn';
-			if (window.location.pathname.startsWith('/pm/')) btn.setAttribute('data-mce-bogus', '1');
-			btn.style.cssText = 'position:absolute;z-index:10;background:rgba(211,211,211,0.6);border:1px solid #ccc;border-radius:15px;cursor:pointer;transition:all 0.2s ease;font-weight:bold;color:black;text-align:center;line-height:1.3;display:flex;align-items:center;justify-content:center;box-sizing:border-box;';
-			return btn;
-		};
+		if (isPacks && !hasOwnedClass) return 0;
+		if (isOffer && tradeBlocks.length > 0 && cardEl.closest('.trade__main-items') === tradeBlocks[0] && !hasOwnedClass) return 0;
 
-		const fetchCharacterNameFromNeedPage = async (cardId) => {
-			const cacheKey = `name_${cardId}`;
-			if (cardInfoCache.has(cacheKey)) return cardInfoCache.get(cacheKey);
-			try {
-				const res = await fetch(`${location.origin}/cards/users/need/?id=${cardId}`, { credentials: 'include' });
-				if (!res.ok) { cardInfoCache.set(cacheKey, null); return null; }
-				const doc = new DOMParser().parseFromString(await res.text(), 'text/html');
-				const titleEl = doc.querySelector('.ncard__main-title.as-center a[href^="/cards/"]');
-				if (titleEl?.textContent) { const name = titleEl.textContent.trim(); cardInfoCache.set(cacheKey, name); return name; }
-				cardInfoCache.set(cacheKey, null); return null;
-			} catch (err) { cardInfoCache.set(cacheKey, null); return null; }
-		};
-
-		const fetchAnimeLinkFromUsersPage = async (cardId) => {
-			const cacheKey = `animeLink_${cardId}`;
-			if (cardInfoCache.has(cacheKey)) return cardInfoCache.get(cacheKey);
-			try {
-				const res = await fetch(`${location.origin}/cards/users/?id=${cardId}`, { credentials: 'include' });
-				if (!res.ok) { cardInfoCache.set(cacheKey, null); return null; }
-				const doc = new DOMParser().parseFromString(await res.text(), 'text/html');
-				const animeLinkEl = doc.querySelector('a.ncard__img');
-				if (animeLinkEl?.hasAttribute('href')) { const link = new URL(animeLinkEl.getAttribute('href'), location.origin).href; cardInfoCache.set(cacheKey, link); return link; }
-				cardInfoCache.set(cacheKey, null); return null;
-			} catch (err) { cardInfoCache.set(cacheKey, null); return null; }
-		};
-
-		const fetchAnimeNameFromAnimePage = async (animePageUrl, cardId) => {
-			const cacheKey = `animeName_${animePageUrl}`;
-			if (cardInfoCache.has(cacheKey)) return cardInfoCache.get(cacheKey);
-			try {
-				const res = await fetch(animePageUrl, { credentials: 'include' });
-				if (!res.ok) { cardInfoCache.set(cacheKey, null); return null; }
-				const doc = new DOMParser().parseFromString(await res.text(), 'text/html');
-				const titleH1 = doc.querySelector('h1[itemprop="name"]');
-				const origTitleDiv = doc.querySelector('.pmovie__original-title');
-				let animeName = titleH1?.textContent ? titleH1.textContent.replace(/(Аниме)$/i, '').trim() : (origTitleDiv?.textContent ? origTitleDiv.textContent.trim() : null);
-				if (animeName) { cardInfoCache.set(cacheKey, animeName); return animeName; }
-				cardInfoCache.set(cacheKey, null); return null;
-			} catch (err) { cardInfoCache.set(cacheKey, null); return null; }
-		};
-
-		const fetchAllPagesUniversal = async (searchUrl, targetCardId) => {
-			try {
-				const response = await fetch(searchUrl, { credentials: 'include' });
-				if (!response.ok) return 0;
-				const htmlText = await response.text();
-				const doc = new DOMParser().parseFromString(htmlText, 'text/html');
-				const titleElement = doc.querySelector('.ncard__main-title-2.as-center span');
-				if (titleElement?.textContent) {
-					const match = titleElement.textContent.match(/\((\d+)\s+шт\.\)/);
-					if (match) return parseInt(match[1], 10);
-				}
-				return doc.querySelectorAll(`.anime-cards__item[data-id="${targetCardId}"], .lootbox__card[data-id="${targetCardId}"]`).length;
-			} catch (err) { return 0; }
-		};
-
-		async function checkCardDuplicates(cardElement, triggeredByMassCheck = false) {
-			const cardId = await getCardId(cardElement, 'type', true);
-			if (isRemeltPage() && cardId && unsafeWindow.remeltActiveInfo) unsafeWindow.remeltActiveInfo.add(cardId.toString());
-			let btn = cardElement.querySelector('.check-duplicates-btn');
-			const loggedInUserName = getLoggedUserName();
-			if (!btn && triggeredByMassCheck) {
-				btn = createDupBtn();
-				btn.style.opacity = '0';
-				btn.style.pointerEvents = 'none';
-				if (window.getComputedStyle(cardElement).position === 'static') cardElement.style.position = 'relative';
-				cardElement.appendChild(btn);
-			}
-			if (!btn) return;
-			if (!cardId || !loggedInUserName) { updateButtonContent(btn, '❓'); btn.classList.add('checked'); return; }
-			if (isCardPackPage() && !cardElement.classList.contains('anime-cards__owned-by-user')) { updateButtonContent(btn, 0); btn.classList.add('checked'); return; }
-			const cacheKeyForDuplicates = `${loggedInUserName}_${cardId}`;
-			if (triggeredByMassCheck && duplicatesCache.has(cacheKeyForDuplicates)) { updateButtonContent(btn, duplicatesCache.get(cacheKeyForDuplicates)); btn.classList.add('checked'); return; }
-			updateButtonContent(btn, '⏳');
-			btn.style.pointerEvents = 'none';
-			try {
-				const searchUrlObject = new URL(`${location.origin}/user/cards/`);
-				searchUrlObject.searchParams.set('name', loggedInUserName);
-				searchUrlObject.searchParams.set('card_id', cardId);
-				const duplicateCount = await fetchAllPagesUniversal(searchUrlObject.toString(), cardId);
-				duplicatesCache.set(cacheKeyForDuplicates, duplicateCount);
-				updateButtonContent(btn, duplicateCount);
-				btn.classList.add('checked');
-			} catch (err) { updateButtonContent(btn, '❌'); btn.classList.add('checked'); } finally { if (btn.style.pointerEvents !== 'none' || !triggeredByMassCheck) btn.style.pointerEvents = 'auto'; }
-		}
-		unsafeWindow.checkCardDuplicates = checkCardDuplicates;
-
-		function updateButtonContent(btn, content) {
-			btn.textContent = '';
-			btn.className = 'check-duplicates-btn';
-			if (['🔒', '❓', '❌', '⏳', '...'].includes(content)) {
-				btn.textContent = content;
-				btn.style.background = (content === '⏳' || content === '...') ? 'LightGray' : 'rgba(255, 100, 110, 0.8)';
-				btn.style.color = (content === '⏳' || content === '...') ? 'black' : 'white';
-			} else {
-				const count = Number(content);
-				btn.textContent = `×${count}`;
-				btn.style.background = count > 1 ? 'rgba(255, 0, 0, 0.7)' : (count === 1 ? 'rgba(0, 150, 0, 0.7)' : 'rgba(0, 0, 0, 0.7)');
-				btn.style.color = 'white';
-			}
-			btn.style.opacity = '1'; btn.style.visibility = 'visible'; btn.style.transform = 'translateY(0)';
-		}
-
-		async function addCheckButtons() {
-			const isEnabled = await GM_getValue(INDIVIDUAL_DUP_BTN_ENABLED_KEY, true);
-			const userId = getLoggedUserName();
-			const cards = getCardsOnPage();
-			for (const cardEl of cards) {
-				if (cardEl.querySelector('.check-duplicates-btn') || cardEl.classList.contains('card-show__placeholder')) continue;
-				const newBtn = createDupBtn();
-				const cardWidth = cardEl.offsetWidth;
-				if (cardWidth === 0) continue;
-				const baseScaleFactor = await GM_getValue('acm_dupButtonSizeFactor', 0.13);
-				let scale = baseScaleFactor;
-				if (cardEl.classList.contains('lootbox__card')) scale *= cardEl.closest('.lootbox__row')?.offsetWidth > 600 ? 0.8 : 1.3;
-				else if (cardWidth < 140) scale *= 1.3;
-				const buttonSize = Math.max(16, Math.min(50, cardWidth * scale));
-				Object.assign(newBtn.style, { width: `${buttonSize}px`, height: `${buttonSize}px`, fontSize: `${buttonSize * 0.5}px`, bottom: `${buttonSize * 1.5}px`, right: `${Math.max(2, Math.min(5, cardWidth * 0.02))}px` });
-				if (!isEnabled) { newBtn.style.opacity = '0'; newBtn.style.visibility = 'hidden'; newBtn.style.pointerEvents = 'none'; }
-				newBtn.addEventListener('click', (e) => { e.stopPropagation(); e.preventDefault(); if (!userId) { updateButtonContent(newBtn, '🔒'); newBtn.classList.add('checked'); return; } checkCardDuplicates(cardEl); });
-				cardEl.classList.add('acm-card-container');
-				if (window.getComputedStyle(cardEl).position === 'static') cardEl.style.position = 'relative';
-				cardEl.appendChild(newBtn);
-			}
-		}
-		unsafeWindow.addCheckButtons = addCheckButtons;
-
-		function createMainCheckButton() {
-			if (document.getElementById('check-all-duplicates-btn')) return;
-			const mainButton = document.createElement('button');
-			mainButton.id = 'check-all-duplicates-btn';
-			mainButton.title = "Проверить дубликаты карт";
-			const duplicatesIcon = document.createElement('span');
-			mainButton.appendChild(duplicatesIcon);
-			Object.assign(mainButton.style, { position:'fixed', right:'12px', bottom:'180px', zIndex:'102', width:'40px', height:'40px', border:'none', borderRadius:'50%', transition:'all 0.3s ease', color:'white', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', padding:'0' });
-
-			const updateMainButtonUI = () => {
-				mainButton.disabled = false;
-				if (массоваяПроверкаДублейНаПаузе) { duplicatesIcon.className = 'fal fa-play'; mainButton.style.background = 'linear-gradient(145deg, rgb(100, 50, 50), rgb(50, 50, 50))'; }
-				else if (массоваяПроверкаДублейЗапущена) { duplicatesIcon.className = 'fal fa-spinner fa-spin'; mainButton.style.background = 'linear-gradient(145deg, rgb(100, 50, 50), rgb(50, 50, 50))'; }
-				else { duplicatesIcon.className = 'fal fa-search'; mainButton.style.background = 'linear-gradient(145deg, rgb(100, 50, 50), rgb(50, 50, 50))'; }
-				duplicatesIcon.style.fontSize = '18px';
-			};
-
-			async function processNextBatch() {
-				if (idТаймаутаСледующегоБатча) clearTimeout(idТаймаутаСледующегоБатча);
-				idТаймаутаСледующегоБатча = null;
-				if (isCardInPackSelected || массоваяПроверкаДублейНаПаузе || !массоваяПроверкаДублейЗапущена) { updateMainButtonUI(); return; }
-				updateMainButtonUI();
-				if (isProcessingAutoPackCheck) {
-					await checkCardDuplicates(массивКартДляПроверки[индексПоследнейПровереннойКарты], true);
-					индексПоследнейПровереннойКарты++;
-					if (индексПоследнейПровереннойКарты < массивКартДляПроверки.length) idТаймаутаСледующегоБатча = setTimeout(processNextBatch, GM_getValue('autoDup_delay_ms', 150));
-					else { массоваяПроверкаДублейЗапущена = false; updateMainButtonUI(); }
-				} else {
-					const batchSize = 1;
-					const batch = массивКартДляПроверки.slice(индексПоследнейПровереннойКарты, индексПоследнейПровереннойКарты + batchSize);
-					if (batch.length === 0) { массоваяПроверкаДублейЗапущена = false; updateMainButtonUI(); return; }
-					await Promise.all(batch.map(card => checkCardDuplicates(card, true)));
-					индексПоследнейПровереннойКарты += batch.length;
-					if (индексПоследнейПровереннойКарты < массивКартДляПроверки.length) idТаймаутаСледующегоБатча = setTimeout(processNextBatch, 1000);
-					else { массоваяПроверкаДублейЗапущена = false; updateMainButtonUI(); }
-				}
-			}
-
-			mainButton.addEventListener('click', async (event) => {
-				const wasAuto = unsafeWindow.isAutoDuplicateCheckTriggered === true;
-				if (wasAuto) unsafeWindow.isAutoDuplicateCheckTriggered = false;
-				isCardInPackSelected = false;
-				showDuplicateCheckNotifications = event.isTrusted;
-				if (!getLoggedUserName()) return;
-				if (массоваяПроверкаДублейЗапущена) {
-					if (массоваяПроверкаДублейНаПаузе) { массоваяПроверкаДублейНаПаузе = false; processNextBatch(); }
-					else { массоваяПроверкаДублейНаПаузе = true; updateMainButtonUI(); }
-				} else {
-					duplicatesCache.clear(); массоваяПроверкаДублейЗапущена = true; массоваяПроверкаДублейНаПаузе = false; индексПоследнейПровереннойКарты = 0; массивКартДляПроверки = getCardsOnPage().filter(el => !el.closest('#cards-carousel') && !el.classList.contains('card-show__placeholder'));
-					if (массивКартДляПроверки.length === 0) { массоваяПроверкаДублейЗапущена = false; updateMainButtonUI(); return; }
-					processNextBatch();
-				}
-			});
-			document.body.appendChild(mainButton);
-			updateMainButtonUI();
-		}
-		createMainCheckButton();
-		await addCheckButtons();
+		return null;
 	}
 
+	/**
+	 * Обновляет визуальное состояние кнопки-бейджа дубликатов на карте.
+	 * [btn] - DOM-элемент кнопки.
+	 * [content] - Число дублей или спец-символ (⏳, ❌, ❓).
+	 */
+	function ascm_updateDupBadgeUI(btn, content) {
+		if (!btn) return;
+		btn.textContent = '';
+		btn.className = 'check-duplicates-btn checked';
+		if (['🔒', '❓', '❌', '⏳', '...'].includes(content)) {
+			btn.textContent = content;
+			btn.style.background = (content === '⏳' || content === '...') ? 'LightGray' : 'rgba(255, 100, 110, 0.8)';
+			btn.style.color = (content === '⏳' || content === '...') ? 'black' : 'white';
+			if (content === '⏳') btn.title = 'Загрузка данных...';
+			else if (content === '❌') btn.title = 'Ошибка запроса. Нажмите для повтора.';
+		} else {
+			const count = Number(content);
+			btn.textContent = `×${count}`;
+			btn.style.background = count > 1 ? 'rgba(255, 0, 0, 0.7)' : (count === 1 ? 'rgba(0, 150, 0, 0.7)' : 'rgba(0, 0, 0, 0.7)');
+			btn.style.color = 'white';
+			btn.title = `У вас ${count} шт. этой карты.\nНажмите для принудительного обновления.`;
+		}
+		btn.style.opacity = '1';
+		btn.style.visibility = 'visible';
+		btn.style.transform = 'translateY(0)';
+	}
+
+	/**
+	 * Индивидуальная проверка дубликатов для одной карты.
+	 * [cardEl] - DOM-элемент карты.
+	 * [isMass] - флаг массовой проверки (влияет на логику возврата).
+	 */
+	/**
+	 * Индивидуальная проверка дубликатов для одной карты.
+	 * [cardEl] - DOM-элемент карты.
+	 * [isMass] - флаг массовой проверки.
+	 */
+	async function ascm_checkSingleCardDups(cardEl, isMass = false, isForced = false) {
+		const typeId = await getCardId(cardEl, 'type', true);
+		const user = asbm_getUsername();
+		if (!typeId || !user) return false;
+
+		const cacheKey = `${user}_${typeId}`;
+		const allCards = getCardsOnPage();
+		const relatedCards = [];
+
+		for (const el of allCards) {
+			if (await getCardId(el, 'type', true) === typeId) relatedCards.push(el);
+		}
+
+		const updateAll = (content) => {
+			relatedCards.forEach(el => {
+				let b = el.querySelector('.check-duplicates-btn');
+				if (!b) {
+					b = document.createElement('div');
+					b.className = 'check-duplicates-btn';
+					b.style.cssText = 'position:absolute;z-index:10;background:rgba(211,211,211,0.6);border:1px solid #ccc;border-radius:50%;cursor:pointer;transition:all 0.2s ease;font-weight:bold;color:black;text-align:center;line-height:1;display:flex;align-items:center;justify-content:center;box-sizing:border-box;';
+					const cardWidth = el.offsetWidth;
+					if (cardWidth > 0) {
+						const scale = 0.18; // Соответствует нашему новому scale
+						const btnSize = Math.max(22, Math.min(60, cardWidth * scale));
+						Object.assign(b.style, { width: `${btnSize}px`, height: `${btnSize}px`, fontSize: `${btnSize * 0.55}px`, bottom: `${btnSize * 1.3}px`, right: `5px` });
+					}
+					if (window.getComputedStyle(el).position === 'static') el.style.position = 'relative';
+					el.appendChild(b);
+				}
+				ascm_updateDupBadgeUI(b, content);
+			});
+		};
+
+		const instantZero = ascm_getInstantContextResult(cardEl);
+		if (!isForced && instantZero !== null) {
+			duplicatesCache.set(cacheKey, instantZero);
+			updateAll(instantZero); 
+			return false;
+		}
+
+		if (!isForced && duplicatesCache.has(cacheKey)) {
+			updateAll(duplicatesCache.get(cacheKey)); 
+			return false;
+		}
+
+		updateAll('⏳');
+		const timeNow = () => { const d = new Date(); return `${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}:${d.getSeconds().toString().padStart(2,'0')}.${d.getMilliseconds().toString().padStart(3,'0')}`; };
+		
+		try {
+			console.log(`%c[ACM Network] [${timeNow()}] Запрос дублей для ID: ${typeId}`, "color: #bb86fc;");
+			const url = new URL(`${location.origin}/user/cards/`);
+			url.searchParams.set('name', user);
+			url.searchParams.set('card_id', typeId);
+			const count = await ascm_fetchInventoryCount(url.toString(), typeId);
+			
+			if (count !== null) {
+				duplicatesCache.set(cacheKey, count);
+				updateAll(count);
+				return true;
+			}
+			updateAll('❌');
+			return true;
+		} catch (e) {
+			updateAll('❌');
+			return true;
+		}
+	}
+
+	/**
+	 * Синхронизирует внешний вид главной кнопки ручной проверки.
+	 */
+	function ascm_syncDupMainButtonUI() {
+		const btn = document.getElementById('check-all-duplicates-btn');
+		if (!btn) return;
+		const icon = btn.querySelector('span');
+		if (isMassDupCheckRunning) {
+			icon.className = 'fas fa-spinner fa-spin';
+			btn.style.background = 'linear-gradient(145deg, #e74c3c, #c0392b)';
+			btn.title = 'Остановить проверку дубликатов';
+		} else {
+			icon.className = 'fal fa-search';
+			btn.style.background = 'linear-gradient(145deg, #643232, #323232)';
+			btn.title = 'Проверить дубликаты на этой странице';
+		}
+	}
+
+	/**
+	 * Останавливает массовую проверку и сбрасывает состояние.
+	 */
+	function ascm_stopMassDupCheck() {
+		if (dupQueueTimeoutId) clearTimeout(dupQueueTimeoutId);
+		dupEngineInstanceId++;
+		isMassDupCheckRunning = false;
+		isMassDupCheckPaused = false;
+		isManualDupCheckActive = false;
+		lastCheckedDupIndex = 0;
+		dupCardsToProcess = [];
+		ascm_syncDupMainButtonUI();
+	}
+
+	/**
+	 * Добавляет индивидуальные кнопки поиска дубликатов (🔍) на все карты на странице.
+	 */
+	async function ascm_injectDupButtons() {
+		const isBtnEnabled = await GM_getValue(INDIVIDUAL_DUP_BTN_ENABLED_KEY, true);
+		const cards = getCardsOnPage();
+		const scale = await GM_getValue('acm_dupButtonSizeFactor', 0.18);
+
+		for (const cardEl of cards) {
+			if (cardEl.querySelector('.check-duplicates-btn') || cardEl.classList.contains('card-show__placeholder')) continue;
+			
+			const newBtn = document.createElement('div');
+			newBtn.className = 'check-duplicates-btn';
+			newBtn.textContent = '🔍';
+			newBtn.title = 'Проверить количество дубликатов в инвентаре';
+			newBtn.style.cssText = 'position:absolute;z-index:10;background:rgba(211,211,211,0.6);border:1px solid #ccc;border-radius:50%;cursor:pointer;transition:all 0.2s ease;font-weight:bold;color:black;text-align:center;line-height:1;display:flex;align-items:center;justify-content:center;box-sizing:border-box;';
+			
+			const cardWidth = cardEl.offsetWidth;
+			if (cardWidth === 0) continue;
+			
+			const btnSize = Math.max(22, Math.min(60, cardWidth * scale));
+			Object.assign(newBtn.style, { width: `${btnSize}px`, height: `${btnSize}px`, fontSize: `${btnSize * 0.55}px`, bottom: `${btnSize * 1.3}px`, right: `5px` });
+			
+			if (!isBtnEnabled) { newBtn.style.display = 'none'; }
+			newBtn.onclick = (event) => { 
+				event.stopPropagation(); event.preventDefault(); 
+				const force = newBtn.classList.contains('checked');
+				ascm_checkSingleCardDups(cardEl, false, force); 
+			};
+			
+			if (window.getComputedStyle(cardEl).position === 'static') cardEl.style.position = 'relative';
+			cardEl.appendChild(newBtn);
+		}
+	}
+	unsafeWindow.addCheckButtons = ascm_injectDupButtons; // Резерв для совместимости
+
+	/**
+	 * Инициализирует пользовательский интерфейс модуля дубликатов, создавая главную плавающую кнопку управления.
+	 * Автоматически внедряет индивидуальные маркеры поиска на все обнаруженные карточки текущей страницы.
+	 * Управляет глобальной логикой переключения состояний между активным сканированием, паузой и ожиданием.
+	 * [нет аргументов]
+	 */
+	async function ascm_initDupUI() {
+		if (document.getElementById('check-all-duplicates-btn') || window.location.pathname.includes('/clubs/boost/')) {
+			ascm_injectDupButtons(); return;
+		}
+		const btn = document.createElement('button');
+		btn.id = 'check-all-duplicates-btn';
+		btn.title = "Проверить дубликаты карт";
+		btn.innerHTML = '<span></span>';
+		Object.assign(btn.style, { position:'fixed', right:'12px', bottom:'180px', zIndex:'102', width:'40px', height:'40px', border:'none', borderRadius:'50%', color:'white', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', padding:'0' });
+		
+		btn.onclick = () => {
+			if (isMassDupCheckRunning) {
+				ascm_stopMassDupCheck();
+				sccLog("Проверка дубликатов остановлена", 'info');
+			} else {
+				ascm_runDuplicateEngine(true);
+			}
+		};
+		
+		document.body.appendChild(btn);
+		ascm_syncDupMainButtonUI();
+		ascm_injectDupButtons();
+	}
+
+	/**
+	 * Универсальный двигатель анализа дубликатов с поддержкой прерывания.
+	 * При каждом вызове инкрементирует ID сессии, останавливая предыдущие итерации.
+	 * [isManual] - сохраняет флаг ручного режима для авто-продолжения на новых страницах.
+	 */
+	async function ascm_runDuplicateEngine(isManual = false) {
+		const instanceId = ++dupEngineInstanceId;
+		const user = asbm_getUsername();
+		if (!user) return;
+
+		const targetBtnId = isManual ? 'check-all-duplicates-btn' : 'autoDuplicateCheckButton';
+		const badgePos = isManual ? 'right' : 'left';
+
+		isMassDupCheckRunning = true;
+		if (isManual) {
+			isManualDupCheckActive = true;
+			ascm_syncDupMainButtonUI();
+		}
+
+		try {
+			await sleep(50);
+			if (instanceId !== dupEngineInstanceId) return;
+			const allCards = getCardsOnPage().filter(el => !el.closest('#cards-carousel') && !el.classList.contains('card-show__placeholder'));
+			const cardDataList = [];
+			const sessionResults = new Map();
+
+			for (const el of allCards) {
+				const id = await getCardId(el, 'type', true);
+				if (!id) continue;
+				cardDataList.push({ el, id });
+				if (sessionResults.has(id)) continue;
+				const instantZero = ascm_getInstantContextResult(el);
+				if (instantZero !== null) {
+					sessionResults.set(id, instantZero);
+					duplicatesCache.set(`${user}_${id}`, instantZero);
+					continue;
+				}
+				if (!isRemeltPage() && duplicatesCache.has(`${user}_${id}`)) {
+					sessionResults.set(id, duplicatesCache.get(`${user}_${id}`));
+				}
+			}
+
+			for (const { el, id } of cardDataList) {
+				if (sessionResults.has(id)) {
+					let badge = el.querySelector('.check-duplicates-btn');
+					if (!badge) {
+						await ascm_checkSingleCardDups(el, true);
+						badge = el.querySelector('.check-duplicates-btn');
+					}
+					ascm_updateDupBadgeUI(badge, sessionResults.get(id));
+				}
+			}
+
+			const idsToFetch = [...new Set(cardDataList.filter(c => !sessionResults.has(c.id)).map(c => c.id))];
+			if (idsToFetch.length > 0) {
+				let networkReqCount = 0;
+				const totalToFetch = idsToFetch.length;
+
+				for (let i = 0; i < totalToFetch; i++) {
+					const targetId = idsToFetch[i];
+					if (instanceId !== dupEngineInstanceId) return;
+					
+					// Обновляем счетчик на кнопке (сколько осталось)
+					ascm_setButtonBadge(targetBtnId, totalToFetch - i, badgePos);
+
+					if (isMassDupCheckPaused) {
+						while (isMassDupCheckPaused && instanceId === dupEngineInstanceId) await sleep(500);
+					}
+					if (!isMassDupCheckRunning || instanceId !== dupEngineInstanceId) break;
+
+					if (networkReqCount > 0) await sleep(1000);
+					if (instanceId !== dupEngineInstanceId) return;
+
+					const relatedCards = cardDataList.filter(c => c.id === targetId && document.body.contains(c.el));
+					if (relatedCards.length === 0) continue;
+
+					relatedCards.forEach(c => {
+						const b = c.el.querySelector('.check-duplicates-btn');
+						if (b) ascm_updateDupBadgeUI(b, '⏳');
+					});
+
+					const url = new URL(`${location.origin}/user/cards/`);
+					url.searchParams.set('name', user);
+					url.searchParams.set('card_id', targetId);
+					const count = await ascm_fetchInventoryCount(url.toString(), targetId);
+
+					if (instanceId !== dupEngineInstanceId) return;
+
+					if (count !== null) {
+						duplicatesCache.set(`${user}_${targetId}`, count);
+						relatedCards.forEach(c => {
+							const b = c.el.querySelector('.check-duplicates-btn');
+							ascm_updateDupBadgeUI(b, count);
+						});
+					}
+					networkReqCount++;
+				}
+			}
+		} finally {
+			ascm_setButtonBadge(targetBtnId, 0);
+			if (instanceId === dupEngineInstanceId) {
+				isMassDupCheckRunning = false;
+				isManualDupCheckActive = false;
+				ascm_syncDupMainButtonUI();
+			}
+		}
+	}
+	
+	/**
+	 * Загружает конфигурацию рангов для автоматической проверки дубликатов.
+	 * Возвращает объект с булевыми значениями для каждого ранга.
+	 */
+	function autoDup_loadSettings() {
+		const defaults = { a: false, b: false, c: true, d: true, e: true };
+		const saved = GM_getValue('autoDuplicateCheckSettings_v1', {});
+		return { ...defaults, ...saved };
+	}
+
+	/**
+	 * Создает и отображает модальное окно настроек модуля дубликатов.
+	 * Позволяет пользователю выбрать ранги для автоматического срабатывания в паках.
+	 */
+	function autoDup_openSettingsModal() {
+		const MODAL_WRAPPER_ID = 'acm_modal_wrapper';
+		if (document.getElementById(MODAL_WRAPPER_ID)) return;
+		
+		const settings = autoDup_loadSettings();
+		const wrapper = document.createElement('div');
+		wrapper.id = MODAL_WRAPPER_ID;
+		wrapper.innerHTML = `
+			<div class="acm-modal-backdrop"></div>
+			<div class="acm-modal" id="autoDup_settings_modal">
+				<div class="modal-header"><h2>Настройки автопроверки дублей</h2></div>
+				<div class="modal-body">
+					<p style="font-size:13px; color:#999; text-align:center; margin-bottom:15px;">Выберите ранги для автопроверки в паках.</p>
+					<div id="autoDup_settings_list"></div>
+				</div>
+				<div class="modal-footer">
+					<button id="autodup-back-to-main" class="action-btn back-btn">Назад</button>
+					<button id="autoDup_save" class="action-btn save-btn">Сохранить</button>
+				</div>
+			</div>`;
+		document.body.appendChild(wrapper);
+		
+		const list = wrapper.querySelector('#autoDup_settings_list');
+		['a', 'b', 'c', 'd', 'e'].forEach(rank => {
+			list.innerHTML += `
+				<div class="setting-row">
+					<span>Ранг <b>${rank.toUpperCase()}</b></span>
+					<label class="protector-toggle-switch">
+						<input type="checkbox" data-rank="${rank}" ${settings[rank] ? 'checked' : ''}>
+						<span class="protector-toggle-slider"></span>
+					</label>
+				</div>`;
+		});
+
+		wrapper.querySelector('#autodup-back-to-main').onclick = () => { 
+			wrapper.remove(); 
+			unsafeWindow.openMasterSettingsModal(); 
+		};
+
+		wrapper.querySelector('#autoDup_save').onclick = () => {
+			const newSets = {};
+			wrapper.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+				newSets[cb.dataset.rank] = cb.checked;
+			});
+			GM_setValue('autoDuplicateCheckSettings_v1', newSets);
+			safeDLEPushCall('success', 'Настройки дубликатов сохранены');
+			wrapper.remove();
+		};
+	}
+	
+	/**
+	 * Инициализирует плавающую кнопку управления автоматической проверкой дубликатов.
+	 * Реализует сложную верстку с маской фона, позволяющую отображать счетчик прогресса без обрезания.
+	 */
+	async function createAutoDuplicateFeature() {
+		const isPacks = isCardPackPage();
+		const isTradeOffer = window.location.pathname.startsWith('/trades/');
+		const isCreate = isTradeCreationPage();
+		if (!isPacks && !isTradeOffer && !isCreate) return;
+
+		const button = document.createElement('button');
+		button.id = 'autoDuplicateCheckButton';
+		// Основной контейнер - прозрачный и не режет дочерние элементы
+		Object.assign(button.style, { 
+			width:'40px', height:'40px', position:'fixed', bottom:'180px', right:'27px', 
+			zIndex:'100', border:'none', cursor:'pointer', background:'none', 
+			padding:'0', transition:'all 0.3s ease', overflow:'visible' 
+		});
+
+		// Внутренний слой для визуализации фона с маской
+		const btnBg = document.createElement('div');
+		Object.assign(btnBg.style, {
+			position:'absolute', inset:'0', borderRadius:'50%', display:'flex', 
+			alignItems:'center', justifyContent:'flex-start', paddingLeft:'8px',
+			boxShadow:'0 0 10px rgba(0,0,0,0.7)', transition:'background 0.3s ease',
+			mask:'radial-gradient(circle at 80% 50%, transparent 20px, black 0px)',
+			webkitMask:'radial-gradient(circle at 80% 50%, transparent 20px, black 0px)'
+		});
+		
+		const icon = document.createElement('span');
+		icon.className = 'fal fa-sync-alt'; 
+		icon.style.fontSize = '10px'; 
+		icon.style.color = 'white';
+		
+		btnBg.appendChild(icon);
+		button.appendChild(btnBg);
+
+		const syncKey = isPacks ? 'autoPackCheckEnabledState' : (isCreate ? 'autoDuplicateTradeEnabledState' : 'autoDuplicateOffersEnabledState');
+		
+		const updateUI = () => {
+			const en = GM_getValue(syncKey, false);
+			btnBg.style.background = en ? 'linear-gradient(145deg, #28a745, #1e7e34)' : 'linear-gradient(145deg, rgba(100, 50, 50, 0.65), rgba(50, 50, 50, 0.65))';
+			icon.style.animation = en ? 'acm-spin 2s linear infinite' : 'none';
+			button.title = en ? 'Авто-проверка дубликатов: ВКЛ' : 'Включить автоматическую проверку дубликатов';
+		};
+
+		button.onclick = () => {
+			const newState = !GM_getValue(syncKey, false);
+			GM_setValue(syncKey, newState);
+			updateUI();
+			if (newState) ascm_runDuplicateEngine(false);
+			else ascm_stopMassDupCheck();
+		};
+
+		GM_addValueChangeListener(syncKey, (n, o, newValue, remote) => { if (remote) updateUI(); });
+		document.body.appendChild(button);
+		updateUI();
+	}
+	
 
 	// ##################################################################################
-	// # 8. [SECTION] AUTOMATED TASKS (Автосбор карт, кристаллов и паков)
+	// # 8. [SECTION] AUTOMATED TASKS (Автоматизация ресурсов)
 	// ##################################################################################
 
-	// --- [Sub-Module] Автосбор с видео (Auto-Watch) ---
+	// --- [Sub-Module] 8.1. Добыча карт (Card Harvesting) ---
 	
 	/**
 	 * Основной цикл автоматического сбора карт. 
@@ -2331,8 +2732,316 @@ async function runMainScript() {
 	}
 	unsafeWindow.mainCardCheckLogic = mainCardCheckLogic;
 	
-	// function processCardReward()
-	// function updateSmartTarget()
+	/**
+	 * Принудительно останавливает цикл проверки/получения карт (очищает таймер).
+	 * Позволяет системе Лидерства корректно завершать задачи при перевыборах.
+	 */
+	function stopMainCardCheckLogic() {
+		if (checkNewCardTimeoutId) {
+			clearTimeout(checkNewCardTimeoutId);
+			checkNewCardTimeoutId = null;
+		}
+		console.log("%c[AutoWatch] Цикл проверки карт остановлен.", "color: #72767d; font-style: italic;");
+	}
+	unsafeWindow.stopMainCardCheckLogic = stopMainCardCheckLogic;
+	
+	/**
+     * ГЛАВНЫЙ ОБРАБОТЧИК КАРТЫ
+     * Обрабатывает ответы от сервера при получении карты (авто, ручной или системный режим).
+     * Автоматически активирует снежные камни, обновляет прогресс пула и синхронизирует статус паузы.
+     */
+    async function processCardReward(responseData, requestPayload, source = 'site') {
+        // При любом сетевом ответе с этого адреса обновляем глобальный таймер, чтобы избежать ложных релоадов
+        await GM_setValue(LAST_SUCCESSFUL_REQUEST_KEY_WATCH, Date.now());
+
+        if (!responseData) return;
+
+        // --- БЛОК 1: ОБРАБОТКА ОШИБОК И ЛИМИТОВ ---
+        if (!responseData.cards) {
+            const reason = responseData.reason || "";
+            
+            // Если сервер подтвердил, что лимит 36/36 забит — принудительно ставим статус паузы в память.
+            // Это критически важно для корректного срабатывания модуля "Нового дня".
+            if (/получил свои \d+ карт/.test(reason)) {
+                await GM_setValue(COLLECTION_PAUSED_KEY, true);
+                console.log("%c[ACM] Сервер подтвердил достижение лимита. Статус паузы синхронизирован.", "color: #faa61a; font-weight: bold;");
+            }
+            
+            if (reason) handleCardError(reason, source);
+            return;
+        }
+
+        // --- БЛОК 2: ОБРАБОТКА УСПЕШНОГО ПОЛУЧЕНИЯ КАРТЫ ---
+        try {
+            const card = responseData.cards;
+            const mskTime = getMoscowTime(true);
+            const watchedInfo = parsePayload(requestPayload);
+            const animeIdValue = watchedInfo.watched_news_id || card.news_id || "???";
+
+            // --- ЛОГИКА СНЕЖНОГО КАМНЯ (АВТОАКТИВАЦИЯ) ---
+            let stoneRecord = "Нет"; 
+            if (responseData.snow_stone_gift) {
+                stoneRecord = String(responseData.snow_stone_gift).trim();
+                
+                // Если в ответе есть код камня — активируем его немедленно
+                if (stoneRecord && stoneRecord !== "Нет") {
+                    console.log(`%c[ACM Stone Activator] Обнаружен камень ${stoneRecord}. Запускаю активацию...`, "color: #ff00ff; font-weight: bold;");
+                    activateSnowStone(stoneRecord);
+                }
+            } else if (responseData.hasOwnProperty('snow_stone_gift')) {
+                stoneRecord = "Нет";
+            } else {
+                stoneRecord = "неизвестно";
+            }
+
+            console.log(`%c[ACM] Карта: ${card.name} | Тип: ${source} | Камень: ${stoneRecord}`, "color: #00ffff; font-weight: bold; background: #000; padding: 2px;");
+
+            // Формируем объект лога для IndexedDB
+            const receipt = {
+                receivedAt: Date.now(),
+                dateMsk: mskTime,
+                cardId: card.id,
+                cardName: card.name || 'Без названия',
+                rank: (card.rank || 'e').toLowerCase(),
+                cardAnimeId: card.news_id,
+                image: card.image || '',
+                watchedAnimeId: animeIdValue,
+                watchedEpisode: watchedInfo.episode || '?',
+                watchedSeason: watchedInfo.season || '?',
+                source: source,
+                snowStone: stoneRecord
+            };
+
+            // --- ОБНОВЛЕНИЕ ПРОГРЕССА ПУЛА (3/5) ---
+            const STATE_KEY = 'ascm_smart_progression_v1';
+            let state = await GM_getValue(STATE_KEY);
+            if (state && state.index !== -1) {
+                const currentTargetAnimeId = GLOBAL_ANIME_POOL[state.index]?.anime_id;
+                // Считаем прогресс только если ID аниме совпадает с целью или это не системная выдача
+                if (source !== 'site' || (animeIdValue == currentTargetAnimeId)) {
+                    state.cards_collected = (state.cards_collected || 0) + 1;
+                    if (state.cards_collected >= 5) {
+                        state.ep_offset++;
+                        state.cards_collected = 0;
+                    }
+                    await GM_setValue(STATE_KEY, state);
+                }
+            }
+
+            // --- ФИНАЛИЗАЦИЯ (СОХРАНЕНИЕ И УВЕДОМЛЕНИЯ) ---
+            await saveCardReceipt(receipt);
+            
+            let stonePushInfo = (stoneRecord !== "Нет" && stoneRecord !== "Ошибка" && stoneRecord !== "неизвестно")
+                ? `\n💎 Снежный камень: ${stoneRecord}`
+                : "";
+
+            safeDLEPushCall('custom', `[ACM] Получена карта:\n${card.name} [${card.rank ? card.rank.toUpperCase() : '?'}]${stonePushInfo}`);
+
+            // Обновляем таблицу мониторинга (если открыта) и счетчик карт в профиле
+            if (typeof unsafeWindow.afRefreshTableNow === 'function') unsafeWindow.afRefreshTableNow();
+            if (typeof updateCardCounter === 'function') {
+                // Вызываем с force=true, чтобы мгновенно обновить цифры лимита на кнопках
+                setTimeout(() => updateCardCounter(true), 1200);
+            }
+
+        } catch (e) {
+            console.error("[ACM Debug] Критическая ошибка в обработчике карты:", e);
+        }
+    }
+	
+		// --- ЦЕНТРАЛЬНЫЙ НАВИГАТОР ЦЕЛЕЙ ---
+    async function updateSmartTarget() {
+        const STATE_KEY = 'ascm_smart_progression_v1';
+        let state = await GM_getValue(STATE_KEY) || { index: 0, ep_offset: 0, cards_collected: 0, failed_attempts: 0 };
+        
+        const db = await openDb();
+        let targetFound = false;
+        let checkedAnimeCount = 0;
+
+        const allReceipts = await new Promise(r => {
+            const req = db.transaction('card_receipts', 'readonly').objectStore('card_receipts').getAll();
+            req.onsuccess = () => r(req.result);
+        });
+
+        while (checkedAnimeCount < GLOBAL_ANIME_POOL.length) {
+            const curAnime = GLOBAL_ANIME_POOL[state.index];
+            if (!curAnime) break;
+
+            const baseEp = parseInt(curAnime.min_ep);
+            const maxEpisodes = parseInt(curAnime.max_ep || 12);
+
+            while (state.ep_offset < maxEpisodes) {
+                const currentEp = baseEp + state.ep_offset;
+                // Сравнение в фильтре:
+                const collected = allReceipts.filter(rc => rc.watchedAnimeId == curAnime.anime_id && rc.watchedEpisode == currentEp).length; // Было id
+                
+                // Запрос к истории:
+                const history = await new Promise(r => {
+                    const req = db.transaction('anime_history', 'readonly').objectStore('anime_history').get(curAnime.anime_id.toString()); // Было id
+                    req.onsuccess = () => r(req.result);
+                });
+                const isAlreadyWatched = history && history.episodes && history.episodes.includes(currentEp);
+
+                if (collected >= 5 || (isAlreadyWatched && collected === 0)) {
+                    state.ep_offset++;
+                    state.cards_collected = 0;
+                    state.failed_attempts = 0;
+                } else {
+                    state.cards_collected = collected;
+                    targetFound = true;
+                    break;
+                }
+            }
+
+            if (targetFound) break;
+
+            state.index = (state.index + 1) % GLOBAL_ANIME_POOL.length;
+            state.ep_offset = 0;
+            state.cards_collected = 0;
+            state.failed_attempts = 0;
+            checkedAnimeCount++;
+        }
+
+        // ПРАВКА: если цель так и не найдена после обхода всего пула
+        if (!targetFound) {
+            state.index = -1;
+        }
+
+        await GM_setValue(STATE_KEY, state);
+        if (typeof unsafeWindow.syncMonitoringStatsUI === 'function') {
+            unsafeWindow.syncMonitoringStatsUI(state);
+        }
+        return state;
+    }
+
+	// --- [Sub-Module] 8.2. Добыча камней (Crystal Harvesting) ---
+	// function startAutoClickCrystalScript()
+	// function analyzeChatHtml()
+	// function sendDiamondCollectRequest()
+	// function fetchChatManually()
+	// function verifyAndCountCrystal()
+	
+	/**
+	 * Выполняет запрос к серверу для проверки статуса ежедневного входа и получения бонуса. 
+	 * Извлекает точное серверное время из HTTP-заголовка Date для синхронизации локального 
+	 * календаря скрипта с временем сайта, что критично для корректного сброса лимитов 
+	 * в полночь по московскому времени (UTC+3).
+	 * [нет аргументов]
+	 */
+	async function triggerDailyBonusCheck() {
+		try {
+			const userHash = typeof unsafeWindow !== 'undefined' ? unsafeWindow.dle_login_hash : window.dle_login_hash;
+			if (!userHash) return null;
+
+			const response = await fetch(`${getCurrentDomain()}/engine/ajax/controller.php?mod=check_login_days`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'X-Requested-With': 'XMLHttpRequest' },
+				body: new URLSearchParams({ 'mod': 'check_login_days', 'user_hash': userHash })
+			});
+
+			const serverDateHeader = response.headers.get('Date');
+			let serverTs = Date.now();
+			let serverDay = '';
+
+			if (serverDateHeader) {
+				const sDate = new Date(serverDateHeader);
+				serverTs = sDate.getTime();
+				const sMsk = new Date(serverTs + (3 * 60 * 60 * 1000));
+				serverDay = sMsk.toISOString().split('T')[0];
+				unsafeWindow.ascm_actual_server_date = serverDay;
+			}
+
+			if (!response.ok) return { success: false, serverDay, serverTs };
+
+			const text = (await response.text()).toLowerCase();
+			const isOk = text.includes('бонус') || text.includes('получили') || text.includes('начислено') || text.trim() === 'no';
+			
+			return { success: isOk, serverDay: serverDay, serverTs: serverTs };
+		} catch (e) {
+			return null;
+		}
+	}
+
+	// --- [Sub-Module] 8.3. Управление паками (Pack Management) ---
+	// function autoFarmLoop()
+	// function selectBestCard()
+	// function handleCardClick()
+	
+	/**
+	 * Ожидает физического появления новых карт в DOM после покупки пака.
+	 * Снимает блокировку сканирования и передает управление Глобальному Наблюдателю.
+	 */
+	function waitForNewPackAndProcess() {
+		let attempts = 0;
+		const maxAttempts = 200;
+		const checkInterval = setInterval(() => {
+			attempts++;
+			const lootboxRow = document.querySelector('.lootbox__row');
+			if (lootboxRow && lootboxRow.offsetParent !== null && lootboxRow.dataset.packId) {
+				const firstCardImage = lootboxRow.querySelector('.lootbox__card img');
+				if (firstCardImage && firstCardImage.src && !firstCardImage.src.includes('empty-card.png')) {
+					clearInterval(checkInterval);
+					setTimeout(() => {
+						isProcessingBuyClick = false;
+						// Активируем Наблюдатель для проверки новых карт
+						if (typeof initializeSmartCardObserver === 'function') initializeSmartCardObserver();
+					}, 250);
+					return;
+				}
+			}
+			if (attempts > maxAttempts) {
+				clearInterval(checkInterval);
+				isProcessingBuyClick = false;
+			}
+		}, 50);
+	}
+	
+	/**
+	 * Выполняет массовый запрос статистики спроса для карт, выпавших в паке.
+	 * Автоматически отсеивает ранги согласно настройкам и игнорирует уже проверенные карты.
+	 * [packId] - идентификатор пака для логирования и проверки контейнера.
+	 */
+	async function triggerMassDemandCheckForPackPage(packId) {
+		const isEnabled = GM_getValue('autoDemandCheckEnabledState', false);
+		if (!isEnabled) return;
+		
+		const settings = (typeof autoDemand_loadSettings === 'function') ? autoDemand_loadSettings() : { ass: true, s: true, a: true };
+		const ranksToCheck = Object.keys(settings).filter(rank => settings[rank]);
+		if (ranksToCheck.length === 0) return;
+
+		const lootboxRow = document.querySelector('.lootbox__row');
+		if (!lootboxRow) return;
+
+		const cardsInPack = Array.from(lootboxRow.querySelectorAll('.lootbox__list .lootbox__card'));
+		const cardsToProcess = cardsInPack.filter(card => {
+			const rank = card.dataset.rank?.toLowerCase();
+			return rank && ranksToCheck.includes(rank) && !card.querySelector('.acm-stats-wrapper');
+		});
+
+		if (cardsToProcess.length === 0) return;
+
+		let highestNotifyRank = null;
+		cardsInPack.forEach(card => {
+			const rank = card.dataset.rank?.toLowerCase();
+			if (rank === 'ass') highestNotifyRank = 'ass';
+			else if (rank === 's' && highestNotifyRank !== 'ass') highestNotifyRank = 's';
+			else if (rank === 'a' && highestNotifyRank !== 'ass' && highestNotifyRank !== 's') highestNotifyRank = 'a';
+		});
+
+		if (highestNotifyRank && typeof showHighRankCardNotification === 'function') {
+			showHighRankCardNotification(highestNotifyRank);
+		}
+
+		for (const card of cardsToProcess) {
+			const typeCardId = await getCardId(card, 'type');
+			if (typeCardId) {
+				await updateCardInfo(typeCardId, card, false);
+				await sleep(250); 
+			}
+		}
+	}
+
+	// --- [Sub-Module] 8.4. Системное обслуживание (Maintenance) ---
 	
 	/**
 	 * Осуществляет мониторинг смены календарных суток по московскому времени (UTC+3) и 
@@ -2398,58 +3107,7 @@ async function runMainScript() {
 		}
 	}
 	
-	/**
-	 * Выполняет запрос к серверу для проверки статуса ежедневного входа и получения бонуса. 
-	 * Извлекает точное серверное время из HTTP-заголовка Date для синхронизации локального 
-	 * календаря скрипта с временем сайта, что критично для корректного сброса лимитов 
-	 * в полночь по московскому времени (UTC+3).
-	 * [нет аргументов]
-	 */
-	async function triggerDailyBonusCheck() {
-		try {
-			const userHash = typeof unsafeWindow !== 'undefined' ? unsafeWindow.dle_login_hash : window.dle_login_hash;
-			if (!userHash) return null;
-
-			const response = await fetch(`${getCurrentDomain()}/engine/ajax/controller.php?mod=check_login_days`, {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'X-Requested-With': 'XMLHttpRequest' },
-				body: new URLSearchParams({ 'mod': 'check_login_days', 'user_hash': userHash })
-			});
-
-			const serverDateHeader = response.headers.get('Date');
-			let serverTs = Date.now();
-			let serverDay = '';
-
-			if (serverDateHeader) {
-				const sDate = new Date(serverDateHeader);
-				serverTs = sDate.getTime();
-				const sMsk = new Date(serverTs + (3 * 60 * 60 * 1000));
-				serverDay = sMsk.toISOString().split('T')[0];
-				unsafeWindow.ascm_actual_server_date = serverDay;
-			}
-
-			if (!response.ok) return { success: false, serverDay, serverTs };
-
-			const text = (await response.text()).toLowerCase();
-			const isOk = text.includes('бонус') || text.includes('получили') || text.includes('начислено') || text.trim() === 'no';
-			
-			return { success: isOk, serverDay: serverDay, serverTs: serverTs };
-		} catch (e) {
-			return null;
-		}
-	}
-
-	// --- [Sub-Module] Сборщик Кристаллов (ACC) ---
-	// function startAutoClickCrystalScript()
-	// function analyzeChatHtml()
-	// function sendDiamondCollectRequest()
-	// function fetchChatManually()
-	// function verifyAndCountCrystal()
-
-	// --- [Sub-Module] Автофарм и Защита паков ---
-	// function autoFarmLoop()
-	// function selectBestCard()
-	// function handleCardClick()
+	// function runHistoryScanner()
 
 
 	// ##################################################################################
@@ -2480,6 +3138,50 @@ async function runMainScript() {
 	// function startRemeltLoop()
 
 	// --- [Sub-Module] Клубный менеджер ---
+	
+	/**
+	 * Инициализирует модуль Турбо-вклада, настраивая кнопку управления и устанавливая 
+	 * слушатели изменений для мгновенной синхронизации скорости и статуса между вкладками. 
+	 * Автоматически запускает кликер при загрузке страницы, если соответствующий статус 
+	 * зафиксирован в хранилище.
+	 * [getButtonFunc] - хелпер для создания стандартной кнопки
+	 */
+	async function initTurboBoosterModule(getButtonFunc) {
+		if (!window.location.pathname.includes('/clubs/boost/')) return;
+
+		GM_addValueChangeListener(CLUB_MANAGER_SETTINGS_KEY, (key, oldV, newV, remote) => {
+			if (clickerIntervalId && oldV.clickInterval !== newV.clickInterval) {
+				console.log(`%c[ACM Turbo] Скорость изменена: ${newV.clickInterval}мс`, "color: #bc95ff; font-weight: bold;");
+				startClicker();
+			}
+		});
+
+		GM_addValueChangeListener('ascm_active_booster_tab', async (key, oldVal, newVal, remote) => {
+			if (remote && newVal && newVal !== tabIdWatch) {
+				const isActive = await GM_getValue('boosterState', false);
+				if (isActive) {
+					sccLog("Вклады запущены в другой вкладке. Уступаю.", 'warning', true);
+					stopClicker();
+					await GM_setValue('boosterState', false);
+					updateButtonState();
+				}
+			}
+		});
+
+		controlButton = getButtonFunc('turboBoosterBtn', 'bolt', 460, 'ТУРБО-ВКЛАД', async () => {
+			const newState = !(await GM_getValue('boosterState', false));
+			await GM_setValue('boosterState', newState);
+			if (newState) await startClicker(); else stopClicker();
+			updateButtonState();
+		});
+
+		document.body.appendChild(controlButton);
+		updateButtonState();
+		
+		if (await GM_getValue('boosterState', false)) {
+			await startClicker();
+		}
+	}
 	
 	/**
 	 * Инициализирует и внедряет компактную панель управления скоростью Турбо-вклада непосредственно 
@@ -2575,7 +3277,7 @@ async function runMainScript() {
 	 * Реализует логику автоматического поиска кнопки вноса в шахту клуба в заданный временной интервал. 
 	 * При обнаружении кнопки инициирует активацию «Турбо-вклада», а в случае отсутствия элемента 
 	 * запускает таймер обратного отсчета до принудительной перезагрузки страницы, уведомляя 
-	 * пользователя через визуальный пуш-интерфейс и рассчитывая период форс-режима.
+	 * пользователя через компактный визуальный интерфейс с обновляемым счетчиком.
 	 * [sets] - объект настроек клубного менеджера
 	 * [currentTimeInSeconds] - текущее время в секундах от начала суток (МСК)
 	 * [startTimeInSeconds] - время начала окна поиска (секунды)
@@ -2631,28 +3333,29 @@ async function runMainScript() {
 				const forceRange = `${sets.startTime} — ${fEndStr}`;
 
 				const updateReloadUI = () => {
-					const counterEl = document.getElementById('ascm-reload-counter-val');
-					if (counterEl) {
-						counterEl.textContent = secondsLeft + 'с';
-						return;
-					}
-					const html = `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:5px;width:100%;"><div style="font-size:13px;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:1px;display:flex;align-items:center;gap:6px;"><i class="fas fa-spinner fa-spin" style="color:#ffd700;font-size:14px;"></i> ПОИСК КНОПКИ...</div><div style="background:rgba(255,255,255,0.15);padding:4px 10px;border-radius:6px;margin:2px 0;"><div style="font-size:11px;color:#fff;opacity:0.9;">Активен до: <b style="color:#00ff00;font-size:12px;">${sets.endTime} (МСК)</b></div></div><div style="font-size:10px;font-weight:bold;color:#ddd;text-transform:uppercase;margin-top:5px;">Перезагрузка страницы через:</div><div id="ascm-reload-counter-val" style="font-size:56px;font-weight:900;color:#fff;font-family:'Consolas',monospace;line-height:1;margin:0;text-shadow:0 0 20px rgba(255,255,255,0.5);">${secondsLeft}с</div><div style="font-size:9px;color:#fff;opacity:0.6;font-style:italic;margin-top:4px;">Окно форс-режима: ${forceRange}</div></div>`;
-					isStickyNotificationActive = false;
-					showNotification(html, 'error', true);
-					if (currentNotificationElement) {
-						currentNotificationElement.style.padding = '12px 15px';
-						currentNotificationElement.style.minWidth = '220px';
-						currentNotificationElement.style.width = 'auto';
-					}
+					const html = `
+						<div style="display:flex; flex-direction:column; align-items:center; text-align:center; line-height:1.2; padding:0; margin:0;">
+							<div style="font-size:11px; font-weight:bold; white-space:nowrap; margin-bottom:2px;">
+								<i class="fas fa-spinner fa-spin" style="color:#ffd700; font-size:10px; margin-right:4px;"></i>ПОИСК КНОПКИ...
+							</div>
+							<div style="font-size:10px;">Релоад: <b>${secondsLeft}с</b></div>
+							<div style="font-size:9px; opacity:0.8;">Форс до: ${fEndStr}</div>
+						</div>
+					`;
+					showNotification(html, 'error', { sticky: true, id: 'ascm-hunter-reload' });
 				};
 
 				console.log(`[ACM Hunter] Кнопка не найдена. Релоад через ${secondsLeft}с. Окно вкладов до ${sets.endTime}`);
 
 				const countdownId = setInterval(async () => {
 					secondsLeft--;
-					if (secondsLeft > 0) updateReloadUI();
-					else {
+					if (secondsLeft > 0) {
+						updateReloadUI();
+					} else {
 						clearInterval(countdownId);
+						const existing = document.getElementById('ascm-hunter-reload');
+						if (existing) existing.click();
+						
 						sccLog("Время поиска: кнопка не появилась, перезагрузка...", 'warning', true);
 						await GM_setValue('ascm_shahta_occupied_lock', { id: tabIdWatch, ts: Date.now() });
 						sessionStorage.setItem('ascm_last_hunter_ts', Date.now());
@@ -2664,6 +3367,34 @@ async function runMainScript() {
 		}
 	}
 	
+	/**
+	 * Запускает цикл автоматических кликов в шахте клуба. Считывает актуальную скорость 
+	 * из настроек менеджера и устанавливает глобальный идентификатор интервала, 
+	 * предварительно фиксируя ID текущей вкладки как активного исполнителя буста.
+	 * [нет аргументов]
+	 */
+	async function startClicker() {
+		if (clickerIntervalId) clearInterval(clickerIntervalId);
+		await GM_setValue('ascm_active_booster_tab', tabIdWatch);
+		const sets = await GM_getValue(CLUB_MANAGER_SETTINGS_KEY, CLUB_MANAGER_DEFAULT);
+		console.log(`%c[ACM Turbo] Запуск со скоростью: ${sets.clickInterval}мс`, "color: #43b581; font-weight: bold;");
+		clickerIntervalId = setInterval(performClick, sets.clickInterval || 20);
+	}
+
+	/**
+	 * Полностью останавливает цикл автоматических кликов и очищает идентификатор интервала. 
+	 * Используется для штатного завершения работы при достижении лимитов или при 
+	 * получении сигнала о перехвате управления другой вкладкой.
+	 * [нет аргументов]
+	 */
+	function stopClicker() {
+		if (clickerIntervalId) { 
+			clearInterval(clickerIntervalId); 
+			clickerIntervalId = null; 
+			console.log("%c[ACM Turbo] Остановлен.", "color: #ff4d4d; font-weight: bold;");
+		}
+	}
+
 	/**
 	 * Выполняет автоматическую имитацию нажатия на кнопку вклада в шахту клуба с учетом установленных 
 	 * лимитов и временных интервалов. Проверяет статус лидера через кросс-доменное хранилище для 
@@ -2689,10 +3420,10 @@ async function runMainScript() {
 		
 		const globalActiveId = await GM_getValue('ascm_active_booster_tab');
 		if (globalActiveId && globalActiveId !== tabIdWatch) {
-			sccLog("Турбо: обнаружена активность в другом окне. Выключаюсь.", 'warning', true);
 			stopClicker(); 
 			await GM_setValue('boosterState', false); 
 			updateButtonState();
+			sccLog("Турбо: обнаружена активность в другом окне. Выключаюсь.", 'warning', true);
 			return;
 		}
 
@@ -2707,12 +3438,12 @@ async function runMainScript() {
 		if (limitEl && limitEl.parentElement && !isInForcedWindow) {
 			const m = limitEl.parentElement.textContent.match(/(\d+)\s*\/\s*(\d+)/);
 			if (m && parseInt(m[1]) >= parseInt(m[2])) {
-				sccLog("Турбо: Лимит достигнут. Остановка.", 'success', true);
 				const todayStr = msk.toISOString().split('T')[0];
-				await GM_setValue('ascm_lastTurboTriggerDate', todayStr); 
 				stopClicker(); 
 				await GM_setValue('boosterState', false); 
+				await GM_setValue('ascm_lastTurboTriggerDate', todayStr); 
 				updateButtonState();
+				sccLog("Турбо: Лимит достигнут. Остановка.", 'success', true);
 				return;
 			}
 		}
@@ -2720,7 +3451,20 @@ async function runMainScript() {
 		const btn = document.querySelector('.club__boost-btn') || document.querySelector('.club__boost__refresh-btn');
 		if (btn && btn.offsetParent !== null) btn.click();
 	}
-	
+
+	/**
+	 * Обновляет визуальное состояние главной кнопки Турбо-вклада (цвет фона) в зависимости 
+	 * от текущего статуса активности бустера. Синхронизирует отображение кнопки с 
+	 * настройками, сохраненными в глобальном хранилище.
+	 * [нет аргументов]
+	 */
+	async function updateButtonState() {
+		const isActive = await GM_getValue('boosterState', false);
+		if (controlButton) {
+			controlButton.style.background = isActive ? 'linear-gradient(145deg, #43b581, #2e7d32)' : 'linear-gradient(145deg, rgb(166, 100, 110), rgb(222, 0, 5))';
+		}
+	}
+
 	/**
 	 * Создает и отображает модальное окно настроек Клубного менеджера. Реализует комплексный интерфейс 
 	 * для управления временем автоматического вноса, параметрами «Форс-режима» и интенсивностью 
@@ -2945,7 +3689,115 @@ async function runMainScript() {
 	// ##################################################################################
 
 	// --- [Sub-Module] Глобальные наблюдатели ---
-	// function initializeSmartCardObserver()
+	
+	/**
+	 * Глобальный наблюдатель за изменениями DOM. Централизованно управляет внедрением
+	 * элементов интерфейса и запуском автоматических проверок (спрос и дубли).
+	 * Реализует механизм debounce для оптимизации производительности.
+	 */
+	function initializeSmartCardObserver() {
+		const processCardChanges = async () => {
+			if (typeof ensureDbLoaded === 'function') await ensureDbLoaded();
+			
+			if (typeof addDemandCheckButtonsToCards === 'function') addDemandCheckButtonsToCards();
+			if (typeof addInfoButtonsToCards === 'function') addInfoButtonsToCards();
+			if (typeof ascm_injectDupButtons === 'function') ascm_injectDupButtons();
+			
+			if (typeof freshnessOverlayEnabled !== 'undefined' && freshnessOverlayEnabled) {
+				if (!isSpecificTradeOfferPage() || (isSpecificTradeOfferPage() && isFreshnessCheckActive)) {
+					if (typeof freshnessData !== 'undefined' && freshnessData && typeof updateFreshnessOverlays === 'function') {
+						await updateFreshnessOverlays();
+					}
+				}
+			}
+
+			(async () => {
+				if (typeof highlightTargetUserWishlist === 'function') await highlightTargetUserWishlist();
+				if (typeof unsafeWindow.highlightNoSRankDecks === 'function') {
+					await unsafeWindow.highlightNoSRankDecks();
+				}
+				if (typeof highlightReadyToStarCards === 'function') {
+					await highlightReadyToStarCards(); 
+				}
+			})();
+
+			const isPacks = isCardPackPage();
+			const lootboxRow = isPacks ? document.querySelector('.lootbox__row') : null;
+
+			const autoDupEn = (isPacks && GM_getValue('autoPackCheckEnabledState', false)) || 
+							 (isTradeCreationPage() && GM_getValue('autoDuplicateTradeEnabledState', false)) || 
+							 (window.location.pathname.startsWith('/trades/') && GM_getValue('autoDuplicateOffersEnabledState', false));
+			
+			if (autoDupEn || isManualDupCheckActive) {
+				if (isMassDupCheckRunning) isMassDupCheckRunning = false;
+				ascm_runDuplicateEngine(isManualDupCheckActive);
+			}
+
+			if (isPacks && GM_getValue('autoDemandCheckEnabledState', false) && lootboxRow && lootboxRow.offsetParent !== null) {
+				const cards = lootboxRow.querySelectorAll('.lootbox__card');
+				const needsDemand = Array.from(cards).some(c => !c.querySelector('.acm-stats-wrapper'));
+				
+				if (needsDemand && cards.length > 0) {
+					const currentPackId = lootboxRow.dataset.packId || 'manual';
+					if (typeof triggerMassDemandCheckForPackPage === 'function') {
+						triggerMassDemandCheckForPackPage(currentPackId);
+					}
+				}
+			}
+		};
+
+		setTimeout(processCardChanges, 300);
+
+		const targetSelectors = [
+			'#ascm-remelt-grid', '.anime-cards--full-page', '.trade__main', 
+			'.trade__inventory', '.tabs__content', '.trade__search', 
+			'.lootbox__row', '.lootbox__list', '.history__inner', '.remelt__inventory-list', 
+			'.dpm-dialog-list', '.deck__list', '.sect.pmovie__related', 
+			'.stone__inventory', '.card-awakening-list', '.ncard-owner'
+		];
+
+		const observerCallback = (mutationsList) => {
+			const hasSiteChanges = Array.from(mutationsList).some(m => {
+				if (m.type === 'attributes' && (m.attributeName === 'data-id' || m.target.classList.contains('remelt__rank-item'))) {
+					dupEngineInstanceId++;
+					return true;
+				}
+				const nodes = [...m.addedNodes, ...m.removedNodes];
+				const cardClasses = ['ascm-remelt-card', 'anime-cards__item', 'lootbox__card', 'trade__main-item', 'remelt__inventory-item'];
+				const isRealChange = nodes.some(n => n.nodeType === 1 && (cardClasses.some(cls => n.classList.contains(cls)) || n.id === 'ascm-remelt-grid'));
+				if (isRealChange) {
+					dupEngineInstanceId++;
+					return true;
+				}
+				return false;
+			});
+
+			if (!hasSiteChanges) return;
+
+			if (smartObserverTimeout) clearTimeout(smartObserverTimeout);
+			smartObserverTimeout = setTimeout(processCardChanges, 800);
+		};
+
+		const extraTargets = ['.remelt__rank-list', '.card-filter-list__pagination'];
+		[...targetSelectors, ...extraTargets].forEach(selector => {
+			const targetNode = document.querySelector(selector);
+			if (targetNode) {
+				const observer = new MutationObserver(observerCallback);
+				const config = selector === '.remelt__rank-list' ? { attributes: true, subtree: true, attributeFilter: ['class'] } : { childList: true, subtree: true, attributes: true, attributeFilter: ['data-id'] };
+				observer.observe(targetNode, config);
+				if (typeof smartObservers !== 'undefined' && Array.isArray(smartObservers)) {
+				}
+			}
+		});
+
+		window.addEventListener('beforeunload', () => {
+			if (typeof smartObservers !== 'undefined' && Array.isArray(smartObservers)) {
+				smartObservers.forEach(obs => obs.disconnect());
+			}
+			if (smartObserverTimeout) clearTimeout(smartObserverTimeout);
+		});
+	}
+	
 	// function setupUnifiedXhrInterceptor()
 	// function setupSiteNotificationInterceptor()
 
@@ -3082,175 +3934,6 @@ async function runMainScript() {
         // Отправляем в ПУШ только если это не системная выдача И не ошибка лимита
         if (source !== 'site' && !isDailyLimit) {
             safeDLEPushCall('info', `${prefix}${msg}`);
-        }
-    }
-
-	// --- ЦЕНТРАЛЬНЫЙ НАВИГАТОР ЦЕЛЕЙ ---
-    async function updateSmartTarget() {
-        const STATE_KEY = 'ascm_smart_progression_v1';
-        let state = await GM_getValue(STATE_KEY) || { index: 0, ep_offset: 0, cards_collected: 0, failed_attempts: 0 };
-        
-        const db = await openDb();
-        let targetFound = false;
-        let checkedAnimeCount = 0;
-
-        const allReceipts = await new Promise(r => {
-            const req = db.transaction('card_receipts', 'readonly').objectStore('card_receipts').getAll();
-            req.onsuccess = () => r(req.result);
-        });
-
-        while (checkedAnimeCount < GLOBAL_ANIME_POOL.length) {
-            const curAnime = GLOBAL_ANIME_POOL[state.index];
-            if (!curAnime) break;
-
-            const baseEp = parseInt(curAnime.min_ep);
-            const maxEpisodes = parseInt(curAnime.max_ep || 12);
-
-            while (state.ep_offset < maxEpisodes) {
-                const currentEp = baseEp + state.ep_offset;
-                // Сравнение в фильтре:
-                const collected = allReceipts.filter(rc => rc.watchedAnimeId == curAnime.anime_id && rc.watchedEpisode == currentEp).length; // Было id
-                
-                // Запрос к истории:
-                const history = await new Promise(r => {
-                    const req = db.transaction('anime_history', 'readonly').objectStore('anime_history').get(curAnime.anime_id.toString()); // Было id
-                    req.onsuccess = () => r(req.result);
-                });
-                const isAlreadyWatched = history && history.episodes && history.episodes.includes(currentEp);
-
-                if (collected >= 5 || (isAlreadyWatched && collected === 0)) {
-                    state.ep_offset++;
-                    state.cards_collected = 0;
-                    state.failed_attempts = 0;
-                } else {
-                    state.cards_collected = collected;
-                    targetFound = true;
-                    break;
-                }
-            }
-
-            if (targetFound) break;
-
-            state.index = (state.index + 1) % GLOBAL_ANIME_POOL.length;
-            state.ep_offset = 0;
-            state.cards_collected = 0;
-            state.failed_attempts = 0;
-            checkedAnimeCount++;
-        }
-
-        // ПРАВКА: если цель так и не найдена после обхода всего пула
-        if (!targetFound) {
-            state.index = -1;
-        }
-
-        await GM_setValue(STATE_KEY, state);
-        if (typeof unsafeWindow.syncMonitoringStatsUI === 'function') {
-            unsafeWindow.syncMonitoringStatsUI(state);
-        }
-        return state;
-    }
-
-	/**
-     * ГЛАВНЫЙ ОБРАБОТЧИК КАРТЫ
-     * Обрабатывает ответы от сервера при получении карты (авто, ручной или системный режим).
-     * Автоматически активирует снежные камни, обновляет прогресс пула и синхронизирует статус паузы.
-     */
-    async function processCardReward(responseData, requestPayload, source = 'site') {
-        // При любом сетевом ответе с этого адреса обновляем глобальный таймер, чтобы избежать ложных релоадов
-        await GM_setValue(LAST_SUCCESSFUL_REQUEST_KEY_WATCH, Date.now());
-
-        if (!responseData) return;
-
-        // --- БЛОК 1: ОБРАБОТКА ОШИБОК И ЛИМИТОВ ---
-        if (!responseData.cards) {
-            const reason = responseData.reason || "";
-            
-            // Если сервер подтвердил, что лимит 36/36 забит — принудительно ставим статус паузы в память.
-            // Это критически важно для корректного срабатывания модуля "Нового дня".
-            if (/получил свои \d+ карт/.test(reason)) {
-                await GM_setValue(COLLECTION_PAUSED_KEY, true);
-                console.log("%c[ACM] Сервер подтвердил достижение лимита. Статус паузы синхронизирован.", "color: #faa61a; font-weight: bold;");
-            }
-            
-            if (reason) handleCardError(reason, source);
-            return;
-        }
-
-        // --- БЛОК 2: ОБРАБОТКА УСПЕШНОГО ПОЛУЧЕНИЯ КАРТЫ ---
-        try {
-            const card = responseData.cards;
-            const mskTime = getMoscowTime(true);
-            const watchedInfo = parsePayload(requestPayload);
-            const animeIdValue = watchedInfo.watched_news_id || card.news_id || "???";
-
-            // --- ЛОГИКА СНЕЖНОГО КАМНЯ (АВТОАКТИВАЦИЯ) ---
-            let stoneRecord = "Нет"; 
-            if (responseData.snow_stone_gift) {
-                stoneRecord = String(responseData.snow_stone_gift).trim();
-                
-                // Если в ответе есть код камня — активируем его немедленно
-                if (stoneRecord && stoneRecord !== "Нет") {
-                    console.log(`%c[ACM Stone Activator] Обнаружен камень ${stoneRecord}. Запускаю активацию...`, "color: #ff00ff; font-weight: bold;");
-                    activateSnowStone(stoneRecord);
-                }
-            } else if (responseData.hasOwnProperty('snow_stone_gift')) {
-                stoneRecord = "Нет";
-            } else {
-                stoneRecord = "неизвестно";
-            }
-
-            console.log(`%c[ACM] Карта: ${card.name} | Тип: ${source} | Камень: ${stoneRecord}`, "color: #00ffff; font-weight: bold; background: #000; padding: 2px;");
-
-            // Формируем объект лога для IndexedDB
-            const receipt = {
-                receivedAt: Date.now(),
-                dateMsk: mskTime,
-                cardId: card.id,
-                cardName: card.name || 'Без названия',
-                rank: (card.rank || 'e').toLowerCase(),
-                cardAnimeId: card.news_id,
-                image: card.image || '',
-                watchedAnimeId: animeIdValue,
-                watchedEpisode: watchedInfo.episode || '?',
-                watchedSeason: watchedInfo.season || '?',
-                source: source,
-                snowStone: stoneRecord
-            };
-
-            // --- ОБНОВЛЕНИЕ ПРОГРЕССА ПУЛА (3/5) ---
-            const STATE_KEY = 'ascm_smart_progression_v1';
-            let state = await GM_getValue(STATE_KEY);
-            if (state && state.index !== -1) {
-                const currentTargetAnimeId = GLOBAL_ANIME_POOL[state.index]?.anime_id;
-                // Считаем прогресс только если ID аниме совпадает с целью или это не системная выдача
-                if (source !== 'site' || (animeIdValue == currentTargetAnimeId)) {
-                    state.cards_collected = (state.cards_collected || 0) + 1;
-                    if (state.cards_collected >= 5) {
-                        state.ep_offset++;
-                        state.cards_collected = 0;
-                    }
-                    await GM_setValue(STATE_KEY, state);
-                }
-            }
-
-            // --- ФИНАЛИЗАЦИЯ (СОХРАНЕНИЕ И УВЕДОМЛЕНИЯ) ---
-            await saveCardReceipt(receipt);
-            
-            let stonePushInfo = (stoneRecord !== "Нет" && stoneRecord !== "Ошибка" && stoneRecord !== "неизвестно")
-                ? `\n💎 Снежный камень: ${stoneRecord}`
-                : "";
-
-            safeDLEPushCall('custom', `[ACM] Получена карта:\n${card.name} [${card.rank ? card.rank.toUpperCase() : '?'}]${stonePushInfo}`);
-
-            // Обновляем таблицу мониторинга (если открыта) и счетчик карт в профиле
-            if (typeof unsafeWindow.afRefreshTableNow === 'function') unsafeWindow.afRefreshTableNow();
-            if (typeof updateCardCounter === 'function') {
-                // Вызываем с force=true, чтобы мгновенно обновить цифры лимита на кнопках
-                setTimeout(() => updateCardCounter(true), 1200);
-            }
-
-        } catch (e) {
-            console.error("[ACM Debug] Критическая ошибка в обработчике карты:", e);
         }
     }
 
@@ -3497,66 +4180,6 @@ async function runMainScript() {
     // ##################################################
     // БЛОК КАСТОМНЫХ УВЕДОМЛЕНИЙ!
     // ##################################################
-    // ##################################################
-    // # Отображает кастомное уведомление вверху экрана с заданным сообщением и типом.
-    // ##################################################
-    function showNotification(message, type = 'info', isSticky = false, customBg = null) {
-        if (isStickyNotificationActive && !isSticky) {
-            return;
-        }
-        if (currentNotificationTimeout) {
-            clearTimeout(currentNotificationTimeout);
-            currentNotificationTimeout = null;
-        }
-        if (!currentNotificationElement) {
-            currentNotificationElement = document.createElement('div');
-            currentNotificationElement.className = 'custom-card-notification';
-            Object.assign(currentNotificationElement.style, {
-                position: 'fixed', left: '50%', transform: 'translateX(-50%)',
-                color: 'white', padding: '12px 28px', borderRadius: '10px',
-                boxShadow: '0 8px 20px rgba(0,0,0,0.5)', zIndex: '2147483640',
-                fontSize: '15px', fontWeight: 'bold', textAlign: 'center',
-                maxWidth: '90%', whiteSpace: 'pre-wrap',
-                transition: `top ${NOTIFICATION_ANIMATION_DURATION_MS}ms cubic-bezier(0.68, -0.55, 0.27, 1.55)`
-            });
-            currentNotificationElement.style.top = '-150px';
-            document.body.appendChild(currentNotificationElement);
-        }
-        if (isSticky) isStickyNotificationActive = true;
-        currentNotificationElement.innerHTML = String(message);
-        let bgColor;
-        if(customBg) {
-            bgColor = customBg;
-        } else {
-            switch (type) {
-                case 'success': bgColor = 'linear-gradient(145deg, LawnGreen, SeaGreen)'; break;
-                case 'error': bgColor = 'linear-gradient(145deg, Tomato, Crimson)'; break;
-                case 'warning': bgColor = 'linear-gradient(145deg, Gold, DarkOrange)'; break;
-                case 'custom': bgColor = 'linear-gradient(145deg, #a35f19, #b36a1e)'; break;
-                case 'info':
-                default: bgColor = 'linear-gradient(145deg, DodgerBlue, RoyalBlue)'; break;
-            }
-        }
-        currentNotificationElement.style.background = bgColor;
-        currentNotificationElement.dataset.lastShowTime = Date.now().toString();
-        if (currentNotificationElement.style.top !== '20px') {
-            currentNotificationElement.style.transition = `top ${NOTIFICATION_ANIMATION_DURATION_MS}ms cubic-bezier(0.68, -0.55, 0.27, 1.55)`;
-            currentNotificationElement.style.top = '20px';
-        } else {
-            currentNotificationElement.style.transition = 'opacity 0.1s ease-out';
-            currentNotificationElement.style.opacity = '0.85';
-            setTimeout(() => { if (currentNotificationElement) currentNotificationElement.style.opacity = '1'; }, 100);
-        }
-        const displayDuration = isSticky ? 999999 : (type === 'error' ? 5000 : (type === 'warning' ? 4000 : 3500));
-        currentNotificationTimeout = setTimeout(() => {
-            if (currentNotificationElement) {
-                currentNotificationElement.style.transition = `top ${NOTIFICATION_ANIMATION_DURATION_MS}ms cubic-bezier(0.68, -0.55, 0.27, 1.55)`;
-                currentNotificationElement.style.top = '-150px';
-            }
-            if (isSticky) isStickyNotificationActive = false;
-            currentNotificationTimeout = null;
-        }, displayDuration);
-    }
 
     // ##################################################
     // УВЕДОМЛЕНИЯ О ПОЛУЧЕННЫХ КАРТАХ (С АВТОПРОСМОТРА)
@@ -4447,19 +5070,7 @@ async function runMainScript() {
             }
      `);
 
-	// ##################################################
-    // # ВСПОМОГАТЕЛЬНЫЙ ПАРСЕР ID КЛУБА
-    // ##################################################
-    function getMyClubIdFromMenu() {
-        const clubLink = Array.from(document.querySelectorAll('.lgn__menu a')).find(a => a.textContent.includes('Мой клуб'));
-        if (clubLink) {
-            const match = clubLink.getAttribute('href').match(/\/clubs\/(\d+)\//);
-            return match ? match[1] : null;
-        }
-        return null;
-    }
-	
-	
+
     /**
 	 * Главное модальное окно настроек AnimeStars Card Master.
 	 * Управляет отображением всех модулей и их состоянием.
@@ -4904,7 +5515,7 @@ async function runMainScript() {
 
 		const refreshAllButtons = () => {
 			document.querySelectorAll('.show-card-info-btn, .check-demand-btn, .check-duplicates-btn, .acm-s-count-badge').forEach(el => el.remove());
-			addInfoButtonsToCards(); addDemandCheckButtonsToCards(); if (typeof addCheckButtons === 'function') addCheckButtons();
+			addInfoButtonsToCards(); addDemandCheckButtonsToCards(); ascm_injectDupButtons();
 		};
 
 		const handleInstantChange = async (key, val, label) => {
@@ -6936,22 +7547,20 @@ async function runMainScript() {
         };
 
 	/**
-	 * Обновляет визуальное состояние и метаданные DOM-элемента карточки, внедряя блок статистики спроса. 
-	 * Функция проверяет актуальность данных в IndexedDB, при необходимости инициирует асинхронную загрузку, 
-	 * рассчитывает размеры шрифтов и иконок в зависимости от ширины карты и настраивает интерактивный 
-	 * многофункциональный tooltip с поддержкой обновления данных по клику.
-	 * [cardId] - уникальный идентификатор типа карты (string/number)
-	 * [element] - DOM-элемент карточки, в который производится инъекция
-	 * [triggeredByIndividualButton] - флаг, указывающий на запуск процесса через кнопку (включает анимацию загрузки)
+	 * Загружает и внедряет блок статистики спроса на карточку.
+	 * Оптимизировано: генерирует HTML один раз и применяет ко всем идентичным картам на странице.
+	 * [cardId] - идентификатор типа карты.
+	 * [element] - DOM-элемент, инициировавший обновление.
+	 * [triggeredByIndividualButton] - флаг активации через индивидуальную кнопку (включает лоадер).
+	 * [cardsCache] - необязательный массив элементов для ускорения поиска.
 	 */
-	async function updateCardInfo(cardId, element, triggeredByIndividualButton = false) {
+	async function updateCardInfo(cardId, element, triggeredByIndividualButton = false, cardsCache = null) {
 		if (!cardId || !element) return;
-																											  
+		
 		if (isRemeltPage() && unsafeWindow.remeltActiveInfo) {
 			unsafeWindow.remeltActiveInfo.add(cardId.toString());
 		}
 
-													   
 		if (!document.getElementById('acm-custom-tooltip')) {
 			GM_addStyle(`
 				#acm-custom-tooltip {
@@ -6988,94 +7597,61 @@ async function runMainScript() {
 				tooltip.dataset.activeContent = '';
 			};
 		}
-		if (!unsafeWindow.zeroStatsVerifiedSet) {
-			unsafeWindow.zeroStatsVerifiedSet = new Set();
-		}
-																	  
 
-		const cardWidth = element.offsetWidth;
-		const baseIconSize = await GM_getValue('ascm_statsIconSize', 11);
-		const baseFontSize = await GM_getValue('ascm_statsFontSize', 12);
-		const standardCardWidth = 150;
-		const scaleFactor = cardWidth / standardCardWidth;
-		let finalFontSize = Math.round(Math.max(9, Math.min(20, baseFontSize * scaleFactor)));
-		let finalIconSize = Math.round(Math.max(8, Math.min(19, baseIconSize * scaleFactor)));
-		const isCollectorCard = element.classList.contains('ca-card-item');
-		const demandButton = element.querySelector(isCollectorCard ? '.ca-check-demand-btn' : '.check-demand-btn');
-
-		if (demandButton && triggeredByIndividualButton) {
-			demandButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-			demandButton.style.pointerEvents = 'none';
+		const relatedCards = [];
+		if (cardsCache) {
+			for (const el of cardsCache) {
+				if (el.dataset.cardId === cardId || el.dataset.id === cardId) relatedCards.push(el);
+			}
+		} else {
+			const allCards = getCardsOnPage();
+			for (const el of allCards) {
+				const cid = await getCardId(el, 'type', true);
+				if (cid === cardId) relatedCards.push(el);
+			}
 		}
+		if (relatedCards.length === 0) relatedCards.push(element);
+
+		relatedCards.forEach(targetEl => {
+			const demandButton = targetEl.querySelector('.check-demand-btn, .ca-check-demand-btn');
+			if (demandButton && triggeredByIndividualButton) {
+				demandButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+				demandButton.style.pointerEvents = 'none';
+			}
+		});
 
 		try {
-																
+			if (!unsafeWindow.zeroStatsVerifiedSet) unsafeWindow.zeroStatsVerifiedSet = new Set();
 			if (!unsafeWindow.zeroStatsVerifiedSet.has(cardId)) {
 				const existingCache = await unsafeWindow.getCache('cardId: ' + cardId);
-				if (existingCache) {
-					if (existingCache.needCount === 0 && existingCache.tradeCount === 0 && existingCache.popularityCount === 0) {
-						const db = await openDb();
-						const tx = db.transaction(DEMAND_CACHE_STORE_NAME, 'readwrite');
-						const store = tx.objectStore(DEMAND_CACHE_STORE_NAME);
-						store.delete('cardId: ' + cardId);
-						await new Promise(r => tx.oncomplete = r);
-						unsafeWindow.zeroStatsVerifiedSet.add(cardId);
-					}
+				if (existingCache && existingCache.needCount === 0 && existingCache.tradeCount === 0 && existingCache.popularityCount === 0) {
+					const db = await openDb();
+					const tx = db.transaction(DEMAND_CACHE_STORE_NAME, 'readwrite');
+					tx.objectStore(DEMAND_CACHE_STORE_NAME).delete('cardId: ' + cardId);
+					await new Promise(r => tx.oncomplete = r);
+					unsafeWindow.zeroStatsVerifiedSet.add(cardId);
 				}
 			}
-														
 
 			const card = await unsafeWindow.loadCard(cardId);
-			if (card && typeof card.needCount !== 'undefined') {
-				element.dataset.needCount = card.needCount;
-			}
 			const DEFAULT_RANK_COLORS = { e: 'rgb(156, 111, 81)', d: 'rgb(160, 155, 145)', c: 'rgb(1, 145, 69)', b: 'rgb(32, 148, 228)', a: 'rgb(217, 49, 52)', s: 'rgb(167, 76, 207)', ass: 'rgb(119, 44, 232)', sss: 'rgb(207, 207, 207)' };
 			const DEFAULT_ICON_COLORS = { need: '#43b581', trade: '#faa61a', owners: '#54a8ee' };
 
-			const [rankColors, iconColors] = await Promise.all([
-				(async () => {
-					const colors = {};
-					for (const rankKey of Object.keys(DEFAULT_RANK_COLORS)) colors[rankKey] = await GM_getValue(`ascm_rankColor_${rankKey}`, DEFAULT_RANK_COLORS[rankKey]);
-					return colors;
-				})(),
-				(async () => {
-					const colors = {};
-					for (const iconKey of Object.keys(DEFAULT_ICON_COLORS)) colors[iconKey] = await GM_getValue(`ascm_iconColor_${iconKey}`, DEFAULT_ICON_COLORS[iconKey]);
-					return colors;
-				})()
-			]);
+			const rankColors = {};
+			for (const rKey of Object.keys(DEFAULT_RANK_COLORS)) rankColors[rKey] = await GM_getValue(`ascm_rankColor_${rKey}`, DEFAULT_RANK_COLORS[rKey]);
+			const iconColors = {};
+			for (const iconKey of Object.keys(DEFAULT_ICON_COLORS)) iconColors[iconKey] = await GM_getValue(`ascm_iconColor_${iconKey}`, DEFAULT_ICON_COLORS[iconKey]);
 
-			let rank = element.dataset.rank?.toLowerCase();
-			if (!rank) {
-				const imgElement = element.querySelector('img');
-				if (imgElement) {
-					const imageUrl = imgElement.dataset.src || imgElement.src;
-					if (imageUrl) {
-						const match = imageUrl.match(/\/cards_image\/\d+\/([a-z]+)\//);
-						if (match && match[1]) rank = match[1];
-					}
+			let cardRank = element.dataset.rank?.toLowerCase();
+			if (!cardRank) {
+				const img = element.querySelector('img');
+				if (img) {
+					const match = (img.dataset.src || img.src).match(/\/cards_image\/\d+\/([a-z]+)\//);
+					if (match) cardRank = match[1];
 				}
 			}
-			
-																															   
+
 			const isDark = document.body.classList.contains('dle_theme_dark');
-			const isInsideModal = element.closest('#card-modal, #modal-gift-card') || isCollectorCard || element.classList.contains('noffer');
-
-																															  
-																																			  
-			const color = (isInsideModal && !isDark) ? '#ffffff' : (rankColors[rank] || 'inherit');
-			
-																																			   
-			const finalIconColors = {
-				need: iconColors.need,
-				trade: iconColors.trade,
-				owners: iconColors.owners
-			};
-
-			element.querySelector('.acm-stats-wrapper')?.remove();
-			element.closest('.ca-card-wrapper')?.querySelector('.ca-card-demand-stats')?.remove();
-
-																	  
 			const cacheKey = 'cardId: ' + cardId;
 			let timeString = "Только что";
 			let fetchedTime = Date.now();
@@ -7083,157 +7659,126 @@ async function runMainScript() {
 			try {
 				const db = await openDb();
 				const tx = db.transaction(DEMAND_CACHE_STORE_NAME, 'readonly');
-				const store = tx.objectStore(DEMAND_CACHE_STORE_NAME);
-				const cacheResult = await new Promise(resolve => {
-					const req = store.get(cacheKey);
-					req.onsuccess = () => resolve(req.result);
-					req.onerror = () => resolve(null);
+				const cacheResult = await new Promise(r => {
+					const req = tx.objectStore(DEMAND_CACHE_STORE_NAME).get(cacheKey);
+					req.onsuccess = () => r(req.result);
 				});
-
 				if (cacheResult && cacheResult.expires) {
-																
-					if (cacheResult.data && cacheResult.data.updatedAt) {
-						fetchedTime = cacheResult.data.updatedAt;
-					} else {
-											   
-						const ttlHours = await GM_getValue(CACHE_TTL_STORAGE_KEY, DEFAULT_CACHE_TTL_HOURS);
-						fetchedTime = cacheResult.expires - (ttlHours * 3600 * 1000);
-					}
-
-					const diffMs = Date.now() - fetchedTime;
-																																				 
-					const diffMins = Math.max(0, Math.floor(diffMs / 60000));
-
+					fetchedTime = cacheResult.data?.updatedAt || (cacheResult.expires - (await GM_getValue(CACHE_TTL_STORAGE_KEY, 72) * 3600 * 1000));
+					const diffMins = Math.max(0, Math.floor((Date.now() - fetchedTime) / 60000));
 					if (diffMins > 0) {
 						const h = Math.floor(diffMins / 60);
-						const m = diffMins % 60;
-						if (h > 0) timeString = `${h}ч ${m}м назад`;
-						else timeString = `${m} мин. назад`;
+						timeString = h > 0 ? `${h}ч ${diffMins % 60}м назад` : `${diffMins} мин. назад`;
 					}
 				}
 			} catch(e) {}
 
-													   
 			const timeHtml = `<span class="acm-tooltip-time"><i class="fas fa-clock" style="color: #dcddde !important; margin-right: 5px; display: inline-block !important; vertical-align: middle;"></i>Актуальность: <b>${timeString}</b></span>`;
 			const hintHtml = `<span class="acm-tooltip-hint"><i class="fas fa-sync-alt"></i> Нажмите, чтобы обновить</span>`;
-
-			const getTooltipHtml = (title, count, titleColor) => {
-				return `<span class="acm-tooltip-header" style="color:${titleColor}">${title}: <b>${count}</b></span>${timeHtml}${hintHtml}`;
-			};
+			const getTooltipHtml = (title, count, titleColor) => `<span class="acm-tooltip-header" style="color:${titleColor}">${title}: <b>${count}</b></span>${timeHtml}${hintHtml}`;
 			const mainTooltipHtml = `<span class="acm-tooltip-header">Спрос на карту</span>${timeHtml}${hintHtml}`;
 
-			const statsHTML = `
-				<span class="acm-stat-item" data-type="need"><i class="fas fa-shopping-cart" style="color: ${finalIconColors.need}; font-size: ${finalIconSize}px !important; line-height: 0;"></i> <span style="position: relative; z-index: 2; color: ${color} !important; text-shadow: 1.5px 0 0 #1b1b1b, -1px 0 0 #1b1b1b, 0 1px 0 #1b1b1b, 0 -1px 0 #1b1b1b, 0 0 4px #1b1b1b !important; font-size: ${finalFontSize}px !important; line-height: 0;">${card.needCount}</span></span>
-				<span class="acm-stat-item" data-type="trade"><i class="fas fa-sync-alt" style="color: ${finalIconColors.trade}; font-size: ${finalIconSize}px !important; line-height: 0;"></i> <span style="position: relative; z-index: 2; color: ${color} !important; text-shadow: 1.5px 0 0 #1b1b1b, -1px 0 0 #1b1b1b, 0 1px 0 #1b1b1b, 0 -1px 0 #1b1b1b, 0 0 4px #1b1b1b !important; font-size: ${finalFontSize}px !important; line-height: 0;">${card.tradeCount}</span></span>
-				<span class="acm-stat-item" data-type="owners"><i class="fas fa-users" style="color: ${finalIconColors.owners}; font-size: ${finalIconSize}px !important; line-height: 0;"></i> <span style="position: relative; z-index: 2; color: ${color} !important; text-shadow: 1.5px 0 0 #1b1b1b, -1px 0 0 #1b1b1b, 0 1px 0 #1b1b1b, 0 -1px 0 #1b1b1b, 0 0 4px #1b1b1b !important; font-size: ${finalFontSize}px !important; line-height: 0;">${card.popularityCount}</span></span>
-			`;
+			const color = rankColors[cardRank] || 'inherit';
 
-			const attachEvents = (container) => {
-				const tooltipEl = document.getElementById('acm-custom-tooltip');
+			relatedCards.forEach(targetEl => {
+				targetEl.dataset.needCount = card.needCount;
+				const cardWidth = targetEl.offsetWidth;
+				const scaleFactor = cardWidth / 150;
+				const finalFontSize = Math.round(Math.max(12, Math.min(22, 13 * scaleFactor)));
+				const finalIconSize = Math.round(Math.max(11, Math.min(21, 12 * scaleFactor)));
+				const isCollector = targetEl.classList.contains('ca-card-item');
+				const isInsideModal = targetEl.closest('#card-modal, #modal-gift-card') || isCollector || targetEl.classList.contains('noffer');
+				const finalColor = (isInsideModal && !isDark) ? '#ffffff' : color;
 
-				container.onmousemove = (e) => {
-					unsafeWindow.acm_moveTooltip(e);
+				const statsHTML = `
+					<span class="acm-stat-item" data-type="need"><i class="fas fa-shopping-cart" style="color: ${iconColors.need}; font-size: ${finalIconSize}px !important; line-height: 0;"></i> <span style="position: relative; z-index: 2; color: ${finalColor} !important; text-shadow: 1.5px 0 0 #1b1b1b, -1px 0 0 #1b1b1b, 0 1px 0 #1b1b1b, 0 -1px 0 #1b1b1b, 0 0 4px #1b1b1b !important; font-size: ${finalFontSize}px !important; line-height: 0;">${card.needCount}</span></span>
+					<span class="acm-stat-item" data-type="trade"><i class="fas fa-sync-alt" style="color: ${iconColors.trade}; font-size: ${finalIconSize}px !important; line-height: 0;"></i> <span style="position: relative; z-index: 2; color: ${finalColor} !important; text-shadow: 1.5px 0 0 #1b1b1b, -1px 0 0 #1b1b1b, 0 1px 0 #1b1b1b, 0 -1px 0 #1b1b1b, 0 0 4px #1b1b1b !important; font-size: ${finalFontSize}px !important; line-height: 0;">${card.tradeCount}</span></span>
+					<span class="acm-stat-item" data-type="owners"><i class="fas fa-users" style="color: ${iconColors.owners}; font-size: ${finalIconSize}px !important; line-height: 0;"></i> <span style="position: relative; z-index: 2; color: ${finalColor} !important; text-shadow: 1.5px 0 0 #1b1b1b, -1px 0 0 #1b1b1b, 0 1px 0 #1b1b1b, 0 -1px 0 #1b1b1b, 0 0 4px #1b1b1b !important; font-size: ${finalFontSize}px !important; line-height: 0;">${card.popularityCount}</span></span>
+				`;
 
-					const item = e.target.closest('.acm-stat-item');
-					let content = mainTooltipHtml;
-
-					if (item) {
-						const type = item.dataset.type;
-						if (type === 'need') content = getTooltipHtml('Хотят получить', card.needCount, iconColors.need);
-						else if (type === 'trade') content = getTooltipHtml('Готовы обменять', card.tradeCount, iconColors.trade);
-						else if (type === 'owners') content = getTooltipHtml('Владельцев', card.popularityCount, iconColors.owners);
-					}
-
-					if (tooltipEl.dataset.activeContent !== content) {
-						tooltipEl.innerHTML = content;
-						tooltipEl.dataset.activeContent = content;
-						tooltipEl.style.opacity = '1';
-					}
+				const attachEvents = (container) => {
+					const tooltipEl = document.getElementById('acm-custom-tooltip');
+					container.onmousemove = (e) => {
+						unsafeWindow.acm_moveTooltip(e);
+						const item = e.target.closest('.acm-stat-item');
+						let content = mainTooltipHtml;
+						if (item) {
+							const type = item.dataset.type;
+							if (type === 'need') content = getTooltipHtml('Хотят получить', card.needCount, iconColors.need);
+							else if (type === 'trade') content = getTooltipHtml('Готовы обменять', card.tradeCount, iconColors.trade);
+							else if (type === 'owners') content = getTooltipHtml('Владельцев', card.popularityCount, iconColors.owners);
+						}
+						if (tooltipEl.dataset.activeContent !== content) {
+							tooltipEl.innerHTML = content;
+							tooltipEl.dataset.activeContent = content;
+							tooltipEl.style.opacity = '1';
+						}
+					};
+					container.onmouseleave = () => unsafeWindow.acm_hideTooltip();
+					container.onclick = async (e) => {
+						e.preventDefault(); e.stopPropagation();
+						container.style.opacity = '0.5';
+						unsafeWindow.acm_hideTooltip();
+						try {
+							const dBase = await openDb();
+							const txR = dBase.transaction(DEMAND_CACHE_STORE_NAME, 'readwrite');
+							txR.objectStore(DEMAND_CACHE_STORE_NAME).delete(cacheKey);
+							await new Promise(r => txR.oncomplete = r);
+							await updateCardInfo(cardId, targetEl, false);
+						} catch(err) { container.style.opacity = '1'; }
+					};
 				};
 
-				container.onmouseleave = (e) => { unsafeWindow.acm_hideTooltip(); };
+				targetEl.querySelector('.acm-stats-wrapper')?.remove();
+				targetEl.closest('.ca-card-wrapper')?.querySelector('.ca-card-demand-stats')?.remove();
 
-				container.onclick = async (e) => {
-					e.preventDefault(); e.stopPropagation();
-					container.style.opacity = '0.5';
-					container.style.cursor = 'wait';
-					unsafeWindow.acm_hideTooltip();
-					try {
-						const db = await openDb();
-						const tx = db.transaction(DEMAND_CACHE_STORE_NAME, 'readwrite');
-						const store = tx.objectStore(DEMAND_CACHE_STORE_NAME);
-						store.delete(cacheKey);
-						await new Promise(r => tx.oncomplete = r);
-						if (typeof pendingDemandRequests !== 'undefined') pendingDemandRequests.delete(cardId);
-						await updateCardInfo(cardId, element, false);
-						safeDLEPushCall('info', `Спрос обновлен!`);
-					} catch(err) {
-											   
-						container.style.opacity = '1';
-						container.style.cursor = 'pointer';
+				if (isCollector) {
+					const wrapper = targetEl.closest('.ca-card-wrapper');
+					if (wrapper) {
+						const ownerDiv = wrapper.querySelector('.ca-card-owner');
+						if (ownerDiv) {
+							const statsDiv = document.createElement('div');
+							statsDiv.className = 'ca-card-demand-stats'; statsDiv.innerHTML = statsHTML;
+							attachEvents(statsDiv); wrapper.insertBefore(statsDiv, ownerDiv);
+						}
 					}
-				};
-
-				container.style.cursor = 'pointer';
-			};
-
-			if (isCollectorCard) {
-				const wrapper = element.closest('.ca-card-wrapper');
-				if (wrapper) {
-					const ownerDiv = wrapper.querySelector('.ca-card-owner');
-					if (ownerDiv) {
-						const statsDiv = document.createElement('div');
-						statsDiv.className = 'ca-card-demand-stats'; statsDiv.innerHTML = statsHTML;
-						attachEvents(statsDiv); wrapper.insertBefore(statsDiv, ownerDiv);
+				} else if (targetEl.matches('.ncard__img')) {
+					let statsWrapper = targetEl.parentNode.querySelector('.acm-stats-wrapper');
+					if (!statsWrapper) {
+						statsWrapper = document.createElement('div');
+						statsWrapper.className = 'acm-stats-wrapper'; targetEl.after(statsWrapper);
 					}
-				}
-				if (demandButton) demandButton.remove();
-			} else if (element.matches('.ncard__img')) {
-				let statsWrapper = element.parentNode.querySelector('.acm-stats-wrapper');
-				if (!statsWrapper) {
-					statsWrapper = document.createElement('div');
-					statsWrapper.className = 'acm-stats-wrapper'; element.after(statsWrapper);
-				}
-				statsWrapper.style.cssText = "width:100%;max-width:288px;margin:-7px auto 10px auto!important;border-radius:0 0 10px 10px;background:#252525!important;display:block!important;opacity:1!important;";
-				statsWrapper.innerHTML = `<div class="acm-card-stats" style="padding:5px 0;">${statsHTML}</div>`;
-				attachEvents(statsWrapper);
-				if (demandButton) demandButton.remove();
-			} else if (element.classList.contains('noffer')) {
-				const stats = document.createElement('div');
-				stats.className = 'acm-card-stats';
-				stats.innerHTML = statsHTML;
-				attachEvents(stats);
-				const nofferLeft = element.querySelector('.noffer__left');
-				const nofferMain = nofferLeft ? nofferLeft.querySelector('.noffer__main') : null;
-				if (nofferMain) {
-					nofferMain.insertAdjacentElement('afterend', stats);
-				} else if (nofferLeft) {
-					nofferLeft.appendChild(stats);
+					statsWrapper.style.cssText = "width:100%;max-width:288px;margin:-7px auto 10px auto!important;border-radius:0 0 10px 10px;background:#252525!important;display:block!important;opacity:1!important;";
+					statsWrapper.innerHTML = `<div class="acm-card-stats" style="padding:5px 0;">${statsHTML}</div>`;
+					attachEvents(statsWrapper);
+				} else if (targetEl.classList.contains('noffer')) {
+					const stats = document.createElement('div');
+					stats.className = 'acm-card-stats'; stats.innerHTML = statsHTML;
+					attachEvents(stats);
+					const nofferMain = targetEl.querySelector('.noffer__left .noffer__main');
+					if (nofferMain) nofferMain.insertAdjacentElement('afterend', stats);
+					else targetEl.appendChild(stats);
 				} else {
-					element.appendChild(stats);
+					const statsWrapper = document.createElement('div');
+					statsWrapper.className = 'acm-stats-wrapper';
+					const stats = document.createElement('div');
+					stats.className = 'acm-card-stats'; stats.innerHTML = statsHTML;
+					attachEvents(statsWrapper);
+					statsWrapper.appendChild(stats);
+					targetEl.appendChild(statsWrapper);
+					if (typeof removeCheckMarkOrDemandButton === 'function') removeCheckMarkOrDemandButton(targetEl);
 				}
-				if (demandButton) demandButton.remove();
-			} else {
-				const statsWrapper = document.createElement('div');
-				statsWrapper.className = 'acm-stats-wrapper';
-				const stats = document.createElement('div');
-				stats.className = 'acm-card-stats';
-				stats.innerHTML = statsHTML;
-				attachEvents(statsWrapper);
-				statsWrapper.appendChild(stats);
-				element.appendChild(statsWrapper);
-				if (card.needCount !== undefined) {
-					removeCheckMarkOrDemandButton(element);
-				}
-			}
+			});
 
 		} catch (error) {
-                console.error(`Ошибка обновления информации о карте ${cardId}:`, error);						
-			if (demandButton && triggeredByIndividualButton) {
-				demandButton.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
-				demandButton.style.pointerEvents = 'auto';
-				safeDLEPushCall('error', `Не удалось загрузить спрос для карты ID ${cardId}`);
-			}
+			console.error(`Ошибка спроса ID ${cardId}:`, error);
+			relatedCards.forEach(targetEl => {
+				const btn = targetEl.querySelector('.check-demand-btn, .ca-check-demand-btn');
+				if (btn && triggeredByIndividualButton) {
+					btn.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
+					btn.style.pointerEvents = 'auto';
+				}
+			});
 		}
 	}
 	unsafeWindow.updateCardInfo = updateCardInfo;
@@ -7320,31 +7865,6 @@ async function runMainScript() {
         }
 
         // ##################################################
-        // # Принудительно останавливает и сбрасывает состояние массовой проверки дубликатов.
-        // ##################################################
-        function stopMassDuplicateCheck() {
-            if (idТаймаутаСледующегоБатча) {
-                clearTimeout(idТаймаутаСледующегоБатча);
-                idТаймаутаСледующегоБатча = null;
-            }
-            if (массоваяПроверкаДублейЗапущена) {
-                console.log('[AnimeStars Card Master] Массовая проверка дубликатов принудительно остановлена.');
-                isProcessingAutoPackCheck = false;
-                массоваяПроверкаДублейЗапущена = false;
-                массоваяПроверкаДублейНаПаузе = false;
-                индексПоследнейПровереннойКарты = 0;
-                массивКартДляПроверки = [];
-                hideSpecialButtonCounter('check-all-duplicates-btn');
-                const mainButton = document.getElementById('check-all-duplicates-btn');
-                if (mainButton) {
-                    const icon = mainButton.querySelector('span:first-child');
-                    if (icon) icon.className = 'fal fa-search';
-                    mainButton.title = "Проверить дубликаты карт";
-                }
-            }
-        }
-
-        // ##################################################
         // ГЛОБАЛЬНЫЙ МЕХАНИЗМ ВОЗОБНОВЛЕНИЯ ПРОВЕРКИ СПРОСА ("БУДИЛЬНИК")
         // ##################################################
         let globalResumeIntervalId = null;
@@ -7387,282 +7907,194 @@ async function runMainScript() {
             }
         }
 
-        // ##################################################
-        // # Основная функция для массовой проверки спроса на карты (текущая страница или все страницы с пагинацией).
-        // ##################################################
-        async function processCards(checkAllPages = false, isAutoTriggered = false) {
-            const thisCheckInstanceId = ++currentDemandCheckInstanceId;
-            if (window.location.pathname.includes('/clubs/boost/')) {
-                console.log('[ACM] Проверка спроса отключена на странице вкладов.');
-                return;
-            }
-            if (isAutoTriggered) {
-                const settings = await unsafeWindow.autoDemandTrade_loadSettings();
-                const ranksToCheck = Object.keys(settings).filter(rank => settings[rank]);
-                if (ranksToCheck.length === 0) return;
-                let cardsForAutoCheck = [];
-                if (isCardPackPage()) {
-                    cardsForAutoCheck = Array.from(document.querySelectorAll('.lootbox__row .lootbox__card'));
-                } else if (window.location.pathname.startsWith('/trades/')) {
-                    cardsForAutoCheck = Array.from(document.querySelectorAll('.trade__main-item, .history__body-item'));
-                }
-                if (cardsForAutoCheck.length === 0) return;
-                const processingPromises = cardsForAutoCheck.map(async (cardElement) => {
-                    const typeCardId = await getCardId(cardElement, 'type');
-                    if (!typeCardId) return;
-                    let rank = cardElement.dataset.rank?.toLowerCase();
-                    if (!rank) {
-                        const img = cardElement.querySelector('img');
-                        if (img) {
-                            const imageUrl = img.dataset.src || img.src;
-                            if (imageUrl) {
-                                const match = imageUrl.match(/\/cards_image\/\d+\/([a-z]+)\//);
-                                if (match && match[1]) {
-                                    rank = match[1];
-                                }
-                            }
-                        }
-                    }
-                    if (rank && ranksToCheck.includes(rank)) {
-                        try {
-                            await updateCardInfo(typeCardId, cardElement, false);
-                        } catch (e) {
-                            console.error(`Ошибка при автопроверке спроса для карты ${typeCardId}:`, e);
-                        }
-                    }
-                });
-                await Promise.all(processingPromises);
-                return;
-            }
-            const myTask = { tabId: unsafeWindow.tabIdWatch, checkAllPages: checkAllPages, timestamp: Date.now() };
-            if (isProcessCardsRunning) {
-                shouldStopProcessCards = true;
-                sessionStorage.setItem('stopDemandCheck', 'true');
-                console.log('[processCards] Пользователь нажал "Стоп". Устанавливаю флаг остановки.');
-                safeDLEPushCall('warning', 'Массовая проверка спроса прервана пользователем.');
-                const btnSinglePage = document.getElementById('processCards');
-                const btnAllPages = document.getElementById('processAllPagesBtn');
-                const activeBtn = (btnSinglePage && btnSinglePage.style.background.includes('rgb(50, 200, 50)')) ? btnSinglePage : btnAllPages;
-                if (activeBtn) {
-                    const icon = activeBtn.querySelector('span:first-child');
-                    if (icon) {
-                        icon.className = 'fas fa-spinner';
-                        icon.style.animation = 'acm-spin 1s linear infinite';
-                    }
-                    activeBtn.style.background = 'linear-gradient(145deg, #e67e22, #d35400)';
-                    activeBtn.title = "Остановка...";
-                    if (btnSinglePage) btnSinglePage.disabled = true;
-                    if (btnAllPages) btnAllPages.disabled = true;
-                }
+        /**
+		 * Осуществляет массовую проверку спроса для всех карт на текущей странице или по всей коллекции пользователя. 
+		 * Реализует многопоточную обработку запросов с учетом лимитов и задержек, предотвращая блокировки 
+		 * со стороны сервера. Управляет очередью задач между вкладками и визуализирует прогресс в консоли, 
+		 * выводя на экран только финальный результат.
+		 * [checkAllPages] - флаг автоматического перехода по страницам пагинации
+		 * [isAutoTriggered] - флаг автоматического запуска при загрузке страницы
+		 */
+		async function processCards(checkAllPages = false, isAutoTriggered = false) {
+			const thisCheckInstanceId = ++currentDemandCheckInstanceId;
+			if (window.location.pathname.includes('/clubs/boost/')) return;
 
-                return;
-            }
-            isProcessCardsRunning = true;
-            if (isPausedByAnotherTab) {
-                safeDLEPushCall('info', 'Попытка возобновить проверку отменена пользователем.');
-                isPausedByAnotherTab = false;
-                let tasks = await GM_getValue(DEMAND_TASK_STACK_KEY, []);
-                tasks = tasks.filter(task => task.tabId !== unsafeWindow.tabIdWatch);
-                await GM_setValue(DEMAND_TASK_STACK_KEY, tasks);
-                isProcessCardsRunning = false;
-                return;
-            }
-            let tasks = await GM_getValue(DEMAND_TASK_STACK_KEY, []);
-            tasks = tasks.filter(task => task.tabId !== unsafeWindow.tabIdWatch);
-            tasks.unshift(myTask);
-            await GM_setValue(DEMAND_TASK_STACK_KEY, tasks);
-            let resumeCheckIntervalId = null;
-            try {
-                shouldStopProcessCards = false;
-                const buttonId = checkAllPages ? 'processAllPagesBtn' : 'processCards';
-                const mainProcessBtn = document.getElementById(buttonId);
-                if (mainProcessBtn && !originalProcessCardsColor) {
-                    originalProcessCardsColor = mainProcessBtn.style.background;
-                }
-                while (!shouldStopProcessCards) {
-                    tasks = await GM_getValue(DEMAND_TASK_STACK_KEY, []);
-                    const activeTask = tasks[0];
-                    if (!activeTask || activeTask.tabId !== unsafeWindow.tabIdWatch) {
-                        if (!isPausedByAnotherTab) {
-                            safeDLEPushCall('warning', 'Проверка приостановлена другой вкладкой...');
-                            isPausedByAnotherTab = true;
-                            if (mainProcessBtn) mainProcessBtn.style.background = 'linear-gradient(145deg, #e67e22, #d35400)';
-                        }
-                        await sleep(2000);
-                        continue;
-                    }
-                    if (isPausedByAnotherTab) {
-                        safeDLEPushCall('success', 'Возобновляю проверку спроса...');
-                        isPausedByAnotherTab = false;
-                    }
-                    if (mainProcessBtn) mainProcessBtn.style.background = 'linear-gradient(145deg, rgb(50, 200, 50), rgb(0, 150, 0))';
-                    if (isCardPackPage()) { /* ... */ }
-                    const currentPathname = window.location.pathname;
-                    let posterProcessed = false;
-                    if (currentPathname.match(/^\/cards\/\d+\/trade\/?$/i) || currentPathname.startsWith('/trades/')) {
-                        const nofferElement = document.querySelector('.noffer.cards--container');
-                        const posterImageLink = nofferElement ? nofferElement.querySelector('a.noffer__img') : null;
-                        if (nofferElement && posterImageLink && nofferElement.dataset.originalId) {
-                            const posterCardId = nofferElement.dataset.originalId;
-                            const existingStats = nofferElement.querySelector('.noffer__left .card-stats');
-                            const existingButtonOnPoster = posterImageLink.querySelector('.check-demand-btn');
-                            if (posterCardId && !existingStats && existingButtonOnPoster) {
-                                await updateCardInfo(posterCardId, nofferElement, true);
-                                posterProcessed = true;
-                            } else if (posterCardId && existingStats) {
-                                posterProcessed = true;
-                            }
-                        }
-                    }
-                    if (currentPathname.match(/^\/cards\/\d+\/trade\/?$/i) || currentPathname.startsWith('/trades/')) { /* ... */ }
-                    if (shouldStopProcessCards) break;
-                    await sleep(200);
-                    let cardsToProcessInLoop = getCardsOnPage().filter(cardEl => !cardEl.querySelector('.card-stats') && !cardEl.classList.contains('trade__inventory-item--lock') && !cardEl.classList.contains('remelt__inventory-item--lock') && !cardEl.classList.contains('card-show__placeholder') && !cardEl.classList.contains('noffer'));
-                    let counter = cardsToProcessInLoop.length;
-                    if (counter === 0 && !posterProcessed) {
-                        safeDLEPushCall('info', 'Нет карт для проверки спроса.');
-                        break;
-                    }
-                    const totalCardsToProcess = cardsToProcessInLoop.length;
-                    if (!isPausedByAnotherTab) safeDLEPushCall('info', `Начинаю проверку спроса для ${totalCardsToProcess} карт...`);
-                    if (mainProcessBtn) { updateSpecialButtonCounterText(buttonId, counter); showSpecialButtonCounter(buttonId); startAnimation(buttonId); }
-                    if (isCardPackPage()) {
-                        const batchSize = 3;
-                        for (let i = 0; i < cardsToProcessInLoop.length; i += batchSize) {
-                            if (shouldStopProcessCards || thisCheckInstanceId !== currentDemandCheckInstanceId) break;
-                            const currentTasks = await GM_getValue(DEMAND_TASK_STACK_KEY, []);
-                            if (!currentTasks[0] || currentTasks[0].tabId !== unsafeWindow.tabIdWatch) {
-                                break;
-                            }
-                            const batch = cardsToProcessInLoop.slice(i, i + batchSize);
-                            const processPromises = batch.map(async (cardElement) => {
-                                let typeCardId = await getCardId(cardElement, 'type');
-                                if (typeCardId) {
-                                    await updateCardInfo(typeCardId, cardElement, false);
-                                }
-                            });
-                            await Promise.all(processPromises);
-                            counter -= batch.length;
-                            if (mainProcessBtn) updateSpecialButtonCounterText(buttonId, counter);
-                            const processedCountPack = totalCardsToProcess - counter;
-                            if (!isPausedByAnotherTab) safeDLEPushCall('info', `Проверка спроса... (${processedCountPack} из ${totalCardsToProcess})`);
-                            if (i + batchSize < cardsToProcessInLoop.length && !shouldStopProcessCards) {
-                                await sleep(2000);
-                            }
-                        }
-                    }
-                    else if (currentPathname.startsWith('/trades/') && !currentPathname.startsWith('/trades/history/')) {
-                        const batchSize = 4;
-                        for (let i = 0; i < cardsToProcessInLoop.length; i += batchSize) {
-                            if (shouldStopProcessCards || thisCheckInstanceId !== currentDemandCheckInstanceId) break;
-                            const currentTasks = await GM_getValue(DEMAND_TASK_STACK_KEY, []);
-                            if (!currentTasks[0] || currentTasks[0].tabId !== unsafeWindow.tabIdWatch) {
-                                break;
-                            }
-                            const batch = cardsToProcessInLoop.slice(i, i + batchSize);
-                            const processPromises = batch.map(async (cardElement) => {
-                                let typeCardId = await getCardId(cardElement, 'type');
-                                if (typeCardId) {
-                                    await updateCardInfo(typeCardId, cardElement, false);
-                                }
-                            });
-                            await Promise.all(processPromises);
-                            counter -= batch.length;
-                            if (mainProcessBtn) updateSpecialButtonCounterText(buttonId, counter);
-                            const processedCountPack = totalCardsToProcess - counter;
-                            if (!isPausedByAnotherTab) safeDLEPushCall('info', `Проверка спроса... (${processedCountPack} из ${totalCardsToProcess})`);
-                            if (i + batchSize < cardsToProcessInLoop.length && !shouldStopProcessCards) {
-                                await sleep(2500);
-                            }
-                        }
-                    } else {
-                        for (const cardElement of cardsToProcessInLoop) {
-                            if (shouldStopProcessCards || thisCheckInstanceId !== currentDemandCheckInstanceId) break;
-                            const currentTasks = await GM_getValue(DEMAND_TASK_STACK_KEY, []);
-                            if (!currentTasks[0] || currentTasks[0].tabId !== unsafeWindow.tabIdWatch) {
-                                break;
-                            }
-                            let typeCardId = await getCardId(cardElement, 'type');
-                            if (typeCardId) {
-                                const cachedCard = await getCard('cardId: ' + typeCardId);
-                                if (cachedCard) {
-                                    await updateCardInfo(typeCardId, cardElement, false);
-                                } else {
-                                    await sleep(1900);
-                                    await updateCardInfo(typeCardId, cardElement, false);
-                                }
-                            }
-                            counter--;
-                            if (mainProcessBtn) updateSpecialButtonCounterText(buttonId, counter);
-                            const processedCountPack = totalCardsToProcess - counter;
-                            if (!isPausedByAnotherTab) safeDLEPushCall('info', `Проверка спроса... (${processedCountPack} из ${totalCardsToProcess})`);
-                        }
-                    }
-                    if (mainProcessBtn) { stopAnimation(buttonId); hideSpecialButtonCounter(buttonId); }
-                    if (thisCheckInstanceId !== currentDemandCheckInstanceId) {
-                        if (typeof unsafeWindow.safeDLEPushCall === 'function') {
-                        }
-                        break;
-                    }
-                    const finalTasks = await GM_getValue(DEMAND_TASK_STACK_KEY, []);
-                    if (!finalTasks[0] || finalTasks[0].tabId !== unsafeWindow.tabIdWatch) {
-                        continue;
-                    }
-                    if (shouldStopProcessCards) break;
+			if (isAutoTriggered) {
+				const settings = await unsafeWindow.autoDemandTrade_loadSettings();
+				const ranksToCheck = Object.keys(settings).filter(rank => settings[rank]);
+				if (ranksToCheck.length === 0) return;
+				let cardsForAutoCheck = [];
+				if (isCardPackPage()) {
+					cardsForAutoCheck = Array.from(document.querySelectorAll('.lootbox__row .lootbox__card'));
+				} else if (window.location.pathname.startsWith('/trades/')) {
+					cardsForAutoCheck = Array.from(document.querySelectorAll('.trade__main-item, .history__body-item'));
+				}
+				if (cardsForAutoCheck.length === 0) return;
+				const processingPromises = cardsForAutoCheck.map(async (cardElement) => {
+					const typeCardId = await getCardId(cardElement, 'type');
+					if (!typeCardId) return;
+					let rank = cardElement.dataset.rank?.toLowerCase();
+					if (!rank) {
+						const img = cardElement.querySelector('img');
+						const imageUrl = img?.dataset.src || img?.src;
+						if (imageUrl) {
+							const match = imageUrl.match(/\/cards_image\/\d+\/([a-z]+)\//);
+							if (match && match[1]) rank = match[1];
+						}
+					}
+					if (rank && ranksToCheck.includes(rank)) {
+						try { await updateCardInfo(typeCardId, cardElement, false); } catch (e) {}
+					}
+				});
+				await Promise.all(processingPromises);
+				return;
+			}
 
-                    if (checkAllPages && isMyCardPage() && cardsToProcessInLoop.length > 0) {
-                        await goToNextPageForDemand();
-                        return;
-                    } else {
-                        sessionStorage.removeItem('shouldAutoProcessDemand');
-                    }
+			const myTask = { tabId: unsafeWindow.tabIdWatch, checkAllPages: checkAllPages, timestamp: Date.now() };
+			if (isProcessCardsRunning) {
+				shouldStopProcessCards = true;
+				const btnSingle = document.getElementById('processCards');
+				const btnAll = document.getElementById('processAllPagesBtn');
+				[btnSingle, btnAll].forEach(btn => {
+					if (btn) {
+						btn.style.background = 'linear-gradient(145deg, #e74c3c, #c0392b)';
+						btn.title = "Остановка...";
+						const icon = btn.querySelector('span:first-child');
+						if (icon) icon.className = 'fas fa-spinner fa-spin';
+					}
+				});
+				sccLog("Проверка спроса прервана. Завершаю активный запрос...", 'warning');
+				return;
+			}
 
-                    safeDLEPushCall('success', 'Проверка спроса завершена.');
-                    break;
-                }
-            } finally {
-                isProcessCardsRunning = false;
-                isPausedByAnotherTab = false;
-                const btnSinglePage = document.getElementById('processCards');
-                const btnAllPages = document.getElementById('processAllPagesBtn');
-                const defaultBackground = originalProcessCardsColor || 'linear-gradient(145deg, rgb(166, 100, 110), rgb(222, 0, 5))';
-                if (btnSinglePage) {
-                    btnSinglePage.style.background = defaultBackground;
-                    const icon = btnSinglePage.querySelector('span:first-child');
-                    if (icon) {
-                        icon.className = 'fal fa-rocket';
-                    }
-                    btnSinglePage.title = 'Проверить спрос (текущая страница)';
-                    btnSinglePage.disabled = false;
-                }
-                if (btnAllPages) {
-                    btnAllPages.style.background = defaultBackground;
-                    const icon = btnAllPages.querySelector('span:first-child');
-                    if (icon) {
-                        icon.className = 'fal fa-rocket';
-                        icon.style.animation = '';
-                    }
-                    btnAllPages.title = 'Проверить спрос (ВСЕ страницы)';
-                    btnAllPages.disabled = false;
-                }
-                if (btnAllPages) {
-                    btnAllPages.style.background = defaultBackground;
-                    const icon = btnAllPages.querySelector('span:first-child');
-                    if (icon) icon.className = 'fal fa-rocket';
-                    btnAllPages.title = 'Проверить спрос (ВСЕ страницы)';
-                    btnAllPages.disabled = false;
-                }
-                originalProcessCardsColor = '';
-                const isGoingToNextPage = sessionStorage.getItem('shouldAutoProcessDemand') === 'true';
-                if (!isGoingToNextPage) {
-                    let tasks = await GM_getValue(DEMAND_TASK_STACK_KEY, []);
-                    if (tasks[0] && tasks[0].tabId === unsafeWindow.tabIdWatch) {
-                        tasks.shift();
-                        await GM_setValue(DEMAND_TASK_STACK_KEY, tasks);
-                    }
-                }
-            }
-        }
+			isProcessCardsRunning = true;
+			if (isPausedByAnotherTab) {
+				safeDLEPushCall('info', 'Попытка возобновить проверку отменена.');
+				isPausedByAnotherTab = false;
+				let tasks = await GM_getValue(DEMAND_TASK_STACK_KEY, []);
+				tasks = tasks.filter(task => task.tabId !== unsafeWindow.tabIdWatch);
+				await GM_setValue(DEMAND_TASK_STACK_KEY, tasks);
+				isProcessCardsRunning = false;
+				return;
+			}
+
+			let tasks = await GM_getValue(DEMAND_TASK_STACK_KEY, []);
+			tasks = tasks.filter(task => task.tabId !== unsafeWindow.tabIdWatch);
+			tasks.unshift(myTask);
+			await GM_setValue(DEMAND_TASK_STACK_KEY, tasks);
+
+			try {
+				shouldStopProcessCards = false;
+				const buttonId = checkAllPages ? 'processAllPagesBtn' : 'processCards';
+				const mainProcessBtn = document.getElementById(buttonId);
+				if (mainProcessBtn && !originalProcessCardsColor) originalProcessCardsColor = mainProcessBtn.style.background;
+
+				while (!shouldStopProcessCards) {
+					tasks = await GM_getValue(DEMAND_TASK_STACK_KEY, []);
+					const activeTask = tasks[0];
+					if (!activeTask || activeTask.tabId !== unsafeWindow.tabIdWatch) {
+						if (!isPausedByAnotherTab) {
+							isPausedByAnotherTab = true;
+							if (mainProcessBtn) mainProcessBtn.style.background = 'linear-gradient(145deg, #e67e22, #d35400)';
+						}
+						await sleep(2000); continue;
+					}
+					if (isPausedByAnotherTab) isPausedByAnotherTab = false;
+					if (mainProcessBtn) mainProcessBtn.style.background = 'linear-gradient(145deg, rgb(50, 200, 50), rgb(0, 150, 0))';
+
+					const currentPathname = window.location.pathname;
+					let posterProcessed = false;
+					if (currentPathname.match(/^\/cards\/\d+\/trade\/?$/i) || currentPathname.startsWith('/trades/')) {
+						const nofferElement = document.querySelector('.noffer.cards--container');
+						if (nofferElement?.dataset.originalId) {
+							const posterCardId = nofferElement.dataset.originalId;
+							if (!nofferElement.querySelector('.acm-stats-wrapper')) {
+								await updateCardInfo(posterCardId, nofferElement, true);
+								posterProcessed = true;
+							} else { posterProcessed = true; }
+						}
+					}
+
+					if (shouldStopProcessCards) break;
+					await sleep(200);
+
+					let cardsToProcessInLoop = getCardsOnPage().filter(cardEl => !cardEl.querySelector('.acm-stats-wrapper') && !cardEl.classList.contains('trade__inventory-item--lock') && !cardEl.classList.contains('card-show__placeholder'));
+					let counter = cardsToProcessInLoop.length;
+					if (counter === 0 && !posterProcessed) break;
+
+					const totalCardsToProcess = cardsToProcessInLoop.length;
+					sccLog(`Начинаю проверку спроса для ${totalCardsToProcess} карт...`, 'debug', true);
+
+					if (mainProcessBtn) { updateSpecialButtonCounterText(buttonId, counter); showSpecialButtonCounter(buttonId); startAnimation(buttonId); }
+
+					const batchSize = isCardPackPage() ? 3 : (currentPathname.startsWith('/trades/') ? 4 : 1);
+					const interval = isCardPackPage() ? 2000 : (currentPathname.startsWith('/trades/') ? 2500 : 1900);
+
+					for (let i = 0; i < cardsToProcessInLoop.length; i += batchSize) {
+						if (shouldStopProcessCards || thisCheckInstanceId !== currentDemandCheckInstanceId) break;
+
+						const currentTasks = await GM_getValue(DEMAND_TASK_STACK_KEY, []);
+						if (currentTasks[0]?.tabId !== unsafeWindow.tabIdWatch) break;
+
+						const batch = cardsToProcessInLoop.slice(i, i + batchSize);
+						let hasNetworkRequest = false;
+
+						await Promise.all(batch.map(async (cardElement) => {
+							const typeCardId = await getCardId(cardElement, 'type');
+							if (typeCardId) {
+								const cached = await getCache('cardId: ' + typeCardId);
+								if (!cached) hasNetworkRequest = true;
+
+								await updateCardInfo(typeCardId, cardElement, false);
+							}
+						}));
+
+						counter -= batch.length;
+						if (mainProcessBtn) updateSpecialButtonCounterText(buttonId, counter);
+						sccLog(`Проверка спроса... (${totalCardsToProcess - counter} из ${totalCardsToProcess})`, 'debug', true);
+
+						if (hasNetworkRequest && i + batchSize < cardsToProcessInLoop.length && !shouldStopProcessCards) {
+							await sleep(interval);
+						}
+					}
+
+					if (mainProcessBtn) { stopAnimation(buttonId); hideSpecialButtonCounter(buttonId); }
+					if (shouldStopProcessCards || thisCheckInstanceId !== currentDemandCheckInstanceId) break;
+
+					if (checkAllPages && isMyCardPage() && cardsToProcessInLoop.length > 0) {
+						await goToNextPageForDemand(); return;
+					} else { sessionStorage.removeItem('shouldAutoProcessDemand'); }
+
+					safeDLEPushCall('success', 'Проверка спроса завершена.');
+					break;
+				}
+			} finally {
+				isProcessCardsRunning = false;
+				isPausedByAnotherTab = false;
+				const btnSingle = document.getElementById('processCards');
+				const btnAll = document.getElementById('processAllPagesBtn');
+				const defaultBg = originalProcessCardsColor || 'linear-gradient(145deg, rgb(166, 100, 110), rgb(222, 0, 5))';
+				[btnSingle, btnAll].forEach(btn => {
+					if (btn) {
+						btn.style.background = defaultBg;
+						btn.disabled = false;
+						const icon = btn.querySelector('span:first-child');
+						if (icon) {
+							icon.className = 'fal fa-rocket';
+							icon.style.animation = '';
+						}
+					}
+				});
+				originalProcessCardsColor = '';
+				if (sessionStorage.getItem('shouldAutoProcessDemand') !== 'true') {
+					let tasks = await GM_getValue(DEMAND_TASK_STACK_KEY, []);
+					if (tasks[0]?.tabId === unsafeWindow.tabIdWatch) {
+						tasks.shift();
+						await GM_setValue(DEMAND_TASK_STACK_KEY, tasks);
+					}
+				}
+			}
+		}
 
         // ##################################################
         // # Запускает CSS-анимацию для иконки на кнопке по ее ID.
@@ -7786,13 +8218,6 @@ async function runMainScript() {
             const el = document.getElementById(buttonId + '_counter'); if (el) el.textContent = value;
         }
 
-        // ##################################################
-        // # Обновляет состояние и значение счетчика на кнопке.
-        // ##################################################
-        function updateButtonCounter(id, counter) {
-            const c = document.getElementById(id + '_counter');
-            if (c) { c.style.display = counter > 0 ? 'flex' : 'none'; c.textContent = counter; }
-        }
 
         /**
 		 * Применяет текущее состояние видимости к управляемым кнопкам.
@@ -9138,324 +9563,6 @@ async function runMainScript() {
         // НАЧАЛО БЛОКА: АВТОПРОВЕРКИ СПРОСА ПАКОВ
         // ##################################################
 
-// ##################################################
-        // # Создает кнопку автопроверки дубликатов (Универсальная: Паки, Создание обмена, Предложения)
-        // ##################################################
-        async function createAutoDuplicateFeature() {
-            const isPacks = isCardPackPage();
-            const isTradeCreation = isTradeCreationPage();
-            const isTradeOffer = /^\/trades\/(?!history\/$|$)/.test(window.location.pathname);
-
-            if (!isPacks && !isTradeCreation && !isTradeOffer) return;
-
-            if (isPacks) {
-                const settings = await unsafeWindow.autoDup_loadSettings();
-                const isAnyRankEnabled = Object.values(settings).some(isEnabled => isEnabled);
-                if (!isAnyRankEnabled) return;
-            }
-
-            // --- Внутренние переменные и состояние для автопроверки ---
-            let isAutoChecking = false;
-            let currentAutoCheckInstanceId = 0; // Для отмены старых задач
-
-            // --- Вспомогательные функции, необходимые для этой логики ---
-            const getLoggedUserName = () => document.querySelector('.lgn__name span')?.textContent.trim() || null;
-
-            const fetchAllPagesUniversal = async (searchUrl, targetCardId) => {
-                try {
-                    const response = await fetch(searchUrl, { credentials: 'include' });
-                    if (!response.ok) return null;
-                    const htmlText = await response.text();
-                    const doc = new DOMParser().parseFromString(htmlText, 'text/html');
-                    const titleElement = doc.querySelector('.ncard__main-title-2.as-center span');
-                    const match = titleElement?.textContent.match(/\((\d+)\s+шт\.\)/);
-                    if (match?.[1]) return parseInt(match[1], 10);
-                    return doc.querySelectorAll(`.anime-cards__item[data-id="${targetCardId}"]`).length;
-                } catch (err) {
-                    console.error(`[AutoDups Fetch] Ошибка сети при запросе (${targetCardId}):`, err);
-                    return null;
-                }
-            };
-
-            const updateButtonContent = (btn, content) => {
-                if (!btn) return;
-                btn.textContent = '';
-                btn.className = 'check-duplicates-btn'; // Сброс
-                if (content === '⏳') {
-                    btn.textContent = content;
-                    btn.style.background = 'LightGray';
-                    btn.style.color = 'black';
-                } else if (typeof content === 'number') {
-                    btn.textContent = `×${content}`;
-                    btn.style.background = content > 1 ? 'rgba(255, 0, 0, 0.7)' : (content === 1 ? 'rgba(0, 150, 0, 0.7)' : 'rgba(0, 0, 0, 0.7)');
-                    btn.style.color = 'white';
-                } else {
-                    btn.textContent = '❌';
-                    btn.style.background = 'rgba(255, 100, 100, 0.8)';
-                    btn.style.color = 'white';
-                }
-                btn.classList.add('checked');
-                btn.style.opacity = '1';
-                btn.style.visibility = 'visible';
-                btn.style.transform = 'translateY(0)';
-            };
-
-
-            /**
-             * Основная функция умной автоматической проверки.
-             */
-            async function runSmartAutoDuplicateCheck() {
-                if (isAutoChecking) {
-                    currentAutoCheckInstanceId++;
-                    console.log(`[AutoDups] Прерываю предыдущую проверку (ID: ${currentAutoCheckInstanceId-1}) и запускаю новую.`);
-                }
-                const thisCheckInstanceId = ++currentAutoCheckInstanceId;
-                isAutoChecking = true;
-
-                const loggedInUserName = getLoggedUserName();
-                if (!loggedInUserName) {
-                    isAutoChecking = false;
-                    return;
-                }
-
-                let cardElements = [];
-                if (isPacks) cardElements = Array.from(document.querySelectorAll('.lootbox__row .lootbox__card'));
-                else if (isTradeCreation) cardElements = Array.from(document.querySelectorAll('.trade__inventory-item'));
-                else if (isTradeOffer) cardElements = Array.from(document.querySelectorAll('.trade__main-item'));
-
-                const cardInfoList = await Promise.all(
-                    cardElements.map(async el => ({
-                        el,
-                        id: await getCardId(el, 'type', true)
-                    }))
-                );
-
-                const sessionCache = new Map();
-
-                for (const { el, id } of cardInfoList) {
-                    if (!id || sessionCache.has(id)) continue;
-
-                    // Условие: ищем значок, у которого уже есть класс 'checked' И текст начинается с '×'
-                    const scriptBadge = el.querySelector('.check-duplicates-btn.checked');
-                    if (scriptBadge && scriptBadge.textContent.startsWith('×')) {
-                        const count = parseInt(scriptBadge.textContent.substring(1), 10);
-                        if (!isNaN(count)) {
-                            sessionCache.set(id, count);
-                        }
-                    }
-                }
-
-                if (sessionCache.size > 0) {
-                    console.log(`[AutoDups] Предварительный анализ: найдено ${sessionCache.size} карт с уже известным количеством дублей.`);
-                    for (const { el, id } of cardInfoList) {
-                        if (id && sessionCache.has(id)) {
-                            updateButtonContent(el.querySelector('.check-duplicates-btn'), sessionCache.get(id));
-                        }
-                    }
-                }
-
-                // *** ИСПРАВЛЕННОЕ УСЛОВИЕ ФИЛЬТРАЦИИ ***
-                const uniqueIdsToFetch = cardInfoList
-                    .filter(({ id, el }) => {
-                        if (!id) return false;
-                        const badge = el.querySelector('.check-duplicates-btn.checked');
-                        // Считаем непроверенной, только если нет значка с результатом (с крестиком)
-                        return !(badge && badge.textContent.startsWith('×'));
-                    })
-                    .map(({ id }) => id)
-                    .filter((value, index, self) => self.indexOf(value) === index);
-
-                if (uniqueIdsToFetch.length === 0) {
-                    console.log("[AutoDups] Все карты на странице уже проверены. Запросов не требуется.");
-                    isAutoChecking = false;
-                    return;
-                }
-
-                console.log(`[AutoDups] Начинаю проверку для ${uniqueIdsToFetch.length} уникальных ID.`);
-
-                for (const id of uniqueIdsToFetch) {
-                    if (thisCheckInstanceId !== currentAutoCheckInstanceId) {
-                        console.log(`[AutoDups] Процесс (ID: ${thisCheckInstanceId}) прерван новым запуском.`);
-                        isAutoChecking = false;
-                        return;
-                    }
-
-                    cardInfoList.forEach(cardInfo => {
-                        if (cardInfo.id === id) {
-                           updateButtonContent(cardInfo.el.querySelector('.check-duplicates-btn'), '⏳');
-                        }
-                    });
-
-                    await sleep(1000);
-
-                    if (thisCheckInstanceId !== currentAutoCheckInstanceId) {
-                        isAutoChecking = false;
-                        return;
-                    }
-
-                    const searchUrlObject = new URL(`${location.origin}/user/cards/`);
-                    searchUrlObject.searchParams.set('name', loggedInUserName);
-                    searchUrlObject.searchParams.set('card_id', id);
-
-                    const duplicateCount = await fetchAllPagesUniversal(searchUrlObject.toString(), id);
-
-                    if (thisCheckInstanceId !== currentAutoCheckInstanceId) {
-                        isAutoChecking = false;
-                        return;
-                    }
-
-                    if (typeof duplicateCount === 'number') {
-                        sessionCache.set(id, duplicateCount);
-                        cardInfoList.forEach(cardInfo => {
-                            if (cardInfo.id === id) {
-                               updateButtonContent(cardInfo.el.querySelector('.check-duplicates-btn'), duplicateCount);
-                            }
-                        });
-                    } else {
-                        cardInfoList.forEach(cardInfo => {
-                           if (cardInfo.id === id) {
-                               updateButtonContent(cardInfo.el.querySelector('.check-duplicates-btn'), null);
-                           }
-                        });
-                    }
-                }
-
-                console.log("[AutoDups] Автоматическая проверка завершена.");
-                isAutoChecking = false;
-            }
-
-            // --- UI и триггеры ---
-
-            const buttonId = 'autoDuplicateCheckButton';
-            if (document.getElementById(buttonId)) return;
-
-            const button = document.createElement('button');
-            button.id = buttonId;
-            if (window.location.pathname.startsWith('/pm/')) {
-                button.setAttribute('data-mce-bogus', '1');
-            }
-
-            Object.assign(button.style, {
-                width: '40px', height: '40px', borderRadius: '50%', position: 'fixed',
-                bottom: '180px', right: '27px', zIndex: '100', border: 'none', cursor: 'pointer',
-                boxShadow: '0 0 10px rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center',
-                justifyContent: 'flex-start', paddingLeft: '0',
-                transition: 'transform 0.1s ease, box-shadow 0.1s ease, background 0.3s ease',
-                color: 'white',
-                mask: 'radial-gradient(circle at 80% 50%, transparent 20px, black 0px)',
-                webkitMask: 'radial-gradient(circle at 80% 50%, transparent 20px, black 0px)'
-            });
-
-            const icon = document.createElement('span');
-            icon.className = 'fal fa-sync-alt';
-            icon.style.fontSize = '10px';
-            button.appendChild(icon);
-
-            GM_addStyle("@keyframes packCheckSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }");
-
-            const getEnabled = () => {
-                if (isPacks) return autoPackCheckEnabled;
-                if (isTradeCreation) return autoDuplicateTradeEnabled;
-                if (isTradeOffer) return autoDuplicateOffersEnabled;
-                return false;
-            };
-            const setEnabled = (val) => {
-                if (isPacks) GM_setValue('autoPackCheckEnabledState', autoPackCheckEnabled = val);
-                else if (isTradeCreation) GM_setValue('autoDuplicateTradeEnabledState', autoDuplicateTradeEnabled = val);
-                else if (isTradeOffer) GM_setValue('autoDuplicateOffersEnabledState', autoDuplicateOffersEnabled = val);
-            };
-
-            function updateButtonStateVisuals() {
-                const isEnabled = getEnabled();
-                let pageName = isPacks ? 'паков' : (isTradeCreation ? 'обмена' : (isTradeOffer ? 'предложения' : ''));
-
-                if (isEnabled) {
-                    button.style.background = 'linear-gradient(145deg, #28a745, #1e7e34)';
-                    button.title = `Автопроверка дубликатов (${pageName}): ВКЛЮЧЕНА`;
-                    icon.style.animation = 'packCheckSpin 2s linear infinite';
-                } else {
-                    button.style.background = 'linear-gradient(145deg, rgba(100, 50, 50, 0.65), rgba(50, 50, 50, 0.65))';
-                    button.title = `Автопроверка дубликатов (${pageName}): ВЫКЛЮЧЕНА`;
-                    icon.style.animation = 'none';
-                }
-            }
-            updateButtonStateVisuals();
-
-            button.addEventListener('click', () => {
-                const newState = !getEnabled();
-                setEnabled(newState);
-                updateButtonStateVisuals();
-                safeDLEPushCall('info', `Автопроверка дубликатов ${newState ? 'включена' : 'выключена'}.`);
-                if (newState) {
-                    runSmartAutoDuplicateCheck();
-                } else {
-                    currentAutoCheckInstanceId++;
-                    isAutoChecking = false;
-                }
-            });
-
-            ['mousedown', 'mouseup', 'mouseleave'].forEach(eventType => {
-                button.addEventListener(eventType, () => {
-                    if (eventType === 'mousedown') button.style.transform = 'translateY(2px) scale(0.95)';
-                    else button.style.transform = 'translateY(0) scale(1)';
-                });
-            });
-
-            document.body.appendChild(button);
-            if (!managedButtonSelectors.includes('#' + buttonId)) {
-                managedButtonSelectors.push('#' + buttonId);
-            }
-
-            // === НАБЛЮДАТЕЛИ (Возвращаем стабильную версию) ===
-            const createObserver = (targetSelector, cardItemSelector) => {
-                const targetNode = document.querySelector(targetSelector);
-                if (targetNode) {
-                    const observer = new MutationObserver((mutations) => {
-                        const hasStructuralChange = mutations.some(m => {
-                            const added = Array.from(m.addedNodes).some(n => n.nodeType === 1 && n.matches(cardItemSelector));
-                            const removed = Array.from(m.removedNodes).some(n => n.nodeType === 1 && n.matches(cardItemSelector));
-                            return added || removed;
-                        });
-
-                        if (getEnabled() && hasStructuralChange) {
-                            console.log(`[AutoDups Observer] Обнаружено структурное изменение в "${targetSelector}". Запускаю проверку.`);
-                            setTimeout(() => runSmartAutoDuplicateCheck(), 300);
-                        }
-                    });
-                    observer.observe(targetNode, { childList: true, subtree: true });
-                }
-            };
-
-            if (isPacks) {
-                const observerTargetNode = document.querySelector('.ncard-pack.lootbox');
-                if (observerTargetNode) {
-                    packPageObserver = new MutationObserver(() => {
-                        if (isProcessingBuyClick || !getEnabled()) return;
-                        const lootboxRow = document.querySelector('.lootbox__row');
-                        if (!lootboxRow) return;
-                        const currentPackId = lootboxRow.dataset.packId;
-                        if (currentPackId && currentPackId !== lastProcessedPackIdForAutoCheck && lootboxRow.offsetParent !== null) {
-                            lastProcessedPackIdForAutoCheck = currentPackId;
-                            setTimeout(() => {
-                                const finalRow = document.querySelector('.lootbox__row');
-                                if (finalRow && finalRow.dataset.packId === currentPackId) runSmartAutoDuplicateCheck();
-                            }, GM_getValue('autoPackCheck_initialDelay_ms', 1400));
-                        }
-                    });
-                    packPageObserver.observe(observerTargetNode, { childList: true, subtree: true, attributes: true, attributeFilter: ['style', 'data-pack-id'] });
-                }
-            } else if (isTradeCreation) {
-                createObserver('.trade__inventory-list', '.trade__inventory-item');
-            } else if (isTradeOffer) {
-                createObserver('.trade__main', '.trade__main-item');
-            }
-
-            // Первичный запуск для всех страниц
-            if (getEnabled()) {
-                setTimeout(() => runSmartAutoDuplicateCheck(), 500);
-            }
-        }
-
         // ##################################################
         // # Наблюдатель специально для подсветки карт из списка желаний в паках
         // ##################################################
@@ -9487,160 +9594,68 @@ async function runMainScript() {
             });
         }
 
-        // ##################################################
-        // # Запускает массовую проверку дубликатов для карт из только что открытого пака.
-        // ##################################################
-        async function triggerMassDuplicateCheckForPackPage(packId) {
-            if (!autoPackCheckEnabled) return;
-            stopMassDuplicateCheck();
-            await sleep(50);
-            if (!autoPackCheckEnabled) return;
-            const massCheckBtn = document.getElementById('check-all-duplicates-btn');
-            if (massCheckBtn) {
-                unsafeWindow.isAutoDuplicateCheckTriggered = true;
-                isProcessingAutoPackCheck = true;
-                massCheckBtn.click();
-            } else {
-            }
-        }
 
-        // ##################################################
-        // # Запускает массовую проверку спроса для карт A/S ранга из открытого пака.
-        // ##################################################
-        async function triggerMassDemandCheckForPackPage(packId) {
-            if (!autoDemandCheckEnabled) return;
-            const settings = await unsafeWindow.autoDemand_loadSettings();
-            const ranksToCheck = Object.keys(settings).filter(rank => settings[rank]);
-            if (ranksToCheck.length === 0) {
-                return;
-            }
-            const lootboxRow = document.querySelector('.lootbox__row');
-            if (!lootboxRow) return;
-            const cardsInPack = Array.from(lootboxRow.querySelectorAll('.lootbox__list .lootbox__card'));
-            if (cardsInPack.length === 0) return;
-            let highestNotifyRank = null;
-            cardsInPack.forEach(card => {
-                const rank = card.dataset.rank?.toLowerCase();
-                if (rank === 'ass') {
-                    highestNotifyRank = 'ass';
-                } else if (rank === 's' && highestNotifyRank !== 'ass') {
-                    highestNotifyRank = 's';
-                } else if (rank === 'a' && highestNotifyRank !== 'ass' && highestNotifyRank !== 's') {
-                    highestNotifyRank = 'a';
-                }
-            });
-            if (highestNotifyRank) {
-                showHighRankCardNotification(highestNotifyRank);
-            }
-            const promises = [];
-            cardsInPack.forEach(card => {
-                const rank = card.dataset.rank?.toLowerCase();
-                if (rank && ranksToCheck.includes(rank)) {
-                    promises.push(async () => {
-                        const typeCardId = await getCardId(card, 'type');
-                        if (typeCardId) {
-                            await updateCardInfo(typeCardId, card, false);
-                        }
-                    });
-                }
-            });
-            if (promises.length > 0) {
-                for (const promiseFunc of promises) {
-                    await promiseFunc();
-                    await sleep(200);
-                }
-            }
-        }
 
-        /**
-		 * Создает кнопку и инициализирует логику автоматической проверки спроса в паках.
-		 * Синхронизирует состояние активации модуля между всеми зеркалами сайта.
-		 */
-		async function createAutoDemandCheckFeature() {
-			if (!isCardPackPage()) return;
-			const settings = await unsafeWindow.autoDemand_loadSettings();
-			const isAnyRankEnabled = Object.values(settings).some(isEnabled => isEnabled);
-			if (!isAnyRankEnabled) return;
+	/**
+	 * Создает кнопку управления автоматической проверкой спроса в паках.
+	 * Исправлена структура для корректного отображения счетчиков поверх маски.
+	 */
+	async function createAutoDemandCheckFeature() {
+		if (!isCardPackPage()) return;
+		const settings = autoDemand_loadSettings();
+		if (!Object.values(settings).some(isEnabled => isEnabled)) return;
 
-			const button = document.createElement('button');
-			button.id = 'autoDemandCheckButton';
-			Object.assign(button.style, {
-				width: '40px', height: '40px', borderRadius: '50%', position: 'fixed',
-				bottom: '390px', right: '27px', zIndex: '100', border: 'none', cursor: 'pointer',
-				boxShadow: '0 0 10px rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center',
-				transition: 'all 0.3s ease', color: 'black',
-				mask: 'radial-gradient(circle at 80% 50%, transparent 20px, black 0px)',
-				'-webkit-mask': 'radial-gradient(circle at 80% 50%, transparent 20px, black 0px)',
-				justifyContent: 'flex-start', padding: '0 0 0 1px'
-			});
+		const button = document.createElement('button');
+		button.id = 'autoDemandCheckButton';
+		Object.assign(button.style, {
+			width: '40px', height: '40px', position: 'fixed',
+			bottom: '390px', right: '27px', zIndex: '100', border: 'none', 
+			cursor: 'pointer', background: 'none', padding: '0', 
+			transition: 'all 0.3s ease', overflow: 'visible'
+		});
 
-			const icon = document.createElement('span');
-			icon.className = 'fal fa-rocket';
-			icon.style.fontSize = '10px';
-			button.appendChild(icon);
+		const btnBg = document.createElement('div');
+		Object.assign(btnBg.style, {
+			position: 'absolute', inset: '0', borderRadius: '50%', display: 'flex', 
+			alignItems: 'center', justifyContent: 'flex-start', paddingLeft: '9px',
+			boxShadow: '0 0 10px rgba(0,0,0,0.7)', transition: 'all 0.3s ease',
+			mask: 'radial-gradient(circle at 80% 50%, transparent 20px, black 0px)',
+			webkitMask: 'radial-gradient(circle at 80% 50%, transparent 20px, black 0px)'
+		});
 
-			function updateButtonStateVisuals() {
-				const en = autoDemandCheckEnabled;
-				button.style.background = en ? 'linear-gradient(145deg, #28a745, #1e7e34)' : 'linear-gradient(145deg, rgb(166, 100, 110), rgb(222, 0, 5))';
-				button.title = `Автоспрос (Паки): ${en ? 'ВКЛ' : 'ВЫКЛ'}`;
-				icon.style.animation = en ? 'packCheckSpin 2s linear infinite' : 'none';
-			}
+		const icon = document.createElement('span');
+		icon.className = 'fal fa-rocket';
+		icon.style.fontSize = '10px';
+		icon.style.color = 'black';
+		
+		btnBg.appendChild(icon);
+		button.appendChild(btnBg);
 
-			updateButtonStateVisuals();
+		const updateUI = () => {
+			const en = GM_getValue('autoDemandCheckEnabledState', false);
+			btnBg.style.background = en ? 'linear-gradient(145deg, #28a745, #1e7e34)' : 'linear-gradient(145deg, rgb(166, 100, 110), rgb(222, 0, 5))';
+			icon.style.animation = en ? 'acm-spin 2s linear infinite' : 'none';
+			button.title = `Автоспрос (Паки): ${en ? 'ВКЛ' : 'ВЫКЛ'}`;
+		};
 
-			button.addEventListener('click', () => {
-				autoDemandCheckEnabled = !autoDemandCheckEnabled;
-				GM_setValue('autoDemandCheckEnabledState', autoDemandCheckEnabled);
-				updateButtonStateVisuals();
-				safeDLEPushCall('info', `Автопроверка спроса (для A/S) ${autoDemandCheckEnabled ? 'включена' : 'выключена'}.`);
-				
-				if (autoDemandCheckEnabled) {
-					const lootboxRow = document.querySelector('.lootbox__row');
-					if (lootboxRow && lootboxRow.offsetParent !== null) {
-						const currentPackId = lootboxRow.dataset.packId;
-						if (currentPackId && currentPackId !== lastProcessedPackIdForDemandCheck) {
-							triggerMassDemandCheckForPackPage(currentPackId);
-						}
-					}
-				}
-			});
+		updateUI();
 
-			document.body.appendChild(button);
-			if (!managedButtonSelectors.includes('#autoDemandCheckButton')) {
-				managedButtonSelectors.push('#autoDemandCheckButton');
-			}
-
-			const observerTargetNode = document.querySelector('.ncard-pack.lootbox');
-			if (!observerTargetNode) return;
-			let isCheckingDemand = false;
-			const demandObserver = new MutationObserver(() => {
-				if (isProcessingBuyClick) return;
-				if (!autoDemandCheckEnabled || isCheckingDemand) return;
+		button.onclick = () => {
+			const newState = !GM_getValue('autoDemandCheckEnabledState', false);
+			GM_setValue('autoDemandCheckEnabledState', newState);
+			updateUI();
+			if (newState) {
 				const lootboxRow = document.querySelector('.lootbox__row');
-				if (!lootboxRow) return;
-				const currentPackId = lootboxRow.dataset.packId;
-				if (currentPackId && currentPackId !== lastProcessedPackIdForDemandCheck && lootboxRow.offsetParent !== null) {
-					isCheckingDemand = true;
-					const cardsToClean = lootboxRow.querySelectorAll('.lootbox__card');
-					cardsToClean.forEach(card => {
-						card.classList.remove('div-checked');
-						const checkMark = card.querySelector('.div-marked.fa-check');
-						if (checkMark) checkMark.remove();
-					});
-					lastProcessedPackIdForDemandCheck = currentPackId;
-					setTimeout(() => {
-						const finalCheckRow = document.querySelector('.lootbox__row');
-						if (finalCheckRow && finalCheckRow.dataset.packId === currentPackId) {
-							triggerMassDemandCheckForPackPage(currentPackId);
-						}
-						isCheckingDemand = false;
-					}, 50);
+				if (lootboxRow && lootboxRow.offsetParent !== null) {
+					lastProcessedPackIdForDemandCheck = null;
+					if (typeof initializeSmartCardObserver === 'function') initializeSmartCardObserver();
 				}
-			});
-			demandObserver.observe(observerTargetNode, {
-				childList: true, subtree: true, attributes: true, attributeFilter: ['style', 'data-pack-id', 'class']
-			});
-		}
+			}
+		};
+
+		document.body.appendChild(button);
+	}
+	
         // ##################################################
         // КОНЕЦ БЛОКА: АВТОПРОВЕРКА СПРОСА ПАКОВ
         // ##################################################
@@ -10720,45 +10735,63 @@ async function runMainScript() {
         // КОНЕЦ БЛОКА
         // ##################################################
 
-		// Глобальная функция синхронизации
+		/**
+		 * Рассчитывает и обновляет статистику сбора кристаллов в интерфейсе мониторинга на основе 
+		 * актуальных записей в журнале истории. Суммирует данные по текущему пользователю 
+		 * за всё время, включая старые записи без указания автора, распределяя результаты 
+		 * по категориям, что обеспечивает полное соответствие счетчиков содержимому таблицы.
+		 * [нет аргументов]
+		 */
 		async function updateDetailedStatsUI() {
-            // ПРАВКА: Получаем статы именно для текущего пользователя
-            const userName = asbm_getUsername();
-            const allStats = await GM_getValue(ACC_STATS_DETAILED_KEY, {});
-            const stats = allStats[userName] || {
-                auto: { clicks: 0, success: 0 },
-                manual: { clicks: 0, success: 0 },
-                force: { clicks: 0, success: 0 }
-            };
+			const userName = asbm_getUsername();
+			const history = await GM_getValue(CRYSTAL_HISTORY_KEY, []);
 
-            const totalClicks = stats.auto.clicks + stats.manual.clicks + stats.force.clicks;
-            const totalSuccess = stats.auto.success + stats.manual.success + stats.force.success;
+			const stats = {
+				total: { clicks: 0, success: 0 },
+				auto: { clicks: 0, success: 0 },
+				manual: { clicks: 0, success: 0 },
+				force: { clicks: 0, success: 0 }
+			};
 
-            // 1. Обновляем карточки в модальном окне (если оно открыто)
-            const container = document.getElementById('acc-stats-display');
-            if (container) {
-                const createCard = (label, clicks, success, isTotal = false) => `
-                    <div class="acc-stat-card" style="${isTotal ? 'border-color: #5865f2; background: #232428;' : ''}">
-                        <div class="acc-stat-label">${label}</div>
-                        <div class="acc-stat-value">${clicks} / <span>${success}</span></div>
-                    </div>
-                `;
+			history.forEach(item => {
+				// Умная проверка: если имя совпадает ИЛИ запись старая (поле user пустое)
+				if (!item.user || item.user === userName) {
+					const src = item.source || 'auto';
+					const isSuccess = item.status && (item.status.includes('Вы нашли') || item.status.includes('награда'));
+					
+					if (stats[src]) {
+						stats[src].clicks++;
+						if (isSuccess) stats[src].success++;
+						
+						stats.total.clicks++;
+						if (isSuccess) stats.total.success++;
+					}
+				}
+			});
 
-                container.innerHTML =
-                    createCard('ИТОГО (КЛИК/СБОР)', totalClicks, totalSuccess, true) +
-                    createCard('🤖 АВТОСБОР', stats.auto.clicks, stats.auto.success) +
-                    createCard('⚡ КНОПКА СБОРА', stats.force.clicks, stats.force.success) +
-                    createCard('⌨️ РУЧНОЙ ВВОД', stats.manual.clicks, stats.manual.success);
-            }
+			const container = document.getElementById('acc-stats-display');
+			if (container) {
+				const createCard = (label, clicks, success, isTotal = false) => `
+					<div class="acc-stat-card" style="${isTotal ? 'border-color: #5865f2; background: #232428;' : ''}">
+						<div class="acc-stat-label">${label}</div>
+						<div class="acc-stat-value">${clicks} / <span>${success}</span></div>
+					</div>
+				`;
 
-            // 2. Обновляем счетчик на маленькой плавающей кнопке
-            const counterBtn = document.getElementById('crystal_counter');
-            if (counterBtn && crystalScriptEnabled) {
-                counterBtn.textContent = `${totalClicks}/${totalSuccess}`;
-                counterBtn.style.display = 'flex';
-            }
-        }
-        unsafeWindow.updateDetailedStatsUI = updateDetailedStatsUI;
+				container.innerHTML =
+					createCard('ИТОГО (КЛИК/СБОР)', stats.total.clicks, stats.total.success, true) +
+					createCard('🤖 АВТОСБОР', stats.auto.clicks, stats.auto.success) +
+					createCard('⚡ КНОПКА СБОРА', stats.force.clicks, stats.force.success) +
+					createCard('⌨️ РУЧНОЙ ВВОД', stats.manual.clicks, stats.manual.success);
+			}
+
+			const counterBtn = document.getElementById('crystal_counter');
+			if (counterBtn && crystalScriptEnabled) {
+				counterBtn.textContent = `${stats.total.clicks}/${stats.total.success}`;
+				counterBtn.style.display = 'flex';
+			}
+		}
+		unsafeWindow.updateDetailedStatsUI = updateDetailedStatsUI;
 
 		// --- ФУНКЦИЯ КОПИРОВАНИЯ ДЛЯ DISCORD (С КНОПКОЙ КОПИРОВАНИЯ В DISCORD) ---
         unsafeWindow.copyPromoToClipboard = async function(code, chatTime) {
@@ -10894,81 +10927,101 @@ async function runMainScript() {
 // ##################################################
 // НАЧАЛО БЛОКА СОРТИРОВКИ ПО СПРОСУ (ИНВЕНТАРЬ/ТРЕЙДЫ)
 // ##################################################
-        // ##################################################
-        // ##################################################
-        async function initDemandSorting() {
-            if (window.location.pathname.startsWith('/trades/history/')) {
-                return;
-            }
-            const DEMAND_SORTING_ENABLED_KEY = 'acm_demandSortingEnabled';
-            const isEnabled = await GM_getValue(DEMAND_SORTING_ENABLED_KEY, true);
-            if (!isEnabled) return;
-            const sortSelect = document.getElementById('cards_order');
-            if (!sortSelect) return;
-            if (!sortSelect.querySelector('option[value="demand"]')) {
-                const newOption = document.createElement('option');
-                newOption.value = 'demand';
-                newOption.textContent = 'По спросу на странице';
-                sortSelect.appendChild(newOption);
-            }
-            sortSelect.addEventListener('change', async (event) => {
-                if (event.target.value !== 'demand') {
-                    return;
-                }
-                event.preventDefault();
-                event.stopImmediatePropagation();
-                safeDLEPushCall('info', 'Сортировка по спросу... Собираю данные...');
-                const cardContainer = document.querySelector('.anime-cards--full-page');
-                if (!cardContainer) {
-                    safeDLEPushCall('error', 'Не найден контейнер с картами.');
-                    return;
-                }
-                const cards = Array.from(cardContainer.querySelectorAll('.anime-cards__item-wrapper'));
-                const cardsToFetch = [];
-                const cardDataPromises = cards.map(async (cardWrapper) => {
-                    const cardEl = cardWrapper.querySelector('.anime-cards__item');
-                    if (!cardEl) return null;
-                    let needCount = cardEl.dataset.needCount;
-                    if (typeof needCount === 'undefined') {
-                        cardsToFetch.push(cardEl);
-                        return { wrapper: cardWrapper, el: cardEl, needCount: -1 };
-                    }
-                    return { wrapper: cardWrapper, el: cardEl, needCount: parseInt(needCount, 10) };
-                });
-                let cardDataList = (await Promise.all(cardDataPromises)).filter(Boolean);
-                if (cardsToFetch.length > 0) {
-                    let fetchedCount = 0;
-                    for (const cardEl of cardsToFetch) {
-                        if (document.getElementById('cards_order').value !== 'demand') {
-                            safeDLEPushCall('info', 'Сортировка отменена пользователем.');
-                            return;
-                        }
-                        fetchedCount++;
-                        safeDLEPushCall('info', `Сортировка по спросу... (${fetchedCount}/${cardsToFetch.length})`);
-                        const cardId = await getCardId(cardEl, 'type', true);
-                        if (cardId) {
-                            const isCached = await getCache('cardId: ' + cardId);
-                            if (!isCached) {
-                                await sleep(1900);
-                            }
-                            await updateCardInfo(cardId, cardEl, false);
-                        }
-                        const itemToUpdate = cardDataList.find(item => item.el === cardEl);
-                        if (itemToUpdate && cardEl.dataset.needCount) {
-                            itemToUpdate.needCount = parseInt(cardEl.dataset.needCount, 10);
-                        }
-                        cardDataList.sort((a, b) => b.needCount - a.needCount);
-                        cardDataList.forEach(item => {
-                            cardContainer.appendChild(item.wrapper);
-                        });
-                    }
-                } else {
-                    cardDataList.sort((a, b) => b.needCount - a.needCount);
-                    cardDataList.forEach(item => cardContainer.appendChild(item.wrapper));
-                }
-                safeDLEPushCall('success', 'Сортировка по спросу завершена!');
-            }, true);
-        }
+	/**
+	 * Инициализирует функционал сортировки карт по спросу в инвентаре.
+	 * Реализует три состояния: по убыванию (desc), по возрастанию (asc) и исходный порядок (original).
+	 */
+	async function initDemandSorting() {
+		if (window.location.pathname.startsWith('/trades/history/')) return;
+		const isEnabled = await GM_getValue('acm_demandSortingEnabled', true);
+		if (!isEnabled) return;
+
+		const sortSelect = document.getElementById('cards_order');
+		if (!sortSelect) return;
+
+		if (!sortSelect.querySelector('option[value="demand"]')) {
+			const newOption = document.createElement('option');
+			newOption.value = 'demand';
+			newOption.textContent = 'По спросу на странице';
+			sortSelect.appendChild(newOption);
+		}
+
+		let originalOrderWrappers = null;
+
+		sortSelect.addEventListener('change', async (event) => {
+			if (event.target.value !== 'demand') {
+				sortSelect.dataset.currentDirection = '';
+				originalOrderWrappers = null;
+				return;
+			}
+			
+			event.preventDefault();
+			event.stopImmediatePropagation();
+
+			const cardContainer = document.querySelector('.anime-cards--full-page');
+			if (!cardContainer) return;
+
+			const wrappers = Array.from(cardContainer.querySelectorAll('.anime-cards__item-wrapper'));
+			if (!originalOrderWrappers) originalOrderWrappers = [...wrappers];
+
+			const allCards = wrappers.map(w => w.querySelector('.anime-cards__item')).filter(Boolean);
+			let direction = sortSelect.dataset.currentDirection || 'desc';
+
+			const updateProgress = (cur, total, dir) => {
+				const dirText = dir === 'desc' ? 'Убывание ↓' : (dir === 'asc' ? 'Возрастание ↑' : 'Сброс');
+				const msg = `<b>Сортировка по спросу: ${dirText}</b>\nАнализ: ${cur} из ${total}`;
+				showNotification(msg, 'info', { id: 'ascm-sort-status', timeout: 10000 });
+			};
+
+			const processedIds = new Set();
+			let count = 0;
+
+			for (const cardEl of allCards) {
+				const cardId = await getCardId(cardEl, 'type', true);
+				if (cardId && !processedIds.has(cardId)) {
+					const isCached = await getCache('cardId: ' + cardId);
+					if (!isCached) await sleep(1850); 
+					await updateCardInfo(cardId, cardEl, false, allCards);
+					processedIds.add(cardId);
+				}
+				count++;
+				if (count % 5 === 0) updateProgress(count, allCards.length, direction);
+			}
+
+			let nextDirection = '';
+			if (direction === 'desc') {
+				wrappers.sort((a, b) => {
+					const valA = parseInt(a.querySelector('.anime-cards__item')?.dataset.needCount) || 0;
+					const valB = parseInt(b.querySelector('.anime-cards__item')?.dataset.needCount) || 0;
+					return valB - valA;
+				});
+				nextDirection = 'asc';
+			} else if (direction === 'asc') {
+				wrappers.sort((a, b) => {
+					const valA = parseInt(a.querySelector('.anime-cards__item')?.dataset.needCount) || 0;
+					const valB = parseInt(b.querySelector('.anime-cards__item')?.dataset.needCount) || 0;
+					return valA - valB;
+				});
+				nextDirection = 'original';
+			} else {
+				wrappers.splice(0, wrappers.length, ...originalOrderWrappers);
+				nextDirection = 'desc';
+			}
+
+			sortSelect.dataset.currentDirection = nextDirection;
+
+			const fragment = document.createDocumentFragment();
+			wrappers.forEach(w => fragment.appendChild(w));
+			
+			const titleH2 = cardContainer.querySelector('h2.ncard__main-title');
+			cardContainer.innerHTML = '';
+			if (titleH2) cardContainer.appendChild(titleH2);
+			cardContainer.appendChild(fragment);
+
+			const finalStatus = direction === 'desc' ? 'Убывание ↓' : (direction === 'asc' ? 'Возрастание ↑' : 'Порядок восстановлен');
+			showNotification(`Сортировка завершена: ${finalStatus}`, 'success', { id: 'ascm-sort-status' });
+		}, true);
+	}
 
         // ##################################################
         // ##################################################
@@ -11137,7 +11190,8 @@ async function runMainScript() {
                         if (cardsToFetch.length > 0) {
                             for (const [index, cardEl] of cardsToFetch.entries()) {
                                 if (tradeSortState === null) break;
-                                safeDLEPushCall('info', `Сортировка по спросу... (${index + 1}/${cardsToFetch.length})`);
+                                const msg = `<b>Сортировка по спросу...</b>\nОбработано: ${index + 1} из ${cardsToFetch.length}`;
+                                showNotification(msg, 'info', { id: 'ascm-trade-sort-status', timeout: 10000 });
                                 const cardId = await getCardId(cardEl, 'type', true);
                                 if (cardId) {
                                     const isCached = await getCache('cardId: ' + cardId);
@@ -11194,8 +11248,8 @@ async function runMainScript() {
             let restartDirection = null;
             let currentSortInstanceId = 0;
             const stopSortingProcess = (restoreDOM = true) => {
-                currentSortInstanceId++;
-                if (remeltSortState === null) return false;
+				currentSortInstanceId++;
+				if (remeltSortState === null) return false;
                 const lastState = remeltSortState;
                 remeltSortState = null;
                 sortButton.textContent = 'По спросу ↓';
@@ -11318,10 +11372,9 @@ async function runMainScript() {
                         performSortAndRedraw();
                         if (cardsToFetch.length > 0) {
                             for (const [index, cardEl] of cardsToFetch.entries()) {
-                                if (thisSortInstanceId !== currentSortInstanceId) {
-                                    return;
-                                }
-                                safeDLEPushCall('info', `Сортировка по спросу... (${index + 1}/${cardsToFetch.length})`);
+                                if (thisSortInstanceId !== currentSortInstanceId) return;
+                                const msg = `<b>Сортировка по спросу...</b>\nОбработано: ${index + 1} из ${cardsToFetch.length}`;
+                                showNotification(msg, 'info', { id: 'ascm-remelt-sort-status', timeout: 10000 });
                                 const typeId = await getCardId(cardEl, 'type');
                                 if (typeId) {
                                     const isCached = await getCache('cardId: ' + typeId);
@@ -11343,7 +11396,7 @@ async function runMainScript() {
                             }
                         }
                         if (thisSortInstanceId === currentSortInstanceId) {
-                            safeDLEPushCall('success', 'Сортировка по убыванию завершена!');
+                            showNotification('Сортировка завершена!', 'success', { id: 'ascm-remelt-sort-status' });
                         }
                     } catch (error) {
                         safeDLEPushCall('error', error.message);
@@ -11356,10 +11409,11 @@ async function runMainScript() {
                     sortButton.style.borderColor = '#a93226';
                     performSortAndRedraw();
                 } else if (remeltSortState === 'asc') {
-                    stopSortingProcess(true);
-                }
-            });
-        }
+					stopSortingProcess(true);
+				}
+			});
+			unsafeWindow.ascm_stopOldRemeltSort = () => stopSortingProcess(true);
+		}
 
 
         async function initStonePageSorting() {
@@ -11847,89 +11901,7 @@ async function runMainScript() {
             console.log("[ACM] Премиум-функции отключены в настройках.");
         }
 
-            // ##################################################
-            // # УМНЫЙ ЕДИНЫЙ НАБЛЮДАТЕЛЬ ЗА КАРТОЧКАМИ
-            // ##################################################
-            let smartObservers = [];
-            let smartObserverTimeout;
-            function initializeSmartCardObserver() {
-                const processCardChanges = async () => {
-                    addDemandCheckButtonsToCards();
-                    addInfoButtonsToCards();
-                    if (typeof unsafeWindow.addCheckButtons === 'function') {
-                        unsafeWindow.addCheckButtons();
-                    }
-                    if (freshnessOverlayEnabled) {
-                        if (!isSpecificTradeOfferPage() || (isSpecificTradeOfferPage() && isFreshnessCheckActive)) {
-                            if (freshnessData) {
-                                await updateFreshnessOverlays();
-                            }
-                        }
-                    }
-                    // Принудительный запуск всех визуальных модулей при загрузке
-					(async () => {
-						await highlightTargetUserWishlist();
-						if (typeof unsafeWindow.highlightNoSRankDecks === 'function') {
-							await unsafeWindow.highlightNoSRankDecks();
-						}
-						if (typeof highlightReadyToStarCards === 'function') {
-							await highlightReadyToStarCards(); 
-						}
-					})();
-				};
-                setTimeout(processCardChanges);
-                const targetSelectors = [
-                    '#ascm-remelt-grid', 
-                    '.anime-cards--full-page', 
-                    '.trade__main', 
-                    '.trade__inventory', 
-                    '.tabs__content', // Добавлено: именно этот контейнер меняется при клике на "Хочет"
-                    '.trade__search', // Добавлено: именно этот блок меняется при фильтрах
-                    '.lootbox__row', // Карты, выпадающие из пака
-                    '.history__inner', // История обменов
-                    '.remelt__inventory-list', // Инвентарь на странице переплавки
-                    '.dpm-dialog-list', // Карты в личных сообщениях
-                    '.deck__list', // Карты в колоде на странице аниме
-                    '.sect.pmovie__related', // Контейнер, где карусель заменяется на все карты
-                    '.stone__inventory', // Инвентарь для пробуждения
-                    '.card-awakening-list', // Список карт для пробуждения
-					'.ncard-owner' // ПРАВКА: Страница владельцев карты
-                ];
-                const observerCallback = (mutationsList) => {
-                    // Проверяем, являются ли изменения делом рук нашего скрипта
-                    const isInternalChange = Array.from(mutationsList).every(m => {
-                        const nodes = [...m.addedNodes, ...m.removedNodes];
-                        return nodes.every(n => n.classList && (n.classList.contains('ascm-phantom-star') || n.classList.contains('ascm-star-hitbox')));
-                    });
 
-                    // Если это наши звезды или хитбоксы - ничего не делаем, чтобы не вызвать бесконечный цикл
-                    if (isInternalChange) return;
-
-                    const hasRelevantChanges = mutationsList.some(m => m.type === 'childList' && (m.addedNodes.length > 0 || m.removedNodes.length > 0));
-                    if (hasRelevantChanges) {
-                        clearTimeout(smartObserverTimeout);
-                        smartObserverTimeout = setTimeout(() => {
-                            processCardChanges();
-                        }, 500); // Увеличили задержку до 500мс для стабильности
-                    }
-                };
-                targetSelectors.forEach(selector => {
-                    const targetNode = document.querySelector(selector);
-                    if (targetNode) {
-                        const observer = new MutationObserver(observerCallback);
-                        observer.observe(targetNode, {
-                            childList: true,
-                            subtree: true
-                        });
-                        smartObservers.push(observer);
-                    }
-                });
-                window.addEventListener('beforeunload', () => {
-                    smartObservers.forEach(observer => observer.disconnect());
-                    clearTimeout(smartObserverTimeout);
-                });
-            }
-            initializeSmartCardObserver();
 
             // ##################################################
             // # СПЕЦИАЛЬНЫЙ ФИКС ДЛЯ ПРЕДПРОСМОТРА В IFRAME
@@ -11976,45 +11948,16 @@ async function runMainScript() {
                 }, true);
             }
 
-            // ##################################################
-            // # УМНОЕ ОЖИДАНИЕ ПАКА ПОСЛЕ ПОКУПКИ
-            // ##################################################
-            function waitForNewPackAndProcess() {
-                let attempts = 0;
-                const maxAttempts = 200;
-                const checkInterval = setInterval(() => {
-                    attempts++;
-                    const lootboxRow = document.querySelector('.lootbox__row');
-                    if (lootboxRow && lootboxRow.offsetParent !== null && lootboxRow.dataset.packId) {
-                        const firstCardImage = lootboxRow.querySelector('.lootbox__card img');
-                        if (firstCardImage && firstCardImage.src && !firstCardImage.src.includes('empty-card.png')) {
-                            clearInterval(checkInterval);
-                            setTimeout(() => {
-                                if (autoPackCheckEnabled) {
-                                    triggerMassDuplicateCheckForPackPage(lootboxRow.dataset.packId);
-                                }
-                                if (autoDemandCheckEnabled) {
-                                    triggerMassDemandCheckForPackPage(lootboxRow.dataset.packId);
-                                }
-                                isProcessingBuyClick = false;
-                            }, 250);
-                            return;
-                        }
-                    }
-                    if (attempts > maxAttempts) {
-                        clearInterval(checkInterval);
-                        isProcessingBuyClick = false;
-                    }
-                }, 50);
-            }
+			
             document.body.addEventListener('click', function(event) {
-                const buyButton = event.target.closest('.lootbox__open-btn');
-                if (!isCardPackPage() || !buyButton) {
-                    return;
-                }
-                isCardInPackSelected = false;
+			const buyButton = event.target.closest('.lootbox__open-btn');
+			const cardSelect = event.target.closest('.lootbox__card');
+			if (!isCardPackPage() || (!buyButton && !cardSelect)) return;
+
+			isCardInPackSelected = cardSelect ? true : false;
+			isManualDupCheckActive = false; // Сброс ручного режима при любом выборе или покупке
                 isProcessingBuyClick = true;
-                stopMassDuplicateCheck();
+                ascm_stopMassDupCheck();
                 if (isProcessCardsRunning) {
                     const processBtn = document.getElementById('processCards');
                     if (processBtn) processBtn.click();
@@ -12023,15 +11966,6 @@ async function runMainScript() {
                 lastProcessedPackIdForDemandCheck = null;
                 waitForNewPackAndProcess();
             }, true);
-            document.body.addEventListener('click', function(event) {
-                const buyButton = event.target.closest('.lootbox__open-btn');
-                if (!isCardPackPage() || !buyButton) {
-                    return;
-                }
-                stopMassDuplicateCheck();
-                lastProcessedPackIdForAutoCheck = null;
-                lastProcessedPackIdForDemandCheck = null;
-            });
             const isSliderEnabled = await GM_getValue(MAX_WIDTH_SLIDER_ENABLED_KEY, true);
             if (isSliderEnabled) {
                 createMaxWidthControlSlider();
@@ -12680,7 +12614,7 @@ async function runMainScript() {
 		}
 	}
             if (!window.location.pathname.includes('/clubs/boost/')) {
-                await initDuplicateChecker();
+                await ascm_initDupUI();
             }
             if (isCardPackPage()) {
                 await createAutoDuplicateFeature();
@@ -12720,6 +12654,7 @@ async function runMainScript() {
             initRemeltPageSorting();
             initStonePageSorting();
             initDemandCheckObserver();
+            initializeSmartCardObserver();
             let isGlobalListenerAdded = false;
             if (!isGlobalListenerAdded) {
                 isGlobalListenerAdded = true;
@@ -13250,9 +13185,7 @@ async function runMainScript() {
                     setTimeout(() => {
                         addDemandCheckButtonsToCards();
                         addInfoButtonsToCards(); // ПРАВКА: Добавлен вызов для отрисовки маркера "i"
-                        if (typeof unsafeWindow.addCheckButtons === 'function') {
-                            unsafeWindow.addCheckButtons();
-                        }
+                        ascm_injectDupButtons();
                     }, 500);
                     return result;
                 };
@@ -13312,31 +13245,25 @@ async function runMainScript() {
         }
         unsafeWindow.highlightCrystalPanel = highlightCrystalPanel;
 
-        // ##################################################
-        // --- Функция для обновления счетчика на главной кнопке ---
-        // ##################################################
+        /**
+		 * Обновляет числовой индикатор на плавающей кнопке кристалла. Использует механизм 
+		 * детального пересчета статистики из истории, обеспечивая визуальную синхронизацию 
+		 * между всеми открытыми вкладками и корректное отображение суточного прогресса 
+		 * сбора камней духа.
+		 * [нет аргументов]
+		 */
 		async function updateCrystalButtonCounter() {
-            const counterElement = document.getElementById('crystal_counter');
-            if (!counterElement) return;
+			const counterElement = document.getElementById('crystal_counter');
+			if (!counterElement) return;
 
-            if (crystalScriptEnabled) {
-                const stats = await GM_getValue(ACC_STATS_DETAILED_KEY, {
-                    auto: { clicks: 0, success: 0 },
-                    manual: { clicks: 0, success: 0 },
-                    force: { clicks: 0, success: 0 }
-                });
-
-                const totalClicks = stats.auto.clicks + stats.manual.clicks + stats.force.clicks;
-                const totalSuccess = stats.auto.success + stats.manual.success + stats.force.success;
-
-                // Отображаем новые суммарные данные
-                counterElement.textContent = `${totalClicks}/${totalSuccess}`;
-                counterElement.style.display = 'flex';
-            } else {
-                counterElement.style.display = 'none';
-            }
-        }
-        unsafeWindow.updateCrystalButtonCounter = updateCrystalButtonCounter;
+			if (crystalScriptEnabled) {
+				// Вызываем функцию пересчета, которая сама обновит и этот счетчик
+				await updateDetailedStatsUI();
+			} else {
+				counterElement.style.display = 'none';
+			}
+		}
+		unsafeWindow.updateCrystalButtonCounter = updateCrystalButtonCounter;
 
         // ##################################################
         // # Фиксер плеера по событию noData (Запускается один раз при инициализации)
@@ -15549,110 +15476,7 @@ async function runMainScript() {
         updateButtonView('initial');
     }
 
-    // ##################################################
-    // # Функция, реализующая "Настройки автопроверки дублей"
-    // ##################################################
-    (function() {
-        'use strict';
-        function autoDup_loadSettings() {
-            return { ...defaultSettings, ...GM_getValue(AUTO_DUP_SETTINGS_KEY, {}) };
-        }
-        function autoDup_saveSettings(settings) {
-            GM_setValue(AUTO_DUP_SETTINGS_KEY, settings);
-        }
-        function autoDup_createSettingsModal() {
-            const MODAL_WRAPPER_ID = 'acm_modal_wrapper';
-            if (document.getElementById(MODAL_WRAPPER_ID)) return;
-            const wrapper = document.createElement('div');
-            wrapper.id = MODAL_WRAPPER_ID;
-            wrapper.innerHTML = `
-                <div class="acm-modal-backdrop"></div>
-                <div class="acm-modal" id="autoDup_settings_modal">
-                <div class="modal-header">
-                <h2>Настройки автопроверки дублей</h2>
-                </div>
-                <div class="modal-body">
-                <p style="font-size: 13px; color: #999; text-align: center; margin-bottom: 15px;">Выберите ранги, которые будут автоматически проверяться на дубликаты при открытии пака.</p>
-                <div id="autoDup_settings_list"></div>
-                <div style="border-top: 1px solid #33353a; margin-top: 20px; padding-top: 15px; text-align: center;">
-                <label for="autoPackCheck_initialDelay_slider" style="display: block; font-size: 13px; color: #999; margin-bottom: 10px;">
-                Задержка пока крутится анимация
-                </label>
-                <input type="range" id="autoPackCheck_initialDelay_slider" min="0" max="5000" step="50" style="width: 80%;">
-                <div id="autoPackCheck_initialDelay_value" style="margin-top: 5px; font-weight: bold; color: #ddd; font-family: monospace;"></div>
-                <label for="autoDup_delay_slider" style="display: block; font-size: 13px; color: #999; margin-bottom: 10px; margin-top: 15px;">
-                Задержка между проверкой карт
-                </label>
-                <input type="range" id="autoDup_delay_slider" min="0" max="3000" step="50" style="width: 80%;">
-                <div id="autoDup_delay_value" style="margin-top: 5px; font-weight: bold; color: #ddd; font-family: monospace;"></div>
-                </div>
-                </div>
-                <div class="modal-footer">
-                <button id="autodup-back-to-main" class="action-btn back-btn">Назад</button>
-                <button class="action-btn save-btn autoDup_save_settings">Сохранить</button>
-                </div>
-                </div>`;
-            document.body.appendChild(wrapper);
-            const settingsList = wrapper.querySelector('#autoDup_settings_list');
-            checkableRanks.forEach(rank => {
-                settingsList.innerHTML += `
-                    <div class="setting-row">
-                    <span>Проверять дубли для ранга <b>${rank.toUpperCase()}</b></span>
-                    <label class="protector-toggle-switch">
-                    <input type="checkbox" data-rank="${rank}">
-                    <span class="protector-toggle-slider"></span>
-                    </label>
-                    </div>`;
-                    });
-            const delaySlider = wrapper.querySelector('#autoDup_delay_slider');
-            const delayValueDisplay = wrapper.querySelector('#autoDup_delay_value');
-            const updateDelayDisplay = () => { delayValueDisplay.textContent = `${delaySlider.value} мс (${(delaySlider.value / 1000).toFixed(2)} сек)`; };
-            delaySlider.addEventListener('input', updateDelayDisplay);
-            const initialDelaySlider = wrapper.querySelector('#autoPackCheck_initialDelay_slider');
-            const initialDelayValueDisplay = wrapper.querySelector('#autoPackCheck_initialDelay_value');
-            const updateInitialDelayDisplay = () => { initialDelayValueDisplay.textContent = `${initialDelaySlider.value} мс (${(initialDelaySlider.value / 1000).toFixed(2)} сек)`; };
-            initialDelaySlider.addEventListener('input', updateInitialDelayDisplay);
-            const closeModal = () => wrapper.remove();
-            wrapper.querySelector('#autodup-back-to-main').onclick = () => {
-                closeModal();
-                unsafeWindow.openMasterSettingsModal();
-            };
-            wrapper.querySelector('.acm-modal-backdrop').onclick = closeModal;
-            wrapper.querySelector('.autoDup_save_settings').onclick = () => {
-                const newSettings = {};
-                wrapper.querySelectorAll('input[type="checkbox"]').forEach(cb => { newSettings[cb.dataset.rank] = cb.checked; });
-                autoDup_saveSettings(newSettings);
-                GM_setValue('autoDup_delay_ms', parseInt(wrapper.querySelector('#autoDup_delay_slider').value, 10));
-                GM_setValue('autoPackCheck_initialDelay_ms', parseInt(wrapper.querySelector('#autoPackCheck_initialDelay_slider').value, 10));
-                closeModal();
-                if (typeof safeDLEPushCall === 'function') {
-                    unsafeWindow.safeDLEPushCall('success', 'Настройки автопроверки дублей сохранены!');
-                }
-            };
-            return wrapper;
-        }
-        // ##################################################
-        // Открывает модальное окно и заполняет его данными
-        // ##################################################
-        function autoDup_openSettingsModal() {
-            const wrapper = autoDup_createSettingsModal();
-            if(!wrapper) return;
-            const settings = autoDup_loadSettings();
-            wrapper.querySelectorAll('#autoDup_settings_list input[type="checkbox"]').forEach(cb => {
-                cb.checked = settings[cb.dataset.rank] === true;
-            });
-            const initialDelaySlider = wrapper.querySelector('#autoPackCheck_initialDelay_slider');
-            const initialDelayValueDisplay = wrapper.querySelector('#autoPackCheck_initialDelay_value');
-            initialDelaySlider.value = GM_getValue('autoPackCheck_initialDelay_ms', 1400);
-            initialDelayValueDisplay.textContent = `${initialDelaySlider.value} мс (${(initialDelaySlider.value / 1000).toFixed(2)} сек)`;
-            const delaySlider = wrapper.querySelector('#autoDup_delay_slider');
-            const delayValueDisplay = wrapper.querySelector('#autoDup_delay_value');
-            delaySlider.value = GM_getValue('autoDup_delay_ms', 150);
-            delayValueDisplay.textContent = `${delaySlider.value} мс (${(delaySlider.value / 1000).toFixed(2)} сек)`;
-        }
-        unsafeWindow.autoDup_loadSettings = autoDup_loadSettings;
-        unsafeWindow.autoDup_openSettingsModal = autoDup_openSettingsModal;
-    })();
+    
 
     // ##################################################
     // # БЛОК: Настройки автопроверки СПРОСА (ПАКИ)
@@ -16008,71 +15832,6 @@ async function runMainScript() {
     });
 
 
-    // ##################################################
-    // # МОДУЛЬ: AS Club Turbo-Booster
-    // ##################################################
-    function initTurboBoosterModule(getButtonFunc, notifyFunc) {
-        if (!window.location.pathname.includes('/clubs/boost/')) return;
-
-        let clickerIntervalId = null;
-        let controlButton = null;
-
-        const startClicker = async () => {
-            if (clickerIntervalId) clearInterval(clickerIntervalId);
-            GM_setValue('ascm_active_booster_tab', tabIdWatch);
-            const sets = await GM_getValue(CLUB_MANAGER_SETTINGS_KEY, CLUB_MANAGER_DEFAULT);
-            console.log(`%c[ACM Turbo] Запуск со скоростью: ${sets.clickInterval}мс`, "color: #43b581");
-            clickerIntervalId = setInterval(performClick, sets.clickInterval || 20);
-        };
-
-        const stopClicker = () => {
-            if (clickerIntervalId) { 
-                clearInterval(clickerIntervalId); 
-                clickerIntervalId = null; 
-                console.log("%c[ACM Turbo] Остановлен.", "color: #ff4d4d");
-            }
-        };
-
-        // СЛУШАТЕЛЬ ДЛЯ МГНОВЕННОЙ СМЕНЫ СКОРОСТИ
-        GM_addValueChangeListener(CLUB_MANAGER_SETTINGS_KEY, (key, oldV, newV, remote) => {
-            if (clickerIntervalId && oldV.clickInterval !== newV.clickInterval) {
-                console.log(`%c[ACM Turbo] Скорость изменена в реальном времени: ${newV.clickInterval}мс`, "color: #bc95ff");
-                startClicker(); // Перезапуск с новым интервалом
-            }
-        });
-
-        // ИСПРАВЛЕННЫЙ СЛУШАТЕЛЬ
-        GM_addValueChangeListener('ascm_active_booster_tab', async (key, oldVal, newValue, remote) => {
-            // Используем newValue (как в аргументах функции)
-            if (remote && newValue && newValue !== tabIdWatch) {
-                const isActive = await GM_getValue('boosterState', false);
-                if (isActive) {
-                    sccLog("Вклады запущены в другой вкладке. Уступаю.", 'warning', true);
-                    stopClicker();
-                    await GM_setValue('boosterState', false);
-                    updateButtonState();
-                }
-            }
-        });
-
-        function updateButtonState() {
-            const isActive = GM_getValue('boosterState', false);
-            if (controlButton) {
-                controlButton.style.background = isActive ? 'linear-gradient(145deg, #43b581, #2e7d32)' : 'linear-gradient(145deg, rgb(166, 100, 110), rgb(222, 0, 5))';
-            }
-        }
-
-        controlButton = getButtonFunc('turboBoosterBtn', 'bolt', 460, 'ТУРБО-ВКЛАД', () => {
-            const newState = !GM_getValue('boosterState', false);
-            GM_setValue('boosterState', newState);
-            if (newState) startClicker(); else stopClicker();
-            updateButtonState();
-        });
-        document.body.appendChild(controlButton);
-        updateButtonState();
-        if (GM_getValue('boosterState', false)) startClicker();
-    }
-	
     // ##################################################
     // # БЛОК: AnimeStars Super Card Collector
     // ##################################################
@@ -19166,46 +18925,38 @@ async function runMainScript() {
 	// ##################################################
     // # ГЛОБАЛЬНАЯ СЕТЬ ВКЛАДОК: ТАЙМЕРЫ, РЕДИРЕКТЫ И БУСТЕР
     // ##################################################
-    let localCountdownInt = null;
-    GM_addValueChangeListener('ascm_global_countdown', (key, oldV, newV, remote) => {
-        if (!newV) { 
-            if (localCountdownInt) clearInterval(localCountdownInt); 
-            if (isStickyNotificationActive) {
-                isStickyNotificationActive = false;
-                if (currentNotificationElement) currentNotificationElement.style.top = '-150px';
-            }
-            return; 
-        }
-        if (localCountdownInt) clearInterval(localCountdownInt);
-        
-        localCountdownInt = setInterval(() => {
-            const left = Math.round((newV.endTs - Date.now()) / 1000);
-            if (left > 0) {
-                const html = `<div style="font-size:13px; margin-bottom:5px;">🏆 ДО КЛУБНЫХ ВЗНОСОВ: <b>${left}с</b></div>
-                    <div style="display:flex; gap:5px; justify-content:center;">
-                        <button onclick="location.href='${newV.boostUrl}'" style="background:#43b581; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-size:10px;">В ШАХТУ! ⚒️</button>
-                        <button id="acm-stop-all" style="background:#4e5058; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-size:10px;">ФИЛОНИТЬ 💤</button>
-                    </div>`;
-                
-                isStickyNotificationActive = false; 
-                showNotification(html, 'warning', true);
-                
-                const b = document.getElementById('acm-stop-all');
-                if (b) b.onclick = () => { 
-                    GM_deleteValue('ascm_global_countdown'); 
-                    GM_setValue('ascm_lastTurboTriggerDate', new Date(Date.now() + 3*3600*1000).toISOString().split('T')[0]); 
-                };
-            } else { 
-                // ПРАВКА: Когда время вышло, останавливаем таймер и прячем уведомление
-                clearInterval(localCountdownInt); 
-                isStickyNotificationActive = false;
-                if (currentNotificationElement) {
-                    currentNotificationElement.style.transition = `top ${NOTIFICATION_ANIMATION_DURATION_MS}ms cubic-bezier(0.68, -0.55, 0.27, 1.55)`;
-                    currentNotificationElement.style.top = '-150px';
-                }
-            }
-        }, 1000);
-    });
+    // Слушатель глобального таймера обратного отсчета для взносов
+	let localCountdownInt = null;
+	GM_addValueChangeListener('ascm_global_countdown', (key, oldV, newV, remote) => {
+		if (!newV) { 
+			if (localCountdownInt) clearInterval(localCountdownInt); 
+			const existing = document.getElementById('acm-countdown-push');
+			if (existing) existing.click(); // Закрываем пуш, если таймер удален
+			return; 
+		}
+		if (localCountdownInt) clearInterval(localCountdownInt);
+		
+		localCountdownInt = setInterval(() => {
+			const left = Math.round((newV.endTs - Date.now()) / 1000);
+			if (left > 0) {
+				const html = `🏆 ДО КЛУБНЫХ ВЗНОСОВ: <b>${left}с</b>\n<div style="display:flex; gap:5px; justify-content:center; margin-top:8px;"><button onclick="location.href='${newV.boostUrl}'" style="background:#43b581; color:white; border:none; padding:4px 10px; border-radius:4px; cursor:pointer; font-size:10px;">В ШАХТУ! ⚒️</button><button id="acm-stop-all" style="background:#4e5058; color:white; border:none; padding:4px 10px; border-radius:4px; cursor:pointer; font-size:10px;">ФИЛОНИТЬ 💤</button></div>`;
+				
+				// ПРАВКА: Используем уникальный ID 'acm-countdown-push' и sticky: true
+				showNotification(html, 'warning', { sticky: true, id: 'acm-countdown-push' });
+				
+				const b = document.getElementById('acm-stop-all');
+				if (b) b.onclick = (e) => { 
+					e.stopPropagation();
+					GM_deleteValue('ascm_global_countdown'); 
+					GM_setValue('ascm_lastTurboTriggerDate', new Date(Date.now() + 3*3600*1000).toISOString().split('T')[0]); 
+				};
+			} else { 
+				clearInterval(localCountdownInt); 
+				const existing = document.getElementById('acm-countdown-push');
+				if (existing) existing.click();
+			}
+		}, 1000);
+	});
 
     // Слушатель сигнала на принудительный переход в шахту (С БРОНИРОВАНИЕМ)
     GM_addValueChangeListener('ascm_redirect_signal', async (key, oldV, newV, remote) => {
@@ -19591,7 +19342,10 @@ async function runMainScript() {
         
         const twinName = await GM_getValue(WISHLIST_TARGET_USER_KEY, "");
         const otherBtnTitle = document.getElementById('ascm-title-otherwish');
-        if (otherBtnTitle) otherBtnTitle.innerHTML = twinName ? `ЛИСТ "ХОЧУ" ${twinName.toUpperCase()} <i class="fal fa-leaf"></i>` : `СКАНИРОВАТЬ ЛИСТ "ХОЧУ" ТВИНА <i class="fal fa-leaf"></i>`;
+        if (otherBtnTitle) {
+            const iconHtml = '<i class="fas fa-play" style="color:#772ce8; margin-right:5px;"></i>';
+            otherBtnTitle.innerHTML = twinName ? `${iconHtml} ЛИСТ "ХОЧУ" ${twinName.toUpperCase()} <i class="fal fa-leaf"></i>` : `${iconHtml} СКАНИРОВАТЬ ЛИСТ "ХОЧУ" ТВИНА <i class="fal fa-leaf"></i>`;
+        }
         
         // Скрываем данные кеша твина, если его имя удалено из настроек
         const twinCache = twinName ? await GM_getValue(REMELT_TWIN_WISH_PREFIX + rank) : null;
@@ -19778,165 +19532,177 @@ async function runMainScript() {
     }
 	
 	/**
-     * Сканер списка желаний: теперь сохраняет Type ID для точной фильтрации
-     */
-    async function scanWishlistForRemelt(isTwin = false) {
-        const activeRank = document.querySelector('.remelt__rank-item--active')?.dataset.rank;
-        if (!activeRank) return safeDLEPushCall('error', 'Сначала выберите ранг (A-E)');
+	 * Сканирует список желаний (свой или твина) с поддержкой изменения скорости на лету.
+	 * [isTwin] - если true, сканирует список твина.
+	 */
+	async function scanWishlistForRemelt(isTwin = false) {
+		const activeRank = document.querySelector('.remelt__rank-item--active')?.dataset.rank;
+		if (!activeRank) return safeDLEPushCall('error', 'Сначала выберите ранг (A-E)');
 
-        let username = isTwin ? await GM_getValue(WISHLIST_TARGET_USER_KEY, "") : asbm_getUsername();
-        if (isTwin && !username) {
-            safeDLEPushCall('warning', 'Имя твина не задано. Открываю настройки...');
-            return openWishlistSettingsModal();
-        }
+		const username = isTwin ? await GM_getValue(WISHLIST_TARGET_USER_KEY, "") : asbm_getUsername();
+		if (isTwin && !username) return openWishlistSettingsModal();
 
-        if (isRemeltScanning) { remeltScanStopFlag = true; return; }
-        isRemeltScanning = true; remeltScanStopFlag = false;
+		if (isRemeltScanning) {
+			remeltScanStopFlag = true;
+			return;
+		}
 
-        const btnId = isTwin ? 'ascm-remelt-otherwish-btn' : 'ascm-remelt-mywish-btn';
-        const infoId = isTwin ? 'ascm-info-otherwish' : 'ascm-info-mywish';
-        const spdId = isTwin ? 'ascm-remelt-other-spd' : 'ascm-remelt-my-spd'; // Берем скорость из слайдера
-        
-        const btn = document.getElementById(btnId);
-        const infoBlock = document.getElementById(infoId);
-        const delay = parseInt(document.getElementById(spdId).value) || 1000;
-        
-        btn.style.background = '#5865f2';
+		isRemeltScanning = true;
+		remeltScanStopFlag = false;
 
-        let currentPage = 1, totalPages = 1, foundTypeIds = new Set();
+		const btnId = isTwin ? 'ascm-remelt-otherwish-btn' : 'ascm-remelt-mywish-btn';
+		const infoId = isTwin ? 'ascm-info-otherwish' : 'ascm-info-mywish';
+		const spdId = isTwin ? 'ascm-remelt-other-spd' : 'ascm-remelt-my-spd';
+		
+		const btn = document.getElementById(btnId);
+		const titleEl = btn.querySelector('.title');
+		const infoBlock = document.getElementById(infoId);
+		const slider = document.getElementById(spdId);
+		
+		const originalTitleHTML = titleEl.innerHTML;
+		const color = isTwin ? '#772ce8' : '#019145';
 
-        try {
-            await ensureDbLoaded();
-            while (!remeltScanStopFlag) {
-                const url = `/user/cards/need/?name=${encodeURIComponent(username)}&rank=${activeRank}&page=${currentPage}`;
-                if (infoBlock) infoBlock.innerHTML = `Скан: <b>${currentPage}</b> / <b>${totalPages}</b> стр.<br>~${Math.round((totalPages - currentPage + 1) * (delay/1000))} сек.`;
+		btn.style.setProperty('border-color', '#ff4d4d', 'important');
+		titleEl.innerHTML = '<i class="fas fa-stop" style="color:#ff4d4d; margin-right:5px;"></i> ОСТАНОВИТЬ СКАН';
+		btn.title = 'Нажмите для принудительной остановки сканирования';
 
-                const response = await fetch(url);
-                const htmlText = await response.text();
-                const doc = new DOMParser().parseFromString(htmlText, 'text/html');
-                
-                if (currentPage === 1) {
-                    const pagin = doc.querySelector('.pagination__pages');
-                    if (pagin) {
-                        const pages = Array.from(pagin.querySelectorAll('a, span')).map(el => parseInt(el.textContent.trim())).filter(n => !isNaN(n));
-                        totalPages = pages.length > 0 ? Math.max(...pages) : 1;
-                    }
-                }
+		let currentPage = 1, totalPages = 1, foundTypeIds = new Set();
 
-                const cards = doc.querySelectorAll('.anime-cards__item');
-                for (let cardEl of cards) {
-                    const typeId = await getCardId(cardEl, 'type', true);
-                    if (typeId) foundTypeIds.add(typeId.toString());
-                }
+		try {
+			await ensureDbLoaded();
+			while (!remeltScanStopFlag) {
+				const url = `/user/cards/need/?name=${encodeURIComponent(username)}&rank=${activeRank}&page=${currentPage}`;
+				if (infoBlock) infoBlock.innerHTML = `Скан: <b>${currentPage}</b> / <b>${totalPages}</b> стр.<br>Найдено: ${foundTypeIds.size}`;
 
-                // --- ДОБАВЛЕНО: Перерисовка сетки (чтобы исключения применились сразу) ---
-                if (typeof unsafeWindow.renderRemeltGrid === 'function') unsafeWindow.renderRemeltGrid();
+				const response = await fetch(url);
+				const htmlText = await response.text();
+				const doc = new DOMParser().parseFromString(htmlText, 'text/html');
+				
+				if (currentPage === 1) {
+					const pagin = doc.querySelector('.pagination__pages');
+					if (pagin) {
+						const pages = Array.from(pagin.querySelectorAll('a, span')).map(el => parseInt(el.textContent.trim())).filter(n => !isNaN(n));
+						totalPages = pages.length > 0 ? Math.max(...pages) : 1;
+					}
+				}
 
-                if (currentPage >= totalPages) break;
-                currentPage++;
-                await sleep(delay); 
-            }
+				doc.querySelectorAll('.anime-cards__item').forEach(cardEl => {
+					const tId = cardEl.dataset.id;
+					if (tId) foundTypeIds.add(tId.toString());
+				});
 
-            // Сохраняем результат в любом случае (даже при стопе), помечая статус
-            const mskTime = getMoscowTime(true);
-            const storageKey = (isTwin ? REMELT_TWIN_WISH_PREFIX : REMELT_MY_WISH_PREFIX) + activeRank;
-            await GM_setValue(storageKey, { 
-                ids: Array.from(foundTypeIds), 
-                timestamp: Date.now(), 
-                timeFormatted: mskTime, 
-                count: foundTypeIds.size, 
-                user: username,
-                isFull: !remeltScanStopFlag,
-                p: currentPage,
-                t: totalPages
-            });
-            updateRemeltCacheTimers();
-            if (!remeltScanStopFlag) sccLog(`Лист ХОЧУ (${username}) обновлен!`, 'success', true);
-        } finally {
-            isRemeltScanning = false; btn.style.background = '';
-            updateRemeltCalculation();
-        }
-    }
+				if (currentPage >= totalPages) break;
+				currentPage++;
+
+				const currentDelay = parseInt(slider.value) || 1000;
+				await sleep(currentDelay); 
+			}
+
+			const storageKey = (isTwin ? REMELT_TWIN_WISH_PREFIX : REMELT_MY_WISH_PREFIX) + activeRank;
+			await GM_setValue(storageKey, { 
+				ids: Array.from(foundTypeIds), timestamp: Date.now(), timeFormatted: getMoscowTime(true), count: foundTypeIds.size, user: username, isFull: !remeltScanStopFlag, p: currentPage, t: totalPages
+			});
+			
+			updateRemeltCacheTimers();
+			if (!remeltScanStopFlag) sccLog(`Лист ХОЧУ (${username}) обновлен!`, 'success', true);
+		} finally {
+			isRemeltScanning = false;
+			btn.style.borderColor = '';
+			titleEl.innerHTML = originalTitleHTML;
+			btn.title = isTwin ? 'Обновить данные из списка желаний твина' : 'Обновить данные из моего списка желаний';
+			updateRemeltCalculation();
+		}
+	}
 	
 	/**
-     * Сканнер инвентаря для переплавки: использует задержку из слайдера и обновляет инфо-блоки
-     */
-    async function scanRemeltInventoryForRank(rank) {
-        if (isRemeltScanning) { remeltScanStopFlag = true; return; }
-        isRemeltScanning = true; remeltScanStopFlag = false;
-        
-        const btn = document.getElementById('ascm-remelt-scan-btn');
-        const infoMain = document.getElementById('ascm-info-main');
-        const delay = parseInt(document.getElementById('ascm-remelt-scan-spd').value) || 500;
-        
-        btn.style.background = '#5865f2';
-        
-        let currentPage = 1, totalPages = 0, tempMap = new Map(), totalFound = 0;
+	 * Сканирует инвентарь пользователя для текущего ранга с динамической скоростью.
+	 * Реализует переключение визуальных состояний кнопки (Старт/Стоп) и подсказок.
+	 * [rank] - буквенный код ранга.
+	 */
+	async function scanRemeltInventoryForRank(rank) {
+		const btn = document.getElementById('ascm-remelt-scan-btn');
+		const titleEl = btn.querySelector('.title');
+		const infoMain = document.getElementById('ascm-info-main');
+		const slider = document.getElementById('ascm-remelt-scan-spd');
 
-        try {
-            await ensureDbLoaded();
-            while (!remeltScanStopFlag) {
-                await ensureDbLoaded(); // Поддержание базы в ОЗУ
-                const response = await fetch("/engine/ajax/controller.php?mod=cards_filter", {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'X-Requested-With': 'XMLHttpRequest' },
-                    body: new URLSearchParams({ action: 'search_remelt', rank: rank, search: '', locked: '0', sort: 'date', page: currentPage, user_hash: unsafeWindow.dle_login_hash }).toString()
-                });
-                const data = await response.json();
-                if (!data.html) break;
-                if (currentPage === 1) {
-                    totalPages = data.count_pages || 1;
-                    console.log(`[Remelt Scan] Старт анализа ${rank.toUpperCase()}: ${totalPages} стр.`);
-                }
+		if (isRemeltScanning) {
+			remeltScanStopFlag = true;
+			return;
+		}
 
-                if (infoMain) infoMain.innerHTML = `Скан: <b>${currentPage}</b> / <b>${totalPages}</b> стр.<br>~${Math.round((totalPages - currentPage) * (delay/1000))} сек.`;
+		isRemeltScanning = true;
+		remeltScanStopFlag = false;
+		
+		btn.style.setProperty('border-color', '#ff4d4d', 'important');
+		titleEl.innerHTML = '<i class="fas fa-stop" style="color:#ff4d4d; margin-right:5px;"></i> ОСТАНОВИТЬ СКАН';
+		btn.title = 'Нажмите, чтобы прервать сканирование инвентаря';
+		
+		let currentPage = 1;
+		let totalPages = 0;
+		let tempMap = new Map();
+		let totalFound = 0;
 
-                const doc = new DOMParser().parseFromString(`<div>${data.html}</div>`, 'text/html');
-                const remeltItems = doc.querySelectorAll('.remelt__inventory-item');
-                
-                // ПРАВКА: Используем цикл for...of вместо forEach, чтобы await работал корректно
-                for (const el of remeltItems) {
-                    const id = el.dataset.id, img = el.querySelector('img')?.getAttribute('src');
-                    if (id && img) {
-                        if (!tempMap.has(img)) {
-                            const typeId = cardImageIndex.get(normalizeImagePath(img));
-                            let cachedDemand = null;
-                            if (typeId) {
-                                cachedDemand = await getCache('cardId: ' + typeId);
-                            }
-                            tempMap.set(img, { ids: [], demand: cachedDemand || {needCount:0,tradeCount:0,popularityCount:0} });
-                        }
-                        tempMap.get(img).ids.push(id); totalFound++;
-                    }
-                }
+		try {
+			await ensureDbLoaded();
+			while (!remeltScanStopFlag) {
+				const response = await fetch("/engine/ajax/controller.php?mod=cards_filter", {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'X-Requested-With': 'XMLHttpRequest' },
+					body: new URLSearchParams({ 
+						action: 'search_remelt', rank: rank, search: '', locked: '0', sort: 'date', page: currentPage, user_hash: unsafeWindow.dle_login_hash 
+					}).toString()
+				});
+				
+				const data = await response.json();
+				if (!data.html) break;
+				if (currentPage === 1) totalPages = data.count_pages || 1;
 
-                remeltInventoryMap = tempMap;
-                updateRemeltCalculation();
-                // --- ДОБАВЛЕНО: Живое обновление сетки после каждой страницы ---
-                if (typeof unsafeWindow.renderRemeltGrid === 'function') unsafeWindow.renderRemeltGrid();
-                
-                if (!data.next_page || currentPage >= totalPages) break;
-                currentPage++; await sleep(delay);
-            }
-            const mskFull = getMoscowTime(true);
-            remeltInventoryMap = tempMap;
-            // Сохраняем флаг завершенности и прогресс страниц
-            await GM_setValue(REMELT_CACHE_PREFIX + rank, { 
-                map: Array.from(tempMap.entries()), 
-                timeFormatted: mskFull, 
-                timestamp: Date.now(), 
-                count: totalFound,
-                isFull: !remeltScanStopFlag,
-                p: currentPage,
-                t: totalPages 
-            });
-            
-            updateRemeltCacheTimers();
-            sccLog(`Анализ ${rank.toUpperCase()} готов! Найдено: ${totalFound} карт.`, 'success', true);
-        } finally {
-            isRemeltScanning = false; btn.style.background = '';
-        }
-    }
+				if (infoMain) infoMain.innerHTML = `Скан: <b>${currentPage}</b> / <b>${totalPages}</b> стр.<br>Найдено: ${totalFound}`;
+
+				const doc = new DOMParser().parseFromString(`<div>${data.html}</div>`, 'text/html');
+				const remeltItems = doc.querySelectorAll('.remelt__inventory-item');
+				
+				for (const el of remeltItems) {
+					const id = el.dataset.id;
+					const img = el.querySelector('img')?.getAttribute('src');
+					if (id && img) {
+						if (!tempMap.has(img)) {
+							const tId = cardImageIndex.get(normalizeImagePath(img));
+							const cached = tId ? await getCache('cardId: ' + tId) : null;
+							tempMap.set(img, { ids: [], demand: cached || {needCount:0, tradeCount:0, popularityCount:0} });
+						}
+						tempMap.get(img).ids.push(id);
+						totalFound++;
+					}
+				}
+
+				remeltInventoryMap = tempMap;
+				if (!data.next_page || currentPage >= totalPages) break;
+				currentPage++;
+
+				const currentDelay = parseInt(slider.value) || 500;
+				await sleep(currentDelay);
+			}
+
+			const mskFull = getMoscowTime(true);
+			await GM_setValue(REMELT_CACHE_PREFIX + rank, { 
+				map: Array.from(tempMap.entries()), timeFormatted: mskFull, timestamp: Date.now(), count: totalFound, isFull: !remeltScanStopFlag, p: currentPage, t: totalPages 
+			});
+			
+			updateRemeltCacheTimers();
+			updateRemeltCalculation();
+			if (typeof unsafeWindow.renderRemeltGrid === 'function') unsafeWindow.renderRemeltGrid(true);
+			if (!remeltScanStopFlag) sccLog(`Анализ ${rank.toUpperCase()} завершен: ${totalFound} карт.`, 'success', true);
+
+		} catch (error) {
+			sccLog(`Ошибка сканирования: ${error.message}`, 'error');
+		} finally {
+			isRemeltScanning = false;
+			btn.style.borderColor = '';
+			titleEl.innerHTML = '<i class="fas fa-play" style="color:#5865f2; margin-right:5px;"></i> Сканировать инвентарь';
+			btn.title = 'Запустить полный анализ инвентаря для текущего ранга';
+		}
+	}
 
 	// МОДУЛЬ: Инициализация Dashboard переплавки V2.1
     async function initRemeltAdvancedDashboard() {
@@ -19958,24 +19724,24 @@ async function runMainScript() {
         dashboard.innerHTML = `
             <!-- ВЕРХНИЙ РЯД -->
             <div class="ascm-remelt-row">
-                <div id="ascm-remelt-scan-btn" class="ascm-remelt-btn-big" title="Анализ страниц инвентаря текущего ранга">
-                    <span class="title" style="color:#5865f2;">Сканировать инвентарь</span>
+                <div id="ascm-remelt-scan-btn" class="ascm-remelt-btn-big" title="Запустить полный анализ инвентаря для текущего ранга">
+                    <span class="title" style="color:#5865f2;"><i class="fas fa-play" style="color:#5865f2; margin-right:5px;"></i> Сканировать инвентарь</span>
                     <span id="ascm-info-main" class="subtitle">Нажмите</span>
                     <div class="ascm-btn-slider-container">
                         <input type="range" id="ascm-remelt-scan-spd" min="200" max="3000" step="100">
                         <span class="ascm-btn-slider-val" id="ascm-val-scan-spd">--- мс</span>
                     </div>
                 </div>
-                <div id="ascm-remelt-mywish-btn" class="ascm-remelt-btn-big" title="Анализ вашего списка 'ХОЧУ'">
-                    <span class="title" style="color:#019145;">Сканировать мой лист "ХОЧУ" <i class="fal fa-leaf"></i></span>
+                <div id="ascm-remelt-mywish-btn" class="ascm-remelt-btn-big" title="Обновить данные из моего списка желаний">
+                    <span class="title" style="color:#019145;"><i class="fas fa-play" style="color:#019145; margin-right:5px;"></i> Сканировать мой лист "ХОЧУ" <i class="fal fa-leaf"></i></span>
                     <span id="ascm-info-mywish" class="subtitle">---</span>
                     <div class="ascm-btn-slider-container">
                         <input type="range" id="ascm-remelt-my-spd" min="100" max="3000" step="100">
                         <span class="ascm-btn-slider-val" id="ascm-val-my-spd">--- мс</span>
                     </div>
                 </div>
-                <div id="ascm-remelt-otherwish-btn" class="ascm-remelt-btn-big" title="Анализ списка 'ХОЧУ' твина">
-                    <span class="title" style="color:#772ce8;" id="ascm-title-otherwish">Сканировать лист "ХОЧУ" ТВИНА <i class="fal fa-leaf"></i></span>
+                <div id="ascm-remelt-otherwish-btn" class="ascm-remelt-btn-big" title="Обновить данные из списка желаний твина">
+                    <span class="title" style="color:#772ce8;" id="ascm-title-otherwish"><i class="fas fa-play" style="color:#772ce8; margin-right:5px;"></i> Сканировать лист "ХОЧУ" ТВИНА <i class="fal fa-leaf"></i></span>
                     <span id="ascm-info-otherwish" class="subtitle">---</span>
                     <div class="ascm-btn-slider-container">
                         <input type="range" id="ascm-remelt-other-spd" min="100" max="3000" step="100">
@@ -20127,6 +19893,9 @@ async function runMainScript() {
 		
 		// ФУНКЦИЯ СИНХРОНИЗАЦИИ ВИДИМОСТИ (Добавлено скрытие блоков сортировки)
         unsafeWindow.syncRemeltVisibility = (isVisible) => {
+            if (isVisible && typeof unsafeWindow.ascm_stopOldRemeltSort === 'function') {
+                unsafeWindow.ascm_stopOldRemeltSort();
+            }
             const dash = document.getElementById('ascm-remelt-dashboard');
             const flameBtn = document.getElementById('ascm-remelt-toggle-flame');
             // Наши новые блоки
@@ -20212,6 +19981,7 @@ async function runMainScript() {
 
         // Функция отрисовывает сетку карт и блок пагинации внизу. Реагирует на фильтры и размер страницы.
         unsafeWindow.renderRemeltGrid = async (resetPage = false) => {
+			ascm_stopMassDupCheck();
 			if (resetPage) currentRemeltPage = 1;
 			const grid = document.getElementById('ascm-remelt-grid');
 			const pagin = document.getElementById('ascm-pagination');
@@ -20354,7 +20124,7 @@ async function runMainScript() {
                 setTimeout(async () => {
                     if (typeof unsafeWindow.addDemandCheckButtonsToCards === 'function') unsafeWindow.addDemandCheckButtonsToCards();
                     if (typeof unsafeWindow.addInfoButtonsToCards === 'function') unsafeWindow.addInfoButtonsToCards();
-                    if (typeof unsafeWindow.addCheckButtons === 'function') unsafeWindow.addCheckButtons();
+                    ascm_injectDupButtons();
                     if (typeof unsafeWindow.highlightReadyToStarCards === 'function') unsafeWindow.highlightReadyToStarCards();
 
                     const cards = grid.querySelectorAll('.ascm-remelt-card');
@@ -20676,33 +20446,36 @@ async function runMainScript() {
         
         // Логика кнопки "1" для плавок с выводом лога
         dashboard.querySelector('#ascm-remelt-min-btn').onclick = () => { 
-            const el = document.getElementById('ascm-remelt-limit');
-            el.value = 1; 
-            sccLog(`Изменено: Плавки -> 1`, 'info', true);
-            updateRemeltCalculation(); 
-            saveRemeltRankSettings(); 
-        };
-        // Логика кнопки "10" для плавок с выводом лога
-        dashboard.querySelector('#ascm-remelt-10-btn').onclick = () => { 
-            const el = document.getElementById('ascm-remelt-limit');
-            el.value = 10; 
-            sccLog(`Изменено: Плавки -> 10`, 'info', true);
-            updateRemeltCalculation(); 
-            saveRemeltRankSettings(); 
-        };
+			const el = document.getElementById('ascm-remelt-limit');
+			el.value = 1; 
+			sccLog(`Изменено: Плавки -> 1`, 'info', true);
+			updateRemeltCalculation(); 
+			saveRemeltRankSettings(); 
+			if (typeof updateMeltTagsOnly === 'function') updateMeltTagsOnly();
+		};
+
+		dashboard.querySelector('#ascm-remelt-10-btn').onclick = () => { 
+			const el = document.getElementById('ascm-remelt-limit');
+			el.value = 10; 
+			sccLog(`Изменено: Плавки -> 10`, 'info', true);
+			updateRemeltCalculation(); 
+			saveRemeltRankSettings(); 
+			if (typeof updateMeltTagsOnly === 'function') updateMeltTagsOnly();
+		};
         // Логика кнопки "MAX" для плавок с расчетом и выводом лога
         dashboard.querySelector('#ascm-remelt-max-btn').onclick = () => {
-            const possibleText = document.getElementById('ascm-remelt-calc-result').querySelector('b')?.textContent;
-            const rank = document.querySelector('.remelt__rank-item--active')?.dataset.rank;
-            if (possibleText) {
-                let val = parseInt(possibleText);
-                if (rank === 'a' && val > 5) val = 5;
-                document.getElementById('ascm-remelt-limit').value = val;
-                sccLog(`Изменено: Плавки -> ${val} (MAX)`, 'info', true);
-            }
-            updateRemeltCalculation(); 
-            saveRemeltRankSettings();
-        };
+			const possibleText = document.getElementById('ascm-remelt-calc-result').querySelector('b')?.textContent;
+			const rank = document.querySelector('.remelt__rank-item--active')?.dataset.rank;
+			if (possibleText) {
+				let val = parseInt(possibleText);
+				if (rank === 'a' && val > 5) val = 5;
+				document.getElementById('ascm-remelt-limit').value = val;
+				sccLog(`Изменено: Плавки -> ${val} (MAX)`, 'info', true);
+			}
+			updateRemeltCalculation(); 
+			saveRemeltRankSettings();
+			if (typeof updateMeltTagsOnly === 'function') updateMeltTagsOnly();
+		};
 
         // КНОПКА ПОЛНОГО СБРОСА
         // ПРАВКА: Обработчик кнопки Инструкции

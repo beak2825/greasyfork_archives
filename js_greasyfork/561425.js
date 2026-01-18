@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Torrent Mod Toolkit - Non stable
 // @namespace    http://tampermonkey.net/
-// @version      1.3
+// @version      1.3.1
 // @description  Common actions for torrent mods
 // @icon         https://raw.githubusercontent.com/xzin-CoRK/torrent-mod-toolkit/refs/heads/main/hammer.png
 // @author       xzin
@@ -10,6 +10,8 @@
 // @match        https://*/details.php*
 // @match        https://*/torrents.php*
 // @match        https://*/details*
+// @match        https://*/requests*
+// @exclude      https://*.roku.com*
 // @exclude      https://redacted.sh/*
 // @exclude      https://gazellegames.net/*
 // @exclude      https://orpheus.network/*
@@ -29,7 +31,7 @@
 (function () {
     "use strict";
 
-    const version = "1.3";
+    const version = "1.3.1";
 
     var mediainfo;
     var uniqueId;
@@ -633,13 +635,39 @@
                     home_tracker_link += trackerConfig.extraParams;
                 }
 
-                // Add filter parameters if enabled and tracker supports them
+                // BHD uses search parameter for filters (format: ?search=1080p+FLUX&imdb=tt3283556)
+                const trackerCode = getTrackerCodeFromUrl(trackerConfig.url);
+                if (trackerCode === 'BHD') {
+                    const useResolutionFilter = GM_getValue('tmt_filter_resolution', false);
+                    const useReleaseGroupFilter = GM_getValue('tmt_filter_release_group', false);
+
+                    if (useResolutionFilter || useReleaseGroupFilter) {
+                        const filterParts = [];
+
+                        if (useResolutionFilter) {
+                            const resolution = currentResolution || extractResolutionFromTitle();
+                            if (resolution) {
+                                filterParts.push(resolution);
+                            }
+                        }
+
+                        if (useReleaseGroupFilter && release_group) {
+                            filterParts.push(release_group);
+                        }
+
+                        if (filterParts.length > 0) {
+                            const filterString = filterParts.join(' ');
+                            home_tracker_link = home_tracker_link.replace('search=&', 'search=' + encodeURIComponent(filterString) + '&');
+                        }
+                    }
+                }
+
+                // Add filter parameters if enabled and tracker supports them (UNIT3D trackers)
                 const useResolutionFilter = GM_getValue('tmt_filter_resolution', false);
                 const useReleaseGroupFilter = GM_getValue('tmt_filter_release_group', false);
 
                 // Determine if tracker supports &name= parameter (UNIT3D trackers)
                 const unit3dTrackers = ['LST', 'BLU', 'ATH', 'HUNO', 'ULCX', 'CAPY', 'FNP', 'OLDT'];
-                const trackerCode = getTrackerCodeFromUrl(trackerConfig.url);
                 const supportsNameParam = unit3dTrackers.includes(trackerCode);
 
                 if (supportsNameParam && (useResolutionFilter || useReleaseGroupFilter)) {
@@ -1338,7 +1366,7 @@
             .sort((a, b) => TRACKER_CONFIGS[a].displayOrder - TRACKER_CONFIGS[b].displayOrder);
 
         if (sortedTrackers.length > 0) {
-            container.style.display = ''; 
+            container.style.display = '';
             sortedTrackers.forEach(code => {
                 const config = TRACKER_CONFIGS[code];
                 const tracker = availableTrackers[code];
@@ -1797,6 +1825,32 @@
         }
 
         let finalUrl = baseUrl + id;
+
+        // BHD uses search parameter for filters (format: ?search=1080p+FLUX&imdb=tt3283556)
+        if (trackerCode === 'BHD') {
+            const useResolutionFilter = GM_getValue('tmt_filter_resolution', false);
+            const useReleaseGroupFilter = GM_getValue('tmt_filter_release_group', false);
+
+            if (useResolutionFilter || useReleaseGroupFilter) {
+                const filterParts = [];
+
+                if (useResolutionFilter) {
+                    const resolution = currentResolution || extractResolutionFromTitle();
+                    if (resolution) {
+                        filterParts.push(resolution);
+                    }
+                }
+
+                if (useReleaseGroupFilter && currentReleaseGroup) {
+                    filterParts.push(currentReleaseGroup);
+                }
+
+                if (filterParts.length > 0) {
+                    const filterString = filterParts.join(' ');
+                    finalUrl = finalUrl.replace('search=&', 'search=' + encodeURIComponent(filterString) + '&');
+                }
+            }
+        }
 
         // Add filter parameters if enabled and tracker supports them
         const useResolutionFilter = GM_getValue('tmt_filter_resolution', false);

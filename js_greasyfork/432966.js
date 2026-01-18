@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name            Pick'ems Group Pick Grid
-// @version         4.5.1
+// @version         4.5.2
 // @author          Adam Winn
 // @description     Show a Group Pick Grid for the Pick'ems
 // @grant           GM_deleteValue
@@ -4700,6 +4700,7 @@ if (typeof this !== 'undefined' && this.Sweetalert2){this.swal = this.sweetAlert
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   fetchAdditionalGameData: () => (/* binding */ fetchAdditionalGameData),
+/* harmony export */   fetchAllPlayoffRoundsData: () => (/* binding */ fetchAllPlayoffRoundsData),
 /* harmony export */   fetchAutoFillInitialData: () => (/* binding */ fetchAutoFillInitialData),
 /* harmony export */   fetchGroupMembers: () => (/* binding */ fetchGroupMembers),
 /* harmony export */   fetchGroupPickGridData: () => (/* binding */ fetchGroupPickGridData),
@@ -4774,8 +4775,7 @@ const makeApiCall = async (url, options = {}) => (0,_util__WEBPACK_IMPORTED_MODU
         responseData = await response.json();
     }
     catch (e) {
-        (0,_util__WEBPACK_IMPORTED_MODULE_0__.throwError)(`Failed to parse JSON from ${url}: ${e instanceof Error ? e.message : 'Unknown error'}`);
-        return;
+        return (0,_util__WEBPACK_IMPORTED_MODULE_0__.throwError)(`Failed to parse JSON from ${url}: ${e instanceof Error ? e.message : 'Unknown error'}`);
     }
     // Now safely check response status
     if (!response.ok) {
@@ -4786,15 +4786,14 @@ const makeApiCall = async (url, options = {}) => (0,_util__WEBPACK_IMPORTED_MODU
         if (responseMessage === 'No credentials found') {
             errorMessage += '. Please log in to ESPN.';
         }
-        (0,_util__WEBPACK_IMPORTED_MODULE_0__.throwError)(errorMessage);
-        return;
+        return (0,_util__WEBPACK_IMPORTED_MODULE_0__.throwError)(errorMessage);
     }
     return responseData;
 });
 const fetchAutoFillInitialData = (chosenWeek) => (0,_util__WEBPACK_IMPORTED_MODULE_0__.runWithErrorHandling)(async function fetchAutoFillInitialDataHandler() {
     const groupData = await fetchGroupData(chosenWeek);
     // Retrieve propositions from the group data.
-    if (!isGroupDataResponse(groupData)) {
+    if (!(0,_util__WEBPACK_IMPORTED_MODULE_0__.isGroupDataResponse)(groupData)) {
         (0,_util__WEBPACK_IMPORTED_MODULE_0__.throwError)('Invalid group data response');
         return { propositions: [] };
     }
@@ -4805,7 +4804,7 @@ const fetchAutoFillInitialData = (chosenWeek) => (0,_util__WEBPACK_IMPORTED_MODU
     }
     const groupMembers = await fetchRawGroupMembers();
     // Validate the fetched group data.
-    if (!isGroupMembersResponse(groupMembers)) {
+    if (!(0,_util__WEBPACK_IMPORTED_MODULE_0__.isGroupMembersResponse)(groupMembers)) {
         (0,_util__WEBPACK_IMPORTED_MODULE_0__.throwError)('Failed to fetch group members data');
         return { propositions: [] };
     }
@@ -4853,7 +4852,7 @@ const fetchAdditionalGameData = async (propositions, autofillType) => {
             }
             const url = mapping.value;
             const html = await fetchWithGM(gameId, url);
-            if (!isString(html)) {
+            if (!(0,_util__WEBPACK_IMPORTED_MODULE_0__.isString)(html)) {
                 return {
                     gameId: '-1',
                     team1Id: '-1',
@@ -4884,31 +4883,32 @@ const fetchAdditionalGameData = async (propositions, autofillType) => {
         }
         catch (error) {
             if (error instanceof Error) {
-                (0,_util__WEBPACK_IMPORTED_MODULE_0__.throwError)(error.message);
+                return (0,_util__WEBPACK_IMPORTED_MODULE_0__.throwError)(error.message);
             }
             else {
-                (0,_util__WEBPACK_IMPORTED_MODULE_0__.throwError)('An unknown error occurred');
+                return (0,_util__WEBPACK_IMPORTED_MODULE_0__.throwError)('An unknown error occurred');
             }
-            throw new Error('This should never be reached');
         }
     });
     const responses = await Promise.all(additionalDataPromises);
     const errorMessages = [];
     // Collect initial error messages from missing data
     responses.forEach(data => {
-        if (data.errorMessage) {
+        if (data?.errorMessage) {
             errorMessages.push(data.errorMessage);
         }
     });
+    // Filter out any undefined responses and check for duplicates
+    const validResponses = responses.filter((data) => data !== undefined);
     // Check for duplicate spread values (only for spread games)
     if (autofillType === 'espnSpread') {
-        checkForDuplicateGameData(responses, 'espnSpread', errorMessages);
+        checkForDuplicateGameData(validResponses, 'espnSpread', errorMessages);
     }
     else if (autofillType === 'espnFPI') {
-        checkForDuplicateGameData(responses, 'espnFPI', errorMessages);
+        checkForDuplicateGameData(validResponses, 'espnFPI', errorMessages);
     }
     return {
-        data: responses.map(data => ({ [autofillType]: data })),
+        data: validResponses.map(data => ({ [autofillType]: data })),
         errorMessages
     };
 };
@@ -4966,7 +4966,7 @@ const fetchGroupMembers = (chosenWeek) => (0,_util__WEBPACK_IMPORTED_MODULE_0__.
         (0,_util__WEBPACK_IMPORTED_MODULE_0__.throwError)('Invalid chosenWeek: must be a positive number');
     }
     const data = await fetchRawGroupMembers();
-    if (!isGroupMembersResponse(data)) {
+    if (!(0,_util__WEBPACK_IMPORTED_MODULE_0__.isGroupMembersResponse)(data)) {
         (0,_util__WEBPACK_IMPORTED_MODULE_0__.throwError)('Invalid group members response');
         return { groupUsers: [], chosenWeek };
     }
@@ -4996,7 +4996,7 @@ const fetchGroupPickGridData = (groupUsers, chosenWeek) => (0,_util__WEBPACK_IMP
         return false;
     }
     const groupData = groupDataResult.value;
-    if (!isGroupDataResponse(groupData)) {
+    if (!(0,_util__WEBPACK_IMPORTED_MODULE_0__.isGroupDataResponse)(groupData)) {
         (0,_util__WEBPACK_IMPORTED_MODULE_0__.throwError)('Invalid group data response for pick grid');
         return false;
     }
@@ -5010,7 +5010,7 @@ const fetchGroupPickGridData = (groupUsers, chosenWeek) => (0,_util__WEBPACK_IMP
     for (let i = 1; i < results.length; i++) {
         const result = results[i];
         const user = groupUsers[i - 1];
-        if (result.status === 'fulfilled' && user && isUserDataResponse(result.value)) {
+        if (result.status === 'fulfilled' && user && (0,_util__WEBPACK_IMPORTED_MODULE_0__.isUserDataResponse)(result.value)) {
             usersData[user.id] = result.value;
         }
         else if (result.status === 'rejected' && user) {
@@ -5028,6 +5028,76 @@ const fetchGroupPickGridData = (groupUsers, chosenWeek) => (0,_util__WEBPACK_IMP
     const outputData = (0,_grid__WEBPACK_IMPORTED_MODULE_2__.assembleUserPicksData)(groupUsers, chosenWeek, usersData, weeklyPropositions);
     (0,_util__WEBPACK_IMPORTED_MODULE_0__.log)('outputData', outputData);
     return { groupUsers, outputData, usersData, weeklyPropositions, chosenWeek };
+});
+// Fetch all playoff rounds and combine them into a single grid view
+const fetchAllPlayoffRoundsData = (groupUsers, numRounds) => (0,_util__WEBPACK_IMPORTED_MODULE_0__.runWithErrorHandling)(async function fetchAllPlayoffRoundsDataHandler() {
+    // Input validation
+    if (!Array.isArray(groupUsers)) {
+        (0,_util__WEBPACK_IMPORTED_MODULE_0__.throwError)('Invalid groupUsers: must be an array');
+    }
+    if (typeof numRounds !== 'number' || numRounds < 1) {
+        (0,_util__WEBPACK_IMPORTED_MODULE_0__.throwError)('Invalid numRounds: must be a positive number');
+    }
+    if (groupUsers.length === 0) {
+        (0,_util__WEBPACK_IMPORTED_MODULE_0__.throwError)('fetchAllPlayoffRoundsData called with empty groupUsers array');
+    }
+    // Fetch group data for all rounds in parallel
+    const roundPromises = [];
+    for (let round = 1; round <= numRounds; round++) {
+        roundPromises.push(fetchGroupData(round));
+    }
+    // Also fetch user entries (only need to do this once since user data contains all picks)
+    const userPromises = groupUsers.map(user => fetchUserEntries(user.userId));
+    const [roundResults, userResults] = await Promise.all([
+        Promise.allSettled(roundPromises),
+        Promise.allSettled(userPromises)
+    ]);
+    // Combine propositions from all rounds
+    let allWeeklyPropositions = [];
+    for (let i = 0; i < roundResults.length; i++) {
+        const result = roundResults[i];
+        if (result.status === 'fulfilled' && (0,_util__WEBPACK_IMPORTED_MODULE_0__.isGroupDataResponse)(result.value)) {
+            const roundPropositions = result.value.propositions;
+            if (roundPropositions) {
+                // Add round number to each proposition for display purposes
+                const propositionsWithRound = roundPropositions.map(prop => ({
+                    ...prop,
+                    roundNumber: i + 1
+                }));
+                allWeeklyPropositions = [...allWeeklyPropositions, ...propositionsWithRound];
+            }
+        }
+    }
+    if (allWeeklyPropositions.length === 0) {
+        (0,_util__WEBPACK_IMPORTED_MODULE_0__.throwError)('No propositions data found for any playoff round');
+        return false;
+    }
+    // Build usersData object from user results
+    const usersData = {};
+    for (let i = 0; i < userResults.length; i++) {
+        const result = userResults[i];
+        const user = groupUsers[i];
+        if (result.status === 'fulfilled' && user && (0,_util__WEBPACK_IMPORTED_MODULE_0__.isUserDataResponse)(result.value)) {
+            usersData[user.id] = result.value;
+        }
+        else if (result.status === 'rejected' && user) {
+            (0,_util__WEBPACK_IMPORTED_MODULE_0__.log)(`Failed to fetch data for user ${user.userId || 'unknown'}: ${result.reason}`);
+        }
+    }
+    // Clean up and sort propositions by date and display order
+    allWeeklyPropositions = (0,_util__WEBPACK_IMPORTED_MODULE_0__.cleanUpPropositions)(allWeeklyPropositions, groupUsers);
+    allWeeklyPropositions.sort((a, b) => {
+        if (a.date === b.date) {
+            return a.displayOrder - b.displayOrder;
+        }
+        return new Date(a.date).getTime() - new Date(b.date).getTime();
+    });
+    (0,_util__WEBPACK_IMPORTED_MODULE_0__.log)('allWeeklyPropositions', allWeeklyPropositions);
+    (0,_util__WEBPACK_IMPORTED_MODULE_0__.log)('usersData', usersData);
+    // Use a special "all" week indicator (0) for combined view
+    const outputData = (0,_grid__WEBPACK_IMPORTED_MODULE_2__.assembleAllRoundsPicksData)(groupUsers, usersData, allWeeklyPropositions);
+    (0,_util__WEBPACK_IMPORTED_MODULE_0__.log)('outputData', outputData);
+    return { groupUsers, outputData, usersData, weeklyPropositions: allWeeklyPropositions, chosenWeek: 0 };
 });
 // Helper function to fetch any content using GM_xmlhttpRequest which will bypass cors restrictions
 const fetchWithGM = (gameId, url) => new Promise((resolve, reject) => {
@@ -5081,20 +5151,6 @@ const sendAutoFillPicksRequest = (autofillPickData) => (0,_util__WEBPACK_IMPORTE
 const getMembersData = () => (0,_util__WEBPACK_IMPORTED_MODULE_0__.runWithErrorHandling)(async function getMembersDataHandler() {
     return await makeGetRequest(_config__WEBPACK_IMPORTED_MODULE_1__.GAME_CONFIG.MEMBERS_URL);
 });
-// Type guards for API responses
-const isGroupDataResponse = (data) => {
-    return typeof data === 'object' && data !== null && 'propositions' in data;
-};
-const isGroupMembersResponse = (data) => {
-    return typeof data === 'object' && data !== null && 'entries' in data;
-};
-const isUserDataResponse = (data) => {
-    return typeof data === 'object' && data !== null &&
-        (('id' in data) || ('picks' in data) || ('member' in data));
-};
-const isString = (value) => {
-    return typeof value === 'string';
-};
 
 
 /***/ }),
@@ -5178,9 +5234,14 @@ const assembleAutoFillPickData = (propositions, _userCurrentPicks, additionalDat
             if (!additional || additional.gameId === '-1') {
                 return null;
             }
-            ({ gameId, team1Id, team2Id, team1Name, team2Name } = additional);
-            team1Pct = Number(additional.team1Pct);
-            team2Pct = Number(additional.team2Pct);
+            // Safely destructure with defaults for missing properties
+            gameId = additional.gameId ?? '';
+            team1Id = additional.team1Id ?? '';
+            team2Id = additional.team2Id ?? '';
+            team1Name = additional.team1Name ?? '';
+            team2Name = additional.team2Name ?? '';
+            team1Pct = Number(additional.team1Pct) || 0;
+            team2Pct = Number(additional.team2Pct) || 0;
         }
         else {
             gameId = proposition.id;
@@ -5188,7 +5249,8 @@ const assembleAutoFillPickData = (propositions, _userCurrentPicks, additionalDat
             if (!proposition.possibleOutcomes || proposition.possibleOutcomes.length < 2) {
                 return null;
             }
-            const [outcome1, outcome2] = proposition.possibleOutcomes;
+            const outcome1 = proposition.possibleOutcomes[0];
+            const outcome2 = proposition.possibleOutcomes[1];
             const counter1 = outcome1?.choiceCounters?.find(el => el.scoringFormatId === _config__WEBPACK_IMPORTED_MODULE_0__.CONSTANTS.SCORING_FORMATS.CONFIDENCE);
             const counter2 = outcome2?.choiceCounters?.find(el => el.scoringFormatId === _config__WEBPACK_IMPORTED_MODULE_0__.CONSTANTS.SCORING_FORMATS.CONFIDENCE);
             team1Id = outcome1?.id || '';
@@ -5761,7 +5823,7 @@ class GameConfiguration {
         const urlYearMatch = typeof window !== 'undefined'
             ? window.location.pathname.match(/[-/](\d{4})(?=[-/]|$)/)
             : null;
-        this.YEAR = year ?? (urlYearMatch ? parseInt(urlYearMatch[1]) : new Date().getFullYear());
+        this.YEAR = year ?? (urlYearMatch ? parseInt(urlYearMatch[1], 10) : new Date().getFullYear());
         // Use current year for date calculations to avoid hardcoded stale dates
         const currentDate = new Date();
         const currentYear = currentDate.getFullYear();
@@ -5848,6 +5910,7 @@ class GameConfiguration {
         return `https://gambit-api.fantasy.espn.com/apis/v1/challenges/${this.ACTIVE_GAME_TYPE_FOR_URL}-${this.YEAR}`;
     }
     get ACTIVE_GAME_WEEK() {
+        // Map game types to their configuration
         const gameConfigMapping = {
             NFL_PIGSKIN_PICKEM: {
                 startDate: this.DATES.NFL_START,
@@ -5880,70 +5943,22 @@ class GameConfiguration {
         };
         const activeGameType = this.ACTIVE_GAME_TYPE;
         const activeGame = gameConfigMapping[activeGameType];
-        let GAME_WEEK = 0;
-        if (activeGame.startDate) {
-            if (this.ACTIVE_GAME_TYPE === 'TOURNAMENT_CHALLENGE_BRACKET') {
-                GAME_WEEK = (0,_util__WEBPACK_IMPORTED_MODULE_0__.diffRounds)(this.DATES.CURRENT_DATE, this.DATES);
-            }
-            else {
-                // Calculate week number based on sport-specific week start days
-                const currentDate = new Date(this.DATES.CURRENT_DATE);
-                const startDate = new Date(activeGame.startDate);
-                // Set both dates to midnight to compare dates only, not times
-                const currentDateOnly = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
-                const startDateOnly = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
-                // Calculate difference in days
-                const daysDiff = Math.floor((currentDateOnly.getTime() - startDateOnly.getTime()) / (1000 * 60 * 60 * 24));
-                if (daysDiff < 0) {
-                    // Before season starts
-                    GAME_WEEK = 1;
-                }
-                else {
-                    // Determine week start day based on game type
-                    let weekStartDay; // 0=Sunday, 1=Monday, 2=Tuesday, etc.
-                    if (this.ACTIVE_GAME_TYPE === 'COLLEGE_FOOTBALL_PICKEM' ||
-                        this.ACTIVE_GAME_TYPE === 'COLLEGE_FOOTBALL_PLAYOFF_CHALLENGE' ||
-                        this.ACTIVE_GAME_TYPE === 'COLLEGE_FOOTBALL_BOWL_MANIA') {
-                        weekStartDay = 1; // Monday for college football
-                    }
-                    else if (this.ACTIVE_GAME_TYPE === 'NFL_PIGSKIN_PICKEM' ||
-                        this.ACTIVE_GAME_TYPE === 'NFL_PLAYOFF_FOOTBALL_CHALLENGE' ||
-                        this.ACTIVE_GAME_TYPE === 'NFL_ELIMINATOR_CHALLENGE') {
-                        weekStartDay = 2; // Tuesday for NFL
-                    }
-                    else {
-                        // Default to calendar weeks for other game types
-                        GAME_WEEK = Math.floor(daysDiff / 7) + 1;
-                        return GAME_WEEK;
-                    }
-                    // Week 1 always starts on the season start date
-                    // Week 2+ start on the appropriate weekday (Monday for college, Tuesday for NFL)
-                    GAME_WEEK = 1;
-                    // Count how many week transition days have passed
-                    const transitionDate = new Date(startDateOnly);
-                    // Find the first transition day (first Monday/Tuesday on or after start date)
-                    const startDayOfWeek = startDateOnly.getDay();
-                    let daysToFirstTransition = (weekStartDay - startDayOfWeek + 7) % 7;
-                    // If start date is already on the transition day, first transition is 7 days later
-                    if (daysToFirstTransition === 0) {
-                        daysToFirstTransition = 7;
-                    }
-                    transitionDate.setDate(transitionDate.getDate() + daysToFirstTransition);
-                    // Count transitions that have occurred
-                    while (transitionDate <= currentDateOnly) {
-                        GAME_WEEK++;
-                        transitionDate.setDate(transitionDate.getDate() + 7);
-                    }
-                }
-            }
-            if (GAME_WEEK > activeGame.maxWeeks) {
-                GAME_WEEK = activeGame.maxWeeks;
-            }
+        // If no start date configured, return max weeks
+        if (!activeGame.startDate) {
+            return activeGame.maxWeeks;
+        }
+        let gameWeek;
+        // Tournament bracket uses round-based calculation
+        if (activeGameType === 'TOURNAMENT_CHALLENGE_BRACKET') {
+            gameWeek = (0,_util__WEBPACK_IMPORTED_MODULE_0__.diffRounds)(this.DATES.CURRENT_DATE, this.DATES);
         }
         else {
-            GAME_WEEK = activeGame.maxWeeks;
+            // Use the week start day utilities for regular season games
+            const weekStartDay = (0,_util__WEBPACK_IMPORTED_MODULE_0__.getWeekStartDay)(activeGameType);
+            gameWeek = (0,_util__WEBPACK_IMPORTED_MODULE_0__.calculateGameWeek)(this.DATES.CURRENT_DATE, activeGame.startDate, weekStartDay);
         }
-        return GAME_WEEK;
+        // Cap at max weeks
+        return Math.min(gameWeek, activeGame.maxWeeks);
     }
     get GROUP_URL() {
         return `${this.API_BASE_URL}/groups/`;
@@ -6008,6 +6023,7 @@ const SELECTORS = {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   assembleAllRoundsPicksData: () => (/* binding */ assembleAllRoundsPicksData),
 /* harmony export */   assembleUserPicksData: () => (/* binding */ assembleUserPicksData),
 /* harmony export */   calculateUserWeekScores: () => (/* binding */ calculateUserWeekScores),
 /* harmony export */   extractWeekMatchupsData: () => (/* binding */ extractWeekMatchupsData),
@@ -6110,6 +6126,95 @@ const assembleUserPicksData = (groupUsers, chosenWeek, usersData, weeklyProposit
     outputData.sort((a, b) => b.userWeekScore - a.userWeekScore);
     return outputData;
 });
+// Assembles user picks data for all playoff rounds combined (no week-specific filtering)
+const assembleAllRoundsPicksData = (groupUsers, usersData, weeklyPropositions) => (0,_util__WEBPACK_IMPORTED_MODULE_3__.runWithErrorHandling)(function assembleAllRoundsPicksDataHandler() {
+    // Input validation
+    if (!Array.isArray(groupUsers)) {
+        (0,_util__WEBPACK_IMPORTED_MODULE_3__.throwError)('Invalid groupUsers: must be an array');
+    }
+    if (!usersData || typeof usersData !== 'object') {
+        (0,_util__WEBPACK_IMPORTED_MODULE_3__.throwError)('Invalid usersData: must be an object');
+    }
+    if (!Array.isArray(weeklyPropositions)) {
+        (0,_util__WEBPACK_IMPORTED_MODULE_3__.throwError)('Invalid weeklyPropositions: must be an array');
+    }
+    // Check for empty arrays - these are error conditions
+    if (groupUsers.length === 0) {
+        (0,_util__WEBPACK_IMPORTED_MODULE_3__.throwError)('assembleAllRoundsPicksData called with empty groupUsers array');
+    }
+    if (weeklyPropositions.length === 0) {
+        (0,_util__WEBPACK_IMPORTED_MODULE_3__.throwError)('assembleAllRoundsPicksData called with empty weeklyPropositions array');
+    }
+    const outcomeLookup = {};
+    weeklyPropositions.forEach(proposition => {
+        proposition.possibleOutcomes.forEach(outcome => {
+            if (!outcomeLookup[outcome.name]) {
+                outcomeLookup[outcome.name] = outcome;
+            }
+        });
+    });
+    const soloWinners = (0,_util__WEBPACK_IMPORTED_MODULE_3__.findUserSoloWinner)(groupUsers, usersData, weeklyPropositions);
+    const outputData = [];
+    groupUsers.forEach(user => {
+        const userData = usersData[user.id];
+        if (!userData) {
+            return;
+        }
+        const username = (0,_util__WEBPACK_IMPORTED_MODULE_3__.getUsername)(userData);
+        const picks = userData.picks || [];
+        // Calculate total score across all rounds
+        let totalScore = 0;
+        if (userData.score?.scoreByPeriod) {
+            Object.values(userData.score.scoreByPeriod).forEach(period => {
+                if (period.score) {
+                    totalScore += period.score;
+                }
+            });
+        }
+        const userPickDataList = [];
+        picks.forEach((pick) => {
+            const gameData = weeklyPropositions.find(proposition => proposition.id === pick.propositionId);
+            if (!gameData) {
+                return;
+            }
+            // Safely check if outcomesPicked exists and has at least one item
+            if (!pick.outcomesPicked || pick.outcomesPicked.length === 0) {
+                return;
+            }
+            const userPick = gameData.possibleOutcomes?.find(outcome => outcome.id === pick.outcomesPicked[0].outcomeId);
+            if (!userPick) {
+                return;
+            }
+            const lookupOutcome = outcomeLookup[userPick.name];
+            if (!lookupOutcome) {
+                return;
+            }
+            const mappingEntry = lookupOutcome.mappings?.find((mapping) => mapping.type === 'IMAGE_PRIMARY');
+            const userPickLogo = mappingEntry?.value ?? '';
+            const isSoloWinner = soloWinners.some(sw => sw.correctGame === lookupOutcome.id && sw.username === username);
+            userPickDataList.push({
+                displayOrder: gameData.displayOrder + 1,
+                username: username,
+                matchup: gameData.name,
+                userPickConfidence: pick.confidenceScore || 0,
+                userPickName: userPick.name,
+                userPickAbbrev: userPick.abbrev || '',
+                userPickResult: pick.outcomesPicked[0].result,
+                userPickLogo: userPickLogo,
+                userWeekScore: totalScore, // Use total score instead of weekly score
+                userSoloWinner: isSoloWinner,
+                gameId: gameData.id,
+            });
+        });
+        outputData.push({
+            username,
+            userWeekScore: totalScore, // Use total score
+            picks: userPickDataList,
+        });
+    });
+    outputData.sort((a, b) => b.userWeekScore - a.userWeekScore);
+    return outputData;
+});
 const extractWeekMatchupsData = (weeklyPropositions) => {
     // Use the shared game status extraction logic
     const { weekMatchups, numGames, gamesHaveStarted, allGamesFinished } = (0,_util__WEBPACK_IMPORTED_MODULE_3__.extractGameStatus)(weeklyPropositions);
@@ -6184,8 +6289,9 @@ const calculateUserWeekScores = (groupUsers, usersData, chosenWeek, numGames) =>
     if (!usersData || typeof usersData !== 'object') {
         (0,_util__WEBPACK_IMPORTED_MODULE_3__.throwError)('Invalid usersData: must be an object');
     }
-    if (typeof chosenWeek !== 'number' || chosenWeek < 1) {
-        (0,_util__WEBPACK_IMPORTED_MODULE_3__.throwError)('Invalid chosenWeek: must be a positive number');
+    // Allow chosenWeek of 0 for combined "all rounds" view (e.g., NFL Playoffs)
+    if (typeof chosenWeek !== 'number' || chosenWeek < 0) {
+        (0,_util__WEBPACK_IMPORTED_MODULE_3__.throwError)('Invalid chosenWeek: must be a non-negative number');
     }
     if (typeof numGames !== 'number' || numGames < 0) {
         (0,_util__WEBPACK_IMPORTED_MODULE_3__.throwError)('Invalid numGames: must be a non-negative number');
@@ -6202,9 +6308,12 @@ const calculateUserWeekScores = (groupUsers, usersData, chosenWeek, numGames) =>
         if (user.scoringFormatId) {
             scoringFormatId = user.scoringFormatId;
         }
+        // For combined "all rounds" view (chosenWeek === 0), include all periods
+        // Otherwise, only include periods up to the chosen week
+        const isAllRoundsView = chosenWeek === 0;
         let userOverallScore = 0;
         Object.entries(userData.score?.scoreByPeriod || {}).forEach(([week, scoreObj]) => {
-            if (parseInt(week, 10) <= chosenWeek) {
+            if (isAllRoundsView || parseInt(week, 10) <= chosenWeek) {
                 userOverallScore += scoreObj.score;
             }
         });
@@ -6234,7 +6343,9 @@ const calculateUserWeekScores = (groupUsers, usersData, chosenWeek, numGames) =>
         let userOverallWins = 0;
         let userOverallLosses = 0;
         if (userData.picks && Array.isArray(userData.picks)) {
-            for (let i = 0; i < userData.picks.length && i < (chosenWeek * numGames); i++) {
+            // For combined "all rounds" view, count all picks; otherwise limit to chosen week
+            const maxPicks = isAllRoundsView ? userData.picks.length : (chosenWeek * numGames);
+            for (let i = 0; i < userData.picks.length && i < maxPicks; i++) {
                 const pick = userData.picks[i];
                 if (pick?.outcomesPicked && pick.outcomesPicked.length > 0 && pick.outcomesPicked[0]) {
                     if (pick.outcomesPicked[0].result === 'CORRECT') {
@@ -6246,8 +6357,12 @@ const calculateUserWeekScores = (groupUsers, usersData, chosenWeek, numGames) =>
                 }
             }
         }
+        // For combined "all rounds" view, use overall score as the "week" score
         let userWeekScore = 0;
-        if (userData.score?.scoreByPeriod?.[chosenWeek]?.score) {
+        if (isAllRoundsView) {
+            userWeekScore = userOverallScore;
+        }
+        else if (userData.score?.scoreByPeriod?.[chosenWeek]?.score) {
             userWeekScore = userData.score.scoreByPeriod[chosenWeek].score;
         }
         userWeekScores.push({
@@ -6495,14 +6610,28 @@ const pickGridSetup = () => (0,_util__WEBPACK_IMPORTED_MODULE_3__.runWithErrorHa
                     btn.style.backgroundColor = _styles__WEBPACK_IMPORTED_MODULE_1__.STYLES.BUTTONS.INACTIVE.backgroundColor;
                 } // Use explicit string instead of empty string
             }
-            const clickedWeek = parseInt(chosenWeekBtn.id.replace("chosenWeek_", ""), 10);
-            const requestKey = `pickgrid-week-${clickedWeek}`;
+            const clickedWeekStr = chosenWeekBtn.id.replace("chosenWeek_", "");
+            const isAllRounds = clickedWeekStr === 'all';
+            const clickedWeek = isAllRounds ? 1 : parseInt(clickedWeekStr, 10);
+            const requestKey = isAllRounds ? 'pickgrid-all-rounds' : `pickgrid-week-${clickedWeek}`;
             try {
                 // Use coordinated request to prevent race conditions
                 const result = await (0,_util__WEBPACK_IMPORTED_MODULE_3__.coordinatedRequest)(requestKey, async () => {
                     const groupMembersResponse = await (0,_api__WEBPACK_IMPORTED_MODULE_2__.fetchGroupMembers)(clickedWeek);
-                    const { groupUsers, chosenWeek: apiChosenWeek } = groupMembersResponse;
-                    const groupPickGridResponse = await (0,_api__WEBPACK_IMPORTED_MODULE_2__.fetchGroupPickGridData)(groupUsers, apiChosenWeek);
+                    const { groupUsers } = groupMembersResponse;
+                    // If fetching all rounds (NFL/College Football Playoffs combined view)
+                    if (isAllRounds) {
+                        const numRounds = _config__WEBPACK_IMPORTED_MODULE_0__.GAME_CONFIG.ACTIVE_GAME_TYPE === 'NFL_PLAYOFF_FOOTBALL_CHALLENGE'
+                            ? _config__WEBPACK_IMPORTED_MODULE_0__.GAME_CONFIG.MAX_WEEKS.NFL_PLAYOFFS
+                            : _config__WEBPACK_IMPORTED_MODULE_0__.GAME_CONFIG.MAX_WEEKS.COLLEGE_FOOTBALL_PLAYOFFS;
+                        const allRoundsResponse = await (0,_api__WEBPACK_IMPORTED_MODULE_2__.fetchAllPlayoffRoundsData)(groupUsers, numRounds);
+                        if (!allRoundsResponse || typeof allRoundsResponse === 'boolean') {
+                            throw new Error("Failed to fetch all playoff rounds data");
+                        }
+                        return allRoundsResponse;
+                    }
+                    // Standard single-week fetch
+                    const groupPickGridResponse = await (0,_api__WEBPACK_IMPORTED_MODULE_2__.fetchGroupPickGridData)(groupUsers, clickedWeek);
                     if (!groupPickGridResponse || typeof groupPickGridResponse === 'boolean') {
                         throw new Error("Failed to fetch group pick grid data");
                     }
@@ -6641,8 +6770,9 @@ const outputGrid = (groupUsers, outputData, usersData, weeklyPropositions, chose
     if (!Array.isArray(weeklyPropositions)) {
         (0,_util__WEBPACK_IMPORTED_MODULE_3__.throwError)('Invalid weeklyPropositions: must be an array');
     }
-    if (typeof chosenWeek !== 'number' || chosenWeek < 1) {
-        (0,_util__WEBPACK_IMPORTED_MODULE_3__.throwError)('Invalid chosenWeek: must be a positive number');
+    // Allow chosenWeek of 0 for combined "all rounds" view (e.g., NFL Playoffs)
+    if (typeof chosenWeek !== 'number' || chosenWeek < 0) {
+        (0,_util__WEBPACK_IMPORTED_MODULE_3__.throwError)('Invalid chosenWeek: must be a non-negative number');
     }
     // Destructure with default value for maxWeekPoints and ensure it's a number
     const { weekMatchups, numGames, gamesHaveStarted, allGamesFinished, maxWeekPoints = 0 } = extractWeekMatchupsData(weeklyPropositions);
@@ -6653,7 +6783,7 @@ const outputGrid = (groupUsers, outputData, usersData, weeklyPropositions, chose
     if (warningDiv) {
         if (noPicksMessage) {
             warningDiv.innerHTML = `<div style="background-color: #fff3cd; border: 1px solid #ffeaa7; color: #856404; padding: 10px; margin-bottom: 15px; border-radius: 4px; text-align: center; font-weight: bold; max-width: 600px; margin-left: auto; margin-right: auto;">
-                <span>⚠️ ${noPicksMessage}</span>
+                <span>⚠️ ${(0,_util__WEBPACK_IMPORTED_MODULE_3__.escapeHtml)(noPicksMessage)}</span>
             </div>`;
         }
         else {
@@ -7120,16 +7250,16 @@ const buildPickGridButtons = ({ gameType, activeWeek, isDesktop }) => {
             html += `<button class="mbtn-small" id = "chosenWeek_1"> Show Pick Grid </button>`;
             break;
         case 'NFL_PLAYOFF_FOOTBALL_CHALLENGE':
-            // Always show all 4 round buttons since there's not much data and rounds are limited
-            html += (0,_util__WEBPACK_IMPORTED_MODULE_1__.createWeekButtons)(4, ['Wild Card', 'Divisional', 'Conf Champ', 'Super Bowl']);
+            // Single button to show all playoff rounds in one grid
+            html += `<button class="mbtn-small" id="chosenWeek_all">Show Pick Grid</button>`;
             break;
         case 'TOURNAMENT_CHALLENGE_BRACKET':
             // Always show all 6 round buttons since rounds are limited
             html += (0,_util__WEBPACK_IMPORTED_MODULE_1__.createWeekButtons)(6, ['1st Rd', '2nd Rd', 'Sweet 16', 'Elite 8', 'Final 4', 'Champ']);
             break;
         case 'COLLEGE_FOOTBALL_PLAYOFF_CHALLENGE':
-            // Always show all 4 round buttons since there's not much data and rounds are limited
-            html += (0,_util__WEBPACK_IMPORTED_MODULE_1__.createWeekButtons)(4, ['1st Rd', 'Qtr', 'Semi', 'Champ']);
+            // Single button to show all playoff rounds in one grid
+            html += `<button class="mbtn-small" id="chosenWeek_all">Show Pick Grid</button>`;
             break;
         case 'NFL_ELIMINATOR_CHALLENGE':
             html += `<button class="mbtn-small" id = "chosenWeek_${activeWeek}"> Show Pick Grid </button>`;
@@ -7375,13 +7505,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/dist/sweetalert2.all.js");
 /* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(sweetalert2__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _util_formatting__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./util/formatting */ "./src/util/formatting.ts");
+
 
 /**
  * Show an error modal dialog with red styling
  */
 const showErrorModal = (message) => {
     return sweetalert2__WEBPACK_IMPORTED_MODULE_0___default().fire({
-        html: message.replace(/\n/g, '<br>'),
+        html: (0,_util_formatting__WEBPACK_IMPORTED_MODULE_1__.escapeHtmlWithLineBreaks)(message),
         confirmButtonText: 'OK',
         confirmButtonColor: '#FA5252',
         backdrop: true,
@@ -7396,7 +7528,7 @@ const showErrorModal = (message) => {
  */
 const showInfoModal = (message) => {
     sweetalert2__WEBPACK_IMPORTED_MODULE_0___default().fire({
-        html: message.replace(/\n/g, '<br>'),
+        html: (0,_util_formatting__WEBPACK_IMPORTED_MODULE_1__.escapeHtmlWithLineBreaks)(message),
         confirmButtonText: 'OK',
         confirmButtonColor: '#339AF0',
         backdrop: true,
@@ -7411,7 +7543,7 @@ const showInfoModal = (message) => {
  */
 const showSuccessModal = (message) => {
     sweetalert2__WEBPACK_IMPORTED_MODULE_0___default().fire({
-        html: message.replace(/\n/g, '<br>'),
+        html: (0,_util_formatting__WEBPACK_IMPORTED_MODULE_1__.escapeHtmlWithLineBreaks)(message),
         confirmButtonText: 'OK',
         confirmButtonColor: '#51CF66',
         backdrop: true,
@@ -7428,7 +7560,7 @@ const showSuccessModal = (message) => {
  */
 const showWarningModal = (message) => {
     sweetalert2__WEBPACK_IMPORTED_MODULE_0___default().fire({
-        html: message.replace(/\n/g, '<br>'),
+        html: (0,_util_formatting__WEBPACK_IMPORTED_MODULE_1__.escapeHtmlWithLineBreaks)(message),
         confirmButtonText: 'OK',
         confirmButtonColor: '#FFD43B',
         backdrop: true,
@@ -7441,6 +7573,8 @@ const showWarningModal = (message) => {
 /**
  * Show a confirmation dialog using modal
  * Returns a Promise that resolves to true if confirmed, false if cancelled
+ * Note: This modal accepts pre-constructed HTML content (e.g., from autofill comparisons)
+ * so we don't escape it. The caller is responsible for sanitizing any user input.
  */
 const showConfirmModal = (message, questionText) => {
     return sweetalert2__WEBPACK_IMPORTED_MODULE_0___default().fire({
@@ -7626,7 +7760,8 @@ const showModalMobileTooltip = (event, message) => {
     hideModalMobileTooltip();
     const tooltip = document.createElement('div');
     tooltip.className = 'modal-mobile-tooltip-popup';
-    tooltip.innerHTML = message;
+    // Use textContent instead of innerHTML to prevent XSS
+    tooltip.textContent = message;
     tooltip.style.cssText = `
         position: fixed;
         background: rgba(0, 0, 0, 0.9);
@@ -8271,6 +8406,7 @@ const initializeDynamicStyles = async () => {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   addStylesheetIfNotPresent: () => (/* reexport safe */ _util_index__WEBPACK_IMPORTED_MODULE_0__.addStylesheetIfNotPresent),
+/* harmony export */   calculateGameWeek: () => (/* reexport safe */ _util_index__WEBPACK_IMPORTED_MODULE_0__.calculateGameWeek),
 /* harmony export */   cleanUpPropositions: () => (/* reexport safe */ _util_index__WEBPACK_IMPORTED_MODULE_0__.cleanUpPropositions),
 /* harmony export */   cleanupManager: () => (/* reexport safe */ _util_index__WEBPACK_IMPORTED_MODULE_0__.cleanupManager),
 /* harmony export */   convertStyleObjectToString: () => (/* reexport safe */ _util_index__WEBPACK_IMPORTED_MODULE_0__.convertStyleObjectToString),
@@ -8278,22 +8414,33 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   createWeekButtons: () => (/* reexport safe */ _util_index__WEBPACK_IMPORTED_MODULE_0__.createWeekButtons),
 /* harmony export */   debounce: () => (/* reexport safe */ _util_index__WEBPACK_IMPORTED_MODULE_0__.debounce),
 /* harmony export */   denverGlow: () => (/* reexport safe */ _util_index__WEBPACK_IMPORTED_MODULE_0__.denverGlow),
+/* harmony export */   diffDays: () => (/* reexport safe */ _util_index__WEBPACK_IMPORTED_MODULE_0__.diffDays),
 /* harmony export */   diffRounds: () => (/* reexport safe */ _util_index__WEBPACK_IMPORTED_MODULE_0__.diffRounds),
 /* harmony export */   diffWeeks: () => (/* reexport safe */ _util_index__WEBPACK_IMPORTED_MODULE_0__.diffWeeks),
+/* harmony export */   escapeHtml: () => (/* reexport safe */ _util_index__WEBPACK_IMPORTED_MODULE_0__.escapeHtml),
+/* harmony export */   escapeHtmlWithLineBreaks: () => (/* reexport safe */ _util_index__WEBPACK_IMPORTED_MODULE_0__.escapeHtmlWithLineBreaks),
 /* harmony export */   extractGameStatus: () => (/* reexport safe */ _util_index__WEBPACK_IMPORTED_MODULE_0__.extractGameStatus),
 /* harmony export */   findUserSoloWinner: () => (/* reexport safe */ _util_index__WEBPACK_IMPORTED_MODULE_0__.findUserSoloWinner),
 /* harmony export */   getMaxUserPoints: () => (/* reexport safe */ _util_index__WEBPACK_IMPORTED_MODULE_0__.getMaxUserPoints),
 /* harmony export */   getTeamLogo: () => (/* reexport safe */ _util_index__WEBPACK_IMPORTED_MODULE_0__.getTeamLogo),
 /* harmony export */   getUsername: () => (/* reexport safe */ _util_index__WEBPACK_IMPORTED_MODULE_0__.getUsername),
+/* harmony export */   getWeekStartDay: () => (/* reexport safe */ _util_index__WEBPACK_IMPORTED_MODULE_0__.getWeekStartDay),
 /* harmony export */   handleScoreToggleButtonClick: () => (/* reexport safe */ _util_index__WEBPACK_IMPORTED_MODULE_0__.handleScoreToggleButtonClick),
 /* harmony export */   hideLoadingSpinner: () => (/* reexport safe */ _util_index__WEBPACK_IMPORTED_MODULE_0__.hideLoadingSpinner),
 /* harmony export */   hideScoresForAdam: () => (/* reexport safe */ _util_index__WEBPACK_IMPORTED_MODULE_0__.hideScoresForAdam),
+/* harmony export */   isArray: () => (/* reexport safe */ _util_index__WEBPACK_IMPORTED_MODULE_0__.isArray),
 /* harmony export */   isDesktop: () => (/* reexport safe */ _util_index__WEBPACK_IMPORTED_MODULE_0__.isDesktop),
+/* harmony export */   isElement: () => (/* reexport safe */ _util_index__WEBPACK_IMPORTED_MODULE_0__.isElement),
+/* harmony export */   isGroupDataResponse: () => (/* reexport safe */ _util_index__WEBPACK_IMPORTED_MODULE_0__.isGroupDataResponse),
+/* harmony export */   isGroupMembersResponse: () => (/* reexport safe */ _util_index__WEBPACK_IMPORTED_MODULE_0__.isGroupMembersResponse),
 /* harmony export */   isIOS: () => (/* reexport safe */ _util_index__WEBPACK_IMPORTED_MODULE_0__.isIOS),
 /* harmony export */   isIPhoneOrIPod: () => (/* reexport safe */ _util_index__WEBPACK_IMPORTED_MODULE_0__.isIPhoneOrIPod),
 /* harmony export */   isIpadOS: () => (/* reexport safe */ _util_index__WEBPACK_IMPORTED_MODULE_0__.isIpadOS),
 /* harmony export */   isMobile: () => (/* reexport safe */ _util_index__WEBPACK_IMPORTED_MODULE_0__.isMobile),
+/* harmony export */   isObject: () => (/* reexport safe */ _util_index__WEBPACK_IMPORTED_MODULE_0__.isObject),
 /* harmony export */   isOnOwnPickPage: () => (/* reexport safe */ _util_index__WEBPACK_IMPORTED_MODULE_0__.isOnOwnPickPage),
+/* harmony export */   isString: () => (/* reexport safe */ _util_index__WEBPACK_IMPORTED_MODULE_0__.isString),
+/* harmony export */   isUserDataResponse: () => (/* reexport safe */ _util_index__WEBPACK_IMPORTED_MODULE_0__.isUserDataResponse),
 /* harmony export */   log: () => (/* reexport safe */ _util_index__WEBPACK_IMPORTED_MODULE_0__.log),
 /* harmony export */   observeForElements: () => (/* reexport safe */ _util_index__WEBPACK_IMPORTED_MODULE_0__.observeForElements),
 /* harmony export */   parseGameHTML: () => (/* reexport safe */ _util_index__WEBPACK_IMPORTED_MODULE_0__.parseGameHTML),
@@ -8304,6 +8451,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   sleep: () => (/* reexport safe */ _util_index__WEBPACK_IMPORTED_MODULE_0__.sleep),
 /* harmony export */   throwConfetti: () => (/* reexport safe */ _util_index__WEBPACK_IMPORTED_MODULE_0__.throwConfetti),
 /* harmony export */   throwError: () => (/* reexport safe */ _util_index__WEBPACK_IMPORTED_MODULE_0__.throwError),
+/* harmony export */   toMidnight: () => (/* reexport safe */ _util_index__WEBPACK_IMPORTED_MODULE_0__.toMidnight),
 /* harmony export */   transformUrl: () => (/* reexport safe */ _util_index__WEBPACK_IMPORTED_MODULE_0__.transformUrl),
 /* harmony export */   translateTeamNames: () => (/* reexport safe */ _util_index__WEBPACK_IMPORTED_MODULE_0__.translateTeamNames),
 /* harmony export */   translateUserNames: () => (/* reexport safe */ _util_index__WEBPACK_IMPORTED_MODULE_0__.translateUserNames)
@@ -8517,15 +8665,105 @@ const coordinatedRequest = async (key, requestFn, options = {}) => {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   calculateGameWeek: () => (/* binding */ calculateGameWeek),
+/* harmony export */   diffDays: () => (/* binding */ diffDays),
 /* harmony export */   diffRounds: () => (/* binding */ diffRounds),
 /* harmony export */   diffWeeks: () => (/* binding */ diffWeeks),
-/* harmony export */   sleep: () => (/* binding */ sleep)
+/* harmony export */   getWeekStartDay: () => (/* binding */ getWeekStartDay),
+/* harmony export */   sleep: () => (/* binding */ sleep),
+/* harmony export */   toMidnight: () => (/* binding */ toMidnight)
 /* harmony export */ });
+// Constants for week days
+const WEEK_DAYS = {
+    SUNDAY: 0,
+    MONDAY: 1,
+    TUESDAY: 2,
+};
+// Milliseconds per day
+const MS_PER_DAY = 1000 * 60 * 60 * 24;
 const diffWeeks = (startDate, endDate) => {
-    const msPerWeek = 1000 * 60 * 60 * 24 * 7;
+    const msPerWeek = MS_PER_DAY * 7;
     const timeDiff = Math.abs(endDate - startDate);
     const weeksDiff = timeDiff / msPerWeek;
     return Math.ceil(weeksDiff);
+};
+/**
+ * Strips time from a date, returning a new Date at midnight.
+ */
+const toMidnight = (date) => {
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+};
+/**
+ * Calculates the difference in days between two dates (ignoring time).
+ */
+const diffDays = (startDate, endDate) => {
+    const startMidnight = toMidnight(startDate);
+    const endMidnight = toMidnight(endDate);
+    return Math.floor((endMidnight.getTime() - startMidnight.getTime()) / MS_PER_DAY);
+};
+/**
+ * Gets the week start day for a game type.
+ * College football weeks start on Monday.
+ * NFL weeks start on Tuesday.
+ * Returns null for game types that use simple calendar weeks.
+ */
+const getWeekStartDay = (gameType) => {
+    const collegeFootballTypes = [
+        'COLLEGE_FOOTBALL_PICKEM',
+        'COLLEGE_FOOTBALL_PLAYOFF_CHALLENGE',
+        'COLLEGE_FOOTBALL_BOWL_MANIA'
+    ];
+    const nflTypes = [
+        'NFL_PIGSKIN_PICKEM',
+        'NFL_PLAYOFF_FOOTBALL_CHALLENGE',
+        'NFL_ELIMINATOR_CHALLENGE'
+    ];
+    if (collegeFootballTypes.includes(gameType)) {
+        return WEEK_DAYS.MONDAY;
+    }
+    if (nflTypes.includes(gameType)) {
+        return WEEK_DAYS.TUESDAY;
+    }
+    return null; // Use simple calendar weeks
+};
+/**
+ * Calculates the current game week based on:
+ * - Current date
+ * - Season start date
+ * - The day of week when new weeks begin (e.g., Monday=1, Tuesday=2)
+ *
+ * Week 1 starts on the season start date.
+ * Week 2+ start on the specified weekday.
+ */
+const calculateGameWeek = (currentTimestamp, startTimestamp, weekStartDay) => {
+    const currentDate = toMidnight(new Date(currentTimestamp));
+    const startDate = toMidnight(new Date(startTimestamp));
+    const daysDiff = diffDays(startDate, currentDate);
+    // Before season starts
+    if (daysDiff < 0) {
+        return 1;
+    }
+    // Use simple calendar weeks if no specific week start day
+    if (weekStartDay === null) {
+        return Math.floor(daysDiff / 7) + 1;
+    }
+    // Week 1 always starts on the season start date
+    let gameWeek = 1;
+    // Find the first transition day (first weekStartDay on or after start date)
+    const startDayOfWeek = startDate.getDay();
+    let daysToFirstTransition = (weekStartDay - startDayOfWeek + 7) % 7;
+    // If start date is already on the transition day, first transition is 7 days later
+    if (daysToFirstTransition === 0) {
+        daysToFirstTransition = 7;
+    }
+    const transitionDate = new Date(startDate);
+    transitionDate.setDate(transitionDate.getDate() + daysToFirstTransition);
+    // Count transitions that have occurred
+    while (transitionDate <= currentDate) {
+        gameWeek++;
+        transitionDate.setDate(transitionDate.getDate() + 7);
+    }
+    return gameWeek;
 };
 const diffRounds = (currentDate, dates) => {
     // Show the next round's button 24hrs after the start of the previous round.
@@ -9242,8 +9480,7 @@ const runWithErrorHandling = (fn) => {
         return fn();
     }
     catch (error) {
-        throwError('An error occurred', error); // Pass a string as the first argument
-        throw error;
+        return throwError('An error occurred', error);
     }
 };
 
@@ -9259,11 +9496,37 @@ const runWithErrorHandling = (fn) => {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   escapeHtml: () => (/* binding */ escapeHtml),
+/* harmony export */   escapeHtmlWithLineBreaks: () => (/* binding */ escapeHtmlWithLineBreaks),
 /* harmony export */   getUsername: () => (/* binding */ getUsername),
 /* harmony export */   translateUserNames: () => (/* binding */ translateUserNames)
 /* harmony export */ });
 /* harmony import */ var _error__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./error */ "./src/util/error.ts");
 
+/**
+ * Escapes HTML special characters to prevent XSS attacks.
+ * Use this when inserting user-provided or API-provided content into HTML.
+ */
+const escapeHtml = (text) => {
+    if (typeof text !== 'string') {
+        return '';
+    }
+    const htmlEscapeMap = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    };
+    return text.replace(/[&<>"']/g, char => htmlEscapeMap[char]);
+};
+/**
+ * Converts newlines to <br> tags safely by escaping HTML first.
+ * Use this instead of directly replacing \n with <br> on untrusted content.
+ */
+const escapeHtmlWithLineBreaks = (text) => {
+    return escapeHtml(text).replace(/\n/g, '<br>');
+};
 const translateUserNames = (name) => (0,_error__WEBPACK_IMPORTED_MODULE_0__.runWithErrorHandling)(function translateUserNamesHandler() {
     // Organized by replacement name with consolidated patterns
     const NAME_MAPPINGS = [
@@ -9591,6 +9854,7 @@ async function throwConfetti() {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   addStylesheetIfNotPresent: () => (/* reexport safe */ _dom__WEBPACK_IMPORTED_MODULE_5__.addStylesheetIfNotPresent),
+/* harmony export */   calculateGameWeek: () => (/* reexport safe */ _datetime__WEBPACK_IMPORTED_MODULE_2__.calculateGameWeek),
 /* harmony export */   cleanUpPropositions: () => (/* reexport safe */ _helpers__WEBPACK_IMPORTED_MODULE_7__.cleanUpPropositions),
 /* harmony export */   cleanupManager: () => (/* reexport safe */ _cleanup__WEBPACK_IMPORTED_MODULE_6__.cleanupManager),
 /* harmony export */   convertStyleObjectToString: () => (/* reexport safe */ _dom__WEBPACK_IMPORTED_MODULE_5__.convertStyleObjectToString),
@@ -9598,22 +9862,33 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   createWeekButtons: () => (/* reexport safe */ _helpers__WEBPACK_IMPORTED_MODULE_7__.createWeekButtons),
 /* harmony export */   debounce: () => (/* reexport safe */ _cleanup__WEBPACK_IMPORTED_MODULE_6__.debounce),
 /* harmony export */   denverGlow: () => (/* reexport safe */ _dom__WEBPACK_IMPORTED_MODULE_5__.denverGlow),
+/* harmony export */   diffDays: () => (/* reexport safe */ _datetime__WEBPACK_IMPORTED_MODULE_2__.diffDays),
 /* harmony export */   diffRounds: () => (/* reexport safe */ _datetime__WEBPACK_IMPORTED_MODULE_2__.diffRounds),
 /* harmony export */   diffWeeks: () => (/* reexport safe */ _datetime__WEBPACK_IMPORTED_MODULE_2__.diffWeeks),
+/* harmony export */   escapeHtml: () => (/* reexport safe */ _formatting__WEBPACK_IMPORTED_MODULE_4__.escapeHtml),
+/* harmony export */   escapeHtmlWithLineBreaks: () => (/* reexport safe */ _formatting__WEBPACK_IMPORTED_MODULE_4__.escapeHtmlWithLineBreaks),
 /* harmony export */   extractGameStatus: () => (/* reexport safe */ _gameStatus__WEBPACK_IMPORTED_MODULE_8__.extractGameStatus),
 /* harmony export */   findUserSoloWinner: () => (/* reexport safe */ _dom__WEBPACK_IMPORTED_MODULE_5__.findUserSoloWinner),
 /* harmony export */   getMaxUserPoints: () => (/* reexport safe */ _helpers__WEBPACK_IMPORTED_MODULE_7__.getMaxUserPoints),
 /* harmony export */   getTeamLogo: () => (/* reexport safe */ _helpers__WEBPACK_IMPORTED_MODULE_7__.getTeamLogo),
 /* harmony export */   getUsername: () => (/* reexport safe */ _formatting__WEBPACK_IMPORTED_MODULE_4__.getUsername),
+/* harmony export */   getWeekStartDay: () => (/* reexport safe */ _datetime__WEBPACK_IMPORTED_MODULE_2__.getWeekStartDay),
 /* harmony export */   handleScoreToggleButtonClick: () => (/* reexport safe */ _dom__WEBPACK_IMPORTED_MODULE_5__.handleScoreToggleButtonClick),
 /* harmony export */   hideLoadingSpinner: () => (/* reexport safe */ _dom__WEBPACK_IMPORTED_MODULE_5__.hideLoadingSpinner),
 /* harmony export */   hideScoresForAdam: () => (/* reexport safe */ _dom__WEBPACK_IMPORTED_MODULE_5__.hideScoresForAdam),
+/* harmony export */   isArray: () => (/* reexport safe */ _typeGuards__WEBPACK_IMPORTED_MODULE_9__.isArray),
 /* harmony export */   isDesktop: () => (/* reexport safe */ _device__WEBPACK_IMPORTED_MODULE_3__.isDesktop),
+/* harmony export */   isElement: () => (/* reexport safe */ _typeGuards__WEBPACK_IMPORTED_MODULE_9__.isElement),
+/* harmony export */   isGroupDataResponse: () => (/* reexport safe */ _typeGuards__WEBPACK_IMPORTED_MODULE_9__.isGroupDataResponse),
+/* harmony export */   isGroupMembersResponse: () => (/* reexport safe */ _typeGuards__WEBPACK_IMPORTED_MODULE_9__.isGroupMembersResponse),
 /* harmony export */   isIOS: () => (/* reexport safe */ _device__WEBPACK_IMPORTED_MODULE_3__.isIOS),
 /* harmony export */   isIPhoneOrIPod: () => (/* reexport safe */ _device__WEBPACK_IMPORTED_MODULE_3__.isIPhoneOrIPod),
 /* harmony export */   isIpadOS: () => (/* reexport safe */ _device__WEBPACK_IMPORTED_MODULE_3__.isIpadOS),
 /* harmony export */   isMobile: () => (/* reexport safe */ _device__WEBPACK_IMPORTED_MODULE_3__.isMobile),
+/* harmony export */   isObject: () => (/* reexport safe */ _typeGuards__WEBPACK_IMPORTED_MODULE_9__.isObject),
 /* harmony export */   isOnOwnPickPage: () => (/* reexport safe */ _dom__WEBPACK_IMPORTED_MODULE_5__.isOnOwnPickPage),
+/* harmony export */   isString: () => (/* reexport safe */ _typeGuards__WEBPACK_IMPORTED_MODULE_9__.isString),
+/* harmony export */   isUserDataResponse: () => (/* reexport safe */ _typeGuards__WEBPACK_IMPORTED_MODULE_9__.isUserDataResponse),
 /* harmony export */   log: () => (/* reexport safe */ _error__WEBPACK_IMPORTED_MODULE_1__.log),
 /* harmony export */   observeForElements: () => (/* reexport safe */ _dom__WEBPACK_IMPORTED_MODULE_5__.observeForElements),
 /* harmony export */   parseGameHTML: () => (/* reexport safe */ _dom__WEBPACK_IMPORTED_MODULE_5__.parseGameHTML),
@@ -9624,6 +9899,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   sleep: () => (/* reexport safe */ _datetime__WEBPACK_IMPORTED_MODULE_2__.sleep),
 /* harmony export */   throwConfetti: () => (/* reexport safe */ _helpers__WEBPACK_IMPORTED_MODULE_7__.throwConfetti),
 /* harmony export */   throwError: () => (/* reexport safe */ _error__WEBPACK_IMPORTED_MODULE_1__.throwError),
+/* harmony export */   toMidnight: () => (/* reexport safe */ _datetime__WEBPACK_IMPORTED_MODULE_2__.toMidnight),
 /* harmony export */   transformUrl: () => (/* reexport safe */ _helpers__WEBPACK_IMPORTED_MODULE_7__.transformUrl),
 /* harmony export */   translateTeamNames: () => (/* reexport safe */ _helpers__WEBPACK_IMPORTED_MODULE_7__.translateTeamNames),
 /* harmony export */   translateUserNames: () => (/* reexport safe */ _formatting__WEBPACK_IMPORTED_MODULE_4__.translateUserNames)
@@ -9637,6 +9913,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _cleanup__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./cleanup */ "./src/util/cleanup.ts");
 /* harmony import */ var _helpers__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./helpers */ "./src/util/helpers.ts");
 /* harmony import */ var _gameStatus__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./gameStatus */ "./src/util/gameStatus.ts");
+/* harmony import */ var _typeGuards__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./typeGuards */ "./src/util/typeGuards.ts");
 // Ensure that confetti.ts is loaded so that it attaches its functions to window.
 
 // Re-export everything from all util modules for backward compatibility
@@ -9648,6 +9925,75 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+
+
+/***/ }),
+
+/***/ "./src/util/typeGuards.ts":
+/*!********************************!*\
+  !*** ./src/util/typeGuards.ts ***!
+  \********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   isArray: () => (/* binding */ isArray),
+/* harmony export */   isElement: () => (/* binding */ isElement),
+/* harmony export */   isGroupDataResponse: () => (/* binding */ isGroupDataResponse),
+/* harmony export */   isGroupMembersResponse: () => (/* binding */ isGroupMembersResponse),
+/* harmony export */   isObject: () => (/* binding */ isObject),
+/* harmony export */   isString: () => (/* binding */ isString),
+/* harmony export */   isUserDataResponse: () => (/* binding */ isUserDataResponse)
+/* harmony export */ });
+/**
+ * Centralized type guards for runtime type checking.
+ * Use these guards when validating API responses or external data.
+ */
+/**
+ * Type guard for group data API response containing propositions.
+ */
+const isGroupDataResponse = (data) => {
+    return typeof data === 'object' && data !== null && 'propositions' in data;
+};
+/**
+ * Type guard for group members API response containing entries.
+ */
+const isGroupMembersResponse = (data) => {
+    return typeof data === 'object' && data !== null && 'entries' in data;
+};
+/**
+ * Type guard for user data API response.
+ */
+const isUserDataResponse = (data) => {
+    return typeof data === 'object' && data !== null &&
+        (('id' in data) || ('picks' in data) || ('member' in data));
+};
+/**
+ * Type guard for string values.
+ */
+const isString = (value) => {
+    return typeof value === 'string';
+};
+/**
+ * Type guard for checking if a node is an Element.
+ */
+const isElement = (node) => {
+    return node.nodeType === Node.ELEMENT_NODE;
+};
+/**
+ * Type guard for checking if a value is a non-null object.
+ */
+const isObject = (value) => {
+    return typeof value === 'object' && value !== null;
+};
+/**
+ * Type guard for checking if a value is an array.
+ */
+const isArray = (value) => {
+    return Array.isArray(value);
+};
 
 
 /***/ })

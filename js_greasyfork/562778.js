@@ -1,13 +1,14 @@
 // ==UserScript==
 // @name         DyPlayer Insite Loading
 // @namespace    Beginner.2023.VideoPlayerInsideLoader
-// @version      1.2.2
+// @version      1.2.2.1
 // @description  "Directly play anime videos on the same page with Next and Previous episode buttons for anime-seven.com"
 // @author       Beginner(2023)
 // @match        *://*.anime-seven.com/*/
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=anime-seven.com
 // @grant        GM_addStyle
 // @license       MIT
+
 // @downloadURL https://update.greasyfork.org/scripts/562778/DyPlayer%20Insite%20Loading.user.js
 // @updateURL https://update.greasyfork.org/scripts/562778/DyPlayer%20Insite%20Loading.meta.js
 // ==/UserScript==
@@ -78,6 +79,7 @@
 
     function rewriteClick(element) {
         element.onclick = (e) => {
+            console.group("[DyPlayer Insite Loading]")
             const targetLink = e.target.closest('a');
             if (!targetLink) return;
 
@@ -111,17 +113,19 @@
                 manageSelectBackgroundColor("add", ep);
             }
 
-            function choosePlayer(ep, num=0) {
-                console.group("[DyPlayer Insite Loading] choosePlayer:");
-                if (!ep) {
-                    console.error("`ep` is not found");
+            function choosePlayer(ep_ele, num=0) {
+                console.group("choosePlayer:");
+                if (!ep_ele) {
+                    console.error("'ep_ele' is missing or undefined.");
                     console.groupEnd();
                     return;
                 };
                 
-                const playerItems = Array.from(ep.querySelectorAll("a")).filter(el => el.hasAttribute("href"));
+                const playerItems = Array.from(ep_ele.querySelectorAll("a")).filter(el => el.hasAttribute("href"));
+                console.log('playerItems: ', playerItems)
                 if (playerItems.length > 0 && playerItems[num]) {
                     playerItems[num].click();
+                    console.log(`The player ${num+1}(${num}) has been clicked.`)
                 } else {
                     console.warn(`Index ${num} is out of bounds for the links found.`);
                 }
@@ -129,7 +133,7 @@
             }
 
             function watchPreviousVideo(current_ep) {
-                console.group("[DyPlayer Insite Loading] watchPreviousVideo:");
+                console.group("watchPreviousVideo:");
                 console.log("Current EP of element: ", current_ep);
                 if (current_ep) {
                     let currentEpInd = epItems.indexOf(current_ep)
@@ -147,7 +151,7 @@
             }
 
             function watchNextVideo(current_ep) {
-                console.group("[DyPlayer Insite Loading] watchNextVideo:");
+                console.group("watchNextVideo:");
                 console.log("Current EP of element: ", current_ep);
                 if (current_ep) {
                     let currentEpInd = epItems.indexOf(current_ep)
@@ -185,11 +189,16 @@
                                 allowfullscreen="true"
                                 frameborder="0">
                             </iframe>
-                        </div>`;
+                        </div>`
 
                     if (displayArea.querySelector("div.pre-next-ep")) {
-                        displayArea.querySelector("div.pre-next-ep").remove();
-                        console.log('[DyPlayer Insite Loading] "div.pre-next-ep" element has been removed')
+                        let resl = displayArea.querySelector("div.pre-next-ep").remove();
+                        if (resl) {
+                            console.log(`*The navigation container element has been removed`)
+                        } else {
+                            console.log(`*The navigation container element could not be removed`)
+                        }
+                        console.log('The navigation container element has been removed')
                     }
 
                     // create nav container
@@ -235,8 +244,9 @@
                 }
             })
                 .catch(err => console.error('Fetch error:', err));
+            console.groupEnd();
         };
-    }
+    };
 
     window.addEventListener("load", (event) => {
         initial()

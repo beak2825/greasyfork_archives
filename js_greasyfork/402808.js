@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         知乎美化
 // @namespace    http://tampermonkey.net/
-// @version      2026.1.5.1
+// @version      2026.1.15
 // @description  1.【重要更新】增加夜间模式按钮     2.知乎题目栏增加举报、匿名、问题日志、快捷键四个按钮     3.知乎按钮图标在鼠标悬停时变色(题目按钮、回答下方按钮、评论按钮等)     4.回答的发布时间移至顶部     5.图片原图显示     6.文字和卡片链接从知乎跳转链接改为直链     7.隐藏侧边栏     8.GIF图自动播放【默认不开启】     9.问题增加创建时间和最后编辑时间     10.鼠标悬停在回答时显示浅蓝色聚焦框    11.引用角标高亮    12.首页信息流增加不感兴趣按钮  13.【重要更新】增加设置界面    14.显示信息流标签【默认不开启】
 // @author       AN drew
 // @match        *://*.zhihu.com/*
@@ -487,18 +487,18 @@ function question() {
         if ($(".ListShortcut").length > 0) {
             $(".ListShortcut").width($(".Question-main").width());
             $(".Question-mainColumn").width($(".ListShortcut").width());
-            $(".ContentItem-actions").width($(".Question-mainColumn").width() - 40); //每个回答的的margin-left + margin-right=40px，减去才能正好居中
+            $(".ContentItem-actions").width($(".Question-mainColumn").width() - 40); //每个回答的margin-left + margin-right=40px，减去才能正好居中
 
         } else {
             $(".Question-mainColumn").width($(".Question-main").width());
-            $(".ContentItem-actions").width($(".Question-mainColumn").width() - 40); //每个回答的的margin-left + margin-right=40px，减去才能正好居中
+            $(".ContentItem-actions").width($(".Question-mainColumn").width() - 40); //每个回答的margin-left + margin-right=40px，减去才能正好居中
         }
     } else if (Config.currentValues.hideQuestionSidebar == 2) //隐藏侧边栏，仅水平居中内容，不拉宽
     {
         $(".Question-sideColumn.Question-sideColumn--sticky").hide();
 
         $(".Question-main").attr("style", "display:flex;justify-content:center;");
-        $(".ContentItem-actions").width($(".Question-mainColumn").width() - 40); //每个回答的的margin-left + margin-right=40px，减去才能正好居中
+        $(".ContentItem-actions").width($(".Question-mainColumn").width() - 40); //每个回答的margin-left + margin-right=40px，减去才能正好居中
     }
 
     //首页顶部导航栏"等你来答"页
@@ -958,6 +958,7 @@ function zhuanlan() {
     {
         $(".Post-Row-Content-right").hide();
         $(".Post-Row-Content-left").width($(".Post-Row-Content").width());
+        $(".ContentItem-actions").width($(".Post-Row-Content-left").width() - 32); //每个回答的padding-left + padding-right=32px，减去才能正好居中
     }
     else if(Config.currentValues.hideColumnSideBar == 2)
     {
@@ -1022,6 +1023,7 @@ function pin() {
         html[data-theme=light] body{background:white!important;}
         html[data-theme=dark] body{background:rgb(18,18,18)!important;}
         .PinToolbar-menuContainer .Menu{display:none!important;}
+        .PinDetail{background: #191b1f; padding: 20px;}
         `);
         pinbg=1;
     }
@@ -1114,7 +1116,7 @@ function club() {
     {
         $(".ClubSideBar").hide();
         $(".Club-mainColumn").width($(".Club-container").width());
-        $(".ClubEdit").width($(".Club-mainColumn").width() - 40); //每个提问的的margin-left + margin-right=40px，减去才能正好居中
+        $(".ClubEdit").width($(".Club-mainColumn").width() - 40); //每个提问的margin-left + margin-right=40px，减去才能正好居中
         $('.ClubTopPosts').width($(".Club-mainColumn").width() - 32);
         $('.ClubPostList').width($(".Club-mainColumn").width());
         $('.PostItem.css-1b27c42').width($(".Club-mainColumn").width() - 32);
@@ -1123,7 +1125,7 @@ function club() {
     {
         $(".ClubSideBar").hide();
         $(".Club-mainColumn").parent().attr("style", "display:flex;justify-content:center;");
-        $(".ClubEdit").width($(".Club-mainColumn").width() - 40); //每个提问的的margin-left + margin-right=40px，减去才能正好居中
+        $(".ClubEdit").width($(".Club-mainColumn").width() - 40); //每个提问的margin-left + margin-right=40px，减去才能正好居中
         $('.ClubTopPosts').width($(".Club-mainColumn").width() - 32);
         $('.ClubPostList').width($(".Club-mainColumn").width());
         $('.PostItem.css-1b27c42').width($(".Club-mainColumn").width() - 32);
@@ -1198,6 +1200,7 @@ function ring() {
                 $(".css-1g878q7").width(totalWidth);
                 $(".css-ekkpum").width(totalWidth);
 
+
                 let coverWidth=$(".css-19assbf").width();
                 let coverHeight=$(".css-19assbf").height();
                 $(".css-19assbf").width(totalWidth).height(coverHeight*totalWidth/coverWidth);
@@ -1239,7 +1242,7 @@ function ring() {
             let coverHeight=$(".css-19assbf").height();
             $(".css-19assbf").width(totalWidth).height(coverHeight*totalWidth/coverWidth);
 
-            GM_addStyle(`.css-11uaof3 .RichContent-actions.is-fixed{width:${totalWidth}px !important;}`);
+            GM_addStyle(`.css-1rnr3jg .RichContent-actions.is-fixed{width:${totalWidth}px !important;}`);
             widthFlag=1;
         }
     }
@@ -1248,7 +1251,7 @@ function ring() {
 
         $(".css-ill7fe").hide();
         $(".css-14pitda").parent().attr("style", "display:flex;justify-content:center;");
-        GM_addStyle(`.css-11uaof3 .RichContent-actions.is-fixed{width:${$(".css-kboer3").width()}px !important;}`);
+        GM_addStyle(`.css-1rnr3jg .RichContent-actions.is-fixed{width:${$(".css-kboer3").width()}px !important;}`);
     }
 
     //圈子的发布时间
@@ -1969,7 +1972,7 @@ function iconColor() {
     $(".AnswerAdd-topicBiosButton .Zi--Edit").attr("fill", "#0084FF");
 
     //内容管理-编辑按钮
-    $(".CreationCard-ActionButton .Zi--Edit").closest('.CreationCard-ActionButton').hover(function() {
+    $(".Button--withLabel .Zi--Edit").closest('.Button--withLabel').hover(function() {
         $(this).find(".Zi--Trash").attr("fill", "#0084FF");
         $(this).attr("style", "color:#0084FF");
     }, function() {
@@ -1978,13 +1981,24 @@ function iconColor() {
     });
 
     //内容管理-数据按钮
-    $(".css-5i9hgn .Zi--Statistics").closest('a').hover(function() {
+    $(".Button--withLabel .Zi--Statistics").closest('.Button--withLabel').hover(function() {
         $(this).find(".Zi--Statistics").attr("fill", "#8763f2");
         $(this).attr("style", "color:#8763f2");
     }, function() {
         $(this).find(".Zi--Statistics").attr("fill", "currentColor");
         $(this).attr("style", "color:#8590A6");
     });
+
+
+    //内容管理-查看评论按钮
+    $(".Button--withLabel .Zi--Comments").closest('.Button--withLabel').hover(function() {
+        $(this).find(".Zi--Statistics").attr("fill", "#00ff7f");
+        $(this).attr("style", "color:#00ff7f");
+    }, function() {
+        $(this).find(".Zi--Statistics").attr("fill", "currentColor");
+        $(this).attr("style", "color:#8590A6");
+    });
+
 
     //内容管理-更多按钮的具体菜单项
     $('.Button.Menu-item.css-cn5m5x').each(function() {
@@ -2563,8 +2577,16 @@ function index() {
     }, 500);
 
     if (Config.currentValues.hideIndexSidebar == 1) {
-        $('#TopstoryContent .css-cazg48').removeClass('css-cazg48').addClass('css-1tane06');
-        $('#TopstoryContent .css-yhjwoe').css('padding', '16px 52px');
+        GM_addStyle(`
+        /*ring-feeds 圈子内容拉宽*/
+        #TopstoryContent .css-1g878q7{
+            width:100% !important
+        };
+        /*ring-feeds 圈子想法居中*/
+        #TopstoryContent .css-poklwr{
+            width:100% !important
+        }
+        `);
     }
 
     $(".Zi--Hot").find("path").css({
@@ -9551,6 +9573,7 @@ html[data-theme=dark] .css-3dzt4y {
 html[data-theme=dark] .css-1851sov {
     color: #d3d3d3 !important;
 }
+/*==知乎热榜==*/
 
 
 
@@ -9685,7 +9708,7 @@ html[data-theme=dark] .css-tnpjv7{
     color:#d3d3d3;
 }
 /*不感兴趣-设置屏蔽关键词-顶距增大*/
-.css-l3rx45{
+.Modal-content .css-l3rx45{
     margin-top: 35px;
 }
 
@@ -9836,83 +9859,13 @@ html[data-theme=dark] .css-10wc74s{
     background:#121212;
 }
 
+/*链接颜色*/
+.css-10o75c2 a.ztext-link, .css-10o75c2 a.internal, .css-10o75c2 a.external, .css-10o75c2 a.videox{
+    color: #0084ff !important
+}
+
 /*==知乎首页==*/
 
-
-/*==知乎文章==*/
-/*代码的滚动条样式*/
-.css-ob6uua pre::-webkit-scrollbar {
-    height: 12px;
-}
-
-.css-ob6uua pre::-webkit-scrollbar-track {
-    background: #d3d3d3;
-    border-radius: 10px;
-}
-
-.css-ob6uua pre::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 10px;
-}
-
-.css-ob6uua pre::-webkit-scrollbar-thumb:hover {
-    background: #555;
-}
-
-/*代码背景*/
-html[data-theme=dark] .css-1olvdus pre {
-    background: #212429 !important;
-}
-
-html[data-theme=dark] .css-1olvdus code {
-    background: #212429 !important;
-}
-
-/*作者边框*/
-html[data-theme=dark] .css-zein01 {
-    border: none !important;
-}
-
-.css-b7erz1 {
-    color: #0084ff !important;
-}
-
-/*引用内容*/
-blockquote{
-    color: #535861 !important;
-}
-html[data-theme=dark] blockquote{
-    color: #c4c7cec7 !important;
-}
-
-/*导航栏*/
-.ColumnPageHeader-Title{
-    width:150px;
-}
-
-html[data-theme=dark] .css-j3g3pk{
-    color:#d3d3d3;
-}
-
-/*
-@用户
-.PostIndex-body .css-1gomreu a.UserLink-link {
-    color: #0084ff;
-}
-*/
-
-/*图片保持原大小*/
-.css-10o75c2 img.content_image[data-size="normal"], .css-10o75c2 img.origin_image[data-size="normal"]{
-    width: auto !important;
-    max-width: 100% !important;
-}
-
-/*文章点赞用户列表*/
-html[data-theme=dark] .VoterList-content {
-    background:#191b1f !important;
-}
-
-/*==知乎文章==*/
 
 
 /*==等你来答==*/
@@ -9929,6 +9882,18 @@ html[data-theme=dark] .css-19nug30 {
 /*邀请回答-提问者名称*/
 html[data-theme=dark] .css-1w0nc6z {
     color: #d3d3d3 !important;
+}
+
+/*邀请回答-稍后答按钮*/
+html[data-theme=dark] .css-3470e2 {
+    background: #d3d3d3 !important;
+    border: none !important;
+}
+
+/*邀请回答-写回答按钮*/
+html[data-theme=dark] .css-hc8adx {
+    color: #d3d3d3 !important;
+    border: none !important;
 }
 
 /*问题底部边框*/
@@ -10040,7 +10005,175 @@ html[data-theme=dark] .css-1p9otau{
     background:#121212 !important;
 }
 
+/*问题标签卡片*/
+html[data-theme=dark] .css-wmwsyx {
+    background: #191b1f !important;
+    border: 1px solid #191b1f;
+}
+
+/*超链接卡片*/
+html[data-theme=dark] .css-19tsar1.LinkCard{
+    background: #26292a !important;
+}
+
+/*视频卡片*/
+html[data-theme=dark] .css-ob6uua .LinkCard.new{
+    background: #121212 !important;
+}
+/*评论输入框*/
+html[data-theme=dark] .InputLike.css-1rl4wxv{
+    border: none !important;
+}
+/*评论输入框-固定*/
+html[data-theme=dark] .css-kt4t4n {
+    background: #191b1f !important;
+}
+/*评论区-更多*/
+html[data-theme=dark] .css-pu97ow {
+    fill: #2e2e2e !important
+}
+html[data-theme=dark] .css-h9kawn {
+    background: #191b1f !important;
+}
+html[data-theme=dark] .css-wqf2py:hover {
+    color: #0084ff !important;
+}
+/*评论区-查看全部回复*/
+html[data-theme=dark] .css-70t8h2 {
+    background: #121212 !important;
+    border-bottom: 20px solid #121212;
+}
+html[data-theme=dark] .css-1onritu::before{
+    border-bottom: 1px solid #444;
+}
+
+/*评论区-回复按钮*/
+.css-1ij6qqc:focus-visible {
+    box-shadow:none !important;
+}
+.css-1ij6qqc:hover {
+    color:#32CD32;
+}
+/*评论区-点赞按钮*/
+.Button--grey.Button--plain.css-1vd72tl:focus-visible {
+    box-shadow:none !important;
+}
+.Button--grey.Button--plain.css-1vd72tl:hover {
+    color:#dd3e4a;
+}
+.css-1staphk:focus-visible {
+    box-shadow:none !important;
+}
+/*评论区-表情按钮*/
+.css-iuqaea:focus-visible {
+    box-shadow:none !important;
+    color:#0084ff;
+}
+
+/*评论区-表情分类*/
+html[data-theme=dark] .css-1c21y8s {
+    background: #191b1f !important;
+}
+html[data-theme=dark] .css-1dq2715 {
+    background: #121212 !important;
+}
+
+
+/*标题评论区-加载占位*/
+html[data-theme=dark] path[d="M0 0h656v44H0V0zm0 0h480v12H0V0zm0 32h238v12H0V32z"]{
+    fill:#121212 !important;
+}
+/*私信聊天框*/
+html[data-theme=dark] .css-h07o3w {
+    background: #191b1f !important;
+}
+html[data-theme=dark] .css-11lk6sp {
+    border-bottom: 1px solid #444!important;
+}
+/*私信聊天框-滚动条*/
+.MessagesBox::-webkit-scrollbar {
+    width: 12px;
+}
+.MessagesBox::-webkit-scrollbar-track {
+    background: #d3d3d3;
+    border-radius: 10px;
+}
+.MessagesBox::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+.MessagesBox::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+/*私信-搜索联系人*/
+html[data-theme=dark] .ChatSideBar-Search-Input input{
+    background: #191b1f!important;
+    color:#d3d3d3!important;
+    border: 1px solid #444 !important;
+}
+html[data-theme=dark] .ChatUserListItem .Chat-ActionMenuPopover-Button{
+    background: #191b1f!important;
+    color:#d3d3d3!important;
+}
+html[data-theme=dark] .ChatListGroup-SectionTitle--bottomBorder:after{
+    background: #444 !important;
+}
+/*私信-当前联系人*/
+html[data-theme=dark] .ChatUserListItem--active{
+    background: #8080801c !important;
+}
+html[data-theme=dark] .ChatUserListItem--active .Chat-ActionMenuPopover-Button{
+    background: #8080801c!important;
+    color:#d3d3d3!important;
+}
+html[data-theme=dark] .ChatUserListItem:after{
+    background: #444 !important;
+}
+/*私信-当前联系人-滚动条*/
+.ChatListGroup-SectionContent::-webkit-scrollbar {
+    width: 12px;
+}
+.ChatListGroup-SectionContent::-webkit-scrollbar-track {
+    background: #d3d3d3;
+    border-radius: 10px;
+}
+.ChatListGroup-SectionContent::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+.ChatListGroup-SectionContent::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* 自定义滚动条的箭头 */
+/*
+.ChatListGroup-SectionContent::-webkit-scrollbar-button {
+background-color: c1c1c1;
+}
+*/
+
+/* 或者针对滚动条的上下箭头分别设置*/
+/*
+.ChatListGroup-SectionContent::-webkit-scrollbar-button:vertical:start {
+background-color: #c1c1c1;
+}
+
+.ChatListGroup-SectionContent::-webkit-scrollbar-button:vertical:end {
+background-color: #c1c1c1;
+}
+*/
+
+/*回答表格-表头*/
+html[data-theme=dark] .css-1olvdus table[data-draft-type='table'] th{
+    background: #9da2a7;
+}
+/*回答表格-边框*/
+html[data-theme=dark] .css-1olvdus table[data-draft-type='table'] td,html[data-theme=dark]  .css-1olvdus table[data-draft-type='table'] th{
+    border:1px solid #444;
+}
+
 /*==知乎问题==*/
+
 
 
 /*==知乎文章==*/
@@ -10072,10 +10205,23 @@ html[data-theme=dark] .css-h0sxub:hover{
 }
 
 /*插入代码段*/
-html[data-theme=dark] .css-1yl6ec1 .highlight pre,html[data-theme=dark] .css-1yl6ec1 code{
+html[data-theme=dark] .highlight pre,html[data-theme=dark] code{
     background: #212429 !important;
     color: #d3d3d3 !important;
 }
+
+/*latex文本字体*/
+.MathJax_SVG text {
+    font-family:
+        "Times New Roman",     /* 1. Windows首选 */
+        "Georgia",             /* 2. Windows/Mac备用，Linux可能也有 */
+        "DejaVu Serif",        /* 3. Linux首选，部分Mac也有 */
+        "STIXGeneral",         /* 4. 数学字体，可能需网页加载 */
+        "Noto Serif SC",       /* 5. 开源思源宋体，跨平台覆盖广 */
+        "Arial Unicode MS"     /* 6. 最终后备 */
+        !important;
+}
+
 /*块引用*/
 html[data-theme=dark] .css-1yl6ec1 blockquote{
     color: #8590a6 !important;
@@ -10130,6 +10276,7 @@ html[data-theme=dark] .css-fkrpal{
 .css-1yl6ec1 img.origin_image[data-size="normal"]{
     width: auto !important;
 }
+
 /*举报文章-背景*/
 html[data-theme=dark] .css-1j23ebo{
     background: #191b1f !important;
@@ -10153,6 +10300,11 @@ html[data-theme=dark] .css-1ol5wx9{
     background: #212429 !important;
     border:1px solid #444!important;
 }
+/*举报文章-侵权说明*/
+html[data-theme=dark] .css-1soi229{
+    background: #212429 !important;
+}
+
 /*举报文章-了解规则*/
 html[data-theme=dark] .css-bi9r1t{
     color: #d3d3d3 !important;
@@ -10193,7 +10345,103 @@ html[data-theme=dark] .ReferenceList li.is-active {
     color: black
 }
 
+
+/*代码的滚动条样式*/
+.css-ob6uua pre::-webkit-scrollbar {
+    height: 12px;
+}
+
+.css-ob6uua pre::-webkit-scrollbar-track {
+    background: #d3d3d3;
+    border-radius: 10px;
+}
+
+.css-ob6uua pre::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+.css-ob6uua pre::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/*代码背景*/
+html[data-theme=dark] .css-1olvdus pre {
+    background: #212429 !important;
+}
+
+html[data-theme=dark] .css-1olvdus code {
+    background: #212429 !important;
+}
+
+/*作者边框*/
+html[data-theme=dark] .css-zein01 {
+    border: none !important;
+}
+
+.css-b7erz1 {
+    color: #0084ff !important;
+}
+
+/*引用内容*/
+blockquote{
+    color: #535861 !important;
+}
+html[data-theme=dark] blockquote{
+    color: #c4c7cec7 !important;
+}
+
+/*导航栏*/
+.ColumnPageHeader-Title{
+    width:150px;
+}
+
+html[data-theme=dark] .css-j3g3pk{
+    color:#d3d3d3;
+}
+
+/*
+@用户
+.PostIndex-body .css-1gomreu a.UserLink-link {
+    color: #0084ff;
+}
+*/
+
+/*图片保持原大小*/
+.css-10o75c2 img.content_image[data-size="normal"], .css-10o75c2 img.origin_image[data-size="normal"]{
+    width: auto !important;
+    max-width: 100% !important;
+}
+
+/*文章点赞用户列表*/
+html[data-theme=dark] .VoterList-content {
+    background:#191b1f !important;
+}
+
+/*文章标签*/
+html[data-theme=dark] .css-127i0sx {
+    background: #191b1f !important;
+}
+html[data-theme=dark] .css-1x8apwm{
+    border-bottom:1px solid #444!important;
+}
+/*没有评论svg*/
+html[data-theme=dark] .css-1jroejq{
+    filter:brightness(0.6)!important;
+}
+/*底栏背景*/
+html[data-theme=dark] .App-main{
+    background: #121212 !important;
+}
+html[data-theme=dark] .ContentItem-actions{
+    background: #191b1f !important;
+}
+/*文中提示*/
+html[data-theme=dark] .css-ob6uua blockquote{
+    color: #0084ff !important
+}
 /*==知乎文章==*/
+
 
 
 /*==知乎知学堂==*/
@@ -10687,6 +10935,10 @@ html[data-theme=dark] .css-ksdfxq{
 html[data-theme=dark] .css-1u2jvnm{
     color: #d3d3d3!important;
 }
+/*开始创作-编辑区-同步到圈子-选择圈子-选择按钮*/
+html[data-theme=dark] .css-1dxnn7v{
+    background: #d3d3d3!important;
+}
 /*开始创作-编辑区-同步到圈子-圈子搜索框*/
 html[data-theme=dark] .css-1l03w1b{
     background: #191b1f !important;
@@ -10909,6 +11161,9 @@ html[data-theme=dark] .css-13ev0i:hover{
 
 
 /*创作助手-背景*/
+html[data-theme=dark] .css-6a8ffv{
+    background: #121212 !important;
+}
 html[data-theme=dark] .AIAssistantPanelV2-container{
     background: transparent !important;
 }
@@ -11008,7 +11263,22 @@ html[data-theme=dark] .css-1ykdma4 {
 html[data-theme=dark] .css-10r8x72{
     box-shadow: 0px -0.5px 0px 0px #444 inset;
 }
+.css-8jrr84.toolbarV3{
+    overflow-x: hidden;
+}
+
+
 /*发布文章-工具栏按钮*/
+.ToolbarButton:hover{
+    background: #8080801c !important;
+}
+.ToolbarButton:hover .ZDI{
+    fill: #0084ff !important;
+}
+.ToolbarButton:hover .css-8atqhb{
+    color: #0084ff !important;
+}
+
 html[data-theme=dark] .ToolbarButton:hover{
     background: #8080801c !important;
 }
@@ -11040,6 +11310,165 @@ html[data-theme=dark] .css-1pmadmj.Button.Button--plain:hover{
     background: #8080801c!important;
     color: #0084ff!important;
 }
+
+/*图片上传提示*/
+html[data-theme=dark] .css-qkx00h{
+    color: #d3d3d3 !important;
+}
+/*手机扫码上传-二维码-边框*/
+html[data-theme=dark] .css-1bzr12u{
+    border: 2px solid transparent;
+}
+/*手机扫码上传-二维码-背景*/
+html[data-theme=dark] .css-1fp3r3y{
+    background: none;
+}
+/*手机扫码上传-二维码-亮度*/
+html[data-theme=dark] .css-t7unhu{
+    filter: brightness(0.6)!important;
+}
+
+/*公共图片库-提示按钮*/
+html[data-theme=dark] .css-19hv5gp{
+    background: #191b1f !important;
+    border: none !important;
+}
+/*公共图片库-详细介绍*/
+html[data-theme=dark] .css-1360u59{
+    color: #d3d3d3 !important;
+}
+/*公共图片库-搜索框*/
+html[data-theme=dark] .css-4wybfm{
+    border: 1px solid #444 !important;
+}
+/*公共图片库-预加载背景*/
+html[data-theme=dark] .css-xe8co0 img{
+    background: #d3d3d3 !important;
+}
+
+/*公共图片库-选择*/
+html[data-theme=dark] .css-128iodx{
+    border: 1.5px solid #d3d3d3;
+}
+
+/*表情包-选择*/
+html[data-theme=dark] .MaterialLibrary-imgListItemHover .css-7ijodq{
+    border: 2px solid #d3d3d3;
+}
+
+/*个人素材-删除按钮*/
+html[data-theme=dark] .css-io7y5k{
+    background: #d953501a !important;
+}
+
+/*个人素材-移动按钮*/
+html[data-theme=dark] .css-j0wsbj{
+    background: #d3d3d3 !important;
+}
+
+/*个人素材-占位*/
+.css-1wlmnwm[role="list"] div[role="listitem"]{
+    display: none;
+}
+
+/*视频上传-导入视频*/
+html[data-theme=dark] .css-13nuqv5{
+    color: #d3d3d3 !important;
+}
+/*视频上传-箭头*/
+html[data-theme=dark] .css-1952n4z{
+    color: #d3d3d3 !important;
+}
+/*视频上传-边框*/
+html[data-theme=dark] .css-1rtdnql{
+    border: 2px dashed #d3d3d3;
+}
+/*视频上传-提示文字*/
+html[data-theme=dark] .css-mr5gp1{
+    color: #d3d3d3 !important;
+}
+
+/*收益-知乎商品-标题*/
+html[data-theme=dark] .css-5z170y{
+    color: #d3d3d3 !important;
+}
+/*收益-知乎商品-背景*/
+html[data-theme=dark] .GoodsSourceRecommend-list .css-11v4451 {
+    background: #191b1f;
+}
+/*收益-知乎商品(MCN)-背景*/
+html[data-theme=dark] .GMCNGoodSearch-goodList .css-11v4451 {
+    background: #121212;
+}
+/*收益-知乎商品-添加按钮*/
+html[data-theme=dark] .css-1e5fatp{
+    background: #d3d3d3 !important;
+}
+/*收益-知乎商品-推广设置*/
+html[data-theme=dark] .MCNEditSetting-title{
+    color: #d3d3d3 !important;
+}
+
+/*公式编辑器-大边框*/
+html[data-theme=dark] .css-qemnd1{
+    border: 1px solid #444;
+}
+/*公式编辑器-中间边框*/
+html[data-theme=dark] .css-kf0yxo{
+    border-left: 1px solid #444;
+}
+/*公式编辑器-文本*/
+html[data-theme=dark] .cm-line{
+    color: #d3d3d3 !important;
+}
+/*公式编辑器-公式排版-中间边框*/
+html[data-theme=dark] .css-l1bxog{
+    background: #444;
+}
+
+/*公式帮助文档-标题-背景*/
+html[data-theme=dark] .css-s870qk{
+    background: #121212;
+    border-bottom:1px solid #444;
+}
+/*公式帮助文档-标题-文字*/
+html[data-theme=dark] .css-1tny33p{
+    color:#d3d3d3;
+    background: #121212;
+}
+/*公式帮助文档-标签-normal*/
+html[data-theme=dark] .css-ej3ubf {
+    color: #d3d3d3 !important;
+    background: #8080801c !important;
+}
+/*公式帮助文档-标签-active*/
+html[data-theme=dark] .css-k6okna {
+    color: #1772f6 !important;
+    background: #1772f61a !important;
+}
+/*公式帮助文档-标签-下边框*/
+html[data-theme=dark] .css-131ucyf {
+    border-bottom:1px solid #444;
+}
+/*公式帮助文档-列表-背景*/
+html[data-theme=dark] .css-7hf26x {
+    background: #121212 !important;
+}
+/*公式帮助文档-列表-文字*/
+html[data-theme=dark] .css-839cag{
+    color: #d3d3d3 !important;
+}
+/*公式帮助文档-快捷键1*/
+html[data-theme=dark] .css-ecgjmq{
+    background: #8080801c !important;
+    color: #8590a6 !important;
+}
+/*公式帮助文档-快捷键2*/
+html[data-theme=dark] .css-1ci8aky{
+    background: #8080801c !important;
+    color: #8590a6 !important;
+}
+
 
 
 /*发布文章-底栏*/
@@ -11259,16 +11688,148 @@ html[data-theme=dark] .css-pjaw30{
 }
 /*=主页=*/
 
-/*=圈子=*/
+/*=知乎圈子=*/
 /*圈子背景*/
-html[data-theme=dark] .css-1g878q7{
+html[data-theme=dark] .css-14pitda{
     background: #191b1f!important;
 }
 /*分享想法背景*/
 html[data-theme=dark] .css-17pkp3f{
     background: #191b1f!important;
 }
-/*=圈子=*/
+
+/*圈子列表-当前圈子*/
+.App-main a .css-1viwt9b{
+    color: #16b89b;
+}
+/*圈子列表-其他圈子*/
+.App-main a .css-zn5wp7 .css-vurnku,
+.App-main a .css-zn5wp7 .css-17yzv3l{
+    color: #8590a6;
+}
+/*圈子列表-全部圈子*/
+.App-main a .css-zkfaav .css-ag3q0x{
+    color: #8590a6;
+}
+
+
+/*圈子头像*/
+html[data-theme=dark] .css-6pqcq1{
+    border: 4px solid #444;
+}
+/*圈子标题*/
+html[data-theme=dark] .css-15kyhij{
+    color:#d3d3d3 !important;
+}
+/*讨论人数*/
+html[data-theme=dark] .css-voomue{
+    color:#d3d3d3 !important;
+}
+/*圈子标题-下边框*/
+html[data-theme=dark] .css-fcvwbp{
+    border-bottom: 1px solid #444;
+}
+
+
+/*邀请加入按钮*/
+html[data-theme=dark] .css-md97ka{
+    background:#16b89b1a !important;
+}
+
+/*次级导航栏-active*/
+html[data-theme=dark] .css-19s1rf{
+    color:#0084ff;
+}
+html[data-theme=dark] .css-1y05zzh{
+    background:#0084ff;
+}
+
+/*次级导航栏-normal*/
+html[data-theme=dark] .css-j6adnp{
+    color:#d3d3d3;
+}
+html[data-theme=dark] .css-p6ejz3{
+    background:none;
+}
+/*次级导航栏-normal-hover*/
+html[data-theme=dark] .css-96y6w7:hover .css-p6ejz3{
+    background:#0084ff;
+}
+
+/*圈子简介、圈子成员-标题*/
+html[data-theme=dark] .css-1vtri56{
+    color:#d3d3d3;
+}
+/*圈子简介-内容*/
+html[data-theme=dark] .css-juw3ca{
+    color:#d3d3d3;
+}
+/*圈子成员-主理人*/
+html[data-theme=dark] .css-19kcma7{
+    color:#d3d3d3;
+}
+/*圈子成员-其他成员*/
+html[data-theme=dark] .css-uxh5hf{
+    color:#d3d3d3;
+}
+
+/*知乎椭圆标签*/
+html[data-theme=dark] .ztext-mention-hook{
+    background: #1772f614;
+    border: 1px solid #444;
+}
+/*知乎椭圆标签-loading界面*/
+html[data-theme=dark] .css-mk7s6o{
+    background:#191b1f;
+}
+
+
+/*-圈子广场-*/
+/*圈子广场-圈子广场*/
+html[data-theme=dark] .css-w0en9j{
+    background:#121212;
+}
+/*圈子广场-圈子广场*/
+html[data-theme=dark] .css-1w0yveu{
+    color:#d3d3d3;
+}
+/*圈子广场-我加入的圈子、为你推荐*/
+html[data-theme=dark] .css-1oml8kn{
+    color:#d3d3d3;
+}
+/*圈子广场-圈子标题*/
+html[data-theme=dark] .css-1je9f37{
+    color:#d3d3d3;
+}
+/*圈子广场-圈子最新内容*/
+html[data-theme=dark] .css-10svrus{
+    color:#d3d3d3;
+}
+/*圈子广场-圈子最新内容-左侧提示线*/
+html[data-theme=dark] .css-qhzhdo{
+    background:#444;
+}
+/*圈子广场-圈子最新内容-发布者*/
+html[data-theme=dark] .css-1h9hcdn{
+    color:#d3d3d3;
+}
+/*圈子广场-推荐标签*/
+html[data-theme=dark] .css-ukbjm6 {
+    color: #d3d3d3;
+    background: #8080801c;
+}
+/*圈子广场-圈子头像*/
+html[data-theme=dark] .css-dyytne {
+    background: #444;
+}
+
+/*-圈子广场-*/
+
+
+/*=知乎圈子=*/
+
+
+
 
 /*=创作灵感=*/
 
@@ -11466,6 +12027,30 @@ html[data-theme=dark] css-1wi98sv.is-active{
 /*内容管理-排序按钮*/
 html[data-theme=dark] .css-pi8g4d{
     border:1px solid #444!important;
+}
+
+/*内容管理-播客-背景*/
+html[data-theme=dark] .css-smf7y2{
+    background: #191b1f!important;
+}
+/*内容管理-播客-暂无内容*/
+html[data-theme=dark] .css-1ptti3p{
+    color: #d3d3d3 !important;
+}
+/*内容管理-播客-RSS提示*/
+html[data-theme=dark] .css-m9wflr{
+    color: #d3d3d3 !important;
+}
+
+/*内容管理-播客-返回*/
+html[data-theme=dark] .css-m9wfl7zn9pdr{
+    color: #d3d3d3 !important;
+}
+
+
+/*内容管理-播客-RSS Feed 地址*/
+html[data-theme=dark] .css-gipym1{
+    color: #d3d3d3 !important;
 }
 
 
@@ -11957,21 +12542,23 @@ html[data-theme=dark] .css-vm9s9s{
 html[data-theme=dark] .css-iotqsc{
     color: #d3d3d3 !important;
 }
-/*账号信息-关联账号*/
+/*账号信息-关联账号-提示*/
 html[data-theme=dark] .css-114mqx8{
     background: #12121230!important;
 }
-html[data-theme=dark] .css-ipuq3s{
+/*账号信息-关联账号-表头*/
+html[data-theme=dark] .css-1gucmug{
     background: #191b1f!important;
     border-bottom:1px solid #444!important;
 }
-.css-ipuq3s.is-fixed {
-    left:226.5px !important;
+.css-1gucmug.is-fixed {
+    left:auto !important;
 }
-html[data-theme=dark] .css-3if57f{
+/*账号信息-关联账号-行内*/
+html[data-theme=dark] .css-1brwgn9{
     border-bottom:1px solid #444!important;
 }
-html[data-theme=dark] .css-3if57f div{
+html[data-theme=dark] .css-1brwgn9 div{
     color: #d3d3d3 !important;
 }
 html[data-theme=dark] .css-9ofz8q .MultiUploadButton-addWrapper{
@@ -12005,6 +12592,8 @@ html[data-theme=dark] .ToolsCopyright-answer{
 html[data-theme=dark] .ToolsCopyright-question{
     color: #d3d3d3 !important;
 }
+
+
 /*=个人中心=*/
 
 /*==创作中心==*/
@@ -12100,200 +12689,8 @@ html[data-theme=dark] .Creator-salt-author-manage-specification-third-title{
 
 /*==盐选作者平台==*/
 
-/*==知乎问题==*/
-/*问题标签卡片*/
-html[data-theme=dark] .css-wmwsyx {
-    background: #191b1f !important;
-    border: 1px solid #191b1f;
-}
-
-/*超链接卡片*/
-html[data-theme=dark] .css-19tsar1.LinkCard{
-    background: #26292a !important;
-}
-
-/*视频卡片*/
-html[data-theme=dark] .css-ob6uua .LinkCard.new{
-    background: #121212 !important;
-}
-/*评论输入框*/
-html[data-theme=dark] .InputLike.css-1rl4wxv{
-    border: none !important;
-}
-/*评论输入框-固定*/
-html[data-theme=dark] .css-kt4t4n {
-    background: #191b1f !important;
-}
-/*评论区-更多*/
-html[data-theme=dark] .css-pu97ow {
-    fill: #2e2e2e !important
-}
-html[data-theme=dark] .css-h9kawn {
-    background: #191b1f !important;
-}
-html[data-theme=dark] .css-wqf2py:hover {
-    color: #0084ff !important;
-}
-/*评论区-查看全部回复*/
-html[data-theme=dark] .css-70t8h2 {
-    background: #121212 !important;
-    border-bottom: 20px solid #121212;
-}
-html[data-theme=dark] .css-1onritu::before{
-    border-bottom: 1px solid #444;
-}
-
-/*评论区-回复按钮*/
-.css-1ij6qqc:focus-visible {
-    box-shadow:none !important;
-    color:#32CD32;
-}
-.css-1ij6qqc:hover {
-    color:#32CD32;
-}
-/*评论区-点赞按钮*/
-.css-1vd72tl:focus-visible {
-    box-shadow:none !important;
-}
-.css-1staphk:focus-visible {
-    box-shadow:none !important;
-}
-/*评论区-表情按钮*/
-.css-iuqaea:focus-visible {
-    box-shadow:none !important;
-    color:#0084ff;
-}
-
-/*评论区-表情分类*/
-html[data-theme=dark] .css-1c21y8s {
-    background: #191b1f !important;
-}
-html[data-theme=dark] .css-1dq2715 {
-    background: #121212 !important;
-}
 
 
-
-/*标题评论区-加载占位*/
-html[data-theme=dark] path[d="M0 0h656v44H0V0zm0 0h480v12H0V0zm0 32h238v12H0V32z"]{
-    fill:#121212 !important;
-}
-/*私信聊天框*/
-html[data-theme=dark] .css-h07o3w {
-    background: #191b1f !important;
-}
-html[data-theme=dark] .css-11lk6sp {
-    border-bottom: 1px solid #444!important;
-}
-/*私信聊天框-滚动条*/
-.MessagesBox::-webkit-scrollbar {
-    width: 12px;
-}
-.MessagesBox::-webkit-scrollbar-track {
-    background: #d3d3d3;
-    border-radius: 10px;
-}
-.MessagesBox::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 10px;
-}
-.MessagesBox::-webkit-scrollbar-thumb:hover {
-    background: #555;
-}
-/*私信-搜索联系人*/
-html[data-theme=dark] .ChatSideBar-Search-Input input{
-    background: #191b1f!important;
-    color:#d3d3d3!important;
-    border: 1px solid #444 !important;
-}
-html[data-theme=dark] .ChatUserListItem .Chat-ActionMenuPopover-Button{
-    background: #191b1f!important;
-    color:#d3d3d3!important;
-}
-html[data-theme=dark] .ChatListGroup-SectionTitle--bottomBorder:after{
-    background: #444 !important;
-}
-/*私信-当前联系人*/
-html[data-theme=dark] .ChatUserListItem--active{
-    background: #8080801c !important;
-}
-html[data-theme=dark] .ChatUserListItem--active .Chat-ActionMenuPopover-Button{
-    background: #8080801c!important;
-    color:#d3d3d3!important;
-}
-html[data-theme=dark] .ChatUserListItem:after{
-    background: #444 !important;
-}
-/*私信-当前联系人-滚动条*/
-.ChatListGroup-SectionContent::-webkit-scrollbar {
-    width: 12px;
-}
-.ChatListGroup-SectionContent::-webkit-scrollbar-track {
-    background: #d3d3d3;
-    border-radius: 10px;
-}
-.ChatListGroup-SectionContent::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 10px;
-}
-.ChatListGroup-SectionContent::-webkit-scrollbar-thumb:hover {
-    background: #555;
-}
-
-
-/* 自定义滚动条的箭头 */
-/*
-.ChatListGroup-SectionContent::-webkit-scrollbar-button {
-background-color: c1c1c1;
-}
-*/
-/* 或者针对滚动条的上下箭头分别设置*/
-/*
-.ChatListGroup-SectionContent::-webkit-scrollbar-button:vertical:start {
-background-color: #c1c1c1;
-}
-
-.ChatListGroup-SectionContent::-webkit-scrollbar-button:vertical:end {
-background-color: #c1c1c1;
-}
-*/
-
-/*回答表格-表头*/
-html[data-theme=dark] .css-1olvdus table[data-draft-type='table'] th{
-    background: #9da2a7;
-}
-/*回答表格-边框*/
-html[data-theme=dark] .css-1olvdus table[data-draft-type='table'] td,html[data-theme=dark]  .css-1olvdus table[data-draft-type='table'] th{
-    border:1px solid #444;
-}
-
-
-/*==知乎问题==*/
-
-/*==知乎文章==*/
-/*文章标签*/
-html[data-theme=dark] .css-127i0sx {
-    background: #191b1f !important;
-}
-html[data-theme=dark] .css-1x8apwm{
-    border-bottom:1px solid #444!important;
-}
-/*没有评论svg*/
-html[data-theme=dark] .css-1jroejq{
-    filter:brightness(0.6)!important;
-}
-/*底栏背景*/
-html[data-theme=dark] .App-main{
-    background: #121212 !important;
-}
-html[data-theme=dark] .ContentItem-actions{
-    background: #191b1f !important;
-}
-/*文中提示*/
-html[data-theme=dark] .css-ob6uua blockquote{
-    color: #0084ff !important
-}
-/*==知乎文章==*/
 
 
 /*==搜索结果==*/
@@ -12455,9 +12852,13 @@ html[data-theme=dark] .css-9w3zhd{
 
 /*==话题讨论==*/
 /*次级导航栏*/
+.Topic-pageHeader .Topic-tabs{
+    overflow: hidden !important;
+}
 html[data-theme=dark] .Topic-pageHeader .Topic-tabs{
     overflow: hidden !important;
 }
+
 /*百科-简介*/
 html[data-theme=dark] .TopicIntroSection-title{
     color: #d3d3d3 !important
@@ -12466,6 +12867,28 @@ html[data-theme=dark] .TopicIntroSection-title{
 html[data-theme=dark] .TopicAbstract-title{
     color: #d3d3d3 !important
 }
+/*讨论-好问一览-背景*/
+html[data-theme=dark] .css-1xrwxso{
+    background: #191b1f !important;
+}
+/*讨论-好问一览-上框线*/
+html[data-theme=dark] .css-kgzxcc{
+    border-bottom:1px solid #444 !important;
+}
+/*讨论-好问一览-问题标题*/
+html[data-theme=dark] .css-1etw3tk{
+    color: #d3d3d3 !important
+}
+/*讨论-好问一览-下框线*/
+html[data-theme=dark] .css-fpmvar{
+    border-top:1px solid #444 !important;
+}
+/*讨论-圈子标签-背景*/
+html[data-theme=dark] .css-19z74wa{
+    background: #191b1f;
+    border: 1px solid #444;
+}
+
 /*==话题讨论==*/
 
 
@@ -12489,9 +12912,7 @@ html[data-theme=dark] .css-1sjs4ns{
     color: #d3d3d3 !important
 }
 /*圆桌介绍*/
-html[data-theme=dark] .css-1fnir59,
-html[data-theme=dark] .css-t3f0zn,
-html[data-theme=dark] .css-1cj0s4z {
+html[data-theme=dark] .css-wzjkix {
     background: #191b1f !important;
 }
 /*圆桌标题*/
@@ -12561,6 +12982,119 @@ html[data-theme=dark] .css-37j01z{
     color: #d3d3d3 !important;
 }
 /*==知乎圆桌==*/
+
+
+
+/*==最近浏览==*/
+/*最近浏览-大背景*/
+html[data-theme=dark] .App{
+    background: #121212 !important;
+}
+/*最近浏览-背景*/
+html[data-theme=dark] .css-9511cm{
+    background: #191b1f !important;
+}
+/*最近浏览-最近浏览*/
+html[data-theme=dark] .css-67353r{
+    color: #d3d3d3 !important;
+}
+html[data-theme=dark] .css-dilx2p{
+    background: #191b1f !important;
+    border-bottom: 1px solid #444;
+}
+/*最近浏览-今天*/
+html[data-theme=dark] .css-oarhve{
+    color: #d3d3d3 !important;
+}
+/*最近浏览-问题内容*/
+html[data-theme=dark] .css-cj7w57{
+    color: #d3d3d3 !important;
+}
+html[data-theme=dark] .css-i83kfi{
+    border-top: 1px solid #444;
+}
+
+/*==最近浏览==*/
+
+/*==知乎设置==*/
+/*知乎设置-背景*/
+html[data-theme=dark] .css-11oa45q{
+    background: #191b1f !important;
+}
+/*知乎设置-导航栏边框*/
+html[data-theme=dark] .css-64n6wy{
+    border-left: 1px solid #444;
+}
+/*知乎设置-大标题边框*/
+html[data-theme=dark] .css-13hrskl{
+    border-bottom: 1px solid #444;
+}
+/*知乎设置-小标题边框*/
+html[data-theme=dark] .css-5d29nz{
+    border-top: 1px solid #444;
+}
+/*知乎设置-小标题边框-展开*/
+html[data-theme=dark] .css-bq13ez{
+    border-bottom: 1px solid #444;
+    /*
+    background: #8491a514;
+    */
+}
+
+/*知乎设置-弹出框-身份验证*/
+html[data-theme=dark] .VerificationDialogModalHeader-title{
+    color: #d3d3d3 !important;
+}
+
+/*知乎设置-邮件设置推荐*/
+html[data-theme=dark] .css-1y24rxm{
+    color: #8491a5 !important;
+}
+html[data-theme=dark] .css-q5b5cv{
+    border-top: 1px solid #444;
+}
+
+/*知乎设置-屏蔽关键词*/
+html[data-theme=dark] .css-uy25oq{
+    color: #0084ff !important;
+}
+html[data-theme=dark] .css-18pp70h{
+    border-bottom: 1px solid #444;
+}
+/*知乎设置-屏蔽关键词-输入框*/
+html[data-theme=dark] .css-qjupwl{
+    color: #d3d3d3 !important;
+}
+html[data-theme=dark] .css-15h5496{
+    color: #d3d3d3 !important;
+}
+
+/*知乎设置-第三方账号用户名*/
+html[data-theme=dark] .css-u11v9t{
+    color: #d3d3d3 !important;
+}
+/*知乎设置-隐藏个人信息*/
+html[data-theme=dark] .css-t2gnct{
+    background: #191b1f !important;
+    border: 1px solid #444;
+}
+html[data-theme=dark] .css-4pxftp{
+    color: #d3d3d3 !important;
+}
+
+/*知乎设置-快捷键边框*/
+html[data-theme=dark] .css-1yij8ym{
+    border: 1px solid #444;
+}
+/*知乎设置-水印用户名*/
+html[data-theme=dark] .WatermarkPreferenceExamples-username{
+    color: #d3d3d3 !important;
+}
+
+
+/*==知乎设置==*/
+
+
     `);
 }
 function addCSS() {
@@ -12580,6 +13114,21 @@ function topic() {
         $('.css-1q32xh5').hide();
         $(".ContentLayout-sideColumn").hide();
         $(".ContentLayout").attr("style", "display:flex;justify-content:center;");
+    }
+
+    //专栏举报按钮
+    if ($(".Zi--Report").length == 0) //未添加举报
+    {
+        let $TopicActions=$('.TopicActions--OptionsMenu'); //更多
+        if ($TopicActions.find(".Zi--Dots").length > 0)
+            $TopicActions.hide();
+        var button_text = '<button type=\"button\" class=\"Button TopicActions-link Button--plain\"><span style=\"display: inline-flex; align-items: center;\"><svg class=\"Zi Zi--Report\" fill=\"currentColor\" viewBox=\"0 0 24 24\" width=\"14\" height=\"14\"><path d=\"M19.947 3.129c-.633.136-3.927.639-5.697.385-3.133-.45-4.776-2.54-9.949-.888-.997.413-1.277 1.038-1.277 2.019L3 20.808c0 .3.101.54.304.718a.97.97 0 0 0 .73.304c.275 0 .519-.102.73-.304.202-.179.304-.418.304-.718v-6.58c4.533-1.235 8.047.668 8.562.864 2.343.893 5.542.008 6.774-.657.397-.178.596-.474.596-.887V3.964c0-.599-.42-.972-1.053-.835z\" fill-rule=\"evenodd\"></path></svg></span> 举报</button>';
+        var $report = $(button_text);
+        $report.bind("click", function() {
+            $TopicActions.click();
+            $(".Menu").find('button').click();
+        });
+        $TopicActions.after($report);
     }
 }
 
@@ -12680,6 +13229,20 @@ function creator() {
 
     //"被折叠"提示
     $('html[data-theme=dark]  .Zi--HelpOutline').closest('.css-vurnku').css('background', '#ffffff1c')
+
+    //隐藏首次进入时的活动推广弹窗
+    $('img.css-vdogor').closest('.Modal-enter-done').hide();
+
+    let poptimer= setInterval(function(){
+        if($('.Modal-enter-done img.css-vdogor').length>0)
+        {
+            if($('button[aria-label="关闭"]').length>0)
+            {
+                $('button[aria-label="关闭"]').get(0).click();
+                clearInterval(poptimer);
+            }
+        }
+    },100);
 }
 
 //无障碍
@@ -13740,6 +14303,11 @@ function recent(){
         $(".GlobalLeftSideBar").hide();
         $(".css-8gasvh").attr("style", "display:flex;justify-content:center;");
     }
+
+}
+
+function zhihu_settings()
+{
 
 }
 
@@ -14817,6 +15385,8 @@ html[data-theme=dark] #settingLayer #settings-close{
         setInterval(wza, 300);
     else if (window.location.href.indexOf("/recent-viewed") > -1) //最近浏览
         setInterval(recent, 300);
+    else if (window.location.href.indexOf("/settings") > -1) //知乎设置
+        setInterval(zhihu_settings, 300);
     else
         setInterval(index, 300); //首页
 

@@ -3,7 +3,7 @@
 // @description ￥+＾:指した要素を非表示登録　Ctrl+＾:非表示登録をundo　Shift+＾:非表示登録を編集　￥+左クリック：要素を削除　^+左クリック：親要素を削除　Shift+Alt+￥:見えない要素を削除　￥+@:要素のtextを編集可能化　 ￥+BS：要素の横幅を拡大　￥+.：指した要素を画像として保存　￥+Enter：指した要素をドラッグできるようにする　￥+f：ページ全体のフォントを詰める
 // @match *://*/*
 // @match file:///*.html
-// @version     0.8.2
+// @version     0.8.3
 // @grant       GM.setClipboard
 // @grant       GM_setValue
 // @grant       GM_getValue
@@ -29,7 +29,7 @@
     `body , * { }`,
   ];
   const YENDOT_SCALE_MIN = 1.5; // ￥＋.の保存時の解像度の最低倍率　1=100%
-  const YENDOT_SCALE_AT_LEAST_FIT_SCREEN = 0; // 1:￥＋.の保存時の解像度を画面の縦か横（長辺）フィット以上にしようとする、要するに高解像度化
+  const YENDOT_SCALE_AT_LEAST_FIT_SCREEN = 1; // 1:￥＋.の保存時の解像度を画面の縦か横（長辺）フィット以上にしようとする、要するに高解像度化
   const YENDOT_SCALE_AT_LEAST_FIT_SCREEN_X = 1920; // ↑が1の時に画面解像度が取得できない時の暫定解像度
   const YENDOT_SCALE_AT_LEAST_FIT_SCREEN_Y = 1080; // ↑が1の時に画面解像度が取得できない時の暫定解像度
 
@@ -170,7 +170,13 @@
   document.addEventListener('blur', function(e) { keyP = {}; /*input_key_buffer.length = 0;*/ }, false);
 
   document.addEventListener("saveDOMAsImage", e => { // { detail: { element: ele, filename: fn, scale: scale, eleToFlash: 発光させる要素, hd:true=高画質要求 } } // \+.::
-    let [capture, FNAME_SAVE, scale, eleToFlash, hd] = [e.detail.element, e.detail.filename, e.detail.scale, e.detail.eleToFlash, e.detail?.hd]
+    let detail = JP(e.detail);
+    [detail.element, detail.eleToFlash] = [detail.element, detail.eleToFlash].map(v => typeof v == "string" ? eleget0(v) : v);
+    saveDOMAsImage(detail)
+  })
+
+  function saveDOMAsImage(detail) {
+    let [capture, FNAME_SAVE, scale, eleToFlash, hd] = [detail.element, detail.filename, detail.scale, detail.eleToFlash, detail?.hd];
     scale *= window.devicePixelRatio
     scale = Math.max(YENDOT_SCALE_MIN, scale)
     if (hd || YENDOT_SCALE_AT_LEAST_FIT_SCREEN) {
@@ -206,7 +212,7 @@
       eleToFlash?.classList?.add("yenClickHighlight")
       setTimeout(eleToFlash => eleToFlash?.classList?.remove("yenClickHighlight"), 1000, eleToFlash)
     });
-  })
+  }
 
   document.addEventListener('keydown', function(e) {
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.getAttribute('contenteditable') === 'true' || ((e.target.closest('#chat-messages,ytd-comments-header-renderer') || document.activeElement.closest('#chat-messages,ytd-comments-header-renderer')))) return;
@@ -257,7 +263,8 @@
       function signzen(str) { return str.replace(/^\s+/, "").replace(/\\|\/|\:|\;|\,|\+|\&|\=|\*|\?|\"|\'|\>|\<|\./g, c => { return String.fromCharCode(c.charCodeAt(0) + 0xFEE0) }) }
 
       let scale = 1
-      document.dispatchEvent(new CustomEvent('saveDOMAsImage', { detail: { element: ele, filename: fn, scale: scale } }))
+      //      document.dispatchEvent(new CustomEvent('saveDOMAsImage', { detail: { element: ele, filename: fn, scale: scale } }))
+      saveDOMAsImage({ element: ele, filename: fn, scale: scale })
       //input_key_buffer = []
       keyP = {}
       e.preventDefault()
@@ -1022,5 +1029,8 @@
 
   function ctLong(callback, name = "test", time = 10) { console.time(name); for (let i = time; i--;) { callback() } console.timeEnd(name) } // 速度測定（もともと長くかかるもの）
   function ct(callback, name = "test", time = 10) { let i = 0; let st = Date.now(); while (Date.now() - st < 1000) { i++, callback() } console.log(`${name} ${i}回実行 / 1sec , ${1000/i}ミリ秒/１実行 ${callback.toString().slice(0,55)}`) } // 速度測定（一瞬で終わるもの）
+  function JS(v) { try { return JSON.stringify(v) } catch { return null } }
+
+  function JP(v) { try { return JSON.parse(v) } catch { return null } }
 
 })();

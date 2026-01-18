@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SharmZ Quick Nav
 // @namespace    http://tampermonkey.net/
-// @version      1.1
+// @version      1.2
 // @description  Adds persistent top-right navigation box to Torn.com with hot pink styling
 // @author       SharmZ
 // @match        https://www.torn.com/*
@@ -33,18 +33,24 @@
     navBox.innerHTML = `
         <div style="font-weight: bold; margin-bottom: 5px; text-align: center; color: #FF1493;">QUICK NAV</div>
         <div style="display: flex; flex-direction: column; gap: 3px;">
-            <a href="https://www.torn.com/factions.php?step=your"
+            <a href="https://www.torn.com/factions.php?step=your&type=1#/war/rank"
                style="color: #FF1493; text-decoration: none; padding: 3px 5px; border-radius: 3px; background: rgba(255, 20, 147, 0.2); transition: all 0.2s;">My Faction</a>
             <a href="https://www.torn.com/page.php?sid=stocks"
                style="color: #FF1493; text-decoration: none; padding: 3px 5px; border-radius: 3px; background: rgba(255, 20, 147, 0.2); transition: all 0.2s;">Stocks</a>
-            <a href="https://www.torn.com/bazaar.php"
+            <a href="https://www.torn.com/bazaar.php?userId=3542741"
                style="color: #FF1493; text-decoration: none; padding: 3px 5px; border-radius: 3px; background: rgba(255, 20, 147, 0.2); transition: all 0.2s;">My Bazaar</a>
+            <a href="https://www.torn.com/displaycase.php#display/3542741"
+               style="color: #FF1493; text-decoration: none; padding: 3px 5px; border-radius: 3px; background: rgba(255, 20, 147, 0.2); transition: all 0.2s;">Display Case</a>
             <a href="https://www.weav3r.dev/dollar-bazaars"
-               style="color: #FF1493; text-decoration: none; padding: 3px 5px; border-radius: 3px; background: rgba(255, 20, 147, 0.2); transition: all 0.2s;">$1 Items</a>
+               style="color: #FF1493; text-decoration: none; padding: 3px 5px; border-radius: 3px; background: rgba(255, 20, 147, 0.2); transition: all 0.2s;" target="_blank">$1 Items</a>
             <a href="https://ffscouter.com/target-finder"
-               style="color: #FF1493; text-decoration: none; padding: 3px 5px; border-radius: 3px; background: rgba(255, 20, 147, 0.2); transition: all 0.2s;">Target Finder</a>
-            <a href="https://www.torn.com/factions.php?step=your&type=1#/tab=armoury&start=0&sub=medical"
-               style="color: #FF1493; text-decoration: none; padding: 3px 5px; border-radius: 3px; background: rgba(255, 20, 147, 0.2); transition: all 0.2s;">Med Armory</a>
+               style="color: #FF1493; text-decoration: none; padding: 3px 5px; border-radius: 3px; background: rgba(255, 20, 147, 0.2); transition: all 0.2s;" target="_blank">Target Finder</a>
+            <a href="https://wiki.torn.com/wiki/Big_Al%27s_Bunker"
+               style="color: #FF1493; text-decoration: none; padding: 3px 5px; border-radius: 3px; background: rgba(255, 20, 147, 0.2); transition: all 0.2s;" target="_blank">Big Al Bunker Wiki</a>
+            <a href="https://www.torn.com/forums.php#/p=threads&f=10&t=16521728&b=0&a=0&start"
+               style="color: #FF1493; text-decoration: none; padding: 3px 5px; border-radius: 3px; background: rgba(255, 20, 147, 0.2); transition: all 0.2s;">RW Weps Forum</a>
+            <a href="https://www.torn.com/forums.php#/p=threads&f=23&t=16521459&b=0&a=0&start"
+               style="color: #FF1493; text-decoration: none; padding: 3px 5px; border-radius: 3px; background: rgba(255, 20, 147, 0.2); transition: all 0.2s;">Art Forum</a>
         </div>
     `;
 

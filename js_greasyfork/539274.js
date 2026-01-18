@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         98堂-预览
-// @version      1.11.5
+// @version      1.11.10
 // @namespace    https://sleazyfork.org/zh-CN/users/1461640-%E6%98%9F%E5%AE%BF%E8%80%81%E9%AD%94
 // @author       星宿老魔
 // @description  98堂[原色花堂]增强：图片预览-无缝翻页-搜索页优化
@@ -54,7 +54,7 @@
     static inject() {
       if (this.injected) return;
       const style = document.createElement("style");
-      style.textContent = '.sht-img-grid{display:flex;flex-wrap:nowrap;align-items:stretch;gap:8px;width:100%}.sht-img-item{aspect-ratio:4/3;overflow:hidden;border-radius:4px;position:relative;cursor:pointer;display:flex;align-items:center;justify-content:center;background:#f0f0f0}.sht-img-item-single{aspect-ratio:4/3;max-width:50%;overflow:hidden;border-radius:4px;position:relative;cursor:pointer;display:flex;align-items:center;justify-content:center;background:#f0f0f0}.sht-img-loading{background:linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%);background-size:200% 100%;animation:sht-loading 1.5s ease-in-out infinite}.sht-img-loading::after{content:"⏳";position:absolute;font-size:24px;opacity:0.5}@keyframes sht-loading{0%{background-position:200% 0}100%{background-position:-200% 0}}.sht-img-loaded img{animation:sht-fade-in 0.3s ease-in}.sht-img-error{background:#ffebee}.sht-img-error::after{content:"❌ 加载失败";position:absolute;font-size:12px;color:#c62828}@keyframes sht-fade-in{from{opacity:0}to{opacity:1}}.sht-img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;opacity:0;transition:opacity 0.3s}.sht-img-loaded .sht-img{opacity:1}.sht-links{margin:10px 0 0 0;padding:8px;background:#fafafa;border:1px solid #eee;border-radius:4px;width:100%;box-sizing:border-box}.sht-link-item{background:#f5f5f5;border:1px solid #e0e0e0;padding:4px 6px;border-radius:3px;margin-bottom:4px;word-break:break-all;cursor:pointer;font-size:12px;color:#666;transition:background 0.2s}.sht-link-item:hover{background:#ebebeb}.sht-link-clickable{background:#f0f7ff;border:1px solid #d0e3f7;color:#4a6fa5;text-decoration:none;display:block}.sht-link-clickable:hover{background:#e3f0ff}.sht-link-icon{margin-right:4px;font-size:10px}.sht-attachments{margin:10px 0 0 0;padding:8px;background:#faf8f5;border:1px solid #ebe6df;border-radius:4px;width:100%;box-sizing:border-box}.sht-attachment-item{margin-bottom:4px}.sht-attachment-item:last-child{margin-bottom:0}.sht-attachment-link{display:flex;align-items:center;padding:6px 8px;background:#f7f5f2;border:1px solid #e5e0d8;border-radius:4px;text-decoration:none;color:#8b7355;font-size:12px;transition:background 0.2s}.sht-attachment-link:hover{background:#f0ede8}.sht-attachment-icon{margin-right:6px;font-size:14px}.sht-attachment-name{flex:1;word-break:break-all}.sht-attachment-size{margin-left:8px;color:#aaa;font-size:11px}.sht-nav-toggle{position:relative;display:inline-block;width:38px;height:20px}.sht-nav-toggle input{opacity:0;width:0;height:0}.sht-nav-slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#ddd;border-radius:10px;transition:background 0.3s}.sht-nav-slider:before{position:absolute;content:"";height:16px;width:16px;left:2px;bottom:2px;background:white;border-radius:50%;box-shadow:0 1px 3px rgba(0,0,0,0.2);transition:transform 0.3s}.sht-nav-toggle input:checked+.sht-nav-slider{background:#4d84c6}.sht-nav-toggle input:checked+.sht-nav-slider:before{transform:translateX(18px)}.sht-nav-active a{background-color:#840000!important;background-image:url(/static/image/common/nv_a.png)!important;background-repeat:no-repeat!important;background-position:50% -33px!important;color:#fff!important;font-weight:700!important;height:33px!important;line-height:33px!important;padding:0 8px!important;box-sizing:border-box!important;text-align:center!important;display:inline-block!important}', 
+      style.textContent = '.sht-img-grid{display:flex;flex-wrap:nowrap;align-items:stretch;gap:8px;width:100%}.sht-img-item,.sht-img-item-single{aspect-ratio:4/3;overflow:hidden;border-radius:4px;position:relative;cursor:pointer;display:flex;align-items:center;justify-content:center;background:#f0f0f0}.sht-img-item-single{max-width:50%}.sht-img-loading{background:linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%);background-size:200% 100%;animation:sht-loading 1.5s ease-in-out infinite}.sht-img-loading::after{content:"⏳";position:absolute;font-size:24px;opacity:.5}@keyframes sht-loading{0%{background-position:200% 0}to{background-position:-200% 0}}.sht-img-loaded img{animation:sht-fade-in .3s ease-in}.sht-img-error{background:#ffebee}.sht-img-error::after{content:"❌ 加载失败";position:absolute;font-size:12px;color:#c62828}@keyframes sht-fade-in{from{opacity:0}to{opacity:1}}.sht-img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;opacity:0;transition:opacity .3s}.sht-img-loaded .sht-img{opacity:1}.sht-links{margin:10px 0 0;padding:8px;background:#fafafa;border:1px solid #eee;border-radius:4px;width:100%;box-sizing:border-box}.sht-link-item{background:#f5f5f5;border:1px solid #e0e0e0;padding:4px 6px;border-radius:3px;margin-bottom:4px;word-break:break-all;cursor:pointer;font-size:12px;color:#666;transition:background .2s}.sht-link-item:hover{background:#ebebeb}.sht-link-clickable{background:#f0f7ff;border-color:#d0e3f7;color:#4a6fa5;text-decoration:none;display:block}.sht-link-clickable:hover{background:#e3f0ff}.sht-link-icon{margin-right:4px;font-size:10px}.sht-attachments{margin:10px 0 0;padding:8px;background:#faf8f5;border:1px solid #ebe6df;border-radius:4px;width:100%;box-sizing:border-box}.sht-attachment-item{margin-bottom:4px}.sht-attachment-item:last-child{margin-bottom:0}.sht-attachment-link{display:flex;align-items:center;padding:6px 8px;background:#f7f5f2;border:1px solid #e5e0d8;border-radius:4px;text-decoration:none;color:#8b7355;font-size:12px;transition:background .2s}.sht-attachment-link:hover{background:#f0ede8}.sht-attachment-icon{margin-right:6px;font-size:14px}.sht-attachment-name{flex:1;word-break:break-all}.sht-attachment-size{margin-left:8px;color:#aaa;font-size:11px}.sht-nav-toggle{position:relative;display:inline-block;width:38px;height:20px}.sht-nav-toggle input{opacity:0;width:0;height:0}.sht-nav-slider{position:absolute;cursor:pointer;inset:0;background:#ddd;border-radius:10px;transition:background .3s}.sht-nav-slider:before{position:absolute;content:"";height:16px;width:16px;left:2px;bottom:2px;background:#fff;border-radius:50%;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:transform .3s}.sht-nav-toggle input:checked+.sht-nav-slider{background:#4d84c6}.sht-nav-toggle input:checked+.sht-nav-slider:before{transform:translateX(18px)}.sht-nav-active a{background-color:#840000!important;background-image:url(/static/image/common/nv_a.png)!important;background-repeat:no-repeat!important;background-position:50% -33px!important;color:#fff!important;font-weight:700!important;height:33px!important;line-height:33px!important;padding:0 8px!important;box-sizing:border-box!important;text-align:center!important;display:inline-block!important}', 
       document.head.appendChild(style), this.injected = !0;
     }
     static createElement(tag, className, text) {
@@ -145,21 +145,18 @@
   _Lightbox.nextBtn = null, _Lightbox.closeBtn = null, _Lightbox.images = [], _Lightbox.currentIndex = 0;
   let Lightbox = _Lightbox;
   const _ImageProxy = class {
-    static getStorageKeys() {
-      return this.STORAGE_KEYS;
+    static getGearConfigs() {
+      return this.GEAR_CONFIGS;
     }
-    static getLevelConfigs() {
-      return this.LEVEL_CONFIGS;
+    static getGear() {
+      const stored = localStorage.getItem(this.STORAGE_KEYS.GEAR);
+      return !stored || "off" !== stored && "smart" !== stored && "speed" !== stored ? "true" === localStorage.getItem(this.STORAGE_KEYS.ENABLED) && this.hasProxyUrl() ? "smart" : "off" : stored;
+    }
+    static setGear(gear) {
+      localStorage.setItem(this.STORAGE_KEYS.GEAR, gear), localStorage.setItem(this.STORAGE_KEYS.ENABLED, "off" !== gear ? "true" : "false");
     }
     static isEnabled() {
-      const stored = localStorage.getItem(this.STORAGE_KEYS.ENABLED), hasProxy = this.hasProxyUrl();
-      return "true" === stored && hasProxy;
-    }
-    static setEnabled(enabled) {
-      localStorage.setItem(this.STORAGE_KEYS.ENABLED, String(enabled));
-    }
-    static getRawEnabled() {
-      return "true" === localStorage.getItem(this.STORAGE_KEYS.ENABLED);
+      return "off" !== this.getGear() && this.hasProxyUrl();
     }
     static hasProxyUrl() {
       const url = localStorage.getItem(this.STORAGE_KEYS.PROXY_URL);
@@ -172,14 +169,7 @@
       if (url && url.trim()) {
         let normalizedUrl = url.trim();
         normalizedUrl.endsWith("/") || (normalizedUrl += "/"), localStorage.setItem(this.STORAGE_KEYS.PROXY_URL, normalizedUrl);
-      } else localStorage.removeItem(this.STORAGE_KEYS.PROXY_URL), this.setEnabled(!1);
-    }
-    static getCompressionLevel() {
-      const stored = localStorage.getItem(this.STORAGE_KEYS.COMPRESSION_LEVEL);
-      return !stored || "low" !== stored && "medium" !== stored && "high" !== stored ? "medium" : stored;
-    }
-    static setCompressionLevel(level) {
-      localStorage.setItem(this.STORAGE_KEYS.COMPRESSION_LEVEL, level);
+      } else localStorage.removeItem(this.STORAGE_KEYS.PROXY_URL), this.setGear("off");
     }
     static isTargetHost(url) {
       return !(url.includes("/static/") || url.includes("icon") || url.includes("avatar")) && ([ "ymawv.la", "wmaiv.la", "iili.io", "7pzzv.us" ].some(host => url.includes(host)) || url.toLowerCase().endsWith(".gif"));
@@ -188,18 +178,42 @@
       const proxyUrl = this.getProxyUrl();
       if (!proxyUrl) return null;
       try {
-        const cleanUrl = originalUrl.replace(/^https?:\/\//, ""), isGif = originalUrl.toLowerCase().endsWith(".gif"), level = this.getCompressionLevel(), levelConfig = this.LEVEL_CONFIGS[level], conf = isGif ? levelConfig.animated : levelConfig.static;
+        const cleanUrl = originalUrl.replace(/^https?:\/\//, ""), conf = originalUrl.toLowerCase().endsWith(".gif") ? this.COMPRESSION_CONFIG.animated : this.COMPRESSION_CONFIG.static;
         let params = `url=${encodeURIComponent(cleanUrl)}&w=${conf.w}&q=${conf.q}&output=${conf.fmt}`;
-        return void 0 !== conf.n && (params += `&n=${conf.n}`), `${proxyUrl}?${params}`;
+        return "n" in conf && void 0 !== conf.n && (params += `&n=${conf.n}`), `${proxyUrl}?${params}`;
       } catch {
         return null;
       }
     }
     static async load(img, originalUrl, isHighPriority = !1) {
-      if (isHighPriority && img.setAttribute("fetchpriority", "high"), !this.isEnabled()) return this.directLoad(img, originalUrl);
+      isHighPriority && img.setAttribute("fetchpriority", "high");
+      const gear = this.getGear();
+      if ("off" === gear || !this.hasProxyUrl()) return this.directLoad(img, originalUrl);
       if (!this.isTargetHost(originalUrl)) return this.directLoad(img, originalUrl);
+      if ("smart" === gear) return this.smartLoad(img, originalUrl);
       const compressedUrl = this.getCompressedUrl(originalUrl);
       return compressedUrl ? this.loadWithFallback(img, compressedUrl, originalUrl) : this.directLoad(img, originalUrl);
+    }
+    static async smartLoad(img, originalUrl) {
+      return new Promise((resolve, reject) => {
+        let timeoutId, resolved = !1;
+        const cleanup = () => {
+          resolved = !0, timeoutId && clearTimeout(timeoutId), img.onload = null, img.onerror = null;
+        };
+        timeoutId = window.setTimeout(() => {
+          if (resolved) return;
+          cleanup();
+          const compressedUrl = this.getCompressedUrl(originalUrl);
+          compressedUrl ? this.loadWithFallback(img, compressedUrl, originalUrl).then(resolve).catch(reject) : this.directLoad(img, originalUrl).then(resolve).catch(reject);
+        }, this.SMART_TIMEOUT_MS), img.decoding = "async", img.onload = () => {
+          resolved || (cleanup(), resolve());
+        }, img.onerror = () => {
+          if (resolved) return;
+          cleanup();
+          const compressedUrl = this.getCompressedUrl(originalUrl);
+          compressedUrl ? this.loadWithFallback(img, compressedUrl, originalUrl).then(resolve).catch(reject) : reject(new Error("加载失败"));
+        }, img.src = originalUrl;
+      });
     }
     static loadWithFallback(img, proxyUrl, originalUrl) {
       return new Promise((resolve, reject) => {
@@ -209,7 +223,7 @@
         };
         timeoutId = window.setTimeout(() => {
           resolved || (cleanup(), this.directLoad(img, originalUrl).then(resolve).catch(reject));
-        }, this.TIMEOUT_MS), img.decoding = "async", img.onload = () => {
+        }, this.PROXY_TIMEOUT_MS), img.decoding = "async", img.onload = () => {
           resolved || (cleanup(), resolve());
         }, img.onerror = () => {
           resolved || (cleanup(), this.directLoad(img, originalUrl).then(resolve).catch(reject));
@@ -238,7 +252,7 @@
         }), new Promise((_, reject) => setTimeout(() => reject(new Error("超时")), 5e3)) ]);
         return result.ok ? {
           success: !0,
-          message: "代理可用 ✓"
+          message: "代理可用"
         } : {
           success: !1,
           message: `代理返回错误: ${result.status}`
@@ -250,56 +264,62 @@
         };
       }
     }
+    static getCompressionLevel() {
+      return "medium";
+    }
+    static setCompressionLevel(_level) {}
+    static setEnabled(enabled) {
+      enabled ? "off" === this.getGear() && this.setGear("smart") : this.setGear("off");
+    }
+    static getRawEnabled() {
+      return "off" !== this.getGear();
+    }
+    static getLevelConfigs() {
+      return {
+        low: {
+          label: "极速",
+          desc: "快速加载"
+        },
+        medium: {
+          label: "智能",
+          desc: "自动优化"
+        },
+        high: {
+          label: "高清",
+          desc: "接近原图"
+        }
+      };
+    }
   };
   _ImageProxy.STORAGE_KEYS = {
-    ENABLED: "SHT_IMAGE_ACCELERATION_ENABLED",
+    GEAR: "SHT_IMAGE_ACCEL_GEAR",
     PROXY_URL: "SHT_IMAGE_PROXY_URL",
+    ENABLED: "SHT_IMAGE_ACCELERATION_ENABLED",
     COMPRESSION_LEVEL: "SHT_IMAGE_COMPRESSION_LEVEL"
-  }, _ImageProxy.TIMEOUT_MS = 1e4, _ImageProxy.LEVEL_CONFIGS = {
-    low: {
-      label: "低",
-      desc: "最快速度，图片可能稍微模糊",
-      static: {
-        w: 300,
-        q: 60,
-        fmt: "webp"
-      },
-      animated: {
-        w: 300,
-        q: 50,
-        fmt: "webp",
-        n: -1
-      }
+  }, _ImageProxy.SMART_TIMEOUT_MS = 200, _ImageProxy.PROXY_TIMEOUT_MS = 1e4, _ImageProxy.GEAR_CONFIGS = {
+    off: {
+      label: "关",
+      desc: "原始画质"
     },
-    medium: {
-      label: "中",
-      desc: "平衡速度和质量",
-      static: {
-        w: 400,
-        q: 75,
-        fmt: "webp"
-      },
-      animated: {
-        w: 400,
-        q: 65,
-        fmt: "webp",
-        n: -1
-      }
+    smart: {
+      label: "智能",
+      desc: "自动优化"
     },
-    high: {
-      label: "高",
-      desc: "保持清晰，适度压缩",
-      static: {
-        w: 600,
-        q: 85,
-        fmt: "webp"
-      },
-      animated: {
-        w: 500,
-        q: 75,
-        fmt: "webp",
-        n: -1
-      }
+    speed: {
+      label: "极速",
+      desc: "快速加载"
+    }
+  }, _ImageProxy.COMPRESSION_CONFIG = {
+    static: {
+      w: 500,
+      q: 70,
+      fmt: "webp"
+    },
+    animated: {
+      w: 480,
+      q: 65,
+      fmt: "webp",
+      n: -1
     }
   };
   let ImageProxy = _ImageProxy;
@@ -362,129 +382,30 @@
   _ImageLoader.MAX_CONCURRENT = 8, _ImageLoader.loadingCount = 0, _ImageLoader.queue = [], 
   _ImageLoader.preconnectedHosts = new Set;
   let ImageLoader = _ImageLoader;
-  const _UIComponents = class {
-    static createToggleSwitch(label, options) {
-      const container = document.createElement("div");
-      container.style.display = "flex", container.style.alignItems = "center";
-      const labelSpan = document.createElement("span");
-      labelSpan.textContent = `${label}：`, labelSpan.style.cssText = "font-size: 13px; color: #666; margin-right: 6px; line-height: 20px;", 
-      container.appendChild(labelSpan);
-      const switchLabel = StyleManager.createElement("label", "sht-nav-toggle"), input = document.createElement("input");
-      input.type = "checkbox";
-      const slider = StyleManager.createElement("span", "sht-nav-slider");
-      switchLabel.appendChild(input), switchLabel.appendChild(slider), container.appendChild(switchLabel);
-      const storedValue = localStorage.getItem(options.storageKeyEnabled);
-      let enabled = null === storedValue ? options.defaultEnabled ?? !1 : "true" === storedValue;
-      return input.addEventListener("change", () => {
-        enabled = input.checked, localStorage.setItem(options.storageKeyEnabled, String(enabled)), 
-        enabled ? options.onEnable() : options.onDisable();
-      }), input.checked = enabled, enabled && options.onEnable(), container;
+  const GEAR_UI = {
+    off: {
+      color: "#9e9e9e"
+    },
+    smart: {
+      color: "#2196F3"
+    },
+    speed: {
+      color: "#FF9800"
     }
-    static createButtonSwitch(label, options) {
-      const button = document.createElement("button");
-      button.style.cssText = "\n      padding: 4px 12px;\n      background: #f0f0f0;\n      border: 1px solid #ccc;\n      border-radius: 4px;\n      cursor: pointer;\n      font-size: 13px;\n      color: #333;\n      transition: all 0.2s;\n      display: flex;\n      align-items: center;\n      gap: 4px;\n    ";
-      const storedValue = localStorage.getItem(options.storageKeyEnabled);
-      let enabled = null === storedValue ? options.defaultEnabled ?? !1 : "true" === storedValue;
-      const updateUI = () => {
-        enabled ? (button.style.background = "#e3f2fd", button.style.borderColor = "#2196F3", 
-        button.style.color = "#1976D2", button.innerHTML = `✅ ${label}`) : (button.style.background = "#f0f0f0", 
-        button.style.borderColor = "#ccc", button.style.color = "#333", button.innerHTML = `⚪ ${label}`);
-      };
-      return button.addEventListener("mouseenter", () => {
-        enabled || (button.style.background = "#e0e0e0");
-      }), button.addEventListener("mouseleave", () => {
-        enabled || (button.style.background = "#f0f0f0");
-      }), button.addEventListener("click", e => {
-        e.preventDefault(), enabled = !enabled, localStorage.setItem(options.storageKeyEnabled, String(enabled)), 
-        updateUI(), enabled ? options.onEnable() : options.onDisable();
-      }), updateUI(), enabled && setTimeout(() => options.onEnable(), 0), button;
-    }
-    static setupSearchTitleContainer() {
-      const titleContainer = document.querySelector(".sttl.mbn");
-      return titleContainer ? (titleContainer.style.display = "flex", titleContainer.style.justifyContent = "space-between", 
-      titleContainer.style.alignItems = "center", titleContainer) : null;
-    }
-    static isClickableLink(link) {
-      return link.startsWith("thunder://") || link.startsWith("https://") || link.startsWith("http://");
-    }
-    static createLinksElement(links) {
-      const allLinks = [ ...links.ed2k, ...links.magnet, ...links.xunlei, ...links.baidu ];
-      if (0 === allLinks.length) return null;
-      const container = StyleManager.createElement("div", "sht-links");
-      if (allLinks.forEach((link, index) => {
-        const linkDiv = document.createElement("div");
-        if (linkDiv.style.marginBottom = "4px", this.isClickableLink(link)) {
-          const linkAnchor = document.createElement("a");
-          linkAnchor.href = link, linkAnchor.target = "_blank", linkAnchor.rel = "noopener noreferrer", 
-          linkAnchor.className = "sht-link-item sht-link-clickable", linkAnchor.innerHTML = `<span class="sht-link-icon">🔗</span>${link}`, 
-          linkAnchor.title = "点击打开链接", linkAnchor.addEventListener("click", e => {
-            e.stopPropagation();
-          }), linkDiv.appendChild(linkAnchor);
-        } else {
-          const linkBox = StyleManager.createElement("div", "sht-link-item");
-          linkBox.innerHTML = `<span class="sht-link-icon">📋</span>${link}`, linkBox.title = "点击复制链接", 
-          linkBox.addEventListener("click", e => {
-            e.preventDefault(), e.stopPropagation(), navigator.clipboard.writeText(link).then(() => {
-              const originalText = linkBox.innerHTML;
-              linkBox.innerHTML = '<span class="sht-link-icon">✅</span>已复制！', linkBox.style.background = "#c8e6c9", 
-              setTimeout(() => {
-                linkBox.innerHTML = originalText, linkBox.style.background = "";
-              }, 1e3);
-            }).catch(() => {});
-          }), linkDiv.appendChild(linkBox);
-        }
-        index > 0 && (linkDiv.style.display = "none", linkDiv.classList.add("hidden-link")), 
-        container.appendChild(linkDiv);
-      }), allLinks.length > 1) {
-        const toggleButton = document.createElement("button");
-        toggleButton.textContent = `显示剩余 ${allLinks.length - 1} 个链接`, toggleButton.style.cssText = "margin-top: 5px; cursor: pointer; border: 1px solid #ccc; background-color: #f0f0f0; padding: 5px 10px; border-radius: 4px;";
-        let expanded = !1;
-        toggleButton.addEventListener("click", e => {
-          e.preventDefault(), e.stopPropagation(), expanded = !expanded, container.querySelectorAll(".hidden-link").forEach(l => {
-            l.style.display = expanded ? "block" : "none";
-          }), toggleButton.textContent = expanded ? "收起链接" : `显示剩余 ${allLinks.length - 1} 个链接`;
-        }), container.appendChild(toggleButton);
-      }
-      return container;
-    }
-    static createNormalPageToggle(options) {
-      const navMenu = document.querySelector("#nv ul");
-      if (!navMenu) return;
-      const infiniteScrollLi = document.createElement("li"), toggleContainer = document.createElement("div");
-      toggleContainer.id = "nav-toggle-infinite-scroll";
-      const toggleLink = document.createElement("a");
-      toggleLink.href = "javascript:;", toggleLink.textContent = "无缝翻页", toggleContainer.appendChild(toggleLink), 
-      infiniteScrollLi.appendChild(toggleContainer), navMenu.appendChild(infiniteScrollLi);
-      const storedValue = localStorage.getItem(options.storageKeyEnabled);
-      let enabled = null === storedValue ? options.defaultEnabled ?? !1 : "true" === storedValue;
-      const originalWidth = toggleLink.offsetWidth || 68, updateToggle = () => {
-        enabled ? (toggleContainer.classList.add("a"), toggleContainer.classList.add("sht-nav-active"), 
-        toggleLink.style.minWidth = `${originalWidth}px`, toggleLink.style.width = `${originalWidth}px`) : (toggleContainer.classList.remove("a"), 
-        toggleContainer.classList.remove("sht-nav-active"), toggleContainer.classList.remove("hover"), 
-        toggleLink.style.cssText = "");
-      };
-      toggleContainer.addEventListener("click", e => {
-        e.preventDefault(), enabled = !enabled, localStorage.setItem(options.storageKeyEnabled, String(enabled)), 
-        updateToggle(), enabled ? options.onEnable() : options.onDisable();
-      }), updateToggle(), enabled && options.onEnable();
-      const settingsLi = document.createElement("li"), settingsContainer = document.createElement("div");
-      settingsContainer.id = "nav-toggle-settings";
-      const settingsLink = document.createElement("a");
-      settingsLink.href = "javascript:;", settingsLink.textContent = "脚本设置", settingsLink.title = "点击打开脚本设置面板", 
-      settingsContainer.appendChild(settingsLink), settingsLi.appendChild(settingsContainer), 
-      navMenu.appendChild(settingsLi), settingsContainer.addEventListener("click", e => {
-        e.preventDefault(), this.showSettingsPanel();
-      });
-    }
-    static showSettingsPanel() {
+  };
+  class SettingsPanel {
+    static show() {
       const existingPanel = document.getElementById("sht-settings-panel"), existingOverlay = document.getElementById("sht-settings-overlay");
       if (existingPanel) return existingPanel.remove(), void existingOverlay?.remove();
       const overlay = document.createElement("div");
       overlay.id = "sht-settings-overlay", overlay.style.cssText = "\n      position: fixed; top: 0; left: 0; width: 100%; height: 100%;\n      background: rgba(0,0,0,0.5); z-index: 99998;\n    ";
       const panel = document.createElement("div");
-      panel.id = "sht-settings-panel", panel.style.cssText = "\n      position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);\n      background: #fff; border-radius: 12px; padding: 24px; z-index: 99999;\n      box-shadow: 0 8px 32px rgba(0,0,0,0.3); min-width: 420px; max-width: 90vw;\n      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;\n      max-height: 90vh; overflow-y: auto;\n    ";
-      const levelConfigs = ImageProxy.getLevelConfigs(), currentLevel = ImageProxy.getCompressionLevel(), currentProxyUrl = ImageProxy.getProxyUrl(), hasProxy = ImageProxy.hasProxyUrl(), accelEnabled = ImageProxy.getRawEnabled(), currentPreviewCount = CONFIG.get("maxPreviewImages");
-      panel.innerHTML = `\n      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 16px;">\n        <h3 style="margin: 0; font-size: 18px; color: #333;">⚙️ 脚本设置</h3>\n        <button id="sht-settings-close" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #999; line-height: 1;">&times;</button>\n      </div>\n      \n      \x3c!-- 预览图张数设置 --\x3e\n      <div style="margin-bottom: 24px; padding: 16px; background: #f8f9fa; border-radius: 10px;">\n        <label style="display: block; font-weight: 600; margin-bottom: 12px; color: #333;">🖼️ 预览图张数</label>\n        <div style="display: flex; gap: 10px;">\n          ${[ 3, 4, 5 ].map(num => `\n            <label style="flex: 1; padding: 10px; border: 2px solid ${num === currentPreviewCount ? "#2196F3" : "#ddd"}; \n              border-radius: 8px; cursor: pointer; text-align: center; transition: all 0.2s;\n              background: ${num === currentPreviewCount ? "#e3f2fd" : "#fff"};">\n              <input type="radio" name="preview-count" value="${num}" \n                ${num === currentPreviewCount ? "checked" : ""} style="display: none;">\n              <div style="font-size: 18px; font-weight: 600;">${num}</div>\n              <div style="font-size: 11px; color: #666;">张</div>\n            </label>\n          `).join("")}\n        </div>\n        <div style="font-size: 12px; color: #999; margin-top: 8px;">每个帖子显示的预览图数量</div>\n      </div>\n\n      \x3c!-- 图片加速设置区域 --\x3e\n      <div style="margin-bottom: 24px; padding: 16px; background: #f8f9fa; border-radius: 10px;">\n        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">\n          <label style="font-weight: 600; color: #333;">🚀 图片加速</label>\n          <label style="position: relative; display: inline-block; width: 50px; height: 26px;">\n            <input type="checkbox" id="sht-accel-toggle" ${accelEnabled && hasProxy ? "checked" : ""} ${hasProxy ? "" : "disabled"}\n              style="opacity: 0; width: 0; height: 0;">\n            <span style="position: absolute; cursor: ${hasProxy ? "pointer" : "not-allowed"}; top: 0; left: 0; right: 0; bottom: 0; \n              background-color: ${accelEnabled && hasProxy ? "#4CAF50" : "#ccc"}; transition: .3s; border-radius: 26px;\n              opacity: ${hasProxy ? "1" : "0.6"};">\n              <span style="position: absolute; content: ''; height: 20px; width: 20px; left: ${accelEnabled && hasProxy ? "26px" : "3px"}; bottom: 3px; \n                background-color: white; transition: .3s; border-radius: 50%;"></span>\n            </span>\n          </label>\n        </div>\n        \n        <div style="font-size: 13px; color: #666; margin-bottom: 16px; padding: 10px; background: ${hasProxy ? "#e8f5e9" : "#fff3e0"}; border-radius: 6px;">\n          ${hasProxy ? "✅ 已设置代理，可使用图片加速功能" : "⚠️ 请先设置代理地址才能开启图片加速<br>💡 利用代理压缩图片加速加载，需要自行部署代理服务"}\n        </div>\n\n        <div style="margin-bottom: 16px;">\n          <label style="display: block; font-weight: 500; margin-bottom: 8px; color: #555; font-size: 14px;">🔧 代理地址</label>\n          <input type="text" id="sht-proxy-url" placeholder="自行搭建或寻找公益图片代理服务" \n            value="${currentProxyUrl}"\n            style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; box-sizing: border-box;">\n          <div style="margin-top: 8px; display: flex; align-items: center; gap: 10px;">\n            <button id="sht-test-proxy" style="padding: 6px 12px; background: #f0f0f0; border: 1px solid #ddd; border-radius: 6px; cursor: pointer; font-size: 13px;">\n              🔍 测试代理\n            </button>\n            <span id="sht-proxy-test-result" style="font-size: 13px;"></span>\n          </div>\n        </div>\n\n        <div>\n          <label style="display: block; font-weight: 500; margin-bottom: 10px; color: #555; font-size: 14px;">⚡ 压缩等级</label>\n          <div style="display: flex; gap: 8px;">\n            ${[ "low", "medium", "high" ].map(level => `\n              <label class="sht-level-label" style="flex: 1; padding: 10px 8px; border: 2px solid ${level === currentLevel ? "#4CAF50" : "#ddd"}; \n                border-radius: 8px; cursor: pointer; text-align: center; transition: all 0.2s;\n                background: ${level === currentLevel ? "#e8f5e9" : "#fff"};">\n                <input type="radio" name="compression-level" value="${level}" \n                  ${level === currentLevel ? "checked" : ""} style="display: none;">\n                <div style="font-size: 14px; font-weight: 600; margin-bottom: 2px;">${levelConfigs[level].label}</div>\n                <div style="font-size: 10px; color: #666; line-height: 1.3;">${levelConfigs[level].desc}</div>\n              </label>\n            `).join("")}\n          </div>\n        </div>\n      </div>\n\n      <div style="display: flex; gap: 12px;">\n        <button id="sht-settings-save" style="flex: 1; padding: 12px; background: linear-gradient(135deg, #4CAF50, #45a049); \n          color: #fff; border: none; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer;">\n          ✓ 保存设置\n        </button>\n        <button id="sht-settings-cancel" style="padding: 12px 20px; background: #f5f5f5; color: #666; \n          border: 1px solid #ddd; border-radius: 8px; font-size: 15px; cursor: pointer;">\n          取消\n        </button>\n      </div>\n    `, 
+      panel.id = "sht-settings-panel", panel.style.cssText = "\n      position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);\n      background: #fff; border-radius: 12px; padding: 24px; z-index: 99999;\n      box-shadow: 0 8px 32px rgba(0,0,0,0.3); min-width: 380px; max-width: 90vw;\n      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;\n      max-height: 90vh; overflow-y: auto;\n    ";
+      const gearConfigs = ImageProxy.getGearConfigs(), currentGear = ImageProxy.getGear(), currentProxyUrl = ImageProxy.getProxyUrl(), hasProxy = ImageProxy.hasProxyUrl(), currentPreviewCount = CONFIG.get("maxPreviewImages");
+      panel.innerHTML = `\n      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 16px;">\n        <h3 style="margin: 0; font-size: 18px; color: #333;">⚙️ 脚本设置</h3>\n        <button id="sht-settings-close" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #999; line-height: 1;">&times;</button>\n      </div>\n      \n      \x3c!-- 预览图张数（紧凑版） --\x3e\n      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; padding: 12px 16px; background: #f8f9fa; border-radius: 8px;">\n        <span style="font-weight: 600; color: #333; font-size: 14px;">🖼️ 预览图张数</span>\n        <div style="display: flex; gap: 6px;">\n          ${[ 3, 4, 5 ].map(num => `\n            <label style="width: 36px; height: 36px; border: 2px solid ${num === currentPreviewCount ? "#2196F3" : "#ddd"}; \n              border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center;\n              background: ${num === currentPreviewCount ? "#e3f2fd" : "#fff"}; font-weight: 600; font-size: 15px; color: ${num === currentPreviewCount ? "#1976D2" : "#666"};">\n              <input type="radio" name="preview-count" value="${num}" ${num === currentPreviewCount ? "checked" : ""} style="display: none;">\n              ${num}\n            </label>\n          `).join("")}\n        </div>\n      </div>\n\n      \x3c!-- 图片加速区域 --\x3e\n      <div style="padding: 16px; background: #f8f9fa; border-radius: 10px; margin-bottom: 16px;">\n        <div style="font-weight: 600; color: #333; margin-bottom: 12px; font-size: 14px;">🚀 图片加速</div>\n        \n        \x3c!-- 加速挡位选择 --\x3e\n        <div style="display: flex; gap: 10px; margin-bottom: 16px;">\n          ${[ "off", "smart", "speed" ].map(gear => {
+        const config = gearConfigs[gear], ui = GEAR_UI[gear], isSelected = gear === currentGear, isDisabled = "off" !== gear && !hasProxy;
+        return `\n              <label class="sht-gear-label" data-gear="${gear}" style="flex: 1; padding: 12px 8px; border: 2px solid ${isSelected ? ui.color : "#ddd"}; \n                border-radius: 8px; cursor: ${isDisabled ? "not-allowed" : "pointer"}; text-align: center; transition: all 0.2s;\n                background: #fff; opacity: ${isDisabled ? "0.5" : "1"};">\n                <input type="radio" name="accel-gear" value="${gear}" ${isSelected ? "checked" : ""} ${isDisabled ? "disabled" : ""} style="display: none;">\n                <div style="font-size: 15px; font-weight: 600; color: ${isSelected ? ui.color : "#666"};">${config.label}</div>\n                <div style="font-size: 11px; color: #999; margin-top: 4px;">${config.desc}</div>\n              </label>\n            `;
+      }).join("")}\n        </div>\n\n        \x3c!-- 代理地址 --\x3e\n        <div>\n          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">\n            <span style="font-size: 13px; color: #555;">🔧 代理地址</span>\n            <span id="sht-proxy-status" style="font-size: 11px; padding: 2px 6px; border-radius: 4px; \n              background: ${hasProxy ? "#e8f5e9" : "#fff3e0"}; color: ${hasProxy ? "#4caf50" : "#ff9800"};">\n              ${hasProxy ? "已设置" : "未设置"}\n            </span>\n          </div>\n          <div style="display: flex; gap: 8px;">\n            <input type="text" id="sht-proxy-url" placeholder="输入代理服务地址" \n              value="${currentProxyUrl}"\n              style="flex: 1; padding: 8px 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; box-sizing: border-box;">\n            <button id="sht-test-proxy" style="padding: 8px 12px; background: #f0f0f0; border: 1px solid #ddd; border-radius: 6px; cursor: pointer; font-size: 12px; white-space: nowrap;">\n              测试\n            </button>\n          </div>\n          <div id="sht-proxy-test-result" style="font-size: 12px; margin-top: 6px; min-height: 16px;"></div>\n          <div style="font-size: 11px; color: #999; margin-top: 4px;">💡 需自行部署或使用公益图片代理服务</div>\n        </div>\n      </div>\n\n      <div style="display: flex; gap: 12px;">\n        <button id="sht-settings-save" style="flex: 1; padding: 12px; background: linear-gradient(135deg, #4CAF50, #45a049); \n          color: #fff; border: none; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer;">\n          ✓ 保存设置\n        </button>\n        <button id="sht-settings-cancel" style="padding: 12px 20px; background: #f5f5f5; color: #666; \n          border: 1px solid #ddd; border-radius: 8px; font-size: 15px; cursor: pointer;">\n          取消\n        </button>\n      </div>\n    `, 
       overlay.addEventListener("click", () => {
         overlay.remove(), panel.remove();
       }), document.body.appendChild(overlay), document.body.appendChild(panel);
@@ -499,39 +420,50 @@
             const label = inp.closest("label");
             if (label) {
               const isChecked = inp.checked;
-              label.style.borderColor = isChecked ? "#2196F3" : "#ddd", label.style.background = isChecked ? "#e3f2fd" : "#fff";
+              label.style.borderColor = isChecked ? "#2196F3" : "#ddd", label.style.background = isChecked ? "#e3f2fd" : "#fff", 
+              label.style.color = isChecked ? "#1976D2" : "#666";
             }
           });
         });
       });
-      const levelLabels = panel.querySelectorAll(".sht-level-label");
-      levelLabels.forEach(label => {
-        label.addEventListener("click", () => {
-          levelLabels.forEach(l => {
-            l.style.borderColor = "#ddd", l.style.background = "#fff";
-          }), label.style.borderColor = "#4CAF50", label.style.background = "#e8f5e9";
+      const proxyInput = panel.querySelector("#sht-proxy-url"), proxyStatus = panel.querySelector("#sht-proxy-status"), gearLabels = panel.querySelectorAll(".sht-gear-label"), updateGearAvailability = hasProxyNow => {
+        gearLabels.forEach(label => {
+          const gear = label.getAttribute("data-gear"), input = label.querySelector("input"), isDisabled = "off" !== gear && !hasProxyNow;
+          if (label.style.opacity = isDisabled ? "0.5" : "1", label.style.cursor = isDisabled ? "not-allowed" : "pointer", 
+          input.disabled = isDisabled, isDisabled && input.checked) {
+            input.checked = !1;
+            const offInput = panel.querySelector('input[value="off"]');
+            offInput && (offInput.checked = !0, updateGearUI("off"));
+          }
+        }), proxyStatus.style.background = hasProxyNow ? "#e8f5e9" : "#fff3e0", proxyStatus.style.color = hasProxyNow ? "#4caf50" : "#ff9800", 
+        proxyStatus.textContent = hasProxyNow ? "已设置" : "未设置";
+      }, updateGearUI = selectedGear => {
+        gearLabels.forEach(label => {
+          const gear = label.getAttribute("data-gear"), ui = GEAR_UI[gear], isSelected = gear === selectedGear;
+          label.style.borderColor = isSelected ? ui.color : "#ddd";
+          const titleDiv = label.querySelector("div");
+          titleDiv && (titleDiv.style.color = isSelected ? ui.color : "#666");
         });
-      });
-      const proxyInput = panel.querySelector("#sht-proxy-url"), accelToggle = panel.querySelector("#sht-accel-toggle"), toggleSlider = accelToggle.nextElementSibling, toggleDot = toggleSlider?.querySelector("span"), statusDiv = panel.querySelector('div[style*="background: #e8f5e9"], div[style*="background: #fff3e0"]'), updateToggleUI = (enabled, hasProxyNow) => {
-        accelToggle.disabled = !hasProxyNow, toggleSlider.style.cursor = hasProxyNow ? "pointer" : "not-allowed", 
-        toggleSlider.style.opacity = hasProxyNow ? "1" : "0.6", toggleSlider.style.backgroundColor = enabled && hasProxyNow ? "#4CAF50" : "#ccc", 
-        toggleDot && (toggleDot.style.left = enabled && hasProxyNow ? "26px" : "3px"), statusDiv && (statusDiv.style.background = hasProxyNow ? "#e8f5e9" : "#fff3e0", 
-        statusDiv.innerHTML = hasProxyNow ? "✅ 已设置代理，可使用图片加速功能" : "⚠️ 请先设置代理地址才能开启图片加速<br>💡 利用代理压缩图片加速加载，需要自行部署代理服务");
       };
       proxyInput.addEventListener("input", () => {
         const hasProxyNow = !!proxyInput.value.trim();
-        hasProxyNow || (accelToggle.checked = !1), updateToggleUI(accelToggle.checked, hasProxyNow);
-      }), accelToggle.addEventListener("change", () => {
-        const hasProxyNow = !!proxyInput.value.trim();
-        updateToggleUI(accelToggle.checked, hasProxyNow);
+        updateGearAvailability(hasProxyNow);
+      }), gearLabels.forEach(label => {
+        label.addEventListener("click", () => {
+          const input = label.querySelector("input");
+          if (input.disabled) return;
+          const gear = label.getAttribute("data-gear");
+          input.checked = !0, updateGearUI(gear);
+        });
       }), panel.querySelector("#sht-test-proxy")?.addEventListener("click", async () => {
         const resultSpan = panel.querySelector("#sht-proxy-test-result"), testUrl = proxyInput.value.trim();
-        if (!testUrl) return resultSpan.textContent = "请输入代理地址", void (resultSpan.style.color = "#f44336");
-        resultSpan.textContent = "测试中...", resultSpan.style.color = "#666";
+        if (!testUrl) return resultSpan.textContent = "❌ 请输入代理地址", void (resultSpan.style.color = "#f44336");
+        resultSpan.textContent = "⏳ 测试中...", resultSpan.style.color = "#666";
         const result = await ImageProxy.testProxy(testUrl);
-        resultSpan.textContent = result.message, resultSpan.style.color = result.success ? "#4CAF50" : "#f44336";
+        resultSpan.textContent = result.success ? `✅ ${result.message}` : `❌ ${result.message}`, 
+        resultSpan.style.color = result.success ? "#4CAF50" : "#f44336", result.success && updateGearAvailability(!0);
       }), panel.querySelector("#sht-settings-save")?.addEventListener("click", () => {
-        const selectedPreviewCount = panel.querySelector('input[name="preview-count"]:checked'), selectedLevel = panel.querySelector('input[name="compression-level"]:checked');
+        const selectedPreviewCount = panel.querySelector('input[name="preview-count"]:checked'), selectedGear = panel.querySelector('input[name="accel-gear"]:checked');
         let needsReload = !1;
         if (selectedPreviewCount) {
           const newCount = parseInt(selectedPreviewCount.value);
@@ -539,125 +471,16 @@
           needsReload = !0);
         }
         const newProxyUrl = proxyInput.value.trim();
-        newProxyUrl !== ImageProxy.getProxyUrl() && ImageProxy.setProxyUrl(newProxyUrl);
-        const wasEnabled = ImageProxy.isEnabled();
-        ImageProxy.setEnabled(accelToggle.checked), wasEnabled !== ImageProxy.isEnabled() && (needsReload = !0), 
-        selectedLevel && ImageProxy.setCompressionLevel(selectedLevel.value), closePanel(), 
-        needsReload && location.reload();
-      });
-    }
-    static createSearchPageSingleToggle(infiniteScrollOptions) {
-      const titleContainer = this.setupSearchTitleContainer();
-      if (!titleContainer) return;
-      const controlsContainer = document.createElement("div");
-      controlsContainer.style.display = "flex", controlsContainer.style.alignItems = "center", 
-      controlsContainer.style.gap = "12px";
-      const filterBtn = document.createElement("button");
-      filterBtn.id = "sht-search-filter-btn", filterBtn.innerHTML = "🔍 搜索过滤", filterBtn.style.cssText = "\n      padding: 4px 12px;\n      background: #f0f0f0;\n      border: 1px solid #ccc;\n      border-radius: 4px;\n      cursor: pointer;\n      font-size: 13px;\n      color: #333;\n      transition: all 0.2s;\n    ", 
-      filterBtn.addEventListener("mouseenter", () => filterBtn.style.background = "#e0e0e0"), 
-      filterBtn.addEventListener("mouseleave", () => filterBtn.style.background = "#f0f0f0"), 
-      filterBtn.addEventListener("click", () => this.showFilterPanel()), controlsContainer.appendChild(filterBtn);
-      const infiniteScrollBtn = this.createButtonSwitch("无缝翻页", infiniteScrollOptions);
-      controlsContainer.appendChild(infiniteScrollBtn), titleContainer.appendChild(controlsContainer);
-    }
-    static showFilterPanel() {
-      const existingPanel = document.getElementById("sht-filter-panel"), existingOverlay = document.getElementById("sht-filter-overlay");
-      if (existingPanel) return existingPanel.remove(), void existingOverlay?.remove();
-      const overlay = document.createElement("div");
-      overlay.id = "sht-filter-overlay", overlay.style.cssText = "position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 99998;";
-      const panel = document.createElement("div");
-      panel.id = "sht-filter-panel", panel.style.cssText = "\n      position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);\n      background: #fff; border-radius: 12px; padding: 24px; z-index: 99999;\n      box-shadow: 0 8px 32px rgba(0,0,0,0.3); width: 620px; max-width: 90vw;\n      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;\n      max-height: 85vh; overflow-y: auto;\n    ";
-      const filteredForumsStr = localStorage.getItem("sht-filtered-forums"), filteredForums = filteredForumsStr ? JSON.parse(filteredForumsStr) : [];
-      let html = `\n      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 16px;">\n        <h3 style="margin: 0; font-size: 18px; color: #333;">🔍 搜索结果过滤</h3>\n        <button id="sht-filter-close" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #999; line-height: 1;">&times;</button>\n      </div>\n      \n      <div style="margin-bottom: 20px; padding: 12px; background: #fff8e1; border-radius: 8px; border: 1px solid #ffe082;">\n        <label style="display: flex; align-items: center; cursor: pointer; font-weight: 600; color: #795548; font-size: 14px;">\n          <input type="checkbox" id="sht-filter-hide-posts" ${"false" !== localStorage.getItem("sht-hide-posts-enabled") ? "checked" : ""} style="margin-right: 10px; width: 16px; height: 16px;">\n          自动过滤隐藏贴 (含回复可见、权限不足等)\n        </label>\n      </div>\n\n      <div style="font-size: 14px; font-weight: 600; color: #666; margin-bottom: 12px;">勾选以下板块将从搜索结果中隐藏：</div>\n      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">\n    `;
-      this.FORUM_DATA.forEach((group, idx) => {
-        html += `\n        <div style="background: #fcfcfc; border: 1px solid #f0f0f0; border-radius: 8px; padding: 12px;">\n          <div style="font-weight: 600; color: #333; margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;">\n            <span style="font-size: 13px;">${group.group}</span>\n            <span style="font-size: 11px; color: #2196F3; cursor: pointer; padding: 2px 6px; background: #e3f2fd; border-radius: 4px;" class="sht-group-toggle" data-idx="${idx}">全选</span>\n          </div>\n          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">\n            ${group.items.map(forum => `\n              <label style="font-size: 12px; color: #555; display: flex; align-items: center; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${forum.name}">\n                <input type="checkbox" class="sht-forum-checkbox" value="${forum.id}" ${filteredForums.includes(forum.id) ? "checked" : ""} style="margin-right: 6px; width: 14px; height: 14px;">\n                ${forum.name}\n              </label>\n            `).join("")}\n          </div>\n        </div>\n      `;
-      }), html += '\n      </div>\n      <div style="display: flex; gap: 12px; margin-top: 24px;">\n        <button id="sht-filter-save" style="flex: 1; padding: 12px; background: linear-gradient(135deg, #2196F3, #1976D2); \n          color: #fff; border: none; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer;">\n          ✓ 应用设置\n        </button>\n        <button id="sht-filter-cancel" style="padding: 12px 20px; background: #f5f5f5; color: #666; \n          border: 1px solid #ddd; border-radius: 8px; font-size: 15px; cursor: pointer;">\n          取消\n        </button>\n      </div>\n    ', 
-      panel.innerHTML = html, document.body.appendChild(overlay), document.body.appendChild(panel);
-      const close = () => {
-        overlay.remove(), panel.remove();
-      };
-      panel.querySelector("#sht-filter-close")?.addEventListener("click", close), panel.querySelector("#sht-filter-cancel")?.addEventListener("click", close), 
-      overlay.addEventListener("click", close), panel.querySelectorAll(".sht-group-toggle").forEach(btn => {
-        btn.addEventListener("click", e => {
-          const groupDiv = e.target.closest("div")?.parentElement, checkboxes = groupDiv?.querySelectorAll(".sht-forum-checkbox"), allChecked = Array.from(checkboxes).every(cb => cb.checked);
-          checkboxes.forEach(cb => cb.checked = !allChecked), e.target.textContent = allChecked ? "全选" : "取消全选";
-        });
-      }), panel.querySelector("#sht-filter-save")?.addEventListener("click", () => {
-        const selectedForums = Array.from(panel.querySelectorAll(".sht-forum-checkbox:checked")).map(cb => cb.value), isHidePostsEnabled = panel.querySelector("#sht-filter-hide-posts").checked;
-        localStorage.setItem("sht-filtered-forums", JSON.stringify(selectedForums)), localStorage.setItem("sht-hide-posts-enabled", String(isHidePostsEnabled)), 
-        close(), location.reload();
-      });
-    }
-    static createSearchPageDualToggles(infiniteScrollOptions, removeHiddenOptions) {
-      const titleContainer = this.setupSearchTitleContainer();
-      if (!titleContainer) return;
-      const controlsContainer = document.createElement("div");
-      controlsContainer.style.display = "flex", controlsContainer.style.alignItems = "center", 
-      controlsContainer.style.gap = "20px", controlsContainer.appendChild(this.createToggleSwitch("无缝翻页", infiniteScrollOptions)), 
-      controlsContainer.appendChild(this.createToggleSwitch("移除隐藏贴", removeHiddenOptions)), 
-      titleContainer.appendChild(controlsContainer);
-    }
-    static createAttachmentsElement(attachments) {
-      if (0 === attachments.length) return null;
-      const container = StyleManager.createElement("div", "sht-attachments");
-      return attachments.forEach(attachment => {
-        const attachDiv = document.createElement("div");
-        attachDiv.className = "sht-attachment-item";
-        const attachLink = document.createElement("a");
-        attachLink.href = attachment.url, attachLink.target = "_blank", attachLink.rel = "noopener noreferrer", 
-        attachLink.className = "sht-attachment-link", attachLink.title = "点击下载附件";
-        const icon = document.createElement("span");
-        icon.className = "sht-attachment-icon", icon.textContent = "📎";
-        const name = document.createElement("span");
-        if (name.className = "sht-attachment-name", name.textContent = attachment.name, 
-        attachLink.appendChild(icon), attachLink.appendChild(name), attachment.size) {
-          const size = document.createElement("span");
-          size.className = "sht-attachment-size", size.textContent = `(${attachment.size})`, 
-          attachLink.appendChild(size);
+        if (newProxyUrl !== ImageProxy.getProxyUrl() && ImageProxy.setProxyUrl(newProxyUrl), 
+        selectedGear) {
+          const gear = selectedGear.value;
+          gear !== ImageProxy.getGear() && (ImageProxy.setGear(gear), needsReload = !0);
         }
-        attachDiv.appendChild(attachLink), container.appendChild(attachDiv);
-      }), container;
-    }
-    static createImageGridPreview(container, _titleLink, limitedImages, downloadLinks, attachments) {
-      if (limitedImages.length > 0) {
-        const imgContainer = StyleManager.createElement("div", "sht-img-grid");
-        limitedImages.forEach(imgEl => {
-          const imgSrc = imgEl.getAttribute("file"), imgWrapperClass = 1 === limitedImages.length ? "sht-img-item-single" : "sht-img-item", imgWrapper = StyleManager.createElement("div", imgWrapperClass);
-          imgWrapper.classList.add("sht-img-loading");
-          const img = StyleManager.createElement("img", "sht-img");
-          img.dataset.src = imgSrc, img.alt = "预览图", img.addEventListener("load", () => {
-            imgWrapper.classList.remove("sht-img-loading"), imgWrapper.classList.add("sht-img-loaded");
-          }), img.addEventListener("error", () => {
-            imgWrapper.classList.remove("sht-img-loading"), imgWrapper.classList.add("sht-img-error");
-          }), imgWrapper.addEventListener("click", e => {
-            e.preventDefault(), e.stopPropagation();
-            const allLoadedSrcs = Array.from(imgContainer.querySelectorAll("img.sht-img")).map(el => el.src).filter(src => src && !src.startsWith("data:")), currentIdx = allLoadedSrcs.indexOf(img.src);
-            Lightbox.show(allLoadedSrcs, currentIdx >= 0 ? currentIdx : 0);
-          }), imgWrapper.appendChild(img), imgContainer.appendChild(imgWrapper);
-        }), StyleManager.setImageGridWidth(imgContainer, limitedImages.length), container.appendChild(imgContainer), 
-        this.observeImagesForLazyLoad(imgContainer);
-      }
-      if (!([ ...downloadLinks.ed2k, ...downloadLinks.magnet, ...downloadLinks.xunlei, ...downloadLinks.baidu ].length > 0) && attachments && attachments.length > 0) {
-        const attachmentsElement = this.createAttachmentsElement(attachments);
-        attachmentsElement && container.appendChild(attachmentsElement);
-      }
-      const linksElement = this.createLinksElement(downloadLinks);
-      linksElement && (linksElement.className = "sht-links", container.appendChild(linksElement));
-    }
-    static observeImagesForLazyLoad(container) {
-      const images = container.querySelectorAll("img[data-src]");
-      if (0 === images.length) return;
-      const allUrls = Array.from(images).map(img => img.dataset.src).filter(Boolean);
-      ImageLoader.preconnectBatch(allUrls), ImageLoader.preconnect("https://images.weserv.nl"), 
-      images.forEach(img => {
-        const imgElement = img, src = imgElement.dataset.src;
-        src && ImageLoader.queueLoad(imgElement, src, 50).catch(() => {
-          imgElement.closest(".sht-img-item, .sht-img-item-single")?.classList.add("sht-img-error");
-        });
+        closePanel(), needsReload && location.reload();
       });
     }
-  };
-  _UIComponents.FORUM_DATA = [ {
+  }
+  const FORUM_DATA = [ {
     group: "在线视频区",
     items: [ {
       id: "41",
@@ -817,6 +640,248 @@
       name: "投稿送邀请码"
     } ]
   } ];
+  class FilterPanel {
+    static show() {
+      const existingPanel = document.getElementById("sht-filter-panel"), existingOverlay = document.getElementById("sht-filter-overlay");
+      if (existingPanel) return existingPanel.remove(), void existingOverlay?.remove();
+      const overlay = document.createElement("div");
+      overlay.id = "sht-filter-overlay", overlay.style.cssText = "position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 99998;";
+      const panel = document.createElement("div");
+      panel.id = "sht-filter-panel", panel.style.cssText = "\n      position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);\n      background: #fff; border-radius: 12px; padding: 24px; z-index: 99999;\n      box-shadow: 0 8px 32px rgba(0,0,0,0.3); width: 620px; max-width: 90vw;\n      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;\n      max-height: 85vh; overflow-y: auto;\n    ";
+      const filteredForumsStr = localStorage.getItem("sht-filtered-forums"), filteredForums = filteredForumsStr ? JSON.parse(filteredForumsStr) : [];
+      let html = `\n      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 16px;">\n        <h3 style="margin: 0; font-size: 18px; color: #333;">🔍 搜索结果过滤</h3>\n        <button id="sht-filter-close" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #999; line-height: 1;">&times;</button>\n      </div>\n      \n      <div style="margin-bottom: 20px; padding: 12px; background: #fff8e1; border-radius: 8px; border: 1px solid #ffe082;">\n        <label style="display: flex; align-items: center; cursor: pointer; font-weight: 600; color: #795548; font-size: 14px;">\n          <input type="checkbox" id="sht-filter-hide-posts" ${"false" !== localStorage.getItem("sht-hide-posts-enabled") ? "checked" : ""} style="margin-right: 10px; width: 16px; height: 16px;">\n          自动过滤隐藏贴 (含回复可见、权限不足等)\n        </label>\n      </div>\n\n      <div style="font-size: 14px; font-weight: 600; color: #666; margin-bottom: 12px;">勾选以下板块将从搜索结果中隐藏：</div>\n      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">\n    `;
+      FORUM_DATA.forEach((group, idx) => {
+        html += `\n        <div style="background: #fcfcfc; border: 1px solid #f0f0f0; border-radius: 8px; padding: 12px;">\n          <div style="font-weight: 600; color: #333; margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;">\n            <span style="font-size: 13px;">${group.group}</span>\n            <span style="font-size: 11px; color: #2196F3; cursor: pointer; padding: 2px 6px; background: #e3f2fd; border-radius: 4px;" class="sht-group-toggle" data-idx="${idx}">全选</span>\n          </div>\n          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">\n            ${group.items.map(forum => `\n              <label style="font-size: 12px; color: #555; display: flex; align-items: center; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${forum.name}">\n                <input type="checkbox" class="sht-forum-checkbox" value="${forum.id}" ${filteredForums.includes(forum.id) ? "checked" : ""} style="margin-right: 6px; width: 14px; height: 14px;">\n                ${forum.name}\n              </label>\n            `).join("")}\n          </div>\n        </div>\n      `;
+      }), html += '\n      </div>\n      <div style="display: flex; gap: 12px; margin-top: 24px;">\n        <button id="sht-filter-save" style="flex: 1; padding: 12px; background: linear-gradient(135deg, #2196F3, #1976D2); \n          color: #fff; border: none; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer;">\n          ✓ 应用设置\n        </button>\n        <button id="sht-filter-cancel" style="padding: 12px 20px; background: #f5f5f5; color: #666; \n          border: 1px solid #ddd; border-radius: 8px; font-size: 15px; cursor: pointer;">\n          取消\n        </button>\n      </div>\n    ', 
+      panel.innerHTML = html, document.body.appendChild(overlay), document.body.appendChild(panel);
+      const close = () => {
+        overlay.remove(), panel.remove();
+      };
+      panel.querySelector("#sht-filter-close")?.addEventListener("click", close), panel.querySelector("#sht-filter-cancel")?.addEventListener("click", close), 
+      overlay.addEventListener("click", close), panel.querySelectorAll(".sht-group-toggle").forEach(btn => {
+        btn.addEventListener("click", e => {
+          const groupDiv = e.target.closest("div")?.parentElement, checkboxes = groupDiv?.querySelectorAll(".sht-forum-checkbox"), allChecked = Array.from(checkboxes).every(cb => cb.checked);
+          checkboxes.forEach(cb => cb.checked = !allChecked), e.target.textContent = allChecked ? "全选" : "取消全选";
+        });
+      }), panel.querySelector("#sht-filter-save")?.addEventListener("click", () => {
+        const selectedForums = Array.from(panel.querySelectorAll(".sht-forum-checkbox:checked")).map(cb => cb.value), isHidePostsEnabled = panel.querySelector("#sht-filter-hide-posts").checked;
+        localStorage.setItem("sht-filtered-forums", JSON.stringify(selectedForums)), localStorage.setItem("sht-hide-posts-enabled", String(isHidePostsEnabled)), 
+        close(), location.reload();
+      });
+    }
+  }
+  const _UIComponents = class {
+    static createToggleSwitch(label, options) {
+      const container = document.createElement("div");
+      container.style.display = "flex", container.style.alignItems = "center";
+      const labelSpan = document.createElement("span");
+      labelSpan.textContent = `${label}：`, labelSpan.style.cssText = "font-size: 13px; color: #666; margin-right: 6px; line-height: 20px;", 
+      container.appendChild(labelSpan);
+      const switchLabel = StyleManager.createElement("label", "sht-nav-toggle"), input = document.createElement("input");
+      input.type = "checkbox";
+      const slider = StyleManager.createElement("span", "sht-nav-slider");
+      switchLabel.appendChild(input), switchLabel.appendChild(slider), container.appendChild(switchLabel);
+      const storedValue = localStorage.getItem(options.storageKeyEnabled);
+      let enabled = null === storedValue ? options.defaultEnabled ?? !1 : "true" === storedValue;
+      return input.addEventListener("change", () => {
+        enabled = input.checked, localStorage.setItem(options.storageKeyEnabled, String(enabled)), 
+        enabled ? options.onEnable() : options.onDisable();
+      }), input.checked = enabled, enabled && options.onEnable(), container;
+    }
+    static createButtonSwitch(label, options) {
+      const button = document.createElement("button");
+      button.style.cssText = "\n      padding: 4px 12px;\n      background: #f0f0f0;\n      border: 1px solid #ccc;\n      border-radius: 4px;\n      cursor: pointer;\n      font-size: 13px;\n      color: #333;\n      transition: all 0.2s;\n      display: flex;\n      align-items: center;\n      gap: 4px;\n    ";
+      const storedValue = localStorage.getItem(options.storageKeyEnabled);
+      let enabled = null === storedValue ? options.defaultEnabled ?? !1 : "true" === storedValue;
+      const updateUI = () => {
+        enabled ? (button.style.background = "#e3f2fd", button.style.borderColor = "#2196F3", 
+        button.style.color = "#1976D2", button.innerHTML = `✅ ${label}`) : (button.style.background = "#f0f0f0", 
+        button.style.borderColor = "#ccc", button.style.color = "#333", button.innerHTML = `⚪ ${label}`);
+      };
+      return button.addEventListener("mouseenter", () => {
+        enabled || (button.style.background = "#e0e0e0");
+      }), button.addEventListener("mouseleave", () => {
+        enabled || (button.style.background = "#f0f0f0");
+      }), button.addEventListener("click", e => {
+        e.preventDefault(), enabled = !enabled, localStorage.setItem(options.storageKeyEnabled, String(enabled)), 
+        updateUI(), enabled ? options.onEnable() : options.onDisable();
+      }), updateUI(), enabled && setTimeout(() => options.onEnable(), 0), button;
+    }
+    static setupSearchTitleContainer() {
+      const titleContainer = document.querySelector(".sttl.mbn");
+      return titleContainer ? (titleContainer.style.display = "flex", titleContainer.style.justifyContent = "space-between", 
+      titleContainer.style.alignItems = "center", titleContainer) : null;
+    }
+    static isClickableLink(link) {
+      return link.startsWith("thunder://") || link.startsWith("https://") || link.startsWith("http://");
+    }
+    static createLinksElement(links) {
+      const allLinks = [ ...links.ed2k, ...links.magnet, ...links.xunlei, ...links.baidu ];
+      if (0 === allLinks.length) return null;
+      const container = StyleManager.createElement("div", "sht-links");
+      if (allLinks.forEach((link, index) => {
+        const linkDiv = document.createElement("div");
+        if (linkDiv.style.marginBottom = "4px", this.isClickableLink(link)) {
+          const linkAnchor = document.createElement("a");
+          linkAnchor.href = link, linkAnchor.target = "_blank", linkAnchor.rel = "noopener noreferrer", 
+          linkAnchor.className = "sht-link-item sht-link-clickable", linkAnchor.innerHTML = `<span class="sht-link-icon">🔗</span>${link}`, 
+          linkAnchor.title = "点击打开链接", linkAnchor.addEventListener("click", e => {
+            e.stopPropagation();
+          }), linkDiv.appendChild(linkAnchor);
+        } else {
+          const linkBox = StyleManager.createElement("div", "sht-link-item");
+          linkBox.innerHTML = `<span class="sht-link-icon">📋</span>${link}`, linkBox.title = "点击复制链接", 
+          linkBox.addEventListener("click", e => {
+            e.preventDefault(), e.stopPropagation(), navigator.clipboard.writeText(link).then(() => {
+              const originalText = linkBox.innerHTML;
+              linkBox.innerHTML = '<span class="sht-link-icon">✅</span>已复制！', linkBox.style.background = "#c8e6c9", 
+              setTimeout(() => {
+                linkBox.innerHTML = originalText, linkBox.style.background = "";
+              }, 1e3);
+            }).catch(() => {});
+          }), linkDiv.appendChild(linkBox);
+        }
+        index > 0 && (linkDiv.style.display = "none", linkDiv.classList.add("hidden-link")), 
+        container.appendChild(linkDiv);
+      }), allLinks.length > 1) {
+        const toggleButton = document.createElement("button");
+        toggleButton.textContent = `显示剩余 ${allLinks.length - 1} 个链接`, toggleButton.style.cssText = "margin-top: 5px; cursor: pointer; border: 1px solid #ccc; background-color: #f0f0f0; padding: 5px 10px; border-radius: 4px;";
+        let expanded = !1;
+        toggleButton.addEventListener("click", e => {
+          e.preventDefault(), e.stopPropagation(), expanded = !expanded, container.querySelectorAll(".hidden-link").forEach(l => {
+            l.style.display = expanded ? "block" : "none";
+          }), toggleButton.textContent = expanded ? "收起链接" : `显示剩余 ${allLinks.length - 1} 个链接`;
+        }), container.appendChild(toggleButton);
+      }
+      return container;
+    }
+    static createNormalPageToggle(options) {
+      const navMenu = document.querySelector("#nv ul");
+      if (!navMenu) return;
+      const infiniteScrollLi = document.createElement("li"), toggleContainer = document.createElement("div");
+      toggleContainer.id = "nav-toggle-infinite-scroll";
+      const toggleLink = document.createElement("a");
+      toggleLink.href = "javascript:;", toggleLink.textContent = "无缝翻页", toggleContainer.appendChild(toggleLink), 
+      infiniteScrollLi.appendChild(toggleContainer), navMenu.appendChild(infiniteScrollLi);
+      const storedValue = localStorage.getItem(options.storageKeyEnabled);
+      let enabled = null === storedValue ? options.defaultEnabled ?? !1 : "true" === storedValue;
+      const originalWidth = toggleLink.offsetWidth || 68, updateToggle = () => {
+        enabled ? (toggleContainer.classList.add("a"), toggleContainer.classList.add("sht-nav-active"), 
+        toggleLink.style.minWidth = `${originalWidth}px`, toggleLink.style.width = `${originalWidth}px`) : (toggleContainer.classList.remove("a"), 
+        toggleContainer.classList.remove("sht-nav-active"), toggleContainer.classList.remove("hover"), 
+        toggleLink.style.cssText = "");
+      };
+      toggleContainer.addEventListener("click", e => {
+        e.preventDefault(), enabled = !enabled, localStorage.setItem(options.storageKeyEnabled, String(enabled)), 
+        updateToggle(), enabled ? options.onEnable() : options.onDisable();
+      }), updateToggle(), enabled && options.onEnable();
+      const settingsLi = document.createElement("li"), settingsContainer = document.createElement("div");
+      settingsContainer.id = "nav-toggle-settings";
+      const settingsLink = document.createElement("a");
+      settingsLink.href = "javascript:;", settingsLink.textContent = "脚本设置", settingsLink.title = "点击打开脚本设置面板", 
+      settingsContainer.appendChild(settingsLink), settingsLi.appendChild(settingsContainer), 
+      navMenu.appendChild(settingsLi), settingsContainer.addEventListener("click", e => {
+        e.preventDefault(), SettingsPanel.show();
+      });
+    }
+    static createSearchPageSingleToggle(infiniteScrollOptions) {
+      const titleContainer = this.setupSearchTitleContainer();
+      if (!titleContainer) return;
+      const controlsContainer = document.createElement("div");
+      controlsContainer.style.display = "flex", controlsContainer.style.alignItems = "center", 
+      controlsContainer.style.gap = "12px";
+      const filterBtn = document.createElement("button");
+      filterBtn.id = "sht-search-filter-btn", filterBtn.innerHTML = "🔍 搜索过滤", filterBtn.style.cssText = "\n      padding: 4px 12px;\n      background: #f0f0f0;\n      border: 1px solid #ccc;\n      border-radius: 4px;\n      cursor: pointer;\n      font-size: 13px;\n      color: #333;\n      transition: all 0.2s;\n    ", 
+      filterBtn.addEventListener("mouseenter", () => filterBtn.style.background = "#e0e0e0"), 
+      filterBtn.addEventListener("mouseleave", () => filterBtn.style.background = "#f0f0f0"), 
+      filterBtn.addEventListener("click", () => FilterPanel.show()), controlsContainer.appendChild(filterBtn);
+      const infiniteScrollBtn = this.createButtonSwitch("无缝翻页", infiniteScrollOptions);
+      controlsContainer.appendChild(infiniteScrollBtn), titleContainer.appendChild(controlsContainer);
+    }
+    static createSearchPageDualToggles(infiniteScrollOptions, removeHiddenOptions) {
+      const titleContainer = this.setupSearchTitleContainer();
+      if (!titleContainer) return;
+      const controlsContainer = document.createElement("div");
+      controlsContainer.style.display = "flex", controlsContainer.style.alignItems = "center", 
+      controlsContainer.style.gap = "20px", controlsContainer.appendChild(this.createToggleSwitch("无缝翻页", infiniteScrollOptions)), 
+      controlsContainer.appendChild(this.createToggleSwitch("移除隐藏贴", removeHiddenOptions)), 
+      titleContainer.appendChild(controlsContainer);
+    }
+    static createAttachmentsElement(attachments) {
+      if (0 === attachments.length) return null;
+      const container = StyleManager.createElement("div", "sht-attachments");
+      return attachments.forEach(attachment => {
+        const attachDiv = document.createElement("div");
+        attachDiv.className = "sht-attachment-item";
+        const attachLink = document.createElement("a");
+        attachLink.href = attachment.url, attachLink.target = "_blank", attachLink.rel = "noopener noreferrer", 
+        attachLink.className = "sht-attachment-link", attachLink.title = "点击下载附件";
+        const icon = document.createElement("span");
+        icon.className = "sht-attachment-icon", icon.textContent = "📎";
+        const name = document.createElement("span");
+        if (name.className = "sht-attachment-name", name.textContent = attachment.name, 
+        attachLink.appendChild(icon), attachLink.appendChild(name), attachment.size) {
+          const size = document.createElement("span");
+          size.className = "sht-attachment-size", size.textContent = `(${attachment.size})`, 
+          attachLink.appendChild(size);
+        }
+        attachDiv.appendChild(attachLink), container.appendChild(attachDiv);
+      }), container;
+    }
+    static createImageGridPreview(container, _titleLink, limitedImages, downloadLinks, attachments) {
+      if (limitedImages.length > 0) {
+        const imgContainer = StyleManager.createElement("div", "sht-img-grid");
+        limitedImages.forEach(imgEl => {
+          const imgSrc = imgEl.getAttribute("file"), imgWrapperClass = 1 === limitedImages.length ? "sht-img-item-single" : "sht-img-item", imgWrapper = StyleManager.createElement("div", imgWrapperClass);
+          imgWrapper.classList.add("sht-img-loading");
+          const img = StyleManager.createElement("img", "sht-img");
+          img.dataset.src = imgSrc, img.alt = "预览图", img.addEventListener("load", () => {
+            imgWrapper.classList.remove("sht-img-loading"), imgWrapper.classList.add("sht-img-loaded");
+          }), img.addEventListener("error", () => {
+            imgWrapper.classList.remove("sht-img-loading"), imgWrapper.classList.add("sht-img-error");
+          }), imgWrapper.addEventListener("click", e => {
+            e.preventDefault(), e.stopPropagation();
+            const allLoadedSrcs = Array.from(imgContainer.querySelectorAll("img.sht-img")).map(el => el.src).filter(src => src && !src.startsWith("data:")), currentIdx = allLoadedSrcs.indexOf(img.src);
+            Lightbox.show(allLoadedSrcs, currentIdx >= 0 ? currentIdx : 0);
+          }), imgWrapper.appendChild(img), imgContainer.appendChild(imgWrapper);
+        }), StyleManager.setImageGridWidth(imgContainer, limitedImages.length), container.appendChild(imgContainer), 
+        this.observeImagesForLazyLoad(imgContainer);
+      }
+      if (!([ ...downloadLinks.ed2k, ...downloadLinks.magnet, ...downloadLinks.xunlei, ...downloadLinks.baidu ].length > 0) && attachments && attachments.length > 0) {
+        const attachmentsElement = this.createAttachmentsElement(attachments);
+        attachmentsElement && container.appendChild(attachmentsElement);
+      }
+      const linksElement = this.createLinksElement(downloadLinks);
+      linksElement && (linksElement.className = "sht-links", container.appendChild(linksElement));
+    }
+    static observeImagesForLazyLoad(container) {
+      const images = container.querySelectorAll("img[data-src]");
+      if (0 === images.length) return;
+      const allUrls = Array.from(images).map(img => img.dataset.src).filter(Boolean);
+      ImageLoader.preconnectBatch(allUrls), ImageLoader.preconnect("https://images.weserv.nl"), 
+      this.imageObserver || (this.imageObserver = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const imgElement = entry.target, src = imgElement.dataset.src;
+            if (src && !imgElement.src) {
+              imgElement.dataset.loading = "true";
+              const priority = entry.intersectionRatio > .5 ? 80 : 50;
+              ImageLoader.queueLoad(imgElement, src, priority).catch(() => {
+                imgElement.closest(".sht-img-item, .sht-img-item-single")?.classList.add("sht-img-error");
+              }), this.imageObserver?.unobserve(imgElement);
+            }
+          }
+        });
+      }, {
+        rootMargin: "200px 0px",
+        threshold: 0
+      })), images.forEach(img => {
+        const imgElement = img;
+        imgElement.src || imgElement.dataset.loading || this.imageObserver.observe(imgElement);
+      });
+    }
+  };
+  _UIComponents.imageObserver = null;
   let UIComponents = _UIComponents;
   function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));

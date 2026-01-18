@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Steam 评分优化脚本
 // @namespace    https://greasyfork.org/zh-CN/users/113945-mogeko
-// @version      0.2.6
+// @version      0.2.7
 // @author       neilwong; Mogeko (搬运)
 // @description  优化 Steam 的评分系统
 // @license      MIT
@@ -42,12 +42,12 @@
         const dateText = dateItem.innerText;
         const dateArr = dateText.replace("年", "/").replace("月", "/").replace("日", "").split("/");
         if (dateArr.length > 2) {
-          const gameDate = /* @__PURE__ */ new Date();
+          const gameDate = new Date();
           gameDate.setFullYear(dateArr[0]);
           gameDate.setMonth(dateArr[1] - 1);
           gameDate.setDate(dateArr[2]);
-          days = ((/* @__PURE__ */ new Date()).getTime() - gameDate.getTime()) / 864e5;
-          days = Number.parseInt(days);
+          days = (Date.now() - gameDate.getTime()) / 864e5;
+          days = Number.parseInt(days, 10);
         }
       }
       if (!item) {
@@ -66,9 +66,9 @@
         console.log(content);
         return;
       }
-      const num = lastArr[0].replace(/\,/g, "");
+      const num = lastArr[0].replace(/,/g, "");
       const rate = lastArr[2].replace("%", "");
-      const realNum = Number.parseInt(num * rate / 100);
+      const realNum = Number.parseInt(num * rate / 100, 10);
       if (Number.isNaN(realNum)) {
         console.log(content);
         return;
@@ -79,7 +79,8 @@
         realRate = realRate > 10 ? realRate.toFixed(0) : realRate.toFixed(1);
       }
       const innerHtml = `<span style="padding-left: 0.5em;width: 2em;display: inline-block;">${rate}</span><span style="width: 4.5em;display:inline-block;">${Number.parseInt(
-      num * rate / 100
+      num * rate / 100,
+      10
     )}</span><span style="width: 3em;display:inline-block;">${days}</span><span style="width:3em;display:inline-block;">${realRate}</span>`;
       item.innerHTML = innerHtml;
       item.style.width = "13em";

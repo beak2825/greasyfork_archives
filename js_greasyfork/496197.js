@@ -6,7 +6,7 @@
 // @grant               GM_addStyle
 // @grant               GM_xmlhttpRequest
 // @run-at              document-start
-// @version             0.5.0
+// @version             0.5.1
 // @author              hdyzen
 // @description         tweaks for redgifs page
 // @license             MIT
@@ -48,25 +48,57 @@ function observerInit() {
 }
 observerInit();
 
-function patchJSONParse() {
-    const originalJParse = JSON.parse;
+const originalJParse = JSON.parse;
 
-    JSON.parse = function (text, reviver) {
-        const result = originalJParse.call(this, text, reviver);
+JSON.parse = function (text, reviver) {
+    const result = originalJParse.call(this, text, reviver);
 
-        if (Array.isArray(result.gifs)) {
-            result.gifs = result.gifs.filter((gif) => {
-                if (gif.cta !== null) return false;
+    if (Array.isArray(result.gifs)) {
+        result.gifs = result.gifs.filter((gif) => {
+            if (gif.cta !== null) return false;
 
-                gifsURLS.set(gif.id, gif.urls);
-                return true;
+            gifsURLS.set(gif.id, gif.urls);
+            return true;
+        });
+    }
+
+    return result;
+};
+
+XMLHttpRequest.prototype.open = new Proxy(XMLHttpRequest.prototype.open, {
+    apply: (target, thisArg, argList) => {
+        const [, url] = argList;
+        if (url.includes("cameron")) {
+            console.log("Request intercepted:", argList);
+            thisArg.send = () => {};
+            return;
+        }
+
+        if (url.includes("/feeds/modules")) {
+            thisArg.addEventListener("readystatechange", () => {
+                if (thisArg.readyState !== 4) return;
+
+                const modulesCleaned = cleanModules(thisArg.responseText);
+                Object.defineProperty(thisArg, "responseText", { value: modulesCleaned, configurable: true, writable: true });
             });
         }
 
+        const result = Reflect.apply(target, thisArg, argList);
         return result;
-    };
+    },
+});
+
+function cleanModules(res) {
+    const modules = JSON.parse(res).modules;
+    for (const module in modules) {
+        for (let i = 0; i < modules[module].length; i++) {
+            const entry = modules[module][i];
+            if (entry.type === "live-cam") modules[module][i] = {};
+        }
+    }
+
+    return JSON.stringify(modules);
 }
-patchJSONParse();
 
 function addListenerToEntries(entries) {
     for (const entry of entries) {

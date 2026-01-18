@@ -1,13 +1,10 @@
 // ==UserScript==
 // @name         SupJAV to Minnano-AV 搜尋增強
-// @namespace    https://sleazyfork.org/users/1434867
-// @version      1.0.7
+// @namespace    https://sleazyfork.org/zh-CN/users/1006954
+// @version      1.0.9
 // @description  演員資料查詢 + 深色模式 + 多結果選擇 + 自動選擇 + 防重複觸發 + 浮動按鈕可拖動 + 位置記憶 + 動態 emoji 移除 + 內容可選取 + 修正滾動 BUG + 支援內頁多演員 + 圈選文字快捷查詢 + 照片顯示 + 完整資料連結 + 多網站適配
 // @description:en  Actress info query + Dark mode + Multi-result selection + Auto select + Anti-duplicate + Draggable button + Position memory + Dynamic emoji removal + Text selection + Fixed scroll bug + Support detail page multi-actress + Manual text selection query + Photo display + Full data link + Multi-site support
-// @author       c24301013
-// @homepage     https://sleazyfork.org/zh-CN/scripts/553318
-// @homepageURL  https://sleazyfork.org/zh-CN/scripts/553318
-// @supportURL   https://sleazyfork.org/zh-CN/scripts/553318/feedback
+// @author     wei9133 & AI
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=supjav.com
 // @match        https://supjav.com/*
 // @match        https://shiroutowiki.work/*
@@ -19,6 +16,9 @@
 // @connect      www.minnano-av.com
 // @run-at       document-idle
 // @license      MIT
+// @homepage     https://update.greasyfork.org/scripts/553318
+// @homepageURL  https://update.greasyfork.org/scripts/553318
+// @supportURL   https://update.greasyfork.org/scripts/553318/feedback
 // @downloadURL https://update.greasyfork.org/scripts/553318/SupJAV%20to%20Minnano-AV%20%E6%90%9C%E5%B0%8B%E5%A2%9E%E5%BC%B7.user.js
 // @updateURL https://update.greasyfork.org/scripts/553318/SupJAV%20to%20Minnano-AV%20%E6%90%9C%E5%B0%8B%E5%A2%9E%E5%BC%B7.meta.js
 // ==/UserScript==
@@ -26,7 +26,7 @@
 (function() {
     'use strict';
 
-    console.log('[SupJAV增強 v1.0.7] 腳本已啟動');
+    console.log('[SupJAV增強 v1.0.9] 腳本已啟動 - Grid View 修復版');
 
     // ============================================
     // 配置區
@@ -240,25 +240,25 @@
 
     function extractActressPhoto(doc) {
         let thumbElement = doc.querySelector('#main-area > section > div.actress-header > div.act-area > div.thumb img');
-        
+
         if (!thumbElement) {
             thumbElement = doc.querySelector('div.actress-header div.act-area div.thumb img');
             console.log('[SupJAV增強] 使用照片備用選擇器 1');
         }
-        
+
         if (!thumbElement) {
             thumbElement = doc.querySelector('div.thumb img');
             console.log('[SupJAV增強] 使用照片備用選擇器 2');
         }
-        
+
         if (!thumbElement) {
             console.log('[SupJAV增強] 未找到照片');
             return null;
         }
-        
+
         // ⭐ 優先使用 getAttribute（避免瀏覽器自動轉換域名）
         let thumbImg = thumbElement.getAttribute('src') || thumbElement.src;
-        
+
         // 處理相對路徑
         if (thumbImg && thumbImg.startsWith('/')) {
             thumbImg = 'https://www.minnano-av.com' + thumbImg;
@@ -267,32 +267,32 @@
             thumbImg = 'https://www.minnano-av.com/' + thumbImg;
             console.log('[SupJAV增強] 照片 URL 已補全前綴:', thumbImg);
         }
-        
+
         console.log('[SupJAV增強] 最終照片 URL:', thumbImg);
         return thumbImg;
     }
 
     function extractActressPageUrl(doc, fallbackUrl) {
         const profileLink = doc.querySelector('#main-area > section > div.actress-header h2 a');
-        
+
         if (!profileLink) {
             console.log('[SupJAV增強] 未找到演員頁面連結，使用備用 URL');
             return fallbackUrl;
         }
-        
+
         let href = profileLink.getAttribute('href');
         if (!href) {
             console.log('[SupJAV增強] 連結無 href 屬性，使用備用 URL');
             return fallbackUrl;
         }
-        
+
         // 處理相對路徑
         if (href.startsWith('/')) {
             href = 'https://www.minnano-av.com' + href;
         } else if (!href.startsWith('http')) {
             href = 'https://www.minnano-av.com/' + href;
         }
-        
+
         console.log('[SupJAV增強] 從頁面解析到真實 URL:', href);
         return href;
     }
@@ -926,15 +926,19 @@
                     return;
                 }
 
+                // === DEBUG LOG ===
+                console.log(`[SupJAV增強] 請求成功，長度: ${response.responseText.length}`);
+
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(response.responseText, 'text/html');
 
+                // 1. 檢查是否直接跳轉到了個人頁面
                 let actProfile = doc.querySelector('#main-area > section > div.actress-header > div.act-profile');
+                if (!actProfile) actProfile = doc.querySelector('div.actress-header div.act-profile');
+                if (!actProfile) actProfile = doc.querySelector('div.act-profile');
 
                 if (actProfile) {
-                    console.log('[SupJAV增強] 資料獲取成功（單一結果）');
-
-                    // ⭐ 提取照片和真實 URL
+                    console.log('[SupJAV增強] 直接命中演員個人頁面');
                     const thumbImg = extractActressPhoto(doc);
                     const sourceUrl = extractActressPageUrl(doc, searchUrl);
 
@@ -955,82 +959,84 @@
                     return;
                 }
 
-                // 多結果處理
-                const resultRows = doc.querySelectorAll('#main-area > section > table > tbody > tr');
+                // 2. 嘗試解析搜尋結果列表
+                console.log('[SupJAV增強] 未直接命中，嘗試解析搜尋列表...');
+                let extractedResults = [];
 
-                if (resultRows.length > 1) {
-                    console.log(`[SupJAV增強] 檢測到 ${resultRows.length - 1} 個搜尋結果`);
-
-                    console.log('[SupJAV增強] === 搜尋結果頁面結構分析 ===');
-                    Array.from(resultRows).slice(0, 4).forEach((row, index) => {
-                        console.log(`\n[SupJAV增強] 第 ${index} 列 HTML:`, row.outerHTML.substring(0, 500));
-
-                        const link = row.querySelector('td:nth-child(1) > a');
-                        if (link) {
-                            console.log(`[SupJAV增強] 第 ${index} 列連結 href:`, link.getAttribute('href'));
-                            console.log(`[SupJAV增強] 第 ${index} 列連結文字:`, link.textContent.trim());
-                        }
-
-                        const nameCell = row.querySelector('td.details h2 a');
-                        if (nameCell) {
-                            console.log(`[SupJAV增強] 第 ${index} 列名稱:`, nameCell.textContent.trim());
-                            console.log(`[SupJAV增強] 第 ${index} 列名稱 href:`, nameCell.getAttribute('href'));
-                        }
-                    });
-                    console.log('[SupJAV增強] === 結構分析結束 ===\n');
-
-                    searchResults = Array.from(resultRows).slice(1).map((row, index) => {
+                // Plan A: 表格模式 (Table View - 舊版/備援)
+                const tableRows = doc.querySelectorAll('#main-area > section > table > tbody > tr');
+                if (tableRows.length > 1) {
+                    console.log(`[SupJAV增強] 偵測到表格佈局 (Table View)，行數: ${tableRows.length}`);
+                    extractedResults = Array.from(tableRows).slice(1).map((row, index) => {
                         const link = row.querySelector('td:nth-child(1) > a');
                         const nameCell = row.querySelector('td.details h2 a');
-
-                        if (!link) {
-                            console.warn(`[SupJAV增強] 第 ${index + 1} 列找不到連結`);
-                            return null;
-                        }
+                        if (!link) return null;
 
                         let url = link.getAttribute('href');
-
-                        if (url.startsWith('/')) {
-                            url = 'https://www.minnano-av.com' + url;
-                        } else if (!url.startsWith('http')) {
-                            url = 'https://www.minnano-av.com/' + url;
+                        // 修正相對路徑
+                        if (url && !url.startsWith('http')) {
+                            url = url.startsWith('/') ? 'https://www.minnano-av.com' + url : 'https://www.minnano-av.com/' + url;
                         }
 
-                        console.log(`[SupJAV增強] 完整 URL：${url}`);
-
-                        let name = '';
-                        if (nameCell) {
-                            name = nameCell.textContent.trim();
-                        }
-                        if (!name && link) {
-                            name = link.textContent.trim();
-                        }
-                        if (!name) {
-                            const match = url.match(/actress(\d+)\.html/);
-                            name = match ? `演員 #${match[1]}` : `結果 ${index + 1}`;
-                        }
-
-                        console.log(`[SupJAV增強] 結果 ${index + 1}:`, { name, url });
-
-                        return {
-                            name: name,
-                            url: url,
-                            rowIndex: index + 2
-                        };
+                        let name = nameCell ? nameCell.textContent.trim() : link.textContent.trim();
+                        return { name: name, url: url, rowIndex: index };
                     }).filter(item => item !== null);
+                }
 
-                    console.log('[SupJAV增強] 搜尋結果列表:', searchResults);
+                // Plan B: 通用網格模式 (Grid/Card View - 新版)
+                if (extractedResults.length === 0) {
+                    console.log('[SupJAV增強] 表格解析無結果，切換至通用連結掃描模式 (Grid View)...');
 
-                    if (searchResults.length > 0) {
-                        currentResultIndex = 0;
-                        fetchActressDataByIndex(0, actressName);
-                    } else {
-                        console.error('[SupJAV增強] 沒有有效的搜尋結果');
-                        showErrorUI('找不到演員資料');
-                        resetIconsForActress(actressName);
-                    }
+                    const allLinks = doc.querySelectorAll('#main-area a');
+                    const linkMap = new Map(); // 用來去重 (URL -> Object)
+
+                    allLinks.forEach(a => {
+                        const href = a.getAttribute('href');
+                        if (!href) return;
+
+                        // 判斷是否為演員頁面連結 (關鍵特徵: actress + 數字 + .html)
+                        if (/actress\d+\.html/.test(href)) {
+                            let fullUrl = href.startsWith('http') ? href :
+                                         (href.startsWith('/') ? 'https://www.minnano-av.com' + href : 'https://www.minnano-av.com/' + href);
+
+                            // 標準化 URL (移除末尾可能的斜線或錨點，確保去重準確)
+                            fullUrl = fullUrl.split('#')[0].replace(/\/$/, '');
+
+                            let name = a.textContent.trim();
+                            const img = a.querySelector('img');
+                            if (!name && img && img.alt) name = img.alt.trim();
+                            if (!name && a.title) name = a.title.trim();
+
+                            // ⭐ 過濾邏輯：移除「女優情報」或無意義的連結 ⭐
+                            if (name.includes('女優情報') || name === '詳細' || name === 'AV作品を見る' || name === '女優情報') {
+                                // 如果這個 URL 還沒被收錄過，且這是唯一的連結，我們才考慮(但通常這代表有另一個主連結)
+                                // 這裡直接 return 忽略，因為通常會有另一個帶有正確名字的連結指向同一 URL
+                                return;
+                            }
+
+                            if (name) {
+                                // 如果 URL 已存在，保留原本的 (通常上面的連結比較準)
+                                // 或者更新名字比較長的？ 不，通常短的比較像名字，長的可能是 "Name (Actress)"
+                                if (!linkMap.has(fullUrl)) {
+                                     linkMap.set(fullUrl, { name: name, url: fullUrl });
+                                }
+                            }
+                        }
+                    });
+
+                    extractedResults = Array.from(linkMap.values());
+                    console.log(`[SupJAV增強] Grid 模式掃描找到 ${extractedResults.length} 個有效結果`);
+                }
+
+                // 3. 處理結果
+                searchResults = extractedResults;
+
+                if (searchResults.length > 0) {
+                    console.log('[SupJAV增強] 解析完成，結果列表:', searchResults);
+                    currentResultIndex = 0;
+                    fetchActressDataByIndex(0, actressName);
                 } else {
-                    console.error('[SupJAV增強] 找不到演員資料，也找不到搜尋結果列表');
+                    console.error('[SupJAV增強] 找不到演員資料 (Table與Grid模式皆失敗)');
                     showErrorUI('找不到演員資料');
                     resetIconsForActress(actressName);
                 }
@@ -1228,7 +1234,7 @@
         });
 
         let navControls = '';
-        
+
         if (hasMultipleResults) {
             const optionsHTML = searchResults.map((result, index) => {
                 const selected = index === currentResultIndex ? 'selected' : '';
@@ -1246,8 +1252,8 @@
             const nextColor = currentResultIndex === searchResults.length - 1 ? '#666' : 'white';
 
             navControls = `
-                <select id="result-selector" 
-                    autocomplete="off" 
+                <select id="result-selector"
+                    autocomplete="off"
                     autocorrect="off"
                     autocapitalize="off"
                     spellcheck="false"
@@ -1341,7 +1347,7 @@
                         border-radius: 4px;
                         font-size: 14px;
                         transition: background 0.2s;
-                    " onmouseover="this.style.background='${isDarkMode ? '#2666c7' : '#2666c7'}'" 
+                    " onmouseover="this.style.background='${isDarkMode ? '#2666c7' : '#2666c7'}'"
                        onmouseout="this.style.background='${isDarkMode ? '#3282EB' : '#3282EB'}'">
                         🔗 查看完整資料（含演出清單）
                     </a>
@@ -1356,9 +1362,9 @@
         const linkHeight = cachedData && cachedData.sourceUrl ? 60 : 0;
         const topMargin = 100;
         const bottomMargin = 20;
-        
+
         const contentMaxHeight = Math.max(200, windowHeight - topMargin - bottomMargin - headerHeight - photoHeight - linkHeight);
-        
+
         console.log('[SupJAV增強] 內容區最大高度:', contentMaxHeight);
 
         panel.innerHTML = `
@@ -1430,36 +1436,36 @@
                 selector.setAttribute('data-supjav-internal', 'true');
                 selector.setAttribute('data-lpignore', 'true');
                 selector.setAttribute('data-form-type', 'other');
-                
+
                 const newSelector = selector.cloneNode(true);
                 selector.parentNode.replaceChild(newSelector, selector);
-                
+
                 ['change', 'input'].forEach(eventType => {
                     newSelector.addEventListener(eventType, (e) => {
                         e.preventDefault();
                         e.stopPropagation();
                         e.stopImmediatePropagation();
-                        
+
                         const selectedIndex = parseInt(e.target.value);
                         console.log(`[SupJAV增強] 下拉選單觸發（${eventType}），索引:`, selectedIndex);
-                        
+
                         if (selectedIndex !== currentResultIndex && !isNaN(selectedIndex)) {
                             console.log('[SupJAV增強] 下拉選單切換到索引:', selectedIndex);
                             fetchActressDataByIndex(selectedIndex, currentActressName);
                         }
                     }, true);
                 });
-                
+
                 newSelector.addEventListener('mousedown', (e) => {
                     e.stopPropagation();
                     console.log('[SupJAV增強] 下拉選單被按下');
                 }, true);
-                
+
                 newSelector.addEventListener('click', (e) => {
                     e.stopPropagation();
                     console.log('[SupJAV增強] 下拉選單被點擊');
                 }, true);
-                
+
                 console.log('[SupJAV增強] 下拉選單事件已綁定（強化隔離模式）');
             }
 
@@ -1723,18 +1729,18 @@
             pos2 = pos4 - e.clientY;
             pos3 = e.clientX;
             pos4 = e.clientY;
-            
+
             // 計算新位置
             let newTop = element.offsetTop - pos2;
             let newLeft = element.offsetLeft - pos1;
-            
+
             // ⭐ 獲取面板和視窗尺寸
             const panelRect = element.getBoundingClientRect();
             const panelWidth = panelRect.width;
             const panelHeight = panelRect.height;
             const windowWidth = window.innerWidth;
             const windowHeight = window.innerHeight;
-            
+
             // ⭐ 上下邊界限制（完全不能移出）
             if (newTop < 0) {
                 newTop = 0;
@@ -1742,19 +1748,19 @@
             if (newTop + panelHeight > windowHeight) {
                 newTop = windowHeight - panelHeight;
             }
-            
+
             // ⭐ 左右邊界限制（允許 3/4 移出，保留 1/4）
             const minVisibleWidth = panelWidth * 0.25;
             const maxLeftOffset = windowWidth - minVisibleWidth;
             const minLeftOffset = -panelWidth + minVisibleWidth;
-            
+
             if (newLeft > maxLeftOffset) {
                 newLeft = maxLeftOffset;
             }
             if (newLeft < minLeftOffset) {
                 newLeft = minLeftOffset;
             }
-            
+
             // 套用新位置
             element.style.top = newTop + "px";
             element.style.left = newLeft + "px";
@@ -1769,4 +1775,3 @@
     }
 
 })();
-                        

@@ -1,12 +1,16 @@
 // ==UserScript==
-// @name         VGMDB to Bangumi Person
+// @name         Bangumi 人物创建助手
 // @namespace    http://tampermonkey.net/
-// @version      0.2.1
-// @description  将VGMDB人物/组织条目添加到Bangumi现实人物
+// @version      0.2.4.1
+// @description  将VGMDB人物/组织条目和各个社交平台的用户添加到Bangumi现实人物
 // @author       Gemini / SilenceAkarin
 // @license MIT
 // @match        https://vgmdb.net/artist/*
 // @match        https://vgmdb.net/org/*
+// @match        https://x.com/*
+// @match        https://twitter.com/*
+// @match        https://space.bilibili.com/*
+// @match        https://www.pixiv.net/users/*
 // @match        https://bgm.tv/person/new
 // @match        https://bangumi.tv/person/new
 // @match        https://chii.in/person/new
@@ -18,8 +22,14 @@
 // @connect      thumb-media.vgm.io
 // @connect      vgm.io
 // @connect      vgmdb.net
-// @downloadURL https://update.greasyfork.org/scripts/562845/VGMDB%20to%20Bangumi%20Person.user.js
-// @updateURL https://update.greasyfork.org/scripts/562845/VGMDB%20to%20Bangumi%20Person.meta.js
+// @connect      abs.twimg.com
+// @connect      pbs.twimg.com
+// @connect      i0.hdslb.com
+// @connect      i1.hdslb.com
+// @connect      i2.hdslb.com
+// @connect      i.pximg.net
+// @downloadURL https://update.greasyfork.org/scripts/562845/Bangumi%20%E4%BA%BA%E7%89%A9%E5%88%9B%E5%BB%BA%E5%8A%A9%E6%89%8B.user.js
+// @updateURL https://update.greasyfork.org/scripts/562845/Bangumi%20%E4%BA%BA%E7%89%A9%E5%88%9B%E5%BB%BA%E5%8A%A9%E6%89%8B.meta.js
 // ==/UserScript==
 
 (function() {
@@ -28,6 +38,8 @@
     // 辅助工具栏样式
     GM_addStyle(`
         .vgm-btn { margin-left: 10px; padding: 5px 10px; cursor: pointer; background: #F09199; color: #fff; border: none; border-radius: 4px; font-size: 12px; font-weight: bold; }
+        #vgm-pixiv-btn { margin-left: 15px; padding: 6px 16px; background: #0097fa; color: white; border: none; border-radius: 20px; cursor: pointer; font-size: 14px; font-weight: bold; transition: 0.2s; box-shadow: 0 2px 4px rgba(0,151,250,0.2); }
+        #vgm-pixiv-btn { background: #3dafff; transform: translateY(-1px); }
         #bgm_submit_btn { width: 100%; padding: 10px; background: #F09199; color: white; border: none; font-size: 14px; font-weight: bold; cursor: pointer; margin-top: 10px; border-radius: 4px; }
         #bgm_submit_btn:hover { background: #f2a0a7; }
         #bgm_submit_btn:disabled { background: #ccc; cursor: not-allowed; }
@@ -64,7 +76,7 @@
         }
 
         const btn = document.createElement('button');
-        btn.innerText = '🚀 提取数据并跳转';
+        btn.innerText = '🚀 导入到 Bangumi';
         btn.className = 'vgm-btn';
         headerNameNode.parentNode.insertBefore(btn, headerNameNode.nextSibling);
 
@@ -74,7 +86,7 @@
         headerNameNode.parentNode.insertBefore(linkToggle, headerNameNode.nextSibling);
 
         btn.onclick = async function() {
-            btn.innerHTML = '⌛ 同步中...';
+            btn.innerHTML = '⌛ 提取中...';
             const data = {
                 name: '',
                 engName: headerNameNode.innerText.trim(),
@@ -86,7 +98,9 @@
                 twitter: '',
                 nodes: '',
                 avatarBase64: '',
-                summary: ''
+                summary: '',
+                fromPixiv: false,
+                fromSNS: false
             };
 
             // --- 新增：Organization 页面数据提取逻辑 ---
@@ -95,26 +109,27 @@
                 data.name = data.engName; // 组织名通常直接作为名字
 
                 // 提取 Description
-//                 const labels = document.querySelectorAll('dt.smallfont.label b');
-//                 for (const label of labels) {
-//                     if (label.innerText === 'Description') {
-//                         // 找到 Description 对应的 dd 元素
-//                         const dt = label.parentElement.parentElement; // 或者是 label.closest('dt')
-//                         const dd = dt.nextElementSibling;
-//                         if (dd && dd.tagName === 'DD') {
-//                             // 替换 <br> 为换行符，并清理文本
-//                             let descHtml = dd.innerHTML.replace(/<br\s*\/?>/gi, '\n');
-//                             // 创建临时元素解析 HTML 实体
-//                             let temp = document.createElement('div');
-//                             temp.innerHTML = descHtml;
-//                             data.summary = temp.innerText.trim();
-//                         }
-//                         break;
-//                     }
-//                 }
+                //                 const labels = document.querySelectorAll('dt.smallfont.label b');
+                //                 for (const label of labels) {
+                //                     if (label.innerText === 'Description') {
+                //                         // 找到 Description 对应的 dd 元素
+                //                         const dt = label.parentElement.parentElement; // 或者是 label.closest('dt')
+                //                         const dd = dt.nextElementSibling;
+                //                         if (dd && dd.tagName === 'DD') {
+                //                             // 替换 <br> 为换行符，并清理文本
+                //                             let descHtml = dd.innerHTML.replace(/<br\s*\/?>/gi, '\n');
+                //                             // 创建临时元素解析 HTML 实体
+                //                             let temp = document.createElement('div');
+                //                             temp.innerHTML = descHtml;
+                //                             data.summary = temp.innerText.trim();
+                //                         }
+                //                         break;
+                //                     }
+                //                 }
             }
             // --- 结束新增 ---
             if (!isOrg) {
+                data.isArtist = true;
                 // 1. 姓名提取
                 const leftNameSpan = document.querySelector('#leftfloat span[style*="font-size: 9pt"]');
                 if (leftNameSpan) {
@@ -154,8 +169,6 @@
                     if (m) data.twitter = '@' + m[1];
                 }
             });
-
-
 
             // 5. 头像
             const ogImg = document.querySelector('meta[property="og:image"]');
@@ -218,6 +231,304 @@
         };
     }
 
+    // ================= X (Twitter) 提取端 =================
+    else if (location.hostname.includes('x.com') || location.hostname.includes('twitter.com')) {
+
+        // 修正后的提取数据逻辑
+        async function collectXData() {
+            try {
+                // 定位主列容器，避免抓取到侧边栏自己的头像
+                const primaryColumn = document.querySelector('[data-testid="primaryColumn"]');
+
+                const userNameSection = primaryColumn?.querySelector('[data-testid="UserName"]');
+                const spans = userNameSection?.querySelectorAll('span');
+                const rawName = spans ? spans[0].innerText : "";
+
+                let handle = "";
+                const allText = userNameSection?.innerText.split('\n') || [];
+                handle = allText.find(t => t.startsWith('@')) || "";
+
+                const bio = primaryColumn?.querySelector('[data-testid="UserDescription"]')?.innerText || "";
+                const website = primaryColumn?.querySelector('[data-testid="UserUrl"]')?.innerText || "";
+
+                // --- 修正头像抓取逻辑 ---
+                // 在主栏目中寻找包含 profile_images 的图片，这通常是用户的大头像
+                const avatarImg = primaryColumn?.querySelector('img[src*="/profile_images/"]');
+                let avatarUrl = "";
+                if (avatarImg) {
+                    // 转换成高清大图地址 (去掉 _normal, _400x400 等后缀)
+                    avatarUrl = avatarImg.src.replace(/_(normal|400x400|200x200)\./, '.');
+                }
+                // -----------------------
+
+                const data = {
+                    name: rawName.replace(/\s+/g, ''),
+                    engName: '',
+                    kana: '',
+                    aliases: [],
+                    birthdate: '',
+                    bloodtype: '',
+                    websites: website ? [{ title: 'HP', url: `https://${website}` }] : [],
+                    twitter: handle,
+                    avatarBase64: avatarUrl ? await fetchImg(avatarUrl) : '',
+                    summary: bio,
+                    fromSNS: true
+                };
+
+                GM_setValue('vgmdb_to_bgm_data', data);
+                window.open('https://bgm.tv/person/new', '_blank');
+            } catch (e) {
+                console.error("X 抓取失败:", e);
+                alert("抓取失败，请确保在用户主页。");
+            }
+        }
+
+        // 注入按钮（针对 X 的单页应用特性使用观察者）
+        const injectXBtn = () => {
+            if (document.getElementById('vgm-x-btn')) return;
+            const nameContainer = document.querySelector('[data-testid="UserName"]');
+            if (nameContainer) {
+                const btn = document.createElement('button');
+                btn.id = 'vgm-x-btn';
+                btn.innerText = '🚀 导入到 Bangumi';
+                btn.className = 'vgm-btn'; // 复用你定义的样式
+                btn.onclick = (e) => {
+                    btn.innerHTML = '⌛ 提取中...';
+                    e.preventDefault();
+                    collectXData();
+                    btn.innerText = '✅ 提取成功';
+                };
+                nameContainer.appendChild(btn);
+            }
+        };
+
+        const observer = new MutationObserver(injectXBtn);
+        observer.observe(document.body, { childList: true, subtree: true });
+    }
+    // ================= Bilibili 提取端 =================
+    else if (location.host === 'space.bilibili.com') {
+        // 1. 提取 B 站数据逻辑
+        async function collectBilibiliData() {
+            try {
+                // 获取用户名
+                const nameEl = document.querySelector('.nickname');
+                const username = nameEl ? nameEl.innerText.trim() : "";
+
+                // 获取简介 (尝试多个可能的 B 站选择器)
+                const descEl = document.querySelector('.pure-text') ||
+                      document.querySelector('.h-sign') ||
+                      document.querySelector('.user-description');
+                let description = "";
+                if (descEl) {
+                    description = descEl.getAttribute('title') || descEl.innerText.trim();
+                }
+
+                // 获取头像并处理高清图
+                const avatarImg = document.querySelector('.avatar img') ||
+                      document.querySelector('.h-avatar img') ||
+                      document.querySelector('.b-avatar img');
+                let avatarUrl = "";
+                if (avatarImg) {
+                    // 去掉 @ 后缀获取原图，补全 https 协议
+                    avatarUrl = avatarImg.src.split('@')[0];
+                    if (avatarUrl.startsWith('//')) avatarUrl = 'https:' + avatarUrl;
+                }
+
+                // 构造 Bangumi 兼容的数据对象
+                const data = {
+                    name: username,
+                    engName: '',
+                    kana: '',
+                    aliases: [],
+                    birthdate: '',
+                    bloodtype: '',
+                    websites: [{ title: 'Bilibili', url: window.location.href }],
+                    twitter: '', // 或者是 B 站 UID
+                    // 转换头像为 Base64 (复用你代码中的 fetchImg)
+                    avatarBase64: avatarUrl ? await fetchImg(avatarUrl) : '',
+                    summary: description,
+                    fromSNS: true
+                };
+                // 存储数据并跳转
+                GM_setValue('vgmdb_to_bgm_data', data);
+                window.open('https://bgm.tv/person/new', '_blank');
+            } catch (e) {
+                console.error("B站抓取失败:", e);
+                alert("抓取信息失败，请重试。");
+            }
+        }
+
+        // 2. 注入按钮到 B 站页面 (勋章容器处)
+        const injectBiliBtn = () => {
+            if (document.getElementById('vgm-bili-btn')) return;
+
+            // 寻找注入点，B 站勋章容器通常比较稳定
+            const levelIcon = document.querySelector('.level-icon') ||
+                  document.querySelector('.level');
+            if (levelIcon) {
+                const btn = document.createElement('button');
+                btn.id = 'vgm-bili-btn';
+                btn.innerText = '🚀 导入到 Bangumi';
+                // 使用你的通用按钮样式类名
+                btn.className = 'vgm-btn';
+                // 兼容你之前的行内样式以便快速调整
+                btn.style = `
+            margin-left: 12px;
+            padding: 0 12px;
+            height: 24px;
+            line-height: 24px;
+            background-color: #fb7299;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            vertical-align: middle;
+            transition: background-color 0.2s;
+        `;
+
+                btn.onclick = (e) => {
+                    btn.innerHTML = '⌛ 提取中...';
+                    e.preventDefault();
+                    e.stopPropagation();
+                    collectBilibiliData();
+                    btn.innerText = '✅ 提取成功';
+                };
+
+                // 2. 关键操作：将按钮插入到等级图标的“后面”
+                // 如果 levelIcon 的父级是 <a> 标签，我们插在 <a> 后面；如果是图标本身，则插在图标后面
+                const anchorTag = levelIcon.closest('a.level');
+                if (anchorTag) {
+                    anchorTag.parentNode.insertBefore(btn, anchorTag.nextSibling);
+                } else {
+                    levelIcon.parentNode.insertBefore(btn, levelIcon.nextSibling);
+                }
+            }
+        };
+
+        // 建议：由于 B 站是单页应用，可能需要定时检查或使用 MutationObserver
+        setInterval(injectBiliBtn, 1000);
+
+        // 使用观察者处理 SPA 跳转
+        const observer = new MutationObserver((mutations) => {
+            injectBiliBtn();
+        });
+        observer.observe(document.body, { childList: true, subtree: true });
+    }
+
+    else if (location.hostname.includes('pixiv.net')) {
+
+        // --- 信息提取 ---
+        async function extractData() {
+            try {
+                // 1. 定位主信息区块 (这是关键，防止抓到导航栏)
+                const nameHeading = document.querySelector('h1');
+                if (!nameHeading) return;
+
+                // 向上寻找包含头像和名字的共同大容器 (对应您提供的 sc-70a37843-2)
+                const profileMainBlock = nameHeading.closest('div[class*="fOjlKC"]') || nameHeading.closest('header') || document.body;
+
+                // 2. 抓取头像：仅在主区块内寻找 img
+                const avatarImg = profileMainBlock.querySelector('div[role="img"] img');
+                const avatarSrc = avatarImg ? avatarImg.src : "";
+
+                // 3. PID (从URL获取)
+                const pid = window.location.href.match(/users\/(\d+)/)?.[1] || "Unknown";
+
+                // 4. 名字与简介
+                const name = nameHeading.innerText.trim();
+                const introEl = document.querySelector('div[class*="ipHwGd"]') || document.querySelector('.sc-ecb57f7a-3');
+                const intro = introEl ? introEl.innerText.trim() : "未填写简介";
+
+                // 5. 链接处理
+                let xUser = "";
+                let links = [];
+                const linkNodes = document.querySelectorAll('ul li a[href*="jump.php"]');
+                linkNodes.forEach(a => {
+                    try {
+                        let decodedUrl = decodeURIComponent(a.href.split('url=')[1]);
+
+                        if (decodedUrl) {
+                            // 1. 自动补全 http/https 前缀
+                            if (!/^https?:\/\//i.test(decodedUrl)) {
+                                decodedUrl = 'https://' + decodedUrl;
+                            }
+                            const isTwitter = decodedUrl.includes('twitter.com/') || decodedUrl.includes('x.com/');
+
+                            if (isTwitter) {
+                                // 如果是 Twitter，仅提取 ID，不放入 External Links
+                                const match = decodedUrl.match(/(?:twitter\.com|x\.com)\/([^\/\?\s]+)/);
+                                if (match) xUser = `@${match[1]}`;
+                            } else {
+                                // 如果不是 Twitter，才放入外部链接列表
+                                links.push({ title: 'HP', url: decodedUrl });
+                            }
+                        }
+                    }catch(e) {
+                        console.error("链接解析失败", e);
+                    }
+                });
+
+                // 6. 转换头像为安全显示格式
+                let avatarBase64 = "";
+                if (avatarSrc && typeof fetchImg === 'function') {
+                    // 必须 await，否则程序会直接跳过图片抓取去执行 GM_setValue
+                    avatarBase64 = await fetchImg(avatarSrc);
+                }
+
+                const data = {
+                    name: name,
+                    engName: '',
+                    kana: '',
+                    aliases: [],
+                    birthdate: '',
+                    bloodtype: '',
+                    websites: links,
+                    twitter: xUser,
+                    avatarBase64: avatarBase64,
+                    summary: intro,
+                    fromPixiv: true
+                };
+
+                GM_setValue('vgmdb_to_bgm_data', data);
+                window.open('https://bgm.tv/person/new', '_blank');
+            } catch (e) {
+                console.error("Pixiv抓取失败:", e);
+                alert("抓取信息失败，请重试。");
+            }
+        }
+
+        // ---- 注入按钮Pixiv ----
+        const injectPixivBtn = () => {
+            if (document.getElementById('vgm-pixiv-btn')) return;
+            const h1 = document.querySelector('h1');
+            if (h1) {
+                const btn = document.createElement('button');
+                btn.id = 'vgm-pixiv-btn';
+                btn.innerText = '🚀 导入到 Bangumi';
+                btn.onclick = (e) => {
+                    e.preventDefault();
+                    const originalText = btn.innerText;
+                    btn.innerHTML = '⌛ 提取中...';
+                    extractData();
+                    btn.innerText = '✅ 提取成功';
+                };
+                // 插入到名字所在行的末尾
+                h1.parentElement.style.display = 'flex';
+                h1.parentElement.style.alignItems = 'center';
+                h1.parentElement.appendChild(btn);
+            }
+        }
+
+        // 处理 Pixiv 的单页路由跳转
+        const observer = new MutationObserver(injectPixivBtn);
+        observer.observe(document.body, { childList: true, subtree: true });
+    }
+
     // ================= Bangumi 填充端 =================
     else if (location.pathname === '/person/new') {
         const data = GM_getValue('vgmdb_to_bgm_data');
@@ -234,14 +545,20 @@
             }
 
             // 2. 根据类型勾选职位
-            if (data.isOrg) {
-                // 如果是组织，勾选“制作人员/制作公司”
-                const producerBox = document.getElementById('crtProProducer');
-                if (producerBox && !producerBox.checked) producerBox.click();
-            } else {
-                // 如果是个人，勾选“歌手/音乐家”
-                const artistBox = document.getElementById('crtProArtist');
-                if (artistBox && !artistBox.checked) artistBox.click();
+            if (!data.fromSNS) {
+                const roleMap = {
+                    'isOrg': 'crtProProducer',
+                    'isArtist': 'crtProArtist',
+                    'fromPixiv': 'crtProIllustrator',
+                };
+
+                // 遍历映射表，只要 data 里的对应属性为 true，就勾选对应的框
+                Object.keys(roleMap).forEach(key => {
+                    if (data[key]) {
+                        const el = document.getElementById(roleMap[key]);
+                        if (el && !el.checked) el.click();
+                    }
+                });
             }
 
             // 3. 切换 Wiki 模式
@@ -367,14 +684,54 @@ ${data.twitter ? '|X='+data.twitter : ''}
         return m ? `${m[3]}年${months[m[1]]}月${m[2]}日` : (str.match(/\d{4}/) ? `${str.match(/\d{4}/)[0]}年` : "");
     }
 
+    // 原图片抓取，测试用
+    //     async function fetchImg(url) {
+    //         return new Promise((res) => {
+    //             GM_xmlhttpRequest({
+    //                 method: "GET",
+    //                 url: url,
+    //                 responseType: "blob",
+    //                 onload: (r) => {
+    //                     const f = new FileReader();
+    //                     f.onloadend = () => res(f.result);
+    //                     f.readAsDataURL(r.response);
+    //                 }});
+    //         });
+    //     }
 
+    // 图片抓取
     async function fetchImg(url) {
+        // 自动根据当前页面生成 Referer
+        const currentOrigin = window.location.origin + '/';
+
         return new Promise((res) => {
-            GM_xmlhttpRequest({ method: "GET", url: url, responseType: "blob", onload: (r) => {
-                const f = new FileReader(); f.onloadend = () => res(f.result); f.readAsDataURL(r.response);
-            }});
+            GM_xmlhttpRequest({
+                method: "GET",
+                url: url,
+                headers: {
+                    // 动态适配：当前在哪个站，Referer 就填哪个站
+                    "Referer": currentOrigin,
+                    "Cache-Control": "max-age=0",
+                },
+                responseType: "blob",
+                onload: (r) => {
+                    const f = new FileReader();
+                    f.onloadend = () => res(f.result);
+                    f.readAsDataURL(r.response);
+                },
+                onerror: () => res("")
+            });
         });
     }
+
+    const waitForElement = (selector) => {
+        return new Promise((resolve) => {
+            const timer = setInterval(() => {
+                const el = document.querySelector(selector);
+                if (el) { clearInterval(timer); resolve(el); }
+            }, 500);
+        });
+    };
 
     function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 })();

@@ -314,77 +314,10 @@
     return { start, stop };
   })();
 
-  /** @type {HTMLElement[]} */
-  var containers = [];
-  /** @type {{prepend:HTMLStyleElement,append:HTMLStyleElement}[]} */
-
-  var styleTags = [];
-  /**
-   * @param {string} css
-   * @param {object} options
-   * @param {boolean} [options.prepend]
-   * @param {boolean} [options.singleTag]
-   * @param {string} [options.container]
-   * @param {Record<string,string>} [options.attributes]
-   * @returns {void}
-   */
-
-  function injectCss (css, options) {
-    if (!css || typeof document === "undefined") return;
-    var position = options.prepend === true ? "prepend" : "append";
-    var singleTag = options.singleTag === true;
-    var container = typeof options.container === "string" ? document.querySelector(options.container) : document.getElementsByTagName("head")[0];
-
-    function createStyleTag() {
-      var styleTag = document.createElement("style");
-      styleTag.setAttribute("type", "text/css");
-
-      if (options.attributes) {
-        var k = Object.keys(options.attributes);
-
-        for (var i = 0; i < k.length; i++) {
-          styleTag.setAttribute(k[i], options.attributes[k[i]]);
-        }
-      }
-
-      var pos = position === "prepend" ? "afterbegin" : "beforeend";
-      container.insertAdjacentElement(pos, styleTag);
-      return styleTag;
-    }
-    /** @type {HTMLStyleElement} */
-
-
-    var styleTag;
-
-    if (singleTag) {
-      var id = containers.indexOf(container);
-
-      if (id === -1) {
-        id = containers.push(container) - 1;
-        styleTags[id] = {};
-      }
-
-      if (styleTags[id] && styleTags[id][position]) {
-        styleTag = styleTags[id][position];
-      } else {
-        styleTag = styleTags[id][position] = createStyleTag();
-      }
-    } else {
-      styleTag = createStyleTag();
-    } // strip potential UTF-8 BOM if css was read from a file
-
-
-    if (css.charCodeAt(0) === 0xfeff) css = css.substring(1);
-
-    if (styleTag.styleSheet) {
-      styleTag.styleSheet.cssText += css;
-    } else {
-      styleTag.appendChild(document.createTextNode(css));
-    }
-  }
+  var e=[],t=[];function n(n,r){if(n&&"undefined"!=typeof document){var a,s=!0===r.prepend?"prepend":"append",d=!0===r.singleTag,i="string"==typeof r.container?document.querySelector(r.container):document.getElementsByTagName("head")[0];if(d){var u=e.indexOf(i);-1===u&&(u=e.push(i)-1,t[u]={}),a=t[u]&&t[u][s]?t[u][s]:t[u][s]=c();}else a=c();65279===n.charCodeAt(0)&&(n=n.substring(1)),a.styleSheet?a.styleSheet.cssText+=n:a.appendChild(document.createTextNode(n));}function c(){var e=document.createElement("style");if(e.setAttribute("type","text/css"),r.attributes)for(var t=Object.keys(r.attributes),n=0;n<t.length;n++)e.setAttribute(t[n],r.attributes[t[n]]);var a="prepend"===s?"afterbegin":"beforeend";return i.insertAdjacentElement(a,e),e}}
 
   var css = "@charset \"UTF-8\";\n.k-wrapper #catelogX .module-header-r {\n  min-width: 0;\n}\n.k-wrapper #catelogX .module-header-r .module-header-btn {\n  position: static;\n  padding: 0;\n}\n.k-wrapper #volumes .chapter-bar {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  position: relative;\n}\n.k-wrapper #volumes .chapter-bar::after {\n  content: none;\n}\n.k-wrapper #volumes .chapter-bar .download-btn {\n  border-radius: 4px;\n  background-color: rgba(255, 57, 84, 0.1);\n  padding: 4px 12px;\n  font-weight: 500;\n  color: #ff3955;\n  border: 0;\n  white-space: nowrap;\n  margin-left: 16px;\n}\n.k-wrapper #volumes .chapter-bar .download-btn::after {\n  content: \"下载\";\n}\n.k-wrapper #volumes .chapter-bar .download-btn:disabled {\n  opacity: 0.5;\n}\n.k-wrapper #volumes .chapter-bar .download-btn:disabled::after {\n  content: \"下载中...\";\n}\n.k-wrapper #volumes .chapter-bar .progress,\n.k-wrapper #volumes .chapter-bar .progress > div {\n  position: absolute;\n  pointer-events: none;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  top: 0;\n}\n.k-wrapper #volumes .chapter-bar .progress > div {\n  background-color: rgba(255, 57, 84, 0.1);\n  transition: all 0.2s linear;\n}";
-  injectCss(css,{});
+  n(css,{});
 
   document.body.classList.add("k-wrapper");
   router({ domain: ["//www.linovelib.com"], routes: [{ run: main }] });

@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         SKU填充
-// @version      0.1.7
+// @version      0.1.8
 // @description  将剪切板内容拆分多行并快速填充到SKU当中哟~
 // @author       鹿秋夏
 // @include      https://sell.publish.tmall.com/tmall/publish.htm?*
@@ -162,10 +162,7 @@
 
             if (!footer) return;
 
-            const leftContainer = footer.querySelector('.left');
-            if (!leftContainer) return;
-
-            if (leftContainer.querySelectorAll('[data-sku-dialog]').length >= 2) return;
+            if (footer.querySelectorAll('[data-sku-dialog]').length >= 2) return;
 
             const refBtn = cachedRefButton || document.evaluate(
                 '//div[@class="front"]//button[not(@data-sku)]',
@@ -177,16 +174,35 @@
             if (!refBtn) return;
 
             const handlers = createActionHandlers();
+            const refBtnMarginRight = getComputedStyle(refBtn).marginRight;
 
             const createDialogButton = (text, handler) => {
                 const b = createButton(text, handler, refBtn);
                 b.dataset.skuDialog = 'true';
-                b.style.marginRight = '8px';
+                b.style.marginRight = refBtnMarginRight;
                 return b;
             };
 
             const fillBtn = createDialogButton('SKU填充', handlers.fillHandler);
             const replaceBtn = createDialogButton('SKU替换', handlers.replaceHandler);
+
+            let leftContainer = footer.querySelector('[data-sku-left-container]');
+            if (!leftContainer) {
+                leftContainer = document.createElement('div');
+                leftContainer.dataset.skuLeftContainer = 'true';
+                Object.assign(leftContainer.style, {
+                    display: 'flex',
+                    alignItems: 'center'
+                });
+
+                Object.assign(footer.style, {
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
+                });
+
+                footer.insertBefore(leftContainer, footer.firstChild);
+            }
 
             leftContainer.appendChild(fillBtn);
             leftContainer.appendChild(replaceBtn);

@@ -1,15 +1,15 @@
 // ==UserScript==
-// @name         Berkutschi JSON -> Tabulka skokanů
+// @name         Berkutschi JSON -> Tabulka skokanů + status
 // @namespace    kvido
-// @version      1.0.7
-// @description  Jednoduchá tabulka, ID řádku = jmeno_prijmeni + náhodný refresh
+// @version      1.1.0
+// @description  Tabulka jmen + výkonů (obě kola) + statusu
 // @match        https://live.berkutschi.com/events/*.json
 // @author       LM
 // @license      MIT
 // @run-at       document-start
 // @grant        none
-// @downloadURL https://update.greasyfork.org/scripts/562901/Berkutschi%20JSON%20-%3E%20Tabulka%20skokan%C5%AF.user.js
-// @updateURL https://update.greasyfork.org/scripts/562901/Berkutschi%20JSON%20-%3E%20Tabulka%20skokan%C5%AF.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/562901/Berkutschi%20JSON%20-%3E%20Tabulka%20skokan%C5%AF%20%2B%20status.user.js
+// @updateURL https://update.greasyfork.org/scripts/562901/Berkutschi%20JSON%20-%3E%20Tabulka%20skokan%C5%AF%20%2B%20status.meta.js
 // ==/UserScript==
 
 (function () {
@@ -27,7 +27,6 @@
     return Number.isFinite(num) ? String(num) : "";
   }
 
-  // "tvorba id do řádků"
   function idFromName(nameRaw) {
     const name = String(nameRaw ?? "").trim();
     let first = "", last = "";
@@ -56,14 +55,52 @@
     return raw.trim();
   }
 
+  function pickJumpers(json) {
+    if (Array.isArray(json?.jumpers)) return json.jumpers;
+    if (Array.isArray(json?.startlist?.jumpers)) return json.startlist.jumpers;
+    if (Array.isArray(json?.data?.jumpers)) return json.data.jumpers;
+    if (Array.isArray(json?.data?.startlist?.jumpers)) return json.data.startlist.jumpers;
+    return [];
+  }
+
   function pickResults(json) {
     if (Array.isArray(json?.results)) return json.results;
     if (Array.isArray(json?.data?.results)) return json.data.results;
     return [];
   }
 
-  function build(rows) {
-    rows.sort((a, b) => Number(a.final_rank) - Number(b.final_rank));
+  function pickStatusText(json) {
+    const msgs =
+      (Array.isArray(json?.messages) ? json.messages :
+      Array.isArray(json?.data?.messages) ? json.data.messages :
+      []);
+
+    if (!msgs.length) return "";
+
+    // poslední zpráva = nejaktuálnější
+    const last = msgs[msgs.length - 1];
+    return String(last?.text ?? "").trim();
+  }
+
+  function formatNameFromJumper(j) {
+    const last = String(j?.lastname ?? "").trim();
+    const first = String(j?.firstname ?? "").trim();
+    const name = `${last}, ${first}`.trim();
+    return name === "," ? "" : name;
+  }
+
+  function build(rows, statusText) {
+    rows.sort((a, b) => {
+      const ar = Number(a.final_rank);
+      const br = Number(b.final_rank);
+      if (Number.isFinite(ar) && Number.isFinite(br)) return ar - br;
+
+      const ab = Number(a.bib);
+      const bb = Number(b.bib);
+      if (Number.isFinite(ab) && Number.isFinite(bb)) return ab - bb;
+
+      return 0;
+    });
 
     document.open();
     document.write(`<!doctype html>
@@ -73,44 +110,53 @@
 <title>Berkutschi – výsledky</title>
 <style>
   body { background:#fff; color:#000; font-family:Arial,Helvetica,sans-serif; padding:20px; }
-  table { border-collapse:collapse; margin:auto; width:860px; }
+  .wrap { width: 1100px; margin: 0 auto; display:flex; gap:20px; align-items:flex-start; }
+  table { border-collapse:collapse; background:#fff; }
+  .main { width:860px; }
   th, td { border:1px solid #000; padding:6px 8px; text-align:center; }
   th { font-weight:bold; }
+  .status { width: 220px; }
+  .status td { text-align:left; }
 </style>
 </head>
 <body>
-<table>
-<thead>
-<tr>
-  <th>Pořadí</th>
-  <th>Jméno</th>
-  <th>Délka 1</th>
-  <th>Body 1</th>
-  <th>Délka 2</th>
-  <th>Body 2</th>
-</tr>
-</thead>
-<tbody>
-${rows.map(r => `
-<tr id="${esc(r._id)}">
-  <td>${esc(n(r.final_rank))}</td>
-  <td>${esc(r.name)}</td>
-  <td>${esc(n(r.length1))}</td>
-  <td>${esc(n(r.points1))}</td>
-  <td>${esc(n(r.length2))}</td>
-  <td>${esc(n(r.points2))}</td>
-</tr>`).join("")}
-</tbody>
+
+<div class="wrap">
+  <table class="main">
+    <thead>
+      <tr>
+        <th>Pořadí</th>
+        <th>Jméno</th>
+        <th>Délka 1</th>
+        <th>Body 1</th>
+        <th>Délka 2</th>
+        <th>Body 2</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${rows.map(r => `
+      <tr id="${esc(r._id)}">
+        <td>${esc(n(r.final_rank))}</td>
+        <td>${esc(r.name)}</td>
+        <td>${esc(n(r.length1))}</td>
+        <td>${esc(n(r.points1))}</td>
+        <td>${esc(n(r.length2))}</td>
+        <td>${esc(n(r.points2))}</td>
+      </tr>`).join("")}
+    </tbody>
+  </table>
+
+  <table class="status">
+  <thead>
+    <tr><th>Status</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td id="status">${esc(statusText)}</td>
+    </tr>
+  </tbody>
 </table>
-
-<script>
-(function(){
-  const delays=[10000,15000,20000];
-  const delay=delays[Math.floor(Math.random()*delays.length)];
-  setTimeout(()=>location.reload(), delay);
-})();
-</script>
-
+</div>
 </body>
 </html>`);
     document.close();
@@ -122,25 +168,42 @@ ${rows.map(r => `
       if (!raw) return;
 
       const json = JSON.parse(raw);
+
+      const jumpers = pickJumpers(json);
       const results = pickResults(json);
+      const statusText = pickStatusText(json);
 
-      const rows = results.map(r => ({
-        _id: idFromName(r.name),
-        name: r.name ?? "",
-        final_rank: r.final_rank ?? "",
-        length1: r.length1 ?? "",
-        points1: r.points1 ?? "",
-        length2: r.length2 ?? "",
-        points2: r.points2 ?? ""
-      }));
+      const resultsByBib = new Map();
+      for (const r of results) {
+        const bib = String(r?.bib ?? "").trim();
+        if (bib) resultsByBib.set(bib, r);
+      }
 
-      build(rows);
+      const rows = jumpers.map(j => {
+        const bib = String(j?.bib ?? "").trim();
+        const res = bib ? resultsByBib.get(bib) : undefined;
+
+        const displayName = formatNameFromJumper(j); // "SATO, Keiichi"
+        const id = idFromName(displayName);          // "keiichi_sato"
+
+        return {
+          bib,
+          _id: id,
+          name: displayName,
+          final_rank: res?.final_rank ?? "",
+          length1: res?.length1 ?? "",
+          points1: res?.points1 ?? "",
+          length2: res?.length2 ?? "",
+          points2: res?.points2 ?? ""
+        };
+      });
+
+      build(rows, statusText);
     } catch (e) {
       console.error("Berkutschi table error:", e);
     }
   }
 
-  // @run-at document-start: počkej, až existuje <pre>
   const tryRun = () => {
     if (document.querySelector("pre") || document.readyState !== "loading") main();
     else setTimeout(tryRun, 20);

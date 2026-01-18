@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Panel Herosów i Tytanów
 // @namespace    https://greasyfork.org/users/1036645
-// @version      1.80
+// @version      1.85
 // @description  Panel ilustrujący tajmery herosów z groove w postaci kolorowych obrazków
 // @author       Mateoo
 // @match        http*://*.margonem.pl
@@ -71,7 +71,7 @@
     };
 
     menu.id = "dodawanie_menu";
-    menu.style.cssText = "position:absolute;top:6%;left:82.5%;width:17%;height:87%;background-color: rgba(108, 114, 115, 0.3);color:#0d3a6b;border-style:solid;border-width:1.5px;border-color:#098491;border-radius:16px;opacity:0.9;font-size:20px;font-family:Comic Sans MS;z-index:999;display:none;";
+    menu.style.cssText = "position:absolute;top:6%;left:82%;width:18.8%;height:87%;background-color: rgba(108, 114, 115, 0.3);color:#0d3a6b;border-style:solid;border-width:1.5px;border-color:#098491;border-radius:16px;opacity:0.9;font-size:20px;font-family:Comic Sans MS;z-index:999;display:none;";
 
     menueve.id = "herosyeve_menu";
     menueve.style.cssText = "position:absolute;top:6%;left:82.5%;width:17%;height:87%;background-color: rgba(108, 114, 115, 0.3);color:#0d3a6b;border-style:solid;border-width:1.5px;border-color:#098491;border-radius:16px;opacity:0.9;font-size:20px;font-family:Comic Sans MS;z-index:999;display:none;";
@@ -87,7 +87,7 @@
             position:absolute;
             top:${position.top}%;
             left:${position.left}%;
-            width:23%;
+            width:18%;
             height:15%;
             text-align:center;
             background-color:#24803c;
@@ -116,29 +116,30 @@
     // Lista herosów i ich pozycji
     const heroes = [
         { id: "pat", name: "Mroczny Patryk", img: "https://micc.garmory-cdn.cloud/obrazki/npc/her/bardzozlypatryk.gif", position: { top: 1, left: 1 } },
-        { id: "karm", name: "Karmazynowy Mściciel", img: "https://micc.garmory-cdn.cloud/obrazki/npc/her/gnom_msciciel.gif", position: { top: 1, left: 25 } },
-        { id: "zlod", name: "Złodziej", img: "https://micc.garmory-cdn.cloud/obrazki/npc/her/zlodziej.gif", position: { top: 1, left: 49 } },
-        { id: "przew", name: "Zły Przewodnik", img: "https://micc.garmory-cdn.cloud/obrazki/npc/her/mnich-zly2.gif", position: { top: 1, left: 73 } },
-        { id: "opek", name: "Opętany Paladyn", img: "https://micc.garmory-cdn.cloud/obrazki/npc/her/opetanypaladyn02.gif", position: { top: 17, left: 1 } },
-        { id: "kost", name: "Piekielny Kościej", img: "https://micc.garmory-cdn.cloud/obrazki/npc/her/piekielny_kosciej.gif", position: { top: 17, left: 25 } },
-        { id: "kozi", name: "Koziec Mąciciel Ścieżek", img: "https://micc.garmory-cdn.cloud/obrazki/npc/her/koziec_maciciel_sciezek.gif", position: { top: 17, left: 49 } },
-        { id: "koch", name: "Kochanka Nocy", img: "https://micc.garmory-cdn.cloud/obrazki/npc/her/kochanka-nocy.gif", position: { top: 17, left: 73 } },
-        { id: "kasi", name: "Książe Kasim", img: "https://micc.garmory-cdn.cloud/obrazki/npc/her/ksiaze-kasim.gif", position: { top: 33, left: 1 } },
-        { id: "brat", name: "Święty Braciszek", img: "https://micc.garmory-cdn.cloud/obrazki/npc/her/sw_braciszek.gif", position: { top: 33, left: 25 } },
-        { id: "roger", name: "Złoty Roger", img: "https://micc.garmory-cdn.cloud/obrazki/npc/her/szkielet_pirata.gif", position: { top: 33, left: 49 } },
-        { id: "bacaa", name: "Baca Bez Łowiec", img: "https://micc.garmory-cdn.cloud/obrazki/npc/her/baca-bez-lowiec.gif", position: { top: 33, left: 73 } },
-        { id: "ata", name: "Czarująca Atalia", img: "https://micc.garmory-cdn.cloud/obrazki/npc/her/tri_atalia.gif", position: { top: 49, left: 1 } },
-        { id: "oblo", name: "Obłąkany Łowca Orków", img: "https://micc.garmory-cdn.cloud/obrazki/npc/her/oblakany_ac1dae9d.gif", position: { top: 49, left: 25 } },
-        { id: "lichw", name: "Lichwiarz Grauhaz", img: "https://micc.garmory-cdn.cloud/obrazki/npc/her/heros_129xd.gif", position: { top: 49, left: 49 } },
-        { id: "viv", name: "Viviana Nandin", img: "https://micc.garmory-cdn.cloud/obrazki/npc/her/viv_nandin_i3bd1.gif", position: { top: 49, left: 73 } },
-        { id: "przeraza", name: "Przeraza", img: "https://micc.garmory-cdn.cloud/obrazki/npc/her/przeraza.gif", position: { top: 65, left: 1 } },
-        { id: "dem", name: "Demonis Pan Nicości", img: "https://micc.garmory-cdn.cloud/obrazki/npc/her/sekta_demon_cz_s.gif", position: { top: 65, left: 25 } },
-        { id: "mulh", name: "Mulher Ma", img: "https://micc.garmory-cdn.cloud/obrazki/npc/her/mulher_ma.gif", position: { top: 65, left: 49 } },
-        { id: "vap", name: "Vapor Veneno", img: "https://micc.garmory-cdn.cloud/obrazki/npc/her/joziniec_bagienny.gif", position: { top: 65, left: 73 } },
-        { id: "debo", name: "Dęborożec", img: "https://micc.garmory-cdn.cloud/obrazki/npc/her/zwierz_kniei.gif", position: { top: 81, left: 1 } },
-        { id: "tep", name: "Tepeyollotl", img: "https://micc.garmory-cdn.cloud/obrazki/npc/her/tep_35ecb966.gif", position: { top: 81, left: 25 } },
-        { id: "nego", name: "Negthotep Czarny Kapłan", img: "https://micc.garmory-cdn.cloud/obrazki/npc/her/negthotep.gif", position: { top: 81, left: 49 } },
-        { id: "smo", name: "Młody Smok", img: "https://micc.garmory-cdn.cloud/obrazki/npc/her/smokbarb.gif", position: { top: 81, left: 73 } },
+        { id: "karm", name: "Karmazynowy Mściciel", img: "https://micc.garmory-cdn.cloud/obrazki/npc/her/gnom_msciciel.gif", position: { top: 1, left: 20 } },
+        { id: "zlod", name: "Złodziej", img: "https://micc.garmory-cdn.cloud/obrazki/npc/her/zlodziej.gif", position: { top: 1, left: 39 } },
+        { id: "przew", name: "Zły Przewodnik", img: "https://micc.garmory-cdn.cloud/obrazki/npc/her/mnich-zly2.gif", position: { top: 1, left: 58 } },
+        { id: "opek", name: "Opętany Paladyn", img: "https://micc.garmory-cdn.cloud/obrazki/npc/her/opetanypaladyn02.gif", position: { top: 1, left: 77 } },
+        { id: "kost", name: "Piekielny Kościej", img: "https://micc.garmory-cdn.cloud/obrazki/npc/her/piekielny_kosciej.gif", position: { top: 17, left: 1 } },
+        { id: "kozi", name: "Koziec Mąciciel Ścieżek", img: "https://micc.garmory-cdn.cloud/obrazki/npc/her/koziec_maciciel_sciezek.gif", position: { top: 17, left: 20 } },
+        { id: "koch", name: "Kochanka Nocy", img: "https://micc.garmory-cdn.cloud/obrazki/npc/her/kochanka-nocy.gif", position: { top: 17, left: 39 } },
+        { id: "kasi", name: "Książe Kasim", img: "https://micc.garmory-cdn.cloud/obrazki/npc/her/ksiaze-kasim.gif", position: { top: 17, left: 58 } },
+        { id: "brat", name: "Święty Braciszek", img: "https://micc.garmory-cdn.cloud/obrazki/npc/her/sw_braciszek.gif", position: { top: 17, left: 77 } },
+        { id: "roger", name: "Złoty Roger", img: "https://micc.garmory-cdn.cloud/obrazki/npc/her/szkielet_pirata.gif", position: { top: 33, left: 1 } },
+        { id: "bacaa", name: "Baca Bez Łowiec", img: "https://micc.garmory-cdn.cloud/obrazki/npc/her/baca-bez-lowiec.gif", position: { top: 33, left: 20 } },
+        { id: "ata", name: "Czarująca Atalia", img: "https://micc.garmory-cdn.cloud/obrazki/npc/her/tri_atalia.gif", position: { top: 33, left: 39 } },
+        { id: "oblo", name: "Obłąkany Łowca Orków", img: "https://micc.garmory-cdn.cloud/obrazki/npc/her/oblakany_ac1dae9d.gif", position: { top: 33, left: 58 } },
+        { id: "lichw", name: "Lichwiarz Grauhaz", img: "https://micc.garmory-cdn.cloud/obrazki/npc/her/heros_129xd.gif", position: { top: 33, left: 77 } },
+        { id: "viv", name: "Viviana Nandin", img: "https://micc.garmory-cdn.cloud/obrazki/npc/her/viv_nandin_i3bd1.gif", position: { top: 49, left: 1 } },
+        { id: "przeraza", name: "Przeraza", img: "https://micc.garmory-cdn.cloud/obrazki/npc/her/przeraza.gif", position: { top: 49, left: 20 } },
+        { id: "dem", name: "Demonis Pan Nicości", img: "https://micc.garmory-cdn.cloud/obrazki/npc/her/sekta_demon_cz_s.gif", position: { top: 49, left: 39 } },
+        { id: "mulh", name: "Mulher Ma", img: "https://micc.garmory-cdn.cloud/obrazki/npc/her/mulher_ma.gif", position: { top: 49, left: 58 } },
+        { id: "vap", name: "Vapor Veneno", img: "https://micc.garmory-cdn.cloud/obrazki/npc/her/joziniec_bagienny.gif", position: { top: 49, left: 77 } },
+        { id: "debo", name: "Dęborożec", img: "https://micc.garmory-cdn.cloud/obrazki/npc/her/zwierz_kniei.gif", position: { top: 65, left: 1 } },
+        { id: "tep", name: "Tepeyollotl", img: "https://micc.garmory-cdn.cloud/obrazki/npc/her/tep_35ecb966.gif", position: { top: 65, left: 20 } },
+        { id: "wid", name: "Widmo Triady", img: "https://micc.garmory-cdn.cloud/obrazki/npc/her/trist2_widmo_triady.gif", position: { top: 65, left: 39 } },
+        { id: "nego", name: "Negthotep Czarny Kapłan", img: "https://micc.garmory-cdn.cloud/obrazki/npc/her/negthotep.gif", position: { top: 65, left: 58 } },
+        { id: "smo", name: "Młody Smok", img: "https://micc.garmory-cdn.cloud/obrazki/npc/her/smokbarb.gif", position: { top: 65, left: 77 } },
     ];
 
     heroes.forEach(hero => createHeroElement(hero, menu, hero.position));
@@ -183,6 +184,7 @@ refreshButton.onclick = () => {
         ["vapor veneno", "vap", 80, 240],
         ["dęborożec", "debo", 80, 240],
         ["tepeyollotl", "tep", 80, 240],
+        ["widmo triady", "wid", 80,240],
         ["negthotep czarny kaplan", "nego", 80, 240],
         ["młody smok", "smo", 85, 260]
     ];
@@ -217,10 +219,10 @@ menu.appendChild(refreshButton);
 
     // Dodanie herosów eventowych do Panelu Eventowego
     const eventHeroes = [
-        { id: "roga", name: "Rogoglowy Anthony (62)", img: "https://micc.garmory-cdn.cloud/obrazki/npc/hev/h25-h1-anthony.gif", position: { top: 1, left: 1 } },
-        { id: "czte", name: "Czteroreka Sophia (120)", img: "https://micc.garmory-cdn.cloud/obrazki/npc/hev/h25-h2-sophia.gif", position: { top: 1, left: 25 } },
-        { id: "jedn", name: "Jednoreki Noah (164)", img: "https://micc.garmory-cdn.cloud/obrazki/npc/hev/h25-h3-noah.gif", position: { top: 1, left: 49 } },
-        { id: "dwug", name: "Dwuglowa Charlotte (202)", img: "https://micc.garmory-cdn.cloud/obrazki/npc/hev/h25-h4-charlotte.gif", position:  { top: 1, left: 73 } },
+        { id: "roga", name: "BRAK EVENTU", img: "https://micc.garmory-cdn.cloud/obrazki/npc/hev/y.gif", position: { top: 1, left: 1 } },
+        //{ id: "czte", name: "Czteroreka Sophia (120)", img: "https://micc.garmory-cdn.cloud/obrazki/npc/hev/h25-h2-sophia.gif", position: { top: 1, left: 25 } },
+        //{ id: "jedn", name: "Jednoreki Noah (164)", img: "https://micc.garmory-cdn.cloud/obrazki/npc/hev/h25-h3-noah.gif", position: { top: 1, left: 49 } },
+        //{ id: "dwug", name: "Dwuglowa Charlotte (202)", img: "https://micc.garmory-cdn.cloud/obrazki/npc/hev/h25-h4-charlotte.gif", position:  { top: 1, left: 73 } },
         // Dodaj więcej eventowych herosów według potrzeb
     ];
  eventHeroes.forEach(hero => {

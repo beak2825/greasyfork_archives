@@ -36,9 +36,8 @@
     }
   };
   (() => {
-    var _a, _b;
     const metaRoot = document.querySelector("#info");
-    const imdb = (_b = (_a = metaRoot == null ? void 0 : metaRoot.textContent) == null ? void 0 : _a.match(/tt[0-9]{4,}/)) == null ? void 0 : _b[0];
+    const imdb = metaRoot?.textContent?.match(/tt[0-9]{4,}/)?.[0];
     const doubanID = document.location.toString().split("/")[4];
     if (!imdb || !doubanID) return;
     for (const [key, sites] of Object.entries(META_DATA)) {

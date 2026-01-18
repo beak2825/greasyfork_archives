@@ -1,9 +1,17 @@
 // ==UserScript==
 // @name         含羞草
-// @version      1.0.0
+// @version      1.0.1
 // @description  含羞草视频解锁观看及下载，无限制播放下载 | 官网：https://khsy.cc
 // @author       khsy.cc
-// @match        https://*.bt56y.com/*
+// @include           */pages/mianfei*
+// @include 		  https://www.*.com/home
+// @include 		  */play/video/*
+// @include 		  *://*.*.*/*
+// @include 		  *://*.*/*
+// @include 		  *://*.*.*.*/*
+// @include 		  */home/disposition/*
+// @include 		  */smallVideo/index/*
+// @include		      *://tools.thatwind.com/*
 // @match        https://*.jfjd2.com/*
 // @match        https://*.95agri.com/*
 // @match        https://*/play/video/*
@@ -31,7 +39,7 @@
     // ==================== 配置常量 ====================
     const CONFIG = {
         SERVER_BASE: 'https://khsy.cc',
-        SCRIPT_VERSION: '1.0.0',
+        SCRIPT_VERSION: '1.0.1',
         THEME: {
             primary: '#8b5cf6',
             secondary: '#ec4899',

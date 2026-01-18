@@ -1,9 +1,8 @@
 // ==UserScript==
 // @name         静态部署YYDS
 // @namespace    https://g.hz.netease.com/zhuning1
-// @version      0.1
+// @version      0.2
 // @description  解除发布屏蔽
-// @author       zhuning1@corp.netease.com
 // @match        *://music-fet.hz.netease.com/*
 // @match        *://fet.qa.igame.163.com/*
 // @icon         https://s1.music.126.net/style/favicon.ico

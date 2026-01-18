@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        azusa_partner_library_bgm_covers_updates
 // @namespace   https://greasyfork.org/users/1396048-moeruotaku
-// @version     2026.01.16.68
+// @version     2026.01.17.69
 // @description bgm_covers_updates
 // @author      moeruotaku
 // @license     MIT
@@ -12,6 +12,7 @@
 // ==/UserScript==
 
 const bgm_covers = {
+  7644: "ef/0b/7644_jp.jpg",
   14483: "70/48/14483_33X33.jpg",
   25501: "83/e1/25501_K2ba2.jpg",
   42435: "8b/f8/42435_c45U6.jpg",
@@ -25,7 +26,7 @@ const bgm_covers = {
   184679: "0a/96/184679_TZDWG.jpg",
   196753: "34/a6/196753_zoNVi.jpg",
   208489: "1c/dd/208489_PnXRP.jpg",
-  209858: "29/79/209858_RLP5M.jpg",
+  217598: "29/d6/217598_HJ7jJ.jpg",
   218425: "8e/b1/218425_vbDLL.jpg",
   219247: "0d/a0/219247_LLYCa.jpg",
   234489: "2e/f0/234489_333nt.jpg",
@@ -40,10 +41,10 @@ const bgm_covers = {
   272351: "dd/3b/272351_l07i8.jpg",
   273590: "e7/f4/273590_2151L.jpg",
   279507: "ff/ed/279507_6M5zm.jpg",
-  282324: "cb/a9/282324_l2i2l.jpg",
   289342: "c2/38/289342_8CnzY.jpg",
   289556: "1a/ce/289556_2q0zg.jpg",
   295217: "31/37/295217_GQKWX.jpg",
+  297267: "44/e3/297267_5euea.jpg",
   305872: "5d/58/305872_mVwvR.jpg",
   307014: "ee/ec/307014_cVtli.jpg",
   308287: "b5/d6/308287_Qj65Q.jpg",
@@ -76,12 +77,13 @@ const bgm_covers = {
   413626: "bc/dd/413626_dLvhw.jpg",
   432458: "f3/af/432458_9j6EJ.jpg",
   433639: "f7/54/433639_P3lL5.jpg",
+  433903: "00/76/433903_4b9bX.jpg",
+  433931: "9f/f0/433931_SNqwD.jpg",
   434727: "18/44/434727_Lxg2W.jpg",
   443706: "bd/33/443706_6IvL3.jpg",
   449549: "32/87/449549_Oo94K.jpg",
   453901: "0a/ad/453901_TyxyW.jpg",
   460819: "f0/ce/460819_u5H0Z.jpg",
-  462338: "74/68/462338_yNcUs.jpg",
   462533: "de/6c/462533_0IF5L.jpg",
   465369: "0b/38/465369_x3iTt.jpg",
   480576: "61/da/480576_83XMK.jpg",
@@ -93,6 +95,5 @@ const bgm_covers = {
   524513: "cd/fa/524513_HbF4M.jpg",
   532479: "64/41/532479_GrzIL.jpg",
   544387: "7f/94/544387_jRfRG.jpg",
-  550010: "1b/0d/550010_3AbNc.jpg",
-  570430: "56/b4/570430_X2HOY.jpg"
+  550010: "1b/0d/550010_3AbNc.jpg"
 };
