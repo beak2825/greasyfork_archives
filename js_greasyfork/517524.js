@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        azusa_partner_library_bgm_covers
 // @namespace   https://greasyfork.org/users/1396048-moeruotaku
-// @version     2026.01.17.69
+// @version     2026.01.19.96
 // @description bgm_covers
 // @author      moeruotaku
 // @license     MIT
@@ -6756,6 +6756,7 @@ const bgm_covers = {
   193697: "de/99/193697_JSbyz.jpg",
   193719: "af/58/193719_hBLRS.jpg",
   193750: "fe/5f/193750_5hcWw.jpg",
+  193851: "f1/75/193851_IDdH3.jpg",
   193856: "ae/8c/193856_92c02.jpg",
   193866: "27/af/193866_67Nz7.jpg",
   193902: "24/cf/193902_6rCMa.jpg",
@@ -7380,6 +7381,7 @@ const bgm_covers = {
   212932: "37/38/212932_17SsR.jpg",
   212952: "c7/34/212952_ocJ6M.jpg",
   212954: "a8/03/212954_jp.jpg",
+  212997: "78/01/212997_Rvy5y.jpg",
   213009: "e9/f8/213009_mztvy.jpg",
   213037: "e2/8b/213037_Yhd79.jpg",
   213038: "45/d5/213038_PEuuM.jpg",
@@ -8407,6 +8409,7 @@ const bgm_covers = {
   250328: "ed/53/250328_BtRrQ.jpg",
   250385: "ab/07/250385_z1Y68.jpg",
   250459: "07/e4/250459_uQqtP.jpg",
+  250520: "19/45/250520_q2w2V.jpg",
   250639: "e4/2a/250639_6S1ph.jpg",
   251029: "6f/30/251029_53W5i.jpg",
   251030: "dc/b6/251030_ibzpW.jpg",
@@ -8845,6 +8848,7 @@ const bgm_covers = {
   271925: "92/db/271925_03v4E.jpg",
   271936: "cf/17/271936_42s52.jpg",
   272012: "3f/cd/272012_FZyv3.jpg",
+  272026: "d4/84/272026_loLDj.jpg",
   272351: "dd/3b/272351_l07i8.jpg",
   272373: "b7/30/272373_3O2a0.jpg",
   272391: "c5/29/272391_uF30h.jpg",
@@ -9233,6 +9237,7 @@ const bgm_covers = {
   286866: "09/9d/286866_37zL7.jpg",
   286869: "b1/e3/286869_aR0VL.jpg",
   286872: "fb/2f/286872_d0aBp.jpg",
+  286892: "a6/ec/286892_8Zs7W.jpg",
   286975: "d5/8d/286975_51E5e.jpg",
   286980: "1a/02/286980_oGUGY.jpg",
   287050: "61/89/287050_36aYQ.jpg",
@@ -12664,6 +12669,7 @@ const bgm_covers = {
   426502: "68/53/426502_exKEr.jpg",
   426746: "bb/6e/426746_AV9AZ.jpg",
   426770: "6c/69/426770_xc1HY.jpg",
+  426967: "ee/d3/426967_9T9A9.jpg",
   426994: "5f/ef/426994_ggolH.jpg",
   427133: "61/9a/427133_8G1F2.jpg",
   427143: "97/2e/427143_QzLOZ.jpg",

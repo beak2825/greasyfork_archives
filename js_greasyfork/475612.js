@@ -8,7 +8,7 @@
 // @match        https://www.jeuxvideo.com/forums/42-*
 // @match        https://www.jeuxvideo.com/forums/1-*
 // @match        https://www.jeuxvideo.com/forums/0-*
-// @version      1.7.0
+// @version      1.8.0
 // @icon         https://image.jeuxvideo.com/smileys_img/11.gif
 // @grant        none
 // @license      MIT
@@ -52,7 +52,7 @@ function onSmileyButtonClick() {
 function waitForSmileyPanel(attempt = 0) {
   const maxAttempts = 10;
   const delay = 30;
-  const panel = document.querySelector('.modalWrapper__main.smileys__modal');
+  const panel = document.querySelector('.smileys__modal');
 
     if (panel) {
         handleSmileyPanel();
@@ -66,27 +66,26 @@ function waitForSmileyPanel(attempt = 0) {
 
 // Remplacement des smileys (classe .smileys__adds pour ajouter la logique javascript)
 function handleSmileyPanel() {
-    const c_smiley1 = document.querySelector(".smileys__modal .smileys__table tr:nth-child(1) td:nth-child(5)"),
-          c_smiley1d = document.querySelector(".smileys__modal .smileys__table tr:nth-child(1) td:nth-child(6)");
-    
-    c_smiley1.innerHTML = `<img class="smileys__img smileys__adds" data-code=":hapoelparty:" src="//image.jeuxvideo.com/smileys_img/hapoelparty.gif" width="45" height="27">`;
-    c_smiley1d.innerHTML = `:hapoelparty:`;
+    const smileysTable = document.querySelector(".smileys__modal .smileys__table");
+    const c_smiley1 = smileysTable.querySelector("tr:nth-child(1) td:nth-child(5)"),
+          c_smiley1d = smileysTable.querySelector("tr:nth-child(1) td:nth-child(6)");
+    c_smiley1.innerHTML = '<img class="smileys__img smileys__adds" data-code=":hapoelparty:" src="//image.jeuxvideo.com/smileys_img/hapoelparty.gif" width="45" height="27">';
+    c_smiley1d.innerHTML = ':hapoelparty:';
 
 
-    const c_smiley2 = document.querySelector(".smileys__modal .smileys__table tr:nth-child(3) td:nth-child(7)"),
-          c_smiley2d = document.querySelector(".smileys__modal .smileys__table tr:nth-child(3) td:nth-child(8)");
-    c_smiley2.innerHTML = `<img class="smileys__img smileys__adds" data-code=":loveyou:" src="//image.jeuxvideo.com/smileys_img/loveyou.gif" width="64" height="30">`;
-    c_smiley2d.innerHTML = `:loveyou:`;
+    const c_smiley2 = smileysTable.querySelector("tr:nth-child(3) td:nth-child(7)"),
+          c_smiley2d = smileysTable.querySelector("tr:nth-child(3) td:nth-child(8)");
+    c_smiley2.innerHTML = '<img class="smileys__img smileys__adds" data-code=":loveyou:" src="//image.jeuxvideo.com/smileys_img/loveyou.gif" width="64" height="30">';
+    c_smiley2d.innerHTML = ':loveyou:';
 
-    //logique javascript
-    document.querySelectorAll(".smileys__img.smileys__adds").forEach(img => {
+    //Listener JS
+    const smileysImg = smileysTable.querySelectorAll(".smileys__img.smileys__adds");
+    for (const img of smileysImg) {
         img.addEventListener("click", (e) => {
-            //e.stopPropagation();
-            //e.preventDefault();
-            const code = img.dataset.code;
-            insertTextAtCursor(` ${code} `);
+            //e.stopPropagation(); e.preventDefault();
+            insertTextAtCursor(` ${img.dataset.code} `);
         });
-    });
+    }
 }
 
 //  Insertion texte à la position mémorisée + fermeture modal

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TestplaceForScript-DD1969-Namechanged
 // @namespace    DD1969
-// @version      0.8
+// @version      1.0
 // @license      GPL-3.0
 // @author       DD1969
 // @description  Test place for script

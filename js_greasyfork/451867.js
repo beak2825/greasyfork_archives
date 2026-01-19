@@ -1,15 +1,14 @@
 // ==UserScript==
 // @name         DMMDownloader
 // @namespace    https://github.com/Timesient/manga-download-scripts
-// @version      0.6
+// @version      0.7
 // @license      GPL-3.0
 // @author       Timesient
-// @description  Manga downloader for book.dmm.com and book.dmm.co.jp
+// @description  Manga downloader for book.dmm.com
 // @icon         https://p.dmm.com/p/common/pinned/general/favicon.ico
 // @homepageURL  https://greasyfork.org/scripts/451867-dmmdownloader
 // @supportURL   https://github.com/Timesient/manga-download-scripts/issues
 // @match        https://book.dmm.com/*
-// @match        https://book.dmm.co.jp/*
 // @require      https://unpkg.com/axios@0.27.2/dist/axios.min.js
 // @require      https://unpkg.com/jszip@3.7.1/dist/jszip.min.js
 // @require      https://unpkg.com/file-saver@2.0.5/dist/FileSaver.min.js
@@ -51,7 +50,7 @@
         ? `${authData.url}${isShareFile ? '' : 'normal_default/'}${isShareFile ? filename.replace('../', '') : filename}/${index}.jpeg?${new URLSearchParams(authData.auth_info)}`
         : `${authData.url}${filename}/${index}.jpeg?${new URLSearchParams(authData.auth_info)}`,
       pattern: Array.from(filename + `/${index}`).reduce((acc, cur) => acc + cur.charCodeAt(0), 0) % 4 + 1,
-			size: configData[filename].FileLinkInfo.PageLinkInfoList[index].Page.Size
+      size: configData[filename].FileLinkInfo.PageLinkInfoList[index].Page.Size
     }));
   }).flat();
 
@@ -106,15 +105,14 @@
 
   // get config data
   function getConfigData(addon) {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       GM_xmlhttpRequest({
         method: 'GET',
         url: `${authData.url}${addon}configuration_pack.json?${new URLSearchParams(authData.auth_info)}`,
         responseType: 'json',
-        onload: res => resolve({
-          configData: res.response,
-          isNeedNormalDefault: addon === 'normal_default/'
-        })
+        onload: res => res.response
+          ? resolve({ configData: res.response, isNeedNormalDefault: addon === 'normal_default/' })
+          : reject()
       });
     });
   }

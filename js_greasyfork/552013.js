@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Open2ch Kome UID Display
 // @namespace   https://greasyfork.org/ja/users/864059
-// @version     3.0.5
+// @version     3.0.6
 // @description Open2chのkomeチャットの発言にUIDを明示的に表示し、UIDごとに色を付けて表示します。
 // @author      七色の彩り
 // @match       https://*.open2ch.net/test/read.cgi/*
@@ -813,33 +813,38 @@
             }
             // 画像がある場合、画像ロード前はスクロールしない
         } else {
-            // 画像がない場合（外部拡張機能による後入れの可能性があるケース）
-            // コメント内容を取得し、URLが含まれているかチェック
+            // 画像がない場合：PageExpand等の後入れ要素を考慮
             const commentText = wrap.textContent || '';
             const hasUrl = /(http|https):\/\/[^\s]+/.test(commentText);
             const isTwitterUrl = /(twitter\.com|x\.com)/i.test(commentText);
 
             if (hasUrl && !isTwitterUrl) {
-                // ★ 処理開始時の位置を記憶（ここが生命線です）
+                // 処理開始時に底にいたかチェック
+                checkScrollPosition(scrollElement);
                 const wasAtBottom = isScrolledToBottom;
 
                 if (wasAtBottom) {
-                    // (1) まずテキスト挿入直後にスクロール
+                    // (1) テキスト挿入直後にスクロール
                     scrollToBottom(scrollElement, false);
 
-                    // (2) 500ms後：一段目の展開に合わせて補正
-                    setTimeout(() => {
-                        scrollToBottom(scrollElement, true);
-                    }, 500);
+                    // (2) 500ms後と1500ms後の「追い打ち」スクロール
+                    [500, 1500].forEach(delay => {
+                        setTimeout(() => {
+                            // 実行瞬間の「底からの距離」を計算
+                            // scrollHeight(全体の高さ) - (scrollTop(現在位置) + clientHeight(表示領域))
+                            const distanceFromBottom = scrollElement.scrollHeight - (scrollElement.scrollTop + scrollElement.clientHeight);
 
-                    // (3) 1500ms後：重い画像や遅れて出たサムネイル用に「念押し」
-                    // ここでは判定をせず、wasAtBottomがtrueなら強制的に飛ばします
-                    setTimeout(() => {
-                        scrollToBottom(scrollElement, true);
-                    }, 1500);
+                            // 底から350px以内（動画プレイヤー1枚分くらい）にいるなら、画像によるズレとみなして吸着
+                            // それ以上離れているなら、ユーザーが遡っているので何もしない
+                            if (distanceFromBottom < 350) {
+                                scrollToBottom(scrollElement, true);
+                            }
+                        }, delay);
+                    });
                 }
             } else {
-                // 通常コメント
+                // 通常コメント（URLなし）
+                // 常に最新の状態をチェックして、一番下にいる時だけ追従
                 checkScrollPosition(scrollElement);
                 if (isScrolledToBottom) {
                     scrollToBottom(scrollElement, false);
@@ -848,14 +853,14 @@
         }
 
         return true;
-            } catch (e) { // catch ブロックの開始
+            } catch (e) {
             // エラーが発生しても、ログに出力するだけで処理は中断しない
             console.error('Kome UID display: Error processing kcomm_wrap:', e);
 
             // UID未処理に戻すことで、再実行の機会を与える（オプション）
             wrap.classList.remove('uid-processed');
             return false;
-        } // catch ブロックの終了
+        }
     }
 
     function setupGlobalClickListener() {

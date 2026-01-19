@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         Logitech Sync Plus
 // @namespace    http://tampermonkey.net/
-// @version      2.13.4
+// @version      2.13.6
 // @description  Logitec Sync optimizations
 // @author       StvnMrtns
 // @include      https://sync.logitech.com/*
+// @icon         https://www.google.com/s2/favicons?sz=96&domain=sync.logitech.com
 // @require      https://code.jquery.com/jquery-3.6.0.min.js
 // @require      https://greasyfork.org/scripts/383527-wait-for-key-elements/code/Wait_for_key_elements.js?version=701631
 // @require      https://openuserjs.org/src/libs/sizzle/GM_config.js
@@ -63,13 +64,13 @@ var event_text_container_prefix;
     var version_number = GM_info.script.version;
 
     // classes | class-value regulary changes at Logitech
-    activity_container = 'djrOIw';   // class="containers__NonFullWidthContainer-sc-566aaba3-7 xXxXxX"               | search for class in source: class="containers__NonFullWidthContainer-sc- "
-    activity_date = 'gnVpFU';        // class="Body__Body3-sc-17rsza-2 xXxXxX"                                       | search for class in source: class="Body__Body3-sc- "
-    activity_line = 'gPIRzH';        // class="Body__Body4-sc-17rsza-3 xXxXxX"                                       | search for class in source: class="Body__Body4-sc- "
-    activity_line_time = 'jZFCYA';   // class="Label__Label2-sc-qs84ke-1 xXxXxX"                                     | search for class in source: class="Label__Label2-sc- "
+    activity_container = 'iSAqBS';   // class="containers__NonFullWidthContainer-sc-566aaba3-7 xXxXxX"               | search for class in source: class="containers__NonFullWidthContainer-sc- "
+    activity_date = 'gFYQmU';        // class="Body__Body3-sc-17rsza-2 xXxXxX"                                       | search for class in source: class="Body__Body3-sc- "
+    activity_line = 'ksPlKX';        // class="Body__Body4-sc-17rsza-3 xXxXxX"                                       | search for class in source: class="Body__Body4-sc- "
+    activity_line_time = 'kLoiME';   // class="Label__Label2-sc-qs84ke-1 xXxXxX"                                     | search for class in source: class="Label__Label2-sc- "
 
-    event_container = 'cMINoF';      // class="containers__Container-sc-89dea2f6-8 xXxXxX custom-line"                                         | search for class in source: class="containers__Container-sc- "
-    event_text_container = 'gBsfUV'; // class="containers__Container-sc-89dea2f6-8 Events__EventTextContainer-sc-6eb25dd1-0 xXxXxX zZzZzZ"     | search for class in source: class="Events__EventTextContainer-sc- "
+    event_container = 'goqJQL';      // class="containers__Container-sc-89dea2f6-8 xXxXxX custom-line"                                         | search for class in source: class="containers__Container-sc- "
+    event_text_container = 'ckKRwz'; // class="containers__Container-sc-89dea2f6-8 Events__EventTextContainer-sc-6eb25dd1-0 xXxXxX zZzZzZ"     | search for class in source: class="Events__EventTextContainer-sc- "
 
     // classes | perfixes to search for
     activity_container_prefix = 'containers__NonFullWidthContainer-sc-';
@@ -194,8 +195,9 @@ function editGlobalCSS()
     GM_addStyle('.custom-text-blue      { color: #00B8FC !important; }');
 
     GM_addStyle('.logi-plus { position: absolute; top: 10px; right: 50px; color: #AAAAAA; font-size: 11px; z-index: 1005; }');
-    GM_addStyle('.logi-plus-info { position: absolute; bottom: 10px; right: 50px; color: #AAAAAA; font-size: 11px; z-index: 1005; line-height: 1.5em; }');
+    GM_addStyle('.logi-plus-info { position: fixed; bottom: 10px; right: 50px; color: #AAAAAA; font-size: 11px; z-index: 1005; line-height: 1.5em; }');
     GM_addStyle('.logi-plus-info .info { display: inline-block; }');
+    GM_addStyle('.logi-plus-info .info.changes-detected { background: rgba(255, 255, 255, 0.9); padding: 5px 10px; border-radius: 5px; }');
 }
 
 // ***********************************************
@@ -247,6 +249,7 @@ function editPageInventoryRoomActivityContent()
 
                 // find and convert time
                 line_time = $(this).parents('div').eq(1).find('span.'+activity_line_time).text();
+
                 if(line_time.indexOf('GMT') >= 0)
                 {
                     line_time = line_time.substring(0, line_time.indexOf('GMT')-1);
@@ -602,6 +605,8 @@ function editPageInventoryRoomActivityContent()
         var classes_active = 0;
         var classes_active_changes = '';
 
+        classes_active_changes += '&#9749; <span class="custom-text-green">Have a chat with to the developer<br>of the script to apply the changes below</span><br><br><b><u>Changes detected</u>:</b><br>';
+
         if($('.'+activity_container)[0])
         {
             classes_active++;
@@ -664,7 +669,7 @@ function editPageInventoryRoomActivityContent()
         {
             $('.logi-plus g').addClass('custom-text-red');
             $('.logi-plus-info g').addClass('custom-text-red');
-            $('.logi-plus-info .info').html(classes_active_changes+'<br>Logi Sync changes detected for Logi Sync Plus');
+            $('.logi-plus-info .info').html(classes_active_changes+'<br><span class="custom-text-red"><b>Logi Sync <u>changes detected</u> for Logi Sync Plus</b></span>').addClass('changes-detected');
         }
         else if(classes_active == 6)
         {
@@ -676,7 +681,7 @@ function editPageInventoryRoomActivityContent()
         {
             $('.logi-plus g').addClass('custom-text-orange');
             $('.logi-plus-info g').addClass('custom-text-orange');
-            $('.logi-plus-info .info').html(classes_active_changes+'<br>Logi Sync changes detected for Logi Sync Plus');
+            $('.logi-plus-info .info').html(classes_active_changes+'<br><span class="custom-text-orange"><b>Logi Sync <u>changes detected</u> for Logi Sync Plus</b></span>').addClass('changes-detected');
         }
     }
 }

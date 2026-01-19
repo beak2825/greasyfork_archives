@@ -2,7 +2,7 @@
 // @name			Hentai Heroes++ (OCD) Season version
 // @namespace		https://sleazyfork.org/fr/scripts/415625-hentai-heroes-ocd-season-version
 // @description		Adding things here and there in the Hentai Heroes game.
-// @version			0.94.1
+// @version			0.94.2
 // @match           https://*.hentaiheroes.com/*
 // @match           https://*.haremheroes.com/*
 // @match           https://*.gayharem.com/*
@@ -25,6 +25,7 @@
 	 CHANGELOG
 	=========== */
 
+// 0.94.2: Fixed a few bugs.
 // 0.94.1: Fixed a bug with labyrinth team filter.
 // 0.94.0: Added a sort for penta drill fights according to penta drill sim. Added new parameters in lab/penta drill filters.
 // 0.93.9: Added new world and villain in Comix Harem. Fixed a few things.
@@ -3695,18 +3696,16 @@ function moduleMarket() {
 
     let timer;
     $('#shops button').click(() => {
-        let clickedButton = $(this).attr('rel'),
-            opened_shop = $('#tabs-switcher').children('.active');
-        clearTimeout(timer);
-        timer = setTimeout(() => {
+        let opened_shop = $('#tabs-switcher').children('.active');
+        setTimeout(() => {
             if (opened_shop[0].attributes.type.value == 'armor') equipments_shop(1);
             else if (opened_shop[0].attributes.type.value == 'booster') boosters_shop(1);
             else if (opened_shop[0].attributes.type.value == 'potion') {
-                if (clickedButton == 'buy' || clickedButton == 'buy_all' || clickedButton == 'shop_reload') get_buyableStocks('potion');
+                get_buyableStocks('potion');
                 books_shop(1);
             }
             else if (opened_shop[0].attributes.type.value == 'gift') {
-                if (clickedButton == 'buy' || clickedButton == 'buy_all' || clickedButton == 'shop_reload') get_buyableStocks('gift');
+                get_buyableStocks('gift');
                 gifts_shop(1);
             }
         }, 2*timeout);
@@ -8329,7 +8328,8 @@ function moduleLeague() {
 
                         //Add booster status
                         if (loadSetting('leagueBoardBoostersStatus')) {
-                            if (opponents[i].className.indexOf('player-row') == -1 && $(opponents[i]).find('.boosters .circular-progress').length == 0) {
+                            if ($(opponents[i]).find('.boosters .circular-progress').length == 0) {
+                            //if (opponents[i].className.indexOf('player-row') == -1 && $(opponents[i]).find('.boosters .circular-progress').length == 0) {
                                 let opponent_boosters = Array.from($(opponents[i]).find('.boosters .slot'));
                                 opponent_boosters.forEach((booster) => {
                                     ($(opponents[i]).find('.boosters ')).append(leagueBoosterStatus(booster))
@@ -10921,8 +10921,8 @@ function moduleLabyrinthTeamFilter() {
         <label class="head-group" for="filter_aff_limit">${window.GT.design.affection_cap}</label>
         <select name="filter_aff_limit" id="filter_aff_limit" icon="down-arrow">
         <option value="all" selected="selected">${labels.all}</option>
-        <option value=0>${window.GT.design.Yes}</option>
-        <option value=1>${window.GT.design.No}</option>
+        <option value=0>${window.GT.design.capped}</option>
+        <option value=1>${window.GT.design.uncapped}</option>
         </select></div></div>
 
         <div class="form-control" style="grid-row:5; grid-column: 1;"><div class="input-group" style="break-inside: avoid;">
@@ -10934,8 +10934,8 @@ function moduleLabyrinthTeamFilter() {
         <label class="head-group" for="filter_lvl_limit">${window.GT.design.level_cap}</label>
         <select name="filter_lvl_limit" id="filter_lvl_limit" icon="down-arrow">
         <option value="all" selected="selected">${labels.all}</option>
-        <option value=0>${window.GT.design.Yes}</option>
-        <option value=1>${window.GT.design.No}</option>
+        <option value=0>${window.GT.design.capped}</option>
+        <option value=1>${window.GT.design.uncapped}</option>
         </select></div></div>
 
         </div>
@@ -10951,7 +10951,9 @@ function moduleLabyrinthTeamFilter() {
         $("#filter_rarity").get(0).value = "all";
         $("#filter_skill5").get(0).value = "all";
         $("#filter_aff_category").get(0).value = "all";
-        $("#filter_aff_lvl").get(0).value = "all";
+        $("#filter_aff_limit").get(0).value = "all";
+        $("#filter_lvl_limit").get(0).value = "all";
+        $("#filter_lvl").get(0).value = "";
 
         filterGirls();
     }
@@ -17679,19 +17681,20 @@ function displayTopRankingTooltip() {
                             Top 250 : ${nThousand(top250)}<BR>
                             Top 500 : ${nThousand(top500)}<BR>
                             Top 1000 : ${nThousand(top1000)}`;
+            $('#leaderboard_top').remove();
             $('#top_ranking_tab_container .top_ranking-container').prepend($(
                 `<div id="leaderboard_top" tooltip="" hh_title="${textTops}">
                 <img src="https://cdn-icons-png.flaticon.com/128/5140/5140914.png">
                 </div>`)
             );
         }, 2*timeout)
-    }).observe($('#top_ranking_tab_container')[0], {attributes: true, subtree: true});
+    }).observe($('#top_ranking_tab_container')[0], {attributes: true, subtree: true, once: true});
 
         //CSS
         sheet.insertRule(`#leaderboard_top {
             position: absolute;
             top: -1px;
-            right: 218px;
+            right: 15rem;
             z-index: 100;}`
         );
 

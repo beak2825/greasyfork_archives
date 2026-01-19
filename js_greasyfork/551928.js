@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         [Inventory] ASIN table viewer - with trend
 // @namespace    http://tampermonkey.net/
-// @version      5.16
+// @version      5.17
 // @description  [新增 ASIN 趨勢分析] 銷售 & 庫存報表 + YTD 月度銷售趨勢資料 (Long Format CSV)
 // @match        https://www.sellercentral.amazon.dev/*
 // @grant        none
@@ -272,21 +272,43 @@
         return Object.values(result);
     }
 
-    // ---------- [新增] YTD 趨勢分析功能 ----------
+    // ---------- [新增] Trailing 12 Months 趨勢分析功能 ----------
     async function fetchYTDTrendData() {
         const today = new Date();
         const currentYear = today.getFullYear();
         const currentMonth = today.getMonth() + 1; // 1-12
 
-        console.log(`🔄 開始抓取 YTD 趨勢資料 (${currentYear}/01 ~ ${currentYear}/${String(currentMonth).padStart(2, '0')})...`);
+        // 計算 trailing 12 months (從當前月份往回推 12 個月)
+        const months = [];
+        for (let i = 0; i < 12; i++) {
+            let targetMonth = currentMonth - i;
+            let targetYear = currentYear;
+
+            // 處理跨年
+            while (targetMonth <= 0) {
+                targetMonth += 12;
+                targetYear -= 1;
+            }
+
+            months.push({ year: targetYear, month: targetMonth });
+        }
+
+        // 反轉順序，讓最舊的月份在前面 (2025-02, 2025-03, ..., 2026-01)
+        months.reverse();
+
+        const firstMonth = months[0];
+        const lastMonth = months[months.length - 1];
+        console.log(`🔄 開始抓取 Trailing 12 Months 趨勢資料 (${firstMonth.year}-${String(firstMonth.month).padStart(2, '0')} ~ ${lastMonth.year}-${String(lastMonth.month).padStart(2, '0')})...`);
 
         const promises = [];
-        for (let month = 1; month <= currentMonth; month++) {
-            const startDate = fmt(currentYear, month, 1);
-            const endDate = fmt(currentYear, month, lastDay(currentYear, month));
+
+        // 抓取 trailing 12 months 的資料
+        for (const { year, month } of months) {
+            const startDate = fmt(year, month, 1);
+            const endDate = fmt(year, month, lastDay(year, month));
             promises.push(
                 fetchReport(startDate, endDate).then(report => ({
-                    month: `${currentYear}-${String(month).padStart(2, '0')}`,
+                    month: `${year}-${String(month).padStart(2, '0')}`,
                     report: report
                 }))
             );
@@ -327,7 +349,7 @@
         // 排序月份 (確保欄位順序正確)
         allMonths.sort();
 
-        console.log(`✅ YTD 趨勢資料抓取完成！共 ${asinMonthMap.size} 個 ASIN，${allMonths.length} 個月份`);
+        console.log(`✅ 趨勢資料抓取完成！共 ${asinMonthMap.size} 個 ASIN，${allMonths.length} 個月份`);
         return { asinMonthMap, allMonths };
     }
 

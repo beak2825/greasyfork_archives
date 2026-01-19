@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube mods
 // @namespace    sami@kankaristo.fi
-// @version      25.16.6
+// @version      25.16.13
 // @description  YouTube modifications.
 // @author       sami@kankaristo.fi
 // @match        https://www.youtube.com/*
@@ -34,12 +34,12 @@ var notificationButtonListenerSet = false;
 /**
  * List of YouTube playlists.
  *
- * Tooltips last updated on: 2026-01-17
+ * Tooltips last updated on: 2026-01-19
  */
 var sidebarButtons = [
     {
         "text": "Rick Beato",
-        "tooltip": "160 videos = 84:48",
+        "tooltip": "94 videos = 40:00",
         "href": "https://www.youtube.com/playlist?list=PLuEqX5XqgpJfMOz4LCbrXSGHZcxUMBOJU",
         "highlight": true,
         "cssText": "background-color: black;"
@@ -53,7 +53,7 @@ var sidebarButtons = [
     },
     {
         "text": "MrSteele",
-        "tooltip": "600 videos = 92:28",
+        "tooltip": "590 videos = 91:56",
         "href": "https://www.youtube.com/playlist?list=PLuEqX5XqgpJc93bsImcy3_JqGUgDfXR27",
         "highlight": true,
         "cssText": "background-color: black;"
@@ -95,7 +95,7 @@ var sidebarButtons = [
     },
     {
         "text": "JDiResta",
-        "tooltip": "539 videos = 138:19",
+        "tooltip": "540 videos = 138:32",
         "href": "https://www.youtube.com/playlist?list=PLuEqX5XqgpJepkvkkhwsi74mMJVwUVqWP",
         "highlight": true
     },
@@ -189,7 +189,7 @@ var sidebarButtons = [
     },
     {
         "text": "Hat Films",
-        "tooltip": "1859 videos = 1234:16",
+        "tooltip": "1860 videos = 1235:50",
         "href": "https://www.youtube.com/playlist?list=PLuEqX5XqgpJdC0yw1XlWKFaW9O2BIqeCN",
         "highlight": true
     },
@@ -209,7 +209,7 @@ var sidebarButtons = [
     },
     {
         "text": "Tom",
-        "tooltip": "2088 videos = 811:59",
+        "tooltip": "2089 videos = 812:21",
         "href": "https://www.youtube.com/playlist?list=PLuEqX5XqgpJe4Zout6ifo0uebISiFc5im",
         "highlight": true
     },

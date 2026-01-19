@@ -2,7 +2,7 @@
 // @name         WME GIS (IL)
 // @description  Shows an GIS icon in WME bottom right corner. When clicked, opens selected city GIS (if available).
 // @namespace    https://greasyfork.org/users/gad_m/wme_gis_il
-// @version      1.0.59
+// @version      1.0.60
 // @author       gad_m
 // @license      MIT
 // @include 	 /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor.*$/
@@ -67,6 +67,14 @@ let arcgis = function(orgUrl, lon, lat, zoom, cityName, prefix, suffix, isEPSG) 
     suffix = suffix?suffix:'2039';
     let result = prefix + orgUrl + cityName + "&extent=" + extent + "," + suffix;
     console.debug('wme-gis-il: arcgis() returning: ' + result);
+    return result;
+};
+
+let experienceArcgis = function(orgUrl, x, y, zoom, cityName) {
+    scale = 160 * Math.pow(2, 21 - zoom);
+    let prefix = 'https://';
+    let result = prefix + orgUrl + cityName + "#widget_6=acenter:" + x + "," + y + ",scale:" + scale;
+    console.debug('wme-gis-il: experienceArcgis() returning: ' + result);
     return result;
 };
 
@@ -191,6 +199,8 @@ let gisCoIlPrefix = function(orgUrl, lon, lat, zoom, cityName, prefix) {
                 return likeTlv(params['orgUrl'], params['lon'], params['lat'], params['zoom']);
             } else if ('arcgis' === params['functionName']) {
                 return arcgis(params['orgUrl'], params['lon'], params['lat'], params['zoom'], params['cityName'], params['prefix'], params['suffix'], params['isEPSG'] === "true");
+            } else if ('experienceArcgis' === params['functionName']) {
+                return experienceArcgis(params['orgUrl'], params['x'], params['y'], params['zoom'], params['cityName']);
             } else if ('v3GisNet' === params['functionName']) {
                 return v3GisNet(params['orgUrl'], params['lon'], params['lat'], params['zoom'], params['cityName']);
             } else if ('v5GisNet' === params['functionName']) {
@@ -400,7 +410,9 @@ let gisCoIlPrefix = function(orgUrl, lon, lat, zoom, cityName, prefix) {
                                     "noExtent": cityData.noExtent,
                                     "isEPSG": cityData.isEPSG,
                                     "queryParams": cityData.queryParams,
-                                    "project": cityData.project
+                                    "project": cityData.project,
+                                    "x": x,
+                                    "y": y
                                 };
                                 let hrefVal = convertUrl(params);
                                 if (hrefVal.startsWith("chrome")) {

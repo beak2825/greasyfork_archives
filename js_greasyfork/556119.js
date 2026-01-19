@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         HiveHQ Faction CPR Tracker
 // @namespace    http://tampermonkey.net/
-// @version      1.2.4
+// @version      1.3.0
 // @description  Tracks CPR data for organized crimes by intercepting Fetch requests and sending them to HiveHQ, compatible with TornPDA and PC
 // @author       Antish [1877236]
 // @license      MIT
@@ -21,7 +21,7 @@
     const HIVEHQ_API_KEY = "#############"; // Hardcoded for TornPDA. Set this to your HiveHQ API key.
 
     class HiveHQCprTracker {
-        _VERSION = "1.2.4";
+        _VERSION = "1.3.0";
         _EXTENSION_NAME = "HiveHQ CPR Tracker";
         _HIVEHQ_API_ENDPOINT = "https://www.hivehq.org/hive/external/api/v1/cpr/store";
         _INTERCEPT_TARGET_URL = "page.php?sid=organizedCrimesData&step=crimeList";
@@ -167,7 +167,7 @@
                     margin-bottom: 10px;
                     border-radius: 5px;
                 }
-                
+
                 .${this.classes.title} {
                     text-align: center;
                     width: 100% !important;
@@ -175,15 +175,15 @@
                     font-size: 25px;
                     color: #fca311;
                 }
-                
+
                 .${this.classes.fieldHeaders} {
                     color: #fca311;
                 }
-                
+
                 .${this.classes.apiKey} {
                     color: #c1b631;
                 }
-                
+
                 .${this.classes.apiKeyManipulation} {
                     color: #14213d;
                     background: #82c91e;
@@ -191,7 +191,7 @@
                     border-radius: 9px;
                     cursor: pointer;
                 }
-                
+
                 `;
                 this.elements.injectableContainer.prepend(dashboard);
                 this.elements.injectableContainer.prepend(styling);
@@ -412,23 +412,19 @@
                 }
             });
 
-            // 1. We are only interested in completely empty Scenarios to prevent stale data
-            if (emptySlots !== totalPlayerSlots) {
-                return;
+            // 1. Create CPR for scenario if it doesn't already exist
+            if (!checkpointPassRates[scenarioName]) {
+                checkpointPassRates[scenarioName] = {
+                    "updatedAt": hhqCprTracker.getCurrentTimestamp(),
+                    "roles": {}
+                };
             }
-
-            // 2. If scenario exists, skip.
-            if (checkpointPassRates[scenarioName]) {
-                return;
-            }
-
-            checkpointPassRates[scenarioName] = {
-                "updatedAt": hhqCprTracker.getCurrentTimestamp(),
-                "roles": {}
-            };
 
             data.playerSlots.forEach(slot => {
-                const slotName = String(slot.name);
+                if (slot.player !== null) {
+                    return;
+                }
+                const slotName = String(slot.name).split(" #")[0];
                 checkpointPassRates[scenarioName]["roles"][slotName] = slot.successChance;
             });
 
@@ -445,7 +441,7 @@
             }
 
             // Limits requests to once a minute.
-            const currentTimestamp = Math.floor(Date.now() / 1000);
+            const currentTimestamp = this.getCurrentTimestamp();
             const lastUpdate = this._getStorageValue(this._STORAGE_KEYS.lastUpdatedAt, 0);
             const timeLeftForNextRequest = currentTimestamp - lastUpdate;
             if (timeLeftForNextRequest < this._REQUEST_LIMITER) {
@@ -479,9 +475,9 @@
                             // }
 
                             if (jsonResponse.status === -1) {
+                                // Server Error and Outdated Script error
                                 this._dashboard.updateStatus(jsonResponse.message)
                                 console.warn(jsonResponse.message);
-                                console.warn("Server Error.");
                                 return;
                             }
 

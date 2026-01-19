@@ -1,16 +1,10 @@
 // ==UserScript==
 // @name         GGn Formatters
-// @version      45
+// @version      46
 // @description  Formatters
 // @author       ingts (some by ZeDoCaixao and letsclay)
 // @match        https://gazellegames.net/
 // ==/UserScript==
-
-if (typeof RegExp.escape === 'undefined') { // temporary
-    RegExp.escape = function (s) {
-        return s.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&")
-    }
-}
 
 let destructiveEditsEnabled = false
 const isEditPage = location.href.includes("action=editgroup")
@@ -209,7 +203,7 @@ function formatAbout(str, gameTitle) {
 
     if (destructiveEditsEnabled) {
         // If a line starts with [u], [i], or [b] and has only new lines after the closing tag, make it a list item and remove the new lines
-        about = about.replace(/\[[uib]]([^\[]+)\[\/[uib]]:?\n+/g,
+        about = about.replace(/\[[uib]]+([^\[]+)\[\/[uib]]+:?\n+/g,
             (_, p1) => `[*][b]${p1}[/b]: `)
 
         // Title case text inside [align=center][b][u] and remove extra tags
@@ -303,17 +297,6 @@ function formatSysReqs(str) {
         reqs = reqs.replace(/\.x/g, '')
     }
 
-    let platform = isEditPage &&
-        (document.getElementById('nexusmodsuri') ? 'Windows'
-            : (document.getElementById('itunesuri') && document.getElementById('epicgamesuri')) ? 'MacOS'
-                        : document.getElementById('googleplayuri') ? 'Android'
-                : (document.getElementById('itunesuri') && !document.getElementById('epicgamesuri')) ? 'iOS'
-                    : '')
-        || document.getElementById('platform')?.value
-
-    if (platform === 'Linux')
-        platform = ''
-
     const minimumHeader = headersMap.get("minimumReqs")
     const recommendedHeader = headersMap.get("recommendedReqs")
 
@@ -390,6 +373,15 @@ function formatSysReqs(str) {
         }
         return match
     })
+
+    let platform = isEditPage
+        ? document.getElementById('user_script_data').dataset.platform
+        : document.getElementById('platform')?.value
+
+    if (platform === 'Linux')
+        platform = null
+    if (platform === 'Mac')
+        platform = 'MacOS'
 
     if (platform === 'Android' || platform === 'iOS') {
         // add the OS label if missing

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CRM Calls Tracker
 // @namespace    http://tampermonkey.net/
-// @version      20
+// @version      22
 // @description  Дополнение к ЦРМ в виде статистики + мотивационные уведомления + детализация
 // @author       voodoo_lT
 // @match        https://hgh03.mamoth.club/app/*
@@ -16,33 +16,33 @@
     'use strict';
 
     const STATUS_CONFIG = [
-        { name: 'Не дозвон',        color: '#39a7bd' },
-        { name: 'Срез на 1 минуте',  color: '#7f17ff' },
-        { name: 'Срез на паспорте',  color: '#5100b5' },
-        { name: 'Компания',          color: '#dc3545' },
-        { name: 'Умник',             color: '#b32b6f' },
-        { name: 'Молодой',           color: '#dc3545' },
-        { name: 'Третьи лица',       color: '#5000b4' },
-        { name: 'Фрод',              color: '#0c8ca6' },
-        { name: 'Связь',             color: '#002185' },
-        { name: 'Списали',           color: '#008f3c' },
-        { name: 'Не существует',     color: '#918900' },
-        { name: 'Удалить',           color: '#db3545' },
-        { name: 'Взял паспорт',      color: '#00ff04' },
-        { name: 'Передать',          color: '#a6a6a6' },
-        { name: 'Перезвон',          color: '#a6a6a6' }
+        { name: 'Не дозвон', color: '#39a7bd' },
+        { name: 'Срез на 1 минуте', color: '#7f17ff' },
+        { name: 'Срез на паспорте', color: '#5100b5' },
+        { name: 'Компания', color: '#dc3545' },
+        { name: 'Умник', color: '#b32b6f' },
+        { name: 'Молодой', color: '#dc3545' },
+        { name: 'Третьи лица', color: '#5000b4' },
+        { name: 'Фрод', color: '#0c8ca6' },
+        { name: 'Связь', color: '#002185' },
+        { name: 'Списали', color: '#008f3c' },
+        { name: 'Не существует', color: '#918900' },
+        { name: 'Удалить', color: '#db3545' },
+        { name: 'Взял паспорт', color: '#00ff04' },
+        { name: 'Передать', color: '#a6a6a6' },
+        { name: 'Перезвон', color: '#a6a6a6' }
     ];
 
     const STATUS_COLORS = Object.fromEntries(STATUS_CONFIG.map(item => [item.name, item.color]));
-    const STATUS_NAMES  = STATUS_CONFIG.map(item => item.name);
+    const STATUS_NAMES = STATUS_CONFIG.map(item => item.name);
 
-    let managerKey      = 'UNKNOWN_MANAGER';
+    let managerKey = 'UNKNOWN_MANAGER';
     let currentStatsKey = 'stats_UNKNOWN_MANAGER';
     let currentDetailsKey = 'details_UNKNOWN_MANAGER';
-    let stats           = {};
-    let statusDetails   = {}; // Детальная информация по каждому статусу
-    let currentDayKey   = '';
-    let isCollapsed     = GM_getValue('crm_tracker_collapsed', false);
+    let stats = {};
+    let statusDetails = {}; // Детальная информация по каждому статусу
+    let currentDayKey = '';
+    let isCollapsed = GM_getValue('crm_tracker_collapsed', false);
     let animationInProgress = false;
 
     function updateManagerKey() {
@@ -154,42 +154,57 @@
         return phoneMatch ? phoneMatch[0] : 'Неизвестный номер';
     }
 
-    let lastUpdateTime = 0;
-    function updateStats(statusName) {
-        const now = Date.now();
-        if (now - lastUpdateTime < 200) return;
-        lastUpdateTime = now;
+// 1. Добавь эту переменную в начало скрипта, где объявлены остальные let
+let lastUpdateTime = 0;
+let lastProcessedPhone = '';
 
-        if (STATUS_NAMES.includes(statusName)) {
-            const oldValue = stats[statusName] || 0;
-            stats[statusName] = oldValue + 1;
+// 2. Сама исправленная функция
+function updateStats(statusName) {
+    const now = Date.now();
+    // Защита от слишком быстрых повторных кликов
+    if (now - lastUpdateTime < 200) return;
 
-            // Сохраняем детальную информацию
-            if (!statusDetails[statusName]) {
-                statusDetails[statusName] = [];
-            }
+    const currentPhoneNumber = getCurrentPhoneNumber();
 
-            const phoneNumber = getCurrentPhoneNumber();
-            const timestamp = new Date().toLocaleString('ru-RU', {
-                timeZone: 'Europe/Kiev',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit'
-            });
-
-            statusDetails[statusName].push({
-                phone: phoneNumber,
-                time: timestamp,
-                fullDate: new Date().toISOString()
-            });
-
-            GM_setValue(currentStatsKey, stats);
-            GM_setValue(currentDetailsKey, statusDetails);
-
-            checkMotivationalNotifications(statusName, oldValue);
-            setTimeout(updateWidget, 50);
-        }
+    // ПРОВЕРКА: Если номер не изменился (лаг CRM) или не найден — выходим
+    if (currentPhoneNumber === 'Неизвестный номер' || currentPhoneNumber === lastProcessedPhone) {
+        console.warn(`Статистика заблокирована: номер ${currentPhoneNumber} уже был обработан.`);
+        return;
     }
+
+    if (STATUS_NAMES.includes(statusName)) {
+        const oldValue = stats[statusName] || 0;
+        stats[statusName] = oldValue + 1;
+
+        // ЗАПОМИНАЕМ НОМЕР: Теперь это действие считается завершенным для этого номера
+        lastProcessedPhone = currentPhoneNumber;
+
+        // Сохраняем детализацию
+        if (!statusDetails[statusName]) {
+            statusDetails[statusName] = [];
+        }
+
+        const timestamp = new Date().toLocaleString('ru-RU', {
+            timeZone: 'Europe/Kiev',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        });
+
+        statusDetails[statusName].push({
+            phone: currentPhoneNumber,
+            time: timestamp,
+            fullDate: new Date().toISOString()
+        });
+
+        // Сохранение в память браузера
+        GM_setValue(currentStatsKey, stats);
+        GM_setValue(currentDetailsKey, statusDetails);
+
+        checkMotivationalNotifications(statusName, oldValue);
+        setTimeout(updateWidget, 50);
+    }
+}
 
     function checkMotivationalNotifications(statusName, oldValue) {
         const total = getTotal();
@@ -614,6 +629,46 @@ modal.querySelector('.modal-overlay').addEventListener('click', (e) => {
                 color: rgba(255, 255, 255, 0.6);
                 font-size: 12px;
             }
+            /* 1. Скрываем стандартные стрелки для Chrome, Edge, Safari */
+::-webkit-scrollbar-button {
+    display: none;
+    width: 0;
+    height: 0;
+}
+
+/* 2. Настраиваем сам скроллбар */
+::-webkit-scrollbar {
+    width: 8px;  /* ширина вертикального */
+    height: 8px; /* высота горизонтального */
+}
+
+/* 3. Фон дорожки (делаем прозрачным) */
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* 4. Ползунок (делаем закругленным и аккуратным) */
+::-webkit-scrollbar-thumb {
+    background-color: rgba(136, 136, 136, 0.2); /* полупрозрачный серый */
+    border-radius: 10px;
+    /* Добавляем небольшой отступ, чтобы ползунок не прилипал к краям */
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+
+/* Эффект при наведении */
+::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(136, 136, 136, 0.8);
+}
+/* Скрываем кнопки со стрелками */
+::-webkit-scrollbar-button {
+    display: none;
+}
+
+/* Опционально: если хотите, чтобы полоса занимала все место без отступов */
+::-webkit-scrollbar-track-piece {
+    background: transparent;
+}
         `;
         document.head.appendChild(style);
 

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         UTFPR Power-Up
 // @namespace    http://tampermonkey.net/
-// @version      1.9.4
+// @version      2.1.0
 // @description  Melhorias de interface para sistemas corporativos e utilitários acadêmicos
 // @author       Gemini & Você
 // @match        https://sistemas2.utfpr.edu.br/*
@@ -43,18 +43,17 @@
     const isSeedPrDomain = currentUrl.includes('seed.pr.gov.br');
     let styles = '';
 
-    // Declaração das funções de atualização que o observador central irá chamar
+    // Declaração das funções de atualização
     let runMenuModification, runPastaDoEstudanteUpdates, runBloqueioHelperUpdates;
 
 
     // ------------------------------------------------------------------------------------
-    // --- MÓDULO UTFPR: OTIMIZADOR DE MENU (v1.8.2)
+    // --- MÓDULO UTFPR: OTIMIZADOR DE MENU
     // ------------------------------------------------------------------------------------
     function initializeMenuOptimizer() {
         console.log('Power-Up: Módulo Otimizador de Menu ativado.');
         const ICON_SIZE = '26px'; const ICON_COLOR = '#0042b1'; const ICON_HOVER_BACKGROUND = 'rgba(0, 66, 177, 0.1)';
         
-        // Definição dos Ícones
         const icons = {
             home: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="${ICON_COLOR}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`,
             pasta: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>`,
@@ -68,128 +67,36 @@
             strictoSensu: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="${ICON_COLOR}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>`
         };
 
-        // --- DADOS DOS SUBMENUS ---
         const submenusData = {
-            'Requerimento': [
-                { name: "Cadastro", url: "https://sistemas2.utfpr.edu.br/url/1826" },
-                { name: "Trâmite", url: "https://sistemas2.utfpr.edu.br/url/1869" }
-            ],
-            'Acadêmico': [
-                { name: "Aluno - Cadastro", url: "/home/modulo/18" }, { name: "Aluno - Mudança De Curso", url: "/home/modulo/540" }, { name: "Aluno Acadêmico - Consulta", url: "/home/modulo/23" },
-                { name: "Aluno Geral - Relatório", url: "/home/modulo/24" }, { name: "Atividades Complementares", url: "/home/modulo/265" }, { name: "Curso E Matriz", url: "/home/modulo/611" },
-                { name: "Dados Pessoais - Consulta", url: "/home/modulo/318" }, { name: "Deaae", url: "/home/modulo/308" }, { name: "Diários De Classe", url: "/home/modulo/612" },
-                { name: "Diplomas - Solicitação De Emissão", url: "/home/modulo/564" }, { name: "Documentos Disponibilizados", url: "/home/modulo/675" }, { name: "Educação Especial / Nec. Educ. Específicas", url: "/home/modulo/627" },
-                { name: "Eleição", url: "/home/modulo/287" }, { name: "Enade", url: "/home/modulo/613" }, { name: "Envio De Email", url: "/home/modulo/352" }, { name: "Eventos Letivos", url: "/home/modulo/54" },
-                { name: "Fechamento - Ano/semestre", url: "/home/modulo/47" }, { name: "Formatura", url: "/home/modulo/614" }, { name: "Fundamentação Legal", url: "/home/modulo/615" },
-                { name: "Horários", url: "/home/modulo/616" }, { name: "Jubilamento", url: "/home/modulo/617" }, { name: "Matrícula", url: "/home/modulo/619" },
-                { name: "Matrícula Calouros - Homologação", url: "/home/modulo/666" }, { name: "Menu Aluno", url: "/home/modulo/206" }, { name: "Microestágio", url: "/home/modulo/623" },
-                { name: "Ocorrências", url: "/home/modulo/625" }, { name: "Pagamento E Bloqueio", url: "/home/modulo/59" }, { name: "Plano De Ensino", url: "/home/modulo/626" },
-                { name: "Professores - Relatório", url: "/home/modulo/26" }, { name: "Registros Acadêmicos", url: "/home/modulo/629" }, { name: "Relatórios", url: "/home/modulo/630" },
-                { name: "Reopção, Transferência E Aproveitamento", url: "/home/modulo/728" }, { name: "Restrito Desis", url: "/home/modulo/139" }, { name: "Simulação Portal Do Aluno", url: "/home/modulo/548" },
-                { name: "Turmas E Horários", url: "/home/modulo/632" }, { name: "Usuários - Consultas", url: "/home/modulo/144" }
-            ],
-            'Sistemas Gerais': [
-                { name: "Agendamento De Veículos", url: "/url/2249" }, { name: "Aniversariantes Do Dia", url: "/url/2448" }, { name: "Aprovação De Agendamento De Veículos", url: "/url/2251" },
-                { name: "Bibliotec", url: "/url/2180" }, { name: "Calem - Matrícula Servidor (1º Período)", url: "/url/2253" }, { name: "Carta De Serviços", url: "ords/f?p=134:1:1" },
-                { name: "Consulta Individual De Servidor", url: "/url/2170" }, { name: "Consulta Protocolos Do Servidor", url: "/url/2176" }, { name: "Consulta Refeições Do Servidor No Ru", url: "/url/2174" },
-                { name: "Dirf - Declaração Complementar", url: "/url/2168" }, { name: "Enquete - Servidor", url: "/url/2404" }, { name: "Indicadores De Gestão Universitária", url: "ords/f?p=108:1" },
-                { name: "Lista De Ramais", url: "ords/f?p=120:1:0:1" }, { name: "Monitoria - Relatório Geral", url: "/url/2447" }, { name: "Movimentação - Remanejamento (No Mesmo Campus)", url: "/url/2482" },
-                { name: "Movimentação - Remoção Por Permuta (Entre Campus)", url: "/url/2401" }, { name: "Passaporte Vacinal", url: "/url/2417" }, { name: "Passaporte Vacinal - Estatística", url: "/url/2425" },
-                { name: "Plano De Saúde De Servidor", url: "/url/2172" }, { name: "Registro De Atividades Docentes", url: "/url/2247" }, { name: "Riadd", url: "/url/2542" }
-            ]
+            'Requerimento': [{ name: "Cadastro", url: "https://sistemas2.utfpr.edu.br/url/1826" }, { name: "Trâmite", url: "https://sistemas2.utfpr.edu.br/url/1869" }],
+            'Acadêmico': [ { name: "Aluno - Cadastro", url: "/home/modulo/18" }, { name: "Aluno - Mudança De Curso", url: "/home/modulo/540" }, { name: "Aluno Acadêmico - Consulta", url: "/home/modulo/23" }, { name: "Aluno Geral - Relatório", url: "/home/modulo/24" }, { name: "Atividades Complementares", url: "/home/modulo/265" }, { name: "Curso E Matriz", url: "/home/modulo/611" }, { name: "Dados Pessoais - Consulta", url: "/home/modulo/318" }, { name: "Deaae", url: "/home/modulo/308" }, { name: "Diários De Classe", url: "/home/modulo/612" }, { name: "Diplomas - Solicitação De Emissão", url: "/home/modulo/564" }, { name: "Documentos Disponibilizados", url: "/home/modulo/675" }, { name: "Educação Especial / Nec. Educ. Específicas", url: "/home/modulo/627" }, { name: "Eleição", url: "/home/modulo/287" }, { name: "Enade", url: "/home/modulo/613" }, { name: "Envio De Email", url: "/home/modulo/352" }, { name: "Eventos Letivos", url: "/home/modulo/54" }, { name: "Fechamento - Ano/semestre", url: "/home/modulo/47" }, { name: "Formatura", url: "/home/modulo/614" }, { name: "Fundamentação Legal", url: "/home/modulo/615" }, { name: "Horários", url: "/home/modulo/616" }, { name: "Jubilamento", url: "/home/modulo/617" }, { name: "Matrícula", url: "/home/modulo/619" }, { name: "Matrícula Calouros - Homologação", url: "/home/modulo/666" }, { name: "Menu Aluno", url: "/home/modulo/206" }, { name: "Microestágio", url: "/home/modulo/623" }, { name: "Ocorrências", url: "/home/modulo/625" }, { name: "Pagamento E Bloqueio", url: "/home/modulo/59" }, { name: "Plano De Ensino", url: "/home/modulo/626" }, { name: "Professores - Relatório", url: "/home/modulo/26" }, { name: "Registros Acadêmicos", url: "/home/modulo/629" }, { name: "Relatórios", url: "/home/modulo/630" }, { name: "Reopção, Transferência E Aproveitamento", url: "/home/modulo/728" }, { name: "Restrito Desis", url: "/home/modulo/139" }, { name: "Simulação Portal Do Aluno", url: "/home/modulo/548" }, { name: "Turmas E Horários", url: "/home/modulo/632" }, { name: "Usuários - Consultas", url: "/home/modulo/144" } ],
+            'Sistemas Gerais': [ { name: "Agendamento De Veículos", url: "/url/2249" }, { name: "Aniversariantes Do Dia", url: "/url/2448" }, { name: "Aprovação De Agendamento De Veículos", url: "/url/2251" }, { name: "Bibliotec", url: "/url/2180" }, { name: "Calem - Matrícula Servidor (1º Período)", url: "/url/2253" }, { name: "Carta De Serviços", url: "ords/f?p=134:1:1" }, { name: "Consulta Individual De Servidor", url: "/url/2170" }, { name: "Consulta Protocolos Do Servidor", url: "/url/2176" }, { name: "Consulta Refeições Do Servidor No Ru", url: "/url/2174" }, { name: "Dirf - Declaração Complementar", url: "/url/2168" }, { name: "Enquete - Servidor", url: "/url/2404" }, { name: "Indicadores De Gestão Universitária", url: "ords/f?p=108:1" }, { name: "Lista De Ramais", url: "ords/f?p=120:1:0:1" }, { name: "Monitoria - Relatório Geral", url: "/url/2447" }, { name: "Movimentação - Remanejamento (No Mesmo Campus)", url: "/url/2482" }, { name: "Movimentação - Remoção Por Permuta (Entre Campus)", url: "/url/2401" }, { name: "Passaporte Vacinal", url: "/url/2417" }, { name: "Passaporte Vacinal - Estatística", url: "/url/2425" }, { name: "Plano De Saúde De Servidor", url: "/url/2172" }, { name: "Registro De Atividades Docentes", url: "/url/2247" }, { name: "Riadd", url: "/url/2542" } ]
         };
 
-        // Ordena os submenus (exceto Requerimento que tem ordem fixa)
         submenusData['Acadêmico'].sort((a, b) => a.name.localeCompare(b.name));
         submenusData['Sistemas Gerais'].sort((a, b) => a.name.localeCompare(b.name));
 
-        // Bloco Esquerdo
-        const leftBlockLinks = [
-            { href: 'https://sistemas2.utfpr.edu.br/home', title: 'Home', icon: icons.home },
-            { href: 'https://sistemas2.utfpr.edu.br/url/2450', title: 'Pasta do Estudante', icon: icons.pasta },
-            { href: 'https://sistemas2.utfpr.edu.br/url/1695', title: 'Cadastro de Pessoa', icon: icons.cadastro },
-            { href: 'https://sistemas2.utfpr.edu.br/url/1826', title: 'Requerimento', icon: icons.requerimento, hasSubmenu: true }
-        ];
+        const leftBlockLinks = [ { href: 'https://sistemas2.utfpr.edu.br/home', title: 'Home', icon: icons.home }, { href: 'https://sistemas2.utfpr.edu.br/url/2450', title: 'Pasta do Estudante', icon: icons.pasta }, { href: 'https://sistemas2.utfpr.edu.br/url/1695', title: 'Cadastro de Pessoa', icon: icons.cadastro }, { href: 'https://sistemas2.utfpr.edu.br/url/1826', title: 'Requerimento', icon: icons.requerimento, hasSubmenu: true } ];
+        const staticMiddleBlockLinks = [ { href: 'https://sistemas2.utfpr.edu.br/home/modulo/606', title: 'Acadêmico', icon: icons.academico, hasSubmenu: true }, { href: 'https://sistemas2.utfpr.edu.br/home/modulo/650', title: 'Identificação', icon: icons.identificacao }, { href: 'https://sistemas2.utfpr.edu.br/home/modulo/658', title: 'Lato Sensu', icon: icons.latoSensu }, { href: 'https://sistemas2.utfpr.edu.br/home/modulo/651', title: 'Protocolo Institucional', icon: icons.protocolo }, { href: 'https://sistemas2.utfpr.edu.br/home/modulo/665', title: 'Sistemas Gerais', icon: icons.sistemasGerais, hasSubmenu: true }, { href: 'https://sistemas2.utfpr.edu.br/home/modulo/641', title: 'Stricto Sensu', icon: icons.strictoSensu } ];
 
-        // Bloco Central (Links Estáticos + Dinâmicos filtrados)
-        const staticMiddleBlockLinks = [
-            { href: 'https://sistemas2.utfpr.edu.br/home/modulo/606', title: 'Acadêmico', icon: icons.academico, hasSubmenu: true },
-            { href: 'https://sistemas2.utfpr.edu.br/home/modulo/650', title: 'Identificação', icon: icons.identificacao },
-            { href: 'https://sistemas2.utfpr.edu.br/home/modulo/658', title: 'Lato Sensu', icon: icons.latoSensu },
-            { href: 'https://sistemas2.utfpr.edu.br/home/modulo/651', title: 'Protocolo Institucional', icon: icons.protocolo },
-            { href: 'https://sistemas2.utfpr.edu.br/home/modulo/665', title: 'Sistemas Gerais', icon: icons.sistemasGerais, hasSubmenu: true },
-            { href: 'https://sistemas2.utfpr.edu.br/home/modulo/641', title: 'Stricto Sensu', icon: icons.strictoSensu }
-        ];
-
-        // Mapa de ícones antigos
-        const iconMap = {
-            'sistemas-corporativos': `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16"></path><path d="M9 21v-4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4"></path><path d="M9 10h1M14 10h1M9 14h1M14 14h1"></path></svg>`,
-            '/url/2275': `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><path d="M16 13H8"></path><path d="M16 17H8"></path><path d="M10 9H8"></path></svg>`,
-            '/url/2211': `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"></path><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path></svg>`,
-            '/url/2404': `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>`,
-            'suporte.utfpr.edu.br': `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="4"></circle><line x1="4.93" y1="4.93" x2="9.17" y2="9.17"></line><line x1="14.83" y1="14.83" x2="19.07" y2="19.07"></line><line x1="4.93" y1="19.07" x2="9.17" y2="14.83"></line><line x1="14.83" y1="9.17" x2="19.07" y2="4.93"></line></svg>`,
-        };
-
-        function getIconForLink(href) { for (const key in iconMap) { if (href.includes(key)) return iconMap[key]; } return `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>`; }
+        function getIconForLink(href) { return `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>`; }
         
-        styles += `
-            #custom-icon-menu { display: flex; align-items: center; justify-content: center; flex-grow: 1; height: 100%; gap: 10px; } #custom-icon-menu .icon-link { position: relative; display: flex; align-items: center; justify-content: center; width: 42px; height: 42px; border-radius: 50%; transition: background-color 0.2s ease-in-out; cursor: pointer; } #custom-icon-menu .icon-link:hover { background-color: ${ICON_HOVER_BACKGROUND}; } #custom-icon-menu .icon-link svg { width: ${ICON_SIZE}; height: ${ICON_SIZE}; color: ${ICON_COLOR}; } #custom-icon-menu .custom-badge { position: absolute; top: 2px; right: 2px; background-color: red; color: white; border-radius: 50%; font-size: 11px; font-weight: bold; min-width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; padding: 1px; box-shadow: 0 0 2px rgba(0,0,0,0.5); } .menuTop .p-grid > div:last-child { margin-left: auto !important; flex-shrink: 0 !important; }
-            /* Submenu Styles */
-            .dropdown { position: relative; display: flex; align-items: center; height: 100%; }
-            .dropdown-content { display: none; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); background-color: #fff; min-width: 280px; box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); z-index: 9999; max-height: 80vh; overflow-y: auto; border-radius: 4px; padding: 5px 0; text-align: left; border: 1px solid #ddd; }
-            .dropdown:hover .dropdown-content { display: block; }
-            .dropdown-content a { color: #333 !important; padding: 8px 12px; text-decoration: none; display: block; font-size: 12px; font-weight: normal; line-height: 1.2; border: none !important; background: none !important; width: 100%; text-align: left; }
-            .dropdown-content a:hover { background-color: #f1f1f1 !important; color: #0042b1 !important; }
-        `;
+        styles += `#custom-icon-menu { display: flex; align-items: center; justify-content: center; flex-grow: 1; height: 100%; gap: 10px; } #custom-icon-menu .icon-link { position: relative; display: flex; align-items: center; justify-content: center; width: 42px; height: 42px; border-radius: 50%; transition: background-color 0.2s ease-in-out; cursor: pointer; } #custom-icon-menu .icon-link:hover { background-color: ${ICON_HOVER_BACKGROUND}; } #custom-icon-menu .icon-link svg { width: ${ICON_SIZE}; height: ${ICON_SIZE}; color: ${ICON_COLOR}; } #custom-icon-menu .custom-badge { position: absolute; top: 2px; right: 2px; background-color: red; color: white; border-radius: 50%; font-size: 11px; font-weight: bold; min-width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; padding: 1px; box-shadow: 0 0 2px rgba(0,0,0,0.5); } .menuTop .p-grid > div:last-child { margin-left: auto !important; flex-shrink: 0 !important; } .dropdown { position: relative; display: flex; align-items: center; height: 100%; } .dropdown-content { display: none; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); background-color: #fff; min-width: 280px; box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); z-index: 9999; max-height: 80vh; overflow-y: auto; border-radius: 4px; padding: 5px 0; text-align: left; border: 1px solid #ddd; } .dropdown:hover .dropdown-content { display: block; } .dropdown-content a { color: #333 !important; padding: 8px 12px; text-decoration: none; display: block; font-size: 12px; font-weight: normal; line-height: 1.2; border: none !important; background: none !important; width: 100%; text-align: left; } .dropdown-content a:hover { background-color: #f1f1f1 !important; color: #0042b1 !important; }`;
 
-        function createSeparator() {
-            const separator = document.createElement('div'); 
-            separator.style.borderLeft = '1px solid #ccc'; 
-            separator.style.height = '28px'; 
-            separator.style.margin = '0 5px';
-            return separator;
-        }
+        function createSeparator() { const separator = document.createElement('div'); separator.style.borderLeft = '1px solid #ccc'; separator.style.height = '28px'; separator.style.margin = '0 5px'; return separator; }
 
         function renderItem(item, container) {
             if (item.hasSubmenu && submenusData[item.title]) {
-                // Render Dropdown
-                const dropdownDiv = document.createElement('div');
-                dropdownDiv.className = 'dropdown';
-                
-                const triggerLink = document.createElement('a');
-                triggerLink.href = item.href;
-                triggerLink.className = 'icon-link';
-                triggerLink.title = item.title;
-                triggerLink.innerHTML = item.icon;
-                
-                const dropdownContent = document.createElement('div');
-                dropdownContent.className = 'dropdown-content';
-                
-                submenusData[item.title].forEach(subItem => {
-                    const subLink = document.createElement('a');
-                    subLink.href = subItem.url;
-                    subLink.textContent = subItem.name;
-                    dropdownContent.appendChild(subLink);
-                });
-                
-                dropdownDiv.appendChild(triggerLink);
-                dropdownDiv.appendChild(dropdownContent);
-                container.appendChild(dropdownDiv);
+                const dropdownDiv = document.createElement('div'); dropdownDiv.className = 'dropdown';
+                const triggerLink = document.createElement('a'); triggerLink.href = item.href; triggerLink.className = 'icon-link'; triggerLink.title = item.title; triggerLink.innerHTML = item.icon;
+                const dropdownContent = document.createElement('div'); dropdownContent.className = 'dropdown-content';
+                submenusData[item.title].forEach(subItem => { const subLink = document.createElement('a'); subLink.href = subItem.url; subLink.textContent = subItem.name; dropdownContent.appendChild(subLink); });
+                dropdownDiv.appendChild(triggerLink); dropdownDiv.appendChild(dropdownContent); container.appendChild(dropdownDiv);
             } else {
-                // Render Link Normal
-                const newLink = document.createElement('a');
-                newLink.href = item.href;
-                newLink.className = 'icon-link';
-                newLink.title = item.title;
+                const newLink = document.createElement('a'); newLink.href = item.href; newLink.className = 'icon-link'; newLink.title = item.title;
                 if (item.target) newLink.target = item.target;
                 newLink.innerHTML = item.icon;
-                
-                if (item.badge) {
-                    const newBadge = document.createElement('span');
-                    newBadge.className = 'custom-badge';
-                    newBadge.textContent = item.badge;
-                    newLink.appendChild(newBadge);
-                }
+                if (item.badge) { const newBadge = document.createElement('span'); newBadge.className = 'custom-badge'; newBadge.textContent = item.badge; newLink.appendChild(newBadge); }
                 container.appendChild(newLink);
             }
         }
@@ -198,64 +105,22 @@
             if (document.getElementById('custom-icon-menu')) return;
             const originalMenu = document.getElementById('links'); const searchInput = document.querySelector('input[placeholder="Pesquisar sistemas..."]'); if (!originalMenu || !searchInput) return;
             const searchContainer = searchInput.closest('.p-col'); const topBarGrid = searchContainer ? searchContainer.parentElement : null; if (!topBarGrid) return;
-            console.log('Power-Up: Recriando menu otimizado (3 seções)...');
             const newIconContainer = document.createElement('div'); newIconContainer.id = 'custom-icon-menu';
-            
-            // 1. Bloco Esquerdo
             leftBlockLinks.forEach(item => renderItem(item, newIconContainer));
-
-            // 2. Separador 1
             newIconContainer.appendChild(createSeparator());
-
-            // 3. Preparação Blocos Central e Direito
-            let middleBlockArray = [...staticMiddleBlockLinks];
-            let farRightBlockArray = [];
-
+            let middleBlockArray = [...staticMiddleBlockLinks]; let farRightBlockArray = [];
             originalMenu.querySelectorAll('a').forEach(link => { 
-                const href = link.getAttribute('href');
-                if (href === '/home' || href.includes('mppastadoaluno') || href.includes('mpcadastropessoa') || href.includes('url/1826')) return;
-
-                let title = '';
-                const labelElement = link.querySelector('.nome-completo'); 
-                if (labelElement) title = labelElement.textContent.trim();
-                else title = link.title || 'Sistema';
-
-                const iconHtml = getIconForLink(link.href);
-                let badgeContent = null;
-                const badge = link.querySelector('.badge'); 
-                if (badge) badgeContent = badge.textContent.trim();
-
-                const itemObject = {
-                    href: link.href,
-                    title: title,
-                    icon: iconHtml,
-                    badge: badgeContent,
-                    target: link.target === '_blank' ? '_blank' : null
-                };
-
-                // Lógica de distribuição
-                if (href.includes('/url/2211') || href.includes('/url/2404') || href.includes('suporte.utfpr.edu.br')) {
-                    farRightBlockArray.push(itemObject);
-                } else {
-                    middleBlockArray.push(itemObject);
-                }
+                const href = link.getAttribute('href'); if (href === '/home' || href.includes('mppastadoaluno') || href.includes('mpcadastropessoa') || href.includes('url/1826')) return;
+                let title = ''; const labelElement = link.querySelector('.nome-completo'); if (labelElement) title = labelElement.textContent.trim(); else title = link.title || 'Sistema';
+                const iconHtml = getIconForLink(link.href); let badgeContent = null; const badge = link.querySelector('.badge'); if (badge) badgeContent = badge.textContent.trim();
+                const itemObject = { href: link.href, title: title, icon: iconHtml, badge: badgeContent, target: link.target === '_blank' ? '_blank' : null };
+                if (href.includes('/url/2211') || href.includes('/url/2404') || href.includes('suporte.utfpr.edu.br')) { farRightBlockArray.push(itemObject); } else { middleBlockArray.push(itemObject); }
             });
-
-            // 4. Renderização Bloco Central
-            middleBlockArray.sort((a, b) => a.title.localeCompare(b.title));
-            middleBlockArray.forEach(item => renderItem(item, newIconContainer));
-
-            // 5. Separador 2
+            middleBlockArray.sort((a, b) => a.title.localeCompare(b.title)); middleBlockArray.forEach(item => renderItem(item, newIconContainer));
             newIconContainer.appendChild(createSeparator());
-
-            // 6. Renderização Bloco Direito (Far Right)
-            // Mantemos a ordem de extração ou alfabética. Alfabética fica melhor organizado.
-            farRightBlockArray.sort((a, b) => a.title.localeCompare(b.title));
-            farRightBlockArray.forEach(item => renderItem(item, newIconContainer));
-
+            farRightBlockArray.sort((a, b) => a.title.localeCompare(b.title)); farRightBlockArray.forEach(item => renderItem(item, newIconContainer));
             topBarGrid.insertBefore(newIconContainer, searchContainer); 
-            const originalMenuContainer = originalMenu.closest('.vertical-flex-child-invariavel-xs-sm'); 
-            if (originalMenuContainer) originalMenuContainer.style.display = 'none';
+            const originalMenuContainer = originalMenu.closest('.vertical-flex-child-invariavel-xs-sm'); if (originalMenuContainer) originalMenuContainer.style.display = 'none';
         }
     }
 
@@ -289,73 +154,9 @@
         let processarInfoDeStatus = () => { document.querySelectorAll("#tbl_docs div[id^='dv_']").forEach(actionContainer => { if (actionContainer.querySelector('.status-info-icon')) return; const detailedInfoSpan = actionContainer.querySelector("span:has(i.fa-folder-open-o)"); const infoText = detailedInfoSpan ? detailedInfoSpan.innerText.trim().replace(/\s+/g, ' ') : 'Status do documento'; if(detailedInfoSpan) detailedInfoSpan.setAttribute('data-processed', 'true'); const infoIcon = document.createElement('i'); infoIcon.className = 'fa fa-lightbulb-o status-info-icon'; infoIcon.title = infoText; actionContainer.appendChild(infoIcon); }); };
         let padronizarIcones = () => { const processedAttr = 'data-bsb-icon-processed'; document.querySelectorAll(`img[src*='Documento-Físico-Autenticado.png']:not([${processedAttr}]), img[src*='Documento-Nato-CompAssinado.png']:not([${processedAttr}])`).forEach(img => { const icon = document.createElement('i'); icon.className = 'fa fa-file-text-o bsb-icon bsb-icon-autenticado'; icon.setAttribute(processedAttr, 'true'); img.replaceWith(icon); }); document.querySelectorAll(`img[src*='Documento-Fisico-Invalido-Pequeno.png'][title='Invalidar Documento']:not([${processedAttr}])`).forEach(img => { const icon = document.createElement('i'); icon.className = 'fa fa-ban bsb-icon bsb-icon-invalidar'; icon.title = img.title; icon.style.cursor = 'pointer'; if (img.getAttribute('onclick')) icon.setAttribute('onclick', img.getAttribute('onclick')); icon.setAttribute(processedAttr, 'true'); img.replaceWith(icon); }); document.querySelectorAll(`span:has(i.fa-folder-open-o):not([${processedAttr}])`).forEach(span => { const icon = span.querySelector('i.fa-folder-open-o'); if (icon) { icon.className = 'fa fa-share-alt bsb-icon-disponivel'; span.setAttribute(processedAttr, 'true'); } }); document.querySelectorAll(`button[onclick*='fsDisponibilizarDoc'][onclick*=', 0,']:not([${processedAttr}])`).forEach(btn => { const icon = btn.querySelector('i.fa-share-alt'); if (icon) icon.classList.add('bsb-icon-disponivel'); btn.setAttribute(processedAttr, 'true'); }); document.querySelectorAll(`button[onclick*='fsDisponibilizarDoc'][onclick*=', 1,']:not([${processedAttr}])`).forEach(btn => { const icon = btn.querySelector('i.fa-share-alt'); if (icon) icon.classList.add('bsb-icon-retirar'); btn.setAttribute(processedAttr, 'true'); }); };
         function parseDateFromRow(row) { const dateText = row.cells[2]?.textContent; if (!dateText) return null; const match = dateText.match(/\[(\d{2})\/(\d{2})\/(\d{4}) (\d{2}:\d{2}:\d{2})\]/); if (!match) return null; const [, day, month, year, time] = match; return new Date(`${year}-${month}-${day}T${time}`); }
-        function checkDocumentExists(searchConfig, tab1Panel) {
-            const rows = Array.from(tab1Panel.querySelectorAll('#tbl_docs tbody tr'));
-            return rows.some(row => {
-                const cellTextOriginal = row.cells[1]?.textContent;
-                if (!cellTextOriginal) return false;
-
-                let hasIncludedKeyword = false;
-
-                if (searchConfig.exactMatch) {
-                    const cellTextTrimmed = cellTextOriginal.trim();
-                    hasIncludedKeyword = searchConfig.include.some(inc => cellTextTrimmed === inc);
-                } else {
-                    const cellTextLower = cellTextOriginal.toLowerCase();
-                    hasIncludedKeyword = searchConfig.include.some(inc => cellTextLower.includes(inc.toLowerCase()));
-                }
-
-                if (!hasIncludedKeyword) return false;
-
-                if (searchConfig.exclude && searchConfig.exclude.length > 0) {
-                    const cellTextLower = cellTextOriginal.toLowerCase();
-                    const hasExcludedKeyword = searchConfig.exclude.some(exc => cellTextLower.includes(exc.toLowerCase()));
-                    if (hasExcludedKeyword) return false;
-                }
-                return true;
-            });
-        }
-        function handleStatusButtonClick(searchConfig) {
-            const allRows = Array.from(document.querySelectorAll('#tbl_docs tbody tr'));
-            const matchingRows = allRows.filter(row => {
-                const cellTextOriginal = row.cells[1]?.textContent;
-                if (!cellTextOriginal) return false;
-
-                let hasIncludedKeyword = false;
-
-                if (searchConfig.exactMatch) {
-                    const cellTextTrimmed = cellTextOriginal.trim();
-                    hasIncludedKeyword = searchConfig.include.some(inc => cellTextTrimmed === inc);
-                } else {
-                    const cellTextLower = cellTextOriginal.toLowerCase();
-                    hasIncludedKeyword = searchConfig.include.some(inc => cellTextLower.includes(inc.toLowerCase()));
-                }
-
-                if (!hasIncludedKeyword) return false;
-
-                if (searchConfig.exclude && searchConfig.exclude.length > 0) {
-                    const cellTextLower = cellTextOriginal.toLowerCase();
-                    const hasExcludedKeyword = searchConfig.exclude.some(exc => cellTextLower.includes(exc.toLowerCase()));
-                    if (hasExcludedKeyword) return false;
-                }
-                return true;
-            });
-            if (matchingRows.length === 0) return;
-            let latestRow = matchingRows.reduce((latest, current) => { const latestDate = parseDateFromRow(latest); const currentDate = parseDateFromRow(current); if (currentDate && (!latestDate || currentDate > latestDate)) { return current; } return latest; }, matchingRows[0]);
-            const link = latestRow.querySelector('td a[href*="javascript:popup"], td i[onclick*="fsDownload"], td i[onclick*="fsGerarDoc"]');
-            if (link) { link.click(); } else { console.error('Power-Up: Link do popup não encontrado na linha do documento mais recente.'); }
-        }
-        let renderStatusButtons = () => {
-            const tab1Panel = document.querySelector('#tabs-1'); if (!tab1Panel || document.getElementById('status-check-container')) return;
-            const container = document.createElement('div'); container.id = 'status-check-container'; const title = document.createElement('h5'); title.className = 'ui-widget-header ui-corner-all'; title.textContent = 'Status Rápido de Documentos'; container.appendChild(title); const buttonWrapper = document.createElement('div'); buttonWrapper.className = 'status-check-wrapper';
-            DOCUMENTOS_MAPEADOS.forEach(doc => {
-                const btn = document.createElement('button'); btn.type = 'button'; btn.className = 'uiBotao status-check-btn'; btn.textContent = doc.label;
-                const found = checkDocumentExists(doc.searchConfig, tab1Panel);
-                if (found) { btn.classList.add('status-exists'); btn.onclick = () => handleStatusButtonClick(doc.searchConfig); } else { btn.classList.add('status-missing'); btn.onclick = () => iniciarUploadRapido(doc.value); }
-                buttonWrapper.appendChild(btn);
-            });
-            container.appendChild(buttonWrapper); tab1Panel.prepend(container);
-        };
+        function checkDocumentExists(searchConfig, tab1Panel) { const rows = Array.from(tab1Panel.querySelectorAll('#tbl_docs tbody tr')); return rows.some(row => { const cellTextOriginal = row.cells[1]?.textContent; if (!cellTextOriginal) return false; let hasIncludedKeyword = false; if (searchConfig.exactMatch) { const cellTextTrimmed = cellTextOriginal.trim(); hasIncludedKeyword = searchConfig.include.some(inc => cellTextTrimmed === inc); } else { const cellTextLower = cellTextOriginal.toLowerCase(); hasIncludedKeyword = searchConfig.include.some(inc => cellTextLower.includes(inc.toLowerCase())); } if (!hasIncludedKeyword) return false; if (searchConfig.exclude && searchConfig.exclude.length > 0) { const cellTextLower = cellTextOriginal.toLowerCase(); const hasExcludedKeyword = searchConfig.exclude.some(exc => cellTextLower.includes(exc.toLowerCase())); if (hasExcludedKeyword) return false; } return true; }); }
+        function handleStatusButtonClick(searchConfig) { const allRows = Array.from(document.querySelectorAll('#tbl_docs tbody tr')); const matchingRows = allRows.filter(row => { const cellTextOriginal = row.cells[1]?.textContent; if (!cellTextOriginal) return false; let hasIncludedKeyword = false; if (searchConfig.exactMatch) { const cellTextTrimmed = cellTextOriginal.trim(); hasIncludedKeyword = searchConfig.include.some(inc => cellTextTrimmed === inc); } else { const cellTextLower = cellTextOriginal.toLowerCase(); hasIncludedKeyword = searchConfig.include.some(inc => cellTextLower.includes(inc.toLowerCase())); } if (!hasIncludedKeyword) return false; if (searchConfig.exclude && searchConfig.exclude.length > 0) { const cellTextLower = cellTextOriginal.toLowerCase(); const hasExcludedKeyword = searchConfig.exclude.some(exc => cellTextLower.includes(exc.toLowerCase())); if (hasExcludedKeyword) return false; } return true; }); if (matchingRows.length === 0) return; let latestRow = matchingRows.reduce((latest, current) => { const latestDate = parseDateFromRow(latest); const currentDate = parseDateFromRow(current); if (currentDate && (!latestDate || currentDate > latestDate)) { return current; } return latest; }, matchingRows[0]); const link = latestRow.querySelector('td a[href*="javascript:popup"], td i[onclick*="fsDownload"], td i[onclick*="fsGerarDoc"]'); if (link) { link.click(); } else { console.error('Power-Up: Link do popup não encontrado na linha do documento mais recente.'); } }
+        let renderStatusButtons = () => { const tab1Panel = document.querySelector('#tabs-1'); if (!tab1Panel || document.getElementById('status-check-container')) return; const container = document.createElement('div'); container.id = 'status-check-container'; const title = document.createElement('h5'); title.className = 'ui-widget-header ui-corner-all'; title.textContent = 'Status Rápido de Documentos'; container.appendChild(title); const buttonWrapper = document.createElement('div'); buttonWrapper.className = 'status-check-wrapper'; DOCUMENTOS_MAPEADOS.forEach(doc => { const btn = document.createElement('button'); btn.type = 'button'; btn.className = 'uiBotao status-check-btn'; btn.textContent = doc.label; const found = checkDocumentExists(doc.searchConfig, tab1Panel); if (found) { btn.classList.add('status-exists'); btn.onclick = () => handleStatusButtonClick(doc.searchConfig); } else { btn.classList.add('status-missing'); btn.onclick = () => iniciarUploadRapido(doc.value); } buttonWrapper.appendChild(btn); }); container.appendChild(buttonWrapper); tab1Panel.prepend(container); };
 
         // --- RECURSO: LINKS RÁPIDOS (RA, CRACHÁ, BLOQUEIO) ---
         let adicionarLinksAcademicos = () => {
@@ -367,189 +168,200 @@
             let extractedRA = null;
             let p_pesscodnr = null;
 
-            // 1. Tenta pegar o ID real do aluno do campo hidden (Mais confiável)
+            // Mapeamento de Cidades para DADs e IDs (Numéricos)
+            // IMPORTANTE: IDs baseados em suposição lógica acadXX -> XX. Se falhar, usar o padrão 11.
+            const campusMap = {
+                'curitiba': { dad: 'acad01', id: 1 },
+                'apucarana': { dad: 'acad02', id: 2 },
+                'campo mourao': { dad: 'acad03', id: 3 }, 'campo mourão': { dad: 'acad03', id: 3 },
+                'cornelio procopio': { dad: 'acad04', id: 4 }, 'cornélio procópio': { dad: 'acad04', id: 4 },
+                'pato branco': { dad: 'acad05', id: 5 },
+                'dois vizinhos': { dad: 'acad06', id: 6 },
+                'londrina': { dad: 'acad07', id: 7 },
+                'medianeira': { dad: 'acad08', id: 8 },
+                'ponta grossa': { dad: 'acad09', id: 9 },
+                'santa helena': { dad: 'acad10', id: 10 },
+                'francisco beltrao': { dad: 'acad11', id: 11 }, 'francisco beltrão': { dad: 'acad11', id: 11 },
+                'toledo': { dad: 'acad12', id: 12 },
+                'guarapuava': { dad: 'acad13', id: 13 }
+            };
+
+            // Detecta unidade ATUAL do usuário
+            const detectCurrentUnitId = () => {
+                const button = document.querySelector('button.ui-button-primary span.pi-map-marker');
+                if (button) {
+                    const text = button.parentElement.textContent.trim().toLowerCase();
+                    for (const [city, data] of Object.entries(campusMap)) {
+                        if (text.includes(city)) return data.id;
+                    }
+                }
+                return 11; // Padrão FB
+            };
+            const currentUnitId = detectCurrentUnitId();
+
+            // Função para trocar unidade via API Legado
+            const changeUnit = (targetId) => {
+                return fetch('https://sistemas2.utfpr.edu.br/dpls/sistema/entrada/mpMenu2.pcMudaUnidade', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: `p_unidcodnr=${targetId}`
+                });
+            };
+
+            // Função auxiliar para descobrir o DAD e ID baseado no texto da linha
+            const getCampusData = (text) => {
+                const lowerText = text.toLowerCase();
+                for (const [city, data] of Object.entries(campusMap)) {
+                    if (lowerText.includes(city)) return data;
+                }
+                return { dad: 'acad11', id: 11 };
+            };
+
             const hiddenInput = document.getElementById('p_pesscodnr');
-            if (hiddenInput && hiddenInput.value) {
-                p_pesscodnr = hiddenInput.value;
-                console.log('%cPower-Up: ID do aluno (p_pesscodnr) encontrado via input hidden: ' + p_pesscodnr, 'color: blue');
-            }
+            if (hiddenInput && hiddenInput.value) { p_pesscodnr = hiddenInput.value; }
 
-            // 2. Extração visual do RA (Fallback)
-            const strongAluno = document.querySelector('div#fsResultado_int span[style*="font-size:large"] strong');
-            if (strongAluno) {
-                const match = strongAluno.textContent.match(/Estudante:\s*(\d+)\s*-/);
-                if (match) extractedRA = match[1];
-            }
-            if (!extractedRA) {
-                const linkAluno = document.querySelector('div#fsResultado_int a[href*="mpcadastropessoa.inicioderac"] strong');
-                if (linkAluno) {
-                    const match = linkAluno.textContent.match(/Estudante:\s*(\d+)\s*-/);
-                    if (match) extractedRA = match[1];
+            const headers = document.querySelectorAll('strong, span, b, td, div');
+            for (let el of headers) {
+                if (el.textContent && el.textContent.includes('Estudante:')) {
+                    const match = el.textContent.match(/Estudante:\s*(\d+)\s*-/);
+                    if (match) { extractedRA = match[1]; if (!p_pesscodnr) { p_pesscodnr = extractedRA.substring(0, extractedRA.length - 1); } break; }
                 }
             }
-            
-            // Fallback se o hidden input estiver vazio (casos raros)
-            if (!p_pesscodnr && extractedRA) {
-                p_pesscodnr = extractedRA.substring(0, extractedRA.length - 1);
-                console.log('%cPower-Up: ID do aluno calculado via RA visual: ' + p_pesscodnr, 'color: orange');
-            }
 
-            if (!extractedRA) return;
-
-            // --- INJEÇÃO DE LINKS DE CABEÇALHO (RA, CRACHÁ, BLOQUEIO) ---
-            
-            // Link do RA
-            if (strongAluno) {
-                const spanAluno = strongAluno.parentElement;
-                if (spanAluno && spanAluno.tagName !== 'A' && !spanAluno.hasAttribute(raProcessedAttr)) {
-                    const match = strongAluno.textContent.match(/Estudante:\s*(\d+)\s*-\s*(.+)/);
-                    if (match) {
-                        spanAluno.setAttribute(raProcessedAttr, 'true');
-                        const nome = match[2];
-                        const url = `https://sistemas2.utfpr.edu.br/dpls/sistema/acad11/mpcadastropessoa.inicioderac`;
-                        strongAluno.innerHTML = `Estudante: ${extractedRA} - `;
-                        const link = document.createElement('a');
-                        link.href = url;
-                        link.target = "_blank";
-                        link.title = `Abrir Cadastro de Pessoa para ${nome}`;
-                        link.style.cursor = 'pointer';
-                        link.style.color = '#0042b1';
-                        link.style.textDecoration = 'underline';
-                        link.textContent = nome;
-                        link.addEventListener('click', () => {
-                            GM_setValue('consulta_cadastro', extractedRA);
-                            GM_setValue('consulta_cadastro_etapa2', null);
-                        });
-                        strongAluno.appendChild(link);
+            if (extractedRA) {
+                const strongAluno = document.querySelector('div#fsResultado_int span[style*="font-size:large"] strong') || Array.from(document.querySelectorAll('strong')).find(el => el.textContent.includes(`Estudante: ${extractedRA}`));
+                if (strongAluno) {
+                    const spanAluno = strongAluno.parentElement;
+                    if (spanAluno && spanAluno.tagName !== 'A' && !spanAluno.hasAttribute(raProcessedAttr)) {
+                        const match = strongAluno.textContent.match(/Estudante:\s*(\d+)\s*-\s*(.+)/);
+                        if (match) {
+                            spanAluno.setAttribute(raProcessedAttr, 'true'); const nome = match[2]; const url = `https://sistemas2.utfpr.edu.br/dpls/sistema/acad11/mpcadastropessoa.inicioderac`; strongAluno.innerHTML = `Estudante: ${extractedRA} - `;
+                            const link = document.createElement('a'); link.href = url; link.target = "_blank"; link.title = `Abrir Cadastro de Pessoa para ${nome}`; link.style.cursor = 'pointer'; link.style.color = '#0042b1'; link.style.textDecoration = 'underline'; link.textContent = nome;
+                            link.addEventListener('click', () => { GM_setValue('consulta_cadastro', extractedRA); GM_setValue('consulta_cadastro_etapa2', null); }); strongAluno.appendChild(link);
+                        }
                     }
                 }
-            }
-
-            // Link do Crachá
-            const centerDiv = document.querySelector('div#fsResultado_int div[style*="float: left"] center');
-            if (centerDiv && !centerDiv.hasAttribute(crachaProcessedAttr)) {
-                let foundSemFoto = false;
-                Array.from(centerDiv.childNodes).forEach(node => {
-                    if (node.nodeType === Node.TEXT_NODE && node.textContent.includes('Sem foto')) {
-                        foundSemFoto = true;
-                    }
-                });
-                if (foundSemFoto) {
-                    centerDiv.setAttribute(crachaProcessedAttr, 'true');
-                    const raLink = centerDiv.querySelector('a[href*="mpcadastropessoa.inicioderac"]');
-                    const imgNode = centerDiv.querySelector('img');
-                    const linkCracha = document.createElement('a');
-                    linkCracha.href = 'https://sistemas2.utfpr.edu.br/dpls/sistema/acad11/mpcracha.inicio1';
-                    linkCracha.target = '_blank';
-                    linkCracha.style.color = 'red';
-                    linkCracha.style.textDecoration = 'underline';
-                    linkCracha.title = 'Abrir página do crachá';
-                    linkCracha.textContent = '[Sem foto no Sistema de Crachá]';
-                    centerDiv.innerHTML = '';
-                    if (raLink) centerDiv.appendChild(raLink);
-                    else if (imgNode) centerDiv.appendChild(imgNode);
-                    centerDiv.appendChild(document.createElement('br'));
-                    centerDiv.appendChild(linkCracha);
+                const imgSemFoto = document.querySelector('img[src*="sem_foto"]');
+                const centerDiv = imgSemFoto ? imgSemFoto.parentElement : document.querySelector('div#fsResultado_int div[style*="float: left"] center');
+                if (centerDiv && !centerDiv.hasAttribute(crachaProcessedAttr)) {
+                    let foundSemFoto = false; if (centerDiv && (centerDiv.textContent.includes('Sem foto') || (imgSemFoto))) { foundSemFoto = true; }
+                    if (foundSemFoto) { centerDiv.setAttribute(crachaProcessedAttr, 'true'); const linkCracha = document.createElement('a'); linkCracha.href = 'https://sistemas2.utfpr.edu.br/dpls/sistema/acad11/mpcracha.inicio1'; linkCracha.target = '_blank'; linkCracha.style.color = 'red'; linkCracha.style.textDecoration = 'underline'; linkCracha.title = 'Abrir página do crachá'; linkCracha.textContent = '[Sem foto no Sistema de Crachá]'; centerDiv.appendChild(document.createElement('br')); centerDiv.appendChild(linkCracha); }
                 }
+                const cursosTitle = Array.from(document.querySelectorAll('strong')).find(el => el.textContent.includes('Cursos:'));
+                if (cursosTitle && !cursosTitle.hasAttribute(bloqueioProcessedAttr)) { cursosTitle.setAttribute(bloqueioProcessedAttr, 'true'); const link = document.createElement('a'); link.href = 'https://sistemas2.utfpr.edu.br/dpls/sistema/acad11/mpalunobloqueio.inicio'; link.target = '_blank'; link.title = 'Abrir página de bloqueio de aluno'; link.className = 'bsb-bloqueio-link'; link.innerHTML = ' [<i class="fa fa-lock" aria-hidden="true"></i> Bloqueio]'; link.addEventListener('click', () => { GM_setValue('consulta_bloqueio', extractedRA); }); cursosTitle.parentElement.insertBefore(link, cursosTitle.nextSibling); }
             }
 
-            // Link de Bloqueio
-            const cursosTitle = document.querySelector('div#fsResultado_int div[style*="float: right"] strong');
-            if (cursosTitle && cursosTitle.textContent.includes('Cursos:') && !cursosTitle.hasAttribute(bloqueioProcessedAttr)) {
-                cursosTitle.setAttribute(bloqueioProcessedAttr, 'true');
-                const link = document.createElement('a');
-                link.href = 'https://sistemas2.utfpr.edu.br/dpls/sistema/acad11/mpalunobloqueio.inicio';
-                link.target = '_blank';
-                link.title = 'Abrir página de bloqueio de aluno';
-                link.className = 'bsb-bloqueio-link';
-                link.innerHTML = ' [<i class="fa fa-lock" aria-hidden="true"></i> Bloqueio]';
-                link.addEventListener('click', () => {
-                    GM_setValue('consulta_bloqueio', extractedRA);
-                });
-                cursosTitle.parentElement.insertBefore(link, cursosTitle.nextSibling);
-            }
-
-            // --- SCANNER DE CURSOS E LINKS ACADÊMICOS (v1.9.4) ---
+            // --- SCANNER E LÓGICA DE TROCA DE UNIDADE (v2.1.0) ---
             if (p_pesscodnr) {
-                // Scanner Universal: Procura em todos os elementos de texto relevantes dentro do resultado
-                const textElements = document.querySelectorAll('#dv_resultado span, #dv_resultado strong, #dv_resultado b, #dv_resultado font, #dv_resultado td');
-                
-                textElements.forEach(el => {
-                    if (el.hasAttribute(cursosProcessedAttr)) return;
-                    
-                    const text = el.textContent;
-                    // Regex flexível: Procura padrão [20XX/X] ... [ID]
-                    // Aceita quebras de linha e espaços variados
-                    const cursoMatch = text.match(/\[\s*\d{4}\/\d\s*\][\s\S]*?\[(\d+)\]/);
-                    
-                    if (cursoMatch) {
-                        console.log('%cPower-Up: Curso detectado: ' + text.trim().substring(0, 50) + '...', 'color: blue');
-                        el.setAttribute(cursosProcessedAttr, 'true');
+                const resultadoDiv = document.getElementById('dv_resultado');
+                if (!resultadoDiv) return;
+
+                const scanAndInject = () => {
+                    const walker = document.createTreeWalker(resultadoDiv, NodeFilter.SHOW_TEXT, null, false);
+                    let node;
+                    while (node = walker.nextNode()) {
+                        const text = node.nodeValue;
+                        const match = text.match(/\[(\d+)\]/);
                         
-                        const p_curscodnr = cursoMatch[1]; // ID do curso (ex: 25)
-                        
-                        // Tenta encontrar o p_gradcodnr (Grade/Currículo) no texto seguinte ou irmãos
-                        let p_gradcodnr = null;
-                        let contextText = el.textContent;
-                        
-                        // Coleta texto dos próximos irmãos para achar a grade
-                        let nextNode = el.nextSibling;
-                        let attempts = 0;
-                        while(nextNode && attempts < 5) {
-                            contextText += " " + (nextNode.textContent || "");
-                            nextNode = nextNode.nextSibling;
-                            attempts++;
+                        if (match) {
+                            const p_curscodnr = match[1];
+                            const parentEl = node.parentElement;
+                            if (parentEl.hasAttribute(cursosProcessedAttr)) continue;
+
+                            parentEl.setAttribute(cursosProcessedAttr, 'true');
+
+                            // Detecta Câmpus
+                            const fullLineText = parentEl.textContent + (parentEl.nextSibling ? parentEl.nextSibling.textContent : "");
+                            const targetData = getCampusData(fullLineText);
+                            
+                            // Detecta Grade
+                            let p_gradcodnr = null;
+                            let contextText = parentEl.textContent;
+                            let nextSibling = parentEl.nextSibling;
+                            let attempts = 0;
+                            while(nextSibling && attempts < 5) { contextText += " " + (nextSibling.textContent || ""); nextSibling = nextSibling.nextSibling; attempts++; }
+                            const gradeMatch = contextText.match(/(Grade|Currículo):\s*(\d+)/i);
+                            if (gradeMatch) p_gradcodnr = gradeMatch[2];
+
+                            // Toolbar
+                            const toolbar = document.createElement('span');
+                            toolbar.className = 'bsb-curso-toolbar';
+                            toolbar.style.marginLeft = '2px';
+                            toolbar.style.fontSize = '0.9em';
+                            toolbar.style.whiteSpace = 'nowrap';
+
+                            // --- LÓGICA DO LINK INTELIGENTE ---
+                            const createSmartLink = (label, icon, endpointParams) => {
+                                const a = document.createElement('a');
+                                a.innerHTML = `<i class="fa ${icon}"></i>`;
+                                a.className = 'bsb-curso-link';
+                                a.style.marginLeft = '6px';
+                                a.style.textDecoration = 'none';
+                                a.style.fontSize = '1.1em';
+                                a.style.cursor = 'pointer';
+
+                                const targetUrl = `https://sistemas2.utfpr.edu.br/dpls/sistema/${targetData.dad}/${endpointParams}`;
+
+                                if (targetData.id === currentUnitId) {
+                                    // Mesmo Câmpus: Link Direto Azul
+                                    a.href = targetUrl;
+                                    a.target = '_blank';
+                                    a.title = label;
+                                    a.style.color = '#0042b1'; // Azul
+                                } else {
+                                    // Outro Câmpus: Link Laranja com Troca Automática
+                                    a.title = `${label} (Troca automática para ${targetData.dad})`;
+                                    a.style.color = '#e67e22'; // Laranja
+                                    
+                                    a.onclick = async (e) => {
+                                        e.preventDefault();
+                                        const originalIcon = a.innerHTML;
+                                        a.innerHTML = `<i class="fa fa-spinner fa-spin"></i>`; // Loading
+                                        document.body.style.cursor = 'wait';
+
+                                        try {
+                                            // 1. Troca Unidade
+                                            await changeUnit(targetData.id);
+                                            console.log(`Power-Up: Unidade trocada para ${targetData.id}`);
+                                            
+                                            // 2. Abre Link
+                                            window.open(targetUrl, '_blank');
+
+                                            // 3. Destroca após 3s
+                                            setTimeout(async () => {
+                                                await changeUnit(currentUnitId);
+                                                console.log(`Power-Up: Unidade restaurada para ${currentUnitId}`);
+                                                a.innerHTML = originalIcon;
+                                                document.body.style.cursor = 'default';
+                                            }, 3000);
+
+                                        } catch (err) {
+                                            console.error("Power-Up: Erro na troca de unidade.", err);
+                                            alert("Erro ao trocar unidade automaticamente. Tente manualmente.");
+                                            a.innerHTML = originalIcon;
+                                            document.body.style.cursor = 'default';
+                                        }
+                                    };
+                                }
+                                return a;
+                            };
+
+                            toolbar.appendChild(createSmartLink('Boletim', 'fa-file-text-o', 
+                                `mpBoletim.inicioAluno?p_pesscodnr=${p_pesscodnr}&p_curscodnr=${p_curscodnr}&p_alcuordemnr=1`));
+                            
+                            toolbar.appendChild(createSmartLink('Histórico', 'fa-graduation-cap', 
+                                `mpHistEscol.pcprocessa?p_pesscodnr=${p_pesscodnr}&p_curscodnr=${p_curscodnr}&p_alcuordemnr=1`));
+
+                            if (p_gradcodnr) {
+                                toolbar.appendChild(createSmartLink('Situação', 'fa-bar-chart', 
+                                    `mpListaSituacaoAluno.pcListaDisciplinasCur?p_pesscodnr=${p_pesscodnr}&p_curscodnr=${p_curscodnr}&p_alcuordemnr=1&p_gradcodnr=${p_gradcodnr}`));
+                            }
+
+                            if (node.nextSibling) { parentEl.insertBefore(toolbar, node.nextSibling); } else { parentEl.appendChild(toolbar); }
                         }
-                        
-                        const gradeMatch = contextText.match(/(Grade|Currículo):\s*(\d+)/i);
-                        if (gradeMatch) {
-                            p_gradcodnr = gradeMatch[2];
-                        }
-
-                        // Verifica se já não inserimos a toolbar (evitar duplicatas em re-renderizações parciais)
-                        if (el.querySelector('.bsb-curso-toolbar')) return;
-
-                        // Criação do container de links
-                        const toolbar = document.createElement('span');
-                        toolbar.className = 'bsb-curso-toolbar';
-                        toolbar.style.marginLeft = '10px';
-                        toolbar.style.fontSize = '0.9em';
-                        toolbar.style.whiteSpace = 'nowrap'; // Evita quebra de linha feia
-
-                        // Helper para criar link
-                        const createLink = (label, icon, url) => {
-                            const a = document.createElement('a');
-                            a.href = url;
-                            a.target = '_blank';
-                            a.innerHTML = `<i class="fa ${icon}"></i> ${label}`;
-                            a.className = 'bsb-curso-link';
-                            a.style.marginLeft = '8px';
-                            a.style.color = '#0042b1';
-                            a.style.fontWeight = 'normal';
-                            a.style.cursor = 'pointer';
-                            a.style.textDecoration = 'none';
-                            a.onmouseover = () => a.style.textDecoration = 'underline';
-                            a.onmouseout = () => a.style.textDecoration = 'none';
-                            return a;
-                        };
-
-                        // Link Boletim
-                        toolbar.appendChild(createLink('Boletim', 'fa-file-text-o', 
-                            `https://sistemas2.utfpr.edu.br/dpls/sistema/acad11/mpBoletim.inicioAluno?p_pesscodnr=${p_pesscodnr}&p_curscodnr=${p_curscodnr}&p_alcuordemnr=1`));
-
-                        // Link Histórico
-                        toolbar.appendChild(createLink('Histórico', 'fa-graduation-cap', 
-                            `https://sistemas2.utfpr.edu.br/dpls/sistema/acad11/mpHistEscol.pcprocessa?p_pesscodnr=${p_pesscodnr}&p_curscodnr=${p_curscodnr}&p_alcuordemnr=1`));
-
-                        // Link Situação (Só se achou a grade)
-                        if (p_gradcodnr) {
-                            toolbar.appendChild(createLink('Situação', 'fa-bar-chart', 
-                                `https://sistemas2.utfpr.edu.br/dpls/sistema/acad11/mpListaSituacaoAluno.pcListaDisciplinasCur?p_pesscodnr=${p_pesscodnr}&p_curscodnr=${p_curscodnr}&p_alcuordemnr=1&p_gradcodnr=${p_gradcodnr}`));
-                        }
-
-                        el.appendChild(toolbar);
                     }
-                });
+                };
+                scanAndInject(); setTimeout(scanAndInject, 1000);
             }
         };
         // --- FIM: LINKS RÁPIDOS ---
@@ -598,6 +410,8 @@
             'Documento Ilegível': 'O documento enviado está ilegível, cortado ou com baixa qualidade, impossibilitando a análise das informações.', 'Falta Assinatura': 'A declaração enviada não está assinada. É necessário que o candidato assine o documento.',
             'Dados Divergentes': 'Os dados presentes no documento (nome, CPF, etc.) divergem das informações fornecidas no ato da inscrição.', 'Documento Inválido': 'O tipo de documento enviado não corresponde ao solicitado no edital.',
             'Documento incompleto': 'Documento incompleto, faltando páginas, frente ou verso.', 'Documento aberto': 'O candidato precisa tirar o documento do plástico de proteção, abri-lo, e enviar a foto da frente e verso.',
+            'Modelo Incompatível': 'Documento apresentado não está de acordo com a declaração modelo disponível em https://www.utfpr.edu.br/cursos/estudenautfpr/sisu/modelos-de-declaracoes',
+            'Assinatura ou Hash': 'Documento apresentado não possuiu assinatura física nem digital, tampouco código hash de validação'
         };
         function executar(campoMotivo) {
             if (document.getElementById('botoes-motivos-container')) return;

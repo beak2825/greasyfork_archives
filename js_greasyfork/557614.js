@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LIMS 주요 고객 알리미
 // @namespace    http://tampermonkey.net/
-// @version      1.2
+// @version      1.3
 // @description  IBSheet 기반 고객 알림 및 관리 시스템
 // @author       김재형
 // @match        *://*/ngs/sample/retrieveWaitForm.do*
@@ -117,10 +117,66 @@
             .panel-footer { padding: 10px; background: #f8f9fa; border-top: 1px solid #eee; font-size: 11px; color: #666; }
             #watched-list-ul { list-style: none; padding: 0; margin: 0; }
             #watched-list-ul li {
-                display: flex; justify-content: space-between;
-                padding: 5px 0; border-bottom: 1px solid #f0f0f0;
+                padding: 8px 0; border-bottom: 1px solid #f0f0f0;
             }
-            .delete-btn { color: red; cursor: pointer; font-weight: bold; margin-left: 10px; }
+            .customer-info { width: 100%; }
+            .customer-name-row {
+                display: flex; align-items: center; gap: 5px;
+            }
+            .customer-name { font-weight: 500; }
+            .detected-badge { color: red; font-weight: bold; font-size: 11px; }
+            .delete-btn { color: #999; cursor: pointer; font-size: 12px; margin-left: auto; }
+            .delete-btn:hover { color: red; }
+            .comment-row {
+                display: flex; align-items: center; gap: 5px; margin-top: 4px;
+            }
+            .comment-text {
+                font-size: 12px; color: #666;
+                max-width: 220px;
+                white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+                cursor: pointer;
+            }
+            .comment-text:hover { color: #333; text-decoration: underline; }
+            .comment-text.empty { color: #aaa; font-style: italic; }
+            .edit-comment-btn { cursor: pointer; font-size: 12px; opacity: 0.6; }
+            .edit-comment-btn:hover { opacity: 1; }
+
+            #comment-editor-modal {
+                position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+                background: rgba(0,0,0,0.5);
+                display: flex; justify-content: center; align-items: center;
+                z-index: 10001;
+            }
+            .comment-editor-content {
+                background: white; border-radius: 8px; width: 320px;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            }
+            .comment-editor-header {
+                padding: 12px; border-bottom: 1px solid #eee;
+                display: flex; justify-content: space-between; align-items: center;
+            }
+            .comment-editor-header button {
+                background: none; border: none; cursor: pointer; font-size: 14px;
+            }
+            #comment-input {
+                width: calc(100% - 24px); margin: 12px; height: 80px;
+                border: 1px solid #ddd; border-radius: 4px; padding: 8px;
+                font-size: 13px; resize: none;
+                box-sizing: border-box;
+            }
+            #comment-input:focus { outline: none; border-color: #4a90d9; }
+            .comment-editor-footer {
+                padding: 12px; border-top: 1px solid #eee;
+                display: flex; justify-content: flex-end; gap: 8px;
+            }
+            .comment-editor-footer button {
+                padding: 6px 14px; border-radius: 4px; cursor: pointer;
+                font-size: 13px;
+            }
+            #save-comment-btn { background: #4a90d9; color: white; border: none; }
+            #save-comment-btn:hover { background: #3a7fc9; }
+            #cancel-comment-btn { background: #f0f0f0; border: 1px solid #ddd; }
+            #cancel-comment-btn:hover { background: #e0e0e0; }
 
             @keyframes shake {
                 0% { transform: rotate(0deg); }
@@ -149,13 +205,23 @@
         ul.innerHTML = '';
         Object.keys(watchedList).forEach(name => {
             const isDetected = detectedCustomers.has(name);
+            const comment = watchedList[name].comment || '';
             const li = document.createElement('li');
             if (isDetected) {
                 li.style.backgroundColor = '#fff3cd';
             }
             li.innerHTML = `
-                <span>${name} ${isDetected ? '<span style="color:red; font-weight:bold; margin-left:5px;">(발견!)</span>' : ''}</span>
-                <span class="delete-btn" data-name="${name}">삭제</span>
+                <div class="customer-info">
+                    <div class="customer-name-row">
+                        <span class="customer-name">${name}</span>
+                        ${isDetected ? '<span class="detected-badge">(발견!)</span>' : ''}
+                        <span class="delete-btn" data-name="${name}">✕</span>
+                    </div>
+                    <div class="comment-row">
+                        <span class="comment-text ${comment ? '' : 'empty'}" data-name="${name}" title="${comment || '클릭하여 코멘트 추가'}">${comment || '(코멘트 없음)'}</span>
+                        <span class="edit-comment-btn" data-name="${name}">✏️</span>
+                    </div>
+                </div>
             `;
             ul.appendChild(li);
         });
@@ -163,10 +229,68 @@
         // 삭제 이벤트 추가
         ul.querySelectorAll('.delete-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
+                e.stopPropagation();
                 const name = e.target.getAttribute('data-name');
                 toggleWatchList(name);
                 renderList();
             });
+        });
+
+        // 코멘트 편집 이벤트 추가
+        ul.querySelectorAll('.edit-comment-btn, .comment-text').forEach(el => {
+            el.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const name = e.target.getAttribute('data-name') || e.target.closest('[data-name]').getAttribute('data-name');
+                showCommentEditor(name);
+            });
+        });
+    }
+
+    function showCommentEditor(name) {
+        // 기존 에디터 제거
+        const existingEditor = document.getElementById('comment-editor-modal');
+        if (existingEditor) existingEditor.remove();
+
+        const currentComment = watchedList[name]?.comment || '';
+
+        const modal = document.createElement('div');
+        modal.id = 'comment-editor-modal';
+        modal.innerHTML = `
+            <div class="comment-editor-content">
+                <div class="comment-editor-header">
+                    <strong>📝 ${name}</strong>
+                    <button id="close-comment-editor">✖</button>
+                </div>
+                <textarea id="comment-input" placeholder="코멘트를 입력하세요...">${currentComment}</textarea>
+                <div class="comment-editor-footer">
+                    <button id="save-comment-btn">저장</button>
+                    <button id="cancel-comment-btn">취소</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+
+        const textarea = document.getElementById('comment-input');
+        textarea.focus();
+        textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+
+        // 이벤트
+        document.getElementById('close-comment-editor').addEventListener('click', () => modal.remove());
+        document.getElementById('cancel-comment-btn').addEventListener('click', () => modal.remove());
+        document.getElementById('save-comment-btn').addEventListener('click', () => {
+            const newComment = document.getElementById('comment-input').value.trim();
+            if (watchedList[name]) {
+                watchedList[name].comment = newComment;
+                GM_setValue(STORAGE_KEY, watchedList);
+                showToast(`💾 [${name}] 코멘트 저장됨`);
+            }
+            modal.remove();
+            renderList();
+        });
+
+        // ESC로 닫기
+        modal.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') modal.remove();
         });
     }
 

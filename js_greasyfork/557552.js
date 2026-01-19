@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AnimeStars Card Master (fork)
 // @namespace    AnimeStars.org
-// @version      1.33
+// @version      1.35
 // @description  1) Показывает спрос на карты.
 // @description  2) Показывает дубликаты карт.
 // @description  3) Отправляет карты в "Не нужное".
@@ -130,9 +130,9 @@ async function runMainScript() {
     // -------------------- ОБЩИЕ КОНСТАНТЫ --------------------
     const DELAY = 60; // Общая задержка в миллисекундах (мс), используемая в различных частях скрипта для пауз.
     const NOTIFICATION_ANIMATION_DURATION_MS = 400; // Задает длительность анимации (в мс) для появления и скрытия кастомных уведомлений.
-	// ПРАВКА: Добавлен селектор .ncard__img для основной карты на странице владельцев
-    const CARD_CLASSES_SELECTORS = '.ascm-remelt-card, .remelt__inventory-item, .lootbox__card, .anime-cards__item, .trade__inventory-item, .trade__main-item, .card-filter-list__card, .deck__item, .history__body-item, .card-show__placeholder, .stone__inventory-item, .card-awakening-list__card, .card-awakening-list__card__s, .ncard__img'; // CSS-селектор, который находит все возможные DOM-элементы карточек на разных страницах.    let lastCrystalVerificationTimestamp = 0; // Отслеживает время последней проверки
-    const CRYSTAL_VERIFICATION_INTERVAL = 180000; // 180000 мс = 3 минуты
+    const CARD_CLASSES_SELECTORS = '.noffer, .anime-cards__placeholder, .ascm-remelt-card, .remelt__inventory-item, .lootbox__card, .anime-cards__item, .trade__inventory-item, .trade__main-item, .card-filter-list__card, .deck__item, .history__body-item, .card-show__placeholder, .stone__inventory-item, .card-awakening-list__card, .card-awakening-list__card__s, .ncard__img';
+	let lastCrystalVerificationTimestamp = 0;
+	const CRYSTAL_VERIFICATION_INTERVAL = 180000;
 
     // -------------------- ОПРЕДЕЛЕНИЕ СТРАНИЦ --------------------
 	const isSpecificTradeOfferPage = () => /^\/cards\/\d+\/trade\/?$/i.test(window.location.pathname); // Проверка страницы предложения обмена конкретной карты
@@ -652,8 +652,8 @@ async function runMainScript() {
 		}
 
 		const activeNotifications = Array.from(container.querySelectorAll('.acm-push-item:not(.acm-removing)'));
-		if (activeNotifications.length > 5) {
-			activeNotifications.slice(5).forEach(old => {
+		if (activeNotifications.length > 3) {
+			activeNotifications.slice(3).forEach(old => {
 				if (typeof removeNotif === 'function') removeNotif.call(old); 
 				else old.remove();
 			});
@@ -2334,13 +2334,13 @@ async function runMainScript() {
 		const scale = await GM_getValue('acm_dupButtonSizeFactor', 0.18);
 
 		for (const cardEl of cards) {
-			if (cardEl.querySelector('.check-duplicates-btn') || cardEl.classList.contains('card-show__placeholder')) continue;
+			if (cardEl.querySelector('.check-duplicates-btn') || cardEl.classList.contains('card-show__placeholder') || cardEl.classList.contains('noffer')) continue;
 			
 			const newBtn = document.createElement('div');
 			newBtn.className = 'check-duplicates-btn';
 			newBtn.textContent = '🔍';
 			newBtn.title = 'Проверить количество дубликатов в инвентаре';
-			newBtn.style.cssText = 'position:absolute;z-index:10;background:rgba(211,211,211,0.6);border:1px solid #ccc;border-radius:50%;cursor:pointer;transition:all 0.2s ease;font-weight:bold;color:black;text-align:center;line-height:1;display:flex;align-items:center;justify-content:center;box-sizing:border-box;';
+			newBtn.style.cssText = 'position:absolute;z-index:10;background:rgba(211,211,211,0.6);border:1px solid #ccc;border-radius:50%;cursor:pointer;transition:all 0.2s ease;font-weight:bold;color:black;text-align:center;line-height:1;display:flex;align-items:center;justify-content:center;box-sizing:border-box;pointer-events:auto!important;';
 			
 			const cardWidth = cardEl.offsetWidth;
 			if (cardWidth === 0) continue;
@@ -3003,7 +3003,8 @@ async function runMainScript() {
 	 */
 	async function triggerMassDemandCheckForPackPage(packId) {
 		const isEnabled = GM_getValue('autoDemandCheckEnabledState', false);
-		if (!isEnabled) return;
+		if (!isEnabled || packId === lastProcessedPackIdForDemandCheck) return;
+		lastProcessedPackIdForDemandCheck = packId;
 		
 		const settings = (typeof autoDemand_loadSettings === 'function') ? autoDemand_loadSettings() : { ass: true, s: true, a: true };
 		const ranksToCheck = Object.keys(settings).filter(rank => settings[rank]);
@@ -3691,28 +3692,31 @@ async function runMainScript() {
 	// --- [Sub-Module] Глобальные наблюдатели ---
 	
 	/**
-	 * Глобальный наблюдатель за изменениями DOM. Централизованно управляет внедрением
-	 * элементов интерфейса и запуском автоматических проверок (спрос и дубли).
-	 * Реализует механизм debounce для оптимизации производительности.
+	 * Глобальный отказоустойчивый наблюдатель за карточками.
+	 * Следит за всем документом, что позволяет автоматически обрабатывать карты,
+	 * загруженные через AJAX (фильтры, пагинация, динамические вкладки), 
+	 * не теряя привязку к контейнерам.
 	 */
 	function initializeSmartCardObserver() {
 		const processCardChanges = async () => {
-			if (typeof ensureDbLoaded === 'function') await ensureDbLoaded();
+			await ensureDbLoaded();
 			
-			if (typeof addDemandCheckButtonsToCards === 'function') addDemandCheckButtonsToCards();
-			if (typeof addInfoButtonsToCards === 'function') addInfoButtonsToCards();
-			if (typeof ascm_injectDupButtons === 'function') ascm_injectDupButtons();
+			// Внедряем кнопки ACM
+			addDemandCheckButtonsToCards();
+			addInfoButtonsToCards();
+			ascm_injectDupButtons();
 			
+			// Обновляем визуальные слои (новизна, вишлисты, звезды)
 			if (typeof freshnessOverlayEnabled !== 'undefined' && freshnessOverlayEnabled) {
 				if (!isSpecificTradeOfferPage() || (isSpecificTradeOfferPage() && isFreshnessCheckActive)) {
-					if (typeof freshnessData !== 'undefined' && freshnessData && typeof updateFreshnessOverlays === 'function') {
+					if (typeof freshnessData !== 'undefined' && freshnessData) {
 						await updateFreshnessOverlays();
 					}
 				}
 			}
 
 			(async () => {
-				if (typeof highlightTargetUserWishlist === 'function') await highlightTargetUserWishlist();
+				await highlightTargetUserWishlist();
 				if (typeof unsafeWindow.highlightNoSRankDecks === 'function') {
 					await unsafeWindow.highlightNoSRankDecks();
 				}
@@ -3721,79 +3725,65 @@ async function runMainScript() {
 				}
 			})();
 
+			// Проверка авто-задач
 			const isPacks = isCardPackPage();
-			const lootboxRow = isPacks ? document.querySelector('.lootbox__row') : null;
-
 			const autoDupEn = (isPacks && GM_getValue('autoPackCheckEnabledState', false)) || 
 							 (isTradeCreationPage() && GM_getValue('autoDuplicateTradeEnabledState', false)) || 
 							 (window.location.pathname.startsWith('/trades/') && GM_getValue('autoDuplicateOffersEnabledState', false));
 			
 			if (autoDupEn || isManualDupCheckActive) {
-				if (isMassDupCheckRunning) isMassDupCheckRunning = false;
 				ascm_runDuplicateEngine(isManualDupCheckActive);
 			}
 
-			if (isPacks && GM_getValue('autoDemandCheckEnabledState', false) && lootboxRow && lootboxRow.offsetParent !== null) {
-				const cards = lootboxRow.querySelectorAll('.lootbox__card');
-				const needsDemand = Array.from(cards).some(c => !c.querySelector('.acm-stats-wrapper'));
+			if (isPacks && GM_getValue('autoDemandCheckEnabledState', false)) {
+				const lootboxRow = document.querySelector('.lootbox__row');
+				if (lootboxRow && lootboxRow.offsetParent !== null) {
+					const cards = lootboxRow.querySelectorAll('.lootbox__card');
+					const needsDemand = Array.from(cards).some(c => !c.querySelector('.acm-stats-wrapper'));
+					if (needsDemand) triggerMassDemandCheckForPackPage(lootboxRow.dataset.packId || 'manual');
+				}
+			}
+		};
+
+		// Первый запуск при загрузке
+		setTimeout(processCardChanges, 500);
+
+		const globalObserver = new MutationObserver((mutations) => {
+			let shouldTrigger = false;
+
+			for (const mutation of mutations) {
+				// Если изменились атрибуты ID или ранга
+				if (mutation.type === 'attributes' && (mutation.attributeName === 'data-id' || mutation.attributeName === 'data-rank')) {
+					shouldTrigger = true; break;
+				}
 				
-				if (needsDemand && cards.length > 0) {
-					const currentPackId = lootboxRow.dataset.packId || 'manual';
-					if (typeof triggerMassDemandCheckForPackPage === 'function') {
-						triggerMassDemandCheckForPackPage(currentPackId);
+				// Если добавлены новые узлы (AJAX фильтры)
+				if (mutation.addedNodes.length > 0) {
+					const hasNewCards = Array.from(mutation.addedNodes).some(node => {
+						if (node.nodeType !== 1) return false;
+						return node.matches(CARD_CLASSES_SELECTORS) || node.querySelector(CARD_CLASSES_SELECTORS);
+					});
+					if (hasNewCards) {
+						shouldTrigger = true; break;
 					}
 				}
 			}
-		};
 
-		setTimeout(processCardChanges, 300);
-
-		const targetSelectors = [
-			'#ascm-remelt-grid', '.anime-cards--full-page', '.trade__main', 
-			'.trade__inventory', '.tabs__content', '.trade__search', 
-			'.lootbox__row', '.lootbox__list', '.history__inner', '.remelt__inventory-list', 
-			'.dpm-dialog-list', '.deck__list', '.sect.pmovie__related', 
-			'.stone__inventory', '.card-awakening-list', '.ncard-owner'
-		];
-
-		const observerCallback = (mutationsList) => {
-			const hasSiteChanges = Array.from(mutationsList).some(m => {
-				if (m.type === 'attributes' && (m.attributeName === 'data-id' || m.target.classList.contains('remelt__rank-item'))) {
-					dupEngineInstanceId++;
-					return true;
-				}
-				const nodes = [...m.addedNodes, ...m.removedNodes];
-				const cardClasses = ['ascm-remelt-card', 'anime-cards__item', 'lootbox__card', 'trade__main-item', 'remelt__inventory-item'];
-				const isRealChange = nodes.some(n => n.nodeType === 1 && (cardClasses.some(cls => n.classList.contains(cls)) || n.id === 'ascm-remelt-grid'));
-				if (isRealChange) {
-					dupEngineInstanceId++;
-					return true;
-				}
-				return false;
-			});
-
-			if (!hasSiteChanges) return;
-
-			if (smartObserverTimeout) clearTimeout(smartObserverTimeout);
-			smartObserverTimeout = setTimeout(processCardChanges, 800);
-		};
-
-		const extraTargets = ['.remelt__rank-list', '.card-filter-list__pagination'];
-		[...targetSelectors, ...extraTargets].forEach(selector => {
-			const targetNode = document.querySelector(selector);
-			if (targetNode) {
-				const observer = new MutationObserver(observerCallback);
-				const config = selector === '.remelt__rank-list' ? { attributes: true, subtree: true, attributeFilter: ['class'] } : { childList: true, subtree: true, attributes: true, attributeFilter: ['data-id'] };
-				observer.observe(targetNode, config);
-				if (typeof smartObservers !== 'undefined' && Array.isArray(smartObservers)) {
-				}
+			if (shouldTrigger) {
+				if (smartObserverTimeout) clearTimeout(smartObserverTimeout);
+				smartObserverTimeout = setTimeout(processCardChanges, 600);
 			}
 		});
 
+		globalObserver.observe(document.body, {
+			childList: true,
+			subtree: true,
+			attributes: true,
+			attributeFilter: ['data-id', 'data-rank', 'class']
+		});
+
 		window.addEventListener('beforeunload', () => {
-			if (typeof smartObservers !== 'undefined' && Array.isArray(smartObservers)) {
-				smartObservers.forEach(obs => obs.disconnect());
-			}
+			globalObserver.disconnect();
 			if (smartObserverTimeout) clearTimeout(smartObserverTimeout);
 		});
 	}
@@ -4200,7 +4190,7 @@ async function runMainScript() {
             case 'ass': bgColor = 'rgb(119, 44, 232)'; break;
             default: bgColor = 'linear-gradient(145deg, DodgerBlue, RoyalBlue)'; break;
         }
-        showNotification(message, 'custom_bg', false, bgColor);
+        showNotification(message, 'info', { bg: bgColor });
     }
 
     // ##################################################
@@ -4222,7 +4212,7 @@ async function runMainScript() {
         } else {
             return;
         }
-        showNotification(message, 'custom_bg', false, bgColor);
+        showNotification(message, 'info', { bg: bgColor });
     }
 
     // ##################################################
@@ -4603,20 +4593,20 @@ async function runMainScript() {
             /* Фантомный индикатор звезды (Стиль как на скрине + прицел 11px) */
             .ascm-phantom-star {
                 position: absolute;
-                right: 11px;  /* Идеальное среднее значение по горизонтали */
+                right: 5%;
                 z-index: 110;
                 background: #00ff00;
-                border: 1.5px solid #fff;
+                border: 1px solid #fff;
                 border-radius: 50%;
                 color: white;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                font-size: 11px; 
+                font-size: 150%; 
                 box-shadow: 0 0 10px #00ff00, inset 0 0 5px rgba(255,255,255,0.5);
                 pointer-events: none;
-                width: 21px;
-                height: 21px;
+                width: 14%;
+                height: 9.3%;
                 animation: ascmStarBlink 2s infinite ease-in-out;
             }
             @keyframes ascmStarBlink {
@@ -4628,7 +4618,7 @@ async function runMainScript() {
                 position: absolute;
                 top: 5%;
                 right: 0;
-                width: 45px;
+                width: 30%;
                 height: 45%; 
                 z-index: 120;
                 cursor: help;
@@ -6780,187 +6770,146 @@ async function runMainScript() {
 		// Заменяем старую функцию, чтобы она использовала новую логику
 		unsafeWindow.fetchCardDatabase = fetchCardDatabaseFromRepo;
 
-		// ##################################################
-        // Обновляет локальную копию базы данных (GitHub Direct + Scan)
-        // ##################################################
+		/**
+         * Обновляет локальную базу данных с динамическим расчетом этапов.
+         * Обеспечивает видимость каждого шага (мин. 1 сек) и дублирует статус в консоль.
+         * [force] - флаг принудительного обновления.
+         */
         unsafeWindow.updateLocalDatabase = async function(force = false) {
             await sleep(1000);
             const UPDATE_FLAG_KEY = 'ascm_db_update_in_progress';
             const LAST_DB_UPDATE_KEY = 'ascm_db_last_update_ts';
-            const MAX_UPDATE_DURATION_MS = 1 * 60 * 1000;
+            const STICKY_ID = 'acm-db-update-status';
+            const MAX_UPDATE_DURATION_MS = 60000;
             const now = Date.now();
 
             const updateInfo = await GM_getValue(UPDATE_FLAG_KEY, null);
-            if (updateInfo && updateInfo.timestamp && (now - updateInfo.timestamp < MAX_UPDATE_DURATION_MS)) {
-                console.log(`[Card DB] Обновление уже идет (ID: ${updateInfo.tabId}).`);
+            if (updateInfo && (now - updateInfo.timestamp < MAX_UPDATE_DURATION_MS)) {
+                console.log(`%c[Card DB] Обновление уже выполняется в другой вкладке.`, "color: #faa61a;");
                 return;
-            } else if (updateInfo) {
-                await GM_deleteValue(UPDATE_FLAG_KEY);
             }
-
-            const notifyStatus = (text) => {
-                console.log(`[Card DB] ${text}`);
-                if (typeof showNotification === 'function') {
-                    showNotification(text, 'info', true);
-                    if (currentNotificationTimeout) { clearTimeout(currentNotificationTimeout); currentNotificationTimeout = null; }
-                }
-            };
-
-            // Проверка необходимости обновления
-            let needsUpdate = force;
-            let updateReason = force ? "Принудительно" : "";
             
+            let needsUpdate = force;
             if (!force) {
                 const cardCount = await getCardCountFromDB();
-                if (cardCount === 0) {
-                    needsUpdate = true; updateReason = "База пуста";
-                } else {
+                if (cardCount === 0) needsUpdate = true;
+                else {
                     const lastUpdateTime = await GM_getValue(LAST_DB_UPDATE_KEY, 0);
-                    // ПРАВКА: Получаем динамический TTL из настроек (по умолчанию 8)
                     const userTtlHours = await GM_getValue(DB_UPDATE_TTL_KEY, 8);
-                    if ((now - lastUpdateTime) >= userTtlHours * 3600 * 1000) {
-                        needsUpdate = true; updateReason = "TTL истек";
-                    }
+                    if ((now - lastUpdateTime) >= userTtlHours * 3600 * 1000) needsUpdate = true;
                 }
             }
 
             if (!needsUpdate) return;
 
-            console.log(`[Card DB] Старт обновления. Причина: ${updateReason}`);
-            await GM_setValue(UPDATE_FLAG_KEY, { tabId: unsafeWindow.tabIdWatch, timestamp: now });
+            const isGithubCheckEnabled = await GM_getValue(GITHUB_CHECK_ENABLED_KEY, true);
+            const isGithubDemandEnabled = await GM_getValue('ascm_githubDemandCacheEnabled', true);
+            const isPageScanEnabled = await GM_getValue(PAGE_SCAN_ENABLED_KEY, true);
+
+            // 1. Предварительный расчет количества этапов
+            let steps = [];
+            if (isGithubCheckEnabled || force) {
+                steps.push("Загрузка данных с GitHub");
+                if (isGithubDemandEnabled) steps.push("Импорт данных о спросе");
+            }
+            if (isPageScanEnabled) steps.push("Скан новых карт на сайте");
+            steps.push("Завершение обновления");
+
+            const totalSteps = steps.length;
+            let currentStepIdx = 0;
+            const dontRefreshWarning = "\n⚠️ Не обновляйте страницу до конца процесса!";
+
+            // Вспомогательный логгер (Пуш + Консоль + Задержка)
+            const notifyStatus = async (text, isSticky = true, type = 'info') => {
+                const stepNum = isSticky ? ++currentStepIdx : currentStepIdx;
+                const prefix = isSticky ? `[Этап ${stepNum}/${totalSteps}] ` : "";
+                const fullMsg = prefix + text;
+                const displayMsg = isSticky ? fullMsg + dontRefreshWarning : text;
+
+                console.log(`%c[Card DB] ${fullMsg}`, "color: #00ffff;");
+                showNotification(displayMsg, type, { sticky: isSticky, id: STICKY_ID });
+                
+                if (isSticky) await sleep(1000); // Минимум 1 сек на чтение этапа
+            };
+
+            await GM_setValue(UPDATE_FLAG_KEY, { tabId: tabIdWatch, timestamp: now });
 
             try {
-                const isGithubCheckEnabled = await GM_getValue(GITHUB_CHECK_ENABLED_KEY, true);
-                const isPageScanEnabled = await GM_getValue(PAGE_SCAN_ENABLED_KEY, true);
                 let updateSuccessful = false;
 
-                // --- ЭТАП 1: GitHub (JSON) ---
+                // ЭТАП: GitHub
                 if (isGithubCheckEnabled || force) {
-                    try {
-                        notifyStatus('[Этап 1/4] 🌐 Загрузка новой базы (JSON)...');
-                        const fetchedDataObj = await unsafeWindow.fetchCardDatabase();
+                    await notifyStatus('Загрузка данных с GitHub...');
+                    const fetchedDataObj = await unsafeWindow.fetchCardDatabase();
 
-                        if (fetchedDataObj && fetchedDataObj.cards && fetchedDataObj.cards.length > 0) {
-                            const fetchedCards = fetchedDataObj.cards;
-                            notifyStatus(`[Этап 2/4] 💾 Обработка ${fetchedCards.length} карт и дат спроса...`);
-                            await sleep(200);
+                    if (fetchedDataObj && fetchedDataObj.cards?.length > 0) {
+                        const fetchedCards = fetchedDataObj.cards;
+                        await populateDb(fetchedCards);
 
-                            // 1. Сохраняем основные данные карт
-                            await populateDb(fetchedCards);
+                        // ЭТАП: Спрос
+                        if (isGithubDemandEnabled) {
+                            await notifyStatus('Импорт данных о спросе...');
+                            const ttlInHours = await GM_getValue(CACHE_TTL_STORAGE_KEY, DEFAULT_CACHE_TTL_HOURS);
+                            const ttlMs = ttlInHours * 3600 * 1000;
+                            const db = await openDb();
+                            const tx = db.transaction(DEMAND_CACHE_STORE_NAME, 'readwrite');
+                            const store = tx.objectStore(DEMAND_CACHE_STORE_NAME);
 
-                            // 2. Обновляем кэш спроса, используя ДАТУ ИЗ КАРТЫ
-                            const isGithubDemandEnabled = await GM_getValue('ascm_githubDemandCacheEnabled', true);
-                            if (isGithubDemandEnabled) {
-                                const ttlInHours = await GM_getValue(CACHE_TTL_STORAGE_KEY, DEFAULT_CACHE_TTL_HOURS);
-                                // Переводим TTL настройки пользователя в миллисекунды
-                                const ttlMs = ttlInHours * 3600 * 1000;
-
-                                const db = await openDb();
-                                const transaction = db.transaction(DEMAND_CACHE_STORE_NAME, 'readwrite');
-                                const demandStore = transaction.objectStore(DEMAND_CACHE_STORE_NAME);
-
-                                fetchedCards.forEach(card => {
-                                    // Если нули — пропускаем (данных еще нет)
-                                    if (card.users === 0 && card.need === 0 && card.trade === 0) return;
-
-                                    const key = 'cardId: ' + card.id;
-                                    
-                                    // РАСЧЕТ ИСТЕЧЕНИЯ
-                                    const specificExpiresTime = (card._demandUpdatedAt || Date.now()) + ttlMs;
-
-                                    const cacheData = {
-                                        data: {
-                                            popularityCount: card.users,
-                                            needCount: card.need,
-                                            tradeCount: card.trade,
-                                            // !!! ВАЖНО: Сохраняем исходную дату обновления явно !!!
-                                            updatedAt: card._demandUpdatedAt 
-                                        },
-                                        expires: specificExpiresTime
-                                    };
-
-                                    // Обновляем, если в локальном кэше старье или нет данных
-                                    const getRequest = demandStore.get(key);
-                                    getRequest.onsuccess = () => {
-                                        const localData = getRequest.result;
-                                        // Если локальный кэш "живее" (дольше проживет), чем данные из базы -> не трогаем
-                                        if (localData && localData.expires > specificExpiresTime) {
-                                            return;
-                                        }
-                                        demandStore.put(cacheData, key);
-                                    };
-                                });
-
-                                await new Promise((resolve, reject) => {
-                                    transaction.oncomplete = resolve;
-                                    transaction.onerror = reject;
-                                });
+                            for (const card of fetchedCards) {
+                                if (card.users === 0 && card.need === 0 && card.trade === 0) continue;
+                                const expires = (card._demandUpdatedAt || Date.now()) + ttlMs;
+                                store.put({ 
+                                    data: { popularityCount: card.users, needCount: card.need, tradeCount: card.trade, updatedAt: card._demandUpdatedAt }, 
+                                    expires 
+                                }, 'cardId: ' + card.id);
                             }
-
-                            // 3. Обновляем память (удаляя временные поля спроса)
-                            if (!cardDatabaseMap) cardDatabaseMap = new Map(); else cardDatabaseMap.clear();
-                            if (!cardImageIndex) cardImageIndex = new Map(); else cardImageIndex.clear();
-
-                            fetchedCards.forEach(card => {
-                                const memoryCard = { ...card };
-                                // Удаляем служебные поля, чтобы не забивать ОЗУ
-                                delete memoryCard.users;
-                                delete memoryCard.need;
-                                delete memoryCard.trade;
-                                delete memoryCard._demandUpdatedAt; 
-                                
-                                cardDatabaseMap.set(memoryCard.id, memoryCard);
-                                const compositeKey = normalizeImagePath(memoryCard.image);
-                                if (compositeKey) cardImageIndex.set(compositeKey, memoryCard.id);
-                            });
-
-                            isDatabaseReady = true;
-                            resetGlobalDbUnloadTimer();
-                            updateSuccessful = true;
+                            await new Promise(r => tx.oncomplete = r);
                         }
-                    } catch (e) {
-                        console.error('[Card DB] Ошибка GitHub:', e.message);
-                        if (!force) notifyStatus('❌ Ошибка загрузки JSON. Пробую скан сайта...');
-                    }
-                }
 
-                // --- ЭТАП 3: Скан сайта (резерв) ---
-                if (isPageScanEnabled) {
-                    if (typeof unsafeWindow.runFallbackCardScrape === 'function') {
-                        notifyStatus(updateSuccessful ? '[Этап 3/4] 🔍 До-проверка свежих на сайте...' : '[Этап 3/4] ⚠️ Резерв: Скан сайта...');
-                        await unsafeWindow.runFallbackCardScrape(2);
+                        // Обновление ОЗУ
+                        if (!cardDatabaseMap) cardDatabaseMap = new Map(); else cardDatabaseMap.clear();
+                        if (!cardImageIndex) cardImageIndex = new Map(); else cardImageIndex.clear();
+                        fetchedCards.forEach(c => {
+                            cardDatabaseMap.set(c.id, c);
+                            const key = normalizeImagePath(c.image);
+                            if (key) cardImageIndex.set(key, c.id);
+                        });
                         updateSuccessful = true;
                     }
                 }
 
-                // --- ЭТАП 4: Финал ---
+                // ЭТАП: Скан сайта
+                if (isPageScanEnabled) {
+                    await notifyStatus('Скан новых карт на сайте...');
+                    await unsafeWindow.runFallbackCardScrape(2);
+                    updateSuccessful = true;
+                }
+
+                // ЭТАП: Финал
                 if (updateSuccessful) {
-                    notifyStatus('[Этап 4/4] ✨ Финализация...');
+                    await notifyStatus('Завершение обновления...');
                     await GM_setValue(LAST_DB_UPDATE_KEY, Date.now());
-                    localStorage.removeItem('ascm_freshnessData_sharedCache');
                     freshnessData = null;
                     await prepareFreshnessData();
                     await updateFreshnessOverlays(true);
                     
-                    isStickyNotificationActive = false;
-                    unsafeWindow.safeDLEPushCall('success', '🎉 База карт успешно обновлена!');
-                } else if (!force) {
-                    isStickyNotificationActive = false;
-                    unsafeWindow.safeDLEPushCall('warning', 'Не удалось обновить базу.');
+                    document.getElementById(STICKY_ID)?.remove();
+                    await notifyStatus('🎉 База карт успешно обновлена!', false, 'success');
+                    // Автоматическое скрытие успеха через 3 сек реализовано через стандартный timeout showNotification
+                    setTimeout(() => {
+                         const successMsg = document.getElementById(STICKY_ID);
+                         if (successMsg) successMsg.click(); // Закрываем
+                    }, 3000);
                 }
 
             } catch (e) {
-                isStickyNotificationActive = false;
-                console.error('[Card DB] Критическая ошибка:', e);
-                unsafeWindow.safeDLEPushCall('error', 'Ошибка обновления: ' + e.message);
+                console.error('[Card DB] Ошибка:', e);
+                document.getElementById(STICKY_ID)?.remove();
+                showNotification('❌ Ошибка обновления: ' + e.message, 'error', { timeout: 5000 });
             } finally {
-                isStickyNotificationActive = false;
-                const finalUpdateInfo = await GM_getValue(UPDATE_FLAG_KEY, null);
-                if (finalUpdateInfo && finalUpdateInfo.tabId === unsafeWindow.tabIdWatch) {
-                    await GM_deleteValue(UPDATE_FLAG_KEY);
-                }
+                await GM_deleteValue(UPDATE_FLAG_KEY);
             }
-        }
+        };
 
         // ПРАВКА: Добавлена проверка на пустую базу с запросом подтверждения на обновление при первом запуске
 		unsafeWindow.initializeDatabase = async function() {
@@ -7548,7 +7497,7 @@ async function runMainScript() {
 
 	/**
 	 * Загружает и внедряет блок статистики спроса на карточку.
-	 * Оптимизировано: генерирует HTML один раз и применяет ко всем идентичным картам на странице.
+	 * Оптимизировано: удаляет все старые блоки перед вставкой, предотвращая дублирование на постерах.
 	 * [cardId] - идентификатор типа карты.
 	 * [element] - DOM-элемент, инициировавший обновление.
 	 * [triggeredByIndividualButton] - флаг активации через индивидуальную кнопку (включает лоадер).
@@ -7682,6 +7631,9 @@ async function runMainScript() {
 
 			relatedCards.forEach(targetEl => {
 				targetEl.dataset.needCount = card.needCount;
+				if (targetEl.classList.contains('noffer')) {
+					targetEl.querySelector('.noffer__left')?.querySelectorAll(':scope > .acm-card-stats').forEach(s => s.remove());
+				}
 				const cardWidth = targetEl.offsetWidth;
 				const scaleFactor = cardWidth / 150;
 				const finalFontSize = Math.round(Math.max(12, Math.min(22, 13 * scaleFactor)));
@@ -7729,8 +7681,15 @@ async function runMainScript() {
 					};
 				};
 
-				targetEl.querySelector('.acm-stats-wrapper')?.remove();
+				Array.from(targetEl.childNodes).forEach(node => {
+					if (node.nodeType === 1 && (node.classList.contains('acm-stats-wrapper') || node.classList.contains('acm-card-stats'))) {
+						node.remove();
+					}
+				});
 				targetEl.closest('.ca-card-wrapper')?.querySelector('.ca-card-demand-stats')?.remove();
+
+				const btn = targetEl.querySelector('.check-demand-btn, .ca-check-demand-btn');
+				if (btn) { btn.innerHTML = '<i class="fas fa-chart-line"></i>'; btn.style.pointerEvents = 'auto'; }
 
 				if (isCollector) {
 					const wrapper = targetEl.closest('.ca-card-wrapper');
@@ -7855,9 +7814,7 @@ async function runMainScript() {
                     if (card.offsetParent === null) {
                         return false;
                     }
-                    if (card.closest('.owl-item')) {
-                        return false;
-                    }
+                    // if (card.closest('.owl-item')) return false;
                     return true;
                 });
             }
@@ -8233,6 +8190,14 @@ async function runMainScript() {
 			managedButtonSelectors.forEach(selector => {
 				const btn = document.querySelector(selector);
 				if (btn) {
+					if (selector === '#readyToCharge') {
+						const logged = asbm_getUsername();
+						const owner = new URLSearchParams(window.location.search).get('name');
+						if (!logged || !owner || logged.toLowerCase() !== owner.toLowerCase()) {
+							btn.style.display = 'none';
+							return;
+						}
+					}
 					const isHidden = areActionButtonsHidden;
 					const activeTransition = 'opacity 0.3s ease, transform 0.3s ease';
 
@@ -8364,48 +8329,82 @@ async function runMainScript() {
             console.log('[Anti-Blur] Функция отключения размытия в паках активна.');
         }
 
-        /**
-		 * Извлекает ID карты (тип или экземпляр) из DOM-элемента или URL.
-		 * Приоритет: 1. data-атрибуты, 2. Ссылка href (id=), 3. Поиск по картинке (резерв).
-		 * [cardElement] - DOM-элемент карты, [targetIdType] - 'type' или 'owner', [isSilent] - скрыть логи.
-		 */
-		async function getCardId(cardElement, targetIdType = 'type', isSilent = false) {
-			if (!cardElement) return null;
+	/**
+	 * МАТРИЦА ПРАВИЛ ИДЕНТИФИКАЦИИ (Lookup Map) v3.5 In-Place
+	 * Порядок: Специфичные подразделы профиля -> Трейды -> Спец. разделы (A-Z) -> Глобальные.
+	 */
+	const PAGE_ID_RULES = [
+		// --- 1. Личный кабинет: Подразделы инвентаря (Самый высокий приоритет) ---
+		['/user/cards/trade/',   'dataset.id',         'selector(.card-offer-remove-btn).dataset.id'],
+		['/user/cards/need/',    'dataset.id',         null],
+		['/user/cards/',         'dataset.id',         'dataset.ownerId'],
+		['/user/',               'dataset.id',         null], // Главная страница профиля
 
-			let typeId = null;
-			let ownerId = null;
-			const href = cardElement.getAttribute('href') || '';
+		// --- 2. Рынок и Трейды ---
+		[/\/cards\/\d+\/trade\//, 'dataset.originalId', 'dataset.id'],
+		['/trades/history/',     'dataset.cardId',     null],
+		['/trades/',             'dataset.cardId',     'dataset.id'],
 
-			typeId = cardElement.dataset.cardId;
-			ownerId = cardElement.dataset.id || cardElement.dataset.ownerId;
+		// --- 3. Специальные разделы (Алфавитный порядок по URL) ---
+		['/aniserials/',         'dataset.id',         null],
+		['/card_awakening/',     'dataset.realId',     'dataset.id'],
+		['/cards/pack/',         'dataset.id',         null],
+		['/cards_created/',      'dataset.id',         null],
+		['/cards_progress/',     'attr.href',          null],
+		['/cards_remelt/',       'dataset.cardId',     'dataset.id'],
+		['/cards_showcase/',     null,                 'dataset.id'],
+		['/celestial_stone/',    'dataset.cardId',     'dataset.id'],
+		['/favourite_cards/',    'dataset.id',         null],
+		['/pm/',                 'dataset.id',         null],
+		['/update_stars/',       null,                 'dataset.id'],
 
-			if (!typeId && href.includes('id=')) {
-				const match = href.match(/[?&]id=(\d+)/);
-				if (match) {
-					const idFromLink = match[1];
-					if (window.location.pathname.includes('/trades/') || window.location.pathname.includes('/cards/')) {
-						typeId = idFromLink;
-					} else {
-						if (!ownerId) ownerId = idFromLink;
-					}
+		// --- 4. Глобальные страницы и Фолбэки ---
+		['/cards/users/',        'param.id',           null],
+		['/cards/',              'dataset.id',         null]
+	];
+
+	/**
+	 * Универсальный извлекатель ID карты.
+	 * Сначала проверяет матрицу правил (PAGE_ID_RULES), затем (при неудаче) ищет в локальной БД по картинке.
+	 */
+	async function getCardId(cardElement, targetIdType = 'type', isSilent = false) {
+		if (!cardElement) return null;
+
+		const currentPath = window.location.pathname;
+		const urlParams = new URLSearchParams(window.location.search);
+		let foundId = null;
+
+		// 1. ПОИСК ПО МАТРИЦЕ (с поддержкой Regex)
+		const rule = PAGE_ID_RULES.find(r => {
+			if (r[0] instanceof RegExp) return r[0].test(currentPath);
+			return currentPath.includes(r[0]);
+		});
+
+		if (rule) {
+			const source = (targetIdType === 'type') ? rule[1] : rule[2];
+			if (source) {
+				if (source.startsWith('selector(')) {
+					const sel = source.match(/\((.*?)\)/)[1];
+					const attr = source.split('dataset.')[1];
+					const subEl = cardElement.querySelector(sel);
+					if (subEl) foundId = subEl.dataset[attr];
+				} else if (source.startsWith('dataset.')) {
+					foundId = cardElement.dataset[source.split('.')[1]];
+				} else if (source.startsWith('attr.')) {
+					const attrName = source.split('.')[1];
+					const attrVal = cardElement.getAttribute(attrName);
+					foundId = (attrName === 'href' && attrVal) ? attrVal.match(/[?&]id=(\d+)/)?.[1] : attrVal;
+				} else if (source === 'param.id') {
+					foundId = urlParams.get('id');
 				}
 			}
+		}
 
-			if (targetIdType === 'owner') return ownerId || null;
+		if (foundId && !isNaN(foundId)) return foundId.toString();
 
-			if (typeId) {
-				await ensureDbLoaded();
-				if (ownerId) await saveOwnerToTypeMapping(ownerId, typeId);
-				return typeId;
-			}
-
-			if (ownerId) {
-				const cachedTypeId = await getTypeIdFromOwnerCache(ownerId);
-				if (cachedTypeId) {
-					await ensureDbLoaded();
-					return cachedTypeId;
-				}
-			}
+		// 2. РЕЗЕРВНЫЙ ПОИСК ПО БАЗЕ (Только для Type ID)
+		if (targetIdType === 'type') {
+			if (cardElement.dataset.cardId) return cardElement.dataset.cardId;
 
 			let img = cardElement.dataset.image;
 			if (!img) {
@@ -8418,89 +8417,41 @@ async function runMainScript() {
 				if (isDatabaseReady && cardImageIndex) {
 					const key = normalizeImagePath(img);
 					if (key && cardImageIndex.has(key)) {
-						const foundId = cardImageIndex.get(key);
-						if (ownerId) await saveOwnerToTypeMapping(ownerId, foundId);
-						return foundId;
+						const dbId = cardImageIndex.get(key).toString();
+						cardElement.dataset.cardId = dbId;
+						return dbId;
 					}
 				}
 			}
-
-			return null;
+			const match = (cardElement.getAttribute('href') || '').match(/[?&]id=(\d+)/);
+			if (match) return match[1];
 		}
-		unsafeWindow.getCardId = getCardId;
 
-        // ##################################################
-        // # Находит и осуществляет переход на следующую страницу пагинации (для массовой отправки в "Не нужное").
-        // ##################################################
-        async function goToNextPage(mode) {
-            if (shouldStopProcessing) { sessionStorage.removeItem('shouldAutoCharge'); return; }
-            if (!/^\/user\/cards\//.test(window.location.pathname) || !new URLSearchParams(window.location.search).has('name')) {
-                sessionStorage.removeItem('shouldAutoCharge');
-                return;
-            }
-            const nextPageSelectors = [
-                '.pagination__item--next a:not(.disabled)',
-                '.pagination a[rel="next"]:not([aria-disabled="true"])',
-                'a.pagination__next:not(.disabled)',
-                '.pagination li.active + li:not(.disabled) a',
-                '.pages a.swchPgs:not(.active) + a.swchPgs',
-                '.pagination_wrapper a:last-of-type:not(.current)'
-            ];
-            let nextPageLinkElement = null;
-            for (const selector of nextPageSelectors) {
-                const element = document.querySelector(selector);
-                if (element?.href && !element.closest('.disabled') && !element.classList.contains('disabled') && element.getAttribute('aria-disabled') !== 'true') {
-                    if (selector.includes(':last-of-type')) {
-                        const currentPageTextEl = document.querySelector('.pagination .current, .pagination li.active span, .pagination li.active a');
-                        if (currentPageTextEl && element.textContent.trim() === currentPageTextEl.textContent.trim()) continue;
-                    }
-                    nextPageLinkElement = element;
-                    break;
-                }
-            }
-            if (!nextPageLinkElement) {
-                const currentUrl = new URL(window.location.href);
-                const params = currentUrl.searchParams;
-                const currentPageNum = parseInt(params.get('page') || '1', 10);
-                const nextPageNum = currentPageNum + 1;
-                const foundNextPageLinkByText = Array.from(document.querySelectorAll('.pagination a[href]'))
-                .find(link => {
-                    return link.textContent.trim() === String(nextPageNum) &&
-                        !link.closest('.disabled') && !link.classList.contains('disabled') &&
-                        link.getAttribute('aria-disabled') !== 'true';
-                });
-                if (foundNextPageLinkByText) {
-                    nextPageLinkElement = foundNextPageLinkByText;
-                } else {
-                    const foundNextPageLinkByUrlParam = Array.from(document.querySelectorAll('.pagination a[href*="page="]'))
-                    .find(link => {
-                        try {
-                            const linkUrl = new URL(link.href, window.location.origin);
-                            const linkPageNum = parseInt(linkUrl.searchParams.get('page'), 10);
-                            return linkPageNum === nextPageNum &&
-                                !link.closest('.disabled') && !link.classList.contains('disabled') &&
-                                link.getAttribute('aria-disabled') !== 'true';
-                        } catch (e) { return false; }
-                    });
-                    if (foundNextPageLinkByUrlParam) nextPageLinkElement = foundNextPageLinkByUrlParam;
-                }
-            }
-            if (nextPageLinkElement && (new URL(nextPageLinkElement.href).pathname + new URL(nextPageLinkElement.href).search !== window.location.pathname + window.location.search)) {
-                const stepMessage = (mode === 'delete_then_add')
-                ? '[Шаг 3/3] Переход на следующую страницу...'
-                : '[Шаг 2/2] Переход на следующую страницу...';
-                safeDLEPushCall('info', stepMessage);
-                sessionStorage.setItem('shouldAutoCharge', 'true');
-                await sleep(1000);
+		return null;
+	}
+	unsafeWindow.getCardId = getCardId;
+
+        /**
+         * Выполняет переход на следующую страницу.
+         * Выводит компактное отцентрированное уведомление о процессе перехода.
+         */
+        async function goToNextPage(cur, total) {
+            if (shouldStopProcessing) return false;
+            const nextBtn = document.querySelector('.pagination__pages-btn a');
+            if (nextBtn && nextBtn.href && nextBtn.href.includes('page=')) {
+                const nextNum = parseInt(cur) + 1;
+                const html = `
+                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 5px; min-width: 220px;">
+                    <div style="font-size: 18px; font-weight: 900;">🚚 ПЕРЕХОД...</div>
+                    <div style="font-size: 12px; opacity: 0.8;">На страницу ${nextNum} из ${total}</div>
+                </div>`;
+                showNotification(html, 'info', { sticky: true, id: 'acm-charge-status' });
+                await sleep(1200);
                 if (!shouldStopProcessing) {
-                    window.location.href = nextPageLinkElement.href;
+                    window.location.href = nextBtn.href;
                     return true;
-                } else {
-                    sessionStorage.removeItem('shouldAutoCharge');
                 }
             }
-            safeDLEPushCall('info', 'Достигнута последняя страница или не найдена кнопка перехода.');
-            sessionStorage.removeItem('shouldAutoCharge');
             return false;
         }
 
@@ -8556,37 +8507,36 @@ async function runMainScript() {
             sessionStorage.removeItem('shouldAutoProcessDemand');
         }
 
-        // ##################################################
-        // ##################################################
-        async function sendUnwantedPageRequest(action, ids) {
-            const user_hash = unsafeWindow.dle_login_hash;
-            if (!user_hash) {
-                safeDLEPushCall('error', 'Ошибка: не найден хеш пользователя.');
-                return false;
-            }
-            const body = new URLSearchParams();
-            body.append('action', action);
-            ids.forEach(id => body.append('ids[]', id));
-            body.append('user_hash', user_hash);
+	/**
+	 * Отправляет сетевой запрос и возвращает структурированный результат.
+	 * [action] - 'add_no_need' или 'delete_no_need'
+	 * [ids] - массив owner_id
+	 */
+	async function sendUnwantedPageRequest(action, ids) {
+		const user_hash = unsafeWindow.dle_login_hash;
+		if (!user_hash) return { success: false, msg: 'Ошибка: нет хеша' };
+		const body = new URLSearchParams();
+		body.append('action', action);
+		ids.forEach(id => body.append('ids[]', id));
+		body.append('user_hash', user_hash);
 
-            try {
-                const response = await fetch("/engine/ajax/controller.php?mod=cards_ajax", {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
-                    body: body.toString()
-                });
-
-                if (!response.ok) {
-                    throw new Error(`Сетевая ошибка: ${response.status}`);
-                }
-                return true;
-            } catch (error) {
-                console.error(`Ошибка при выполнении действия "${action}":`, error);
-                safeDLEPushCall('error', `Ошибка запроса: ${action}. Процесс остановлен.`);
-                shouldStopProcessing = true;
-                return false;
-            }
-        }
+		try {
+			const response = await fetch("/engine/ajax/controller.php?mod=cards_ajax", {
+				method: 'POST',
+				headers: { 
+					'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+					'X-Requested-With': 'XMLHttpRequest',
+					'Accept': 'application/json, text/javascript, */*; q=0.01'
+				},
+				body: body.toString()
+			});
+			if (!response.ok) throw new Error();
+			const data = await response.json();
+			return { success: !data.error, msg: data.error || data.status || "Успешно" };
+		} catch (e) {
+			return { success: false, msg: 'Ошибка сети' };
+		}
+	}
 
         // ##################################################
         // # Отправляет запрос на полную очистку списка "Готов обменять" ("Не нужное").
@@ -8717,70 +8667,133 @@ async function runMainScript() {
         };
     };
 
-        // ##################################################
-        // # Запускает процесс массового добавления карт со страницы в список "Готов обменять".
-        // ##################################################
-        async function readyToCharge() {
-            const READY_TO_TRADE_MODE_KEY = 'readyToTradeMode_v2';
-            const mode = await GM_getValue(READY_TO_TRADE_MODE_KEY, 'add_only');
-            const buttonId = 'readyToCharge';
-            const readyToChargeBtn = document.getElementById(buttonId);
-            if (isAutoChargeRunning) {
-                shouldStopProcessing = true;
-                sessionStorage.removeItem('shouldAutoCharge');
-                safeDLEPushCall('info', 'Процесс будет остановлен после текущей страницы.');
-                if (readyToChargeBtn) {
-                    readyToChargeBtn.style.background = 'linear-gradient(145deg, #e67e22, #d35400)';
-                    readyToChargeBtn.innerHTML = '<span class="fas fa-stop" style="font-size: 10px;"></span>';
-                    readyToChargeBtn.disabled = true;
-                }
-                return;
-            }
-            isAutoChargeRunning = true;
-            shouldStopProcessing = false;
-            sessionStorage.setItem('shouldAutoCharge', 'true');
-            if (readyToChargeBtn) {
-                if (!originalReadyToChargeColor) originalReadyToChargeColor = readyToChargeBtn.style.background;
-                readyToChargeBtn.style.background = 'linear-gradient(145deg, rgb(50, 222, 50), rgb(50, 122, 50))';
-                readyToChargeBtn.innerHTML = '<span class="fas fa-stop" style="font-size: 10px;"></span>';
-                readyToChargeBtn.title = "Остановить процесс";
-            }
-            while (true) {
-                const cards = getCardsOnPage();
-                const ownerIds = (await Promise.all(cards.map(card => getCardId(card, 'owner')))).filter(Boolean);
-                if (ownerIds.length === 0) {
-                    safeDLEPushCall('info', 'На странице нет карт для обработки. Завершение.');
-                    break;
-                }
-                if (mode === 'delete_then_add') {
-                    safeDLEPushCall('info', `[Шаг 1/3] Удаление ${ownerIds.length} карт из ненужных...`);
-                    await sendUnwantedPageRequest('delete_no_need', ownerIds);
-                    await sleep(1000);
-                }
-                const step = (mode === 'delete_then_add') ? '2/3' : '1/2';
-                safeDLEPushCall('info', `[Шаг ${step}] Добавление ${ownerIds.length} карт в ненужные...`);
-                await sendUnwantedPageRequest('add_no_need', ownerIds);
-                await sleep(1000);
-                if (shouldStopProcessing) {
-                    safeDLEPushCall('info', 'Процесс остановлен пользователем. Переход на следующую страницу отменен.');
-                    break;
-                }
-                const hasNextPage = await goToNextPage(mode);
-                if (!hasNextPage) {
-                    break;
-                }
-                return;
-            }
-            isAutoChargeRunning = false;
-            shouldStopProcessing = false;
-            sessionStorage.removeItem('shouldAutoCharge');
-            if (readyToChargeBtn) {
-                readyToChargeBtn.style.background = originalReadyToChargeColor;
-                readyToChargeBtn.innerHTML = '<span class="fal fa-circle-check" style="font-size: 14px;"></span>';
-                readyToChargeBtn.title = "Готов поменять";
-                readyToChargeBtn.disabled = false;
-            }
-        }
+	/**
+	 * Массовая обработка инвентаря.
+	 * Оптимизированный UI: две строки заголовка, минимальные отступы и фикс авто-скрытия.
+	 */
+	async function readyToCharge() {
+		const loggedUser = asbm_getUsername();
+		const owner = new URLSearchParams(window.location.search).get('name');
+		if (!loggedUser || !owner || loggedUser.toLowerCase() !== owner.toLowerCase()) {
+			safeDLEPushCall('error', 'Функция доступна только в вашем инвентаре!');
+			return;
+		}
+
+		if (isAutoChargeRunning) {
+			shouldStopProcessing = true;
+			sessionStorage.removeItem('shouldAutoCharge');
+			const btn = document.getElementById('readyToCharge');
+			if (btn) {
+				btn.style.background = 'linear-gradient(145deg, #e67e22, #d35400)';
+				btn.innerHTML = '<span class="fas fa-spinner fa-spin"></span>';
+			}
+			return;
+		}
+
+		const mode = await GM_getValue('readyToTradeMode_v2', 'add_only');
+		const curPg = new URLSearchParams(window.location.search).get('page') || "1";
+		const lastPg = document.querySelector('.pagination__pages a[href*="page="]:last-of-type')?.textContent || "??";
+		
+		isAutoChargeRunning = true; 
+		shouldStopProcessing = false;
+		sessionStorage.setItem('shouldAutoCharge', 'true');
+
+		const btn = document.getElementById('readyToCharge');
+		if (btn) {
+			if (!originalReadyToChargeColor) originalReadyToChargeColor = btn.style.background;
+			btn.style.background = 'linear-gradient(145deg, #4CAF50, #2E7D32)';
+			btn.innerHTML = '<span class="fas fa-stop"></span>';
+		}
+
+		const stages = [];
+		if (mode === 'delete_then_add') {
+			stages.push({ id: 'del', label: 'Очистка страницы' });
+			stages.push({ id: 'add', label: 'Добавление в список' });
+		} else {
+			stages.push({ id: 'add', label: 'Добавление в список' });
+		}
+		stages.push({ id: 'move', label: 'Переход дальше' });
+
+		const updateSticky = (activeId, statusMap = {}) => {
+			let content = `<div style="text-align: center; width: 240px; font-family: sans-serif; color: #eee; line-height: 1 !important; padding: 0; margin: 0 !important;">
+				<div style="font-weight: 900; font-size: 13px; color: #ffd700; margin: 0 !important;">ИНВЕНТАРЬ</div>
+				<div style="font-size: 10px; color: #bbb; margin: 0 0 4px 0 !important;">стр.: ${curPg} из ${lastPg}</div>
+				<div style="display: flex; flex-direction: column; gap: 1px; text-align: left; margin: 0 !important;">`;
+
+			stages.forEach((s, idx) => {
+				const isCurrent = s.id === activeId;
+				const isDone = !!statusMap[s.id];
+				const color = isDone ? '#00ff00' : (isCurrent ? '#ffd700' : '#444');
+				const resultText = statusMap[s.id] || (isCurrent ? 'выполняется...' : 'ожидание');
+				
+				content += `<div style="padding: 1px 4px; border-radius: 3px; margin: 0 !important; border: 1px solid ${isCurrent ? 'rgba(255,215,0,0.3)' : 'transparent'}; background: ${isCurrent ? 'rgba(255,215,0,0.05)' : 'none'};">
+					<div style="font-size: 10px; font-weight: bold; color: ${color}; display: flex; align-items: center; gap: 4px; margin: 0 !important; line-height: 1 !important;">
+						<span style="font-size: 9px; width: 12px;">${isDone ? '✔' : (isCurrent ? '▶' : '○')}</span> Шаг ${idx + 1}: ${s.label}
+					</div>
+					<div style="font-size: 9px; margin: 0 0 0 16px !important; color: ${isDone ? '#bbb' : '#666'}; line-height: 1 !important; white-space: normal;">
+						${resultText}
+					</div>
+				</div>`;
+			});
+			content += '</div></div>';
+			showNotification(content, 'info', { sticky: true, id: 'acm-charge-status', bg: 'rgba(15, 15, 15, 0.98)' });
+		};
+
+		const stepResults = {};
+
+		while (true) {
+			if (shouldStopProcessing) break;
+			const ids = getCardsOnPage().map(c => c.dataset.ownerId).filter(id => id && !isNaN(id));
+
+			if (ids.length > 0) {
+				if (mode === 'delete_then_add') {
+					updateSticky('del', stepResults);
+					const resDel = await sendUnwantedPageRequest('delete_no_need', ids);
+					stepResults.del = resDel.msg;
+					await sleep(1000);
+				}
+				if (shouldStopProcessing) break;
+				updateSticky('add', stepResults);
+				const resAdd = await sendUnwantedPageRequest('add_no_need', ids);
+				stepResults.add = resAdd.msg;
+				updateSticky('move', stepResults);
+				await sleep(1000);
+			} else {
+				stepResults.del = "Пропущено"; stepResults.add = "Пропущено";
+				updateSticky('move', stepResults);
+			}
+
+			if (shouldStopProcessing) break;
+
+			const nextBtn = document.querySelector('.pagination__pages-btn a');
+			if (nextBtn && nextBtn.href && nextBtn.href.includes('page=')) {
+				stepResults.move = "Загрузка...";
+				updateSticky(null, stepResults);
+				await sleep(1000);
+				if (!shouldStopProcessing) { window.location.href = nextBtn.href; return; }
+			} else {
+				stepResults.move = "Конец списка";
+				updateSticky(null, stepResults);
+				break;
+			}
+		}
+
+		isAutoChargeRunning = false;
+		document.getElementById('acm-charge-status')?.remove(); // Очистка липкого окна перед финалом
+		
+		if (shouldStopProcessing) {
+			showNotification(`<div style="text-align: center; font-size: 11px; line-height: 1.1;"><b>🚫 ОСТАНОВЛЕНО</b><br>Обработка прервана</div>`, 'warning', { timeout: 3000 });
+		} else {
+			showNotification(`<div style="text-align: center; font-size: 11px; line-height: 1.1;"><b>✨ ГОТОВО</b><br>Инвентарь обработан</div>`, 'success', { timeout: 3000 });
+		}
+		
+		if (btn) { 
+			btn.style.background = originalReadyToChargeColor; 
+			btn.innerHTML = '<span class="fal fa-circle-check"></span>'; 
+			btn.disabled = false; 
+		}
+		sessionStorage.removeItem('shouldAutoCharge');
+	}
 
         // ##################################################
         // # Инициализирует автоматическое продолжение процесса "Готов обменять" при переходе на новую страницу.
@@ -8791,7 +8804,6 @@ async function runMainScript() {
                 const execCharge = async () => {
                     await sleep(1000);
                     if (!shouldStopProcessing) {
-                        safeDLEPushCall('info', 'Автоматический запуск обработки карт...');
                         await readyToCharge();
                     }
                 };
@@ -9020,7 +9032,7 @@ async function runMainScript() {
 	unsafeWindow.toggleAnimeInfoTooltip = async function(event) {
 		const button = event?.currentTarget; if (!button || !event) return;
 		event.preventDefault(); event.stopPropagation(); event.stopImmediatePropagation();
-		const cardSelectors = ['.ascm-remelt-card', '.anime-cards__item', '.trade__inventory-item', '.trade__main-item', '.history__body-item', '.lootbox__card', '.remelt__inventory-item', '.stone__inventory-item', '.card-awakening-list__card', '.card-awakening-list__card__s', '.ca-card-item', '.ncard-owner', '.ncard__main'];
+		const cardSelectors = ['.anime-cards__placeholder', '.ascm-remelt-card', '.anime-cards__item', '.trade__inventory-item', '.trade__main-item', '.history__body-item', '.lootbox__card', '.remelt__inventory-item', '.stone__inventory-item', '.card-awakening-list__card', '.card-awakening-list__card__s', '.ca-card-item', '.ncard-owner', '.ncard__main', '.noffer'];
 		let cardElement = null; for (const selector of cardSelectors) { const found = button.closest(selector); if (found) { cardElement = found; break; } }
 		if (!cardElement) return;
 		if (!button.dataset.uniqueId) button.dataset.uniqueId = `info-btn-${Math.random().toString(36).substr(2, 9)}`;
@@ -9248,7 +9260,7 @@ async function runMainScript() {
 				} else if (cardWidth < smallCardThreshold) scaleFactor *= 1.3;
 				buttonSize = Math.max(16, Math.min(50, cardWidth * scaleFactor));
 			}
-			infoBtn.style.cssText += `width:${buttonSize}px;height:${buttonSize}px;font-size:${buttonSize * 0.5}px;padding:${buttonSize * 0.15}px;`;
+			infoBtn.style.cssText += `width:${buttonSize}px;height:${buttonSize}px;font-size:${buttonSize * 0.5}px;padding:${buttonSize * 0.15}px;pointer-events:auto!important;`;
 			infoBtn.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); unsafeWindow.toggleAnimeInfoTooltip(e); }, true);
 			if (triggerType === 'hover') {
 				let hoverTimer;
@@ -9267,6 +9279,10 @@ async function runMainScript() {
 			}
 			cardElement.classList.add('acm-card-container');
 			if (window.getComputedStyle(cardElement).position === 'static') cardElement.style.position = 'relative';
+			if (cardElement.classList.contains('anime-cards__placeholder')) {
+				infoBtn.style.setProperty('top', '5%', 'important');
+				infoBtn.style.setProperty('left', '30%', 'important');
+			}
 			cardElement.appendChild(infoBtn);
 		}
 	}
@@ -9836,59 +9852,87 @@ async function runMainScript() {
             document.head.appendChild(customStyle);
         }
 
-        // ##################################################
-        // # Обрабатывает постер на странице трейда, добавляя на него кнопку проверки спроса.
-        // ##################################################
-        function handleTradePagePoster() {
-            const nofferElement = document.querySelector('.noffer.cards--container');
-            const posterImageLink = nofferElement ? nofferElement.querySelector('a.noffer__img') : null;
-            if (nofferElement && posterImageLink && nofferElement.dataset.originalId) {
-                const cardId = nofferElement.dataset.originalId;
-                if (posterImageLink.querySelector('.check-demand-btn')) {
-                    return;
-                }
-                const demandBtn = createDemandCheckButton();
-                Object.assign(demandBtn.style, {
-                    zIndex: '15',
-                    width: '30px',
-                    height: '30px',
-                    opacity: '0',
-                    visibility: 'hidden',
-                    transform: 'translateY(0px)'
-                });
-                demandBtn.style.setProperty('bottom', '10px', 'important');
-                demandBtn.style.setProperty('right', '10px', 'important');
-                demandBtn.style.setProperty('top', 'auto', 'important');
-                demandBtn.style.setProperty('left', 'auto', 'important');
-                const iconInBtn = demandBtn.querySelector('i');
-                if (iconInBtn) {
-                    iconInBtn.style.fontSize = '14px';
-                }
-                demandBtn.addEventListener('click', async (e) => {
-                    e.stopPropagation(); e.preventDefault();
-                    await updateCardInfo(cardId, nofferElement, true);
-                });
-                if (window.getComputedStyle(posterImageLink).position === 'static') {
-                    posterImageLink.style.position = 'relative';
-                }
-                posterImageLink.style.display = 'block';
-                posterImageLink.appendChild(demandBtn);
-                posterImageLink.addEventListener('mouseenter', () => {
-                    if (!demandBtn.querySelector('.fa-spinner') && !demandBtn.querySelector('.fa-exclamation-triangle')) {
-                        demandBtn.style.opacity = '0.8';
-                        demandBtn.style.visibility = 'visible';
-                        demandBtn.style.transform = 'translateY(0)';
-                    }
-                });
-                posterImageLink.addEventListener('mouseleave', () => {
-                    if (!demandBtn.querySelector('.fa-spinner') && !demandBtn.querySelector('.fa-exclamation-triangle')) {
-                        demandBtn.style.opacity = '0';
-                        demandBtn.style.visibility = 'hidden';
-                        demandBtn.style.transform = 'translateY(0px)';
-                    }
-                });
-            }
-        }
+	/**
+	 * Внедряет маркеры ACM на постер трейда с адаптивным позиционированием.
+	 * Реализована полная поддержка глобальных настроек видимости и метода активации (i).
+	 */
+	async function handleTradePagePoster() {
+		const noffer = document.querySelector('.noffer.cards--container');
+		const imgLink = noffer?.querySelector('a.noffer__img');
+		const typeId = noffer?.dataset.originalId;
+
+		if (!noffer || !imgLink || !typeId || imgLink.querySelector('.check-demand-btn')) return;
+
+		if (window.getComputedStyle(imgLink).position === 'static') imgLink.style.position = 'relative';
+
+		// Загрузка глобальных настроек
+		const isInfoEnabled = await GM_getValue(ACM_ANIME_INFO_BTN_ENABLED_KEY, true);
+		const infoVisibility = await GM_getValue(ACM_INFO_BTN_VISIBILITY_KEY, 'always');
+		const triggerType = await GM_getValue(ACM_INFO_BTN_TRIGGER_KEY, 'click');
+
+		// 1. Кнопка СПРОСА (📊) - Справа внизу
+		const demandBtn = createDemandCheckButton();
+		Object.assign(demandBtn.style, { width: '32px', height: '32px', zIndex: '30', opacity: '0', visibility: 'hidden', pointerEvents: 'auto' });
+		demandBtn.style.setProperty('display', 'flex', 'important');
+		demandBtn.style.setProperty('bottom', '2.5%', 'important');
+		demandBtn.style.setProperty('right', '5%', 'important');
+		demandBtn.style.setProperty('top', 'auto', 'important');
+		demandBtn.style.setProperty('left', 'auto', 'important');
+		demandBtn.onclick = (e) => { e.stopPropagation(); e.preventDefault(); updateCardInfo(typeId, noffer, true); };
+		imgLink.appendChild(demandBtn);
+
+		// 2. Кнопка ДУБЛИКАТОВ (🔍) - Над спросом
+		const dupBtn = document.createElement('div');
+		dupBtn.className = 'check-duplicates-btn';
+		dupBtn.innerHTML = '🔍';
+		Object.assign(dupBtn.style, { position: 'absolute', zIndex: '31', width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(211,211,211,0.8)', color: 'black', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontWeight: 'bold', fontSize: '16px', opacity: '0', visibility: 'hidden', pointerEvents: 'auto' });
+		dupBtn.style.setProperty('display', 'flex', 'important');
+		dupBtn.style.setProperty('bottom', '15%', 'important');
+		dupBtn.style.setProperty('right', '5%', 'important');
+		dupBtn.style.setProperty('top', 'auto', 'important');
+		dupBtn.style.setProperty('left', 'auto', 'important');
+		dupBtn.onclick = (e) => { e.stopPropagation(); e.preventDefault(); ascm_checkSingleCardDups(noffer, false, dupBtn.classList.contains('checked')); };
+		imgLink.appendChild(dupBtn);
+
+		// 3. Маркер ИНФОРМАЦИИ (i)
+		let infoBtn = null;
+		if (isInfoEnabled) {
+			infoBtn = unsafeWindow.createInfoButton(typeId);
+			const isAlwaysVisible = infoVisibility === 'always';
+			Object.assign(infoBtn.style, { width: '32px', height: '32px', fontSize: '18px', zIndex: '32', transform: 'none', opacity: isAlwaysVisible ? '1' : '0', visibility: isAlwaysVisible ? 'visible' : 'hidden', pointerEvents: 'auto' });
+			infoBtn.style.setProperty('display', 'flex', 'important');
+			infoBtn.style.setProperty('top', '2.5%', 'important');
+			infoBtn.style.setProperty('left', '20%', 'important');
+			infoBtn.style.setProperty('bottom', 'auto', 'important');
+			infoBtn.style.setProperty('right', 'auto', 'important');
+
+			if (triggerType === 'hover') {
+				let hT;
+				infoBtn.onmouseenter = (e) => {
+					clearTimeout(unsafeWindow.acmInfoHideTimer);
+					const ev = { currentTarget: infoBtn, preventDefault: ()=>{}, stopPropagation: ()=>{}, stopImmediatePropagation: ()=>{} };
+					hT = setTimeout(() => unsafeWindow.toggleAnimeInfoTooltip(ev), 300);
+				};
+				infoBtn.onmouseleave = () => {
+					clearTimeout(hT);
+					unsafeWindow.acmInfoHideTimer = setTimeout(() => document.querySelector('.acm-info-tooltip-popup')?.remove(), 500);
+				};
+			} else {
+				infoBtn.onclick = (e) => { e.stopPropagation(); e.preventDefault(); unsafeWindow.toggleAnimeInfoTooltip(e); };
+			}
+			imgLink.appendChild(infoBtn);
+		}
+
+		// Логика появления группы при наведении
+		imgLink.onmouseenter = () => {
+			[demandBtn, dupBtn].forEach(b => { b.style.setProperty('opacity', '1', 'important'); b.style.setProperty('visibility', 'visible', 'important'); });
+			if (infoBtn && infoVisibility === 'hover') { infoBtn.style.setProperty('opacity', '1', 'important'); infoBtn.style.setProperty('visibility', 'visible', 'important'); }
+		};
+		imgLink.onmouseleave = () => {
+			[demandBtn, dupBtn].forEach(b => { if (!b.classList.contains('checked') && !b.querySelector('.fa-spinner')) { b.style.setProperty('opacity', '0', 'important'); b.style.setProperty('visibility', 'hidden', 'important'); } });
+			if (infoBtn && infoVisibility === 'hover') { infoBtn.style.setProperty('opacity', '0', 'important'); infoBtn.style.setProperty('visibility', 'hidden', 'important'); }
+		};
+	}
 	
         // ##################################################
         // # Обновляет все визуальные элементы счетчиков.
@@ -11717,7 +11761,7 @@ async function runMainScript() {
             };
 
             // ТВОЙ ВЕРТИКАЛЬНЫЙ ПРИЦЕЛ (от 1-й до 5-й звезды сверху вниз)
-            const starYPos = [37.0, 29.0, 21.0, 13.0, 5.0];
+            const starYPos = [37.0, 28.5, 20.0, 11.5, 3.0];
 
             const cards = document.querySelectorAll('.anime-cards__item');
 
@@ -19132,8 +19176,6 @@ async function runMainScript() {
                                         <div class="anime-cards__rank rank-${card.rank}">${rankName}</div>
                                         <div class="anime-cards__name">${card.name}</div>
                                         <div class="anime-cards__text">Поздравляем! Ты открыл новую карту. Она добавлена в коллекцию.</div>
-                                        <!-- Сюда будет вставлен спрос -->
-                                        <div id="ascm-gift-demand-container"></div>
                                     </div>
                                 </div>
                             </div>
@@ -19147,22 +19189,20 @@ async function runMainScript() {
         
         const $modal = unsafeWindow.jQuery('#card-modal');
         $modal.dialog({
-            autoOpen: true, width: 500, height: 620, resizable: false,
+            autoOpen: true, width: 500, height: 600, resizable: false,
             dialogClass: "modalfixed",
             close: function() { $modal.dialog('destroy').remove(); }
         });
         
         $modal.html(modalHtml);
 
-        // ВНЕДРЕНИЕ СПРОСА
         const compositeKey = normalizeImagePath(card.image);
         const typeId = cardImageIndex.get(compositeKey);
         if (typeId) {
-            const container = $modal.find('#ascm-gift-demand-container')[0];
-            if (container) {
-                // Вызываем штатную функцию обновления инфо
-                await updateCardInfo(typeId, container, false);
-                console.log(`[ACM Remelt] Спрос для новой карты (ID: ${typeId}) добавлен в окно.`);
+            const placeholder = $modal.find('.anime-cards__placeholder')[0];
+            if (placeholder) {
+                placeholder.dataset.cardId = typeId;
+                // Observer сам подхватит этот placeholder и добавит маркеры
             }
         }
     }

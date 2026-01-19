@@ -1,10 +1,15 @@
 // ==UserScript==
 // @name         DLsite 当日发售游戏筛选
 // @namespace    http://tampermonkey.net/
-// @version      1.6.5
-// @description  筛选DLsite排行榜中指定日期发售的游戏，支持前后切换与日期选择
+// @version      1.7
+// @description  筛选DLsite排行榜中指定日期发售的游戏，支持前后切换与日期选择,总览
 // @author       Accard
 // @match        https://www.dlsite.com/maniax/ranking/day/=/date/30d/category/game
+// @match        https://www.dlsite.com/maniax/ranking/day?category=game&date=30d
+// @match        https://www.dlsite.com/maniax/ranking/week?category=game&date=30d
+// @match        https://www.dlsite.com/maniax/ranking/month?category=game&date=30d
+// @match        https://www.dlsite.com/maniax/ranking/year?category=game&date=30d
+// @match        https://www.dlsite.com/maniax/ranking/total?category=game&date=30d
 // @grant        none
 // @license MIT licensed
 // @downloadURL https://update.greasyfork.org/scripts/557722/DLsite%20%E5%BD%93%E6%97%A5%E5%8F%91%E5%94%AE%E6%B8%B8%E6%88%8F%E7%AD%9B%E9%80%89.user.js
@@ -18,6 +23,8 @@
        0. 当前筛选日期（新增）
     ========================== */
     let currentDate = new Date();
+    let viewMode = 'single'; // single | overview
+    let overviewDate = null; // overview 模式当前选中的日期
 
     /* =========================
        1. CSS（新增日期控件样式）
@@ -94,10 +101,54 @@
             cursor: pointer;
         }
 
+        #toggle-view {
+            padding: 4px 10px;
+            border-radius: 4px;
+            border: none;
+            background: rgba(255,255,255,0.25);
+            color: white;
+            cursor: pointer;
+        }
+
+        #toggle-view:hover {
+            background: rgba(255,255,255,0.35);
+        }
+
         #today-games-content {
-            overflow-y: auto;
+            display: flex;
             flex: 1;
             background: #f9f9f9;
+            overflow-y: auto;
+        }
+
+        .date-list {
+            width: 180px;
+            background: #fff;
+            border-right: 1px solid #eee;
+            overflow-y: auto;
+        }
+
+        .date-item {
+            padding: 10px;
+            font-size: 13px;
+            cursor: pointer;
+            border-bottom: 1px solid #f2f2f2;
+        }
+
+        .date-item:hover {
+            background: #fff5f5;
+        }
+
+        .games-panel {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .date-section h4 {
+            margin: 12px 0;
+            padding-left: 6px;
+            border-left: 4px solid #ff5252;
         }
 
         .simple-table {
@@ -226,6 +277,7 @@
                         <input type="date" id="date-picker">
                         <button id="date-next">&gt;</button>
                     </div>
+                    <button id="toggle-view">总览</button>
                     <button id="today-games-close-btn">×</button>
                 </div>
             </div>
@@ -259,6 +311,16 @@
             runFilter(popup);
         };
 
+        popup.querySelector('#toggle-view').onclick = () => {
+            viewMode = viewMode === 'single' ? 'overview' : 'single';
+            if(viewMode === 'single'){
+                popup.querySelector('#toggle-view').innerText = '总览';
+            }else{
+                popup.querySelector('#toggle-view').innerText = '单日';
+            }
+            runFilter(popup);
+        };
+
         popup.querySelector('#today-games-close-btn').onclick = () => {
             popup.style.display = 'none';
         };
@@ -270,8 +332,67 @@
        4. 核心筛选逻辑（改为用 currentDate）
     ========================== */
     function runFilter(popup) {
-        const targetDate = formatDLDate(currentDate);
+        const rows = document.querySelectorAll('#ranking_table tr');
+        const content = popup.querySelector('#today-games-content');
+        const title = popup.querySelector('#today-games-title');
+        content.innerHTML = '';
 
+        if (viewMode === 'single') {
+            const targetDate = formatDLDate(currentDate);
+            const content = popup.querySelector('#today-games-content');
+            const title = popup.querySelector('#today-games-title');
+
+            let len = renderSingleDate(content,targetDate);
+            title.textContent = `发售日期：${targetDate} - (共${len} 款)`;
+        }else{
+            title.textContent = '发售日期总览';
+
+            const map = {};
+            rows.forEach(row => {
+                const rawDate = row.querySelector('.sales_date')?.textContent || '';
+                const date = rawDate.replace(/^販売日:\s*/, '').trim();
+                const name = row.querySelector('.work_name a');
+                if (!date || !name) return;
+                map[date] ??= [];
+                map[date].push({
+                    title: name.textContent.trim(),
+                    url: name.href,
+                    img: row.querySelector('.work_thumb_box_img')?.src || ''
+                });
+            });
+
+            const dates = Object.keys(map).sort().reverse();
+            const list = document.createElement('div');
+            list.className = 'date-list';
+
+            const panel = document.createElement('div');
+            panel.innerHTML = '<div style="padding:40px;color:#888;">请选择左侧日期</div>';
+            panel.className = 'games-panel';
+
+            dates.forEach(d => {
+                const item = document.createElement('div');
+                item.className = 'date-item';
+                item.textContent = `${d} (${map[d].length})`;
+                item.onclick = () => {
+                    overviewDate = d;
+                    renderSingleDate(panel, d);
+                };
+                list.appendChild(item);
+            });
+
+            content.appendChild(list);
+            content.appendChild(panel);
+        }
+        popup.style.display = 'flex';
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', createUI);
+    } else {
+        createUI();
+    }
+
+    function renderSingleDate(container, targetDate) {
         const rows = document.querySelectorAll('#ranking_table tr');
         const result = [];
 
@@ -282,53 +403,44 @@
             const dateEl = row.querySelector('.sales_date');
             if (!dateEl) return;
 
-            if (dateEl.textContent.includes(targetDate)) {
-                const titleA = name.querySelector('a');
-                const img = row.querySelector('.work_thumb_box_img');
-                const category = row.querySelector('.work_category');
-                const price = row.querySelector('.work_price_wrap');
-                const salesEl = row.querySelector('.work_dl span[class*="_dl_count_"]');
+            const cleanDate = dateEl.textContent.replace(/^販売日:\s*/, '').trim();
+            if (cleanDate !== targetDate) return;
 
-                result.push({
-                    title: titleA.textContent.trim(),
-                    url: titleA.href,
-                    img: img?.dataset.src || img?.src || '',
-                    category: category?category.textContent.trim() : '',
-                    price: price?.innerHTML || '',
-                    sales: parseInt(salesEl?.textContent.replace(/\D/g, '')) || 0
-                });
-            }
+            const titleA = name.querySelector('a');
+            const img = row.querySelector('.work_thumb_box_img');
+            const category = row.querySelector('.work_category');
+            const price = row.querySelector('.work_price_wrap');
+            const salesEl = row.querySelector('.work_dl span[class*="_dl_count_"]');
+
+            result.push({
+                title: titleA.textContent.trim(),
+                url: titleA.href,
+                img: img?.dataset.src || img?.src || '',
+                category: category ? category.textContent.trim() : '',
+                price: price?.innerHTML || '',
+                sales: parseInt(salesEl?.textContent.replace(/\D/g, '')) || 0
+            });
         });
 
         result.sort((a, b) => b.sales - a.sales);
 
-        const content = popup.querySelector('#today-games-content');
-        const title = popup.querySelector('#today-games-title');
-
-        title.textContent = `发售日期：${targetDate} - (共${result.length} 款)`;
-        content.innerHTML = result.length
+        container.innerHTML = result.length
             ? `<table class="simple-table">${result.map(g => `
-                <tr class="simple-row" onclick="window.open('${g.url}')">
-                    <td class="col-img"><img src="${g.img}"></td>
-                    <td class="col-info">
-                        <span class="info-cat">${g.category}</span>
-                        <div class="info-title">${g.title}</div>
-                        <div class="info-price">${g.price}</div>
-                    </td>
-                    <td class="col-sales">
-                        <span class="sales-label">販売数</span>
-                        <div class="sales-num">${g.sales.toLocaleString()}</div>
-                    </td>
-                </tr>
-            `).join('')}</table>`
-            : `<div style="padding:40px;text-align:center;color:#888;">该日期无发售游戏</div>`;
+            <tr class="simple-row" onclick="window.open('${g.url}')">
+                <td class="col-img"><img src="${g.img}"></td>
+                <td class="col-info">
+                    <span class="info-cat">${g.category}</span>
+                    <div class="info-title">${g.title}</div>
+                    <div class="info-price">${g.price}</div>
+                </td>
+                <td class="col-sales">
+                    <span class="sales-label">販売数</span>
+                    <div class="sales-num">${g.sales.toLocaleString()}</div>
+                </td>
+            </tr>
+        `).join('')}</table>`
+        : `<div style="padding:40px;text-align:center;color:#888;">该日期无发售游戏</div>`;
 
-        popup.style.display = 'flex';
-    }
-
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', createUI);
-    } else {
-        createUI();
+        return result.length;
     }
 })();

@@ -1,13 +1,13 @@
 // ==UserScript==
-// @name Funr3g
+// @name Brazil
 // @description br
 // @version 5.0.0
 // @author reg
 // @match *://minefun.io/*
 // @grant none
 // @namespace http://tampermonkey.net/
-// @downloadURL https://update.greasyfork.org/scripts/537529/Funr3g.user.js
-// @updateURL https://update.greasyfork.org/scripts/537529/Funr3g.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/537529/Brazil.user.js
+// @updateURL https://update.greasyfork.org/scripts/537529/Brazil.meta.js
 // ==/UserScript==
  
 (() => {
@@ -758,30 +758,31 @@ class NoHunger extends Module {
     }
 
     onEnable() {
-        // Verifica se o hooks e o network existem
-        if (hooks.A && hooks.A.network) {
-            
-            // ESSA LINHA É A SOLUÇÃO: se listeners não existir, nós criamos ele como um objeto vazio
-            if (!hooks.A.network.listeners) {
-                hooks.A.network.listeners = {};
-            }
-
-            hooks.A.network.listeners.NoHunger = function(packetType, packetData) {
-                if (packetType == hooks.A.network.toServer.TIME_STEP_INFO) {
-                    if (packetData.m) delete packetData.m;
-                    if (packetData.s) delete packetData.s;
-                    if (packetData.j) delete packetData.j;
+        // Verifica se U existe (sistema de pacotes do código original)
+        if (typeof U !== 'undefined' && U.listeners) {
+            U.listeners.NoHunger = function(e, t) {
+                // Intercepta TIME_STEP_INFO (ID 1)
+                if (e == U.toServer?.TIME_STEP_INFO || e == 1) {
+                    // Remove campos de fome
+                    if (t.m) delete t.m;
+                    if (t.s) delete t.s;
+                    if (t.j) delete t.j;
+                    
+                    // Debug: log para verificar
+                    console.log("[NoHunger] Pacote interceptado, campos removidos");
                 }
+                return t;
             };
+            console.log("[NoHunger] Ativado com sucesso");
         } else {
-            console.log("Erro: O jogo ainda não carregou a rede (network).");
-            this.disable(); // Desativa o módulo para não bugar
+            console.error("[NoHunger] Erro: Sistema U não encontrado");
         }
     }
 
     onDisable() {
-        if (hooks.A && hooks.A.network && hooks.A.network.listeners) {
-            delete hooks.A.network.listeners.NoHunger;
+        if (typeof U !== 'undefined' && U.listeners) {
+            delete U.listeners.NoHunger;
+            console.log("[NoHunger] Desativado");
         }
     }
 }
@@ -1395,55 +1396,190 @@ class TeleportModule extends Module {
  
   class HitModule extends Module {
     constructor() {
-        // Mantido em Combat com atalho na tecla X
-        super("2HitAll", "Combat", null, "KeyX");
+        super("2HitAll", "Combat", {
+            "Delay": 100,  // Delay entre hits em ms
+            "Damage": 2,   // Dano por hit
+            "Range": 10    // Alcance máximo
+        }, "KeyX");
+        
+        this.lastHitTime = 0;
+        this.hitQueue = [];
     }
 
+    // Função para calcular se o jogador está dentro do alcance
+    isInRange(playerPos, targetPos, range) {
+        const dx = targetPos.x - playerPos.x;
+        const dy = targetPos.y - playerPos.y;
+        const dz = targetPos.z - playerPos.z;
+        return (dx*dx + dy*dy + dz*dz) <= (range * range);
+    }
+
+    // Função para obter posição ajustada do alvo
+    getTargetPosition(target) {
+        try {
+            // Tenta múltiplas propriedades possíveis
+            const model = target.model || target._model || target;
+            if (model && model.position) {
+                return {
+                    x: model.position.x,
+                    y: model.position.y + 1.6, // Altura aproximada do torso
+                    z: model.position.z
+                };
+            }
+        } catch (e) {}
+        return null;
+    }
+
+    // Função principal de hit
+    performHit(target, damage = 2) {
+        try {
+            const gameWorld = hooks.A?.gameWorld;
+            const network = hooks.A?.network;
+            const server = gameWorld?.server;
+            
+            if (!gameWorld || !network || !server) return false;
+
+            // Obtém posição do jogador
+            const player = gameWorld.player;
+            if (!player || !player.position) return false;
+            
+            // Obtém posição do alvo
+            const targetPos = this.getTargetPosition(target);
+            if (!targetPos) return false;
+            
+            // Verifica alcance
+            if (!this.isInRange(player.position, targetPos, this.options.Range)) {
+                return false;
+            }
+
+            // Não bater em si mesmo
+            const sessionId = target.sessionId || target.id;
+            if (sessionId === server.sessionId) return false;
+
+            // Calcula direção do hit
+            const dx = targetPos.x - player.position.x;
+            const dy = targetPos.y - (player.position.y + 1.6); // Altura dos olhos
+            const dz = targetPos.z - player.position.z;
+            
+            const distance = Math.sqrt(dx*dx + dy*dy + dz*dz);
+            if (distance === 0) return false;
+            
+            // Normaliza a direção
+            const dirX = dx / distance;
+            const dirY = dy / distance;
+            const dirZ = dz / distance;
+
+            const time = gameWorld.time?.localServerTimeMs || Date.now();
+            const damageValue = parseInt(this.options.Damage) || 2;
+
+            // Determina tipo de hit baseado no modo de jogo
+            let packetType = null;
+            let packetData = null;
+
+            // Detecta modo de jogo
+            if (target.hasOwnProperty('isBlock')) {
+                // Modo HNS (Hide and Seek)
+                if (!target.isHunter) {
+                    packetType = network.toServer?.HNS_ATTACK_BLOCK;
+                    packetData = [targetPos.x, targetPos.y, targetPos.z, 
+                                  dirX, dirY, dirZ, time, sessionId];
+                }
+            } else if (target.hasOwnProperty('isZombie')) {
+                // Modo Infection
+                if (!target.isZombie) {
+                    packetType = network.toServer?.HIT;
+                    packetData = [time, targetPos.x, targetPos.y, targetPos.z,
+                                  dirX, dirY, dirZ, damageValue, sessionId];
+                }
+            } else {
+                // Modos Normais (incluindo Bedwars, Skywars, etc.)
+                packetType = network.toServer?.HIT;
+                packetData = [time, targetPos.x, targetPos.y, targetPos.z,
+                              dirX, dirY, dirZ, damageValue, sessionId];
+            }
+
+            // Envia o pacote se tudo estiver correto
+            if (packetType && packetData && server.sendData) {
+                server.sendData(packetType, packetData);
+                
+                // Log para debugging (remover na versão final)
+                console.log(`[2HitAll] Hit em ${sessionId} com ${damageValue} de dano`);
+                
+                return true;
+            }
+        } catch (error) {
+            console.error("[2HitAll] Erro no performHit:", error);
+        }
+        return false;
+    }
+
+    // Hit único em todos os jogadores
     hitAll() {
         try {
-            const network = hooks.A?.network;
-            const server = hooks.A?.gameWorld?.server;
-            const players = hooks.A?.gameWorld?.server?.players;
+            const gameWorld = hooks.A?.gameWorld;
+            if (!gameWorld || !gameWorld.server || !gameWorld.server.players) return;
 
-            // Verifica se as instâncias do jogo estão prontas
-            if (!network || !server || !players) return;
+            const players = gameWorld.server.players;
+            const currentTime = Date.now();
+            const delay = parseInt(this.options.Delay) || 100;
 
-            players.forEach(plr => {
-                // Não ataca a si mesmo
-                if (plr.sessionId === server.sessionId) return;
-
-                const { x, y, z } = plr.model.position;
-                const time = hooks.A.gameWorld.time.localServerTimeMs;
-
-                // Referência corrigida: packetsOut vira network.toServer
-                if (plr.hasOwnProperty('isBlock')) { // Modo HNS (Hide and Seek)
-                    if (plr.isHunter) return;
-                    server.sendData(
-                        network.toServer.HNS_ATTACK_BLOCK,
-                        [x, y + 0.1, z, 0.00000001, -0.9999999, 0.00000001, time, plr.sessionId]
-                    );
-                } else if (plr.hasOwnProperty('isZombie')) { // Modo Infection
-                    if (plr.isZombie) return;
-                    server.sendData(
-                        network.toServer.HIT,
-                        [time, x, y + 0.1, z, 0.00000001, -0.9999999, 0.00000001, 2, plr.sessionId]
-                    );
-                } else { // Modos Normais
-                    server.sendData(
-                        network.toServer.HIT,
-                        [time, x, y + 0.1, z, 0.00000001, -0.9999999, 0.00000001, 2, plr.sessionId]
-                    );
-                }
+            // Itera por todos os jogadores
+            players.forEach(target => {
+                if (!target || target === gameWorld.player) return;
+                
+                // Verifica se o alvo está vivo/selecionável
+                if (target.isAlive === false) return;
+                
+                // Realiza o hit
+                this.performHit(target);
             });
-        } catch (err) {
-            console.error("Erro no HitAll:", err);
+            
+            this.lastHitTime = currentTime;
+            
+        } catch (error) {
+            console.error("[2HitAll] Erro no hitAll:", error);
         }
     }
 
+    // Modo automático (se quiser manter ativo)
+    onRender() {
+        if (!this.isEnabled) return;
+        
+        const currentTime = Date.now();
+        const delay = parseInt(this.options.Delay) || 100;
+        
+        // Se quiser que seja automático enquanto estiver ativo
+        if (this.options.Automatic === "true") {
+            if (currentTime - this.lastHitTime >= delay) {
+                this.hitAll();
+            }
+        }
+    }
+
+    // Quando a tecla é pressionada
     onEnable() {
+        // Versão por toque: dá um hit all imediatamente
         this.hitAll();
-        // Opcional: Desativa automaticamente após bater para você poder apertar de novo
-        this.disable(); 
+        
+        // Opção: se quiser que fique ativo dando hits repetidos
+        // Remova a linha abaixo se quiser apenas um hit por ativação
+        // this.disable(); // Descomente para comportamento "one-shot"
+    }
+
+    // Para debugging: adiciona comando no console
+    static debugInfo() {
+        const gameWorld = hooks.A?.gameWorld;
+        if (!gameWorld) return "GameWorld não carregado";
+        
+        const players = gameWorld.server?.players || [];
+        const network = hooks.A?.network;
+        
+        return {
+            totalPlayers: players.length,
+            playerSession: gameWorld.server?.sessionId,
+            networkMethods: network ? Object.keys(network) : [],
+            toServerMethods: network?.toServer ? Object.keys(network.toServer) : []
+        };
     }
 }
  

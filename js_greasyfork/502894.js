@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           JAVLibrary Improvements
 // @description    Many improvements mainly in details view of a video: video thumbnails below cover (deactivatable through Configuration in the browser extension menu), easier collect of Google Drive and Rapidgator links for JDownloader (hotkey < or \), save/show favorite actresses (since script installation), recherche links for actresses, auto reload on Cloudflare rate limit, save cover with actress names just by clicking, advertising photos in full size, remove redirects, layout improvements
-// @version        20260112
+// @version        20260119
 // @author         resykano
 // @icon           https://www.javlibrary.com/favicon.ico
 // @match          *://*.javlibrary.com/*
@@ -134,12 +134,21 @@ const configurationOptions = {
     },
 };
 
-function getTitleElement() {
-    return document.querySelector("#video_id > table > tbody > tr > td.text");
+async function getTitleElement() {
+    return await waitForElement("#video_id > table > tbody > tr > td.text");
 }
-function getAvid() {
+async function getAvid() {
     if (!avid) {
-        avid = getTitleElement()?.textContent;
+        const titleElement = await getTitleElement();
+        if (!titleElement) {
+            return null;
+        }
+
+        const textContent = titleElement?.textContent;
+        if (textContent) {
+            const match = textContent.match(/^(\S+)/);
+            avid = match ? match[1] : textContent;
+        }
 
         // in VR titles, JAVLibrary adds an additional leading zero after hyphen
         // remove these if there are five digits after the hyphen to get correct titles
@@ -148,7 +157,7 @@ function getAvid() {
             avid = avid.replace(/-(0+)/, "-");
         }
     }
-    // return avid;
+    return avid;
 }
 function castContainer() {
     return document.querySelector("#video_cast");
@@ -278,7 +287,7 @@ function addImprovementsCss() {
 
     switch (true) {
         // JAV Details
-        case /[a-z]{2}\/\?v=jav.*/.test(url): {
+        case /[a-z]{2}\/jav.*/.test(url): {
             GM_addStyle(`
                 #toplogo .languagemenu {
                     top: 45px;
@@ -531,7 +540,7 @@ function externalSearch() {
                                     const url = match[1];
                                     onClickContent = onClickContent.replace(
                                         /window\.open\s*\([^)]*\)/,
-                                        `window.open('${url}', '_self')`
+                                        `window.open('${url}', '_self')`,
                                     );
                                     link.setAttribute("onclick", onClickContent);
                                     link.click();
@@ -632,23 +641,22 @@ async function addImprovements() {
         const configured = await GM_getValue("improvements", configurationOptions.improvements.default);
         if (!configured) return;
 
-        getAvid();
-
         switch (true) {
             // JAV Details
-            case /[a-z]{2}\/\?v=jav.*/.test(url): {
+            case /[a-z]{2}\/jav.*/.test(url): {
                 console.log("JAV Details");
 
+                await getAvid();
                 if (!avid) {
                     console.log("addImprovements details: no AVID");
                     return;
                 }
 
                 // add title textbox
-                addTitleCopyPerClick();
+                await addTitleCopyPerClick();
 
                 // adds posibility for local search but disabled by default as needs addinal scripts
-                addLocalSearchButton();
+                await addLocalSearchButton();
 
                 // add search links
                 setSearchLinks();
@@ -699,10 +707,12 @@ async function addImprovements() {
                 // autorun local search
                 const authorsMode = await GM_getValue("authorsMode", false);
                 if (authorsMode) {
-                    (function () {
+                    (async function () {
                         // Handle the case when the window is opened in the background
                         window.addEventListener("focus", function () {
-                            executeInitialLocalSearch("EventListener");
+                            executeInitialLocalSearch("EventListener").catch((err) =>
+                                console.error("Error in executeInitialLocalSearch:", err),
+                            );
                         });
                         // Handle the case when the window is opened in the foreground
                         // IntersectionObserver is used for better performance and reliability
@@ -710,13 +720,15 @@ async function addImprovements() {
                         const observer = new IntersectionObserver((entries) => {
                             entries.forEach((entry) => {
                                 if (entry.isIntersecting) {
-                                    executeInitialLocalSearch("IntersectionObserver");
+                                    executeInitialLocalSearch("IntersectionObserver").catch((err) =>
+                                        console.error("Error in executeInitialLocalSearch:", err),
+                                    );
                                 }
                             });
                         });
                         // Set up the observer after a short delay to ensure DOM is loaded
-                        setTimeout(() => {
-                            const textElement = getTitleElement();
+                        setTimeout(async () => {
+                            const textElement = await getTitleElement();
                             if (textElement) {
                                 observer.observe(textElement);
                             }
@@ -779,7 +791,7 @@ async function addImprovements() {
                 } else {
                     const searchByIDFilterEnabled = await GM_getValue(
                         "searchByIDFilter",
-                        configurationOptions.searchByIDFilter.default
+                        configurationOptions.searchByIDFilter.default,
                     );
 
                     if (searchByIDFilterEnabled) {
@@ -938,7 +950,7 @@ async function addImprovements() {
                     if (searchTerm) {
                         document
                             .querySelector(
-                                "#top > div.p-body > div > div.uix_contentWrapper > div > div > div > form > div > dl > dd > div > div.formSubmitRow-controls > button"
+                                "#top > div.p-body > div > div.uix_contentWrapper > div > div > div > form > div > dl > dd > div > div.formSubmitRow-controls > button",
                             )
                             .click();
 
@@ -1028,11 +1040,11 @@ async function addImprovements() {
 
     function removeRedirects() {
         let externalLinks = document.querySelectorAll(
-            "table[id^=comment] > tbody > tr:nth-child(1) > td.t > div a[href^='redirect.php']"
+            "table[id^=comment] > tbody > tr:nth-child(1) > td.t > div a[href^='redirect.php']",
         );
         for (let externalLink of externalLinks) {
             externalLink.href = decodeURIComponent(
-                externalLink.href?.replace(/https:\/\/www\.javlibrary\.com\/.*\/redirect\.php\?url=/, "").replace(/\&ver=.*/, "")
+                externalLink.href?.replace(/https:\/\/www\.javlibrary\.com\/.*\/redirect\.php\?url=/, "").replace(/\&ver=.*/, ""),
             );
         }
     }
@@ -1048,8 +1060,8 @@ async function addImprovements() {
         }
     }
 
-    function addTitleCopyPerClick() {
-        let titleElement = getTitleElement();
+    async function addTitleCopyPerClick() {
+        let titleElement = await getTitleElement();
 
         titleElement.style.cursor = "pointer";
         titleElement.addEventListener("click", function () {
@@ -1057,8 +1069,8 @@ async function addImprovements() {
         });
     }
 
-    function executeInitialLocalSearch(source) {
-        const textElement = getTitleElement();
+    async function executeInitialLocalSearch(source) {
+        const textElement = await getTitleElement();
 
         if (textElement && !avidCopiedToClipboard && document.hasFocus()) {
             // if tab was opened with link
@@ -1093,7 +1105,7 @@ async function addImprovements() {
         const authorsMode = await GM_getValue("authorsMode", false);
 
         if (authorsMode) {
-            let targetElement = getTitleElement();
+            let targetElement = await getTitleElement();
 
             let newButton = document.createElement("button");
             newButton.textContent = "Local-Search";
@@ -1109,7 +1121,7 @@ async function addImprovements() {
                         runLocalSearch();
                     });
                 },
-                false
+                false,
             );
         }
     }
@@ -1207,7 +1219,7 @@ async function addImprovements() {
                         }
                     }
                 },
-                { once: true }
+                { once: true },
             );
         }
     }
@@ -1240,7 +1252,7 @@ async function addImprovements() {
 
                 const timeoutValue = await GM_getValue(
                     "externalSearchModeTimeout",
-                    configurationOptions.externalSearchModeTimeout.default
+                    configurationOptions.externalSearchModeTimeout.default,
                 );
                 setTimeout(async () => {
                     GM_setValue("externalSearchMode", false);
@@ -1304,7 +1316,7 @@ async function addImprovements() {
                 "https://sukebei.nyaa.si/?f=0&c=0_0&s=size&o=desc&q=" + avid,
                 "Torrent",
                 false,
-                contentTd
+                contentTd,
             );
             addSearchLinkAndOpenAllButton("BT1207", "https://bt1207so.top/?find=" + avid, "Torrent", false, contentTd);
         }
@@ -1316,14 +1328,14 @@ async function addImprovements() {
                 "https://www.akiba-online.com/search/?q=" + avid + "&c%5Btitle_only%5D=1&o=date&search=" + avid,
                 "Search-Thumbnails-1",
                 true,
-                contentTd
+                contentTd,
             );
             addSearchLinkAndOpenAllButton(
                 "Max JAV | Thumbnails",
                 "https://maxjav.com/?s=" + avid,
                 "Search-Thumbnails-1",
                 false,
-                contentTd
+                contentTd,
             );
         }
 
@@ -1334,21 +1346,21 @@ async function addImprovements() {
                 "http://video-jav.net/?s=" + avid,
                 "Search-Thumbnails-2",
                 true,
-                contentTd
+                contentTd,
             );
             addSearchLinkAndOpenAllButton(
                 "JAVAkiba | Thumbnails",
                 "https://javakiba.org/?s=" + avid,
                 "Search-Thumbnails-2",
                 false,
-                contentTd
+                contentTd,
             );
             addSearchLinkAndOpenAllButton(
                 "3xPlanet | Thumbnails",
                 "https://3xplanet.com/?s=" + avid,
                 "Search-Thumbnails-2",
                 false,
-                contentTd
+                contentTd,
             );
         }
 
@@ -1359,7 +1371,7 @@ async function addImprovements() {
                 "https://jav.guru/?s=" + avid,
                 "Collect-Rapidgator-Links",
                 true,
-                contentTd
+                contentTd,
             );
             addSearchLinkAndOpenAllButton("Supjav | RG", "https://supjav.com/?s=" + avid, "Collect-Rapidgator-Links", false, contentTd);
             addSearchLinkAndOpenAllButton(
@@ -1367,14 +1379,14 @@ async function addImprovements() {
                 "https://missav.ai/en/search/" + avid,
                 "Collect-Rapidgator-Links",
                 false,
-                contentTd
+                contentTd,
             );
             addSearchLinkAndOpenAllButton(
                 "Maddawg JAV | RG",
                 "https://maddawgjav.net/?s=" + avid,
                 "Collect-Rapidgator-Links",
                 false,
-                contentTd
+                contentTd,
             );
             addSearchLinkAndOpenAllButton("BLOGJAV.NET | RG (optional)", "https://blogjav.net/?s=" + avid, "", true, contentTd);
             addSearchLinkAndOpenAllButton(
@@ -1382,7 +1394,7 @@ async function addImprovements() {
                 `https://duckduckgo.com/?q=site:javdaily.eklablog.com+"${avid}"`,
                 "",
                 false,
-                contentTd
+                contentTd,
             );
         }
 
@@ -1394,7 +1406,7 @@ async function addImprovements() {
                 "https://javx357.com/?s=" + avid,
                 "Open-GDrive-Group",
                 false,
-                contentTd
+                contentTd,
             );
         }
 
@@ -1406,14 +1418,14 @@ async function addImprovements() {
                 "https://www.twojav.com/en/search?q=" + avid,
                 "Open-Stream-Group",
                 false,
-                contentTd
+                contentTd,
             );
             addSearchLinkAndOpenAllButton(
                 "JAV Most | Stream",
                 "https://www5.javmost.com/search/" + avid,
                 "Open-Stream-Group",
                 false,
-                contentTd
+                contentTd,
             );
             addSearchLinkAndOpenAllButton("SEXTB | Stream", "https://sextb.net/search/" + avid, "Open-Stream-Group", false, contentTd);
             addSearchLinkAndOpenAllButton(
@@ -1421,7 +1433,7 @@ async function addImprovements() {
                 "https://jable.tv/search/" + avid + "/",
                 "Open-Stream-Group",
                 false,
-                contentTd
+                contentTd,
             );
             addSearchLinkAndOpenAllButton("BIGO JAV | Stream", "https://bigojav.com/?s=" + avid, "Open-Stream-Group", false, contentTd);
             addSearchLinkAndOpenAllButton(
@@ -1429,7 +1441,7 @@ async function addImprovements() {
                 "https://highporn.net/search/videos?search_query=" + avid,
                 "Open-Stream-Group",
                 false,
-                contentTd
+                contentTd,
             );
         }
 
@@ -1440,14 +1452,14 @@ async function addImprovements() {
                 "https://jjavbooks.com/en/" + avid,
                 "",
                 true,
-                contentTd
+                contentTd,
             );
             addSearchLinkAndOpenAllButton(
                 "JavPlace | alternative research platform",
                 "https://jav.place/en?q=" + avid,
                 "",
                 false,
-                contentTd
+                contentTd,
             );
         }
 
@@ -1458,14 +1470,14 @@ async function addImprovements() {
                 "https://duckduckgo.com/?kah=jp-jp&kl=jp-jp&kp=-2&q=" + encodeURIComponent(`"${avid}" "Rapidgator"`),
                 "",
                 true,
-                contentTd
+                contentTd,
             );
             addSearchLinkAndOpenAllButton(
                 "DuckDuckGo | Video Image Search",
                 "https://duckduckgo.com/?kp=-2&iax=images&ia=images&q=" + '"' + avid + '"' + " JAV",
                 "",
                 false,
-                contentTd
+                contentTd,
             );
         }
     }
@@ -1686,7 +1698,7 @@ async function addImprovements() {
                 // This means that the decision as to what must be clicked does not work with the if clause.
                 // close with ok
                 let okButton = document.querySelector(
-                    "div.noty_bar.center.alert.default > div.noty_message > div.noty_text > div.noty_buttons > button.button.green"
+                    "div.noty_bar.center.alert.default > div.noty_message > div.noty_text > div.noty_buttons > button.button.green",
                 );
                 okButton?.click();
                 // if not closed with ok, then with close button which can only be clicked after a delay
@@ -1886,10 +1898,11 @@ async function addVideoThumbnails() {
             `);
     }
 
-    function getVideoThumbnailUrl() {
+    async function getVideoThumbnailUrl() {
         // only in details view
-        if (!/[a-z]{2}\/\?v=jav.*/.test(url)) return;
+        if (!/[a-z]{2}\/jav.*/.test(url)) return;
 
+        await getAvid();
         if (!avid) {
             console.log("getVideoThumbnailUrl: no AVID");
             return;
@@ -2048,7 +2061,7 @@ async function addVideoThumbnails() {
             if (!result.isSuccess) return null;
             const doc = new DOMParser().parseFromString(result.responseText, "text/html");
             const imageNodeList = doc.querySelectorAll(
-                '.entry-content a img[data-src*="pixhost."], .entry-content a img[data-src*="imagetwist."]'
+                '.entry-content a img[data-src*="pixhost."], .entry-content a img[data-src*="imagetwist."]',
             );
 
             if (imageNodeList.length > 0) {
@@ -2143,7 +2156,7 @@ async function addVideoThumbnails() {
                     return imageUrl;
                 } else {
                     console.log(
-                        'The image URL obtained from JavStore has been removed or failed to load: "Picture removed" placeholder'
+                        'The image URL obtained from JavStore has been removed or failed to load: "Picture removed" placeholder',
                     );
                 }
             }
@@ -2737,7 +2750,7 @@ async function initializeBeforeRender() {
 
     switch (true) {
         // JAV Details
-        case /[a-z]{2}\/\?v=jav.*/.test(url):
+        case /[a-z]{2}\/jav.*/.test(url):
             // on low resolutions cover image get fixed size by site javascript
             removeResizingOfCoverImage();
             break;
@@ -2761,17 +2774,7 @@ function main() {
                 addVideoThumbnails();
             };
 
-            // Sometimes the EventListener is not executed to prevent this:
-            // Check if the DOM is already loaded before adding the event listener
-            // If it's still loading, add the event listener for "DOMContentLoaded"
-            // If it's already loaded, execute the main function immediately
-            if (document.readyState === "loading") {
-                // Add event listener if the document is still loading
-                window.addEventListener("load", executeFunctions, { once: true });
-            } else {
-                // Execute immediately if the document is already loaded
-                executeFunctions();
-            }
+            executeFunctions();
         }
     }
 }

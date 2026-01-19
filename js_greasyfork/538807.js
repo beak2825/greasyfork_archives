@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          Open2ch NG Word Akuton dev
 // @namespace     https://greasyfork.org/ja/users/864059
-// @version       1.9.6
+// @version       1.9.8
 // @description   Open2chでNGワード/ネーム/行数/IDもしくはL指定で自動アク禁。権限切れ・他者アク禁検知で、賢く安全に送信を制御（タイトル指定で自動起動）。
 // @author        七色の彩り
 // @match         https://*.open2ch.net/test/read.cgi/*
@@ -9,7 +9,6 @@
 // @grant         GM_setValue
 // @grant         GM_getValue
 // @grant         GM_info
-// @grant         none
 // @exclude       https://open.open2ch.net/test/ad.cgi/*
 // @require       https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js
 // @license       MIT
@@ -47,7 +46,9 @@
     let cleanupTimer = null; // クリーンアップ用のタイマーID
 
     // Open2chのデフォルトネームを捉える正規表現 ('名無し', '名無しさん@おーぷん', '名無しさん', '名無し▼副' などに対応)
-    const DEFAULT_NAMES_REGEX = /^(名無し|名無しさん@おーぷん|名無しさん|名無し▼副)$/;
+    // 1. (名無し|名無しさん@おーぷん|名無しさん|名無し▼副) に完全一致
+    // 2. あるいは「新年まで＠」「あけおめ＠」で始まる名前に一致
+    const DEFAULT_NAMES_REGEX = /^(名無し|名無しさん@おーぷん|名無しさん|名無し▼副|新年まで＠.*|あけおめ＠.*)$/;
 
     // Open2chのホスト名パターンリスト (正規表現を使用)
     // Open2chのサブドメインを柔軟にマッチさせるため、正規表現を使用
@@ -76,7 +77,8 @@
     // ★ユーザー編集ポイント: 共通のNGワードリストをここで定義
     const rawConfig = {
         COMMON_NG_WORDS: [
-            'ニャイル大佐◆8oODN/jZ8.', '毎日何度もサーバーエラー','地獄の責め苦に遭え','毎日何度も理不尽に弾かれる',
+            'ニャイル大佐◆8oODN/jZ8.', '毎日何度もサーバーエラー','地獄の責め苦に遭え','毎日何度も理不尽に弾かれる','違法な書き込みを何年も放置',
+            '管理人が気に入らないスレやレス','❌Open2ch',/(この板は現在、お休み中です).*?\1/,
             /(?=.*さとる)(?=.*(?:ボコボコ|半殺し|カタワ|偽管理人|屠殺されろ|惨殺されろ|虐殺されろ|死ね))/,
             'Puyuyu。', 'ぷゆゆ', 'ハジハジ', 'プユユ', 'はじはじ','大家都是',
             '🤲🥺', 'てんりわう', '┗😎┛', '┏🥺┓', '✋🥺🤚', '将棋・初段ワイ','悪しきを払うて','天理王命','あしきをはらうて', // 不定期コピペ爆撃
@@ -90,7 +92,10 @@
             'douxnavi',//たまに同人ナビスパム
             'いひーーーー','いっひっひーーーー',
             '非国民火垂る見ろ','Te-l-eg.ram','Tel-e.gr.-am','すいげつデリヘル',
-            '神宗教を世界中に撒こう！','hogehogengtest',
+            '神宗教を世界中に撒こう！','小野真琴','高津レジデンス403号室','NnVkhTx',
+            '蛇が我が災いとなろうとは','獣たちの間で朽ち果てる',
+            /俺[\s\S]*俺[\s\S]*真夏[\s\S]*Jamboree[\s\S]*砂浜[\s\S]*Big\s*Wave[\s\S]*Weekend/,
+            'hogehogengtest',//テスト用
         ],
             COMMON_NG_IDS: [
             'ID:AB:CD:L123','ID:ABCD','ID:Wb.cw.L2',// 例: ここにすべての共通NG IDを記述
@@ -159,7 +164,7 @@
     const AUTO_APPLY_RULES = {
         //'ガールズクリエイション': 'set1',
         'FLOWER KNIGHT GIRL': 'set2',
-        'ティンクルスターナイツ': 'set3',
+        //'ティンクルスターナイツ': 'set3',
         //'モンスター娘TD': 'set3',
         'コマンド確認':'set3',
     };
@@ -939,32 +944,105 @@ function openSettingsPage() {
         const collectUrls = () => {
             detectedUrls.clear();
 
-            // 1. 要素（a, img, iframe）の href/src から直接抽出
-            // これが「本来のリンク先」や「画像の実体」なので、最も信頼度が高い
             ddElement.querySelectorAll('a, img, iframe').forEach(el => {
-                const url = el.href || el.src || el.getAttribute('data-src');
-                if (url && url.startsWith('http')) {
-                    // アンカーリンク(>>1)を除外
-                    if (el.classList.contains('_ank') || el.classList.contains('ank')) return;
-                    detectedUrls.add(url);
+                let url = el.href || el.src || el.getAttribute('data-src');
+                if (!url) return;
+
+                // --- 1. 精密除外リスト ---
+                // システム画像
+                if (url.includes('image.open2ch.net')) return;
+                // 空リンクやJS
+                if (url === '#' || url.startsWith('javascript:')) return;
+                // アンカーリンク(>>1)
+                if (el.classList.contains('_ank') || el.classList.contains('ank')) return;
+
+                // 【ここを修正】内部リンクの除外条件を細分化
+                if (url.includes('open2ch.net')) {
+                    // 以下の「機能系」は除外するが、make_thread.cgi（次スレ）などは除外しない
+                    if (url.includes('/l10#') || url.includes('/anko/')) return;
+                    // test/ の中でも、read.cgi や make_thread.cgi 以外（システム操作系など）を除外したい場合はここで絞る
+                    // 今回は「make_thread.cgi」が含まれていれば許可する
+                    if (url.includes('/test/') && !url.includes('make_thread.cgi') && !url.includes('read.cgi')) return;
+                }
+
+                if (url.startsWith('//')) url = 'https:' + url;
+
+                if (url.startsWith('http')) {
+                    // --- 2. YouTubeの正規化 ---
+                    if (url.includes('youtube.com') || url.includes('youtu.be') || url.includes('youtube-nocookie.com')) {
+                        let videoId = '';
+                        if (url.includes('v=')) {
+                            // 標準URL
+                            const params = new URLSearchParams(url.split('?')[1]);
+                            videoId = params.get('v');
+                        } else {
+                            // embed や youtu.be 形式
+                            const parts = url.split(/[/?#]/);
+                            // 末尾、もしくはパラメータ直前のセグメントを取得
+                            videoId = parts.find(p => p.length === 11); // YouTubeのIDは常に11文字
+                        }
+                        if (videoId) {
+                            detectedUrls.add(`https://www.youtube.com/watch?v=${videoId}`);
+                            return;
+                        }
+                    }
+
+                    // --- ニコニコ正規化 ---
+                    if (url.includes('nicovideo.jp/watch/') || url.includes('embed.nicovideo.jp/watch/')) {
+                        // 1. ID部分（sm123, so123, lv123 等）を正規表現で確実に抽出
+                        // watch/ の直後の英数字のみを取得し、? 以降のパラメータを完全に無視する
+                        const nicoMatch = url.match(/watch\/([a-z0-9]+)/);
+
+                        if (nicoMatch && nicoMatch[1]) {
+                            const nicoId = nicoMatch[1];
+                            // 2. 常に「標準的な視聴URL」として Set に追加
+                            detectedUrls.add(`https://www.nicovideo.jp/watch/${nicoId}`);
+
+                            // 3. embed 形式も、パラメータを削った「綺麗な状態」で追加
+                            detectedUrls.add(`https://embed.nicovideo.jp/watch/${nicoId}`);
+
+                            return; // ニコニコとして処理完了
+                        }
+                    }
+
+                    // --- 4. その他のURL ---
+                    // 次スレURLなどのパラメータが重要なものはそのまま、それ以外は削る
+                    if (url.includes('make_thread.cgi') || url.includes('youtube.com/watch')) {
+                        detectedUrls.add(url);
+                    } else {
+                        detectedUrls.add(url.split('?')[0].split('#')[0]);
+                    }
                 }
             });
 
-            // 2. 正規表現によるテキスト抽出（ただし、カードの説明文内は除外する）
-            // まずは ddElement のクローンを作って、カードの中身（説明文など）を消去する
+            // 2. 正規表現によるテキスト抽出（カード内除外は維持）
             const tempForTextSearch = ddElement.cloneNode(true);
             tempForTextSearch.querySelectorAll('.lp-content, .lp-meta').forEach(el => el.remove());
-
-            const ddHtml = tempForTextSearch.innerHTML;
-            const doc = new DOMParser().parseFromString(ddHtml, 'text/html');
-            const decodedHtml = doc.documentElement.textContent;
+            const decodedHtml = new DOMParser().parseFromString(tempForTextSearch.innerHTML, 'text/html').documentElement.textContent;
 
             const urlRegex = /https?:\/\/[\w/:%#\$&\?\(\)~\.=\+\-]+/g;
             const matches = decodedHtml.match(urlRegex);
             if (matches) {
                 matches.forEach(url => {
-                    if (url.includes('open2ch.net') && (url.includes('/anko/') || url.includes('/test/'))) return;
-                    detectedUrls.add(url);
+                    // テキスト抽出時も同じ除外ルールを適用
+                    if (url.includes('image.open2ch.net') || url.includes('/l10#') || url.includes('/anko/')) return;
+                    if (url.includes('/test/') && !url.includes('make_thread.cgi') && !url.includes('read.cgi')) return;
+
+                    // YouTube正規化（テキスト版）
+                    if (url.includes('youtube.com') || url.includes('youtu.be')) {
+                        const ytMatch = url.match(/(?:v=|youtu\.be\/|embed\/)([^?&#\s]+)/);
+                        if (ytMatch && ytMatch[1]) {
+                            detectedUrls.add(`https://www.youtube.com/watch?v=${ytMatch[1]}`);
+                            return;
+                        }
+                    }
+
+                    // パラメータ除去
+                    if (url.includes('make_thread.cgi')) {
+                        detectedUrls.add(url);
+                    } else {
+                        detectedUrls.add(url.split('?')[0].split('#')[0]);
+                    }
                 });
             }
         };
@@ -1081,44 +1159,45 @@ function openSettingsPage() {
         const unfinishedTags = getUnfinishedTags();
         const hasUrlTag = ddElement.querySelector('url') !== null;
 
-        // 抽出されたURLが全て「即時系（画像等）」かどうか
-        const hasOnlyInstantUrls = detectedUrls.size > 0 && Array.from(detectedUrls).every(url =>
-            /twitter\.com|x\.com|youtube\.com|youtu\.be|imgu\.jp|\.(?:jpe?g|png|gif|webp)/i.test(url)
-        );
+        // [nico:...] や [youtube:...] などの展開待ち独自タグがあるかチェック
+        const hasSpecialTag = /\[(nico|youtube|twitter|x|sky|twid):[^\]]+\]/.test(ddElement.innerHTML);
 
-        // --- C. 判定と終了のロジック ---
-
-        // 1回目抽出時点での判定（テキスト、ID、画像URLなど）
+        // 1回目抽出時点での判定（テキスト、ID、既にDOMにある画像URLなど）
         const alreadyAkued = checkAndExecute();
         if (alreadyAkued) return true;
 
-        // 【修正の肝】画像のみの場合、判定後に即終了
-        if (!hasUrlTag) {
+        // --- C. 判定と終了のロジック ---
+
+        // 1. URLタグも独自タグも無い場合（通常投稿、またはDOM確定済みの画像のみ）
+        if (!hasUrlTag && !hasSpecialTag) {
             if (detectedUrls.size > 0) {
-                console.log(`${SCRIPT_NAME}: DEBUG: No.${postNumber} - 画像/即時系のみのため判定完了: ${Array.from(detectedUrls).join(', ')}`);
+                console.log(`${SCRIPT_NAME}: DEBUG: No.${postNumber} - 即時系のみのため判定完了: ${Array.from(detectedUrls).join(', ')}`);
             }
             processedPostNumbers.add(postNumber);
             return false;
         }
 
-        // URLタグはあるが、既に中身（href）が全部埋まっている場合も即終了
-        if (hasUrlTag && unfinishedTags.length === 0) {
-            console.log(`${SCRIPT_NAME}: DEBUG: No.${postNumber} - URLタグ展開済のため判定完了: ${Array.from(detectedUrls).join(', ')}`);
+        // 2. URLタグはあるが、既に中身（href）が全部埋まっており、独自タグもない場合
+        if (hasUrlTag && unfinishedTags.length === 0 && !hasSpecialTag) {
             processedPostNumbers.add(postNumber);
             return false;
         }
 
-        // --- D. DOM変化監視ルート (未展開のURLタグがある場合のみ) ---
-        //console.log(`${SCRIPT_NAME}: DEBUG: No.${postNumber} - カード展開を監視します...`);
+        // --- D. DOM変化監視ルート (カード化や独自タグの展開を待つ) ---
+        //console.log(`${SCRIPT_NAME}: DEBUG: No.${postNumber} - 展開待ち要素(URLタグ:${hasUrlTag}, 独自タグ:${hasSpecialTag})を監視します...`);
         let timeoutId = null;
         const observer = new MutationObserver((mutations, obs) => {
-            if (getUnfinishedTags().length === 0) {
+            // URLタグが全て埋まり、かつ独自タグが消滅（iframe等に置換）したかチェック
+            const currentUnfinished = getUnfinishedTags();
+            const stillHasSpecialTag = /\[(nico|youtube|twitter|x|sky|twid):[^\]]+\]/.test(ddElement.innerHTML);
+
+            if (currentUnfinished.length === 0 && !stillHasSpecialTag) {
                 clearTimeout(timeoutId);
                 obs.disconnect();
 
                 setTimeout(() => {
                     collectUrls();
-                    console.log(`${SCRIPT_NAME}: DEBUG: No.${postNumber} - カード確定検知後の最終捕捉URL: ${Array.from(detectedUrls).join(', ')}`);
+                    console.log(`${SCRIPT_NAME}: DEBUG: No.${postNumber} - 展開検知後の最終捕捉URL: ${Array.from(detectedUrls).join(', ')}`);
                     checkAndExecute();
                     processedPostNumbers.add(postNumber);
                 }, 50);
@@ -1129,13 +1208,12 @@ function openSettingsPage() {
             childList: true,
             subtree: true,
             attributes: true,
-            attributeFilter: ['href']
+            attributeFilter: ['href', 'src']
         });
 
         timeoutId = setTimeout(() => {
             observer.disconnect();
             if (processedPostNumbers.has(postNumber)) return;
-
             collectUrls();
             console.log(`${SCRIPT_NAME}: DEBUG: No.${postNumber} - 監視タイムアウト。捕捉URL: ${Array.from(detectedUrls).join(', ')}`);
             checkAndExecute();

@@ -1,18 +1,18 @@
 // ==UserScript==
 // @name           Empornium coalesce variations
 // @author         ephraim
-// @namespace      empornium
+// @namespace      empornium.sx
+// @version        7.6
 // @description    Combines torrents of different variations to one row
-// @match          https://www.empornium.is/torrents.php*
-// @match          https://www.empornium.is/user.php*
-// @match          https://www.empornium.me/torrents.php*
-// @match          https://www.empornium.me/user.php*
 // @match          https://www.empornium.sx/torrents.php*
 // @match          https://www.empornium.sx/user.php*
-// @exclude        /https://www\.empornium\.(is|me|sx)/torrents\.php\?id=/
-// @exclude        /https://www\.empornium\.(is|me|sx)/torrents\.php\?action=notify/
+// @exclude        https://www.empornium.sx/torrents.php?action=notify
+// @exclude        https://www\empornium.sx/torrents.php?id=
+// @match          https://www.emparadise.rs/torrents.php*
+// @match          https://www.emparadise.rs/user.php*
+// @exclude        https://www.emparadise.rs/torrents.php?action=notify
+// @exclude        https://www.emparadise.rs/torrents.php?id=
 // @grant          none
-// @version        7.5.2
 // @downloadURL https://update.greasyfork.org/scripts/441810/Empornium%20coalesce%20variations.user.js
 // @updateURL https://update.greasyfork.org/scripts/441810/Empornium%20coalesce%20variations.meta.js
 // ==/UserScript==
@@ -22,15 +22,15 @@ const variationRegexes = [
   // VR
   /(?:desktop|gearvr|gear|smartphone|mobile|oculus\/?(?:vive)(?: rift)?|oculus\/?(?: ?go)?|go \dk|vive|PlayStationVR PS4|playstation|psvr)(?: ?vr)?/ig,
   // resolutions
-  /\d+ ?px|\d+p(?:\d+)?|sd(?!\w)|hd(?!\w|\W)|\[hd\]|4kuhd| 4k|uhd|fullhd|ultrahd|standard|\b[1-9]{1}k(?!\w)|\d+p?\s?x\s?\d+p?\s?(?:px)?|480lp|480|360|720|1080|2160|(?:\d+ ?MP)/ig,
+  /\d+ ?px|\d+p(?:\d+)?|\bsd\b|\bhd\b|\[hd\]|4kuhd| 4k|uhd|fullhd|fhd|ultrahd|standard|\b[1-9]{1}k(?!\w)|\d+p?\s?x\s?\d+p?\s?(?:px)?|480lp|480|360|720|1080|2160|(?:\d+ ?MP)/ig,
   // bitrate
   /(?:\d+(?:\.\d+)?\s?(?:k|m)?bps)|mobile-(?:high|medium|low)|mobile|(?:low|medium|high|higher) ?bitrate/ig,
   // extras
   /bts|(hq )*image *set|images|(?:with )?picset|\+?pictures|\+?photoset|pics|pic set|\bx\d+|uhq|\d+\s?pics|(first|second) (camera|cam)|best cut|split scenes/ig,
   // framerate
-  /\d+(?:\.\d+)?\s?fps/ig,
+  //\d+(?:\.\d+)?\s?fps/ig,
   // encoding
-  /h\.?265|x\.?265|hevc|hvec|avc|h\.?264|x\.?264|SVT-AV1|AV1 encode|AV1|reencoded|rencoded|reencode|re-encode|lower bitrate|lq|hq|original|10bit/ig,
+  /h\.?265|x\.?265|hevc|hvec|avc|h\.?264|x\.?264|SVT-AV1|AV1|reencoded|rencoded|reencode|re-encode|lower bitrate|lq|hq|original|10bit/ig,
   // filetype
   /mpeg4|3gp|mp4|wmv|mkv|blu-ray/ig,
   // reported torrents
@@ -72,7 +72,7 @@ function combineTorrents(multiTorrent) {
       const variationName = document.createElement('a');
       variationName.textContent = mt.variations[i];
       variationName.href = mt.hrefs[i];
-      variationName.title = mt.headings[i];
+      //variationName.title = mt.headings[i];
       variationName.className = 'variationLink';
       let torrentId = new URL(mt.hrefs[i]).searchParams.get('id');
       variationName.setAttribute('onmouseover', `return overlib(overlay${torrentId}, FULLHTML);`);
@@ -137,7 +137,7 @@ function extractVariation(title) {
     /\!+|\/$|\[[\s\W]*\]|\([\s\W]*\)/g, // extra !, /, whitespace and non-word characters in [], empty ()
     /[\(\{\[]+(?:\s*|.)[\)\]\}]+/g, // brackets with one character or only whitespace, can be nested [[]]
     /\s(?=\s)/g, // more than one whitespace in a row
-    / \.|( \-|in|freeleech|\[req\])$/i // trailing dot and dash and some words
+    /(?:[\.\- ]*|( \-|in|freeleech|\[req\]))$/i // trailing dot and dash and some words
   ]
   replacementRegs.forEach(re => {
     cleanTitle = cleanTitle.replace(re, '').trim();
@@ -246,23 +246,27 @@ function charSoup(_string) {
 
   let string = _string;
   const irrelevant = [
-    /Se7enSeas|The Rat Bastards|requested|request|req/gi, // group names and requests
+    /Se7enSeas|The Rat Bastards|requested|request|req|untouched/gi, // group names and requests
     /\b(?:in|and)\b/gi, // connecting words
     /\.(?:com|org)/gi, // TLDs
-    /\[[\w\s/-]+\]/g, // anything in brackets, like different websites
-    /VivThomas|Mofos/i, // website names
-    /\d{2,4}[-\.]\d+[-\.]\d{2,4}/gi // dates
+    /\[[\w\s,\.\/-]+\]/g, // anything in brackets, like different websites
+    /VivThomas|Mofos|Slayed|anal4k|tiny4k|cum4k|girlcum|jayspov|Vixen/i, // website names
+    /\d{2,4}[-\.]\d+[-\.]\d{2,4}|20[12]\d/gi, // dates
+    ///\W/gi, // non-word characters
+    /(?:January|February|March|April|May|June|July|August|September|October|November|December) \d{2,6}/gi // more dates
   ];
   for (const ex of irrelevant) {
     var shorterString = string.replace(ex, '');
-    if (shorterString.length > 30) {
+    if (shorterString.length > 10) {
       string = shorterString;
     }
   }
-  string = string.replace(/[\s\W]/gi, ''); // non word characters and whitespace
+  string = string.replace(/\W/g, ''); // non word characters
+  //console.log(_string, '\t', string)
   string = string.toLowerCase();
+  string = [...string].sort().join('');
   soupCache.set(_string, string);
-
+  //console.log(_string, '\t', string)
   return string;
 }
 

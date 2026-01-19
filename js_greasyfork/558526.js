@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TEMU打印商品打包标签
 // @namespace    http://tampermonkey.net/
-// @version      1.2
+// @version      1.3
 // @description  从右侧抽屉提取 SKU货号、次销售属性、发货数，直接调用浏览器打印，不显示生成页面。
 // @match        *://*.kuajingmaihuo.com/*
 // @match        *://*.temu.com/**
@@ -14,49 +14,95 @@
 (function () {
     'use strict';
 
-    /* ========== 持续监听抽屉打开 ========== */
-    function waitFor(selector, callback) {
+    /* ========== 持续监听DOM变化，检测任何抽屉 ========== */
+    function observeDrawers() {
         const observer = new MutationObserver(() => {
-            const el = document.querySelector(selector);
-            if (el) callback(el);
+            // 查找所有可能的抽屉容器
+            const drawers = document.querySelectorAll('div[class*="drawer-body"]');
+            drawers.forEach(drawer => {
+                if (!drawer.hasAttribute('data-print-observer')) {
+                    drawer.setAttribute('data-print-observer', 'true');
+                    observeDrawerChanges(drawer);
+                }
+            });
         });
         observer.observe(document.body, { childList: true, subtree: true });
     }
 
-    /* ========== 右下角创建按钮 ========== */
-    function insertButton(drawerEl) {
-        if (drawerEl.querySelector("#tm-print-label-btn")) return;
-
-        const btn = document.createElement("button");
-        btn.id = "tm-print-label-btn";
-        btn.innerText = "打印商品打包标签";
-
-        // 按页面注入对应 class
-        if (window.location.hostname === 'agentseller.temu.com') {
-            btn.className = "BTN_outerWrapper_5-120-1 BTN_medium_5-120-1 BTN_outerWrapperBtn_5-120-1";
-        } else {
-            btn.className = "BTN_outerWrapper_5-117-0 BTN_medium_5-117-0 BTN_outerWrapperBtn_5-117-0";
+    /* ========== 检查原生打印按钮是否存在 ========== */
+    function checkPrintButtonExists(drawerEl) {
+        // 查找所有按钮
+        const buttons = drawerEl.querySelectorAll('button');
+        for (let btn of buttons) {
+            const span = btn.querySelector('span');
+            if (span && span.innerText.trim() === '打印') {
+                return true;
+            }
         }
+        return false;
+    }
 
-        btn.style.cssText = `
-            position: absolute;
-            right: 16px;
-            bottom: 16px;
-            background: #407cff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            z-index: 9999;
-            padding: 6px 12px;
-        `;
+    /* ========== 右下角创建/更新按钮 ========== */
+    function updateButton(drawerEl) {
+        const existingBtn = drawerEl.querySelector("#tm-print-label-btn");
+        const hasPrintButton = checkPrintButtonExists(drawerEl);
 
-        btn.onclick = extractData;
+        if (hasPrintButton) {
+            // 有打印按钮，显示自定义按钮
+            if (!existingBtn) {
+                const btn = document.createElement("button");
+                btn.id = "tm-print-label-btn";
+                btn.innerText = "打印商品打包标签";
 
-        drawerEl.style.position = 'relative';
-        drawerEl.appendChild(btn);
+                // 按页面注入对应 class
+                if (window.location.hostname === 'agentseller.temu.com') {
+                    btn.className = "BTN_outerWrapper_5-120-1 BTN_medium_5-120-1 BTN_outerWrapperBtn_5-120-1";
+                } else {
+                    btn.className = "BTN_outerWrapper_5-117-0 BTN_medium_5-117-0 BTN_outerWrapperBtn_5-117-0";
+                }
 
-        console.log("右下角按钮已插入");
+                btn.style.cssText = `
+                    position: absolute;
+                    right: 16px;
+                    bottom: 16px;
+                    background: #407cff;
+                    color: white;
+                    border: none;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    z-index: 9999;
+                    padding: 6px 12px;
+                `;
+
+                btn.onclick = () => extractData(drawerEl);
+
+                drawerEl.style.position = 'relative';
+                drawerEl.appendChild(btn);
+
+                console.log("自定义打印按钮已显示");
+            }
+        } else {
+            // 没有打印按钮，隐藏自定义按钮
+            if (existingBtn) {
+                existingBtn.remove();
+                console.log("自定义打印按钮已隐藏");
+            }
+        }
+    }
+
+    /* ========== 监听抽屉内容变化，动态显示/隐藏按钮 ========== */
+    function observeDrawerChanges(drawerEl) {
+        const observer = new MutationObserver(() => {
+            updateButton(drawerEl);
+        });
+
+        observer.observe(drawerEl, {
+            childList: true,
+            subtree: true
+        });
+
+        // 首次检查
+        updateButton(drawerEl);
     }
 
     /* ========== 根据表头获取列索引 ========== */
@@ -75,15 +121,7 @@
     }
 
     /* ========== 提取抽屉表格中的数据 ========== */
-    function extractData() {
-        let drawerEl = null;
-
-        if (window.location.hostname === "agentseller.temu.com") {
-            drawerEl = document.querySelector('div[class*="index-module__drawer-body___1X-rI"]');
-        } else {
-            drawerEl = document.querySelector('div[class*="index-module__drawer-body___3-jUp"]');
-        }
-
+    function extractData(drawerEl) {
         if (!drawerEl) {
             alert("未找到抽屉容器！");
             return;
@@ -186,8 +224,7 @@
         };
     }
 
-    /* ========== 监听抽屉打开，自动插入按钮 ========== */
-    waitFor('div.index-module__drawer-body___1X-rI', insertButton);
-    waitFor('div.index-module__drawer-body___3-jUp', insertButton);
+    /* ========== 启动监听 ========== */
+    observeDrawers();
 
 })();

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         客優雲出入庫-更新蝦皮庫存
 // @namespace    http://tampermonkey.net/
-// @version      2025-08-26
+// @version      2026-01-19--1
 // @description  客優雲出入庫-更新蝦皮庫存 功能
 // @author       You
 // @match        https://erp.keyouyun.com/depot/active*
@@ -99,15 +99,35 @@
                             },
                             async: false
                         });
-                        console.log(skuCodesMapping);
+                        //console.log(skuCodesMapping);
                     }
+                    var positionMapping = {};
+                    $.ajax({
+                        url:`https://world.keyouyun.com/vn/api/warehouse/operation/records`,
+                        type:"POST",
+                        data:JSON.stringify({"warehouseId":warehouse.warehouseId,"scItemIds":Object.values(skuCodesMapping).map(x=>x.scItemId)}),
+                        contentType:"application/json; charset=utf-8",
+                        dataType:"json",
+                        success: function(data){
 
+                            data.forEach(item => {
+                                const key = item.scItemId;
+                                const value = item.positions[0];
+                                positionMapping[key] = value;
+                            });
+                            //console.log(positionMapping);
+                        },
+                        xhrFields: {
+                            withCredentials: true
+                        },
+                        async: false
+                    });
 
                     var tmp = flow.warehouseFlowItem.map(x=>{
 
                         var mapping = skuCodesMapping[x.skuCode];
                         return {
-                            "position":"WHJ-1-1",
+                            "position":positionMapping[mapping.scItemId] ?? "WHJ-1-1",
                             "id":mapping.id,
                             "count":x.count,
                             "skuCode":x.skuCode,
@@ -145,7 +165,7 @@
                         },
                         async: false
                     });
-                   break;
+                    break;
                 }
             }
         });
@@ -275,13 +295,14 @@
             result.forEach(function (element){
                 if(element.variationIndexs[0].stock<2 ){
                     if(skuData.residue>2){
-                        element.variationIndexs[0].stock = 999;}
+                        element.variationIndexs[0].stock = 999999;}
                     else{
                         element.variationIndexs[0].stock = skuData.residue;
                     }
                 }else if (skuData.residue ==0 && element.variationIndexs[0].stock>0){
                     element.variationIndexs[0].stock = 0;
                 }
+                //element.variationIndexs[0].stock = 9999999;
 
             });
 
@@ -338,5 +359,4 @@
         }
 
     },5000);
-    // Your code here...
 })();

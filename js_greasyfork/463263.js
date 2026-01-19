@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Magento 2 admin
 // @namespace    dedeman
-// @version      4.23
+// @version      4.24
 // @description  all
 // @author       Dragos
 // @icon         https://i.dedeman.ro/dedereact/design/images/small-logo.svg
@@ -7614,7 +7614,7 @@
                         $('#user_password').attr('autocomplete', 'new-password').val('');
                         $('#user_confirmation').attr('autocomplete', 'new-password').val('');
                         $('#user_current_password').attr('autocomplete', 'current-password');
-                        $('#user_username').attr('autocomplete', 'new-username').val('');
+                        $('#user_username').attr('autocomplete', 'new-username');
                         $('#user_username').closest('.admin__field').insertBefore($('#user_password').closest('.admin__field'));
                     });
                 }

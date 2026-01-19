@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         Hentai Heroes SFW beta
+// @name         Hentai Heroes SFW
 // @namespace    https://sleazyfork.org/fr/scripts/539097-hentai-heroes-sfw
 // @description  Removing explicit images in Hentai Heroes game and setting all girls / champions poses to the default one.
-// @version      1.7.0
+// @version      1.10.1
 // @match        https://*.comixharem.com/*
 // @match        https://*.hentaiheroes.com/*
 // @match        https://*.pornstarharem.com/*
@@ -10,11 +10,14 @@
 // @grant        none
 // @author       Geto_hh
 // @license      MIT
-// @downloadURL https://update.greasyfork.org/scripts/539097/Hentai%20Heroes%20SFW%20beta.user.js
-// @updateURL https://update.greasyfork.org/scripts/539097/Hentai%20Heroes%20SFW%20beta.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/539097/Hentai%20Heroes%20SFW.user.js
+// @updateURL https://update.greasyfork.org/scripts/539097/Hentai%20Heroes%20SFW.meta.js
 // ==/UserScript==
 
 // ==CHANGELOG==
+// 1.10.0: Add option to replace background
+// 1.9.0: Add option to hide avatars
+// 1.8.0: Add option to hide girls
 // 1.7.0: Put observer back for girls and home background
 // 1.6.0: Use style to hide images and background images
 // 1.5.0: Split hide process and modify process & remove observer
@@ -41,7 +44,15 @@ let debugModifyLimitCount = 0;
 
 let foundMatchingUrl = false;
 
+const DEFAULT_BACKGROUND_URL =
+  'https://hh2.hh-content.com/pictures/gallery/6/2200x/9c04e3d2df8d992146eea132225d2d54.jpg';
+const NEW_BACKGROUNG_URL =
+  'https://hh2.hh-content.com/pictures/gallery/6/2200x/401-a8339a2168753900db437d91f2ed39ff.jpg';
+
+const HIDE_AVATARS = true;
 const HIDE_BACKGROUND = false;
+const HIDE_GIRLS = true;
+const REPLACE_BACKGROUND = true;
 
 const NB_OF_GIRL_ICONS_TO_PROCESS_AT_ONCE = 20;
 let currentIconIndex = 0;
@@ -62,6 +73,7 @@ const activitiesSelectorsOfBackgroundImagesSrcToRemove = [
   '.pop-records-container > .pop-record',
 ];
 const activitiesSelectorsOfImagesSrcToRemove = [
+  ...(HIDE_AVATARS ? ['.player-profile-picture > img'] : []),
   ...(HIDE_BACKGROUND ? ['.fixed_scaled > img'] : []),
   '.mission_image > img',
   '.pop_thumb > img',
@@ -74,6 +86,7 @@ const activitiesSelectorsOfGirlsIconsSrcToModify = [];
 
 // Champions screen https://www.hentaiheroes.com/champions/3
 const championsSelectorsOfImagesSrcToRemove = [
+  ...(HIDE_AVATARS ? ['.player-profile-picture > img'] : []),
   ...(HIDE_BACKGROUND ? ['.fixed_scaled > img'] : []),
   '.champions-animation > .avatar',
   '.champions-animation > .champions-over__champion-image',
@@ -99,6 +112,7 @@ const charactersSelectorsOfGirlsIconsSrcToModify = ['.left > img'];
 
 // Club champion screen https://www.hentaiheroes.com/club-champion.html
 const clubChampionSelectorsOfImagesSrcToRemove = [
+  ...(HIDE_AVATARS ? ['.player-profile-picture > img'] : []),
   ...(HIDE_BACKGROUND ? ['.fixed_scaled > img'] : []),
   '.figure',
   '.girl-fav-position > .favorite-position',
@@ -112,30 +126,29 @@ const clubChampionSelectorsOfGirlsSrcToModify = [
 const clubChampionSelectorsOfGirlsIconsSrcToModify = [];
 
 // Edit Labyrinth team screen https://www.hentaiheroes.com/edit-labyrinth-team.html
-const editLabyrinthTeamSelectorsOfGirlsSrcToModify = [
-  '.base-hexagon > .girl_img',
-  '.girl-display > .avatar',
-];
+const editLabyrinthTeamSelectorsOfGirlsSrcToModify = ['.girl-display > .avatar'];
 const editLabyrinthTeamSelectorsOfGirlsIconsSrcToModify = [
+  '.base-hexagon > .girl_img',
   '.harem-girl-container > .girl_img', // all girls => 282 for me
 ];
 
 // Edit team screen https://www.hentaiheroes.com/edit-team.html
-const editTeamSelectorsOfGirlsSrcToModify = [
+const editTeamSelectorsOfGirlsSrcToModify = ['.girl-display > .avatar'];
+const editTeamSelectorsOfGirlsIconsSrcToModify = [
   '.base-hexagon > .girl_img',
-  '.girl-display > .avatar',
+  '.harem-girl-container > .girl_img',
 ];
-const editTeamSelectorsOfGirlsIconsSrcToModify = ['.harem-girl-container > .girl_img'];
 
 // Edit world boss team screen https://www.hentaiheroes.com/edit-world-boss-team.html
-const editWorldBossTeamSelectorsOfGirlsSrcToModify = [
+const editWorldBossTeamSelectorsOfGirlsSrcToModify = ['.girl-display > .avatar'];
+const editWorldBossTeamSelectorsOfGirlsIconsSrcToModify = [
   '.base-hexagon > .girl_img',
-  '.girl-display > .avatar',
+  '.harem-girl-container > .girl_img',
 ];
-const editWorldBossTeamSelectorsOfGirlsIconsSrcToModify = ['.harem-girl-container > .girl_img'];
 
 // Event pop-up https://www.hentaiheroes.com/event.html?tab=sm_event_36
 const eventSelectorsOfImagesSrcToRemove = [
+  ...(HIDE_AVATARS ? ['.player-profile-picture > img'] : []),
   ...(HIDE_BACKGROUND ? ['.fixed_scaled > img'] : []),
   '.sm-static-girl > img',
   '.lse_puzzle_wrapper > .lively_scene_image',
@@ -150,9 +163,8 @@ const girlSelectorsOfGirlsSrcToModify = [
   '.girl-skills-avatar > .avatar',
   '.girl-avatar-wrapper > .avatar',
   '.team-slot-container > img',
-  '.base-hexagon > .girl_img',
 ];
-const girlSelectorsOfGirlsIconsSrcToModify = [];
+const girlSelectorsOfGirlsIconsSrcToModify = ['.base-hexagon > .girl_img'];
 
 // Home screen https://www.hentaiheroes.com/home.html
 const homeSelectorsOfBackgroundImagesSrcToRemove = [
@@ -162,6 +174,7 @@ const homeSelectorsOfBackgroundImagesSrcToRemove = [
   '.news_thumb > .news_thumb_pic',
 ];
 const homeSelectorsOfImagesSrcToRemove = [
+  ...(HIDE_AVATARS ? ['.player-profile-picture > img'] : []),
   ...(HIDE_BACKGROUND ? ['.fixed_scaled > img'] : []),
   '.waifu-container > .avatar',
 ];
@@ -175,10 +188,9 @@ const labyrinthSelectorsOfGirlsIconsSrcToModify = [];
 
 // Labyrinth battle screen https://www.hentaiheroes.com/labyrinth-battle.html
 const labyrinthBattleSelectorsOfGirlsSrcToModify = [
-  '.base-hexagon > .girl_img',
   '.pvp-girls > .avatar',
 ];
-const labyrinthBattleSelectorsOfGirlsIconsSrcToModify = [];
+const labyrinthBattleSelectorsOfGirlsIconsSrcToModify = ['.base-hexagon > .girl_img'];
 
 // Labyrinth entrance screen https://www.hentaiheroes.com/labyrinth-entrance.html
 const labyrinthEntranceSelectorsOfImagesSrcToRemove = ['.labyrinth-girl > .avatar'];
@@ -189,30 +201,27 @@ const labyrinthEntranceSelectorsOfGirlsIconsSrcToModify = [];
 const labyrinthPoolSelectSelectorsOfGirlsSrcToModify = [];
 const labyrinthPoolSelectSelectorsOfGirlsIconsSrcToModify = ['.girl-container > .girl-image'];
 const labyrinthPoolSelectSelectorsOfImagesSrcToRemove = [
+  ...(HIDE_AVATARS ? ['.player-profile-picture > img'] : []),
   ...(HIDE_BACKGROUND ? ['.fixed_scaled > img'] : []),
 ];
 
 // Labyrinth pre-battle screen https://www.hentaiheroes.com/labyrinth-pre-battle.html
-const labyrinthPreBattleSelectorsOfGirlsSrcToModify = ['.base-hexagon > .girl_img'];
-const labyrinthPreBattleSelectorsOfGirlsIconsSrcToModify = [];
+const labyrinthPreBattleSelectorsOfGirlsSrcToModify = [];
+const labyrinthPreBattleSelectorsOfGirlsIconsSrcToModify = ['.base-hexagon > .girl_img'];
 
 // League pre-battle screen https://www.hentaiheroes.com/leagues-pre-battle.html
-const leaguePreBattleSelectorsOfGirlsSrcToModify = [
-  '.girl-block > .avatar',
-  '.base-hexagon > .girl_img',
-];
-const leaguePreBattleSelectorsOfGirlsIconsSrcToModify = [];
+const leaguePreBattleSelectorsOfGirlsSrcToModify = ['.girl-block > .avatar'];
+const leaguePreBattleSelectorsOfGirlsIconsSrcToModify = ['.base-hexagon > .girl_img'];
 const leaguePreBattleSelectorsOfImagesSrcToRemove = [
+  ...(HIDE_AVATARS ? ['.player-profile-picture > img'] : []),
   ...(HIDE_BACKGROUND ? ['.fixed_scaled > img'] : []),
 ];
 
 // League battle screen https://www.hentaiheroes.com/league-battle.html
-const leagueBattleSelectorsOfGirlsSrcToModify = [
-  '.new-battle-girl-container > .avatar',
-  '.base-hexagon > .girl_img',
-];
-const leagueBattleSelectorsOfGirlsIconsSrcToModify = [];
+const leagueBattleSelectorsOfGirlsSrcToModify = ['.new-battle-girl-container > .avatar'];
+const leagueBattleSelectorsOfGirlsIconsSrcToModify = ['.base-hexagon > .girl_img'];
 const leagueBattleSelectorsOfImagesSrcToRemove = [
+  ...(HIDE_AVATARS ? ['.player-profile-picture > img'] : []),
   ...(HIDE_BACKGROUND ? ['.fixed_scaled > img'] : []),
 ];
 
@@ -231,6 +240,7 @@ const noEnergySelectorsOfImagesSrcToRemove = ['#no_energy_popup > .avatar'];
 
 // Pachinko screen https://www.hentaiheroes.com/pachinko.html
 const pachinkoSelectorsOfImagesSrcToRemove = [
+  ...(HIDE_AVATARS ? ['.player-profile-picture > img'] : []),
   ...(HIDE_BACKGROUND ? ['.fixed_scaled > img'] : []),
   '.pachinko_img > img',
 ];
@@ -241,6 +251,7 @@ const pachinkoSelectorsOfGirlsIconsSrcToModify = [];
 const pantheonSelectorsOfGirlsSrcToModify = ['.girl-container > .avatar'];
 const pantheonSelectorsOfGirlsIconsSrcToModify = [];
 const pantheonSelectorsOfImagesSrcToRemove = [
+  ...(HIDE_AVATARS ? ['.player-profile-picture > img'] : []),
   ...(HIDE_BACKGROUND ? ['.fixed_scaled > img'] : []),
   '.girl-container > .avatar',
   '.pantheon_bgr > .stage-bgr',
@@ -248,17 +259,17 @@ const pantheonSelectorsOfImagesSrcToRemove = [
 
 // Pantheon battle screen https://www.hentaiheroes.com/pantheon-battle.html
 const pantheonBattleSelectorsOfGirlsSrcToModify = [
-  '.base-hexagon > .girl_img',
   '.new-battle-girl-container > .avatar',
 ];
-const pantheonBattleSelectorsOfGirlsIconsSrcToModify = [];
+const pantheonBattleSelectorsOfGirlsIconsSrcToModify = ['.base-hexagon > .girl_img'];
 const pantheonBattleSelectorsOfImagesSrcToRemove = [
+  ...(HIDE_AVATARS ? ['.player-profile-picture > img'] : []),
   ...(HIDE_BACKGROUND ? ['.fixed_scaled > img'] : []),
 ];
 
 // Pantheon pre-battle screen https://www.hentaiheroes.com/pantheon-pre-battle.html
-const pantheonPreBattleSelectorsOfGirlsSrcToModify = ['.base-hexagon > .girl_img'];
-const pantheonPreBattleSelectorsOfGirlsIconsSrcToModify = [];
+const pantheonPreBattleSelectorsOfGirlsSrcToModify = [];
+const pantheonPreBattleSelectorsOfGirlsIconsSrcToModify = ['.base-hexagon > .girl_img'];
 const pantheonPreBattleSelectorsOfImagesSrcToRemove = [
   '.fixed_scaled > img',
   '.player-profile-picture > img',
@@ -268,19 +279,20 @@ const pantheonPreBattleSelectorsOfImagesSrcToRemove = [
 const questSelectorsOfImagesToHide = ['.canvas > .picture'];
 
 // Season arena screen https://www.hentaiheroes.com/season-arena.html
-const seasonArenaSelectorsOfGirlsSrcToModify = ['.base-hexagon > .girl_img'];
-const seasonArenaSelectorsOfGirlsIconsSrcToModify = [];
+const seasonArenaSelectorsOfGirlsSrcToModify = [];
+const seasonArenaSelectorsOfGirlsIconsSrcToModify = ['.base-hexagon > .girl_img'];
 const seasonArenaSelectorsOfImagesSrcToRemove = [
+  ...(HIDE_AVATARS ? ['.player-profile-picture > img'] : []),
   ...(HIDE_BACKGROUND ? ['.fixed_scaled > img'] : []),
 ];
 
 // Season battle screen https://www.hentaiheroes.com/season-battle.html
 const seasonBattleSelectorsOfGirlsSrcToModify = [
-  '.base-hexagon > .girl_img',
   '.new-battle-girl-container > .avatar',
 ];
-const seasonBattleSelectorsOfGirlsIconsSrcToModify = [];
+const seasonBattleSelectorsOfGirlsIconsSrcToModify = ['.base-hexagon > .girl_img'];
 const seasonBattleSelectorsOfImagesSrcToRemove = [
+  ...(HIDE_AVATARS ? ['.player-profile-picture > img'] : []),
   ...(HIDE_BACKGROUND ? ['.fixed_scaled > img'] : []),
 ];
 
@@ -304,25 +316,25 @@ const sideQuestsSelectorsOfGirlsIconsSrcToModify = [];
 // Teams screen https://www.hentaiheroes.com/teams.html
 const teamsSelectorsOfGirlsSrcToModify = [
   '.team-slot-container > img',
-  '.base-hexagon > .girl_img',
 ];
-const teamsSelectorsOfGirlsIconsSrcToModify = [];
+const teamsSelectorsOfGirlsIconsSrcToModify = ['.base-hexagon > .girl_img'];
 const teamsSelectorsOfImagesSrcToRemove = ['.girl-image-container > img'];
 
 // Troll battle screen https://www.hentaiheroes.com/troll-battle.html
 const trollBattleSelectorsOfGirlsSrcToModify = [
-  '.base-hexagon > .girl_img',
   '.new-battle-girl-container > .avatar',
 ];
-const trollBattleSelectorsOfGirlsIconsSrcToModify = [];
+const trollBattleSelectorsOfGirlsIconsSrcToModify = ['.base-hexagon > .girl_img'];
 const trollBattleSelectorsOfImagesSrcToRemove = [
+  ...(HIDE_AVATARS ? ['.player-profile-picture > img'] : []),
   ...(HIDE_BACKGROUND ? ['.fixed_scaled > img'] : []),
 ];
 
 // Troll pre-battle screen https://www.hentaiheroes.com/troll-pre-battle.html
-const trollPreBattleSelectorsOfGirlsSrcToModify = ['.base-hexagon > .girl_img'];
-const trollPreBattleSelectorsOfGirlsIconsSrcToModify = [];
+const trollPreBattleSelectorsOfGirlsSrcToModify = [];
+const trollPreBattleSelectorsOfGirlsIconsSrcToModify = ['.base-hexagon > .girl_img'];
 const trollPreBattleSelectorsOfImagesSrcToRemove = [
+  ...(HIDE_AVATARS ? ['.player-profile-picture > img'] : []),
   ...(HIDE_BACKGROUND ? ['.fixed_scaled > img'] : []),
 ];
 
@@ -333,19 +345,21 @@ const worldSelectorsOfGirlsIconsSrcToModify = [];
 
 // World boss battle screen https://www.hentaiheroes.com/world-boss-battle.html
 const worldBossBattleSelectorsOfGirlsSrcToModify = [
-  '.base-hexagon > .girl_img',
   '.pvp-girls > .avatar',
 ];
-const worldBossBattleSelectorsOfGirlsIconsSrcToModify = [];
+const worldBossBattleSelectorsOfGirlsIconsSrcToModify = ['.base-hexagon > .girl_img'];
 
 // World boss event screen https://www.hentaiheroes.com/world-boss-event
-const worldBossEventSelectorsOfImagesSrcToRemove = ['.right-container > .avatar'];
+const worldBossEventSelectorsOfImagesSrcToRemove = [
+  '.left-container > .avatar',
+  '.right-container > .avatar',
+];
 const worldBossEventSelectorsOfGirlsSrcToModify = [];
 const worldBossEventSelectorsOfGirlsIconsSrcToModify = [];
 
 // World boss pre-battle screen https://www.hentaiheroes.com/world-boss-pre-battle
-const worldBossEventPreBattleSelectorsOfGirlsSrcToModify = ['.base-hexagon > .girl_img'];
-const worldBossEventPreBattleSelectorsOfGirlsIconsSrcToModify = [];
+const worldBossEventPreBattleSelectorsOfGirlsSrcToModify = [];
+const worldBossEventPreBattleSelectorsOfGirlsIconsSrcToModify = ['.base-hexagon > .girl_img'];
 
 function initObserver() {
   if (DEBUG_ACTIVATED) {
@@ -406,7 +420,7 @@ function processGirlImagesSrcToModify(
     console.log('> PROCESSING GIRLS SRC TO MODIFY');
   }
   if (observer) {
-    if (selectorsOfGirlsSrcToModify.length === 0) {
+    if (HIDE_GIRLS || selectorsOfGirlsSrcToModify.length === 0) {
       observerGirlImagesProcessed = true;
     }
     if (selectorsOfGirlsIconsSrcToModify.length === 0) {
@@ -415,8 +429,12 @@ function processGirlImagesSrcToModify(
     }
   }
 
+  if (HIDE_GIRLS && selectorsOfGirlsSrcToModify.length > 0) {
+    processImagesSrcToHidePermanently(selectorsOfGirlsSrcToModify);
+  }
+
   const baseElements =
-    selectorsOfGirlsSrcToModify.length > 0
+    !HIDE_GIRLS && selectorsOfGirlsSrcToModify.length > 0
       ? document.querySelectorAll(selectorsOfGirlsSrcToModify.join(', '))
       : [];
 
@@ -637,8 +655,12 @@ function hideMedias() {
     console.log(' ');
     console.log('> ALL PAGES');
   }
+  if (REPLACE_BACKGROUND && !HIDE_BACKGROUND) {
+    processImagesSrcToReplace(['.fixed_scaled > img'], NEW_BACKGROUNG_URL);
+  }
   processBackgroundImagesSrcToHidePermanently(shopSelectorsOfBackgroundImagesSrcToRemove);
   processImagesSrcToHidePermanently([
+    ...(HIDE_AVATARS ? ['.player-profile-picture > img'] : []),
     ...loginSelectorsOfImagesSrcToRemove,
     ...noEnergySelectorsOfImagesSrcToRemove,
     ...shopSelectorsOfImagesSrcToRemove,
@@ -725,6 +747,8 @@ function hideMedias() {
       console.log(' ');
       console.log('> HOME PAGE');
     }
+
+    processImagesSrcToReplace(homeSelectorsOfImagesSrcToReplace, NEW_BACKGROUNG_URL);
 
     processBackgroundImagesSrcToHidePermanently(homeSelectorsOfBackgroundImagesSrcToRemove);
     processImagesSrcToHidePermanently(homeSelectorsOfImagesSrcToRemove);
@@ -1409,10 +1433,6 @@ function modifyGirlMedias() {
       console.log('> HOME PAGE');
     }
 
-    processImagesSrcToReplace(
-      homeSelectorsOfImagesSrcToReplace,
-      'https://hh2.hh-content.com/pictures/gallery/6/2200x/9c04e3d2df8d992146eea132225d2d54.jpg',
-    );
     processGirlImagesSrcToModify(
       homeSelectorsOfGirlsSrcToModify,
       homeSelectorsOfGirlsIconsSrcToModify,

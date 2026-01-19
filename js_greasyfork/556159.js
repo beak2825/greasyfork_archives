@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TMN Mobile-All-in-One Script
 // @namespace    http://tampermonkey.net/
-// @version      1.10.0
+// @version      1.10.3
 // @description  Revised version with countdown fix and GTA/Crimes integration
 // @author       Pap
 // @license      MIT
@@ -32,10 +32,53 @@
 
     const $ = window.jQuery;
     const page = location.href.toLowerCase();
+    // ---------------- DEFAULT STATES ----------------
+    const defaultScriptStates = {
+        Crimes: true,
+        GTA: true,
+        Booze: true,
+        Jail: true,
+        OC: false,
+        DTM: false,
+        'Auto Arbitrage': false,
+        'Auto Bank': false,
+        'Auto Heal': false,
+        'Auto Login': false,
+        'Auto Travel': false,
+        'Spawn Camp Bullets': false
+    };
+
+    const defaultOverlaySectionStates = {
+        overlay: true,
+        account: true,
+        oc: true,
+        arbitrage: true
+    };
+
+    const defaultOCInputs = {
+        AutoOCPref: false,
+        SpecificLeaderNames: '',
+        PositionPref: false,
+        LeaderInputs: {
+            Type: false,
+            'Transporter': '',
+            'Weapon Master': '',
+            'Explosive Expert': ''
+        },
+        CarPref: false,
+        AddToClassifieds: false
+    };
+
+    // Load saved values
+    const savedScriptStates = Object.assign({}, defaultScriptStates, JSON.parse(GM_getValue('TMN_SCRIPT_STATES', '{}')));
+    GM_setValue('TMN_SCRIPT_STATES', JSON.stringify(savedScriptStates));
+    const savedOCInputs = JSON.parse(GM_getValue('TMN_OC_INPUTS', '{}'));
     const TMN_PLAYER = JSON.parse(GM_getValue('TMN_ACCOUNT_INPUTS', '{ "Username": "TMN_PLAYER" }')).Username;
     const TMN_PASSWORD = JSON.parse(GM_getValue('TMN_ACCOUNT_INPUTS', '{ "Password": "" }')).Password;
     const TMN_CAPTCHA_KEY = JSON.parse(GM_getValue('TMN_ACCOUNT_INPUTS', '{ "CaptchaKey": "" }')).CaptchaKey;
-    const PRESOLVE_CAPTCHA_KEY = "6LfhsUcUAAAAANgy-ecJurYuIiSVtwDq_a9G3jUM";
+    const PRESOLVE_CAPTCHA_KEY = '6LfhsUcUAAAAANgy-ecJurYuIiSVtwDq_a9G3jUM';
+    const CURRENT_CITY = $("#ctl00_userInfo_lblcity").text().trim();
+    const HOT_CITY = JSON.parse(GM_getValue('TMN_HOT_CITY', '{ "date": 0 }'));
     const TMN_PIC = 'Katana';
     const defaultPage = '/authenticated/default.aspx';
     const iFramePages = [ 'crimes.aspx', 'playerproperty.aspx?p=g&cleanup', 'jail.aspx', 'travel.aspx?d=', 'trade.aspx?arbitrage', 'credits.aspx?autoheal', 'ocads.aspx?add' ];
@@ -44,53 +87,13 @@
     if (lblMsg.includes('You are in jail! You will stay in for')) HandleJail();
     $('#divStats').css({ height: 'unset', overflow: 'unset' });
     // const testMail = JSON.parse(GM_getValue('TMN_LAST_NEW_MAIL'));
-    // testMail.id = 392959;
+    // testMail.id = 396517;
     // GM_setValue('TMN_LAST_NEW_MAIL', JSON.stringify(testMail));
 
     (function AddOverlay() {
         if (window.self !== window.top) return;
 
         if (!$('#tmn-overlay').length) {
-            // ---------------- DEFAULT STATES ----------------
-            const defaultScriptStates = {
-                Crimes: true,
-                GTA: true,
-                Booze: true,
-                Jail: true,
-                OC: false,
-                DTM: false,
-                'Auto Arbitrage': false,
-                'Auto Bank': false,
-                'Auto Heal': false,
-                'Auto Login': false,
-                'Auto Travel': false,
-                'Spawn Camp Bullets': false
-            };
-
-            const defaultOverlaySectionStates = {
-                overlay: true,
-                account: true,
-                oc: true,
-                arbitrage: true
-            };
-
-            const defaultOCInputs = {
-                AutoOCPref: false,
-                SpecificLeaderNames: '',
-                PositionPref: false,
-                LeaderInputs: {
-                    Type: false,
-                    'Transporter': '',
-                    'Weapon Master': '',
-                    'Explosive Expert': ''
-                },
-                CarPref: false,
-                AddToClassifieds: false
-            };
-
-            // Load saved values
-            const savedScriptStates = Object.assign({}, defaultScriptStates, JSON.parse(GM_getValue('TMN_SCRIPT_STATES', '{}')));
-            GM_setValue('TMN_SCRIPT_STATES', JSON.stringify(savedScriptStates));
             const savedOverlaySectionsMinimized = Object.assign({}, defaultOverlaySectionStates, JSON.parse(GM_getValue('TMN_OVERLAY_SECTIONS_MINIMIZED', '{}')));            
             const savedAccountInputs = JSON.parse(GM_getValue('TMN_ACCOUNT_INPUTS', '{}'));
             const savedOCInputs = Object.assign({}, defaultOCInputs, JSON.parse(GM_getValue('TMN_OC_INPUTS', '{}')));
@@ -738,7 +741,8 @@
             return new Promise(r => setTimeout(r, ms));
         }
         await PostMsg(msg);
-        await sleep(2000);
+        await sleep(500);
+        return;
     }
 
     async function PostMsg(message) {
@@ -749,6 +753,21 @@
             },
             body: message
         });
+        return;
+    }
+
+    async function TellLogan(message) {
+        const now = Date.now();
+        const savedLastMessageToLogan = GM_getValue('TMN_LAST_MSG_TO_LOGAN', 0);
+        if (now < savedLastMessageToLogan + 30000) return;
+        await fetch('https://ntfy.sh/TMN_BF_Alert', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: message
+        });
+        GM_setValue('TMN_LAST_MSG_TO_LOGAN', now);
         return;
     }
 
@@ -884,7 +903,6 @@
     }
 
     async function CrimesCountdown(type) {
-        await GetNextTimers();
         const storedValues = { 'Booze': GM_getValue('TMN_NEXT_BOOZE'), 'Crimes': GM_getValue('TMN_NEXT_CRIME'), 'GTA': GM_getValue('TMN_NEXT_GTA') }
         const lblMsg = $('#ctl00_main_lblResult');
         //const delayToNextSecond = 1000 - (Date.now() % 1000);
@@ -970,6 +988,8 @@
         GM_setValue('TMN_NEXT_GTA', lastGTA + 4 * 60 * 1000);
         GM_setValue('TMN_NEXT_JET_FLIGHT', lastTravel + 20 * 60 * 1000);
         GM_setValue('TMN_NEXT_FLIGHT', lastTravel + 45 * 60 * 1000);
+
+        await GetHotCity();
         return;
     }
 
@@ -1030,11 +1050,16 @@
         }
     }
 
-    async function isCurrentCityHot() {
+    async function GetHotCity() {
+        const today = new Date();
+        const date = today.getDate();
+        if (!(date !== HOT_CITY.date && today.getHours() >= 12)) return;
+
         const fetchedPage = await FetchPage('statistics.aspx');
         const hotCity = decodeURIComponent(fetchedPage.find("td:first-child span:contains('Swords')").nextAll("span[id^='City']").text().trim());
-        const currentCity = $('#ctl00_userInfo_lblcity').text().trim();
-        return currentCity == hotCity;
+        GM_setValue('TMN_HOT_CITY', JSON.stringify({ city: hotCity, date: date }));
+        Log('Updated hot city...');
+        return;
     }
     
     function isWaitingForSpawningBullets() {
@@ -1244,11 +1269,19 @@
 
     const Pipeline = (() => {
         const PIPELINE_STEPS = [
+            { id: 'timers', log: 'Updating timers...', cb: () => GetNextTimers() },
+            { id: 'checkmailbox', log: 'Checking mailbox...', cb: () => CheckMailbox(), url: 'mailbox.aspx?p=m&id=' },
+            { id: 'campbullets', log: 'Checking for spawned bullets...', cb: async () => {
+                if (savedScriptStates['Spawn Camp Bullets']) {
+                    const bulletsSpawned = await SpawnCampBullets();
+                    if (bulletsSpawned) return;
+                }
+            }},
             { id: 'ocads', state: 'AddToClassifieds', url: 'ocads.aspx?add' },
-            { id: 'arbitrage', state: 'Auto Arbitrage', url: 'trade.aspx?arbitrage' },
-            { id: 'bank', state: 'Auto Bank', url: 'playerproperty.aspx?a=' },
-            { id: 'travel', state: 'Auto Travel', url: 'travel.aspx?d=' }
+            { id: 'travel', state: 'Auto Travel', url: 'travel.aspx?d=' },
+            { id: 'bank', state: 'Auto Bank', url: 'playerproperty.aspx?a=' }
         ];
+
         const SAFE_PAGES = [defaultPage, 'credits.aspx?autoheal'];
 
         function getState() {
@@ -1280,7 +1313,8 @@
             }
         }
 
-        function init() {
+        async function init() {
+            Log('Initiating pipeline...');
             const steps = {};
             for (const step of PIPELINE_STEPS) {
                 steps[step.id] = 'pending';
@@ -1292,84 +1326,55 @@
                 startedAt: Date.now()
             });
 
-            run();
+            await run();
         }
 
-        function completeStep(id) {
+        async function completeStep(id) {
             const state = getState();
             if (!state?.active) return;
 
             state.steps[id] = 'done';
             setState(state);
 
-            run();
+            await run();
         }
 
         async function run() {
             const now = Date.now();
-            const savedScriptStates = JSON.parse(GM_getValue('TMN_SCRIPT_STATES', '{}'));
-            const savedOCInputs = JSON.parse(GM_getValue('TMN_OC_INPUTS', '{}'));
             const state = getState();
             if (!state?.active) return;
 
             const next = PIPELINE_STEPS.find(step => state.steps[step.id] === 'pending');
-
             if (!next) {
                 clear();
-                if (isMobile()) {
-                    GoToPage('jail.aspx');
-                    return;
-                } else {
-                    SetupMainContentFrame();
-                    MainSetup();
-                }
+                if (page.includes(defaultPage)) GoToPage('trade.aspx?arbitrage');
+                return;
             }
-
-            if (savedScriptStates[next.state] || savedOCInputs[next.state]) {
-                if (next.id === 'ocads') {
-                    if (now > GM_getValue('TMN_NEXT_OC', Infinity)) {
-                        const fetchedPage = await FetchPage('ocads.aspx');
-                        const isAddedToClassifieds = fetchedPage.find('#ctl00_main_revOC a').filter(function () { return $(this).text().trim() === 'Pap' }).length;
-                        const isInHotCity = await isCurrentCityHot();
-                        if ((isAddedToClassifieds && !isInHotCity) || (!isAddedToClassifieds && isInHotCity)) {
-                            GoToPage(next.url);
-                            return;
-                        }
-                    }
-                    completeStep(next.id);
-                    return;
-                } else if (next.id === 'arbitrage') {
-                    GoToPage(next.url);
-                    return;
+            
+            if (!next.state || savedScriptStates[next.state] || savedOCInputs[next.state]) {
+                // console.log(state);
+                if (!next.state) {
+                    Log(next.log);
+                    const mustWait = await next.cb();
+                    if (!mustWait) completeStep(next.id);
+                } else if (next.id === 'ocads') {
+                    Log('Checking oc ads...');
+                    const mustWait = await CheckAddToClassifieds();
+                    if (mustWait) GoToPage('ocads.aspx?add');
+                    else completeStep(next.id);
+                } else if (next.id === 'travel') {
+                    Log('Checking travel...');
+                    const mustWait = await CheckAutoTravel();
+                    if (!mustWait) completeStep(next.id);
                 } else if (next.id === 'bank') {
                     if (now > GM_getValue('TMN_AUTO_BANK_TIME', 0)) {
                         const amount = 49999999;
                         GoToPage(`playerproperty.aspx?a=${amount}`);
-                        return;
                     }
                     completeStep(next.id);
-                    return;
-                } else if (next.id === 'travel') {
-                    const nextFlight = GM_getValue('TMN_NEXT_FLIGHT');
-                    const isInHotCity = await isCurrentCityHot();
-                    if (nextFlight > now) {
-                        const higherPrecedenceLogPresent = $('#console:contains("precedence")').length;
-                        const nextFlightTime = new Date(nextFlight).toLocaleTimeString('en-NZ', { hour: 'numeric', minute: '2-digit', hour12: true });
-                        if (!higherPrecedenceLogPresent) Log(`Next Flight: ${nextFlightTime}`);
-                    } else {
-                        if (!isInHotCity) {
-                            const fetchedPage = await FetchPage('statistics.aspx');
-                            const hotCity = decodeURIComponent(fetchedPage.find("td:first-child span:contains('Swords')").nextAll("span[id^='City']").text().trim());
-                            GoToPage(`travel.aspx?d=${hotCity}`);
-                            return;
-                        }
-                    }
-                    completeStep(next.id);
-                    return;
                 }
             } else {
                 completeStep(next.id);
-                return;
             }
         }
 
@@ -1377,27 +1382,22 @@
     })();
 
     async function MainSetup() {
-        const savedScriptStates = JSON.parse(GM_getValue('TMN_SCRIPT_STATES', '{}'));
-        Log('Updating timers...');
-        await GetNextTimers();
-        Log('Checking for spawned bullets...');
-        if (savedScriptStates['Spawn Camp Bullets']) {
-            const bulletsSpawned = await SpawnCampBullets();
-            if (bulletsSpawned) return;
-        }
-        Log('Checking mail...');
-        await CheckMailbox();
-
         if (page.includes(defaultPage)) {
-            console.log(page);
-            Log('Initiating pipeline...');
-            Pipeline.init();
-            if (isMobile()) return;
+            await Pipeline.init();
         }
-        
-        if (savedScriptStates['Spawn Camp Bullets']) setInterval(SpawnCampBullets, 5000);
-        // Stagger intervals
-        setTimeout(() => { setInterval(CheckMailbox, 5000); }, 2500);
+
+        // const now = Date.now();
+        // const nextFlight = GM_getValue('TMN_NEXT_FLIGHT', 0);
+        // const nextOC = GM_getValue('TMN_NEXT_OC', Infinity);
+        // // Stagger intervals
+        // if (savedScriptStates['Spawn Camp Bullets']) setInterval(SpawnCampBullets, 5000);
+        // setTimeout(() => { setInterval(CheckMailbox, 5000); }, 2500);
+        // // Check Auto Travel
+        // setTimeout(CheckAutoTravel, Math.min(now - nextFlight, 0));
+        // // Check Add To Classifieds
+        // setTimeout(CheckAddToClassifieds, Math.min(now - nextOC, 0));
+        // Reload after 5mins incase page hangs
+        setTimeout(() => { location.href = defaultPage }, 5 * 60000);
         return;
     }
 
@@ -1428,28 +1428,27 @@
     }
 
     async function ProcessMail(mail) {
-        const savedScriptStates = JSON.parse(GM_getValue('TMN_SCRIPT_STATES', '{}'));
-        const savedOCInputs = JSON.parse(GM_getValue('TMN_OC_INPUTS', '{}'));
         const lastNewMail = JSON.parse(GM_getValue('TMN_LAST_NEW_MAIL', '{}'));
 
         // return if old mail
-        console.log(mail);
         if (mail.id > lastNewMail.id || !lastNewMail.id) {
             GM_setValue('TMN_LAST_NEW_MAIL', JSON.stringify(mail));
             // ✅ 1. NEW MAIL NOTIFICATION
             if (mail.author !== TMN_PLAYER) { 
-                Notify(`New message from ${mail.author}\n${mail.subject}`);
-                return; 
+                await Notify(`New message from ${mail.author}\n${mail.subject}`);
+                return;
             }
 
             // ✅ 2. TRADE NOTIFICATIONS
             if (mail.author === TMN_PLAYER &&
                 mail.subject === 'Trade Notification') {
-                const isLastTrade = $(`.GridRow:contains(${TMN_PLAYER}}):contains('Trade Notification')`).eq(0).has(`a[href='${mail.link}']`).length;
-                const fetchedPage = await FetchPage(mail.link);
+                let fetchedPage = await FetchPage('mailbox.aspx');
+                const isLastTrade = fetchedPage.find(`.GridRow:contains(${TMN_PLAYER}):contains('Trade Notification')`).eq(0).has(`a[href='${mail.link}']`).length;
+                fetchedPage = await FetchPage(mail.link);
                 const mailContent = fetchedPage.find('.GridRow').text().trim().split('\n').at(-1).trim();
                 await Notify(`${mail.author} - ${mail.subject}\n${mailContent}`);
                 if (savedScriptStates['Auto Arbitrage'] && isLastTrade) {
+                    Pipeline.completeStep('mailbox');
                     if (isMobile()) location.href = 'trade.aspx?arbitrage';
                     else SetupContentFrame('trade.aspx?arbitrage');
                 }
@@ -1487,23 +1486,23 @@
                             (savedOCInputs['PositionPref'] !== 'TP' && position !== 'Transporter') ||
                             (savedOCInputs['PositionPref'] === 'TP' && position === 'Transporter');
 
-                    if (leaderOK && positionOK && inviteLocation.includes(currentCity)) {
+                    if (leaderOK && positionOK && inviteLocation.includes(CURRENT_CITY)) {
                         await Notify(`${mail.author} - OC Invite\n${leader} invited you as ${position} to ${ocType}`);
                         LogCountdown(3000, 1000, 'Accepting invite ', () => { location.href = `${mail.link}&autoAccept` });
                         return;
-                    } else if (!inviteLocation.includes(currentCity)){
-                        Notify(`${mail.author} - ${mail.subject}\nCan't accept invite to ${leader}'s OC as it's in a different city.`);
+                    } else if (!inviteLocation.includes(CURRENT_CITY)){
+                        await Notify(`${mail.author} - ${mail.subject}\nCan't accept invite to ${leader}'s OC as it's in a different city.`);
                         return;
                     }
                 }
 
                 // ✅ DTM auto-accept logic
-                if (savedScriptStates.DTM && inviteLocation.includes(currentCity)) {
+                if (savedScriptStates.DTM && inviteLocation.includes(CURRENT_CITY)) {
                     await Notify(`${mail.author} - DTM Invite\n${leader} invited you to DTM`);
                     LogCountdown(3000, 1000, 'Accepting invite ', () => { location.href = `${mail.link}&autoAccept` });
                     return;
-                } else if (!inviteLocation.includes(currentCity)){
-                    Notify(`${mail.author} - DTM Invite\nCan't accept invite to ${leader}'s DTM as it's in a different city.`);
+                } else if (!inviteLocation.includes(CURRENT_CITY)){
+                    await Notify(`${mail.author} - DTM Invite\nCan't accept invite to ${leader}'s DTM as it's in a different city.`);
                     return;
                 }
             }
@@ -1512,16 +1511,16 @@
             if (mail.author === TMN_PLAYER) {
                 if (mail.subject === 'Organized Crime Notification') {
                     FetchPage(mail.link);
-                    Notify(`${mail.author}\nOC Complete`);
+                    await Notify(`${mail.author}\nOC Complete`);
                 } else if (mail.subject === 'Drugs Transportation Mission') {
                     FetchPage(mail.link);
-                    Notify(`${mail.author}\nDTM Complete`);
+                    await Notify(`${mail.author}\nDTM Complete`);
                 } else if (mail.subject === "You've witnessed a murder!") {
                     const fetchedPage = await FetchPage(mail.link);
                     const mailContent = fetchedPage.find('.GridRow').text().trim().split('\n').at(-1).trim();
-                    Notify(`${mail.author} - ${mail.subject}\n${mailContent}`);
+                    await Notify(`${mail.author} - ${mail.subject}\n${mailContent}`);
                 } else {
-                    Notify(`${mail.author}\n${mail.subject}`);
+                    await Notify(`${mail.author}\n${mail.subject}`);
                 }
             }
         }
@@ -1557,7 +1556,7 @@
             $contentFrame.css({
                 'display': 'grid',
                 'grid-template-columns': '1fr',
-                'grid-template-rows': '1fr repeat',
+                'grid-template-rows': 'unset',
                 'grid-template-areas': ` 'a' 'b' 'c' 'd'`,
                 'grid-area': 'content',
                 'width': '100%',
@@ -1615,7 +1614,6 @@
     }
 
     async function GoNextAction() {
-        const savedScriptStates = JSON.parse(GM_getValue('TMN_SCRIPT_STATES', '{}'));
         const nextBooze = GM_getValue('TMN_NEXT_BOOZE', 0);
         const nextCrime = GM_getValue('TMN_NEXT_CRIME', 0);
         const nextGTA = GM_getValue('TMN_NEXT_GTA', 0);
@@ -1628,7 +1626,6 @@
     }
 
     async function JailScript() {
-        const savedScriptStates = JSON.parse(GM_getValue('TMN_SCRIPT_STATES', '{}'));
         const scriptCheck = $('#ctl00_main_MyScriptTest_btnSubmit')[0];
         if (scriptCheck) {
             window.top.location.href = 'crimes.aspx?scriptCheck';
@@ -1654,11 +1651,17 @@
         const now = Date.now();
         const sentenceLength = parseInt(GM_getValue('TMN_SENTENCE_LENGTH', '')) || 0;
         const lblMsg = $('#ctl00_lblMsg').text();
-        if (lblMsg == '' && isMobile()) await MainSetup();
-        else if (lblMsg.includes('failed') || lblMsg.includes('You cannot load')) {
+        if (lblMsg == '' && isMobile()) {
+            await Pipeline.init();
+            setInterval(async () => { await Pipeline.init() }, 5000);
+            // await MainSetup();
+        } else if (lblMsg.includes('failed') || lblMsg.includes('You cannot load')) {
             location.href = location.href;
         } else if (lblMsg.includes('seconds')) {
-            if (isMobile()) await MainSetup();
+            if (isMobile()) {
+                setInterval(async () => { await Pipeline.init() }, 5000);
+                await MainSetup();
+            }
             let match = lblMsg.match(/(\d+)\s*more seconds/);
             if (match) {
                 const seconds = parseInt(match[1], 10);
@@ -1723,7 +1726,6 @@
 
     function CrimesScript() {
         const scriptCheck = $('#ctl00_main_MyScriptTest_btnSubmit')[0];
-        const savedScriptStates = JSON.parse(GM_getValue('TMN_SCRIPT_STATES', '{}'));
         if (scriptCheck) {
             window.top.location.href = 'crimes.aspx?scriptCheck';
         } else if (OnLoginPage()) {
@@ -1767,7 +1769,6 @@
     }
 
     function GTAScript() {
-        const savedScriptStates = JSON.parse(GM_getValue('TMN_SCRIPT_STATES', '{}'));
         const scriptCheck = $('#ctl00_main_MyScriptTest_btnSubmit')[0];
         if (scriptCheck) window.top.location.href = 'crimes.aspx?scriptCheck';
         else if (OnLoginPage()) {
@@ -1809,7 +1810,6 @@
     }
 
     async function BoozeScript() {
-        const savedScriptStates = JSON.parse(GM_getValue('TMN_SCRIPT_STATES', '{}'));
         const scriptCheck = $('#ctl00_main_MyScriptTest_btnSubmit')[0];
         const sqlScriptCheck = $('#ctl00_main_pnlMessage')[0];
 
@@ -1904,8 +1904,6 @@
 
     function OCScript() {
         //https://www.tmn2010.net/authenticated/organizedcrime.aspx?act=accept&ocid=3288&pos=WeaponMaster
-        const savedScriptStates = JSON.parse(GM_getValue('TMN_SCRIPT_STATES', '{}'));
-        const savedOCInputs = JSON.parse(GM_getValue('TMN_OC_INPUTS', '{}'));
         const startOCBtn = savedOCInputs['LeaderInputs']['Type'] === 'National Bank' ? $('#ctl00_main_btnStartOCRobBank') : savedOCInputs['LeaderInputs']['Type'] === 'Casino' ? $('#ctl00_main_btnStartOCRobCasino') : $('#ctl00_main_btnStartOCRobArmoury');
         const $playerRow = $(`tr:contains(${TMN_PLAYER})`);
         const lblMsg = $('#ctl00_lblMsg');
@@ -2024,7 +2022,6 @@
     }
 
     function DTMScript() {
-        const savedScriptStates = JSON.parse(GM_getValue('TMN_SCRIPT_STATES', '{}'));
         const $playerRow = $(`tr:contains(${TMN_PLAYER})`);
         if ($playerRow.length) GM_setValue('TMN_NEXT_DTM', 'Doing One');
         if (!savedScriptStates.DTM) return;
@@ -2080,14 +2077,28 @@
         }
     }
 
+    async function CheckAddToClassifieds() {
+        const now = Date.now();
+        const nextOC = GM_getValue('TMN_NEXT_OC', Infinity);
+        if (now > nextOC) {
+            const fetchedPage = await FetchPage('ocads.aspx');
+            const isAddedToClassifieds = fetchedPage.find('#ctl00_main_revOC a').filter(function () { return $(this).text().trim() === TMN_PLAYER }).length;
+            const isInHotCity = CURRENT_CITY == HOT_CITY.city;
+            if ((isAddedToClassifieds && !isInHotCity) || (!isAddedToClassifieds && isInHotCity)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     async function AddToClassifieds() {
         const lblMsg = $('#ctl00_lblMsg');
         const addBtn = $('#ctl00_main_btnAddOC');
-
         if (lblMsg.text() == '') addBtn.click()
         else if (lblMsg.text().includes('It seems like you are unavailable to OC right now.')) LogCountdown(5000, 1000, 'Retrying ', () => { addBtn.click() })
         else {
             Pipeline.completeStep('ocads');
+            location.href = defaultPage;
         }
     }
 
@@ -2097,7 +2108,6 @@
         if ($('#ctl00_lblMsg').text().includes('jail')) return;
         await new Promise(resolve => setTimeout(resolve, 1000));
 
-        const savedScriptStates = JSON.parse(GM_getValue('TMN_SCRIPT_STATES', '{}'));
         if (!savedScriptStates['Auto Arbitrage']) return;
 
         const MAX_ACTIVE_OFFERS = 5;
@@ -2147,7 +2157,13 @@
             } else {
                 // Max money offers
                 // End arbitrage
-                Pipeline.completeStep('arbitrage');
+                if (isMobile()) {
+                    GoToPage('jail.aspx');
+                    return;
+                } else {
+                    SetupMainContentFrame();
+                    return;
+                }
             }
         } else if (activeCreditOffers < MAX_CREDIT_OFFERS && totalActiveOffers < MAX_ACTIVE_OFFERS && creditsOnHand >= sellCreditsQuantity) {
             // Create credit offer
@@ -2158,12 +2174,18 @@
             LogCountdown(3000, 1000, 'Creating credit offer', () => { $postButton.click() });
         } else {
             // end arbitrage
-            Pipeline.completeStep('arbitrage');
+            if (isMobile()) {
+                GoToPage('jail.aspx');
+                return;
+            } else {
+                SetupMainContentFrame();
+                MainSetup();
+                return;
+            }
         }
     }
 
     function AutoBank() {
-        const savedScriptStates = JSON.parse(GM_getValue('TMN_SCRIPT_STATES', '{}'));
         const amount = location.href.split('a=')[1];
         const lblMsg = $('#ctl00_lblMsg').text();
         const timeLeft = $('#ctl00_main_lblTimeLeft').text();
@@ -2185,7 +2207,6 @@
     }
 
     function AutoHeal() {
-        const savedScriptStates = JSON.parse(GM_getValue('TMN_SCRIPT_STATES', '{}'));
         if (!savedScriptStates['Auto Heal']) return;
 
         const lblMsg = $('#ctl00_lblMsg')?.text();
@@ -2194,6 +2215,25 @@
             else setTimeout(() => { $('#ctl00_main_btnBuyHealth').click() }, 3000);
         }
         else $('#ctl00_main_btnBuyHealth').click();
+    }
+
+    async function CheckAutoTravel() {
+        const now = Date.now();
+        const nextFlight = GM_getValue('TMN_NEXT_FLIGHT');
+        const isInHotCity = CURRENT_CITY == HOT_CITY.city;
+        if (nextFlight > now) {
+            const higherPrecedenceLogPresent = $('#console:contains("precedence")').length;
+            const nextFlightTime = new Date(nextFlight).toLocaleTimeString('en-NZ', { hour: 'numeric', minute: '2-digit', hour12: true });
+            // if (!higherPrecedenceLogPresent) Log(`Next Flight: ${nextFlightTime}`);
+        } else {
+            if (!isInHotCity) {
+                const fetchedPage = await FetchPage('statistics.aspx');
+                const hotCity = decodeURIComponent(fetchedPage.find("td:first-child span:contains('Swords')").nextAll("span[id^='City']").text().trim());
+                GoToPage(`travel.aspx?d=${hotCity}`);
+                return true;
+            }
+        }
+        return;
     }
 
     function AutoTravel() {
@@ -2212,9 +2252,11 @@
         } else if (nextFlight) {
             GM_setValue('TMN_NEXT_FLIGHT', GetAvailableTime(lblMsg) - 0 * 60000);
             Pipeline.completeStep('travel');
+            location.href = defaultPage;
         } else if (welcomeMsg.includes('Welcome')/* || lblMsg.includes('travel again')*/) {
             GM_setValue('TMN_NEXT_FLIGHT', Date.now() + 45 * 60000);
             Pipeline.completeStep('travel');
+            location.href = defaultPage;
         } else {
             $(`label:contains(${destination})`).click();
             //setTimeout(() => { $('#ctl00_main_btnTravelNormal').click() }, Math.random() * 2000 + 3000);
@@ -2361,7 +2403,6 @@
     }
 
     async function SpawnCampBullets() {
-        const savedScriptStates = JSON.parse(GM_getValue('TMN_SCRIPT_STATES', '{}'));
         if (!savedScriptStates['Spawn Camp Bullets']) return;
 
         const lblMsg = $('#ctl00_lblMsg').text();
@@ -2372,7 +2413,7 @@
         const now = Date.now()
 
         if (isWaitingForSpawningBullets() && nextSydneySpawnTime - now <= 120000 && nextSydneySpawnTime - now >= 115000) {
-            await UniversalCaptchaSolve('6LfhsUcUAAAAANgy-ecJurYuIiSVtwDq_a9G3jUM');
+            await UniversalCaptchaSolve();
         }
 
         if (hasFlown && document.referrer.includes("travel")) {
@@ -2410,16 +2451,17 @@
                     } else break;
                 }
 
-                if (regex.test(text) && !lblMsg.includes('jail')) {
+                if (regex.test(text)) {
+                    const destCity = text.split("System: ")[1].split(" -")[0];
+                    TellLogan(`${destCity} bullets have spawned.`);
+                    if (lblMsg.includes('jail')) return;
                     // const utterance = new SpeechSynthesisUtterance("Alert");
                     // window.speechSynthesis.speak(utterance);
-                    const destCity = text.split("System: ")[1].split(" -")[0];
-                    const currentCity = $("#ctl00_userInfo_lblcity").text().trim();
 
-                    if (destCity == currentCity) {
+                    if (destCity == CURRENT_CITY) {
                         window.top.location.href = "/authenticated/store.aspx?p=b";
                     } else if (notInOCorDTM) {
-                        const nextJetFlight = GM_getValue('TMN_NEXT_JET_FLIGHT', Infinity);
+                        const nextJetFlight = GM_getValue('TMN_NEXT_FLIGHT', Infinity) - 25 * 60000;
                         if (now >= nextJetFlight) window.top.location.href = `travel.aspx?d=${destCity}&bb=true`;
                         break;
                     }
@@ -2655,6 +2697,7 @@
         //GM_deleteValue('TMN_CAPTCHA_KEY');
         GM_deleteValue('TMN_CAPTCHA_TOKEN');
         GM_deleteValue('TMN_EXPERIENCE');
+        GM_deleteValue('TMN_HOT_CITY');
         GM_deleteValue('TMN_LAST_NEW_MAIL');
         GM_deleteValue('TMN_NEXT_SYDNEY_SPAWN_TIME');
         GM_deleteValue('TMN_NEXT_BOOZE');

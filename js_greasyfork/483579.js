@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name  MyMHUI
 // @namespace  https://greasyfork.org/en/users/39779
-// @version  2.2.30.15.14
+// @version  2.2.34.15.14
 // @description  my mh ui modify
 // @author  Elie
 // @match  http://mousehuntgame.com/*
@@ -154,83 +154,6 @@ const locations = [
   ['rift_bristle_woods', 'Bristle Woods Rift', true, 'Grand Duke'],
   ['rift_valour', 'Valour Rift', true, 'Archduke']
 ];
-/**
- * Environment type:id dictionary.
- */
-const environmentTypeIdDictionary = {
-  acolyte_realm: 1,
-  meadow: 18,
-  town_of_gnawnia: 28,
-  ronzas_traveling_shoppe: 24,
-  windmill: 30,
-  harbour: 13,
-  mountain: 20,
-  winter_hunt_fortress: 68,
-  winter_hunt_workshop: 70,
-  winter_hunt_grove: 69,
-  kings_arms: 38,
-  tournament_hall: 37,
-  kings_gauntlet: 15,
-  calm_clearing: 4,
-  great_gnarled_tree: 12,
-  halloween_event_location: 64,
-  lagoon: 17,
-  laboratory: 16,
-  mousoleum: 21,
-  town_of_digby: 27,
-  bazaar: 3,
-  pollution_outbreak: 45,
-  training_grounds: 29,
-  dojo: 8,
-  meditation_room: 19,
-  pinnacle_chamber: 23,
-  catacombs: 6,
-  forbidden_grove: 11,
-  cape_clawed: 5,
-  elub_shore: 10,
-  nerg_plains: 22,
-  derr_dunes: 7,
-  jungle_of_dread: 14,
-  dracano: 9,
-  balacks_cove: 2,
-  claw_shot_city: 43,
-  train_station: 44,
-  fort_rox: 54,
-  queso_river: 59,
-  queso_plains: 57,
-  queso_quarry: 58,
-  queso_geyser: 61,
-  super_brie_factory: 60,
-  ss_huntington_ii: 26,
-  seasonal_garden: 31,
-  zugzwang_tower: 32,
-  zugzwang_library: 36,
-  slushy_shoreline: 39,
-  iceberg: 40,
-  sunken_city: 47,
-  desert_warpath: 33,
-  desert_city: 34,
-  desert_oasis: 35,
-  lost_city: 41,
-  sand_dunes: 42,
-  fungal_cavern: 50,
-  labyrinth: 52,
-  ancient_city: 51,
-  moussu_picchu: 56,
-  floating_islands: 63,
-  foreword_farm: 65,
-  prologue_pond: 66,
-  table_of_contents: 67,
-  bountiful_beanstalk: 71,
-  school_of_sorcery: 72,
-  draconic_depths: 73,
-  rift_gnawnia: 46,
-  rift_burroughs: 48,
-  rift_whisker_woods: 49,
-  rift_furoma: 53,
-  rift_bristle_woods: 55,
-  rift_valour: 62
-};
 // prettier-ignore
 /**
  * Location-specific anchor points.
@@ -304,6 +227,12 @@ const locationAnchor = {
   rift_valour: null
 };
 const functions = {
+  empty() {
+    // eslint-disable-next-line no-undef
+    $('#eventLocationsSettingsDiv').html('');
+  },
+  emptyLoad() {},
+  emptySave() {},
   greatWinterHunt() {
     const html = `
   <table>
@@ -316,25 +245,25 @@ const functions = {
     <tr>
       <td>Bait</td>
       <td>
-        <button title="toggle Cinnamon Hill Bait." type="button" id="gwhHillBaitButton" style="background-color:rgb(255, 140, 140);"></button>
+        <button title="toggle Cinnamon Hill Bait." type="button" id="hillBaitButton" style="background-color:rgb(255, 140, 140);"></button>
       </td>
       <td>
-        <button title="toggle Golem Workshop Bait." type="button" id="gwhWorkshopBaitButton" style="background-color:rgb(150, 115, 230);"></button>
+        <button title="toggle Golem Workshop Bait." type="button" id="workshopBaitButton" style="background-color:rgb(150, 115, 230);"></button>
       </td>
       <td>
-        <button title="toggle Ice Fortress Bait." type="button" id="gwhFortressBaitButton" style="background-color:rgb(255, 140, 140);"></button>
+        <button title="toggle Ice Fortress Bait." type="button" id="fortressBaitButton" style="background-color:rgb(255, 140, 140);"></button>
       </td>
     </tr>
     <tr>
       <td>FS</td>
       <td>
-        <button title="toggle Cinnamon Hill Festive Spirit." type="button" id="gwhHillFSButton" style="background-color:rgb(255, 140, 140);"></button>
+        <button title="toggle Cinnamon Hill Festive Spirit." type="button" id="hillFSButton" style="background-color:rgb(255, 140, 140);"></button>
       </td>
       <td>
-        <button title="toggle Golem Workshop Festive Spirit." type="button" id="gwhHillFSButton" style="background-color:rgb(150, 115, 230);"></button>
+        <button title="toggle Golem Workshop Festive Spirit." type="button" id="workshopFSButton" style="background-color:rgb(150, 115, 230);"></button>
       </td>
       <td>
-        <button title="toggle Ice Fortress Festive Spirit." type="button" id="gwhHillFSButton" style="background-color:rgb(255, 140, 140);"></button>
+        <button title="toggle Ice Fortress Festive Spirit." type="button" id="fortressFSButton" style="background-color:rgb(255, 140, 140);"></button>
       </td>
     </tr>
     <tr>
@@ -342,16 +271,16 @@ const functions = {
     </tr>
     <tr>
       <td>
-        <input title="Start using PP quantity." type="number" id="gwhStartPpQtyInput" value="25">
+        <input title="Start using PP quantity." type="number" id="startPpQtyInput" value="25">
       </td>
       <td>
-        <input title="Stop using PP quantity." type="number" id="gwhPpKeptQtyInput" value="2">
+        <input title="Stop using PP quantity." type="number" id="ppKeptQtyInput" value="2">
       </td>
       <td>
-        <input title="Stop using GPP quantity." type="number" id="gwhGppEndQtyInput" value="2">
+        <input title="Stop using GPP quantity." type="number" id="gppEndQtyInput" value="2">
       </td>
       <td>
-        <select title="Area to hunt with GPP." id="gwhGppAreaSelect">
+        <select title="Area to hunt with GPP." id="gppAreaSelect">
           <option value="winter_hunt_grove">Hill</option>
           <option value="winter_hunt_workshop">Workshop</option>
           <option value="winter_hunt_fortress">Fortress</option>
@@ -363,13 +292,13 @@ const functions = {
     </tr>
     <tr>
       <td>
-        <input title="Start using cinnamon quantity." type="number" id="gwhStartCinnamonQtyInput" value="37">
+        <input title="Start using cinnamon quantity." type="number" id="startCinnamonQtyInput" value="37">
       </td>
       <td>
-        <input title="Stop using cinnamon quantity." type="number" id="gwhCinnamonKeptQtyInput" value="3">
+        <input title="Stop using cinnamon quantity." type="number" id="cinnamonKeptQtyInput" value="3">
       </td>
       <td>
-        <input title="Too many cinnamon quantity." type="number" id="gwhTooManyCinnamonInput" value="73">
+        <input title="Too many cinnamon quantity." type="number" id="tooManyCinnamonInput" value="73">
       </td>
       <td>
       </td>
@@ -400,16 +329,16 @@ const functions = {
     </tr>
     <tr>
       <td>
-        <input title="Start using hailstone quantity." type="number" id="gwhGoHailstoneQtyInput" value="35">
+        <input title="Start using hailstone quantity." type="number" id="goHailstoneQtyInput" value="35">
       </td>
       <td>
-        <input title="Stop using hailstone quantity." type="number" id="gwhHailstoneKeptQtyInput" value="2">
+        <input title="Stop using hailstone quantity." type="number" id="hailstoneKeptQtyInput" value="2">
       </td>
       <td>
-        <input title="Too many hailstone quantity." type="number" id="gwhTooManyHailstoneInput" value="35">
+        <input title="Too many hailstone quantity." type="number" id="tooManyHailstoneInput" value="35">
       </td>
       <td>
-        <input title="Festive Spirit數量少於此離開 Fortress." type="number" id="gwhFsKeptQtyInput" value="3">
+        <input title="Festive Spirit數量少於此離開 Fortress." type="number" id="fsKeptQtyInput" value="3">
       </td>
     </tr>
     <tr>
@@ -417,19 +346,19 @@ const functions = {
     </tr>
     <tr>
       <td>
-        <select title="是否自動處理 golem" id="gwhIsAutoGolemSelect">
+        <select title="是否自動處理 golem" id="isAutoGolemSelect">
           <option value="true">Yes</option>
           <option value="false">No</option>
         </select>
       </td>
       <td>
-        <select title="是否自動升級 golem?" id="gwhIsAutoUpgradeSelect">
+        <select title="是否自動升級 golem?" id="isAutoUpgradeSelect">
           <option value="true">Yes</option>
           <option value="false">No</option>
         </select>
       </td>
       <td>
-        <select title="有 scarf時,是否用閒置的 golem送掉" id="gwhIsScarfUnusedGolemSelect">
+        <select title="有 scarf時,是否用閒置的 golem送掉" id="isScarfUnusedGolemSelect">
           <option value="true">Yes</option>
           <option value="false">No</option>
         </select>
@@ -439,13 +368,13 @@ const functions = {
     </tr>
     <tr>
       <td>
-        <input title="自動 build幾個 golem(等級高到低)." type="number" id="gwhGolemsAutoBuildInput" value="2">
+        <input title="自動 build幾個 golem(等級高到低)." type="number" id="golemsAutoBuildInput" value="2">
       </td>
       <td>
-        <input title="自動 upgrade幾個 golem(由左至右)." type="number" id="gwhGolemsAutoUpgradeInput" value="2">
+        <input title="自動 upgrade幾個 golem(由左至右)." type="number" id="golemsAutoUpgradeInput" value="2">
       </td>
       <td>
-        <input title="自動 claim幾個 golem(由左至右)." type="number" id="gwhGolemsAutoClaimInput" value="3">
+        <input title="自動 claim幾個 golem(由左至右)." type="number" id="golemsAutoClaimInput" value="3">
       </td>
       <td>
       </td>
@@ -486,13 +415,13 @@ const functions = {
     <tr>
       <td>GoTd</td>
       <td>
-        <select title="是否使用 GoTd設定?" id="gwhIsGoodGoTdSelect">
+        <select title="是否使用 GoTd設定?" id="isGoodGoTdSelect">
           <option value="true">Yes</option>
           <option value="false">No</option>
         </select>
       </td>
       <td>
-        <input title="不使用 GoTd設定的 UTC日期,逗點分隔." type="text" id="gwhBadGotdDatesInput">
+        <input title="不使用 GoTd設定的 UTC日期,逗點分隔." type="text" id="badGotdDatesInput">
       </td>
       <td>
       </td>
@@ -502,25 +431,25 @@ const functions = {
     </tr>
     <tr>
       <td>
-        <select title="是否自動 mapping?" id="gwhIsAutoMappingSelect">
+        <select title="是否自動 mapping?" id="isAutoMappingSelect">
           <option value="true">Yes</option>
           <option value="false">No</option>
         </select>
       </td>
       <td>
-        <select title="是否優先 mapping?" id="gwhIsMappingSelect">
+        <select title="是否優先 mapping?" id="isMappingSelect">
           <option value="true">Yes</option>
           <option value="false">No</option>
         </select>
       </td>
       <td>
-        <select title="只剩 PP mice時是否強制使用 PP?" id="gwhIsCheckPpMiceBaitSelect">
+        <select title="只剩 PP mice時是否強制使用 PP?" id="isCheckPpMiceBaitSelect">
           <option value="true">Yes</option>
           <option value="false">No</option>
         </select>
       </td>
       <td>
-        <select title="是否強制 map area的清除順序?" id="gwhIsForcedMapClearOrderSelect">
+        <select title="是否強制 map area的清除順序?" id="isForcedMapClearOrderSelect">
           <option value="true">Yes</option>
           <option value="false">No</option>
         </select>
@@ -552,10 +481,10 @@ const functions = {
     </tr>
     <tr>
       <td>
-        <input title="GPP數量少於此, drop需要 GPP的 map." type="number" id="gwhDropMapGppAsGppLessThanInput" value="40">
+        <input title="GPP數量少於此, drop需要 GPP的 map." type="number" id="dropMapGppAsGppLessThanInput" value="40">
       </td>
       <td>
-        <input title="GPP數量少於此, drop有 Glazy的 map(做 Joy的 map有機會多抓 Glazy)." type="number" id="gwhDropMapGlazyAsGppLessThanInput" value="100">
+        <input title="GPP數量少於此, drop有 Glazy的 map(做 Joy的 map有機會多抓 Glazy)." type="number" id="dropMapGlazyAsGppLessThanInput" value="100">
       </td>
       <td>
       </td>
@@ -567,13 +496,13 @@ const functions = {
     </tr>
     <tr>
       <td>
-        <input title="Animated Snow數量大於等於此,停用 Animated Snow Cannon." type="number" id="gwhStopAnimatedSnowCannonAtInput" value="-1">
+        <input title="Animated Snow數量大於等於此,停用 Animated Snow Cannon." type="number" id="stopAnimatedSnowCannonAtInput" value="-1">
       </td>
       <td>
-        <input title="Cinnamon數量大於等於此,停用 Cinnamon Cannon." type="number" id="gwhStopCinnamonCannonAtInput" value="-1">
+        <input title="Cinnamon數量大於等於此,停用 Cinnamon Cannon." type="number" id="stopCinnamonCannonAtInput" value="-1">
       </td>
       <td>
-        <select title="Shutdown時,用完 cinnamon後是否自動前往 Fortress" id="gwhIsAutoFortressSelect">
+        <select title="Shutdown時,用完 cinnamon後是否自動前往 Fortress" id="isAutoFortressSelect">
           <option value="true">Yes</option>
           <option value="false">No</option>
         </select>
@@ -586,14 +515,14 @@ const functions = {
     </tr>
     <tr>
       <td>
-        <select title="Trap area" id="gwhTrapAreaSelect">
+        <select title="Trap area" id="trapAreaSelect">
           <option value="winter_hunt_grove">Hill</option>
           <option value="winter_hunt_workshop">Workshop</option>
           <option value="winter_hunt_fortress">Fortress</option>
         </select>
       </td>
       <td>
-        <select title="Trap type" id="gwhTrapTypeSelect">
+        <select title="Trap type" id="trapTypeSelect">
           <option value="normalTrap">Normal</option>
           <option value="ppTrap">Mapping</option>
           <option value="fsTrap">Breaking Shield</option>
@@ -601,7 +530,7 @@ const functions = {
         </select>
       </td>
       <td>
-        <select title="Is trap GoTd" id="gwhTrapGoTdSelect">
+        <select title="Is trap GoTd" id="trapGoTdSelect">
           <option value="gotd">GoTd</option>
           <option value="normal">not</option>
         </select>
@@ -675,237 +604,1356 @@ const functions = {
     </tr>
   </table>
   `;
+    console.log(html);
     // eslint-disable-next-line no-undef
     $('#eventLocationsSettingsDiv').html(html);
   },
-  // prettier-ignore
   greatWinterHuntLoad() {
     const storageKey = 'greatWinterHunt';
+    if (!localStorage[storageKey]) return;
     const a = JSON.parse(localStorage[storageKey]);
-    let isPp = a.winter_hunt_grove.ppTrap.normal[0].indexOf('Pecan Pecorino') == 0;
+    const p = document.querySelector('#mypanel');
+    let isPp =
+      a.winter_hunt_grove.ppTrap.normal[0].indexOf('Pecan Pecorino') == 0;
     let isSb = a.winter_hunt_grove.ppTrap.normal[0].indexOf('SUPER') == 0;
     let isGouda = a.winter_hunt_grove.ppTrap.normal[0].indexOf('Gouda') == 0;
-    document.querySelector('#gwhHillBaitButton').textContent =
-      (isPp ? 'PP' : isSb ? 'SB' : isGouda ? 'GOU' : 'GPP');
-    isPp = a.winter_hunt_workshop.ppTrap.normal[0].indexOf('Pecan Pecorino') == 0;
+    p.querySelector('#hillBaitButton').textContent = isPp
+      ? 'PP'
+      : isSb
+        ? 'SB'
+        : isGouda
+          ? 'GOU'
+          : 'GPP';
+    isPp =
+      a.winter_hunt_workshop.ppTrap.normal[0].indexOf('Pecan Pecorino') == 0;
     isSb = a.winter_hunt_workshop.ppTrap.normal[0].indexOf('SUPER') == 0;
     isGouda = a.winter_hunt_workshop.ppTrap.normal[0].indexOf('Gouda') == 0;
-    document.querySelector('#gwhWorkshopBaitButton').textContent =
-      (isPp ? 'PP' : isSb ? 'SB' : isGouda ? 'GOU' : 'GPP');
-    isPp = a.winter_hunt_fortress.fsTrap.normal[0].indexOf('Pecan Pecorino') == 0;
+    p.querySelector('#workshopBaitButton').textContent = isPp
+      ? 'PP'
+      : isSb
+        ? 'SB'
+        : isGouda
+          ? 'GOU'
+          : 'GPP';
+    isPp =
+      a.winter_hunt_fortress.fsTrap.normal[0].indexOf('Pecan Pecorino') == 0;
     isSb = a.winter_hunt_fortress.fsTrap.normal[0].indexOf('SUPER') == 0;
     isGouda = a.winter_hunt_fortress.fsTrap.normal[0].indexOf('Gouda') == 0;
-    document.querySelector('#gwhFortressBaitButton').textContent =
-      (isPp ? 'PP' : isSb ? 'SB' : isGouda ? 'GOU' : 'GPP');
-    document.querySelector('#gwhStartPpQtyInput').value = a.startPpQty;
-    document.querySelector('#gwhPpKeptQtyInput').value = a.ppKeptQty;
-    document.querySelector('#gwhGppEndQtyInput').value = a.gppEndQty;
-    document.querySelector('#gwhGppAreaSelect').value = a.gppArea;
-    document.querySelector('#gwhStartCinnamonQtyInput').value = a.startCinnamonQty;
-    document.querySelector('#gwhCinnamonKeptQtyInput').value = a.cinnamonKeptQty;
-    document.querySelector('#gwhTooManyCinnamonInput').value = a.tooManyCinnamon;
-    document.querySelectorAll('.stopForgeAt')[0].value = a.stopForgeAt[0];
-    document.querySelectorAll('.stopForgeAt')[1].value = a.stopForgeAt[1];
-    document.querySelectorAll('.stopForgeAt')[2].value = a.stopForgeAt[2];
-    document.querySelector('#gwhGoHailstoneQtyInput').value = a.goHailstoneQty;
-    document.querySelector('#gwhHailstoneKeptQtyInput').value = a.hailstoneKeptQty;
-    document.querySelector('#gwhTooManyHailstoneInput').value = a.tooManyHailstone;
-    document.querySelector('#gwhFsKeptQtyInput').value = a.fsKeptQty;
-    document.querySelector('#gwhIsAutoGolemSelect').value = a.isAutoGolem;
-    document.querySelector('#gwhIsAutoUpgradeSelect').value = a.isAutoUpgrade;
-    document.querySelector('#gwhIsScarfUnusedGolemSelect').value = a.isScarfUnusedGolem;
-    document.querySelector('#gwhGolemsAutoBuildInput').value = a.golemsAutoBuild;
-    document.querySelector('#gwhGolemsAutoUpgradeInput').value = a.golemsAutoUpgrade;
-    document.querySelector('#gwhGolemsAutoClaimInput').value = a.golemsAutoClaim;
-    document.querySelectorAll('.defaultGolemTarget')[0].value = a.golemSetup.defaultTarget[0];
-    document.querySelectorAll('.defaultGolemTarget')[1].value = a.golemSetup.defaultTarget[1];
-    document.querySelectorAll('.defaultGolemTarget')[2].value = a.golemSetup.defaultTarget[2];
-    document.querySelector('#gwhIsGoodGoTdSelect').value = a.isGoodGoTd;
-    document.querySelector('#gwhBadGotdDatesInput').value = a.badGotdDates.join(',');
-    document.querySelector('#gwhIsAutoMappingSelect').value = a.isAutoMapping;
-    document.querySelector('#gwhIsMappingSelect').value = a.isMapping;
-    document.querySelector('#gwhIsCheckPpMiceBaitSelect').value = a.isCheckPpMiceBait;
-    document.querySelector('#gwhIsForcedMapClearOrderSelect').value = a.isForcedMapClearOrder;
-    document.querySelectorAll('.mapAreaClearOrder')[0].value = a.mapAreaClearOrder[0];
-    document.querySelectorAll('.mapAreaClearOrder')[1].value = a.mapAreaClearOrder[1];
-    document.querySelectorAll('.mapAreaClearOrder')[2].value = a.mapAreaClearOrder[2];
-    document.querySelector('#gwhDropMapGppAsGppLessThanInput').value = a.dropMapGppAsGppLessThan;
-    document.querySelector('#gwhDropMapGlazyAsGppLessThanInput').value = a.dropMapGlazyAsGppLessThan;
-    document.querySelector('#gwhStopAnimatedSnowCannonAtInput').value = a.shutdown.stopAnimatedSnowCannonAt;
-    document.querySelector('#gwhStopCinnamonCannonAtInput').value = a.shutdown.stopCinnamonCannonAt;
-    document.querySelector('#gwhIsAutoFortressSelect').value = a.shutdown.isAutoFortress;
-    const trapArea = document.querySelector('#gwhTrapAreaSelect').value;
-    const trapType = document.querySelector('#gwhTrapTypeSelect').value;
-    const trapGoTd = document.querySelector('#gwhTrapGoTdSelect').value;
-    document.querySelector('#gwhBaitInput').value = a[trapArea][trapType][trapGoTd][0];
-    document.querySelector('#gwhWeaponInput').value = a[trapArea][trapType][trapGoTd][1];
-    document.querySelector('#gwhBaseInput').value = a[trapArea][trapType][trapGoTd][2];
-    document.querySelector('#gwhCharmInput').value = a[trapArea][trapType][trapGoTd][3];
-    document.querySelector('#gwhFestiveSpiritSelect').value = a[trapArea][trapType][trapGoTd][4];
-    document.querySelectorAll('.toggleCannons')[0].value = a[trapArea][trapType][trapGoTd][5][0];
-    document.querySelectorAll('.toggleCannons')[1].value = a[trapArea][trapType][trapGoTd][5][1];
-    document.querySelectorAll('.toggleCannons')[2].value = a[trapArea][trapType][trapGoTd][5][2];
-    // document.querySelector('#').value = a.;
-    // document.querySelector('#').value = a.;
-    // document.querySelector('#').value = a.;
-    // document.querySelector('#').value = a.;
-    // prettier-ignore
-    // toggle Hill Bait
-    document
-      .querySelector('#gwhHillBaitButton')
-      .addEventListener('click', function (e) {
-        const a = JSON.parse(localStorage[storageKey]);
-        const isPp = a.winter_hunt_grove.ppTrap.normal[0].indexOf('Pecan Pecorino') == 0;
-        const isSb = a.winter_hunt_grove.ppTrap.normal[0].indexOf('SUPER') == 0;
-        const isGouda = a.winter_hunt_grove.ppTrap.normal[0].indexOf('Gouda') == 0;
-        a.winter_hunt_grove.ppTrap.normal[0] =
-            isPp ? 'Glazed Pecan,Pecan Pecorino' : isSb ? 'Gouda' : isGouda ? 'Pecan Pecorino' : 'SUPER';
-        a.winter_hunt_grove.ppTrap.gotd[0] =
-            isPp ? 'Glazed Pecan,Pecan Pecorino' : isSb ? 'Gouda' : isGouda ? 'Pecan Pecorino' : 'SUPER';
-        localStorage[storageKey] = JSON.stringify(a);
-        e.target.innerHTML = isPp ? 'GPP' : isSb ? 'GOU' : isGouda ? 'PP' : 'SB';
-        console.log(JSON.parse(localStorage[storageKey]));
-      });
-    // prettier-ignore
-    // toggle Workshop Bait
-    document
-      .querySelector('#gwhWorkshopBaitButton')
-      .addEventListener('click', function (e) {
-        const a = JSON.parse(localStorage[storageKey]);
-        const isPp = a.winter_hunt_workshop.ppTrap.normal[0].indexOf('Pecan Pecorino') == 0;
-        const isSb = a.winter_hunt_workshop.ppTrap.normal[0].indexOf('SUPER') == 0;
-        const isGouda = a.winter_hunt_workshop.ppTrap.normal[0].indexOf('Gouda') == 0;
-        a.winter_hunt_workshop.ppTrap.normal[0] =
-            isPp ? 'Glazed Pecan,Pecan Pecorino' : isSb ? 'Gouda' : isGouda ? 'Pecan Pecorino' : 'SUPER';
-        a.winter_hunt_workshop.ppTrap.gotd[0] =
-            isPp ? 'Glazed Pecan,Pecan Pecorino' : isSb ? 'Gouda' : isGouda ? 'Pecan Pecorino' : 'SUPER';
-        localStorage[storageKey] = JSON.stringify(a);
-        e.target.innerHTML = isPp ? 'GPP' : isSb ? 'GOU' : isGouda ? 'PP' : 'SB';
-        console.log(JSON.parse(localStorage[storageKey]));
-      });
-    // prettier-ignore
-    // toggle Fortress Bait
-    document
-      .querySelector('#gwhFortressBaitButton')
-      .addEventListener('click', function (e) {
-        const a = JSON.parse(localStorage[storageKey]);
-        const isPp = a.winter_hunt_fortress.fsTrap.normal[0].indexOf('Pecan Pecorino') == 0;
-        const isSb = a.winter_hunt_fortress.fsTrap.normal[0].indexOf('SUPER') == 0;
-        const isGouda = a.winter_hunt_fortress.fsTrap.normal[0].indexOf('Gouda') == 0;
-        a.winter_hunt_fortress.fsTrap.normal[0] =
-            isPp ? 'Glazed Pecan,Pecan Pecorino' : isSb ? 'Gouda' : isGouda ? 'Pecan Pecorino' : 'SUPER';
-        a.winter_hunt_fortress.fsTrap.gotd[0] =
-            isPp ? 'Glazed Pecan,Pecan Pecorino' : isSb ? 'Gouda' : isGouda ? 'Pecan Pecorino' : 'SUPER';
-        a.winter_hunt_fortress.ppTrap.normal[0] =
-            isPp ? 'Glazed Pecan,Pecan Pecorino' : isSb ? 'Gouda' : isGouda ? 'Pecan Pecorino' : 'SUPER';
-        a.winter_hunt_fortress.ppTrap.gotd[0] =
-            isPp ? 'Glazed Pecan,Pecan Pecorino' : isSb ? 'Gouda' : isGouda ? 'Pecan Pecorino' : 'SUPER';
-        localStorage[storageKey] = JSON.stringify(a);
-        e.target.innerHTML = isPp ? 'GPP' : isSb ? 'GOU' : isGouda ? 'PP' : 'SB';
-        console.log(JSON.parse(localStorage[storageKey]));
-      });
-    // Change trap
-    document
-      .getElementById('gwhTrapAreaSelect')
-      .addEventListener('change', function (e) {
-        const a = JSON.parse(localStorage[storageKey]);
-        const trapArea = document.querySelector('#gwhTrapAreaSelect').value
-        const trapType = document.querySelector('#gwhTrapTypeSelect').value
-        const trapGoTd = document.querySelector('#gwhTrapGoTdSelect').value
-        functions.loadGwhTrap(a, trapArea, trapType, trapGoTd)
-        console.log(a);
-      });
-    document
-      .getElementById('gwhTrapTypeSelect')
-      .addEventListener('change', function (e) {
-        const a = JSON.parse(localStorage[storageKey]);
-        const trapArea = document.querySelector('#gwhTrapAreaSelect').value
-        const trapType = document.querySelector('#gwhTrapTypeSelect').value
-        const trapGoTd = document.querySelector('#gwhTrapGoTdSelect').value
-        functions.loadGwhTrap(a, trapArea, trapType, trapGoTd)
-        console.log(a);
-      });
-    document
-      .getElementById('gwhTrapGoTdSelect')
-      .addEventListener('change', function (e) {
-        const a = JSON.parse(localStorage[storageKey]);
-        const trapArea = document.querySelector('#gwhTrapAreaSelect').value
-        const trapType = document.querySelector('#gwhTrapTypeSelect').value
-        const trapGoTd = document.querySelector('#gwhTrapGoTdSelect').value
-        functions.loadGwhTrap(a, trapArea, trapType, trapGoTd)
-        console.log(a);
-      });
-  },
-  loadGwhTrap(a, trapArea, trapType, trapGoTd) {
-    document.querySelector('#gwhBaitInput').value =
-      a[trapArea][trapType][trapGoTd][0];
-    document.querySelector('#gwhWeaponInput').value =
+    p.querySelector('#fortressBaitButton').textContent = isPp
+      ? 'PP'
+      : isSb
+        ? 'SB'
+        : isGouda
+          ? 'GOU'
+          : 'GPP';
+    p.querySelector('#startPpQtyInput').value = a.startPpQty;
+    p.querySelector('#ppKeptQtyInput').value = a.ppKeptQty;
+    p.querySelector('#gppEndQtyInput').value = a.gppEndQty;
+    p.querySelector('#gppAreaSelect').value = a.gppArea;
+    p.querySelector('#startCinnamonQtyInput').value = a.startCinnamonQty;
+    p.querySelector('#cinnamonKeptQtyInput').value = a.cinnamonKeptQty;
+    p.querySelector('#tooManyCinnamonInput').value = a.tooManyCinnamon;
+    p.querySelectorAll('.stopForgeAt')[0].value = a.stopForgeAt[0];
+    p.querySelectorAll('.stopForgeAt')[1].value = a.stopForgeAt[1];
+    p.querySelectorAll('.stopForgeAt')[2].value = a.stopForgeAt[2];
+    p.querySelector('#goHailstoneQtyInput').value = a.goHailstoneQty;
+    p.querySelector('#hailstoneKeptQtyInput').value = a.hailstoneKeptQty;
+    p.querySelector('#tooManyHailstoneInput').value = a.tooManyHailstone;
+    p.querySelector('#fsKeptQtyInput').value = a.fsKeptQty;
+    p.querySelector('#isAutoGolemSelect').value = a.isAutoGolem;
+    p.querySelector('#isAutoUpgradeSelect').value = a.isAutoUpgrade;
+    p.querySelector('#isScarfUnusedGolemSelect').value = a.isScarfUnusedGolem;
+    p.querySelector('#golemsAutoBuildInput').value = a.golemsAutoBuild;
+    p.querySelector('#golemsAutoUpgradeInput').value = a.golemsAutoUpgrade;
+    p.querySelector('#golemsAutoClaimInput').value = a.golemsAutoClaim;
+    [...p.querySelectorAll('.defaultGolemTarget')].forEach(
+      (v, i) => (v.value = a.golemSetup.defaultTarget[i])
+    );
+    p.querySelector('#isGoodGoTdSelect').value = a.isGoodGoTd;
+    p.querySelector('#badGotdDatesInput').value = a.badGotdDates.join(',');
+    p.querySelector('#isAutoMappingSelect').value = a.isAutoMapping;
+    p.querySelector('#isMappingSelect').value = a.isMapping;
+    p.querySelector('#isCheckPpMiceBaitSelect').value = a.isCheckPpMiceBait;
+    p.querySelector('#isForcedMapClearOrderSelect').value =
+      a.isForcedMapClearOrder;
+    [...p.querySelectorAll('.mapAreaClearOrder')].forEach(
+      (v, i) => (v.value = a.mapAreaClearOrder[i])
+    );
+    p.querySelector('#dropMapGppAsGppLessThanInput').value =
+      a.dropMapGppAsGppLessThan;
+    p.querySelector('#dropMapGlazyAsGppLessThanInput').value =
+      a.dropMapGlazyAsGppLessThan;
+    p.querySelector('#stopAnimatedSnowCannonAtInput').value =
+      a.shutdown.stopAnimatedSnowCannonAt;
+    p.querySelector('#stopCinnamonCannonAtInput').value =
+      a.shutdown.stopCinnamonCannonAt;
+    p.querySelector('#isAutoFortressSelect').value = a.shutdown.isAutoFortress;
+    const trapArea = p.querySelector('#trapAreaSelect').value;
+    const trapType = p.querySelector('#trapTypeSelect').value;
+    const trapGoTd = p.querySelector('#trapGoTdSelect').value;
+    p.querySelector('#gwhBaitInput').value = a[trapArea][trapType][trapGoTd][0];
+    p.querySelector('#gwhWeaponInput').value =
       a[trapArea][trapType][trapGoTd][1];
-    document.querySelector('#gwhBaseInput').value =
-      a[trapArea][trapType][trapGoTd][2];
-    document.querySelector('#gwhCharmInput').value =
+    p.querySelector('#gwhBaseInput').value = a[trapArea][trapType][trapGoTd][2];
+    p.querySelector('#gwhCharmInput').value =
       a[trapArea][trapType][trapGoTd][3];
-    document.querySelector('#gwhFestiveSpiritSelect').value =
+    p.querySelector('#gwhFestiveSpiritSelect').value =
       a[trapArea][trapType][trapGoTd][4];
-    document.querySelectorAll('.toggleCannons')[0].value =
-      a[trapArea][trapType][trapGoTd][5][0];
-    document.querySelectorAll('.toggleCannons')[1].value =
-      a[trapArea][trapType][trapGoTd][5][1];
-    document.querySelectorAll('.toggleCannons')[2].value =
-      a[trapArea][trapType][trapGoTd][5][2];
+    [...p.querySelectorAll('.toggleCannons')].forEach(
+      (v, i) => (v.value = a[trapArea][trapType][trapGoTd][5][i])
+    );
+    // p.querySelector('#').value = a.;
+    // toggle Hill Bait
+    p.querySelector('#hillBaitButton').addEventListener('click', function (e) {
+      const a = JSON.parse(localStorage[storageKey]);
+      const isPp =
+        a.winter_hunt_grove.ppTrap.normal[0].indexOf('Pecan Pecorino') == 0;
+      const isSb = a.winter_hunt_grove.ppTrap.normal[0].indexOf('SUPER') == 0;
+      const isGouda =
+        a.winter_hunt_grove.ppTrap.normal[0].indexOf('Gouda') == 0;
+      a.winter_hunt_grove.ppTrap.normal[0] = isPp
+        ? 'Glazed Pecan,Pecan Pecorino'
+        : isSb
+          ? 'Gouda'
+          : isGouda
+            ? 'Pecan Pecorino'
+            : 'SUPER';
+      a.winter_hunt_grove.ppTrap.gotd[0] = isPp
+        ? 'Glazed Pecan,Pecan Pecorino'
+        : isSb
+          ? 'Gouda'
+          : isGouda
+            ? 'Pecan Pecorino'
+            : 'SUPER';
+      localStorage[storageKey] = JSON.stringify(a);
+      e.target.innerHTML = isPp ? 'GPP' : isSb ? 'GOU' : isGouda ? 'PP' : 'SB';
+      console.log(JSON.parse(localStorage[storageKey]));
+    });
+    // toggle Workshop Bait
+    p.querySelector('#workshopBaitButton').addEventListener(
+      'click',
+      function (e) {
+        const a = JSON.parse(localStorage[storageKey]);
+        const isPp =
+          a.winter_hunt_workshop.ppTrap.normal[0].indexOf('Pecan Pecorino') ==
+          0;
+        const isSb =
+          a.winter_hunt_workshop.ppTrap.normal[0].indexOf('SUPER') == 0;
+        const isGouda =
+          a.winter_hunt_workshop.ppTrap.normal[0].indexOf('Gouda') == 0;
+        a.winter_hunt_workshop.ppTrap.normal[0] = isPp
+          ? 'Glazed Pecan,Pecan Pecorino'
+          : isSb
+            ? 'Gouda'
+            : isGouda
+              ? 'Pecan Pecorino'
+              : 'SUPER';
+        a.winter_hunt_workshop.ppTrap.gotd[0] = isPp
+          ? 'Glazed Pecan,Pecan Pecorino'
+          : isSb
+            ? 'Gouda'
+            : isGouda
+              ? 'Pecan Pecorino'
+              : 'SUPER';
+        localStorage[storageKey] = JSON.stringify(a);
+        e.target.innerHTML = isPp
+          ? 'GPP'
+          : isSb
+            ? 'GOU'
+            : isGouda
+              ? 'PP'
+              : 'SB';
+        console.log(JSON.parse(localStorage[storageKey]));
+      }
+    );
+    // toggle Fortress Bait
+    p.querySelector('#fortressBaitButton').addEventListener(
+      'click',
+      function (e) {
+        const a = JSON.parse(localStorage[storageKey]);
+        const isPp =
+          a.winter_hunt_fortress.fsTrap.normal[0].indexOf('Pecan Pecorino') ==
+          0;
+        const isSb =
+          a.winter_hunt_fortress.fsTrap.normal[0].indexOf('SUPER') == 0;
+        const isGouda =
+          a.winter_hunt_fortress.fsTrap.normal[0].indexOf('Gouda') == 0;
+        a.winter_hunt_fortress.fsTrap.normal[0] = isPp
+          ? 'Glazed Pecan,Pecan Pecorino'
+          : isSb
+            ? 'Gouda'
+            : isGouda
+              ? 'Pecan Pecorino'
+              : 'SUPER';
+        a.winter_hunt_fortress.fsTrap.gotd[0] = isPp
+          ? 'Glazed Pecan,Pecan Pecorino'
+          : isSb
+            ? 'Gouda'
+            : isGouda
+              ? 'Pecan Pecorino'
+              : 'SUPER';
+        a.winter_hunt_fortress.ppTrap.normal[0] = isPp
+          ? 'Glazed Pecan,Pecan Pecorino'
+          : isSb
+            ? 'Gouda'
+            : isGouda
+              ? 'Pecan Pecorino'
+              : 'SUPER';
+        a.winter_hunt_fortress.ppTrap.gotd[0] = isPp
+          ? 'Glazed Pecan,Pecan Pecorino'
+          : isSb
+            ? 'Gouda'
+            : isGouda
+              ? 'Pecan Pecorino'
+              : 'SUPER';
+        localStorage[storageKey] = JSON.stringify(a);
+        e.target.innerHTML = isPp
+          ? 'GPP'
+          : isSb
+            ? 'GOU'
+            : isGouda
+              ? 'PP'
+              : 'SB';
+        console.log(JSON.parse(localStorage[storageKey]));
+      }
+    );
+    // Change trap
+    p.getElementById('trapAreaSelect').addEventListener('change', function (e) {
+      const a = JSON.parse(localStorage[storageKey]);
+      const trapArea = p.querySelector('#trapAreaSelect').value;
+      const trapType = p.querySelector('#trapTypeSelect').value;
+      const trapGoTd = p.querySelector('#trapGoTdSelect').value;
+      loadTrap(a, trapArea, trapType, trapGoTd);
+      console.log(a);
+    });
+    p.getElementById('trapTypeSelect').addEventListener('change', function (e) {
+      const a = JSON.parse(localStorage[storageKey]);
+      const trapArea = p.querySelector('#trapAreaSelect').value;
+      const trapType = p.querySelector('#trapTypeSelect').value;
+      const trapGoTd = p.querySelector('#trapGoTdSelect').value;
+      loadTrap(a, trapArea, trapType, trapGoTd);
+      console.log(a);
+    });
+    p.getElementById('trapGoTdSelect').addEventListener('change', function (e) {
+      const a = JSON.parse(localStorage[storageKey]);
+      const trapArea = p.querySelector('#trapAreaSelect').value;
+      const trapType = p.querySelector('#trapTypeSelect').value;
+      const trapGoTd = p.querySelector('#trapGoTdSelect').value;
+      loadTrap(a, trapArea, trapType, trapGoTd);
+      console.log(a);
+    });
+    function loadTrap(a, trapArea, trapType, trapGoTd) {
+      const p = document.querySelector('#mypanel');
+      p.querySelector('#gwhBaitInput').value =
+        a[trapArea][trapType][trapGoTd][0];
+      p.querySelector('#gwhWeaponInput').value =
+        a[trapArea][trapType][trapGoTd][1];
+      p.querySelector('#gwhBaseInput').value =
+        a[trapArea][trapType][trapGoTd][2];
+      p.querySelector('#gwhCharmInput').value =
+        a[trapArea][trapType][trapGoTd][3];
+      p.querySelector('#gwhFestiveSpiritSelect').value =
+        a[trapArea][trapType][trapGoTd][4];
+      p.querySelectorAll('.toggleCannons')[0].value =
+        a[trapArea][trapType][trapGoTd][5][0];
+      p.querySelectorAll('.toggleCannons')[1].value =
+        a[trapArea][trapType][trapGoTd][5][1];
+      p.querySelectorAll('.toggleCannons')[2].value =
+        a[trapArea][trapType][trapGoTd][5][2];
+    }
   },
-  // prettier-ignore
   greatWinterHuntSave() {
     const storageKey = 'greatWinterHunt';
-    const a = localStorage[storageKey] ? JSON.parse(localStorage[storageKey]) : {};
-    a.startPpQty = parseInt(document.querySelector('#gwhStartPpQtyInput').value);
-    a.ppKeptQty = parseInt(document.querySelector('#gwhPpKeptQtyInput').value);
-    a.gppEndQty =parseInt( document.querySelector('#gwhGppEndQtyInput').value);
-    a.gppArea = document.querySelector('#gwhGppAreaSelect').value;
-    a.startCinnamonQty = parseInt(document.querySelector('#gwhStartCinnamonQtyInput').value);
-    a.cinnamonKeptQty = parseInt(document.querySelector('#gwhCinnamonKeptQtyInput').value);
-    a.tooManyCinnamon = parseInt(document.querySelector('#gwhTooManyCinnamonInput').value);
-    a.stopForgeAt[0] = parseInt(document.querySelectorAll('.stopForgeAt')[0].value);
-    a.stopForgeAt[1] = parseInt(document.querySelectorAll('.stopForgeAt')[1].value);
-    a.stopForgeAt[2] = parseInt(document.querySelectorAll('.stopForgeAt')[2].value);
-    a.goHailstoneQty = parseInt(document.querySelector('#gwhGoHailstoneQtyInput').value);
-    a.hailstoneKeptQty = parseInt(document.querySelector('#gwhHailstoneKeptQtyInput').value);
-    a.tooManyHailstone = parseInt(document.querySelector('#gwhTooManyHailstoneInput').value);
-    a.fsKeptQty = parseInt(document.querySelector('#gwhFsKeptQtyInput').value);
-    a.isAutoGolem = document.querySelector('#gwhIsAutoGolemSelect').value === 'true';
-    a.isAutoUpgrade = document.querySelector('#gwhIsAutoUpgradeSelect').value === 'true';
-    a.isScarfUnusedGolem = document.querySelector('#gwhIsScarfUnusedGolemSelect').value === 'true';
-    a.golemsAutoBuild = parseInt(document.querySelector('#gwhGolemsAutoBuildInput').value);
-    a.golemsAutoUpgrade = parseInt(document.querySelector('#gwhGolemsAutoUpgradeInput').value);
-    a.golemsAutoClaim = parseInt(document.querySelector('#gwhGolemsAutoClaimInput').value);
-    a.golemSetup.defaultTarget[0] = document.querySelectorAll('.defaultGolemTarget')[0].value;
-    a.golemSetup.defaultTarget[1] = document.querySelectorAll('.defaultGolemTarget')[1].value;
-    a.golemSetup.defaultTarget[2] = document.querySelectorAll('.defaultGolemTarget')[2].value;
-    a.isGoodGoTd = document.querySelector('#gwhIsGoodGoTdSelect').value === 'true';
-    a.badGotdDates = document.querySelector('#gwhBadGotdDatesInput').value.split(',');
-    a.isAutoMapping = document.querySelector('#gwhIsAutoMappingSelect').value === 'true';
-    a.isMapping = document.querySelector('#gwhIsMappingSelect').value === 'true';
-    a.isCheckPpMiceBait = document.querySelector('#gwhIsCheckPpMiceBaitSelect').value === 'true';
-    a.isForcedMapClearOrder = document.querySelector('#gwhIsForcedMapClearOrderSelect').value === 'true';
-    a.mapAreaClearOrder[0] = document.querySelectorAll('.mapAreaClearOrder')[0].value;
-    a.mapAreaClearOrder[1] = document.querySelectorAll('.mapAreaClearOrder')[1].value;
-    a.mapAreaClearOrder[2] = document.querySelectorAll('.mapAreaClearOrder')[2].value;
-    a.dropMapGppAsGppLessThan = parseInt(document.querySelector('#gwhDropMapGppAsGppLessThanInput').value);
-    a.dropMapGlazyAsGppLessThan = parseInt(document.querySelector('#gwhDropMapGlazyAsGppLessThanInput').value);
-    a.shutdown.stopAnimatedSnowCannonAt = parseInt(document.querySelector('#gwhStopAnimatedSnowCannonAtInput').value);
-    a.shutdown.stopCinnamonCannonAt = parseInt(document.querySelector('#gwhStopCinnamonCannonAtInput').value);
-    a.shutdown.isAutoFortress = document.querySelector('#gwhIsAutoFortressSelect').value === 'true';
-    const trapArea = document.querySelector('#gwhTrapAreaSelect').value
-    const trapType = document.querySelector('#gwhTrapTypeSelect').value
-    const trapGoTd = document.querySelector('#gwhTrapGoTdSelect').value
-    a[trapArea][trapType][trapGoTd][0] = document.querySelector('#gwhBaitInput').value;
-    a[trapArea][trapType][trapGoTd][1] = document.querySelector('#gwhWeaponInput').value;
-    a[trapArea][trapType][trapGoTd][2] = document.querySelector('#gwhBaseInput').value;
-    a[trapArea][trapType][trapGoTd][3] = document.querySelector('#gwhCharmInput').value;
-    a[trapArea][trapType][trapGoTd][4] = document.querySelector('#gwhFestiveSpiritSelect').value === 'true';
-    a[trapArea][trapType][trapGoTd][5][0] = document.querySelectorAll('.toggleCannons')[0].value === 'true';
-    a[trapArea][trapType][trapGoTd][5][1] = document.querySelectorAll('.toggleCannons')[1].value === 'true';
-    a[trapArea][trapType][trapGoTd][5][2] = document.querySelectorAll('.toggleCannons')[2].value === 'true';
+    const a = localStorage[storageKey]
+      ? JSON.parse(localStorage[storageKey])
+      : {};
+    const p = document.querySelector('#mypanel');
+    a.startPpQty = parseInt(p.querySelector('#startPpQtyInput').value);
+    a.ppKeptQty = parseInt(p.querySelector('#ppKeptQtyInput').value);
+    a.gppEndQty = parseInt(p.querySelector('#gppEndQtyInput').value);
+    a.gppArea = p.querySelector('#gppAreaSelect').value;
+    a.startCinnamonQty = parseInt(
+      p.querySelector('#startCinnamonQtyInput').value
+    );
+    a.cinnamonKeptQty = parseInt(
+      p.querySelector('#cinnamonKeptQtyInput').value
+    );
+    a.tooManyCinnamon = parseInt(
+      p.querySelector('#tooManyCinnamonInput').value
+    );
+    a.stopForgeAt[0] = parseInt(p.querySelectorAll('.stopForgeAt')[0].value);
+    a.stopForgeAt[1] = parseInt(p.querySelectorAll('.stopForgeAt')[1].value);
+    a.stopForgeAt[2] = parseInt(p.querySelectorAll('.stopForgeAt')[2].value);
+    a.goHailstoneQty = parseInt(p.querySelector('#goHailstoneQtyInput').value);
+    a.hailstoneKeptQty = parseInt(
+      p.querySelector('#hailstoneKeptQtyInput').value
+    );
+    a.tooManyHailstone = parseInt(
+      p.querySelector('#tooManyHailstoneInput').value
+    );
+    a.fsKeptQty = parseInt(p.querySelector('#fsKeptQtyInput').value);
+    a.isAutoGolem = p.querySelector('#isAutoGolemSelect').value === 'true';
+    a.isAutoUpgrade = p.querySelector('#isAutoUpgradeSelect').value === 'true';
+    a.isScarfUnusedGolem =
+      p.querySelector('#isScarfUnusedGolemSelect').value === 'true';
+    a.golemsAutoBuild = parseInt(
+      p.querySelector('#golemsAutoBuildInput').value
+    );
+    a.golemsAutoUpgrade = parseInt(
+      p.querySelector('#golemsAutoUpgradeInput').value
+    );
+    a.golemsAutoClaim = parseInt(
+      p.querySelector('#golemsAutoClaimInput').value
+    );
+    [...p.querySelectorAll('.defaultGolemTarget')].forEach(
+      (v, i) => (a.golemSetup.defaultTarget[i] = v.value)
+    );
+    a.isGoodGoTd = p.querySelector('#isGoodGoTdSelect').value === 'true';
+    a.badGotdDates = p.querySelector('#badGotdDatesInput').value.split(',');
+    a.isAutoMapping = p.querySelector('#isAutoMappingSelect').value === 'true';
+    a.isMapping = p.querySelector('#isMappingSelect').value === 'true';
+    a.isCheckPpMiceBait =
+      p.querySelector('#isCheckPpMiceBaitSelect').value === 'true';
+    a.isForcedMapClearOrder =
+      p.querySelector('#isForcedMapClearOrderSelect').value === 'true';
+    [...p.querySelectorAll('.mapAreaClearOrder')].forEach(
+      (v, i) => (a.mapAreaClearOrder[i] = v.value)
+    );
+    a.dropMapGppAsGppLessThan = parseInt(
+      p.querySelector('#dropMapGppAsGppLessThanInput').value
+    );
+    a.dropMapGlazyAsGppLessThan = parseInt(
+      p.querySelector('#dropMapGlazyAsGppLessThanInput').value
+    );
+    a.shutdown.stopAnimatedSnowCannonAt = parseInt(
+      p.querySelector('#stopAnimatedSnowCannonAtInput').value
+    );
+    a.shutdown.stopCinnamonCannonAt = parseInt(
+      p.querySelector('#stopCinnamonCannonAtInput').value
+    );
+    a.shutdown.isAutoFortress =
+      p.querySelector('#isAutoFortressSelect').value === 'true';
+    const trapArea = p.querySelector('#trapAreaSelect').value;
+    const trapType = p.querySelector('#trapTypeSelect').value;
+    const trapGoTd = p.querySelector('#trapGoTdSelect').value;
+    a[trapArea][trapType][trapGoTd][0] = p.querySelector('#gwhBaitInput').value;
+    a[trapArea][trapType][trapGoTd][1] =
+      p.querySelector('#gwhWeaponInput').value;
+    a[trapArea][trapType][trapGoTd][2] = p.querySelector('#gwhBaseInput').value;
+    a[trapArea][trapType][trapGoTd][3] =
+      p.querySelector('#gwhCharmInput').value;
+    a[trapArea][trapType][trapGoTd][4] =
+      p.querySelector('#gwhFestiveSpiritSelect').value === 'true';
+    a[trapArea][trapType][trapGoTd][5][0] =
+      p.querySelectorAll('.toggleCannons')[0].value === 'true';
+    a[trapArea][trapType][trapGoTd][5][1] =
+      p.querySelectorAll('.toggleCannons')[1].value === 'true';
+    a[trapArea][trapType][trapGoTd][5][2] =
+      p.querySelectorAll('.toggleCannons')[2].value === 'true';
+    localStorage[storageKey] = JSON.stringify(a);
+    console.log(JSON.parse(localStorage[storageKey]));
+  },
+  floating_islands() {
+    const powerCodeOptions = `
+      <option value=""></option>
+      <option value="arcn">Arcane</option>
+      <option value="drcnc">Draconic</option>
+      <option value="frgttn">Forgotten</option>
+      <option value="hdr">Hydro</option>
+      <option value="law">Law</option>
+      <option value="phscl">Physical</option>
+      <option value="shdw">Shadow</option>
+      <option value="tctcl">Tactical</option>
+    `;
+    const laiPowerTypesDdl = `
+      <select
+        class="myLaiPowerTypes"
+        style="background-color:rgb(250, 80, 130);">
+        ${powerCodeOptions}
+      </select>
+    `;
+    const haiPowerTypesDdl = `
+      <select
+        class="myHaiPowerTypes"
+        style="background-color:rgb(240, 235, 190);">
+        ${powerCodeOptions}
+      </select>
+    `;
+    const modOptions = `
+      <option value="loot_cache">Loot Cache</option>
+      <option value="sky_pirates">Sky Pirate Den</option>
+      <option value="cloudstone_bonus">Empyrean Seal Stowage</option>
+      <option value="charm_bonus">Ancient Jade Stockpile</option>
+      <option value="ore_gem_bonus">Ore and Glass Deposit</option>
+    `;
+    const spModDdl = `
+      <select title="SP Wheel mod" class="spWheelPattern">
+        ${modOptions}
+      </select>
+    `;
+    const html = `
+  <table>
+    <tr>
+      <td>
+        <b>Travel to</b>
+        <select title="在 Launch Pad且不自動 Sky Map時前往此處" id="travelToInput">
+        </select>
+      </td>
+      <td>
+        <b>Low CC</b>
+        <select title="Cloud Curd是否不足" id="isLowCCDdl">
+          <option value="true">Yes</option>
+          <option value="false">No</option>
+        </select>
+      </td>
+      <td>
+        <b>auto CJS</b>
+        <select title="是否自動使用 CJS" id="isAutoCjsDdl">
+          <option value="true">Yes</option>
+          <option value="false" selected>No</option>
+        </select>
+      </td>
+      <td>
+        <b>Sleep In CJS</b>
+        <select title="CJS中是否睡覺" id="isSleepInCJSDdl">
+          <option value="true">Yes</option>
+          <option value="false" selected>No</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <b>Use Bottled Wind</b>
+        <select title="是否使用 Bottled Wind"
+          style="background-color:rgb(140, 238, 255);"
+          id="isBottledWindDdl">
+          <option value="true">Yes</option>
+          <option value="false" selected>No</option>
+        </select>
+      </td>
+      <td>
+        <b>Auto Hunt after Trove</b>
+        <select title="是否自動判斷 Trove後繼續 hunt"
+          style="background-color:rgb(140, 238, 255);"
+          id="isAutoHuntAfterTroveDdl">
+          <option value="true">Yes</option>
+          <option value="false" selected>No</option>
+        </select>
+      </td>
+      <td>
+        <b>start Pirate Hunting Progress in SP</b>
+        <input
+          title="SP從多少 progress開始 Pirate hunting"
+          type="number"
+          id="startPirateProgressSpInput"
+          value="30">
+      </td>
+      <td>
+        <b>Auto Buy</b>
+        <select title="是否自動買 cheese" id="isAutoBuyDdl">
+          <option value="true" selected>Yes</option>
+          <option value="false">No</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <b>Shrine Max Index</b>
+        <input title="Shrine index必須小於(不含)此值, LAI/HAI通用"
+          type="number" id="shrineMaxIndexInput" value="4">
+      </td>
+      <td>
+      </td>
+      <td>
+      </td>
+      <td>
+      </td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td><strong style="font-weight: bold;">LAI</strong></td>
+      <td><strong style="font-weight: bold;">HAI</strong></td>
+      <td><strong style="font-weight: bold;">SP</strong></td>
+    </tr>
+    <tr>
+      <td>Auto Sky Map</td>
+      <td>
+        <select title="是否自動 LAI Sky Map" id="isAutoLaiDdl">
+          <option value="true" selected>Yes</option>
+          <option value="false">No</option>
+        </select>
+      </td>
+      <td>
+        <select title="是否自動 HAI Sky Map" id="isAutoHaiDdl">
+          <option value="true">Yes</option>
+          <option value="false" selected>No</option>
+        </select>
+      </td>
+      <td>
+        <select title="是否自動 Sky Palace" id="isAutoSpDdl">
+          <option value="true">Yes</option>
+          <option value="false" selected>No</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Included HAI Shrine
+      </td>
+      <td colspan="3">
+        <select
+          class="includedHaiShrine"
+          style="background-color:rgb(250, 80, 130);">
+          <option value=""></option>
+          <option value="paragon_cache_a">Sproc</option>
+        </select>
+        <select
+          class="includedHaiShrine"
+          style="background-color:rgb(250, 80, 130);">
+          <option value=""></option>
+          <option value="paragon_cache_b">Silk</option>
+        </select>
+        <select
+          class="includedHaiShrine"
+          style="background-color:rgb(250, 80, 130);">
+          <option value=""></option>
+          <option value="paragon_cache_c">Wing</option>
+        </select>
+        <select
+          class="includedHaiShrine"
+          style="background-color:rgb(250, 80, 130);">
+          <option value=""></option>
+          <option value="paragon_cache_d">Bangle</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        My HAI Powers
+      </td>
+      <td colspan="3">
+        ${haiPowerTypesDdl}
+        ${haiPowerTypesDdl}
+        ${haiPowerTypesDdl}
+        ${haiPowerTypesDdl}
+        ${haiPowerTypesDdl}
+        ${haiPowerTypesDdl}
+        ${haiPowerTypesDdl}
+        ${haiPowerTypesDdl}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        My LAI Powers
+      </td>
+      <td colspan="3">
+        ${laiPowerTypesDdl}
+        ${laiPowerTypesDdl}
+        ${laiPowerTypesDdl}
+        ${laiPowerTypesDdl}
+        ${laiPowerTypesDdl}
+        ${laiPowerTypesDdl}
+        ${laiPowerTypesDdl}
+        ${laiPowerTypesDdl}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        SP Wheel Pattern
+      </td>
+      <td colspan="3">
+        <select title="SP Wheel power type" class="spWheelPattern">
+          ${powerCodeOptions}
+        </select>
+        ${spModDdl}
+        ${spModDdl}
+        ${spModDdl}
+        ${spModDdl}
+      </td>
+    </tr>
+    <tr>
+      <td>Use Cyclone</td>
+      <td>
+        <select title="是否 cyclone LAI" id="isCycleLaiDdl">
+          <option value="true">Yes</option>
+          <option value="false" selected>No</option>
+        </select>
+      </td>
+      <td>
+        <select title="是否 cyclone HAI" id="isCycleHaiDdl">
+          <option value="true">Yes</option>
+          <option value="false" selected>No</option>
+        </select>
+      </td>
+      <td>
+        <select title="是否 cyclone SP" id="isCycleSpDdl">
+          <option value="true" selected>Yes</option>
+          <option value="false">No</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>Bottled Wind Last Block</td>
+      <td>
+        <select title="是否 BW LAI last block" id="isBwLaiLastBlockDdl">
+          <option value="true">Yes</option>
+          <option value="false" selected>No</option>
+        </select>
+      </td>
+      <td>
+        <select title="是否 BW HAI last block" id="isBwHaiLastBlockDdl">
+          <option value="true">Yes</option>
+          <option value="false" selected>No</option>
+        </select>
+      </td>
+      <td>
+        <select title="是否 BW SP last block" id="isBwSpLastBlockDdl">
+          <option value="true">Yes</option>
+          <option value="false" selected>No</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>Bottled Wind Boss</td>
+      <td>
+        <select title="Warden是否 Bottled Wind" id="isBottledWindWardenDdl">
+          <option value="true">Yes</option>
+          <option value="false" selected>No</option>
+        </select>
+      </td>
+      <td>
+        <select title="Paragon是否 Bottled Wind" id="isBottledWindParagonDdl">
+          <option value="true">Yes</option>
+          <option value="false" selected>No</option>
+        </select>
+      </td>
+      <td>
+        <select title="Empress是否 Bottled Wind" id="isBottledWindEmpressDdl">
+          <option value="true">Yes</option>
+          <option value="false" selected>No</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>Bottled Wind after Trove</td>
+      <td>
+        <select title="LAI Trove後是否繼續 Bottled Wind"
+          id="isBwAfterLaiTroveDdl">
+          <option value="true">Yes</option>
+          <option value="false" selected>No</option>
+        </select>
+      </td>
+      <td>
+        <select title="HAI Trove後是否繼續 Bottled Wind"
+          id="isBwAfterHaiTroveDdl">
+          <option value="true">Yes</option>
+          <option value="false" selected>No</option>
+        </select>
+      </td>
+      <td>
+        <select title="SP Trove後是否繼續 Bottled Wind"
+          id="isBwAfterSpTroveDdl">
+          <option value="true">Yes</option>
+          <option value="false" selected>No</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>Auto Bottled Wind Off</td>
+      <td>
+        <select title="是否自動關閉 LAI Bottled Wind" id="isBwAutoOffLaiDdl">
+          <option value="true">Yes</option>
+          <option value="false" selected>No</option>
+        </select>
+      </td>
+      <td>
+        <select title="是否自動關閉 HAI Bottled Wind" id="isBwAutoOffHaiDdl">
+          <option value="true" selected>Yes</option>
+          <option value="false">No</option>
+        </select>
+      </td>
+      <td>
+        <select title="是否自動關閉 SP Bottled Wind" id="isBwAutoOffSPDdl">
+          <option value="true">Yes</option>
+          <option value="false" selected>No</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>Hunt after Boss</td>
+      <td>
+        <select title="LAI Boss後是否繼續 hunt" id="isHuntAfterBossLaiDdl">
+          <option value="true">Yes</option>
+          <option value="false" selected>No</option>
+        </select>
+      </td>
+      <td>
+        <select title="HAI Boss後是否繼續 hunt" id="isHuntAfterBossHaiDdl">
+          <option value="true" selected>Yes</option>
+          <option value="false">No</option>
+        </select>
+      </td>
+      <td>
+        <select title="SP Boss後是否繼續 hunt" id="isHuntAfterBossSpDdl">
+          <option value="true" selected>Yes</option>
+          <option value="false">No</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>Hunt after Trove</td>
+      <td>
+        <select title="LAI Trove後是否繼續 hunt" id="isHuntAfterLaiTroveDdl">
+          <option value="true">Yes</option>
+          <option value="false" selected>No</option>
+        </select>
+      </td>
+      <td>
+        <select title="HAI Trove後是否繼續 hunt" id="isHuntAfterHaiTroveDdl">
+          <option value="true" selected>Yes</option>
+          <option value="false">No</option>
+        </select>
+      </td>
+      <td>
+        <select title="SP Trove後是否繼續 hunt" id="isHuntAfterSpTroveDdl">
+          <option value="true" selected>Yes</option>
+          <option value="false">No</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>Is Hunting Pirate</td>
+      <td>
+        <select title="是否 LAI Pirate hunting" id="isPirateHuntingLaiDdl">
+          <option value="true">Yes</option>
+          <option value="false" selected>No</option>
+        </select>
+      </td>
+      <td>
+        <select title="是否 HAI Pirate hunting" id="isPirateHuntingHaiDdl">
+          <option value="true">Yes</option>
+          <option value="false" selected>No</option>
+        </select>
+      </td>
+      <td>
+        <select title="是否 SP Pirate hunting" id="isPirateHuntingSpDdl">
+          <option value="true" selected>Yes</option>
+          <option value="false">No</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>
+      </td>
+      <td>
+      </td>
+      <td>
+      </td>
+      <td>
+      </td>
+    </tr>
+  </table>
+  `;
+    console.log(html);
+    // eslint-disable-next-line no-undef
+    $('#eventLocationsSettingsDiv').html(html);
+  },
+  floating_islandsLoad() {
+    const storageKey = 'floating_islands';
+    if (!localStorage[storageKey]) return;
+    const a = JSON.parse(localStorage[storageKey]);
+    const p = document.querySelector('#mypanel');
+    p.querySelector('#travelToInput').value = a.travelTo; // not empty if never hunt in launch
+    p.querySelector('#isLowCCDdl').value = a.isLowCC;
+    p.querySelector('#isAutoCjsDdl').value = a.isAutoCjs;
+    p.querySelector('#isSleepInCJSDdl').value = a.isSleepInCJS;
+    p.querySelector('#isAutoLaiDdl').value = a.isAutoLai;
+    p.querySelector('#isAutoHaiDdl').value = a.isAutoHai;
+    p.querySelector('#isAutoSpDdl').value = a.isAutoSp;
+    const includedHaiShrineDdls = p.querySelectorAll('.includedHaiShrine');
+    includedHaiShrineDdls[0].value =
+      a.includedHaiShrine.indexOf('paragon_cache_a') < 0
+        ? ''
+        : 'paragon_cache_a'; // null or empty if not filter
+    includedHaiShrineDdls[1].value =
+      a.includedHaiShrine.indexOf('paragon_cache_b') < 0
+        ? ''
+        : 'paragon_cache_b'; // null or empty if not filter
+    includedHaiShrineDdls[2].value =
+      a.includedHaiShrine.indexOf('paragon_cache_c') < 0
+        ? ''
+        : 'paragon_cache_c'; // null or empty if not filter
+    includedHaiShrineDdls[3].value =
+      a.includedHaiShrine.indexOf('paragon_cache_d') < 0
+        ? ''
+        : 'paragon_cache_d'; // null or empty if not filter
+    p.querySelector('#isCycleLaiDdl').value = a.isCycleLai;
+    p.querySelector('#isCycleHaiDdl').value = a.isCycleHai;
+    p.querySelector('#isCycleSpDdl').value = a.isCycleSp;
+    p.querySelector('#isBottledWindDdl').value = a.isBottledWind;
+    p.querySelector('#isBwLaiLastBlockDdl').value = a.isBwLaiLastBlock;
+    p.querySelector('#isBwHaiLastBlockDdl').value = a.isBwHaiLastBlock;
+    p.querySelector('#isBwSpLastBlockDdl').value = a.isBwSpLastBlock;
+    p.querySelector('#isBottledWindWardenDdl').value = a.isBottledWindWarden;
+    p.querySelector('#isBottledWindParagonDdl').value = a.isBottledWindParagon;
+    p.querySelector('#isBottledWindEmpressDdl').value = a.isBottledWindEmpress;
+    p.querySelector('#isBwAfterLaiTroveDdl').value = a.isBwAfterLaiTrove;
+    p.querySelector('#isBwAfterHaiTroveDdl').value = a.isBwAfterHaiTrove;
+    p.querySelector('#isBwAfterSpTroveDdl').value = a.isBwAfterSpTrove;
+    p.querySelector('#isBwAutoOffLaiDdl').value = a.isBwAutoOffLai;
+    p.querySelector('#isBwAutoOffHaiDdl').value = a.isBwAutoOffHai;
+    p.querySelector('#isBwAutoOffSPDdl').value = a.isBwAutoOffSP;
+    p.querySelector('#isHuntAfterBossLaiDdl').value = a.isHuntAfterBossLai;
+    p.querySelector('#isHuntAfterBossHaiDdl').value = a.isHuntAfterBossHai;
+    p.querySelector('#isHuntAfterBossSpDdl').value = a.isHuntAfterBossSp;
+    p.querySelector('#isHuntAfterLaiTroveDdl').value = a.isHuntAfterLaiTrove;
+    p.querySelector('#isHuntAfterHaiTroveDdl').value = a.isHuntAfterHaiTrove;
+    p.querySelector('#isHuntAfterSpTroveDdl').value = a.isHuntAfterSpTrove;
+    p.querySelector('#isAutoHuntAfterTroveDdl').value = a.isAutoHuntAfterTrove;
+    p.querySelector('#isPirateHuntingLaiDdl').value = a.isPirateHuntingLai;
+    p.querySelector('#isPirateHuntingHaiDdl').value = a.isPirateHuntingHai;
+    p.querySelector('#isPirateHuntingSpDdl').value = a.isPirateHuntingSp;
+    p.querySelector('#startPirateProgressSpInput').value =
+      a.startPirateProgressSp;
+    p.querySelector('#isAutoBuyDdl').value = a.isAutoBuy;
+    let classKey = 'myLaiPowerTypes';
+    p.querySelectorAll(`.${classKey}`).forEach(
+      (v, i) => (v.value = a[classKey][i] ? a[classKey][i] : '')
+    );
+    classKey = 'myHaiPowerTypes';
+    p.querySelectorAll(`.${classKey}`).forEach(
+      (v, i) => (v.value = a[classKey][i] ? a[classKey][i] : '')
+    );
+    p.querySelector('#shrineMaxIndexInput').value = a.shrineMaxIndex;
+    classKey = 'spWheelPattern';
+    p.querySelectorAll(`.${classKey}`).forEach(
+      (v, i) => (v.value = a[classKey][i] ? a[classKey][i] : '')
+    );
+    // document.querySelector('#').value = a.;
+    // document.querySelector('#').value = a.;
+    // document.querySelector('#').value = a.;
+    // document.querySelector('#').value = a.;
+    // Change trap
+    // document
+    //   .getElementById('trapAreaSelect')
+    //   .addEventListener('change', function (e) {
+    //     const a = JSON.parse(localStorage[storageKey]);
+    //     const trapArea = document.querySelector('#trapAreaSelect').value;
+    //     const trapType = document.querySelector('#trapTypeSelect').value;
+    //     const trapGoTd = document.querySelector('#trapGoTdSelect').value;
+    //     functions.loadGwhTrap(a, trapArea, trapType, trapGoTd);
+    //     console.log(a);
+    //   });
+    // document
+    //   .getElementById('trapTypeSelect')
+    //   .addEventListener('change', function (e) {
+    //     const a = JSON.parse(localStorage[storageKey]);
+    //     const trapArea = document.querySelector('#trapAreaSelect').value;
+    //     const trapType = document.querySelector('#trapTypeSelect').value;
+    //     const trapGoTd = document.querySelector('#trapGoTdSelect').value;
+    //     functions.loadGwhTrap(a, trapArea, trapType, trapGoTd);
+    //     console.log(a);
+    //   });
+    // document
+    //   .getElementById('trapGoTdSelect')
+    //   .addEventListener('change', function (e) {
+    //     const a = JSON.parse(localStorage[storageKey]);
+    //     const trapArea = document.querySelector('#trapAreaSelect').value;
+    //     const trapType = document.querySelector('#trapTypeSelect').value;
+    //     const trapGoTd = document.querySelector('#trapGoTdSelect').value;
+    //     functions.loadGwhTrap(a, trapArea, trapType, trapGoTd);
+    //     console.log(a);
+    //   });
+    function loadTrap(a, trapArea, trapType, trapGoTd) {
+      document.querySelector('#gwhBaitInput').value =
+        a[trapArea][trapType][trapGoTd][0];
+      document.querySelector('#gwhWeaponInput').value =
+        a[trapArea][trapType][trapGoTd][1];
+      document.querySelector('#gwhBaseInput').value =
+        a[trapArea][trapType][trapGoTd][2];
+      document.querySelector('#gwhCharmInput').value =
+        a[trapArea][trapType][trapGoTd][3];
+      document.querySelector('#gwhFestiveSpiritSelect').value =
+        a[trapArea][trapType][trapGoTd][4];
+      document.querySelectorAll('.toggleCannons')[0].value =
+        a[trapArea][trapType][trapGoTd][5][0];
+      document.querySelectorAll('.toggleCannons')[1].value =
+        a[trapArea][trapType][trapGoTd][5][1];
+      document.querySelectorAll('.toggleCannons')[2].value =
+        a[trapArea][trapType][trapGoTd][5][2];
+    }
+  },
+  floating_islandsSave() {
+    const storageKey = 'floating_islands';
+    const a = localStorage[storageKey]
+      ? JSON.parse(localStorage[storageKey])
+      : {};
+    const p = document.querySelector('#mypanel');
+    a.travelTo = p.querySelector('#travelToInput').value; // not empty if never hunt in launch
+    a.isLowCC = p.querySelector('#isLowCCDdl').value === 'true';
+    a.isAutoCjs = p.querySelector('#isAutoCjsDdl').value === 'true';
+    a.isSleepInCJS = p.querySelector('#isSleepInCJSDdl').value === 'true';
+    a.isAutoLai = p.querySelector('#isAutoLaiDdl').value === 'true';
+    a.isAutoHai = p.querySelector('#isAutoHaiDdl').value === 'true';
+    a.isAutoSp = p.querySelector('#isAutoSpDdl').value === 'true';
+    a.includedHaiShrine = []; // null or empty if not filter
+    [...p.querySelectorAll('.includedHaiShrine')].forEach((v) => {
+      if (v.value.trim() !== '') a.includedHaiShrine.push(v.value.trim());
+    });
+    a.isCycleLai = p.querySelector('#isCycleLaiDdl').value === 'true';
+    a.isCycleHai = p.querySelector('#isCycleHaiDdl').value === 'true';
+    a.isCycleSp = p.querySelector('#isCycleSpDdl').value === 'true';
+    a.isBottledWind = p.querySelector('#isBottledWindDdl').value === 'true';
+    a.isBwLaiLastBlock =
+      p.querySelector('#isBwLaiLastBlockDdl').value === 'true';
+    a.isBwHaiLastBlock =
+      p.querySelector('#isBwHaiLastBlockDdl').value === 'true';
+    a.isBwSpLastBlock = p.querySelector('#isBwSpLastBlockDdl').value === 'true';
+    a.isBottledWindWarden =
+      p.querySelector('#isBottledWindWardenDdl').value === 'true';
+    a.isBottledWindParagon =
+      p.querySelector('#isBottledWindParagonDdl').value === 'true';
+    a.isBottledWindEmpress =
+      p.querySelector('#isBottledWindEmpressDdl').value === 'true';
+    a.isBwAfterLaiTrove =
+      p.querySelector('#isBwAfterLaiTroveDdl').value === 'true';
+    a.isBwAfterHaiTrove =
+      p.querySelector('#isBwAfterHaiTroveDdl').value === 'true';
+    a.isBwAfterSpTrove =
+      p.querySelector('#isBwAfterSpTroveDdl').value === 'true';
+    a.isBwAutoOffLai = p.querySelector('#isBwAutoOffLaiDdl').value === 'true';
+    a.isBwAutoOffHai = p.querySelector('#isBwAutoOffHaiDdl').value === 'true';
+    a.isBwAutoOffSP = p.querySelector('#isBwAutoOffSPDdl').value === 'true';
+    a.isHuntAfterBossLai =
+      p.querySelector('#isHuntAfterBossLaiDdl').value === 'true';
+    a.isHuntAfterBossHai =
+      p.querySelector('#isHuntAfterBossHaiDdl').value === 'true';
+    a.isHuntAfterBossSp =
+      p.querySelector('#isHuntAfterBossSpDdl').value === 'true';
+    a.isHuntAfterLaiTrove =
+      p.querySelector('#isHuntAfterLaiTroveDdl').value === 'true';
+    a.isHuntAfterHaiTrove =
+      p.querySelector('#isHuntAfterHaiTroveDdl').value === 'true';
+    a.isHuntAfterSpTrove =
+      p.querySelector('#isHuntAfterSpTroveDdl').value === 'true';
+    a.isAutoHuntAfterTrove =
+      p.querySelector('#isAutoHuntAfterTroveDdl').value === 'true';
+    a.isPirateHuntingLai =
+      p.querySelector('#isPirateHuntingLaiDdl').value === 'true';
+    a.isPirateHuntingHai =
+      p.querySelector('#isPirateHuntingHaiDdl').value === 'true';
+    a.isPirateHuntingSp =
+      p.querySelector('#isPirateHuntingSpDdl').value === 'true';
+    a.startPirateProgressSp = parseInt(
+      p.querySelector('#startPirateProgressSpInput').value
+    );
+    a.isAutoBuy = p.querySelector('#isAutoBuyDdl').value === 'true';
+    a.myLaiPowerTypes = [];
+    [...p.querySelectorAll('.myLaiPowerTypes')].forEach((v) => {
+      if (v.value.trim() !== '') a.myLaiPowerTypes.push(v.value.trim());
+    });
+    a.myHaiPowerTypes = [];
+    [...p.querySelectorAll('.myHaiPowerTypes')].forEach((v) => {
+      if (v.value.trim() !== '') a.myHaiPowerTypes.push(v.value.trim());
+    });
+    a.shrineMaxIndex = parseInt(p.querySelector('#shrineMaxIndexInput').value);
+    a.spWheelPattern = [];
+    [...p.querySelectorAll('.spWheelPattern')].forEach((v) => {
+      if (v.value.trim() !== '') a.spWheelPattern.push(v.value.trim());
+    });
+    localStorage[storageKey] = JSON.stringify(a);
+    console.log(JSON.parse(localStorage[storageKey]));
+  },
+  rift_valour() {
+    const html = `
+  <table>
+    <tr>
+      <td><b>Auto Enter</b></td>
+      <td>
+        <select
+          style="background-color:rgb(140, 238, 255);"
+          title="Auto enter tower"
+          id="isAutoEnterDdl">
+          <option value="true" selected>Yes</option>
+          <option value="false">No</option>
+        </select>
+      </td>
+      <td>GSC Quantity to enter</td>
+      <td>
+        <input
+          title="GSC Quantity to enter tower, set to 0 if auto"
+          type="number"
+          id="minGscToEnterInput"
+          value="0">
+      </td>
+    </tr>
+    <tr>
+      <td><b>Enter after time</b></td>
+      <td>
+        <input
+          style="background-color:rgb(140, 238, 255);"
+          title="Enter tower after this time"
+          type="text"
+          id="enterAfterTimeInput"
+          value="">
+      </td>
+      <td><b>Enter before time</b></td>
+      <td>
+        <input
+          style="background-color:rgb(140, 238, 255);"
+          title="Enter tower before this time"
+          type="text"
+          id="enterBeforeTimeInput"
+          value="">
+      </td>
+    </tr>
+    <tr>
+      <td><b>UU run extra Fragment</b></td>
+      <td>
+        <input
+          title="Extra fragments required for UU run"
+          type="number"
+          id="uuRunExtraFragsInput"
+          value="0">
+      </td>
+      <td><b>UU run extra Secret</b></td>
+      <td>
+        <input
+          title="Extra secrets required for UU run"
+          type="number"
+          id="uuRunExtraSecretInput"
+          value="1000">
+      </td>
+    </tr>
+    <tr>
+      <td>Auto Augmentation</td>
+      <td>
+        <select title="是否自動 Augmentation" id="isAutoAugmentDdl">
+          <option value="true" selected>Yes</option>
+          <option value="false">No</option>
+        </select>
+      </td>
+      <td>Is Prestige Push</td>
+      <td>
+        <select title="是否 Prestige Push"
+          id="isPrestigePushDdl">
+          <option value="true">Yes</option>
+          <option value="false" selected>No</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>PP required CF Quantity</td>
+      <td>
+        <input
+          title="Champion's fire required for Prestige Push"
+          type="text"
+          id="ppRunNeedCfInput"
+          value="800">
+      </td>
+      <td>PP required Bait Quantity</td>
+      <td>
+        <input
+          title="GSC + Elixir required for Prestige Push"
+          type="text"
+          id="ppRunNeedBaitInput"
+          value="900">
+      </td>
+    </tr>
+    <tr>
+      <td>Use Sigil Hunter</td>
+      <td>
+        <select title="是否啟用 Sigil Hunter" id="isSigilHunterDdl">
+          <option value="null" selected>Auto</option>
+          <option value="true">Yes</option>
+          <option value="false">No</option>
+        </select>
+      </td>
+      <td>Use Secret Research</td>
+      <td>
+        <select title="是否啟用 Secret Research" id="isSecretResearchDdl">
+          <option value="null" selected>Auto</option>
+          <option value="true">Yes</option>
+          <option value="false">No</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>Use Super Siphon</td>
+      <td>
+        <select title="是否啟用 Sigil Hunter" id="isSuperSiphonDdl">
+          <option value="null" selected>Auto</option>
+          <option value="true">Yes</option>
+          <option value="false">No</option>
+        </select>
+      </td>
+      <td>Use Ultimate Umbra</td>
+      <td>
+        <select title="是否啟用 Secret Research" id="isUltimateUmbraDdl">
+          <option value="null" selected>Auto</option>
+          <option value="true">Yes</option>
+          <option value="false">No</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>Use String Stepping</td>
+      <td>
+        <select title="是否啟用 Sigil Hunter" id="isStringSteppingDdl">
+          <option value="null" selected>Auto</option>
+          <option value="true">Yes</option>
+          <option value="false">No</option>
+        </select>
+      </td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Auto Retreat</td>
+      <td>
+        <select title="Auto retreat or not" id="isAutoRetreatDdl">
+          <option value="true">Yes</option>
+          <option value="false" selected>No</option>
+        </select>
+      </td>
+      <td>Minimum Retreat Floor</td>
+      <td>
+        <input
+          title="Can auto retreat after this floor only"
+          type="number"
+          id="minRetreatFloorInput"
+          value="3">
+      </td>
+    </tr>
+    <tr>
+      <td>Forced Retreat Floor</td>
+      <td>
+        <input
+          title="Forced retreat after this floor. 0 if not auto retreat"
+          type="number"
+          id="forceRetreatFloorInput"
+          value="0">
+      </td>
+      <td>Dangerous Hunts</td>
+      <td>
+        <input
+          title="Safe hunts remaining to catch Eclipse"
+          type="number"
+          id="dangerousHuntsInput"
+          value="11">
+      </td>
+    </tr>
+    <tr>
+      <td>Safe Hunts Shade</td>
+      <td>
+        <input
+          title="Safe Hunts for Shade of Eclipse"
+          type="number"
+          id="eclipseNeedHuntsInput"
+          value="8">
+      </td>
+      <td>Safe Hunts Eclipse</td>
+      <td>
+        <input
+          title="Safe Hunts for Total Eclipse"
+          type="number"
+          id="eclipseUUNeedHuntsInput"
+          value="10">
+      </td>
+    </tr>
+    <tr>
+      <td>Auto Upgrade</td>
+      <td>
+        <select
+          title="Auto upgrade augmentation or not"
+          id="isAutoUpgradeDdl">
+          <option value="true" selected>Yes</option>
+          <option value="false">No</option>
+        </select>
+      </td>
+      <td>Auto Buy Item</td>
+      <td>
+        <select
+          title="Auto buy items or not"
+          id="isAutoBuyItemDdl">
+          <option value="true" selected>Yes</option>
+          <option value="false">No</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>Minimum GSC quantity</td>
+      <td>
+        <input
+          title="Auto buy GSC as quantity less than this"
+          type="number"
+          id="minCheeseQtyInput"
+          value="20">
+      </td>
+      <td>Buy GSC quantity</td>
+      <td>
+        <input
+          title="Auto buy this quantity of GSC"
+          type="number"
+          id="buyCheeseQtyInput"
+          value="55">
+      </td>
+    </tr>
+    <tr>
+      <td>
+      </td>
+      <td>
+      </td>
+      <td>
+      </td>
+      <td>
+      </td>
+    </tr>
+  </table>
+  `;
+    console.log(html);
+    // eslint-disable-next-line no-undef
+    $('#eventLocationsSettingsDiv').html(html);
+  },
+  rift_valourLoad() {
+    const storageKey = 'rift_valour';
+    if (!localStorage[storageKey]) return;
+    const a = JSON.parse(localStorage[storageKey]);
+    const p = document.querySelector('#mypanel');
+    p.querySelector('#isAutoEnterDdl').value = a.isAutoEnter;
+    p.querySelector('#minGscToEnterInput').value = a.minGscToEnter;
+    p.querySelector('#enterAfterTimeInput').value = a.enterAfterTime;
+    p.querySelector('#enterBeforeTimeInput').value = a.enterBeforeTime;
+    p.querySelector('#isAutoAugmentDdl').value = a.isAutoAugment;
+    p.querySelector('#isPrestigePushDdl').value = a.isPrestigePush;
+    p.querySelector('#ppRunNeedCfInput').value = a.ppRunNeedCf;
+    p.querySelector('#ppRunNeedBaitInput').value = a.ppRunNeedBait;
+    p.querySelector('#uuRunExtraFragsInput').value = a.uuRunExtraFrags;
+    p.querySelector('#uuRunExtraSecretInput').value = a.uuRunExtraSecret;
+    p.querySelector('#isSigilHunterDdl').value = a.isSigilHunter;
+    p.querySelector('#isSecretResearchDdl').value = a.isSecretResearch;
+    p.querySelector('#isSuperSiphonDdl').value = a.isSuperSiphon;
+    p.querySelector('#isUltimateUmbraDdl').value = a.isUltimateUmbra;
+    p.querySelector('#isStringSteppingDdl').value = a.isStringStepping;
+    p.querySelector('#isAutoRetreatDdl').value = a.isAutoRetreat;
+    p.querySelector('#minRetreatFloorInput').value = a.minRetreatFloor;
+    p.querySelector('#forceRetreatFloorInput').value = a.forceRetreatFloor;
+    p.querySelector('#eclipseNeedHuntsInput').value = a.eclipseNeedHunts;
+    p.querySelector('#eclipseUUNeedHuntsInput').value = a.eclipseUUNeedHunts;
+    p.querySelector('#isAutoUpgradeDdl').value = a.isAutoUpgrade;
+    p.querySelector('#isAutoBuyItemDdl').value = a.isAutoBuyItem;
+    p.querySelector('#minCheeseQtyInput').value = a.minCheeseQty;
+    p.querySelector('#buyCheeseQtyInput').value = a.buyCheeseQty;
+    p.querySelector('#dangerousHuntsInput').value = a.dangerousHunts;
+    // document.querySelector('#').value = a.;
+    // Change trap
+    // document
+    //   .getElementById('trapAreaSelect')
+    //   .addEventListener('change', function (e) {
+    //     const a = JSON.parse(localStorage[storageKey]);
+    //     const trapArea = document.querySelector('#trapAreaSelect').value;
+    //     const trapType = document.querySelector('#trapTypeSelect').value;
+    //     const trapGoTd = document.querySelector('#trapGoTdSelect').value;
+    //     functions.loadGwhTrap(a, trapArea, trapType, trapGoTd);
+    //     console.log(a);
+    //   });
+    // document
+    //   .getElementById('trapTypeSelect')
+    //   .addEventListener('change', function (e) {
+    //     const a = JSON.parse(localStorage[storageKey]);
+    //     const trapArea = document.querySelector('#trapAreaSelect').value;
+    //     const trapType = document.querySelector('#trapTypeSelect').value;
+    //     const trapGoTd = document.querySelector('#trapGoTdSelect').value;
+    //     functions.loadGwhTrap(a, trapArea, trapType, trapGoTd);
+    //     console.log(a);
+    //   });
+    // document
+    //   .getElementById('trapGoTdSelect')
+    //   .addEventListener('change', function (e) {
+    //     const a = JSON.parse(localStorage[storageKey]);
+    //     const trapArea = document.querySelector('#trapAreaSelect').value;
+    //     const trapType = document.querySelector('#trapTypeSelect').value;
+    //     const trapGoTd = document.querySelector('#trapGoTdSelect').value;
+    //     functions.loadGwhTrap(a, trapArea, trapType, trapGoTd);
+    //     console.log(a);
+    //   });
+    function loadTrap(a, trapArea, trapType, trapGoTd) {
+      document.querySelector('#gwhBaitInput').value =
+        a[trapArea][trapType][trapGoTd][0];
+      document.querySelector('#gwhWeaponInput').value =
+        a[trapArea][trapType][trapGoTd][1];
+      document.querySelector('#gwhBaseInput').value =
+        a[trapArea][trapType][trapGoTd][2];
+      document.querySelector('#gwhCharmInput').value =
+        a[trapArea][trapType][trapGoTd][3];
+      document.querySelector('#gwhFestiveSpiritSelect').value =
+        a[trapArea][trapType][trapGoTd][4];
+      document.querySelectorAll('.toggleCannons')[0].value =
+        a[trapArea][trapType][trapGoTd][5][0];
+      document.querySelectorAll('.toggleCannons')[1].value =
+        a[trapArea][trapType][trapGoTd][5][1];
+      document.querySelectorAll('.toggleCannons')[2].value =
+        a[trapArea][trapType][trapGoTd][5][2];
+    }
+  },
+  rift_valourSave() {
+    const storageKey = 'rift_valour';
+    const a = localStorage[storageKey]
+      ? JSON.parse(localStorage[storageKey])
+      : {};
+    const p = document.querySelector('#mypanel');
+    a.isAutoEnter = p.querySelector('#isAutoEnterDdl').value === 'true';
+    a.minGscToEnter = parseInt(p.querySelector('#minGscToEnterInput').value);
+    a.enterAfterTime = p.querySelector('#enterAfterTimeInput').value.trim();
+    a.enterBeforeTime = p.querySelector('#enterBeforeTimeInput').value.trim();
+    a.isAutoAugment = p.querySelector('#isAutoAugmentDdl').value === 'true';
+    a.isPrestigePush = p.querySelector('#isPrestigePushDdl').value === 'true';
+    a.ppRunNeedCf = parseInt(p.querySelector('#ppRunNeedCfInput').value);
+    a.ppRunNeedBait = parseInt(p.querySelector('#ppRunNeedBaitInput').value);
+    a.uuRunExtraFrags = parseInt(
+      p.querySelector('#uuRunExtraFragsInput').value
+    );
+    a.uuRunExtraSecret = parseInt(
+      p.querySelector('#uuRunExtraSecretInput').value
+    );
+    a.isSigilHunter =
+      p.querySelector('#isSigilHunterDdl').value === 'null'
+        ? null
+        : p.querySelector('#isSigilHunterDdl').value === 'true';
+    a.isSecretResearch =
+      p.querySelector('#isSecretResearchDdl').value === 'null'
+        ? null
+        : p.querySelector('#isSecretResearchDdl').value === 'true';
+    a.isSuperSiphon =
+      p.querySelector('#isSuperSiphonDdl').value === 'null'
+        ? null
+        : p.querySelector('#isSuperSiphonDdl').value === 'true';
+    a.isUltimateUmbra =
+      p.querySelector('#isUltimateUmbraDdl').value === 'null'
+        ? null
+        : p.querySelector('#isUltimateUmbraDdl').value === 'true';
+    a.isStringStepping =
+      p.querySelector('#isStringSteppingDdl').value === 'null'
+        ? null
+        : p.querySelector('#isStringSteppingDdl').value === 'true';
+    a.isAutoRetreat = p.querySelector('#isAutoRetreatDdl').value === 'true';
+    a.minRetreatFloor = parseInt(
+      p.querySelector('#minRetreatFloorInput').value
+    );
+    a.forceRetreatFloor = parseInt(
+      p.querySelector('#forceRetreatFloorInput').value
+    );
+    a.eclipseNeedHunts = parseInt(
+      p.querySelector('#eclipseNeedHuntsInput').value
+    );
+    a.eclipseUUNeedHunts = parseInt(
+      p.querySelector('#eclipseUUNeedHuntsInput').value
+    );
+    a.isAutoUpgrade = p.querySelector('#isAutoUpgradeDdl').value === 'true';
+    a.isAutoBuyItem = p.querySelector('#isAutoBuyItemDdl').value === 'true';
+    a.minCheeseQty = parseInt(p.querySelector('#minCheeseQtyInput').value);
+    a.buyCheeseQty = parseInt(p.querySelector('#buyCheeseQtyInput').value);
+    a.dangerousHunts = parseInt(p.querySelector('#dangerousHuntsInput').value);
     localStorage[storageKey] = JSON.stringify(a);
     console.log(JSON.parse(localStorage[storageKey]));
   }
@@ -1183,13 +2231,15 @@ const functions = {
     mypanel +=
       '<button type="button" style="background-color: #DEA32C;" id="changeHudDisplayButton">HUD</button>';
     // <a class="loot" title="" href="https://www.mousehuntgame.com/item.php?item_type=rune_craft_item" onclick="hg.views.ItemView.show('rune_craft_item'); return false;">Rune</a>
-    // prettier-ignore
     mypanel += `
     </details>
     <details class="eventLocationDetails" name="mypaneldetails"${localStorage.isLocalPanel ? ' open' : ''}>
       <summary class="eventLocationSummary" style="width: 6em;height: 1.4em;background-color: #22ff22cc;cursor: pointer;place-content: center;font-size: 16px;">Local</summary>
         <select id="eventLocationsSelect">
+          <option value="empty">Clear</option>
           <option value="greatWinterHunt">GWH</option>
+          <option value="floating_islands">Floating Islands</option>
+          <option value="rift_valour">Valour Rift</option>
         </select>
         <button type="button" style="background-color: #fc0000ff;" id="saveReloadEventLocationButton">Save(Left Click)/Reload(Right Click) settings</button>
         <button type="button" style="background-color: #00fc00ff;" id="reRunEventLocationButton">re-run eventLocation</button>
@@ -1205,10 +2255,10 @@ const functions = {
         (farming == 0
           ? 'None'
           : farming == 1
-          ? 'Cheese'
-          : farming == 2
-          ? 'Candle'
-          : 'Error') +
+            ? 'Cheese'
+            : farming == 2
+              ? 'Candle'
+              : 'Error') +
         '</button>';
       const candling = setupLny.candling;
       mypanel +=
@@ -1216,12 +2266,12 @@ const functions = {
         (!candling
           ? 'Null'
           : candling == 'none'
-          ? 'None'
-          : candling == 'white'
-          ? 'White'
-          : candling == 'red'
-          ? 'Red'
-          : 'Error') +
+            ? 'None'
+            : candling == 'white'
+              ? 'White'
+              : candling == 'red'
+                ? 'Red'
+                : 'Error') +
         '</button>';
       const isNianGao = setupLny.isNianGao;
       mypanel +=
@@ -1235,14 +2285,12 @@ const functions = {
     if (isHalloween && isGloomyGreenwood) {
       storageKey = 'halloween_event_location';
       const settings = JSON.parse(localStorage[storageKey]);
-      // prettier-ignore
-      mypanel += `<input title="Reserved Cheese Quantity" type="text" id="minBaitQuantity" value="${JSON.stringify(settings.minBaitQuantity)}" style="width: 8em;">`
+      mypanel += `<input title="Reserved Cheese Quantity" type="text" id="minBaitQuantity" value="${JSON.stringify(settings.minBaitQuantity)}" style="width: 8em;">`;
       mypanel += `<input title="map剩餘 goal高於此,不使用 index低於 mapEndingPriorityBegin的 bait.因為 map一定是 3-6-6組合" type="number" id="mapEndingQuantity" value="${settings.mapEndingQuantity}" style="width: 2em;">`;
       mypanel += `<input title="map剩餘 goal高於 mapEndingQuantity,不使用 index低於此的 bait.因為 map一定是 3-6-6組合" type="number" id="mapEndingPriorityBegin" value="${settings.mapEndingPriorityBegin}" style="width: 2em;">`;
     }
     // Fort Rox
     const isFrox = environmentType == 'fort_rox';
-    // prettier-ignore
     if (isFrox) {
       storageKey = 'fort_rox';
       const a = JSON.parse(localStorage[storageKey]);
@@ -1292,7 +2340,6 @@ const functions = {
     }
     // Superbrie Factory
     const isFactory = environmentType == 'super_brie_factory';
-    // prettier-ignore
     if (isFactory) {
       const a = localStorage.getItem('currentTrapKey');
       storageKey = 'superbrieFactory';
@@ -1301,140 +2348,13 @@ const functions = {
       mypanel += `
         <select id="superbrieFactoryTraps">
           <option value disabled>Unknown</option>
-          <option value="gouda_cheese"${ a == 'gouda_cheese' ? ' selected' : '' }>Gouda</option>
-          <option value="super_brie_cheese"${ a == 'super_brie_cheese' ? ' selected' : '' }>SB</option>
-          <option value="coggy_colby_cheese"${ a == 'coggy_colby_cheese' ? ' selected' : '' }>CC</option>
-          <option value="speed_coggy_colby_cheese"${ a == 'speed_coggy_colby_cheese' ? ' selected' : '' }>SCC</option>
-          <option value="boss"${ a == 'boss' ? ' selected' : '' }>Boss</option>
+          <option value="gouda_cheese"${a == 'gouda_cheese' ? ' selected' : ''}>Gouda</option>
+          <option value="super_brie_cheese"${a == 'super_brie_cheese' ? ' selected' : ''}>SB</option>
+          <option value="coggy_colby_cheese"${a == 'coggy_colby_cheese' ? ' selected' : ''}>CC</option>
+          <option value="speed_coggy_colby_cheese"${a == 'speed_coggy_colby_cheese' ? ' selected' : ''}>SCC</option>
+          <option value="boss"${a == 'boss' ? ' selected' : ''}>Boss</option>
         </select>
         <button title="toggle isAutoFrc" type="button" id="isAutoFrc">${isAutoFrc ? 'FRC' : 'No'}</button>
-      `;
-    }
-    // Floating Islands
-    const isFi = environmentType == 'floating_islands';
-    // prettier-ignore
-    if (isFi) {
-      storageKey = 'floating_islands';
-      const a = JSON.parse(localStorage[storageKey]);
-      mypanel += `
-        <button title="toggle isAutoLai." type="button" id="isAutoLaiButton" style="background-color:rgb(255, 140, 140);">
-        ${a.isAutoLai ? 'autoL' : 'No'}
-        </button>
-        <button title="toggle isAutoHai." type="button" id="isAutoHaiButton" style="background-color:rgb(150, 115, 230);">
-        ${a.isAutoHai ? 'autoH' : 'No'}
-        </button>
-        <button title="toggle isAutoSp." type="button" id="isAutoSpButton" style="background-color:rgb(255, 205, 115);">
-        ${a.isAutoSp ? 'autoS' : 'No'}
-        </button>
-        <br/>
-        <button title="toggle isBottledWind" type="button" id="isBottledWindButton" style="background-color:rgb(140, 238, 255);">
-        ${a.isBottledWind ? 'BW' : 'No'}
-        </button>
-        <button title="toggle isBwLastBlockLai" type="button" id="isBwLastBlockLaiButton" style="background-color:rgb(255, 140, 140);">
-        ${a.isBwLaiLastBlock ? 'bwLstL' : 'No'}
-        </button>
-        <button title="toggle isBwLastBlockHai" type="button" id="isBwLastBlockHaiButton" style="background-color:rgb(150, 115, 230);">
-        ${a.isBwHaiLastBlock ? 'bwLstH' : 'No'}
-        </button>
-        <button title="toggle isBwLastBlockSp" type="button" id="isBwLastBlockSpButton" style="background-color:rgb(255, 205, 115);">
-        ${a.isBwSpLastBlock ? 'bwLstS' : 'No'}
-        </button>
-        <button title="toggle isHuntAfterLaiTrove" type="button" id="isHuntAfterLaiTroveButton" style="background-color:rgb(255, 140, 140);">
-        ${a.isHuntAfterLaiTrove ? 'endL' : 'No'}
-        </button>
-        <button title="toggle isHuntAfterHaiTrove" type="button" id="isHuntAfterHaiTroveButton" style="background-color:rgb(150, 115, 230);">
-        ${a.isHuntAfterHaiTrove ? 'endH' : 'No'}
-        </button>
-        <button title="toggle isAutoHuntAfterTrove" type="button" id="isAutoHuntAfterTroveButton" style="background-color:rgb(140, 238, 255);">
-        ${a.isAutoHuntAfterTrove ? 'autoEnd' : 'No'}
-        </button>
-        <br/>
-        <select class="includedHaiShrineDDL" style="background-color:rgb(190, 237, 199);">
-          <option value=""></option>
-          <option value="paragon_cache_a"${a.includedHaiShrine.indexOf('paragon_cache_a') > -1 ? ' selected' : ''}>Sproc</option>
-        </select>
-        <select class="includedHaiShrineDDL" style="background-color:rgb(190, 237, 199);">
-          <option value=""></option>
-          <option value="paragon_cache_b"${a.includedHaiShrine.indexOf('paragon_cache_b') > -1 ? ' selected' : ''}>Silk</option>
-        </select>
-        <select class="includedHaiShrineDDL" style="background-color:rgb(190, 237, 199);">
-          <option value=""></option>
-          <option value="paragon_cache_c"${a.includedHaiShrine.indexOf('paragon_cache_c') > -1 ? ' selected' : ''}>Wing</option>
-        </select>
-        <select class="includedHaiShrineDDL" style="background-color:rgb(190, 237, 199);">
-          <option value=""></option>
-          <option value="paragon_cache_d"${a.includedHaiShrine.indexOf('paragon_cache_d') > -1 ? ' selected' : ''}>Bangle</option>
-        </select>
-        <br/>
-        <b><font color="yellow">HAI</font></b>
-        <select class="myHaiPowerTypesDDL" style="background-color:rgb(190, 237, 199);width: 5em;">
-          <option value=""></option>
-          <option value="arcn"${a.myHaiPowerTypes[0] && a.myHaiPowerTypes[0] === 'arcn' ? ' selected' : ''}>Arcane</option>
-          <option value="drcnc"${a.myHaiPowerTypes[0] && a.myHaiPowerTypes[0] === 'drcnc' ? ' selected' : ''}>Draconic</option>
-          <option value="frgttn"${a.myHaiPowerTypes[0] && a.myHaiPowerTypes[0] === 'frgttn' ? ' selected' : ''}>Forgotten</option>
-          <option value="hdr"${a.myHaiPowerTypes[0] && a.myHaiPowerTypes[0] === 'hdr' ? ' selected' : ''}>Hydro</option>
-          <option value="law"${a.myHaiPowerTypes[0] && a.myHaiPowerTypes[0] === 'law' ? ' selected' : ''}>Law</option>
-          <option value="phscl"${a.myHaiPowerTypes[0] && a.myHaiPowerTypes[0] === 'phscl' ? ' selected' : ''}>Physical</option>
-          <option value="shdw"${a.myHaiPowerTypes[0] && a.myHaiPowerTypes[0] === 'shdw' ? ' selected' : ''}>Shadow</option>
-          <option value="tctcl"${a.myHaiPowerTypes[0] && a.myHaiPowerTypes[0] === 'tctcl' ? ' selected' : ''}>Tactical</option>
-        </select>
-        <select class="myHaiPowerTypesDDL" style="background-color:rgb(190, 237, 199);width: 5em;">
-          <option value=""></option>
-          <option value="arcn"${a.myHaiPowerTypes[1] && a.myHaiPowerTypes[1] === 'arcn' ? ' selected' : ''}>Arcane</option>
-          <option value="drcnc"${a.myHaiPowerTypes[1] && a.myHaiPowerTypes[1] === 'drcnc' ? ' selected' : ''}>Draconic</option>
-          <option value="frgttn"${a.myHaiPowerTypes[1] && a.myHaiPowerTypes[1] === 'frgttn' ? ' selected' : ''}>Forgotten</option>
-          <option value="hdr"${a.myHaiPowerTypes[1] && a.myHaiPowerTypes[1] === 'hdr' ? ' selected' : ''}>Hydro</option>
-          <option value="law"${a.myHaiPowerTypes[1] && a.myHaiPowerTypes[1] === 'law' ? ' selected' : ''}>Law</option>
-          <option value="phscl"${a.myHaiPowerTypes[1] && a.myHaiPowerTypes[1] === 'phscl' ? ' selected' : ''}>Physical</option>
-          <option value="shdw"${a.myHaiPowerTypes[1] && a.myHaiPowerTypes[1] === 'shdw' ? ' selected' : ''}>Shadow</option>
-          <option value="tctcl"${a.myHaiPowerTypes[1] && a.myHaiPowerTypes[1] === 'tctcl' ? ' selected' : ''}>Tactical</option>
-        </select>
-        <select class="myHaiPowerTypesDDL" style="background-color:rgb(190, 237, 199);width: 5em;">
-          <option value=""></option>
-          <option value="arcn"${a.myHaiPowerTypes[2] && a.myHaiPowerTypes[2] === 'arcn' ? ' selected' : ''}>Arcane</option>
-          <option value="drcnc"${a.myHaiPowerTypes[2] && a.myHaiPowerTypes[2] === 'drcnc' ? ' selected' : ''}>Draconic</option>
-          <option value="frgttn"${a.myHaiPowerTypes[2] && a.myHaiPowerTypes[2] === 'frgttn' ? ' selected' : ''}>Forgotten</option>
-          <option value="hdr"${a.myHaiPowerTypes[2] && a.myHaiPowerTypes[2] === 'hdr' ? ' selected' : ''}>Hydro</option>
-          <option value="law"${a.myHaiPowerTypes[2] && a.myHaiPowerTypes[2] === 'law' ? ' selected' : ''}>Law</option>
-          <option value="phscl"${a.myHaiPowerTypes[2] && a.myHaiPowerTypes[2] === 'phscl' ? ' selected' : ''}>Physical</option>
-          <option value="shdw"${a.myHaiPowerTypes[2] && a.myHaiPowerTypes[2] === 'shdw' ? ' selected' : ''}>Shadow</option>
-          <option value="tctcl"${a.myHaiPowerTypes[2] && a.myHaiPowerTypes[2] === 'tctcl' ? ' selected' : ''}>Tactical</option>
-        </select>
-        <select class="myHaiPowerTypesDDL" style="background-color:rgb(190, 237, 199);width: 5em;">
-          <option value=""></option>
-          <option value="arcn"${a.myHaiPowerTypes[3] && a.myHaiPowerTypes[3] === 'arcn' ? ' selected' : ''}>Arcane</option>
-          <option value="drcnc"${a.myHaiPowerTypes[3] && a.myHaiPowerTypes[3] === 'drcnc' ? ' selected' : ''}>Draconic</option>
-          <option value="frgttn"${a.myHaiPowerTypes[3] && a.myHaiPowerTypes[3] === 'frgttn' ? ' selected' : ''}>Forgotten</option>
-          <option value="hdr"${a.myHaiPowerTypes[3] && a.myHaiPowerTypes[3] === 'hdr' ? ' selected' : ''}>Hydro</option>
-          <option value="law"${a.myHaiPowerTypes[3] && a.myHaiPowerTypes[3] === 'law' ? ' selected' : ''}>Law</option>
-          <option value="phscl"${a.myHaiPowerTypes[3] && a.myHaiPowerTypes[3] === 'phscl' ? ' selected' : ''}>Physical</option>
-          <option value="shdw"${a.myHaiPowerTypes[3] && a.myHaiPowerTypes[3] === 'shdw' ? ' selected' : ''}>Shadow</option>
-          <option value="tctcl"${a.myHaiPowerTypes[3] && a.myHaiPowerTypes[3] === 'tctcl' ? ' selected' : ''}>Tactical</option>
-        </select>
-        <br/>
-      `;
-    }
-    // Valour Rift
-    const isVrift = environmentType == 'rift_valour';
-    // prettier-ignore
-    if (isVrift) {
-      storageKey = 'rift_valour';
-      const a = JSON.parse(localStorage[storageKey]);
-      mypanel += `
-        <button title="toggle isAutoRetreat." type="button" id="isAutoRetreatButton" style="background-color:rgb(255, 140, 140);">
-        ${a.isAutoRetreat ? 'aRetrt' : 'No'}
-        </button>
-        <button title="toggle isAutoEnter." type="button" id="isAutoEnterButton" style="background-color:rgb(150, 115, 230);">
-        ${a.isAutoEnter ? 'aEnter' : 'No'}
-        </button>
-        <br/>
-        <input title="uuRunExtraSecret" type="number" id="uuRunExtraSecretInput" value="${a.uuRunExtraSecret}" style="width: 3.5em;">
-        <br/>
-        <input title="uuRunExtraFrags" type="number" id="uuRunExtraFragsInput" value="${a.uuRunExtraFrags}" style="width: 2.5em;">
-        <br/>
-        <input title="enterAfterTime" type="text" id="enterAfterTimeInput" value="${a.enterAfterTime}" style="width: 10em;">
-        <br/>
-        <input title="enterBeforeTime" type="text" id="enterBeforeTimeInput" value="${a.enterBeforeTime}" style="width: 10em;">
       `;
     }
     mypanel += `</details></div>`;
@@ -1539,29 +2459,28 @@ const functions = {
     changeReloadButton.addEventListener('click', () => {
       const reloadAfterTravel = document.getElementById('reloadAfterTravel');
       reloadAfterTravel.value =
-        reloadAfterTravel.value == 'true' ? 'false' : 'true';
-      changeReloadButton.innerText =
-        reloadAfterTravel.value == 'true' ? 'Reload' : 'Sneak';
+        reloadAfterTravel.value === 'true' ? 'false' : 'true';
+      changeReloadButton.textContent =
+        reloadAfterTravel.value === 'true' ? 'Reload' : 'Sneak';
     });
     // 變更 locations下拉選單時 quick travel
     const travelToLocation = document.getElementById('travelToLocation');
     travelToLocation.addEventListener('change', function () {
       // 下拉選單變更時每次都要重讀 current location.
       // 因為會連續不 refresh地變換多個位置
-      environmentType = (usr.environment_type || '').trim();
+      // eslint-disable-next-line no-undef
+      environmentType = (user.environment_type || '').trim();
       const travelToLocationValue = travelToLocation.value;
       logging('travel from ', environmentType, ' to ', travelToLocationValue);
-      if (environmentType != travelToLocationValue) {
-        usr.environment_type = travelToLocationValue;
-        usr.environment_id = environmentTypeIdDictionary[travelToLocationValue];
+      if (environmentType !== travelToLocationValue) {
         // eslint-disable-next-line no-undef
-        app.pages.TravelPage.travel(travelToLocationValue);
-        if (document.getElementById('reloadAfterTravel').value == 'true') {
-          window.setTimeout(function () {
-            // window.location.reload('true');
-            window.location.href = 'https://www.mousehuntgame.com/';
-          }, 2000);
-        }
+        hg.utils.User.travel(travelToLocationValue, () => {
+          if (document.querySelector('#reloadAfterTravel').value === 'true') {
+            window.setTimeout(function () {
+              window.location.href = 'https://www.mousehuntgame.com/';
+            }, 2000);
+          }
+        });
       }
     });
     // 快速 sleep
@@ -1657,9 +2576,10 @@ const functions = {
     });
     // GWH settings
     if (isGwh) {
-      document.querySelector('#eventLocationsSelect').value = 'greatWinterHunt';
-      functions.greatWinterHunt();
-      functions.greatWinterHuntLoad();
+      const functionName = 'greatWinterHunt';
+      document.querySelector('#eventLocationsSelect').value = functionName;
+      functions[functionName]();
+      functions[functionName + 'Load']();
     }
     // LNY quick toggle
     if (isLny) {
@@ -1676,10 +2596,10 @@ const functions = {
             a.farming == 0
               ? 'None'
               : a.farming == 1
-              ? 'Cheese'
-              : a.farming == 2
-              ? 'Candle'
-              : 'Error';
+                ? 'Cheese'
+                : a.farming == 2
+                  ? 'Candle'
+                  : 'Error';
           console.log(JSON.parse(localStorage[storageKey]));
         });
       // toggle candling status
@@ -1691,20 +2611,20 @@ const functions = {
           a.candling = !candling
             ? 'none'
             : candling == 'none'
-            ? 'white'
-            : candling == 'white'
-            ? 'red'
-            : null;
+              ? 'white'
+              : candling == 'white'
+                ? 'red'
+                : null;
           localStorage[storageKey] = JSON.stringify(a);
           e.target.innerHTML = !a.candling
             ? 'Null'
             : a.candling == 'none'
-            ? 'None'
-            : a.candling == 'white'
-            ? 'White'
-            : a.candling == 'red'
-            ? 'Red'
-            : 'Error';
+              ? 'None'
+              : a.candling == 'white'
+                ? 'White'
+                : a.candling == 'red'
+                  ? 'Red'
+                  : 'Error';
           console.log(JSON.parse(localStorage[storageKey]));
         });
       // toggle isNianGao
@@ -1860,230 +2780,22 @@ const functions = {
           console.log(JSON.parse(localStorage[storageKey]));
         });
     }
-    // Floating Islands quick toggle
-    if (isFi) {
-      storageKey = 'floating_islands';
-      // toggle auto lai sky map
-      document
-        .getElementById('isAutoLaiButton')
-        .addEventListener('click', function (e) {
-          const prop = 'isAutoLai';
-          const a = JSON.parse(localStorage[storageKey]);
-          a[prop] = a[prop] ? false : true;
-          localStorage[storageKey] = JSON.stringify(a);
-          e.target.innerHTML = a[prop] ? 'autoL' : 'No';
-          console.log(JSON.parse(localStorage[storageKey]));
-        });
-      // toggle auto hai sky map
-      document
-        .getElementById('isAutoHaiButton')
-        .addEventListener('click', function (e) {
-          const prop = 'isAutoHai';
-          const a = JSON.parse(localStorage[storageKey]);
-          a[prop] = a[prop] ? false : true;
-          localStorage[storageKey] = JSON.stringify(a);
-          e.target.innerHTML = a[prop] ? 'autoH' : 'No';
-          console.log(JSON.parse(localStorage[storageKey]));
-        });
-      // toggle auto sky palace
-      document
-        .getElementById('isAutoSpButton')
-        .addEventListener('click', function (e) {
-          const prop = 'isAutoSp';
-          const a = JSON.parse(localStorage[storageKey]);
-          a[prop] = a[prop] ? false : true;
-          localStorage[storageKey] = JSON.stringify(a);
-          e.target.innerHTML = a[prop] ? 'autoS' : 'No';
-          console.log(JSON.parse(localStorage[storageKey]));
-        });
-      // toggle isBottledWind
-      document
-        .getElementById('isBottledWindButton')
-        .addEventListener('click', function (e) {
-          const prop = 'isBottledWind';
-          const a = JSON.parse(localStorage[storageKey]);
-          a[prop] = a[prop] ? false : true;
-          localStorage[storageKey] = JSON.stringify(a);
-          e.target.innerHTML = a[prop] ? 'BW' : 'No';
-          console.log(JSON.parse(localStorage[storageKey]));
-        });
-      // toggle isBwLastBlockLai
-      document
-        .getElementById('isBwLastBlockLaiButton')
-        .addEventListener('click', function (e) {
-          const prop = 'isBwLaiLastBlock';
-          const a = JSON.parse(localStorage[storageKey]);
-          a[prop] = a[prop] ? false : true;
-          localStorage[storageKey] = JSON.stringify(a);
-          e.target.innerHTML = a[prop] ? 'bwLstL' : 'No';
-          console.log(JSON.parse(localStorage[storageKey]));
-        });
-      // toggle isBwLastBlockHai
-      document
-        .getElementById('isBwLastBlockHaiButton')
-        .addEventListener('click', function (e) {
-          const prop = 'isBwHaiLastBlock';
-          const a = JSON.parse(localStorage[storageKey]);
-          a[prop] = a[prop] ? false : true;
-          localStorage[storageKey] = JSON.stringify(a);
-          e.target.innerHTML = a[prop] ? 'bwLstH' : 'No';
-          console.log(JSON.parse(localStorage[storageKey]));
-        });
-      // toggle isBwLastBlockSp
-      document
-        .getElementById('isBwLastBlockSpButton')
-        .addEventListener('click', function (e) {
-          const prop = 'isBwSpLastBlock';
-          const a = JSON.parse(localStorage[storageKey]);
-          a[prop] = a[prop] ? false : true;
-          localStorage[storageKey] = JSON.stringify(a);
-          e.target.innerHTML = a[prop] ? 'bwLstS' : 'No';
-          console.log(JSON.parse(localStorage[storageKey]));
-        });
-      // toggle isHuntAfterHaiTrove
-      document
-        .getElementById('isHuntAfterHaiTroveButton')
-        .addEventListener('click', function (e) {
-          const prop = 'isHuntAfterHaiTrove';
-          const a = JSON.parse(localStorage[storageKey]);
-          a[prop] = a[prop] ? false : true;
-          localStorage[storageKey] = JSON.stringify(a);
-          e.target.innerHTML = a[prop] ? 'endH' : 'No';
-          console.log(JSON.parse(localStorage[storageKey]));
-        });
-      // toggle isHuntAfterLaiTrove
-      document
-        .getElementById('isHuntAfterLaiTroveButton')
-        .addEventListener('click', function (e) {
-          const prop = 'isHuntAfterLaiTrove';
-          const a = JSON.parse(localStorage[storageKey]);
-          a[prop] = a[prop] ? false : true;
-          localStorage[storageKey] = JSON.stringify(a);
-          e.target.innerHTML = a[prop] ? 'endL' : 'No';
-          console.log(JSON.parse(localStorage[storageKey]));
-        });
-      // toggle isAutoHuntAfterTrove
-      document
-        .getElementById('isAutoHuntAfterTroveButton')
-        .addEventListener('click', function (e) {
-          const prop = 'isAutoHuntAfterTrove';
-          const a = JSON.parse(localStorage[storageKey]);
-          a[prop] = a[prop] ? false : true;
-          localStorage[storageKey] = JSON.stringify(a);
-          e.target.innerHTML = a[prop] ? 'autoEnd' : 'No';
-          console.log(JSON.parse(localStorage[storageKey]));
-        });
-      let elements = document.getElementsByClassName('includedHaiShrineDDL');
-      for (let i = 0; i < elements.length; i++) {
-        const prop = 'includedHaiShrine';
-        const element = elements[i];
-        element.addEventListener('change', function (e) {
-          const elements = document.getElementsByClassName(
-            'includedHaiShrineDDL'
-          );
-          const values = [];
-          for (let i = 0; i < elements.length; i++) {
-            const element = elements[i];
-            if (element.value !== '') values.push(element.value);
-          }
-          const a = JSON.parse(localStorage[storageKey]);
-          a[prop] = values;
-          localStorage[storageKey] = JSON.stringify(a);
-          console.log(JSON.parse(localStorage[storageKey]));
-        });
-      }
-      elements = document.getElementsByClassName('myHaiPowerTypesDDL');
-      for (let i = 0; i < elements.length; i++) {
-        const element = elements[i];
-        element.addEventListener('change', function (e) {
-          const prop = 'myHaiPowerTypes';
-          const elements =
-            document.getElementsByClassName('myHaiPowerTypesDDL');
-          const values = [];
-          for (let i = 0; i < elements.length; i++) {
-            const element = elements[i];
-            if (element.value !== '') values.push(element.value);
-          }
-          const a = JSON.parse(localStorage[storageKey]);
-          a[prop] = values;
-          localStorage[storageKey] = JSON.stringify(a);
-          console.log(JSON.parse(localStorage[storageKey]));
-        });
-      }
-    }
-    // Valour Rift quick toggle
-    if (isVrift) {
-      storageKey = 'rift_valour';
-      // toggle auto retreat
-      document
-        .getElementById('isAutoRetreatButton')
-        .addEventListener('click', function (e) {
-          const prop = 'isAutoRetreat';
-          const a = JSON.parse(localStorage[storageKey]);
-          a[prop] = a[prop] ? false : true;
-          localStorage[storageKey] = JSON.stringify(a);
-          e.target.innerHTML = a[prop] ? 'aRetrt' : 'No';
-          console.log(JSON.parse(localStorage[storageKey]));
-        });
-      // toggle auto enter
-      document
-        .getElementById('isAutoEnterButton')
-        .addEventListener('click', function (e) {
-          const prop = 'isAutoEnter';
-          const a = JSON.parse(localStorage[storageKey]);
-          a[prop] = a[prop] ? false : true;
-          localStorage[storageKey] = JSON.stringify(a);
-          e.target.innerHTML = a[prop] ? 'aEnter' : 'No';
-          console.log(JSON.parse(localStorage[storageKey]));
-        });
-      // toggle uuRunExtraSecret
-      document
-        .getElementById('uuRunExtraSecretInput')
-        .addEventListener('change', function (e) {
-          const prop = 'uuRunExtraSecret';
-          const a = JSON.parse(localStorage[storageKey]);
-          const v = e.target.value.trim();
-          a[prop] = parseInt(v);
-          localStorage[storageKey] = JSON.stringify(a);
-          e.target.value = a[prop];
-          console.log(JSON.parse(localStorage[storageKey]));
-        });
-      // toggle uuRunExtraFrags
-      document
-        .getElementById('uuRunExtraFragsInput')
-        .addEventListener('change', function (e) {
-          const prop = 'uuRunExtraFrags';
-          const a = JSON.parse(localStorage[storageKey]);
-          const v = e.target.value.trim();
-          a[prop] = parseInt(v);
-          localStorage[storageKey] = JSON.stringify(a);
-          e.target.value = a[prop];
-          console.log(JSON.parse(localStorage[storageKey]));
-        });
-      // toggle enterAfterTime
-      document
-        .getElementById('enterAfterTimeInput')
-        .addEventListener('change', function (e) {
-          const prop = 'enterAfterTime';
-          const a = JSON.parse(localStorage[storageKey]);
-          const v = e.target.value.trim();
-          a[prop] = v;
-          localStorage[storageKey] = JSON.stringify(a);
-          e.target.value = a[prop];
-          console.log(JSON.parse(localStorage[storageKey]));
-        });
-      // toggle enterBeforeTime
-      document
-        .getElementById('enterBeforeTimeInput')
-        .addEventListener('change', function (e) {
-          const prop = 'enterBeforeTime';
-          const a = JSON.parse(localStorage[storageKey]);
-          const v = e.target.value.trim();
-          a[prop] = v;
-          localStorage[storageKey] = JSON.stringify(a);
-          e.target.value = a[prop];
-          console.log(JSON.parse(localStorage[storageKey]));
-        });
+    switch (environmentType) {
+      case 'floating_islands':
+        document.querySelector('#eventLocationsSelect').value = environmentType;
+        functions[environmentType]();
+        functions[environmentType + 'Load']();
+        break;
+      case 'rift_valour':
+        document.querySelector('#eventLocationsSelect').value = environmentType;
+        functions[environmentType]();
+        functions[environmentType + 'Load']();
+        break;
+      default:
+        document.querySelector('#eventLocationsSelect').value = 'empty';
+        functions['empty']();
+        functions['emptyLoad']();
+        break;
     }
     // delayed onmouseover event
     const delay = function (elem, callback, seconds) {

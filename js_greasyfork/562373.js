@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         OC Preferred Roles Highlighter
 // @namespace    http://torn.com/
-// @version      2.5
+// @version      2.8
 // @description  Highlights preferred roles in Organized Crimes with custom thresholds per role
 // @author       srsbsns
 // @match        https://www.torn.com/factions.php*
@@ -50,6 +50,13 @@
             "Bomber #2": { min: 70, max: 100 },
             "Driver": { min: 70, max: 100 }
         },
+        "Clinical Precision": {
+            "Assassin": { min: 0, max: 50 },
+            "Imitator": { min: 70, max: 100 },
+            "Cleaner": { min: 70, max: 100 },
+            "Cat Burglar": { min: 70, max: 100 }
+        },
+
         "Honey Trap": {
             "Muscle #1": { min: 70, max: 100 },
             "Muscle #2": { min: 75, max: 100 },
@@ -61,13 +68,14 @@
             "Bomber": { min: 70, max: 100 },
             "Hacker": { min: 70, max: 100 },
             "Picklock #1": { min: 70, max: 100 },
-            "Picklock #2": { min: 40, max: 100 }
+            "Picklock #2": { min: 0, max: 50 }
         },
         "Break the Bank": {
             "Muscle #1": { min: 60, max: 100 },
-            "Muscle #2": { min: 60, max: 100 },
+            "Muscle #2": { min: 0, max: 50 },
             "Muscle #3": { min: 63, max: 100 },
-            "Thief #1": { min: 60, max: 100 },
+            "Robber": { min: 60, max: 100 },
+            "Thief #1": { min: 0, max: 50 },
             "Thief #2": { min: 62, max: 100 }
         }
     };
@@ -96,12 +104,36 @@
             position: relative !important;
         }
 
+        /* Highlight special roles (leave for low) that DON'T meet threshold in orange */
+        .oc-low-role {
+            background-color: rgba(255, 140, 0, 0.15) !important;
+            border: 2px solid #ff8c00 !important;
+            box-shadow: 0 0 8px rgba(255, 140, 0, 0.3) !important;
+            position: relative !important;
+        }
+
         /* Requirement badge for bad roles */
         .oc-requirement-badge {
             position: absolute !important;
-            top: 2px !important;
+            top: -13px !important;
             right: 2px !important;
             background: #ff0000 !important;
+            color: #ffffff !important;
+            font-size: 9px !important;
+            font-weight: bold !important;
+            padding: 2px 4px !important;
+            border-radius: 3px !important;
+            z-index: 100 !important;
+            pointer-events: none !important;
+            white-space: nowrap !important;
+        }
+
+        /* Requirement badge for low roles (orange) */
+        .oc-requirement-badge-low {
+            position: absolute !important;
+            top: -13px !important;
+            right: 2px !important;
+            background: #ff8c00 !important;
             color: #ffffff !important;
             font-size: 9px !important;
             font-weight: bold !important;
@@ -130,6 +162,15 @@
         return roleName.toLowerCase().trim();
     }
 
+   function isLowThresholdRole(crimeName, roleName) {
+    // Check if this is a special "leave for low" role
+    return (crimeName === "Gaslight the Way" && roleName === "Looter #2") ||
+           (crimeName === "Break the Bank" && roleName === "Thief #1") ||
+           (crimeName === "Break the Bank" && roleName === "Muscle #2") ||
+           (crimeName === "Clinical Precision" && roleName === "Assassin") ||
+           (crimeName === "Blast from the Past" && roleName === "Picklock #2");
+}
+
     // ============================================================================
     // MAIN ANNOTATION LOGIC
     // ============================================================================
@@ -155,7 +196,7 @@
 
             roleSlots.forEach(roleSlot => {
                 // Remove any existing highlighting first
-                roleSlot.classList.remove('oc-preferred-role', 'oc-good-role', 'oc-bad-role');
+                roleSlot.classList.remove('oc-preferred-role', 'oc-good-role', 'oc-bad-role', 'oc-low-role');
 
                 // Get role name from title___UqFNy span
                 const roleNameElement = roleSlot.querySelector('.title___UqFNy, [class*="title___"]');
@@ -191,6 +232,7 @@
                 // If this role has a threshold configured, check if it meets criteria
                 if (roleConfig) {
                     const meetsThreshold = successChance >= roleConfig.min && successChance <= roleConfig.max;
+                    const isLowRole = isLowThresholdRole(crimeName, roleName);
 
                     if (meetsThreshold) {
                         // Meets threshold - highlight BLUE (whether filled or available)
@@ -200,26 +242,35 @@
                             roleSlot.classList.add('oc-preferred-role');
                         }
                     } else {
-                        // Doesn't meet threshold - highlight RED (whether filled or available)
-                        roleSlot.classList.add('oc-bad-role');
-                        
+                        // Doesn't meet threshold
+                        if (isLowRole) {
+                            // Special "low" role - highlight ORANGE
+                            roleSlot.classList.add('oc-low-role');
+                        } else {
+                            // Normal bad role - highlight RED
+                            roleSlot.classList.add('oc-bad-role');
+                        }
+
                         // Add requirement badge
-                        const existingBadge = roleSlot.querySelector('.oc-requirement-badge');
+                        const existingBadge = roleSlot.querySelector('.oc-requirement-badge, .oc-requirement-badge-low');
                         if (existingBadge) existingBadge.remove();
-                        
+
                         const badge = document.createElement('div');
-                        badge.className = 'oc-requirement-badge';
-                        
+                        badge.className = isLowRole ? 'oc-requirement-badge-low' : 'oc-requirement-badge';
+
                         // Format the requirement text
                         let reqText = '';
-                        if (roleConfig.min > 0 && roleConfig.max >= 100) {
-                            reqText = `req. >${roleConfig.min}%`;
+                        if (isLowRole) {
+                            // Special text for low threshold roles
+                            reqText = `leave for below ${roleConfig.max}%`;
+                        } else if (roleConfig.min > 0 && roleConfig.max >= 100) {
+                            reqText = `preferred >${roleConfig.min}%`;
                         } else if (roleConfig.min === 0 && roleConfig.max < 100) {
-                            reqText = `req. <${roleConfig.max}%`;
+                            reqText = `preferred <${roleConfig.max}%`;
                         } else if (roleConfig.min > 0 && roleConfig.max < 100) {
-                            reqText = `req. ${roleConfig.min}-${roleConfig.max}%`;
+                            reqText = `preferred ${roleConfig.min}-${roleConfig.max}%`;
                         }
-                        
+
                         badge.textContent = reqText;
                         roleSlot.appendChild(badge);
                     }
@@ -246,7 +297,7 @@
     // INITIALIZATION
     // ============================================================================
     function init() {
-        console.log('[OC Roles] Script initialized (v2.3)');
+        console.log('[OC Roles] Script initialized (v2.6)');
 
         // Initial highlight
         setTimeout(() => {

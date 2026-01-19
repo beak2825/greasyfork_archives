@@ -1,15 +1,14 @@
 // ==UserScript==
 // @name         Forums Fav
 // @namespace    Forums Fav
-// @version      0.25.0
+// @version      0.26.5
 // @description  Modification Forum Ajax + Set local Storage
 // @author       Test
 // @icon         https://images.emojiterra.com/google/noto-emoji/unicode-15/color/128px/1f6e1.png
 // @match        *://www.jeuxvideo.com/profil/*?mode=infos
-// @match        *://www.jeuxvideo.com/profil/*?mode=favoris
-// @match        *://www.jeuxvideo.com/profil/*?mode=page_perso
+// @match        *://www.jeuxvideo.com/forums/0-15-*
+// @match        *://www.jeuxvideo.com/forums/0-50-*
 // @match        *://www.jeuxvideo.com/
-// @match        *://www.jeuxvideo.com/sso/infos_pseudo.php?*
 // @match        *://risibank.fr/embed*
 // @license      none
 // @grant        none
@@ -22,12 +21,10 @@
 if (location.href.includes('jeuxvideo.com/forums/0-')) {
     const origSend = XMLHttpRequest.prototype.send;
     XMLHttpRequest.prototype.send = function(body) {
-        if (typeof body === "string") {
-            if (body.includes("id_forum=") && body.includes("id_topic=0")) {
-                //Forum 15-18 => 103 et -15 => Genesis
-                body = body.replace("id_forum=50", "id_forum=103");
-                body = body.replace("id_forum=15", "id_forum=3021265");
-            }
+        if (typeof body === "string" && body.includes("id_forum=") && body.includes("id_topic=0")) {
+            //Forum 15-18 => 103 et -15 => Genesis
+            body = body.replace("id_forum=50", "id_forum=103");
+            body = body.replace("id_forum=15", "id_forum=3021265");
         }
         return origSend.call(this, body);
     };
@@ -87,28 +84,23 @@ if (location.href.includes('https://risibank.fr/embed')) {
     }
 
     const pseudo = new URL(location.href).searchParams.get("setPseudoPerso");
-    const auth = localStorage.getItem("auth");
 
     if (pseudo) {
         initializeIframeAuth(pseudo);
-    } else if (!pseudo && !auth) {
+    } else {
          document.addEventListener("click", async e => {
-             const btn = e.target.closest('.btn-primary');
-             if (btn?.textContent.trim() === "Connexion") {
-                 e.preventDefault(); e.stopPropagation();
-                 await initializeIframeAuth("");
-                 location.reload();
-             }
+            const btn = e.target.closest('.btn-primary');
+            if (btn?.textContent.trim() === "Connexion") {
+                e.preventDefault(); e.stopPropagation();
+                await initializeIframeAuth("");
+                location.reload();
+            }
+            const btn2 = e.target.closest('.btn-outline-primary');
+            if (btn2?.title?.trim() === "Se deconnecter") {
+                e.preventDefault(); e.stopPropagation();
+                localStorage.removeItem("auth"); localStorage.removeItem("recentMedias");
+                location.reload();
+            }
          }, { capture: true });
-    }
-    else {
-       document.addEventListener("click", async e => {
-           const btn = e.target.closest('.btn-outline-primary');
-           if (btn?.title?.trim() === "Se deconnecter") {
-               e.preventDefault(); e.stopPropagation();
-               localStorage.removeItem("auth"); localStorage.removeItem("recentMedias");
-               location.reload();
-           }
-       }, { capture: true });
     }
 }

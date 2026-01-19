@@ -3,7 +3,7 @@
 // @name:en            Full Picture Load
 // @name:zh-CN         图片全载Next
 // @name:zh-TW         圖片全載Next
-// @version            2026.1.12
+// @version            2026.1.18
 // @description        支持寫真、H漫、漫畫的網站1000+，樸實無華直觀操作的UI，圖片全量載入，簡易的看圖功能，漫畫無限滾動閱讀模式，下載壓縮打包，如有下一頁元素可自動化下載。
 // @description:en     supports 1,000+ websites for photos, h-comics, and comics, fully load all images, simple image viewing function, comic infinite scroll read mode, and compressed and packaged downloads.
 // @description:zh-CN  支持写真、H漫、漫画的网站1000+，朴实无华直观操作的UI，图片全量加载，简易的看图功能，漫画无限滚动阅读模式，下载压缩打包，如有下一页元素可自动化下载。
@@ -2128,7 +2128,7 @@
 		insertImg: [".album .wrap", 2],
 		autoDownload: [0],
 		np: (key) => {
-			let eles = fn.gae("//div[@class='wrapper']//a[text()='上一篇']");
+			let eles = fn.gae("//div[@class='wrapper']//a[text()='上一篇'] | //div[@class='page']/a[text()='上一篇']");
 			let [n, p] = eles;
 			if (key == "next") {
 				return n.href;

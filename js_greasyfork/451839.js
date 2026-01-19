@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AllInOneDownloader
 // @namespace    https://github.com/Timesient/manga-download-scripts
-// @version      6.3
+// @version      6.4
 // @license      GPL-3.0
 // @author       Timesient
 // @description  Match and then run a proper script
@@ -62,7 +62,6 @@
 // @match        https://cycomi.com/*
 // @match        https://play.dlsite.com/*
 // @match        https://book.dmm.com/*
-// @match        https://book.dmm.co.jp/*
 // @match        https://animestore.docomo.ne.jp/animestore/comic_viewer/viewer.html*
 // @match        https://drecom-media.jp/viewer/e/*
 // @match        https://*.ebookrenta.com/sc/view_*
@@ -185,7 +184,6 @@
     'cycomi.com': 'https://update.greasyfork.org/scripts/467898/cycomidownloader.js',
     'play.dlsite.com': 'https://update.greasyfork.org/scripts/485728/dlsitedownloader.js',
     'book.dmm.com': 'https://update.greasyfork.org/scripts/451867/dmmdownloader.js',
-    'book.dmm.co.jp': 'https://update.greasyfork.org/scripts/451867/dmmdownloader.js',
     'animestore.docomo.ne.jp': 'https://update.greasyfork.org/scripts/562757/docomoanimestoredownloader.js',
     'drecom-media.jp': 'https://update.greasyfork.org/scripts/513082/drecommangadownloader.js',
     'firecross.jp': 'https://update.greasyfork.org/scripts/451868/firecrossdownloader.js',

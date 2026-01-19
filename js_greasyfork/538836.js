@@ -1,335 +1,351 @@
 // ==UserScript==
-// @name         MyDealz_01_Deep_comment_extractor 🧠
+// @name         MyDealz_01_Deep_State_AI_Exporter (Final v11.0) 🧠
 // @namespace    violentmonkey
-// @version      9.0
-// @description  High-End Intelligence: Extrahiert OP & Metadaten direkt aus dem "Deep State" (Initial State), nutzt GraphQL für Kommentare und bietet 4 professionelle KI-Analyse-Modi.
+// @version      12.3
+// @description  Beste UI (Controls Top), Progress Tracking & Nested Comments.
 // @match        https://www.mydealz.de/diskussion/*
 // @match        https://www.mydealz.de/deals/*
 // @match        https://www.mydealz.de/gutscheine/*
 // @icon         https://www.mydealz.de/favicon.svg
+// @grant        GM_addStyle
+// @grant        GM_setClipboard
 // @grant        unsafeWindow
-// @downloadURL https://update.greasyfork.org/scripts/536079/MyDealz_01_Deep_comment_extractor%20%F0%9F%A7%A0.user.js
-// @updateURL https://update.greasyfork.org/scripts/536079/MyDealz_01_Deep_comment_extractor%20%F0%9F%A7%A0.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/536079/MyDealz_01_Deep_State_AI_Exporter%20%28Final%20v110%29%20%F0%9F%A7%A0.user.js
+// @updateURL https://update.greasyfork.org/scripts/536079/MyDealz_01_Deep_State_AI_Exporter%20%28Final%20v110%29%20%F0%9F%A7%A0.meta.js
 // ==/UserScript==
 
-(function () {
+(function() {
     'use strict';
 
     // ==========================================
-    // 1. CONFIG & PROMPTS (Deine "Perfekten Prompts")
+    // 1. CONFIG & STYLES (Fixed Full-Window Layout)
     // ==========================================
-    const KI_LINKS = [
-        { id: 'chatgptBtn', label: 'ChatGPT', url: 'https://chatgpt.com/' },
-        { id: 'claudeBtn', label: 'Claude', url: 'https://claude.ai/' },
-        { id: 'geminiBtn', label: 'Gemini', url: 'https://gemini.google.com/' },
-        { id: 'perplexityBtn', label: 'Perplexity', url: 'https://www.perplexity.ai/' }
+    const THEME = {
+        primary: '#0F172A',     // Slate 900
+        secondary: '#334155',
+        accent: '#2563EB',      // Blue 600
+        bg: '#F8FAFC',
+        surface: '#FFFFFF',
+        border: '#E2E8F0',
+        text: '#1E293B'
+    };
+
+    const AI_URLS = [
+        { name: 'ChatGPT', url: 'https://chatgpt.com/' },
+        { name: 'Claude', url: 'https://claude.ai/' },
+        { name: 'Gemini', url: 'https://gemini.google.com/' },
+        { name: 'Perplexity', url: 'https://www.perplexity.ai/' },
+        { name: 'NotebookLM', url: 'https://notebooklm.google.com/' }
     ];
 
-    const BTN_COLORS = { NORMAL: '#03a5c1', ERROR: '#e53935', SUCCESS: '#4caf50', PROCESSING: '#e67e22' };
     const fmtMeta = (meta) => JSON.stringify(meta, null, 2);
 
+    const formatComments = (comments, level = 0) => {
+        return comments.map(c => {
+            const indent = "  ".repeat(level);
+            
+            const r = c.reactions;
+            const parts = [];
+            // SVGs with Fallbacks as requested
+            if (r.like > 0) parts.push(`![](https://www.mydealz.de/assets/img/reactions/like_948bf.svg) ${r.like}`);
+            if (r.helpful > 0) parts.push(`![✅](https://www.mydealz.de/assets/img/reactions/helpful_4f8f6.svg) ${r.helpful}`);
+            if (r.funny > 0) parts.push(`![](https://www.mydealz.de/assets/img/reactions/funny_611f8.svg) ${r.funny}`);
+
+            const reactionStr = parts.length > 0 ? ` [${parts.join(' | ')}]` : '';
+            const header = `${indent}👤 **${c.user}** [${c.date}]${reactionStr}`;
+            
+            let body = `${indent}${c.text.replace(/\n/g, `\n${indent}`)}`;
+            
+            let output = `${header}\n${body}`;
+            
+            if (c.replies && c.replies.length > 0) {
+                output += `\n${indent}-- Antworten --\n${formatComments(c.replies, level + 1)}`;
+            }
+            return output;
+        }).join('\n\n' + "  ".repeat(level));
+    };
+
     const PROMPT_LEVELS = {
-        // 1. ROHDATEN
         RAW: {
             label: '🧱 Rohdaten',
-            id: 'promptRawBtn',
-            gen: (meta, comments) => `<context_data>\n${fmtMeta(meta)}\n</context_data>\n\n<discussion_thread>\n${comments}\n</discussion_thread>`
+            gen: (meta, comments) => JSON.stringify({ meta, comments }, null, 2)
         },
-
-        // 2. KURZ (Dein "Deal Intelligence Analyst" Prompt)
         SHORT: {
             label: '⚡ Kurz',
-            id: 'promptShortBtn',
-            gen: (meta, comments) => `# Role: Deal Intelligence Analyst & Community Sentiment Evaluator
- 
-# Context
-Du erhältst Metadaten zu einem Produktangebot sowie einen Diskussionsthread einer Deal-Plattform. Die Community ist kritisch und deckt oft Schwächen auf, die im Marketingtext fehlen.
- 
-# Task
-Analysiere die Eingabedaten, um eine fundierte Kaufentscheidung zu simulieren. **WICHTIG:** Die kollektive Erfahrung der Community (Kommentare) wiegt schwerer als der Angebotspreis oder die Händlerbeschreibung.
- 
-# Input Data
-<product_metadata>
-${fmtMeta(meta)}
-</product_metadata>
- 
-<community_discussion>
-${comments}
-</community_discussion>
- 
-# Processing Instructions
-1. **Markt-Check:** Ist der Preis wirklich gut oder nur ein "Schein-Rabatt"? (Achte auf Vergleiche in den Kommentaren).
-2. **Nutzenanalyse:** Identifiziere die **Hauptkritik**.
-   * *Bei Hardware:* Gibt es bessere/günstigere Modelle?
-   * *Bei Services:* Gibt es kostenlose Alternativen (Workarounds)?
-   * *Bei Food/Mode:* Stimmt die Qualität?
-3. **Lösungsfindung:** Suche nach "Hidden Gems" in den Kommentaren (z.B. Gutscheincodes, technische Kniffe, bessere Konkurrenzprodukte).
-4. **Synthese:** Erstelle ein kurzes, scannbares Fazit.
- 
-# Output Format
-Antworte ausschließlich in diesem Markdown-Format:
- 
-## 🚦 Status: [🟢 KAUFEN / 🟡 BEDINGT / 🔴 FINGER WEG]
-*(Ein prägnanter Satz als Begründung, basierend auf dem Konsens der Diskussion)*
- 
-## ⚡ Deal-Analyse
-* **Preis-Check:** [Einschätzung: Bestpreis, Standard oder teuer?]
-* **Community-Konsens:** [Was sagt die Mehrheit? Hype oder Enttäuschung?]
-* **Der Haken:** [Das stärkste Gegenargument (z.B. "Veraltete Technik", "Abo-Falle", "Schlechter Geschmack")]
-* **Beste Alternative/Lösung:** [Der wertvollste Tipp aus den Kommentaren]
- 
----
-*Analyse basierend auf ${meta.Statistik.Kommentare_Total} Kommentaren.*`
+            gen: (meta, comments) => `# Context\n${fmtMeta(meta)}\n\n# Comments\n${formatComments(comments)}`
         },
-
-        // 3. STANDARD (Dein "Community Sentiment & Value Analyst" Prompt)
         MEDIUM: {
             label: '💡 Standard',
-            id: 'promptMediumBtn',
-            gen: (meta, comments) => `# Role: Community Sentiment & Value Analyst
-Du bist spezialisiert darauf, aus Foren-Diskussionen den echten Nutzwert zu extrahieren. Du filterst Rauschen, erkennst Sarkasmus anhand von User-Reaktionen und identifizierst technische Lösungen.
- 
-# Input Data
-<context_data>
-${fmtMeta(meta)}
-</context_data>
- 
-<discussion_thread>
-${comments}
-</discussion_thread>
- 
-# Processing Logic (Social Signal Parsing)
-Analysiere den Textfluss und achte auf Reaktions-Marker am Ende von Kommentaren. Interpretiere sie wie folgt:
-1. **\`💡\` (Glühbirne) & \`👍\` (Daumen):** Hohe Zahlen = Validierte Lösung oder Expertenwissen. Dieser Inhalt muss priorisiert werden.
-2. **\`😂\` (Lachsmilie):** Hohe Zahlen = Indikator für Sarkasmus, Spott oder ein schlechtes Preis-Leistungs-Verhältnis. (Vorsicht: Text nicht wörtlich nehmen!).
-3. **Keywords:** Achte auf Begriffe wie "Workaround", "Trick", "Alternative", "Skript", "Einstellung".
- 
-# Analysis Steps (Chain of Thought)
-1. **Klassifizierung:** Um was geht es? (Produkt, Dienstleistung, Preisfehler?). Gibt es eine Grundsatzdiskussion (z.B. Hardware vs. App, Original vs. Klon, Abo vs. Kauf)?
-2. **Problem-Identifikation:** Was ist der Hauptkritikpunkt der Community? (z.B. "unnötige Kosten", "schlechte Qualität", "Versandrisiko").
-3. **Lösungs-Mining:** Suche nach Kommentaren mit \`💡\`-Reaktionen, die Alternativen oder Fixes beschreiben.
- 
-# Output Format (Markdown)
- 
-## 🌡️ Stimmungsbild & Real-Check
-*(Einleitender Absatz: Ist die Community begeistert oder kritisch? Dominiert Sarkasmus oder echte Kaufabsicht?)*
- 
-## ✅ Deal-Bewertung
-* **Pro:** [Argumente der Befürworter]
-* **Contra:** [Argumente der Kritiker]
-* **Der "Elefant im Raum":** [Das eine Thema, über das alle diskutieren - z.B. Sinnhaftigkeit, Preisfehler-Storno, Alternativen]
- 
-## 🛠️ Validierte Lösungen & Workarounds (High Value)
-*(Extrahiere NUR technische Lösungen/Tricks mit positiven Community-Signalen 💡/👍)*
-* **Lösung/Trick:** [Beschreibung] (User: [Name])
-* **Alternative:** [Welches Produkt/App wird stattdessen empfohlen?]
- 
-## ⚖️ Fazit & Empfehlung
-*(Ein Satz: Kaufen oder Alternative nutzen?)*`
+            gen: (meta, comments) => `# Role: Community Sentiment Analyst\n\n# Metadata\n${fmtMeta(meta)}\n\n# Thread Structure (Nested)\n${formatComments(comments)}\n\n# Task\nAnalyse the sentiment and extract key facts.`
         },
-
-        // 4. AUSFÜHRLICH (Dein "Senior UX Researcher" Prompt)
         DETAILED: {
             label: '🧐 Ausführlich',
-            id: 'promptDetailedBtn',
-            gen: (meta, comments) => `# Role: Senior UX Researcher & Community Knowledge Miner
-Du bist Experte für die Analyse komplexer User-Diskussionen. Dein Ziel ist die Extraktion von "Hidden Knowledge" (technische Lösungen, die nicht im Artikel stehen) und die Analyse der Gruppendynamik.
- 
-# Input Context
-<context_data>
-${fmtMeta(meta)}
-</context_data>
- 
-<discussion_thread>
-${comments}
-</discussion_thread>
- 
-# Deep Analysis Protocol (Signal Processing)
-1. **Reaktions-Metrik-Decoding:**
-   - Achte auf Markierungen am Ende der Kommentare (z.B. \`💡 5\`, \`😂 20\`).
-   - **\`💡\` (Licht):** Das wichtigste Signal! Markiert validierte Lösungen, Workarounds oder Expertenwissen.
-   - **\`😂\` (Lachsmilie):** Markiert Spott, Ironie oder "Preis-Leistungs-Fail". Nimm Texte mit vielen 😂 NIEMALS wörtlich.
-   - **\`👍\` (Daumen):** Markiert Zustimmung/Konsens.
-2. **Workaround-Mining (Strict Mode):**
-   - Identifiziere Schritt-für-Schritt-Anleitungen nur, wenn sie von der Community (durch \`💡\` oder \`👍\`) validiert wurden.
-   - Wenn KEINE technischen Workarounds vorhanden sind, schreibe explizit: "Keine Workarounds in der Diskussion gefunden." (Erfinde nichts!).
-3. **OP-Dynamik:**
-   - Prüfe, ob der Autor [OP] im Thread aktiv ist. Klärt er Fragen oder wird er kritisiert?
- 
-# Output Format (Detailed Report)
- 
-## 🌡️ Stimmungs-Seismograph
-*(Analysiere die emotionale Temperatur. Ist die Community dankbar, wütend oder amüsiert? Nutze das Verhältnis von \`😂\` (Spott) zu \`👍\` (Dank) als Beweis.)*
- 
-## 🛠️ The "Hive Mind" Solution (Validierte Workarounds)
-*Hier wird das kollektive Wissen aggregiert. Priorität auf Kommentare mit hohen \`💡\`-Werten.*
- 
-### 🔧 Workaround / Pro-Tipp: [Titel]
-* **Problem:** [Welches Limit/Problem wird umgangen?]
-* **Lösung:** [Zusammenfassung der Schritte aus den Kommentaren]
-* **Credits:** *(Vorgeschlagen von User: [Name])*
- 
-*(Falls keine Workarounds existieren, diesen Bereich ausblenden oder Hinweis geben)*
- 
-## ⚔️ Konflikt-Matrix (Argumentations-Cluster)
-*Analysiere die polarisierenden Lager.*
-* **Lager A (Die Kritiker/Skeptiker):** [Hauptargument? z.B. "Zu teuer", "Datenschutz", "Braucht man nicht"]
-* **Lager B (Die Befürworter/Realisten):** [Gegenargument? z.B. "Alternativlos", "Komfort-Gewinn"]
-* **Der Gewinner der Debatte:** [Welche Seite hat mehr Zustimmung/Likes erhalten?]
- 
-## 💡 UX & Usability Insights
-* **Pain Points:** [Welche konkreten Probleme (Bugs, Versand, Haptik) werden genannt?]
-* **Hidden Gems:** [Details, die im Deal-Text fehlten, aber in den Kommentaren auftauchen]
- 
-## ⚖️ Executive Summary
-*(Ein Absatz: Empfehlung basierend auf der Schwarmintelligenz. Ist das Produkt ein "No-Brainer" für die Masse oder nur für eine Nische interessant?)*
- 
----
-*Analysis generated via Deep-Dive Mining Protocol | ${new Date().toLocaleDateString()}*`
+            gen: (meta, comments) => `# Role: UX Researcher\n\n# Metadata\n${fmtMeta(meta)}\n\n# Deep Dive Thread\n${formatComments(comments)}\n\n# Protocol\nAnalyze interactions between parents and replies.`
         }
     };
 
     // ==========================================
-    // 2. STATE & CORE LOGIC
+    // 2. STATE
     // ==========================================
     let state = {
         isScraping: false,
         threadId: null,
         xsrfToken: null,
-        collectedComments: [],
+        collectedRoots: [],
         opUsername: null,
         metaData: {},
-        currentPromptLevel: 'MEDIUM', // Default: Standard
-        commentIdCounter: 1 // New: Counter for logical IDs
+        currentPromptLevel: 'MEDIUM',
+        abortController: null
     };
 
-    function getCookie(name) {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop().split(';').shift();
-    }
-
+    // ==========================================
+    // 3. CORE UTILS
+    // ==========================================
     function getThreadId() {
-        const el = document.querySelector('[data-thread-id]');
-        if (el) return el.dataset.threadId;
+        const store = unsafeWindow.__INITIAL_STATE__;
+        if (store && store.threadDetail) {
+            return store.threadDetail.threadId;
+        }
         const match = window.location.pathname.match(/-(\d+)(?:\?|$)/);
         return match ? match[1] : null;
     }
 
+    function getCookie(name) {
+        const v = `; ${document.cookie}`;
+        const p = v.split(`; ${name}=`);
+        if (p.length === 2) return p.pop().split(';').shift();
+    }
+
     function cleanText(html) {
         if (!html) return "";
-        const temp = document.createElement('div');
-        temp.innerHTML = html;
-        temp.querySelectorAll('br').forEach(br => br.replaceWith(' '));
-        temp.querySelectorAll('p').forEach(p => p.insertAdjacentText('afterend', ' '));
-        return temp.textContent.replace(/\s\s+/g, ' ').trim();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        
+        // Extract Links: Convert <a href="...">text</a> to [text](url)
+        doc.querySelectorAll('a').forEach(a => {
+            const url = a.getAttribute('href'); 
+            const label = a.textContent.trim() || "Link";
+            if (url && !url.startsWith('javascript:') && !url.startsWith('data:')) {
+                a.replaceWith(document.createTextNode(` [${label}](${url}) `));
+            } else {
+                a.replaceWith(document.createTextNode(` [${label}] `));
+            }
+        });
+
+        doc.querySelectorAll('br').forEach(br => br.replaceWith(document.createTextNode(' ')));
+        return doc.body.textContent.replace(/\s+/g, ' ').trim();
     }
 
     function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+    
+    // ==========================================
+    // 3.1 CACHE MANAGER (IndexedDB)
+    // ==========================================
+    const CacheManager = {
+        DB_NAME: 'MyDealzExportCache_v2', // Changed name to force fresh DB
+        STORE_NAME: 'threads',
+        
+        async init() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(this.DB_NAME, 1);
+                request.onerror = () => reject(request.error);
+                request.onsuccess = () => resolve(request.result);
+                request.onupgradeneeded = (e) => {
+                    const db = e.target.result;
+                    if (!db.objectStoreNames.contains(this.STORE_NAME)) {
+                        const store = db.createObjectStore(this.STORE_NAME, { keyPath: 'threadId' });
+                        store.createIndex('timestamp', 'timestamp', { unique: false });
+                    }
+                };
+            });
+        },
+        
+        async get(threadId) {
+            try {
+                const db = await this.init();
+                return new Promise((resolve, reject) => {
+                    const tx = db.transaction(this.STORE_NAME, 'readonly');
+                    const store = tx.objectStore(this.STORE_NAME);
+                    const request = store.get(threadId);
+                    
+                    request.onsuccess = () => {
+                        const data = request.result;
+                        // Cache Valid for 1 Hour
+                        if (data && Date.now() - data.timestamp < 60 * 60 * 1000) {
+                            resolve(data);
+                        } else {
+                        resolve(null);
+                        }
+                    };
+                    request.onerror = () => reject(request.error);
+                });
+            } catch (e) { console.error("Cache Error", e); return null; }
+        },
+        
+        async set(threadId, meta, comments) {
+            try {
+                const db = await this.init();
+                return new Promise((resolve, reject) => {
+                    const tx = db.transaction(this.STORE_NAME, 'readwrite');
+                    const store = tx.objectStore(this.STORE_NAME);
+                    const data = { threadId, meta, comments, timestamp: Date.now() };
+                    const request = store.put(data);
+                    request.onsuccess = () => resolve(data);
+                    request.onerror = () => reject(request.error);
+                });
+            } catch (e) { console.error("Cache Write Error", e); }
+        },
+
+        async delete(threadId) {
+             const db = await this.init();
+             const tx = db.transaction(this.STORE_NAME, 'readwrite');
+             await tx.objectStore(this.STORE_NAME).delete(threadId);
+        }
+    };
 
     // ==========================================
-    // 3. DATA EXTRACTION (Deep State + Fallback)
+    // 4. DATA EXTRACTION
     // ==========================================
-
     function getMetadata() {
-        let op = "Unbekannt";
-        let title = document.title;
-        let price = "N/A";
-        let merchant = "N/A";
-        let temp = "N/A";
-        let description = "N/A";
-
-        // 1. Versuch: __INITIAL_STATE__ (Deep State Mining)
-        try {
-            const store = unsafeWindow.__INITIAL_STATE__;
-            if (store) {
-                let coreData = null;
-                // Array Scanning Logic (MyDealz V2 Structure)
-                if (Array.isArray(store)) {
-                    const foundItem = store.find(item => item.data && (item.data.thread || item.data.discussion || item.data.voucher));
-                    if (foundItem) coreData = foundItem.data.thread || foundItem.data.discussion || foundItem.data.voucher;
-                } else {
-                    // Object Structure (Legacy)
-                    coreData = store.thread || store.discussion || store.voucher;
-                    if (!coreData && store.data) coreData = store.data.thread || store.data.discussion;
-                }
-
-                if (coreData) {
-                    console.log("✅ Deep State Data gefunden:", coreData);
-                    op = coreData.user ? coreData.user.username : "Unbekannt";
-                    title = coreData.title;
-                    price = coreData.price || "N/A";
-                    merchant = coreData.merchant ? coreData.merchant.merchantName : "N/A";
-                    temp = coreData.temperature || "N/A";
-                    // Extract HTML Description and clean it
-                    description = cleanText(coreData.description || "");
-                    return { Titel: title, URL: window.location.href, DealInfo: { Preis: price, Händler: merchant, Temperatur: temp, Beschreibung: description }, OP: op };
+        const store = unsafeWindow.__INITIAL_STATE__ || {};
+        const details = store.threadDetail || store.data?.thread || {};
+        
+        // Title
+        let title = details.title || document.querySelector('h1.thread-title')?.innerText || document.title;
+        
+        // Merchant - Strict "Verfügbar bei" check
+        let merchant = details.merchant?.merchantName;
+        if (!merchant) {
+            // Find "Verfügbar bei" span
+            const availNode = [...document.querySelectorAll('span')].find(s => s.textContent.includes('Verfügbar bei'));
+            if (availNode) {
+                const link = availNode.querySelector('a') || availNode.nextElementSibling?.querySelector('a');
+                if (link) merchant = link.innerText.trim();
+            }
+            // Fallback: Check global merchant link, excluding ads
+            if (!merchant || merchant === "OTTO") { 
+                const merchEl = document.querySelector('a[data-t="merchantLink"]');
+                if (merchEl && !merchEl.href.includes('/gutscheine/') && !merchEl.href.includes('subid')) {
+                    merchant = merchEl.innerText.trim();
                 }
             }
-        } catch (e) { console.warn("Deep-State-Extraction failed:", e); }
+        }
+        merchant = merchant || "N/A";
 
-        // 2. Versuch: DOM-Scraping (Fallback)
-        console.warn("⚠️ Fallback auf DOM...");
+        // OP Name - Strict: First span only
+        let op = details.user?.username;
+        if (!op || op === "Unbekannt") {
+            const opContainer = document.querySelector('.thread-user') || document.querySelector('.thread-user-name');
+            if (opContainer) {
+                // Try to get direct first span child
+                const nameSpan = opContainer.querySelector('span:first-child');
+                if (nameSpan) {
+                     op = nameSpan.innerText.trim();
+                } else {
+                     op = opContainer.innerText.trim().split('\n')[0];
+                }
+            }
+        }
+        op = op || "Unbekannt";
 
-        let opEl = document.querySelector('.threadItemCard-author .thread-user');
-        if (!opEl) opEl = document.querySelector('.short-profile-target .thread-user');
-        if (!opEl) opEl = document.querySelector('.thread-user-name');
-        if (opEl) op = opEl.textContent.trim();
+        const price = details.price || document.querySelector('.thread-price')?.innerText || "N/A";
+        const temp = details.temperature || document.querySelector('.vote-temp')?.innerText || "N/A";
+        const commentCount = details.commentCount || 0;
 
-        let titleEl = document.querySelector('h1.thread-title');
-        if (titleEl) title = titleEl.textContent.trim();
+        // Date Logic
+        let createdAtTs = details.createdAt;
+        if (!createdAtTs) {
+            const dateSpan = document.querySelector('.space--mv-3 span[title]');
+            if (dateSpan) {
+                const titleStr = dateSpan.getAttribute('title');
+                const parts = titleStr.match(/(\d{2})\.(\d{2})\.(\d{4}), (\d{2}):(\d{2}):(\d{2})/);
+                if (parts) {
+                    createdAtTs = new Date(`${parts[3]}-${parts[2]}-${parts[1]}T${parts[4]}:${parts[5]}:${parts[6]}`).getTime() / 1000;
+                }
+            }
+        }
+        
+        const createdDate = createdAtTs ? new Date(createdAtTs * 1000) : new Date();
+        const now = new Date();
+        const diffTime = Math.abs(now - createdDate);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
 
-        let priceEl = document.querySelector('.thread-price');
-        if (priceEl) price = priceEl.textContent.trim();
+        const isExpired = details.isExpired || document.querySelector('.thread--expired') !== null;
+        const status = isExpired ? "Abgelaufen ❌" : "Aktiv ✅";
 
-        let tempEl = document.querySelector('.vote-temp--hot') || document.querySelector('.vote-temp--burn') || document.querySelector('.vote-temp');
-        if (tempEl) temp = tempEl.textContent.trim();
-
-        let descEl = document.querySelector('.pepper-description');
-        if (descEl) description = cleanText(descEl.innerHTML);
+        // Clean Title
+        if (merchant && merchant !== "N/A") {
+            const pattern = new RegExp(`^\\[${merchant}\\]\\s*`, 'i');
+            title = title.replace(pattern, '');
+        }
 
         return {
-            Titel: title,
+            Titel: title.trim(),
             URL: window.location.href,
-            DealInfo: { Preis: price, Händler: merchant, Temperatur: temp },
-            OP: op
+            OP: op,
+            DealInfo: {
+                Preis: price,
+                Händler: merchant,
+                Temperatur: temp.toString() + "°",
+                Status: status,
+                Erstellt: createdDate.toLocaleDateString(),
+                Alter: `${diffDays} Tage`
+            },
+            MetaCount: commentCount,
+            ExportDatum: now.toLocaleString()
         };
     }
 
-    async function makeGqlRequest(query, variables) {
-        const response = await fetch("https://www.mydealz.de/graphql", {
-            method: 'POST',
-            headers: {
-                'content-type': 'application/json',
-                'x-pepper-txn': 'threads.show.deal',
-                'x-request-type': 'application/vnd.pepper.v1+json',
-                'x-requested-with': 'XMLHttpRequest',
-                'x-xsrf-token': state.xsrfToken
-            },
-            body: JSON.stringify({ query, variables })
-        });
-        const json = await response.json();
-        return json.data;
+    async function makeGqlRequest(query, variables, retries = 3) {
+        for (let attempt = 1; attempt <= retries; attempt++) {
+            try {
+                const response = await fetch("https://www.mydealz.de/graphql", {
+                    method: 'POST',
+                    headers: {
+                        'content-type': 'application/json',
+                        'x-pepper-txn': 'threads.show.deal',
+                        'x-request-type': 'application/vnd.pepper.v1+json',
+                        'x-xsrf-token': state.xsrfToken
+                    },
+                    signal: state.abortController?.signal,
+                    body: JSON.stringify({ query, variables })
+                });
+
+                if (response.status === 429) {
+                    const retryAfter = parseInt(response.headers.get('Retry-After')) || (attempt * 2);
+                    console.warn(`⏳ Rate Limit. Warte ${retryAfter}s...`);
+                    await sleep(retryAfter * 1000);
+                    continue;
+                }
+
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const json = await response.json();
+                if (json.errors) throw new Error(json.errors[0].message);
+                
+                return json.data;
+            } catch (e) {
+                if (attempt === retries) throw e;
+                await sleep(1000 * attempt);
+            }
+        }
     }
 
-    const USER_FIELDS = `
-        user { 
-            username 
-            bestBadge { level { name } }
-        }
+    const USER_FIELDS = `user { username bestBadge { level { name } } }`;
+    const COMMENT_FIELDS = `
+        commentId
+        ${USER_FIELDS}
+        preparedHtmlContent
+        reactionCounts { type count }
+        createdAtTs
+        replyCount
     `;
+
+
 
     async function fetchRootComments(page) {
         const query = `query comments($filter: CommentFilter!, $limit: Int, $page: Int) {
           comments(filter: $filter, limit: $limit, page: $page) {
-            items {
-              commentId
-              ${USER_FIELDS}
-              preparedHtmlContent
-              reactionCounts { type count }
-              createdAtTs
-              replyCount
-            }
+            items { ${COMMENT_FIELDS} }
             pagination { current last }
           }
         }`;
@@ -343,13 +359,7 @@ ${comments}
     async function fetchNestedReplies(mainCommentId) {
         const query = `query comments($filter: CommentFilter!, $limit: Int, $page: Int) {
           comments(filter: $filter, limit: $limit, page: $page) {
-            items {
-              commentId
-              ${USER_FIELDS}
-              preparedHtmlContent
-              reactionCounts { type count }
-              createdAtTs
-            }
+            items { ${COMMENT_FIELDS} }
           }
         }`;
         const data = await makeGqlRequest(query, {
@@ -359,285 +369,403 @@ ${comments}
         return data ? data.comments.items : [];
     }
 
-    // ==========================================
-    // 4. PROCESSING
-    // ==========================================
-    function processComment(item, parentUser = null) {
+    function transformComment(item) {
+        if (!item || !item.user) {
+            return {
+                id: item?.commentId || 'unknown',
+                user: '[Gelöscht]',
+                rawUser: null,
+                text: '[Dieser Kommentar wurde entfernt]',
+                date: 'N/A',
+                reactions: { like: 0, helpful: 0, funny: 0 },
+                replies: []
+            };
+        }
+
         let like = 0, helpful = 0, funny = 0;
         if (item.reactionCounts) {
             item.reactionCounts.forEach(r => {
-                if (r.type === 'LIKE') like = r.count;
-                if (r.type === 'HELPFUL') helpful = r.count;
-                if (r.type === 'FUNNY') funny = r.count;
+                const t = r.type;
+                if (t === 'LIKE') like = r.count;
+                if (t === 'HELPFUL') helpful = r.count;
+                if (t === 'FUNNY') funny = r.count;
             });
         }
 
-        let text = cleanText(item.preparedHtmlContent);
-        if (parentUser) {
-            text = `[Antwort an ${parentUser}] ${text}`;
-        }
-
-        const isOp = item.user.username === state.opUsername;
-        let userLabel = item.user.username;
-
-        if (isOp) userLabel += ' [OP]';
-        if (item.user.bestBadge?.level?.name) userLabel += ` (${item.user.bestBadge.level.name})`;
-
-        // Filter Logic: Skip meaningless short comments without reactions
-        const isShort = text.split(/\s+/).length < 4;
-        const hasReactions = like > 0 || helpful > 0 || funny > 0;
-        if (isShort && !hasReactions && !isOp) return;
-
-        state.collectedComments.push({
-            id: state.commentIdCounter++, // Logical ID
+        let userLabel = item.user.username || 'Unbekannt';
+        if (state.opUsername && userLabel === state.opUsername) userLabel += ' [OP]';
+        
+        return {
+            id: item.commentId,
             user: userLabel,
             rawUser: item.user.username,
-            text: text,
+            text: cleanText(item.preparedHtmlContent),
             date: new Date(item.createdAtTs * 1000).toISOString().split('T')[0],
-            reactions: { like, helpful, funny }
-        });
-    }
-
-    function generateStatistics() {
-        const userCounts = {};
-        let repliesCount = 0;
-
-        state.collectedComments.forEach(c => {
-            userCounts[c.rawUser] = (userCounts[c.rawUser] || 0) + 1;
-            if (c.text.startsWith('[Antwort')) repliesCount++;
-        });
-
-        const topUsers = Object.entries(userCounts)
-            .sort(([, a], [, b]) => b - a)
-            .slice(0, 5)
-            .map(([u, c]) => `${u} (${c})`);
-
-        return {
-            Kommentare_Total: state.collectedComments.length,
-            Antworten: repliesCount,
-            Deal_Ersteller: state.opUsername || "Unbekannt",
-            Top_Akteure: topUsers
+            reactions: { like, helpful, funny },
+            replies: [] 
         };
     }
 
-    function updateButton(text, color) {
-        const btn = document.getElementById('ai-export-btn');
-        if (btn) {
-            btn.textContent = text;
-            if (color) btn.style.background = color;
+    async function runExport(btn, forceRefresh = false) {
+        if (state.isScraping) {
+            if (confirm('Export läuft bereits. Abbrechen?')) {
+                state.abortController?.abort();
+                state.isScraping = false;
+                btn.textContent = "🧠 AI Export";
+                btn.disabled = false;
+            }
+            return;
         }
-    }
 
-    // ==========================================
-    // 5. MAIN EXECUTION
-    // ==========================================
-    async function runExport(btn) {
-        if (state.isScraping) return;
         state.isScraping = true;
-        state.collectedComments = [];
-        state.commentIdCounter = 1; // Reset Counter
+        state.abortController = new AbortController();
         state.threadId = getThreadId();
         state.xsrfToken = decodeURIComponent(getCookie('xsrf_t'));
+        state.collectedRoots = [];
 
-        if (!state.threadId) { alert("Keine Thread ID!"); state.isScraping = false; return; }
+        if (!state.threadId) { alert("ID Error"); state.isScraping = false; return; }
 
-        const origLabel = "🧠 AI Export";
-        updateButton("⏳ Start...", BTN_COLORS.PROCESSING);
         btn.disabled = true;
 
         try {
-            // 1. Metadaten
-            const meta = getMetadata();
-            state.opUsername = meta.OP;
-            state.metaData = { ...meta, Datum_Export: new Date().toISOString() };
-
-            // 2. Kommentare
-            updateButton("💬 Lade Seite 1...", BTN_COLORS.PROCESSING);
-            const firstPage = await fetchRootComments(1);
-            if (!firstPage) throw new Error("API Error beim Laden der Kommentare");
-
-            const totalPages = firstPage.pagination.last;
-            let processedCount = 0;
-
-            for (const item of firstPage.items) {
-                processComment(item);
-                processedCount++;
-                updateButton(`📥 ${processedCount} Kommentare...`, BTN_COLORS.PROCESSING);
-
-                if (item.replyCount > 0) {
-                    const replies = await fetchNestedReplies(item.commentId);
-                    replies.forEach(r => processComment(r, item.user.username));
-                    processedCount += replies.length;
-                    updateButton(`📥 ${processedCount} (inkl. Antworten)...`, BTN_COLORS.PROCESSING);
+            // 1. Check Cache (if not forced)
+            if (!forceRefresh) {
+                const cached = await CacheManager.get(state.threadId);
+                if (cached) {
+                    console.log('✅ Loaded from Cache');
+                    state.metaData = cached.meta;
+                    state.collectedRoots = cached.comments;
+                    state.metaData._fromCache = true; // Flag for UI
+                    state.metaData._cacheTime = cached.timestamp;
+                    openUi();
+                    return;
                 }
             }
 
-            // Parallel Fetching (Batch Size: 5)
-            const BATCH_SIZE = 5;
-            for (let i = 2; i <= totalPages; i += BATCH_SIZE) {
-                const batchPromises = [];
-                const endPage = Math.min(i + BATCH_SIZE - 1, totalPages);
+            // 2. Fresh Scrape
+            // Uses robust DOM/State extraction (v12.3) instead of broken GQL thread query
+            btn.textContent = "⏳ Extracting Meta...";
+            
+            // Artificial delay to ensure dynamic content is loaded (if any)
+            await sleep(500);
 
-                updateButton(`📄 Lade Seite ${i}-${endPage}/${totalPages}...`, BTN_COLORS.PROCESSING);
+            // Use the improved v12.3 getMetadata function
+            state.metaData = getMetadata();
+            
+            // Enhance metadata with calculated fields if needed (e.g. clean title)
+             if (state.metaData.DealInfo.Händler !== "N/A") {
+                const pattern = new RegExp(`^\\[${state.metaData.DealInfo.Händler}\\]\\s*`, 'i');
+                state.metaData.Titel = state.metaData.Titel.replace(pattern, '');
+            }
 
-                for (let p = i; p <= endPage; p++) {
-                    batchPromises.push(fetchRootComments(p));
-                }
+            state.opUsername = state.metaData.OP;
+            
+            // Total Est
+            let totalEst = state.metaData.MetaCount;
+            if (totalEst === 0) totalEst = "?";
 
-                const results = await Promise.all(batchPromises);
+            // Loop Comments
+            const firstPage = await fetchRootComments(1);
+            if (!firstPage) throw new Error("API Limit");
+            const totalPages = firstPage.pagination.last;
+            
+            let count = 0;
+            const processItems = async (items) => {
+                const nodes = [];
+                const CHUNK_SIZE = 25;
 
-                for (const pageData of results) {
-                    if (pageData && pageData.items) {
-                        for (const item of pageData.items) {
-                            processComment(item);
-                            processedCount++;
+                for (let i = 0; i < items.length; i += CHUNK_SIZE) {
+                    const chunk = items.slice(i, i + CHUNK_SIZE);
+                    
+                    // Anti-Freeze: Yield to main thread
+                    await new Promise(r => setTimeout(r, 0));
 
-                            // Handle replies sequentially to avoid flooding
-                            if (item.replyCount > 0) {
-                                const replies = await fetchNestedReplies(item.commentId);
-                                replies.forEach(r => processComment(r, item.user.username));
-                                processedCount += replies.length;
+                    for (const item of chunk) {
+                        const node = transformComment(item);
+                        count++;
+                        const progressStr = totalEst === "?" ? count : `${count}/${totalEst}`;
+                        btn.textContent = `⏳ ${progressStr}...`;
+                        
+                        if (item.replyCount > 0) {
+                            const replies = await fetchNestedReplies(item.commentId);
+                            // Process replies (usually small, but could chunk deep trees if needed)
+                            for (const r of replies) {
+                                node.replies.push(transformComment(r));
+                                count++;
+                                const progressStrRep = totalEst === "?" ? count : `${count}/${totalEst}`;
+                                btn.textContent = `⏳ ${progressStrRep}...`;
                             }
                         }
+                        nodes.push(node);
                     }
                 }
+                return nodes;
+            };
+            state.collectedRoots.push(...await processItems(firstPage.items));
 
-                updateButton(`📥 ${processedCount} gesammelt...`, BTN_COLORS.PROCESSING);
-                await sleep(200); // Breathe between batches
+            for (let p = 2; p <= totalPages; p++) {
+                // btn.textContent = `📄 S${p}/${totalPages}...`; // Detailed progress inside processItems
+                await sleep(150);
+                const data = await fetchRootComments(p);
+                if (data) state.collectedRoots.push(...await processItems(data.items));
             }
 
-            state.metaData.Statistik = generateStatistics();
-
-            updateButton(`✨ Fertig (${processedCount})`, BTN_COLORS.SUCCESS);
-
-            const cleanJsonl = state.collectedComments.map(c => {
-                const { rawUser, ...keep } = c;
-                if (keep.reactions.like === 0 && keep.reactions.helpful === 0 && keep.reactions.funny === 0) delete keep.reactions;
-                return JSON.stringify(keep);
-            }).join('\n');
-
-            openUi(cleanJsonl);
+            state.metaData.Statistik = { Total: count };
+            
+            // 3. Save to Cache
+            await CacheManager.set(state.threadId, state.metaData, state.collectedRoots);
+            
+            openUi();
 
         } catch (e) {
-            console.error(e);
-            alert("Fehler: " + e.message);
-            updateButton("❌ Fehler", BTN_COLORS.ERROR);
+            if (e.name === 'AbortError') {
+                console.log('Export abgebrochen');
+                btn.textContent = "❌ Aborted";
+            } else {
+                console.error(e);
+                alert("Error: " + e.message);
+            }
         } finally {
             state.isScraping = false;
-            setTimeout(() => {
-                updateButton(origLabel, BTN_COLORS.NORMAL);
-                btn.disabled = false;
-            }, 3000);
+            state.abortController = null;
+            if (btn.textContent !== "❌ Aborted") btn.textContent = "🧠 AI Export";
+            btn.disabled = false;
         }
     }
 
     // ==========================================
-    // 6. UI (Popup Window)
+    // 6. UI IMPLEMENTATION (Controls Top)
     // ==========================================
-    function openUi(jsonlData) {
-        const w = window.open('', '_blank', 'width=1000,height=900');
-        if (!w) return alert("Popup blockiert!");
+    function downloadFile(filename, content, type) {
+        const blob = new Blob([content], { type });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    function openUi() {
+        const w = window.open('', '_blank', 'width=1000,height=800');
+        if(!w) return alert("Popup Blocked!");
+
+        // Inject logic back to main window for re-running
+        w.UnsafeRunExport = () => runExport(document.querySelector('#mydealz-ai-btn'), true);
 
         w.document.title = "MyDealz AI Export";
-        w.document.head.innerHTML = `
-            <style>
-                body { font-family: 'Segoe UI', sans-serif; background: #f4f6f8; margin: 0; padding: 20px; color: #2c3e50; }
-                .container { max-width: 950px; margin: 0 auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 5px 25px rgba(0,0,0,0.08); }
-                h2 { margin-top: 0; color: #2c3e50; border-bottom: 2px solid #ecf0f1; padding-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
-                .badge { background: #3498db; color: white; padding: 4px 10px; border-radius: 12px; font-size: 12px; vertical-align: middle; }
-                .controls { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
-                button { padding: 10px 18px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; transition: all 0.2s; }
-                .btn-prompt { background: #ecf0f1; color: #7f8c8d; }
-                .btn-prompt.active { background: #2c3e50; color: white; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(44, 62, 80, 0.2); }
-                .btn-copy { background: #27ae60; color: white; margin-left: auto; }
-                .btn-copy:hover { background: #219150; }
-                .btn-ai { background: white; border: 1px solid #bdc3c7; color: #7f8c8d; }
-                .btn-ai:hover { border-color: #3498db; color: #3498db; }
-                textarea { width: 100%; height: 500px; padding: 15px; border: 1px solid #bdc3c7; border-radius: 8px; font-family: 'Consolas', monospace; font-size: 12px; resize: vertical; box-sizing: border-box; line-height: 1.5; background: #fafafa; color: #2c3e50; }
-                .meta-info { font-size: 13px; color: #7f8c8d; margin-bottom: 15px; background: #f8f9fa; padding: 10px; border-radius: 6px; border: 1px solid #eee; }
-            </style>
+        const d = w.document;
+
+        const css = `
+            :root { 
+                --bg: ${THEME.bg}; --surface: ${THEME.surface};
+                --border: ${THEME.border}; --primary: ${THEME.primary}; --text: ${THEME.text};
+            }
+            body { 
+                margin: 0; padding: 0; font-family: 'Inter', system-ui, sans-serif; 
+                background: var(--bg); height: 100vh; overflow: hidden;
+                display: flex; flex-direction: column;
+            }
+            
+            .header {
+                flex: 0 0 auto;
+                padding: 12px 20px; background: var(--surface); border-bottom: 1px solid var(--border);
+                display: flex; justify-content: space-between; align-items: center;
+            }
+            .header h2 { margin: 0; font-size: 16px; color: var(--text); display: flex; align-items: center; gap: 10px; }
+            .badge { background: #EEF2FF; color: #4F46E5; padding: 2px 8px; border-radius: 4px; font-size: 11px; }
+
+            .meta-bar {
+                flex: 0 0 auto;
+                display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+                padding: 12px 20px; background: #F1F5F9; border-bottom: 1px solid var(--border);
+                font-size: 12px; color: #64748B;
+            }
+            .meta-item b { color: #334155; font-weight: 600; margin-right: 4px; }
+            .meta-item.cache-info { color: #059669; font-weight: 500; }
+
+            /* Controls Area (Tabs + Actions) */
+            .controls-area {
+                flex: 0 0 auto;
+                padding: 16px 20px;
+                background: var(--surface);
+                border-bottom: 1px solid var(--border);
+                display: flex; flex-direction: column; gap: 16px;
+                box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+                z-index: 10;
+            }
+
+            .tabs { display: flex; gap: 8px; }
+            .tab-btn {
+                padding: 6px 12px; border-radius: 6px; border: 1px solid #CBD5E1; cursor: pointer;
+                background: white; color: #64748B; font-weight: 500; font-size: 12px;
+            }
+            .tab-btn.active { background: #F1F5F9; border-color: var(--primary); color: var(--primary); font-weight: 600; }
+
+            .action-row { display: flex; gap: 40px; }
+            .group-label { font-size: 10px; text-transform: uppercase; color: #94A3B8; font-weight: 700; margin-bottom: 6px; }
+            .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+            
+            .btn {
+                min-width: 90px; justify-content: center;
+                padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border);
+                background: white; color: #475569; font-size: 12px; cursor: pointer;
+                display: flex; align-items: center; gap: 6px;
+            }
+            
+            .toast {
+                position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(20px);
+                background: rgba(15, 23, 42, 0.9); color: white; padding: 10px 20px; 
+                border-radius: 30px; font-size: 13px; font-weight: 500;
+                opacity: 0; transition: all 0.3s ease; pointer-events: none;
+                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+                display: flex; align-items: center; gap: 8px; z-index: 1000;
+            }
+            .toast.visible { opacity: 1; transform: translateX(-50%) translateY(0); }
+            .btn:hover { background: #F8FAFC; border-color: #CBD5E1; }
+            .btn-primary { background: var(--primary); color: white; border-color: var(--primary); }
+            .btn-primary:hover { background: #334155; }
+
+            /* Output */
+            .main {
+                flex: 1; 
+                display: flex; flex-direction: column;
+                padding: 0; 
+                min-height: 0; 
+            }
+            textarea {
+                flex: 1; width: 100%; resize: none; border: none;
+                padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 12px;
+                background: #FAFAFA; color: #334155; outline: none; box-sizing: border-box;
+                overflow-y: auto;
+            }
         `;
 
-        const render = () => {
-            const promptGen = PROMPT_LEVELS[state.currentPromptLevel].gen;
-            return promptGen(state.metaData, jsonlData);
-        };
+        d.head.innerHTML = `<style>${css}</style>`;
+        d.body.innerHTML = `
+            <div class="header">
+                <h2>💎 MyDealz Analyzer <span class="badge">v11.0</span></h2>
+            </div>
+            
+            <div class="meta-bar">
+                <div class="meta-item"><b>Deal:</b> ${state.metaData.Titel.substring(0,30)}...</div>
+                <div class="meta-item"><b>Status:</b> ${state.metaData.DealInfo.Status} (${state.metaData.DealInfo.Alter})</div>
+                <div class="meta-item"><b>Preis:</b> ${state.metaData.DealInfo.Preis}</div>
+                <div class="meta-item"><b>Count:</b> ${state.metaData.Statistik.Total}</div>
+                ${state.metaData._fromCache ? 
+                    `<div class="meta-item cache-info">⚡ Cached (${new Date(state.metaData._cacheTime).toLocaleTimeString()})</div>` 
+                    : ''}
+            </div>
 
-        const metaHtml = `
-            <strong>Thread:</strong> ${state.metaData.Titel} | 
-            <strong>OP:</strong> ${state.metaData.Statistik.Deal_Ersteller} |
-            <strong>Temp:</strong> ${state.metaData.DealInfo.Temperatur}° | 
-            <strong>Volumen:</strong> ${state.metaData.Statistik.Kommentare_Total} Posts
-        `;
-
-        w.document.body.innerHTML = `
-            <div class="container">
-                <h2>
-                    <span>💎 AI Export <span class="badge">v8.1</span></span>
-                </h2>
-                <div class="meta-info">${metaHtml}</div>
+            <div class="controls-area">
                 
-                <div class="controls">
-                    ${Object.keys(PROMPT_LEVELS).map(k =>
-            `<button id="${k}" class="btn-prompt">${PROMPT_LEVELS[k].label}</button>`
-        ).join('')}
-                    <button id="copy" class="btn-copy">📋 Copy Prompt</button>
+                <div>
+                     <div class="group-label">Prompts</div>
+                     <div class="tabs" id="tabContainer"></div>
                 </div>
- 
-                <textarea id="out" readonly></textarea>
- 
-                <div class="controls" style="margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px;">
-                    <span style="align-self: center; font-size: 13px; color: #95a5a6; font-weight: 600;">Direkt öffnen:</span>
-                    ${KI_LINKS.map(l => `<button id="link_${l.id}" class="btn-ai">${l.label}</button>`).join('')}
+                
+                <div class="action-row">
+                     <div>
+                        <div class="group-label">Exportieren</div>
+                        <div class="btn-row">
+                            <button class="btn" id="copyBtn">📋 Copy</button>
+                            <button class="btn btn-primary" id="saveMd">💾 .MD</button>
+                            <button class="btn" id="saveJson">💾 .JSON</button>
+                            <button class="btn" id="refreshBtn" title="Cache löschen & Neu laden">🔄</button>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="group-label">AI Direktlink</div>
+                        <div class="btn-row">
+                            ${AI_URLS.map(ai => 
+                                `<button class="btn" onclick="window.open('${ai.url}')">${ai.name}</button>`
+                            ).join('')}
+                        </div>
+                    </div>
                 </div>
             </div>
+
+            <div class="main">
+                 <textarea id="output" readonly></textarea>
+            </div>
+            <div id="toast" class="toast"></div>
         `;
 
-        const out = w.document.getElementById('out');
+        const out = d.getElementById('output');
+        const tabContainer = d.getElementById('tabContainer');
 
-        Object.keys(PROMPT_LEVELS).forEach(k => {
-            w.document.getElementById(k).onclick = (e) => {
-                w.document.querySelectorAll('.btn-prompt').forEach(b => b.classList.remove('active'));
-                e.target.classList.add('active');
-                state.currentPromptLevel = k;
-                out.value = render();
+        Object.keys(PROMPT_LEVELS).forEach(key => {
+            const b = d.createElement('button');
+            b.className = `tab-btn ${key === 'MEDIUM' ? 'active' : ''}`;
+            b.textContent = PROMPT_LEVELS[key].label;
+            b.onclick = () => {
+                d.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                b.classList.add('active');
+                state.currentPromptLevel = key;
+                out.value = PROMPT_LEVELS[key].gen(state.metaData, state.collectedRoots);
             };
+            tabContainer.appendChild(b);
         });
 
-        w.document.getElementById('copy').onclick = () => {
-            out.select();
-            w.document.execCommand('copy');
-            const btn = w.document.getElementById('copy');
-            const original = btn.textContent;
-            btn.textContent = "✅ Kopiert!";
-            setTimeout(() => btn.textContent = original, 1500);
+        const safeTitle = state.metaData.Titel.replace(/[^a-zA-Z0-9]/g, '_').substring(0, 50);
+        const dateStr = new Date().toISOString().split('T')[0];
+        const baseName = `${dateStr}_${safeTitle}_mydealz`;
+
+        const toast = d.getElementById('toast');
+        const showToast = (msg) => {
+            toast.innerHTML = msg;
+            toast.classList.add('visible');
+            setTimeout(() => toast.classList.remove('visible'), 2000);
         };
 
-        KI_LINKS.forEach(l => {
-            w.document.getElementById(`link_${l.id}`).onclick = () => window.open(l.url, '_blank');
-        });
+        d.getElementById('copyBtn').onclick = async function(e) { 
+            e.preventDefault(); // Prevent focus
+            const btn = this;
+            try {
+                await navigator.clipboard.writeText(out.value);
+                showToast("✅ Erfolgreich kopiert!");
+            } catch(e) {
+                // Fallback: Invisible Textarea
+                const ta = d.createElement('textarea');
+                ta.value = out.value;
+                ta.style.position = 'fixed'; ta.style.left = '-9999px';
+                d.body.appendChild(ta);
+                ta.select();
+                d.execCommand('copy');
+                d.body.removeChild(ta);
+                showToast("✅ Kopiert (Fallback)!");
+            }
+        };
+        d.getElementById('saveMd').onclick = () => downloadFile(`${baseName}.md`, out.value, 'text/markdown');
+        d.getElementById('saveJson').onclick = () => downloadFile(`${baseName}.json`, JSON.stringify({meta: state.metaData, comments: state.collectedRoots},null,2), 'application/json');
+        
+        d.getElementById('refreshBtn').onclick = async () => {
+             if(confirm("Cache löschen und neu laden?")) {
+                 await CacheManager.delete(state.metaData.OP ? state.threadId : getThreadId()); // Access State from closure
+                 w.close();
+                 if(w.UnsafeRunExport) w.UnsafeRunExport();
+             }
+        };
 
-        // Default Active: Standard (Medium)
-        w.document.getElementById('MEDIUM').click();
+        out.value = PROMPT_LEVELS[state.currentPromptLevel].gen(state.metaData, state.collectedRoots);
     }
 
     function init() {
         const btn = document.createElement('button');
-        btn.id = "ai-export-btn";
+        btn.id = 'mydealz-ai-btn'; // ID for reference
         btn.textContent = "🧠 AI Export";
         Object.assign(btn.style, {
-            position: 'fixed', bottom: '20px', right: '20px',
-            padding: '12px 20px', background: BTN_COLORS.NORMAL,
-            color: '#fff', border: 'none', borderRadius: '50px',
-            fontSize: '14px', cursor: 'pointer', zIndex: 99999,
-            boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
-            fontWeight: 'bold', fontFamily: 'system-ui',
-            transition: 'transform 0.2s ease, width 0.2s ease'
+            position: 'fixed', bottom: '20px', right: '20px', zIndex: 99999,
+            padding: '12px 20px', background: THEME.primary, color: 'white',
+            border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
         });
         btn.onclick = () => runExport(btn);
         document.body.appendChild(btn);
     }
-
+    
     if (document.readyState === 'complete') init();
     else window.addEventListener('load', init);
 

@@ -15,7 +15,7 @@
 // @author              冻猫, RyomaHan, YeSilin
 // @include             *
 // @exclude             *www.w3school.com.cn*
-// @version             12.5.83
+// @version             12.5.85
 // @run-at              document-end
 // @license             MIT
 // @grant               GM_setValue
@@ -1293,22 +1293,23 @@
         gv.btnFullscreenToggle.classList.remove("visible");
         gv.btnPipToggle.classList.remove("visible");
 
-        const hostname = document.location.hostname;
+        // const hostname = document.location.hostname;
 
-        // YouTube特殊处理：切换剧院模式
-        if (hostname.includes("www.youtube.com")) {
-          const flexy = document.querySelector("#page-manager > ytd-watch-flexy");
-          // 是否处于剧院模式
-          const isTheaterMode =
-            flexy && getComputedStyle(flexy).getPropertyValue("--ytd-watch-flexy-chat-max-height").trim() === "460px";
-          // 不是剧院模式就自动进入宽屏模式
-          if (!isTheaterMode) {
-            document.querySelector("#movie_player .ytp-size-button").click();
-            gv.ytbStageChange = true;
-          }
-          // 临时方案直接隐藏
-          document.querySelector("#above-the-fold")?.style.setProperty("display", "none");
-        }
+        // // YouTube特殊处理：切换剧院模式
+        // if (hostname.includes("www.youtube.com")) {
+        //   const flexy = document.querySelector("#page-manager > ytd-watch-flexy");
+        //   // 是否处于剧院模式
+        //   const isTheaterMode =
+        //     flexy && getComputedStyle(flexy).getPropertyValue("--ytd-watch-flexy-chat-max-height").trim() === "460px";
+        //   // 不是剧院模式就自动进入宽屏模式
+        //   if (!isTheaterMode) {
+        //     document.querySelector("#movie_player .ytp-size-button").click();
+        //     gv.ytbStageChange = true;
+        //   }
+        //   // 临时方案直接隐藏
+        //   document.querySelector("#above-the-fold")?.style.setProperty("display", "none");
+        //   document.querySelector("#secondary")?.style.setProperty("display", "none");
+        // }
       }
       gv.isFull = true;
       gv.useCssFullscreen = true;
@@ -1369,18 +1370,15 @@
       }
 
       // YouTube特殊处理：恢复剧院模式
-      // if (document.location.hostname == "www.youtube.com" && gv.ytbStageChange) {
-      //   document.querySelector("#movie_player .ytp-size-button").click();
-      //   gv.ytbStageChange = false;
+      // if (document.location.hostname == "www.youtube.com") {
+      //   if (gv.ytbStageChange) {
+      //     document.querySelector("#movie_player .ytp-size-button").click();
+      //     gv.ytbStageChange = false;
+      //   }
+      //   // 临时方案
+      //   document.querySelector("#above-the-fold")?.style.setProperty("display", "block");
+      //   document.querySelector("#secondary")?.style.setProperty("display", "block");
       // }
-      if (document.location.hostname == "www.youtube.com") {
-        if (gv.ytbStageChange) {
-          document.querySelector("#movie_player .ytp-size-button").click();
-          gv.ytbStageChange = false;
-        }
-        // 临时方案
-        document.querySelector("#above-the-fold")?.style.setProperty("display", "block");
-      }
 
       // 隐藏辅助按钮
       gv.leftBtn.style.display = "";

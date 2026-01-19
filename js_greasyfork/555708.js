@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         enhanced artikel-edit
 // @namespace    https://greasyfork.org/de/users/1516523-martink
-// @version      0.9.1
+// @version      0.9.2
 // @description  Klon-Artikel Info | Vergleichslinks | Clone-Optionen | Grid Divider | Created-From-Info | Einstellungsmenü
 // @author       Martin Kaiser
 // @match        https://opus.geizhals.at/kalif/artikel?id=*
@@ -63,7 +63,7 @@
 
     // ===== GLOBAL ERROR HANDLER für DOM-Manipulations-Fehler =====
     // Fängt "removeChild" und "insertBefore" Fehler ab, die durch React-Updates während unserer DOM-Manipulationen entstehen
-    
+
     // Patche Node.prototype.insertBefore um Fehler abzufangen
     const originalInsertBefore = Node.prototype.insertBefore;
     Node.prototype.insertBefore = function(newNode, referenceNode) {
@@ -1042,7 +1042,7 @@
 
         // 1e. Matchrule-Feld auslesen
         let matchruleValue = '';
-        const matchruleField = document.querySelector('input[name="matchrule"]') || 
+        const matchruleField = document.querySelector('input[name="matchrule"]') ||
                                document.querySelector('textarea[name="matchrule"]');
         if (matchruleField) {
             matchruleValue = matchruleField.value || '';
@@ -1389,37 +1389,37 @@
 
                     // Funktion zum Setzen des Matchrule-Werts
                     const setMatchruleValue = async () => {
-                        const matchruleField = document.querySelector('input[name="matchrule"]') || 
+                        const matchruleField = document.querySelector('input[name="matchrule"]') ||
                                                document.querySelector('textarea[name="matchrule"]');
 
                         if (matchruleField) {
                             const isTextarea = matchruleField.tagName === 'TEXTAREA';
                             const nativeValueSetter = Object.getOwnPropertyDescriptor(
-                                isTextarea ? HTMLTextAreaElement.prototype : HTMLInputElement.prototype, 
+                                isTextarea ? HTMLTextAreaElement.prototype : HTMLInputElement.prototype,
                                 'value'
                             ).set;
 
                             // Focus setzen
                             matchruleField.focus();
-                            
+
                             // Wert mit nativem Setter setzen
                             nativeValueSetter.call(matchruleField, matchruleValue);
-                            
+
                             // Mehrere Event-Typen dispatchen für React-Kompatibilität
                             matchruleField.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
                             matchruleField.dispatchEvent(new Event('change', { bubbles: true, cancelable: true }));
                             matchruleField.dispatchEvent(new Event('blur', { bubbles: true, cancelable: true }));
-                            
+
                             // Auch KeyboardEvent simulieren (manche React-Versionen brauchen das)
                             matchruleField.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, cancelable: true, key: 'a' }));
                             matchruleField.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true, cancelable: true, key: 'a' }));
-                            
+
                             // Zusätzlich: Setze auch das value-Attribut direkt
                             matchruleField.value = matchruleValue;
-                            
+
                             // Nochmal Input-Event
                             matchruleField.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
-                            
+
                             return true;
                         }
                         return false;
@@ -1436,7 +1436,7 @@
                     // Drittes Setzen (falls applyMatchruleContainerReorder das Feld ersetzt hat)
                     await setMatchruleValue();
                     await new Promise(resolve => setTimeout(resolve, 300));
-                    
+
                     // Viertes Setzen - nochmals für den Fall dass die Textarea gerade erst erstellt wurde
                     await setMatchruleValue();
 
@@ -1724,7 +1724,7 @@
 
         cloneModeSettings.forEach(setting => {
             const wrapper = createOtherSettingRow(setting);
-            
+
             // Special handling for cloneApplyChanges - add info button
             if (setting.key === 'cloneApplyChanges') {
                 const infoButton = document.createElement('button');
@@ -1822,7 +1822,7 @@
 
                 wrapper.appendChild(infoButton);
             }
-            
+
             checkboxContainer.appendChild(wrapper);
         });
 
@@ -1928,11 +1928,11 @@
 
             const label = document.createElement('label');
             label.style.cssText = `cursor: ${toggleInput.checked ? 'pointer' : 'not-allowed'}; margin: 0; ${!toggleInput.checked ? 'opacity: 0.5; color: #999;' : ''}`;
-            
+
             // Label mit "(Standard: aktiv/inaktiv)" - "aktiv" fett
             const labelText = document.createTextNode(cb.label + ' (Standard: ');
             label.appendChild(labelText);
-            
+
             if (cb.defaultActive) {
                 const boldSpan = document.createElement('strong');
                 boldSpan.textContent = 'aktiv';
@@ -2583,10 +2583,10 @@
                     backdrop.addEventListener('click', closeTooltip);
                 });
                 wrapper.appendChild(infoButton);
-                
+
                 // Wrapper auf flex-wrap umstellen für Radio-Buttons in neuer Zeile
                 wrapper.style.flexWrap = 'wrap';
-                
+
                 // Radio-Buttons für Modus-Auswahl (unter der Checkbox)
                 const radioContainer = document.createElement('div');
                 radioContainer.id = 'sidebarAutoCollapseRadioContainer';
@@ -2598,11 +2598,11 @@
                     flex-direction: column;
                     gap: 0.4rem;
                 `;
-                
+
                 // Radio 1: Immer
                 const radio1Wrapper = document.createElement('div');
                 radio1Wrapper.style.cssText = 'display: flex; align-items: center; gap: 0.4rem;';
-                
+
                 const radio1 = document.createElement('input');
                 radio1.type = 'radio';
                 radio1.name = 'sidebarAutoCollapseMode';
@@ -2610,19 +2610,19 @@
                 radio1.id = 'sidebarAutoCollapseMode_always';
                 radio1.checked = otherSettings.sidebarAutoCollapseMode === 'always' || !otherSettings.sidebarAutoCollapseMode;
                 radio1.style.cursor = 'pointer';
-                
+
                 const label1 = document.createElement('label');
                 label1.textContent = 'Immer';
                 label1.htmlFor = 'sidebarAutoCollapseMode_always';
                 label1.style.cssText = 'cursor: pointer; margin: 0;';
-                
+
                 radio1Wrapper.appendChild(radio1);
                 radio1Wrapper.appendChild(label1);
-                
+
                 // Radio 2: Nur bis max. Fensterbreite
                 const radio2Wrapper = document.createElement('div');
                 radio2Wrapper.style.cssText = 'display: flex; align-items: center; gap: 0.4rem;';
-                
+
                 const radio2 = document.createElement('input');
                 radio2.type = 'radio';
                 radio2.name = 'sidebarAutoCollapseMode';
@@ -2630,12 +2630,12 @@
                 radio2.id = 'sidebarAutoCollapseMode_maxWidth';
                 radio2.checked = otherSettings.sidebarAutoCollapseMode === 'maxWidth';
                 radio2.style.cursor = 'pointer';
-                
+
                 const label2 = document.createElement('label');
                 label2.textContent = 'Nur bis max. Fensterbreite (in Pixel):';
                 label2.htmlFor = 'sidebarAutoCollapseMode_maxWidth';
                 label2.style.cssText = 'cursor: pointer; margin: 0;';
-                
+
                 const maxWidthInput = document.createElement('input');
                 maxWidthInput.type = 'number';
                 maxWidthInput.id = 'sidebarAutoCollapseMaxWidth';
@@ -2650,7 +2650,7 @@
                     font-size: 0.875rem;
                     margin-left: 0.5rem;
                 `;
-                
+
                 // Aktuelle Fensterbreite anzeigen (in physischen Pixeln)
                 const currentWidthDisplay = document.createElement('span');
                 currentWidthDisplay.id = 'sidebarAutoCollapseCurrentWidth';
@@ -2666,16 +2666,16 @@
                 updateCurrentWidthDisplay();
                 // Update bei Fenstergrößenänderung
                 window.addEventListener('resize', updateCurrentWidthDisplay);
-                
+
                 radio2Wrapper.appendChild(radio2);
                 radio2Wrapper.appendChild(label2);
                 radio2Wrapper.appendChild(maxWidthInput);
                 radio2Wrapper.appendChild(currentWidthDisplay);
-                
+
                 // Funktion zum Aktualisieren des Radio-States
                 const updateRadioState = () => {
                     const isMainCheckboxChecked = checkbox.checked;
-                    
+
                     // Radio-Buttons nur aktiv wenn Hauptcheckbox aktiv
                     radio1.disabled = !isMainCheckboxChecked;
                     radio2.disabled = !isMainCheckboxChecked;
@@ -2685,16 +2685,16 @@
                     label2.style.cursor = isMainCheckboxChecked ? 'pointer' : 'default';
                     radio1.style.cursor = isMainCheckboxChecked ? 'pointer' : 'default';
                     radio2.style.cursor = isMainCheckboxChecked ? 'pointer' : 'default';
-                    
+
                     // Input-Feld nur aktiv wenn Radio 2 ausgewählt UND Hauptcheckbox aktiv
                     const isMaxWidthActive = isMainCheckboxChecked && radio2.checked;
                     maxWidthInput.disabled = !isMaxWidthActive;
                     maxWidthInput.style.opacity = isMaxWidthActive ? '1' : '0.5';
                 };
-                
+
                 // Event-Handler für Hauptcheckbox
                 checkbox.addEventListener('change', updateRadioState);
-                
+
                 radio1.addEventListener('change', () => {
                     if (radio1.checked) {
                         otherSettings.sidebarAutoCollapseMode = 'always';
@@ -2702,7 +2702,7 @@
                         updateRadioState();
                     }
                 });
-                
+
                 radio2.addEventListener('change', () => {
                     if (radio2.checked) {
                         otherSettings.sidebarAutoCollapseMode = 'maxWidth';
@@ -2710,7 +2710,7 @@
                         updateRadioState();
                     }
                 });
-                
+
                 maxWidthInput.addEventListener('change', () => {
                     const value = parseInt(maxWidthInput.value, 10);
                     if (value && value > 0) {
@@ -2720,10 +2720,10 @@
                         maxWidthInput.value = otherSettings.sidebarAutoCollapseMaxWidth || 2560;
                     }
                 });
-                
+
                 // Initial state
                 updateRadioState();
-                
+
                 radioContainer.appendChild(radio1Wrapper);
                 radioContainer.appendChild(radio2Wrapper);
                 wrapper.appendChild(radioContainer);
@@ -2834,13 +2834,13 @@
                     font-size: 0.875rem;
                     cursor: pointer;
                 `;
-                
+
                 const options = [
                     { value: 'mousewheel', label: 'Mausrad-Button' },
                     { value: 'ctrlf', label: 'STRG+F' },
                     { value: 'both', label: 'Mausrad-Button oder STRG+F' }
                 ];
-                
+
                 options.forEach(opt => {
                     const option = document.createElement('option');
                     option.value = opt.value;
@@ -2850,13 +2850,13 @@
                     }
                     dropdown.appendChild(option);
                 });
-                
+
                 dropdown.addEventListener('change', () => {
                     otherSettings.previewSectionSearchTrigger = dropdown.value;
                     saveOtherSettingsConfig(otherSettings);
                     if (commonChangeCallback) commonChangeCallback('previewSectionSearchTrigger', dropdown.value);
                 });
-                
+
                 wrapper.appendChild(dropdown);
             }
 
@@ -3857,7 +3857,7 @@
     function applyHerstellerlinkCaseButton() {
         try {
             const otherSettings = getOtherSettingsConfig();
-            
+
             // Finde das Herstellerlink-Formular
             const hlinkForm = document.getElementById('section_form_hlink');
             if (!hlinkForm) return;
@@ -4153,13 +4153,13 @@
             // Finde das Input-Element ODER die bereits existierende Textarea
             let matchruleInput = matchruleForm.querySelector('input[name="matchrule"]');
             const existingTextarea = matchruleForm.querySelector('textarea[name="matchrule"]');
-            
+
             // Wenn bereits eine Textarea existiert (von uns erstellt), verwende deren Wert
             if (existingTextarea && !matchruleInput) {
                 // Bereits modifiziert, nichts tun
                 return;
             }
-            
+
             if (!matchruleInput) return;
 
             // Finde das h5 Element mit dem Matchrule-Link
@@ -4337,21 +4337,21 @@
     function applyBezeichnungKvHinweisEntfernen() {
         try {
             const otherSettings = getOtherSettingsConfig();
-            
+
             // Finde das Bezeichnung-Formular
             const bezeichnungForm = document.querySelector('form#section_form_bezeichnung');
             if (!bezeichnungForm) return;
-            
+
             // Finde das small-Element mit dem Kommentar
             const smallElement = bezeichnungForm.querySelector('small.d-flex');
             if (!smallElement) return;
-            
+
             // Prüfe ob der Text "Bezeichnung wird über KV generiert" enthält
             const textContent = smallElement.textContent || '';
             const containsKvHinweis = textContent.includes('Bezeichnung wird über KV generiert');
-            
+
             if (!containsKvHinweis) return;
-            
+
             if (otherSettings.bezeichnungKvHinweisEntfernen) {
                 // Verstecke das Element
                 smallElement.style.display = 'none';
@@ -4373,65 +4373,65 @@
     function applyLinksCountDisplay() {
         try {
             const otherSettings = getOtherSettingsConfig();
-            
+
             // Finde die Links-Sektion
             const linksForm = document.getElementById('section_form_links');
             if (!linksForm) return;
-            
+
             // Wenn deaktiviert, entferne vorhandene Count-Anzeigen
             if (!otherSettings.linksCountDisplay) {
                 const existingCounts = linksForm.querySelectorAll('.geizhals-link-count');
                 existingCounts.forEach(el => el.remove());
                 return;
             }
-            
+
             // Prüfe ob bereits läuft
             if (linksCountDisplayRunning) return;
-            
+
             // Finde alle Bleistift-Links in der Tabelle
             const pencilLinks = linksForm.querySelectorAll('a[href*="kalif/artikel/link?id="]');
             if (pencilLinks.length === 0) return;
-            
+
             // Prüfe ob bereits alle Counts geladen wurden
             const existingCounts = linksForm.querySelectorAll('.geizhals-link-count');
             if (existingCounts.length >= pencilLinks.length) return;
-            
+
             linksCountDisplayRunning = true;
-            
+
             // Für jeden Link die Anzahl der Verlinkungen laden
             let pendingLoads = pencilLinks.length;
-            
+
             const finishAllLoads = () => {
                 pendingLoads--;
                 if (pendingLoads <= 0) linksCountDisplayRunning = false;
             };
-            
+
             pencilLinks.forEach((link, index) => {
                 // Prüfe ob für diesen Link bereits ein Count existiert
                 if (link.parentElement.querySelector('.geizhals-link-count')) {
                     finishAllLoads();
                     return;
                 }
-                
+
                 const url = link.href;
-                
+
                 // Erstelle iframe - muss JavaScript ausführen können für React-SPA
                 const iframe = document.createElement('iframe');
                 iframe.style.cssText = 'position: absolute; left: -9999px; top: -9999px; width: 800px; height: 600px; visibility: hidden;';
                 iframe.src = url;
-                
+
                 let checkCount = 0;
                 const maxChecks = 50; // Max 5 Sekunden warten (50 x 100ms)
-                
+
                 const checkForContent = () => {
                     checkCount++;
                     try {
                         const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-                        
+
                         // Suche nach "Artikelauswahl (X)"
                         const h5Elements = iframeDoc.querySelectorAll('h5');
                         let count = null;
-                        
+
                         for (const h5 of h5Elements) {
                             const text = h5.textContent || '';
                             const match = text.match(/Artikelauswahl\s*\((\d+)\)/);
@@ -4440,21 +4440,21 @@
                                 break;
                             }
                         }
-                        
+
                         if (count !== null) {
                             // Füge die Anzahl neben dem Bleistift-Icon ein
                             const countSpan = document.createElement('span');
                             countSpan.className = 'geizhals-link-count';
                             countSpan.textContent = `(${count})`;
                             countSpan.style.cssText = 'margin-left: 2px; font-size: 0.85em; color: #666;';
-                            
+
                             // Prüfe ob bereits eingefügt und mache Parent nowrap + dynamische Breite
                             if (!link.parentElement.querySelector('.geizhals-link-count')) {
                                 link.parentElement.style.whiteSpace = 'nowrap';
                                 link.parentElement.style.width = 'auto';
                                 link.parentElement.appendChild(countSpan);
                             }
-                            
+
                             iframe.remove();
                             finishAllLoads();
                         } else if (checkCount < maxChecks) {
@@ -4473,20 +4473,20 @@
                         }
                     }
                 };
-                
+
                 iframe.onload = () => {
                     // Warte kurz damit React rendern kann
                     setTimeout(checkForContent, 200);
                 };
-                
+
                 iframe.onerror = () => {
                     iframe.remove();
                     finishAllLoads();
                 };
-                
+
                 document.body.appendChild(iframe);
             });
-            
+
         } catch (e) {
             linksCountDisplayRunning = false;
         }
@@ -4496,43 +4496,43 @@
     function applyLinksAddArticleIds() {
         try {
             const otherSettings = getOtherSettingsConfig();
-            
+
             // Finde die Links-Sektion
             const linksForm = document.getElementById('section_form_links');
             if (!linksForm) return;
-            
+
             // Entferne vorhandenen Button
             const existingButton = linksForm.querySelector('.geizhals-add-article-ids-btn');
             if (existingButton) existingButton.remove();
-            
+
             if (!otherSettings.linksAddArticleIds) return;
-            
+
             // Finde den Header
             const header = linksForm.querySelector('h5.pt-1.mb-0');
             if (!header) return;
-            
+
             // Finde den übergeordneten flex-Container und die Button-Gruppe
             const headerContainer = header.parentElement;
             const btnGroup = headerContainer ? headerContainer.querySelector('.section__header__buttons') : null;
-            
+
             // Erstelle Button
             const addButton = document.createElement('button');
             addButton.type = 'button';
             addButton.className = 'geizhals-add-article-ids-btn btn btn-outline-primary btn-sm';
             addButton.textContent = 'Artikel-ID(s) nachtragen';
             addButton.style.cssText = 'font-size: 0.85rem; padding: 0.2rem 0.6rem; margin-right: 0.5rem;';
-            
+
             addButton.addEventListener('click', () => {
                 openAddArticleIdsOverlay();
             });
-            
+
             // Füge Button vor der Button-Gruppe ein (rechtsbündig)
             if (btnGroup) {
                 btnGroup.parentElement.insertBefore(addButton, btnGroup);
             } else {
                 header.appendChild(addButton);
             }
-            
+
         } catch (e) {
             // Fehler ignorieren
         }
@@ -4553,12 +4553,12 @@
             // Prüfe ob wir auf der richtigen URL sind (nur ?id=<id>, nicht mode= oder clone=)
             const url = new URL(window.location.href);
             if (!url.pathname.endsWith('/kalif/artikel')) return;
-            
+
             const params = url.searchParams;
             const hasId = params.has('id');
             const hasMode = params.has('mode');
             const hasClone = params.has('clone') || params.has('clone_id');
-            
+
             // Nur wenn id vorhanden und kein mode/clone Parameter
             if (!hasId || hasMode || hasClone) return;
 
@@ -4660,7 +4660,7 @@
         if (existingOverlay) existingOverlay.remove();
         const existingBackdrop = document.getElementById('geizhals-add-article-ids-backdrop');
         if (existingBackdrop) existingBackdrop.remove();
-        
+
         // Backdrop
         const backdrop = document.createElement('div');
         backdrop.id = 'geizhals-add-article-ids-backdrop';
@@ -4673,7 +4673,7 @@
             background: rgba(0, 0, 0, 0.5);
             z-index: 9999998;
         `;
-        
+
         // Overlay
         const overlay = document.createElement('div');
         overlay.id = 'geizhals-add-article-ids-overlay';
@@ -4690,7 +4690,7 @@
             max-width: 500px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         `;
-        
+
         overlay.innerHTML = `
             <h5 style="margin: 0 0 1rem 0; border-bottom: 2px solid #0d6efd; padding-bottom: 0.5rem;">Artikel-ID(s) nachtragen</h5>
             <div style="margin-bottom: 1rem;">
@@ -4715,16 +4715,16 @@
                 <button type="button" id="geizhals-article-ids-save" class="btn btn-primary btn-sm" disabled>Speichern</button>
             </div>
         `;
-        
+
         document.body.appendChild(backdrop);
         document.body.appendChild(overlay);
-        
+
         const input = overlay.querySelector('#geizhals-article-ids-input');
         const saveButton = overlay.querySelector('#geizhals-article-ids-save');
         const cancelButton = overlay.querySelector('#geizhals-article-ids-cancel');
         const statusDiv = overlay.querySelector('#geizhals-article-ids-status');
         const statusText = overlay.querySelector('#geizhals-article-ids-status-text');
-        
+
         // Validierung
         const validateInput = () => {
             const value = input.value.trim();
@@ -4737,71 +4737,71 @@
             saveButton.disabled = !isValid;
             return isValid;
         };
-        
+
         input.addEventListener('input', validateInput);
         input.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && validateInput()) {
                 saveButton.click();
             }
         });
-        
+
         // Abbrechen
         const closeOverlay = () => {
             overlay.remove();
             backdrop.remove();
         };
-        
+
         cancelButton.addEventListener('click', closeOverlay);
         backdrop.addEventListener('click', closeOverlay);
-        
+
         // Speichern
         saveButton.addEventListener('click', async () => {
             const ids = input.value.trim().split(/\s+/).filter(id => id);
             if (ids.length === 0) return;
-            
+
             // Deaktiviere Buttons
             saveButton.disabled = true;
             cancelButton.disabled = true;
             input.disabled = true;
-            
+
             // Zeige Status
             statusDiv.style.display = 'block';
-            
+
             // Finde alle Bleistift-Links
             const linksForm = document.getElementById('section_form_links');
             const pencilLinks = linksForm ? linksForm.querySelectorAll('a[href*="kalif/artikel/link?id="]') : [];
-            
+
             if (pencilLinks.length === 0) {
                 statusText.textContent = 'Keine Links gefunden!';
                 setTimeout(closeOverlay, 2000);
                 return;
             }
-            
+
             const totalLinks = pencilLinks.length;
             let processedLinks = 0;
-            
+
             // Verarbeite alle Links sequentiell
             for (const link of pencilLinks) {
                 processedLinks++;
                 statusText.textContent = `Link ${processedLinks}/${totalLinks} wird verarbeitet...`;
-                
+
                 try {
                     await processLinkWithIds(link.href, ids);
                     statusText.textContent = `Link ${processedLinks}/${totalLinks} gespeichert`;
                 } catch (e) {
                     statusText.textContent = `Link ${processedLinks}/${totalLinks} - Fehler`;
                 }
-                
+
                 // Kurze Pause zwischen den Links
                 await new Promise(resolve => setTimeout(resolve, 500));
             }
-            
+
             statusText.textContent = `Fertig! ${totalLinks} Links verarbeitet.`;
-            
+
             // Schließe Overlay nach kurzer Pause
             setTimeout(closeOverlay, 1500);
         });
-        
+
         // Fokus auf Input
         input.focus();
     }
@@ -4811,23 +4811,23 @@
             const iframe = document.createElement('iframe');
             iframe.style.cssText = 'position: absolute; left: -9999px; top: -9999px; width: 1200px; height: 800px; visibility: hidden;';
             iframe.src = url;
-            
+
             let checkCount = 0;
             const maxChecks = 100; // Max 10 Sekunden warten
-            
+
             const checkForReactSelect = () => {
                 checkCount++;
                 try {
                     const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
                     const iframeWin = iframe.contentWindow;
-                    
+
                     // Suche nach dem React-Select Input für "Einen Artikel oder mehrere (mit IDs) hinzufügen"
                     let reactSelectInput = null;
                     let container = null;
-                    
+
                     // Finde das richtige React-Select (das mit "Einen Artikel oder mehrere")
                     const allPlaceholders = iframeDoc.querySelectorAll('div[id$="-placeholder"]');
-                    
+
                     for (const ph of allPlaceholders) {
                         if (ph.textContent && ph.textContent.includes('Artikel oder mehrere')) {
                             container = ph.closest('.css-b62m3t-container');
@@ -4837,22 +4837,22 @@
                             }
                         }
                     }
-                    
+
                     if (reactSelectInput) {
                         // IDs als String vorbereiten
                         const idsString = ids.join(' ');
-                        
+
                         // Klicke auf den Container um das Dropdown zu öffnen
                         const controlDiv = container.querySelector('[class*="-control"]');
-                        
+
                         if (controlDiv) {
                             controlDiv.dispatchEvent(new iframeWin.MouseEvent('mousedown', { bubbles: true, cancelable: true }));
                         }
-                        
+
                         setTimeout(() => {
                             // Fokussiere das Input
                             reactSelectInput.focus();
-                            
+
                             // Methode 1: Native value setter für React-Inputs (funktioniert in Chrome und Firefox)
                             try {
                                 const nativeInputValueSetter = Object.getOwnPropertyDescriptor(iframeWin.HTMLInputElement.prototype, 'value').set;
@@ -4861,7 +4861,7 @@
                                 // Fallback: Direktes Setzen
                                 reactSelectInput.value = idsString;
                             }
-                            
+
                             // Feuere Input-Event für React (verschiedene Varianten für Browser-Kompatibilität)
                             try {
                                 // Versuche InputEvent (moderner)
@@ -4877,13 +4877,13 @@
                                 const event = new iframeWin.Event('input', { bubbles: true });
                                 reactSelectInput.dispatchEvent(event);
                             }
-                            
+
                             // Zusätzlich Change-Event (manche React-Komponenten brauchen das)
                             try {
                                 const changeEvent = new iframeWin.Event('change', { bubbles: true });
                                 reactSelectInput.dispatchEvent(changeEvent);
                             } catch (e) {}
-                            
+
                             // Methode 2: Simuliere Tastatureingabe (Fallback für React-Select)
                             // React-Select verwendet onInputChange, das auf Keyboard-Events reagiert
                             setTimeout(() => {
@@ -4894,11 +4894,11 @@
                                 } catch (e) {
                                     reactSelectInput.value = idsString;
                                 }
-                                
+
                                 // Feuere Events erneut
                                 reactSelectInput.dispatchEvent(new iframeWin.Event('input', { bubbles: true }));
                                 reactSelectInput.dispatchEvent(new iframeWin.Event('change', { bubbles: true }));
-                                
+
                                 // Simuliere keydown/keyup für das letzte Zeichen
                                 const lastChar = idsString.slice(-1);
                                 reactSelectInput.dispatchEvent(new iframeWin.KeyboardEvent('keydown', {
@@ -4912,10 +4912,10 @@
                                     cancelable: true
                                 }));
                             }, 100);
-                            
+
                             // Delay basierend auf Anzahl der IDs
                             const delay = Math.max(2000, ids.length * 400);
-                            
+
                             setTimeout(() => {
                                 // Enter drücken um die IDs zu übernehmen
                                 reactSelectInput.dispatchEvent(new iframeWin.KeyboardEvent('keydown', {
@@ -4926,17 +4926,17 @@
                                     bubbles: true,
                                     cancelable: true
                                 }));
-                                
+
                                 // Warte und prüfe ob Speichern-Button aktiviert wurde
                                 let saveCheckCount = 0;
                                 const maxSaveChecks = 50;
-                                
+
                                 const checkSaveButton = () => {
                                     saveCheckCount++;
                                     // Finde den richtigen Speichern-Button in der expanded-actions Toolbar
                                     const expandedActions = iframeDoc.querySelector('.expanded-actions');
                                     const saveButton = expandedActions ? expandedActions.querySelector('button.btn-success:not([disabled])') : null;
-                                    
+
                                     if (saveButton) {
                                         saveButton.click();
                                         setTimeout(() => {
@@ -4950,11 +4950,11 @@
                                         resolve();
                                     }
                                 };
-                                
+
                                 setTimeout(checkSaveButton, 500);
                             }, delay);
                         }, 300);
-                        
+
                     } else if (checkCount < maxChecks) {
                         setTimeout(checkForReactSelect, 100);
                     } else {
@@ -4970,16 +4970,16 @@
                     }
                 }
             };
-            
+
             iframe.onload = () => {
                 setTimeout(checkForReactSelect, 300);
             };
-            
+
             iframe.onerror = () => {
                 iframe.remove();
                 reject(new Error('iframe load error'));
             };
-            
+
             document.body.appendChild(iframe);
         });
     }
@@ -5000,13 +5000,13 @@
                 document.removeEventListener('mousedown', existingHandler);
                 window._geizhalsPreviewSectionSearchHandler = null;
             }
-            
+
             const existingCtrlFHandler = window._geizhalsPreviewSectionCtrlFHandler;
             if (existingCtrlFHandler) {
                 document.removeEventListener('keydown', existingCtrlFHandler, true);
                 window._geizhalsPreviewSectionCtrlFHandler = null;
             }
-            
+
             const existingMouseMoveHandler = window._geizhalsPreviewSectionMouseMoveHandler;
             if (existingMouseMoveHandler) {
                 document.removeEventListener('mousemove', existingMouseMoveHandler);
@@ -5020,19 +5020,19 @@
             // Prüfe ob wir auf der richtigen URL sind
             const url = new URL(window.location.href);
             if (!url.pathname.endsWith('/kalif/artikel')) return;
-            
+
             const triggerMode = otherSettings.previewSectionSearchTrigger || 'mousewheel';
-            
+
             // Speichere Mausposition für STRG+F
             let lastMouseX = 0;
             let lastMouseY = 0;
             let hoveredSection = null;
             let hoveredSectionType = null;
-            
+
             const mouseMoveHandler = (e) => {
                 lastMouseX = e.clientX;
                 lastMouseY = e.clientY;
-                
+
                 // Prüfe ob Maus über einer relevanten Section ist
                 const target = document.elementFromPoint(e.clientX, e.clientY);
                 if (target) {
@@ -5041,10 +5041,10 @@
                         const formDesc = section.querySelector('form#section_form_desc');
                         const header = section.querySelector('h5');
                         const isArticlePreview = formDesc || (header && header.textContent.includes('Artikelvorschau'));
-                        
+
                         const formData = section.querySelector('form#section_form_data');
                         const isDataSection = formData || (header && header.textContent.includes('Beschreibung'));
-                        
+
                         if (isArticlePreview) {
                             hoveredSection = section;
                             hoveredSectionType = 'preview';
@@ -5061,7 +5061,7 @@
                     }
                 }
             };
-            
+
             // Nur mousemove tracken wenn STRG+F aktiv ist
             if (triggerMode === 'ctrlf' || triggerMode === 'both') {
                 document.addEventListener('mousemove', mouseMoveHandler);
@@ -5076,17 +5076,17 @@
                         // Prüfe ob der Klick über einer relevanten Section war
                         const target = e.target;
                         const section = target.closest('section.section');
-                        
+
                         if (section) {
                             // Prüfe ob es die Artikelvorschau-Section ist (hat form#section_form_desc oder h5 mit "Artikelvorschau")
                             const formDesc = section.querySelector('form#section_form_desc');
                             const header = section.querySelector('h5');
                             const isArticlePreview = formDesc || (header && header.textContent.includes('Artikelvorschau'));
-                            
+
                             // Prüfe ob es die Eingabemaske-Section ist (hat form#section_form_data oder h5 mit "Beschreibung")
                             const formData = section.querySelector('form#section_form_data');
                             const isDataSection = formData || (header && header.textContent.includes('Beschreibung'));
-                            
+
                             if (isArticlePreview) {
                                 e.preventDefault();
                                 e.stopPropagation();
@@ -5103,7 +5103,7 @@
                 window._geizhalsPreviewSectionSearchHandler = mouseHandler;
                 document.addEventListener('mousedown', mouseHandler);
             }
-            
+
             // Event-Listener für STRG+F
             if (triggerMode === 'ctrlf' || triggerMode === 'both') {
                 const ctrlFHandler = (e) => {
@@ -5111,7 +5111,7 @@
                     if (document.getElementById('geizhals-preview-section-search-overlay')) {
                         return;
                     }
-                    
+
                     if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
                         // Prüfe ob Maus über einer relevanten Section ist
                         if (hoveredSection && hoveredSectionType) {
@@ -5121,7 +5121,7 @@
                         }
                     }
                 };
-                
+
                 window._geizhalsPreviewSectionCtrlFHandler = ctrlFHandler;
                 document.addEventListener('keydown', ctrlFHandler, true);
             }
@@ -5174,10 +5174,10 @@
         const viewportWidth = window.innerWidth;
         const viewportHeight = window.innerHeight;
         const overlayWidth = 400;
-        
+
         let left = mouseX;
         let top = mouseY;
-        
+
         if (left + (overlayWidth / 2) > viewportWidth - 10) {
             left = viewportWidth - (overlayWidth / 2) - 10;
         }
@@ -5193,8 +5193,8 @@
 
         // Bestimme Titel und Placeholder basierend auf sectionType
         const titleText = sectionType === 'data' ? 'Suche in Eingabemaske' : 'Suche in Artikelvorschau';
-        const placeholderText = sectionType === 'data' 
-            ? 'Labels, Werte & Überschriften durchsuchen...' 
+        const placeholderText = sectionType === 'data'
+            ? 'Labels, Werte & Überschriften durchsuchen...'
             : 'Bezeichnungs- & Beschreibungszeilen durchsuchen...';
 
         // Erstelle Overlay
@@ -5321,12 +5321,12 @@
         `;
 
         const searchTermLower = searchTerm.toLowerCase();
-        
+
         // Hilfsfunktion: Markiere gefundenen Text in einem Element
         function highlightTextInElement(element, searchTerm) {
             const searchTermLower = searchTerm.toLowerCase();
             const marks = [];
-            
+
             // Rekursiv durch alle Textknoten gehen
             const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null, false);
             const textNodes = [];
@@ -5336,35 +5336,35 @@
                     textNodes.push(node);
                 }
             }
-            
+
             textNodes.forEach(textNode => {
                 const text = textNode.textContent;
                 const lowerText = text.toLowerCase();
                 let lastIndex = 0;
                 const fragments = [];
                 let index;
-                
+
                 while ((index = lowerText.indexOf(searchTermLower, lastIndex)) !== -1) {
                     // Text vor dem Match
                     if (index > lastIndex) {
                         fragments.push(document.createTextNode(text.substring(lastIndex, index)));
                     }
-                    
+
                     // Der gematchte Text in einem Mark-Element
                     const mark = document.createElement('mark');
                     mark.className = 'geizhals-ps-text-match geizhals-ps-match';
                     mark.textContent = text.substring(index, index + searchTerm.length);
                     fragments.push(mark);
                     marks.push(mark);
-                    
+
                     lastIndex = index + searchTerm.length;
                 }
-                
+
                 // Restlicher Text nach dem letzten Match
                 if (lastIndex < text.length) {
                     fragments.push(document.createTextNode(text.substring(lastIndex)));
                 }
-                
+
                 // Ersetze den Textknoten durch die Fragments
                 if (fragments.length > 0) {
                     const parent = textNode.parentNode;
@@ -5374,7 +5374,7 @@
                     parent.removeChild(textNode);
                 }
             });
-            
+
             return marks;
         }
 
@@ -5396,7 +5396,7 @@
                             previewSectionSearchMatches.push({ element: mark, type: 'label' });
                         });
                     }
-                    
+
                     // Vierte Spalte (Index 3) - Wert (wenn vorhanden)
                     if (tds.length >= 4) {
                         const valueCell = tds[3];
@@ -5558,7 +5558,7 @@
         // Nach dem Scroll prüfen ob Element vom Overlay überdeckt wird
         setTimeout(() => {
             const elementRect = element.getBoundingClientRect();
-            
+
             // Wenn Element-Oberkante unter der Overlay-Unterkante liegt, ist alles OK
             // Wenn nicht, müssen wir nachjustieren
             if (elementRect.top < overlayBottom) {
@@ -5568,7 +5568,7 @@
                     top: -adjustment,
                     behavior: 'smooth'
                 });
-                
+
                 // Setze Hintergrundfarbe erst nach der Korrektur
                 setTimeout(() => {
                     element.style.backgroundColor = '#EF0FFF';
@@ -5579,14 +5579,14 @@
             }
         }, 350);
     }
-    
+
     function createHighlightOverlay(element, overlayId) {
         // Entferne existierendes Overlay
         const existing = document.getElementById(overlayId);
         if (existing) existing.remove();
-        
+
         const rect = element.getBoundingClientRect();
-        
+
         const overlay = document.createElement('div');
         overlay.id = overlayId;
         overlay.style.cssText = `
@@ -5602,15 +5602,15 @@
             border-radius: 2px;
         `;
         document.body.appendChild(overlay);
-        
+
         // Speichere Element-Referenz für Updates
         overlay._targetElement = element;
     }
-    
+
     function updateHighlightOverlayPosition(element, overlayId) {
         const overlay = document.getElementById(overlayId);
         if (!overlay || !element) return;
-        
+
         const rect = element.getBoundingClientRect();
         overlay.style.top = `${rect.top}px`;
         overlay.style.left = `${rect.left}px`;
@@ -5652,7 +5652,7 @@
                     // Element wurde bereits vom DOM entfernt, ignorieren
                 }
             });
-            
+
             const matchedElements = document.querySelectorAll('.geizhals-ps-match');
             matchedElements.forEach(el => {
                 try {
@@ -5731,7 +5731,7 @@
         // Markierte Elemente finden und Fadeout anwenden
         const matchedElements = document.querySelectorAll('.geizhals-ps-match:not(mark)');
         const markElements = document.querySelectorAll('mark.geizhals-ps-text-match');
-        
+
         matchedElements.forEach(el => {
             const isCurrent = el.classList.contains('geizhals-ps-current-match');
             el.classList.remove('geizhals-ps-match', 'geizhals-ps-current-match');
@@ -5739,7 +5739,7 @@
             el.style.backgroundColor = '';
             el.classList.add(isCurrent ? 'geizhals-ps-highlight-fadeout-filled' : 'geizhals-ps-highlight-fadeout-other');
         });
-        
+
         markElements.forEach(el => {
             const isCurrent = el.classList.contains('geizhals-ps-current-match');
             el.classList.remove('geizhals-ps-match', 'geizhals-ps-current-match', 'geizhals-ps-text-match');
@@ -5753,7 +5753,7 @@
             document.querySelectorAll('.geizhals-ps-highlight-fadeout-filled, .geizhals-ps-highlight-fadeout-other').forEach(el => {
                 el.classList.remove('geizhals-ps-highlight-fadeout-filled', 'geizhals-ps-highlight-fadeout-other');
             });
-            
+
             // Entferne Mark-Elemente und stelle ursprünglichen Text wieder her
             document.querySelectorAll('mark.geizhals-ps-text-fadeout-current, mark.geizhals-ps-text-fadeout-other').forEach(mark => {
                 try {
@@ -5860,7 +5860,7 @@
                 textSpan.className = 'geizhals-hersteller-text';
                 textSpan.dataset.geizhalsOriginalHref = herstellerLink.href;
                 textSpan.dataset.geizhalsOriginalText = herstellerLink.textContent;
-                
+
                 // Behalte die Farbe bei
                 textSpan.style.cssText = 'color: var(--bs-primary-bg-subtle);';
 
@@ -5874,7 +5874,7 @@
                     link.textContent = textSpan.dataset.geizhalsOriginalText || textSpan.textContent;
                     link.className = 'text-decoration-underline';
                     link.style.cssText = 'color: var(--bs-primary-bg-subtle);';
-                    
+
                     textSpan.replaceWith(link);
                 }
             }
@@ -6010,22 +6010,22 @@
             // Prüfe ob wir auf der richtigen URL sind (nur ?id=<id>, nicht mode= oder clone=)
             const url = new URL(window.location.href);
             if (!url.pathname.endsWith('/kalif/artikel')) return;
-            
+
             const params = url.searchParams;
             const hasId = params.has('id');
             const hasMode = params.has('mode');
             const hasClone = params.has('clone') || params.has('clone_id');
-            
+
             // Nur wenn id vorhanden und kein mode/clone Parameter
             if (!hasId || hasMode || hasClone) return;
-            
+
             const articleId = params.get('id');
             if (!articleId) return;
 
             // Prüfe ob Container bereits existiert
             const existingContainer = document.querySelector('.geizhals-image-gallery-container');
             if (existingContainer) return;
-            
+
             // Prüfe ob bereits am Laden
             if (imageGalleryLoading) return;
 
@@ -6061,14 +6061,14 @@
 
             // Lade Bilder aus iframe - IMMER, auch wenn imageCount 0 ist
             imageGalleryLoading = true;
-            
+
             // Failsafe: Reset imageGalleryLoading nach 20 Sekunden falls es hängen bleibt
             setTimeout(() => {
                 if (imageGalleryLoading) {
                     imageGalleryLoading = false;
                 }
             }, 20000);
-            
+
             // Verzögertes Laden um das Rendern der Seite nicht zu blockieren
             setTimeout(() => {
                 requestAnimationFrame(() => {
@@ -6099,7 +6099,7 @@
                 }
             }
         }
-        
+
         if (!varianteDiv) return;
 
         // Erstelle Container für die Bildergalerie
@@ -6189,7 +6189,7 @@
                 // Suche nach allen Bildern mit pix_original im gesamten Dokument
                 const images = iframeDoc.querySelectorAll('img[src*="pix_original"]');
                 const currentImageCount = images.length;
-                
+
                 // Warte bis die Bildanzahl stabil ist (5 aufeinanderfolgende gleiche Werte)
                 if (currentImageCount === lastImageCount) {
                     stableCount++;
@@ -6211,7 +6211,7 @@
                     imageGalleryIframe = null;
                     createGalleryUI(imageUrls, varianteDiv);
                     iframe.remove();
-                } 
+                }
                 // Keine Bilder, aber genug gewartet und stabil
                 else if (currentImageCount === 0 && stableCount >= 5 && checkCount >= minChecksBeforeEmpty) {
                     imageGalleryLoading = false;
@@ -6262,7 +6262,7 @@
         };
 
         document.body.appendChild(iframe);
-        
+
         // Fallback: Starte Check auch ohne onload nach 1 Sekunde
         setTimeout(() => {
             if (checkCount === 0 && imageGalleryIframe === iframe) {
@@ -6278,7 +6278,7 @@
 
         // Speichere originale URLs für späteren Zugriff auf Originalauflösung
         const originalImageUrls = imageUrls ? [...imageUrls] : [];
-        
+
         // Konvertiere immer zu externen URLs (Webversion)
         if (imageUrls && imageUrls.length > 0) {
             // Konvertiere interne URLs zu externen URLs
@@ -6309,7 +6309,7 @@
                 }
             }
         }
-        
+
         if (!varianteDiv) {
             return;
         }
@@ -6350,7 +6350,7 @@
         } else {
             // Variable zum Tracken des gepinnten Thumbnails
             let pinnedThumb = null;
-            
+
             // Funktion zum Erstellen des X-Buttons
             const createCloseButton = () => {
                 const closeBtn = document.createElement('button');
@@ -6383,7 +6383,7 @@
                 });
                 return closeBtn;
             };
-            
+
             // Funktion zum Schließen des gepinnten Overlays
             const closePinnedOverlay = () => {
                 if (pinnedThumb) {
@@ -6408,19 +6408,21 @@
                     overlay._handleMouseUp = null;
                 }
                 overlay.style.display = 'none';
-                // Entferne X-Button und Reset-Button falls vorhanden
+                // Entferne X-Button, Reset-Button und Brightness-Slider falls vorhanden
                 const existingCloseBtn = overlay.querySelector('.geizhals-overlay-close-btn');
                 if (existingCloseBtn) existingCloseBtn.remove();
                 const existingResetBtn = overlay.querySelector('.geizhals-overlay-reset-btn');
                 if (existingResetBtn) existingResetBtn.remove();
+                const existingBrightnessSlider = overlay.querySelector('.geizhals-overlay-brightness-slider');
+                if (existingBrightnessSlider) existingBrightnessSlider.remove();
             };
-            
+
             // Funktion zum Anzeigen des Overlays
             const showOverlay = (thumb, imgUrl, isPinned) => {
                 // Finde die Unterkante der Titelleiste/Miniaturbilder
                 const headbar = document.querySelector('.pane__headbar');
                 const headbarBottom = headbar ? headbar.getBoundingClientRect().bottom : 50;
-                
+
                 // Berechne verfügbare Höhe für das Overlay (unterhalb Titelleiste bis Viewport-Ende)
                 const viewportHeight = window.innerHeight;
                 // 20px Padding (5 oben Abstand, 10 unten Abstand) + 8px Overlay-Padding (4px oben/unten) + 4px Border
@@ -6433,7 +6435,7 @@
                 overlayImg.style.cssText = `display: block; max-width: 1500px; max-height: ${availableHeight}px;`;
                 overlayImg.draggable = false; // Verhindere natives Bild-Dragging
                 overlay.appendChild(overlayImg);
-                
+
                 // Füge X-Button und Resize-Handle hinzu wenn gepinnt
                 if (isPinned) {
                     // Zoom-Funktionalität - sofort aktiv wenn gepinnt
@@ -6445,7 +6447,7 @@
                     let dragStartY = 0;
                     let dragStartTranslateX = 0;
                     let dragStartTranslateY = 0;
-                    
+
                     // Funktion zum Aktualisieren der Bild-Transformation
                     const updateTransform = () => {
                         overlayImg.style.transformOrigin = '0 0';
@@ -6458,19 +6460,19 @@
                             }
                         }
                     };
-                    
+
                     // Mausrad-Handler für Zoom an Cursor-Position
                     const handleWheel = (e) => {
                         e.preventDefault();
-                        
+
                         const rect = overlay.getBoundingClientRect();
                         // Cursor-Position relativ zum Overlay
                         const cursorX = e.clientX - rect.left;
                         const cursorY = e.clientY - rect.top;
-                        
+
                         const oldZoom = zoomLevel;
                         const zoomSpeed = 0.1;
-                        
+
                         if (e.deltaY < 0) {
                             // Zoom in
                             zoomLevel = Math.min(5, zoomLevel + zoomSpeed);
@@ -6478,23 +6480,23 @@
                             // Zoom out
                             zoomLevel = Math.max(0.5, zoomLevel - zoomSpeed);
                         }
-                        
+
                         // Berechne den Bildpunkt unter dem Cursor (vor dem Zoom)
                         const imagePointX = (cursorX - translateX) / oldZoom;
                         const imagePointY = (cursorY - translateY) / oldZoom;
-                        
+
                         // Neue Translation, damit der gleiche Bildpunkt unter dem Cursor bleibt
                         translateX = cursorX - imagePointX * zoomLevel;
                         translateY = cursorY - imagePointY * zoomLevel;
-                        
+
                         updateTransform();
                     };
-                    
+
                     // Drag-Start
                     const handleMouseDown = (e) => {
                         if (e.target.tagName === 'BUTTON' || e.target.closest('button')) return;
                         if (e.target.classList.contains('geizhals-overlay-resize-handle')) return;
-                        
+
                         isDragging = true;
                         dragStartX = e.clientX;
                         dragStartY = e.clientY;
@@ -6503,20 +6505,20 @@
                         overlayImg.style.cursor = 'grabbing';
                         e.preventDefault();
                     };
-                    
+
                     // Drag-Move
                     const handleMouseMove = (e) => {
                         if (!isDragging) return;
-                        
+
                         const deltaX = e.clientX - dragStartX;
                         const deltaY = e.clientY - dragStartY;
-                        
+
                         translateX = dragStartTranslateX + deltaX;
                         translateY = dragStartTranslateY + deltaY;
-                        
+
                         updateTransform();
                     };
-                    
+
                     // Drag-End
                     const handleMouseUp = () => {
                         if (isDragging) {
@@ -6524,27 +6526,27 @@
                             overlayImg.style.cursor = 'grab';
                         }
                     };
-                    
+
                     // Setze Cursor auf grab
                     overlayImg.style.cursor = 'grab';
-                    
+
                     overlay.addEventListener('wheel', handleWheel, { passive: false });
                     overlay.addEventListener('mousedown', handleMouseDown);
                     document.addEventListener('mousemove', handleMouseMove);
                     document.addEventListener('mouseup', handleMouseUp);
-                    
+
                     // Speichere Handler-Referenzen für Cleanup
                     overlay._handleWheel = handleWheel;
                     overlay._handleMouseMove = handleMouseMove;
                     overlay._handleMouseUp = handleMouseUp;
-                    
+
                     const closeBtn = createCloseButton();
                     closeBtn.addEventListener('click', (e) => {
                         e.stopPropagation();
                         closePinnedOverlay();
                     });
                     overlay.appendChild(closeBtn);
-                    
+
                     // Reset-Button erstellen (links neben X-Button)
                     const resetBtn = document.createElement('button');
                     resetBtn.className = 'geizhals-overlay-reset-btn';
@@ -6575,7 +6577,7 @@
                     resetBtn.addEventListener('mouseleave', () => {
                         resetBtn.style.background = 'rgba(40, 167, 69, 0.9)';
                     });
-                    
+
                     // Reset-Button Klick-Handler
                     resetBtn.addEventListener('click', (e) => {
                         e.stopPropagation();
@@ -6584,11 +6586,66 @@
                         translateY = 0;
                         overlayImg.style.transform = '';
                         overlayImg.style.transformOrigin = '';
+                        overlayImg.style.filter = '';
+                        // Auch Brightness-Slider zurücksetzen
+                        const slider = overlay.querySelector('.geizhals-overlay-brightness-slider');
+                        if (slider) slider.value = '1';
                         resetBtn.style.display = 'none';
                     });
-                    
+
                     overlay.appendChild(resetBtn);
-                    
+
+                    // Helligkeits-Slider erstellen (immer sichtbar, links neben Reset-Button)
+                    // Position: X-Button (right: 8px, 28px breit) + Reset-Button (right: 44px, ~58px breit) + 8px Abstand
+                    const brightnessSlider = document.createElement('input');
+                    brightnessSlider.type = 'range';
+                    brightnessSlider.className = 'geizhals-overlay-brightness-slider';
+                    brightnessSlider.min = '0.2';
+                    brightnessSlider.max = '2';
+                    brightnessSlider.step = '0.05';
+                    brightnessSlider.value = '1';
+                    brightnessSlider.title = 'Helligkeit anpassen';
+                    brightnessSlider.style.cssText = `
+                        position: absolute;
+                        top: 12px;
+                        right: 110px;
+                        width: 80px;
+                        height: 20px;
+                        cursor: pointer;
+                        pointer-events: auto;
+                        accent-color: #ffc107;
+                        opacity: 0.8;
+                        transition: opacity 0.2s;
+                    `;
+
+                    brightnessSlider.addEventListener('mouseenter', () => {
+                        brightnessSlider.style.opacity = '1';
+                    });
+                    brightnessSlider.addEventListener('mouseleave', () => {
+                        brightnessSlider.style.opacity = '0.8';
+                    });
+
+                    // Helligkeit in Echtzeit anpassen
+                    brightnessSlider.addEventListener('input', (e) => {
+                        e.stopPropagation();
+                        const brightness = parseFloat(brightnessSlider.value);
+                        overlayImg.style.filter = `brightness(${brightness})`;
+                        // Zeige Reset-Button wenn Helligkeit nicht auf Neutralwert
+                        if (brightness !== 1) {
+                            resetBtn.style.display = 'flex';
+                        } else if (zoomLevel === 1 && translateX === 0 && translateY === 0) {
+                            // Verstecke Reset-Button nur wenn auch Zoom/Position auf Standard
+                            resetBtn.style.display = 'none';
+                        }
+                    });
+
+                    // Verhindere Drag beim Slider
+                    brightnessSlider.addEventListener('mousedown', (e) => {
+                        e.stopPropagation();
+                    });
+
+                    overlay.appendChild(brightnessSlider);
+
                     // Resize-Handle erstellen (unten rechts)
                     const resizeHandle = document.createElement('div');
                     resizeHandle.className = 'geizhals-overlay-resize-handle';
@@ -6603,17 +6660,17 @@
                         background: linear-gradient(135deg, transparent 50%, rgba(220, 53, 69, 0.8) 50%);
                         border-bottom-right-radius: 4px;
                     `;
-                    
+
                     // Resize-Logik
                     let isResizing = false;
                     let startX, startY, startWidth, startHeight, aspectRatio;
-                    
+
                     const onResizeStart = (e) => {
                         e.preventDefault();
                         e.stopPropagation();
                         isResizing = true;
-                        
-                        // Reset Zoom und Translation beim Resize
+
+                        // Reset Zoom, Translation und Helligkeit beim Resize
                         if (zoomLevel !== 1 || translateX !== 0 || translateY !== 0) {
                             zoomLevel = 1;
                             translateX = 0;
@@ -6622,29 +6679,33 @@
                             overlayImg.style.transformOrigin = '';
                             resetBtn.style.display = 'none';
                         }
-                        
+                        // Auch Helligkeit zurücksetzen
+                        overlayImg.style.filter = '';
+                        const slider = overlay.querySelector('.geizhals-overlay-brightness-slider');
+                        if (slider) slider.value = '1';
+
                         startX = e.clientX || e.touches[0].clientX;
                         startY = e.clientY || e.touches[0].clientY;
                         startWidth = overlayImg.offsetWidth;
                         startHeight = overlayImg.offsetHeight;
                         aspectRatio = startWidth / startHeight;
-                        
+
                         document.addEventListener('mousemove', onResizeMove);
                         document.addEventListener('mouseup', onResizeEnd);
                         document.addEventListener('touchmove', onResizeMove);
                         document.addEventListener('touchend', onResizeEnd);
                     };
-                    
+
                     const onResizeMove = (e) => {
                         if (!isResizing) return;
                         e.preventDefault();
-                        
+
                         const clientX = e.clientX || e.touches[0].clientX;
                         const clientY = e.clientY || e.touches[0].clientY;
-                        
+
                         const deltaX = clientX - startX;
                         const deltaY = clientY - startY;
-                        
+
                         // Verwende die größere Änderung für proportionale Skalierung
                         let newWidth, newHeight;
                         if (Math.abs(deltaX) > Math.abs(deltaY)) {
@@ -6654,11 +6715,11 @@
                             newHeight = Math.max(100, startHeight + deltaY);
                             newWidth = newHeight * aspectRatio;
                         }
-                        
+
                         // Begrenze auf max-Werte
                         const maxWidth = window.innerWidth - 40;
                         const maxHeight = viewportHeight - headbarBottom - 32;
-                        
+
                         if (newWidth > maxWidth) {
                             newWidth = maxWidth;
                             newHeight = newWidth / aspectRatio;
@@ -6667,13 +6728,13 @@
                             newHeight = maxHeight;
                             newWidth = newHeight * aspectRatio;
                         }
-                        
+
                         overlayImg.style.width = `${newWidth}px`;
                         overlayImg.style.height = `${newHeight}px`;
                         overlayImg.style.maxWidth = 'none';
                         overlayImg.style.maxHeight = 'none';
                     };
-                    
+
                     const onResizeEnd = () => {
                         isResizing = false;
                         document.removeEventListener('mousemove', onResizeMove);
@@ -6681,10 +6742,10 @@
                         document.removeEventListener('touchmove', onResizeMove);
                         document.removeEventListener('touchend', onResizeEnd);
                     };
-                    
+
                     resizeHandle.addEventListener('mousedown', onResizeStart);
                     resizeHandle.addEventListener('touchstart', onResizeStart);
-                    
+
                     overlay.appendChild(resizeHandle);
                     overlay.style.pointerEvents = 'auto';
                 } else {
@@ -6693,7 +6754,7 @@
 
                 // Position berechnen
                 const rect = thumb.getBoundingClientRect();
-                
+
                 // Overlay sichtbar machen
                 overlay.style.display = 'block';
 
@@ -6701,7 +6762,7 @@
                 const positionOverlay = () => {
                     const viewportWidth = window.innerWidth;
                     const overlayWidth = overlay.offsetWidth;
-                    
+
                     const minTop = headbarBottom + 5; // Mindest-Abstand zur Titelleiste
 
                     // Position unter dem Thumbnail, zentriert
@@ -6724,7 +6785,7 @@
                     overlayImg.onload = positionOverlay;
                 }
             };
-            
+
             imageUrls.forEach((imgUrl, index) => {
                 const thumb = document.createElement('img');
                 thumb.src = imgUrl;
@@ -6751,7 +6812,7 @@
                         thumb.style.position = 'relative';
                         return;
                     }
-                    
+
                     thumb.style.borderColor = '#0d6efd';
                     thumb.style.transform = 'scale(1.1)';
                     thumb.style.zIndex = '10';
@@ -6768,7 +6829,7 @@
                     if (pinnedThumb === thumb) {
                         return;
                     }
-                    
+
                     // Wenn ein anderes Bild gepinnt ist, nur Hover-Effekt zurücksetzen
                     if (pinnedThumb) {
                         thumb.style.transform = 'scale(1)';
@@ -6776,7 +6837,7 @@
                         thumb.style.position = '';
                         return;
                     }
-                    
+
                     // Kein Bild gepinnt - normale Hover-Logik
                     thumb.style.borderColor = '#fff';
                     thumb.style.transform = 'scale(1)';
@@ -6788,19 +6849,19 @@
                 thumb.addEventListener('click', (e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    
+
                     // Prüfe ob Bild vollständig geladen ist
                     if (!thumb.complete || thumb.naturalWidth === 0) {
                         // Bild noch nicht geladen - nichts tun
                         return;
                     }
-                    
+
                     // Wenn dieses Bild bereits gepinnt ist -> Schließen
                     if (pinnedThumb === thumb) {
                         closePinnedOverlay();
                         return;
                     }
-                    
+
                     // Wenn ein anderes Bild gepinnt ist -> Umschalten
                     if (pinnedThumb) {
                         pinnedThumb.style.borderColor = '#fff';
@@ -6809,7 +6870,7 @@
                         pinnedThumb.style.zIndex = '';
                         pinnedThumb.style.position = '';
                     }
-                    
+
                     // Dieses Bild pinnen
                     pinnedThumb = thumb;
                     thumb.style.borderColor = 'red';
@@ -6817,7 +6878,7 @@
                     thumb.style.transform = 'scale(1.1)';
                     thumb.style.zIndex = '10';
                     thumb.style.position = 'relative';
-                    
+
                     // Overlay mit X-Button anzeigen (mit Originalauflösung)
                     showOverlay(thumb, thumb.dataset.originalUrl, true);
                 });
@@ -7030,18 +7091,18 @@
             const hasIdParam = urlParams.has('id');
             const isClean = isCleanArticleUrl();
             const otherSettings = getOtherSettingsConfig();
-            
+
             // Auto-collapse on clean URLs with id parameter if setting is enabled (not on clone_id URLs)
             if (isClean && hasIdParam && !hasCloneId && otherSettings.sidebarAutoCollapse) {
                 // Prüfe ob Modus 'maxWidth': nur einklappen wenn Fensterbreite <= maxWidth
                 // Verwende physische Pixel (innerWidth * devicePixelRatio) für korrekte Berechnung bei HiDPI-Displays
                 const currentWidth = Math.floor(window.innerWidth * window.devicePixelRatio);
                 const maxWidth = otherSettings.sidebarAutoCollapseMaxWidth || 2560;
-                
-                const shouldCollapse = otherSettings.sidebarAutoCollapseMode === 'maxWidth' 
+
+                const shouldCollapse = otherSettings.sidebarAutoCollapseMode === 'maxWidth'
                     ? currentWidth <= maxWidth
                     : true; // 'always' Modus
-                    
+
                 if (shouldCollapse) {
                     // Mehrere Versuche mit steigenden Verzögerungen für robusteres Einklappen
                     const collapseDelays = [100, 500, 1000, 2000, 3500, 5000];
@@ -7083,7 +7144,7 @@
             setTimeout(applyDomDependentFeatures, 2000);
             setTimeout(applyDomDependentFeatures, 3500);
             setTimeout(applyDomDependentFeatures, 5000);
-            
+
             // Expliziter Aufruf für Bildergalerie mit verschiedenen Verzögerungen
             if (otherSettings.imageGalleryHoverPreview && !hasModeParam && !hasCloneId) {
                 setTimeout(applyImageGalleryHoverPreview, 500);
@@ -7570,7 +7631,7 @@
         const buttons = actionPane.querySelectorAll('button.btn');
         for (const btn of buttons) {
             // Check for text "Speichern" or SVG icon
-            if (btn.textContent.trim() === 'Speichern' || 
+            if (btn.textContent.trim() === 'Speichern' ||
                 btn.querySelector('svg.bi-floppy2')) {
                 return btn;
             }
@@ -7684,7 +7745,7 @@
                     const pasteBtn = document.getElementById('geizhals-paste-btn');
                     const saveBtn = document.getElementById('geizhals-save-btn');
                     const cloneBtn = document.getElementById('geizhals-clone-btn');
-                    
+
                     if (pasteBtn && pasteBtn.parentElement === navbarNav && pasteBtn.nextSibling) {
                         navbarNav.insertBefore(reloadBtn, pasteBtn.nextSibling);
                     } else if (pasteBtn && pasteBtn.parentElement === navbarNav) {
@@ -7717,7 +7778,7 @@
 
         const links = actionPane.querySelectorAll('a.btn.btn-dark');
         for (const link of links) {
-            if (link.textContent.trim() === 'Neu laden' || 
+            if (link.textContent.trim() === 'Neu laden' ||
                 link.querySelector('svg.bi-arrow-clockwise')) {
                 return link;
             }
@@ -7842,7 +7903,7 @@
 
         const buttons = actionPane.querySelectorAll('button.btn');
         for (const btn of buttons) {
-            if (btn.textContent.trim() === 'Einfügen' || 
+            if (btn.textContent.trim() === 'Einfügen' ||
                 btn.querySelector('svg.bi-clipboard')) {
                 return btn;
             }
@@ -7964,7 +8025,7 @@
 
         const buttons = actionPane.querySelectorAll('button.btn');
         for (const btn of buttons) {
-            if (btn.textContent.trim() === 'Kopieren' || 
+            if (btn.textContent.trim() === 'Kopieren' ||
                 btn.querySelector('svg.bi-copy')) {
                 return btn;
             }
@@ -8876,11 +8937,11 @@
                         // Verwende physische Pixel (innerWidth * devicePixelRatio) für korrekte Berechnung bei HiDPI-Displays
                         const currentWidth = Math.floor(window.innerWidth * window.devicePixelRatio);
                         const maxWidth = otherSettings.sidebarAutoCollapseMaxWidth || 2560;
-                        
-                        const shouldCollapse = otherSettings.sidebarAutoCollapseMode === 'maxWidth' 
+
+                        const shouldCollapse = otherSettings.sidebarAutoCollapseMode === 'maxWidth'
                             ? currentWidth <= maxWidth
                             : true; // 'always' Modus
-                            
+
                         if (shouldCollapse) {
                             // Mehrere Versuche mit steigenden Verzögerungen für robusteres Einklappen
                             const collapseDelays = [300, 800, 1500, 2500, 4000];
@@ -8994,7 +9055,7 @@
                 const hasMode = url.searchParams.has('mode');
                 const hasClone = url.searchParams.has('clone') || url.searchParams.has('clone_id');
                 const containerExists = document.querySelector('.geizhals-image-gallery-container');
-                
+
                 if (!hasMode && !hasClone && !containerExists) {
                     applyImageGalleryHoverPreview();
                 }

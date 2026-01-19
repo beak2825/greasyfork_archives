@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            Twitch Sidebar Thumbnail Preview
 // @name:de         Twitch Seitenleiste Vorschaubild
-// @version         1.0.2
+// @version         1.0.3
 // @description     Hover over Channel in the Sidebar to see a Thumbnail Preview of the Stream on Twitch
 // @description:de  Bewege den Mauszeiger über einen Kanal in der Seitenleiste, um ein Vorschaubild des Streams zu sehen auf Twitch
 // @icon            https://static.twitchcdn.net/assets/favicon-32-e29e246c157142c94346.png
@@ -47,7 +47,7 @@
 
         dialog.parentNode.style.width = "440px";
         dialog.parentNode.querySelector("img")?.remove();
-        const channel = element.querySelector("[title]").textContent.toLowerCase();
+        const channel = element.querySelector("a").href.split("/")[3];
         if (!cache[channel] || Date.now() - cache[channel] >= 30 * 1000) { // Cache Thumbnails for half minute
             cache[channel] = Date.now();
         }

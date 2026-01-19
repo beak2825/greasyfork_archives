@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Nurbo Mod + glotus
 // @namespace    http://youtube.com
-// @version      1.5.8.7
+// @version      1.5.8.9
 // @description  Shift=Insta,  Traps/Spikes. [ AutoBiomhat ] [Autoheal] [Bull] [Shadow wings]   and upgrades.
 // @icon         https://static.wikia.nocookie.net/moom/images/7/70/Cookie.png/revision/latest?cb=20190223141839
 // @author       Nurbo Mod
@@ -395,9 +395,7 @@ function handleMessage(m) {
         if (ws && msgpack5) ws.send(new Uint8Array(Array.from(msgpack5.encode(sender))));
     }
 
-    function sendChatMessage(message) {
-        doNewSend(["6", [message]]);
-    }
+ 
 
     function storeEquip(id, index) {
         doNewSend(["c", [0, id, index]]);
@@ -417,14 +415,7 @@ function handleMessage(m) {
     }
 
     // Update spike type
-    function updateItems() {
-        for (let i = 22; i < 26; i++) {
-            if (isVisible(document.getElementById("actionBarItem" + i))) {
-                spikeType = i - 16;
-                break;
-            }
-        }
-    }
+   
     setInterval(updateItems, 250);
 
     // Функция для размещения шипа
@@ -604,44 +595,7 @@ function handleMessage(m) {
     }
 
     // Обработчик сообщений от сервера
-    function handleMessage(m) {
-        let temp = msgpack5.decode(new Uint8Array(m.data));
-        let data = (temp.length > 1) ? [temp[0], ...temp[1]] : temp;
-        if (!data) return;
-
-        if (data[0] === "C" && myPlayer.id == null) myPlayer.id = data[1];
-
-        if (data[0] === "a") {
-            let enemiesNear = [];
-            for (let i = 0; i < data[1].length / 13; i++) {
-                let obj = data[1].slice(13 * i, 13 * i + 13);
-                if (obj[0] === myPlayer.id) {
-                    [myPlayer.x, myPlayer.y, myPlayer.dir, myPlayer.object, myPlayer.weapon] =
-                        [obj[1], obj[2], obj[3], obj[4], obj[5]];
-                } else {
-                    enemiesNear.push(obj);
-                }
-            }
-
-            if (enemiesNear.length > 0) {
-                enemiesNear.sort((a, b) => {
-                    const distA = Math.hypot(a[1] - myPlayer.x, a[2] - myPlayer.y);
-                    const distB = Math.hypot(b[1] - myPlayer.x, b[2] - myPlayer.y);
-                    return distA - distB;
-                });
-
-                nearestEnemy = enemiesNear[0];
-
-                // Автоматически активируем автоспайк при появлении врага
-                if (autoSpikeEnabled && nearestEnemy) {
-                    performSpikeSurround();
-                }
-            } else {
-                nearestEnemy = null;
-            }
-        }
-    }
-
+  
     // Перехват WebSocket
     if (!WebSocket.prototype.__originalSend) {
         WebSocket.prototype.__originalSend = WebSocket.prototype.send;

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ZedTools Cooldown Sync
 // @namespace    http://tampermonkey.net/
-// @version      1.2.0
+// @version      1.2.1
 // @description  多端设备同步ZedTools本地时间
 // @author       Owen
 // @license      MIT
@@ -12,7 +12,7 @@
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @grant        GM_registerMenuCommand
-// @connect      101.35.15.85
+// @connect      zedcity.mrgongm.cn
 // @downloadURL https://update.greasyfork.org/scripts/560114/ZedTools%20Cooldown%20Sync.user.js
 // @updateURL https://update.greasyfork.org/scripts/560114/ZedTools%20Cooldown%20Sync.meta.js
 // ==/UserScript==
@@ -22,9 +22,9 @@
 
     // 配置选项
     const CONFIG = {
-        serverUrl: GM_getValue('serverUrl', 'http://101.35.15.85/admin-api'),
+        serverUrl: GM_getValue('serverUrl', 'http://zedcity.mrgongm.cn'),
         dataKeys: [
-            'script_exploration_fuelTrade_cooldown_at_ms',
+             'script_exploration_fuelTrade_cooldown_at_ms',
             'script_exploration_map5_cooldown_at_ms',
             'script_exploration_map6_cooldown_at_ms',
             'script_forgeTimestamp',
@@ -34,6 +34,7 @@
             'script_exploration_fuelTrade_openDoor_cooldown_at_ms',
             'script_exploration_map5_openDoor_cooldown_at_ms',
             'script_exploration_map6_openDoor_cooldown_at_ms',
+            'script_cooldownTimeExchangeScrap_at_ms',
             // 可以添加更多需要同步的键
         ]
     };

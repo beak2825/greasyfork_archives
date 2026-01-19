@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name              海角社区
 // @version           1.2.7
-// @description       🔥赠送多款脚本，不限次看付费视频，查看封禁用户视频、下载视频，复制播放链接，保存账号密码免输入，帖子是否有视频图片提示(标题前缀)，自动展开帖子，屏蔽广告等
+// @description       🔥海角社区赠送多款脚本，不限次看海角社区付费视频，查看封禁内容、下载视频，复制播放链接，保存账号密码免输入，帖子是否有视频图片提示(标题前缀)，自动展开帖子，屏蔽广告等
 // @icon              https://dnn.xhus.cn/images/boy.jpeg
 // @namespace         海角社区
 // @author            lucky
@@ -20,12 +20,10 @@
 // @include           *://hai*.*/*
 // @include      	  *://hj*/*
 // @include      	  *://*.hj*/*
-// @include      	  *://paidaa.*/*
-// @include      	  *://*.paidaa.*/*
 // @include           */post/details/*
+// @match             *://*/post/details*
 // @include		      *://tools.thatwind.com/*
 // @include			  *://m3u8-player.com/*
-// @match             *://*/post/details*
 // @require           https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js
 // @require			  https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.5.8/hls.min.js
 // @run-at 			  document-start
@@ -1053,12 +1051,31 @@ const util = {
 
 	showAndHidTips: (name,val = 'success') => {
 		if(val == 'success'){
-			$('.' + name).addClass('tips-yuan')
+			if(superVip._CONFIG_.initFinish){
+				$('.' + name).addClass('tips-yuan');
+			}else{
+				setTimeout(() =>{
+					$('.' + name).addClass('tips-yuan');
+				},1500)
+			}
 		}else if(val == 'fail'){
-			$('.' + name).addClass('tips-yuan-err')
+			if(superVip._CONFIG_.initFinish){
+				$('.' + name).addClass('tips-yuan-err')
+			}else{
+				setTimeout(() =>{
+					$('.' + name).addClass('tips-yuan-err')
+				},1500)
+			}
 		}else if(val == 'none'){
-			$('.' + name).removeClass('tips-yuan')
-			$('.' + name).removeClass('tips-yuan-err')
+			if(superVip._CONFIG_.initFinish){
+				$('.' + name).removeClass('tips-yuan');
+				$('.' + name).removeClass('tips-yuan-err');
+			}else{
+				setTimeout(() =>{
+					$('.' + name).removeClass('tips-yuan');
+					$('.' + name).removeClass('tips-yuan-err');
+				},1500)
+			}
 		}else{
 			return ''
 		}
@@ -2729,6 +2746,7 @@ const superVip = (function() {
 			if(_CONFIG_.user.ver != md5x()){
 				util.logouted();
 			}
+			_CONFIG_.initFinish = 1;
 		}
 	}
 

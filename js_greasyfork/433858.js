@@ -1,12 +1,11 @@
 // ==UserScript==
 // @name         empornium better filelist
-// @version      3.4.1.1
+// @version      3.5
 // @description  Shows filelist as expandable tree structure
 // @author       ephraim
 // @namespace    empornium
-// @match        https://www.empornium.is/torrents.php?id=*
-// @match        https://www.empornium.me/torrents.php?id=*
 // @match        https://www.empornium.sx/torrents.php?id=*
+// @match        https://www.emparadise.rs/torrents.php?id=*
 // @match        https://www.homeporntorrents.club/torrents.php?id=*
 // @match        https://femdomcult.org/torrents.php?id=*
 // @match        https://sextorrent.eu/torrents.php?id=*

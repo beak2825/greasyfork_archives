@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         enhanced property
 // @namespace    https://greasyfork.org/de/users/1516523-martink
-// @version      1.4.3
+// @version      1.4.4
 // @description  Alle öffnen | Alle schließen | Alle speichern | value-editor mit cat-parameter-Links (schnellere Suche) | Bestehende Werte ansehen | Artikelbezeichnungen laden
 // @author       Martin Kaiser
 // @match        https://opus.geizhals.at/kalif/artikel/property*
@@ -197,11 +197,11 @@
         link.setAttribute('type', 'button');
         link.textContent = 'Bestehende Werte ansehen';
         link.setAttribute('data-view-values-btn', 'true');
-
+        
         // Event-Handler für Klick - extrahiert ID und öffnet Link
         link.addEventListener('click', async (e) => {
             e.preventDefault();
-
+            
             const originalText = link.textContent;
             link.textContent = 'Lade...';
             link.disabled = true;
@@ -236,7 +236,7 @@
                 try {
                     const clipboardText = await navigator.clipboard.readText();
                     const match = clipboardText.match(/[?&]id=(\d+)/);
-
+                    
                     if (match) {
                         const id = match[1];
                         const url = `https://opus.geizhals.at/kalif/artikel/property/value?id=${id}`;
@@ -666,7 +666,7 @@
 
                         // Finde das select Element für data_type
                         const dataTypeSelect = iframeDoc.querySelector('select[name="data_type"]');
-
+                        
                         if (dataTypeSelect) {
                             // Prüfe ob "Artikel Referenz (ohne Einheit)" (value="43") ausgewählt ist
                             const selectedValue = dataTypeSelect.value;
@@ -739,7 +739,7 @@
 
                         // Spezifischer Selektor
                         const inputField = iframeDoc.querySelector('.w-100 .input-group input.form-control[disabled]');
-
+                        
                         if (inputField) {
                             const value = inputField.getAttribute('value');
                             if (value && value.length > 0) {
@@ -861,13 +861,13 @@
         if (successCount === total) {
             btn.textContent = `Fertig ✓ (${successCount})`;
             btn.className = 'btn btn-success btn-sm ms-2';
-
+            
             // Aktiviere eigene Sortierung für die Wert-Spalte
             setupCustomSorting();
         } else if (successCount > 0) {
             btn.textContent = `Teilweise geladen (${successCount}/${total})`;
             btn.className = 'btn btn-warning btn-sm ms-2';
-
+            
             // Aktiviere eigene Sortierung auch bei teilweisem Erfolg
             setupCustomSorting();
         } else {
@@ -979,15 +979,18 @@
         btn.setAttribute('type', 'button');
         btn.title = 'Alle Werte kopieren';
         btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="14" height="14" fill="currentColor" class="bi bi-clipboard"><path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1z"/><path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0z"/></svg>';
-
+        
         btn.addEventListener('click', async (e) => {
             e.stopPropagation();
             e.preventDefault();
-
+            
             const rows = getValueTableRows();
             const values = [];
 
             for (const row of rows) {
+                // Überspringe versteckte (gefilterte) Zeilen
+                if (row.style.display === 'none') continue;
+
                 const cells = row.querySelectorAll('td');
                 if (cells.length < 2) continue;
 
@@ -1006,13 +1009,13 @@
 
             try {
                 await navigator.clipboard.writeText(values.join('\r\n'));
-
+                
                 // Visuelles Feedback
                 const originalHTML = btn.innerHTML;
                 btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="14" height="14" fill="currentColor" class="bi bi-clipboard-check"><path fill-rule="evenodd" d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0z"/><path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1z"/><path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0z"/></svg>';
                 btn.className = 'btn btn-success btn-sm ms-2';
                 btn.title = `${values.length} Werte kopiert`;
-
+                
                 setTimeout(() => {
                     btn.innerHTML = originalHTML;
                     btn.className = 'btn btn-outline-light btn-sm ms-2';
@@ -1024,6 +1027,58 @@
         });
 
         return btn;
+    }
+
+    function createFilterInput() {
+        const input = document.createElement('input');
+        input.id = 'filter-values-input';
+        input.type = 'text';
+        input.className = 'form-control form-control-sm ms-2';
+        input.style.width = '150px';
+        input.title = 'Filtert die Wert-Spalte. Mit | für ODER (z.B. rot|gelb)';
+
+        input.addEventListener('input', () => {
+            filterTable(input.value);
+        });
+
+        // ESC zum Löschen
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                input.value = '';
+                filterTable('');
+            }
+        });
+
+        return input;
+    }
+
+    function filterTable(filterValue) {
+        const rows = getValueTableRows();
+        const filterText = filterValue.trim().toLowerCase();
+
+        if (!filterText) {
+            // Kein Filter - alle Zeilen anzeigen
+            for (const row of rows) {
+                row.style.display = '';
+            }
+            return;
+        }
+
+        // Erstelle Array von Filter-Begriffen (getrennt durch |)
+        const filterTerms = filterText.split('|').map(t => t.trim()).filter(t => t.length > 0);
+
+        for (const row of rows) {
+            const cells = row.querySelectorAll('td');
+            if (cells.length < 2) continue;
+
+            const valueCell = cells[1];
+            const valueText = valueCell.textContent.trim().toLowerCase();
+
+            // Prüfe ob einer der Filter-Begriffe im Wert vorkommt
+            const matches = filterTerms.some(term => valueText.includes(term));
+
+            row.style.display = matches ? '' : 'none';
+        }
     }
 
     async function initPropertyValuePage() {
@@ -1044,10 +1099,10 @@
         const wertSpan = headerDiv.querySelector('span:first-child');
         const sortButton = headerDiv.querySelector('span.rotate--90');
 
-        // Erstelle einen linken Wrapper für "Wert" + Kopierbutton (bleiben zusammen)
+        // Erstelle einen linken Wrapper für "Wert" + Kopierbutton + Filter (bleiben zusammen)
         const leftWrapper = document.createElement('div');
         leftWrapper.className = 'd-flex align-items-center';
-
+        
         // Verschiebe das Wert-Span in den Wrapper
         if (wertSpan) {
             headerDiv.insertBefore(leftWrapper, wertSpan);
@@ -1058,12 +1113,16 @@
         const copyBtn = createCopyValuesButton();
         leftWrapper.appendChild(copyBtn);
 
+        // Erstelle Filterfeld (nach dem Kopierbutton)
+        const filterInput = createFilterInput();
+        leftWrapper.appendChild(filterInput);
+
         // Erstelle Status-Element für Datentyp-Prüfung
         const statusEl = document.createElement('span');
         statusEl.id = 'load-article-names-status';
         statusEl.className = 'badge bg-secondary ms-2';
         statusEl.textContent = 'Prüfe Datentyp...';
-
+        
         // Füge Status vor dem Sortierbutton ein
         if (sortButton) {
             headerDiv.insertBefore(statusEl, sortButton);
@@ -1073,7 +1132,7 @@
 
         // Prüfe ob data_type "Artikel Referenz" ist (async)
         const isArtikelReferenz = await checkIfDataTypeIsArtikelReferenz();
-
+        
         // Entferne Status-Element
         statusEl.remove();
 

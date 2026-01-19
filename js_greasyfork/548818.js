@@ -1,12 +1,13 @@
 // ==UserScript==
 // @name         Archive_ReupBank
 // @namespace    Archive_ReupBank
-// @version      3.5.1
+// @version      3.6.0
 // @description  Reup les images noelshack + renvoyer image
 // @author       969-6261
 // @icon         https://images.emojiterra.com/openmoji/v16.0/128px/1f501.png
 // @match        *://risibank.fr/compte*
 // @match        *://risibank.fr/media/*
+// @match        *://www.jeuxvideo.com/messages-prives/nouveau.php*
 // @match        *://www.jeuxvideo.com/messages-prives/message.php*
 // @match        *://www.jeuxvideo.com/forums/42-*
 // @match        *://www.jeuxvideo.com/forums/message/*
@@ -37,10 +38,15 @@ const tagOfReup = 'reup';
 if (location.hostname === 'www.jeuxvideo.com' || location.protocol === 'file:') {
     'use strict';
 
-    const images = document.querySelectorAll('.img-shack , img[data-risi]');
 
-    images.forEach(img => {
-        img.addEventListener('click', async (e) => {
+    //const images = document.querySelectorAll('.img-shack , img[data-risi]');
+    //images.forEach(img => {
+    //    img.addEventListener('click', async (e) => {
+
+
+    document.body.addEventListener('click', async (e) => {
+         const img = e.target;
+         if (img.matches('.img-shack, img[data-risi], .message__urlImg')) {
 
             e.preventDefault(); // Empêche l'ouverture du lien
 
@@ -202,8 +208,8 @@ if (location.hostname === 'www.jeuxvideo.com' || location.protocol === 'file:') 
             const joined = tagsClean.join('-');
             const targetUrlReup = `${risibankSiteUrl}/compte#add-media?tags=${encodeURIComponent(joined)}&link=${urlNewNoelshack}`;
             window.open(targetUrlReup, '_blank');
-
-        });
+        }
+        //});
     });
 }
 

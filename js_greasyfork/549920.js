@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name               Script Notifier
 // @namespace          http://github.com/0H4S
-// @version            2.2
+// @version            2.3
 // @author             OHAS
 // @description        Sistema de notificação para UserScripts.
 // @license            CC-BY-NC-ND-4.0
@@ -747,8 +747,8 @@ class ScriptNotifier {
     _getNotifierStyles() {
         return `
             :host {
-                --sn-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-                --sn-font-family-code: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+                --sn-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Microsoft YaHei", "PingFang SC", "Hiragino Sans GB", "Heiti SC", "Apple SD Gothic Neo", "Noto Sans CJK SC", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+                --sn-font-family-code: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace, var(--sn-font-family);
                 --sn-font-size-title: 16px;
                 --sn-font-size-body: 14px;
                 --sn-font-weight-title: 600;

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YTMusictoSpotify
 // @namespace    https://greasyfork.org/en/users/1500575-just-j
-// @version      2025-12-24
+// @version      2026-1-19
 // @description  Transform YTMusic into a spotify-like interface!
 // @author       Just J
 // @match        https://music.youtube.com/*
@@ -162,6 +162,9 @@ ytmusic-chip-cloud-chip-renderer[enable-bauhaus-style][chip-style=STYLE_LARGE_TR
     border-radius: 8px;
     margin-left: 345px;
 }
+#contents.ytmusic-section-list-renderer:has(.card-container.style-scope.ytmusic-card-shelf-renderer) {
+    margin-left: 130px;
+}
 .style-scope.ytmusic-browse-response:has(div#header) #contents.ytmusic-section-list-renderer {
     padding-top: 70px;
 }
@@ -171,7 +174,7 @@ div#primary ytmusic-section-list-renderer div#contents.ytmusic-section-list-rend
 }
 div#secondary ytmusic-section-list-renderer div#contents.ytmusic-section-list-renderer {
     padding-top: 0px!important;
-    width: 168%;
+    width: 80vw;
 }
 #content-wrapper.ytmusic-browse-response {
     margin-left: 0;
@@ -649,6 +652,12 @@ yt-icon-button#previous-items-button, yt-icon-button#next-items-button {
 }
 yt-icon-button#previous-items-button:hover, yt-icon-button#next-items-button:hover {
     opacity: 100%;
+}
+html.no-focus-outline {
+    overflow-x: hidden !important;
+}
+#header.ytmusic-playlist-shelf-renderer ytmusic-side-aligned-item-renderer.ytmusic-playlist-shelf-renderer {
+    margin-top: 16px;
 }
 `;
 const style = document.createElement('style')

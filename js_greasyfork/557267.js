@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         海角社区
 // @version      1.0.7
-// @description  海角社区视频解锁观看及下载，无限制播放下载 | 官网：https://khsy.cc
+// @description  海角社区无限制观看和下载海角视频，自动屏蔽广告，可以查看封禁账户，播放器支持倍速播放 | 官网：https://khsy.cc
 // @author       khsy.cc
 // @include      *://hj*.*/*
 // @include      *://h*.top/*

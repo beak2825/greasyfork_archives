@@ -2,7 +2,7 @@
 // @name            FC2PPVDB Enhanced
 // @name:en         FC2PPVDB Enhanced
 // @namespace       https://greasyfork.org/zh-CN/scripts/552583-fc2ppvdb-enhanced
-// @version         2.0.0
+// @version         2.0.1
 // @author          Icarusle
 // @description     提供极速磁力搜索、高清预览、连拍图集、跨端历史同步与自定义过滤，重塑卡片布局丰富交互体验。极致性能，优雅动效。
 // @description:en  Magnet search, HD preview, multi-shot gallery, sync history, and more. Modern UI with smooth animations.
@@ -12,6 +12,7 @@
 // @match           https://fd2ppv.cc/*
 // @match           https://supjav.com/*
 // @match           https://missav.ws/*
+// @match           https://missav.ai/*
 // @match           https://javdb.com/*
 // @match           https://javdb565.com/*
 // @require         https://unpkg.com/dexie@3.2.4/dist/dexie.js
@@ -24,6 +25,7 @@
 // @grant           GM_addStyle
 // @grant           GM_deleteValue
 // @grant           GM_getValue
+// @grant           GM_info
 // @grant           GM_registerMenuCommand
 // @grant           GM_setClipboard
 // @grant           GM_setValue
@@ -31,6 +33,7 @@
 // @grant           GM_xmlhttpRequest
 // @grant           unsafeWindow
 // @run-at          document-end
+// @noframes
 // @downloadURL https://update.greasyfork.org/scripts/552583/FC2PPVDB%20Enhanced.user.js
 // @updateURL https://update.greasyfork.org/scripts/552583/FC2PPVDB%20Enhanced.meta.js
 // ==/UserScript==
@@ -38,6 +41,34 @@
 (function (Dexie) {
   'use strict';
 
+  const SCRIPT_INFO = {
+    NAME: "FC2PPVDB Enhanced",
+    VERSION: typeof GM_info !== "undefined" ? GM_info.script.version : "2.0.1",
+    NAMESPACE: "https://greasyfork.org/zh-CN/scripts/552583-fc2ppvdb-enhanced",
+    GREASYFORK_URL: "https://greasyfork.org/scripts/552583"
+  };
+  const STORAGE_KEYS = {
+    SETTINGS: "settings_v1",
+    CACHE: "magnet_cache_v1",
+    HISTORY: "history_v1",
+    SUPABASE_URL: "supabase_url",
+    SUPABASE_KEY: "supabase_key",
+    SUPABASE_JWT: "supabase_jwt",
+    SUPABASE_REFRESH: "supabase_refresh_token",
+    SYNC_USER_ID: "sync_user_id",
+    CURRENT_USER_EMAIL: "current_user_email",
+    LAST_SYNC_TS: "last_sync_ts",
+    LAST_AUTO_SYNC_TS: "last_auto_sync_ts",
+    WEBDAV_URL: "webdav_url",
+    WEBDAV_USER: "webdav_user",
+    WEBDAV_PASS: "webdav_pass",
+    WEBDAV_PATH: "webdav_path",
+    WEBDAV_LAST_ETAG: "webdav_last_etag",
+    WEBDAV_SYNC_LOCK: "webdav_sync_lock",
+    SYNC_MODE: "sync_mode",
+    LANGUAGE: "language",
+    USER_GRID_COLUMNS: "user_grid_columns_preference"
+  };
   const TIMING = {
     DEBOUNCE_MS: 300,
     THROTTLE_MS: 200,
@@ -53,6 +84,75 @@
     POLITE_DELAY_MS: 500,
     MAGNET_JITTER_MS: 3e3
   };
+  const UI_CONSTANTS = {
+    FONT_FAMILY: "'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif",
+    Z_INDEX_MAX: 2147483647,
+    Z_INDEX_OVERLAY: 2147483648,
+    Z_INDEX_TOOLTIP: 999999,
+    DEFAULT_TIMESTAMP: "1970-01-01T00:00:00.000Z",
+    DEFAULT_SYNC_FILENAME: "fc2_enhanced_sync.json",
+    TIME_ZONE: "Asia/Shanghai"
+  };
+  const UI_TOKENS = {
+    COLORS: {
+      SUCCESS: "#10b981",
+      SUCCESS_LIGHT: "rgba(16, 185, 129, 0.1)",
+      ERROR: "#ef4444",
+      ERROR_LIGHT: "rgba(239, 68, 68, 0.1)",
+      WARN: "#f59e0b",
+      WARN_LIGHT: "rgba(245, 158, 11, 0.1)",
+      INFO: "#3b82f6",
+      DEBUG: "#71717a",
+      TEXT_DIM: "#9ca3af",
+      TEXT_MUTED: "#6b7280",
+      WHITE: "#ffffff",
+      BORDER: "rgba(255, 255, 255, 0.1)",
+      BORDER_LIGHT: "rgba(255, 255, 255, 0.05)"
+    },
+    BACKDROP: {
+      COLOR: "rgba(20, 20, 25, 0.95)",
+      BLUR: "12px",
+      SHADOW: "0 8px 16px rgba(0,0,0,0.4)"
+    },
+    SPACING: {
+      XS: "4px",
+      SM: "8px",
+      MD: "12px",
+      LG: "16px",
+      XL: "20px",
+      GUTTER: "15px"
+    },
+    RADIUS: {
+      MD: "8px"
+    }
+  };
+  const SYSTEM_KEYS = {
+    DEBUG_KEY: "fc2_enhanced_debug",
+    MESSAGING_CHANNEL: "fc2-enhanced-sync",
+    MAX_LOGS: 500,
+    LOG_PREFIX: "[FC2 Enhanced]"
+  };
+  const MAGNET_CONFIG = {
+    MAX_CONCURRENCY: 4,
+    MAX_RETRIES: 2,
+    RETRY_DELAY: 1e3,
+    PREDICTIVE_LIMIT: 12,
+    DEFAULT_TYPE: "fc2",
+    SEARCH_TIMEOUT_MS: 1e4
+  };
+  const SYNC_STATUS = {
+    IDLE: "idle",
+    SYNCING: "syncing",
+    SUCCESS: "success",
+    ERROR: "error",
+    CONFLICT: "conflict"
+  };
+  const DOM_IDS = {
+    SETTINGS_HOST: "fc2-enh-settings-host",
+    SETTINGS_CONTAINER: "fc2-enh-settings-container",
+    TAB_CONTENT: "tab-content-container",
+    LOG_LIST: "debug-log-list"
+  };
   const NETWORK = {
     CHUNK_SIZE: 12
   };
@@ -63,7 +163,7 @@ EXPIRATION_MS: 14 * 24 * 60 * 60 * 1e3
 };
   const DATABASE = {
     NAME: "fc2_enhanced_db",
-    VERSION: 1
+    VERSION: 5
   };
   const VALIDATION = {
     ACTRESS_NAME_MAX_LENGTH: 50,
@@ -99,6 +199,10 @@ EXPIRATION_MS: 14 * 24 * 60 * 60 * 1e3
   const PREVIEW_SLUG_MAP = {};
   const JAV_PREFIX_BLACKLIST = ["FC2", "PPV"];
   const ACTRESS_BLACKLIST = [
+    /首页/,
+    /分类/,
+    /我的/,
+    /搜索/,
     /排行榜/,
     /导航/,
     /菜单/,
@@ -106,197 +210,116 @@ EXPIRATION_MS: 14 * 24 * 60 * 60 * 1e3
     /全部/,
     /^[\d\s]+$/
   ];
-  const Config = {
-    EXTERNAL_URLS,
-    SCRAPER_URLS,
-    SCRAPER_CONFIG,
-    STORAGE_KEYS: { SETTINGS: "settings_v1", CACHE: "magnet_cache_v1", HISTORY: "history_v1" },
-    TIMEOUTS: { API: 2e4, VIDEO_LOAD: 5e3, SYNC_DEBOUNCE: 2e3 },
-    CLASSES: {
-      cardRebuilt: "card-rebuilt",
-      processedCard: "processed-card",
-      hideNoMagnet: "hide-no-magnet",
-      videoPreviewContainer: "video-preview-container",
-      staticPreview: "static-preview",
-      previewElement: "preview-element",
-      hidden: "hidden",
-      infoArea: "info-area",
-      customTitle: "custom-card-title",
-      fc2IdBadge: "fc2-id-badge",
-      badgeCopied: "copied",
-      preservedIconsContainer: "preserved-icons-container",
-      resourceLinksContainer: "resource-links-container",
-      resourceBtn: "resource-btn",
-      btnLoading: "is-loading",
-      btnMagnet: "magnet",
-      tooltip: "tooltip",
-      buttonText: "button-text",
-      extraPreviewContainer: "preview-container",
-      extraPreviewTitle: "preview-title",
-      extraPreviewGrid: "preview-grid",
-      isCensored: "is-censored",
-      hideCensored: "hide-censored",
-      isViewed: "is-viewed",
-      hideViewed: "hide-viewed"
-    },
-    CACHE_EXPIRATION_DAYS: 14,
-    COPIED_BADGE_DURATION: 1500
-  };
-  const Storage = {
-    get: (key, def) => typeof GM_getValue !== "undefined" ? GM_getValue(key, def) : def,
-    set: (key, val) => {
-      if (typeof GM_setValue !== "undefined") GM_setValue(key, val);
-    },
-    delete: (key) => {
-      if (typeof GM_deleteValue !== "undefined") GM_deleteValue(key);
-    }
-  };
-  const Utils = {
-    debounce: (func, delay) => {
-      let t2;
-      return (...a) => {
-        if (t2) clearTimeout(t2);
-        t2 = setTimeout(() => func(...a), delay);
-      };
-    },
-    chunk: (arr, size) => Array.from({ length: Math.ceil(arr.length / size) }, (_, i) => arr.slice(i * size, i * size + size)),
-    sleep: (ms) => new Promise((res) => setTimeout(res, ms)),
-    copyToClipboard: (text) => {
-      if (typeof GM_setClipboard !== "undefined") GM_setClipboard(text);
-    },
-    extractFC2Id: (url) => url?.match(/articles\/(\d+)/)?.[1] ?? null,
-    parseVideoId: (text, url = "") => {
-      const input = (text + " " + url).replace(/[+\s_]/g, "-").toUpperCase();
-      const fc2Prefix = input.match(/(?:FC2[^\d]*PPV[^\d]*|FC2-)(\d{5,8})/i);
-      if (fc2Prefix) return { id: fc2Prefix[1], type: "fc2" };
-      const fc2FromUrl = Utils.extractFC2Id(url);
-      if (fc2FromUrl) return { id: fc2FromUrl, type: "fc2" };
-      const dateMatch = input.match(/(\d{6,8})-(\d{1,4})/);
-      if (dateMatch) {
-        const studios = STUDIOS;
-        const studioKey = studios.find((x) => input.includes(x));
-        if (studioKey) {
-          const datePart = dateMatch[1];
-          const seqPart = dateMatch[2];
-          const studioIdMap = STUDIO_ID_MAP;
-          const sid = studioIdMap[studioKey] || studioKey;
-          const slugMap = PREVIEW_SLUG_MAP;
-          const previewSlug = slugMap[sid] ? `${slugMap[sid]}-${datePart}_${seqPart}` : null;
-          return { id: `${datePart}-${seqPart}-${sid}`, type: "jav", previewSlug };
-        }
-        return { id: `${dateMatch[1]}-${dateMatch[2]}`, type: "jav" };
-      }
-      const jav = input.match(/([A-Z]{1,10})-?(\d{2,8})/);
-      if (jav) {
-        const prefix = jav[1];
-        const blacklist = JAV_PREFIX_BLACKLIST;
-        if (!blacklist.includes(prefix)) {
-          return { id: `${prefix}-${jav[2]}`, type: "jav" };
-        }
-      }
-      const fc2Raw = text.match(/(\d{5,10})/);
-      if (fc2Raw) return { id: fc2Raw[1], type: "fc2" };
-      return null;
-    },
-    cleanActressName: (name) => {
-      if (!name) return null;
-      const n = name.trim();
-      const blacklist = ACTRESS_BLACKLIST;
-      if (blacklist.some((reg) => reg.test(n))) return null;
-      if (n.length > VALIDATION.ACTRESS_NAME_MAX_LENGTH || n.length < VALIDATION.ACTRESS_NAME_MIN_LENGTH) return null;
-      return n;
-    },
-    formatDate: (dateStr) => {
-      if (!dateStr) return "";
-      try {
-        const date = new Date(dateStr);
-        if (isNaN(date.getTime())) return dateStr;
-        return date.toLocaleDateString(void 0, {
-          year: "numeric",
-          month: "2-digit",
-          day: "2-digit"
-        });
-      } catch (e) {
-        return dateStr;
-      }
-    }
-  };
-  const State = (() => {
-    const defaults = {
-      previewMode: "static",
-      hideNoMagnet: false,
-      hideCensored: false,
-      enableHistory: true,
-      hideViewed: false,
-      enableFollows: false,
-      loadExtraPreviews: false,
-      enableQuickBar: true,
-      enableMagnets: true,
-      enableExternalLinks: true,
-      enableActressName: true,
-language: Storage.get("language", "auto") || "auto",
-      lastSyncTs: "1970-01-01T00:00:00.000Z",
-      supabaseUrl: Storage.get("supabase_url", "") || "",
-      supabaseKey: Storage.get("supabase_key", "") || "",
-      webdavUrl: Storage.get("webdav_url", "") || "",
-      webdavUser: Storage.get("webdav_user", "") || "",
-      webdavPass: Storage.get("webdav_pass", "") || "",
-      webdavPath: Storage.get("webdav_path", "fc2_enhanced_sync.json") || "fc2_enhanced_sync.json",
-      syncMode: Storage.get("sync_mode", "none") || "none",
-      syncStatus: "idle"
-    };
-    const stored = Storage.get(Config.STORAGE_KEYS.SETTINGS, {}) || {};
-    if (stored.previewMode && !["static", "hover"].includes(stored.previewMode)) {
-      stored.previewMode = defaults.previewMode;
-    }
-    const boolKeys = [
-      "hideNoMagnet",
-      "hideCensored",
-      "enableHistory",
-      "hideViewed",
-      "enableFollows",
-      "loadExtraPreviews",
-      "enableQuickBar",
-      "enableMagnets",
-      "enableExternalLinks",
-      "enableActressName"
-    ];
-    boolKeys.forEach((key) => {
-      if (stored[key] !== void 0 && typeof stored[key] !== "boolean") {
-        stored[key] = Boolean(stored[key]);
-      }
-    });
-    const rawState = { ...defaults, ...stored };
-    const listeners = new Set();
-    const saveState = (data) => {
-      const { syncStatus: _syncStatus, ...toSave } = data;
-      Storage.set(Config.STORAGE_KEYS.SETTINGS, toSave);
-    };
-    const store = new Proxy(rawState, {
-      set(target, prop, value) {
-        target[prop] = value;
-        if (prop !== "syncStatus") {
-          saveState(target);
-        }
-        listeners.forEach((cb) => cb(prop, value));
-        return true;
-      }
-    });
-    return {
-      proxy: store,
-      on: (cb) => listeners.add(cb)
-    };
+  const CLOUDFLARE_INDICATORS = [
+    "Just a moment...",
+    "Checking your browser",
+    "Attention Required!",
+    "Cloudflare"
+  ];
+  const scriptRel = (function detectScriptRel() {
+    const relList = typeof document !== "undefined" && document.createElement("link").relList;
+    return relList && relList.supports && relList.supports("modulepreload") ? "modulepreload" : "preload";
   })();
-  const DEBUG_KEY = "fc2_enhanced_debug";
+  const assetsURL = function(dep) {
+    return "/" + dep;
+  };
+  const seen = {};
+  const __vitePreload = function preload(baseModule, deps, importerUrl) {
+    let promise = Promise.resolve();
+    if (deps && deps.length > 0) {
+      let allSettled2 = function(promises) {
+        return Promise.all(
+          promises.map(
+            (p) => Promise.resolve(p).then(
+              (value) => ({ status: "fulfilled", value }),
+              (reason) => ({ status: "rejected", reason })
+            )
+          )
+        );
+      };
+      document.getElementsByTagName("link");
+      const cspNonceMeta = document.querySelector(
+        "meta[property=csp-nonce]"
+      );
+      const cspNonce = cspNonceMeta?.nonce || cspNonceMeta?.getAttribute("nonce");
+      promise = allSettled2(
+        deps.map((dep) => {
+          dep = assetsURL(dep);
+          if (dep in seen) return;
+          seen[dep] = true;
+          const isCss = dep.endsWith(".css");
+          const cssSelector = isCss ? '[rel="stylesheet"]' : "";
+          if (document.querySelector(`link[href="${dep}"]${cssSelector}`)) {
+            return;
+          }
+          const link = document.createElement("link");
+          link.rel = isCss ? "stylesheet" : scriptRel;
+          if (!isCss) {
+            link.as = "script";
+          }
+          link.crossOrigin = "";
+          link.href = dep;
+          if (cspNonce) {
+            link.setAttribute("nonce", cspNonce);
+          }
+          document.head.appendChild(link);
+          if (isCss) {
+            return new Promise((res, rej) => {
+              link.addEventListener("load", res);
+              link.addEventListener(
+                "error",
+                () => rej(new Error(`Unable to preload CSS for ${dep}`))
+              );
+            });
+          }
+        })
+      );
+    }
+    function handlePreloadError(err) {
+      const e = new Event("vite:preloadError", {
+        cancelable: true
+      });
+      e.payload = err;
+      window.dispatchEvent(e);
+      if (!e.defaultPrevented) {
+        throw err;
+      }
+    }
+    return promise.then((res) => {
+      for (const item of res || []) {
+        if (item.status !== "rejected") continue;
+        handlePreloadError(item.reason);
+      }
+      return baseModule().catch(handlePreloadError);
+    });
+  };
+  const DEBUG_KEY = SYSTEM_KEYS.DEBUG_KEY;
+  const MAX_LOGS = SYSTEM_KEYS.MAX_LOGS;
+  const LOG_PREFIX = SYSTEM_KEYS.LOG_PREFIX;
   const Logger$1 = {
+    history: [],
+    _addHistory(level, module, message, data) {
+      const entry = {
+        timestamp: ( new Date()).toLocaleTimeString(),
+        level,
+        module,
+        message,
+        data
+      };
+      this.history.push(entry);
+      if (this.history.length > MAX_LOGS) {
+        this.history.shift();
+      }
+    },
 init() {
       if (this.enabled) {
         console.log(
-          "%c FC2PPVDB Enhanced %c v2.1.0 %c\n%c https://greasyfork.org/scripts/552583 ",
-          "background: #3b82f6; color: white; padding: 2px 4px; border-radius: 3px 0 0 3px; font-weight: bold;",
+          `%c ${SCRIPT_INFO.NAME} %c v${SCRIPT_INFO.VERSION} %c
+%c ${SCRIPT_INFO.GREASYFORK_URL} `,
+          `background: ${UI_TOKENS.COLORS.INFO}; color: white; padding: 2px 4px; border-radius: 3px 0 0 3px; font-weight: bold;`,
           "background: #353535; color: white; padding: 2px 4px; border-radius: 0 3px 3px 0;",
           "",
-          "color: #9ca3af; font-size: 11px; margin-top: 4px;"
+          `color: ${UI_TOKENS.COLORS.TEXT_DIM}; font-size: 11px; margin-top: 4px;`
         );
       }
     },
@@ -318,37 +341,49 @@ disable() {
         console.log("[FC2 Enhanced] Debug mode disabled");
       }
     },
-log(module, message, data) {
+debug(module, message, data) {
+      this._addHistory("debug", module, message, data);
       if (this.enabled) {
         const timestamp = ( new Date()).toLocaleTimeString();
-        console.log(`%c[FC2 Enhanced] %c[${timestamp}] [${module}]`, "color: #3b82f6; font-weight: bold;", "color: #9ca3af;", message, data || "");
+        console.debug(`%c${LOG_PREFIX} %c[${timestamp}] [${module}] ⚙️`, `color: ${UI_TOKENS.COLORS.DEBUG}; font-weight: bold;`, `color: ${UI_TOKENS.COLORS.TEXT_DIM};`, message, data || "");
+      }
+    },
+log(module, message, data) {
+      this._addHistory("log", module, message, data);
+      if (this.enabled) {
+        const timestamp = ( new Date()).toLocaleTimeString();
+        console.log(`%c${LOG_PREFIX} %c[${timestamp}] [${module}]`, `color: ${UI_TOKENS.COLORS.INFO}; font-weight: bold;`, `color: ${UI_TOKENS.COLORS.TEXT_DIM};`, message, data || "");
       }
     },
 info(module, message, data) {
+      this._addHistory("info", module, message, data);
       if (this.enabled) {
         const timestamp = ( new Date()).toLocaleTimeString();
-        console.info(`%c[FC2 Enhanced] %c[${timestamp}] [${module}] ℹ️`, "color: #3b82f6; font-weight: bold;", "color: #9ca3af;", message, data || "");
+        console.info(`%c${LOG_PREFIX} %c[${timestamp}] [${module}] ℹ️`, `color: ${UI_TOKENS.COLORS.INFO}; font-weight: bold;`, `color: ${UI_TOKENS.COLORS.TEXT_DIM};`, message, data || "");
       }
     },
 success(module, message, data) {
+      this._addHistory("success", module, message, data);
       if (this.enabled) {
         const timestamp = ( new Date()).toLocaleTimeString();
-        console.log(`%c[FC2 Enhanced] %c[${timestamp}] [${module}] ✅`, "color: #10b981; font-weight: bold;", "color: #9ca3af;", message, data || "");
+        console.log(`%c${LOG_PREFIX} %c[${timestamp}] [${module}] ✅`, `color: ${UI_TOKENS.COLORS.SUCCESS}; font-weight: bold;`, `color: ${UI_TOKENS.COLORS.TEXT_DIM};`, message, data || "");
       }
     },
 warn(module, message, data) {
+      this._addHistory("warn", module, message, data);
       if (this.enabled) {
         const timestamp = ( new Date()).toLocaleTimeString();
-        console.warn(`%c[FC2 Enhanced] %c[${timestamp}] [${module}] ⚠️`, "color: #f59e0b; font-weight: bold;", "color: #9ca3af;", message, data || "");
+        console.warn(`%c${LOG_PREFIX} %c[${timestamp}] [${module}] ⚠️`, `color: ${UI_TOKENS.COLORS.WARN}; font-weight: bold;`, `color: ${UI_TOKENS.COLORS.TEXT_DIM};`, message, data || "");
       }
     },
 error(module, message, error) {
+      this._addHistory("error", module, message, error);
       const timestamp = ( new Date()).toLocaleTimeString();
-      console.error(`%c[FC2 Enhanced] %c[${timestamp}] [${module}] ❌`, "color: #ef4444; font-weight: bold;", "color: #9ca3af;", message, error || "");
+      console.error(`%c${LOG_PREFIX} %c[${timestamp}] [${module}] ❌`, `color: ${UI_TOKENS.COLORS.ERROR}; font-weight: bold;`, `color: ${UI_TOKENS.COLORS.TEXT_DIM};`, message, error || "");
     },
 time(label) {
       if (this.enabled) {
-        console.time(`[FC2 Enhanced] ${label}`);
+        console.time(`${LOG_PREFIX} ${label}`);
       }
     },
 timeEnd(label) {
@@ -383,12 +418,18 @@ table(module, data) {
   class FC2Database extends Dexie {
     constructor() {
       super(DATABASE.NAME);
-      this.version(3).stores({
-        history: "&id, timestamp, updated_at, is_deleted, sync_dirty, [is_deleted+timestamp], [sync_dirty+updated_at]",
-        cache: "&id, timestamp, [timestamp+id]",
-        itemDetails: "&id, lastAccessed, [lastAccessed+id]"
-      }).upgrade(async (_tx) => {
-        Logger$1.info("Database", "Upgrading to version 3 - Adding composite indexes");
+      this.version(5).stores({
+        history: "&id, timestamp, status, updated_at, is_deleted, sync_dirty, [is_deleted+timestamp], [sync_dirty+updated_at], [status+is_deleted]",
+        cache: "&id, timestamp",
+        itemDetails: "&id, lastAccessed"
+      });
+      this.version(4).stores({
+        history: "&id, timestamp, status, updated_at, is_deleted, sync_dirty, [is_deleted+timestamp], [sync_dirty+updated_at], [status+is_deleted]",
+        cache: "&id, timestamp",
+        itemDetails: "&id, lastAccessed"
+      }).upgrade(async (tx) => {
+        Logger$1.info("Database", "Upgrading to version 4 - Adding status field");
+        return tx.table("history").toCollection().modify({ status: "watched" });
       });
       Logger$1.info("Database", `FC2EnhancedDB initialized (v${DATABASE.VERSION})`);
     }
@@ -440,19 +481,20 @@ table(module, data) {
   const Repository = {
     db,
     history: {
-      async add(id) {
+      async add(id, status = "watched") {
         Logger$1.time("History.add");
         const now = ( new Date()).toISOString();
         const item = {
           id: String(id),
           timestamp: Date.now(),
+          status,
           updated_at: now,
           is_deleted: 0,
           sync_dirty: 1
         };
         await db.history.put(item);
         qCache.invalidate();
-        Logger$1.success("History", `Added: ${id}`, item);
+        Logger$1.success("History", `Added: ${id} as ${status}`, item);
         Logger$1.timeEnd("History.add");
       },
       async getAll() {
@@ -466,6 +508,16 @@ table(module, data) {
         qCache.set("all", items);
         Logger$1.info("History", `Retrieved ${items.length} active items from DB`);
         Logger$1.timeEnd("History.getAll");
+        return items;
+      },
+      async getByStatus(status) {
+        const cached = qCache.get(`status_${status}`);
+        if (cached) return cached;
+        Logger$1.time(`History.getByStatus(${status})`);
+        const items = await db.history.where({ status, is_deleted: 0 }).toArray();
+        qCache.set(`status_${status}`, items);
+        Logger$1.info("History", `Retrieved ${items.length} ${status} items from DB`);
+        Logger$1.timeEnd(`History.getByStatus(${status})`);
         return items;
       },
       async getKeys() {
@@ -588,18 +640,289 @@ table(module, data) {
     }
   };
   const CacheManager = Repository.cache;
+  const Config = {
+    EXTERNAL_URLS,
+    SCRAPER_URLS,
+    SCRAPER_CONFIG,
+    STORAGE_KEYS,
+    TIMEOUTS: { API: 2e4, VIDEO_LOAD: 5e3, SYNC_DEBOUNCE: 2e3 },
+    CLASSES: {
+      cardRebuilt: "card-rebuilt",
+      processedCard: "processed-card",
+      hideNoMagnet: "hide-no-magnet",
+      videoPreviewContainer: "video-preview-container",
+      staticPreview: "static-preview",
+      previewElement: "preview-element",
+      hidden: "hidden",
+      infoArea: "info-area",
+      customTitle: "custom-card-title",
+      fc2IdBadge: "fc2-id-badge",
+      badgeCopied: "copied",
+      preservedIconsContainer: "preserved-icons-container",
+      resourceLinksContainer: "resource-links-container",
+      resourceBtn: "resource-btn",
+      btnLoading: "is-loading",
+      btnMagnet: "magnet",
+      tooltip: "tooltip",
+      buttonText: "button-text",
+      extraPreviewContainer: "preview-container",
+      extraPreviewTitle: "preview-title",
+      extraPreviewGrid: "preview-grid",
+      isCensored: "is-censored",
+      hideCensored: "hide-censored",
+      isViewed: "is-viewed",
+      hideViewed: "hide-viewed",
+      isWanted: "is-wanted",
+      isDownloaded: "is-downloaded",
+      isBlocked: "is-blocked",
+      hideBlocked: "hide-blocked"
+    },
+    CACHE_EXPIRATION_DAYS: 14,
+    COPIED_BADGE_DURATION: 1500
+  };
+  const Storage = {
+    get: (key, def) => typeof GM_getValue !== "undefined" ? GM_getValue(key, def) : def,
+    set: (key, val) => {
+      if (typeof GM_setValue !== "undefined") GM_setValue(key, val);
+    },
+    delete: (key) => {
+      if (typeof GM_deleteValue !== "undefined") GM_deleteValue(key);
+    }
+  };
+  const Utils = {
+    debounce: (func, delay) => {
+      let t2;
+      return (...a) => {
+        if (t2) clearTimeout(t2);
+        t2 = setTimeout(() => func(...a), delay);
+      };
+    },
+    chunk: (arr, size) => Array.from({ length: Math.ceil(arr.length / size) }, (_, i) => arr.slice(i * size, i * size + size)),
+    sleep: (ms) => new Promise((res) => setTimeout(res, ms)),
+    copyToClipboard: (text) => {
+      if (typeof GM_setClipboard !== "undefined") GM_setClipboard(text);
+    },
+    extractFC2Id: (url) => url?.match(/(?:articles\/|fc2-ppv-|fc2-)(\d+)/i)?.[1] ?? null,
+    parseVideoId: (text, url = "") => {
+      const input = (text + " " + url).replace(/[+\s_]/g, "-").toUpperCase();
+      const fc2Prefix = input.match(/(?:FC2[^\d]*PPV[^\d]*|FC2-)(\d{5,8})/i);
+      if (fc2Prefix) return { id: fc2Prefix[1], type: "fc2" };
+      const fc2FromUrl = Utils.extractFC2Id(url);
+      if (fc2FromUrl) return { id: fc2FromUrl, type: "fc2" };
+      const dateMatch = input.match(/(\d{6,8})-(\d{1,4})/);
+      if (dateMatch) {
+        const studios = STUDIOS;
+        const studioKey = studios.find((x) => input.includes(x));
+        if (studioKey) {
+          const datePart = dateMatch[1];
+          const seqPart = dateMatch[2];
+          const studioIdMap = STUDIO_ID_MAP;
+          const sid = studioIdMap[studioKey] || studioKey;
+          const slugMap = PREVIEW_SLUG_MAP;
+          const previewSlug = slugMap[sid] ? `${slugMap[sid]}-${datePart}_${seqPart}` : null;
+          return { id: `${datePart}-${seqPart}-${sid}`, type: "jav", previewSlug };
+        }
+        return { id: `${dateMatch[1]}-${dateMatch[2]}`, type: "jav" };
+      }
+      const jav = input.match(/([A-Z]{2,10})-?(\d{2,8})/);
+      if (jav) {
+        const prefix = jav[1];
+        const lowerUrl = url.toLowerCase();
+        const lowerInput = input.toLowerCase();
+        if (prefix === "DM" && (lowerUrl.includes("/dm") || lowerInput.includes("/dm"))) return null;
+        if (["PAGE", "LIST", "NEW", "BEST"].includes(prefix)) return null;
+        const blacklist = JAV_PREFIX_BLACKLIST;
+        if (!blacklist.includes(prefix)) {
+          return { id: `${prefix}-${jav[2]}`, type: "jav" };
+        }
+      }
+      const fc2Raw = input.match(/(?:^|[^A-Z0-9])(\d{5,10})(?:$|[^A-Z0-9])/);
+      if (fc2Raw) return { id: fc2Raw[1], type: "fc2" };
+      return null;
+    },
+    cleanActressName: (name) => {
+      if (!name) return null;
+      const n = name.trim();
+      const blacklist = ACTRESS_BLACKLIST;
+      if (blacklist.some((reg) => reg.test(n))) return null;
+      if (n.length > VALIDATION.ACTRESS_NAME_MAX_LENGTH || n.length < VALIDATION.ACTRESS_NAME_MIN_LENGTH) return null;
+      return n;
+    },
+    formatDate: (dateStr) => {
+      if (!dateStr) return "";
+      try {
+        const date = new Date(dateStr);
+        if (isNaN(date.getTime())) return dateStr;
+        return date.toLocaleDateString(void 0, {
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit"
+        });
+      } catch (e) {
+        return dateStr;
+      }
+    },
+    cleanImageUrl: (url) => {
+      if (!url) return url;
+      return url.replace(/!\d+x\d+\.(jpg|jpeg|png|webp)/gi, "");
+    }
+  };
+  var AppEvents = ((AppEvents2) => {
+    AppEvents2["BOOTSTRAP"] = "app:bootstrap";
+    AppEvents2["SERVICES_READY"] = "app:services-ready";
+    AppEvents2["UI_READY"] = "app:ui-ready";
+    AppEvents2["STATE_CHANGED"] = "app:state-changed";
+    AppEvents2["THEME_CHANGED"] = "ui:theme-changed";
+    AppEvents2["LANGUAGE_CHANGED"] = "ui:language-changed";
+    AppEvents2["GRID_CHANGED"] = "ui:grid-changed";
+    AppEvents2["SYNC_STATUS_CHANGED"] = "sync:status-changed";
+    AppEvents2["HISTORY_LOADED"] = "history:loaded";
+    return AppEvents2;
+  })(AppEvents || {});
+  const CoreEvents = (() => {
+    const handlers = new Map();
+    return {
+on(event, handler) {
+        if (!handlers.has(event)) {
+          handlers.set(event, new Set());
+        }
+        handlers.get(event).add(handler);
+        return () => this.off(event, handler);
+      },
+off(event, handler) {
+        const handlersSet = handlers.get(event);
+        if (handlersSet) {
+          handlersSet.delete(handler);
+        }
+      },
+emit(event, data) {
+        Logger$1.debug("CoreEvents", `Emit: ${event}`, data);
+        const handlersSet = handlers.get(event);
+        if (handlersSet) {
+          handlersSet.forEach((handler) => {
+            try {
+              handler(data);
+            } catch (e) {
+              Logger$1.error("CoreEvents", `Error in handler for ${event}`, e);
+            }
+          });
+        }
+      }
+    };
+  })();
+  const State = (() => {
+    const defaults = {
+      previewMode: "static",
+      hideNoMagnet: false,
+      hideCensored: false,
+      enableHistory: true,
+      hideViewed: false,
+      enableFollows: false,
+      loadExtraPreviews: false,
+      enableQuickBar: true,
+      enableMagnets: true,
+      enableExternalLinks: true,
+      enableActressName: true,
+hideBlocked: true,
+language: Storage.get("language", "auto") || "auto",
+      lastSyncTs: UI_CONSTANTS.DEFAULT_TIMESTAMP,
+      supabaseUrl: Storage.get("supabase_url", "") || "",
+      supabaseKey: Storage.get("supabase_key", "") || "",
+      webdavUrl: Storage.get("webdav_url", "") || "",
+      webdavUser: Storage.get("webdav_user", "") || "",
+      webdavPass: Storage.get("webdav_pass", "") || "",
+      webdavPath: Storage.get("webdav_path", UI_CONSTANTS.DEFAULT_SYNC_FILENAME) || UI_CONSTANTS.DEFAULT_SYNC_FILENAME,
+      syncMode: Storage.get("sync_mode", "none") || "none",
+      syncStatus: "idle",
+      syncInterval: 5,
+      replaceFc2Covers: false
+    };
+    const stored = Storage.get(Config.STORAGE_KEYS.SETTINGS, {}) || {};
+    if (stored.previewMode && !["static", "hover"].includes(stored.previewMode)) {
+      stored.previewMode = defaults.previewMode;
+    }
+    const boolKeys = [
+      "hideNoMagnet",
+      "hideCensored",
+      "enableHistory",
+      "hideViewed",
+      "enableFollows",
+      "loadExtraPreviews",
+      "enableQuickBar",
+      "enableMagnets",
+      "enableExternalLinks",
+      "enableActressName",
+      "hideBlocked",
+      "replaceFc2Covers"
+    ];
+    boolKeys.forEach((key) => {
+      if (stored[key] !== void 0 && typeof stored[key] !== "boolean") {
+        stored[key] = Boolean(stored[key]);
+      }
+    });
+    const rawState = { ...defaults, ...stored };
+    let skipBroadcast = false;
+    const saveState = (data) => {
+      const { syncStatus: _syncStatus, ...toSave } = data;
+      Storage.set(Config.STORAGE_KEYS.SETTINGS, toSave);
+    };
+    const store = new Proxy(rawState, {
+      set(target, prop, value) {
+        if (target[prop] === value) return true;
+        target[prop] = value;
+        if (prop !== "syncStatus") {
+          saveState(target);
+          if (!skipBroadcast) {
+            __vitePreload(async () => {
+              const { MessagingService: MessagingService2, MessageType: MessageType2 } = await Promise.resolve().then(() => MessagingService$1);
+              return { MessagingService: MessagingService2, MessageType: MessageType2 };
+            }, void 0 ).then(({ MessagingService: MessagingService2, MessageType: MessageType2 }) => {
+              MessagingService2.broadcast(MessageType2.SETTING_UPDATE, { prop, value });
+            });
+          }
+        }
+        CoreEvents.emit(AppEvents.STATE_CHANGED, { prop, value });
+        if (prop === "language") CoreEvents.emit(AppEvents.LANGUAGE_CHANGED, value);
+        return true;
+      }
+    });
+    __vitePreload(async () => {
+      const { MessagingService: MessagingService2, MessageType: MessageType2 } = await Promise.resolve().then(() => MessagingService$1);
+      return { MessagingService: MessagingService2, MessageType: MessageType2 };
+    }, void 0 ).then(({ MessagingService: MessagingService2, MessageType: MessageType2 }) => {
+      MessagingService2.onMessage((msg) => {
+        if (msg.type === MessageType2.SETTING_UPDATE) {
+          const { prop, value } = msg.payload;
+          if (store[prop] !== value) {
+            Logger$1.info("State", `Syncing setting ${prop} from other tab`);
+            skipBroadcast = true;
+            store[prop] = value;
+            skipBroadcast = false;
+          }
+        }
+      });
+    });
+    return {
+      proxy: store,
+on: (cb) => {
+        return CoreEvents.on(AppEvents.STATE_CHANGED, ({ prop, value }) => cb(prop, value));
+      }
+    };
+  })();
   const translations = {
     zh: {
-      settingsTitle: "FC2PPVDB Enhanced",
+      settingsTitle: SCRIPT_INFO.NAME,
       tabSettings: "偏好设置",
       tabStatistics: "统计与分析",
       tabData: "数据管理",
       tabAbout: "关于",
+      tabDebug: "运行日志",
       tabDmca: "免责声明",
       groupFilters: "内容过滤",
       optionHideNoMagnet: "过滤无磁力资源",
-      optionHideCensored: "过滤有码作品 (Free)",
+      optionHideCensored: "过滤有码作品",
       optionHideViewed: "过滤已阅作品",
+      optionHideBlocked: "隐藏已屏蔽内容",
       groupAppearance: "界面与交互",
       labelPreviewMode: "预览模式",
       previewModeStatic: "静态封面",
@@ -617,6 +940,7 @@ table(module, data) {
       optionEnableMagnets: "启用磁力链接搜索",
       optionEnableExternalLinks: "显示外部资源跳转按钮",
       optionEnableActressName: "显示演员名称",
+      optionReplaceFc2Covers: "替换 FC2PPVDB 封面",
       labelCacheManagement: "存储维护",
       btnClearCache: "清空磁力缓存",
       labelHistoryManagement: "历史记录",
@@ -625,6 +949,8 @@ table(module, data) {
       alertSettingsSaved: "设置已保存并生效",
       alertCacheCleared: "磁力缓存已释放",
       alertHistoryCleared: "浏览历史已清空",
+      alertMarkedWanted: "已加入收藏",
+      alertMarkedBlocked: "已屏蔽作品",
       menuOpenSettings: "⚙️ 脚本设置",
       tooltipCopyMagnet: "复制磁力",
       tooltipCopied: "已复制",
@@ -641,6 +967,10 @@ table(module, data) {
       alertImportError: "恢复失败：文件格式错误",
       tooltipMarkAsViewed: "标为已阅",
       tooltipMarkAsUnviewed: "标为未阅",
+      tooltipMarkAsWanted: "收藏作品",
+      tooltipMarkAsUnwanted: "取消收藏",
+      tooltipMarkAsBlocked: "屏蔽作品",
+      tooltipMarkAsUnblocked: "解除屏蔽",
       confirmResetDatabase: "危险操作：将清除所有历史和设置。确认重置？",
       alertDatabaseReset: "重置完成，即将刷新",
       groupWebDAV: "WebDAV 云同步",
@@ -663,6 +993,14 @@ table(module, data) {
       labelNever: "从未",
       labelSyncing: "正在同步...",
       alertSyncConflict: "发现云端数据更新",
+      alertSyncLockActive: "其他标签页正在同步，请稍候",
+      labelSyncInterval: "自动同步间隔",
+      syncInterval0: "实时 (无限制)",
+      syncInterval2: "2 分钟",
+      syncInterval5: "5 分钟 (推荐)",
+      syncInterval10: "10 分钟",
+      syncInterval30: "30 分钟",
+      syncIntervalManual: "仅手动",
       labelConflictTitle: "数据版本冲突",
       labelConflictDesc: "云端文件比本地更新。请选择合并策略：",
       btnMergeSync: "智能合并",
@@ -690,31 +1028,68 @@ table(module, data) {
       aboutLinks: "友情链接",
       aboutVersion: "当前版本",
       navExtraPreviews: "画廊",
+      labelTechnicalLogs: "运行日志",
+      btnCopy: "复制",
+      btnCopyAll: "复制全部",
+      btnClearLogs: "清空",
+      alertLogsCopied: "日志已复制到剪贴板",
+      labelLogFilters: "筛选",
       tooltipClickToCopy: "点击复制",
       btnCancel: "取消",
       btnSave: "保存更改",
       btnBackToTop: "顶部",
       labelDebugMode: "调试模式",
-      statusDebugOn: "调试中",
-      statusDebugOff: "正常",
-      alertDebugOn: "已开启调试日志",
-      alertDebugOff: "已关闭调试日志",
+      statusDebugOn: "已开启",
+      statusDebugOff: "已关闭",
+      alertDebugOn: "已开启调试模式 (可在运行日志查看)",
+      alertDebugOff: "已关闭调试模式",
+      groupExternalImport: "外部数据导入",
+      btnImportFromJavDB: "从 JavDB 导入历史",
+      alertImportingJavDB: "正在从 JavDB 抓取存量数据 (已看/想看)，请稍候...",
       alertMarkedViewed: "已标记",
       tooltipCopyId: "复制番号",
       verifyCF: "点击验证 CF",
-      dmcaContent: "本脚本仅为辅助工具，<b>不存储任何视频或图片文件</b>。所有内容（包括图片、磁力链接等）均来自第三方公开网站。使用者需自行承担因使用本工具产生的一切法律后果。如果本工具展示的内容侵犯了您的权利，请直接联系内容来源网站进行删除。"
+      dmcaContent: "本脚本仅为辅助工具，<b>不存储任何视频或图片文件</b>。所有内容（包括图片、磁力链接等）均来自第三方公开网站。使用者需自行承担因使用本工具产生的一切法律后果。如果本工具展示的内容侵犯了您的权利，请直接联系内容来源网站进行删除。",
+      confirmReloadSettings: "部分设置需要刷新页面才能生效,是否立即刷新?",
+      errorWebDAVUrl: "URL 必须以 http:// 或 https:// 开头",
+      btnPushPull: "同步 (Push/Pull)",
+      btnLogData: "数据详情",
+      labelLogData: "日志数据",
+      labelDisclaimer: "免责条款",
+      labelGreasyFork: "脚本主页",
+      labelHidden: "隐藏",
+      labelVisible: "显示",
+      shortcutFocusSearch: "聚焦搜索",
+      shortcutOpenSettings: "打开设置",
+      shortcutToggleViewed: "切换隐藏已看",
+      shortcutToggleMagnet: "切换隐藏无磁力",
+      shortcutToggleCensored: "切换隐藏有码",
+      shortcutReload: "刷新页面",
+      shortcutHelp: "显示快捷键帮助",
+      shortcutCloseModal: "关闭模态窗口",
+      labelShortcutsTitle: "键盘快捷键",
+      labelShortcutKey: "快捷键",
+      labelShortcutAction: "功能",
+      statusViewed: "已看内容",
+      statusNoMagnet: "无磁力内容",
+      statusCensored: "有码内容",
+      labelLoading: "加载中...",
+      alertLoggedOut: "已退出登录",
+      alertUserIdMissing: "同步失败：缺少用户 ID，请重新登录"
     },
     en: {
-      settingsTitle: "FC2PPVDB Enhanced",
+      settingsTitle: SCRIPT_INFO.NAME,
       tabSettings: "Preferences",
       tabStatistics: "Analytics",
       tabData: "Data & Sync",
       tabAbout: "About",
+      tabDebug: "Technical Logs",
       tabDmca: "Disclaimer",
       groupFilters: "Filters",
       optionHideNoMagnet: "Filter No-Magnet",
       optionHideCensored: "Filter Censored",
       optionHideViewed: "Filter Viewed",
+      optionHideBlocked: "Filter Blocked",
       groupAppearance: "Appearance",
       labelPreviewMode: "Preview Mode",
       previewModeStatic: "Static Cover",
@@ -732,6 +1107,7 @@ table(module, data) {
       optionEnableMagnets: "Enable Magnet Search",
       optionEnableExternalLinks: "Show External Links",
       optionEnableActressName: "Show Actress Name",
+      optionReplaceFc2Covers: "Replace FC2PPVDB Covers",
       labelCacheManagement: "Storage",
       btnClearCache: "Clear Magnet Cache",
       labelHistoryManagement: "History",
@@ -755,7 +1131,11 @@ table(module, data) {
       alertImportSuccess: "Restore successful, refreshing...",
       alertImportError: "Restore failed: Invalid file",
       tooltipMarkAsViewed: "Mark viewed",
-      tooltipMarkAsUnviewed: "Unmark",
+      tooltipMarkAsUnviewed: "Unmark viewed",
+      tooltipMarkAsWanted: "Add to Wanted",
+      tooltipMarkAsUnwanted: "Remove from Wanted",
+      tooltipMarkAsBlocked: "Block this",
+      tooltipMarkAsUnblocked: "Unblock this",
       confirmResetDatabase: "Danger: Delete ALL data and settings?",
       alertDatabaseReset: "Reset complete",
       groupWebDAV: "WebDAV Sync",
@@ -778,6 +1158,14 @@ table(module, data) {
       labelNever: "Never",
       labelSyncing: "Syncing...",
       alertSyncConflict: "Remote Update Detected",
+      alertSyncLockActive: "Sync in progress in another tab...",
+      labelSyncInterval: "Auto-Sync Interval",
+      syncInterval0: "Real-time (No limit)",
+      syncInterval2: "2 minutes",
+      syncInterval5: "5 minutes (Recommended)",
+      syncInterval10: "10 minutes",
+      syncInterval30: "30 minutes",
+      syncIntervalManual: "Manual only",
       labelConflictTitle: "Conflict",
       labelConflictDesc: "Remote data is newer. Strategy:",
       btnMergeSync: "Merge",
@@ -805,6 +1193,12 @@ table(module, data) {
       aboutLinks: "Links",
       aboutVersion: "Version",
       navExtraPreviews: "Gallery",
+      labelTechnicalLogs: "Technical Logs",
+      btnCopy: "Copy",
+      btnCopyAll: "Copy All",
+      btnClearLogs: "Clear",
+      alertLogsCopied: "Logs copied to clipboard",
+      labelLogFilters: "Filters",
       tooltipClickToCopy: "Copy",
       btnCancel: "Cancel",
       btnSave: "Save",
@@ -814,21 +1208,76 @@ table(module, data) {
       statusDebugOff: "Normal",
       alertDebugOn: "Debug Enabled",
       alertDebugOff: "Debug Disabled",
+      groupExternalImport: "External Import",
+      btnImportFromJavDB: "Import from JavDB",
+      alertImportingJavDB: "Importing stocks from JavDB (Watched/Wanted), please wait...",
       alertMarkedViewed: "Marked",
       tooltipCopyId: "Copy ID",
       verifyCF: "Verify CF",
-      dmcaContent: "This script is a utility tool and <b>does NOT host any video or image files</b>. All content (including images, magnet links) is provided by third-party public public websites. Users assume full responsibility for using this tool. If content displayed by this tool infringes your rights, please contact the source website directly for removal."
+      dmcaContent: "This script is a utility tool and <b>does NOT host any video or image files</b>. All content (including images, magnet links) is provided by third-party public public websites. Users assume full responsibility for using this tool. If content displayed by this tool infringes your rights, please contact the source website directly for removal.",
+      confirmReloadSettings: "Some settings require a reload to take effect. Reload now?",
+      errorWebDAVUrl: "URL must start with http:// or https://",
+      btnPushPull: "Push/Pull",
+      btnLogData: "Data",
+      labelLogData: "Log Data",
+      labelDisclaimer: "Disclaimer",
+      labelGreasyFork: "Greasy Fork",
+      labelHidden: "Hidden",
+      labelVisible: "Visible",
+      shortcutFocusSearch: "Focus Search",
+      shortcutOpenSettings: "Open Settings",
+      shortcutToggleViewed: "Toggle Viewed",
+      shortcutToggleMagnet: "Toggle No-Magnet",
+      shortcutToggleCensored: "Toggle Censored",
+      shortcutReload: "Reload Page",
+      shortcutHelp: "Show Shortcuts Help",
+      shortcutCloseModal: "Close Modal",
+      labelShortcutsTitle: "Keyboard Shortcuts",
+      labelShortcutKey: "Shortcut",
+      labelShortcutAction: "Action",
+      statusViewed: "Viewed Content",
+      statusNoMagnet: "No-Magnet Content",
+      statusCensored: "Censored Content",
+      labelLoading: "Loading...",
+      alertLoggedOut: "Logged out",
+      alertUserIdMissing: "Sync failed: User ID missing. Please login again."
     }
   };
   const Localization = {
     _translations: translations,
-    t(key) {
+t(key, params) {
       const lang = State.proxy.language === "auto" ? navigator.language.startsWith("zh") ? "zh" : "en" : State.proxy.language;
-      const currentLangSet = this._translations[lang] || this._translations.en;
-      return currentLangSet[key] || this._translations.en[key] || key;
+      const set = this._translations[lang] || this._translations.en;
+      let value = this.resolvePath(set, key) || this.resolvePath(this._translations.en, key) || key;
+      if (params && typeof value === "string") {
+        Object.entries(params).forEach(([k, v]) => {
+          value = value.replace(new RegExp(`{${k}}`, "g"), String(v));
+        });
+      }
+      return value;
+    },
+resolvePath(obj, path) {
+      try {
+        return path.split(".").reduce((prev, curr) => prev?.[curr], obj) ?? null;
+      } catch {
+        return null;
+      }
+    },
+register(lang, newTranslations) {
+      if (!this._translations[lang]) this._translations[lang] = {};
+      this.deepMerge(this._translations[lang], newTranslations);
+    },
+    deepMerge(target, source) {
+      for (const key in source) {
+        if (source[key] instanceof Object && key in target) {
+          Object.assign(source[key], this.deepMerge(target[key], source[key]));
+        }
+      }
+      Object.assign(target || {}, source);
+      return target;
     }
   };
-  const t = Localization.t.bind(Localization);
+  const t = (key, params) => Localization.t(key, params);
   const h = (tag, props = {}, ...children) => {
     const el = document.createElement(tag);
     for (const [key, val] of Object.entries(props)) {
@@ -881,6 +1330,7 @@ table(module, data) {
   const IconListUl = '<svg viewBox="0 0 512 512" width="1.2em" height="1.2em" fill="currentColor"><path fill="currentColor" d="M64 144a48 48 0 1 0 0-96a48 48 0 1 0 0 96m128-80c-17.7 0-32 14.3-32 32s14.3 32 32 32h288c17.7 0 32-14.3 32-32s-14.3-32-32-32zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32h288c17.7 0 32-14.3 32-32s-14.3-32-32-32zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32h288c17.7 0 32-14.3 32-32s-14.3-32-32-32zM64 464a48 48 0 1 0 0-96a48 48 0 1 0 0 96m48-208a48 48 0 1 0-96 0a48 48 0 1 0 96 0"/></svg>';
   const IconServer = '<svg viewBox="0 0 512 512" width="1.2em" height="1.2em" fill="currentColor"><path fill="currentColor" d="M64 32C28.7 32 0 60.7 0 96v64c0 35.3 28.7 64 64 64h384c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64zm280 72a24 24 0 1 1 0 48a24 24 0 1 1 0-48m48 24a24 24 0 1 1 48 0a24 24 0 1 1-48 0M64 288c-35.3 0-64 28.7-64 64v64c0 35.3 28.7 64 64 64h384c35.3 0 64-28.7 64-64v-64c0-35.3-28.7-64-64-64zm280 72a24 24 0 1 1 0 48a24 24 0 1 1 0-48m56 24a24 24 0 1 1 48 0a24 24 0 1 1-48 0"/></svg>';
   const IconMagnifyingGlass = '<svg viewBox="0 0 512 512" width="1.2em" height="1.2em" fill="currentColor"><path fill="currentColor" d="M416 208c0 45.9-14.9 88.3-40 122.7l126.6 126.7c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0s208 93.1 208 208M208 352a144 144 0 1 0 0-288a144 144 0 1 0 0 288"/></svg>';
+  const IconStar = '<svg viewBox="0 0 576 512" width="1.2em" height="1.2em" fill="currentColor"><path fill="currentColor" d="M316.9 18L256 126.3L195.1 18c-11.7-20.7-41.5-20.7-53.2 0l-57.8 102.3l-114.7 16c-23.7 3.3-33.2 32.4-16 49.3L42 278.4l-22.1 128.8c-4 23.3 20.6 41.2 41.6 30.2L160 374l98.5 63.3c20.9 11 45.6-7 41.6-30.2L278 278.4l88.7-92.8c17.2-16.9 7.7-46-16-49.3l-114.7-16L178.2 18c-11.7-20.7-41.5-20.7-53.2 0z"/></svg>';
   const UIUtils = {
     h,
     icon: (svgContent, className = "") => {
@@ -897,18 +1347,25 @@ table(module, data) {
         btn.dataset.copied = "false";
       }, 1500);
     },
-    markViewed: (id, el, applyHistoryVisibility) => {
+    markByStatus: (id, status, el, applyVisibility) => {
       if (!State.proxy.enableHistory) return;
-      HistoryManager.add(id);
-      const c = el.closest(`.${Config.CLASSES.processedCard}`);
+      HistoryManager.add(id, status);
+      const c = el.closest(`.${Config.CLASSES.processedCard}`) || el;
       if (c) {
-        c.classList.add(Config.CLASSES.isViewed);
+        if (status === "blocked") {
+          c.classList.add(Config.CLASSES.isBlocked);
+        } else if (status === "wanted") {
+          c.classList.add(Config.CLASSES.isWanted);
+        } else if (status === "downloaded") {
+          c.classList.add(Config.CLASSES.isDownloaded);
+        } else {
+          c.classList.add(Config.CLASSES.isViewed);
+        }
         const vBtn = c.querySelector(".btn-toggle-view");
-        if (vBtn) vBtn.classList.add("is-viewed");
-        const oc = c.closest(`.${Config.CLASSES.cardRebuilt}`);
+        if (vBtn && status === "watched") vBtn.classList.add("is-viewed");
+        const oc = c.classList.contains(Config.CLASSES.cardRebuilt) ? c : c.closest(`.${Config.CLASSES.cardRebuilt}`);
         if (oc) {
-          oc.classList.add(Config.CLASSES.isViewed);
-          applyHistoryVisibility(oc);
+          applyVisibility(oc);
         }
       }
     },
@@ -935,10 +1392,18 @@ table(module, data) {
         isSupjav && State.proxy.hideCensored && c.classList.contains(Config.CLASSES.isCensored)
       );
     },
-    applyHistoryVisibility: (c) => c?.classList.toggle(
-      Config.CLASSES.hideViewed,
-      State.proxy.hideViewed && c.classList.contains(Config.CLASSES.isViewed)
-    )
+    applyHistoryVisibility: (c) => {
+      if (!c) return;
+      const isSearchPage = location.pathname.includes("/search") || location.search.includes("search") || location.search.includes("q=") || location.pathname.includes("/cn/search") || location.pathname.includes("/en/search") || location.pathname.includes("/ja/search");
+      c.classList.toggle(
+        Config.CLASSES.hideViewed,
+        !isSearchPage && State.proxy.hideViewed && c.classList.contains(Config.CLASSES.isViewed)
+      );
+      c.classList.toggle(
+        Config.CLASSES.hideBlocked,
+        c.classList.contains(Config.CLASSES.isBlocked)
+      );
+    }
   };
   const Toast$1 = {
     container: null,
@@ -954,10 +1419,10 @@ table(module, data) {
       const showClose = options.showClose ?? true;
       const iconSvg = type === "success" ? IconCircleCheck : type === "error" ? IconCircleXmark : type === "warn" ? IconTriangleExclamation : IconCircleInfo;
       const colorMap = {
-        success: "#10b981",
-        error: "#ef4444",
-        warn: "#f59e0b",
-        info: "#3b82f6"
+        success: UI_TOKENS.COLORS.SUCCESS,
+        error: UI_TOKENS.COLORS.ERROR,
+        warn: UI_TOKENS.COLORS.WARN,
+        info: UI_TOKENS.COLORS.INFO
       };
       const color = colorMap[type];
       const progress = duration > 0 ? h("div", {
@@ -976,14 +1441,15 @@ table(module, data) {
       const closeIcon = UIUtils.icon(IconXmark);
       const closeBtn = showClose ? h("button", {
         className: "fc2-toast-close",
+        "aria-label": "关闭",
         style: {
           background: "none",
           border: "none",
-          color: "rgba(255,255,255,0.4)",
+          color: UI_TOKENS.COLORS.TEXT_DIM,
           cursor: "pointer",
-          padding: "0 4px",
+          padding: `0 ${UI_TOKENS.SPACING.XS}`,
           fontSize: "14px",
-          marginLeft: "8px",
+          marginLeft: UI_TOKENS.SPACING.SM,
           transition: "color 0.2s",
           display: "flex",
           alignItems: "center"
@@ -992,14 +1458,14 @@ table(module, data) {
           e.stopPropagation();
           this.remove(el);
         },
-        onmouseenter: (e) => e.target.style.color = "#fff",
-        onmouseleave: (e) => e.target.style.color = "rgba(255,255,255,0.4)"
+        onmouseenter: (e) => e.target.style.color = UI_TOKENS.COLORS.WHITE,
+        onmouseleave: (e) => e.target.style.color = UI_TOKENS.COLORS.TEXT_DIM
       }, closeIcon) : null;
       const mainIconContainer = UIUtils.icon(iconSvg);
       Object.assign(mainIconContainer.style, {
         color,
         fontSize: "18px",
-        marginRight: "12px",
+        marginRight: UI_TOKENS.SPACING.MD,
         flexShrink: "0"
       });
       const el = h(
@@ -1012,13 +1478,13 @@ table(module, data) {
             overflow: "hidden",
             display: "flex",
             alignItems: "center",
-            padding: "12px 16px",
-            marginBottom: "10px",
-            borderRadius: "8px",
-            background: "rgba(20, 20, 25, 0.95)",
-            backdropFilter: "blur(12px)",
-            boxShadow: "0 8px 16px rgba(0,0,0,0.4)",
-            color: "#fff",
+            padding: `${UI_TOKENS.SPACING.MD} ${UI_TOKENS.SPACING.LG}`,
+            marginBottom: UI_TOKENS.SPACING.SM,
+            borderRadius: UI_TOKENS.RADIUS.MD,
+            background: UI_TOKENS.BACKDROP.COLOR,
+            backdropFilter: `blur(${UI_TOKENS.BACKDROP.BLUR})`,
+            boxShadow: UI_TOKENS.BACKDROP.SHADOW,
+            color: UI_TOKENS.COLORS.WHITE,
             transform: "translateX(100%)",
             transition: "all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
             opacity: "0",
@@ -1090,18 +1556,13 @@ table(module, data) {
     let isSyncing = false;
     let needsRetry = false;
     let _onProgress = null;
-    const logout = (silent = false) => {
-      ["sync_user_id", "supabase_jwt", "supabase_refresh_token", "current_user_email", "last_sync_ts"].forEach(
-        (k) => GM_deleteValue(k)
-      );
-      if (!silent) {
-        Toast$1.show(t("langZh") === "简体中文" ? "已退出登录" : "Logged out", "success");
-        setTimeout(() => location.reload(), 800);
-      }
+    const _getSupabaseConfig = () => {
+      const url = GM_getValue(STORAGE_KEYS.SUPABASE_URL) || "";
+      const key = GM_getValue(STORAGE_KEYS.SUPABASE_KEY) || "";
+      return { url, key };
     };
-    const api = (method, endpoint, body = null, headers = {}) => {
-      const url = GM_getValue("supabase_url") || "";
-      const key = GM_getValue("supabase_key") || "";
+    const _request = async (endpoint, method, body = null, headers = {}) => {
+      const { url, key } = _getSupabaseConfig();
       if (!url || !key) return Promise.reject("No Supabase config");
       if (!url.startsWith("http")) {
         return Promise.reject(`Invalid Supabase URL: ${url}. Please ensure it starts with https://`);
@@ -1112,30 +1573,41 @@ table(module, data) {
         data: body
       });
     };
-    const getToken = async () => {
-      if (!GM_getValue("supabase_url") || !GM_getValue("supabase_key")) return null;
-      const jwt = GM_getValue("supabase_jwt");
+    const _getAuthHeader = async () => {
+      const { url, key } = _getSupabaseConfig();
+      if (!url || !key) return null;
+      const jwt = GM_getValue(STORAGE_KEYS.SUPABASE_JWT);
       if (jwt) {
         try {
-          if (JSON.parse(atob(jwt.split(".")[1])).exp * 1e3 > Date.now() + 6e4) return jwt;
+          if (JSON.parse(atob(jwt.split(".")[1])).exp * 1e3 > Date.now() + 6e4) return `Bearer ${jwt}`;
         } catch (e) {
         }
       }
-      const refresh = GM_getValue("supabase_refresh_token");
+      const refresh = GM_getValue(STORAGE_KEYS.SUPABASE_REFRESH);
       if (!refresh) return null;
       try {
-        const data = await api("POST", "/auth/v1/token?grant_type=refresh_token", { refresh_token: refresh });
-        if (data.access_token) {
-          GM_setValue("sync_user_id", data.user.id);
-          GM_setValue("supabase_jwt", data.access_token);
-          GM_setValue("supabase_refresh_token", data.refresh_token);
-          GM_setValue("current_user_email", data.user.email);
-          return data.access_token;
+        const data = await _request("/auth/v1/token?grant_type=refresh_token", "POST", { refresh_token: refresh });
+        if (data && data.access_token) {
+          GM_setValue(STORAGE_KEYS.SYNC_USER_ID, data.user.id);
+          GM_setValue(STORAGE_KEYS.SUPABASE_JWT, data.access_token);
+          GM_setValue(STORAGE_KEYS.SUPABASE_REFRESH, data.refresh_token);
+          GM_setValue(STORAGE_KEYS.CURRENT_USER_EMAIL, data.user.email);
+          return `Bearer ${data.access_token}`;
         }
       } catch (e) {
+        Logger$1.error("Supabase", "Token refresh failed", e);
         logout(true);
       }
       return null;
+    };
+    const logout = (silent = false) => {
+      [STORAGE_KEYS.SYNC_USER_ID, STORAGE_KEYS.SUPABASE_JWT, STORAGE_KEYS.SUPABASE_REFRESH, STORAGE_KEYS.CURRENT_USER_EMAIL, STORAGE_KEYS.LAST_SYNC_TS].forEach(
+        (k) => GM_deleteValue(k)
+      );
+      if (!silent) {
+        Toast$1.show(t("alertLoggedOut"), "success");
+        setTimeout(() => location.reload(), 800);
+      }
     };
     return {
       name: "supabase",
@@ -1147,20 +1619,20 @@ table(module, data) {
       },
       async login(email, password) {
         Logger$1.info("Supabase", `Attempting login for: ${email}`);
-        const data = await api("POST", "/auth/v1/token?grant_type=password", { email, password });
-        if (data.access_token) {
-          GM_setValue("sync_user_id", data.user.id);
-          GM_setValue("supabase_jwt", data.access_token);
-          GM_setValue("supabase_refresh_token", data.refresh_token);
-          GM_setValue("current_user_email", data.user.email);
-          GM_setValue("last_sync_ts", "1970-01-01T00:00:00.000Z");
+        const data = await _request("/auth/v1/token?grant_type=password", "POST", { email, password });
+        if (data && data.access_token) {
+          GM_setValue(STORAGE_KEYS.SYNC_USER_ID, data.user.id);
+          GM_setValue(STORAGE_KEYS.SUPABASE_JWT, data.access_token);
+          GM_setValue(STORAGE_KEYS.SUPABASE_REFRESH, data.refresh_token);
+          GM_setValue(STORAGE_KEYS.CURRENT_USER_EMAIL, data.user.email);
+          GM_setValue(STORAGE_KEYS.LAST_SYNC_TS, UI_CONSTANTS.DEFAULT_TIMESTAMP);
           Logger$1.success("Supabase", `Login successful: ${email}`);
           return data.user;
         }
         throw new Error("Login failed");
       },
       async signup(email, password) {
-        return await api("POST", "/auth/v1/signup", { email, password });
+        return await _request("/auth/v1/signup", "POST", { email, password });
       },
       logout,
       async performSync(isManual = false) {
@@ -1168,36 +1640,31 @@ table(module, data) {
           needsRetry = true;
           return;
         }
-        State.proxy.syncStatus = "syncing";
         const runSync = async () => {
           Logger$1.group("Supabase", "🔄 Starting Supabase sync");
           Logger$1.time("Supabase.sync");
           isSyncing = true;
           if (isManual) Toast$1.show(t("labelSyncing"), "info");
           try {
-            const jwt = await getToken();
-            if (!jwt) {
+            State.proxy.syncStatus = SYNC_STATUS.SYNCING;
+            const auth = await _getAuthHeader();
+            if (!auth) {
               Logger$1.error("Supabase", "No valid JWT token");
-              if (isManual) Toast$1.show(t("alertWebDAVSyncError") + "Login required", "error");
-              isSyncing = false;
-              State.proxy.syncStatus = "error";
+              if (isManual) Toast$1.show(t("alertLoginRequired"), "error");
+              State.proxy.syncStatus = SYNC_STATUS.ERROR;
               Logger$1.groupEnd();
               return;
             }
-            let lastSync = GM_getValue("last_sync_ts", "1970-01-01T00:00:00.000Z");
-            const localCount = await Repository.db.history.count();
-            if (localCount === 0 && lastSync !== "1970-01-01T00:00:00.000Z") {
-              lastSync = "1970-01-01T00:00:00.000Z";
-            }
+            let lastSync = GM_getValue(STORAGE_KEYS.LAST_SYNC_TS, UI_CONSTANTS.DEFAULT_TIMESTAMP);
+            const syncStartedAt = ( new Date()).toISOString();
             const dirtyRecords = await Repository.db.history.where("sync_dirty").equals(1).limit(200).toArray();
             if (dirtyRecords.length > 0) {
               Logger$1.info("Supabase", `Pushing ${dirtyRecords.length} dirty records`);
-              const userId = GM_getValue("sync_user_id");
+              const userId = GM_getValue(STORAGE_KEYS.SYNC_USER_ID);
               if (!userId) {
                 Logger$1.error("Supabase", "User ID missing");
-                if (isManual) Toast$1.show("Sync failed: User ID missing. Please login again.", "error");
-                isSyncing = false;
-                State.proxy.syncStatus = "error";
+                if (isManual) Toast$1.show(t("alertUserIdMissing"), "error");
+                State.proxy.syncStatus = SYNC_STATUS.ERROR;
                 Logger$1.groupEnd();
                 return;
               }
@@ -1205,11 +1672,12 @@ table(module, data) {
               const payload = dirtyRecords.map((r) => ({
                 fc2_id: isNaN(Number(r.id)) ? r.id : parseInt(r.id, 10),
                 last_watched_at: new Date(r.timestamp).toISOString(),
+                status: r.status || "watched",
                 is_deleted: !!r.is_deleted,
                 user_id: userId
               }));
-              await api("POST", "/rest/v1/user_history", payload, {
-                Authorization: `Bearer ${jwt}`,
+              await _request("/rest/v1/user_history", "POST", payload, {
+                Authorization: auth,
                 Prefer: "resolution=merge-duplicates"
               });
               Logger$1.success("Supabase", `Pushed ${dirtyRecords.length} records`);
@@ -1226,14 +1694,14 @@ table(module, data) {
             while (hasMore) {
               const rangeStart = page * pageSize;
               const rangeEnd = (page + 1) * pageSize - 1;
-              const remoteData = await api(
-                "GET",
-                `/rest/v1/user_history?updated_at=gt.${encodeURIComponent(
+              const remoteData = await _request(
+                `/rest/v1/user_history?updated_at=gte.${encodeURIComponent(
                 lastSync
-              )}&select=fc2_id,last_watched_at,is_deleted,updated_at&order=updated_at.asc`,
+              )}&select=fc2_id,last_watched_at,is_deleted,updated_at,status&order=updated_at.asc`,
+                "GET",
                 null,
                 {
-                  Authorization: `Bearer ${jwt}`,
+                  Authorization: auth,
                   Range: `${rangeStart}-${rangeEnd}`
                 }
               );
@@ -1246,6 +1714,7 @@ table(module, data) {
                     toUpdateByArray.push({
                       id: String(item.fc2_id),
                       timestamp: new Date(item.last_watched_at).getTime(),
+                      status: item.status || "watched",
                       updated_at: item.updated_at,
                       is_deleted: 0,
                       sync_dirty: 0
@@ -1263,29 +1732,26 @@ table(module, data) {
                 else page++;
               } else hasMore = false;
             }
+            await HistoryManager.load();
+            GM_setValue(STORAGE_KEYS.LAST_SYNC_TS, syncStartedAt);
+            State.proxy.lastSyncTs = syncStartedAt;
+            State.proxy.syncStatus = SYNC_STATUS.SUCCESS;
             if (pulledCount > 0 || dirtyRecords.length > 0) {
-              GM_setValue("last_sync_ts", maxTs);
-              await HistoryManager.load();
               Logger$1.success(
                 "Supabase",
                 `Sync complete - Pulled: ${pulledCount}, Pushed: ${dirtyRecords.length}`
               );
-              if (isManual)
-                Toast$1.show(
-                  `Sync completed. Pulled: ${pulledCount}, Pushed: ${dirtyRecords.length}`,
-                  "success"
-                );
+              if (isManual) Toast$1.show(t("alertWebDAVSyncSuccess"), "success");
             } else if (isManual) {
               Logger$1.info("Supabase", "Already up to date");
-              Toast$1.show("Already up to date.", "info");
+              Toast$1.show(t("alertAlreadyUpToDate"), "info");
             }
-            State.proxy.syncStatus = "success";
             Logger$1.timeEnd("Supabase.sync");
             Logger$1.groupEnd();
-          } catch (e) {
-            Logger$1.error("Supabase", "Sync failed", e);
-            State.proxy.syncStatus = "error";
-            if (isManual) Toast$1.show(`Sync failed: ${e.statusText || e.message || "Network Error"}`, "error");
+          } catch (error) {
+            Logger$1.error("Supabase", "Sync failed", error);
+            State.proxy.syncStatus = SYNC_STATUS.ERROR;
+            if (isManual) Toast$1.show(t("alertWebDAVSyncError") + (error instanceof Error ? error.message : String(error)), "error");
             Logger$1.timeEnd("Supabase.sync");
             Logger$1.groupEnd();
           } finally {
@@ -1389,7 +1855,7 @@ static async executeWithRetry(operation, config = {}) {
       const { webdavUser, webdavPass } = State.proxy;
       return "Basic " + btoa(`${webdavUser}:${webdavPass}`);
     };
-    const request = async (method, url, body = null, headers = {}) => {
+    const request = async (method, url, body = null, headers = {}, timeout = 3e4) => {
       return new Promise((resolve, reject) => {
         GM_xmlhttpRequest({
           method,
@@ -1397,10 +1863,36 @@ static async executeWithRetry(operation, config = {}) {
           headers: { Authorization: getAuthHeader(), ...headers },
           data: body,
           responseType: "text",
+          timeout,
           onload: resolve,
-          onerror: reject
+          onerror: reject,
+          ontimeout: () => reject(new Error("Request Timeout"))
         });
       });
+    };
+    const ensureDirectory = async (baseUrl, fullPath) => {
+      const parts = fullPath.split("/").filter((p) => p && !p.includes("."));
+      let currentPath = baseUrl.replace(/\/$/, "");
+      for (const part of parts) {
+        currentPath += "/" + part;
+        try {
+          const res = await request("PROPFIND", currentPath, null, { Depth: "0" });
+          if (res.status === 404) {
+            Logger$1.info("WebDAV", `Creating directory: ${currentPath}`);
+            const mkres = await request("MKCOL", currentPath);
+            if (mkres.status !== 201 && mkres.status !== 405) {
+              throw new Error(`MKCOL failed: ${mkres.status}`);
+            }
+          }
+        } catch (e) {
+          Logger$1.error("WebDAV", `EnsureDirectory failed for ${currentPath}`, e);
+        }
+      }
+    };
+    const validatePayload = (data) => {
+      if (!data || typeof data !== "object") return false;
+      if (!Array.isArray(data.history)) return false;
+      return true;
     };
     const fetchFull = async () => {
       const { webdavUrl, webdavPath } = State.proxy;
@@ -1413,7 +1905,14 @@ static async executeWithRetry(operation, config = {}) {
           onload: (res) => {
             if (res.status === 200) {
               const etag = res.responseHeaders.match(/etag:\s*(.*)/i)?.[1]?.replace(/"/g, "").trim();
-              resolve({ data: JSON.parse(res.responseText), etag });
+              try {
+                const parsed = JSON.parse(res.responseText);
+                if (!validatePayload(parsed)) throw new Error("Invalid schema");
+                resolve({ data: parsed, etag });
+              } catch (e) {
+                Logger$1.error("WebDAV", "Failed to parse remote data", e);
+                reject(new Error("Remote data corrupted"));
+              }
             } else if (res.status === 404) {
               resolve(null);
             } else {
@@ -1424,37 +1923,57 @@ static async executeWithRetry(operation, config = {}) {
         });
       });
     };
-    const runSync = async (isManual = false, forceRefresh = false) => {
+    const runSync = async (isManual = false, forceRefresh = false, retryOnConflict = true) => {
       if (isSyncing) return;
+      const lastLock = GM_getValue(STORAGE_KEYS.WEBDAV_SYNC_LOCK, 0);
+      const now = Date.now();
+      if (now - lastLock < 1e4) {
+        Logger$1.warn("WebDAV", "Sync is already in progress (locked)");
+        if (isManual) Toast$1.show(t("alertSyncLockActive"), "warn");
+        return;
+      }
+      GM_setValue(STORAGE_KEYS.WEBDAV_SYNC_LOCK, now);
       const { webdavUrl, webdavPath } = State.proxy;
       if (!webdavUrl || !webdavPath) return;
       Logger$1.group("WebDAV", "🔄 Starting WebDAV sync");
       Logger$1.time("WebDAV.sync");
       isSyncing = true;
-      State.proxy.syncStatus = "syncing";
+      State.proxy.syncStatus = SYNC_STATUS.SYNCING;
       if (isManual) Toast$1.show(t("labelSyncing"), "info");
       try {
+        await ensureDirectory(webdavUrl, webdavPath);
         const remote = await fetchFull();
         const remoteData = remote?.data;
         const remoteETag = remote?.etag;
-        const lastEtag = GM_getValue("webdav_last_etag");
+        const lastEtag = GM_getValue(STORAGE_KEYS.WEBDAV_LAST_ETAG);
         if (!forceRefresh && lastEtag && remoteETag && lastEtag !== remoteETag) {
-          Logger$1.warn("WebDAV", "ETag conflict detected", { lastEtag, remoteETag });
-          State.proxy.syncStatus = "conflict";
-          if (isManual) Toast$1.show(t("alertSyncConflict"), "error");
-          isSyncing = false;
-          Logger$1.groupEnd();
-          return;
+          if (retryOnConflict) {
+            Logger$1.info("WebDAV", "Conflict detected, attempting auto re-merge...");
+            State.proxy.syncStatus = SYNC_STATUS.SYNCING;
+          } else {
+            Logger$1.warn("WebDAV", "ETag conflict detected", { lastEtag, remoteETag });
+            State.proxy.syncStatus = SYNC_STATUS.CONFLICT;
+            if (isManual) Toast$1.show(t("alertSyncConflict"), "error");
+            isSyncing = false;
+            Logger$1.groupEnd();
+            return;
+          }
         }
         const localRecords = await Repository.db.history.toArray();
         const finalMap = new Map();
+        let addedCount = 0;
+        let updatedCount = 0;
         if (remoteData?.history) {
           remoteData.history.forEach((r) => finalMap.set(r.id, r));
         }
         localRecords.forEach((l) => {
           const r = finalMap.get(l.id);
-          if (!r || l.timestamp > r.timestamp) {
+          if (!r) {
             finalMap.set(l.id, { id: l.id, timestamp: l.timestamp, is_deleted: l.is_deleted });
+            addedCount++;
+          } else if (l.timestamp > r.timestamp) {
+            finalMap.set(l.id, { id: l.id, timestamp: l.timestamp, is_deleted: l.is_deleted });
+            updatedCount++;
           }
         });
         const payload = {
@@ -1464,7 +1983,7 @@ static async executeWithRetry(operation, config = {}) {
         };
         Logger$1.info(
           "WebDAV",
-          `Syncing ${payload.history.length} items (${localRecords.length} local, ${remoteData?.history?.length || 0} remote)`
+          `Merge stats: ${addedCount} added, ${updatedCount} updated. Total: ${payload.history.length}`
         );
         const url = webdavUrl.replace(/\/$/, "") + "/" + webdavPath;
         const putHeaders = { "Content-Type": "application/json" };
@@ -1472,25 +1991,31 @@ static async executeWithRetry(operation, config = {}) {
         const res = await request("PUT", url, JSON.stringify(payload, null, 2), putHeaders);
         if (res.status >= 200 && res.status < 300) {
           const newEtag = res.responseHeaders.match(/etag:\s*(.*)/i)?.[1]?.replace(/"/g, "").trim() || remoteETag;
-          if (newEtag) GM_setValue("webdav_last_etag", newEtag);
+          if (newEtag) GM_setValue(STORAGE_KEYS.WEBDAV_LAST_ETAG, newEtag);
           await Repository.db.transaction("rw", Repository.db.history, async () => {
             await Repository.db.history.bulkPut(payload.history.map((h2) => ({ ...h2, sync_dirty: 0 })));
           });
           await HistoryManager.load();
-          State.proxy.syncStatus = "success";
+          State.proxy.syncStatus = SYNC_STATUS.SUCCESS;
+          State.proxy.lastSyncTime = ( new Date()).toISOString();
           Logger$1.success("WebDAV", `Sync complete - ${payload.history.length} items synced`);
           Logger$1.timeEnd("WebDAV.sync");
           Logger$1.groupEnd();
           if (isManual) Toast$1.show(t("alertWebDAVSyncSuccess"), "success");
         } else if (res.status === 412) {
-          State.proxy.syncStatus = "conflict";
+          if (retryOnConflict) {
+            Logger$1.warn("WebDAV", "Conflict (412) during PUT, retrying once...");
+            isSyncing = false;
+            return runSync(isManual, true, false);
+          }
+          State.proxy.syncStatus = SYNC_STATUS.CONFLICT;
           if (isManual) Toast$1.show(t("alertSyncConflict"), "error");
         } else {
           throw new Error(`WebDAV Error: ${res.status}`);
         }
       } catch (e) {
         Logger$1.error("WebDAV", "Sync failed", e);
-        State.proxy.syncStatus = "error";
+        State.proxy.syncStatus = SYNC_STATUS.ERROR;
         const msg = e.statusText || e.message || (e.status ? `Status ${e.status}` : "Network Error");
         if (isManual) Toast$1.show(t("alertWebDAVSyncError") + msg, "error");
         Logger$1.timeEnd("WebDAV.sync");
@@ -1498,6 +2023,7 @@ static async executeWithRetry(operation, config = {}) {
         throw e;
       } finally {
         isSyncing = false;
+        GM_setValue(STORAGE_KEYS.WEBDAV_SYNC_LOCK, 0);
       }
     };
     return {
@@ -1510,6 +2036,12 @@ static async executeWithRetry(operation, config = {}) {
         if (res.status < 200 || res.status >= 300) throw res;
         Logger$1.success("WebDAV", "Connection test successful");
         return res;
+      },
+      async logout() {
+        [STORAGE_KEYS.WEBDAV_URL, STORAGE_KEYS.WEBDAV_USER, STORAGE_KEYS.WEBDAV_PASS, STORAGE_KEYS.WEBDAV_PATH, STORAGE_KEYS.WEBDAV_LAST_ETAG].forEach(
+          (k) => GM_deleteValue(k)
+        );
+        Logger$1.info("WebDAV", "Logged out and cleared credentials");
       },
       async performSync(isManual = false) {
         return await RetryManager.executeWithRetry(
@@ -1528,47 +2060,75 @@ static async executeWithRetry(operation, config = {}) {
       return null;
     };
     return {
+      init() {
+        CoreEvents.on(AppEvents.BOOTSTRAP, () => {
+          Logger$1.info("SyncManager", "Bootstrap event received, starting auto-sync");
+          this.performSync(false).catch(() => {
+          });
+        });
+      },
       set onProgress(val) {
         SupabaseProvider.onProgress = val;
       },
-      async login(email, password) {
+async login(email, password) {
         return await SupabaseProvider.login(email, password);
       },
       async signup(email, password) {
         return await SupabaseProvider.signup(email, password);
       },
-      logout(silent = false) {
-        SupabaseProvider.logout(silent);
+      async logout(silent = false) {
+        const provider = getProvider();
+        if (provider) {
+          await provider.logout();
+        } else {
+          SupabaseProvider.logout(silent);
+        }
+        State.proxy.syncMode = "none";
+        State.proxy.syncStatus = SYNC_STATUS.IDLE;
+        GM_setValue(STORAGE_KEYS.LAST_SYNC_TS, UI_CONSTANTS.DEFAULT_TIMESTAMP);
       },
       async testWebDAV() {
         return await WebDAVProvider.test();
       },
       requestSync: () => {
-        Logger$1.info("SyncManager", "Sync requested, will execute in 2s");
+        const interval = State.proxy.syncInterval;
+        const mode = State.proxy.syncMode;
+        if (interval === -1 || mode === "none") {
+          return;
+        }
+        if (interval === 0) {
+          Logger$1.info("SyncManager", "Sync requested (real-time mode), will execute in 2s");
+          if (syncTimer) clearTimeout(syncTimer);
+          syncTimer = setTimeout(() => SyncManager.performSync(), 2e3);
+          return;
+        }
+        const lastAutoSync = GM_getValue(STORAGE_KEYS.LAST_AUTO_SYNC_TS, 0);
+        const now = Date.now();
+        const minInterval = interval * 60 * 1e3;
+        if (now - lastAutoSync < minInterval) {
+          return;
+        }
+        Logger$1.info("SyncManager", `Sync requested (interval: ${interval}min), will execute in 2s`);
         if (syncTimer) clearTimeout(syncTimer);
-        syncTimer = setTimeout(() => SyncManager.performSync(), 2e3);
+        syncTimer = setTimeout(() => {
+          GM_setValue(STORAGE_KEYS.LAST_AUTO_SYNC_TS, Date.now());
+          SyncManager.performSync();
+        }, 2e3);
       },
       async performSync(isManual = false) {
-        const provider = getProvider();
-        if (!provider) return;
         try {
-          const result = await provider.performSync(isManual);
-          setTimeout(() => {
-            State.proxy.syncStatus = "idle";
-          }, 5e3);
-          return result;
-        } catch (e) {
-          Logger$1.error("SyncManager", "Sync failed globally", e);
-          State.proxy.syncStatus = "error";
-          setTimeout(() => {
-            State.proxy.syncStatus = "idle";
-          }, 5e3);
+          const provider = getProvider();
+          if (!provider) return;
+          await provider.performSync(isManual);
+        } catch (error) {
+          Logger$1.error("SyncManager", "Sync failed", error);
+          State.proxy.syncStatus = SYNC_STATUS.ERROR;
         }
       },
       async forceFullSync() {
         if (!confirm(t("alertPushAllQuery"))) return;
         await Repository.db.history.toCollection().modify({ sync_dirty: 1 });
-        GM_setValue("last_sync_ts", "1970-01-01T00:00:00.000Z");
+        GM_setValue(STORAGE_KEYS.LAST_SYNC_TS, UI_CONSTANTS.DEFAULT_TIMESTAMP);
         return await this.performSync(true);
       }
     };
@@ -1637,11 +2197,29 @@ getStats() {
   const Events = {
 HISTORY_ADDED: "history:added",
     HISTORY_REMOVED: "history:removed",
-    HISTORY_CLEARED: "history:cleared"
+    HISTORY_CLEARED: "history:cleared",
+    HISTORY_LOADED: "history:loaded",
+SYNC_STARTED: "sync:started",
+    SYNC_COMPLETED: "sync:completed",
+    SYNC_FAILED: "sync:failed",
+    SYNC_CONFLICT: "sync:conflict",
+NETWORK_ONLINE: "network:online",
+    NETWORK_OFFLINE: "network:offline",
+SETTINGS_OPENED: "settings:opened",
+    SETTINGS_CLOSED: "settings:closed",
+    SETTINGS_CHANGED: "settings:changed",
+DATA_EXPORTED: "data:exported",
+    DATA_IMPORTED: "data:imported"
   };
   const HistoryManager = (() => {
-    const historyCache = new Set();
+    const historyCache = new Map();
     return {
+      init() {
+        CoreEvents.on(AppEvents.BOOTSTRAP, async () => {
+          Logger$1.info("HistoryManager", "Bootstrap event received, loading history");
+          await this.load();
+        });
+      },
       async load() {
         Logger$1.time("HistoryManager.load");
         if (!State.proxy.enableHistory) {
@@ -1650,142 +2228,611 @@ HISTORY_ADDED: "history:added",
           return;
         }
         try {
-          const ids = await Repository.history.getKeys();
-          ids.forEach((id) => historyCache.add(id));
-          Logger$1.success("HistoryManager", `Loaded ${ids.length} history items`);
+          const items = await Repository.history.getAll();
+          items.forEach((item) => historyCache.set(item.id, item.status || "watched"));
+          eventBus.emit(Events.HISTORY_LOADED, items.length);
+          Logger$1.success("HistoryManager", `Loaded ${items.length} history items`);
         } catch (e) {
           Logger$1.error("HistoryManager", "Failed to load history", e);
           historyCache.clear();
         }
         Logger$1.timeEnd("HistoryManager.load");
       },
-      async add(id) {
+      async add(id, status = "watched", remote = false) {
         if (!State.proxy.enableHistory || !id) return;
-        historyCache.add(String(id));
-        await Repository.history.add(id);
-        eventBus.emit(Events.HISTORY_ADDED, id);
-        Logger$1.info("HistoryManager", `Added to history: ${id}`);
-        SyncManager.requestSync();
+        const idStr = String(id);
+        if (historyCache.get(idStr) === status && !remote) return;
+        historyCache.set(idStr, status);
+        if (!remote) {
+          await Repository.history.add(id, status);
+          __vitePreload(async () => {
+            const { MessagingService: MessagingService2, MessageType: MessageType2 } = await Promise.resolve().then(() => MessagingService$1);
+            return { MessagingService: MessagingService2, MessageType: MessageType2 };
+          }, void 0 ).then(({ MessagingService: MessagingService2, MessageType: MessageType2 }) => {
+            MessagingService2.broadcast(MessageType2.HISTORY_UPDATE, { action: "add", id: idStr, status });
+          });
+        }
+        eventBus.emit(Events.HISTORY_ADDED, { id, status });
+        Logger$1.info("HistoryManager", `${remote ? "Remote" : "Local"} Added: ${id} as ${status}`);
+        if (!remote) SyncManager.requestSync();
       },
-      async remove(id) {
+      async remove(id, remote = false) {
         if (!State.proxy.enableHistory || !id) return;
-        historyCache.delete(String(id));
-        await Repository.history.remove(id);
-        eventBus.emit(Events.HISTORY_REMOVED, id);
-        Logger$1.info("HistoryManager", `Removed from history: ${id}`);
-        SyncManager.requestSync();
+        const idStr = String(id);
+        const prevStatus = historyCache.get(idStr);
+        historyCache.delete(idStr);
+        if (!remote) {
+          await Repository.history.remove(id);
+          __vitePreload(async () => {
+            const { MessagingService: MessagingService2, MessageType: MessageType2 } = await Promise.resolve().then(() => MessagingService$1);
+            return { MessagingService: MessagingService2, MessageType: MessageType2 };
+          }, void 0 ).then(({ MessagingService: MessagingService2, MessageType: MessageType2 }) => {
+            MessagingService2.broadcast(MessageType2.HISTORY_UPDATE, { action: "remove", id: idStr });
+          });
+        }
+        eventBus.emit(Events.HISTORY_REMOVED, { id, prevStatus });
+        Logger$1.info("HistoryManager", `${remote ? "Remote" : "Local"} Removed: ${id}`);
+        if (!remote) SyncManager.requestSync();
       },
-      async clear() {
+      async clear(remote = false) {
         const count = historyCache.size;
         historyCache.clear();
-        await Repository.history.clear();
+        if (!remote) {
+          await Repository.history.clear();
+          __vitePreload(async () => {
+            const { MessagingService: MessagingService2, MessageType: MessageType2 } = await Promise.resolve().then(() => MessagingService$1);
+            return { MessagingService: MessagingService2, MessageType: MessageType2 };
+          }, void 0 ).then(({ MessagingService: MessagingService2, MessageType: MessageType2 }) => {
+            MessagingService2.broadcast(MessageType2.HISTORY_UPDATE, { action: "clear" });
+          });
+        }
         eventBus.emit(Events.HISTORY_CLEARED, count);
-        Logger$1.warn("HistoryManager", `Cleared ${count} history items`);
-        SyncManager.requestSync();
+        Logger$1.warn("HistoryManager", `${remote ? "Remote" : "Local"} Cleared ${count} items`);
+        if (!remote) SyncManager.requestSync();
       },
-      has(id) {
-        return State.proxy.enableHistory && historyCache.has(String(id));
+      has(id, status) {
+        if (!State.proxy.enableHistory) return false;
+        if (status) return historyCache.get(String(id)) === status;
+        return historyCache.has(String(id)) && historyCache.get(String(id)) !== "blocked";
+      },
+      getStatus(id) {
+        return historyCache.get(String(id)) || null;
       }
     };
   })();
+  __vitePreload(async () => {
+    const { MessagingService: MessagingService2, MessageType: MessageType2 } = await Promise.resolve().then(() => MessagingService$1);
+    return { MessagingService: MessagingService2, MessageType: MessageType2 };
+  }, void 0 ).then(({ MessagingService: MessagingService2, MessageType: MessageType2 }) => {
+    MessagingService2.onMessage((msg) => {
+      if (msg.type === MessageType2.HISTORY_UPDATE) {
+        const { action, id, status } = msg.payload;
+        if (action === "add") HistoryManager.add(id, status, true);
+        else if (action === "remove") HistoryManager.remove(id, true);
+        else if (action === "clear") HistoryManager.clear(true);
+      }
+    });
+  });
   const tokens = `
+    /* ============================================================
+       DESIGN TOKENS & DESIGN SYSTEM
+       ============================================================ */
+
     :root {
+        /* Colors */
         --fc2-bg: #050505;
         --fc2-surface: rgba(18, 18, 20, 0.9);
         --fc2-text: #f0f0f0;
         --fc2-text-dim: #a1a1aa;
         --fc2-border: rgba(255, 255, 255, 0.1);
         --fc2-primary: #ffffff;
+        --fc2-primary-rgb: 255, 255, 255;
         --fc2-success: #4ade80;
         --fc2-danger: #f87171;
         --fc2-accent: #e4e4e7;
+        
+        /* Gradients */
         --fc2-accent-grad: linear-gradient(135deg, #3f3f46, #18181b);
         --fc2-magnet-grad: linear-gradient(135deg, #52525b, #27272a);
+        
+        /* Layout & Spacing */
         --fc2-radius: 16px;
         --fc2-btn-radius: 10px;
         --fc2-blur: blur(20px);
         --fc2-shadow: 0 12px 48px rgba(0, 0, 0, 0.8);
         --fc2-font: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+
+        /* Z-Index Scale */
+        --fc2-z-toast: 10000;
+        --fc2-z-fab: 20000;
+        --fc2-z-modal: 2147483647;
+        --fc2-z-overlay: 2147483640;
+        
+        /* Scrollbar Colors */
+        --fc2-scrollbar-thumb: rgba(255, 255, 255, 0.1);
+        --fc2-scrollbar-hover: rgba(255, 255, 255, 0.2);
+
+        /* Aliases for settings panel (Legacy Compatibility) */
+        --fc2-enh-bg: rgba(26, 27, 38, 0.95);
+        --fc2-enh-bg-secondary: rgba(18, 18, 20, 0.9);
+        --fc2-enh-text: #f0f0f0;
+        --fc2-enh-border: rgba(255, 255, 255, 0.1);
+    }
+
+    /* ============================================================
+       LIGHT THEME OVERRIDES
+       ============================================================ */
+
+    :root.fc2-light-theme {
+        --fc2-bg: #f8f9fa;
+        --fc2-surface: rgba(255, 255, 255, 0.8);
+        --fc2-text: #1a1a1a;
+        --fc2-text-dim: #52525b; /* Darkened from #71717a for better contrast */
+        --fc2-border: rgba(0, 0, 0, 0.08);
+        --fc2-primary: #111111;
+        --fc2-success: #16a34a;
+        --fc2-danger: #dc2626;
+        --fc2-accent: #3f3f46;
+        
+        --fc2-accent-grad: linear-gradient(135deg, #e4e4e7, #f4f4f5);
+        --fc2-magnet-grad: linear-gradient(135deg, #d4d4d8, #e4e4e7);
+        
+        --fc2-scrollbar-thumb: rgba(0, 0, 0, 0.15);
+        --fc2-scrollbar-hover: rgba(0, 0, 0, 0.25);
+        
+        --fc2-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
     }
 `;
   const animations = `
-    /* --- Animations --- */
-    @keyframes fc2-fade-in { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes fc2-shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
-    @keyframes fc2-pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); } }
-    @keyframes fc2-copy-success { 0% { transform: scale(1); } 50% { transform: scale(1.1); background: var(--fc2-success); } 100% { transform: scale(1); } }
-    @keyframes fc2-magnet-in { 0% { transform: scale(0.5); opacity: 0; } 70% { transform: scale(1.1); } 100% { transform: scale(1); opacity: 1; } }
-    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-    @keyframes popIn { from { opacity: 0; transform: translate(-50%, -48%) scale(0.96); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
-    @keyframes fc2-pulse-sync { 0% { transform: scale(0.8); opacity: 0.6; } 50% { transform: scale(1.1); opacity: 1; } 100% { transform: scale(0.8); opacity: 0.6; } }
-    @keyframes fc2-dropdown-in {
-        from { opacity: 0; transform: translateY(-10px) scale(0.95); }
-        to { opacity: 1; transform: translateY(0) scale(1); }
+    /* ============================================================
+       GLOBAL ANIMATIONS
+       ============================================================ */
+
+    /* Generic Fade & Slide In */
+    @keyframes fc2-fade-in {
+        from {
+            opacity: 0;
+            transform: translateY(15px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
-    @keyframes fc2-tab-slide {
-        from { opacity: 0; transform: translateY(12px); }
-        to { opacity: 1; transform: translateY(0); }
+
+    /* Core Spinner */
+    @keyframes fc2-spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
     }
+
+    /* Loading Shimmer (Skeletons) */
+    @keyframes fc2-shimmer {
+        0% { background-position: -200% 0; }
+        100% { background-position: 200% 0; }
+    }
+
+    /* Pulse Effects */
+    @keyframes fc2-pulse {
+        0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4); }
+        70% { box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+    }
+
+    @keyframes fc2-pulse-sync {
+        0% {
+            transform: scale(0.8);
+            opacity: 0.6;
+        }
+        50% {
+            transform: scale(1.1);
+            opacity: 1;
+        }
+        100% {
+            transform: scale(0.8);
+            opacity: 0.6;
+        }
+    }
+
     @keyframes fc2-pulse-once {
         0% { transform: scale(1); }
-        50% { transform: scale(1.15); filter: brightness(1.2); }
+        50% {
+            transform: scale(1.15);
+            background: var(--fc2-primary);
+            color: #111;
+        }
         100% { transform: scale(1); }
     }
-    .pulse-once { animation: fc2-pulse-once 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); }
-`;
-  const getBaseStyles = (C) => `
-    /* --- Typography --- */
-    .fc2-enh-settings-panel,
-    .fc2-fab-container,
-    .fc2-toast-container,
-    .enh-modal-panel,
-    .${C.cardRebuilt},
-    .fc2-enh-settings-panel *,
-    .enh-modal-panel * {
-        font-family: var(--fc2-font) !important;
+
+    /* UI Logic Specific */
+    @keyframes fc2-copy-success {
+        0% { transform: scale(1); }
+        50% {
+            transform: scale(1.1);
+            background: var(--fc2-success);
+        }
+        100% { transform: scale(1); }
     }
 
-    /* --- Core Utility --- */
-    .${C.hideNoMagnet}, .${C.hideCensored}, .${C.hideViewed} { display: none !important; }
+    @keyframes fc2-magnet-in {
+        0% {
+            transform: scale(0.5);
+            opacity: 0;
+        }
+        70% { transform: scale(1.1); }
+        100% {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
 
-    /* --- Scrollbar --- */
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
-    ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+    @keyframes fc2-pop-in {
+        from {
+            opacity: 0;
+            transform: translate(-50%, -48%) scale(0.96);
+        }
+        to {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+    }
 
-    /* --- Skeleton --- */
+    @keyframes fc2-dropdown-in {
+        from {
+            opacity: 0;
+            transform: translateY(-10px) scale(0.95);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    @keyframes fc2-tab-slide {
+        from {
+            opacity: 0;
+            transform: translateY(12px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Enhancement Layer Animations */
+    @keyframes fc2-pulse-ring {
+        0% {
+            transform: scale(0.8);
+            opacity: 1;
+        }
+        100% {
+            transform: scale(1.2);
+            opacity: 0;
+        }
+    }
+
+    @keyframes fc2-fade-in-scale {
+        from {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    @keyframes fc2-shake {
+        0%, 100% { transform: translate(-50%, -50%) translateX(0); }
+        25% { transform: translate(-50%, -50%) translateX(-10px); }
+        75% { transform: translate(-50%, -50%) translateX(10px); }
+    }
+
+    @keyframes fc2-fade-simple {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    @keyframes fc2-fade-out {
+        from { opacity: 1; }
+        to { opacity: 0; }
+    }
+
+    @keyframes fc2-slide-up {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes fc2-slide-down-out {
+        from {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        to {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+    }
+
+    @keyframes fc2-toast-shrink {
+        from { transform: scaleX(1); }
+        to { transform: scaleX(0); }
+    }
+
+    /* Helper Classes */
+    .pulse-once {
+        animation: fc2-pulse-once 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+`;
+  const getBaseStyles = (C) => `
+    /* ============================================================
+       CSS RESET & GLOBAL OVERRIDES
+       ============================================================ */
+
+    .fc2-enh-settings-panel,
+    .fc2-enh-modal-overlay,
+    .enh-modal-panel,
+    .fc2-fab-container {
+        all: revert;
+    }
+
+    .fc2-enh-settings-panel *:not(svg):not(path):not(circle):not(rect):not(line):not(polyline):not(polygon),
+    .fc2-enh-modal-overlay *:not(svg):not(path):not(circle):not(rect):not(line):not(polyline):not(polygon),
+    .enh-modal-panel *:not(svg):not(path):not(circle):not(rect):not(line):not(polyline):not(polygon),
+    .fc2-fab-container *:not(svg):not(path):not(circle):not(rect):not(line):not(polyline):not(polygon) {
+        box-sizing: border-box;
+        font-family: var(--fc2-font) !important;
+        font-size: 14px !important;
+        font-weight: normal !important;
+        font-style: normal !important;
+        line-height: 1.5 !important;
+        letter-spacing: normal !important;
+        text-transform: none !important;
+    }
+
+    /* Icons Visibility Fix */
+    .fc2-enh-settings-panel svg,
+    .fc2-enh-settings-panel .fc2-icon {
+        display: inline-block !important;
+        vertical-align: middle !important;
+    }
+
+    /* Headings */
+    .fc2-enh-settings-panel h2,
+    .fc2-enh-settings-panel h3,
+    .fc2-enh-settings-panel h4 {
+        margin: 0 !important;
+        padding: 0 !important;
+        font-weight: 600 !important;
+    }
+
+    .fc2-enh-settings-panel h2 { font-size: 20px !important; }
+    .fc2-enh-settings-panel h3 { font-size: 16px !important; }
+    .fc2-enh-settings-panel h4 { font-size: 14px !important; }
+
+    /* Forms & Controls */
+    .fc2-enh-settings-panel label,
+    .fc2-enh-settings-panel input,
+    .fc2-enh-settings-panel select,
+    .fc2-enh-settings-panel button {
+        font-size: 14px !important;
+        line-height: 1.5 !important;
+    }
+
+    /* ============================================================
+       SELECT DROPDOWN STYLES
+       ============================================================ */
+
+    .fc2-enh-settings-panel select,
+    .fc2-enh-settings-panel .fc2-select {
+        display: inline-block !important;
+        padding: 6px 32px 6px 12px !important;
+        background: var(--fc2-enh-bg-secondary) !important;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 512'%3E%3Cpath fill='%23cdd6f4' d='M137.4 374.6c12.5 12.5 32.8 12.5 45.3 0l128-128c9.2-9.2 11.9-22.9 6.9-34.9s-16.6-19.8-29.6-19.8L32 192c-12.9 0-24.6 7.8-29.6 19.8s-2.2 25.7 6.9 34.9l128 128z'/%3E%3C/svg%3E") !important;
+        background-repeat: no-repeat !important;
+        background-position: right 8px center !important;
+        background-size: 12px !important;
+        color: var(--fc2-enh-text) !important;
+        border: 1px solid var(--fc2-enh-border) !important;
+        border-radius: 4px !important;
+        cursor: pointer !important;
+        appearance: none !important;
+        -webkit-appearance: none !important;
+        color-scheme: dark !important;
+        filter: invert(0) !important;
+        transition: border-color 0.2s;
+    }
+
+    .fc2-enh-settings-panel select:hover {
+        border-color: var(--fc2-primary) !important;
+    }
+
+    .fc2-enh-settings-panel select:focus {
+        outline: none !important;
+        border-color: var(--fc2-primary) !important;
+        box-shadow: 0 0 0 2px rgba(var(--fc2-primary-rgb), 0.2) !important;
+    }
+
+    .fc2-enh-settings-panel select option {
+        padding: 6px 12px !important;
+        background: #1e1e1e !important;
+        color: var(--fc2-enh-text) !important;
+    }
+
+    .fc2-enh-settings-panel select option:checked,
+    .fc2-enh-settings-panel select option:hover {
+        background: var(--fc2-primary) !important;
+        color: #fff !important;
+    }
+
+    /* ============================================================
+       SCROLLBAR & UTILITIES
+       ============================================================ */
+
+    /* Global Scrollbar */
+    ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: var(--fc2-scrollbar-thumb) !important;
+        border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--fc2-scrollbar-hover) !important;
+    }
+
+    /* Skeleton Loading Base */
     .fc2-skeleton {
-        background: linear-gradient(90deg, rgba(255,255,255,0.03) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.03) 75%);
+        background: linear-gradient(
+            90deg, 
+            rgba(255, 255, 255, 0.03) 25%, 
+            rgba(255, 255, 255, 0.08) 50%, 
+            rgba(255, 255, 255, 0.03) 75%
+        );
         background-size: 200% 100%;
-        animation: fc2-shimmer 1.5s infinite linear;
         border-radius: 4px;
+        animation: fc2-shimmer 1.5s infinite linear;
+    }
+
+    /* Functional Hide Classes */
+    .${C.hideNoMagnet}, 
+    .${C.hideCensored}, 
+    .${C.hideViewed} {
+        display: none !important;
     }
 `;
   const getComponentStyles = (C) => `
-    *, ::before, ::after { box-sizing: border-box; }
-    .fc2-icon { display: inline-flex; align-items: center; justify-content: center; width: 1em; height: 1em; vertical-align: -0.125em; }
-    .fc2-icon svg { width: 100%; height: 100%; fill: currentColor; }
+    /* ============================================================
+       BASE COMPONENTS & RESET
+       ============================================================ */
 
-    /* --- Toast --- */
-    .fc2-toast-container { position: fixed; top: 20px; right: 20px; z-index: 10000; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
-    .fc2-toast-item { background: var(--fc2-surface); color: #fff; padding: 10px 16px; border-radius: 8px; box-shadow: var(--fc2-shadow); display: flex; align-items: center; font-size: 13px; transform: translateX(100%); transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55); opacity: 0; pointer-events: auto; backdrop-filter: blur(8px); border-left: 3px solid var(--fc2-primary); }
-    .fc2-toast-item.show { transform: translateX(0); opacity: 1; }
-
-    /* --- Elegant FAB (Unified) --- */
-    .fc2-fab-container { position: fixed; bottom: 40px; right: 40px; z-index: 2000000000; display: flex; flex-direction: column-reverse; align-items: center; gap: 12px; pointer-events: none; }
-    .fc2-fab-trigger, .fc2-fab-actions { pointer-events: auto; }
-    .fc2-fab-trigger {
-        width: 48px; height: 48px; border-radius: 50%;
-        background: var(--fc2-accent-grad); color: #fff; border: none;
-        box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2); cursor: pointer;
-        display: flex; align-items: center; justify-content: center;
-        font-size: 20px; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-        touch-action: none; -webkit-tap-highlight-color: transparent;
+    *, ::before, ::after {
+        box-sizing: border-box;
     }
-    .fc2-fab-trigger:hover { transform: scale(1.1); box-shadow: 0 8px 25px rgba(255, 255, 255, 0.3); }
-    .fc2-fab-trigger.active { transform: rotate(135deg); background: #eee; color: #111; }
-    .fc2-fab-trigger.active:hover { transform: scale(1.1) rotate(135deg); }
+
+    .fc2-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1em;
+        height: 1em;
+        vertical-align: -0.125em;
+    }
+
+    .fc2-icon svg {
+        width: 100%;
+        height: 100%;
+        fill: currentColor;
+    }
+
+    /* ============================================================
+       TOAST NOTIFICATIONS
+       ============================================================ */
+
+    .fc2-toast-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: var(--fc2-z-toast);
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        pointer-events: none;
+    }
+
+    .fc2-toast-item {
+        display: flex;
+        align-items: center;
+        padding: 10px 16px;
+        background: var(--fc2-surface);
+        color: #fff;
+        border-radius: 8px;
+        border-left: 3px solid var(--fc2-primary);
+        box-shadow: var(--fc2-shadow);
+        font-size: 13px;
+        backdrop-filter: blur(8px);
+        transform: translateX(100%);
+        transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        opacity: 0;
+        pointer-events: auto;
+    }
+
+    .fc2-toast-item.show {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    /* ============================================================
+       ELEGANT FAB (UNIFIED)
+       ============================================================ */
+
+    .fc2-fab-container {
+        position: fixed;
+        bottom: 40px;
+        right: 40px;
+        z-index: var(--fc2-z-fab);
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: center;
+        gap: 12px;
+        pointer-events: none;
+    }
+
+    .fc2-fab-trigger, 
+    .fc2-fab-actions {
+        pointer-events: auto;
+    }
+
+    .fc2-fab-trigger {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 48px;
+        background: var(--fc2-accent-grad);
+        color: #fff;
+        border: none;
+        border-radius: 50%;
+        box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+        font-size: 20px;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        touch-action: none;
+        -webkit-tap-highlight-color: transparent;
+        will-change: transform;
+    }
+
+    .fc2-fab-trigger:hover {
+        transform: scale(1.1);
+        box-shadow: 0 8px 25px rgba(255, 255, 255, 0.3);
+    }
+
+    .fc2-fab-trigger:active {
+        transform: scale(0.95);
+    }
+
+    .fc2-fab-trigger.active {
+        transform: rotate(135deg);
+        background: #eee;
+        color: #111;
+    }
+
+    .fc2-fab-trigger.active:hover {
+        transform: scale(1.1) rotate(135deg);
+    }
 
     .fc2-fab-actions {
         display: flex;
@@ -1796,128 +2843,291 @@ HISTORY_ADDED: "history:added",
         pointer-events: none;
         transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
-    .fc2-fab-actions.visible { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+
+    .fc2-fab-actions.visible {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        pointer-events: auto;
+    }
 
     .fc2-fab-btn {
-        width: 40px; height: 40px; border-radius: 50%;
-        background: var(--fc2-surface); color: var(--fc2-text-dim);
-        border: 1px solid var(--fc2-border); backdrop-filter: var(--fc2-blur);
-        display: flex; align-items: center; justify-content: center;
-        font-size: 16px; cursor: pointer; transition: all 0.2s;
-        box-shadow: var(--fc2-shadow); position: relative;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        background: var(--fc2-surface);
+        color: var(--fc2-text-dim);
+        border: 1px solid var(--fc2-border);
+        border-radius: 50%;
+        backdrop-filter: var(--fc2-blur);
+        font-size: 16px;
+        box-shadow: var(--fc2-shadow);
+        cursor: pointer;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         -webkit-tap-highlight-color: transparent;
+        will-change: transform;
     }
-    .fc2-fab-btn:hover { background: var(--fc2-primary); color: #111; border-color: transparent; transform: scale(1.1); }
-    .fc2-fab-btn.active { background: var(--fc2-primary); color: #111; box-shadow: 0 0 15px rgba(255, 255, 255, 0.2); }
+
+    .fc2-fab-btn:hover {
+        background: var(--fc2-primary);
+        color: #111;
+        border-color: transparent;
+        transform: translateY(-2px) scale(1.1);
+        box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+    }
+
+    .fc2-fab-btn:active {
+        transform: scale(0.95);
+    }
+
+    .fc2-fab-btn.active {
+        background: var(--fc2-primary);
+        color: #111;
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+    }
+
     .fc2-fab-btn::before {
-        content: attr(data-title); position: absolute; right: 52px; top: 50%;
-        transform: translateY(-50%) translateX(5px); background: rgba(0,0,0,0.85);
-        color: #fff; padding: 5px 10px; border-radius: 6px; font-size: 12px;
-        white-space: nowrap; opacity: 0; pointer-events: none; transition: all 0.2s;
-        visibility: hidden; backdrop-filter: blur(4px);
+        content: attr(data-title);
+        position: absolute;
+        right: 52px;
+        top: 50%;
+        visibility: hidden;
+        padding: 5px 10px;
+        background: rgba(0,0,0,0.85);
+        color: #fff;
+        border-radius: 6px;
+        font-size: 12px;
+        white-space: nowrap;
+        opacity: 0;
+        backdrop-filter: blur(4px);
+        transform: translateY(-50%) translateX(5px);
+        transition: all 0.2s;
+        pointer-events: none;
     }
-    .fc2-fab-btn:hover::before { opacity: 1; visibility: visible; transform: translateY(-50%) translateX(0); }
+
+    .fc2-fab-btn:hover::before {
+        visibility: visible;
+        opacity: 1;
+        transform: translateY(-50%) translateX(0);
+    }
 
     .fc2-sync-dot {
-        position: absolute; top: -2px; right: -2px; width: 10px; height: 10px;
-        border-radius: 50%; border: 2px solid var(--fc2-bg);
-        background: #666; transition: all 0.3s;
+        position: absolute;
+        top: -2px;
+        right: -2px;
+        width: 10px;
+        height: 10px;
+        background: #666;
+        border: 2px solid var(--fc2-bg);
+        border-radius: 50%;
+        transition: all 0.3s;
     }
-    .fc2-sync-dot.syncing { background: #89b4fa; animation: fc2-pulse-sync 1.5s infinite; }
+
+    .fc2-sync-dot.syncing {
+        background: #89b4fa;
+        animation: fc2-pulse-sync 1.5s infinite;
+    }
+
     .fc2-sync-dot.success { background: #a6e3a1; }
     .fc2-sync-dot.error { background: #f38ba8; }
     .fc2-sync-dot.conflict { background: #fab387; }
 
-    /* --- Card & UI --- */
+    /* ============================================================
+       CARD SYSTEM
+       ============================================================ */
+
     .${C.cardRebuilt} {
         position: relative;
-        border-radius: var(--fc2-radius);
         background: var(--fc2-surface);
         border: 1px solid var(--fc2-border);
+        border-radius: var(--fc2-radius);
         backdrop-filter: var(--fc2-blur);
         -webkit-backdrop-filter: var(--fc2-blur);
         transform: translateZ(0);
         will-change: transform;
         animation: fc2-fade-in 0.4s ease-out backwards;
+        container-type: inline-size;
+        container-name: card;
     }
-    .${C.cardRebuilt}.has-active-dropdown { z-index: 100 !important; }
-    body.searching .${C.cardRebuilt}:not(.search-match) { display: none !important; }
+
+    .${C.cardRebuilt}.has-active-dropdown {
+        z-index: 100 !important;
+    }
+
+    body.searching .${C.cardRebuilt}:not(.search-match) {
+        display: none !important;
+    }
 
     .${C.processedCard} {
         position: relative;
-        border-radius: var(--fc2-radius);
-        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-        background: var(--fc2-surface);
-        border: 1px solid var(--fc2-border);
-        height: 100%;
         display: flex;
         flex-direction: column;
+        height: 100%;
+        background: var(--fc2-surface);
+        border: 1px solid var(--fc2-border);
+        border-radius: var(--fc2-radius);
         overflow: visible;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        will-change: transform;
     }
-    .${C.processedCard}:hover { transform: translateY(-4px); box-shadow: var(--fc2-shadow); z-index: 5; }
-    .${C.processedCard}.has-active-dropdown { z-index: 100 !important; }
-    .${C.processedCard}.${C.isViewed} { border-color: var(--fc2-accent); }
+
+    .${C.processedCard}:hover {
+        transform: translateY(-4px);
+        border-color: rgba(255, 255, 255, 0.2);
+        box-shadow: var(--fc2-shadow);
+        z-index: 5;
+    }
+
+    .${C.processedCard}.has-active-dropdown,
+    .${C.cardRebuilt}.has-active-dropdown {
+        z-index: 100 !important;
+        overflow: visible !important;
+    }
+
+    .${C.processedCard}.${C.isViewed} {
+        border-color: var(--fc2-accent);
+    }
 
     /* Detail Page Poster Style (Vertical) */
-    .${C.processedCard}.is-detail { width: 100% !important; max-width: none !important; height: auto !important; }
-    .${C.processedCard}.is-detail .${C.videoPreviewContainer} { aspect-ratio: auto !important; height: auto !important; background: transparent !important; }
-    .${C.processedCard}.is-detail .${C.videoPreviewContainer} img { position: static !important; height: auto !important; width: 100% !important; display: block !important; }
-    .${C.processedCard}.is-detail .${C.infoArea} { margin-top: 0 !important; padding: 10px 12px !important; }
-    .${C.processedCard}.is-detail .${C.resourceLinksContainer} { margin-top: 0 !important; }
+    .${C.processedCard}.is-detail {
+        width: 100% !important;
+        max-width: none !important;
+        height: auto !important;
+    }
 
-    .${C.videoPreviewContainer} { 
-        position: relative; 
-        width: 100%; 
-        aspect-ratio: 16 / 9; 
-        background: #0f1015; 
-        overflow: hidden; 
+    .${C.processedCard}.is-detail .${C.videoPreviewContainer} {
+        aspect-ratio: auto !important;
+        height: auto !important;
+        background: transparent !important;
+    }
+
+    .${C.processedCard}.is-detail .${C.videoPreviewContainer} img {
+        position: static !important;
+        display: block !important;
+        width: 100% !important;
+        height: auto !important;
+    }
+
+    .${C.processedCard}.is-detail .${C.infoArea} {
+        padding: 10px 12px !important;
+        margin-top: 0 !important;
+    }
+
+    .${C.processedCard}.is-detail .${C.resourceLinksContainer} {
+        margin-top: 0 !important;
+    }
+
+    .${C.videoPreviewContainer} {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        background: #0f1015;
         border-top-left-radius: var(--fc2-radius);
         border-top-right-radius: var(--fc2-radius);
+        overflow: hidden;
     }
-    .${C.videoPreviewContainer} video, .${C.videoPreviewContainer} img.${C.staticPreview} { 
-        width: 100%; 
-        height: 100%; 
-        object-fit: contain; 
-        transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.4s ease; 
+
+    .${C.videoPreviewContainer} video, 
+    .${C.videoPreviewContainer} img.${C.staticPreview} {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.4s ease;
     }
-    .${C.processedCard}:hover .${C.videoPreviewContainer} video, .${C.processedCard}:hover .${C.videoPreviewContainer} img.${C.staticPreview} { transform: scale(1.05); }
-    .${C.previewElement} { position: absolute; top: 0; left: 0; transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1); opacity: 1; }
-    .${C.previewElement}.${C.hidden} { opacity: 0; pointer-events: none; }
 
-    /* --- Unified Button System --- */
-    .card-top-right-controls { position: absolute; top: 8px; right: 8px; z-index: 10; display: flex; gap: 6px; align-items: center; }
+    .${C.processedCard}:hover .${C.videoPreviewContainer} video, 
+    .${C.processedCard}:hover .${C.videoPreviewContainer} img.${C.staticPreview} {
+        transform: scale(1.05);
+    }
 
-    .${C.resourceBtn}, .card-top-right-controls > *, .verify-cf-btn {
+    .${C.previewElement} {
+        position: absolute;
+        top: 0;
+        left: 0;
+        opacity: 1;
+        transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .${C.previewElement}.${C.hidden} {
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    /* ============================================================
+       UNIFIED BUTTON SYSTEM
+       ============================================================ */
+
+    .card-top-right-controls {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        z-index: 10;
+        display: flex;
+        gap: 4px;
+        align-items: center;
+    }
+
+    .${C.resourceBtn}, 
+    .card-top-right-controls > *, 
+    .verify-cf-btn {
         position: relative;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        text-decoration: none;
-        cursor: pointer;
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        border-radius: var(--fc2-btn-radius);
         background: rgba(0, 0, 0, 0.25);
         color: rgba(255, 255, 255, 0.9);
-        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: var(--fc2-btn-radius);
         font-size: 13px;
         font-weight: 500;
+        text-decoration: none;
         backdrop-filter: blur(8px);
         -webkit-backdrop-filter: blur(8px);
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        will-change: transform;
     }
-    .${C.resourceBtn} *, .fc2-fab-btn *, .fc2-fab-trigger *, .close-btn *, .verify-cf-btn * { pointer-events: none !important; }
-    .${C.resourceBtn}:hover, .card-top-right-controls > *:hover {
+    
+    .${C.resourceBtn},
+    .card-top-right-controls > *,
+    .fc2-fab-btn,
+    .fc2-fab-trigger,
+    .fc2-enh-tab-btn,
+    .enh-modal-close {
+        cursor: pointer !important;
+    }
+
+    .${C.resourceBtn} *, 
+    .fc2-fab-btn *, 
+    .fc2-fab-trigger *, 
+    .close-btn *, 
+    .verify-cf-btn * {
+        pointer-events: none !important;
+    }
+
+    .${C.resourceBtn}:hover, 
+    .card-top-right-controls > *:hover {
         background: var(--fc2-magnet-grad);
         color: #fff;
         border-color: transparent;
         transform: translateY(-2px) scale(1.02);
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4), inset 0 0 0 1px rgba(255,255,255,0.1);
     }
+
+    .${C.resourceBtn}:active, 
+    .card-top-right-controls > *:active {
+        transform: translateY(0) scale(0.98);
+    }
+
     .verify-cf-btn {
         margin: 4px auto;
         padding: 4px 12px;
         color: #fab387 !important;
         border-color: rgba(250, 179, 135, 0.3) !important;
     }
+
     .verify-cf-btn:hover {
         background: rgba(250, 179, 135, 0.2) !important;
         color: #fff !important;
@@ -1926,18 +3136,52 @@ HISTORY_ADDED: "history:added",
         box-shadow: 0 4px 15px rgba(250, 179, 135, 0.2) !important;
     }
 
-    /* Size Classes */
-    .card-top-right-controls > * { height: 26px; padding: 0 8px; font-size: 11px; }
-    .${C.resourceBtn} { height: 32px; padding: 0 12px; }
+    /* Responsive Size Classes */
+    .card-top-right-controls > * {
+        height: 24px;
+        padding: 0 6px;
+        font-size: 10px;
+    }
+
+    .card-top-right-controls .fc2-icon {
+        font-size: 0.9em;
+    }
+
+    .${C.resourceBtn} {
+        height: 32px; /* Increased from 28px for better accessibility */
+        padding: 0 12px;
+        font-size: 13px;
+    }
+    
+    .${C.resourceBtn} .fc2-icon {
+        font-size: 1.1em;
+    }
+
+    @container (max-width: 250px) {
+        .card-top-right-controls > * {
+            height: 20px;
+            padding: 0 4px;
+            font-size: 9px;
+        }
+        .card-top-right-controls { top: 6px; right: 6px; gap: 3px; }
+        .${C.resourceBtn} { height: 24px; padding: 0 6px; font-size: 10px; }
+        .card-left-actions { gap: 4px; }
+    }
+
+    @container (min-width: 350px) {
+        .card-top-right-controls > * { height: 26px; padding: 0 8px; font-size: 11px; }
+        .${C.resourceBtn} { height: 30px; padding: 0 12px; font-size: 13px; }
+    }
 
     /* Specialized Buttons */
     .${C.resourceBtn}.${C.btnMagnet} {
-        /* Inherits glass style from .resourceBtn, just override specific animations if needed */
         font-weight: 600;
-        border: 1px solid rgba(255, 255, 255, 0.15); /* Re-apply border as previous rule set it to none */
-        background: rgba(0, 0, 0, 0.25); /* Reset to glass */
+        margin-left: auto;
+        background: rgba(0, 0, 0, 0.25);
+        border: 1px solid rgba(255, 255, 255, 0.15);
         animation: fc2-magnet-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
+
     .${C.resourceBtn}.${C.btnMagnet}:hover {
         background: var(--fc2-magnet-grad);
         color: #fff;
@@ -1946,45 +3190,68 @@ HISTORY_ADDED: "history:added",
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4), inset 0 0 0 1px rgba(255,255,255,0.1);
     }
 
-    .btn-toggle-view.is-viewed { color: var(--fc2-primary); border-color: var(--fc2-primary); }
+    .btn-toggle-view.is-viewed {
+        color: var(--fc2-primary);
+        border-color: var(--fc2-primary);
+    }
+
     .btn-toggle-view .icon-viewed { display: none; }
     .btn-toggle-view.is-viewed .icon-viewed { display: inline-block; }
     .btn-toggle-view.is-viewed .icon-unviewed { display: none; }
+
+    .btn-toggle-wanted.is-wanted {
+        background: rgba(241, 196, 15, 0.1) !important;
+        color: #f1c40f;
+        border-color: rgba(241, 196, 15, 0.4);
+        text-shadow: 0 0 10px rgba(241, 196, 15, 0.5);
+    }
+
+    .btn-toggle-blocked.is-blocked {
+        background: rgba(243, 139, 168, 0.1) !important;
+        color: #f38ba8;
+        border-color: rgba(243, 139, 168, 0.4);
+    }
+
+    .card-top-right-controls .btn-toggle-wanted:hover { background: rgba(241, 196, 15, 0.3) !important; color: #fff; }
+    .card-top-right-controls .btn-toggle-blocked:hover { background: rgba(243, 139, 168, 0.3) !important; color: #fff; }
 
     .btn-actress {
         display: inline-flex;
         align-items: center;
         justify-content: center;
         margin: 4px auto;
-        font-weight: 500;
+        padding: 4px 12px;
+        background: rgba(0, 0, 0, 0.25);
         color: rgba(255, 255, 255, 0.9);
         border: 1px solid rgba(255, 255, 255, 0.15);
-        background: rgba(0, 0, 0, 0.25);
-        padding: 4px 12px;
         border-radius: var(--fc2-btn-radius);
+        font-weight: 500;
         line-height: normal;
-        cursor: pointer;
-        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         backdrop-filter: blur(8px);
         -webkit-backdrop-filter: blur(8px);
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
-    .btn-actress:hover { 
+
+    .btn-actress:hover {
         background: var(--fc2-magnet-grad);
         color: #fff;
         border-color: transparent;
-        transform: translateY(-2px) scale(1.02); 
+        transform: translateY(-2px) scale(1.02);
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4), inset 0 0 0 1px rgba(255,255,255,0.1);
     }
 
     .${C.fc2IdBadge} {
         background: rgba(0, 0, 0, 0.5) !important;
         color: #ffffff !important;
-        font-weight: 700 !important;
         border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        border-radius: var(--fc2-btn-radius);
+        font-weight: 700 !important;
+        letter-spacing: 0.5px;
         backdrop-filter: var(--fc2-blur) !important;
         -webkit-backdrop-filter: var(--fc2-blur) !important;
-        letter-spacing: 0.5px;
     }
+
     .${C.fc2IdBadge}.${C.badgeCopied} {
         background: var(--fc2-success) !important;
         color: #111 !important;
@@ -1992,216 +3259,761 @@ HISTORY_ADDED: "history:added",
         animation: fc2-copy-success 0.4s ease;
     }
 
+    /* ============================================================
+       INFO AREA
+       ============================================================ */
+
     .${C.infoArea} {
-        padding: 12px;
-        background: rgba(255, 255, 255, 0.03);
         display: flex;
         flex-direction: column;
         justify-content: flex-end;
         flex-grow: 1;
+        padding: 12px;
+        background: rgba(255, 255, 255, 0.03);
         border-top: 1px solid var(--fc2-border);
         border-bottom-left-radius: var(--fc2-radius);
         border-bottom-right-radius: var(--fc2-radius);
     }
+
     .${C.customTitle} {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        height: 38px;
+        margin: 0 0 10px;
         color: var(--fc2-text) !important;
         font-size: 13px;
         font-weight: 600 !important;
         line-height: 1.5;
-        margin: 0 0 10px;
-        height: 38px;
-        overflow: hidden;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
         text-decoration: none !important;
         text-shadow: none;
+        overflow: hidden;
         transition: color 0.2s;
     }
-    .${C.customTitle}:hover { color: var(--fc2-primary) !important; text-decoration: none !important; }
-    .${C.resourceLinksContainer} { display: flex; gap: 8px; align-items: center; margin-top: auto; justify-content: flex-end; }
 
-    /* --- Link Dropdown --- */
-    .enh-dropdown { position: relative; display: inline-flex; }
+    .${C.customTitle}:hover {
+        color: var(--fc2-primary) !important;
+    }
+
+    .card-left-actions {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 6px;
+        margin-top: auto;
+    }
+
+    .${C.resourceLinksContainer} {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 6px;
+        margin-left: auto;
+    }
+
+    /* ============================================================
+       DROPDOWN & TOOLTIP
+       ============================================================ */
+
+    .enh-dropdown {
+        position: relative;
+        display: inline-flex;
+    }
+
     .enh-dropdown-content {
-        display: none;
         position: absolute;
         top: calc(100% + 8px);
         right: 0;
-        background: rgba(0, 0, 0, 0.6);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        border-radius: 12px;
-        padding: 8px;
+        z-index: 1000;
+        display: none;
         flex-direction: column;
         gap: 6px;
-        z-index: 1000;
-        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
         min-width: 140px;
+        padding: 8px;
+        background: rgba(0, 0, 0, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 12px;
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        z-index: 1001;
         animation: fc2-dropdown-in 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .enh-dropdown.active .enh-dropdown-content { display: flex; }
-    .enh-dropdown-content .resource-btn { width: 100%; justify-content: flex-start; padding: 0 10px; height: 36px; }
-    .enh-dropdown-content .resource-btn .${C.buttonText} { display: inline-block; margin-left: 8px; }
-    .enh-dropdown-content .resource-btn .${C.tooltip} { display: none !important; }
 
-    .${C.buttonText} { display: none; }
+    .enh-dropdown.active .enh-dropdown-content {
+        display: flex;
+    }
+
+    .enh-dropdown-content .${C.resourceBtn} {
+        width: 100%;
+        height: 36px;
+        padding: 0 10px;
+        justify-content: flex-start;
+    }
+
+    .enh-dropdown-content .${C.resourceBtn} .${C.buttonText} {
+        display: inline-block;
+        margin-left: 8px;
+    }
+
+    .${C.buttonText} {
+        display: none;
+    }
 
     .${C.resourceBtn}.${C.btnLoading} {
         cursor: wait;
-        border-color: var(--fc2-primary);
-        opacity: 0.7;
+        opacity: 0.5;
     }
-    .${C.resourceBtn}.${C.btnLoading} .fc2-icon { animation: spin 1s linear infinite; }
 
-    .${C.resourceBtn} .${C.tooltip} { position: absolute; bottom: 125%; left: 50%; transform: translateX(-50%) scale(0.9); background: rgba(0, 0, 0, 0.85); color: #fff; padding: 5px 8px; border-radius: 6px; font-size: 11px; white-space: nowrap; opacity: 0; visibility: hidden; transition: opacity 0.2s; pointer-events: none; z-index: 1000; backdrop-filter: blur(4px); }
-    .${C.resourceBtn}:hover .${C.tooltip} { opacity: 1; visibility: visible; transform: translateX(-50%) scale(1); }
-    .${C.cardRebuilt}.${C.hideNoMagnet}, .${C.cardRebuilt}.${C.isCensored}.${C.hideCensored}, .${C.cardRebuilt}.${C.isViewed}.${C.hideViewed} { display: none !important; }
+    .${C.resourceBtn} .${C.tooltip} {
+        position: absolute;
+        bottom: 125%;
+        left: 50%;
+        z-index: 10000;
+        visibility: hidden;
+        padding: 5px 8px;
+        background: rgba(0, 0, 0, 0.85);
+        color: #fff;
+        border-radius: 6px;
+        font-size: 11px;
+        white-space: nowrap;
+        opacity: 0;
+        backdrop-filter: blur(4px);
+        transform: translateX(-50%) scale(0.9);
+        transition: opacity 0.2s;
+        pointer-events: none;
+    }
 
-    /* --- Detail Toolbar --- */
+    .${C.resourceBtn}:hover .${C.tooltip} {
+        visibility: visible;
+        opacity: 1;
+        transform: translateX(-50%) scale(1);
+    }
+
+    /* ============================================================
+       DETAIL TOOLBAR
+       ============================================================ */
+
     .enh-toolbar {
-        margin: 15px 0 !important; padding: 0 !important;
-        height: 52px !important; min-height: 52px !important;
+        display: flex !important;
+        align-items: center !important;
+        width: 100% !important;
+        height: 52px !important;
+        min-height: 52px !important;
+        margin: 15px 0 !important;
+        padding: 0 !important;
         background: var(--fc2-surface) !important;
-        backdrop-filter: var(--fc2-blur) !important;
-        -webkit-backdrop-filter: var(--fc2-blur) !important;
         border: 1px solid var(--fc2-border) !important;
         border-radius: var(--fc2-radius) !important;
         box-shadow: var(--fc2-shadow);
-        width: 100% !important;
-        display: flex !important; align-items: center !important;
+        backdrop-filter: var(--fc2-blur) !important;
+        -webkit-backdrop-filter: var(--fc2-blur) !important;
         overflow: visible !important;
     }
+
     .enh-toolbar .info-area {
         display: grid !important;
         grid-template-columns: 1fr auto 1fr !important;
-        width: 100% !important; height: 100% !important;
         align-items: center !important;
-        padding: 0 12px !important; margin: 0 !important; background: transparent !important;
+        width: 100% !important;
+        height: 100% !important;
+        padding: 0 12px !important;
+        margin: 0 !important;
+        background: transparent !important;
         border: none !important;
         overflow: visible !important;
     }
+
     .enh-toolbar .card-top-right-controls {
         position: static !important;
-        display: flex !important; justify-content: flex-start !important;
+        display: flex !important;
+        justify-content: flex-start !important;
         gap: 6px !important;
     }
+
     .enh-toolbar .btn-actress {
-        grid-column: 2 !important; justify-self: center !important;
+        grid-column: 2 !important;
+        justify-self: center !important;
         margin: 0 !important;
     }
+
     .enh-toolbar .resource-links-container {
-        grid-column: 3 !important; justify-self: flex-end !important;
-        margin: 0 !important; display: flex !important; gap: 6px !important;
+        grid-column: 3 !important;
+        justify-self: flex-end !important;
+        display: flex !important;
         align-items: center !important;
+        gap: 6px !important;
+        margin: 0 !important;
         overflow: visible !important;
     }
-    .enh-toolbar .resource-links-container .resource-btn .button-text { display: none !important; }
-    .enh-toolbar .resource-links-container .resource-btn {
+
+    .enh-toolbar .${C.resourceBtn}, 
+    .enh-toolbar .card-top-right-controls > * {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        height: 34px !important;
+        padding: 0 15px !important;
+        font-size: 13px !important;
+        line-height: normal !important;
+    }
+
+    .enh-toolbar .resource-links-container .${C.resourceBtn} {
         width: 34px !important;
         padding: 0 !important;
         flex-shrink: 0 !important;
-        justify-content: center !important;
     }
-    /* 工具栏中的下拉菜单特殊处理 */
-    .enh-toolbar .enh-dropdown { position: static !important; }
-    .enh-toolbar .enh-dropdown-trigger { width: 34px !important; }
+
+    /* Dropdown in Toolbar */
+    .enh-toolbar .enh-dropdown {
+        position: static !important;
+    }
+
+    .enh-toolbar .enh-dropdown-trigger {
+        width: 34px !important;
+    }
+
     .enh-toolbar .enh-dropdown-content {
         position: fixed !important;
         top: auto !important;
         right: auto !important;
         transform: translateY(8px);
     }
-    /* 下拉菜单内的按钮需要显示文字 */
-    .enh-toolbar .enh-dropdown-content .resource-btn {
+
+    .enh-toolbar .enh-dropdown-content .${C.resourceBtn} {
         width: 100% !important;
-        justify-content: flex-start !important;
         padding: 0 10px !important;
+        justify-content: flex-start !important;
     }
-    .enh-toolbar .enh-dropdown-content .resource-btn .button-text {
+
+    .enh-toolbar .enh-dropdown-content .${C.resourceBtn} .${C.buttonText} {
         display: inline-block !important;
     }
-    .enh-toolbar .resource-btn, .enh-toolbar .card-top-right-controls > * {
-        height: 34px !important;
-        padding: 0 15px !important;
-        font-size: 13px !important;
-        display: inline-flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        line-height: normal !important;
+
+    /* ============================================================
+       MODAL & SETTINGS PANEL
+       ============================================================ */
+
+    .enh-modal-backdrop {
+        position: fixed;
+        inset: 0;
+        z-index: var(--fc2-z-overlay);
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(8px);
+        transition: all 0.3s;
     }
 
-    /* Settings Panel Refined */
-    .enh-modal-backdrop { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(8px); z-index: 2147483640; transition: all 0.3s; }
-    .enh-modal-panel { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(26, 27, 38, 0.85); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); color: #a9b1d6; border-radius: 16px; box-shadow: 0 40px 80px rgba(0,0,0,0.6); border: 1px solid rgba(255, 255, 255, 0.1); display: flex; flex-direction: column; z-index: 2147483647; animation: popIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); overflow: hidden; }
-    
-    .fc2-enh-settings-panel { width: min(95%, 700px); max-height: 85vh; display: flex; flex-direction: column; }
-    .fc2-enh-settings-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid rgba(255, 255, 255, 0.05); display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.2); }
-    .fc2-enh-settings-header h2 { font-size: 1.25rem; margin: 0; font-weight: 700; color: #fff; letter-spacing: -0.02em; }
-    .close-btn { background: none; border: none; color: #565f89; font-size: 1.2rem; cursor: pointer; transition: color 0.2s; display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; }
-    .close-btn:hover { color: #fff; background: rgba(255,255,255,0.05); }
-    
-    .fc2-enh-settings-tabs { display: flex; padding: 0 1rem; background: rgba(0,0,0,0.2); border-bottom: 1px solid rgba(255,255,255,0.05); }
-    .fc2-enh-tab-btn { background: none; border: none; color: #565f89; padding: 1rem 1.5rem; cursor: pointer; display: flex; align-items: center; gap: 10px; font-weight: 500; transition: all 0.2s; border-bottom: 2px solid transparent; font-size: 0.95rem; }
-    .fc2-enh-tab-btn .fc2-icon { font-size: 1rem; }
-    .fc2-enh-tab-btn:hover { color: #cfc9c2; background: rgba(255,255,255,0.02); }
-    .fc2-enh-tab-btn.active { color: var(--fc2-primary); border-bottom-color: var(--fc2-primary); background: rgba(122,162,247,0.05); }
-    
-    .fc2-enh-settings-content { position: relative; padding: 2rem; overflow-y: auto; flex-grow: 1; background: transparent; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.1) transparent; }
-    .fc2-enh-settings-content::-webkit-scrollbar { width: 6px; }
-    .fc2-enh-settings-content::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
-    
-    .fc2-tab-content-wrapper { animation: fc2-tab-slide 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+    .enh-modal-panel {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        z-index: var(--fc2-z-modal);
+        display: flex;
+        flex-direction: column;
+        background: rgba(26, 27, 38, 0.85);
+        color: #a9b1d6;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        box-shadow: 0 40px 80px rgba(0,0,0,0.6);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        overflow: hidden;
+        animation: fc2-pop-in 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        transform: translate(-50%, -50%);
+    }
 
-    .fc2-enh-settings-group { margin-bottom: 2.5rem; }
-    .fc2-enh-settings-group h3 { margin-top: 0; margin-bottom: 1.25rem; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; color: #565f89; display: flex; align-items: center; border-bottom: none; }
-    
-    .fc2-enh-form-row { margin-bottom: 1.25rem; display: flex; flex-direction: column; gap: 0.6rem; }
-    .fc2-enh-form-row.checkbox { flex-direction: row; align-items: center; gap: 0; cursor: pointer; padding: 4px 0; }
-    .fc2-enh-form-row label { font-size: 0.95rem; color: #cfc9c2; display: flex; align-items: center; cursor: inherit; }
-    
+    .fc2-enh-settings-panel {
+        width: min(95%, 800px);
+        max-height: 92vh;
+    }
+
+    .fc2-enh-settings-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1.25rem 1.5rem;
+        background: rgba(0,0,0,0.2);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .fc2-enh-settings-header h2 {
+        margin: 0;
+        color: #fff;
+        font-size: 1.25rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+    }
+
+    .close-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: none;
+        color: #565f89;
+        border: none;
+        border-radius: 50%;
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .close-btn:hover {
+        background: rgba(255,255,255,0.05);
+        color: #fff;
+    }
+
+    .fc2-enh-settings-tabs {
+        display: flex;
+        padding: 0 1rem;
+        background: rgba(0,0,0,0.2);
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .fc2-enh-tab-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 1rem 1.5rem;
+        background: none;
+        color: #565f89;
+        border: none;
+        border-bottom: 2px solid transparent;
+        font-size: 0.95rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .fc2-enh-tab-btn:hover {
+        background: rgba(255,255,255,0.02);
+        color: #cfc9c2;
+    }
+
+    .fc2-enh-tab-btn.active {
+        background: rgba(122,162,247,0.05);
+        color: var(--fc2-primary);
+        border-bottom-color: var(--fc2-primary);
+    }
+
+    .fc2-enh-settings-content {
+        position: relative;
+        flex-grow: 1;
+        min-height: 350px;
+        padding: 1.5rem;
+        overflow-y: auto;
+        background: transparent;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255,255,255,0.1) transparent;
+    }
+
+    .fc2-enh-settings-content::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .fc2-enh-settings-content::-webkit-scrollbar-thumb {
+        background: rgba(255,255,255,0.1);
+        border-radius: 10px;
+    }
+
+    .fc2-tab-content-wrapper {
+        animation: fc2-tab-slide 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .fc2-enh-settings-group {
+        margin-bottom: 1rem;
+        padding: 1rem;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        transition: all 0.2s ease;
+    }
+
+    .fc2-enh-settings-group:hover {
+        background: rgba(255, 255, 255, 0.03);
+        border-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .fc2-enh-settings-group:last-child {
+        margin-bottom: 0;
+    }
+
+    .fc2-enh-settings-group h3 {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 0;
+        margin-bottom: 1rem;
+        padding-bottom: 0.8rem;
+        color: #7aa2f7;
+        border-bottom: 1px solid rgba(122, 162, 247, 0.15);
+        font-size: 0.9rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+    }
+
+    .fc2-enh-form-row {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .fc2-enh-form-row:last-child {
+        margin-bottom: 0;
+    }
+
+    .fc2-enh-form-row.checkbox {
+        justify-content: flex-start;
+        gap: 0.75rem;
+        padding: 0.4rem 0.5rem;
+        margin-bottom: 0.25rem;
+        border-radius: 8px;
+        transition: background 0.15s ease;
+        cursor: pointer;
+    }
+
+    .fc2-enh-form-row.checkbox:hover {
+        background: rgba(255, 255, 255, 0.03);
+    }
+
+    .fc2-enh-form-row label {
+        display: flex;
+        align-items: center;
+        color: #c0caf5;
+        font-size: 0.95rem;
+        font-weight: 400;
+        line-height: 1.6;
+        cursor: inherit;
+    }
+
     .fc2-enh-form-row select, 
     .fc2-enh-form-row input[type="text"], 
-    .fc2-enh-form-row input[type="password"] { 
-        width: 100%; background: #16161e; border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 0.7rem 1rem; color: #fff; outline: none; transition: border-color 0.2s, box-shadow 0.2s; font-size: 0.9rem;
+    .fc2-enh-form-row input[type="password"] {
+        width: 100%;
+        max-width: 300px;
+        padding: 0.6rem 1rem;
+        background: rgba(255, 255, 255, 0.03);
+        color: #fff;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 8px;
+        font-size: 0.9rem;
+        outline: none;
+        transition: all 0.2s;
     }
+
+    .fc2-enh-form-row select:hover, 
+    .fc2-enh-form-row input:hover {
+        background: rgba(255, 255, 255, 0.06);
+        border-color: rgba(255, 255, 255, 0.15);
+    }
+
     .fc2-enh-form-row select:focus, 
-    .fc2-enh-form-row input:focus { border-color: var(--fc2-primary); box-shadow: 0 0 0 2px rgba(122,162,247,0.2); }
-    
-    input[type="checkbox"] { 
-        appearance: none; -webkit-appearance: none; width: 1.2rem; height: 1.2rem; background: #16161e; border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; margin-right: 0.8rem; cursor: pointer; position: relative; transition: all 0.2s; 
+    .fc2-enh-form-row input:focus {
+        border-color: var(--fc2-primary);
+        box-shadow: 0 0 0 2px rgba(122,162,247,0.2);
     }
-    input[type="checkbox"]:checked { background: var(--fc2-primary); border-color: var(--fc2-primary); }
-    input[type="checkbox"]:checked::after { content: "✔"; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); color: #111; font-size: 0.8rem; font-weight: bold; }
-    
-    .fc2-enh-settings-footer { padding: 1rem 1.5rem; border-top: 1px solid rgba(255, 255, 255, 0.05); display: flex; justify-content: flex-end; gap: 0.75rem; background: rgba(0, 0, 0, 0.2); }
-    .fc2-enh-btn { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255,255,255,0.08); color: #cfc9c2; padding: 0.6rem 1.2rem; border-radius: 8px; cursor: pointer; font-weight: 500; font-size: 0.9rem; transition: all 0.2s; }
-    .fc2-enh-btn:hover { background: rgba(255, 255, 255, 0.08); color: #fff; border-color: rgba(255,255,255,0.15); }
-    .fc2-enh-btn.primary { background: var(--fc2-primary); border: none; color: #111; font-weight: 600; }
-    .fc2-enh-btn.primary:hover { background: #89b4fa; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(122,162,247,0.3); }
-    .fc2-enh-btn.danger { border-color: rgba(243, 139, 168, 0.2); color: #f38ba8; }
-    .fc2-enh-btn.danger:hover { background: rgba(243, 139, 168, 0.1); border-color: #f38ba8; }
 
-    /* Gallery Modal */
-    .enh-gallery-panel { width: 95vw; height: 90vh; max-width: 1200px; padding: 0; }
-    .enh-gallery-content { position: relative; width: 100%; height: 100%; display: flex; flex-direction: column; overflow: hidden; }
-    .enh-gallery-header { padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
-    .enh-gallery-body { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; align-content: flex-start; }
-    .enh-gallery-body img, .enh-gallery-body video { max-width: calc(33% - 10px); height: auto; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); transition: transform 0.2s; cursor: pointer; }
-    .enh-gallery-body img:hover { transform: scale(1.02); }
+    input[type="checkbox"] {
+        position: relative;
+        appearance: none;
+        -webkit-appearance: none;
+        width: 1.2rem;
+        height: 1.2rem;
+        margin-right: 0.8rem;
+        background: #16161e;
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
 
-    /* Large Viewer */
-    .enh-viewer-backdrop { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.95); z-index: 10000; display: flex; flex-direction: column; animation: fc2-fade-in 0.2s ease; }
-    .enh-viewer-stage { flex: 1; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-    .enh-viewer-stage img, .enh-viewer-stage video { width: 100%; height: 100%; max-width: 100%; max-height: 100%; object-fit: contain; box-shadow: 0 0 40px rgba(0,0,0,0.5); border-radius: 4px; }
-    .enh-viewer-nav { position: absolute; top: 0; bottom: 0; width: 15%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: rgba(255,255,255,0.3); font-size: 50px; transition: all 0.2s; user-select: none; z-index: 10001; }
-    .enh-viewer-nav:hover { background: rgba(255,255,255,0.05); color: #fff; }
+    input[type="checkbox"]:checked {
+        background: var(--fc2-primary);
+        border-color: var(--fc2-primary);
+    }
+
+    input[type="checkbox"]:checked::after {
+        content: "✔";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        color: #111;
+        font-size: 0.8rem;
+        font-weight: bold;
+        transform: translate(-50%, -50%);
+    }
+
+    .fc2-enh-settings-footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.75rem;
+        padding: 1rem 1.5rem;
+        background: rgba(0, 0, 0, 0.2);
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .fc2-enh-btn, 
+    .fc2-btn {
+        padding: 0.6rem 1.2rem;
+        background: rgba(255, 255, 255, 0.03);
+        color: #cfc9c2;
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 8px;
+        font-family: var(--fc2-font);
+        font-size: 0.9rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .fc2-enh-btn:hover, 
+    .fc2-btn:hover {
+        background: rgba(255, 255, 255, 0.08);
+        color: #fff;
+        border-color: rgba(255,255,255,0.15);
+    }
+
+    .fc2-enh-btn.primary, 
+    .fc2-btn.primary {
+        background: var(--fc2-primary);
+        color: #111;
+        border: none;
+        font-weight: 600;
+    }
+
+    .fc2-enh-btn.primary:hover, 
+    .fc2-btn.primary:hover {
+        background: #89b4fa;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(122,162,247,0.3);
+    }
+
+    .fc2-enh-btn.danger, 
+    .fc2-btn.danger {
+        color: #f38ba8;
+        border-color: rgba(243, 139, 168, 0.2);
+    }
+
+    .fc2-enh-btn.danger:hover, 
+    .fc2-btn.danger:hover {
+        background: rgba(243, 139, 168, 0.1);
+        border-color: #f38ba8;
+    }
+
+    /* ============================================================
+       MISC INTERACTION COMPONENTS
+       ============================================================ */
+
+    /* Preview Loading State */
+    .preview-loading {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .preview-spinner {
+        animation: fc2-spin 0.8s linear infinite;
+    }
+
+    .preview-progress {
+        font-weight: 500;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .preview-error {
+        animation: fc2-shake 0.5s;
+    }
+
+    /* Smart Tooltip */
+    .smart-tooltip {
+        position: relative;
+        letter-spacing: 0.3px;
+    }
+
+    .smart-tooltip::before {
+        content: '';
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        border: 6px solid transparent;
+        border-bottom-color: rgba(0, 0, 0, 0.9);
+        transform: translateX(-50%);
+    }
+
+    /* Context Menu */
+    .context-menu {
+        z-index: 2000;
+        background: var(--fc2-surface);
+        border: 1px solid var(--fc2-border);
+        border-radius: 8px;
+        box-shadow: var(--fc2-shadow);
+        backdrop-filter: var(--fc2-blur);
+        animation: fc2-pop-in 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .context-menu-item {
+        padding: 8px 12px;
+        color: var(--fc2-text);
+        font-size: 13px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .context-menu-item:hover {
+        background: rgba(255, 255, 255, 0.05);
+        transform: translateX(4px);
+    }
+
+    /* ============================================================
+       GALLERY & VIEWER
+       ============================================================ */
+
+    .enh-gallery-panel {
+        width: 95vw;
+        height: 90vh;
+        max-width: 1200px;
+        padding: 0;
+    }
+
+    .enh-gallery-content {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    .enh-gallery-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 20px;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .enh-gallery-body {
+        display: flex;
+        flex: 1;
+        flex-wrap: wrap;
+        align-content: flex-start;
+        justify-content: center;
+        gap: 10px;
+        padding: 15px;
+        overflow-y: auto;
+    }
+
+    .enh-gallery-body img, 
+    .enh-gallery-body video {
+        max-width: calc(33% - 10px);
+        height: auto;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+
+    .enh-gallery-body img:hover {
+        transform: scale(1.02);
+    }
+
+    .enh-viewer-backdrop {
+        position: fixed;
+        inset: 0;
+        z-index: 10000;
+        display: flex;
+        flex-direction: column;
+        background: rgba(0, 0, 0, 0.95);
+        animation: fc2-fade-simple 0.2s ease;
+    }
+
+    .enh-viewer-stage {
+        position: relative;
+        display: flex;
+        flex: 1;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+
+    .enh-viewer-stage img, 
+    .enh-viewer-stage video {
+        display: block;
+        width: 100%;
+        height: 100%;
+        max-width: 100%;
+        max-height: 100%;
+        border-radius: 4px;
+        box-shadow: 0 0 40px rgba(0,0,0,0.5);
+        object-fit: contain;
+    }
+
+    .enh-viewer-nav {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        z-index: 10001;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 15%;
+        color: rgba(255,255,255,0.3);
+        font-size: 50px;
+        user-select: none;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .enh-viewer-nav:hover {
+        background: rgba(255,255,255,0.05);
+        color: #fff;
+    }
+
     .enh-viewer-nav.prev { left: 0; }
     .enh-viewer-nav.next { right: 0; }
-    .enh-viewer-close { position: absolute; top: 20px; right: 20px; width: 50px; height: 50px; border-radius: 50%; background: rgba(255,255,255,0.1); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 30px; cursor: pointer; z-index: 10002; transition: all 0.2s; }
-    .enh-viewer-close:hover { background: rgba(255,255,255,0.2); transform: rotate(90deg); }
-    .enh-viewer-counter { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.6); color: #fff; padding: 6px 16px; border-radius: 20px; font-size: 14px; backdrop-filter: blur(10px); z-index: 10002; }
+
+    .enh-viewer-close {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        z-index: 10002;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 50px;
+        height: 50px;
+        background: rgba(255,255,255,0.1);
+        color: #fff;
+        border-radius: 50%;
+        font-size: 30px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .enh-viewer-close:hover {
+        background: rgba(255,255,255,0.2);
+        transform: rotate(90deg);
+    }
+
+    .enh-viewer-counter {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        z-index: 10002;
+        padding: 6px 16px;
+        background: rgba(0,0,0,0.6);
+        color: #fff;
+        border-radius: 20px;
+        font-size: 14px;
+        backdrop-filter: blur(10px);
+        transform: translateX(-50%);
+    }
 
     @keyframes fc2-toast-shrink {
         from { width: 100%; }
@@ -2209,103 +4021,128 @@ HISTORY_ADDED: "history:added",
     }
 `;
   const getMobileStyles = (C) => `
-    /* --- Mobile Touch Optimizations --- */
+    /* ============================================================
+       MOBILE TOUCH OPTIMIZATIONS
+       ============================================================ */
+
     @media (max-width: 768px) {
         * {
             /* Prevent double-tap zoom on mobile */
             touch-action: manipulation;
         }
         
-        /* Smooth scrolling on mobile */
         body {
+            /* Smooth scrolling on mobile */
             -webkit-overflow-scrolling: touch;
-        }
-        
-        /* Ensure buttons have adequate touch targets (44x44px minimum) */
-        button, a, .${C.resourceBtn}, .card-top-right-controls > * {
-            min-height: 44px;
-            min-width: 44px;
-        }
-        
-        /* Improve touch feedback */
-        .${C.resourceBtn}:active,
-        .card-top-right-controls > *:active,
-        .fc2-fab-btn:active,
-        .fc2-fab-trigger:active {
-            opacity: 0.7;
-            transform: scale(0.95);
-        }
-        
-        /* Performance optimizations */
-        .${C.processedCard},
-        .${C.cardRebuilt},
-        .${C.resourceBtn},
-        .fc2-fab-btn,
-        .fc2-fab-trigger {
-            /* Enable hardware acceleration */
-            transform: translateZ(0);
-            -webkit-transform: translateZ(0);
-            will-change: transform;
-        }
-        
-        /* Disable hover effects on touch devices to prevent sticky hover */
-        @media (hover: none) {
-            .${C.resourceBtn}:hover,
-            .card-top-right-controls > *:hover,
-            .fc2-fab-btn:hover,
-            .fc2-fab-trigger:hover,
-            .${C.processedCard}:hover {
-                transform: none;
-                box-shadow: none;
-            }
-        }
-        
-        /* Reduce animations for better performance */
-        * {
-            animation-duration: 0.2s !important;
-            transition-duration: 0.2s !important;
-        }
-
-        /* Settings Panel */
-        .fc2-enh-settings-panel { 
-            width: 95% !important; 
-            max-height: 90vh !important; 
-            max-height: 90svh !important; 
-            border-radius: 16px !important; 
-        }
-        .fc2-enh-settings-content { padding: 1rem !important; }
-        .fc2-enh-settings-tabs { flex-wrap: wrap !important; }
-        .fc2-enh-tab-btn { padding: 0.75rem 1rem !important; flex: 1; justify-content: center; }
-        
-        /* Data tab buttons wrap */
-        .fc2-enh-form-row { flex-wrap: wrap !important; }
-        
-        /* Global resets for mobile width */
-        html, body {
             overflow-x: hidden !important;
             width: 100% !important;
             margin: 0 !important;
             padding: 0 !important;
         }
 
-        *, ::before, ::after {
-            box-sizing: border-box !important;
+        html {
+            overflow-x: hidden !important;
+            width: 100% !important;
         }
 
-        /* List Layout - Force single column and full width */
-        div.grid, div.posts, div.flex-wrap, .movie-list, .work-list, .tile-images { 
-            grid-template-columns: 1fr !important; 
+        /* Hardware Acceleration for Mobile */
+        .${C.processedCard},
+        .${C.cardRebuilt},
+        .${C.resourceBtn},
+        .fc2-fab-btn,
+        .fc2-fab-trigger {
+            transform: translateZ(0);
+            -webkit-transform: translateZ(0);
+            will-change: transform;
+        }
+        
+        /* Disable hover effects on touch devices to prevent "sticky" hover */
+        @media (hover: none) {
+            .${C.resourceBtn}:hover,
+            .card-top-right-controls > *:hover,
+            .fc2-fab-btn:hover,
+            .fc2-fab-trigger:hover,
+            .${C.processedCard}:hover {
+                transform: none !important;
+                box-shadow: none !important;
+                border-color: rgba(255, 255, 255, 0.1) !important;
+            }
+        }
+        
+        /* Sharper animations for mobile performance */
+        * {
+            animation-duration: 0.2s !important;
+            transition-duration: 0.2s !important;
+        }
+
+        /* ============================================================
+           SETTINGS PANEL MOBILE
+           ============================================================ */
+
+        .fc2-enh-settings-panel { 
+            width: 98% !important; 
+            max-height: 95vh !important; 
+            max-height: 95svh !important; 
+            border-radius: 12px !important; 
+        }
+
+        .fc2-enh-settings-content {
+            padding: 1rem !important;
+        }
+
+        .fc2-enh-settings-tabs {
+            flex-wrap: wrap !important;
+        }
+
+        .fc2-enh-tab-btn {
+            display: flex;
+            flex: 1;
+            justify-content: center;
+            padding: 0.75rem 0.5rem !important;
+            font-size: 0.85rem !important;
+        }
+        
+        .fc2-enh-form-row {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 0.5rem !important;
+        }
+
+        .fc2-enh-form-row select, 
+        .fc2-enh-form-row input {
+            max-width: 100% !important;
+        }
+
+        .fc2-enh-form-row.checkbox {
+            flex-direction: row !important;
+            align-items: center !important;
+        }
+
+        /* ============================================================
+           GRID & CARD LAYOUT MOBILE
+           ============================================================ */
+
+        /* Force single column layout on common containers */
+        div.grid, 
+        div.posts, 
+        div.flex-wrap, 
+        .movie-list, 
+        .work-list, 
+        .tile-images { 
             display: grid !important; 
+            grid-template-columns: 1fr !important; 
             gap: 12px !important; 
-            padding: 10px !important;
             width: 100% !important;
             max-width: 100% !important;
+            padding: 10px !important;
             box-sizing: border-box !important;
             margin: 0 !important;
         }
 
-        /* Target common site wrapper classes */
-        .container, .main-content, #main, #content {
+        .container, 
+        .main-content, 
+        #main, 
+        #content {
             width: 100% !important;
             max-width: 100% !important;
             padding-left: 0 !important;
@@ -2314,95 +4151,110 @@ HISTORY_ADDED: "history:added",
             margin-right: 0 !important;
         }
         
-        /* Card Container */
         .${C.cardRebuilt} {
             width: 100% !important;
             max-width: 100% !important;
             margin: 0 !important;
         }
         
-        /* Larger Touch Targets */
+        /* Larger Touch Targets for Mobile */
         .card-top-right-controls { 
             top: 12px !important; 
             right: 12px !important; 
             gap: 10px !important; 
         }
+
         .card-top-right-controls > * { 
+            min-height: 44px;
+            min-width: 44px;
             height: 36px !important; 
-            min-width: 36px !important; 
             padding: 0 12px !important; 
             font-size: 14px !important; 
         }
+
         .${C.resourceBtn} { 
+            min-height: 44px;
             height: 44px !important; 
             padding: 0 16px !important; 
             font-size: 14px !important; 
         }
+
         .btn-actress { 
-            padding: 8px 16px !important; 
-            font-size: 15px !important; 
             width: 90% !important; 
             margin: 8px auto !important; 
+            padding: 8px 16px !important; 
+            font-size: 15px !important; 
         }
+
         .fc2-fab-trigger { 
             width: 56px !important; 
             height: 56px !important; 
             font-size: 24px !important; 
         }
+
         .fc2-fab-btn { 
             width: 48px !important; 
             height: 48px !important; 
             font-size: 20px !important; 
         }
         
-        /* Toolbar Optimization */
+        /* ============================================================
+           TOOLBAR & MODAL MOBILE
+           ============================================================ */
+
         .enh-toolbar { 
+            display: flex !important;
+            flex-direction: column !important;
             height: auto !important; 
             min-height: 60px !important; 
-            border-radius: 12px !important; 
             margin: 10px 0 !important; 
+            border-radius: 12px !important; 
         }
+
         .enh-toolbar .info-area { 
             display: flex !important; 
             flex-direction: column !important; 
+            gap: 12px !important;
+            width: 100% !important;
             height: auto !important; 
             padding: 12px !important; 
-            gap: 12px !important;
-            grid-template-columns: 1fr !important;
         }
+
         .enh-toolbar .card-top-right-controls,
         .enh-toolbar .btn-actress,
         .enh-toolbar .resource-links-container { 
-            width: 100% !important; 
+            display: flex !important;
             justify-content: center !important; 
-            grid-column: auto !important;
+            width: 100% !important; 
             margin: 0 !important;
         }
+
         .enh-toolbar .resource-links-container { 
             flex-wrap: wrap !important; 
             gap: 10px !important; 
         }
-        .enh-toolbar .resource-links-container .resource-btn { 
-            width: auto !important; 
+
+        .enh-toolbar .resource-links-container .${C.resourceBtn} { 
             flex: 1 !important; 
+            width: auto !important; 
             min-width: 80px !important; 
         }
         
-        /* Dropdown Menu */
         .enh-dropdown-content {
             min-width: 160px !important;
             max-width: 90vw !important;
         }
-        .enh-dropdown-content .resource-btn {
+
+        .enh-dropdown-content .${C.resourceBtn} {
             height: 44px !important;
             font-size: 14px !important;
         }
         
-        /* Gallery Mobile */
         .enh-viewer-nav { 
             width: 25% !important; 
             font-size: 36px !important; 
         }
+
         .enh-viewer-close { 
             top: 15px !important; 
             right: 15px !important; 
@@ -2410,11 +4262,21 @@ HISTORY_ADDED: "history:added",
             height: 44px !important; 
         }
         
-        /* Modal Panels */
         .enh-modal-panel {
             width: 95% !important;
             max-width: 95% !important;
             max-height: 90vh !important;
+        }
+
+        /* Mobile Context Menu Adjustment */
+        .context-menu {
+            position: fixed !important;
+            bottom: 20px !important;
+            top: auto !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            width: 90% !important;
+            max-width: 300px !important;
         }
         
         /* FAB Container - safely above bottom bar */
@@ -2425,144 +4287,103 @@ HISTORY_ADDED: "history:added",
     }
 `;
   const enhancementStyles = `
-    /* ===== 微交互动画 ===== */
-    
-    /* 按钮悬浮效果 */
+    /* ============================================================
+       GLOBAL STATE & UTILITIES
+       ============================================================ */
+
+    /* Content Visibility for Performance */
+    .fc2-processed-card:nth-child(n+51) {
+        content-visibility: auto;
+        contain-intrinsic-size: 320px 280px;
+    }
+
+    /* Shaded State for Missing Magnets */
+    .no-magnet {
+        filter: grayscale(0.8) opacity(0.5);
+        transition: all 0.5s ease;
+    }
+
+    .no-magnet:hover {
+        filter: grayscale(0.4) opacity(0.8);
+    }
+
+    /* GPU Acceleration Layer */
     .resource-btn,
     .fc2-fab-btn,
-    .fc2-enh-btn {
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    
-    .resource-btn:hover,
-    .fc2-fab-btn:hover,
-    .fc2-enh-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
-    }
-    
-    .resource-btn:active,
-    .fc2-fab-btn:active,
-    .fc2-enh-btn:active {
-        transform: translateY(0);
-        transition-duration: 0.1s;
-    }
-    
-    /* 卡片悬浮效果 */
     .processed-card {
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        will-change: transform;
+        transform: translateZ(0);
+        -webkit-transform: translateZ(0);
     }
-    
-    .processed-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-    }
-    
-    /* ===== 加载动画 ===== */
-    
-    @keyframes spin {
-        from { transform: rotate(0deg); }
-        to { transform: rotate(360deg); }
-    }
-    
-    @keyframes pulse {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.5; }
-    }
-    
-    @keyframes shimmer {
-        0% { background-position: -1000px 0; }
-        100% { background-position: 1000px 0; }
-    }
-    
-    /* 脉冲环动画 */
-    @keyframes pulse-ring {
-        0% {
-            transform: scale(0.8);
-            opacity: 1;
-        }
-        100% {
-            transform: scale(1.2);
-            opacity: 0;
-        }
-    }
-    
-    .btn-loading {
-        position: relative;
-        pointer-events: none;
-        opacity: 0.7;
-    }
-    
-    .btn-loading::before {
-        content: '';
-        position: absolute;
-        inset: -4px;
-        border: 2px solid currentColor;
-        border-radius: inherit;
-        animation: pulse-ring 1.5s ease-out infinite;
-    }
-    
-    /* ===== 骨架屏 ===== */
-    
+
+    /* ============================================================
+       SKELETON SCREENS
+       ============================================================ */
+
     .skeleton-container {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
         gap: 20px;
         padding: 20px;
     }
-    
+
     .skeleton-card {
+        padding: 16px;
         background: var(--fc2-surface);
         border-radius: var(--fc2-radius);
         overflow: hidden;
-        padding: 16px;
+        contain: layout style paint;
     }
-    
+
     .skeleton-image {
         width: 100%;
         height: 150px;
+        margin-bottom: 12px;
         background: linear-gradient(
             90deg,
-            rgba(255,255,255,0.05) 0%,
-            rgba(255,255,255,0.1) 50%,
-            rgba(255,255,255,0.05) 100%
+            rgba(255, 255, 255, 0.05) 0%,
+            rgba(255, 255, 255, 0.1) 50%,
+            rgba(255, 255, 255, 0.05) 100%
         );
         background-size: 1000px 100%;
-        animation: shimmer 2s infinite;
         border-radius: calc(var(--fc2-radius) / 2);
-        margin-bottom: 12px;
+        animation: fc2-shimmer 2s infinite;
     }
-    
+
     .skeleton-text {
         height: 16px;
+        margin-bottom: 8px;
         background: linear-gradient(
             90deg,
-            rgba(255,255,255,0.05) 0%,
-            rgba(255,255,255,0.1) 50%,
-            rgba(255,255,255,0.05) 100%
+            rgba(255, 255, 255, 0.05) 0%,
+            rgba(255, 255, 255, 0.1) 50%,
+            rgba(255, 255, 255, 0.05) 100%
         );
         background-size: 1000px 100%;
-        animation: shimmer 2s infinite;
         border-radius: 4px;
-        margin-bottom: 8px;
+        animation: fc2-shimmer 2s infinite;
     }
-    
+
     .skeleton-text.short {
         width: 60%;
     }
-    
-    /* ===== 进度条 ===== */
-    
+
+    /* ============================================================
+       PROGRESS & LOADING INDICATORS
+       ============================================================ */
+
     .progress-bar {
+        position: relative;
         width: 100%;
         height: 4px;
-        background: rgba(255,255,255,0.1);
+        background: rgba(255, 255, 255, 0.1);
         border-radius: 2px;
         overflow: hidden;
-        position: relative;
+        contain: layout style paint;
     }
-    
+
     .progress-fill {
+        position: relative;
         height: 100%;
         background: linear-gradient(
             90deg,
@@ -2570,265 +4391,55 @@ HISTORY_ADDED: "history:added",
             var(--fc2-accent) 100%
         );
         transition: width 0.3s ease;
-        position: relative;
     }
-    
+
     .progress-fill::after {
         content: '';
         position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
+        inset: 0;
         background: linear-gradient(
-            90deg,
-            transparent 0%,
-            rgba(255,255,255,0.3) 50%,
+            90deg, 
+            transparent 0%, 
+            rgba(255, 255, 255, 0.3) 50%, 
             transparent 100%
         );
-        animation: shimmer 2s infinite;
+        animation: fc2-shimmer 2s infinite;
     }
-    
-    /* ===== 智能提示 ===== */
-    
-    .smart-tooltip {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        letter-spacing: 0.3px;
-    }
-    
-    .smart-tooltip::before {
-        content: '';
-        position: absolute;
-        bottom: 100%;
-        left: 50%;
-        transform: translateX(-50%);
-        border: 6px solid transparent;
-        border-bottom-color: rgba(0, 0, 0, 0.9);
-    }
-    
-    /* ===== 上下文菜单 ===== */
-    
-    .context-menu {
-        animation: fadeInScale 0.2s ease-out;
-    }
-    
-    @keyframes fadeInScale {
-        from {
-            opacity: 0;
-            transform: scale(0.9);
-        }
-        to {
-            opacity: 1;
-            transform: scale(1);
-        }
-    }
-    
-    .context-menu-item {
-        transition: all 0.2s;
-        border-radius: 4px;
-    }
-    
-    .context-menu-item:hover {
-        background: var(--fc2-hover);
-        transform: translateX(4px);
-    }
-    
-    /* ===== 预览加载状态 ===== */
-    
-    .preview-loading {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 10px;
-    }
-    
-    .preview-spinner {
-        animation: spin 0.8s linear infinite;
-    }
-    
-    .preview-progress {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        font-weight: 500;
-        text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-    }
-    
-    .preview-error {
-        animation: shake 0.5s;
-    }
-    
-    @keyframes shake {
-        0%, 100% { transform: translate(-50%, -50%) translateX(0); }
-        25% { transform: translate(-50%, -50%) translateX(-10px); }
-        75% { transform: translate(-50%, -50%) translateX(10px); }
-    }
-    
-    /* ===== 同步状态指示 ===== */
-    
-    .fc2-sync-dot {
+
+    .btn-loading {
         position: relative;
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        background: var(--sync-color, #10b981);
-        transition: all 0.3s;
+        pointer-events: none;
+        opacity: 0.7;
     }
-    
-    .fc2-sync-dot.syncing {
-        --sync-color: #3b82f6;
-        animation: pulse 1.5s infinite;
-    }
-    
-    .fc2-sync-dot.error {
-        --sync-color: #ef4444;
-    }
-    
-    .fc2-sync-dot.success {
-        --sync-color: #10b981;
-    }
-    
-    /* 同步进度环 */
-    .fc2-sync-dot::before {
+
+    .btn-loading::before {
         content: '';
         position: absolute;
         inset: -4px;
-        border: 2px solid var(--sync-color);
-        border-radius: 50%;
-        opacity: 0;
-    }
-    
-    .fc2-sync-dot.syncing::before {
-        opacity: 1;
-        animation: pulse-ring 1.5s ease-out infinite;
-    }
-    
-    /* ===== 淡入淡出动画 ===== */
-    
-    .fade-in {
-        animation: fadeIn 0.3s ease-out;
-    }
-    
-    .fade-out {
-        animation: fadeOut 0.3s ease-out;
-    }
-    
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-    }
-    
-    @keyframes fadeOut {
-        from { opacity: 1; }
-        to { opacity: 0; }
-    }
-    
-    /* ===== 滑动动画 ===== */
-    
-    .slide-in-up {
-        animation: slideInUp 0.3s ease-out;
-    }
-    
-    .slide-out-down {
-        animation: slideOutDown 0.3s ease-out;
-    }
-    
-    @keyframes slideInUp {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-    
-    @keyframes slideOutDown {
-        from {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        to {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-    }
-    
-    /* ===== 响应式优化 ===== */
-    
-    @media (max-width: 768px) {
-        /* 移动端禁用悬浮效果 */
-        .resource-btn:hover,
-        .fc2-fab-btn:hover,
-        .fc2-enh-btn:hover,
-        .processed-card:hover {
-            transform: none;
-            box-shadow: none;
-        }
-        
-        /* 移动端优化骨架屏 */
-        .skeleton-container {
-            grid-template-columns: 1fr;
-        }
-        
-        /* 移动端上下文菜单 */
-        .context-menu {
-            bottom: 20px;
-            left: 50% !important;
-            top: auto !important;
-            transform: translateX(-50%);
-            width: 90%;
-            max-width: 300px;
-        }
-    }
-    
-    /* ===== 性能优化 ===== */
-    
-    .no-magnet {
-        filter: grayscale(0.8) opacity(0.5);
-        transition: all 0.5s ease;
-    }
-    
-    .no-magnet:hover {
-        filter: grayscale(0.4) opacity(0.8);
-    }
-    
-    /* 使用GPU加速 */
-    .resource-btn,
-    .fc2-fab-btn,
-    .processed-card,
-    .smart-tooltip,
-    .context-menu {
-        will-change: transform;
-        transform: translateZ(0);
-        -webkit-transform: translateZ(0);
-    }
-    
-    /* 减少重绘 */
-    .preview-loading,
-    .skeleton-card,
-    .progress-bar {
-        contain: layout style paint;
+        border: 2px solid currentColor;
+        border-radius: inherit;
+        animation: fc2-pulse-ring 1.5s ease-out infinite;
     }
 
-    @keyframes fc2-toast-shrink {
-        from { transform: scaleX(1); }
-        to { transform: scaleX(0); }
-    }
+    /* ============================================================
+       ANIMATION HELPERS (LEGACY COMPAT)
+       ============================================================ */
 
-    .pulse-once {
-        animation: fc2-pulse-once 0.4s ease-out;
-    }
-
-    @keyframes fc2-pulse-once {
-        0% { transform: scale(1); }
-        50% { transform: scale(1.15); background: var(--fc2-primary); color: #111; }
-        100% { transform: scale(1); }
-    }
+    .fade-in { animation: fc2-fade-simple 0.3s ease-out; }
+    .fade-out { animation: fc2-fade-out 0.3s ease-out; }
+    .slide-in-up { animation: fc2-slide-up 0.3s ease-out; }
+    .slide-out-down { animation: fc2-slide-down-out 0.3s ease-out; }
 `;
   const getConsolidatedCss = () => {
     const C = Config.CLASSES;
-    const performanceFix = location.hostname.includes("missav") || location.hostname.includes("supjav") ? `
+    const performanceFix = location.hostname.includes("missav") || location.hostname.includes("supjav") || location.hostname.includes("javdb") ? `
         .${C.processedCard}:nth-child(n+51) { content-visibility: auto; contain-intrinsic-size: 320px 280px; }
+    ` : "";
+    const siteSpecificFix = location.hostname.includes("fd2ppv") ? `
+        .artist-card.card-rebuilt,
+        .work-card.card-rebuilt,
+        .work-list > div,
+        .artist-list > div { overflow: visible !important; }
     ` : "";
     return `
         ${tokens}
@@ -2836,6 +4447,7 @@ HISTORY_ADDED: "history:added",
         ${getBaseStyles(C)}
         ${getComponentStyles(C)}
         ${performanceFix}
+        ${siteSpecificFix}
         ${getMobileStyles(C)}
         ${enhancementStyles}
     `;
@@ -2848,6 +4460,25 @@ HISTORY_ADDED: "history:added",
     return {
       init() {
         if (sharedSheet) return;
+        let lastUpdate = 0;
+        const detectTheme = () => {
+          const now = Date.now();
+          if (now - lastUpdate < 500) return;
+          lastUpdate = now;
+          const bodyBg = window.getComputedStyle(document.body).backgroundColor;
+          if (!bodyBg || bodyBg === "rgba(0, 0, 0, 0)" || bodyBg === "transparent") return;
+          const rgb = bodyBg.match(/\d+/g);
+          if (rgb && rgb.length >= 3) {
+            const r = parseInt(rgb[0]), g = parseInt(rgb[1]), b = parseInt(rgb[2]);
+            const isLight = r * 0.299 + g * 0.587 + b * 0.114 > 180;
+            const hasClass = document.documentElement.classList.contains("fc2-light-theme");
+            if (isLight && !hasClass) {
+              document.documentElement.classList.add("fc2-light-theme");
+            } else if (!isLight && hasClass) {
+              document.documentElement.classList.remove("fc2-light-theme");
+            }
+          }
+        };
         const css = getCss();
         if (typeof GM_addStyle !== "undefined") {
           GM_addStyle(css);
@@ -2862,6 +4493,11 @@ HISTORY_ADDED: "history:added",
           document.adoptedStyleSheets = [...document.adoptedStyleSheets, sharedSheet];
         } catch (_e) {
         }
+        if (document.body) detectTheme();
+        else document.addEventListener("DOMContentLoaded", detectTheme);
+        const themeObserver = new MutationObserver(() => detectTheme());
+        themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+        themeObserver.observe(document.body, { attributes: true, attributeFilter: ["class", "style"] });
       },
       getCss
     };
@@ -2869,20 +4505,24 @@ HISTORY_ADDED: "history:added",
   const GridManager = (() => {
     let styleEl;
     return {
+      init() {
+        CoreEvents.on(AppEvents.GRID_CHANGED, (cols) => this.apply(cols));
+        const savedCols = typeof GM_getValue !== "undefined" ? GM_getValue(STORAGE_KEYS.USER_GRID_COLUMNS, 0) : 0;
+        if (savedCols > 0) {
+          this.apply(savedCols);
+        }
+      },
       apply(cols) {
         const hn = location.hostname;
-        if (hn === "missav.ws") {
+        if (hn.includes("missav")) {
           const path = location.pathname;
           if (/\/(cn\/|en\/|ja\/)?(fc2-ppv-|[a-z]{2,5}-)\d+/i.test(path)) return;
-          if (path === "/" || /^\/([a-z]{2}(\/|$))?/.test(path) || path.includes("/dm")) {
-            if (!path.includes("/search") && !path.includes("/new") && !path.includes("/release")) return;
-          }
         }
         if (!styleEl) {
           styleEl = document.createElement("style");
           document.head.appendChild(styleEl);
         }
-        const sel = hn.includes("fc2ppvdb.com") ? { cont: ".flex.flex-wrap.-m-4.py-4", card: `> .${Config.CLASSES.cardRebuilt}` } : hn.includes("fd2ppv.cc") ? {
+        const sel = hn.includes("fc2ppvdb.com") ? { cont: "[data-enh-grid-container], .flex.flex-wrap.-m-4.py-4, .container > .flex.flex-wrap, #actress-articles .flex.flex-wrap, section > div > .flex.flex-wrap", card: `> .${Config.CLASSES.cardRebuilt}` } : hn.includes("fd2ppv.cc") ? {
           cont: ".flex.flex-wrap, .work-list, .container .grid, .other-works-grid",
           card: `> .${Config.CLASSES.cardRebuilt}`
         } : hn.includes("supjav.com") ? { cont: ".posts.clearfix:not(:has(.swiper-wrapper))", card: `> .${Config.CLASSES.cardRebuilt}` } : hn.includes("missav.ws") ? { cont: 'div.grid[class*="grid-cols-"]', card: `> .${Config.CLASSES.cardRebuilt}` } : hn.includes("javdb") ? { cont: ".movie-list, .tile-images.tile-small", card: `> .${Config.CLASSES.cardRebuilt}` } : null;
@@ -2890,8 +4530,27 @@ HISTORY_ADDED: "history:added",
           styleEl.innerHTML = "";
           return;
         }
-        const cardCss = sel.card ? `${sel.cont} ${sel.card} { padding: 0 !important; margin: 0 !important; width: 100% !important; box-sizing: border-box !important; }` : "";
-        styleEl.innerHTML = `${sel.cont} { display: grid !important; grid-template-columns: repeat(${cols === 2 ? 2 : 1}, 1fr) !important; gap: 1rem !important; margin: 0 !important; padding: 1rem 10px !important; width: 100% !important; max-width: none !important; box-sizing: border-box !important; } ${cardCss} ${sel.cont} .inner { padding: 0 !important; } @media (min-width: 768px) { ${sel.cont} { grid-template-columns: repeat(${cols}, 1fr) !important; padding: 1rem 0 !important; } }`;
+        const containerList = sel.cont.split(",").map((s) => s.trim());
+        const cardRules = containerList.map((s) => `${s} ${sel.card}`).join(", ");
+        const baseGridCss = `
+                display: grid !important; 
+                grid-template-columns: repeat(${cols === 2 ? 2 : 1}, 1fr) !important; 
+                gap: 1rem !important; 
+                margin: 0 !important; 
+                padding: 1rem 10px !important; 
+                width: 100% !important; 
+                max-width: none !important; 
+                box-sizing: border-box !important;
+            `;
+        const cardCss = sel.card ? `${cardRules} { padding: 0 !important; margin: 0 !important; width: 100% !important; box-sizing: border-box !important; }` : "";
+        styleEl.innerHTML = `
+                ${sel.cont} { ${baseGridCss} }
+                ${cardCss}
+                ${sel.cont} .inner { padding: 0 !important; }
+                @media (min-width: 768px) {
+                    ${sel.cont} { grid-template-columns: repeat(${cols}, 1fr) !important; padding: 1rem 0 !important; }
+                }
+            `;
       }
     };
   })();
@@ -3155,19 +4814,20 @@ HISTORY_ADDED: "history:added",
       if (!exists) return;
       const previewBtn = UIButtons.btn(IconImages, t("extraPreviewTitle"), "javascript:;", async (e) => {
         const btn = e.currentTarget;
-        const iconContainer = btn.querySelector(".fc2-icon");
-        if (!iconContainer) return;
-        const originalSvg = iconContainer.innerHTML;
-        iconContainer.innerHTML = IconSpinner;
+        if (btn.classList.contains(Config.CLASSES.btnLoading)) return;
         btn.classList.add(Config.CLASSES.btnLoading);
-        const res = await ScraperService.fetchExtraPreviews(id);
-        iconContainer.innerHTML = originalSvg;
-        btn.classList.remove(Config.CLASSES.btnLoading);
-        if (res?.length) openGallery(id, res);
-        else Toast$1.show(t("alertNoPreview"), "info");
+        try {
+          const res = await ScraperService.fetchExtraPreviews(id);
+          if (res?.length) openGallery(id, res);
+          else Toast$1.show(t("alertNoPreview"), "info");
+        } finally {
+          btn.classList.remove(Config.CLASSES.btnLoading);
+        }
       });
       previewBtn.classList.add("btn-gallery");
-      cont.appendChild(previewBtn);
+      const magnetBtn = cont.querySelector(`.${Config.CLASSES.btnMagnet}`);
+      if (magnetBtn) cont.insertBefore(previewBtn, magnetBtn);
+      else cont.appendChild(previewBtn);
     },
     addActressButton: (cont, actress) => {
       if (!cont || !actress || cont.querySelector(".btn-actress")) return;
@@ -3188,8 +4848,10 @@ HISTORY_ADDED: "history:added",
         },
         actress
       );
+      const leftActions = cont.querySelector(".card-left-actions");
       const links = cont.querySelector(`.${Config.CLASSES.resourceLinksContainer}`);
-      if (links) cont.insertBefore(actBtn, links);
+      if (leftActions) cont.insertBefore(actBtn, leftActions);
+      else if (links) cont.insertBefore(actBtn, links);
       else cont.appendChild(actBtn);
     },
     addMagnetButton: (cont, url) => {
@@ -3372,11 +5034,13 @@ HISTORY_ADDED: "history:added",
       } = data;
       const ctrls = h("div", { className: "card-top-right-controls" });
       if (State.proxy.enableHistory) {
-        const isViewed = HistoryManager.has(id);
+        const status = HistoryManager.getStatus(id);
+        const isViewed = status === "watched";
+        const isWanted = status === "wanted";
+        const isBlocked = status === "blocked";
         const vBtn = h(
-          "a",
+          "span",
           {
-            href: "javascript:;",
             className: `resource-btn btn-toggle-view ${isViewed ? "is-viewed" : ""}`,
             onclick: (e) => {
               e.preventDefault();
@@ -3384,7 +5048,7 @@ HISTORY_ADDED: "history:added",
               const c = vBtn.closest(`.${C.processedCard}`), oc = c?.closest(`.${C.cardRebuilt}`);
               if (!c) return;
               const newState = !c.classList.contains(C.isViewed);
-              if (newState) HistoryManager.add(id);
+              if (newState) HistoryManager.add(id, "watched");
               else HistoryManager.remove(id);
               c.classList.toggle(C.isViewed, newState);
               vBtn.classList.toggle("is-viewed", newState);
@@ -3400,7 +5064,100 @@ HISTORY_ADDED: "history:added",
           UIUtils.icon(IconEyeSlash, "icon-unviewed"),
           h("span", { className: C.tooltip }, isViewed ? t("tooltipMarkAsUnviewed") : t("tooltipMarkAsViewed"))
         );
-        ctrls.appendChild(vBtn);
+        const wBtn = h(
+          "span",
+          {
+            className: `resource-btn btn-toggle-wanted ${isWanted ? "is-wanted" : ""}`,
+            onclick: (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              const c = wBtn.closest(`.${C.processedCard}`), oc = c?.closest(`.${C.cardRebuilt}`);
+              if (!c) return;
+              const newState = !c.classList.contains(C.isWanted);
+              if (newState) HistoryManager.add(id, "wanted");
+              else HistoryManager.remove(id);
+              c.classList.toggle(C.isWanted, newState);
+              wBtn.classList.toggle("is-wanted", newState);
+              if (oc) oc.classList.toggle(C.isWanted, newState);
+            }
+          },
+          UIUtils.icon(IconStar, "icon-wanted"),
+          h("span", { className: C.tooltip }, isWanted ? t("tooltipMarkAsUnwanted") : t("tooltipMarkAsWanted"))
+        );
+        const bBtn = h(
+          "span",
+          {
+            className: `resource-btn btn-toggle-blocked ${isBlocked ? "is-blocked" : ""}`,
+            onclick: (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              const c = bBtn.closest(`.${C.processedCard}`), oc = c?.closest(`.${C.cardRebuilt}`);
+              if (!c) return;
+              const newState = !c.classList.contains(C.isBlocked);
+              if (newState) HistoryManager.add(id, "blocked");
+              else HistoryManager.remove(id);
+              c.classList.toggle(C.isBlocked, newState);
+              bBtn.classList.toggle("is-blocked", newState);
+              if (oc) {
+                oc.classList.toggle(C.isBlocked, newState);
+                UIUtils.applyHistoryVisibility(oc);
+              }
+            }
+          },
+          UIUtils.icon(IconBan, "icon-blocked"),
+          h("span", { className: C.tooltip }, isBlocked ? t("tooltipMarkAsUnblocked") : t("tooltipMarkAsBlocked"))
+        );
+        ctrls.append(vBtn);
+      }
+      const leftActions = h("div", { className: "card-left-actions" });
+      if (State.proxy.enableHistory) {
+        const status = HistoryManager.getStatus(id);
+        const isWanted = status === "wanted";
+        const isBlocked = status === "blocked";
+        const wBtn = h(
+          "span",
+          {
+            className: `resource-btn btn-toggle-wanted ${isWanted ? "is-wanted" : ""}`,
+            onclick: (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              const c = wBtn.closest(`.${C.processedCard}`), oc = c?.closest(`.${C.cardRebuilt}`);
+              if (!c) return;
+              const newState = !c.classList.contains(C.isWanted);
+              if (newState) HistoryManager.add(id, "wanted");
+              else HistoryManager.remove(id);
+              c.classList.toggle(C.isWanted, newState);
+              wBtn.classList.toggle("is-wanted", newState);
+              if (oc) oc.classList.toggle(C.isWanted, newState);
+            }
+          },
+          UIUtils.icon(IconStar, "icon-wanted"),
+          h("span", { className: C.tooltip }, isWanted ? t("tooltipMarkAsUnwanted") : t("tooltipMarkAsWanted"))
+        );
+        const bBtn = h(
+          "span",
+          {
+            className: `resource-btn btn-toggle-blocked ${isBlocked ? "is-blocked" : ""}`,
+            onclick: (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              const c = bBtn.closest(`.${C.processedCard}`), oc = c?.closest(`.${C.cardRebuilt}`);
+              if (!c) return;
+              const newState = !c.classList.contains(C.isBlocked);
+              if (newState) HistoryManager.add(id, "blocked");
+              else HistoryManager.remove(id);
+              c.classList.toggle(C.isBlocked, newState);
+              bBtn.classList.toggle("is-blocked", newState);
+              if (oc) {
+                oc.classList.toggle(C.isBlocked, newState);
+                UIUtils.applyHistoryVisibility(oc);
+              }
+            }
+          },
+          UIUtils.icon(IconBan, "icon-blocked"),
+          h("span", { className: C.tooltip }, isBlocked ? t("tooltipMarkAsUnblocked") : t("tooltipMarkAsBlocked"))
+        );
+        leftActions.append(wBtn, bBtn);
       }
       const badge = h(
         "div",
@@ -3467,13 +5224,6 @@ HISTORY_ADDED: "history:added",
             card.classList.add("has-active-dropdown");
             const outer = card.closest(".card-rebuilt");
             if (outer) outer.classList.add("has-active-dropdown");
-            const isInToolbar = dropdown.closest(".enh-toolbar");
-            if (isInToolbar) {
-              const rect = trigger.getBoundingClientRect();
-              dropdownContent.style.right = `${window.innerWidth - rect.right}px`;
-              dropdownContent.style.left = "auto";
-              dropdownContent.style.top = `${rect.bottom + 8}px`;
-            }
           } else {
             card.classList.remove("has-active-dropdown");
             const outer = card.closest(".card-rebuilt");
@@ -3525,14 +5275,11 @@ HISTORY_ADDED: "history:added",
           info.appendChild(UIButtons.btn("", t("verifyCF"), `https://fd2ppv.cc/articles/${id}`, (e) => {
           }, "verify-cf-btn"));
         } else {
-          info.appendChild(UIButtons.btn("", actress, "javascript:void(0);", (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            UIUtils.copyButtonBehavior(e.currentTarget, actress, t("tooltipCopied"));
-          }));
+          UIButtons.addActressButton(leftActions, actress);
         }
       }
-      info.appendChild(links);
+      leftActions.appendChild(links);
+      info.appendChild(leftActions);
       const card = h(
         "div",
         {
@@ -3542,44 +5289,141 @@ HISTORY_ADDED: "history:added",
         previewLink,
         info
       );
-      if (preservedIconsHTML && preservedIconsHTML.includes("color_free0")) card.classList.add(C.isCensored);
+      if (preservedIconsHTML && preservedIconsHTML.includes("icon-mosaic_free color_free0")) card.classList.add(C.isCensored);
       if (State.proxy.enableHistory && HistoryManager.has(id)) card.classList.add(C.isViewed);
       return { finalElement: card, linksContainer: links, newCard: card };
     }
   };
   const UIToolbar = {
     createDetailToolbar: (data, markViewed, addPreviewButton) => {
-      const { id, type, title, actress, previewSlug } = data;
-      const { finalElement, linksContainer } = UICard.createEnhancedCard({
-        id,
-        type,
-        title,
-        articleUrl: location.href,
-        primaryImageUrl: type === "fc2" ? `https://wumaobi.com/fc2daily/data/FC2-PPV-${id}/cover.jpg` : void 0,
-        actress,
-        previewSlug
-      }, markViewed);
-      finalElement.classList.add("enh-toolbar");
-      const preview = finalElement.querySelector(`.${Config.CLASSES.videoPreviewContainer}`);
-      const ctrls = finalElement.querySelector(".card-top-right-controls");
-      const infoArea = finalElement.querySelector(`.${Config.CLASSES.infoArea}`);
-      if (preview && ctrls && infoArea) {
-        infoArea.prepend(ctrls);
-        preview.remove();
+      const { id, type, actress } = data;
+      const C = Config.CLASSES;
+      const toolbar = h("div", { className: "enh-toolbar" });
+      const infoArea = h("div", { className: `${C.infoArea} info-area` });
+      const ctrls = h("div", { className: "card-top-right-controls" });
+      if (State.proxy.enableHistory) {
+        const status = HistoryManager.getStatus(id);
+        const isViewed = status === "watched";
+        const vBtn = h(
+          "a",
+          {
+            href: "javascript:;",
+            className: `resource-btn btn-toggle-view ${isViewed ? "is-viewed" : ""}`,
+            onclick: (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              const newState = !vBtn.classList.contains("is-viewed");
+              if (newState) HistoryManager.add(id, "watched");
+              else HistoryManager.remove(id);
+              vBtn.classList.toggle("is-viewed", newState);
+              const tt = vBtn.querySelector(`.${C.tooltip}`);
+              if (tt) tt.textContent = newState ? t("tooltipMarkAsUnviewed") : t("tooltipMarkAsViewed");
+            }
+          },
+          UIUtils.icon(IconEye, "icon-viewed"),
+          UIUtils.icon(IconEyeSlash, "icon-unviewed"),
+          h("span", { className: C.tooltip }, isViewed ? t("tooltipMarkAsUnviewed") : t("tooltipMarkAsViewed"))
+        );
+        ctrls.appendChild(vBtn);
       }
-      if (actress && infoArea) UIButtons.addActressButton(infoArea, actress);
-      infoArea?.querySelector(`.${Config.CLASSES.customTitle}`)?.remove();
+      const badge = h(
+        "div",
+        {
+          className: `${C.fc2IdBadge} ${C.resourceBtn}`,
+          title: t("tooltipClickToCopy"),
+          onclick: (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            UIUtils.copyButtonBehavior(badge, id, "COPIED");
+          }
+        },
+        id
+      );
+      ctrls.appendChild(badge);
+      const links = h("div", { className: `${C.resourceLinksContainer} resource-links-container` });
+      if (State.proxy.enableHistory) {
+        const status = HistoryManager.getStatus(id);
+        const isWanted = status === "wanted";
+        const isBlocked = status === "blocked";
+        const wBtn = h(
+          "a",
+          {
+            href: "javascript:;",
+            className: `resource-btn btn-toggle-wanted ${isWanted ? "is-wanted" : ""}`,
+            onclick: (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              const newState = !wBtn.classList.contains("is-wanted");
+              if (newState) HistoryManager.add(id, "wanted");
+              else HistoryManager.remove(id);
+              wBtn.classList.toggle("is-wanted", newState);
+            }
+          },
+          UIUtils.icon(IconStar, "icon-wanted"),
+          h("span", { className: C.tooltip }, isWanted ? t("tooltipMarkAsUnwanted") : t("tooltipMarkAsWanted"))
+        );
+        const bBtn = h(
+          "a",
+          {
+            href: "javascript:;",
+            className: `resource-btn btn-toggle-blocked ${isBlocked ? "is-blocked" : ""}`,
+            onclick: (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              const newState = !bBtn.classList.contains("is-blocked");
+              if (newState) HistoryManager.add(id, "blocked");
+              else HistoryManager.remove(id);
+              bBtn.classList.toggle("is-blocked", newState);
+            }
+          },
+          UIUtils.icon(IconBan, "icon-blocked"),
+          h("span", { className: C.tooltip }, isBlocked ? t("tooltipMarkAsUnblocked") : t("tooltipMarkAsBlocked"))
+        );
+        links.append(wBtn, bBtn);
+      }
+      if (State.proxy.enableExternalLinks) {
+        const dropdown = h("div", { className: "enh-dropdown" });
+        const dropdownContent = h("div", { className: "enh-dropdown-content" });
+        const trigger = UIButtons.btn(IconLink, t("labelExternalLinks"), "javascript:;", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const isActive = dropdown.classList.contains("active");
+          document.querySelectorAll(".enh-dropdown.active").forEach((d) => d.classList.remove("active"));
+          if (!isActive) dropdown.classList.add("active");
+        });
+        trigger.classList.add("enh-dropdown-trigger");
+        trigger.appendChild(h("span", { className: "fc2-icon", innerHTML: IconCaretDown, style: { marginLeft: "4px", opacity: "0.6", fontSize: "10px" } }));
+        const hn = location.hostname;
+        const { EXTERNAL_URLS: EXTERNAL_URLS2 } = Config;
+        [
+          { n: "Supjav", i: IconBolt, u: EXTERNAL_URLS2.SUPJAV.replace("{id}", id), s: !hn.includes("supjav") },
+          { n: "MissAV", i: IconPlayCircle, u: type === "fc2" ? EXTERNAL_URLS2.MISSAV_FC2.replace("{id}", id) : EXTERNAL_URLS2.MISSAV.replace("{id}", id), s: !hn.includes("missav") },
+          { n: "JavDB", i: IconDatabase, u: EXTERNAL_URLS2.JAVDB.replace("{id}", id), s: !hn.includes("javdb") },
+          { n: "FC2DB", i: IconListUl, u: EXTERNAL_URLS2.FC2DB.replace("{id}", id), s: type === "fc2" && !hn.includes("fc2ppvdb") },
+          { n: "FD2", i: IconServer, u: EXTERNAL_URLS2.FD2.replace("{id}", id), s: type === "fc2" && !hn.includes("fd2ppv") },
+          { n: "Sukebei", i: IconMagnifyingGlass, u: EXTERNAL_URLS2.SUKEBEI.replace("{id}", id), s: true }
+        ].filter((x) => x.s).forEach((x) => {
+          dropdownContent.appendChild(UIButtons.btn(x.i, x.n, x.u));
+        });
+        dropdown.append(trigger, dropdownContent);
+        links.appendChild(dropdown);
+      }
+      infoArea.appendChild(ctrls);
+      if (actress) UIButtons.addActressButton(infoArea, actress);
+      infoArea.appendChild(links);
+      toolbar.appendChild(infoArea);
       ScraperService.fetchMagnets([{ id, type }], async (_, url) => {
         await CacheManager.set(id, url);
-        if (url) UIButtons.addMagnetButton(linksContainer, url);
+        if (url) UIButtons.addMagnetButton(links, url);
       });
-      if (type === "fc2" && linksContainer) addPreviewButton(linksContainer, id);
-      return finalElement;
+      if (type === "fc2") addPreviewButton(links, id);
+      return toolbar;
     }
   };
   const UIBuilder = {
     createElement: UIUtils.h,
-    markViewed: (id, el) => UIUtils.markViewed(id, el, UIUtils.applyHistoryVisibility),
+    markViewed: (id, el) => UIUtils.markByStatus(id, "watched", el, UIUtils.applyHistoryVisibility),
+    markByStatus: (id, status, el) => UIUtils.markByStatus(id, status, el, UIUtils.applyHistoryVisibility),
     btn: UIButtons.btn,
     createEnhancedCard: (data) => UICard.createEnhancedCard(data, UIBuilder.markViewed),
     createExtraPreviewsGrid: UIGallery.createExtraPreviewsGrid,
@@ -3595,36 +5439,60 @@ HISTORY_ADDED: "history:added",
   };
   const EnhancedPreviewManager = {
 cache: new Map(),
-    maxCacheSize: 10,
+    maxCacheSize: 5,
+
 preloadQueue: new Set(),
     isPreloading: false,
 _loadVideoProgressive(card) {
-      const isTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0;
       const cont = card.querySelector(`.${Config.CLASSES.videoPreviewContainer}`);
       const img = cont?.querySelector(`img.${Config.CLASSES.staticPreview}`);
-      if (!cont || !img || cont.querySelector("video")) return;
+      if (!cont || !img) return;
       const { id, type, previewSlug } = card.dataset;
       const url = this._getPreviewUrl(id, type, previewSlug);
+      const cached = this.cache.get(id);
+      if (cached && cached.element instanceof HTMLVideoElement) {
+        const video2 = cached.element;
+        if (video2.parentNode !== cont) {
+          if (video2.parentNode) video2.remove();
+          cont.appendChild(video2);
+        }
+        video2.classList.remove(Config.CLASSES.hidden);
+        img.classList.add(Config.CLASSES.hidden);
+        video2.play().catch(() => {
+        });
+        cached.timestamp = Date.now();
+        if (!("ontouchstart" in window || navigator.maxTouchPoints > 0)) {
+          this._attachWarmCleanup(card, video2, img, cont);
+        }
+        return;
+      }
+      if (cont.querySelector("video")) return;
       this._showLoadingIndicator(cont);
       const video = this._createVideoElement(url);
       cont.appendChild(video);
       let isStillHovered = true;
-      if (isTouch) {
-        this._cachePreview(id, video);
-      } else {
-        const cleanup = () => {
+      const isTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0;
+      if (!isTouch) {
+        this._attachWarmCleanup(card, video, img, cont, () => {
           isStillHovered = false;
-          if (video.isConnected) {
-            video.pause();
-            video.remove();
-          }
-          img.classList.remove(Config.CLASSES.hidden);
-          this._hideLoadingIndicator(cont);
-        };
-        card.addEventListener("mouseleave", cleanup, { once: true });
+        });
       }
-      this._attachLoadingEventsWithCheck(video, cont, img, () => isStillHovered);
+      this._attachLoadingEventsWithCheck(video, cont, img, () => isStillHovered, id);
       Logger$1.log("PreviewManager", `Loading preview for ${id}`);
+    },
+_attachWarmCleanup(card, video, img, cont, onCleanup) {
+      const cleanup = () => {
+        if (onCleanup) onCleanup();
+        if (video.isConnected) {
+          video.pause();
+          video.classList.add(Config.CLASSES.hidden);
+        }
+        img.classList.remove(Config.CLASSES.hidden);
+        this._hideLoadingIndicator(cont);
+        const id = card.dataset.id;
+        if (id) this._cachePreview(id, video);
+      };
+      card.addEventListener("mouseleave", cleanup, { once: true });
     },
 _createVideoElement(url) {
       const video = h("video", {
@@ -3639,7 +5507,7 @@ _createVideoElement(url) {
       });
       return video;
     },
-_attachLoadingEventsWithCheck(video, cont, img, checkHover) {
+_attachLoadingEventsWithCheck(video, cont, img, checkHover, id) {
       video.addEventListener("progress", () => {
         if (video.buffered.length > 0 && checkHover()) {
           const percent = video.buffered.end(0) / video.duration * 100;
@@ -3649,7 +5517,7 @@ _attachLoadingEventsWithCheck(video, cont, img, checkHover) {
       video.addEventListener("playing", () => {
         if (!checkHover()) {
           video.pause();
-          video.remove();
+          this._cachePreview(id, video);
           return;
         }
         requestAnimationFrame(() => {
@@ -3659,7 +5527,7 @@ _attachLoadingEventsWithCheck(video, cont, img, checkHover) {
             this._hideLoadingIndicator(cont);
           } else {
             video.pause();
-            video.remove();
+            this._cachePreview(id, video);
           }
         });
       }, { once: true });
@@ -3764,6 +5632,10 @@ async _smartPreload(currentCard) {
       for (const card of toPreload) {
         const { id } = card.dataset;
         if (id && !this.preloadQueue.has(id)) {
+          if (this.preloadQueue.size >= 30) {
+            const first = this.preloadQueue.values().next().value;
+            if (first) this.preloadQueue.delete(first);
+          }
           this.preloadQueue.add(id);
           this._preloadVideo(card);
         }
@@ -3778,14 +5650,28 @@ _preloadVideo(card) {
       link.as = "video";
       link.href = url;
       document.head.appendChild(link);
+      setTimeout(() => {
+        if (link.parentNode) link.remove();
+      }, 6e4);
       Logger$1.log("PreviewManager", `Preloading ${id}`);
     },
 _cachePreview(id, element) {
+      if (this.cache.has(id)) {
+        this.cache.get(id).timestamp = Date.now();
+        return;
+      }
       if (this.cache.size >= this.maxCacheSize) {
-        const oldest = Array.from(this.cache.entries()).sort((a, b) => a[1].timestamp - b[1].timestamp)[0];
-        if (oldest) {
-          this.cache.delete(oldest[0]);
+        const entries = Array.from(this.cache.entries());
+        entries.sort((a, b) => a[1].timestamp - b[1].timestamp);
+        const oldestId = entries[0][0];
+        const oldestItem = entries[0][1];
+        if (oldestItem.element instanceof HTMLVideoElement) {
+          oldestItem.element.pause();
+          oldestItem.element.src = "";
+          oldestItem.element.load();
+          oldestItem.element.remove();
         }
+        this.cache.delete(oldestId);
       }
       this.cache.set(id, {
         url: element.src,
@@ -3797,6 +5683,9 @@ clearCache() {
       this.cache.forEach((item) => {
         if (item.element instanceof HTMLVideoElement) {
           item.element.pause();
+          item.element.src = "";
+          item.element.load();
+          item.element.remove();
         }
       });
       this.cache.clear();
@@ -3842,15 +5731,19 @@ init(container, selector) {
     }
   };
   const PreviewManager = EnhancedPreviewManager;
+  const CACHE_NO_MAGNET = "@@NO_MAGNET@@";
   const EnhancedMagnetManager = {
 queue: new Map(),
 activeSearches: new Set(),
-maxConcurrency: 4,
+maxConcurrency: MAGNET_CONFIG.MAX_CONCURRENCY,
 onProgress: null,
 flushTimer: null,
 async fetchMagnet(id, type) {
       const cached = await CacheManager.get(id);
-      if (cached) return cached;
+      if (cached) {
+        if (cached === CACHE_NO_MAGNET) return null;
+        return cached;
+      }
       if (this.queue.has(id)) {
         const task = this.queue.get(id);
         return new Promise((resolve) => {
@@ -3862,16 +5755,30 @@ async fetchMagnet(id, type) {
         });
       }
       return new Promise((resolve) => {
-        this.queue.set(id, {
+        const task = {
           id,
-          type: type || "fc2",
+          type: type || MAGNET_CONFIG.DEFAULT_TYPE,
           resolve,
           retryCount: 0,
           status: "pending",
           startTime: Date.now()
-        });
+        };
+        this.queue.set(id, task);
+        setTimeout(() => {
+          if (this.queue.has(id)) {
+            const t2 = this.queue.get(id);
+            if (t2 === task && t2.status !== "found" && t2.status !== "failed") {
+              this._onTimeout(t2);
+            }
+          }
+        }, MAGNET_CONFIG.SEARCH_TIMEOUT_MS);
         this._requestProcess();
       });
+    },
+_onTimeout(task) {
+      Logger$1.warn("MagnetManager", `Search timed out for ${task.id}`);
+      this._notifyUI(task.id, "failed");
+      task.resolve(null);
     },
 _requestProcess() {
       if (this.flushTimer) clearTimeout(this.flushTimer);
@@ -3911,7 +5818,7 @@ async _executeSearchBatch(batch) {
           if (url) {
             this._onTaskSuccess(task, url);
           } else {
-            this._onTaskFailed(task);
+            this._onTaskFailed(task, true);
           }
         }
       );
@@ -3922,30 +5829,41 @@ async _onTaskSuccess(task, url) {
       task.resolve(url);
       this.queue.delete(task.id);
       this._updateStatus();
-      this._notifyUI(task.id, "found");
+      this._notifyUI(task.id, "found", url);
     },
-_onTaskFailed(task) {
-      const maxRetries = 2;
-      if (task.retryCount < maxRetries) {
+async _onTaskFailed(task, forceFail = false) {
+      const maxRetries = MAGNET_CONFIG.MAX_RETRIES;
+      if (!forceFail && task.retryCount < maxRetries) {
         task.retryCount++;
         task.status = "pending";
-        task.startTime = Date.now() + Math.pow(2, task.retryCount) * 1e3;
+        task.startTime = Date.now() + Math.pow(2, task.retryCount) * MAGNET_CONFIG.RETRY_DELAY;
         Logger$1.warn("MagnetManager", `Retrying ${task.id} (${task.retryCount}/${maxRetries})`);
       } else {
         task.status = "failed";
         task.resolve(null);
         this.queue.delete(task.id);
         this._notifyUI(task.id, "failed");
+        await CacheManager.set(task.id, CACHE_NO_MAGNET);
       }
       this._updateStatus();
     },
-_notifyUI(id, status) {
+_notifyUI(id, status, url) {
       const cards = document.querySelectorAll(`[data-id="${id}"]`);
       cards.forEach((card) => {
         const container = card.querySelector(`.${Config.CLASSES.resourceLinksContainer}`);
+        const rebuiltCard = card.closest(`.${Config.CLASSES.cardRebuilt}`);
         if (container) {
-          if (status === "failed") {
+          if (status === "found" && url) {
+            UIBuilder.addMagnetButton(container, url);
+            card.classList.remove("no-magnet");
+            if (rebuiltCard) {
+              UIBuilder.applyCardVisibility(rebuiltCard, true);
+            }
+          } else if (status === "failed") {
             card.classList.add("no-magnet");
+            if (rebuiltCard) {
+              UIBuilder.applyCardVisibility(rebuiltCard, false);
+            }
           }
         }
       });
@@ -3963,30 +5881,145 @@ failed: all.filter((t2) => t2.status === "failed").length
 predictiveSearch(card) {
       const { id, type } = card.dataset;
       if (id && type && !this.queue.has(id)) {
-        if (this.queue.size < 12) {
+        if (this.queue.size < MAGNET_CONFIG.PREDICTIVE_LIMIT) {
           this.fetchMagnet(id, type);
         }
       }
     },
 init() {
-      Logger$1.info("MagnetManager", "Enhanced Magnet Manager Initialized");
+      CoreEvents.on(AppEvents.UI_READY, () => {
+        Logger$1.info("MagnetManager", "Enhanced Magnet Manager Initialized via UI_READY");
+      });
     }
   };
   const MagnetManager = EnhancedMagnetManager;
-  class SiteEngine {
+  var PageContext = ((PageContext2) => {
+    PageContext2["Unknown"] = "unknown";
+    PageContext2["List"] = "list";
+    PageContext2["Detail"] = "detail";
+    PageContext2["User"] = "user";
+    PageContext2["Search"] = "search";
+    return PageContext2;
+  })(PageContext || {});
+  class BaseSite {
     constructor(config) {
+      this.observers = [];
+      this.activeContext = PageContext.Unknown;
       this.config = config;
     }
-async processCard(card) {
-      const startTime = performance.now();
+async init() {
       try {
-        if (card.hasAttribute("data-enh-processed") || !this.config.list) return null;
-        const list = this.config.list;
+        Logger$1.info("Site", `Initializing ${this.config.name}...`);
+        if (this.config.onBeforeInit) await this.config.onBeforeInit();
+        PreviewManager.init(document.body, `.${Config.CLASSES.processedCard}`);
+        eventBus.on(Events.HISTORY_LOADED, () => {
+          const count = document.querySelectorAll(`.${Config.CLASSES.processedCard}`).length;
+          if (count > 0) {
+            Logger$1.info("Site", `History loaded, refreshing ${count} cards`);
+            document.querySelectorAll(`.${Config.CLASSES.processedCard}`).forEach((c) => {
+              const id = c.dataset.id;
+              if (!id) return;
+              const status = HistoryManager.getStatus(id);
+              if (status) {
+                UIBuilder.markByStatus(id, status, c);
+              }
+            });
+          }
+        });
+        this.activeContext = this.detectContext();
+        if (this.config.list) this.initListMode();
+        if (this.config.detail && this.activeContext === PageContext.Detail) {
+          this.initDetailMode();
+        }
+        if (this.config.customInit) this.config.customInit();
+        if (this.config.onInit) await this.config.onInit();
+        if (this.config.onAfterInit) await this.config.onAfterInit();
+        State.on((prop, value) => {
+          if (["hideNoMagnet", "enableMagnets", "hideCensored", "hideViewed", "hideBlocked"].includes(prop)) {
+            this.refreshVisibility();
+          }
+        });
+      } catch (error) {
+        Logger$1.error("Site", `Initialization failed for ${this.config.name}`, error);
+      }
+    }
+refreshVisibility() {
+      const enableMagnets = State.proxy.enableMagnets;
+      const cards = document.querySelectorAll(`.${Config.CLASSES.cardRebuilt}`);
+      cards.forEach((c) => {
+        const card = c;
+        const hasMagnetBtn = !!card.querySelector(`.${Config.CLASSES.btnMagnet}`);
+        const effectiveHasMagnet = !enableMagnets ? true : hasMagnetBtn;
+        UIBuilder.applyCardVisibility(card, effectiveHasMagnet);
+        UIBuilder.applyCensoredFilter(card);
+        UIBuilder.applyHistoryVisibility(card);
+      });
+    }
+initListMode() {
+      if (!this.config.list) return;
+      const list = this.config.list;
+      const process = (nodes) => {
+        if (nodes.length > 0) Logger$1.debug("Site", `Found ${nodes.length} potential cards via ${list.cardSelector}`);
+        nodes.forEach((c) => {
+          if (list.containerSelector && !c.closest(list.containerSelector)) {
+            Logger$1.debug("Site", "Card skipped: not in container", c);
+            return;
+          }
+          if (c.parentElement && !c.parentElement.hasAttribute("data-enh-grid-container")) {
+            c.parentElement.setAttribute("data-enh-grid-container", "true");
+          }
+          if (!c.classList.contains(Config.CLASSES.cardRebuilt)) {
+            c.setAttribute("data-enh-rebuilding", "true");
+            this.processCard(c);
+          }
+        });
+      };
+      process(Array.from(document.querySelectorAll(list.cardSelector)));
+      const obs = new MutationObserver((muts) => {
+        const added = [];
+        for (const m of muts) {
+          Array.from(m.addedNodes).forEach((n) => {
+            if (n.nodeType !== 1) return;
+            const el = n;
+            if (el.matches(list.cardSelector)) added.push(el);
+            else el.querySelectorAll(list.cardSelector).forEach((c) => added.push(c));
+          });
+        }
+        if (added.length) process(added);
+      });
+      obs.observe(document.body, { childList: true, subtree: true });
+      this.observers.push(obs);
+    }
+initDetailMode() {
+      if (!this.config.detail) return;
+      const detail = this.config.detail;
+      const check = () => {
+        const target = document.querySelector(detail.triggerSelector || detail.mainImageSelector || "");
+        if (target && !target.hasAttribute("data-enh-processed")) {
+          target.setAttribute("data-enh-processed", "true");
+          if (detail.customDetailAction) {
+            Promise.resolve(detail.customDetailAction(target, obs)).catch((err) => {
+              Logger$1.error("Site", "Detail action failed", err);
+              target.removeAttribute("data-enh-processed");
+            });
+          }
+        }
+      };
+      const obs = new MutationObserver(check);
+      check();
+      obs.observe(document.body, { childList: true, subtree: true });
+      this.observers.push(obs);
+    }
+async processCard(card) {
+      if (!this.config.list) return;
+      const list = this.config.list;
+      try {
         let data = list.extractor(card);
         if (data instanceof Promise) data = await data;
         if (!data) {
+          Logger$1.warn("Site", "Extractor failed for card", card);
           card.removeAttribute("data-enh-rebuilding");
-          return null;
+          return;
         }
         card.setAttribute("data-enh-processed", "true");
         const extraUi = list.getExtraUi ? list.getExtraUi(card) : {};
@@ -3997,19 +6030,14 @@ async processCard(card) {
         if (list.postProcess) list.postProcess(card, finalElement, newCard, data);
         card.replaceChildren(finalElement);
         card.classList.add(Config.CLASSES.cardRebuilt);
+        card.removeAttribute("data-enh-rebuilding");
         if (newCard.classList.contains(Config.CLASSES.isCensored)) card.classList.add(Config.CLASSES.isCensored);
         if (newCard.classList.contains(Config.CLASSES.isViewed)) card.classList.add(Config.CLASSES.isViewed);
         UIBuilder.applyCensoredFilter(card);
         UIBuilder.applyHistoryVisibility(card);
         await this.handleMagnet(data.id, data.type, linksContainer);
-        const duration = performance.now() - startTime;
-        if (duration > 100) {
-          console.log(`[FC2 Enhanced] processCard took ${duration.toFixed(2)}ms`);
-        }
-        return null;
       } catch (error) {
-        console.error("[FC2 Enhanced] processCard failed:", error);
-        return null;
+        Logger$1.error("Site", "Process card failed", error);
       }
     }
 async handleMagnet(id, type, container) {
@@ -4023,385 +6051,501 @@ async handleMagnet(id, type, container) {
         UIBuilder.applyCardVisibility(container.closest(`.${Config.CLASSES.cardRebuilt}`), true);
         return;
       }
-      UIBuilder.toggleLoading(container, true);
       try {
         const url = await MagnetManager.fetchMagnet(id, type);
-        UIBuilder.toggleLoading(container, false);
-        if (url) {
-          UIBuilder.addMagnetButton(container, url);
-        }
+        if (url) UIBuilder.addMagnetButton(container, url);
         UIBuilder.applyCardVisibility(container.closest(`.${Config.CLASSES.cardRebuilt}`), !!url);
-      } catch (_e) {
-        UIBuilder.toggleLoading(container, false);
+      } catch (e) {
+        Logger$1.warn("Site", `Magnet fetch failed for ${id}`);
+        UIBuilder.applyCardVisibility(container.closest(`.${Config.CLASSES.cardRebuilt}`), false);
       }
     }
-    init() {
-      PreviewManager.init(document.body, `.${Config.CLASSES.processedCard}`);
-      if (this.config.list) {
-        const list = this.config.list;
-        const processCards = (nodes) => {
-          nodes.forEach((c) => {
-            if (list.containerSelector && !c.closest(list.containerSelector)) return;
-            if (!c.classList.contains(Config.CLASSES.cardRebuilt)) {
-              c.setAttribute("data-enh-rebuilding", "true");
-              this.processCard(c);
-            }
-          });
-        };
-        processCards(Array.from(document.querySelectorAll(list.cardSelector)));
-        const globalObs = new MutationObserver((muts) => {
-          const added = [];
-          for (const m of muts) {
-            Array.from(m.addedNodes).forEach((n) => {
-              if (n.nodeType !== 1) return;
-              const el = n;
-              if (el.matches(list.cardSelector)) added.push(el);
-              else el.querySelectorAll(list.cardSelector).forEach((c) => added.push(c));
-            });
-          }
-          if (added.length) processCards(added);
-        });
-        globalObs.observe(document.body, { childList: true, subtree: true });
-      }
-      if (this.config.detail) {
-        const detail = this.config.detail;
-        const obs = new MutationObserver(() => {
-          const target = document.querySelector(detail.triggerSelector || detail.mainImageSelector || "");
-          if (target && !target.hasAttribute("data-enh-processed")) {
-            target.setAttribute("data-enh-processed", "true");
-            if (detail.customDetailAction) {
-              Promise.resolve(detail.customDetailAction(target, obs)).catch((err) => {
-                console.error("[FC2 Enhanced] Detail action failed:", err);
-                target.removeAttribute("data-enh-processed");
-              });
-            }
-          }
-        });
-        obs.observe(document.body, { childList: true, subtree: true });
-      }
-      if (this.config.customInit) this.config.customInit();
+cleanup() {
+      this.observers.forEach((o) => o.disconnect());
+      this.observers = [];
+      if (this.config.onCleanup) this.config.onCleanup();
     }
   }
-  const SiteConfigs = {
-    fc2ppvdb: {
-      list: {
-        containerSelector: "#actress-articles, .container .flex.flex-wrap",
-        cardSelector: 'div[class*="p-4"]:not(.card-rebuilt)',
-        extractor: (card) => {
-          const id = Utils.extractFC2Id(
-            card.querySelector('a[href^="/articles/"]')?.href || ""
-          );
-          return id ? {
-            id,
-            type: "fc2",
-            title: card.querySelector("div.mt-1 a.text-white")?.textContent?.trim() || `FC2-PPV-${id}`,
-            primaryImageUrl: `https://wumaobi.com/fc2daily/data/FC2-PPV-${id}/cover.jpg`,
-            articleUrl: `/articles/${id}`
-          } : null;
-        },
-        getExtraUi: (card) => ({
-          preservedIconsHTML: Array.from(card.querySelectorAll(".float .icon, .badges span")).map((n) => n.outerHTML).join("")
-        })
-      },
-      detail: {
-        mainImageSelector: "div.lg\\:w-2\\/5",
-        customDetailAction: (cont) => {
-          const id = Utils.extractFC2Id(location.href);
-          if (!id) return;
-          const { finalElement, linksContainer } = UIBuilder.createEnhancedCard({
-            id,
-            type: "fc2",
-            primaryImageUrl: `https://wumaobi.com/fc2daily/data/FC2-PPV-${id}/cover.jpg`
-          });
-          finalElement.classList.add("is-detail");
-          cont.replaceChildren(finalElement);
-          ScraperService.fetchMagnets([{ id, type: "fc2" }], async (_, url) => {
-            await CacheManager.set(id, url);
-            if (url) UIBuilder.addMagnetButton(linksContainer, url);
-          });
-          UIBuilder.addPreviewButton(linksContainer, id);
+  class GenericSite extends BaseSite {
+    detectContext() {
+      if (this.config.detectContext) {
+        return this.config.detectContext();
+      }
+      const path = window.location.pathname;
+      const host = window.location.hostname;
+      if (path.includes("/search/") || window.location.search.includes("keyword=")) {
+        return PageContext.Search;
+      }
+      if (host.includes("missav")) {
+        const segments = path.split("/").filter(Boolean);
+        const lastSegment = (segments[segments.length - 1] || "").toLowerCase();
+        const isDetailPattern = /^(fc2-ppv-|[a-z]{2,10}-)\d+/i.test(lastSegment) || /^[a-z0-9]{15,}$/.test(lastSegment);
+        if (isDetailPattern && segments.length <= 3) {
+          return PageContext.Detail;
+        }
+        const listBlacklist = ["search", "new", "actress", "maker", "dm", "genres", "series", "tags", "makers"];
+        if (segments.some((s) => listBlacklist.some((b) => s.toLowerCase().startsWith(b)))) return PageContext.List;
+        if (segments.length === 1 && !listBlacklist.includes(lastSegment)) {
+          return PageContext.Detail;
         }
       }
-    },
-    "fd2ppv.cc": {
-      list: {
-        containerSelector: ".work-list, .flex.flex-wrap, .container .grid, .other-works-grid",
-        cardSelector: ".artist-card:not(.card-rebuilt)",
-        extractor: (card) => {
-          const link = card.querySelector(
-            'a[href*="/articles/"], .other-work-title a, a.block'
-          );
-          const id = Utils.extractFC2Id(link?.href || "");
-          const img = card.querySelector("img");
-          return id ? {
-            id,
-            type: "fc2",
-            title: (card.querySelector(".other-work-title, .work-title, p, h3, .mt-1")?.textContent || `FC2-PPV-${id}`).trim(),
-            primaryImageUrl: img?.dataset?.src || img?.src,
-            articleUrl: link?.href || `/articles/${id}`
-          } : null;
-        },
-        getExtraUi: (card) => ({
-          preservedIconsHTML: Array.from(card.querySelectorAll(".float .icon, .badges span")).map((n) => n.outerHTML).join("")
-        })
-      },
-      detail: {
-        mainImageSelector: ".work-image-large",
-        customDetailAction: (cont) => {
-          const id = Utils.extractFC2Id(location.href);
-          if (!id) return;
-          const actressRaw = document.querySelector(".artist-name a")?.textContent;
-          const actress = Utils.cleanActressName(actressRaw);
-          if (actress) CacheManager.set(`actress_${id}`, actress);
-          const img = cont.querySelector("img");
-          const { finalElement, linksContainer } = UIBuilder.createEnhancedCard({
-            id,
-            type: "fc2",
-            primaryImageUrl: img?.src || `https://wumaobi.com/fc2daily/data/FC2-PPV-${id}/cover.jpg`
-          });
-          finalElement.classList.add("is-detail");
-          cont.replaceChildren(finalElement);
-          ScraperService.fetchMagnets([{ id, type: "fc2" }], async (_, url) => {
-            await CacheManager.set(id, url);
-            if (url) UIBuilder.addMagnetButton(linksContainer, url);
-          });
-          UIBuilder.addPreviewButton(linksContainer, id);
+      if (path.includes("/v/") || path.includes("/detail/") || path.includes("/movie/") || path.endsWith(".html")) {
+        return PageContext.Detail;
+      }
+      return PageContext.List;
+    }
+  }
+  const _SiteManager = class _SiteManager {
+static register(config) {
+      this.registry.set(config.name, config);
+    }
+static registerAll(configs) {
+      Object.entries(configs).forEach(([name, config]) => {
+        config.name = name;
+        this.register(config);
+      });
+    }
+static async bootstrap() {
+      const hostname = location.hostname;
+      let matchedConfig = null;
+      for (const config of this.registry.values()) {
+        const matches = config.hostnames.some(
+          (hn) => typeof hn === "string" ? hostname.includes(hn) : hn.test(hostname)
+        );
+        if (matches) {
+          matchedConfig = config;
+          break;
         }
       }
-    },
-    supjav: {
-      list: {
-        containerSelector: ".posts.clearfix:not(:has(.swiper-wrapper)), .posts:not(:has(.swiper-wrapper))",
-        cardSelector: ".post:not(.card-rebuilt)",
-        extractor: (card) => {
-          const tLink = card.querySelector('h3 a, a[rel="bookmark"]');
-          const img = card.querySelector("img.thumb, img");
-          const text = tLink?.title || tLink?.textContent || img?.alt || "";
-          const info = Utils.parseVideoId(text, tLink?.href || "");
-          if (!info) return null;
-          return {
-            ...info,
-            title: text.trim(),
-            imageUrl: img?.dataset?.original || img?.getAttribute("data-original") || img?.src,
-            articleUrl: tLink?.href,
-            previewSlug: info.previewSlug || null
-          };
-        },
-        postProcess: (card, _el, newCard, data) => {
-          const C = Config.CLASSES;
-          if (data.title.includes("[有]") || card.innerText.includes("有码")) {
-            card.classList.add(C.isCensored);
-            newCard.classList.add(C.isCensored);
-          }
-          const meta = card.querySelector(".meta");
-          if (meta) {
-            const infoArea = newCard.querySelector(`.${C.infoArea}`);
-            if (infoArea)
-              infoArea.insertBefore(
-                meta.cloneNode(true),
-                infoArea.querySelector(`.${C.resourceLinksContainer}`)
-              );
-          }
-        }
-      },
-      detail: {
-        triggerSelector: ".archive-title h1",
-        customDetailAction: async (titleEl) => {
-          const video = document.querySelector("#dz_video");
-          const info = Utils.parseVideoId(titleEl.textContent || "", location.href);
-          if (!video || !info) return;
-          let actress = null;
-          if (info.type === "jav") {
-            const actresses = Array.from(document.querySelectorAll('div.post-meta a[href*="/star/"]')).map(
-              (a) => Utils.cleanActressName(a.textContent)
-            );
-            actress = actresses.find((a) => !!a) || null;
-          }
-          const toolbar = UIBuilder.createDetailToolbar(
-            info.id,
-            info.type,
-            titleEl.textContent?.trim() || "",
-            actress ?? void 0,
-            info.previewSlug ?? void 0
-          );
-          video.after(toolbar);
-          if (info.type === "fc2") {
-            actress = await ScraperService.fetchActressFromFD2(info.id);
-            if (actress) {
-              const infoArea = toolbar.querySelector(`.${Config.CLASSES.infoArea}`);
-              if (infoArea) UIBuilder.addActressButton(infoArea, actress);
-            }
-          }
-        }
+      if (matchedConfig) {
+        Logger$1.success("SiteManager", `Matched site: ${matchedConfig.name}`);
+        this.activeSite = new GenericSite(matchedConfig);
+        await this.activeSite.init();
+        this.initUrlWatcher();
+      } else {
+        Logger$1.warn("SiteManager", `No site config matched for ${hostname}`);
       }
-    },
-    missav: {
-      list: {
-        containerSelector: 'div.grid[class*="grid-cols-"], .sm\\:container .grid',
-        cardSelector: "div.thumbnail:not(.card-rebuilt)",
-        extractor: (card) => {
-          const tLink = card.querySelector("div.my-2 a, a.text-secondary");
-          const img = card.querySelector("img");
-          if (!tLink || !tLink.getAttribute("href") || tLink.getAttribute("href") === "#" || !tLink.textContent?.trim())
-            return null;
-          const info = Utils.parseVideoId(tLink.textContent || "", tLink.href || "");
-          if (!info) return null;
-          const videoTag = card.querySelector("video.preview");
-          const previewSlug = videoTag?.dataset.src?.match(/fourhoi\.com\/([^/]+)\/preview\.mp4/)?.[1] || info.previewSlug || null;
-          return {
-            ...info,
-            title: tLink.textContent?.trim() || "",
-            imageUrl: img?.dataset.src || img?.getAttribute("data-src") || img?.src,
-            articleUrl: tLink.href,
-            previewSlug
-          };
-        },
-        postProcess: (card) => {
-          card.removeAttribute("x-data");
-          card.addEventListener("mouseenter", (e) => e.stopPropagation(), true);
+    }
+static initUrlWatcher() {
+      const check = () => {
+        if (location.href !== this.currentUrl) {
+          this.currentUrl;
+          this.currentUrl = location.href;
+          Logger$1.info("SiteManager", "URL changed detected");
+          if (this.activeSite) {
+            this.activeSite.init();
+          }
         }
+      };
+      const wrap = (name) => {
+        const orig = history[name];
+        return function() {
+          const res = orig.apply(this, arguments);
+          check();
+          return res;
+        };
+      };
+      history.pushState = wrap("pushState");
+      history.replaceState = wrap("replaceState");
+      window.addEventListener("popstate", check);
+    }
+static getActiveSite() {
+      return this.activeSite;
+    }
+  };
+  _SiteManager.registry = new Map();
+  _SiteManager.activeSite = null;
+  _SiteManager.currentUrl = location.href;
+  let SiteManager = _SiteManager;
+  const fc2ppvdb = {
+    name: "FC2PPVDB",
+    hostnames: ["fc2ppvdb.com"],
+    detectContext: () => {
+      const path = location.pathname;
+      if (/^\/articles\/\d+/.test(path)) return PageContext.Detail;
+      return PageContext.List;
+    },
+    list: {
+      containerSelector: "#actress-articles .flex.flex-wrap, .container .flex.flex-wrap, .max-w-screen-xl .flex.flex-wrap",
+      cardSelector: 'div[class*="p-4"]:not(.card-rebuilt)',
+      extractor: (card) => {
+        const anchor = card.querySelector('a[href*="/articles/"]');
+        const id = Utils.extractFC2Id(anchor?.href || card.querySelector("span.absolute")?.textContent || "");
+        if (!id) return null;
+        const img = card.querySelector("img");
+        const imageUrl = img?.dataset.src || img?.src;
+        const writer = card.querySelector('a[href^="/writers/"]')?.textContent?.trim();
+        return {
+          id,
+          type: "fc2",
+          title: card.querySelector("a.title-font, div.mt-1 a.text-white")?.textContent?.trim() || `FC2-PPV-${id}`,
+          primaryImageUrl: State.proxy.replaceFc2Covers ? `https://wumaobi.com/fc2daily/data/FC2-PPV-${id}/cover.jpg` : imageUrl,
+          imageUrl,
+articleUrl: `/articles/${id}`,
+          actressName: writer
+};
       },
-      detail: {
-        triggerSelector: 'div[x-data*="baseUrl"]',
-        customDetailAction: async (el, obs) => {
-          const info = Utils.parseVideoId(document.title, el.getAttribute("x-data") || "");
-          if (!info) return;
-          let actress = null;
-          if (info.type === "jav") {
-            const contentArea = document.querySelector("div.mt-4, div.text-secondary, main");
-            const actresses = Array.from(
-              (contentArea || document).querySelectorAll('a[href*="/actresses/"]')
-            ).map((a) => Utils.cleanActressName(a.textContent));
-            actress = actresses.find((a) => !!a) || null;
-          }
-          const toolbar = UIBuilder.createDetailToolbar(
-            info.id,
-            info.type,
-            document.title,
-            actress ?? void 0,
-            info.previewSlug ?? void 0
-          );
-          el.insertAdjacentElement("afterend", toolbar);
-          if (info.type === "fc2") {
-            actress = await ScraperService.fetchActressFromFD2(info.id);
-            if (actress) {
-              const infoArea = toolbar.querySelector(`.${Config.CLASSES.infoArea}`);
-              if (infoArea) UIBuilder.addActressButton(infoArea, actress);
-            }
-          }
-          obs?.disconnect();
-        }
-      }
+      getExtraUi: (card) => ({
+        preservedIconsHTML: Array.from(card.querySelectorAll(".float .icon, .badges span")).map((n) => n.outerHTML).join("")
+      })
     },
-    javdb: {
-      list: {
-        containerSelector: ".movie-list, .tile-images:not(.preview-images)",
-        cardSelector: ".item:not(.card-rebuilt), .tile-item:not(.card-rebuilt)",
-        extractor: (card) => {
-          const link = card.matches('a.box, a.tile-item, a[href^="/v/"]') ? card : card.querySelector('a.box, a.tile-item, a[href^="/v/"]');
-          if (!link) return null;
-          const idStrong = card.querySelector(".video-title strong, .video-number");
-          const text = idStrong ? idStrong.textContent : link.title || link.innerText;
-          const img = card.querySelector("img");
-          const info = Utils.parseVideoId(text || "", link.href);
-          return info ? {
-            ...info,
-            title: link.title || (card.querySelector(".video-title")?.textContent || text || "").trim(),
-            imageUrl: img?.dataset?.src || img?.src,
-            articleUrl: link.href,
-            previewSlug: info.previewSlug || null
-          } : null;
-        },
-        postProcess: (card, _el, newCard, _data) => {
-          const score = card.querySelector(".score");
-          const meta = card.querySelector(".meta");
+    detail: {
+      mainImageSelector: "div.lg\\:w-2\\/5",
+      customDetailAction: (cont) => {
+        const id = Utils.extractFC2Id(location.href);
+        if (!id) return;
+        const actress = Utils.cleanActressName(document.querySelector('a[href^="/actresses/"]')?.textContent);
+        if (actress) CacheManager.set(`actress_${id}`, actress);
+        const { finalElement, linksContainer } = UIBuilder.createEnhancedCard({
+          id,
+          type: "fc2",
+          primaryImageUrl: State.proxy.replaceFc2Covers ? `https://wumaobi.com/fc2daily/data/FC2-PPV-${id}/cover.jpg` : void 0
+        });
+        finalElement.classList.add("is-detail");
+        cont.replaceChildren(finalElement);
+        ScraperService.fetchMagnets([{ id, type: "fc2" }], async (_, url) => {
+          await CacheManager.set(id, url);
+          if (url) UIBuilder.addMagnetButton(linksContainer, url);
+        });
+        UIBuilder.addPreviewButton(linksContainer, id);
+      }
+    }
+  };
+  const fd2ppv = {
+    name: "FD2PPV",
+    hostnames: ["fd2ppv.cc"],
+    detectContext: () => {
+      const path = window.location.pathname;
+      if (path.includes("/articles/")) return PageContext.Detail;
+      return PageContext.List;
+    },
+    list: {
+      containerSelector: ".artist-list, .work-list, .flex.flex-wrap, .container .grid, .other-works-grid",
+      cardSelector: ".artist-card:not(.card-rebuilt)",
+      extractor: (card) => {
+        const link = card.querySelector(
+          'a[href*="/articles/"], .other-work-title a, a.block'
+        );
+        const id = Utils.extractFC2Id(link?.href || "");
+        const img = card.querySelector("img");
+        const actress = Utils.cleanActressName(card.querySelector(".artist-avatar-container img")?.getAttribute("alt"));
+        return id ? {
+          id,
+          type: "fc2",
+          title: (card.querySelector("p")?.textContent || card.querySelector(".other-work-title, .work-title, h3, .mt-1")?.textContent || `FC2-PPV-${id}`).trim(),
+          actress: actress ?? void 0,
+          primaryImageUrl: img?.dataset?.src || img?.src,
+          articleUrl: link?.href || `/articles/${id}`
+        } : null;
+      },
+      postProcess: (card, _el, newCard) => {
+        const stats = card.querySelector(".stats");
+        if (stats) {
           const infoArea = newCard.querySelector(`.${Config.CLASSES.infoArea}`);
           if (infoArea) {
-            if (score)
-              infoArea.insertBefore(
-                score.cloneNode(true),
-                infoArea.querySelector(`.${Config.CLASSES.resourceLinksContainer}`)
-              );
-            if (meta)
-              infoArea.insertBefore(
-                meta.cloneNode(true),
-                infoArea.querySelector(`.${Config.CLASSES.resourceLinksContainer}`)
-              );
+            infoArea.insertBefore(stats.cloneNode(true), infoArea.querySelector(".card-left-actions"));
           }
         }
       },
-      detail: {
-        mainImageSelector: ".column-video-cover",
-        customDetailAction: async (cont) => {
-          const titleEl = document.querySelector("h2.title");
-          const info = Utils.parseVideoId(titleEl?.textContent || "", location.href);
-          if (info) {
-            const img = cont.querySelector("img.video-cover");
-            const actresses = Array.from(
-              document.querySelectorAll('a[href*="/star/"], .value a[href*="/actresses/"]')
-            ).map((a) => Utils.cleanActressName(a.textContent));
-            let actress = actresses.find((a) => !!a);
-            const { finalElement, linksContainer } = UIBuilder.createEnhancedCard({
-              id: info.id,
-              type: info.type,
-              title: "",
-              primaryImageUrl: img?.src || "",
-              articleUrl: location.href,
-              actress: actress ?? void 0,
-              previewSlug: info.previewSlug ?? void 0
-            });
-            finalElement.classList.add("is-detail");
-            Array.from(cont.children).forEach((child) => {
-              if (child instanceof HTMLElement) child.style.display = "none";
-            });
-            cont.appendChild(finalElement);
-            cont.style.maxWidth = "100%";
-            const magnetLinks = Array.from(
-              document.querySelectorAll('#magnets-content a[href^="magnet:?"]')
+      getExtraUi: (card) => {
+        const preservedIconsHTML = Array.from(card.querySelectorAll(".float i, .badges span")).map((n) => n.outerHTML).join("");
+        if (preservedIconsHTML && preservedIconsHTML.includes("icon-mosaic_free color_free0")) card.classList.add(Config.CLASSES.isCensored);
+        return { preservedIconsHTML };
+      }
+    },
+    detail: {
+      mainImageSelector: ".work-image-large",
+      customDetailAction: (cont) => {
+        const id = Utils.extractFC2Id(location.href) || Utils.extractFC2Id(document.querySelector(".work-title")?.textContent || "") || Utils.extractFC2Id(document.querySelector('.work-meta-value a[href*="article"]')?.getAttribute("href") || "");
+        if (!id) return;
+        const actressRaw = document.querySelector(".artist-info-card .artist-name a")?.textContent || document.querySelector(".artist-name a")?.textContent || Array.from(document.querySelectorAll(".work-meta-label")).find((el) => el.textContent?.trim() === "賣家")?.nextElementSibling?.querySelector("a")?.textContent;
+        const actress = Utils.cleanActressName(actressRaw);
+        if (actress) CacheManager.set(`actress_${id}`, actress);
+        const img = cont.querySelector("img");
+        const primaryImageUrl = img?.src || img?.dataset.src || `https://wumaobi.com/fc2daily/data/FC2-PPV-${id}/cover.jpg`;
+        const { finalElement, linksContainer } = UIBuilder.createEnhancedCard({
+          id,
+          type: "fc2",
+          actress: actress ?? void 0,
+          primaryImageUrl
+        });
+        finalElement.classList.add("is-detail");
+        cont.style.padding = "0";
+        cont.style.background = "transparent";
+        cont.style.height = "auto";
+        cont.replaceChildren(finalElement);
+        ScraperService.fetchMagnets([{ id, type: "fc2" }], async (_, url) => {
+          await CacheManager.set(id, url);
+          if (url) UIBuilder.addMagnetButton(linksContainer, url);
+        });
+        UIBuilder.addPreviewButton(linksContainer, id);
+      }
+    }
+  };
+  const supjav = {
+    name: "Supjav",
+    hostnames: ["supjav.com"],
+    list: {
+      containerSelector: ".posts.clearfix:not(:has(.swiper-wrapper)), .posts:not(:has(.swiper-wrapper))",
+      cardSelector: ".post:not(.card-rebuilt)",
+      extractor: (card) => {
+        const tLink = card.querySelector('h3 a, a[rel="bookmark"]');
+        const img = card.querySelector("img.thumb, img");
+        const text = tLink?.title || tLink?.textContent || img?.alt || "";
+        const info = Utils.parseVideoId(text, tLink?.href || "");
+        if (!info) return null;
+        return {
+          ...info,
+          title: text.trim(),
+          imageUrl: Utils.cleanImageUrl(img?.dataset?.original || img?.getAttribute("data-original") || img?.src),
+          articleUrl: tLink?.href,
+          previewSlug: info.previewSlug || null
+        };
+      },
+      postProcess: (card, _el, newCard, data) => {
+        const C = Config.CLASSES;
+        if (data.title.includes("[有]") || card.innerText.includes("有码")) {
+          card.classList.add(C.isCensored);
+          newCard.classList.add(C.isCensored);
+        }
+        const meta = card.querySelector(".meta");
+        if (meta) {
+          const infoArea = newCard.querySelector(`.${C.infoArea}`);
+          if (infoArea)
+            infoArea.insertBefore(
+              meta.cloneNode(true),
+              infoArea.querySelector(".card-left-actions")
             );
-            if (magnetLinks.length > 0) {
-              CacheManager.set(info.id, magnetLinks[0].href);
-              magnetLinks.slice(0, 3).forEach((m) => UIBuilder.addMagnetButton(linksContainer, m.href));
-            } else {
-              ScraperService.fetchMagnets([{ id: info.id, type: info.type }], async (_, url) => {
-                await CacheManager.set(info.id, url);
-                if (url && linksContainer) UIBuilder.addMagnetButton(linksContainer, url);
-              });
-            }
-            if (info.type === "fc2") {
-              UIBuilder.addPreviewButton(linksContainer, info.id);
-              if (!actress) {
-                actress = await ScraperService.fetchActressFromFD2(info.id);
-                if (actress) {
-                  const infoArea = finalElement.querySelector(`.${Config.CLASSES.infoArea}`);
-                  if (infoArea) UIBuilder.addActressButton(infoArea, actress);
-                }
+        }
+      }
+    },
+    detail: {
+      triggerSelector: ".archive-title h1, h1.entry-title, .post-title h1",
+      customDetailAction: async (titleEl) => {
+        const video = document.querySelector("#dz_video, .video-container, .entry-content .video-player");
+        const info = Utils.parseVideoId(titleEl.textContent || "", location.href);
+        if (!info) return;
+        let actress = null;
+        if (info.type === "jav") {
+          const actresses = Array.from(document.querySelectorAll('div.post-meta a[href*="/star/"], .post-meta a[href*="/star/"]')).map(
+            (a) => Utils.cleanActressName(a.textContent)
+          );
+          actress = actresses.find((a) => !!a) || null;
+        }
+        const toolbar = UIBuilder.createDetailToolbar(
+          info.id,
+          info.type,
+          titleEl.textContent?.trim() || "",
+          actress ?? void 0,
+          info.previewSlug ?? void 0
+        );
+        if (video) {
+          video.after(toolbar);
+        } else {
+          titleEl.after(toolbar);
+        }
+        if (info.type === "fc2") {
+          actress = await ScraperService.fetchActressFromFD2(info.id);
+          if (actress) {
+            const infoArea = toolbar.querySelector(`.${Config.CLASSES.infoArea}`);
+            if (infoArea) UIBuilder.addActressButton(infoArea, actress);
+          }
+        }
+      }
+    }
+  };
+  const missav = {
+    name: "MissAV",
+    hostnames: ["missav.ws", "missav.ai"],
+    list: {
+      containerSelector: "main, .grid, .sm\\:container, div.posts, #main",
+      cardSelector: 'div.grid[class*="grid-cols-"] > div:not(.card-rebuilt), div.thumbnail:not(.card-rebuilt)',
+      extractor: (card) => {
+        const tLink = card.querySelector([
+          "a.text-secondary",
+          "a.hover\\:text-primary",
+          "div.my-2 a",
+          "div.mt-1 a",
+          ".video-title a",
+          ".thumbnail + div a"
+        ].join(","));
+        const img = card.querySelector("img");
+        const video = card.querySelector("video");
+        const anyLink = tLink || card.querySelector('a[href*="/fc2-ppv-"], a[href*="/en/"], a[href*="/ja/"], a[href*="/cn/"]');
+        if (!anyLink || !anyLink.getAttribute("href") || anyLink.getAttribute("href") === "#")
+          return null;
+        const info = Utils.parseVideoId(anyLink.textContent || "", anyLink.href || "");
+        if (!info) return null;
+        if (info.id.length < 5 && info.type === "fc2") return null;
+        const previewSlug = video?.dataset.src?.match(/fourhoi\.com\/([^/]+)\/preview\.mp4/)?.[1] || video?.src?.match(/fourhoi\.com\/([^/]+)\/preview\.mp4/)?.[1] || info.previewSlug || null;
+        return {
+          ...info,
+          title: anyLink.textContent?.trim() || "",
+          imageUrl: img?.dataset.src || img?.getAttribute("data-src") || img?.src,
+          articleUrl: anyLink.href,
+          previewSlug
+        };
+      },
+      postProcess: (card) => {
+        card.removeAttribute("x-data");
+        card.addEventListener("mouseenter", (e) => e.stopPropagation(), true);
+      }
+    },
+    detail: {
+      triggerSelector: 'div[x-data*="player"], div.player-container, h1.text-base, div.mt-4',
+      customDetailAction: async (el, obs) => {
+        const title = document.querySelector("h1.text-base")?.textContent || document.title;
+        const info = Utils.parseVideoId(title, location.href);
+        if (!info) return;
+        let actress = null;
+        if (info.type === "jav") {
+          const contentArea = document.querySelector("div.mt-4, div.text-secondary, main");
+          const actresses = Array.from(
+            (contentArea || document).querySelectorAll('a[href*="/actresses/"]')
+          ).map((a) => Utils.cleanActressName(a.textContent));
+          actress = actresses.find((a) => !!a) || null;
+        }
+        const toolbar = UIBuilder.createDetailToolbar(
+          info.id,
+          info.type,
+          title,
+          actress ?? void 0,
+          info.previewSlug ?? void 0
+        );
+        const target = document.querySelector("h1.text-base") || el;
+        target.insertAdjacentElement("afterend", toolbar);
+        if (info.type === "fc2") {
+          actress = await ScraperService.fetchActressFromFD2(info.id);
+          if (actress) {
+            const infoArea = toolbar.querySelector(`.${Config.CLASSES.infoArea}`);
+            if (infoArea) UIBuilder.addActressButton(infoArea, actress);
+          }
+        }
+        obs?.disconnect();
+      }
+    }
+  };
+  const javdb = {
+    name: "JavDB",
+    hostnames: ["javdb.com", "javdb565.com"],
+    list: {
+      containerSelector: ".movie-list, .tile-images:not(.preview-images)",
+      cardSelector: ".item:not(.card-rebuilt), .tile-item:not(.card-rebuilt)",
+      extractor: (card) => {
+        const link = card.matches('a.box, a.tile-item, a[href^="/v/"]') ? card : card.querySelector('a.box, a.tile-item, a[href^="/v/"]');
+        if (!link) return null;
+        const idStrong = card.querySelector(".video-title strong, .video-number");
+        const text = idStrong ? idStrong.textContent : link.title || link.innerText;
+        const img = card.querySelector("img");
+        const info = Utils.parseVideoId(text || "", link.href);
+        return info ? {
+          ...info,
+          title: link.title || (card.querySelector(".video-title")?.textContent || text || "").trim(),
+          imageUrl: img?.dataset?.src || img?.src,
+          articleUrl: link.href,
+          previewSlug: info.previewSlug || null
+        } : null;
+      },
+      postProcess: (card, _el, newCard, _data) => {
+        const score = card.querySelector(".score");
+        const meta = card.querySelector(".meta");
+        const infoArea = newCard.querySelector(`.${Config.CLASSES.infoArea}`);
+        if (infoArea) {
+          if (score)
+            infoArea.insertBefore(
+              score.cloneNode(true),
+              infoArea.querySelector(".card-left-actions")
+            );
+          if (meta)
+            infoArea.insertBefore(
+              meta.cloneNode(true),
+              infoArea.querySelector(".card-left-actions")
+            );
+        }
+      }
+    },
+    detail: {
+      mainImageSelector: ".column-video-cover",
+      customDetailAction: async (cont) => {
+        const titleEl = document.querySelector("h2.title");
+        const info = Utils.parseVideoId(titleEl?.textContent || "", location.href);
+        if (info) {
+          const img = cont.querySelector("img.video-cover");
+          const actresses = Array.from(
+            document.querySelectorAll('a[href*="/star/"], .value a[href*="/actresses/"]')
+          ).map((a) => Utils.cleanActressName(a.textContent));
+          let actress = actresses.find((a) => !!a);
+          const { finalElement, linksContainer } = UIBuilder.createEnhancedCard({
+            id: info.id,
+            type: info.type,
+            title: "",
+            primaryImageUrl: img?.src || "",
+            articleUrl: location.href,
+            previewSlug: info.previewSlug ?? void 0
+          });
+          finalElement.classList.add("is-detail");
+          Array.from(cont.children).forEach((child) => {
+            if (child instanceof HTMLElement) child.style.display = "none";
+          });
+          cont.appendChild(finalElement);
+          cont.style.maxWidth = "100%";
+          const magnetLinks = Array.from(
+            document.querySelectorAll('#magnets-content a[href^="magnet:?"]')
+          );
+          if (magnetLinks.length > 0) {
+            CacheManager.set(info.id, magnetLinks[0].href);
+            magnetLinks.slice(0, 3).forEach((m) => UIBuilder.addMagnetButton(linksContainer, m.href));
+          } else {
+            ScraperService.fetchMagnets([{ id: info.id, type: info.type }], async (_, url) => {
+              await CacheManager.set(info.id, url);
+              if (url && linksContainer) UIBuilder.addMagnetButton(linksContainer, url);
+            });
+          }
+          if (info.type === "fc2") {
+            UIBuilder.addPreviewButton(linksContainer, info.id);
+            if (!actress) {
+              actress = await ScraperService.fetchActressFromFD2(info.id);
+              if (actress) {
+                const infoArea = finalElement.querySelector(`.${Config.CLASSES.infoArea}`);
+                if (infoArea) UIBuilder.addActressButton(infoArea, actress);
               }
             }
           }
+          const bindNativeButton = (selector) => {
+            const btn = document.querySelector(selector);
+            if (btn && !btn.hasAttribute("data-hooked")) {
+              btn.setAttribute("data-hooked", "true");
+              btn.addEventListener("click", () => {
+                setTimeout(() => HistoryManager.add(info.id), 500);
+              });
+            }
+          };
+          bindNativeButton('form.button_to[action*="/reviews/watched"] button');
+          bindNativeButton("button.js-watched-video");
         }
       }
     }
   };
-  const renderSelect = (id, label, options) => {
-    const val = State.proxy[id];
+  const SiteRegistry = {
+    fc2ppvdb,
+    fd2ppv,
+    supjav,
+    missav,
+    javdb
+  };
+  const SiteConfigs = SiteRegistry;
+  const FormRow = (props) => {
+    const { label, children, className = "" } = props;
+    const childArray = Array.isArray(children) ? children : [children];
     return h(
       "div",
-      { className: "fc2-enh-form-row" },
-      h("label", {}, label),
-      h(
-        "select",
-        {
-          id: `set-${id}`,
-          onchange: (e) => {
-            State.proxy[id] = e.target.value;
-          }
-        },
-        ...options.map(([v, t2]) => h("option", { value: v, selected: val === v }, t2))
-      )
+      { className: `fc2-enh-form-row ${className}` },
+      label ? h("label", {}, label) : null,
+      ...childArray
     );
   };
-  const renderCheckbox = (id, label) => {
+  const CheckboxRow = (props) => {
+    const { id, label, checked, onChange } = props;
     return h(
       "div",
       { className: "fc2-enh-form-row checkbox" },
@@ -4411,19 +6555,54 @@ async handleMagnet(id, type, container) {
         h("input", {
           type: "checkbox",
           id: `set-${id}`,
-          checked: State.proxy[id],
+          checked,
           onchange: (e) => {
-            State.proxy[id] = e.target.checked;
+            onChange(e.target.checked);
           }
         }),
         ` ${label}`
       )
     );
   };
+  const Button = (props) => {
+    const { text, onClick, variant = "default", icon, disabled = false, className = "" } = props;
+    const variantClass = variant === "primary" ? "primary" : variant === "danger" ? "danger" : "";
+    return h(
+      "button",
+      {
+        className: `fc2-enh-btn ${variantClass} ${className}`.trim(),
+        onclick: onClick,
+        disabled
+      },
+      icon || null,
+      text
+    );
+  };
+  const Select = (props) => {
+    const { id, options, value, onChange } = props;
+    return h(
+      "select",
+      {
+        id: `set-${id}`,
+        className: "fc2-select",
+        onchange: (e) => {
+          const newValue = e.target.value;
+          if (onChange) {
+            onChange(newValue);
+          }
+        }
+      },
+      ...options.map(
+        (opt) => h("option", {
+          value: opt.value,
+          selected: opt.value === value
+        }, opt.label)
+      )
+    );
+  };
   const renderSettingsTab = () => {
     const mkIcon = (svg) => {
       const s = UIUtils.icon(svg);
-      Object.assign(s.style, { marginRight: "10px", color: "var(--fc2-primary)" });
       return s;
     };
     return h(
@@ -4433,53 +6612,144 @@ async handleMagnet(id, type, container) {
         "div",
         { className: "fc2-enh-settings-group" },
         h("h3", {}, mkIcon(IconFilter), t("groupFilters")),
-        renderCheckbox("hideNoMagnet", t("optionHideNoMagnet")),
-        renderCheckbox("hideCensored", t("optionHideCensored")),
-        renderCheckbox("hideViewed", t("optionHideViewed"))
+        CheckboxRow({
+          id: "hideNoMagnet",
+          label: t("optionHideNoMagnet"),
+          checked: State.proxy.hideNoMagnet,
+          onChange: (checked) => {
+            State.proxy.hideNoMagnet = checked;
+          }
+        }),
+        CheckboxRow({
+          id: "hideCensored",
+          label: t("optionHideCensored"),
+          checked: State.proxy.hideCensored,
+          onChange: (checked) => {
+            State.proxy.hideCensored = checked;
+          }
+        }),
+        CheckboxRow({
+          id: "hideViewed",
+          label: t("optionHideViewed"),
+          checked: State.proxy.hideViewed,
+          onChange: (checked) => {
+            State.proxy.hideViewed = checked;
+          }
+        }),
+        CheckboxRow({
+          id: "hideBlocked",
+          label: t("optionHideBlocked"),
+          checked: State.proxy.hideBlocked,
+          onChange: (checked) => {
+            State.proxy.hideBlocked = checked;
+          }
+        })
       ),
       h(
         "div",
         { className: "fc2-enh-settings-group" },
         h("h3", {}, mkIcon(IconPalette), t("groupAppearance")),
-        renderSelect("previewMode", t("labelPreviewMode"), [
-          ["static", t("previewModeStatic")],
-          ["hover", t("previewModeHover")]
-        ]),
-        h(
-          "div",
-          { className: "fc2-enh-form-row" },
-          h("label", {}, t("labelGridColumns")),
-          h(
-            "select",
-            { id: "set-gridColumns" },
-            ...[0, 1, 2, 3, 4, 5, 6].map(
-              (i) => h(
-                "option",
-                {
-                  value: i,
-                  selected: (typeof GM_getValue !== "undefined" ? GM_getValue("user_grid_columns_preference", 0) : 0) === i
-                },
-                i || t("labelDefault")
-              )
-            )
-          )
-        ),
-        renderSelect("language", t("labelLanguage"), [
-          ["auto", t("langAuto")],
-          ["zh", t("langZh")],
-          ["en", t("langEn")]
-        ])
+        FormRow({
+          label: t("labelPreviewMode"),
+          children: Select({
+            id: "previewMode",
+            options: [
+              { value: "static", label: t("previewModeStatic") },
+              { value: "hover", label: t("previewModeHover") }
+            ],
+            value: State.proxy.previewMode,
+            onChange: (value) => {
+              State.proxy.previewMode = value;
+            }
+          })
+        }),
+        FormRow({
+          label: t("labelGridColumns"),
+          children: Select({
+            id: "gridColumns",
+            options: [0, 1, 2, 3, 4, 5, 6].map((i) => ({
+              value: String(i),
+              label: i === 0 ? t("labelDefault") : String(i)
+            })),
+            value: String(typeof GM_getValue !== "undefined" ? GM_getValue(STORAGE_KEYS.USER_GRID_COLUMNS, 0) : 0)
+          })
+        }),
+        FormRow({
+          label: t("labelLanguage"),
+          children: Select({
+            id: "language",
+            options: [
+              { value: "auto", label: t("langAuto") },
+              { value: "zh", label: t("langZh") },
+              { value: "en", label: t("langEn") }
+            ],
+            value: State.proxy.language,
+            onChange: (value) => {
+              State.proxy.language = value;
+            }
+          })
+        })
       ),
       h(
         "div",
         { className: "fc2-enh-settings-group" },
         h("h3", {}, mkIcon(IconClockRotateLeft), t("groupDataHistory")),
-        renderCheckbox("enableMagnets", t("optionEnableMagnets")),
-        renderCheckbox("enableExternalLinks", t("optionEnableExternalLinks")),
-        renderCheckbox("enableActressName", t("optionEnableActressName")),
-        renderCheckbox("enableHistory", t("optionEnableHistory")),
-        renderCheckbox("loadExtraPreviews", t("optionLoadExtraPreviews")),
-        renderCheckbox("enableQuickBar", t("optionEnableQuickBar"))
+        CheckboxRow({
+          id: "enableMagnets",
+          label: t("optionEnableMagnets"),
+          checked: State.proxy.enableMagnets,
+          onChange: (checked) => {
+            State.proxy.enableMagnets = checked;
+          }
+        }),
+        CheckboxRow({
+          id: "enableExternalLinks",
+          label: t("optionEnableExternalLinks"),
+          checked: State.proxy.enableExternalLinks,
+          onChange: (checked) => {
+            State.proxy.enableExternalLinks = checked;
+          }
+        }),
+        CheckboxRow({
+          id: "enableActressName",
+          label: t("optionEnableActressName"),
+          checked: State.proxy.enableActressName,
+          onChange: (checked) => {
+            State.proxy.enableActressName = checked;
+          }
+        }),
+        CheckboxRow({
+          id: "replaceFc2Covers",
+          label: t("optionReplaceFc2Covers"),
+          checked: State.proxy.replaceFc2Covers,
+          onChange: (checked) => {
+            State.proxy.replaceFc2Covers = checked;
+          }
+        }),
+        CheckboxRow({
+          id: "enableHistory",
+          label: t("optionEnableHistory"),
+          checked: State.proxy.enableHistory,
+          onChange: (checked) => {
+            State.proxy.enableHistory = checked;
+          }
+        }),
+        CheckboxRow({
+          id: "loadExtraPreviews",
+          label: t("optionLoadExtraPreviews"),
+          checked: State.proxy.loadExtraPreviews,
+          onChange: (checked) => {
+            State.proxy.loadExtraPreviews = checked;
+          }
+        }),
+        CheckboxRow({
+          id: "enableQuickBar",
+          label: t("optionEnableQuickBar"),
+          checked: State.proxy.enableQuickBar,
+          onChange: (checked) => {
+            State.proxy.enableQuickBar = checked;
+          }
+        })
       )
     );
   };
@@ -4592,15 +6862,14 @@ isValidLength(str, min, max) {
   };
   const BackupManager = {
 async exportData() {
-      Logger$1.info("Backup", "Preparing data for export...");
-      const history = await Repository.history.getAll();
+      const history2 = await Repository.history.getAll();
       const { syncStatus, ...persistentSettings } = State.proxy;
       const data = {
-        appName: "FC2PPVDB Enhanced",
+        appName: SCRIPT_INFO.NAME,
         version: 2,
         timestamp: Date.now(),
         settings: persistentSettings,
-        history
+        history: history2
       };
       try {
         const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
@@ -4657,18 +6926,83 @@ async importData(file) {
       });
     }
   };
+  const JavDBMigration = (() => {
+    let isImporting = false;
+    async function fetchPage(url) {
+      return new Promise((resolve) => {
+        GM_xmlhttpRequest({
+          method: "GET",
+          url,
+          onload: (res) => resolve(res.responseText),
+          onerror: () => resolve(null)
+        });
+      });
+    }
+    async function processList(baseUrl, typeName) {
+      let page = 1;
+      let totalAdded = 0;
+      while (true) {
+        const url = `${baseUrl}?page=${page}`;
+        Logger$1.info("JavDBMigration", `Fetching ${typeName} page ${page}: ${url}`);
+        const html = await fetchPage(url);
+        if (!html) break;
+        const doc = new DOMParser().parseFromString(html, "text/html");
+        const items = doc.querySelectorAll(".movie-list .item");
+        if (items.length === 0) break;
+        let pageCount = 0;
+        for (const item of Array.from(items)) {
+          const titleEl = item.querySelector(".video-title strong");
+          const link = item.querySelector("a.box");
+          if (titleEl && link) {
+            const info = Utils.parseVideoId(titleEl.textContent || "", link.href);
+            if (info) {
+              await HistoryManager.add(info.id);
+              pageCount++;
+              totalAdded++;
+            }
+          }
+        }
+        Logger$1.info("JavDBMigration", `Processed page ${page}, found ${pageCount} items`);
+        const nextButton = doc.querySelector('.pagination-next, a[rel="next"]');
+        if (!nextButton || pageCount === 0) break;
+        page++;
+        await new Promise((r) => setTimeout(r, 1e3));
+      }
+      return totalAdded;
+    }
+    return {
+      async runImport() {
+        if (isImporting) return;
+        isImporting = true;
+        Toast$1.show("Starting JavDB Import...", "info");
+        try {
+          const watchedCount = await processList("https://javdb.com/users/watched_videos", "Watched");
+          Toast$1.show(`Import Complete! Added ${watchedCount} items.`, "success");
+          Logger$1.success("JavDBMigration", `Imported ${watchedCount} watched items.`);
+        } catch (e) {
+          Logger$1.error("JavDBMigration", "Import failed", e);
+          Toast$1.show("Import Failed. Check console for details.", "error");
+        } finally {
+          isImporting = false;
+        }
+      },
+      isBusy() {
+        return isImporting;
+      }
+    };
+  })();
   const renderDataTab = (render, saveWebDAV) => {
-    const jwt = typeof GM_getValue !== "undefined" ? GM_getValue("supabase_jwt") : null;
+    const jwt = typeof GM_getValue !== "undefined" ? GM_getValue(STORAGE_KEYS.SUPABASE_JWT) : null;
     const isLoggedIn = !!jwt;
-    const lastSync = typeof GM_getValue !== "undefined" ? GM_getValue("last_sync_ts", "Never") : "Never";
+    const lastSync = typeof GM_getValue !== "undefined" ? GM_getValue(STORAGE_KEYS.LAST_SYNC_TS, t("labelNever")) : t("labelNever");
     const currentLang = State.proxy.language === "auto" ? navigator.language.startsWith("zh") ? "zh" : "en" : State.proxy.language;
-    const displayTime = lastSync !== "Never" ? new Date(lastSync).toLocaleString(currentLang === "zh" ? "zh-CN" : "en-US", {
-      timeZone: "Asia/Shanghai",
+    const displayTime = lastSync !== t("labelNever") ? new Date(lastSync).toLocaleString(currentLang === "zh" ? "zh-CN" : "en-US", {
+      timeZone: UI_CONSTANTS.TIME_ZONE,
       hour12: false
     }) : t("labelNever");
     const mkIcon = (svg) => {
       const s = UIUtils.icon(svg);
-      Object.assign(s.style, { marginRight: "4px" });
+      Object.assign(s.style, { marginRight: UI_TOKENS.SPACING.XS });
       return s;
     };
     return h(
@@ -4680,33 +7014,55 @@ async importData(file) {
         h("h3", {}, t("groupDataManagement")),
         h(
           "div",
-          { className: "fc2-enh-form-row", style: { display: "flex", gap: "0.5rem", flexWrap: "wrap" } },
-          h(
-            "button",
-            {
-              className: "fc2-enh-btn",
-              onclick: async () => {
-                await Repository.cache.clear();
-                Toast$1.show(t("alertCacheCleared"), "success");
-              }
-            },
-            t("btnClearCache")
-          ),
-          h(
-            "button",
-            {
-              className: "fc2-enh-btn",
-              onclick: async () => {
-                await HistoryManager.clear();
-                Toast$1.show(t("alertHistoryCleared"), "success");
-              }
-            },
-            t("btnClearHistory")
-          ),
+          { className: "fc2-enh-form-row", style: { display: "flex", gap: UI_TOKENS.SPACING.SM, flexWrap: "wrap" } },
+          Button({
+            text: t("btnClearCache"),
+            onClick: async () => {
+              await Repository.cache.clear();
+              Toast$1.show(t("alertCacheCleared"), "success");
+            }
+          }),
+          Button({
+            text: t("btnClearHistory"),
+            onClick: async () => {
+              await HistoryManager.clear();
+              Toast$1.show(t("alertHistoryCleared"), "success");
+            }
+          }),
+          Button({
+            text: t("btnExportData"),
+            icon: mkIcon(IconFileExport),
+            onClick: () => BackupManager.exportData()
+          }),
+          Button({
+            text: t("btnImportData"),
+            icon: mkIcon(IconFileImport),
+            onClick: () => {
+              const input = h("input", { type: "file", accept: ".json" });
+              input.onchange = async () => {
+                if (input.files?.[0]) {
+                  const success = await BackupManager.importData(input.files[0]);
+                  if (success) {
+                    Toast$1.show(t("alertImportSuccess"), "success");
+                    setTimeout(() => location.reload(), 1500);
+                  } else {
+                    Toast$1.show(t("alertImportError"), "error");
+                  }
+                }
+              };
+              input.click();
+            }
+          })
+        ),
+        h(
+          "div",
+          { className: "fc2-enh-form-row" },
+          h("label", {}, t("labelDebugMode")),
           h(
             "button",
             {
               className: `fc2-enh-btn ${Logger$1.enabled ? "primary" : ""}`,
+              style: { width: "fit-content", minWidth: "100px" },
               onclick: () => {
                 if (Logger$1.enabled) {
                   Logger$1.disable();
@@ -4719,38 +7075,6 @@ async importData(file) {
               }
             },
             Logger$1.enabled ? t("statusDebugOn") : t("statusDebugOff")
-          ),
-          h(
-            "button",
-            {
-              className: "fc2-enh-btn",
-              onclick: () => BackupManager.exportData()
-            },
-            mkIcon(IconFileExport),
-            t("btnExportData")
-          ),
-          h(
-            "button",
-            {
-              className: "fc2-enh-btn",
-              onclick: () => {
-                const input = h("input", { type: "file", accept: ".json" });
-                input.onchange = async () => {
-                  if (input.files?.[0]) {
-                    const success = await BackupManager.importData(input.files[0]);
-                    if (success) {
-                      Toast$1.show(t("alertImportSuccess"), "success");
-                      setTimeout(() => location.reload(), 1500);
-                    } else {
-                      Toast$1.show(t("alertImportError"), "error");
-                    }
-                  }
-                };
-                input.click();
-              }
-            },
-            mkIcon(IconFileImport),
-            t("btnImportData")
           )
         ),
         h(
@@ -4770,6 +7094,48 @@ async importData(file) {
             h("option", { value: "supabase", selected: State.proxy.syncMode === "supabase" }, t("syncModeSupabase")),
             h("option", { value: "webdav", selected: State.proxy.syncMode === "webdav" }, t("syncModeWebDAV"))
           )
+        ),
+        State.proxy.syncMode !== "none" ? h(
+          "div",
+          { className: "fc2-enh-form-row" },
+          h("label", {}, t("labelSyncInterval")),
+          h(
+            "select",
+            {
+              id: "set-syncInterval",
+              onchange: (e) => {
+                State.proxy.syncInterval = parseInt(e.target.value, 10);
+              }
+            },
+            h("option", { value: "0", selected: State.proxy.syncInterval === 0 }, t("syncInterval0")),
+            h("option", { value: "2", selected: State.proxy.syncInterval === 2 }, t("syncInterval2")),
+            h("option", { value: "5", selected: State.proxy.syncInterval === 5 }, t("syncInterval5")),
+            h("option", { value: "10", selected: State.proxy.syncInterval === 10 }, t("syncInterval10")),
+            h("option", { value: "30", selected: State.proxy.syncInterval === 30 }, t("syncInterval30")),
+            h("option", { value: "-1", selected: State.proxy.syncInterval === -1 }, t("syncIntervalManual"))
+          )
+        ) : null
+      ),
+      h(
+        "div",
+        { className: "fc2-enh-settings-group" },
+        h("h3", {}, t("groupExternalImport")),
+        h(
+          "div",
+          { className: "fc2-enh-form-row" },
+          h(
+            "button",
+            {
+              className: `fc2-enh-btn ${JavDBMigration.isBusy() ? "loading" : ""}`,
+              disabled: JavDBMigration.isBusy(),
+              onclick: async () => {
+                await JavDBMigration.runImport();
+                render("data");
+              }
+            },
+            mkIcon(IconMagnifyingGlass),
+            t("btnImportFromJavDB")
+          )
         )
       ),
       State.proxy.syncMode === "webdav" ? h(
@@ -4784,7 +7150,18 @@ async importData(file) {
             id: "set-webdavUrl",
             type: "text",
             value: State.proxy.webdavUrl,
-            placeholder: "https://dav.jianguoyun.com/dav/"
+            placeholder: "https://dav.jianguoyun.com/dav/",
+            oninput: (e) => {
+              const input = e.target;
+              const value = input.value.trim();
+              if (value && !value.match(/^https?:\/\/.+/)) {
+                input.style.borderColor = UI_TOKENS.COLORS.ERROR;
+                input.title = t("errorWebDAVUrl");
+              } else {
+                input.style.borderColor = "";
+                input.title = "";
+              }
+            }
           })
         ),
         h(
@@ -4806,12 +7183,12 @@ async importData(file) {
           h("input", {
             id: "set-webdavPath",
             type: "text",
-            value: State.proxy.webdavPath || "fc2_enhanced_sync.json"
+            value: State.proxy.webdavPath || UI_CONSTANTS.DEFAULT_SYNC_FILENAME
           })
         ),
         h(
           "div",
-          { className: "fc2-enh-form-row", style: { display: "flex", gap: "0.5rem" } },
+          { className: "fc2-enh-form-row", style: { display: "flex", gap: UI_TOKENS.SPACING.SM } },
           h(
             "button",
             {
@@ -4859,12 +7236,12 @@ async importData(file) {
         isLoggedIn ? h(
           "div",
           {},
-          h("p", {}, `${t("labelUser")}: `, h("strong", {}, typeof GM_getValue !== "undefined" ? GM_getValue("current_user_email", "N/A") : "N/A")),
-          h("p", { style: { fontSize: "0.8em", color: "var(--fc2-text-dim)" } }, `${t("labelLastSync")}: ${displayTime}`),
+          h("p", {}, `${t("labelUser")}: `, h("strong", {}, typeof GM_getValue !== "undefined" ? GM_getValue(STORAGE_KEYS.CURRENT_USER_EMAIL, "N/A") : "N/A")),
+          h("p", { style: { fontSize: "0.8em", color: UI_TOKENS.COLORS.TEXT_DIM } }, `${t("labelLastSync")}: ${displayTime}`),
           h(
             "div",
-            { className: "fc2-enh-form-row", style: { display: "flex", gap: "0.5rem", flexWrap: "wrap" } },
-            h("button", { className: "fc2-enh-btn", onclick: () => SyncManager.performSync(true) }, "Push/Pull"),
+            { className: "fc2-enh-form-row", style: { display: "flex", gap: UI_TOKENS.SPACING.SM, flexWrap: "wrap" } },
+            h("button", { className: "fc2-enh-btn", onclick: () => SyncManager.performSync(true) }, t("btnPushPull")),
             h("button", { className: "fc2-enh-btn", onclick: () => SyncManager.logout() }, t("btnLogout"))
           )
         ) : h(
@@ -4888,7 +7265,7 @@ async importData(file) {
             style: {
               lineHeight: "1.6",
               fontSize: "0.9em",
-              color: "#ccc",
+              color: UI_TOKENS.COLORS.TEXT_DIM,
               whiteSpace: "pre-line"
 },
             innerHTML: contentHtml
@@ -4900,12 +7277,12 @@ async importData(file) {
       return h(
         "div",
         { className: "fc2-settings-group" },
-        h("div", { className: "fc2-settings-group-header", style: { color: "#ff5252" } }, t("tabDmca")),
+        h("div", { className: "fc2-settings-group-header", style: { color: UI_TOKENS.COLORS.ERROR } }, t("tabDmca")),
         h(
           "div",
           {
             className: "fc2-settings-item",
-            style: { flexDirection: "column", alignItems: "flex-start", gap: "10px" }
+            style: { flexDirection: "column", alignItems: "flex-start", gap: UI_TOKENS.SPACING.SM }
           },
           h(
             "div",
@@ -4913,17 +7290,17 @@ async importData(file) {
               style: {
                 display: "flex",
                 alignItems: "center",
-                gap: "8px",
-                color: "#ffc107",
+                gap: UI_TOKENS.SPACING.SM,
+                color: UI_TOKENS.COLORS.WARN,
                 fontWeight: "bold",
                 fontSize: "1em"
               }
             },
             UIUtils.icon(IconTriangleExclamation),
-            "Disclaimer"
+            t("labelDisclaimer")
           ),
           h("div", {
-            style: { lineHeight: "1.6", fontSize: "0.9em", color: "#ccc" },
+            style: { lineHeight: "1.6", fontSize: "0.9em", color: UI_TOKENS.COLORS.TEXT_DIM },
             innerHTML: t("dmcaContent")
           })
         )
@@ -4934,60 +7311,281 @@ async importData(file) {
       { className: "fc2-settings-tab-content" },
 h(
         "div",
-        { style: { textAlign: "center", marginBottom: "20px", padding: "10px" } },
-        h("h3", { style: { margin: "0 0 10px 0" } }, "FC2PPVDB Enhanced"),
-        h("div", { style: { fontSize: "0.85em", opacity: 0.7, marginBottom: "10px" } }, `${t("aboutVersion")} 2.0.0`),
-        h("p", { style: { fontSize: "0.95em", color: "#eee" } }, t("aboutDescription"))
+        { style: { textAlign: "center", marginBottom: UI_TOKENS.SPACING.XL, padding: UI_TOKENS.SPACING.SM } },
+        h("h3", { style: { margin: `0 0 ${UI_TOKENS.SPACING.SM} 0` } }, SCRIPT_INFO.NAME),
+        h("div", { style: { fontSize: "0.85em", opacity: 0.7, marginBottom: UI_TOKENS.SPACING.SM } }, `${t("aboutVersion")} ${SCRIPT_INFO.VERSION}`),
+        h("p", { style: { fontSize: "0.95em", color: UI_TOKENS.COLORS.WHITE } }, t("aboutDescription"))
       ),
 mkSection(t("aboutHelpTitle"), t("aboutHelpContent")),
 mkDmcaSection(),
 h(
         "div",
-        { style: { marginTop: "20px", textAlign: "center", fontSize: "0.85em" } },
-        h("a", { href: "https://greasyfork.org/zh-CN/scripts/552583-fc2ppvdb-enhanced", target: "_blank", style: { color: "#646cff", textDecoration: "none" } }, "Greasy Fork")
+        { style: { marginTop: UI_TOKENS.SPACING.XL, textAlign: "center", fontSize: "0.85em" } },
+        h("a", { href: SCRIPT_INFO.GREASYFORK_URL, target: "_blank", style: { color: UI_TOKENS.COLORS.INFO, textDecoration: "none" } }, t("labelGreasyFork"))
       )
     );
   };
+  const DebugTab = (() => {
+    let container = null;
+    let activeFilters = { error: true, warn: true, info: true, success: true };
+    const createLogItem = (entry) => {
+      const item = document.createElement("div");
+      item.style.cssText = `
+            font-family: monospace;
+            font-size: 12px;
+            padding: ${UI_TOKENS.SPACING.XS} ${UI_TOKENS.SPACING.SM};
+            border-bottom: 1px solid ${UI_TOKENS.COLORS.BORDER_LIGHT};
+            display: flex;
+            gap: ${UI_TOKENS.SPACING.SM};
+            word-break: break-all;
+            background: ${entry.level === "error" ? UI_TOKENS.COLORS.ERROR_LIGHT : entry.level === "warn" ? UI_TOKENS.COLORS.WARN_LIGHT : entry.level === "success" ? UI_TOKENS.COLORS.SUCCESS_LIGHT : "transparent"};
+        `;
+      const time = document.createElement("span");
+      time.style.color = UI_TOKENS.COLORS.TEXT_DIM;
+      time.textContent = `[${entry.timestamp}]`;
+      const level = document.createElement("span");
+      level.style.fontWeight = "bold";
+      level.style.color = entry.level === "error" ? UI_TOKENS.COLORS.ERROR : entry.level === "warn" ? UI_TOKENS.COLORS.WARN : entry.level === "success" ? UI_TOKENS.COLORS.SUCCESS : UI_TOKENS.COLORS.INFO;
+      level.textContent = entry.level.toUpperCase();
+      const module = document.createElement("span");
+      module.style.color = UI_TOKENS.COLORS.TEXT_MUTED;
+      module.style.fontWeight = "bold";
+      module.textContent = `[${entry.module}]`;
+      const msg = document.createElement("span");
+      msg.style.color = "var(--fc2-enh-text)";
+      msg.textContent = entry.message;
+      item.appendChild(time);
+      item.appendChild(level);
+      item.appendChild(module);
+      item.appendChild(msg);
+      if (entry.data) {
+        const dataToggle = document.createElement("button");
+        dataToggle.style.cssText = "font-size: 10px; padding: 0 4px; border: 1px solid var(--fc2-enh-border); border-radius: 2px; background: var(--fc2-enh-bg); color: var(--fc2-enh-text); cursor: pointer;";
+        dataToggle.textContent = t("btnLogData");
+        dataToggle.onclick = (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          console.log(`[Log Detail][${entry.module}]`, entry.data);
+          const modal = document.createElement("div");
+          modal.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background: rgba(0, 0, 0, 0.8);
+                    backdrop-filter: blur(${UI_TOKENS.BACKDROP.BLUR});
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: ${UI_CONSTANTS.Z_INDEX_OVERLAY};
+                    padding: ${UI_TOKENS.SPACING.XL};
+                `;
+          const content = document.createElement("div");
+          content.style.cssText = `
+                    background: var(--fc2-enh-bg);
+                    color: var(--fc2-enh-text);
+                    padding: ${UI_TOKENS.SPACING.XL};
+                    border-radius: ${UI_TOKENS.RADIUS.MD};
+                    max-width: 800px;
+                    max-height: 80vh;
+                    overflow: auto;
+                    box-shadow: ${UI_TOKENS.BACKDROP.SHADOW};
+                `;
+          const header = document.createElement("div");
+          header.style.cssText = "display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;";
+          const titleEl = document.createElement("h3");
+          titleEl.textContent = `${t("labelLogData")} - ${entry.module}`;
+          titleEl.style.margin = "0";
+          const closeBtn = document.createElement("button");
+          closeBtn.textContent = "✕";
+          closeBtn.className = "fc2-btn";
+          closeBtn.style.cssText = "padding: 4px 12px; cursor: pointer;";
+          closeBtn.onclick = (e2) => {
+            e2.stopPropagation();
+            modal.remove();
+          };
+          header.appendChild(titleEl);
+          header.appendChild(closeBtn);
+          const pre = document.createElement("pre");
+          pre.style.cssText = `
+                    background: var(--fc2-enh-bg-secondary);
+                    padding: 15px;
+                    border-radius: 4px;
+                    overflow: auto;
+                    font-family: monospace;
+                    font-size: 12px;
+                    line-height: 1.5;
+                    user-select: text;
+                    cursor: text;
+                    white-space: pre-wrap;
+                    word-wrap: break-word;
+                `;
+          pre.textContent = JSON.stringify(entry.data, null, 2);
+          const copyBtn = document.createElement("button");
+          copyBtn.className = "fc2-btn";
+          copyBtn.textContent = t("btnCopy") || "复制";
+          copyBtn.style.cssText = "margin-top: 10px; width: 100%;";
+          copyBtn.onclick = (e2) => {
+            e2.stopPropagation();
+            navigator.clipboard.writeText(JSON.stringify(entry.data, null, 2));
+            copyBtn.textContent = "✓ " + (t("alertLogsCopied") || "已复制");
+            setTimeout(() => copyBtn.textContent = t("btnCopy") || "复制", 2e3);
+          };
+          content.appendChild(header);
+          content.appendChild(pre);
+          content.appendChild(copyBtn);
+          modal.appendChild(content);
+          modal.onclick = (e2) => {
+            if (e2.target === modal) modal.remove();
+          };
+          document.body.appendChild(modal);
+        };
+        item.appendChild(dataToggle);
+      }
+      return item;
+    };
+    return {
+      render() {
+        container = document.createElement("div");
+        container.className = "tab-content";
+        container.style.display = "flex";
+        container.style.flexDirection = "column";
+        container.style.height = "100%";
+        const header = document.createElement("div");
+        header.style.cssText = `padding: ${UI_TOKENS.SPACING.GUTTER}; border-bottom: 1px solid ${UI_TOKENS.COLORS.BORDER}; display: flex; justify-content: space-between; align-items: center;`;
+        const title = document.createElement("h3");
+        title.textContent = t("labelTechnicalLogs");
+        title.style.margin = "0";
+        const actions = document.createElement("div");
+        actions.style.display = "flex";
+        actions.style.gap = UI_TOKENS.SPACING.SM;
+        const copyBtn = document.createElement("button");
+        copyBtn.className = "fc2-btn";
+        copyBtn.innerHTML = `${IconMagnifyingGlass} ${t("btnCopyAll")}`;
+        copyBtn.style.cssText = "background: var(--fc2-enh-bg); color: var(--fc2-enh-text); border: 1px solid var(--fc2-enh-border);";
+        copyBtn.onclick = () => {
+          const text = Logger$1.history.map((e) => `[${e.timestamp}] [${e.level.toUpperCase()}] [${e.module}] ${e.message}`).join("\n");
+          navigator.clipboard.writeText(text);
+          alert(t("alertLogsCopied"));
+        };
+        const clearBtn = document.createElement("button");
+        clearBtn.className = "fc2-btn btn-danger";
+        clearBtn.textContent = t("btnClearLogs");
+        clearBtn.style.cssText = `background: var(--fc2-enh-bg); color: ${UI_TOKENS.COLORS.ERROR}; border: 1px solid ${UI_TOKENS.COLORS.ERROR_LIGHT};`;
+        clearBtn.onclick = () => {
+          Logger$1.history = [];
+          this.refresh();
+        };
+        actions.appendChild(copyBtn);
+        actions.appendChild(clearBtn);
+        const filters = document.createElement("div");
+        filters.style.cssText = "display: flex; gap: 12px; align-items: center; margin-left: 20px;";
+        const filterLabel = document.createElement("span");
+        filterLabel.textContent = t("labelLogFilters") + ":";
+        filterLabel.style.cssText = "font-size: 12px; color: var(--fc2-enh-text); opacity: 0.7;";
+        filters.appendChild(filterLabel);
+        ["error", "warn", "info", "success"].forEach((level) => {
+          const label = document.createElement("label");
+          label.style.cssText = "display: flex; align-items: center; gap: 4px; cursor: pointer; font-size: 12px;";
+          const checkbox = document.createElement("input");
+          checkbox.type = "checkbox";
+          checkbox.checked = activeFilters[level];
+          checkbox.style.cssText = "cursor: pointer;";
+          checkbox.onchange = () => {
+            activeFilters[level] = checkbox.checked;
+            this.refresh();
+          };
+          const text = document.createElement("span");
+          text.textContent = level.toUpperCase();
+          text.style.color = level === "error" ? UI_TOKENS.COLORS.ERROR : level === "warn" ? UI_TOKENS.COLORS.WARN : level === "success" ? UI_TOKENS.COLORS.SUCCESS : UI_TOKENS.COLORS.INFO;
+          label.appendChild(checkbox);
+          label.appendChild(text);
+          filters.appendChild(label);
+        });
+        actions.appendChild(filters);
+        header.appendChild(title);
+        header.appendChild(actions);
+        const list = document.createElement("div");
+        list.id = DOM_IDS.LOG_LIST;
+        list.style.cssText = `flex: 1; overflow-y: auto; padding: ${UI_TOKENS.SPACING.SM}; background: var(--fc2-enh-bg-secondary);`;
+        container.appendChild(header);
+        container.appendChild(list);
+        this.refresh();
+        return container;
+      },
+      refresh() {
+        const list = container?.querySelector(`#${DOM_IDS.LOG_LIST}`);
+        if (list) {
+          list.innerHTML = "";
+          const logs = [...Logger$1.history].reverse().filter(
+            (entry) => activeFilters[entry.level]
+          );
+          logs.forEach((entry) => {
+            list.appendChild(createLogItem(entry));
+          });
+        }
+      }
+    };
+  })();
   const SettingsPanel = (() => {
     let host = null;
     let shadow = null;
+    let styleSheet = null;
+    const tabCache = new Map();
     const create = () => {
       if (host && host.isConnected) return;
       if (host) host.remove();
       host = h("div", {
-        id: "fc2-enh-settings-host",
+        id: DOM_IDS.SETTINGS_HOST,
         style: {
           display: "none",
           position: "fixed",
           inset: "0",
-          zIndex: "2147483647"
+          zIndex: String(UI_CONSTANTS.Z_INDEX_MAX)
         }
       });
       shadow = host.attachShadow({ mode: "open" });
-      shadow.innerHTML = `
-            <style>
+      try {
+        styleSheet = new CSSStyleSheet();
+        styleSheet.replaceSync(`
                 ${StyleManager.getCss()}
                 :host { all: initial; }
-                #fc2-enh-settings-container {
+                #${DOM_IDS.SETTINGS_CONTAINER} {
                     position: absolute;
                     inset: 0;
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+                    font-family: ${UI_CONSTANTS.FONT_FAMILY};
                 }
-            </style>
-            <div id="fc2-enh-settings-container"></div>
-        `;
+            `);
+        shadow.adoptedStyleSheets = [styleSheet];
+      } catch (e) {
+        shadow.innerHTML = `
+                <style>
+                    ${StyleManager.getCss()}
+                    :host { all: initial; }
+                    #${DOM_IDS.SETTINGS_CONTAINER} {
+                        position: absolute;
+                        inset: 0;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-family: ${UI_CONSTANTS.FONT_FAMILY};
+                    }
+                </style>
+            `;
+      }
+      const container = h("div", { id: DOM_IDS.SETTINGS_CONTAINER });
+      shadow.appendChild(container);
       document.body.appendChild(host);
-      Logger$1.info("SettingsPanel", "Settings host created and resources preloaded");
     };
     const hide = (e) => {
       if (e) {
         e.preventDefault();
         e.stopPropagation();
       }
-      Logger$1.info("SettingsPanel", "Hiding settings panel");
       if (host) {
         host.style.setProperty("display", "none", "important");
         document.body.classList.remove("fc2-settings-open");
@@ -5003,14 +7601,23 @@ h(
     const saveAndClose = () => {
       const q = (id) => shadow.getElementById(`set-${id}`);
       const colsEl = q("gridColumns");
+      let needsReload = false;
       if (colsEl) {
         const cols = parseInt(colsEl.value || 0);
-        if (typeof GM_setValue !== "undefined") {
-          GM_setValue("user_grid_columns_preference", cols);
+        const currentCols = typeof GM_getValue !== "undefined" ? GM_getValue(STORAGE_KEYS.USER_GRID_COLUMNS, 0) : 0;
+        if (cols !== currentCols) {
+          needsReload = true;
+          if (typeof GM_setValue !== "undefined") {
+            GM_setValue(STORAGE_KEYS.USER_GRID_COLUMNS, cols);
+          }
+          CoreEvents.emit(AppEvents.GRID_CHANGED, cols);
         }
-        GridManager.apply(cols);
       }
       saveWebDAVSettings();
+      const langEl = q("language");
+      if (langEl && langEl.value !== State.proxy.language) {
+        needsReload = true;
+      }
       const boolKeys = [
         "hideNoMagnet",
         "hideCensored",
@@ -5032,90 +7639,158 @@ h(
       });
       Logger$1.success("SettingsPanel", "Settings saved successfully");
       Toast$1.show(t("alertSettingsSaved"), "success");
-      setTimeout(() => location.reload(), 500);
+      if (needsReload) {
+        const shouldReload = confirm(t("confirmReloadSettings"));
+        if (shouldReload) {
+          setTimeout(() => location.reload(), TIMING.DEBOUNCE_MS);
+        }
+      }
       hide();
+    };
+    const handleKeyDown = (e) => {
+      if (!host || host.style.display === "none") return;
+      if (e.key === "Escape") {
+        e.preventDefault();
+        hide();
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key === "s") {
+        e.preventDefault();
+        saveAndClose();
+      }
     };
     const render = (activeTab = "settings") => {
       create();
       host.style.setProperty("display", "block", "important");
       document.body.classList.add("fc2-settings-open");
-      const container = shadow.getElementById("fc2-enh-settings-container");
-      container.innerHTML = "";
-      const mkIcon = (svg) => {
-        const s = h("span", { className: "fc2-icon" });
-        s.innerHTML = svg;
-        return s;
-      };
-      const closeIcon = mkIcon(IconXmark);
-      const panel = h(
-        "div",
-        { className: "fc2-enh-settings-panel enh-modal-panel" },
-        h(
+      const container = shadow.getElementById(DOM_IDS.SETTINGS_CONTAINER);
+      if (container.children.length === 0) {
+        const mkIcon = (svg) => {
+          const s = h("span", { className: "fc2-icon" });
+          s.innerHTML = svg;
+          return s;
+        };
+        const closeIcon = mkIcon(IconXmark);
+        const panel = h(
           "div",
-          {
-            className: "fc2-enh-settings-header",
-            style: {
-              backdropFilter: "blur(20px)",
-              background: "rgba(30,30,30,0.8)",
-              position: "sticky",
-              top: 0,
-              zIndex: 10
-            }
-          },
-          h("h2", {}, "FC2PPVDB Enhanced"),
-          h("button", { className: "close-btn", onclick: hide }, closeIcon)
-        ),
-        h(
-          "div",
-          { className: "fc2-enh-settings-tabs" },
-          h(
-            "button",
-            {
-              className: `fc2-enh-tab-btn ${activeTab === "settings" ? "active" : ""}`,
-              onclick: () => render("settings")
-            },
-            mkIcon(IconSliders),
-            t("tabSettings")
-          ),
-          h(
-            "button",
-            {
-              className: `fc2-enh-tab-btn ${activeTab === "data" ? "active" : ""}`,
-              onclick: () => render("data")
-            },
-            mkIcon(IconDatabase),
-            t("tabData")
-          ),
-          h(
-            "button",
-            {
-              className: `fc2-enh-tab-btn ${activeTab === "about" ? "active" : ""}`,
-              onclick: () => render("about")
-            },
-            mkIcon(IconCircleInfo),
-            t("tabAbout")
-          )
-        ),
-        h(
-          "div",
-          { className: "fc2-enh-settings-content" },
+          { className: "fc2-enh-settings-panel enh-modal-panel" },
           h(
             "div",
-            { className: "fc2-tab-content-wrapper", key: activeTab },
-            activeTab === "settings" ? renderSettingsTab() : activeTab === "data" ? renderDataTab(render, saveWebDAVSettings) : renderAboutTab()
+            {
+              className: "fc2-enh-settings-header",
+              style: {
+                backdropFilter: `blur(${UI_TOKENS.BACKDROP.BLUR})`,
+                background: UI_TOKENS.BACKDROP.COLOR,
+                position: "sticky",
+                top: 0,
+                zIndex: 10
+              }
+            },
+            h("h2", {}, SCRIPT_INFO.NAME),
+            h("button", { className: "close-btn", onclick: hide }, closeIcon)
+          ),
+          h(
+            "div",
+            { className: "fc2-enh-settings-tabs", id: "tab-buttons" },
+            h(
+              "button",
+              {
+                className: "fc2-enh-tab-btn",
+                "data-tab": "settings",
+                onclick: () => switchTab("settings")
+              },
+              mkIcon(IconSliders),
+              t("tabSettings")
+            ),
+            h(
+              "button",
+              {
+                className: "fc2-enh-tab-btn",
+                "data-tab": "data",
+                onclick: () => switchTab("data")
+              },
+              mkIcon(IconDatabase),
+              t("tabData")
+            ),
+            h(
+              "button",
+              {
+                className: "fc2-enh-tab-btn",
+                "data-tab": "debug",
+                onclick: () => switchTab("debug")
+              },
+              mkIcon(IconBolt),
+              t("tabDebug")
+            ),
+            h(
+              "button",
+              {
+                className: "fc2-enh-tab-btn",
+                "data-tab": "about",
+                onclick: () => switchTab("about")
+              },
+              mkIcon(IconCircleInfo),
+              t("tabAbout")
+            )
+          ),
+          h("div", { className: "fc2-enh-settings-content", id: DOM_IDS.TAB_CONTENT }),
+          h(
+            "div",
+            { className: "fc2-enh-settings-footer" },
+            h("button", { className: "fc2-enh-btn", onclick: (e) => hide(e) }, t("btnCancel")),
+            h("button", { className: "fc2-enh-btn primary", onclick: () => saveAndClose() }, t("btnSave"))
           )
-        ),
-        h(
-          "div",
-          { className: "fc2-enh-settings-footer" },
-          h("button", { className: "fc2-enh-btn", onclick: (e) => hide(e) }, t("btnCancel")),
-          h("button", { className: "fc2-enh-btn primary", onclick: () => saveAndClose() }, t("btnSave"))
-        )
-      );
-      const backdrop = h("div", { className: "enh-modal-backdrop", onclick: hide });
-      container.append(backdrop, panel);
+        );
+        const backdrop = h("div", { className: "enh-modal-backdrop", onclick: hide });
+        container.append(backdrop, panel);
+      }
+      switchTab(activeTab);
+      document.addEventListener("keydown", handleKeyDown);
+      setTimeout(() => {
+        const firstButton = shadow?.querySelector(".fc2-enh-tab-btn.active");
+        firstButton?.focus();
+      }, 100);
     };
-    return { show: () => render(), render };
+    const switchTab = (tabName) => {
+      const contentContainer = shadow.getElementById(DOM_IDS.TAB_CONTENT);
+      const tabButtons = shadow.querySelectorAll(".fc2-enh-tab-btn");
+      tabButtons.forEach((btn) => {
+        if (btn.dataset.tab === tabName) {
+          btn.classList.add("active");
+        } else {
+          btn.classList.remove("active");
+        }
+      });
+      if (!tabCache.has(tabName)) {
+        const tabContent = h("div", {
+          className: "fc2-tab-content-wrapper",
+          "data-tab": tabName
+        });
+        const content = tabName === "settings" ? renderSettingsTab() : tabName === "data" ? renderDataTab(render, saveWebDAVSettings) : tabName === "about" ? renderAboutTab() : DebugTab.render();
+        tabContent.appendChild(content);
+        tabCache.set(tabName, tabContent);
+      }
+      contentContainer.querySelectorAll(".fc2-tab-content-wrapper").forEach((tab) => {
+        tab.style.display = "none";
+      });
+      const cachedTab = tabCache.get(tabName);
+      if (!contentContainer.contains(cachedTab)) {
+        contentContainer.appendChild(cachedTab);
+      }
+      cachedTab.style.display = "block";
+    };
+    const clearTabCache = () => {
+      tabCache.clear();
+    };
+    return {
+      show: () => render(),
+      render,
+      hide: () => {
+        hide();
+        document.removeEventListener("keydown", handleKeyDown);
+      },
+      clearCache: clearTabCache,
+      switchTab
+    };
   })();
   const MenuManager = {
     _menuIds: [],
@@ -5127,10 +7802,18 @@ h(
   };
   const QuickBar = (() => {
     let container = null;
-    const render = () => {
+    let _eventBound = false;
+    const init = () => {
       if (container) container.remove();
       if (!State.proxy.enableQuickBar) return;
       const appState = State.proxy;
+      if (!_eventBound) {
+        CoreEvents.on(AppEvents.LANGUAGE_CHANGED, () => {
+          MenuManager.register();
+          init();
+        });
+        _eventBound = true;
+      }
       container = h("div", { className: "fc2-fab-container" });
       const actions = h("div", { className: "fc2-fab-actions" });
       const mkBtn = (iconSvg, title, prop, onClick) => {
@@ -5140,6 +7823,7 @@ h(
           {
             className: `fc2-fab-btn ${prop && appState[prop] ? "active" : ""}`,
             "data-title": title,
+            "aria-label": title,
             onclick: (e) => {
               e.preventDefault();
               e.stopPropagation();
@@ -5149,6 +7833,17 @@ h(
                 b.classList.toggle("active", isActive);
                 const status = isActive ? t("statusOn") : t("statusOff");
                 Toast$1.show(`${title}: ${status}`, isActive ? "success" : "info");
+                const cards = document.querySelectorAll(`.${Config.CLASSES.cardRebuilt}`);
+                cards.forEach((card) => {
+                  if (prop === "hideCensored") {
+                    UIUtils.applyCensoredFilter(card);
+                  } else if (prop === "hideViewed") {
+                    UIUtils.applyHistoryVisibility(card);
+                  } else if (prop === "hideNoMagnet") {
+                    const hasM = card.querySelector(`.${Config.CLASSES.btnMagnet}`) !== null;
+                    UIUtils.applyCardVisibility(card, hasM);
+                  }
+                });
               } else if (onClick) onClick();
             }
           },
@@ -5174,7 +7869,8 @@ h(
       const trigger = h(
         "button",
         {
-          className: "fc2-fab-trigger"
+          className: "fc2-fab-trigger",
+          "aria-label": t("btnMoreOptions") || "More options"
 },
         iconPlusContainer,
         h("div", {
@@ -5302,7 +7998,7 @@ h(
       };
       document.addEventListener("click", closeFAB, true);
     };
-    return { init: render };
+    return { init };
   })();
   const GlobalErrorHandler = {
     init() {
@@ -5330,449 +8026,13 @@ h(
       Logger$1.info("GlobalErrorHandler", "Initialized");
     }
   };
-  const MobileDebug = {
-isMobile() {
-      const userAgent = navigator.userAgent.toLowerCase();
-      const isMobileUA = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent);
-      const isTouchDevice = "ontouchstart" in window || navigator.maxTouchPoints > 0;
-      const isSmallScreen = window.innerWidth <= 768;
-      return isMobileUA || isTouchDevice && isSmallScreen;
-    },
-getDeviceInfo() {
-      return {
-        userAgent: navigator.userAgent,
-        platform: navigator.platform,
-        screenWidth: window.screen.width,
-        screenHeight: window.screen.height,
-        windowWidth: window.innerWidth,
-        windowHeight: window.innerHeight,
-        devicePixelRatio: window.devicePixelRatio,
-        touchPoints: navigator.maxTouchPoints,
-        isTouchDevice: "ontouchstart" in window,
-        orientation: window.screen.orientation?.type || "unknown",
-        isMobile: this.isMobile()
-      };
-    },
-logTouchEvent(eventType, event) {
-      if (!Logger$1.enabled) return;
-      const touch = event.touches[0] || event.changedTouches[0];
-      Logger$1.log("MobileDebug", `Touch ${eventType}`, {
-        x: touch?.clientX,
-        y: touch?.clientY,
-        target: event.target?.className,
-        touches: event.touches.length
-      });
-    },
-enableTouchIndicators() {
-      if (typeof document === "undefined") return;
-      const style = document.createElement("style");
-      style.textContent = `
-            .touch-indicator {
-                position: fixed;
-                width: 40px;
-                height: 40px;
-                border: 2px solid #ff0000;
-                border-radius: 50%;
-                pointer-events: none;
-                z-index: 999999;
-                transform: translate(-50%, -50%);
-                animation: touch-fade 0.5s ease-out forwards;
-            }
-            @keyframes touch-fade {
-                from { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-                to { opacity: 0; transform: translate(-50%, -50%) scale(2); }
-            }
-        `;
-      document.head.appendChild(style);
-      const addIndicator = (x, y) => {
-        const indicator = document.createElement("div");
-        indicator.className = "touch-indicator";
-        indicator.style.left = `${x}px`;
-        indicator.style.top = `${y}px`;
-        document.body.appendChild(indicator);
-        setTimeout(() => indicator.remove(), 500);
-      };
-      document.addEventListener("touchstart", (e) => {
-        Array.from(e.touches).forEach((touch) => {
-          addIndicator(touch.clientX, touch.clientY);
-        });
-      }, { passive: true });
-      Logger$1.info("MobileDebug", "Touch indicators enabled");
-    },
-showDebugPanel() {
-      const info = this.getDeviceInfo();
-      const panel = document.createElement("div");
-      panel.style.cssText = `
-            position: fixed;
-            top: 10px;
-            left: 10px;
-            background: rgba(0, 0, 0, 0.9);
-            color: #0f0;
-            padding: 10px;
-            font-family: monospace;
-            font-size: 10px;
-            z-index: 999999;
-            max-width: 300px;
-            border-radius: 5px;
-            line-height: 1.4;
-        `;
-      panel.innerHTML = `
-            <div style="font-weight: bold; margin-bottom: 5px;">📱 Mobile Debug Info</div>
-            <div>Device: ${info.isMobile ? "✅ Mobile" : "❌ Desktop"}</div>
-            <div>Screen: ${info.screenWidth}x${info.screenHeight}</div>
-            <div>Window: ${info.windowWidth}x${info.windowHeight}</div>
-            <div>DPR: ${info.devicePixelRatio}</div>
-            <div>Touch: ${info.isTouchDevice ? "✅" : "❌"} (${info.touchPoints} points)</div>
-            <div>Orientation: ${info.orientation}</div>
-            <div>Platform: ${info.platform}</div>
-            <div style="margin-top: 5px; font-size: 9px; opacity: 0.7;">
-                Tap to close
-            </div>
-        `;
-      panel.onclick = () => panel.remove();
-      document.body.appendChild(panel);
-      Logger$1.info("MobileDebug", "Debug panel shown", info);
-    },
-testTouchEvents() {
-      const buttons = document.querySelectorAll("button, a.resource-btn, .fc2-fab-btn");
-      let tested = 0;
-      buttons.forEach((btn) => {
-        const hasClick = !!btn.onclick;
-        const hasTouch = !!btn.ontouchend;
-        if (!hasClick && !hasTouch) {
-          Logger$1.warn("MobileDebug", "Button without events", {
-            element: btn.className,
-            text: btn.textContent?.trim()
-          });
-        } else {
-          tested++;
-        }
-      });
-      Logger$1.success("MobileDebug", `Tested ${tested}/${buttons.length} buttons`);
-      return { total: buttons.length, withEvents: tested };
-    },
-init() {
-      if (!this.isMobile()) {
-        Logger$1.info("MobileDebug", "Not a mobile device, skipping mobile debug init");
-        return;
-      }
-      Logger$1.info("MobileDebug", "Mobile device detected", this.getDeviceInfo());
-      if (typeof window !== "undefined") {
-        window.MobileDebug = {
-          info: () => this.showDebugPanel(),
-          indicators: () => this.enableTouchIndicators(),
-          test: () => this.testTouchEvents(),
-          device: () => {
-            console.table(this.getDeviceInfo());
-            return this.getDeviceInfo();
-          }
-        };
-        Logger$1.success("MobileDebug", "Mobile debug tools available via window.MobileDebug");
-      }
-    }
-  };
-  const KeyboardShortcuts = {
-    shortcuts: new Map(),
-    enabled: true,
-    init() {
-      document.addEventListener("keydown", (e) => {
-        if (!this.enabled) return;
-        const target = e.target;
-        if (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable) {
-          return;
-        }
-        const key = this.getKeyCombo(e);
-        const shortcut = this.shortcuts.get(key);
-        if (shortcut) {
-          e.preventDefault();
-          shortcut.handler();
-          Logger$1.log("Shortcuts", `Triggered: ${key}`);
-        }
-      });
-      this.registerDefaults();
-      Logger$1.info("Shortcuts", "Keyboard shortcuts initialized");
-    },
-    getKeyCombo(e) {
-      const parts = [];
-      if (e.ctrlKey || e.metaKey) parts.push("Ctrl");
-      if (e.altKey) parts.push("Alt");
-      if (e.shiftKey) parts.push("Shift");
-      parts.push(e.key.toUpperCase());
-      return parts.join("+");
-    },
-    register(key, description, handler) {
-      this.shortcuts.set(key, { description, handler });
-    },
-    registerDefaults() {
-      this.register("/", "聚焦搜索", () => {
-        const searchInput = document.querySelector('input[type="search"]');
-        if (searchInput) {
-          searchInput.focus();
-          searchInput.select();
-        }
-      });
-      this.register("Ctrl+S", "打开设置", () => {
-        SettingsPanel.show();
-      });
-      this.register("H", "切换隐藏已看", () => {
-        State.proxy.hideViewed = !State.proxy.hideViewed;
-        Toast$1.show(
-          `已看内容: ${State.proxy.hideViewed ? "隐藏" : "显示"}`,
-          State.proxy.hideViewed ? "info" : "success"
-        );
-      });
-      this.register("M", "切换隐藏无磁力", () => {
-        State.proxy.hideNoMagnet = !State.proxy.hideNoMagnet;
-        Toast$1.show(
-          `无磁力内容: ${State.proxy.hideNoMagnet ? "隐藏" : "显示"}`,
-          State.proxy.hideNoMagnet ? "info" : "success"
-        );
-      });
-      this.register("C", "切换隐藏有码", () => {
-        State.proxy.hideCensored = !State.proxy.hideCensored;
-        Toast$1.show(
-          `有码内容: ${State.proxy.hideCensored ? "隐藏" : "显示"}`,
-          State.proxy.hideCensored ? "info" : "success"
-        );
-      });
-      this.register("R", "刷新页面", () => {
-        location.reload();
-      });
-      this.register("?", "显示快捷键帮助", () => {
-        this.showHelp();
-      });
-      this.register("ESCAPE", "关闭模态窗口", () => {
-        const modal = document.querySelector(".enh-modal-backdrop");
-        if (modal) {
-          modal.remove();
-        }
-      });
-    },
-    showHelp() {
-      const shortcuts = Array.from(this.shortcuts.entries()).map(([key, { description }]) => ({ key, description }));
-      const modal = h(
-        "div",
-        {
-          className: "enh-modal-backdrop",
-          onclick: (e) => {
-            if (e.target === modal) modal.remove();
-          }
-        },
-        h(
-          "div",
-          {
-            className: "enh-modal-panel",
-            style: "width: 500px; max-width: 90%;",
-            onclick: (e) => e.stopPropagation()
-          },
-          h(
-            "div",
-            { className: "fc2-enh-settings-header" },
-            h("h2", {}, "⌨️ 键盘快捷键"),
-            h("button", {
-              className: "close-btn",
-              onclick: () => modal.remove()
-            }, "×")
-          ),
-          h(
-            "div",
-            {
-              className: "fc2-enh-settings-content",
-              style: "max-height: 60vh; overflow-y: auto;"
-            },
-            h(
-              "table",
-              {
-                style: "width: 100%; border-collapse: collapse;"
-              },
-              h(
-                "thead",
-                {},
-                h(
-                  "tr",
-                  {},
-                  h("th", { style: "text-align: left; padding: 10px; border-bottom: 1px solid var(--fc2-border);" }, "快捷键"),
-                  h("th", { style: "text-align: left; padding: 10px; border-bottom: 1px solid var(--fc2-border);" }, "功能")
-                )
-              ),
-              h(
-                "tbody",
-                {},
-                ...shortcuts.map(
-                  ({ key, description }) => h(
-                    "tr",
-                    {},
-                    h(
-                      "td",
-                      {
-                        style: "padding: 10px; border-bottom: 1px solid var(--fc2-border);"
-                      },
-                      h("kbd", {
-                        style: `
-                                                background: var(--fc2-surface);
-                                                padding: 4px 8px;
-                                                border-radius: 4px;
-                                                border: 1px solid var(--fc2-border);
-                                                font-family: monospace;
-                                                font-size: 12px;
-                                            `
-                      }, key.replace(/\+/g, " + "))
-                    ),
-                    h("td", {
-                      style: "padding: 10px; border-bottom: 1px solid var(--fc2-border);"
-                    }, description)
-                  )
-                )
-              )
-            )
-          )
-        )
-      );
-      document.body.appendChild(modal);
-    }
-  };
-  const SmartTooltips = {
-    currentTooltip: null,
-    hideTimeout: null,
-    init() {
-      document.addEventListener("mouseenter", (e) => {
-        const target = e.target;
-        if (!(target instanceof Element)) return;
-        const tooltipText = target.getAttribute("data-tooltip") || target.title;
-        if (tooltipText && this.shouldShowTooltip(target)) {
-          this.show(target, tooltipText);
-        }
-      }, true);
-      document.addEventListener("mouseleave", (e) => {
-        const target = e.target;
-        if (!(target instanceof Element)) return;
-        if (target.hasAttribute("data-tooltip") || target.title) {
-          this.hide();
-        }
-      }, true);
-      Logger$1.info("Tooltips", "Smart tooltips initialized");
-    },
-    shouldShowTooltip(element) {
-      if ("ontouchstart" in window) return false;
-      if (element.tagName === "INPUT" || element.tagName === "TEXTAREA") return false;
-      return true;
-    },
-    show(element, text) {
-      this.hide();
-      const tooltip = h("div", {
-        className: "smart-tooltip",
-        style: `
-                position: fixed;
-                background: rgba(0, 0, 0, 0.9);
-                color: #fff;
-                padding: 6px 12px;
-                border-radius: 6px;
-                font-size: 12px;
-                z-index: 999999;
-                pointer-events: none;
-                white-space: nowrap;
-                max-width: 300px;
-                backdrop-filter: blur(8px);
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-                opacity: 0;
-                transition: opacity 0.2s;
-            `
-      }, text);
-      document.body.appendChild(tooltip);
-      const rect = element.getBoundingClientRect();
-      const tooltipRect = tooltip.getBoundingClientRect();
-      let top = rect.bottom + 8;
-      let left = rect.left + rect.width / 2 - tooltipRect.width / 2;
-      if (left < 8) left = 8;
-      if (left + tooltipRect.width > window.innerWidth - 8) {
-        left = window.innerWidth - tooltipRect.width - 8;
-      }
-      if (top + tooltipRect.height > window.innerHeight - 8) {
-        top = rect.top - tooltipRect.height - 8;
-      }
-      tooltip.style.top = `${top}px`;
-      tooltip.style.left = `${left}px`;
-      requestAnimationFrame(() => {
-        tooltip.style.opacity = "1";
-      });
-      this.currentTooltip = tooltip;
-    },
-    hide() {
-      if (this.currentTooltip) {
-        this.currentTooltip.style.opacity = "0";
-        setTimeout(() => {
-          if (this.currentTooltip) {
-            this.currentTooltip.remove();
-            this.currentTooltip = null;
-          }
-        }, 200);
-      }
-    }
-  };
-  const GestureSupport = {
-    init() {
-      Logger$1.info("Gestures", "Gesture support initialized (long-press disabled)");
-    },
-    showContextMenu(element, x, y) {
-      const card = element.closest(".processed-card");
-      if (!card) return;
-      const { id } = card.dataset;
-      if (!id) return;
-      const menu = h(
-        "div",
-        {
-          className: "context-menu",
-          style: `
-                position: fixed;
-                top: ${y}px;
-                left: ${x}px;
-                background: var(--fc2-surface);
-                border: 1px solid var(--fc2-border);
-                border-radius: 8px;
-                padding: 8px;
-                z-index: 999999;
-                box-shadow: var(--fc2-shadow);
-                min-width: 150px;
-            `,
-          onclick: (e) => e.stopPropagation()
-        },
-        h("div", {
-          className: "context-menu-item",
-          style: "padding: 8px 12px; cursor: pointer;",
-          onclick: () => {
-            navigator.clipboard.writeText(id);
-            Toast$1.show(t("tooltipCopied"), "success");
-            menu.remove();
-          }
-        }, `📋 ${t("tooltipCopyId") || "Copy ID"}`),
-        h("div", {
-          className: "context-menu-item",
-          style: "padding: 8px 12px; cursor: pointer;",
-          onclick: () => {
-            HistoryManager.add(id);
-            card.classList.add(Config.CLASSES.isViewed);
-            Toast$1.show(t("alertMarkedViewed"), "success");
-            menu.remove();
-          }
-        }, `👁️ ${t("tooltipMarkAsViewed")}`)
-      );
-      document.body.appendChild(menu);
-      const closeMenu = () => {
-        menu.remove();
-        document.removeEventListener("click", closeMenu);
-      };
-      setTimeout(() => {
-        document.addEventListener("click", closeMenu);
-      }, 100);
-    }
-  };
-  const initUIEnhancements = () => {
-    KeyboardShortcuts.init();
-    SmartTooltips.init();
-    GestureSupport.init();
-    Logger$1.success("UI/UX", "All UI enhancements initialized");
-  };
   const MigrationManager = {
+    init() {
+      CoreEvents.on(AppEvents.BOOTSTRAP, async () => {
+        Logger$1.info("Migration", "Bootstrap event received, running migration");
+        await this.run();
+      });
+    },
     async run() {
       const currentVersion = Storage.get("migration_version", 0);
       const TARGET_VERSION = 1;
@@ -5908,10 +8168,7 @@ is_deleted: 0,
       const doc = document;
       const title = doc.title;
       const indicators = [
-        title.includes("Just a moment..."),
-        title.includes("Checking your browser"),
-        title.includes("Attention Required!"),
-        title.includes("Cloudflare"),
+        ...CLOUDFLARE_INDICATORS.map((ind) => title.includes(ind)),
         !!doc.querySelector("#cf-wrapper"),
         !!doc.querySelector(".cf-browser-verification"),
         !!doc.querySelector("#cf-content"),
@@ -5926,70 +8183,38 @@ is_deleted: 0,
       return;
     }
     try {
-      const win = typeof unsafeWindow !== "undefined" ? unsafeWindow : window;
       GlobalErrorHandler.init();
       Logger$1.init();
-      Logger$1.group("Main", "🚀 FC2PPVDB Enhanced Initializing");
+      Logger$1.group("Main", `🚀 ${SCRIPT_INFO.NAME} Initializing`);
       Logger$1.time("Main.init");
       if (!document.querySelector('meta[name="viewport"]')) {
         const viewport = document.createElement("meta");
         viewport.name = "viewport";
         viewport.content = "width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes";
         document.head.appendChild(viewport);
-        Logger$1.info("Main", "Added viewport meta tag for mobile support");
       }
-      Logger$1.info("Main", "Running database GC...");
-      await Repository.runGC().catch((e) => Logger$1.error("Main", "GC Failed", e));
-      State.on((key, _value) => {
-        Logger$1.log("State", `State changed: ${key} = ${_value}`);
-        const C = Config.CLASSES;
-        if (key === "language") {
-          MenuManager.register();
-          QuickBar.init();
-        } else if (["enableMagnets", "enableExternalLinks", "enableActressName"].includes(key)) {
-          location.reload();
-        } else if (key === "hideNoMagnet") {
-          document.querySelectorAll(`.${C.cardRebuilt}`).forEach(
-            (c) => UIBuilder.applyCardVisibility(c, !!c.querySelector(`.${C.btnMagnet}`))
-          );
-        } else if (key === "hideCensored") {
-          document.querySelectorAll(`.${C.cardRebuilt}`).forEach((c) => UIBuilder.applyCensoredFilter(c));
-        } else if (key === "hideViewed") {
-          document.querySelectorAll(`.${C.cardRebuilt}`).forEach((c) => UIBuilder.applyHistoryVisibility(c));
-        }
-      });
+      SyncManager.init();
+      HistoryManager.init();
+      MigrationManager.init?.();
+      Logger$1.info("Main", "Emitting BOOTSTRAP...");
+      CoreEvents.emit(AppEvents.BOOTSTRAP, {});
+      Repository.runGC().catch((e) => Logger$1.error("Main", "GC Failed", e));
+      StyleManager.init();
       const hostname = location.hostname;
-      const initDelay = hostname.includes("supjav") || hostname.includes("missav") ? 800 : 0;
+      const uiDelay = hostname.includes("supjav") || hostname.includes("missav") ? 800 : 0;
       setTimeout(async () => {
-        SyncManager.performSync(false).catch(() => {
-        });
-        await MigrationManager.run();
-        Logger$1.info("Main", "Loading history...");
-        await HistoryManager.load();
-        Logger$1.info("Main", "Injecting styles...");
-        StyleManager.init();
-        if (Logger$1.enabled) {
-          MobileDebug.init();
-        }
-        initUIEnhancements();
-        MagnetManager.init();
-        const cols = typeof GM_getValue !== "undefined" ? GM_getValue("user_grid_columns_preference", 0) : 0;
-        Logger$1.info("Main", `Applying grid: ${cols || "auto"} columns`);
-        GridManager.apply(cols);
-        MenuManager.register();
         QuickBar.init();
-        const configKey = Object.keys(SiteConfigs).find((k) => hostname.includes(k));
-        const config = configKey ? SiteConfigs[configKey] : null;
-        if (config) {
-          Logger$1.success("Main", `Site detected: ${configKey}`);
-          new SiteEngine(config).init();
-        } else {
-          Logger$1.warn("Main", `No config for: ${hostname}`);
-        }
+        GridManager.init();
+        MagnetManager.init();
+        MenuManager.register();
+        Logger$1.info("Main", "Emitting UI_READY...");
+        CoreEvents.emit(AppEvents.UI_READY, {});
+        SiteManager.registerAll(SiteConfigs);
+        await SiteManager.bootstrap();
         Logger$1.timeEnd("Main.init");
         Logger$1.groupEnd();
-        Logger$1.info("Main", "✅ Initialization complete");
-      }, initDelay);
+        Logger$1.info("Main", "✅ Main workflow complete");
+      }, uiDelay);
     } catch (error) {
       Logger$1.error("Main", "Fatal initialization error", error);
     }
@@ -5999,5 +8224,43 @@ is_deleted: 0,
   } else {
     main();
   }
+  var MessageType = ((MessageType2) => {
+    MessageType2["SETTING_UPDATE"] = "SETTING_UPDATE";
+    MessageType2["HISTORY_UPDATE"] = "HISTORY_UPDATE";
+    MessageType2["UI_REFRESH"] = "UI_REFRESH";
+    return MessageType2;
+  })(MessageType || {});
+  const MessagingService = (() => {
+    const CHANNEL_NAME = SYSTEM_KEYS.MESSAGING_CHANNEL;
+    const tabId = Math.random().toString(36).substring(2, 11);
+    const channel = new BroadcastChannel(CHANNEL_NAME);
+    const listeners = new Set();
+    channel.onmessage = (event) => {
+      const msg = event.data;
+      if (msg.sourceTabId === tabId) return;
+      Logger$1.info("MessagingService", `Received ${msg.type} from other tab`);
+      listeners.forEach((l) => l(msg));
+    };
+    return {
+      broadcast(type, payload) {
+        const msg = {
+          type,
+          payload,
+          sourceTabId: tabId
+        };
+        channel.postMessage(msg);
+        Logger$1.info("MessagingService", `Broadcasted ${type}`);
+      },
+      onMessage(handler) {
+        listeners.add(handler);
+        return () => listeners.delete(handler);
+      }
+    };
+  })();
+  const MessagingService$1 = Object.freeze( Object.defineProperty({
+    __proto__: null,
+    MessageType,
+    MessagingService
+  }, Symbol.toStringTag, { value: "Module" }));
 
 })(Dexie);

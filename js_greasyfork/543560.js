@@ -1,11 +1,12 @@
 // ==UserScript==
 // @name         Udemy.com Courses Auto-Enroll & Auto-Checkout
 // @namespace    https://www.linkedin.com/in/bernando-jr-minguita/
-// @version      1.1
+// @version      1.1.1
 // @description  Instantly auto-clicks "Enroll now" on Udemy with coupons/discounts; shows popup banner at bottom-right before clicking button immediately.
 // @author       Bernando Jr Minguita
 // @match        https://www.udemy.com/course/*?*couponCode=*
 // @match        https://www.udemy.com/payment/checkout/express/course/*?*discountCode=*
+// @match        https://www.udemy.com/payment/checkout/express/course/*?*couponCode=*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=udemy.com
 // @grant        none
 // @license      MIT
@@ -113,12 +114,22 @@ SOFTWARE.
             }
 
             // --- Course page "Enroll now" button ---
-            const courseButton = document.querySelector('button[data-purpose="buy-this-course-button"]');
-            if (courseButton && pageText.includes('Enroll now')) {
+            const courseButton1 = document.querySelector('button[data-purpose="buy-this-course-button"]');
+            if (courseButton1 && pageText.includes('Enroll now')) {
                 clicked = true;
                 log('"Enroll now" button found on course page. Clicking now.');
                 showBanner('Auto-clicking "Enroll now" on this course...', '#0073e6');
-                requestAnimationFrame(() => courseButton.click());
+                requestAnimationFrame(() => courseButton1.click());
+                return;
+            }
+
+            // --- Course page "Enroll now" button ---
+            const courseButton2 = document.querySelector('button[data-purpose="buy-now-button"]');
+            if (courseButton2 && pageText.includes('Enroll now')) {
+                clicked = true;
+                log('"Enroll now" button found on course page. Clicking now.');
+                showBanner('Auto-clicking "Enroll now" on this course...', '#0073e6');
+                requestAnimationFrame(() => courseButton2.click());
                 return;
             }
 
@@ -167,7 +178,8 @@ SOFTWARE.
     const url = window.location.href;
 
     if ((/^https:\/\/www\.udemy\.com\/course\/.+\?/.test(url) && url.includes('couponCode=')) ||
-        (/^https:\/\/www\.udemy\.com\/payment\/checkout\/express\/course\/.+\?/.test(url) && url.includes('discountCode='))) {
+        (/^https:\/\/www\.udemy\.com\/payment\/checkout\/express\/course\/.+\?/.test(url) && url.includes('discountCode=')) ||
+        (/^https:\/\/www\.udemy\.com\/payment\/checkout\/express\/course\/.+\?/.test(url) && url.includes('couponCode='))) {
         log('Udemy auto-enroll/checkout script active.');
         initAutoEnroll();
     } else {

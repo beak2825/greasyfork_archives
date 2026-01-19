@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Faction Vault - Member & Management Dev
 // @namespace    http://tampermonkey.net/
-// @version      5.5
+// @version      5.9.2
 // @description  Faction vault requests with management dashboard for bankers.
 // @author       Deviyl[3722358]
 // @icon         https://deviyl.github.io/icons/moneybag-green.png
@@ -9,6 +9,7 @@
 // @grant        GM_xmlhttpRequest
 // @grant        GM_setValue
 // @grant        GM_getValue
+// @grant        GM_addValueChangeListener
 // @grant        GM_addStyle
 // @license      MIT
 // @connect      api.torn.com
@@ -48,6 +49,7 @@
 // So members can request money in torn through the faction armory, while traveling, and when in other cities.
 //
 // I hope everyone who uses this finds it useful and helps ease their journey through Torn. Always here to help, Deviyl[3722358]. <3
+//
 
 
 (function() {
@@ -65,6 +67,9 @@
     // -------------------------------------------------------------------------
     const SETTINGS_KEY = "torn_vault_settings";
     const ACTIVE_REQ_KEY = "torn_vault_has_active";
+    const currentTabId = Date.now() + Math.random();
+    const DEBUG_MODE = true; // toggle console logging
+    GM_setValue("current_tab_id_temp", currentTabId);
 
     function getSettings() {
         return GM_getValue(SETTINGS_KEY, {
@@ -76,15 +81,16 @@
             discordPingType: "role"
         });
     }
-
     let settings = getSettings();
-    let cachedApiData = {
+
+    let cachedApiData = GM_getValue("global_user_data") || {
         name: "",
-        id: GM_getValue("last_known_player_id", ""),
-        position: GM_getValue("last_known_position", ""),
-        isBanker: GM_getValue("last_known_is_banker", 0),
-        vaultBalance: 0,
-        lastAction: 0
+        user_id: "",
+        faction_id: "",
+        faction_position: "",
+        isbanker: 0,
+        faction_money_balance: 0,
+        last_action: 0
     };
 
     let tornValid = !!settings.tornApiKey;
@@ -97,6 +103,7 @@
     let lastApiCall = 0;
     let mgmtTimerInterval = null;
     let isFetchingQueue = false;
+    let isSyncing = false;
 
     // -------------------------------------------------------------------------
     // STYLES
@@ -135,14 +142,63 @@
     // -------------------------------------------------------------------------
     // UTILITY FUNCTIONS
     // -------------------------------------------------------------------------
-    const formatMoney = (val) => val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    function vLog(message, style = null, type = 'log', data = null) {
+        if (!DEBUG_MODE) return;
+        const now = new Date();
+        const timestamp = `[${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}]`;
+        const prefix = '[Vault Script] | ' + timestamp + ' - ';
+        if (style) {
+            if (data) {
+                console.log('%c' + prefix + message, style, data);
+            } else {
+                console.log('%c' + prefix + message, style);
+            }
+            return;
+        }
+        if (type === 'error') {
+            data ? console.error(prefix + message, data) : console.error(prefix + message);
+        } else if (type === 'warn') {
+            data ? console.warn(prefix + message, data) : console.warn(prefix + message);
+        } else {
+            data ? console.log(prefix + message, data) : console.log(prefix + message);
+        }
+    }
+
+    const formatMoney = (val) => {
+        if (val === undefined || val === null) return "0";
+        return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    };
     const parseMoney = (val) => parseInt(val.toString().replace(/[^0-9]/g, "")) || 0;
 
+    function handleAmountInput(e) {
+        const input = e.target;
+        const rawValue = input.value;
+        const selectionStart = input.selectionStart;
+        const numericVal = parseMoney(rawValue);
+        const formatted = formatMoney(numericVal);
+        input.value = formatted;
+        const textBeforeCursor = rawValue.substring(0, selectionStart).replace(/,/g, '');
+        let newPos = 0;
+        let foundTextCount = 0;
+
+        for (let i = 0; i < formatted.length; i++) {
+            if (foundTextCount === textBeforeCursor.length) break;
+            if (formatted[i] !== ',') foundTextCount++;
+            newPos = i + 1;
+        }
+
+        input.setSelectionRange(newPos, newPos);
+        validateAmount(numericVal);
+    }
+
     function getDbUrl(path, overrideMethod = null) {
-        if (!settings.firebaseUrl || !settings.firebaseApiKey) return null;
+        if (!settings.firebaseUrl || !settings.firebaseApiKey) return "";
         const base = settings.firebaseUrl.replace(/\/$/, "");
         let url = `${base}${path}.json?auth=${settings.firebaseApiKey}`;
-        if (overrideMethod) url += `&x-http-method-override=${overrideMethod}`;
+
+        if (overrideMethod) {
+            url += `&x-http-method-override=${overrideMethod}`;
+        }
         return url;
     }
 
@@ -158,6 +214,50 @@
         return 'status-offline';
     }
 
+    function refreshUIDisplay() {
+        const balSpan = document.getElementById('balance-amount-span');
+        if (balSpan) {
+            balSpan.innerText = formatMoney(cachedApiData.faction_money_balance);
+        }
+        const mgmt = document.getElementById('vault-management-container');
+        if (mgmt) {
+            mgmt.style.display = cachedApiData.isbanker ? 'block' : 'none';
+        }
+        updateStatusIcon();
+    }
+
+    function trackApiUsage() {
+        const now = Date.now();
+        let timestamps = GM_getValue("api_usage_timestamps", []);
+        const rollingList = timestamps.filter(ts => now - ts < 60000);
+        rollingList.push(now);
+        GM_setValue("api_usage_timestamps", rollingList);
+        const color = rollingList.length > 80 ? 'color: #ff4444; font-weight: bold;' : 'color: #6fb33d;';
+        vLog(`Global API Calls (60s): ${rollingList.length}`, color, 'log', null);
+    }
+
+    function isLeader() {
+        const now = Date.now();
+        const lastHeartbeat = GM_getValue("leader_heartbeat", 0);
+        const leaderTabId = String(GM_getValue("leader_tab_id", 0));
+        const myId = String(currentTabId);
+        if (leaderTabId === myId) {
+            const color = 'color: #f39c12; font-weight: bold;'
+            vLog(`I am the Leader. Tab ID - ${myId}`, color, 'log', null);
+            return true;
+        }
+        if (now - lastHeartbeat > 5000) {
+            GM_setValue("leader_heartbeat", now);
+            GM_setValue("leader_tab_id", myId);
+            const color = 'color: #f39c12; font-weight: bold;'
+            vLog(`Leader switched to - ${myId}.`, color, 'log', null);
+            return true;
+        }
+        const color = 'color: #f39c12; font-weight: bold;'
+        vLog(`I am a follower. Leader Tab - ${myId}.`, color, 'log', null);
+        return false;
+    }
+
     // -------------------------------------------------------------------------
     // DISCORD FUNCTIONALITY
     // -------------------------------------------------------------------------
@@ -169,24 +269,14 @@
         let ping = settings.discordPingID ? `${pingPrefix}${settings.discordPingID}>` : '';
 
         const header = `### --- Vault Bot ---`;
-        const profileLink = `[${cachedApiData.name} [${cachedApiData.id}]](https://www.torn.com/profiles.php?XID=${cachedApiData.id})`;
+        const profileLink = `[${cachedApiData.name} [${cachedApiData.user_id}]](https://www.torn.com/profiles.php?XID=${cachedApiData.user_id})`;
         const armoryLink = `[Fulfill](https://www.torn.com/factions.php?step=your#/tab=armoury)`;
 
-        if (isTest) {
-            content = `${header}\n > ⚙️ **TEST PING** — ${customMsg}`;
-        }
-        else if (isCanceled) {
-            content = `${header}\n > 🔴 **CANCELED** — ${profileLink} cancelled their request.`;
-        }
-        else if (isExpired) {
-            content = `${header}\n > 🟡 **EXPIRED** — ${profileLink} - the request expired.`;
-        }
-        else if (isFilled) {
-            content = `${header}\n > 🟢 **FILLED** — **${filledUser}'s** request for $${formatMoney(filledAmount)} was filled by ${profileLink}`;
-        }
-        else if (customMsg) {
-            content = `${header}\n > ${customMsg}`;
-        }
+        if (isTest) content = `${header}\n > ⚙️ **TEST PING** — ${customMsg}`;
+        else if (isCanceled) content = `${header}\n > 🔴 **CANCELED** — ${profileLink} cancelled their request.`;
+        else if (isExpired) content = `${header}\n > 🟡 **EXPIRED** — ${profileLink} - the request expired.`;
+        else if (isFilled) content = `${header}\n > 🟢 **FILLED** — **${filledUser}'s** request for **$${formatMoney(filledAmount)}** was filled by ${profileLink}`;
+        else if (customMsg) content = `${header}\n > ${customMsg}`;
         else { //new request
             const amountStr = document.getElementById('vault-amount')?.value || "0";
             const isPrefOnline = document.getElementById('vault-pref-online')?.checked;
@@ -195,132 +285,281 @@
             content = `${header}\n > 🔵 **NEW REQUEST** — ${ping} — ${profileLink} requested **$${amountStr}**${timeoutText}. ${armoryLink}`;
         }
 
-        GM_xmlhttpRequest({
-            method: "POST",
-            url: settings.discordWebhook,
-            headers: { "Content-Type": "application/json" },
-            data: JSON.stringify({ "content": content }),
-            onload: function(r) {
-                if (isTest) {
-                    const testBtn = document.getElementById('vault-test-discord');
-                    if (testBtn) {
-                        testBtn.innerText = "SENT!";
-                        setTimeout(() => { testBtn.innerText = "TEST PING"; }, 2000);
+        const performSend = () => {
+            GM_xmlhttpRequest({
+                method: "POST",
+                url: settings.discordWebhook,
+                headers: { "Content-Type": "application/json" },
+                data: JSON.stringify({ "content": content }),
+                onload: function(r) {
+                    if (isTest) {
+                        const testBtn = document.getElementById('vault-test-discord');
+                        if (testBtn) {
+                            testBtn.innerText = "SENT!";
+                            setTimeout(() => { testBtn.innerText = "TEST PING"; }, 2000);
+                        }
                     }
                 }
-            }
-        });
+            });
+        };
+
+        // debounce for expired message
+        if (isExpired) {
+            const baseUrl = `${settings.firebaseUrl.replace(/\/$/, "")}/last_ping.json?auth=${settings.firebaseApiKey}`;
+            const jitter = Math.floor(Math.random() * 1000) + 500;
+
+            setTimeout(() => {
+                GM_xmlhttpRequest({
+                    method: "GET",
+                    url: baseUrl,
+                    onload: function(response) {
+                        try {
+                            const lastPing = response.responseText ? JSON.parse(response.responseText) : null;
+                            const now = Date.now();
+
+                            if (lastPing && lastPing.content === content && Math.abs(now - lastPing.time) < 10000) {
+                                vLog("Discord | Duplicate Expired ping blocked (Firebase).", 'color: orange;');
+                                return;
+                            }
+                            GM_xmlhttpRequest({
+                                method: "POST",
+                                url: baseUrl,
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    "X-HTTP-Method-Override": "PUT"
+                                },
+                                data: JSON.stringify({ content: content, time: now }),
+                                onload: function() {
+                                    vLog("Firebase | Ping timestamp updated. Sending to Discord...");
+                                    performSend();
+                                },
+                                onerror: performSend
+                            });
+                        } catch (e) {
+                            vLog("Discord | Debounce parse error, sending anyway.", 'warn', e);
+                            performSend();
+                        }
+                    },
+                    onerror: performSend
+                });
+            }, jitter);
+        } else {
+            performSend();
+        }
     }
 
     // -------------------------------------------------------------------------
     // API AND DATA FETCHING
     // -------------------------------------------------------------------------
-    async function fetchFactionRankInfo(apiKey, playerId) {
-        if (!apiKey || !playerId) return;
-        GM_xmlhttpRequest({
-            method: "GET", url: `${TORN_API_BASE}/faction/?selections=&key=${apiKey}`,
-            onload: (r) => {
-                try {
-                    const data = JSON.parse(r.responseText);
-                    if (data.members && data.members[playerId]) {
-                        const posName = data.members[playerId].position;
-                        cachedApiData.position = posName;
-                        GM_setValue("last_known_position", posName);
-                        GM_xmlhttpRequest({
-                            method: "GET", url: `${TORN_API_BASE}/faction/?selections=positions&key=${apiKey}`,
-                            onload: (pr) => {
-                                try {
-                                    const posMap = JSON.parse(pr.responseText);
-                                    if (posMap.positions && posMap.positions[posName]) {
-                                        const isBanker = posMap.positions[posName].canGiveMoney || 0;
-                                        cachedApiData.isBanker = isBanker;
-                                        GM_setValue("last_known_is_banker", isBanker);
-                                        updateHeaderTitle();
-                                        const mgmt = document.getElementById('vault-management-container');
-                                        if (mgmt) mgmt.style.display = isBanker ? 'block' : 'none';
-                                    }
-                                } catch (e) {}
-                            }
-                        });
-                    }
-                } catch (e) {}
+    async function syncAllData(force = false) {
+        if (!settings.tornApiKey) tornValid = false;
+        if (!settings.firebaseUrl || !settings.firebaseApiKey) firebaseValid = false;
+
+        if (!settings.tornApiKey) {
+            if (typeof updateShieldUI === "function") updateShieldUI();
+            return;
+        }
+        const lastAction = cachedApiData.last_action || 0;
+        const isInactive = ((Date.now() / 1000) - lastAction) > 1800;
+
+        if (isInactive && !force) {
+            vLog("User is Offline. Sleep Mode to save API calls.");
+            return;
+        }
+
+        if (!isLeader() && !force) {
+            const globalData = GM_getValue("global_user_data");
+            if (globalData) {
+                Object.assign(cachedApiData, globalData);
+                if (typeof updateShieldUI === "function") updateShieldUI();
+
+                const balSpan = document.getElementById('balance-amount-span');
+                if (balSpan) balSpan.innerText = formatMoney(cachedApiData.faction_money_balance);
             }
-        });
-    }
+            return;
+        }
 
-    async function fetchTornData(force = false) {
-        const now = Date.now();
-        if (!force && (now - lastApiCall < 30000)) return;
-        if (!settings.tornApiKey) return;
-        lastApiCall = now;
-        GM_xmlhttpRequest({
-            method: "GET", url: `${TORN_API_BASE}/v2/user/money/?key=${settings.tornApiKey}`,
-            onload: (r) => {
-                try {
-                    const m = JSON.parse(r.responseText);
-                    if (m.error && [2, 10, 13].includes(m.error.code)) { tornValid = false; updateShieldUI(); }
-                    if (m?.money?.faction) {
-                        cachedApiData.vaultBalance = m.money.faction.money || 0;
-                        const span = document.getElementById('balance-amount-span');
-                        if (span) span.innerText = formatMoney(cachedApiData.vaultBalance);
-                    }
-                } catch (e) {}
-            }
-        });
-    }
+        if (isSyncing) return;
 
-    function runHeartbeat() {
-        settings = getSettings();
-        if (!settings.tornApiKey) { tornValid = false; updateShieldUI(); return; }
-        GM_xmlhttpRequest({
-            method: "GET", url: `${TORN_API_BASE}/user/?key=${settings.tornApiKey}&selections=`,
-            onload: (r) => {
-                try {
-                    const j = JSON.parse(r.responseText);
-                    if (!(j.error && j.error.code === 2)) {
-                        cachedApiData.name = j.name;
-                        cachedApiData.id = j.player_id;
-                        cachedApiData.lastAction = j.last_action.timestamp;
-                        GM_setValue("last_known_player_id", j.player_id);
+        try {
+            isSyncing = true;
+            vLog("Syncing all data...");
 
-                        const dbUrl = getDbUrl(`/vaultRequests/${cachedApiData.id}`);
-                        if (dbUrl) {
-                            GM_xmlhttpRequest({
-                                method: "GET", url: dbUrl, onload: (res) => {
-                                    const data = JSON.parse(res.responseText);
-                                    if (data && data.name) {
-                                        hasActiveRequest = true; GM_setValue(ACTIVE_REQ_KEY, true); activeData = data;
-                                        GM_xmlhttpRequest({
-                                            method: "POST", url: getDbUrl(`/vaultRequests/${cachedApiData.id}`, "PATCH"),
-                                            data: JSON.stringify({ lastAction: cachedApiData.lastAction }),
-                                            headers: { "Content-Type": "application/json", "X-HTTP-Method-Override": "PATCH" }
-                                        });
-                                        if (isTargetPage()) updateUI(data);
-                                    } else {
-                                        hasActiveRequest = false; GM_setValue(ACTIVE_REQ_KEY, false); activeData = null;
-                                        if (isTargetPage()) resetUI();
-                                    }
-                                    updateStatusIcon();
-                                }
-                            });
+            // sync user info (name,id,factionid,position,isbanker,lastaction)
+            const userRes = await new Promise((resolve) => {
+                trackApiUsage();
+                GM_xmlhttpRequest({
+                    method: "GET",
+                    url: `${TORN_API_BASE}/user/?key=${settings.tornApiKey}`,
+                    onload: (r) => resolve(JSON.parse(r.responseText))
+                });
+            });
+            if (userRes.error) throw new Error(userRes.error.error);
+            tornValid = true;
+
+            // sync faction vault balance (only ping if on armory page with vault request)
+            let moneyRes = null;
+            const isArmouryTab = window.location.hash.includes('tab=armoury');
+            if (isArmouryTab || !cachedApiData.faction_money_balance) {
+                moneyRes = await new Promise((resolve) => {
+                    trackApiUsage();
+                    GM_xmlhttpRequest({
+                        method: "GET",
+                        url: `${TORN_API_BASE}/v2/user/money/?key=${settings.tornApiKey}`,
+                        onload: (r) => resolve(JSON.parse(r.responseText))
+                    });
+                });
+                vLog("Faction balance updated from API.");
+            } else {
+                moneyRes = {
+                    money: {
+                        faction: {
+                            money: cachedApiData.faction_money_balance
                         }
                     }
-                } catch(e) {}
+                };
+                vLog("Using cached faction balance.");
             }
-        });
+
+            // position check (only check once every 5m or is blank value)
+            const lastPosSync = GM_getValue("last_position_sync", 0);
+            const now = Date.now();
+            let factionRes;
+
+            if (now - lastPosSync > 300000 || !GM_getValue("cached_faction_positions")) {
+                factionRes = await new Promise((resolve) => {
+                    trackApiUsage();
+                    GM_xmlhttpRequest({
+                        method: "GET",
+                        url: `${TORN_API_BASE}/faction/?selections=positions&key=${settings.tornApiKey}`,
+                        onload: (r) => {
+                            const data = JSON.parse(r.responseText);
+                            GM_setValue("cached_faction_positions", data);
+                            GM_setValue("last_position_sync", now);
+                            resolve(data);
+                        }
+                    });
+                });
+                vLog("Faction positions refreshed from API.");
+            } else {
+                factionRes = GM_getValue("cached_faction_positions");
+                vLog("Using cached faction positions.");
+            }
+
+            const userPosition = userRes.faction?.position || "Member";
+            let isbanker = 0;
+            if (factionRes.positions && factionRes.positions[userPosition]) {
+                isbanker = factionRes.positions[userPosition].canUseMedicalItem || 0;
+            }
+
+            const updatedData = {
+                name: userRes.name,
+                user_id: userRes.player_id,
+                faction_id: userRes.faction?.faction_id || 0,
+                faction_position: userPosition,
+                isbanker,
+                faction_money_balance: moneyRes?.money?.faction?.money || 0,
+                last_action: userRes.last_action?.timestamp || 0
+            };
+
+            GM_setValue("global_user_data", updatedData);
+            Object.assign(cachedApiData, updatedData);
+
+            // check firebase connectivity
+            const fbCheck = await new Promise((resolve) => {
+                if (!settings.firebaseUrl || !settings.firebaseApiKey) resolve(false);
+                GM_xmlhttpRequest({
+                    method: "GET",
+                    url: `${settings.firebaseUrl.replace(/\/$/, "")}/.json?auth=${settings.firebaseApiKey}&shallow=true`,
+                    onload: (res) => resolve(res.status === 200),
+                    onerror: () => resolve(false)
+                });
+            });
+            firebaseValid = fbCheck;
+
+            // pull any active requests
+            const dbRes = await new Promise((resolve) => {
+                GM_xmlhttpRequest({
+                    method: "GET",
+                    url: `${settings.firebaseUrl.replace(/\/$/, "")}/vaultRequests/${updatedData.user_id}.json?auth=${settings.firebaseApiKey}`,
+                    onload: (r) => resolve(r.status === 200 ? JSON.parse(r.responseText) : null),
+                    onerror: () => resolve(null)
+                });
+            });
+
+            if (dbRes && dbRes.amount) {
+                activeData = dbRes;
+                hasActiveRequest = true;
+                GM_setValue(ACTIVE_REQ_KEY, true);
+                GM_setValue("global_active_request_data", dbRes);
+
+                // push last active timestamp if active request
+                GM_xmlhttpRequest({
+                    method: "POST",
+                    url: `${settings.firebaseUrl.replace(/\/$/, "")}/vaultRequests/${updatedData.user_id}.json?auth=${settings.firebaseApiKey}`,
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-HTTP-Method-Override": "PATCH"
+                    },
+                    data: JSON.stringify({
+                        lastAction: updatedData.last_action,
+                        name: updatedData.name
+                    }),
+                    onload: (res) => {
+                        if (res.status === 200) vLog("Activity timestamp updated.");
+                    }
+                });
+
+                if (typeof updateUI === "function") {
+                    updateUI(activeData);
+                }
+            } else {
+                activeData = null;
+                hasActiveRequest = false;
+                GM_setValue(ACTIVE_REQ_KEY, false);
+                GM_setValue("global_active_request_data", null);
+                vLog("No active request found.");
+            }
+
+            const balSpan = document.getElementById('balance-amount-span');
+            if (balSpan) balSpan.innerText = formatMoney(updatedData.faction_money_balance);
+
+            const mgmt = document.getElementById('vault-management-container');
+            if (mgmt) mgmt.style.display = updatedData.isbanker ? 'block' : 'none';
+
+            vLog("Sync Complete", null, 'log', updatedData);
+
+        } catch (e) {
+            vLog("Sync Failed:", null, 'error', e);
+            if (e.message.includes('code: 2') || e.message.includes('key')) tornValid = false;
+        } finally {
+            isSyncing = false;
+            if (typeof updateShieldUI === "function") updateShieldUI();
+        }
     }
 
     function updateManagementList() {
-        if (!settings.firebaseUrl || settings.firebaseUrl === "") return;
+        if (!settings.firebaseUrl || !settings.firebaseApiKey) {
+            const listContainer = document.getElementById('vault-mgmt-list');
+            if (listContainer) {
+                listContainer.innerHTML = '<p style="color:#ff4444; font-size:11px; text-align:center; padding: 10px;">Database connection required.</p>';
+            }
+            return;
+        }
+
         const listContainer = document.getElementById('vault-mgmt-list');
         if (!listContainer || !isTargetPage()) return;
+        const baseUrl = getDbUrl("/vaultRequests");
+        if (!baseUrl) return;
+
+        const requestUrl = baseUrl + (baseUrl.includes('?') ? '&' : '?') + 't=' + Date.now();
 
         GM_xmlhttpRequest({
             method: "GET",
-            url: getDbUrl("/vaultRequests") + (getDbUrl("/vaultRequests").includes('?') ? '&' : '?') + 't=' + Date.now(),
+            url: requestUrl,
             onload: (res) => {
                 try {
-                    if (!res) return;
+                    if (!res || res.status !== 200) return;
                     const raw = res.responseText || res.response || res.responseData;
                     let allReqs = {};
 
@@ -331,6 +570,7 @@
                             allReqs = JSON.parse(raw);
                         }
                     }
+
                     if (!allReqs || typeof allReqs !== 'object') allReqs = {};
 
                     const purgeBtn = document.getElementById('vault-mgmt-purge');
@@ -426,7 +666,7 @@
                     mgmtTimerInterval = setInterval(runTick, 1000);
 
                 } catch(e) {
-                    console.error("Vault Management Refresh Error:", e);
+                    vLog("Management Refresh Error:", null, 'error', e);
                 }
             }
         });
@@ -434,18 +674,19 @@
 
     async function fulfillRequest(userId, userName, amount) {
         sendDiscordPing(null, false, false, false, true, userName, amount);
-
         const deleteUrl = getDbUrl(`/vaultRequests/${userId}`, "DELETE");
-        if (deleteUrl) {
+        if (!deleteUrl) return;
+
+        await new Promise((resolve) => {
             GM_xmlhttpRequest({
                 method: "POST",
                 url: deleteUrl,
                 headers: { "X-HTTP-Method-Override": "DELETE" },
-                onload: () => {
-                    window.location.href = `https://www.torn.com/factions.php?step=your#/tab=controls&option=give-to-user&giveMoneyTo=${userId}&money=${amount}`;
-                }
+                onload: () => resolve(),
+                onerror: () => resolve()
             });
-        }
+        });
+        window.location.assign(`https://www.torn.com/factions.php?step=your#/tab=controls&option=give-to-user&giveMoneyTo=${userId}&money=${amount}`);
     }
 
     function purgeExpiredRequests() {
@@ -486,7 +727,7 @@
                                     headers: { "X-HTTP-Method-Override": "DELETE" },
                                     onload: () => resolve(),
                                     onerror: () => {
-                                        console.warn(`Failed to delete request for ${userId}`);
+                                        vLog(`Failed to delete request for ${userId}`, null, 'warn');
                                         resolve();
                                     }
                                 });
@@ -497,7 +738,7 @@
 
                     if (deleteExpired.length > 0) {
                         Promise.all(deleteExpired).then(() => {
-                            const bankerLink = `[${cachedApiData.name} [${cachedApiData.id}]](https://www.torn.com/profiles.php?XID=${cachedApiData.id})`;
+                            const bankerLink = `[${cachedApiData.name} [${cachedApiData.user_id}]](https://www.torn.com/profiles.php?XID=${cachedApiData.user_id})`;
                             const userList = expiredUserLinks.join(', ');
                             const msg = `❌ **PURGED** — ${bankerLink} cleared ${expiredUserLinks.length} expired request(s): ${userList}`;
 
@@ -513,7 +754,7 @@
                         updateManagementList();
                     }
                 } catch (e) {
-                    console.error("Purge failed", e);
+                    vLog("Purge failed", null, 'error', e);
                     btn.innerText = "PURGE EXPIRED";
                     btn.style.opacity = "1";
                 }
@@ -577,24 +818,43 @@
                 vaultIcon = document.createElement('li');
                 vaultIcon.id = 'mgmt-vault-notification-icon';
                 vaultIcon.style = `background-image: url('${ICON_STATUS}'); cursor: pointer;`;
-                const a = document.createElement('a'); a.href = "/factions.php?step=your#/tab=armoury";
-                a.setAttribute('aria-label', tooltipText); a.style = "display: block; width: 100%; height: 100%;";
-                vaultIcon.appendChild(a); enableTornStyleTooltip(a); iconList.appendChild(vaultIcon);
+                const a = document.createElement('a');
+                a.href = "/factions.php?step=your#/tab=armoury";
+                a.setAttribute('aria-label', tooltipText);
+                a.style = "display: block; width: 100%; height: 100%;";
+                vaultIcon.appendChild(a);
+                enableTornStyleTooltip(a);
+                iconList.appendChild(vaultIcon);
             } else {
-                const a = vaultIcon.querySelector('a'); if (a && a.__updateTip) a.__updateTip(tooltipText);
+                const a = vaultIcon.querySelector('a');
+                if (a && a.__updateTip) a.__updateTip(tooltipText);
             }
-        } else if (vaultIcon) { vaultIcon.remove(); }
+        } else if (vaultIcon) {
+            vaultIcon.remove();
+        }
+
+        if (!settings.firebaseUrl || !settings.firebaseApiKey) {
+            let bIcon = document.getElementById('mgmt-banker-queue-icon');
+            if (bIcon) bIcon.remove();
+            return;
+        }
 
         if (isFetchingQueue) return;
 
-        if (cachedApiData.isBanker) {
+        if (cachedApiData.isbanker) {
             isFetchingQueue = true;
+            const requestUrl = getDbUrl("/vaultRequests");
+            if (!requestUrl) {
+                isFetchingQueue = false;
+                return;
+            }
             GM_xmlhttpRequest({
                 method: "GET",
-                url: getDbUrl("/vaultRequests"),
+                url: requestUrl,
                 onload: (res) => {
                     isFetchingQueue = false;
                     try {
+                        if (res.status !== 200) throw new Error("DB Error");
                         const allReqs = JSON.parse(res.responseText);
                         const count = (allReqs && res.responseText !== "null") ? Object.keys(allReqs).length : 0;
                         let bankerIcon = document.getElementById('mgmt-banker-queue-icon');
@@ -605,13 +865,19 @@
                                 bankerIcon = document.createElement('li');
                                 bankerIcon.id = 'mgmt-banker-queue-icon';
                                 bankerIcon.style = `background-image: url('${ICON_STATUS_R}'); cursor: pointer;`;
-                                const a = document.createElement('a'); a.href = "/factions.php?step=your#/tab=armoury";
-                                a.setAttribute('aria-label', tooltipText); a.style = "display: block; width: 100%; height: 100%;";
-                                bankerIcon.appendChild(a); enableTornStyleTooltip(a); iconList.appendChild(bankerIcon);
+                                const a = document.createElement('a');
+                                a.href = "/factions.php?step=your#/tab=armoury";
+                                a.setAttribute('aria-label', tooltipText);
+                                a.style = "display: block; width: 100%; height: 100%;";
+                                bankerIcon.appendChild(a);
+                                enableTornStyleTooltip(a);
+                                iconList.appendChild(bankerIcon);
                             } else {
                                 const a = bankerIcon.querySelector('a');
-                                if (a && a.__updateTip) a.__updateTip(tooltipText);
-                                else a.setAttribute('aria-label', tooltipText);
+                                if (a) {
+                                    if (a.__updateTip) a.__updateTip(tooltipText);
+                                    else a.setAttribute('aria-label', tooltipText);
+                                }
                             }
                         } else if (bankerIcon) {
                             bankerIcon.remove();
@@ -621,7 +887,11 @@
                         if (bIcon) bIcon.remove();
                     }
                 },
-                onerror: () => { isFetchingQueue = false; }
+                onerror: () => {
+                    isFetchingQueue = false;
+                    let bIcon = document.getElementById('mgmt-banker-queue-icon');
+                    if (bIcon) bIcon.remove();
+                }
             });
         } else {
             let bIcon = document.getElementById('mgmt-banker-queue-icon');
@@ -637,13 +907,9 @@
         if (!titleEl) return;
         const isCollapsed = localStorage.getItem('torn_vault_collapsed') === 'true';
         if (!isCollapsed) {
-            //position verification test
-            //const posSuffix = cachedApiData.position ? ` - ${cachedApiData.position.toUpperCase()}` : "";
-            //const bankerSuffix = ` - ${cachedApiData.isBanker}`;
-            //titleEl.innerText = `VAULT BALANCE REQUEST${posSuffix}${bankerSuffix}`;
-            titleEl.innerText = `VAULT BALANCE REQUEST`;
+            titleEl.innerText = `Vault Balance Request`;
         } else {
-            titleEl.innerText = 'Member Vault Requests';
+            titleEl.innerText = 'Member Dashboard';
         }
     }
 
@@ -651,6 +917,9 @@
         const inputArea = document.getElementById('vault-input-area'), shield = document.getElementById('vault-shield'), statusArea = document.getElementById('vault-status-area');
         if (!inputArea || !shield || !statusArea) return;
         settings = getSettings();
+        if (!settings.tornApiKey) tornValid = false;
+        if (!settings.firebaseUrl || !settings.firebaseApiKey) firebaseValid = false;
+
         shield.innerHTML = "";
         const tornIssues = !settings.tornApiKey || tornValid === false;
         const firebaseIssues = !settings.firebaseUrl || !settings.firebaseApiKey || firebaseValid === false;
@@ -701,7 +970,7 @@
             return;
         } else {
             updateManagementList();
-            if (typeof fetchTornData === "function") fetchTornData(false);
+            if (typeof fetchTornData === "function") syncAllData(false);
             if (existingReq && existingMgmt) {
                 updateManagementList();
                 return;
@@ -772,7 +1041,7 @@
                         </div>
                     </div>
                     <div style="display: flex; align-items: center; gap: 15px;">
-                        <p style="color: #aaa; font-size: 12px; margin: 0;">Balance: <span style="color: #fff; font-weight: bold;">$<span id="balance-amount-span">${formatMoney(cachedApiData.vaultBalance)}</span></span></p>
+                        <p style="color: #aaa; font-size: 12px; margin: 0;">Balance: <span style="color: #fff; font-weight: bold;">$<span id="balance-amount-span">${formatMoney(cachedApiData.faction_money_balance)}</span></span></p>
                         <button id="vault-submit" style="padding: 6px 15px; cursor: pointer; background: #3777ce; color: #fff; border: none; border-radius: 3px; font-weight: bold;">Submit Request</button>
                         <p id="vault-error" style="color: #ff4444; font-size: 11px; margin: 0; display: none; margin-left: 5px;">⚠ Over balance!</p>
                     </div>
@@ -787,7 +1056,7 @@
         // MANAGEMENT CONTAINER
         const mgmtContainer = document.createElement('div');
         mgmtContainer.id = 'vault-management-container';
-        mgmtContainer.style = `background: #333; border: 1px solid #444; border-radius: 5px; padding: 12px; margin: 10px 0; color: #fff; font-family: Arial, sans-serif; display: ${cachedApiData.isBanker ? 'block' : 'none'};`;
+        mgmtContainer.style = `background: #333; border: 1px solid #444; border-radius: 5px; padding: 12px; margin: 10px 0; color: #fff; font-family: Arial, sans-serif; display: ${cachedApiData.isbanker ? 'block' : 'none'};`;
         mgmtContainer.innerHTML = `
             <div id="vault-mgmt-header" style="display: flex; align-items: center; justify-content: space-between; user-select: none; cursor: pointer;">
                 <div id="vault-mgmt-title-click" style="display: flex; align-items: center; gap: 10px; flex-grow: 1;">
@@ -846,29 +1115,26 @@
         });
 
         document.getElementById('vault-save-settings').addEventListener('click', () => {
-            const btn = document.getElementById('vault-save-settings'); btn.innerText = "VALIDATING...";
-            const newTornKey = document.getElementById('set-torn-key').value.trim(), newFbUrl = document.getElementById('set-fb-url').value.trim(), newFbKey = document.getElementById('set-fb-key').value.trim();
-            GM_xmlhttpRequest({
-                method: "GET", url: `${TORN_API_BASE}/user/?key=${newTornKey}&selections=`,
-                onload: (r) => {
-                    const j = JSON.parse(r.responseText);
-                    tornValid = !(j.error && [2, 10, 13].includes(j.error.code));
-                    if (tornValid && j.player_id) fetchFactionRankInfo(newTornKey, j.player_id);
-                    GM_xmlhttpRequest({
-                        method: "GET", url: `${newFbUrl.replace(/\/$/, "")}/.json?auth=${newFbKey}&shallow=true`,
-                        onload: (res) => {
-                            firebaseValid = (res.status === 200);
-                            settings.tornApiKey = newTornKey; settings.firebaseUrl = newFbUrl; settings.firebaseApiKey = newFbKey;
-                            settings.discordWebhook = document.getElementById('set-discord-webhook').value.trim();
-                            settings.discordPingID = document.getElementById('set-discord-id').value.trim();
-                            settings.discordPingType = document.getElementById('set-discord-type').checked ? 'user' : 'role';
-                            GM_setValue(SETTINGS_KEY, settings);
-                            btn.innerText = "SAVE & VALIDATE";
-                            if (tornValid && firebaseValid) document.getElementById('vault-settings-modal').style.display = 'none';
-                            updateShieldUI(); fetchTornData(true);
-                        },
-                        onerror: () => { firebaseValid = false; btn.innerText = "SAVE & VALIDATE"; updateShieldUI(); }
-                    });
+            const btn = document.getElementById('vault-save-settings');
+            btn.innerText = "VALIDATING...";
+
+            const newTornKey = document.getElementById('set-torn-key').value.trim();
+            const newFbUrl = document.getElementById('set-fb-url').value.trim();
+            const newFbKey = document.getElementById('set-fb-key').value.trim();
+
+            settings.tornApiKey = newTornKey;
+            settings.firebaseUrl = newFbUrl;
+            settings.firebaseApiKey = newFbKey;
+            settings.discordWebhook = document.getElementById('set-discord-webhook').value.trim();
+            settings.discordPingID = document.getElementById('set-discord-id').value.trim();
+            settings.discordPingType = document.getElementById('set-discord-type').checked ? 'user' : 'role';
+
+            GM_setValue(SETTINGS_KEY, settings);
+
+            syncAllData(true).then(() => {
+                btn.innerText = "SAVE & VALIDATE";
+                if (tornValid && firebaseValid) {
+                    document.getElementById('vault-settings-modal').style.display = 'none';
                 }
             });
         });
@@ -916,14 +1182,12 @@
         document.getElementById('vault-timeout-mins').addEventListener('input', (e) => {
             localStorage.setItem('torn_vault_timeout_mins', e.target.value);
         });
-        document.getElementById('vault-amount').addEventListener('input', (e) => {
-            const val = parseMoney(e.target.value); e.target.value = formatMoney(val); validateAmount(val);
-        });
+        document.getElementById('vault-amount').addEventListener('input', handleAmountInput);
         container.querySelectorAll('.q-btn').forEach(btn => btn.addEventListener('click', () => {
             const val = parseMoney(btn.dataset.amt); document.getElementById('vault-amount').value = formatMoney(val); validateAmount(val);
         }));
         document.getElementById('btn-full').addEventListener('click', () => {
-            const val = cachedApiData.vaultBalance; document.getElementById('vault-amount').value = formatMoney(val); validateAmount(val);
+            const val = cachedApiData.faction_money_balance; document.getElementById('vault-amount').value = formatMoney(val); validateAmount(val);
         });
         validateAmount(0);
     }
@@ -932,7 +1196,7 @@
     // REQUEST HANDLING
     // -------------------------------------------------------------------------
     function validateAmount(amt) {
-        const bal = cachedApiData.vaultBalance, sub = document.getElementById('vault-submit'), err = document.getElementById('vault-error');
+        const bal = cachedApiData.faction_money_balance, sub = document.getElementById('vault-submit'), err = document.getElementById('vault-error');
         if (!sub || !err) return;
         if (amt > bal || amt <= 0) {
             err.style.display = amt > bal ? 'inline-block' : 'none';
@@ -942,37 +1206,89 @@
         }
     }
 
-    function submitRequest() {
+    async function submitRequest() {
         const amt = parseMoney(document.getElementById('vault-amount').value);
         if (amt <= 0) return;
+
         const btn = document.getElementById('vault-submit');
         if (btn) { btn.innerText = "Submitting..."; btn.disabled = true; }
+        await syncAllData(true);
+
         const isPrefOnline = document.getElementById('vault-pref-online').checked;
-        const timeoutVal = isPrefOnline ? (parseInt(document.getElementById('vault-timeout-mins').value) || 0) : 0;
-        const data = { name: cachedApiData.name, id: cachedApiData.id, amount: amt, pref: isPrefOnline ? 1 : 0, timeout: timeoutVal, timestamp: Date.now(), lastAction: cachedApiData.lastAction };
-        hasActiveRequest = true; GM_setValue(ACTIVE_REQ_KEY, true); activeData = data;
+        const timeoutVal = parseInt(document.getElementById('vault-timeout-mins').value) || 0;
+        const data = {
+            name: cachedApiData.name,
+            id: cachedApiData.user_id,
+            amount: amt,
+            pref: isPrefOnline ? 1 : 0,
+            timeout: timeoutVal,
+            timestamp: Date.now(),
+            lastAction: cachedApiData.last_action
+        };
+
+        hasActiveRequest = true;
+        GM_setValue(ACTIVE_REQ_KEY, true);
+        activeData = data;
+
         updateStatusIcon();
+
         GM_xmlhttpRequest({
-            method: "POST", url: getDbUrl(`/vaultRequests/${cachedApiData.id}`, "PUT"),
-            data: JSON.stringify(data), headers: { "Content-Type": "application/json", "X-HTTP-Method-Override": "PUT" },
+            method: "POST",
+            url: getDbUrl(`/vaultRequests/${cachedApiData.user_id}`, "PUT"),
+            data: JSON.stringify(data),
+            headers: {
+                "Content-Type": "application/json",
+                "X-HTTP-Method-Override": "PUT"
+            },
             onload: (res) => {
-                if (res.status === 200) { updateUI(data); sendDiscordPing(); }
+                if (res.status === 200) {
+                    updateUI(data);
+                    sendDiscordPing();
+                } else {
+                    vLog("Firebase Error:", null, 'error', res.responseText);
+                    //alert("Failed to submit request to database.");
+                }
                 if (btn) { btn.innerText = "Submit Request"; btn.disabled = false; }
+            },
+            onerror: () => {
+                if (btn) { btn.innerText = "Submit Request"; btn.disabled = false; }
+                vLog("Firebase Error: Failed to submit.", null, 'error');
+                //alert("Network error while submitting request.");
             }
         });
     }
 
     function cancelRequest(isManual = false, isTimeout = false) {
+        const userId = cachedApiData.user_id;
+        if (!userId) {
+            vLog("Cannot cancel: No User ID found.", null, 'error');
+            return;
+        }
+
         hasActiveRequest = false;
         GM_setValue(ACTIVE_REQ_KEY, false);
         activeData = null;
+
         updateStatusIcon();
         resetUI();
+
         if (isManual) sendDiscordPing(null, false, true, false);
         if (isTimeout) sendDiscordPing(null, false, false, true);
+
         GM_xmlhttpRequest({
-            method: "POST", url: getDbUrl(`/vaultRequests/${cachedApiData.id}`, "DELETE"),
-            headers: { "X-HTTP-Method-Override": "DELETE" }, onload: () => { updateStatusIcon(); }
+            method: "POST",
+            url: `${settings.firebaseUrl.replace(/\/$/, "")}/vaultRequests/${userId}.json?auth=${settings.firebaseApiKey}`,
+            headers: {
+                "X-HTTP-Method-Override": "DELETE"
+            },
+            onload: (res) => {
+                if (res.status === 200) {
+                    vLog("Request deleted from Firebase.");
+                } else {
+                    vLog("Delete failed:", null, 'error', res.responseText);
+                }
+                updateStatusIcon();
+            }
         });
     }
 
@@ -1001,12 +1317,20 @@
             }
         };
         if (pollInterval) clearInterval(pollInterval);
+        if (!data || !data.id) {
+            vLog("No active request data, skipping poll interval setup.");
+            return;
+        }
         pollInterval = setInterval(() => {
+            if (!data || !data.id) {
+                clearInterval(pollInterval);
+                return;
+            }
             const dbUrl = getDbUrl(`/vaultRequests/${data.id}`);
             if (dbUrl) {
                 GM_xmlhttpRequest({ method: "GET", url: dbUrl, onload: (res) => {
                     if (res.responseText === "null") {
-                        hasActiveRequest = false; GM_setValue(ACTIVE_REQ_KEY, false); activeData = null; resetUI(); updateStatusIcon();
+                        hasActiveRequest = false; GM_setValue(ACTIVE_REQ_KEY, false); activeData = null; resetUI(); updateStatusIcon(); clearInterval(pollInterval);
                     }
                 }});
             }
@@ -1017,13 +1341,58 @@
     // -------------------------------------------------------------------------
     // INITIALIZATION
     // -------------------------------------------------------------------------
-    runHeartbeat();
-    fetchTornData(true);
-    setInterval(injectUI, 2000);
-    setInterval(runHeartbeat, 30000);
-    setInterval(fetchTornData, 60000);
-    setInterval(updateManagementList, 10000);
-    window.addEventListener('hashchange', injectUI);
+
+    if (typeof GM_addValueChangeListener !== "undefined") {
+        GM_addValueChangeListener("global_user_data", (key, oldValue, newValue, remote) => {
+            if (remote) {
+                Object.assign(cachedApiData, newValue);
+                if (typeof updateShieldUI === "function") updateShieldUI();
+
+                const balSpan = document.getElementById('balance-amount-span');
+                if (balSpan) balSpan.innerText = formatMoney(newValue.faction_money_balance);
+                if (newValue.isbanker && typeof updateManagementList === "function") {
+                    updateManagementList();
+                }
+            }
+        });
+    } else {
+        vLog("GM_addValueChangeListener not supported (Mobile/PDA).", null, 'warn');
+    }
+
+    if (typeof GM_addValueChangeListener !== "undefined") {
+        GM_addValueChangeListener("global_active_request_data", (key, oldVal, newVal, remote) => {
+            if (remote) {
+                activeData = newVal;
+                hasActiveRequest = !!newVal;
+                if (typeof updateUI === "function") updateUI(newVal);
+            }
+        });
+    } else {
+        vLog("GM_addValueChangeListener not supported (Mobile/PDA).", null, 'warn');
+    }
+
+    window.addEventListener('hashchange', () => {
+        injectUI();
+        syncAllData(true);
+    });
     window.addEventListener('popstate', injectUI);
+
+    injectUI();
+    syncAllData(true);
+
+    setInterval(() => {
+        const myId = String(currentTabId);
+        const leaderId = String(GM_getValue("leader_tab_id"));
+
+        if (leaderId === myId) {
+            GM_setValue("leader_heartbeat", Date.now());
+        } else if (Date.now() - GM_getValue("leader_heartbeat", 0) > 5000) {
+            isLeader();
+            syncAllData();
+        }
+    }, 1000);
+    setInterval(injectUI, 2000);
+    setInterval(syncAllData, 30000);
+    setInterval(updateManagementList, 10000);
 
 })();

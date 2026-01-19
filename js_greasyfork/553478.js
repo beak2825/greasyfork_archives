@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            HWGiftHelper
 // @namespace       HWGiftHelper
-// @version         0.4.2
+// @version         0.4.3
 // @description     Gift helper for the game Hero Wars
 // @author          FatSwan
 // @license         Copyright FatSwan
@@ -2265,13 +2265,14 @@ this.sendsRepeatMission = async function (param) {
 	/**
 	 * Mission Request
 	 */
-	SendRequest(JSON.stringify(missionStartCall), async e => {
+	await SendRequest(JSON.stringify(missionStartCall), async e => {
 		if (e?.error) {
 			isSendsMission = false;
 			console.log(e['error']);
 			let msg = e['error'].name + ' ' + e['error'].description + `<br>${I18N_G('REPETITIONS')}: ${param.count}`;
 			setProgress(msg);
             isStopSendMission = true;
+            hasErrorInSendMission = true;
 			return;
 		}
 		/**
@@ -2291,6 +2292,7 @@ this.sendsRepeatMission = async function (param) {
 				if (!isSuccess) {
                     setProgress('Mission failed.');
                     isStopSendMission = true;
+                    hasErrorInSendMission = true;
 					return;
 				}
 			}
@@ -2315,6 +2317,7 @@ this.sendsRepeatMission = async function (param) {
                 if (e == null) {
 					isSendsMission = false;
                     isStopSendMission = true;
+                    hasErrorInSendMission = true;
 					return;
                 }
 				if (e?.error) {
@@ -2323,6 +2326,7 @@ this.sendsRepeatMission = async function (param) {
 					let msg = e['error'].name + ' ' + e['error'].description + `<br>${I18N_G('REPETITIONS')}: ${param.count}`;
         			setProgress(msg);
                     isStopSendMission = true;
+                    hasErrorInSendMission = true;
 					return;
 				}
 				r = e.results[0].result.response;
@@ -2331,6 +2335,7 @@ this.sendsRepeatMission = async function (param) {
 					console.log(r['error']);
                     setProgress(r['error']);
                     isStopSendMission = true;
+                    hasErrorInSendMission = true;
 					return;
 				}
 
@@ -2368,7 +2373,7 @@ async function sendTutorialMissionEnd(seed) {
                         "heroes": {
                             "2": {
                                 "hp": 1439,
-                                "energy": 514,
+                                "energy": 414,
                                 "isDead": false
                             }
                         }
@@ -2392,10 +2397,12 @@ async function sendTutorialMissionEnd(seed) {
     }
 
     // Mission Completion Request
-    await SendRequest(JSON.stringify(missionEndCall));
+    let result = await Send(JSON.stringify(missionEndCall)).then(
+        (e) => e?.results
+    );
 
     // after 10 seconds, end tutorial mission
-    await sleep(10e3);
+    await sleep(1e3);
     location.reload();
 }
 
@@ -3309,6 +3316,16 @@ class HWTask {
         const quests = new dailyQuests();
 
         try {
+            await quests.init();
+            // check mission info, if the mission is tutorial mission
+            const missionInfo = quests.questInfo['missionGetAll'];
+            if (missionInfo == null) {
+                return;
+            }
+            if (missionInfo.length == 1 && missionInfo[0].wins == 0) {
+                return;
+            }
+
             // 走地图流程
             // farm all
             await questAllFarm();
@@ -3316,8 +3333,6 @@ class HWTask {
             // pass missions (mission2 - 3)
             await passMission({id: 2, count: 0, maxCount: 1});
             await passMission({id: 3, count: 0, maxCount: 1});
-
-            await quests.init();
 
             // Summon -> Thea
             await quests.doSummon();
@@ -3666,6 +3681,7 @@ class HWTask {
                 checkboxes["countControl"].cbox.checked = false;
             }
             await tasks.doGiftKeys(StatusData.guildId);
+            await TaskHelper.sendDailyGifts();
 
             // 退出公会
             if (await tasks.quitGuild() == false) {
@@ -3794,7 +3810,7 @@ class TaskHelper {
 
     // 送每日礼物
     static async sendDailyGifts() {
-        await Send('{"calls":[{"name":"clanSendDailyGifts","args":{},"ident":"body"}]}');
+        return await Send('{"calls":[{"name":"clanSendDailyGifts","args":{},"ident":"body"}]}');
     }
 
     // 开神器宝箱，每次10个钥匙
@@ -4119,11 +4135,21 @@ function setupHWHelperOptions() {
 
 // pass mission
 let isStopSendMission = false;
+let hasErrorInSendMission = false;
 async function passMission(param) {
     isStopSendMission = false;
-    await sendsRepeatMission(param);
+    hasErrorInSendMission = false;
+    sendsRepeatMission(param);
     while (isStopSendMission == false) {
-        await sleep(5 * 1000);
+        await sleep(2e3);
+    }
+
+    if (hasErrorInSendMission) {
+        // resend mission once
+        sendsRepeatMission(param);
+        while (isStopSendMission == false) {
+            await sleep(2e3);
+        }
     }
 }
 
@@ -5142,7 +5168,7 @@ async function autoRunTaskOnStart() {
         await checkExpedition();
     }
     await collectAllStuff();
-    await refreshUserInfo();    
+    await refreshUserInfo();
 }
 
 /**
@@ -5228,9 +5254,10 @@ function reload() {
 async function onGameLoad() {
     // check tutorial battle
     const allMissions = await questUtils.getAllMission();
-    if (allMissions.length == 0) {
-        sendTutorialMissionEnd(0);
-        return;
+    if (allMissions.length == 0 || 
+        (allMissions.length == 1 && allMissions[0].wins == 0)) {
+            sendTutorialMissionEnd(0);
+            return;
     }
 
     autoRunTaskOnStart();

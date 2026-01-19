@@ -3,7 +3,7 @@
 // @author          Murka, SaVeGe, & Snorlax
 // @description     op
 // @icon            https://imagizer.imageshack.com/img924/3497/SedB2D.png
-// @version         4.5
+// @version         12.X
 // @match           *://moomoo.io/*
 // @match           *://*.moomoo.io/*
 // @run-at          document-start
@@ -3886,7 +3886,7 @@ function __p_vU9y_ast() {
         __p_vU9y_ast(t.type && (n.type = t.type), t.noModule && (n.noModule = 1), t.crossOrigin && (n.crossOrigin = t.crossOrigin), t.referrerPolicy && (n.referrerPolicy = t.referrerPolicy), n.src = getGlobal("UM9gcT").createObjectURL(s), this.V(() => {
           getGlobal("q5RfA7D").head.appendChild(n);
           try {
-            console.log("Glotus: damn SaVeGe is my king", t.src);
+            console.log("Snorlax_X12 is the goat ong", t.src);
           } catch (_) {}
         }));
       }
@@ -3992,7 +3992,7 @@ function __p_vU9y_ast() {
     _placementHitbox: 0,
     _possiblePlacement: 1,
     _killMessage: 1,
-    _killMessageText: "Glotus Client!",
+    _killMessageText: "Je pense, donc je suis",
     _autospawn: 0,
     _autoaccept: 0,
     _texturepack: 0,
@@ -14384,9 +14384,9 @@ function __p_vU9y_ast() {
     }
   }();
   const _n = 0;
-  const Kn = _n ? "4.5" : "SaVeGe Mode";
+  const Kn = _n ? "12.X" : "SnorlaX Mode";
   const Xn = getGlobal("q5RfA7D").head === null;
-  __p_vU9y_ast(Xn || T.warn("Glotus Client loading warning! It is generally recommended to use faster injection mode."), T.test("Glotus Client initialization.."));
+  __p_vU9y_ast(Xn || T.warn("SnorlaX Client loading warning! It is generally recommended to use faster injection mode."), T.test("SnorlaX Client initialization.."));
   const Vn = w.M();
   const An = new Bn();
   getGlobal("yaVoVt").WebSocket = new (getGlobal("yaVoVt").Proxy)(getGlobal("yaVoVt").WebSocket, {
@@ -14432,9 +14432,9 @@ function __p_vU9y_ast() {
       const i = s instanceof getGlobal("cJ0jbDL");
       __p_vU9y_ast(i && new (getGlobal("wgorjqz"))("(assets.+\\.js$|index.+\\.js$)", "").test(s.src) && e === null && (e = s, (() => {
         try {
-          console.log("Glotus: intercept bundl- SaVeGe interrupted and decided to fuck it all over", s.src, "type=", s.type || "(classic)");
+          console.log("SnorlaX: intercept bundl- SnorlaX is the goat", s.src, "type=", s.type || "(classic)");
         } catch (_) {}
-      })(), T.test("Glotus getting fucked by SaVeGe"), n(s), S.init(s)));
+      })(), T.test("SnorlaX mod on top"), n(s), S.init(s)));
     };
     __p_vU9y_ast(new (getGlobal("GUpot3"))(t => {
       for (const n of t) {
@@ -14592,7 +14592,7 @@ function __p_vU9y_ast() {
     }
   })(Xn));
   const Fn = () => {
-    __p_vU9y_ast(T.test("SaVeGeing Glotus"), An.Dc.init(), ft.init(), Et.init(), mt.init());
+    __p_vU9y_ast(T.test("SnorlaX mod initialization..."), An.Dc.init(), ft.init(), Et.init(), mt.init());
   };
   const FnOnce = (() => {
     let ran = false;
@@ -14625,7 +14625,7 @@ function __p_vU9y_ast() {
   })();
   __p_vU9y_ast(getGlobal("yaVoVt").addEventListener("DOMContentLoaded", FnOnce), getGlobal("yaVoVt").addEventListener("load", FnOnce), getGlobal("q5RfA7D").readyState !== "loading" && FnOnce());
   const Yn = () => { // SaVeGe
-    T.test("SaVeGe is cool");
+    T.test("SnorlaX is cool");
     const {
       Ys: t
     } = ft.vs();

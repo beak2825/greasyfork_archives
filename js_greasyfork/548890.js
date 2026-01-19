@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         98助手 (全功能整合精簡版)
 // @namespace    https://www.sehuatang.net
-// @version      202510161410
+// @version      202511151700
 // @description  自動翻頁、圖片預覽、黑名單、快速評分、簽到等全功能整合腳本。(重構 by Gemini)
 // @author       Joey (修改 by Gemini)
 // @match        *://*.sehuatang.net/*
@@ -43,6 +43,17 @@
 // @match        *://*m86p7.387l9.net/*
 // @match        *://*.fhmm.fu2zu.net/*
 // @match        *://*.kzs1w.com/*
+// @match        *://*.ofrb.b29gj.net/*
+// @match        *://*mhr0b.r8hr7.com/*
+// @match        *://*bnh8.0ly6e.net/*
+// @match        *://*dmn12.vip/*
+// @match        *://*plwt.kpqq4.com/*
+// @match        *://*w4gv.4rzxy.net/*
+// @match        *://*lw7f.srg3f.net/*
+// @match        *://*dmn12.vip/*
+// @match        *://*46dz.bgdy3.net/*
+// @match        *://*fg8m.r8hr7.net/*
+// @match        *://*kriv.87nex.net/*
 // @exclude      */forum.php?mod=forumdisplay&fid=96*
 // @grant        GM_getValue
 // @grant        GM_setValue
@@ -970,7 +981,7 @@
                 displayHeatLevel();
                 const fid = getQueryParams(window.location.href).fid;
                 if (fid == 143) { blockingResolvedAction(settings); }
-                if ([166, 97, 146, 2, 39, 141, 155].includes(parseInt(fid))) await displayThreadBuyInfo(settings);
+                if ([166, 97, 146, 2, 39, 141, 155, 145, 159].includes(parseInt(fid))) await displayThreadBuyInfo(settings);
                 blockContentByTitle(settings);
             } else if (pageName === "isPostPage") {
                 appendTitleFromHotImage();
@@ -1107,7 +1118,7 @@
     }
     async function displayBuyInfoOnGenericLists(settings) {
         if (!settings.displayThreadBuyInfo) return;
-        const validFidRegex = /fid=(166|97|146|2|39|141|155)|forum-(166|97|146|2|39|141|155)/;
+        const validFidRegex = /fid=(166|97|146|2|39|141|155|145|159)|forum-(166|97|146|2|39|141|155|145|159)/;
         for (const th of document.querySelectorAll("th")) {
             const aElement = th.querySelector("a");
             const nextTd = th.nextElementSibling;
@@ -1137,7 +1148,7 @@
             });
             buttonContainer.appendChild(blockingResolvedButton);
         }
-        if ([166, 97, 146, 2, 39, 141, 155].includes(parseInt(fid))) {
+        if ([166, 97, 146, 2, 39, 141, 155, 145, 159].includes(parseInt(fid))) {
             await displayThreadBuyInfo(settings);
         }
         addDateRangeSelectorAndButton(document.querySelector(".xs1.xw0.i"));
@@ -1274,7 +1285,7 @@
     }
     async function appendBuyNumber() {
         const divPt = document.getElementById("pt");
-        const validFidRegex = /fid=(166|97|146|2|39|141|155)|forum-(166|97|146|2|39|141|155)/;
+        const validFidRegex = /fid=(166|97|146|2|39|141|155|145|159)|forum-(166|97|146|2|39|141|155|145|159)/;
         if (!divPt || !validFidRegex.test(divPt.innerHTML)) return;
 
         const tid = extractTid(window.location.href);

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            HWH Tweaker
 // @namespace       http://tampermonkey.net/
-// @version         5.9.5
+// @version         6.0.1
 // @description     Extension for HeroWarsHelper by ZingerY - Adds adventure path editor, custom buttons, and tweaks
 // @author          AI Assistant
 // @license         MIT
@@ -16,7 +16,7 @@
 
 
 // Configuration at the top of the script
-const TWEAKER_VERSION = '5.9.5'
+const TWEAKER_VERSION = '6.0.1';
 const DEBUG_MODE = localStorage.getItem('hwh_debug_mode') === 'true';
 const TOURNAMENT_RETENTION_DAYS = 7;
 const TOURNAMENT_RETENTION_MS = TOURNAMENT_RETENTION_DAYS * 24 * 60 * 60 * 1000;
@@ -183,7 +183,7 @@ let _activityThrottled = false;
         if (_activityThrottled) return;
         _activityThrottled = true;
         window._lastActivity = Date.now();
-        setTimeout(() => { _activityThrottled = false; }, 5000);
+        setTimeout(() => { _activityThrottled = false; }, 30000);
     }, { passive: true, capture: true });
 });
 
@@ -578,6 +578,121 @@ ${eightCoinLines.join('\n')}`;
     // Consolidated Send function getter - used throughout the script
     const getSend = () => HWHFuncs?.Send || window.Send || (typeof Send !== 'undefined' ? Send : null);
 
+    // Shared fragment sell helper - used by Tab 5 and Collect More
+    const executeFragmentSells = async (inventoryData, fragSellConfig) => {
+        const SendFunction = getSend();
+        if (!SendFunction) return { success: false, gold: 0, coins: {}, details: [], hasWork: false };
+
+        const heroSoulMode = localStorage.getItem('hwh_hero_soul_mode') || 'gold';
+        const titanSoulMode = localStorage.getItem('hwh_titan_soul_mode') || 'gold';
+        const petSoulMode = localStorage.getItem('hwh_pet_soul_mode') || 'gold';
+
+        const fragSources = {
+            hero: inventoryData.fragmentHero || {},
+            titan: inventoryData.fragmentTitan || {},
+            pet: inventoryData.fragmentPet || {},
+            artifact: inventoryData.fragmentArtifact || {},
+            titanArtifact: inventoryData.fragmentTitanArtifact || {}
+        };
+
+        const sellCalls = [];
+        const sellDetails = [];
+        let heroSoulsToExchange = false;
+        let titanSoulsToExchange = false;
+        let petSoulsToExchange = false;
+
+        Object.entries(fragSources).forEach(([type, fragments]) => {
+            for (const [id, qty] of Object.entries(fragments)) {
+                const settings = fragSellConfig[`${type}_${id}`];
+                if (settings?.sell) {
+                    const sellAmount = qty - (settings.keep || 0);
+                    if (sellAmount > 0) {
+                        const itemName = window.identifyItem?.(id, type) || `${type} #${id}`;
+                        if (type === 'hero') {
+                            if (heroSoulMode === 'coins') { heroSoulsToExchange = true; sellDetails.push(`${itemName}: ${sellAmount} → Soul Coins`); }
+                            else { sellCalls.push({ name: 'inventorySell', args: { type: 'hero', libId: id, amount: sellAmount, fragment: true }, ident: `sell_hero_${id}` }); sellDetails.push(`${itemName}: ${sellAmount} → Gold`); }
+                        } else if (type === 'titan') {
+                            titanSoulsToExchange = true;
+                            sellDetails.push(`${itemName}: ${sellAmount} → ${titanSoulMode === 'gold' ? 'Gold' : 'Titan Coins'}`);
+                        } else if (type === 'pet') {
+                            if (petSoulMode === 'coins') { petSoulsToExchange = true; sellDetails.push(`${itemName}: ${sellAmount} → Pet Coins`); }
+                            else { sellCalls.push({ name: 'inventorySell', args: { type: 'pet', libId: id, amount: sellAmount, fragment: true }, ident: `sell_pet_${id}` }); sellDetails.push(`${itemName}: ${sellAmount} → Gold`); }
+                        } else {
+                            sellCalls.push({ name: 'inventorySell', args: { type: type, libId: id, amount: sellAmount, fragment: true }, ident: `sell_${type}_${id}` });
+                            sellDetails.push(`${itemName}: ${sellAmount}`);
+                        }
+                    }
+                }
+            }
+        });
+
+        const hasWork = sellCalls.length > 0 || heroSoulsToExchange || titanSoulsToExchange || petSoulsToExchange;
+        if (!hasWork) return { success: true, gold: 0, coins: {}, details: [], hasWork: false, sellCount: 0 };
+
+        let totalGold = 0;
+        const totalCoins = {};
+
+        if (heroSoulsToExchange) {
+            debugLog('💀 Exchanging hero souls for Soul Coins...');
+            try {
+                const result = await SendFunction(JSON.stringify({ calls: [{ name: 'inventoryExchangeStones', args: {}, ident: 'ex' }] }));
+                Object.entries(result?.results?.[0]?.result?.response?.reward?.coin || {}).forEach(([id, amt]) => { totalCoins[id] = (totalCoins[id] || 0) + amt; });
+            } catch (e) { console.warn('Hero exchange error:', e); }
+        }
+
+        if (titanSoulsToExchange) {
+            debugLog('⚡ Exchanging titan souls...');
+            try {
+                const result = await SendFunction(JSON.stringify({ calls: [{ name: 'inventoryExchangeTitanStones', args: {}, ident: 'ex' }] }));
+                let coinsGained = result?.results?.[0]?.result?.response?.reward?.coin?.[15] || 0;
+                if (titanSoulMode === 'gold' && coinsGained > 0) {
+                    debugLog('🔱 Converting Titan Coins to gold...');
+                    const shopResult = await SendFunction(JSON.stringify({ calls: [{ name: 'shopGetAll', args: {}, ident: 'shops' }] }));
+                    const shops = shopResult?.results?.[0]?.result?.response;
+                    if (shops?.[12]) {
+                        let goldSlot = null, goldSlotId = null;
+                        for (const slotId in shops[12].slots) {
+                            const slot = shops[12].slots[slotId];
+                            if (slot.reward?.gold && slot.cost?.coin?.[15] === 100) { goldSlot = slot; goldSlotId = parseInt(slotId); break; }
+                        }
+                        if (goldSlot) {
+                            const invCheck = await SendFunction(JSON.stringify({ calls: [{ name: 'inventoryGet', args: {}, ident: 'inv' }] }));
+                            const buyCount = Math.floor((invCheck?.results?.[0]?.result?.response?.coin?.[15] || 0) / 100);
+                            if (buyCount > 0) {
+                                const buyResult = await SendFunction(JSON.stringify({ calls: [{ name: 'shopBuy', args: { shopId: 12, slot: goldSlotId, cost: goldSlot.cost, reward: goldSlot.reward, amount: buyCount }, ident: 'buy' }] }));
+                                if (!buyResult?.results?.[0]?.result?.error) { totalGold += buyCount * goldSlot.reward.gold; debugLog(`🪙 Converted ${buyCount * 100} Titan Coins → ${(buyCount * goldSlot.reward.gold).toLocaleString()} gold`); }
+                            }
+                        }
+                    }
+                } else if (coinsGained > 0) { totalCoins['15'] = (totalCoins['15'] || 0) + coinsGained; }
+            } catch (e) { console.warn('Titan exchange error:', e); }
+        }
+
+        if (petSoulsToExchange) {
+            debugLog('🐾 Exchanging pet souls for Pet Soul Coins...');
+            try {
+                const result = await SendFunction(JSON.stringify({ calls: [{ name: 'inventoryExchangePetStones', args: {}, ident: 'ex' }] }));
+                Object.entries(result?.results?.[0]?.result?.response?.reward?.coin || {}).forEach(([id, amt]) => { totalCoins[id] = (totalCoins[id] || 0) + amt; });
+            } catch (e) { console.warn('Pet exchange error:', e); }
+        }
+
+        if (sellCalls.length > 0) {
+            debugLog('💎 Auto-selling', sellCalls.length, 'fragment types');
+            try {
+                const resp = await SendFunction(JSON.stringify({ calls: sellCalls }));
+                resp?.results?.forEach(r => {
+                    if (r?.result?.response?.gold) totalGold += r.result.response.gold;
+                    Object.entries(r?.result?.response?.coin || {}).forEach(([id, amt]) => { totalCoins[id] = (totalCoins[id] || 0) + amt; });
+                });
+            } catch (e) { console.warn('Fragment sell error:', e); }
+        }
+
+        if (totalGold > 0) debugLog('💰 Fragment sell gold:', totalGold);
+        Object.entries(totalCoins).forEach(([id, amt]) => debugLog(`🪙 Fragment sell coin ${id}:`, amt));
+
+        return { success: true, gold: totalGold, coins: totalCoins, details: sellDetails, hasWork: true, sellCount: sellCalls.length };
+    };
+
     // ================================================================
     // DOM QUERY CACHE SYSTEM - Performance Optimization
     // ================================================================
@@ -768,6 +883,68 @@ ${eightCoinLines.join('\n')}`;
         }
 
         // ============================================================
+        // 3. Clean up Winterfest gift cache
+        // ============================================================
+        try {
+            const winterfestCache = localStorage.getItem(WINTERFEST_GIFT_CACHE_KEY);
+            if (winterfestCache) {
+                const originalSize = winterfestCache.length;
+                const parsed = JSON.parse(winterfestCache);
+
+                if (parsed.timestamp) {
+                    const maxAgeMs = WINTERFEST_CACHE_DAYS * 24 * 60 * 60 * 1000;
+                    const age = now - parsed.timestamp;
+                    const ageInDays = Math.floor(age / (24 * 60 * 60 * 1000));
+
+                    if (age > maxAgeMs) {
+                        localStorage.removeItem(WINTERFEST_GIFT_CACHE_KEY);
+                        cleanedItems++;
+                        savedSpace += originalSize;
+                        debugLog(`  ✔ Removed Winterfest cache (${ageInDays} days old, ${(originalSize/1024).toFixed(1)} KB)`);
+                    } else {
+                        debugLog(`  ℹ Winterfest cache is ${ageInDays} days old - keeping it`);
+                    }
+                }
+            }
+        } catch (e) {
+            console.warn('  ⚠ Error cleaning Winterfest cache:', e);
+        }
+
+        // ============================================================
+        // 4. Clean up AoC history (keep only last 7 days)
+        // ============================================================
+        try {
+            const aocHistory = localStorage.getItem('hwh_aoc_history');
+            if (aocHistory) {
+                const originalSize = aocHistory.length;
+                const parsed = JSON.parse(aocHistory);
+
+                if (Array.isArray(parsed)) {
+                    const AOC_RETENTION_MS = 7 * 24 * 60 * 60 * 1000;
+                    const originalCount = parsed.length;
+
+                    const filtered = parsed.filter(entry =>
+                                                   entry.timestamp && (now - entry.timestamp) < AOC_RETENTION_MS
+                                                  );
+
+                    const removedCount = originalCount - filtered.length;
+
+                    if (removedCount > 0) {
+                        const newData = JSON.stringify(filtered);
+                        localStorage.setItem('hwh_aoc_history', newData);
+                        cleanedItems++;
+                        savedSpace += (originalSize - newData.length);
+                        debugLog(`  ✔ Cleaned AoC history: removed ${removedCount} old entries (saved ${((originalSize - newData.length)/1024).toFixed(1)} KB)`);
+                    } else {
+                        debugLog(`  ℹ All ${originalCount} AoC entries are within 7 days - keeping them`);
+                    }
+                }
+            }
+        } catch (e) {
+            console.warn('  ⚠ Error cleaning AoC history:', e);
+        }
+
+        // ============================================================
         // Summary
         // ============================================================
         if (cleanedItems > 0) {
@@ -817,7 +994,18 @@ ${eightCoinLines.join('\n')}`;
         // Arena stats (built into Tweaker sidebar)
         'hwh_arena_battle_history',
         'hwh_grand_battle_history',
-        'hw_UserId'
+        'hw_UserId',
+        'hwh_inventory_tab2_checked',
+        'hwh_fragment_sell_settings',
+        // Tab 6 Craft Manager
+        'hwh_craft_targets',
+        'hwh_craft_color_filter',
+        'hwh_craft_sort_col',
+        'hwh_craft_sort_dir',
+        'hwh_hero_excluded',
+        'hwh_hero_soul_mode',
+        'hwh_titan_soul_mode',
+        'hwh_pet_soul_mode'
     ];
 
     const HELPER_KEY = 'scriptMenu_saveOption';
@@ -1601,6 +1789,27 @@ ${eightCoinLines.join('\n')}`;
             console.warn('Could not load checked items:', e);
         }
 
+        // Load fragment sell settings
+        let fragmentSellSettings = {};
+        try {
+            const savedFragments = localStorage.getItem('hwh_fragment_sell_settings');
+            if (savedFragments) fragmentSellSettings = JSON.parse(savedFragments);
+        } catch (e) {
+            console.warn('Could not load fragment settings:', e);
+        }
+
+        const saveFragmentSettings = () => {
+            try {
+                localStorage.setItem('hwh_fragment_sell_settings', JSON.stringify(fragmentSellSettings));
+            } catch (e) {
+                console.warn('Could not save fragment settings:', e);
+            }
+        };
+        // Hero soul sell mode: 'gold' or 'coins'
+        let heroSoulMode = localStorage.getItem('hwh_hero_soul_mode') || 'gold';
+        let titanSoulMode = localStorage.getItem('hwh_titan_soul_mode') || 'gold';
+        let petSoulMode = localStorage.getItem('hwh_pet_soul_mode') || 'gold';
+
         // Cache loot box choice data for all known consumables
         window._lootBoxCache = {};
         const allItemIds = new Set([
@@ -1746,7 +1955,7 @@ ${eightCoinLines.join('\n')}`;
     `;
 
         const title = document.createElement('h2');
-        title.textContent = '📦 Consumables Manager';
+        title.textContent = '📦 Inventory Manager';
         title.style.cssText = `
         color: #ffd700;
         margin: 0;
@@ -1842,10 +2051,42 @@ ${eightCoinLines.join('\n')}`;
         transition: all 0.2s;
     `;
 
+        const tab5Btn = document.createElement('button');
+        tab5Btn.textContent = '💎 Sell Stones & Art Frags';
+        tab5Btn.style.cssText = `
+        flex: 1;
+        background: rgba(139, 105, 20, 0.3);
+        color: #ccc;
+        border: none;
+        border-radius: 6px;
+        padding: 8px 12px;
+        font-size: 12px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: all 0.2s;
+    `;
+
+        const tab6Btn = document.createElement('button');
+        tab6Btn.textContent = '🔨 Craft';
+        tab6Btn.style.cssText = `
+        flex: 1;
+        background: rgba(139, 105, 20, 0.3);
+        color: #ccc;
+        border: none;
+        border-radius: 6px;
+        padding: 8px 12px;
+        font-size: 12px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: all 0.2s;
+    `;
+
         tabContainer.appendChild(tab1Btn);
         tabContainer.appendChild(tab2Btn);
         tabContainer.appendChild(tab3Btn);
         tabContainer.appendChild(tab4Btn);
+        tabContainer.appendChild(tab5Btn);
+        tabContainer.appendChild(tab6Btn);
 
         // Content container
         const contentContainer = document.createElement('div');
@@ -2882,6 +3123,1596 @@ ${eightCoinLines.join('\n')}`;
             const tab2Count = Object.keys(tab2CheckedItems).length;
             footer.textContent = `Auto-Use: ${tab1Count} items • Use Selected: ${tab2Count} items`;
         };
+        // ===== TAB 5: SELL FRAGMENTS =====
+        // Pre-build fragment master list ONCE (outside render function)
+        let fragmentMasterList = null;
+        const buildFragmentMasterList = () => {
+            if (fragmentMasterList) return fragmentMasterList;
+
+            const heroArtifactIds = new Set();
+            const titanArtifactIds = new Set();
+
+            // Extract artifact IDs from heroes/titans
+            Object.values(lib?.data?.hero || {}).forEach(h => {
+                if (h?.artifacts) h.artifacts.forEach(a => heroArtifactIds.add(String(typeof a === 'number' ? a : a?.id)));
+            });
+            Object.values(lib?.data?.titan || {}).forEach(t => {
+                if (t?.artifacts) t.artifacts.forEach(a => titanArtifactIds.add(String(typeof a === 'number' ? a : a?.id)));
+            });
+
+            const types = [
+                { key: 'hero', lib: lib?.data?.hero, label: '🦸 Hero', color: '#4a90e2' },
+                { key: 'titan', lib: lib?.data?.titan, label: '🗿 Titan', color: '#ff9800' },
+                { key: 'pet', lib: lib?.data?.pet, label: '🐾 Pet', color: '#4caf50' },
+                { key: 'artifact', lib: null, manual: heroArtifactIds, label: '🏺 Artifact', color: '#e91e63' },
+                { key: 'titanArtifact', lib: null, manual: titanArtifactIds, label: '⚡ TitanArt', color: '#ff5722' }
+            ];
+
+            const list = [];
+            types.forEach(t => {
+                const ids = new Set();
+                if (t.lib) {
+                    Object.keys(t.lib).forEach(id => { if (/^\d+$/.test(id)) ids.add(id); });
+                }
+                if (t.manual) {
+                    t.manual.forEach(id => ids.add(id));
+                }
+                // Add from settings
+                Object.keys(fragmentSellSettings).forEach(k => {
+                    if (k.startsWith(t.key + '_')) ids.add(k.replace(t.key + '_', ''));
+                });
+
+                ids.forEach(id => {
+                    list.push({ id, type: t.key, typeLabel: t.label, color: t.color, _name: null });
+                });
+            });
+
+            fragmentMasterList = list;
+            return list;
+        };
+
+        // Helper: get fragments needed to craft one item
+        const getFragmentMergeCost = (type, id) => {
+            try {
+                return lib.data?.inventoryItem?.[type]?.[id]?.fragmentMergeCost?.fragmentCount || null;
+            } catch (e) { return null; }
+        };
+
+        // Helper: get complete (built) item count
+        const getCompleteCount = (type, id) => {
+            return inventoryData[type]?.[id] || 0;
+        };
+
+        const renderTab5 = () => {
+            contentContainer.innerHTML = '';
+
+            // Get current inventory quantities (gear/scroll moved to Tab 6 Craft)
+            const invData = {
+                hero: inventoryData.fragmentHero || {},
+                titan: inventoryData.fragmentTitan || {},
+                pet: inventoryData.fragmentPet || {},
+                artifact: inventoryData.fragmentArtifact || {},
+                titanArtifact: inventoryData.fragmentTitanArtifact || {}
+            };
+
+            // Get master list (cached)
+            const masterList = buildFragmentMasterList();
+
+            // Add inventory items that might not be in master list
+            Object.entries(invData).forEach(([type, data]) => {
+                Object.keys(data).forEach(id => {
+                    if (!masterList.find(m => m.type === type && m.id === id)) {
+                        const typeInfo = { hero: ['🦸 Hero', '#4a90e2'], titan: ['🗿 Titan', '#ff9800'], pet: ['🐾 Pet', '#4caf50'], artifact: ['🏺 Artifact', '#e91e63'], titanArtifact: ['⚡ TitanArt', '#ff5722'] };
+                        masterList.push({ id, type, typeLabel: typeInfo[type][0], color: typeInfo[type][1], _name: null });
+                    }
+                });
+            });
+
+            const tab5Content = document.createElement('div');
+            tab5Content.style.cssText = 'display: flex; flex-direction: column; overflow: hidden; flex: 1;';
+
+            // Search box
+            const searchInput = document.createElement('input');
+            searchInput.type = 'text';
+            searchInput.placeholder = '🔍 Search fragment name or ID...';
+            searchInput.style.cssText = 'width:100%;background:rgba(0,0,0,0.3);border:1px solid rgba(156,39,176,0.5);color:#ce93d8;padding:6px 10px;border-radius:6px;font-size:12px;margin-bottom:8px;';
+
+            // Filter row
+            const filterRow = document.createElement('div');
+            filterRow.style.cssText = 'display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;padding:8px;background:rgba(0,0,0,0.2);border-radius:6px;align-items:center;';
+
+            const typeSelect = document.createElement('select');
+            typeSelect.style.cssText = 'background:rgba(0,0,0,0.5);color:#ce93d8;border:1px solid rgba(156,39,176,0.5);border-radius:4px;padding:4px 8px;font-size:11px;';
+            typeSelect.innerHTML = '<option value="all">All Types</option><option value="hero">🦸 Hero</option><option value="titan">🗿 Titan</option><option value="pet">🐾 Pet</option><option value="artifact">🏺 Artifact</option><option value="titanArtifact">⚡ TitanArt</option>';            filterRow.appendChild(typeSelect);
+
+            const filters = { hasQty: true, zeroQty: false, sellEnabled: false };
+            ['📦 In Stock|hasQty', '0️⃣ Zero|zeroQty', '☑️ Sell On|sellEnabled'].forEach(f => {
+                const [label, key] = f.split('|');
+                const lbl = document.createElement('label');
+                lbl.style.cssText = 'display:flex;align-items:center;gap:4px;color:#ccc;font-size:11px;cursor:pointer;';
+                const cb = document.createElement('input');
+                cb.type = 'checkbox';
+                cb.checked = filters[key];
+                cb.onchange = () => { filters[key] = cb.checked; doFilter(); };
+                lbl.appendChild(cb);
+                lbl.appendChild(document.createTextNode(label));
+                filterRow.appendChild(lbl);
+            });
+
+            // Action row 1 - Main buttons
+            const actionRow1 = document.createElement('div');
+            actionRow1.style.cssText = 'display:flex;gap:8px;margin-bottom:6px;';
+
+            const sellBtn = document.createElement('button');
+            sellBtn.textContent = '💰 Sell Excess Now';
+            sellBtn.style.cssText = 'flex:2;background:#9c27b0;color:white;border:none;border-radius:6px;padding:8px;font-size:12px;cursor:pointer;font-weight:bold;';
+            sellBtn.onclick = () => sellFragmentsNow();
+
+            const selAllBtn = document.createElement('button');
+            selAllBtn.textContent = '☑️ Sell All';
+            selAllBtn.style.cssText = 'flex:1;background:rgba(156,39,176,0.5);color:#ce93d8;border:none;border-radius:6px;padding:8px 12px;font-size:11px;cursor:pointer;font-weight:bold;';
+            selAllBtn.onclick = () => { filtered.forEach(f => { const k = `${f.type}_${f.id}`; if (!fragmentSellSettings[k]) fragmentSellSettings[k] = {keep:0,sell:false}; fragmentSellSettings[k].sell = true; }); saveFragmentSettings(); renderRows(); };
+
+            const deselBtn = document.createElement('button');
+            deselBtn.textContent = '⬜ Sell None';
+            deselBtn.style.cssText = 'flex:1;background:rgba(139,105,20,0.3);color:#ccc;border:none;border-radius:6px;padding:8px 12px;font-size:11px;cursor:pointer;font-weight:bold;';
+            deselBtn.onclick = () => { filtered.forEach(f => { const k = `${f.type}_${f.id}`; if (fragmentSellSettings[k]) fragmentSellSettings[k].sell = false; }); saveFragmentSettings(); renderRows(); };
+
+            const keepBtn = document.createElement('button');
+            keepBtn.textContent = '📌 Keep=Have';
+            keepBtn.style.cssText = 'flex:1;background:rgba(76,175,80,0.5);color:#a5d6a7;border:none;border-radius:6px;padding:8px 12px;font-size:11px;cursor:pointer;font-weight:bold;';
+            keepBtn.onclick = () => { filtered.forEach(f => { const k = `${f.type}_${f.id}`; if (!fragmentSellSettings[k]) fragmentSellSettings[k] = {keep:0,sell:false}; fragmentSellSettings[k].keep = invData[f.type]?.[f.id] || 0; }); saveFragmentSettings(); renderRows(); };
+
+            actionRow1.append(sellBtn, selAllBtn, deselBtn, keepBtn);
+
+            // Action row 2 - Unit type controls (6★ select + mode dropdown grouped)
+            const actionRow2 = document.createElement('div');
+            actionRow2.style.cssText = 'display:flex;gap:16px;margin-bottom:8px;padding:6px 10px;background:rgba(0,0,0,0.2);border-radius:6px;align-items:center;flex-wrap:wrap;';
+
+            // Hero group
+            const heroGrp = document.createElement('div');
+            heroGrp.style.cssText = 'display:flex;align-items:center;gap:4px;';
+            const heroBtn = document.createElement('button');
+            heroBtn.textContent = '👻 6★ Hero';
+            heroBtn.style.cssText = 'background:rgba(206,147,216,0.4);color:#ce93d8;border:none;border-radius:4px;padding:4px 8px;font-size:10px;cursor:pointer;font-weight:bold;';
+            heroBtn.title = 'Select all 6★ hero frags to sell';
+            heroBtn.onclick = async () => {
+                const origText = heroBtn.textContent;
+                heroBtn.textContent = '⏳';
+                try {
+                    const resp = await Send(JSON.stringify({calls:[{name:'heroGetAll',args:{},ident:'h'}]}));
+                    const heroes = resp.results[0].result.response;
+                    let count = 0;
+                    Object.entries(heroes).forEach(([id, h]) => {
+                        if (h.star === 6) {
+                            const k = `hero_${id}`;
+                            if (!fragmentSellSettings[k]) fragmentSellSettings[k] = {keep: 0, sell: false};
+                            fragmentSellSettings[k].sell = true;
+                            count++;
+                        }
+                    });
+                    saveFragmentSettings();
+                    renderRows();
+                    console.log(`✅ Selected ${count} 6★ hero frags for sell`);
+                } catch (e) { console.error('Failed to get heroes:', e); }
+                heroBtn.textContent = origText;
+            };
+            const heroArrow = document.createElement('span');
+            heroArrow.textContent = '→';
+            heroArrow.style.cssText = 'color:#666;font-size:10px;';
+            const heroSelect = document.createElement('select');
+            heroSelect.style.cssText = 'background:#1a0f08;color:#ffd700;border:1px solid #8b6914;border-radius:4px;padding:2px 4px;font-size:10px;';
+            heroSelect.title = 'Hero soul conversion mode';
+            heroSelect.innerHTML = `<option value="gold" ${heroSoulMode === 'gold' ? 'selected' : ''}>🪙 Gold</option><option value="coins" ${heroSoulMode === 'coins' ? 'selected' : ''}>💀 Soul Coins</option>`;
+            heroSelect.onchange = () => { heroSoulMode = heroSelect.value; localStorage.setItem('hwh_hero_soul_mode', heroSoulMode); };
+            heroGrp.append(heroBtn, heroArrow, heroSelect);
+
+            // Titan group
+            const titanGrp = document.createElement('div');
+            titanGrp.style.cssText = 'display:flex;align-items:center;gap:4px;';
+            const titanBtn = document.createElement('button');
+            titanBtn.textContent = '🗿 6★ Titan';
+            titanBtn.style.cssText = 'background:rgba(255,152,0,0.4);color:#ff9800;border:none;border-radius:4px;padding:4px 8px;font-size:10px;cursor:pointer;font-weight:bold;';
+            titanBtn.title = 'Select all 6★ titan frags to sell';
+            titanBtn.onclick = async () => {
+                const origText = titanBtn.textContent;
+                titanBtn.textContent = '⏳';
+                try {
+                    const resp = await Send(JSON.stringify({calls:[{name:'titanGetAll',args:{},ident:'t'}]}));
+                    const titans = resp.results[0].result.response;
+                    let count = 0;
+                    Object.entries(titans).forEach(([id, t]) => {
+                        if (t.star === 6) {
+                            const k = `titan_${id}`;
+                            if (!fragmentSellSettings[k]) fragmentSellSettings[k] = {keep: 0, sell: false};
+                            fragmentSellSettings[k].sell = true;
+                            count++;
+                        }
+                    });
+                    saveFragmentSettings();
+                    renderRows();
+                    console.log(`✅ Selected ${count} 6★ titan frags for sell`);
+                } catch (e) { console.error('Failed to get titans:', e); }
+                titanBtn.textContent = origText;
+            };
+            const titanArrow = document.createElement('span');
+            titanArrow.textContent = '→';
+            titanArrow.style.cssText = 'color:#666;font-size:10px;';
+            const titanSelect = document.createElement('select');
+            titanSelect.style.cssText = 'background:#1a0f08;color:#ffd700;border:1px solid #8b6914;border-radius:4px;padding:2px 4px;font-size:10px;';
+            titanSelect.title = 'Titan soul conversion mode';
+            titanSelect.innerHTML = `<option value="gold" ${titanSoulMode === 'gold' ? 'selected' : ''}>🪙 Gold</option><option value="coins" ${titanSoulMode === 'coins' ? 'selected' : ''}>⚡ Titan Coins</option>`;
+            titanSelect.onchange = () => { titanSoulMode = titanSelect.value; localStorage.setItem('hwh_titan_soul_mode', titanSoulMode); };
+            titanGrp.append(titanBtn, titanArrow, titanSelect);
+
+            // Pet group
+            const petGrp = document.createElement('div');
+            petGrp.style.cssText = 'display:flex;align-items:center;gap:4px;';
+            const petBtn = document.createElement('button');
+            petBtn.textContent = '🐾 6★ Pet';
+            petBtn.style.cssText = 'background:rgba(76,175,80,0.4);color:#4caf50;border:none;border-radius:4px;padding:4px 8px;font-size:10px;cursor:pointer;font-weight:bold;';
+            petBtn.title = 'Select all 6★ pet frags to sell';
+            petBtn.onclick = async () => {
+                const origText = petBtn.textContent;
+                petBtn.textContent = '⏳';
+                try {
+                    const resp = await Send(JSON.stringify({calls:[{name:'pet_getAll',args:{},ident:'p'}]}));
+                    const pets = resp.results[0].result.response;
+                    let count = 0;
+                    // pet_getAll returns array, not object
+                    pets.forEach(p => {
+                        if (p.star === 6) {
+                            const k = `pet_${p.id}`;
+                            if (!fragmentSellSettings[k]) fragmentSellSettings[k] = {keep: 0, sell: false};
+                            fragmentSellSettings[k].sell = true;
+                            count++;
+                        }
+                    });
+                    saveFragmentSettings();
+                    renderRows();
+                    console.log(`✅ Selected ${count} 6★ pet frags for sell`);
+                } catch (e) { console.error('Failed to get pets:', e); }
+                petBtn.textContent = origText;
+            };
+            const petArrow = document.createElement('span');
+            petArrow.textContent = '→';
+            petArrow.style.cssText = 'color:#666;font-size:10px;';
+            const petSelect = document.createElement('select');
+            petSelect.style.cssText = 'background:#1a0f08;color:#ffd700;border:1px solid #8b6914;border-radius:4px;padding:2px 4px;font-size:10px;';
+            petSelect.title = 'Pet soul conversion mode';
+            petSelect.innerHTML = `<option value="gold" ${petSoulMode === 'gold' ? 'selected' : ''}>🪙 Gold</option><option value="coins" ${petSoulMode === 'coins' ? 'selected' : ''}>🐾 Pet Coins</option>`;
+            petSelect.onchange = () => { petSoulMode = petSelect.value; localStorage.setItem('hwh_pet_soul_mode', petSoulMode); };
+            petGrp.append(petBtn, petArrow, petSelect);
+
+            actionRow2.append(heroGrp, titanGrp, petGrp);
+
+            // Grid header
+            const gridHeader = document.createElement('div');
+            gridHeader.style.cssText = 'display:grid;grid-template-columns:70px 1fr 50px 90px 60px 50px;gap:6px;padding:8px 10px;background:rgba(156,39,176,0.3);border-radius:6px;font-weight:bold;margin-bottom:6px;font-size:11px;color:#ce93d8;';
+            gridHeader.innerHTML = '<div style="text-align:center">Type</div><div>Name</div><div style="text-align:center" title="Complete items built">🎁</div><div style="text-align:center" title="Fragments / Needed">Frags</div><div style="text-align:center">Keep</div><div style="text-align:center">Sell</div>';
+
+            // Scroll container
+            const scrollBox = document.createElement('div');
+            scrollBox.style.cssText = 'overflow-y:auto;flex:1;';
+            const virtualBox = document.createElement('div');
+            virtualBox.style.cssText = 'position:relative;';
+            scrollBox.appendChild(virtualBox);
+
+            // Footer
+            const footerEl = document.createElement('div');
+            footerEl.style.cssText = 'padding-top:8px;font-size:11px;color:#999;';
+
+            let filtered = [];
+            let lastRange = [-1, -1];
+            const ROW_H = 32, BUFFER = 5;
+
+            // Name cache for lazy loading
+            const nameCache = {};
+            // Build artifact-to-user maps (cached globally)
+            if (!window._artifactUserMaps) {
+                const heroArtMap = {}, titanArtMap = {};
+                if (lib?.data?.hero) {
+                    Object.entries(lib.data.hero).forEach(([heroId, hero]) => {
+                        if (parseInt(heroId) >= 100) return; // Skip computer/event heroes
+                        if (hero.artifacts?.length) {
+                            const heroName = window.identifyItem?.(heroId, 'hero') || `Hero #${heroId}`;
+                            hero.artifacts.forEach(artId => {
+                                if (artId > 0) {
+                                    if (!heroArtMap[artId]) heroArtMap[artId] = [];
+                                    if (!heroArtMap[artId].includes(heroName)) heroArtMap[artId].push(heroName);
+                                }
+                            });
+                        }
+                    });
+                }
+                if (lib?.data?.titan) {
+                    Object.entries(lib.data.titan).forEach(([titanId, titan]) => {
+                        const id = parseInt(titanId);
+                        if (id < 4000 || id > 4050) return; // Skip non-standard titans
+                        if (titan.artifacts?.length) {
+                            const titanName = window.identifyItem?.(titanId, 'titan') || `Titan #${titanId}`;
+                            titan.artifacts.forEach(artId => {
+                                if (artId > 0) {
+                                    if (!titanArtMap[artId]) titanArtMap[artId] = [];
+                                    if (!titanArtMap[artId].includes(titanName)) titanArtMap[artId].push(titanName);
+                                }
+                            });
+                        }
+                    });
+                }
+                window._artifactUserMaps = { hero: heroArtMap, titan: titanArtMap };
+            }
+            const artMaps = window._artifactUserMaps;
+
+            const getName = (type, id) => {
+                const k = `${type}_${id}`;
+                if (!nameCache[k]) {
+                    let name = window.identifyItem?.(id, type) || `${type} #${id}`;
+                    if (type === 'artifact' && artMaps.hero[id]?.length) {
+                        name += ` (${artMaps.hero[id].join(', ')})`;
+                    } else if (type === 'titanArtifact' && artMaps.titan[id]?.length) {
+                        name += ` (${artMaps.titan[id].join(', ')})`;
+                    }
+                    nameCache[k] = name;
+                }
+                return nameCache[k];
+            };
+
+            const doFilter = () => {
+                const search = searchInput.value.toLowerCase();
+                const typeF = typeSelect.value;
+
+                filtered = masterList.filter(f => {
+                    if (typeF !== 'all' && f.type !== typeF) return false;
+
+                    const qty = invData[f.type]?.[f.id] || 0;
+                    const settings = fragmentSellSettings[`${f.type}_${f.id}`];
+
+                    // Filter checkboxes
+                    // Quantity filters (In Stock / Zero) are OR with each other
+                    // Sell On is AND with quantity filters
+                    const hasQtyFilter = filters.hasQty || filters.zeroQty;
+
+                    if (hasQtyFilter) {
+                        let qtyPass = false;
+                        if (filters.hasQty && qty > 0) qtyPass = true;
+                        if (filters.zeroQty && qty === 0) qtyPass = true;
+                        if (!qtyPass) return false;
+                    }
+
+                    if (filters.sellEnabled && !settings?.sell) return false;
+
+                    // Search
+                    if (search) {
+                        const name = getName(f.type, f.id).toLowerCase();
+                        if (!name.includes(search) && !f.id.includes(search)) return false;
+                    }
+
+                    return true;
+                });
+
+                // Sort: by type, then qty desc
+                const typeOrder = { hero: 1, titan: 2, pet: 3, artifact: 4, titanArtifact: 5 };
+                filtered.sort((a, b) => {
+                    if (typeOrder[a.type] !== typeOrder[b.type]) return typeOrder[a.type] - typeOrder[b.type];
+                    const qA = invData[a.type]?.[a.id] || 0, qB = invData[b.type]?.[b.id] || 0;
+                    return qB - qA;
+                });
+
+                lastRange = [-1, -1];
+                scrollBox.scrollTop = 0;
+                renderRows();
+            };
+
+            const renderRows = () => {
+                const scrollTop = scrollBox.scrollTop;
+                const viewH = scrollBox.clientHeight || 400;
+                virtualBox.style.height = filtered.length * ROW_H + 'px';
+
+                const start = Math.max(0, Math.floor(scrollTop / ROW_H) - BUFFER);
+                const end = Math.min(filtered.length, Math.ceil((scrollTop + viewH) / ROW_H) + BUFFER);
+
+                if (start === lastRange[0] && end === lastRange[1]) return;
+                lastRange = [start, end];
+
+                virtualBox.innerHTML = '';
+
+                for (let i = start; i < end; i++) {
+                    const f = filtered[i];
+                    const k = `${f.type}_${f.id}`;
+                    const fragQty = invData[f.type]?.[f.id] || 0;
+                    const settings = fragmentSellSettings[k] || { keep: 0, sell: false };
+
+                    // Get complete item count and fragments needed (gear/scroll only)
+                    const completeQty = getCompleteCount(f.type, f.id);
+                    const needed = getFragmentMergeCost(f.type, f.id);
+
+                    // Build fragments display: "35/50" or just "35" if no merge info
+                    let fragDisplay;
+                    if (needed) {
+                        const pct = fragQty / needed;
+                        const fragColor = pct >= 1 ? '#4ae29a' : (pct >= 0.5 ? '#ffd700' : (fragQty > 0 ? '#ff9800' : '#666'));
+                        fragDisplay = `<span style="color:${fragColor}">${fragQty}/${needed}</span>`;
+                    } else {
+                        fragDisplay = `<span style="color:${fragQty > 0 ? '#4ae29a' : '#666'}">${fragQty.toLocaleString()}</span>`;
+                    }
+
+                    // Built column: show count or dash
+                    const builtDisplay = completeQty > 0
+                    ? `<span style="color:#4ae29a;font-weight:bold">${completeQty}</span>`
+                        : `<span style="color:#555">-</span>`;
+
+                    const row = document.createElement('div');
+                    row.style.cssText = `display:grid;grid-template-columns:70px 1fr 50px 90px 60px 50px;gap:6px;padding:4px 10px;align-items:center;font-size:11px;position:absolute;top:${i * ROW_H}px;left:0;right:0;height:${ROW_H}px;border-bottom:1px solid rgba(139,105,20,0.2);`;
+
+                    row.innerHTML = `
+                        <div style="text-align:center;font-size:10px;color:${f.color};font-weight:bold">${f.typeLabel}</div>
+                        <div class="twk-gold" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="ID:${f.id}">${getName(f.type, f.id)}</div>
+                        <div style="text-align:center;font-family:monospace">${builtDisplay}</div>
+                        <div style="text-align:center;font-family:monospace">${fragDisplay}</div>
+                        <div style="text-align:center"><input type="number" min="0" value="${settings.keep}" style="width:45px;background:rgba(0,0,0,0.5);color:#ffd700;border:1px solid rgba(139,105,20,0.5);border-radius:4px;padding:2px;font-size:10px;text-align:center"></div>
+                        <div style="text-align:center"><input type="checkbox" ${settings.sell ? 'checked' : ''} style="width:16px;height:16px;cursor:pointer"></div>
+                    `;
+                    const keepInput = row.querySelector('input[type="number"]');
+                    const sellCb = row.querySelector('input[type="checkbox"]');
+
+                    keepInput.onchange = () => {
+                        if (!fragmentSellSettings[k]) fragmentSellSettings[k] = { keep: 0, sell: false };
+                        fragmentSellSettings[k].keep = Math.max(0, parseInt(keepInput.value) || 0);
+                        saveFragmentSettings();
+                    };
+
+                    sellCb.onchange = () => {
+                        if (!fragmentSellSettings[k]) fragmentSellSettings[k] = { keep: 0, sell: false };
+                        fragmentSellSettings[k].sell = sellCb.checked;
+                        saveFragmentSettings();
+                        updateFooter();
+                    };
+
+                    virtualBox.appendChild(row);
+                }
+
+                updateFooter();
+            };
+
+            const updateFooter = () => {
+                const sellCount = Object.values(fragmentSellSettings).filter(s => s.sell).length;
+                const excess = filtered.reduce((sum, f) => {
+                    const s = fragmentSellSettings[`${f.type}_${f.id}`];
+                    if (s?.sell) return sum + Math.max(0, (invData[f.type]?.[f.id] || 0) - (s.keep || 0));
+                    return sum;
+                }, 0);
+                footerEl.textContent = `Showing ${filtered.length} of ${masterList.length} • ${sellCount} marked • ${excess.toLocaleString()} excess`;
+            };
+
+            // Event handlers with debounce
+            let timeout;
+            searchInput.oninput = () => { clearTimeout(timeout); timeout = setTimeout(doFilter, 150); };
+            typeSelect.onchange = doFilter;
+            let raf;
+            scrollBox.onscroll = () => { if (raf) cancelAnimationFrame(raf); raf = requestAnimationFrame(renderRows); };
+
+            // Build UI
+            tab5Content.append(searchInput, filterRow, actionRow1, actionRow2, gridHeader, scrollBox, footerEl);
+            contentContainer.appendChild(tab5Content);
+
+            doFilter();
+        };
+        // ===== TAB 6: CRAFT MANAGER (Gear & Scroll only) =====
+        const craftTargets = JSON.parse(localStorage.getItem('hwh_craft_targets') || '{}');
+        const saveCraftTargets = () => localStorage.setItem('hwh_craft_targets', JSON.stringify(craftTargets));
+        let tab6ColorFilter = localStorage.getItem('hwh_craft_color_filter') || 'all';
+        const heroExcluded = JSON.parse(localStorage.getItem('hwh_hero_excluded') || '[]');
+        const saveHeroExcluded = (ids) => localStorage.setItem('hwh_hero_excluded', JSON.stringify(ids));
+
+        // Confirmation modal for craft/sell operations
+        const showCraftSellConfirmModal = async (craftList, sellFragList, sellItemList) => {
+            return new Promise((resolve) => {
+                const modal = document.createElement('div');
+                modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);z-index:999999999;display:flex;align-items:center;justify-content:center;';
+
+                const totalCraft = craftList.reduce((s, i) => s + i.amount, 0);
+                const totalSellFrags = sellFragList.reduce((s, i) => s + i.amount, 0);
+                const totalSellItems = sellItemList.reduce((s, i) => s + i.amount, 0);
+
+                const box = document.createElement('div');
+                box.style.cssText = 'background:#1a1a2e;border:2px solid #8b6914;border-radius:10px;padding:14px;max-width:500px;max-height:80vh;display:flex;flex-direction:column;';
+
+                box.innerHTML = `
+                    <div style="color:#ffd700;font-size:14px;font-weight:bold;margin-bottom:10px;">⚠️ Confirm Actions</div>
+
+                    ${craftList.length > 0 ? `
+                    <div style="margin-bottom:10px;">
+                        <label style="display:flex;align-items:center;gap:8px;color:#4caf50;font-size:12px;font-weight:bold;cursor:pointer;">
+                            <input type="checkbox" id="csm_craft" checked style="width:16px;height:16px;">
+                            🔨 Craft ${totalCraft} items (${craftList.length} types)
+                        </label>
+                        <div id="csm_craftList" style="max-height:100px;overflow-y:auto;padding-left:24px;margin-top:4px;font-size:10px;color:#a5d6a7;">
+                            ${craftList.slice(0, 20).map(i => `${i.name}: ${i.amount}`).join('<br>')}
+                            ${craftList.length > 20 ? `<br><i>...and ${craftList.length - 20} more</i>` : ''}
+                        </div>
+                    </div>
+                    ` : ''}
+
+                    ${sellFragList.length > 0 ? `
+                    <div style="margin-bottom:10px;">
+                        <label style="display:flex;align-items:center;gap:8px;color:#ff9800;font-size:12px;font-weight:bold;cursor:pointer;">
+                            <input type="checkbox" id="csm_sellFrags" checked style="width:16px;height:16px;">
+                            💰 Sell ${totalSellFrags.toLocaleString()} excess fragments (${sellFragList.length} types)
+                        </label>
+                        <div id="csm_fragList" style="max-height:100px;overflow-y:auto;padding-left:24px;margin-top:4px;font-size:10px;color:#ffe0b2;">
+                            ${sellFragList.slice(0, 20).map(i => `${i.name}: ${i.amount}`).join('<br>')}
+                            ${sellFragList.length > 20 ? `<br><i>...and ${sellFragList.length - 20} more</i>` : ''}
+                        </div>
+                    </div>
+                    ` : ''}
+
+                    ${sellItemList.length > 0 ? `
+                    <div style="margin-bottom:10px;">
+                        <label style="display:flex;align-items:center;gap:8px;color:#f44336;font-size:12px;font-weight:bold;cursor:pointer;">
+                            <input type="checkbox" id="csm_sellItems" checked style="width:16px;height:16px;">
+                            🗑️ Sell ${totalSellItems} excess built items (${sellItemList.length} types)
+                        </label>
+                        <div id="csm_itemList" style="max-height:100px;overflow-y:auto;padding-left:24px;margin-top:4px;font-size:10px;color:#ef9a9a;">
+                            ${sellItemList.slice(0, 20).map(i => `${i.name}: ${i.amount}`).join('<br>')}
+                            ${sellItemList.length > 20 ? `<br><i>...and ${sellItemList.length - 20} more</i>` : ''}
+                        </div>
+                    </div>
+                    ` : ''}
+
+                    ${craftList.length === 0 && sellFragList.length === 0 && sellItemList.length === 0 ? `
+                    <div style="color:#999;font-size:12px;text-align:center;padding:20px;">Nothing to do!</div>
+                    ` : ''}
+
+                    <div style="display:flex;gap:8px;margin-top:10px;">
+                        <button id="csm_confirm" style="flex:1;background:#4caf50;color:white;border:none;border-radius:6px;padding:10px;cursor:pointer;font-weight:bold;font-size:12px;" ${craftList.length === 0 && sellFragList.length === 0 && sellItemList.length === 0 ? 'disabled' : ''}>✓ Confirm</button>
+                        <button id="csm_cancel" style="background:#666;color:white;border:none;border-radius:6px;padding:10px 16px;cursor:pointer;font-size:12px;">Cancel</button>
+                    </div>
+                `;
+
+                modal.appendChild(box);
+                document.body.appendChild(modal);
+
+                box.querySelector('#csm_cancel').onclick = () => {
+                    modal.remove();
+                    resolve({ confirmed: false });
+                };
+
+                box.querySelector('#csm_confirm').onclick = () => {
+                    const result = {
+                        confirmed: true,
+                        doCraft: box.querySelector('#csm_craft')?.checked ?? false,
+                        doSellFrags: box.querySelector('#csm_sellFrags')?.checked ?? false,
+                        doSellItems: box.querySelector('#csm_sellItems')?.checked ?? false
+                    };
+                    modal.remove();
+                    resolve(result);
+                };
+            });
+        };
+
+        // Calculate what would be crafted/sold (shared logic)
+        const calculateCraftSellLists = () => {
+            const fragData = { gear: {...(inventoryData.fragmentGear || {})}, scroll: {...(inventoryData.fragmentScroll || {})} };
+            const builtData = { gear: {...(inventoryData.gear || {})}, scroll: {...(inventoryData.scroll || {})} };
+            const usedInRecipes = getUsedInRecipes();
+
+            const craftList = [];
+            const sellFragList = [];
+            const sellItemList = [];
+
+            ['gear', 'scroll'].forEach(type => {
+                Object.keys(fragData[type]).forEach(id => {
+                    const mergeCost = lib.data?.inventoryItem?.[type]?.[id]?.fragmentMergeCost;
+                    if (mergeCost?.fragmentCount) {
+                        const k = `${type}_${id}`;
+                        const fragCount = fragData[type][id] || 0;
+                        const builtCount = builtData[type][id] || 0;
+                        const needed = mergeCost.fragmentCount;
+                        const canMake = Math.floor(fragCount / needed);
+                        const isIngredient = usedInRecipes.has(k);
+                        const defaultTarget = isIngredient ? Math.max(builtCount, 50) : builtCount;
+                        const target = craftTargets[k] ?? defaultTarget;
+                        const name = window.identifyItem?.(id, type) || `${type} #${id}`;
+
+                        // What to craft
+                        const needToCraft = Math.max(0, Math.min(canMake, target - builtCount));
+                        if (needToCraft > 0) {
+                            craftList.push({ type, id: parseInt(id), amount: needToCraft, needed, name });
+                        }
+
+                        // Excess frags to sell (only if target is explicitly set)
+                        if (craftTargets[k] !== undefined) {
+                            const fragsNeededForTarget = Math.max(0, (target - builtCount) * needed);
+                            const excessFrags = fragCount - fragsNeededForTarget;
+                            if (excessFrags > 0) {
+                                sellFragList.push({ type: `fragment${type.charAt(0).toUpperCase() + type.slice(1)}`, id: parseInt(id), amount: excessFrags, name });
+                            }
+                        }
+                    }
+                });
+
+                // Excess built items to sell
+                Object.keys(builtData[type]).forEach(id => {
+                    const k = `${type}_${id}`;
+                    const builtCount = builtData[type][id] || 0;
+                    const target = craftTargets[k];
+                    if (target !== undefined && builtCount > target) {
+                        const excess = builtCount - target;
+                        const name = window.identifyItem?.(id, type) || `${type} #${id}`;
+                        sellItemList.push({ type, id: parseInt(id), amount: excess, name });
+                    }
+                });
+            });
+
+            return { craftList, sellFragList, sellItemList };
+        };
+
+        // Build set of items used as ingredients in recipes
+        const getUsedInRecipes = () => {
+            const used = new Set();
+            const gear = lib.data?.inventoryItem?.gear || {};
+            const scroll = lib.data?.inventoryItem?.scroll || {};
+            Object.values(gear).forEach(g => {
+                if (g.craftRecipe?.gear) Object.keys(g.craftRecipe.gear).forEach(id => used.add('gear_' + id));
+                if (g.craftRecipe?.scroll) Object.keys(g.craftRecipe.scroll).forEach(id => used.add('scroll_' + id));
+            });
+            Object.values(scroll).forEach(s => {
+                if (s.craftRecipe?.gear) Object.keys(s.craftRecipe.gear).forEach(id => used.add('gear_' + id));
+                if (s.craftRecipe?.scroll) Object.keys(s.craftRecipe.scroll).forEach(id => used.add('scroll_' + id));
+            });
+            return used;
+        };
+
+        // Build gear->recipe scroll mapping
+        const gearToScrollMap = {};
+        Object.entries(lib.data?.inventoryItem?.scroll || {}).forEach(([scrollId, s]) => {
+            const scrollName = window.identifyItem?.(scrollId, 'scroll');
+            if (scrollName?.endsWith(' - Recipe')) {
+                const gearName = scrollName.replace(' - Recipe', '');
+                Object.entries(lib.data?.inventoryItem?.gear || {}).forEach(([gearId, g]) => {
+                    if (window.identifyItem?.(gearId, 'gear') === gearName) {
+                        gearToScrollMap[gearId] = scrollId;
+                    }
+                });
+            }
+        });
+
+        const renderTab6 = () => {
+            contentContainer.innerHTML = '';
+
+            const usedInRecipes = getUsedInRecipes();
+
+            const fragData = {
+                gear: inventoryData.fragmentGear || {},
+                scroll: inventoryData.fragmentScroll || {}
+            };
+            const builtData = {
+                gear: inventoryData.gear || {},
+                scroll: inventoryData.scroll || {}
+            };
+
+            // Build list of craftable items
+            const craftableItems = [];
+            ['gear', 'scroll'].forEach(type => {
+                Object.keys(fragData[type]).forEach(id => {
+                    const itemData = lib.data?.inventoryItem?.[type]?.[id];
+                    const mergeCost = itemData?.fragmentMergeCost;
+                    if (mergeCost?.fragmentCount) {
+                        const isIngredient = usedInRecipes.has(`${type}_${id}`);
+                        const fragCount = fragData[type][id] || 0;
+                        const builtCount = builtData[type][id] || 0;
+                        const needed = mergeCost.fragmentCount;
+                        const canMake = Math.floor(fragCount / needed);
+                        const name = window.identifyItem?.(id, type) || `${type} #${id}`;
+                        craftableItems.push({
+                            type, id, name, fragCount, builtCount, needed, canMake,
+                            goldCost: mergeCost.gold || 0,
+                            isIngredient,
+                            color: itemData?.color || 0
+                        });
+                    }
+                });
+            });
+
+            // Sort state
+            let sortCol = localStorage.getItem('hwh_craft_sort_col') || 'canMake';
+            let sortDir = localStorage.getItem('hwh_craft_sort_dir') || 'desc';
+            let searchText = '';
+
+            const doSort = (items) => {
+                return [...items].sort((a, b) => {
+                    let av, bv;
+                    switch (sortCol) {
+                        case 'type': av = a.type; bv = b.type; break;
+                        case 'color': av = a.color; bv = b.color; break;
+                        case 'name': av = a.name.toLowerCase(); bv = b.name.toLowerCase(); break;
+                        case 'built': av = a.builtCount; bv = b.builtCount; break;
+                        case 'frags': av = a.fragCount; bv = b.fragCount; break;
+                        case 'canMake': av = a.canMake; bv = b.canMake; break;
+                        case 'target':
+                            av = craftTargets[`${a.type}_${a.id}`] ?? a.builtCount;
+                            bv = craftTargets[`${b.type}_${b.id}`] ?? b.builtCount;
+                            break;
+                        default: av = a.canMake; bv = b.canMake;
+                    }
+                    if (typeof av === 'string') {
+                        return sortDir === 'asc' ? av.localeCompare(bv) : bv.localeCompare(av);
+                    }
+                    return sortDir === 'asc' ? av - bv : bv - av;
+                });
+            };
+
+            const doFilter = (items) => {
+                if (!searchText) return items;
+                const s = searchText.toLowerCase();
+                return items.filter(i => i.name.toLowerCase().includes(s) || i.id.includes(s));
+            };
+
+            const tab6Content = document.createElement('div');
+            tab6Content.style.cssText = 'display:flex;flex-direction:column;overflow:hidden;flex:1;';
+
+            // Search box
+            const searchInput = document.createElement('input');
+            searchInput.type = 'text';
+            searchInput.placeholder = '🔍 Search gear/scroll...';
+            searchInput.style.cssText = 'width:100%;background:rgba(0,0,0,0.3);border:1px solid rgba(76,175,80,0.5);color:#a5d6a7;padding:6px 10px;border-radius:6px;font-size:11px;margin-bottom:8px;';
+            searchInput.oninput = () => {
+                searchText = searchInput.value;
+                renderRows();
+            };
+
+            // Action row - keep your existing buttons
+            const actionRow = document.createElement('div');
+            actionRow.style.cssText = 'display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;align-items:center;';
+
+            const craftAllBtn = document.createElement('button');
+            craftAllBtn.textContent = '🔨 Craft';
+            craftAllBtn.style.cssText = 'flex:1;background:#4caf50;color:white;border:none;border-radius:6px;padding:8px;font-size:11px;cursor:pointer;font-weight:bold;';
+            craftAllBtn.onclick = async () => {
+                const { craftList, sellFragList, sellItemList } = calculateCraftSellLists();
+                const result = await showCraftSellConfirmModal(craftList, [], []);
+                if (!result.confirmed || !result.doCraft) return;
+
+                craftAllBtn.textContent = '⏳';
+                const craftResults = await craftAllToTarget();
+                craftAllBtn.textContent = '🔨 Craft';
+
+                // Show results
+                alert(`✓ Crafted ${craftResults?.crafted || 0} items (${craftResults?.types || 0} types)`);
+            };
+
+            const sellExcessBtn = document.createElement('button');
+            sellExcessBtn.textContent = '💰 Sell Excess';
+            sellExcessBtn.style.cssText = 'flex:1;background:#9c27b0;color:white;border:none;border-radius:6px;padding:8px;font-size:11px;cursor:pointer;font-weight:bold;';
+            sellExcessBtn.onclick = async () => {
+                const { craftList, sellFragList, sellItemList } = calculateCraftSellLists();
+                const result = await showCraftSellConfirmModal([], sellFragList, sellItemList);
+                if (!result.confirmed) return;
+                if (!result.doSellFrags && !result.doSellItems) return;
+
+                sellExcessBtn.textContent = '⏳';
+                const sellResults = await sellExcessFragments(result.doSellFrags, result.doSellItems);
+                sellExcessBtn.textContent = '💰 Sell Excess';
+
+                // Show results
+                const goldStr = sellResults?.gold > 0 ? `\n🪙 Gold: ${sellResults.gold.toLocaleString()}` : '';
+                const coinStr = Object.entries(sellResults?.coins || {}).map(([id, amt]) =>
+                                                                             `\n💰 ${window.identifyItem?.(id, 'coin') || 'Coin'}: ${amt.toLocaleString()}`
+                ).join('');
+                alert(`✓ Sold ${sellResults?.fragTypes || 0} frag types, ${sellResults?.itemTypes || 0} item types${goldStr}${coinStr}`);
+            };
+
+            const setTargetBtn = document.createElement('button');
+            setTargetBtn.textContent = '🎯=Built';
+            setTargetBtn.style.cssText = 'background:rgba(76,175,80,0.5);color:#a5d6a7;border:none;border-radius:6px;padding:6px 8px;font-size:10px;cursor:pointer;font-weight:bold;';
+            setTargetBtn.onclick = () => {
+                craftableItems.forEach(item => {
+                    if (tab6ColorFilter === 'all' || item.color == tab6ColorFilter) {
+                        craftTargets[`${item.type}_${item.id}`] = item.builtCount;
+                    }
+                });
+                saveCraftTargets();
+                renderRows();
+            };
+
+            const bulkTargetInput = document.createElement('input');
+            bulkTargetInput.type = 'text';
+            bulkTargetInput.inputMode = 'numeric';
+            bulkTargetInput.placeholder = '#';
+            bulkTargetInput.style.cssText = 'width:36px;background:rgba(0,0,0,0.5);color:#ffd700;border:1px solid rgba(76,175,80,0.5);border-radius:4px;padding:4px;font-size:10px;text-align:center;';
+
+            const bulkTargetBtn = document.createElement('button');
+            bulkTargetBtn.textContent = '🎯 All';
+            bulkTargetBtn.style.cssText = 'background:rgba(76,175,80,0.5);color:#a5d6a7;border:none;border-radius:6px;padding:6px 8px;font-size:10px;cursor:pointer;font-weight:bold;';
+            bulkTargetBtn.onclick = () => {
+                const val = parseInt(bulkTargetInput.value) || 0;
+                craftableItems.forEach(item => {
+                    if (tab6ColorFilter === 'all' || item.color == tab6ColorFilter) {
+                        craftTargets[`${item.type}_${item.id}`] = val;
+                    }
+                });
+                saveCraftTargets();
+                renderRows();
+            };
+
+            // Color filter
+            const colorSelect = document.createElement('select');
+            colorSelect.style.cssText = 'background:#1a0f08;color:#ffd700;border:1px solid #8b6914;border-radius:4px;padding:4px;font-size:10px;';
+            colorSelect.innerHTML = `
+                <option value="all" ${tab6ColorFilter==='all'?'selected':''}>All</option>
+                <option value="1" ${tab6ColorFilter==='1'?'selected':''}>⬜</option>
+                <option value="2" ${tab6ColorFilter==='2'?'selected':''}>🟩</option>
+                <option value="3" ${tab6ColorFilter==='3'?'selected':''}>🟦</option>
+                <option value="4" ${tab6ColorFilter==='4'?'selected':''}>🟪</option>
+                <option value="5" ${tab6ColorFilter==='5'?'selected':''}>🟧</option>
+                <option value="6" ${tab6ColorFilter==='6'?'selected':''}>🟥</option>
+            `;
+            colorSelect.onchange = () => {
+                tab6ColorFilter = colorSelect.value;
+                localStorage.setItem('hwh_craft_color_filter', tab6ColorFilter);
+                renderRows();
+            };
+
+            const refreshBtn = document.createElement('button');
+            refreshBtn.textContent = '🔄';
+            refreshBtn.style.cssText = 'background:rgba(139,105,20,0.5);color:#ffd700;border:none;border-radius:6px;padding:6px 10px;font-size:11px;cursor:pointer;font-weight:bold;';
+            refreshBtn.onclick = async () => {
+                refreshBtn.textContent = '⏳';
+                const resp = await Send(JSON.stringify({calls:[{name:'inventoryGet',args:{},ident:'inv'}]}));
+                const freshInv = resp?.results?.[0]?.result?.response;
+                if (freshInv) {
+                    inventoryData.fragmentGear = freshInv.fragmentGear || {};
+                    inventoryData.fragmentScroll = freshInv.fragmentScroll || {};
+                    inventoryData.gear = freshInv.gear || {};
+                    inventoryData.scroll = freshInv.scroll || {};
+                }
+                refreshBtn.textContent = '🔄';
+                renderTab6();
+            };
+
+
+
+            // Hero needs button (insert your full heroNeedsBtn code here)
+            const heroNeedsBtn = document.createElement('button');
+            heroNeedsBtn.textContent = '🎯 Hero';
+            heroNeedsBtn.style.cssText = 'background:rgba(255,152,0,0.5);color:#ffe0b2;border:none;border-radius:6px;padding:6px 8px;font-size:10px;cursor:pointer;font-weight:bold;';
+            heroNeedsBtn.title = 'Set targets from hero gear needs';
+            heroNeedsBtn.onclick = async () => {
+                heroNeedsBtn.textContent = '⏳';
+                const heroExcluded = JSON.parse(localStorage.getItem('hwh_hero_excluded') || '[]');
+
+                try {
+                    const resp = await Send(JSON.stringify({calls:[{name:'heroGetAll',args:{},ident:'h'}]}));
+                    const userHeroes = resp.results[0].result.response;
+
+                    // Build gearToScrollMap
+                    const gearToScrollMap = {};
+                    Object.entries(lib.data.inventoryItem.scroll).forEach(([scrollId, s]) => {
+                        const scrollName = window.identifyItem?.(scrollId, 'scroll');
+                        if (scrollName?.endsWith(' - Recipe')) {
+                            const gearName = scrollName.replace(' - Recipe', '');
+                            Object.entries(lib.data.inventoryItem.gear).forEach(([gearId, g]) => {
+                                if (window.identifyItem?.(gearId, 'gear') === gearName) {
+                                    gearToScrollMap[gearId] = scrollId;
+                                }
+                            });
+                        }
+                    });
+
+                    const resolveRecipe = (type, id, qty = 1, result = {gear: {}, scroll: {}}) => {
+                        const item = lib.data.inventoryItem[type]?.[id];
+                        if (!item) return result;
+                        if (item.craftRecipe) {
+                            if (item.craftRecipe.gear) {
+                                Object.entries(item.craftRecipe.gear).forEach(([gid, gqty]) => {
+                                    resolveRecipe('gear', gid, qty * gqty, result);
+                                });
+                            }
+                            if (item.craftRecipe.scroll) {
+                                Object.entries(item.craftRecipe.scroll).forEach(([sid, sqty]) => {
+                                    resolveRecipe('scroll', sid, qty * sqty, result);
+                                });
+                            }
+                            if (type === 'gear' && gearToScrollMap[id]) {
+                                resolveRecipe('scroll', gearToScrollMap[id], qty, result);
+                            }
+                        } else if (item.fragmentMergeCost) {
+                            result[type][id] = (result[type][id] || 0) + qty;
+                        }
+                        return result;
+                    };
+
+                    // Calculate max any single hero needs (for buffer)
+                    const maxAnyHero = {gear: {}, scroll: {}};
+                    Object.entries(lib.data.hero).forEach(([heroId, hd]) => {
+                        if (parseInt(heroId) >= 150 || !hd?.color) return;
+                        const heroNeeds = {gear: {}, scroll: {}};
+                        for (let c = 1; c <= 18; c++) {
+                            (hd.color[c]?.items || []).forEach(gearId => {
+                                resolveRecipe('gear', String(gearId), 1, heroNeeds);
+                            });
+                        }
+                        ['gear', 'scroll'].forEach(type => {
+                            Object.entries(heroNeeds[type]).forEach(([id, qty]) => {
+                                maxAnyHero[type][id] = Math.max(maxAnyHero[type][id] || 0, qty);
+                            });
+                        });
+                    });
+
+                    // Build hero list (ALL heroes id < 150)
+                    const heroList = [];
+                    Object.entries(lib.data.hero).forEach(([id, hd]) => {
+                        if (parseInt(id) >= 150) return;
+                        const userHero = userHeroes[id];
+                        const currentColor = userHero?.color || 0;
+                        const owned = !!userHero;
+                        const maxed = currentColor >= 18;
+                        heroList.push({ id, name: window.identifyItem(id, 'hero'), owned, currentColor, maxed, colorsRemaining: 18 - currentColor });
+                    });
+                    heroList.sort((a, b) => {
+                        if (a.maxed !== b.maxed) return a.maxed ? 1 : -1;
+                        if (a.owned !== b.owned) return a.owned ? -1 : 1;
+                        return b.colorsRemaining - a.colorsRemaining;
+                    });
+
+                    // Create modal
+                    const modal = document.createElement('div');
+                    modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);z-index:999999999;display:flex;align-items:center;justify-content:center;';
+
+                    const box = document.createElement('div');
+                    box.style.cssText = 'background:#1a1a2e;border:2px solid #8b6914;border-radius:10px;padding:12px;max-width:440px;max-height:80vh;display:flex;flex-direction:column;';
+
+                    box.innerHTML = `
+                        <div style="color:#ffd700;font-size:14px;font-weight:bold;margin-bottom:8px;">🎯 Select Heroes to Include</div>
+                        <div style="display:flex;gap:4px;margin-bottom:8px;flex-wrap:wrap;">
+                            <button id="hm_selAll" style="background:#4caf50;color:white;border:none;border-radius:4px;padding:4px 8px;cursor:pointer;font-size:10px;">✓ All</button>
+                            <button id="hm_selOwned" style="background:#2196f3;color:white;border:none;border-radius:4px;padding:4px 8px;cursor:pointer;font-size:10px;">✓ Owned</button>
+                            <button id="hm_selNone" style="background:#666;color:white;border:none;border-radius:4px;padding:4px 8px;cursor:pointer;font-size:10px;">✗ None</button>
+                            <button id="hm_selUnowned" style="background:#ff9800;color:white;border:none;border-radius:4px;padding:4px 8px;cursor:pointer;font-size:10px;">✓ Unowned</button>
+                            <button id="hm_selUnmaxed" style="background:#9c27b0;color:white;border:none;border-radius:4px;padding:4px 8px;cursor:pointer;font-size:10px;">✓ Unmaxed</button>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:6px;padding:6px;background:rgba(76,175,80,0.2);border-radius:4px;margin-bottom:6px;">
+                            <span style="color:#a5d6a7;font-size:11px;">🛡️ Buffer for</span>
+                            <input type="number" id="hm_buffer" value="2" min="0" max="10" style="width:32px;background:rgba(0,0,0,0.5);color:#ffd700;border:1px solid rgba(76,175,80,0.5);border-radius:3px;padding:2px;font-size:11px;text-align:center;">
+                            <span style="color:#a5d6a7;font-size:11px;">future hero(s)</span>
+                        </div>
+                        <div id="hm_list" style="overflow-y:auto;flex:1;margin-bottom:8px;max-height:350px;">
+                            ${heroList.map(h => `
+                                <div style="display:flex;align-items:center;gap:6px;padding:4px 6px;border-bottom:1px solid rgba(139,105,20,0.2);${h.maxed ? 'opacity:0.5;' : ''}${!h.owned ? 'opacity:0.7;' : ''}">
+                                    <input type="checkbox" class="hm_cb" data-id="${h.id}" data-owned="${h.owned}" data-maxed="${h.maxed}" ${!h.maxed && !heroExcluded.includes(h.id) ? 'checked' : ''} style="cursor:pointer;width:14px;height:14px;">                                    <span style="color:${h.maxed ? '#666' : (h.owned ? '#4ae29a' : '#ff9800')};font-size:10px;width:14px;">${h.maxed ? '★' : (h.owned ? '✓' : '?')}</span>
+                                    <span class="hm_name" data-id="${h.id}" style="color:#ffd700;flex:1;cursor:pointer;font-size:11px;text-decoration:underline dotted;" title="Click for details">${h.name}</span>
+                                    <span style="color:#999;font-size:10px;">${h.maxed ? 'MAX' : `C${h.currentColor}→18`}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div style="color:#999;font-size:10px;margin-bottom:6px;">Selected: <span id="hm_count">${heroList.filter(h=>!h.maxed && !heroExcluded.includes(h.id)).length}</span> / ${heroList.length}</div>
+                        <div style="display:flex;gap:6px;">
+                            <button id="hm_calc" style="flex:1;background:#4caf50;color:white;border:none;border-radius:4px;padding:8px;cursor:pointer;font-weight:bold;font-size:12px;">🎯 Calculate Targets</button>
+                            <button id="hm_cancel" style="background:#666;color:white;border:none;border-radius:4px;padding:8px 12px;cursor:pointer;font-size:12px;">Cancel</button>
+                        </div>
+                    `;
+
+                    modal.appendChild(box);
+                    document.body.appendChild(modal);
+
+                    const updateCount = () => {
+                        box.querySelector('#hm_count').textContent = box.querySelectorAll('.hm_cb:checked').length;
+                    };
+                    box.querySelectorAll('.hm_cb').forEach(cb => cb.onchange = updateCount);
+
+                    box.querySelector('#hm_selAll').onclick = () => { box.querySelectorAll('.hm_cb').forEach(cb => cb.checked = true); updateCount(); };
+                    box.querySelector('#hm_selOwned').onclick = () => { box.querySelectorAll('.hm_cb').forEach(cb => cb.checked = cb.dataset.owned === 'true'); updateCount(); };
+                    box.querySelector('#hm_selNone').onclick = () => { box.querySelectorAll('.hm_cb').forEach(cb => cb.checked = false); updateCount(); };
+                    box.querySelector('#hm_selUnowned').onclick = () => { box.querySelectorAll('.hm_cb').forEach(cb => cb.checked = cb.dataset.owned === 'false'); updateCount(); };
+                    box.querySelector('#hm_selUnmaxed').onclick = () => { box.querySelectorAll('.hm_cb').forEach(cb => cb.checked = cb.dataset.maxed === 'false'); updateCount(); };
+                    box.querySelector('#hm_cancel').onclick = () => {
+                        const uncheckedIds = [...box.querySelectorAll('.hm_cb:not(:checked)')]
+                        .filter(cb => cb.dataset.maxed === 'false')
+                        .map(cb => cb.dataset.id);
+                        saveHeroExcluded(uncheckedIds);
+                        modal.remove();
+                    };
+
+                    // Hero name click - show requirements in separate popup
+                    box.querySelectorAll('.hm_name').forEach(el => {
+                        el.onclick = (e) => {
+                            e.stopPropagation();
+                            const heroId = el.dataset.id;
+                            const hd = lib.data.hero[heroId];
+                            const userHero = userHeroes[heroId];
+                            const currentColor = userHero?.color || 0;
+                            const heroName = window.identifyItem(heroId, 'hero');
+
+                            const heroNeeds = {gear: {}, scroll: {}};
+                            let colorBreakdown = [];
+
+                            for (let c = 1; c <= 18; c++) {
+                                const items = hd.color?.[c]?.items || [];
+                                if (items.length) {
+                                    const isPast = c <= currentColor;
+                                    colorBreakdown.push(`<div style="color:${isPast ? '#666' : '#ffd700'};${isPast ? 'text-decoration:line-through;' : ''}font-size:10px;">C${c}: ${items.map(g => window.identifyItem(String(g), 'gear')).join(', ')}</div>`);
+                                    if (!isPast) {
+                                        items.forEach(gearId => resolveRecipe('gear', String(gearId), 1, heroNeeds));
+                                    }
+                                }
+                            }
+
+                            const gearList = Object.entries(heroNeeds.gear).sort((a,b) => b[1] - a[1]).map(([id, qty]) => `${window.identifyItem(id, 'gear')}: ${qty}`);
+                            const scrollList = Object.entries(heroNeeds.scroll).sort((a,b) => b[1] - a[1]).map(([id, qty]) => `${window.identifyItem(id, 'scroll')}: ${qty}`);
+
+                            document.querySelector('#hm_detail')?.remove();
+
+                            const detailPopup = document.createElement('div');
+                            detailPopup.id = 'hm_detail';
+                            detailPopup.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#252540;border:2px solid #ffd700;border-radius:8px;padding:12px;width:480px;max-width:90vw;max-height:70vh;overflow-y:auto;z-index:9999999999;box-shadow:0 4px 20px rgba(0,0,0,0.5);';
+
+                            detailPopup.innerHTML = `
+                                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                                    <span style="color:#ffd700;font-weight:bold;font-size:13px;">${heroName} (C${currentColor}→18)</span>
+                                    <button id="hm_closeDetail" style="background:none;border:none;color:#999;cursor:pointer;font-size:16px;">✕</button>
+                                </div>
+                                <details style="margin-bottom:8px;">
+                                    <summary style="color:#a5d6a7;cursor:pointer;font-size:11px;">Color Breakdown</summary>
+                                    <div style="padding-left:12px;color:#ccc;max-height:150px;overflow-y:auto;">${colorBreakdown.join('')}</div>
+                                </details>
+                                <details open style="margin-bottom:8px;">
+                                    <summary style="color:#a5d6a7;cursor:pointer;font-size:11px;">Base Gear (${gearList.length})</summary>
+                                    <div style="padding-left:12px;color:#ccc;font-size:10px;max-height:120px;overflow-y:auto;">${gearList.join('<br>') || 'None'}</div>
+                                </details>
+                                <details open style="margin-bottom:8px;">
+                                    <summary style="color:#a5d6a7;cursor:pointer;font-size:11px;">Recipe Scrolls (${scrollList.length})</summary>
+                                    <div style="padding-left:12px;color:#ccc;font-size:10px;max-height:120px;overflow-y:auto;">${scrollList.join('<br>') || 'None'}</div>
+                                </details>
+                                <button id="hm_copy" style="background:#666;color:white;border:none;border-radius:4px;padding:6px 10px;font-size:10px;cursor:pointer;">📋 Copy to Clipboard</button>
+                            `;
+
+                            document.body.appendChild(detailPopup);
+
+                            detailPopup.querySelector('#hm_closeDetail').onclick = () => detailPopup.remove();
+
+                            detailPopup.querySelector('#hm_copy').onclick = () => {
+                                const text = `=== ${heroName} (C${currentColor}→18) ===\n\nBase Gear:\n${gearList.join('\n')}\n\nRecipe Scrolls:\n${scrollList.join('\n')}`;
+                                navigator.clipboard.writeText(text);
+                                alert('Copied!');
+                            };
+                        };
+                    });
+                    box.querySelector('#hm_calc').onclick = () => {
+                        document.querySelector('#hm_detail')?.remove();
+                        const selectedIds = new Set([...box.querySelectorAll('.hm_cb:checked')].map(cb => cb.dataset.id));
+                        // Save unchecked heroes (exclude maxed since they're always unchecked)
+                        const uncheckedIds = [...box.querySelectorAll('.hm_cb:not(:checked)')]
+                        .filter(cb => cb.dataset.maxed === 'false')
+                        .map(cb => cb.dataset.id);
+                        saveHeroExcluded(uncheckedIds);
+                        const bufferMultiplier = parseInt(box.querySelector('#hm_buffer')?.value) || 0;
+                        modal.remove();
+
+                        // Calculate per-hero needs for report
+                        const perHeroNeeds = [];
+                        const totalBase = {gear: {}, scroll: {}};
+
+                        selectedIds.forEach(heroId => {
+                            const hd = lib.data.hero[heroId];
+                            if (!hd?.color) return;
+                            const userHero = userHeroes[heroId];
+                            const currentColor = userHero?.color || 0;
+                            const heroName = window.identifyItem(heroId, 'hero');
+                            const heroNeeds = {gear: {}, scroll: {}};
+
+                            for (let c = currentColor + 1; c <= 18; c++) {
+                                (hd.color[c]?.items || []).forEach(gearId => {
+                                    resolveRecipe('gear', String(gearId), 1, heroNeeds);
+                                });
+                            }
+
+                            // Add to total
+                            ['gear', 'scroll'].forEach(type => {
+                                Object.entries(heroNeeds[type]).forEach(([id, qty]) => {
+                                    totalBase[type][id] = (totalBase[type][id] || 0) + qty;
+                                });
+                            });
+
+                            if (Object.keys(heroNeeds.gear).length || Object.keys(heroNeeds.scroll).length) {
+                                perHeroNeeds.push({ heroId, heroName, currentColor, heroNeeds });
+                            }
+                        });
+
+                        // Reset all craftable items to 0
+                        ['gear', 'scroll'].forEach(type => {
+                            Object.keys(lib.data.inventoryItem[type] || {}).forEach(id => {
+                                if (lib.data.inventoryItem[type][id]?.fragmentMergeCost) {
+                                    craftTargets[`${type}_${id}`] = 0;
+                                }
+                            });
+                        });
+
+                        // Set targets from selected heroes
+                        ['gear', 'scroll'].forEach(type => {
+                            Object.entries(totalBase[type]).forEach(([id, qty]) => {
+                                craftTargets[`${type}_${id}`] = qty;
+                            });
+                        });
+
+                        // Calculate buffer additions
+                        const bufferAdded = {gear: {}, scroll: {}};
+                        if (bufferMultiplier > 0) {
+                            ['gear', 'scroll'].forEach(type => {
+                                Object.entries(maxAnyHero[type]).forEach(([id, qty]) => {
+                                    const key = `${type}_${id}`;
+                                    const floor = qty * bufferMultiplier;
+                                    const current = craftTargets[key] || 0;
+                                    if (floor > current) {
+                                        bufferAdded[type][id] = floor - current;
+                                        craftTargets[key] = floor;
+                                    }
+                                });
+                            });
+                        }
+
+                        saveCraftTargets();
+
+                        // Build summary report
+                        let report = [];
+                        report.push('═══════════════════════════════════════');
+                        report.push('🎯 HERO GEAR TARGET CALCULATION');
+                        report.push('═══════════════════════════════════════');
+                        report.push(`Selected: ${selectedIds.size} heroes | Buffer: ${bufferMultiplier}x`);
+                        report.push('');
+
+                        // Per-hero breakdown
+                        report.push('───────────────────────────────────────');
+                        report.push('📋 PER-HERO NEEDS');
+                        report.push('───────────────────────────────────────');
+                        perHeroNeeds.forEach(h => {
+                            report.push(`\n${h.heroName} (C${h.currentColor}→18):`);
+                            const gearItems = Object.entries(h.heroNeeds.gear).sort((a,b) => b[1] - a[1]);
+                            const scrollItems = Object.entries(h.heroNeeds.scroll).sort((a,b) => b[1] - a[1]);
+                            if (gearItems.length) {
+                                report.push('  Gear: ' + gearItems.map(([id, qty]) => `${window.identifyItem(id, 'gear')}×${qty}`).join(', '));
+                            }
+                            if (scrollItems.length) {
+                                report.push('  Scrolls: ' + scrollItems.map(([id, qty]) => `${window.identifyItem(id, 'scroll')}×${qty}`).join(', '));
+                            }
+                        });
+
+                        // Buffer additions
+                        if (bufferMultiplier > 0 && (Object.keys(bufferAdded.gear).length || Object.keys(bufferAdded.scroll).length)) {
+                            report.push('');
+                            report.push('───────────────────────────────────────');
+                            report.push(`🛡️ BUFFER ADDITIONS (${bufferMultiplier}x max single hero)`);
+                            report.push('───────────────────────────────────────');
+                            const bufferGear = Object.entries(bufferAdded.gear).sort((a,b) => b[1] - a[1]);
+                            const bufferScroll = Object.entries(bufferAdded.scroll).sort((a,b) => b[1] - a[1]);
+                            if (bufferGear.length) {
+                                report.push('Gear: ' + bufferGear.map(([id, qty]) => `${window.identifyItem(id, 'gear')}+${qty}`).join(', '));
+                            }
+                            if (bufferScroll.length) {
+                                report.push('Scrolls: ' + bufferScroll.map(([id, qty]) => `${window.identifyItem(id, 'scroll')}+${qty}`).join(', '));
+                            }
+                        }
+
+                        // Final totals
+                        report.push('');
+                        report.push('───────────────────────────────────────');
+                        report.push('📊 FINAL TARGETS');
+                        report.push('───────────────────────────────────────');
+
+                        const finalGear = Object.entries(craftTargets)
+                        .filter(([k, v]) => k.startsWith('gear_') && v > 0)
+                        .map(([k, v]) => [k.replace('gear_', ''), v])
+                        .sort((a, b) => b[1] - a[1]);
+                        const finalScroll = Object.entries(craftTargets)
+                        .filter(([k, v]) => k.startsWith('scroll_') && v > 0)
+                        .map(([k, v]) => [k.replace('scroll_', ''), v])
+                        .sort((a, b) => b[1] - a[1]);
+
+                        report.push(`\nBase Gear (${finalGear.length} items):`);
+                        finalGear.forEach(([id, qty]) => report.push(`  ${window.identifyItem(id, 'gear')}: ${qty}`));
+
+                        report.push(`\nRecipe Scrolls (${finalScroll.length} items):`);
+                        finalScroll.forEach(([id, qty]) => report.push(`  ${window.identifyItem(id, 'scroll')}: ${qty}`));
+
+                        report.push('');
+                        report.push('═══════════════════════════════════════');
+
+                        const reportText = report.join('\n');
+                        navigator.clipboard.writeText(reportText);
+
+                        console.log(`🎯 Targets set for ${selectedIds.size} heroes (buffer: ${bufferMultiplier}x). Gear: ${finalGear.length}, Scrolls: ${finalScroll.length}`);
+                        console.log('📋 Summary copied to clipboard!');
+                        renderTab6();
+                    };
+
+                } catch (e) {
+                    console.error('Hero needs calc failed:', e);
+                }
+                heroNeedsBtn.textContent = '🎯 Hero';
+            };
+
+
+            actionRow.append(craftAllBtn, sellExcessBtn, setTargetBtn, bulkTargetInput, bulkTargetBtn, heroNeedsBtn, colorSelect, refreshBtn);
+
+            // Grid header with sortable columns
+            const gridHeader = document.createElement('div');
+            gridHeader.style.cssText = 'display:grid;grid-template-columns:50px 28px 1fr 50px 75px 45px 55px 36px;gap:4px;padding:8px 10px;background:rgba(76,175,80,0.3);border-radius:6px;font-weight:bold;margin-bottom:6px;font-size:10px;color:#a5d6a7;';
+
+            const headers = [
+                { col: 'type', label: 'Type', align: 'center' },
+                { col: 'color', label: 'Clr', align: 'center' },
+                { col: 'name', label: 'Name', align: 'left' },
+                { col: 'built', label: 'Built', align: 'center' },
+                { col: 'frags', label: 'Frags', align: 'center' },
+                { col: 'canMake', label: 'Can', align: 'center' },
+                { col: 'target', label: 'Target', align: 'center' },
+                { col: null, label: '', align: 'center' }
+            ];
+
+            headers.forEach(h => {
+                const div = document.createElement('div');
+                div.style.cssText = `text-align:${h.align};${h.col ? 'cursor:pointer;user-select:none;' : ''}`;
+                div.textContent = h.label + (h.col === sortCol ? (sortDir === 'asc' ? ' ▲' : ' ▼') : '');
+                if (h.col) {
+                    div.onclick = () => {
+                        if (sortCol === h.col) {
+                            sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+                        } else {
+                            sortCol = h.col;
+                            sortDir = 'desc';
+                        }
+                        localStorage.setItem('hwh_craft_sort_col', sortCol);
+                        localStorage.setItem('hwh_craft_sort_dir', sortDir);
+                        // Update header indicators
+                        [...gridHeader.children].forEach((c, i) => {
+                            if (headers[i].col) {
+                                c.textContent = headers[i].label + (headers[i].col === sortCol ? (sortDir === 'asc' ? ' ▲' : ' ▼') : '');
+                            }
+                        });
+                        renderRows();
+                    };
+                }
+                gridHeader.appendChild(div);
+            });
+
+            // Scroll container with virtual scrolling
+            const scrollBox = document.createElement('div');
+            scrollBox.style.cssText = 'overflow-y:auto;flex:1;';
+
+            // Virtual scrolling setup
+            const ROW_HEIGHT = 32;
+            const BUFFER = 8;
+            let filteredItems = [];
+            let lastStart = -1;
+            let lastEnd = -1;
+
+            const virtualContainer = document.createElement('div');
+            virtualContainer.style.cssText = 'position:relative;';
+            scrollBox.appendChild(virtualContainer);
+
+            // Footer
+            const footerEl = document.createElement('div');
+            footerEl.style.cssText = 'padding-top:8px;font-size:11px;color:#999;';
+
+            const colorMap = {1:'⬜',2:'🟩',3:'🟦',4:'🟪',5:'🟧',6:'🟥'};
+
+            const applyFilters = () => {
+                let items = craftableItems;
+                if (tab6ColorFilter !== 'all') {
+                    items = items.filter(i => i.color == tab6ColorFilter);
+                }
+                items = doFilter(items);
+                items = doSort(items);
+                filteredItems = items;
+                virtualContainer.style.height = `${filteredItems.length * ROW_HEIGHT}px`;
+                lastStart = -1;
+                lastEnd = -1;
+            };
+
+            let cachedViewHeight = null;
+
+            const renderVisibleRows = () => {
+                if (document.hidden) return;
+
+                const scrollTop = scrollBox.scrollTop;
+                if (!cachedViewHeight) cachedViewHeight = scrollBox.clientHeight;
+                const viewHeight = cachedViewHeight;
+                const start = Math.max(0, Math.floor(scrollTop / ROW_HEIGHT) - BUFFER);
+                const end = Math.min(filteredItems.length, Math.ceil((scrollTop + viewHeight) / ROW_HEIGHT) + BUFFER);
+
+                if (start === lastStart && end === lastEnd) return;
+                lastStart = start;
+                lastEnd = end;
+
+                virtualContainer.innerHTML = '';
+
+                for (let i = start; i < end; i++) {
+                    const item = filteredItems[i];
+                    const k = `${item.type}_${item.id}`;
+                    const defaultTarget = item.isIngredient ? Math.max(item.builtCount, 50) : item.builtCount;
+                    const target = craftTargets[k] ?? defaultTarget;
+                    const needToCraft = Math.max(0, target - item.builtCount);
+                    const willCraft = Math.min(item.canMake, needToCraft);
+
+                    const typeIcon = item.type === 'gear' ? '⚙️' : '📜';
+                    const typeColor = item.type === 'gear' ? '#607d8b' : '#9c27b0';
+                    const ingredientFlag = item.isIngredient ? '<span title="Used in recipes" style="color:#ff9800">⚠️</span>' : '';
+                    const fragColor = item.canMake > 0 ? '#4ae29a' : (item.fragCount > 0 ? '#ffd700' : '#666');
+                    const targetColor = willCraft > 0 ? '#4ae29a' : '#999';
+
+                    const row = document.createElement('div');
+                    row.style.cssText = `position:absolute;top:${i * ROW_HEIGHT}px;left:0;right:0;height:${ROW_HEIGHT}px;display:grid;grid-template-columns:50px 28px 1fr 50px 75px 45px 55px 36px;gap:4px;padding:4px 10px;align-items:center;font-size:11px;border-bottom:1px solid rgba(139,105,20,0.2);box-sizing:border-box;`;
+
+                    row.innerHTML = `
+                        <div style="text-align:center;color:${typeColor};font-weight:bold">${typeIcon}${ingredientFlag}</div>
+                        <div style="text-align:center;font-size:9px">${colorMap[item.color]||'⚫'}</div>
+                        <div class="twk-gold" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="ID:${item.id}">${item.name}</div>
+                        <div style="text-align:center;font-weight:bold;color:#4ae29a">${item.builtCount}</div>
+                        <div style="text-align:center;font-family:monospace;color:${fragColor};font-size:10px">${item.fragCount}/${item.needed}</div>
+                        <div style="text-align:center;font-weight:bold;color:${item.canMake > 0 ? '#4ae29a' : '#666'}">${item.canMake}</div>
+                        <div style="text-align:center"><input type="text" inputmode="numeric" value="${target}" style="width:44px;background:rgba(0,0,0,0.5);color:${targetColor};border:1px solid rgba(76,175,80,0.5);border-radius:4px;padding:2px;font-size:10px;text-align:center;-moz-appearance:textfield;"></div>
+                        <div style="text-align:center">${item.canMake > 0 ? `<button style="background:#4caf50;color:white;border:none;border-radius:4px;padding:2px 5px;font-size:10px;cursor:pointer" title="Craft ${willCraft > 0 ? willCraft : item.canMake}">🔨</button>` : ''}</div>
+                    `;
+
+                    const targetInput = row.querySelector('input');
+                    targetInput.onchange = () => {
+                        craftTargets[k] = Math.max(0, parseInt(targetInput.value) || 0);
+                        saveCraftTargets();
+                        const newTarget = craftTargets[k];
+                        const newNeedToCraft = Math.max(0, newTarget - item.builtCount);
+                        const newWillCraft = Math.min(item.canMake, newNeedToCraft);
+                        targetInput.style.color = newWillCraft > 0 ? '#4ae29a' : '#999';
+                    };
+
+                    const craftBtn = row.querySelector('button');
+                    if (craftBtn) {
+                        craftBtn.onclick = async () => {
+                            const amt = willCraft > 0 ? willCraft : item.canMake;
+                            if (amt > 0) {
+                                craftBtn.textContent = '⏳';
+                                try {
+                                    await Send(JSON.stringify({calls:[{name:'inventoryCraftFragments',args:{type:item.type,libId:parseInt(item.id),amount:amt},ident:'craft'}]}));
+                                    item.fragCount -= amt * item.needed;
+                                    item.builtCount += amt;
+                                    item.canMake = Math.floor(item.fragCount / item.needed);
+                                    inventoryData[`fragment${item.type.charAt(0).toUpperCase() + item.type.slice(1)}`][item.id] = item.fragCount;
+                                    inventoryData[item.type][item.id] = item.builtCount;
+                                } catch (e) { console.error('Craft failed:', e); }
+                                renderRows();
+                            }
+                        };
+                    }
+
+                    virtualContainer.appendChild(row);
+                }
+
+                // Update footer
+                const totalCanMake = filteredItems.reduce((sum, i) => sum + i.canMake, 0);
+                const ingredientCount = filteredItems.filter(i => i.isIngredient).length;
+                footerEl.textContent = `${filteredItems.length}/${craftableItems.length} items (${ingredientCount} ⚠️) • ${totalCanMake.toLocaleString()} craftable`;
+            };
+
+            const renderRows = () => {
+                applyFilters();
+                renderVisibleRows();
+            };
+
+            // Scroll event for virtual rendering
+            let scrollTimeout;
+            scrollBox.addEventListener('scroll', () => {
+                if (scrollTimeout) cancelAnimationFrame(scrollTimeout);
+                scrollTimeout = requestAnimationFrame(renderVisibleRows);
+            }, { passive: true });
+
+            // Reset cached height on resize
+            window.addEventListener('resize', () => { cachedViewHeight = null; }, { passive: true });
+
+            tab6Content.append(searchInput, actionRow, gridHeader, scrollBox, footerEl);
+            contentContainer.appendChild(tab6Content);
+
+            renderRows();
+        };
+
+        // Craft all items to their targets
+        const craftAllToTarget = async () => {
+            const fragData = { gear: {...(inventoryData.fragmentGear || {})}, scroll: {...(inventoryData.fragmentScroll || {})} };
+            const builtData = { gear: {...(inventoryData.gear || {})}, scroll: {...(inventoryData.scroll || {})} };
+            const usedInRecipes = getUsedInRecipes();
+
+            const toCraft = [];
+            ['gear', 'scroll'].forEach(type => {
+                Object.keys(fragData[type]).forEach(id => {
+                    const mergeCost = lib.data?.inventoryItem?.[type]?.[id]?.fragmentMergeCost;
+                    if (mergeCost?.fragmentCount) {
+                        const k = `${type}_${id}`;
+                        const fragCount = fragData[type][id] || 0;
+                        const builtCount = builtData[type][id] || 0;
+                        const needed = mergeCost.fragmentCount;
+                        const canMake = Math.floor(fragCount / needed);
+                        const isIngredient = usedInRecipes.has(k);
+                        const defaultTarget = isIngredient ? Math.max(builtCount, 50) : builtCount;
+                        const target = craftTargets[k] ?? defaultTarget;
+                        const needToCraft = Math.max(0, Math.min(canMake, target - builtCount));
+                        if (needToCraft > 0) {
+                            toCraft.push({ type, id: parseInt(id), amount: needToCraft, needed });
+                        }
+                    }
+                });
+            });
+
+            if (toCraft.length === 0) { console.log('Nothing to craft'); return; }
+
+            console.log(`Crafting ${toCraft.length} items...`);
+            for (const item of toCraft) {
+                try {
+                    await Send(JSON.stringify({calls:[{name:'inventoryCraftFragments',args:{type:item.type,libId:item.id,amount:item.amount},ident:'craft'}]}));
+                    fragData[item.type][item.id] = (fragData[item.type][item.id] || 0) - (item.amount * item.needed);
+                    builtData[item.type][item.id] = (builtData[item.type][item.id] || 0) + item.amount;
+                    await new Promise(r => setTimeout(r, 100));
+                } catch (e) { console.error('Craft failed:', item, e); }
+            }
+
+            inventoryData.fragmentGear = fragData.gear;
+            inventoryData.fragmentScroll = fragData.scroll;
+            inventoryData.gear = builtData.gear;
+            inventoryData.scroll = builtData.scroll;
+            renderTab6();
+
+            const totalCrafted = toCraft.reduce((s, i) => s + i.amount, 0);
+            return { crafted: totalCrafted, types: toCraft.length };
+        };
+
+        const sellExcessFragments = async (doFrags = true, doItems = true) => {
+            const fragData = { gear: {...(inventoryData.fragmentGear || {})}, scroll: {...(inventoryData.fragmentScroll || {})} };
+            const builtData = { gear: {...(inventoryData.gear || {})}, scroll: {...(inventoryData.scroll || {})} };
+            let totalGold = 0;
+            const coinRewards = {};
+            const toSellFrags = [];
+            const toSellItems = [];
+
+            ['gear', 'scroll'].forEach(type => {
+                // Sell excess fragments
+                Object.keys(fragData[type]).forEach(id => {
+                    const mergeCost = lib.data?.inventoryItem?.[type]?.[id]?.fragmentMergeCost;
+                    if (mergeCost?.fragmentCount) {
+                        const k = `${type}_${id}`;
+                        const fragCount = fragData[type][id] || 0;
+                        const builtCount = builtData[type][id] || 0;
+                        const needed = mergeCost.fragmentCount;
+                        const target = craftTargets[k] ?? builtCount;
+                        const fragsNeededForTarget = Math.max(0, (target - builtCount) * needed);
+                        const excess = fragCount - fragsNeededForTarget;
+                        if (excess > 0) {
+                            toSellFrags.push({ type: `fragment${type.charAt(0).toUpperCase() + type.slice(1)}`, id: parseInt(id), amount: excess, name: window.identifyItem?.(id, type) || id });
+                        }
+                    }
+                });
+
+                // Sell excess built items
+                Object.keys(builtData[type]).forEach(id => {
+                    const k = `${type}_${id}`;
+                    const builtCount = builtData[type][id] || 0;
+                    const target = craftTargets[k];
+                    if (target !== undefined && builtCount > target) {
+                        const excess = builtCount - target;
+                        toSellItems.push({ type, id: parseInt(id), amount: excess, name: window.identifyItem?.(id, type) || id });
+                    }
+                });
+            });
+
+            if (toSellFrags.length === 0 && toSellItems.length === 0) {
+                console.log('No excess to sell');
+                return;
+            }
+
+            console.log(`Selling ${toSellFrags.length} frag types, ${toSellItems.length} item types...`);
+
+            // Sell fragments
+            for (const item of (doFrags ? toSellFrags : [])) {
+                try {
+                    const resp = await Send(JSON.stringify({calls:[{name:'inventorySell',args:{type:item.type,libId:item.id,amount:item.amount},ident:'sell'}]}));
+                    const r = resp?.results?.[0]?.result?.response;
+                    if (r?.gold) totalGold += r.gold;
+                    if (r?.coin) {
+                        Object.entries(r.coin).forEach(([coinId, amt]) => {
+                            coinRewards[coinId] = (coinRewards[coinId] || 0) + amt;
+                        });
+                    }
+                    console.log(`  Sold ${item.amount} ${item.name} frags`);
+                    const baseType = item.type.replace('fragment', '').toLowerCase();
+                    fragData[baseType][item.id] = (fragData[baseType][item.id] || 0) - item.amount;
+                    await new Promise(r => setTimeout(r, 100));
+                } catch (e) { console.error('Sell frag failed:', item, e); }
+            }
+
+
+            // Sell built items
+            for (const item of (doItems ? toSellItems : [])) {
+                try {
+                    const resp = await Send(JSON.stringify({calls:[{name:'inventorySell',args:{type:item.type,libId:item.id,amount:item.amount},ident:'sell'}]}));
+                    const r = resp?.results?.[0]?.result?.response;
+                    if (r?.gold) totalGold += r.gold;
+                    if (r?.coin) {
+                        Object.entries(r.coin).forEach(([coinId, amt]) => {
+                            coinRewards[coinId] = (coinRewards[coinId] || 0) + amt;
+                        });
+                    }
+                    console.log(`  Sold ${item.amount} ${item.name}`);
+                    builtData[item.type][item.id] = (builtData[item.type][item.id] || 0) - item.amount;
+                    await new Promise(r => setTimeout(r, 100));
+                } catch (e) { console.error('Sell item failed:', item, e); }
+            }
+
+            inventoryData.fragmentGear = fragData.gear;
+            inventoryData.fragmentScroll = fragData.scroll;
+            inventoryData.gear = builtData.gear;
+            inventoryData.scroll = builtData.scroll;
+            renderTab6();
+
+            return {
+                fragTypes: doFrags ? toSellFrags.length : 0,
+                itemTypes: doItems ? toSellItems.length : 0,
+                gold: totalGold,
+                coins: coinRewards
+            };
+        };
+
+
+        // ===== SELL FRAGMENTS NOW =====
+        const sellFragmentsNow = async () => {
+            const SendFunction = getSend();
+            if (!SendFunction) { alert('❌ Send function not available'); return; }
+
+            // Refresh inventory first
+            let freshInventory;
+            try {
+                const result = await SendFunction(JSON.stringify({ calls: [{ name: 'inventoryGet', args: {}, ident: 'inv' }] }));
+                freshInventory = result?.results?.[0]?.result?.response;
+            } catch (e) { alert('❌ Could not refresh inventory: ' + e.message); return; }
+            if (!freshInventory) { alert('❌ Could not get inventory data'); return; }
+
+            // Preview what will be sold
+            const preview = await executeFragmentSells(freshInventory, fragmentSellSettings, { includeGearScroll: true, dryRun: true });
+            if (!preview.hasWork) {
+                alert('ℹ️ No fragments to sell.\n\nMake sure you have:\n• Checked the "Sell" checkbox for items\n• Set a "Keep" amount lower than current quantity');
+                return;
+            }
+
+            // Confirm
+            const confirmMsg = `Sell ${preview.details.length} fragment type(s)?\n\n${preview.details.slice(0, 10).join('\n')}${preview.details.length > 10 ? `\n...and ${preview.details.length - 10} more` : ''}`;
+            if (!confirm(confirmMsg)) return;
+
+            // Execute
+            const result = await executeFragmentSells(freshInventory, fragmentSellSettings, { includeGearScroll: true });
+
+            // Refresh display
+            try {
+                const refreshResult = await SendFunction(JSON.stringify({ calls: [{ name: 'inventoryGet', args: {}, ident: 'inv' }] }));
+                const newInv = refreshResult?.results?.[0]?.result?.response;
+                if (newInv) {
+                    inventoryData.fragmentHero = newInv.fragmentHero || {};
+                    inventoryData.fragmentTitan = newInv.fragmentTitan || {};
+                    inventoryData.fragmentPet = newInv.fragmentPet || {};
+                    inventoryData.fragmentScroll = newInv.fragmentScroll || {};
+                    inventoryData.fragmentGear = newInv.fragmentGear || {};
+                    inventoryData.fragmentArtifact = newInv.fragmentArtifact || {};
+                    inventoryData.fragmentTitanArtifact = newInv.fragmentTitanArtifact || {};
+                }
+            } catch (e) { debugLog('Inventory refresh after sell failed:', e); }
+
+            fragmentMasterList = null;
+            renderTab5();
+
+            // Show results
+            let resultMsg = `✅ Sold fragments!`;
+            if (result.gold > 0) resultMsg += `\n🪙 Gold: +${result.gold.toLocaleString()}`;
+            Object.entries(result.coins).forEach(([coinId, amount]) => {
+                const coinName = window.identifyItem?.(coinId, 'coin') || `Coin #${coinId}`;
+                resultMsg += `\n💰 ${coinName}: +${amount.toLocaleString()}`;
+            });
+            alert(resultMsg);
+        };
+
         // ===== CUSTOM REWARD POPUP =====
         const showRewardSummary = (summaryText) => {
             // Create overlay for reward popup
@@ -3632,47 +5463,18 @@ ${eightCoinLines.join('\n')}`;
         };
 
         // Tab button handlers
-        tab1Btn.onclick = () => {
-            tab1Btn.style.background = '#ff9800';
-            tab1Btn.style.color = 'white';
-            tab2Btn.style.background = 'rgba(139, 105, 20, 0.3)';
-            tab2Btn.style.color = '#ddd';
-            tab3Btn.style.background = 'rgba(139, 105, 20, 0.3)';
-            tab3Btn.style.color = '#ddd';
-            renderTab1();
+        const resetTabStyles = () => {
+            [tab1Btn, tab2Btn, tab3Btn, tab4Btn, tab5Btn, tab6Btn].forEach(btn => {
+                btn.style.background = 'rgba(139, 105, 20, 0.3)';
+                btn.style.color = '#ddd';
+            });
         };
-
-        tab2Btn.onclick = () => {
-            tab1Btn.style.background = 'rgba(139, 105, 20, 0.3)';
-            tab1Btn.style.color = '#ddd';
-            tab2Btn.style.background = '#4a90e2';
-            tab2Btn.style.color = 'white';
-            tab3Btn.style.background = 'rgba(139, 105, 20, 0.3)';
-            tab3Btn.style.color = '#ddd';
-            renderTab2();
-        };
-
-        tab3Btn.onclick = () => {
-            tab1Btn.style.background = 'rgba(139, 105, 20, 0.3)';
-            tab1Btn.style.color = '#ddd';
-            tab2Btn.style.background = 'rgba(139, 105, 20, 0.3)';
-            tab2Btn.style.color = '#ddd';
-            tab3Btn.style.background = '#8b6914';
-            tab3Btn.style.color = 'white';
-            renderTab3();
-        };
-        tab4Btn.onclick = () => {
-            tab1Btn.style.background = 'rgba(139, 105, 20, 0.3)';
-            tab1Btn.style.color = '#ddd';
-            tab2Btn.style.background = 'rgba(139, 105, 20, 0.3)';
-            tab2Btn.style.color = '#ddd';
-            tab3Btn.style.background = 'rgba(139, 105, 20, 0.3)';
-            tab3Btn.style.color = '#ddd';
-            tab4Btn.style.background = '#8b6914';
-            tab4Btn.style.color = 'white';
-            renderTab4();
-        };
-
+        tab1Btn.onclick = () => { resetTabStyles(); tab1Btn.style.background = '#ff9800'; tab1Btn.style.color = 'white'; renderTab1(); };
+        tab2Btn.onclick = () => { resetTabStyles(); tab2Btn.style.background = '#4a90e2'; tab2Btn.style.color = 'white'; renderTab2(); };
+        tab3Btn.onclick = () => { resetTabStyles(); tab3Btn.style.background = '#8b6914'; tab3Btn.style.color = 'white'; renderTab3(); };
+        tab4Btn.onclick = () => { resetTabStyles(); tab4Btn.style.background = '#8b6914'; tab4Btn.style.color = 'white'; renderTab4(); };
+        tab5Btn.onclick = () => { resetTabStyles(); tab5Btn.style.background = '#9c27b0'; tab5Btn.style.color = 'white'; renderTab5(); };
+        tab6Btn.onclick = () => { resetTabStyles(); tab6Btn.style.background = '#4caf50'; tab6Btn.style.color = 'white'; renderTab6(); };
         // Build popup
         popup.appendChild(header);
         popup.appendChild(tabContainer);
@@ -3687,6 +5489,753 @@ ${eightCoinLines.join('\n')}`;
         debugLog(`✅ Inventory Manager opened`);
     };
 
+    // ============================================================================
+    // 🎯 FRAGMENT HUNTER v4
+    // ============================================================================
+    // 1. Paste this code into Tweaker (after showInventoryManager function)
+    // 2. Add to custom buttons section (~line 28821, after 'Artifacts Up'):
+    //
+    //            'Fragment Hunter': {
+    //                action: () => {
+    //                    if (window.showFragmentHunter) {
+    //                        window.showFragmentHunter();
+    //                    } else {
+    //                        console.error('showFragmentHunter not loaded yet');
+    //                    }
+    //                },
+    //                icon: '🎯',
+    //                color: 'red',
+    //                description: 'Hunt gear/scroll fragments by category or hero needs'
+    //            },
+    //
+    // ============================================================================
+
+    // Storage keys
+    const FRAG_HUNT_MISSION = 'hwh_frag_hunt_mission';
+    const FRAG_HUNT_X10 = 'hwh_frag_hunt_x10';
+    const FRAG_HUNT_CLAN = 'hwh_frag_hunt_clan';
+    const FRAG_HUNT_BUY = 'hwh_frag_hunt_buy';
+    const FRAG_HUNT_DROPTABLE = 'hwh_frag_hunt_droptable';
+    const DROP_TABLE_TTL = 24 * 60 * 60 * 1000;
+
+    let _fragDropTable = null;
+    let _fragDropTableExpiry = 0;
+
+    window.showFragmentHunter = async function() {
+        debugLog('🎯 Opening Fragment Hunter...');
+        await waitForGameReady();
+
+        const SendFunc = getSend();
+        if (!SendFunc) { alert('❌ Send function unavailable'); return; }
+
+        // ===== HELPERS =====
+        const energy = id => id === 0 ? 999 : id > 145 ? 10 : id < 86 ? 6 : 8;
+        const inR = (v, a, b) => v >= a && v <= b;
+
+        const itemType = id => {
+            if (inR(id,21,55)||inR(id,56,99)||inR(id,167,178)||inR(id,221,232)) return 'gear';
+            if (inR(id,141,166)||inR(id,190,220)||inR(id,244,254)) return 'scroll';
+            return 'unknown';
+        };
+
+        const itemColor = id => {
+            if (inR(id,21,55)||inR(id,141,145)) return {bg:'#2e7d32',b:'#4caf50'};
+            if (inR(id,56,90)) return {bg:'#1565c0',b:'#42a5f5'};
+            if (inR(id,91,166)) return {bg:'#6a1b9a',b:'#ab47bc'};
+            if (inR(id,167,220)) return {bg:'#e65100',b:'#ff9800'};
+            if (inR(id,221,254)) return {bg:'#b71c1c',b:'#f44336'};
+            return {bg:'#424242',b:'#757575'};
+        };
+
+        const colorNames = {1:'Gray',2:'Green',3:'Green+1',4:'Blue',5:'Blue+1',6:'Blue+2',7:'Violet',8:'Violet+1',9:'Violet+2',10:'Violet+3',11:'Orange',12:'Orange+1',13:'Orange+2',14:'Orange+3',15:'Orange+4',16:'Red',17:'Red+1',18:'Red+2'};
+        const colorStyles = {1:'#888',2:'#4caf50',3:'#66bb6a',4:'#2196f3',5:'#42a5f5',6:'#64b5f6',7:'#9c27b0',8:'#ab47bc',9:'#ba68c8',10:'#ce93d8',11:'#ff9800',12:'#ffa726',13:'#ffb74d',14:'#ffcc80',15:'#ffe0b2',16:'#f44336',17:'#ef5350',18:'#e57373'};
+
+        // Use lib.data for actual fragment merge cost
+        const getFragMergeCost = (type, id) => {
+            return lib.data?.inventoryItem?.[type]?.[id]?.fragmentMergeCost?.fragmentCount || 0;
+        };
+
+        const itemName = id => {
+            const type = itemType(id);
+            if (window.itemNameCache?.[type]?.[id]) return window.itemNameCache[type][id];
+            const key = type === 'gear' ? 'LIB_GEAR_NAME_' : 'LIB_SCROLL_NAME_';
+            const name = cheats.translate(`${key}${id}`) || `${type} #${id}`;
+            if (window.itemNameCache?.[type]) window.itemNameCache[type][id] = name;
+            return name;
+        };
+
+        // ===== DROP TABLE (cached) =====
+        const getDropTable = () => {
+            if (_fragDropTable && Date.now() < _fragDropTableExpiry) return _fragDropTable;
+            try {
+                const saved = localStorage.getItem(FRAG_HUNT_DROPTABLE);
+                if (saved) {
+                    const { data, expiry } = JSON.parse(saved);
+                    if (Date.now() < expiry) { _fragDropTable = data; _fragDropTableExpiry = expiry; return data; }
+                }
+            } catch (e) {}
+            const types = ['gear','fragmentGear','scroll','fragmentScroll'];
+            const table = Object.values(lib.data.mission).map(m => {
+                const drops = m.normalMode?.waves?.at(-1)?.enemies?.at(-1)?.drop ?? [];
+                if (drops.some(d => Object.keys(d.reward)[0] === 'fragmentHero')) return null;
+                const items = [], items2 = [];
+                drops.forEach(d => {
+                    const t = Object.keys(d.reward).pop();
+                    if (d.chance && types.includes(t)) {
+                        const id = +Object.keys(d.reward[t]).pop();
+                        if (id > 90) { items.push(id); items2.push({id, chance: d.chance}); }
+                    }
+                });
+                return items.length ? {id:m.id, world:m.world, index:m.index, drop:items, drop2:items2} : null;
+            }).filter(Boolean);
+            _fragDropTable = table; _fragDropTableExpiry = Date.now() + DROP_TABLE_TTL;
+            try { localStorage.setItem(FRAG_HUNT_DROPTABLE, JSON.stringify({data:table, expiry:_fragDropTableExpiry})); } catch(e){}
+            return table;
+        };
+
+        // ===== GEAR → SCROLL MAP =====
+        const buildGearToScrollMap = () => {
+            const map = {};
+            Object.entries(lib.data.inventoryItem.scroll || {}).forEach(([scrollId, s]) => {
+                const scrollName = itemName(+scrollId);
+                if (scrollName?.includes('Recipe') || scrollName?.includes('recipe')) {
+                    const gearName = scrollName.replace(/ - Recipe.*| recipe.*/i, '').trim();
+                    Object.entries(lib.data.inventoryItem.gear || {}).forEach(([gearId, g]) => {
+                        if (itemName(+gearId) === gearName) map[gearId] = scrollId;
+                    });
+                }
+            });
+            return map;
+        };
+
+        // ===== RESOLVE RECIPE TO BASE FRAGMENTS (inventory-aware at each level) =====
+        // Returns: for each base fragment type, how many MORE fragments we need to farm
+        const resolveRecipe = (type, id, qty, result, gearToScrollMap) => {
+            const item = lib.data.inventoryItem[type]?.[id];
+            if (!item || qty <= 0) return result;
+
+            // Check how many of this CRAFTED item we already have
+            const haveCrafted = inv[type]?.[id] || 0;
+            const stillNeedItems = Math.max(0, qty - haveCrafted);
+
+            if (stillNeedItems === 0) {
+                // We have enough crafted items already
+                return result;
+            }
+
+            if (item.craftRecipe) {
+                // This item is craftable from components - recurse
+                if (item.craftRecipe.gear) {
+                    Object.entries(item.craftRecipe.gear).forEach(([gid, gqty]) => {
+                        resolveRecipe('gear', gid, stillNeedItems * gqty, result, gearToScrollMap);
+                    });
+                }
+                if (item.craftRecipe.scroll) {
+                    Object.entries(item.craftRecipe.scroll).forEach(([sid, sqty]) => {
+                        resolveRecipe('scroll', sid, stillNeedItems * sqty, result, gearToScrollMap);
+                    });
+                }
+                // Check if this gear needs a recipe scroll
+                if (type === 'gear' && gearToScrollMap[id]) {
+                    resolveRecipe('scroll', gearToScrollMap[id], stillNeedItems, result, gearToScrollMap);
+                }
+            } else if (item.fragmentMergeCost) {
+                // Base fragment item - this is what we actually need to farm
+                // Just record how many of this item we need (fragments calculated later)
+                result[type][id] = (result[type][id] || 0) + stillNeedItems;
+            }
+            return result;
+        };
+
+        // ===== FETCH DATA =====
+        let stamina = 0, staminaBought = 0, vipLevel = 0, inv = {}, userHeroes = {};
+        try {
+            const r = await SendFunc(JSON.stringify({ calls: [
+                { name: "userGetInfo", args: {}, ident: "user" },
+                { name: "inventoryGet", args: {}, ident: "inv" },
+                { name: "heroGetAll", args: {}, ident: "heroes" }
+            ]}));
+            const user = r.results[0].result.response;
+            const stam = user.refillable.find(n => n.id === 1);
+            stamina = stam?.amount || 0;
+            staminaBought = stam?.boughtToday || 0;
+            inv = r.results[1].result.response;
+            userHeroes = r.results[2].result.response;
+            const vp = user.vipPoints;
+            vipLevel = (vp > 999 || inv.consumable?.[151]) ? 5 : vp > 9 ? 1 : 0;
+        } catch (e) { alert('❌ Error: ' + e.message); return; }
+
+        const dropTable = getDropTable();
+        const gearToScrollMap = buildGearToScrollMap();
+
+        // Stock helper
+        const stock = id => {
+            const t = itemType(id);
+            const frags = inv[t==='gear'?'fragmentGear':'fragmentScroll']?.[id] || 0;
+            const full = inv[t==='gear'?'gear':'scroll']?.[id] || 0;
+            const mergeCost = getFragMergeCost(t, id);
+            return { frags, full, mergeCost };
+        };
+
+        // Calculate fragments still needed (accounts for full items + frags)
+        const fragsStillNeeded = (id, qtyItemsNeeded) => {
+            const s = stock(id);
+            if (s.mergeCost === 0) return 0;
+            const totalFragsNeeded = qtyItemsNeeded * s.mergeCost;
+            const totalFragsHave = (s.full * s.mergeCost) + s.frags;
+            return Math.max(0, totalFragsNeeded - totalFragsHave);
+        };
+
+        // ===== SETTINGS =====
+        let missionId = +localStorage.getItem(FRAG_HUNT_MISSION) || 0;
+        let useX10 = localStorage.getItem(FRAG_HUNT_X10) === 'true';
+        let getClan = localStorage.getItem(FRAG_HUNT_CLAN) === 'true';
+        let buyStam = localStorage.getItem(FRAG_HUNT_BUY) === 'true';
+
+        // ===== PRE-BUILD HERO LIST =====
+        const heroListData = [];
+        Object.entries(lib.data.hero).forEach(([id, hd]) => {
+            if (parseInt(id) >= 150 || !hd?.color) return;
+            const uh = userHeroes[id];
+            heroListData.push({
+                id,
+                name: window.identifyItem?.(id,'hero') || cheats.translate(`LIB_HERO_NAME_${id}`) || `Hero ${id}`,
+                owned: !!uh,
+                currentColor: uh?.color || 0,
+                maxed: (uh?.color || 0) >= 18
+            });
+        });
+        heroListData.sort((a,b) => {
+            if (a.maxed !== b.maxed) return a.maxed ? 1 : -1;
+            if (a.owned !== b.owned) return a.owned ? -1 : 1;
+            return a.name.localeCompare(b.name);
+        });
+
+        // ===== CREATE UI =====
+        const overlay = document.createElement('div');
+        overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.85);display:flex;justify-content:center;align-items:center;z-index:100000;backdrop-filter:blur(3px);';
+
+        const box = document.createElement('div');
+        box.style.cssText = 'background:linear-gradient(135deg,#2c2416 0%,#1a1510 100%);border:3px solid #8b6914;border-radius:12px;padding:20px;width:95%;max-width:900px;max-height:85vh;display:flex;flex-direction:column;box-shadow:0 10px 40px rgba(0,0,0,0.9),inset 0 1px 0 rgba(255,255,255,0.1);';
+
+        box.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;padding-bottom:12px;border-bottom:2px solid rgba(139,105,20,0.5);">
+            <div><h2 style="color:#ffd700;margin:0;font-size:20px;text-shadow:2px 2px 4px rgba(0,0,0,0.8);">🎯 Fragment Hunter</h2>
+            <div class="twk-muted" style="font-size:11px;margin-top:4px;">Farm fragments by category or hero needs</div></div>
+            <button id="fh-x" style="background:#d32f2f;color:#fff;border:none;border-radius:6px;padding:6px 14px;font-size:16px;cursor:pointer;font-weight:bold;">✖</button>
+        </div>
+        <div id="fh-stats" style="display:flex;gap:20px;margin-bottom:12px;padding:12px;background:rgba(0,0,0,0.3);border-radius:8px;flex-wrap:wrap;"></div>
+        <div id="fh-opts" style="display:flex;gap:15px;margin-bottom:12px;padding:10px;background:rgba(0,0,0,0.2);border-radius:8px;flex-wrap:wrap;align-items:center;"></div>
+        <div id="fh-target" class="twk-panel" style="margin-bottom:12px;min-height:100px;"></div>
+        <div id="fh-btns" class="twk-flex-gap10" style="margin-bottom:12px;"></div>
+        <div id="fh-results" style="display:none;padding:15px;background:rgba(0,0,0,0.3);border-radius:8px;max-height:180px;overflow-y:auto;"></div>
+        <div class="twk-muted twk-center" style="margin-top:auto;padding-top:10px;border-top:1px solid rgba(139,105,20,0.3);font-size:10px;">Based on dimaka1256's HWHhuntFragmentExt</div>
+    `;
+
+        // Stats
+        box.querySelector('#fh-stats').innerHTML = `
+        <div style="display:flex;align-items:center;gap:6px;"><span style="font-size:22px;">⚡</span><div><div class="twk-gold-bold" style="font-size:18px;">${stamina}</div><div class="twk-muted" style="font-size:10px;">Stamina</div></div></div>
+        <div style="display:flex;align-items:center;gap:6px;"><span style="font-size:22px;">👑</span><div><div style="color:${vipLevel>=5?'#4caf50':vipLevel>=1?'#ff9800':'#f44336'};font-size:18px;font-weight:bold;">VIP${vipLevel}</div><div class="twk-muted" style="font-size:10px;">${vipLevel>=5?'x10 raids':vipLevel>=1?'Single':'No raids'}</div></div></div>
+        <div style="display:flex;align-items:center;gap:6px;"><span style="font-size:22px;">💎</span><div><div style="color:#ce93d8;font-size:18px;font-weight:bold;">${2-staminaBought}/2</div><div class="twk-muted" style="font-size:10px;">Refills left</div></div></div>
+    `;
+
+        // Options
+        const optsEl = box.querySelector('#fh-opts');
+        const mkCb = (lbl, chk, fn, dis) => {
+            const l = document.createElement('label');
+            l.style.cssText = `display:flex;align-items:center;gap:6px;color:${dis?'#555':'#bbb'};font-size:12px;cursor:${dis?'not-allowed':'pointer'};`;
+            const c = document.createElement('input'); c.type='checkbox'; c.checked=chk; c.disabled=dis;
+            c.onchange = () => fn(c.checked);
+            l.appendChild(c); l.append(lbl); return l;
+        };
+        optsEl.appendChild(mkCb('🏰 Clan stamina', getClan, v=>{getClan=v;localStorage.setItem(FRAG_HUNT_CLAN,v);}));
+        optsEl.appendChild(mkCb('💎 Buy stamina', buyStam, v=>{buyStam=v;localStorage.setItem(FRAG_HUNT_BUY,v);}));
+        optsEl.appendChild(mkCb('⚡ x10 raids', useX10, v=>{useX10=v;localStorage.setItem(FRAG_HUNT_X10,v);}, vipLevel<5));
+
+        // Target display
+        const targetEl = box.querySelector('#fh-target');
+        const showTarget = () => {
+            const m = dropTable.find(x => x.id === missionId);
+            if (!m) {
+                targetEl.innerHTML = `<div class="twk-center twk-muted" style="padding:25px;"><div style="font-size:28px;margin-bottom:8px;">🎯</div><div>No mission selected</div><div style="font-size:11px;">Choose by Category or by Hero needs</div></div>`;
+                return;
+            }
+            const e = energy(m.id), raids = Math.floor(stamina/e);
+            let drops = m.drop.map(id => {
+                const it = m.drop2.find(d=>d.id===id), c = itemColor(id), s = stock(id);
+                const canCraft = s.mergeCost > 0 ? s.full + Math.floor(s.frags/s.mergeCost) : s.full;
+                return `<div style="display:flex;align-items:center;gap:8px;padding:5px 10px;background:${c.bg}33;border-left:3px solid ${c.b};border-radius:4px;margin:3px 0;">
+                <span style="color:${c.b};font-weight:bold;min-width:42px;">[${it?.chance||'?'}%]</span>
+                <span class="twk-white" style="flex:1;">${itemName(id)}</span>
+                <span style="color:${canCraft>0?'#4caf50':'#ff9800'};font-size:11px;">${s.full}+${s.frags}/${s.mergeCost}🧩</span>
+            </div>`;
+            }).join('');
+            targetEl.innerHTML = `
+            <div class="twk-flex-between" style="margin-bottom:10px;">
+                <div><div class="twk-gold-bold" style="font-size:15px;">📍 World ${m.world} - Mission ${m.index}</div>
+                <div class="twk-muted" style="font-size:11px;margin-top:3px;">${e}⚡/raid • ${raids} raids • ${raids*e}⚡ total</div></div>
+                <button id="fh-chg" style="background:rgba(139,105,20,0.5);color:#ffd700;border:1px solid #8b6914;border-radius:5px;padding:6px 14px;font-size:11px;cursor:pointer;">🔄 Change</button>
+            </div>
+            <div class="twk-muted twk-mb-5" style="font-size:11px;">Drops:</div>${drops}
+        `;
+        };
+        showTarget();
+
+        // Buttons
+        const btnsEl = box.querySelector('#fh-btns');
+        const startBtn = document.createElement('button');
+        startBtn.innerHTML = '🚀 Start Hunting';
+        startBtn.style.cssText = 'flex:2;background:linear-gradient(135deg,#4caf50,#2e7d32);color:#fff;border:none;border-radius:8px;padding:14px;font-size:15px;font-weight:bold;cursor:pointer;box-shadow:0 4px 15px rgba(76,175,80,0.4);';
+
+        const catBtn = document.createElement('button');
+        catBtn.innerHTML = '📦 Category';
+        catBtn.style.cssText = 'flex:1;background:rgba(139,105,20,0.5);color:#ffd700;border:2px solid #8b6914;border-radius:8px;padding:14px;font-size:12px;font-weight:bold;cursor:pointer;';
+
+        const heroBtn = document.createElement('button');
+        heroBtn.innerHTML = '🦸 Hero';
+        heroBtn.style.cssText = 'flex:1;background:rgba(33,150,243,0.4);color:#90caf9;border:2px solid #2196f3;border-radius:8px;padding:14px;font-size:12px;font-weight:bold;cursor:pointer;';
+
+        btnsEl.appendChild(startBtn);
+        btnsEl.appendChild(catBtn);
+        btnsEl.appendChild(heroBtn);
+
+        const resultsEl = box.querySelector('#fh-results');
+
+        overlay.appendChild(box);
+        document.body.appendChild(overlay);
+
+        // ===== EVENTS =====
+        box.querySelector('#fh-x').onclick = () => overlay.remove();
+        overlay.onclick = e => { if (e.target === overlay) overlay.remove(); };
+        box.addEventListener('click', e => { if (e.target.id === 'fh-chg' || e.target.closest('#fh-chg')) pickCategory(); });
+        catBtn.onclick = pickCategory;
+        heroBtn.onclick = pickHero;
+
+        // ===== START HUNTING =====
+        startBtn.onclick = async () => {
+            const m = dropTable.find(x => x.id === missionId);
+            if (!m) { alert('❌ Select a mission first'); return; }
+            startBtn.disabled = true; startBtn.innerHTML = '⏳ Hunting...';
+            resultsEl.style.display = 'block';
+            resultsEl.innerHTML = '<div class="twk-muted">Starting...</div>';
+            try {
+                if (getClan) {
+                    resultsEl.innerHTML += '<div class="twk-muted">🏰 Checking clan...</div>';
+                    const q = await Caller.send(['questGetAll']);
+                    if (q?.filter(e => e.state === 2 && e.id === 20010002)?.length) {
+                        await Caller.send({ name: 'quest_questsFarm', args: { questIds: [20010002] } });
+                        resultsEl.innerHTML += '<div class="twk-green">✅ +200 stamina</div>';
+                    }
+                }
+                if (buyStam && staminaBought < 2) {
+                    const n = 2 - staminaBought;
+                    for (let i = 0; i < n; i++) await Caller.send('refillableBuyStamina');
+                    resultsEl.innerHTML += `<div class="twk-green">✅ +${n*120} stamina bought</div>`;
+                }
+                const ref = await SendFunc(JSON.stringify({ calls: [{ name: "userGetInfo", args: {}, ident: "u" }] }));
+                stamina = ref.results[0].result.response.refillable.find(n => n.id === 1)?.amount || 0;
+                const e = energy(m.id);
+                let raids = Math.floor(stamina / e);
+                if (useX10 && vipLevel >= 5) raids = Math.floor(raids/10)*10;
+                if (!raids) { resultsEl.innerHTML += '<div class="twk-orange">⚠️ No stamina</div>'; startBtn.disabled = false; startBtn.innerHTML = '🚀 Start Hunting'; return; }
+                resultsEl.innerHTML += `<div class="twk-muted">🎯 Raiding ${raids}x...</div>`;
+                const calls = vipLevel >= 5 ? [{ name: "missionRaid", args: { id: m.id, times: raids }, ident: "r" }]
+                : Array.from({length: raids}, (_, i) => ({ name: "missionRaid", args: { id: m.id, times: 1 }, ident: `r${i}` }));
+                const all = [];
+                for (let i = 0; i < calls.length; i += 20) {
+                    const res = await SendFunc(JSON.stringify({ calls: calls.slice(i, i+20) }));
+                    if (res?.results) all.push(...res.results);
+                    await new Promise(r => setTimeout(r, 80));
+                }
+                const loot = {};
+                all.forEach(r => {
+                    const resp = r.result?.response; if (!resp) return;
+                    Object.values(resp).forEach(item => {
+                        ['fragmentScroll','fragmentGear'].forEach(k => {
+                            if (item[k]) Object.keys(item[k]).forEach(id => { loot[id] = (loot[id]||0) + 1; });
+                        });
+                    });
+                });
+                let html = `<div class="twk-gold-bold" style="font-size:14px;margin-bottom:8px;">✅ Done! Spent ${raids*e}⚡</div>`;
+                if (!Object.keys(loot).length) { html += '<div class="twk-orange">😢 No fragments</div>'; }
+                else {
+                    html += '<div class="twk-muted twk-mb-5">Loot:</div>';
+                    Object.entries(loot).forEach(([id, qty]) => {
+                        const c = itemColor(+id);
+                        html += `<div style="display:flex;gap:8px;padding:3px 8px;background:${c.bg}22;border-left:3px solid ${c.b};margin:2px 0;"><span class="twk-white">${itemName(+id)}</span><span class="twk-green-bold">×${qty}</span></div>`;
+                    });
+                }
+                resultsEl.innerHTML = html;
+            } catch (err) { resultsEl.innerHTML += `<div class="twk-red">❌ ${err.message}</div>`; }
+            startBtn.disabled = false; startBtn.innerHTML = '🚀 Start Hunting';
+        };
+
+        // ===== CATEGORY PICKER =====
+        function pickCategory() {
+            const cats = [
+                { label: '💜 Purple Gear', color: '#9c27b0', items: [91,92,93,94,95,96,97,98] },
+                { label: '📜 Purple Scrolls A-N', color: '#9c27b0', items: [158,153,162,164,165,157,152,166] },
+                { label: '📜 Purple Scrolls O-Z', color: '#9c27b0', items: [163,159,154,161,156,160,155] },
+                { label: '🧡 Orange Gear', color: '#ff9800', items: [167,168,169,170,171,172,173,174,175,176,177,178] },
+                { label: '📜 Orange Scrolls A-K', color: '#ff9800', items: [190,194,197,205,204,215,214,196,218,193,219,217,206] },
+                { label: '📜 Orange Scrolls L-Z', color: '#ff9800', items: [198,220,195,192,216,191,199,200] },
+                { label: '❤️ Red Gear', color: '#f44336', items: [221,222,223,224,225,226,227,228,229,230,231,232] },
+                { label: '📜 Red Scrolls', color: '#f44336', items: [244,245,246,247,248,249,250,251,252,253,254] },
+            ];
+            const ov = document.createElement('div');
+            ov.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.85);display:flex;justify-content:center;align-items:center;z-index:100001;';
+            const pk = document.createElement('div');
+            pk.style.cssText = 'background:linear-gradient(135deg,#2c2416,#1a1510);border:3px solid #8b6914;border-radius:12px;padding:20px;max-width:550px;';
+            pk.innerHTML = `<h3 class="twk-gold" style="margin:0 0 12px;">Select Category</h3><div id="pk-cats" style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;"></div>
+            <button id="pk-x" style="margin-top:12px;width:100%;background:rgba(0,0,0,0.3);color:#888;border:1px solid #555;border-radius:6px;padding:10px;cursor:pointer;">Cancel</button>`;
+            cats.forEach(cat => {
+                const b = document.createElement('button');
+                b.style.cssText = `background:${cat.color}33;border:2px solid ${cat.color};color:#fff;border-radius:8px;padding:10px;cursor:pointer;text-align:left;`;
+                b.innerHTML = `<div style="font-weight:bold;">${cat.label}</div><div class="twk-muted" style="font-size:10px;">${cat.items.length} items</div>`;
+                b.onclick = () => { ov.remove(); pickItem(cat); };
+                pk.querySelector('#pk-cats').appendChild(b);
+            });
+            pk.querySelector('#pk-x').onclick = () => ov.remove();
+            ov.onclick = e => { if (e.target === ov) ov.remove(); };
+            ov.appendChild(pk); document.body.appendChild(ov);
+        }
+
+        function pickItem(cat) {
+            const ov = document.createElement('div');
+            ov.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.85);display:flex;justify-content:center;align-items:center;z-index:100001;';
+            const pk = document.createElement('div');
+            pk.style.cssText = 'background:linear-gradient(135deg,#2c2416,#1a1510);border:3px solid #8b6914;border-radius:12px;padding:20px;max-width:650px;max-height:75vh;overflow-y:auto;';
+            pk.innerHTML = `<h3 class="twk-gold" style="margin:0 0 5px;">${cat.label}</h3><div class="twk-muted" style="font-size:11px;margin-bottom:12px;">Select item</div>
+            <div id="pk-items" style="display:flex;flex-direction:column;gap:5px;"></div>
+            <button id="pk-back" style="margin-top:12px;width:100%;background:rgba(0,0,0,0.3);color:#888;border:1px solid #555;border-radius:6px;padding:10px;cursor:pointer;">← Back</button>`;
+            const itemsEl = pk.querySelector('#pk-items');
+            cat.items.forEach(id => {
+                const s = stock(id), c = itemColor(id);
+                const canCraft = s.mergeCost > 0 ? s.full + Math.floor(s.frags/s.mergeCost) : s.full;
+                const b = document.createElement('button');
+                b.style.cssText = `background:${c.bg}22;border:2px solid ${c.b}44;border-left:4px solid ${c.b};color:#fff;border-radius:6px;padding:8px 10px;cursor:pointer;text-align:left;display:flex;justify-content:space-between;align-items:center;`;
+                b.innerHTML = `<span>${itemName(id)}</span><span style="color:${canCraft>0?'#4caf50':'#ff9800'};font-size:11px;">${s.full}+${s.frags}/${s.mergeCost}🧩</span>`;
+                b.onclick = () => { ov.remove(); pickMission(id); };
+                itemsEl.appendChild(b);
+            });
+            pk.querySelector('#pk-back').onclick = () => { ov.remove(); pickCategory(); };
+            ov.onclick = e => { if (e.target === ov) ov.remove(); };
+            ov.appendChild(pk); document.body.appendChild(ov);
+        }
+
+        function pickMission(itemId) {
+            const missions = dropTable.filter(m => m.drop.includes(itemId));
+            const ov = document.createElement('div');
+            ov.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.85);display:flex;justify-content:center;align-items:center;z-index:100001;';
+            const pk = document.createElement('div');
+            pk.style.cssText = 'background:linear-gradient(135deg,#2c2416,#1a1510);border:3px solid #8b6914;border-radius:12px;padding:20px;max-width:650px;max-height:75vh;overflow-y:auto;';
+            const ic = itemColor(itemId);
+            pk.innerHTML = `<h3 class="twk-gold" style="margin:0 0 5px;">Select Mission</h3>
+            <div style="color:${ic.b};font-size:12px;margin-bottom:12px;padding:8px;background:${ic.bg}22;border-radius:6px;">🎯 ${itemName(itemId)}</div>
+            <div id="pk-missions" style="display:flex;flex-direction:column;gap:6px;"></div>
+            <button id="pk-x" style="margin-top:12px;width:100%;background:rgba(0,0,0,0.3);color:#888;border:1px solid #555;border-radius:6px;padding:10px;cursor:pointer;">Cancel</button>`;
+            const missEl = pk.querySelector('#pk-missions');
+            missions.forEach(m => {
+                const e = energy(m.id), it = m.drop2.find(d => d.id === itemId);
+                const others = m.drop.filter(id => id !== itemId).map(id => {
+                    const d = m.drop2.find(x => x.id === id), c = itemColor(id);
+                    return `<span style="color:${c.b};font-size:10px;">[${d?.chance}%] ${itemName(id)}</span>`;
+                }).join('<br>');
+                const b = document.createElement('button');
+                b.style.cssText = 'background:rgba(0,0,0,0.3);border:2px solid rgba(139,105,20,0.5);color:#fff;border-radius:8px;padding:10px;cursor:pointer;text-align:left;';
+                b.innerHTML = `<div class="twk-flex-between" style="margin-bottom:4px;"><span class="twk-gold-bold">📍 W${m.world} M${m.index}</span><span class="twk-green-bold" style="font-size:13px;">[${it?.chance}%]</span></div>
+                <div class="twk-muted" style="font-size:10px;">${e}⚡/raid</div>
+                ${others ? `<div style="margin-top:5px;padding-top:5px;border-top:1px solid #333;"><div class="twk-dim" style="font-size:9px;margin-bottom:2px;">Also drops:</div>${others}</div>` : ''}`;
+                b.onclick = () => { missionId = m.id; localStorage.setItem(FRAG_HUNT_MISSION, m.id); ov.remove(); showTarget(); };
+                missEl.appendChild(b);
+            });
+            pk.querySelector('#pk-x').onclick = () => ov.remove();
+            ov.onclick = e => { if (e.target === ov) ov.remove(); };
+            ov.appendChild(pk); document.body.appendChild(ov);
+        }
+
+        // ===== HERO PICKER (fast) =====
+        function pickHero() {
+            const ov = document.createElement('div');
+            ov.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.85);display:flex;justify-content:center;align-items:center;z-index:100001;';
+            const pk = document.createElement('div');
+            pk.style.cssText = 'background:linear-gradient(135deg,#2c2416,#1a1510);border:3px solid #2196f3;border-radius:12px;padding:20px;max-width:500px;max-height:80vh;display:flex;flex-direction:column;';
+            pk.innerHTML = `
+            <h3 style="color:#90caf9;margin:0 0 8px;">🦸 Select Hero</h3>
+            <input id="hero-search" type="text" placeholder="Type to search..." style="width:100%;padding:8px;margin-bottom:10px;background:rgba(0,0,0,0.4);border:1px solid #2196f3;border-radius:6px;color:#fff;font-size:12px;box-sizing:border-box;">
+            <div id="hero-list" style="flex:1;overflow-y:auto;min-height:200px;"></div>
+            <button id="pk-x" style="margin-top:12px;background:rgba(0,0,0,0.3);color:#888;border:1px solid #555;border-radius:6px;padding:10px;cursor:pointer;">Cancel</button>
+        `;
+
+            const listEl = pk.querySelector('#hero-list');
+            const searchEl = pk.querySelector('#hero-search');
+
+            const renderHeroes = (filter = '') => {
+                const frag = document.createDocumentFragment();
+                const filterLower = filter.toLowerCase();
+                let count = 0;
+
+                for (const h of heroListData) {
+                    if (filter && !h.name.toLowerCase().includes(filterLower)) continue;
+                    if (count++ >= 40) break;
+
+                    const b = document.createElement('button');
+                    b.style.cssText = `display:flex;justify-content:space-between;align-items:center;width:100%;background:rgba(0,0,0,0.3);border:2px solid ${h.maxed?'#444':h.owned?'#4caf50':'#ff9800'};color:#fff;border-radius:6px;padding:8px 12px;cursor:pointer;text-align:left;opacity:${h.maxed?'0.5':'1'};margin-bottom:4px;box-sizing:border-box;`;
+                    b.innerHTML = `<span>${h.owned?'✓':'?'} ${h.name}</span><span style="color:${colorStyles[h.currentColor]||'#888'};font-size:11px;">${h.maxed?'MAX':`C${h.currentColor}`}</span>`;
+                    b.onclick = () => { ov.remove(); pickHeroTarget(h); };
+                    frag.appendChild(b);
+                }
+
+                listEl.innerHTML = '';
+                if (count === 0) {
+                    listEl.innerHTML = '<div class="twk-muted twk-center" style="padding:20px;">No heroes found</div>';
+                } else {
+                    listEl.appendChild(frag);
+                    const total = heroListData.filter(h => !filter || h.name.toLowerCase().includes(filterLower)).length;
+                    if (count < total) {
+                        const more = document.createElement('div');
+                        more.className = 'twk-muted twk-center';
+                        more.style.cssText = 'padding:10px;font-size:11px;';
+                        more.textContent = `Showing ${count} of ${total} — type to filter`;
+                        listEl.appendChild(more);
+                    }
+                }
+            };
+
+            renderHeroes();
+
+            let debounceTimer;
+            searchEl.oninput = () => {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => renderHeroes(searchEl.value), 100);
+            };
+
+            pk.querySelector('#pk-x').onclick = () => ov.remove();
+            ov.onclick = e => { if (e.target === ov) ov.remove(); };
+            ov.appendChild(pk); document.body.appendChild(ov);
+            searchEl.focus();
+        }
+
+        // ===== HERO TARGET PICKER (Finish Current vs Next vs All) =====
+        function pickHeroTarget(hero) {
+            const hd = lib.data.hero[hero.id];
+            const currentColor = hero.currentColor;
+            const nextColor = currentColor + 1;
+            const colorsRemaining = 18 - currentColor;
+
+            // Check if current color has empty slots (unequipped gear)
+            const userHero = userHeroes[hero.id];
+            const emptySlots = userHero?.slots?.length || 0;
+            const currentGearIds = hd.color?.[currentColor]?.items || [];
+
+            // Calculate needs for FINISHING current color (only unequipped slots)
+            let finishNeeds = null;
+            let finishGearIds = [];
+            let finishGearNames = [];
+            let finishStillNeeded = 0;
+
+            if (emptySlots > 0 && currentColor > 0) {
+                finishNeeds = {gear:{}, scroll:{}};
+                // Empty slots are the LAST N items in the gear list
+                finishGearIds = currentGearIds.slice(-emptySlots);
+                finishGearIds.forEach(gearId => {
+                    resolveRecipe('gear', String(gearId), 1, finishNeeds, gearToScrollMap);
+                });
+                finishGearNames = finishGearIds.map(id => window.identifyItem?.(String(id), 'gear') || `Gear ${id}`);
+
+                Object.entries(finishNeeds.gear).forEach(([id, qty]) => { finishStillNeeded += fragsStillNeeded(+id, qty); });
+                Object.entries(finishNeeds.scroll).forEach(([id, qty]) => { finishStillNeeded += fragsStillNeeded(+id, qty); });
+            }
+
+            // Calculate needs for NEXT color
+            const nextNeeds = {gear:{}, scroll:{}};
+            const nextGearIds = hd.color?.[nextColor]?.items || [];
+            nextGearIds.forEach(gearId => resolveRecipe('gear', String(gearId), 1, nextNeeds, gearToScrollMap));
+            const nextGearNames = nextGearIds.map(id => window.identifyItem?.(String(id), 'gear') || `Gear ${id}`);
+
+            let nextStillNeeded = 0;
+            Object.entries(nextNeeds.gear).forEach(([id, qty]) => { nextStillNeeded += fragsStillNeeded(+id, qty); });
+            Object.entries(nextNeeds.scroll).forEach(([id, qty]) => { nextStillNeeded += fragsStillNeeded(+id, qty); });
+
+            // Calculate needs for ALL remaining (current unequipped + all future colors)
+            const allNeeds = {gear:{}, scroll:{}};
+            // First add unequipped current slots
+            if (emptySlots > 0) {
+                finishGearIds.forEach(gearId => resolveRecipe('gear', String(gearId), 1, allNeeds, gearToScrollMap));
+            }
+            // Then add all future colors
+            for (let c = nextColor; c <= 18; c++) {
+                (hd.color?.[c]?.items || []).forEach(gearId => resolveRecipe('gear', String(gearId), 1, allNeeds, gearToScrollMap));
+            }
+
+            let allStillNeeded = 0;
+            Object.entries(allNeeds.gear).forEach(([id, qty]) => { allStillNeeded += fragsStillNeeded(+id, qty); });
+            Object.entries(allNeeds.scroll).forEach(([id, qty]) => { allStillNeeded += fragsStillNeeded(+id, qty); });
+
+            const ov = document.createElement('div');
+            ov.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.85);display:flex;justify-content:center;align-items:center;z-index:100001;';
+            const pk = document.createElement('div');
+            pk.style.cssText = 'background:linear-gradient(135deg,#2c2416,#1a1510);border:3px solid #2196f3;border-radius:12px;padding:20px;max-width:550px;';
+
+            const finishDone = finishStillNeeded === 0;
+            const nextDone = nextStillNeeded === 0;
+            const allDone = allStillNeeded === 0;
+            const finishTypes = finishNeeds ? Object.keys(finishNeeds.gear).length + Object.keys(finishNeeds.scroll).length : 0;
+            const nextTypes = Object.keys(nextNeeds.gear).length + Object.keys(nextNeeds.scroll).length;
+            const allTypes = Object.keys(allNeeds.gear).length + Object.keys(allNeeds.scroll).length;
+
+            // Build buttons HTML
+            let buttonsHTML = '';
+
+            // Show "Finish Current" if there are empty slots
+            if (emptySlots > 0 && finishNeeds) {
+                buttonsHTML += `
+                <button id="pick-finish" style="width:100%;background:${colorStyles[currentColor]}22;border:2px solid ${colorStyles[currentColor]};color:#fff;border-radius:8px;padding:12px;cursor:pointer;text-align:left;margin-bottom:10px;opacity:${finishDone?'0.6':'1'};">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                        <span style="color:${colorStyles[currentColor]};font-weight:bold;font-size:14px;">🔧 Finish C${currentColor} ${colorNames[currentColor]}</span>
+                        <span style="color:${finishDone?'#4caf50':'#ff9800'};font-size:12px;font-weight:bold;">${finishDone?'✓ READY':finishStillNeeded+' frags'}</span>
+                    </div>
+                    <div class="twk-muted" style="font-size:11px;">${emptySlots} empty slots • ${finishTypes} base fragments</div>
+                    <div class="twk-muted" style="font-size:10px;margin-top:4px;color:#888;">Need: ${finishGearNames.join(', ')}</div>
+                </button>
+            `;
+            }
+
+            // Show "Next Color" if not already at max
+            if (nextColor <= 18) {
+                buttonsHTML += `
+                <button id="pick-next" style="width:100%;background:${colorStyles[nextColor]}22;border:2px solid ${colorStyles[nextColor]};color:#fff;border-radius:8px;padding:12px;cursor:pointer;text-align:left;margin-bottom:10px;opacity:${nextDone?'0.6':'1'};">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                        <span style="color:${colorStyles[nextColor]};font-weight:bold;font-size:14px;">⭐ Next: C${nextColor} ${colorNames[nextColor]}</span>
+                        <span style="color:${nextDone?'#4caf50':'#ff9800'};font-size:12px;font-weight:bold;">${nextDone?'✓ READY':nextStillNeeded+' frags'}</span>
+                    </div>
+                    <div class="twk-muted" style="font-size:11px;">${nextGearIds.length} gear pieces • ${nextTypes} base fragments</div>
+                    <div class="twk-muted" style="font-size:10px;margin-top:4px;color:#888;">Gear: ${nextGearNames.slice(0,3).join(', ')}${nextGearNames.length > 3 ? '...' : ''}</div>
+                </button>
+            `;
+            }
+
+            // Show "All" if more than 1 option makes sense
+            if (colorsRemaining > 0 || emptySlots > 0) {
+                const allLabel = emptySlots > 0 ? `C${currentColor} (finish) + C${nextColor}→18` : `C${nextColor}→18`;
+                buttonsHTML += `
+                <button id="pick-all" style="width:100%;background:rgba(76,175,80,0.2);border:2px solid #4caf50;color:#fff;border-radius:8px;padding:12px;cursor:pointer;text-align:left;opacity:${allDone?'0.6':'1'};">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                        <span style="color:#4caf50;font-weight:bold;font-size:14px;">📊 All: ${allLabel}</span>
+                        <span style="color:${allDone?'#4caf50':'#ff9800'};font-size:12px;font-weight:bold;">${allDone?'✓ READY':allStillNeeded+' frags'}</span>
+                    </div>
+                    <div class="twk-muted" style="font-size:11px;">${allTypes} base fragments total</div>
+                </button>
+            `;
+            }
+
+            pk.innerHTML = `
+            <h3 style="color:#90caf9;margin:0 0 5px;">🦸 ${hero.name}</h3>
+            <div class="twk-muted" style="font-size:11px;margin-bottom:15px;">
+                Current: <span style="color:${colorStyles[currentColor]}">${colorNames[currentColor] || 'None'}</span>
+                ${emptySlots > 0 ? `<span style="color:#ff9800;"> (${emptySlots} slots empty!)</span>` : ''}
+                • ${colorsRemaining} color${colorsRemaining !== 1 ? 's' : ''} to max
+            </div>
+            ${buttonsHTML}
+            <button id="pk-back" style="margin-top:15px;width:100%;background:rgba(0,0,0,0.3);color:#888;border:1px solid #555;border-radius:6px;padding:10px;cursor:pointer;">← Back</button>
+        `;
+
+            // Event handlers
+            if (emptySlots > 0 && finishNeeds) {
+                pk.querySelector('#pick-finish').onclick = () => { ov.remove(); pickHeroFragment(hero, currentColor, finishNeeds, finishGearNames); };
+            }
+            if (nextColor <= 18) {
+                pk.querySelector('#pick-next').onclick = () => { ov.remove(); pickHeroFragment(hero, nextColor, nextNeeds, nextGearNames); };
+            }
+            const pickAllBtn = pk.querySelector('#pick-all');
+            if (pickAllBtn) pickAllBtn.onclick = () => { ov.remove(); pickHeroFragment(hero, 'all', allNeeds); };
+            pk.querySelector('#pk-back').onclick = () => { ov.remove(); pickHero(); };
+            ov.onclick = e => { if (e.target === ov) ov.remove(); };
+            ov.appendChild(pk); document.body.appendChild(ov);
+        }
+
+        // ===== HERO FRAGMENT PICKER =====
+        function pickHeroFragment(hero, targetColor, needs, gearNames = null) {
+            const fragments = [];
+
+            Object.entries(needs.gear).forEach(([id, qty]) => {
+                const s = stock(+id);
+                const totalNeeded = qty * s.mergeCost;
+                const have = (s.full * s.mergeCost) + s.frags;
+                const stillNeed = Math.max(0, totalNeeded - have);
+                fragments.push({ id: +id, type: 'gear', qty, mergeCost: s.mergeCost, totalNeeded, have, stillNeed, name: itemName(+id) });
+            });
+            Object.entries(needs.scroll).forEach(([id, qty]) => {
+                const s = stock(+id);
+                const totalNeeded = qty * s.mergeCost;
+                const have = (s.full * s.mergeCost) + s.frags;
+                const stillNeed = Math.max(0, totalNeeded - have);
+                fragments.push({ id: +id, type: 'scroll', qty, mergeCost: s.mergeCost, totalNeeded, have, stillNeed, name: itemName(+id) });
+            });
+
+            fragments.sort((a,b) => {
+                if ((a.stillNeed > 0) !== (b.stillNeed > 0)) return a.stillNeed > 0 ? -1 : 1;
+                return b.stillNeed - a.stillNeed;
+            });
+
+            const ov = document.createElement('div');
+            ov.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.85);display:flex;justify-content:center;align-items:center;z-index:100001;';
+            const pk = document.createElement('div');
+            pk.style.cssText = 'background:linear-gradient(135deg,#2c2416,#1a1510);border:3px solid #2196f3;border-radius:12px;padding:20px;max-width:700px;max-height:80vh;overflow-y:auto;';
+
+            const label = targetColor === 'all' ? `C${hero.currentColor+1}→18` : `C${targetColor} ${colorNames[targetColor]}`;
+            const doneCount = fragments.filter(f => f.stillNeed === 0).length;
+
+            // Build gear list header if we have gear names
+            let gearHeader = '';
+            if (gearNames && gearNames.length > 0) {
+                gearHeader = `
+                <div style="margin-bottom:12px;padding:10px;background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.3);border-radius:6px;">
+                    <div class="twk-muted" style="font-size:10px;margin-bottom:5px;">📦 Top-level gear needed:</div>
+                    <div style="color:#ffd700;font-size:11px;">${gearNames.join(', ')}</div>
+                </div>
+            `;
+            }
+
+            pk.innerHTML = `
+            <h3 style="color:#90caf9;margin:0 0 5px;">🦸 ${hero.name} → ${label}</h3>
+            <div class="twk-muted" style="font-size:11px;margin-bottom:12px;">${doneCount}/${fragments.length} base fragments complete • Click to hunt missing</div>
+            ${gearHeader}
+            <div id="frag-list" style="display:flex;flex-direction:column;gap:5px;"></div>
+            <button id="pk-back" style="margin-top:12px;width:100%;background:rgba(0,0,0,0.3);color:#888;border:1px solid #555;border-radius:6px;padding:10px;cursor:pointer;">← Back</button>
+        `;
+
+            const fragList = pk.querySelector('#frag-list');
+            fragments.forEach(f => {
+                const c = itemColor(f.id);
+                const done = f.stillNeed === 0;
+                const pct = f.totalNeeded > 0 ? Math.min(100, Math.round(f.have / f.totalNeeded * 100)) : 100;
+
+                const b = document.createElement('button');
+                b.style.cssText = `background:${c.bg}22;border:2px solid ${done?'#4caf50':c.b}44;border-left:4px solid ${done?'#4caf50':c.b};color:#fff;border-radius:6px;padding:8px 12px;cursor:${done?'default':'pointer'};text-align:left;display:flex;justify-content:space-between;align-items:center;opacity:${done?'0.6':'1'};`;
+                b.innerHTML = `
+                <div style="flex:1;">
+                    <div>${done?'✓ ':''}<span style="color:${c.b}">${f.name}</span></div>
+                    <div class="twk-muted" style="font-size:10px;">Need ${f.qty}× (${f.totalNeeded} frags)</div>
+                </div>
+                <div style="text-align:right;">
+                    <div style="color:${done?'#4caf50':pct>=50?'#ff9800':'#f44336'};font-weight:bold;">${done?'DONE':f.stillNeed+' to go'}</div>
+                    <div class="twk-muted" style="font-size:10px;">${f.have}/${f.totalNeeded} (${pct}%)</div>
+                </div>
+            `;
+                if (!done) {
+                    b.onclick = () => { ov.remove(); pickMission(f.id); };
+                }
+                fragList.appendChild(b);
+            });
+
+            pk.querySelector('#pk-back').onclick = () => { ov.remove(); pickHeroTarget(hero); };
+            ov.onclick = e => { if (e.target === ov) ov.remove(); };
+            ov.appendChild(pk); document.body.appendChild(ov);
+        }
+    };
+
+    debugLog('✅ Fragment Hunter v4 loaded');
 
     // ================================================================
     // SECTION 1: CORE SETTINGS AND DATA MANAGEMENT
@@ -6390,6 +8939,131 @@ background: transparent;
             };
         }
     };
+    // Buy gear/scrolls from Arena, Grand, Tower, Friendship, Outland shops - prioritized by craft targets
+    window.buyShopsWithCraftPriority = async function() {
+        try {
+            if (HWHFuncs.setProgress) HWHFuncs.setProgress('🛒 Checking shops...', false);
+
+            const SendFunction = getSend();
+            if (!SendFunction) return { success: false, error: 'No Send function available' };
+
+            const result = await SendFunction(JSON.stringify({calls:[
+                {name:'inventoryGet',args:{},ident:'inv'},
+                {name:'shopGetAll',args:{},ident:'shops'}
+            ]}));
+            const inv = result.results[0].result.response;
+            const shops = result.results[1].result.response;
+
+            // Load craft targets from tab 6
+            let craftTargets = {};
+            try { craftTargets = JSON.parse(localStorage.getItem('hwh_craft_targets') || '{}'); } catch(e){}
+
+            const SHOPS = {4:'Arena', 5:'Grand', 6:'Tower', 9:'Friendship', 10:'Outland'};
+            const VALID_TYPES = ['gear', 'scroll', 'fragmentGear', 'fragmentScroll'];
+
+            const buyList = [];
+            const invTracker = JSON.parse(JSON.stringify(inv)); // clone for tracking spending
+
+            for (const [shopId, shopName] of Object.entries(SHOPS)) {
+                const shop = shops[shopId];
+                if (!shop?.slots) continue;
+
+                for (const [slotId, slot] of Object.entries(shop.slots)) {
+                    if (slot.bought) continue;
+
+                    const costType = Object.keys(slot.cost)[0];
+                    const costId = Object.keys(slot.cost[costType])[0];
+                    const costAmt = parseInt(slot.cost[costType][costId]);
+                    const have = invTracker[costType]?.[costId] || 0;
+                    if (have < costAmt) continue;
+
+                    const rwdType = Object.keys(slot.reward)[0];
+                    if (!VALID_TYPES.includes(rwdType)) continue;
+
+                    const rwdId = Object.keys(slot.reward[rwdType])[0];
+                    const rwdQty = parseInt(slot.reward[rwdType][rwdId]) || 1;
+
+                    const isFragment = rwdType.startsWith('fragment');
+                    const baseType = isFragment ? rwdType.replace('fragment','').toLowerCase() : rwdType;
+                    const targetKey = `${baseType}_${rwdId}`;
+                    const target = craftTargets[targetKey] || 0;
+
+                    const haveBuilt = inv[baseType]?.[rwdId] || 0;
+                    const fragKey = `fragment${baseType.charAt(0).toUpperCase() + baseType.slice(1)}`;
+                    const haveFrags = inv[fragKey]?.[rwdId] || 0;
+                    const mergeCost = lib.data?.inventoryItem?.[baseType]?.[rwdId]?.fragmentMergeCost?.fragmentCount || 50;
+
+                    const effectiveHave = haveBuilt + Math.floor(haveFrags / mergeCost);
+                    const needItems = Math.max(0, target - effectiveHave);
+
+                    if (needItems <= 0) continue; // Skip if at or above target
+
+                    const contribution = isFragment ? (rwdQty / mergeCost) : rwdQty;
+                    const priority = needItems * contribution;
+
+                    // Deduct cost from tracker
+                    invTracker[costType][costId] -= costAmt;
+
+                    const itemName = window.identifyItem?.(rwdId, baseType) || `${rwdType}#${rwdId}`;
+
+                    buyList.push({
+                        shopId: parseInt(shopId), slotId: parseInt(slotId),
+                        shopName, itemName, rwdType, rwdQty, priority,
+                        cost: slot.cost, reward: slot.reward
+                    });
+                }
+            }
+
+            if (!buyList.length) {
+                if (HWHFuncs.setProgress) HWHFuncs.setProgress('✅ Shops: No items to buy', false);
+                return { success: true, items: 'No items to buy', count: 0, hasItems: false, rewards: {} };
+            }
+
+            // Sort by priority (highest first)
+            buyList.sort((a,b) => b.priority - a.priority);
+
+            if (HWHFuncs.setProgress) HWHFuncs.setProgress(`🛒 Buying ${buyList.length} items...`, false);
+
+            const structuredRewards = {};
+            let bought = 0;
+
+            for (const item of buyList) {
+                try {
+                    const r = await SendFunction(JSON.stringify({calls:[{
+                        name: 'shopBuy',
+                        args: { shopId: item.shopId, slot: item.slotId, cost: item.cost, reward: item.reward },
+                        ident: 'buy'
+                    }]}));
+
+                    if (r.results[0].result.response && !r.results[0].result.error) {
+                        bought++;
+                        const icon = item.rwdType.includes('Gear') ? '⚙️' : '📜';
+                        const frag = item.rwdType.startsWith('fragment') ? ' (Frag)' : '';
+                        const key = `${icon} ${item.itemName}${frag}`;
+                        structuredRewards[key] = { amount: (structuredRewards[key]?.amount || 0) + item.rwdQty, source: item.shopName[0] };
+                    }
+                } catch (e) {
+                    debugLog(`Shop buy failed: ${item.itemName}`, e);
+                }
+                await new Promise(r => setTimeout(r, 50));
+            }
+
+            if (HWHFuncs.setProgress) HWHFuncs.setProgress(`✅ Shops: ${bought} items bought`, false);
+
+            return {
+                success: true,
+                items: `${bought} items`,
+                count: bought,
+                hasItems: bought > 0,
+                rewards: structuredRewards
+            };
+        } catch (error) {
+            console.error('Shop buy error:', error);
+            if (HWHFuncs.setProgress) HWHFuncs.setProgress('❌ Shop purchase failed', true);
+            return { success: false, error: error.message };
+        }
+    };
+
     window.collectAllGuildQuestRewards = async function() {
         try {
             if (HWHFuncs.setProgress) HWHFuncs.setProgress('🏰 Starting guild quest collection...', false);
@@ -9105,9 +11779,12 @@ color: #ffd700; font-family: Arial, sans-serif; font-size: 14px;
                 const isFastInterval = intervalSec < 1800; // Less than 30 minutes
 
                 const doRefresh = async () => {
+                    if (document.hidden) {
+                        debugLog('⏸️ Tournament refresh skipped - tab hidden');
+                        return;
+                    }
                     const existingPopup = DOMCache.get('tournamentPopup', '#power-tournament-popup');
                     const existingDock = DOMCache.get('tournamentDock', '#tournament-dock');
-
                     if (!existingPopup && !existingDock) {
                         stopAutoRefresh(false);
                         return;
@@ -9561,11 +12238,230 @@ color: #ffd700; font-family: Arial, sans-serif; font-size: 14px;
         }
     };
 
+    // ===== TOP STATUS BAR =====
+    window.showTopStatusBar = async function() {
+        const existing = document.getElementById('hwh-top-statusbar');
+        if (existing) existing.remove();
+        if (window._tsbTimer) clearInterval(window._tsbTimer);
+        if (window._tsbRefresh) clearInterval(window._tsbRefresh);
+        if (window._tsbResizeHandler) window.removeEventListener('resize', window._tsbResizeHandler);
+
+        const gameCanvas = DOMCache.get('gameCanvas', 'canvas');
+        let barLeft = '50%';
+        let barTransform = 'translateX(-50%)';
+        let barWidth = '800px';
+
+        if (gameCanvas) {
+            const rect = gameCanvas.getBoundingClientRect();
+            barLeft = rect.left + 'px';
+            barTransform = 'none';
+            barWidth = rect.width + 'px';
+        }
+
+        const bar = document.createElement('div');
+        bar.id = 'hwh-top-statusbar';
+        bar.style.cssText = `
+            position: fixed; top: 0; left: ${barLeft}; transform: ${barTransform};
+            width: ${barWidth}; height: 28px; background: rgba(42,24,16,0.95);
+            border: 1px solid #8b6914; border-top: none;
+            z-index: 9990; display: flex; align-items: center; justify-content: space-between;
+            padding: 0 10px; font-family: Arial, sans-serif; font-size: 11px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3); box-sizing: border-box;
+        `;
+
+        bar.innerHTML = `
+            <div id="tsb-content" style="display: flex; gap: 15px; align-items: center; flex: 1; color: #ccc;">
+                <span style="color: #666;">Loading...</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <span id="tsb-lastrefresh" style="color: #666; font-size: 10px;">—</span>
+                <button id="tsb-close" style="background: transparent; border: none; color: #666; cursor: pointer; font-size: 14px; padding: 2px 6px;">✕</button>
+            </div>
+        `;
+
+        document.body.appendChild(bar);
+
+        // Reposition on window resize - same as tournament dock
+        window._tsbResizeHandler = () => {
+            const canvas = DOMCache.get('gameCanvas', 'canvas');
+            if (canvas && bar) {
+                const rect = canvas.getBoundingClientRect();
+                bar.style.left = rect.left + 'px';
+                bar.style.width = rect.width + 'px';
+                bar.style.transform = 'none';
+            }
+        };
+        window.addEventListener('resize', window._tsbResizeHandler);
+
+        document.getElementById('tsb-close').onclick = (e) => {
+            e.stopPropagation();
+            window.removeEventListener('resize', window._tsbResizeHandler);
+            bar.remove();
+            if (window._tsbTimer) clearInterval(window._tsbTimer);
+            if (window._tsbRefresh) clearInterval(window._tsbRefresh);
+        };
+
+        await updateTopStatusBar();
+
+        // Update timers every second
+        window._tsbTimer = setInterval(updateTopStatusBarTimers, 1000);
+
+        // Refresh API data every 5 minutes
+        window._tsbRefresh = setInterval(async () => {
+            if (document.hidden) {
+                debugLog('⏸️ Top status bar refresh skipped - tab hidden');
+                return;
+            }
+            const bar = document.getElementById('hwh-top-statusbar');
+            if (!bar) {
+                clearInterval(window._tsbRefresh);
+                return;
+            }
+            await updateTopStatusBar();
+        }, 5 * 60 * 1000);
+    };
+
+    window.hideTopStatusBar = function() {
+        const bar = document.getElementById('hwh-top-statusbar');
+        if (bar) bar.remove();
+        if (window._tsbTimer) clearInterval(window._tsbTimer);
+        if (window._tsbRefresh) clearInterval(window._tsbRefresh);
+        if (window._tsbResizeHandler) window.removeEventListener('resize', window._tsbResizeHandler);
+    };
+
+    window._tsbCache = {};
+
+    async function updateTopStatusBar() {
+        try {
+            const SendFunction = getSend();
+            const response = await SendFunction(JSON.stringify({
+                calls: [
+                    { name: "arenaGetAll", args: {}, ident: "arena" },
+                    { name: "clanWarGetBriefInfo", args: {}, ident: "gw" },
+                    { name: "crossClanWar_getBriefInfo", args: {}, ident: "cow" },
+                    { name: "clanRaid_getInfo", args: {}, ident: "asgard" },
+                    { name: "questGetEvents", args: {}, ident: "events" },
+                    { name: "questGetAll", args: {}, ident: "quests" }
+                ]
+            }));
+
+            const r = {};
+            response?.results?.forEach(x => { r[x.ident] = x.result?.response; });
+
+            const c = window._tsbCache;
+            c.arenaPlace = r.arena?.arenaPlace || '?';
+            c.grandPlace = r.arena?.grandPlace || '?';
+            c.rewardTime = r.arena?.rewardTime || 0;
+
+            c.gwActive = r.gw?.hasActiveWar;
+            c.gwTries = r.gw?.tries || 0;
+            c.gwEnd = r.gw?.nearestWarEndTime || 0;
+
+            c.cowActive = r.cow?.hasActiveWar;
+            c.cowHero = r.cow?.heroTries || 0;
+            c.cowTitan = r.cow?.titanTries || 0;
+            c.cowEnd = r.cow?.endTime || 0;
+
+            c.asgardEnd = r.asgard?.boss?.timestamps?.end || 0;
+            c.asgardLevel = r.asgard?.boss?.level || 0;
+
+            const events = r.events || [];
+            const now = Date.now() / 1000;
+            const activeEvents = events.filter(e => e.endTime > now).sort((a, b) => a.endTime - b.endTime);
+            if (activeEvents[0]) {
+                c.eventName = cheats?.translate(activeEvents[0].name_localeKey) || 'Event';
+                c.eventEnd = activeEvents[0].endTime || 0;
+            }
+
+            c.questTotal = Array.isArray(r.quests) ? r.quests.filter(q => q.state === 1).length : 0;
+
+            // Update last refresh time
+            c.lastRefresh = Date.now();
+            const refreshEl = document.getElementById('tsb-lastrefresh');
+            if (refreshEl) {
+                refreshEl.textContent = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                refreshEl.style.color = '#4ae29a';
+                setTimeout(() => { refreshEl.style.color = '#666'; }, 1500);
+            }
+
+            updateTopStatusBarTimers();
+        } catch (e) {
+            console.error('Top status bar error:', e);
+        }
+    }
+
+    function updateTopStatusBarTimers() {
+        const content = document.getElementById('tsb-content');
+        if (!content) return;
+
+        const c = window._tsbCache;
+        const now = Math.floor(Date.now() / 1000);
+
+        const fmt = (secs) => {
+            if (secs <= 0) return '—';
+            if (secs < 3600) return Math.floor(secs / 60) + 'm';
+            if (secs < 86400) return Math.floor(secs / 3600) + 'h' + (Math.floor((secs % 3600) / 60) + '').padStart(2, '0') + 'm';
+            return Math.floor(secs / 86400) + 'd' + Math.floor((secs % 86400) / 3600) + 'h';
+        };
+
+        const click = 'cursor:pointer;';
+        let html = '';
+        const arenaTime = fmt(c.rewardTime - now);
+
+        // Arena/Grand - clickable
+        html += `<span style="${click}" onclick="cheats.goNavigtor('ARENA')">⚔️ A:<span class="twk-gold">#${c.arenaPlace}</span> <span class="twk-muted">${arenaTime}</span></span>`;
+        html += `<span style="${click}" onclick="cheats.goNavigtor('GRAND')">G:<span class="twk-gold">#${c.grandPlace}</span> <span class="twk-muted">${arenaTime}</span></span>`;
+
+        // GW
+        if (c.gwActive) {
+            html += `<span style="${click}" onclick="cheats.goNavigtor('CLAN_PVP')">🏰 GW:<span class="twk-green">${c.gwTries}</span> <span class="twk-muted">${fmt(c.gwEnd - now)}</span></span>`;
+        } else {
+            html += `<span style="color:#666;${click}" onclick="cheats.goNavigtor('CLAN_PVP')">🏰 GW:—</span>`;
+        }
+
+        // CoW
+        if (c.cowActive) {
+            html += `<span style="${click}" onclick="cheats.goNavigtor('CLAN_GLOBAL_PVP')">🌍 CoW:H<span class="twk-green">${c.cowHero}</span>/T<span class="twk-green">${c.cowTitan}</span> <span class="twk-muted">${fmt(c.cowEnd - now)}</span></span>`;
+        } else {
+            html += `<span style="color:#666;${click}" onclick="cheats.goNavigtor('CLAN_GLOBAL_PVP')">🌍 CoW:—</span>`;
+        }
+
+        // Asgard
+        if (c.asgardEnd > now) {
+            const bossName = c.asgardLevel >= 100 ? 'Maes' : 'Osh';
+            html += `<span style="${click}" onclick="cheats.goNavigtor('CLAN_RAID')">🐉 ${bossName} <span class="twk-muted">${fmt(c.asgardEnd - now)}</span></span>`;
+        } else {
+            html += `<span style="color:#666;${click}" onclick="cheats.goNavigtor('CLAN_RAID')">🐉 Asgard:—</span>`;
+        }
+
+        // Event
+        if (c.eventEnd > now) {
+            const name = (c.eventName || 'Event').substring(0, 12);
+            html += `<span style="${click}" onclick="window.goSpecialEvents()">🎯 <span class="twk-gold">${name}</span> <span class="twk-muted">${fmt(c.eventEnd - now)}</span></span>`;
+        }
+
+        // Quests
+        if (c.questTotal > 0) {
+            html += `<span style="${click}" onclick="window.goSpecialEvents()">📋 <span class="twk-orange">${c.questTotal}</span></span>`;
+        }
+
+        content.innerHTML = html;
+    }
+    ModuleTracker.register('Top Status Bar');
+
+    // Initialize top status bar when game ready
+    waitForGameReady().then(() => {
+        window.showTopStatusBar();
+    });
+
+
     // Placeholder for second stats function
     window.goStats2 = function() {
         // For now, also opens Power Tournament
         window.goPowerTournament();
     };
+
+
 
     // Function to open Special Events popup
     window.goSpecialEvents = function() {
@@ -10083,24 +12979,24 @@ color: #ffd700; font-family: Arial, sans-serif; font-size: 14px;
     };
     window.showAoCStatsUnified = async function() {
         try {
-            // Global auto-refresh state for AoC - default to 15 min
+            // Global auto-refresh state for AoC
             if (!window._aocAutoRefresh) {
+                const savedInterval = parseInt(localStorage.getItem('hwh_aoc_refresh_interval')) || 15;
                 window._aocAutoRefresh = {
                     timer: null,
-                    interval: 15,
+                    interval: savedInterval,
                     lastRefresh: null
                 };
-                // Change the auto-refresh to only update dock, not show full window
-                // Auto-start the 15 min refresh (dock only, no popup)
-                window._aocAutoRefresh.timer = setInterval(async () => {
+                const aocRefreshFn = async () => {
+                    if (document.hidden) return; // Skip if tab hidden
                     window.showAoCDock(null);
                     debugLog('🏰 AoC auto-refreshed (dock only)');
-
                     const idleTime = Date.now() - (window._lastActivity || Date.now());
                     if (idleTime > 60000) {
                         await sendAoCStatusNotification();
                     }
-                }, 15 * 60 * 1000);
+                };
+                window._aocAutoRefresh.timer = setInterval(aocRefreshFn, savedInterval * 60 * 1000);
                 window._aocAutoRefresh.lastRefresh = Date.now();
             }
 
@@ -13040,9 +15936,9 @@ display: flex; flex-direction: column;
 
                 window._aocAutoRefresh.interval = interval;
                 window._aocAutoRefresh.timer = setInterval(async () => {
+                    if (document.hidden) return; // Skip if tab hidden
                     window.showAoCDock(null);
                     debugLog('🏰 AoC auto-refreshed (dock only)');
-
                     const idleTime = Date.now() - (window._lastActivity || Date.now());
                     if (idleTime > 60000) {
                         await sendAoCStatusNotification();
@@ -15072,7 +17968,10 @@ display: flex; flex-direction: column;
                 if (!window.buyAllInSoulShop) throw new Error('Soul Shop function not available');
                 return window.buyAllInSoulShop();
             },
-
+            buyShopsWithPriority: () => {
+                if (!window.buyShopsWithCraftPriority) throw new Error('Shop Priority function not available');
+                return window.buyShopsWithCraftPriority();
+            },
             collectGuildRewards: async () => {
                 if (!window.collectAllGuildRewards) throw new Error('Guild Rewards function not available');
                 const results = await window.collectAllGuildRewards();
@@ -15257,6 +18156,57 @@ display: flex; flex-direction: column;
                     };
 
                     const SendFunction = getSend();
+
+                    // FIRST: Harvest BP quests (they give XP which may unlock more levels)
+                    let bpQuestCount = 0;
+                    const bpQuestRewards = {};
+                    try {
+                        const questResp = await SendFunction('{"calls":[{"name":"questGetAll","args":{},"ident":"body"}]}');
+                        const allQuests = questResp?.results?.[0]?.result?.response || [];
+
+                        const bpReady = allQuests.filter(q =>
+                                                         q.state == 2 &&
+                                                         +q.id >= 14e8 &&
+                                                         +q.id < 2e9 &&
+                                                         q.reward?.battlePassExp
+                                                        );
+
+                        if (bpReady.length > 0) {
+                            debugLog(`🎫 Harvesting ${bpReady.length} BP quests first (for XP)...`);
+                            if (HWHFuncs?.setProgress) {
+                                HWHFuncs.setProgress(`🎫 Harvesting ${bpReady.length} BP quests...`, false);
+                            }
+
+                            const bpCalls = bpReady.map((q, i) => ({
+                                name: 'questFarm',
+                                args: { questId: +q.id },
+                                ident: `bpq_${i}`
+                            }));
+
+                            const bpResult = await SendFunction(JSON.stringify({ calls: bpCalls }));
+
+                            if (bpResult?.results) {
+                                bpResult.results.forEach((result, index) => {
+                                    if (!result.result?.error && result.result?.response) {
+                                        bpQuestCount++;
+                                        debugLog(`🎫 BP quest ${bpReady[index].id} harvested:`, result.result.response);
+
+                                        const rewards = window.parseRewardResponse?.(result.result.response) || [];
+                                        rewards.forEach(r => {
+                                            if (r.name && r.quantity) {
+                                                if (!bpQuestRewards[r.name]) bpQuestRewards[r.name] = { amount: 0, source: 'B' };
+                                                bpQuestRewards[r.name].amount += r.quantity;
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        }
+                    } catch (bpQuestError) {
+                        console.warn('BP quest harvest error:', bpQuestError);
+                    }
+
+                    // THEN: Get fresh BP info (with updated XP from quests)
                     const passResponse = await SendFunction(JSON.stringify({
                         calls: [
                             { name: 'battlePass_getInfo', args: {}, ident: 'getInfo' },
@@ -15314,157 +18264,36 @@ display: flex; flex-direction: column;
                     }
 
                     const count = freeCollected + paidCollected;
+
+                    // Merge BP quest rewards into structuredRewards
+                    Object.entries(bpQuestRewards).forEach(([name, data]) => {
+                        if (!structuredRewards[name]) structuredRewards[name] = { amount: 0, source: 'B' };
+                        structuredRewards[name].amount += data.amount;
+                    });
+
+                    const totalCount = count + bpQuestCount;
                     const rewardCount = Object.keys(structuredRewards).length;
 
+                    // Refresh local state
+                    if (bpQuestCount > 0 && typeof silentSync === 'function') {
+                        await silentSync();
+                    }
+
                     if (HWHFuncs?.setProgress) {
-                        HWHFuncs.setProgress(`✅ Season Rewards: ${count} collected (${freeCollected} free, ${paidCollected} premium)`, false);
+                        const questMsg = bpQuestCount > 0 ? `, ${bpQuestCount} quests` : '';
+                        HWHFuncs.setProgress(`✅ Season Rewards: ${totalCount} collected (${freeCollected} free, ${paidCollected} premium${questMsg})`, false);
                     }
 
                     return {
                         success: true,
-                        items: rewardCount > 0 ? `${count} items` : `${count} rewards`,
-                        count,
+                        items: rewardCount > 0 ? `${totalCount} items` : `${totalCount} rewards`,
+                        count: totalCount,
                         hasItems: rewardCount > 0,
                         rewards: structuredRewards
                     };
 
                 } catch (error) {
                     console.error('Error in collectBattlePass:', error);
-                    return { success: false, items: 'Error: ' + error.message, count: 0, hasItems: false };
-                }
-            },
-            exchangeSoulCoins: async () => {
-                try {
-                    debugLog('🔄 Starting Soul Coin Exchange...');
-                    const SendFunction = getSend();
-
-                    if (HWHFuncs?.setProgress) HWHFuncs.setProgress('🔄 Exchanging souls for coins...', false);
-
-                    const result = await SendFunction(JSON.stringify({
-                        calls: [{
-                            name: 'inventoryExchangeStones',
-                            args: {},
-                            ident: 'exchange'
-                        }]
-                    }));
-
-                    const response = result?.results?.[0]?.result?.response;
-
-                    if (!response?.reward) {
-                        return { success: true, items: 'No souls to exchange', count: 0, hasItems: false };
-                    }
-
-                    const coinsGained = response.reward?.coin?.[5] || 0;
-                    const fragmentsUsed = response.cost?.fragmentHero ? Object.values(response.cost.fragmentHero).reduce((a, b) => a + b, 0) : 0;
-
-                    return {
-                        success: true,
-                        items: coinsGained > 0 ? `+${coinsGained} Soul Coins` : 'Exchanged',
-                        count: fragmentsUsed,
-                        hasItems: coinsGained > 0,
-                        rewards: coinsGained > 0 ? { '🪙 Soul Coins': { amount: coinsGained, source: 'E' } } : {}
-                    };
-                } catch (error) {
-                    console.error('Soul Coin Exchange error:', error);
-                    return { success: false, items: 'Error: ' + error.message, count: 0, hasItems: false };
-                }
-            },
-
-            sellHeroSouls: async () => {
-                try {
-                    debugLog('👻 Starting Sell Hero Souls for Gold...');
-                    const SendFunction = getSend();
-
-                    // Use cheats cache if available, otherwise fetch
-                    const heroes = cheats?.heroes;
-                    const needHeroes = !heroes || Object.keys(heroes).length === 0;
-
-                    const calls = needHeroes ? [
-                        { name: 'inventoryGet', args: {}, ident: 'inventory' },
-                        { name: 'heroGetAll', args: {}, ident: 'heroes' }
-                    ] : [
-                        { name: 'inventoryGet', args: {}, ident: 'inventory' }
-                    ];
-
-                    const response = await SendFunction(JSON.stringify({ calls }));
-                    const inventory = response?.results?.[0]?.result?.response;
-                    const heroData = needHeroes ? response?.results?.[1]?.result?.response : heroes;
-
-                    if (!inventory || !heroData) {
-                        return { success: false, items: 'Could not get data', count: 0, hasItems: false };
-                    }
-
-                    const sellCalls = [];
-                    const fragmentHero = inventory.fragmentHero || {};
-
-                    for (const heroId in fragmentHero) {
-                        if (heroData[heroId]?.star == 6 && fragmentHero[heroId] > 0) {
-                            sellCalls.push({
-                                name: 'inventorySell',
-                                args: { type: 'hero', libId: heroId, amount: fragmentHero[heroId], fragment: true },
-                                ident: `sell_${heroId}`
-                            });
-                        }
-                    }
-
-                    if (!sellCalls.length) {
-                        return { success: true, items: 'No 6★ souls to sell', count: 0, hasItems: false };
-                    }
-
-                    if (HWHFuncs?.setProgress) HWHFuncs.setProgress(`👻 Selling souls from ${sellCalls.length} heroes...`, false);
-
-                    const sellResponse = await SendFunction(JSON.stringify({ calls: sellCalls }));
-                    let totalGold = 0;
-
-                    sellResponse?.results?.forEach(r => {
-                        if (r?.result?.response?.gold) totalGold += r.result.response.gold;
-                    });
-
-                    return {
-                        success: true,
-                        items: totalGold > 0 ? `+${totalGold.toLocaleString()} gold` : 'No gold received',
-                        count: sellCalls.length,
-                        hasItems: totalGold > 0,
-                        rewards: totalGold > 0 ? { '🪙 Gold': { amount: totalGold, source: 'G' } } : {}
-                    };
-                } catch (error) {
-                    console.error('Sell Hero Souls error:', error);
-                    return { success: false, items: 'Error: ' + error.message, count: 0, hasItems: false };
-                }
-            },
-            exchangeTitanCoins: async () => {
-                try {
-                    debugLog('🔁 Starting Titan Soul Coin Exchange...');
-                    const SendFunction = getSend();
-
-                    if (HWHFuncs?.setProgress) HWHFuncs.setProgress('🔁 Exchanging titan souls for coins...', false);
-
-                    const result = await SendFunction(JSON.stringify({
-                        calls: [{
-                            name: 'inventoryExchangeTitanStones',
-                            args: {},
-                            ident: 'exchange'
-                        }]
-                    }));
-
-                    const response = result?.results?.[0]?.result?.response;
-
-                    if (!response?.reward) {
-                        return { success: true, items: 'No titan souls to exchange', count: 0, hasItems: false };
-                    }
-
-                    const coinsGained = response.reward?.coin?.[15] || 0;
-                    const fragmentsUsed = response.cost?.fragmentTitan ? Object.values(response.cost.fragmentTitan).reduce((a, b) => a + b, 0) : 0;
-
-                    return {
-                        success: true,
-                        items: coinsGained > 0 ? `+${coinsGained} Titan Soul Coins` : 'No titan souls to exchange',
-                        count: fragmentsUsed,
-                        hasItems: coinsGained > 0,
-                        rewards: coinsGained > 0 ? { '🪙 Titan Soul Coins': { amount: coinsGained, source: 'TE' } } : {}
-                    };
-                } catch (error) {
-                    console.error('Titan Soul Coin Exchange error:', error);
                     return { success: false, items: 'Error: ' + error.message, count: 0, hasItems: false };
                 }
             },
@@ -15549,6 +18378,7 @@ display: flex; flex-direction: column;
                     return { success: false, items: 'Error: ' + error.message, count: 0, hasItems: false };
                 }
             },
+
             sellXPPotions: async () => {
                 try {
                     debugLog('🧪 Starting XP Potion sale...');
@@ -15662,6 +18492,19 @@ display: flex; flex-direction: column;
                         console.warn('Could not load checked items:', e);
                     }
 
+                    // Sell excess fragments using shared helper
+                    let fragSellConfig = {};
+                    try {
+                        const savedFrags = localStorage.getItem('hwh_fragment_sell_settings');
+                        if (savedFrags) fragSellConfig = JSON.parse(savedFrags);
+                    } catch (e) { console.warn('Could not load fragment settings:', e); }
+
+                    const fragResult = await executeFragmentSells(inventoryData, fragSellConfig, { includeGearScroll: false });
+                    const fragSellGold = fragResult.gold || 0;
+                    const fragSellCoins = fragResult.coins || {};
+
+
+
                     // Get items to use from Tab 1
                     const consumables = inventoryData.consumable || {};
                     let itemsToUse = Object.keys(tab1CheckedItems).filter(id => consumables[id] > 0);
@@ -15683,11 +18526,23 @@ display: flex; flex-direction: column;
                     debugLog(`📦 Processing ${itemsToUse.length} items (${Object.keys(tab1CheckedItems).filter(id => consumables[id] > 0).length} auto-use + ${autoSelectedItems.length} auto-selected)`);
 
                     if (itemsToUse.length === 0) {
+                        // Still report fragment sell results even if no consumables to use
+                        const fragRewards = {};
+                        if (fragSellGold > 0) {
+                            fragRewards['🪙 Gold'] = { amount: fragSellGold, source: 'FS' };
+                        }
+                        Object.entries(fragSellCoins).forEach(([coinId, amount]) => {
+                            const coinName = window.identifyItem?.(coinId, 'coin') || `Coin #${coinId}`;
+                            fragRewards[coinName] = { amount, source: 'FS' };
+                        });
+
+                        const hasFragResults = fragSellGold > 0 || Object.keys(fragSellCoins).length > 0;
                         return {
                             success: true,
-                            items: 'No items in Tab 1 list to use',
-                            count: 0,
-                            hasItems: false
+                            items: hasFragResults ? `Sold fragments` : 'No items in Tab 1 list to use',
+                            count: hasFragResults ? (fragResult.sellCount || 0) : 0,
+                            hasItems: hasFragResults,
+                            rewards: fragRewards
                         };
                     }
 
@@ -15884,6 +18739,20 @@ display: flex; flex-direction: column;
                         // Small delay between rounds
                         await new Promise(resolve => setTimeout(resolve, 100));
                     }
+                    // Add fragment sell rewards to aggregated rewards
+                    if (fragSellGold > 0) {
+                        aaggregatedRewards['🪙 Gold'] = (aggregatedRewards['🪙 Gold'] || 0) + fragSellGold;
+                    }
+                    if (Object.keys(fragSellCoins).length > 0) {
+                        Object.entries(fragSellCoins).forEach(([coinId, amount]) => {
+                            if (amount > 0) {
+                                const coinName = window.identifyItem?.(coinId, 'coin') || `Coin #${coinId}`;
+                                aggregatedRewards[`💰 ${coinName}`] = (aggregatedRewards[`💰 ${coinName}`] || 0) + amount;
+                            }
+                        });
+                    }
+
+
                     const rewardCount = Object.keys(aggregatedRewards).length;
                     // Convert to structured format
                     const structuredRewards = {};
@@ -15914,6 +18783,133 @@ display: flex; flex-direction: column;
                         count: 0,
                         hasItems: false
                     };
+                }
+            },
+
+            // Sell excess gear/scroll items and frags based on Tab 6 targets
+            sellCraftExcess: async () => {
+                try {
+                    debugLog('⚙️ Starting Sell Craft Excess (Tab 6)...');
+
+                    const SendFunction = getSend();
+                    const response = await SendFunction(JSON.stringify({calls:[{name:'inventoryGet',args:{},ident:'inv'}]}));
+                    const inv = response?.results?.[0]?.result?.response;
+                    if (!inv) return { success: false, items: 'Could not get inventory', count: 0, hasItems: false };
+
+                    const fragData = { gear: inv.fragmentGear || {}, scroll: inv.fragmentScroll || {} };
+                    const builtData = { gear: inv.gear || {}, scroll: inv.scroll || {} };
+
+                    // Load craft targets
+                    let targets = {};
+                    try {
+                        const saved = localStorage.getItem('hwh_craft_targets');
+                        if (saved) targets = JSON.parse(saved);
+                    } catch (e) { console.warn('Could not load craft targets:', e); }
+
+                    const toSellFrags = [];
+                    const toSellItems = [];
+
+                    ['gear', 'scroll'].forEach(type => {
+                        // Excess fragments
+                        Object.keys(fragData[type]).forEach(id => {
+                            const mergeCost = lib.data?.inventoryItem?.[type]?.[id]?.fragmentMergeCost;
+                            if (mergeCost?.fragmentCount) {
+                                const k = `${type}_${id}`;
+                                const fragCount = fragData[type][id] || 0;
+                                const builtCount = builtData[type][id] || 0;
+                                const needed = mergeCost.fragmentCount;
+                                const target = targets[k];
+                                if (target !== undefined) {
+                                    const fragsNeededForTarget = Math.max(0, (target - builtCount) * needed);
+                                    const excess = fragCount - fragsNeededForTarget;
+                                    if (excess > 0) {
+                                        toSellFrags.push({ type: `fragment${type.charAt(0).toUpperCase() + type.slice(1)}`, id: parseInt(id), amount: excess, name: window.identifyItem?.(id, type) || id });
+                                    }
+                                }
+                            }
+                        });
+
+                        // Excess built items
+                        Object.keys(builtData[type]).forEach(id => {
+                            const k = `${type}_${id}`;
+                            const builtCount = builtData[type][id] || 0;
+                            const target = targets[k];
+                            if (target !== undefined && builtCount > target) {
+                                const excess = builtCount - target;
+                                toSellItems.push({ type, id: parseInt(id), amount: excess, name: window.identifyItem?.(id, type) || id });
+                            }
+                        });
+                    });
+
+                    if (toSellFrags.length === 0 && toSellItems.length === 0) {
+                        return { success: true, items: 'No excess to sell', count: 0, hasItems: false };
+                    }
+
+                    // Update progress
+                    if (HWHFuncs?.setProgress) {
+                        HWHFuncs.setProgress(`⚙️ Selling ${toSellFrags.length + toSellItems.length} excess types...`, false);
+                    }
+
+                    let totalGold = 0;
+                    let soldCount = 0;
+                    const coinRewards = {};
+
+                    // Sell fragments
+                    for (const item of toSellFrags) {
+                        try {
+                            const resp = await SendFunction(JSON.stringify({calls:[{name:'inventorySell',args:{type:item.type,libId:item.id,amount:item.amount},ident:'sell'}]}));
+                            const r = resp?.results?.[0]?.result?.response;
+                            if (r?.gold) totalGold += r.gold;
+                            if (r?.coin) {
+                                Object.entries(r.coin).forEach(([coinId, amt]) => {
+                                    coinRewards[coinId] = (coinRewards[coinId] || 0) + amt;
+                                });
+                            }
+                            soldCount++;
+                            debugLog(`  Sold ${item.amount} ${item.name} frags`);
+                            await new Promise(r => setTimeout(r, 50));
+                        } catch (e) { console.error('Sell frag failed:', item, e); }
+                    }
+
+                    // Sell built items
+                    for (const item of toSellItems) {
+                        try {
+                            const resp = await SendFunction(JSON.stringify({calls:[{name:'inventorySell',args:{type:item.type,libId:item.id,amount:item.amount},ident:'sell'}]}));
+                            const r = resp?.results?.[0]?.result?.response;
+                            if (r?.gold) totalGold += r.gold;
+                            if (r?.coin) {
+                                Object.entries(r.coin).forEach(([coinId, amt]) => {
+                                    coinRewards[coinId] = (coinRewards[coinId] || 0) + amt;
+                                });
+                            }
+                            soldCount++;
+                            debugLog(`  Sold ${item.amount} ${item.name}`);
+                            await new Promise(r => setTimeout(r, 50));
+                        } catch (e) { console.error('Sell item failed:', item, e); }
+                    }
+
+                    // Build rewards object
+                    const rewards = {};
+                    if (totalGold > 0) {
+                        rewards['🪙 Gold'] = { amount: totalGold, source: 'Craft' };
+                    }
+                    Object.entries(coinRewards).forEach(([coinId, amount]) => {
+                        if (amount > 0) {
+                            const coinName = window.identifyItem?.(coinId, 'coin') || `Coin #${coinId}`;
+                            rewards[`💰 ${coinName}`] = { amount, source: 'Craft' };
+                        }
+                    });
+
+                    return {
+                        success: true,
+                        items: `${toSellFrags.length} frag types, ${toSellItems.length} item types → ${totalGold.toLocaleString()} gold`,
+                        count: soldCount,
+                        hasItems: Object.keys(rewards).length > 0,
+                        rewards
+                    };
+                } catch (error) {
+                    console.error('Sell Craft Excess error:', error);
+                    return { success: false, items: 'Error: ' + error.message, count: 0, hasItems: false };
                 }
             },
 
@@ -16066,21 +19062,20 @@ display: flex; flex-direction: column;
                 default: false,
                 disabled: false
             },
-            exchangeSoulCoins: {
-                icon: '👻',
-                label: 'Exchange Hero Souls → Hero Soul Coins',
-                desc: 'Convert 6★ hero soul fragments to Soul Coins',
-                group: 'collect',
-                default: false,
-                disabled: false,
-                exclusive: 'heroSouls'
-            },
             collectSoulShop: {
                 icon: '👻',
                 label: 'Soul Shop',
                 desc: 'Buy all items from the Soul Shop',
                 group: 'collect',
                 default: true,
+                disabled: false
+            },
+            buyShopsWithPriority: {
+                icon: '🏪',
+                label: 'Buy Shops (Priority)',
+                desc: 'Buy gear/scrolls from Arena, Grand, Tower, Friendship, Outland - by craft target priority',
+                group: 'collect',
+                default: false,
                 disabled: false
             },
             collectGuildRewards: {
@@ -16109,42 +19104,33 @@ display: flex; flex-direction: column;
             },
             autoUseInventory: {
                 icon: '📦',
-                label: 'Use Inventory',
+                label: 'Use Inventory + Sell Frags',
                 desc: 'Auto-use checked items from Inventory Tab 1',
                 group: 'collect',
                 default: false,
                 disabled: false
             },
-            // === REMAINING CONVERSIONS LAST ===
-            sellHeroSouls: {
-                icon: '👻',
-                label: 'Sell Hero Souls → Gold',
-                desc: 'Sell 6★ hero soul fragments for gold',
-                group: 'collect',
-                default: false,
-                disabled: false,
-                exclusive: 'heroSouls'
-            },
-            exchangeTitanCoins: {
-                icon: '📱',
-                label: 'Exchange Titan Souls → Titan Soul Coins',
-                desc: 'Convert 6★ titan soul fragments to Titan Soul Coins',
-                group: 'collect',
-                default: false,
-                disabled: false
-            },
             buyTitanShopGold: {
-                icon: '📱',
+                icon: '🔱',
                 label: 'Sell Titan Soul Coins → Gold',
                 desc: 'Buy gold from Titan Soul Shop',
                 group: 'collect',
                 default: false,
                 disabled: false
             },
+            // === REMAINING CONVERSIONS LAST ===
             sellXPPotions: {
                 icon: '🧪',
                 label: 'Sell XP Potions → Gold',
                 desc: `Sell excess XP potions (keeps ${localStorage.getItem(XP_POTION_KEEP_KEY) || 484} Huge)`,
+                group: 'collect',
+                default: false,
+                disabled: false
+            },
+            sellCraftExcess: {
+                icon: '⚙️',
+                label: 'Sell Excess Gear/Scrolls',
+                desc: 'Sell gear & scroll frags/items above Tab 6 targets',
                 group: 'collect',
                 default: false,
                 disabled: false
@@ -16739,22 +19725,24 @@ ${preTasks.length ? `
             return `<span style="color:#999">${formatNum(before)}</span> → <span style="color:${color}">${formatNum(after)} (${sign}${formatNum(diff)})</span>`;
         };
 
-        let currencyHtml = '';
+        // Build inline currency display for header
+        let currencyHeaderHtml = '';
         if (currenciesBefore && currenciesAfter) {
-            currencyHtml = `
-                <div style="background:rgba(0,0,0,0.3); padding:8px 12px; border-radius:6px; margin-bottom:10px; font-size:11px;">
-                    <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-                        <span>🪙 Gold:</span>
-                        <span>${formatDelta(currenciesBefore.gold, currenciesAfter.gold)}</span>
-                    </div>
-                    <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-                        <span>💎 Emeralds:</span>
-                        <span>${formatDelta(currenciesBefore.emeralds, currenciesAfter.emeralds)}</span>
-                    </div>
-                    <div style="display:flex; justify-content:space-between;">
-                        <span>👻 Soul Coins:</span>
-                        <span>${formatDelta(currenciesBefore.soulCoins, currenciesAfter.soulCoins)}</span>
-                    </div>
+            const makeDeltaSpan = (before, after, icon, title) => {
+                const diff = after - before;
+                let deltaHtml = '';
+                if (diff !== 0) {
+                    const color = diff > 0 ? '#4ae29a' : '#ff6b6b';
+                    const sign = diff > 0 ? '+' : '';
+                    deltaHtml = ` <span style="color:${color}">(${sign}${formatNum(diff)})</span>`;
+                }
+                return `<span title="${title}">${icon} ${formatNum(after)}${deltaHtml}</span>`;
+            };
+            currencyHeaderHtml = `
+                <div style="display:flex; gap:12px; font-size:11px; background:rgba(0,0,0,0.3); padding:4px 10px; border-radius:4px; margin-right:10px;">
+                    ${makeDeltaSpan(currenciesBefore.gold, currenciesAfter.gold, '🪙', 'Gold')}
+                    ${makeDeltaSpan(currenciesBefore.emeralds, currenciesAfter.emeralds, '💎', 'Emeralds')}
+                    ${makeDeltaSpan(currenciesBefore.soulCoins, currenciesAfter.soulCoins, '👻', 'Soul Coins')}
                 </div>
             `;
         }
@@ -16818,9 +19806,12 @@ ${preTasks.length ? `
         };
 
         let content = `
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
                 <h3 style="margin: 0; font-size: 14px;">📊 Collection Summary</h3>
-                <button id="close-collect-summary" style="background: #666; color: #fff; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 14px; font-weight: bold;">✕</button>
+                <div style="display:flex; align-items:center;">
+                    ${currencyHeaderHtml}
+                    <button id="close-collect-summary" style="background: #666; color: #fff; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 14px; font-weight: bold;">✕</button>
+                </div>
             </div>
             <div style="display: flex; gap: 20px; margin-bottom: 12px; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 4px;">
                 <span class="twk-green-bold">✅ ${successCount} completed</span>
@@ -16854,7 +19845,6 @@ ${preTasks.length ? `
         // Close scrollable task list, add currency section at bottom of column 1
         content += `
                     </div>
-                    ${currencyHtml}
                 </div>
                 <!-- Right column: All Items -->
                 <div style="display: flex; flex-direction: column; min-height: 0; overflow: hidden;">
@@ -17751,7 +20741,8 @@ ${preTasks.length ? `
             { key: 'hwh_power_tournament_history', label: '🏆 Tournament', related: ['hwh_power_tournament_clan_cache', 'hwh_tournament_end_time'] },
             { key: 'hwh_grand_battle_history', label: '⚔️ Grand Arena', related: [] },
             { key: 'hwh_arena_battle_history', label: '🏟️ Arena', related: [] },
-            { key: 'hwh_aoc_history', label: '🏰 AoC', related: [] }
+            { key: 'hwh_aoc_history', label: '🏰 AoC', related: [] },
+            { key: 'hwh_winterfest_gift_cache', label: '🎄 Winterfest', related: [] }
         ];
 
         const formatBytes = (bytes) => {
@@ -17761,7 +20752,31 @@ ${preTasks.length ? `
         };
 
         const refreshHistoryList = () => {
+            // Calculate total localStorage usage
+            let totalBytes = 0;
+            for (let key in localStorage) {
+                if (localStorage.hasOwnProperty(key)) {
+                    totalBytes += (localStorage[key].length * 2); // UTF-16 = 2 bytes per char
+                }
+            }
+            const totalMB = (totalBytes / (1024 * 1024)).toFixed(2);
+            const WARNING_THRESHOLD_MB = 3; // Warn at 3MB (localStorage limit is ~5MB)
+
             let html = '';
+
+            // Show storage warning if over threshold
+            if (totalBytes > WARNING_THRESHOLD_MB * 1024 * 1024) {
+                html += '<div style="background: #c0392b; color: #fff; padding: 8px; border-radius: 4px; margin-bottom: 10px; font-size: 11px;">' +
+                    '⚠️ <b>Storage Warning:</b> ' + totalMB + ' MB used (limit ~5 MB)<br>' +
+                    '<span style="font-size: 10px;">Clear old data to prevent issues</span>' +
+                    '</div>';
+            } else if (totalBytes > 1 * 1024 * 1024) {
+                // Info level at 1MB+
+                html += '<div style="background: #8b6914; color: #ffd700; padding: 6px; border-radius: 4px; margin-bottom: 10px; font-size: 10px;">' +
+                    '💾 Storage: ' + totalMB + ' MB used' +
+                    '</div>';
+            }
+
             historyItems.forEach((item, index) => {
                 const data = localStorage.getItem(item.key);
                 const size = data ? new Blob([data]).size : 0;
@@ -18187,6 +21202,32 @@ ${preTasks.length ? `
     async function initTweaker() {
         debugLog(`Initializing HWH Tweaker v${TWEAKER_VERSION}...`);
 
+        // Weekly storage check
+        const STORAGE_CHECK_KEY = 'hwh_last_storage_check';
+        const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
+        const lastCheck = parseInt(localStorage.getItem(STORAGE_CHECK_KEY)) || 0;
+
+        if (Date.now() - lastCheck > WEEK_MS) {
+            let totalBytes = 0;
+            for (let key in localStorage) {
+                if (localStorage.hasOwnProperty(key)) {
+                    totalBytes += (localStorage[key].length * 2);
+                }
+            }
+            const totalMB = (totalBytes / (1024 * 1024)).toFixed(2);
+            const WARNING_THRESHOLD_MB = 3;
+
+            if (totalBytes > WARNING_THRESHOLD_MB * 1024 * 1024) {
+                console.warn(`⚠️ HWH Tweaker: localStorage at ${totalMB} MB (limit ~5 MB)`);
+                setTimeout(() => {
+                    if (HWHFuncs?.setProgress) {
+                        HWHFuncs.setProgress(`⚠️ Storage: ${totalMB} MB - Clear old data in Settings`, 8000);
+                    }
+                }, 5000);
+            }
+            localStorage.setItem(STORAGE_CHECK_KEY, Date.now().toString());
+        }
+
         // Load settings immediately
         window.loadCollectSettings();
         window.loadUISettings();
@@ -18277,6 +21318,13 @@ ${preTasks.length ? `
         // Set up hourly ToP refresh interval
         if (!window._topRefreshInterval) {
             window._topRefreshInterval = setInterval(async () => {
+                if (document.hidden) return; // Skip if tab hidden
+                // Skip if tournament ended
+                const endTime = parseInt(localStorage.getItem('hwh_tournament_end_time')) || 0;
+                if (endTime && Date.now() > endTime) {
+                    debugLog('⏸️ Tournament ended - skipping refresh');
+                    return;
+                }
                 try {
                     debugLog('🔄 Hourly Power Tournament data refresh...');
                     await window.refreshPowerTournamentData(false);
@@ -25079,7 +28127,6 @@ Win Rate: <span class="twk-gold">${grandWinRate}%</span>
         debugLog(`Adventure extension: ${window.isUISettingEnabled('enableAdventureExtension') ? 'ENABLED' : 'DISABLED'}`);
         debugLog('Features: Collection automation, Custom navigation buttons, Button visibility control, Collect More with internal functions, Collect on load, HWH Do All integration, Config gear icon, Adventure path integration');
         // Check if AoC is active on page load and show dock
-        // Check if AoC is active on page load and show dock
         window.checkAoCOnLoad = async function() {
             try {
                 const SendFunction = getSend();
@@ -25115,20 +28162,22 @@ Win Rate: <span class="twk-gold">${grandWinRate}%</span>
 
                     // Set up auto-refresh if not already running
                     if (!window._aocAutoRefresh) {
+                        const savedInterval = parseInt(localStorage.getItem('hwh_aoc_refresh_interval')) || 15;
                         window._aocAutoRefresh = {
                             timer: null,
-                            interval: 15,
+                            interval: savedInterval,
                             lastRefresh: null
                         };
-                        window._aocAutoRefresh.timer = setInterval(async () => {
-                            window.showAoCDock(null);  // Let it fetch its own data
+                        const aocRefreshFn = async () => {
+                            if (document.hidden) return; // Skip if tab hidden
+                            window.showAoCDock(null);
                             debugLog('🏰 AoC auto-refreshed (dock only)');
-
                             const idleTime = Date.now() - (window._lastActivity || Date.now());
                             if (idleTime > 60000) {
                                 await sendAoCStatusNotification();
                             }
-                        }, 15 * 60 * 1000);
+                        };
+                        window._aocAutoRefresh.timer = setInterval(aocRefreshFn, savedInterval * 60 * 1000);
                         window._aocAutoRefresh.lastRefresh = Date.now();
                     }
 
@@ -27103,6 +30152,19 @@ Win Rate: <span class="twk-gold">${grandWinRate}%</span>
                 icon: '📱',
                 color: 'purple',
                 description: 'Artifacts Upgrade (Others menu)'
+            },
+
+            'Fragment Hunter': {
+                action: () => {
+                    if (window.showFragmentHunter) {
+                        window.showFragmentHunter();
+                    } else {
+                        console.error('showFragmentHunter not loaded yet');
+                    }
+                },
+                icon: '🎯',
+                color: 'red',
+                description: 'Hunt gear/scroll fragments by category or hero needs'
             },
 
             'Skins Up': {
@@ -32556,6 +35618,7 @@ font-weight: bold;
                         { name: '📊 Game Data', action: () => window.showGameDataPopup && window.showGameDataPopup() },
                         { name: '🗺️ Edit Adventure Paths', action: () => window.editAdventurePathsStandalone && window.editAdventurePathsStandalone() },
                         { name: '📦 Inventory Manager', action: () => window.showInventoryManager && window.showInventoryManager() },
+                            { name: '🎯 Fragment Hunter', action: () => window.showFragmentHunter && window.showFragmentHunter() },
                         { name: '⚙️ HW Settings', action: () => { try { new (selfGame['game.mechanics.settings.popup.SettingsPopupMediator'])().open(); } catch(e){} } },
                     ]},
                     { name: '📋 Others', items: [

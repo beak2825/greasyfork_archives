@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Torn OC Loan Manager
 // @namespace    https://torn.com
-// @version      1.3.1
+// @version      1.3.2
 // @description  Highlights over-loaned items and helps loan missing OC tools + split calculator
 // @author       Allenone [2033011]
 // @match        https://www.torn.com/factions.php?step=your*
@@ -347,8 +347,8 @@
                 } else {
                     const rows = overList.map(e => `
                         <tr style="border-bottom:1px solid #333;">
-                            <td style="padding:12px 8px;">${e.name} <span style="font-size:11px;color:#0b0;">[${e.pid}]</span></td>
-                            <td style="padding:12px 8px;">${e.item} <span style="font-size:11px;color:#0b0;">(${e.iid})</span></td>
+                            <td style="padding:12px 8px; color:${color};">${e.name} <span style="font-size:11px;color:${color};">[${e.pid}]</span></td>
+                            <td style="padding:12px 8px; color:${color};">${e.item} <span style="font-size:11px;color:${color};">(${e.iid})</span></td>
                         </tr>
                     `).join('');
                     content.innerHTML = `

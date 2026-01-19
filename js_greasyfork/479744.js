@@ -1,20 +1,28 @@
 // ==UserScript==
 // @name         吾爱后台管理全选
 // @namespace    https://greasyfork.org/zh-CN/scripts/479744
-// @version      1.1.2
+// @version      1.2.0
 // @description  吾爱后台管理全选(除第一个)
 // @author       冰冻大西瓜
 // @match        https://www.52pojie.cn/forum.php?mod=modcp&action=thread&op=post*
 // @license      AGPL-3.0-only
 // @grant        GM_addStyle
-// @note         2024年6月14日 更新分表样式,提高管理效率
+// @note         2026年1月14日 添加配置项,随时改变隐藏的分表
 // @note         2026年1月11日 显示全部分表按钮并修改查询时间为2008-03-13
+// @note         2024年6月14日 更新分表样式,提高管理效率
+
 // @downloadURL https://update.greasyfork.org/scripts/479744/%E5%90%BE%E7%88%B1%E5%90%8E%E5%8F%B0%E7%AE%A1%E7%90%86%E5%85%A8%E9%80%89.user.js
 // @updateURL https://update.greasyfork.org/scripts/479744/%E5%90%BE%E7%88%B1%E5%90%8E%E5%8F%B0%E7%AE%A1%E7%90%86%E5%85%A8%E9%80%89.meta.js
 // ==/UserScript==
 
 ;(function () {
   'use strict'
+
+  // ==================== 配置项 ====================
+  const CONFIG = {
+    // 需要隐藏的分表索引(0-based),例如: [3, 4, 5, 6] 表示隐藏分表3、4、5、6
+    hiddenTableIndexes: [3, 4, 5, 6],
+  }
 
   // ==================== 样式定义 ====================
   GM_addStyle(`
@@ -45,20 +53,15 @@
     }
     .table-btn-right {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       grid-template-rows: repeat(2, auto);
       gap: 5px;
       flex: 1;
     }
-    .table-btn-right button:nth-child(n+6):nth-child(-n+10) {
-      grid-row: 2;
-    }
-      /* 定义排列顺序 */
-    .table-btn-right button:nth-child(6) { grid-column: 5; }
-    .table-btn-right button:nth-child(7) { grid-column: 4; }
-    .table-btn-right button:nth-child(8) { grid-column: 3; }
-    .table-btn-right button:nth-child(9) { grid-column: 2; }
-    .table-btn-right button:nth-child(10) { grid-column: 1; }
+    /* 蛇形布局:第二排倒序(强制指定行和列) */
+    .table-btn-right button:nth-child(6) { grid-column: 1; grid-row: 2; }
+    .table-btn-right button:nth-child(5) { grid-column: 2; grid-row: 2; }
+    .table-btn-right button:nth-child(4) { grid-column: 3; grid-row: 2; }
   `)
 
   // 全局绑定提交按钮
@@ -116,6 +119,9 @@
 
     if (!select || !searchSubmit || menuItems.length === 0) return
 
+    // 根据配置过滤需要显示的分表
+    const visibleMenuItems = menuItems.filter((_, index) => !CONFIG.hiddenTableIndexes.includes(index))
+
     // 创建容器
     const container = document.createElement('div')
     container.className = 'table-btn-container'
@@ -128,15 +134,17 @@
 
     // 创建所有分表按钮
     const allButtons = []
-    menuItems.forEach((item, index) => {
+    visibleMenuItems.forEach((item, visibleIndex) => {
+      // 获取原始索引
+      const originalIndex = menuItems.indexOf(item)
       const button = document.createElement('button')
       button.type = 'button'
       button.textContent = item.textContent
-      button.dataset.index = index
+      button.dataset.index = originalIndex
       allButtons.push(button)
 
-      // 第一个和最后一个放左边，其他放右边
-      if (index === 0 || index === menuItems.length - 1) {
+      // 第一个和最后一个放左边,其他放右边
+      if (visibleIndex === 0 || visibleIndex === visibleMenuItems.length - 1) {
         leftBox.appendChild(button)
       } else {
         rightBox.appendChild(button)
@@ -145,12 +153,13 @@
 
     // 高亮当前选中的分表按钮
     const currentSelectedValue = select.value
-    const highlightIndex = menuItems.findIndex(item => {
+    // 检查当前选中的分表是否在可见列表中
+    const visibleHighlightIndex = visibleMenuItems.findIndex(item => {
       const tableName = item.textContent.split('post_')[1]
       return tableName === currentSelectedValue
     })
-    if (highlightIndex !== -1) {
-      allButtons[highlightIndex].classList.add('table-btn-active')
+    if (visibleHighlightIndex !== -1) {
+      allButtons[visibleHighlightIndex].classList.add('table-btn-active')
     }
 
     // 添加点击事件委托

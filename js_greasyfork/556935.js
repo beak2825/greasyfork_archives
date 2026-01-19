@@ -1,13 +1,14 @@
 // ==UserScript==
 // @name         UltimateServer Decoder
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.1
 // @description  Decode service names on ultimateserver.org
 // @author       MidniteRyder
 // @match        https://www.ultimateserver.org/*
 // @match        https://ultimateserver.org/*
 // @match        https://ps.freshticks.xyz/*
 // @match        https://thelink.icu/*
+// @match        https://ultimateapps.xyz/store/*
 // @grant        GM_registerMenuCommand
 // @grant        GM_getValue
 // @grant        GM_setValue

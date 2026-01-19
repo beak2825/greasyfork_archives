@@ -222,8 +222,8 @@
 
   // 检测更新
   const localVersion = GM_info.script.version;
-  const scriptUrl = 'https://simcompanies-scripts.pages.dev/showExecTrainingLogs.user.js?t=' + Date.now();
-  const downloadUrl = 'https://simcompanies-scripts.pages.dev/showExecTrainingLogs.user.js';
+  const scriptUrl = 'https://sc.22-7.top/scripts/showExecTrainingLogs.user.js?t=' + Date.now();
+  const downloadUrl = 'https://sc.22-7.top/scripts/showExecTrainingLogs.user.js';
 
   function compareVersions(v1, v2) {
     const a = v1.split('.').map(Number);

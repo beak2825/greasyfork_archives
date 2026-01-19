@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         头条助手（主页Hook）
 // @namespace    http://tampermonkey.net/
-// @version      0.4.1
+// @version      0.4.2
 // @description  头条助手（主页Hook） XmlhttpRequest Hook
 // @author       myaijarvis
 // @match        https://www.toutiao.com/c/user/token/*
@@ -266,7 +266,7 @@ ajaxHooker.hook(request => {
 
             let show_time = unsafeWindow.SHOW_FILTER_TIME; // 从全局读取开关状态
             if (show_time) {
-                // 剔除时间超过一个月的吧
+                // 剔除时间超过xx天的
                 const now = Date.now(); // 当前时间（毫秒）
                 const oneMonthAgo = now - 40 * 24 * 60 * 60 * 1000; // 40天前的毫秒时间戳
 
@@ -288,6 +288,35 @@ ajaxHooker.hook(request => {
                         document.getElementById(LOADING_ID_TIME)?.remove();
                     }, 3000)
                 }
+            }
+            // 数量
+            let show = unsafeWindow.SHOW_FILTER; // 从全局读取开关状态
+            if (show) {
+                responseText.data = responseText.data.filter(item => {
+                    if (item.hasOwnProperty('aggr_type')) {
+                        // article
+                        const ic = item.itemCell?.itemCounter;
+                        return ic && ic.readCount > 10000;
+                    } else if (item.hasOwnProperty('comment_base')) {
+                        // 转发内容
+                        return true;
+                    } else if (item.hasOwnProperty('video_duration')) {
+                        // video
+                        const ic = item.itemCell?.itemCounter;
+                        return ic && ic.readCount > 10000;
+                    } else {
+                        // wtt
+                        const ic = item.itemCell?.itemCounter;
+                        return ic && (ic.showCount > 50000 || ic.readCount > 5000);
+                    }
+                });
+            }
+
+            // 过滤转发
+            let show_repost = unsafeWindow.SHOW_FILTER_REPOST;
+            if (show_repost) {
+                // 剔除包含 comment_base 的项
+                responseText.data = responseText.data.filter(item => !item.hasOwnProperty('comment_base'));
             }
 
             let response_data = responseText.data;
@@ -386,36 +415,7 @@ ajaxHooker.hook(request => {
                     console.log(response_data[i])
                 }
             }
-            // >>> 新增：只保留满足显示条件的数据项 <<<
-            let show = unsafeWindow.SHOW_FILTER; // 从全局读取开关状态
-            if (show) {
-                responseText.data = responseText.data.filter(item => {
-                    if (item.hasOwnProperty('aggr_type')) {
-                        // article
-                        const ic = item.itemCell?.itemCounter;
-                        return ic && ic.readCount > 10000;
-                    } else if (item.hasOwnProperty('comment_base')) {
-                        // 转发内容，不显示
-                        return false;
-                    } else if (item.hasOwnProperty('video_duration')) {
-                        // video
-                        const ic = item.itemCell?.itemCounter;
-                        return ic && ic.readCount > 10000;
-                    } else {
-                        // wtt
-                        const ic = item.itemCell?.itemCounter;
-                        return ic && (ic.showCount > 50000 || ic.readCount > 5000);
-                    }
-                });
-            }
-
-            // >>> 过滤转发内容 <<<
-            let show_repost = unsafeWindow.SHOW_FILTER_REPOST;
-            if (show_repost) {
-                // 如果开启了转发过滤，剔除包含 comment_base 的项
-                responseText.data = responseText.data.filter(item => !item.hasOwnProperty('comment_base'));
-            }
-
+            
             res.responseText = JSON.stringify(responseText)
             //console.log(responseText);
         };
@@ -429,14 +429,12 @@ ajaxHooker.hook(request => {
             //res.responseText += 'test';
             //console.log(res.responseText);
             // JSON.parse:JSON字符串转换为JS对象,JSON.stringify则相反
-
             const responseText = JSON.parse(res.responseText);// 保存原始数据
             if (responseText.err_no != 0) {
                 // 请求返回有问题
                 console.log(responseText.message);
                 return;
             }
-
             for (let i = 0; i < responseText.data.activity_list.length; i++) {
                 let activity_time = responseText.data.activity_list[i].activity_time;
                 responseText.data.activity_list[i].introduction = '【' + activity_time + '】' + responseText.data.activity_list[i].introduction; // 修改数据

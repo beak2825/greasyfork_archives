@@ -1,7 +1,7 @@
 // ==UserScript==
 // @id             c6a206b6-1d09-479b-8f25-5d04425f3c40
 // @name           GameFAQs - Bluesky Embeds
-// @version        2.2
+// @version        2.3
 // @namespace      Takato
 // @author         Takato
 // @description    Bluesky embedding on GameFAQs
@@ -57,9 +57,18 @@ if (document.location.host == "embed.bsky.app") {
 				}
 
 			}
+
+			.gfbsky-gif-container {
+				background-color: black;
+
+				> *:not(video) {
+					display: none;
+				}
+			}
 		`;
 		document.body.append(css);
 
+		// Videos
 		document.querySelectorAll("div:has(> img[src*='https://video.bsky.app/'])").forEach((container)=>{
 			var thumb = container.querySelector("img[src*='https://video.bsky.app/']");
 			var meta = thumb?.src.match(/https:\/\/video\.bsky\.app\/watch\/(did%3Aplc%3A[\w]{24})\/([\w]{59})\/thumbnail\.jpg/);
@@ -90,11 +99,43 @@ if (document.location.host == "embed.bsky.app") {
 				vid.autoplay = true;
 				vid.controls = true;
 				vid.loop = true;
-				vid.playsinline = true;
+				vid.setAttribute("playsinline", "true");
 				vid.style = "width: 100%; height: 100%; object-fit: contain;";
 
 				thumb.replaceWith(vid);
 			});
+		});
+
+		// 'Gifs'
+		document.querySelectorAll("a[href*='https://media.tenor.com/']:has(> img[src*='https://cdn.bsky.app/img/'])").forEach((link)=>{
+			var thumb = link.querySelector("img[src*='https://cdn.bsky.app/img/']");
+			var meta = link.href.match(/https:\/\/media\.tenor\.com\/([\w\-]{14})AC\/([\w\-]+)\.gif/);
+
+			if (!meta) {
+				return;
+			}
+
+			link.classList.add("gfbsky-gif-container");
+
+			var alt = link.querySelector("img + div p.line-clamp-2")?.innerText;
+			var size = link.href.match(/https:\/\/media\.tenor\.com\/(?:.+)\.gif\?hh=(\d+)&ww=(\d+)/);
+
+			var vid = document.createElement("video");
+			vid.src = `https://t.gifs.bsky.app/${meta[1]}P3/${meta[2]}.webm`;
+			vid.poster = thumb.src;
+			vid.title = alt ? alt : "";
+			vid.autoplay = true;
+			vid.loop = true;
+			vid.setAttribute("playsinline", "true");
+			vid.defaultMuted = true;
+			vid.muted = true;
+			vid.setAttribute("disablepictureinpicture", "true");
+			vid.preload = "auto";
+			if (size) {
+				vid.style.setProperty("aspect-ratio", `${size[2]} / ${size[1]}`);
+			}
+
+			thumb.replaceWith(vid);
 		});
 
 	});

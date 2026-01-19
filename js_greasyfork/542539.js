@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LinkKF MediaSession + TMDB + 시즌제목 + 디버그 강화
 // @namespace    http://tampermonkey.net/
-// @version      1.88
+// @version      1.90
 // @description  TMDB 시리즈/시즌/에피소드 정보 기반 MediaSession 설정, 디버그 로그 강화
 // @match        *://*/*
 // @icon         https://cdn.jsdelivr.net/gh/756751uosmaqy/vjplayer@main/iconkf.jpg
@@ -26,31 +26,20 @@
     function debugLog(...args) { console.log("[LinkKF Debug]", ...args); }
 
     const seriesTMDBIdMap = {
-        "Lets Play 퀘스트 투성이의 마이 라이프": "293010",
-        "지옥선생 누베": "259544",
-        "악식영애와 광혈공작": "274814",
-        "샤바케 Shabake": "278059",
-        "산다 Sanda": "258901",
-        "만지지 마세요 코테사시 군": "283880",
-        "캣츠 아이 CatsEye": "286691",
-        "란마 ½   2기- Ranma ½ (2024)": "259140",
-        "닌자와 극도": "285070",
-        "믿었던 동료들에게 던전 오지에서 살해당할 뻔했지만 기프트 『무한 뽑기』로 레벨 9999의 동료들을 손에 넣어 전 파티 멤버와 세계에 복수& 『참교육!』합니다!": "278635",
+        "용사 파티에서 쫓겨난 다재무능 ~파티 사정으로 부여술사를 하고 있던 검사, 만능에 이른다~": "285166",
+        "용사형에 처함 징벌용사 9004부대 형무기록": "249907",
+        "전생했더니 드래곤의 알이었다 ~최강이 아니면 목표로 하지 않아~": "285291",
+        "최애의 아이 3기 [Oshi no Ko] 3rd Season": "203737",
     };
     const seriesSeasonMap = {
-        "결혼반지 이야기 2기": 1,
-        "터무니없는 스킬로 이세계 방랑 밥 2기": 1,
-        "란마 ½   2기- Ranma ½ (2024)": 1,
+        "최애의 아이 3기 [Oshi no Ko] 3rd Season": 1,
     };
     const seriesPosterMap = {
-        "나의 히어로 아카데미아 8기 - 나의 히어로 아카데미아 FINAL SEASON": "60H3CpA6PRMG5IEnoZRq4yjOkfo",
-        "불멸의 그대에게 3기": "oyvcZF0NGkprPeaGajuMUJrgv2g",
-        "스파이 패밀리 3기": "vDGB41PATBLb5GaXTfG1weZ03Xr",
+        "최애의 아이 3기 [Oshi no Ko] 3rd Season": "zs3L7Q9ghIwBT9bF0X7wJ5scAmL",
     };
     const seriesEpisodeMap = {
-        "결혼반지 이야기 2기": 13,
         "터무니없는 스킬로 이세계 방랑 밥 2기": 13,
-        "란마 ½   2기- Ranma ½ (2024)": 13,
+        "최애의 아이 3기 [Oshi no Ko] 3rd Season": 25,
     };
     const titleDisplayMap = { "청춘 돼지는 산타클로스의 꿈을 꾸지 않는다": 2 };
     const onePieceSeasonMap = [

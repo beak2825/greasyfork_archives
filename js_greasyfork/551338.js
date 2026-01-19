@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         referenzanschluss-sortierer
 // @namespace    https://greasyfork.org/de/users/1516523-martink
-// @version      2.0.3
+// @version      2.0.4
 // @description  Sortiert Referenzanschluss-Zeilen - Vereinfachte UI ohne Checkboxen, +3 Button
 // @author       Martin Kaiser
 // @match        https://opus.geizhals.at/kalif/artikel?id=*
@@ -35,6 +35,7 @@
     // ==================== CONSTANTS ====================
     const KEY_PATTERNS = [
         'hw_referenzanschluss',
+        'hw_nas_anschluss_extern',
         'hw_mainboards_slots_pcie',
         'hw_mainboards_slots_m2',
 		'hw_mainboards_slots_sonstige',
@@ -334,7 +335,7 @@
                 attempts++;
             }
         }
-        
+
         // Fallback: Lese direkt aus dem DOM
         // 1. Versuche hidden inputs mit name="keys" zu lesen
         const reactSelectContainer = container.querySelector('[class*="-container"]');
@@ -350,7 +351,7 @@
                 if (values.length > 0) return values;
             }
         }
-        
+
         // 2. Fallback: Lese aus den sichtbaren multiValue-Elementen
         const multiValueDivs = container.querySelectorAll('[class*="multiValue"] [class*="9jq23d"]');
         if (multiValueDivs.length > 0) {
@@ -363,7 +364,7 @@
             });
             if (values.length > 0) return values;
         }
-        
+
         return null;
     }
 
@@ -381,12 +382,12 @@
      */
     function removeChangedFieldHighlight(element) {
         if (!element) return;
-        
+
         // Entferne von Element selbst
         if (element.classList && element.classList.contains('changed__field')) {
             element.classList.remove('changed__field');
         }
-        
+
         // Suche in Eltern-Elementen
         let parent = element.parentElement;
         let attempts = 0;
@@ -397,7 +398,7 @@
             parent = parent.parentElement;
             attempts++;
         }
-        
+
         // Suche in Kind-Elementen
         const changedChildren = element.querySelectorAll('.changed__field');
         changedChildren.forEach(child => {
@@ -414,7 +415,7 @@
         if (directElement) {
             removeChangedFieldHighlight(directElement);
         }
-        
+
         // Versuche über Label zu finden
         const label = root.querySelector('label[for="' + fieldName + '"]');
         if (label) {
@@ -572,17 +573,17 @@
         if (inputGroup) {
             const numInput = inputGroup.querySelector('input.input-numeric');
             const unitSelect = inputGroup.querySelector('select.input-numeric');
-            
+
             // React-Select innerhalb input-group (Array-Typen mit/ohne Unit)
             if (reactInput && isMultiple) {
                 return unitSelect ? 'NUMERIC+UNIT+ARRAY' : 'NUMERIC+ARRAY';
             }
-            
+
             // Numerische Typen
             if (numInput) {
                 return unitSelect ? 'NUMERIC+UNIT' : 'NUMERIC';
             }
-            
+
             // TEXT: Einfaches Input-Feld mit Clear-Button (kein input-numeric, kein react-select)
             const textInput = inputGroup.querySelector('input.form-control:not(.input-numeric)');
             if (textInput) return 'TEXT';
@@ -959,16 +960,16 @@
         const pattern = getContainerPattern(containerScope);
         const fields = getAllFieldsInGroup(root, groupIndex, containerScope);
         const keys = {};
-        
+
         for (const field of fields) {
             const value = getFieldValue(root, field.name, field.type);
             const keyBase = field.name; // Vollständiger Key mit Pattern und Index
-            
+
             // Initialisiere die drei Eigenschaften
             keys[keyBase + '.unit'] = '';
             keys[keyBase + '.val'] = null;
             keys[keyBase + '.name'] = '';
-            
+
             if (field.type === 'TEXT') {
                 keys[keyBase + '.val'] = value || '';
             }
@@ -1011,7 +1012,7 @@
                 }
             }
         }
-        
+
         return {
             version: 1,
             pattern: pattern,
@@ -1029,20 +1030,20 @@
         if (!clipboardData || typeof clipboardData !== 'object') {
             return { valid: false, error: 'Ungültiges Datenformat: Kein gültiges JSON-Objekt' };
         }
-        
+
         if (!clipboardData.keys || typeof clipboardData.keys !== 'object') {
             return { valid: false, error: 'Ungültiges Datenformat: Keine Keys gefunden' };
         }
-        
+
         if (!clipboardData.pattern) {
             return { valid: false, error: 'Ungültiges Datenformat: Kein Pattern gefunden' };
         }
-        
+
         // Prüfe ob Pattern übereinstimmt
         if (clipboardData.pattern !== targetPattern) {
             return { valid: false, error: `Pattern stimmt nicht überein: Quelle="${clipboardData.pattern}", Ziel="${targetPattern}"` };
         }
-        
+
         // Extrahiere Key-Namen aus Clipboard (ohne .val/.unit/.name Suffix)
         const clipboardKeyBases = new Set();
         for (const key of Object.keys(clipboardData.keys)) {
@@ -1051,11 +1052,11 @@
                 clipboardKeyBases.add(match[1]);
             }
         }
-        
+
         // Hole Ziel-Felder
         const targetFields = getAllFieldsInGroup(root, targetIndex, containerScope);
         const targetKeyBases = new Set(targetFields.map(f => f.name));
-        
+
         // Konvertiere Clipboard-Keys zu Ziel-Index
         const sourceIndex = clipboardData.index;
         const convertedClipboardKeys = new Set();
@@ -1068,29 +1069,29 @@
                     break;
                 }
             }
-            
+
             if (!foundPattern) {
                 return { valid: false, error: `Ungültiger Key: "${keyBase}" beginnt nicht mit einem gültigen Pattern` };
             }
-            
+
             // Ersetze Source-Index mit Target-Index
             const regex = new RegExp('^(' + foundPattern + '_)' + sourceIndex + '_(.+)$');
             const match = keyBase.match(regex);
             if (!match) {
                 return { valid: false, error: `Ungültiges Key-Format: "${keyBase}"` };
             }
-            
+
             const convertedKey = match[1] + targetIndex + '_' + match[2];
             convertedClipboardKeys.add(convertedKey);
         }
-        
+
         // Prüfe ob alle konvertierten Keys in den Ziel-Keys existieren
         for (const key of convertedClipboardKeys) {
             if (!targetKeyBases.has(key)) {
                 return { valid: false, error: `Key "${key}" existiert nicht im Ziel` };
             }
         }
-        
+
         // Prüfe ob alle Ziel-Keys in den Clipboard-Keys existieren
         for (const key of targetKeyBases) {
             // Konvertiere zurück zu Source-Index für Vergleich
@@ -1103,7 +1104,7 @@
                 }
             }
         }
-        
+
         return { valid: true };
     }
 
@@ -1114,24 +1115,24 @@
         const targetPattern = getContainerPattern(containerScope);
         const sourceIndex = clipboardData.index;
         const targetFields = getAllFieldsInGroup(root, targetIndex, containerScope);
-        
+
         const changes = [];
-        
+
         for (const field of targetFields) {
             // Konvertiere Ziel-Feldname zu Quell-Feldname
             const regex = new RegExp('^(' + targetPattern + '_)' + targetIndex + '_(.+)$');
             const match = field.name.match(regex);
             if (!match) continue;
-            
+
             const sourceKeyBase = match[1] + sourceIndex + '_' + match[2];
-            
+
             // Hole Werte aus Clipboard
             const clipVal = clipboardData.keys[sourceKeyBase + '.val'];
             const clipUnit = clipboardData.keys[sourceKeyBase + '.unit'];
             const clipName = clipboardData.keys[sourceKeyBase + '.name'];
-            
+
             let value = null;
-            
+
             if (field.type === 'TEXT') {
                 value = clipVal || '';
             }
@@ -1172,7 +1173,7 @@
                     value = { values: [], unit: clipUnit || '' };
                 }
             }
-            
+
             changes.push({
                 fieldName: field.name,
                 fieldType: field.type,
@@ -1180,7 +1181,7 @@
                 isEmptyValue: false
             });
         }
-        
+
         await applyFieldChangesInParallel(root, changes);
     }
 
@@ -1190,7 +1191,7 @@
     async function copyGroupToClipboard(root, groupIndex, containerScope) {
         const exportData = exportGroupToClipboardFormat(root, groupIndex, containerScope);
         const jsonString = JSON.stringify(exportData, null, 2);
-        
+
         try {
             await navigator.clipboard.writeText(jsonString);
             return true;
@@ -1207,7 +1208,7 @@
     async function pasteGroupFromClipboard(root, groupIndex, containerScope) {
         try {
             const clipboardText = await navigator.clipboard.readText();
-            
+
             let clipboardData;
             try {
                 clipboardData = JSON.parse(clipboardText);
@@ -1215,35 +1216,35 @@
                 alert('Fehler: Zwischenablage enthält kein gültiges JSON-Format');
                 return false;
             }
-            
+
             const targetPattern = getContainerPattern(containerScope);
             const validation = validateClipboardData(clipboardData, targetPattern, groupIndex, containerScope, root);
-            
+
             if (!validation.valid) {
                 alert('Fehler beim Einfügen:\n' + validation.error);
                 return false;
             }
-            
+
             // Prüfe ob Ziel-Gruppe befüllt ist
             const isEmpty = isGroupEmpty(root, groupIndex, containerScope);
-            
+
             if (!isEmpty) {
                 const confirmed = confirm('Die Zielgruppe enthält bereits Daten.\nMöchten Sie diese überschreiben?');
                 if (!confirmed) {
                     return false;
                 }
             }
-            
+
             showSpinner();
             try {
                 await importClipboardDataToGroup(root, clipboardData, groupIndex, containerScope);
-                
+
                 // Highlight
                 setGroupColorMoving(root, groupIndex, containerScope);
                 setTimeout(() => {
                     clearGroupColor(root, groupIndex, containerScope, 800);
                 }, 500);
-                
+
                 return true;
             } finally {
                 hideSpinner();
@@ -1267,40 +1268,40 @@
             if (fieldType === 'TEXT') {
                 if (value && value !== '') return false;
             }
-            
+
             // NUMERIC: Einfacher String
             else if (fieldType === 'NUMERIC') {
                 if (value && value !== '') return false;
             }
-            
+
             // NUMERIC+UNIT: Objekt mit {value, unit}
             else if (fieldType === 'NUMERIC+UNIT') {
                 if (value && typeof value === 'object' && value.value && value.value !== '') {
                     return false;
                 }
             }
-            
+
             // REFERENCE: Objekt mit {label, value}
             else if (fieldType === 'REFERENCE') {
                 if (value && typeof value === 'object' && (value.label || value.value)) {
                     return false;
                 }
             }
-            
+
             // TEXT+ARRAY, NUMERIC+ARRAY: Array von Objekten
             else if (fieldType === 'TEXT+ARRAY' || fieldType === 'NUMERIC+ARRAY') {
                 if (Array.isArray(value) && value.length > 0) {
                     return false;
                 }
             }
-            
+
             // NUMERIC+UNIT+ARRAY: Objekt mit {values: [], unit}
             else if (fieldType === 'NUMERIC+UNIT+ARRAY') {
                 if (value && typeof value === 'object' && value.values && value.values.length > 0) {
                     return false;
                 }
             }
-            
+
             // Fallback für unbekannte Typen
             else if (value !== null && value !== undefined && value !== '') {
                 if (typeof value === 'object' && !Array.isArray(value)) {
@@ -1332,11 +1333,11 @@
      * @returns {Promise<boolean[]>} - Array of results
      */
     async function applyFieldChangesInParallel(root, changes) {
-        const promises = changes.map(change => 
+        const promises = changes.map(change =>
             setFieldValue(root, change.fieldName, change.fieldType, change.value, change.isEmptyValue)
         );
         const results = await Promise.all(promises);
-        
+
         // Entferne changed__field Hervorhebungen nach kurzer Verzögerung
         // (damit React Zeit hat, die Klasse hinzuzufügen, bevor wir sie entfernen)
         setTimeout(() => {
@@ -1344,7 +1345,7 @@
                 removeChangedFieldHighlightByName(root, change.fieldName);
             }
         }, 50);
-        
+
         return results;
     }
 
@@ -1353,7 +1354,7 @@
      */
     async function clearGroupsInParallel(root, indices, containerScope) {
         const allChanges = [];
-        
+
         for (const index of indices) {
             const fields = getAllFieldsInGroup(root, index, containerScope);
             for (const field of fields) {
@@ -2026,7 +2027,7 @@
         setGroupColorDeleting(root, index, containerScope);
 
         const fields = getAllFieldsInGroup(root, index, containerScope);
-        
+
         // Collect all changes
         const changes = fields.map(field => ({
             fieldName: field.name,
@@ -2060,7 +2061,7 @@
     async function insertMultipleGroupsAfter(root, groupIndex, count, containerScope) {
         // Fügt 'count' neue leere Gruppen nach groupIndex ein und verschiebt ALLE nachfolgenden Gruppen
         const key = getContainerCheckboxKey(containerScope);
-        
+
         try {
             // Erstelle 'count' neue Gruppen am Ende
             for (let i = 0; i < count; i++) {
@@ -2071,10 +2072,10 @@
                 }
                 await new Promise(resolve => setTimeout(resolve, 300));
             }
-            
+
             // Aktualisiere maxIndex nach dem Erstellen
             const newMaxIndex = getMaxAvailableGroupIndex(root, containerScope);
-            
+
             // Sammle alle Daten der Gruppen die verschoben werden müssen (von groupIndex bis newMaxIndex - count)
             // Diese müssen um 'count' Positionen nach unten verschoben werden
             // ALLE Gruppen werden verschoben, auch leere
@@ -2086,17 +2087,17 @@
                     data: getGroupValues(root, i, containerScope)
                 });
             }
-            
+
             // Wende alle Verschiebungen parallel an (von hinten nach vorne, um Überschreibungen zu vermeiden)
             const shiftChanges = [];
             for (const shift of groupDataToShift) {
                 const sourceFields = getAllFieldsInGroup(root, shift.targetIndex, containerScope);
                 const pattern = sourceFields.length > 0 ? getPatternFromFieldName(sourceFields[0].name) : KEY_PATTERNS[0];
-                
+
                 // Highlight Quell- und Zielgruppe
                 setGroupColorMoving(root, shift.sourceIndex, containerScope);
                 setGroupColorMoving(root, shift.targetIndex, containerScope);
-                
+
                 for (const baseName in shift.data) {
                     const fieldName = pattern + '_' + shift.targetIndex + '_' + baseName;
                     const fieldData = shift.data[baseName];
@@ -2110,23 +2111,23 @@
                     }
                 }
             }
-            
+
             await applyFieldChangesInParallel(root, shiftChanges);
-            
+
             // Lösche die Quellgruppen (die jetzt die neuen leeren Gruppen werden)
             const clearIndices = [];
             for (let i = groupIndex; i < groupIndex + count; i++) {
                 clearIndices.push(i);
                 setGroupColorCreating(root, i, containerScope);
             }
-            
+
             await clearGroupsInParallel(root, clearIndices, containerScope);
-            
+
             // UI aktualisieren
             await new Promise(resolve => setTimeout(resolve, 150));
             updateUIVisibilityForAllContainers(root);
             await new Promise(resolve => setTimeout(resolve, 300));
-            
+
             // Finde Container neu nach DOM-Update
             const allContainers = document.querySelectorAll(DATA_CONTAINER_SELECTOR);
             let freshContainer = containerScope;
@@ -2137,12 +2138,12 @@
                     break;
                 }
             }
-            
+
             attachAllEventHandlers(root);
             await new Promise(resolve => setTimeout(resolve, 500));
-            
+
             updateAllButtonStates(root, freshContainer);
-            
+
             // Clear colors
             for (const shift of groupDataToShift) {
                 clearGroupColor(root, shift.sourceIndex, freshContainer, 800);
@@ -2151,9 +2152,9 @@
             for (let i = groupIndex; i < groupIndex + count; i++) {
                 clearGroupColor(root, i, freshContainer, 800);
             }
-            
+
             addCopyIconsToReferenzanschluss();
-            
+
         } catch (error) {
             console.error('[sort99] insertMultipleGroupsAfter error:', error);
             alert('Fehler beim Einfügen der Gruppen!');
@@ -2339,47 +2340,81 @@
         isSwappingInProgress = true;
         showSpinner();
         try {
-            const maxInitialIndex = getMaxAvailableGroupIndex(root, container);
-            const lastFilled = getLastFilledGroupIndex(root, container);
-
-            let firstGapIndex = 0;
-            for (let i = 1; i < lastFilled; i++) {
-                if (isGroupEmpty(root, i, container)) {
-                    firstGapIndex = i;
-                    break;
-                }
-            }
-
-            if (firstGapIndex === 0) {
+            // Hole die tatsächlich vorhandenen Gruppen (sortiert nach Index)
+            const groups = findGroups(root, container);
+            if (groups.length === 0) {
                 hideSpinner();
                 isSwappingInProgress = false;
                 return;
             }
 
+            // Sortiere nach Index
+            groups.sort((a, b) => a.index - b.index);
+
+            // Extrahiere die tatsächlichen Indizes
+            const actualIndices = groups.map(g => g.index);
+
+            // Finde die erste Lücke: eine leere Gruppe vor einer gefüllten Gruppe
+            let firstGapIndex = null;
+            let lastFilledIndex = null;
+
+            // Finde den letzten gefüllten Index
+            for (let i = actualIndices.length - 1; i >= 0; i--) {
+                if (!isGroupEmpty(root, actualIndices[i], container)) {
+                    lastFilledIndex = actualIndices[i];
+                    break;
+                }
+            }
+
+            if (lastFilledIndex === null) {
+                // Keine gefüllten Gruppen
+                hideSpinner();
+                isSwappingInProgress = false;
+                return;
+            }
+
+            // Finde die erste leere Gruppe VOR der letzten gefüllten
+            for (const idx of actualIndices) {
+                if (idx >= lastFilledIndex) break;
+                if (isGroupEmpty(root, idx, container)) {
+                    firstGapIndex = idx;
+                    break;
+                }
+            }
+
+            if (firstGapIndex === null) {
+                // Keine Lücken gefunden
+                hideSpinner();
+                isSwappingInProgress = false;
+                return;
+            }
+
+            // Sammle alle gefüllten Gruppen ab der ersten Lücke
             const filledGroupsAfterGap = [];
-            for (let i = firstGapIndex; i <= lastFilled; i++) {
-                if (!isGroupEmpty(root, i, container)) {
+            for (const idx of actualIndices) {
+                if (idx >= firstGapIndex && !isGroupEmpty(root, idx, container)) {
                     filledGroupsAfterGap.push({
-                        index: i,
-                        data: getGroupValues(root, i, container)
+                        index: idx,
+                        data: getGroupValues(root, idx, container)
                     });
                 }
             }
 
-            // Clear all groups from firstGapIndex to lastFilled in parallel
-            const indicesToClear = [];
-            for (let i = firstGapIndex; i <= lastFilled; i++) {
-                indicesToClear.push(i);
-            }
+            // Sammle alle Indizes ab der ersten Lücke bis zum Ende
+            const indicesToClear = actualIndices.filter(idx => idx >= firstGapIndex);
 
             await clearGroupsInParallel(root, indicesToClear, container);
 
             await new Promise(resolve => setTimeout(resolve, 150));
 
+            // Berechne die Ziel-Indizes: fortlaufend ab firstGapIndex
+            // Aber nur für Indizes, die tatsächlich existieren!
+            const availableTargetIndices = actualIndices.filter(idx => idx >= firstGapIndex);
+
             // Set values for target groups in parallel
             const groupDataPairs = [];
-            for (let i = 0; i < filledGroupsAfterGap.length; i++) {
-                const targetIndex = firstGapIndex + i;
+            for (let i = 0; i < filledGroupsAfterGap.length && i < availableTargetIndices.length; i++) {
+                const targetIndex = availableTargetIndices[i];
                 const sourceIndex = filledGroupsAfterGap[i].index;
 
                 // Highlight source and target groups during move
@@ -2395,23 +2430,14 @@
             await setMultipleGroupValuesInParallel(root, groupDataPairs, container);
 
             // Clear highlighting for all groups
-            for (let i = 0; i < filledGroupsAfterGap.length; i++) {
-                const targetIndex = firstGapIndex + i;
+            for (let i = 0; i < filledGroupsAfterGap.length && i < availableTargetIndices.length; i++) {
+                const targetIndex = availableTargetIndices[i];
                 const sourceIndex = filledGroupsAfterGap[i].index;
                 clearGroupColor(root, sourceIndex, container, 800);
                 clearGroupColor(root, targetIndex, container, 800);
             }
 
-            // Clear remaining groups at the end in parallel
-            const finalMaxIndex = getMaxAvailableGroupIndex(root, container);
-            const remainingIndicesToClear = [];
-            for (let idx = firstGapIndex + filledGroupsAfterGap.length; idx <= finalMaxIndex; idx++) {
-                remainingIndicesToClear.push(idx);
-            }
-
-            if (remainingIndicesToClear.length > 0) {
-                await clearGroupsInParallel(root, remainingIndicesToClear, container);
-            }
+            // Die restlichen Gruppen am Ende sind bereits leer (wurden mit clearGroupsInParallel gelöscht)
 
             await new Promise(resolve => setTimeout(resolve, 150));
 
@@ -3476,7 +3502,7 @@
     }
 
     // ==================== INITIALISIERUNG ====================
-    
+
     /**
      * Wartet auf das Erscheinen eines DOM-Elements mit Timeout
      * @param {string} selector - CSS Selector
@@ -3487,22 +3513,22 @@
     function waitForElement(selector, timeout = 30000, interval = 500) {
         return new Promise((resolve) => {
             const startTime = Date.now();
-            
+
             const check = () => {
                 const element = document.querySelector(selector);
                 if (element) {
                     resolve(element);
                     return;
                 }
-                
+
                 if (Date.now() - startTime >= timeout) {
                     resolve(null);
                     return;
                 }
-                
+
                 setTimeout(check, interval);
             };
-            
+
             check();
         });
     }
@@ -3515,7 +3541,7 @@
     async function waitForReactContainers(timeout = 30000) {
         const startTime = Date.now();
         const interval = 500;
-        
+
         while (Date.now() - startTime < timeout) {
             // Prüfe ob mindestens ein Container mit Referenzanschluss-Feldern existiert
             for (const pattern of KEY_PATTERNS) {
@@ -3528,10 +3554,10 @@
                     }
                 }
             }
-            
+
             await new Promise(resolve => setTimeout(resolve, interval));
         }
-        
+
         return false;
     }
 
@@ -3544,7 +3570,7 @@
 
             // Warte auf React-Container bevor Initialisierung startet
             const containersReady = await waitForReactContainers(30000);
-            
+
             if (!containersReady) {
                 // Starte trotzdem MutationObserver um späteres Laden zu erfassen
                 startMutationObserver(root);

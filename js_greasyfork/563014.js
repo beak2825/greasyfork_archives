@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Impex Cube Better Dropdowns
 // @namespace    https://github.com/quantavil
-// @version      1.0.0
+// @version      1.0.1
 // @description  Transforms basic select dropdowns into searchable, modern dropdowns with fuzzy search
 // @author       Quantavil
 // @match        *://*.impexcube.in/*
@@ -22,9 +22,8 @@
     .bd-wrapper {
       position: relative;
       display: inline-block;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      font-size: 13px;
       vertical-align: middle;
+      box-sizing: border-box;
     }
 
     .bd-trigger {
@@ -32,17 +31,18 @@
       align-items: center;
       justify-content: space-between;
       gap: 4px;
-      padding: 4px 8px;
+      padding: 0 4px; /* compacted padding */
       width: 100%;
       background: #fff;
-      border: 1px solid #d1d5db;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 13px;
-      color: #374151;
+      border: 1px solid #767676; /* Match default Chrome border */
+      border-radius: 2px; /* Match default Look */
+      cursor: default;
+      font-size: 13px; /* Will be overwritten by inline styles if present */
+      color: #000;
       transition: all 0.2s ease;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-      min-height: 28px;
+      min-height: 20px; /* Reduced min-height */
+      height: 100%; /* Fill wrapper */
+      box-sizing: border-box;
     }
 
     .bd-trigger:hover {
@@ -386,12 +386,19 @@
             this.wrapper.className = "bd-wrapper";
 
             // Preserve original select's width/margin styles for inline layout
-            const selectStyle = this.select.style;
-            if (selectStyle.width) {
-                this.wrapper.style.width = selectStyle.width;
-            }
-            if (selectStyle.margin) {
-                this.wrapper.style.margin = selectStyle.margin;
+            // Preserve original select's styles
+            const computedStyle = window.getComputedStyle(this.select);
+
+            // basic copy of layout properties
+            this.wrapper.style.width = computedStyle.width;
+            this.wrapper.style.margin = computedStyle.margin;
+            this.wrapper.style.display = computedStyle.display === 'inline' ? 'inline-block' : computedStyle.display;
+            this.wrapper.style.verticalAlign = computedStyle.verticalAlign;
+
+            // If the original has a specific height set, try to respect it on the trigger
+            if (computedStyle.height && computedStyle.height !== 'auto') {
+                // this.wrapper.style.height = computedStyle.height; 
+                // We rely on child filling height 
             }
 
             // Create trigger button
@@ -402,6 +409,13 @@
         <span class="bd-trigger-text bd-placeholder">--Choose--</span>
         <span class="bd-arrow"></span>
       `;
+
+            // Copy font styles to trigger
+            this.trigger.style.fontFamily = computedStyle.fontFamily;
+            this.trigger.style.fontSize = computedStyle.fontSize;
+            this.trigger.style.fontWeight = computedStyle.fontWeight;
+            this.trigger.style.height = computedStyle.height; // Explicitly set height if possible
+            this.trigger.style.lineHeight = computedStyle.lineHeight;
             this.trigger.style.width = "100%";
 
             // Create dropdown
@@ -433,13 +447,25 @@
 
             // Assemble wrapper
             this.wrapper.appendChild(this.trigger);
-            this.wrapper.appendChild(this.dropdown);
+            // Dropdown is appended to body later or kept here? 
+            // Better to keep in wrapper for positioning context if using absolute, 
+            // OR append to body and use fixed positioning. 
+            // The logic currently uses fixed/absolute positioning but inside wrapper? 
+            // Wait, existing CSS `bd-dropdown` is `position: fixed`.
+            // So appending to body is safer for z-index and overflow clipping.
+            document.body.appendChild(this.dropdown);
 
             // Insert wrapper and hide original select
             this.select.parentNode.insertBefore(this.wrapper, this.select);
             this.select.classList.add("bd-enhanced");
 
             this.renderOptions();
+        }
+
+        destroy() {
+            this.wrapper.remove();
+            this.dropdown.remove(); // Remove dropdown from body
+            this.select.classList.remove("bd-enhanced");
         }
 
         renderOptions(highlight = "") {

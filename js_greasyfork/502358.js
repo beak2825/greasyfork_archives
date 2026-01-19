@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         fc ticketshop tools
 // @namespace    http://tampermonkey.net/
-// @version      2.1-BETA
+// @version      2.1.1-BETA
 // @description  provides various utilities for the fc ticket shop
 // @author       Hendrik Steinmetz
 // @match        https://www.ticket-onlineshop.com/ols/fckoeln/de/maenner/*
@@ -35,7 +35,7 @@ const LOG_LEVEL = Object.freeze({
   DEBUG: Symbol("debug"),
 });
 
-const MY_ACCOUNT_BTN = "a.fc-meta-item:nth-child(2)";
+const MY_ACCOUNT_BTN = "li.fc-meta-item:nth-child(2)";
 const HOME_TEXT =
   "body > div.wrapper.home-wrapper > main > section:nth-child(1)";
 const CHOOSE_SEAT_BTN = "#choose-seat-button";
@@ -417,124 +417,6 @@ function sendTelemetry(success) {
   });
 }
 
-/**
- * Sends a seat request for a specified block.
- *
- * @param {Object} block - The block object containing block details.
- * @param {string} block.blockId - The ID of the block to request seats for.
- * @returns {Promise<Response>} A promise that resolves to the response of the seat request.
- * @throws {Error} Throws an error if the request fails with status 403 (bot detected) or 404 (no ticket).
- */
-function sendSeatRequest(block) {
-  if (
-    !document.querySelector(CHOOSE_SEAT_BTN) ||
-    !config.selectStanding ||
-    config.state === "STOP"
-  ) {
-    return;
-  }
-
-  const failureCauses = {
-    BOT_DETECTED: "botDetected",
-    NO_TICKET: "noTicket",
-  };
-  const eventId = window.location.pathname.split("/").pop();
-  const data = generateRequestBodyForBlock(block);
-  return fetch(
-    `https://www.ticket-onlineshop.com/ols/fckoeln/de/maenner/channel/shop/areaplan/addseats/event/${eventId}/area/${block.blockId}`,
-    {
-      method: "POST",
-      body: data,
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-        Cookie: "OLS_SESSION_ID=b279d5c4b73139c7a2a0c41aa92833ac",
-      },
-    }
-  )
-    .then((response) => {
-      if (response.ok) {
-        return response;
-      } else if (response.status === 403) {
-        throw new Error("403", { cause: failureCauses.BOT_DETECTED });
-      } else if (response.status === 404) {
-        throw new Error("404", { cause: failureCauses.NO_TICKET });
-      } else {
-        throw new Error("fail");
-      }
-    })
-    .catch((err) => {
-      throw err;
-    });
-}
-
-function sendSeatRequests() {
-  if (
-    !document.querySelector(CHOOSE_SEAT_BTN) ||
-    !config.selectStanding ||
-    config.state === "STOP"
-  ) {
-    return;
-  }
-
-  const failureCauses = {
-    BOT_DETECTED: "botDetected",
-    NO_TICKET: "noTicket",
-  };
-  const eventId = window.location.pathname.split("/").pop();
-  const requests = Object.values(blockData)
-    .filter((b) => !b.testing)
-    .map((block) => {
-      const data = generateRequestBodyForBlock(block);
-      return fetch(
-        `https://www.ticket-onlineshop.com/ols/fckoeln/de/maenner/channel/shop/areaplan/addseats/event/${eventId}/area/${block.blockId}`,
-        {
-          method: "POST",
-          body: data,
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-            Cookie: "PIM-SESSION-ID=cw23490a",
-          },
-        }
-      )
-        .then((response) => {
-          if (response.ok) {
-            return response;
-          } else if (response.status === 403) {
-            throw new Error("403", { cause: failureCauses.BOT_DETECTED });
-          } else if (response.status === 404) {
-            throw new Error("404", { cause: failureCauses.NO_TICKET });
-          } else {
-            throw new Error("fail");
-          }
-        })
-        .catch((err) => {
-          throw err;
-        });
-    });
-
-  Promise.any(requests)
-    .then((response) => response.text())
-    .then((body) => {
-      if (!body || typeof body === "number" || body.length <= 100) return;
-
-      const list = document.querySelector("#seat-cards-list");
-      list.innerHTML = body;
-      document.querySelector(".event-sidecart").style.display = "block";
-    })
-    .catch((err) => {
-      if (
-        err instanceof AggregateError &&
-        err.errors.find((e) => e.cause === failureCauses.BOT_DETECTED)
-      ) {
-        log("Bot detected, delete data and relogin");
-      } else {
-        log("No tickets found. Retrying");
-        //setRandomThrottledTimeout(sendSeatRequests, 2000, 3000);
-        setThrottledTimeout(() => location.reload(), 2000);
-      }
-    });
-}
-
 async function automateBookSeat() {
   const btn = document.querySelector(ADD_TO_CART_BTN);
 
@@ -688,32 +570,6 @@ function sendPushbulletPush(title, msg = null) {
       log(response.responseText);
     },
   });
-}
-
-/**
- *
- * @param {string} blockData
- */
-function generateRequestBodyForBlock(blockData) {
-  if (!blockData) return;
-
-  const id = `b${blockData.blockId}_0_ga${new Date().getTime()}`;
-
-  const data = new FormData();
-  data.append("seats[0][priceId]", blockData.priceId);
-  data.append("seats[0][row]", "");
-  data.append("seats[0][seat]", "");
-  data.append("seats[0][blockId]", blockData.blockId);
-  data.append("seats[0][block]", blockData.name);
-  data.append("seats[0][tribune]", blockData.tribune);
-  data.append("seats[0][id]", id);
-
-  const urlEncodedData = new URLSearchParams();
-  for (const [key, val] of data) {
-    urlEncodedData.append(key, val);
-  }
-
-  return urlEncodedData.toString();
 }
 
 function getThrottle() {

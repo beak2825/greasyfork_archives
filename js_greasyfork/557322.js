@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Veyra Enemy Wave Farming Bot
 // @namespace    http://tampermonkey.net/
-// @version      3.2.7
+// @version      3.2.9
 // @description  Automated farming bot for Veyra browser game
 // @author       Sinclair/Woobs
 // @match        https://demonicscans.org/active_wave.php*
@@ -450,11 +450,11 @@
             default: return { skill: -1, stam: 10 };
         }
     }
-    function applyDamageResult(result) {
+    function applyDamageResult(result,yourDamage) {
         if (!result || result.status !== "success") return;
 
         const userId = getUserId(); // your current user ID
-        let myDamage = 0;
+        let myDamage = yourDamage;
 
         // find the user's entry in the leaderboard
         if (Array.isArray(result.leaderboard)) {
@@ -462,6 +462,11 @@
             if (userEntry) {
                 myDamage = userEntry.DAMAGE_DEALT;
             }
+        }
+        else {
+            const dmgMatch = result.message.match(/You have dealt <strong>([\d,]+)<\/strong>/);
+            const lastDmg = dmgMatch ? parseInt(dmgMatch[1].replace(/,/g, '')) : 0;
+            myDamage += lastDmg;
         }
 
         // update session damage
@@ -793,23 +798,6 @@
             }
         }
     }
-    function extractMyDamageAndHP(result,myUserId) {
-        if (!result || result.status !== "success") return null;
-
-        // Find yourself in leaderboard
-        const me = result.leaderboard?.find(
-            entry => String(entry.ID) === myUserId
-        );
-
-        const myDamage = me ? me.DAMAGE_DEALT : 0;
-        const hpLeft = result.hp?.value ?? 0;
-
-        return {
-            userId: myUserId,
-            damageDealt: myDamage,
-            hpLeft
-        };
-    }
     //This above is for auto atking without clicking buttons
 
     function humanDelay(base = 700, offset = 250) {
@@ -1058,6 +1046,7 @@
         'Wave 1': 'https://demonicscans.org/active_wave.php?gate=3&wave=3',
         'Wave 2': 'https://demonicscans.org/active_wave.php?gate=3&wave=5',
         'Wave 3': 'https://demonicscans.org/active_wave.php?gate=3&wave=8',
+        'Gate 2 Wave 1': 'https://demonicscans.org/active_wave.php?gate=5&wave=9',
         'Guild Dungeon': 'https://demonicscans.org/guild_dungeon.php',
         'Event Wave': 'https://demonicscans.org/active_wave.php?event=4&wave=2'
     };
@@ -1066,12 +1055,13 @@
     const wave1Monsters = ['orc grunt', 'orc bonecrusher', 'hobgoblin spearman','goblin slinger', 'goblin skirmisher'];
     const wave2Monsters = ['lizardman shadowclaw', 'troll brawler','lizardman flamecaster', 'troll ravager'];
     const guildMonsters = ["Brood Pit", "Shattered Stone Causeways", "Territory Center","Plunder Warrens","Gribble Junk-Magus-Plunder", "Gribble Junk-Magus-Territory"];
-    //const wave3Monsters = ["lizardman bloodpriest", "lizardman dreadblade", "lizardman guardian", "lizardman juggernaut", "lizardman vanguard", "lizardman warmage","Drakzareth The Tyrant Lizard King","Drakzareth The Cataclysmic Half Dragon King",
-    //"General Hrazz the Dawnflame Oathkeeper", "General Skarn the Radiant Bastion", "Vessir, The Solar Inferna Empress", "Hrazz The Dawnflame Seraph", "General Vessir the Sunfang Duelist", "Skarn, The Molten General"];
     const wave3Monsters = [
         "lizardman bloodpriest", "lizardman dreadblade", "lizardman guardian",
         "lizardman juggernaut", "lizardman vanguard", "lizardman warmage",
         "Drakzareth", "Hrazz", "Skarn", "Vessir"
+    ];
+    const g2wave1Monsters = [
+        "charybdis, living maelstrom","dark siren","deep sea beast","kraken","merfolk","scylla, devourer of sailors","the crab king","triton warrior","water nymph","poseidon","oceanus"
     ];
     const broodMonsters = ["Orc Stone-Rend", "Krak One-Horn", "Skrit Gear"];
     const stoneMonsters = ["Hruk Forge-Eater", "Zorgra Frost-Vein"];
@@ -1087,6 +1077,7 @@
             case 'Wave 1': return wave1Monsters;
             case 'Wave 2': return wave2Monsters;
             case 'Wave 3': return wave3Monsters;
+            case 'Gate 2 Wave 1': return g2wave1Monsters;
             case 'Event Wave': return waveEMonsters;
             case 'Guild Dungeon': return guildMonsters;
             case 'Current Page': return getMonstersFromCurrentPage();
@@ -1373,7 +1364,7 @@
 
         hudContainer.innerHTML = `
         <div id="hud-header" style="text-align: center; margin-bottom: 10px; cursor: move; display: flex; justify-content: space-between; align-items: center;">
-            <h3 style="margin: 0; color: #3498db; flex-grow: 1; text-align:center;">🤖 Veyra Farming Bot v3.2.7</h3>
+            <h3 style="margin: 0; color: #3498db; flex-grow: 1; text-align:center;">🤖 Veyra Farming Bot v3.2.9</h3>
             <button id="hud-toggle" style="background:none;border:none;color:white;font-size:16px;font-weight:bold;cursor:pointer;margin-left:5px;">−</button>
         </div>
 
@@ -1392,6 +1383,7 @@
                     <option value="Wave 1">Wave 1</option>
                     <option value="Wave 2">Wave 2</option>
                     <option value="Wave 3">Wave 3</option>
+                    <option value="Gate 2 Wave 1">Gate 2 Wave 1</option>
                     <option value="Event Wave">Event Wave</option>
                     <option value="Guild Dungeon">Guild Dungeon</option>
                     <option value="Current Page">Current Page</option>
@@ -2150,7 +2142,7 @@
 
         updateStatus(`AutoLoot: Claiming… 0 / ${needed.toLocaleString()} EXP`);
 
-        const SKIP_NAMES = ["skarn", "vessir", "hrazz", "drakzareth"];
+        const SKIP_NAMES = ["skarn", "vessir", "hrazz", "drakzareth","oceanus","poseidon"];
         const MAX_HP = 100_000_000_000;
         const CONCURRENCY = 5;
 
@@ -2518,9 +2510,19 @@
                             return;
                         }
                     }
-
-                    // ✅ We have a valid attack
                     atk = usableAtk;
+                    mobName = titleEl.childNodes[0].textContent.trim();
+                    mobName = mobName.replace(/^[^\p{L}]+/u, "").trim();
+                    const mobNameLower2 = mobName.toLowerCase();
+                    if (mobNameLower2 == "gribble junk-magus")
+                    {
+                        console.log('downgrading to slash and setting HP to 1M');
+                        farmingState.targetDamage = 1000000;
+                        atk = "slash";
+                    }
+                    else
+                    {atk = usableAtk;}
+
                     const { stam } = getAtkMeta(atk);
 
                     try {
@@ -2539,7 +2541,7 @@
 
                         farmingState.staminaSpent += stam;
 
-                        applyDamageResult(result);
+                        applyDamageResult(result,yourDamage);
                         const currentFastHP = parseInt(
                             document.getElementById('hpText')?.textContent
                             .split('/')[0]
@@ -2645,9 +2647,26 @@
                         pauseFarming();
                         return;
                     }
+                    mobName = titleEl.childNodes[0].textContent.trim();
+                    mobName = mobName.replace(/^[^\p{L}]+/u, "").trim();
+                    const mobNameLower2 = mobName.toLowerCase();
+                    if (mobNameLower2 == "gribble junk-magus")
+                    {
+                        console.log('downgrading to slash and setting HP to 1M');
+                        farmingState.targetDamage = 1000000;
+                    }
                     if (yourDamage <= farmingState.targetDamage) {
                         const remaining = farmingState.targetDamage - yourDamage;
-                        if (yourDamage >= farmingState.slashDmg && farmingState.slashbox) {
+                        if (mobNameLower2 == "gribble junk-magus") {
+                            if (attackButtonWeak) {
+                                attackButtonWeak.click();
+                                farmingState.staminaSpent += 1;
+                                updateStatus(`Slash Attack! Need ${remaining}`);
+                            } else {
+                                updateStatus("Slash attack button missing!");
+                            }
+                        }
+                        else if (yourDamage >= farmingState.slashDmg && farmingState.slashbox) {
                             // Use slash attack
                             if (attackButtonWeak) {
                                 attackButtonWeak.click();
@@ -2726,7 +2745,7 @@
 
 
     async function handleWavePhase() {
-        const BOSS_MOBS = ['skarn', 'vessir', 'hrazz', 'drakzareth'];
+        const BOSS_MOBS = ['skarn', 'vessir', 'hrazz', 'drakzareth','oceanus','poseidon'];
         const bossSet = new Set(BOSS_MOBS.map(b => b.toLowerCase()));
         const targetBossSet = new Set(
             (farmingState.targetMob || [])
@@ -2736,6 +2755,7 @@
                 )
             .filter(Boolean) // remove undefined if no match
         );
+        console.log(targetBossSet, "this is boss set");
 
         const staminaCost = getStaminaCost();
         const currentStamina = getCurrentStamina();
@@ -2746,6 +2766,7 @@
 
         // 1️⃣ Boss candidates (exact match + dmg gate)
         const bossCards = allCards.filter(card => {
+            if (targetBossSet.size === 0) return false;
             const name = card.dataset.name?.toLowerCase();
             if (!name) return false;
 
@@ -2756,7 +2777,29 @@
             const userDmg = Number(card.dataset.userdmg || 0);
             return userDmg < farmingState.bossDmgThreshold;
         });
+        console.log(bossCards, "This is the boss card now")
+        const SKIP_NAMES = ["skarn", "vessir", "hrazz", "drakzareth","oceanus","poseidon"];
+        function isSkippedMonster(name) {
+            const lower = name.toLowerCase();
+            return SKIP_NAMES.some(skip => lower.includes(skip));
+        }
+        function hasLootableDeadMobs() {
+            const cards = document.querySelectorAll(
+                '.monster-card[data-dead="1"][data-eligible="1"]'
+            );
 
+            for (const card of cards) {
+                const name =
+                      card.dataset.name ||
+                      card.querySelector('h3')?.textContent ||
+                      "";
+
+                if (!isSkippedMonster(name)) {
+                    return true; // found at least one valid mob
+                }
+            }
+            return false;
+        }
         if (currentStamina < staminaCost) {
             if (farmingState.refreshbox)
             {
@@ -2811,7 +2854,7 @@
                             document.querySelector('.unclaimed-pill .count')
                             ?.textContent.replace(/[^\d]/g, '')
                         ) || 0;
-                        if (deadMobCount > 0) {
+                        if (deadMobCount > 0 && hasLootableDeadMobs()) {
                             updateStatus("EXP ≥ 80%, dead mobs available → auto-looting and don't waste FSP");
                             if (await useExpPotionIfNeeded()) return;
                             autoLootMobs();
@@ -2866,7 +2909,7 @@
                         document.querySelector('.unclaimed-pill .count')
                         ?.textContent.replace(/[^\d]/g, '')
                     ) || 0;
-                    if (deadMobCount > 0) {
+                    if (deadMobCount > 0 && hasLootableDeadMobs()) {
                         updateStatus("EXP ≥ 80%, dead mobs available → auto-looting and don't waste FSP");
                         if (await useExpPotionIfNeeded()) return;
                         autoLootMobs();

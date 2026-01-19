@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gemini Model Selector
 // @namespace    http://tampermonkey.net/
-// @version      9.0
+// @version      10.0
 // @description  After entering the prompt and pressing Enter, you select the model.
 // @author       81standard
 // @match        https://gemini.google.com/*
@@ -14,14 +14,11 @@
     'use strict';
 
     // ==========================================
-    // 1. 言語環境の自動判定
+    // 1. 言語環境・設定
     // ==========================================
     const pageLang = document.documentElement.lang || navigator.language;
     const isJapanese = pageLang.toLowerCase().startsWith('ja');
 
-    // ==========================================
-    // 2. 言語別キーワード設定
-    // ==========================================
     const CONFIG = {
         ja: {
             dialogTitle: "送信モードを選択",
@@ -43,14 +40,9 @@
 
     const CURRENT_UI = isJapanese ? CONFIG.ja : CONFIG.en;
     const MODELS = CURRENT_UI.models;
-
-    // ==========================================
-    // 3. 設定の記憶と同期
-    // ==========================================
     const STORAGE_KEY = 'gemini_selector_last_index';
     let selectedIndex = 0;
 
-    // セレクタ定義
     const MODE_MENU_TRIGGER = '[data-test-id="bard-mode-menu-button"]';
     const SEND_BUTTON_SELECTOR = 'button[aria-label*="送信"], button[aria-label*="Send"], button[aria-label*="Submit"]';
 
@@ -65,7 +57,7 @@
             border-radius: 8px;
             padding: 0;
             z-index: 99999;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.7);
             color: #e8eaed;
             font-family: 'Google Sans', sans-serif;
             min-width: 250px;
@@ -85,6 +77,9 @@
             font-size: 14px;
             border-left: 4px solid transparent;
         }
+        .gms-option:hover {
+            background-color: #3c4043;
+        }
         .gms-option.selected {
             background-color: #3c4043;
             border-left: 4px solid #8ab4f8;
@@ -93,6 +88,10 @@
     `);
 
     let isDialogVisible = false;
+
+    // ==========================================
+    // 2. イベント監視 (キーボード & マウス)
+    // ==========================================
 
     // キーボード操作
     document.addEventListener('keydown', function(e) {
@@ -122,27 +121,35 @@
             if (sendBtn && !sendBtn.disabled) {
                 e.preventDefault();
                 e.stopPropagation();
-                syncWithNativeUI(); // ★表示前に純正UIの状態を読み取る
+                syncWithNativeUI();
                 showDialog();
             }
         }
     }, true);
 
-    // ★純正UIのボタンテキストを読み取って選択位置を同期する関数
+    // ★追加: ダイアログ外クリックで閉じる
+    document.addEventListener('mousedown', function(e) {
+        if (isDialogVisible) {
+            const dialog = document.getElementById('gemini-model-selector-dialog');
+            // クリックされた要素がダイアログそのもの、あるいはダイアログの子要素でない場合
+            if (dialog && !dialog.contains(e.target)) {
+                closeDialog();
+            }
+        }
+    }, true);
+
+    // ==========================================
+    // 3. ロジック
+    // ==========================================
+
     function syncWithNativeUI() {
         const triggerBtn = document.querySelector(MODE_MENU_TRIGGER);
         if (!triggerBtn) return;
-
         const currentText = triggerBtn.innerText;
-        console.log(`[GeminiScript] Syncing... Native UI says: "${currentText}"`);
-
-        // 現在のボタンのテキストに含まれるキーワードを MODELS から探す
         const foundIndex = MODELS.findIndex(m => currentText.includes(m.keyword));
-
         if (foundIndex !== -1) {
             selectedIndex = foundIndex;
         } else {
-            // 見つからない場合は前回の保存値をロード（保険）
             let saved = parseInt(localStorage.getItem(STORAGE_KEY));
             selectedIndex = (isNaN(saved) || saved >= MODELS.length) ? 0 : saved;
         }
@@ -176,7 +183,11 @@
             const div = document.createElement('div');
             div.className = `gms-option ${index === selectedIndex ? 'selected' : ''}`;
             div.textContent = model.name;
-            div.onclick = () => { selectedIndex = index; executeModelSwitchAndSend(); };
+            div.onclick = (e) => {
+                e.stopPropagation(); // クリックが背後に抜けないように
+                selectedIndex = index;
+                executeModelSwitchAndSend();
+            };
             dialog.appendChild(div);
         });
     }
@@ -188,7 +199,6 @@
 
         const triggerBtn = document.querySelector(MODE_MENU_TRIGGER);
         if (triggerBtn) {
-            // ★重要：現在のボタンのテキストが既にターゲットと同じなら、メニューを開く必要はない
             if (!triggerBtn.innerText.includes(targetModel.keyword)) {
                 triggerBtn.click();
                 let foundElement = null;
@@ -211,11 +221,8 @@
                     foundElement.click();
                     await sleep(500);
                 }
-            } else {
-                console.log(`[GeminiScript] Model already set to ${targetModel.keyword}. Skipping click.`);
             }
         }
-
         const sendBtn = document.querySelector(SEND_BUTTON_SELECTOR);
         if (sendBtn) sendBtn.click();
     }

@@ -3,11 +3,11 @@
 // @namespace   http://tampermonkey.net/
 // @description hb bundle info
 // @license     MIT
-// @include     http*://www.humblebundle.com/games/*
+// @include     http*://www.humblebundle.com/games*
 // @include     http*://www.humblebundle.com/software/*
 // @connect     steamdb.info
 // @grant       unsafeWindow
-// @version     2025.04.23.2
+// @version     2026.01.19.1
 // @run-at      document-start
 // @grant       GM_xmlhttpRequest
 // @grant       GM_addStyle
@@ -38,7 +38,7 @@ const callback = function(mutationsList, observer) {
     for(let mutation of mutationsList) {
         if (mutation.removedNodes) {
             for (let removedNode of mutation.removedNodes) {
-                if (removedNode.id == 'webpack-bundle-page-data') {
+                if (removedNode.id == 'webpack-bundle-page-data' || removedNode.id == 'landingPage-json-data') {
                     txt = $.trim(removedNode.text);
                     observer.disconnect();
                     break;
@@ -64,36 +64,48 @@ function DOM_ContentReady () {
 
     if (txt){
         j = JSON.parse(txt);
-        $('.base-main-wrapper').before('<div class="d" id="a1"></div>');
+        $('.base-main-wrapper').before('<div class="d" align="center" id="a1"></div>');
         $('#a1').append('<p><a id="p">JSON</a></p>');
-        if (j && j.bundleData) {
-            var r = [];
-            $.each(j.exchangeRates, function (i, e) {
-                var k = i.split('|')[0];
-                r[k] = e;
-            });
-            j = j.bundleData;
-            $('#a1').append(`<p>${j.basic_data.human_name}</p>`);
-            $('#a1').append(`<p>${j.machine_name}</p>`);
-            //$('#a1').append(`<p>${j.hero_tile.tile_stamp}</p>`);
-            //$('#a1').append(`<p>${j.hero_tile.hover_highlights}</p>`);
-            //if (j.hero_tile.exclusive_countries)
-            //    $('#a1').append(`<p>Inc: ${j.hero_tile.exclusive_countries}</p>`);
-            //if (j.hero_tile.disallowed_countries)
-            //    $('#a1').append(`<p><span style="color:red;">Exc: ${j.hero_tile.disallowed_countries}</span></p>`);
-            //var d = new Date(`${new Date(j.hero_tile['start_date|datetime'])} UTC`).toLocaleString();
-            //$('#a1').append(`<p>Start: ${d}</p>`);
-            var d = new Date(`${j.basic_data['end_time|datetime']}+00:00`).toLocaleString();
-            $('#a1').append(`<p>End: ${d}</p>`);
+        if (j) {
+            if (j.bundleData) {
+                var r = [];
+                $.each(j.exchangeRates, function (i, e) {
+                    var k = i.split('|')[0];
+                    r[k] = e;
+                });
+                j = j.bundleData;
+                $('#a1').append(`<p>${j.basic_data.human_name}</p>`);
+                $('#a1').append(`<p>${j.machine_name}</p>`);
+                //$('#a1').append(`<p>${j.hero_tile.tile_stamp}</p>`);
+                //$('#a1').append(`<p>${j.hero_tile.hover_highlights}</p>`);
+                //if (j.hero_tile.exclusive_countries)
+                //    $('#a1').append(`<p>Inc: ${j.hero_tile.exclusive_countries}</p>`);
+                //if (j.hero_tile.disallowed_countries)
+                //    $('#a1').append(`<p><span style="color:red;">Exc: ${j.hero_tile.disallowed_countries}</span></p>`);
+                //var d = new Date(`${new Date(j.hero_tile['start_date|datetime'])} UTC`).toLocaleString();
+                //$('#a1').append(`<p>Start: ${d}</p>`);
 
-            m = [];
-            $.each(j.tier_pricing_data, function (i, e) {
-                m[e.identifier] = e['price|money'];
-            });
-            $('#a1').append('<table class="d" id="b"></table><br>');
-            $('#a1').append('<table class="d" id="c"></table><br>');
-            $('#a1').append('<table class="d" id="d"></table>');
-            /*
+                var end = new Date(`${j.basic_data['end_time|datetime']}+00:00`);
+                var diff = end - new Date();
+                end = end.toLocaleString();
+                $('#a1').append(`<p id="end">End: ${end}</p>`);
+                if (diff < 7 * 24 * 60 * 60 * 1000) {
+                    if (diff < 3 * 24 * 60 * 60 * 1000) {
+                        $('#end').css('color', 'red');
+                    }else{
+                        $('#end').css('color', 'yellow');
+                    }
+                }
+
+
+                m = [];
+                $.each(j.tier_pricing_data, function (i, e) {
+                    m[e.identifier] = e['price|money'];
+                });
+                $('#a1').append('<table class="d" id="b"></table><br>');
+                $('#a1').append('<table class="d" id="c"></table><br>');
+                $('#a1').append('<table class="d" id="d"></table>');
+                /*
             $.each(j.hero_tile.cached_content_events, function(i, e){
                 var id = e.identifier;
                 if (m[id])
@@ -113,48 +125,48 @@ function DOM_ContentReady () {
             });
             */
 
-            var n = [];
-            var q = 1;
-            $.each(j.tier_order.reverse(), function (o, v){
-                var t = j.tier_pricing_data[v]['price|money'];
-                var c = (t.amount / r[t.currency] * r['CNY']).toFixed(2);
-                var games = j.tier_display_data[v].tier_item_machine_names;
-                var l = games.length - n.length;
-                //$('#c').append(`<tr><th colspan="5">${j.tier_display_data[v].header}<br>${t.amount}&nbsp;${t.currency}&nbsp;/&nbsp;${c}&nbsp;CNY</th><tr>`);
-                var sp = `<th rowspan="${l}">${j.tier_display_data[v].header}<br>${t.amount}&nbsp;${t.currency}&nbsp;/&nbsp;${c}&nbsp;CNY</th>`;
-                var k = 0;
-                games.forEach(function (i){
-                    var g = j.tier_item_data[i];
-                    if ($.inArray(g.machine_name, n) < 0){
-                        n.push(g.machine_name);
-                        var h = '';
-                        if (g.availability_icons){
-                            g.availability_icons.delivery_icons.forEach(function (v) {
-                                h = `${h}<i class="hb ${v}" />`;
-                            });
-                        }
-                        var sub = '';
-                        if (g.exclusive_countries && g.exclusive_countries.length)
-                            sub = `<span style="color:green;" title="${g.exclusive_countries}">+</span>`;
-                        if (g.disallowed_countries && g.disallowed_countries.length)
-                            sub = `${sub} <span style="color:red;" title="${g.disallowed_countries}">-</span>`;
-                        var p = '-';
-                        if (g['msrp_price|money']){
-                            p = `${g['msrp_price|money'].amount} ${g['msrp_price|money'].currency}`;
-                        }
-                        /*
+                var n = [];
+                var q = 1;
+                $.each(j.tier_order.reverse(), function (o, v){
+                    var t = j.tier_pricing_data[v]['price|money'];
+                    var c = (t.amount / r[t.currency] * r['CNY']).toFixed(2);
+                    var games = j.tier_display_data[v].tier_item_machine_names;
+                    var l = games.length - n.length;
+                    //$('#c').append(`<tr><th colspan="5">${j.tier_display_data[v].header}<br>${t.amount}&nbsp;${t.currency}&nbsp;/&nbsp;${c}&nbsp;CNY</th><tr>`);
+                    var sp = `<th rowspan="${l}">${j.tier_display_data[v].header}<br>${t.amount}&nbsp;${t.currency}&nbsp;/&nbsp;${c}&nbsp;CNY</th>`;
+                    var k = 0;
+                    games.forEach(function (i){
+                        var g = j.tier_item_data[i];
+                        if ($.inArray(g.machine_name, n) < 0){
+                            n.push(g.machine_name);
+                            var h = '';
+                            if (g.availability_icons){
+                                g.availability_icons.delivery_icons.forEach(function (v) {
+                                    h = `${h}<i class="hb ${v}" />`;
+                                });
+                            }
+                            var sub = '';
+                            if (g.exclusive_countries && g.exclusive_countries.length)
+                                sub = `<span style="color:green;" title="${g.exclusive_countries}">+</span>`;
+                            if (g.disallowed_countries && g.disallowed_countries.length)
+                                sub = `${sub} <span style="color:red;" title="${g.disallowed_countries}">-</span>`;
+                            var p = '-';
+                            if (g['msrp_price|money']){
+                                p = `${g['msrp_price|money'].amount} ${g['msrp_price|money'].currency}`;
+                            }
+                            /*
                         if (g['min_price|money']){
                             p = `${p}<br>${g['min_price|money'].amount} ${g['min_price|money'].currency}`;
                         }
                         */
-                        if (k ++ >0)
-                            sp = '';
-                        $('#c').append(`<tr>${sp}<td>${q++}</td><td>${g.human_name}<br>${g.machine_name}</td><td>${p}</td><td>${h}${sub}</td></tr>`);
-                    }
+                            if (k ++ >0)
+                                sp = '';
+                            $('#c').append(`<tr>${sp}<td>${q++}</td><td>${g.human_name}<br>${g.machine_name}</td><td>${p}</td><td>${h}${sub}</td></tr>`);
+                        }
+                    });
                 });
-            });
 
-            /*
+                /*
             r = j.hero_tile.hero_tile_grid_info.displayitem_image_info;
             n = [];
             $.each(j.bonus_data, function (o, e) {
@@ -194,6 +206,23 @@ function DOM_ContentReady () {
                 });
             });
             */
+            } else if (j. data.games) {
+                $.each(j.data.games.mosaic[0].products , function (i, e) {
+                    var t = e.hover_highlights.join(',');
+                    var start = new Date(`${e['start_date|datetime']}+00:00`).toLocaleString();
+                    var end = new Date(`${e['end_date|datetime']}+00:00`);
+                    var diff = end - new Date();
+                    end = end.toLocaleString();
+                    $('#a1').append(`<tr><td><a target=_blank href="${e.product_url}">${e.tile_name}</a></td><td>${start}</td><td id="end${i}">${end}</td><td>${t}</td></tr>`);
+                    if (diff < 7 * 24 * 60 * 60 * 1000) {
+                        if (diff < 3 * 24 * 60 * 60 * 1000) {
+                            $(`#end${i}`).css('color', 'red');
+                        }else{
+                            $(`#end${i}`).css('color', 'yellow');
+                        }
+                    }
+                });
+            }
         }
     }
 }

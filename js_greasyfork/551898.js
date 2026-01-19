@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube MP3 Auto Downloader
 // @namespace    Violentmonkey Scripts
-// @version      3.0
+// @version      3.1
 // @description  Adds a floating button to YouTube pages to download audio as MP3 via a local server, with concurrent download support.
 // @match        https://www.youtube.com/*
 // @grant        none
@@ -10,7 +10,7 @@
 // @updateURL https://update.greasyfork.org/scripts/551898/YouTube%20MP3%20Auto%20Downloader.meta.js
 // ==/UserScript==
 
-(function() {
+(function () {
     'use strict';
     const FLASK_URL = "http://localhost:8888";
 
@@ -96,7 +96,19 @@
                     throw new Error(`狀態檢查失敗: ${statusResponse.statusText}`);
                 }
 
-                const { status, message: errorMessage } = await statusResponse.json();
+                const { status, message: errorMessage, progress, title } = await statusResponse.json();
+
+                // 更新進度顯示
+                if (progress) {
+                    statusEl.textContent = progress;
+
+                    // 根據狀態更新背景顏色
+                    if (status === 'downloading') {
+                        statusEl.style.backgroundColor = 'rgba(0, 123, 255, 0.9)'; // Blue
+                    } else if (status === 'converting') {
+                        statusEl.style.backgroundColor = 'rgba(255, 193, 7, 0.9)'; // Yellow
+                    }
+                }
 
                 if (status === 'done') {
                     clearInterval(pollInterval);
@@ -130,7 +142,7 @@
                     window.URL.revokeObjectURL(downloadUrl);
                     a.remove();
 
-                    statusEl.textContent = '下載完成!';
+                    statusEl.textContent = '✓ 下載完成!';
                     setTimeout(() => statusEl.remove(), 3000);
 
                 } else if (status === 'error') {
@@ -140,12 +152,12 @@
             } catch (pollError) {
                 clearInterval(pollInterval);
                 console.error('Download failed:', pollError);
-                statusEl.textContent = `失敗: ${pollError.message.substring(0, 50)}...`;
+                statusEl.textContent = `✗ ${pollError.message.substring(0, 40)}`;
                 statusEl.style.backgroundColor = '#dc3545'; // Red
                 // Keep error message on screen longer
                 setTimeout(() => statusEl.remove(), 10000);
             }
-        }, 2000); // Poll every 2 seconds
+        }, 1000); // Poll every 1 second for smoother progress updates
     }
 
     mainBtn.onclick = async () => {
