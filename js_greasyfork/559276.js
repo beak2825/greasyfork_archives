@@ -3,7 +3,7 @@
 // @namespace    https://fanis.dev/userscripts
 // @author       Fanis Hatzidakis
 // @license      PolyForm-Internal-Use-1.0.0; https://polyformproject.org/licenses/internal-use/1.0.0/
-// @version      1.4.0
+// @version      1.5.0
 // @description  Summarize web articles via OpenAI API. Modular architecture with configurable selectors and inspection mode.
 // @match        *://*/*
 // @exclude      about:*
@@ -118,7 +118,11 @@
         EXCLUDES_GLOBAL: 'digest_excludes_v1',
         DOMAIN_SELECTORS: 'digest_domain_selectors_v1',
         DOMAIN_EXCLUDES: 'digest_domain_excludes_v1',
+        MIN_TEXT_LENGTH: 'digest_min_text_length_v1',
     };
+
+    // Minimum text length for extraction (in characters)
+    const DEFAULT_MIN_TEXT_LENGTH = 100;
 
     // Default prompts
     const DEFAULT_PROMPTS = {
@@ -2222,48 +2226,30 @@
 
 
     /**
-     * Check if element is excluded based on exclusion rules
-     */
-    function isExcluded(el, EXCLUDE) {
-        if (!el) return true;
-
-        // Check if element itself matches exclusion selectors
-        if (EXCLUDE.self) {
-            for (const sel of EXCLUDE.self) {
-                try {
-                    if (el.matches(sel)) return true;
-                } catch {}
-            }
-        }
-
-        // Check if any ancestor matches exclusion selectors
-        if (EXCLUDE.ancestors) {
-            for (const sel of EXCLUDE.ancestors) {
-                try {
-                    if (el.closest(sel)) return true;
-                } catch {}
-            }
-        }
-
-        return false;
-    }
-
-    /**
      * Get selected text from the page
+     * @param {number} minLength - Minimum text length required
+     * @returns {Object|null} - { text } or { error, actualLength } or null if no selection
      */
-    function getSelectedText() {
+    function getSelectedText(minLength = 100) {
         const selection = window.getSelection();
         const text = selection.toString().trim();
-        if (text && text.length > 100) {
-            return text;
+        if (!text) {
+            return null;
         }
-        return null;
+        if (text.length < minLength) {
+            return { error: 'selection_too_short', actualLength: text.length, minLength };
+        }
+        return { text };
     }
 
     /**
      * Extract article body using configured selectors
+     * @param {string[]} SELECTORS - CSS selectors to find container
+     * @param {Object} EXCLUDE - Exclusion rules
+     * @param {number} minLength - Minimum text length required
+     * @returns {Object|null} - { text, container, title } or { error, ... } or null
      */
-    function extractArticleBody(SELECTORS, EXCLUDE) {
+    function extractArticleBody(SELECTORS, EXCLUDE, minLength = 100) {
         let container = null;
 
         // Try each selector in order
@@ -2281,7 +2267,7 @@
 
         if (!container) {
             log('No article container found');
-            return null;
+            return { error: 'no_container' };
         }
 
         // Try to find article title
@@ -2305,41 +2291,48 @@
             }
         }
 
-        // Extract text-containing elements (p, li, blockquote, figcaption, etc.)
-        const textSelectors = 'p, li, blockquote, figcaption, dd, dt';
-        const elements = Array.from(container.querySelectorAll(textSelectors));
+        // Clone container to avoid modifying the DOM
+        const clone = container.cloneNode(true);
 
-        const filtered = elements.filter(el => {
-            const text = el.textContent.trim();
+        // Remove UI elements
+        clone.querySelectorAll(`[${UI_ATTR}]`).forEach(el => el.remove());
 
-            // Filter by length
-            if (text.length < 40) return false;
-
-            // Exclude UI elements
-            if (el.closest(`[${UI_ATTR}]`)) return false;
-
-            // Check against exclusion rules
-            if (isExcluded(el, EXCLUDE)) return false;
-
-            // Exclude if nested inside another text element we're already capturing
-            const parent = el.parentElement;
-            if (parent && parent.closest(textSelectors) && elements.includes(parent.closest(textSelectors))) {
-                return false;
+        // Remove excluded elements (self)
+        if (EXCLUDE.self) {
+            for (const sel of EXCLUDE.self) {
+                try {
+                    clone.querySelectorAll(sel).forEach(el => el.remove());
+                } catch {}
             }
-
-            return true;
-        });
-
-        if (filtered.length === 0) {
-            log('No text elements found in container');
-            return null;
         }
 
-        log(`Found ${filtered.length} text elements`);
+        // Remove excluded containers (ancestors)
+        if (EXCLUDE.ancestors) {
+            for (const sel of EXCLUDE.ancestors) {
+                try {
+                    clone.querySelectorAll(sel).forEach(el => el.remove());
+                } catch {}
+            }
+        }
+
+        // Get visible text content (innerText for browsers, textContent fallback for jsdom/tests)
+        const text = (clone.innerText ?? clone.textContent ?? '').trim();
+
+        if (!text) {
+            log('No text found in container');
+            return { error: 'no_text' };
+        }
+
+        if (text.length < minLength) {
+            log(`Text too short: ${text.length} < ${minLength}`);
+            return { error: 'article_too_short', actualLength: text.length, minLength };
+        }
+
+        log(`Extracted ${text.length} characters from container`);
 
         return {
-            text: filtered.map(el => el.textContent.trim()).join('\n\n'),
-            elements: filtered,
+            text: text,
+            elements: null,
             container: container,
             title: title
         };
@@ -2347,21 +2340,28 @@
 
     /**
      * Get text to digest (selection or article body)
+     * @param {string[]} SELECTORS - CSS selectors to find container
+     * @param {Object} EXCLUDE - Exclusion rules
+     * @param {number} minLength - Minimum text length required
+     * @returns {Object} - { text, source, ... } or { error, ... }
      */
-    function getTextToDigest(SELECTORS, EXCLUDE) {
+    function getTextToDigest(SELECTORS, EXCLUDE, minLength = 100) {
         // First check if user has selected text
-        const selected = getSelectedText();
+        const selected = getSelectedText(minLength);
         if (selected) {
-            return { text: selected, elements: null, source: 'selection' };
+            if (selected.error) {
+                return { error: selected.error, actualLength: selected.actualLength, minLength, source: 'selection' };
+            }
+            return { text: selected.text, elements: null, source: 'selection' };
         }
 
         // Otherwise extract article body
-        const article = extractArticleBody(SELECTORS, EXCLUDE);
-        if (article) {
-            return { text: article.text, elements: article.elements, source: 'article', container: article.container };
+        const article = extractArticleBody(SELECTORS, EXCLUDE, minLength);
+        if (article.error) {
+            return { error: article.error, actualLength: article.actualLength, minLength, source: 'article' };
         }
 
-        return null;
+        return { text: article.text, elements: article.elements, source: 'article', container: article.container };
     }
 
     /**
@@ -3070,6 +3070,16 @@
         let AUTO_SIMPLIFY = false;
         try { const v = await storage.get(STORAGE_KEYS.AUTO_SIMPLIFY, ''); if (v !== '') AUTO_SIMPLIFY = (v === true || v === 'true'); } catch {}
 
+        // Minimum text length for extraction
+        let MIN_TEXT_LENGTH = DEFAULT_MIN_TEXT_LENGTH;
+        try {
+            const v = await storage.get(STORAGE_KEYS.MIN_TEXT_LENGTH, '');
+            if (v !== '') {
+                const parsed = parseInt(v, 10);
+                if (!isNaN(parsed) && parsed >= 0) MIN_TEXT_LENGTH = parsed;
+            }
+        } catch {}
+
         // Initialize cache
         const cache = new DigestCache(storage);
         await cache.init();
@@ -3135,9 +3145,28 @@
             updateOverlayStatus('processing', mode, false);
 
             try {
-                const textData = getTextToDigest(SELECTORS, EXCLUDE);
-                if (!textData) {
-                    openInfo('No text found to summarize. Try selecting text or visit an article page.');
+                const textData = getTextToDigest(SELECTORS, EXCLUDE, MIN_TEXT_LENGTH);
+
+                // Handle extraction errors
+                if (textData.error) {
+                    let msg;
+                    switch (textData.error) {
+                        case 'selection_too_short':
+                            msg = `Selected text is too short (${textData.actualLength} chars). Minimum is ${textData.minLength} chars.`;
+                            break;
+                        case 'article_too_short':
+                            msg = `Article text is too short (${textData.actualLength} chars). Minimum is ${textData.minLength} chars.\nTry selecting text manually or adjust the minimum length in settings.`;
+                            break;
+                        case 'no_container':
+                            msg = 'No article container found. Try selecting text manually or add a custom selector for this site.';
+                            break;
+                        case 'no_text':
+                            msg = 'Container found but no text inside. Try selecting text manually.';
+                            break;
+                        default:
+                            msg = 'No text found to summarize. Try selecting text or visit an article page.';
+                    }
+                    openInfo(msg);
                     updateOverlayStatus('ready');
                     return;
                 }
@@ -3258,6 +3287,20 @@
 
         GM_registerMenuCommand?.('Custom prompts', () => {
             openCustomPromptDialog(storage, CUSTOM_PROMPTS, setCustomPrompts);
+        });
+
+        GM_registerMenuCommand?.(`Minimum text length (${MIN_TEXT_LENGTH} chars)`, () => {
+            const input = prompt(`Minimum text length for extraction (current: ${MIN_TEXT_LENGTH} chars):`, MIN_TEXT_LENGTH);
+            if (input === null) return;
+            const val = parseInt(input, 10);
+            if (isNaN(val) || val < 0) {
+                openInfo('Invalid value. Please enter a non-negative number.');
+                return;
+            }
+            storage.set(STORAGE_KEYS.MIN_TEXT_LENGTH, String(val)).then(() => {
+                MIN_TEXT_LENGTH = val;
+                openInfo(`Minimum text length set to ${val} characters.`);
+            });
         });
 
         // Selector configuration menu commands
@@ -3419,8 +3462,8 @@
         // Auto-simplify if enabled
         if (AUTO_SIMPLIFY) {
             setTimeout(() => {
-                const textData = getTextToDigest(SELECTORS, EXCLUDE);
-                if (textData && textData.source === 'article') {
+                const textData = getTextToDigest(SELECTORS, EXCLUDE, MIN_TEXT_LENGTH);
+                if (!textData.error && textData.source === 'article') {
                     log('Auto-simplify enabled, applying large summary...');
                     handleDigest('large');
                 }

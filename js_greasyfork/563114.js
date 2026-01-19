@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Quick Boilerplates
 // @namespace    http://tampermonkey.net/
-// @version      0.1
+// @version      0.2
 // @description  Manage and insert boilerplate text with Ctrl+Q shortcut
 // @author       yclee126
 // @match        *://*/*
@@ -95,7 +95,8 @@
     let lastSavedRange = null; // workaround for contentEditable fields (it always inserts at the start without this)
 
     document.addEventListener('focusin', (e) => {
-        if (overlay.contains(e.target)) return;
+        if (overlayVisible()) return;
+
         const tag = e.target.tagName;
         if (tag === 'INPUT' || tag === 'TEXTAREA' || e.target.isContentEditable) {
             lastFocusedElement = e.target;
@@ -103,6 +104,8 @@
     }, true);
 
     document.addEventListener('selectionchange', () => {
+        if (overlayVisible()) return;
+
         const sel = window.getSelection();
         if (sel.rangeCount > 0) {
             const range = sel.getRangeAt(0);
@@ -162,6 +165,10 @@
     function saveData() {
         GM_setValue("bp_data", JSON.stringify(boilerplates));
         renderList(searchInput.value);
+    }
+
+    function overlayVisible() {
+        return overlay.style.display === 'flex';
     }
 
     function renderList(filter = "") {
@@ -256,6 +263,8 @@
             mainActions.style.display = 'flex';
             editor.style.display = 'none';
         }
+
+        searchInput.focus();
     }
 
     function openEditor(bp = null) {
@@ -295,7 +304,7 @@
             const current = document.activeElement;
             if (current && !overlay.contains(current)) lastFocusedElement = current;
 
-            if (overlay.style.display === 'flex') {
+            if (overlayVisible()) {
                 closeUI();
             } else {
                 overlay.style.display = 'flex';
@@ -311,7 +320,7 @@
             }
         }
 
-        if (e.key === 'Escape' && overlay.style.display === 'flex') closeUI();
+        if (e.key === 'Escape' && overlayVisible()) closeUI();
     });
 
     searchInput.addEventListener('input', (e) => {
@@ -320,7 +329,7 @@
     });
 
     searchInput.addEventListener('keydown', (e) => {
-        if (overlay.style.display !== 'flex' || editor.style.display === 'flex') return;
+        if (!overlayVisible()) return;
 
         if (e.key === 'ArrowDown') {
             e.preventDefault();
@@ -364,14 +373,18 @@
             editNameError.style.display = 'none';
         }
 
+        let idx = boilerplates.findIndex(b => b.id === editingId);
         if (editingId) {
-            const idx = boilerplates.findIndex(b => b.id === editingId);
             boilerplates[idx] = { ...boilerplates[idx], name, content };
         } else {
             boilerplates.push({ id: Date.now(), name, content });
+            idx = boilerplates.length - 1;
         }
+
         saveData();
         toggleEditorView(false);
+        selectedIndex = idx;
+        renderList();
     };
 
     overlay.querySelector('#bp-delete').onclick = () => {

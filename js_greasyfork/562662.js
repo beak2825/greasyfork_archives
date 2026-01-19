@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Toolasha
 // @namespace    http://tampermonkey.net/
-// @version      0.4.946
+// @version      0.4.950
 // @description  Toolasha - Enhanced tools for Milky Way Idle.
 // @author       Celasha and Claude, thank you to bot7420, DrDucky, Frotty, Truth_Light, AlphB, and sentientmilk for providing the basis for a lot of this. Thank you to Miku, Orvel, Jigglymoose, Incinarator, Knerd, and others for their time and help. Thank you to Steez for testing and helping me figure out where I'm wrong! Special thanks to Zaeter for the name.
 // @license      CC-BY-NC-SA-4.0
@@ -482,6 +482,13 @@
                     type: 'checkbox',
                     default: true,
                     help: 'Displays total materials needed and shortfall when entering quantity'
+                },
+                alchemy_profitDisplay: {
+                    id: 'alchemy_profitDisplay',
+                    label: 'Alchemy panel: Show profit calculator',
+                    type: 'checkbox',
+                    default: true,
+                    help: 'Displays profit/hour and profit/day for alchemy actions based on success rate and market prices'
                 }
             }
         },
@@ -1891,6 +1898,16 @@
                 const newCharacterId = data.character?.id;
                 const newCharacterName = data.character?.name;
 
+                // Validate character data before processing
+                if (!newCharacterId || !newCharacterName) {
+                    console.error('[DataManager] Invalid character data received:', {
+                        hasCharacter: !!data.character,
+                        hasId: !!newCharacterId,
+                        hasName: !!newCharacterName
+                    });
+                    return; // Don't process invalid character data
+                }
+
                 // Check if this is a character switch (not first load)
                 if (this.currentCharacterId && this.currentCharacterId !== newCharacterId) {
                     // Prevent rapid-fire character switches (loop protection)
@@ -2734,7 +2751,20 @@
          * @returns {boolean} Setting value
          */
         getSetting(key) {
-            return this.settingsMap[key]?.isTrue ?? false;
+            // Check loaded settings first
+            if (this.settingsMap[key]) {
+                return this.settingsMap[key].isTrue ?? false;
+            }
+
+            // Fallback: Check settings-config.js for default (fixes race condition on load)
+            for (const group of Object.values(settingsGroups)) {
+                if (group.settings[key]) {
+                    return group.settings[key].default ?? false;
+                }
+            }
+
+            // Ultimate fallback
+            return false;
         }
 
         /**
@@ -5162,11 +5192,6 @@
 
         let totalEfficiency = 0;
 
-        // Extract skill name from action type for skill-specific tea detection
-        // e.g., "/action_types/brewing" -> "brewing"
-        const skillName = actionTypeHrid.replace('/action_types/', '');
-        const skillLevelBuffType = `/buff_types/${skillName}_level`;
-
         // Process each active tea/drink
         for (const drink of activeDrinks) {
             if (!drink || !drink.itemHrid) {
@@ -5186,13 +5211,8 @@
                     const scaledEfficiency = baseEfficiency * (1 + drinkConcentration);
                     totalEfficiency += scaledEfficiency;
                 }
-                // Skill-specific level buff (e.g., Brewing Tea: +3 Brewing levels)
-                // Level bonuses translate to efficiency: +1 level = +1% efficiency
-                else if (buff.typeHrid === skillLevelBuffType) {
-                    const levelBonus = buff.flatBoost;
-                    const scaledBonus = levelBonus * (1 + drinkConcentration);
-                    totalEfficiency += scaledBonus;
-                }
+                // Note: Skill-specific level buffs are NOT counted here
+                // They affect Level Bonus calculation, not Tea Bonus
             }
         }
 
@@ -5226,11 +5246,6 @@
 
         const teaBreakdown = [];
 
-        // Extract skill name from action type for skill-specific tea detection
-        // e.g., "/action_types/brewing" -> "brewing"
-        const skillName = actionTypeHrid.replace('/action_types/', '');
-        const skillLevelBuffType = `/buff_types/${skillName}_level`;
-
         // Process each active tea/drink
         for (const drink of activeDrinks) {
             if (!drink || !drink.itemHrid) {
@@ -5254,14 +5269,8 @@
                     baseEfficiency += baseValue;
                     totalEfficiency += scaledValue;
                 }
-                // Skill-specific level buff (e.g., Brewing Tea: +3 Brewing levels)
-                // Level bonuses translate to efficiency: +1 level = +1% efficiency
-                else if (buff.typeHrid === skillLevelBuffType) {
-                    const baseValue = buff.flatBoost;
-                    const scaledValue = baseValue * (1 + drinkConcentration);
-                    baseEfficiency += baseValue;
-                    totalEfficiency += scaledValue;
-                }
+                // Note: Skill-specific level buffs are NOT counted here
+                // They affect Level Bonus calculation, not Tea Bonus
             }
 
             // Only add to breakdown if this tea contributes efficiency
@@ -5486,6 +5495,60 @@
         return parseTeaBuff(activeDrinks, itemDetailMap, drinkConcentration, {
             buffTypeHrids: ['/buff_types/gathering']
         });
+    }
+
+    /**
+     * Parse skill level bonus from active tea buffs for a specific action type
+     * @param {string} actionTypeHrid - Action type HRID (e.g., "/action_types/cheesesmithing")
+     * @param {Array} activeDrinks - Array of active drink items from actionTypeDrinkSlotsMap
+     * @param {Object} itemDetailMap - Item details from init_client_data
+     * @param {number} drinkConcentration - Drink Concentration stat (as decimal, e.g., 0.129 for 12.9%)
+     * @returns {number} Total skill level bonus (e.g., 9.032 for +8 base × 1.129 DC)
+     *
+     * @example
+     * // With Ultra Cheesesmithing Tea (+8 Cheesesmithing base) and 12.9% DC:
+     * parseTeaSkillLevelBonus("/action_types/cheesesmithing", activeDrinks, items, 0.129)
+     * // Returns: 9.032 (8 × 1.129 = 9.032 levels)
+     */
+    function parseTeaSkillLevelBonus(actionTypeHrid, activeDrinks, itemDetailMap, drinkConcentration = 0) {
+        if (!activeDrinks || activeDrinks.length === 0) {
+            return 0; // No active teas
+        }
+
+        if (!actionTypeHrid || !itemDetailMap) {
+            return 0; // Missing required data
+        }
+
+        // Extract skill name from action type HRID
+        // "/action_types/cheesesmithing" -> "cheesesmithing"
+        const skillName = actionTypeHrid.split('/').pop();
+        const skillLevelBuffType = `/buff_types/${skillName}_level`;
+
+        let totalLevelBonus = 0;
+
+        // Process each active tea/drink
+        for (const drink of activeDrinks) {
+            if (!drink || !drink.itemHrid) {
+                continue; // Empty slot
+            }
+
+            const itemDetails = itemDetailMap[drink.itemHrid];
+            if (!itemDetails || !itemDetails.consumableDetail || !itemDetails.consumableDetail.buffs) {
+                continue; // Not a consumable or has no buffs
+            }
+
+            // Check each buff on this tea
+            for (const buff of itemDetails.consumableDetail.buffs) {
+                // Skill-specific level buff (e.g., "/buff_types/cheesesmithing_level")
+                if (buff.typeHrid === skillLevelBuffType) {
+                    const baseValue = buff.flatBoost;
+                    const scaledValue = baseValue * (1 + drinkConcentration);
+                    totalLevelBonus += scaledValue;
+                }
+            }
+        }
+
+        return totalLevelBonus;
     }
 
     /**
@@ -6000,7 +6063,18 @@
         switch (context) {
             case 'profit': {
                 const profitMode = config.getSettingValue('profitCalc_pricingMode');
-                return profitMode || 'ask';
+
+                // Convert profit calculation modes to price types
+                // For EV/profit context, we're calculating sell-side value
+                switch (profitMode) {
+                    case 'conservative':
+                        return 'bid'; // Instant sell (Bid price)
+                    case 'hybrid':
+                    case 'optimistic':
+                        return 'ask'; // Patient sell (Ask price)
+                    default:
+                        return 'ask';
+                }
             }
             case 'networth': {
                 const networthMode = config.getSettingValue('networth_pricingMode');
@@ -6582,7 +6656,18 @@
             // Action Level bonus increases the effective requirement
             const baseRequirement = actionDetails.levelRequirement?.level || 1;
             const effectiveRequirement = baseRequirement + actionLevelBonus;
-            const levelEfficiency = Math.max(0, skillLevel - effectiveRequirement);
+
+            // Calculate tea skill level bonus (e.g., +8 Cheesesmithing from Ultra Cheesesmithing Tea)
+            const teaSkillLevelBonus = parseTeaSkillLevelBonus(
+                actionDetails.type,
+                activeDrinks,
+                itemDetailMap,
+                drinkConcentration
+            );
+
+            // Apply tea skill level bonus to effective player level
+            const effectiveLevel = skillLevel + teaSkillLevelBonus;
+            const levelEfficiency = Math.max(0, effectiveLevel - effectiveRequirement);
 
             const houseEfficiency = calculateHouseEfficiency(actionDetails.type);
 
@@ -8543,7 +8628,18 @@
                 break;
             }
         }
-        const levelEfficiency = Math.max(0, currentLevel - requiredLevel);
+
+        // Calculate tea skill level bonus (e.g., +5 Foraging from Ultra Foraging Tea)
+        const teaSkillLevelBonus = parseTeaSkillLevelBonus(
+            actionDetail.type,
+            drinkSlots,
+            gameData.itemDetailMap,
+            drinkConcentration
+        );
+
+        // Apply tea skill level bonus to effective player level
+        const effectiveLevel = currentLevel + teaSkillLevelBonus;
+        const levelEfficiency = Math.max(0, effectiveLevel - requiredLevel);
 
         // Calculate house efficiency bonus
         let houseEfficiency = 0;
@@ -14782,8 +14878,18 @@
             // - action-time-display historically didn't floor (preserving for compatibility)
             const effectiveRequirement = baseRequirement + (floorActionLevel ? Math.floor(actionLevelBonus) : actionLevelBonus);
 
+            // Calculate tea skill level bonus (e.g., +8 Cheesesmithing from Ultra Cheesesmithing Tea)
+            const teaSkillLevelBonus = parseTeaSkillLevelBonus(
+                actionDetails.type,
+                activeDrinks,
+                itemDetailMap,
+                drinkConcentration
+            );
+
             // Calculate efficiency components
-            const levelEfficiency = Math.max(0, skillLevel - effectiveRequirement);
+            // Apply tea skill level bonus to effective player level
+            const effectiveLevel = skillLevel + teaSkillLevelBonus;
+            const levelEfficiency = Math.max(0, effectiveLevel - effectiveRequirement);
             const houseEfficiency = calculateHouseEfficiency(actionDetails.type);
             const equipmentEfficiency = parseEquipmentEfficiencyBonuses(
                 equipment,
@@ -17250,7 +17356,12 @@
             const actionLevelBonus = parseActionLevelBonus(activeDrinks, itemDetailMap, drinkConcentration);
             const effectiveRequirement = baseRequirement + Math.floor(actionLevelBonus);
 
-            const levelEfficiency = Math.max(0, skillLevel - effectiveRequirement);
+            // Calculate tea skill level bonus (e.g., +8 Cheesesmithing from Ultra Cheesesmithing Tea)
+            const teaSkillLevelBonus = parseTeaSkillLevelBonus(actionDetails.type, activeDrinks, itemDetailMap, drinkConcentration);
+
+            // Apply tea skill level bonus to effective player level
+            const effectiveLevel = skillLevel + teaSkillLevelBonus;
+            const levelEfficiency = Math.max(0, effectiveLevel - effectiveRequirement);
             const houseEfficiency = calculateHouseEfficiency(actionDetails.type);
             const equipmentEfficiency = parseEquipmentEfficiencyBonuses(equipment, actionDetails.type, itemDetailMap);
 
@@ -21931,7 +22042,7 @@
         constructor() {
             this.isActive = false;
             this.unregisterHandlers = [];
-            this.processedBars = new WeakSet();
+            this.processedBars = new Set();
             this.isInitialized = false;
         }
 
@@ -35415,6 +35526,1783 @@
     const combatSummary = new CombatSummary();
 
     /**
+     * Alchemy Profit Calculator Module
+     * Calculates real-time profit for alchemy actions accounting for:
+     * - Success rate (failures consume materials but not catalyst)
+     * - Efficiency bonuses
+     * - Tea buff costs and duration
+     * - Market prices (ask/bid based on pricing mode)
+     */
+
+
+    class AlchemyProfit {
+        constructor() {
+            this.cachedData = null;
+            this.lastFingerprint = null;
+        }
+
+        /**
+         * Extract alchemy action data from the DOM
+         * @returns {Object|null} Action data or null if extraction fails
+         */
+        async extractActionData() {
+            try {
+                const alchemyComponent = document.querySelector('[class*="SkillActionDetail_alchemyComponent"]');
+                if (!alchemyComponent) return null;
+
+                // Get success rate with breakdown
+                const successRateBreakdown = this.extractSuccessRate();
+                if (successRateBreakdown === null) return null;
+
+                // Get action time (base 20 seconds)
+                const actionSpeedBreakdown = this.extractActionSpeed();
+                const actionTime = 20 / (1 + actionSpeedBreakdown.total);
+
+                // Get efficiency
+                const efficiencyBreakdown = this.extractEfficiency();
+
+                // Get rare find
+                const rareFindBreakdown = this.extractRareFind();
+
+                // Get essence find
+                const essenceFindBreakdown = this.extractEssenceFind();
+
+                // Get requirements (inputs)
+                const requirements = await this.extractRequirements();
+
+                // Get drops (outputs)
+                const drops = await this.extractDrops();
+
+                // Get catalyst
+                const catalyst = await this.extractCatalyst();
+
+                // Get consumables (tea/drinks)
+                const consumables = await this.extractConsumables();
+                const teaDuration = this.extractTeaDuration();
+
+                return {
+                    successRate: successRateBreakdown.total,
+                    successRateBreakdown,
+                    actionTime,
+                    efficiency: efficiencyBreakdown.total,
+                    efficiencyBreakdown,
+                    actionSpeedBreakdown,
+                    rareFindBreakdown,
+                    essenceFindBreakdown,
+                    requirements,
+                    drops,
+                    catalyst,
+                    consumables,
+                    teaDuration
+                };
+            } catch (error) {
+                console.error('[AlchemyProfit] Failed to extract action data:', error);
+                return null;
+            }
+        }
+
+        /**
+         * Extract success rate with breakdown from the DOM and active buffs
+         * @returns {Object} Success rate breakdown { total, base, tea }
+         */
+        extractSuccessRate() {
+            try {
+                const element = document.querySelector('[class*="SkillActionDetail_successRate"] [class*="SkillActionDetail_value"]');
+                if (!element) return null;
+
+                const text = element.textContent.trim();
+                const match = text.match(/(\d+\.?\d*)/);
+                if (!match) return null;
+
+                const totalSuccessRate = parseFloat(match[1]) / 100;
+
+                // Calculate tea bonus from active drinks
+                const gameData = dataManager.getInitClientData();
+                if (!gameData) {
+                    return {
+                        total: totalSuccessRate,
+                        base: totalSuccessRate,
+                        tea: 0
+                    };
+                }
+
+                const actionTypeHrid = '/action_types/alchemy';
+                const drinkSlots = dataManager.getActionDrinkSlots(actionTypeHrid);
+                const equipment = dataManager.getEquipment();
+
+                // Get drink concentration from equipment
+                const drinkConcentration = getDrinkConcentration(equipment, gameData.itemDetailMap);
+
+                // Calculate tea success rate bonus
+                let teaBonus = 0;
+
+                if (drinkSlots && drinkSlots.length > 0) {
+                    for (const drink of drinkSlots) {
+                        if (!drink || !drink.itemHrid) continue;
+
+                        const itemDetails = gameData.itemDetailMap[drink.itemHrid];
+                        if (!itemDetails || !itemDetails.consumableDetail || !itemDetails.consumableDetail.buffs) {
+                            continue;
+                        }
+
+                        // Check for alchemy_success buff
+                        for (const buff of itemDetails.consumableDetail.buffs) {
+                            if (buff.typeHrid === '/buff_types/alchemy_success') {
+                                // ratioBoost is a percentage multiplier (e.g., 0.05 = 5% of base)
+                                // It scales with drink concentration
+                                const ratioBoost = buff.ratioBoost * (1 + drinkConcentration);
+                                teaBonus += ratioBoost;
+                            }
+                        }
+                    }
+                }
+
+                // Calculate base success rate (before tea bonus)
+                // Formula: total = base × (1 + tea_ratio_boost)
+                // So: base = total / (1 + tea_ratio_boost)
+                const baseSuccessRate = totalSuccessRate / (1 + teaBonus);
+
+                return {
+                    total: totalSuccessRate,
+                    base: baseSuccessRate,
+                    tea: teaBonus
+                };
+            } catch (error) {
+                console.error('[AlchemyProfit] Failed to extract success rate:', error);
+                return null;
+            }
+        }
+
+        /**
+         * Extract action speed buff using dataManager (matches Action Panel pattern)
+         * @returns {Object} Action speed breakdown { total, equipment, tea }
+         */
+        extractActionSpeed() {
+            try {
+                const gameData = dataManager.getInitClientData();
+                if (!gameData) {
+                    return { total: 0, equipment: 0, tea: 0 };
+                }
+
+                const equipment = dataManager.getEquipment();
+                const actionTypeHrid = '/action_types/alchemy';
+
+                // Parse equipment speed bonuses using utility
+                const equipmentSpeed = parseEquipmentSpeedBonuses(
+                    equipment,
+                    actionTypeHrid,
+                    gameData.itemDetailMap
+                );
+
+                // TODO: Add tea speed bonuses when tea-parser supports it
+                const teaSpeed = 0;
+
+                const total = equipmentSpeed + teaSpeed;
+
+                return {
+                    total,
+                    equipment: equipmentSpeed,
+                    tea: teaSpeed
+                };
+            } catch (error) {
+                console.error('[AlchemyProfit] Failed to extract action speed:', error);
+                return { total: 0, equipment: 0, tea: 0 };
+            }
+        }
+
+        /**
+         * Extract efficiency using dataManager (matches Action Panel pattern)
+         * @returns {Object} Efficiency breakdown { total, level, house, tea, equipment, community }
+         */
+        extractEfficiency() {
+            try {
+                const gameData = dataManager.getInitClientData();
+                if (!gameData) {
+                    return { total: 0, level: 0, house: 0, tea: 0, equipment: 0, community: 0 };
+                }
+
+                const equipment = dataManager.getEquipment();
+                const skills = dataManager.getSkills();
+                const houseRooms = Array.from(dataManager.getHouseRooms().values());
+                const actionTypeHrid = '/action_types/alchemy';
+
+                // Get required level from the DOM (action-specific)
+                const requiredLevel = this.extractRequiredLevel();
+
+                // Get current alchemy level from character skills
+                let currentLevel = requiredLevel;
+                for (const skill of skills) {
+                    if (skill.skillHrid === '/skills/alchemy') {
+                        currentLevel = skill.level;
+                        break;
+                    }
+                }
+
+                // Calculate house efficiency bonus (room level × 1.5%)
+                let houseEfficiency = 0;
+                for (const room of houseRooms) {
+                    const roomDetail = gameData.houseRoomDetailMap?.[room.houseRoomHrid];
+                    if (roomDetail?.usableInActionTypeMap?.[actionTypeHrid]) {
+                        houseEfficiency += (room.level || 0) * 1.5;
+                    }
+                }
+
+                // Get equipped drink slots for alchemy
+                const drinkSlots = dataManager.getActionDrinkSlots(actionTypeHrid);
+
+                // Get drink concentration from equipment
+                const drinkConcentration = getDrinkConcentration(equipment, gameData.itemDetailMap);
+
+                // Parse tea efficiency bonus using utility
+                const teaEfficiency = parseTeaEfficiency(
+                    actionTypeHrid,
+                    drinkSlots,
+                    gameData.itemDetailMap,
+                    drinkConcentration
+                );
+
+                // Parse tea skill level bonus (e.g., +8 Cheesesmithing from Ultra Cheesesmithing Tea)
+                const teaLevelBonus = parseTeaSkillLevelBonus(
+                    actionTypeHrid,
+                    drinkSlots,
+                    gameData.itemDetailMap,
+                    drinkConcentration
+                );
+
+                // Calculate level efficiency bonus (+1% per level above requirement)
+                // Apply tea level bonus to effective level
+                const effectiveLevel = currentLevel + teaLevelBonus;
+                const levelEfficiency = Math.max(0, effectiveLevel - requiredLevel);
+
+                // Calculate equipment efficiency bonus using utility
+                const equipmentEfficiency = parseEquipmentEfficiencyBonuses(
+                    equipment,
+                    actionTypeHrid,
+                    gameData.itemDetailMap
+                );
+
+                // Get community buff efficiency (Production Efficiency)
+                const communityBuffLevel = dataManager.getCommunityBuffLevel('/community_buff_types/production_efficiency');
+                let communityEfficiency = 0;
+                if (communityBuffLevel > 0) {
+                    // Formula: 0.14 + ((level - 1) × 0.003) = 14% base, +0.3% per level
+                    const flatBoost = 0.14;
+                    const flatBoostLevelBonus = 0.003;
+                    const communityBonus = flatBoost + ((communityBuffLevel - 1) * flatBoostLevelBonus);
+                    communityEfficiency = communityBonus * 100; // Convert to percentage
+                }
+
+                // Stack all efficiency bonuses additively
+                const totalEfficiency = stackAdditive(
+                    levelEfficiency,
+                    houseEfficiency,
+                    teaEfficiency,
+                    equipmentEfficiency,
+                    communityEfficiency
+                );
+
+                return {
+                    total: totalEfficiency / 100, // Convert percentage to decimal
+                    level: levelEfficiency,
+                    house: houseEfficiency,
+                    tea: teaEfficiency,
+                    equipment: equipmentEfficiency,
+                    community: communityEfficiency
+                };
+            } catch (error) {
+                console.error('[AlchemyProfit] Failed to extract efficiency:', error);
+                return { total: 0, level: 0, house: 0, tea: 0, equipment: 0, community: 0 };
+            }
+        }
+
+        /**
+         * Extract rare find bonus from equipment and buffs
+         * @returns {Object} Rare find breakdown { total, equipment, achievement }
+         */
+        extractRareFind() {
+            try {
+                const gameData = dataManager.getInitClientData();
+                if (!gameData) {
+                    return { total: 0, equipment: 0, achievement: 0 };
+                }
+
+                const equipment = dataManager.getEquipment();
+                const actionTypeHrid = '/action_types/alchemy';
+
+                // Parse equipment rare find bonuses
+                let equipmentRareFind = 0;
+                for (const slot of equipment) {
+                    if (!slot || !slot.itemHrid) continue;
+
+                    const itemDetail = gameData.itemDetailMap[slot.itemHrid];
+                    if (!itemDetail?.noncombatStats?.rareFind) continue;
+
+                    const enhancementLevel = slot.enhancementLevel || 0;
+                    const enhancementBonus = this.getEnhancementBonus(enhancementLevel);
+                    const slotMultiplier = this.getSlotMultiplier(itemDetail.equipmentType);
+
+                    equipmentRareFind += itemDetail.noncombatStats.rareFind * (1 + enhancementBonus * slotMultiplier);
+                }
+
+                // Get achievement rare find bonus (Veteran tier: +2%)
+                const achievementBuffs = dataManager.getAchievementBuffs(actionTypeHrid);
+                const achievementRareFind = (achievementBuffs.rareFind || 0) * 100; // Convert to percentage
+
+                const total = equipmentRareFind + achievementRareFind;
+
+                return {
+                    total: total / 100, // Convert to decimal
+                    equipment: equipmentRareFind,
+                    achievement: achievementRareFind
+                };
+            } catch (error) {
+                console.error('[AlchemyProfit] Failed to extract rare find:', error);
+                return { total: 0, equipment: 0, achievement: 0 };
+            }
+        }
+
+        /**
+         * Extract essence find bonus from equipment and buffs
+         * @returns {Object} Essence find breakdown { total, equipment }
+         */
+        extractEssenceFind() {
+            try {
+                const gameData = dataManager.getInitClientData();
+                if (!gameData) {
+                    return { total: 0, equipment: 0 };
+                }
+
+                const equipment = dataManager.getEquipment();
+
+                // Parse equipment essence find bonuses
+                let equipmentEssenceFind = 0;
+                for (const slot of equipment) {
+                    if (!slot || !slot.itemHrid) continue;
+
+                    const itemDetail = gameData.itemDetailMap[slot.itemHrid];
+                    if (!itemDetail?.noncombatStats?.essenceFind) continue;
+
+                    const enhancementLevel = slot.enhancementLevel || 0;
+                    const enhancementBonus = this.getEnhancementBonus(enhancementLevel);
+                    const slotMultiplier = this.getSlotMultiplier(itemDetail.equipmentType);
+
+                    equipmentEssenceFind += itemDetail.noncombatStats.essenceFind * (1 + enhancementBonus * slotMultiplier);
+                }
+
+                return {
+                    total: equipmentEssenceFind / 100, // Convert to decimal
+                    equipment: equipmentEssenceFind
+                };
+            } catch (error) {
+                console.error('[AlchemyProfit] Failed to extract essence find:', error);
+                return { total: 0, equipment: 0 };
+            }
+        }
+
+        /**
+         * Get enhancement bonus percentage for a given enhancement level
+         * @param {number} enhancementLevel - Enhancement level (0-20)
+         * @returns {number} Enhancement bonus as decimal
+         */
+        getEnhancementBonus(enhancementLevel) {
+            const bonuses = {
+                0: 0, 1: 0.02, 2: 0.042, 3: 0.066, 4: 0.092, 5: 0.12,
+                6: 0.15, 7: 0.182, 8: 0.216, 9: 0.252, 10: 0.29,
+                11: 0.334, 12: 0.384, 13: 0.44, 14: 0.502, 15: 0.57,
+                16: 0.644, 17: 0.724, 18: 0.81, 19: 0.902, 20: 1.0
+            };
+            return bonuses[enhancementLevel] || 0;
+        }
+
+        /**
+         * Get slot multiplier for enhancement bonuses
+         * @param {string} equipmentType - Equipment type HRID
+         * @returns {number} Multiplier (1 or 5)
+         */
+        getSlotMultiplier(equipmentType) {
+            // 5× multiplier for accessories, back, trinket, charm, pouch
+            const fiveXSlots = [
+                '/equipment_types/neck',
+                '/equipment_types/ring',
+                '/equipment_types/earrings',
+                '/equipment_types/back',
+                '/equipment_types/trinket',
+                '/equipment_types/charm',
+                '/equipment_types/pouch'
+            ];
+            return fiveXSlots.includes(equipmentType) ? 5 : 1;
+        }
+
+        /**
+         * Extract required level from notes
+         * @returns {number} Required alchemy level
+         */
+        extractRequiredLevel() {
+            try {
+                const notesEl = document.querySelector('[class*="SkillActionDetail_notes"]');
+                if (!notesEl) return 0;
+
+                const text = notesEl.textContent;
+                const match = text.match(/(\d+)/);
+                return match ? parseInt(match[1]) : 0;
+            } catch (error) {
+                console.error('[AlchemyProfit] Failed to extract required level:', error);
+                return 0;
+            }
+        }
+
+        /**
+         * Extract tea buff duration from React props
+         * @returns {number} Duration in seconds (default 300)
+         */
+        extractTeaDuration() {
+            try {
+                const container = document.querySelector('[class*="SkillActionDetail_alchemyComponent"]');
+                if (!container || !container._reactProps) {
+                    return 300;
+                }
+
+                let fiber = container._reactProps;
+                for (let key in fiber) {
+                    if (key.startsWith('__reactFiber') || key.startsWith('__reactInternalInstance')) {
+                        fiber = fiber[key];
+                        break;
+                    }
+                }
+
+                let current = fiber;
+                let depth = 0;
+
+                while (current && depth < 20) {
+                    if (current.memoizedProps?.actionBuffs) {
+                        const buffs = current.memoizedProps.actionBuffs;
+
+                        for (const buff of buffs) {
+                            if (buff.uniqueHrid && buff.uniqueHrid.endsWith('tea')) {
+                                const duration = buff.duration || 0;
+                                return duration / 1e9; // Convert nanoseconds to seconds
+                            }
+                        }
+                        break;
+                    }
+
+                    current = current.return;
+                    depth++;
+                }
+
+                return 300; // Default 5 minutes
+            } catch (error) {
+                console.error('[AlchemyProfit] Failed to extract tea duration:', error);
+                return 300;
+            }
+        }
+
+        /**
+         * Extract requirements (input materials) from the DOM
+         * @returns {Promise<Array>} Array of requirement objects
+         */
+        async extractRequirements() {
+            try {
+                const elements = document.querySelectorAll('[class*="SkillActionDetail_itemRequirements"] [class*="Item_itemContainer"]');
+                const requirements = [];
+
+                for (let i = 0; i < elements.length; i++) {
+                    const el = elements[i];
+                    const itemData = await this.extractItemData(el, true, i);
+                    if (itemData) {
+                        requirements.push(itemData);
+                    }
+                }
+
+                return requirements;
+            } catch (error) {
+                console.error('[AlchemyProfit] Failed to extract requirements:', error);
+                return [];
+            }
+        }
+
+        /**
+         * Extract drops (outputs) from the DOM
+         * @returns {Promise<Array>} Array of drop objects
+         */
+        async extractDrops() {
+            try {
+                const elements = document.querySelectorAll('[class*="SkillActionDetail_dropTable"] [class*="Item_itemContainer"]');
+                const drops = [];
+
+                for (let i = 0; i < elements.length; i++) {
+                    const el = elements[i];
+                    const itemData = await this.extractItemData(el, false, i);
+                    if (itemData) {
+                        drops.push(itemData);
+                    }
+                }
+
+                return drops;
+            } catch (error) {
+                console.error('[AlchemyProfit] Failed to extract drops:', error);
+                return [];
+            }
+        }
+
+        /**
+         * Extract catalyst from the DOM
+         * @returns {Promise<Object>} Catalyst object with prices
+         */
+        async extractCatalyst() {
+            try {
+                const element = document.querySelector('[class*="SkillActionDetail_catalystItemInputContainer"] [class*="ItemSelector_itemContainer"]') ||
+                               document.querySelector('[class*="SkillActionDetail_catalystItemInputContainer"] [class*="SkillActionDetail_itemContainer"]');
+
+                if (!element) {
+                    return { ask: 0, bid: 0 };
+                }
+
+                const itemData = await this.extractItemData(element, false, -1);
+                return itemData || { ask: 0, bid: 0 };
+            } catch (error) {
+                console.error('[AlchemyProfit] Failed to extract catalyst:', error);
+                return { ask: 0, bid: 0 };
+            }
+        }
+
+        /**
+         * Extract consumables (tea/drinks) from the DOM
+         * @returns {Promise<Array>} Array of consumable objects
+         */
+        async extractConsumables() {
+            try {
+                const elements = document.querySelectorAll('[class*="ActionTypeConsumableSlots_consumableSlots"] [class*="Item_itemContainer"]');
+                const consumables = [];
+
+                for (const el of elements) {
+                    const itemData = await this.extractItemData(el, false, -1);
+                    if (itemData && itemData.itemHrid !== '/items/coin') {
+                        consumables.push(itemData);
+                    }
+                }
+
+                return consumables;
+            } catch (error) {
+                console.error('[AlchemyProfit] Failed to extract consumables:', error);
+                return [];
+            }
+        }
+
+        /**
+         * Calculate the cost to create an enhanced item
+         * @param {string} itemHrid - Item HRID
+         * @param {number} targetLevel - Target enhancement level
+         * @param {string} priceType - 'ask' or 'bid'
+         * @returns {number} Total cost to create the enhanced item
+         */
+        calculateEnhancementCost(itemHrid, targetLevel, priceType) {
+            if (targetLevel === 0) {
+                const priceData = marketAPI.getPrice(itemHrid, 0);
+                return priceType === 'ask' ? (priceData?.ask || 0) : (priceData?.bid || 0);
+            }
+
+            const gameData = dataManager.getInitClientData();
+            if (!gameData) return 0;
+
+            const itemData = gameData.itemDetailMap?.[itemHrid];
+            if (!itemData) return 0;
+
+            // Start with base item cost
+            const basePriceData = marketAPI.getPrice(itemHrid, 0);
+            let totalCost = priceType === 'ask' ? (basePriceData?.ask || 0) : (basePriceData?.bid || 0);
+
+            // Add enhancement material costs for each level
+            const enhancementMaterials = itemData.enhancementCosts;
+            if (!enhancementMaterials || !Array.isArray(enhancementMaterials)) {
+                return totalCost;
+            }
+
+            // Enhance from level 0 to targetLevel
+            for (let level = 0; level < targetLevel; level++) {
+                for (const cost of enhancementMaterials) {
+                    const materialHrid = cost.itemHrid;
+                    const materialCount = cost.count || 0;
+
+                    if (materialHrid === '/items/coin') {
+                        totalCost += materialCount; // Coins are 1:1
+                    } else {
+                        const materialPrice = marketAPI.getPrice(materialHrid, 0);
+                        const price = priceType === 'ask' ? (materialPrice?.ask || 0) : (materialPrice?.bid || 0);
+                        totalCost += price * materialCount;
+                    }
+                }
+            }
+
+            return totalCost;
+        }
+
+        /**
+         * Calculate value recovered from decomposing an enhanced item
+         * @param {string} itemHrid - Item HRID
+         * @param {number} enhancementLevel - Enhancement level
+         * @param {string} priceType - 'ask' or 'bid'
+         * @returns {number} Total value recovered from decomposition
+         */
+        calculateDecompositionValue(itemHrid, enhancementLevel, priceType) {
+            if (enhancementLevel === 0) return 0;
+
+            const gameData = dataManager.getInitClientData();
+            if (!gameData) return 0;
+
+            const itemDetails = gameData.itemDetailMap?.[itemHrid];
+            if (!itemDetails) return 0;
+
+            let totalValue = 0;
+
+            // 1. Base item decomposition outputs
+            if (itemDetails.decompositionDetail?.results) {
+                for (const result of itemDetails.decompositionDetail.results) {
+                    const priceData = marketAPI.getPrice(result.itemHrid, 0);
+                    if (priceData) {
+                        const price = priceType === 'ask' ? priceData.ask : priceData.bid;
+                        totalValue += price * result.amount * 0.98; // 2% market tax
+                    }
+                }
+            }
+
+            // 2. Enhancing Essence from enhancement level
+            // Formula: round(2 × (0.5 + 0.1 × (1.05^itemLevel)) × (2^enhancementLevel))
+            const itemLevel = itemDetails.itemLevel || 1;
+            const essenceAmount = Math.round(2 * (0.5 + 0.1 * Math.pow(1.05, itemLevel)) * Math.pow(2, enhancementLevel));
+
+            const essencePriceData = marketAPI.getPrice('/items/enhancing_essence', 0);
+            if (essencePriceData) {
+                const essencePrice = priceType === 'ask' ? essencePriceData.ask : essencePriceData.bid;
+                totalValue += essencePrice * essenceAmount * 0.98; // 2% market tax
+            }
+
+            return totalValue;
+        }
+
+        /**
+         * Extract item data (HRID, prices, count, drop rate) from DOM element
+         * @param {HTMLElement} element - Item container element
+         * @param {boolean} isRequirement - True if this is a requirement (has count), false if drop (has drop rate)
+         * @param {number} index - Index in the list (for extracting count/rate text)
+         * @returns {Promise<Object|null>} Item data object or null
+         */
+        async extractItemData(element, isRequirement, index) {
+            try {
+                // Get item HRID from SVG use element
+                const use = element.querySelector('svg use');
+                if (!use) return null;
+
+                const href = use.getAttribute('href');
+                if (!href) return null;
+
+                const itemId = href.split('#')[1];
+                if (!itemId) return null;
+
+                const itemHrid = `/items/${itemId}`;
+
+                // Get enhancement level
+                let enhancementLevel = 0;
+                if (isRequirement) {
+                    const enhEl = element.querySelector('[class*="Item_enhancementLevel"]');
+                    if (enhEl) {
+                        const match = enhEl.textContent.match(/\+(\d+)/);
+                        enhancementLevel = match ? parseInt(match[1]) : 0;
+                    }
+                }
+
+                // Get market prices
+                let ask = 0, bid = 0;
+                if (itemHrid === '/items/coin') {
+                    ask = bid = 1;
+                } else {
+                    const priceData = marketAPI.getPrice(itemHrid, enhancementLevel);
+                    if (priceData && (priceData.ask > 0 || priceData.bid > 0)) {
+                        // Market data exists for this specific enhancement level
+                        ask = priceData.ask || 0;
+                        bid = priceData.bid || 0;
+                    } else {
+                        // No market data for this enhancement level - calculate cost
+                        ask = this.calculateEnhancementCost(itemHrid, enhancementLevel, 'ask');
+                        bid = this.calculateEnhancementCost(itemHrid, enhancementLevel, 'bid');
+                    }
+                }
+
+                const result = { itemHrid, ask, bid, enhancementLevel };
+
+                // Get count or drop rate
+                if (isRequirement && index >= 0) {
+                    // Extract count from requirement
+                    const countElements = document.querySelectorAll('[class*="SkillActionDetail_itemRequirements"] [class*="SkillActionDetail_inputCount"]');
+                    if (countElements[index]) {
+                        const text = countElements[index].textContent.trim();
+                        const cleaned = text.replace(/,/g, '');
+                        result.count = parseFloat(cleaned) || 1;
+                    }
+                } else if (!isRequirement) {
+                    // Extract count and drop rate from drop by matching item HRID
+                    // Search through all drop elements to find the one containing this item
+                    const dropElements = document.querySelectorAll('[class*="SkillActionDetail_drop"]');
+
+                    for (const dropElement of dropElements) {
+                        // Check if this drop element contains our item
+                        const dropItemElement = dropElement.querySelector('[class*="Item_itemContainer"] svg use');
+                        if (dropItemElement) {
+                            const dropHref = dropItemElement.getAttribute('href');
+                            const dropItemId = dropHref ? dropHref.split('#')[1] : null;
+                            const dropItemHrid = dropItemId ? `/items/${dropItemId}` : null;
+
+                            if (dropItemHrid === itemHrid) {
+                                // Found the matching drop element
+                                const text = dropElement.textContent.trim();
+
+                                // Extract count (at start of text)
+                                const countMatch = text.match(/^([\d\s,.]+)/);
+                                if (countMatch) {
+                                    const cleaned = countMatch[1].replace(/,/g, '').trim();
+                                    result.count = parseFloat(cleaned) || 1;
+                                } else {
+                                    result.count = 1;
+                                }
+
+                                // Extract drop rate percentage (handles both "7.29%" and "~7.29%")
+                                const rateMatch = text.match(/~?([\d,.]+)%/);
+                                if (rateMatch) {
+                                    const cleaned = rateMatch[1].replace(/,/g, '');
+                                    result.dropRate = parseFloat(cleaned) / 100 || 1;
+                                } else {
+                                    result.dropRate = 1;
+                                }
+
+                                break; // Found it, stop searching
+                            }
+                        }
+                    }
+
+                    // If we didn't find a matching drop element, set defaults
+                    if (result.count === undefined) {
+                        result.count = 1;
+                    }
+                    if (result.dropRate === undefined) {
+                        result.dropRate = 1;
+                    }
+                }
+
+                return result;
+            } catch (error) {
+                console.error('[AlchemyProfit] Failed to extract item data:', error);
+                return null;
+            }
+        }
+
+        /**
+         * Calculate profit based on extracted data and pricing mode
+         * @param {Object} data - Action data from extractActionData()
+         * @returns {Object|null} { profitPerHour, profitPerDay } or null
+         */
+        calculateProfit(data) {
+            try {
+                if (!data) return null;
+
+                // Get pricing mode
+                const pricingMode = config.getSetting('profitCalc_pricingMode') || 'hybrid';
+
+                // Determine buy/sell price types
+                let buyType, sellType;
+                if (pricingMode === 'conservative') {
+                    buyType = 'ask';  // Instant buy (Ask)
+                    sellType = 'bid'; // Instant sell (Bid)
+                } else if (pricingMode === 'hybrid') {
+                    buyType = 'ask';  // Instant buy (Ask)
+                    sellType = 'ask'; // Patient sell (Ask)
+                } else { // optimistic
+                    buyType = 'bid';  // Patient buy (Bid)
+                    sellType = 'ask'; // Patient sell (Ask)
+                }
+
+                // Calculate material cost (accounting for failures and decomposition value)
+                const materialCost = data.requirements.reduce((sum, req) => {
+                    const price = buyType === 'ask' ? req.ask : req.bid;
+                    const itemCost = price * (req.count || 1);
+
+                    // Subtract decomposition value for enhanced items
+                    const decompValue = this.calculateDecompositionValue(req.itemHrid, req.enhancementLevel || 0, buyType);
+                    const netCost = itemCost - decompValue;
+
+                    return sum + netCost;
+                }, 0);
+
+                // Calculate cost per attempt (materials consumed on failure, materials + catalyst on success)
+                const catalystPrice = buyType === 'ask' ? data.catalyst.ask : data.catalyst.bid;
+                const costPerAttempt = (materialCost * (1 - data.successRate)) +
+                                       ((materialCost + catalystPrice) * data.successRate);
+
+                // Calculate income per attempt
+                const incomePerAttempt = data.drops.reduce((sum, drop, index) => {
+                    const price = sellType === 'ask' ? drop.ask : drop.bid;
+
+                    // Identify drop type
+                    const isEssence = (index === data.drops.length - 2); // Second-to-last
+                    const isRare = (index === data.drops.length - 1);     // Last
+
+                    // Get base drop rate
+                    let effectiveDropRate = drop.dropRate || 1;
+
+                    // Apply Rare Find bonus to rare drops
+                    if (isRare && data.rareFindBreakdown) {
+                        effectiveDropRate = effectiveDropRate * (1 + data.rareFindBreakdown.total);
+                    }
+
+                    let income;
+                    if (isEssence) {
+                        // Essence doesn't multiply by success rate
+                        income = price * effectiveDropRate * (drop.count || 1);
+                    } else {
+                        // Normal and rare drops multiply by success rate
+                        income = price * effectiveDropRate * (drop.count || 1) * data.successRate;
+                    }
+
+                    // Apply market tax (2% fee)
+                    if (drop.itemHrid !== '/items/coin') {
+                        income *= 0.98;
+                    }
+
+                    return sum + income;
+                }, 0);
+
+                // Calculate net profit per attempt
+                const netProfitPerAttempt = incomePerAttempt - costPerAttempt;
+
+                // Calculate profit per second (accounting for efficiency)
+                const profitPerSecond = (netProfitPerAttempt * (1 + data.efficiency)) / data.actionTime;
+
+                // Calculate tea cost per second
+                let teaCostPerSecond = 0;
+                if (data.consumables.length > 0 && data.teaDuration > 0) {
+                    const totalTeaCost = data.consumables.reduce((sum, consumable) => {
+                        const price = buyType === 'ask' ? consumable.ask : consumable.bid;
+                        return sum + price;
+                    }, 0);
+                    teaCostPerSecond = totalTeaCost / data.teaDuration;
+                }
+
+                // Final profit accounting for tea costs
+                const finalProfitPerSecond = profitPerSecond - teaCostPerSecond;
+                const profitPerHour = finalProfitPerSecond * 3600;
+                const profitPerDay = finalProfitPerSecond * 86400;
+
+                // Calculate actions per hour
+                const actionsPerHour = (3600 / data.actionTime) * (1 + data.efficiency);
+
+                // Build detailed requirement costs breakdown
+                const requirementCosts = data.requirements.map(req => {
+                    const price = buyType === 'ask' ? req.ask : req.bid;
+                    const costPerAction = price * (req.count || 1);
+                    const costPerHour = costPerAction * actionsPerHour;
+
+                    // Calculate decomposition value
+                    const decompositionValue = this.calculateDecompositionValue(req.itemHrid, req.enhancementLevel || 0, buyType);
+                    const decompositionValuePerHour = decompositionValue * actionsPerHour;
+
+                    return {
+                        itemHrid: req.itemHrid,
+                        count: req.count || 1,
+                        price: price,
+                        costPerAction: costPerAction,
+                        costPerHour: costPerHour,
+                        enhancementLevel: req.enhancementLevel || 0,
+                        decompositionValue: decompositionValue,
+                        decompositionValuePerHour: decompositionValuePerHour
+                    };
+                });
+
+                // Build detailed drop revenues breakdown
+                const dropRevenues = data.drops.map((drop, index) => {
+                    const price = sellType === 'ask' ? drop.ask : drop.bid;
+                    const isEssence = (index === data.drops.length - 2);
+                    const isRare = (index === data.drops.length - 1);
+
+                    // Get base drop rate
+                    const baseDropRate = drop.dropRate || 1;
+                    let effectiveDropRate = baseDropRate;
+
+                    // Apply Rare Find bonus to rare drops
+                    if (isRare && data.rareFindBreakdown) {
+                        effectiveDropRate = baseDropRate * (1 + data.rareFindBreakdown.total);
+                    }
+
+                    let revenuePerAttempt;
+                    if (isEssence) {
+                        // Essence doesn't multiply by success rate
+                        revenuePerAttempt = price * effectiveDropRate * (drop.count || 1);
+                    } else {
+                        // Normal and rare drops multiply by success rate
+                        revenuePerAttempt = price * effectiveDropRate * (drop.count || 1) * data.successRate;
+                    }
+
+                    // Apply market tax for non-coin items
+                    const revenueAfterTax = (drop.itemHrid !== '/items/coin') ? revenuePerAttempt * 0.98 : revenuePerAttempt;
+                    const revenuePerHour = revenueAfterTax * actionsPerHour;
+
+                    return {
+                        itemHrid: drop.itemHrid,
+                        count: drop.count || 1,
+                        dropRate: baseDropRate,              // Base drop rate (before Rare Find)
+                        effectiveDropRate: effectiveDropRate, // Effective drop rate (after Rare Find)
+                        price: price,
+                        isEssence: isEssence,
+                        isRare: isRare,
+                        revenuePerAttempt: revenueAfterTax,
+                        revenuePerHour: revenuePerHour,
+                        dropsPerHour: effectiveDropRate * (drop.count || 1) * actionsPerHour * (isEssence ? 1 : data.successRate)
+                    };
+                });
+
+                // Build catalyst cost detail
+                const catalystCost = {
+                    itemHrid: data.catalyst.itemHrid,
+                    price: catalystPrice,
+                    costPerSuccess: catalystPrice,
+                    costPerAttempt: catalystPrice * data.successRate,
+                    costPerHour: catalystPrice * data.successRate * actionsPerHour
+                };
+
+                // Build consumable costs breakdown
+                const consumableCosts = data.consumables.map(c => {
+                    const price = buyType === 'ask' ? c.ask : c.bid;
+                    const drinksPerHour = data.teaDuration > 0 ? 3600 / data.teaDuration : 0;
+                    const costPerHour = price * drinksPerHour;
+
+                    return {
+                        itemHrid: c.itemHrid,
+                        price: price,
+                        drinksPerHour: drinksPerHour,
+                        costPerHour: costPerHour
+                    };
+                });
+
+                // Calculate total costs per hour for summary
+                const materialCostPerHour = materialCost * actionsPerHour;
+                const catalystCostPerHour = catalystCost.costPerHour;
+                const totalTeaCostPerHour = teaCostPerSecond * 3600;
+
+                // Calculate total revenue per hour
+                const revenuePerHour = incomePerAttempt * actionsPerHour;
+
+                return {
+                    // Summary totals
+                    profitPerHour,
+                    profitPerDay,
+                    revenuePerHour,
+
+                    // Actions and rates
+                    actionsPerHour,
+
+                    // Per-attempt economics
+                    materialCost,
+                    catalystPrice,
+                    costPerAttempt,
+                    incomePerAttempt,
+                    netProfitPerAttempt,
+
+                    // Per-hour costs
+                    materialCostPerHour,
+                    catalystCostPerHour,
+                    totalTeaCostPerHour,
+
+                    // Detailed breakdowns
+                    requirementCosts,      // Array of material cost details
+                    dropRevenues,          // Array of drop revenue details
+                    catalystCost,          // Single catalyst cost detail
+                    consumableCosts,       // Array of tea/drink details
+
+                    // Core stats
+                    successRate: data.successRate,
+                    actionTime: data.actionTime,
+                    efficiency: data.efficiency,
+                    teaDuration: data.teaDuration,
+
+                    // Modifier breakdowns
+                    successRateBreakdown: data.successRateBreakdown,
+                    efficiencyBreakdown: data.efficiencyBreakdown,
+                    actionSpeedBreakdown: data.actionSpeedBreakdown,
+                    rareFindBreakdown: data.rareFindBreakdown,
+                    essenceFindBreakdown: data.essenceFindBreakdown,
+
+                    // Pricing info
+                    pricingMode,
+                    buyType,
+                    sellType
+                };
+            } catch (error) {
+                console.error('[AlchemyProfit] Failed to calculate profit:', error);
+                return null;
+            }
+        }
+
+        /**
+         * Generate state fingerprint for change detection
+         * @returns {string} Fingerprint string
+         */
+        getStateFingerprint() {
+            try {
+                const successRate = document.querySelector('[class*="SkillActionDetail_successRate"] [class*="SkillActionDetail_value"]')?.textContent || '';
+                const consumables = Array.from(document.querySelectorAll('[class*="ActionTypeConsumableSlots_consumableSlots"] [class*="Item_itemContainer"]'))
+                    .map(el => el.querySelector('svg use')?.getAttribute('href') || 'empty')
+                    .join('|');
+
+                // Get catalyst (from the catalyst input container)
+                const catalyst = document.querySelector('[class*="SkillActionDetail_catalystItemInputContainer"] svg use')?.getAttribute('href') || 'none';
+
+                // Get requirements (input materials)
+                const requirements = Array.from(document.querySelectorAll('[class*="SkillActionDetail_itemRequirements"] [class*="Item_itemContainer"]'))
+                    .map(el => {
+                        const href = el.querySelector('svg use')?.getAttribute('href') || 'empty';
+                        const enh = el.querySelector('[class*="Item_enhancementLevel"]')?.textContent || '0';
+                        return `${href}${enh}`;
+                    })
+                    .join('|');
+
+                // Don't include infoText - it contains our profit display which causes update loops
+                return `${successRate}:${consumables}:${catalyst}:${requirements}`;
+            } catch (error) {
+                return '';
+            }
+        }
+    }
+
+    // Create and export singleton instance
+    const alchemyProfit = new AlchemyProfit();
+
+    /**
+     * Alchemy Profit Display Module
+     * Displays profit calculator in alchemy action detail panel
+     */
+
+
+    class AlchemyProfitDisplay {
+        constructor() {
+            this.isActive = false;
+            this.unregisterObserver = null;
+            this.displayElement = null;
+            this.updateTimeout = null;
+            this.lastFingerprint = null;
+            this.pollInterval = null;
+        }
+
+        /**
+         * Initialize the display system
+         */
+        initialize() {
+            if (!config.getSetting('alchemy_profitDisplay')) {
+                return;
+            }
+
+            this.setupObserver();
+            this.isActive = true;
+        }
+
+        /**
+         * Setup DOM observer to watch for alchemy panel
+         */
+        setupObserver() {
+            // Observer for alchemy component appearing
+            this.unregisterObserver = domObserver.onClass(
+                'AlchemyProfitDisplay',
+                'SkillActionDetail_alchemyComponent',
+                (alchemyComponent) => {
+                    this.checkAndUpdateDisplay();
+                }
+            );
+
+            // Initial check for existing panel
+            this.checkAndUpdateDisplay();
+
+            // Polling interval to check DOM state (like enhancement-ui.js does)
+            // This catches state changes that the observer might miss
+            this.pollInterval = setInterval(() => {
+                this.checkAndUpdateDisplay();
+            }, 200); // Check 5× per second for responsive updates
+        }
+
+        /**
+         * Check DOM state and update display accordingly
+         * Pattern from enhancement-ui.js
+         */
+        checkAndUpdateDisplay() {
+            // Query current DOM state
+            const alchemyComponent = document.querySelector('[class*="SkillActionDetail_alchemyComponent"]');
+            const instructionsEl = document.querySelector('[class*="SkillActionDetail_instructions"]');
+            const infoContainer = document.querySelector('[class*="SkillActionDetail_info"]');
+
+            // Determine if display should be shown
+            // Show if: alchemy component exists AND instructions NOT present AND info container exists
+            const shouldShow = alchemyComponent && !instructionsEl && infoContainer;
+
+            if (shouldShow && (!this.displayElement || !this.displayElement.parentNode)) {
+                // Should show but doesn't exist - create it
+                this.handleAlchemyPanelUpdate(alchemyComponent);
+            } else if (!shouldShow && this.displayElement?.parentNode) {
+                // Shouldn't show but exists - remove it
+                this.removeDisplay();
+            } else if (shouldShow && this.displayElement?.parentNode) {
+                // Should show and exists - check if state changed
+                const fingerprint = alchemyProfit.getStateFingerprint();
+                if (fingerprint !== this.lastFingerprint) {
+                    this.handleAlchemyPanelUpdate(alchemyComponent);
+                }
+            }
+        }
+
+        /**
+         * Handle alchemy panel update
+         * @param {HTMLElement} alchemyComponent - Alchemy component container
+         */
+        handleAlchemyPanelUpdate(alchemyComponent) {
+            // Get info container
+            const infoContainer = alchemyComponent.querySelector('[class*="SkillActionDetail_info"]');
+            if (!infoContainer) {
+                this.removeDisplay();
+                return;
+            }
+
+            // Check if state has changed
+            const fingerprint = alchemyProfit.getStateFingerprint();
+            if (fingerprint === this.lastFingerprint && this.displayElement?.parentNode) {
+                return; // No change, display still valid
+            }
+            this.lastFingerprint = fingerprint;
+
+            // Debounce updates
+            if (this.updateTimeout) {
+                clearTimeout(this.updateTimeout);
+            }
+
+            this.updateTimeout = setTimeout(() => {
+                this.updateDisplay(infoContainer);
+            }, 100);
+        }
+
+        /**
+         * Update or create profit display
+         * @param {HTMLElement} infoContainer - Info container to append display to
+         */
+        async updateDisplay(infoContainer) {
+            try {
+                // Extract action data
+                const actionData = await alchemyProfit.extractActionData();
+                if (!actionData) {
+                    this.removeDisplay();
+                    return;
+                }
+
+                // Calculate profit
+                const profitData = alchemyProfit.calculateProfit(actionData);
+                if (!profitData) {
+                    this.removeDisplay();
+                    return;
+                }
+
+                // Save expanded/collapsed state before recreating
+                const expandedState = this.saveExpandedState();
+
+                // Always recreate display (complex collapsible structure makes refresh difficult)
+                this.createDisplay(infoContainer, profitData);
+
+                // Restore expanded/collapsed state
+                this.restoreExpandedState(expandedState);
+            } catch (error) {
+                console.error('[AlchemyProfitDisplay] Failed to update display:', error);
+                this.removeDisplay();
+            }
+        }
+
+        /**
+         * Save the expanded/collapsed state of all collapsible sections
+         * @returns {Map<string, boolean>} Map of section titles to their expanded state
+         */
+        saveExpandedState() {
+            const state = new Map();
+
+            if (!this.displayElement) {
+                return state;
+            }
+
+            // Find all collapsible sections and save their state
+            const sections = this.displayElement.querySelectorAll('.mwi-collapsible-section');
+            sections.forEach(section => {
+                const header = section.querySelector('.mwi-section-header');
+                const content = section.querySelector('.mwi-section-content');
+                const label = header?.querySelector('span:last-child');
+
+                if (label && content) {
+                    const title = label.textContent.trim();
+                    const isExpanded = content.style.display === 'block';
+                    state.set(title, isExpanded);
+                }
+            });
+
+            return state;
+        }
+
+        /**
+         * Restore the expanded/collapsed state of collapsible sections
+         * @param {Map<string, boolean>} state - Map of section titles to their expanded state
+         */
+        restoreExpandedState(state) {
+            if (!this.displayElement || state.size === 0) {
+                return;
+            }
+
+            // Find all collapsible sections and restore their state
+            const sections = this.displayElement.querySelectorAll('.mwi-collapsible-section');
+            sections.forEach(section => {
+                const header = section.querySelector('.mwi-section-header');
+                const content = section.querySelector('.mwi-section-content');
+                const summary = section.querySelector('div[style*="margin-left: 16px"]');
+                const arrow = header?.querySelector('span:first-child');
+                const label = header?.querySelector('span:last-child');
+
+                if (label && content && arrow) {
+                    const title = label.textContent.trim();
+                    const shouldBeExpanded = state.get(title);
+
+                    if (shouldBeExpanded !== undefined && shouldBeExpanded) {
+                        // Expand this section
+                        content.style.display = 'block';
+                        if (summary) {
+                            summary.style.display = 'none';
+                        }
+                        arrow.textContent = '▼';
+                    }
+                }
+            });
+        }
+
+        /**
+         * Create profit display element with detailed breakdown
+         * @param {HTMLElement} container - Container to append to
+         * @param {Object} profitData - Profit calculation results from calculateProfit()
+         */
+        createDisplay(container, profitData) {
+            // Remove any existing display
+            this.removeDisplay();
+
+            // Validate required data
+            if (!profitData || !profitData.dropRevenues || !profitData.requirementCosts ||
+                !profitData.catalystCost || !profitData.consumableCosts) {
+                console.error('[AlchemyProfitDisplay] Missing required profit data fields:', profitData);
+                return;
+            }
+
+            // Extract summary values
+            const profit = Math.round(profitData.profitPerHour);
+            const profitPerDay = Math.round(profitData.profitPerDay);
+            const revenue = Math.round(profitData.revenuePerHour);
+            const costs = Math.round(profitData.materialCostPerHour + profitData.catalystCostPerHour + profitData.totalTeaCostPerHour);
+            const summary = `${formatLargeNumber(profit)}/hr, ${formatLargeNumber(profitPerDay)}/day`;
+
+            // ===== Build Detailed Breakdown Content =====
+            const detailsContent = document.createElement('div');
+
+            // Revenue Section
+            const revenueDiv = document.createElement('div');
+            revenueDiv.innerHTML = `<div style="font-weight: 500; color: var(--text-color-primary, #fff); margin-bottom: 4px;">Revenue: ${formatLargeNumber(revenue)}/hr</div>`;
+
+            // Split drops into normal, essence, and rare
+            const normalDrops = profitData.dropRevenues.filter(drop => !drop.isEssence && !drop.isRare);
+            const essenceDrops = profitData.dropRevenues.filter(drop => drop.isEssence);
+            const rareDrops = profitData.dropRevenues.filter(drop => drop.isRare);
+
+            // Normal Drops subsection
+            if (normalDrops.length > 0) {
+                const normalDropsContent = document.createElement('div');
+                let normalDropsRevenue = 0;
+
+                for (const drop of normalDrops) {
+                    const itemDetails = dataManager.getItemDetails(drop.itemHrid);
+                    const itemName = itemDetails?.name || drop.itemHrid;
+                    const decimals = drop.dropsPerHour < 1 ? 2 : 1;
+                    const dropRatePct = formatPercentage(drop.dropRate, drop.dropRate < 0.01 ? 3 : 2);
+
+                    const line = document.createElement('div');
+                    line.style.marginLeft = '8px';
+                    line.textContent = `• ${itemName}: ${drop.dropsPerHour.toFixed(decimals)}/hr (${dropRatePct} × ${formatPercentage(profitData.successRate, 1)} success) @ ${formatWithSeparator(Math.round(drop.price))} → ${formatLargeNumber(Math.round(drop.revenuePerHour))}/hr`;
+                    normalDropsContent.appendChild(line);
+
+                    normalDropsRevenue += drop.revenuePerHour;
+                }
+
+                const normalDropsSection = createCollapsibleSection(
+                    '',
+                    `Normal Drops: ${formatLargeNumber(Math.round(normalDropsRevenue))}/hr (${normalDrops.length} item${normalDrops.length !== 1 ? 's' : ''})`,
+                    null,
+                    normalDropsContent,
+                    false,
+                    1
+                );
+                revenueDiv.appendChild(normalDropsSection);
+            }
+
+            // Essence Drops subsection
+            if (essenceDrops.length > 0) {
+                const essenceContent = document.createElement('div');
+                let essenceRevenue = 0;
+
+                for (const drop of essenceDrops) {
+                    const itemDetails = dataManager.getItemDetails(drop.itemHrid);
+                    const itemName = itemDetails?.name || drop.itemHrid;
+                    const decimals = drop.dropsPerHour < 1 ? 2 : 1;
+                    const dropRatePct = formatPercentage(drop.dropRate, drop.dropRate < 0.01 ? 3 : 2);
+
+                    const line = document.createElement('div');
+                    line.style.marginLeft = '8px';
+                    line.textContent = `• ${itemName}: ${drop.dropsPerHour.toFixed(decimals)}/hr (${dropRatePct}, not affected by success rate) @ ${formatWithSeparator(Math.round(drop.price))} → ${formatLargeNumber(Math.round(drop.revenuePerHour))}/hr`;
+                    essenceContent.appendChild(line);
+
+                    essenceRevenue += drop.revenuePerHour;
+                }
+
+                const essenceSection = createCollapsibleSection(
+                    '',
+                    `Essence Drops: ${formatLargeNumber(Math.round(essenceRevenue))}/hr (${essenceDrops.length} item${essenceDrops.length !== 1 ? 's' : ''})`,
+                    null,
+                    essenceContent,
+                    false,
+                    1
+                );
+                revenueDiv.appendChild(essenceSection);
+            }
+
+            // Rare Drops subsection
+            if (rareDrops.length > 0) {
+                const rareContent = document.createElement('div');
+                let rareRevenue = 0;
+
+                for (const drop of rareDrops) {
+                    const itemDetails = dataManager.getItemDetails(drop.itemHrid);
+                    const itemName = itemDetails?.name || drop.itemHrid;
+                    const decimals = drop.dropsPerHour < 1 ? 2 : 1;
+                    const baseDropRatePct = formatPercentage(drop.dropRate, drop.dropRate < 0.01 ? 3 : 2);
+                    const effectiveDropRatePct = formatPercentage(drop.effectiveDropRate, drop.effectiveDropRate < 0.01 ? 3 : 2);
+
+                    const line = document.createElement('div');
+                    line.style.marginLeft = '8px';
+
+                    // Show both base and effective drop rate
+                    if (profitData.rareFindBreakdown && profitData.rareFindBreakdown.total > 0) {
+                        const rareFindBonus = formatPercentage(profitData.rareFindBreakdown.total, 1);
+                        line.textContent = `• ${itemName}: ${drop.dropsPerHour.toFixed(decimals)}/hr (${baseDropRatePct} base × ${rareFindBonus} rare find = ${effectiveDropRatePct}, × ${formatPercentage(profitData.successRate, 1)} success) @ ${formatWithSeparator(Math.round(drop.price))} → ${formatLargeNumber(Math.round(drop.revenuePerHour))}/hr`;
+                    } else {
+                        line.textContent = `• ${itemName}: ${drop.dropsPerHour.toFixed(decimals)}/hr (${baseDropRatePct} × ${formatPercentage(profitData.successRate, 1)} success) @ ${formatWithSeparator(Math.round(drop.price))} → ${formatLargeNumber(Math.round(drop.revenuePerHour))}/hr`;
+                    }
+
+                    rareContent.appendChild(line);
+
+                    rareRevenue += drop.revenuePerHour;
+                }
+
+                const rareSection = createCollapsibleSection(
+                    '',
+                    `Rare Drops: ${formatLargeNumber(Math.round(rareRevenue))}/hr (${rareDrops.length} item${rareDrops.length !== 1 ? 's' : ''})`,
+                    null,
+                    rareContent,
+                    false,
+                    1
+                );
+                revenueDiv.appendChild(rareSection);
+            }
+
+            // Costs Section
+            const costsDiv = document.createElement('div');
+            costsDiv.innerHTML = `<div style="font-weight: 500; color: var(--text-color-primary, #fff); margin-top: 12px; margin-bottom: 4px;">Costs: ${formatLargeNumber(costs)}/hr</div>`;
+
+            // Material Costs subsection (consumed on ALL attempts)
+            if (profitData.requirementCosts && profitData.requirementCosts.length > 0) {
+                const materialCostsContent = document.createElement('div');
+                for (const material of profitData.requirementCosts) {
+                    const itemDetails = dataManager.getItemDetails(material.itemHrid);
+                    const itemName = itemDetails?.name || material.itemHrid;
+                    const amountPerHour = material.count * profitData.actionsPerHour;
+
+                    const line = document.createElement('div');
+                    line.style.marginLeft = '8px';
+
+                    // Show enhancement level if > 0
+                    const enhText = material.enhancementLevel > 0 ? ` +${material.enhancementLevel}` : '';
+
+                    // Show decomposition value if enhanced
+                    if (material.enhancementLevel > 0 && material.decompositionValuePerHour > 0) {
+                        const netCostPerHour = material.costPerHour - material.decompositionValuePerHour;
+                        line.textContent = `• ${itemName}${enhText}: ${amountPerHour.toFixed(1)}/hr @ ${formatWithSeparator(Math.round(material.price))} → ${formatLargeNumber(Math.round(material.costPerHour))}/hr (recovers ${formatLargeNumber(Math.round(material.decompositionValuePerHour))}/hr, net ${formatLargeNumber(Math.round(netCostPerHour))}/hr)`;
+                    } else {
+                        line.textContent = `• ${itemName}${enhText}: ${amountPerHour.toFixed(1)}/hr (consumed on all attempts) @ ${formatWithSeparator(Math.round(material.price))} → ${formatLargeNumber(Math.round(material.costPerHour))}/hr`;
+                    }
+
+                    materialCostsContent.appendChild(line);
+                }
+
+                const materialCostsSection = createCollapsibleSection(
+                    '',
+                    `Material Costs: ${formatLargeNumber(Math.round(profitData.materialCostPerHour))}/hr (${profitData.requirementCosts.length} material${profitData.requirementCosts.length !== 1 ? 's' : ''})`,
+                    null,
+                    materialCostsContent,
+                    false,
+                    1
+                );
+                costsDiv.appendChild(materialCostsSection);
+            }
+
+            // Catalyst Cost subsection (consumed only on success)
+            if (profitData.catalystCost && profitData.catalystCost.itemHrid) {
+                const catalystContent = document.createElement('div');
+                const itemDetails = dataManager.getItemDetails(profitData.catalystCost.itemHrid);
+                const itemName = itemDetails?.name || profitData.catalystCost.itemHrid;
+
+                // Calculate catalysts per hour (only consumed on success)
+                const catalystsPerHour = profitData.actionsPerHour * profitData.successRate;
+
+                const line = document.createElement('div');
+                line.style.marginLeft = '8px';
+                line.textContent = `• ${itemName}: ${catalystsPerHour.toFixed(1)}/hr (consumed only on success, ${formatPercentage(profitData.successRate, 1)}) @ ${formatWithSeparator(Math.round(profitData.catalystCost.price))} → ${formatLargeNumber(Math.round(profitData.catalystCost.costPerHour))}/hr`;
+                catalystContent.appendChild(line);
+
+                const catalystSection = createCollapsibleSection(
+                    '',
+                    `Catalyst Cost: ${formatLargeNumber(Math.round(profitData.catalystCost.costPerHour))}/hr`,
+                    null,
+                    catalystContent,
+                    false,
+                    1
+                );
+                costsDiv.appendChild(catalystSection);
+            }
+
+            // Drink Costs subsection
+            if (profitData.consumableCosts && profitData.consumableCosts.length > 0) {
+                const drinkCostsContent = document.createElement('div');
+                for (const drink of profitData.consumableCosts) {
+                    const itemDetails = dataManager.getItemDetails(drink.itemHrid);
+                    const itemName = itemDetails?.name || drink.itemHrid;
+
+                    const line = document.createElement('div');
+                    line.style.marginLeft = '8px';
+                    line.textContent = `• ${itemName}: ${drink.drinksPerHour.toFixed(1)}/hr @ ${formatWithSeparator(Math.round(drink.price))} → ${formatLargeNumber(Math.round(drink.costPerHour))}/hr`;
+                    drinkCostsContent.appendChild(line);
+                }
+
+                const drinkCount = profitData.consumableCosts.length;
+                const drinkCostsSection = createCollapsibleSection(
+                    '',
+                    `Drink Costs: ${formatLargeNumber(Math.round(profitData.totalTeaCostPerHour))}/hr (${drinkCount} drink${drinkCount !== 1 ? 's' : ''})`,
+                    null,
+                    drinkCostsContent,
+                    false,
+                    1
+                );
+                costsDiv.appendChild(drinkCostsSection);
+            }
+
+            // Modifiers Section
+            const modifiersDiv = document.createElement('div');
+            modifiersDiv.style.cssText = `
+            margin-top: 12px;
+        `;
+
+            // Main modifiers header
+            const modifiersHeader = document.createElement('div');
+            modifiersHeader.style.cssText = 'font-weight: 500; color: var(--text-color-primary, #fff); margin-bottom: 4px;';
+            modifiersHeader.textContent = 'Modifiers:';
+            modifiersDiv.appendChild(modifiersHeader);
+
+            // Success Rate breakdown
+            if (profitData.successRateBreakdown) {
+                const successBreakdown = profitData.successRateBreakdown;
+                const successContent = document.createElement('div');
+
+                // Base success rate (from player level vs recipe requirement)
+                const line = document.createElement('div');
+                line.style.marginLeft = '8px';
+                line.textContent = `• Base Success Rate: ${formatPercentage(successBreakdown.base, 1)}`;
+                successContent.appendChild(line);
+
+                // Tea bonus (from Catalytic Tea)
+                if (successBreakdown.tea > 0) {
+                    const teaLine = document.createElement('div');
+                    teaLine.style.marginLeft = '8px';
+                    teaLine.textContent = `• Tea Bonus: +${formatPercentage(successBreakdown.tea, 1)} (multiplicative)`;
+                    successContent.appendChild(teaLine);
+                }
+
+                const successSection = createCollapsibleSection(
+                    '',
+                    `Success Rate: ${formatPercentage(profitData.successRate, 1)}`,
+                    null,
+                    successContent,
+                    false,
+                    1
+                );
+                modifiersDiv.appendChild(successSection);
+            } else {
+                // Fallback if breakdown not available
+                const successRateLine = document.createElement('div');
+                successRateLine.style.marginLeft = '8px';
+                successRateLine.textContent = `• Success Rate: ${formatPercentage(profitData.successRate, 1)}`;
+                modifiersDiv.appendChild(successRateLine);
+            }
+
+            // Efficiency breakdown
+            if (profitData.efficiencyBreakdown) {
+                const effBreakdown = profitData.efficiencyBreakdown;
+                const effContent = document.createElement('div');
+
+                if (effBreakdown.level > 0) {
+                    const line = document.createElement('div');
+                    line.style.marginLeft = '8px';
+                    line.textContent = `• Level Bonus: +${effBreakdown.level.toFixed(1)}%`;
+                    effContent.appendChild(line);
+                }
+
+                if (effBreakdown.house > 0) {
+                    const line = document.createElement('div');
+                    line.style.marginLeft = '8px';
+                    line.textContent = `• House Bonus: +${effBreakdown.house.toFixed(1)}%`;
+                    effContent.appendChild(line);
+                }
+
+                if (effBreakdown.tea > 0) {
+                    const line = document.createElement('div');
+                    line.style.marginLeft = '8px';
+                    line.textContent = `• Tea Bonus: +${effBreakdown.tea.toFixed(1)}%`;
+                    effContent.appendChild(line);
+                }
+
+                if (effBreakdown.equipment > 0) {
+                    const line = document.createElement('div');
+                    line.style.marginLeft = '8px';
+                    line.textContent = `• Equipment Bonus: +${effBreakdown.equipment.toFixed(1)}%`;
+                    effContent.appendChild(line);
+                }
+
+                if (effBreakdown.community > 0) {
+                    const line = document.createElement('div');
+                    line.style.marginLeft = '8px';
+                    line.textContent = `• Community Buff: +${effBreakdown.community.toFixed(1)}%`;
+                    effContent.appendChild(line);
+                }
+
+                const effSection = createCollapsibleSection(
+                    '',
+                    `Efficiency: +${formatPercentage(profitData.efficiency, 1)}`,
+                    null,
+                    effContent,
+                    false,
+                    1
+                );
+                modifiersDiv.appendChild(effSection);
+            }
+
+            // Action Speed breakdown
+            if (profitData.actionSpeedBreakdown) {
+                const speedBreakdown = profitData.actionSpeedBreakdown;
+                const baseActionTime = 20; // Alchemy base time is 20 seconds
+                const actionSpeed = (baseActionTime / profitData.actionTime) - 1;
+
+                if (actionSpeed > 0) {
+                    const speedContent = document.createElement('div');
+
+                    if (speedBreakdown.equipment > 0) {
+                        const line = document.createElement('div');
+                        line.style.marginLeft = '8px';
+                        line.textContent = `• Equipment Bonus: +${formatPercentage(speedBreakdown.equipment, 1)}`;
+                        speedContent.appendChild(line);
+                    }
+
+                    if (speedBreakdown.tea > 0) {
+                        const line = document.createElement('div');
+                        line.style.marginLeft = '8px';
+                        line.textContent = `• Tea Bonus: +${formatPercentage(speedBreakdown.tea, 1)}`;
+                        speedContent.appendChild(line);
+                    }
+
+                    const speedSection = createCollapsibleSection(
+                        '',
+                        `Action Speed: +${formatPercentage(actionSpeed, 1)}`,
+                        null,
+                        speedContent,
+                        false,
+                        1
+                    );
+                    modifiersDiv.appendChild(speedSection);
+                }
+            }
+
+            // Rare Find breakdown
+            if (profitData.rareFindBreakdown) {
+                const rareBreakdown = profitData.rareFindBreakdown;
+
+                if (rareBreakdown.total > 0) {
+                    const rareContent = document.createElement('div');
+
+                    if (rareBreakdown.equipment > 0) {
+                        const line = document.createElement('div');
+                        line.style.marginLeft = '8px';
+                        line.textContent = `• Equipment Bonus: +${rareBreakdown.equipment.toFixed(1)}%`;
+                        rareContent.appendChild(line);
+                    }
+
+                    if (rareBreakdown.achievement > 0) {
+                        const line = document.createElement('div');
+                        line.style.marginLeft = '8px';
+                        line.textContent = `• Achievement Bonus: +${rareBreakdown.achievement.toFixed(1)}%`;
+                        rareContent.appendChild(line);
+                    }
+
+                    const rareSection = createCollapsibleSection(
+                        '',
+                        `Rare Find: +${formatPercentage(rareBreakdown.total, 1)}`,
+                        null,
+                        rareContent,
+                        false,
+                        1
+                    );
+                    modifiersDiv.appendChild(rareSection);
+                }
+            }
+
+            // Essence Find breakdown
+            if (profitData.essenceFindBreakdown) {
+                const essenceBreakdown = profitData.essenceFindBreakdown;
+
+                if (essenceBreakdown.total > 0) {
+                    const essenceContent = document.createElement('div');
+
+                    if (essenceBreakdown.equipment > 0) {
+                        const line = document.createElement('div');
+                        line.style.marginLeft = '8px';
+                        line.textContent = `• Equipment Bonus: +${essenceBreakdown.equipment.toFixed(1)}%`;
+                        essenceContent.appendChild(line);
+                    }
+
+                    const essenceSection = createCollapsibleSection(
+                        '',
+                        `Essence Find: +${formatPercentage(essenceBreakdown.total, 1)}`,
+                        null,
+                        essenceContent,
+                        false,
+                        1
+                    );
+                    modifiersDiv.appendChild(essenceSection);
+                }
+            }
+
+            // Assemble Detailed Breakdown
+            detailsContent.appendChild(revenueDiv);
+            detailsContent.appendChild(costsDiv);
+            detailsContent.appendChild(modifiersDiv);
+
+            // Create "Detailed Breakdown" collapsible
+            const topLevelContent = document.createElement('div');
+            topLevelContent.innerHTML = `
+            <div style="margin-bottom: 4px;">Actions: ${profitData.actionsPerHour.toFixed(1)}/hr | Success Rate: ${formatPercentage(profitData.successRate, 1)}</div>
+        `;
+
+            // Add Net Profit line at top level (always visible when Profitability is expanded)
+            const profitColor = profit >= 0 ? '#4ade80' : (config.getSetting('color_loss') || '#f87171');
+            const netProfitLine = document.createElement('div');
+            netProfitLine.style.cssText = `
+            font-weight: 500;
+            color: ${profitColor};
+            margin-bottom: 8px;
+        `;
+            netProfitLine.textContent = `Net Profit: ${formatLargeNumber(profit)}/hr, ${formatLargeNumber(profitPerDay)}/day`;
+            topLevelContent.appendChild(netProfitLine);
+
+            // Add pricing mode label
+            const pricingMode = profitData.pricingMode || 'hybrid';
+            const modeLabel = {
+                'conservative': 'Conservative',
+                'hybrid': 'Hybrid',
+                'optimistic': 'Optimistic'
+            }[pricingMode] || 'Hybrid';
+
+            const modeDiv = document.createElement('div');
+            modeDiv.style.cssText = `
+            margin-bottom: 8px;
+            color: #888;
+            font-size: 0.85em;
+        `;
+            modeDiv.textContent = `Pricing Mode: ${modeLabel}`;
+            topLevelContent.appendChild(modeDiv);
+
+            const detailedBreakdownSection = createCollapsibleSection(
+                '📊',
+                'Detailed Breakdown',
+                null,
+                detailsContent,
+                false,
+                0
+            );
+
+            topLevelContent.appendChild(detailedBreakdownSection);
+
+            // Create main profit section
+            const profitSection = createCollapsibleSection(
+                '💰',
+                'Profitability',
+                summary,
+                topLevelContent,
+                false,
+                0
+            );
+            profitSection.id = 'mwi-alchemy-profit';
+            profitSection.classList.add('mwi-alchemy-profit');
+
+            // Append to container
+            container.appendChild(profitSection);
+            this.displayElement = profitSection;
+        }
+
+        /**
+         * Remove profit display
+         */
+        removeDisplay() {
+            if (this.displayElement && this.displayElement.parentNode) {
+                this.displayElement.remove();
+            }
+            this.displayElement = null;
+            // Don't clear lastFingerprint here - we need to track state across recreations
+        }
+
+        /**
+         * Disable the display
+         */
+        disable() {
+            if (this.updateTimeout) {
+                clearTimeout(this.updateTimeout);
+                this.updateTimeout = null;
+            }
+
+            if (this.pollInterval) {
+                clearInterval(this.pollInterval);
+                this.pollInterval = null;
+            }
+
+            if (this.unregisterObserver) {
+                this.unregisterObserver();
+                this.unregisterObserver = null;
+            }
+
+            this.removeDisplay();
+            this.lastFingerprint = null; // Clear fingerprint on disable
+            this.isActive = false;
+        }
+    }
+
+    // Create and export singleton instance
+    const alchemyProfitDisplay = new AlchemyProfitDisplay();
+
+    /**
      * Feature Registry
      * Centralized feature initialization system
      */
@@ -35620,6 +37508,24 @@
                 // Look for our injected required materials displays
                 const materialsElements = document.querySelectorAll('.mwi-required-materials');
                 return materialsElements.length > 0 || null; // null if panels open but no input entered yet
+            }
+        },
+        {
+            key: 'alchemy_profitDisplay',
+            name: 'Alchemy Profit Calculator',
+            category: 'Actions',
+            initialize: () => alchemyProfitDisplay.initialize(),
+            async: false,
+            healthCheck: () => {
+                // Check if alchemy panel is open
+                const alchemyComponent = document.querySelector('[class*="SkillActionDetail_alchemyComponent"]');
+                if (!alchemyComponent) {
+                    return null; // Not on alchemy screen, can't verify
+                }
+
+                // Look for our injected profit display
+                const profitDisplay = document.querySelector('.mwi-alchemy-profit');
+                return profitDisplay !== null;
             }
         },
 
@@ -35900,6 +37806,31 @@
      * Re-initializes all features when character switches
      */
     function setupCharacterSwitchHandler() {
+        // Handle character_switching event (cleanup phase)
+        dataManager.on('character_switching', async (data) => {
+            console.log(`[FeatureRegistry] Character switching: ${data.oldName} → ${data.newName}`);
+
+            // Clear config cache to prevent stale settings
+            if (config && typeof config.clearSettingsCache === 'function') {
+                config.clearSettingsCache();
+            }
+
+            // Disable all active features (cleanup DOM elements, event listeners, etc.)
+            // Note: Individual features should implement their own disable() methods
+            for (const feature of featureRegistry) {
+                try {
+                    // Check if feature has a disable method
+                    const featureInstance = getFeatureInstance(feature.key);
+                    if (featureInstance && typeof featureInstance.disable === 'function') {
+                        featureInstance.disable();
+                    }
+                } catch (error) {
+                    console.error(`[FeatureRegistry] Failed to disable ${feature.name}:`, error);
+                }
+            }
+        });
+
+        // Handle character_switched event (re-initialization phase)
         dataManager.on('character_switched', async (data) => {
             // Force cleanup of dungeon tracker UI (safety measure)
             if (dungeonTrackerUI && typeof dungeonTrackerUI.cleanup === 'function') {
@@ -35926,6 +37857,55 @@
                 setTimeout(() => reinit(), 300); // Longer delay for game to stabilize
             }
         });
+    }
+
+    /**
+     * Get feature instance from imported module
+     * @param {string} key - Feature key
+     * @returns {Object|null} Feature instance or null
+     * @private
+     */
+    function getFeatureInstance(key) {
+        // Map feature keys to their imported instances
+        const instanceMap = {
+            'tooltipPrices': tooltipPrices,
+            'expectedValueCalculator': expectedValueCalculator,
+            'tooltipConsumables': tooltipConsumables,
+            'marketFilter': marketFilter,
+            'fillMarketOrderPrice': autoFillPrice,
+            'market_visibleItemCount': itemCountDisplay,
+            'market_showListingPrices': listingPriceDisplay,
+            'market_showEstimatedListingAge': estimatedListingAge,
+            'market_tradeHistory': tradeHistory,
+            'actionTimeDisplay': actionTimeDisplay,
+            'quickInputButtons': quickInputButtons,
+            'actionPanel_outputTotals': outputTotals,
+            'actionPanel_maxProduceable': maxProduceable,
+            'actionPanel_gatheringStats': gatheringStats,
+            'requiredMaterials': requiredMaterials,
+            'alchemy_profitDisplay': alchemyProfitDisplay,
+            'abilityBookCalculator': abilityBookCalculator,
+            'zoneIndices': zoneIndices,
+            'combatScore': combatScore,
+            'dungeonTracker': dungeonTracker,
+            'combatSummary': combatSummary,
+            'equipmentLevelDisplay': equipmentLevelDisplay,
+            'alchemyItemDimming': alchemyItemDimming,
+            'skillExperiencePercentage': skillExperiencePercentage,
+            'taskProfitDisplay': taskProfitDisplay,
+            'taskRerollTracker': taskRerollTracker,
+            'taskSorter': taskSorter,
+            'taskIcons': taskIcons,
+            'skillRemainingXP': remainingXP,
+            'houseCostDisplay': housePanelObserver,
+            'networth': networthFeature,
+            'inventorySort': inventorySort,
+            'inventoryBadgePrices': inventoryBadgePrices,
+            'enhancementTracker': enhancementTracker,
+            'notifiEmptyAction': emptyQueueNotification
+        };
+
+        return instanceMap[key] || null;
     }
 
     /**
@@ -36299,6 +38279,9 @@
             }
         })();
 
+        // Setup character switch handler once (NOT inside character_initialized listener)
+        featureRegistry$1.setupCharacterSwitchHandler();
+
         dataManager.on('character_initialized', (data) => {
             // Initialize all features using the feature registry
             setTimeout(async () => {
@@ -36308,9 +38291,6 @@
                     config.applyColorSettings();
 
                     await featureRegistry$1.initializeFeatures();
-
-                    // Setup character switch handler (re-initializes features on character switch)
-                    featureRegistry$1.setupCharacterSwitchHandler();
 
                     // Health check after initialization
                     setTimeout(async () => {
@@ -36344,7 +38324,7 @@
         const targetWindow = typeof unsafeWindow !== 'undefined' ? unsafeWindow : window;
 
         targetWindow.Toolasha = {
-            version: '0.4.946',
+            version: '0.4.950',
 
             // Feature toggle API (for users to manage settings via console)
             features: {

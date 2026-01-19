@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TornW3B Trading Companion
 // @namespace    http://tampermonkey.net/
-// @version      2.01
+// @version      2.02
 // @description  Calculates the total value of items in a trade on Torn.com.
 // @match        https://www.torn.com/*
 // @grant        GM_setValue
@@ -1842,6 +1842,10 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
             }
             updateUI();
             requestAnimationFrame(() => colorCodeItemsByValue());
+            return;
+        }
+
+        if (!document.hasFocus()) {
             return;
         }
 

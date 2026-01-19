@@ -14,7 +14,7 @@
 // @description:ko Twitter/X에서 마지막 읽기 위치를 추적하고 동기화합니다. 수동 및 자동 옵션 포함. 새로운 게시물을 확인하면서 현재 위치를 잃지 않도록 이상적입니다. 트윗 ID를 사용하여 정확한 위치 지정을 하고, 리포스트를 지원합니다。
 // @icon https://x.com/favicon.ico
 // @namespace http://tampermonkey.net/
-// @version 2026.1.18
+// @version 2026.1.19.1
 // @author Copiis
 // @license MIT
 // @match https://x.com/*

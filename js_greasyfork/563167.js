@@ -95,12 +95,10 @@
         // speed-control-container上でwheel -> ±0.1ずつ速度変更
         container.addEventListener('wheel', (e) => {
             e.preventDefault();
-            e.stopImmediatePropagation();
             updateSpeed(video, video.playbackRate + (e.deltaY < 0 ? config.speedStep : -config.speedStep));
         }, { passive: false });
         container.addEventListener('click', (e) => {
             e.preventDefault();
-            e.stopImmediatePropagation();
             updateSpeed(video, 1.0);
         }, true);
 
@@ -126,7 +124,6 @@
         // player上で ctrl+wheel -> 速度変更
         if (e.ctrlKey) {
             e.preventDefault();
-            e.stopImmediatePropagation()
             updateSpeed(video, video.playbackRate + (e.deltaY < 0 ? config.speedStep : -config.speedStep));
             return;
         }
@@ -135,7 +132,6 @@
         if (!e.ctrlKey && !e.altKey) {
             if (player.classList.contains('ytp-settings-shown')) return;
             e.preventDefault();
-            e.stopImmediatePropagation()
             const currentVol = player.getVolume();
             const nextVol = Math.max(0, Math.min(100, currentVol + (e.deltaY < 0 ? config.volStep : -config.volStep)));
             player.setVolume(nextVol);
@@ -150,7 +146,6 @@
             const video = document.querySelector('video');
             if (video) {
                 e.preventDefault();
-                e.stopImmediatePropagation();
                 updateSpeed(video, 1.0);
             }
         }

@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Dark Mode Auto Toggle
-// @version      0.2.7
+// @version      0.2.8
 // @description  Enable eye-friendly dark mode with a toggle button and automatically based on location
 // @namespace    https://greasyfork.org/en/users/28298
 // @author       https://greasyfork.org/en/users/28298
@@ -268,8 +268,8 @@
     // Initial update
     updateDarkMode();
 
-    // Update every half hour
-    setInterval(updateDarkMode, 1800000);
+    // Update every 15min
+    setInterval(updateDarkMode, 900000);
 
     // Manual toggle still works
     button.addEventListener('click', () => toggleDarkMode());

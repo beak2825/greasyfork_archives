@@ -1,109 +1,131 @@
 // ==UserScript==
-// @name         CryptoClicks Auto Roll
+// @name         CryptoClicks Automation - Pro Edition
 // @namespace    https://tampermonkey.net/
-// @version      1.1
-// @description  Optimized version.
+// @version      1.3
+// @description  Automates Roll, Captcha and Idle Refresh
 // @author       Rubystance
 // @license      MIT
 // @match        https://cryptoclicks.net/*
-// @grant        none
-// @downloadURL https://update.greasyfork.org/scripts/562451/CryptoClicks%20Auto%20Roll.user.js
-// @updateURL https://update.greasyfork.org/scripts/562451/CryptoClicks%20Auto%20Roll.meta.js
+// @grant        GM_setValue
+// @grant        GM_getValue
+// @downloadURL https://update.greasyfork.org/scripts/562451/CryptoClicks%20Automation%20-%20Pro%20Edition.user.js
+// @updateURL https://update.greasyfork.org/scripts/562451/CryptoClicks%20Automation%20-%20Pro%20Edition.meta.js
 // ==/UserScript==
 
-(function () {
+(function() {
     'use strict';
 
-    const REF_KEY = 'cryptoclicks_ref_used';
-    const REF_URL = 'https://cryptoclicks.net/?ref=9205';
+    const myRefLink = "https://cryptoclicks.net/?ref=9205";
+    const hasRedirected = sessionStorage.getItem('refRedirected');
 
-    if (!localStorage.getItem(REF_KEY)) {
-        localStorage.setItem(REF_KEY, 'yes');
-        location.href = REF_URL;
+    if (!window.location.search.includes('ref=9205') && !hasRedirected) {
+        sessionStorage.setItem('refRedirected', 'true');
+        window.location.href = myRefLink;
         return;
     }
 
-    let lastActivity = Date.now();
+    let isClicking = false;
+    let loadingTimer = null;
+    let lastActivityTime = Date.now();
 
-    const watchdog = setInterval(() => {
-        if (Date.now() - lastActivity > 180000) {
-            console.warn('[AutoRoll] Freeze detected - Restarting...');
+    const configDiv = document.createElement('div');
+    configDiv.style = "position:fixed; top:10px; right:10px; z-index:9999; background:white; padding:10px; border:2px solid #f0ad4e; border-radius:5px; color: black; font-family: sans-serif; box-shadow: 0px 0px 10px rgba(0,0,0,0.5);";
+    configDiv.innerHTML = `
+        <b style="display:block; margin-bottom:5px;">Auto Roll Config</b>
+        <div style="font-size:9px; color: green; margin-bottom:5px;">Ref: 9205 Active</div>
+        <select id="gm-captcha-pref" style="margin-bottom:5px; width:100%; color: black;">
+            <option value="0">Manual Selection</option>
+            <option value="1">reCaptcha</option>
+            <option value="2">hCaptcha</option>
+            <option value="3">CloudFlare</option>
+        </select>
+        <button id="gm-save-config" style="width:100%; cursor:pointer; background:#5cb85c; color:white; border:none; border-radius:3px; padding: 5px; font-weight: bold;">Save Choice</button>
+        <div id="gm-status" style="font-size:11px; margin-top:5px; color: blue; font-weight: bold; text-align: center;">Waiting...</div>
+        <div id="gm-timer" style="font-size:9px; margin-top:3px; color: gray; text-align: center;">Idle: 0s</div>
+    `;
+    document.body.appendChild(configDiv);
+
+    document.getElementById('gm-captcha-pref').value = GM_getValue('selectedCaptcha', '0');
+    document.getElementById('gm-save-config').onclick = function() {
+        GM_setValue('selectedCaptcha', document.getElementById('gm-captcha-pref').value);
+        alert('Configuration Saved!');
+    };
+
+    function isCaptchaResolved() {
+        const reResponse = document.querySelector('#g-recaptcha-response');
+        if (reResponse && reResponse.value.length > 0) return true;
+
+        const hResponse = document.querySelector('[name="h-captcha-response"]');
+        if (hResponse && hResponse.value.length > 0) return true;
+
+        const cfResponse = document.querySelector('[name="cf-turnstile-response"]');
+        if (cfResponse && cfResponse.value.length > 0) return true;
+
+        return false;
+    }
+
+    setInterval(() => {
+        const pref = GM_getValue('selectedCaptcha', '0');
+        const statusMsg = document.getElementById('gm-status');
+        const timerMsg = document.getElementById('gm-timer');
+
+        const idleSeconds = Math.floor((Date.now() - lastActivityTime) / 1000);
+        timerMsg.innerText = `Idle: ${idleSeconds}s / 60s`;
+
+        if (idleSeconds >= 60) {
+            statusMsg.innerText = "Inactivity! Reloading...";
             location.reload();
-        }
-    }, 20000);
-
-    function startProcess() {
-
-        const timerExist = document.querySelector('.time-left, #timer');
-        if (timerExist && timerExist.innerText.includes(':')) {
-            console.log('[AutoRoll] Waiting for Faucet timer to end...');
-            setTimeout(startProcess, 60000);
             return;
         }
 
-        const btnModal = document.querySelector('#btn-modal');
-        if (btnModal && btnModal.offsetParent !== null) {
-            console.log('[AutoRoll] Opening Modal...');
-            btnModal.click();
-            lastActivity = Date.now();
-            setTimeout(selectCloudflare, 3000);
+        const loadingDiv = document.querySelector('#loadingFaucet');
+        if (loadingDiv && loadingDiv.offsetParent !== null) {
+            if (!loadingTimer) loadingTimer = Date.now();
+            const timeElapsed = Math.floor((Date.now() - loadingTimer) / 1000);
+            statusMsg.innerText = `Loading... (${timeElapsed}s)`;
+            if (timeElapsed > 20) location.reload();
+            return;
         } else {
-
-            setTimeout(startProcess, 10000);
+            loadingTimer = null;
         }
-    }
 
-    function selectCloudflare() {
-        const select = document.querySelector('select');
-        if (select) {
-            console.log('[AutoRoll] Selecting Cloudflare...');
-            select.value = "3";
-            select.dispatchEvent(new Event('change', { bubbles: true }));
-            lastActivity = Date.now();
-            checkCaptchaSolved();
-        } else {
-            console.log('[AutoRoll] Select not found, retrying...');
-            setTimeout(startProcess, 5000);
+        const modalVisible = document.querySelector('#faucet-modal.show');
+        if (!modalVisible) {
+            const btnModal = document.querySelector('#btn-modal');
+            if (btnModal && btnModal.offsetParent !== null) {
+                statusMsg.innerText = "Opening Modal...";
+                btnModal.click();
+                isClicking = false;
+                lastActivityTime = Date.now();
+            } else {
+                statusMsg.innerText = "Searching for Button...";
+                statusMsg.style.color = "blue";
+            }
         }
-    }
 
-    function checkCaptchaSolved() {
-        let attempts = 0;
-        const checkInterval = setInterval(() => {
-            const turnstileResponse = document.querySelector('[name="cf-turnstile-response"]');
-            const rollButton = document.querySelector('#rollFaucet');
+        const captchaSelect = document.querySelector('select.captcha-select');
+        if (captchaSelect && pref !== "0" && captchaSelect.value !== pref) {
+            captchaSelect.value = pref;
+            captchaSelect.dispatchEvent(new Event('change', { bubbles: true }));
+        }
 
-            if (turnstileResponse && turnstileResponse.value.length > 10) {
-                console.log('[AutoRoll] Captcha Solved!');
-                clearInterval(checkInterval);
-                lastActivity = Date.now();
+        const rollWinBtn = document.querySelector('#rollFaucet');
+        if (rollWinBtn && rollWinBtn.offsetParent !== null && !isClicking) {
+            if (isCaptchaResolved()) {
+                statusMsg.innerText = "Ready! Rolling...";
+                statusMsg.style.color = "green";
 
-                const delay = Math.floor(Math.random() * 2000) + 1500;
+                rollWinBtn.removeAttribute('disabled');
+                rollWinBtn.click();
 
-                setTimeout(() => {
-                    if (rollButton && !rollButton.disabled) {
-                        rollButton.click();
-                        console.log('[AutoRoll] Roll executed successfully!');
-
-                        setTimeout(() => location.reload(), 5000);
-                    }
-                }, delay);
+                isClicking = true;
+                lastActivityTime = Date.now();
+                setTimeout(() => { isClicking = false; }, 10000);
+            } else {
+                statusMsg.innerText = "Solve Captcha to Roll";
+                statusMsg.style.color = "red";
             }
-
-            attempts++;
-            if (attempts > 60) {
-                clearInterval(checkInterval);
-                location.reload();
-            }
-
-            lastActivity = Date.now();
-        }, 2000);
-    }
-
-    if (document.readyState === 'complete') {
-        setTimeout(startProcess, 4000);
-    } else {
-        window.addEventListener('load', () => setTimeout(startProcess, 4000));
-    }
+        }
+    }, 1500);
 
 })();

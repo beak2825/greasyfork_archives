@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         DBD Detailed Match History
 // @namespace    https://github.com/Bloodpoint-Farming
-// @version      1.0.8
+// @version      1.0.9
 // @description  Changes match history to show BP/category for all players and BP/hour.
 // @author       Snoggles
-// @match        https://stats.deadbydaylight.com/match-history*
+// @match        https://stats.deadbydaylight.com/*
 // @run-at       document-start
 // @license      MIT
 // @supportURL   https://github.com/Bloodpoint-Farming/dbd-detailed-match-history

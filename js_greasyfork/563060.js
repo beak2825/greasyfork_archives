@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gander
 // @namespace    waiter7@red
-// @version      1.3
+// @version      1.3.5
 // @description  Add preview popups for torrent/group links on redacted.sh and orpheus.network
 // @author       waiter7
 // @match        https://redacted.sh/*
@@ -36,7 +36,7 @@
     let currentPopup = null;
 
     // Helper Functions
-    
+
     // Add hover effect to element
     function addHoverEffect(element, hoverOpacity = '1', defaultOpacity = '0.6') {
         element.addEventListener('mouseenter', () => {
@@ -56,15 +56,15 @@
         icon.style.opacity = '0.6';
         icon.style.transition = 'opacity 0.2s';
         icon.title = title;
-        
+
         addHoverEffect(icon);
-        
+
         icon.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
             onClick(e);
         });
-        
+
         return icon;
     }
 
@@ -115,7 +115,7 @@
                 [data-torrent-preview-popup]::-webkit-scrollbar-thumb:hover {
                     background: rgba(255, 255, 255, 0.3);
                 }
-                
+
                 @keyframes popupFadeIn {
                     0% {
                         opacity: 0;
@@ -126,22 +126,22 @@
                         transform: scale(1) translateY(0);
                     }
                 }
-                
+
                 [data-torrent-preview-popup] {
                     animation: popupFadeIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
                 }
-                
+
                 .loading-ellipses {
                     display: inline-block;
                     width: 1.2em;
                     text-align: left;
                 }
-                
+
                 .loading-ellipses::after {
                     content: '...';
                     animation: loadingEllipses 1.4s steps(4, end) infinite;
                 }
-                
+
                 @keyframes loadingEllipses {
                     0% {
                         content: '';
@@ -174,6 +174,7 @@
         popup.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.5)';
         popup.style.backgroundColor = '#1a1a1a';
         popup.style.borderRadius = '8px';
+        popup.style.contain = 'layout style paint';
     }
 
     // Add preview icons to all torrent links
@@ -205,6 +206,9 @@
             // Skip button classes
             if (link.classList.contains('button_fl') || link.classList.contains('button_dl')) return;
 
+            // Skip links with hash fragments (e.g., #postid, #info, etc.)
+            if (link.href.includes('#')) return;
+
             // Skip if link contains an image
             if (link.querySelector('img')) return;
 
@@ -225,10 +229,10 @@
             // Smart icon placement: check link context for better placement
             const parent = link.parentElement;
             const isInTable = parent && (parent.tagName === 'TD' || parent.tagName === 'TH');
-            const isListingPage = window.location.pathname === '/torrents.php' && 
-                                 !window.location.search.includes('id=') && 
+            const isListingPage = window.location.pathname === '/torrents.php' &&
+                                 !window.location.search.includes('id=') &&
                                  !window.location.search.includes('torrentid=');
-            
+
             // On listing pages or in tables, use insertAdjacentElement for precise placement
             if (isListingPage || isInTable) {
                 link.insertAdjacentElement('afterend', icon);
@@ -401,8 +405,8 @@
     // Get oldest torrent date
     function getOldestDate(torrents) {
         if (!torrents || torrents.length === 0) return null;
-        return torrents.reduce((oldest, torrent) => 
-            torrent.time < oldest ? torrent.time : oldest, 
+        return torrents.reduce((oldest, torrent) =>
+            torrent.time < oldest ? torrent.time : oldest,
             torrents[0].time
         );
     }
@@ -410,8 +414,8 @@
     // Get most recent upload date
     function getMostRecentDate(torrents) {
         if (!torrents || torrents.length === 0) return null;
-        return torrents.reduce((newest, torrent) => 
-            torrent.time > newest ? torrent.time : newest, 
+        return torrents.reduce((newest, torrent) =>
+            torrent.time > newest ? torrent.time : newest,
             torrents[0].time
         );
     }
@@ -423,33 +427,33 @@
         div.textContent = text;
         return div.innerHTML;
     }
-    
+
     // Decode HTML entities (e.g., &iacute; -> í, &#54756; -> 塔) before escaping
     function decodeHtml(html) {
         if (html == null) return '';
         const str = String(html);
-        
+
         // Use a more robust method: create a temporary element and decode
         // This handles both named entities (&amp;) and numeric entities (&#54756; or &#xD547;)
         const txt = document.createElement('textarea');
         txt.innerHTML = str;
         let decoded = txt.value;
-        
+
         // If textarea method didn't fully decode (some browsers have issues with numeric entities),
         // use a more explicit approach for numeric entities
         // Handle decimal numeric entities: &#54756;
         decoded = decoded.replace(/&#(\d+);/g, (match, dec) => {
             return String.fromCharCode(parseInt(dec, 10));
         });
-        
+
         // Handle hexadecimal numeric entities: &#xD547; or &#xD547;
         decoded = decoded.replace(/&#x([0-9A-Fa-f]+);/g, (match, hex) => {
             return String.fromCharCode(parseInt(hex, 16));
         });
-        
+
         return decoded;
     }
-    
+
     // Safely decode and escape HTML - handles special characters properly
     function safeHtml(text) {
         if (text == null) return '';
@@ -544,11 +548,11 @@
     // Format artists with expansion support
     function formatArtistsWithExpansion(artists, maxVisible = 6) {
         if (!artists || artists.length === 0) return '';
-        
+
         const artistLinks = artists.map(a =>
             `<a href="${BASE_URL}/artist.php?id=${a.id}">${safeHtml(a.name)}</a>`
         );
-        
+
         if (artistLinks.length <= maxVisible) {
             return artistLinks.join(', ');
         } else {
@@ -562,11 +566,11 @@
     // Format artists with "Various Artists" logic (2 or fewer show each, 3+ show "Various Artists" with expand)
     function formatArtistsWithVarious(artists, uniqueId) {
         if (!artists || artists.length === 0) return { html: '', hasExpand: false, allArtists: '' };
-        
+
         const artistLinks = artists.map(a =>
             `<a href="${BASE_URL}/artist.php?id=${a.id}">${safeHtml(a.name)}</a>`
         );
-        
+
         if (artists.length <= 2) {
             return { html: artistLinks.join(', '), hasExpand: false, allArtists: '' };
         } else {
@@ -619,7 +623,7 @@
         const strokeColor = '#B0B0B0';
         const strokeWidth = '1.5';
         const fillColor = 'none';
-        
+
         const icons = {
             calendar: `<svg width="${iconSize}" height="${iconSize}" viewBox="0 0 16 16" style="display: inline-block; vertical-align: middle; opacity: 0.7;">
                 <rect x="3" y="4" width="10" height="9" stroke="${strokeColor}" stroke-width="${strokeWidth}" fill="${fillColor}" rx="1"/>
@@ -629,48 +633,48 @@
                 <circle cx="6" cy="9.5" r="0.8" fill="${strokeColor}"/>
                 <circle cx="10" cy="9.5" r="0.8" fill="${strokeColor}"/>
             </svg>`,
-            
+
             clock: `<svg width="${iconSize}" height="${iconSize}" viewBox="0 0 16 16" style="display: inline-block; vertical-align: middle; opacity: 0.7;">
                 <circle cx="8" cy="8" r="6" stroke="${strokeColor}" stroke-width="${strokeWidth}" fill="${fillColor}"/>
                 <line x1="8" y1="8" x2="8" y2="5" stroke="${strokeColor}" stroke-width="${strokeWidth}" stroke-linecap="round"/>
                 <line x1="8" y1="8" x2="11" y2="8" stroke="${strokeColor}" stroke-width="${strokeWidth}" stroke-linecap="round"/>
             </svg>`,
-            
+
             user: `<svg width="${iconSize}" height="${iconSize}" viewBox="0 0 16 16" style="display: inline-block; vertical-align: middle; opacity: 0.7;">
                 <circle cx="8" cy="5" r="2.5" stroke="${strokeColor}" stroke-width="${strokeWidth}" fill="${fillColor}"/>
                 <path d="M3 14 Q3 10 8 10 Q13 10 13 14" stroke="${strokeColor}" stroke-width="${strokeWidth}" fill="${fillColor}"/>
             </svg>`,
-            
+
             users: `<svg width="${iconSize}" height="${iconSize}" viewBox="0 0 16 16" style="display: inline-block; vertical-align: middle; opacity: 0.7;">
                 <circle cx="6" cy="5" r="2" stroke="${strokeColor}" stroke-width="${strokeWidth}" fill="${fillColor}"/>
                 <path d="M2 14 Q2 11 6 11 Q10 11 10 14" stroke="${strokeColor}" stroke-width="${strokeWidth}" fill="${fillColor}"/>
                 <circle cx="11" cy="5.5" r="1.8" stroke="${strokeColor}" stroke-width="${strokeWidth}" fill="${fillColor}"/>
                 <path d="M8 14 Q8 11.5 11 11.5 Q14 11.5 14 14" stroke="${strokeColor}" stroke-width="${strokeWidth}" fill="${fillColor}"/>
             </svg>`,
-            
+
             cycle: `<svg width="${iconSize}" height="${iconSize}" viewBox="0 0 16 16" style="display: inline-block; vertical-align: middle; opacity: 0.7;">
                 <path d="M8 3 L8 10 M8 10 L5 7 M8 10 L11 7" stroke="${strokeColor}" stroke-width="${strokeWidth}" fill="${fillColor}" stroke-linecap="round" stroke-linejoin="round"/>
                 <line x1="3" y1="13" x2="13" y2="13" stroke="${strokeColor}" stroke-width="${strokeWidth}" stroke-linecap="round"/>
             </svg>`,
-            
+
             arrowUp: `<svg width="${iconSize}" height="${iconSize}" viewBox="0 0 16 16" style="display: inline-block; vertical-align: middle; opacity: 0.7;">
                 <path d="M8 3 L8 13 M8 3 L4 7 M8 3 L12 7" stroke="${strokeColor}" stroke-width="${strokeWidth}" fill="${fillColor}" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>`,
-            
+
             arrowDown: `<svg width="${iconSize}" height="${iconSize}" viewBox="0 0 16 16" style="display: inline-block; vertical-align: middle; opacity: 0.7;">
                 <path d="M8 13 L8 3 M8 13 L4 9 M8 13 L12 9" stroke="${strokeColor}" stroke-width="${strokeWidth}" fill="${fillColor}" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>`,
-            
+
             disk: `<svg width="${iconSize}" height="${iconSize}" viewBox="0 0 16 16" style="display: inline-block; vertical-align: middle; opacity: 0.7;">
                 <rect x="3" y="5" width="10" height="8" stroke="${strokeColor}" stroke-width="${strokeWidth}" fill="${fillColor}" rx="1"/>
                 <line x1="3" y1="7" x2="13" y2="7" stroke="${strokeColor}" stroke-width="${strokeWidth}"/>
                 <circle cx="8" cy="9.5" r="1" fill="${strokeColor}"/>
             </svg>`,
-            
+
             folder: `<svg width="${iconSize}" height="${iconSize}" viewBox="0 0 16 16" style="display: inline-block; vertical-align: middle; opacity: 0.7;">
                 <path d="M3 4 L6 4 L7 5 L13 5 L13 12 L3 12 Z" stroke="${strokeColor}" stroke-width="${strokeWidth}" fill="${fillColor}"/>
             </svg>`,
-            
+
             microphone: `<svg width="${iconSize}" height="${iconSize}" viewBox="0 0 16 16" style="display: inline-block; vertical-align: middle; opacity: 0.7;">
                 <path d="M8 2 L8 9" stroke="${strokeColor}" stroke-width="${strokeWidth}" stroke-linecap="round"/>
                 <path d="M5 9 Q5 7 8 7 Q11 7 11 9" stroke="${strokeColor}" stroke-width="${strokeWidth}" fill="${fillColor}"/>
@@ -678,14 +682,14 @@
                 <line x1="7" y1="13" x2="9" y2="13" stroke="${strokeColor}" stroke-width="${strokeWidth}" stroke-linecap="round"/>
                 <path d="M4 9 L4 11 M12 9 L12 11" stroke="${strokeColor}" stroke-width="${strokeWidth}" stroke-linecap="round"/>
             </svg>`,
-            
+
             musicNote: `<svg width="${iconSize}" height="${iconSize}" viewBox="0 0 16 16" style="display: inline-block; vertical-align: middle; opacity: 0.7;">
                 <ellipse cx="7" cy="10" rx="2" ry="2.5" stroke="${strokeColor}" stroke-width="${strokeWidth}" fill="${fillColor}"/>
                 <line x1="7" y1="2" x2="7" y2="7.5" stroke="${strokeColor}" stroke-width="${strokeWidth}" stroke-linecap="round"/>
                 <path d="M7 2 Q9 2 10 4 Q11 6 11 8" stroke="${strokeColor}" stroke-width="${strokeWidth}" fill="${fillColor}" stroke-linecap="round"/>
             </svg>`
         };
-        
+
         return icons[iconType] || '';
     }
 
@@ -761,10 +765,14 @@
             };
             const releaseType = group.releaseType ? releaseTypeMap[group.releaseType] || 'Unknown' : null;
 
+            // Build group link for cover image
+            const groupLink = `${BASE_URL}/torrents.php?id=${groupId}`;
+
             // Add cover art if available - positioned relative to .box, not inner div
             if (image) {
                 content += `
-                    <div style="position: absolute; top: 0; left: 0; right: 0; height: 280px; background-image: url('${image}'); background-size: cover; background-position: center; filter: blur(30px) brightness(0.3); opacity: 0.7; z-index: 0; transform: scale(1.1); pointer-events: none;"></div>
+                    <div id="blurredBg" style="position: absolute; top: 0; left: 0; right: 0; height: 200px; background-image: url('${image}'); background-size: cover; background-position: center; filter: blur(20px) brightness(0.35); opacity: 0.8; z-index: 0; transform: scale(1.15); pointer-events: none;"></div>
+                    <div id="gradientOverlay" style="position: absolute; top: 0; left: 0; right: 0; height: 100%; background: linear-gradient(to bottom, transparent 0%, transparent 120px, rgba(26, 26, 26, 0.7) 170px, #1a1a1a 210px); z-index: 0; pointer-events: none;"></div>
                 `;
             }
 
@@ -772,11 +780,13 @@
                     <div style="padding: 18px; position: relative; z-index: 1;">
             `;
 
-            // Add cover art image inside padded div
+            // Add cover art image inside padded div - make it clickable
             if (image) {
                 content += `
                     <div style="text-align: center; margin-bottom: 8px; padding: 20px;">
-                        <img src="${image}" alt="Cover art" style="max-width: 100%; max-height: 200px; border-radius: 6px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); display: block; margin: 0 auto;" />
+                        <a href="${groupLink}" style="display: inline-block; cursor: pointer;">
+                            <img src="${image}" alt="Cover art" style="max-width: 100%; max-height: 200px; border-radius: 6px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); display: block; margin: 0 auto; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'" />
+                        </a>
                     </div>
                 `;
             }
@@ -784,29 +794,29 @@
             // Artist and title with year
             if (torrentId && data.torrent) {
                 const torrent = data.torrent;
-                
+
                 // Get main artists and "with" artists separately
                 const musicInfo = group.musicInfo || {};
                 const mainArtists = musicInfo.artists || [];
                 const withArtists = musicInfo.with || [];
-                
+
                 // Format main artists with "Various Artists" logic
                 const artistUniqueId = `single-${groupId || torrentId || Date.now()}`;
                 const mainArtistsFormatted = formatArtistsWithVarious(mainArtists, artistUniqueId);
                 const showGuestArtists = !mainArtistsFormatted.hasExpand && withArtists.length > 0;
-                
+
                 // Format "with" artists with expansion support (only if not using "Various Artists")
                 const withArtistLinks = showGuestArtists ? formatArtistsWithExpansion(withArtists) : '';
-                
+
                 // Get edition year
                 const editionYear = torrent.remasterYear || year;
-                
+
                 // Build edition info (without year since it's in title)
                 const editionParts = [];
                 if (torrent.remasterRecordLabel) editionParts.push(torrent.remasterRecordLabel);
                 if (torrent.remasterCatalogueNumber) editionParts.push(torrent.remasterCatalogueNumber);
                 if (torrent.remasterTitle) editionParts.push(torrent.remasterTitle);
-                
+
                 // For single torrents: new layout
                 content += `
                     <div style="margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
@@ -815,7 +825,7 @@
                             <a href="${torrentLink}" style="text-decoration: none;">${safeHtml(title)}</a>
                             ${editionYear && editionYear !== 'Unknown' ? `<span style="opacity: 0.7; font-weight: normal; font-size: 0.95em;"> (${editionYear})</span>` : ''}
                         </div>
-                        
+
                         <!-- Artists -->
                         <div style="opacity: 0.85; line-height: 1.6; margin-bottom: 4px; text-align: center;">
                             <div style="display: flex; align-items: center; justify-content: center; gap: 4px; flex-wrap: nowrap;">
@@ -825,7 +835,7 @@
                             ${mainArtistsFormatted.hasExpand ? `<div id="various-artists-list-${artistUniqueId}" style="display: none; margin-top: 4px; opacity: 0.85; text-align: center; word-wrap: break-word; overflow-wrap: break-word;">${mainArtistsFormatted.allArtists}</div>` : ''}
                         </div>
                 `;
-                
+
                 // "feat. Guests" line if present and not using "Various Artists"
                 if (showGuestArtists && withArtistLinks) {
                     content += `
@@ -834,7 +844,7 @@
                         </div>
                     `;
                 }
-                
+
                 // If using "Various Artists", include guest artists in expanded section
                 if (mainArtistsFormatted.hasExpand && withArtists.length > 0) {
                     const withArtistLinksExpanded = formatArtistsWithExpansion(withArtists);
@@ -844,7 +854,7 @@
                         </div>
                     `;
                 }
-                
+
                 // Edition info (without year)
                 if (editionParts.length > 0) {
                     content += `
@@ -853,19 +863,19 @@
                         </div>
                     `;
                 }
-                
+
                 // Release type and format info as pill badges
                 const formatParts = [torrent.media, torrent.format, torrent.encoding].filter(Boolean);
                 const formatText = formatParts.map(part => safeHtml(part)).join(' ');
                 const pills = [];
-                
+
                 if (releaseType) {
                     pills.push(`<span style="display: inline-block; padding: 4px 10px; background: rgba(255, 255, 255, 0.1); border-radius: 4px; font-size: 0.85em; opacity: 0.9;">${escapeHtml(releaseType)}</span>`);
                 }
                 if (formatText) {
                     pills.push(`<span style="display: inline-block; padding: 4px 10px; background: rgba(255, 255, 255, 0.1); border-radius: 4px; font-size: 0.85em; opacity: 0.9; text-transform: uppercase; letter-spacing: 0.5px;">${formatText}</span>`);
                 }
-                
+
                 if (pills.length > 0) {
                     content += `
                         <div style="display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; align-items: center; margin-top: ${editionParts.length > 0 ? '8px' : '6px'};">
@@ -873,7 +883,7 @@
                         </div>
                     `;
                 }
-                
+
                 content += `
                     </div>
                 `;
@@ -883,15 +893,15 @@
                 const musicInfo = group.musicInfo || {};
                 const mainArtists = musicInfo.artists || [];
                 const withArtists = musicInfo.with || [];
-                
+
                 // Format main artists with "Various Artists" logic
                 const artistUniqueId = `group-${groupId || Date.now()}`;
                 const mainArtistsFormatted = formatArtistsWithVarious(mainArtists, artistUniqueId);
                 const showGuestArtists = !mainArtistsFormatted.hasExpand && withArtists.length > 0;
-                
+
                 // Format "with" artists with expansion support (only if not using "Various Artists")
                 const withArtistLinks = showGuestArtists ? formatArtistsWithExpansion(withArtists) : '';
-                
+
                 content += `
                     <div style="margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
                         <!-- Title with group year -->
@@ -899,7 +909,7 @@
                             <a href="${torrentLink}" style="text-decoration: none;">${safeHtml(title)}</a>
                             ${year !== 'Unknown' ? `<span style="opacity: 0.7; font-weight: normal; font-size: 0.95em;"> (${year})</span>` : ''}
                         </div>
-                        
+
                         <!-- Artists -->
                         <div style="opacity: 0.85; line-height: 1.6; margin-bottom: 4px; text-align: center;">
                             <div style="display: flex; align-items: center; justify-content: center; gap: 4px; flex-wrap: nowrap;">
@@ -909,7 +919,7 @@
                             ${mainArtistsFormatted.hasExpand ? `<div id="various-artists-list-${artistUniqueId}" style="display: none; margin-top: 4px; opacity: 0.85; text-align: center; word-wrap: break-word; overflow-wrap: break-word;">${mainArtistsFormatted.allArtists}</div>` : ''}
                         </div>
                 `;
-                
+
                 // "feat. Guests" line if present and not using "Various Artists"
                 if (showGuestArtists && withArtistLinks) {
                     content += `
@@ -918,7 +928,7 @@
                         </div>
                     `;
                 }
-                
+
                 // If using "Various Artists", include guest artists in expanded section
                 if (mainArtistsFormatted.hasExpand && withArtists.length > 0) {
                     const withArtistLinksExpanded = formatArtistsWithExpansion(withArtists);
@@ -928,7 +938,7 @@
                         </div>
                     `;
                 }
-                
+
                 // Release type as pill badge (no format info for groups)
                 if (releaseType) {
                     content += `
@@ -937,7 +947,7 @@
                         </div>
                     `;
                 }
-                
+
                 content += `
                     </div>
                 `;
@@ -958,7 +968,7 @@
             if (!torrentId) {
                 // Calculate stats
                 const recentUploadTime = newestDate ? formatRelativeTime(newestDate) : null;
-                
+
                 // Get unique uploaders
                 const uniqueUploaders = [];
                 const uploaderMap = new Map();
@@ -968,7 +978,7 @@
                         uniqueUploaders.push({ id: t.userId, name: t.username });
                     }
                 });
-                
+
                 // Group torrents by edition
                 const editionGroups = new Map();
                 torrents.forEach(torrent => {
@@ -979,7 +989,7 @@
                         remasterRecordLabel: torrent.remasterRecordLabel || '',
                         remasterCatalogueNumber: torrent.remasterCatalogueNumber || ''
                     });
-                    
+
                     if (!editionGroups.has(editionKey)) {
                         editionGroups.set(editionKey, []);
                     }
@@ -987,20 +997,20 @@
                 });
                 const editionGroupsArray = Array.from(editionGroups.entries());
                 const editionCount = editionGroupsArray.length;
-                
+
                 // Calculate torrent stats
                 const totalSnatches = torrents.reduce((sum, t) => sum + (t.snatched || 0), 0);
                 const totalSeeders = torrents.reduce((sum, t) => sum + (t.seeders || 0), 0);
                 const totalLeechers = torrents.reduce((sum, t) => sum + (t.leechers || 0), 0);
                 const totalSize = torrents.reduce((sum, t) => sum + (t.size || 0), 0);
                 const avgSnatches = torrents.length > 0 ? Math.round(totalSnatches / torrents.length) : 0;
-                
+
                 // Find most snatched and most seeded torrents
-                const mostSnatched = torrents.reduce((max, t) => 
+                const mostSnatched = torrents.reduce((max, t) =>
                     (t.snatched || 0) > (max.snatched || 0) ? t : max, torrents[0]);
-                const mostSeeded = torrents.reduce((max, t) => 
+                const mostSeeded = torrents.reduce((max, t) =>
                     (t.seeders || 0) > (max.seeders || 0) ? t : max, torrents[0]);
-                
+
                 // Most Snatched and Most Seeded (only if multiple editions) - moved to top
                 if (editionCount > 1) {
                     // Helper function to get edition info for a torrent
@@ -1020,15 +1030,15 @@
                         }
                         return editionParts.length > 0 ? editionParts.join(' / ') : 'Original Release';
                     };
-                    
+
                     const mostSnatchedFormatParts = [mostSnatched.media, mostSnatched.format, mostSnatched.encoding].filter(Boolean);
                     const mostSeededFormatParts = [mostSeeded.media, mostSeeded.format, mostSeeded.encoding].filter(Boolean);
                     const mostSnatchedEdition = getEditionInfo(mostSnatched);
                     const mostSeededEdition = getEditionInfo(mostSeeded);
-                    
+
                     const mostSnatchedFormatText = mostSnatchedFormatParts.map(part => safeHtml(part)).join(' ');
                     const mostSeededFormatText = mostSeededFormatParts.map(part => safeHtml(part)).join(' ');
-                    
+
                     content += `
                         <div style="margin-bottom: 12px; font-size: 0.85em; opacity: 0.8;">
                             <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: nowrap; align-items: flex-start;">
@@ -1053,15 +1063,15 @@
                         <div style="margin-top: 12px; margin-bottom: 0px; padding-bottom: 0px; border-bottom: 1px solid rgba(255, 255, 255, 0.1);"></div>
                     `;
                 }
-                
+
                 // Format dates for tooltips
                 const formatDateForTooltip = (dateString) => {
                     if (!dateString || dateString === 'Unknown') return 'Unknown';
                     try {
                         const date = new Date(dateString);
-                        return date.toLocaleString('en-US', { 
-                            year: 'numeric', 
-                            month: 'long', 
+                        return date.toLocaleString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
                             day: 'numeric',
                             hour: '2-digit',
                             minute: '2-digit'
@@ -1070,18 +1080,18 @@
                         return dateString;
                     }
                 };
-                
+
                 const fullOldestDateFormatted = formatDateForTooltip(fullOldestDate);
                 const newestDateFormatted = newestDate ? formatDateForTooltip(newestDate) : null;
                 const compactAge = formatCompactTime(age);
                 const compactRecentTime = newestDate ? formatCompactTime(recentUploadTime) : null;
-                
+
                 // Icon-based info bar - compact, wraps naturally (placed after Most Snatched/Most Seeded)
                 content += `
                     <div style="margin-top: ${editionCount > 1 ? '12px' : '12px'}; margin-bottom: 12px; font-size: 0.85em; opacity: 0.85;">
                         <div style="display: flex; flex-wrap: wrap; gap: 8px 10px; justify-content: center; align-items: center;">
                 `;
-                
+
                 // Created icon
                 content += `
                     <div title="${escapeHtml('Created: ' + fullOldestDateFormatted)}" style="display: flex; align-items: center; gap: 3px; white-space: nowrap;">
@@ -1089,7 +1099,7 @@
                         <span>${compactAge}</span>
                     </div>
                 `;
-                
+
                 // Latest icon (pencil for last updated)
                 if (newestDate) {
                     content += `
@@ -1099,7 +1109,7 @@
                         </div>
                     `;
                 }
-                
+
                 // Uploader icon
                 if (uniqueUploaders.length > 0) {
                     if (uniqueUploaders.length === 1) {
@@ -1119,7 +1129,7 @@
                         `;
                     }
                 }
-                
+
                 // Snatches icon (cycle icon)
                 if (totalSnatches > 0) {
                     content += `
@@ -1129,7 +1139,7 @@
                         </div>
                     `;
                 }
-                
+
                 // Seeders icon (up arrow)
                 if (totalSeeders > 0) {
                     content += `
@@ -1139,7 +1149,7 @@
                         </div>
                     `;
                 }
-                
+
                 // Leechers icon (down arrow)
                 if (totalLeechers > 0) {
                     content += `
@@ -1149,7 +1159,7 @@
                         </div>
                     `;
                 }
-                
+
                 // Size icon
                 if (totalSize > 0) {
                     const sizeStr = formatBytes(totalSize);
@@ -1160,18 +1170,18 @@
                         </div>
                     `;
                 }
-                
+
                 content += `
                         </div>
                     </div>
                 `;
-                
+
                 // Expandable uploader list (full width, underneath icons)
                 if (uniqueUploaders.length > 1) {
-                    const uploaderLinks = uniqueUploaders.map(u => 
+                    const uploaderLinks = uniqueUploaders.map(u =>
                         `<a href="${BASE_URL}/user.php?id=${u.id}" style="text-decoration: none; opacity: 0.85;">${safeHtml(u.name)}</a>`
                     ).join(', ');
-                    
+
                     content += `
                         <div id="uploaderList" style="display: none; margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255, 255, 255, 0.1); font-size: 0.9em; opacity: 0.85;">
                             <div style="opacity: 0.7; margin-bottom: 6px;">Uploaders:</div>
@@ -1179,12 +1189,12 @@
                         </div>
                     `;
                 }
-                
+
                 // HR under icon section
                 content += `
                     <div style="margin-top: 0px; margin-bottom: 12px; padding-bottom: 0px; border-bottom: 1px solid rgba(255, 255, 255, 0.1);"></div>
                 `;
-                
+
                 // Build edition/torrent count line with arrow indicator (moved to bottom)
                 content += `
                     <div style="margin-bottom: 10px; font-size: 0.95em; text-align: center;">
@@ -1204,7 +1214,7 @@
                 editionGroupsArray.forEach(([editionKey, groupTorrents], groupIndex) => {
                     const firstTorrent = groupTorrents[0];
                     const editionParts = [];
-                    
+
                     // Build edition label
                     if (firstTorrent.remasterYear && firstTorrent.remasterYear > 0) {
                         editionParts.push(firstTorrent.remasterYear);
@@ -1218,20 +1228,20 @@
                     if (firstTorrent.remasterTitle) {
                         editionParts.push(firstTorrent.remasterTitle);
                     }
-                    
-                    const editionLabel = editionParts.length > 0 
+
+                    const editionLabel = editionParts.length > 0
                         ? editionParts.join(' / ')
                         : 'Original Release';
-                    
+
                     // Show edition header if there are multiple editions or if edition info exists
                     const showEditionHeader = editionGroupsArray.length > 1 || editionLabel !== 'Original Release';
                     const isFirstEdition = groupIndex === 0;
-                    
+
                     // Single container for each edition with all its torrents
                     content += `
                         <div style="margin-top: ${isFirstEdition ? '0' : '8px'}; padding: 8px; background: rgba(255, 255, 255, 0.03); border-radius: 4px; border-left: 3px solid rgba(255, 255, 255, 0.15); transition: background 0.2s;">
                     `;
-                    
+
                     if (showEditionHeader) {
                         content += `
                             <div style="margin-bottom: 6px; opacity: 0.9; font-size: 0.95em; font-weight: 600;">
@@ -1239,14 +1249,14 @@
                             </div>
                         `;
                     }
-                    
+
                     // List torrents in this edition within the same container
                     groupTorrents.forEach((torrent, torrentIndex) => {
                         const torrentUrl = `${BASE_URL}/torrents.php?torrentid=${torrent.id}`;
                         const formatParts = [torrent.media, torrent.format, torrent.encoding].filter(Boolean);
                         const formatText = formatParts.map(part => safeHtml(part)).join(' ');
                         const isLastTorrent = torrentIndex === groupTorrents.length - 1;
-                        
+
                         content += `
                             <div style="margin-bottom: ${isLastTorrent ? '0' : '4px'}; padding: 4px 0;">
                                 <div style="display: flex; align-items: center; gap: 8px;">
@@ -1260,7 +1270,7 @@
                             </div>
                         `;
                     });
-                    
+
                     content += `
                         </div>
                     `;
@@ -1272,15 +1282,15 @@
             } else {
                 // Show torrent-specific info with icon section
                 const torrent = data.torrent;
-                
+
                 // Format dates for tooltips
                 const formatDateForTooltip = (dateString) => {
                     if (!dateString || dateString === 'Unknown') return 'Unknown';
                     try {
                         const date = new Date(dateString);
-                        return date.toLocaleString('en-US', { 
-                            year: 'numeric', 
-                            month: 'long', 
+                        return date.toLocaleString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
                             day: 'numeric',
                             hour: '2-digit',
                             minute: '2-digit'
@@ -1289,20 +1299,20 @@
                         return dateString;
                     }
                 };
-                
+
                 const fullOldestDateFormatted = formatDateForTooltip(fullOldestDate);
                 const uploaderName = torrent.username || 'Unknown';
                 const uploaderLink = torrent.userId
                     ? `<a href="${BASE_URL}/user.php?id=${torrent.userId}" style="text-decoration: none; opacity: 0.85; max-width: 80px; overflow: hidden; text-overflow: ellipsis; display: inline-block;">${safeHtml(uploaderName)}</a>`
                     : safeHtml(uploaderName);
                 const compactAge = formatCompactTime(age);
-                
+
                 // Icon-based info bar - compact, wraps naturally
                 content += `
                     <div style="margin-top: 14px; margin-bottom: 10px; font-size: 0.85em; opacity: 0.85;">
                         <div style="display: flex; flex-wrap: wrap; gap: 8px 10px; justify-content: center; align-items: center;">
                 `;
-                
+
                 // Uploader icon
                 content += `
                     <div title="Uploader" style="display: flex; align-items: center; gap: 3px; white-space: nowrap;">
@@ -1310,7 +1320,7 @@
                         ${uploaderLink}
                     </div>
                 `;
-                
+
                 // Snatches icon (cycle icon)
                 if (torrent.snatched !== undefined && torrent.snatched !== null) {
                     content += `
@@ -1320,7 +1330,7 @@
                         </div>
                     `;
                 }
-                
+
                 // Seeders icon (up arrow)
                 if (torrent.seeders !== undefined && torrent.seeders !== null) {
                     content += `
@@ -1330,7 +1340,7 @@
                         </div>
                     `;
                 }
-                
+
                 // Leechers icon (down arrow)
                 if (torrent.leechers !== undefined && torrent.leechers !== null) {
                     content += `
@@ -1340,7 +1350,7 @@
                         </div>
                     `;
                 }
-                
+
                 // Size icon
                 if (torrent.size) {
                     const sizeStr = formatBytes(torrent.size);
@@ -1351,7 +1361,7 @@
                         </div>
                     `;
                 }
-                
+
                 content += `
                         </div>
                     </div>
@@ -1365,13 +1375,19 @@
 
             popup.innerHTML = content;
 
+            // Fix Safari gradient rendering: must set explicit height SYNCHRONOUSLY after reflow
+            // Safari calculates height: 100% incorrectly on first render if done async
+            const popupHeight = Math.max(popup.scrollHeight, popup.offsetHeight);
+            const gradientOverlay = popup.querySelector('#gradientOverlay');
+            if (gradientOverlay) {
+                gradientOverlay.style.height = `${popupHeight}px`;
+            }
+
             // Adjust position if popup would overflow bottom of viewport
             setTimeout(() => {
                 const popupRect = popup.getBoundingClientRect();
-                // Use scrollHeight for scrollable popups, height for non-scrollable
-                const popupHeight = popup.scrollHeight > popup.clientHeight ? popup.scrollHeight : popupRect.height;
                 const viewportBottom = window.innerHeight + window.pageYOffset;
-                const marginBottom = 15; // 10-20px margin
+                const marginBottom = 15;
                 const popupBottom = popupRect.top + popupHeight + window.pageYOffset + marginBottom;
                 if (popupBottom > viewportBottom) {
                     const overflow = popupBottom - viewportBottom;
@@ -1394,18 +1410,18 @@
                 const torrentList = popup.querySelector('#torrentList');
                 const expandButton = popup.querySelector('.expandTorrentList');
                 const indicator = popup.querySelector('#torrentListIndicator');
-                
+
                 if (torrentList && expandButton) {
                     const toggleTorrentList = () => {
                         const isHidden = torrentList.style.display === 'none' || !torrentList.style.display;
                         torrentList.style.display = isHidden ? 'block' : 'none';
-                        
+
                         // Update arrow indicator
                         if (indicator) {
                             indicator.textContent = isHidden ? '▲' : '▼';
                         }
                     };
-                    
+
                     expandButton.addEventListener('click', toggleTorrentList);
                     addHoverEffect(expandButton, '1', '0.9');
                 }
@@ -1429,7 +1445,7 @@
                     const match = expandUploadersBtn.textContent.match(/(\d+)/);
                     const uploaderCount = match ? parseInt(match[1]) : (uniqueUploaders ? uniqueUploaders.length : 0);
                     const originalText = `${uploaderCount}`;
-                    
+
                     expandUploadersBtn.addEventListener('click', function(e) {
                         e.stopPropagation();
                         const isHidden = uploaderList.style.display === 'none' || !uploaderList.style.display;
@@ -1448,13 +1464,13 @@
                 while (hiddenSpan && !hiddenSpan.classList.contains('artists-hidden')) {
                     hiddenSpan = hiddenSpan.nextElementSibling;
                 }
-                
+
                 if (hiddenSpan) {
                     // Extract initial count from button text
                     const initialText = toggle.textContent;
                     const match = initialText.match(/\[show (\d+) more\]/);
                     const hiddenCount = match ? parseInt(match[1]) : 0;
-                    
+
                     toggle.addEventListener('click', function() {
                         if (hiddenSpan.style.display === 'none' || !hiddenSpan.style.display) {
                             hiddenSpan.style.display = 'inline';
@@ -1475,7 +1491,7 @@
                 const artistsList = popup.querySelector(`#various-artists-list-${uniqueId}`);
                 const featSection = popup.querySelector(`#various-artists-feat-${uniqueId}`);
                 const indicator = popup.querySelector(`#various-artists-indicator-${uniqueId}`);
-                
+
                 if (artistsList) {
                     toggle.addEventListener('click', function() {
                         const isExpanded = artistsList.style.display !== 'none' && artistsList.style.display !== '';
@@ -1537,7 +1553,7 @@
             const initialText = expandTagsBtn.textContent;
             const match = initialText.match(/\[show (\d+) more\]/);
             const hiddenCount = match ? parseInt(match[1]) : 0;
-            
+
             expandTagsBtn.addEventListener('click', function() {
                 if (tagsHidden.style.display === 'none') {
                     tagsHidden.style.display = 'inline';
@@ -1554,14 +1570,14 @@
         const renderReleases = (releasesList, releases, releaseTypeMap, sortBy, showAll) => {
             // Clear existing releases
             releasesList.innerHTML = '';
-            
+
             // Helper to decode HTML entities
             // Calculate total snatches for each release
             const releasesWithSnatches = releases.map(release => {
                 const totalSnatches = release.torrent ? release.torrent.reduce((sum, t) => sum + (t.snatched || 0), 0) : 0;
                 return { ...release, totalSnatches };
             });
-            
+
             // Sort releases based on sort type
             let sortedReleases;
             if (sortBy === 'snatches') {
@@ -1580,10 +1596,10 @@
                     return getLatestDate(b) - getLatestDate(a);
                 });
             }
-            
+
             // Limit to 3 if not showing all
             const releasesToShow = showAll ? sortedReleases : sortedReleases.slice(0, 3);
-            
+
             // Render each release
             releasesToShow.forEach((release, index) => {
                 const releaseLink = `${BASE_URL}/torrents.php?id=${release.groupId}`;
@@ -1591,7 +1607,7 @@
                 const releaseType = release.releaseType ? releaseTypeMap[release.releaseType] || null : null;
                 const groupName = safeHtml(release.groupName || '');
                 const isFirst = index === 0;
-                
+
                 // Get snatches or date based on sort type
                 let rightColumn = '';
                 if (sortBy === 'snatches') {
@@ -1619,7 +1635,7 @@
                         `;
                     }
                 }
-                
+
                 const releaseDiv = document.createElement('div');
                 releaseDiv.style.cssText = `margin-bottom: ${isFirst ? '8px' : '10px'}; padding: 8px; background: rgba(255, 255, 255, 0.03); border-radius: 4px; border-left: 3px solid rgba(255, 255, 255, ${isFirst ? '0.3' : '0.15'}); transition: background 0.2s;`;
                 releaseDiv.innerHTML = `
@@ -1637,7 +1653,7 @@
                         ${rightColumn}
                     </div>
                 `;
-                
+
                 // Add hover effects
                 // Release div hover effects (custom background change, not opacity)
                 releaseDiv.addEventListener('mouseenter', function() {
@@ -1646,27 +1662,27 @@
                 releaseDiv.addEventListener('mouseleave', function() {
                     this.style.background = 'rgba(255, 255, 255, 0.03)';
                 });
-                
+
                 releasesList.appendChild(releaseDiv);
             });
         };
 
         // Get data from popup or cache
         const artistData = popup._artistData || (artistPopupCache.has(artistId) ? artistPopupCache.get(artistId)._artistData : null);
-        
+
         if (artistData && artistData.topReleases && artistData.topReleases.length > 0) {
             const releasesList = popup.querySelector('#releasesList');
             const sortBySnatchesBtn = popup.querySelector('#sortBySnatches');
             const sortByDateBtn = popup.querySelector('#sortByDate');
             const showAllBtn = popup.querySelector('#showAllReleases');
-            
+
             // Track current state
             let currentSort = 'snatches';
             let showingAll = false;
-            
+
             // Initial render (top 3 by snatches)
             renderReleases(releasesList, artistData.topReleases, artistData.releaseTypeMap, 'snatches', false);
-            
+
             // Sort toggle handlers
             if (sortBySnatchesBtn && sortByDateBtn) {
                 const updateSortButtons = () => {
@@ -1682,19 +1698,19 @@
                         sortByDateBtn.style.textDecoration = 'underline';
                     }
                 };
-                
+
                 sortBySnatchesBtn.addEventListener('click', function() {
                     currentSort = 'snatches';
                     updateSortButtons();
                     renderReleases(releasesList, artistData.topReleases, artistData.releaseTypeMap, currentSort, showingAll);
                 });
-                
+
                 sortByDateBtn.addEventListener('click', function() {
                     currentSort = 'date';
                     updateSortButtons();
                     renderReleases(releasesList, artistData.topReleases, artistData.releaseTypeMap, currentSort, showingAll);
                 });
-                
+
                 // Add hover effects
                 // Sort buttons have dynamic opacity based on active state, so use custom hover
                 [sortBySnatchesBtn, sortByDateBtn].forEach(btn => {
@@ -1709,14 +1725,14 @@
                         }
                     });
                 });
-                
+
                 updateSortButtons();
             }
-            
+
             // Show all handlers (top and bottom buttons)
             const showAllTopBtn = popup.querySelector('#showAllReleasesTop');
             const showAllBottomBtn = popup.querySelector('#showAllReleasesBottom');
-            
+
             const updateShowAllButtons = () => {
                 const buttonText = showingAll ? 'show less' : 'show all';
                 if (showAllTopBtn) {
@@ -1728,25 +1744,25 @@
                     showAllBottomBtn.style.display = showingAll ? 'none' : 'block';
                 }
             };
-            
+
             const toggleShowAll = () => {
                 showingAll = !showingAll;
                 updateShowAllButtons();
                 renderReleases(releasesList, artistData.topReleases, artistData.releaseTypeMap, currentSort, showingAll);
             };
-            
+
             if (showAllTopBtn) {
                 const topSpan = showAllTopBtn.querySelector('span');
                 topSpan.addEventListener('click', toggleShowAll);
                 addHoverEffect(topSpan, '1', '0.8');
             }
-            
+
             if (showAllBottomBtn) {
                 const bottomSpan = showAllBottomBtn.querySelector('span');
                 bottomSpan.addEventListener('click', toggleShowAll);
                 addHoverEffect(bottomSpan, '1', '0.8');
             }
-            
+
             // Initialize button visibility
             updateShowAllButtons();
         }
@@ -1767,16 +1783,16 @@
             if (!popup.style.position) {
                 setupPopupStyles(popup);
             }
-            
+
             // Position near cursor
             const x = Math.min(event.pageX + 10, window.innerWidth + window.pageXOffset - 400);
             const y = event.pageY + 10;
             popup.style.left = `${x}px`;
             popup.style.top = `${y}px`;
-            
+
             document.body.appendChild(popup);
             currentPopup = popup;
-            
+
             // Reattach event handlers
             attachArtistPopupHandlers(popup, artistId);
             return;
@@ -1837,7 +1853,8 @@
             // Add artist image background - positioned relative to .box, not inner div
             if (image) {
                 content += `
-                    <div style="position: absolute; top: 0; left: 0; right: 0; height: 280px; background-image: url('${image}'); background-size: cover; background-position: center; filter: blur(30px) brightness(0.3); opacity: 0.7; z-index: 0; transform: scale(1.1); pointer-events: none;"></div>
+                    <div id="blurredBg" style="position: absolute; top: 0; left: 0; right: 0; height: 200px; background-image: url('${image}'); background-size: cover; background-position: center; filter: blur(20px) brightness(0.35); opacity: 0.8; z-index: 0; transform: scale(1.15); pointer-events: none;"></div>
+                    <div id="gradientOverlay" style="position: absolute; top: 0; left: 0; right: 0; height: 100%; background: linear-gradient(to bottom, transparent 0%, transparent 120px, rgba(26, 26, 26, 0.7) 170px, #1a1a1a 210px); z-index: 0; pointer-events: none;"></div>
                 `;
             }
 
@@ -1845,11 +1862,13 @@
                     <div style="padding: 18px; position: relative; z-index: 1;">
             `;
 
-            // Add artist image inside padded div
+            // Add artist image inside padded div - make it clickable
             if (image) {
                 content += `
                     <div style="text-align: center; margin-bottom: 8px; padding: 20px;">
-                        <img src="${image}" alt="Artist" style="max-width: 100%; max-height: 200px; border-radius: 6px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); display: block; margin: 0 auto;" />
+                        <a href="${artistLink}" style="display: inline-block; cursor: pointer;">
+                            <img src="${image}" alt="Artist" style="max-width: 100%; max-height: 200px; border-radius: 6px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); display: block; margin: 0 auto; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'" />
+                        </a>
                     </div>
                 `;
             }
@@ -1867,7 +1886,7 @@
                 content += `
                     <div style="display: flex; flex-wrap: nowrap; gap: 12px 16px; margin-bottom: 0; font-size: 0.85em; opacity: 0.85; justify-content: center; align-items: center; overflow-x: auto;">
                 `;
-                
+
                 if (stats.numGroups) {
                     content += `
                         <div title="Groups: ${stats.numGroups.toLocaleString()}" style="display: flex; align-items: center; gap: 4px; white-space: nowrap; flex-shrink: 0;">
@@ -1876,7 +1895,7 @@
                         </div>
                     `;
                 }
-                
+
                 if (stats.numTorrents) {
                     content += `
                         <div title="Torrents: ${stats.numTorrents.toLocaleString()}" style="display: flex; align-items: center; gap: 4px; white-space: nowrap; flex-shrink: 0;">
@@ -1885,7 +1904,7 @@
                         </div>
                     `;
                 }
-                
+
                 if (stats.numSeeders) {
                     content += `
                         <div title="Seeders: ${stats.numSeeders.toLocaleString()}" style="display: flex; align-items: center; gap: 4px; white-space: nowrap; flex-shrink: 0;">
@@ -1894,7 +1913,7 @@
                         </div>
                     `;
                 }
-                
+
                 if (stats.numSnatches) {
                     content += `
                         <div title="Snatches: ${stats.numSnatches.toLocaleString()}" style="display: flex; align-items: center; gap: 4px; white-space: nowrap; flex-shrink: 0;">
@@ -1903,7 +1922,7 @@
                         </div>
                     `;
                 }
-                
+
                 content += `
                     </div>
                 `;
@@ -1918,7 +1937,7 @@
                 const visibleTagLinks = visibleTags.map(tag =>
                     `<a href="${BASE_URL}/torrents.php?action=advanced&amp;taglist=${encodeURIComponent(tag.name)}">${safeHtml(tag.name)}</a>`
                 ).join(', ');
-                
+
                 if (hiddenTags.length > 0) {
                     const hiddenTagLinks = hiddenTags.map(tag =>
                         `<a href="${BASE_URL}/torrents.php?action=advanced&amp;taglist=${encodeURIComponent(tag.name)}">${safeHtml(tag.name)}</a>`
@@ -2006,14 +2025,20 @@
             `;
 
             popup.innerHTML = content;
-            
+
+            // Fix Safari gradient rendering: must set explicit height SYNCHRONOUSLY after reflow
+            // Safari calculates height: 100% incorrectly on first render if done async
+            const popupHeight = Math.max(popup.scrollHeight, popup.offsetHeight);
+            const gradientOverlay = popup.querySelector('#gradientOverlay');
+            if (gradientOverlay) {
+                gradientOverlay.style.height = `${popupHeight}px`;
+            }
+
             // Adjust position if popup would overflow bottom of viewport
             setTimeout(() => {
                 const popupRect = popup.getBoundingClientRect();
-                // Use scrollHeight for scrollable popups, height for non-scrollable
-                const popupHeight = popup.scrollHeight > popup.clientHeight ? popup.scrollHeight : popupRect.height;
                 const viewportBottom = window.innerHeight + window.pageYOffset;
-                const marginBottom = 15; // 10-20px margin
+                const marginBottom = 15;
                 const popupBottom = popupRect.top + popupHeight + window.pageYOffset + marginBottom;
                 if (popupBottom > viewportBottom) {
                     const overflow = popupBottom - viewportBottom;
@@ -2022,17 +2047,17 @@
                     popup.style.top = `${newTop}px`;
                 }
             }, 0);
-            
+
             // Store releases data and releaseTypeMap on popup for deferred sorting
             const artistData = {
                 topReleases: topReleases,
                 releaseTypeMap: releaseTypeMap
             };
             popup._artistData = artistData;
-            
+
             // Attach all event handlers
             attachArtistPopupHandlers(popup, artistId);
-            
+
             // Cache the popup for future use (clone after attaching handlers, but preserve data)
             const cachedPopup = popup.cloneNode(true);
             cachedPopup._artistData = artistData;
