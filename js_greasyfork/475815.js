@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Jira copy summary
 // @namespace    https://github.com/rybak/atlassian-tweaks
-// @version      5.2
+// @version      5.1
 // @license      MIT
 // @description  Adds a "Copy summary" button for issue pages on Jira.
 // @author       Sergey Lukashevich, Andrei Rybak, Dmitry Trubin
@@ -22,7 +22,7 @@
 // ==/UserScript==
 
 /*
- * Copyright 2017-2026 Sergey Lukashevich
+ * Copyright 2017-2023 Sergey Lukashevich
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
  * documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
  * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit
@@ -38,8 +38,6 @@
  */
 
 /*
-version 5.2
-	- Jira 10 is now supported.
 version 5.1
 	- handling of ticket summaries with angle brackets "<>" has been fixed
 version 5.0
@@ -170,7 +168,7 @@ version 1.2
 		return ul;
 	}
 
-	function createButtonForJira8plus() {
+	function createButtonForJira8and9() {
 		var div = document.createElement("div");
 		div.id = "opsbar-copycopy_container"
 		div.classList.add("aui-buttons");
@@ -237,9 +235,8 @@ version 1.2
 						break;
 					case "8":
 					case "9":
-					case "10":
 						container = document.getElementById("stalker").getElementsByClassName("aui-toolbar2-primary")[0];
-						button = createButtonForJira8plus();
+						button = createButtonForJira8and9();
 						break;
 					default:
 						console.log("Jira v" + jiraMajorVersion + " is not supported");

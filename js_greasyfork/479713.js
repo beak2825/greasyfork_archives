@@ -1,30 +1,24 @@
 // ==UserScript==
-// @name         GGn Steam Uploady
+// @name         GGn Steam Uploady (edited)
 // @namespace    https://gazellegames.net/
-// @version      48
-// @description  Fill upload form with Steam info
-// @author       ingts
+// @version      47.002
+// @description  Fill upload form with Steam info. Edited from "GGn New Uploady"
+// @author       NeutronNoir, ZeDoCaixao, ingts
 // @match        https://gazellegames.net/upload.php*
 // @match        https://gazellegames.net/torrents.php?action=editgroup*
-// @match        https://steamdb.info/app/*
 // @grant        GM.xmlHttpRequest
 // @grant        GM_getValue
 // @grant        GM_setValue
-// @grant        GM_openInTab
-// @grant        GM_deleteValue
-// @grant        GM_addValueChangeListener
-// @grant        GM_removeValueChangeListener
-// @connect      *
+// @connect      store.steampowered.com
+// @connect      steamcdn-a.akamaihd.net
 // @require      https://update.greasyfork.org/scripts/548332/1727369/GGn%20Uploady.js
-// @require      https://update.greasyfork.org/scripts/540511/1737488/GGn%20Formatters.js
-// @downloadURL https://update.greasyfork.org/scripts/479713/GGn%20Steam%20Uploady.user.js
-// @updateURL https://update.greasyfork.org/scripts/479713/GGn%20Steam%20Uploady.meta.js
+// @require      https://update.greasyfork.org/scripts/540511/1727707/GGn%20Formatters.js
+// @downloadURL https://update.greasyfork.org/scripts/479713/GGn%20Steam%20Uploady%20%28edited%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/479713/GGn%20Steam%20Uploady%20%28edited%29.meta.js
 // ==/UserScript==
 
-const settings = loadSettings({
-    get_languages: true,
-    extra_info: 'steamdb'
-})
+if (typeof GM_getValue('get_languages') === 'undefined')
+    GM_setValue('get_languages', true)
 
 const allowedTags = new Set([
     // "Casual", allowed but too common
@@ -35,8 +29,6 @@ const allowedTags = new Set([
     "Anime",
     "Adventure",
     "Aliens",
-    "Alternate History",
-    "Creature Collector",
     "Base Building",
     "City Builder",
     "Simulation",
@@ -64,7 +56,6 @@ const allowedTags = new Set([
     "Romance",
     "Interactive Fiction",
     "Hidden Object",
-    "Vehicular Combat",
     "Hack and Slash",
     "Education",
     "Bullet Hell",
@@ -89,6 +80,7 @@ const allowedTags = new Set([
     "Stealth",
     "Trivia",
     "Typing",
+    "Minigames",
     "4X",
     "Cooking",
     "Match 3",
@@ -107,7 +99,6 @@ const allowedTags = new Set([
     "Golf",
     "Chess",
     "Boxing",
-    "Satire",
     "Gambling",
     "Fishing",
     "Auto Battler",
@@ -116,29 +107,6 @@ const allowedTags = new Set([
     "Grand Strategy",
     "Space Sim",
     "Female Protagonist",
-    "Quick-Time Events",
-    "Time Travel",
-    "Real-Time",
-    "Surreal",
-    "Procedural Generation",
-    "Post-apocalyptic",
-    "Martial Arts",
-    "Otome",
-    "Trains",
-    "Dinosaurs",
-    "Naval",
-    "Villain Protagonist",
-    "Boss Rush",
-    "Pirates",
-    "Tanks",
-    "Hacking",
-    "Sokoban",
-    "Western",
-    "Werewolves",
-    "Mars",
-    "Cats",
-    "Dystopian",
-    "Party",
 ])
 
 const tagMap = new Map([
@@ -157,44 +125,13 @@ const tagMap = new Map([
     ["Traditional Roguelike", ["roguelike"]],
     ["Text-Based", ["text.adventure"]],
     ["Flight", ["flight.simulation"]],
+    ["Party", ["party"]],
     ["Party Game", ["party"]],
     ["Football (American)", ["american.football"]],
     ["Football (Soccer)", ["soccer"]],
-    ["Top-Down Shooter", ["top.down", "shooter"]],
-    ["Twin Stick Shooter", ["twin.stick", "shooter"]],
-    ["Cyberpunk", ["cyberpunk", "dystopian"]],
-    ["LGBTQ+", ["lgbtq.characters"]],
-    ["Political", ["politics"]],
-    ["Political Sim", ["politics", "simulation"]],
-    ["Open World Survival Craft", ["open.world", "survival", "crafting"]],
-    ["Hex Grid", ["hexagonal.grid"]],
-    ["Ninja", ["ninjas"]],
-    ["Minigames", ["mini.games"]],
-    ["Naval Combat", ["naval", "vehicular.combat"]],
-    ["On-Rails Shooter", ["rail.shooter"]],
-    ["Turn-Based Combat", ["turn.based"]],
-    ["Real Time Tactics", ["real.time, tactics"]],
 ])
 
 let platform = ''
-const coverInput = document.querySelector("input[name='image']")
-
-if (location.hostname === "steamdb.info"
-    && GM_getValue('checking_steamdb', false)
-    && document.getElementById('info')
-) {
-    const aliasesEls = document.evaluate("//td[contains(text(),'name_localized')]/following-sibling::td[1]/table/tbody/tr/td[2]", document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null)
-    const aliases = []
-    for (let i = 0; i < aliasesEls.snapshotLength; i++) {
-        aliases.push(aliasesEls.snapshotItem(i).textContent)
-    }
-
-    GM_setValue('steamdb_info', {
-        aliases: aliases,
-        cover2x: document.querySelector('a[href*="library_capsule_2x.jpg"]')?.href,
-        name: document.querySelector('h1').textContent
-    })
-}
 
 if (location.href.includes('upload.php')) {
     document.querySelector("#groupinfo a[href*='forums.php']").textContent = "Steam URL or ID"
@@ -206,20 +143,11 @@ if (location.href.includes('upload.php')) {
         '<a href="javascript:;" id="fill_win">Win</a> <a href="javascript:;" id="fill_lin">Lin</a> <a href="javascript:;" id="fill_mac">Mac</a>')
 
     const platformInput = document.getElementById('platform')
-    document.getElementById('fill_win').onclick = () => {
-        platformInput.value = "Windows"
-        platformClick()
-    }
-    document.getElementById('fill_lin').onclick = () => {
-        platformInput.value = "Linux"
-        platformClick()
-    }
-    document.getElementById('fill_mac').onclick = () => {
-        platformInput.value = "Mac"
-        platformClick()
-    }
+    document.getElementById('fill_win').onclick = () => platformInput.value = "Windows"
+    document.getElementById('fill_lin').onclick = () => platformInput.value = "Linux"
+    document.getElementById('fill_mac').onclick = () => platformInput.value = "Mac"
 
-    function platformClick() {
+    steamIdInput.onblur = () => {
         const inputValue = steamIdInput.value
         if (!inputValue) return
         const appid = /\d+/.exec(inputValue)?.[0]
@@ -244,20 +172,13 @@ if (location.href.includes('upload.php')) {
             fillUpload(data)
         })
 
-        getExtraInfo(appid).then(({aliases, cover2x}) => {
-            document.querySelector('input[name=aliases]').value = joinAliases(aliases)
-            if (cover2x)
-                coverInput.value = cover2x
-        })
-
         GM.xmlHttpRequest({
             url: `https://store.steampowered.com/app/${steamIdInput.value}`,
-            headers: {'Cookie': 'wants_mature_content=1; birthtime=-63140399; lastagecheckage=1-January-1968',},
         }).then(res => {
-            const doc = res.responseXML
-            const uploadTags = new Set()
+            const page = new DOMParser().parseFromString(res.responseText, "text/html")
+            let uploadTags = new Set()
 
-            for (const steamTag of doc.querySelectorAll('.glance_tags a')) {
+            for (const steamTag of page.querySelectorAll('.glance_tags a')) {
                 const text = steamTag.textContent.trim()
                 if (allowedTags.has(text)) {
                     uploadTags.add(text.toLowerCase()
@@ -276,75 +197,31 @@ if (location.href.includes('upload.php')) {
                     mapped.forEach(tag => uploadTags.add(tag))
                 }
             }
-
-            if (doc.evaluate("//h2[text()='AI Generated Content Disclosure']", doc.body,
-                null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue) {
-                uploadTags.add('ai.generated.art')
-            }
-
-            if (uploadTags.has('roguelite'))
-                uploadTags.delete('roguelike')
-
             document.querySelector('input[name="tags"]').value = Array.from(uploadTags).join(', ')
             if (uploadTags.has('adult'))
                 document.getElementById('Rating').value = 9
         })
     }
 } else {
-    platform = document.getElementById('user_script_data').dataset.platform
+    platform = document.getElementById('nexusmodsuri') ? 'Windows'
+        : document.getElementById('itunesuri') ? 'Mac'
+            : 'Linux'
 
-    createFiller('steamuri', /\d+/, async (id) =>
-        ({...await getAppDetails(id), ...await getExtraInfo(id)}), {
-        getAliases: r => r.aliases,
+    createFiller('steamuri', /\d+/, getAppDetails, {
         getYear: getYear,
         getAgeRating: r => getAgeRating(r)?.value,
         getDescription: r => getDesc(r, true),
         getScreenshots: getScreenshots,
         getTitle: r => r.name,
-        getCover: r => r.cover2x ?? getCover(r).then(res => res.url),
+        getCover: r => getCover(r).then(res => res.url),
         getTrailer: getTrailer
     })
 }
 
-function cleanAliases(name, aliases) {
-    if (aliases?.length < 1) return []
-    const nameRegexp = new RegExp(`${RegExp.escape(name)}`, 'i')
-    return aliases
-        .map(a => a.replace(nameRegexp, '')
-            .trim()
-            .replace(/[()]|^-\s*/g, ''))
-        .filter(Boolean)
-}
 
-/** @returns {Promise<{aliases: string[], cover2x: string}> | {}} */
-function getExtraInfo(appid) {
-    if (settings.extra_info === null) return {}
-    const usingSteamdb = settings.extra_info === 'steamdb'
-
-    return (usingSteamdb ? new Promise(resolve => {
-        GM_deleteValue('steamdb_info')
-        GM_setValue('checking_steamdb', 1)
-
-        const tab = GM_openInTab(`https://steamdb.info/app/${appid}/info`)
-        const listener = GM_addValueChangeListener('steamdb_info', (key, oldValue, newValue) => {
-            GM_removeValueChangeListener(listener)
-            tab.close()
-            GM_deleteValue('checking_steamdb')
-            resolve(newValue)
-        })
-    }) : GM.xmlHttpRequest({
-        url: settings.extra_info + appid,
-        responseType: "json"
-    })).then(res => {
-        const {name, aliases, cover2x} = (usingSteamdb ? res : res.response) ?? {}
-        return {
-            aliases: cleanAliases(name, aliases),
-            cover2x: cover2x
-        }
-    })
-}
-
-/** @param {SteamAppDetails} data */
+/**
+ * @param {SteamAppDetails} data
+ */
 function fillUpload(data) {
     const desc = getDesc(data, false)
 
@@ -368,22 +245,20 @@ function fillUpload(data) {
     }
 
     const parseSteamLanguage = unsafeWindow?.GetLanguagesFromSteam?.parseSteamLanguage // from Get Languages From Steam script
-    if (parseSteamLanguage && settings.get_languages && !document.getElementById('empty_group').checked) {
+    if (parseSteamLanguage && GM_getValue('get_languages') && !document.getElementById('empty_group').checked) {
         parseSteamLanguage(data.supported_languages)
     }
 
     $("#title").val(data.name)
     $("#gameswebsiteuri").val(data.website)
 
-    if (!coverInput.value) {
-        setTimeout(() => getCover(data).then(cover => {
-            if (coverInput.value) return
-            coverInput.value = cover.url
-            if (!cover.isBig && settings.extra_info === null) { // the cover from extra info should have been set by now and if not, it doesn't exist so don't show the warning
-                coverInput.insertAdjacentHTML('afterend', `<span style="color:yellow;">Big cover could not be found. Until a way to retrieve it for newer games is found, take the <a href=https://steamdb.info/app/${data.steam_appid}/info target="_blank">library_capsule_2x link</a></span>`)
-            }
-        }), 2500)
-    }
+    const coverInput = document.querySelector("input[name='image']")
+    getCover(data).then(cover => {
+        coverInput.value = cover.url
+        if (!cover.isBig) {
+            coverInput.insertAdjacentHTML('afterend', `<span style="color:yellow;">Big cover could not be found. Until a way to retrieve it for newer games is found, take the <a href=https://steamdb.info/app/${data.steam_appid}/info target="_blank">library_capsule_2x link</a></span>`)
+        }
+    })
 
     if (data.metacritic) {
         $("#meta").val(data.metacritic.score)
@@ -399,6 +274,7 @@ function fillUpload(data) {
  */
 async function getAppDetails(id) {
     return (await GM.xmlHttpRequest({
+        method: "GET",
         url: "https://store.steampowered.com/api/appdetails?l=en&appids=" + id,
         responseType: "json",
     })).response[id].data
@@ -555,16 +431,4 @@ function html2bb(str) {
     str = str.replace(/\n\n\[\*]/g, "\n[*]")
     str = str.replace(/.*]\[u]\s?\[\/u]\[.*/g, "") // remove empty tags
     return str.trim()
-}
-
-function loadSettings(defaults) {
-    for (const [key, value] of Object.entries(defaults)) {
-        let gmValue = GM_getValue(key)
-        if (typeof gmValue === 'undefined') {
-            GM_setValue(key, value)
-            continue
-        }
-        defaults[key] = gmValue
-    }
-    return defaults
 }

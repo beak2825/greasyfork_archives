@@ -97,7 +97,7 @@
             statusSpan.className = 'mega-status';
             statusSpan.style.marginLeft = '10px';
             statusSpan.style.fontWeight = 'bold';
-
+            statusSpan.style.fontSize = '0.9em'; //稍微縮小一點字體
             element.parentNode.insertBefore(statusSpan, element.nextSibling);
         }
         statusSpan.innerText = `[${text}]`;
@@ -108,10 +108,10 @@
         const payload = [{ 'a': 'g', 'p': fileId }];
         sendMegaRequest(payload, null, (data) => {
             if (typeof data === 'number') {
-                updateStatus(linkElement, `❌失效 (${data})`, '#dc3545');
+                updateStatus(linkElement, `失效 (${data})`, 'red');
             } else if (data && data.s) {
                 const sizeMB = (data.s / 1048576).toFixed(2);
-                updateStatus(linkElement, `✅有效 ${sizeMB}MB`, '#28a745');
+                updateStatus(linkElement, `有效 ${sizeMB}MB`, 'green');
             } else {
                 updateStatus(linkElement, '未知', 'gray');
             }
@@ -123,9 +123,9 @@
         const urlParams = `&n=${folderId}`;
         sendMegaRequest(payload, urlParams, (data) => {
             if (typeof data === 'number') {
-                updateStatus(linkElement, `❌資料夾失效 (${data})`, '#dc3545');
+                updateStatus(linkElement, `資料夾失效 (${data})`, 'red');
             } else if (data && data.f) {
-                updateStatus(linkElement, `✅資料夾有效`, '#28a745');
+                updateStatus(linkElement, `資料夾有效`, 'green');
             } else {
                 updateStatus(linkElement, '未知', 'gray');
             }

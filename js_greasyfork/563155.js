@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Пинги разделов
 // @namespace    http://tampermonkey.net/
-// @version      1.2
+// @version      1.1
 // @description  Удобные пинги разделов форума
 // @author       Forest
 // @match        https://lolz.live/*
@@ -17,18 +17,16 @@
 (function() {
     'use strict';
 
-    let sectionsDB = GM_getValue('lz_db_v6', []);
-    const lastFetch = GM_getValue('lz_ts_v6', 0);
+    let sectionsDB = GM_getValue('lz_db', []);
+    const lastFetch = GM_getValue('lz_ts', 0);
 
     const style = document.createElement('style');
     style.innerHTML = `
-        #lz-menu { position: absolute; z-index: 2147483647; background: #222; border: 1px solid #333; border-radius: 6px; box-shadow: 0 6px 16px rgba(0,0,0,0.6); display: none; font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif; font-size: 13px; min-width: 250px; padding: 4px 0; }
-        .lz-item { padding: 6px 14px; cursor: pointer; color: #ccc; display: flex; justify-content: space-between; align-items: center; transition: background 0.1s; }
+        #lz-menu { position: absolute; z-index: 2147483647; background: #222; border: 1px solid #333; border-radius: 6px; box-shadow: 0 6px 16px rgba(0,0,0,0.6); display: none; font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif; font-size: 13px; min-width: 220px; padding: 4px 0; }
+        .lz-item { padding: 6px 14px; cursor: pointer; color: #ccc; display: block; transition: background 0.1s; }
+        .lz-item strong { color: #fff; }
         .lz-item:hover, .lz-item.active { background: #363636; color: #fff; }
-        .lz-name { font-weight: bold; color: #fff; }
-        .lz-hl { color: #229557; }
-        .lz-parent { font-size: 11px; color: #666; margin-left: 10px; white-space: nowrap; max-width: 140px; overflow: hidden; text-overflow: ellipsis; text-align: right; }
-        .lz-item:hover .lz-parent, .lz-item.active .lz-parent { color: #999; }
+        .lz-hl { color: #229557; font-weight: bold; }
     `;
     document.head.appendChild(style);
 
@@ -46,50 +44,15 @@
             onload: function(r) {
                 const doc = new DOMParser().parseFromString(r.responseText, "text/html");
                 const links = [];
-                const seenUrls = new Set();
-
-                const addLink = (name, url, parentName) => {
-                    if (!name || !url) return;
-                    let fullUrl = url.startsWith('http') ? url : 'https://lolz.live/' + url.replace(/^\//, '');
-                    if (seenUrls.has(fullUrl)) return;
-                    seenUrls.add(fullUrl);
-                    links.push({ n: name, u: fullUrl, p: parentName });
-                };
-
-                const categories = doc.querySelectorAll('.node.category.level_1');
-
-                categories.forEach(cat => {
-                    const catTitleEl = cat.querySelector('.categoryText .nodeTitle');
-                    const catName = catTitleEl ? catTitleEl.innerText.trim() : "";
-
-                    const level2Nodes = cat.querySelectorAll('.node.level_2');
-
-                    level2Nodes.forEach(l2 => {
-                        const l2Link = l2.querySelector('.nodeTitle a');
-                        if (l2Link) {
-                            const l2Name = l2Link.innerText.trim();
-                            const l2Url = l2Link.getAttribute('href');
-
-                            addLink(l2Name, l2Url, catName);
-
-                            const subNodes = l2.querySelectorAll('.subForumList .node');
-                            subNodes.forEach(sub => {
-                                const subLink = sub.querySelector('.nodeTitle a');
-                                if (subLink) {
-                                    const subName = subLink.innerText.trim();
-                                    const subUrl = subLink.getAttribute('href');
-                                    addLink(subName, subUrl, l2Name);
-                                }
-                            });
-                        }
-                    });
+                doc.querySelectorAll('.nodeTitle a, .subNodeLink').forEach(n => {
+                    let h = n.getAttribute('href');
+                    let txt = n.innerText.trim();
+                    if (h && txt) {
+                        let fullUrl = h.startsWith('http') ? h : 'https://lolz.live/' + h.replace(/^\//, '');
+                        links.push({ n: txt, u: fullUrl });
+                    }
                 });
-
-                if (links.length) {
-                    sectionsDB = links;
-                    GM_setValue('lz_db_v6', links);
-                    GM_setValue('lz_ts_v6', Date.now());
-                }
+                if (links.length) { sectionsDB = links; GM_setValue('lz_db', links); GM_setValue('lz_ts', Date.now()); }
             }
         });
     }
@@ -176,12 +139,8 @@
         matches.forEach((m, i) => {
             const div = document.createElement('div');
             div.className = `lz-item ${i === 0 ? 'active' : ''}`;
-
             const safeName = m.n.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-            const hlName = safeName.replace(new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi'), '<span class="lz-hl">$1</span>');
-            const parentHtml = m.p ? `<span class="lz-parent">(${m.p})</span>` : '';
-
-            div.innerHTML = `<span class="lz-name">${hlName}</span>${parentHtml}`;
+            div.innerHTML = safeName.replace(new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi'), '<span class="lz-hl">$1</span>');
             div.onmousedown = (e) => { e.preventDefault(); insert(m, range, hashIdx, el); };
             menu.appendChild(div);
         });

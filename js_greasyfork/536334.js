@@ -2,7 +2,7 @@
 // @name         Scouts Membership System (UK) Tweaks
 // @description  Provide a few tweaks including a role compliance report to the Scouts Website
 // @namespace    http://tampermonkey.net/
-// @version      100000073
+// @version      100000072
 // @author       David Breakwell
 // @match        https://membership.scouts.org.uk/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=scouts.org.uk
@@ -41,7 +41,7 @@
 // @updateURL https://update.greasyfork.org/scripts/536334/Scouts%20Membership%20System%20%28UK%29%20Tweaks.meta.js
 // ==/UserScript==
 //     https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js
-var code_version = "100000073";
+var code_version = "100000072";
 var learning_popup;
 var mem = [{}];
 var mems= [];
@@ -2242,10 +2242,7 @@ var debug_log = [];
               if(w==null){
                w = welcome.data.find(e=>e['Membership number']==role_detail.data[i].membershipid&&e['Role']==role_detail.data[i].Role&&e['Team ID']==role_detail.data[i].TeamId&& e['Category key'] == act[j]&&e['Unit name']==role_detail.data[i].UnitName)
               }
-
                if (w!=null) {
-                   if (debug) { do_debug("Welcome Status for "+ role_detail.data[i].FullName+"/"+ role_detail.data[i].membershipid+"/"+act[j]);}
-                 if (debug) { do_debug("Status "+w.Status+"/"+w.Role+"/"+w['Category key']+"/"+w['Membership number']);}
                    if (w.Status=="Completed") {
                    line[titlefieldnames[9+j]] = "✅";
                    state = 0x2705;
@@ -2268,10 +2265,7 @@ var debug_log = [];
                        state = 0x2705;
 
                    }
-               } else { line[titlefieldnames[9+j]] ="";
-                        if (debug) { do_debug("Welcome Status NOT FOUND for "+ role_detail.data[i].FullName+"/"+ role_detail.data[i].membershipid+"/"+act[j]);}
-                      }
-
+               } else { line[titlefieldnames[9+j]] ="";}
            }
            if(learning_json.hasOwnProperty("rows")) {
            for(j=0;j<learn2.length;j++) {

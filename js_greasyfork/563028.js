@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name ТЕСТ
-// @version 0.1.3
+// @version 0.0.5
 // @description тех
 // @author Mibo
 // @match https://forum.blackrussia.online/threads/*
@@ -34,7 +34,12 @@
             content: 
                 '[SIZE=4][FONT=times new roman][COLOR=#e393f8][CENTER][B]{{ greeting }}, уважаемый[/color] {{ user.mention }}!<br>' +
                 '[url=https://postimages.org/][img]https://i.postimg.cc/1zcGTzsD/twL1KNg.png[/img][/url]<br>' +
-                '[CENTER][B]' +
+                '[CENTER][B]Рекомендуемые сервисы для загрузки изображений и видео:[/B][/CENTER]<br>' +
+                '[url=https://yapx.ru/]yapx.ru[/url], [url=https://yapx.ru/]https://yapx.ru/[/url]<br>' +
+                '[url=https://imgur.com/]imgur.com[/url], [url=https://imgur.com/]https://imgur.com/[/url]<br>' +
+                '[url=https://www.youtube.com/]youtube.com[/url], [url=https://www.youtube.com/]https://www.youtube.com/[/url]<br>' +
+                '[url=https://imgbb.com/]ImgBB.com[/url], [url=https://imgbb.com/]https://imgbb.com/[/url]<br>' +
+                '[url=https://imgfoto.host/]ImgFoto.host[/url], [url=https://imgfoto.host/]https://imgfoto.host/[/url]<br>' +
                 '[url=https://postimages.org/]Postimages.org[/url] [url=https://postimages.org/]https://postimages.org/[/url]<br><br>' +
                 '(Все ссылки кликабельны)<br><br>' +
                 '[url=https://postimages.org/][img]https://i.postimg.cc/sXWGdyB9/image.png[/img][/url]',
@@ -48,125 +53,24 @@
             status: false,
         },
         {
-            title: '1 - Без окна о блокировке тема не подлежит рассмотрению',
+            title: 'Нет окна блокировки',
             content: 
                 '[SIZE=4][FONT=times new roman][COLOR=#e393f8][CENTER][B]{{ greeting }}, уважаемый[/color] {{ user.mention }}!<br>' +
                 '[url=https://postimages.org/][img]https://i.postimg.cc/sXWGdyB9/image.png[/img][/url]<br>' +
                 '[CENTER]Без окна о блокировке тема не подлежит рассмотрению - создайте новую тему, прикрепив окно блокировки.<br><br>' +
                 'Если ваш аккаунт был заблокирован на фотохостинге или видеохостинге, обратите внимание: доказательства из социальных сетей не принимаются.<br><br>' +
-                '[B]Используйте для этого следующие сервисы:[/B]<br>' +
+                '[B]Рекомендуемые сервисы для загрузки изображений и видео:[/B]<br>' +
                 '[url=https://yapx.ru/]yapx.ru[/url], [url=https://yapx.ru/]https://yapx.ru/[/url]<br>' +
                 '[url=https://imgur.com/]imgur.com[/url], [url=https://imgur.com/]https://imgur.com/[/url]<br>' +
                 '[url=https://www.youtube.com/]youtube.com[/url], [url=https://www.youtube.com/]https://www.youtube.com/[/url]<br>' +
                 '[url=https://imgbb.com/]ImgBB.com[/url], [url=https://imgbb.com/]https://imgbb.com/[/url]<br>' +
                 '[url=https://imgfoto.host/]ImgFoto.host[/url], [url=https://imgfoto.host/]https://imgfoto.host/[/url]<br>' +
                 '[url=https://postimages.org/]Postimages.org[/url] [url=https://postimages.org/]https://postimages.org/[/url]<br><br>' +
-                '(все ссылки кликабельны)<br><br>' +
-                '[url=https://postimages.org/][img]https://i.postimg.cc/sXWGdyB9/image.png[/img][/url]',
+                '(Все ссылки кликабельны)<br><br>' +
+                '[url=https://postimages.org/][img]https://i.postimg.cc/sXWGdyB9/image.png[/img][/url]<br>' + 
+                '[CENTER]Желаем приятной игры и хорошего настроения на нашем сервере [COLOR=rgb(144,0,32)]CHERRY[/COLOR].[/CENTER][/B][/SIZE]',
             prefix: UNACCEPT_PREFIX,
             status: false,
-        },
-        {
-            title: '2 - Обращение не связано с разделом «Технического раздела» (жалоба на админа)',
-            content: 
-                '[SIZE=4][FONT=times new roman][COLOR=#e393f8][CENTER][B]{{ greeting }}, уважаемый[/color] {{ user.mention }}!<br>' +
-                '[url=https://postimages.org/][img]https://i.postimg.cc/sXWGdyB9/image.png[/img][/url]<br>' +
-                '[CENTER]Ваше обращение не связано с разделом «Технического раздела». Вы получили наказание от администратора.<br><br>' +
-                '[B]Чтобы подать жалобу, перейдите в раздел «Жалобы на администрацию» на вашем сервере.[/B]<br><br>' +
-                'Форма для подачи жалобы доступна по ссылке.<br><br>' +
-                '[url=https://postimages.org/][img]https://i.postimg.cc/sXWGdyB9/image.png[/img][/url]',
-            prefix: UNACCEPT_PREFIX,
-            status: false,
-        },
-        {
-            title: '3 - Обращение не связано с разделом «Технического раздела» (жалоба на игрока)',
-            content: 
-                '[SIZE=4][FONT=times new roman][COLOR=#e393f8][CENTER][B]{{ greeting }}, уважаемый[/color] {{ user.mention }}!<br>' +
-                '[url=https://postimages.org/][img]https://i.postimg.cc/sXWGdyB9/image.png[/img][/url]<br>' +
-                '[CENTER]Ваше обращение не связано с разделом «Технического раздела».<br><br>' +
-                '[B]Чтобы подать жалобу на игрока, перейдите в раздел «Жалобы на игроков» на вашем сервере.[/B]<br><br>' +
-                'Форма для подачи жалобы доступна по ссылке.<br><br>' +
-                '[url=https://postimages.org/][img]https://i.postimg.cc/sXWGdyB9/image.png[/img][/url]',
-            prefix: UNACCEPT_PREFIX,
-            status: false,
-        },
-        {
-            title: '4 - Обращение не соответствует форме (расширенная форма)',
-            content: 
-                '[SIZE=4][FONT=times new roman][COLOR=#e393f8][CENTER][B]{{ greeting }}, уважаемый[/color] {{ user.mention }}!<br>' +
-                '[url=https://postimages.org/][img]https://i.postimg.cc/sXWGdyB9/image.png[/img][/url]<br>' +
-                '[CENTER]Ваше обращение не соответствует форме.<br><br>' +
-                '[B]Пожалуйста, заполните форму, создав новую тему. Укажите название темы и никнейм технического специалиста.[/B]<br><br>' +
-                '01. Ваш игровой никнейм:<br>' +
-                '02. Никнейм технического специалиста:<br>' +
-                '03. Сервер, на котором вы играете:<br>' +
-                '04. Описание ситуации: подробно опишите, что произошло.<br>' +
-                '05. Скриншоты, которые могут помочь в решении проблемы (если есть):<br>' +
-                '06. Дата и время, когда возникла проблема (укажите как можно точнее):<br><br>' +
-                '[url=https://postimages.org/][img]https://i.postimg.cc/sXWGdyB9/image.png[/img][/url]',
-            prefix: UNACCEPT_PREFIX,
-            status: false,
-        },
-        {
-            title: '5 - Тема принята к рассмотрению',
-            content: 
-                '[SIZE=4][FONT=times new roman][COLOR=#e393f8][CENTER][B]{{ greeting }}, уважаемый[/color] {{ user.mention }}!<br>' +
-                '[url=https://postimages.org/][img]https://i.postimg.cc/sXWGdyB9/image.png[/img][/url]<br>' +
-                '[CENTER][B]Ваша тема принята к рассмотрению.[/B] Ожидайте ответа от Куратора Технических Специалистов или его заместителя.<br><br>' +
-                '[COLOR=Red]Не создавайте подобные темы. В противном случае ваш аккаунт может быть заблокирован.[/COLOR]<br><br>' +
-                '[url=https://postimages.org/][img]https://i.postimg.cc/sXWGdyB9/image.png[/img][/url]',
-            prefix: PIN_PREFIX,
-            status: true,
-        },
-        {
-            title: '6 - Тема является дубликатом',
-            content: 
-                '[SIZE=4][FONT=times new roman][COLOR=#e393f8][CENTER][B]{{ greeting }}, уважаемый[/color] {{ user.mention }}!<br>' +
-                '[url=https://postimages.org/][img]https://i.postimg.cc/sXWGdyB9/image.png[/img][/url]<br>' +
-                '[CENTER]Эта тема является дубликатом вашей предыдущей темы.<br><br>' +
-                '[B]Пожалуйста, перестаньте создавать однотипные и одинаковые темы, иначе ваш форумный аккаунт может быть заблокирован.[/B]<br><br>' +
-                '[url=https://postimages.org/][img]https://i.postimg.cc/sXWGdyB9/image.png[/img][/url]',
-            prefix: UNACCEPT_PREFIX,
-            status: false,
-        },
-        {
-            title: '7 - Игрок будет заблокирован после проверки',
-            content: 
-                '[SIZE=4][FONT=times new roman][COLOR=#e393f8][CENTER][B]{{ greeting }}, уважаемый[/color] {{ user.mention }}!<br>' +
-                '[url=https://postimages.org/][img]https://i.postimg.cc/sXWGdyB9/image.png[/img][/url]<br>' +
-                '[CENTER]После тщательной проверки доказательств и системы логирования принято решение.<br><br>' +
-                '[COLOR=Red][B]Игрок будет заблокирован.[/B][/COLOR]<br><br>' +
-                '[url=https://postimages.org/][img]https://i.postimg.cc/sXWGdyB9/image.png[/img][/url]',
-            prefix: ACCEPT_PREFIX,
-            status: false,
-        },
-        {
-            title: '8 - Обращение составлено не по форме (альтернативная форма)',
-            content: 
-                '[SIZE=4][FONT=times new roman][COLOR=#e393f8][CENTER][B]{{ greeting }}, уважаемый[/color] {{ user.mention }}!<br>' +
-                '[url=https://postimages.org/][img]https://i.postimg.cc/sXWGdyB9/image.png[/img][/url]<br>' +
-                '[CENTER]Ваше обращение составлено не по форме.<br><br>' +
-                '[B]Пожалуйста, заполните форму, создав новую тему:[/B]<br><br>' +
-                'Код:<br>' +
-                '01. Ваш игровой никнейм:<br>' +
-                '02. Сервер, на котором Вы играете:<br>' +
-                '03. Суть Вашей возникшей проблемы (описать максимально подробно и раскрыто):<br>' +
-                '04. Любые скриншоты, которые могут помочь в решении проблемы (если таковые имеются):<br>' +
-                '05. Дата и время произошедшей технической проблемы (постарайтесь указать максимально точно):<br><br>' +
-                '[url=https://postimages.org/][img]https://i.postimg.cc/sXWGdyB9/image.png[/img][/url]',
-            prefix: UNACCEPT_PREFIX,
-            status: false,
-        },
-        {
-            title: '9 - Тема уже взята в обработку',
-            content: 
-                '[SIZE=4][FONT=times new roman][COLOR=#e393f8][CENTER][B]{{ greeting }}, уважаемый[/color] {{ user.mention }}!<br>' +
-                '[url=https://postimages.org/][img]https://i.postimg.cc/sXWGdyB9/image.png[/img][/url]<br>' +
-                '[CENTER][B]Тема уже взята в обработку и будет рассмотрена.[/B] Ожидайте ответ в этой теме.<br><br>' +
-                'Процесс может потребовать некоторого времени.<br><br>' +
-                '[url=https://postimages.org/][img]https://i.postimg.cc/sXWGdyB9/image.png[/img][/url]',
-            prefix: PIN_PREFIX,
-            status: true,
         },
         {
             title: 'Оскорбление родственников / Упоминание семьи',
@@ -442,18 +346,9 @@
         var threadTitle = $('.p-title-value').text().trim();
         var url = window.location.href + 'edit';
         
-        // Получаем название префикса по его ID
-        var prefixName = getPrefixName(prefix);
-        
-        // Убираем все возможные префиксы из заголовка
-        var cleanedTitle = removePrefixesFromTitle(threadTitle);
-        
-        // Формируем новый заголовок с префиксом
-        var newTitle = prefixName ? prefixName + ' / ' + cleanedTitle : cleanedTitle;
-        
         var formData = new FormData();
         formData.append('prefix_id', prefix);
-        formData.append('title', newTitle); // Используем очищенный заголовок с новым префиксом
+        formData.append('title', threadTitle);
         formData.append('_xfToken', XF.config.csrf);
         formData.append('_xfRequestUri', window.location.pathname);
         formData.append('_xfWithData', '1');
@@ -478,68 +373,5 @@
         }).catch(function(error) {
             console.error('Ошибка при изменении темы:', error);
         });
-    }
-
-    // Функция для получения названия префикса по ID
-    function getPrefixName(prefixId) {
-        var prefixNames = {
-            4: 'Отказано',
-            8: 'Одобрено',
-            6: 'Решено',
-            2: 'На рассмотрении',
-            12: 'Главному администратору',
-            10: 'Команде проекта',
-            9: 'На контроле',
-            7: 'Закрыто',
-            11: 'Специальной администрации',
-            13: 'Тех. специалисту',
-            5: 'Крепко'
-        };
-        
-        return prefixNames[prefixId] || '';
-    }
-
-    // Функция для удаления префиксов из заголовка
-    function removePrefixesFromTitle(title) {
-        // Список всех возможных префиксов для удаления
-        var prefixesToRemove = [
-            'Отказано',
-            'Одобрено',
-            'Решено',
-            'На рассмотрении',
-            'Главному администратору',
-            'Команде проекта',
-            'На контроле',
-            'Закрыто',
-            'Специальной администрации',
-            'Тех. специалисту',
-            'Крепко'
-        ];
-        
-        var cleanedTitle = title;
-        
-        // Убираем каждый префикс с разделителем "/"
-        prefixesToRemove.forEach(function(prefix) {
-            var prefixWithSeparator = prefix + ' / ';
-            if (cleanedTitle.startsWith(prefixWithSeparator)) {
-                cleanedTitle = cleanedTitle.substring(prefixWithSeparator.length);
-            }
-            
-            // Также проверяем без пробелов вокруг "/"
-            var prefixWithSlash = prefix + '/';
-            if (cleanedTitle.startsWith(prefixWithSlash)) {
-                cleanedTitle = cleanedTitle.substring(prefixWithSlash.length);
-            }
-            
-            // Проверяем точное совпадение (если префикс - это весь заголовок)
-            if (cleanedTitle === prefix) {
-                cleanedTitle = '';
-            }
-        });
-        
-        // Убираем возможные двойные разделители
-        cleanedTitle = cleanedTitle.replace(/^\/\s*/, '').trim();
-        
-        return cleanedTitle || 'Нет заголовка';
     }
 })();

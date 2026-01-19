@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube Enhancer
 // @namespace    Violentmonkey Scripts
-// @version      1.1.5
+// @version      1.1.4
 // @description  Reduz uso de CPU (Smart Mode), personaliza layout, remove Shorts e adiciona relógio customizável.
 // @author       John Wiliam & IA
 // @match        *://www.youtube.com/*
@@ -18,7 +18,7 @@
 (function() {
     'use strict';
 
-    const FLAG = "__yt_enhancer_v1_1_5__";
+    const FLAG = "__yt_enhancer_v1_1_4__";
     if (window[FLAG]) return;
     window[FLAG] = true;
 
@@ -126,7 +126,7 @@
             return () => element.removeEventListener(event, safeHandler, options);
         },
 
-        migrateConfig(savedConfig, currentVersion = '1.1.5') {
+        migrateConfig(savedConfig, currentVersion = '1.1.4') {
             if (!savedConfig || typeof savedConfig !== 'object') {
                 return null;
             }
@@ -145,11 +145,11 @@
     // 1. CONFIG MANAGER
     // =======================================================
     const ConfigManager = {
-        CONFIG_VERSION: '1.1.5',
+        CONFIG_VERSION: '1.1.4',
         STORAGE_KEY: 'YT_ENHANCER_CONFIG',
         
         defaults: {
-            version: '1.1.5',
+            version: '1.1.4',
             VIDEOS_PER_ROW: 5,
             FEATURES: {
                 CPU_TAMER: true,
@@ -735,14 +735,11 @@
     // =======================================================
     function init() {
         try {
-            // Configuração inicial para carregar os módulos
             const config = ConfigManager.load();
             if (config.FEATURES.CPU_TAMER) SmartCpuTamer.init();
             
-            // CORREÇÃO (v1.1.5): Recarrega a config fresca ao abrir o menu
             GM_registerMenuCommand('⚙️ Configurações', () => {
-                const currentConfig = ConfigManager.load(); // <--- Leitura fresca aqui
-                UIManager.createSettingsModal(currentConfig, (newConfig) => ConfigManager.save(newConfig));
+                UIManager.createSettingsModal(config, (newConfig) => ConfigManager.save(newConfig));
             });
             
             StyleManager.init();

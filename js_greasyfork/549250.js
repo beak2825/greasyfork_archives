@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         CodeChef/QOJ/Codeforces → VJudge/Luogu Redirect
 // @namespace    http://tampermonkey.net/
-// @version      1.5
-// @description  在 CodeChef、QOJ、Codeforces 题目页提供跳转到对应 VJudge/Luogu 题目的按钮（可切换为自动跳转）
+// @version      1.4.1
+// @description  在 CodeChef、QOJ、Codeforces 题目页提供跳转到对应 VJudge/Luogu 题目的按钮（可切换为自动跳转）,修复了 Codeforces Div1/Div2 分开举办比赛的洛谷跳转
 // @author       znzryb
 // @match        https://www.codechef.com/problems/*
 // @match        https://qoj.ac/problem/*
@@ -10,7 +10,7 @@
 // @match        https://codeforces.com/contest/*/problem/*
 // @match        https://codeforces.com/problemset/problem/*/*
 // @match        https://codeforces.com/gym/*/problem/*
-// @grant        GM_xmlhttpRequest
+// @grant        none
 // @license      GPL-3.0
 // @run-at       document-idle
 // @downloadURL https://update.greasyfork.org/scripts/549250/CodeChefQOJCodeforces%20%E2%86%92%20VJudgeLuogu%20Redirect.user.js
@@ -21,7 +21,7 @@
   'use strict';
 
   /** 工具函数：创建并挂载按钮（避免重复） */
-  function createJumpButton(targetUrl, label = 'Jump to VJudge', buttonId = 'vj-redirect-btn', topOffset = '100px', isGrayed = false) {
+  function createJumpButton(targetUrl, label = 'Jump to VJudge', buttonId = 'vj-redirect-btn', topOffset = '100px') {
     if (!targetUrl) return;
     if (document.getElementById(buttonId)) return;
     const btn = document.createElement('button');
@@ -32,7 +32,7 @@
       top: topOffset,
       right: '20px',
       padding: '10px 15px',
-      backgroundColor: isGrayed ? '#6c757d' : '#28a745',
+      backgroundColor: '#28a745',
       color: '#fff',
       border: 'none',
       borderRadius: '6px',
@@ -40,110 +40,24 @@
       fontSize: '14px',
       zIndex: 10000,
       boxShadow: '0 2px 10px rgba(0,0,0,0.15)',
-      opacity: isGrayed ? '0.6' : '1',
     });
-    if (!isGrayed) {
-      btn.onmouseenter = () => (btn.style.opacity = '0.9');
-      btn.onmouseleave = () => (btn.style.opacity = '1');
-    }
+    btn.onmouseenter = () => (btn.style.opacity = '0.9');
+    btn.onmouseleave = () => (btn.style.opacity = '1');
     btn.addEventListener('click', () => {
       window.open(targetUrl, '_blank');
     });
     document.body.appendChild(btn);
   }
 
-  /** 检测 Luogu 题目是否存在 */
-  async function checkLuoguProblemExists(luoguUrl) {
-    return new Promise((resolve) => {
-      GM_xmlhttpRequest({
-        method: 'GET',
-        url: luoguUrl,
-        onload: function(response) {
-          try {
-            if (response.status !== 200) {
-              console.log('Luogu 返回非 200 状态:', response.status);
-              resolve(false);
-              return;
-            }
-
-            const html = response.responseText;
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, 'text/html');
-
-            // 更精确的错误检测：检查特定的错误提示元素
-            // Luogu 错误页面会有特定的错误提示标题
-            const errorTitle = doc.querySelector('h1, .error-title, [class*="error"]');
-            if (errorTitle) {
-              const errorText = errorTitle.textContent || '';
-              if (errorText.includes('出错啦') || errorText.includes('找不到题目')) {
-                console.log('检测到 Luogu 错误页面:', luoguUrl);
-                resolve(false);
-                return;
-              }
-            }
-
-            // 检查是否存在题目标题（更可靠的判断方法）
-            const problemTitle = doc.querySelector('.problem-title, h1[class*="title"], .title');
-            if (problemTitle) {
-              console.log('Luogu 题目存在（找到题目标题）:', luoguUrl);
-              resolve(true);
-              return;
-            }
-
-            // 备用检查：是否存在题目描述区域
-            const problemDescription = doc.querySelector('[class*="description"], .problem-content, .statement');
-            if (problemDescription) {
-              console.log('Luogu 题目存在（找到题目内容）:', luoguUrl);
-              resolve(true);
-              return;
-            }
-
-            // 如果都没找到，可能是页面结构变化，默认返回 true
-            console.log('无法确定 Luogu 题目状态，默认为存在:', luoguUrl);
-            resolve(true);
-          } catch (error) {
-            console.error('解析 Luogu 页面失败:', error);
-            // 解析错误时默认返回 true（保守策略）
-            resolve(true);
-          }
-        },
-        onerror: function(error) {
-          console.error('请求 Luogu 失败:', error);
-          // 网络错误时默认返回 true（保守策略）
-          resolve(true);
-        },
-        ontimeout: function() {
-          console.error('请求 Luogu 超时');
-          // 超时时默认返回 true（保守策略）
-          resolve(true);
-        },
-        timeout: 10000 // 10秒超时
-      });
-    });
-  }
-
-  /** 创建带探测功能的 Luogu 按钮 */
-  async function createLuoguButtonWithCheck(luoguUrl, buttonId = 'luogu-redirect-btn', topOffset = '100px') {
-    // 先探测题目是否存在
-    const exists = await checkLuoguProblemExists(luoguUrl);
-
-    // 根据探测结果创建按钮
-    if (exists) {
-      createJumpButton(luoguUrl, 'Jump to Luogu', buttonId, topOffset);
-    } else {
-      createJumpButton(luoguUrl, 'luogu 未找到', buttonId, topOffset, true);
-    }
-  }
-
   /** 检测当前是否为单独的 Div2 比赛 */
   function isStandaloneDivision2() {
     // 获取比赛标题元素
-    const contestNameElement = document.querySelector('.contest-name') ||
+    const contestNameElement = document.querySelector('.contest-name') || 
                                document.querySelector('#sidebar .rtable a');
     if (!contestNameElement) return false;
-
+    
     const contestName = contestNameElement.textContent.trim();
-
+    
     // 检查是否包含 "Div. 2" 但不包含 "+"（排除联合比赛）
     if (contestName.includes('Div. 2') && !contestName.includes('+')) {
       // 排除 Div. 3、Div. 4 等
@@ -152,7 +66,7 @@
       }
       return true;
     }
-
+    
     return false;
   }
 
@@ -163,13 +77,13 @@
     if (roundMatch) {
       return `Round ${roundMatch[1]}`;
     }
-
+    
     // 其他可能的格式
     const eduMatch = contestName.match(/Educational.*?Round\s+(\d+)/i);
     if (eduMatch) {
       return `Educational Round ${eduMatch[1]}`;
     }
-
+    
     return null;
   }
 
@@ -179,26 +93,26 @@
       // 获取 Div1 比赛页面
       const response = await fetch(`https://codeforces.com/contest/${div1ContestId}`);
       if (!response.ok) return false;
-
+      
       const html = await response.text();
       const parser = new DOMParser();
       const doc = parser.parseFromString(html, 'text/html');
-
+      
       // 提取 Div1 比赛名称
-      const div1NameElement = doc.querySelector('.contest-name') ||
+      const div1NameElement = doc.querySelector('.contest-name') || 
                              doc.querySelector('#sidebar .rtable a');
       if (!div1NameElement) return false;
-
+      
       const div1ContestName = div1NameElement.textContent.trim();
-
+      
       // 比较比赛名称的关键标识
       const div2Identifier = extractRoundIdentifier(div2ContestName);
       const div1Identifier = extractRoundIdentifier(div1ContestName);
-
+      
       if (div2Identifier && div1Identifier && div2Identifier === div1Identifier) {
         return true;
       }
-
+      
       return false;
     } catch (error) {
       console.error('验证 Div1 比赛失败:', error);
@@ -212,13 +126,13 @@
       // 方法1：使用 Codeforces API
       const apiUrl = `https://codeforces.com/api/contest.standings?contestId=${div1ContestId}&from=1&count=1`;
       const response = await fetch(apiUrl);
-
+      
       if (!response.ok) {
         throw new Error('API 请求失败');
       }
-
+      
       const data = await response.json();
-
+      
       if (data.status === 'OK' && data.result && data.result.problems) {
         // 返回题目数组，每个题目包含 index 和 name
         return data.result.problems.map(problem => ({
@@ -226,21 +140,21 @@
           name: problem.name
         }));
       }
-
+      
       throw new Error('API 返回数据格式错误');
     } catch (error) {
       console.error('获取 Div1 题目列表失败:', error);
-
+      
       // 方法2：解析比赛页面（备用方案）
       try {
         const response = await fetch(`https://codeforces.com/contest/${div1ContestId}`);
         const html = await response.text();
         const parser = new DOMParser();
         const doc = parser.parseFromString(html, 'text/html');
-
+        
         const problems = [];
         const problemLinks = doc.querySelectorAll('.problems td.id a');
-
+        
         problemLinks.forEach(link => {
           const index = link.textContent.trim();
           const row = link.closest('tr');
@@ -252,7 +166,7 @@
             });
           }
         });
-
+        
         return problems;
       } catch (fallbackError) {
         console.error('备用方案也失败:', fallbackError);
@@ -267,16 +181,16 @@
     const cleanName = (name) => {
       return name.replace(/^[A-Z]\d?\.\s*/, '').trim();
     };
-
+    
     const cleanCurrentName = cleanName(currentProblemName);
-
+    
     for (const problem of div1Problems) {
       const cleanDiv1Name = cleanName(problem.name);
       if (cleanCurrentName === cleanDiv1Name) {
         return problem.index;
       }
     }
-
+    
     return null;
   }
 
@@ -402,7 +316,7 @@
                 const luoguUrl = `https://www.luogu.com.cn/problem/CF${div1ContestId}${matchedIndex}`;
                 const vjudgeUrl = `https://vjudge.net/problem/CodeForces-${contestId}${problemIndex}`;
 
-                await createLuoguButtonWithCheck(luoguUrl, 'luogu-redirect-btn', '100px');
+                createJumpButton(luoguUrl, 'Jump to Luogu', 'luogu-redirect-btn', '100px');
                 createJumpButton(vjudgeUrl, 'Jump to VJudge', 'vj-redirect-btn', '150px');
                 return;
               }
@@ -418,7 +332,7 @@
           const luoguUrl = `https://www.luogu.com.cn/problem/CF${contestId}${problemIndex}`;
           const vjudgeUrl = `https://vjudge.net/problem/CodeForces-${contestId}${problemIndex}`;
 
-          await createLuoguButtonWithCheck(luoguUrl, 'luogu-redirect-btn', '100px');
+          createJumpButton(luoguUrl, 'Jump to Luogu', 'luogu-redirect-btn', '100px');
           createJumpButton(vjudgeUrl, 'Jump to VJudge', 'vj-redirect-btn', '150px');
         }
       })();
@@ -428,22 +342,20 @@
     // 普通情况：直接生成跳转链接
     // Gym 题目在 VJudge 上格式为 Gym-105578E（无分隔符）
     // 普通题目格式为 CodeForces-2120D
-    (async () => {
-      const luoguUrl = `https://www.luogu.com.cn/problem/CF${contestId}${problemIndex}`;
-      const vjudgeUrl = isGym
-        ? `https://vjudge.net/problem/Gym-${contestId}${problemIndex}`
-        : `https://vjudge.net/problem/CodeForces-${contestId}${problemIndex}`;
+    const luoguUrl = `https://www.luogu.com.cn/problem/CF${contestId}${problemIndex}`;
+    const vjudgeUrl = isGym
+      ? `https://vjudge.net/problem/Gym-${contestId}${problemIndex}`
+      : `https://vjudge.net/problem/CodeForces-${contestId}${problemIndex}`;
 
-      // === AUTO REDIRECT（可选）===
-      // 如果需要自动跳转到 Luogu，取消下面一行注释：
-      // window.location.href = luoguUrl;
-      // 如果需要自动跳转到 VJudge，取消下面一行注释：
-      // window.location.href = vjudgeUrl;
+    // === AUTO REDIRECT（可选）===
+    // 如果需要自动跳转到 Luogu，取消下面一行注释：
+    // window.location.href = luoguUrl;
+    // 如果需要自动跳转到 VJudge，取消下面一行注释：
+    // window.location.href = vjudgeUrl;
 
-      // 创建两个按钮
-      await createLuoguButtonWithCheck(luoguUrl, 'luogu-redirect-btn', '100px');
-      createJumpButton(vjudgeUrl, 'Jump to VJudge', 'vj-redirect-btn', '150px');
-    })();
+    // 创建两个按钮
+    createJumpButton(luoguUrl, 'Jump to Luogu', 'luogu-redirect-btn', '100px');
+    createJumpButton(vjudgeUrl, 'Jump to VJudge', 'vj-redirect-btn', '150px');
     return;
   }
 

@@ -10,7 +10,7 @@
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @run-at       document-end
-// @namespace    http://tampermonkey.net/
+// @namespace http://tampermonkey.net/
 // @downloadURL https://update.greasyfork.org/scripts/531088/Grok%20-%20Filter%27S%20For%20Code%2012426.user.js
 // @updateURL https://update.greasyfork.org/scripts/531088/Grok%20-%20Filter%27S%20For%20Code%2012426.meta.js
 // ==/UserScript==

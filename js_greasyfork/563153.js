@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Restore OG Car Names
 // @namespace    torn.restore.og.cars
-// @version      1.2.9
+// @version      1.2.7
 // @description  Restores original car names from Torn fictional ones across Torn (Racing, Item Market, Items, Bazaar, Logs) including all descriptions/text. PDA-friendly (debounced observer + burst).
 // @author       MoDuL
 // @license      MIT
@@ -23,35 +23,38 @@
 (function () {
   "use strict";
 
-  const SHOW_CONSOLE_NOTICE = true;
-  if (SHOW_CONSOLE_NOTICE) {
-    console.info("[Restore OG Car Names] Script injected.");
-  }
+const SHOW_CONSOLE_NOTICE = true;
+if (SHOW_CONSOLE_NOTICE) {
+  console.info("[Restore OG Car Names] Script injected.");
+}
+
 
   function getSidLower() {
+    // Works for both normal query and weird SPA/hash cases.
+    // Example: page.php?sid=ItemMarket#/market/...
     try {
       const url = new URL(location.href);
       const sid = (url.searchParams.get("sid") || "").trim();
       return sid.toLowerCase();
     } catch (_) {
+      // Fallback: regex
       const m = location.href.match(/[?&]sid=([^&#]+)/i);
       return (m ? decodeURIComponent(m[1]) : "").trim().toLowerCase();
     }
   }
 
+  // Only run on these areas (even though we match broadly for reliability)
   function isTargetArea() {
     const path = location.pathname.toLowerCase();
     const sid = getSidLower();
 
+    // Direct pages
     if (path.endsWith("/item.php") || path.endsWith("item.php")) return true;
     if (path.endsWith("/bazaar.php") || path.endsWith("bazaar.php")) return true;
 
+    // Routed pages via page.php/loader.php
     return sid === "racing" || sid === "itemmarket" || sid === "log";
   }
-function isInsideRaceFilterUI(nodeOrEl) {
-  const el = nodeOrEl?.nodeType === 1 ? nodeOrEl : nodeOrEl?.parentElement;
-  return !!(el && el.closest && el.closest("#modulRF"));
-}
 
   // -------------------- Mapping: Fictional -> Original --------------------
   const REPLACEMENTS = {
@@ -128,71 +131,18 @@ function isInsideRaceFilterUI(nodeOrEl) {
   }
 
   function shouldSkipTextNode(node) {
-  const el = node && node.parentElement;
-  if (!el) return false;
-
-  // DO NOT rewrite MoDuL Race Filter UI
-  if (isInsideRaceFilterUI(node)) return true;
-
-  const tag = el.tagName;
-  return (
-    tag === "SCRIPT" ||
-    tag === "STYLE" ||
-    tag === "TEXTAREA" ||
-    tag === "INPUT" ||
-    tag === "CODE" ||
-    tag === "PRE" ||
-    tag === "NOSCRIPT"
-  );
-}
-
-
-  // ==========================================================
-  // Compatibility fix for Race Filter:
-  // Keep the *fictional* name hidden in the Racing custom list.
-  // ==========================================================
-  function patchRacingCarNames(root) {
-    // Only needed on racing pages
-    if (getSidLower() !== "racing") return;
-
-    const scope = root && root.querySelectorAll ? root : document;
-    const nodes = scope.querySelectorAll(".custom-events-wrap .event-header li.car span.t-hide");
-
-    for (const el of nodes) {
-      // Avoid re-processing
-      if (el.dataset.ogCarPatched === "1") continue;
-
-      const raw = (el.textContent || "").trim();
-      if (!raw) { el.dataset.ogCarPatched = "1"; continue; }
-
-      // If it's not a fictional key, mark and skip
-      if (!Object.prototype.hasOwnProperty.call(REPLACEMENTS, raw)) {
-        el.dataset.ogCarPatched = "1";
-        continue;
-      }
-
-      // Store fictional once (useful for future scripts)
-      if (!el.dataset.ogCarName) el.dataset.ogCarName = raw;
-
-      // Replace visible text with OG
-      const og = REPLACEMENTS[raw] || raw;
-      if (og !== raw) el.textContent = og;
-
-      // Inject hidden fictional text so li.textContent still contains it
-      // (display:none still appears in textContent)
-      const next = el.nextElementSibling;
-      const hasHidden = next && next.classList && next.classList.contains("ogcar-hidden");
-
-      if (!hasHidden) {
-        const hidden = document.createElement("span");
-        hidden.className = "ogcar-hidden";
-        hidden.style.display = "none";
-        hidden.textContent = " " + raw; // space helps separation
-        el.insertAdjacentElement("afterend", hidden);
-      }
-
-      el.dataset.ogCarPatched = "1";
-    }
+    const el = node && node.parentElement;
+    if (!el) return false;
+    const tag = el.tagName;
+    return (
+      tag === "SCRIPT" ||
+      tag === "STYLE" ||
+      tag === "TEXTAREA" ||
+      tag === "INPUT" ||
+      tag === "CODE" ||
+      tag === "PRE" ||
+      tag === "NOSCRIPT"
+    );
   }
 
   function replaceTextNodes(root) {
@@ -223,7 +173,6 @@ function isInsideRaceFilterUI(nodeOrEl) {
     if (!root) return;
 
     root.querySelectorAll("[title],[aria-label],img[alt]").forEach((el) => {
-      if (isInsideRaceFilterUI(el)) return;
       if (el.hasAttribute("title")) {
         const v = el.getAttribute("title") || "";
         const n = replaceInString(v);
@@ -244,11 +193,6 @@ function isInsideRaceFilterUI(nodeOrEl) {
 
   function apply() {
     if (!isTargetArea()) return;
-
-    // 1) Do the racing-list compatibility patch first (cheap + targeted)
-    patchRacingCarNames(document);
-
-    // 2) Then do the global replacements (text + attributes)
     replaceAttributes(document.body);
     replaceTextNodes(document.body);
   }

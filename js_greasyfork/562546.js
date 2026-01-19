@@ -10,7 +10,7 @@
 // @grant        GM_setValue
 // @connect      supabase.co
 // @license      MIT License
-// @version      1.2.1
+// @version      1.1.0
 // @downloadURL https://update.greasyfork.org/scripts/562546/GitHub%20Repo%20%E2%86%92%20Supabase%20Helper.user.js
 // @updateURL https://update.greasyfork.org/scripts/562546/GitHub%20Repo%20%E2%86%92%20Supabase%20Helper.meta.js
 // ==/UserScript==
@@ -61,22 +61,18 @@
     // GM 存储脚本菜单: Github 原生 UI 配置 supabase 参数
     GM_registerMenuCommand('⚙ Supabase Config', openConfigModal);
 
-    // 新增：菜单按钮 - 查询任意 owner/repo 是否存在于 Supabase
-    GM_registerMenuCommand('🔎 Check Repo Exists', openRepoCheckModal);
-
 
     // 环境变量结构体
-    // 注意：不要在启动时缓存 ENV（Config Modal 保存后会更新 GM 存储，但常量不会自动刷新）
-    // 改为每次请求前动态读取。
+    const ENV = {
+        SUPABASE_URL: GM_getValue(GM_KEY.SUPA_URL, ''),
+        SUPABASE_KEY: GM_getValue(GM_KEY.SUPA_KEY, ''),
+        TABLE: GM_getValue(GM_KEY.SUPA_TABLE, DEFAULT_TABLE),
+    };
 
-    // 新增：每次请求时动态读取最新配置（避免在 Config Modal 保存后，需要刷新页面才生效）
-    function getEnv() {
-        return {
-            SUPABASE_URL: GM_getValue(GM_KEY.SUPA_URL, ''),
-            SUPABASE_KEY: GM_getValue(GM_KEY.SUPA_KEY, ''),
-            TABLE: GM_getValue(GM_KEY.SUPA_TABLE, DEFAULT_TABLE),
-        };
-    }
+    /*     if (!ENV.SUPABASE_URL || !ENV.SUPABASE_KEY) {
+        console.warn('[TM] Supabase env not set');
+        return;
+    } */
 
     /* ============================================================
    二、判断是否是仓库首页
@@ -118,32 +114,30 @@
    ============================================================ */
     /* Supabase 检查仓库是否存在 */
     async function checkRepoExists({ owner, repo }) {
-        const env = getEnv();
         // 检查环境变量, 如果为空, 则直接抛出 error
-        if (!env.SUPABASE_URL) {
+        if (!ENV.SUPABASE_URL) {
             throw new Error('SUPABASE_URL is not configured');
         }
-        if (!env.SUPABASE_KEY) {
+        if (!ENV.SUPABASE_KEY) {
             throw new Error('SUPABASE_KEY is not configured');
         }
-        if (!env.TABLE) {
+        if (!ENV.TABLE) {
             throw new Error('SUPABASE TABLE is not configured');
         }
         const url =
-              `${env.SUPABASE_URL}/rest/v1/${env.TABLE}` +
-              `?${DB_KEY.OWNER}=ilike.${owner}` +
-              `&${DB_KEY.REPO}=ilike.${repo}` +
+              `${ENV.SUPABASE_URL}/rest/v1/${ENV.TABLE}` +
+              `?${DB_KEY.OWNER}=eq.${owner}` +
+              `&${DB_KEY.REPO}=eq.${repo}` +
               `&select=${DB_KEY.OWNER}`;
-        const key = env.SUPABASE_KEY;
+        const key = ENV.SUPABASE_KEY;
         const res = await supabaseRequest('GET', url, key);
         return res.status === 200 && Array.isArray(res.data) && res.data.length > 0;
     }
 
     /* Supabase 添加仓库 */
     async function addRepo({ owner, repo }) {
-        const env = getEnv();
-        const url = `${env.SUPABASE_URL}/rest/v1/${env.TABLE}`;
-        const key = env.SUPABASE_KEY;
+        const url = `${ENV.SUPABASE_URL}/rest/v1/${ENV.TABLE}`;
+        const key = ENV.SUPABASE_KEY;
         const payload = {
             [DB_KEY.OWNER]: owner,
             [DB_KEY.REPO]: repo
@@ -285,7 +279,7 @@
         /* 测试 */
         document.getElementById('sb-test').onclick = async () => {
             const url = document.getElementById('sb-url').value.trim();
-            document.getElementById('sb-key').value.trim();
+            const key = document.getElementById('sb-key').value.trim();
             const table = document.getElementById('sb-table').value.trim();
             const status = document.getElementById('sb-status');
 
@@ -397,7 +391,7 @@
         /* 测试 */
         document.getElementById('sb-test').onclick = async () => {
             const url = document.getElementById('sb-url').value.trim();
-            document.getElementById('sb-key').value.trim();
+            const key = document.getElementById('sb-key').value.trim();
             const table = document.getElementById('sb-table').value.trim();
             const status = document.getElementById('sb-status');
 
@@ -432,126 +426,6 @@
             // }
             close();
         };
-    }
-
-
-
-    /******************************************************************
-   * GitHub 原生风格：Repo Exists 查询弹窗（owner/repo 两行输入）
-   ******************************************************************/
-    function openRepoCheckModal() {
-        // 避免重复打开
-        if (document.getElementById('tm-sb-backdrop') || document.getElementById('tm-sb-modal')) return;
-
-        /* 背景遮罩 */
-        const backdrop = document.createElement('div');
-        backdrop.id = 'tm-sb-backdrop';
-        backdrop.style.cssText = `
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,.4);
-    z-index: 9998;
-  `;
-
-        /* 弹窗主体 */
-        const modal = document.createElement('div');
-        modal.id = 'tm-sb-modal';
-        modal.className = 'Box';
-        modal.style.cssText = `
-    position: fixed;
-    top: 20%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 480px;
-    z-index: 9999;
-  `;
-
-        const current = getRepoInfoIfHome();
-
-        modal.innerHTML = `
-    <div class="Box-header">
-      <strong>Check Repo Exists (Supabase)</strong>
-    </div>
-
-    <div class="Box-body">
-      <label class="d-block mb-2">Owner</label>
-      <input id="sb-check-owner" class="form-control input-block" autocomplete="off">
-
-      <label class="d-block mt-3 mb-2">Repo</label>
-      <input id="sb-check-repo" class="form-control input-block" autocomplete="off">
-
-      <div id="sb-check-status" class="mt-3 color-fg-muted"></div>
-    </div>
-
-    <div class="Box-footer d-flex flex-justify-end gap-2">
-      <button class="btn" id="sb-check-cancel">Cancel</button>
-      <button class="btn" id="sb-check-config">Config</button>
-      <button class="btn btn-primary" id="sb-check-run">Query</button>
-    </div>
-  `;
-
-        document.body.append(backdrop, modal);
-
-        const ownerEl = document.getElementById('sb-check-owner');
-        const repoEl = document.getElementById('sb-check-repo');
-        const statusEl = document.getElementById('sb-check-status');
-
-        // 默认填入当前页面 owner/repo（如果在仓库页）
-        ownerEl.value = current?.owner || '';
-        repoEl.value = current?.repo || '';
-
-        function setStatus(text) {
-            statusEl.textContent = text;
-        }
-
-        function close() {
-            backdrop.remove();
-            modal.remove();
-        }
-
-        backdrop.onclick = close;
-        document.getElementById('sb-check-cancel').onclick = close;
-        document.getElementById('sb-check-config').onclick = () => {
-            close();
-            openConfigModal();
-        };
-
-        async function runQuery() {
-            const owner = ownerEl.value.trim();
-            const repo = repoEl.value.trim();
-
-            if (!owner || !repo) {
-                setStatus('Please input owner and repo.');
-                return;
-            }
-
-            setStatus('Querying…');
-            try {
-                const exists = await checkRepoExists({ owner, repo });
-                setStatus(exists ? '✅ Exists in database' : '❌ Not found');
-            } catch (e) {
-                console.error(e);
-                // 更友好的错误信息
-                const msg = String(e?.message || e || 'Unknown error');
-                if (msg.includes('not configured')) {
-                    setStatus('⚠ Supabase is not configured. Click Config to set it.');
-                } else {
-                    setStatus('❌ Request failed. Please check config / network / RLS.');
-                }
-            }
-        }
-
-        document.getElementById('sb-check-run').onclick = runQuery;
-        ownerEl.addEventListener('keydown', (ev) => {
-            if (ev.key === 'Enter') runQuery();
-        });
-        repoEl.addEventListener('keydown', (ev) => {
-            if (ev.key === 'Enter') runQuery();
-        });
-
-        // 聚焦第一行
-        ownerEl.focus();
-        ownerEl.select?.();
     }
 
 

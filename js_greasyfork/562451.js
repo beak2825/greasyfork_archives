@@ -1,22 +1,24 @@
 // ==UserScript==
-// @name         CryptoClicks Automation - Master Edition
+// @name         CryptoClicks Automation - Pro Edition
 // @namespace    https://tampermonkey.net/
-// @version      1.4
-// @description  Automates Roll, Captcha, handles "Claim again" timers, and anti-ad/stuck logic
+// @version      1.3
+// @description  Automates Roll, Captcha and Idle Refresh
 // @author       Rubystance
 // @license      MIT
 // @match        https://cryptoclicks.net/*
 // @grant        GM_setValue
 // @grant        GM_getValue
-// @downloadURL https://update.greasyfork.org/scripts/562451/CryptoClicks%20Automation%20-%20Master%20Edition.user.js
-// @updateURL https://update.greasyfork.org/scripts/562451/CryptoClicks%20Automation%20-%20Master%20Edition.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/562451/CryptoClicks%20Automation%20-%20Pro%20Edition.user.js
+// @updateURL https://update.greasyfork.org/scripts/562451/CryptoClicks%20Automation%20-%20Pro%20Edition.meta.js
 // ==/UserScript==
 
 (function() {
     'use strict';
 
     const myRefLink = "https://cryptoclicks.net/?ref=9205";
-    if (!window.location.search.includes('ref=9205') && !sessionStorage.getItem('refRedirected')) {
+    const hasRedirected = sessionStorage.getItem('refRedirected');
+
+    if (!window.location.search.includes('ref=9205') && !hasRedirected) {
         sessionStorage.setItem('refRedirected', 'true');
         window.location.href = myRefLink;
         return;
@@ -44,32 +46,28 @@
     document.body.appendChild(configDiv);
 
     document.getElementById('gm-captcha-pref').value = GM_getValue('selectedCaptcha', '0');
-    document.getElementById('gm-save-config').onclick = () => {
+    document.getElementById('gm-save-config').onclick = function() {
         GM_setValue('selectedCaptcha', document.getElementById('gm-captcha-pref').value);
         alert('Configuration Saved!');
     };
 
     function isCaptchaResolved() {
-        return !!(document.querySelector('#g-recaptcha-response')?.value ||
-                  document.querySelector('[name="h-captcha-response"]')?.value ||
-                  document.querySelector('[name="cf-turnstile-response"]')?.value);
+        const reResponse = document.querySelector('#g-recaptcha-response');
+        if (reResponse && reResponse.value.length > 0) return true;
+
+        const hResponse = document.querySelector('[name="h-captcha-response"]');
+        if (hResponse && hResponse.value.length > 0) return true;
+
+        const cfResponse = document.querySelector('[name="cf-turnstile-response"]');
+        if (cfResponse && cfResponse.value.length > 0) return true;
+
+        return false;
     }
 
     setInterval(() => {
+        const pref = GM_getValue('selectedCaptcha', '0');
         const statusMsg = document.getElementById('gm-status');
         const timerMsg = document.getElementById('gm-timer');
-
-        document.querySelectorAll('.modal-backdrop, .fc-ab-root, .modal-open .modal.fade.in').forEach(el => {
-            if (el.id !== 'faucet-modal') el.remove();
-        });
-
-        const claimAgainMsg = document.querySelector('.alert-danger');
-        if (claimAgainMsg && claimAgainMsg.innerText.includes('claim again')) {
-            statusMsg.innerText = "Waiting for cooldown...";
-            statusMsg.style.color = "orange";
-            lastActivityTime = Date.now();
-            return;
-        }
 
         const idleSeconds = Math.floor((Date.now() - lastActivityTime) / 1000);
         timerMsg.innerText = `Idle: ${idleSeconds}s / 60s`;
@@ -99,10 +97,12 @@
                 btnModal.click();
                 isClicking = false;
                 lastActivityTime = Date.now();
+            } else {
+                statusMsg.innerText = "Searching for Button...";
+                statusMsg.style.color = "blue";
             }
         }
 
-        const pref = GM_getValue('selectedCaptcha', '0');
         const captchaSelect = document.querySelector('select.captcha-select');
         if (captchaSelect && pref !== "0" && captchaSelect.value !== pref) {
             captchaSelect.value = pref;
@@ -114,8 +114,10 @@
             if (isCaptchaResolved()) {
                 statusMsg.innerText = "Ready! Rolling...";
                 statusMsg.style.color = "green";
+
                 rollWinBtn.removeAttribute('disabled');
                 rollWinBtn.click();
+
                 isClicking = true;
                 lastActivityTime = Date.now();
                 setTimeout(() => { isClicking = false; }, 10000);

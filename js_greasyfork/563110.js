@@ -2,7 +2,7 @@
 // @name         气象继续教育
 // @license      MIT
 // @namespace    http://tampermonkey.net/
-// @version      3.49
+// @version      3.48
 // @description  气象学习综合工具：课程列表显示 + 视频播放控制 + 自动下一节 + 进度追踪
 // @author       You
 // @match        http://www.cmatc.cn/lms/app/lms/student/Userselectlesson/show.do*
@@ -46,7 +46,7 @@
         SKIP_COMPLETED: GM_getValue('skipCompleted', true), // 是否跳过已完成的视频
         
         // 调试配置
-        DEBUG_MODE: GM_getValue('debugMode', true) // 是否开启调试模式
+        DEBUG_MODE: GM_getValue('debugMode', false) // 是否开启调试模式
     };
 
     // 全局变量
@@ -1181,7 +1181,8 @@
                     const progress = Math.min(100, Math.floor((newTotalTime / videoDuration) * 100));
                     
                     // 构建日志内容，添加进度百分比
-                    const logContent = `提交学习时长 ${formatSeconds(simulatedLearnTime)}，累计 ${formatSeconds(newTotalTime)}，进度 ${progress}%`;
+                    const logSuffix = videoDuration > 0 && newTotalTime >= videoDuration ? ' （视频已播放完毕，可以立即结束播放）' : '';
+                    const logContent = `提交学习时长 ${formatSeconds(simulatedLearnTime)}，累计 ${formatSeconds(newTotalTime)}，进度 ${progress}%${logSuffix}`;
                     
                     // 显示模拟提交日志
                     displayDebugLog(logContent);
@@ -1192,8 +1193,27 @@
                     // 发送进度更新消息
                     sendProgressUpdateMessage(progress);
                     
-                    // 移除自动结束逻辑，即使学习时长超过视频总时长，也只更新进度，不自动触发结束
-                    // 只有倒计时结束或手动点击才会触发下一个视频播放
+                    // 检查是否播放完毕
+                    if (videoDuration > 0 && newTotalTime >= videoDuration) {
+                        console.log('模拟学习时长已超过视频总时长，准备发送视频完成消息');
+                        
+                        // 发送视频完成消息
+                        sendVideoCompletedMessage();
+                        
+                        // 标记课程已完成
+                        isCourseCompleted = true;
+                        
+                        // 触发播放下一节视频逻辑
+                        const nextCourse = findNextCourse();
+                        if (nextCourse) {
+                            console.log('将播放下一个课程：', nextCourse.title);
+                            showVideoEndCountdown(nextCourse);
+                        } else {
+                            console.log('已播放完所有课程或没有找到下一个未完成的课程');
+                            // 显示课程完成提示
+                            showCourseCompletedMessage();
+                        }
+                    }
                     
                     console.log('调试提交完成');
                 });
@@ -2159,12 +2179,15 @@
                     // 计算进度百分比
                     const progress = Math.min(100, Math.floor((newTotalTime / videoDuration) * 100));
                     
+                    let logSuffix = '';
                     // 检查累计时长是否超过视频时长
                     if (videoDuration > 0 && newTotalTime >= videoDuration) {
-                        // 移除自动发送视频完成消息的逻辑，只显示提示
-                        console.log('学习时长已超过视频总时长，但不会自动结束，等待倒计时或手动操作');
+                        logSuffix = ' （视频已播放完毕，可以立即结束播放）';
+                        // 学习时长已超过视频总时长，发送视频完成消息
+                        console.log('学习时长已超过视频总时长，发送视频完成消息');
+                        sendVideoCompletedMessage();
                     }
-                    finalLog = `提交学习时长 ${formatSeconds(seconds)}，累计 ${formatSeconds(newTotalTime)}，进度 ${progress}%`;
+                    finalLog = `提交学习时长 ${formatSeconds(seconds)}，累计 ${formatSeconds(newTotalTime)}，进度 ${progress}%${logSuffix}`;
                     isLearnTimeLog = true;
                 }
             }
@@ -2181,12 +2204,15 @@
                     // 计算进度百分比
                     const progress = Math.min(100, Math.floor((newTotalTime / videoDuration) * 100));
                     
+                    let logSuffix = '';
                     // 检查累计时长是否超过视频时长
                     if (videoDuration > 0 && newTotalTime >= videoDuration) {
-                        // 移除自动发送视频完成消息的逻辑，只显示提示
-                        console.log('学习时长已超过视频总时长，但不会自动结束，等待倒计时或手动操作');
+                        logSuffix = ' （视频已播放完毕，可以立即结束播放）';
+                        // 学习时长已超过视频总时长，发送视频完成消息
+                        console.log('学习时长已超过视频总时长，发送视频完成消息');
+                        sendVideoCompletedMessage();
                     }
-                    finalLog = `完成学习时长计算，总计 ${formatSeconds(seconds)}，累计 ${formatSeconds(newTotalTime)}，进度 ${progress}%`;
+                    finalLog = `完成学习时长计算，总计 ${formatSeconds(seconds)}，累计 ${formatSeconds(newTotalTime)}，进度 ${progress}%${logSuffix}`;
                     isLearnTimeLog = true;
                 }
             }
@@ -2245,10 +2271,26 @@
             // 每次进度更新时都保存进度到本地存储
             sendProgressUpdateMessage(progress);
             
-            // 移除自动结束逻辑，即使学习时长超过视频总时长，也不自动发送视频完成消息
-            // 只有倒计时结束或手动点击才会触发下一个视频播放
+            // 检查是否播放完毕
             if (videoDuration > 0 && totalLearntime >= videoDuration) {
-                console.log('学习时长已超过视频总时长，但不会自动结束，等待倒计时或手动操作');
+                console.log('学习时长已超过视频总时长，准备发送视频完成消息');
+                
+                // 发送视频完成消息
+                sendVideoCompletedMessage();
+                
+                // 标记课程已完成
+                isCourseCompleted = true;
+                
+                // 触发播放下一节视频逻辑
+                const nextCourse = findNextCourse();
+                if (nextCourse) {
+                    console.log('将播放下一个课程：', nextCourse.title);
+                    showVideoEndCountdown(nextCourse);
+                } else {
+                    console.log('已播放完所有课程或没有找到下一个未完成的课程');
+                    // 显示课程完成提示
+                    showCourseCompletedMessage();
+                }
             }
         }
 
@@ -2430,10 +2472,26 @@
                                         }
                                     }
                                     
-                                    // 当进度达到100%时，不自动触发播放下一节视频逻辑
-                                    // 只有倒计时结束或手动点击才会触发下一个视频播放
+                                    // 当进度达到100%时，触发播放下一节视频逻辑
                                     if (videoDuration > 0 && totalLearntime >= videoDuration) {
-                                        console.log('真实学习时长已超过视频总时长，但不会自动结束，等待倒计时或手动操作');
+                                        console.log('真实学习时长已超过视频总时长，触发下一节视频播放');
+                                        
+                                        // 发送视频完成消息
+                                        sendVideoCompletedMessage();
+                                        
+                                        // 标记课程已完成
+                                        isCourseCompleted = true;
+                                        
+                                        // 触发播放下一节视频逻辑
+                                        const nextCourse = findNextCourse();
+                                        if (nextCourse) {
+                                            console.log('将播放下一个课程：', nextCourse.title);
+                                            showVideoEndCountdown(nextCourse);
+                                        } else {
+                                            console.log('已播放完所有课程或没有找到下一个未完成的课程');
+                                            // 显示课程完成提示
+                                            showCourseCompletedMessage();
+                                        }
                                     }
                                 }
                         }

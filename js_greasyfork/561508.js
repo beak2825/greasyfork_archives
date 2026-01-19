@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Arson bang for buck custom underko
 // @namespace    custom.Para_Thenics.torn.com
-// @version      0.0.8
+// @version      0.0.6
 // @description  Display profit per nerve and how to perform
 // @author       Para_Thenics, auboli77
 // @match        https://www.torn.com/page.php?sid=crimes*
@@ -769,28 +769,17 @@
     return match ? parseFloat(match[1]) : 0;
   }
 
-  function shouldShowScenario(matchingScenarios, hasFlamethrower) {
-    if (matchingScenarios.length === 0) {
-        return null;
-    }
-    
-    if (matchingScenarios.length === 1) {
-      return matchingScenarios[0];
-    }
-    
-    let selectedScenario = null;
-      
-    if (matchingScenarios.length === 2) {
-      if (hasFlamethrower) {
-        selectedScenario = matchingScenarios.find(s => s.ignition === "flamethrower");
-      }
-        
-      if (!selectedScenario) {
-        selectedScenario = matchingScenarios.find(s => s.ignition === "lighter");
-      }
-    }
-    
-    return selectedScenario;
+  function shouldShowScenario(scenario, hasFlamethrower) {
+    // Show all scenarios without ignition requirement
+    if (!scenario.ignition) return true;
+
+    // Hide lighter scenarios if player has flamethrower
+    if (hasFlamethrower && scenario.ignition !== "flamethrower") return false;
+
+    // Hide flamethrower scenarios if player doesn't have it
+    if (!hasFlamethrower && scenario.ignition === "flamethrower") return false;
+
+    return true;
   }
 
   // ============================================================================
@@ -936,8 +925,13 @@
         (scenario) => scenario.name === scenarioName
       );
 
-      const selectedScenario = shouldShowScenario(matchingScenarios, hasFlamethrower);
-      
+      if (matchingScenarios.length === 0) return;
+
+      // Select appropriate scenario variant
+      const selectedScenario = matchingScenarios.find((scenario) =>
+        shouldShowScenario(scenario, hasFlamethrower)
+      );
+
       if (!selectedScenario) return;
 
       const tooltip = createTooltipElement(selectedScenario, sectionElement, sectionElement);
@@ -1033,7 +1027,9 @@
         };
       }
 
-      const selectedScenario = shouldShowScenario(matchingScenarios, hasFlamethrower);
+      const selectedScenario = matchingScenarios.find((scenario) =>
+        shouldShowScenario(scenario, hasFlamethrower)
+      );
 
       if (!selectedScenario) {
         return {

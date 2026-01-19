@@ -4,7 +4,7 @@
 // @description  Améliore l'interface de Kraland
 // @author       Somin
 // @namespace    somin
-// @version      beta.0.35
+// @version      beta.0.23
 // @match        http://www.kraland.org/*
 // @match        http://kraland.org/*
 // @match        http://test.kraland.org/*
@@ -212,6 +212,7 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
                     let nameLeft=titleLeft.textContent.trim();
                     switch(nameLeft){
                         case 'Nouvelles' :
+                            console.log('test');
                             motd();
                             break;
                         case 'Kramails' :
@@ -669,16 +670,15 @@ modalObserver.observe(document.body, { childList: true, subtree: true });
         var cLeft=document.getElementById('col-left');
         var content=document.getElementById('content');
         var row=content.querySelector('.row');
-        if(kipath.startsWith('/forum/sujet')){
+
+        let isTopicPage=document.querySelector('#content ul.media-list.forum');
+        if(isTopicPage){
             topicSetUp();
-        }else if(!kipath.startsWith('/forum/post')){
-            //getForums();
-            forumSetUp();
-        }else{
+        }else if(aparam.fstyle){
             forumSetUp();
         }
 
-        async function topicSetUp(){
+        function topicSetUp(){
             pinup();
             leftSetup();
             cLeft.style.width = '15%';
@@ -761,56 +761,23 @@ modalObserver.observe(document.body, { childList: true, subtree: true });
             ezSpoiler();
 
             //--- insertion formulaire réponse
-            var pscript=document.createElement('script');
-            pscript.src='http://www.kraland.org/lib/kraland-7.0.0/js/post.js';
-            document.body.appendChild(pscript);
-            var replyb=cRight.querySelectorAll('a[title="répondre"]');
+            let libox=document.createElement('li');
+            let replyBox=document.createElement('div');
+            let ultopic=document.querySelector('');
+
+            var replyb=document.querySelectorAll('a[data-original-title="répondre"]');
+
+            var tdoc=loadPage(replyb[0].href);
+
+            const form = tdoc.querySelector('form');
+            if (!form) {
+                console.log('No form found in ',replyb[0].href);
+                return;
+            }
+            let formClone=form.cloneNode(true);
+
             for(let i=0;i<replyb.length;i++){
-                applyDRF(replyb[i]);
-            }
-            var quoteb=cRight.querySelectorAll('a[title="citer"]');
-            for(let i=0;i<quoteb.length;i++){
-                applyDRF(quoteb[i]);
-            }
-            function applyDRF(onebtn){
-                let replyu=onebtn.href;
-                onebtn.addEventListener('click', (e)=>{
-                    e.preventDefault();
-                    displayReplyForm(replyu);
-                });
-            }
-            async function displayReplyForm(urlr){
-                try{
-                    var tdoc= await loadPage(urlr);
-                    const form = tdoc.querySelector('#col-right form');
-                    if(!form){
-                        console.log('No form found in ',urlr);
-                        return;
-                    }
-                    form.querySelectorAll('div.form-group').forEach(rform=>{
-                        rform.querySelector('label').remove();
-                        rform.querySelector('div').style.width='100%';
-                    });
-                    cRight.querySelector('ul.media-list.forum').after(form);
-                    const prevw=tdoc.getElementById('accordion2');
-                    if(prevw){
-                        let nhr=document.createElement('br');
-                        nhr.style.marginTop='5px';
-                        nhr.style.marginBottom='5px';
-                        form.after(prevw);
-                        form.after(nhr);
-                    }
-                    const textarea = form.querySelector('textarea');
-                    if(textarea){
-                        textarea.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
-                        textarea.focus();
-                    }
-                }catch(err){
-                    console.log('tdoc failed : '+err);
-                }
+
             }
 
             //--- naviguer avec les flèches
@@ -824,11 +791,6 @@ modalObserver.observe(document.body, { childList: true, subtree: true });
         }
 
         function forumSetUp(){
-            let fbtn=cRight.querySelector('h1 a');
-            if(!fbtn){
-                cRight.querySelector('h1').remove();
-                getForums();
-            }
             if(cLeft && true){
                 cLeft.remove();
             }else{
@@ -856,6 +818,11 @@ modalObserver.observe(document.body, { childList: true, subtree: true });
                 }
                 let allurl=document.querySelectorAll('a');
                 allurl.forEach(u=>{u.style.textDecoration='none';})
+            }
+
+            let fbtn=cRight.querySelector('h1 a');
+            if(!fbtn){
+                cRight.querySelector('h1').remove();
             }
         }
 
@@ -1032,36 +999,19 @@ modalObserver.observe(document.body, { childList: true, subtree: true });
         });
     }
 
-    //---GET forums
-    async function getForums(){
-        var ulf=document.querySelector('nav a[href="forum"]').parentElement.querySelector('ul');
-        var fLinks=ulf.querySelectorAll('a');
-        var mfdiv=document.getElementById('col-right');
-        console.log(mfdiv);
-        for(let i=0;i<fLinks.length-1;i++){
-            let urlf=fLinks[i].href;
-            if(fLinks[i].pathname===kipath){continue;}
-            try{
-                var fpage = await loadPage(urlf);
-                var fdiv=fpage.getElementById('col-right').querySelector('div').cloneNode(true);
-                mfdiv.appendChild(fdiv);
-            }catch(err){
-                console.error(err);
-                continue;
-            }
-        }
-    }
-
     //---GET request
     async function loadPage(theURL) {
         const response = await fetch(theURL, { credentials: 'same-origin' });
+
         if (!response.ok) {
             throw new Error('HTTP error ' + response.status);
         }
+
         const html = await response.text();
+
         const parser = new DOMParser();
         const htmlDoc = parser.parseFromString(html, 'text/html');
-        //console.log(response.url, response.status);
+
         return htmlDoc;
     }
     //--- fin du code

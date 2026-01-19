@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Firefox MIUI Tab KeepAlive
 // @namespace    https://github.com/DJ-Flitzefinger/firefox-miui-tab-keepalive
-// @version      1.2.1
-// @description  Prevents Firefox Mobile tabs from being discarded or reloaded by MIUI's aggressive memory management on Xiaomi phones, using a silent phantom MediaSession and background playback support on whitelisted sites.
+// @version      1.0
+// @description  Prevents Firefox Mobile tabs from being discarded or reloaded by MIUI’s aggressive memory management on Xiaomi phones, using a silent phantom MediaSession and background playback support on whitelisted sites.
 // @license      GPL-3.0-or-later
 // @match        *://*/*
 // @run-at       document-idle
@@ -68,14 +68,8 @@
    * Background-play "owner" parameters.
    * Only the owner tab fakes visibility and emits lightweight activity ticks.
    */
-  const OWNER_HEARTBEAT_MS = 3000;
-  const OWNER_TTL_MS = 12000;
-
-  /**
-   * Compare-and-swap delay for owner claim verification.
-   * Allows other tabs time to potentially claim ownership.
-   */
-  const OWNER_CLAIM_VERIFY_DELAY_MS = 50;
+  const OWNER_HEARTBEAT_MS = 8000;
+  const OWNER_TTL_MS = 25000;
 
   /**
    * Synthetic user-activity tick interval (owner tab only).
@@ -85,9 +79,9 @@
 
   /**
    * MediaSession refresh interval.
-   * Set to 0 to disable periodic refresh (avoids interrupting other audio apps).
+   * Keeps the phantom entry stable in Android's "Now Playing" UI.
    */
-  const MEDIASESSION_REFRESH_MS = 0;
+  const MEDIASESSION_REFRESH_MS = 60000;
 
   /**
    * Backoff watchdog parameters for resuming phantom playback.
@@ -95,18 +89,6 @@
    */
   const RETRY_DELAY_MIN = 15000;
   const RETRY_DELAY_MAX = 120000;
-
-  /**
-   * Canvas stream framerate for fallback phantom video.
-   * Lower values reduce CPU usage.
-   */
-  const CANVAS_STREAM_FPS = 0.5;
-
-  /**
-   * IndexedDB heartbeat interval.
-   * Periodic writes to keep the database connection active.
-   */
-  const INDEXEDDB_HEARTBEAT_MS = 15000;
 
   // ============================================================
   // Global state (Tampermonkey storage, cross-domain)
@@ -193,28 +175,15 @@
   }
 
   /**
-   * Claim ownership for bg-play features using compare-and-swap pattern.
-   * Returns true if this tab successfully claimed ownership, false otherwise.
+   * Claim ownership for bg-play features.
+   * The last writer wins, which is intended: "last played" becomes the owner.
    */
   async function claimOwner(reason) {
     void reason;
-    if (!(await getGlobalEnabled())) return false;
+    if (!(await getGlobalEnabled())) return;
 
-    // Write our claim
     await gmSet(KEY_OWNER_ID, tabId);
     await gmSet(KEY_OWNER_TS, now());
-
-    // Brief delay to allow concurrent claims to settle
-    await new Promise(r => setTimeout(r, OWNER_CLAIM_VERIFY_DELAY_MS));
-
-    // Verify we're still the owner (compare-and-swap verification)
-    const currentOwner = await gmGet(KEY_OWNER_ID, '');
-    if (currentOwner !== tabId) {
-      // Another tab claimed ownership after us
-      return false;
-    }
-
-    return true;
   }
 
   // ============================================================
@@ -267,122 +236,6 @@
   function setUi(on) {
     lockSvg.style.opacity = on ? '1' : '0';
     badge.style.borderColor = on ? 'rgba(255,255,255,0.72)' : 'rgba(255,255,255,0.60)';
-  }
-
-  // ============================================================
-  // Web Locks API (prevents tab from being considered idle)
-  // ============================================================
-
-  let webLockHeld = false;
-  let webLockAbortController = null;
-
-  async function acquireWebLock() {
-    if (webLockHeld) return;
-    if (!('locks' in navigator)) return;
-
-    try {
-      webLockAbortController = new AbortController();
-      webLockHeld = true;
-
-      // Request an exclusive lock that we hold indefinitely
-      navigator.locks.request(
-        'ffka-keepalive-' + tabId,
-        { mode: 'exclusive', signal: webLockAbortController.signal },
-        () => new Promise(() => {}) // Never resolves = hold lock forever
-      ).catch(() => {
-        // Lock was aborted or failed
-        webLockHeld = false;
-      });
-    } catch (_) {
-      webLockHeld = false;
-    }
-  }
-
-  function releaseWebLock() {
-    if (!webLockHeld) return;
-
-    try {
-      if (webLockAbortController) {
-        webLockAbortController.abort();
-        webLockAbortController = null;
-      }
-    } catch (_) {}
-
-    webLockHeld = false;
-  }
-
-  // ============================================================
-  // IndexedDB Heartbeat (keeps database connection active)
-  // ============================================================
-
-  const IDB_NAME = 'ffka-keepalive-db';
-  const IDB_STORE = 'heartbeat';
-  let idbDatabase = null;
-  let idbHeartbeatTimer = null;
-
-  function openIndexedDB() {
-    return new Promise((resolve, reject) => {
-      try {
-        const request = indexedDB.open(IDB_NAME, 1);
-
-        request.onupgradeneeded = (event) => {
-          const db = event.target.result;
-          if (!db.objectStoreNames.contains(IDB_STORE)) {
-            db.createObjectStore(IDB_STORE, { keyPath: 'id' });
-          }
-        };
-
-        request.onsuccess = (event) => {
-          resolve(event.target.result);
-        };
-
-        request.onerror = () => {
-          reject(request.error);
-        };
-      } catch (e) {
-        reject(e);
-      }
-    });
-  }
-
-  async function writeIndexedDBHeartbeat() {
-    if (!idbDatabase) return;
-
-    try {
-      const tx = idbDatabase.transaction(IDB_STORE, 'readwrite');
-      const store = tx.objectStore(IDB_STORE);
-      store.put({ id: tabId, ts: Date.now(), url: location.href });
-    } catch (_) {}
-  }
-
-  async function startIndexedDBHeartbeat() {
-    if (idbHeartbeatTimer) return;
-
-    try {
-      idbDatabase = await openIndexedDB();
-      await writeIndexedDBHeartbeat();
-
-      idbHeartbeatTimer = setInterval(() => {
-        if (!enabledLocal) return;
-        writeIndexedDBHeartbeat();
-      }, INDEXEDDB_HEARTBEAT_MS);
-    } catch (_) {
-      // IndexedDB not available, continue without it
-    }
-  }
-
-  function stopIndexedDBHeartbeat() {
-    if (idbHeartbeatTimer) {
-      clearInterval(idbHeartbeatTimer);
-      idbHeartbeatTimer = null;
-    }
-
-    if (idbDatabase) {
-      try {
-        idbDatabase.close();
-      } catch (_) {}
-      idbDatabase = null;
-    }
   }
 
   // ============================================================
@@ -447,10 +300,6 @@
     }
   }
 
-  /**
-   * Minimal valid MP4 video (black frame, no audio).
-   * This is a widely compatible ftyp+moov+moof structure.
-   */
   const DATA_MP4 =
     'data:video/mp4;base64,' +
     'AAAAHGZ0eXBpc29tAAACAGlzb21pc28yYXZjMW1wNDEAAABsbW9vdgAAAGxtdmhkAAAAAAAAAAAAAAAAAAAD6AAAA+gAAQAAAQAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAABR0cmFrAAAAXHRraGQAAAADAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAABAAAAAEAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAJtZGlhAAAAIG1kaGQAAAAAAAAAAAAAAAAAAAPoAAAD6AABAAAAAAAALWhkbHIAAAAAAAAAAHZpZGUAAAAAAAAAAAAAAABWaWRlb0hhbmRsZXIAAAABGm1pbmYAAAAUdm1oZAAAAAEAAAAAAAAAAAAAACRkaW5mAAAAHGRyZWYAAAABAAAAAQAAABx1cmwgAAAAAQAAAFJzdGJsAAAAQHN0c2QAAAABAAAAAAAwYXZjMQAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAABAAAAAQAAAAAAAAAAAAAAAAAAAAAAABj//wAAACRzdHRzAAAAAQAAAAEAAAABAAAAHGN0dHMAAAABAAAAAQAAAAEAAAAUc3RzYwAAAAEAAAABAAAAAQAAAAEAAAAUc3RzegAAAAEAAAABAAAAAQAAABRzdGNvAAAAAQAAAAEAAAABAAAAHG1vb2YAAAAMbWZoZAAAAAEAAAAA';
@@ -478,7 +327,7 @@
           ctx.fillStyle = 'black';
           ctx.fillRect(0, 0, 2, 2);
         }
-        const stream = canvas.captureStream(CANVAS_STREAM_FPS);
+        const stream = canvas.captureStream(1);
         v.srcObject = stream;
       } catch (_) {}
     }, { once: true });
@@ -524,12 +373,6 @@
 
     setUi(true);
 
-    // Acquire Web Lock
-    await acquireWebLock();
-
-    // Start IndexedDB heartbeat
-    await startIndexedDBHeartbeat();
-
     await ensureVideoElement();
     try { await videoEl.play(); } catch (_) {}
 
@@ -539,8 +382,7 @@
     clearWatchdogLoop();
     scheduleWatchdogLoop();
 
-    // MediaSession is set once above via setMediaSessionPlaying(true)
-    // No periodic refresh to avoid interrupting other audio apps
+    startMediaSessionRefresh();
   }
 
   function stopKeepAlive() {
@@ -558,12 +400,6 @@
     clearWatchdogLoop();
     retryDelayMs = RETRY_DELAY_MIN;
 
-    // Release Web Lock
-    releaseWebLock();
-
-    // Stop IndexedDB heartbeat
-    stopIndexedDBHeartbeat();
-
     try {
       if (videoEl) {
         videoEl.pause();
@@ -579,9 +415,6 @@
     videoEl = null;
 
     localOwnerFlag = false;
-
-    // Restore original visibility API when disabled
-    uninstallVisibilityHooks();
   }
 
   // ============================================================
@@ -615,13 +448,12 @@
 
   let visibilityHooksInstalled = false;
   let localOwnerFlag = false;
-  let visibilityBlockerRef = null;
 
   async function refreshLocalOwnerFlag() {
     localOwnerFlag = await isMeOwner();
   }
 
-  function installVisibilityHooks() {
+  function installVisibilityHooksOnce() {
     if (visibilityHooksInstalled) return;
     visibilityHooksInstalled = true;
 
@@ -645,86 +477,11 @@
       });
     } catch (_) {}
 
-    // Store reference so we can remove it later
-    visibilityBlockerRef = (ev) => {
+    const blocker = (ev) => {
       if (enabledLocal && isBgPlayDomain() && localOwnerFlag) ev.stopImmediatePropagation();
     };
-    document.addEventListener('visibilitychange', visibilityBlockerRef, true);
-    document.addEventListener('webkitvisibilitychange', visibilityBlockerRef, true);
-  }
-
-  function uninstallVisibilityHooks() {
-    if (!visibilityHooksInstalled) return;
-
-    // Restore original visibilityState property
-    try {
-      if (origVisibilityState) {
-        Object.defineProperty(document, 'visibilityState', origVisibilityState);
-      } else {
-        delete document.visibilityState;
-      }
-    } catch (_) {}
-
-    // Restore original hidden property
-    try {
-      if (origHidden) {
-        Object.defineProperty(document, 'hidden', origHidden);
-      } else {
-        delete document.hidden;
-      }
-    } catch (_) {}
-
-    // Remove event blockers
-    if (visibilityBlockerRef) {
-      try {
-        document.removeEventListener('visibilitychange', visibilityBlockerRef, true);
-        document.removeEventListener('webkitvisibilitychange', visibilityBlockerRef, true);
-      } catch (_) {}
-      visibilityBlockerRef = null;
-    }
-
-    visibilityHooksInstalled = false;
-  }
-
-  // ============================================================
-  // Synthetic user activity (owner tab only)
-  // ============================================================
-
-  /**
-   * Emit synthetic mouse/pointer events with realistic coordinates.
-   * Note: isTrusted will still be false, but coordinates are plausible.
-   */
-  function emitSyntheticActivity() {
-    const clientX = Math.random() * (window.innerWidth || 800);
-    const clientY = Math.random() * (window.innerHeight || 600);
-
-    try {
-      const mouseEvt = new MouseEvent('mousemove', {
-        bubbles: true,
-        cancelable: true,
-        clientX: clientX,
-        clientY: clientY,
-        screenX: clientX + (window.screenX || 0),
-        screenY: clientY + (window.screenY || 0),
-        view: window
-      });
-      document.dispatchEvent(mouseEvt);
-    } catch (_) {}
-
-    try {
-      const pointerEvt = new PointerEvent('pointermove', {
-        bubbles: true,
-        cancelable: true,
-        clientX: clientX,
-        clientY: clientY,
-        screenX: clientX + (window.screenX || 0),
-        screenY: clientY + (window.screenY || 0),
-        view: window,
-        pointerType: 'touch',
-        isPrimary: true
-      });
-      document.dispatchEvent(pointerEvt);
-    } catch (_) {}
+    document.addEventListener('visibilitychange', blocker, true);
+    document.addEventListener('webkitvisibilitychange', blocker, true);
   }
 
   // ============================================================
@@ -742,7 +499,8 @@
       if (!localOwnerFlag) return;
 
       try { window.__ffkaLastActivity = Date.now(); } catch (_) {}
-      emitSyntheticActivity();
+      try { window.dispatchEvent(new Event('mousemove')); } catch (_) {}
+      try { window.dispatchEvent(new Event('pointermove')); } catch (_) {}
     }, Math.max(5000, USER_ACTIVITY_TICK_MS));
   }
 
@@ -786,7 +544,7 @@
     setUi(on);
 
     if (on) {
-      installVisibilityHooks();
+      installVisibilityHooksOnce();
       await startKeepAlive();
 
       const alive = await isOwnerAlive();
@@ -813,10 +571,8 @@
     if (!isBgPlayDomain()) return;
     if (!ev || !ev.target) return;
 
-    const claimed = await claimOwner('media-play');
-    if (claimed) {
-      await refreshLocalOwnerFlag();
-    }
+    await claimOwner('media-play');
+    await refreshLocalOwnerFlag();
   }, true);
 
   // ============================================================
@@ -854,7 +610,7 @@
       if (!alive) await claimOwner('fallback-enable');
       await refreshLocalOwnerFlag();
 
-      installVisibilityHooks();
+      installVisibilityHooksOnce();
       startOwnerHeartbeatLoop();
       startUserActivityTick();
     } else {

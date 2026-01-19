@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         WME to PartnerHub link
-// @version      1.0.5
+// @version      1.0.4
 // @description  Adds a PartnerHub link in "Share location" popup for the same lat/lon/zoom.
 // @author       Falcon4Tech
 // @match        https://www.waze.com/editor*
@@ -37,8 +37,8 @@
 
   function getOpenTitle(sameWindow) {
     const lang = getLang();
-    if (lang.startsWith("pl")) return sameWindow ? "Odśwież ten widok" : "Otwórz w nowym oknie";
-    return sameWindow ? "Refresh this window" : "Open in new window";
+    if (lang.startsWith("pl")) return sameWindow ? "Otwórz w tym oknie" : "Otwórz w nowym oknie";
+    return sameWindow ? "Open in this window" : "Open in new window";
   }
 
   function parsePermalink(permalink) {
@@ -261,6 +261,10 @@
     } else {
       content.appendChild(wrapper);
     }
+  }
+
+  function findActiveSharePopupRoot() {
+    return document.querySelector(".share-location-pop-up-wrapper");
   }
 
   function tryInject() {

@@ -4,7 +4,6 @@
 // @version      3.1
 // @description  Solves AbLink images
 // @author       engageub
-// @match        https://earnpepe.online/app/faucet?currency=LTC
 // @match        https://coinymate.com/faucet/
 // @match        https://spaceshooter.net/faucet/
 // @match        https://freegetcoins.com/faucet/

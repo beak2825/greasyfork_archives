@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         dA_archive_notes
 // @namespace    http://tampermonkey.net/
-// @version      2.5
+// @version      2.3
 // @description  archive the notes
 // @author       Dediggefedde
 // @match        http://*.deviantart.com/notifications/notes/*
@@ -9,9 +9,9 @@
 // @match        https://*.deviantart.com/messages/notes
 // @match        https://*.deviantart.com/notifications/notes/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=deviantart.com
-// @resource	viewer	https://phi.pf-control.de/userscripts/dA_archive_notes/dA_ArchiveNotes_Viewer.exe
+// @resource	viewer	https://phi.pf-control.de/userscripts/dA_archive_notes/Viewer.html
 // @grant        GM.addStyle
-// @grant        GM_getResourceURL
+// @grant        GM_getResourceText
 // @grant        GM.xmlHttpRequest
 // @downloadURL https://update.greasyfork.org/scripts/444633/dA_archive_notes.user.js
 // @updateURL https://update.greasyfork.org/scripts/444633/dA_archive_notes.meta.js
@@ -20,7 +20,7 @@
 (function () {
     'use strict';
 
-    let viewer = GM_getResourceURL("viewer");
+    let viewer = GM_getResourceText("viewer");
     let starterBat = `
 	@echo off
 	Rem This opens a chrome window in "local file access" mode for this session.
@@ -123,18 +123,6 @@
         let date = note.date.slice(0, -5).replace(/T/g, "_").replace(/:/g, "-");
         return `${folders[note.folder].title}_${note.id}_${note.sender}_${date}.html`;
     }
-    function createMetaDiv(id) {
-        const noteObj=notes[id];
-        const div = document.createElement('div');
-        div.id = `note-meta-${id}`;
-        div.dataset.folder = noteObj.folder;
-        div.dataset.sender = noteObj.sender;
-        div.dataset.date = noteObj.date;
-        div.dataset.subject = noteObj.subject;
-        div.style.display = 'none';
-        document.body.appendChild(div);
-        return div.outerHTML;
-    }
     //
     function zipResponse() {
         let zip = new tiny_zip();
@@ -148,19 +136,16 @@
         zip.add("content.tsv", tiny_zip.utf8(contenttext));
         //
         Object.entries(notes).forEach(([id, note]) => {
-            zip.add("html/"+getNoteFileName(id), tiny_zip.utf8(createMetaDiv(id)+"\n"+note.text)); //TODO notes/
+            zip.add(getNoteFileName(id), tiny_zip.utf8(note.text)); //TODO notes/
         });
         //
         const replacements = { "-": "-", "T": "_", "Z": "", ":": "-", ".": "-" };
         const dt = (new Date()).toISOString().replace(/\D/gi, (el) => replacements[el] || "").slice(0, -5);
         //
-        (async () => {
-            const response = await fetch(viewer);
-            const arrayBuffer = await response.arrayBuffer();
-            const uint8Array = new Uint8Array(arrayBuffer);
-            zip.add("dA_ArchiveNotes Viewer.exe", uint8Array);
-            download(zip.generate(), "application/octet-stream", `dA_archive_notes_${dt}.zip`);
-        })();
+        zip.add("_Viewer.html", tiny_zip.utf8(viewer));
+        zip.add("_chrome_starter.bat", tiny_zip.utf8(starterBat));
+        //
+        download(zip.generate(), "application/octet-stream", `dA_archive_notes_${dt}.zip`);
     }
     //
     function addDialog() {
@@ -416,7 +401,7 @@
             const folder = document.getElementById("dA_AN_folderSelect")?.value ?? "1";
             const pageMode = document.querySelector("input[name=pagesel]:checked")?.value ?? "range";
 
-            cancelFlag = false;
+            cancelFlag=false;
             let min = 0;
             maxPage = -1;
             notes = {};
@@ -426,28 +411,28 @@
             }
 
             if (folder == "dA_AN_folder_all") {
-                pendingFolders = [];
+                pendingFolders=[];
                 Object.entries(folders).forEach(([key, obj]) => { //{id, title, count}
                     pendingFolders.push(key);
                     totalCount += obj.count;
                 });
                 curCount = 0;
-                if (totalCount == 0) { totalCount = 1; }
-                downloadPuppy(pendingFolders.shift(), min).then(res => {
-                    console.log("Finished!", res);
-                }).catch((ex) => {
-                    console.log("Error:", ex);
+                if(totalCount==0){totalCount=1;}
+                downloadPuppy(pendingFolders.shift(), min).then(res=>{
+                    console.log("Finished!",res);
+                }).catch((ex)=>{
+                    console.log("Error:",ex);
                     alert(`Error: ${ex}`);
                 });
             } else {
                 totalCount = maxPage == -1 ? folders[folder].count : maxPage * 10;
                 totalCount -= min * 10;
                 curCount = 0;
-                if (totalCount == 0) { totalCount = 1; }
-                downloadPuppy(folder, min * 10).then(res => {
-                    console.log("Finished!", res);
-                }).catch((ex) => {
-                    console.log("Error:", ex);
+                if(totalCount==0){totalCount=1;}
+                downloadPuppy(folder, min * 10).then(res=>{
+                    console.log("Finished!",res);
+                }).catch((ex)=>{
+                    console.log("Error:",ex);
                     alert(`Error:\n ${ex}`);
                 });;
             }
@@ -503,11 +488,11 @@
     //
     //ressource for creating zip:
     /*
-    Copyright (C) 2013 https://github.com/vuplea
-    Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-    The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-    */
+	Copyright (C) 2013 https://github.com/vuplea
+	Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+	The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+	*/
     // edit note: update by dediggefedde at 2024-10-17 into class form
     //
     class tiny_zip {

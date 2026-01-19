@@ -1,140 +1,108 @@
 // ==UserScript==
-// @name         YouTube 油管去广告 Pro
-// @version      3.6
-// @description  采用倍速快进跳过技术，避开检测
+// @name         🔥 YouTube 油管去广告 Pro (2026 增强版)
+// @namespace    http://tampermonkey.net/
+// @version      2.0
+// @description  屏蔽 YouTube 广告 + 绕过反广告检测 + 自动恢复播放
 // @author       stephchow
 // @match        https://www.youtube.com/*
 // @grant        GM_addStyle
 // @run-at       document-start
 // @license MIT
-// @namespace http://tampermonkey.net/
-// @downloadURL https://update.greasyfork.org/scripts/561174/YouTube%20%E6%B2%B9%E7%AE%A1%E5%8E%BB%E5%B9%BF%E5%91%8A%20Pro.user.js
-// @updateURL https://update.greasyfork.org/scripts/561174/YouTube%20%E6%B2%B9%E7%AE%A1%E5%8E%BB%E5%B9%BF%E5%91%8A%20Pro.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/561174/%F0%9F%94%A5%20YouTube%20%E6%B2%B9%E7%AE%A1%E5%8E%BB%E5%B9%BF%E5%91%8A%20Pro%20%282026%20%E5%A2%9E%E5%BC%BA%E7%89%88%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/561174/%F0%9F%94%A5%20YouTube%20%E6%B2%B9%E7%AE%A1%E5%8E%BB%E5%B9%BF%E5%91%8A%20Pro%20%282026%20%E5%A2%9E%E5%BC%BA%E7%89%88%29.meta.js
 // ==/UserScript==
 
 (function () {
     'use strict';
 
-    // 1. 隐藏广告位的 CSS (保持原有基础上增加)
+    // ============= 1. 隐藏广告元素（扩展选择器） =============
     const adSelectors = [
-        '.video-ads', '.ytp-ad-module', 'ytd-ad-slot-renderer',
-        'ytd-rich-item-renderer:has([aria-label*="Ad"])',
-        'ytd-rich-item-renderer:has([aria-label*="廣告"])',
-        '#player-ads', 'ytd-banner-promo-renderer',
-        '#masthead-ad', '.ad-showing', '.ad-interrupting'
+        // 播放器广告
+        '.video-ads', '#player-ads', '.ytp-ad-module',
+        'ytd-ad-slot-renderer', 'ytd-player-legacy-desktop-watch-ads-renderer',
+
+        // 信息流推广
+        'ytd-rich-item-renderer:has(ytd-badge-supported-renderer[aria-label*="廣告"]), ' +
+        'ytd-rich-item-renderer:has(ytd-badge-supported-renderer[aria-label*="Ad"]), ' +
+        'ytd-rich-item-renderer:has(ytd-badge-supported-renderer[aria-label*="Sponsor"]), ' +
+        'ytd-rich-item-renderer:has(.ytd-video-meta-block span:contains("Ad"))',
+
+        // 徽章 & 商品
+        'ytd-badge-supported-renderer[aria-label*="廣告"], ' +
+        'ytd-badge-supported-renderer[aria-label*="Ad"], ' +
+        'ytd-merch-shelf-renderer', 'ytd-in-feed-ad-layout-renderer',
+
+        // 新版动态广告容器（2025+）
+        '[id^="ad-"]', '[class*="ad-"][class*="renderer"]'
     ].join(', ');
 
-    GM_addStyle(`${adSelectors} { display: none !important; }`);
-
-    // 2. 核心逻辑：检测并加速广告
-  // 定义多语言跳过关键词（支持简体/繁体/英文等）
-const SKIP_KEYWORDS_MAP = {
-    en: ['Skip', 'skip', 'SKIP'],
-    zh_cn: ['跳过'],
-    zh_tw: ['略過', '跳過'],
-    ja: ['スキップ'],
-    ko: ['건너뛰기'],
-    ru: ['Пропустить'],
-    es: ['Saltar'],
-    fr: ['Ignorer']
-};
-
-// 提取所有关键词为扁平数组（供脚本使用）
-const SKIP_KEYWORDS = Object.values(SKIP_KEYWORDS_MAP).flat();
-
-/**
-  *智能查找“跳过广告”按钮：先按 class，再按文本内容
- */
-function getSkipButton() {
-    // ✅ 第一优先级：已知的 class 选择器（高效且准确）
-    const classSelectors = [
-        '.ytp-ad-skip-button',
-        '.ytp-skip-ad-button',
-        '.ytp-ad-skip-button-modern'
-    ].join(', ');
-
-    let button = document.querySelector(classSelectors);
-    if (button && !button.disabled) {
-        return button;
-    }
-
-    // ✅ 第二优先级：基于文本或 aria-label 的模糊匹配（抗 UI 变更）
-    const candidateButtons = document.querySelectorAll('button, [role="button"]');
-    for (const btn of candidateButtons) {
-        if (btn.disabled) continue;
-
-        const text = (btn.textContent || btn.innerText || '').trim();
-        const ariaLabel = btn.ariaLabel || '';
-
-        // 检查文本或 aria-label 是否包含任一关键词
-        const matched = SKIP_KEYWORDS.some(keyword =>
-            text.includes(keyword) || ariaLabel.includes(keyword)
-        );
-
-        if (matched) {
-            return btn;
+    GM_addStyle(`
+        ${adSelectors} {
+            display: none !important;
+            height: 0 !important;
+            visibility: hidden !important;
         }
-    }
-
-    return null; // 未找到
-}
-
-/**
- * 处理广告视频：快进 + 自动跳过
- */
-function handleVideoAds() {
-    const video = document.querySelector('video');
-    const moviePlayer = document.querySelector('#movie_player');
-
-    const isAd = moviePlayer?.classList.contains('ad-showing') ||
-                 moviePlayer?.classList.contains('ad-interrupting');
-
-    if (video && isAd) {
-        // 静音 + 16倍速快进到结尾
-        video.muted = true;
-        video.playbackRate = 16;
-        if (isFinite(video.duration)) {
-            video.currentTime = video.duration - 0.1;
+        /* 防止布局跳动 */
+        ytd-rich-grid-row > #contents > ytd-rich-item-renderer[style*="display: none"] {
+            display: none !important;
         }
+    `);
 
-        // 🔥 使用双重保险策略获取并点击跳过按钮
-        const skipButton = getSkipButton();
-        if (skipButton) {
-            // 防止重复点击（可选）
-            if (!skipButton.hasBeenClickedByScript) {
-                skipButton.click();
-                skipButton.hasBeenClickedByScript = true; // 标记已点击
+    // ============= 2. 智能移除反广告弹窗 + 恢复播放 =============
+    function removeAntiAdBlock() {
+        // 方法1：移除已知弹窗组件
+        const badElements = [
+            'ytd-enforcement-message-view-model',
+            'tp-yt-paper-dialog',
+            'ytd-popup-container',
+            'ytd-engagement-panel-section-list-renderer[page-subtype="ad"]'
+        ];
+        badElements.forEach(sel => {
+            document.querySelectorAll(sel).forEach(el => el.remove());
+        });
+
+        // 方法2：劫持错误状态，强制播放
+        const video = document.querySelector('video');
+        if (video) {
+            // 解除暂停状态
+            if (video.paused && !document.hidden) {
+                video.play().catch(e => console.debug('[AdBlock] Auto-play failed:', e));
+            }
+
+            // 伪造广告上报（防止后台检测）
+            if (!window.__adReported__) {
+                window.__adReported__ = true;
+                // 模拟广告可见事件（欺骗 IntersectionObserver）
+                video.dispatchEvent(new CustomEvent('yt-visibility-change', { detail: { visible: true } }));
             }
         }
-    }
-}
 
-    // 3. 移除反拦截弹窗 (关键修复)
-   function removeEnforcement() {
-    const overlays = document.querySelectorAll(
-        'ytd-enforcement-message-view-model, tp-yt-iron-overlay-backdrop, ytd-popup-container'
-    );
-
-    if (overlays.length > 0) {
-        console.log('[YT Ad Block] 检测到 enforcement 弹窗，正在移除...', overlays);
-        overlays.forEach(el => el.remove());
-    }
-
-    if (document.body.style.overflow === 'hidden') {
+        // 方法3：恢复页面滚动
         document.body.style.overflow = '';
-        console.log('[YT Ad Block] 已恢复页面滚动');
+        document.documentElement.style.overflow = '';
     }
-}
 
-    // 4. 高频监听
-    const observer = new MutationObserver(() => {
-        handleVideoAds();
-        removeEnforcement();
-    });
+    // 高频检查（初期密集，后期降频）
+    let checkCount = 0;
+    const checkInterval = setInterval(() => {
+        removeAntiAdBlock();
+        checkCount++;
+        if (checkCount > 20) clearInterval(checkInterval); // 20秒后停止高频检查
+    }, 500);
 
-    observer.observe(document.documentElement, { childList: true, subtree: true });
+    // 低频保活
+    setInterval(removeAntiAdBlock, 3000);
 
-    // 5. 定时检查（防止 MutationObserver 漏掉）
-    setInterval(handleVideoAds, 500);
+    // ============= 3. 劫持历史路由，修复 SPA 广告残留 =============
+    const originalPush = history.pushState;
+    history.pushState = function () {
+        originalPush.apply(this, arguments);
+        setTimeout(removeAntiAdBlock, 800);
+    };
 
+    // ============= 4. 阻止广告相关请求（可选，需配合 uBlock） =============
+    // 注意：纯脚本无法拦截 fetch/XHR，此处仅为示意
+    // 实际建议搭配 uBOPa 规则
+
+    console.log('[YouTube AdBlock Pro] 已启动 | 2026 增强版');
 })();

@@ -1,14 +1,14 @@
 // ==UserScript==
-// @name         Pytems [Deprecated]
+// @name         Pytems
 // @namespace    https://py9.dev/
-// @version      1.1.1
+// @version      1.1.0
 // @description  Create & Manage Items in Infinite Craft with an Easy to use Menu!
 // @author       Py9
 // @match        https://neal.fun/infinite-craft/
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=neal.fun
 // @grant        none
-// @downloadURL https://update.greasyfork.org/scripts/487439/Pytems%20%5BDeprecated%5D.user.js
-// @updateURL https://update.greasyfork.org/scripts/487439/Pytems%20%5BDeprecated%5D.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/487439/Pytems.user.js
+// @updateURL https://update.greasyfork.org/scripts/487439/Pytems.meta.js
 // ==/UserScript==
 
 (function() {

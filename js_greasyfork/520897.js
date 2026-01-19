@@ -1,18 +1,18 @@
 // ==UserScript==
-// @name        Apple iCloud: full day events border
+// @name        iCloud full day events border
 // @description Apply the default border with the good color on full day events.
-// @version     1.0.0
-// @namespace   https://breat.fr
-// @homepageURL https://usercssjs.breat.fr/a/apple-icloud
-// @supportURL  https://discord.gg/Q8KSHzdBxs
+// @namespace   https://gitlab.com/breatfr
 // @match       https://www.icloud.com/calendar/
+// @version     1.0.0
+// @homepageURL https://gitlab.com/breatfr/icloud
+// @supportURL  https://discord.gg/Q8KSHzdBxs
 // @author      BreatFR
 // @copyright   2024, BreatFR (https://breat.fr)
-// @icon        https://breat.fr/static/images/userscripts-et-userstyles/a/apple-icloud/icon.jpg
-// @license     AGPL-3.0-or-later; https://www.gnu.org/licenses/agpl-3.0.txt
 // @grant       none
-// @downloadURL https://update.greasyfork.org/scripts/520897/Apple%20iCloud%3A%20full%20day%20events%20border.user.js
-// @updateURL https://update.greasyfork.org/scripts/520897/Apple%20iCloud%3A%20full%20day%20events%20border.meta.js
+// @icon        https://gitlab.com/uploads/-/system/project/avatar/65415880/icloud.png
+// @license     AGPL-3.0-or-later; https://www.gnu.org/licenses/agpl-3.0.txt
+// @downloadURL https://update.greasyfork.org/scripts/520897/iCloud%20full%20day%20events%20border.user.js
+// @updateURL https://update.greasyfork.org/scripts/520897/iCloud%20full%20day%20events%20border.meta.js
 // ==/UserScript==
 
 (function() {

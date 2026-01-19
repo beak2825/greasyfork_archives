@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         CunyCrypt
-// @version      0.9.19
+// @version      0.9.18
 // @description  End-to-end encryption for Discord messages and files, but less obvious
 // @author       redcat (forked from NotTrueFalse)
 // @match        https://discord.com/*
@@ -1100,9 +1100,9 @@ Installation: Install as Tampermonkey userscript, then click the lock icon in Di
             return pd;
         }
 
-        Object.defineProperty(window, 'localstorage', getLocalStoragePropertyDescriptor());
+        Object.defineProperty(window, 'cunnycryptlocalstorage', getLocalStoragePropertyDescriptor());
 
-        if (!localstorage) {
+        if (!cunnycryptlocalstorage) {
             log("waiting to restore localstorage...");
             setTimeout(() => resolve(restore_localstorage()), 100);
             return;
@@ -1116,15 +1116,15 @@ restore_localstorage().then(() => {
 });
 
     function save_peers(peers) {
-        localstorage.setItem("discrypt-peers", JSON.stringify(peers));
+        cunnycryptlocalstorage.setItem("discrypt-peers", JSON.stringify(peers));
     }
 
     function save_keypair(keypair) {
-        localstorage.setItem("discrypt-keypair", JSON.stringify(keypair));
+        cunnycryptlocalstorage.setItem("discrypt-keypair", JSON.stringify(keypair));
     }
 
     function get_keypair() {
-        let keypair_string = localstorage.getItem("discrypt-keypair");
+        let keypair_string = cunnycryptlocalstorage.getItem("discrypt-keypair");
         if (!keypair_string) return null;
         try {
             const parsed = JSON.parse(keypair_string);
@@ -1146,7 +1146,7 @@ restore_localstorage().then(() => {
 
 
     function get_peers() {
-        let peers_string = localstorage.getItem("discrypt-peers");
+        let peers_string = cunnycryptlocalstorage.getItem("discrypt-peers");
         if (!peers_string) { save_peers({}); return {}; }
         try {
             return JSON.parse(peers_string);

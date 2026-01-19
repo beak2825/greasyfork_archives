@@ -5,7 +5,7 @@
 // @namespace            https://github.com/utags
 // @homepageURL          https://github.com/utags/userscripts#readme
 // @supportURL           https://github.com/utags/userscripts/issues
-// @version              0.13.0
+// @version              0.12.2
 // @description          Paste/drag/select images, batch upload to Imgur/Tikolu/MJJ.Today/Appinn; auto-copy Markdown/HTML/BBCode/link; site button integration with SPA observer; local history.
 // @description:zh-CN    通用图片上传与插入：支持粘贴/拖拽/选择，批量上传至 Imgur/Tikolu/MJJ.Today/Appinn；自动复制 Markdown/HTML/BBCode/链接；可为各站点插入按钮并适配 SPA；保存本地历史。
 // @description:zh-TW    通用圖片上傳與插入：支援貼上/拖曳/選擇，批次上傳至 Imgur/Tikolu/MJJ.Today/Appinn；自動複製 Markdown/HTML/BBCode/連結；可為各站點插入按鈕並適配 SPA；保存本地歷史。
@@ -246,98 +246,6 @@
   function isTopFrame() {
     return win.self === win.top
   }
-  function isImgurUrl(url) {
-    try {
-      const u = new URL(url)
-      const h = u.hostname.toLowerCase()
-      return h.includes('imgur.com')
-    } catch (e) {
-      return false
-    }
-  }
-  function applyProxy(url, options = {}) {
-    const {
-      providerKey,
-      originalName,
-      proxy,
-      defaultUrl,
-      useWebp = false,
-    } = options
-    try {
-      const isGif =
-        typeof originalName === 'string' && /\.gif$/i.test(originalName.trim())
-      let px = proxy || 'none'
-      if (px === 'none') return url
-      if (px === 'wsrv.nl') {
-        const provider = providerKey || (isImgurUrl(url) ? 'imgur' : 'other')
-        if (provider === 'imgur' || provider === '111666_best') {
-          px = 'wsrv.nl-duckduckgo'
-        } else {
-          const urlEncoded = encodeURIComponent(url)
-          const defaultUrlEncoded = encodeURIComponent(defaultUrl || url)
-          const qp = ''
-            .concat(isGif ? '&n=-1' : '')
-            .concat(useWebp ? '&output=webp' : '', '&default=')
-            .concat(defaultUrlEncoded)
-          return 'https://wsrv.nl/?url='.concat(urlEncoded).concat(qp)
-        }
-      }
-      if (px === 'duckduckgo') {
-        const convertedUrl = useWebp
-          ? applyProxy(url, {
-              providerKey,
-              originalName,
-              proxy: 'wsrv.nl',
-              defaultUrl,
-              useWebp,
-            })
-          : url
-        return 'https://external-content.duckduckgo.com/iu/?u='.concat(
-          encodeURIComponent(convertedUrl)
-        )
-      }
-      if (px === 'wsrv.nl-duckduckgo') {
-        const urlEncoded = encodeURIComponent(url)
-        const defaultUrlEncoded = encodeURIComponent(defaultUrl || url)
-        const ddgUrl = 'https://external-content.duckduckgo.com/iu/?u='.concat(
-          urlEncoded
-        )
-        const qp = ''
-          .concat(isGif ? '&n=-1' : '')
-          .concat(useWebp ? '&output=webp' : '', '&default=')
-          .concat(defaultUrlEncoded)
-        return 'https://wsrv.nl/?url='
-          .concat(encodeURIComponent(ddgUrl))
-          .concat(qp)
-      }
-      return url
-    } catch (e) {
-      return url
-    }
-  }
-  function applyProxyChain(chains) {
-    if (chains.length > 1) {
-      const head2 = chains[0]
-      const defaultUrl = applyProxyChain(chains.slice(1))
-      const proxied2 = applyProxy(head2.url, {
-        providerKey: head2.providerKey,
-        originalName: head2.originalName,
-        proxy: head2.proxy,
-        defaultUrl,
-        useWebp: head2.useWebp,
-      })
-      return proxied2
-    }
-    const head = chains[0]
-    const proxied = applyProxy(head.url, {
-      providerKey: head.providerKey,
-      originalName: head.originalName,
-      proxy: head.proxy,
-      defaultUrl: head.defaultUrl,
-      useWebp: head.useWebp,
-    })
-    return proxied
-  }
   var DEFAULT_FORMAT = 'markdown'
   var DEFAULT_HOST = 'mjj'
   var DEFAULT_PROXY = 'wsrv.nl'
@@ -529,7 +437,6 @@
       proxy_wsrv_nl: 'wsrv.nl',
       proxy_duckduckgo: 'DuckDuckGo',
       proxy_wsrv_nl_duckduckgo: 'wsrv.nl -> DuckDuckGo',
-      multi_host_none: 'Also upload to',
       error_network: 'Network error',
       error_upload_failed: 'Upload failed',
       placeholder_uploading: 'Uploading "{name}"...',
@@ -605,8 +512,6 @@
       proxy_none: '\u65E0\u4EE3\u7406',
       proxy_wsrv_nl: 'wsrv.nl',
       proxy_duckduckgo: 'DuckDuckGo',
-      proxy_wsrv_nl_duckduckgo: 'wsrv.nl \u2192 DuckDuckGo',
-      multi_host_none: '\u540C\u65F6\u4E0A\u4F20\u81F3',
       error_network: '\u7F51\u7EDC\u9519\u8BEF',
       error_upload_failed: '\u4E0A\u4F20\u5931\u8D25',
       placeholder_uploading: '\u6B63\u5728\u4E0A\u4F20\u300C{name}\u300D...',
@@ -682,8 +587,6 @@
       proxy_none: '\u4E0D\u4F7F\u7528\u4EE3\u7406',
       proxy_wsrv_nl: 'wsrv.nl',
       proxy_duckduckgo: 'DuckDuckGo',
-      proxy_wsrv_nl_duckduckgo: 'wsrv.nl \u2192 DuckDuckGo',
-      multi_host_none: '\u540C\u6642\u4E0A\u50B3\u81F3',
       error_network: '\u7DB2\u8DEF\u932F\u8AA4',
       error_upload_failed: '\u4E0A\u50B3\u5931\u6557',
       placeholder_uploading: '\u6B63\u5728\u4E0A\u50B3\u300C{name}\u300D...',
@@ -721,7 +624,6 @@
         'photo_lily',
         '111666_best',
         'mock',
-        'mock2',
       ]
     : [
         'imgur',
@@ -735,7 +637,6 @@
         '111666_best',
       ]
   var ALLOWED_PROXIES = ['none', 'wsrv.nl', 'duckduckgo', 'wsrv.nl-duckduckgo']
-  var ALLOWED_PROXIES_MULTI_HOST = ['wsrv.nl', 'wsrv.nl-duckduckgo']
   var ALLOWED_BUTTON_POSITIONS = ['before', 'inside', 'after']
   var DEFAULT_BUTTON_POSITION = 'after'
   var APPINN_UPLOAD_ENDPOINT = 'https://h1.appinn.me/upload'
@@ -1069,14 +970,6 @@
       if (resolvedHost) next.host = resolvedHost
       else delete next.host
     }
-    if (Object.prototype.hasOwnProperty.call(next, 'secondaryHost')) {
-      const resolvedSecondaryHost = ensureAllowedValue(
-        next.secondaryHost,
-        ALLOWED_HOSTS
-      )
-      if (resolvedSecondaryHost) next.secondaryHost = resolvedSecondaryHost
-      else delete next.secondaryHost
-    }
     if (Object.prototype.hasOwnProperty.call(next, 'proxy')) {
       const resolved = ensureAllowedValue(next.proxy, ALLOWED_PROXIES)
       if (resolved) next.proxy = resolved
@@ -1104,82 +997,17 @@
   }
   var getHost = async () => {
     const s = await getCurrentSiteSettings()
-    return ensureAllowedValue(s.host, ALLOWED_HOSTS, DEFAULT_HOST)
+    return s.host || DEFAULT_HOST
   }
   var setHost = async (host) => {
-    const resolvedHost = ensureAllowedValue(host, ALLOWED_HOSTS, DEFAULT_HOST)
-    const s = await getCurrentSiteSettings()
-    let secondaryHost = s.secondaryHost
-    if (resolvedHost === secondaryHost) {
-      secondaryHost = void 0
-    }
-    let proxy = s.proxy
-    if (secondaryHost) {
-      proxy = ensureAllowedValue(
-        proxy,
-        ALLOWED_PROXIES_MULTI_HOST,
-        DEFAULT_PROXY
-      )
-    }
-    await updateCurrentSiteSettings({
-      host: resolvedHost,
-      secondaryHost,
-      proxy,
-    })
-  }
-  var getSecondaryHost = async () => {
-    const s = await getCurrentSiteSettings()
-    const primaryHost = ensureAllowedValue(s.host, ALLOWED_HOSTS, DEFAULT_HOST)
-    const secondaryHost = ensureAllowedValue(
-      s.secondaryHost,
-      ALLOWED_HOSTS,
-      void 0
-    )
-    return secondaryHost && secondaryHost !== primaryHost ? secondaryHost : ''
-  }
-  var setSecondaryHost = async (host) => {
-    const s = await getCurrentSiteSettings()
-    const secondaryHost = ensureAllowedValue(host, ALLOWED_HOSTS, void 0)
-    let proxy = s.proxy
-    if (secondaryHost) {
-      proxy = ensureAllowedValue(
-        proxy,
-        ALLOWED_PROXIES_MULTI_HOST,
-        DEFAULT_PROXY
-      )
-    }
-    await updateCurrentSiteSettings({
-      secondaryHost,
-      proxy,
-    })
+    await updateCurrentSiteSettings({ host })
   }
   var getProxy = async () => {
     const s = await getCurrentSiteSettings()
-    const secondaryHost = ensureAllowedValue(
-      s.secondaryHost,
-      ALLOWED_HOSTS,
-      void 0
-    )
-    const resolvedProxy = ensureAllowedValue(
-      s.proxy,
-      secondaryHost ? ALLOWED_PROXIES_MULTI_HOST : ALLOWED_PROXIES,
-      DEFAULT_PROXY
-    )
-    return resolvedProxy
+    return s.proxy || DEFAULT_PROXY
   }
   var setProxy = async (proxy) => {
-    const s = await getCurrentSiteSettings()
-    const secondaryHost = ensureAllowedValue(
-      s.secondaryHost,
-      ALLOWED_HOSTS,
-      void 0
-    )
-    const resolvedProxy = ensureAllowedValue(
-      proxy,
-      secondaryHost ? ALLOWED_PROXIES_MULTI_HOST : ALLOWED_PROXIES,
-      DEFAULT_PROXY
-    )
-    await updateCurrentSiteSettings({ proxy: resolvedProxy })
+    await updateCurrentSiteSettings({ proxy })
   }
   var getWebpEnabled = async () => {
     const s = await getCurrentSiteSettings()
@@ -1424,40 +1252,15 @@
       selectEl.append(opt)
     }
   }
-  var buildSecondaryHostOptions = (selectEl, selectedValue, primaryHost) => {
-    if (!selectEl) return
-    selectEl.textContent = ''
-    const placeholder = createEl('option', {
-      value: '',
-      text: t('multi_host_none'),
-    })
-    selectEl.append(placeholder)
-    const candidates = ALLOWED_HOSTS.filter((h) => h !== primaryHost)
-    const selected =
-      selectedValue && candidates.includes(selectedValue) ? selectedValue : ''
-    for (const val of candidates) {
-      const opt = createEl('option', { value: val, text: t('host_' + val) })
-      if (val === selected) opt.selected = true
-      selectEl.append(opt)
-    }
-  }
   var getProxyLabelKey = (val) =>
     'proxy_'.concat(val.replaceAll('.', '_').replaceAll('-', '_'))
-  var buildProxyOptions = (selectEl, selectedValue, limitToWsrv = false) => {
+  var buildProxyOptions = (selectEl, selectedValue) => {
     if (!selectEl) return
     selectEl.textContent = ''
     const selected = selectedValue
-      ? ensureAllowedValue(
-          selectedValue,
-          limitToWsrv ? ALLOWED_PROXIES_MULTI_HOST : ALLOWED_PROXIES,
-          DEFAULT_PROXY
-        )
+      ? ensureAllowedValue(selectedValue, ALLOWED_PROXIES, DEFAULT_PROXY)
       : DEFAULT_PROXY
-    const visibleProxies = limitToWsrv
-      ? ALLOWED_PROXIES_MULTI_HOST
-      : ALLOWED_PROXIES
-    console.log('visibleProxies', visibleProxies, selected)
-    for (const val of visibleProxies) {
+    for (const val of ALLOWED_PROXIES) {
       const opt = createEl('option', {
         value: val,
         text: t(getProxyLabelKey(val)),
@@ -1509,43 +1312,67 @@
       }
     }
   }
-  async function applyProxyForCurrentSite(
-    url,
-    providerKey,
-    originalName,
-    defaultUrl,
-    secondary
-  ) {
-    let useWebp = false
+  function isImgurUrl(url) {
     try {
-      useWebp = await getWebpEnabled()
-    } catch (e) {}
-    const proxy = await getProxy()
-    if (secondary) {
-      return applyProxyChain([
-        {
-          url,
-          providerKey,
-          originalName,
-          proxy,
-          useWebp,
-        },
-        {
-          url: secondary.url,
-          providerKey: secondary.providerKey,
-          originalName,
-          proxy,
-          useWebp,
-        },
-      ])
+      const u = new URL(url)
+      const h = u.hostname.toLowerCase()
+      return h.includes('imgur.com')
+    } catch (e) {
+      return false
     }
-    return applyProxy(url, {
-      providerKey,
-      originalName,
-      proxy,
-      defaultUrl,
-      useWebp,
-    })
+  }
+  async function applyProxy(url, providerKey, originalName, proxy) {
+    try {
+      const isGif =
+        typeof originalName === 'string' && /\.gif$/i.test(originalName.trim())
+      let useWebp = false
+      try {
+        useWebp = await getWebpEnabled()
+      } catch (e) {}
+      let px = proxy || (await getProxy())
+      if (px === 'none') return url
+      if (px === 'wsrv.nl') {
+        const provider = providerKey || (await getHost())
+        if (
+          provider === 'imgur' ||
+          provider === '111666_best' ||
+          isImgurUrl(url)
+        ) {
+          px = 'wsrv.nl-duckduckgo'
+        } else {
+          const urlEncoded = encodeURIComponent(url)
+          const qp = ''
+            .concat(isGif ? '&n=-1' : '')
+            .concat(useWebp ? '&output=webp' : '', '&default=')
+            .concat(urlEncoded)
+          return 'https://wsrv.nl/?url='.concat(urlEncoded).concat(qp)
+        }
+      }
+      if (px === 'duckduckgo') {
+        const convertedUrl = useWebp
+          ? await applyProxy(url, providerKey, originalName, 'wsrv.nl')
+          : url
+        return 'https://external-content.duckduckgo.com/iu/?u='.concat(
+          encodeURIComponent(convertedUrl)
+        )
+      }
+      if (px === 'wsrv.nl-duckduckgo') {
+        const urlEncoded = encodeURIComponent(url)
+        const ddgUrl = 'https://external-content.duckduckgo.com/iu/?u='.concat(
+          urlEncoded
+        )
+        const qp = ''
+          .concat(isGif ? '&n=-1' : '')
+          .concat(useWebp ? '&output=webp' : '', '&default=')
+          .concat(urlEncoded)
+        return 'https://wsrv.nl/?url='
+          .concat(encodeURIComponent(ddgUrl))
+          .concat(qp)
+      }
+      return url
+    } catch (e) {
+      return url
+    }
   }
   async function gmRequest(opts) {
     const req =
@@ -1858,8 +1685,9 @@
     }
     throw new Error(t('error_upload_failed'))
   }
-  async function uploadImageToHost(file, host) {
-    if (host === 'mock' || host === 'mock2') {
+  async function uploadImage(file) {
+    const host = await getHost()
+    if (host === 'mock') {
       await new Promise((resolve) => {
         setTimeout(resolve, 1e3)
       })
@@ -2294,17 +2122,11 @@
     insertIntoFocused('\n'.concat(text, '\n'))
   }
   async function handleCopyClick(it) {
-    var _a
     const fmt = await getFormat()
-    const secondary = (_a = it.extra) == null ? void 0 : _a[0]
-    const proxied = await applyProxyForCurrentSite(
+    const proxied = await applyProxy(
       it.link,
-      it.provider,
-      it.name,
-      void 0,
-      secondary
-        ? { url: secondary.link, providerKey: secondary.provider }
-        : void 0
+      it.provider || (isImgurUrl(it.link) ? 'imgur' : 'other'),
+      it.name
     )
     const out = await formatText(
       proxied,
@@ -2433,24 +2255,14 @@
       await setFormat(formatSel.value)
     })
     const host = await getHost()
-    const hostSel = createEl('select', {
-      style: 'border-left: 3px solid #3b82f6;',
-    })
+    const hostSel = createEl('select')
     buildHostOptions(hostSel, host)
-    const secondaryHostValue = await getSecondaryHost()
-    const secondaryHostSel = createEl('select', {
-      style: 'border-left: 3px solid #a855f7;',
-    })
-    buildSecondaryHostOptions(secondaryHostSel, secondaryHostValue, host)
     hostSel.addEventListener('change', async () => {
       await setHost(hostSel.value)
     })
-    secondaryHostSel.addEventListener('change', async () => {
-      await setSecondaryHost(secondaryHostSel.value)
-    })
     const proxy = await getProxy()
     const proxySel = createEl('select')
-    buildProxyOptions(proxySel, proxy, Boolean(secondaryHostValue))
+    buildProxyOptions(proxySel, proxy)
     const webpLabel = createEl('label')
     const webpChk = createEl('input', { type: 'checkbox' })
     try {
@@ -2459,6 +2271,7 @@
     webpChk.disabled = proxy === 'none'
     proxySel.addEventListener('change', async () => {
       await setProxy(proxySel.value)
+      webpChk.disabled = proxySel.value === 'none'
     })
     webpChk.addEventListener('change', async () => {
       await setWebpEnabled(Boolean(webpChk.checked))
@@ -2496,7 +2309,6 @@
     const row1 = createEl('div', { class: 'uiu-controls' })
     row1.append(formatSel)
     row1.append(hostSel)
-    row1.append(secondaryHostSel)
     const row2 = createEl('div', { class: 'uiu-controls' })
     row2.append(proxySel)
     row2.append(webpLabel)
@@ -2926,89 +2738,10 @@
         running++
         addLog(''.concat(t('log_uploading')).concat(item.file.name))
         try {
-          const host2 = await getHost()
-          const secondaryHost = await getSecondaryHost()
-          const hasSecondaryHost = Boolean(
-            secondaryHost && secondaryHost !== host2
-          )
-          let primaryLink = ''
-          let secondaryLink
-          if (hasSecondaryHost) {
-            const [primaryResult, secondaryResult] = await Promise.allSettled([
-              uploadImageToHost(item.file, host2),
-              uploadImageToHost(item.file, secondaryHost),
-            ])
-            if (primaryResult.status === 'fulfilled') {
-              primaryLink = primaryResult.value
-              addLog(
-                ''
-                  .concat(t('log_success'), ' [1/2] ')
-                  .concat(item.file.name, ' \u2192 ')
-                  .concat(primaryLink, '\uFF08')
-                  .concat(t('host_' + host2), '\uFF09')
-              )
-            }
-            if (primaryResult.status === 'rejected') {
-              const error = primaryResult.reason
-              addLog(
-                ''
-                  .concat(t('log_failed'), ' [1/2] ')
-                  .concat(item.file.name, '\uFF08')
-                  .concat(
-                    String((error == null ? void 0 : error.message) || error),
-                    '\uFF1A'
-                  )
-                  .concat(t('host_' + host2), '\uFF09')
-              )
-            }
-            if (secondaryResult.status === 'fulfilled') {
-              secondaryLink = secondaryResult.value
-              addLog(
-                ''
-                  .concat(t('log_success'), ' [2/2] ')
-                  .concat(item.file.name, ' \u2192 ')
-                  .concat(secondaryLink, '\uFF08')
-                  .concat(t('host_' + secondaryHost), '\uFF09')
-              )
-            }
-            if (secondaryResult.status === 'rejected') {
-              const error = secondaryResult.reason
-              addLog(
-                ''
-                  .concat(t('log_failed'), ' [2/2] ')
-                  .concat(item.file.name, '\uFF08')
-                  .concat(
-                    String((error == null ? void 0 : error.message) || error),
-                    '\uFF1A'
-                  )
-                  .concat(t('host_' + secondaryHost), '\uFF09')
-              )
-            }
-            if (
-              primaryResult.status === 'rejected' ||
-              secondaryResult.status === 'rejected'
-            ) {
-              throw new Error(t('error_upload_failed'))
-            }
-          } else {
-            primaryLink = await uploadImageToHost(item.file, host2)
-            addLog(
-              ''
-                .concat(t('log_success'))
-                .concat(item.file.name, ' \u2192 ')
-                .concat(primaryLink)
-            )
-          }
+          const link = await uploadImage(item.file)
           const fmt = await getFormat()
-          const proxied = await applyProxyForCurrentSite(
-            primaryLink,
-            host2,
-            item.file.name,
-            void 0,
-            secondaryLink
-              ? { url: secondaryLink, providerKey: secondaryHost }
-              : void 0
-          )
+          const host2 = await getHost()
+          const proxied = await applyProxy(link, host2, item.file.name)
           const out = await formatText(proxied, item.file.name, fmt)
           if (item.placeholder && item.targetEl) {
             const ok = replacePlaceholder(
@@ -3031,22 +2764,19 @@
           } else {
             copyAndInsert(out)
           }
-          const historyEntry = {
-            link: primaryLink,
+          await addToHistory({
+            link,
             name: item.file.name,
             ts: Date.now(),
             pageUrl: location.href,
             provider: host2,
-          }
-          if (secondaryLink) {
-            historyEntry.extra = [
-              {
-                link: secondaryLink,
-                provider: secondaryHost,
-              },
-            ]
-          }
-          await addToHistory(historyEntry)
+          })
+          addLog(
+            ''
+              .concat(t('log_success'))
+              .concat(item.file.name, ' \u2192 ')
+              .concat(link)
+          )
         } catch (error) {
           if (item.placeholder && item.targetEl) {
             const failNote = '<!-- '.concat(
@@ -3120,7 +2850,6 @@
       void processQueue()
     }
     async function renderHistory() {
-      var _a
       if (!header.classList.contains('uiu-show-history')) return
       history.textContent = ''
       const historyControls = createEl('div', { class: 'uiu-controls' })
@@ -3150,15 +2879,9 @@
       const listWrap = createEl('div', { class: 'uiu-list' })
       for (const it of historyItems) {
         const row = createEl('div', { class: 'uiu-row' })
-        const secondary = (_a = it.extra) == null ? void 0 : _a[0]
-        const previewUrl = await applyProxyForCurrentSite(
+        const previewUrl = await applyProxy(
           it.link,
-          it.provider,
-          it.name,
-          void 0,
-          secondary
-            ? { url: secondary.link, providerKey: secondary.provider }
-            : void 0
+          it.provider || (isImgurUrl(it.link) ? 'imgur' : 'other')
         )
         const preview = createEl('img', {
           src: previewUrl,
@@ -3186,33 +2909,15 @@
           })
         )
         try {
-          const primaryProviderKey = it.provider || 'imgur'
-          const primaryProviderText = t('host_' + primaryProviderKey)
-          const providerWrap = createEl('div', {
-            style:
-              'display:flex;flex-wrap:wrap;gap:4px;font-size:11px;color:#cbd5e1;',
-          })
-          providerWrap.append(
+          const providerKey = it.provider || 'imgur'
+          const providerText = t('host_' + providerKey)
+          info.append(
             createEl('span', {
-              text: primaryProviderText,
+              text: providerText,
               style:
-                'border:1px solid #3b82f6;color:#93c5fd;border-radius:4px;padding:1px 6px;width:fit-content;',
+                'font-size:11px;color:#cbd5e1;border:1px solid #334155;border-radius:4px;padding:1px 6px;width:fit-content;',
             })
           )
-          if (Array.isArray(it.extra)) {
-            for (const extra of it.extra) {
-              const key = (extra == null ? void 0 : extra.provider) || 'imgur'
-              const text = t('host_' + key)
-              providerWrap.append(
-                createEl('span', {
-                  text,
-                  style:
-                    'border:1px solid #a855f7;color:#e9d5ff;border-radius:4px;padding:1px 6px;width:fit-content;',
-                })
-              )
-            }
-          }
-          info.append(providerWrap)
         } catch (e) {}
         if (it.pageUrl) {
           let host2 = it.pageUrl
@@ -3234,46 +2939,17 @@
         copyBtn.addEventListener('click', () => {
           void handleCopyClick(it)
         })
-        const openBtn = createEl('button', {
-          text: t('btn_open'),
-          style: 'border:1px solid #3b82f6;color:#93c5fd;',
-        })
+        const openBtn = createEl('button', { text: t('btn_open') })
         openBtn.addEventListener('click', async () => {
-          var _a2
-          const secondary2 = (_a2 = it.extra) == null ? void 0 : _a2[0]
-          const url = await applyProxyForCurrentSite(
+          const url = await applyProxy(
             it.link,
-            it.provider,
-            it.name,
-            void 0,
-            secondary2
-              ? { url: secondary2.link, providerKey: secondary2.provider }
-              : void 0
+            it.provider || (isImgurUrl(it.link) ? 'imgur' : 'other'),
+            it.name
           )
           window.open(url, '_blank')
         })
         ops.append(copyBtn)
         ops.append(openBtn)
-        if (Array.isArray(it.extra)) {
-          for (const extra of it.extra) {
-            if (!(extra == null ? void 0 : extra.link)) continue
-            const openExtraBtn = createEl('button', {
-              text: t('btn_open'),
-              style: 'border:1px solid #a855f7;color:#e9d5ff;',
-            })
-            openExtraBtn.addEventListener('click', async () => {
-              const url = await applyProxyForCurrentSite(
-                extra.link,
-                extra.provider,
-                it.name,
-                void 0,
-                { url: it.link, providerKey: it.provider }
-              )
-              window.open(url, '_blank')
-            })
-            ops.append(openExtraBtn)
-          }
-        }
         row.append(ops)
         listWrap.append(row)
       }
@@ -3321,8 +2997,6 @@
     void addValueChangeListener(
       SITE_SETTINGS_MAP_KEY,
       async (name, oldValue, newValue, remote) => {
-        const oldMap = oldValue || {}
-        const oldSite = oldMap[SITE_KEY] || {}
         const newMap = newValue || {}
         const s = newMap[SITE_KEY] || {}
         if (s.format && formatSel.value !== s.format) {
@@ -3331,41 +3005,19 @@
         if (s.host && hostSel.value !== s.host) {
           hostSel.value = s.host
         }
-        const storedSecondaryHost =
-          typeof s.secondaryHost === 'string' ? s.secondaryHost : ''
-        const secondaryHostValue2 =
-          storedSecondaryHost && storedSecondaryHost !== hostSel.value
-            ? storedSecondaryHost
-            : ''
-        buildSecondaryHostOptions(
-          secondaryHostSel,
-          secondaryHostValue2,
-          hostSel.value
-        )
-        buildProxyOptions(proxySel, s.proxy, Boolean(secondaryHostValue2))
-        webpChk.disabled = proxySel.value === 'none'
+        if (s.proxy) {
+          if (proxySel.value !== s.proxy) {
+            proxySel.value = s.proxy
+          }
+          webpChk.disabled = s.proxy === 'none'
+        }
         const webpEnabled = s.webp === true
         if (webpChk.checked !== webpEnabled) {
           webpChk.checked = webpEnabled
         }
-        const oldProxy = oldSite.proxy
-        const newProxy = proxySel.value
-        const oldWebpEnabled = oldSite.webp === true
-        const proxyChanged = oldProxy !== newProxy
-        const webpChanged = oldWebpEnabled !== webpEnabled
-        console.log(
-          'proxyChanged',
-          proxyChanged,
-          'webpChanged',
-          webpChanged,
-          oldProxy,
-          newProxy
-        )
-        if (proxyChanged || webpChanged) {
-          try {
-            await renderHistory()
-          } catch (e) {}
-        }
+        try {
+          await renderHistory()
+        } catch (e) {}
       }
     )
     return { handleFiles }

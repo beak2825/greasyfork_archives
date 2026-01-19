@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube广告拦截专家-精准安全升级版
 // @namespace    http://tampermonkey.net/
-// @version      2.3.0
+// @version      1.0.4
 // @description  精准拦截YouTube广告，避免误删视频主内容，安全无副作用
 // @author       StarMi
 // @match        *://www.youtube.com/*
@@ -14,331 +14,108 @@
 // @updateURL https://update.greasyfork.org/scripts/544725/YouTube%E5%B9%BF%E5%91%8A%E6%8B%A6%E6%88%AA%E4%B8%93%E5%AE%B6-%E7%B2%BE%E5%87%86%E5%AE%89%E5%85%A8%E5%8D%87%E7%BA%A7%E7%89%88.meta.js
 // ==/UserScript==
 
-(function() {
+(function(){
     'use strict';
 
-    // 统计数据
-    let blockCount = 0;
-
-    // 样式常量：Toast 通知
-    const TOAST_STYLE = `
-        #yt-adblock-toast {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: rgba(28, 28, 28, 0.9);
-            backdrop-filter: blur(10px);
-            color: #fff;
-            padding: 12px 24px;
-            border-radius: 50px;
-            font-family: "Roboto", sans-serif;
-            font-size: 14px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            z-index: 2147483647; /* 确保最高层级 */
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s;
-            opacity: 0;
-            pointer-events: none;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        #yt-adblock-toast.show {
-            transform: translateX(-50%) translateY(0);
-            opacity: 1;
-        }
-        #yt-adblock-toast .icon {
-            font-size: 16px;
-        }
-        #yt-adblock-toast .count {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 12px;
-            margin-left: 8px;
-        }
-    `;
-
-    // 广告选择器列表
-    const AD_SELECTORS = [
-        '.ytp-ad-player-overlay',          // 播放器贴片广告
-        '.ytp-ad-overlay-container',       // 播放器广告叠加层
-        '.ytp-ad-image-overlay',           // 播放器图片广告
-        '.ytp-ad-module',                  // 广告模块容器
-        '.ytp-ad-skip-button',             // 跳过按钮
-        '.ytp-ad-skip-button-modern',      // 新版跳过按钮
-        '.ytp-ad-preview-container',       // 广告预览容器
-        '.ytp-ad-progress-list',           // 广告进度条
-        '#player-ads',                     // 播放器旁边的广告
-        '#masthead-ad',                    // 顶部横幅广告
-        'ytd-display-ad-renderer',         // 搜索结果页广告
-        'ytd-promoted-sparkles-web-renderer', // 推荐列表推广内容
-        'ytd-promoted-video-renderer',     // 推广视频
-        'ytd-ad-slot-renderer',            // 广告插槽
-        '#offer-module',                   // 优惠商品模块
-        'ytd-reel-player-overlay-renderer', // Shorts 广告浮层
-        'ytd-compact-promoted-video-renderer', // 侧边栏推荐广告
-    ];
-
-    // 广告URL特征
-    const AD_URL_PATTERNS = [
-        'doubleclick.net',
-        'pagead2.googlesyndication.com',
-        'youtube.com/api/stats/ads',
-        'youtube.com/youtubei/v1/ads',
-        'googleads.g.doubleclick.net',
-        'ad.doubleclick.net'
-    ];
-
-    /**
-     * UI 管理器：处理通知显示
-     */
-    const UIManager = {
-        toast: null,
-        timer: null,
-        messageEl: null,
-        countEl: null,
-
-        init() {
-            if (this.toast) return; // 避免重复初始化
-
-            // 注入样式
-            const style = document.createElement('style');
-            style.textContent = TOAST_STYLE;
-            document.head.appendChild(style);
-
-            // 创建 Toast 元素 (使用 DOM API 替代 innerHTML 以兼容 Trusted Types)
-            this.toast = document.createElement('div');
-            this.toast.id = 'yt-adblock-toast';
-
-            // 1. 图标
-            const iconSpan = document.createElement('span');
-            iconSpan.className = 'icon';
-            iconSpan.textContent = '⚡';
-            this.toast.appendChild(iconSpan);
-
-            // 2. 消息文本
-            this.messageEl = document.createElement('span');
-            this.messageEl.className = 'message';
-            this.messageEl.textContent = '已极速跳过广告';
-            this.toast.appendChild(this.messageEl);
-
-            // 3. 计数器
-            this.countEl = document.createElement('span');
-            this.countEl.className = 'count';
-            this.countEl.id = 'yt-adblock-count';
-            this.countEl.textContent = '0';
-            this.toast.appendChild(this.countEl);
-
-            document.body.appendChild(this.toast);
-            console.log('[YouTube广告拦截] UI初始化成功 (DOM API)');
-        },
-
-        show(message = '已极速跳过广告') {
-            if (!this.toast) this.init();
-            if (!this.toast) return;
-
-            // 更新内容
-            if (this.messageEl) this.messageEl.textContent = message;
-            if (this.countEl) this.countEl.textContent = `x ${blockCount}`;
-
-            // 显示动画
-            requestAnimationFrame(() => {
-                this.toast.classList.add('show');
-            });
-
-            // 自动隐藏
-            if (this.timer) clearTimeout(this.timer);
-            this.timer = setTimeout(() => {
-                this.toast.classList.remove('show');
-            }, 2000);
-        }
-    };
-
-    /**
-     * 判断是否为广告URL
-     */
+    // 判断URL是否为广告请求
     function isAdUrl(url) {
         if (!url) return false;
+        url = url.toLowerCase();
+        // 只阻止确认为广告的视频请求
+        if (url.includes('googlevideo.com/videoplayback')) {
+            return url.includes('&adformat=') || url.includes('&adurl=');
+        }
+        const adPatterns = [
+            'doubleclick.net',
+            'pagead2.googlesyndication.com',
+            'youtube.com/api/stats/ads',
+            'youtube.com/youtubei/v1/ads',
+            'googleads.g.doubleclick.net',
+            'ad.doubleclick.net'
+        ];
+        return adPatterns.some(pattern => url.includes(pattern));
+    }
+
+    // 拦截fetch请求
+    const originalFetch = window.fetch;
+    window.fetch = function() {
+        const input = arguments[0];
+        let url = '';
+        if (typeof input === 'string') {
+            url = input;
+        } else if (input && input.url) {
+            url = input.url;
+        }
+        if (isAdUrl(url)) {
+            console.log('[YouTube广告拦截] 阻止fetch请求:', url);
+            return new Promise(() => {}); // 永不resolve，阻止请求
+        }
+        return originalFetch.apply(this, arguments);
+    };
+
+    // 拦截XHR请求
+    const originalOpen = XMLHttpRequest.prototype.open;
+    XMLHttpRequest.prototype.open = function(method, url) {
+        if (isAdUrl(url)) {
+            console.log('[YouTube广告拦截] 阻止XHR请求:', url);
+            return;
+        }
+        return originalOpen.apply(this, arguments);
+    };
+
+    // 精准安全地移除广告相关DOM元素
+    function removeAdElements() {
         try {
-            const urlObj = new URL(url);
-            const lowerUrl = urlObj.href.toLowerCase();
-
-            // 针对视频播放流的特异性检查
-            if (lowerUrl.includes('googlevideo.com/videoplayback')) {
-                return lowerUrl.includes('&adformat=') || lowerUrl.includes('&adurl=');
-            }
-
-            return AD_URL_PATTERNS.some(pattern => lowerUrl.includes(pattern));
-        } catch (e) {
-            const lowerUrl = url.toLowerCase();
-            return AD_URL_PATTERNS.some(pattern => lowerUrl.includes(pattern));
-        }
-    }
-
-    /**
-     * 极速跳过视频广告
-     */
-    function skipVideoAds() {
-        const video = document.querySelector('video');
-        if (!video) return;
-
-        const moviePlayer = document.querySelector('.html5-video-player');
-        const isAd = moviePlayer && (moviePlayer.classList.contains('ad-showing') || moviePlayer.classList.contains('ad-interrupting'));
-
-        if (isAd) {
-            // 1. 静音
-            video.muted = true;
-
-            // 2. 极速播放
-            if (!Number.isNaN(video.duration) && video.duration > 0) {
-                 video.currentTime = video.duration;
-            } else {
-                 video.playbackRate = 16;
-            }
-
-            // 3. 点击跳过
-            const skipButtons = document.querySelectorAll('.ytp-ad-skip-button, .ytp-ad-skip-button-modern, .videoAdUiSkipButton');
-            skipButtons.forEach(btn => {
-                if (btn) btn.click();
+            // 只移除广告iframe
+            document.querySelectorAll('iframe').forEach(iframe => {
+                if (iframe.src && isAdUrl(iframe.src)) {
+                    console.log('[YouTube广告拦截] 移除广告iframe:', iframe.src);
+                    iframe.remove();
+                }
             });
 
-            // 4. Shorts 广告
-             const shortsAd = document.querySelector('ytd-reel-video-renderer[is-active] video');
-             if(shortsAd && shortsAd.closest('ytd-ad-slot-renderer')) {
-                 shortsAd.remove();
-             }
-
-             // 计数并提示
-             triggerToast('已为您跳过广告');
-        }
-    }
-
-    /**
-     * 移除页面静态广告元素 (增强版)
-     */
-    function removePageAds() {
-        let hasRemoved = false;
-
-        // 1. 移除已定义的广告容器
-        AD_SELECTORS.forEach(selector => {
-            const elements = document.querySelectorAll(selector);
-            elements.forEach(el => {
-                if (el.tagName !== 'VIDEO') {
+            // 精准广告容器选择器，避免误删主内容
+            const adSelectors = [
+                '.ytp-ad-player-overlay',          // 播放器贴片广告
+                '.ytp-ad-overlay-container',       // 播放器广告叠加
+                '.ytp-ad-image-overlay',           // 播放器图片广告
+                '.ytp-ad-module',                  // 播放器广告模块（需保留，仅移除该层，不动.player本体）
+                '.ytp-ad-skip-button',             // 跳过广告按钮
+                '.ytp-ad-progress-list',           // 广告进度条
+                '#player-ads',                     // 播放区专属广告区域
+                '#masthead-ad',                    // 顶部广告横幅
+                // 推荐&页面广告
+                'ytd-display-ad-renderer',         // 页面广告
+                'ytd-promoted-sparkles-web-renderer', // 推荐区广告
+                'ytd-promoted-video-renderer'
+            ];
+            adSelectors.forEach(selector => {
+                document.querySelectorAll(selector).forEach(el => {
+                    // 只移除匹配到的广告层，不处理.parentNode，确保不会误删容器
                     el.remove();
-                    hasRemoved = true;
+                });
+            });
+
+            // 推荐区卡片“赞助商广告”精准判定
+            document.querySelectorAll('ytd-rich-item-renderer, ytd-video-renderer, ytd-grid-video-renderer').forEach(card => {
+                if (card.innerText && card.innerText.match(/赞助商广告|Sponsored|Ad\b|广告|贊助廣告/i)) {
+                    card.remove();
                 }
             });
-        });
 
-        // 2. 移除赞助商卡片 (增强匹配逻辑)
-        const renderers = document.querySelectorAll('ytd-rich-item-renderer, ytd-video-renderer, ytd-compact-video-renderer');
-        renderers.forEach(card => {
-            if (card.dataset.adChecked) return;
-
-            const text = card.innerText + (card.getAttribute('aria-label') || '');
-
-            if (text && /赞助商广告|Sponsored|Ad\b|广告|贊助廣告/i.test(text)) {
-                card.remove();
-                hasRemoved = true;
-                console.log('[YouTube广告拦截] 移除静态广告卡片:', card.tagName);
-            } else {
-                card.dataset.adChecked = 'true';
-            }
-        });
-
-        if (hasRemoved) {
-             triggerToast('已移除页面广告');
+        } catch(e) {
+            // 静默错误，避免影响页面
         }
     }
 
-    /**
-     * 触发 Toast 提示 (带防抖)
-     */
-    function triggerToast(msg) {
-        if (!window._lastToastTime || Date.now() - window._lastToastTime > 3000) {
-            blockCount++;
-            UIManager.show(msg);
-            console.log(`[YouTube广告拦截] 拦截成功，当前总数: ${blockCount}`);
-            window._lastToastTime = Date.now();
-        }
-    }
+    // 页面首次加载时移除广告元素
+    window.addEventListener('DOMContentLoaded', removeAdElements);
 
-    /**
-     * 拦截网络请求
-     */
-    function setupNetworkInterceptor() {
-        const originalFetch = window.fetch;
-        window.fetch = function(...args) {
-            const input = args[0];
-            let url = '';
-
-            if (typeof input === 'string') {
-                url = input;
-            } else if (input instanceof Request) {
-                url = input.url;
-            }
-
-            if (isAdUrl(url)) {
-                console.log('[YouTube广告拦截] 阻止Fetch请求:', url);
-                return new Promise(() => {});
-            }
-            return originalFetch.apply(this, args);
-        };
-
-        const originalOpen = XMLHttpRequest.prototype.open;
-        XMLHttpRequest.prototype.open = function(method, url) {
-            if (isAdUrl(url)) {
-                console.log('[YouTube广告拦截] 阻止XHR请求:', url);
-                return;
-            }
-            return originalOpen.apply(this, arguments);
-        };
-    }
-
-    /**
-     * 初始化
-     */
-    function init() {
-        console.log('[YouTube广告拦截] 脚本已启动 🚀');
-
-        setupNetworkInterceptor();
-
-        // 确保 UI 在 document.body 就绪后初始化
-        if (document.body) {
-            UIManager.init();
-        } else {
-            // 使用 MutationObserver 等待 body 出现
-            const bodyObserver = new MutationObserver(() => {
-                if (document.body) {
-                    UIManager.init();
-                    bodyObserver.disconnect();
-                }
-            });
-            bodyObserver.observe(document.documentElement, { childList: true });
-        }
-
-        // 定时清理任务
-        setInterval(() => {
-            skipVideoAds();
-            removePageAds();
-        }, 100);
-
-        // 监听动态内容变化
-        const observer = new MutationObserver((mutations) => {
-            for (const mutation of mutations) {
-                if (mutation.addedNodes.length > 0) {
-                    removePageAds();
-                    break;
-                }
-            }
-        });
-
-        const target = document.body || document.documentElement;
-        observer.observe(target, { childList: true, subtree: true });
-    }
-
-    init();
+    // 监听DOM变化，动态移除新增广告元素
+    const observer = new MutationObserver(() => {
+        clearTimeout(window._ytAdblockTimeout);
+        window._ytAdblockTimeout = setTimeout(removeAdElements, 300);
+    });
+    observer.observe(document.documentElement || document.body, { childList:true, subtree:true });
 
 })();

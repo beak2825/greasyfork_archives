@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AI Conversation Navigator
 // @namespace    https://greasyfork.org
-// @version      8.5
+// @version      8.3
 // @description  Floating navigator for your prompts in conversations. Applied for ChatGPT, Gemini, Aistudio, NotebookLM, Grok, Claude, Mistral, Perplexity, Meta, Poe, Deepai, Huggingface, Deepseek, Kimi, Qwen, Manus, Z.ai, Longcat, Chatglm, Chatboxai, Lmarena, Quillbot, Canva, Genspark, Character, Spacefrontiers, Scienceos, Evidencehunt, Playground (allen), Paperfigureqa (allen), Scira, Scispace, Exa.ai, Consensus, Openevidence, Pathway, Math-gpt.
 // @author       Bui Quoc Dung
 // @match        https://chatgpt.com/*
@@ -84,7 +84,7 @@
             domain: 'chatgpt.com',
             includePath: ['chatgpt.com/c/', 'chatgpt.com/g/'],
             userMessage: 'div[data-message-author-role="user"]',
-            shiftTarget: '[data-scroll-root="true"]',
+            shiftTarget: 'main',
             shiftHeader: '.flex.items-center.justify-end.gap-2.overflow-x-hidden',
             collapsedTop: '0'
         },
@@ -343,19 +343,15 @@
         border-left: 1px solid color-mix(in srgb, CanvasText 15%, transparent);
     `;
 
-    const getShiftStyle = (width, selector = '', isHeader = false) => {
+    const getShiftStyle = (width, selector = '') => {
         if (!selector) return '';
         const selectors = selector.split(',');
         const prefixedSelector = selectors.map(s => `body.navigator-expanded ${s.trim()}`).join(', ');
-        const preventNesting = isHeader && CURRENT_SITE.shiftTarget
-            ? `:not(${CURRENT_SITE.shiftTarget} *)`
-            : '';
-
         return `
             ${selector} {
                 transition: margin-right 0.3s ease, max-width 0.3s ease, margin-left 0.3s ease;
             }
-            ${prefixedSelector}${preventNesting} {
+            ${prefixedSelector} {
                 margin-left: 0 !important;
                 margin-right: ${width}px !important;
                 max-width: calc(100% - ${width}px) !important;
@@ -368,22 +364,11 @@
         if (shouldInject && !existingStyle) {
             const currentWidth = CURRENT_SITE.width || NAV_WIDTH;
             let cssContent = '';
-
-            if (CURRENT_SITE.shiftTarget) {
-                cssContent += getShiftStyle(currentWidth, CURRENT_SITE.shiftTarget);
-            }
-
+            if (CURRENT_SITE.shiftTarget) cssContent += getShiftStyle(currentWidth, CURRENT_SITE.shiftTarget);
             if (CURRENT_SITE.shiftHeader) {
-                cssContent += `
-                    ${CURRENT_SITE.shiftHeader} {
-                        transition: margin-right 0.3s ease;
-                    }
-                    body.navigator-collapsed ${CURRENT_SITE.shiftHeader} {
-                        margin-right: ${NAV_COLLAPSED_WIDTH}px !important;
-                    }
-                `;
+                cssContent += getShiftStyle(currentWidth, CURRENT_SITE.shiftHeader);
+                cssContent += `body.navigator-collapsed ${CURRENT_SITE.shiftHeader} { margin-right: ${NAV_COLLAPSED_WIDTH}px !important; transition: margin-right 0.3s ease; }`;
             }
-
             if (cssContent) {
                 const styleElement = document.createElement('style');
                 styleElement.id = injectedStyleId;
@@ -459,34 +444,32 @@
             const toggleHandler = (e) => {
                 e.stopPropagation();
                 isCollapsed = !isCollapsed;
-                container.classList.add('transitioning');
-
                 if (!isCollapsed) {
-                    Object.assign(container.style, {
-                        width: `${currentWidth}px`, bottom: '0px', height: 'auto', top: '0px', right: '0px',
-                        borderLeft: '1px solid color-mix(in srgb, CanvasText 15%, transparent)'
-                    });
-                    Object.assign(header.style, {
-                        backgroundColor: 'Canvas', padding: '15px 0',
-                        borderBottom: '1px solid color-mix(in srgb, CanvasText 15%, transparent)',
-                    });
                     content.style.display = 'block';
+                    container.style.width = `${currentWidth}px`;
                     toggleBtn.textContent = 'Close';
+                    container.style.bottom = '0px';
+                    container.style.height = 'auto';
+                    header.style.backgroundColor = 'Canvas';
+                    header.style.borderBottom = '1px solid color-mix(in srgb, CanvasText 15%, transparent)';
+                    container.style.borderLeft = '1px solid color-mix(in srgb, CanvasText 15%, transparent)';
+                    container.style.top = '0px';
+                    container.style.right = '0px';
+                    header.style.padding = '15px 0';
                 } else {
-                    Object.assign(container.style, {
-                        width: `${NAV_COLLAPSED_WIDTH}px`,
-                        borderLeft: 'none', bottom: 'auto', height: 'min-content', right: '10px',
-                        top: CURRENT_SITE.collapsedTop || '55px'
-                    });
-                    Object.assign(header.style, {
-                        backgroundColor: 'transparent', borderBottom: 'none', padding: '10px 0'
-                    });
                     content.style.display = 'none';
+                    container.style.borderLeft = 'none';
+                    container.style.width = `${NAV_COLLAPSED_WIDTH}px`;
                     toggleBtn.textContent = 'Open';
+                    container.style.bottom = 'auto';
+                    container.style.height = 'min-content';
+                    header.style.backgroundColor = 'transparent';
+                    container.style.right = '10px';
+                    header.style.borderBottom = 'none';
+                    header.style.padding = '10px 0';
+                    container.style.top = CURRENT_SITE.collapsedTop || '55px';
                 }
-
                 updateBodyClassForLayout();
-                setTimeout(() => container.classList.remove('transitioning'), 300);
             };
             toggleBtn.addEventListener('click', toggleHandler);
             updateBodyClassForLayout();

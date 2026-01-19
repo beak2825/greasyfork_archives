@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Custom and nearest Torn events
 // @namespace    http://tampermonkey.net/
-// @version      2.0.30
+// @version      2.0.29
 // @description  See the time until next event. Create and follow custom events
 // @author       ljovcheg  [3191064] 
 // @license      MIT
@@ -28,7 +28,7 @@
     let isTornPDA = typeof window.flutter_inappwebview !== 'undefined'; //detect tornPDA
 
 
-    const SCRIPT_VERSION = '2.0.30';
+    const SCRIPT_VERSION = '2.0.29';
     if (typeof GM_info !== 'undefined' &&
         GM_info &&
         GM_info.script &&
@@ -296,7 +296,6 @@
             return;
         }
 
-        addStyle(); // add style only if closk was found
 
 
         tc_clock_tooltip.html('');
@@ -1522,10 +1521,10 @@
         const futureCandidates = nonPast.filter(e => e.start > now);
         let firstCandidate = false;
         for (const e of futureCandidates) {
-
+            // Only consider overlaps with ONGOING events
             const overlapsOngoing = ongoing_events.some(ongoing =>
                 ongoing.start <= e.start && e.start <= ongoing.end
-
+                // equivalently: e.start <= ongoing.end (since ongoing.start <= now < e.start)
             );
             if (overlapsOngoing) {
                 if (!firstCandidate) {
@@ -1677,11 +1676,8 @@
 
     }
 
-    function addStyle() {
 
-
-
-        GM_addStyle(`
+    GM_addStyle(`
         /*  OVERWRITE TORN STYLE    */
 
         .tc-clock-tooltip{
@@ -2115,5 +2111,4 @@
         .fa-sr-only,.fa-sr-only-focusable:not(:focus),.sr-only,.sr-only-focusable:not(:focus){position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border-width:0}
                 
     `);
-    }
 })();

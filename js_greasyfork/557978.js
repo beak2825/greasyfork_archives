@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         PapaNads PF Hybrid PDA — Plushies / Flowers / Drugs)
 // @namespace    http://tampermonkey.net/
-// @version      2.2-hybrid-final-tweak6-neon
+// @version      2.0-hybrid-final-tweak6-neon
 // @description  Hybrid PDA with neon menus (plush/flower/drugs), Bits & Bobs shop price+stock for Teddy/Cat/Sheep, global & per-item calculators, JSON editor and HOW IT WORKS link (clickable). Keeps YATA preference and Torn API usage. (Neon UI + shop fallback).  
 // @author       PapaNads
 // @match        https://www.torn.com/*
@@ -683,276 +683,265 @@
   }
 
   function renderPlush(container) {
-  // ensure entries in cache
-  PLUSHIES.forEach(p => { if (!plushCache[p.name]) plushCache[p.name] = { countryPrices:{}, updatedAt:0 }; });
+    // ensure entries in cache
+    PLUSHIES.forEach(p => { if (!plushCache[p.name]) plushCache[p.name] = { countryPrices:{}, updatedAt:0 }; });
 
-  const countsArr = PLUSHIES.map(p => plushCounts[p.id] || 0);
-  const sets = countsArr.length ? Math.min(...countsArr) : 0;
-  const total = countsArr.reduce((a,b)=>a+b,0);
-  const goal = Number(GM_getValue(K.GOAL_PLUSH,0));
-  const marketTotal = calcMarketTotal(plushCounts);
+    const countsArr = PLUSHIES.map(p => plushCounts[p.id] || 0);
+    const sets = countsArr.length ? Math.min(...countsArr) : 0;
+    const total = countsArr.reduce((a,b)=>a+b,0);
+    const goal = Number(GM_getValue(K.GOAL_PLUSH,0));
+    const marketTotal = calcMarketTotal(plushCounts);
 
-  // Top-level goal input
-  const topHtml = `
-    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-      <div style="font-weight:900">
-        Plushies — Sets: ${sets} • Goal: 
-        <input id="pfn_plush_goal" type="number" min="0" value="${goal || ''}" style="width:80px;padding:4px;border-radius:4px;background:#070707;color:#fff;border:1px solid rgba(255,255,255,0.03)">
-        <button id="pfn_plush_goal_lock" class="pfn_btn" style="background:linear-gradient(180deg,#00e0ff,#00b8ff);padding:4px 8px;font-size:12px">Lock</button>
+    const topHtml = `
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="font-weight:900">Plushies — Sets: ${sets} • Goal: ${goal>0?goal:'–'}</div>
+        <div style="margin-left:auto" class="pfn_small">Market est total: <span style="font-weight:900;color:#ffdede">${fmtMoney(marketTotal)}</span></div>
       </div>
-      <div style="margin-left:auto" class="pfn_small">
-        Market est total: <span style="font-weight:900;color:#ffdede">${fmtMoney(marketTotal)}</span>
+
+      <div style="margin-top:10px;display:flex;gap:8px;align-items:center">
+        <div class="pfn_small">Global calc (per-item cheapest):</div>
+        <input id="pfn_plush_global_qty" type="number" min="0" value="0" style="width:80px;padding:6px;border-radius:6px;background:#070707;color:#fff;border:1px solid rgba(255,255,255,0.03)">
+        <button id="pfn_plush_global_calc" class="pfn_btn">Calculate cost for X each</button>
+        <button id="pfn_plush_update_shops" class="pfn_btn alt" style="margin-left:8px">Update Bits & Bobs shop data</button>
+        <div style="margin-left:auto" class="pfn_small">Total plush: <span style="font-weight:900;color:#ffdede">${total}</span></div>
       </div>
-    </div>
 
-    <div style="margin-top:10px;display:flex;gap:8px;align-items:center">
-      <div class="pfn_small">Global calc (per-item cheapest):</div>
-      <input id="pfn_plush_global_qty" type="number" min="0" value="0" style="width:80px;padding:6px;border-radius:6px;background:#070707;color:#fff;border:1px solid rgba(255,255,255,0.03)">
-      <button id="pfn_plush_global_calc" class="pfn_btn">Calculate cost for X each</button>
-      <button id="pfn_plush_update_shops" class="pfn_btn alt" style="margin-left:8px">Update Bits & Bobs shop data</button>
-      <div style="margin-left:auto" class="pfn_small">Total plush: <span style="font-weight:900;color:#ffdede">${total}</span></div>
-    </div>
-
-    <div id="pfn_plush_list" style="margin-top:12px"></div>
-  `;
-  container.innerHTML = topHtml;
-
-  // Top-level goal listener
-  document.getElementById('pfn_plush_goal_lock').addEventListener('click', ()=>{
-    const n = Math.max(0, parseInt(document.getElementById('pfn_plush_goal').value||0,10));
-    if(n>0){ 
-      GM_setValue(K.GOAL_PLUSH, n); 
-      toast('Saved plush sets goal: ' + n); 
-      render(); 
-    } else toast('Enter a positive number to lock as goal', true);
-  });
-
-  // Global cost calculation
-  document.getElementById('pfn_plush_global_calc').addEventListener('click', ()=>{
-    const q = Math.max(0, parseInt(document.getElementById('pfn_plush_global_qty').value||0,10));
-    let totalCost = 0;
-    PLUSHIES.forEach(p=>{
-      const cheapest = findCheapestForItem('plush', p.name);
-      if(cheapest && typeof cheapest.price === 'number') totalCost += cheapest.price*q;
-    });
-    toast(`Plush total for ${q} each: ${fmtMoney(totalCost)}`, false);
-  });
-
-  // Update shop data
-  document.getElementById('pfn_plush_update_shops').addEventListener('click', async ()=>{
-    toast('Updating Bits & Bobs (best-effort)...');
-    await fetchShopPlushes(true);
-    render();
-  });
-
-  // Rows (per-plush) — no per-plush goal anymore
-  const rowsHtml = PLUSHIES.map(p=>{
-    const have = plushCounts[p.id] || 0;
-    const cache = plushCache[p.name] || { countryPrices:{}, updatedAt:0 };
-    const cheapest = findCheapestForItem('plush', p.name);
-    const cheapestText = cheapest ? `${cheapest.country} • ${fmtMoney(cheapest.price)} (stk ${cheapest.stock||0})` : 'No data';
-    const marketVal = (marketCache[p.id] || 0) * have;
-
-    let countryChips = '';
-    const cp = cache.countryPrices || {};
-    const entries = Object.entries(cp);
-    if(entries.length){
-      countryChips = '<div class="pfn_country_list">';
-      for(const [country,obj] of entries){
-        const priceText = (obj && typeof obj.price === 'number') ? fmtMoney(obj.price) : '—';
-        const stockText = (obj && obj.stock!==undefined && obj.stock!==null) ? `stk ${obj.stock}` : '';
-        countryChips += `<div class="pfn_country_chip">${country}<br><small>${priceText} ${stockText}</small></div>`;
-      }
-      countryChips += '</div>';
-    }
-
-    const shopEntry = (cache.countryPrices && cache.countryPrices['Torn (Bits & Bobs)']) ? cache.countryPrices['Torn (Bits & Bobs)'] : null;
-    const shopLine = shopEntry ? `<div style="margin-top:6px;color:#ffdede;font-weight:900">Shop price: ${fmtMoney(shopEntry.price)} • stock: ${shopEntry.stock||0}</div>` : '';
-
-    return `
-      <div style="padding:12px;border-radius:10px;background:rgba(255,255,255,0.02);margin-bottom:12px">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <div style="font-weight:900">${p.name} — you have ${have}</div>
-          <div style="font-size:12px;color:#ddd">Updated: ${cache.updatedAt?timeAgo(cache.updatedAt):'never'}</div>
-        </div>
-
-        <div style="margin-top:8px;font-size:13px">Cheapest: <span style="color:var(--neon-plush);font-weight:900">${cheapestText}</span></div>
-        ${shopLine}
-
-        <div style="margin-top:10px;display:flex;gap:12px;align-items:center">
-          <div style="flex:1">
-            <div class="pfn_small">Market value (owned):</div>
-            <div style="font-weight:900;color:#ffb86b">${fmtMoney(marketVal)}</div>
-            <div style="font-size:12px;color:#ddd;margin-top:6px">Market price (per): ${fmtMoney(marketCache[p.id]||0)}</div>
-          </div>
-
-          <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
-            <button data-item="${p.name}" class="pfn_btn pfn_open_json_item" data-type="plush">Edit JSON</button>
-            <button data-item="${p.name}" class="pfn_btn pfn_calc_item" data-type="plush">Calc for X</button>
-            ${ SHOP_PLUSH_IDS.has(p.id) ? `<button data-id="${p.id}" data-item="${p.name}" class="pfn_btn alt pfn_fetch_shop" data-type="plush">Fetch shop price</button>` : '' }
-          </div>
-        </div>
-
-        ${countryChips}
-      </div>
+      <div id="pfn_plush_list" style="margin-top:12px"></div>
     `;
-  }).join('');
-  document.getElementById('pfn_plush_list').innerHTML = rowsHtml;
+    container.innerHTML = topHtml;
 
-  // listeners
-  document.querySelectorAll('.pfn_open_json_item').forEach(btn=>btn.addEventListener('click', ()=>openModalForItem(btn.dataset.type, btn.dataset.item)));
-  document.querySelectorAll('.pfn_calc_item').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      const key = btn.dataset.item;
-      const type = btn.dataset.type;
-      const q = prompt(`Enter quantity to calculate total cost for ${key}:`, '1');
-      if (q === null) return;
-      const qty = Math.max(0, parseInt(q,10) || 0);
-      const cheapest = findCheapestForItem(type, key);
-      if (!cheapest || typeof cheapest.price !== 'number') {
-        alert('No price data for ' + key + '. Try updating shop data or YATA.');
-        return;
-      }
-      const cost = cheapest.price * qty;
-      alert(`Estimated cost for ${qty} ${key}: ${fmtMoney(cost)} (cheapest: ${cheapest.country} at ${fmtMoney(cheapest.price)})`);
+    document.getElementById('pfn_plush_global_calc').addEventListener('click', ()=>{
+      const q = Math.max(0, parseInt(document.getElementById('pfn_plush_global_qty').value||0,10));
+      let totalCost = 0;
+      PLUSHIES.forEach(p=>{
+        const cheapest = findCheapestForItem('plush', p.name);
+        if (cheapest && typeof cheapest.price === 'number') totalCost += cheapest.price * q;
+      });
+      toast(`Plush total for ${q} each: ${fmtMoney(totalCost)}`, false);
     });
-  });
-  document.querySelectorAll('.pfn_fetch_shop').forEach(btn=>btn.addEventListener('click', async ()=>{
-    const id = Number(btn.dataset.id);
-    const name = btn.dataset.item;
-    toast('Fetching Bits & Bobs (best-effort)...');
-    const ok = await fetchBitsAndBobsByScrapeFor(name, id);
-    if (ok) toast('Shop data fetched for ' + name);
-    else toast('Shop data not found (best-effort)', true);
-    render();
-  }));
-}
 
+    document.getElementById('pfn_plush_update_shops').addEventListener('click', async ()=>{
+      toast('Updating Bits & Bobs (best-effort)...');
+      await fetchShopPlushes(true);
+      render();
+    });
+
+    // rows
+    const rowsHtml = PLUSHIES.map(p=>{
+      const have = plushCounts[p.id] || 0;
+      const cache = plushCache[p.name] || { countryPrices:{}, updatedAt:0 };
+      const cheapest = findCheapestForItem('plush', p.name);
+      const cheapestText = cheapest ? `${cheapest.country} • ${fmtMoney(cheapest.price)} (stk ${cheapest.stock||0})` : 'No data';
+      const marketVal = (marketCache[p.id] || 0) * have;
+      // country chips
+      let countryChips = '';
+      const cp = cache.countryPrices || {};
+      const entries = Object.entries(cp);
+      if (entries.length) {
+        countryChips = '<div class="pfn_country_list">';
+        for (const [country,obj] of entries) {
+          const priceText = (obj && typeof obj.price === 'number') ? fmtMoney(obj.price) : '—';
+          const stockText = (obj && (obj.stock!==undefined && obj.stock!==null)) ? `stk ${obj.stock}` : '';
+          countryChips += `<div class="pfn_country_chip">${country}<br><small>${priceText} ${stockText}</small></div>`;
+        }
+        countryChips += '</div>';
+      }
+
+      // If shop-only and we have Torn (Bits & Bobs) entry, show that as shop price, and allow calc
+      const shopEntry = (cache.countryPrices && cache.countryPrices['Torn (Bits & Bobs)']) ? cache.countryPrices['Torn (Bits & Bobs)'] : null;
+      const shopLine = shopEntry ? `<div style="margin-top:6px;color:#ffdede;font-weight:900">Shop price: ${fmtMoney(shopEntry.price)} • stock: ${shopEntry.stock||0}</div>` : '';
+
+      return `
+        <div style="padding:12px;border-radius:10px;background:rgba(255,255,255,0.02);margin-bottom:12px">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div style="font-weight:900">${p.name} — you have ${have}</div>
+            <div style="font-size:12px;color:#ddd">Updated: ${cache.updatedAt?timeAgo(cache.updatedAt):'never'}</div>
+          </div>
+
+          <div style="margin-top:8px;font-size:13px">Cheapest: <span style="color:var(--neon-plush);font-weight:900">${cheapestText}</span></div>
+
+          ${shopLine}
+
+          <div style="margin-top:10px;display:flex;gap:12px;align-items:center">
+            <div style="flex:1">
+              <div class="pfn_small">Market value (owned):</div>
+              <div style="font-weight:900;color:#ffb86b">${fmtMoney(marketVal)}</div>
+              <div style="font-size:12px;color:#ddd;margin-top:6px">Market price (per): ${fmtMoney(marketCache[p.id]||0)}</div>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
+              <button data-item="${p.name}" class="pfn_btn pfn_open_json_item" data-type="plush">Edit JSON</button>
+              <button data-item="${p.name}" class="pfn_btn pfn_calc_item" data-type="plush">Calc for X</button>
+              ${ SHOP_PLUSH_IDS.has(p.id) ? `<button data-id="${p.id}" data-item="${p.name}" class="pfn_btn alt pfn_fetch_shop" data-type="plush">Fetch shop price</button>` : '' }
+            </div>
+          </div>
+
+          ${countryChips}
+
+          <div style="margin-top:12px;display:flex;gap:10px;align-items:center">
+            <div style="flex:1;display:flex;gap:8px;align-items:center">
+              <div class="pfn_small">Set goal (sets):</div>
+              <input data-item="${p.name}" class="pfn_goal_input_item" type="number" min="0" value="" style="width:110px;padding:7px;border-radius:6px;background:#070707;color:#fff;border:1px solid rgba(255,255,255,0.03)">
+            </div>
+            <button data-item="${p.name}" class="pfn_btn pfn_lock_goal_item" data-type="plush">Lock</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+    document.getElementById('pfn_plush_list').innerHTML = rowsHtml;
+
+    // listeners
+    document.querySelectorAll('.pfn_open_json_item').forEach(btn=>btn.addEventListener('click', ()=>openModalForItem(btn.dataset.type, btn.dataset.item)));
+    document.querySelectorAll('.pfn_calc_item').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const key = btn.dataset.item;
+        const type = btn.dataset.type;
+        const q = prompt(`Enter quantity to calculate total cost for ${key}:`, '1');
+        if (q === null) return;
+        const qty = Math.max(0, parseInt(q,10) || 0);
+        const cheapest = findCheapestForItem(type, key);
+        if (!cheapest || typeof cheapest.price !== 'number') {
+          alert('No price data for ' + key + '. Try updating shop data or YATA.');
+          return;
+        }
+        const cost = cheapest.price * qty;
+        alert(`Estimated cost for ${qty} ${key}: ${fmtMoney(cost)} (cheapest: ${cheapest.country} at ${fmtMoney(cheapest.price)})`);
+      });
+    });
+    document.querySelectorAll('.pfn_fetch_shop').forEach(btn=>{
+      btn.addEventListener('click', async ()=>{
+        const id = Number(btn.dataset.id);
+        const name = btn.dataset.item;
+        toast('Fetching Bits & Bobs (best-effort)...');
+        const ok = await fetchBitsAndBobsByScrapeFor(name, id);
+        if (ok) toast('Shop data fetched for ' + name);
+        else toast('Shop data not found (best-effort)', true);
+        render();
+      });
+    });
+    document.querySelectorAll('.pfn_lock_goal_item').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const key = btn.dataset.item;
+        const valEl = document.querySelector(`input.pfn_goal_input_item[data-item="${key}"]`);
+        const n = Math.max(0, parseInt(valEl.value||0,10));
+        if (n>0){ GM_setValue(K.GOAL_PLUSH, n); toast('Saved plush sets goal: ' + n); render(); }
+        else toast('Enter a positive number to lock as goal', true);
+      });
+    });
+  }
 
   function renderFlower(container) {
-  // Initialize flower cache if missing
-  FLOWERS.forEach(f => {
-    if (!flowerCache[f.name]) flowerCache[f.name] = { countryPrices: {}, updatedAt: 0 };
-  });
+    FLOWERS.forEach(f => { if (!flowerCache[f.name]) flowerCache[f.name] = { countryPrices:{}, updatedAt:0 }; });
+    const countsArr = FLOWERS.map(p => flowerCounts[p.id] || 0);
+    const sets = countsArr.length ? Math.min(...countsArr) : 0;
+    const total = countsArr.reduce((a,b)=>a+b,0);
+    const goal = Number(GM_getValue(K.GOAL_FLOWER,0));
+    const marketTotal = calcMarketTotal(flowerCounts);
 
-  const countsArr = FLOWERS.map(p => flowerCounts[p.id] || 0);
-  const sets = countsArr.length ? Math.min(...countsArr) : 0;
-  const total = countsArr.reduce((a, b) => a + b, 0);
-  const goal = Number(GM_getValue(K.GOAL_FLOWER, 0));
-  const marketTotal = calcMarketTotal(flowerCounts);
-
-  // Top section with global goal input
-  const topHtml = `
-    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-      <div style="font-weight:900">
-        Flowers — Sets: ${sets} • Goal: 
-        <input id="pfn_flower_goal" type="number" min="0" value="${goal || ''}" style="width:80px;padding:4px;border-radius:4px;background:#070707;color:#fff;border:1px solid rgba(255,255,255,0.03)">
-        <button id="pfn_flower_goal_lock" class="pfn_btn" style="background:linear-gradient(180deg,#00e0ff,#00b8ff);padding:4px 8px;font-size:12px">Lock</button>
+    const topHtml = `
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="font-weight:900">Flowers — Sets: ${sets} • Goal: ${goal>0?goal:'–'}</div>
+        <div style="margin-left:auto" class="pfn_small">Market est total: <span style="font-weight:900;color:#ffdede">${fmtMoney(marketTotal)}</span></div>
       </div>
-      <div style="margin-left:auto" class="pfn_small">
-        Market est total: <span style="font-weight:900;color:#ffdede">${fmtMoney(marketTotal)}</span>
+
+      <div style="margin-top:10px;display:flex;gap:8px;align-items:center">
+        <div class="pfn_small">Global calc (per-item cheapest):</div>
+        <input id="pfn_flower_global_qty" type="number" min="0" value="0" style="width:80px;padding:6px;border-radius:6px;background:#070707;color:#fff;border:1px solid rgba(255,255,255,0.03)">
+        <button id="pfn_flower_global_calc" class="pfn_btn" style="background:linear-gradient(180deg,#00e0ff,#00b8ff)">Calculate cost for X each</button>
+        <div style="margin-left:auto" class="pfn_small">Total flowers: <span style="font-weight:900;color:#ffdede">${total}</span></div>
       </div>
-    </div>
 
-    <div style="margin-top:10px;display:flex;gap:8px;align-items:center">
-      <div class="pfn_small">Global calc (per-item cheapest):</div>
-      <input id="pfn_flower_global_qty" type="number" min="0" value="0" style="width:80px;padding:6px;border-radius:6px;background:#070707;color:#fff;border:1px solid rgba(255,255,255,0.03)">
-      <button id="pfn_flower_global_calc" class="pfn_btn" style="background:linear-gradient(180deg,#00e0ff,#00b8ff)">Calculate cost for X each</button>
-      <div style="margin-left:auto" class="pfn_small">Total flowers: <span style="font-weight:900;color:#ffdede">${total}</span></div>
-    </div>
-
-    <div id="pfn_flower_list" style="margin-top:12px"></div>
-  `;
-  container.innerHTML = topHtml;
-
-  // Listener for top-level goal lock
-  document.getElementById('pfn_flower_goal_lock').addEventListener('click', () => {
-    const n = Math.max(0, parseInt(document.getElementById('pfn_flower_goal').value || 0, 10));
-    if (n > 0) {
-      GM_setValue(K.GOAL_FLOWER, n);
-      toast('Saved flower sets goal: ' + n);
-      render(); // update display
-    } else {
-      toast('Enter a positive number to lock as goal', true);
-    }
-  });
-
-  // Listener for global cost calculator
-  document.getElementById('pfn_flower_global_calc').addEventListener('click', () => {
-    const q = Math.max(0, parseInt(document.getElementById('pfn_flower_global_qty').value || 0, 10));
-    let totalCost = 0;
-    FLOWERS.forEach(p => {
-      const cheapest = findCheapestForItem('flower', p.name);
-      if (cheapest && typeof cheapest.price === 'number') totalCost += cheapest.price * q;
-    });
-    toast(`Flowers total for ${q} each: ${fmtMoney(totalCost)}`, false);
-  });
-
-  // Generate per-flower rows (without goal input)
-  const rowsHtml = FLOWERS.map(p => {
-    const have = flowerCounts[p.id] || 0;
-    const cache = flowerCache[p.name] || { countryPrices: {}, updatedAt: 0 };
-    const cheapest = findCheapestForItem('flower', p.name);
-    const cheapestText = cheapest ? `${cheapest.country} • ${fmtMoney(cheapest.price)} (stk ${cheapest.stock || 0})` : 'No data';
-    const marketVal = (marketCache[p.id] || 0) * have;
-
-    // Country chips
-    let countryChips = '';
-    const cp = cache.countryPrices || {};
-    const entries = Object.entries(cp);
-    if (entries.length) {
-      countryChips = '<div class="pfn_country_list">';
-      for (const [country, obj] of entries) {
-        const priceText = (obj && typeof obj.price === 'number') ? fmtMoney(obj.price) : '—';
-        const stockText = (obj && (obj.stock !== undefined && obj.stock !== null)) ? `stk ${obj.stock}` : '';
-        countryChips += `<div class="pfn_country_chip">${country}<br><small>${priceText} ${stockText}</small></div>`;
-      }
-      countryChips += '</div>';
-    }
-
-    return `
-      <div style="padding:12px;border-radius:10px;background:rgba(255,255,255,0.02);margin-bottom:12px">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <div style="font-weight:900">${p.name} — you have ${have}</div>
-          <div style="font-size:12px;color:#ddd">Updated: ${cache.updatedAt ? timeAgo(cache.updatedAt) : 'never'}</div>
-        </div>
-
-        <div style="margin-top:8px;font-size:13px">Cheapest: <span style="color:var(--neon-flower);font-weight:900">${cheapestText}</span></div>
-
-        <div style="margin-top:10px;display:flex;gap:12px;align-items:center">
-          <div style="flex:1">
-            <div class="pfn_small">Market value (owned):</div>
-            <div style="font-weight:900;color:#ffb86b">${fmtMoney(marketVal)}</div>
-            <div style="font-size:12px;color:#ddd;margin-top:6px">Market price (per): ${fmtMoney(marketCache[p.id] || 0)}</div>
-          </div>
-
-          <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
-            <button data-item="${p.name}" class="pfn_btn pfn_open_json_item" data-type="flower" style="background:linear-gradient(180deg,#00e0ff,#00b8ff)">Edit JSON</button>
-            <button data-item="${p.name}" class="pfn_btn pfn_calc_item" data-type="flower" style="background:linear-gradient(180deg,#00e0ff,#00b8ff)">Calc for X</button>
-          </div>
-        </div>
-
-        ${countryChips}
-      </div>
+      <div id="pfn_flower_list" style="margin-top:12px"></div>
     `;
-  }).join('');
+    container.innerHTML = topHtml;
 
-  document.getElementById('pfn_flower_list').innerHTML = rowsHtml;
-
-  // Listeners for per-flower buttons
-  document.querySelectorAll('.pfn_open_json_item').forEach(btn => btn.addEventListener('click', () => openModalForItem(btn.dataset.type, btn.dataset.item)));
-  document.querySelectorAll('.pfn_calc_item').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const key = btn.dataset.item;
-      const q = prompt(`Enter quantity to calculate total cost for ${key}:`, '1');
-      if (q === null) return;
-      const qty = Math.max(0, parseInt(q, 10) || 0);
-      const cheapest = findCheapestForItem('flower', key);
-      if (!cheapest || typeof cheapest.price !== 'number') { alert('No price data for ' + key); return; }
-      alert(`Estimated cost for ${qty} ${key}: ${fmtMoney(cheapest.price * qty)} (cheapest: ${cheapest.country} at ${fmtMoney(cheapest.price)})`);
+    document.getElementById('pfn_flower_global_calc').addEventListener('click', ()=>{
+      const q = Math.max(0, parseInt(document.getElementById('pfn_flower_global_qty').value||0,10));
+      let totalCost = 0;
+      FLOWERS.forEach(p=>{
+        const cheapest = findCheapestForItem('flower', p.name);
+        if (cheapest && typeof cheapest.price === 'number') totalCost += cheapest.price*q;
+      });
+      toast(`Flowers total for ${q} each: ${fmtMoney(totalCost)}`, false);
     });
-  });
-}
+
+    const rowsHtml = FLOWERS.map(p=>{
+      const have = flowerCounts[p.id] || 0;
+      const cache = flowerCache[p.name] || { countryPrices:{}, updatedAt:0 };
+      const cheapest = findCheapestForItem('flower', p.name);
+      const cheapestText = cheapest ? `${cheapest.country} • ${fmtMoney(cheapest.price)} (stk ${cheapest.stock||0})` : 'No data';
+      const marketVal = (marketCache[p.id] || 0) * have;
+      let countryChips = '';
+      const cp = cache.countryPrices || {};
+      const entries = Object.entries(cp);
+      if (entries.length) {
+        countryChips = '<div class="pfn_country_list">';
+        for (const [country,obj] of entries) {
+          const priceText = (obj && typeof obj.price === 'number') ? fmtMoney(obj.price) : '—';
+          const stockText = (obj && (obj.stock!==undefined && obj.stock!==null)) ? `stk ${obj.stock}` : '';
+          countryChips += `<div class="pfn_country_chip">${country}<br><small>${priceText} ${stockText}</small></div>`;
+        }
+        countryChips += '</div>';
+      }
+
+      return `
+        <div style="padding:12px;border-radius:10px;background:rgba(255,255,255,0.02);margin-bottom:12px">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div style="font-weight:900">${p.name} — you have ${have}</div>
+            <div style="font-size:12px;color:#ddd">Updated: ${cache.updatedAt?timeAgo(cache.updatedAt):'never'}</div>
+          </div>
+
+          <div style="margin-top:8px;font-size:13px">Cheapest: <span style="color:var(--neon-flower);font-weight:900">${cheapestText}</span></div>
+
+          <div style="margin-top:10px;display:flex;gap:12px;align-items:center">
+            <div style="flex:1">
+              <div class="pfn_small">Market value (owned):</div>
+              <div style="font-weight:900;color:#ffb86b">${fmtMoney(marketVal)}</div>
+              <div style="font-size:12px;color:#ddd;margin-top:6px">Market price (per): ${fmtMoney(marketCache[p.id]||0)}</div>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
+              <button data-item="${p.name}" class="pfn_btn pfn_open_json_item" data-type="flower" style="background:linear-gradient(180deg,#00e0ff,#00b8ff)">Edit JSON</button>
+              <button data-item="${p.name}" class="pfn_btn pfn_calc_item" data-type="flower" style="background:linear-gradient(180deg,#00e0ff,#00b8ff)">Calc for X</button>
+            </div>
+          </div>
+
+          ${countryChips}
+
+          <div style="margin-top:12px;display:flex;gap:10px;align-items:center">
+            <div style="flex:1;display:flex;gap:8px;align-items:center">
+              <div class="pfn_small">Set goal (sets):</div>
+              <input data-item="${p.name}" class="pfn_goal_input_item" type="number" min="0" value="" style="width:110px;padding:7px;border-radius:6px;background:#070707;color:#fff;border:1px solid rgba(255,255,255,0.03)">
+            </div>
+            <button data-item="${p.name}" class="pfn_btn pfn_lock_goal_item" data-type="flower" style="background:linear-gradient(180deg,#00e0ff,#00b8ff)">Lock</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+    document.getElementById('pfn_flower_list').innerHTML = rowsHtml;
+
+    // listeners
+    document.querySelectorAll('.pfn_open_json_item').forEach(btn=>btn.addEventListener('click', ()=>openModalForItem(btn.dataset.type, btn.dataset.item)));
+    document.querySelectorAll('.pfn_calc_item').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const key = btn.dataset.item, type = btn.dataset.type;
+        const q = prompt(`Enter quantity to calculate total cost for ${key}:`, '1');
+        if (q===null) return; const qty = Math.max(0, parseInt(q,10)||0);
+        const cheapest = findCheapestForItem(type, key);
+        if (!cheapest || typeof cheapest.price !== 'number') { alert('No price data for ' + key); return; }
+        const cost = cheapest.price * qty;
+        alert(`Estimated cost for ${qty} ${key}: ${fmtMoney(cost)} (cheapest: ${cheapest.country} at ${fmtMoney(cheapest.price)})`);
+      });
+    });
+    document.querySelectorAll('.pfn_lock_goal_item').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const valEl = document.querySelector(`input.pfn_goal_input_item[data-item="${btn.dataset.item}"]`);
+        const n = Math.max(0, parseInt(valEl.value||0,10));
+        if (n>0) { if (btn.dataset.type==='flower') GM_setValue(K.GOAL_FLOWER,n); else GM_setValue(K.GOAL_PLUSH,n); toast('Saved goal: '+n); render(); }
+        else toast('Enter a positive number to lock as goal', true);
+      });
+    });
+  }
 
   function renderDrugs(container) {
     DRUG_NAMES.forEach(d => { if(!drugCache[d]) drugCache[d] = { countryPrices:{}, updatedAt:0 }; });

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         小水书
 // @namespace    http://tampermonkey.net/
-// @version      1.1.29
+// @version      1.1.28
 // @description  瀑布流排版，自动提取帖子正文图片作为封面，内置设置面板
 // @author       十一世纪，codex
 // @match        https://shuiyuan.sjtu.edu.cn/*
@@ -62,7 +62,7 @@
     if (window.__xhsShuiyuanLoaded) return;
     window.__xhsShuiyuanLoaded = true;
 
-    const VERSION = '1.1.29';
+    const VERSION = '1.1.28';
 
     /* ============================================
      * 0. 早期防闪烁逻辑
@@ -147,7 +147,6 @@
             showUnreadPosts: true, // 跟踪/关注话题显示未读数（也可用于覆盖贴纸）
             darkMode: 'auto', // 深色模式：auto(跟随站点/系统)/dark/light
             cardStagger: true, // 错落布局
-            gridCardAspectRatio: 1.0, // 卡片长宽比（宽/高；仅“非错落布局”生效）
             columnCount: 4, // 列数（桌面端基准）
             metaLayout: 'spacious', // 元信息布局：compact(紧凑单行)/spacious(宽松两行)
             authorDisplay: 'full', // 贴主展示：full/avatar/name
@@ -155,7 +154,6 @@
             pillOpacity: 1.00, // 分类/标签 pill 的背景不透明度倍率（仅影响封面左上角 pill；1.00=默认）
             topicReplyCards: false, // 帖子页回复卡片化：将楼层包装为更“卡片”的视觉层级
             topicReplyCardsBodyPaddingLeft: 14, // 帖子页回复卡片化：正文区域左侧留白（px）
-            topicScrollKeepPosition: true, // 帖子页向上加载更多时保持当前位置（减少跳楼）
             coverPillsEnabled: true, // 封面左上角分类/标签 pill
             cacheEnabled: true, // 跨页面缓存
             cacheTtlMinutes: 20160, // 缓存有效期（分钟）- 14天
@@ -190,7 +188,7 @@
             try {
                 const cfg = { ...this.defaults, ...JSON.parse(GM_getValue(this.KEY, '{}')) };
                 // 基本校验/归一化（避免脏数据导致样式/逻辑异常）
-                cfg.columnCount = Math.min(50, Math.max(1, parseInt(cfg.columnCount, 10) || this.defaults.columnCount));
+                cfg.columnCount = Math.min(8, Math.max(2, parseInt(cfg.columnCount, 10) || this.defaults.columnCount));
                 cfg.metaLayout = (cfg.metaLayout === 'spacious' || cfg.metaLayout === 'compact') ? cfg.metaLayout : this.defaults.metaLayout;
                 cfg.statsAlign = (cfg.statsAlign === 'left' || cfg.statsAlign === 'right' || cfg.statsAlign === 'justify') ? cfg.statsAlign : this.defaults.statsAlign;
                 cfg.darkMode = (cfg.darkMode === 'auto' || cfg.darkMode === 'dark' || cfg.darkMode === 'light') ? cfg.darkMode : this.defaults.darkMode;
@@ -205,18 +203,12 @@
                     if (!Number.isFinite(n)) return this.defaults.pillOpacity;
                     return Math.min(1, Math.max(0.2, n));
                 })();
-                cfg.gridCardAspectRatio = (() => {
-                    const n = parseFloat(cfg.gridCardAspectRatio);
-                    if (!Number.isFinite(n)) return this.defaults.gridCardAspectRatio;
-                    return Math.min(3.0, Math.max(0.6, n));
-                })();
                 cfg.topicReplyCards = (typeof cfg.topicReplyCards === 'boolean') ? cfg.topicReplyCards : this.defaults.topicReplyCards;
                 cfg.topicReplyCardsBodyPaddingLeft = (() => {
                     const n = parseInt(cfg.topicReplyCardsBodyPaddingLeft, 10);
                     if (!Number.isFinite(n)) return this.defaults.topicReplyCardsBodyPaddingLeft;
                     return Math.min(80, Math.max(0, n));
                 })();
-                cfg.topicScrollKeepPosition = (typeof cfg.topicScrollKeepPosition === 'boolean') ? cfg.topicScrollKeepPosition : this.defaults.topicScrollKeepPosition;
                 cfg.coverPillsEnabled = (typeof cfg.coverPillsEnabled === 'boolean') ? cfg.coverPillsEnabled : this.defaults.coverPillsEnabled;
                 cfg.settingsIconStyle = (cfg.settingsIconStyle === 'shuiyuan' || cfg.settingsIconStyle === 'xhsText' || cfg.settingsIconStyle === 'grid') ? cfg.settingsIconStyle : this.defaults.settingsIconStyle;
                 cfg.settingsIconSize = (() => {
@@ -849,7 +841,6 @@
             const cols800 = Math.min(colsDesktop, 2);
             const pillScale = Number(cfg.pillScale) || 1.20;
             const pillOpacity = Math.min(1, Math.max(0.2, Number(cfg.pillOpacity) || 1));
-            const gridCoverAR = Number(cfg.gridCardAspectRatio) || 2.0;
             const topicCardsBodyPaddingLeft = Number(cfg.topicReplyCardsBodyPaddingLeft);
             const topicCardsBodyPaddingLeftPx = Math.min(80, Math.max(0, Number.isFinite(topicCardsBodyPaddingLeft) ? topicCardsBodyPaddingLeft : 14));
              
@@ -866,7 +857,6 @@
                     --xhs-cols: ${colsDesktop};
                     --xhs-pill-scale: ${pillScale};
                     --xhs-pill-alpha: ${pillOpacity};
-                    --xhs-grid-cover-ar: ${gridCoverAR};
                 }
 
                 body.xhs-on { background: var(--xhs-bg) !important; }
@@ -1296,8 +1286,7 @@
                 }
                 .xhs-tag-pill {
                     pointer-events: auto;
-                    /* 浅色主题：用更亮的底色，避免封面偏暗（黑图）时 tag pill 看不清 */
-                    background: rgba(255,255,255, calc(0.86 * var(--xhs-pill-alpha, 1)));
+                    background: rgba(0,0,0, calc(0.18 * var(--xhs-pill-alpha, 1)));
                     border: 1px solid rgba(0,0,0, calc(0.10 * var(--xhs-pill-alpha, 1)));
                     -webkit-backdrop-filter: blur(4px);
                     backdrop-filter: blur(4px);
@@ -1307,7 +1296,7 @@
                     border-radius: 999px;
                     cursor: pointer;
                     font-weight: 650;
-                    box-shadow: 0 2px 8px rgba(0,0,0,0.14);
+                    box-shadow: 0 2px 6px rgba(0,0,0,0.10);
                 }
                 body.xhs-dark .xhs-cat-pill {
                     background: rgba(0,0,0, calc(0.68 * var(--xhs-pill-alpha, 1)));
@@ -1349,24 +1338,6 @@
                     pointer-events: none;
                     background: linear-gradient(180deg, rgba(0,0,0,0.00) 52%, rgba(0,0,0,0.22) 100%);
                 }
-
-                /* grid-mode（非错落布局）：固定封面比例，减少“行高由最长卡片决定”造成的大段留空 */
-                .xhs-grid.grid-mode .xhs-cover {
-                    aspect-ratio: var(--xhs-grid-cover-ar, 4 / 3);
-                    overflow: hidden;
-                }
-                @supports not (aspect-ratio: 1 / 1) {
-                    .xhs-grid.grid-mode .xhs-cover { height: 210px; }
-                }
-                .xhs-grid.grid-mode .xhs-cover .xhs-real-img {
-                    height: 100%;
-                    object-position: var(--xhs-img-pos, 50% 50%);
-                }
-                .xhs-grid.grid-mode .xhs-cover .xhs-text-cover {
-                    height: 100%;
-                    min-height: 0;
-                }
-                .xhs-grid.grid-mode .xhs-title { min-height: 2.8em; }
 
                 /* 卡片更“立体”一点 */
                 .xhs-card {
@@ -1877,14 +1848,6 @@
             return {
                 img: data.img ?? null,
                 likes: typeof data.likes === 'number' ? data.likes : (parseInt(data.likes, 10) || 0),
-                views: (() => {
-                    const v = (typeof data.views === 'number') ? data.views : parseInt(data.views, 10);
-                    return Number.isFinite(v) && v >= 0 ? v : null;
-                })(),
-                replyCount: (() => {
-                    const v = (typeof data.replyCount === 'number') ? data.replyCount : parseInt(data.replyCount, 10);
-                    return Number.isFinite(v) && v >= 0 ? v : null;
-                })(),
                 noImg: Boolean(data.noImg),
                 origin
             };
@@ -1898,9 +1861,6 @@
             const key = String(tid || '');
             if (!key) return;
             const origin = (data?.origin === 'topic' || data?.origin === 'list') ? data.origin : '';
-            const prev = this.persistentCache.get(key);
-            const prevData = prev?.data || null;
-
             const next = {
                 img: data?.img || null,
                 likes: typeof data?.likes === 'number' ? data.likes : (parseInt(data?.likes, 10) || 0),
@@ -1908,21 +1868,8 @@
                 origin
             };
 
-            const nextViews = (() => {
-                const v = (typeof data?.views === 'number') ? data.views : parseInt(data?.views, 10);
-                if (Number.isFinite(v) && v >= 0) return v;
-                const pv = (typeof prevData?.views === 'number') ? prevData.views : parseInt(prevData?.views, 10);
-                return Number.isFinite(pv) && pv >= 0 ? pv : null;
-            })();
-            const nextReplyCount = (() => {
-                const v = (typeof data?.replyCount === 'number') ? data.replyCount : parseInt(data?.replyCount, 10);
-                if (Number.isFinite(v) && v >= 0) return v;
-                const pv = (typeof prevData?.replyCount === 'number') ? prevData.replyCount : parseInt(prevData?.replyCount, 10);
-                return Number.isFinite(pv) && pv >= 0 ? pv : null;
-            })();
-            if (nextViews !== null) next.views = nextViews;
-            if (nextReplyCount !== null) next.replyCount = nextReplyCount;
-
+            const prev = this.persistentCache.get(key);
+            const prevData = prev?.data || null;
             const same =
                 prevData &&
                 prevData.img === next.img &&
@@ -2012,14 +1959,7 @@
 
             // 列表 JSON 的结果也写入跨页面缓存（避免下次进来还要 per-topic 请求）
             try {
-                if (opts?.fromList) this._setPersistentData(tid, {
-                    img: merged.img || null,
-                    likes: merged.likes || 0,
-                    views: (typeof meta?.views === 'number') ? meta.views : null,
-                    replyCount: (typeof meta?.replyCount === 'number') ? meta.replyCount : null,
-                    noImg: merged.noImg,
-                    origin: merged.origin || 'list'
-                });
+                if (opts?.fromList) this._setPersistentData(tid, { img: merged.img || null, likes: merged.likes || 0, noImg: merged.noImg, origin: merged.origin || 'list' });
             } catch {}
         },
 
@@ -2120,8 +2060,18 @@
                 ordered.push(card);
             }
 
-            const highlight = () => {
-                if (!opts?.highlightTids || !opts.highlightTids.length) return;
+            const cfg = Config.get();
+            if (!cfg.cardStagger) {
+                // grid-mode：直接按顺序重新 append
+                this.container.textContent = '';
+                for (const card of ordered) this.container.appendChild(card);
+                return;
+            }
+
+            const desired = this.getDesiredColumnCount();
+            this.rebuildColumnsWithCards(ordered, desired);
+
+            if (opts?.highlightTids && opts.highlightTids.length) {
                 const set = new Set(opts.highlightTids.map((t) => String(t)));
                 requestAnimationFrame(() => {
                     try {
@@ -2131,20 +2081,7 @@
                         }
                     } catch {}
                 });
-            };
-
-            const cfg = Config.get();
-            if (!cfg.cardStagger) {
-                // grid-mode：直接按顺序重新 append
-                this.container.textContent = '';
-                for (const card of ordered) this.container.appendChild(card);
-                highlight();
-                return;
             }
-
-            const desired = this.getDesiredColumnCount();
-            this.rebuildColumnsWithCards(ordered, desired);
-            highlight();
         },
 
         resetObserver() {
@@ -2341,17 +2278,8 @@
                 // list.json 的 img=null/noImg=false 只代表“列表没给图”，不能阻止后续抓取 cooked。
                 if (cachedData) {
                     const origin = cachedData.origin;
-                    const needViews = Boolean(cfg.showStats && cfg.showStatViews);
-                    const needReplies = Boolean(cfg.showStats && cfg.showStatReplies);
-                    const listMeta = this.listTopicMeta.get(String(tid));
-                    const missingStats =
-                        (needViews && typeof cachedData.views !== 'number' && typeof listMeta?.views !== 'number') ||
-                        (needReplies && typeof cachedData.replyCount !== 'number' && typeof listMeta?.replyCount !== 'number');
-
-                    if (!missingStats) {
-                        if (cachedData.img) return cachedData;
-                        if (cachedData.noImg && origin === 'topic') return cachedData;
-                    }
+                    if (cachedData.img) return cachedData;
+                    if (cachedData.noImg && origin === 'topic') return cachedData;
                     // 其它情况（含旧缓存/列表缓存/未验证 noImg）继续请求 topic.json 再确认一次
                 }
             }
@@ -2435,23 +2363,6 @@
             return {
                 img: imgs.length > 0 ? imgs[0].src : null,
                 likes: json.like_count || 0,
-                views: (typeof json.views === 'number') ? json.views : null,
-                replyCount: (() => {
-                    const postsCount = typeof json.posts_count === 'number' ? json.posts_count : 0;
-                    const highestPostNumber = typeof json.highest_post_number === 'number' ? json.highest_post_number : 0;
-                    let replyCount = typeof json.reply_count === 'number' ? json.reply_count : 0;
-                    // 为了保持与列表页展示一致，优先回退到 posts_count/highest_post_number 推断。
-                    try {
-                        const expectedFromPosts = (postsCount > 0) ? Math.max(0, postsCount - 1) : null;
-                        const expectedFromHighest = (highestPostNumber > 0) ? Math.max(0, highestPostNumber - 1) : null;
-                        const expected = (expectedFromPosts !== null) ? expectedFromPosts : expectedFromHighest;
-                        if (expected !== null) {
-                            const cur = Number(replyCount) || 0;
-                            if (Math.abs(expected - cur) > 1) replyCount = expected;
-                        }
-                    } catch {}
-                    return replyCount;
-                })(),
                 noImg: imgs.length === 0,
                 origin: 'topic'
             };
@@ -2472,40 +2383,12 @@
             this.cache.set(tid, merged);
 
             // 写入跨页面缓存（最小化内容，仅保存必要字段）
-            try {
-                this._setPersistentData(tid, {
-                    img: merged.img || null,
-                    likes: merged.likes || 0,
-                    views: (typeof data?.views === 'number') ? data.views : null,
-                    replyCount: (typeof data?.replyCount === 'number') ? data.replyCount : null,
-                    noImg: merged.noImg,
-                    origin: merged.origin || 'topic'
-                });
-            } catch {}
+            try { this._setPersistentData(tid, { img: merged.img || null, likes: merged.likes || 0, noImg: merged.noImg, origin: merged.origin || 'topic' }); } catch {}
             
             // 更新点赞数
             const likeEl = el.querySelector('.xhs-like-count');
             if (likeEl) likeEl.textContent = Utils.formatStatCount(merged.likes ?? 0);
             this.updateStickerForCard(el, merged.likes ?? 0);
-
-            // 更新统计（views / replies）：用于移动端/深翻页列表在 DOM 缺失统计时避免显示 0
-            try {
-                const views = (typeof data?.views === 'number') ? data.views : null;
-                if (views !== null && views >= 0) {
-                    el.dataset.viewNum = String(views);
-                    const viewsEl = el.querySelector('.xhs-views');
-                    if (viewsEl) viewsEl.textContent = `👁️ ${Utils.formatStatCount(views)}`;
-                }
-                const replyCount = (typeof data?.replyCount === 'number') ? data.replyCount : null;
-                if (replyCount !== null && replyCount >= 0) {
-                    el.dataset.replyNum = String(replyCount);
-                    const repliesLink = el.querySelector('.xhs-replies-link');
-                    if (repliesLink) {
-                        repliesLink.textContent = `💬 ${Utils.formatStatCount(replyCount)}`;
-                        repliesLink.setAttribute('aria-label', `${String(replyCount)} 条回复，跳转到第一个帖子`);
-                    }
-                }
-            } catch {}
 
             // 如果有图，替换封面
             if (merged.img) {
@@ -3037,198 +2920,7 @@
     };
 
     /* ============================================
-     * 5. 帖子页滚动稳定（向上加载不跳楼）
-     * ============================================ */
-    const TopicScroll = {
-        enabled: false,
-        observer: null,
-        observerTarget: null,
-        attachTimer: null,
-        freezeUntil: 0,
-        lastFirstPostNumber: null,
-        anchor: null,
-        scrollRaf: 0,
-        adjustTimer: null,
-        adjustRaf: 0,
-        adjustTriesLeft: 0,
-        _boundOnScroll: null,
-
-        _getPostStream() {
-            return document.querySelector('.post-stream');
-        },
-
-        _getFirstPostNumber() {
-            const first = document.querySelector('.topic-post[data-post-number]');
-            const n = parseInt(first?.getAttribute?.('data-post-number') || '', 10);
-            return Number.isFinite(n) ? n : null;
-        },
-
-        _pickAnchor() {
-            const posts = Array.from(document.querySelectorAll('.topic-post[data-post-number]'));
-            const vh = window.innerHeight || 0;
-            if (!posts.length || !vh) return null;
-
-            // 尽量对齐 Discourse 的阅读体验：用一个“视口上方偏移”的 anchor 线
-            const anchorY = Math.min(180, Math.max(64, Math.round(vh * 0.18)));
-            const visible = [];
-            for (const p of posts) {
-                const r = p.getBoundingClientRect();
-                if (r.bottom <= 0 || r.top >= vh) continue;
-                visible.push({ el: p, top: r.top, bottom: r.bottom });
-            }
-            if (!visible.length) return null;
-            visible.sort((a, b) => a.top - b.top);
-
-            const hit = visible.find((v) => v.top <= anchorY && v.bottom >= anchorY) || visible[0];
-            const postNumber = parseInt(hit.el.getAttribute('data-post-number') || '', 10);
-            if (!Number.isFinite(postNumber)) return null;
-            return { postNumber, top: hit.top };
-        },
-
-        captureAnchor() {
-            const picked = this._pickAnchor();
-            if (!picked) return;
-            this.anchor = picked;
-        },
-
-        _scheduleCapture() {
-            if (this.scrollRaf) return;
-            this.scrollRaf = requestAnimationFrame(() => {
-                this.scrollRaf = 0;
-                if (!this.enabled) return;
-                if (Date.now() < (this.freezeUntil || 0)) return;
-                try { this.captureAnchor(); } catch {}
-            });
-        },
-
-        _adjustOnce() {
-            const anchor = this.anchor;
-            if (!anchor || !Number.isFinite(anchor.postNumber)) return true;
-            const el = document.querySelector(`.topic-post[data-post-number="${String(anchor.postNumber)}"]`);
-            if (!el) return true;
-            const top = el.getBoundingClientRect().top;
-            const delta = top - anchor.top;
-            if (!Number.isFinite(delta) || Math.abs(delta) < 6) return true;
-            try { window.scrollBy(0, delta); } catch { return true; }
-            return false;
-        },
-
-        _scheduleAdjust() {
-            if (this.adjustTimer || this.adjustRaf) return;
-            this.adjustTriesLeft = 3;
-            this.adjustTimer = setTimeout(() => {
-                this.adjustTimer = null;
-
-                const step = () => {
-                    this.adjustRaf = 0;
-                    if (!this.enabled) return;
-
-                    const done = this._adjustOnce();
-                    this.adjustTriesLeft -= 1;
-
-                    if (!done && this.adjustTriesLeft > 0) {
-                        this.adjustRaf = requestAnimationFrame(step);
-                        return;
-                    }
-
-                    try { this.captureAnchor(); } catch {}
-                };
-
-                this.adjustRaf = requestAnimationFrame(step);
-            }, 0);
-        },
-
-        _onMutations() {
-            if (!this.enabled) return;
-
-            const prevFirst = this.lastFirstPostNumber;
-            const nextFirst = this._getFirstPostNumber();
-            this.lastFirstPostNumber = nextFirst;
-
-            // 仅处理“向上加载更多”场景：首个楼层号变小
-            if (prevFirst !== null && nextFirst !== null && nextFirst < prevFirst) {
-                // DOM/scroll 会在短时间内持续抖动：冻结 anchor 更新，等稳定后再校正滚动
-                this.freezeUntil = Date.now() + 500;
-                this._scheduleAdjust();
-            }
-        },
-
-        _ensureObserver() {
-            if (!this.enabled) return;
-
-            const stream = this._getPostStream();
-            if (!stream) {
-                clearTimeout(this.attachTimer);
-                this.attachTimer = setTimeout(() => this._ensureObserver(), 500);
-                return;
-            }
-            if (this.observer && this.observerTarget === stream) return;
-
-            try { this.observer?.disconnect?.(); } catch {}
-            this.observer = null;
-            this.observerTarget = stream;
-            this.lastFirstPostNumber = this._getFirstPostNumber();
-
-            this.observer = new MutationObserver(() => this._onMutations());
-            try { this.observer.observe(stream, { childList: true }); } catch {}
-        },
-
-        start() {
-            if (this.enabled) return;
-            this.enabled = true;
-            this.freezeUntil = 0;
-            this.anchor = null;
-            this.lastFirstPostNumber = this._getFirstPostNumber();
-
-            this._boundOnScroll = () => {
-                if (!this.enabled) return;
-                if (Date.now() < (this.freezeUntil || 0)) return;
-                this._scheduleCapture();
-            };
-            window.addEventListener('scroll', this._boundOnScroll, { passive: true });
-
-            try { this.captureAnchor(); } catch {}
-            this._ensureObserver();
-        },
-
-        stop() {
-            if (!this.enabled) return;
-            this.enabled = false;
-
-            try { window.removeEventListener('scroll', this._boundOnScroll); } catch {}
-            this._boundOnScroll = null;
-
-            try { this.observer?.disconnect?.(); } catch {}
-            this.observer = null;
-            this.observerTarget = null;
-            clearTimeout(this.attachTimer);
-            this.attachTimer = null;
-            clearTimeout(this.adjustTimer);
-            this.adjustTimer = null;
-            if (this.scrollRaf) { try { cancelAnimationFrame(this.scrollRaf); } catch {} }
-            this.scrollRaf = 0;
-            if (this.adjustRaf) { try { cancelAnimationFrame(this.adjustRaf); } catch {} }
-            this.adjustRaf = 0;
-            this.adjustTriesLeft = 0;
-            this.freezeUntil = 0;
-            this.anchor = null;
-            this.lastFirstPostNumber = null;
-        },
-
-        update() {
-            const cfg = Config.get();
-            const shouldEnable = Boolean(cfg.enabled && cfg.topicScrollKeepPosition && Utils.isTopicPath());
-            if (!shouldEnable) {
-                this.stop();
-                return;
-            }
-            if (!this.enabled) this.start();
-            this._ensureObserver();
-        }
-    };
-
-    /* ============================================
-     * 6. 主程序
+     * 5. 主程序
      * ============================================ */
     const App = {
         _scrollLock: null,
@@ -3516,7 +3208,6 @@
             }
             // 帖子页增强样式依赖 body class，这里在路由切换时也同步刷新一次
             try { this.applyTopicEnhance(); } catch {}
-            try { TopicScroll.update(); } catch {}
         },
 
         applyTopicEnhance() {
@@ -3600,7 +3291,6 @@
             document.body.dataset.xhsStatReplies = (cfg.showStats && cfg.showStatReplies) ? '1' : '0';
             document.body.dataset.xhsStatViews = (cfg.showStats && cfg.showStatViews) ? '1' : '0';
             try { this.applyTopicEnhance(); } catch {}
-            try { TopicScroll.update(); } catch {}
             // 设置按钮可能需要根据图标配置刷新
             try { this.createFloatBtn(); } catch {}
             
@@ -3827,21 +3517,12 @@
                                 </div>
                                 <div class="xhs-switch ${cfg.cardStagger?'on':''}" data-key="cardStagger"></div>
                             </div>
-                            ${cfg.cardStagger ? '' : `
-                            <div class="xhs-row">
-                                <div>
-                                    <div>卡片长宽比</div>
-                                    <div class="xhs-desc">仅在关闭“卡片错落布局”时生效（宽/高）</div>
-                                </div>
-                                <input class="xhs-input" type="number" min="0.6" max="3.0" step="0.05" value="${cfg.gridCardAspectRatio}" data-input="gridCardAspectRatio" />
-                            </div>
-                            `}
                             <div class="xhs-row">
                                 <div>
                                     <div>列数</div>
-                                    <div class="xhs-desc">桌面端基准列数（1–50；移动端会自动降到 1-3 列）</div>
+                                    <div class="xhs-desc">桌面端基准列数（移动端会自动降到 2-3 列）</div>
                                 </div>
-                                <input class="xhs-input" type="number" min="1" max="50" step="1" value="${cfg.columnCount}" data-input="columnCount" />
+                                <input class="xhs-input" type="number" min="2" max="8" step="1" value="${cfg.columnCount}" data-input="columnCount" />
                             </div>
                             <div class="xhs-row">
                                 <div>
@@ -3891,13 +3572,6 @@
                                     <div class="xhs-desc">把每层回复包装成更“卡片”的层级（仅 /t/... 生效）</div>
                                 </div>
                                 <div class="xhs-switch ${cfg.topicReplyCards?'on':''}" data-key="topicReplyCards"></div>
-                            </div>
-                            <div class="xhs-row">
-                                <div>
-                                    <div>帖子页向上加载不跳楼</div>
-                                    <div class="xhs-desc">向上滚动触发“加载上方更多”时尽量保持当前楼层位置（默认开启）</div>
-                                </div>
-                                <div class="xhs-switch ${cfg.topicScrollKeepPosition?'on':''}" data-key="topicScrollKeepPosition"></div>
                             </div>
                             ${cfg.topicReplyCards ? `
                                 <div class="xhs-row">
@@ -4246,7 +3920,7 @@
                     input.onchange = () => {
                         const k = input.getAttribute('data-input');
                         const raw = input.value;
-                        const isFloat = (k === 'imgCropBaseRatio' || k === 'gridCardAspectRatio' || k === 'pillScale' || k === 'pillOpacity' || k === 'settingsIconTextScale');
+                        const isFloat = (k === 'imgCropBaseRatio' || k === 'pillScale' || k === 'pillOpacity' || k === 'settingsIconTextScale');
                         const isText = (k === 'settingsIconXhsText');
                         const isColor = (k === 'settingsIconGradientTop' || k === 'settingsIconGradientBottom' || k === 'settingsIconGridColor' || k === 'settingsIconGearColor');
                         const v = isText || isColor ? String(raw || '').trim() : (isFloat ? parseFloat(raw) : parseInt(raw, 10));

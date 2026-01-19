@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Torn Poker Join/Leave Monitor
 // @namespace    torn.poker.monitor
-// @version      2.0.30
+// @version      2.0.29
 // @description  Monitor poker table join/leave events
 // @author       Flav
 // @license      MIT
@@ -235,10 +235,9 @@ runWhenJQueryReady(function (unsafeWindow, $) {
             if (tab) {
                 PRELOADED_TABS.set(userId, tab);
                 tab.blur();
-                setTimeout(() => window.focus(), 0);
+                setTimeout(() => window.focus(), 100);
                 goBtn.style.display = 'inline-block';
             }
-            preBtn.blur();
         });
 
         goBtn.addEventListener('click', () => {

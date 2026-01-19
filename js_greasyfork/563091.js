@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name         Geoguessr Better Breakdown UI
+// @name         Guess Peek (Geoguessr)-Fixed
 // @namespace    https://greasyfork.org/users/1179204
-// @version      1.0.1
-// @description  built-in StreetView Window to view where you guessed and the correct location
-// @author       KaKa, Alien Perfect
+// @version      0.1.6
+// @description  Click on your pin to see where you've guessed! (originally made by Alien Perfect)
+// @author       Alien Perfect, KaKa
 // @match        https://www.geoguessr.com/*
 // @icon         https://www.google.com/s2/favicons?sz=32&domain=geoguessr.com
 // @grant        GM_addStyle
@@ -13,8 +13,8 @@
 // @grant        GM_openInTab
 // @grant        unsafeWindow
 // @license      MIT
-// @downloadURL https://update.greasyfork.org/scripts/563091/Geoguessr%20Better%20Breakdown%20UI.user.js
-// @updateURL https://update.greasyfork.org/scripts/563091/Geoguessr%20Better%20Breakdown%20UI.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/563091/Guess%20Peek%20%28Geoguessr%29-Fixed.user.js
+// @updateURL https://update.greasyfork.org/scripts/563091/Guess%20Peek%20%28Geoguessr%29-Fixed.meta.js
 // ==/UserScript==
 
 "use strict";
@@ -24,35 +24,28 @@
 ======================= */
 const SEARCH_RADIUS = 250000;
 const STORAGE_CAP = 50;
+
 const SELECTORS = {
     markerList: "[class*='map-pin_']:not([data-qa='correct-location-marker'])",
     roundMarker:"[data-qa='correct-location-marker']",
     roundEnd: "[data-qa='close-round-result']",
     gameEnd: "[data-qa='play-again-button']",
     roundNumber: "[data-qa='round-number']",
-    guessMap: "[class*='guess-map_canvas']",
-    resultMap:"[class*='coordinate-result-map_map']"
+    guessMap: ".guess-map_canvas__cvpqv",
 };
 
 /* =======================
    State Management
 ======================= */
 let svs = null;
-let guessMap = null;
 let lastClickedCoords = null;
 let mapObserver = null;
 let markerObserver = null;
-let realTimePreviewTooltip = null;
-let gameLoopTimer = null;
-let currentGameToken = null;
-let coverageLayer = null;
-let viewer = null;
-let gameLoopRunning = false;
-let isCoverageLayer = false;
-let isSVFullScreen = false;
 let clickListenerAttached = false;
+let realTimePreviewTooltip = false;
 let isRealTimeTooltip = GM_getValue("realTimeTooltip", false);
-const committedRounds = new Set();
+let processedRounds = new Set(); // Round numbers already fetched in this game
+let currentGameToken = null;
 
 /* =======================
    Utility Functions
@@ -64,11 +57,11 @@ function getReactFiber(el) {
 }
 
 function getGuessMapInstance() {
-    let el = document.querySelector(SELECTORS.guessMap) || document.querySelector(SELECTORS.resultMap);
+    let el = document.querySelector(SELECTORS.guessMap);
     const fiber = getReactFiber(el);
     try {
         return fiber?.return?.return?.memoizedProps?.map ||
-            fiber?.return?.memoizedState?.memoizedState?.current?.instance || fiber?.return?.updateQueue?.lastEffect?.deps?.[0];
+            fiber?.return?.memoizedState?.memoizedState?.current?.instance || null;
     } catch { return null; }
 }
 
@@ -133,45 +126,28 @@ function fetchAnswerPanoFromRoundData() {
 
 function attachClickListener(map) {
     map.addListener("click", async (e) => {
-        if (!document.querySelector(SELECTORS.roundEnd) &&
+        if (!document.querySelector(SELECTORS.roundEnd) ||
             !document.querySelector(SELECTORS.gameEnd)) {
+
             lastClickedCoords = {
                 lat: e.latLng.lat(),
                 lng: e.latLng.lng()
             };
-            const pano = await getNearestPano(lastClickedCoords);
-            const marker = document.querySelector(SELECTORS.markerList)
-            if(marker)updateRealtimePreview(marker, pano);
+
+        }
+        const pano = await getNearestPano(lastClickedCoords);
+        const marker = document.querySelector(SELECTORS.markerList);
+        if (marker&&!document.querySelector(SELECTORS.roundEnd) &&
+            !document.querySelector(SELECTORS.gameEnd)) {
+            updateRealtimePreview(marker, pano);
         }
     });
 }
 
-
-function scheduleGameLoop(delay=200) {
-    if (gameLoopTimer) {
-        clearTimeout(gameLoopTimer);
-    }
-
-    gameLoopTimer = setTimeout(async () => {
-        if (gameLoopRunning) return;
-
-        gameLoopRunning = true;
-        try {
-            await gameLoop();
-        } catch (err) {
-            console.error('[Guess Peek] gameLoop error:', err);
-        } finally {
-            gameLoopRunning = false;
-        }
-    }, delay);
-}
-
-
-function startMarkerObserver() {
-    stopMarkerObserver();
-
-    markerObserver = new MutationObserver(() => {
-        scheduleGameLoop(150);
+function startObserver() {
+    stopObserver();
+    markerObserver = new MutationObserver(async () => {
+        await gameLoop()
     });
 
     markerObserver.observe(document.body, {
@@ -180,20 +156,11 @@ function startMarkerObserver() {
     });
 }
 
-function stopMarkerObserver() {
-    if (markerObserver) {
-        markerObserver.disconnect();
-        markerObserver = null;
-    }
-
-    if (gameLoopTimer) {
-        clearTimeout(gameLoopTimer);
-        gameLoopTimer = null;
-    }
+function stopObserver() {
+    if (markerObserver) markerObserver.disconnect();
 }
 
-
-function starMapObserver() {
+function observeMapContainer() {
     stopMapObserver();
 
     const targetNode = document.body;
@@ -204,9 +171,9 @@ function starMapObserver() {
         const mapEl = document.querySelector(SELECTORS.guessMap);
         if (!mapEl) return;
 
-        guessMap = getGuessMapInstance(mapEl);
-        if (guessMap && !clickListenerAttached) {
-            attachClickListener(guessMap);
+        const mapInstance = getGuessMapInstance(mapEl);
+        if (mapInstance && !clickListenerAttached) {
+            attachClickListener(mapInstance);
             clickListenerAttached = true;
             stopMapObserver();
         }
@@ -228,7 +195,6 @@ function stopMapObserver() {
 }
 
 async function gameLoop() {
-    if(!document.querySelector('#__next')) return
     const token = getGameToken(location.pathname);
     const round = getCurrentRound();
     const isRoundEnd = !!document.querySelector(SELECTORS.roundEnd);
@@ -239,26 +205,31 @@ async function gameLoop() {
 
     if (token !== currentGameToken) {
         currentGameToken = token;
-        committedRounds.clear();
+        processedRounds.clear();
         lastClickedCoords = null;
     }
 
-    await commitRoundResult({
-        token,
-        round,
-        guessCoords: (isRoundEnd || isGameEnd) ? lastClickedCoords : null,
-        hasAnswerMarker: !!isRoundMarker
-    });
+    if ((isRoundEnd || isGameEnd)) {
+        if (lastClickedCoords) {
+            const pano = await getNearestPano(lastClickedCoords);
+            saveGuess(token, round, pano);
+        }
+        if(isRoundMarker){
+            const answer= fetchAnswerPanoFromRoundData()
+            saveAnswer(token,round,answer)
+        }
+    }
     updateMarkersUI(token, round, isGameEnd);
 }
 
-function updateMarkersUI(token, currentRound, isFinal) {
+function updateMarkersUI(token, currentRound, isFinalResults) {
     const data = GM_getValue(token);
     if (!data) return;
+
     const markers = document.querySelectorAll(SELECTORS.markerList);
     const answerMarkers = document.querySelectorAll(SELECTORS.roundMarker);
     if (markers.length === 0) return;
-    if (isFinal) {
+    if (isFinalResults) {
         markers.forEach((marker, index) => {
             const rNum = index + 1;
             if (data.guess?.[rNum]) {
@@ -274,6 +245,7 @@ function updateMarkersUI(token, currentRound, isFinal) {
             });
         }
     } else {
+
         const pano = data.guess?.[currentRound];
         if (pano) {
             applyPanoToGuessMarker(markers[0], pano, currentRound);
@@ -284,6 +256,7 @@ function updateMarkersUI(token, currentRound, isFinal) {
         }
     }
 }
+
 
 function positionTooltip(marker, tooltip) {
     const mapContainer = document.querySelector(SELECTORS.guessMap);
@@ -354,8 +327,6 @@ function updateRealtimePreview(marker, pano) {
         `;
         realTimePreviewTooltip.querySelector(".peek-close-btn")?.addEventListener("click", (e) => {
             e.stopPropagation();
-            isRealTimeTooltip=false
-            saveRealTimeTooltipState(false);
             realTimePreviewTooltip.style.display = "none"
         });
 
@@ -383,7 +354,7 @@ function updateRealtimePreview(marker, pano) {
 
 function applyPanoToGuessMarker(marker, pano, roundId) {
     const bindKey = `bound_${roundId}`;
-    if (marker.dataset?.peekBound === bindKey) return;
+    if (marker.dataset.peekBound === bindKey) return;
     marker.dataset.peekBound = bindKey;
 
     marker.style.cursor = "pointer";
@@ -395,7 +366,7 @@ function applyPanoToGuessMarker(marker, pano, roundId) {
     const tooltip = document.createElement("div");
     tooltip.className = "peek-tooltip";
     if (pano.error) {
-        tooltip.innerHTML = `<div class="peek-error">No Street View found within 250km</div>`;
+        tooltip.innerHTML = `<div class="peek-error">No Street View within 250km</div>`;
     } else {
         tooltip.innerHTML = `
             <div class="peek-header">
@@ -404,13 +375,12 @@ function applyPanoToGuessMarker(marker, pano, roundId) {
             <div class="peek-body">
                 <img src="${getStreetViewThumbUrl(pano)}" class="peek-thumb" alt="Preview">
             </div>
-            <div class="peek-note">Click pin to view Street View</div>
         `;
 
         const clickHandler = (e) => {
             e.preventDefault();
             e.stopPropagation();
-            openNativeStreetView(pano);
+            GM_openInTab(getStreetViewUrl(pano.panoId), { active: true });
         };
 
         marker.removeEventListener("click", marker._peekHandler);
@@ -423,7 +393,7 @@ function applyPanoToGuessMarker(marker, pano, roundId) {
 
 async function applyPanoToAnswerMarker(marker, pano, roundId) {
     const bindKey = `answer_${roundId}`;
-    if (marker.dataset?.peekBound === bindKey) return;
+    if (marker.dataset.peekBound === bindKey) return;
     marker.dataset.peekBound = bindKey;
 
     marker.style.cursor = "pointer";
@@ -433,143 +403,29 @@ async function applyPanoToAnswerMarker(marker, pano, roundId) {
     const tooltip = document.createElement("div");
     tooltip.className = "peek-answer-tooltip";
     tooltip.innerHTML = `
-            <div class="peek-note">Click pin to view Street View</div>
             <div class="peek-body">
                 <img src="${getStreetViewThumbUrl(pano)}" class="peek-thumb">
             </div>
         `;
     marker.appendChild(tooltip);
-    const clickHandler = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        openNativeStreetView(pano);
-    };
-
-    marker.removeEventListener("click", marker._peekHandler);
-    marker._peekHandler = clickHandler;
-    marker.addEventListener("click", clickHandler);
-}
-
-function openNativeStreetView(pano) {
-    if (!pano || pano.error) return;
-    if (!guessMap)guessMap=getGuessMapInstance();
-    if (!guessMap) {
-        console.error("[Guess Peek] Could not find Google Maps instance");
-        return;
-    }
-    if(!isCoverageLayer){
-        coverageLayer = new google.maps.StreetViewCoverageLayer();
-        coverageLayer.setMap(guessMap);
-        isCoverageLayer=true
-    }
-    const shareDiv=document.querySelector("[class*='standard-final-result_challengeFriendButton']")
-    if(shareDiv) shareDiv.style.display='none'
-    const xpDiv=document.querySelector("[class*='level-up-xp-button']")
-    if(xpDiv) xpDiv.style.opacity='0'
-    const mapContainer = document.querySelector(SELECTORS.resultMap);
-    let splitContainer = mapContainer.querySelector('.peek-split-container');
-    if (!splitContainer) {
-        splitContainer = document.createElement('div');
-        splitContainer.className = 'peek-split-container';
-        splitContainer.innerHTML = `
-            <div class="peek-split-resizer"></div>
-            <button class="peek-split-close">×</button>
-            <div class="peek-split-pano"></div>
-        `;
-        mapContainer.appendChild(splitContainer);
-
-        splitContainer.querySelector('.peek-split-close').onclick = (e) => {
-            e.stopPropagation();
-            coverageLayer.setMap(null);
-            isCoverageLayer = false;
-            splitContainer.classList.remove('active');
-            if(shareDiv) shareDiv.style.display='block';
-            if(xpDiv) xpDiv.style.opacity='1.0';
-            requestAnimationFrame(() => {
-                splitContainer.remove();
-            });
-        };
-
-        const panoDiv = splitContainer.querySelector('.peek-split-pano');
-
-        viewer=new google.maps.StreetViewPanorama(panoDiv, {
-            pano: pano.panoId,
-            pov: {
-                heading: pano.heading || 0,
-                pitch: pano.pitch || 0
-            },
-            zoom: 1,
-            addressControl: true,
-            showRoadLabels: false,
-            enableCloseButton: false,
-            zoomControl:true,
-            clickToGo: true
-        })
-    }
-    else {
-        viewer.setPanorama(pano.panoId)
-    }
-    requestAnimationFrame(() => {
-        splitContainer.classList.add('active');
-    });
 }
 
 /* =======================
    Storage & Helpers
 ======================= */
 
-async function commitRoundResult({
-    token,
-    round,
-    guessCoords = null,
-    hasAnswerMarker = false
-}) {
-    if (!token || round == null) return;
-
-    const commitKey = `${token}_${round}`;
-    if (committedRounds.has(commitKey)) return;
-
-    const pending = {};
-
-    if (guessCoords) {
-        try {
-            pending.guess = await getNearestPano(guessCoords);
-        } catch (err) {
-            console.error("[commitRoundResult] getNearestPano failed", err);
-        }
-    }
-
-    if (hasAnswerMarker) {
-        try {
-            pending.answer = fetchAnswerPanoFromRoundData();
-        } catch (err) {
-            console.error("[commitRoundResult] fetchAnswer failed", err);
-        }
-    }
-
-    if (!pending.guess && !pending.answer) return;
-
-    const data = GM_getValue(token, { guess: {}, answer: {} });
-
-    if (pending.guess) {
-        data.guess[round] = pending.guess;
-    }
-
-    if (pending.answer) {
-        data.answer[round] = pending.answer;
-    }
-
+function saveGuess(token, round, pano) {
+    let data = GM_getValue(token, { guess: {}, answer: {} });
+    data.guess[round] = pano;
     GM_setValue(token, data);
+    updateHistory(token, "history");
+}
 
-    if (pending.guess) {
-        updateHistory(`${token}_guess`, "guess");
-    }
-
-    if (pending.answer) {
-        updateHistory(`${token}_answer`, "answer");
-    }
-
-    committedRounds.add(commitKey);
+function saveAnswer(token, round, pano) {
+    let data = GM_getValue(token, { guess: {}, answer: {} });
+    data.answer[round] = pano;
+    GM_setValue(token, data);
+    updateHistory(token, "answer");
 }
 
 function saveRealTimeTooltipState(state){
@@ -633,24 +489,28 @@ function inResults() {
 
 
 function main() {
-    startMarkerObserver();
-    starMapObserver();
+    observeMapContainer();
+    startObserver();
 
     window.addEventListener("urlchange", () => {
-        startMarkerObserver();
-        starMapObserver();
+        stopMapObserver();
+        startObserver();
+        observeMapContainer();
     });
     let onKeyDown = async (e) => {
         if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA' || event.target.isContentEditable) {
             return;
         }
-        e.stopPropagation();
-        if (e.key.toLowerCase() === 'p') {
-            isRealTimeTooltip = !isRealTimeTooltip;
-            if (realTimePreviewTooltip) {
-                realTimePreviewTooltip.style.display = isRealTimeTooltip ? 'block' : 'none';
+        if ((e.key === 'p' || e.key === 'P')){
+            if(!isRealTimeTooltip){
+                realTimePreviewTooltip.style.display='block'
+                isRealTimeTooltip=true
             }
-            saveRealTimeTooltipState(isRealTimeTooltip);
+            else{
+                realTimePreviewTooltip.style.display='none'
+                isRealTimeTooltip=false
+            }
+            saveRealTimeTooltipState(isRealTimeTooltip)
         }
     }
     document.addEventListener("keydown", onKeyDown, true);
@@ -658,7 +518,7 @@ function main() {
         .peek-tooltip {
             display: none;
             position: absolute;
-            width: 300px;
+            width: 200px;
             background: rgba(26, 26, 26, 0.95);
             color: white;
             border: 1px solid #ffd700;
@@ -677,7 +537,7 @@ function main() {
         .peek-answer-tooltip {
             display: none;
             position: absolute;
-            width: 300px;
+            width: 200px;
             background: rgba(30, 30, 35, 0.96);
             color: white;
             border: 1px solid #4ade80;
@@ -695,7 +555,7 @@ function main() {
 
         .peek-realtime-tooltip {
             position: absolute;
-            width: 300px;
+            width: 200px;
             background: rgba(30, 30, 35, 0.96);
             color: white;
             border: 1px solid #4ade80;
@@ -721,70 +581,11 @@ function main() {
             line-height: 16px;
             cursor: pointer;
             z-index: 10003;
-        }
+            }
 
         .peek-close-btn:hover {
             background: rgba(255,107,107,0.3);
             }
-
-        .peek-split-container {
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 50%;
-            height: 100%;
-            background: #000;
-            z-index: 10006;
-            transform: translateX(100%);
-            transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-            overflow: hidden;
-            box-shadow: -5px 0 20px rgba(0,0,0,0.5);
-        }
-
-        .peek-split-container.active {
-            transform: translateX(0);
-        }
-
-        .peek-split-resizer {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 4px;
-            height: 100%;
-            background: #7dcc4c;
-            cursor: ew-resize;
-            z-index: 10007;
-        }
-
-        .peek-split-pano {
-            width: 100%;
-            height: 100%;
-        }
-
-        .peek-split-close {
-            background: none rgb(68, 68, 68);
-            border: 0px; margin: 10px;
-            color:#b3b3b3;
-            font-size:32px;
-            padding: 0px;
-            text-transform: none;
-            appearance: none;
-            position: absolute;
-            cursor: pointer;
-            user-select: none;
-            border-radius: 2px;
-            height: 40px;
-            width: 40px;
-            box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px;
-            overflow: hidden;
-            top: 60px;
-            right: 0px;
-            z-index: 10008;
-        }
-
-        .peek-split-close:hover {
-            color: #e6e6e6;
-        }
 
         [data-pano="true"]:hover .peek-tooltip,
         [data-pano="false"]:hover .peek-tooltip {display: block;}
@@ -801,8 +602,7 @@ function main() {
 
         .peek-header { background: #111; padding: 6px; font-size: 11px; color: #888; text-align: center; border-bottom: 1px solid #333; }
         .peek-dist { color: #ffd700; font-weight: bold; font-size: 13px; }
-        .peek-note { font-size:10px; color:#ffd700; margin-top:4px; }
-        .peek-body { height: 150px; background: #000; overflow: hidden; }
+        .peek-body { height: 100px; background: #000; overflow: hidden; }
         .peek-thumb { width: 100%; height: 100%; object-fit: cover; }
         .peek-error { padding: 15px; color: #ff4d4d; font-size: 12px; text-align: center; }
     `);

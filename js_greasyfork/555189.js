@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TorrentBD Shoutbox Manager
 // @namespace    TBD-Shoutbox-Manager
-// @version      1.2.4
+// @version      1.2.3
 // @description  Complete shoutbox overhaul
 // @author       CornHub
 // @license      MIT
@@ -2788,8 +2788,8 @@ function toggleSmilemoji(one, alt) {
 
 const MemeCreatorModule = {
     IMGFLIP_CONFIG: {
-        username: 'puls33',
-        password: '12345678@',
+        username: 'puls3',
+        password: 'cornhub69',
         apiUrl: 'https://api.imgflip.com'
     },
 

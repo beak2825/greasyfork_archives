@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         QQ邮箱暗黑模式
 // @namespace    https://mail.qq.com/
-// @version      1.1
-// @description  为QQ邮箱提供暗黑模式，支持手动、自动（跟随系统）、定时三种模式。
+// @version      1.0.0
+// @description  为QQ邮箱提供暗黑模式，支持手动、自动（跟随系统）、定时三种模式
 // @author       blackzro358
 // @license      AGPLv3
 // @match        https://mail.qq.com/*
@@ -125,9 +125,7 @@
             background-color: #121212 !important;
         }
 
-        /* -------------------------------------------
-           通用组件修复
-           ------------------------------------------- */
+        /* 额外的暗色模式修复 */
         body.qqmail-dark-mode .xm-modal-content,
         body.qqmail-dark-mode .xm-modal-header {
             background-color: #2A2A2A !important;
@@ -138,8 +136,8 @@
             color: #CCCCCC !important;
         }
 
-        body.qqmail-dark-mode input:not([class*="editor"]),
-        body.qqmail-dark-mode textarea:not([class*="editor"]) {
+        body.qqmail-dark-mode input,
+        body.qqmail-dark-mode textarea {
             background-color: #2A2A2A !important;
             color: #E8E8E8 !important;
             border-color: #444444 !important;
@@ -149,10 +147,10 @@
             background: #1E1E1E !important;
         }
 
-        /* 邮件内容区域（读信） */
+        /* 邮件内容区域 */
         body.qqmail-dark-mode .mail-detail-content,
         body.qqmail-dark-mode .mail-content-container,
-        body.qqmail-dark-mode [class*="mail-content"]:not([contenteditable="true"]),
+        body.qqmail-dark-mode [class*="mail-content"],
         body.qqmail-dark-mode [class*="message-body"] {
             background-color: #1E1E1E !important;
             color: #E8E8E8 !important;
@@ -183,56 +181,9 @@
             color: var(--accent_blue_lighten_3) !important;
         }
 
-        /* Iframe 处理:
-           仅反转普通读信的 iframe，
-           排除编辑器(editor)、写信(compose)相关的 iframe，以免编辑器变黑。
-        */
-        body.qqmail-dark-mode iframe:not([class*="editor"]):not([id*="editor"]):not([class*="compose"]) {
+        /* iframe 邮件内容 */
+        body.qqmail-dark-mode iframe {
             filter: invert(0.9) hue-rotate(180deg);
-        }
-
-        /* -------------------------------------------
-           写信/编辑器区域核心修复 (Keep Light)
-           ------------------------------------------- */
-        
-        /* 目标：.xmail-cmp-editor-content, [contenteditable="true"], .mail-reply-editor-wrap
-           强制背景为白色，文字为黑色，恢复 CSS 变量
-        */
-        body.qqmail-dark-mode .mail-compose-mail-content-editor .mail-content-editor-inner,
-        body.qqmail-dark-mode .xmail-cmp-editor-content,
-        body.qqmail-dark-mode [contenteditable="true"],
-        body.qqmail-dark-mode .mail-reply-editor-wrap .reply-editor-content,
-        body.qqmail-dark-mode #contentDiv_0 {
-            background-color: #FFFFFF !important;
-            color: #000000 !important;
-            caret-color: #000000 !important;
-            
-            /* 在编辑器内部局部重置暗黑模式变量回正常模式 */
-            --base_black: #000000;
-            --base_gray_100: #000000;
-            --base_gray_090: #1a1a1a;
-            --base_gray_080: #2b2b2b;
-            --base_gray_050: #808080;
-        }
-
-        /* 确保编辑器内的所有子元素继承黑色文字，除非有内联样式 */
-        body.qqmail-dark-mode .xmail-cmp-editor-content *,
-        body.qqmail-dark-mode [contenteditable="true"] * {
-            color: inherit; 
-        }
-        
-        /* 修复快捷回复框等输入区域 */
-        body.qqmail-dark-mode .mail-reply-editor-wrap {
-            border-color: #444 !important; /* 边框保持深色适配主题 */
-        }
-        
-        /* 修复工具栏背景，让它还是暗色，只让"纸张"是白色 */
-        body.qqmail-dark-mode .compose-editor-toolbar-wrap {
-            background-color: #1E1E1E !important; 
-            border-bottom-color: #333 !important;
-        }
-        body.qqmail-dark-mode .compose-editor-toolbar-wrap::before {
-            background: #1E1E1E !important;
         }
     `;
 
@@ -487,7 +438,7 @@
         // 注册菜单
         registerMenuCommands();
 
-        console.log('[QQ邮箱暗黑模式] 已加载 - 写信区域保持亮色模式');
+        console.log('[QQ邮箱暗黑模式] 已加载');
     }
 
     // 启动

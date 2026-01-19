@@ -1,14 +1,10 @@
 // ==UserScript==
 // @name               PicKit
-// @name:en            PicKit
-// @name:ru            PicKit
-// @name:zh-CN         PicKit- 拾字工具箱
+// @name:zh-CN         拾字
 // @namespace          https://github.com/CodebyGPT/PicKit
-// @version            2026.01.19
-// @description        A user script to reduce mouse clicks.
-// @description:en     A user script to reduce mouse clicks.
-// @description:ru     Пользовательский скрипт для уменьшения количества кликов мыши.
-// @description:zh-CN  尝试让您少点一次鼠标
+// @version            2026.01.05
+// @description        Reduce the number of mouse clicks for users
+// @description:zh-CN  帮你少点一次鼠标
 // @author             CodebyGPT
 // @license            GPL-3.0
 // @license            https://www.gnu.org/licenses/gpl-3.0.txt
@@ -96,8 +92,6 @@ const safeOpenTab = (url, options) => {
         inputRecoveryMode: 'off', // 'off' | 'loose' (default, ignore tracking params) | 'strict'
         enableDragPreview: false,
         scrollRepaintMode: 'always',
-        smartEngine: false,        // 是否启用智能分配
-        fallbackEngine: 'bing',   // 不含中文时的备用引擎
     };
 
     const SCROLL_REPAINT_MODE = {
@@ -217,10 +211,6 @@ const safeOpenTab = (url, options) => {
 scroll_always: '始终重绘',
 scroll_viewport: '锚点在视口内重绘',
 scroll_hide: '始终不重绘',
-menu_smart_engine: '🧠 智能分配引擎',
-menu_fallback_engine: '🔍 备用搜索引擎',
-val_smart_on: '开启',
-val_smart_off: '关闭',
         },
         'en': {
             lang_name: 'English',
@@ -286,10 +276,6 @@ val_smart_off: '关闭',
 scroll_always: 'Always redraw',
 scroll_viewport: 'Redraw anchor points within the viewport',
 scroll_hide: 'Never redraw',
-menu_smart_engine: '🧠 Smart Engine',
-menu_fallback_engine: '🔍 Fallback Engine',
-val_smart_on: 'On',
-val_smart_off: 'Off',
         },
         'ru': {
             lang_name: 'Русский',
@@ -355,10 +341,6 @@ val_smart_off: 'Off',
 scroll_always: 'Всегда перерисовывать',
 scroll_viewport: 'Анкор перерисовывается внутри окна просмотра',
 scroll_hide: 'Всегда не перерисовывать',
-menu_smart_engine: '🧠 Умный поиск',
-menu_fallback_engine: '🔍 Резерв поиск',
-val_smart_on: 'Вкл',
-val_smart_off: 'Выкл',
         }
     };
 
@@ -629,30 +611,6 @@ GM_registerMenuCommand(`${t('scroll_repaint')}: ${modeText[scrollMode]}`, () => 
                 }
             }
         });
-
-        // 智能分配开关
-const smartOn = getConfig('smartEngine');
-GM_registerMenuCommand(`${t('menu_smart_engine')}: ${smartOn ? t('val_smart_on') : t('val_smart_off')}`, () => {
-    setConfig('smartEngine', !smartOn);
-    location.reload();
-});
-
-// 备用引擎选择（仅当开启时才显示，防止关闭时误调）
-if (smartOn) {
-    const fbKey = getConfig('fallbackEngine');
-    const fbName = SEARCH_ENGINES[fbKey] ? SEARCH_ENGINES[fbKey].name : 'Custom';
-    GM_registerMenuCommand(`${t('menu_fallback_engine')}: ${fbName}`, () => {
-        const choice = prompt(t('prompt_search'), fbKey);   // 复用原“搜索引擎”提示文案
-        if (choice) {
-            if (SEARCH_ENGINES[choice] || choice.includes('%s')) {
-                setConfig('fallbackEngine', choice);
-                location.reload();
-            } else {
-                alert(t('err_search'));
-            }
-        }
-    });
-}
 
         // 2.7 缓存功能
         GM_registerMenuCommand(`${t('menu_cache')}: ${getConfig('enableCache') ? t('val_on') : t('val_off')}`, () => {
@@ -1928,14 +1886,7 @@ const isInInput = targetInput !== null;   // 已由调用方传进来
             searchBtn.onclick = (e) => {
                 e.stopPropagation();
                 const query = getConfig('enableCache') ? (cachedSelection.text || text) : text;
-                // 智能分配引擎
-let engine;
-const rawText = getConfig('enableCache') ? (cachedSelection.text || text) : text;
-if (getConfig('smartEngine') && !/[\u4e00-\u9fa5]/.test(rawText)) {
-    engine = getConfig('fallbackEngine');   // 无中文→备用
-} else {
-    engine = getConfig('searchEngine');     // 有中文→主引擎
-}
+                let engine = getConfig('searchEngine');
                 let url = SEARCH_ENGINES[engine] ? SEARCH_ENGINES[engine].url : (engine.includes('%s') ? engine : SEARCH_ENGINES['google'].url);
                 safeOpenTab(url.replace('%s', encodeURIComponent(query.trim())), { active: true });
                 setTimeout(hideUI, 50);

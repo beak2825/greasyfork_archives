@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         仿M浏览器元素审查
 // @namespace    https://viayoo.com/81gzxv
-// @version      3.2
+// @version      2.8
 // @description  利用AI模仿并生成M浏览器的元素审查，在脚本菜单开启元素审查，专注AD规则生成，支持规则编辑。
 // @author       Via && Gemini
 // @match        *://*/*
@@ -21,7 +21,6 @@
     'use strict';
 
     let isDebugMode = false;
-    let isLogging = false;
     let isPicking = false;
     let isCollapsed = false;
     let currentTarget = null;
@@ -135,18 +134,13 @@
 
         #mb-js-content {height: 100%;display: flex;flex-direction: column; padding: 10px; box-sizing: border-box;background: var(--mb-bg) !important;}
         #mb-js-log {flex: 1; margin-top: 10px;overflow-y: auto !important;font-family: monospace;font-size: 11px;border-top: 1px solid var(--mb-border);padding-top: 5px;-webkit-overflow-scrolling: touch;}
-        #mb-js-input {flex-shrink: 0; height: 100px;}
-        .mb-tool-btn.log-active { color: #f1c40f !important; font-weight: bold; text-shadow: 0 0 5px rgba(241, 196, 15, 0.5); }
+        #mb-js-input {flex-shrink: 0; height: 100px;}       
         .log-item { border-bottom: 0.5px solid var(--mb-border); padding: 4px 0; white-space: pre-wrap; font-size: 11px;}
         .log-warn { color: #f1c40f; }
         .log-error { color: #ff4757; background: rgba(255, 71, 87, 0.05); }
         .log-result { color: #2ecc71; }
  
         body.mb-picking-mode { cursor: crosshair !important; }
-        body.mb-picking-mode a, body.mb-picking-mode button, body.mb-picking-mode [onclick],body.mb-picking-mode input[type="button"], body.mb-picking-mode input[type="submit"] { 
-          cursor: crosshair !important; 
-          pointer-events: auto !important; 
-         }
 
         @media (min-width: 768px) {
             #mb-debug-panel { height: 45% !important; }
@@ -195,7 +189,6 @@
                         <button class="ad-mini-btn" id="btn-js-run" style="background:#f1c40f; color:#000; border:none; font-weight:bold;">执行</button>
                         <button class="ad-mini-btn" id="btn-js-clear">清空日志</button>
                         <button class="ad-mini-btn" id="btn-js-copy-all">复制日志</button>
-                        <button class="ad-mini-btn" id="btn-log-switch">监听网页日志</button>
                     </div>
                     <div id="mb-js-log"></div>
                 </div>
@@ -225,46 +218,17 @@
     const btnFold = document.getElementById('mb-btn-fold');
     const jsLog = document.getElementById('mb-js-log');
     const jsInput = document.getElementById('mb-js-input');
-    const btnLogSwitch = document.getElementById('btn-log-switch');
 
     function addLog(msg, type = '') {
-        const isManualRun = (type === 'log-result' || type === 'log-error');
-        if (!isManualRun && !isLogging && !type.startsWith('script')) return;
-        if (jsLog.childNodes.length >= 100) jsLog.lastChild.remove();
-        let output = '';
-        try {
-            if (msg === null) output = 'null';
-            else if (typeof msg === 'object') {
-                try {
-                    const raw = JSON.stringify(msg);
-                    output = raw.length > 1000 ? raw.substring(0, 1000) + "..." : raw;
-                } catch (e) { output = Object.prototype.toString.call(msg); }
-            } else output = String(msg);
-        } catch (e) { output = "[解析失败]"; }
-        const div = document.createElement('div');
-        div.className = `log-item ${type}`;
-        div.innerText = `[${new Date().toLocaleTimeString(undefined, {hour12: false})}] ${output}`;
-        jsLog.prepend(div);
-    }
+      const div = document.createElement('div'); div.className = `log-item ${type}`;
+       if (typeof msg === 'object' && msg !== null) { try { msg = JSON.stringify(msg); } catch (e) { msg = Object.prototype.toString.call(msg); }} div.innerText = `[${new Date().toLocaleTimeString(undefined, {hour12:false})}] ${msg}`; jsLog.prepend(div);}
+       const originalConsole = {log: console.log,error: console.error,warn: console.warn,info: console.info};
+       const hookConsole = (level, type) => { console[level] = (...args) => { originalConsole[level].apply(console, args); addLog(args.length > 1 ? args : args[0], type);};};
+       hookConsole('log', ''); hookConsole('error', 'log-error'); hookConsole('warn', 'log-error'); hookConsole('info', 'log-result');
+       window.addEventListener('error', (e) => { addLog(`${e.message} at ${e.filename}:${e.lineno}`, 'log-error');});
+       window.addEventListener('unhandledrejection', (e) => { addLog(`Promise Error: ${e.reason}`, 'log-error');
+    });
 
-
-    (function initLogHook() {
-        const levels = { log: '', error: 'log-error', warn: 'log-warn', info: 'log-result' };
-        for (const key in levels) {
-            const original = console[key];
-            console[key] = (...args) => {
-                original.apply(console, args);
-                if (isDebugMode) {
-                    const content = args.length > 1 ? args.map(a => (typeof a === 'object' ? JSON.stringify(a) : String(a))).join(' ') : args[0];
-                    addLog(content, levels[key]);
-                }
-            };
-        }
-        window.addEventListener('error', e => {
-            if (isDebugMode) addLog(e.message, 'log-error');
-        });
-    })();
- 
     function switchToPage(index) {
         stage.style.transform = `translateX(-${index * 100}%)`;
         const btnBack = document.getElementById('mb-btn-back');
@@ -282,51 +246,17 @@
             btnFold.innerText = '▼收起';
         }
     }
-    
-    function updateLogBtnUI() {
-        if (isLogging) {
-            btnLogSwitch.style.background = '#f1c40f';
-            btnLogSwitch.style.color = '#000';
-            btnLogSwitch.innerText = '停止监听';
-        } else {
-            btnLogSwitch.style.background = 'var(--mb-bg)';
-            btnLogSwitch.style.color = 'var(--mb-text)';
-            btnLogSwitch.innerText = '监听网页日志';
-        }
-    }
-
-    btnLogSwitch.onclick = () => {
-        isLogging = !isLogging;
-        updateLogBtnUI();
-        isLogging ? addLog("已开启网页日志监听", "log-result") : addLog("已停止网页日志监听", "log-warn");
-    };
-
-    (function initLogHook() {
-        const levels = { log: '', error: 'log-error', warn: 'log-warn', info: 'log-result' };
-        for (const key in levels) {
-            const original = console[key];
-            console[key] = (...args) => {
-                original.apply(console, args);
-                if (isLogging) {
-                    const content = args.length > 1 ? args.map(a => (typeof a === 'object' ? JSON.stringify(a) : String(a))).join(' ') : args[0];
-                    addLog(content, levels[key]);
-                }
-            };
-        }
-    })();
 
     function startPicking() {
         isPicking = true;
         btnPick.classList.add('active');
         document.body.classList.add('mb-picking-mode');
-        window.onbeforeunload = () => { if (isPicking) return "正在审查元素"; };
     }
 
     function stopPicking() {
         isPicking = false;
         btnPick.classList.remove('active');
         document.body.classList.remove('mb-picking-mode');
-        window.onbeforeunload = null;
     }
 
     function togglePanel(show) {
@@ -350,128 +280,78 @@
         let rest = match[3].replace(/("(.*?)")/g, '<span class="hl-url">"$2"</span>');
         return `<span class="hl-domain">${match[1]}</span><span class="hl-sep">${match[2]}</span><span class="hl-selector">${rest}</span>`;
     }
-    
-    /* 参考了[轻量规则](https://raw.githubusercontent.com/damengzhu/abpmerge/main/abpmerge.txt) (Abpmerge)
-    [混合规则](https://raw.githubusercontent.com/lingeringsound/adblock_auto/main/Rules/adblock_auto_lite.txt)
-    !! 感谢 ！！
-    */
-   function generateSmartRules(el) {
-    const domain = window.location.hostname;
-    const tagName = el.tagName.toLowerCase();
-    let rules = [];
-    const isInvalid = (str) => /^[:\d]/.test(str) || str.includes(':') || str.includes('(') || str.includes(')');
-    const adKeywords = /ad|ads|adv|banner|popup|modal|sponsor|gg|google|float|fixed|sticky|overlay|iframe|script|推广|广告/i;
 
-    if (el.id && !isInvalid(el.id)) {
-        rules.push(`${domain}###${el.id}`);
-        if (adKeywords.test(el.id)) {
-            rules.push(`###${el.id}`);
+    function generateSmartRules(el) {
+        const domain = window.location.hostname;
+        const tagName = el.tagName.toLowerCase();
+        let rules = [];
+        const isInvalid = (str) => /^[:\d]/.test(str) || str.includes(':');
+        if (el.id && !isInvalid(el.id)) {
+            rules.push(`${domain}###${el.id}`);
         }
-    }
-
-    const classList = Array.from(el.classList).filter(c =>
-        !/\d{5,}/.test(c) && c.length < 35 && c !== 'mb-inspect-hl' && !isInvalid(c)
-    );
-    
-    if (classList.length > 0) {
-        classList.forEach(c => {
-            rules.push(`${domain}##.${c}`);
-            if (adKeywords.test(c)) {
-                rules.push(`##.${c}`);
-                rules.push(`${domain}##${tagName}.${c}`);
+        const classList = Array.from(el.classList).filter(c =>
+            !/\d{5,}/.test(c) && c.length < 30 && c !== 'mb-inspect-hl' && !isInvalid(c)
+        );
+        if (classList.length > 0) {
+            classList.forEach(c => rules.push(`${domain}##.${c}`));
+            if (classList.length >= 2) rules.push(`${domain}##.${classList.slice(0, 2).join('.')}`);
+            if (classList.length >= 3) rules.push(`${domain}##.${classList.join('.')}`);
+        }
+        let attrRules = [];
+        let sizeBundle = "";
+        for (let attr of el.attributes) {
+            if (['id', 'class', 'style'].includes(attr.name)) continue;
+            let val = attr.value;
+            if (!val) continue;
+            if (['width', 'height'].includes(attr.name)) {
+                sizeBundle += `[${attr.name}="${val}"]`;
+                continue;
             }
-        });
-        if (classList.length >= 2) {
-            const pair = classList.slice(0, 2).join('.');
-            rules.push(`${domain}##.${pair}`);
-            if (adKeywords.test(pair)) rules.push(`##.${pair}`);
-        }
-    }
-
-    if (el.previousElementSibling) {
-        const prev = el.previousElementSibling;
-        const prevS = prev.id ? `#${prev.id}` : (prev.classList.length ? `.${prev.classList[0]}` : '');
-        if (prevS && !isInvalid(prevS)) rules.push(`${domain}##${prevS} + ${tagName}`);
-    }
-    if (el.parentElement && el.parentElement.id && el.parentElement.tagName !== 'BODY') {
-        rules.push(`${domain}###${el.parentElement.id} > ${tagName}${classList.length ? '.' + classList[0] : ''}`);
-    }
-
-    let attrRules = [];
-    let sizeBundle = "";
-    for (let attr of el.attributes) {
-        let val = attr.value;
-        if (!val || ['id', 'class'].includes(attr.name)) continue;
-
-        if (['width', 'height'].includes(attr.name)) {
-            sizeBundle += `[${attr.name}="${val}"]`;
-            continue;
-        }
-
-        if (attr.name === 'style') {
-            const isFixed = /fixed|sticky|absolute/.test(val);
-            const isHighZ = /z-index\s*:\s*(99\d+|2147483647)/.test(val);
-            if (isFixed || isHighZ) {
-                if (isFixed) rules.push(`${domain}##${tagName}[style*="fixed"]`);
-                if (isHighZ) rules.push(`${domain}##${tagName}[style*="z-index"]`);
-            }
-            continue;
-        }
-
-        if (val.startsWith('data:')) {
-            const b64 = val.match(/^data:[^;]+;base64,[A-Za-z0-9+/=]{20,50}/);
-            if (b64) attrRules.push(`${tagName}[${attr.name}^="${b64[0]}"]`);
-            continue;
-        }
-
-        if (attr.name.startsWith('data-')) {
-            if (adKeywords.test(attr.name) || adKeywords.test(val)) {
-                rules.push(`${domain}##${tagName}[${attr.name}]`);
-            }
-            if (val.length < 60) attrRules.push(`${tagName}[${attr.name}="${val}"]`);
-            continue;
-        }
-
-        if (['src', 'href', 'title', 'alt'].includes(attr.name)) {
-            if (adKeywords.test(val)) {
-                rules.push(`${domain}##${tagName}[${attr.name}*="${val.substring(0, 20)}"]`);
+            if (val.startsWith('data:')) {
+                const b64 = val.match(/^data:[^;]+;base64,/);
+                if (b64) {
+                    attrRules.push(`${tagName}[${attr.name}^="${b64[0]}"]`);
+                    continue;
+                }
             }
             if (/^(https?:|)\/\//.test(val)) {
-                const m = val.match(/^((?:https?:|)\/\/[^\/]+\/)/);
-                if (m) attrRules.push(`${tagName}[${attr.name}^="${m[1]}"]`);
-            } else if (val.length > 0 && val.length < 100) {
-                attrRules.push(`${tagName}[${attr.name}*="${val}"]`);
+                const urlMatch = val.match(/^((?:https?:|)\/\/[^\/]+\/)/);
+                if (urlMatch) {
+                    attrRules.push(`${tagName}[${attr.name}^="${urlMatch[1]}"]`);
+                } else {
+                    attrRules.push(`${tagName}[${attr.name}="${val}"]`);
+                }
+            } else {
+                if (val.length > 180) {
+                    attrRules.push(`${tagName}[${attr.name}^="${val.substring(0, 30)}"]`);
+                } else {
+                    attrRules.push(`${tagName}[${attr.name}="${val}"]`);
+                }
             }
         }
-    }
-
-    if (sizeBundle) rules.push(`${domain}##${tagName}${sizeBundle}`);
-    attrRules.forEach(r => rules.push(`${domain}##${r}`));
-
-    const adTags = ['iframe', 'embed', 'ins', 'object'];
-    if (adTags.includes(tagName)) rules.push(`${domain}##${tagName}`);
-
-    rules = [...new Set(rules)];
-    rules.sort((a, b) => {
-        const getWeight = (s) => {
-            const hasDomain = s.includes(domain);
-            if (adKeywords.test(s)) return hasDomain ? 1 : 2;
-            if (s.includes('###') || s.includes('##.')) return hasDomain ? 3 : 4;
-            if (s.includes(' > ') || s.includes(' + ')) return 5;
-            return 6;
-        };
-        const wa = getWeight(a), wb = getWeight(b);
-        return wa !== wb ? wa - wb : a.length - b.length;
-    });
-
-    const genericTags = ['div', 'span', 'p', 'li', 'ul', 'ins', 'section', 'article', 'img', 'header', 'footer'];
+        if (sizeBundle) {
+            rules.push(`${domain}##${tagName}${sizeBundle}`);
+        }
+        attrRules.forEach(r => rules.push(`${domain}##${r}`));
+        rules = [...new Set(rules)];
+        rules.sort((a, b) => {
+            const getWeight = (s) => {
+                if (/[Aa][Dd][Ss]|[Bb]anner/i.test(s)) return 1;
+                if (s.includes('[src') || s.includes('[href') || s.includes('[data-src') || s.includes('[srcid')) return 2;
+                if (s.includes('[width') || s.includes('[height')) return 3;
+                if (s.includes('###') || (s.includes('##.') && !s.includes('['))) return 4;
+                return 5;
+            };
+            const weightA = getWeight(a);
+            const weightB = getWeight(b);
+            if (weightA !== weightB) return weightA - weightB;
+            return a.length - b.length;
+        });
+        const genericTags = ['div', 'span', 'p', 'li', 'ul', 'ins', 'section', 'article'];
         return rules.filter(r => {
-         const sel = r.split(/###?/)[1];
-          if (!sel) return false;
-          if (genericTags.includes(sel.toLowerCase())) return false;
-          if (sel.includes('*=') && sel.includes('http') && sel.length > 120) return false;
-          return true;
-       });
+            const selector = r.split(/###?/)[1];
+            return !genericTags.includes(selector);
+        });
     }
 
     function renderAdPage() {
@@ -807,24 +687,10 @@
     if (document.readyState === 'complete') createDebugTrigger();
     else window.addEventListener('load', createDebugTrigger);
     
-    let startX, startY;
     const handler = (e) => {
-        if (!isDebugMode || !isPicking) return;
-        const trigger = document.getElementById('mb-debug-trigger');
-        if (panel.contains(e.target) || (trigger && trigger.contains(e.target))) return;
-        if (e.type === 'mousedown' || e.type === 'touchstart' || e.type === 'pointerdown') {
-            const touch = e.touches ? e.touches[0] : e; startX = touch.clientX; startY = touch.clientY;
-            return; 
-        }
-        if (e.type === 'click' || e.type === 'pointerup' || e.type === 'touchend') {
-            const touch = e.changedTouches ? e.changedTouches[0] : e; const diffX = Math.abs(touch.clientX - startX); const diffY = Math.abs(touch.clientY - startY);
-            if (diffX < 10 && diffY < 10) { e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation(); highlight(e.target); renderDOM();
-            if (isCollapsed) { isCollapsed = false;updateFoldState(); }
-              return false;
-            }
-        }
+        if (!isDebugMode || !isPicking || panel.contains(e.target)) return;
+        e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+        if (e.type === 'click') { highlight(e.target); renderDOM(); if (isCollapsed) { isCollapsed = false; updateFoldState(); } }
     };
-    const events = ['mousedown', 'touchstart', 'pointerdown', 'click', 'pointerup', 'touchend'];
-    events.forEach(type => { window.addEventListener(type, handler, { capture: true, passive: false });
-    });
+    ['click', 'mousedown', 'mouseup', 'pointerdown'].forEach(type => window.addEventListener(type, handler, true));
 })();
