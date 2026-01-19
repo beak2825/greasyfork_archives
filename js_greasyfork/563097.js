@@ -2,8 +2,8 @@
 // @name         悬浮精准时间显示（秒杀助手）
 // @name:en      Precision Floating Clock (Synchronized)
 // @namespace    http://tampermonkey.net/
-// @version      1.3.1
-// @description  在网页右上角显示带有毫秒的精准北京时间，支持自动与苏宁、淘宝服务器同步，确保秒杀不掉链子。支持拖拽、亮暗色自动切换及自定义颜色。
+// @version      1.3.2
+// @description  在网页右上角显示带有毫秒的精准北京时间，支持自动与京东、淘宝服务器同步，确保秒杀不掉链子。支持拖拽、亮暗色自动切换及自定义颜色。
 // @description:en Display high-precision network time (including milliseconds) on any webpage. Supports synchronization with Tmall and Suning servers, perfect for flash sales. Features include drag-and-drop, dark mode support, and customizable colors.
 // @author       l_greasy
 // @match        *://*/*
@@ -13,11 +13,12 @@
 // @grant        GM_xmlhttpRequest
 // @grant        GM_addStyle
 // @license      MIT
-// @connect      suning.com
+// @connect      jd.com
 // @connect      taobao.com
 // @downloadURL https://update.greasyfork.org/scripts/563097/%E6%82%AC%E6%B5%AE%E7%B2%BE%E5%87%86%E6%97%B6%E9%97%B4%E6%98%BE%E7%A4%BA%EF%BC%88%E7%A7%92%E6%9D%80%E5%8A%A9%E6%89%8B%EF%BC%89.user.js
 // @updateURL https://update.greasyfork.org/scripts/563097/%E6%82%AC%E6%B5%AE%E7%B2%BE%E5%87%86%E6%97%B6%E9%97%B4%E6%98%BE%E7%A4%BA%EF%BC%88%E7%A7%92%E6%9D%80%E5%8A%A9%E6%89%8B%EF%BC%89.meta.js
 // ==/UserScript==
+
 
 (function() {
     'use strict';
@@ -45,7 +46,6 @@
                 50% { background-position: 100% 50%; }
                 100% { background-position: 0% 50%; }
             }
-
             #tm-precise-clock-v5-7 {
                 position: fixed !important;
                 top: ${config.pos.top};
@@ -56,17 +56,12 @@
                 display: flex !important;
                 align-items: center;
                 justify-content: center;
-                padding: 0 !important;
                 z-index: 2147483647 !important;
                 font-family: "SF Pro Display", "SF Pro", -apple-system, BlinkMacSystemFont, sans-serif !important;
                 font-variant-numeric: tabular-nums !important;
                 font-weight: 200 !important;
                 font-size: 32px !important;
-                letter-spacing: -0.2px !important;
-                -webkit-font-smoothing: antialiased;
-                background: linear-gradient(135deg,
-                    rgba(255, 255, 255, ${config.bgOpacity}),
-                    rgba(255, 255, 255, ${config.bgOpacity + 0.15})) !important;
+                background: linear-gradient(135deg, rgba(255,255,255,${config.bgOpacity}), rgba(255,255,255,${config.bgOpacity + 0.15})) !important;
                 background-size: 200% 200% !important;
                 animation: glassFlow 8s ease infinite !important;
                 color: ${displayTextColor} !important;
@@ -77,34 +72,9 @@
                 box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08) !important;
                 backdrop-filter: blur(25px) saturate(190%) !important;
                 -webkit-backdrop-filter: blur(25px) saturate(190%) !important;
-                overflow: hidden;
-                transition: transform 0.2s cubic-bezier(0.2, 0, 0.2, 1), color 0.4s ease;
+                transition: transform 0.2s cubic-bezier(0.2, 0, 0.2, 1);
             }
-
-            #tm-precise-clock-v5-7::before {
-                content: '';
-                position: absolute;
-                top: 0; left: 0; right: 0; bottom: 0;
-                background: radial-gradient(circle at var(--x, 50%) var(--y, 50%),
-                            rgba(255, 255, 255, 0.45) 0%,
-                            transparent 60%);
-                opacity: 0;
-                transition: opacity 0.3s;
-                pointer-events: none;
-            }
-
-            #tm-precise-clock-v5-7:hover::before { opacity: 1; }
-            #tm-precise-clock-v5-7:active { transform: scale(0.96); }
-
-            .tm-ms-v5-7 {
-                font-size: 0.55em;
-                margin-left: 6px;
-                opacity: 0.5;
-                font-weight: 300;
-                width: 1.2em;
-                display: inline-block;
-            }
-
+            .tm-ms-v5-7 { font-size: 0.55em; margin-left: 6px; opacity: 0.5; font-weight: 300; width: 1.2em; display: inline-block; }
             #tm-settings-v5-7 {
                 position: fixed !important;
                 background: rgba(255, 255, 255, 0.95) !important;
@@ -115,19 +85,12 @@
                 width: 180px !important;
                 display: none;
                 box-shadow: 0 20px 50px rgba(0,0,0,0.15) !important;
-                border: 1px solid rgba(255,255,255,0.7) !important;
                 font-family: -apple-system, sans-serif;
             }
             .s-item { margin-bottom: 18px; }
             .s-item label { display: flex; justify-content: space-around; align-items: center; }
-            #cfg-ok-v5 {
-                width: 100%; background: #007AFF; color: #fff; border: none;
-                padding: 10px; border-radius: 14px; cursor: pointer; font-weight: 600;
-            }
-            .color-dot {
-                width: 28px; height: 28px; border-radius: 50%; border: 2px solid transparent; cursor: pointer;
-                transition: 0.2s;
-            }
+            #cfg-ok-v5 { width: 100%; background: #007AFF; color: #fff; border: none; padding: 10px; border-radius: 14px; cursor: pointer; font-weight: 600; }
+            .color-dot { width: 28px; height: 28px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; transition: 0.2s; }
             .dot-active { border-color: #007AFF !important; transform: scale(1.15); }
         `;
         const existingStyle = document.getElementById('tm-clock-style-v5');
@@ -140,58 +103,68 @@
 
     // --- 核心对时逻辑 ---
     function syncTime() {
-        const startTime = Date.now();
-        // 优先使用苏宁接口
-        GM_xmlhttpRequest({
-            method: "GET",
-            url: "https://quan.suning.com/getSysTime.do",
-            timeout: 3000,
-            onload: (res) => {
-                try {
-                    const endTime = Date.now();
-                    const rtt = endTime - startTime; // 计算网络往返延迟
-                    const data = JSON.parse(res.responseText);
-                    // 假设服务器处理时间极短，服务器时间 = 返回时间 - (延迟/2)
-                    const serverTime = new Date(data.sysTime2.replace(/-/g, '/')).getTime();
-                    timeOffset = (serverTime + (rtt / 2)) - endTime;
-                    console.log(`[Clock] 校准成功 (Suning), 延迟: ${rtt}ms, 偏移: ${timeOffset}ms`);
-                } catch (e) {
-                    syncTimeBackup(); // 主接口解析失败则尝试备用
-                }
-            },
-            onerror: () => syncTimeBackup()
+        const fetchTaobao = new Promise((resolve, reject) => {
+            const start = Date.now();
+            GM_xmlhttpRequest({
+                method: "GET",
+                url: "https://api.m.taobao.com/rest/api3.do?api=mtop.common.getTimestamp",
+                timeout: 2000,
+                onload: (res) => {
+                    try {
+                        const data = JSON.parse(res.responseText);
+                        const serverTime = parseInt(data.data.t);
+                        if (isNaN(serverTime)) throw new Error();
+                        resolve({ serverTime, rtt: Date.now() - start, source: 'Taobao' });
+                    } catch (e) { reject(); }
+                },
+                onerror: reject
+            });
         });
-    }
 
-    function syncTimeBackup() {
-        const startTime = Date.now();
-        GM_xmlhttpRequest({
-            method: "GET",
-            url: "https://api.m.taobao.com/rest/api3.do?api=mtop.common.getTimestamp",
-            timeout: 3000,
-            onload: (res) => {
-                try {
-                    const endTime = Date.now();
-                    const rtt = endTime - startTime;
-                    const data = JSON.parse(res.responseText);
-                    const serverTime = parseInt(data.data.t);
-                    timeOffset = (serverTime + (rtt / 2)) - endTime;
-                    console.log(`[Clock] 备用校准成功 (Taobao), 延迟: ${rtt}ms`);
-                } catch (e) {}
+        const fetchJD = new Promise((resolve, reject) => {
+            const start = Date.now();
+            GM_xmlhttpRequest({
+                method: "GET",
+                url: "https://a.jd.com//ajax/queryServerData.html",
+                timeout: 2000,
+                onload: (res) => {
+                    try {
+                        const data = JSON.parse(res.responseText);
+                        const serverTime = parseFloat(data.serverTime);
+                        if (isNaN(serverTime)) throw new Error();
+                        resolve({ serverTime, rtt: Date.now() - start, source: 'JD' });
+                    } catch (e) { reject(); }
+                },
+                onerror: reject
+            });
+        });
+
+        // 竞争机制：哪家先回用哪家
+        Promise.any([fetchTaobao, fetchJD]).then(res => {
+            const endTime = Date.now();
+            // 修正后的偏移计算
+            const offset = (res.serverTime + (res.rtt / 2)) - endTime;
+            if (!isNaN(offset)) {
+                timeOffset = offset;
+                console.log(`[Clock] 校准成功 (${res.source}), 偏移: ${timeOffset}ms`);
             }
+        }).catch(() => {
+            console.warn("[Clock] 接口请求失败，维持当前偏移");
         });
     }
 
     // --- 刷新逻辑 ---
     function updateClock() {
         if (!clockDiv) return;
-        const now = new Date(Date.now() + timeOffset);
-        const h = String(now.getHours()).padStart(2, '0');
-        const m = String(now.getMinutes()).padStart(2, '0');
-        const s = String(now.getSeconds()).padStart(2, '0');
-        const ms = String(Math.floor(now.getMilliseconds() / 10)).padStart(2, '0'); // 取两位毫秒
+        const localNow = Date.now();
+        const adjustedNow = new Date(localNow + timeOffset);
 
-        // 直接操作 DOM 提升性能
+        // 极致容错：如果计算结果非法，强制显示本地时间
+        const h = String(isNaN(adjustedNow.getTime()) ? new Date().getHours() : adjustedNow.getHours()).padStart(2, '0');
+        const m = String(isNaN(adjustedNow.getTime()) ? new Date().getMinutes() : adjustedNow.getMinutes()).padStart(2, '0');
+        const s = String(isNaN(adjustedNow.getTime()) ? new Date().getSeconds() : adjustedNow.getSeconds()).padStart(2, '0');
+        const ms = String(Math.floor((isNaN(adjustedNow.getTime()) ? new Date().getMilliseconds() : adjustedNow.getMilliseconds()) / 10)).padStart(2, '0');
+
         clockDiv.innerHTML = `${h}:${m}:${s}<span class="tm-ms-v5-7">${ms}</span>`;
         requestAnimationFrame(updateClock);
     }
@@ -210,19 +183,7 @@
 
         updateStyles();
 
-        // 鼠标随动光影
-        clockDiv.addEventListener('mousemove', (e) => {
-            const rect = clockDiv.getBoundingClientRect();
-            const x = ((e.clientX - rect.left) / rect.width) * 100;
-            const y = ((e.clientY - rect.top) / rect.height) * 100;
-            clockDiv.style.setProperty('--x', `${x}%`);
-            clockDiv.style.setProperty('--y', `${y}%`);
-        });
-
-        // 亮暗色切换监听
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateStyles);
-
-        // 拖拽与设置弹出逻辑
+        // 交互逻辑
         let isDragging = false, hasMoved = false, ox, oy, startX, startY;
         clockDiv.onmousedown = (e) => {
             if (e.button !== 0) return;
@@ -242,29 +203,31 @@
         document.addEventListener('mouseup', (e) => {
             if (!isDragging) return;
             isDragging = false;
-            if (!hasMoved) showSettings(e.clientX, e.clientY);
-            else GM_setValue('clockConfig_v5_7', config);
+            if (!hasMoved) {
+                syncTime(); // 点击时强制同步
+                showSettings(e.clientX, e.clientY);
+            } else {
+                GM_setValue('clockConfig_v5_7', config);
+            }
         });
 
         updateClock();
         syncTime();
-        // 每 5 分钟自动校准一次
         setInterval(syncTime, 300000);
     }
 
     function showSettings(x, y) {
         settingsPanel.innerHTML = `
-            <div style="font-weight:600; margin-bottom:15px; font-size:15px; color:#1d1d1f; text-align:center;">Appearance</div>
+            <div style="font-weight:600; margin-bottom:15px; font-size:14px; color:#1d1d1f; text-align:center;">Settings</div>
             <div class="s-item">
                 <label>
-                    <div class="color-dot" data-col="auto" style="background: linear-gradient(135deg, #000 50%, #fff 50%); border: 1px solid #ddd;" title="Auto"></div>
-                    <div class="color-dot" data-col="#000000" style="background: #000;" title="Dark Text"></div>
-                    <div class="color-dot" data-col="#ffffff" style="background: #fff; border: 1px solid #eee;" title="Light Text"></div>
+                    <div class="color-dot" data-col="auto" style="background: linear-gradient(135deg, #000 50%, #fff 50%); border: 1px solid #ddd;"></div>
+                    <div class="color-dot" data-col="#000000" style="background: #000;"></div>
+                    <div class="color-dot" data-col="#ffffff" style="background: #fff; border: 1px solid #eee;"></div>
                 </label>
             </div>
             <button id="cfg-ok-v5">Done</button>
         `;
-
         settingsPanel.style.display = 'block';
         settingsPanel.style.left = Math.min(x, window.innerWidth - 200) + 'px';
         settingsPanel.style.top = Math.min(y, window.innerHeight - 150) + 'px';
@@ -278,7 +241,6 @@
                 updateStyles();
             };
         });
-
         settingsPanel.querySelector('#cfg-ok-v5').onclick = () => {
             GM_setValue('clockConfig_v5_7', config);
             settingsPanel.style.display = 'none';

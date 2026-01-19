@@ -2,7 +2,7 @@
 // @name         MH: Profile+
 // @author       Warden Slayer
 // @namespace    https://greasyfork.org/en/users/227259-wardenslayer
-// @version      1.47
+// @version      1.48
 // @description  Community requested features for the tabs on your MH profile.
 // @grant        GM_xmlhttpRequest
 // @icon         https://www.mousehuntgame.com/images/items/weapons/974151e440f297f1b6d55385310ac63c.jpg?cv=2
@@ -95,7 +95,7 @@ function generateProfile() {
   let eggMaster = localStorage.getItem('ws.pfp.eggMaster');
   if ($('.userInteractionButtonsView-relationship').get(0)) {
     userID = $('.userInteractionButtonsView-relationship').attr(
-      'data-recipient-snuid'
+      'data-recipient-snuid',
     );
     maybeYourFriend = userID;
   } else if (myProfileLink) {
@@ -154,7 +154,7 @@ function generateProfile() {
       ['not_a_real_field'],
       function (data) {
         randomFriend.text('Visit Random Friend (' + data[0].name + ')');
-      }
+      },
     );
   }
 }
@@ -183,10 +183,10 @@ function flexEggMaster() {
 $(document).on('click', '#tipButton', function () {
   const debug = localStorage.getItem('ws.debug');
   const receivingHunter = $('.userInteractionButtonsView-relationship').attr(
-    'data-recipient-snuid'
+    'data-recipient-snuid',
   );
   const receivingName = $('.friendsPage-friendRow-titleBar-name').attr(
-    'data-text'
+    'data-text',
   );
   const sendingHunter = user.unique_hash;
   const url =
@@ -223,7 +223,7 @@ $(document).on(
       console.log('ID Copied', copiedID);
     }
     GM_setClipboard(copiedID);
-  }
+  },
 );
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -236,21 +236,21 @@ $(document).on(
 function sumCategoryStats(category) {
   const categoryName = $(category).find('.mouseListView-categoryContent-name');
   const categoryTest = $(category).find(
-    '.mouseListView-categoryContent-description'
+    '.mouseListView-categoryContent-description',
   );
   let categoryCatches = 0;
   let categoryMisses = 0;
   const categoryMice = $(category).find(
-    '.mouseListView-categoryContent-subgroup-mouse.stats:not(.header)'
+    '.mouseListView-categoryContent-subgroup-mouse.stats:not(.header)',
   );
   categoryMice.each(function (i) {
     const thisCatches = parseInt(
       $(this).find('.catches').text().replace(',', ''),
-      10
+      10,
     );
     const thisMisses = parseInt(
       $(this).find('.misses').text().replace(',', ''),
-      10
+      10,
     );
     categoryCatches += thisCatches;
     categoryMisses += thisMisses;
@@ -270,7 +270,7 @@ function sumCategoryStats(category) {
       categoryMisses.toLocaleString() +
       ', Total: ' +
       categoryTotal.toLocaleString() +
-      ']'
+      ']',
   );
   $(categoryStats).css({
     fontSize: '16px',
@@ -280,22 +280,22 @@ function sumCategoryStats(category) {
 
 function generateMice() {
   const allMice = $(
-    '.mouseListView-categoryContent-subgroup-mouse.stats:not(.header)'
+    '.mouseListView-categoryContent-subgroup-mouse.stats:not(.header)',
   );
   const statsHeader = $(
-    '.mouseListView-categoryContent-subgroup-mouse.stats.header'
+    '.mouseListView-categoryContent-subgroup-mouse.stats.header',
   );
   allMice.each(function (i) {
     const thisThumb = $(this).find(
-      '.mouseListView-categoryContent-subgroup-mouse-thumb'
+      '.mouseListView-categoryContent-subgroup-mouse-thumb',
     );
     const thisCatches = parseInt(
       $(this).find('.catches').text().replace(',', ''),
-      10
+      10,
     );
     const thisMisses = parseInt(
       $(this).find('.misses').text().replace(',', ''),
-      10
+      10,
     );
     const thisCrown = setCrownBorder(thisThumb, thisCatches);
   });
@@ -307,10 +307,10 @@ function generateMice() {
     '.mouseListView-categoryContent-subgroup-mouse-stats',
     function () {
       SortMice(this);
-    }
+    },
   );
   const theseCategories = $(
-    '.mouseListView-categoryContent-category.all.active'
+    '.mouseListView-categoryContent-category.all.active',
   );
   theseCategories.each(function (i) {
     sumCategoryStats(this);
@@ -391,7 +391,7 @@ function setCrownBorder(thumb, catches, expanded) {
 
 function sortMiceBy(key, UD) {
   let activeGrouping = $(
-    '.mousehuntHud-page-subTabContent.active[data-template-file="AdversariesPage"]'
+    '.mousehuntHud-page-subTabContent.active[data-template-file="AdversariesPage"]',
   );
   let activeSubGroup = '';
   if (
@@ -399,25 +399,25 @@ function sortMiceBy(key, UD) {
       .length > 0
   ) {
     activeSubGroup = $(activeGrouping).find(
-      '.mouseListView-categoryContent-category.active.hasFilter.caught'
+      '.mouseListView-categoryContent-category.active.hasFilter.caught',
     );
   } else if (
     $('.mouseListView-categoryContent-category.active.hasFilter.uncaught')
       .length > 0
   ) {
     activeSubGroup = $(activeGrouping).find(
-      '.mouseListView-categoryContent-category.active.hasFilter.uncaught'
+      '.mouseListView-categoryContent-category.active.hasFilter.uncaught',
     );
   } else {
     activeSubGroup = $(activeGrouping).find(
-      '.mouseListView-categoryContent-category.all.active'
+      '.mouseListView-categoryContent-category.all.active',
     );
   }
   const mouseContainer = $(activeSubGroup).find(
-    '.mouseListView-categoryContent-subgroupContainer'
+    '.mouseListView-categoryContent-subgroupContainer',
   );
   const allMice = $(activeSubGroup).find(
-    '.mouseListView-categoryContent-subgroup-mouse.stats:not(.header)'
+    '.mouseListView-categoryContent-subgroup-mouse.stats:not(.header)',
   );
   $(allMice)
     .sort(function (a, b) {
@@ -470,7 +470,7 @@ function generateCrowns() {
     console.log(
       'Crowns Tab',
       localStorage.getItem('Lock Favorites'),
-      localStorage.getItem('ShowCommunityRanks')
+      localStorage.getItem('ShowCommunityRanks'),
     );
   }
   buildToolbar();
@@ -535,7 +535,7 @@ function buildToolbar() {
   const communityRanksLabel = document.createElement('label');
   communityRanksLabel.htmlFor = 'communityRanksLabel';
   communityRanksLabel.appendChild(
-    document.createTextNode('Show Crown Summary  ')
+    document.createTextNode('Show Crown Summary  '),
   );
   toolBar.appendChild(communityRanks);
   toolBar.appendChild(communityRanksLabel);
@@ -617,7 +617,7 @@ function lockFavorites() {
     return;
   }
   const allMice = $('.mouseCrownsView-group-mouse').find(
-    '.mouseCrownsView-group-mouse-favouriteButton'
+    '.mouseCrownsView-group-mouse-favouriteButton',
   );
   allMice.css('pointer-events', 'none');
 }
@@ -625,7 +625,7 @@ function lockFavorites() {
 function unlockFavorites() {
   localStorage.setItem('Lock Favorites', 'N');
   const allMice = $('.mouseCrownsView-group-mouse').find(
-    '.mouseCrownsView-group-mouse-favouriteButton'
+    '.mouseCrownsView-group-mouse-favouriteButton',
   );
   allMice.css('pointer-events', 'auto');
   $('.mouseCrownsView-crown.favourite').css({
@@ -697,22 +697,22 @@ function showCommunityRanks() {
     });
   communityCrownHeader.insertAfter(crownBreak);
   const allUncrowned = $('.mouseCrownsView-group.none').find(
-    '.mouseCrownsView-group-mouse'
+    '.mouseCrownsView-group-mouse',
   );
   const allBronze = $(
-    '.mouseCrownsView-group.bronze,.mouseCrownsView-group.silver,.mouseCrownsView-group.gold,.mouseCrownsView-group.platinum,.mouseCrownsView-group.diamond'
+    '.mouseCrownsView-group.bronze,.mouseCrownsView-group.silver,.mouseCrownsView-group.gold,.mouseCrownsView-group.platinum,.mouseCrownsView-group.diamond',
   ).find('.mouseCrownsView-group-mouse');
   const allSilver = $(
-    '.mouseCrownsView-group.silver,.mouseCrownsView-group.gold,.mouseCrownsView-group.platinum,.mouseCrownsView-group.diamond'
+    '.mouseCrownsView-group.silver,.mouseCrownsView-group.gold,.mouseCrownsView-group.platinum,.mouseCrownsView-group.diamond',
   ).find('.mouseCrownsView-group-mouse');
   const allGold = $(
-    '.mouseCrownsView-group.gold,.mouseCrownsView-group.platinum,.mouseCrownsView-group.diamond'
+    '.mouseCrownsView-group.gold,.mouseCrownsView-group.platinum,.mouseCrownsView-group.diamond',
   ).find('.mouseCrownsView-group-mouse');
   const allPlat = $(
-    '.mouseCrownsView-group.platinum,.mouseCrownsView-group.diamond'
+    '.mouseCrownsView-group.platinum,.mouseCrownsView-group.diamond',
   ).find('.mouseCrownsView-group-mouse');
   const allDiamond = $('.mouseCrownsView-group.diamond').find(
-    '.mouseCrownsView-group-mouse'
+    '.mouseCrownsView-group-mouse',
   );
   const bronzeCrowns = allBronze.length;
   const silverCrowns = allSilver.length;
@@ -728,7 +728,7 @@ function showCommunityRanks() {
       silverCrowns,
       goldCrowns,
       platCrowns,
-      diamondCrowns
+      diamondCrowns,
     );
   }
   const bronzeLink =
@@ -747,7 +747,7 @@ function showCommunityRanks() {
       uncrowned +
       ' (' +
       ((uncrowned / totalMice) * 100).toFixed(2) +
-      '%) | '
+      '%) | ',
   );
   $(rankSummary).attr('title', 'Mobster and Leprechaun excluded from counts');
   const bronzeText = document.createTextNode(
@@ -755,35 +755,35 @@ function showCommunityRanks() {
       bronzeCrowns +
       ' (' +
       ((bronzeCrowns / totalMice) * 100).toFixed(2) +
-      '%) | '
+      '%) | ',
   );
   const silverText = document.createTextNode(
     'Silver: ' +
       silverCrowns +
       ' (' +
       ((silverCrowns / totalMice) * 100).toFixed(2) +
-      '%) | '
+      '%) | ',
   );
   const goldText = document.createTextNode(
     'Gold: ' +
       goldCrowns +
       ' (' +
       ((goldCrowns / totalMice) * 100).toFixed(2) +
-      '%) | '
+      '%) | ',
   );
   const platText = document.createTextNode(
     'Platinum: ' +
       platCrowns +
       ' (' +
       ((platCrowns / totalMice) * 100).toFixed(2) +
-      '%) | '
+      '%) | ',
   );
   const diamondText = document.createTextNode(
     'Diamond: ' +
       diamondCrowns +
       ' (' +
       ((diamondCrowns / totalMice) * 100).toFixed(2) +
-      '%)'
+      '%)',
   );
   const aBronze = document.createElement('a');
   aBronze.appendChild(bronzeText);
@@ -866,7 +866,7 @@ function populatePowerCrowns(mouse) {
         class: iconClass,
         src: icon,
         title: powerType,
-      })
+      }),
     );
     $(label).find('img').css({
       width: '17.5px',
@@ -1058,7 +1058,7 @@ function getPowerTypeTotals(type) {
     draconic: 67,
     forgotten: 87,
     hydro: 204,
-    law: 68,
+    law: 113,
     physical: 79,
     rift: 142,
     shadow: 91,
@@ -1068,7 +1068,7 @@ function getPowerTypeTotals(type) {
     prize: 2,
   };
   const num = $(
-    '.mouseCrownsView-group:not(.favourite):not(.none):not(.bronze)'
+    '.mouseCrownsView-group:not(.favourite):not(.none):not(.bronze)',
   ).find('.pt.' + type).length;
   const percent = ((num / totalMice[type]) * 100).toFixed(2);
   let result = [];
@@ -1096,7 +1096,7 @@ $(document).on(
     } else if (eventTarget === 'mouseCrownsView-group-header-name') {
       btnGroup.toggle();
     }
-  }
+  },
 );
 
 function getMousePowerType(mouseName) {
@@ -2347,6 +2347,51 @@ function getMousePowerType(mouseName) {
     'Muscular Mussel': 'hydro',
     'Nyagarha the Falls Guardian': 'hydro',
     'Ancient Wisdom Keeper': 'hydro',
+    'Mark Twine': 'law',
+    'J.R.R. Token': 'law',
+    'Jean Austere': 'law',
+    'Indigo Montana': 'law',
+    "Robbin' Cloak": 'law',
+    'Captain Noname': 'law',
+    'Dawn Quixotic': 'law',
+    'Duke of Reuben': 'law',
+    'Three Mouseketeers': 'law',
+    'Lady Breakwell': 'law',
+    'Zephrum Bobblebro': 'law',
+    'Ignoramius J. Wryly': 'law',
+    Tumblestaff: 'law',
+    Ratberry: 'law',
+    'Miss Crunchbull': 'law',
+    'Lisa Doolots': 'law',
+    'Lady Blatherly': 'law',
+    'Mr. Daresee': 'law',
+    "Rouge O'Hair": 'law',
+    'Red Valet': 'law',
+    'Dilemma Woodmouse': 'law',
+    'Nancy Sketched': 'law',
+    'Hardy Mice': 'law',
+    'Herbie Pirouette': 'law',
+    'Skillful Mr. Cutley': 'law',
+    'Professor Morty Artie': 'law',
+    'Becca de Frost': 'law',
+    'Billy Lowfellow': 'law',
+    'Great Ratsby': 'law',
+    'Madame Bogarty': 'law',
+    'Lady MacBath': 'law',
+    'Prince Hapless': 'law',
+    'Aching Heels': 'law',
+    'Petra Pot': 'law',
+    'Gerald Rivers': 'law',
+    'Danielle Targatheon': 'law',
+    'Grandolph the Green': 'law',
+    Rinsebreeze: 'law',
+    'Janis the Grey Witch': 'law',
+    'Adventure Weaver': 'law',
+    'Comedy Weaver': 'law',
+    'Romance Weaver': 'law',
+    'Suspense Weaver': 'law',
+    'Tragedy Weaver': 'law',
+    'Ultimate Mythweaver': 'law',
   };
   if (miceMap[mouseName] == undefined) {
     console.warn('Mouse not found', mouseName, miceMap[mouseName]);
@@ -2396,19 +2441,19 @@ function copyMyCrowns() {
 function copyCrowns() {
   const debug = localStorage.getItem('ws.debug');
   const allMice = $(
-    '.mouseCrownsView-group.none,.mouseCrownsView-group.bronze,.mouseCrownsView-group.silver,.mouseCrownsView-group.gold,.mouseCrownsView-group.platinum,.mouseCrownsView-group.diamond'
+    '.mouseCrownsView-group.none,.mouseCrownsView-group.bronze,.mouseCrownsView-group.silver,.mouseCrownsView-group.gold,.mouseCrownsView-group.platinum,.mouseCrownsView-group.diamond',
   ).find('.mouseCrownsView-group-mouse');
   let miceArray = [];
   allMice.each(function (i) {
     let $mouse = correctMouseName(
-      $(this).find('.mouseCrownsView-group-mouse-name').text()
+      $(this).find('.mouseCrownsView-group-mouse-name').text(),
     );
     let $count = parseInt(
       $(this)
         .find('.mouseCrownsView-group-mouse-catches')
         .text()
         .replace(',', ''),
-      10
+      10,
     );
     miceArray[i] = [$mouse, $count];
   });
@@ -2454,6 +2499,10 @@ function correctMouseName(mouseName) {
     newMouseName = 'Ol King Coal';
   } else if (mouseName == 'Dread Piratert') {
     newMouseName = 'Dread Pirate Mousert';
+  } else if (mouseName == "Robbin' Cloak") {
+    newMouseName = 'Robbin Cloak';
+  } else if (mouseName == "Rouge O'Hair") {
+    newMouseName = 'Rouge O Hair';
   } else {
     newMouseName = mouseName;
   }
@@ -2462,7 +2511,7 @@ function correctMouseName(mouseName) {
 
 function decorate() {
   let collapseProps = JSON.parse(
-    localStorage.getItem('ws.mh.pfp.collapseProps')
+    localStorage.getItem('ws.mh.pfp.collapseProps'),
   );
   if (collapseProps) {
   } else {
@@ -2477,11 +2526,11 @@ function decorate() {
     };
     localStorage.setItem(
       'ws.mh.pfp.collapseProps',
-      JSON.stringify(collapseProps)
+      JSON.stringify(collapseProps),
     );
   }
   let uncrowned = $('.mouseCrownsView-group.none').find(
-    '.mouseCrownsView-crown.none'
+    '.mouseCrownsView-crown.none',
   );
   $(uncrowned).css({
     'background-image':
@@ -2497,7 +2546,7 @@ function decorate() {
         .find('.mouseCrownsView-group-mouse-catches')
         .text()
         .replace(',', ''),
-      10
+      10,
     );
     setCrownBorder(image, catches);
     if (localStorage.getItem('ShowPowerCrowns') == 'Y') {
@@ -2521,7 +2570,7 @@ function decorate() {
         .replace('Earned at ', '')
         .replace(' catches', '')
         .replace(',', ''),
-      10
+      10,
     );
     setCrownBorder(header, catches, isHeaderExpanded);
   });
@@ -2532,12 +2581,12 @@ $(document).on(
   '.mouseCrownsView-group-header:not(.community):not(.powerCrown)',
   function (e) {
     showHideCrowns($(this).parent());
-  }
+  },
 );
 
 function showHideCrowns(thisGroup) {
   let collapseProps = JSON.parse(
-    localStorage.getItem('ws.mh.pfp.collapseProps')
+    localStorage.getItem('ws.mh.pfp.collapseProps'),
   );
   const thisCrown = $(thisGroup)
     .attr('class')
@@ -2551,7 +2600,7 @@ function showHideCrowns(thisGroup) {
   theseMice.toggle();
   localStorage.setItem(
     'ws.mh.pfp.collapseProps',
-    JSON.stringify(collapseProps)
+    JSON.stringify(collapseProps),
   );
   decorate();
 }
@@ -2612,10 +2661,10 @@ function hideLeItems() {
     .find('.hunterProfileItemsView-categoryContent-item.collected')
     .not('.limited_edition');
   let allUncollected = $(allTypes).find(
-    '.hunterProfileItemsView-categoryContent-item.uncollected'
+    '.hunterProfileItemsView-categoryContent-item.uncollected',
   );
   let collectedLe = $(allTypes).find(
-    '.hunterProfileItemsView-categoryContent-item.collected.limited_edition'
+    '.hunterProfileItemsView-categoryContent-item.collected.limited_edition',
   );
   let activeTab = $('.hunterProfileItemsView-filter').filter('.active');
   if ($(activeTab).hasClass('collected')) {
@@ -2643,10 +2692,10 @@ function showLeItems() {
     .find('.hunterProfileItemsView-categoryContent-item.collected')
     .not('.limited_edition');
   let allUncollected = $(allTypes).find(
-    '.hunterProfileItemsView-categoryContent-item.uncollected'
+    '.hunterProfileItemsView-categoryContent-item.uncollected',
   );
   let collectedLe = $(allTypes).find(
-    '.hunterProfileItemsView-categoryContent-item.collected.limited_edition'
+    '.hunterProfileItemsView-categoryContent-item.collected.limited_edition',
   );
   let activeTab = $('.hunterProfileItemsView-filter').filter('.active');
   if ($(activeTab).hasClass('collected')) {
@@ -2718,7 +2767,7 @@ $(document).on(
     } else {
       showLeItems();
     }
-  }
+  },
 );
 //Uncollected tab
 $(document).on(
@@ -2730,7 +2779,7 @@ $(document).on(
     } else {
       showLeItems();
     }
-  }
+  },
 );
 //Limited Edition Tab
 $(document).on(
@@ -2742,7 +2791,7 @@ $(document).on(
     } else {
       showLeItems();
     }
-  }
+  },
 );
 //All Tab
 $(document).on('click', '.hunterProfileItemsView-filter.all', function () {

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ASTRIX Zed City Explorer Helper
 // @namespace    https://www.zed.city/
-// @version      1.0.2
+// @version      1.0.3
 // @description  Zed City Explorer Helper
 // @author       ASTRIX & Opus 4.5
 // @match        https://www.zed.city/*
@@ -26,80 +26,80 @@
 
   // Zone requirements for each explore location
   const ZONE_REQUIREMENTS = {
-    0: {
+    "fuel-depot": {
       name: "Fuel Depot",
       zones: [
         { zone: 1, name: "Secure Panel", items: [{ name: "Security Card", quantity: 1 }] }
       ]
     },
-    1: {
+    "construction-yard": {
       name: "Construction Yard",
       zones: [
         { zone: 1, name: "Secure Lockup Door", items: [{ name: "Lockpick", quantity: 1 }] },
         { zone: 2, name: "Security Vault", items: [{ name: "Explosives", quantity: 1 }] }
       ]
     },
-    2: {
+    "demolition-site": {
       name: "Demolition Site",
       zones: [
         { zone: 1, name: "Secure Gate", items: [{ name: "Lockpick", quantity: 1 }] }
       ]
     },
-    3: {
+    "research-facility": {
       name: "Research Facility",
       zones: [
         { zone: 1, name: "Serum Storage", items: [{ name: "Splicer", quantity: 1 }] }
       ]
     },
-    4: {
+    "reclaim-zone": {
       name: "Reclaim Zone",
       zones: []
     },
-    5: {
+    "fishing-reserve": {
       name: "Fishing Reserve",
       zones: []
     },
-    6: {
+    "military-base": {
       name: "Military Base",
       zones: [
         { zone: 1, name: "Enter Barracks", items: [{ name: "Barracks Key", quantity: 1 }] },
         { zone: 2, name: "Enter Generals Quarters", items: [{ name: "Generals RFID", quantity: 1 }] }
       ]
     },
-    7: {
+    "data-center": {
       name: "Data Center",
       zones: [
         { zone: 1, name: "Security Room", items: [{ name: "Lockpick", quantity: 1 }] },
         { zone: 2, name: "Control Room", items: [{ name: "Explosives", quantity: 1 }] }
       ]
     },
-    8: {
+    "junkyard": {
       name: "Junkyard",
       zones: [
         { zone: 1, name: "Power Backup Generator", items: [{ name: "Battery", quantity: 1 }] },
         { zone: 2, name: "Hack Security Door", items: [{ name: "Splicer", quantity: 1 }] }
       ]
     },
-    9: {
+    "logging-camp": {
       name: "Logging Camp",
       zones: [
         { zone: 1, name: "Construct Log Lifter", items: [{ name: "Nails", quantity: 250 }, { name: "Planks", quantity: 250 }, { name: "Rope", quantity: 5 }] }
       ]
     },
-    10: {
+    "open-meadow": {
       name: "Open Meadow",
       zones: [
         { zone: 1, name: "Create Clearing", items: [{ name: "Hatchet", quantity: 1 }] }
       ]
     },
-    11: {
+    "oil-refinery": {
       name: "Oil Refinery",
       zones: [
         { zone: 1, name: "Bypass Security Door", items: [{ name: "Splicer", quantity: 1 }] },
         { zone: 2, name: "Access Hidden Armourer", items: [{ name: "Money", quantity: 10000 }] }
       ]
     },
-    12: {
+    "industrial-foundry": {
       name: "Industrial Foundry",
       zones: [
         { zone: 1, name: "Picklock Main Doors", items: [{ name: "Lockpick", quantity: 1 }] },
@@ -109,7 +109,7 @@
         { zone: 3, name: "Repair Toolbench", items: [{ name: "Advanced Tools", quantity: 1 }, { name: "Steel", quantity: 100 }] }
       ]
     },
-    13: {
+    "abandoned-quarry": {
       name: "Abandoned Quarry",
       zones: [
         { zone: 1, name: "Break-in to old mine", items: [{ name: "Splicer", quantity: 1 }] }
@@ -118,19 +118,16 @@
   };
 
   // Get current explore location ID from URL
-  function getExploreLocationId() {
-    const match = window.location.pathname.match(/^\/explore\/(\d+)$/);
-    return match ? parseInt(match[1]) : null;
+  function getExploreLocation() {
+    const match = window.location.pathname.match(/^\/explore\/(.+)$/);
+    return match ? match[1] : null;
   }
 
   // Get zone requirements for current location
   function getZoneRequirementsForLocation() {
-    const locationId = getExploreLocationId();
-    if (locationId === 0) {
-      return ZONE_REQUIREMENTS[0];
-    }
-    if (!locationId || !ZONE_REQUIREMENTS[locationId]) return null;
-    return ZONE_REQUIREMENTS[locationId];
+    const location = getExploreLocation();
+    if (!location || !ZONE_REQUIREMENTS[location]) return null;
+    return ZONE_REQUIREMENTS[location];
   }
 
   // Check if a zone is already unlocked by searching the page DOM
@@ -631,9 +628,9 @@
     }
   }
 
-  // Check if current URL matches /explore/{number}
+  // Check if current URL matches /explore/{location-name}
   function isExplorePage() {
-    const match = window.location.pathname.match(/^\/explore\/(\d+)$/);
+    const match = window.location.pathname.match(/^\/explore\/[\w-]+$/);
     return match !== null;
   }
 
@@ -913,13 +910,14 @@
       background: ${isVehicleItem ? "rgba(59, 130, 246, 0.15)" : "transparent"};
     `;
 
-    // Check if item exists in both vehicle and inventory
-    const inventoryItem = itemsCache?.find(
-      (i) => i.name?.toLowerCase() === item.name?.toLowerCase()
-    );
-    const vehicleItem = vehicleItemsCache?.find(
-      (i) => i.name?.toLowerCase() === item.name?.toLowerCase()
-    );
+    // Use the item directly based on whether it's from vehicle or inventory
+    // Match by ID for the counterpart to handle items with same name but different conditions
+    const inventoryItem = isVehicleItem 
+      ? itemsCache?.find((i) => i.id === item.id) 
+      : item;
+    const vehicleItem = isVehicleItem 
+      ? item 
+      : vehicleItemsCache?.find((i) => i.id === item.id);
     const hasInInventory = inventoryItem && inventoryItem.quantity > 0;
     const hasInVehicle = vehicleItem && vehicleItem.quantity > 0;
 
@@ -1353,18 +1351,18 @@
               // Create the Update Inventory button
               const button = document.createElement("button");
               button.className = TRAVELING_BTN_CLASS;
-              button.textContent = "Update Inventory";
+              button.textContent = "Refresh Inventory";
               button.style.cssText = `
                 background: rgba(60, 139, 64, 0.6);
                 color: white;
                 border: none;
-                border-radius: 4px;
+                border-radius: 3px;
                 padding: 5px 10px;
                 cursor: pointer;
-                margin-bottom: 8px;
-                margin-top: 8px;
-                font-weight: 500;
-                font-size: 12px;
+                margin-bottom: 6px;
+                margin-top: 6px;
+                font-weight: 400;
+                font-size: 10px;
                 transition: all 0.3s ease;
               `;
               //hover effect

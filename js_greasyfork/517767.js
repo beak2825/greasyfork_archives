@@ -14,7 +14,7 @@
 // @description:ko Twitter/X에서 마지막 읽기 위치를 추적하고 동기화합니다. 수동 및 자동 옵션 포함. 새로운 게시물을 확인하면서 현재 위치를 잃지 않도록 이상적입니다. 트윗 ID를 사용하여 정확한 위치 지정을 하고, 리포스트를 지원합니다。
 // @icon https://x.com/favicon.ico
 // @namespace http://tampermonkey.net/
-// @version 2026.1.19.1
+// @version 2026.1.19.2
 // @author Copiis
 // @license MIT
 // @match https://x.com/*
@@ -524,7 +524,7 @@
         showPopup('autoDownloadToggled', 3000, { status });
     }
 
-    GM_registerMenuCommand(`Auto-Download ${autoDownloadEnabled ? 'Disable' : 'Enable'}`, toggleAutoDownload);
+   GM_registerMenuCommand("Auto-Download ON/OFF", toggleAutoDownload);
 
     async function redirectToHomeAndSearch(fromFile = false) {
     if (window.location.href.includes("/home")) {
@@ -1858,20 +1858,19 @@
     popup.style.transform = "translateX(-50%)";
     popup.style.backgroundColor = "rgba(0, 0, 0, 0.9)";
     popup.style.color = "#ffffff";
-    popup.style.padding = "10px 20px";
+    popup.style.padding = (messageKey === 'autoDownloadToggled') ? "20px 40px" : "10px 20px";  // Noch größeres Padding für Auto-Download-Popup
     popup.style.borderRadius = "8px";
-    popup.style.fontSize = "14px";
+    popup.style.fontSize = (messageKey === 'autoDownloadToggled') ? "22px" : "14px";  // Noch größere Schrift für Auto-Download-Popup
     popup.style.boxShadow = "0 0 10px rgba(246, 146, 25, 0.8)";
     popup.style.zIndex = "10000";
     popup.style.maxWidth = "500px";
     popup.style.whiteSpace = "pre-wrap";
     popup.style.transition = `opacity ${fadeDuration / 1000}s ease`;
-    popup.style.opacity = "0";
+    popup.style.opacity = "1";  // Direkt auf 1 setzen, kein Fade-In
     popup.textContent = message;
 
     if (document.body) {
         document.body.appendChild(popup);
-        setTimeout(() => { popup.style.opacity = "1"; }, 120);
 
         setTimeout(() => {
             try {
