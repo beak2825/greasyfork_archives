@@ -3,7 +3,7 @@
 // @namespace   Gradient
 // @description Боевая статистика персонажа
 // @include     /^https{0,1}:\/\/((www|mirror)\.heroeswm\.ru|my\.lordswm\.com)\/pl_info\.php\?id=\d+/
-// @version     1.2.14
+// @version     1.2.15
 // @downloadURL https://update.greasyfork.org/scripts/14050/GN_BattleState.user.js
 // @updateURL https://update.greasyfork.org/scripts/14050/GN_BattleState.meta.js
 // ==/UserScript==
@@ -13,7 +13,7 @@
 //----------------------------------------------------------------------------//
 
 var script_name = 'GN_BattleState'; // Enter your script name here
-var script_version = '1.2.14';
+var script_version = '1.2.15';
 
 //----------------------------------------------------------------------------//
 
@@ -747,10 +747,7 @@ function send_async_get(url, counter)
           update_content(content_table, true, 0, battle_states);
           draw_expander(content_table);
 
-          save_value(script_name + '_LvlStates' + get_id(), JSON.stringify(lvl_battle_states));
-          save_value(script_name + '_ParserInfo' + get_id(), JSON.stringify(parser_info));
-          save_value('GN_ShowLastTask_Tasks' + current_user_id, JSON.stringify(merc_tasks));
-          save_value('GN_ShowLastHunt_Hunts' + current_user_id, JSON.stringify(hunts));
+          save_results();
 
           ['Refresh', 'Export', 'Remove'].forEach(function(current){
             var el = document.getElementById(script_name + current);
@@ -765,6 +762,15 @@ function send_async_get(url, counter)
   };
 
   xhr.send(null);
+}
+
+//----------------------------------------------------------------------------//
+
+function save_results(){
+  save_value(script_name + '_LvlStates' + get_id(), JSON.stringify(lvl_battle_states));
+  save_value(script_name + '_ParserInfo' + get_id(), JSON.stringify(parser_info));
+  save_value('GN_ShowLastTask_Tasks' + current_user_id, JSON.stringify(merc_tasks));
+  save_value('GN_ShowLastHunt_Hunts' + current_user_id, JSON.stringify(hunts));
 }
 
 //----------------------------------------------------------------------------//
@@ -898,6 +904,7 @@ function search_value(response_){
 
   parser_info.parse_date = raw_data[raw_data.length - 1].battle_date;
   parser_info.last_id    = raw_data[raw_data.length - 1].id;
+  save_results();
 }
 
 //----------------------------------------------------------------------------//

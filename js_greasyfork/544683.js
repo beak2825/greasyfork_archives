@@ -589,8 +589,8 @@
     createFloatingBox(true);
 
     const localVersion = GM_info.script.version;
-    const scriptUrl = 'https://simcompanies-scripts.pages.dev/checkIceCreamMeltInMarket.user.js?t=' + Date.now();
-    const downloadUrl = 'https://simcompanies-scripts.pages.dev/checkIceCreamMeltInMarket.user.js';
+    const scriptUrl = 'https://sc.22-7.top/scripts/checkIceCreamMeltInMarket.user.js?t=' + Date.now();
+    const downloadUrl = 'https://sc.22-7.top/scripts/checkIceCreamMeltInMarket.user.js';
 
     function compareVersions(v1, v2) {
         const a = v1.split('.').map(Number);

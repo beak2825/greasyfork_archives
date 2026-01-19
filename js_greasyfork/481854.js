@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         b站自律脚本
 // @namespace    http://tampermonkey.net/
-// @version      0.6.2
+// @version      0.6.3
 // @description  1.除了搜索、视频页、私信页、个人主页、专栏之外的任何页都会被重定向到搜索页；2.视频页去掉相关推荐，并且非自己的视频去掉评论；3.新增配置项支持自行添加重定向的列表。(使用时请打开"设置"-"通用"-"仅在顶层页面（框架）运行"，否则会加载次数过多)
 // @author       shandianchengzi
 // @match        https://*.bilibili.com/*
@@ -9,6 +9,7 @@
 // @grant        GM_registerMenuCommand
 // @grant        GM_getValue
 // @grant        GM_setValue
+// @noframes
 // @downloadURL https://update.greasyfork.org/scripts/481854/b%E7%AB%99%E8%87%AA%E5%BE%8B%E8%84%9A%E6%9C%AC.user.js
 // @updateURL https://update.greasyfork.org/scripts/481854/b%E7%AB%99%E8%87%AA%E5%BE%8B%E8%84%9A%E6%9C%AC.meta.js
 // ==/UserScript==

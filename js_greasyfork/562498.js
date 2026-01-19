@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         小红书全能AI助手
 // @namespace    http://tampermonkey.net/
-// @version      2.3
-// @description  采用API拦截技术，支持自动滚动获取全部笔记，生成带xsec_token的永久有效链接，支持导出Excel/CSV/JSON。新增AI创作模块，内置多种写作模版，支持自定义模版和AI生成人设。提升创作效率，助力内容变现！新增excel带图片导出模式，方便直观查看封面图。
+// @version      2.4.2
+// @description  采用API拦截技术，支持自动滚动获取全部笔记，生成带xsec_token的永久有效链接，支持导出Excel/CSV/JSON。新增AI创作模块，内置多种写作模版，支持自定义模版和AI生成人设。提升创作效率，助力内容变现！新增excel带图片导出模式，方便直观查看封面图。新增资源下载功能，支持高清图片/视频批量下载。
 // @author       Coriander
 // @match        https://creator.xiaohongshu.com/publish/*
 // @match        https://www.xiaohongshu.com/*
@@ -12,6 +12,7 @@
 // @grant        GM_getValue
 // @grant        GM_addStyle
 // @grant        GM_registerMenuCommand
+// @grant        GM_download
 // @license      MIT
 // @downloadURL https://update.greasyfork.org/scripts/562498/%E5%B0%8F%E7%BA%A2%E4%B9%A6%E5%85%A8%E8%83%BDAI%E5%8A%A9%E6%89%8B.user.js
 // @updateURL https://update.greasyfork.org/scripts/562498/%E5%B0%8F%E7%BA%A2%E4%B9%A6%E5%85%A8%E8%83%BDAI%E5%8A%A9%E6%89%8B.meta.js
@@ -27,8 +28,138 @@
   let isAutoScrolling = false;
   let currentPageUrl = location.href; // 记录当前页面URL
 
+  // 全局视频URL存储 - 页面加载时捕获的真实视频链接
+  let CACHED_VIDEO_URL = null;
+
   // ==========================================
-  // 0.1 页面切换监听 - 保持数据清洁性
+  // 0.1 XHR 拦截 - 捕获实际视频流URL
+  // ==========================================
+  (function () {
+    const originalOpen = XMLHttpRequest.prototype.open;
+    const originalSend = XMLHttpRequest.prototype.send;
+
+    XMLHttpRequest.prototype.open = function (method, url, ...rest) {
+      this._xhrUrl = url;
+      // 【新增】直接捕获 stream 类型的 mp4 链接 (最高优先级)
+      if (
+        url &&
+        typeof url === "string" &&
+        url.includes("xhscdn.com") &&
+        url.includes("/stream/") &&
+        url.includes(".mp4")
+      ) {
+        CACHED_VIDEO_URL = url;
+        console.log("[XHS-Stream] 捕获无水印流地址:", url);
+      }
+      return originalOpen.apply(this, [method, url, ...rest]);
+    };
+
+    XMLHttpRequest.prototype.send = function (data, ...rest) {
+      const self = this;
+      const origStateChange = this.onreadystatechange;
+
+      this.onreadystatechange = function () {
+        if (self.readyState === 4 && self.status === 200 && self._xhrUrl) {
+          try {
+            // 【关键】从笔记详情 API 提取无水印视频链接
+            if (
+              self._xhrUrl.includes("/api/sns/") &&
+              (self._xhrUrl.includes("/feed") || self._xhrUrl.includes("/note"))
+            ) {
+              const resp = JSON.parse(self.responseText);
+              if (resp && resp.data) {
+                // 遍历所有笔记数据
+                const processNote = (note) => {
+                  if (note && note.type === "video" && note.video) {
+                    const v = note.video;
+
+                    // 【最优】尝试 origin_video_key (真正无水印原始版本)
+                    // 修改：不再主动覆盖 CACHED_VIDEO_URL，仅做日志记录，由 renderResourceGrid 决定是否使用
+                    if (v.consumer && v.consumer.origin_video_key) {
+                      const url = `https://sns-video-bd.xhscdn.com/${v.consumer.origin_video_key}`;
+                      // CACHED_VIDEO_URL = url; // 禁用：避免覆盖真实抓取的 Stream 链接
+                      console.log(
+                        "[XHS-无水印] 发现 origin_video_key:",
+                        url.substring(0, 60),
+                      );
+                      return;
+                    }
+
+                    // 【备选】H.264 master URL (通常带水印)
+                    if (
+                      v.media &&
+                      v.media.stream &&
+                      v.media.stream.h264 &&
+                      v.media.stream.h264[0]
+                    ) {
+                      const url =
+                        v.media.stream.h264[0].master_url ||
+                        v.media.stream.h264[0].masterUrl;
+                      // if (url && url.startsWith("http") && !CACHED_VIDEO_URL) {
+                      //   CACHED_VIDEO_URL = url; // 禁用
+                      // }
+                    }
+                    // 备选 H.265
+                    else if (
+                      v.media &&
+                      v.media.stream &&
+                      v.media.stream.h265 &&
+                      v.media.stream.h265[0]
+                    ) {
+                      const url =
+                        v.media.stream.h265[0].master_url ||
+                        v.media.stream.h265[0].masterUrl;
+                      // if (url && url.startsWith("http")) {
+                      //   CACHED_VIDEO_URL = url; // 禁用
+                      // }
+                    }
+                  }
+                };
+
+                if (resp.data.items) {
+                  resp.data.items.forEach((item) => {
+                    const note = item.note_card || item.note || item;
+                    processNote(note);
+                  });
+                }
+              }
+            }
+          } catch (e) {
+            console.warn("[XHS] API 拦截异常:", e.message);
+          }
+        }
+        if (origStateChange) origStateChange.call(this);
+      };
+      return originalSend.apply(this, [data, ...rest]);
+    };
+  })();
+
+  // ==========================================
+  // 0.1.1 Fetch 拦截 - 补充捕获
+  // ==========================================
+  (function () {
+    const originalFetch = window.fetch;
+    window.fetch = function (input, init) {
+      let url = input;
+      if (input instanceof Request) {
+        url = input.url;
+      }
+      if (
+        url &&
+        typeof url === "string" &&
+        url.includes("xhscdn.com") &&
+        url.includes("/stream/") &&
+        url.includes(".mp4")
+      ) {
+        CACHED_VIDEO_URL = url;
+        console.log("[XHS-Stream-Fetch] 捕获无水印流地址:", url);
+      }
+      return originalFetch.apply(this, arguments);
+    };
+  })();
+
+  // ==========================================
+  // 0.2 页面切换监听 - 保持数据清洁性
   // ==========================================
   function getPageKey(url) {
     try {
@@ -58,6 +189,33 @@
         if (btn) btn.click(); // 触发停止
       }
       currentPageUrl = newUrl;
+
+      // 检查是否为详情页，提示资源下载
+      if (document.getElementById("xhs-ai-helper")) {
+        checkResourcePage(newUrl);
+      }
+    }
+  }
+
+  function checkResourcePage(url) {
+    const isDetail = url.includes("/explore/");
+    const input = document.getElementById("res-url-input");
+    const tab = document.querySelector('.ai-tab-item[data-tab="download"]');
+
+    if (input && isDetail) {
+      input.value = url;
+      // 高亮提示
+      if (tab) {
+        const originText = tab.innerText;
+        tab.style.color = "#ff2442";
+        tab.innerText = "资源下载 ●";
+        setTimeout(() => {
+          tab.style.color = "";
+          tab.innerText = "资源下载";
+        }, 8000);
+      }
+    } else if (input) {
+      input.value = "";
     }
   }
 
@@ -274,16 +432,38 @@
             transition: all 0.3s; display: flex; flex-direction: column; color: #333;
         }
         .drag-handle { padding: 15px; cursor: move; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; user-select: none; }
-        .ai-brand { font-weight: 800; font-size: 15px; display: flex; align-items: center; gap: 5px; }
-        #xhs-ai-helper.minimized { width: 48px; height: 48px; border-radius: 50%; overflow: hidden; cursor: pointer; background: #ff2442; }
+        .ai-brand { font-weight: 800; font-size: 15px; display: flex; align-items: center; gap: 5px; color: #ff2442; }
+        #xhs-ai-helper.minimized { width: 48px; height: 48px; border-radius: 50%; overflow: hidden; cursor: pointer; background: #ff2442; box-shadow: 0 4px 12px rgba(255, 36, 66, 0.4); }
         #xhs-ai-helper.minimized .minimized-icon { display: flex; width: 100%; height: 100%; align-items: center; justify-content: center; color: white; font-size: 24px; }
         #xhs-ai-helper.minimized .ai-main-wrapper { display: none; }
 
-        .ai-tabs { display: flex; padding: 0 15px; border-bottom: 1px solid #eee; background: #fcfcfc; border-radius: 16px 16px 0 0; }
-        .ai-tab-item { padding: 12px 15px; font-size: 13px; font-weight: 600; color: #888; cursor: pointer; border-bottom: 2px solid transparent; }
-        .ai-tab-item.active { color: #ff2442; border-bottom-color: #ff2442; }
+        /* 顶部 Tab 栏优化 - 可滚动 */
+        .ai-tabs {
+            display: flex; gap: 6px; padding: 12px 12px 0;
+            background: #fff; border-radius: 16px 16px 0 0;
+            border-bottom: 1px solid #f0f0f0; user-select: none;
+            overflow-x: auto; white-space: nowrap;
+            /* 隐藏滚动条但保留功能 */
+            scrollbar-width: none; -ms-overflow-style: none;
+        }
+        .ai-tabs::-webkit-scrollbar { display: none; }
 
-        .ai-content-body { padding: 15px; max-height: 70vh; overflow-y: auto; background: #fff; border-radius: 0 0 16px 16px; }
+        .ai-tab-item {
+            padding: 8px 12px; font-size: 13px; font-weight: 600; color: #666; cursor: pointer;
+            border-radius: 8px 8px 0 0; transition: all 0.2s; position: relative;
+            background: transparent;
+            flex-shrink: 0; /* 防止子元素被压缩 */
+        }
+        .ai-tab-item:hover { color: #333; background: #f8f8f8; }
+        .ai-tab-item.active {
+            color: #ff2442; background: #fff1f3;
+        }
+        .ai-tab-item.active::after {
+            content: ''; position: absolute; bottom: -1px; left: 0; width: 100%;
+            height: 2px; background: #ff2442; border-radius: 2px 2px 0 0;
+        }
+
+        .ai-content-body { padding: 15px; max-height: 70vh; overflow-y: auto; background: #fff; border-radius: 0 0 16px 16px; min-height: 200px; }
         .tab-panel { display: none; }
         .tab-panel.active { display: block; animation: slideIn 0.2s; }
 
@@ -313,6 +493,23 @@
             white-space: pre-wrap; display: none;
         }
         .ai-compact-box { background: #fff; padding: 10px; border-radius: 6px; border: 1px solid #ebd4b5; }
+
+        /* 资源下载板块样式 */
+        .res-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 8px; margin-top: 10px; }
+        .res-item { position: relative; aspect-ratio: 1; border-radius: 6px; overflow: hidden; border: 1px solid #eee; cursor: pointer; }
+        .res-item img, .res-item video { width: 100%; height: 100%; object-fit: cover; }
+        .res-item .res-type { position: absolute; top: 2px; right: 2px; font-size: 10px; background: rgba(0,0,0,0.6); color: #fff; padding: 1px 4px; border-radius: 4px; }
+        .res-item:hover::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.1); }
+        .res-item.selected { border: 2px solid #ff2442; }
+        .res-item .res-check { position: absolute; top: 2px; left: 2px; z-index: 2; width: 16px; height: 16px; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; opacity: 0.8; }
+        .res-item.selected .res-check { background: #ff2442; color: #fff; opacity: 1; }
+
+        /* 导出字段选择网格样式 */
+        .export-field-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; font-size: 11px; }
+        .export-field-item { background: #fff; border: 1px solid #ddd; border-radius: 4px; padding: 6px 2px; text-align: center; cursor: pointer; user-select: none; transition: all 0.2s; color: #666; position: relative; }
+        .export-field-item:hover { border-color: #ff2442; color: #ff2442; background: #fff5f6; }
+        .export-field-item.selected { background: #ffeaea; border-color: #ff2442; color: #ff2442; font-weight: bold; }
+        .export-field-item.selected::after { content: '✓'; position: absolute; top: -5px; right: -5px; font-size: 9px; background: #ff2442; color: white; width: 14px; height: 14px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid #fff; }
 
         /* 小屏幕/副屏适配 */
         @media screen and (max-width: 500px), screen and (max-height: 600px) {
@@ -373,6 +570,7 @@
                     <div class="ai-tab-item active" data-tab="data">数据导出</div>
                     <div class="ai-tab-item" data-tab="write">AI创作</div>
                     <div class="ai-tab-item" data-tab="analysis">AI分析</div>
+                    <div class="ai-tab-item" data-tab="download">资源下载</div>
                     <div class="ai-tab-item" data-tab="settings">⚙️ 设置</div>
                 </div>
                 <div class="ai-content-body">
@@ -387,13 +585,26 @@
                             <button id="auto-scroll-btn" class="ai-btn secondary" style="padding:8px;">⏬ 自动滚动加载全部</button>
                         </div>
 
-                        <div style="display:flex;gap:5px;">
-                            <select id="export-format" class="ai-select" style="margin-bottom:0;">
-                                <option value="csv">CSV / Excel (纯文本)</option>
-                                <option value="xls">Excel (含图片预览)</option>
-                                <option value="json">JSON (开发用)</option>
+                        <div style="display:flex;gap:5px; flex-wrap:wrap;">
+                            <select id="export-format" class="ai-select" style="margin-bottom:0; width:100px;">
+                                <option value="csv">CSV (纯文本)</option>
+                                <option value="xls">Excel(含预览图)</option>
+                                <option value="json">JSON</option>
                             </select>
                             <button id="clean-data-btn" class="ai-btn secondary" style="width:auto;margin-top:0;">清空</button>
+                        </div>
+
+                        <div class="ai-compact-box" style="margin-top:8px; padding: 6px; background:#f5f5f5; border-radius:4px;">
+                             <label style="font-size:12px; font-weight:bold; display:block; margin-bottom:6px; color:#555;">导出字段 (点击切换):</label>
+                             <div id="export-field-container" class="export-field-container">
+                                <div class="export-field-item selected" data-value="笔记ID">笔记ID</div>
+                                <div class="export-field-item selected" data-value="链接">链接</div>
+                                <div class="export-field-item selected" data-value="封面图">封面</div>
+                                <div class="export-field-item selected" data-value="标题">标题</div>
+                                <div class="export-field-item selected" data-value="作者">作者</div>
+                                <div class="export-field-item selected" data-value="点赞数">点赞数</div>
+                                <div class="export-field-item selected" data-value="类型">类型</div>
+                             </div>
                         </div>
 
                         <button id="export-btn" class="ai-btn" style="background:#00b85c;margin-top:10px;">📥 导出所有捕获数据</button>
@@ -435,18 +646,18 @@
                               </div>
                               <div id="template-manage-status" style="margin-top:6px;font-size:12px;color:#666;"></div>
                             </div>
-                            
+
                             <button id="ai-gen-btn" class="ai-btn" style="margin-top:10px;">✨ 生成文案</button>
                             <div id="ai-status" style="text-align:center;font-size:12px;margin-top:5px;color:#999;"></div>
                         </div>
                     </div>
-                    
+
                     <div id="panel-analysis" class="tab-panel">
                         <!-- Section 1: 智能分析 -->
                         <div class="data-card" style="border-left: 4px solid #4a90e2; background: #f0f7ff;">
                            <div style="font-size: 14px; font-weight: bold; margin-bottom: 5px; color:#2c3e50;">📊 智能总结与分析</div>
                            <div style="font-size: 11px; color:#666; margin-bottom:10px;">上传导出的 CSV/JSON，让 AI 分析趋势。</div>
-                           
+
                            <input type="file" id="analysis-file-input" accept=".csv,.json" style="display:none;" />
                            <label for="analysis-file-input" class="file-upload-label" id="analysis-file-label">
                                📂 点击选择或拖拽文件 (CSV/JSON)
@@ -464,14 +675,14 @@
                               <button id="analysis-config-btn" class="ai-btn secondary" style="width:auto; padding:4px 8px; font-size:12px; margin:0;" title="API 设置">⚙️ 配置 API</button>
                            </div>
                            <div style="font-size: 11px; color:#666; margin: 0 0 10px;">AI 自动分类数据并生成新文件。</div>
-                           
+
                            <div class="ai-compact-box">
                                <label style="font-size:12px;color:#888;display:block;margin-bottom:4px;">自定义分类 (可选, 逗号分隔)</label>
                                <textarea id="analysis-categories" class="ai-textarea" style="height:40px; margin-bottom:8px; border:1px solid #eee; background:#f9f9f9; padding:5px; font-size: 12px;" placeholder="美妆, 穿搭, 美食..."></textarea>
-                               
+
                                <div style="display:flex; justify-content:space-between; align-items:center;">
                                    <div style="font-size:12px;color:#666; display:flex; align-items:center; gap:5px;">
-                                      导出格式: 
+                                      导出格式:
                                       <select id="analysis-export-format" class="ai-select" style="width:auto; padding:3px 6px; margin:0; height:auto; background:#fff; border-color:#ddd;">
                                           <option value="xls">Excel</option> // 默认Excel
                                           <option value="csv">CSV</option>
@@ -481,14 +692,46 @@
                                    <button id="analysis-classify-btn" class="ai-btn" style="width:auto; padding:6px 15px; margin:0; background:#ff9800;">🚀 开始分类</button>
                                </div>
                            </div>
-                           
+
                            <div id="classify-status" style="margin-top:8px; font-size:12px; color:#666;"></div>
                            <div id="api-limit-tip" style="display:none; margin-top:8px; font-size:11px; color:#d35400; background:rgba(255,152,0,0.1); padding:8px; border-radius:4px; line-height: 1.4;">
                               ⚠️ 检测到未分类数据。这通常是因为 API 速率限制或额度不足。<br>建议：<br>1. 检查 API Key 额度。<br>2. 更换更稳定的模型 (如 gpt-3.5/4)。<br>3. 每次处理需要一定时间，请耐心等待。
                            </div>
                         </div>
                     </div>
-                
+
+                    <div id="panel-download" class="tab-panel">
+                        <div class="data-card">
+                             <div style="font-size: 14px; font-weight: bold; margin-bottom: 5px; color:#2c3e50;">📥 笔记资源提取</div>
+                             <div style="font-size: 11px; color:#666; margin-bottom:10px;">输入笔记链接，或者在详情页直接使用。（支持无水印图片/视频下载）</div>
+
+                             <input id="res-url-input" class="ai-input" placeholder="粘贴小红书笔记链接 (或者留空自动检测当前页)" />
+                             <button id="res-fetch-btn" class="ai-btn" style="background:#2196f3;">🔍 提取资源</button>
+                        </div>
+
+                        <div id="res-result-area" class="data-card" style="display:none; border-left: 4px solid #4CAF50;">
+                             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                                <div style="font-size: 13px; font-weight: bold;">资源列表 <span id="res-count" style="color:#666;font-weight:normal;font-size:11px;"></span></div>
+                                <select id="res-quality-select" class="ai-select" style="width:auto;margin:0;padding:2px 5px;height:24px;font-size:11px;">
+                                    <option value="no_wm">高清无水印 (推荐)</option>
+                                    <option value="best_wm">最高画质 (可能带水印)</option>
+                                </select>
+                             </div>
+
+                             <div class="ai-compact-box" style="margin-bottom:8px;padding:5px;background:#f1f8e9;">
+                                <div style="font-size: 11px; display:flex; justify-content:space-between; align-items:center;">
+                                   <label style="cursor:pointer;"><input type="checkbox" id="res-select-all" checked> 全选</label>
+                                   <span style="color:#666;">点击图片可预览/取消</span>
+                                </div>
+                             </div>
+
+                             <div id="res-grid" class="res-grid"></div>
+
+                             <button id="res-download-btn" class="ai-btn" style="background:#4CAF50; margin-top:10px;">⬇️ 批量下载选中资源</button>
+                             <div id="res-status" style="margin-top:5px; font-size:11px; color:#666; text-align:center;"></div>
+                        </div>
+                    </div>
+
                     <div id="panel-settings" class="tab-panel">
                         <div class="data-card">
                              <div style="font-size: 13px; font-weight: bold; margin-bottom: 8px;">⚙️ 全局 API 设置</div>
@@ -500,10 +743,10 @@
                                     <button id="api-config-add" class="ai-btn secondary" style="width:32px;margin:0;padding:0;" title="新增配置">➕</button>
                                     <button id="api-config-del" class="ai-btn secondary" style="width:32px;margin:0;padding:0;" title="删除配置">🗑️</button>
                                 </div>
-                                
+
                                 <input id="api-base-url" class="ai-input" placeholder="Base URL" style="margin-bottom:5px;">
                                 <input id="api-key" type="password" class="ai-input" placeholder="API Key" style="margin-bottom:5px;">
-                                
+
                                 <div style="display:flex;gap:5px;">
                                     <input id="api-model" class="ai-input" placeholder="Model (e.g. gpt-3.5-turbo)" style="margin-bottom:0;flex:1;">
                                     <button id="api-model-fetch-btn" class="ai-btn secondary" style="width:40px;margin:0;padding:0;" title="尝试获取模型列表">🔄</button>
@@ -549,6 +792,22 @@
       }
     };
     div.querySelector("#export-btn").onclick = exportData;
+
+    // 资源下载绑定
+    div.querySelector("#res-fetch-btn").onclick = handleFetchResources;
+    div.querySelector("#res-select-all").onchange = (e) => {
+      const checked = e.target.checked;
+      div.querySelectorAll(".res-item").forEach((item) => {
+        if (checked) item.classList.add("selected");
+        else item.classList.remove("selected");
+      });
+    };
+    div.querySelector("#res-quality-select").onchange = () => {
+      if (CURRENT_NOTE_RAW) {
+        renderResourceGrid(CURRENT_NOTE_RAW);
+      }
+    };
+    div.querySelector("#res-download-btn").onclick = handleBatchDownload;
 
     // AI功能绑定
     // div.querySelector("#config-toggle").onclick = ... // Removed
@@ -919,6 +1178,17 @@
       if (settingsTab) settingsTab.click();
     };
 
+    // 绑定导出字段点击事件
+    const exportContainer = div.querySelector("#export-field-container");
+    if (exportContainer) {
+      exportContainer.addEventListener("click", (e) => {
+        const item = e.target.closest(".export-field-item");
+        if (item) {
+          item.classList.toggle("selected");
+        }
+      });
+    }
+
     refreshManageSelect();
     if (templates[0]) fillTemplateForm(templates[0]);
 
@@ -1057,21 +1327,33 @@
     }
   }
 
-  function exportList(dataList, format, baseName) {
+  function exportList(dataList, format, baseName, selectedCols) {
     if (!dataList || dataList.length === 0) return;
 
+    // 默认全选
+    let headers = Object.keys(dataList[0]);
+    // 如果有指定列，则强行使用指定列 (支持自定义字段顺序，且不依赖 dataList[0] 是否拥有该key)
+    if (selectedCols && selectedCols.length > 0) {
+      headers = selectedCols;
+    }
+
     if (format === "json") {
+      // JSON 也要过滤字段
+      const filteredList = dataList.map((row) => {
+        const newRow = {};
+        headers.forEach((h) => (newRow[h] = row[h]));
+        return newRow;
+      });
       download(
-        JSON.stringify(dataList, null, 2),
+        JSON.stringify(filteredList, null, 2),
         `${baseName}.json`,
         "application/json",
       );
     } else if (format === "xls") {
       // Excel (HTML Table 伪装)
-      const headers = Object.keys(dataList[0]);
       let html = `
-            <html xmlns:o="urn:schemas-microsoft-com:office:office" 
-                  xmlns:x="urn:schemas-microsoft-com:office:excel" 
+            <html xmlns:o="urn:schemas-microsoft-com:office:office"
+                  xmlns:x="urn:schemas-microsoft-com:office:excel"
                   xmlns="http://www.w3.org/TR/REC-html40">
             <head>
                <meta charset="utf-8">
@@ -1126,7 +1408,6 @@
       download(html, `${baseName}.xls`, "application/vnd.ms-excel");
     } else {
       // CSV
-      const headers = Object.keys(dataList[0]);
       const csvBody = dataList
         .map((row) =>
           headers
@@ -1152,8 +1433,44 @@
       return;
     }
     const format = document.getElementById("export-format").value;
+
+    // 获取勾选的列
+    let selectedCols = [];
+    const exportContainer = document.getElementById("export-field-container");
+
+    if (exportContainer) {
+      // 新版：表格选择
+      const selectedItems = exportContainer.querySelectorAll(
+        ".export-field-item.selected",
+      );
+      selectedCols = Array.from(selectedItems).map((el) =>
+        el.getAttribute("data-value"),
+      );
+    } else {
+      // ... fallback ...
+      const selectEl = document.getElementById("export-col-select");
+      if (selectEl) {
+        selectedCols = Array.from(selectEl.selectedOptions).map(
+          (opt) => opt.value,
+        );
+      } else {
+        const checks = document.querySelectorAll(".export-col-check");
+        if (checks.length > 0) {
+          selectedCols = Array.from(checks)
+            .filter((c) => c.checked)
+            .map((c) => c.value);
+        }
+      }
+    }
+
+    // 如果用户什么都没选，提醒一下（或者默认全选）
+    if (selectedCols.length === 0) {
+      alert("请至少选择一个导出字段！");
+      return;
+    }
+
     const dataList = Array.from(GLOBAL_DATA.values());
-    exportList(dataList, format, "xhs_data_full");
+    exportList(dataList, format, "xhs_data_full", selectedCols);
   }
 
   function download(content, name, type) {
@@ -1664,6 +1981,532 @@
       btn.disabled = false;
       btn.innerText = "📂 智能分类并导出";
     }
+  }
+
+  // ==========================================
+  // 5. 资源下载模块逻辑
+  // ==========================================
+  let CURRENT_NOTE_RAW = null; // 存储当前笔记原始数据，用于切换画质
+
+  async function handleFetchResources() {
+    const input = document.getElementById("res-url-input");
+    const btn = document.getElementById("res-fetch-btn");
+    const resultArea = document.getElementById("res-result-area");
+    const grid = document.getElementById("res-grid");
+    const countEl = document.getElementById("res-count");
+
+    let url = input.value.trim();
+    if (!url) {
+      url = location.href;
+    }
+
+    btn.disabled = true;
+    btn.innerText = "提取中... (请稍候)";
+    resultArea.style.display = "none";
+    grid.innerHTML = "";
+    CURRENT_NOTE_RAW = null;
+    // CACHED_VIDEO_URL = null; // 修改：不要清空缓存，保留用户浏览期间抓取的真实链接
+
+    try {
+      let noteData = null;
+      // 策略: 优先 fetch 页面源码，正则提取 state，这是最稳妥的方式（兼容性最好）
+      // 直接读取 window 对象可能会因沙箱隔离失败
+
+      let targetUrl = url;
+      // 处理短链或非详情页URL (略，假设用户输入正确详情页或在详情页操作)
+
+      const html = await fetchHtml(targetUrl);
+      noteData = extractNoteFromHtml(html);
+
+      // 如果 HTML 中没有 __INITIAL_STATE__，尝试使用 noteId 调用接口兜底
+      if (!noteData) {
+        const noteId = getNoteIdFromUrl(targetUrl);
+        noteData = await fetchNoteDetailViaApi(noteId);
+      }
+
+      if (!noteData)
+        throw new Error("无法提取笔记数据，请确认链接有效且为公开笔记");
+
+      // 补充步骤: 如果是当前页，尝试从 DOM 提取额外视频链接 (参考 Demo)
+      if (
+        noteData.type === "video" &&
+        (targetUrl.includes(location.pathname) || targetUrl === location.href)
+      ) {
+        const domVideo = await extractVideoFromDOM();
+        if (domVideo) {
+          if (!noteData.video) noteData.video = {};
+          // 将 DOM 提取的 URL 存入 temporary field
+          noteData.video.dom_url = domVideo;
+        }
+      }
+
+      // 等待 100ms 让 XHR 拦截器有时间捕获缓存
+      await new Promise((r) => setTimeout(r, 100));
+
+      CURRENT_NOTE_RAW = noteData;
+      renderResourceGrid(noteData);
+      resultArea.style.display = "block";
+    } catch (e) {
+      alert("提取失败: " + e.message);
+      console.error(e);
+    } finally {
+      btn.disabled = false;
+      btn.innerText = "🔍 提取资源";
+    }
+  }
+
+  function fetchHtml(url) {
+    return new Promise((resolve, reject) => {
+      GM_xmlhttpRequest({
+        method: "GET",
+        url: url,
+        headers: {
+          "User-Agent": navigator.userAgent,
+          Referer: "https://www.xiaohongshu.com/",
+        },
+        onload: (res) => resolve(res.responseText),
+        onerror: (err) => reject(new Error("网络请求失败")),
+      });
+    });
+  }
+
+  function extractNoteFromHtml(html) {
+    // 尝试多种写法的 __INITIAL_STATE__，避免因前端调整导致解析失败
+    const candidates = [];
+
+    // 1) 直接对象形式 window.__INITIAL_STATE__ = {...}</script>
+    const directMatch = html.match(
+      /__INITIAL_STATE__=({[\s\S]*?})\s*<\/script>/,
+    );
+    if (directMatch && directMatch[1]) {
+      candidates.push(directMatch[1]);
+    }
+
+    // 2) JSON.parse(decodeURIComponent("...")) 形式
+    const decodeMatch = html.match(
+      /__INITIAL_STATE__=JSON\.parse\(decodeURIComponent\("([^"]+)"\)\)/,
+    );
+    if (decodeMatch && decodeMatch[1]) {
+      try {
+        candidates.push(decodeURIComponent(decodeMatch[1]));
+      } catch (e) {
+        console.warn("decodeURIComponent 失败", e);
+      }
+    }
+
+    // 逐个尝试解析
+    for (const raw of candidates) {
+      try {
+        const jsonStr = raw.replace(/undefined/g, "null");
+        const state = JSON.parse(jsonStr);
+        if (state && state.note && state.note.noteDetailMap) {
+          const keys = Object.keys(state.note.noteDetailMap);
+          if (keys.length > 0) return state.note.noteDetailMap[keys[0]];
+        }
+        if (state && state.note && state.note.firstNoteId) {
+          return state.note.noteDetailMap[state.note.firstNoteId];
+        }
+      } catch (e) {
+        console.warn("__INITIAL_STATE__ 解析失败，尝试下一个候选", e);
+      }
+    }
+
+    return null;
+  }
+
+  function getNoteIdFromUrl(url) {
+    const match = url.match(/explore\/([a-zA-Z0-9_-]+)/);
+    return match ? match[1] : null;
+  }
+
+  async function fetchNoteDetailViaApi(noteId) {
+    if (!noteId) return null;
+    // 使用 web feed 接口兜底（需登录态，但与页面一致，成功率更高）
+    const apiUrl = `https://edith.xiaohongshu.com/api/sns/web/v1/feed?source=explore_note&note_id=${noteId}`;
+    try {
+      const res = await new Promise((resolve, reject) => {
+        GM_xmlhttpRequest({
+          method: "GET",
+          url: apiUrl,
+          headers: {
+            "Content-Type": "application/json",
+            Referer: "https://www.xiaohongshu.com/",
+            "User-Agent": navigator.userAgent,
+          },
+          onload: (r) => {
+            try {
+              resolve(JSON.parse(r.responseText));
+            } catch (e) {
+              reject(e);
+            }
+          },
+          onerror: () => reject(new Error("接口请求失败")),
+        });
+      });
+
+      if (res && res.data && res.data.items && res.data.items[0]) {
+        const card = res.data.items[0].note_card || res.data.items[0].note;
+        return card || null;
+      }
+    } catch (e) {
+      console.warn("接口兜底获取失败", e);
+    }
+    return null;
+  }
+
+  // 参考视频解析demo.js: 尝试从 DOM 提取视频链接
+  function extractVideoFromDOM() {
+    return new Promise((resolve) => {
+      const video = document.querySelector("video");
+      if (!video) return resolve(null);
+
+      // 1. 检查 src
+      if (video.src && video.src.startsWith("http")) {
+        return resolve(video.src);
+      }
+
+      // 2. 检查 source 标签
+      const sources = video.querySelectorAll("source");
+      for (let s of sources) {
+        if (s.src && s.src.startsWith("http")) return resolve(s.src);
+      }
+
+      // 3. Demo 策略: 轮询 source (针对动态注入)
+      let checks = 0;
+      const timer = setInterval(() => {
+        checks++;
+        const dynamicSources = video.querySelectorAll("source");
+        for (let s of dynamicSources) {
+          if (s.src && s.src.startsWith("http")) {
+            clearInterval(timer);
+            resolve(s.src);
+            return;
+          }
+        }
+        if (checks > 20) {
+          // 2秒超时
+          clearInterval(timer);
+          resolve(null);
+        }
+      }, 100);
+    });
+  }
+
+  function renderResourceGrid(data) {
+    const note = data.note || data;
+    const grid = document.getElementById("res-grid");
+    const countEl = document.getElementById("res-count");
+    const qualityMode = document.getElementById("res-quality-select").value; // 'no_wm' or 'best_wm'
+
+    grid.innerHTML = ""; // 清空旧数据
+    const resources = [];
+    const noteId = note.noteId || note.id || "unknown";
+
+    // 常量定义 (参考 Demo)
+    const imageServer = [
+      "https://sns-img-hw.xhscdn.net/",
+      "https://sns-img-bd.xhscdn.com/",
+      "https://sns-img-qc.xhscdn.com/",
+      "https://ci.xiaohongshu.com/",
+    ];
+    // 正则提取图片 Key
+    const keyReg = /(?<=\/)(spectrum\/)?[a-z0-9A-Z\-]+(?=!)/;
+
+    const videoServer = [
+      "https://sns-video-hw.xhscdn.com/",
+      "https://sns-video-bd.xhscdn.com/",
+      "https://sns-video-al.xhscdn.com/",
+    ];
+
+    // 1. 视频处理
+    if (note.type === "video" && note.video) {
+      let videoUrl = "";
+      let coverUrl = "";
+      // 兼容 imageList / images_list
+      const imgs = note.images_list || note.imageList || [];
+      if (imgs.length > 0 && imgs[0])
+        coverUrl = imgs[0].url || imgs[0].url_default || "";
+
+      // 【新增】策略 Special: 优先使用捕获到的 Stream 无水印 MP4
+      if (
+        CACHED_VIDEO_URL &&
+        CACHED_VIDEO_URL.includes("/stream/") &&
+        CACHED_VIDEO_URL.includes(".mp4")
+      ) {
+        videoUrl = CACHED_VIDEO_URL;
+        console.log("[资源下载] ✅ 命中 Stream 无水印直链(VIP):", videoUrl);
+      }
+
+      // 策略 A: origin_video_key (构造无水印原片链接)
+      // 注意：原片(origin)往往是H.265编码，在部分Windows设备上可能只有声音无画面
+      if (
+        !videoUrl &&
+        note.video.consumer &&
+        note.video.consumer.origin_video_key
+      ) {
+        // 如果用户明确想要“无水印”且接受可能的不兼容，可以使用 origin
+        // 即使有可能无画面，但只要是 "no_wm" 模式，我们应该优先保证无水印。
+        // 使用 https 协议，并默认使用 bd 节点
+        videoUrl = `${videoServer[1]}${note.video.consumer.origin_video_key}`;
+      }
+
+      // 策略 B: 优先使用缓存的真实视频URL (来自 XHR 拦截，无水印)
+      if (!videoUrl && CACHED_VIDEO_URL) {
+        videoUrl = CACHED_VIDEO_URL;
+        console.log(
+          "[资源下载] ✅ 使用XHR捕获的无水印视频:",
+          CACHED_VIDEO_URL.substring(0, 70),
+        );
+      }
+
+      // 策略 C: DOM 嗅探提取 (从页面<video>标签获取)
+      if (!videoUrl && note.video.dom_url) {
+        videoUrl = note.video.dom_url;
+      }
+
+      // 策略 D: 从 media.stream 获取 (支持 h265/h264 master_url / masterUrl)
+      // 兼容：不同 API 可能返回 snake_case 或 camelCase
+      if (!videoUrl && note.video.media && note.video.media.stream) {
+        const stream = note.video.media.stream;
+        let h264Url = "";
+        let h265Url = "";
+
+        const getUrl = (list) => {
+          if (list && list.length > 0) {
+            return list[0].master_url || list[0].masterUrl || "";
+          }
+          return "";
+        };
+
+        h264Url = getUrl(stream.h264);
+        h265Url = getUrl(stream.h265);
+
+        // 选择逻辑：
+        if (!videoUrl) {
+          // 如果 origin (策略A) 没有找到链接
+          // 一般来说优先 H.264 以保证兼容性（但这往往带水印）
+          // 如果用户选了 no_wm 但 origin 没找到，那也没办法，只能给一个能播的。
+          if (h264Url) {
+            videoUrl = h264Url;
+          } else if (h265Url) {
+            videoUrl = h265Url;
+          }
+        }
+      }
+
+      // 策略 C: 再次尝试 origin_video_key (兜底)
+      if (
+        !videoUrl &&
+        note.video.consumer &&
+        note.video.consumer.origin_video_key
+      ) {
+        videoUrl = `http://sns-video-bd.xhscdn.com/${note.video.consumer.origin_video_key}`;
+      }
+
+      if (videoUrl) {
+        resources.push({
+          type: "video",
+          url: videoUrl,
+          cover: coverUrl,
+          name: `video_${noteId}.mp4`,
+        });
+      }
+    }
+
+    // 2. 图片处理 (含 Live Photo)
+    const images = note.images_list || note.imageList || [];
+    if (images && images.length > 0) {
+      images.forEach((img, index) => {
+        let targetUrl = img.url_default || img.url;
+
+        // --- 图片无水印/高清优化 ---
+        if (qualityMode === "no_wm") {
+          try {
+            // 尝试从 URL 提取 key 并拼接原图服务器 (Demo 方案)
+            // 原 URL 通常类似 http://sns-webpic-qc.xhscdn.net/2024/.../...!...
+            const keyMatch = targetUrl.match(keyReg);
+            if (keyMatch) {
+              targetUrl = imageServer[1] + keyMatch[0]; // 使用 sns-img-bd
+            } else if (img.infoList && img.infoList.length > 0) {
+              // 备用方案: 寻找 WB_DFT
+              const noWmBest = img.infoList.find(
+                (i) => i.imageScene === "WB_DFT",
+              );
+              if (noWmBest && noWmBest.url) targetUrl = noWmBest.url;
+            }
+          } catch (e) {
+            console.error("图片解析优化失败", e);
+          }
+        } else {
+          // 此处维持原有的最高画质寻找逻辑 (通常 infoList 里会有水印大图)
+          if (img.infoList && img.infoList.length > 0) {
+            const best = img.infoList.find(
+              (i) => i.imageScene === "CRD_WM_WEBP",
+            ); // 往往最大
+            if (best && best.url) targetUrl = best.url;
+            else {
+              const largest = img.infoList.reduce(
+                (p, c) => ((p.size || 0) > (c.size || 0) ? p : c),
+                img.infoList[0],
+              );
+              if (largest && largest.url) targetUrl = largest.url;
+            }
+          }
+        }
+
+        resources.push({
+          type: "image",
+          url: targetUrl,
+          cover: targetUrl,
+          name: `image_${noteId}_${index + 1}.jpg`,
+        });
+
+        // --- Live Photo (实况图) ---
+        // 检查 stream 字段 (h264/h265 视频流)
+        if (img.live_photo && img.stream) {
+          // live_photo 可能是 boolean
+          let liveUrl = "";
+          let h264Url = "";
+          let h265Url = "";
+
+          // 优先使用 H.264 (兼容性好)，其次 H.265
+          // 兼容：同时尝试 master_url 和 masterUrl
+          const getLiveUrl = (list) => {
+            if (list && list.length > 0) {
+              return list[0].master_url || list[0].masterUrl || "";
+            }
+            return "";
+          };
+
+          h264Url = getLiveUrl(img.stream.h264);
+          h265Url = getLiveUrl(img.stream.h265);
+
+          liveUrl = h264Url || h265Url;
+
+          if (liveUrl) {
+            resources.push({
+              type: "video",
+              subType: "live_photo",
+              url: liveUrl,
+              cover: targetUrl,
+              name: `live_photo_${noteId}_${index + 1}.mp4`,
+            });
+          }
+        }
+      });
+    }
+
+    countEl.innerText = `(${resources.length} 个文件)`;
+
+    resources.forEach((res, idx) => {
+      const div = document.createElement("div");
+      div.className = "selected res-item"; // 默认选中
+      div.dataset.url = res.url;
+      div.dataset.name = res.name;
+      div.setAttribute("title", "点击选中/取消");
+
+      let inner = "";
+      if (res.type === "video") {
+        const icon = res.subType === "live_photo" ? "📸" : "▶️";
+        const label = res.subType === "live_photo" ? "实况" : "视频";
+        inner = `<img src="${res.cover}"><div class="res-type">${label}</div><div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:24px;color:white;text-shadow:0 0 5px rgba(0,0,0,0.5);">${icon}</div>`;
+      } else {
+        inner = `<img src="${res.cover}"><div class="res-type">图片</div>`;
+      }
+
+      div.innerHTML = `
+             <div class="res-check">✔</div>
+             ${inner}
+          `;
+
+      div.onclick = (e) => {
+        // 切换选中状态
+        if (div.classList.contains("selected")) {
+          div.classList.remove("selected");
+        } else {
+          div.classList.add("selected");
+        }
+      };
+
+      grid.appendChild(div);
+    });
+  }
+
+  async function handleBatchDownload() {
+    const items = document.querySelectorAll(".res-item.selected");
+    const btn = document.getElementById("res-download-btn");
+    const status = document.getElementById("res-status");
+
+    if (items.length === 0) return alert("请至少选择一个资源");
+
+    btn.disabled = true;
+    const originalText = btn.innerText;
+    btn.innerText = "下载中...";
+    status.innerText = "正在初始化下载...";
+
+    let success = 0;
+    for (let i = 0; i < items.length; i++) {
+      const url = items[i].dataset.url;
+      const name = items[i].dataset.name;
+      status.innerText = `正在下载 (${i + 1}/${items.length}) ...`;
+
+      try {
+        await downloadFile(url, name);
+        success++;
+        // 冷却 300ms
+        await new Promise((r) => setTimeout(r, 300));
+      } catch (e) {
+        console.error("Download fail", e);
+      }
+    }
+
+    status.innerText = `✅ 完成！成功下载 ${success} 个文件`;
+    btn.disabled = false;
+    btn.innerText = originalText;
+  }
+
+  function downloadFile(url, filename) {
+    return new Promise((resolve, reject) => {
+      // 优先使用 GM_download (支持跨域和大文件)
+      if (typeof GM_download !== "undefined") {
+        GM_download({
+          url: url,
+          name: filename,
+          saveAs: false, // 设为 true 可弹出保存框，但批量下载建议 false
+          onload: () => resolve(),
+          onerror: (e) =>
+            reject(new Error("GM_download error: " + (e.error || "unknown"))),
+          ontimeout: () => reject(new Error("GM_download timeout")),
+        });
+        return;
+      }
+
+      // 降级方案: Blob (可能受 CORS 限制)
+      GM_xmlhttpRequest({
+        method: "GET",
+        url: url,
+        responseType: "blob",
+        onload: (res) => {
+          try {
+            if (res.status !== 200) throw new Error("Status " + res.status);
+            const blob = res.response;
+            const u = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = u;
+            a.download = filename;
+            a.style.display = "none";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            setTimeout(() => URL.revokeObjectURL(u), 10000);
+            resolve();
+          } catch (e) {
+            reject(e);
+          }
+        },
+        onerror: reject,
+      });
+    });
   }
 
   setTimeout(createUI, 1500);

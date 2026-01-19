@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         OTT 회차 수집기
 // @namespace    http://tampermonkey.net/
-// @version      1.2
+// @version      1.4
 // @description  OTT에서 "회차_날짜 에피소드명" 형식으로 정보를 수집합니다.
 // @author       DongHaerang
 // @license      CC BY-NC-SA 4.0
@@ -17,21 +17,21 @@
 (function() {
     'use strict';
 
-    // 1. 공통 스타일 설정
+    // 1. 공통 스타일 설정 (ott- 접두사를 추가하여 충돌 방지)
     GM_addStyle(`
-        #filter-button-container {
-            position: fixed; top: 10px; left: 60%; transform: translateX(-50%);
+        #ott-button-container {
+            position: fixed; top: 0px; left: 60%; transform: translateX(-50%);
             z-index: 999999; display: flex; gap: 10px;
         }
-        .filter-btn {
-            background-color: #0073e6; color: white; border: 1px solid white;
-            padding: 5px 12px; height: auto; line-height: 1.2;
+        .ott-btn {
+            background-color: #0073e6; color: white; border: none;
+            padding: 0px 5px; height: auto; line-height: 1.2;
             border-radius: 5px; font-size: 14px; font-weight: bold;
             cursor: pointer; transition: background-color 0.2s;
             box-shadow: 0 4px 10px rgba(0,0,0,0.5);
         }
-        .filter-btn:hover { background-color: #005bb5; }
-        #copy-notification {
+        .ott-btn:hover { background-color: #005bb5; }
+        #ott-notification {
             position: fixed; top: 80px; left: 50%; transform: translateX(-50%);
             background-color: rgba(0, 0, 0, 0.85); color: white;
             padding: 15px 30px; border-radius: 8px; z-index: 1000000;
@@ -41,8 +41,9 @@
     `);
 
     const showNotification = (message) => {
-        let notify = document.getElementById('copy-notification') || document.createElement('div');
-        if (!notify.id) { notify.id = 'copy-notification'; document.body.appendChild(notify); }
+        // 전용 알림창 ID 사용
+        let notify = document.getElementById('ott-notification') || document.createElement('div');
+        if (!notify.id) { notify.id = 'ott-notification'; document.body.appendChild(notify); }
         notify.innerText = message;
         notify.style.opacity = '1';
         setTimeout(() => { notify.style.opacity = '0'; }, 1500);
@@ -56,7 +57,8 @@
         return null;
     };
 
-    const collectData = () => {
+    // 4. [기능] 데이터 수집 (isReverse가 true면 순서를 뒤집음)
+    const collectData = (isReverse = false) => {
         const site = getSiteType();
         let results = [];
         let titles = [], infos = [];
@@ -65,8 +67,12 @@
             titles = document.querySelectorAll('.title1.line2');
             infos = document.querySelectorAll('.title2.line1');
         } else if (site === 'tving') {
-            titles = document.querySelectorAll('.item__title');
-            infos = document.querySelectorAll('.item__subinfo');
+            // 가로 슬라이드 컨테이너 내부로 범위 제한
+            const container = document.querySelector('.lists__slides-horizontal.css-2movxq.ezbolwx0');
+            if (container) {
+                titles = container.querySelectorAll('.item__title');
+                infos = container.querySelectorAll('.item__subinfo');
+            }
         } else if (site === 'coupang') {
             titles = document.querySelectorAll('[data-cy="episode-title"]');
             infos = document.querySelectorAll('[class*="episodeDate"]');
@@ -131,9 +137,12 @@
         }
 
         if (results.length > 0) {
+            // 역순 요청 시 배열 반전
+            if (isReverse) results.reverse();
             const finalString = results.join('\n').trim() + '\n';
             GM_setClipboard(finalString);
-            showNotification(`✅ ${results.length}개 회차 복사 완료!`);
+            // 역순일 경우 메시지 차별화
+            showNotification(`✅ ${results.length}개 회차 ${isReverse ? '역순 ' : ''}복사 완료!`);
         }
     };
 
@@ -184,14 +193,17 @@
         window.location.href = url.toString();
     };
 
+    // 7. 버튼 및 이벤트 설정
     const init = () => {
-        if (!document.getElementById('filter-button-container')) {
+        // 중복 생성 방지를 위해 고유 ID 체크
+        if (!document.getElementById('ott-button-container')) {
             const container = document.createElement('div');
-            container.id = 'filter-button-container';
+            container.id = 'ott-button-container';
             const btn = document.createElement('button');
-            btn.className = 'filter-btn';
+            btn.className = 'ott-btn';
             btn.innerText = '회차 수집';
-            btn.onclick = collectData;
+            // 클릭 시 이벤트 객체가 인자로 넘어가는 것을 방지하고 정순(false) 전달
+            btn.onclick = () => collectData(false);
             container.appendChild(btn);
             document.body.appendChild(container);
         }
@@ -200,7 +212,16 @@
     window.addEventListener('keydown', (e) => {
         if (e.altKey) {
             const key = e.key.toLowerCase();
-            if (key === 'e' || e.key === 'ㄷ') { e.preventDefault(); collectData(); }
+            // ALT+E 감지
+            if (key === 'e' || e.key === 'ㄷ') { 
+                e.preventDefault(); 
+                // Shift 키 여부에 따라 정순/역순 분기
+                if (e.shiftKey) {
+                    collectData(true);  // Alt + Shift + E: 역순 복사
+                } else {
+                    collectData(false); // Alt + E: 정순 복사
+                }
+            }
             else if (key === 'a' || e.key === 'ㅁ') { e.preventDefault(); navigate('prev'); }
             else if (key === 's' || e.key === 'ㄴ') { e.preventDefault(); navigate('next'); }
             else if (key === 'q' || e.key === 'ㅂ') { e.preventDefault(); toggleSort(); }

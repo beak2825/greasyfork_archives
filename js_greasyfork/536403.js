@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         超星学习通助手，自动跳转任务点，自动答题超全题库ai答题，视频，章节测试，考试自动处理
 // @namespace    helper
-// @version      2.1.2
+// @version      2.1.3
 // @author       helper
 // @description  学习助手-支持学习通，目前已完成：视频自动播放，自动切换任务点，deepseek智能AI赋能，章节测试，作业自动完成，期末考试处理，自动保存
 // @match        *://*.chaoxing.com/*

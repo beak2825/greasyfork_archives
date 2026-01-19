@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bangumi 人物创建助手
 // @namespace    http://tampermonkey.net/
-// @version      0.2.8.1
+// @version      0.2.10.2
 // @description  将其他维基站点人物/组织条目和各个社交平台的用户添加到Bangumi现实人物
 // @author       Gemini / SilenceAkarin
 // @license MIT
@@ -15,6 +15,8 @@
 // @match        *://weibo.com/n/*
 // @match        *://weibo.com/u/*
 // @match        https://www.pixiv.net/users/*
+// @match        https://www.youtube.com/*
+// @match        https://www.nicovideo.jp/user/*
 // @match        *://vocadb.net/Ar/*
 // @match        *://touhoudb.com/Ar/*
 // @match        *://ci-en.dlsite.com/creator/*
@@ -38,11 +40,14 @@
 // @connect      tva2.sinaimg.cn
 // @connect      tvax4.sinaimg.cn
 // @connect      t.cn
+// @connect      googleusercontent.com
+// @connect      yt3.ggpht.com
 // @connect      static.vocadb.net
 // @connect      static.touhoudb.com
 // @connect      media.ci-en.jp
 // @connect      yt3.googleusercontent.com
 // @connect      yt4.googleusercontent.com
+// @connect      secure-dcdn.cdn.nimg.jp
 // @connect      facebook.com
 // @connect      fbcdn.net
 // @connect      *
@@ -718,7 +723,12 @@
 
                             // 2. 转换为 "1991年07月11日" 形式
                             const parts = dateStr.split('-');
-                            data.birthdate = `${parts[0]}年${parts[1]}月${parts[2]}日`;
+                            const year = parts[0];
+                            const month = Number(parts[1]);
+                            const day = Number(parts[2]);
+
+                            data.birthdate = `${year}年${month}月${day}日`;
+                            // data.birthdate = `${parts[0]}年${parts[1]}月${parts[2]}日`;
                         }
                     }
                 }
@@ -760,7 +770,7 @@
                     console.error("头像转换失败", e);
                 }
             }
-            
+
 
             // 6. 输出结果
             console.log("✅ 提取成功", data);
@@ -1041,7 +1051,7 @@
                     birthdate: '',
                     bloodtype: '',
                     websites: [{ title: 'Bilibili', url: window.location.href }],
-                    twitter: '', // 或者是 B 站 UID
+                    twitter: '', 
                     // 转换头像为 Base64 (复用你代码中的 fetchImg)
                     avatarBase64: avatarUrl ? await fetchImg(avatarUrl) : '',
                     summary: description,
@@ -1125,6 +1135,364 @@
             injectBiliBtn();
         });
         observer.observe(document.body, { childList: true, subtree: true });
+    }
+
+    // ================= YouTube 提取端 =================
+    else if (location.hostname.includes('youtube.com')) {
+        const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+        // --- 抓取主逻辑 ---
+        async function fullScrapeProcess(btn) {
+            const moreBtn = document.querySelector('.ytDescriptionPreviewViewModelHost') ||
+                  document.querySelector('.yt-truncated-text__absolute-button');
+
+            if (!moreBtn) {
+                alert("未能找到频道简介按钮，请确保在频道主页。");
+                return;
+            }
+
+            btn.innerText = '⌛ 提取中...';
+            moreBtn.click(); // 展开面板
+
+            await sleep(800); // 等待面板弹出
+
+            const data = await scrapeData();
+
+            // 关闭面板
+            const closeBtn = document.querySelector('#visibility-button button[aria-label="关闭"]');
+            if (closeBtn) closeBtn.click();
+
+            btn.innerText = '✅ 提取成功';
+            console.log("抓取数据结果:", data);
+            GM_setValue('vgmdb_to_bgm_data', data);
+            window.open('https://bgm.tv/person/new', '_blank');
+            setTimeout(() => { btn.innerText = '🚀 导入到 Bangumi'; }, 2000);
+        }
+
+        async function scrapeData() {
+            const data = {
+                name: document.querySelector('meta[property="og:title"]')?.content || "",
+                summary: document.querySelector('meta[property="og:description"]')?.content || "",
+                websites: [],
+                birthdate: '',
+                bloodtype: '',
+                twitter: '',
+                PixivID: '',
+                avatarBase64: '',
+                fromSNS: true
+            };
+
+            // 头像
+            const metaImage = document.querySelector('meta[property="og:image"]');
+            if (metaImage) data.avatarBase64 = await fetchImg(metaImage.content);
+
+            // 外链
+            data.websites.push({ title: 'YouTube', url: window.location.href }); // 填充YouTube链接
+            document.querySelectorAll('yt-channel-external-link-view-model').forEach(item => {
+                const title = item.querySelector('.ytChannelExternalLinkViewModelTitle')?.innerText.trim();
+                const anchor = item.querySelector('a');
+
+                if (anchor) {
+                    const realUrl = new URL(anchor.href).searchParams.get('q') || anchor.href;
+
+                    // 1. 处理 Twitter / X (获取 @用户名)
+                    if (realUrl.includes('twitter.com/') || realUrl.includes('x.com/')) {
+                        // 排除掉没有用户名的情况（如主页链接），提取路径最后一部分
+                        const twitterHandle = realUrl.split('/').filter(part => part).pop();
+                        if (twitterHandle && twitterHandle !== 'twitter.com' && twitterHandle !== 'x.com') {
+                            data.twitter = '@' + twitterHandle;
+                        }
+                        return; // 跳过添加进 websites
+                    }
+
+                    // 2. 处理 Pixiv (获取 ID)
+                    if (realUrl.includes('pixiv.net/users/')) {
+                        const pixivMatch = realUrl.match(/users\/(\    d+)/);
+                        if (pixivMatch && pixivMatch[1]) {
+                            data.PixivID = pixivMatch[1];
+                        }
+                        return; // 跳过添加进 websites
+                    }
+
+                    // 3. 普通网站，排除后存入 websites
+                    data.websites.push({ title, url: realUrl });
+                }
+            });
+            return data;
+        }
+        function injectButton() {
+            // 检查 ID，防止重复注入
+            if (document.getElementById('yt-scraper-btn')) return;
+
+            const subscribeContainer = document.querySelector('yt-subscribe-button-view-model');
+            if (!subscribeContainer) return;
+
+            const actionWrapper = subscribeContainer.closest('.ytFlexibleActionsViewModelAction');
+            // 如果找不到 actionWrapper，尝试直接在 subscribeContainer 后面插入
+            const targetNode = actionWrapper || subscribeContainer;
+            if (!targetNode.parentNode) return;
+
+            const wrapper = document.createElement('span');
+            wrapper.id = 'yt-scraper-wrapper'; // 给容器也加个 ID 方便管理
+            wrapper.style.display = 'inline-flex';
+            wrapper.style.alignItems = 'center';
+            wrapper.style.verticalAlign = 'middle';
+            wrapper.style.gap = '10px';
+            wrapper.style.marginLeft = '8px'; // 补充左边距
+
+            const btn = document.createElement('button');
+            btn.id = 'yt-scraper-btn'; // 【核心修复】加上 ID
+            btn.textContent = '🚀 导入到 Bangumi';
+
+            // 样式部分保持不变...
+            Object.assign(btn.style, {
+                height: '36px',
+                padding: '0 16px',
+                borderRadius: '18px',
+                border: 'none',
+                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                color: '#f1f1f1',
+                fontSize: '14px',
+                fontWeight: '500',
+                cursor: 'pointer',
+                transition: 'background-color 0.2s'
+            });
+
+            btn.onmouseover = () => btn.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
+            btn.onmouseout = () => btn.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+            btn.onclick = () => fullScrapeProcess(btn);
+
+            // 辅助函数
+            function createCheckbox(id, text) {
+                const label = document.createElement('label');
+                label.style = "font-size: 12px; color: #aaa; cursor: pointer; display: inline-flex; align-items: center; white-space: nowrap;";
+                const input = document.createElement('input');
+                input.type = 'checkbox';
+                input.id = id;
+                input.style.marginRight = '3px';
+                label.appendChild(input);
+                label.appendChild(document.createTextNode(text));
+                return label;
+            }
+
+            wrapper.appendChild(btn);
+            wrapper.appendChild(createCheckbox('vgm_skip_links', '不填充链接'));
+            wrapper.appendChild(createCheckbox('vgm_skip_summary', '不填充简介'));
+
+            // 执行插入
+            targetNode.parentNode.insertBefore(wrapper, targetNode.nextSibling);
+            console.log("提取按钮已成功注入");
+        }
+
+        // --- 监听 YouTube 页面切换 ---
+        // YouTube 是 SPA，需要频繁检测 DOM
+        const observer = new MutationObserver(() => {
+            if (window.location.pathname.includes('@')) {
+                injectButton();
+            }
+        });
+
+        observer.observe(document.body, { childList: true, subtree: true });
+
+    }
+
+    // ================= Niconico 提取端 =================
+    else if (location.hostname.includes('nicovideo.jp')) {
+        const BUTTON_ID = 'nico-scraper-btn';
+        // 2. 核心抓取函数
+        async function scrapeNicoData() {
+            const data = {
+                name: '',
+                engName: '',
+                kana: '',
+                aliases: [],
+                birthdate: '',
+                bloodtype: '',
+                websites: [],
+                twitter: '',
+                nodes: '',
+                avatarBase64: '',
+                summary: '',
+                isIllustrator: false,
+                PixivID: '',
+                fromSNS: true
+            };
+
+            const skipLinks = document.getElementById('nico_skip_links')?.checked;
+            const skipSummary = document.getElementById('nico_skip_summary')?.checked;
+
+            // --- 抓取姓名 ---
+            const nameNode = document.querySelector('.UserDetailsHeader-nickname');
+            if (nameNode) {
+                data.name = nameNode.innerText.trim();
+                // data.engName = data.name;
+            }
+
+            // --- 抓取简介 (支持折叠状态) ---
+            // 优先从已有的隐藏节点提取完整文本，如果没有则取折叠状态文本
+            if (!skipSummary) {
+                const expandedNode = document.querySelector('.ExpandBox-expanded');
+                const collapsedNode = document.querySelector('.ExpandBox-collapsed');
+
+
+                // 即使是折叠的，ExpandBox-expanded 往往也包含完整的 HTML
+                if (expandedNode) {
+                    data.summary = expandedNode.innerText.trim();
+                } else if (collapsedNode) {
+                    data.summary = collapsedNode.innerText.trim();
+                }
+
+                // 提取简介中的 URL (包括 A 标签中的 href 和文本中的链接)
+                if (expandedNode) {
+                    const links = expandedNode.querySelectorAll('a');
+                    links.forEach(a => processLink(a.href, data));
+                }
+                const urlRegex = /(https?:\/\/[^\s]+)/g;
+                const foundUrls = data.summary.match(urlRegex) || [];
+                foundUrls.forEach(url => processLink(url, data));
+            }
+
+            // --- 抓取头像 ---
+            const avatarNode = document.querySelector('.UserIcon-image');
+            if (avatarNode) {
+                const bgImg = window.getComputedStyle(avatarNode).backgroundImage;
+                const imgUrl = bgImg.replace(/^url\(["']?/, '').replace(/["']?\)$/, '');
+                if (imgUrl && imgUrl !== 'none') {
+                    data.avatarBase64 = await fetchImg(imgUrl);
+                }
+            }
+
+            // --- 抓取 SNS 链接区域 ---
+            if (!skipLinks) {
+                const snsLinks = document.querySelectorAll('.UserDetailsHeader-snsLink');
+                snsLinks.forEach(link => processLink(link.href, data));
+            }
+
+            console.log("抓取完成:", data);
+            // alert("数据已抓取，请查看控制台 (F12)");
+            return data;
+        }
+
+        // 3. 链接分类处理逻辑
+        function processLink(realUrl, data) {
+            if (!realUrl || realUrl.startsWith('javascript:')) return;
+
+            // 处理 Twitter / X
+            if (realUrl.includes('twitter.com/') || realUrl.includes('x.com/')) {
+                const parts = realUrl.split('/').filter(p => p);
+                const twitterHandle = parts.pop().split('?')[0];
+                if (twitterHandle && !['twitter.com', 'x.com', 'intent', 'share'].includes(twitterHandle)) {
+                    data.twitter = '@' + twitterHandle;
+                }
+                return;
+            }
+
+            let title = "Website";
+            if (realUrl.includes('youtube.com/') || realUrl.includes('youtu.be/')) title = "YouTube";
+            else if (realUrl.includes('instagram.com/')) title = "Instagram";
+            else if (realUrl.includes('facebook.com/')) title = "Facebook";
+            else if (realUrl.includes('pixiv.net/')) {
+                title = "Pixiv";
+                const pixivMatch = realUrl.match(/users\/(\d+)/);
+                if (pixivMatch) data.PixivID = pixivMatch[1];
+            }
+
+            const exists = data.websites.some(item => item.url === realUrl);
+            if (!exists) data.websites.push({ title: title, url: realUrl });
+
+            GM_setValue('vgmdb_to_bgm_data', data);
+            window.open('https://bgm.tv/person/new', '_blank');
+        }
+
+        // 4. 注入按钮 (增加防重逻辑)
+        // const BUTTON_ID = 'nico-scraper-btn';
+        const WRAPPER_ID = 'nico-scraper-wrapper';
+
+        function injectButton() {
+            const target = document.querySelector('.UserDetailsHeader-buttons');
+            // 1. 检查包装容器是否存在，防止重复注入
+            if (!target || document.getElementById(WRAPPER_ID)) return;
+
+            // 2. 创建包装容器
+            const wrapper = document.createElement('span');
+            wrapper.id = WRAPPER_ID;
+            wrapper.style.display = 'inline-flex';
+            wrapper.style.alignItems = 'center';
+            wrapper.style.verticalAlign = 'middle';
+            wrapper.style.gap = '12px';
+            wrapper.style.marginLeft = '8px';
+
+            // 3. 创建抓取按钮
+            const btn = document.createElement('button');
+            btn.id = BUTTON_ID;
+            btn.innerHTML = '抓取信息';
+            btn.style.cssText = `
+        padding: 0 16px;
+        height: 32px;
+        background-color: #252525;
+        color: white;
+        border: none;
+        border-radius: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        font-size: 12px;
+        white-space: nowrap;
+    `;
+
+            btn.onclick = async (e) => {
+                e.preventDefault();
+                btn.innerText = '正在抓取...';
+                btn.disabled = true;
+                try {
+                    await scrapeNicoData(); // 注意：scrapeNicoData 内部需读取复选框状态
+                    btn.innerText = '抓取成功';
+                } catch (err) {
+                    btn.innerText = '抓取失败';
+                } finally {
+                    btn.disabled = false;
+                    setTimeout(() => { btn.innerText = '抓取信息'; }, 2000);
+                }
+            };
+
+            // 4. 创建复选框的辅助函数
+            function createCheckbox(id, text) {
+                const label = document.createElement('label');
+                label.style = "font-size: 12px; color: #666; cursor: pointer; display: inline-flex; align-items: center; white-space: nowrap;";
+
+                const input = document.createElement('input');
+                input.type = 'checkbox';
+                input.id = id;
+                input.style.marginRight = '4px';
+                input.style.cursor = 'pointer';
+
+                label.appendChild(input);
+                label.appendChild(document.createTextNode(text));
+                return label;
+            }
+
+            // 5. 组装并插入
+            wrapper.appendChild(btn);
+            wrapper.appendChild(createCheckbox('nico_skip_links', '不填充链接'));
+            wrapper.appendChild(createCheckbox('nico_skip_summary', '不填充简介'));
+
+            // 使用 append 确保插入到容器的最末尾（最右边）
+            target.appendChild(wrapper);
+        }
+
+        // 5. 监听与防抖
+        let timeoutTimer = null;
+        const observer = new MutationObserver((mutations) => {
+            // 性能优化：只在确实有节点增减时才触发检查
+            const shouldCheck = mutations.some(m => m.addedNodes.length > 0);
+            if (shouldCheck) {
+                if (timeoutTimer) clearTimeout(timeoutTimer);
+                timeoutTimer = setTimeout(injectButton, 300);
+            }
+        });
+
+        observer.observe(document.body, { childList: true, subtree: true });
+        injectButton();
+
     }
 
     // ================= Pixiv 提取端 =================
@@ -1357,6 +1725,10 @@ ${data.PixivID ? '|Pixiv= id='+data.PixivID : ''}
 
             // 提交请求
             newBtn.onclick = async function() {
+                // 还原为 Wiki 模式
+                const wikiModeBtn = document.querySelector('a[onclick="NormaltoWCODE()"]');
+                if (wikiModeBtn) { wikiModeBtn.click(); await sleep(500); }
+
                 newBtn.disabled = true;
                 newBtn.innerText = '正在提交...';
 

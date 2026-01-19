@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Better-PRTS-Plus
 // @namespace    https://github.com/ntgmc/Better-PRTS-Plus
-// @version      2.7.6
-// @description  [整合版] 集成完美作业筛选、深度暗黑模式及干员头像可视化等功能的 zoot.plus 全方位体验增强脚本。
+// @version      2.9.0
+// @description  [整合版] 集成完美作业筛选、深度暗黑模式适配及干员头像可视化等功能的 zoot.plus 全方位体验增强脚本。
 // @author       一只摆烂的42 & Gemini 3 pro
 // @match        https://zoot.plus/*
 // @icon         https://zoot.plus/favicon.ico
@@ -19,49 +19,8 @@
 
 /*
     Better-PRTS-Plus
-    Copyright (C) 2023-2025  ntgmc
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+    Copyright (C) 2023-2026  ntgmc
 */
-
-/**
- * =========================================================================
- *                            Better-PRTS-Plus 代码结构说明
- * =========================================================================
- *
- * 本脚本主要包含以下模块：
- * 1. 配置与常量：定义全局颜色、存储键值及状态变量。
- * 2. 数据与样式：干员映射表与CSS样式注入（*按要求在此处省略具体内容*）。
- * 3. 核心逻辑：暗黑模式切换、DOM元素获取与注入。
- * 4. 业务逻辑：
- *    - [V10.x] 筛选栏控制与图标逻辑
- *    - [V6.x] 卡片视觉优化（徽章、干员头像）
- *    - [V8.x] 内容清洗（B站链接、描述折叠）
- *    - [V11.x] 弹窗增强（详情网格化）
- *    - [V9.x] 全局悬浮球与设置面板
- * 5. 初始化与监听：MutationObserver 统一管理与入口函数。
- *
- * 版本号标识说明：
- * [V3.0] 暗黑模式核心
- * [V5.0] Tooltip/气泡交互
- * [V6.0] 卡片/列表视觉优化
- * [V8.0] 文本清洗与链接优化
- * [V9.0] 悬浮球与设置系统
- * [V10.0] 筛选器核心逻辑
- * [V11.0] 弹窗与详情增强
- * =========================================================================
- */
 
 (function() {
     'use strict';
@@ -72,21 +31,6 @@
 
     const OPS_STORAGE_KEY = 'prts_plus_user_ops';
     const DISPLAY_MODE_KEY = 'prts_plus_display_mode'; // 可选值: 'GRAY' | 'HIDE'
-    const DARK_MODE_KEY = 'prts_plus_dark_mode_v3';
-
-    // [V3.0 样式配置] 罗德岛配色定义
-    const c = {
-        bgDeep: '#18181c',      // 全局深底
-        bgCard: '#232326',      // 卡片/弹窗
-        bgHover: '#2d2d30',     // 悬浮/输入框背景
-        border: '#38383b',      // 边框
-        textMain: '#e0e0e0',    // 主字
-        textSub: '#9ca3af',     // 辅字
-        primary: '#5c8ae6',     // 罗德岛蓝
-        tagRedBg: '#4a1e1e',    // 突袭-暗红背景
-        tagRedText: '#fca5a5',  // 突袭-亮粉红文字
-        tagRedBorder: '#7f1d1d' // 突袭-深红边框
-    };
 
     // [V9.4 设置配置] 功能开关默认状态
     const CONFIG = {
@@ -103,7 +47,6 @@
     let isProcessingFilter = false;
     let rafId = null;
     let filterDebounceTimer = null;
-    let isDarkMode = localStorage.getItem(DARK_MODE_KEY) === null ? true : (localStorage.getItem(DARK_MODE_KEY) === 'true');
 
     // =========================================================================
     //                            MODULE 2: 数据与样式
@@ -121,200 +64,14 @@
     }
 
     // [样式] CSS 样式定义
+    // 适配 zoot.plus PR #512: 移除强制覆盖样式的部分，仅保留脚本功能特有的样式
+    // 使用 body.dark 来适配网站原生深色模式
     const mergedStyles = `
     /* ==========================================================================
-       0. [全局强制] 输入框聚焦样式 (去除蓝色，统一为淡紫色光晕)
-       ========================================================================== */
-    /* 覆盖 Blueprint 默认的蓝色聚焦样式，应用 PR 定义的 Violet 风格 */
-    .bp4-input:focus, 
-    .bp4-input.bp4-active,
-    textarea:focus,
-    select:focus,
-    .bp4-dialog .bp4-input:focus,
-    .bp4-input-group .bp4-input:focus {
-        border-color: none !important;
-        box-shadow: 0 0 3px colors.violet.500 !important;
-        outline: none !important;
-    }
-
-    /* ==========================================================================
-       1. [核心基础] 全局暗黑模式与布局
-       ========================================================================== */
-    html.dark, html.dark body, html.dark #root, html.dark #app,
-    html.dark .bg-zinc-50, html.dark .bg-slate-50, html.dark .bg-gray-50, html.dark .bg-white,
-    html.dark .bg-zinc-100, html.dark .bg-slate-100, html.dark .bg-gray-100 {
-        background-color: ${c.bgDeep} !important;
-        color: ${c.textMain} !important;
-    }
-
-    /* 滚动条与自动填充修复 */
-    html.dark input:-webkit-autofill,
-    html.dark input:-webkit-autofill:hover,
-    html.dark input:-webkit-autofill:focus,
-    html.dark input:-webkit-autofill:active {
-        -webkit-box-shadow: 0 0 0 30px ${c.bgHover} inset !important;
-        -webkit-text-fill-color: #fff !important;
-        caret-color: #fff !important;
-        transition: background-color 5000s ease-in-out 0s;
-    }
-
-    /* ==========================================================================
-       2. [Blueprint 组件] 覆盖框架默认样式
-       ========================================================================== */
-    /* 2.1 容器：导航、抽屉、弹窗、卡片 */
-    html.dark .bp4-navbar {
-        background-color: ${c.bgCard} !important;
-        border-bottom: 1px solid ${c.border} !important;
-        box-shadow: none !important;
-    }
-    
-    html.dark .bp4-card, html.dark .card-container {
-        background-color: ${c.bgCard} !important;
-        border: 1px solid ${c.border} !important;
-        box-shadow: none !important;
-        color: ${c.textMain} !important;
-    }
-
-    html.dark .bp4-drawer, html.dark .bp4-drawer > section, 
-    html.dark .bp4-overlay-content, html.dark .bp4-dialog {
-        background-color: ${c.bgCard} !important;
-        color: ${c.textMain} !important;
-        box-shadow: 0 0 0 1px ${c.border}, 0 4px 8px rgba(0,0,0,0.5) !important;
-    }
-
-    html.dark .bp4-drawer header, html.dark .bp4-dialog-header,
-    html.dark .bp4-drawer .bg-slate-100 {
-        background-color: ${c.bgCard} !important;
-        border-bottom: 1px solid ${c.border} !important;
-        color: ${c.textMain} !important;
-    }
-
-    html.dark .bp4-dialog-footer, html.dark .bp4-dialog-footer-fixed {
-        background-color: ${c.bgCard} !important;
-        border-top: 1px solid ${c.border} !important;
-        color: ${c.textMain} !important;
-    }
-
-    html.dark .bp4-dialog-header .bp4-heading { color: #fff !important; }
-    html.dark .bp4-dialog-close-button .bp4-icon { color: ${c.textSub} !important; }
-
-    /* 2.2 交互：按钮、输入框、Tab */
-    html.dark .bp4-button {
-        background-color: ${c.bgHover} !important;
-        background-image: none !important;
-        border: 1px solid ${c.border} !important;
-        color: ${c.textMain} !important;
-        box-shadow: none !important;
-    }
-    html.dark .bp4-button:hover { background-color: #3e3e42 !important; }
-    html.dark .bp4-button.bp4-intent-primary {
-        background-color: ${c.primary} !important;
-        color: #fff !important;
-        border: none !important;
-    }
-    
-    html.dark .bp4-button.bp4-minimal.bp4-active.\\!text-inherit {
-    color: rgb(3 105 161 / var(--tw-bg-opacity)) !important;
-
-    .bp4-icon,
-    svg {
-      fill: currentColor !important;
-      color: inherit !important;
-    }
-  }
-
-    /* 输入框基础样式 (Dark Mode) */
-    html.dark .bp4-input, html.dark textarea, html.dark select,
-    html.dark .bp4-dialog .bp4-input {
-        background-color: ${c.bgHover} !important;
-        color: #fff !important;
-        border: 1px solid ${c.border} !important;
-        box-shadow: none !important;
-    }
-    
-    /* [暗黑模式] 输入框聚焦样式 (PR #508 Violet Style) */
-    /* 注意：由于使用了 html.dark 前缀，优先级高于上方的全局样式，因此暗黑模式下仍为紫色 */
-    html.dark .bp4-input:focus, 
-    html.dark .bp4-input.bp4-active,
-    html.dark textarea:focus,
-    html.dark select:focus,
-    html.dark .bp4-dialog .bp4-input:focus {
-        border-color: #8b5cf6 !important; /* Violet-500 */
-        box-shadow: inset 0 0 0 1px #8b5cf6, 0 0 0 2px rgba(139, 92, 246, 0.3) !important;
-        outline: none !important;
-    }
-
-    html.dark .bp4-input::placeholder { color: #666 !important; }
-
-    html.dark .bp4-tab { color: ${c.textSub} !important; }
-    html.dark .bp4-tab[aria-selected="true"] { color: ${c.primary} !important; }
-
-    /* 2.3 浮层与菜单 */
-    html.dark .bp4-portal .bp4-popover2-content,
-    html.dark .bp4-portal .bp4-menu,
-    html.dark .bp4-select-popover .bp4-popover2-content,
-    html.dark .bp4-popover2.bp4-minimal .bp4-popover2-content,
-    html.dark .bp4-popover2-content {
-        background-color: #232326 !important;
-        color: #e0e0e0 !important;
-        border: 1px solid #3f3f46 !important;
-        box-shadow: 0 4px 16px rgba(0,0,0,0.6) !important;
-    }
-    html.dark .bp4-popover2-content * { color: #e0e0e0; }
-
-    html.dark .bp4-menu-item { color: ${c.textMain} !important; background-color: transparent !important; }
-    html.dark .bp4-menu-item:hover,
-    html.dark .bp4-menu-item.bp4-active,
-    html.dark .bp4-menu-item.bp4-selected,
-    html.dark .bp4-menu-item.bp4-intent-primary.bp4-active {
-        background-color: ${c.primary} !important;
-        color: #fff !important;
-    }
-    html.dark .bp4-menu-item.bp4-disabled {
-        color: ${c.textSub} !important;
-        background-color: transparent !important;
-    }
-
-    html.dark .bp4-popover2-arrow-fill { fill: #232326 !important; }
-    html.dark .bp4-popover2-arrow-border { fill: #3f3f46 !important; }
-
-    /* ==========================================================================
-       3. [通用工具] 颜色修正与第三方内容
-       ========================================================================== */
-    html.dark h1, html.dark h2, html.dark h3, html.dark h4, html.dark h5,
-    html.dark .bp4-heading, html.dark strong { color: #fff !important; }
-    
-    html.dark .text-gray-700, html.dark .text-zinc-600, 
-    html.dark .text-slate-900, html.dark .text-gray-800 { color: ${c.textMain} !important; }
-    html.dark .text-gray-500, html.dark .text-zinc-500 { color: ${c.textSub} !important; }
-
-    html.dark .bp4-card.border-l-4 { border-left-width: 4px !important; }
-    html.dark .border-sky-700 { border-left-color: #0369a1 !important; }
-    html.dark .border-pink-700 { border-left-color: #be185d !important; }
-    html.dark .border-violet-700 { border-left-color: #6d28d9 !important; }
-    html.dark .border-red-700 { border-left-color: #b91c1c !important; }
-    html.dark .border-emerald-700 { border-left-color: #047857 !important; }
-    html.dark .border-yellow-700 { border-left-color: #a16207 !important; }
-
-    html.dark .bp4-tag { background-color: #333 !important; color: #ccc !important; border: 1px solid #444 !important; }
-    html.dark .bp4-tag[class*="bg-red-"], html.dark .bp4-tag.bg-red-400 {
-        background-color: ${c.tagRedBg} !important;
-        color: ${c.tagRedText} !important;
-        border-color: ${c.tagRedBorder} !important;
-    }
-    
-    .bp4-tag[data-op-extracted="true"] { display: none !important; }
-
-    html.dark .markdown-body { color: ${c.textMain} !important; background: transparent !important; }
-    html.dark .markdown-body pre, html.dark .markdown-body code { background-color: ${c.bgHover} !important; color: ${c.textMain} !important; }
-    html.dark .markdown-body table tr:nth-child(2n) { background-color: rgba(255, 255, 255, 0.05) !important; }
-    html.dark .markdown-body a { color: ${c.primary} !important; }
-
-    /* ==========================================================================
-       4. [PRTS 业务模块] 专有组件样式
+       [PRTS 业务模块] 专有组件样式
        ========================================================================== */
     
-    /* 4.1 描述容器 (Hover 展开) */
+    /* 1. 描述容器 (Hover 展开) */
     .prts-desc-wrapper { position: relative; height: 24px; margin: 2px 0; width: 100%; z-index: 10; }
     .prts-desc-wrapper:hover { z-index: 100; }
     .prts-desc-content {
@@ -326,13 +83,19 @@
         white-space: normal; overflow: visible; background-color: #ffffff; color: #374151;
         padding: 4px 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.2); border: 1px solid #e5e7eb;
     }
-    html.dark .prts-desc-content { color: #9ca3af; }
-    html.dark .prts-desc-wrapper:hover .prts-desc-content {
+    
+    /* 深色适配 */
+    body.dark .prts-desc-content { color: #9ca3af; }
+    body.dark .prts-desc-wrapper:hover .prts-desc-content {
         background-color: #232326; color: #e5e7eb; border-color: #3f3f46;
         box-shadow: 0 4px 16px rgba(0,0,0,0.6);
     }
+    /* 高对比度适配 */
+    body.high-contrast-theme .prts-desc-wrapper:hover .prts-desc-content {
+        background-color: #18181c; border-color: #38383b;
+    }
 
-    /* 4.2 视频链接 */
+    /* 2. 视频链接 */
     .prts-video-box { margin-top: 2px; margin-bottom: 6px; display: flex; align-items: center; position: relative; z-index: 1; }
     .prts-bili-link {
         display: inline-flex !important; align-items: center; color: #94a3b8 !important;
@@ -340,11 +103,12 @@
         padding: 2px 0; background: transparent !important; border: none !important; transition: color 0.2s; cursor: pointer;
     }
     .prts-bili-link:hover { color: #fb7299 !important; text-decoration: underline !important; }
-    html.dark .prts-bili-link { color: #52525b !important; }
-    html.dark .prts-bili-link:hover { color: #fb7299 !important; }
+    
+    body.dark .prts-bili-link { color: #52525b !important; }
+    body.dark .prts-bili-link:hover { color: #fb7299 !important; }
     .prts-bili-link .bp4-icon { margin-right: 4px; font-size: 11px; }
 
-    /* 4.3 筛选栏与按钮 */
+    /* 3. 筛选栏与按钮 */
     #prts-filter-bar { display: flex; align-items: center; flex-wrap: wrap; width: 100%; margin-top: 8px; margin-bottom: 12px; padding-left: 2px; }
     .prts-btn {
         background: none !important; background-color: transparent !important; border: none !important;
@@ -359,66 +123,69 @@
     .prts-btn .bp4-icon { margin-right: 7px !important; color: #5c7080 !important; fill: currentColor !important; }
     .prts-btn.prts-active .bp4-icon { color: #2563eb !important; }
 
-    html.dark .prts-btn { color: #a7b6c2 !important; }
-    html.dark .prts-btn:hover, html.dark .prts-btn.prts-active {
+    body.dark .prts-btn { color: #a7b6c2 !important; }
+    body.dark .prts-btn:hover, body.dark .prts-btn.prts-active {
         background-color: rgba(138, 155, 168, 0.15) !important; color: #f5f8fa !important;
     }
-    html.dark .prts-btn.prts-active { color: #60a5fa !important; }
-    html.dark .prts-btn .bp4-icon { color: #a7b6c2 !important; }
-    html.dark .prts-btn.prts-active .bp4-icon { color: #60a5fa !important; }
+    body.dark .prts-btn.prts-active { color: #60a5fa !important; }
+    body.dark .prts-btn .bp4-icon { color: #a7b6c2 !important; }
+    body.dark .prts-btn.prts-active .bp4-icon { color: #60a5fa !important; }
 
     .prts-divider { width: 1px; height: 16px; background-color: rgba(16, 22, 26, 0.15); margin: 0 8px; display: inline-block; }
-    html.dark .prts-divider { background-color: rgba(255, 255, 255, 0.15); }
+    body.dark .prts-divider { background-color: rgba(255, 255, 255, 0.15); }
 
-    /* 4.4 状态标签与卡片置灰 */
+    /* 4. 状态标签与卡片置灰 */
     .prts-status-label {
         margin-top: 12px !important; padding-top: 8px !important; border-top: 1px dashed #e5e7eb !important;
         font-size: 13px !important; font-weight: 700 !important; display: flex !important; align-items: center !important; line-height: 1.5 !important;
     }
-    html.dark .prts-status-label { border-top-color: #444 !important; }
+    body.dark .prts-status-label { border-top-color: #444 !important; }
+    /* 红色警告 (缺人/不可用) - 对应 Tailwind text-red-600 / dark:text-red-500 */
+    .prts-label-missing { color: #dc2626 !important; } 
+    body.dark .prts-label-missing { color: #ef4444 !important; } 
+    
+    /* 琥珀色警告 (需助战) - 对应 Tailwind text-amber-600 / dark:text-amber-500 */
     .prts-label-support { color: #d97706 !important; }
-    html.dark .prts-label-support { color: #ff9d2e !important; }
-    .prts-label-missing { color: #dc2626 !important; }
-    html.dark .prts-label-missing { color: #f87171 !important; }
+    body.dark .prts-label-support { color: #f59e0b !important; }
     
     .prts-card-gray .bp4-card {
         opacity: 0.4 !important; filter: grayscale(0.9) !important; transition: opacity 0.2s ease, filter 0.2s ease !important; background-color: #f3f4f6 !important;
     }
-    html.dark .prts-card-gray .bp4-card { background-color: #1a1a1a !important; }
+    body.dark .prts-card-gray .bp4-card { background-color: #1a1a1a !important; }
     .prts-card-gray:hover .bp4-card { opacity: 0.95 !important; filter: grayscale(0) !important; }
 
-    /* 4.5 干员显示 (Grid, Items, Avatar, Badges) */
+    /* 5. 干员显示 (Grid, Items, Avatar, Badges) */
     .prts-op-grid { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; margin-bottom: 8px; align-items: center; }
     .prts-op-grid .bp4-popover2-target { display: inline-flex !important; margin: 0 !important; padding: 0 !important; vertical-align: top !important; height: 42px !important; }
 
-    /* --- [PR #508 Avatar 适配: 稀有度边框与背景] --- */
-    /* 6星: bg-orange-200 ring-orange-300 */
-    html.dark .bg-orange-200.ring-orange-300 {
+    /* Avatar 适配: 稀有度边框与背景 */
+    /* 6星 */
+    body.dark .bg-orange-200.ring-orange-300 {
         background-color: rgba(234, 88, 12, 0.2) !important;     /* orange-600 / 0.2 */
         --tw-ring-color: rgba(249, 115, 22, 0.6) !important;      /* orange-500 / 0.6 */
         box-shadow: inset 0 0 0 2px var(--tw-ring-color) !important;
     }
-    /* 5星: bg-yellow-100 ring-yellow-200 */
-    html.dark .bg-yellow-100.ring-yellow-200 {
+    /* 5星 */
+    body.dark .bg-yellow-100.ring-yellow-200 {
         background-color: rgba(234, 179, 8, 0.2) !important;      /* yellow-500 / 0.2 */
         --tw-ring-color: rgba(234, 179, 8, 0.6) !important;       /* yellow-500 / 0.6 */
         box-shadow: inset 0 0 0 2px var(--tw-ring-color) !important;
     }
-    /* 4星: bg-purple-100 ring-purple-200 */
-    html.dark .bg-purple-100.ring-purple-200 {
+    /* 4星 */
+    body.dark .bg-purple-100.ring-purple-200 {
         background-color: rgba(147, 51, 234, 0.2) !important;     /* purple-600 / 0.2 */
         --tw-ring-color: rgba(168, 85, 247, 0.6) !important;      /* purple-500 / 0.6 */
         box-shadow: inset 0 0 0 2px var(--tw-ring-color) !important;
     }
-    /* 低星: bg-slate-100 ring-slate-200 */
-    html.dark .bg-slate-100.ring-slate-200 {
+    /* 低星 */
+    body.dark .bg-slate-100.ring-slate-200 {
         background-color: #2d2d30 !important;
         --tw-ring-color: #3f3f46 !important;                      /* zinc-700 */
         box-shadow: inset 0 0 0 2px #3f3f46 !important;
         color: #52525b !important;                                /* zinc-600 */
     }
     /* 头像中的默认文字颜色 */
-    html.dark .text-slate-300 { color: #52525b !important; }      /* zinc-600 */
+    body.dark .text-slate-300 { color: #52525b !important; }      /* zinc-600 */
     
     .prts-op-item, .prts-op-text {
         position: relative; width: 42px; height: 42px; box-shadow: 0 1px 2px rgba(0,0,0,0.1);
@@ -427,9 +194,9 @@
     .prts-op-item:hover, .prts-op-text:hover { transform: translateY(-2px); box-shadow: 0 4px 6px rgba(0,0,0,0.2); z-index: 50; }
     
     .prts-op-item { background-color: #f8fafc; border: 1px solid #cbd5e1; border-radius: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
-    html.dark .prts-op-item { background-color: #1f2937; border-color: #374151; }
+    body.dark .prts-op-item { background-color: #1f2937; border-color: #374151; }
     .prts-op-item:hover { border-color: #3b82f6; }
-    html.dark .prts-op-item:hover { border-color: #60a5fa; }
+    body.dark .prts-op-item:hover { border-color: #60a5fa; }
     
     .prts-op-img { width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 3px; }
     
@@ -439,8 +206,8 @@
         line-height: 1.1; padding: 2px; word-break: break-all;
     }
     .prts-op-text:hover { border-style: solid; border-color: #3b82f6; background-color: #fff; }
-    html.dark .prts-op-text { background-color: #27272a; color: #d1d5db; border-color: #52525b; }
-    html.dark .prts-op-text:hover { background-color: #27272a; border-color: #60a5fa; }
+    body.dark .prts-op-text { background-color: #27272a; color: #d1d5db; border-color: #52525b; }
+    body.dark .prts-op-text:hover { background-color: #27272a; border-color: #60a5fa; }
 
     /* 关卡徽章 */
     .prts-level-badge {
@@ -449,7 +216,7 @@
         font-weight: 700; font-size: 0.95em; margin-right: 8px; border: 1px solid #2563eb; vertical-align: middle;
         line-height: 1.2; flex-shrink: 0; box-shadow: 0 1px 2px rgba(37, 99, 235, 0.2);
     }
-    html.dark .prts-level-badge {
+    body.dark .prts-level-badge {
         background-color: #1e3a8a; border-color: #1e40af; color: #e0e7ff !important; box-shadow: none;
     }
 
@@ -459,7 +226,7 @@
         position: relative; width: 48px; height: 48px; background-color: #1f2937;
         border: 1px solid #e5e7eb; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.2);
     }
-    html.dark .prts-popover-item { border-color: #4b5563; }
+    body.dark .prts-popover-item { border-color: #4b5563; }
     .prts-popover-img { width: 100%; height: 100%; object-fit: cover; border-radius: 3px; }
 
     .prts-op-skill, .prts-popover-skill {
@@ -475,12 +242,12 @@
         background-color: #ffffff !important; color: #000000 !important; border: 1px solid #e5e7eb;
     }
     /* 深色模式强制覆盖 */
-    html.dark .bp4-popover2-content .prts-popover-skill, 
-    html.dark .prts-popover-skill {
+    body.dark .bp4-popover2-content .prts-popover-skill, 
+    body.dark .prts-popover-skill {
         background-color: #18181b !important; color: #f3f4f6 !important; border-color: rgba(255, 255, 255, 0.3) !important;
     }
 
-    /* 4.6 模拟 Tooltip */
+    /* 6. 模拟 Tooltip */
     [data-prts-tooltip]:hover::after {
         content: attr(data-prts-tooltip); position: absolute; bottom: 115%; left: 50%; transform: translateX(-50%);
         background-color: #30404d; color: #f5f8fa; padding: 5px 8px; font-size: 12px; border-radius: 3px;
@@ -490,10 +257,10 @@
         content: ""; position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%);
         border-width: 5px; border-style: solid; border-color: #30404d transparent transparent transparent; z-index: 100;
     }
-    html.dark [data-prts-tooltip]:hover::after { background-color: #202b33; }
-    html.dark [data-prts-tooltip]:hover::before { border-color: #202b33 transparent transparent transparent; }
+    body.dark [data-prts-tooltip]:hover::after { background-color: #202b33; }
+    body.dark [data-prts-tooltip]:hover::before { border-color: #202b33 transparent transparent transparent; }
 
-    /* 4.7 侧边栏与公告 */
+    /* 7. 侧边栏与公告 */
     .prts-sidebar-collapsed { max-height: 48px !important; overflow: hidden !important; cursor: pointer !important; opacity: 0.9; }
     .prts-sidebar-header-icon { display: flex; align-items: center; justify-content: space-between; }
     .prts-sidebar-header-icon::after { content: "▼"; font-size: 0.8em; color: #9ca3af; transition: transform 0.3s; }
@@ -510,13 +277,13 @@
         display: flex !important; align-items: center !important; margin: 0 !important;
         width: 100% !important; opacity: 1 !important; visibility: visible !important; color: #1f2937 !important;
     }
-    html.dark .prts-notice-btn h4.bp4-heading { color: #f3f4f6 !important; }
+    body.dark .prts-notice-btn h4.bp4-heading { color: #f3f4f6 !important; }
     
     .prts-dialog-tag { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 14px; font-weight: bold; margin-right: 8px; color: #fff; vertical-align: middle; }
     .prts-tag-update { background-color: #10b981; } .prts-tag-fix { background-color: #f59e0b; }
     .prts-tag-event { background-color: #3b82f6; } .prts-tag-note { background-color: #64748b; }
 
-    /* 4.8 悬浮球 & 控制面板 */
+    /* 8. 悬浮球 & 控制面板 */
     #prts-float-container {
         position: fixed; z-index: 9999; display: flex; align-items: center; opacity: 0.6; user-select: none;
         transition: opacity 0.3s, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
@@ -534,7 +301,8 @@
     }
     .prts-float-btn svg { width: 24px; height: 24px; fill: currentColor; }
     #prts-float-container.snap-left .prts-float-btn { border-radius: 0 8px 8px 0; border-right: 1px solid #e5e7eb; border-left: none; box-shadow: 2px 2px 8px rgba(0,0,0,0.1); }
-    html.dark .prts-float-btn { background-color: #232326; border-color: #3f3f46; color: #e5e7eb; box-shadow: -2px 2px 12px rgba(0,0,0,0.5); }
+    
+    body.dark .prts-float-btn { background-color: #232326; border-color: #3f3f46; color: #e5e7eb; box-shadow: -2px 2px 12px rgba(0,0,0,0.5); }
     
     .prts-settings-panel {
         position: absolute; top: 0; width: 260px; background: #fff; border: 1px solid #e5e7eb; border-radius: 8px;
@@ -543,12 +311,15 @@
     }
     #prts-float-container.snap-left .prts-settings-panel { left: 55px; right: auto; transform: translateX(-20px) scale(0.95); transform-origin: top left; }
     #prts-float-container.prts-float-open .prts-settings-panel { visibility: visible; opacity: 1; transform: translateX(0) scale(1); pointer-events: auto; }
-    html.dark .prts-settings-panel { background: #18181c; border-color: #3f3f46; box-shadow: 0 4px 20px rgba(0,0,0,0.6); }
+    
+    body.dark .prts-settings-panel { background: #18181c; border-color: #3f3f46; box-shadow: 0 4px 20px rgba(0,0,0,0.6); }
+    /* 高对比度模式下保持一致的深色背景 */
+    body.high-contrast-theme .prts-settings-panel { background: #18181c; }
     
     .prts-panel-title { font-size: 14px; font-weight: bold; margin-bottom: 12px; color: #1f2937; display: flex; align-items: center; padding-bottom: 8px; border-bottom: 1px solid #f3f4f6; }
-    html.dark .prts-panel-title { color: #f3f4f6; border-color: #3f3f46; }
+    body.dark .prts-panel-title { color: #f3f4f6; border-color: #3f3f46; }
     .prts-panel-item { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; font-size: 13px; color: #4b5563; }
-    html.dark .prts-panel-item { color: #d1d5db; }
+    body.dark .prts-panel-item { color: #d1d5db; }
     
     .prts-switch { position: relative; display: inline-block; width: 36px; height: 20px; }
     .prts-switch input { opacity: 0; width: 0; height: 0; }
@@ -556,86 +327,21 @@
     .prts-slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; }
     input:checked + .prts-slider { background-color: #3b82f6; }
     input:checked + .prts-slider:before { transform: translateX(16px); }
-    html.dark .prts-slider { background-color: #4b5563; }
-    html.dark input:checked + .prts-slider { background-color: #2563eb; }
+    body.dark .prts-slider { background-color: #4b5563; }
+    body.dark input:checked + .prts-slider { background-color: #2563eb; }
 `;
 
     GM_addStyle(mergedStyles);
 
     // =========================================================================
-    //                            MODULE 3: 核心逻辑 - 暗黑模式 & 工具
+    //                            MODULE 3: 工具函数
     // =========================================================================
-
-    /**
-     * [V3.0 暗黑模式] 应用样式类名
-     * @param {boolean} enable 是否启用
-     */
-    function applyDarkMode(enable) {
-        const html = document.documentElement;
-        if (enable) {
-            html.classList.add('dark');
-        } else {
-            html.classList.remove('dark');
-        }
-        updateDarkModeButtonIcon(enable);
-    }
-
-    /**
-     * [V3.0 暗黑模式] 切换开关逻辑
-     */
-    function toggleDarkMode() {
-        isDarkMode = !isDarkMode;
-        localStorage.setItem(DARK_MODE_KEY, isDarkMode);
-        applyDarkMode(isDarkMode);
-    }
-
-    /**
-     * [V3.0 暗黑模式] 更新按钮图标状态
-     */
-    function updateDarkModeButtonIcon(isDark) {
-        const btn = document.getElementById('prts-mode-toggle');
-        if (!btn) return;
-
-        const moonSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
-        const sunSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`;
-
-        btn.innerHTML = isDark ? moonSvg : sunSvg;
-        btn.title = isDark ? "关闭暗黑模式" : "开启暗黑模式";
-        btn.style.color = isDark ? c.primary : '#5f6b7c';
-    }
 
     /**
      * [工具] XPath 元素查找
      */
     function getElementByXPath(path) {
         return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-    }
-
-    /**
-     * [V3.0 暗黑模式] 替换原生切换按钮
-     */
-    function manageDarkModeButton() {
-        const targetXPath = "/html/body/main/div/div[1]/div[4]/button[2]";
-        const oldButton = getElementByXPath(targetXPath);
-        // 隐藏原生按钮
-        if (oldButton && oldButton.id !== 'prts-mode-toggle') {
-            oldButton.style.display = 'none';
-        }
-
-        const containerXPath = "/html/body/main/div/div[1]/div[4]";
-        const container = getElementByXPath(containerXPath) || document.querySelector('.bp4-navbar .flex.md\\:gap-4.gap-3');
-
-        // 插入自定义按钮
-        if (container && !document.getElementById('prts-mode-toggle')) {
-            const myBtn = document.createElement('button');
-            myBtn.id = 'prts-mode-toggle';
-            myBtn.className = 'bp4-button bp4-minimal';
-            myBtn.type = 'button';
-            myBtn.style.marginLeft = '4px';
-            myBtn.onclick = toggleDarkMode;
-            container.appendChild(myBtn);
-            updateDarkModeButtonIcon(isDarkMode);
-        }
     }
 
     // =========================================================================
@@ -657,10 +363,40 @@
         const storedData = GM_getValue(OPS_STORAGE_KEY, '[]');
         try {
             const ops = JSON.parse(storedData);
-            ownedOpsSet = new Set(ops.filter(op => op.own === true).map(op => op.name));
+            ownedOpsSet = new Set();
+
+            if (Array.isArray(ops)) {
+                // 情况A: 纯字符串数组 (新版逻辑) ["A", "B"]
+                if (ops.length === 0 || typeof ops[0] === 'string') {
+                    ops.forEach(op => ownedOpsSet.add(op));
+                }
+                // 情况B: 对象数组 (旧版/Maa格式) [{"name":"A", "own":true}]
+                else {
+                    ops.forEach(op => {
+                        if (op.own !== false && op.name) {
+                            ownedOpsSet.add(op.name);
+                        }
+                    });
+                }
+            }
             console.log(`[Better PRTS] 已加载 ${ownedOpsSet.size} 名持有干员`);
         } catch (e) {
             console.error('[Better PRTS] 数据解析失败', e);
+            ownedOpsSet = new Set(); // 出错重置
+        }
+    }
+
+    /**
+     * [V10.1 交互] 更新导入按钮文本 (UI Sync)
+     */
+    function updateImportButtonUI() {
+        const btn = document.getElementById('btn-import');
+        if (!btn) return;
+
+        const count = ownedOpsSet.size;
+        const textSpan = btn.querySelector('.bp4-button-text');
+        if (textSpan) {
+            textSpan.innerText = count > 0 ? `导入干员 (${count})` : '导入干员';
         }
     }
 
@@ -674,18 +410,59 @@
         input.onchange = e => {
             const file = e.target.files[0];
             if (!file) return;
+
+            if (file.size > 2 * 1024 * 1024) {
+                alert('❌ 文件过大，请上传标准格式的干员数据文件');
+                return;
+            }
+
             const reader = new FileReader();
             reader.onload = event => {
                 try {
                     const jsonStr = event.target.result;
-                    const json = JSON.parse(jsonStr);
-                    if (!Array.isArray(json)) throw new Error("非数组格式");
-                    GM_setValue(OPS_STORAGE_KEY, jsonStr);
-                    loadOwnedOps();
-                    alert(`✅ 导入成功！\n共识别 ${json.length} 条数据，持有 ${ownedOpsSet.size} 名干员。`);
-                    if (currentFilterMode !== 'NONE') requestFilterUpdate();
+                    let json;
+                    try {
+                        json = JSON.parse(jsonStr);
+                    } catch (e) {
+                        alert('❌ 文件格式错误：不是有效的 JSON 文件');
+                        return;
+                    }
+
+                    if (!Array.isArray(json)) throw new Error("数据格式非数组");
+
+                    let names = [];
+                    // 逻辑复刻：支持纯字符串数组或 Maa 导出格式对象
+                    if (json.length === 0) {
+                         names = [];
+                    } else if (typeof json[0] === 'string') {
+                        names = json;
+                    } else if (typeof json[0] === 'object' && json[0] !== null && 'name' in json[0]) {
+                        names = json
+                            .filter(op => op?.own !== false && typeof op?.name === 'string')
+                            .map(op => String(op.name).trim())
+                            .filter(name => /^[a-zA-Z0-9\u4e00-\u9fa5\-\(\)\uff08\uff09]+$/.test(name));
+                    }
+
+                    if (names.length > 0) {
+                        const uniqueNames = Array.from(new Set(names));
+
+                        // 1. 持久化存储
+                        GM_setValue(OPS_STORAGE_KEY, JSON.stringify(uniqueNames));
+
+                        // 2. 更新内存状态
+                        ownedOpsSet = new Set(uniqueNames);
+
+                        // 3. [关键修复] 立即调用主渲染函数刷新按钮文字，无需等待定时器
+                        injectFilterControls();
+
+                        alert(`✅ 导入成功！\n共识别 ${uniqueNames.length} 名持有干员。`);
+                        if (currentFilterMode !== 'NONE') requestFilterUpdate();
+                    } else {
+                        alert('⚠️ 未能识别有效的干员数据，请检查文件格式');
+                    }
                 } catch (err) {
-                    alert('❌ 导入失败，请检查文件格式。\n' + err.message);
+                    console.error(err);
+                    alert('❌ 导入过程中发生未知错误: ' + err.message);
                 }
             };
             reader.readAsText(file);
@@ -736,7 +513,7 @@
     }
 
     /**
-     * [V10.3 UI组件] 注入筛选控制栏与Material图标
+     * [V10.3 UI组件] 注入筛选控制栏与 Blueprint 图标
      */
     function injectFilterControls() {
         if (isFilterDisabledPage()) {
@@ -750,61 +527,102 @@
         const searchRow = searchInputGroup.parentElement;
         if (!searchRow) return;
 
+        // 1. 确保容器存在
         let controlBar = document.getElementById('prts-filter-bar');
-        let isNew = false; // 标记是否是新建的
-
+        let isNew = false;
         if (!controlBar) {
             isNew = true;
             controlBar = document.createElement('div');
             controlBar.id = 'prts-filter-bar';
+        }
 
-            const createBpBtn = (text, svgPath, onClick, id) => {
-                const btn = document.createElement('button');
+        // 确保容器在正确的位置
+        if (searchRow.nextSibling !== controlBar) {
+            searchRow.parentNode.insertBefore(controlBar, searchRow.nextSibling);
+        }
+
+        // 2. 图标路径 (BlueprintJS 16x16 Standard Paths)
+        const paths = {
+            // Icon: import (PR: import) - 修正为 16px 适配路径
+            import: 'M11 6h3l-6 6-6-6h3V1h6v5zm-7 8v2h12v-2h-2v1H6v-1H4z',
+            // Icon: eye-open (PR: eye-open)
+            eyeOn: 'M8 3C3 3 0 8 0 8s3 5 8 5 8-5 8-5-3-5-8-5zm0 8c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z M8 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z',
+            // Icon: eye-off (PR: eye-off)
+            eyeOff: 'M6.41 7.83c-.03.39.07.79.31 1.12.24.34.59.58.98.68.39.1.81.02 1.15-.21.34-.23.59-.57.7-.96.1-.39.02-.8-.21-1.15-.16-.23-.38-.42-.64-.53L6.41 7.83z M2.05 2.64L1.03 3.66l2.54 2.54C2.22 6.75 1.12 7.34 0 8c0 0 4 5.6 8 5.6 1.41 0 2.71-.35 3.85-.96l2.08 2.09 1.02-1.02L2.05 2.64z M8 12c-2.21 0-4-1.79-4-4 0-.2.02-.39.05-.58l5.04 5.04c-1.24.74-3.46.59-1.09-.46z M13.57 11.6c.54-1.06.83-2.24.83-3.6 0 0-4-5.6-8-5.6-.69 0-1.34.09-1.98.25L6.07 4.3C6.68 4.1 7.33 4 8 4c2.21 0 4 1.79 4 4 0 .64-.14 1.24-.38 1.79l1.95 1.81z',
+            // Icon: confirm (PR: confirm / 完美阵容)
+            perfect: 'M13.76 3.84l-7.2 7.2L3.04 7.52 1.6 8.96l5.04 5.04 8.64-8.64z',
+            // Icon: people (PR: people / 允许助战)
+            support: 'M12 6.4c0-1.77-1.43-3.2-3.2-3.2S5.6 4.63 5.6 6.4s1.43 3.2 3.2 3.2 3.2-1.43 3.2-3.2zm-3.2 1.6c-.88 0-1.6-.72-1.6-1.6s.72-1.6 1.6-1.6 1.6.72 1.6 1.6-.72 1.6-1.6 1.6zm3.2-1.6c0-1.77-1.43-3.2-3.2-3.2-.45 0-.86.1-1.26.26.7.74 1.15 1.72 1.24 2.82.02.21.02.41 0 .62-.1 1.04-.51 1.98-1.16 2.71.37.13.75.19 1.18.19 1.77.01 3.2-1.42 3.2-3.4zM8.8 10.4H2.4c-.88 0-1.6.72-1.6 1.6v2.4h9.6V12c0-.88-.72-1.6-1.6-1.6zm-5.6 2.4h4.8v.8H3.2v-.8zm12-1.6h-4.8c.21 0 .4.03.59.07.67.15 1.29.44 1.81.85.91.71 1.5 1.81 1.57 3.04.01.1.01.18.03.28V12c0-.88-.72-1.6-1.6-1.6z'
+        };
+
+        // 3. 渲染辅助函数
+        const renderButton = (id, text, svgPath, onClick, active = false, disabled = false) => {
+            let btn = document.getElementById(id);
+            // 统一使用 viewBox 0 0 16 16
+            const innerHTML = `
+                <span class="bp4-icon" aria-hidden="true" style="margin-right:6px">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="${svgPath}"></path></svg>
+                </span>
+                <span class="bp4-button-text">${text}</span>
+            `;
+
+            if (!btn) {
+                btn = document.createElement('button');
                 btn.type = "button";
                 btn.className = 'prts-btn';
                 btn.id = id;
-                btn.innerHTML = `
-                    <span class="bp4-icon" aria-hidden="true" style="margin-right:6px">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="${svgPath}"></path></svg>
-                    </span>
-                    <span class="bp4-button-text">${text}</span>
-                `;
                 btn.onclick = onClick;
-                return btn;
-            };
-
-            const createDivider = () => {
-                const div = document.createElement('div');
-                div.className = 'prts-divider';
-                return div;
-            };
-
-            const paths = {
-                import: 'M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z',
-                eyeOn: 'M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z',
-                eyeOff: 'M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-4.01.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46A11.804 11.804 0 0 0 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z',
-                perfect: 'M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z',
-                support: 'M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z'
-            };
-
-            controlBar.append(
-                createBpBtn('导入干员', paths.import, handleImport, 'btn-import'),
-                createBpBtn(displayMode === 'GRAY' ? '置灰模式' : '隐藏模式', displayMode === 'GRAY' ? paths.eyeOn : paths.eyeOff, toggleDisplayMode, 'btn-setting'),
-                createDivider(),
-                createBpBtn('完美阵容', paths.perfect, () => toggleFilter('PERFECT'), 'btn-perfect'),
-                createBpBtn('允许助战', paths.support, () => toggleFilter('SUPPORT'), 'btn-support')
-            );
-        }
-
-        if (searchRow.nextSibling !== controlBar) {
-            searchRow.parentNode.insertBefore(controlBar, searchRow.nextSibling);
-
-            // [关键修复]：只有当元素真正插入 DOM 后，getElementById 才能找到它们并应用样式
-            // 如果是新创建的，或者位置发生了变动，我们都重新应用一次样式，确保万无一失
-            if (currentFilterMode !== 'NONE' || isNew) {
-                updateFilterButtonStyles();
-                requestFilterUpdate();
+                // 不在此处 append，由下方统一排序
             }
+
+            if (btn.innerHTML !== innerHTML) btn.innerHTML = innerHTML;
+
+            if (active && !btn.classList.contains('prts-active')) btn.classList.add('prts-active');
+            if (!active && btn.classList.contains('prts-active')) btn.classList.remove('prts-active');
+
+            if (disabled) {
+                btn.style.opacity = '0.5';
+                btn.style.cursor = 'not-allowed';
+            } else {
+                btn.style.opacity = '1';
+                btn.style.cursor = 'pointer';
+            }
+            return btn;
+        };
+
+        // 4. 按严格顺序构建/移动 DOM 节点
+
+        // (1) 导入按钮
+        const importText = ownedOpsSet.size > 0 ? `导入干员 (${ownedOpsSet.size})` : '导入干员';
+        const btnImport = renderButton('btn-import', importText, paths.import, handleImport);
+        controlBar.appendChild(btnImport);
+
+        // (2) 模式切换
+        const displayModeText = displayMode === 'GRAY' ? '置灰模式' : '隐藏模式';
+        const displayModeIcon = displayMode === 'GRAY' ? paths.eyeOn : paths.eyeOff;
+        const btnSetting = renderButton('btn-setting', displayModeText, displayModeIcon, toggleDisplayMode);
+        controlBar.appendChild(btnSetting);
+
+        // (3) 分割线
+        let divider = document.getElementById('prts-divider-el');
+        if (!divider) {
+            divider = document.createElement('div');
+            divider.className = 'prts-divider';
+            divider.id = 'prts-divider-el';
+        }
+        controlBar.appendChild(divider);
+
+        // (4) 完美阵容
+        const btnPerfect = renderButton('btn-perfect', '完美阵容', paths.perfect, () => toggleFilter('PERFECT'), currentFilterMode === 'PERFECT');
+        controlBar.appendChild(btnPerfect);
+
+        // (5) 允许助战
+        const btnSupport = renderButton('btn-support', '允许助战', paths.support, () => toggleFilter('SUPPORT'), currentFilterMode === 'SUPPORT');
+        controlBar.appendChild(btnSupport);
+
+        // 初始触发
+        if (isNew && currentFilterMode !== 'NONE') {
+            requestFilterUpdate();
         }
     }
 
@@ -1035,7 +853,7 @@
     }
 
     /**
-     * [V10.0 筛选核心] 应用筛选逻辑
+     * [V10.4 筛选核心] 应用筛选逻辑
      */
     function applyFilterLogic() {
         if (isFilterDisabledPage()) return;
@@ -1049,9 +867,7 @@
                 const cardInner = card.querySelector('.bp4-card');
                 if (!cardInner) return;
 
-                // 视觉优化
                 optimizeCardVisuals(card, cardInner);
-                // 链接清洗
                 cleanBilibiliLinks(cardInner);
 
                 let isUnavailable = false;
@@ -1065,6 +881,7 @@
                     tags.forEach(tag => {
                         if (tag.querySelector('h4')) return;
                         const text = tag.innerText.trim();
+                        // 排除非干员标签
                         if (['普通', '突袭', 'Beta'].includes(text) ||
                             text.includes('活动关卡') || text.includes('剿灭') || text.includes('危机合约') ||
                             text.includes('|') || text.startsWith('[') || text.includes('更新') ||
@@ -1085,18 +902,25 @@
                         }
                     });
 
+                    // 1. 判定是否“不可用” (用于决定是否置灰)
+                    // 完美模式: 只要缺人就不可用
                     if (currentFilterMode === 'PERFECT') {
                         if (missingCount > 0) isUnavailable = true;
-                    } else if (currentFilterMode === 'SUPPORT') {
+                    }
+                    // 助战模式: 缺人超过1个才不可用
+                    else if (currentFilterMode === 'SUPPORT') {
                         if (missingCount > 1) isUnavailable = true;
                     }
 
-                    if (isUnavailable) {
-                        statusType = 'missing';
-                        statusValue = missingCount;
-                    } else if (currentFilterMode === 'SUPPORT' && missingCount === 1) {
+                    // 2. 判定显示的状态标签 (颜色逻辑)
+                    if (currentFilterMode === 'SUPPORT' && missingCount === 1) {
+                        // 允许助战且正好缺1人 -> 琥珀色提示 (即使作业是“可用”的)
                         statusType = 'support';
                         statusValue = missingOpName;
+                    } else if (missingCount > 0) {
+                        // 其他缺人情况 -> 红色警告
+                        statusType = 'missing';
+                        statusValue = missingCount;
                     }
                 }
 
@@ -1115,7 +939,7 @@
                     if (hasGrayClass) card.classList.remove('prts-card-gray');
                 }
 
-                // 更新状态标签
+                // 更新状态标签 UI
                 const existingLabel = cardInner.querySelector('.prts-status-label');
                 if (!statusType) {
                     if (existingLabel) existingLabel.remove();
@@ -1125,10 +949,10 @@
                 let newHtml = '';
                 let newClass = 'prts-status-label';
                 if (statusType === 'support') {
-                    newClass += ' prts-label-support';
+                    newClass += ' prts-label-support'; // 琥珀色
                     newHtml = `<span class="bp4-icon" style="margin-right:6px;">🆘</span>需助战: ${statusValue}`;
                 } else {
-                    newClass += ' prts-label-missing';
+                    newClass += ' prts-label-missing'; // 红色
                     newHtml = `<span class="bp4-icon" style="margin-right:6px;">✘</span>缺 ${statusValue} 人`;
                 }
 
@@ -1286,9 +1110,7 @@
         title.innerHTML = `<span style="margin-right:auto">功能开关</span><span style="font-size:12px;opacity:0.6">刷新生效</span>`;
         panel.appendChild(title);
 
-        panel.appendChild(createSwitch('🌙 暗黑模式', isDarkMode, (val) => {
-            isDarkMode = val; localStorage.setItem(DARK_MODE_KEY, isDarkMode); applyDarkMode(isDarkMode);
-        }));
+        // 已移除暗黑模式开关，由网站原生 ThemeSwitchButton 接管
         panel.appendChild(createSwitch('🖼️ 作业卡片美化', CONFIG.visuals, (val) => {
             CONFIG.visuals = val; saveConfig(); if(val) requestFilterUpdate(); else location.reload();
         }));
@@ -1372,7 +1194,7 @@
                 if (centerX < winWidth / 2) {
                     container.style.left = '0px';
                     container.style.right = 'auto';
-                    container.classList.remove('snap-right');
+                    container.classList.remove('snap-left');
                     container.classList.add('snap-left');
                     isRight = false;
                 } else {
@@ -1404,15 +1226,12 @@
     // =========================================================================
 
     function init() {
-        applyDarkMode(isDarkMode);
         loadOwnedOps();
         createFloatingBall();
         injectFilterControls();
 
         // 全局 DOM 观察者
         const observer = new MutationObserver((mutations) => {
-            // 暗黑模式与界面元素守护
-            manageDarkModeButton();
             optimizeSidebar();
             optimizeDialogContent();
 
@@ -1467,7 +1286,6 @@
 
         // 保底定时器
         setInterval(() => {
-            manageDarkModeButton();
             optimizeSidebar();
             optimizeDialogContent();
             createFloatingBall();

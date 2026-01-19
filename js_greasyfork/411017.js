@@ -3,7 +3,7 @@
 // @name:de            TracklistToRYM
 // @name:en            TracklistToRYM
 // @namespace          sun/userscripts
-// @version            1.52.0
+// @version            1.53.0
 // @description        Imports an album's tracklist from various sources into Rate Your Music.
 // @description:de     Importiert die Tracklist eines Albums von verschiedenen Quellen in Rate Your Music.
 // @description:en     Imports an album's tracklist from various sources into Rate Your Music.
@@ -27,9 +27,11 @@
 // @connect            allmusic.com
 // @connect            amazon.com
 // @connect            ampwall.com
+// @connect            animelo.jp
 // @connect            apple.com
 // @connect            archive.org
 // @connect            audiomack.com
+// @connect            auone.jp
 // @connect            awa.fm
 // @connect            azurewebsites.net
 // @connect            baer.works
@@ -43,6 +45,8 @@
 // @connect            castalbums.org
 // @connect            deezer.com
 // @connect            discogs.com
+// @connect            docomo.ne.jp
+// @connect            dwango.jp
 // @connect            e-onkyo.com
 // @connect            freegalmusic.com
 // @connect            freemusicarchive.org
@@ -55,11 +59,14 @@
 // @connect            itch.zone
 // @connect            jam.coop
 // @connect            jiosaavn.com
+// @connect            joox.com
 // @connect            junodownload.com
 // @connect            karent.jp
 // @connect            khinsider.com
+// @connect            kkbox.com
 // @connect            last.fm
 // @connect            line.me
+// @connect            linkco.re
 // @connect            loot.co.za
 // @connect            maniadb.com
 // @connect            melon.com
@@ -67,6 +74,7 @@
 // @connect            migalmoreno.com
 // @connect            mirlo.space
 // @connect            mora.jp
+// @connect            music-book.jp
 // @connect            music-flo.com
 // @connect            musicbrainz.org
 // @connect            musik-sammler.de
@@ -78,12 +86,14 @@
 // @connect            nts.live
 // @connect            open.audio
 // @connect            oricon.co.jp
+// @connect            orimyu.com
 // @connect            ototoy.jp
 // @connect            pandora.com
 // @connect            pulsewidth.org.uk
 // @connect            qobuz.com
 // @connect            qq.com
 // @connect            radiofreefedi.net
+// @connect            rakuten.co.jp
 // @connect            rateyourmusic.com
 // @connect            rauversion.com
 // @connect            recochoku.jp
@@ -212,6 +222,18 @@
       index: "[data-testid='play-state-button'] div",
       title: "[data-testid='track-name']",
       length: ".ai_top.fv-num_tabular-nums div",
+    },
+    {
+      name: "animelo mix",
+      icon: "https://pc.animelo.jp/assets/animelo_pc/favicon-cec631885f6955626c361333cfe8e783.ico",
+      extractor: "node",
+      placeholder: "https://pc.animelo.jp/portals/album/*",
+      artist: ".portal-title-area .sub-title a",
+      album: ".contents-title",
+      parent: ".track",
+      index: ".track-number p",
+      title: ".title a",
+      length: false,
     },
     {
       name: "Apple Music",
@@ -443,6 +465,29 @@
       index: "td[class^=trackPos]",
       title: "td[class^=trackTitle] span",
       length: "td[class^=duration] span",
+    },
+    {
+      name: "dmusic",
+      extractor: "node",
+      placeholder: "https://dmusic.docomo.ne.jp/album/*",
+      artist: ".song-main__artist-link",
+      album: "h1",
+      parent:
+        ".section--page_album:first-of-type .track-list__item:not(.track-list--list_header)",
+      index: ".track-list__number",
+      title: ".track-list__title",
+      length: false,
+    },
+    {
+      name: "dwango.jp",
+      extractor: "node",
+      placeholder: "https://pc.dwango.jp/portals/album/*",
+      artist: ".portal-title-area .sub-title a",
+      album: ".contents-title",
+      parent: ".track",
+      index: ".track-number p",
+      title: ".title a",
+      length: false,
     },
     {
       name: "Encyclopaedia Metallum",
@@ -706,6 +751,17 @@
       length: false,
     },
     {
+      name: "JOOX",
+      extractor: "node",
+      placeholder: "https://www.joox.com/album/*",
+      artist: ".subLinkSection a",
+      album: "h1",
+      parent: ".SongListItem",
+      index: ".SongListCount span",
+      title: ".SongName a",
+      length: false,
+    },
+    {
       name: "Juno Download",
       extractor: "node",
       placeholder: "https://www.junodownload.com/products/*",
@@ -748,6 +804,23 @@
       length: ".clickable-row[align='right'] a",
     },
     {
+      name: "KKBOX",
+      extractor: "node",
+      placeholder: "https://www.kkbox.com/tw/tc/album/*",
+      artist: ".artist a",
+      album: "h1",
+      parent: ".content-tracks li",
+      index: ".index",
+      title: ".song a",
+      length: ".duration",
+      modifier: async (data) => {
+        let x = new DOMParser().parseFromString(data, "text/html");
+        for (const y of x.querySelectorAll(".artist a img")) y.remove();
+        x = new XMLSerializer().serializeToString(x);
+        return x;
+      },
+    },
+    {
       name: "Last.fm",
       extractor: "node",
       placeholder: "https://www.last.fm/music/*/*",
@@ -774,6 +847,17 @@
       },
     },
     {
+      name: "LinkCore",
+      extractor: "node",
+      placeholder: "https://linkco.re/*",
+      artist: "h2 a",
+      album: "h1",
+      parent: ".trackList > ul > li",
+      index: ".list_number",
+      title: ".list_song_title p:first-child",
+      length: false,
+    },
+    {
       name: "Loot.co.za",
       extractor: "node",
       placeholder: "https://www.loot.co.za/product/*/*",
@@ -786,6 +870,7 @@
     },
     {
       name: "maniadb.com",
+      icon: "https://i.maniadb.com/images/manialogo_2s.gif",
       extractor: "node",
       placeholder: "http://www.maniadb.com/album/*",
       artist: ".album-artist",
@@ -889,6 +974,28 @@
       },
     },
     {
+      name: "music.jp",
+      extractor: "node",
+      placeholder: "https://music-book.jp/music/Album/*",
+      artist: ".artist .text",
+      album: "h1 span",
+      parent: "section:first-of-type .list-item",
+      index: ".rank",
+      title: ".item-title",
+      length: false,
+    },
+    {
+      name: "Music Store",
+      extractor: "node",
+      placeholder: "https://musicstore.auone.jp/s/album/*",
+      artist: ".album-info__artist-inner",
+      album: "h1",
+      parent: "#albumList .album-track-list__item",
+      index: ".album-track-list__number",
+      title: ".album-track-list__title-inner",
+      length: ".album-track-list__spec",
+    },
+    {
       name: "Musik-Sammler",
       extractor: "node",
       placeholder: "https://www.musik-sammler.de/release/*",
@@ -989,6 +1096,24 @@
       },
     },
     {
+      name: "orimyu Store",
+      extractor: "node",
+      placeholder: "https://music.orimyu.com/php/cd/CdTop.php?cd=*",
+      artist: ".info a span",
+      album: ".info h1",
+      parent: "tr[itemprop]",
+      index: ".rank01",
+      title: ".truncate_h2 span",
+      length: "td:nth-child(5)",
+      modifier: async (data) => {
+        let x = new DOMParser().parseFromString(data, "text/html");
+        for (const y of x.querySelectorAll("meta[itemprop=duration]"))
+          y.remove();
+        x = new XMLSerializer().serializeToString(x);
+        return x;
+      },
+    },
+    {
       name: "OTOTOY",
       extractor: "node",
       placeholder: "https://ototoy.jp/_/default/p/*",
@@ -1041,6 +1166,22 @@
       index: ".songlist__number",
       title: ".songlist__songname_txt a",
       length: ".songlist__time",
+    },
+    {
+      name: "Rakuten Music",
+      extractor: "json",
+      placeholder: "https://music.rakuten.co.jp/link/album/*",
+      artist: "props.pageProps.apiResponse.data.artist.name",
+      album: "props.pageProps.apiResponse.data.name",
+      parent: "props.pageProps.apiResponse.data.songs",
+      index: false,
+      title: "name",
+      length: "time",
+      modifier: async (data) => {
+        let x = new DOMParser().parseFromString(data, "text/html");
+        x = x.getElementById("__NEXT_DATA__").textContent;
+        return x;
+      },
     },
     {
       name: "Rate Your Music",
@@ -1279,6 +1420,7 @@
     },
     {
       name: "Tent",
+      icon: "https://tent.sny.sh/asset.php?file=favicon.svg",
       extractor: "node",
       placeholder: "https://tent.sny.sh/release.php?*",
       artist: "h1 a",
@@ -1330,6 +1472,7 @@
     },
     {
       name: "TOWER RECORDS MUSIC",
+      icon: "https://tower.jp/favicon.ico",
       extractor: "node",
       placeholder: "https://music.tower.jp/album/detail/*",
       artist: ".p-content__name",
@@ -1353,7 +1496,7 @@
     },
     {
       name: "Tubo",
-      icon: "https://tubo.migalmoreno.com/icons/tubo.svg",
+      icon: "https://github.com/migalmoreno/tubo/raw/refs/heads/master/resources/src/icons/tubo.svg",
       extractor: "json",
       placeholder: "https://tubo.migalmoreno.com/playlist?url=*",
       artist: "uploader-name",
@@ -2120,6 +2263,7 @@
           }
           #ttrym-settings-wrapper #ttrym-icons button {
             background: none;
+            color: inherit;
             border: none;
             cursor: pointer;
             font-size: 1.5em;

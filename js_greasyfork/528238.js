@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         snooker.org ZHCN
-// @version      2.0.24
+// @version      2.0.26
 // @description  Basic Chinese UI for snooker.org
 // @author       Nan Zhu
 // @include      *://*snooker.org/*
@@ -142,7 +142,11 @@ const playerMap = {
   1697: "唐立",
   4937: "张啸",
   3199: "廖予生",
-  3745: "娄明*"
+  3745: "娄明*",
+  3143: "王均晋",
+  5006: "龚钲皓",
+  5007: "彭家朗",
+  5005: "彭启南"
 };
 
 const playerMapB = {
@@ -408,7 +412,8 @@ const tournamentNameGroup = {
   "亚太区Q Tour 5": [2458, 2008],
   "中东区Q Tour 1": [2494, 1949, 1638],
   "中东区Q Tour 2": [2495, 1993, 1639],
-  "中东区Q Tour 3": [2125, 1640],
+  "中东区Q Tour 3": [2575, 2125, 1640],
+  "中东区Q Tour 4": [2576],  
   "国际区Q Tour 1": [2424, 2043, 1549],
   "国际区Q Tour 2": [2425, 2044, 1550],
   "国际区Q Tour 3": [2426, 2045, 1551],

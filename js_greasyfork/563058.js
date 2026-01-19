@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Linux Do 自定义类别
 // @namespace    ddc/linux-do-custom-categories
-// @version      0.0.3
+// @version      0.0.4
 // @author       DDC(NaiveMagic)
 // @description  Linux Do Custom Categories
 // @license      MIT
@@ -728,6 +728,8 @@
   const ADD_BTN_ID = "custom-category-add-btn";
   const TITLE_TEXT_CLASS = "custom-category-title-text";
   const CUSTOM_CHECKBOX_CLASS = "custom-category-checkbox";
+  const NAME_INPUT_BOUND_ATTR = "data-custom-name-input-bound";
+  const EDIT_PANEL_BOUND_ATTR = "data-custom-category-edit-panel";
   function generateId() {
     return Math.random().toString(36).slice(2, 10);
   }
@@ -738,6 +740,7 @@
     originalDesc: "",
     originalSaveText: "",
     editingGroupId: null,
+    nameInputValue: "",
     nameInput: null,
     cleanup: null
   };
@@ -749,6 +752,7 @@
     state.isAddMode = false;
     state.selectedCategoryIds.clear();
     state.editingGroupId = null;
+    state.nameInputValue = "";
     state.nameInput = null;
     if (state.cleanup) {
       state.cleanup();
@@ -790,6 +794,19 @@
     titleEl.appendChild(wrapper);
     return wrapper;
   }
+  function getAddButtonHost(container) {
+    const modalTitle = container.querySelector(".d-modal__title-text");
+    if (modalTitle) {
+      return modalTitle;
+    }
+    const panelTitle = container.querySelector(
+      ".sidebar__edit-navigation-menu__title, .sidebar__edit-navigation-menu__header"
+    );
+    if (panelTitle) {
+      return panelTitle;
+    }
+    return container.querySelector(".sidebar__edit-navigation-menu");
+  }
   function enterAddMode(modal, onSave, options) {
     const editingGroup = options?.group ?? null;
     state.isAddMode = true;
@@ -798,7 +815,10 @@
       editingGroup.categoryIds.forEach((id) => state.selectedCategoryIds.add(id));
     }
     state.editingGroupId = editingGroup?.id ?? null;
-    const titleEl = modal.querySelector(".d-modal__title-text");
+    state.nameInputValue = editingGroup?.name ?? "";
+    const titleEl = modal.querySelector(
+      ".d-modal__title-text, .sidebar__edit-navigation-menu__title"
+    );
     const titleTextEl = titleEl ? getTitleTextElement(titleEl) : null;
     const descEl = modal.querySelector(".sidebar__edit-navigation-menu__deselect-wrapper");
     const saveBtn = modal.querySelector(".sidebar__edit-navigation-menu__save-button");
@@ -820,7 +840,15 @@
     if (addBtn) {
       addBtn.style.display = "none";
     }
-    const initialName = editingGroup?.name ?? "";
+    const bindNameInput = (input) => {
+      if (input.getAttribute(NAME_INPUT_BOUND_ATTR) === "true") {
+        return;
+      }
+      input.setAttribute(NAME_INPUT_BOUND_ATTR, "true");
+      input.addEventListener("input", () => {
+        state.nameInputValue = input.value;
+      });
+    };
     const ensureNameInput = () => {
       const currentDescEl = modal.querySelector(".sidebar__edit-navigation-menu__deselect-wrapper");
       if (!currentDescEl) {
@@ -829,8 +857,9 @@
       const existingNameInput = modal.querySelector("#custom-category-name-wrapper input");
       if (existingNameInput) {
         state.nameInput = existingNameInput;
-        if (existingNameInput.value !== initialName) {
-          existingNameInput.value = initialName;
+        bindNameInput(existingNameInput);
+        if (existingNameInput.value !== state.nameInputValue) {
+          existingNameInput.value = state.nameInputValue;
         }
         return;
       }
@@ -845,7 +874,8 @@
         placeholder: "输入名称",
         style: "flex: 1; padding: 6px 10px; border: 1px solid var(--primary-low); border-radius: 4px;"
       });
-      nameInput.value = initialName;
+      nameInput.value = state.nameInputValue;
+      bindNameInput(nameInput);
       inputWrapper.appendChild(nameInput);
       state.nameInput = nameInput;
       currentDescEl.after(inputWrapper);
@@ -1012,7 +1042,7 @@
         if (!state.isAddMode) return;
         e.preventDefault();
         e.stopPropagation();
-        const name = state.nameInput?.value.trim();
+        const name = (state.nameInputValue || state.nameInput?.value || "").trim();
         if (!name) {
           alert("请输入自定义类别名");
           return;
@@ -1050,9 +1080,11 @@
   }
   function injectAddButton(modal, onSave) {
     if (modal.querySelector(`#${ADD_BTN_ID}`)) return;
-    const titleEl = modal.querySelector(".d-modal__title-text");
-    if (!titleEl) return;
-    getTitleTextElement(titleEl);
+    const host = getAddButtonHost(modal);
+    if (!host) return;
+    if (host.classList.contains("d-modal__title-text")) {
+      getTitleTextElement(host);
+    }
     const btn = createEl("button", {
       id: ADD_BTN_ID,
       class: "btn btn-small btn-primary",
@@ -1064,35 +1096,74 @@
       e.stopPropagation();
       enterAddMode(modal, onSave);
     });
-    titleEl.appendChild(btn);
+    host.appendChild(btn);
   }
   function initModalObserver(onSave) {
+    const enhancePanel = (container) => {
+      if (!getAddButtonHost(container)) {
+        return;
+      }
+      if (container.getAttribute(EDIT_PANEL_BOUND_ATTR) === "true") {
+        return;
+      }
+      container.setAttribute(EDIT_PANEL_BOUND_ATTR, "true");
+      injectAddButton(container, onSave);
+      if (pendingEditGroup) {
+        const group = pendingEditGroup;
+        pendingEditGroup = null;
+        enterAddMode(container, onSave, { group });
+      }
+    };
+    const findEditPanelContainer = (node) => {
+      if (node.matches(".d-modal__container") && node.querySelector(".sidebar-categories-form")) {
+        return node;
+      }
+      const modal = node.querySelector(".d-modal__container");
+      if (modal && modal.querySelector(".sidebar-categories-form")) {
+        return modal;
+      }
+      if (node.matches(".sidebar__edit-navigation-menu") && node.querySelector(".sidebar-categories-form")) {
+        return node;
+      }
+      const panel = node.querySelector(".sidebar__edit-navigation-menu");
+      if (panel && panel.querySelector(".sidebar-categories-form")) {
+        return panel;
+      }
+      if (node.matches(".sidebar-categories-form")) {
+        return node.closest(".sidebar__edit-navigation-menu") ?? node.closest(".d-modal__container") ?? node.parentElement;
+      }
+      const form = node.querySelector(".sidebar-categories-form");
+      if (form) {
+        return form.closest(".sidebar__edit-navigation-menu") ?? form.closest(".d-modal__container") ?? form.parentElement;
+      }
+      return null;
+    };
     const observer = new MutationObserver((mutations) => {
       for (const mutation of mutations) {
         for (const node of mutation.addedNodes) {
           if (!(node instanceof HTMLElement)) continue;
-          const modal = node.matches(".d-modal__container") ? node : node.querySelector?.(".d-modal__container");
-          if (modal instanceof HTMLElement) {
-            const title = modal.querySelector(".d-modal__title-text");
-            if (title?.textContent?.includes("编辑类别导航")) {
-              injectAddButton(modal, onSave);
-              if (pendingEditGroup) {
-                const group = pendingEditGroup;
-                pendingEditGroup = null;
-                enterAddMode(modal, onSave, { group });
-              }
-            }
+          const container = findEditPanelContainer(node);
+          if (container) {
+            enhancePanel(container);
           }
         }
         for (const node of mutation.removedNodes) {
           if (!(node instanceof HTMLElement)) continue;
-          if (node.matches(".d-modal__container") || node.querySelector?.(".d-modal__container")) {
+          if (node.getAttribute(EDIT_PANEL_BOUND_ATTR) === "true" || node.querySelector?.(`[${EDIT_PANEL_BOUND_ATTR}="true"]`)) {
             resetState();
           }
         }
       }
     });
     observer.observe(document.body, { childList: true, subtree: true });
+    const initialPanels = document.querySelectorAll(
+      ".d-modal__container, .sidebar__edit-navigation-menu"
+    );
+    initialPanels.forEach((panel) => {
+      if (panel.querySelector(".sidebar-categories-form")) {
+        enhancePanel(panel);
+      }
+    });
   }
   const CATEGORY_LIST_SELECTOR$2 = "#sidebar-section-content-categories";
   const CATEGORY_SECTION_SELECTOR = '[data-section-name="categories"]';
@@ -1342,6 +1413,9 @@
   const CATEGORY_ICON_CACHE = new Map();
   let isTagIconFetchPending = false;
   let heatSettingsCache = null;
+  function isMobileView() {
+    return document.documentElement.classList.contains("mobile-view");
+  }
   function getLoadingIndicator() {
     return document.querySelector(LOADING_INDICATOR_SELECTOR);
   }
@@ -1373,7 +1447,7 @@
       display: block;
     }
 
-    .${CUSTOM_VIEW_CLASS} ${CONTENTS_SELECTOR} {
+    .${CUSTOM_VIEW_CLASS} ${CONTENTS_SELECTOR}:not(#${CUSTOM_LIST_CONTAINER_ID}) {
       display: none !important;
     }
 
@@ -1381,6 +1455,23 @@
     .${CUSTOM_VIEW_CLASS} #${HEADER_LIST_ID},
     .${CUSTOM_VIEW_CLASS} ${SHOW_MORE_SELECTOR} {
       display: none !important;
+    }
+
+    .mobile-view.${CUSTOM_VIEW_CLASS} #${CUSTOM_LIST_CONTAINER_ID} {
+      padding: 0 8px;
+    }
+
+    .mobile-view.${CUSTOM_VIEW_CLASS} #${CUSTOM_LIST_CONTAINER_ID} .topic-list {
+      width: 100%;
+    }
+
+    .mobile-view.${CUSTOM_VIEW_CLASS} #${CUSTOM_LIST_CONTAINER_ID} .topic-list-data {
+      padding-left: 0;
+      padding-right: 0;
+    }
+
+    .mobile-view.${CUSTOM_VIEW_CLASS} #${CUSTOM_LIST_CONTAINER_ID} .topic-item-metadata {
+      width: 100%;
     }
   `;
     const styleEl = createEl("style", { id: CUSTOM_VIEW_STYLE_ID }, [styles]);
@@ -1453,7 +1544,7 @@
     }
     const container = createEl("div", {
       id: CUSTOM_LIST_CONTAINER_ID,
-      class: CUSTOM_LIST_CONTAINER_CLASS
+      class: `${CUSTOM_LIST_CONTAINER_CLASS} contents`
     });
     const table = createEl("table", getTopicListTableAttributes());
     const caption = cloneTopicListCaption();
@@ -2116,6 +2207,21 @@
     }
     return createEl("td", { class: classes.join(" ") }, [link]);
   }
+  function createRepliesBadgeBlock(topic) {
+    const replies = getReplyCount(topic);
+    const link = createEl("a", {
+      href: `/t/${topic.slug}/${topic.id}/1`,
+      class: "badge-posts",
+      "aria-label": `${replies} 条回复，跳转到第一个帖子`
+    });
+    link.appendChild(createEl("span", { class: "number" }, [String(replies)]));
+    const classes = ["num", "posts-map", "posts", "topic-list-data"];
+    const likesHeat = getLikesHeatClass(topic);
+    if (likesHeat) {
+      classes.push(likesHeat);
+    }
+    return createEl("div", { class: classes.join(" ") }, [link]);
+  }
   function createViewsCell(topic) {
     const views = topic.views ?? 0;
     const viewsText = formatCompactNumber(views);
@@ -2130,6 +2236,9 @@
     }
     return createEl("td", { class: classes.join(" ") }, [span]);
   }
+  function getLastPostNumber(topic) {
+    return topic.highest_post_number ?? topic.posts_count ?? 1;
+  }
   function createActivityCell(topic) {
     const activityTitle = buildActivityTitle(topic.created_at, topic.last_posted_at, topic.bumped_at);
     const activityAttrs = {
@@ -2138,7 +2247,7 @@
     if (activityTitle) {
       activityAttrs.title = activityTitle;
     }
-    const lastPostNumber = topic.highest_post_number ?? topic.posts_count ?? 1;
+    const lastPostNumber = getLastPostNumber(topic);
     const link = createEl("a", {
       href: `/t/${topic.slug}/${topic.id}/${lastPostNumber}`,
       class: "post-activity"
@@ -2151,7 +2260,94 @@
     link.appendChild(relativeDate);
     return createEl("td", activityAttrs, [link]);
   }
+  function createMobileAvatar(topic, users) {
+    const poster = topic.posters[0];
+    if (!poster) {
+      return null;
+    }
+    const user = users.get(poster.user_id);
+    if (!user) {
+      return null;
+    }
+    const lastPostNumber = getLastPostNumber(topic);
+    const link = createEl("a", {
+      href: `/t/${topic.slug}/${topic.id}/${lastPostNumber}`,
+      "data-user-card": user.username
+    });
+    const img = createEl("img", {
+      alt: "",
+      width: "48",
+      height: "48",
+      loading: "lazy",
+      src: buildAvatarUrl(user),
+      class: "avatar",
+      title: buildPosterTitle(user, poster)
+    });
+    link.appendChild(img);
+    const wrapper = createEl("div", { class: "pull-left" }, [link]);
+    return wrapper;
+  }
+  function createMobileActivityBlock(topic) {
+    const activityTitle = buildActivityTitle(topic.created_at, topic.last_posted_at, topic.bumped_at);
+    const spanAttrs = { class: "age activity" };
+    if (activityTitle) {
+      spanAttrs.title = activityTitle;
+    }
+    const lastPostNumber = getLastPostNumber(topic);
+    const link = createEl("a", {
+      href: `/t/${topic.slug}/${topic.id}/${lastPostNumber}`
+    });
+    const relativeDate = createEl("span", {
+      class: "relative-date",
+      "data-time": String(new Date(topic.bumped_at).getTime()),
+      "data-format": "tiny"
+    }, [formatRelativeTimeTiny(topic.bumped_at)]);
+    link.appendChild(relativeDate);
+    const span = createEl("span", spanAttrs, [link]);
+    return createEl("div", { class: "num activity last" }, [span]);
+  }
+  function createTopicRowMobile(topic, users, categories) {
+    const category = categories.get(topic.category_id);
+    const parentCategory = category?.parent_category_id ? categories.get(category.parent_category_id) : void 0;
+    const tr = createEl("tr", {
+      class: buildTopicRowClass(topic, category, parentCategory),
+      "data-topic-id": String(topic.id)
+    });
+    const td = createEl("td", { class: "topic-list-data" });
+    const avatar = createMobileAvatar(topic, users);
+    if (avatar) {
+      td.appendChild(avatar);
+    }
+    const metadata = createEl("div", { class: "topic-item-metadata right" });
+    const mainLink = createEl("div", { class: "main-link" });
+    mainLink.appendChild(createTopicStatuses(topic));
+    mainLink.appendChild(createTopicTitleLink(topic));
+    mainLink.appendChild(createTopicBadges(topic));
+    metadata.appendChild(mainLink);
+    const pullRight = createEl("div", { class: "pull-right" }, [
+      createRepliesBadgeBlock(topic)
+    ]);
+    metadata.appendChild(pullRight);
+    const stats = createEl("div", { class: "topic-item-stats clearfix" });
+    const categoryTags = createEl("span", { class: "topic-item-stats__category-tags" });
+    if (category) {
+      categoryTags.appendChild(createCategoryBadge(category, categories));
+    }
+    const tagsList = createTagsList(topic.tags);
+    if (tagsList) {
+      categoryTags.appendChild(tagsList);
+    }
+    stats.appendChild(categoryTags);
+    stats.appendChild(createMobileActivityBlock(topic));
+    metadata.appendChild(stats);
+    td.appendChild(metadata);
+    tr.appendChild(td);
+    return tr;
+  }
   function createTopicRow(topic, users, categories) {
+    if (isMobileView()) {
+      return createTopicRowMobile(topic, users, categories);
+    }
     const category = categories.get(topic.category_id);
     const parentCategory = category?.parent_category_id ? categories.get(category.parent_category_id) : void 0;
     const tr = createEl("tr", {
@@ -2364,12 +2560,13 @@
   const CATEGORY_LINK_SELECTOR = "a.sidebar-section-link";
   const CUSTOM_GROUP_ATTR = "data-custom-group-id";
   const CUSTOM_LISTENER_ATTR = "data-custom-category-listener";
+  const LOGO_LISTENER_ATTR = "data-custom-logo-listener";
   const CUSTOM_URL_PREFIX = "/custom-c/";
   const LIST_AREA_SELECTOR = "#list-area";
   const PENDING_CUSTOM_GROUP_KEY = "custom-category-pending-group";
   function buildCustomUrl(name) {
     const encodedName = encodeURIComponent(name.trim());
-    return `${window.location.origin}/custom-c/${encodedName}`;
+    return `${window.location.origin}${CUSTOM_URL_PREFIX}${encodedName}`;
   }
   function updateUrlToCustom(name) {
     const targetUrl = buildCustomUrl(name);
@@ -2385,10 +2582,18 @@
     const fallbackUrl = new URL("/latest", window.location.origin);
     const hopUrl = intermediateUrl.href === targetUrl.href ? fallbackUrl : intermediateUrl;
     window.history.pushState(window.history.state, document.title, hopUrl.href);
-    window.dispatchEvent(new PopStateEvent("popstate", { state: window.history.state }));
+    window.dispatchEvent(
+      new PopStateEvent("popstate", { state: window.history.state })
+    );
     window.setTimeout(() => {
-      window.history.pushState(window.history.state, document.title, targetUrl.href);
-      window.dispatchEvent(new PopStateEvent("popstate", { state: window.history.state }));
+      window.history.pushState(
+        window.history.state,
+        document.title,
+        targetUrl.href
+      );
+      window.dispatchEvent(
+        new PopStateEvent("popstate", { state: window.history.state })
+      );
     }, 0);
   }
   function getCustomGroupNameFromPath(pathname) {
@@ -2450,7 +2655,28 @@
     if (path.startsWith("/tag/")) {
       return true;
     }
+    if (path.startsWith(CUSTOM_URL_PREFIX)) {
+      return true;
+    }
     return false;
+  }
+  function isHomeLink(link) {
+    const href = link.getAttribute("href");
+    if (!href) {
+      return false;
+    }
+    try {
+      const url = new URL(href, window.location.origin);
+      return url.origin === window.location.origin && url.pathname === "/";
+    } catch (error) {
+      return false;
+    }
+  }
+  function isLogoLink(link) {
+    if (link.querySelector("#site-logo")) {
+      return true;
+    }
+    return link.closest(".title") !== null;
   }
   function redirectFromCustomUrlIfNeeded() {
     const customName = getCustomGroupNameFromPath(window.location.pathname);
@@ -2572,7 +2798,11 @@
     updateUrlToCustom(group.name);
     showLoading();
     try {
-      const data = await fetchMergedTopics(group.categoryIds, new Map(), controller.signal);
+      const data = await fetchMergedTopics(
+        group.categoryIds,
+new Map(),
+        controller.signal
+      );
       if (activeRequestId !== requestId || controller.signal.aborted) {
         return;
       }
@@ -2587,7 +2817,8 @@
     }
   }
   async function loadMore() {
-    if (!currentGroup || !currentData || !currentData.hasMore || isLoading) return;
+    if (!currentGroup || !currentData || !currentData.hasMore || isLoading)
+      return;
     const { controller, requestId } = startRequest();
     showLoading();
     try {
@@ -2601,7 +2832,9 @@
       }
       currentData.topics.push(...data.topics);
       data.users.forEach((u, id) => currentData.users.set(id, u));
-      data.categories.forEach((category, id) => currentData.categories.set(id, category));
+      data.categories.forEach(
+        (category, id) => currentData.categories.set(id, category)
+      );
       currentData.hasMore = data.hasMore;
       currentData.pageOffsets = data.pageOffsets;
       data.categories = currentData.categories;
@@ -2662,6 +2895,34 @@
       true
     );
   }
+  function initLogoClickListener() {
+    const body = document.body;
+    if (!body || body.getAttribute(LOGO_LISTENER_ATTR) === "true") {
+      return;
+    }
+    body.setAttribute(LOGO_LISTENER_ATTR, "true");
+    body.addEventListener(
+      "click",
+      (event) => {
+        if (!activeCustomUrl) {
+          return;
+        }
+        const target = event.target instanceof Element ? event.target : event.target instanceof Node ? event.target.parentElement : null;
+        if (!target) {
+          return;
+        }
+        const link = target.closest("a[href]");
+        if (!link) {
+          return;
+        }
+        if (!isLogoLink(link) || !isHomeLink(link)) {
+          return;
+        }
+        cancelActiveOperation();
+      },
+      true
+    );
+  }
   function handleRefresh() {
     refreshSidebar(handleGroupClick);
   }
@@ -2669,11 +2930,14 @@
     if (redirectFromCustomUrlIfNeeded()) {
       return;
     }
-    await injectSidebar(handleGroupClick);
+    void injectSidebar(handleGroupClick).catch((error) => {
+      console.warn("Sidebar not ready yet, will retry on DOM changes:", error);
+    });
     initModalObserver(handleRefresh);
     initMenu();
     initLocationObserver();
     initCategoryClickListener();
+    initLogoClickListener();
     window.addEventListener("scroll", handleScroll);
     scheduleCategoryMetadataPrefetch();
     scheduleTagIconPrefetch();

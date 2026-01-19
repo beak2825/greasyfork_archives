@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         DBD-RawsBanHelper
 // @namespace    http://tampermonkey.net/
-// @version      3.1
+// @version      3.2
 // @description  过滤动漫花园、末日动漫、Nyaa和蜜柑计划中的DBD-Raws与731学院内容，并修复行颜色问题
-// @description:zh-CN  3.1更新内容：过滤关键词现在分为全局过滤和站点过滤，导入导出时也支持不同站点的区分，控制面板也进行相应的调整，修复了TOC对Nyaa中正常内容的错误过滤
+// @description:zh-CN  3.2更新内容：修复了直接进入蜜柑计划时没有过滤731学院的问题，并在将其删除后对相应的网页元素进行调整
 // @author       Fuck DBD-Raws
 // @license      MIT
 // @match        *://*.dmhy.org/*
@@ -71,12 +71,23 @@
 
     // 过滤特定内容（我的英雄学院）
     function filter731() {
-        const bullshits = document.querySelectorAll('[title~=我的英雄学院]');
+        const bullshits = document.querySelectorAll('[title*=我的英雄学院]');
         bullshits.forEach(bullshit => {
             if (window.location.href.includes('/Home/Search')) {
                 bullshit.parentNode.parentNode.parentNode.parentNode.remove();
             } else {
                 bullshit.parentNode.parentNode.parentNode.remove();
+            }
+        });
+
+        // ✅ 新增功能：检查 ul.list-inline.an-ul 是否为空
+        const uls = document.querySelectorAll('ul.list-inline.an-ul');
+        uls.forEach(ul => {
+            if (ul.children.length === 0) {
+                // 如果没有子元素，则删除父元素
+                if (ul.parentNode) {
+                    ul.parentNode.remove();
+                }
             }
         });
     }
@@ -353,6 +364,10 @@
                 console.log('ℹ️蜜柑计划展开过滤逻辑已绑定点击事件');
             }
         }, 500);
+    }
+
+    if (location.hostname.includes('mikanani.kas.pub')) {
+        window.addEventListener('load', filter731);
     }
 
     window.addEventListener('load', filterContent);

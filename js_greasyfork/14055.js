@@ -4,7 +4,7 @@
 // @description Улучшенный рынок
 // @include     /^https{0,1}:\/\/((www|mirror)\.heroeswm\.ru|my\.lordswm\.com)\/auction\.php.*/
 // @exclude     /.+cat=(res|elements|dom|cert|part).*/
-// @version     1.0.21
+// @version     1.0.22
 // @downloadURL https://update.greasyfork.org/scripts/14055/GN_Market.user.js
 // @updateURL https://update.greasyfork.org/scripts/14055/GN_Market.meta.js
 // ==/UserScript==
@@ -741,8 +741,8 @@ function show_proper_artefacts(){
     current.ppb = current.price/current.cur_dur;
 
     var desc = current.dom.querySelector('td[valign="top"]');
-    var lot_link = desc.firstChild;
-    lot_link.setAttribute('href', document.location + '#' + current.lotid);
+    //var lot_link = desc.firstChild;
+    //lot_link.setAttribute('href', document.location + '#' + current.lotid);
 
     var ppb = document.getElementById(script_name + 'PPB' + current.lotid);
 

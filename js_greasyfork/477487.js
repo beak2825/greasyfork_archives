@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         哔哩哔哩新版首页排版调整和去广告(bilibili)
 // @namespace    http://tampermonkey.net/
-// @version      2.1.1
+// @version      2.2.1
 // @author       Ling2Ling4
 // @description  调整B站首页每行的视频数, 可屏蔽首页和视频页的广告, 可自定义过滤视频
 // @license      MIT
@@ -9,6 +9,7 @@
 // @match        *://www.bilibili.com/
 // @match        *://www.bilibili.com/?*
 // @match        *://www.bilibili.com/video/*
+// @require      https://cdn.jsdelivr.net/npm/spark-md5@3.0.2/spark-md5.min.js
 // @require      https://cdn.jsdelivr.net/npm/umd-react@19.2.1/dist/react.production.min.js
 // @require      https://cdn.jsdelivr.net/npm/umd-react@19.2.1/dist/react-dom.production.min.js
 // @grant        GM_addStyle
@@ -1373,7 +1374,8 @@ ${rules.map((r) => `  • ${r.name}`).join("\n")}`;
     enableVideoGrid: false,
     videosPerRow: 5,
     enableCustomFilters: false,
-    customFilterRules: ""
+    customFilterRules: "",
+    fillEmptySpace: true
   };
   const FILTER_HELP_TEXT = `每行一条规则（满足任意一条即过滤）。
 支持逻辑运算符：&& (与), || (或)。
@@ -1418,11 +1420,20 @@ defaultCollapsed: false,
             key: "videosPerRow",
             label: "每行视频数量",
             type: "slider",
-            min: 3,
-            max: 8,
+            min: 2,
+            max: 10,
             step: 1,
             defaultValue: 6,
-            description: "设置首页每行显示的视频卡片数量（3-8个）。需开启“调整首页视频密度”才能生效。",
+            description: "设置首页每行显示的视频卡片数量（2-10个）。需开启“调整首页视频密度”才能生效。",
+            hidden: (data) => !data.enableVideoGrid
+          },
+          {
+            key: "fillEmptySpace",
+            label: "加载视频以填补空白",
+            type: "boolean",
+            defaultValue: true,
+            fullWidth: true,
+            description: "调整网格后，自动请求额外视频以填满第一屏空缺(仅在页面加载时执行一次)。",
             hidden: (data) => !data.enableVideoGrid
           }
         ]
@@ -1438,6 +1449,7 @@ defaultCollapsed: false,
             label: "启用智能去广告",
             type: "boolean",
             defaultValue: true,
+            fullWidth: true,
             description: "根据当前访问的页面（首页/视频页）智能匹配并移除对应的广告元素。"
           },
           {
@@ -1454,7 +1466,7 @@ defaultCollapsed: false,
         id: "custom-filter",
         title: "自定义视频过滤",
         color: "#f59e0b",
-defaultCollapsed: false,
+defaultCollapsed: true,
         controls: [
           {
             key: "enableCustomFilters",
@@ -1572,10 +1584,329 @@ defaultCollapsed: false,
     }
     return false;
   };
+  const WbiUtils = {
+    mixinKeyEncTab: [
+      46,
+      47,
+      18,
+      2,
+      53,
+      8,
+      23,
+      32,
+      15,
+      50,
+      10,
+      31,
+      58,
+      3,
+      45,
+      35,
+      27,
+      43,
+      5,
+      49,
+      33,
+      9,
+      42,
+      19,
+      29,
+      28,
+      14,
+      39,
+      12,
+      38,
+      41,
+      13,
+      37,
+      48,
+      7,
+      16,
+      24,
+      55,
+      40,
+      61,
+      26,
+      17,
+      0,
+      1,
+      60,
+      51,
+      30,
+      4,
+      22,
+      25,
+      54,
+      21,
+      56,
+      59,
+      6,
+      63,
+      57,
+      62,
+      11,
+      36,
+      20,
+      34,
+      44,
+      52
+    ],
+getMixinKey(orig) {
+      let temp = "";
+      this.mixinKeyEncTab.forEach((n) => {
+        if (n < orig.length) {
+          temp += orig[n];
+        }
+      });
+      return temp.slice(0, 32);
+    },
+
+async getWbiKeys() {
+      const CACHE_KEY = "tm_bili_wbi_keys";
+      const cache = localStorage.getItem(CACHE_KEY);
+      if (cache) {
+        try {
+          const { img_key: img_key2, sub_key: sub_key2, ts } = JSON.parse(cache);
+          if (Date.now() - ts < 24 * 3600 * 1e3) {
+            return { img_key: img_key2, sub_key: sub_key2 };
+          }
+        } catch (e) {
+          localStorage.removeItem(CACHE_KEY);
+        }
+      }
+      const resp = await fetch("https://api.bilibili.com/x/web-interface/nav");
+      const json = await resp.json();
+      const { img_url, sub_url } = json.data.wbi_img;
+      const img_key = img_url.substring(img_url.lastIndexOf("/") + 1, img_url.lastIndexOf("."));
+      const sub_key = sub_url.substring(sub_url.lastIndexOf("/") + 1, sub_url.lastIndexOf("."));
+      localStorage.setItem(CACHE_KEY, JSON.stringify({
+        img_key,
+        sub_key,
+        ts: Date.now()
+      }));
+      return { img_key, sub_key };
+    },
+async encWbi(params) {
+      const { img_key, sub_key } = await this.getWbiKeys();
+      const mixin_key = this.getMixinKey(img_key + sub_key);
+      const curr_time = Math.round(Date.now() / 1e3);
+      const newParams = { ...params, wts: curr_time };
+      const sortedKeys = Object.keys(newParams).sort();
+      const queryParts = [];
+      sortedKeys.forEach((key) => {
+        const value = newParams[key];
+        const cleanVal = encodeURIComponent(value).replace(/[!'()*]/g, "");
+        queryParts.push(`${encodeURIComponent(key)}=${cleanVal}`);
+      });
+      const queryString = queryParts.join("&");
+      const w_rid = SparkMD5.hash(queryString + mixin_key);
+      return `${queryString}&w_rid=${w_rid}`;
+    }
+  };
+  const STORAGE_KEY_IDX = "tm_bili_feed_idx";
+  function getNextRefreshIndex() {
+    let idx = 1;
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY_IDX);
+      if (saved) {
+        idx = parseInt(saved, 10);
+        if (isNaN(idx)) idx = 1;
+      }
+    } catch (e) {
+    }
+    idx += 1;
+    localStorage.setItem(STORAGE_KEY_IDX, idx.toString());
+    return idx;
+  }
+  async function fetchRecommendVideos(options = {}) {
+    const currentIdx = getNextRefreshIndex();
+    const baseParams = {
+      web_location: 1430650,
+      y_num: 5,
+feed_version: "V8",
+fresh_type: options.fresh_type || 3,
+      ps: options.ps || 10,
+fresh_idx: currentIdx,
+fresh_idx_1h: currentIdx
+};
+    const queryStr = await WbiUtils.encWbi(baseParams);
+    const url = `https://api.bilibili.com/x/web-interface/wbi/index/top/feed/rcmd?${queryStr}`;
+    try {
+      const response = await fetch(url);
+      const result = await response.json();
+      if (result.code !== 0) {
+        console.error("Bilibili API Error:", result.message);
+        return [];
+      }
+      const videos = result.data.item.filter((item) => item.goto === "av");
+      return videos;
+    } catch (error) {
+      console.error("Fetch Failed:", error);
+      return [];
+    }
+  }
+  const getVideoCardHTML = (videoInfo) => {
+    const { playCountText, danmaku, duration, videoTitle, videoId, videoCover, userId, userName, publishTime } = videoInfo;
+    return `<div class="feed-card bili-ad-remover-filled-card" data-v-33e1fa42="">
+    <div class="bili-feed-card" data-v-33e1fa42="">
+      <div class="bili-video-card is-rcmd enable-no-interest" style="--cover-radio:56.25%;"><!----><!---->
+        <div class="bili-video-card__wrap">
+          <div class="bili-video-card__no-interest" style="display: none;">
+            <div class="bili-video-card__no-interest--inner">
+              <div class="bili-video-card__no-interest--left"><svg xmlns="http://www.w3.org/2000/svg"
+                  xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 36 36" width="36" height="36"
+                  class="no-interest-icon" fill="currentColor">
+                  <path
+                    d="M3 18C3 9.715724999999999 9.715724999999999 3 18 3C26.284274999999997 3 33 9.715724999999999 33 18C33 26.284274999999997 26.284274999999997 33 18 33C9.715724999999999 33 3 26.284274999999997 3 18zM12.796710000000001 12.694004999999999C12.358049999999999 12.253995 11.645745 12.2529 11.205735 12.691575C10.765709999999999 13.130234999999999 10.764615 13.842555 11.20329 14.282565000000002L13.41144 16.494975L11.20329 18.7074C10.764615 19.147350000000003 10.765709999999999 19.8597 11.205735 20.298375C11.645745 20.73705 12.358049999999999 20.735925 12.796710000000001 20.295975L15.2682 17.81895C15.99795 17.087175000000002 15.99795 15.902775000000002 15.2682 15.17097L12.796710000000001 12.694004999999999zM24.794325 12.691575C24.354300000000002 12.2529 23.64195 12.253995 23.203274999999998 12.694004999999999L20.7318 15.17097C20.00205 15.902775000000002 20.00205 17.087175000000002 20.7318 17.81895L23.203274999999998 20.295975C23.64195 20.735925 24.354300000000002 20.73705 24.794325 20.298375C25.234274999999997 19.8597 25.2354 19.147350000000003 24.796725000000002 18.7074L22.588575 16.494975L24.796725000000002 14.282565000000002C25.2354 13.842555 25.234274999999997 13.130234999999999 24.794325 12.691575zM15.900974999999999 24.68535C16.843875 23.425575000000002 17.722649999999998 23.257199999999997 18 23.257199999999997C18.277350000000002 23.257199999999997 19.15605 23.425575000000002 20.099025 24.68535C20.471024999999997 25.182975 21.176025 25.284675 21.67365 24.912675C22.171274999999998 24.540599999999998 22.273049999999998 23.8356 21.900975 23.33805C20.5938 21.591 19.082024999999998 21.007199999999997 18 21.007199999999997C16.917900000000003 21.007199999999997 15.406125 21.591 14.09898 23.33805C13.72692 23.8356 13.82871 24.540599999999998 14.326305 24.912675C14.823929999999999 25.284675 15.5289 25.182975 15.900974999999999 24.68535z"
+                    fill="currentColor"></path>
+                </svg><span class="no-interest-title">不感兴趣</span><span class="no-interest-desc">将减少此类内容推荐</span></div>
+              <div class="bili-video-card__no-interest--right">
+                <div class="revert-btn"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                    viewBox="0 0 24 24" width="24" height="24" class="revert-icon" fill="currentColor">
+                    <path
+                      d="M8.28032 2.46967C8.57321 2.76257 8.57321 3.23744 8.28032 3.53033L4.81065 7L8.28032 10.46965C8.57321 10.76255 8.57321 11.23745 8.28032 11.53035C7.98743 11.8232 7.51254 11.8232 7.21966 11.53035L3.57321 7.88389C3.08505 7.39573 3.08505 6.60428 3.57321 6.11612L7.21966 2.46967C7.51254 2.17678 7.98743 2.17678 8.28032 2.46967z"
+                      fill="currentColor"></path>
+                    <path
+                      d="M3.75 7C3.75 6.58579 4.08579 6.25 4.5 6.25L14.25 6.25C17.97795 6.25 21 9.27208 21 13C21 16.72795 17.97795 19.75 14.25 19.75L7.5 19.75C7.08579 19.75 6.75 19.4142 6.75 19C6.75 18.5858 7.08579 18.25 7.5 18.25L14.25 18.25C17.1495 18.25 19.5 15.8995 19.5 13C19.5 10.10052 17.1495 7.75 14.25 7.75L4.5 7.75C4.08579 7.75 3.75 7.41421 3.75 7z"
+                      fill="currentColor"></path>
+                  </svg> 撤销 </div>
+              </div>
+            </div>
+          </div><a class="bili-video-card__image--link" href="https://www.bilibili.com/video/${videoId}" target="_blank"
+            data-spmid="333.1007" data-mod="tianma.3-4-10" data-idx="click">
+            <div class="bili-video-card__image">
+              <div class="bili-video-card__image--wrap">
+                <div class="bili-watch-later--wrap">
+                  <div class="bili-watch-later bili-watch-later--pip" style="display: none;"><svg
+                      xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 20 20"
+                      width="20" height="20" fill="currentColor" class="bili-watch-later__icon">
+                      <path
+                        d="M10 3.1248000000000005C6.20305 3.1248000000000005 3.1250083333333336 6.202841666666667 3.1250083333333336 9.999833333333335C3.1250083333333336 13.796750000000001 6.20305 16.874833333333335 10 16.874833333333335C11.898291666666667 16.874833333333335 13.615833333333333 16.106291666666667 14.860625 14.861916666666666C15.104708333333335 14.617916666666666 15.500416666666668 14.617958333333334 15.7445 14.862041666666668C15.9885 15.106166666666669 15.988416666666668 15.501916666666666 15.744333333333334 15.745958333333334C14.274750000000001 17.215041666666668 12.243041666666667 18.124833333333335 10 18.124833333333335C5.512691666666667 18.124833333333335 1.8750083333333334 14.487125 1.8750083333333334 9.999833333333335C1.8750083333333334 5.512483333333334 5.512691666666667 1.8748000000000002 10 1.8748000000000002C14.487291666666668 1.8748000000000002 18.125 5.512483333333334 18.125 9.999833333333335C18.125 10.304458333333333 18.108208333333334 10.605458333333333 18.075458333333337 10.901791666666668C18.0375 11.244916666666667 17.728625 11.492291666666667 17.385583333333333 11.454333333333334C17.0425 11.416416666666667 16.795083333333334 11.107541666666668 16.833000000000002 10.764458333333334C16.860750000000003 10.513625000000001 16.875 10.2585 16.875 9.999833333333335C16.875 6.202841666666667 13.796958333333333 3.1248000000000005 10 3.1248000000000005z"
+                        fill="currentColor"></path>
+                      <path
+                        d="M15.391416666666666 9.141166666666667C15.635458333333334 8.897083333333335 16.031208333333332 8.897083333333335 16.275291666666668 9.141166666666667L17.5 10.365875L18.72475 9.141166666666667C18.968791666666668 8.897083333333335 19.364541666666668 8.897083333333335 19.608625 9.141166666666667C19.852666666666668 9.385291666666667 19.852666666666668 9.780958333333334 19.608625 10.025083333333333L18.08925 11.544416666666669C17.763833333333334 11.869833333333334 17.236208333333334 11.869833333333334 16.91075 11.544416666666669L15.391416666666666 10.025083333333333C15.147333333333334 9.780958333333334 15.147333333333334 9.385291666666667 15.391416666666666 9.141166666666667z"
+                        fill="currentColor"></path>
+                      <path
+                        d="M12.499333333333334 9.278375C13.05475 9.599 13.05475 10.400666666666668 12.499333333333334 10.721291666666668L9.373916666666666 12.525791666666668C8.818541666666667 12.846416666666666 8.124274999999999 12.445583333333333 8.124274999999999 11.804291666666668L8.124274999999999 8.1954C8.124274999999999 7.554066666666667 8.818541666666667 7.153233333333334 9.373916666666666 7.473900000000001L12.499333333333334 9.278375z"
+                        fill="currentColor"></path>
+                    </svg><span class="bili-watch-later__tip--lab" style="display: none;">添加至稍后再看</span><!----></div>
+                </div>
+                <picture class="v-img bili-video-card__cover" data-v-d613d352=""><!--[--><!--[-->
+                  <source
+                    srcset="${videoCover}@672w_378h_1c_!web-home-common-cover.avif"
+                    type="image/avif" data-v-d613d352=""><!--]--><!--[-->
+                  <source
+                    srcset="${videoCover}@672w_378h_1c_!web-home-common-cover.webp"
+                    type="image/webp" data-v-d613d352=""><!--]--><!--[--><img
+                    src="${videoCover}@672w_378h_1c_!web-home-common-cover"
+                    alt="${videoTitle}" loading="eager" onload="fsrCb();firstVideoCardImgLoaded()" onerror="
+            typeof window.imgOnError === 'function' &amp;&amp; window.imgOnError(this)
+          " data-v-d613d352=""><!--]--><!--]-->
+                </picture>
+                <div class="v-inline-player"></div>
+              </div>
+              <div class="bili-video-card__mask">
+                <div class="bili-video-card__stats">
+                  <div class="bili-video-card__stats--left"><!--[--><span class="bili-video-card__stats--item"><svg
+                        xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24"
+                        width="24" height="24" fill="#ffffff" class="bili-video-card__stats--icon"><!--[-->
+                        <path
+                          d="M12 4.99805C9.48178 4.99805 7.283 5.12616 5.73089 5.25202C4.65221 5.33949 3.81611 6.16352 3.72 7.23254C3.60607 8.4998 3.5 10.171 3.5 11.998C3.5 13.8251 3.60607 15.4963 3.72 16.76355C3.81611 17.83255 4.65221 18.6566 5.73089 18.7441C7.283 18.8699 9.48178 18.998 12 18.998C14.5185 18.998 16.7174 18.8699 18.2696 18.74405C19.3481 18.65655 20.184 17.8328 20.2801 16.76405C20.394 15.4973 20.5 13.82645 20.5 11.998C20.5 10.16965 20.394 8.49877 20.2801 7.23205C20.184 6.1633 19.3481 5.33952 18.2696 5.25205C16.7174 5.12618 14.5185 4.99805 12 4.99805zM5.60965 3.75693C7.19232 3.62859 9.43258 3.49805 12 3.49805C14.5677 3.49805 16.8081 3.62861 18.3908 3.75696C20.1881 3.90272 21.6118 5.29278 21.7741 7.09773C21.8909 8.3969 22 10.11405 22 11.998C22 13.88205 21.8909 15.5992 21.7741 16.8984C21.6118 18.7033 20.1881 20.09335 18.3908 20.23915C16.8081 20.3675 14.5677 20.498 12 20.498C9.43258 20.498 7.19232 20.3675 5.60965 20.2392C3.81206 20.0934 2.38831 18.70295 2.22603 16.8979C2.10918 15.5982 2 13.8808 2 11.998C2 10.1153 2.10918 8.39787 2.22603 7.09823C2.38831 5.29312 3.81206 3.90269 5.60965 3.75693z"
+                          fill="currentColor"></path>
+                        <path
+                          d="M14.7138 10.96875C15.50765 11.4271 15.50765 12.573 14.71375 13.0313L11.5362 14.8659C10.74235 15.3242 9.75 14.7513 9.75001 13.8346L9.75001 10.1655C9.75001 9.24881 10.74235 8.67587 11.5362 9.13422L14.7138 10.96875z"
+                          fill="currentColor"></path><!--]-->
+                      </svg><span class="bili-video-card__stats--text">${playCountText}</span></span><!--]--><span
+                      class="bili-video-card__stats--item"><svg xmlns="http://www.w3.org/2000/svg"
+                        xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="24" height="24"
+                        fill="#ffffff" class="bili-video-card__stats--icon"><!--[-->
+                        <path
+                          d="M12 4.99805C9.48178 4.99805 7.283 5.12616 5.73089 5.25202C4.65221 5.33949 3.81611 6.16352 3.72 7.23254C3.60607 8.4998 3.5 10.171 3.5 11.998C3.5 13.8251 3.60607 15.4963 3.72 16.76355C3.81611 17.83255 4.65221 18.6566 5.73089 18.7441C7.283 18.8699 9.48178 18.998 12 18.998C14.5185 18.998 16.7174 18.8699 18.2696 18.74405C19.3481 18.65655 20.184 17.8328 20.2801 16.76405C20.394 15.4973 20.5 13.82645 20.5 11.998C20.5 10.16965 20.394 8.49877 20.2801 7.23205C20.184 6.1633 19.3481 5.33952 18.2696 5.25205C16.7174 5.12618 14.5185 4.99805 12 4.99805zM5.60965 3.75693C7.19232 3.62859 9.43258 3.49805 12 3.49805C14.5677 3.49805 16.8081 3.62861 18.3908 3.75696C20.1881 3.90272 21.6118 5.29278 21.7741 7.09773C21.8909 8.3969 22 10.11405 22 11.998C22 13.88205 21.8909 15.5992 21.7741 16.8984C21.6118 18.7033 20.1881 20.09335 18.3908 20.23915C16.8081 20.3675 14.5677 20.498 12 20.498C9.43258 20.498 7.19232 20.3675 5.60965 20.2392C3.81206 20.0934 2.38831 18.70295 2.22603 16.8979C2.10918 15.5982 2 13.8808 2 11.998C2 10.1153 2.10918 8.39787 2.22603 7.09823C2.38831 5.29312 3.81206 3.90269 5.60965 3.75693z"
+                          fill="currentColor"></path>
+                        <path
+                          d="M15.875 10.75L9.875 10.75C9.46079 10.75 9.125 10.4142 9.125 10C9.125 9.58579 9.46079 9.25 9.875 9.25L15.875 9.25C16.2892 9.25 16.625 9.58579 16.625 10C16.625 10.4142 16.2892 10.75 15.875 10.75z"
+                          fill="currentColor"></path>
+                        <path
+                          d="M17.375 14.75L11.375 14.75C10.9608 14.75 10.625 14.4142 10.625 14C10.625 13.5858 10.9608 13.25 11.375 13.25L17.375 13.25C17.7892 13.25 18.125 13.5858 18.125 14C18.125 14.4142 17.7892 14.75 17.375 14.75z"
+                          fill="currentColor"></path>
+                        <path
+                          d="M7.875 10C7.875 10.4142 7.53921 10.75 7.125 10.75L6.625 10.75C6.21079 10.75 5.875 10.4142 5.875 10C5.875 9.58579 6.21079 9.25 6.625 9.25L7.125 9.25C7.53921 9.25 7.875 9.58579 7.875 10z"
+                          fill="currentColor"></path>
+                        <path
+                          d="M9.375 14C9.375 14.4142 9.03921 14.75 8.625 14.75L8.125 14.75C7.71079 14.75 7.375 14.4142 7.375 14C7.375 13.5858 7.71079 13.25 8.125 13.25L8.625 13.25C9.03921 13.25 9.375 13.5858 9.375 14z"
+                          fill="currentColor"></path><!--]-->
+                      </svg><span class="bili-video-card__stats--text">${danmaku}</span></span></div><span
+                    class="bili-video-card__stats__duration">${duration}</span>
+                </div>
+              </div>
+            </div>
+          </a>
+          <div style="" class="bili-video-card__info">
+            <div class="bili-video-card__info--right"><!--[-->
+              <div class="bili-video-card__info--no-interest" style="display:none;"><svg
+                  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24"
+                  width="24" height="24" class="bili-video-card__info--no-interest--icon" fill="currentColor"><!--[-->
+                  <path
+                    d="M13.62335 5.49835C13.62335 6.3949 12.8966 7.12171 12 7.12171C11.10345 7.12171 10.37665 6.3949 10.37665 5.49835C10.37665 4.6018 11.10345 3.875 12 3.875C12.8966 3.875 13.62335 4.6018 13.62335 5.49835zM13.62345 18.4985C13.62345 19.3951 12.8966 20.12195 12 20.12195C11.10335 20.12195 10.3765 19.3951 10.3765 18.4985C10.3765 17.60185 11.10335 16.875 12 16.875C12.8966 16.875 13.62345 17.60185 13.62345 18.4985zM12 13.62485C12.89745 13.62485 13.62495 12.89735 13.62495 11.99995C13.62495 11.1025 12.89745 10.375 12 10.375C11.10255 10.375 10.37505 11.1025 10.37505 11.99995C10.37505 12.89735 11.10255 13.62485 12 13.62485z"
+                    fill="currentColor"></path><!--]-->
+                </svg></div><!----><!--]-->
+              <h3 class="bili-video-card__info--tit" title="${videoTitle}"><a
+                  href="https://www.bilibili.com/video/${videoId}" target="_blank" data-spmid="333.1007"
+                  data-mod="tianma.3-4-10" data-idx="click">${videoTitle}</a></h3>
+              <div class="bili-video-card__info--bottom"><!--[--><!----><a class="bili-video-card__info--owner"
+                  href="//space.bilibili.com/${userId}" target="_blank" data-spmid="333.1007"
+                  data-mod="tianma.3-4-10" data-idx="click"><svg xmlns="http://www.w3.org/2000/svg"
+                    xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="24" height="24"
+                    fill="currentColor" class="bili-video-card__info--owner__up"><!--[-->
+                    <path
+                      d="M6.15 8.24805C6.5642 8.24805 6.9 8.58383 6.9 8.99805L6.9 12.7741C6.9 13.5881 7.55988 14.248 8.3739 14.248C9.18791 14.248 9.8478 13.5881 9.8478 12.7741L9.8478 8.99805C9.8478 8.58383 10.1836 8.24805 10.5978 8.24805C11.012 8.24805 11.3478 8.58383 11.3478 8.99805L11.3478 12.7741C11.3478 14.41655 10.01635 15.748 8.3739 15.748C6.73146 15.748 5.4 14.41655 5.4 12.7741L5.4 8.99805C5.4 8.58383 5.73578 8.24805 6.15 8.24805z"
+                      fill="currentColor"></path>
+                    <path
+                      d="M12.6522 8.99805C12.6522 8.58383 12.98795 8.24805 13.4022 8.24805L15.725 8.24805C17.31285 8.24805 18.6 9.53522 18.6 11.123C18.6 12.71085 17.31285 13.998 15.725 13.998L14.1522 13.998L14.1522 14.998C14.1522 15.4122 13.8164 15.748 13.4022 15.748C12.98795 15.748 12.6522 15.4122 12.6522 14.998L12.6522 8.99805zM14.1522 12.498L15.725 12.498C16.4844 12.498 17.1 11.8824 17.1 11.123C17.1 10.36365 16.4844 9.74804 15.725 9.74804L14.1522 9.74804L14.1522 12.498z"
+                      fill="currentColor"></path>
+                    <path
+                      d="M12 4.99805C9.48178 4.99805 7.283 5.12616 5.73089 5.25202C4.65221 5.33949 3.81611 6.16352 3.72 7.23254C3.60607 8.4998 3.5 10.171 3.5 11.998C3.5 13.8251 3.60607 15.4963 3.72 16.76355C3.81611 17.83255 4.65221 18.6566 5.73089 18.7441C7.283 18.8699 9.48178 18.998 12 18.998C14.5185 18.998 16.7174 18.8699 18.2696 18.74405C19.3481 18.65655 20.184 17.8328 20.2801 16.76405C20.394 15.4973 20.5 13.82645 20.5 11.998C20.5 10.16965 20.394 8.49877 20.2801 7.23205C20.184 6.1633 19.3481 5.33952 18.2696 5.25205C16.7174 5.12618 14.5185 4.99805 12 4.99805zM5.60965 3.75693C7.19232 3.62859 9.43258 3.49805 12 3.49805C14.5677 3.49805 16.8081 3.62861 18.3908 3.75696C20.1881 3.90272 21.6118 5.29278 21.7741 7.09773C21.8909 8.3969 22 10.11405 22 11.998C22 13.88205 21.8909 15.5992 21.7741 16.8984C21.6118 18.7033 20.1881 20.09335 18.3908 20.23915C16.8081 20.3675 14.5677 20.498 12 20.498C9.43258 20.498 7.19232 20.3675 5.60965 20.2392C3.81206 20.0934 2.38831 18.70295 2.22603 16.8979C2.10918 15.5982 2 13.8808 2 11.998C2 10.1153 2.10918 8.39787 2.22603 7.09823C2.38831 5.29312 3.81206 3.90269 5.60965 3.75693z"
+                      fill="currentColor"></path><!--]-->
+                  </svg><span class="bili-video-card__info--author" title="${userName}">${userName}</span><span
+                    class="bili-video-card__info--date">· ${publishTime}</span></a><!--]--></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+  };
+  const createDOM = (html) => {
+    const template = document.createElement("template");
+    template.innerHTML = html.trim();
+    return template.content.firstElementChild;
+  };
   const FIXED_CARD_CLASS = "bili-grid-fixed-card";
   const HIDDEN_AD_CLASS = "bili-ad-remover-hidden-ad";
   const HIDDEN_FILTER_CLASS = "bili-ad-remover-hidden-custom";
+  const FILLED_CARD_CLASS = "bili-ad-remover-filled-card";
   const REFRESH_BTN_SELECTOR = ".primary-btn.roll-btn";
+  const formatCount = (num) => {
+    if (num >= 1e4) {
+      return (num / 1e4).toFixed(1) + "万";
+    }
+    return num.toString();
+  };
+  const formatDuration = (seconds) => {
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor(seconds % 3600 / 60);
+    const s = seconds % 60;
+    const pad = (n) => n.toString().padStart(2, "0");
+    if (h > 0) return `${pad(h)}:${pad(m)}:${pad(s)}`;
+    return `${pad(m)}:${pad(s)}`;
+  };
+  const formatDate = (ts) => {
+    const date = new Date(ts * 1e3);
+    const M = date.getMonth() + 1;
+    const D = date.getDate();
+    const pad = (n) => n.toString().padStart(2, "0");
+    return `${pad(M)}-${pad(D)}`;
+  };
   const App = () => {
     const [isSettingsOpen, setIsSettingsOpen] = React.useState(false);
     const [settings, setSettings] = React.useState(DEFAULT_SETTINGS);
@@ -1583,6 +1914,11 @@ defaultCollapsed: false,
     const cleanTimerRef = React.useRef(0);
     const layoutRafRef = React.useRef(0);
     const observerRef = React.useRef(null);
+    const hasFilledVideosRef = React.useRef(false);
+    const isFetchingRef = React.useRef(false);
+    const containerRef = React.useRef(null);
+    const fillFragmentRef = React.useRef(null);
+    const videoBufferRef = React.useRef(null);
     const parsedCustomRules = React.useMemo(() => {
       return parseCustomRules(settings.customFilterRules);
     }, [settings.customFilterRules]);
@@ -1641,11 +1977,100 @@ defaultCollapsed: false,
       const path = window.location.pathname;
       return path === "/" || path === "/index.html" || path === "";
     };
+    const getContainer = () => {
+      if (!containerRef.current || !containerRef.current.isConnected) {
+        containerRef.current = document.querySelector(SELECTORS.home_video_grid);
+      }
+      return containerRef.current;
+    };
+    const generateVideoFragment = (videos) => {
+      const fragment = document.createDocumentFragment();
+      videos.forEach((v) => {
+        const html = getVideoCardHTML({
+          playCountText: formatCount(v.stat.view),
+          danmaku: formatCount(v.stat.danmaku),
+          duration: formatDuration(v.duration),
+          videoTitle: v.title,
+          videoId: v.bvid,
+          videoCover: v.pic.replace("http://", "//"),
+          userId: v.owner.mid.toString(),
+          userName: v.owner.name,
+          publishTime: formatDate(v.pubdate)
+        });
+        const el = createDOM(html);
+        if (el) fragment.appendChild(el);
+      });
+      return fragment;
+    };
+    const triggerFillVideoData = async (currentSettings, isRefill) => {
+      if (isFetchingRef.current) return;
+      if (!currentSettings.enableVideoGrid || !currentSettings.fillEmptySpace) return;
+      if (!isHomePage()) return;
+      isFetchingRef.current = true;
+      const carouselSubtraction = currentSettings.hideCarousel ? 0 : 4;
+      const singleFillCount = 3 * currentSettings.videosPerRow - carouselSubtraction - 11;
+      if (singleFillCount <= 0) {
+        isFetchingRef.current = false;
+        return;
+      }
+      const ps = isRefill ? singleFillCount : singleFillCount * 2;
+      try {
+        const videos = await fetchRecommendVideos({ ps });
+        if (videos && videos.length > 0) {
+          if (isRefill) {
+            videoBufferRef.current = generateVideoFragment(videos);
+          } else {
+            const splitIndex = singleFillCount;
+            const currentBatch = videos.slice(0, splitIndex);
+            const nextBatch = videos.slice(splitIndex);
+            if (currentBatch.length > 0) {
+              fillFragmentRef.current = generateVideoFragment(currentBatch);
+              tryInsertFilledVideos();
+            }
+            if (nextBatch.length > 0) {
+              videoBufferRef.current = generateVideoFragment(nextBatch);
+            }
+          }
+        }
+      } catch (e) {
+        console.error("[AdRemover] Fill videos failed:", e);
+      } finally {
+        isFetchingRef.current = false;
+      }
+    };
+    const insertFragmentToDOM = (fragment) => {
+      const container = getContainer();
+      if (!container) return;
+      const referenceNode = container.children[10];
+      if (referenceNode && referenceNode.nextSibling) {
+        container.insertBefore(fragment, referenceNode.nextSibling);
+      } else {
+        container.appendChild(fragment);
+      }
+    };
+    const tryInsertFilledVideos = () => {
+      if (!fillFragmentRef.current || hasFilledVideosRef.current) return;
+      const container = getContainer();
+      if (!container) return;
+      if (container.children.length >= 10) {
+        insertFragmentToDOM(fillFragmentRef.current);
+        fillFragmentRef.current = null;
+        hasFilledVideosRef.current = true;
+        executeAdClean();
+      }
+    };
+    const removeFilledCards = () => {
+      const container = getContainer();
+      if (container) {
+        const filledCards = container.querySelectorAll(`.${FILLED_CARD_CLASS}`);
+        filledCards.forEach((card) => card.remove());
+      }
+    };
     const handleHomeRefreshClick = (e) => {
       if (!isHomePage()) return;
       const target = e.target;
       if (!target.closest(REFRESH_BTN_SELECTOR)) return;
-      const container = document.querySelector(SELECTORS.home_video_grid);
+      const container = getContainer();
       if (!container) return;
       const oldFirstCard = container.querySelector(SELECTORS.video_card);
       if (cleanTimerRef.current) {
@@ -1654,16 +2079,22 @@ defaultCollapsed: false,
       }
       const startTime = Date.now();
       cleanTimerRef.current = window.setInterval(() => {
-        if (Date.now() - startTime > 2e3) {
+        if (Date.now() - startTime > 3e3) {
           if (cleanTimerRef.current) clearInterval(cleanTimerRef.current);
           return;
         }
-        const currentContainer = document.querySelector(SELECTORS.home_video_grid);
+        const currentContainer = getContainer();
         if (!currentContainer) return;
         const newFirstCard = currentContainer.querySelector(SELECTORS.video_card);
         if (newFirstCard && oldFirstCard && newFirstCard !== oldFirstCard) {
-          executeAdClean();
           if (cleanTimerRef.current) clearInterval(cleanTimerRef.current);
+          removeFilledCards();
+          if (videoBufferRef.current) {
+            insertFragmentToDOM(videoBufferRef.current);
+            videoBufferRef.current = null;
+          }
+          executeAdClean();
+          triggerFillVideoData(settingsRef.current, true);
         }
       }, 100);
     };
@@ -1690,7 +2121,7 @@ defaultCollapsed: false,
     const fixGridAlignment = (currentSettings) => {
       resetGridAlignment();
       if (!currentSettings.enableVideoGrid) return;
-      const container = document.querySelector(SELECTORS.home_video_grid);
+      const container = getContainer();
       if (!container) return;
       const visibleChildren = Array.from(container.children).filter((child) => {
         const el = child;
@@ -1744,6 +2175,7 @@ defaultCollapsed: false,
           elements.forEach((el) => {
             const element = el;
             if (element.style.display === "none") return;
+            if (element.classList.contains(FILLED_CARD_CLASS)) return;
             let isMatch = true;
             if (rule.contentCheck) {
               const mode = rule.contentCheck.mode;
@@ -1785,7 +2217,7 @@ defaultCollapsed: false,
       }
       const customRules = rulesRef.current;
       if (currentSettings.enableCustomFilters && customRules.length > 0) {
-        const container = document.querySelector(SELECTORS.home_video_grid);
+        const container = getContainer();
         const cards = container ? container.querySelectorAll(SELECTORS.video_card) : document.querySelectorAll(SELECTORS.video_card);
         cards.forEach((el) => {
           const card = el;
@@ -1823,14 +2255,16 @@ defaultCollapsed: false,
         observerRef.current = null;
       }
       executeAdClean();
+      triggerFillVideoData(currentSettings, false);
       const needExecution = currentSettings.removeAds || currentSettings.enableVideoGrid || currentSettings.enableCustomFilters && currentSettings.customFilterRules.length > 0;
       if (!needExecution) return;
       if (isHomePage()) {
-        const container = document.querySelector(SELECTORS.home_video_grid);
+        const container = getContainer();
         if (container) {
           observerRef.current = new MutationObserver((mutations) => {
             if (container.children.length >= 6) {
               executeAdClean();
+              tryInsertFilledVideos();
             }
           });
           observerRef.current.observe(container, { childList: true });
@@ -1895,7 +2329,7 @@ React.createElement(React.StrictMode, null, React.createElement(Component, null)
     );
     return root;
   }
-  const globalCss = ".bilibili-ad-remover-hide-carousel .recommended-swipe,.bilibili-ad-remover-hide-carousel.bilibili-custom-grid-mode .is-version8 .recommended-swipe{display:none!important}.bilibili-custom-grid-mode .is-version8{display:flex!important;flex-wrap:wrap!important;gap:20px!important;grid-template-columns:none!important;height:auto!important;position:relative!important;align-items:flex-start!important}.bilibili-custom-grid-mode .is-version8>*{--gap-size: 20px;width:calc((100% - (var(--bili-custom-col-num) - 1) * var(--gap-size)) / var(--bili-custom-col-num))!important;margin:0!important;grid-column:auto!important;grid-row:auto!important}.bilibili-ad-remover-hide-carousel .is-version8>*{margin-top:24px!important}.bilibili-custom-grid-mode .is-version8>.recommended-swipe{display:block!important;--gap-size: 20px;--single-col-width: calc((100% - (var(--bili-custom-col-num) - 1) * var(--gap-size)) / var(--bili-custom-col-num));width:calc(var(--single-col-width) * 2 + var(--gap-size))!important;height:auto!important;margin-bottom:75px!important}.bilibili-custom-grid-mode .is-version8>.recommended-swipe .shim-card{height:100%!important}";
+  const globalCss = ".bilibili-ad-remover-hide-carousel .recommended-swipe,.bilibili-ad-remover-hide-carousel.bilibili-custom-grid-mode .is-version8 .recommended-swipe{display:none!important}.bilibili-custom-grid-mode .is-version8{display:flex!important;flex-wrap:wrap!important;gap:20px!important;grid-template-columns:none!important;height:auto!important;position:relative!important;align-items:flex-start!important}.bilibili-custom-grid-mode .is-version8>*{--gap-size: 20px;width:calc((100% - (var(--bili-custom-col-num) - 1) * var(--gap-size)) / var(--bili-custom-col-num))!important;margin:0!important;grid-column:auto!important;grid-row:auto!important}.bilibili-custom-grid-mode .is-version8>.bili-ad-remover-hidden-ad{display:none!important}.bilibili-custom-grid-mode .is-version8>.bili-ad-remover-filled-card{display:block!important}.bilibili-custom-grid-mode .is-version8>.bili-ad-remover-filled-card.bili-ad-remover-hidden-ad{display:none!important}.bilibili-ad-remover-hide-carousel .is-version8>*{margin-top:24px!important}.bilibili-custom-grid-mode .is-version8>.recommended-swipe{display:block!important;--gap-size: 20px;--single-col-width: calc((100% - (var(--bili-custom-col-num) - 1) * var(--gap-size)) / var(--bili-custom-col-num));width:calc(var(--single-col-width) * 2 + var(--gap-size))!important;height:auto!important;margin-bottom:75px!important}.bilibili-custom-grid-mode .is-version8>.recommended-swipe .shim-card{height:100%!important}";
   importCSS(globalCss);
   const tailwindStyles = '/*! tailwindcss v4.1.18 | MIT License | https://tailwindcss.com */@layer properties{@supports (((-webkit-hyphens:none)) and (not (margin-trim:inline))) or ((-moz-orient:inline) and (not (color:rgb(from red r g b)))){*,:before,:after,::backdrop{--tw-translate-x:0;--tw-translate-y:0;--tw-translate-z:0;--tw-rotate-x:initial;--tw-rotate-y:initial;--tw-rotate-z:initial;--tw-skew-x:initial;--tw-skew-y:initial;--tw-space-y-reverse:0;--tw-border-style:solid;--tw-leading:initial;--tw-font-weight:initial;--tw-tracking:initial;--tw-ordinal:initial;--tw-slashed-zero:initial;--tw-numeric-figure:initial;--tw-numeric-spacing:initial;--tw-numeric-fraction:initial;--tw-shadow:0 0 #0000;--tw-shadow-color:initial;--tw-shadow-alpha:100%;--tw-inset-shadow:0 0 #0000;--tw-inset-shadow-color:initial;--tw-inset-shadow-alpha:100%;--tw-ring-color:initial;--tw-ring-shadow:0 0 #0000;--tw-inset-ring-color:initial;--tw-inset-ring-shadow:0 0 #0000;--tw-ring-inset:initial;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-offset-shadow:0 0 #0000;--tw-blur:initial;--tw-brightness:initial;--tw-contrast:initial;--tw-grayscale:initial;--tw-hue-rotate:initial;--tw-invert:initial;--tw-opacity:initial;--tw-saturate:initial;--tw-sepia:initial;--tw-drop-shadow:initial;--tw-drop-shadow-color:initial;--tw-drop-shadow-alpha:100%;--tw-drop-shadow-size:initial;--tw-backdrop-blur:initial;--tw-backdrop-brightness:initial;--tw-backdrop-contrast:initial;--tw-backdrop-grayscale:initial;--tw-backdrop-hue-rotate:initial;--tw-backdrop-invert:initial;--tw-backdrop-opacity:initial;--tw-backdrop-saturate:initial;--tw-backdrop-sepia:initial;--tw-duration:initial}}}@layer theme{:root,:host{--font-sans:ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";--font-mono:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;--color-blue-600:oklch(54.6% .245 262.881);--color-gray-300:oklch(87.2% .01 258.338);--color-gray-400:oklch(70.7% .022 261.325);--color-gray-500:oklch(55.1% .027 264.364);--color-gray-600:oklch(44.6% .03 256.802);--color-black:#000;--color-white:#fff;--spacing:.25rem;--text-xs:.75rem;--text-xs--line-height:calc(1/.75);--text-sm:.875rem;--text-sm--line-height:calc(1.25/.875);--text-lg:1.125rem;--text-lg--line-height:calc(1.75/1.125);--font-weight-bold:700;--tracking-wider:.05em;--leading-tight:1.25;--radius-lg:.5rem;--blur-sm:8px;--default-transition-duration:.15s;--default-transition-timing-function:cubic-bezier(.4,0,.2,1);--default-font-family:var(--font-sans);--default-mono-font-family:var(--font-mono);--color-surface:#1e293b;--color-primary:#3b82f6}}@layer base{*,:after,:before,::backdrop{box-sizing:border-box;border:0 solid;margin:0;padding:0}::file-selector-button{box-sizing:border-box;border:0 solid;margin:0;padding:0}html,:host{-webkit-text-size-adjust:100%;tab-size:4;line-height:1.5;font-family:var(--default-font-family,ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji");font-feature-settings:var(--default-font-feature-settings,normal);font-variation-settings:var(--default-font-variation-settings,normal);-webkit-tap-highlight-color:transparent}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;-webkit-text-decoration:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,samp,pre{font-family:var(--default-mono-font-family,ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace);font-feature-settings:var(--default-mono-font-feature-settings,normal);font-variation-settings:var(--default-mono-font-variation-settings,normal);font-size:1em}small{font-size:80%}sub,sup{vertical-align:baseline;font-size:75%;line-height:0;position:relative}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}:-moz-focusring{outline:auto}progress{vertical-align:baseline}summary{display:list-item}ol,ul,menu{list-style:none}img,svg,video,canvas,audio,iframe,embed,object{vertical-align:middle;display:block}img,video{max-width:100%;height:auto}button,input,select,optgroup,textarea{font:inherit;font-feature-settings:inherit;font-variation-settings:inherit;letter-spacing:inherit;color:inherit;opacity:1;background-color:#0000;border-radius:0}::file-selector-button{font:inherit;font-feature-settings:inherit;font-variation-settings:inherit;letter-spacing:inherit;color:inherit;opacity:1;background-color:#0000;border-radius:0}:where(select:is([multiple],[size])) optgroup{font-weight:bolder}:where(select:is([multiple],[size])) optgroup option{padding-inline-start:20px}::file-selector-button{margin-inline-end:4px}::placeholder{opacity:1}@supports (not ((-webkit-appearance:-apple-pay-button))) or (contain-intrinsic-size:1px){::placeholder{color:currentColor}@supports (color:color-mix(in lab,red,red)){::placeholder{color:color-mix(in oklab,currentcolor 50%,transparent)}}}textarea{resize:vertical}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-date-and-time-value{min-height:1lh;text-align:inherit}::-webkit-datetime-edit{display:inline-flex}::-webkit-datetime-edit-fields-wrapper{padding:0}::-webkit-datetime-edit{padding-block:0}::-webkit-datetime-edit-year-field{padding-block:0}::-webkit-datetime-edit-month-field{padding-block:0}::-webkit-datetime-edit-day-field{padding-block:0}::-webkit-datetime-edit-hour-field{padding-block:0}::-webkit-datetime-edit-minute-field{padding-block:0}::-webkit-datetime-edit-second-field{padding-block:0}::-webkit-datetime-edit-millisecond-field{padding-block:0}::-webkit-datetime-edit-meridiem-field{padding-block:0}::-webkit-calendar-picker-indicator{line-height:1}:-moz-ui-invalid{box-shadow:none}button,input:where([type=button],[type=reset],[type=submit]){appearance:button}::file-selector-button{appearance:button}::-webkit-inner-spin-button{height:auto}::-webkit-outer-spin-button{height:auto}[hidden]:where(:not([hidden=until-found])){display:none!important}}@layer components;@layer utilities{.pointer-events-none{pointer-events:none}.absolute{position:absolute}.fixed{position:fixed}.relative{position:relative}.static{position:static}.inset-0{inset:calc(var(--spacing)*0)}.top-1\\/2{top:50%}.right-1{right:calc(var(--spacing)*1)}.right-2{right:calc(var(--spacing)*2)}.z-50{z-index:50}.col-span-1{grid-column:span 1/span 1}.col-span-2{grid-column:span 2/span 2}.container{width:100%}@media(min-width:40rem){.container{max-width:40rem}}@media(min-width:48rem){.container{max-width:48rem}}@media(min-width:64rem){.container{max-width:64rem}}@media(min-width:80rem){.container{max-width:80rem}}@media(min-width:96rem){.container{max-width:96rem}}.m-0{margin:calc(var(--spacing)*0)}.m-4{margin:calc(var(--spacing)*4)}.mt-0\\.5{margin-top:calc(var(--spacing)*.5)}.mt-2{margin-top:calc(var(--spacing)*2)}.-mr-1{margin-right:calc(var(--spacing)*-1)}.mr-1{margin-right:calc(var(--spacing)*1)}.mb-1{margin-bottom:calc(var(--spacing)*1)}.mb-1\\.5{margin-bottom:calc(var(--spacing)*1.5)}.-ml-1{margin-left:calc(var(--spacing)*-1)}.ml-0\\.5{margin-left:calc(var(--spacing)*.5)}.block{display:block}.flex{display:flex}.grid{display:grid}.hidden{display:none}.inline{display:inline}.h-1{height:calc(var(--spacing)*1)}.h-3{height:calc(var(--spacing)*3)}.h-4{height:calc(var(--spacing)*4)}.h-5{height:calc(var(--spacing)*5)}.h-6{height:calc(var(--spacing)*6)}.h-24{height:calc(var(--spacing)*24)}.h-\\[26px\\]{height:26px}.h-\\[540px\\]{height:540px}.h-full{height:100%}.h-px{height:1px}.max-h-\\[75vh\\]{max-height:75vh}.max-h-\\[90vh\\]{max-height:90vh}.w-1{width:calc(var(--spacing)*1)}.w-4{width:calc(var(--spacing)*4)}.w-6{width:calc(var(--spacing)*6)}.w-10{width:calc(var(--spacing)*10)}.w-16{width:calc(var(--spacing)*16)}.w-\\[90vw\\]{width:90vw}.w-full{width:100%}.max-w-\\[90vh\\]{max-width:90vh}.max-w-\\[90vw\\]{max-width:90vw}.flex-1{flex:1}.flex-shrink-0{flex-shrink:0}.-translate-y-1\\/2{--tw-translate-y: -50% ;translate:var(--tw-translate-x)var(--tw-translate-y)}.transform{transform:var(--tw-rotate-x,)var(--tw-rotate-y,)var(--tw-rotate-z,)var(--tw-skew-x,)var(--tw-skew-y,)}.cursor-default{cursor:default}.cursor-help{cursor:help}.cursor-not-allowed{cursor:not-allowed}.cursor-pointer{cursor:pointer}.resize{resize:both}.resize-y{resize:vertical}.appearance-none{appearance:none}.grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.flex-col{flex-direction:column}.items-center{align-items:center}.justify-between{justify-content:space-between}.justify-center{justify-content:center}.gap-2{gap:calc(var(--spacing)*2)}.gap-3{gap:calc(var(--spacing)*3)}:where(.space-y-2>:not(:last-child)){--tw-space-y-reverse:0;margin-block-start:calc(calc(var(--spacing)*2)*var(--tw-space-y-reverse));margin-block-end:calc(calc(var(--spacing)*2)*calc(1 - var(--tw-space-y-reverse)))}.overflow-y-auto{overflow-y:auto}.rounded{border-radius:.25rem}.rounded-full{border-radius:3.40282e38px}.rounded-lg{border-radius:var(--radius-lg)}.rounded-l{border-top-left-radius:.25rem;border-bottom-left-radius:.25rem}.rounded-r{border-top-right-radius:.25rem;border-bottom-right-radius:.25rem}.border{border-style:var(--tw-border-style);border-width:1px}.border-y{border-block-style:var(--tw-border-style);border-block-width:1px}.border-t{border-top-style:var(--tw-border-style);border-top-width:1px}.border-r{border-right-style:var(--tw-border-style);border-right-width:1px}.border-b{border-bottom-style:var(--tw-border-style);border-bottom-width:1px}.border-none{--tw-border-style:none;border-style:none}.border-gray-600{border-color:var(--color-gray-600)}.border-primary{border-color:var(--color-primary)}.border-primary\\/50{border-color:#3b82f680}@supports (color:color-mix(in lab,red,red)){.border-primary\\/50{border-color:color-mix(in oklab,var(--color-primary)50%,transparent)}}.border-transparent{border-color:#0000}.border-white\\/10{border-color:#ffffff1a}@supports (color:color-mix(in lab,red,red)){.border-white\\/10{border-color:color-mix(in oklab,var(--color-white)10%,transparent)}}.bg-black\\/30{background-color:#0000004d}@supports (color:color-mix(in lab,red,red)){.bg-black\\/30{background-color:color-mix(in oklab,var(--color-black)30%,transparent)}}.bg-black\\/50{background-color:#00000080}@supports (color:color-mix(in lab,red,red)){.bg-black\\/50{background-color:color-mix(in oklab,var(--color-black)50%,transparent)}}.bg-black\\/80{background-color:#000c}@supports (color:color-mix(in lab,red,red)){.bg-black\\/80{background-color:color-mix(in oklab,var(--color-black)80%,transparent)}}.bg-primary{background-color:var(--color-primary)}.bg-primary\\/20{background-color:#3b82f633}@supports (color:color-mix(in lab,red,red)){.bg-primary\\/20{background-color:color-mix(in oklab,var(--color-primary)20%,transparent)}}.bg-surface{background-color:var(--color-surface)}.bg-transparent{background-color:#0000}.bg-white\\/5{background-color:#ffffff0d}@supports (color:color-mix(in lab,red,red)){.bg-white\\/5{background-color:color-mix(in oklab,var(--color-white)5%,transparent)}}.bg-white\\/10{background-color:#ffffff1a}@supports (color:color-mix(in lab,red,red)){.bg-white\\/10{background-color:color-mix(in oklab,var(--color-white)10%,transparent)}}.p-0{padding:calc(var(--spacing)*0)}.p-1{padding:calc(var(--spacing)*1)}.p-3{padding:calc(var(--spacing)*3)}.px-1{padding-inline:calc(var(--spacing)*1)}.px-2{padding-inline:calc(var(--spacing)*2)}.px-3{padding-inline:calc(var(--spacing)*3)}.py-1{padding-block:calc(var(--spacing)*1)}.py-1\\.5{padding-block:calc(var(--spacing)*1.5)}.py-2{padding-block:calc(var(--spacing)*2)}.pt-1{padding-top:calc(var(--spacing)*1)}.pt-2{padding-top:calc(var(--spacing)*2)}.pb-1{padding-bottom:calc(var(--spacing)*1)}.pl-1{padding-left:calc(var(--spacing)*1)}.text-center{text-align:center}.text-left{text-align:left}.font-mono{font-family:var(--font-mono)}.text-lg{font-size:var(--text-lg);line-height:var(--tw-leading,var(--text-lg--line-height))}.text-sm{font-size:var(--text-sm);line-height:var(--tw-leading,var(--text-sm--line-height))}.text-xs{font-size:var(--text-xs);line-height:var(--tw-leading,var(--text-xs--line-height))}.text-\\[9px\\]{font-size:9px}.text-\\[10px\\]{font-size:10px}.leading-tight{--tw-leading:var(--leading-tight);line-height:var(--leading-tight)}.font-bold{--tw-font-weight:var(--font-weight-bold);font-weight:var(--font-weight-bold)}.tracking-wider{--tw-tracking:var(--tracking-wider);letter-spacing:var(--tracking-wider)}.break-all{word-break:break-all}.text-gray-300{color:var(--color-gray-300)}.text-gray-400{color:var(--color-gray-400)}.text-gray-500{color:var(--color-gray-500)}.text-gray-600{color:var(--color-gray-600)}.text-primary{color:var(--color-primary)}.text-white{color:var(--color-white)}.uppercase{text-transform:uppercase}.tabular-nums{--tw-numeric-spacing:tabular-nums;font-variant-numeric:var(--tw-ordinal,)var(--tw-slashed-zero,)var(--tw-numeric-figure,)var(--tw-numeric-spacing,)var(--tw-numeric-fraction,)}.underline{text-decoration-line:underline}.decoration-gray-600{-webkit-text-decoration-color:var(--color-gray-600);text-decoration-color:var(--color-gray-600)}.decoration-dashed{text-decoration-style:dashed}.underline-offset-2{text-underline-offset:2px}.accent-gray-600{accent-color:var(--color-gray-600)}.accent-primary{accent-color:var(--color-primary)}.opacity-50{opacity:.5}.shadow{--tw-shadow:0 1px 3px 0 var(--tw-shadow-color,#0000001a),0 1px 2px -1px var(--tw-shadow-color,#0000001a);box-shadow:var(--tw-inset-shadow),var(--tw-inset-ring-shadow),var(--tw-ring-offset-shadow),var(--tw-ring-shadow),var(--tw-shadow)}.shadow-2xl{--tw-shadow:0 25px 50px -12px var(--tw-shadow-color,#00000040);box-shadow:var(--tw-inset-shadow),var(--tw-inset-ring-shadow),var(--tw-ring-offset-shadow),var(--tw-ring-shadow),var(--tw-shadow)}.shadow-lg{--tw-shadow:0 10px 15px -3px var(--tw-shadow-color,#0000001a),0 4px 6px -4px var(--tw-shadow-color,#0000001a);box-shadow:var(--tw-inset-shadow),var(--tw-inset-ring-shadow),var(--tw-ring-offset-shadow),var(--tw-ring-shadow),var(--tw-shadow)}.shadow-sm{--tw-shadow:0 1px 3px 0 var(--tw-shadow-color,#0000001a),0 1px 2px -1px var(--tw-shadow-color,#0000001a);box-shadow:var(--tw-inset-shadow),var(--tw-inset-ring-shadow),var(--tw-ring-offset-shadow),var(--tw-ring-shadow),var(--tw-shadow)}.shadow-primary\\/10{--tw-shadow-color:#3b82f61a}@supports (color:color-mix(in lab,red,red)){.shadow-primary\\/10{--tw-shadow-color:color-mix(in oklab,color-mix(in oklab,var(--color-primary)10%,transparent)var(--tw-shadow-alpha),transparent)}}.blur{--tw-blur:blur(8px);filter:var(--tw-blur,)var(--tw-brightness,)var(--tw-contrast,)var(--tw-grayscale,)var(--tw-hue-rotate,)var(--tw-invert,)var(--tw-saturate,)var(--tw-sepia,)var(--tw-drop-shadow,)}.backdrop-blur-sm{--tw-backdrop-blur:blur(var(--blur-sm));-webkit-backdrop-filter:var(--tw-backdrop-blur,)var(--tw-backdrop-brightness,)var(--tw-backdrop-contrast,)var(--tw-backdrop-grayscale,)var(--tw-backdrop-hue-rotate,)var(--tw-backdrop-invert,)var(--tw-backdrop-opacity,)var(--tw-backdrop-saturate,)var(--tw-backdrop-sepia,);backdrop-filter:var(--tw-backdrop-blur,)var(--tw-backdrop-brightness,)var(--tw-backdrop-contrast,)var(--tw-backdrop-grayscale,)var(--tw-backdrop-hue-rotate,)var(--tw-backdrop-invert,)var(--tw-backdrop-opacity,)var(--tw-backdrop-saturate,)var(--tw-backdrop-sepia,)}.transition-all{transition-property:all;transition-timing-function:var(--tw-ease,var(--default-transition-timing-function));transition-duration:var(--tw-duration,var(--default-transition-duration))}.transition-colors{transition-property:color,background-color,border-color,outline-color,text-decoration-color,fill,stroke,--tw-gradient-from,--tw-gradient-via,--tw-gradient-to;transition-timing-function:var(--tw-ease,var(--default-transition-timing-function));transition-duration:var(--tw-duration,var(--default-transition-duration))}.transition-opacity{transition-property:opacity;transition-timing-function:var(--tw-ease,var(--default-transition-timing-function));transition-duration:var(--tw-duration,var(--default-transition-duration))}.duration-200{--tw-duration:.2s;transition-duration:.2s}.outline-none{--tw-outline-style:none;outline-style:none}.select-none{-webkit-user-select:none;user-select:none}@media(hover:hover){.group-hover\\/header\\:text-white:is(:where(.group\\/header):hover *){color:var(--color-white)}.hover\\:border-white\\/5:hover{border-color:#ffffff0d}@supports (color:color-mix(in lab,red,red)){.hover\\:border-white\\/5:hover{border-color:color-mix(in oklab,var(--color-white)5%,transparent)}}.hover\\:bg-blue-600:hover{background-color:var(--color-blue-600)}.hover\\:bg-white\\/5:hover{background-color:#ffffff0d}@supports (color:color-mix(in lab,red,red)){.hover\\:bg-white\\/5:hover{background-color:color-mix(in oklab,var(--color-white)5%,transparent)}}.hover\\:bg-white\\/10:hover{background-color:#ffffff1a}@supports (color:color-mix(in lab,red,red)){.hover\\:bg-white\\/10:hover{background-color:color-mix(in oklab,var(--color-white)10%,transparent)}}.hover\\:text-primary:hover{color:var(--color-primary)}.hover\\:text-white:hover{color:var(--color-white)}.hover\\:decoration-primary:hover{-webkit-text-decoration-color:var(--color-primary);text-decoration-color:var(--color-primary)}.hover\\:opacity-80:hover{opacity:.8}}.focus\\:border-primary:focus{border-color:var(--color-primary)}.focus\\:ring-0:focus{--tw-ring-shadow:var(--tw-ring-inset,)0 0 0 calc(0px + var(--tw-ring-offset-width))var(--tw-ring-color,currentcolor);box-shadow:var(--tw-inset-shadow),var(--tw-inset-ring-shadow),var(--tw-ring-offset-shadow),var(--tw-ring-shadow),var(--tw-shadow)}.disabled\\:cursor-not-allowed:disabled{cursor:not-allowed}.disabled\\:text-gray-500:disabled{color:var(--color-gray-500)}.disabled\\:text-gray-600:disabled{color:var(--color-gray-600)}@media(min-width:48rem){.md\\:w-\\[35vh\\]{width:35vh}.md\\:w-\\[400px\\]{width:400px}.md\\:min-w-\\[440px\\]{min-width:440px}}}:host{-webkit-text-size-adjust:100%;color:#f3f4f6;font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;font-size:16px;line-height:1.5}#shadow-app-root{width:100%;height:100%}::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-track{background:#1e293b}::-webkit-scrollbar-thumb{background:#475569;border-radius:4px}::-webkit-scrollbar-thumb:hover{background:#64748b}.mobile-thick-scrollbar::-webkit-scrollbar{width:12px;height:12px}.mobile-thick-scrollbar::-webkit-scrollbar-thumb{background:#475569;border:2px solid #1e293b;border-radius:6px}@property --tw-translate-x{syntax:"*";inherits:false;initial-value:0}@property --tw-translate-y{syntax:"*";inherits:false;initial-value:0}@property --tw-translate-z{syntax:"*";inherits:false;initial-value:0}@property --tw-rotate-x{syntax:"*";inherits:false}@property --tw-rotate-y{syntax:"*";inherits:false}@property --tw-rotate-z{syntax:"*";inherits:false}@property --tw-skew-x{syntax:"*";inherits:false}@property --tw-skew-y{syntax:"*";inherits:false}@property --tw-space-y-reverse{syntax:"*";inherits:false;initial-value:0}@property --tw-border-style{syntax:"*";inherits:false;initial-value:solid}@property --tw-leading{syntax:"*";inherits:false}@property --tw-font-weight{syntax:"*";inherits:false}@property --tw-tracking{syntax:"*";inherits:false}@property --tw-ordinal{syntax:"*";inherits:false}@property --tw-slashed-zero{syntax:"*";inherits:false}@property --tw-numeric-figure{syntax:"*";inherits:false}@property --tw-numeric-spacing{syntax:"*";inherits:false}@property --tw-numeric-fraction{syntax:"*";inherits:false}@property --tw-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-shadow-color{syntax:"*";inherits:false}@property --tw-shadow-alpha{syntax:"<percentage>";inherits:false;initial-value:100%}@property --tw-inset-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-inset-shadow-color{syntax:"*";inherits:false}@property --tw-inset-shadow-alpha{syntax:"<percentage>";inherits:false;initial-value:100%}@property --tw-ring-color{syntax:"*";inherits:false}@property --tw-ring-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-inset-ring-color{syntax:"*";inherits:false}@property --tw-inset-ring-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-ring-inset{syntax:"*";inherits:false}@property --tw-ring-offset-width{syntax:"<length>";inherits:false;initial-value:0}@property --tw-ring-offset-color{syntax:"*";inherits:false;initial-value:#fff}@property --tw-ring-offset-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-blur{syntax:"*";inherits:false}@property --tw-brightness{syntax:"*";inherits:false}@property --tw-contrast{syntax:"*";inherits:false}@property --tw-grayscale{syntax:"*";inherits:false}@property --tw-hue-rotate{syntax:"*";inherits:false}@property --tw-invert{syntax:"*";inherits:false}@property --tw-opacity{syntax:"*";inherits:false}@property --tw-saturate{syntax:"*";inherits:false}@property --tw-sepia{syntax:"*";inherits:false}@property --tw-drop-shadow{syntax:"*";inherits:false}@property --tw-drop-shadow-color{syntax:"*";inherits:false}@property --tw-drop-shadow-alpha{syntax:"<percentage>";inherits:false;initial-value:100%}@property --tw-drop-shadow-size{syntax:"*";inherits:false}@property --tw-backdrop-blur{syntax:"*";inherits:false}@property --tw-backdrop-brightness{syntax:"*";inherits:false}@property --tw-backdrop-contrast{syntax:"*";inherits:false}@property --tw-backdrop-grayscale{syntax:"*";inherits:false}@property --tw-backdrop-hue-rotate{syntax:"*";inherits:false}@property --tw-backdrop-invert{syntax:"*";inherits:false}@property --tw-backdrop-opacity{syntax:"*";inherits:false}@property --tw-backdrop-saturate{syntax:"*";inherits:false}@property --tw-backdrop-sepia{syntax:"*";inherits:false}@property --tw-duration{syntax:"*";inherits:false}';
   (function() {

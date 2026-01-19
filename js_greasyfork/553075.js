@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         百合会论坛阅读增强
 // @namespace    http://tampermonkey.net/
-// @version      2.2.0
+// @version      2.2.1
 // @description  为百合会论坛提供漫画/小说的沉浸式阅读体验，支持多种阅读模式、暗色模式、Material Design风格
 // @author       bluelightgit
 // @match        https://bbs.yamibo.com/thread-*
@@ -189,6 +189,52 @@
             };
         }
 
+        function scoreOrderedMatchRatio(source, target) {
+            if (!source || !target) return 0;
+            if (source === target) return 1;
+            if (source.includes(target)) return 0.98 + Math.min(0.02, target.length / Math.max(1, source.length) * 0.02);
+
+            let matched = 0;
+            let pos = 0;
+            for (let i = 0; i < target.length; i++) {
+                const ch = target[i];
+                const found = source.indexOf(ch, pos);
+                if (found === -1) continue;
+                matched += 1;
+                pos = found + 1;
+            }
+            return matched / Math.max(1, target.length);
+        }
+
+        function findBestMatchingFavoriteSeriesTitle(queryCandidates, favorites) {
+            const favoriteTitles = Array.isArray(favorites) ? favorites : [];
+            const candidates = Array.isArray(queryCandidates) ? queryCandidates : [];
+
+            let best = null;
+            for (const fav of favoriteTitles) {
+                if (typeof fav !== 'string') continue;
+                const favNorm = normalizeTitleForFavoriteMatch(fav);
+                if (!favNorm) continue;
+
+                for (const cand of candidates) {
+                    if (typeof cand !== 'string') continue;
+                    const candNorm = normalizeTitleForFavoriteMatch(cand);
+                    if (!candNorm) continue;
+
+                    const score = Math.max(
+                        scoreOrderedMatchRatio(candNorm, favNorm),
+                        scoreOrderedMatchRatio(favNorm, candNorm)
+                    );
+                    if (!best || score > best.score + 1e-6 ||
+                        (Math.abs(score - best.score) <= 1e-6 && favNorm.length < best.normLength)) {
+                        best = { title: fav, score, normLength: favNorm.length };
+                    }
+                }
+            }
+
+            return best;
+        }
+
         // =========================
         const CONFIG = {
             GOLDEN_RATIO: 0.618,
@@ -203,6 +249,7 @@
             SEARCH_RETRY_INTERVAL_MS: 2000,
             STORAGE_KEY: 'yamibo_reader_data',
             AUTO_OPEN_KEY: 'yamibo_reader_auto_open',
+            FORUM_MODE_RESTORE_KEY: 'yamibo_reader_forum_mode_restore',
             WEBDAV_CONFIG_KEY: 'yamibo_reader_webdav_config',
             WEBDAV_STATE_KEY: 'yamibo_reader_webdav_state',
             // 阅读模式
@@ -222,6 +269,7 @@
         // =========================
         const ICONS = {
             book: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1zm0 13.5c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V8c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5v11.5z"/></svg>',
+            list: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h2v2H4zm4 0h12v2H8zm-4 5h2v2H4zm4 0h12v2H8zm-4 5h2v2H4zm4 0h12v2H8z"/></svg>',
             bookmark: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>',
             bookmarkFilled: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/></svg>',
             settings: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/></svg>',
@@ -455,6 +503,21 @@
             } else if (typeof this.data.settings.sidebarCollapsed !== 'boolean') {
                 this.data.settings.sidebarCollapsed = !!this.data.settings.sidebarCollapsed;
                 settingsUpdated = true;
+            }
+            if (!Object.prototype.hasOwnProperty.call(this.data.settings, 'layoutMode')) {
+                this.data.settings.layoutMode = 'auto';
+                settingsUpdated = true;
+            } else {
+                const rawMode = typeof this.data.settings.layoutMode === 'string'
+                    ? this.data.settings.layoutMode.trim().toLowerCase()
+                    : '';
+                if (rawMode !== 'auto' && rawMode !== 'mobile' && rawMode !== 'desktop') {
+                    this.data.settings.layoutMode = 'auto';
+                    settingsUpdated = true;
+                } else if (this.data.settings.layoutMode !== rawMode) {
+                    this.data.settings.layoutMode = rawMode;
+                    settingsUpdated = true;
+                }
             }
             this.migrateLegacyFavorites();
 
@@ -721,6 +784,21 @@
             this.save();
         }
 
+        clearSeriesNameOverride(baseKey) {
+            if (!baseKey) {
+                return;
+            }
+            const overrides = this.data.seriesNameOverrides;
+            if (!overrides || typeof overrides !== 'object') {
+                return;
+            }
+            if (!Object.prototype.hasOwnProperty.call(overrides, baseKey)) {
+                return;
+            }
+            delete overrides[baseKey];
+            this.save({ origin: 'clearSeriesNameOverride' });
+        }
+
         renameFavoriteSeries(oldKey, newKey, newTitle) {
             if (!oldKey || !newKey || oldKey === newKey) {
                 return;
@@ -855,6 +933,15 @@
              };
          }
 
+         getSyncPayload() {
+             return {
+                 meta: this.data.meta || {},
+                 favorites: this.data.favorites || {},
+                 readingProgress: this.data.readingProgress || {},
+                 seriesNameOverrides: this.data.seriesNameOverrides || {}
+             };
+         }
+
          exportData(pretty = true) {
              const payload = this.getExportPayload();
              return JSON.stringify(payload, null, pretty ? 2 : 0);
@@ -879,13 +966,17 @@
              }
 
              const parsedMeta = parsed.meta && typeof parsed.meta === 'object' ? parsed.meta : {};
+             const ignoreSettings = options.ignoreSettings === true;
+             const nextSettings = ignoreSettings
+                 ? (this.data.settings && typeof this.data.settings === 'object' ? this.data.settings : {})
+                 : (typeof parsed.settings === 'object' && parsed.settings !== null ? parsed.settings : {});
              const nextData = {
                  meta: {
                      ...(this.data.meta && typeof this.data.meta === 'object' ? this.data.meta : {}),
                      ...parsedMeta
                  },
                  favorites: typeof parsed.favorites === 'object' && parsed.favorites !== null ? parsed.favorites : {},
-                 settings: typeof parsed.settings === 'object' && parsed.settings !== null ? parsed.settings : {},
+                 settings: nextSettings,
                  readingProgress: typeof parsed.readingProgress === 'object' && parsed.readingProgress !== null ? parsed.readingProgress : {},
                  seriesNameOverrides: typeof parsed.seriesNameOverrides === 'object' && parsed.seriesNameOverrides !== null ? parsed.seriesNameOverrides : {}
              };
@@ -1087,10 +1178,7 @@
          }
 
          const localSettings = coercePlainObject(local.settings);
-         const remoteSettings = coercePlainObject(remote.settings);
-         const mergedSettings = newerOverridesOlder
-             ? { ...localSettings, ...remoteSettings }
-             : { ...remoteSettings, ...localSettings };
+         const mergedSettings = localSettings;
 
          const schemaVersion = Math.max(Number(localMeta.schemaVersion) || 1, Number(remoteMeta.schemaVersion) || 1);
          const createdAt = Math.min(Number(localMeta.createdAt) || Date.now(), Number(remoteMeta.createdAt) || Date.now());
@@ -1208,12 +1296,12 @@
              return { etag };
          }
 
-         async syncBidirectional() {
-             const localPayload = this.dataStore.getExportPayload();
+        async syncBidirectional() {
+             const localPayload = this.dataStore.getSyncPayload();
              const { payload: remotePayload, etag: remoteEtag } = await this.download();
              const merged = mergeReaderPayload(localPayload, remotePayload);
-             this.dataStore.importData(merged, { notify: false, origin: 'webdav-sync' });
-             const { etag: nextEtag } = await this.upload(merged);
+             this.dataStore.importData(merged, { notify: false, origin: 'webdav-sync', ignoreSettings: true });
+             const { etag: nextEtag } = await this.upload(this.dataStore.getSyncPayload());
              this.setState({ etag: nextEtag || remoteEtag || '', lastSyncAt: Date.now() });
              return { merged, etag: nextEtag || remoteEtag || '' };
          }
@@ -1383,6 +1471,7 @@
              this.imageCache = new ImageCache(); // 图片缓存
              this.webdavSync = new WebDAVSyncService(this.dataStore);
              this.webdavSyncButton = null;
+             this.webdavSyncButtonDefaultIcon = '';
              this.webdavSyncInFlight = false;
              this.webdavSyncQueued = false;
              this.webdavSyncStatusTimer = null;
@@ -1390,13 +1479,14 @@
              this.webdavLastAutoSyncStartAt = 0;
              this.webdavAutoSyncPending = false;
              this.scrollHandler = null;
-             this.scrollUpdateScheduled = false;
-             this.currentScrollImageIndex = 0;
-             this.lastFlipDirection = 'next';
+            this.scrollUpdateScheduled = false;
+            this.currentScrollImageIndex = 0;
+            this.lastFlipDirection = 'next';
             this.baseSeriesKey = buildSeriesKey(this.parser.threadTitle);
             const defaultSeriesName = this.parser.seriesTitle || normalizeSeriesTitle(this.parser.threadTitle) || this.parser.threadTitle || '未命名合集';
+            this.defaultSeriesName = (defaultSeriesName || '').trim() || '未命名合集';
             const storedSeriesName = this.dataStore.getSeriesNameOverride(this.baseSeriesKey);
-            this.currentSeriesName = (storedSeriesName || defaultSeriesName).trim() || defaultSeriesName;
+            this.currentSeriesName = (storedSeriesName || this.defaultSeriesName).trim() || this.defaultSeriesName;
             this.seriesTitle = this.currentSeriesName;
             this.seriesKey = buildSeriesKey(this.currentSeriesName);
             if (this.seriesKey !== this.baseSeriesKey && this.dataStore.getFavorite && this.dataStore.getFavorite(this.baseSeriesKey)) {
@@ -1406,6 +1496,9 @@
             this.mainWidthRatio = Number.isFinite(storedMainWidth) ? storedMainWidth : CONFIG.DEFAULT_MAIN_WIDTH_RATIO;
             this.mainWidthRatio = Math.min(Math.max(this.mainWidthRatio, 0.5), 0.9);
             this.sidebarCollapsed = !!this.dataStore.getSetting('sidebarCollapsed', false);
+            this.isMobileLayoutActive = false;
+            this.handleLayoutResize = () => this.updateMobileLayout();
+            window.addEventListener('resize', this.handleLayoutResize, { passive: true });
 
              this.currentDirectoryCount = null;
              this.unsubscribeStoreChange = typeof this.dataStore.onChange === 'function'
@@ -1414,6 +1507,86 @@
              this.createFloatingButton();
              this.autoOpenIfRequested();
          }
+
+        normalizeSeriesNameForComparison(value) {
+            return typeof value === 'string'
+                ? value.trim().replace(/\s+/g, ' ')
+                : '';
+        }
+
+        isDefaultSeriesName(value) {
+            const a = this.normalizeSeriesNameForComparison(value);
+            const b = this.normalizeSeriesNameForComparison(this.defaultSeriesName);
+            return !!a && a === b;
+        }
+
+        resetSeriesNameToDefault() {
+            const next = this.defaultSeriesName || this.currentSeriesName;
+            if (!next) {
+                return false;
+            }
+            return this.updateSeriesName(next, { persistOverride: true });
+        }
+
+        getFavoriteSeriesTitles() {
+            const favorites = typeof this.dataStore.getAllFavorites === 'function'
+                ? this.dataStore.getAllFavorites()
+                : [];
+            const titles = [];
+            const seen = new Set();
+            const addTitle = (value) => {
+                const t = typeof value === 'string' ? value.trim() : '';
+                if (!t) return;
+                if (seen.has(t)) return;
+                seen.add(t);
+                titles.push(t);
+            };
+
+            for (const fav of favorites || []) {
+                addTitle(fav && typeof fav.seriesTitle === 'string' ? fav.seriesTitle : '');
+
+                const chapters = fav && fav.chapters && typeof fav.chapters === 'object' ? fav.chapters : null;
+                if (chapters) {
+                    Object.values(chapters).forEach((chapter) => {
+                        addTitle(chapter && typeof chapter.title === 'string' ? chapter.title : '');
+                    });
+                }
+            }
+
+            return titles;
+        }
+
+        getBestSearchQueryForDirectory(rawQuery) {
+            const query = typeof rawQuery === 'string' ? rawQuery.trim() : '';
+            if (!query) return '';
+
+            const candidates = [query];
+            const normalizedFromQuery = normalizeSeriesTitle(query);
+            if (normalizedFromQuery && normalizedFromQuery !== query) {
+                candidates.push(normalizedFromQuery);
+            }
+            const normalizedFromThread = normalizeSeriesTitle(this.parser?.threadTitle || '');
+            if (normalizedFromThread && !candidates.includes(normalizedFromThread)) {
+                candidates.push(normalizedFromThread);
+            }
+
+            const favorites = this.getFavoriteSeriesTitles();
+            const best = findBestMatchingFavoriteSeriesTitle(candidates, favorites);
+            if (best && best.score >= 0.92 && typeof best.title === 'string' && best.title.trim()) {
+                const bestTitle = best.title.trim();
+                const normalizedBest = normalizeSeriesTitle(bestTitle);
+                if (normalizedBest && normalizedBest.length >= 2) {
+                    return normalizedBest;
+                }
+                return bestTitle;
+            }
+
+            if (normalizedFromQuery && normalizedFromQuery.length >= 2 && normalizedFromQuery.length < query.length) {
+                return normalizedFromQuery;
+            }
+
+            return query;
+        }
 
         createFloatingButton() {
             const button = document.createElement('div');
@@ -1455,8 +1628,53 @@
             this.updateFloatingButtonDockState();
         }
 
+        clampFloatingButtonIntoViewport(options = {}) {
+            const btn = this.floatingBtn;
+            if (!btn) {
+                return;
+            }
+            const { save = false, force = false } = options;
+            const rect = btn.getBoundingClientRect();
+            const margin = 0;
+            const maxLeft = Math.max(0, window.innerWidth - rect.width - margin);
+            const maxTop = Math.max(0, window.innerHeight - rect.height - margin);
+            const nextLeft = Math.min(maxLeft, Math.max(margin, rect.left));
+            const nextTop = Math.min(maxTop, Math.max(margin, rect.top));
+
+            const changed = Math.abs(nextLeft - rect.left) > 0.5 || Math.abs(nextTop - rect.top) > 0.5;
+            if (!force && !changed) {
+                return;
+            }
+
+            btn.classList.remove('default-position');
+            btn.style.left = `${Math.round(nextLeft)}px`;
+            btn.style.top = `${Math.round(nextTop)}px`;
+            btn.style.right = 'auto';
+            btn.style.bottom = 'auto';
+            btn.style.transform = 'none';
+
+            if (save && this.dataStore && typeof this.dataStore.setFloatingButtonPosition === 'function') {
+                this.dataStore.setFloatingButtonPosition(nextLeft, nextTop);
+            }
+        }
+
         updateFloatingButtonDockState() {
             if (!this.floatingBtn) {
+                return;
+            }
+            if (this.isTouchDevice()) {
+                this.floatingBtn.classList.remove('edge-left', 'edge-right', 'edge-expanded');
+                delete this.floatingBtn.dataset.dockExpanded;
+                delete this.floatingBtn.dataset.dockState;
+                delete this.floatingBtn.dataset.restoreLeft;
+                delete this.floatingBtn.dataset.restoreRight;
+
+                const rect = this.floatingBtn.getBoundingClientRect();
+                const fullyVisible = rect.left >= 0 &&
+                    rect.top >= 0 &&
+                    rect.right <= window.innerWidth &&
+                    rect.bottom <= window.innerHeight;
+                this.clampFloatingButtonIntoViewport({ save: true, force: !fullyVisible });
                 return;
             }
             if (this.floatingBtn.dataset.dockExpanded === '1') {
@@ -1693,6 +1911,9 @@
         }
 
         enterReaderMode() {
+            if (!this.ensureDesktopLayoutForParsing()) {
+                return;
+            }
             this.isReaderMode = true;
             this.posts = this.parser.getAuthorPosts();
 
@@ -1741,6 +1962,83 @@
             }
             this.readerContainer = null;
             this.webdavSyncButton = null;
+
+            if (this.restoreForumModeOnExitIfNeeded()) {
+                return;
+            }
+
+            this.updateFloatingButtonDockState();
+        }
+
+        setForumModeRestoreInfo(payload) {
+            try {
+                const prevMobileParam = payload && Object.prototype.hasOwnProperty.call(payload, 'prevMobileParam')
+                    ? payload.prevMobileParam
+                    : null;
+                GM_setValue(CONFIG.FORUM_MODE_RESTORE_KEY, JSON.stringify({
+                    enabled: true,
+                    timestamp: Date.now(),
+                    prevMobileParam: typeof prevMobileParam === 'string' ? prevMobileParam : null
+                }));
+            } catch (e) {
+                // ignore
+            }
+        }
+
+        restoreForumModeOnExitIfNeeded() {
+            const raw = GM_getValue(CONFIG.FORUM_MODE_RESTORE_KEY, '');
+            if (!raw) {
+                return false;
+            }
+
+            let info = null;
+            try {
+                info = JSON.parse(raw);
+            } catch (e) {
+                GM_setValue(CONFIG.FORUM_MODE_RESTORE_KEY, '');
+                return false;
+            }
+
+            if (!info || !info.enabled) {
+                GM_setValue(CONFIG.FORUM_MODE_RESTORE_KEY, '');
+                return false;
+            }
+
+            const ts = Number(info.timestamp) || 0;
+            if (!ts || Date.now() - ts > 30 * 60 * 1000) {
+                GM_setValue(CONFIG.FORUM_MODE_RESTORE_KEY, '');
+                return false;
+            }
+
+            let url;
+            try {
+                url = new URL(window.location.href);
+            } catch (e) {
+                GM_setValue(CONFIG.FORUM_MODE_RESTORE_KEY, '');
+                return false;
+            }
+
+            const currentMobile = (url.searchParams.get('mobile') || '').toLowerCase();
+            const forcedDesktop = currentMobile === 'no' || currentMobile === '0' ||
+                /(?:^|;\s*)mobile=no(?:;|$)/i.test(document.cookie || '');
+            if (!forcedDesktop) {
+                GM_setValue(CONFIG.FORUM_MODE_RESTORE_KEY, '');
+                return false;
+            }
+
+            document.cookie = 'mobile=; Max-Age=0; path=/';
+            document.cookie = 'mobile=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+
+            const prev = typeof info.prevMobileParam === 'string' ? info.prevMobileParam.trim() : '';
+            if (prev) {
+                url.searchParams.set('mobile', prev);
+            } else {
+                url.searchParams.delete('mobile');
+            }
+
+            GM_setValue(CONFIG.FORUM_MODE_RESTORE_KEY, '');
+            window.location.replace(url.toString());
+            return true;
         }
 
         createReaderContainer() {
@@ -1755,6 +2053,9 @@
                              <div class="toolbar-left">
                                  <button id="view-mode-btn" class="icon-btn" title="切换阅读模式">
                                      ${ICONS.viewMode}
+                                 </button>
+                                 <button id="directory-btn" class="icon-btn mobile-only" title="打开目录">
+                                     ${ICONS.list}
                                  </button>
                                  <button id="dark-mode-btn" class="icon-btn" title="切换暗色模式">
                                      ${this.darkMode ? ICONS.lightMode : ICONS.darkMode}
@@ -1778,7 +2079,7 @@
                                 <button id="close-reader-top" class="icon-btn" title="关闭阅读模式">
                                     ${ICONS.close}
                                 </button>
-                                <button id="toggle-sidebar-btn" class="icon-btn" title="收起右侧菜单" aria-pressed="false">
+                                <button id="toggle-sidebar-btn" class="icon-btn desktop-only" title="收起右侧菜单" aria-pressed="false">
                                     ${ICONS.chevronsRight}
                                 </button>
                             </div>
@@ -1793,6 +2094,9 @@
                 <div class="reader-resizer" id="reader-resizer"></div>
                 <div class="reader-sidebar">
                         <div class="sidebar-top">
+                            <button id="sidebar-close-btn" class="icon-btn sidebar-close-btn" title="返回">
+                                ${ICONS.chevronsLeft}
+                            </button>
                             <div class="sidebar-tabs">
                             <button class="tab-btn active" data-tab="directory">目录</button>
                             <button class="tab-btn" data-tab="comments">评论</button>
@@ -1825,66 +2129,85 @@
                     </div>
                 </div>
                 <div id="view-mode-menu" class="popup-menu" style="display: none;">
-                    <div class="menu-item" data-mode="${CONFIG.VIEW_MODES.SCROLL_DOWN}">
-                        <span>滑动-下</span>
+                    <div class="menu-header">
+                        <span class="menu-title">阅读菜单</span>
+                        <button id="menu-close-btn" class="icon-btn menu-close-btn" title="关闭">
+                            ${ICONS.close}
+                        </button>
                     </div>
-                    <div class="menu-item" data-mode="${CONFIG.VIEW_MODES.SCROLL_LEFT}">
-                        <span>滑动-左</span>
-                    </div>
-                    <div class="menu-item" data-mode="${CONFIG.VIEW_MODES.SCROLL_RIGHT}">
-                        <span>滑动-右</span>
-                    </div>
-                    <div class="menu-item" data-mode="${CONFIG.VIEW_MODES.FLIP_LEFT_SINGLE}">
-                        <span>翻页-左-单页</span>
-                    </div>
-                    <div class="menu-item" data-mode="${CONFIG.VIEW_MODES.FLIP_LEFT_DOUBLE}">
-                        <span>翻页-左-双页</span>
-                    </div>
-                    <div class="menu-item" data-mode="${CONFIG.VIEW_MODES.FLIP_RIGHT_SINGLE}">
-                        <span>翻页-右-单页</span>
-                    </div>
-                    <div class="menu-item" data-mode="${CONFIG.VIEW_MODES.FLIP_RIGHT_DOUBLE}">
-                        <span>翻页-右-双页</span>
-                    </div>
-                    <div class="menu-divider"></div>
-                    <div class="menu-settings">
-                        <div class="menu-section-title">阅读设置</div>
-                        <label class="menu-range-label" for="menu-preload-slider">
-                            预加载图片
-                            <span id="menu-preload-value">${currentPreload}</span>
-                        </label>
-                        <input type="range" id="menu-preload-slider" min="0" max="10" step="1" value="${currentPreload}">
-                        <label class="menu-input-label" for="menu-search-per-page">每页搜索数量</label>
-                         <input
-                             type="number"
-                             id="menu-search-per-page"
-                             class="menu-number-input"
-                             min="${CONFIG.SEARCH_RESULTS_PER_PAGE_MIN}"
-                             max="${CONFIG.SEARCH_RESULTS_PER_PAGE_MAX}"
-                             step="10"
-                             value="${this.getSearchResultsPerPage()}">
-                         <div class="menu-hint">少于该数量时停止翻页</div>
-                         <div class="menu-toggle-row" id="menu-auto-webdav-row">
-                             <label class="menu-toggle" for="menu-auto-webdav-sync">
-                                 <input type="checkbox" id="menu-auto-webdav-sync">
-                                 <span>自动 WebDAV 同步</span>
-                             </label>
-                             <span class="menu-toggle-state" id="menu-auto-webdav-state">未就绪</span>
+                    <div class="menu-scroll">
+                        <div class="menu-item" data-mode="${CONFIG.VIEW_MODES.SCROLL_DOWN}">
+                            <span>滑动-下</span>
+                        </div>
+                        <div class="menu-item" data-mode="${CONFIG.VIEW_MODES.SCROLL_LEFT}">
+                            <span>滑动-左</span>
+                        </div>
+                        <div class="menu-item" data-mode="${CONFIG.VIEW_MODES.SCROLL_RIGHT}">
+                            <span>滑动-右</span>
+                        </div>
+                        <div class="menu-item" data-mode="${CONFIG.VIEW_MODES.FLIP_LEFT_SINGLE}">
+                            <span>翻页-左-单页</span>
+                        </div>
+                        <div class="menu-item" data-mode="${CONFIG.VIEW_MODES.FLIP_LEFT_DOUBLE}">
+                            <span>翻页-左-双页</span>
+                        </div>
+                        <div class="menu-item" data-mode="${CONFIG.VIEW_MODES.FLIP_RIGHT_SINGLE}">
+                            <span>翻页-右-单页</span>
+                        </div>
+                        <div class="menu-item" data-mode="${CONFIG.VIEW_MODES.FLIP_RIGHT_DOUBLE}">
+                            <span>翻页-右-双页</span>
+                        </div>
+                        <div class="menu-divider"></div>
+                        <div class="menu-settings">
+                            <div class="menu-section-title">设置</div>
+                            <div class="menu-action-grid">
+                                <button id="menu-layout-toggle" class="menu-action-btn" type="button">布局：自动</button>
+                                <button id="menu-reset-series-name" class="menu-action-btn" type="button">系列名：重置</button>
+                            </div>
+                            <div class="menu-hint">自动跟随屏幕；桌面左右布局；移动全屏侧栏</div>
+                            <label class="menu-range-label" for="menu-preload-slider">
+                                预加载图片
+                                <span id="menu-preload-value">${currentPreload}</span>
+                            </label>
+                            <input type="range" id="menu-preload-slider" min="0" max="10" step="1" value="${currentPreload}">
+                            <div class="menu-row-inline">
+                                <label class="menu-input-label" for="menu-search-per-page">每页搜索</label>
+                                <input
+                                    type="number"
+                                    id="menu-search-per-page"
+                                    class="menu-number-input"
+                                    min="${CONFIG.SEARCH_RESULTS_PER_PAGE_MIN}"
+                                    max="${CONFIG.SEARCH_RESULTS_PER_PAGE_MAX}"
+                                    step="10"
+                                    value="${this.getSearchResultsPerPage()}">
+                            </div>
+                            <div class="menu-hint">少于该数量时停止翻页</div>
+                             <div class="menu-toggle-row" id="menu-auto-webdav-row">
+                                 <label class="menu-toggle" for="menu-auto-webdav-sync">
+                                     <input type="checkbox" id="menu-auto-webdav-sync">
+                                     <span>自动 WebDAV 同步</span>
+                                 </label>
+                                 <span class="menu-toggle-state" id="menu-auto-webdav-state">未就绪</span>
+                             </div>
+                             <div class="menu-row-inline">
+                                 <label class="menu-input-label" for="menu-auto-webdav-interval">间隔(秒)</label>
+                                 <input
+                                     type="number"
+                                     id="menu-auto-webdav-interval"
+                                     class="menu-number-input"
+                                     min="0"
+                                     max="3600"
+                                     step="5"
+                                     value="${this.getAutoWebdavSyncIntervalSeconds()}">
+                             </div>
+                             <div class="menu-hint">0 = 关闭自动同步</div>
+                             <div class="menu-hint" id="menu-auto-webdav-hint">需先配置 WebDAV 且至少成功同步一次</div>
+                             <div class="menu-row-inline menu-cache-row">
+                                 <div class="menu-cache-info">缓存: <span id="menu-cache-count">${cachedCount}</span> 张</div>
+                                 <button id="menu-clear-cache" class="menu-action-btn" type="button">清缓存</button>
+                             </div>
+                             <button id="menu-data-transfer" class="menu-action-btn" type="button">导入/导出</button>
                          </div>
-                         <label class="menu-input-label" for="menu-auto-webdav-interval">自动同步间隔(秒)</label>
-                         <input
-                             type="number"
-                             id="menu-auto-webdav-interval"
-                             class="menu-number-input"
-                             min="0"
-                             max="3600"
-                             step="5"
-                             value="${this.getAutoWebdavSyncIntervalSeconds()}">
-                         <div class="menu-hint">0 = 关闭自动同步</div>
-                         <div class="menu-hint" id="menu-auto-webdav-hint">需先配置 WebDAV 且至少成功同步一次</div>
-                         <div class="menu-cache-info">已缓存: <span id="menu-cache-count">${cachedCount}</span> 张</div>
-                         <button id="menu-clear-cache" class="menu-action-btn">清除图片缓存</button>
-                         <button id="menu-data-transfer" class="menu-action-btn">导入/导出</button>
                      </div>
                  </div>
             `;
@@ -1900,6 +2223,7 @@
             this.updateWebdavSyncIndicators();
             this.setupResizer();
             this.applySidebarState();
+            this.updateMobileLayout();
         }
 
         bindReaderEvents() {
@@ -1983,6 +2307,14 @@
             if (toggleSidebarBtn) {
                 toggleSidebarBtn.addEventListener('click', () => this.toggleSidebar());
             }
+            const directoryBtn = document.getElementById('directory-btn');
+            if (directoryBtn) {
+                directoryBtn.addEventListener('click', () => this.openMobileSidebar());
+            }
+            const sidebarCloseBtn = document.getElementById('sidebar-close-btn');
+            if (sidebarCloseBtn) {
+                sidebarCloseBtn.addEventListener('click', () => this.closeMobileSidebar());
+            }
             document.getElementById('search-btn').addEventListener('click', () => this.searchDirectory());
             const searchInputEl = document.getElementById('series-search');
             if (searchInputEl) {
@@ -1998,6 +2330,12 @@
                         searchInputEl.value = this.currentSeriesName;
                         return;
                     }
+                    if (value === this.currentSeriesName) {
+                        if (this.isDefaultSeriesName(value)) {
+                            this.dataStore.clearSeriesNameOverride(this.baseSeriesKey);
+                        }
+                        return;
+                    }
                     this.updateSeriesName(value, { persistOverride: true });
                 });
             }
@@ -2008,6 +2346,9 @@
             // WebDAV 同步
             this.webdavSyncButton = document.getElementById('webdav-sync-btn');
             if (this.webdavSyncButton) {
+                if (!this.webdavSyncButtonDefaultIcon) {
+                    this.webdavSyncButtonDefaultIcon = this.webdavSyncButton.innerHTML;
+                }
                 this.webdavSyncButton.addEventListener('click', async () => {
                     if (this.webdavSyncButton.disabled) {
                         return;
@@ -2017,22 +2358,23 @@
             }
 
             // 阅读模式切换
-            document.getElementById('view-mode-btn').addEventListener('click', (e) => {
-                const menu = document.getElementById('view-mode-menu');
-                const rect = e.target.getBoundingClientRect();
-                menu.style.top = `${rect.bottom + 5}px`;
-                menu.style.left = `${rect.left}px`;
-
-                this.syncMenuSettingControls();
-
-                menu.style.display = menu.style.display === 'none' || menu.style.display === '' ? 'block' : 'none';
-            });
+            const viewModeBtn = document.getElementById('view-mode-btn');
+            if (viewModeBtn) {
+                viewModeBtn.addEventListener('click', (e) => {
+                    const rect = e.currentTarget.getBoundingClientRect();
+                    this.toggleViewModeMenu(rect);
+                });
+            }
+            const menuCloseBtn = document.getElementById('menu-close-btn');
+            if (menuCloseBtn) {
+                menuCloseBtn.addEventListener('click', () => this.closeViewModeMenu());
+            }
 
             document.querySelectorAll('#view-mode-menu .menu-item').forEach(item => {
                 item.addEventListener('click', (e) => {
                     const mode = e.target.closest('.menu-item').dataset.mode;
                     this.changeViewMode(mode);
-                    document.getElementById('view-mode-menu').style.display = 'none';
+                    this.closeViewModeMenu();
                 });
             });
 
@@ -2041,9 +2383,8 @@
                 dataTransferBtn.addEventListener('click', (event) => {
                     event.preventDefault();
                     event.stopPropagation();
-                    const menu = document.getElementById('view-mode-menu');
-                    if (menu) {
-                        menu.style.display = 'none';
+                    if (!this.isMobileLayout()) {
+                        this.closeViewModeMenu();
                     }
                     this.showDataTransferDialog();
                 });
@@ -2053,14 +2394,19 @@
             document.addEventListener('click', (e) => {
                 const menu = document.getElementById('view-mode-menu');
                 const btn = document.getElementById('view-mode-btn');
-                if (menu && !menu.contains(e.target) && !btn.contains(e.target)) {
-                    menu.style.display = 'none';
+                if (!this.isMobileLayout() && menu && btn) {
+                    const menuOpen = menu.style.display && menu.style.display !== 'none';
+                    if (menuOpen && !menu.contains(e.target) && !btn.contains(e.target)) {
+                        this.closeViewModeMenu();
+                    }
                 }
 
                 const preloadSlider = document.getElementById('menu-preload-slider');
                 const preloadValue = document.getElementById('menu-preload-value');
                 const cacheCountSpan = document.getElementById('menu-cache-count');
                 const clearCacheBtn = document.getElementById('menu-clear-cache');
+                const layoutToggleBtn = document.getElementById('menu-layout-toggle');
+                const resetSeriesBtn = document.getElementById('menu-reset-series-name');
                 const perPageInput = document.getElementById('menu-search-per-page');
                 const autoWebdavSyncCheckbox = document.getElementById('menu-auto-webdav-sync');
                 const autoWebdavIntervalInput = document.getElementById('menu-auto-webdav-interval');
@@ -2091,6 +2437,21 @@
                     });
                 }
 
+                if (layoutToggleBtn && !layoutToggleBtn.dataset.bound) {
+                    layoutToggleBtn.dataset.bound = 'true';
+                    layoutToggleBtn.addEventListener('click', () => {
+                        this.cycleLayoutMode();
+                    });
+                }
+
+                if (resetSeriesBtn && !resetSeriesBtn.dataset.bound) {
+                    resetSeriesBtn.dataset.bound = 'true';
+                    resetSeriesBtn.addEventListener('click', () => {
+                        this.resetSeriesNameToDefault();
+                        this.syncMenuSettingControls();
+                    });
+                }
+
                 if (autoWebdavSyncCheckbox && !autoWebdavSyncCheckbox.dataset.bound) {
                     autoWebdavSyncCheckbox.dataset.bound = 'true';
                     autoWebdavSyncCheckbox.addEventListener('change', (event) => {
@@ -2118,6 +2479,227 @@
             });
 
             this.updateFavoriteButton();
+        }
+
+        isMobileLayout() {
+            if (typeof window === 'undefined') {
+                return false;
+            }
+            const mode = this.getLayoutMode();
+            if (mode === 'mobile') {
+                return true;
+            }
+            if (mode === 'desktop') {
+                return false;
+            }
+            return window.matchMedia('(max-width: 1024px)').matches ||
+                window.matchMedia('(pointer: coarse)').matches;
+        }
+
+        isTouchDevice() {
+            if (typeof window === 'undefined') {
+                return false;
+            }
+            return window.matchMedia('(pointer: coarse)').matches;
+        }
+
+        ensureDesktopLayoutForParsing() {
+            if (!this.isTouchDevice()) {
+                return true;
+            }
+            let url;
+            try {
+                url = new URL(window.location.href);
+            } catch (error) {
+                return true;
+            }
+            const mobileParam = (url.searchParams.get('mobile') || '').toLowerCase();
+            if (mobileParam === 'no' || mobileParam === '0') {
+                return true;
+            }
+            this.setForumModeRestoreInfo({
+                prevMobileParam: url.searchParams.has('mobile') ? url.searchParams.get('mobile') : null
+            });
+            document.cookie = 'mobile=no; path=/';
+            this.scheduleAutoOpen(this.parser.threadId);
+            url.searchParams.set('mobile', 'no');
+            window.location.replace(url.toString());
+            return false;
+        }
+
+        updateMobileLayout(options = {}) {
+            const container = this.readerContainer || document.getElementById('yamibo-reader-container');
+            if (!container) {
+                return;
+            }
+            const force = !!options.force;
+            const isMobile = this.isMobileLayout();
+            if (!force && this.isMobileLayoutActive === isMobile) {
+                return;
+            }
+            this.isMobileLayoutActive = isMobile;
+            container.classList.toggle('mobile-layout', isMobile);
+            this.applySidebarState();
+            this.updateToolbarButtonsForLayout(isMobile);
+            if (isMobile) {
+                const menu = document.getElementById('view-mode-menu');
+                if (menu && menu.style.display && menu.style.display !== 'none') {
+                    this.openViewModeMenu();
+                }
+            }
+            if (!isMobile) {
+                container.classList.remove('mobile-menu-open', 'mobile-sidebar-open');
+                this.closeViewModeMenu();
+            }
+        }
+
+        updateToolbarButtonsForLayout(isMobile) {
+            const viewModeBtn = document.getElementById('view-mode-btn');
+            if (viewModeBtn) {
+                viewModeBtn.innerHTML = isMobile ? ICONS.settings : ICONS.viewMode;
+                viewModeBtn.title = isMobile ? '阅读设置' : '切换阅读模式';
+            }
+            const directoryBtn = document.getElementById('directory-btn');
+            if (directoryBtn) {
+                directoryBtn.innerHTML = isMobile ? ICONS.viewMode : ICONS.list;
+            }
+        }
+
+        setMobileMenuOpen(open) {
+            const container = this.readerContainer || document.getElementById('yamibo-reader-container');
+            if (!container) {
+                return;
+            }
+            container.classList.toggle('mobile-menu-open', open);
+            if (open) {
+                container.classList.remove('mobile-sidebar-open');
+            }
+        }
+
+        setMobileSidebarOpen(open) {
+            const container = this.readerContainer || document.getElementById('yamibo-reader-container');
+            if (!container) {
+                return;
+            }
+            container.classList.toggle('mobile-sidebar-open', open);
+            if (open) {
+                container.classList.remove('mobile-menu-open');
+            }
+        }
+
+        toggleMobileSidebar() {
+            const container = this.readerContainer || document.getElementById('yamibo-reader-container');
+            if (!container) {
+                return;
+            }
+            const isOpen = container.classList.contains('mobile-sidebar-open');
+            this.setMobileSidebarOpen(!isOpen);
+        }
+
+        openMobileSidebar() {
+            this.switchTab('directory');
+            if (!this.isMobileLayout()) {
+                if (this.sidebarCollapsed) {
+                    this.toggleSidebar();
+                }
+                return;
+            }
+            this.setMobileSidebarOpen(true);
+        }
+
+        closeMobileSidebar() {
+            if (!this.isMobileLayout()) {
+                return;
+            }
+            this.setMobileSidebarOpen(false);
+        }
+
+        positionPopupMenu(menu, anchorRect) {
+            if (!menu || !anchorRect) {
+                return;
+            }
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+            const margin = 12;
+            const maxHeight = Math.max(220, viewportHeight - margin * 2);
+            const maxWidth = Math.max(220, viewportWidth - margin * 2);
+
+            menu.style.maxHeight = `${maxHeight}px`;
+            menu.style.maxWidth = `${maxWidth}px`;
+            menu.style.left = '0';
+            menu.style.top = '0';
+            menu.style.visibility = 'hidden';
+            menu.style.display = 'flex';
+
+            const menuRect = menu.getBoundingClientRect();
+            let left = anchorRect.left;
+            let top = anchorRect.bottom + 6;
+
+            if (left + menuRect.width > viewportWidth - margin) {
+                left = viewportWidth - margin - menuRect.width;
+            }
+            if (left < margin) {
+                left = margin;
+            }
+
+            if (top + menuRect.height > viewportHeight - margin) {
+                const aboveTop = anchorRect.top - menuRect.height - 6;
+                if (aboveTop >= margin) {
+                    top = aboveTop;
+                } else {
+                    top = Math.max(margin, viewportHeight - margin - menuRect.height);
+                }
+            }
+
+            menu.style.left = `${Math.round(left)}px`;
+            menu.style.top = `${Math.round(top)}px`;
+            menu.style.visibility = '';
+        }
+
+        openViewModeMenu(anchorRect) {
+            const menu = document.getElementById('view-mode-menu');
+            if (!menu) {
+                return;
+            }
+            const scrollArea = menu.querySelector('.menu-scroll');
+            if (scrollArea) {
+                scrollArea.scrollTop = 0;
+            }
+            if (this.isMobileLayout()) {
+                menu.style.display = 'flex';
+                menu.style.left = '';
+                menu.style.top = '';
+                menu.style.maxHeight = '';
+                menu.style.maxWidth = '';
+                menu.style.visibility = '';
+                this.setMobileMenuOpen(true);
+            } else {
+                this.setMobileMenuOpen(false);
+                this.positionPopupMenu(menu, anchorRect);
+            }
+            this.syncMenuSettingControls();
+        }
+
+        closeViewModeMenu() {
+            const menu = document.getElementById('view-mode-menu');
+            if (menu) {
+                menu.style.display = 'none';
+                menu.style.visibility = '';
+            }
+            this.setMobileMenuOpen(false);
+        }
+
+        toggleViewModeMenu(anchorRect) {
+            const menu = document.getElementById('view-mode-menu');
+            if (!menu) {
+                return;
+            }
+            const isOpen = menu.style.display && menu.style.display !== 'none';
+            if (isOpen) {
+                this.closeViewModeMenu();
+                return;
+            }
+            this.openViewModeMenu(anchorRect);
         }
 
         applyLayoutSizing() {
@@ -2182,6 +2764,10 @@
         }
 
         toggleSidebar() {
+            if (this.isMobileLayout()) {
+                this.toggleMobileSidebar();
+                return;
+            }
             this.sidebarCollapsed = !this.sidebarCollapsed;
             this.dataStore.setSetting('sidebarCollapsed', this.sidebarCollapsed);
             this.applySidebarState();
@@ -2195,9 +2781,15 @@
             container.classList.toggle('sidebar-collapsed', this.sidebarCollapsed);
             const toggleBtn = document.getElementById('toggle-sidebar-btn');
             if (toggleBtn) {
-                toggleBtn.innerHTML = this.sidebarCollapsed ? ICONS.chevronsLeft : ICONS.chevronsRight;
-                toggleBtn.title = this.sidebarCollapsed ? '展开右侧菜单' : '收起右侧菜单';
-                toggleBtn.setAttribute('aria-pressed', String(this.sidebarCollapsed));
+                if (this.isMobileLayout()) {
+                    toggleBtn.innerHTML = ICONS.list;
+                    toggleBtn.title = '目录';
+                    toggleBtn.setAttribute('aria-pressed', 'false');
+                } else {
+                    toggleBtn.innerHTML = this.sidebarCollapsed ? ICONS.chevronsLeft : ICONS.chevronsRight;
+                    toggleBtn.title = this.sidebarCollapsed ? '展开右侧菜单' : '收起右侧菜单';
+                    toggleBtn.setAttribute('aria-pressed', String(this.sidebarCollapsed));
+                }
             }
         }
 
@@ -2780,14 +3372,26 @@
 
             const previousKey = this.seriesKey;
             const previousName = this.currentSeriesName;
+            const newKey = buildSeriesKey(trimmed) || previousKey;
+            const isDefaultName = this.isDefaultSeriesName(trimmed);
+
+            if (previousKey === newKey && previousName === trimmed) {
+                if (persistOverride && isDefaultName) {
+                    this.dataStore.clearSeriesNameOverride(this.baseSeriesKey);
+                }
+                return false;
+            }
 
             this.currentSeriesName = trimmed;
             this.seriesTitle = trimmed;
-            const newKey = buildSeriesKey(trimmed) || previousKey;
             this.seriesKey = newKey;
 
             if (persistOverride) {
-                this.dataStore.setSeriesNameOverride(this.baseSeriesKey, trimmed);
+                if (isDefaultName) {
+                    this.dataStore.clearSeriesNameOverride(this.baseSeriesKey);
+                } else {
+                    this.dataStore.setSeriesNameOverride(this.baseSeriesKey, trimmed);
+                }
             }
 
             if (previousKey && previousKey !== newKey) {
@@ -2863,6 +3467,7 @@
             const overlay = document.createElement('div');
              overlay.id = 'data-transfer-overlay';
              overlay.className = 'data-transfer-overlay';
+             overlay.classList.toggle('mobile-dialog', this.isMobileLayout());
              const webdavConfig = this.webdavSync ? this.webdavSync.getConfig() : { url: '', username: '', password: '' };
              const webdavState = this.webdavSync ? this.webdavSync.getState() : { etag: '', lastSyncAt: 0 };
              const lastSyncText = webdavState.lastSyncAt
@@ -3048,7 +3653,7 @@
                              alert('远端文件为空/不存在(404)');
                              return;
                          }
-                         this.dataStore.importData(payload, { notify: false, origin: 'webdav-download' });
+                         this.dataStore.importData(payload, { notify: false, origin: 'webdav-download', ignoreSettings: true });
                          if (etag) {
                              this.webdavSync.setState({ etag, lastSyncAt: Date.now() });
                          }
@@ -3092,7 +3697,7 @@
                          setWebdavStatus('上传中...');
                          this.webdavSyncInFlight = true;
                          this.dataStore.save({ notify: false, origin: 'webdav-upload' });
-                         const payload = this.dataStore.getExportPayload();
+                         const payload = this.dataStore.getSyncPayload();
                          this.setWebdavSyncVisualState('syncing');
                          const { etag } = await this.webdavSync.upload(payload);
                          this.webdavSync.setState({ etag: etag || '', lastSyncAt: Date.now() });
@@ -3185,10 +3790,31 @@
             this.updateWebdavSyncIndicators();
         }
 
+        getLayoutMode() {
+            const rawMode = this.dataStore && typeof this.dataStore.getSetting === 'function'
+                ? this.dataStore.getSetting('layoutMode', 'auto')
+                : 'auto';
+            const mode = typeof rawMode === 'string' ? rawMode.trim().toLowerCase() : 'auto';
+            if (mode === 'desktop' || mode === 'mobile') {
+                return mode;
+            }
+            return 'auto';
+        }
+
+        cycleLayoutMode() {
+            const current = this.getLayoutMode();
+            const next = current === 'auto' ? 'desktop' : (current === 'desktop' ? 'mobile' : 'auto');
+            this.dataStore.setSetting('layoutMode', next);
+            this.syncMenuSettingControls();
+            this.updateMobileLayout({ force: true });
+        }
+
         syncMenuSettingControls() {
             const slider = document.getElementById('menu-preload-slider');
             const sliderValue = document.getElementById('menu-preload-value');
             const cacheCountSpan = document.getElementById('menu-cache-count');
+            const layoutToggleBtn = document.getElementById('menu-layout-toggle');
+            const resetSeriesBtn = document.getElementById('menu-reset-series-name');
             const perPageInput = document.getElementById('menu-search-per-page');
             const autoWebdavRow = document.getElementById('menu-auto-webdav-row');
             const autoWebdavCheckbox = document.getElementById('menu-auto-webdav-sync');
@@ -3208,6 +3834,17 @@
             }
             if (perPageInput) {
                 perPageInput.value = this.getSearchResultsPerPage();
+            }
+            if (layoutToggleBtn) {
+                const mode = this.getLayoutMode();
+                const label = mode === 'desktop' ? '桌面' : (mode === 'mobile' ? '移动' : '自动');
+                layoutToggleBtn.textContent = `布局：${label}`;
+            }
+            if (resetSeriesBtn) {
+                const isDefault = this.isDefaultSeriesName(this.currentSeriesName);
+                const hasOverride = !!this.dataStore.getSeriesNameOverride(this.baseSeriesKey);
+                resetSeriesBtn.disabled = isDefault && !hasOverride;
+                resetSeriesBtn.textContent = isDefault ? (hasOverride ? '系列名：清理' : '系列名：默认') : '系列名：重置';
             }
 
             const config = this.webdavSync ? this.webdavSync.getConfig() : { url: '' };
@@ -3328,6 +3965,15 @@
             const btn = this.webdavSyncButton;
             if (!btn) {
                 return;
+            }
+            if (!this.webdavSyncButtonDefaultIcon) {
+                this.webdavSyncButtonDefaultIcon = btn.innerHTML;
+            }
+            const defaultIcon = this.webdavSyncButtonDefaultIcon || ICONS.cloudSync;
+            if (state === 'syncing') {
+                btn.innerHTML = ICONS.searchSpinner;
+            } else {
+                btn.innerHTML = defaultIcon;
             }
             btn.classList.remove('syncing', 'sync-success', 'sync-failed');
             if (this.webdavSyncStatusTimer) {
@@ -3557,19 +4203,31 @@
                 this.searchRetryRemaining = CONFIG.SEARCH_RETRY_MAX_ATTEMPTS;
             }
 
-            const query = typeof options.queryOverride === 'string'
+            const rawQuery = typeof options.queryOverride === 'string'
                 ? options.queryOverride.trim()
                 : (isRetry && this.lastSearchQuery ? this.lastSearchQuery : (searchInput ? searchInput.value.trim() : ''));
-            console.log('[搜索] 搜索关键词:', query);
+            console.log('[搜索] 搜索关键词:', rawQuery);
 
-            if (!query) {
+            if (!rawQuery) {
                 console.log('[搜索] 错误: 搜索关键词为空');
                 this.showDirectoryError('请输入搜索关键词');
                 return;
             }
 
+            const isExplicitOverrideQuery = typeof options.queryOverride === 'string' && !isRetry;
+            const isUserEditedName = !isRetry &&
+                !isExplicitOverrideQuery &&
+                searchInput &&
+                rawQuery !== this.currentSeriesName;
+            if (isUserEditedName) {
+                this.updateSeriesName(rawQuery, { persistOverride: true });
+            }
+
+            const shouldAutoGuessQuery = !isRetry && !isExplicitOverrideQuery && rawQuery === this.currentSeriesName;
+            const query = shouldAutoGuessQuery
+                ? this.getBestSearchQueryForDirectory(rawQuery)
+                : rawQuery;
             this.lastSearchQuery = query;
-            this.updateSeriesName(query, { persistOverride: !isRetry });
 
             const perPageSetting = this.getSearchResultsPerPage();
             this.setDirectoryLoadingMessage(`搜索中... (每页${perPageSetting}条)`);
@@ -4466,29 +5124,44 @@
             position: absolute;
             inset: -3px;
             border-radius: 50%;
+            border: 2px solid currentColor;
             opacity: 0;
             transition: opacity 0.2s ease;
-            background: conic-gradient(currentColor 0 240deg, transparent 240deg 360deg);
-            -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 0);
-            mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 0);
+            background: none;
+            -webkit-mask: none;
+            mask: none;
             pointer-events: none;
         }
 
         .webdav-sync-btn.syncing::before {
             opacity: 1;
+            border-color: var(--primary-color);
+            animation: none;
+        }
+
+        .webdav-sync-btn.syncing {
+            color: var(--primary-color);
+        }
+
+        .webdav-sync-btn.syncing svg {
             animation: webdav-sync-spin 0.9s linear infinite;
+            transform-origin: 50% 50%;
+            width: 100%;
+            height: 100%;
         }
 
         .webdav-sync-btn.sync-success::before {
             opacity: 1;
             animation: none;
-            background: conic-gradient(#4caf50 0 360deg);
+            border-color: #4caf50;
+            background: none;
         }
 
         .webdav-sync-btn.sync-failed::before {
             opacity: 1;
             animation: none;
-            background: conic-gradient(#f44336 0 360deg);
+            border-color: #f44336;
+            background: none;
         }
 
         @keyframes webdav-sync-spin {
@@ -4760,8 +5433,13 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            gap: 8px;
             min-height: var(--toolbar-height);
             box-shadow: var(--shadow-1);
+        }
+
+        .sidebar-close-btn {
+            display: none;
         }
 
         .sidebar-tabs {
@@ -4769,6 +5447,7 @@
             gap: 6px;
             margin: 0;
             width: 100%;
+            flex: 1 1 auto;
             justify-content: center;
             align-items: center;
             height: 100%;
@@ -5130,7 +5809,36 @@
             box-shadow: var(--shadow-3);
             z-index: 100000;
             min-width: 200px;
+            display: flex;
+            flex-direction: column;
             overflow: hidden;
+        }
+
+        .menu-header {
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px 8px;
+            border-bottom: 1px solid var(--divider);
+        }
+
+        .menu-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .menu-close-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            box-shadow: none;
+        }
+
+        .menu-scroll {
+            overflow-y: auto;
+            overflow-x: hidden;
+            flex: 1 1 auto;
         }
 
         .menu-item {
@@ -5155,7 +5863,7 @@
             padding: 12px 16px 16px;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
         }
 
         .menu-section-title {
@@ -5164,6 +5872,35 @@
             color: var(--text-secondary);
             letter-spacing: 0.8px;
             text-transform: uppercase;
+        }
+
+        .menu-action-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        @media (max-width: 340px) {
+            .menu-action-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .menu-row-inline {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .menu-row-inline .menu-number-input {
+            width: 120px;
+            flex: 0 0 auto;
+            text-align: right;
+        }
+
+        .menu-cache-row .menu-cache-info {
+            flex: 1 1 auto;
         }
 
         .menu-range-label {
@@ -5281,7 +6018,7 @@
         }
 
         .menu-action-btn {
-            align-self: flex-end;
+            width: 100%;
             padding: 8px 12px;
             background: var(--surface);
             border: 1px solid var(--divider);
@@ -5512,13 +6249,256 @@
             background: var(--text-secondary);
         }
 
-        @media (max-width: 1024px) {
-            .reader-main {
-                width: 100%;
-            }
-            .reader-sidebar {
-                display: none;
-            }
+        .mobile-only {
+            display: none;
+        }
+
+        .desktop-only {
+            display: inline-flex;
+        }
+
+        #yamibo-reader-container.mobile-layout {
+            --toolbar-height: 56px;
+        }
+
+        #yamibo-reader-container.mobile-layout .reader-toolbar {
+            padding: 8px 10px;
+        }
+
+        #yamibo-reader-container.mobile-layout .toolbar-right,
+        #yamibo-reader-container.mobile-layout .toolbar-left {
+            flex: 1 1 auto;
+        }
+
+        #yamibo-reader-container.mobile-layout .toolbar-right {
+            order: 0;
+            justify-content: flex-start;
+        }
+
+        #yamibo-reader-container.mobile-layout .toolbar-left {
+            order: 2;
+            justify-content: flex-end;
+        }
+
+        #yamibo-reader-container.mobile-layout .toolbar-center {
+            display: none;
+        }
+
+        #yamibo-reader-container.mobile-layout .reader-main {
+            width: 100%;
+            flex: 1 1 auto;
+        }
+
+        #yamibo-reader-container.mobile-layout .reader-resizer {
+            display: none;
+        }
+
+        #yamibo-reader-container.mobile-layout .reader-sidebar {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            flex: none;
+            z-index: 100001;
+            border-left: none;
+            transform: translateX(100%);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #yamibo-reader-container.mobile-layout.mobile-sidebar-open .reader-sidebar {
+            transform: translateX(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        #yamibo-reader-container.mobile-layout .sidebar-top {
+            justify-content: flex-start;
+        }
+
+        #yamibo-reader-container.mobile-layout .sidebar-close-btn {
+            display: inline-flex;
+        }
+
+        #yamibo-reader-container.mobile-layout .mobile-only {
+            display: inline-flex;
+        }
+
+        #yamibo-reader-container.mobile-layout .desktop-only {
+            display: none;
+        }
+
+        #yamibo-reader-container.mobile-layout #view-mode-menu {
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 0;
+            max-width: none;
+            max-height: none;
+        }
+
+        #yamibo-reader-container.mobile-layout #view-mode-menu .menu-header {
+            display: flex;
+        }
+
+        #yamibo-reader-container.mobile-layout #view-mode-menu .menu-scroll {
+            padding: 8px 0 16px;
+        }
+
+        #yamibo-reader-container.mobile-layout .icon-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            border: 1px solid var(--divider);
+            background: transparent;
+            box-shadow: none;
+        }
+
+        #yamibo-reader-container.mobile-layout .icon-btn:hover {
+            background: var(--divider);
+            box-shadow: none;
+        }
+
+        #yamibo-reader-container.mobile-layout .icon-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        #yamibo-reader-container.mobile-layout .nav-btn {
+            width: 40px;
+            height: 40px;
+        }
+
+        #yamibo-reader-container.mobile-layout .nav-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        #yamibo-reader-container.mobile-layout #floor-indicator {
+            font-size: 15px;
+            min-width: 96px;
+        }
+
+        #yamibo-reader-container.mobile-layout #dark-mode-btn {
+            order: 0;
+        }
+
+        #yamibo-reader-container.mobile-layout #webdav-sync-btn {
+            order: 1;
+        }
+
+        #yamibo-reader-container.mobile-layout #webdav-sync-btn::before {
+            inset: -2px;
+            border-radius: 8px;
+            border: 2px solid currentColor;
+            background: none;
+            -webkit-mask: none;
+            mask: none;
+        }
+
+        #yamibo-reader-container.mobile-layout #webdav-sync-btn.syncing::before {
+            border-color: var(--primary-color);
+            background: none;
+            animation: none;
+        }
+
+        #yamibo-reader-container.mobile-layout #webdav-sync-btn.syncing {
+            border-color: transparent;
+        }
+
+        #yamibo-reader-container.mobile-layout #webdav-sync-btn.syncing svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        #yamibo-reader-container.mobile-layout #webdav-sync-btn.sync-success::before {
+            border-color: #4caf50;
+            background: none;
+            animation: none;
+        }
+
+        #yamibo-reader-container.mobile-layout #webdav-sync-btn.sync-failed::before {
+            border-color: #f44336;
+            background: none;
+            animation: none;
+        }
+
+        #yamibo-reader-container.mobile-layout #directory-btn {
+            order: 2;
+        }
+
+        #yamibo-reader-container.mobile-layout #view-mode-btn {
+            order: 3;
+        }
+
+        #yamibo-reader-container.mobile-layout .tab-btn {
+            padding: 10px 12px;
+            font-size: 15px;
+        }
+
+        #yamibo-reader-container.mobile-layout .menu-item {
+            padding: 14px 18px;
+            font-size: 16px;
+        }
+
+        #yamibo-reader-container.mobile-layout .menu-number-input {
+            padding: 8px 12px;
+            font-size: 14px;
+        }
+
+        #yamibo-reader-container.mobile-layout .menu-action-btn {
+            padding: 10px 14px;
+            font-size: 14px;
+        }
+
+        #yamibo-reader-container.mobile-layout .directory-search input {
+            padding: 10px 12px;
+            font-size: 15px;
+        }
+
+        #yamibo-reader-container.mobile-layout .directory-search .icon-btn {
+            width: 40px;
+            height: 40px;
+        }
+
+        #data-transfer-overlay.mobile-dialog {
+            padding: 0;
+            align-items: stretch;
+            justify-content: stretch;
+        }
+
+        #data-transfer-overlay.mobile-dialog .data-transfer-dialog {
+            width: 100%;
+            height: 100%;
+            height: 100dvh;
+            max-width: none;
+            border-radius: 0;
+            padding: 16px 18px;
+            padding-bottom: calc(26px + env(safe-area-inset-bottom, 0px));
+            box-sizing: border-box;
+        }
+
+        #data-transfer-overlay.mobile-dialog .data-transfer-body {
+            flex: 1 1 auto;
+            overflow: auto;
+        }
+
+        #data-transfer-overlay.mobile-dialog .data-transfer-footer {
+            flex-shrink: 0;
+        }
+
+        #data-transfer-overlay.mobile-dialog .data-transfer-input {
+            padding: 10px 12px;
+            font-size: 14px;
+        }
+
+        #data-transfer-overlay.mobile-dialog #data-transfer-textarea {
+            font-size: 14px;
+        }
+
+        #data-transfer-overlay.mobile-dialog .data-transfer-btn {
+            padding: 10px 14px;
+            font-size: 14px;
         }
     `);
 

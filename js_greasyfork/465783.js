@@ -2,7 +2,7 @@
 // @name         WawaCity / dl-protect Direct Download Link
 // @namespace    https://www.wawacity.pics/
 // @license      MIT
-// @version      0.60
+// @version      0.61
 // @description  Analyse les liens de téléchargement (Uptobox, 1fichier, Rapidgator, Turbobit, Nitroflare, Fikper) du site dl-protect et les affiche directement sur WawaCity. Supprime également les pubs de Wawacity et dl-protect.
 // @author       zyrpion
 // @match        https://dl-protect.link/*
@@ -327,10 +327,15 @@
         // console.log('add button');
         var _i = 1;
         // document.querySelectorAll('a[href*="dl-protect"]').forEach( item => {
+        /*
         document.querySelector('#streamLinkѕ')?.querySelectorAll('a[href*="dl-protect"]').forEach( item => {
             createButton(item, _i++);
         });
         document.querySelector('#DDLLinkѕ')?.querySelectorAll('a[href*="dl-protect"]').forEach( item => {
+            createButton(item, _i++);
+        });
+        */
+        document.querySelectorAll('a[href*="dl-protect"]')?.forEach( item => {
             createButton(item, _i++);
         });
  

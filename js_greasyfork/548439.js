@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 视频观看历史记录 优化版
 // @namespace    Bilibili-video-History-2025
-// @version      1.4.7
+// @version      1.4.9
 // @description  记录并提示 Bilibili 已访问 / 已观看 视频（兼容 2025 年 B 站与最新 Chrome）
 // @author       DreamNya + ITLinya (优化)
 // @match        https://www.bilibili.com/*

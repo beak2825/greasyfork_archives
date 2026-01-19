@@ -1,18 +1,18 @@
 // ==UserScript==
-// @name        iCloud add Plans
+// @name        Apple iCloud: add Plans
 // @description Add Plans in iCloud menus
-// @namespace   https://gitlab.com/breatfr
-// @match       https://*.icloud.com/*
 // @version     1.0.1
-// @homepageURL https://gitlab.com/breatfr/icloud
+// @namespace   https://breat.fr
+// @homepageURL https://usercssjs.breat.fr/a/apple-icloud
 // @supportURL  https://discord.gg/Q8KSHzdBxs
+// @match       https://*.icloud.com/*
 // @author      BreatFR
 // @copyright   2024, BreatFR (https://breat.fr)
-// @grant       none
-// @icon        https://gitlab.com/uploads/-/system/project/avatar/65415880/icloud.png
+// @icon        https://breat.fr/static/images/userscripts-et-userstyles/a/apple-icloud/icon.jpg
 // @license     AGPL-3.0-or-later; https://www.gnu.org/licenses/agpl-3.0.txt
-// @downloadURL https://update.greasyfork.org/scripts/521164/iCloud%20add%20Plans.user.js
-// @updateURL https://update.greasyfork.org/scripts/521164/iCloud%20add%20Plans.meta.js
+// @grant       none
+// @downloadURL https://update.greasyfork.org/scripts/521164/Apple%20iCloud%3A%20add%20Plans.user.js
+// @updateURL https://update.greasyfork.org/scripts/521164/Apple%20iCloud%3A%20add%20Plans.meta.js
 // ==/UserScript==
 
 (function() {

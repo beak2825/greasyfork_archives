@@ -1,6 +1,6 @@
 // ==UserScript==
-// @name        【6年老脚本 常更新】 全网音乐一键免费下载 一键搜索 在线试听 增加手机端app和[无损音乐的下载]2024.12月更新 全新服务器单独运行
-// @version      3.84
+// @name        【8年老脚本 常更新】 全网音乐一键免费下载 一键搜索 秒下载VIP音乐 在线试听 [无损音乐的下载]2026.1月更新 
+// @version      3.92
 // @homepage     https://greasyfork.org/zh-CN/scripts/37058
 // @match        *://music.163.com/*
 // @match        *://y.qq.com/*
@@ -12,13 +12,13 @@
 // @match        *://www.lizhi.fm/*
 // @match        *://music.migu.cn/*
 // @match        *://www.ximalaya.com/*
-// @description  全网音乐在线试听 一键免费下载 一键搜索 提供多站合一 音乐试听 音乐下载 音乐搜索解决方案，网易云音乐，QQ音乐，酷狗音乐，酷我音乐，虾米音乐，百度音乐，蜻蜓FM，荔枝FM，喜马拉雅
+// @description  全网音乐在线试听 一键免费下载 一键搜索 提供多站合一 音乐试听 音乐下载 音乐搜索解决方案，网易云音乐，QQ音乐，酷狗音乐，酷我音乐，虾米音乐，百度音乐，蜻蜓FM，荔枝FM，喜马拉雅。
 // @grant        unsafeWindow
 // @icon         http://music.sonimei.cn/favicon.ico
 // @run-at       document-end
 // @namespace 
-// @downloadURL https://update.greasyfork.org/scripts/37058/%E3%80%906%E5%B9%B4%E8%80%81%E8%84%9A%E6%9C%AC%20%E5%B8%B8%E6%9B%B4%E6%96%B0%E3%80%91%20%E5%85%A8%E7%BD%91%E9%9F%B3%E4%B9%90%E4%B8%80%E9%94%AE%E5%85%8D%E8%B4%B9%E4%B8%8B%E8%BD%BD%20%E4%B8%80%E9%94%AE%E6%90%9C%E7%B4%A2%20%E5%9C%A8%E7%BA%BF%E8%AF%95%E5%90%AC%20%E5%A2%9E%E5%8A%A0%E6%89%8B%E6%9C%BA%E7%AB%AFapp%E5%92%8C%5B%E6%97%A0%E6%8D%9F%E9%9F%B3%E4%B9%90%E7%9A%84%E4%B8%8B%E8%BD%BD%5D202412%E6%9C%88%E6%9B%B4%E6%96%B0%20%E5%85%A8%E6%96%B0%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%8D%95%E7%8B%AC%E8%BF%90%E8%A1%8C.user.js
-// @updateURL https://update.greasyfork.org/scripts/37058/%E3%80%906%E5%B9%B4%E8%80%81%E8%84%9A%E6%9C%AC%20%E5%B8%B8%E6%9B%B4%E6%96%B0%E3%80%91%20%E5%85%A8%E7%BD%91%E9%9F%B3%E4%B9%90%E4%B8%80%E9%94%AE%E5%85%8D%E8%B4%B9%E4%B8%8B%E8%BD%BD%20%E4%B8%80%E9%94%AE%E6%90%9C%E7%B4%A2%20%E5%9C%A8%E7%BA%BF%E8%AF%95%E5%90%AC%20%E5%A2%9E%E5%8A%A0%E6%89%8B%E6%9C%BA%E7%AB%AFapp%E5%92%8C%5B%E6%97%A0%E6%8D%9F%E9%9F%B3%E4%B9%90%E7%9A%84%E4%B8%8B%E8%BD%BD%5D202412%E6%9C%88%E6%9B%B4%E6%96%B0%20%E5%85%A8%E6%96%B0%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%8D%95%E7%8B%AC%E8%BF%90%E8%A1%8C.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/37058/%E3%80%908%E5%B9%B4%E8%80%81%E8%84%9A%E6%9C%AC%20%E5%B8%B8%E6%9B%B4%E6%96%B0%E3%80%91%20%E5%85%A8%E7%BD%91%E9%9F%B3%E4%B9%90%E4%B8%80%E9%94%AE%E5%85%8D%E8%B4%B9%E4%B8%8B%E8%BD%BD%20%E4%B8%80%E9%94%AE%E6%90%9C%E7%B4%A2%20%E7%A7%92%E4%B8%8B%E8%BD%BDVIP%E9%9F%B3%E4%B9%90%20%E5%9C%A8%E7%BA%BF%E8%AF%95%E5%90%AC%20%5B%E6%97%A0%E6%8D%9F%E9%9F%B3%E4%B9%90%E7%9A%84%E4%B8%8B%E8%BD%BD%5D20261%E6%9C%88%E6%9B%B4%E6%96%B0.user.js
+// @updateURL https://update.greasyfork.org/scripts/37058/%E3%80%908%E5%B9%B4%E8%80%81%E8%84%9A%E6%9C%AC%20%E5%B8%B8%E6%9B%B4%E6%96%B0%E3%80%91%20%E5%85%A8%E7%BD%91%E9%9F%B3%E4%B9%90%E4%B8%80%E9%94%AE%E5%85%8D%E8%B4%B9%E4%B8%8B%E8%BD%BD%20%E4%B8%80%E9%94%AE%E6%90%9C%E7%B4%A2%20%E7%A7%92%E4%B8%8B%E8%BD%BDVIP%E9%9F%B3%E4%B9%90%20%E5%9C%A8%E7%BA%BF%E8%AF%95%E5%90%AC%20%5B%E6%97%A0%E6%8D%9F%E9%9F%B3%E4%B9%90%E7%9A%84%E4%B8%8B%E8%BD%BD%5D20261%E6%9C%88%E6%9B%B4%E6%96%B0.meta.js
 // ==/UserScript==
 (function() {
 	'use strict';

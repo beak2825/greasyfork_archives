@@ -2,7 +2,7 @@
 // @name         SOOP (숲) - 사이드바 UI 변경(백업본)
 // @name:ko         SOOP (숲) - 사이드바 UI 변경(백업본)
 // @namespace    https://greasyfork.org/ko/scripts/551140
-// @version      20260116 (08.01)
+// @version      20260120(08.01)
 // @description  사이드바 UI 변경, 월별 리캡, 채팅 모아보기, 차단기능 등
 // @description:ko  사이드바 UI 변경, 월별 리캡, 채팅 모아보기, 차단기능 등
 // @author       askld / eldirna(복구)
@@ -60,6 +60,7 @@
     let nicknameWidth = GM_getValue("nicknameWidth",126);
 
     let isOpenNewtabEnabled = GM_getValue("isOpenNewtabEnabled", 0);
+    let isOpenBackgroundTabEnabled = GM_getValue("isOpenBackgroundTabEnabled", 0);
     let isSidebarMinimized = GM_getValue("isSidebarMinimized", 0);
     let showSidebarOnScreenMode = GM_getValue("showSidebarOnScreenMode", 1);
     let showSidebarOnScreenModeAlways = GM_getValue("showSidebarOnScreenModeAlways", 0);
@@ -67,6 +68,7 @@
     let isAutoChangeMuteEnabled = GM_getValue("isAutoChangeMuteEnabled", 0);
     let isAutoChangeQualityEnabled = GM_getValue("isAutoChangeQualityEnabled", 0);
     let isNo1440pEnabled = GM_getValue("isNo1440pEnabled", 0);
+    let targetQuality = GM_getValue("targetQuality", "원본");
     let isDuplicateRemovalEnabled = GM_getValue("isDuplicateRemovalEnabled", 1);
     let isRemainingBufferTimeEnabled = GM_getValue("isRemainingBufferTimeEnabled", 1);
     let isPinnedStreamWithNotificationEnabled = GM_getValue("isPinnedStreamWithNotificationEnabled", 0);
@@ -2856,6 +2858,27 @@ body:not(.screen_mode):not(.fullScreen_mode):has(#sidebar.min) #webplayer_conten
             }
         });
     };
+    // 카테고리 차단 메뉴 추가(2026.01.12)
+    function registerMenuBlockingCategory() {
+        // GM 메뉴에 카테고리 차단 등록 메뉴를 추가합니다.
+        GM_registerMenuCommand('카테고리 등록 | 카테고리에 포함시 차단', function() {
+            // 사용자에게 차단할 단어 입력을 요청
+            let word = prompt('차단할 카테고리 : ');
+
+            if (word.length < 1) {
+                alert("카테고리는 한 글자 이상이어야 합니다.");
+                return;
+            }
+
+            let catnum = getCategoryNo(word);
+            if (catnum === undefined) {
+                alert(`${word}(은)는 유효하지 않은 카테고리 입니다.`);
+                return;
+            }
+
+            blockCategory(word, catnum);
+        });
+    };
 
     // =================================================================
     // 3.4. UI 생성 및 조작 함수 (UI Generation & Manipulation) - 개선안
@@ -3592,36 +3615,29 @@ body:not(.screen_mode):not(.fullScreen_mode):has(#sidebar.min) #webplayer_conten
         if (isSmallUserLayoutEnabled) userElement.classList.add('small-user-layout');
 
         userElement.href = playerLink;
-        if (isOpenNewtabEnabled) {
-            userElement.target = '_blank';
-        } else {
-            userElement.target = '_self';
-        }
+        // 중요: 브라우저가 직접 제어하지 못하게 target을 제거하거나 _self로 설정합니다.
+        userElement.target = '_self';
 
-        // (개선) 인라인 'onclick' 대신 addEventListener 사용
-        if (isSendLoadBroadEnabled && !isOpenNewtabEnabled) {
-            userElement.addEventListener('click', (event) => {
-                if (event.ctrlKey || !window.location.href.includes('play.sooplive.co.kr')) return;
+        // 클릭 이벤트 가로채기
+        userElement.addEventListener('click', (event) => {
+            // 새 탭 옵션이 켜져 있을 때 (백그라운드 오픈)
+            if (isOpenNewtabEnabled && !event.ctrlKey && !event.shiftKey && !event.metaKey) {
+                event.preventDefault(); // 브라우저 이동 차단
+                event.stopImmediatePropagation(); // 다른 스크립트 방해 금지
 
-                event.preventDefault();
-                event.stopPropagation();
+                // GM_openInTab을 사용하며 active: false를 주면 화면이 유지됩니다.
+                GM_openInTab(playerLink, { active: !isOpenBackgroundTabEnabled, insert: true, setParent: true });
+                return false;
+            }
 
-                const loadingElement = document.body.querySelector('div.loading');
-                if (loadingElement && getComputedStyle(loadingElement).display === 'none' && unsafeWindow.liveView) {
-                    (async () => {
-                        document.querySelector('#play.stop')?.click();
-                        await new Promise(resolve => setTimeout(resolve, 250));
-                        unsafeWindow.liveView.playerController.sendLoadBroad(user_id, broad_no);
-                        await new Promise(resolve => setTimeout(resolve, 200));
-                        if (!!document.querySelector('._Modal_UI_Wrap.dimed')) {
-                            location.href = playerLink;
-                        }
-                    })();
-                } else {
-                    location.href = playerLink;
+            // 새 탭 옵션이 꺼져 있을 때 (기존의 새로고침 없는 전환 로직)
+            if (isSendLoadBroadEnabled && !isOpenNewtabEnabled && !event.ctrlKey) {
+                if (window.location.href.includes('play.sooplive.co.kr') && unsafeWindow.liveView) {
+                    event.preventDefault();
+                    unsafeWindow.liveView.playerController.sendLoadBroad(user_id, broad_no);
                 }
-            });
-        }
+            }
+        }, true); // true를 넣어 이벤트 캡처링 단계에서 가장 먼저 가로챕니다.
 
         userElement.setAttribute('data-watchers', total_view_cnt);
         userElement.setAttribute('broad_thumbnail', `https://liveimg.sooplive.co.kr/m/${broad_no}`);
@@ -3696,7 +3712,19 @@ body:not(.screen_mode):not(.fullScreen_mode):has(#sidebar.min) #webplayer_conten
         userElement.className = 'user';
         if (isSmallUserLayoutEnabled) userElement.classList.add('small-user-layout');
         userElement.href = playerLink;
-        if (isOpenNewtabEnabled) userElement.target = '_blank';
+         // [수정] 브라우저가 화면을 강제로 넘기지 못하게 _self로 고정합니다.
+        userElement.target = '_self';
+
+        // [추가] 클릭 시 백그라운드에서 탭을 여는 로직
+        userElement.addEventListener('click', (event) => {
+            if (isOpenNewtabEnabled && !event.ctrlKey && !event.shiftKey && !event.metaKey) {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                // 화면 유지(active: false) 옵션 사용
+                GM_openInTab(playerLink, { active: !isOpenBackgroundTabEnabled, insert: true, setParent: true });
+                return false;
+            }
+        }, true);
 
         userElement.setAttribute('data-watchers', view_cnt);
         userElement.setAttribute('broad_thumbnail', thumbnail.replace("http://", "https://"));
@@ -3986,7 +4014,7 @@ body:not(.screen_mode):not(.fullScreen_mode):has(#sidebar.min) #webplayer_conten
                 // 방송 시간 && 이미지 && !게시판이미지
                 if (broadStart && imgSrc?.startsWith("http") && !imgSrc?.startsWith('https://stimg.')) {
                     imgSrc += `?${Math.floor(randomTimeCode / 10000)}`;
-                }
+                } 
 
                 let durationText = broadStart
                 ? getElapsedTime(broadStart, "HH:MM")
@@ -4437,6 +4465,11 @@ body:not(.screen_mode):not(.fullScreen_mode):has(#sidebar.min) #webplayer_conten
                             <span class="slider_v8xK4z round"></span>
                         </label>
                     </div>
+                    <div class="option_v8xK4z" id="openBackgroundTabContainer" style="margin-left: 20px; font-size: 0.9em;">
+                      <label for="openBackgroundTab">ㄴ 백그라운드로 열기</label> <label class="switch_v8xK4z">
+                        <input type="checkbox" id="openBackgroundTab"> <span class="slider_v8xK4z round"></span>
+                        </label>
+                    </div>
                 </section>
 
                 <div class="divider_v8xK4z"></div>
@@ -4498,11 +4531,25 @@ body:not(.screen_mode):not(.fullScreen_mode):has(#sidebar.min) #webplayer_conten
                         </label>
                     </div>
                     <div class="option_v8xK4z">
-                        <label for="switchNo1440p">[플레이어] 방송 진입시 1440p가 선택되면 화질을 한 단계 ⬇️낮추기</label>
-                        <label class="switch_v8xK4z">
-                            <input type="checkbox" id="switchNo1440p">
-                            <span class="slider_v8xK4z round"></span>
-                        </label>
+                            <label for="switchNo1440p"> [플레이어] 🔒화질 고정 (새로고침 시 유지)</label>
+                            <label class="switch_v8xK4z">
+                                <input type="checkbox" id="switchNo1440p" ${isNo1440pEnabled ? "checked" : ""}>
+                                <span class="slider_v8xK4z round"></span>
+                            </label>
+                        </div>
+
+                    <div class="option_v8xK4z" style="margin-left: 25px; width: auto;">
+                        <label for="qualitySelector">└ 고정할 화질 선택</label>
+                        <div class="mapper-setting_v8xK4z">
+                            <select id="qualitySelector">
+                                <option value="최대화질">최대화질 (원본)</option>
+                                <option value="1440">1440p</option>
+                                <option value="1080">1080p</option>
+                                <option value="720">720p</option>
+                                <option value="540">540p</option>
+                                <option value="360">360p</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="option_v8xK4z">
                         <label for="switchPlayerAdvancedControlsLive">[플레이어] 영상 🎚️필터 LIVE</label>
@@ -4886,7 +4933,7 @@ body:not(.screen_mode):not(.fullScreen_mode):has(#sidebar.min) #webplayer_conten
                     <p class="description_v8xK4z">5) 'SOOP (숲) - 현재 방송을 보고 있는 스트리머' 실행 필요. 없을 시 0명으로 나옵니다</p>
                     <p class="description_v8xK4z">6) 상단 바의 프로필 사진을 클릭하면 메뉴가 보입니다</p>
 
-                    <p class="description_v8xK4z bug-report_v8xK4z">🐛버그 신고는 <a href="https://greasyfork.org/ko/scripts/484713" target="_blank">Greasy Fork</a>에서 가능합니다.</p>
+                    <p class="description_v8xK4z bug-report_v8xK4z">🐛버그 신고 혹은 수정 및 유용한 기능 추가 가능하신 능력자분이 계신다면 <a href="https://greasyfork.org/ko/scripts/551140" target="_blank">Greasy Fork</a>에서 확인 부탁드립니다.</p>
                 </footer>
             </div>
         </div>
@@ -5012,9 +5059,18 @@ body:not(.screen_mode):not(.fullScreen_mode):has(#sidebar.min) #webplayer_conten
         setCheckboxAndSaveValue("mutedInactiveTabs", isAutoChangeMuteEnabled, "isAutoChangeMuteEnabled");
         setCheckboxAndSaveValue("switchAutoChangeQuality", isAutoChangeQualityEnabled, "isAutoChangeQualityEnabled");
         setCheckboxAndSaveValue("switchNo1440p", isNo1440pEnabled, "isNo1440pEnabled");
+        const qualitySelector = document.getElementById('qualitySelector');
+            if (qualitySelector) {
+                qualitySelector.value = targetQuality;
+                qualitySelector.addEventListener('change', (e) => {
+                 targetQuality = e.target.value;
+               GM_setValue('targetQuality', targetQuality);
+               });
+              }
         setCheckboxAndSaveValue("mpSortByViewers", myplusOrder, "myplusOrder");
         setCheckboxAndSaveValue("removeDuplicates", isDuplicateRemovalEnabled, "isDuplicateRemovalEnabled");
         setCheckboxAndSaveValue("openInNewTab", isOpenNewtabEnabled, "isOpenNewtabEnabled");
+        setCheckboxAndSaveValue("openBackgroundTab", isOpenBackgroundTabEnabled, "isOpenBackgroundTabEnabled");
         setCheckboxAndSaveValue("mouseOverSideBar", showSidebarOnScreenMode, "showSidebarOnScreenMode");
         setCheckboxAndSaveValue("switchShowSidebarOnScreenModeAlways", showSidebarOnScreenModeAlways, "showSidebarOnScreenModeAlways");
         setCheckboxAndSaveValue("chatPosition", isBottomChatEnabled, "isBottomChatEnabled");
@@ -5333,7 +5389,8 @@ body:not(.screen_mode):not(.fullScreen_mode):has(#sidebar.min) #webplayer_conten
             resolve(dataURL); // 데이터 URL 반환
         });
     };
-    const replaceThumbnails = (thumbsBoxLinks) => {
+
+const replaceThumbnails = (thumbsBoxLinks) => {
         for (const thumbsBoxLink of thumbsBoxLinks) {
             if (!thumbsBoxLink.classList.contains("thumbnail-checked")) {
                 thumbsBoxLink.classList.add("thumbnail-checked");
@@ -8381,12 +8438,16 @@ body:not(.screen_mode):not(.fullScreen_mode):has(#sidebar.min) #webplayer_conten
                         if (allThumbsBoxLinks.length) previewModalManager.attachToThumbnails(allThumbsBoxLinks);
                     }
 
-                    // 빈 썸네일 대체
-                    if (isReplaceEmptyThumbnailEnabled){
-                        const noThumbsBoxLinks = document.querySelectorAll('[data-type=cBox] .thumbs-box > a[href].thumb-adult:not([href^="https://vod.sooplive.co.kr"])');
-                        if (noThumbsBoxLinks.length) replaceThumbnails(noThumbsBoxLinks);
-                    }
+                    // 19금 썸네일 대체 기능
+                    const allThumbsBoxes = document.querySelectorAll('[data-type=cBox] .thumbs-box');
+                    const adultThumbLinks = Array.from(allThumbsBoxes)
+                        .filter(box => box.querySelector('span.status.adult'))
+                        .map(box => box.querySelector('a[href]:not([href^="https://vod.sooplive.co.kr"])'))
+                        .filter(link => link);
 
+                    if (adultThumbLinks.length) {
+                        replaceThumbnails(adultThumbLinks);
+                    }
                     // 본문 방송 목록의 새 탭 열기 방지
                     if(!isOpenNewtabEnabled){
                         setTimeout(removeTargetFromLinks, 100);
@@ -9316,37 +9377,61 @@ body:not(.screen_mode):not(.fullScreen_mode):has(#sidebar.min) #webplayer_conten
             customLog.warn("[changeQualityLivePlayer] 변경 실패:", e);
         }
     };
+   // [기능 수정] 화질 고정 및 1440p 차단 통합 함수
     const downgradeFrom1440p = async () => {
         try {
             const livePlayer = await waitForLivePlayer();
             const info = await livePlayer.getLiveInfo();
+            // 사용 가능한 화질 목록 가져오기 (auto 제외)
             const presets = info.CHANNEL.VIEWPRESET.filter(p => p.name !== 'auto' && p.bps);
 
-            const index1440 = presets.findIndex(p => p.label_resolution === '1440');
+            // 설정된 목표 화질 (예: "1080", "720", "원본")
+            const targetQ = GM_getValue("targetQuality", "원본");
+            const isNo1440p = GM_getValue("isNo1440pEnabled", 0); // 1440p 차단 설정 확인
 
-            if (index1440 === -1) {
-                customLog.warn('1440p 화질 정보를 찾을 수 없습니다.');
-                return;
+            let targetPreset = null;
+
+            // 1. 사용자가 '원본'을 선택했을 때
+            if (targetQ === "원본") {
+                // BPS(비트레이트) 기준 내림차순 정렬 (화질 좋은 순서)
+                const sorted = presets.sort((a, b) => b.bps - a.bps);
+                const bestPreset = sorted[0];
+
+                // 1440p 차단 기능이 켜져있고, 최고화질이 1440이라면?
+                if (isNo1440p && bestPreset.label_resolution === '1440') {
+                    // 그 다음으로 좋은 화질 선택 (없으면 그대로)
+                    targetPreset = sorted[1] || bestPreset;
+                    customLog.log(`1440p 차단 설정으로 인해 ${targetPreset.label_resolution} 선택`);
+                } else {
+                    targetPreset = bestPreset;
+                }
+            }
+            // 2. 사용자가 특정 화질(1080, 720 등)을 선택했을 때
+            else {
+                targetPreset = presets.find(p => p.label_resolution === targetQ);
+
+                // 만약 해당 화질이 이 방송에 없다면? (예: 1080 설정했는데 720 방송일 때)
+                if (!targetPreset) {
+                    customLog.warn(`설정한 화질(${targetQ})이 없어 최고 화질로 자동 설정합니다.`);
+                    targetPreset = presets.reduce((prev, curr) => prev.bps > curr.bps ? prev : curr);
+                }
             }
 
-            if (index1440 === 0) {
-                customLog.log('1440p가 최저 화질이라서 더 낮출 수 없습니다.');
-                return;
+            // 화질 변경 실행
+            if (targetPreset) {
+                const targetName = qualityNameToInternalType[targetPreset.name];
+
+                if (!targetName) {
+                     customLog.warn(`화질 매핑 실패: ${targetPreset.name}`);
+                     return;
+                }
+
+                customLog.log(`화질 변경 시도: ${targetQ} 설정 -> 적용: ${targetPreset.label_resolution} (${targetName})`);
+                livePlayer.changeQuality(targetName);
             }
 
-            const lowerPreset = presets[index1440 - 1];
-            const targetName = qualityNameToInternalType[lowerPreset.name];
-
-            if (!targetName) {
-                customLog.warn(`하위 화질 ${lowerPreset.name}에 대한 매핑이 없습니다.`);
-                return;
-            }
-
-            customLog.log(`1440p에서 ${lowerPreset.label}(${targetName})로 다운그레이드 시도`);
-
-            livePlayer.changeQuality(targetName);
         } catch (e) {
-            customLog.error(e.message);
+            customLog.error('화질 변경 중 오류: ' + e.message);
         }
     };
 
@@ -9597,9 +9682,11 @@ body:not(.screen_mode):not(.fullScreen_mode):has(#sidebar.min) #webplayer_conten
         }
         setupSettingButtonTopbar();
 
+
         if (isMonthlyRecapEnabled) observeAndAppendRecapButton();
 
         registerMenuBlockingWord();
+        registerMenuBlockingCategory();//[추가] 카테고리 차단 메뉴 등록 함수
 
         blockedUsers.forEach(function(user) {
             registerUnblockMenu(user);
@@ -11338,5 +11425,7 @@ body:not(.screen_mode):not(.fullScreen_mode):has(#sidebar.min) #webplayer_conten
             return;
         }
     }
+
+
 
 })();

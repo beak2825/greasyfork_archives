@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         搜索引擎屏蔽搜索结果
 // @namespace    http://example.com
-// @version      3.3
+// @version      3.4
 // @description  基于uBlacklist规则的Bing/Google/DuckDuckGo搜索结果屏蔽工具
 // @author       南雪莲
 // @license      MIT
@@ -196,22 +196,23 @@
     
     // 搜索引擎检测
     function getSearchEngine() {
-        const url = window.location.href;
-        if (url.includes('bing.com')) return 'bing';
-        if (url.includes('google.com')) return 'google';
-        if (url.includes('duckduckgo.com')) return 'duckduckgo';
+        const hostname = window.location.hostname;
+        if (hostname.includes('bing.com')) return 'bing';
+        if (hostname.includes('google.com')) return 'google';
+        if (hostname.includes('duckduckgo.com')) return 'duckduckgo';
         return 'other';
     }
     
-    // 选择器映射
+    // DuckDuckGo选择器
     const selectors = {
         bing: 'li.b_algo, div.b_algo',
         google: 'div.g, div[data-snf], div[data-hveid]',
-        duckduckgo: '[data-testid="result"]',
+        // 扩展
+        duckduckgo: '[data-testid="result"], .result, .web-result, .tile, .tile--ad',
         other: 'div.g, li.b_algo'
     };
     
-    // 修复：改进规则转换为正则表达式的函数
+    // 规则转换为正则表达式的函数
     function ruleToRegex(rule) {
         // 标题规则处理
         if (rule.startsWith('title/')) {
@@ -242,18 +243,36 @@
             pattern = pattern.substring(4);
         }
         
-        // 处理通配符
-        pattern = pattern
-            .replace(/\*/g, '.*')
-            .replace(/\?/g, '\\?');
-        
-        // 转义点号，但排除已经转义的点号
-        pattern = pattern.replace(/(?<!\\)\./g, '\\.');
+        // 处理路径匹配
+        if (pattern.includes('/')) {
+            const parts = pattern.split('/');
+            // 处理路径中的通配符和转义
+            pattern = parts.map((part, index) => {
+                if (index === 0) {
+                    // 域名部分
+                    return part
+                        .replace(/\*/g, '.*')
+                        .replace(/\?/g, '\\?')
+                        .replace(/(?<!\\)\./g, '\\.');
+                } else {
+                    // 保留*作为通配符
+                    return part
+                        .replace(/\*/g, '.*')
+                        .replace(/\?/g, '\\?');
+                }
+            }).join('\\/');
+        } else {
+            // 没有路径的情况
+            pattern = pattern
+                .replace(/\*/g, '.*')
+                .replace(/\?/g, '\\?')
+                .replace(/(?<!\\)\./g, '\\.');
+        }
         
         return { pattern, flags: 'i' };
     }
     
-    // 修复：改进检查规则匹配的函数
+    // 检查规则匹配函数
     function checkRuleMatch(rule, url, domain, title) {
         // 标题匹配规则
         if (rule.startsWith('title/')) {
@@ -280,10 +299,10 @@
             } catch (e) {
                 console.error('标题规则解析错误:', e, '规则:', rule);
                 
-                // 回退方案：简单字符串匹配
+                // 简单字符串匹配
                 try {
                     const simplePattern = rule.substring(6).replace(/^\(\?[ims]+\)/, '');
-                    // 如果是忽略大小写标志，进行不区分大小写的匹配
+                    // 区分大小写匹配
                     if (rule.includes('(?i)') || rule.includes('(?i)')) {
                         return title.toLowerCase().includes(simplePattern.toLowerCase());
                     }
@@ -300,10 +319,34 @@
             const { pattern, flags } = ruleToRegex(rule);
             const regex = new RegExp(pattern, flags);
             
-            return regex.test(url) || regex.test(domain);
+            // 同时匹配完整URL和域名
+            const fullMatch = regex.test(url);
+            const domainMatch = regex.test(domain);
+            
+            // 调试输出
+            if (currentConfig.debug && (fullMatch || domainMatch) && Math.random() < 0.1) {
+                console.log('URL规则匹配检查:', {
+                    rule: rule,
+                    pattern: pattern,
+                    url: url,
+                    domain: domain,
+                    fullMatch: fullMatch,
+                    domainMatch: domainMatch
+                });
+            }
+            
+            return fullMatch || domainMatch;
         } catch (e) {
             console.error('URL规则解析错误:', e, '规则:', rule);
-            return url.includes(rule) || domain.includes(rule);
+            
+            // 简单包含匹配
+            try {
+                const simpleRule = rule.replace('*://', '').replace(/\*/g, '');
+                return url.includes(simpleRule) || domain.includes(simpleRule);
+            } catch (e2) {
+                console.error('URL规则回退匹配失败:', e2);
+                return false;
+            }
         }
     }
     
@@ -326,11 +369,18 @@
         results.forEach(result => {
             if (result.hasAttribute('data-blocker-processed')) return;
             
-            const link = result.querySelector('a[href]');
+            // 获取链接
+            const link = getResultLink(result, engine);
             if (!link || !link.href) return;
             
             const url = link.href;
-            const domain = new URL(url).hostname;
+            let domain;
+            try {
+                domain = new URL(url).hostname;
+            } catch (e) {
+                domain = '';
+            }
+            
             const title = getResultTitle(result, engine);
             
             const shouldBlock = currentConfig.rules.some(rule => {
@@ -341,6 +391,17 @@
                 result.style.display = 'none';
                 blocked++;
                 result.setAttribute('data-blocker-processed', 'true');
+                
+                // 调试输出
+                if (currentConfig.debug) {
+                    console.log('屏蔽结果:', {
+                        engine: engine,
+                        url: url,
+                        domain: domain,
+                        title: title,
+                        ruleMatched: true
+                    });
+                }
             } else {
                 result.setAttribute('data-blocker-processed', 'true');
             }
@@ -349,14 +410,31 @@
         updateStatus(blocked);
     }
     
-    // 修复：改进各搜索引擎标题获取
+    // 获取链接
+    function getResultLink(result, engine) {
+        if (engine === 'bing') {
+            return result.querySelector('a[href]');
+        } else if (engine === 'google') {
+            return result.querySelector('a[href]');
+        } else if (engine === 'duckduckgo') {
+            // DuckDuckGo选择器
+            return result.querySelector('a[data-testid="result-extras-url-link"]') ||
+                   result.querySelector('a[data-testid="result-title-a"]') ||
+                   result.querySelector('.result__url') ||
+                   result.querySelector('.tile--title__domain') ||
+                   result.querySelector('a[href]');
+        }
+        return result.querySelector('a[href]');
+    }
+    
+    // 标题获取
     function getResultTitle(result, engine) {
         if (engine === 'bing') {
             return result.querySelector('h2 a')?.textContent?.trim() || 
                    result.querySelector('a h2')?.textContent?.trim() || 
                    result.querySelector('.b_title')?.textContent?.trim() || '';
         } else if (engine === 'google') {
-            // Google有多种标题选择器
+            // Google选择器
             return result.querySelector('h3')?.textContent?.trim() || 
                    result.querySelector('div[role="heading"]')?.textContent?.trim() ||
                    result.querySelector('.LC20lb')?.textContent?.trim() ||
@@ -368,6 +446,9 @@
         } else if (engine === 'duckduckgo') {
             // DuckDuckGo标题获取
             return result.querySelector('a[data-testid="result-title-a"]')?.textContent?.trim() ||
+                   result.querySelector('.result__title')?.textContent?.trim() ||
+                   result.querySelector('.tile__title')?.textContent?.trim() ||
+                   result.querySelector('.tile--title__title')?.textContent?.trim() ||
                    result.querySelector('h2 a')?.textContent?.trim() ||
                    result.querySelector('a h2')?.textContent?.trim() ||
                    '';
@@ -673,11 +754,17 @@
         const ruleErrors = {};
         
         results.forEach(result => {
-            const link = result.querySelector('a[href]');
+            const link = getResultLink(result, engine);
             if (!link || !link.href) return;
             
             const url = link.href;
-            const domain = new URL(url).hostname;
+            let domain = '';
+            try {
+                domain = new URL(url).hostname;
+            } catch (e) {
+                domain = '';
+            }
+            
             const title = getResultTitle(result, engine) || '';
             
             testRules.forEach(rule => {

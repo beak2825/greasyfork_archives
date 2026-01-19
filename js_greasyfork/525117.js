@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         이미지 다운로더 + HR
-// @version         2.90.0.8.260116
+// @version         2.90.0.8.260118
 // @namespace       http://tampermonkey.net/
 // @description     Images can be extracted and batch downloaded from most websites. Especially for websites the right click fails or image can not save. Extra features: zip download / auto-enlarge image. See the script description at info page (suitable for chrome/firefox+tampermonkey)
 // @author          桃源隐叟-The hide oldman in taoyuan mountain, donghaerang
@@ -360,51 +360,57 @@ https://github.com/nodeca/pako/blob/master/LICENSE
             const objectUrl = URL.createObjectURL(blob);
 
             img.onload = function() {
-                const w = this.width;
-                const h = this.height;
+                // naturalWidth를 사용하여 이미지 본래의 정확한 해상도를 가져옵니다.
+                const w = this.naturalWidth || this.width;
+                const h = this.naturalHeight || this.height;
                 const isTving = url.includes("tving.com");
-                const isJpgWebp = ['image/jpeg', 'image/webp'].includes(blob.type);
+                
+                // 파일 확장자나 명찰(MIME)을 모두 검사하여 JPG/WebP 여부를 판단합니다.
+                const typeTag = (blob.type || "").toLowerCase();
+                const isJpgWebp = /(.jpg|.jpeg|.webp)/i.test(url) || 
+                                 ['image/jpeg', 'image/jpg', 'image/webp', 'image/x-webp'].includes(typeTag);
 
-                // 규칙 1: tving + 특정 해상도 -> 포맷만 jpg로 변경
+                // 규칙 1: tving 전용 조건
                 if (isTving && ((w === 1920 && h === 1080) || (w === 1280 && h === 720))) {
                     processImageAdvanced(this, w, h).then(b => saveAs(b, `${filename}.jpg`));
                 } 
-                // 규칙 2: tving 아님 + PNG -> 그대로 유지
-                else if (!isTving && blob.type === 'image/png') {
-                    saveAs(blob, `${filename}.png`);
-                } 
-                // 규칙 3~8: 대상 포맷인 경우 해상도 로직 적용
+                // 규칙 3~8: JPG/WebP 대상 해상도 조절 (Rule 2보다 먼저 검사하여 우선순위를 높임)
                 else if (isJpgWebp) {
-                    if (w > h) { // 가로형 (Landscape)
-                        if (w > 3840 || h > 2160) { // 규칙 3: 축소
+                    if (w > h) { // 가로형
+                        if (w > 3840 || h > 2160) { // 규칙 3
                             processImageAdvanced(this, 3840, 2160).then(b => saveAs(b, `${filename}.jpg`));
-                        } else if (w < 1280 && h < 720) { // 규칙 4: 확대
+                        } else if (w < 1280 && h < 720) { // 규칙 4
                             processImageAdvanced(this, 1280, 720).then(b => saveAs(b, `${filename}.jpg`));
-                        } else { // 규칙 5: 16:9 비율 조정 (현재 너비 기준)
+                        } else { // 규칙 5
                             processImageAdvanced(this, w, Math.round(w / (16/9))).then(b => saveAs(b, `${filename}.jpg`));
                         }
-                    } else if (w < h) { // 세로형 (Portrait)
-                        if (w > 2000 || h > 3000) { // 규칙 6: 축소
+                    } else if (w < h) { // 세로형
+                        if (w > 2000 || h > 3000) { // 규칙 6
                             processImageAdvanced(this, 2000, 3000).then(b => saveAs(b, `${filename}.jpg`));
-                        } else if (w < 500 && h < 750) { // 규칙 7: 확대
+                        } else if (w < 500 && h < 750) { // 규칙 7
                             processImageAdvanced(this, 500, 750).then(b => saveAs(b, `${filename}.jpg`));
-                        } else { // 규칙 8: 2:3 비율 조정 (현재 높이 기준)
+                        } else { // 규칙 8
                             processImageAdvanced(this, Math.round(h / (3/2)), h).then(b => saveAs(b, `${filename}.jpg`));
                         }
-                    } else { // 규칙 9: 정사각형 등
+                    } else { // 규칙 9: 정사각형
                         saveAs(blob, `${filename}.jpg`);
                     }
+                }
+                // 규칙 2: PNG 조건 (JPG가 아님이 확실할 때만 원본 저장)
+                else if (!isTving && (typeTag === 'image/png' || url.toLowerCase().includes('.png'))) {
+                    saveAs(blob, `${filename}.png`);
                 } 
-                // 규칙 9: 기타 모든 조건 외 이미지
+                // 규칙 9: 기타 모든 예외 상황
                 else {
-                    let ext = blob.type.split('/')[1].replace('jpeg', 'jpg') || 'jpg';
+                    let ext = typeTag.split('/')[1] ? typeTag.split('/')[1].split(';')[0].replace('jpeg', 'jpg') : 'jpg';
                     saveAs(blob, `${filename}.${ext}`);
                 }
                 URL.revokeObjectURL(objectUrl);
             };
             img.onerror = function() {
                 // 로드 실패 시 안전하게 원본 다운로드
-                let ext = blob.type.split('/')[1].replace('jpeg', 'jpg') || 'jpg';
+                // 확장자에서 불필요한 메타데이터 제거
+                let ext = blob.type.split('/')[1].split(';')[0].trim().replace('jpeg', 'jpg') || 'jpg';
                 saveAs(blob, `${filename}.${ext}`);
                 URL.revokeObjectURL(objectUrl);
             };
@@ -1050,8 +1056,14 @@ https://github.com/nodeca/pako/blob/master/LICENSE
                 if (zipImgWaitDownload.length >= 1) {
                     //console.log(zipImgWaitDownload);
                     zipImgWaitDownload.forEach(async (img, index) => {
-                        let fileExt = img.substring(img.indexOf("image/") + 6, img.indexOf(";"))
+                        // 세미콜론이 있을 경우와 없을 경우를 모두 고려하여 확장자 추출
+                        let endIdx = img.indexOf(";") > -1 ? img.indexOf(";") : img.indexOf(",");
+                        let fileExt = img.substring(img.indexOf("image/") + 6, endIdx).trim();
+                        
                         fileExt=fileExt.includes("svg")?"svg":fileExt;
+                        // jpeg를 jpg로 통일
+                        fileExt=fileExt.replace('jpeg', 'jpg');
+                        
                         let saveFileName=document.querySelector(".tyc-file-name").value||"pic";
                         let filename = `${saveFileName}-${index}.${fileExt}`;
                         zipSubFoler.file(filename, img.split(",")[1], { base64: true });

@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Chiphell 隐藏勋章
+// @name         Chiphell CHH 隐藏勋章
 // @namespace    http://tampermonkey.net/
 // @version      0.2
 // @description  隐藏 Chiphell 网站上的用户勋章
@@ -8,8 +8,8 @@
 // @grant        none
 // @license      MIT
 // @run-at       document-end
-// @downloadURL https://update.greasyfork.org/scripts/516468/Chiphell%20%E9%9A%90%E8%97%8F%E5%8B%8B%E7%AB%A0.user.js
-// @updateURL https://update.greasyfork.org/scripts/516468/Chiphell%20%E9%9A%90%E8%97%8F%E5%8B%8B%E7%AB%A0.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/516468/Chiphell%20CHH%20%E9%9A%90%E8%97%8F%E5%8B%8B%E7%AB%A0.user.js
+// @updateURL https://update.greasyfork.org/scripts/516468/Chiphell%20CHH%20%E9%9A%90%E8%97%8F%E5%8B%8B%E7%AB%A0.meta.js
 // ==/UserScript==
 
 (function() {

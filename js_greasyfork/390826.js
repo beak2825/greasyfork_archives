@@ -3,7 +3,7 @@
 // @description    Mostra il menu Strumenti di ricerca nei risultati di ricerca di Google
 // @namespace      https://greasyfork.org/users/237458
 // @author         figuccio
-// @version        27.5
+// @version        27.6
 // @match          https://*.google.com/*
 // @match          https://*.google.it/*
 // @match          https://*.google.fr/*
@@ -414,60 +414,7 @@ GM_addStyle('.commercial-unit-desktop-top {display:none!important;}');
 //di nuovo publicita e correlati a destra
 GM_addStyle('#rhs {display:none!important;}');
 GM_addStyle('.YTDezd {display:none!important;}');
-//////////////////////////////////////////////////aggiunto youtube
-    // Trova gli elementi div e textarea di destinazione
-     //const targetDiv = document.querySelector('div.RNNXgb');
-     const targetDiv = document.querySelector('#cnt > div.Fgyi2e.rZj61.caNvfd > div > div.YNk70c > div');//settembre 2025
-   // const targetDiv = document.querySelector('#hdtb-tls > div');
-
-    const searchInput = document.querySelector('textarea.gLFyf');
-    //Crea un elemento pulsante
-    const youtube = document.createElement('button');
-    youtube.innerText = 'Youtube';
-
-    //Applica lo stile CSS al pulsante
-    youtube.style.color = 'red';
-    youtube.style.padding = '10px';
-    youtube.style.background = 'yellow';
-    youtube.style.border = '2px solid blue';
-    youtube.style.borderRadius = '8px';
-    youtube.style.cursor = 'pointer';
-    youtube.style.padding = '5px';
-    youtube.style.marginTop ='9px';
-    youtube.href = 'https://www.youtube.com/results?search_query';
-    // Aggiungi event listener per l'effetto al passaggio del mouse
-    youtube.addEventListener('mouseover', function () {
-      this.style.color = 'lime';
-    });
-
-    // Reimposta il colore quando il mouse se ne va
-    youtube.addEventListener('mouseout', function () {
-      this.style.color = 'red';
-    });
-    //Gestisci l'evento clic sul pulsante
-    youtube.addEventListener('click', function() {
-        // Ottieni la query di ricerca corrente dall'area di testo
-        const searchQuery = searchInput.value.trim();
-
-        // Sostituisci gli spazi con '+'
-        const modifiedQuery = searchQuery.replace(/ /g, '+');
-
-        // Create the YouTube search URL
-        const youtubeURL = `https://www.youtube.com/results?search_query=${modifiedQuery}`;
-
-        // Open the YouTube URL in a new tab
-        window.open(youtubeURL);
-    });
-
-    // Append the button to the target div
-    targetDiv.appendChild(youtube);
-    // Imposta l'URL come suggerimento quando passi il mouse sopra il pulsante
-    youtube.addEventListener('mouseenter', function() {
-        const searchQuery = searchInput.value.trim();
-        const modifiedQuery = searchQuery.replace(/ /g, '+');
-        const youtubeURL = `https://www.youtube.com/results?search_query=${modifiedQuery}`;
-    });
-
+//////////////////////////////////////////////////
     ///////////////////// Mostra il menu Strumenti di ricerca
     const interval = setInterval(() =>
     {var toolsButton = document.getElementById('hdtb-tls');

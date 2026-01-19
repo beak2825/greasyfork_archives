@@ -9,7 +9,7 @@
 // @run-at      document-start
 // @license     MIT
 // @icon        https://www.google.com/s2/favicons?sz=64&domain=youtube.com
-// @version     1.6.8
+// @version     1.7.5
 // @grant       GM_info
 // @grant       GM_addStyle
 // @grant       GM_setValue
@@ -358,35 +358,7 @@
                         b.remove();
                     }
                 });
-                this.unlockScroll();
                 this.resumeVideo();
-            }
-        }
-        unlockScroll() {
-            const css = (el, props) => {
-                if (!el) return;
-                for (const [key, val] of Object.entries(props)) {
-                    el.style.setProperty(key, val, 'important');
-                }
-            };
-            const allowScrollProps = {
-                'overflow-y': 'auto',
-                'overflow-x': 'hidden',
-                'position': 'static',
-                'pointer-events': 'auto',
-                'top': 'auto',
-                'display': 'block'
-            };
-            css(document.body, allowScrollProps);
-            css(document.documentElement, allowScrollProps);
-            const ytdApp = document.querySelector('ytd-app');
-            if (ytdApp) {
-                css(ytdApp, allowScrollProps);
-                ytdApp.removeAttribute('aria-hidden');
-            }
-            const watchPage = document.querySelector('ytd-watch-flexy');
-            if (watchPage) {
-                watchPage.style.removeProperty('filter');
             }
         }
         resumeVideo() {
@@ -577,6 +549,63 @@
         constructor(config) {
             this.config = config;
             this.customRules = new CustomRuleManager(config);
+            this.pendingElements = new Set();
+            this.isProcessing = false;
+        }
+        _startProcessor() {
+            if (this.isProcessing || this.pendingElements.size === 0) return;
+            this.isProcessing = true;
+            this._processNextBatch();
+        }
+        _processNextBatch() {
+            if (this.pendingElements.size === 0) {
+                this.isProcessing = false;
+                return;
+            }
+            requestIdleCallback((deadline) => {
+                const iterator = this.pendingElements.values();
+                let count = 0;
+                const batchSize = 20;
+                while (count < batchSize && (deadline.timeRemaining() > 0 || deadline.didTimeout)) {
+                    const { value, done } = iterator.next();
+                    if (done) break;
+                    const el = value;
+                    this.pendingElements.delete(el);
+                    try {
+                        this.processElement(el);
+                    } catch (e) {
+                        Logger.error('Filter error', e);
+                    }
+                    count++;
+                }
+                if (this.pendingElements.size > 0) {
+                    this._processNextBatch();
+                } else {
+                    this.isProcessing = false;
+                }
+            }, { timeout: 1000 });
+        }
+        processMutations(mutations) {
+            if (mutations.length > 100) {
+                this.processPage();
+                return;
+            }
+            const candidates = new Set();
+            for (const mutation of mutations) {
+                for (const node of mutation.addedNodes) {
+                    if (node.nodeType !== 1) continue;
+                    if (node.matches && node.matches(SELECTORS.allContainers)) {
+                        candidates.add(node);
+                    }
+                    if (node.querySelectorAll) {
+                        const children = node.querySelectorAll(SELECTORS.allContainers);
+                        for (const child of children) candidates.add(child);
+                    }
+                }
+            }
+            if (candidates.size > 0) {
+                this._processBatch(Array.from(candidates), 0);
+            }
         }
         processPage() {
             const elements = Array.from(document.querySelectorAll(SELECTORS.allContainers));
@@ -656,10 +685,19 @@
             element.dataset.ypChecked = 'true';
         }
         _hide(element, reason) {
-            element.style.display = 'none';
-            element.dataset.ypHidden = reason;
+            const container = element.closest('ytd-rich-item-renderer, ytd-grid-video-renderer, ytd-compact-video-renderer') || element;
+            container.style.display = 'none';
+            container.dataset.ypHidden = reason;
+            if (container !== element) {
+                element.dataset.ypHidden = reason;
+            }
             FilterStats.record(reason);
-            Logger.info(`Hidden [${reason}]`, element);
+            Logger.info(`Hidden [${reason}]`, container);
+        }
+        clearCache() {
+            document.querySelectorAll('[data-yp-checked]').forEach(el => {
+                delete el.dataset.ypChecked;
+            });
         }
         reset() {
             document.querySelectorAll('[data-yp-hidden]').forEach(el => {
@@ -1204,10 +1242,11 @@
             this.adGuard.start();
             this.enhancer.init();
             GM_registerMenuCommand('⚙️ 淨化大師設定', () => this.ui.showMainMenu());
-            const obs = new MutationObserver(Utils.debounce(() => this.filter.processPage(), 100));
+            const obs = new MutationObserver((mutations) => this.filter.processMutations(mutations));
             obs.observe(document.body, { childList: true, subtree: true });
             window.addEventListener('yt-navigate-finish', () => {
                 this.patchYouTubeConfig();
+                this.filter.clearCache();
                 this.filter.processPage();
                 this.adGuard.checkAndClean();
             });

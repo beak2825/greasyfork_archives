@@ -2,9 +2,9 @@
 // @name         Cookie Clicker Ultimate Automation
 // @name:zh-TW   餅乾點點樂全自動掛機輔助 (Cookie Clicker)
 // @name:zh-CN   餅乾點點樂全自動掛機輔助 (Cookie Clicker)
-// @version      9.1.3.2
+// @version      9.1.4
 // @description  Automated clicker, auto-buy, auto-harvest, garden manager (5 slots), stock market, season manager, Santa evolver, Smart Sugar Lump harvester, Dragon Aura management, and the new Gambler feature.
-// @description:zh-TW 全功能自動掛機腳本 v9.1.3.2 Safe Restart Protocol
+// @description:zh-TW 全功能自動掛機腳本 v9.1.4 JQB Visual Priority
 // @author       You & AI Architect
 // @match        https://wws.justnainai.com/*
 // @match        https://orteil.dashnet.org/cookieclicker/*
@@ -22,6 +22,11 @@
 
 /*
 變更日誌 (Changelog):
+v9.1.4 JQB Visual Priority (2026):
+  - [Visual] Garden: 新增多汁女王甜菜 (JQB) 專屬視覺優化。無論記憶設定為何，JQB 強制顯示金色高亮邊框 (z-index 15)。
+  - [Fix] Garden: 修正視覺覆蓋邏輯，防止 JQB 金框被紅色異常框覆蓋。
+v9.1.3.3 State Integrity Fix (2026):
+  - [Logic Fix] Godzamok: 修復「幽靈鎖定」Bug。實作狀態記憶防寫機制 (Immutable Snapshot)，防止在高頻連擊下覆蓋使用者的原始支出鎖定設定。
 v9.1.3.2 UI Sync Fix (2026):
   - [UI Fix] Godzamok: 修復戒嚴結束後，花園側邊欄「突變管理」按鈕未同步更新顯示（仍顯示為「否」）的視覺 Bug。現在狀態恢復時會強制刷新該按鈕。
 v9.1.3.1 UI Event Fix (2026):
@@ -336,6 +341,14 @@ v9.1.1 Smart Locking Protocol (2026):
                 /* Ghost Element Fix */
                 b[style*="font-weight:bold"] { display: none !important; }
                 #gardenField { overflow: visible !important; }
+
+                /* [v9.1.4] JQB 專屬樣式：琥珀金 */
+                .cc-overlay-jqb {
+                    border: 3px solid #FFBB00 !important;
+                    box-shadow: 0 0 15px #FFBB00, inset 0 0 10px #FFBB00 !important;
+                    box-sizing: border-box;
+                    z-index: 15;
+                }
 
                 .cc-overlay-missing { border: 3px dashed #2196f3 !important; box-sizing: border-box; background: rgba(33, 150, 243, 0.1); }
                 .cc-overlay-anomaly { border: 3px solid #ff4444 !important; box-shadow: inset 0 0 15px rgba(255, 0, 0, 0.6) !important; box-sizing: border-box; z-index: 10; }
@@ -775,7 +788,7 @@ v9.1.1 Smart Locking Protocol (2026):
                         color: white; padding: 15px; font-weight: bold; font-size: 18px;
                         cursor: move; display: flex; justify-content: space-between; align-items: center;
                     ">
-                        <span>🍪 控制面板 v9.1.3.2</span>
+                        <span>🍪 控制面板 v9.1.4</span>
                         <div class="cc-close-btn" id="main-panel-close">✕</div>
                     </div>
                     <div id="global-status-bar" style="
@@ -3544,6 +3557,12 @@ GodzamokCombo: {
                 // [v8.8.8] 啟動戒嚴協議
                 this.enforceMartialLaw();
 
+                // [v9.1.3.3 Fix] 狀態記憶防護：僅在非活躍(第一層觸發)時記錄原始意圖
+                // 必須在 isActive = true 之前執行，否則每次都會被視為活躍中
+                if (!Runtime.GodzamokState.isActive) {
+                    Runtime.GodzamokState.wasSpendingLocked = Config.Flags.SpendingLocked;
+                }
+
                 // [v9.1.2 Fix] 立即宣告活躍狀態 (同步阻斷 Logic.Buy)
                 Runtime.GodzamokState.isActive = true;
 
@@ -3569,9 +3588,6 @@ GodzamokCombo: {
 
                 const displayMult = currentMult ? Math.round(currentMult).toLocaleString() : "???";
                 Logger.log('Godzamok', `觸發連擊！倍率滿足 (當前: ${displayMult}x > 設定: ${Config.Settings.GodzamokMinMult}x)`);
-
-                // [v9.1.1] 智慧鎖定記憶
-                Runtime.GodzamokState.wasSpendingLocked = Config.Flags.SpendingLocked;
 
                 if (!Config.Flags.SpendingLocked) {
                      $('#chk-spending-lock').prop('checked', true).trigger('change');
@@ -3827,18 +3843,18 @@ GodzamokCombo: {
 
         Buy: {
             update: function(now) {
+                // 🛡️ [CONSTITUTION LEVEL 0]: 憲法級絕對防護 (最優先執行)
+                // [v9.1.3.3 Polish] 將阻斷移至最頂層，優先於暖機與總開關
+                // 防止在 Godzamok 活躍或打寶期間發生任何購買行為 (防止 Race Condition)
+                if (Runtime.SeasonState.isFarming || Runtime.GodzamokState.isActive) {
+                     return; 
+                }
+
                 // [v8.8.8.1] 誓約暖機阻斷
                 if (now < Runtime.Timers.GardenWarmup) return;
 
                 // 前置條件檢查
                 if (!Config.Flags.GlobalMasterSwitch || !Game) return;
-                
-                // 🛡️ [CONSTITUTION LEVEL 0]: 誓約與打寶虛擬鎖定 (Elder Pledge & Virtual Lock)
-                // 必須在最頂層檢查 isFarming
-                // [v9.1.2] Virtual Lock Hardening: 同步阻斷 Godzamok 活躍狀態
-                if (Runtime.SeasonState.isFarming || Runtime.GodzamokState.isActive) {
-                     return; // 🔴 憲法級阻斷
-                }
 
                 const pledge = Game.Upgrades['Elder Pledge'];
                 const isPledgeExpired = (typeof Game.pledgeT === 'undefined' || Game.pledgeT <= 0);
@@ -4209,12 +4225,19 @@ GodzamokCombo: {
                     for (let x = 0; x < 6; x++) {
                         const tileDiv = document.getElementById(`gardenTile-${x}-${y}`);
                         if (!tileDiv) continue;
-                        tileDiv.classList.remove('cc-overlay-missing', 'cc-overlay-anomaly', 'cc-overlay-correct', 'cc-overlay-new');
+                        tileDiv.classList.remove('cc-overlay-missing', 'cc-overlay-anomaly', 'cc-overlay-correct', 'cc-overlay-new', 'cc-overlay-jqb');
                         if (!M.isTileUnlocked(x, y)) continue;
 
                         const savedId = Config.Memory.SavedGardenPlot[y][x];
                         const gameId = M.plot[y][x][0];
                         const normalizedId = (gameId === 0) ? -1 : gameId - 1;
+
+                        // [v9.1.4 New] JQB 絕對視覺優先權 (Level 5 Visual Priority)
+                        // 無論記憶設定為何，只要長出的是 JQB (ID 21)，強制顯示金色並跳過後續檢查
+                        if (normalizedId === 21) {
+                            tileDiv.classList.add('cc-overlay-jqb');
+                            continue; // ⛔ 阻斷後續的紅綠藍判斷，確保金色不被覆蓋
+                        }
 
                         if (normalizedId === -1 && savedId !== -1) tileDiv.classList.add('cc-overlay-missing');
                         else if (normalizedId > -1) {
@@ -4229,7 +4252,9 @@ GodzamokCombo: {
                 }
             },
             clearOverlay: function() {
-                $('.cc-overlay-missing, .cc-overlay-anomaly, .cc-overlay-correct, .cc-overlay-new').removeClass('cc-overlay-missing cc-overlay-anomaly cc-overlay-correct cc-overlay-new');
+                // [v9.1.4] 追加 .cc-overlay-jqb 至移除清單
+                $('.cc-overlay-missing, .cc-overlay-anomaly, .cc-overlay-correct, .cc-overlay-new, .cc-overlay-jqb')
+                    .removeClass('cc-overlay-missing cc-overlay-anomaly cc-overlay-correct cc-overlay-new cc-overlay-jqb');
             },
 
             saveLayout: function() {
@@ -4582,7 +4607,7 @@ GodzamokCombo: {
                     this.isFarming = true;
                     Runtime.SeasonState.isFarming = true;
 
-                    if (isBusy) return; // 冷卻中，僅更新狀態，不執行操作
+                    if (isBusy) return; // 冷卻中，僅更新狀態，不執行切換
 
                     // A. 切換季節
                     if (Game.season !== targetSeasonId) {
@@ -4709,7 +4734,7 @@ GodzamokCombo: {
         },
 
         init: function() {
-            Logger.success('Core', 'Cookie Clicker Ultimate v9.1.3 Loading...');
+            Logger.success('Core', 'Cookie Clicker Ultimate v9.1.4 Loading...');
 
             Runtime.Timers.GardenWarmup = Date.now() + 10000;
             Logger.log('Core', '[花園保護] 暖機模式啟動：暫停操作 10 秒');

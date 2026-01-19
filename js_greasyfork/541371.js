@@ -8,7 +8,7 @@
 // @match        https://www.jeuxvideo.com/forums/42-*
 // @match        https://www.jeuxvideo.com/forums/1-*
 // @match        https://www.jeuxvideo.com/forums/0-*
-// @version      1.5.0
+// @version      1.6.2
 // @icon         https://image.jeuxvideo.com/smileys_img/11.gif
 // @grant        none
 // @license      MIT
@@ -65,62 +65,59 @@ function waitForSmileyPanel(attempt = 0) {
 }
 
 
-// Remplacement des smileys (classe .smileys__add pour ajouter la logique javascript)
+// Remplacement des smileys (classe .smileys__adds pour ajouter la logique javascript)
 function customsmileysplus() {
-    const fifthRow = document.querySelector(".smileys__modal .smileys__table tr:nth-child(5)");
-    fifthRow.insertAdjacentHTML("afterend", `
+    const smileysTable = document.querySelector(".smileys__modal .smileys__table");
+    smileysTable.querySelector("tr:nth-child(5)").insertAdjacentHTML("afterend", `
       <tr>
         <td class="smileys__cell">
-            <img class="smileys__img smileys__add" data-code=":hapoelparty:" src="//image.jeuxvideo.com/smileys_img/hapoelparty.gif" width="45" height="27">
+            <img class="smileys__img smileys__adds" data-code=":hapoelparty:" src="//image.jeuxvideo.com/smileys_img/hapoelparty.gif" width="45" height="27">
         </td>
         <td class="smileys__cell">:hapoelparty:</td>
         <td class="smileys__cell">
-            <img class="smileys__img smileys__add" data-code=":loveyou:" src="//image.jeuxvideo.com/smileys_img/loveyou.gif" width="64" height="30">
+            <img class="smileys__img smileys__adds" data-code=":loveyou:" src="//image.jeuxvideo.com/smileys_img/loveyou.gif" width="64" height="30">
         </td>
         <td class="smileys__cell">:loveyou:</td>
         <td class="smileys__cell">
-            <img class="smileys__img smileys__add" data-code=":opps:" src="//image.jeuxvideo.com/smileys_img/opps.gif" width="16" height="16">
+            <img class="smileys__img smileys__adds" data-code=":opps:" src="//image.jeuxvideo.com/smileys_img/opps.gif" width="16" height="16">
         </td>
         <td class="smileys__cell">:opps:</td>
         <td class="smileys__cell">
-            <img class="smileys__img smileys__add" data-code=":fish:" src="//image.jeuxvideo.com/smileys_img/fish.png" width="16" height="16">
+            <img class="smileys__img smileys__adds" data-code=":fish:" src="//image.jeuxvideo.com/smileys_img/fish.png" width="16" height="16">
         </td>
         <td class="smileys__cell">:fish:</td>
       </tr>
     `);
-    
-    
-    const lastRow = document.querySelector(".smileys__modal .smileys__table tr:last-child");
-    lastRow.outerHTML = `
+
+    smileysTable.querySelector("tr:last-child").outerHTML = `
       <tr>
         <td class="smileys__cell">
-           <img class="smileys__img smileys__add" data-code=":siffle:" src="//image.jeuxvideo.com/smileys_img/siffle.gif" width="22" height="16">
+           <img class="smileys__img smileys__adds" data-code=":siffle:" src="//image.jeuxvideo.com/smileys_img/siffle.gif" width="22" height="16">
         </td>
         <td class="smileys__cell">:siffle:</td>
         <td class="smileys__cell">
-           <img class="smileys__img smileys__add" data-code=":opps:" src="//image.jeuxvideo.com/smileys_img/opps.gif" width="16" height="16">
+           <img class="smileys__img smileys__adds" data-code=":opps:" src="//image.jeuxvideo.com/smileys_img/opps.gif" width="16" height="16">
            </td>
         <td class="smileys__cell">:opps:</td>
         <td class="smileys__cell">
-            <img class="smileys__img smileys__add" data-code=":mac:" src="//image.jeuxvideo.com/smileys_img/16.gif" width="16" height="16">
+            <img class="smileys__img smileys__adds" data-code=":mac:" src="//image.jeuxvideo.com/smileys_img/16.gif" width="16" height="16">
         </td>
         <td class="smileys__cell">:mac:</td>
         <td class="smileys__cell">
-            <img class="smileys__img smileys__add" data-code=":globe:" src="//image.jeuxvideo.com/smileys_img/6.gif" width="16" height="16">
+            <img class="smileys__img smileys__adds" data-code=":globe:" src="//image.jeuxvideo.com/smileys_img/6.gif" width="16" height="16">
         </td>
         <td class="smileys__cell">:globe:</td>
       </tr>
     `;
-    
-    //logique javascript
-    document.querySelectorAll(".smileys__img.smileys__add").forEach(img => {
+
+    //Listener JS
+    const smileysImg = smileysTable.querySelectorAll(".smileys__img.smileys__adds");
+    for (const img of smileysImg) {
         img.addEventListener("click", (e) => {
-            //e.stopPropagation();
-            //e.preventDefault();
-            const code = img.dataset.code;
-            insertTextAtCursor(` ${code} `);
+            //e.stopPropagation(); e.preventDefault();
+            insertTextAtCursor(` ${img.dataset.code} `);
         });
-    });
+    }
 }
 
 //  Insertion texte à la position mémorise fermeture modal

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ASMR音频声道反转
 // @namespace    https://github.com/shangxueink
-// @version      1.0
+// @version      1.1
 // @description  在ASMR网站上添加音频声道反转功能，支持一键切换左右声道
 // @author       shangxueink
 // @license      MIT
@@ -1726,25 +1726,13 @@ var __webpack_exports__ = {};
 /* harmony import */ var core_js_modules_es_array_includes_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4423);
 /* harmony import */ var core_js_modules_es_array_includes_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_includes_js__WEBPACK_IMPORTED_MODULE_0__);
 
-// ASMR音频声道反转脚本
-// 在ASMR网站上添加音频声道反转功能，支持多种声道模式切换
+// ASMR音频声道控制脚本
+// 在ASMR网站上添加音频声道控制功能，支持声道平衡、独立音量控制和反转
 
 (function () {
   'use strict';
 
-  // 声道模式枚举
-  const ChannelMode = {
-    NORMAL: 'normal',
-    // 正常声道
-    SWAP: 'swap',
-    // 反转声道
-    LEFT_ONLY: 'left',
-    // 仅左声道
-    RIGHT_ONLY: 'right' // 仅右声道
-  };
-
-  // 当前声道模式
-  let currentMode = ChannelMode.NORMAL;
+  // 音频处理相关变量
   let audioContext = null;
   let sourceNode = null;
   let splitter = null;
@@ -1753,155 +1741,521 @@ var __webpack_exports__ = {};
   let gainNodeRight = null;
   let currentAudioElement = null;
 
-  // 声道模式配置
-  const modeConfig = [{
-    value: ChannelMode.NORMAL,
-    label: '正常声道',
-    icon: '🔊',
-    color: '#00bfa5'
-  }, {
-    value: ChannelMode.SWAP,
-    label: '反转声道',
-    icon: '🔄',
-    color: '#ff5252'
-  }, {
-    value: ChannelMode.LEFT_ONLY,
-    label: '仅左声道',
-    icon: '◀️',
-    color: '#2196f3'
-  }, {
-    value: ChannelMode.RIGHT_ONLY,
-    label: '仅右声道',
-    icon: '▶️',
-    color: '#ff9800'
-  }];
+  // 声道控制参数
+  let leftVolume = 1.0; // 左声道音量 (0-1)
+  let rightVolume = 1.0; // 右声道音量 (0-1)
+  let balance = 0; // 平衡值 (-1到1, -1为全左, 0为居中, 1为全右)
+  let isSwapped = false; // 是否反转声道
 
-  // 获取当前模式索引
-  function getCurrentModeIndex() {
-    return modeConfig.findIndex(m => m.value === currentMode);
+  // UI状态
+  let isPanelVisible = false;
+  let panelElement = null;
+
+  // 创建触发按钮
+  function createTriggerButton() {
+    const button = document.createElement('button');
+    button.id = 'channel-control-trigger';
+    button.tabIndex = 0;
+    button.type = 'button';
+    button.className = 'q-btn q-btn-item non-selectable no-outline q-btn--flat q-btn--round q-btn--actionable q-focusable q-hoverable';
+    button.style.cssText = `
+      min-width: 32px;
+      min-height: 32px;
+      padding: 0;
+      font-size: 18px;
+    `;
+    button.setAttribute('data-v-627ee493', '');
+    button.innerHTML = `
+      <span class="q-focus-helper"></span>
+      <span class="q-btn__wrapper col row q-anchor--skip">
+        <span class="q-btn__content text-center col items-center q-anchor--skip justify-center row">
+          <i aria-hidden="true" role="img" class="q-icon notranslate material-icons">graphic_eq</i>
+        </span>
+      </span>
+    `;
+
+    // 点击按钮切换面板显示/隐藏
+    button.addEventListener('click', e => {
+      e.stopPropagation();
+      togglePanel();
+    });
+    return button;
   }
 
-  // 获取当前模式配置
-  function getCurrentModeConfig() {
-    return modeConfig[getCurrentModeIndex()];
-  }
-
-  // 创建声道切换器（轮切模式）
-  function createChannelSelector() {
+  // 创建声道控制面板
+  function createChannelControlPanel() {
+    const wrapper = document.createElement('div');
+    wrapper.id = 'channel-control-panel-wrapper';
+    wrapper.style.cssText = `
+      position: fixed;
+      bottom: 120px;
+      right: 20px;
+      z-index: 9999;
+      display: none;
+    `;
     const container = document.createElement('div');
-    container.id = 'channel-selector-container';
+    container.id = 'channel-control-panel';
     container.style.cssText = `
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 4px 8px;
-      background: rgba(0, 0, 0, 0.05);
-      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.98);
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
       user-select: none;
+      min-width: 280px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      backdrop-filter: blur(10px);
     `;
     container.setAttribute('data-v-627ee493', '');
 
-    // 创建左箭头按钮
-    const leftButton = document.createElement('button');
-    leftButton.id = 'channel-prev-btn';
-    leftButton.tabIndex = 0;
-    leftButton.type = 'button';
-    leftButton.className = 'q-btn q-btn-item non-selectable no-outline q-btn--flat q-btn--round q-btn--actionable q-focusable q-hoverable';
-    leftButton.style.cssText = `
-      min-width: 32px;
-      min-height: 32px;
-      padding: 0;
-      font-size: 18px;
+    // 标题栏（带关闭按钮）
+    const header = document.createElement('div');
+    header.style.cssText = `
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 4px;
     `;
-    leftButton.setAttribute('data-v-627ee493', '');
-    leftButton.innerHTML = `
-      <span class="q-focus-helper"></span>
-      <span class="q-btn__wrapper col row q-anchor--skip">
-        <span class="q-btn__content text-center col items-center q-anchor--skip justify-center row">
-          <i aria-hidden="true" role="img" class="q-icon notranslate material-icons">chevron_left</i>
-        </span>
-      </span>
-    `;
-
-    // 创建模式显示标签
-    const modeLabel = document.createElement('div');
-    modeLabel.id = 'channel-mode-label';
-    modeLabel.style.cssText = `
-      min-width: 100px;
-      text-align: center;
+    const title = document.createElement('span');
+    title.textContent = '🎧 声道控制';
+    title.style.cssText = `
       font-size: 14px;
-      font-weight: 500;
-      color: ${getCurrentModeConfig().color};
-      white-space: nowrap;
-      transition: color 0.3s;
+      font-weight: 600;
+      color: #333;
     `;
-    modeLabel.textContent = `${getCurrentModeConfig().icon} ${getCurrentModeConfig().label}`;
 
-    // 创建右箭头按钮
-    const rightButton = document.createElement('button');
-    rightButton.id = 'channel-next-btn';
-    rightButton.tabIndex = 0;
-    rightButton.type = 'button';
-    rightButton.className = 'q-btn q-btn-item non-selectable no-outline q-btn--flat q-btn--round q-btn--actionable q-focusable q-hoverable';
-    rightButton.style.cssText = `
-      min-width: 32px;
-      min-height: 32px;
-      padding: 0;
+    // 关闭按钮
+    const closeButton = document.createElement('button');
+    closeButton.textContent = '✕';
+    closeButton.style.cssText = `
+      width: 24px;
+      height: 24px;
+      border: none;
+      background: transparent;
+      color: #666;
       font-size: 18px;
+      cursor: pointer;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      padding: 0;
+      line-height: 1;
     `;
-    rightButton.setAttribute('data-v-627ee493', '');
-    rightButton.innerHTML = `
-      <span class="q-focus-helper"></span>
-      <span class="q-btn__wrapper col row q-anchor--skip">
-        <span class="q-btn__content text-center col items-center q-anchor--skip justify-center row">
-          <i aria-hidden="true" role="img" class="q-icon notranslate material-icons">chevron_right</i>
-        </span>
-      </span>
+    closeButton.addEventListener('click', () => {
+      hidePanel();
+    });
+    closeButton.addEventListener('mouseenter', () => {
+      closeButton.style.background = '#f0f0f0';
+      closeButton.style.color = '#333';
+    });
+    closeButton.addEventListener('mouseleave', () => {
+      closeButton.style.background = 'transparent';
+      closeButton.style.color = '#666';
+    });
+    header.appendChild(title);
+    header.appendChild(closeButton);
+
+    // 平衡控制区域
+    const balanceSection = createBalanceControl();
+
+    // 分隔线
+    const divider = document.createElement('div');
+    divider.style.cssText = `
+      height: 1px;
+      background: linear-gradient(to right, transparent, #ddd, transparent);
+      margin: 4px 0;
     `;
 
-    // 左箭头点击事件 - 切换到上一个模式
-    leftButton.addEventListener('click', e => {
-      e.stopPropagation();
-      const currentIndex = getCurrentModeIndex();
-      const prevIndex = (currentIndex - 1 + modeConfig.length) % modeConfig.length;
-      const prevMode = modeConfig[prevIndex];
-      switchChannelMode(prevMode.value);
-      updateModeLabel(prevMode);
-    });
+    // 独立音量控制区域
+    const volumeSection = createVolumeControls();
 
-    // 右箭头点击事件 - 切换到下一个模式
-    rightButton.addEventListener('click', e => {
-      e.stopPropagation();
-      const currentIndex = getCurrentModeIndex();
-      const nextIndex = (currentIndex + 1) % modeConfig.length;
-      const nextMode = modeConfig[nextIndex];
-      switchChannelMode(nextMode.value);
-      updateModeLabel(nextMode);
-    });
+    // 按钮区域
+    const buttonSection = createButtonControls();
+    container.appendChild(header);
+    container.appendChild(balanceSection);
+    container.appendChild(divider);
+    container.appendChild(volumeSection);
+    container.appendChild(buttonSection);
+    wrapper.appendChild(container);
+    return wrapper;
+  }
 
-    // 点击标签也可以切换到下一个模式
-    modeLabel.addEventListener('click', e => {
-      e.stopPropagation();
-      const currentIndex = getCurrentModeIndex();
-      const nextIndex = (currentIndex + 1) % modeConfig.length;
-      const nextMode = modeConfig[nextIndex];
-      switchChannelMode(nextMode.value);
-      updateModeLabel(nextMode);
+  // 切换面板显示/隐藏
+  function togglePanel() {
+    if (isPanelVisible) {
+      hidePanel();
+    } else {
+      showPanel();
+    }
+  }
+
+  // 显示面板
+  function showPanel() {
+    if (panelElement) {
+      panelElement.style.display = 'block';
+      isPanelVisible = true;
+    }
+  }
+
+  // 隐藏面板
+  function hidePanel() {
+    if (panelElement) {
+      panelElement.style.display = 'none';
+      isPanelVisible = false;
+    }
+  }
+
+  // 创建平衡控制
+  function createBalanceControl() {
+    const section = document.createElement('div');
+    section.style.cssText = `
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    `;
+
+    // 标签和值显示
+    const labelRow = document.createElement('div');
+    labelRow.style.cssText = `
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: #666;
+    `;
+    labelRow.innerHTML = `
+      <span>声道平衡</span>
+      <span id="balance-value" style="font-weight: 600; color: #00bfa5;">居中</span>
+    `;
+
+    // 滑块容器
+    const sliderContainer = document.createElement('div');
+    sliderContainer.style.cssText = `
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    `;
+
+    // 左标签
+    const leftLabel = document.createElement('span');
+    leftLabel.textContent = 'L';
+    leftLabel.style.cssText = `
+      font-size: 12px;
+      font-weight: 600;
+      color: #2196f3;
+      min-width: 16px;
+    `;
+
+    // 平衡滑块
+    const balanceSlider = document.createElement('input');
+    balanceSlider.type = 'range';
+    balanceSlider.id = 'balance-slider';
+    balanceSlider.min = '-100';
+    balanceSlider.max = '100';
+    balanceSlider.value = '0';
+    balanceSlider.style.cssText = `
+      flex: 1;
+      height: 6px;
+      border-radius: 3px;
+      outline: none;
+      -webkit-appearance: none;
+      background: linear-gradient(to right, #2196f3 0%, #00bfa5 50%, #ff9800 100%);
+      cursor: pointer;
+    `;
+
+    // 滑块样式
+    if (!document.getElementById('channel-control-styles')) {
+      const style = document.createElement('style');
+      style.id = 'channel-control-styles';
+      style.textContent = `
+        #balance-slider::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 18px;
+          height: 18px;
+          border-radius: 50%;
+          background: white;
+          border: 3px solid #00bfa5;
+          cursor: pointer;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+          transition: all 0.2s;
+        }
+        #balance-slider::-webkit-slider-thumb:hover {
+          transform: scale(1.2);
+          border-color: #00897b;
+        }
+        #balance-slider::-moz-range-thumb {
+          width: 18px;
+          height: 18px;
+          border-radius: 50%;
+          background: white;
+          border: 3px solid #00bfa5;
+          cursor: pointer;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+          transition: all 0.2s;
+        }
+        #balance-slider::-moz-range-thumb:hover {
+          transform: scale(1.2);
+          border-color: #00897b;
+        }
+        .volume-slider::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 16px;
+          height: 16px;
+          border-radius: 50%;
+          background: white;
+          border: 2px solid currentColor;
+          cursor: pointer;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+        .volume-slider::-moz-range-thumb {
+          width: 16px;
+          height: 16px;
+          border-radius: 50%;
+          background: white;
+          border: 2px solid currentColor;
+          cursor: pointer;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+      `;
+      document.head.appendChild(style);
+    }
+
+    // 右标签
+    const rightLabel = document.createElement('span');
+    rightLabel.textContent = 'R';
+    rightLabel.style.cssText = `
+      font-size: 12px;
+      font-weight: 600;
+      color: #ff9800;
+      min-width: 16px;
+      text-align: right;
+    `;
+
+    // 平衡滑块事件
+    balanceSlider.addEventListener('input', e => {
+      const value = parseInt(e.target.value);
+      balance = value / 100;
+      updateBalanceDisplay(value);
+      applyAudioSettings();
     });
-    modeLabel.style.cursor = 'pointer';
-    container.appendChild(leftButton);
-    container.appendChild(modeLabel);
-    container.appendChild(rightButton);
+    sliderContainer.appendChild(leftLabel);
+    sliderContainer.appendChild(balanceSlider);
+    sliderContainer.appendChild(rightLabel);
+    section.appendChild(labelRow);
+    section.appendChild(sliderContainer);
+    return section;
+  }
+
+  // 创建音量控制
+  function createVolumeControls() {
+    const section = document.createElement('div');
+    section.style.cssText = `
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    `;
+
+    // 左声道控制
+    const leftControl = createVolumeSlider('left', 'L', '#2196f3', '◀️');
+    // 右声道控制
+    const rightControl = createVolumeSlider('right', 'R', '#ff9800', '▶️');
+    section.appendChild(leftControl);
+    section.appendChild(rightControl);
+    return section;
+  }
+
+  // 创建单个音量滑块
+  function createVolumeSlider(channel, label, color, icon) {
+    const container = document.createElement('div');
+    container.style.cssText = `
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    `;
+
+    // 标签行
+    const labelRow = document.createElement('div');
+    labelRow.style.cssText = `
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: #666;
+    `;
+    labelRow.innerHTML = `
+      <span>${icon} ${label}声道</span>
+      <span id="${channel}-volume-value" style="font-weight: 600; color: ${color};">100%</span>
+    `;
+
+    // 滑块容器
+    const sliderContainer = document.createElement('div');
+    sliderContainer.style.cssText = `
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    `;
+
+    // 音量滑块
+    const slider = document.createElement('input');
+    slider.type = 'range';
+    slider.id = `${channel}-volume-slider`;
+    slider.className = 'volume-slider';
+    slider.min = '0';
+    slider.max = '100';
+    slider.value = '100';
+    slider.style.cssText = `
+      flex: 1;
+      height: 4px;
+      border-radius: 2px;
+      outline: none;
+      -webkit-appearance: none;
+      background: linear-gradient(to right, ${color} 0%, ${color} 100%);
+      cursor: pointer;
+      color: ${color};
+    `;
+
+    // 滑块事件
+    slider.addEventListener('input', e => {
+      const value = parseInt(e.target.value);
+      if (channel === 'left') {
+        leftVolume = value / 100;
+      } else {
+        rightVolume = value / 100;
+      }
+      updateVolumeDisplay(channel, value);
+      applyAudioSettings();
+    });
+    sliderContainer.appendChild(slider);
+    container.appendChild(labelRow);
+    container.appendChild(sliderContainer);
     return container;
   }
 
-  // 更新模式标签
-  function updateModeLabel(modeInfo) {
-    const label = document.getElementById('channel-mode-label');
-    if (label) {
-      label.textContent = `${modeInfo.icon} ${modeInfo.label}`;
-      label.style.color = modeInfo.color;
+  // 创建按钮控制
+  function createButtonControls() {
+    const section = document.createElement('div');
+    section.style.cssText = `
+      display: flex;
+      gap: 8px;
+      margin-top: 4px;
+    `;
+
+    // 反转按钮
+    const swapButton = document.createElement('button');
+    swapButton.id = 'swap-channel-btn';
+    swapButton.textContent = '🔄 反转声道';
+    swapButton.style.cssText = `
+      flex: 1;
+      padding: 8px 12px;
+      background: ${isSwapped ? '#ff5252' : '#f5f5f5'};
+      color: ${isSwapped ? 'white' : '#333'};
+      border: none;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    `;
+    swapButton.addEventListener('click', () => {
+      isSwapped = !isSwapped;
+      swapButton.style.background = isSwapped ? '#ff5252' : '#f5f5f5';
+      swapButton.style.color = isSwapped ? 'white' : '#333';
+      applyAudioSettings();
+    });
+    swapButton.addEventListener('mouseenter', () => {
+      if (!isSwapped) {
+        swapButton.style.background = '#e0e0e0';
+      }
+    });
+    swapButton.addEventListener('mouseleave', () => {
+      swapButton.style.background = isSwapped ? '#ff5252' : '#f5f5f5';
+    });
+
+    // 重置按钮
+    const resetButton = document.createElement('button');
+    resetButton.textContent = '↺ 重置';
+    resetButton.style.cssText = `
+      flex: 1;
+      padding: 8px 12px;
+      background: #f5f5f5;
+      color: #333;
+      border: none;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    `;
+    resetButton.addEventListener('click', () => {
+      resetAllSettings();
+    });
+    resetButton.addEventListener('mouseenter', () => {
+      resetButton.style.background = '#e0e0e0';
+    });
+    resetButton.addEventListener('mouseleave', () => {
+      resetButton.style.background = '#f5f5f5';
+    });
+    section.appendChild(swapButton);
+    section.appendChild(resetButton);
+    return section;
+  }
+
+  // 更新平衡显示
+  function updateBalanceDisplay(value) {
+    const display = document.getElementById('balance-value');
+    if (!display) return;
+    if (value === 0) {
+      display.textContent = '居中';
+      display.style.color = '#00bfa5';
+    } else if (value < 0) {
+      display.textContent = `左 ${Math.abs(value)}%`;
+      display.style.color = '#2196f3';
+    } else {
+      display.textContent = `右 ${value}%`;
+      display.style.color = '#ff9800';
     }
+  }
+
+  // 更新音量显示
+  function updateVolumeDisplay(channel, value) {
+    const display = document.getElementById(`${channel}-volume-value`);
+    if (display) {
+      display.textContent = `${value}%`;
+    }
+  }
+
+  // 重置所有设置
+  function resetAllSettings() {
+    // 重置变量
+    leftVolume = 1.0;
+    rightVolume = 1.0;
+    balance = 0;
+    isSwapped = false;
+
+    // 重置UI
+    const balanceSlider = document.getElementById('balance-slider');
+    if (balanceSlider) balanceSlider.value = '0';
+    updateBalanceDisplay(0);
+    const leftSlider = document.getElementById('left-volume-slider');
+    if (leftSlider) leftSlider.value = '100';
+    updateVolumeDisplay('left', 100);
+    const rightSlider = document.getElementById('right-volume-slider');
+    if (rightSlider) rightSlider.value = '100';
+    updateVolumeDisplay('right', 100);
+    const swapButton = document.getElementById('swap-channel-btn');
+    if (swapButton) {
+      swapButton.style.background = '#f5f5f5';
+      swapButton.style.color = '#333';
+    }
+
+    // 应用设置
+    applyAudioSettings();
   }
 
   // 初始化音频处理
@@ -1924,15 +2278,15 @@ var __webpack_exports__ = {};
       // 创建声道合并器（将左右声道合并回立体声）
       merger = audioContext.createChannelMerger(2);
 
-      // 创建增益节点用于混合和控制音量
+      // 创建增益节点用于控制音量
       gainNodeLeft = audioContext.createGain();
       gainNodeRight = audioContext.createGain();
 
       // 连接节点：音频源 -> 分离器
       sourceNode.connect(splitter);
 
-      // 应用当前模式
-      applyChannelMode(currentMode);
+      // 应用当前设置
+      applyAudioSettings();
 
       // 连接到输出
       merger.connect(audioContext.destination);
@@ -1943,66 +2297,55 @@ var __webpack_exports__ = {};
     }
   }
 
-  // 应用声道模式
-  function applyChannelMode(mode) {
-    if (!splitter || !merger) return;
+  // 应用音频设置
+  function applyAudioSettings() {
+    if (!splitter || !merger || !gainNodeLeft || !gainNodeRight) return;
 
     // 断开所有连接
     splitter.disconnect();
-    switch (mode) {
-      case ChannelMode.NORMAL:
-        // 正常模式：左->左，右->右
-        splitter.connect(merger, 0, 0);
-        splitter.connect(merger, 1, 1);
-        console.log('已切换到：正常声道');
-        break;
-      case ChannelMode.SWAP:
-        // 反转模式：左->右，右->左
-        splitter.connect(merger, 0, 1);
-        splitter.connect(merger, 1, 0);
-        console.log('已切换到：反转声道');
-        break;
-      case ChannelMode.LEFT_ONLY:
-        // 仅左声道：左右声道混合后只输出到左边（右耳机静音）
-        if (gainNodeLeft && gainNodeRight) {
-          // 左声道和右声道都连接到左边的增益节点
-          splitter.connect(gainNodeLeft, 0);
-          splitter.connect(gainNodeLeft, 1);
-          // 左边增益节点输出到左声道
-          gainNodeLeft.connect(merger, 0, 0);
+    gainNodeLeft.disconnect();
+    gainNodeRight.disconnect();
 
-          // 右声道静音（不连接任何内容到右声道）
-        }
-        console.log('已切换到：仅左声道（混合输出）');
-        break;
-      case ChannelMode.RIGHT_ONLY:
-        // 仅右声道：左右声道混合后只输出到右边（左耳机静音）
-        if (gainNodeLeft && gainNodeRight) {
-          // 左声道和右声道都连接到右边的增益节点
-          splitter.connect(gainNodeRight, 0);
-          splitter.connect(gainNodeRight, 1);
-          // 右边增益节点输出到右声道
-          gainNodeRight.connect(merger, 0, 1);
+    // 计算最终的左右声道增益
+    // 平衡值影响：balance = -1 (全左) 到 1 (全右)
+    // balance < 0: 右声道音量降低，左声道获得右声道的部分音量
+    // balance > 0: 左声道音量降低，右声道获得左声道的部分音量
 
-          // 左声道静音（不连接任何内容到左声道）
-        }
-        console.log('已切换到：仅右声道（混合输出）');
-        break;
-    }
-  }
+    let finalLeftGain = leftVolume;
+    let finalRightGain = rightVolume;
 
-  // 切换声道模式
-  function switchChannelMode(mode) {
-    if (!audioContext || !splitter || !merger || !currentAudioElement) {
-      console.error('音频处理未初始化');
-      return;
+    // 应用平衡效果
+    if (balance < 0) {
+      // 向左平衡：右声道音量降低，左声道增加
+      const balanceFactor = Math.abs(balance);
+      finalRightGain *= 1 - balanceFactor;
+      finalLeftGain *= 1 + balanceFactor * 0.5; // 左声道适度增加
+    } else if (balance > 0) {
+      // 向右平衡：左声道音量降低，右声道增加
+      const balanceFactor = balance;
+      finalLeftGain *= 1 - balanceFactor;
+      finalRightGain *= 1 + balanceFactor * 0.5; // 右声道适度增加
     }
-    try {
-      currentMode = mode;
-      applyChannelMode(mode);
-    } catch (error) {
-      console.error('切换声道模式失败:', error);
+
+    // 设置增益值
+    gainNodeLeft.gain.value = finalLeftGain;
+    gainNodeRight.gain.value = finalRightGain;
+
+    // 根据是否反转来连接声道
+    if (isSwapped) {
+      // 反转模式：左->右，右->左
+      splitter.connect(gainNodeLeft, 1); // 右声道数据 -> 左增益节点
+      splitter.connect(gainNodeRight, 0); // 左声道数据 -> 右增益节点
+      gainNodeLeft.connect(merger, 0, 0); // 左增益 -> 左输出
+      gainNodeRight.connect(merger, 0, 1); // 右增益 -> 右输出
+    } else {
+      // 正常模式：左->左，右->右
+      splitter.connect(gainNodeLeft, 0); // 左声道数据 -> 左增益节点
+      splitter.connect(gainNodeRight, 1); // 右声道数据 -> 右增益节点
+      gainNodeLeft.connect(merger, 0, 0); // 左增益 -> 左输出
+      gainNodeRight.connect(merger, 0, 1); // 右增益 -> 右输出
     }
+    console.log(`音频设置已应用 - 左:${finalLeftGain.toFixed(2)}, 右:${finalRightGain.toFixed(2)}, 平衡:${balance.toFixed(2)}, 反转:${isSwapped}`);
   }
 
   // 清理音频处理
@@ -2032,25 +2375,26 @@ var __webpack_exports__ = {};
       audioContext = null;
     }
     currentAudioElement = null;
-    currentMode = ChannelMode.NORMAL;
   }
 
-  // 监听音频元素并插入选择器到播放器
+  // 监听音频元素并插入按钮和面板
   function observeAudioElements() {
-    const selector = createChannelSelector();
-    let selectorInserted = false;
+    const triggerButton = createTriggerButton();
+    const panel = createChannelControlPanel();
+    panelElement = panel;
+    let buttonInserted = false;
+    let panelInserted = false;
 
-    // 尝试将选择器插入到播放器控制栏
-    const insertSelectorToPlayer = () => {
-      if (selectorInserted) return;
+    // 尝试将按钮插入到播放器控制栏
+    const insertButtonToPlayer = () => {
+      if (buttonInserted) return;
 
-      // 查找播放控制按钮组（支持PC端和移动端多种布局）
+      // 查找播放控制按钮组
       let controlRow = null;
 
-      // 方法1: 查找包含播放控制按钮的行（最通用）
+      // 方法1: 查找包含播放控制按钮的行
       const rows = document.querySelectorAll('[data-v-627ee493].row');
       for (const row of rows) {
-        // 检查是否包含播放控制按钮（skip_previous, pause, play_arrow, skip_next等）
         const icons = row.querySelectorAll('.material-icons');
         const hasPlayControls = Array.from(icons).some(icon => {
           var _icon$textContent;
@@ -2058,68 +2402,58 @@ var __webpack_exports__ = {};
         });
         if (hasPlayControls) {
           controlRow = row;
-          console.log('找到播放控制栏（通过图标匹配）:', row.className);
+          console.log('找到播放控制栏（通过图标匹配）');
           break;
         }
       }
 
       // 方法2: 使用特定的类名选择器作为备选
       if (!controlRow) {
-        controlRow =
-        // PC端选择器
-        document.querySelector('.row.flex-center') ||
-        // 移动端选择器 - 包含播放控制按钮的行
-        document.querySelector('.row.q-py-md.self-center') ||
-        // 音量控制行
-        document.querySelector('.row.items-center.q-mx-lg.q-pt-sm') || document.querySelector('.row.items-center.q-gutter-x-sm') ||
-        // 通用选择器
-        Array.from(document.querySelectorAll('.row.items-center')).find(el => {
-          var _el$querySelector;
-          return (_el$querySelector = el.querySelector('.material-icons')) === null || _el$querySelector === void 0 || (_el$querySelector = _el$querySelector.textContent) === null || _el$querySelector === void 0 ? void 0 : _el$querySelector.includes('volume');
-        }) || null;
-        if (controlRow) {
-          console.log('找到播放控制栏（通过类名匹配）:', controlRow.className);
-        }
+        controlRow = document.querySelector('.row.flex-center') || document.querySelector('.row.q-py-md.self-center') || document.querySelector('.row.items-center.q-mx-lg.q-pt-sm') || document.querySelector('.row.items-center.q-gutter-x-sm') || null;
       }
       if (controlRow) {
-        // 检测是否为移动端布局（通过类名判断）
+        // 检测是否为移动端布局
         const isMobile = controlRow.classList.contains('q-py-md') || controlRow.classList.contains('self-center');
         if (isMobile) {
-          // 移动端：创建一个新的居中行来放置选择器
+          // 移动端：创建一个新的居中行来放置按钮
           const centerRow = document.createElement('div');
           centerRow.className = 'row justify-center';
           centerRow.setAttribute('data-v-627ee493', '');
-          // 添加自定义样式来调整上下间距
           centerRow.style.cssText = 'margin-top: -36px; margin-bottom: -18px;';
-          centerRow.appendChild(selector);
-
-          // 将居中行插入到播放控制栏的后面
+          centerRow.appendChild(triggerButton);
           if (controlRow.parentNode && controlRow.nextSibling) {
             controlRow.parentNode.insertBefore(centerRow, controlRow.nextSibling);
           } else if (controlRow.parentNode) {
             controlRow.parentNode.appendChild(centerRow);
           }
-          console.log('声道选择器已成功插入到播放器（移动端居中）');
+          console.log('声道控制按钮已成功插入到播放器（移动端居中）');
         } else {
           // PC端：直接追加到播放控制按钮组的最后
-          controlRow.appendChild(selector);
-          console.log('声道选择器已成功插入到播放器（PC端）');
+          controlRow.appendChild(triggerButton);
+          console.log('声道控制按钮已成功插入到播放器（PC端）');
         }
-        selectorInserted = true;
-      } else {
-        console.log('未找到播放控制栏，将在下次检查时重试');
+        buttonInserted = true;
       }
+    };
+
+    // 插入控制面板到页面
+    const insertPanelToPage = () => {
+      if (panelInserted) return;
+      document.body.appendChild(panel);
+      panelInserted = true;
+      console.log('声道控制面板已成功插入到页面');
     };
 
     // 检查音频元素的函数
     const checkAudioElements = () => {
       const audioElements = document.querySelectorAll('audio');
       if (audioElements.length > 0) {
-        // 尝试插入选择器
-        insertSelectorToPlayer();
+        // 尝试插入按钮和面板
+        insertButtonToPlayer();
+        insertPanelToPage();
         audioElements.forEach(audio => {
           // 监听播放事件
-          if (!audio.dataset.channelSwapListenerAdded) {
+          if (!audio.dataset.channelControlListenerAdded) {
             audio.addEventListener('play', () => {
               console.log('检测到音频播放');
 
@@ -2134,7 +2468,7 @@ var __webpack_exports__ = {};
             audio.addEventListener('ended', () => {
               console.log('音频播放结束');
             });
-            audio.dataset.channelSwapListenerAdded = 'true';
+            audio.dataset.channelControlListenerAdded = 'true';
           }
         });
       }
@@ -2167,7 +2501,7 @@ var __webpack_exports__ = {};
   window.addEventListener('beforeunload', () => {
     cleanupAudioProcessing();
   });
-  console.log('ASMR声道切换脚本已加载');
+  console.log('ASMR声道控制脚本已加载');
 })();
 /******/ })()
 ;

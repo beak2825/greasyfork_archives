@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         快速查包
 // @namespace    fsh
-// @version      1.0.13
+// @version      1.0.15
 // @description  快速跳转至指定包或指定分支
 // @author       05128
 // @match        *://ci.meitu.city/*
@@ -21,7 +21,7 @@
 // ==/UserScript==
 
 // Auto-generated bundle - DO NOT EDIT DIRECTLY
-// Generated at: 2026-01-16T11:13:22.663Z
+// Generated at: 2026-01-19T06:41:20.924Z
 
 // 兼容性函数
 function sleep(ms) {
@@ -357,11 +357,6 @@ const ConfigManager = {
     ADD_FIELDS_URL: 'https://qyapi.weixin.qq.com/cgi-bin/wedoc/smartsheet/add_fields',
     DELETE_FIELDS_URL: 'https://qyapi.weixin.qq.com/cgi-bin/wedoc/smartsheet/delete_fields',
     ADD_RECORDS_URL: 'https://qyapi.weixin.qq.com/cgi-bin/wedoc/smartsheet/add_records',
-    // localStorage缓存键名
-    ACCESS_TOKEN_KEY: 'wework_access_token',
-    ACCESS_TOKEN_EXPIRE_KEY: 'wework_access_token_expire',
-    // token有效期（秒）
-    TOKEN_EXPIRE_TIME: 7200,
 
     // 通知人员配置（用于文档权限设置）
     // 这些用户会被自动添加到文档的 update_file_member_list 中
@@ -1528,6 +1523,9 @@ function getBaseUrl() {
 /**
  * 在Jira页面添加跳转到分支的按钮
  * 在"创建build"和"解决build"字段后添加跳转按钮
+ *
+ * 注意：事件绑定由 EventManager 统一管理（main.js），
+ * 这里只负责创建按钮，避免重复绑定导致打开多个页面
  */
 window.addButtonJira = function addButtonJira() {
   // 检查按钮是否已经存在
@@ -1543,26 +1541,8 @@ window.addButtonJira = function addButtonJira() {
   var btnSolved = $('<button class="search-btn" id="search_btn_solved">跳转</button>');
   $("#customfield_10304-val").after(btnSolved);
 
-  // 绑定点击事件
-  $("#search_btn_create").unbind("click").click(function () {
-    var buildId = getBuildId("customfield_10303-val");
-    // 存储bug平台
-    Utils.storage.setValue("platform", $("#customfield_10301-val").text().trim());
-    Utils.common.sleep(500).then(() => {
-      var targetUrl = getBaseUrl() + buildId;
-      window.open(targetUrl);
-    });
-  });
-
-  $("#search_btn_solved").unbind("click").click(function () {
-    var buildId = getBuildId("customfield_10304-val");
-    // 存储bug平台
-    Utils.storage.setValue("platform", $("#customfield_10301-val").text().trim());
-    Utils.common.sleep(500).then(() => {
-      var targetUrl = getBaseUrl() + buildId;
-      window.open(targetUrl);
-    });
-  });
+  // ⚠️ 事件绑定已移至 main.js 的 EventManager.bindEvent() 中统一管理
+  // 避免重复绑定导致打开多个页面
 };
 
 /**
@@ -1854,6 +1834,7 @@ const JiraModule = {
    * 2. 添加分支跳转按钮
    * 3. 添加创建问题对话框的平台切换按钮
    * 4. 添加企业微信文档创建功能
+   * 5. 添加关闭/重新打开对话框的按钮组（在主循环中检查）
    * @private
    */
   checkAndAddElements() {
@@ -1913,6 +1894,10 @@ const JiraModule = {
 
       this.wechatSyncChecked = true;
     }
+
+    // ⭐ 关键修复：在主循环中检查并添加关闭/重新打开对话框的按钮组
+    // 恢复旧版本的稳定逻辑：不依赖点击事件，而是在主循环中检查对话框是否存在
+    this.addCloseReopenButtons();
 
     this.bindEvents();
   },
@@ -2110,24 +2095,56 @@ const JiraModule = {
     }, ConfigManager.CONSTANTS.DIALOG_DELAY_SHORT);
   },
 
-  bindEvents() {
-    const self = this;
+  /**
+   * 添加关闭/重新打开对话框的按钮组
+   * ⭐ 恢复旧版本的稳定逻辑：在主循环中检查对话框是否存在
+   * 而不是依赖点击事件来触发按钮添加
+   *
+   * 这样可以确保：
+   * 1. 对话框打开时，按钮会被正确添加
+   * 2. 即使对话框已经打开，也会在下次主循环时添加按钮
+   * 3. 不依赖点击事件的时序
+   * @private
+   */
+  addCloseReopenButtons() {
+    // 检查关闭问题和重新打开对话框是否存在
+    const $closeDialog = $("#workflow-transition-21-dialog");
+    const $reopenDialog = $("#workflow-transition-31-dialog");
 
-    // 绑定关闭问题按钮点击事件
-    $('#action_id_21').off('click').on('click', function() {
+    // 如果对话框不存在，跳过
+    if ($closeDialog.length === 0 && $reopenDialog.length === 0) {
+      return;
+    }
+
+    // 处理关闭问题对话框
+    if ($closeDialog.length > 0) {
       const isBtnClose = Utils.dom.safeGetElement("get_branch_btn_close");
       if (!isBtnClose) {
-        self.handleCloseReopenDialog();
+        // 对话框存在但按钮不存在，添加按钮
+        // 使用 setTimeout 确保对话框完全打开
+        setTimeout(() => {
+          this.handleCloseReopenDialog();
+        }, ConfigManager.CONSTANTS.DIALOG_DELAY_MEDIUM);
       }
-    });
+    }
 
-    // 绑定重新打开问题按钮点击事件
-    $('#action_id_31').off('click').on('click', function() {
+    // 处理重新打开问题对话框
+    if ($reopenDialog.length > 0) {
       const isBtnOpen = Utils.dom.safeGetElement("get_branch_btn_open");
       if (!isBtnOpen) {
-        self.handleReopenDialog();
+        // 对话框存在但按钮不存在，添加按钮
+        // 使用 setTimeout 确保对话框完全打开
+        setTimeout(() => {
+          this.handleReopenDialog();
+        }, ConfigManager.CONSTANTS.DIALOG_DELAY_MEDIUM);
       }
-    });
+    }
+  },
+
+  bindEvents() {
+    // 事件绑定已移至 EventManager.registerGlobalEvents() 中统一管理
+    // 不需要在这里单独绑定关闭/重新打开对话框的点击事件
+    // 因为按钮添加逻辑已改为主循环中的 addCloseReopenButtons()
   },
 
   /**

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         直播 - 抖音直播终极增强
 // @namespace    http://tampermonkey.net/
-// @version      3.0
+// @version      3.1
 // @description  弹幕拦截 / 画质自动切换 / 实时精确人数监控 / 礼物栏视觉净化 / 弹幕层一键清爽控制
 // @match        https://*.douyin.com/*
 // @run-at       document-idle
@@ -11,12 +11,28 @@
 // @updateURL https://update.greasyfork.org/scripts/502481/%E7%9B%B4%E6%92%AD%20-%20%E6%8A%96%E9%9F%B3%E7%9B%B4%E6%92%AD%E7%BB%88%E6%9E%81%E5%A2%9E%E5%BC%BA.meta.js
 // ==/UserScript==
 
+
 (function() {
     'use strict';
 
     const TARGET_URL_KEY = "/im/push/v2/";
 
-    console.log("🔥 v25.0 脚本已注入：弹幕物理拦截模式已开启。");
+    console.log("🔥 v11.1 脚本已注入：沉浸式拦截模式已开启 (修复滚动与性能问题)。");
+
+    // ==========================================
+    // 0. 全局样式注入 (防止原生背景色残留)
+    // ==========================================
+    const style = document.createElement('style');
+    style.innerHTML = `
+        .webcast-chatroom___list, .webcast-chatroom___items, .webcast-chatroom___bottom-message {
+            background-color: transparent !important;
+        }
+        /* 隐藏原生可能残留的滚动条背景 */
+        ::-webkit-scrollbar-track {
+            background: transparent !important;
+        }
+    `;
+    document.head.appendChild(style);
 
     // ==========================================
     // 1. Protobuf 定义与类型初始化
@@ -78,29 +94,65 @@
     }
 
     function updateOnlineCount(count) {
-        const nativeCounter = document.querySelector('.ClV317pr[data-e2e="live-room-audience"]');
-        if (nativeCounter) nativeCounter.innerText = count;
+        // [修复] 优先使用精准选择器，避免全页面遍历
+        let el = document.querySelector('[data-e2e="live-room-audience"]');
+
+        // [优化] 如果精准匹配失败，仅在 Header 区域内寻找，极大降低CPU消耗
+        if (!el) {
+            const header = document.querySelector('header') || document.getElementById('livePlayerHeader');
+            if (header) {
+                const candidates = header.querySelectorAll('div');
+                for (let cand of candidates) {
+                    // 匹配纯数字或带"万"的格式
+                    if (/^[\d.]+(万)?\+?$/.test(cand.innerText.trim())) {
+                        el = cand;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (el) {
+            const newText = count.toString();
+            if (el.innerText !== newText) {
+                el.innerText = newText;
+            }
+        }
     }
 
     function injectChatMessage(userName, content) {
-        const listContainer = document.querySelector('.webcast-chatroom___list div[style*="transform: translateY"]');
-        const chatWrapper = document.querySelector('.S3vewJ9R.Ij9il8sm.webcast-chatroom___list');
-        if (!listContainer || !chatWrapper) return;
+        // 1. 查找滚动容器
+        const chatWrapper = document.querySelector('[class*="webcast-chatroom___list"]');
+        if (!chatWrapper) return;
 
+        // 2. 查找消息挂载点
+        const listContainer = chatWrapper.querySelector('div[style*="transform: translateY"]');
+        if (!listContainer) return;
+
+        // [修复] 智能滚动判断：只有当用户在底部附近时才自动滚动 (容差 80px)
+        const threshold = 80;
+        const isNearBottom = chatWrapper.scrollHeight - chatWrapper.scrollTop - chatWrapper.clientHeight <= threshold;
+
+        // 3. 创建消息元素
         const messageWrapper = document.createElement('div');
+        messageWrapper.className = "webcast-chatroom___item"; // 保持通用类名以便 CSS 隐藏背景
+
+        // 4. 注入 HTML (沉浸式样式：无背景，带阴影)
         messageWrapper.innerHTML = `
-            <div class="webcast-chatroom___item">
-                <div class="Cl4EfhXg">
-                    <div class="NkS2Invn">
-                        <span style="color: #FFA500; font-weight: bold;">[弹幕:]</span>
-                        <span style="color: #8ce1ff;">${userName}：</span>
-                        <span style="color: #fff;">${content}</span>
-                    </div>
-                </div>
+            <div style="padding: 4px 12px; font-size: 14px; line-height: 1.5; word-break: break-all;">
+                <span style="color: #FFA500; font-weight: bold; margin-right: 4px; text-shadow: 1px 1px 1px rgba(0,0,0,0.9);">[弹幕]</span>
+                <span style="color: #8ce1ff; font-weight: 500; text-shadow: 1px 1px 1px rgba(0,0,0,0.9);">${userName}：</span>
+                <span style="color: #ffffff; text-shadow: 1px 1px 1px rgba(0,0,0,0.9);">${content}</span>
             </div>
         `;
+
+        // 5. 插入元素
         listContainer.appendChild(messageWrapper);
-        chatWrapper.scrollTop = chatWrapper.scrollHeight;
+
+        // 6. 条件滚动
+        if (isNearBottom) {
+            chatWrapper.scrollTop = chatWrapper.scrollHeight;
+        }
     }
 
     // ==========================================
@@ -109,13 +161,17 @@
     const ORIGIN_WS = window.WebSocket;
     window.WebSocket = function(...args) {
         const ws = new ORIGIN_WS(...args);
+        // 仅劫持包含特定路径的连接
         if (args[0]?.includes(TARGET_URL_KEY)) {
             const listeners = [];
+
+            // 劫持 addEventListener
             ws.addEventListener = function(type, handler, options) {
                 if (type === 'message') listeners.push(handler);
                 else ORIGIN_WS.prototype.addEventListener.call(ws, type, handler, options);
             };
 
+            // 监听原始消息并进行过滤
             ORIGIN_WS.prototype.addEventListener.call(ws, 'message', async (e) => {
                 if (e.data instanceof ArrayBuffer || e.data instanceof Blob) {
                     try {
@@ -123,7 +179,7 @@
                         const pf = PushFrame.decode(new Uint8Array(buf));
                         let payload = pf.payload;
 
-                        // 解压数据
+                        // gzip 解压
                         if (payload[0] === 0x1f && payload[1] === 0x8b) {
                             payload = pako.inflate(payload);
                         }
@@ -131,28 +187,30 @@
                         const res = Response.decode(payload);
                         const filteredMessages = [];
 
-                        // 遍历消息列表：自己渲染弹幕，并从原生列表中删除
+                        // 遍历并处理消息
                         res.messagesList?.forEach(msg => {
                             if (msg.method === 'WebcastChatMessage') {
+                                // 拦截弹幕：解码 -> 自行渲染 -> 不推给原生
                                 const data = ChatMessage.decode(msg.payload);
                                 injectChatMessage(data.user?.nickName || "游客", data.content);
-                                // 此处不将 msg 放入 filteredMessages，实现原生拦截
                             } else {
+                                // 拦截人数更新：更新 UI -> 允许推给原生(为了保持其他状态同步，也可选择不推)
                                 if (msg.method === 'WebcastRoomUserSeqMessage') {
                                     const data = RoomUserSeqMessage.decode(msg.payload);
                                     updateOnlineCount(data.total || 0);
                                 }
-                                filteredMessages.push(msg); // 非弹幕消息保留
+                                // 非弹幕消息放行
+                                filteredMessages.push(msg);
                             }
                         });
 
-                        // 重新打包：伪造一份没有弹幕的 Response 给抖音原生代码
+                        // 重新打包 Response
                         res.messagesList = filteredMessages;
                         pf.payload = Response.encode(res).finish();
-                        pf.payloadEncoding = "";
+                        pf.payloadEncoding = ""; // 清除可能的编码标记
                         const newBuf = PushFrame.encode(pf).finish();
 
-                        // 分发伪造后的事件
+                        // 分发修改后的数据
                         const newEvent = new MessageEvent('message', {
                             data: newBuf.buffer,
                             origin: e.origin,
@@ -163,7 +221,8 @@
                         listeners.forEach(l => l(newEvent));
 
                     } catch(err) {
-                        // 发生错误时保底转发原始数据，防止直播间卡死
+                        console.error("WsHook Error:", err);
+                        // 出错时保底放行原始数据
                         listeners.forEach(l => l(e));
                     }
                 } else {
@@ -187,37 +246,46 @@
     }
 
     function switchToHighestQuality() {
-        const selectors = ['.J1oLRAwo .xMYYJi25', '.RC5nBmmY .xJMJ5DRo'];
-        const settingsBtn = document.querySelector('[data-e2e="common-settings-area"]');
-        if (settingsBtn) settingsBtn.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+        const container = document.querySelector('[data-e2e="quality-selector"]');
+        if (!container) {
+            const settingsBtn = document.querySelector('[data-e2e="common-settings-area"]');
+            if (settingsBtn) settingsBtn.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+            return false;
+        }
 
-        for (let sel of selectors) {
-            const items = Array.from(document.querySelectorAll(sel)).map(x => ({ text: x.textContent.trim(), el: x }));
-            const priority = ["原画", "蓝光", "超清", "高清"];
-            for (let p of priority) {
-                const target = items.find(i => i.text.includes(p));
-                if (target) {
-                    const isCurrent = target.el.classList.contains('active') || target.el.getAttribute('aria-checked') === 'true';
-                    if (!isCurrent) {
-                        target.el.click();
-                        console.log("[画质] 已切换到:", target.text);
-                    }
-                    return true;
+        const priority = ["原画", "蓝光", "超清", "高清"];
+        const items = Array.from(container.querySelectorAll('div'));
+
+        for (let label of priority) {
+            const target = items.find(el =>
+                el.children.length === 0 && el.textContent.trim() === label
+            );
+            if (target) {
+                // 简单的颜色判断，可能会随抖音更新失效，但目前有效
+                const style = window.getComputedStyle(target);
+                // 选中状态通常是纯白，未选中可能是灰色或半透明
+                if (style.color !== 'rgb(255, 255, 255)' && style.color !== '#ffffff') {
+                     target.click();
+                     console.log(`[画质] 切换至: ${label}`);
                 }
+                return true;
             }
         }
         return false;
     }
 
     function removeUnwantedElements() {
-        const keywords = ["赠送", "小心心", "人气票", "热气球", "棒棒糖"];
+        const keywords = ["赠送", "小心心", "人气票", "热气球", "棒棒糖", "粉丝团"];
         waitForElement('div', (div) => {
             const text = div.textContent.trim();
             if (keywords.some(k => text.includes(k))) {
                 let container = div;
+                // 向上查找以删除整行，防止误删
                 for (let i = 0; i < 5; i++) {
-                    if (!container || container.id === "BottomLayout" || container.dataset?.e2e === "gifts-container") {
-                        container?.remove();
+                    if (!container) break;
+                    // 特征判断，避免误删主界面
+                    if (container.id === "BottomLayout" || container.dataset?.e2e === "gifts-container") {
+                        container.remove();
                         break;
                     }
                     container = container.parentElement;
@@ -226,23 +294,22 @@
         }, true);
     }
 
-    // 启动初始化
     removeUnwantedElements();
 
     window.addEventListener('load', () => {
         let hasPressedB = false;
         const initInterval = setInterval(() => {
-            switchToHighestQuality();
+            const success = switchToHighestQuality();
 
             // 自动关闭屏幕弹幕层 (B键)
             const videoElement = document.querySelector('video');
             if (videoElement && !hasPressedB) {
                 simulateKey('b', 66);
                 hasPressedB = true;
-                console.log("[系统] 已自动按 B 键关闭原系统屏幕弹幕");
+                console.log("[系统] 尝试自动关闭原系统屏幕弹幕");
             }
 
-            if (hasPressedB) {
+            if (success && hasPressedB) {
                 setTimeout(() => clearInterval(initInterval), 5000);
             }
         }, 2000);

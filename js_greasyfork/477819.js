@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         推特获取原图
 // @namespace    https://github.com/MuXia-0326/twitter-auto-original-picture
-// @version      1.17
+// @version      1.18
 // @description  推特在新标签页打开图片自动原图
 // @author       Mossia
 // @icon         https://raw.githubusercontent.com/MuXia-0326/drawio/master/angri.png
@@ -19,8 +19,7 @@
   'use strict';
 
   const copyUpdate = true;
-  const share_url = '';
-  const share_url_two = '';
+  let share_url = '';
 
   let userName = '';
 
@@ -432,22 +431,10 @@
         headers: {
           'Content-Type': 'application/json',
         },
-        data: JSON.stringify({ imageUrl: newUrl }),
-        onload: function (response) {
-          var responseData = JSON.parse(response.responseText);
-          console.log('Received response:', responseData);
-        },
-        onerror: function (error) {
-          console.error('Request failed:', error);
-        },
-      });
-      GM_xmlhttpRequest({
-        method: 'POST',
-        url: share_url_two, // 目标 URL
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        data: JSON.stringify({ urls: [newUrl] }),
+        data: JSON.stringify({
+          type: 1,
+          imageUrl: newUrl,
+        }),
         onload: function (response) {
           var responseData = JSON.parse(response.responseText);
           console.log('Received response:', responseData);

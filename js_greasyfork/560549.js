@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SubHD字幕列表优化
 // @namespace    https://greasyfork.org/zh-CN/users/1553511
-// @version      1.3.0
+// @version      1.4.0
 // @description  1.合集置顶。2.添加字幕排序功能，可按下载量和上传时间排序
 // @author       Ling77
 // @license      MIT
@@ -39,6 +39,10 @@
     }
   };
   let settings;
+  const date = new Date;
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
   function settingPage() {
     const myConfigData = {
       title: ScriptName + ' - 脚本设置',
@@ -93,10 +97,7 @@
     const timeEl = row.querySelector(':scope > :nth-child(3) .text-black-50');
     if (!timeEl) return 0;
     let text = timeEl.textContent.trim();
-    if (/^\d{2}-\d{2}/.test(text)) {
-      const year = (new Date).getFullYear();
-      text = `${year}-${text}`;
-    }
+    if (/^\d{2}-\d{2}/.test(text)) text = `${y}-${text}`; else if (/^\d{1,2}:\d{2}$/.test(text)) text = `${y}-${m}-${d} ${text}`;
     return new Date(text.replace(/-/g, '/')).getTime() || 0;
   }
   function setActiveButton(type) {
@@ -179,7 +180,7 @@
     btnBox.innerHTML = `\n      <div class="float-start p-3">\n        <a class="btn btn-sm f12 me-1 btn-light" id="btn-default">${SortLabel.default.long}</a>\n        <a class="btn btn-sm f12 me-1 btn-light" id="btn-download">${SortLabel.download.long}</a>\n        <a class="btn btn-sm f12 me-1 btn-light" id="btn-time">${SortLabel.time.long}</a>\n      </div>\n      <div class="float-end p-3">\n        <a class="btn btn-sm f12 btn-outline-secondary" style="font-size: 1.3em" id="btn-setting">⚙️</a>\n      </div>\n    `;
     container.prepend(btnBox);
     document.getElementById('btn-default').onclick = () => {
-      localStorage.setItem('refreshedBy1553511', true);
+      if (CONFIG.defaultSort !== 'default') localStorage.setItem('refreshedBy560549', true);
       location.reload();
     };
     document.getElementById('btn-download').onclick = () => sortSubtitles('download');
@@ -192,10 +193,10 @@
     if (!container) return;
     moveCollectionToTop(container);
     insertButtons(container);
-    if (localStorage.getItem('refreshedBy1553511')) {
+    if (CONFIG.defaultSort === 'default') setActiveButton('default'); else if (localStorage.getItem('refreshedBy560549')) {
       setActiveButton('default');
-      localStorage.removeItem('refreshedBy1553511');
-    } else if (CONFIG.defaultSort === 'download') sortSubtitles('download'); else if (CONFIG.defaultSort === 'time') sortSubtitles('time'); else setActiveButton('default');
+      localStorage.removeItem('refreshedBy560549');
+    } else if (CONFIG.defaultSort === 'download') sortSubtitles('download'); else if (CONFIG.defaultSort === 'time') sortSubtitles('time');
   }
   init();
 })();

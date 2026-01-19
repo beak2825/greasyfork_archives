@@ -1,8 +1,8 @@
 // ==UserScript==
 // @license MIT
 // @name         NexusMailPurge - PT网站邮箱批量删除插件
-// @namespace    https://github.com/styin8/NexusMailPurge
-// @version      1.0.0
+// @namespace    https://github.com/0x1st/NexusMailPurge
+// @version      1.0.1
 // @description  专为 NexusPHP PT网站设计的邮箱批量删除插件，支持翻页操作
 // @author       1st.
 // @match        *://*/messages.php*

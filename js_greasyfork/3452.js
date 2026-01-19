@@ -7,7 +7,7 @@
 // @author        ejin@v2ex
 // @match         https://*.v2ex.com/*
 // @match         https://v2ex.com/*
-// @version       2025.09.27
+// @version       2026.01.06
 // @grant         none
 // @downloadURL https://update.greasyfork.org/scripts/3452/V2EX_Good.user.js
 // @updateURL https://update.greasyfork.org/scripts/3452/V2EX_Good.meta.js
@@ -309,6 +309,7 @@ min-height: 16px;
 background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg' style='min-width: 16px; min-height: 16px; background-color: white;'%3E%3Crect x='0' y='0' width='16' height='16' fill='%23eee' stroke='%23ccc' stroke-width='1'/%3E%3Cpolygon points='3,12 5,8 9,11 13,6 13,12' fill='%23aaa'/%3E%3Ccircle cx='3' cy='3' r='2' fill='%23888'/%3E%3C/svg%3E");
 background-repeat: no-repeat;
 background-size: 16px 16px;
+background-position: center center;
 display: inline-block;
 }
         `;

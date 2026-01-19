@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         鱼派小尾巴和单词功能
 // @namespace    http://tampermonkey.net/
-// @version      1.0.11
+// @version      1.0.12
 // @description  整合小尾巴和单词功能的精简版脚本   try to thank APTX-4869!
 // @author       ZeroDream
 // @match        https://fishpi.cn/cr
@@ -11,13 +11,16 @@
 // @downloadURL https://update.greasyfork.org/scripts/556762/%E9%B1%BC%E6%B4%BE%E5%B0%8F%E5%B0%BE%E5%B7%B4%E5%92%8C%E5%8D%95%E8%AF%8D%E5%8A%9F%E8%83%BD.user.js
 // @updateURL https://update.greasyfork.org/scripts/556762/%E9%B1%BC%E6%B4%BE%E5%B0%8F%E5%B0%BE%E5%B7%B4%E5%92%8C%E5%8D%95%E8%AF%8D%E5%8A%9F%E8%83%BD.meta.js
 // ==/UserScript==
-
+// ZeroDream  2026-01-19添加单词小尾巴独立控制开关
 (function () {
     'use strict';
-    const version_us = "v1.0.11";
+    const version_us = "v1.0.12";
 
     // 小尾巴开关状态
     var suffixFlag = window.localStorage['xwb_flag'] ? JSON.parse(window.localStorage['xwb_flag']) : true;
+
+    // 单词小尾巴开关状态
+    var wordTailEnabled = window.localStorage['xwb_word_tail_enabled'] ? JSON.parse(window.localStorage['xwb_word_tail_enabled']) : true;
 
     // 输出单词数量设置（默认为1）
     var wordCount = window.localStorage['xwb_tail_word_count'] ? parseInt(window.localStorage['xwb_tail_word_count']) : 1;
@@ -181,6 +184,34 @@
         suffixToggleDiv.appendChild(suffixToggleLabel);
         suffixToggleDiv.appendChild(suffixToggle);
         suffixSection.appendChild(suffixToggleDiv);
+
+        // 单词小尾巴开关
+        const wordTailToggleDiv = document.createElement('div');
+        wordTailToggleDiv.style.cssText = `
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        `;
+        
+        const wordTailToggleLabel = document.createElement('label');
+        wordTailToggleLabel.textContent = '启用单词小尾巴';
+        wordTailToggleLabel.style.fontWeight = '500';
+        wordTailToggleLabel.style.color = '#555';
+        
+        const wordTailToggle = document.createElement('input');
+        wordTailToggle.type = 'checkbox';
+        wordTailToggle.checked = wordTailEnabled;
+        wordTailToggle.id = 'word-tail-toggle';
+        wordTailToggle.style.cssText = `
+            width: 40px;
+            height: 20px;
+            cursor: pointer;
+        `;
+        
+        wordTailToggleDiv.appendChild(wordTailToggleLabel);
+        wordTailToggleDiv.appendChild(wordTailToggle);
+        suffixSection.appendChild(wordTailToggleDiv);
 
         // 小尾巴预设选择
         const presetTitle = document.createElement('div');
@@ -548,6 +579,13 @@
         suffixFlag = suffixToggle.checked;
         window.localStorage['xwb_flag'] = suffixFlag;
         
+        // 保存单词小尾巴设置
+        const wordTailToggle = document.getElementById('word-tail-toggle');
+        if (wordTailToggle) {
+            wordTailEnabled = wordTailToggle.checked;
+            window.localStorage['xwb_word_tail_enabled'] = wordTailEnabled;
+        }
+        
         if (customToggle.checked) {
             window.localStorage['xwb_is_custom_suffix'] = 'true';
             window.localStorage['xwb_custom_suffix'] = customInput.value.trim();
@@ -683,14 +721,14 @@
 
     // 小尾巴选项数组
     const suffixOptions = [
-        '时光清浅处，一步一安然。',
-        '心若向阳，无畏悲伤。',
-        '岁月静好，现世安稳。',
-        '人生如逆旅，我亦是行人。',
-        '胸有丘壑，眼存山河。',
-        '但行好事，莫问前程。',
-        '愿有岁月可回首，且以深情共白头。',
-        '人间烟火气，最抚凡人心。'
+        '时光清浅处，一步一安然。',  // 保留第一个
+        '心有所向，无悔当初。',
+        '温柔半两，从容一生。',
+        '保持热爱，奔赴山海。',
+        '有趣有盼，无灾无难。',
+        '知足上进，不负野心。',
+        '各自努力，顶峰相见。',
+        '愿你眼里有光，心中有爱。'
     ];
 
     // 获取当前选中的小尾巴索引
@@ -1178,15 +1216,22 @@
                         // 获取当前小尾巴文本
                         let currentSuffix = getCurrentSuffixText();
 
-                        // 处理小尾巴和单词
-                        if (t.trim().length == 0 || (!suffixFlag) || needwb == 0 || t.trim().startsWith('凌 ') || t.trim().startsWith('鸽 ') || t.trim().startsWith('小冰 ') || t.trim().startsWith('冰冰 ') || t.trim().startsWith('点歌 ') || t.trim().startsWith('TTS ') || t.trim().startsWith('朗读 ') ) {
+                        // 处理小尾巴和单词（独立控制）
+                        if (t.trim().length == 0 || needwb == 0 || t.trim().startsWith('凌 ') || t.trim().startsWith('鸽 ') || t.trim().startsWith('小冰 ') || t.trim().startsWith('冰冰 ') || t.trim().startsWith('点歌 ') || t.trim().startsWith('TTS ') || t.trim().startsWith('朗读 ') ) {
                             return originalContent;
-                        } else if (wordCount === 0) {
+                        } else if (!suffixFlag && wordTailEnabled && wordCount > 0) {
+                            // 只添加单词，不添加小尾巴
+                            return originalContent + wordMsg;
+                        } else if (suffixFlag && (!wordTailEnabled || wordCount === 0)) {
+                            // 只添加小尾巴，不添加单词
                             return originalContent + '\n\n\n>  ' + currentSuffix;
-                        } else {
-                            // 定义包含小尾巴的wbMsg
+                        } else if (suffixFlag && wordTailEnabled && wordCount > 0) {
+                            // 都添加
                             var wbMsg = '\n\n\n>  ' + currentSuffix;
                             return originalContent + wordMsg + wbMsg;
+                        } else {
+                            // 都不添加
+                            return originalContent;
                         }
                     }(),
                     client: "Web/小梦的魔法" + version_us

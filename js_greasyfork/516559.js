@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         勋章放大镜
 // @namespace    http://tampermonkey.net/
-// @version      2.7.12
+// @version      2.7.13
 // @description  泥潭勋章属性展示！
 // @author       轶致
 // @match        https://www.gamemale.com/wodexunzhang-showxunzhang.html*
@@ -4706,8 +4706,8 @@ var 放大镜内容映射表 = {
 【入手条件】无
 【商店售价】680金币
 【等级1】5% 回帖金币+1▕▏升级条件：消耗80金币
-【等级2】10% 回帖金币+1▕▏升级条件：血液≥300
-【等级3】10% 回帖金币+2▕▏升级条件：追随≥78
+【等级2】10% 回帖金币+1▕▏升级条件：追随≥78
+【等级3】10% 回帖金币+2▕▏升级条件：消耗300血液
 【 Max 】11% 回帖金币+3`,
 '本・比格': `本・比格
 【勋章类型】游戏男从

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         豆瓣、TMDB、IMDb跳转至影巢（HDHIVE）
 // @namespace    https://greasyfork.org/zh-CN/users/1553511
-// @version      1.0.0
+// @version      1.1.0
 // @description  在豆瓣、TMDB、IMDb的影视条目页添加直接跳转至影巢（HDHIVE）对应条目的按纽
 // @author       Ling77
 // @license      MIT
@@ -106,11 +106,14 @@
     } else if (respBody.tv_results.length > 0) {
       tmdbPath = `tv/${respBody.tv_results[0].id}`;
       TmdbCache.set(imdb_id, tmdbPath);
-    } else console.error(`[${ScriptName}] 未在 Tmdb 检索到相关资源`); else if (res.status == 429) alert(`[${ScriptName}]\n请求 tmdb 错误 (${res.status})\n` + `达到速率限制，可能当前使用的人过多，请暂时关闭脚本，等待一段时间后再使用``${JSON.stringify(respBody, null, 2)}`); else alert(`[${ScriptName}]\n请求 tmdb 错误 (${res.status})\n` + `${JSON.stringify(respBody, null, 2)}`);
+    } else if (respBody.tv_episode_results.length > 0) {
+      tmdbPath = `tv/${respBody.tv_episode_results[0].show_id}`;
+      TmdbCache.set(imdb_id, tmdbPath);
+    } else console.error(`[${ScriptName}] 未在 tmdb 检索到相关资源`); else if (res.status == 429) alert(`[${ScriptName}]\n请求 tmdb 错误 (${res.status})\n` + `达到速率限制，可能当前使用的人过多，请暂时关闭脚本，等待一段时间后再使用``${JSON.stringify(respBody, null, 2)}`); else alert(`[${ScriptName}]\n请求 tmdb 错误 (${res.status})\n` + `${JSON.stringify(respBody, null, 2)}`);
     return tmdbPath;
   }
   function createJumpButton(link, css_append = '') {
-    const css = `\n      .hdhive-btn {\n        display: inline-flex;\n        align-items: center;\n        justify-content: center;\n\n        padding: 8px 16px;\n        box-sizing: border-box;\n\n        background-color: #0d253f;\n        color: #eee !important;\n        border-radius: 12px;\n        box-shadow: 0 2px 5px rgba(0,0,0,0.2);\n        font-size: 14px;\n        font-weight: bold;\n        text-decoration: none;\n        line-height: 1.2;\n        transition: all 0.2s ease;      }\n\n      .hdhive-btn:hover {\n        text-decoration: none !important;\n      }\n      \n      .hdhive-btn img {\n        height: 1.8em !important;\n        margin: 0 !important; \n        margin-right: 6px !important;\n      }\n\n      .hdhive-label {\n          color: goldenrod;\n          font-weight: 900;\n          margin-right: 4px;\n      }\n    `;
+    const css = `\n      /* 按钮本体样式 */\n      .hdhive-btn {\n        /* 核心布局：使用 Flexbox 实现图标和文字的完美垂直居中 */\n        display: inline-flex;\n        align-items: center;\n        justify-content: center;\n\n        /* 尺寸与间距 */\n        padding: 8px 16px;\n        /* width: 80%;     如果不想要自适应宽度，可以取消注释设置固定比例宽度 */\n        box-sizing: border-box;\n\n        /* 颜色与外观 */\n        background-color: #0d253f;\n        color: #eee !important;\n        border-radius: 12px;\n        box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* 轻微的阴影增加立体感 */\n\n        /* 字体样式 */\n        font-size: 14px;\n        font-weight: bold;\n        text-decoration: none;\n        line-height: 1.2;\n        transition: all 0.2s ease; /* 平滑过渡动画 */\n      }\n\n      .hdhive-btn:hover {\n        text-decoration: none !important;\n      }\n      \n      /* 图标样式 */\n      .hdhive-btn img {\n        height: 1.8em !important;\n        /* 不需要 vertical-align，因为父级用了 flex + align-items: center */\n        margin: 0 !important; \n        margin-right: 6px !important;\n      }\n\n      /* 文字部分样式 */\n      .hdhive-label {\n          color: goldenrod;\n          font-weight: 900;\n          margin-right: 4px;\n      }\n    `;
     addStyle(css + css_append);
     const wrapper = document.createElement('div');
     wrapper.className = 'hdhive-btn-wrapper';

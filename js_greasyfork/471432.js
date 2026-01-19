@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         手机助手
 // @namespace    http://tampermonkey.net/
-// @version      10.0.0.96
+// @version      10.0.0.97
 // @description  自动滚动，嗅探图片、视频，字体放大，去除广告浮动
 // @author       You
 // @match        *://*/*
@@ -957,9 +957,9 @@ overflow:hidden!important;}`;
                     }, 500);
                     return;
                 } else if (offsetY > thisHeight) {
-                    widthN -= 1;
+                    widthN = widthN ? widthN - 1 : 9;
                 } else if (offsetY < -thisHeight || offsetX > thisHeight || offsetX < -thisHeight) {
-                    widthN += 1;
+                    widthN = widthN ? widthN + 1 : 9;
                 } else {
                     btnWidthClick();
                     return;

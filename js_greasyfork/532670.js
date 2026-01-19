@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Webpage to Markdown
 // @namespace    http://tampermonkey.net/
-// @version      2.0
-// @description  Enhanced webpage to Markdown converter with advanced content detection, multi-platform support, and intelligent filtering. Significantly improved content selection, forced conversion capabilities, and unwanted element recognition.
+// @version      3.0
+// @description  Advanced webpage to Markdown converter with intelligent content extraction, image handling, and code block formatting.
 // @author       Feiyt
 // @homepageURL  https://github.com/Feiyt
 // @license      MIT
@@ -25,7 +25,7 @@
 
 (function() {
     'use strict';
-    console.log("Enhanced Webpage to Markdown (v2.0) script starting..."); // Version updated
+    console.log("Enhanced Webpage to Markdown script starting..."); // Version updated
 
     // --- Configuration ---
     const turndownOptions = {
@@ -65,181 +65,125 @@
      * @returns {object|null} Object containing { title: string, contentNode: Node } or null on failure.
      */
     function getPageContentNode() {
-        console.log("getPageContentNode (v2.0 enhanced logic): Starting content retrieval..."); // Adjusted log message
-        const pageTitle = document.title || window.location.hostname;
+        console.log("getPageContentNode: Starting content retrieval...");
+        
+        // 1. 获取页面标题
+        let pageTitle = document.title;
+        // 尝试从常见标题元素获取更准确的标题
+        const potentialTitles = [
+            document.querySelector('h1.entry-title'),
+            document.querySelector('h1.post-title'),
+            document.querySelector('h1.article-title'),
+            document.querySelector('.article-title'),
+            document.querySelector('h1')
+        ];
+        
+        for (const t of potentialTitles) {
+            if (t && t.textContent && t.textContent.trim().length > 5) {
+                pageTitle = t.textContent.trim();
+                break;
+            }
+        }
+        pageTitle = pageTitle || window.location.hostname;
+
         let bestCandidate = null;
-        let maxScore = -1; // Simple scoring mechanism
+        let maxScore = -1;
+
+        // 辅助函数：计算元素分数
+        function calculateScore(element) {
+            let score = 0;
+            
+            // 基础标签分
+            const tagName = element.tagName.toLowerCase();
+            if (['article', 'main'].includes(tagName)) score += 20;
+            if (['div', 'section'].includes(tagName)) score += 5;
+            
+            // 类名和ID加减分
+            const classAndId = (element.className + " " + element.id).toLowerCase();
+            
+            // 加分关键词
+            if (/(article|body|content|entry|hentry|main|page|pagination|post|text|blog|story)/.test(classAndId)) score += 25;
+            if (/(markdown|wiki|documentation|readme)/.test(classAndId)) score += 30;
+            
+            // 减分关键词
+            if (/(copyright|combx|comment|community|disqus|extra|foot|header|menu|remark|rss|shoutbox|sidebar|sponsor|ad-|agegate|pagination|pager|popup|tweet|twitter)/.test(classAndId)) score -= 50;
+            
+            // 内容质量评估
+            const textContent = element.textContent.trim();
+            const textLength = textContent.length;
+            
+            if (textLength < 20) return -9999; // 忽略太短的内容
+            
+            // 文本密度算分 (对数增长)
+            score += Math.min(Math.log(textLength) * 10, 100);
+            
+            // 子元素统计
+            const childCount = element.childElementCount;
+            const paragraphCount = element.querySelectorAll('p').length;
+            const linkCount = element.querySelectorAll('a').length;
+            const headingsCount = element.querySelectorAll('h1, h2, h3, h4, h5, h6').length;
+            
+            score += paragraphCount * 3; // 段落多通常是正文
+            score += headingsCount * 5; // 有标题结构加分
+            
+            // 链接密度惩罚
+            const linkTextLength = Array.from(element.querySelectorAll('a')).reduce((acc, a) => acc + a.textContent.length, 0);
+            const linkDensity = linkTextLength / Math.max(textLength, 1);
+            
+            if (linkDensity > 0.5) score -= 50; // 链接内容占比过高可能是导航
+            if (linkDensity > 0.8) score -= 100;
+            
+            return score;
+        }
 
         // More robust selectors with priorities implied by order
         const selectors = [
-            // Highest Priority: Semantic & Specific Roles/IDs/Classes
+             // Highest Priority: Semantic & Specific Roles/IDs/Classes
             'article', '[role="article"]', '.article-body', '.post-content', '.entry-content', '#article-content', '.post-body', '.markdown-body',
             // High Priority: Main content areas
             'main', '[role="main"]', '#main-content', '#main', '.main-content', '.main', '#primary',
-            // Medium Priority: Common generic containers (often need cleaning)
+            // Specific Platforms
+            '.notion-page-content', '.zhihu-content', '.daily-content.body', '#js_content',
+            // Medium Priority: Common generic containers
             '#content', '.content',
-            // Lower Priority: More specific layout patterns
-            '#page .content', // Example of nested structure
-            '.container .content',
-             // Stack Overflow Example
-             '#mainbar',
-            // Lowest Priority (if nothing else works, but avoid body initially)
-            // Maybe add specific blog platform IDs? '.hentry'?
+            // News & Blogs
+            '.news-article', '.story-body', '.blog-post',
+            // Fallbacks
+            'body'
         ];
+        
+        // 尝试查找最佳候选
+        // 首先尝试常用的高优先级选择器
+        let candidates = document.querySelectorAll(selectors.join(','));
+        // 如果候选太少，尝试宽泛搜索
+        if (candidates.length < 1) {
+            candidates = document.querySelectorAll('div, section, article, main');
+        }
 
-        // 增强内容抓取能力 - 更全面的网页平台适配
-        const enhancedSelectors = [
-            // 通用内容选择器
-            '.content-area', '.post-article', '.blog-post', '.entry', '.single-post',
-            '.article-content', '.story-content', '.news-content', '.page-content',
-            '.main-article', '.primary-content', '.main-body', '.content-wrapper',
-            '.post-wrapper', '.article-wrapper', '.entry-wrapper',
-            
-            // 博客平台特定选择器
-            '.hentry', '.post', '.article', '.blog-entry', '.content-post',
-            '.entry-content-wrap', '.post-content-wrap', '.article-body-wrap',
-            
-            // 社交媒体和论坛平台
-            '.twitter-tweet', '.fb-post', '.linkedin-post', '.reddit-post',
-            '.discourse-post', '.discourse-post-stream',
-            
-            // 知识平台
-            '.zhihu-content', '.zhihu-post', '.zhihu-answer',
-            '.notion-page-content', '.notion-selectable',
-            '.medium-article', '.medium-content', '.postArticle-content',
-            '.quora-answer', '.stackoverflow-post', '#answers .answer',
-            '.wiki-content', '.mediawiki-content', '.mw-parser-output',
-            
-            // 新闻网站
-            '.news-article', '.article-text', '.story-body', '.story-content',
-            '.news-content', '.article-body-text', '.paragraph-content',
-            '.content-body', '.text-content', '.full-content',
-            
-            // 技术文档和教程
-            '.documentation', '.docs-content', '.tutorial-content',
-            '.guide-content', '.manual-content', '.readme-content',
-            '.markdown-content', '.rst-content', '.asciidoc-content',
-            
-            // 电商和产品页面
-            '.product-description', '.product-details', '.item-description',
-            '.listing-description', '.product-content',
-            
-            // 学术和期刊
-            '.abstract', '.paper-content', '.journal-content', '.academic-content',
-            '.citation-content', '.research-content',
-            
-            // CMS系统特定
-            '.wordpress-content', '.drupal-content', '.joomla-content',
-            '.contentful-content', '.strapi-content', '.ghost-content',
-            
-            // 移动端适配
-            '.mobile-content', '.responsive-content', '.adaptive-content',
-            
-            // 通用语义化选择器
-            '[role="document"]', '[role="article"]', '[role="main"]',
-            '[itemtype*="Article"]', '[itemtype*="BlogPosting"]',
-            '.text', '.copy', '.body-text', '.article-text'
-        ];
-        selectors.push(...enhancedSelectors);
+        candidates.forEach(element => {
+            // 排除明显的非内容元素
+            if (['header', 'footer', 'nav', 'aside'].includes(element.tagName.toLowerCase())) return;
+            // 排除隐藏元素
+            if (element.offsetParent === null) return;
 
-        selectors.forEach((selector, index) => {
-            try {
-                const element = document.querySelector(selector);
-                if (element) {
-                    // 增强评分系统
-                    let score = selectors.length - index; // 基础优先级分数
-                    
-                    // 内容质量评估
-                    const textLength = element.textContent?.trim().length || 0;
-                    const childCount = element.childElementCount || 0;
-                    const linkCount = element.querySelectorAll('a').length || 0;
-                    const paragraphCount = element.querySelectorAll('p').length || 0;
-                    const headingCount = element.querySelectorAll('h1,h2,h3,h4,h5,h6').length || 0;
-                    
-                    // 加分项
-                    if (textLength > 500) score += 2; // 内容丰富
-                    if (paragraphCount > 3) score += 1; // 段落结构良好
-                    if (headingCount > 0) score += 1; // 有标题结构
-                    if (textLength / Math.max(linkCount, 1) > 50) score += 1; // 内容与链接比例合理
-                    
-                    // 减分项
-                    if (textLength < 100) score -= 3; // 内容过少
-                    if (childCount < 2 && textLength < 200) score -= 2; // 结构简单且内容少
-                    if (linkCount > textLength / 10) score -= 1; // 链接过多可能是导航区域
-                    
-                    // 特殊元素检查
-                    if (element.querySelector('nav, .nav, .navigation')) score -= 2; // 包含导航
-                    if (element.querySelector('footer, .footer')) score -= 1; // 包含页脚
-                    if (element.querySelector('.sidebar, .widget')) score -= 1; // 包含侧边栏
-                    
-                    console.log(`Found candidate [${selector}] with enhanced score ${score} (text: ${textLength}, children: ${childCount}, paragraphs: ${paragraphCount})`);
-
-                    if (score > maxScore) {
-                        maxScore = score;
-                        bestCandidate = element;
-                        console.log(`>>> New best candidate: [${selector}] with score ${score}`);
-                    }
-                }
-            } catch (e) { console.warn(`Error querying selector "${selector}": ${e.message}`); }
+            const score = calculateScore(element);
+            // console.log(`Candidate: <${element.tagName} class="${element.className}" id="${element.id}"> score: ${score}`);
+            
+            if (score > maxScore) {
+                maxScore = score;
+                bestCandidate = element;
+            }
         });
 
-        // If no good candidate found via specific selectors, use body as last resort
-        if (!bestCandidate || maxScore < 0) {
-            console.warn("No suitable specific container found after checking selectors. Attempting fallback strategies...");
-            
-            // 强制转换策略1: 尝试移除明显的非内容区域后使用body
-            const bodyClone = document.body.cloneNode(true);
-            const obviousNonContent = [
-                'header', 'nav', '.header', '.nav', '.navigation', '.navbar', '.menu',
-                'footer', '.footer', 'aside', '.sidebar', '.widget-area'
-            ];
-            
-            obviousNonContent.forEach(sel => {
-                try {
-                    const elements = bodyClone.querySelectorAll(sel);
-                    elements.forEach(el => el.remove());
-                } catch (e) {}
-            });
-            
-            // 检查处理后的body是否有足够内容
-            const bodyTextLength = bodyClone.textContent?.trim().length || 0;
-            if (bodyTextLength > 200) {
-                console.log("Using processed body as fallback with text length:", bodyTextLength);
-                bestCandidate = bodyClone;
-            } else {
-                // 强制转换策略2: 查找包含最多文本的单个元素
-                console.log("Attempting to find element with most text content...");
-                let maxTextElement = null;
-                let maxTextLength = 0;
-                
-                document.querySelectorAll('div, section, article, main').forEach(el => {
-                    const textLen = el.textContent?.trim().length || 0;
-                    if (textLen > maxTextLength && textLen > 100) {
-                        maxTextLength = textLen;
-                        maxTextElement = el;
-                    }
-                });
-                
-                if (maxTextElement) {
-                    console.log(`Found element with most text (${maxTextLength} chars), using as fallback.`);
-                    bestCandidate = maxTextElement;
-                } else {
-                    // 最后的强制策略: 使用原始body
-                    console.warn("All fallback strategies failed. Using document.body as absolute last resort.");
-                    bestCandidate = document.body;
-                }
-            }
-        } else {
-            const likelySelectorIndex = selectors.length - 1 - Math.floor(maxScore);
-            const likelySelector = selectors[likelySelectorIndex] || 'heuristic/fallback';
-            console.log(`Selected final container: <${bestCandidate.tagName.toLowerCase()}> (Selector likely: ${likelySelector})`);
+        if (!bestCandidate) {
+             console.warn("No suitable candidate found. Fallback to body.");
+             bestCandidate = document.body;
         }
+        
+        console.log(`Selected final container: <${bestCandidate.tagName.toLowerCase()} class="${bestCandidate.className}" id="${bestCandidate.id}"> with score ${maxScore}`);
 
         // --- Clone and Clean ---
         try {
-            if (!bestCandidate || typeof bestCandidate.cloneNode !== 'function') {
-                console.error("Cannot clone the selected content element."); return null;
-            }
             console.log("Cloning selected container...");
             const clone = bestCandidate.cloneNode(true);
 
@@ -281,17 +225,6 @@
                 '.recommended', '.suggestions', '.more-stories', '.you-might-like',
                 '.trending', '.popular', '.most-read', '.external-links',
                 
-                // 社交媒体嵌入（保留内容，移除容器）
-                '.twitter-embed', '.facebook-embed', '.instagram-embed', '.youtube-embed',
-                '.social-embed', '.embed-wrapper', '.iframe-wrapper',
-                
-                // 特定平台元素
-                '.medium-footer', '.medium-clap', '.medium-highlight-menu',
-                '.notion-sidebar', '.notion-topbar', '.notion-collection-view-item',
-                '.zhihu-ad', '.zhihu-recommend', '.zhihu-footer',
-                '.stackoverflow-sidebar', '.stackoverflow-footer',
-                '.reddit-sidebar', '.reddit-footer', '.reddit-vote',
-                
                 // 导航和分页
                 '.pagination', '.pager', '.page-nav', '.next-prev', '.post-navigation',
                 '.tag-list', '.category-list', '.archive-list', '.recent-posts',
@@ -300,155 +233,160 @@
                 'form:not(.content form)', '.form', '.newsletter', '.subscription',
                 '.contact-form', '.feedback-form', 'input', 'textarea', 'select', 'button:not(.content button)',
                 
-                // 版权和法律信息
-                '.copyright', '.legal', '.terms', '.privacy', '.disclaimer',
-                '.license-info', '.attribution',
-                
-                // 加载和占位符
-                '.loading', '.spinner', '.placeholder', '.skeleton', '.lazy-load',
-                '.intersection-observer', '.lazyload',
-                
-                // 追踪和分析
-                '[id*="analytics"]', '[class*="analytics"]', '[id*="tracking"]', '[class*="tracking"]',
-                '[id*="gtm"]', '[class*="gtm"]', '.google-analytics', '.ga-', '.fb-pixel'
+                // 特定平台噪音
+                '.csdn-side-toolbar', '.tool-box', '.reward-user', '.p-ext'
             ];
 
-            // 增强无效元素过滤规则 - 更精确的平台适配
-            const enhancedExcludeSelectors = [
-                // 通用无效内容模式
-                '[style*="display:none"]', '[style*="display: none"]', '[style*="visibility:hidden"]',
-                '[class*="hidden"]', '[class*="invisible"]', '[id*="hidden"]',
-                
-                // 更多广告和追踪相关
-                '[id*="sponsor"]', '[class*="sponsor"]', '[data-ad]', '[data-ads]',
-                'div[id^="div-gpt-ad"]', '.gpt-ad', '.ad-slot', '.ad-container',
-                
-                // 更多社交和分享
-                '.share-bar', '.sharing-tools', '.social-sharing', '.follow-us',
-                '.subscribe-box', '.newsletter-box', '.email-signup',
-                
-                // 更多导航和菜单
-                '.top-menu', '.bottom-menu', '.side-menu', '.mobile-menu',
-                '.menu-toggle', '.hamburger', '.dropdown-menu',
-                
-                // 更多元数据和时间戳（根据需要保留或删除）
-                '.published-date', '.author-info', '.byline', '.meta-info',
-                '.reading-time', '.word-count', '.view-count',
-                
-                // 特定内容管理系统
-                '.wp-block-group', '.wp-block-columns', '.wp-block-cover',
-                '.elementor-widget', '.vc_row', '.fusion-row',
-                
-                // 移动端特定元素
-                '.mobile-only', '.tablet-only', '.desktop-only',
-                '@media print { display: none }',
-                
-                // 无障碍和屏幕阅读器专用（通常不需要转换）
-                '.screen-reader-text', '.assistive-text', '.skip-link'
-            ];
-            excludeSelectors.push(...enhancedExcludeSelectors);
-
-            console.log("Removing excluded elements from clone...");
-            let removedCount = 0;
-            
-            // 分阶段清理，先处理明显的非内容元素
-            const criticalExcludes = [
-                'script', 'style', 'noscript', 'template', 'meta', 'link[rel="stylesheet"]',
-                '.ad', '.ads', '.advertisement', '[id*="ad-"]', '[class*="ad-"]',
-                'header', 'footer', 'nav', '.header', '.footer', '.navbar'
-            ];
-            
-            // 第一阶段：移除关键非内容元素
-            criticalExcludes.forEach(selector => {
-                try {
-                    const elementsToRemove = clone.querySelectorAll(selector);
-                    elementsToRemove.forEach(el => {
-                        if (el !== clone && typeof el.remove === 'function') {
-                            el.remove();
-                            removedCount++;
-                        }
-                    });
-                } catch (e) { console.warn(`Error removing critical elements for selector "${selector}": ${e.message}`); }
+            // 批量移除干扰元素
+            excludeSelectors.forEach(selector => {
+                const elements = clone.querySelectorAll(selector);
+                elements.forEach(el => el.remove());
             });
-            
-            // 第二阶段：移除其他非必要元素
-            const remainingExcludes = excludeSelectors.filter(sel => !criticalExcludes.includes(sel));
-            for (const selector of remainingExcludes) {
-                try {
-                    const elementsToRemove = clone.querySelectorAll(selector);
-                    elementsToRemove.forEach(el => {
-                        if (el !== clone && typeof el.remove === 'function') {
-                            // 额外检查：如果元素包含大量文本内容，可能是误删
-                            const textLength = el.textContent?.trim().length || 0;
-                            const isLikelyContent = textLength > 200 && el.querySelectorAll('p').length > 2;
-                            
-                            if (!isLikelyContent) {
-                                el.remove();
-                                removedCount++;
-                            } else {
-                                console.log(`Preserved element matching "${selector}" due to substantial content (${textLength} chars)`);
-                            }
-                        } else if (el === clone) {
-                            console.warn(`Exclusion selector "${selector}" matched the container root itself! Skipping removal of root.`);
-                        }
-                    });
-                } catch (e) { console.warn(`Error removing elements for selector "${selector}": ${e.message}`); }
-            }
-            
-            // 第三阶段：清理空元素和只包含空格的元素
-            try {
-                const emptyElements = clone.querySelectorAll('*');
-                emptyElements.forEach(el => {
-                    const text = el.textContent?.trim() || '';
-                    const hasContent = text.length > 0 || el.querySelector('img, video, audio, canvas, svg');
-                    const isStructural = ['div', 'span', 'section', 'article'].includes(el.tagName.toLowerCase());
-                    
-                    if (!hasContent && !isStructural && el.children.length === 0) {
-                        el.remove();
-                        removedCount++;
-                    }
-                });
-            } catch (e) { console.warn('Error during empty element cleanup:', e.message); }
-            
-            console.log(`Removed ${removedCount} elements/subtrees from clone.`);
 
-            // --- Post-cleaning Check and Recovery ---
-            const finalTextLength = clone.textContent?.trim().length || 0;
-            const finalChildCount = clone.childElementCount || 0;
-            
-            if (finalTextLength < 50 || (finalChildCount === 0 && finalTextLength < 200)) {
-                console.warn(`Clone seems empty after cleaning! (Text: ${finalTextLength}, Children: ${finalChildCount})`);
-                console.log("Attempting content recovery...");
-                
-                // 内容恢复策略：重新克隆并使用更保守的清理
-                const recoveryClone = bestCandidate.cloneNode(true);
-                const conservativeExcludes = [
-                    'script', 'style', 'noscript', 'template', 'meta', 'link',
-                    '.ad', '.ads', '.advertisement', 'iframe[src*="ads"]',
-                    'header:not(.content header)', 'footer:not(.content footer)', 'nav:not(.content nav)'
-                ];
-                
-                conservativeExcludes.forEach(selector => {
-                    try {
-                        const elements = recoveryClone.querySelectorAll(selector);
-                        elements.forEach(el => {
-                            if (el !== recoveryClone) el.remove();
-                        });
-                    } catch (e) {}
-                });
-                
-                const recoveredTextLength = recoveryClone.textContent?.trim().length || 0;
-                if (recoveredTextLength > finalTextLength * 2) {
-                    console.log(`Content recovery successful! Recovered ${recoveredTextLength} chars vs ${finalTextLength} chars.`);
-                    return { title: pageTitle, contentNode: recoveryClone };
-                } else {
-                    console.warn("Content recovery failed. Proceeding with original cleaned content.");
+            // 移除空元素
+            const allElements = clone.querySelectorAll('*');
+            allElements.forEach(el => {
+                const hasMedia = el.querySelector('img, video, iframe, svg, canvas');
+                if (!hasMedia && el.textContent.trim() === '') {
+                    el.remove();
                 }
-            } else {
-                console.log(`Content cleaning successful. Final content: ${finalTextLength} chars, ${finalChildCount} child elements.`);
+            });
+
+            // 将相对链接转为绝对链接 (处理 clone 中的 a 标签)
+            const links = clone.querySelectorAll('a');
+            links.forEach(a => {
+                if(a.href && !a.href.startsWith('javascript:') && !a.href.startsWith('#')) {
+                   a.href = a.href; 
+                }
+            });
+            // 处理图片的 src (全面增强版)
+            const images = clone.querySelectorAll('img');
+            images.forEach(img => {
+                // 1. 搜集所有可能的懒加载属性
+                const dataset = img.dataset;
+                const potentialSrcs = [
+                    img.getAttribute('data-src'),
+                    img.getAttribute('data-original'),
+                    img.getAttribute('data-origin'),
+                    img.getAttribute('data-actualsrc'),
+                    img.getAttribute('data-lazy-src'),
+                    img.getAttribute('data-url'),
+                    img.getAttribute('data-image'),
+                    dataset.src,
+                    dataset.original,
+                    dataset.origin,
+                    dataset.actualsrc,
+                    dataset.lazySrc,
+                    dataset.url
+                ];
+
+                // 找到第一个有效的非空 value
+                let realSrc = potentialSrcs.find(s => s && s.trim().length > 0 && !s.startsWith('data:'));
+
+                // 2. 如果没有找到 data 属性，尝试解析 srcset
+                if (!realSrc && img.getAttribute('srcset')) {
+                    const srcset = img.getAttribute('srcset');
+                    // 简单的 Heuristic: 取逗号分隔的最后一部分（通常是最大图），然后取 URL 部分
+                    const sources = srcset.split(',');
+                    if (sources.length > 0) {
+                        const lastSource = sources[sources.length - 1].trim();
+                        // srcset 格式: "url 1x" 或 "url 200w"
+                        realSrc = lastSource.split(/\s+/)[0];
+                    }
+                }
+
+                // 3. 如果找到了更真实的路径，强制更新到 src 属性
+                if (realSrc) {
+                    img.src = realSrc;
+                    img.setAttribute('src', realSrc); // 确保 attribute 也更新，供 Turndown 读取
+                }
+
+                // 4. 绝对路径转换 (处理相对路径)
+                // clone 节点的 .src 属性getter通常会返回绝对路径，但为了保险，手动处理 attribute
+                let currentAttrSrc = img.getAttribute('src');
+                if (currentAttrSrc && !currentAttrSrc.startsWith('http') && !currentAttrSrc.startsWith('//') && !currentAttrSrc.startsWith('data:')) {
+                    try {
+                        const absoluteSrc = new URL(currentAttrSrc, window.location.href).href;
+                        img.src = absoluteSrc;
+                        img.setAttribute('src', absoluteSrc);
+                    } catch(e) {
+                         // ignore invalid urls
+                    }
+                }
+                
+                // 5. 再次检查，如果还是相对协议 //开头，补全协议
+                if (img.getAttribute('src') && img.getAttribute('src').startsWith('//')) {
+                     img.src = window.location.protocol + img.getAttribute('src');
+                     img.setAttribute('src', img.src);
+                }
+            });
+
+            // 额外处理：Picture 标签
+            // 如果 img 被包裹在 picture 中，Turndown 可能处理不好 source，我们需要把 source 的 srcset 赋给 img
+            const pictures = clone.querySelectorAll('picture');
+            pictures.forEach(pic => {
+                const img = pic.querySelector('img');
+                const source = pic.querySelector('source');
+                if (img && source && source.srcset) {
+                     // 同样取 srcset 的最佳候选
+                     const sources = source.srcset.split(',');
+                     const lastSource = sources[sources.length - 1].trim().split(/\s+/)[0];
+                     if (lastSource) {
+                         img.src = lastSource;
+                         img.setAttribute('src', lastSource);
+                     }
+                }
+            });
+
+            // --- 智能尾部截断 (Smart Truncation) ---
+            // 很多页面在正文结束后会有"推荐阅读"、"相关文章"等区域，这些往往在容器内部但不是正文
+            // 我们尝试识别这些分割点，并移除其后的所有内容
+            const endMarkers = [
+                '推荐阅读', '相关推荐', '相关文章', '猜你喜欢', '原文链接', 
+                '更多精彩', '文章目录', 'Next Article', 'Previous Article'
+            ];
+            
+            // 遍历一级子元素寻找截断点
+            let cutoffFound = false;
+            const children = Array.from(clone.children);
+            
+            for (const child of children) {
+                if (cutoffFound) {
+                    child.remove();
+                    continue;
+                }
+                
+                // 检查是否是分割线或特定标题
+                const text = child.textContent.trim();
+                const isHeading = /^h[1-6]$/i.test(child.tagName) || child.classList.contains('title') || child.classList.contains('header');
+                
+                // 1. 明确的分割线后跟"推荐"字样
+                if (child.tagName === 'HR') {
+                    const next = child.nextElementSibling;
+                    if (next && endMarkers.some(m => next.textContent.includes(m))) {
+                        child.remove(); // 移除HR
+                        cutoffFound = true; // 标记后续全部移除
+                        continue;
+                    }
+                }
+                
+                // 2. 包含特定关键词的标题
+                if (isHeading && endMarkers.some(m => text === m || (text.length < 10 && text.includes(m)))) {
+                    console.log(`Smart truncation triggered by marker: "${text}"`);
+                    child.remove();
+                    cutoffFound = true;
+                }
+                
+                // 3. 特定的结束类名结构
+                if (child.matches('.related, .recommend, .comments, .share-block, .article-footer')) {
+                     console.log(`Smart truncation triggered by class: "${child.className}"`);
+                     child.remove();
+                     cutoffFound = true;
+                }
             }
 
             return { title: pageTitle, contentNode: clone };
+
 
         } catch (error) {
             console.error("Critical error during cloning or cleaning:", error.message, error.stack);
@@ -494,8 +432,9 @@
         processed = processed.replace(/([^\n])\n>/g, '$1\n\n>');
         processed = processed.replace(/>\s*\n\n>/g, '>\n>');
         
-        // 7. 移除孤立的HTML标签残留
-        processed = processed.replace(/<\/?[^>]+(>|$)/g, '');
+        // 7. (已移除) 移除孤立的HTML标签残留 
+        // 这一步过于激进，会破坏 <details> 折叠块和未被 Turndown 转换的合法 HTML 元素
+        // processed = processed.replace(/<\/?[^>]+(>|$)/g, '');
         
         // 8. 清理开头和结尾的多余空行
         processed = processed.trim();
@@ -511,7 +450,7 @@
 
     // --- Main Conversion and Download Logic ---
     function convertAndDownload() {
-        console.log("Enhanced Convert to Markdown (v2.0): Button clicked..."); // Version updated
+        console.log("Convert to Markdown: Button clicked..."); // Version updated
         try {
             // --- Initialize Turndown, Apply GFM, Add Math Rule ---
              console.log("Initializing TurndownService...");
@@ -605,13 +544,60 @@
             turndownService.addRule('codeBlocks', {
                 filter: ['pre'],
                 replacement: function(content, node) {
-                    const codeElement = node.querySelector('code');
-                    const language = codeElement ? 
-                        (codeElement.className.match(/language-(\w+)/) || 
-                         codeElement.className.match(/lang-(\w+)/) ||
-                         [])[1] || '' : '';
+                    // 获取语言标识
+                    let language = '';
+                    const codeLabel = node.querySelector('code');
+                    if (codeLabel) {
+                        language = (codeLabel.className.match(/language-(\w+)/) || 
+                                  codeLabel.className.match(/lang-(\w+)/) ||
+                                  [])[1] || '';
+                    }
+                    if (!language) {
+                         language = (node.className.match(/language-(\w+)/) || 
+                                   node.className.match(/lang-(\w+)/) ||
+                                   [])[1] || '';
+                    }
+
+                    // 克隆节点以进行清理，避免影响页面
+                    const clone = node.cloneNode(true);
                     
-                    return '\n\n```' + language + '\n' + content + '\n```\n\n';
+                    // 清理常见干扰元素 (行号、按钮、折叠遮罩等)
+                    const trashSelectors = [
+                        '.pre-numbering', '.hljs-button', '.signin', 
+                        '.hide-preCode-box', '.code-hide-box', '.copy-btn', 
+                        'div[onclick]', 'ul.pre-numbering', '.code-lines'
+                    ];
+                    
+                    trashSelectors.forEach(sel => {
+                        const trash = clone.querySelectorAll(sel);
+                        trash.forEach(el => el.remove());
+                    });
+
+                    // 提取代码文本 - 优先取 code 标签，否则取 pre
+                    const codeEl = clone.querySelector('code') || clone;
+                    
+                    // 处理换行：将 <br> 替换为换行符
+                    codeEl.querySelectorAll('br').forEach(br => br.replaceWith('\n'));
+                    
+                    // 尝试获取文本
+                    // innerText 在某些并未渲染的 clone 节点上可能失效，稳妥起见结合使用
+                    // 对于 <pre><code>...</code></pre> 结构，textContent 通常包含源码换行
+                    let codeText = codeEl.textContent || '';
+                    
+                    return '\n\n```' + language + '\n' + codeText.trim() + '\n```\n\n';
+                }
+            });
+
+            // 添加Details/Summary折叠块处理
+            turndownService.addRule('details', {
+                filter: 'details',
+                replacement: function(content, node) {
+                    const summary = node.querySelector('summary');
+                    const summaryText = summary ? summary.textContent.trim() : 'Details';
+                    // 尝试提取 summary 之后的内容
+                    // 简单清洗：移除 content 中可能包含的 summary 文本重复（TURNDOWN 可能会把 summary 转成 markdown 放在 content 开头）
+                    // 更好的方式是保留 HTML 结构，兼容性好
+                    return '\n\n<details>\n<summary>' + summaryText + '</summary>\n\n' + content.replace(summaryText, '').trim() + '\n\n</details>\n\n';
                 }
             });
 
@@ -711,6 +697,23 @@
                 
                 // 应用后处理优化
                 markdownContent = postProcessMarkdown(markdownContent);
+
+                // --- Add Front Matter ---
+                const now = new Date();
+                const frontMatter = [
+                    '---',
+                    `title: "${pageData.title.replace(/"/g, '\\"')}"`,
+                    `url: ${window.location.href}`,
+                    `date: ${now.toLocaleString()}`,
+                    `author: ${window.location.hostname}`,
+                    '---',
+                    '',
+                    `# ${pageData.title}`,
+                    '',
+                    ''
+                ].join('\n');
+                
+                markdownContent = frontMatter + markdownContent;
                 
                 console.log("Final markdown processing completed.");
             } catch (convertError) {
@@ -741,7 +744,9 @@
             }
 
             // --- Prepare Filename & Download ---
-            const filename = sanitizeFilename(pageData.title) + ".md";
+            const dateStr = new Date().toISOString().split('T')[0];
+            const sanitize = (name) => name.replace(/[\\/:*?"<>|]/g, '_').replace(/\s+/g, ' ').trim();
+            const filename = `${sanitize(pageData.title)}_${dateStr}.md`;
             
             /**
              * 尝试使用GM_download下载，失败时回退到浏览器下载
@@ -1021,7 +1026,7 @@
     if (typeof GM_registerMenuCommand === 'function') {
         try {
              // 主要转换功能
-             GM_registerMenuCommand("🔄 Convert Page to Markdown (v2.0 Enhanced)", convertAndDownload, "m");
+             GM_registerMenuCommand("🔄 Convert Page to Markdown", convertAndDownload, "m");
              
              // 合并的下载设置指南 - 移至主菜单级别
              GM_registerMenuCommand("📥 Download Settings Guide", function() {
@@ -1148,5 +1153,5 @@
         } catch (registerError) { console.error("Failed to register menu command:", registerError); alert("Failed to register menu command!"); }
     } else { console.error("GM_registerMenuCommand is not available."); alert("GM_registerMenuCommand is not available!"); }
 
-    console.log("Enhanced Webpage to Markdown (v2.0) script finished loading."); // Version updated
+    console.log("Webpage to Markdown script finished loading."); // Version updated
 })();

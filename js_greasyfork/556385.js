@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         按钮管理面板
 // @namespace    http://tampermonkey.net/
-// @version      1.0.19
+// @version      1.0.21
 // @description  管理聊天按钮的添加、编辑、删除和保存
 // @author       ZeroDream
 // @match        https://fishpi.cn/cr
@@ -14,11 +14,14 @@
 // @downloadURL https://update.greasyfork.org/scripts/556385/%E6%8C%89%E9%92%AE%E7%AE%A1%E7%90%86%E9%9D%A2%E6%9D%BF.user.js
 // @updateURL https://update.greasyfork.org/scripts/556385/%E6%8C%89%E9%92%AE%E7%AE%A1%E7%90%86%E9%9D%A2%E6%9D%BF.meta.js
 // ==/UserScript==
-
+//ZeroDream 2026-1-19 添加multiMessage属性 用于判断是否发送多条消息
+//ZeroDream 2026-1-20 add 红包功能参考muli
 (function () {
     'use strict';
-    const version_us = "v1.0.19";
-    // 按钮数据结构：{id, textContent, message, className , count, hidden}
+    const version_us = "v1.0.21";
+    // 按钮数据结构：{id, textContent, message, className, count, hidden, multiMessage, actionType, redPacketConfig}
+    // actionType: 'message' (发送消息) | 'redPacket' (发送红包)
+    // redPacketConfig: {type, money, count, msg, recivers, gesture} (仅红包类型使用)
     let buttonsConfig = [];
     const STORAGE_KEY = 'customButtonsConfig';
     const DEFAULT_BUTTONS = [
@@ -33,6 +36,29 @@
         { value: 'green', text: '绿色' },
         { value: 'gray', text: '灰色' },
         { value: 'orange', text: '橙色' }
+    ];
+    
+    // 动作类型选项
+    const actionTypeOptions = [
+        { value: 'message', text: '发送消息' },
+        { value: 'redPacket', text: '发送红包' }
+    ];
+    
+    // 红包类型选项
+    const redPacketTypes = [
+        { value: '拼手气红包', text: '拼手气红包' },
+        { value: '普通红包', text: '普通红包' },
+        { value: '专属红包', text: '专属红包' },
+        { value: '心跳红包', text: '心跳红包' },
+        { value: '猜拳红包', text: '猜拳红包' }
+    ];
+    
+    // 猜拳手势选项
+    const gestureOptions = [
+        { value: '无', text: '无（提示选择）' },
+        { value: '石头', text: '石头' },
+        { value: '剪刀', text: '剪刀' },
+        { value: '布', text: '布' }
     ];
     
     // 更新按钮列表的函数 - 全局函数
@@ -122,6 +148,22 @@
             buttonStatus.style.marginBottom = '4px';
             buttonStatus.textContent = '状态: ' + (button.hidden ? '隐藏' : '显示');
             buttonInfo.appendChild(buttonStatus);
+            
+            // 发送类型显示
+            const actionTypeStatus = document.createElement('div');
+            actionTypeStatus.style.fontSize = '12px';
+            actionTypeStatus.style.color = button.actionType === 'redPacket' ? '#eb2f96' : '#1890ff';
+            actionTypeStatus.style.marginBottom = '4px';
+            actionTypeStatus.textContent = '类型: ' + (button.actionType === 'redPacket' ? '红包' : '消息');
+            buttonInfo.appendChild(actionTypeStatus);
+            
+            // 多条消息状态显示
+            const multiMessageStatus = document.createElement('div');
+            multiMessageStatus.style.fontSize = '12px';
+            multiMessageStatus.style.color = button.multiMessage ? '#1890ff' : '#8c8c8c';
+            multiMessageStatus.style.marginBottom = '4px';
+            multiMessageStatus.textContent = '发送: ' + (button.multiMessage ? '多条' : '单条');
+            buttonInfo.appendChild(multiMessageStatus);
             
             buttonInfo.appendChild(buttonMsg);
             
@@ -320,6 +362,186 @@ window.editButton = function(index) {
         hiddenSelectDiv.appendChild(hiddenCheckbox);
         editDialog.appendChild(hiddenSelectDiv);
         
+        // 多条消息选项
+        const multiMessageDiv = document.createElement('div');
+        multiMessageDiv.style.marginBottom = '15px';
+        const multiMessageLabel = document.createElement('label');
+        multiMessageLabel.textContent = '多条消息: ';
+        multiMessageLabel.style.display = 'inline-block';
+        multiMessageLabel.style.width = '80px';
+        const multiMessageCheckbox = document.createElement('input');
+        multiMessageCheckbox.type = 'checkbox';
+        multiMessageCheckbox.checked = button.multiMessage || false;
+        multiMessageCheckbox.style.marginTop = '5px';
+        multiMessageDiv.appendChild(multiMessageLabel);
+        multiMessageDiv.appendChild(multiMessageCheckbox);
+        editDialog.appendChild(multiMessageDiv);
+        
+        // 动作类型选择
+        const actionTypeDiv = document.createElement('div');
+        actionTypeDiv.style.marginBottom = '15px';
+        const actionTypeLabel = document.createElement('label');
+        actionTypeLabel.textContent = '动作类型: ';
+        actionTypeLabel.style.display = 'inline-block';
+        actionTypeLabel.style.width = '80px';
+        const actionTypeSelect = document.createElement('select');
+        actionTypeSelect.style.width = 'calc(100% - 90px)';
+        actionTypeSelect.style.padding = '5px';
+        
+        actionTypeOptions.forEach(option => {
+            const opt = document.createElement('option');
+            opt.value = option.value;
+            opt.textContent = option.text;
+            if ((option.value === 'redPacket') === (button.actionType === 'redPacket')) {
+                opt.selected = true;
+            }
+            actionTypeSelect.appendChild(opt);
+        });
+        
+        actionTypeDiv.appendChild(actionTypeLabel);
+        actionTypeDiv.appendChild(actionTypeSelect);
+        editDialog.appendChild(actionTypeDiv);
+        
+        // 红包配置区域
+        const redPacketConfigDiv = document.createElement('div');
+        redPacketConfigDiv.id = 'red-packet-config';
+        redPacketConfigDiv.style.marginBottom = '15px';
+        redPacketConfigDiv.style.padding = '10px';
+        redPacketConfigDiv.style.border = '1px solid #d9d9d9';
+        redPacketConfigDiv.style.borderRadius = '6px';
+        redPacketConfigDiv.style.display = button.actionType === 'redPacket' ? 'block' : 'none';
+        
+        // 红包类型选择
+        const typeLabel = document.createElement('label');
+        typeLabel.textContent = '红包类型: ';
+        typeLabel.style.display = 'block';
+        typeLabel.style.marginBottom = '5px';
+        typeLabel.style.marginTop = '5px';
+        const typeSelect = document.createElement('select');
+        typeSelect.id = 'red-packet-type';
+        typeSelect.style.width = '100%';
+        typeSelect.style.padding = '5px';
+        typeSelect.style.marginBottom = '10px';
+        
+        redPacketTypes.forEach(option => {
+            const opt = document.createElement('option');
+            opt.value = option.value;
+            opt.textContent = option.text;
+            if (option.value === (button.redPacketConfig && button.redPacketConfig.type)) {
+                opt.selected = true;
+            }
+            typeSelect.appendChild(opt);
+        });
+        redPacketConfigDiv.appendChild(typeLabel);
+        redPacketConfigDiv.appendChild(typeSelect);
+        
+        // 金额输入
+        const moneyLabel = document.createElement('label');
+        moneyLabel.textContent = '红包金额: ';
+        moneyLabel.style.display = 'block';
+        moneyLabel.style.marginBottom = '5px';
+        const moneyInput = document.createElement('input');
+        moneyInput.type = 'text';
+        moneyInput.id = 'red-packet-money';
+        moneyInput.value = button.redPacketConfig && button.redPacketConfig.money ? button.redPacketConfig.money : '';
+        moneyInput.style.width = '100%';
+        moneyInput.style.padding = '5px';
+        moneyInput.style.marginBottom = '10px';
+        moneyInput.placeholder = '留空则提示输入';
+        redPacketConfigDiv.appendChild(moneyLabel);
+        redPacketConfigDiv.appendChild(moneyInput);
+        
+        // 数量输入
+        const countLabel = document.createElement('label');
+        countLabel.textContent = '红包数量: ';
+        countLabel.style.display = 'block';
+        countLabel.style.marginBottom = '5px';
+        const countInput = document.createElement('input');
+        countInput.type = 'number';
+        countInput.id = 'red-packet-count';
+        countInput.value = button.redPacketConfig && button.redPacketConfig.count ? button.redPacketConfig.count : '1';
+        countInput.style.width = '100%';
+        countInput.style.padding = '5px';
+        countInput.style.marginBottom = '10px';
+        redPacketConfigDiv.appendChild(countLabel);
+        redPacketConfigDiv.appendChild(countInput);
+        
+        // 红包消息输入
+        const redPacketMsgLabel = document.createElement('label');
+        redPacketMsgLabel.textContent = '红包消息: ';
+        redPacketMsgLabel.style.display = 'block';
+        redPacketMsgLabel.style.marginBottom = '5px';
+        const redPacketMsgInput = document.createElement('input');
+        redPacketMsgInput.type = 'text';
+        redPacketMsgInput.id = 'red-packet-msg';
+        redPacketMsgInput.value = button.redPacketConfig && button.redPacketConfig.msg ? button.redPacketConfig.msg : '';
+        redPacketMsgInput.style.width = '100%';
+        redPacketMsgInput.style.padding = '5px';
+        redPacketMsgInput.style.marginBottom = '10px';
+        redPacketMsgInput.placeholder = '留空则使用默认消息';
+        redPacketConfigDiv.appendChild(redPacketMsgLabel);
+        redPacketConfigDiv.appendChild(redPacketMsgInput);
+        
+        // 专属用户输入（仅当选择专属红包时显示）
+        const reciversDiv = document.createElement('div');
+        reciversDiv.id = 'red-packet-recivers-div';
+        reciversDiv.style.marginBottom = '10px';
+        reciversDiv.style.display = (button.redPacketConfig && button.redPacketConfig.type) === '专属红包' ? 'block' : 'none';
+        const reciversLabel = document.createElement('label');
+        reciversLabel.textContent = '专属用户: ';
+        reciversLabel.style.display = 'block';
+        reciversLabel.style.marginBottom = '5px';
+        const reciversInput = document.createElement('input');
+        reciversInput.type = 'text';
+        reciversInput.id = 'red-packet-recivers';
+        reciversInput.value = button.redPacketConfig && button.redPacketConfig.recivers && button.redPacketConfig.recivers[0] ? button.redPacketConfig.recivers[0] : '';
+        reciversInput.style.width = '100%';
+        reciversInput.style.padding = '5px';
+        reciversInput.placeholder = '留空则提示输入';
+        reciversDiv.appendChild(reciversLabel);
+        reciversDiv.appendChild(reciversInput);
+        redPacketConfigDiv.appendChild(reciversDiv);
+        
+        // 手势选择（仅当选择猜拳红包时显示）
+        const gestureDiv = document.createElement('div');
+        gestureDiv.id = 'red-packet-gesture-div';
+        gestureDiv.style.marginBottom = '10px';
+        gestureDiv.style.display = (button.redPacketConfig && button.redPacketConfig.type) === '猜拳红包' ? 'block' : 'none';
+        const gestureLabel = document.createElement('label');
+        gestureLabel.textContent = '猜拳手势: ';
+        gestureLabel.style.display = 'block';
+        gestureLabel.style.marginBottom = '5px';
+        const gestureSelect = document.createElement('select');
+        gestureSelect.id = 'red-packet-gesture';
+        gestureSelect.style.width = '100%';
+        gestureSelect.style.padding = '5px';
+        
+        gestureOptions.forEach(option => {
+            const opt = document.createElement('option');
+            opt.value = option.value;
+            opt.textContent = option.text;
+            if (option.value === (button.redPacketConfig && button.redPacketConfig.gesture)) {
+                opt.selected = true;
+            }
+            gestureSelect.appendChild(opt);
+        });
+        gestureDiv.appendChild(gestureLabel);
+        gestureDiv.appendChild(gestureSelect);
+        redPacketConfigDiv.appendChild(gestureDiv);
+        
+        editDialog.appendChild(redPacketConfigDiv);
+        
+        // 监听动作类型变化
+        actionTypeSelect.addEventListener('change', function() {
+            redPacketConfigDiv.style.display = this.value === 'redPacket' ? 'block' : 'none';
+        });
+        
+        // 监听红包类型变化
+        typeSelect.addEventListener('change', function() {
+            reciversDiv.style.display = this.value === '专属红包' ? 'block' : 'none';
+            gestureDiv.style.display = this.value === '猜拳红包' ? 'block' : 'none';
+        });
+        
         // 按钮容器
         const buttonsDiv = document.createElement('div');
         buttonsDiv.style.display = 'flex';
@@ -360,21 +582,48 @@ window.editButton = function(index) {
             const buttonText = textInput.value.trim();
             const buttonMsg = msgInput.value.trim();
             const isHidden = hiddenCheckbox.checked;
+            const selectedActionType = actionTypeSelect.value;
             
-            if (!buttonText || !buttonMsg) {
-                alert('请填写按钮文本和触发消息');
+            if (!buttonText) {
+                alert('请填写按钮文本');
                 return;
             }
             
-            // 更新按钮配置
-            buttonsConfig[index] = {
-                id: button.id, // 保留原ID
+            if (selectedActionType === 'message' && !buttonMsg) {
+                alert('请填写触发消息');
+                return;
+            }
+            
+            // 构建配置对象
+            const newConfig = {
+                id: button.id,
                 textContent: buttonText,
-                message: buttonMsg,
                 className: colorSelect.value,
-                count: button.count || 0, // 保留原始点击次数，如果不存在则设为0
-                hidden: isHidden
+                count: button.count || 0,
+                hidden: isHidden,
+                multiMessage: multiMessageCheckbox.checked,
+                actionType: selectedActionType
             };
+            
+            // 如果是消息类型，保存消息内容
+            if (selectedActionType === 'message') {
+                newConfig.message = buttonMsg;
+                newConfig.redPacketConfig = null;
+            } else {
+                // 如果是红包类型，保存红包配置
+                newConfig.message = '';
+                newConfig.redPacketConfig = {
+                    type: typeSelect.value,
+                    money: moneyInput.value.trim(),
+                    count: countInput.value,
+                    msg: msgInput.value.trim(),
+                    recivers: reciversInput.value.trim() ? [reciversInput.value.trim()] : [""],
+                    gesture: gestureSelect.value
+                };
+            }
+            
+            // 更新按钮配置
+            buttonsConfig[index] = newConfig;
             
             saveButtonsConfig();
             
@@ -437,21 +686,41 @@ window.editButton = function(index) {
             btn.setAttribute('style', 'margin-right:5px; margin-bottom:5px; padding:4px 8px; border-radius: 4px;');
             
             btn.onclick = function() {
-                // 将消息按换行符分割成多条消息，过滤掉空行
-                const messages = config.message.split('\n').filter(msg => msg.trim() !== '');
-                
-                if (messages.length > 0) {
-                    // 使用sendMessagesApi逐条发送消息
-                    sendMessagesApi(messages)
-                        .then(() => {
-                            // 增加点击次数
-                            config.count++;
-                            saveButtonsConfig();
-                        })
-                        .catch(error => {
-                            console.error('发送消息失败:', error);
-                            showNotification('发送消息失败，请稍后重试', 'error');
-                        });
+                // 根据 actionType 决定发送类型
+                if (config.actionType === 'redPacket') {
+                    // 发送红包
+                    if (config.redPacketConfig) {
+                        sendRedPacketMsg(config.redPacketConfig);
+                        config.count++;
+                        saveButtonsConfig();
+                    }
+                } else {
+                    // 普通消息发送
+                    if (config.multiMessage) {
+                        const messages = config.message.split('\n').filter(msg => msg.trim() !== '');
+                        
+                        if (messages.length > 0) {
+                            sendMessagesApi(messages)
+                                .then(() => {
+                                    config.count++;
+                                    saveButtonsConfig();
+                                })
+                                .catch(error => {
+                                    console.error('发送消息失败:', error);
+                                    showNotification('发送消息失败，请稍后重试', 'error');
+                                });
+                        }
+                    } else {
+                        sendMsgApi(config.message)
+                            .then(() => {
+                                config.count++;
+                                saveButtonsConfig();
+                            })
+                            .catch(error => {
+                                console.error('发送消息失败:', error);
+                                showNotification('发送消息失败，请稍后重试', 'error');
+                            });
+                    }
                 }
             };
             
@@ -507,6 +776,126 @@ window.editButton = function(index) {
             }
             
             sendNext();
+        });
+    }
+    
+    // 发送红包函数
+    function sendRedPacketMsg(data) {
+        let msg = JSON.parse(JSON.stringify(data));
+        
+        // 格式化红包类型
+        if (msg.type) {
+            if (msg.type == '拼手气红包') {
+                msg.type = 'random';
+            } else if (msg.type == '普通红包') {
+                msg.type = 'average';
+            } else if (msg.type == '专属红包') {
+                msg.type = 'specify';
+            } else if (msg.type == '心跳红包') {
+                msg.type = 'heartbeat';
+            } else if (msg.type == '猜拳红包') {
+                msg.type = 'rockPaperScissors';
+            }
+        }
+        
+        // 处理猜拳手势 - 总是提示用户输入
+        if (msg.type == 'rockPaperScissors') {
+            let input = prompt('请选择：石头（0）、剪刀（1）、布（2）', '0');
+            if (input === null) {
+                showNotification("已取消发送", "warning");
+                return;
+            }
+            msg.gesture = input;
+            // 转换中文手势为数字
+            if (msg.gesture == '石头') {
+                msg.gesture = '0';
+            } else if (msg.gesture == '剪刀') {
+                msg.gesture = '1';
+            } else if (msg.gesture == '布') {
+                msg.gesture = '2';
+            }
+        } else if (msg.gesture && msg.gesture !== '无') {
+            // 非猜拳红包但配置了手势，只转换不提示
+            if (msg.gesture == '石头') {
+                msg.gesture = '0';
+            } else if (msg.gesture == '剪刀') {
+                msg.gesture = '1';
+            } else if (msg.gesture == '布') {
+                msg.gesture = '2';
+            }
+        }
+        
+        // 默认红包消息
+        if (!msg.msg) {
+            msg.msg = '恭喜发财！';
+        }
+        
+        // 默认红包金额
+        if (!msg.money) {
+            let input = prompt('请输入红包金额：', '256');
+            if (input === null) {
+                showNotification("金额不能为空哦~", "error");
+                return;
+            }
+            msg.money = input;
+        }
+        
+        // 默认红包数量
+        if (!msg.count) {
+            msg.count = 1;
+        }
+        
+        // 专属红包接收者 - 总是提示用户输入
+        if (msg.type == 'specify') {
+            let input = prompt('请输入专属用户名：', '');
+            if (input === null) {
+                showNotification("已取消发送", "warning");
+                return;
+            }
+            msg.recivers = [input];
+        }
+        
+        // 构建请求内容
+        let content;
+        if (msg.type !== "rockPaperScissors") {
+            content = {
+                type: msg.type,
+                money: msg.money,
+                count: msg.count,
+                msg: msg.msg,
+                recivers: msg.recivers
+            }
+        } else {
+            content = {
+                type: msg.type,
+                money: msg.money,
+                count: msg.count,
+                msg: msg.msg,
+                recivers: msg.recivers,
+                gesture: msg.gesture
+            }
+        }
+        
+        let requestJSONObject = {
+            content: "[redpacket]" + JSON.stringify(msg) + "[/redpacket]",
+            client: "Web/小梦的魔法" + version_us
+        }
+        
+        $.ajax({
+            url: "https://fishpi.cn/chat-room/send",
+            type: 'POST',
+            cache: false,
+            data: JSON.stringify(requestJSONObject),
+            success: function (result) {
+                if (0 !== result.code) {
+                    showNotification('发送失败: ' + result.msg, 'error');
+                } else {
+                    showNotification('红包发送成功！', 'success');
+                }
+            },
+            error: function (result) {
+                showNotification('发送失败: ' + result.statusText, 'error');
+            }
         });
     }
     
@@ -1089,6 +1478,240 @@ window.editButton = function(index) {
         hiddenLabel.appendChild(hiddenText);
         addButtonSection.appendChild(hiddenLabel);
         
+        // 动作类型选择
+        const addActionTypeDiv = document.createElement('div');
+        addActionTypeDiv.style.marginBottom = '15px';
+        const addActionTypeLabel = document.createElement('div');
+        addActionTypeLabel.textContent = '动作类型';
+        addActionTypeLabel.style.marginBottom = '8px';
+        addActionTypeLabel.style.fontWeight = '500';
+        addActionTypeLabel.style.color = '#555';
+        addActionTypeDiv.appendChild(addActionTypeLabel);
+        
+        const addActionTypeSelect = document.createElement('select');
+        addActionTypeSelect.style.cssText = `
+            width: 100%;
+            padding: 10px 12px;
+            margin-bottom: 15px;
+            border: 1px solid #d9d9d9;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 14px;
+            background-color: white;
+        `;
+        
+        actionTypeOptions.forEach(option => {
+            const opt = document.createElement('option');
+            opt.value = option.value;
+            opt.textContent = option.text;
+            addActionTypeSelect.appendChild(opt);
+        });
+        addActionTypeDiv.appendChild(addActionTypeSelect);
+        addButtonSection.appendChild(addActionTypeDiv);
+        
+        // 红包配置区域
+        const addRedPacketConfigDiv = document.createElement('div');
+        addRedPacketConfigDiv.id = 'add-red-packet-config';
+        addRedPacketConfigDiv.style.marginBottom = '15px';
+        addRedPacketConfigDiv.style.padding = '10px';
+        addRedPacketConfigDiv.style.border = '1px solid #d9d9d9';
+        addRedPacketConfigDiv.style.borderRadius = '6px';
+        addRedPacketConfigDiv.style.display = 'none';
+        
+        // 红包类型选择
+        const addTypeLabel = document.createElement('div');
+        addTypeLabel.textContent = '红包类型';
+        addTypeLabel.style.marginBottom = '8px';
+        addTypeLabel.style.fontWeight = '500';
+        addTypeLabel.style.color = '#555';
+        addRedPacketConfigDiv.appendChild(addTypeLabel);
+        
+        const addTypeSelect = document.createElement('select');
+        addTypeSelect.style.cssText = `
+            width: 100%;
+            padding: 10px 12px;
+            margin-bottom: 15px;
+            border: 1px solid #d9d9d9;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 14px;
+            background-color: white;
+        `;
+        
+        redPacketTypes.forEach(option => {
+            const opt = document.createElement('option');
+            opt.value = option.value;
+            opt.textContent = option.text;
+            addTypeSelect.appendChild(opt);
+        });
+        addRedPacketConfigDiv.appendChild(addTypeSelect);
+        
+        // 金额输入
+        const addMoneyLabel = document.createElement('div');
+        addMoneyLabel.textContent = '红包金额';
+        addMoneyLabel.style.marginBottom = '8px';
+        addMoneyLabel.style.fontWeight = '500';
+        addMoneyLabel.style.color = '#555';
+        addRedPacketConfigDiv.appendChild(addMoneyLabel);
+        
+        const addMoneyInput = document.createElement('input');
+        addMoneyInput.type = 'text';
+        addMoneyInput.placeholder = '留空则提示输入';
+        addMoneyInput.style.cssText = `
+            width: 100%;
+            padding: 10px 12px;
+            margin-bottom: 15px;
+            border: 1px solid #d9d9d9;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 14px;
+        `;
+        addRedPacketConfigDiv.appendChild(addMoneyInput);
+        
+        // 数量输入
+        const addCountLabel = document.createElement('div');
+        addCountLabel.textContent = '红包数量';
+        addCountLabel.style.marginBottom = '8px';
+        addCountLabel.style.fontWeight = '500';
+        addCountLabel.style.color = '#555';
+        addRedPacketConfigDiv.appendChild(addCountLabel);
+        
+        const addCountInput = document.createElement('input');
+        addCountInput.type = 'number';
+        addCountInput.value = '1';
+        addCountInput.style.cssText = `
+            width: 100%;
+            padding: 10px 12px;
+            margin-bottom: 15px;
+            border: 1px solid #d9d9d9;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 14px;
+        `;
+        addRedPacketConfigDiv.appendChild(addCountInput);
+        
+        // 消息输入
+        const addMsgLabel = document.createElement('div');
+        addMsgLabel.textContent = '红包消息';
+        addMsgLabel.style.marginBottom = '8px';
+        addMsgLabel.style.fontWeight = '500';
+        addMsgLabel.style.color = '#555';
+        addRedPacketConfigDiv.appendChild(addMsgLabel);
+        
+        const addMsgInput = document.createElement('input');
+        addMsgInput.type = 'text';
+        addMsgInput.placeholder = '留空则使用默认消息';
+        addMsgInput.style.cssText = `
+            width: 100%;
+            padding: 10px 12px;
+            margin-bottom: 15px;
+            border: 1px solid #d9d9d9;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 14px;
+        `;
+        addRedPacketConfigDiv.appendChild(addMsgInput);
+        
+        // 专属用户输入
+        const addReciversDiv = document.createElement('div');
+        addReciversDiv.id = 'add-red-packet-recivers-div';
+        addReciversDiv.style.marginBottom = '10px';
+        addReciversDiv.style.display = 'none';
+        const addReciversLabel = document.createElement('div');
+        addReciversLabel.textContent = '专属用户';
+        addReciversLabel.style.marginBottom = '8px';
+        addReciversLabel.style.fontWeight = '500';
+        addReciversLabel.style.color = '#555';
+        addReciversDiv.appendChild(addReciversLabel);
+        
+        const addReciversInput = document.createElement('input');
+        addReciversInput.type = 'text';
+        addReciversInput.placeholder = '留空则提示输入';
+        addReciversInput.style.cssText = `
+            width: 100%;
+            padding: 10px 12px;
+            margin-bottom: 10px;
+            border: 1px solid #d9d9d9;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 14px;
+        `;
+        addReciversDiv.appendChild(addReciversInput);
+        addRedPacketConfigDiv.appendChild(addReciversDiv);
+        
+        // 手势选择
+        const addGestureDiv = document.createElement('div');
+        addGestureDiv.id = 'add-red-packet-gesture-div';
+        addGestureDiv.style.marginBottom = '10px';
+        addGestureDiv.style.display = 'none';
+        const addGestureLabel = document.createElement('div');
+        addGestureLabel.textContent = '猜拳手势';
+        addGestureLabel.style.marginBottom = '8px';
+        addGestureLabel.style.fontWeight = '500';
+        addGestureLabel.style.color = '#555';
+        addGestureDiv.appendChild(addGestureLabel);
+        
+        const addGestureSelect = document.createElement('select');
+        addGestureSelect.style.cssText = `
+            width: 100%;
+            padding: 10px 12px;
+            margin-bottom: 10px;
+            border: 1px solid #d9d9d9;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 14px;
+            background-color: white;
+        `;
+        
+        gestureOptions.forEach(option => {
+            const opt = document.createElement('option');
+            opt.value = option.value;
+            opt.textContent = option.text;
+            addGestureSelect.appendChild(opt);
+        });
+        addGestureDiv.appendChild(addGestureSelect);
+        addRedPacketConfigDiv.appendChild(addGestureDiv);
+        
+        addButtonSection.appendChild(addRedPacketConfigDiv);
+        
+        // 监听动作类型变化
+        addActionTypeSelect.addEventListener('change', function() {
+            addRedPacketConfigDiv.style.display = this.value === 'redPacket' ? 'block' : 'none';
+        });
+        
+        // 监听红包类型变化
+        addTypeSelect.addEventListener('change', function() {
+            addReciversDiv.style.display = this.value === '专属红包' ? 'block' : 'none';
+            addGestureDiv.style.display = this.value === '猜拳红包' ? 'block' : 'none';
+        });
+        
+        // 多条消息选项
+        const addMultiMessageDiv = document.createElement('div');
+        addMultiMessageDiv.style.cssText = `
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            cursor: pointer;
+        `;
+        
+        const addMultiMessageCheckbox = document.createElement('input');
+        addMultiMessageCheckbox.type = 'checkbox';
+        addMultiMessageCheckbox.id = 'add-multi-message';
+        addMultiMessageCheckbox.style.marginRight = '10px';
+        addMultiMessageCheckbox.style.cursor = 'pointer';
+        
+        const addMultiMessageText = document.createElement('span');
+        addMultiMessageText.textContent = '多条消息（按换行符分割发送）';
+        addMultiMessageText.style.cssText = `
+            font-size: 14px;
+            color: #555;
+            cursor: pointer;
+        `;
+        
+        addMultiMessageDiv.appendChild(addMultiMessageCheckbox);
+        addMultiMessageDiv.appendChild(addMultiMessageText);
+        addButtonSection.appendChild(addMultiMessageDiv);
+        
         // 添加按钮
         const addBtn = document.createElement('button');
         addBtn.textContent = '添加按钮';
@@ -1120,9 +1743,15 @@ window.editButton = function(index) {
             const buttonText = textInput.value.trim();
             const buttonMsg = msgInput.value.trim();
             const isHidden = hiddenCheckbox.checked;
+            const selectedActionType = addActionTypeSelect.value;
             
-            if (!buttonText || !buttonMsg) {
-                showNotification('请填写按钮文本和触发消息', 'error');
+            if (!buttonText) {
+                showNotification('请填写按钮文本', 'error');
+                return;
+            }
+            
+            if (selectedActionType === 'message' && !buttonMsg) {
+                showNotification('请填写触发消息', 'error');
                 return;
             }
             
@@ -1130,11 +1759,29 @@ window.editButton = function(index) {
             const newButton = {
                 id: generateUniqueId(),
                 textContent: buttonText,
-                message: buttonMsg,
                 className: colorSelect.value,
                 count: 0,
-                hidden: isHidden
+                hidden: isHidden,
+                multiMessage: addMultiMessageCheckbox.checked,
+                actionType: selectedActionType
             };
+            
+            // 如果是消息类型，保存消息内容
+            if (selectedActionType === 'message') {
+                newButton.message = buttonMsg;
+                newButton.redPacketConfig = null;
+            } else {
+                // 如果是红包类型，保存红包配置
+                newButton.message = '';
+                newButton.redPacketConfig = {
+                    type: addTypeSelect.value,
+                    money: addMoneyInput.value.trim(),
+                    count: addCountInput.value,
+                    msg: addMsgInput.value.trim(),
+                    recivers: addReciversInput.value.trim() ? [addReciversInput.value.trim()] : [""],
+                    gesture: addGestureSelect.value
+                };
+            }
             
             // 添加到配置并保存
             buttonsConfig.push(newButton);
@@ -1150,6 +1797,14 @@ window.editButton = function(index) {
             textInput.value = '';
             msgInput.value = '';
             hiddenCheckbox.checked = false;
+            addActionTypeSelect.value = 'message';
+            addMultiMessageCheckbox.checked = false;
+            addRedPacketConfigDiv.style.display = 'none';
+            addMoneyInput.value = '';
+            addCountInput.value = '1';
+            addMsgInput.value = '';
+            addReciversInput.value = '';
+            addGestureSelect.value = '无';
             
             // 显示成功提示
             showNotification('按钮添加成功！', 'success');

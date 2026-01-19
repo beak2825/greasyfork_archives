@@ -1,8 +1,9 @@
 // ==UserScript==
 // @name         web漫画にショートカットキーを追加
 // @description  ←→：前／次のページ　Shift+A：頭出しオンオフ　f [：全画面化　Shift+←→か ] Enter：前の話/次の話に移動　Shift+↑：作品情報ページに戻る　（ニコニコ静画のみ）C：コメントオンオフ　（作品情報ページで）→：第1話に移動、Enter：最新話に移動、Shift＋↑：パンくずリスト1つ上に移動　Shift+@：インスタントsibling登録
-// @version      0.1.93
+// @version      0.1.94
 // @run-at document-idle
+// @inject-into content
 // @match *://www.comic-valkyrie.com/*
 // @match *://webcomic.ohtabooks.com/*
 // @match *://comicride.jp/*
@@ -43,6 +44,7 @@
 // @match *://manga-park.com/title/*
 // @match *://manga.line.me/*
 // @match *://mangacross.jp/comics/*
+// @match *://kimicomi.com/series/*
 // @match *://mangahack.com/comics/*
 // @match *://matogrosso.jp/*
 // @match *://news.mynavi.jp/series/*
@@ -330,6 +332,7 @@
 // @match *://takecomic.jp/*
 // @match *://ichicomi.com/episode/*
 // @match *://mangajohnlennon.blog.jp/*
+// @match *://manga-one.com/*
 // @noframes
 // @grant GM_addStyle
 // @grant GM.addStyle
@@ -387,11 +390,18 @@
     } else if (Date.now() - start < timeoutMs) setTimeout(() => { waitanddo(ele, func, delay, timeoutMs, start, Math.min(int + 100, 1000)) }, int)
   }
   const SITEINFO = [{
+      url: '//manga-one.com/',
+      lastEpisode: () => elegeta('//div[@id="chapterList"]/div[contains(@class,"pt-3 switch:pt-8 pb-3 switch:pb-8")]/div/div/div[contains(@class,"flex gap-3 switch:items-center items-center")]/div[contains(@class,"flex grow flex-col justify-between gap-3")]/div[contains(@class,"flex gap-1")]/div/span[text()="無料"]/../..')?.shift(),
+      author: 'div.flex.items-center.gap-4.rounded-md[class*="px-3"] > p[class*="text-[13px]"][class*="font-semibold"].text-primary',
+      delay: 500,
+    }, {
       url: '//mangajohnlennon.blog.jp/',
       sibling: 'img.pict',
       fitFunc: () => { fitFuncA('header', 'img.pict', 400, null, 'footer:inscreen'); },
       nextEpisode: 'ul > li.next > a',
       prevEpisode: 'ul > li.prev > a',
+      lastEpisode: () => elegeta('h1.article-title > a')?.shift(),
+      firstEpisode: () => elegeta('h1.article-title > a')?.pop(),
     }, {
       url: /\/\/takecomic\.jp\/(?:episodes|series)\//,
       lastEpisode: () => eleget0('a.mode-new:not([class*="mode-current"]):inscreen') || elegeta('span.series-eplist-item-access-text.mode-free:inscreen')?.shift(),
@@ -569,7 +579,7 @@
       disableSnapWhenPageIsClicked: 1,
     }, {
       url: () => ld('www.perplexity.ai') || location.protocol == "file:" && eleget0('div.flex.items-center.justify-center.bg-offset.text-foreground.rounded-2xl.p-3.font-sans.text-base.font-normal.select-none , div.mt-md > div > div[class*="border-subtlest"].bg-transparent') || eleget0('a.block[aria-label="Perplexity"] , a.mt-xs[href="https://www.perplexity.ai/"] > div.duration-300 > div.h-auto[class*="md:w-8"] > svg[viewBox="0 0 101 116"]') && eleget0('div.col-span-8 , div.-inset-md.absolute'), // 2025.12
-      sibling: () => elegeta('div.col-span-8 , div.-inset-md.absolute , div.flex.items-center.justify-center.bg-offset.text-foreground.rounded-2xl.p-3.font-sans.text-base.font-normal.select-none , div.mt-md > div > div[class*="border-subtlest"].bg-transparent'),
+      sibling: () => elegeta('div.col-span-8 , div.-inset-md.absolute , div.flex.items-center.justify-center.bg-offset.text-foreground.rounded-2xl.p-3.font-sans.text-base.font-normal.select-none , div.mt-md > div > div[class*="border-subtlest"].bg-transparent , div.grid.min-w-0:nth-of-type(1) , div.prose'),
       header: `.h-headerHeight`,
       /*      url: () => ld('www.perplexity.ai') || location.protocol == "file:" && eleget0('a.block[aria-label="Perplexity"] , a.mt-xs[href="https://www.perplexity.ai/"] > div.duration-300 > div.h-auto[class*="md:w-8"] > svg[viewBox="0 0 101 116"]') && eleget0('div.col-span-8 , div.-inset-md.absolute'), // 2025.05
             sibling: () => elegeta('div.col-span-8 , div.-inset-md.absolute'),
@@ -779,7 +789,7 @@
       lastEpisode: '//div[@class="pg-book-episode__data"]/a[text()="無料で読む"]',
       author: '//ul/li[contains(@class,"pg-book-meta__editor-list")]',
     }, {
-      url: [/\/\/championcross\.jp\/series\/|\/carula\.jp\/series\//, `comic-growl.com/series/`, `https://rimacomiplus.jp/[^\/]+/series/`, `https://mangalt.jp/series/`],
+      url: [/\/\/championcross\.jp\/series\/|\/carula\.jp\/series\//, `comic-growl.com/series/`, `https://rimacomiplus.jp/[^\/]+/series/`, `https://mangalt.jp/series/`], // 最新話を読むが黄色
       lastEpisode: () => eleget0('//a[@class="series-ep-info-link" and contains(text(),"最新話から")]') || eleget0('//img[@class="lazyloaded mode-narrow" and @data-src="/images/icons/free_ja.svg"]') || eleget0('//span[@class="free-icon-new"]'),
       firstEpisode: () => eleget0('//a[text()="はじめから読む（無料）"]') || eleget0('//div[1]/div/div[last()]/a[contains(text(),"作品をすべて見る")]') || eleget0('//a[contains(@class,"series-act-read-btn") and text()="はじめから読む"]') || eleget0('//div/h2[not(contains(text(),"この作品を読んだあなたにオススメ"))]/../../..//div[contains(@class,"manga-list")]/div[last()]/div[@class="store-box"]/div[2]/h2/a') || eleget0('//div/a[@class="g-btn mode-more"]') || eleget0('//div[last()]/div[1]/h2[@class="manga-title"]/a') || eleget0('//div[last()]/div[@class="store-box"]/div[2]/h2/a[not(ancestor::div[@id="recomend-series-list"])]'),
       author: '//span[@class="article-text"]|//span[contains(@class,"author-name-link")]',
@@ -1383,7 +1393,7 @@
       firstEpisode: '//span[@class="btn-link__txt" and contains(text(),"試し読み")]',
       author: '//p[@class="comic-detail-main__author"]',
     }, {
-      url: /\/\/bigcomics\.jp\/series\/|\/\/kansai\.mag-garden\.co\.jp\/series\/|\/\/hayacomic\.jp\/series\//,
+      url: /\/\/bigcomics\.jp\/series\/|\/\/kansai\.mag-garden\.co\.jp\/series\/|\/\/hayacomic\.jp\/series\/|\/\/kimicomi\.com\/series\//,
       lastEpisode: () => eleget0('//a[@class="series-ep-info-link" and contains(text(),"最新話から")]') || eleget0('//img[@class="lazyloaded mode-narrow" and @data-src="/images/icons/free_ja.svg"]') || eleget0('//span[@class="free-icon-new"]'),
       firstEpisode: () => eleget0('//a[text()="はじめから読む（無料）"]') || eleget0('//div[1]/div/div[last()]/a[contains(text(),"作品をすべて見る")]') || eleget0('//a[contains(@class,"series-act-read-btn") and text()="はじめから読む"]') || eleget0('//div/h2[not(contains(text(),"この作品を読んだあなたにオススメ"))]/../../..//div[contains(@class,"manga-list")]/div[last()]/div[@class="store-box"]/div[2]/h2/a') || eleget0('//div/a[@class="g-btn mode-more"]') || eleget0('//div[last()]/div[1]/h2[@class="manga-title"]/a') || eleget0('//div[last()]/div[@class="store-box"]/div[2]/h2/a[not(ancestor::div[@id="recomend-series-list"])]') || elegeta('a#null-false.article-ep-list-item-img-link.click-link.g-episode-link-wrapper:has(span.free-icon-new):text*=第(1|一)(話|回)')?.shift() || eleget0('//a[contains(@class,"series-ep-info-link ") and contains(text()," 1 - ")]'),
       /*  }, {
@@ -1391,7 +1401,7 @@
             lastEpisode: () => eleget0('//a[@class="series-ep-info-link" and contains(text(),"最新話から")]') || eleget0('//img[@class="lazyloaded mode-narrow" and @data-src="/images/icons/free_ja.svg"]') || eleget0('//span[@class="free-icon-new"]'),
             firstEpisode: () => eleget0('//a[text()="はじめから読む（無料）"]') || eleget0('//div[1]/div/div[last()]/a[contains(text(),"作品をすべて見る")]') || eleget0('//a[contains(@class,"series-act-read-btn") and text()="はじめから読む"]') || eleget0('//div/h2[not(contains(text(),"この作品を読んだあなたにオススメ"))]/../../..//div[contains(@class,"manga-list")]/div[last()]/div[@class="store-box"]/div[2]/h2/a') || eleget0('//div/a[@class="g-btn mode-more"]') || eleget0('//div[last()]/div[1]/h2[@class="manga-title"]/a') || eleget0('//div[last()]/div[@class="store-box"]/div[2]/h2/a[not(ancestor::div[@id="recomend-series-list"])]'),
             */
-      author: '//span[@class="article-text"]',
+      author: 'span.article-text , span.article-text.author-name-link',
       sibling: 'div.row.row2-line img.manga2-img,div.row.row2-line img.manga-web-img',
       prevEpisode: '//a[@class="click-link" and text()=" 前話"]|//a[@data-event-detail="article-next-page"]/div[@class="ep-f-nav-h" and contains(text(),"前の話")]',
       nextEpisode: '//span[@class="title-next"]|//*/div[@class="ep-f-nav-h" and text()="次の話"]',
@@ -2035,7 +2045,7 @@
       sibling: '.post:not(.ch5pu .post),div#boardname', //'//dl[@class="thread"]/dt|//span[@class="number"]/../..',
       //sibling: '.post', //'//dl[@class="thread"]/dt|//span[@class="number"]/../..',
       header: '.navbar-fixed-top>.container,div.row.noflex.maxwidth100.white.padding0p5.maxheight2p5.borderbottomlightgrey',
-      pankuzuUp: '//a[contains(text(),"■掲示板に戻る■")]|//div[@id="boardname"]/a[last()]|//html/body/div/div[contains(@class,"row noflex maxwidth100")]/div[@id="threadcontent"]/div[@id="boardname"]/div/a[2]',
+      pankuzuUp: '//a[contains(text(),"■掲示板に戻る■")]|//div[@id="boardname"]/a[last()]|//html/body/div/div[contains(@class,"row noflex maxwidth100")]/div[@id="threadcontent"]/div[@id="boardname"]/div/a[2]|//div[@id="boardname"]/div/a[last()]',
       disableSnapWhenPageIsClicked: 1,
     }, { //
       url: '.shitaraba.net/bbs/read.cgi/|.shitaraba.net/bbs/read_archive.cgi/',

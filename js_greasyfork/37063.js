@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Show points on Amazon.co.jp wishlist
-// @version      25.10.0
+// @version      26.01.0
 // @description  Amazon.co.jpの欲しいものリストと検索ページで、Kindleの商品にポイントを表示しようとします
 // @namespace    https://greasyfork.org/ja/users/165645-agn5e3
 // @author       Nathurru
@@ -10,7 +10,6 @@
 // @match        https://www.amazon.co.jp/dp/*
 // @match        https://www.amazon.co.jp/*/gp/*
 // @match        https://www.amazon.co.jp/gp/*
-// @match        https://www.amazon.co.jp/s*
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_deleteValue
@@ -668,17 +667,35 @@
   };
 
   class ViewRenderer {
+    static renderKiseppe(dom, asin) {
+      const centerCol = document.querySelector('#centerCol');
+      if (!centerCol) return;
+
+      const iframe = document.createElement('iframe');
+      iframe.src = 'https://www.listasin.net/api/0200/chex/' + asin;
+      iframe.style.overflow = 'hidden';
+      iframe.setAttribute('scrolling', 'no');
+      iframe.width = '800';
+      iframe.height = '270';
+      iframe.style.border = '0';
+      iframe.loading = 'lazy';
+      iframe.referrerPolicy = 'no-referrer';
+      iframe.sandbox = 'allow-scripts';
+
+      centerCol.insertAdjacentElement('afterend', iframe);
+    }
+
     static renderPaperPrice(dom, paperPrice, kindlePrice) {
       if (!paperPrice) return;
+
+      const existing = dom.querySelector(".print-list-price");
+      if (existing) return;
 
       paperPrice = Utils.calculateTaxIncludedPrice(paperPrice);
       const discount = paperPrice - kindlePrice;
       const discountRate = Math.round(
         Utils.calculateRate(discount, paperPrice),
       );
-
-      const existing = dom.querySelector(".print-list-price");
-      if (existing) existing.remove();
 
       const target =
         dom.querySelector("#buybox tbody") ||
@@ -700,6 +717,8 @@
         "beforeend",
         Templates.pointsRow(points, pointRate),
       );
+
+      document.querySelectorAll('.total-points-value-display-column').forEach(el => el.remove());
     }
 
     static emphasizePrice(dom) {
@@ -1057,6 +1076,7 @@
           this.storage.save(data.asin, data);
           ViewRenderer.renderPaperPrice(dom, data.paperPrice, data.kindlePrice);
           ViewRenderer.renderPoints(dom, data.kindlePrice, data.pointReturn);
+          ViewRenderer.renderKiseppe(dom, data.asin);
         }
       } catch (error) {
         Logger.error("Item page processing error:", error);

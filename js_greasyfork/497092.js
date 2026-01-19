@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         pixiv获取原图
 // @namespace    https://github.com/MuXia-0326/twitter-auto-original-picture
-// @version      1.13
+// @version      1.14
 // @description  pixiv页面生成按钮用于复制原图链接和下载原图
 // @author       Mossia
 // @icon         https://raw.githubusercontent.com/MuXia-0326/drawio/master/angri.png
@@ -119,7 +119,6 @@ let pixiv_proxy = 'https://pixiv.mossia.top';
 let g_getArtworkUrl = '/ajax/illust/#id#/pages';
 
 let share_url = '';
-let share_url_two = '';
 let userName = '';
 
 // 当前页面类型
@@ -307,22 +306,10 @@ Pages[PageType.Artwork] = {
           headers: {
             'Content-Type': 'application/json',
           },
-          data: JSON.stringify({ imageUrl: newUrl }),
-          onload: function (response) {
-            var responseData = JSON.parse(response.responseText);
-            console.log('Received response:', responseData);
-          },
-          onerror: function (error) {
-            console.error('Request failed:', error);
-          },
-        });
-        GM_xmlhttpRequest({
-          method: 'POST',
-          url: share_url_two, // 目标 URL
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          data: JSON.stringify({ urls: [newUrl] }),
+          data: JSON.stringify({
+            type: 1,
+            imageUrl: newUrl,
+          }),
           onload: function (response) {
             var responseData = JSON.parse(response.responseText);
             console.log('Received response:', responseData);

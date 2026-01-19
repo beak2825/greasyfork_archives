@@ -4,7 +4,7 @@
 // @author         Blaff, Blatomi, Atlantis, Rand0max
 // @namespace      JV_Chat_MP
 // @license        MIT
-// @version        0.1.112.v650_MP
+// @version        0.1.112.v655_MP
 // @icon           https://images.emojiterra.com/google/noto-emoji/unicode-15/color/128px/2709.png
 // @match          https://*.jeuxvideo.com/messages-prives/message.php*
 // @grant          none
@@ -116,7 +116,7 @@ header.jv-header-menu,
 .form-harassment,
 .messageEditor__topInfo,
 .col-lg-3,
-.alert:not(#jvchat-fixed-alert)
+.col-lg-9 > .alert
 {
     display: none!important;
 }

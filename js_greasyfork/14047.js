@@ -4,7 +4,7 @@
 // @description Заполнение содержимого БД
 // @include     /^https{0,1}:\/\/((www|mirror)\.heroeswm\.ru|my\.lordswm\.com)\/.+/
 // @exclude     /^https{0,1}:\/\/((www|mirror)\.heroeswm\.ru|my\.lordswm\.com)\/(login|war|cgame|frames|chat|chatonline|ch_box|chat_line|ticker|chatpost|chat2020|battlechat|campaign)\.php.*/
-// @version     1.3.59
+// @version     1.3.61
 // @downloadURL https://update.greasyfork.org/scripts/14047/GN_CommonValuesFiller.user.js
 // @updateURL https://update.greasyfork.org/scripts/14047/GN_CommonValuesFiller.meta.js
 // ==/UserScript==
@@ -385,6 +385,7 @@ var artefacts = [
   new Artefact('sun_armor', 'Доспех солнца', 3, 85, 1 + Math.floor(hero_lvl/2), 9500, enum_ac.stock, enum_at.armor, enum_as.body, enum_amc.cuirass, { defence: 3 + Math.floor(hero_lvl/6) }, { close_combat_protection: Math.floor(hero_lvl/2), magic_protection: Math.floor(hero_lvl/2) }),
   new Artefact('super_dagger', 'Кинжал солнца', 3, 75, 3 + Math.floor(hero_lvl/4), 10400, enum_ac.stock, enum_at.weapon, enum_as.left_arm, enum_amc.weapon, { attack: 1 + Math.floor(hero_lvl/5), initiative: 1 }, { increase_close_combat_damage: Math.floor(hero_lvl/3), increase_range_combat_damage: Math.floor(hero_lvl/3) }),
   new Artefact('clover_amul', 'Клевер фортуны', 3, 75, 3 + Math.floor(hero_lvl/2), 11000, enum_ac.stock, enum_at.jewelry, enum_as.neck, enum_amc.necklace, { attack: Math.floor(hero_lvl/7), initiative: 1 + Math.floor(hero_lvl/3), luck: 1 }),
+  new Artefact('wind_ring', 'Кольцо ветра', 5, 75, 5 + Math.floor(hero_lvl/4), 6400, enum_ac.stock, enum_at.jewelry, enum_as.ring, enum_amc.ring, { attack: Math.floor(hero_lvl/9), defence: Math.floor(hero_lvl/7), initiative: 1, morale: 1 }),
   new Artefact('sun_ring', 'Кольцо солнца', 5, 75, 4 + Math.floor(hero_lvl/4), 6400, enum_ac.stock, enum_at.jewelry, enum_as.ring, enum_amc.ring, { attack: Math.floor(hero_lvl/4), defence: 2, initiative: 2 }),
   new Artefact('coldring_n', 'Кольцо холода', 5, 75, 6 + Math.floor(hero_lvl/4), 6400, enum_ac.stock, enum_at.jewelry, enum_as.ring, enum_amc.ring, { attack: 2, defence: Math.floor(hero_lvl/3), initiative: 1 }),
   new Artefact('lbow', 'Лук солнца', 5, 85, 1 + Math.floor(hero_lvl/3), 10100, enum_ac.stock, enum_at.weapon, enum_as.rear, enum_amc.weapon, { initiative: Math.floor(hero_lvl/9) }, { increase_range_combat_damage: 3 + hero_lvl }),
@@ -1242,16 +1243,19 @@ var artefacts = [
   // event -> worldwalker
   new Artefact('mir_am2', 'Амулет мироходца', 10, 1, 11, 20000, enum_ac.event, enum_at.jewelry, enum_as.neck, enum_amc.necklace, { attack: 2, defence: 2, knowledge: 1, luck: 1, initiative: 3 }, { hero_initiative: 3 }, enum_aset.worldwalker),
   new Artefact('mir_am1', 'Великий амулет мироходца', 15, 1, 13, 24000, enum_ac.event, enum_at.jewelry, enum_as.neck, enum_amc.necklace, { attack: 2, defence: 3, knowledge: 1, luck: 1, initiative: 4 }, { hero_initiative: 4 }, enum_aset.worldwalker),
+  new Artefact('mh_dag1', 'Великий кинжал мироходца', 15, 1, 9, 24000, enum_ac.event, enum_at.weapon, enum_as.left_arm, enum_amc.weapon, { attack: 3, initiative: 4 }, null, enum_aset.worldwalker),
   new Artefact('mir_bow1', 'Великий лук мироходца', 15, 1, 8, 24000, enum_ac.event, enum_at.weapon, enum_as.rear, enum_amc.weapon, { attack: 2, initiative: 2 }, { increase_range_combat_damage: 16 }, enum_aset.worldwalker),
   new Artefact('mh_sword1', 'Великий меч мироходца', 15, 1, 17, 24000, enum_ac.event, enum_at.weapon, enum_as.right_arm, enum_amc.weapon, { attack: 11, defence: 2, initiative: 2 }, { increase_close_combat_damage: 12 }, enum_aset.worldwalker),
   new Artefact('mir_cl1', 'Великий плащ мироходца', 15, 1, 10, 24000, enum_ac.event, enum_at.jewelry, enum_as.rear, enum_amc.cloack, { defence: 1, initiative: 4 }, { magic_protection: 15, range_combat_protection: 15 }, enum_aset.worldwalker),
   new Artefact('mirh_ring1', 'Великое кольцо мироходца', 15, 1, 14, 24000, enum_ac.event, enum_at.jewelry, enum_as.ring, enum_amc.ring, { attack: 5, defence: 5, initiative: 4 }, null, enum_aset.worldwalker),
+  new Artefact('mh_dag2', 'Кинжал мироходца', 10, 1, 7, 20000, enum_ac.event, enum_at.weapon, enum_as.left_arm, enum_amc.weapon, { attack: 2, initiative: 3 }, null, enum_aset.worldwalker),
   new Artefact('mirh_ring2', 'Кольцо мироходца', 10, 1, 11, 20000, enum_ac.event, enum_at.jewelry, enum_as.ring, enum_amc.ring, { attack: 4, defence: 4, initiative: 3 }, null, enum_aset.worldwalker),
   new Artefact('mir_bow3', 'Лёгкий лук мироходца', 6, 1, 4, 16000, enum_ac.event, enum_at.weapon, enum_as.rear, enum_amc.weapon, { attack: 1, initiative: 1 }, { increase_range_combat_damage: 6 }, enum_aset.worldwalker),
   new Artefact('mir_armor2', 'Доспех мироходца', 10, 1, 10, 20000, enum_ac.event, enum_at.armor, enum_as.body, enum_amc.cuirass, { defence: 5 }, { close_combat_protection: 6 }, enum_aset.worldwalker),
   new Artefact('mir_armor3', 'Лёгкий доспех мироходца', 6, 1, 8, 16000, enum_ac.event, enum_at.armor, enum_as.body, enum_amc.cuirass, { defence: 4 }, { close_combat_protection: 3 }, enum_aset.worldwalker),
   new Artefact('mir_cl3', 'Лёгкий плащ мироходца', 6, 1, 6, 16000, enum_ac.event, enum_at.jewelry, enum_as.rear, enum_amc.cloack, { defence: 1, initiative: 2 }, { magic_protection: 8, range_combat_protection: 7 }, enum_aset.worldwalker),
   new Artefact('mir_boots3', 'Лёгкие сапоги мироходца', 6, 1, 6, 16000, enum_ac.event, enum_at.armor, enum_as.foots, enum_amc.boots, { defence: 4 }, { close_combat_protection: 2 }, enum_aset.worldwalker),
+  new Artefact('mh_dag3', 'Лёгкий кинжал мироходца', 6, 1, 4, 16000, enum_ac.event, enum_at.weapon, enum_as.left_arm, enum_amc.weapon, { attack: 1, initiative: 2 }, null, enum_aset.worldwalker),
   new Artefact('mh_sword3', 'Лёгкий  меч мироходца', 6, 1, 12, 16000, enum_ac.event, enum_at.weapon, enum_as.right_arm, enum_amc.weapon, { attack: 8, defence: 1, initiative: 1 }, { increase_close_combat_damage: 8 }, enum_aset.worldwalker),
   new Artefact('mir_helmt3', 'Лёгкий шлем мироходца', 6, 1, 7, 16000, enum_ac.event, enum_at.armor, enum_as.head, enum_amc.helm, { defence: 4 }, { close_combat_protection: 3 }, enum_aset.worldwalker),
   new Artefact('mir_shld3', 'Лёгкий щит мироходца', 6, 1, 7, 16000, enum_ac.event, enum_at.armor, enum_as.left_arm, enum_amc.shield, { attack: 1, defence: 4, initiative: 1 }, { close_combat_protection: 5 }, enum_aset.worldwalker),
@@ -1393,10 +1397,13 @@ var artefacts = [
   // event -> ronin
   new Artefact('ronin_mask3', 'Забытая маска ронина', 6, 1, 5, 10000, enum_ac.event, enum_at.armor, enum_as.head, enum_amc.helm, { attack: 1, defence: 1, initiative: 1 }, { magic_protection: 5, close_combat_protection: 5, range_combat_protection: 3 }, enum_aset.ronin),
   new Artefact('ronin_sh3', 'Забытые поножи ронина', 6, 1, 7, 10000, enum_ac.event, enum_at.armor, enum_as.foots, enum_amc.boots, { attack: 2, defence: 1 }, { close_combat_protection: 3 }, enum_aset.ronin),
+  new Artefact('ronin_d3', 'Забытый доспех ронина', 6, 1, 9, 10000, enum_ac.event, enum_at.armor, enum_as.body, enum_amc.cuirass, { attack: 1, defence: 1, spellpower: 1, knowledge: 1, initiative: 3 }, { magic_protection: 6, close_combat_protection: 4, range_combat_protection: 6 }, enum_aset.ronin),
   new Artefact('ronin_mask1', 'Зловещая маска ронина', 16, 1, 13, 16000, enum_ac.event, enum_at.armor, enum_as.head, enum_amc.helm, { attack: 3, defence: 1, initiative: 3 }, { magic_protection: 10, close_combat_protection: 10, range_combat_protection: 5 }, enum_aset.ronin),
   new Artefact('ronin_sh1', 'Зловещие поножи ронина', 16, 1, 13, 16000, enum_ac.event, enum_at.armor, enum_as.foots, enum_amc.boots, { attack: 4, defence: 1, initiative: 2 }, { close_combat_protection: 8 }, enum_aset.ronin),
+  new Artefact('ronin_d1', 'Зловещий доспех ронина', 17, 1, 15, 16000, enum_ac.event, enum_at.armor, enum_as.body, enum_amc.cuirass, { attack: 1, defence: 3, spellpower: 1, knowledge: 1, initiative: 5 }, { magic_protection: 11, close_combat_protection: 8, range_combat_protection: 12 }, enum_aset.ronin),
   new Artefact('ronin_mask2', 'Мрачная маска ронина', 11, 1, 9, 12800, enum_ac.event, enum_at.armor, enum_as.head, enum_amc.helm, { attack: 2, defence: 1, initiative: 2 }, { magic_protection: 7, close_combat_protection: 7, range_combat_protection: 4 }, enum_aset.ronin),
   new Artefact('ronin_sh2', 'Мрачные поножи ронина', 11, 1, 10, 12800, enum_ac.event, enum_at.armor, enum_as.foots, enum_amc.boots, { attack: 3, defence: 1, initiative: 1 }, { close_combat_protection: 5 }, enum_aset.ronin),
+  new Artefact('ronin_d2', 'Мрачный доспех ронина', 12, 1, 12, 12800, enum_ac.event, enum_at.armor, enum_as.body, enum_amc.cuirass, { attack: 1, defence: 2, spellpower: 1, knowledge: 1, initiative: 4 }, { magic_protection: 8, close_combat_protection: 6, range_combat_protection: 9 }, enum_aset.ronin),
 
   // event -> honor
   new Artefact('honorarmour_1', 'Великий доспех чести', 17, 80, 14, 16000, enum_ac.event, enum_at.armor, enum_as.body, enum_amc.cuirass, { attack: 1, defence: 4, initiative: 4 }, { magic_protection: 12, close_combat_protection: 14 }, enum_aset.honor),
@@ -1410,6 +1417,9 @@ var artefacts = [
   new Artefact('legend_nature1', 'Амулет природной грации', 17, 1, 16, 16000, enum_ac.event, enum_at.jewelry, enum_as.neck, enum_amc.necklace, { attack: 2, defence: 3, initiative: 5 }, null, enum_aset.legend),
   new Artefact('legend_nature3', 'Амулет природной лёгкости', 6, 1, 9, 12000, enum_ac.event, enum_at.jewelry, enum_as.neck, enum_amc.necklace, { attack: 1, defence: 2, initiative: 3 }, null, enum_aset.legend),
   new Artefact('legend_nature2', 'Амулет природной ловкости', 12, 1, 12, 14000, enum_ac.event, enum_at.jewelry, enum_as.neck, enum_amc.necklace, { attack: 2, defence: 2, initiative: 4 }, null, enum_aset.legend),
+  new Artefact('icemask1', 'Маска морозного долга', 17, 80, 12, 16000, enum_ac.event, enum_at.armor, enum_as.head, enum_amc.helm, { defence: 2, spellpower: 1, knowledge: 1, initiative: 3 }, { magic_protection: 15 }, enum_aset.legend),
+  new Artefact('icemask2', 'Маска морозного обмана', 12, 80, 10, 14000, enum_ac.event, enum_at.armor, enum_as.head, enum_amc.helm, { defence: 1, spellpower: 1, knowledge: 1, initiative: 2 }, { magic_protection: 11 }, enum_aset.legend),
+  new Artefact('icemask3', 'Маска морозного притворства', 6, 80, 8, 12000, enum_ac.event, enum_at.armor, enum_as.head, enum_amc.helm, { defence: 1, spellpower: 1, knowledge: 1, initiative: 1 }, { magic_protection: 8 }, enum_aset.legend),
 
   // potions
   new Artefact('potion01', 'Зелье силы', 1, 1, 1, 0, enum_ac.event, enum_at.untyped, enum_as.backpack, enum_amc.other, { attack: 1 }),

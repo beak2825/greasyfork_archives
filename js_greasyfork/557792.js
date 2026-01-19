@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bangumi 编辑页面增强
 // @namespace    http://tampermonkey.net/
-// @version      1.05
+// @version      1.1
 // @description  内容粘贴,标签快速选择
 // @author       Accard
 // @match        https://bgm.tv/subject/*/edit_detail
@@ -12,8 +12,8 @@
 // @match        https://bgm.tv/wiki/*
 // @match        https://bgm.tv/wiki
 // @match        https://bgm.tv
-// @license MIT licensed
 // @grant        none
+// @license MIT licensed
 // @downloadURL https://update.greasyfork.org/scripts/557792/Bangumi%20%E7%BC%96%E8%BE%91%E9%A1%B5%E9%9D%A2%E5%A2%9E%E5%BC%BA.user.js
 // @updateURL https://update.greasyfork.org/scripts/557792/Bangumi%20%E7%BC%96%E8%BE%91%E9%A1%B5%E9%9D%A2%E5%A2%9E%E5%BC%BA.meta.js
 // ==/UserScript==
@@ -49,6 +49,9 @@
 
         // 为条目搜索页面添加粘贴搜索按钮
         addPasteSearchButtonForSubjectSearch();
+
+        // 摘要类型按钮
+        addSummaryTypeButtons();
     }
 
     // 在指定元素后添加按钮的通用函数
@@ -88,8 +91,12 @@
         try {
             const text = await navigator.clipboard.readText();
             const infoboxTextarea = document.querySelector('textarea[name="subject_infobox"]');
+
             if (infoboxTextarea) {
-                infoboxTextarea.value = text;
+                setTimeout(() => {
+                    document.querySelector('a[onclick="NormaltoWCODE()"]').click();
+                    infoboxTextarea.value = text;
+                }, 100);
                 showNotification('内容已粘贴到Wiki');
             }
         } catch (err) {
@@ -487,5 +494,173 @@
         setTimeout(() => {
             notification.remove();
         }, 3000);
+    }
+
+    // 添加摘要类型按钮
+    function addSummaryTypeButtons() {
+        const summaryMenu = document.getElementById('summaryMenu');
+        const editSummary = document.getElementById('editSummary');
+
+        if (!summaryMenu || !editSummary) return;
+
+        // 创建按钮容器
+        const buttonContainer = document.createElement('div');
+        buttonContainer.id = 'summaryButtonsContainer';
+        buttonContainer.style.cssText = `
+        display: flex;
+        gap: 5px;
+        margin-top: 5px;
+        flex-wrap: wrap;
+    `;
+
+        // 按钮配置
+        const buttonConfigs = [
+            { text: '空白', value: 'summary_empty' },
+            { text: '新条目', value: '新条目' },
+            { text: '修正笔误', value: '修正笔误' },
+            { text: '内容扩充', value: '内容扩充' }
+        ];
+
+        // 创建按钮
+        buttonConfigs.forEach(config => {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'summary-btn';
+            button.textContent = config.text;
+            button.dataset.value = config.value;
+
+            // 按钮样式
+            button.style.cssText = `
+            padding: 2px 8px;
+            font-size: 12px;
+            cursor: pointer;
+            border-radius: 16px;
+            border: 1px solid #ddd;
+            background-color: #f5f5f5;
+            color: #333;
+            transition: all 0.2s;
+            outline: none;
+            white-space: nowrap;
+
+        `;
+
+            // 鼠标悬停效果
+            button.addEventListener('mouseover', () => {
+                if (!button.classList.contains('active')) {
+                    button.style.backgroundColor = '#e8e8e8';
+                    button.style.borderColor = '#409eff';
+                }
+                button.style.transform = 'scale(1.05)';
+                button.style.boxShadow = '0 0 5px #f8f8f8';
+            });
+
+            button.addEventListener('mouseout', () => {
+                if (!button.classList.contains('active')) {
+                    button.style.backgroundColor = '#f5f5f5';
+                    button.style.borderColor = '#ddd';
+                }
+                button.style.transform = 'scale(1.0)';
+                button.style.boxShadow = 'none';
+            });
+
+            // 点击事件
+            button.addEventListener('click', () => {
+                selectSummaryOption(config.value, config.text);
+            });
+
+            buttonContainer.appendChild(button);
+        });
+
+        // 找到input的父元素td
+        const tdElement = editSummary.closest('td');
+        if (tdElement) {
+            // 在input后面插入按钮容器
+            tdElement.insertBefore(buttonContainer, editSummary.nextSibling);
+        } else {
+            // 备用方案：如果找不到td，就在input后面插入
+            editSummary.parentNode.insertBefore(buttonContainer, editSummary.nextSibling);
+        }
+
+        // 初始化按钮状态
+        updateSummaryButtons();
+
+        // 监听下拉菜单变化
+        summaryMenu.addEventListener('change', () => {
+            updateSummaryButtons();
+            // 确保输入框的值与下拉菜单同步
+            editSummary.value = summaryMenu.options[summaryMenu.selectedIndex].text;
+        });
+
+        // 监听输入框变化，尝试匹配选项
+        editSummary.addEventListener('input', () => {
+            const value = editSummary.value.trim();
+
+            // 如果输入框为空，选择空白
+            if (!value) {
+                selectSummaryOption('summary_empty', '');
+                return;
+            }
+
+            // 查找匹配的选项
+            for (let i = 0; i < summaryMenu.options.length; i++) {
+                if (summaryMenu.options[i].text === value) {
+                    summaryMenu.selectedIndex = i;
+                    updateSummaryButtons();
+                    break;
+                }
+            }
+        });
+
+        // 选择摘要选项的函数
+        function selectSummaryOption(value, text) {
+            // 查找对应的选项
+            for (let i = 0; i < summaryMenu.options.length; i++) {
+                const option = summaryMenu.options[i];
+
+                if ((value === 'summary_empty' && option.value === 'summary_empty') ||
+                    option.text === value) {
+                    summaryMenu.selectedIndex = i;
+
+                    // 设置输入框的值
+                    if (value === 'summary_empty') {
+                        editSummary.value = '';
+                    } else {
+                        editSummary.value = option.text;
+                    }
+
+                    // 更新按钮状态
+                    updateSummaryButtons();
+
+                    // 触发change事件
+                    summaryMenu.dispatchEvent(new Event('change'));
+                    break;
+                }
+            }
+        }
+
+        // 更新按钮状态
+        function updateSummaryButtons() {
+            const buttons = document.querySelectorAll('.summary-btn');
+            const selectedOption = summaryMenu.options[summaryMenu.selectedIndex];
+            const selectedValue = selectedOption.value === 'summary_empty' ? 'summary_empty' : selectedOption.text;
+
+            buttons.forEach(button => {
+                const buttonValue = button.dataset.value;
+
+                if (buttonValue === selectedValue) {
+                    // 激活当前按钮
+                    button.classList.add('active');
+                    button.style.backgroundColor = '#409eff';
+                    button.style.color = '#fff';
+                    button.style.borderColor = '#409eff';
+                } else {
+                    // 取消激活
+                    button.classList.remove('active');
+                    button.style.backgroundColor = '#f5f5f5';
+                    button.style.color = '#333';
+                    button.style.borderColor = '#ddd';
+                }
+            });
+        }
     }
 })();

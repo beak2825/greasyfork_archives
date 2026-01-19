@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         去你妈的批站诈骗广告（ bilibili,B站去广告 ）
-// @version      1.18
+// @version      1.19
 // @description  bilibili,B站,去广告,屏蔽视频投票打分三连弹窗,屏蔽小火箭推广视频,屏蔽首页左侧大图滑动推荐栏,屏蔽直播主页顶部自动播放的直播
 // @author       爆菊大师
 // @match        *://*.bilibili.com/*
@@ -106,6 +106,7 @@
             .activity-m-v1.act-now,
             .video-card-ad-small,
             .video-page-game-card-small,
+            .video-page-special-card-small,
             .slide-ad-exp { display: none !important; }
         `);
     }

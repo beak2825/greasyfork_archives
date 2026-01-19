@@ -277,13 +277,36 @@
     };
     const navigateGlobal = (direction) => {
       const allHighlights = Array.from(document.querySelectorAll(".tm-highlight"));
-      if (allHighlights.length === 0) return;
+      if (allHighlights.length === 0) {
+        const pendingCard = document.querySelector('.tm-card[data-load-state="pending"]');
+        if (pendingCard) {
+          pendingCard.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+        return;
+      }
       allHighlights.forEach((el) => el.classList.remove("tm-highlight--active"));
       let currentIndex = currentHighlight ? allHighlights.indexOf(currentHighlight) : -1;
       if (currentIndex === -1) {
         currentIndex = direction === "next" ? -1 : allHighlights.length;
       }
-      const newIndex = direction === "prev" ? currentIndex <= 0 ? allHighlights.length - 1 : currentIndex - 1 : currentIndex >= allHighlights.length - 1 ? 0 : currentIndex + 1;
+      let newIndex;
+      if (direction === "prev") {
+        newIndex = currentIndex <= 0 ? allHighlights.length - 1 : currentIndex - 1;
+      } else {
+        if (currentIndex >= allHighlights.length - 1) {
+          const pendingCard = document.querySelector('.tm-card[data-load-state="pending"]');
+          if (pendingCard) {
+            pendingCard.scrollIntoView({ behavior: "smooth", block: "center" });
+            if (currentHighlight) {
+              currentHighlight.classList.add("tm-highlight--active");
+            }
+            return;
+          }
+          newIndex = 0;
+        } else {
+          newIndex = currentIndex + 1;
+        }
+      }
       currentHighlight = allHighlights[newIndex];
       currentHighlight.classList.add("tm-highlight--active");
       currentHighlight.scrollIntoView({ behavior: "smooth", block: "center" });

@@ -1,18 +1,18 @@
 // ==UserScript==
-// @name        iCloud favicons
+// @name        Apple iCloud: add favicons
 // @description Each service with his own favicon.
-// @namespace   https://gitlab.com/breatfr
-// @match       https://*.icloud.com/*
+// @namespace   https://breat.fr
 // @version     1.0.1
-// @homepageURL https://gitlab.com/breatfr/icloud
+// @homepageURL https://usercssjs.breat.fr/a/apple-icloud
 // @supportURL  https://discord.gg/Q8KSHzdBxs
+// @match       https://*.icloud.com/*
 // @author      BreatFR
 // @copyright   2024, BreatFR (https://breat.fr)
-// @grant       none
-// @icon        https://gitlab.com/uploads/-/system/project/avatar/65415880/icloud.png
+// @icon        https://breat.fr/static/images/userscripts-et-userstyles/a/apple-icloud/icon.jpg
 // @license     AGPL-3.0-or-later; https://www.gnu.org/licenses/agpl-3.0.txt
-// @downloadURL https://update.greasyfork.org/scripts/520789/iCloud%20favicons.user.js
-// @updateURL https://update.greasyfork.org/scripts/520789/iCloud%20favicons.meta.js
+// @grant       none
+// @downloadURL https://update.greasyfork.org/scripts/520789/Apple%20iCloud%3A%20add%20favicons.user.js
+// @updateURL https://update.greasyfork.org/scripts/520789/Apple%20iCloud%3A%20add%20favicons.meta.js
 // ==/UserScript==
 
 (function() {

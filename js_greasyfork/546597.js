@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CSDN界面优化
 // @namespace    http://tampermonkey.net/
-// @version      v1.0.2
+// @version      v1.0.3
 // @description  CSDN界面美化
 // @author       明天不知在哪里
 // @match        *://*.csdn.net/*
@@ -13,12 +13,29 @@
 // ==/UserScript==
 
 (function () {
-  // 左侧
-  const blog_container_aside = document.querySelector(".blog_container_aside");
-  blog_container_aside?.remove();
-  //    右侧
-  const recommend_right = document.querySelector(".recommend-right");
-  recommend_right?.remove();
+  const style = document.createElement("style");
+  document.head.appendChild(style);
+  style.textContent = `
+    /* 顶部导航 */
+    #toolbarBox {
+      display: none !important;
+    }
+
+    /* 左侧边栏 */
+    .blog_container_aside  {
+      display: none !important;
+    }
+
+    /** 右侧边栏 */
+    .preview-wrapper.view, .recommend-right {
+      display: none !important;
+    }
+
+    /* 底部推荐 */
+    .recommend-box {
+      display: none !important;
+    }
+  `
 
   // 主体部分
   const mainBox = document.querySelector("#mainBox");
@@ -31,14 +48,6 @@
   width: 100%;
   `;
 
-  //   底部
-  const recommend_box = document.querySelector(
-    ".recommend-box.insert-baidu-box.recommend-box-style"
-  );
-  recommend_box?.remove();
-
-  const toolbarBox = document.querySelector("#toolbarBox");
-  toolbarBox?.remove();
 
   // 监听复制, 去掉版权声明
   document.addEventListener("copy", (e) => {

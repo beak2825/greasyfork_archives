@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Full_Black_List
 // @namespace    Full_Black_List
-// @version      0.46.5
+// @version      0.47.0
 // @description  Supprime totalement les sujets des pseudo blacklistés depuis la blacklist JVC.
 // @author       Atlantis
 // @match        *://www.jeuxvideo.com/recherche/forums/0-*
@@ -165,10 +165,14 @@ if (location.href.includes('jeuxvideo.com/forums/0-')) {
 //6______MASQUAGE_____BLOC____MESSAGE____FORUM__(Topic_1_42)____
 if (location.href.includes('jeuxvideo.com/forums/1-') || location.href.includes('jeuxvideo.com/forums/42-') || location.href.includes('jeuxvideo.com/forums/message/')) {
 
-    //Masquage_Message_avec_.msg-pseudo-blacklist
+    //CSS pour declaratif et open quote (evite mutation observer inutile et lourd)
     const style = document.createElement('style');
-    style.textContent = `.msg-pseudo-blacklist { display: none !important; } `;
+    style.textContent = `
+    .msg-pseudo-blacklist { display: none !important; } /*Topic Live*/
+    .blockquote-jv--blacklist:not(:focus) > * { display : none; }
+    .blockquote-jv--blacklist { background: rgba(0, 0, 0, .1) !important; }`;
     document.head.appendChild(style);
+    //Masquage_Message_avec_.msg-pseudo-blacklist
     document.querySelectorAll('.msg-pseudo-blacklist').forEach(block => block.remove());
 
     //ajout dun event au bouton blacklist
@@ -176,13 +180,15 @@ if (location.href.includes('jeuxvideo.com/forums/1-') || location.href.includes(
     scopeForumBlocs.addEventListener('click', async(e) => {
         let btnPicto;
         if (e.target.closest('#jvchat-main')) return; //dont touche if jvchat
-        if (btnPicto = e.target.closest('.picto-msg-tronche')) sessionStorage.setItem('fullblacklistJVCAwait', 'true');
-        /* TOPIC LIVE PATCH
-        e.preventDefault(); e.stopImmediatePropagation();
-        const hash = document.getElementById('ajax_hash_preference_user').value;
-        await fetch(`/forums/ajax_forum_blacklist.php?id_alias_msg=${btn.dataset.idAlias}&action=add&ajax_hash=${hash}`);
-        location.reload();
-        */
+        if (btnPicto = e.target.closest('.picto-msg-tronche')) {
+            sessionStorage.setItem('fullblacklistJVCAwait', 'true');
+            /* TOPIC LIVE PATCH
+            e.preventDefault(); e.stopImmediatePropagation();
+            const hash = document.getElementById('ajax_hash_preference_user').value;
+            await fetch(`/forums/ajax_forum_blacklist.php?id_alias_msg=${btnPicto.dataset.idAlias}&action=add&ajax_hash=${hash}`);
+            location.reload();
+            */
+        }
     }, { capture: true });
 
     //Masquage_Citations
@@ -192,7 +198,9 @@ if (location.href.includes('jeuxvideo.com/forums/1-') || location.href.includes(
             const pseudoIRC = p.textContent.startsWith("[") && p.textContent.split("<")[1]?.split(">")[0]?.toLowerCase(); //IRC
             const pseudo = p.textContent.replace(/\s+/g, ' ').split(" a écrit")[0]?.split(" ")?.pop()?.trim()?.toLowerCase(); //FOFO
             if (blacklistStorage.includes(pseudo) || blacklistStorage.includes(pseudoIRC)) {
-                p.closest(".blockquote-jv").hidden = true;
+                const bq = p.closest(".blockquote-jv")
+                bq.classList.add("blockquote-jv--blacklist")
+                bq.setAttribute("tabindex", "0");
             }
         });
     }

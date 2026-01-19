@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         虫虫钢琴铺面查看脚本
 // @namespace    TesterNaN.github.io
-// @version      2.3
+// @version      2.4
 // @description  虫虫钢琴铺面查看工具，可点击下载，全屏，打印等功能。
 // @author       TesterNaN
 // @license      GPLv3
@@ -174,12 +174,9 @@ function noAiScore() {
 
         console.log('给原下载按钮添加监听');
 
-        // 移除所有现有的点击监听器（可选，但可能影响其他功能）
-        // 更好的方法是使用 capture 阶段
         const newBtn = originalBtn.cloneNode(true);
         originalBtn.parentNode.replaceChild(newBtn, originalBtn);
 
-        // 重新添加我们的事件监听器
         newBtn.addEventListener('click', async function(event) {
             event.preventDefault();
             event.stopPropagation();
@@ -192,7 +189,6 @@ function noAiScore() {
 
             console.log('开始合成PDF');
 
-            // 保存原始文本
             const originalText = this.innerHTML;
 
             try {
@@ -202,9 +198,8 @@ function noAiScore() {
             } catch (error) {
                 console.error('生成PDF失败:', error);
             }
-        }, true); // 使用捕获阶段
+        }, true);
 
-        // 如果你想要确保完全拦截，可以添加捕获阶段的事件
         newBtn.addEventListener('click', function(event) {
             event.stopImmediatePropagation();
         }, true);
@@ -220,12 +215,9 @@ function noAiScore() {
 
         console.log('给原下载按钮添加监听');
 
-        // 移除所有现有的点击监听器（可选，但可能影响其他功能）
-        // 更好的方法是使用 capture 阶段
         const newBtn = originalBtn.cloneNode(true);
         originalBtn.parentNode.replaceChild(newBtn, originalBtn);
 
-        // 重新添加我们的事件监听器
         newBtn.addEventListener('click', async function(event) {
             event.preventDefault();
             event.stopPropagation();
@@ -238,7 +230,6 @@ function noAiScore() {
 
             console.log('开始合成PDF');
 
-            // 保存原始文本
             const originalText = this.innerHTML;
 
             try {
@@ -248,9 +239,8 @@ function noAiScore() {
             } catch (error) {
                 console.error('生成PDF失败:', error);
             }
-        }, true); // 使用捕获阶段
+        }, true);
 
-        // 如果你想要确保完全拦截，可以添加捕获阶段的事件
         newBtn.addEventListener('click', function(event) {
             event.stopImmediatePropagation();
         }, true);
@@ -342,10 +332,12 @@ function CrackMain(){
     var H5DownBtn=document.querySelector("#score_header > div > div > div.top-down");
     var H5PrintBtn=document.querySelector("#score_header > div > div > div.top-print");
     var H5ToJp=document.querySelector("body > section > div.s_d_h_b_item1 > div.audition > div.li.audition-jian")
+    var H5AudioBox = document.querySelector("#audio-box");
     setTimeout(function(){
         try{
             H5Image.style.display = 'none';
-            H5Viewer.innerHTML='<iframe id="ai-score-H5" src="'+kj.src+'" frameborder="0" data-ruffle-polyfilled="" scrolling="yes" style="width: 100%; height: 740px; border: none; overflow: auto; min-height: 740px;"></iframe>'+H5Viewer.innerHTML;
+            var H5AudioBoxHeight = H5AudioBox.getBoundingClientRect().height
+            H5Viewer.innerHTML='<iframe id="ai-score-H5" src="'+kj.src+'" frameborder="0" data-ruffle-polyfilled="" scrolling="yes" style="width: 100%; height: 100%; border: none; overflow: auto;"></iframe>'+H5Viewer.innerHTML;
             if (H5Viewer) {
                 // 移除阴影
                 H5Viewer.style.boxShadow = "none";
@@ -369,15 +361,12 @@ function CrackMain(){
 
                 // 只在宽度小于等于1000px时按比例缩放
                 if (width <= MAX_WIDTH) {
-                    const newHeight = Math.round(width * 2263 / 1600);
-                    H5Viewer.style.height = newHeight + 'px';
+                    const newHeight = Math.round(width * 2160 / 1600);
+                    H5Viewer.style.height = (newHeight + H5AudioBoxHeight) + 'px';
+                    document.querySelector("#ai-score-H5").style.height= newHeight + 'px';
 
                     console.log(`宽度: ${width}px, 设置高度: ${newHeight}px`);
-                } else {
-                    // 宽度超过1000px，设置固定高度或auto
-                    // 这里你可以选择保持高度不变或设置为auto
-                    // el.style.height = 'auto';
-                }
+                } else {}
             }
 
             adjustHeight();

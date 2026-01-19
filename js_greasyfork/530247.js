@@ -7,7 +7,7 @@
 // @match https://book.douban.com/subject/*/
 // @icon https://www.google.com/s2/favicons?sz=64&domain=douban.com
 // @grant none
-// @license MIT
+// @license GPL
 // @downloadURL https://update.greasyfork.org/scripts/530247/%E8%B1%86%E7%93%A3%E8%87%AA%E5%8A%A8%E6%8E%A8%E8%8D%90%E4%B9%A6%E7%B1%8D%E6%A0%87%E7%AD%BE.user.js
 // @updateURL https://update.greasyfork.org/scripts/530247/%E8%B1%86%E7%93%A3%E8%87%AA%E5%8A%A8%E6%8E%A8%E8%8D%90%E4%B9%A6%E7%B1%8D%E6%A0%87%E7%AD%BE.meta.js
 // ==/UserScript==
@@ -189,6 +189,6 @@
         }
 
         // 执行新功能
-        addTagsToPopularTags ();
+        addTagsToPopularTags();
     });
 })();

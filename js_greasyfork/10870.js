@@ -6,7 +6,7 @@
 // @include     http://www.weibo.com/*
 // @include     https://www.weibo.com/*
 // @description    同屏显示多图微博的全部大图。
-// @version     4.22
+// @version     4.30
 // @grant       GM_xmlhttpRequest
 // @grant       unsafeWindow
 // @grant       GM_getValue
@@ -30,15 +30,17 @@
 	// http://weibo.com/2328516855/CnYCvixUq?type=comment#_rnd1436493435761
 	var regex = /weibo\.com\/\d{8,10}\/[a-z0-9A-Z]{9}\??/;
 	var cur = -1	// “当前图片”序
+	var inited = false; //已启动标志
 	pinit();
 
 	function pinit() {
 		//检查是否已开大图，否则进入初始化进程；如果已开大图但网址已非单一微博网址则去除按钮；一秒检测一次
-		var bpimg = document.querySelector("img.big_pic");
+		var bpint = document.querySelector(".big_pic_b");
+		var mainb = document.querySelector('main>div[class^="_full_"]');
 		console.log("matched?: ", regex.test(document.location.href));
 		if (regex.test(document.location.href)) {
 			//console.log(document.location.href);
-			if (!bpimg) init();
+			if (!bpint && !!mainb) setTimeout(init, 1000);
 		} else {
 			var buttonbox = document.querySelector(".big_pic_b");
 			if (!!buttonbox) buttonbox.parentNode.removeChild(buttonbox);
@@ -50,9 +52,9 @@
 
 	function init() {
 		//通过评论框架确定页面载入完成，通过附加媒体容器确定有需要展开大图的情况，都成立时进入处理进程
-		var list_ul = document.querySelector("div.vue-recycle-scroller__item-view"); //评论框架
-		var expbox = document.querySelector('div[class*="picture-box_row_"'); //附加媒体容器
-		document.querySelector('main>div[class^="Main_full_"]').style =
+		var list_ul = document.querySelector("scroller"); //评论框架
+		var expbox = document.querySelector('div[class*="picture _row_"'); //附加媒体容器
+		document.querySelector('main>div[class^="_full_"]').style =
 			"width: 800px;";
 		if (!list_ul && !expbox) {
 			console.log("no1"); // * [no1]未加载评论框架，等候
@@ -64,29 +66,30 @@
 			return;
 		} else {
 			// * [go]一切正常，开始处理
-			// 应对超过九图的情况
+			/*/ 应对超过九图的情况
 			var nyimg = document.querySelector(
 				'[class*="woo-box-justifyCenter picture_mask_"]'
 			);
 			if (!!nyimg) {	//识别出超九图特征，将预览容器展开，以预览容器来获取图片
 				nyimg.click();
 				setTimeout(() => {
-					expbox = document.querySelector('div[class*="picture-viewer_wrap_"]');
+					expbox = expbox.querySelector('.woo-box-wrap');
 					console.log("go9");
 					go(expbox);
 					//console.log(expbox);
 				}, 600);
 			} else {
+			}*/
 				console.log("go");
 				go(expbox);
-			}
 		}
 	}
 
-	function go(expbox) {
-		var feedbox = document.querySelector(".vue-recycle-scroller__item-wrapper"); //评论区容器元素
+	async function go(expbox) {
+		if (inited) return;
+		// 		var feedbox = document.querySelector(".vue-recycle-scroller__item-wrapper"); //评论区容器元素
 		var appbox = document.querySelector("WB_app_view"); //应用容器??
-		var videobox = document.querySelector('div[class*="card-video_videoBox_"'); //视频容器
+		var videobox = document.querySelector('div[class*="_videoBox_"'); //视频容器
 		var maintextimgs = document.querySelectorAll(
 			'[class^="detail_wbtext_"]>a[target]'
 		); //正文中的图片??
@@ -114,7 +117,9 @@
 			'div[id^="Pl_Core_RecommendFeed__"]{right: 150px; width: 100px !important; max-height: 35px; overflow: hidden; transition: all ease 0.2s 0.5s;}',
 			'div[id^="Pl_Core_RecommendFeed__"]:hover{width: 300px !important; max-height: 1000px;}',
 			'div[id^="Pl_Core_RecommendFeed__"] .opt_box{display:none;}',
-			'div[id^="Pl_Core_RecommendFeed__"]:hover .opt_box{display: inline-block;}'
+			'div[id^="Pl_Core_RecommendFeed__"]:hover .opt_box{display: inline-block;}',
+			'._main_137iq_7{top: 10px !important;}',
+			'html{scroll-behavior: smooth;}'
 		].join(""); //微博自身框架样式
 		cssNode.innerHTML += [
 			".big_pic_b{position: fixed; left: 10px; top: 200px;}",
@@ -196,114 +201,23 @@
 		if (!!expbox.querySelector('[class*="picture-viewer_preview_"]')) {
 			console.log("nine imgs");
 			imgboxes = expbox.querySelectorAll(
-				'[class*="picture-viewer_listContent_"]>div>div'
+				'div[class*="woo-box-item-inlineBlock _item_"]'
 			);
 			console.log(imgboxes.length);
 		} else {
 			imgboxes = expbox.querySelectorAll(
-				'div[class*="woo-box-item-inlineBlock picture_item_"]'
+				'div[class*="woo-box-item-inlineBlock _item_"]'
 			);
 		}
-
+		//function a(){console.log([...expbox.querySelectorAll('div.woo-picture-slot>img')].map(n=>{return n.src;}));}
+		setTimeout(a,1000);
+		setTimeout(a,4000);
+		setTimeout(a,8000);
 		// 建立大图框架，用于插入大图
-		var bpboxes = [],
-			imgsrc,
-			imgn,
-			imgl = imgboxes.length;
+		var imgl = imgboxes.length;
 		var _limited = false;
 		var root = expbox.parentNode;
 		nslink.className = "big_pic_ns";
-		var nslinks = [];
-
-		var j = 0;
-		for (var i = 0; i < imgl; i++) {
-			//提取大图
-			// https://wx2.sinaimg.cn/orj360/006QkcF9ly1gz75df9qmuj30nn061dj1.jpg
-			// https://wx2.sinaimg.cn/large/006QkcF9ly1gz75df9qmuj30nn061dj1.jpg
-			// https://wx4.sinaimg.cn/large/002MwiQagy1gz7le15xtyj60k06851kx02.jpg
-			// https://wx3.sinaimg.cn/large/003nJ9EBly1hakhpjuqugj60dc336n5l02.jpg
-			bpboxes[i] = creaElemIn("div", root);
-			nslinks[i] = creaElemIn("div", nslink);
-			nslinks[i].innerHTML = (i + 1);
-			nslinks[i].name = i;
-			creaElemIn("br", root);
-			var imgnode = imgboxes[i].querySelector("img");
-			var imgvnode = imgboxes[i].querySelector("video"); //“动图”（实际上是mp4视频）
-			// console.log('imgtest: #',i,/sinaimg.c(om|n)/.test(imgnode.src));
-			if (/sinaimg.c(om|n)/.test(imgnode.src)) {	// 普通大图提取
-				if (/sinaimg.c(om|n)\/(orj|thumb)\d{3}/.test(imgnode.src)) {
-					imgsrc = imgnode.src.replace(
-						/(sinaimg\.c(om|n)\/)(orj|thumb)\d{3}/,
-						"$1large"
-					);
-				} else if (/sinaimg.c(om|n)\/large/.test(imgnode.src)) {
-					imgsrc = imgnode.src;
-				}
-				imgn = creaElemIn("img", bpboxes[i]);
-				imgn.src = imgsrc;
-				imgn.className = "big_pic";
-				imgn.title = "[ " + (i + 1) + " / " + imgl + " ]";
-				nslinks[i].style.backgroundImage = 'url("' + imgnode.src + '")';
-			} else if (!!imgvnode) {
-				if (/sinaimg.c(om|n)\/(orj|thumb)\d{3}/.test(imgvnode.poster)) {	// 动图大图提取
-					imgsrc = loadLargeGif
-						? imgvnode.poster.replace(	// 动大图模式，使用封面的大图
-							/(sinaimg\.c(om|n)\/)(orj|thumb)\d{3}/,
-							"$1large"
-						)
-						: imgvnode.poster;	// 封面模式，直接用封面
-				} else if (/sinaimg.c(om|n)\/large/.test(imgvnode.poster)) {	// 封面直接就是大图
-					imgsrc = imgvnode.poster;
-				}
-				imgn = creaElemIn("img", bpboxes[i]);
-				imgn.src = imgsrc;
-				imgn.className = "big_pic" + ((loadLargeGif) ? "" : " big_pic_poster");
-				imgn.title = "[ " + (i + 1) + " / " + imgl + " ] 点击以视频方式播放";
-				imgn.onclick = function (event) {
-					let pnode = event.target;
-					let vnode = pnode.parentNode.getElementsByTagName("video")[0];
-					pnode.style.display = "none";
-					vnode.style.display = "block";
-					vnode.play();
-					console.log("p: ", "played");
-				};
-				nslinks[i].style.backgroundImage = 'url("' + imgvnode.poster + '")';
-				bpboxes[i].appendChild(imgvnode);	// 将动图视频附在动图大图上，点击显示
-				imgvnode.className = "big_pic_v";
-				imgvnode.controls = true;
-				imgvnode.style.display = "none";
-				imgvnode.addEventListener("ended", function (event) {
-					let vnode = event.target;
-					let pnode = vnode.parentNode.getElementsByTagName("img")[0];
-					console.log("p: ", pnode);
-					vnode.style.display = "none";
-					pnode.style.display = "block";
-				});
-				// imgvnode.onclick = function (event) {
-				// 	console.log("v: ", "clicked");
-				// 	//(vnode.paused)? vnode.play() : vnode.pause();
-				// };
-			} else {
-				j += 1;
-				continue;
-			}
-			nslinks[i].addEventListener(
-				"click",
-				function (e) {
-					scrollto(getTop(bpboxes[e.target.name]) - topspare + 25);
-				},
-				false
-			);
-			if (j == imgl) return;
-		}
-		if (j == imgl) {
-			//没找到符合条件的大图，退出
-			cssNode.innerHTML =
-				".big_pic_sc{position: fixed; left:10px; padding: 3px; border: 1px solid white; color: white; background: rgba(133,133,133,0.6); cursor: pointer;} .big_pic_sc{top: 430px}";
-			return;
-		}
-		imgl = bpboxes.length;
-		if (!!root) root.removeChild(expbox);
 
 		nclink.className = "big_pic_btn";
 		nclink.innerHTML = "图片限宽";
@@ -311,6 +225,7 @@
 			"click",
 			function () {
 				var i;
+				var bpboxes = root.querySelectorAll(".big_pic_box");
 				if (_limited) {
 					for (i = 0; i < imgl; i++) {
 						bpboxes[i].querySelector("img").className = "big_pic";
@@ -331,7 +246,7 @@
 		n1link.addEventListener(
 			"click",
 			function () {
-				scrollto(getTop(bpboxes[0]) - topspare +25);
+				scrollto(getTop(root.querySelectorAll(".big_pic_box")[0]) - topspare +25);
 			},
 			false
 		);
@@ -342,6 +257,7 @@
 			"click",
 			function () {
 				var t = document.documentElement.scrollTop;
+				var bpboxes = root.querySelectorAll(".big_pic_box");
 				for (var j = imgl - 1; j >= 0; j--) {
 					if (t > getTop(bpboxes[j]) + bpboxes[j].offsetHeight - topspare) {
 						scrollto(getTop(bpboxes[j]) - topspare + 25);
@@ -358,6 +274,7 @@
 			"click",
 			function () {
 				var t = document.documentElement.scrollTop;
+				var bpboxes = root.querySelectorAll(".big_pic_box");
 				for (var j = 0; j < imgl; j++) {
 					if (t < getTop(bpboxes[j]) - topspare) {
 						scrollto(getTop(bpboxes[j]) - topspare + 25);
@@ -368,18 +285,21 @@
 			false
 		);
 
-		swmode.className = "big_pic_btn";
+		/*swmode.className = "big_pic_btn";
 		swmode.innerHTML = "↔切换动图模式";
 		swmode.title = "切换为" + ((loadLargeGif) ? "显示封面静图" : "显示动图大图") + "并刷新页面";
 		swmode.addEventListener(
 			"click",
 			function () {
 				loadLargeGif = !loadLargeGif;
-				GM_setValue('WBimgAll', loadLargeGif); 
+				GM_setValue('WBimgAll', loadLargeGif);
 				location.reload();
 			},
 			false
-		);
+		);*/
+		await addImgTo(imgboxes, imgl, nslink, root, expbox);
+
+		inited = true;
 
 		waitscroll();
 
@@ -390,6 +310,8 @@
 			var linetop = t + w * percentage - topspare;	// 注视框顶位置
 			var linebtm = t + w * (1 - percentage);	// 注视框底位置
 			var j, vh, vhmax = 0;	// 检查图片序、图片在注视框内高度、注视框内最大高度
+			var bpboxes = root.querySelectorAll(".big_pic_box");
+			var nslinks = nslink.querySelectorAll("div");
 			if (getTop(bpboxes[0]) >= linebtm || getTop(bpboxes[imgl - 1]) + bpboxes[imgl - 1].offsetHeight <= linetop) {
 				cur = -1;	// 若首图在注视框底之下或末图在注视框顶之上，则无当前图
 			} else {
@@ -421,6 +343,126 @@
 			}
 		};
 	}
+
+	async function addImgTo(nodelist, nllen, nslink, root, expbox){
+			// https://wx2.sinaimg.cn/orj360/006QkcF9ly1gz75df9qmuj30nn061dj1.jpg
+			// https://wx2.sinaimg.cn/large/006QkcF9ly1gz75df9qmuj30nn061dj1.jpg
+			// https://wx4.sinaimg.cn/large/002MwiQagy1gz7le15xtyj60k06851kx02.jpg
+			// https://wx3.sinaimg.cn/large/003nJ9EBly1hakhpjuqugj60dc336n5l02.jpg
+		var cssimg = ["div.woo-picture-slot>img", "img.woo-picture-img"];		// 提取图片的CSS路径
+		var regexp = /sinaimg\.c(om|n)\//											// 图片url样式
+		var regexi = /(sinaimg\.c(om|n)\/)(orj|thumb)\d{3}/;						// 小图url样式
+		var regexl = /sinaimg\.c(om|n)\/large/;										// 大图url样式
+		let bpbox, nslnk;
+
+		var j = 0;
+		for (var i = 0; i < nllen; i++) {
+			let imgsrc = await chkImgSrc(nodelist[i], cssimg, regexp);
+			//var imgvnode = nodelist[i].querySelector("video"); //“动图”（实际上是mp4视频）
+			//提取大图
+				if (regexi.test(imgsrc)) {
+					imgsrc = imgsrc.replace(
+						regexi,
+						"$1large"
+					);
+				}
+				bpbox = creaElemIn("div", root);
+				bpbox.className = "big_pic_box";
+				nslnk = creaElemIn("div", nslink);
+				nslnk.innerHTML = (i + 1);
+				nslnk.name = i;
+				creaElemIn("br", root);
+				let imgn = creaElemIn("img", bpbox);	// 放置大图
+				imgn.src = imgsrc;
+				imgn.className = "big_pic";
+				imgn.title = "[ " + (i + 1) + " / " + nllen + " ]";
+				nslnk.style.backgroundImage = 'url("' + imgsrc + '")';
+			/*} else if (!!imgvnode) {
+				if (regexi.test(imgvnode.poster)) {	// 动图大图提取
+					imgsrc = loadLargeGif
+						? imgvnode.poster.replace(	// 动大图模式，使用封面的大图
+							regexi,
+							"$2large"
+						)
+						: imgvnode.poster;	// 封面模式，直接用封面
+				} else if (regexl.test(imgvnode.poster)) {	// 封面直接就是大图
+					imgsrc = imgvnode.poster;
+				}
+				imgn = creaElemIn("img", bpboxes[i]);
+				imgn.src = imgsrc;
+				imgn.className = "big_pic" + ((loadLargeGif) ? "" : " big_pic_poster");
+				imgn.title = "[ " + (i + 1) + " / " + imgl + " ] 点击以视频方式播放";
+				imgn.onclick = function (event) {
+					let pnode = event.target;
+					let vnode = pnode.parentNode.getElementsByTagName("video")[0];
+					pnode.style.display = "none";
+					vnode.style.display = "block";
+					vnode.play();
+					console.log("p: ", "played");
+				};
+				nslinks[i].style.backgroundImage = 'url("' + imgvnode.poster + '")';
+				bpboxes[i].appendChild(imgvnode);	// 将动图视频附在动图大图上，点击显示
+				imgvnode.className = "big_pic_v";
+				imgvnode.controls = true;
+				imgvnode.style.display = "none";
+				imgvnode.addEventListener("ended", function (event) {
+					let vnode = event.target;
+					let pnode = vnode.parentNode.getElementsByTagName("img")[0];
+					console.log("p: ", pnode);
+					vnode.style.display = "none";
+					pnode.style.display = "block";
+				});
+				// imgvnode.onclick = function (event) {
+				// 	console.log("v: ", "clicked");
+				// 	//(vnode.paused)? vnode.play() : vnode.pause();
+				// };*/
+
+			nslnk.addEventListener(
+				"click",
+				function (e) {
+					let nks = root.querySelectorAll("img.big_pic");						// 普通大图
+					if (nks.length == 0) nks = root.querySelectorAll("img.big_pic_n");	// 限宽大图
+					scrollto(getTop(nks[e.target.name]) - topspare + 25);
+				},
+				false
+			);
+		}
+/* 		if (j == nllen) {
+			//没找到符合条件的大图，退出
+			cssNode.innerHTML =
+				".big_pic_sc{position: fixed; left:10px; padding: 3px; border: 1px solid white; color: white; background: rgba(133,133,133,0.6); cursor: pointer;} .big_pic_sc{top: 430px}";
+			return;
+		}
+		imgl = bpboxes.length; */
+		if (!!root) root.removeChild(expbox);
+	}
+
+	async function chkImgSrc(boxnode, cssimg, regexp, tries = 10) {
+		var found = "";
+		await new Promise(resolve => setTimeout(resolve, 200));
+		for (let i=1;i<=tries;i++){
+			for (let m=0;m<cssimg.length;m++) {
+				let imgn = boxnode.querySelector(cssimg[m]);
+				if (!imgn) continue;
+				let imgsrc = imgn.src;
+				if(!!imgsrc && regexp.test(imgsrc)){
+					found = imgsrc;
+					break;
+				}
+			}
+			if(!!found){
+				return found;
+			}
+			// 没找到且不是最后一次尝试，则等待 1 秒
+			if (i <= tries) {
+				console.log(`第 ${i} 次尝试未果，等待...`);
+				await new Promise(resolve => setTimeout(resolve, 1000));
+			}
+		}
+		console.log(boxnode,"没找到匹配图片");
+		return "";
+	}
+
 
 	function waitscroll() {
 		//等待页面完全载入再滚动
