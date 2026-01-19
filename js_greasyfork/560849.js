@@ -1,14 +1,15 @@
 // ==UserScript==
 // @name         LIMS 메인 대시보드 - LRS 수행팀
 // @namespace    http://tampermonkey.net/
-// @version      1.1.4
-// @description  LRS 수행팀 전용 (PacBio / ONT) 실시간 작업 현황 + Demulti 실시간 알림
+// @version      1.2.5
+// @description  LRS 수행팀 전용 (PacBio / ONT) 실시간 작업 현황 + 지능형 YLD 모니터링
 // @author       김재형
 // @match        https://lims3.macrogen.com/main.do*
 // @grant        GM_xmlhttpRequest
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_notification
+// @grant        unsafeWindow
 // @connect      lims3.macrogen.com
 // @downloadURL https://update.greasyfork.org/scripts/560849/LIMS%20%EB%A9%94%EC%9D%B8%20%EB%8C%80%EC%8B%9C%EB%B3%B4%EB%93%9C%20-%20LRS%20%EC%88%98%ED%96%89%ED%8C%80.user.js
 // @updateURL https://update.greasyfork.org/scripts/560849/LIMS%20%EB%A9%94%EC%9D%B8%20%EB%8C%80%EC%8B%9C%EB%B3%B4%EB%93%9C%20-%20LRS%20%EC%88%98%ED%96%89%ED%8C%80.meta.js
@@ -17,21 +18,24 @@
 (function () {
     'use strict';
 
+    const VERSION = '1.2.5';
     const CACHE_KEY = 'LRS_STATUS_CACHE';
     const CACHE_TIME_KEY = 'LRS_STATUS_CACHE_TIME';
-    const RUNNING_LIST_KEY = 'LRS_DEMULTI_RUNNING';
-    const HOLD_LIST_KEY = 'LRS_DEMULTI_HOLD';
-    const PROGRESS_CACHE_KEY = 'LRS_PROGRESS_CACHE'; // 진행률 감시용 캐시
-    const MONITORING_YLD_KEY = 'LRS_MONITORING_YLD'; // 수율 모니터링 활성화 여부
+    const MONITOR_YLD_KEY = 'LRS_MONITOR_YLD_ACTIVE';
+    const PROGRESS_CACHE_KEY = 'LRS_PLATE_PROGRESS';
+    const LAST_YLD_CHECK_TIME = 'LRS_LAST_YLD_TIME';
+    const LAST_YLD_COUNT_KEY = 'LRS_LAST_YLD_COUNT';
 
     // 보안 토큰(CSRF) 추출 함수
     function getCsrfInfo() {
-        const token = document.querySelector('meta[name="_csrf"]')?.content;
-        const header = document.querySelector('meta[name="_csrf_header"]')?.content;
+        const tokenEl = document.querySelector('meta[name="_csrf"]');
+        const headerEl = document.querySelector('meta[name="_csrf_header"]');
+        const token = tokenEl ? tokenEl.content : undefined;
+        const header = headerEl ? headerEl.content : undefined;
         return { token, header };
     }
 
-    // 날짜 포맷 함수 (YYYYMMDD, YYYY-MM-DD)
+    // 날짜 포맷 함수
     function getFormattedDate(date, separator = '') {
         const y = date.getFullYear();
         const m = String(date.getMonth() + 1).padStart(2, '0');
@@ -46,27 +50,45 @@
     }
 
     async function init() {
-        initStatusSection();
+        let retryCount = 0;
+        const maxRetries = 10;
 
-        const cachedCounts = GM_getValue(CACHE_KEY);
-        const cachedTime = GM_getValue(CACHE_TIME_KEY);
+        async function tryInit() {
+            const exchangeBox = document.querySelector('.object-wrap.exchange');
+            if (!exchangeBox) {
+                if (retryCount < maxRetries) {
+                    retryCount++;
+                    setTimeout(tryInit, 1000);
+                }
+                return;
+            }
 
-        // 캐시 데이터가 있으면 우선 표시 (새로고침 전까지 활용)
-        if (cachedCounts) {
-            updateUITimestamp(cachedTime);
-            updateUI(cachedCounts);
+            initStatusSection();
+            initModal();
+
+            const cachedCounts = GM_getValue(CACHE_KEY);
+            const cachedTime = GM_getValue(CACHE_TIME_KEY);
+            if (cachedCounts) {
+                updateUITimestamp(cachedTime);
+                updateUI(cachedCounts);
+            }
         }
 
-        initModal();
+        tryInit();
 
-        // 초기 실행: 40번 스크립트 부하 분산 후 필요한 데이터만 갱신
-        setTimeout(() => {
-            updateStatusDashboard('demulti');
-        }, 10000);
-
+        // 상시 감시 루프 (5분 주기)
         setInterval(() => {
-            updateStatusDashboard('demulti');
-        }, 10 * 60 * 1000); // 사용자의 요청에 따라 10분 간격으로 조정
+            const isMonitoring = GM_getValue(MONITOR_YLD_KEY, false);
+            if (isMonitoring) {
+                const now = Date.now();
+                const lastCheck = GM_getValue(LAST_YLD_CHECK_TIME, 0);
+                if (now - lastCheck >= 9 * 60 * 1000) {
+                    updateStatusDashboard('yld');
+                }
+            } else {
+                updateStatusDashboard('plate');
+            }
+        }, 5 * 60 * 1000);
     }
 
     function initStatusSection() {
@@ -107,117 +129,67 @@
 
         const listContainer = exchangeBox.querySelector('.object-exchange-ul');
         if (listContainer) {
-            // 컬럼 비율 조정: LIB 대기 칸을 대폭 확보 (0.5fr 0.5fr 3.0fr 0.5fr 0.8fr)
             listContainer.style.cssText = 'display: grid; grid-template-columns: 0.5fr 0.5fr 3.0fr 0.5fr 0.8fr; gap: 4px; padding: 0; margin: 0; min-height: 68px;';
 
             const cellBaseStyle = 'display: flex; flex-direction: column; align-items: center; justify-content: center; background: #f8fbff; border: 1px solid #e2e8f0; border-radius: 8px; transition: 0.2s; height: 68px; box-sizing: border-box; overflow: hidden;';
-            const rowStyle = 'display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 0 4px; height: 50%; box-sizing: border-box;';
             const labelStyle = 'font-size: 8px; font-weight: 600; color: #64748b; white-space: nowrap;';
             const valueStyle = 'font-size: 11px; font-weight: 900;';
 
             listContainer.innerHTML = `
-                <!-- Prep -->
-                <div class="stat-cell" style="${cellBaseStyle}" id="cell-prep" title="DNA/RNA Prep">
-                    <div style="${rowStyle} border-bottom: 1px dashed rgba(72, 52, 212, 0.1);">
-                        <span style="${labelStyle}">P D</span>
-                        <span id="status-prep-dna" style="${valueStyle}">--</span>
-                    </div>
-                    <div style="${rowStyle}">
-                        <span style="${labelStyle}">P R</span>
-                        <span id="status-prep-rna" style="${valueStyle}">--</span>
+                <div class="stat-cell" style="${cellBaseStyle} cursor: pointer;" id="cell-prep" title="Prep (DNA/RNA)">
+                    <div style="font-size: 9px; font-weight: 800; color: #64748b; margin-bottom: 2px;">Prep</div>
+                    <div style="display: flex; width: 100%; justify-content: space-around; align-items: center; padding: 0 4px;">
+                        <div style="display: flex; flex-direction: column; align-items: center;"><span style="${labelStyle}">D</span><span id="status-prep-dna" style="${valueStyle}">--</span></div>
+                        <div style="display: flex; flex-direction: column; align-items: center;"><span style="${labelStyle}">R</span><span id="status-prep-rna" style="${valueStyle}">--</span></div>
                     </div>
                 </div>
-                <!-- QC -->
-                <div class="stat-cell" style="${cellBaseStyle}" id="cell-qc" title="DNA/RNA Sample QC">
-                    <div style="${rowStyle} border-bottom: 1px dashed rgba(72, 52, 212, 0.1);">
-                        <span style="${labelStyle}">Q D</span>
-                        <span id="status-qc-dna" style="${valueStyle}">--</span>
-                    </div>
-                    <div style="${rowStyle}">
-                        <span style="${labelStyle}">Q R</span>
-                        <span id="status-qc-rna" style="${valueStyle}">--</span>
+                <div class="stat-cell" style="${cellBaseStyle} cursor: pointer;" id="cell-sqc" title="SQC (DNA/RNA)">
+                    <div style="font-size: 9px; font-weight: 800; color: #64748b; margin-bottom: 2px;">SQC</div>
+                    <div style="display: flex; width: 100%; justify-content: space-around; align-items: center; padding: 0 4px;">
+                        <div style="display: flex; flex-direction: column; align-items: center;"><span style="${labelStyle}">D</span><span id="status-sqc-dna" style="${valueStyle}">--</span></div>
+                        <div style="display: flex; flex-direction: column; align-items: center;"><span style="${labelStyle}">R</span><span id="status-sqc-rna" style="${valueStyle}">--</span></div>
                     </div>
                 </div>
-                <!-- LIB (상세 레이아웃 - 클릭 시 모달) -->
                 <div class="stat-cell" style="${cellBaseStyle} padding: 4px 8px; justify-content: space-between; align-items: stretch; background: #fff; cursor: pointer;" id="cell-lib">
                     <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #efefff; padding-bottom: 2px;">
-                        <span style="font-size: 10px; font-weight: 900; color: #4834d4; letter-spacing: -0.5px;">LIB 대기 상세 (PBL)</span>
+                        <span style="font-size: 10px; font-weight: 900; color: #4834d4;">LIB 대기 상세 (PBL)</span>
                         <span id="status-lib-total" style="font-size: 14px; font-weight: 950; color: #4834d4;">--</span>
                     </div>
                     <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px 4px; margin-top: 2px;">
-                        <div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 8px; font-weight: 700; color: #64748b;">MB:</span><span id="status-lib-mb" style="font-size: 10px; font-weight: 950; color: #333;">--</span></div>
-                        <div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 8px; font-weight: 700; color: #64748b;">MSG:</span><span id="status-lib-msg" style="font-size: 10px; font-weight: 950; color: #333;">--</span></div>
-                        <div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 8px; font-weight: 700; color: #64748b;">HiFi:</span><span id="status-lib-hifi" style="font-size: 10px; font-weight: 950; color: #333;">--</span></div>
-                        <div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 8px; font-weight: 700; color: #64748b;">16s:</span><span id="status-lib-16s" style="font-size: 10px; font-weight: 950; color: #333;">--</span></div>
-                        <div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 8px; font-weight: 700; color: #64748b;">Amp:</span><span id="status-lib-amp" style="font-size: 10px; font-weight: 950; color: #333;">--</span></div>
-                        <div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 8px; font-weight: 700; color: #64748b;">KNX:</span><span id="status-lib-knx" style="font-size: 10px; font-weight: 950; color: #333;">--</span></div>
-                        <div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 8px; font-weight: 700; color: #64748b;">ONT:</span><span id="status-lib-ont" style="font-size: 10px; font-weight: 950; color: #333;">--</span></div>
-                        <div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 8px; font-weight: 700; color: #64748b;">Etc:</span><span id="status-lib-etc" style="font-size: 10px; font-weight: 950; color: #333;">--</span></div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 7px; color: #64748b;">MB:</span><span id="status-lib-mb" style="font-size: 10px; font-weight: 950;">--</span></div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 7px; color: #64748b;">MSG:</span><span id="status-lib-msg" style="font-size: 10px; font-weight: 950;">--</span></div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 7px; color: #64748b;">HiFi:</span><span id="status-lib-hifi" style="font-size: 10px; font-weight: 950;">--</span></div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 7px; color: #64748b;">16s:</span><span id="status-lib-16s" style="font-size: 10px; font-weight: 950;">--</span></div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 7px; color: #64748b;">Amp:</span><span id="status-lib-amp" style="font-size: 10px; font-weight: 950;">--</span></div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 7px; color: #64748b;">KNX:</span><span id="status-lib-knx" style="font-size: 10px; font-weight: 950;">--</span></div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 7px; color: #64748b;">ONT:</span><span id="status-lib-ont" style="font-size: 10px; font-weight: 950;">--</span></div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 7px; color: #64748b;">Etc:</span><span id="status-lib-etc" style="font-size: 10px; font-weight: 950;">--</span></div>
                     </div>
                 </div>
-                <!-- RUN -->
-                <div class="stat-cell" style="${cellBaseStyle}; cursor: pointer;" id="cell-run" title="Revio/PromethION Run">
+                <div class="stat-cell" style="${cellBaseStyle}; cursor: pointer;" id="cell-run" title="Revio Run">
                     <span style="${labelStyle} padding-top: 2px;">RUN</span>
                     <span id="status-run-wait" style="font-size: 14px; font-weight: 900;">--</span>
                 </div>
-                <!-- YLD (기존 Demulti 섹션 개편) -->
-                <div class="stat-cell" style="${cellBaseStyle} background: #eff6ff; border-color: #bfdbfe; position: relative;" id="cell-yld" title="Revio Yield Check Monitoring">
-                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; width: 100%;">
-                        <div style="display: flex; align-items: center; gap: 4px;">
-                            <span style="font-size: 10px; font-weight: 800; color: #2563eb;">YLD</span>
-                            <span id="status-yld-count" style="font-size: 16px; font-weight: 950; color: #2563eb;">--</span>
-                        </div>
-                        <div id="status-monitoring-label" style="font-size: 8px; color: #94a3b8; margin-top: 1px;">(Progress 대기)</div>
-                        <button id="yld-stop-btn" style="display: none; position: absolute; bottom: 2px; width: 90%; font-size: 7px; padding: 1px 0; background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; border-radius: 2px; cursor: pointer; font-weight: 700;">모니터링 종료</button>
-                    </div>
+                <div class="stat-cell" style="${cellBaseStyle} background: #eff6ff; border-color: #bfdbfe; position: relative; cursor: pointer;" id="cell-yld" title="Yield Check 모니터링">
+                    <span id="yld-label" style="${labelStyle} color: #2563eb; position: absolute; top: 8px;">YLD</span>
+                    <span id="status-yld-count" style="font-size: 24px; font-weight: 900; color: #2563eb;">--</span>
+                    <button id="yld-stop-btn" style="display: none; position: absolute; bottom: 4px; padding: 1px 4px; background: #fff; color: #ef4444; border: 1px solid #ef4444; border-radius: 4px; font-size: 8px; font-weight: 700; cursor: pointer;">종료</button>
+                    <span id="yld-wait-text" style="font-size: 8px; color: #94a3b8; position: absolute; bottom: 8px;">트리거 대기 중</span>
                 </div>
             `;
 
-            // 이벤트 리스너 등록
-            const clickableIds = ['cell-lib', 'cell-run', 'cell-yld'];
-            clickableIds.forEach(id => {
-                const el = document.getElementById(id);
-                if (el) {
-                    if (id === 'cell-yld') {
-                        // YLD 셀 클릭 시 아무 동작 안 함 (필요 시 모달 연결 가능)
-                    } else {
-                        el.onclick = () => { if (window.openLrsModal) window.openLrsModal(); };
-                    }
-                }
-            });
-
-            const stopBtn = document.getElementById('yld-stop-btn');
-            if (stopBtn) {
-                stopBtn.onclick = (e) => {
-                    e.stopPropagation();
-                    GM_setValue(MONITORING_YLD_KEY, false);
-                    updateMonitoringUI(false);
-                    alert('수율 모니터링을 종료하고 진행률 감시 모드로 전환합니다.');
-                };
-            }
-        }
-    }
-
-    function updateMonitoringUI(isMonitoring) {
-        const labelEl = document.getElementById('status-monitoring-label');
-        const countEl = document.getElementById('status-yld-count');
-        const stopBtn = document.getElementById('yld-stop-btn');
-        const cellEl = document.getElementById('cell-yld');
-
-        if (isMonitoring) {
-            if (labelEl) labelEl.innerText = '🔍 모니터링 중';
-            if (labelEl) labelEl.style.color = '#2563eb';
-            if (stopBtn) stopBtn.style.display = 'block';
-            if (cellEl) cellEl.style.background = '#fffbeb';
-            if (cellEl) cellEl.style.borderColor = '#fef3c7';
-        } else {
-            if (labelEl) labelEl.innerText = '(Progress 대기)';
-            if (labelEl) labelEl.style.color = '#94a3b8';
-            if (stopBtn) stopBtn.style.display = 'none';
-            if (cellEl) cellEl.style.background = '#eff6ff';
-            if (cellEl) cellEl.style.borderColor = '#bfdbfe';
-            if (countEl) countEl.innerText = '--';
-            if (countEl) countEl.style.color = '#cbd5e1';
+            document.getElementById('cell-prep').onclick = () => window.openLrsModal();
+            document.getElementById('cell-sqc').onclick = () => window.openLrsModal();
+            document.getElementById('cell-lib').onclick = () => window.openLrsModal();
+            document.getElementById('cell-run').onclick = () => window.openLrsModal();
+            document.getElementById('cell-yld').onclick = (e) => {
+                if (e.target.id === 'yld-stop-btn') return;
+                window.openLrsModal();
+            };
+            document.getElementById('yld-stop-btn').onclick = (e) => {
+                e.stopPropagation();
+                stopYldMonitoring();
+            };
         }
     }
 
@@ -226,401 +198,296 @@
         const headers = {
             "Content-Type": "application/json; charset=UTF-8",
             "X-Requested-With": "XMLHttpRequest",
-            "Accept": "application/json, text/javascript, */*; q=0.01"
+            "Accept": "application/json, text/javascript, */*; q=0.01",
+            "menucd": "NGS170600",
+            "referer": "https://lims3.macrogen.com/ngs/demulti/retireveYieldCheckForm.do?menuCd=NGS170600"
         };
-        if (csrf.header && csrf.token) {
-            headers[csrf.header] = csrf.token;
-        }
+        if (csrf.header && csrf.token) headers[csrf.header] = csrf.token;
 
         return new Promise((resolve) => {
             GM_xmlhttpRequest({
-                method: "POST",
-                url: url,
-                data: JSON.stringify(payload),
-                headers: headers,
-                timeout: 30000, // 30초 타임아웃 추가
+                method: "POST", url, data: JSON.stringify(payload), headers, timeout: 30000,
                 onload: (res) => {
                     try {
                         const data = JSON.parse(res.responseText);
-                        // 다양한 리턴 형태 대응 (waits, result, resultList, dataSet 내의 여러 키)
-                        const list = data.waits || data.result || data.resultList ||
-                            data.dataSet?.waits || data.dataSet?.result ||
-                            data.dataSet?.resultList || data.dataSet?.demultiList || [];
+                        let list = [];
+                        if (data.waits) list = data.waits;
+                        else if (data.result) list = data.result;
+                        else if (data.resultList) list = data.resultList;
+                        else if (data.dataSet) {
+                            const ds = data.dataSet;
+                            list = ds.waits || ds.result || ds.resultList || ds.demultiList || ds.instrumentPlateList || [];
+                        }
                         resolve(Array.isArray(list) ? list : []);
-                    } catch (e) {
-                        console.error(`[LRS] Parse Error (${url}):`, e);
-                        resolve([]);
-                    }
+                    } catch (e) { resolve([]); }
                 },
-                onerror: (err) => {
-                    console.error(`[LRS] Network Error (${url}):`, err);
-                    resolve([]);
-                },
-                ontimeout: () => {
-                    console.error(`[LRS] Timeout Error (${url})`);
-                    resolve([]);
-                }
+                onerror: () => resolve([])
             });
         });
     }
 
+    function stopYldMonitoring() {
+        GM_setValue(MONITOR_YLD_KEY, false);
+        const countEl = document.getElementById('status-yld-count');
+        const btn = document.getElementById('yld-stop-btn');
+        const waitText = document.getElementById('yld-wait-text');
+        if (countEl) countEl.innerText = '--';
+        if (btn) btn.style.display = 'none';
+        if (waitText) waitText.style.display = 'block';
+    }
+
+    const setGlobal = (name, fn) => {
+        if (typeof unsafeWindow !== 'undefined') unsafeWindow[name] = fn;
+        window[name] = fn;
+    };
+    setGlobal('LRS_FORCE_MONITORING', () => {
+        GM_setValue(MONITOR_YLD_KEY, true);
+        updateStatusDashboard('yld');
+        GM_notification({ title: "📡 YLD 모니터링 강제 활성화", text: "YLD 모니터링을 즉시 시작합니다.", timeout: 3000 });
+    });
+    setGlobal('LRS_STOP_MONITORING', stopYldMonitoring);
+    setGlobal('LRS_CHECK_STATUS', () => updateStatusDashboard('all'));
+    setGlobal('LRS_TEST_PLATE', () => updateStatusDashboard('plate'));
+
     async function updateStatusDashboard(type = 'all') {
-        const btnIdMap = { 'prep-qc': 'status-refresh-pq-btn', 'lib-run': 'status-refresh-lr-btn', 'all': 'status-refresh-all-btn', 'demulti': null };
-        const labelMap = { 'prep-qc': 'P/Q', 'lib-run': 'L/R', 'all': 'ALL', 'demulti': 'DEM' };
-
+        const btnIdMap = { 'prep-qc': 'status-refresh-pq-btn', 'lib-run': 'status-refresh-lr-btn', 'all': 'status-refresh-all-btn' };
+        const labelMap = { 'prep-qc': 'P/Q', 'lib-run': 'L/R', 'all': 'ALL' };
         const btn = document.getElementById(btnIdMap[type]);
-        const modalBtn = document.getElementById('modal-refresh-btn');
-
-        if (btn) {
-            btn.style.opacity = '0.7';
-            btn.innerText = `⏳`;
-        }
-        if (modalBtn) {
-            modalBtn.disabled = true;
-            modalBtn.style.opacity = '0.6';
-            modalBtn.innerText = '⏳ 데이터 갱신 중...';
-        }
-
-        const groupIds = {
-            'prep-qc': ['status-qc-dna', 'status-qc-rna', 'status-prep-dna', 'status-prep-rna'],
-            'lib-run': ['status-run-wait', 'status-lib-total', 'status-lib-mb', 'status-lib-msg', 'status-lib-hifi', 'status-lib-16s', 'status-lib-amp', 'status-lib-knx', 'status-lib-ont', 'status-lib-etc'],
-            'demulti': ['status-dem-run', 'status-dem-hold', 'status-dem-cfmd'],
-            'all': [
-                'status-qc-dna', 'status-qc-rna', 'status-prep-dna', 'status-prep-rna',
-                'status-run-wait', 'status-lib-total', 'status-lib-mb', 'status-lib-msg', 'status-lib-hifi',
-                'status-lib-16s', 'status-lib-amp', 'status-lib-knx', 'status-lib-ont', 'status-lib-etc',
-                'status-dem-run', 'status-dem-hold', 'status-dem-cfmd'
-            ]
-        };
-        const clearIds = groupIds[type] || [];
-        clearIds.forEach(id => {
-            const el = document.getElementById(id);
-            if (el) {
-                el.innerText = '--';
-                el.style.color = '#cbd5e1'; // 로딩 중인 필드만 초기화 (나머지 섹션은 캐시 유지)
-            }
-        });
-
-        // 모달 데이터도 즉시 동기화하여 시각적 혼동 방지
-        if (document.getElementById('lrs-modal-overlay')?.style.display === 'flex') {
-            syncModalData();
-        }
+        if (btn) { btn.innerText = '⏳'; btn.style.opacity = '0.7'; }
 
         try {
             const today = new Date();
-            const lastWeek = new Date();
-            lastWeek.setDate(today.getDate() - 7);
+            const sessionCounts = GM_getValue(CACHE_KEY, {});
 
-            const queries = [
-                { id: 'status-qc-dna', group: 'prep-qc', fn: () => fetchLimsData("https://lims3.macrogen.com/ngs/sample/retrieveWaits.do", { "dataSet": { "frmWait": [{ "name": "searchGeneTypeCd", "value": "D" }, { "name": "searchSmplStatCd", "value": "D" }, { "name": "tabIndex", "value": "0" }] } }) },
-                { id: 'status-qc-rna', group: 'prep-qc', fn: () => fetchLimsData("https://lims3.macrogen.com/ngs/sample/retrieveWaits.do", { "dataSet": { "frmWait": [{ "name": "searchGeneTypeCd", "value": "R" }, { "name": "searchSmplStatCd", "value": "D" }, { "name": "tabIndex", "value": "1" }] } }) },
-                { id: 'status-prep-dna', group: 'prep-qc', fn: () => fetchLimsData("https://lims3.macrogen.com/ngs/sample/retrieveWaits.do", { "dataSet": { "frmWait": [{ "name": "searchGeneTypeCd", "value": "D" }, { "name": "searchSmplStatCd", "value": "T" }, { "name": "tabIndex", "value": "2" }] } }) },
-                { id: 'status-prep-rna', group: 'prep-qc', fn: () => fetchLimsData("https://lims3.macrogen.com/ngs/sample/retrieveWaits.do", { "dataSet": { "frmWait": [{ "name": "searchGeneTypeCd", "value": "R" }, { "name": "searchSmplStatCd", "value": "T" }, { "name": "tabIndex", "value": "3" }] } }) },
-                { id: 'status-lib-wait', group: 'lib-run', fn: () => fetchLimsData("https://lims3.macrogen.com/ngs/library/retrieveWaits.do", { "dataSet": { "frmWait": [{ "name": "searchLibTypeCd", "value": "PBL" }, { "name": "menuCd", "value": "NGS120100" }] } }) },
-                { id: 'status-run-wait', group: 'lib-run', fn: () => fetchLimsData("https://lims3.macrogen.com/ngs/amplification/retrieveNgsAmplificationSequalTwoList.do", { "dataSet": { "amplificationForm": [{ "name": "amplificationType", "value": "S2" }, { "name": "searchMode", "value": "PAC" }, { "name": "menuCd", "value": "NGS150500" }] } }) },
-                {
-                    id: 'revio-yld-check', group: 'demulti', fn: async () => {
-                        const isMonitoring = GM_getValue(MONITORING_YLD_KEY, false);
+            const resetTargets = {
+                'prep-qc': ['status-sqc-dna', 'status-sqc-rna', 'status-prep-dna', 'status-prep-rna'],
+                'lib-run': ['status-lib-total', 'status-lib-mb', 'status-lib-msg', 'status-lib-hifi', 'status-lib-16s', 'status-lib-amp', 'status-lib-knx', 'status-lib-ont', 'status-lib-etc', 'status-run-wait'],
+                'yld': ['status-yld-count'],
+                'all': ['status-sqc-dna', 'status-sqc-rna', 'status-prep-dna', 'status-prep-rna', 'status-lib-total', 'status-lib-mb', 'status-lib-msg', 'status-lib-hifi', 'status-lib-16s', 'status-lib-amp', 'status-lib-knx', 'status-lib-ont', 'status-lib-etc', 'status-run-wait', 'status-yld-count']
+            };
+            if (resetTargets[type]) {
+                resetTargets[type].forEach(id => {
+                    sessionCounts[id] = '--';
+                    const el = document.getElementById(id);
+                    if (el) { el.innerText = '--'; el.style.color = '#cbd5e1'; }
+                });
+                updateUI(sessionCounts);
+            }
 
-                        // 1. Pacbio Instrument Plate 리스트 확인 (항상 수행하여 Progress 감시)
-                        const plates = await fetchLimsData("https://lims3.macrogen.com/ngs/instrumentPlate/retrieveNgsInstrumentPlatePacbioList.do", {
-                            "dataSet": { "instrumentPlateForm": [{ "name": "menuCd", "value": "NGS160200" }] }
-                        });
-
-                        // progressRatio 변화 감지
-                        checkProgressChanges(plates);
-
-                        // 모니터링 모드가 아니면 여기서 종료
-                        if (!isMonitoring) return null;
-
-                        // 2. Yield Check 리스트에서 Revio 개수 확인
-                        const yields = await fetchLimsData("https://lims3.macrogen.com/ngs/demulti/retireveYieldCheckList.do", {
-                            "dataSet": { "demultiForm": [{ "name": "menuCd", "value": "NGS170600" }] }
-                        });
-
-                        return yields.filter(y => y.pltfomNm === 'Revio');
-                    }
+            if (type === 'all' || type === 'prep-qc') {
+                const queries = [
+                    { id: 'status-sqc-dna', p: { "dataSet": { "frmWait": [{ "name": "searchGeneTypeCd", "value": "D" }, { "name": "searchSmplStatCd", "value": "D" }, { "name": "tabIndex", "value": "0" }] } } },
+                    { id: 'status-sqc-rna', p: { "dataSet": { "frmWait": [{ "name": "searchGeneTypeCd", "value": "R" }, { "name": "searchSmplStatCd", "value": "D" }, { "name": "tabIndex", "value": "1" }] } } },
+                    { id: 'status-prep-dna', p: { "dataSet": { "frmWait": [{ "name": "searchGeneTypeCd", "value": "D" }, { "name": "searchSmplStatCd", "value": "T" }, { "name": "tabIndex", "value": "2" }] } } },
+                    { id: 'status-prep-rna', p: { "dataSet": { "frmWait": [{ "name": "searchGeneTypeCd", "value": "R" }, { "name": "searchSmplStatCd", "value": "T" }, { "name": "tabIndex", "value": "3" }] } } }
+                ];
+                for (const q of queries) {
+                    const data = await fetchLimsData("https://lims3.macrogen.com/ngs/sample/retrieveWaits.do", q.p);
+                    sessionCounts[q.id] = data.filter(i => ['Revio', 'PromethION'].includes(i.pltfomNm || i.prfmPltfomNm)).length;
+                    updateUI(sessionCounts);
                 }
-            ];
+            }
 
-            const targetQueries = type === 'all' ? queries : queries.filter(q => q.group === type || q.id === 'demulti-data');
-
-            // 갱신 중인 섹션만 담을 임시 저장소
-            const sessionCounts = {};
-
-            for (const q of targetQueries) {
-                const data = await q.fn();
-                const qId = q.id;
-
-                if (qId === 'revio-yld-check') {
-                    processYldData(data, sessionCounts);
-                } else {
-                    const isTarget = (item) => item && ['Revio', 'PromethION'].includes(item.pltfomNm || item.prfmPltfomNm);
-                    const isRevioOnly = (item) => item && (item.pltfomNm || item.prfmPltfomNm) === 'Revio';
-                    const isNot16s = (item) => item && item.libKitNm !== '[3.0] PacBio 16s full-length Library';
-
-                    if (qId === 'status-lib-wait') {
-                        const stats = { total: 0, mb: 0, msg: 0, hifi: 0, s16: 0, amp: 0, knx: 0, ont: 0, etc: 0 };
-                        const filteredData = data.filter(isTarget);
-                        stats.total = filteredData.length;
-                        filteredData.forEach(item => {
-                            const kitNm = item.libKitNm || '';
-                            const platform = item.pltfomNm || item.prfmPltfomNm || '';
-
-                            if (platform === 'PromethION') stats.ont++;
-                            else if (kitNm.includes('Kinnex')) stats.knx++;
-                            else if (kitNm === '[3.0] PacBio Microbial Library') stats.mb++;
-                            else if (kitNm === '[3.0] PacBio MetaShotgun Library') stats.msg++;
-                            else if (kitNm === '[3.0] PacBio HiFi Library') stats.hifi++;
-                            else if (kitNm === '[3.0] PacBio 16s full-length Library') stats.s16++;
-                            else if (kitNm === '[3.0] PacBio Amplicon Library') stats.amp++;
-                            else stats.etc++;
-                        });
-
-                        const mapping = { 'lib-total': stats.total, 'lib-mb': stats.mb, 'lib-msg': stats.msg, 'lib-hifi': stats.hifi, 'lib-16s': stats.s16, 'lib-amp': stats.amp, 'lib-knx': stats.knx, 'lib-ont': stats.ont, 'lib-etc': stats.etc };
-                        Object.entries(mapping).forEach(([k, v]) => sessionCounts[`status-${k}`] = v);
-                    } else {
-                        let count;
-                        if (qId.includes('prep') || qId.includes('qc')) {
-                            count = data.filter(i => isTarget(i) && isNot16s(i)).length;
-                        } else if (qId === 'status-run-wait') {
-                            count = data.filter(isRevioOnly).length;
-                        } else {
-                            count = data.filter(isTarget).length;
-                        }
-                        sessionCounts[qId] = count;
-                    }
-                }
-
-                // 갱신된 항목만 즉시 반영
+            if (type === 'all' || type === 'lib-run') {
+                const libData = await fetchLimsData("https://lims3.macrogen.com/ngs/library/retrieveWaits.do", { "dataSet": { "frmWait": [{ "name": "searchLibTypeCd", "value": "PBL" }, { "name": "menuCd", "value": "NGS120100" }] } });
+                const stats = { total: 0, mb: 0, msg: 0, hifi: 0, s16: 0, amp: 0, knx: 0, ont: 0, etc: 0 };
+                libData.filter(i => ['Revio', 'PromethION'].includes(i.pltfomNm)).forEach(item => {
+                    const kit = (item.libKitNm || '').toUpperCase();
+                    stats.total++;
+                    if (item.pltfomNm === 'PromethION') stats.ont++;
+                    else if (kit.indexOf('KINNEX') !== -1) stats.knx++;
+                    else if (kit.indexOf('MICROBIAL') !== -1) stats.mb++;
+                    else if (kit.indexOf('METASHOTGUN') !== -1) stats.msg++;
+                    else if (kit.indexOf('HIFI LIB') !== -1) stats.hifi++;
+                    else if (kit.indexOf('16S') !== -1) stats.s16++;
+                    else if (kit.indexOf('AMPLICON') !== -1) stats.amp++;
+                    else stats.etc++;
+                });
+                Object.assign(sessionCounts, { 'status-lib-total': stats.total, 'status-lib-mb': stats.mb, 'status-lib-msg': stats.msg, 'status-lib-hifi': stats.hifi, 'status-lib-16s': stats.s16, 'status-lib-amp': stats.amp, 'status-lib-knx': stats.knx, 'status-lib-ont': stats.ont, 'status-lib-etc': stats.etc });
                 updateUI(sessionCounts);
 
-                await new Promise(r => setTimeout(r, 500));
+                const runData = await fetchLimsData("https://lims3.macrogen.com/ngs/amplification/retrieveNgsAmplificationSequalTwoList.do", { "dataSet": { "amplificationForm": [{ "name": "amplificationType", "value": "S2" }, { "name": "searchMode", "value": "PAC" }, { "name": "menuCd", "value": "NGS150500" }] } });
+                const revioRuns = runData.filter(i => (i.pltfomNm || i.prfmPltfomNm) === 'Revio');
+                sessionCounts['status-run-wait'] = revioRuns.length;
+                updateUI(sessionCounts);
             }
 
-            const updateTime = new Date().getTime();
-            const globalCache = GM_getValue(CACHE_KEY, {});
-            Object.assign(globalCache, sessionCounts);
+            if (type === 'all' || type === 'plate') {
+                const beginDate = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+                const platePayload = {
+                    "dataSet": { "instrumentPlateForm": [{ "name": "pltfomCd", "value": "" }, { "name": "pltfomType", "value": "" }, { "name": "insId", "value": "" }, { "name": "searchMode", "value": "PAC" }, { "name": "searchBeginDate_text", "value": (beginDate.getFullYear()) + "-" + (String(beginDate.getMonth() + 1).padStart(2, '0')) + "-" + (String(beginDate.getDate()).padStart(2, '0')) }, { "name": "searchBeginDate", "value": getFormattedDate(beginDate) }, { "name": "searchEndDate_text", "value": (today.getFullYear()) + "-" + (String(today.getMonth() + 1).padStart(2, '0')) + "-" + (String(today.getDate()).padStart(2, '0')) }, { "name": "searchEndDate", "value": getFormattedDate(today) }, { "name": "searchPltfomCd", "value": "" }, { "name": "searchPlateStatCd", "value": "" }, { "name": "searchBasiSrchCd", "value": "" }, { "name": "searchKeyword", "value": "" }, { "name": "menuCd", "value": "NGS160200" }] }
+                };
+                const plateRawResponse = await new Promise((resolve) => {
+                    const csrf = getCsrfInfo();
+                    const headers = {
+                        "Content-Type": "application/json; charset=UTF-8",
+                        "X-Requested-With": "XMLHttpRequest",
+                        "Accept": "application/json, text/javascript, */*; q=0.01",
+                        "menucd": "NGS160200"
+                    };
+                    if (csrf.header && csrf.token) headers[csrf.header] = csrf.token;
+                    GM_xmlhttpRequest({
+                        method: "POST", url: "https://lims3.macrogen.com/ngs/instrumentPlate/retrieveNgsInstrumentPlatePacBioList.do",
+                        data: JSON.stringify(platePayload), headers, timeout: 30000,
+                        onload: (res) => { try { resolve(JSON.parse(res.responseText)); } catch (e) { resolve(null); } },
+                        onerror: () => resolve(null)
+                    });
+                });
+                const plateData = (plateRawResponse && plateRawResponse.dataSet && plateRawResponse.dataSet.instrumentPlateList) ||
+                    (plateRawResponse && plateRawResponse.instrumentPlateList) ||
+                    (plateRawResponse && plateRawResponse.result) ||
+                    (plateRawResponse && plateRawResponse.resultList) || [];
 
-            GM_setValue(CACHE_KEY, globalCache);
-            GM_setValue(CACHE_TIME_KEY, updateTime);
-            updateUITimestamp(updateTime);
+                const prevProg = GM_getValue(PROGRESS_CACHE_KEY, {});
+                const newProg = {};
+                let triggered = false;
 
-        } catch (e) {
-            console.error('[LRS] Update Dashboard Error:', e);
-        } finally {
-            if (btn) { btn.style.opacity = '1'; btn.innerText = labelMap[type]; }
-            if (modalBtn) {
-                modalBtn.disabled = false;
-                modalBtn.style.opacity = '1';
-                modalBtn.innerText = '지금 즉시 새로고침';
-            }
-        }
-    }
-
-    function checkProgressChanges(plates) {
-        const cachedProgress = GM_getValue(PROGRESS_CACHE_KEY, {});
-        const newProgress = {};
-        let changed = false;
-
-        plates.forEach(p => {
-            const id = p.insId;
-            const currentRatio = p.progressRatio || '';
-            const status = p.plateStatNm || '';
-
-            // Run Started 또는 Run Completed인 플레이트만 감시
-            if (status === 'Run Started' || status === 'Run Completed') {
-                newProgress[id] = currentRatio;
-                if (cachedProgress[id] && cachedProgress[id] !== currentRatio) {
-                    console.log(`[LRS] Progress Changed: ${id} (${cachedProgress[id]} -> ${currentRatio})`);
-                    changed = true;
+                plateData.forEach(p => {
+                    const key = p.imprtId || p.insId;
+                    const prog = p.runProgRatio !== undefined ? p.runProgRatio : (p.progressRatio !== undefined ? p.progressRatio : null);
+                    if (key && prog !== null) {
+                        const progStr = String(prog);
+                        newProg[key] = progStr;
+                        if (prevProg[key] !== undefined && prevProg[key] !== progStr) triggered = true;
+                    }
+                });
+                GM_setValue(PROGRESS_CACHE_KEY, newProg);
+                if (triggered && !GM_getValue(MONITOR_YLD_KEY, false)) {
+                    GM_setValue(MONITOR_YLD_KEY, true);
+                    GM_notification({ title: "📡 YLD 모니터링 자동 활성화", text: "플레이트 진행률 변화가 감지되었습니다. 10분 주기로 모니터링을 시작합니다.", timeout: 5000 });
+                    updateStatusDashboard('yld');
                 }
             }
-        });
 
-        GM_setValue(PROGRESS_CACHE_KEY, newProgress);
+            if (type === 'yld' || (type === 'all' && GM_getValue(MONITOR_YLD_KEY, false))) {
+                const yldListPayload = { "dataSet": { "undefined": {}, "demultiForm": [{ "name": "searchBeginDate_text", "value": "" }, { "name": "searchBeginDate", "value": "" }, { "name": "searchEndDate_text", "value": "" }, { "name": "searchEndDate", "value": "" }, { "name": "searchPltfomCd", "value": "RV" }, { "name": "searchRunTypeCd", "value": "" }, { "name": "searchBasicCd", "value": "01" }, { "name": "searchBasicCn", "value": "" }, { "name": "menuCd", "value": "NGS170600" }] } };
+                const yldData = await fetchLimsData("https://lims3.macrogen.com/ngs/demulti/retrieveYieldCheckList.do", yldListPayload);
+                const newYldCount = yldData.length;
+                const prevYldCount = GM_getValue(LAST_YLD_COUNT_KEY, null);
 
-        if (changed) {
-            console.log('[LRS] Triggering YLD Monitoring due to progress change...');
-            GM_setValue(MONITORING_YLD_KEY, true);
-            GM_notification({
-                title: "🚀 Revio 진행률 변경 감지",
-                text: "플레이트 진행률이 변경되어 수율 확인(YLD) 모니터링을 시작합니다.",
-                onclick: () => window.focus()
-            });
-        }
+                // 모니터링 중 수량 변경 감지 시 알림
+                if (GM_getValue(MONITOR_YLD_KEY, false) && prevYldCount !== null && prevYldCount !== newYldCount) {
+                    const diff = newYldCount - prevYldCount;
+                    const diffText = diff > 0 ? `+${diff}건 증가` : `${diff}건 감소`;
+                    GM_notification({
+                        title: "🔔 YLD 수량 변경 감지",
+                        text: `${prevYldCount}건 → ${newYldCount}건 (${diffText})\n확인 후 모니터링을 종료하세요.`,
+                        timeout: 10000
+                    });
+                }
+
+                GM_setValue(LAST_YLD_COUNT_KEY, newYldCount);
+                sessionCounts['status-yld-count'] = newYldCount;
+                GM_setValue(LAST_YLD_CHECK_TIME, Date.now());
+                updateUI(sessionCounts);
+            }
+
+            updateUI(sessionCounts);
+            GM_setValue(CACHE_KEY, sessionCounts);
+            GM_setValue(CACHE_TIME_KEY, Date.now());
+            updateUITimestamp(Date.now());
+        } catch (e) { console.error('[LRS] Error:', e); }
+        finally { if (btn) { btn.innerText = labelMap[type] || 'ALL'; btn.style.opacity = '1'; } }
     }
 
-    function processYldData(data, currentCounts) {
-        const isMonitoring = GM_getValue(MONITORING_YLD_KEY, false);
-        updateMonitoringUI(isMonitoring);
-
-        if (!isMonitoring || data === null) {
-            currentCounts['status-yld-count'] = '--';
-            return;
-        }
-
-        const count = data.length;
-        currentCounts['status-yld-count'] = count;
-
-        const countEl = document.getElementById('status-yld-count');
-        if (countEl) {
-            countEl.innerText = count;
-            countEl.style.color = count > 0 ? '#2563eb' : '#cbd5e1';
-        }
-    }
-
-    function updateUITimestamp(timestamp) {
+    function updateUITimestamp(ts) {
         const el = document.getElementById('status-update-time');
-        if (!el || !timestamp) return;
-        const d = new Date(timestamp);
-        const formatted = `${d.getMonth() + 1}/${d.getDate()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
-        el.innerText = `(${formatted} 기준)`;
+        if (!el || !ts) return;
+        const d = new Date(ts);
+        el.innerText = "(" + (d.getMonth() + 1) + "/" + d.getDate() + " " + String(d.getHours()).padStart(2, '0') + ":" + String(d.getMinutes()).padStart(2, '0') + " 기준)";
     }
 
     function updateUI(counts) {
         Object.entries(counts).forEach(([id, count]) => {
             const el = document.getElementById(id);
-            if (el) {
-                el.innerText = count;
-                el.style.color = getCountColor(count);
-            }
+            if (el) { el.innerText = count; el.style.color = getCountColor(count); }
         });
-        // 모달이 열려있다면 데이터 동기화
-        if (document.getElementById('lrs-modal-overlay')?.style.display === 'flex') {
-            syncModalData();
-        }
+        const active = GM_getValue(MONITOR_YLD_KEY, false);
+        const btn = document.getElementById('yld-stop-btn');
+        const wait = document.getElementById('yld-wait-text');
+        if (btn) btn.style.display = active ? 'block' : 'none';
+        if (wait) wait.style.display = active ? 'none' : 'block';
+        const modalOverlay = document.getElementById('lrs-modal-overlay');
+        if (modalOverlay && modalOverlay.style.display === 'flex') syncModalData();
     }
 
     function initModal() {
         if (document.getElementById('lrs-modal-overlay')) return;
-
         const overlay = document.createElement('div');
         overlay.id = 'lrs-modal-overlay';
-        overlay.style.cssText = `
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center;
-            z-index: 10000; backdrop-filter: blur(4px); transition: 0.3s;
-        `;
-
+        overlay.style.cssText = "position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 10000; backdrop-filter: blur(4px); transition: 0.3s;";
         const modal = document.createElement('div');
         modal.id = 'lrs-modal-content';
-        modal.style.cssText = `
-            background: #fff; padding: 30px; border-radius: 20px; width: 850px; max-width: 95%;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.2); transform: translateY(20px); transition: 0.3s;
-            position: relative; border: 4px solid #efefff;
-        `;
-
+        modal.style.cssText = "background: #fff; padding: 30px; border-radius: 20px; width: 850px; max-width: 95%; box-shadow: 0 20px 50px rgba(0,0,0,0.2); transform: translateY(20px); transition: 0.3s; border: 4px solid #efefff;";
         modal.innerHTML = `
-            <div id="lrs-modal-close" style="position: absolute; top: 20px; right: 20px; cursor: pointer; font-size: 24px; color: #94a3b8; z-index: 10001; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">✕</div>
-            <h2 style="margin: 0 0 25px 0; color: #333; font-size: 20px; display: flex; align-items: center; gap: 10px;">
-                📊 LRS 실시간 상세 현황
-                <span id="modal-update-time" style="font-size: 13px; color: #94a3b8; font-weight: normal;"></span>
-            </h2>
-            
-            <!-- (1) LIB 상세 -->
-            <div style="background: #efefff; padding: 25px; border-radius: 20px; border: 2px solid #4834d4; margin-bottom: 25px; box-shadow: 0 10px 30px rgba(72, 52, 212, 0.1);">
+            <div id="lrs-modal-close" style="position: absolute; top: 20px; right: 20px; cursor: pointer; font-size: 24px; color: #94a3b8;">✕</div>
+            <h2 style="margin: 0 0 25px 0; color: #333; font-size: 20px;">📊 LRS 실시간 상세 현황 <span id="modal-update-time" style="font-size: 13px; color: #94a3b8; font-weight: normal;"></span></h2>
+            <div style="background: #efefff; padding: 25px; border-radius: 20px; border: 2px solid #4834d4; margin-bottom: 25px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 3px solid #fff; padding-bottom: 12px;">
-                    <span style="font-size: 22px; font-weight: 950; color: #4834d4;">LIB 대기 전 수량 (PBL)</span>
-                    <span id="modal-lib-total" style="font-size: 48px; font-weight: 950; color: #4834d4;">--</span>
+                    <span style="font-size: 22px; font-weight: 950; color: #4834d4;">LIB 대기 전 수량 (PBL)</span><span id="modal-lib-total" style="font-size: 48px; font-weight: 950; color: #4834d4;">--</span>
                 </div>
                 <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px;">
-                    <div class="modal-sub-card"><span>Microbial</span><b id="modal-lib-mb">--</b></div>
-                    <div class="modal-sub-card"><span>MetaShotgun</span><b id="modal-lib-msg">--</b></div>
-                    <div class="modal-sub-card"><span>HiFi Lib</span><b id="modal-lib-hifi">--</b></div>
-                    <div class="modal-sub-card"><span>16s Full</span><b id="modal-lib-16s">--</b></div>
-                    <div class="modal-sub-card"><span>Amplicon</span><b id="modal-lib-amp">--</b></div>
-                    <div class="modal-sub-card"><span>Kinnex</span><b id="modal-lib-knx">--</b></div>
-                    <div class="modal-sub-card"><span>ONT (Prom)</span><b id="modal-lib-ont">--</b></div>
-                    <div class="modal-sub-card"><span>Etc</span><b id="modal-lib-etc">--</b></div>
+                    <div class="modal-sub-card"><span>Microbial</span><b id="modal-lib-mb">--</b></div><div class="modal-sub-card"><span>MetaShotgun</span><b id="modal-lib-msg">--</b></div><div class="modal-sub-card"><span>HiFi Lib</span><b id="modal-lib-hifi">--</b></div><div class="modal-sub-card"><span>16s Full</span><b id="modal-lib-16s">--</b></div>
+                    <div class="modal-sub-card"><span>Amplicon</span><b id="modal-lib-amp">--</b></div><div class="modal-sub-card"><span>Kinnex</span><b id="modal-lib-knx">--</b></div><div class="modal-sub-card"><span>ONT (Prom)</span><b id="modal-lib-ont">--</b></div><div class="modal-sub-card"><span>Etc</span><b id="modal-lib-etc">--</b></div>
                 </div>
             </div>
-
-            <!-- (2) 하단 서브 정보 -->
-            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;">
-                <div class="modal-card">
-                    <div class="modal-card-label">Prep (DNA/RNA)</div>
-                    <div style="display: flex; gap: 20px;">
-                        <div style="text-align: center;"><span style="font-size: 12px; color: #64748b;">D</span><div id="modal-prep-dna" style="font-size: 24px; font-weight: 900;">--</div></div>
-                        <div style="text-align: center;"><span style="font-size: 12px; color: #64748b;">R</span><div id="modal-prep-rna" style="font-size: 24px; font-weight: 900;">--</div></div>
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr) 0.8fr; gap: 20px;">
+                <div class="modal-card" style="flex-direction: row; justify-content: space-around; padding: 15px;">
+                    <div style="display: flex; flex-direction: column; align-items: center; border-right: 1px solid #e2e8f0; padding-right: 20px;">
+                        <div class="modal-card-label">Prep (DNA)</div>
+                        <div id="modal-prep-dna" style="font-size: 32px; font-weight: 900; color: #4834d4;">--</div>
+                    </div>
+                    <div style="display: flex; flex-direction: column; align-items: center; padding-left: 10px;">
+                        <div class="modal-card-label">Prep (RNA)</div>
+                        <div id="modal-prep-rna" style="font-size: 32px; font-weight: 900; color: #4834d4;">--</div>
                     </div>
                 </div>
-                <div class="modal-card">
-                    <div class="modal-card-label">QC (DNA/RNA)</div>
-                    <div style="display: flex; gap: 20px;">
-                        <div style="text-align: center;"><span style="font-size: 12px; color: #64748b;">D</span><div id="modal-qc-dna" style="font-size: 24px; font-weight: 900;">--</div></div>
-                        <div style="text-align: center;"><span style="font-size: 12px; color: #64748b;">R</span><div id="modal-qc-rna" style="font-size: 24px; font-weight: 900;">--</div></div>
+                <div class="modal-card" style="flex-direction: row; justify-content: space-around; padding: 15px;">
+                    <div style="display: flex; flex-direction: column; align-items: center; border-right: 1px solid #e2e8f0; padding-right: 20px;">
+                        <div class="modal-card-label">SQC (DNA)</div>
+                        <div id="modal-sqc-dna" style="font-size: 32px; font-weight: 900; color: #4834d4;">--</div>
+                    </div>
+                    <div style="display: flex; flex-direction: column; align-items: center; padding-left: 10px;">
+                        <div class="modal-card-label">SQC (RNA)</div>
+                        <div id="modal-sqc-rna" style="font-size: 32px; font-weight: 900; color: #4834d4;">--</div>
                     </div>
                 </div>
-                <div class="modal-card">
-                    <div class="modal-card-label">RUN 대기 (Revio)</div>
-                    <div id="modal-run-wait" style="font-size: 36px; font-weight: 900; color: #4834d4;">--</div>
-                </div>
+                <div class="modal-card"><div class="modal-card-label">RUN 대기 (Revio)</div><div id="modal-run-wait" style="font-size: 36px; font-weight: 950; color: #4834d4; margin-top: 10px;">--</div></div>
             </div>
-
-            <div style="margin-top: 25px; padding: 15px; background: #f0f7ff; border-radius: 12px; display: flex; justify-content: space-around; align-items: center; border: 1px solid #bfdbfe;">
-                <div style="text-align: center;"><span style="font-size: 12px; color: #2563eb; font-weight: 700;">Demulti 진행 중</span><div id="modal-dem-run" style="font-size: 22px; font-weight: 900; color: #2563eb;">--</div></div>
-                <div style="text-align: center;"><span style="font-size: 12px; color: #64748b; font-weight: 700;">Demulti 대기</span><div id="modal-dem-hold" style="font-size: 22px; font-weight: 900;">--</div></div>
-                <div style="text-align: center;"><span style="font-size: 12px; color: #64748b; font-weight: 700;">완료 (7d)</span><div id="modal-dem-cfmd" style="font-size: 22px; font-weight: 900;">--</div></div>
+            <div style="margin-top: 25px; padding: 15px; background: #f0f7ff; border-radius: 12px; display: flex; justify-content: center; align-items: center; border: 1px solid #bfdbfe;">
+                <div style="text-align: center;"><span style="font-size: 14px; color: #2563eb; font-weight: 800;">🛰️ YLD 실시간 모니터링 수량</span><div id="modal-yld-count" style="font-size: 32px; font-weight: 950; color: #2563eb; margin-top: 5px;">--</div></div>
             </div>
-
-            <div style="margin-top: 25px; text-align: center;">
-                <button id="modal-refresh-btn" style="padding: 12px 60px; background: #efefff; color: #4834d4; border: 2px solid #4834d4; border-radius: 12px; font-weight: 800; font-size: 16px; cursor: pointer; transition: 0.2s; box-shadow: 0 5px 15px rgba(72, 52, 212, 0.1);">지금 즉시 새로고침</button>
+            <div style="margin-top: 20px; display: flex; justify-content: center;">
+                <button id="modal-refresh-btn" style="padding: 12px 30px; background: #4834d4; color: #fff; border: none; border-radius: 12px; font-size: 15px; font-weight: 800; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 15px rgba(72, 52, 212, 0.3);">지금 즉시 새로고침</button>
             </div>
         `;
-
-        overlay.appendChild(modal);
-        document.body.appendChild(overlay);
-
-        window.openLrsModal = () => {
-            overlay.style.display = 'flex';
-            setTimeout(() => { modal.style.transform = 'translateY(0)'; modal.style.opacity = '1'; }, 10);
-            syncModalData();
-        };
-
-        window.closeLrsModal = () => {
-            modal.style.transform = 'translateY(20px)';
-            modal.style.opacity = '0';
-            setTimeout(() => { overlay.style.display = 'none'; }, 200);
-        };
-
+        overlay.appendChild(modal); document.body.appendChild(overlay);
+        window.openLrsModal = () => { overlay.style.display = 'flex'; setTimeout(() => { modal.style.transform = 'translateY(0)'; modal.style.opacity = '1'; }, 10); syncModalData(); };
+        window.closeLrsModal = () => { modal.style.transform = 'translateY(20px)'; modal.style.opacity = '0'; setTimeout(() => { overlay.style.display = 'none'; }, 200); };
         document.getElementById('lrs-modal-close').onclick = window.closeLrsModal;
+        document.getElementById('modal-refresh-btn').onclick = () => { updateStatusDashboard('all'); };
         overlay.onclick = (e) => { if (e.target === overlay) window.closeLrsModal(); };
-        document.getElementById('modal-refresh-btn').onclick = () => updateStatusDashboard('all');
     }
 
     function syncModalData() {
-        const ids = [
-            'status-prep-dna', 'status-prep-rna', 'status-qc-dna', 'status-qc-rna',
-            'status-run-wait', 'status-dem-run', 'status-dem-hold', 'status-dem-cfmd',
-            'status-lib-total', 'status-lib-mb', 'status-lib-msg', 'status-lib-hifi',
-            'status-lib-16s', 'status-lib-amp', 'status-lib-knx', 'status-lib-ont', 'status-lib-etc'
-        ];
+        const ids = ['status-prep-dna', 'status-prep-rna', 'status-sqc-dna', 'status-sqc-rna', 'status-run-wait', 'status-yld-count', 'status-lib-total', 'status-lib-mb', 'status-lib-msg', 'status-lib-hifi', 'status-lib-16s', 'status-lib-amp', 'status-lib-knx', 'status-lib-ont', 'status-lib-etc'];
         ids.forEach(id => {
-            const source = document.getElementById(id);
-            const target = document.getElementById(id.replace('status-', 'modal-'));
-            if (source && target) {
-                target.innerText = source.innerText;
-                target.style.color = source.style.color;
+            const src = document.getElementById(id);
+            const tgt = document.getElementById(id.replace('status-', 'modal-'));
+            if (src && tgt) {
+                tgt.innerText = src.innerText;
+                tgt.style.color = (id === 'status-yld-count') ? '#2563eb' : src.style.color;
             }
         });
-        const timeSource = document.getElementById('status-update-time');
-        const timeTarget = document.getElementById('modal-update-time');
-        if (timeSource && timeTarget) timeTarget.innerText = timeSource.innerText;
+        const timeSrc = document.getElementById('status-update-time');
+        const timeTgt = document.getElementById('modal-update-time');
+        if (timeSrc && timeTgt) timeTgt.innerText = timeSrc.innerText;
     }
 
     const styleTag = document.createElement('style');
-    styleTag.innerHTML = `
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
-        .stat-cell:hover { border-color: #4834d4 !important; background: #efefff !important; box-shadow: 0 4px 12px rgba(72, 52, 212, 0.1); }
-        .modal-card { background: #f8fafc; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .modal-card-label { font-size: 13px; font-weight: 700; color: #64748b; margin-bottom: 8px; }
-        .modal-sub-card { background: #fff; padding: 12px; border-radius: 10px; display: flex; flex-direction: column; align-items: center; gap: 5px; }
-        .modal-sub-card span { font-size: 11px; font-weight: 800; color: #64748b; }
-        .modal-sub-card b { font-size: 22px; font-weight: 950; color: #4834d4; }
-    `;
+    styleTag.innerHTML = ".stat-cell:hover { border-color: #4834d4 !important; background: #efefff !important; } .modal-card { background: #f8fafc; padding: 20px; border-radius: 15px; border: 1px solid #e2e8f0; display: flex; flex-direction: column; align-items: center; } .modal-card-label { font-size: 13px; font-weight: 800; color: #64748b; margin-bottom: 5px; } .sub-label { font-size: 10px; font-weight: 800; color: #94a3b8; margin-bottom: 2px; } .modal-sub-card { background: #fff; padding: 10px; border-radius: 10px; display: flex; flex-direction: column; align-items: center; } .modal-sub-card span { font-size: 9px; font-weight: 800; color: #64748b; } .modal-sub-card b { font-size: 18px; font-weight: 950; color: #4834d4; } #modal-refresh-btn:hover { background: #3c2bb7 !important; transform: translateY(-2px); } #modal-refresh-btn:active { transform: translateY(0); }";
     document.head.appendChild(styleTag);
 
-    if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); }
-    else { setTimeout(init, 200); }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+    else setTimeout(init, 200);
 })();

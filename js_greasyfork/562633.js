@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Youtube 2 columns fix
 // @namespace    http://tampermonkey.net/
-// @version      1.03
+// @version      1.05
 // @description  Youtube watch page with 1 column videos
 // @author       You
 // @match        *://www.youtube.com/*
@@ -24,7 +24,7 @@ grid-template-columns: unset !important;
 grid-auto-flow: unset !important;
 }
 .style-scope .ytd-watch-flexy #secondary {
-width: 385px !important;
+width: 400px !important;
 max-width: 400px !important;
 padding-right: 1ch !important;
 }
@@ -60,9 +60,8 @@ margin-top: -4px !important;
 line-height: normal !important;
 max-width: 260px !important;
 }
-ytd-watch-flexy #secondary-inner .ytd-compact-video-renderer {
+ytd-watch-flexy #secondary-inner ytd-compact-video-renderer {
 display: none !important;
-visibility: hidden !important;
 }
 ytd-watch-flexy #secondary-inner .yt-content-metadata-view-model__delimiter {
 visibility: hidden !important;

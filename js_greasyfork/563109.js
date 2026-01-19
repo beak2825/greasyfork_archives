@@ -1,47 +1,86 @@
 // ==UserScript==
-// @name         Torn Ultra-Wide Bazaar (Version 1.5)
+// @name         Torn Ultra-Wide Market Layout
 // @namespace    http://torn.com/
-// @version      1.5
-// @description  The stable multi-column version that works best for ultra-wide monitors.
+// @version      1.2
+// @description  Expands the layout to the edges of the screen for more market space
 // @author       srsbsns / Gemini
-// @match        *://www.torn.com/bazaar.php*
+// @match        *://www.torn.com/page.php?sid=ItemMarket*
+// @match        *://www.torn.com/imarket.php*
 // @grant        GM_addStyle
 // @license      MIT
-// @downloadURL https://update.greasyfork.org/scripts/563109/Torn%20Ultra-Wide%20Bazaar%20%28Version%2015%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/563109/Torn%20Ultra-Wide%20Bazaar%20%28Version%2015%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/563109/Torn%20Ultra-Wide%20Market%20Layout.user.js
+// @updateURL https://update.greasyfork.org/scripts/563109/Torn%20Ultra-Wide%20Market%20Layout.meta.js
 // ==/UserScript==
 (function() {
     'use strict';
-    GM_addStyle(`
-        /* Force the main container to use the full screen width */
-        div[data-testid="bazaar-items"] {
-            width: 100% !important;
-            max-width: none !important;
-            display: flex !important;
-            flex-wrap: wrap !important;
-            height: auto !important;
-            gap: 10px !important;
-            justify-content: flex-start !important;
-        }
-        /* Neutralize the game's forced row containers */
-        div[class*="row___LkdFI"] {
-            display: contents !important;
-        }
-        /* Set the stable item box size that preserves the grid */
-        div[class*="item___GYCYJ"],
-        div[class*="itemDescription___j4EfE"] {
-            flex: 0 0 205px !important;    /* ← CHANGE THIS NUMBER */
-            width: 205px !important;       /* ← AND THIS NUMBER */
-            height: 80px !important;
-            margin: 0 !important;
-        }
-        /* Expand the overall page layout */
-        .content-wrapper, #mainContainer, div[class*="core-layout"] {
+
+    const styles = `
+        /* 1. Expand the main container wrapper */
+        .content-wrapper,
+        #mainContainer {
             max-width: 100% !important;
             width: 100% !important;
+            padding: 0 10px !important;
         }
+        /* 2. Adjust the flexbox/grid layout of the page */
+        .content-wrapper > .container {
+            display: flex !important;
+            max-width: 100% !important;
+            width: 100% !important;
+            justify-content: space-between !important;
+        }
+        /* 3. Push sidebars to the edges */
+        /* Left Sidebar */
         #sidebar {
+            margin-left: 0 !important;
             flex-shrink: 0 !important;
         }
-    `);
+        /* Right Sidebar (the one with Equipment/Supplies) */
+        .content-wrapper > .container > .sidebar-right,
+        aside[class*="sidebar-right"],
+        div[class*="rightSidebar"] {
+            margin-right: 0 !important;
+            flex-shrink: 0 !important;
+        }
+        /* 4. Force the middle content (the market) to take all remaining space */
+        .content-wrapper > .container > .content,
+        .main-market-wrapper {
+            flex-grow: 1 !important;
+            margin: 0 15px !important;
+            max-width: none !important;
+            width: auto !important;
+        }
+        /* Compatibility for the Item Market specifically */
+        .item-market-main-wrap {
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+    `;
+
+    let styleElement = null;
+
+    function shouldApplyStyles() {
+        const hash = window.location.hash;
+        // Disable on addListing and viewListing pages
+        return !hash.includes('/addListing') && !hash.includes('/viewListing');
+    }
+
+    function updateStyles() {
+        if (shouldApplyStyles()) {
+            if (!styleElement) {
+                styleElement = GM_addStyle(styles);
+            }
+        } else {
+            if (styleElement) {
+                styleElement.remove();
+                styleElement = null;
+            }
+        }
+    }
+
+    // Initial check
+    updateStyles();
+
+    // Listen for hash changes
+    window.addEventListener('hashchange', updateStyles);
 })();

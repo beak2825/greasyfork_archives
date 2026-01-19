@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Warlord
 // @namespace    Para_Thenics.torn.com
-// @version      0.00.001
+// @version      0.00.003
 // @description  Adds attack buttons where needed
 // @author       Para_Thenics
 // @match        https://www.torn.com/*
@@ -14,74 +14,44 @@
 (function() {
     'use strict';
 
-    const STORAGE_KEY = 'warlordApiKey'; // ✅ Unique key for Warlord script
+    const STORAGE_KEY = 'warlordApiKey';
+    let timerInitialized = false; // ✅ Prevent multiple API calls
 
     // ✅ Feature 1: Make status clickable on faction page
     function makeStatusClickable() {
         if (!location.href.includes('factions.php')) return;
-
         const statusCells = document.querySelectorAll('.table-cell.status');
         statusCells.forEach(cell => {
             if (cell.dataset.attackReady === 'true') return;
-
             const playerLink = cell.closest('.table-row')?.querySelector('a[href*="profiles.php?XID="]');
             if (!playerLink) return;
-
             const href = playerLink.getAttribute('href');
             const match = href.match(/XID=(\d+)/);
             if (!match) return;
-
             const userID = match[1];
-
             cell.style.cursor = 'pointer';
             cell.style.color = '#d9534f';
             cell.title = 'Click to attack this player';
-
             cell.addEventListener('click', () => {
                 window.location.href = `https://www.torn.com/loader.php?sid=attack&user2ID=${userID}`;
             });
-
             cell.dataset.attackReady = 'true';
         });
     }
 
-    // ✅ Feature 2: Add elegant icon-only attack button on profile page + preload attack page
+    // ✅ Feature 2: Add attack button on profile page
     function addExtraAttackButton() {
         if (!location.href.includes('profiles.php')) return;
-
         const urlParams = new URLSearchParams(window.location.search);
         const userID = urlParams.get('XID');
         if (!userID) return;
-
         const buttonsList = document.querySelector('.buttons-list');
-        if (!buttonsList) return;
-
-        if (document.querySelector('.custom-attack-btn')) return;
-
+        if (!buttonsList || document.querySelector('.custom-attack-btn')) return;
         const attackURL = `https://www.torn.com/loader.php?sid=attack&user2ID=${userID}`;
-
-        // ✅ Preload attack page
         const preloadLink = document.createElement('link');
         preloadLink.rel = 'prefetch';
         preloadLink.href = attackURL;
         document.head.appendChild(preloadLink);
-
-        // ✅ Grab hospital timer if present
-        const hospitalTimer = document.querySelector('.hospital-time, .statusHospital, .statusTravel');
-        if (hospitalTimer) {
-            const timeText = hospitalTimer.textContent.trim(); // e.g., "02:15:30"
-            const parts = timeText.split(':').map(Number);
-            if (parts.length === 3) {
-                const totalSeconds = parts[0] * 3600 + parts[1] * 60 + parts[2];
-                localStorage.setItem('hospitalTimerSeconds', totalSeconds);
-                localStorage.setItem('hospitalTimerTimestamp', Date.now());
-            }
-        } else {
-            localStorage.removeItem('hospitalTimerSeconds');
-            localStorage.removeItem('hospitalTimerTimestamp');
-        }
-
-        // Create custom button
         const customBtn = document.createElement('button');
         customBtn.classList.add('custom-attack-btn');
         customBtn.innerHTML = '⚔';
@@ -93,81 +63,93 @@
         customBtn.style.borderRadius = '4px';
         customBtn.style.cursor = 'pointer';
         customBtn.style.fontSize = '18px';
-        customBtn.style.fontWeight = 'bold';
         customBtn.style.marginLeft = '8px';
         customBtn.title = 'Attack (Always)';
-
-        customBtn.addEventListener('mouseenter', () => {
-            customBtn.style.backgroundColor = '#c9302c';
-        });
-        customBtn.addEventListener('mouseleave', () => {
-            customBtn.style.backgroundColor = '#d9534f';
-        });
-
-        customBtn.addEventListener('click', () => {
-            window.location.href = attackURL;
-        });
-
+        customBtn.addEventListener('mouseenter', () => customBtn.style.backgroundColor = '#c9302c');
+        customBtn.addEventListener('mouseleave', () => customBtn.style.backgroundColor = '#d9534f');
+        customBtn.addEventListener('click', () => window.location.href = attackURL);
         buttonsList.appendChild(customBtn);
     }
 
-    // ✅ Feature 3: Show live hospital timer on attack page
-    function showHospitalTimerOnAttackPage() {
-        if (!location.href.includes('loader.php?sid=attack')) return;
+    // ✅ Feature 3: Fetch target player's status via API and show timer inside .titleContainer___QrlWP
+    async function fetchTargetStatusTimer() {
+        if (!location.href.includes('loader.php?sid=attack') || timerInitialized) return;
+        timerInitialized = true;
 
-        const storedSeconds = parseInt(localStorage.getItem('hospitalTimerSeconds'), 10);
-        const storedTimestamp = parseInt(localStorage.getItem('hospitalTimerTimestamp'), 10);
-        if (!storedSeconds || !storedTimestamp) return;
+        const apiKey = localStorage.getItem(STORAGE_KEY);
+        if (!apiKey) return;
 
-        const elapsed = Math.floor((Date.now() - storedTimestamp) / 1000);
-        let remaining = storedSeconds - elapsed;
-        if (remaining <= 0) return;
+        const urlParams = new URLSearchParams(window.location.search);
+        const targetID = urlParams.get('user2ID');
+        if (!targetID) return;
 
-        const timerDiv = document.createElement('div');
-        timerDiv.style.position = 'fixed';
-        timerDiv.style.top = '10px';
-        timerDiv.style.right = '10px';
-        timerDiv.style.backgroundColor = '#d9534f';
-        timerDiv.style.color = '#fff';
-        timerDiv.style.padding = '6px 10px';
-        timerDiv.style.borderRadius = '4px';
-        timerDiv.style.fontWeight = 'bold';
-        timerDiv.style.zIndex = '9999';
-        timerDiv.style.boxShadow = '0 2px 6px rgba(0,0,0,0.3)';
-        timerDiv.style.fontSize = '14px';
-        document.body.appendChild(timerDiv);
+        try {
+            const response = await fetch(`https://api.torn.com/user/${targetID}?selections=basic&key=${apiKey}`);
+            const data = await response.json();
 
-        function formatTime(seconds) {
-            const h = String(Math.floor(seconds / 3600)).padStart(2, '0');
-            const m = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
-            const s = String(seconds % 60).padStart(2, '0');
-            return `${h}:${m}:${s}`;
-        }
-
-        function updateTimer() {
-            if (remaining <= 0) {
-                timerDiv.textContent = 'Ready!';
-                clearInterval(interval);
+            if (data.error) {
+                console.error('API Error:', data.error.error);
                 return;
             }
-            timerDiv.textContent = `Hospital: ${formatTime(remaining)}`;
-            remaining--;
-        }
 
-        updateTimer();
-        const interval = setInterval(updateTimer, 1000);
+            const state = data.status.state;
+            const until = data.status.until * 1000;
+            if (!state || !until || state === 'Okay') return;
+
+            let remaining = Math.floor((until - Date.now()) / 1000);
+            if (remaining <= 0) return;
+
+            // ✅ Find container instead of fixed position
+            const container = document.querySelector('.titleContainer___QrlWP');
+            if (!container) return;
+
+
+// ✅ Create timer UI inside container (Dark Mode Friendly)
+const timerDiv = document.createElement('div');
+timerDiv.style.backgroundColor = '#1e1e1e'; // Dark background
+timerDiv.style.color = '#00ff99'; // Bright green text for visibility
+timerDiv.style.padding = '4px 10px';
+timerDiv.style.borderRadius = '6px';
+timerDiv.style.fontWeight = 'bold';
+timerDiv.style.fontSize = '14px';
+timerDiv.style.marginLeft = '12px';
+timerDiv.style.display = 'inline-block';
+timerDiv.style.boxShadow = '0 0 8px rgba(0, 255, 153, 0.5)'; // Subtle glow
+timerDiv.style.border = '1px solid #00ff99'; // Neon border
+container.appendChild(timerDiv);
+
+
+            function formatTime(sec) {
+                const h = String(Math.floor(sec / 3600)).padStart(2, '0');
+                const m = String(Math.floor((sec % 3600) / 60)).padStart(2, '0');
+                const s = String(sec % 60).padStart(2, '0');
+                return `${h}:${m}:${s}`;
+            }
+
+            function updateTimer() {
+                if (remaining <= 0) {
+                    timerDiv.textContent = 'Ready!';
+                    clearInterval(interval);
+                    return;
+                }
+                timerDiv.textContent = `${state}: ${formatTime(remaining)}`;
+                remaining--;
+            }
+
+            updateTimer();
+            const interval = setInterval(updateTimer, 1000);
+        } catch (err) {
+            console.error('Failed to fetch Torn API:', err);
+        }
     }
 
-    // ✅ Feature 4: Warlord API Key Management inside .content-title.m-bottom10
+    // ✅ Feature 4: Warlord API Key button
     function addApiKeyButton() {
         if (!location.href.includes('index.php')) return;
-
         if (document.querySelector('.api-key-btn')) return;
-
         const apiKey = localStorage.getItem(STORAGE_KEY) || '';
         const container = document.querySelector('.content-title.m-bottom10');
         if (!container) return;
-
         const btn = document.createElement('button');
         btn.classList.add('api-key-btn');
         btn.style.backgroundColor = '#337ab7';
@@ -177,15 +159,11 @@
         btn.style.borderRadius = '4px';
         btn.style.cursor = 'pointer';
         btn.style.fontSize = '12px';
-        btn.style.fontWeight = 'bold';
         btn.style.marginLeft = '10px';
-        btn.title = 'Manage Warlord API Key';
-
         btn.textContent = apiKey ? 'Warlord API Key ✅' : 'Set Warlord API Key';
-
         btn.addEventListener('click', () => {
             const newKey = prompt('Enter your Warlord API Key (leave blank to remove):', apiKey);
-            if (newKey === null) return; // Cancelled
+            if (newKey === null) return;
             if (newKey.trim() === '') {
                 localStorage.removeItem(STORAGE_KEY);
                 alert('Warlord API Key removed.');
@@ -196,7 +174,6 @@
                 btn.textContent = 'Warlord API Key ✅';
             }
         });
-
         container.appendChild(btn);
     }
 
@@ -204,7 +181,7 @@
     const observer = new MutationObserver(() => {
         makeStatusClickable();
         addExtraAttackButton();
-        showHospitalTimerOnAttackPage();
+        fetchTargetStatusTimer();
         addApiKeyButton();
     });
     observer.observe(document.body, { childList: true, subtree: true });
@@ -212,7 +189,6 @@
     // Initial run
     makeStatusClickable();
     addExtraAttackButton();
-    showHospitalTimerOnAttackPage();
+    fetchTargetStatusTimer();
     addApiKeyButton();
 })();
-``

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Behandeling FR
 // @namespace    http://tampermonkey.net/
-// @version      1.1.9
+// @version      1.1.13
 // @description  Behandeling inladen voor FR
 // @match        *://*/*
 // @grant        GM_xmlhttpRequest
@@ -20,11 +20,13 @@
 
         // Pak de derde frame (index 2) uit het frameset
         const h3 = document.querySelector('.indication-history-summary__description--patient-name');
-        const patientName = h3.textContent;
+        if (h3){
+            const patientName = h3.textContent;
 
-        if (patientName) {
-            console.log(patientName)
-            return patientName.split(",")[0]
+            if (patientName) {
+                console.log(patientName)
+                return patientName.split(",")[0]
+            }
         }
 
         return null
@@ -34,12 +36,14 @@
 
         //eventueel goeie frame selecteren
 
-        const datumEl = document.querySelector('.breadcrumbs__link');
+        const datumEl = document.querySelectorAll('.breadcrumbs__link')[1];
+        console.log(datumEl)
         if (datumEl){
             console.log("element gevonden");
             
   
             const delen = datumEl.textContent.split(/[-/]/);
+            console.log(delen)
             const [dag, maand, jaar] = delen;
             const nieuweDatum = `${jaar}-${maand}-${dag}`;
             console.log(nieuweDatum)
@@ -87,7 +91,7 @@
                     const complicatie = data.response.behandeling_complicatie;
 
 
-                    const subjectiefeEl = document.querySelector('textarea[name="subjective"]');
+                    const subjectiefeEl = document.getElementById('frm_input_subjective');
 
                     if (subjectiefeEl && subjectiefeEl.innerHTML == '' ){
 
@@ -95,22 +99,22 @@
                             subjectiefeEl.innerHTML = subjectief;
                         }
 
-                        const journaaltekstEl = document.querySelector('textarea[name="journal"]');
+                        const journaaltekstEl = document.getElementById('frm_input_journal');
                         if (journaaltekstEl && journaaltekst) {
                             journaaltekstEl.innerHTML = journaaltekst;
                         }
 
-                        const objectiefeEl = document.querySelector('textarea[name="objective"]');
+                        const objectiefeEl = document.getElementById('frm_input_objective');
                         if (objectiefeEl && objectief) {
                             objectiefeEl.innerHTML = objectief;
                         }
 
-                        const evaluatieEl = document.querySelector('textarea[name="evaluation"]');
+                        const evaluatieEl = document.getElementById('frm_input_evaluation');
                         if (evaluatieEl && evaluatie) {
                             evaluatieEl.innerHTML = evaluatie;
                         }
 
-                        const planEl = document.querySelector('textarea[name="action_plan"]');
+                        const planEl = document.getElementById('frm_input_action_plan');
                         if (planEl && plan) {
                             planEl.innerHTML = plan;
                         }

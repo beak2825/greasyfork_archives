@@ -1,11 +1,14 @@
 // ==UserScript==
 // @name         牛牛战斗Buff显示
 // @namespace    https://www.milkywayidle.com/
-// @version      0.2.1
+// @version      0.2.7
 // @description  Display battle buff and debuff
 // @author       400BadRequest
+// @match        https://milkywayidle.com/*
 // @match        https://www.milkywayidle.com/*
 // @match        https://test.milkywayidle.com/*
+// @match        https://milkywayidlecn.com/*
+// @match        https://www.milkywayidlecn.com/*
 // @run-at       document-start
 // @grant        none
 // @icon         https://www.milkywayidle.com/favicon.svg
@@ -17,8 +20,13 @@
 (function () {
   'use strict';
 
-  const TARGET_PREFIX = 'wss://api.milkywayidle.com/ws?';
+  const TARGET_PREFIXES = [
+    'wss://api.milkywayidle.com/ws?',
+    'wss://api.milkywayidlecn.com/ws?',
+  ];
   const TAG = '[MWI-WSS]';
+  const FALLBACK_SPRITE_URL = '/static/media/abilities_sprite.fdd1b4de.svg';
+  let abilitySpriteBase = null;
   const BUFFS = new Map([
     ['/abilities/mana_spring', 10],
     ['/abilities/taunt', 65],
@@ -29,7 +37,7 @@
     ['/abilities/berserk', 20],
     ['/abilities/elemental_affinity', 20],
     ['/abilities/frenzy', 20],
-    ['/abilities/pike_shell', 30],
+    ['/abilities/spike_shell', 30],
     ['/abilities/retribution', 30],
     ['/abilities/vampirism', 20],
     ['/abilities/insanity', 12],
@@ -41,7 +49,7 @@
     ['/abilities/critical_aura', 120],
   ]);
   const DEBUFFS = new Map([
-    ['/abilities/punctur', 10],
+    ['/abilities/puncture', 10],
     ['/abilities/maim', 12],
     ['/abilities/crippling_slash', 12],
     ['/abilities/fracturing_impact', 12],
@@ -50,6 +58,12 @@
     ['/abilities/frost_surge', 9],
     ['/abilities/toxic_pollen', 10],
     ['/abilities/smoke_burst', 8],
+  ]);
+  const SINGLE_TARGET_DEBUFFS = new Set([
+    '/abilities/puncture',
+    '/abilities/maim',
+    '/abilities/pestilent_shot',
+    '/abilities/smoke_burst',
   ]);
   const TEAM_BUFFS = new Set([
     '/abilities/mana_spring',
@@ -68,6 +82,7 @@
     players: new Map(),
     monsters: new Map(),
   };
+  const PENDING_BUFFS = [];
   let cleanupTimer = null;
 
   function safeParseJson(data) {
@@ -150,6 +165,7 @@
     BATTLE_STATE.monsters.clear();
     LAST_EFFECT_TARGETS.players.clear();
     LAST_EFFECT_TARGETS.monsters.clear();
+    PENDING_BUFFS.length = 0;
   }
 
   function ensureBuffStyles() {
@@ -158,10 +174,11 @@
     style.id = 'mwi-buff-style';
     style.textContent = `
 .mwi-buffbar{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px;align-items:center;justify-content:center}
-.mwi-chip{font:11px/1.2 "Trebuchet MS", Verdana, Arial, sans-serif;padding:2px 6px;border-radius:10px;white-space:nowrap;display:inline-flex;align-items:center;gap:4px}
-.mwi-icon-wrap{position:relative;width:14px;height:14px;display:inline-block}
-.mwi-icon{width:14px;height:14px;display:block}
-.mwi-icon-cover{position:absolute;inset:0;border-radius:50%;pointer-events:none}
+.mwi-chip{font:11px/1.2 "Trebuchet MS", Verdana, Arial, sans-serif;padding:2px 6px;border-radius:10px;white-space:nowrap;display:inline-flex;align-items:center;gap:4px;position:relative}
+.mwi-icon-wrap{position:relative;width:15px;height:15px;display:inline-block}
+.mwi-icon{width:15px;height:15px;display:block}
+.mwi-progress-ring{position:absolute;inset:-3px;border-radius:14px;pointer-events:none;mask:linear-gradient(#000 0 0);-webkit-mask:linear-gradient(#000 0 0)}
+.mwi-progress-ring::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:3px;background:conic-gradient(var(--mwi-ring-color) 0deg var(--mwi-ring-deg), transparent var(--mwi-ring-deg) 360deg);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
 .mwi-buff{background:#e7f4e4;color:#1e4d1a;border:1px solid #7fbf7a}
 .mwi-debuff{background:#fbe3e3;color:#6b1a1a;border:1px solid #d17b7b}
 `;
@@ -207,6 +224,27 @@
     return parts[parts.length - 1] || hrid;
   }
 
+  function getAbilitySpriteBase() {
+    if (abilitySpriteBase) return abilitySpriteBase;
+    const selectors = [
+      'use[href*="abilities_sprite"]',
+      'use[xlink\\:href*="abilities_sprite"]',
+      'img[src*="abilities_sprite"]',
+      'link[href*="abilities_sprite"]',
+    ];
+    for (const sel of selectors) {
+      const el = document.querySelector(sel);
+      if (!el) continue;
+      const href = el.getAttribute('href') || el.getAttribute('xlink:href') || el.getAttribute('src');
+      if (typeof href === 'string' && href.includes('abilities_sprite')) {
+        abilitySpriteBase = href.split('#')[0];
+        return abilitySpriteBase;
+      }
+    }
+    abilitySpriteBase = FALLBACK_SPRITE_URL;
+    return abilitySpriteBase;
+  }
+
   function getActionKey(state) {
     if (!state || typeof state !== 'object') return null;
     if (typeof state.abilityHrid === 'string' && state.abilityHrid.length > 0) return state.abilityHrid;
@@ -246,6 +284,12 @@
 
     const monsterHits = monsterResult.hpChanges.filter((h) => h.delta < 0).map((h) => Number(h.key));
     for (const change of playerResult.actionChanges) {
+      if (BUFFS.has(change.prevAction)) {
+        const casterIndex = Number(change.key);
+        if (Number.isInteger(casterIndex)) {
+          PENDING_BUFFS.push({ mapName: 'pMap', casterIndex, abilityHrid: change.prevAction });
+        }
+      }
       if (!DEBUFFS.has(change.prevAction)) continue;
       if (monsterHits.length === 0) continue;
       const casterIndex = Number(change.key);
@@ -255,6 +299,12 @@
 
     const playerHits = playerResult.hpChanges.filter((h) => h.delta < 0).map((h) => Number(h.key));
     for (const change of monsterResult.actionChanges) {
+      if (BUFFS.has(change.prevAction)) {
+        const casterIndex = Number(change.key);
+        if (Number.isInteger(casterIndex)) {
+          PENDING_BUFFS.push({ mapName: 'mMap', casterIndex, abilityHrid: change.prevAction });
+        }
+      }
       if (!DEBUFFS.has(change.prevAction)) continue;
       if (playerHits.length === 0) continue;
       const casterIndex = Number(change.key);
@@ -315,18 +365,21 @@
       icon.setAttribute('width', '100%');
       icon.setAttribute('height', '100%');
       const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
-      use.setAttribute('href', `/static/media/abilities_sprite.fdd1b4de.svg#${abilityId(effect.abilityHrid)}`);
+      const spriteBase = getAbilitySpriteBase();
+      use.setAttribute('href', `${spriteBase}#${abilityId(effect.abilityHrid)}`);
+      use.setAttribute('xlink:href', `${spriteBase}#${abilityId(effect.abilityHrid)}`);
       icon.appendChild(use);
-      const cover = document.createElement('span');
-      cover.className = 'mwi-icon-cover';
       const total = Math.max(1, effect.durationSec);
       const elapsed = Math.max(0, Math.min(total, (now - effect.startedAt) / 1000));
       const progress = Math.min(1, Math.max(0, elapsed / total));
       const degrees = progress * 360;
-      cover.style.background = `conic-gradient(rgba(0,0,0,0.45) 0deg ${degrees}deg, rgba(0,0,0,0) ${degrees}deg 360deg)`;
       iconWrap.appendChild(icon);
-      iconWrap.appendChild(cover);
       chip.appendChild(iconWrap);
+      const ring = document.createElement('span');
+      ring.className = 'mwi-progress-ring';
+      ring.style.setProperty('--mwi-ring-deg', `${degrees}deg`);
+      ring.style.setProperty('--mwi-ring-color', effect.kind === 'buff' ? 'rgba(60,140,60,0.7)' : 'rgba(180,60,60,0.7)');
+      chip.appendChild(ring);
       bar.appendChild(chip);
     }
   }
@@ -370,6 +423,23 @@
     ensureBuffStyles();
     ensureCleanupTimer();
     updateBattleState(payload);
+    if (PENDING_BUFFS.length > 0) {
+      const pending = PENDING_BUFFS.splice(0, PENDING_BUFFS.length);
+      for (const item of pending) {
+        if (!BUFFS.has(item.abilityHrid)) continue;
+        const duration = BUFFS.get(item.abilityHrid);
+        const isTeamBuff = TEAM_BUFFS.has(item.abilityHrid);
+        const unitList = item.mapName === 'pMap' ? units.players : units.monsters;
+        if (isTeamBuff) {
+          for (const unitEl of unitList) {
+            if (unitEl) updateUnitEffect(unitEl, 'buff', item.abilityHrid, duration);
+          }
+        } else {
+          const unitEl = unitList[item.casterIndex];
+          if (unitEl) updateUnitEffect(unitEl, 'buff', item.abilityHrid, duration);
+        }
+      }
+    }
 
     const logFromMap = (map, mapName, roleResolver) => {
       if (!map || typeof map !== 'object') return;
@@ -402,11 +472,14 @@
         } else {
           const applyList = isDebuff ? targetList : unitList;
           if (isDebuff) {
-            const targets =
-              inferTargetsFromLastEffect(mapName, keyIndex) ||
-              inferTargetIndexes(entity, applyList.length) ||
-              inferTargetsFromOppositeMap(mapName, pMap, mMap, applyList.length) ||
-              applyList.map((_, i) => i);
+            const targets = SINGLE_TARGET_DEBUFFS.has(abilityHrid) && targetSide === 'monsters'
+              ? (applyList.length > 0 ? [0] : [])
+              : (
+                inferTargetsFromLastEffect(mapName, keyIndex) ||
+                inferTargetIndexes(entity, applyList.length) ||
+                inferTargetsFromOppositeMap(mapName, pMap, mMap, applyList.length) ||
+                applyList.map((_, i) => i)
+              );
             const targetInfo = targets.length === applyList.length ? ' target=all' : ` target=${targetSide}[${targets.join(',')}]`;
             for (const t of targets) {
               const unitEl = applyList[t];
@@ -433,7 +506,7 @@
   window.WebSocket = function WebSocketProxy(url, protocols) {
     const ws = protocols ? new NativeWebSocket(url, protocols) : new NativeWebSocket(url);
     const wsUrl = String(url || '');
-    const isTarget = wsUrl.startsWith(TARGET_PREFIX);
+    const isTarget = TARGET_PREFIXES.some((prefix) => wsUrl.startsWith(prefix));
 
     ws.addEventListener('message', (event) => {
       if (!isTarget) return;

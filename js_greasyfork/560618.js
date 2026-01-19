@@ -69,27 +69,28 @@
 // @description:uk    Користувацький скрипт, що покращує YouTube за допомогою багатьох корисних функцій, зокрема: оптимізованого макета сторінки з деталями відео, завантаження відео, знімків екрана, перемикання темної/світлої теми, керування швидким перемотуванням та іншого.
 // @description:ug    YouTube نى كۆپلىگەن پايدىلىق ئىقتىدارلار بىلەن كۈچەيتىدىغان ئىشلەتكۈچى سكرىپتى، بۇلار: ۋىدىئو تەپسىلات بەتنىڭ ئوپتىماللاشتۇرۇلغان تۈزۈلىشى، ۋىدىئو چۈشۈرۈش، سكرىنشات ئېلىش، قارا/ئاق تېما ئالماشتۇرۇش، تېز ئالغا سۈرۈش كونتروللىرى ۋە باشقىلار.
 // @description:vi    Một userscript giúp nâng cao YouTube với nhiều tính năng hữu ích, bao gồm: bố cục trang chi tiết video được tối ưu hóa, tải video, chụp ảnh màn hình, chuyển đổi chủ đề tối/sáng, điều khiển tua nhanh và nhiều tính năng khác.
-// @namespace open_source_thalrien_youtube
-// @version   1.1.1
-// @author    Thalrien.vx,CY Fung
-// @icon      data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACsAAAAgCAYAAACLmoEDAAABo0lEQVR4AdSXAZKDIBAEiR878zL1Zbmf5aY3txaWpqKyWCS1I4jotiMi6VLh75lSv1eFqdIKNks8qv7I9FR9JQE89mrr/KzNc5HXpOsuYgGrE0cd9eSD6n0mVauG5yKvCR7kWWdYNSoSnfxYCyU8g8C4kdcw0A6OtgD3jgHoF6x62I7KVsNe4k6umsWtUmZcA2P2W2DnYZDdQLPVHmd/AvB+A67x8RLAfuy0o8N0S0mRplTxFwVriKJlCqwGDGzoCwawpIh3GVhzJXoj2lFSxEFXg/WbF60PjeLhUR0WaICR6kXAl8AK0oMpDvn+ofISWD7pki89T7/Q1WEFyZgF9DSk218NFkhJEbdGBvb0GPI7zkvRsZzDyfBlJ7B5rtP1DBLQ4ke+BRIFi4vVIB08CvaQk578aAls0UR9NGFJf2BLzr/y3KnTZzB0NqhJ7842PxRk6miwVORIyw6bmQYr0CTgu0prVNlKYOBdbHyyl/9uaZQUCWhEZ3QFPHlc5AYS0Wb5Z2dt738jWlb5iM7opraV1J2ncVhb11IbeVzkniGVx+IPAAD///H503IAAAAGSURBVAMApvWIs8xfbPkAAAAASUVORK5CYII=
-// @include   *://*.youtube.com/**
-// @exclude   /^https?://\w+\.youtube\.com\/live_chat.*$/
-// @exclude   /^https?://\S+\.(txt|png|jpg|jpeg|gif|xml|svg|manifest|log|ini)[^\/]*$/
+// @namespace   open_source_thalrien_youtube
+// @version     1.1.2
+// @author      Thalrien.vx,CY Fung
+// @icon        data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACsAAAAgCAYAAACLmoEDAAABo0lEQVR4AdSXAZKDIBAEiR878zL1Zbmf5aY3txaWpqKyWCS1I4jotiMi6VLh75lSv1eFqdIKNks8qv7I9FR9JQE89mrr/KzNc5HXpOsuYgGrE0cd9eSD6n0mVauG5yKvCR7kWWdYNSoSnfxYCyU8g8C4kdcw0A6OtgD3jgHoF6x62I7KVsNe4k6umsWtUmZcA2P2W2DnYZDdQLPVHmd/AvB+A67x8RLAfuy0o8N0S0mRplTxFwVriKJlCqwGDGzoCwawpIh3GVhzJXoj2lFSxEFXg/WbF60PjeLhUR0WaICR6kXAl8AK0oMpDvn+ofISWD7pki89T7/Q1WEFyZgF9DSk218NFkhJEbdGBvb0GPI7zkvRsZzDyfBlJ7B5rtP1DBLQ4ke+BRIFi4vVIB08CvaQk578aAls0UR9NGFJf2BLzr/y3KnTZzB0NqhJ7842PxRk6miwVORIyw6bmQYr0CTgu0prVNlKYOBdbHyyl/9uaZQUCWhEZ3QFPHlc5AYS0Wb5Z2dt738jWlb5iM7opraV1J2ncVhb11IbeVzkniGVx+IPAAD///H503IAAAAGSURBVAMApvWIs8xfbPkAAAAASUVORK5CYII=
+// @include     *://*.youtube.com/**
+// @exclude     /^https?://\w+\.youtube\.com\/live_chat.*$/
+// @exclude     /^https?://\S+\.(txt|png|jpg|jpeg|gif|xml|svg|manifest|log|ini)[^\/]*$/
+// @antifeature referral-link
 // @noframes
-// @license   MIT
-// @run-at    document-start
-// @grant     GM_registerMenuCommand
-// @grant     GM_openInTab
-// @grant     GM.openInTab
-// @grant     GM_addStyle
-// @grant     GM_setValue
-// @grant     GM_getValue
-// @grant     GM_deleteValue
-// @grant     GM_xmlhttpRequest
-// @grant     unsafeWindow
-// @grant     GM_download
-// @grant     GM_setClipboard
+// @license     MIT
+// @run-at      document-start
+// @grant       GM_registerMenuCommand
+// @grant       GM_openInTab
+// @grant       GM.openInTab
+// @grant       GM_addStyle
+// @grant       GM_setValue
+// @grant       GM_getValue
+// @grant       GM_deleteValue
+// @grant       GM_xmlhttpRequest
+// @grant       unsafeWindow
+// @grant       GM_download
+// @grant       GM_setClipboard
 // @downloadURL https://update.greasyfork.org/scripts/560618/YouTube%20Improvements%20%E2%80%93%20Layout%20%20Video%20Enhancer.user.js
 // @updateURL https://update.greasyfork.org/scripts/560618/YouTube%20Improvements%20%E2%80%93%20Layout%20%20Video%20Enhancer.meta.js
 // ==/UserScript==
@@ -98,7 +99,7 @@
 
   
   /*!
-  * Copyright (c) 2024 - 2025, Thalrien.vx,CY Fung. All rights reserved.
+  * Copyright (c) 2024 - 2026, Thalrien.vx,CY Fung. All rights reserved.
   *
   * Permission is hereby granted, free of charge, to any person obtaining a copy
   * of this software and associated documentation files (the "Software"), to deal
@@ -4350,14 +4351,67 @@
           "download_enter_text": "Tamam",
           "download_cancel_text": "İptal"
         }
+      },
+      "zh-CN": {
+        direction: "ltr",
+        content: {
+          "function_setting_title": "设置",
+          "function_is_comment_table_open": "启用视频详情页面界面优化。",
+          "function_is_theme_progress_bar_open": "启用视频播放进度条美化。",
+          "function_is_speed_control_open": "启用视频快进（播放速度可选择）。",
+          "function_is_mark_or_remove_ad_open": "启用页面广告标记。",
+          "function_is_youtube_downloading_open": "启用YouTube视频下载。",
+          "download_confirm_message": "下载YouTube视频将跳转到第三方网站，这些网站可能包含广告。如果您不需要此下载功能，可以在设置中禁用它。",
+          "download_enter_text": "确定",
+          "download_cancel_text": "取消"
+        }
+      },
+      "zh-TW": {
+        direction: "ltr",
+        content: {
+          "function_setting_title": "設定",
+          "function_is_comment_table_open": "啟用影片詳情頁面介面優化。",
+          "function_is_theme_progress_bar_open": "啟用影片播放進度條美化。",
+          "function_is_speed_control_open": "啟用影片快轉（播放速度可選擇）。",
+          "function_is_mark_or_remove_ad_open": "啟用頁面廣告標記。",
+          "function_is_youtube_downloading_open": "啟用YouTube影片下載。",
+          "download_confirm_message": "下載YouTube影片將跳轉到第三方網站，這些網站可能包含廣告。如果您不需要此下載功能，可以在設定中禁用它。",
+          "download_enter_text": "確定",
+          "download_cancel_text": "取消"
+        }
       }
     },
     getLang: function() {
-      let lang = (navigator.language || navigator.userLanguage).slice(0, 2).toLowerCase();
-      if (!lang) {
-        lang = "en";
+      const lang = navigator.language || navigator.userLanguage;
+      const supportedLanguages = {
+        "en": "en",
+        "es": "es",
+        "fr": "fr",
+        "pt": "pt",
+        "ru": "ru",
+        "ja": "ja",
+        "de": "de",
+        "ko": "ko",
+        "it": "it",
+        "id": "id",
+        "tr": "tr",
+        "pl": "pl",
+        "uk": "uk",
+        "nl": "nl",
+        "vi": "vi",
+        "th": "th",
+        "ar": "ar",
+        "fa": "fa",
+        "hi": "hi",
+        "ms": "ms",
+        "zh-CN": "zh-CN",
+        "zh-TW": "zh-TW"
+      };
+      const langCode = lang.split("-")[0];
+      if (langCode === "zh") {
+        return lang === "zh-CN" ? "zh-CN" : "zh-TW";
       }
-      return lang;
+      return supportedLanguages[langCode] || "en";
     },
     getLanguage: function() {
       const lang = this.getLang();

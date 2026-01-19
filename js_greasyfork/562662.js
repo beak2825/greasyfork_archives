@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Toolasha
 // @namespace    http://tampermonkey.net/
-// @version      0.4.951
+// @version      0.4.952
 // @description  Toolasha - Enhanced tools for Milky Way Idle.
 // @author       Celasha and Claude, thank you to bot7420, DrDucky, Frotty, Truth_Light, AlphB, and sentientmilk for providing the basis for a lot of this. Thank you to Miku, Orvel, Jigglymoose, Incinarator, Knerd, and others for their time and help. Thank you to Steez for testing and helping me figure out where I'm wrong! Special thanks to Zaeter for the name.
 // @license      CC-BY-NC-SA-4.0
@@ -8296,17 +8296,7 @@
 
         // Add specific protection items if they exist
         if (itemDetails.protectionItemHrids && itemDetails.protectionItemHrids.length > 0) {
-            // protectionItemHrids is an array of arrays (one per level)
-            // Flatten and deduplicate
-            const allProtectionHrids = new Set();
-            for (const levelProtections of itemDetails.protectionItemHrids) {
-                if (Array.isArray(levelProtections)) {
-                    for (const hrid of levelProtections) {
-                        allProtectionHrids.add(hrid);
-                    }
-                }
-            }
-            protectionOptions.push(...Array.from(allProtectionHrids));
+            protectionOptions.push(...itemDetails.protectionItemHrids);
         }
 
         // Find cheapest option
@@ -15392,24 +15382,27 @@
                 itemNameFromDom = null;
             }
 
-            // Match action from cache
-            action = cachedActions.find(a => {
-                const actionDetails = dataManager.getActionDetails(a.actionHrid);
-                if (!actionDetails || actionDetails.name !== actionNameFromDom) {
-                    return false;
-                }
+            // ONLY match against the first action (current action), not queued actions
+            // This prevents showing stats from queued actions when party combat interrupts
+            if (cachedActions.length > 0) {
+                const currentAction = cachedActions[0];
+                const actionDetails = dataManager.getActionDetails(currentAction.actionHrid);
 
-                // If there's an item name (like "Foraging Essence" from "Coinify: Foraging Essence"),
-                // we need to match on primaryItemHash
-                if (itemNameFromDom && a.primaryItemHash) {
-                    // Convert display name to item HRID format (lowercase with underscores)
-                    const itemHrid = '/items/' + itemNameFromDom.toLowerCase().replace(/\s+/g, '_');
-                    return a.primaryItemHash.includes(itemHrid);
+                if (actionDetails && actionDetails.name === actionNameFromDom) {
+                    // If there's an item name (like "Foraging Essence" from "Coinify: Foraging Essence"),
+                    // we need to match on primaryItemHash
+                    if (itemNameFromDom && currentAction.primaryItemHash) {
+                        // Convert display name to item HRID format (lowercase with underscores)
+                        const itemHrid = '/items/' + itemNameFromDom.toLowerCase().replace(/\s+/g, '_');
+                        if (currentAction.primaryItemHash.includes(itemHrid)) {
+                            action = currentAction;
+                        }
+                    } else if (!itemNameFromDom) {
+                        // No item name specified, match on action name alone
+                        action = currentAction;
+                    }
                 }
-
-                // No item name specified, just match on action name
-                return true;
-            });
+            }
 
             if (!action) {
                 this.displayElement.innerHTML = '';
@@ -38472,7 +38465,7 @@
         const targetWindow = typeof unsafeWindow !== 'undefined' ? unsafeWindow : window;
 
         targetWindow.Toolasha = {
-            version: '0.4.951',
+            version: '0.4.952',
 
             // Feature toggle API (for users to manage settings via console)
             features: {

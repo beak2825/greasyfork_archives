@@ -1,12 +1,12 @@
 // ==UserScript==
-// @name         Autodarts Chat Macro – Overlay Panel v4.5
+// @name         Autodarts Chat Macro – Overlay Panel v4.8
 // @namespace    v4.5 @frankomio @ dart-base.de
-// @version      4.5
-// @description  An Overlay for adding up to 15 new predefined Texts to chat per Hotkey or Mouse
+// @version      4.8
 // @match        https://play.autodarts.io/*
 // @grant        none
-// @downloadURL https://update.greasyfork.org/scripts/562681/Autodarts%20Chat%20Macro%20%E2%80%93%20Overlay%20Panel%20v45.user.js
-// @updateURL https://update.greasyfork.org/scripts/562681/Autodarts%20Chat%20Macro%20%E2%80%93%20Overlay%20Panel%20v45.meta.js
+// @description An Overlay for adding up to 15 new predefined Texts to chat per Hotkey or Mouse
+// @downloadURL https://update.greasyfork.org/scripts/562681/Autodarts%20Chat%20Macro%20%E2%80%93%20Overlay%20Panel%20v48.user.js
+// @updateURL https://update.greasyfork.org/scripts/562681/Autodarts%20Chat%20Macro%20%E2%80%93%20Overlay%20Panel%20v48.meta.js
 // ==/UserScript==
 
 (function () {
@@ -14,11 +14,13 @@
 
 /* ================= CONFIG ================= */
 
-const SCRIPT_VERSION = '4.5';
+const SCRIPT_VERSION = '4.8';
 const CHAT_BUTTON_SELECTOR = '.chakra-button.css-amgk2y';
 const CHAT_INPUT_SELECTOR  = 'input.chakra-input.css-145kn5z';
-const STORE_KEY = 'autodarts_macro_v43_final';
-const COOLDOWN_MS = 990;
+const STORE_KEY = 'autodarts_macro_v48_final';
+const COOLDOWN_MS = 1500;
+
+
 
 const SNAP_POINTS = ['br','b','bl','l','tl','t','tr','r'];
 
@@ -115,6 +117,13 @@ function defaultPreset(){
   text:'#ffffff',
   btn:'#2d2d2d',
   theme:'dark',
+  miniSnap: 'b',// Default: unten mittig
+  miniX: null,
+  miniY: null,
+  clockEnabled: true,
+  clockX: 20,
+  clockY: 20,
+  clockScale: 1,
   sound:true
  };
 }
@@ -123,6 +132,10 @@ function defaultPreset(){
 
 let mainOverlayRect = null;
 let overlay, lastTrigger=0, lastReadyBeep=true, waitingRebind=null;
+
+let clockOverlay = null;
+let clockDrag = null;
+
 let ledState='ready';
 let drag=null, moved=false;
 
@@ -173,6 +186,13 @@ function clickHuman(el){
    el.dispatchEvent(new MouseEvent(t,{bubbles:true}))
  );
 }
+
+function sanitizeColor(value, fallback){
+  if(typeof value !== 'string') return fallback;
+  if(/^#[0-9a-fA-F]{6}$/.test(value)) return value;
+  return fallback;
+}
+
 
 /* ================= SOUND ================= */
 
@@ -303,6 +323,36 @@ function applyPosition(){
  }
 }
 
+function applyMiniPosition(){
+ const p = state.presets[state.activePreset];
+ const size = 48;
+ const pad = 8;
+ const vw = window.innerWidth;
+ const vh = window.innerHeight;
+
+ let left, top;
+
+ const s = p.miniSnap || 'b';
+
+ if(s==='tl'){left=pad;top=pad;}
+ if(s==='t'){left=(vw-size)/2;top=pad;}
+ if(s==='tr'){left=vw-size-pad;top=pad;}
+ if(s==='l'){left=pad;top=(vh-size)/2;}
+ if(s==='r'){left=vw-size-pad;top=(vh-size)/2;}
+ if(s==='bl'){left=pad;top=vh-size-pad;}
+ if(s==='b'){left=(vw-size)/2;top=vh-size-pad;}
+ if(s==='br'){left=vw-size-pad;top=vh-size-pad;}
+
+ // Falls frei verschoben
+ if(p.miniSnap === null && p.miniX !== null){
+   left = p.miniX;
+   top  = p.miniY;
+ }
+
+ overlay.style.left = left + 'px';
+ overlay.style.top  = top  + 'px';
+}
+
 /* ================= OVERLAY ================= */
 
 function createOverlay(){
@@ -333,6 +383,115 @@ if(!document.getElementById('macro-ui-style')){
  update();
  startClock();
  watchChat();
+createClockOverlay();
+syncClockToPreset(); // ✅ stellt Position + Größe korrekt ein
+
+
+}
+
+
+function createClockOverlay(){
+  if(clockOverlay) return;
+
+  clockOverlay = document.createElement('div');
+  clockOverlay.id = 'macro-clock-overlay';
+  clockOverlay.textContent = new Date().toLocaleTimeString();
+
+  Object.assign(clockOverlay.style,{
+    position:'fixed',
+    left:'40px',
+    top:'40px',
+    zIndex:20000,                 // ✅ garantiert über allem
+    padding:'10px 16px',
+    borderRadius:'12px',
+    background:'rgba(0,0,0,0.85)',
+    color:'#fff',
+    fontSize:'22px',
+    fontWeight:'bold',
+    cursor:'move',
+    userSelect:'none',
+    pointerEvents:'auto',
+    boxShadow:'0 4px 10px rgba(0,0,0,.5)'
+  });
+
+  document.body.appendChild(clockOverlay);
+
+  // ✅ Drag Support
+  let dragClock = null;
+
+  clockOverlay.onmousedown = e=>{
+    e.preventDefault();
+    dragClock = {
+      dx: e.clientX - clockOverlay.offsetLeft,
+      dy: e.clientY - clockOverlay.offsetTop
+    };
+
+    document.onmousemove = ev=>{
+      const p = state.presets[state.activePreset];
+
+      const x = ev.clientX - dragClock.dx;
+      const y = ev.clientY - dragClock.dy;
+
+      clockOverlay.style.left = x + 'px';
+      clockOverlay.style.top  = y + 'px';
+
+      // Position speichern
+        p.clockX = Math.round(x);
+        p.clockY = Math.round(y);
+        save();                    // ✅ sofort sichern
+
+    };
+
+    document.onmouseup = ()=>{
+      document.onmousemove = null;
+      dragClock = null;
+      save();
+    };
+  };
+
+  // ✅ Initial sichtbar + positionieren
+  applyClockPosition();
+  updateClock();
+  clockOverlay.style.display = 'block';
+
+  console.log("✅ Clock overlay created");
+}
+
+
+function applyClockPosition(){
+  if(!clockOverlay) return;
+
+  const p = state.presets[state.activePreset];
+
+  clockOverlay.style.transform = `scale(${p.clockScale || 1})`;
+
+  let x = p.clockX;
+  let y = p.clockY;
+
+  // Default Position
+  if(typeof x !== 'number'){
+    x = window.innerWidth - 180;
+    y = 30;
+    p.clockX = x;
+    p.clockY = y;
+    save();
+  }
+
+  clockOverlay.style.left = x + 'px';
+  clockOverlay.style.top  = y + 'px';
+}
+
+function updateClock(){
+  if(!clockOverlay) return;
+
+  const p = state.presets[state.activePreset];
+
+  clockOverlay.style.display = p.clockEnabled ? 'block' : 'none';
+  clockOverlay.textContent = new Date().toLocaleTimeString();
+}
+function syncClockToPreset(){
+  applyClockPosition();
+  updateClock();
 }
 
 
@@ -454,6 +613,8 @@ function startClock(){
    }
    setLED('ready');
   }
+ updateClock();
+
  },300);
 }
 
@@ -520,10 +681,13 @@ function update(){
      Opacity <input id="opa" type="range" min="0.3" max="1" step="0.05" value="${p.opacity}">
    </div>
 
+   <div style="margin-top:10px">Clock Size<input id="clockScale" type="range" min="0.6" max="2" step="0.05" value="${p.clockScale || 1}">
+   </div>
+
    <div style="margin-top:10px">
-     BG <input id="bg" type="color" value="${p.bg}">
-     Text <input id="tx" type="color" value="${p.text}">
-     Btn <input id="bt" type="color" value="${p.btn}">
+     BG <input id="bg" type="color" value="${sanitizeColor(p.bg,'#215294')}">
+     Text <input id="tx" type="color" value="${sanitizeColor(p.text,'#215294')}">
+     Btn <input id="bt" type="color" value="${sanitizeColor(p.btn,'#215294')}">
    </div>
 
    <div style="margin-top:10px">
@@ -560,12 +724,34 @@ function update(){
  update();
 };
 
+  overlay.querySelector('#clockScale').oninput = e=>{
+  p.clockScale = +e.target.value;
+  applyClockPosition();
+  updateClock()
+  save();
+};
 
   overlay.querySelector('#scale').oninput=e=>{p.scale=+e.target.value;applyPosition();};
   overlay.querySelector('#opa').oninput=e=>{p.opacity=+e.target.value;applyStyle();};
-  overlay.querySelector('#bg').oninput=e=>{p.bg=e.target.value;applyStyle();};
-  overlay.querySelector('#tx').oninput=e=>{p.text=e.target.value;applyStyle();update();};
-  overlay.querySelector('#bt').oninput=e=>{p.btn=e.target.value;update();};
+overlay.querySelector('#bg').oninput = e => {
+  p.bg = sanitizeColor(e.target.value, p.bg);
+  applyStyle();
+  save();
+};
+
+overlay.querySelector('#tx').oninput = e => {
+  p.text = sanitizeColor(e.target.value, p.text);
+  applyStyle();
+  update();
+  save();
+};
+
+overlay.querySelector('#bt').oninput = e => {
+  p.btn = sanitizeColor(e.target.value, p.btn);
+  update();
+  save();
+};
+
 
   overlay.querySelectorAll('button[data-pr]').forEach(b=>{
  const idx = +b.dataset.pr;
@@ -593,6 +779,7 @@ function update(){
  b.onclick = ()=>{
    hidePreview();
    state.activePreset = idx;
+   syncClockToPreset();
    applyPosition();
    applyStyle();
    update();
@@ -622,44 +809,71 @@ function update(){
 
  /* ===== MINI MODE ===== */
  if(state.minimized){
-
+  applyMiniPosition();// ✅ Mini immer korrekt snappen
   overlay.style.padding='0';
   overlay.style.background='transparent';
   overlay.style.boxShadow='none';
   overlay.style.borderRadius='0';
 
   overlay.innerHTML=`
-   <div id="miniWrap" style="position:relative;width:48px;height:48px;cursor:pointer">
-     <img src="${DARTBASE_LOGO}" style="width:48px;height:48px;display:block">
+   <div id="miniWrap" style="position:relative;width:64px;height:64px;cursor:pointer">
+     <img src="${DARTBASE_LOGO}" style="width:64px;height:64px;display:block">
      <div class="macro-led" style="position:absolute;right:4px;top:4px;width:10px;height:10px;border-radius:50%;border:1px solid #000"></div>
    </div>`;
 
   const mini=overlay.querySelector('#miniWrap');
 
-  mini.onmousedown=e=>{
-   moved=false;
-   drag={dx:e.clientX-overlay.offsetLeft,dy:e.clientY-overlay.offsetTop};
-   document.onmousemove=ev=>{
-    moved=true;
-    p.snap=null;
-    p.x=ev.clientX-drag.dx;
-    p.y=ev.clientY-drag.dy;
-    applyPosition();
-   };
-   document.onmouseup=()=>{
-    document.onmousemove=null;
-    drag=null;
-    save();
-   };
+let downX = 0;
+let downY = 0;
+let dragStarted = false;
+
+mini.onmousedown = e => {
+  e.preventDefault();
+
+  downX = e.clientX;
+  downY = e.clientY;
+  dragStarted = false;
+
+  drag = {
+    dx: e.clientX - overlay.offsetLeft,
+    dy: e.clientY - overlay.offsetTop
   };
 
-  mini.onclick=()=>{
-   if(!moved){
-    state.minimized=false;
-    applyPosition();
-    update();
-   }
+  document.onmousemove = ev => {
+    const dist =
+      Math.abs(ev.clientX - downX) +
+      Math.abs(ev.clientY - downY);
+
+    // 👉 erst ab echter Bewegung als Drag werten
+    if(dist > 4){
+      dragStarted = true;
+
+      const p = state.presets[state.activePreset];
+      p.miniSnap = null;
+      p.miniX = ev.clientX - drag.dx;
+      p.miniY = ev.clientY - drag.dy;
+
+      applyMiniPosition();
+    }
   };
+
+  document.onmouseup = () => {
+    document.onmousemove = null;
+    document.onmouseup = null;
+    drag = null;
+
+    // ✅ Wenn kein Drag → Klick = Maximieren
+    if(!dragStarted){
+      state.minimized = false;
+      applyPosition();
+      update();
+    }
+
+    save();
+  };
+};
+
+
 
   updateLED();
   return;
@@ -675,11 +889,38 @@ function update(){
  const snapIcon=(p.snap===null?'📍':'📌');
 
  let html=`
- <div class="macro-header" style="display:flex;justify-content:space-between;cursor:${p.locked?'default':'move'}">
+ <div class="macro-header"
+     style="display:flex;align-items:center;gap:10px;
+            justify-content:space-between;
+            cursor:${p.locked?'default':'move'}">
+
   <b>🎯 Autodarts Chat Panel ${SCRIPT_VERSION}</b>
-  <span id="clock" style="opacity:.8"></span>
-  <span class="macro-led" style="width:10px;height:10px;border-radius:50%;border:1px solid #000"></span>
- </div>
+
+  <div style="display:flex;align-items:center;gap:10px">
+
+    <span id="clock" style="opacity:.8"></span>
+
+    <span class="macro-led"
+          style="width:10px;height:10px;border-radius:50%;border:1px solid #000"></span>
+
+    <!-- 🔽 Prominenter Minimieren Button -->
+    <button id="minHeader"
+            title="Minimieren"
+            class="macro-btn"
+            style="
+              min-width:42px;
+              height:36px;
+              padding:0;
+              font-size:22px;
+              font-weight:bold;
+              line-height:1;
+              border-radius:8px;
+            ">
+      ─
+    </button>
+
+  </div>
+</div>
 
  <div style="display:grid;gap:8px;margin:8px 0;">`;
 
@@ -716,6 +957,8 @@ function update(){
   <button id="theme" class="macro-btn" title="Hell / Dunkel" style="${BTN_STYLE}">🌗</button>
   <button id="settings" class="macro-btn" title="Settings" style="${BTN_STYLE}">⚙️</button>
   <button id="reset" class="macro-btn" title="Reset" style="${BTN_STYLE}">♻</button>
+  <button id="clockToggle" class="macro-btn" title="Uhr ein / aus" style="${BTN_STYLE}">🕒</button>
+
   <button id="min"class="macro-btn" title="Minimieren" style="${BTN_STYLE}" >⬇️</button>
 
 <!-- 🎯 Preset Buttons -->
@@ -729,8 +972,9 @@ function update(){
 
  <a href="https://www.dart-base.de" target="_blank"
     style="display:flex;justify-content:center;gap:8px;margin-top:10px;text-decoration:none;color:inherit">
-   <img src="${DARTBASE_LOGO}" style="width:26px;height:26px">
-   <span>www.dart-base.de</span>
+  <img src="${DARTBASE_LOGO}" style="width:40px;height:40px">
+<span style="font-size:18px;font-weight:bold;">www.dart-base.de</span>
+
  </a>`;
 
  overlay.innerHTML=html;
@@ -832,6 +1076,12 @@ overlay.querySelectorAll('[data-rebind]').forEach(s=>{
 
  }
 
+ overlay.querySelector('#clockToggle').onclick = ()=>{
+  const p = state.presets[state.activePreset];
+  p.clockEnabled = !p.clockEnabled;
+  updateClock();
+  save();
+};
 
  overlay.querySelector('#save').onclick=save;
  overlay.querySelector('#snap').onclick=showSnapMenu;
@@ -871,6 +1121,15 @@ overlay.querySelector('#settings').onclick=()=>{
   applyPosition();
   update();
  };
+    const minHeaderBtn = overlay.querySelector('#minHeader');
+if(minHeaderBtn){
+  minHeaderBtn.onclick = ()=>{
+    state.minimized = true;
+    applyPosition();
+    update();
+  };
+}
+
 // 🎯 Preset Buttons im Hauptoverlay
 overlay.querySelectorAll('[data-main-pr]').forEach(btn=>{
  const idx = +btn.dataset.mainPr;
@@ -891,6 +1150,7 @@ overlay.querySelectorAll('[data-main-pr]').forEach(btn=>{
    hidePreview();
    state.activePreset = idx;
    applyPosition();
+   syncClockToPreset();
    applyStyle();
    update();
    save();
@@ -1043,9 +1303,41 @@ if(waitingRebind){
 
 
 
- if(e.shiftKey && e.code==='Digit7'){state.activePreset=0;applyPosition();applyStyle();update();save();return;}
- if(e.shiftKey && e.code==='Digit8'){state.activePreset=1;applyPosition();applyStyle();update();save();return;}
- if(e.shiftKey && e.code==='Digit9'){state.activePreset=2;applyPosition();applyStyle();update();save();return;}
+if(e.shiftKey && e.code==='Digit7'){
+  state.activePreset = 0;
+  applyPosition();
+    syncClockToPreset()
+  applyClockPosition();   // ✅ zuerst Position
+  updateClock();          // ✅ dann Sichtbarkeit + Text
+  applyStyle();
+  update();
+  save();
+  return;
+}
+
+if(e.shiftKey && e.code==='Digit8'){
+  state.activePreset = 1;
+  applyPosition();
+    syncClockToPreset()
+  applyClockPosition();
+  updateClock();
+  applyStyle();
+  update();
+  save();
+  return;
+}
+
+if(e.shiftKey && e.code==='Digit9'){
+  state.activePreset = 2;
+  applyPosition();
+    syncClockToPreset()
+  applyClockPosition();
+  updateClock();
+  applyStyle();
+  update();
+  save();
+  return;
+}
 
  if(e.shiftKey && e.key.toLowerCase()==='h'){
   state.hidden=!state.hidden;
@@ -1091,5 +1383,7 @@ const t=setInterval(()=>{
 
 window.addEventListener('resize', applyPosition);
 document.addEventListener('fullscreenchange', applyPosition);
+
+    console.log("Clock system loaded");
 
 })();

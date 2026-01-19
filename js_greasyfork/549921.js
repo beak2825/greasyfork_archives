@@ -40,7 +40,7 @@
 // @name:ug             مېنىڭ پرومپتۇم
 // @name:vi             Lời nhắc của tôi
 // @namespace           https://github.com/0H4S
-// @version             3.8
+// @version             3.9
 // @description         Save and use your personalized prompts in your own library. Use Dynamic Prompt mode to insert interactive information and adapt commands as needed. Attach and reuse files anytime without reselections. Compatible with: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, and Google AI Mode.
 // @description:pt-BR   Salve e use seus prompts personalizados na sua própria biblioteca de prompts. Use o modo Prompt Dinâmico para inserir informações interativas e adaptar comandos conforme sua necessidade. Anexe e use arquivos sempre que quiser, sem precisar selecionar tudo de novo. Compatível com: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM e Google Modo IA.
 // @description:zh-CN   保存并在您自己的库中使用自定义提示词。使用动态提示词模式插入交互信息并根据需要调整指令。随时附加和使用文件，无需重新选择。兼容：ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, 腾讯元宝, ChatGLM, Google AI Mode。
@@ -83,7 +83,7 @@
 // @description:vi      Lưu và sử dụng các prompt tùy chỉnh trong thư viện của riêng bạn. Sử dụng chế độ Dynamic Prompt để chèn thông tin tương tác và điều chỉnh lệnh theo nhu cầu. Đính kèm và sử dụng tệp bất cứ lúc nào mà không cần chọn lại. Tương thích với: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode.
 // @author              OHAS
 // @homepage            https://github.com/0H4S
-// @icon                https://files.catbox.moe/3y7y2r.png
+// @icon                https://files.catbox.moe/rvp3fn.svg
 // @license             CC-BY-NC-ND-4.0
 // @copyright           2026 OHAS. All Rights Reserved.
 // @match               *://poe.com/*
@@ -103,6 +103,7 @@
 // @match               *://gemini.google.com/*
 // @match               *://yuanbao.tencent.com/*
 // @match               *://aistudio.google.com/*
+// @match               *://copilot.microsoft.com/*
 // @match               *://notebooklm.google.com/*
 // @match               *://www.google.com/search?*udm=50*
 // @require             https://update.greasyfork.org/scripts/549920.js
@@ -136,31 +137,36 @@
     // =================
 
     // --- CHAVES E CONSTANTES ---
-    const LANG_STORAGE_KEY      = 'UserScriptLang';
-    const GLOBAL_FILES_KEY      = 'GlobalFiles';
-    const PROMPT_STORAGE_KEY    = 'Prompts';
-    const THEME_STORAGE_KEY     = 'Theme';
-    const IMPORTED_THEMES_KEY   = 'ImportedThemes';
-    const DEFAULT_THEME_CONFIG  = { themeId: 'default', mode: 'auto' };
-    let currentThemeConfig      = DEFAULT_THEME_CONFIG;
-    let mediaQueryList          = window.matchMedia('(prefers-color-scheme: dark)');
-    let importedThemes          = {};
-    let currentLang             = 'en';
-    let isInitialized           = false;
-    let isInitializing          = false;
-    let settingsModal           = null;
-    let currentButton           = null;
-    let currentPlatform         = null;
-    let pageObserver            = null;
-    let currentMenu             = null;
-    let currentModal            = null;
-    let languageModal           = null;
-    let currentPlaceholderModal = null;
-    let infoModal               = null;
-    let inlineMenu              = null;
-    let inlineMenuCurrentItems  = [];
-    let inlineMenuIndex         = 0;
-    let currentActiveFileIds    = new Set();
+    const LANG_STORAGE_KEY          = 'UserScriptLang';
+    const GLOBAL_FILES_KEY          = 'GlobalFiles';
+    const PROMPT_STORAGE_KEY        = 'Prompts';
+    const THEME_STORAGE_KEY         = 'Theme';
+    const IMPORTED_THEMES_KEY       = 'ImportedThemes';
+    const PREDICTION_STORAGE_KEY    = 'Prediction';
+    const DEFAULT_PREDICTION_CONFIG = { enabled: true };
+    const DEFAULT_THEME_CONFIG      = { themeId: 'default', mode: 'auto' };
+    let currentThemeConfig          = DEFAULT_THEME_CONFIG;
+    let currentPredictionConfig     = DEFAULT_PREDICTION_CONFIG;
+    let mediaQueryList              = window.matchMedia('(prefers-color-scheme: dark)');
+    let importedThemes              = {};
+    let currentLang                 = 'en';
+    let isInitialized               = false;
+    let isInitializing              = false;
+    let settingsModal               = null;
+    let currentButton               = null;
+    let currentPlatform             = null;
+    let pageObserver                = null;
+    let currentMenu                 = null;
+    let currentModal                = null;
+    let languageModal               = null;
+    let currentPlaceholderModal     = null;
+    let infoModal                   = null;
+    let inlineMenu                  = null;
+    let inlineMenuCurrentItems      = [];
+    let inlineMenuIndex             = 0;
+    let currentActiveFileIds        = new Set();
+    let macroMemory                 = { active: false, text: '', startIndex: 0, hashCount: 0 };
+    let varMemory                   = { active: false, list: [], index: 0, startPos: 0, typed: '' };
 
     // --- TRUSTED TYPES ---
     const scriptPolicy = window.trustedTypes
@@ -174,7 +180,7 @@
     }
 
     // --- NOTIFICADOR ---
-    const SCRIPT_CONFIG = {notificationsUrl:'https://gist.github.com/0H4S/b2f9a9f92259deadc35bdccb11cd9a75', scriptVersion: '3.8',};
+    const SCRIPT_CONFIG = {notificationsUrl:'https://gist.github.com/0H4S/b2f9a9f92259deadc35bdccb11cd9a75', scriptVersion: '3.9',};
     const notifier      = new ScriptNotifier(SCRIPT_CONFIG);
     notifier.run();
 
@@ -199,6 +205,7 @@
         googleModoIA:   'textarea.ITIRGe',
         notebooklm:     'textarea.query-box-input',
         doubao:         'textarea[data-testid="chat_input_input"]',
+        copilot:        '#userInput, textarea[data-testid="composer-input"]',
     };
 
     // =================
@@ -270,7 +277,12 @@
             filesCounter:       'Arquivos ({active}/{total})',
             infoTitle:          'Ajuda',
             infoDPDesc:         'Acesse o guia de uso completo:<br><a href="https://gist.github.com/0H4S/109af9d102881cbc34b20d6f2bc196e7#file-english-md" target="_blank"><span style="color: #63b3ed;">English</span></a> | <a href="https://gist.github.com/0H4S/109af9d102881cbc34b20d6f2bc196e7#file-portugues-br-md" target="_blank"><span style="color: #63b3ed;">Português (BR)</span></a> | <a href="https://gist.github.com/0H4S/109af9d102881cbc34b20d6f2bc196e7#file-md" target="_blank"><span style="color: #63b3ed;">简体中文</span></a>',
-            infoASDesc:         'Envia o prompt para o chat instantaneamente após ser inserido, sem necessidade de ação manual.'
+            infoASDesc:         'Envia o prompt para o chat instantaneamente após ser inserido, sem necessidade de ação manual.',
+            getMoreThemes:      "Obter novos temas",
+            editorSettings:     'Configurações do Editor',
+            smartPredict:       'Previsão de Texto Inteligente',
+            smartPredictDesc:   'Fecha parênteses, expande macros #start e sugere variáveis.'
+
         },
     'en': {
             langName:           'English',
@@ -335,7 +347,11 @@
             filesCounter:       'Files ({active}/{total})',
             infoTitle:          'Help',
             infoDPDesc:         'Access the full usage guide:<br><a href="https://gist.github.com/0H4S/109af9d102881cbc34b20d6f2bc196e7#file-english-md" target="_blank"><span style="color: #63b3ed;">English</span></a> | <a href="https://gist.github.com/0H4S/109af9d102881cbc34b20d6f2bc196e7#file-portugues-br-md" target="_blank"><span style="color: #63b3ed;">Português (BR)</span></a> | <a href="https://gist.github.com/0H4S/109af9d102881cbc34b20d6f2bc196e7#file-md" target="_blank"><span style="color: #63b3ed;">简体中文</span></a>',
-            infoASDesc:         'Sends the prompt to the chat instantly after being inserted, without the need for manual action.'
+            infoASDesc:         'Sends the prompt to the chat instantly after being inserted, without the need for manual action.',
+            getMoreThemes:      "Get more themes",
+            editorSettings:     'Editor Settings',
+            smartPredict:       'Smart Text Prediction',
+            smartPredictDesc:   'Closes parentheses, expands #start macros, and suggests variables.'
         },
     'zh-CN': {
             langName:           '简体中文',
@@ -400,7 +416,11 @@
             filesCounter:       '文件 ({active}/{total})',
             infoTitle:          '帮助',
             infoDPDesc:         '访问完整使用指南：<br><a href="https://gist.github.com/0H4S/109af9d102881cbc34b20d6f2bc196e7#file-english-md" target="_blank"><span style="color: #63b3ed;">English</span></a> | <a href="https://gist.github.com/0H4S/109af9d102881cbc34b20d6f2bc196e7#file-portugues-br-md" target="_blank"><span style="color: #63b3ed;">Português (BR)</span></a> | <a href="https://gist.github.com/0H4S/109af9d102881cbc34b20d6f2bc196e7#file-md" target="_blank"><span style="color: #63b3ed;">简体中文</span></a>',
-            infoASDesc:         '插入提示词后立即发送到聊天框，无需手动操作。'
+            infoASDesc:         '插入提示词后立即发送到聊天框，无需手动操作。',
+            getMoreThemes:      "获取更多主题",
+            editorSettings:     '编辑器设置',
+            smartPredict:       '智能文本预测',
+            smartPredictDesc:   '自动闭合括号，展开 #start 宏并建议变量。'
         },
     'es': {
             langName:           'Español',
@@ -465,7 +485,11 @@
             filesCounter:       'Archivos ({active}/{total})',
             infoTitle:          'Ayuda',
             infoDPDesc:         'Accede a la guía de uso completa:<br><a href="https://gist.github.com/0H4S/109af9d102881cbc34b20d6f2bc196e7#file-english-md" target="_blank"><span style="color: #63b3ed;">English</span></a> | <a href="https://gist.github.com/0H4S/109af9d102881cbc34b20d6f2bc196e7#file-portugues-br-md" target="_blank"><span style="color: #63b3ed;">Português (BR)</span></a> | <a href="https://gist.github.com/0H4S/109af9d102881cbc34b20d6f2bc196e7#file-md" target="_blank"><span style="color: #63b3ed;">简体中文</span></a>',
-            infoASDesc:         'Envía el prompt al chat instantáneamente después de ser insertado, sin necesidad de acción manual.'
+            infoASDesc:         'Envía el prompt al chat instantáneamente después de ser insertado, sin necesidad de acción manual.',
+            getMoreThemes:      "Obtener más temas",
+            editorSettings:     'Configuraciones del Editor',
+            smartPredict:       'Predicción de Texto Inteligente',
+            smartPredictDesc:   'Cierra paréntesis, expande macros #start y sugiere variables.'
         },
     'fr': {
             langName:           'Français',
@@ -530,7 +554,11 @@
             filesCounter:       'Fichiers ({active}/{total})',
             infoTitle:          'Aide',
             infoDPDesc:         'Accédez au guide d’utilisation complet :<br><a href="https://gist.github.com/0H4S/109af9d102881cbc34b20d6f2bc196e7#file-english-md" target="_blank"><span style="color: #63b3ed;">English</span></a> | <a href="https://gist.github.com/0H4S/109af9d102881cbc34b20d6f2bc196e7#file-portugues-br-md" target="_blank"><span style="color: #63b3ed;">Português (BR)</span></a> | <a href="https://gist.github.com/0H4S/109af9d102881cbc34b20d6f2bc196e7#file-md" target="_blank"><span style="color: #63b3ed;">简体中文</span></a>',
-            infoASDesc:         'Envoie le prompt au chat instantanément après l’insertion, sans action manuelle.'
+            infoASDesc:         'Envoie le prompt au chat instantanément après l’insertion, sans action manuelle.',
+            getMoreThemes:      "Obtenir plus de thèmes",
+            editorSettings:     'Paramètres de l’éditeur',
+            smartPredict:       'Prédiction de texte intelligente',
+            smartPredictDesc:   'Ferme les parenthèses, développe les macros #start et suggère des variables.'
         },
     'ru': {
             langName:           'Русский',
@@ -595,7 +623,11 @@
             filesCounter:       'Файлы ({active}/{total})',
             infoTitle:          'Помощь',
             infoDPDesc:         'Полное руководство пользователя:<br><a href="https://gist.github.com/0H4S/109af9d102881cbc34b20d6f2bc196e7#file-english-md" target="_blank"><span style="color: #63b3ed;">English</span></a> | <a href="https://gist.github.com/0H4S/109af9d102881cbc34b20d6f2bc196e7#file-portugues-br-md" target="_blank"><span style="color: #63b3ed;">Português (BR)</span></a> | <a href="https://gist.github.com/0H4S/109af9d102881cbc34b20d6f2bc196e7#file-md" target="_blank"><span style="color: #63b3ed;">简体中文</span></a>',
-            infoASDesc:         'Мгновенно отправляет промпт в чат после вставки, без необходимости подтверждения.'
+            infoASDesc:         'Мгновенно отправляет промпт в чат после вставки, без необходимости подтверждения.',
+            getMoreThemes:      "Получить больше тем",
+            editorSettings:     'Настройки редактора',
+            smartPredict:       'Интеллектуальное предсказание текста',
+            smartPredictDesc:   'Закрывает скобки, разворачивает макросы #start и предлагает переменные.'
         },
     'ja': {
             langName:           '日本語',
@@ -660,7 +692,11 @@
             filesCounter:       'ファイル ({active}/{total})',
             infoTitle:          'ヘルプ',
             infoDPDesc:         'フルガイドにアクセス:<br><a href="https://gist.github.com/0H4S/109af9d102881cbc34b20d6f2bc196e7#file-english-md" target="_blank"><span style="color: #63b3ed;">English</span></a> | <a href="https://gist.github.com/0H4S/109af9d102881cbc34b20d6f2bc196e7#file-portugues-br-md" target="_blank"><span style="color: #63b3ed;">Português (BR)</span></a> | <a href="https://gist.github.com/0H4S/109af9d102881cbc34b20d6f2bc196e7#file-md" target="_blank"><span style="color: #63b3ed;">简体中文</span></a>',
-            infoASDesc:         '挿入後、手動操作なしで即座にチャットに送信します。'
+            infoASDesc:         '挿入後、手動操作なしで即座にチャットに送信します。',
+            getMoreThemes:      "テーマをもっと入手",
+            editorSettings:     'エディター設定',
+            smartPredict:       'スマートテキスト予測',
+            smartPredictDesc:   '括弧を閉じ、#start マクロを展開し、変数を提案します。'
         },
     'ko': {
             langName:           '한국어',
@@ -725,7 +761,11 @@
             filesCounter:       '파일 ({active}/{total})',
             infoTitle:          '도움말',
             infoDPDesc:         '전체 사용 가이드:<br><a href="https://gist.github.com/0H4S/109af9d102881cbc34b20d6f2bc196e7#file-english-md" target="_blank"><span style="color: #63b3ed;">English</span></a> | <a href="https://gist.github.com/0H4S/109af9d102881cbc34b20d6f2bc196e7#file-portugues-br-md" target="_blank"><span style="color: #63b3ed;">Português (BR)</span></a> | <a href="https://gist.github.com/0H4S/109af9d102881cbc34b20d6f2bc196e7#file-md" target="_blank"><span style="color: #63b3ed;">简体中文</span></a>',
-            infoASDesc:         '프롬프트가 삽입된 후 수동 작업 없이 즉시 채팅으로 전송합니다.'
+            infoASDesc:         '프롬프트가 삽입된 후 수동 작업 없이 즉시 채팅으로 전송합니다.',
+            getMoreThemes:      "더 많은 테마 가져오기",
+            editorSettings:     '편집기 설정',
+            smartPredict:       '스마트 텍스트 예측',
+            smartPredictDesc:   '괄호를 닫고, #start 매크로를 확장하며, 변수를 제안합니다.'
         },
     };
 
@@ -889,6 +929,7 @@
                 '--mp-warning': '#ffc107',
                 '--mp-error': '#dc3545',
                 '--mp-info': '#17a2b8',
+                '--mp-switch-knob': '#ffffff',
                 '--mp-shadow-sm': '0 1px 2px rgba(0, 0, 0, 0.04)',
                 '--mp-shadow-md': '0 4px 12px rgba(0, 0, 0, 0.1)'
             },
@@ -912,6 +953,7 @@
                 '--mp-warning': '#ff9f0a',
                 '--mp-error': '#ff4d4f',
                 '--mp-info': '#5ac8fa',
+                '--mp-switch-knob': '#ffffff',
                 '--mp-shadow-sm': '0 1px 2px rgba(0, 0, 0, 0.15)',
                 '--mp-shadow-md': '0 4px 12px rgba(0, 0, 0, 0.25)'
             }
@@ -940,6 +982,7 @@
                 '--mp-btn-add-color': '#50fa7b',
                 '--mp-btn-import-background': 'rgba(255, 184, 108, 0.1)',
                 '--mp-btn-import-color': '#ffb86c',
+                '--mp-switch-knob': '#ffffff',
                 '--mp-shadow-sm': '0 1px 2px rgba(98, 114, 164, 0.2)',
                 '--mp-shadow-md': '0 4px 12px rgba(98, 114, 164, 0.2)'
             },
@@ -965,6 +1008,7 @@
                 '--mp-btn-add-color': '#50fa7b',
                 '--mp-btn-import-background': 'rgba(255, 184, 108, 0.15)',
                 '--mp-btn-import-color': '#ffb86c',
+                '--mp-switch-knob': '#ffffff',
                 '--mp-shadow-sm': '0 1px 2px rgba(0, 0, 0, 0.3)',
                 '--mp-shadow-md': '0 4px 12px rgba(0, 0, 0, 0.4)'
             }
@@ -993,6 +1037,7 @@
                 '--mp-btn-add-color': '#6a994e',
                 '--mp-btn-import-background': 'rgba(231, 111, 81, 0.1)',
                 '--mp-btn-import-color': '#e76f51',
+                '--mp-switch-knob': '#ffffff',
                 '--mp-shadow-sm': '0 1px 2px rgba(67, 40, 24, 0.1)',
                 '--mp-shadow-md': '0 4px 12px rgba(67, 40, 24, 0.15)'
             },
@@ -1018,6 +1063,7 @@
                 '--mp-btn-add-color': '#90be6d',
                 '--mp-btn-import-background': 'rgba(244, 162, 97, 0.15)',
                 '--mp-btn-import-color': '#f4a261',
+                '--mp-switch-knob': '#ffffff',
                 '--mp-shadow-sm': '0 1px 2px rgba(0, 0, 0, 0.5)',
                 '--mp-shadow-md': '0 4px 12px rgba(0, 0, 0, 0.6)'
             }
@@ -1046,6 +1092,7 @@
                 '--mp-btn-add-color': '#008f47',
                 '--mp-btn-import-background': 'rgba(245, 124, 0, 0.1)',
                 '--mp-btn-import-color': '#ef6c00',
+                '--mp-switch-knob': '#ffffff',
                 '--mp-shadow-sm': '0 1px 2px rgba(0, 0, 0, 0.15)',
                 '--mp-shadow-md': '0 4px 12px rgba(0, 0, 0, 0.2)'
             },
@@ -1071,6 +1118,7 @@
                 '--mp-btn-add-color': '#00ff41',
                 '--mp-btn-import-background': 'rgba(255, 153, 0, 0.15)',
                 '--mp-btn-import-color': '#ff9900',
+                '--mp-switch-knob': '#ffffff',
                 '--mp-shadow-sm': '0 1px 4px rgba(0, 243, 255, 0.1)',
                 '--mp-shadow-md': '0 4px 12px rgba(247, 0, 255, 0.15)'
             }
@@ -1100,6 +1148,7 @@
                 '--mp-btn-add-color': '#059669',
                 '--mp-btn-import-background': 'rgba(234, 88, 12, 0.1)',
                 '--mp-btn-import-color': '#ea580c',
+                '--mp-switch-knob': '#ffffff',
                 '--mp-shadow-sm': '0 1px 2px rgba(0, 0, 0, 0.1)',
                 '--mp-shadow-md': '0 4px 12px rgba(0, 0, 0, 0.15)'
             },
@@ -1126,6 +1175,7 @@
                 '--mp-btn-add-color': '#22c55e',
                 '--mp-btn-import-background': 'rgba(249, 115, 22, 0.2)',
                 '--mp-btn-import-color': '#f97316',
+                '--mp-switch-knob': '#ffffff',
                 '--mp-shadow-sm': 'none',
                 '--mp-shadow-md': '0 0 0 1px #333333'
             }
@@ -1334,6 +1384,9 @@
                 --mp-btn-import-background: rgba(253, 126, 20, 0.1);
                 --mp-btn-import-color: #fd7e14;
 
+                /* --- CONTROLE DO TOGGLE (SWITCH) --- */
+                --mp-switch-knob: #ffffff;
+
                 /* --- SOMBRAS E BORDAS --- */
                 --mp-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
                 --mp-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -1377,6 +1430,9 @@
                     --mp-btn-add-color: #69db7c;
                     --mp-btn-import-background: rgba(255, 169, 77, 0.15);
                     --mp-btn-import-color: #ffa94d;
+
+                    /* --- CONTROLE DO TOGGLE (SWITCH) --- */
+                    --mp-switch-knob: #ffffff;
 
                     /* --- SOMBRAS --- */
                     --mp-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
@@ -1435,12 +1491,20 @@
 
             .mp-scroll-arrow.up {
                 top: 0;
-                background: linear-gradient(to bottom, var(--scroll-bg, var(--mp-bg-primary)) 30%, transparent);
+                background: linear-gradient(
+                    to bottom,
+                    color-mix(in srgb, var(--mp-scroll-bg, var(--mp-bg-primary)), transparent 40%) 30%,
+                    transparent
+                );
             }
 
             .mp-scroll-arrow.down {
                 bottom: 0;
-                background: linear-gradient(to top, var(--scroll-bg, var(--mp-bg-primary)) 30%, transparent);
+                background: linear-gradient(
+                    to top,
+                    color-mix(in srgb, var(--mp-scroll-bg, var(--mp-bg-primary)), transparent 40%) 30%,
+                    transparent
+                );
             }
 
             .mp-scroll-arrow:hover {
@@ -1468,7 +1532,7 @@
                 border: none !important;
                 box-shadow: none !important;
                 background-color: transparent !important;
-                padding: 10px;
+                padding: 18px;
                 width: 100%;
                 height: 100%;
                 font-family: var(--mp-font-family-editor) !important;
@@ -2075,6 +2139,10 @@
                 color: var(--mp-text-primary);
             }
 
+            .prompt-item-row.nav-selected {
+                background-color: var(--mp-bg-tertiary);
+            }
+
             .prompt-actions {
                 display: flex;
                 align-items: center;
@@ -2202,6 +2270,11 @@
                 font-size: 14px !important;
             }
 
+            .form-input {
+                padding-left: 18px;
+                padding-right: 18px;
+            }
+
             .form-textarea {
                 height: 300px !important;
                 resize: none !important;
@@ -2264,7 +2337,7 @@
                 left: 3px;
                 width: 16px;
                 height: 16px;
-                background: #fff;
+                background: var(--mp-switch-knob);
                 border-radius: 90px;
                 transition: 0.3s cubic-bezier(.25, 1, .5, 1);
                 box-shadow: var(--mp-shadow-sm);
@@ -3001,6 +3074,40 @@
                 min-width: 160px;
             }
 
+            .mp-theme-action-row {
+                display: flex;
+                gap: 8px;
+                padding: 0 5px;
+                margin: 5px 0 8px 0;
+                flex-shrink: 0;
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            .mp-theme-split-btn {
+                flex: 1;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 10px;
+                border-radius: var(--mp-border-radius-md);
+                border: 1px dashed var(--mp-border-primary);
+                color: var(--mp-text-secondary);
+                background-color: var(--mp-bg-secondary);
+                cursor: pointer;
+                transition: all 0.2s ease;
+                font-size: 13px;
+                font-weight: 500;
+            }
+
+            .mp-theme-split-btn:hover {
+                background-color: var(--mp-bg-tertiary);
+                border-color: var(--mp-accent-primary);
+                color: var(--mp-accent-primary);
+                transform: translateY(-1px);
+                box-shadow: var(--mp-shadow-sm);
+            }
+
             /* ======================== */
             /* CORREÇÃO DE SOBREPOSIÇÃO */
             /* ======================== */
@@ -3079,8 +3186,8 @@
         plus:       `<svg class="mp-add-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>`,
         sol:        `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`,
         lua:        `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`,
-        close:      `<svg viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" /></svg>`,
-        file:       `<svg class="mp-file-icon-gen" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 28"><path d="m16.5 0 7 7v15.6c0 2.25 0 3.38-.57 4.16a3 3 0 0 1-.67.67c-.79.57-1.91.57-4.16.57H5.9c-2.25 0-3.37 0-4.16-.57a3 3 0 0 1-.67-.67C.5 25.97.5 24.85.5 22.6V5.4c0-2.25 0-3.38.57-4.16a3 3 0 0 1 .67-.67C2.52 0 3.65 0 5.9 0z" fill="url(#a)"/><path d="m16.5 0 7 7h-3.8c-1.12 0-1.68 0-2.1-.22a2 2 0 0 1-.88-.87c-.22-.43-.22-.99-.22-2.11z" fill="#fff" fill-opacity=".55"/><path d="M6 11.78c0-.43.35-.78.78-.78h10.44a.78.78 0 1 1 0 1.57H6.78a.8.8 0 0 1-.78-.79m0 4c0-.43.35-.78.78-.78h10.44a.78.78 0 1 1 0 1.57H6.78a.8.8 0 0 1-.78-.79m.11 4.04c0-.44.35-.79.79-.79h6.32a.78.78 0 1 1 0 1.57H6.9a.8.8 0 0 1-.79-.78" fill="#fff"/><defs><linearGradient id="a" x1="1.5" y1="-1" x2="23.5" y2="28" gradientUnits="userSpaceOnUse"><stop stop-color="#7071fc"/><stop offset="1" stop-color="#595ac9"/></linearGradient></defs></svg>`,
+        close:      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024"><path fill="currentColor" d="M195.2 195.2a64 64 0 0 1 90.5 0L512 421.5l226.3-226.3a64 64 0 0 1 90.5 90.5L602.5 512l226.3 226.3a64 64 0 0 1-90.5 90.5L512 602.5 285.7 828.8a64 64 0 0 1-90.5-90.5L421.5 512 195.2 285.7a64 64 0 0 1 0-90.5"/></svg>`,
+        file:       `<svg class="mp-file-icon-gen" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 28"><path d="m16.5 0 7 7v15.6c0 2.25 0 3.38-.57 4.16a3 3 0 0 1-.67.67c-.79.57-1.91.57-4.16.57H5.9c-2.25 0-3.37 0-4.16-.57a3 3 0 0 1-.67-.67C.5 25.97.5 24.85.5 22.6V5.4c0-2.25 0-3.38.57-4.16a3 3 0 0 1 .67-.67C2.52 0 3.65 0 5.9 0z" fill="url(#a)"/><path d="m16.5 0 7 7h-3.8c-1.12 0-1.68 0-2.1-.22a2 2 0 0 1-.88-.87c-.22-.43-.22-.99-.22-2.11z" fill="var(--mp-switch-knob)" fill-opacity=".55"/><path d="M6 11.78c0-.43.35-.78.78-.78h10.44a.78.78 0 1 1 0 1.57H6.78a.8.8 0 0 1-.78-.79m0 4c0-.43.35-.78.78-.78h10.44a.78.78 0 1 1 0 1.57H6.78a.8.8 0 0 1-.78-.79m.11 4.04c0-.44.35-.79.79-.79h6.32a.78.78 0 1 1 0 1.57H6.9a.8.8 0 0 1-.79-.78" fill="var(--mp-switch-knob)"/><defs><linearGradient id="a" x1="1.5" y1="-1" x2="23.5" y2="28" gradientUnits="userSpaceOnUse"><stop stop-color="var(--mp-accent-primary)"/><stop offset="1" stop-color="var(--mp-accent-primary-hover)"/></linearGradient></defs></svg>`,
         expand:     `<svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>`,
         collapse:   `<svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/></svg>`,
         folder:     `<svg style="width:16px;height:16px;margin-right:8px;vertical-align:text-bottom;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>`,
@@ -3092,8 +3199,8 @@
         import:     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M8.71 7.71 11 5.41V15a1 1 0 0 0 2 0V5.41l2.29 2.3a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42l-4-4a1 1 0 0 0-.33-.21 1 1 0 0 0-.76 0 1 1 0 0 0-.33.21l-4 4a1 1 0 1 0 1.42 1.42M21 14a1 1 0 0 0-1 1v4a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-4a1 1 0 0 0-2 0v4a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-4a1 1 0 0 0-1-1"/></svg>`,
         info:       `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M10 2a8 8 0 1 0 0 16 8 8 0 0 0 0-16Zm0 14a6 6 0 1 1 0-12 6 6 0 0 1 0 12ZM9 5h2v2H9V5Zm0 4h2v6H9V9Z"/></svg>`,
         setaCima:   `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17 16"><path fill="currentColor" fill-rule="evenodd" d="M15.81 9.9a1 1 0 0 1-.65-.2L8.93 5.54 2.9 9.74a1.2 1.2 0 0 1-1.63-.33 1.17 1.17 0 0 1 .32-1.63l6.69-4.63a1.2 1.2 0 0 1 1.3 0l6.88 4.59a1.18 1.18 0 0 1-.65 2.16"/></svg>`,
-        setaBaixo:  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17 17"><path fill="currentColor" fill-rule="evenodd" d="M2.16 6.246c.225 0 .45.062.65.196l6.229 4.156 6.037-4.197a1.175 1.175 0 0 1 1.304 1.958l-6.688 4.63a1.17 1.17 0 0 1-1.304.002l-6.88-4.589a1.178 1.178 0 0 1 .652-2.156"/></svg>`
-
+        setaBaixo:  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17 17"><path fill="currentColor" fill-rule="evenodd" d="M2.16 6.246c.225 0 .45.062.65.196l6.229 4.156 6.037-4.197a1.175 1.175 0 0 1 1.304 1.958l-6.688 4.63a1.17 1.17 0 0 1-1.304.002l-6.88-4.589a1.178 1.178 0 0 1 .652-2.156"/></svg>`,
+        cart:       `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>`
     };
     const DEFAULT_ICONS = { ...ICONS };
 
@@ -3495,6 +3602,36 @@
         return btn;
     }
 
+    // --- COPILOT ---
+    function createCopilotButton() {
+        const styleId = 'uni-icon-btn-copilot';
+        if (!document.getElementById(styleId)) {
+            const style = document.createElement('style');
+            style.id = styleId;
+            style.textContent = `.uni-icon-btn-copilot {display: inline-flex;align-items: center;justify-content: center;box-sizing: border-box;width: 36px; height: 36px;margin: 0 4px;cursor: pointer;transition: background-color 0.2s ease;}.uni-icon-btn-copilot svg { display: block; }`;
+            document.head.appendChild(style);
+        }
+        const btn = document.createElement('button');
+        btn.className = 'uni-icon-btn-copilot relative flex items-center text-foreground-800 fill-foreground-800 active:text-foreground-600 active:fill-foreground-600 dark:active:text-foreground-650 dark:active:fill-foreground-650 bg-transparent safe-hover:bg-black/5 active:bg-black/3 dark:safe-hover:bg-black/30 dark:active:bg-black/20 text-sm justify-center min-h-9 min-w-9 h-9 select-none gap-1 rounded-2xl border border-black/8 dark:border-white/8 outline-2 outline-offset-1 focus-visible:z-[1] focus-visible:outline focus-visible:outline-stroke-900';
+        btn.setAttribute('data-testid', 'composer-button-prompts');
+        btn.setAttribute('aria-label', getTranslation('prompts'));
+        btn.type = "button";
+        const span = document.createElement('span');
+        span.style.display = 'flex';
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('width', '24'); svg.setAttribute('height', '24');
+        svg.setAttribute('viewBox', '0 0 20 20'); svg.setAttribute('fill', 'none');
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', 'M4 5h12M4 10h12M4 15h12');
+        path.setAttribute('stroke', 'currentColor');
+        path.setAttribute('stroke-width', '2');
+        svg.appendChild(path);
+        span.appendChild(svg);
+        btn.appendChild(span);
+        createCustomTooltip(btn, getTranslation('prompts'));
+        return btn;
+    }
+
     // ================
     // #endregion BOTÕES DE PROMPT
     // ================
@@ -3536,28 +3673,38 @@
                         <!-- ABA BÁSICO -->
                         <div class="mp-tab-content active" id="tab-basic">
 
-                        <!-- IDIOMA -->
-                        <div class="mp-form-group"><label class="mp-label">${getTranslation('languageSettings')}</label><button id="mp-btn-open-lang" class="mp-action-btn-full"><span id="mp-current-lang-display" style="font-weight:600;">${translations[currentLang]?.langName || currentLang}</span><span class="mp-btn-icon">${ICONS.globo}</span></button></div>
+                            <!-- IDIOMA -->
+                            <div class="mp-form-group"><label class="mp-label">${getTranslation('languageSettings')}</label><button id="mp-btn-open-lang" class="mp-action-btn-full"><span id="mp-current-lang-display" style="font-weight:600;">${translations[currentLang]?.langName || currentLang}</span><span class="mp-btn-icon">${ICONS.globo}</span></button></div>
 
-                        <!-- MODO DE COR -->
-                        <div class="mp-form-group"><label class="mp-label">${getTranslation('colorMode')}</label><div class="mp-segmented-control"><div class="mp-segment-opt" data-val="auto">${ICONS.monitor} <span>${getTranslation('auto')}</span></div>
-                        <div class="mp-segment-opt" data-val="light">${ICONS.sol} <span>${getTranslation('light')}</span></div>
-                        <div class="mp-segment-opt" data-val="dark">${ICONS.lua} <span>${getTranslation('dark')}</span></div></div></div>
+                            <!-- MODO DE COR -->
+                            <div class="mp-form-group"><label class="mp-label">${getTranslation('colorMode')}</label>
+                                <div class="mp-segmented-control">
+                                    <div class="mp-segment-opt" data-val="auto">${ICONS.monitor} <span>${getTranslation('auto')}</span></div>
+                                    <div class="mp-segment-opt" data-val="light">${ICONS.sol} <span>${getTranslation('light')}</span></div>
+                                    <div class="mp-segment-opt" data-val="dark">${ICONS.lua} <span>${getTranslation('dark')}</span></div>
+                                </div>
+                            </div>
 
-                        <!-- LISTA DE TEMAS -->
-                        <div class="mp-form-group" ><label class="mp-label">${getTranslation('theme')}</label><div class="mp-theme-scroll-container" id="mp-theme-list-container"></div></div></div>
+                            <!-- LISTA DE TEMAS -->
+                            <div class="mp-form-group"><label class="mp-label">${getTranslation('theme')}</label>
+                                <div class="mp-theme-scroll-container" id="mp-theme-list-container"></div>
+                            </div>
+                        </div>
 
                         <!-- ABA AVANÇADO -->
                         <div class="mp-tab-content" id="tab-advanced">
-                        <div class="empty-state" style="padding: 40px 20px;">
-                        <div style="font-size: 32px; margin-bottom: 12px; opacity:0.6;">🛠️</div>
-                        <div style="color: var(--mp-text-tertiary); font-weight:500;">Advanced settings coming soon</div></div></div>
+                            <!-- CONFIGURAÇÃO DE EDITOR INTELIGENTE -->
+                            <div class="mp-form-group" style="margin-top: 10px;"><label class="mp-label">${getTranslation('editorSettings')}</label>
+                                <div class="mp-switch-container" style="background: var(--mp-bg-secondary); border: 1px solid var(--mp-border-primary); padding: 12px; border-radius: var(--mp-border-radius-md); margin:0;">
+                                    <div style="display:flex; flex-direction:column; gap:4px;"><span style="font-size:14px; font-weight:600; color:var(--mp-text-primary);">${getTranslation('smartPredict')}</span><span style="font-size:12px; color:var(--mp-text-tertiary);">${getTranslation('smartPredictDesc')}</span></div>
+                                    <div class="mp-switch"><input type="checkbox" id="mp_setting_prediction" /><label for="mp_setting_prediction">Toggle</label></div>
+                                </div>
+                            </div>
+                        </div>
 
+                        <!-- RODAPÉ -->
+                        <div class="mp-settings-footer"><button class="save-button" id="mp-settings-save">${getTranslation('save')}</button></div>
                     </div>
-                </div>
-
-                <!-- RODAPÉ -->
-                <div class="mp-settings-footer"><button class="save-button" id="mp-settings-save">${getTranslation('save')}</button></div></div>
         `;
         setSafeInnerHTML(box, htmlContent);
         overlay.appendChild(box);
@@ -3583,15 +3730,26 @@
         };
         const renderThemeList = () => {
             setSafeInnerHTML(themeListContainer, '');
+
+            const actionRow = document.createElement('div');
+            actionRow.className = 'mp-theme-action-row';
+
+            const shopBtn = document.createElement('div');
+            shopBtn.className = 'mp-theme-split-btn';
+            setSafeInnerHTML(shopBtn, ICONS.cart);
+            shopBtn.onclick = () => window.open('https://ohas.gumroad.com/', '_blank');
+            createCustomTooltip(shopBtn, getTranslation('getMoreThemes'), 'bottom');
+
             const addBtn = document.createElement('div');
-            addBtn.className = 'mp-theme-option';
-            addBtn.style.color = 'var(--mp-accent-primary)';
-            addBtn.style.borderColor = 'var(--mp-accent-primary)';
-            addBtn.style.borderStyle = 'dashed';
-            setSafeInnerHTML(addBtn, `<span style="pointer-events:none; display:flex; align-items:center; gap:6px;">${ICONS.plus}</span>`);
-            createCustomTooltip(addBtn, getTranslation('addTheme'), 'right');
+            addBtn.className = 'mp-theme-split-btn';
+            setSafeInnerHTML(addBtn, ICONS.plus);
             addBtn.onclick = () => fileInput.click();
-            themeListContainer.appendChild(addBtn);
+            createCustomTooltip(addBtn, getTranslation('addTheme'), 'bottom');
+
+            actionRow.appendChild(shopBtn);
+            actionRow.appendChild(addBtn);
+            themeListContainer.appendChild(actionRow);
+
             const createThemeEl = (id, def, isImported) => {
                 const item = document.createElement('div');
                 item.className = 'mp-theme-option';
@@ -3658,8 +3816,18 @@
             if (!languageModal) { languageModal = createLanguageModal(); document.body.appendChild(languageModal); }
             showModal(languageModal);
         };
+        const predictionCheckbox = box.querySelector('#mp_setting_prediction');
+        if (predictionCheckbox) {
+            predictionCheckbox.checked = currentPredictionConfig.enabled;
+            predictionCheckbox.onchange = () => {
+                currentPredictionConfig.enabled = predictionCheckbox.checked;
+            };
+        }
         box.querySelector('#mp-settings-save').onclick = async () => {
             await saveThemeConfig(tempConfig);
+            if (predictionCheckbox) {
+                savePredictionConfig({ enabled: predictionCheckbox.checked });
+            }
             hideModal(overlay);
         };
         setupEnhancedScroll(box.querySelector('#mp-settings-scroll-area'));
@@ -3699,14 +3867,7 @@
             return c;
         };
 
-        /* --- BLOCO DE IGNORAR ---
-            Sintaxe: #ignore ... #end
-            É possível usar qualquer número de '#' no início, desde que sejam iguais no início e no fim.
-            Exemplo:
-                    ##ignore
-                    Este texto será ignorado.
-                    ##end
-        */
+        // --- BLOCO DE IGNORAR ---
         const blockFenceRegex = /([ \t]*)(#+)ignore[ \t]*(?:\r?\n)?([\s\S]*?)(?:\r?\n)?[ \t]*\2end/g;
         processedText = processedText.replace(blockFenceRegex, (_match, _whitespace, _hashes, content) => {
             const key = `__IGNORE_BLK_${ignoreCounter++}__`;
@@ -3714,12 +3875,7 @@
             return key;
         });
 
-        /* --- CERCA DE VALOR OCULTO ---
-            Sintaxe: 'valor'
-            Pode usar qualquer número de aspas simples, desde que sejam iguais no início e no fim.
-            Exemplo:
-                    '''Este é um valor oculto'''
-        */
+        // --- CERCA DE VALOR OCULTO ---
         const valueFenceRegex = /('{2,})((?:(?!\1)[\s\S])*)\1/g;
         processedText = processedText.replace(valueFenceRegex, (_match, _quoteSequence, content) => {
             const key = `__QUOTE_${ignoreCounter++}__`;
@@ -3734,18 +3890,7 @@
             return key;
         });
 
-        /* --- BLOCOS DE SELEÇÃO ---
-            Sintaxe: #start ... #end
-            Dentro do bloco, pode-se usar: '# Título da seção (opcional)', '+ [Opção de seleção múltipla]', '- [Opção soberana]', 'ID [Opção com ID personalizada]', 'Valor personalizado' (opcional, para definir o valor associado à opção)
-            Exemplo:
-                    #start
-                    # Escolha suas frutas
-                    + [Maçã]
-                    'Uma fruta vermelha'
-                    1 [Banana]
-                    - [Nenhuma fruta]
-                    #end
-        */
+        // --- BLOCOS DE SELEÇÃO ---
         const regionRegex = /#start([\s\S]*?)#end/g;
         processedText = processedText.replace(regionRegex, (_match, body) => {
             const key = `__SELECT_${selectCounter++}__`;
@@ -3788,13 +3933,7 @@
             return key;
         });
 
-        /* --- CAMPOS DE INPUT ---
-            Sintaxe: [Label =$variable](contexto opcional)
-            Ideal para informações que se repetem, como nome do usuário, data, etc.
-            O contexto é opcional e pode ser usado para fornecer mais informações sobre o que deve ser inserido.
-            Exemplo:
-                    [Nome = $user_name](Por favor, insira seu nome completo)
-        */
+        // --- CAMPOS DE INPUT ---
         processedText = processedText.replace(/\[([^\]=]+?)\s*=\s*(\$[a-zA-Z0-9_]+)\](?:\(([^)]*)\))?/g, (match, label, varName, comment, _offset, _fullString) => {
             if (label.startsWith('__') && label.endsWith('__')) return match;
             const key = `__INPUT_${inputCounter++}__`;
@@ -3803,14 +3942,7 @@
             return key;
         });
 
-        /* --- CAMPOS DE INPUT SIMPLES ---
-            Sintaxe: [Label](contexto opcional)
-            Cria um campo de input simples sem variável associada.
-            O contexto é opcional e pode ser usado para fornecer mais informações sobre o que deve ser inserido.
-            Exemplo:
-                    [Data de Nascimento](Insira sua data de nascimento no formato DD/MM/AAAA)
-
-        */
+        // --- CAMPOS DE INPUT SIMPLES ---
         processedText = processedText.replace(/\[([^\]]+?)\](?:\(([^)]*)\))?/g, (match, label, comment, _offset, _fullString) => {
             if (label.startsWith('__') && label.endsWith('__')) return match;
             if (inputMap.has(match)) return match;
@@ -3903,17 +4035,26 @@
 
             <!-- ARQUIVOS/ANEXOS -->
             <div class="mp-files-accordion" id="__ap_accordion">
-            <div class="mp-accordion-header" id="__ap_files_header"> <div style="display:flex;align-items:center;">${ICONS.folder}<span id="__ap_files_label">${getTranslation('filesLabel')}</span></div>${ICONS.chevron}</div>
-            <div class="mp-accordion-content" id="__ap_files_content"><div id="__ap_file_scroll_wrapper" class="mp-file-scroll-wrapper"><div id="__ap_file_grid" class="mp-file-grid"></div></div><input type="file" id="__ap_file_input" multiple style="display:none"></div></div>
+                <div class="mp-accordion-header" id="__ap_files_header">
+                    <div style="display:flex;align-items:center;">${ICONS.folder}<span id="__ap_files_label">${getTranslation('filesLabel')}</span></div>${ICONS.chevron}
+                </div>
+                <div class="mp-accordion-content" id="__ap_files_content">
+                    <div id="__ap_file_scroll_wrapper" class="mp-file-scroll-wrapper">
+                        <div id="__ap_file_grid" class="mp-file-grid"></div>
+                    </div><input type="file" id="__ap_file_input" multiple style="display:none">
+                </div>
+            </div>
 
             <! -- INTERRUPTORES DE CONFIGURAÇÃO (PROMPT DINÂMICO, EXECUÇÃO AUTOMÁTICA E SALVAR) -->
-            <div class="mp-switch-container" style="flex-shrink:0;">
-            <div class="mp-switch"><input type="checkbox" id="__ap_use_placeholders" /><label for="__ap_use_placeholders">Toggle</label><span class="switch-text" onclick="document.getElementById('__ap_use_placeholders').click()">${getTranslation('enablePlaceholders')}</span></div>
-            <div class="mp-switch"><input type="checkbox" id="__ap_auto_execute" /><label for="__ap_auto_execute">Toggle</label><span class="switch-text" onclick="document.getElementById('__ap_auto_execute').click()">${getTranslation('autoExecute')}</span></div></div>
-            <div class="modal-footer" style="flex-shrink:0; margin-top: auto;"><button id="__ap_save" class="save-button">${getTranslation('save')}</button></div>
+                <div class="mp-switch-container" style="flex-shrink:0;">
+                    <div class="mp-switch"><input type="checkbox" id="__ap_use_placeholders" /><label for="__ap_use_placeholders">Toggle</label><span class="switch-text" onclick="document.getElementById('__ap_use_placeholders').click()">${getTranslation('enablePlaceholders')}</span></div>
+                    <div class="mp-switch"><input type="checkbox" id="__ap_auto_execute" /><label for="__ap_auto_execute">Toggle</label><span class="switch-text" onclick="document.getElementById('__ap_auto_execute').click()">${getTranslation('autoExecute')}</span></div>
+                </div>
+                <div class="modal-footer" style="flex-shrink:0; margin-top: auto;"><button id="__ap_save" class="save-button">${getTranslation('save')}</button></div>
         `);
         overlay.appendChild(box);
         const textarea = box.querySelector('#__ap_text');
+        attachSmartEditorLogic(textarea);
         const fileScrollWrapper = box.querySelector('#__ap_file_scroll_wrapper');
         setTimeout(() => {
             const textWrapper = setupEnhancedScroll(textarea, null, 'var(--mp-border-radius-md)');
@@ -3980,7 +4121,7 @@
                 };
                 const delBtn = document.createElement('div');
                 delBtn.className = 'mp-file-delete-perm';
-                delBtn.textContent = '✕';
+                setSafeInnerHTML(delBtn, `${ICONS.close}`);
                 delBtn.onclick = async (e) => {
                     e.stopPropagation();
                     if(confirm(getTranslation('confirmDeleteFile'))) {
@@ -4186,7 +4327,7 @@
         scrollContainer.classList.add('mp-scroll-invisible');
         const wrapper = document.createElement('div');
         wrapper.className = 'mp-scroll-wrapper';
-        if (customBgVariable) wrapper.style.setProperty('--scroll-bg', customBgVariable);
+        if (customBgVariable) wrapper.style.setProperty('--mp-scroll-bg', customBgVariable);
         if (borderRadius) wrapper.style.borderRadius = borderRadius;
         wrapper.style.marginBottom = marginBottom;
         wrapper.style.marginTop = marginTop;
@@ -4298,14 +4439,11 @@
         }, 10);
     }
 
-    // --- FECHAR LISTA DE PROMPTS ---
-    function closeMenu() {
-        if (currentMenu && currentMenu.classList.contains('visible')) {
-            currentMenu.classList.remove('visible');
-        }
-    }
+    // ================
+    // #region LISTA DE PROMPTS
+    // ================
 
-    // ---POSICIONAR LISTA DE PROMPTS ---
+    // ---POSICIONAR LISTA  ---
     function positionMenu(menu, button) {
         const btnRect = button.getBoundingClientRect();
         const menuHeight = menu.offsetHeight;
@@ -4328,19 +4466,19 @@
         menu.style.left = `${Math.max(margin, Math.min(left, viewportWidth - menuWidth - margin))}px`;
     }
 
-    // --- ATUALIZAR LISTA DE PROMPTS ---
+    // --- ATUALIZAR LISTA ---
     async function refreshMenu() {
         if (!currentMenu) return;
         setSafeInnerHTML(currentMenu, '');
+        let selectedIndex = -1;
         const searchContainer = document.createElement('div');
         searchContainer.className = 'menu-search-container';
         const searchInput = document.createElement('input');
         searchInput.className = 'menu-search-input';
         searchInput.placeholder = getTranslation('search');
-        searchInput.type = 'prompt';
+        searchInput.type = 'text';
         searchInput.autocomplete = 'off';
         searchInput.onclick = (e) => e.stopPropagation();
-        searchInput.onkeydown = (e) => e.stopPropagation();
         searchContainer.appendChild(searchInput);
         currentMenu.appendChild(searchContainer);
         const listContainer = document.createElement('div');
@@ -4350,6 +4488,17 @@
         const emptyState = document.createElement('div');
         emptyState.className = 'empty-state';
         emptyState.textContent = getTranslation('noSavedPrompts');
+        const updateSelection = () => {
+            const visibleRows = Array.from(listContainer.querySelectorAll('.prompt-item-row'))
+                .filter(row => row.style.display !== 'none');
+            listContainer.querySelectorAll('.prompt-item-row.nav-selected')
+                .forEach(row => row.classList.remove('nav-selected'));
+            if (selectedIndex >= 0 && selectedIndex < visibleRows.length) {
+                const selectedRow = visibleRows[selectedIndex];
+                selectedRow.classList.add('nav-selected');
+                selectedRow.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+            }
+        };
         if (items.length === 0) {
             listContainer.appendChild(emptyState);
         } else {
@@ -4360,16 +4509,24 @@
                 const row = document.createElement('div');
                 row.className = 'prompt-item-row';
                 row.dataset.searchText = (p.title + ' ' + p.text).toLowerCase();
+                row.onmouseenter = () => {
+                    selectedIndex = -1;
+                    updateSelection();
+                };
                 const titleDiv = document.createElement('div');
                 titleDiv.className = 'prompt-title';
                 titleDiv.textContent = p.title;
-                titleDiv.onclick = (e) => {
-                    e.stopPropagation();
+                const executePrompt = () => {
                     if (currentPlaceholderModal) currentPlaceholderModal.dataset.fromInline = "false";
                     if (p.usePlaceholders) openPlaceholderModal(p, index);
                     else insertPrompt(p, index);
                     closeMenu();
                 };
+                titleDiv.onclick = (e) => {
+                    e.stopPropagation();
+                    executePrompt();
+                };
+                row.executeItem = executePrompt;
                 const actionsDiv = document.createElement('div');
                 actionsDiv.className = 'prompt-actions';
                 const createBtn = (cls, icon, title, clickFn) => {
@@ -4391,10 +4548,47 @@
         }
         currentMenu.appendChild(listContainer);
         setupEnhancedScroll(listContainer);
+
+        // --- LÓGICA DE TECLADO ---
+        searchInput.onkeydown = (e) => {
+            if (e.key === 'Escape') {
+                e.preventDefault();
+                e.stopPropagation();
+                closeMenu();
+                return;
+            }
+            e.stopPropagation();
+            const visibleRows = Array.from(listContainer.querySelectorAll('.prompt-item-row'))
+                .filter(row => row.style.display !== 'none');
+            if (visibleRows.length === 0) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                selectedIndex++;
+                if (selectedIndex >= visibleRows.length) selectedIndex = 0;
+                updateSelection();
+            }
+            else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                selectedIndex--;
+                if (selectedIndex < 0) selectedIndex = visibleRows.length - 1;
+                updateSelection();
+            }
+            else if (e.key === 'Enter') {
+                e.preventDefault();
+                if (selectedIndex >= 0 && selectedIndex < visibleRows.length) {
+                    if (visibleRows[selectedIndex].executeItem) {
+                        visibleRows[selectedIndex].executeItem();
+                    }
+                }
+            }
+        };
+
+        // FILTRO DE BUSCA
         searchInput.oninput = (e) => {
             const term = e.target.value.toLowerCase();
             const rows = listContainer.querySelectorAll('.prompt-item-row');
             let visibleCount = 0;
+            selectedIndex = -1;
             rows.forEach(row => {
                 if (row.dataset.searchText && row.dataset.searchText.includes(term)) {
                     row.style.display = 'flex';
@@ -4403,6 +4597,7 @@
                     row.style.display = 'none';
                 }
             });
+            updateSelection();
             if (items.length > 0) {
                 if (visibleCount === 0) {
                     emptyState.style.display = 'block';
@@ -4428,6 +4623,17 @@
         currentMenu.appendChild(footerGrid);
         setTimeout(() => searchInput.focus(), 50);
     }
+
+    // --- FECHAR LISTA ---
+    function closeMenu() {
+        if (currentMenu && currentMenu.classList.contains('visible')) {
+            currentMenu.classList.remove('visible');
+        }
+    }
+
+    // ================
+    // #endregion LISTA DE PROMPTS
+    // ================
 
     // ================
     // #region PROMPT DINÂMICO PT2
@@ -4907,6 +5113,265 @@
     // #endregion OPÇÃO INLINE
     // ================
 
+    // =================
+    // #region EDITOR INTELIGENTE
+    // =================
+
+    // --- CARREGAR CONFIGURAÇÕES ---
+    function loadPredictionConfig() {
+        currentPredictionConfig = GM_getValue(PREDICTION_STORAGE_KEY, DEFAULT_PREDICTION_CONFIG);
+    }
+
+    // --- SALVAR NA MEMÓRIA ---
+    async function savePredictionConfig(config) {
+        currentPredictionConfig = config;
+        await GM_setValue(PREDICTION_STORAGE_KEY, config);
+    }
+
+    // --- APLICAR LÓGICA DE PREVISÃO ---
+    function attachSmartEditorLogic(textarea) {
+        if (!textarea) return;
+        const pairs = {
+            '(': ')',
+            '[': ']',
+            '{': '}',
+            '"': '"',
+            "'": "'",
+            '`': '`'
+        };
+        const closePairs = new Set(Object.values(pairs));
+
+        // --- FUNÇÃO AUXILIAR: FECHAR AUTOCOMPLETE DE $VAR ---
+        const closeVarPrediction = () => {
+            varMemory.active = false;
+            varMemory.list = [];
+            varMemory.typed = '';
+        };
+
+        // --- HANDLER: KEYDOWN ---
+        textarea.addEventListener('keydown', function(e) {
+            if (!currentPredictionConfig.enabled) return;
+            if (e.isComposing || e.keyCode === 229) return;
+            const start = this.selectionStart;
+            const end = this.selectionEnd;
+            const val = this.value;
+            const char = e.key;
+            const hasSelection = start !== end;
+
+            // --- LÓGICA ESPECÍFICA PARA BACKTICK (Shift + `) ---
+            if (e.key === 'Backquote' && e.shiftKey) {
+                e.preventDefault();
+                if (hasSelection) {
+                    const selectedText = val.substring(start, end);
+                    this.setRangeText('`' + selectedText + '`', start, end, 'select');
+                    this.selectionStart = start + 1;
+                    this.selectionEnd = start + 1 + selectedText.length;
+                } else {
+                    const textToInsert = '``';
+                    this.setRangeText(textToInsert, start, end, 'end');
+                    this.selectionStart = start + 1;
+                    this.selectionEnd = start + 1;
+                }
+                return;
+            }
+
+            // --- LÓGICA DE AUTOCOMPLETAR VARIÁVEL ($) ---
+            if (varMemory.active) {
+                if (start < varMemory.startPos) {
+                    closeVarPrediction();
+                }
+                else {
+                    if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        if (varMemory.list.length <= 1) return;
+                        if (e.key === 'ArrowUp') {
+                            varMemory.index = (varMemory.index + 1) % varMemory.list.length;
+                        }
+                        else {
+                            varMemory.index = (varMemory.index - 1 + varMemory.list.length) % varMemory.list.length;
+                        }
+                        const suggestion = varMemory.list[varMemory.index];
+                        const textToInsert = suggestion.substring(varMemory.typed.length);
+                        this.setRangeText(textToInsert, varMemory.startPos + varMemory.typed.length, end, 'select');
+                        return;
+                    }
+                    if (['Enter', 'Tab', 'ArrowRight'].includes(e.key)) {
+                        e.preventDefault();
+                        this.selectionStart = end;
+                        this.selectionEnd = end;
+                        closeVarPrediction();
+                        return;
+                    }
+                    if (e.key === 'Escape') {
+                        e.preventDefault();
+                        this.setRangeText('', varMemory.startPos + varMemory.typed.length, end, 'end');
+                        closeVarPrediction();
+                        return;
+                    }
+                }
+            }
+
+            // --- LÓGICA DE MACROS ---
+            if (char === '#' && hasSelection) {
+                macroMemory.text = val.substring(start, end);
+                macroMemory.startIndex = start;
+                macroMemory.active = true;
+                macroMemory.hashCount = 1;
+                return;
+            }
+            if (macroMemory.active) {
+                if (start !== macroMemory.startIndex + macroMemory.hashCount) {
+                    macroMemory.active = false;
+                    macroMemory.text = '';
+                } else {
+                    if (char === '#') {
+                        macroMemory.hashCount++;
+                        return;
+                    }
+                    if (['s', 'i'].includes(char)) {
+                        e.preventDefault();
+                        const hashes = '#'.repeat(macroMemory.hashCount);
+                        let replacement = '';
+                        if (char === 's') replacement = `${hashes}start\n${macroMemory.text}\n${hashes}end`;
+                        else if (char === 'i') replacement = `${hashes}ignore\n${macroMemory.text}\n${hashes}end`;
+                        this.setRangeText(replacement, macroMemory.startIndex, start, 'select');
+                        macroMemory.active = false;
+                        macroMemory.text = '';
+                        return;
+                    }
+                    if (!['Shift', 'Control', 'Alt'].includes(e.key)) {
+                        macroMemory.active = false;
+                        macroMemory.text = '';
+                    }
+                }
+            }
+
+            // --- LÓGICA GERAL DE PARES ---
+            if (hasSelection && pairs[char]) {
+                e.preventDefault();
+                const selectedText = val.substring(start, end);
+                const textToInsert = char + selectedText + pairs[char];
+                this.setRangeText(textToInsert, start, end, 'select');
+                this.selectionStart = start + 1;
+                this.selectionEnd = start + 1 + selectedText.length;
+                return;
+            }
+            if (!hasSelection && closePairs.has(char) && val[start] === char) {
+                e.preventDefault();
+                this.selectionStart = start + 1;
+                this.selectionEnd = start + 1;
+                return;
+            }
+            if (e.key === 'Backspace' && !hasSelection && start > 0) {
+                if (varMemory.active) {
+                } else {
+                    const prevChar = val[start - 1];
+                    const nextChar = val[start];
+                    if (pairs[prevChar] === nextChar) {
+                        e.preventDefault();
+                        this.setRangeText('', start - 1, start + 1, 'end');
+                    }
+                }
+                return;
+            }
+            if (!hasSelection && pairs[char]) {
+                if (varMemory.active) return;
+                if (char === '`' && !e.shiftKey) {
+                    e.preventDefault();
+                    const textToInsert = '``';
+                    this.setRangeText(textToInsert, start, end, 'end');
+                    this.selectionStart = start + 1;
+                    this.selectionEnd = start + 1;
+                    return;
+                }
+                if (char !== '`') {
+                    e.preventDefault();
+                    const textToInsert = char + pairs[char];
+                    this.setRangeText(textToInsert, start, end, 'end');
+                    this.selectionStart = start + 1;
+                    this.selectionEnd = start + 1;
+                    return;
+                }
+            }
+        });
+
+        // --- AUTOCOMPLETAR VARIÁVEL ---
+        textarea.addEventListener('input', function(e) {
+            if (!currentPredictionConfig.enabled) return;
+            if (e.isComposing || (e.inputType && e.inputType.startsWith('insertComposition'))) return;
+            if (macroMemory.active) return;
+            const cursor = this.selectionStart;
+            const text = this.value;
+            const char = e.data;
+            if (char === '$') {
+                const textBefore = text.substring(0, cursor);
+                const varRegex = /\[[^\]]*?=\s*(\$[\w]+)\]/g;
+                let match;
+                const foundVars = new Set();
+                const varsOrdered = [];
+                while ((match = varRegex.exec(textBefore)) !== null) {
+                    foundVars.add(match[1]);
+                    varsOrdered.push(match[1]);
+                }
+                if (varsOrdered.length > 0) {
+                    const uniqueVars = [...new Set(varsOrdered.reverse())];
+                    varMemory.active = true;
+                    varMemory.list = uniqueVars;
+                    varMemory.index = 0;
+                    varMemory.startPos = cursor - 1;
+                    varMemory.typed = '$';
+                    const suggestion = uniqueVars[0];
+                    const suggestionName = suggestion.substring(1);
+                    this.setRangeText(suggestionName, cursor, cursor, 'select');
+                }
+                return;
+            }
+            if (varMemory.active && e.inputType !== 'deleteContentBackward') {
+                varMemory.typed += char;
+                const matches = varMemory.list.filter(v => v.startsWith(varMemory.typed));
+                if (matches.length > 0) {
+                    varMemory.index = 0;
+                    const firstMatch = matches[0];
+                    const textToInsert = firstMatch.substring(varMemory.typed.length);
+                    this.setRangeText(textToInsert, cursor, cursor, 'select');
+                }
+                else {closeVarPrediction();}
+                return;
+            }
+            if (e.inputType === 'deleteContentBackward' && varMemory.active) {
+                if (cursor <= varMemory.startPos) {
+                    closeVarPrediction();
+                }
+                else {varMemory.typed = text.substring(varMemory.startPos, cursor);closeVarPrediction();}
+                return;
+            }
+
+            // --- MACROS NORMAIS ---
+            if (['s', 'e', 'i'].includes(char)) {
+                const prefixMatch = text.substring(0, cursor).match(/(^|[\s\n])(#+)([sei])$/);
+                if (prefixMatch) {
+                    const hashes = prefixMatch[2];
+                    const type = prefixMatch[3];
+                    let replacement = '';
+                    if (type === 's') replacement = `${hashes}start\n\n${hashes}end`;
+                    else if (type === 'i') replacement = `${hashes}ignore\n\n${hashes}end`;
+                    else if (type === 'e') replacement = `${hashes}end`;
+                    const triggerLength = hashes.length + 1;
+                    const replaceStart = cursor - triggerLength;
+                    this.setRangeText(replacement, replaceStart, cursor, 'select');
+                    const newCursorPos = replaceStart + (type === 'e' ? replacement.length : (hashes.length + (type === 's' ? 5 : 6) + 1));
+                    this.selectionStart = newCursorPos;
+                    this.selectionEnd = newCursorPos;
+                    return;
+                }
+            }
+        });
+    }
+
+    // =================
+    // #endregion EDITOR INTELIGENTE
+    // =================
+
     // ================
     // #endregion FUNÇÕES AUXILIARES
     // ================
@@ -4936,6 +5401,7 @@
         if (hostname.includes('poe.com'))               return 'poe';
         if (hostname.includes('notebooklm.google.com')) return 'notebooklm';
         if (hostname.includes('doubao.com'))            return 'doubao';
+        if (hostname.includes('copilot.microsoft.com')) return 'copilot';
         if (hostname.includes('google.com') && window.location.pathname.includes('/search') && window.location.search.includes('udm=50')) return 'googleModoIA';
         return null;
     }
@@ -4961,6 +5427,7 @@
             case 'googleModoIA':    return document.querySelector('button[data-xid="input-plate-send-button"]');
             case 'notebooklm':      return document.querySelector('button.submit-button');
             case 'doubao':          return document.querySelector('button[data-testid="chat_input_send_button"], button#flow-end-msg-send');
+            case 'copilot':         return document.querySelector('[data-testid="submit-button"]');
             default:                return null;
         }
     }
@@ -5950,6 +6417,39 @@
                 insertionMethod = 'handled_manually';
             }
 
+            // --- COPILOT ---
+            else if (currentPlatform === 'copilot') {
+                const findAnchor = () => {
+                    const testIdEl = document.querySelector('button[data-testid="composer-create-button"]');
+                    if (testIdEl) return { element: testIdEl, type: 'testid' };
+                    return null;
+                };
+                let anchorData = findAnchor();
+                if (!anchorData) {
+                    await new Promise(r => setTimeout(r, 1500));
+                    anchorData = findAnchor();
+                }
+                if (!anchorData) return;
+                const anchorButton = anchorData.element;
+                const anchorWrapper = anchorButton.parentElement;
+                const mainContainer = anchorWrapper ? anchorWrapper.parentElement : anchorButton.parentElement;
+                if (!mainContainer) return;
+                let existingBtn = mainContainer.querySelector('[data-testid="composer-button-prompts"]');
+                if (existingBtn) {
+                    btn = existingBtn;
+                } else {
+                    btn = createCopilotButton();
+                    if (anchorWrapper && anchorWrapper.nextSibling) {
+                        mainContainer.insertBefore(btn, anchorWrapper.nextSibling);
+                    } else {
+                        mainContainer.appendChild(btn);
+                    }
+                }
+                elementToInsert = btn;
+                insertionPoint = mainContainer;
+                insertionMethod = 'handled_manually';
+            }
+
             // --- VERIFICAÇÃO FINAL ---
             if (!btn || !insertionPoint) return;
             const editorEl = document.querySelector(platformSelectors[currentPlatform]);
@@ -6167,22 +6667,35 @@
             if (ev.target.closest('#prompt-menu-container, [data-testid="composer-button-prompts"]')) return;
             closeMenu();
         });
-
-        // --- TECLA ESCAPE (FECHAR MENU/MODAL) E ATALHO ALT+N (NOVO PROMPT) ---
         document.addEventListener('keydown', ev => {
+
+            // --- TECLA ESCAPE (ESC) ---
             if (ev.key === 'Escape') {
-                closeMenu();
+                if (currentMenu && currentMenu.classList.contains('visible')) {
+                    closeMenu();
+                }
                 if (currentModal && currentModal.classList.contains('visible')) hideModal(currentModal);
                 if (languageModal && languageModal.classList.contains('visible')) hideModal(languageModal);
                 if (currentPlaceholderModal && currentPlaceholderModal.classList.contains('visible')) hideModal(currentPlaceholderModal);
             }
 
-            // --- ATALHO ALT+N (ADICIONA NOVO PROMPT) ---
-            if (ev.altKey && (ev.key === 'n' || ev.key === 'N')) {
+            // --- ATALHO ALT+N (NOVO PROMPT) ---
+            if (ev.altKey && (ev.code === 'KeyN' || ev.key === 'n' || ev.key === 'N')) {
                 ev.preventDefault();
                 ev.stopPropagation();
                 closeMenu();
                 openPromptModal();
+            }
+
+            // --- ATALHO ALT+P (ABRIR/FECHAR MENU) ---
+            if (ev.altKey && (ev.code === 'KeyP' || ev.key === 'p' || ev.key === 'P')) {
+                ev.preventDefault();
+                ev.stopPropagation();
+                if (currentMenu && currentMenu.classList.contains('visible')) {
+                    closeMenu();
+                } else {
+                    if (currentButton) currentButton.click();
+                }
             }
         });
 
@@ -6207,6 +6720,7 @@
     // --- INICIAR TUDO ---
     async function start() {
         await determineLanguage();
+        loadPredictionConfig();
         GM_registerMenuCommand(`⚙️ ${getTranslation('settings')}`, () => {
             if (!settingsModal) {
                 settingsModal = createSettingsModal();

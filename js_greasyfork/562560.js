@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         36-40 | Скрипт для технических специалистов
 // @namespace    https://forum.blackrussia.online
-// @version      0.0.2
+// @version      0.0.3
 // @description  -
 // @author       Soul Crown
 // @match        https://forum.blackrussia.online/*
@@ -140,11 +140,11 @@
             `${START_DECOR}<img src="https://i.postimg.cc/mrhcH5vR/1621526767066.png"><br>` +
             `${START_COLOR_1}{{ greeting }}, уважаемый(-ая) {{ user.mention}}${END_COLOR + START_COLOR_2}.${END_COLOR}<br><br>` +
             `${START_COLOR_2}С момента выдачи наказания техническим специалистом прошло более 14 дней. В настоящий момент пересмотр решения о блокировке аккаунта невозможен, однако Вы можете попробовать написать обжалование через некоторый промежуток времени.${END_COLOR}<br><br>` +
-            `${START_COLOR_1}Закрыто${END_COLOR}${START_COLOR_2}.${END_COLOR}${END_DECOR}`,
-            prefix: CLOSE_PREFIX,
-            status: false,
-            open: false,
-            move: 230,
+            `${START_COLOR_1}Передано руководству${END_COLOR}${START_COLOR_2}.${END_COLOR}${END_DECOR}`,
+            prefix: PIN_PREFIX,
+            status: true,
+            open: true,
+            move: 0,
         },
         {
             title: 'Нет окна блокировки',

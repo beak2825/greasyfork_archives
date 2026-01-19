@@ -1,203 +1,186 @@
 // ==UserScript==
-// @name         Torn Location Based Travel Map (MAT Responsive)
-// @namespace    http://tampermonkey.net/
-// @version      2025-12-17
-// @description  Replaces the plane in Torn travel page with a live, responsive location map (MAT version)
-// @author       justlucdewit
-// @match        https://www.torn.com/page.php?sid=travel
-// @icon         https://www.google.com/s2/favicons?sz=64&domain=torn.com
-// @grant        none
-// @license      MAT
-// @downloadURL https://update.greasyfork.org/scripts/559173/Torn%20Location%20Based%20Travel%20Map%20%28MAT%20Responsive%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/559173/Torn%20Location%20Based%20Travel%20Map%20%28MAT%20Responsive%29.meta.js
+// @name        Torn City Based Travel Map
+// @namespace   http://tampermonkey.net/
+// @version     2026-01-19/2.0
+// @description Replaces the plane in Torn travel page with a live location map with curved paths(updated)
+// @author      Papanad[3928917]
+// @match       https://www.torn.com/page.php?sid=travel
+// @icon        https://www.google.com/s2/favicons?sz=64&domain=torn.com
+// @license     MAT
+// @downloadURL https://update.greasyfork.org/scripts/559173/Torn%20City%20Based%20Travel%20Map.user.js
+// @updateURL https://update.greasyfork.org/scripts/559173/Torn%20City%20Based%20Travel%20Map.meta.js
 // ==/UserScript==
 
-
-(function() {
+(function () {
     'use strict';
 
-    const render_frame = (canvas, ctx) => {
-        const canvas_width = canvas.getBoundingClientRect().width;
-        const canvas_height = canvas.getBoundingClientRect().height;
-        canvas.width = canvas_width;
-        canvas.height = canvas_height;
+    // -------------------------------
+    // Pixel-perfect location coordinates (%)
+    // -------------------------------
+ const locations = {
+    torn:            { x: 49.5, y: 47 },// center
+    mexico:          { x: 45.5, y: 46.5 },
+    'cayman-islands':{ x: 53.5, y: 51 },
+    canada:          { x: 54, y: 38 },
+    hawaii:          { x: 32, y: 53 },
+    uk:              { x: 75.7, y: 33.6 },
+    argentina:       { x: 59, y: 81 },
+    switzerland:     { x: 78.5, y: 36.5 },
+    japan:           { x: 13.5, y: 43.5 },
+    uae:             { x: 91.5, y: 50 },
+    china:           { x: 7, y: 40 },
+    'south-africa':  { x: 83.8, y: 78 },
+};
 
-        ctx.clearRect(0, 0, canvas_width, canvas_height);
 
-        const locations = {
-            'torn': { 'x': 51, 'y': 47 },
-            'mexico': { 'x': 48, 'y': 49 },
-            'cayman-islands': { 'x': 54, 'y': 52 },
-            'canada': { 'x': 54, 'y': 38 },
-            'hawaii': { 'x': 34, 'y': 53 },
-            'uk': { 'x': 77, 'y': 31 },
-            'argentina': { 'x': 60, 'y': 83 },
-            'switzerland': { 'x': 79, 'y': 36 },
-            'japan': { 'x': 16, 'y': 42 },
-            'uae': { 'x': 92, 'y': 49 },
-            'china': { 'x': 9, 'y': 39 },
-            'sout-africa': { 'x': 85, 'y': 78 },
-        }
+    const normalize = (name) => {
+        name = name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z\-]/g, '');
+        if (name === 'cayman') return 'cayman-islands';
+        if (name === 'southafrica') return 'south-africa';
+        return name;
+    };
+
+    // -------------------------------
+    // Render function
+    // -------------------------------
+    const render = (canvas, ctx) => {
+        const w = canvas.offsetWidth;
+        const h = canvas.offsetHeight;
+        canvas.width = w;
+        canvas.height = h;
+
+        ctx.clearRect(0, 0, w, h);
+
+        // Map inner bounds to avoid dots outside map image
+        const marginX = w * 0.02; // 2% left/right
+        const marginY = h * 0.05; // 5% top/bottom
+        const mapW = w - 2 * marginX;
+        const mapH = h - 2 * marginY;
 
         // Draw location dots
-        ctx.fillStyle = '#FF0000AA';
-        Object.entries(locations).forEach(([name, loc]) => {
-            const real_x = canvas.width / 100 * loc.x;
-            const real_y = canvas.height / 100 * loc.y;
+        ctx.fillStyle = ctx.fillStyle = '#FF0000AA'; // bright semi-transparent red
 
-            // Draw the dot
+        Object.values(locations).forEach(loc => {
+            const x = marginX + (loc.x / 100) * mapW;
+            const y = marginY + (loc.y / 100) * mapH;
             ctx.beginPath();
-            ctx.arc(real_x, real_y, 5, 0, 2 * Math.PI);
-            ctx.closePath();
+            ctx.arc(x, y, Math.max(4, w * 0.006), 0, 2 * Math.PI);
             ctx.fill();
         });
 
-        // Calculate flight percentage
-        const flight_progress_bar = document.querySelector('div[class^="flightProgressBar__"]');
-        let flight_percentage = flight_progress_bar.querySelector('div[class^="fill__"]').style.width;
-        flight_percentage = Number(flight_percentage.slice(0, flight_percentage.length - 1))
+        // Flight progress
+        const bar = document.querySelector('div[class^="flightProgressBar__"]');
+        if (!bar) return;
+        let progress = bar.querySelector('div[class^="fill__"]').style.width || '0%';
+        progress = Number(progress.replace('%', '')) / 100;
 
-        // Calculate destination and departure country
-        const country_wrapper = document.querySelector('div[class^="nodesAndProgress___"]');
-        let countries = [...country_wrapper.querySelectorAll('img[class^="circularFlag___"]')];
-        const fillHead = country_wrapper.querySelector('img[class^="fillHead___"]');
+        const wrapper = document.querySelector('div[class^="nodesAndProgress___"]');
+        if (!wrapper) return;
+        let flags = [...wrapper.querySelectorAll('img[class^="circularFlag___"]')];
+        const fillHead = wrapper.querySelector('img[class^="fillHead___"]');
+        if (fillHead && fillHead.style.left) flags = flags.reverse();
+        if (flags.length < 2) return;
 
-        // If fillHead has value of left, we are going back
-        if (fillHead.style.left) {
-            countries = countries.reverse();
-        }
+        const dest = normalize(flags[0].src.split('/').at(-1).slice(3, -4));
+        const dep = normalize(flags[1].src.split('/').at(-1).slice(3, -4));
+        const dep_loc = locations[dep];
+        const dest_loc = locations[dest];
+        if (!dep_loc || !dest_loc) return;
 
-        const destination = countries[0].src.split('/').at(-1).slice(3, -4);
-        const departure = countries[1].src.split('/').at(-1).slice(3, -4);
+        const dep_x = marginX + dep_loc.x / 100 * mapW;
+        const dep_y = marginY + dep_loc.y / 100 * mapH;
+        const dest_x = marginX + dest_loc.x / 100 * mapW;
+        const dest_y = marginY + dest_loc.y / 100 * mapH;
 
-        const dest_loc = locations[destination];
-        const dep_loc = locations[departure];
-
-        if (!dest_loc) {
-            console.warn(`Destination ${destination} not found`);
-            return
-        }
-
-        if (!dep_loc) {
-            console.warn(`Departure ${departure} not found`);
-            return
-        }
-
-        // Calculate real coordinates
-        const dep_real_x = canvas.width / 100 * dep_loc.x;
-        const dep_real_y = canvas.height / 100 * dep_loc.y;
-        const dest_real_x = canvas.width / 100 * dest_loc.x;
-        const dest_real_y = canvas.height / 100 * dest_loc.y;
-
-        // Draw line from dep to dest
+        // Draw curved path
         ctx.strokeStyle = '#FF0000AA';
-        ctx.lineWidth = 1; // Added line width for visibility
+        ctx.lineWidth = Math.max(2.5, w * 0.004);
         ctx.beginPath();
-        ctx.moveTo(dep_real_x, dep_real_y);
-        ctx.lineTo(dest_real_x, dest_real_y);
+        ctx.moveTo(dep_x, dep_y);
+        const ctrl_x = (dep_x + dest_x) / 2;
+        const ctrl_y = Math.min(dep_y, dest_y) - Math.abs(dest_x - dep_x) * 0.25;
+        ctx.quadraticCurveTo(ctrl_x, ctrl_y, dest_x, dest_y);
         ctx.stroke();
 
-        // Position plane at correct location (Linear Interpolation)
-        const plane_x = dep_real_x + ((dest_real_x - dep_real_x) * flight_percentage / 100);
-        const plane_y = dep_real_y + ((dest_real_y - dep_real_y) * flight_percentage / 100);
+        // Plane position along Bezier
+        const t = progress;
+        const px = (1 - t) ** 2 * dep_x + 2 * (1 - t) * t * ctrl_x + t ** 2 * dest_x;
+        const py = (1 - t) ** 2 * dep_y + 2 * (1 - t) * t * ctrl_y + t ** 2 * dest_y;
+        const dx = 2 * (1 - t) * (ctrl_x - dep_x) + 2 * t * (dest_x - ctrl_x);
+        const dy = 2 * (1 - t) * (ctrl_y - dep_y) + 2 * t * (dest_y - ctrl_y);
+        const angle = Math.atan2(dy, dx) * 180 / Math.PI;
 
-        // **********************************
-        // NEW CODE FOR ROTATION
-        // **********************************
-
-        // 1. Calculate the angle in radians (y-axis is inverted in canvas)
-        const angle_rad = Math.atan2(dest_real_y - dep_real_y, dest_real_x - dep_real_x);
-
-        // 2. Convert radians to degrees
-        const angle_deg = angle_rad * (180 / Math.PI);
-
-        // 3. Adjust for the plane icon's default orientation (assumes plane points right (0 deg))
-        //    The plane character '✈︎' points 90 degrees right by default. We correct this.
-        const rotation_offset = 0;
-        const final_rotation = angle_deg + rotation_offset;
-
-        // 4. Update CSS transformation
-        const plane = document.getElementById("plane-indicator");
+        const plane = document.getElementById('plane-indicator');
         if (plane) {
-            // Position the center of the plane icon (32px wide/high)
-            plane.style.left = `${plane_x - 16}px`;
-            plane.style.top = `${plane_y - 16}px`;
-
-            // Apply the rotation
-            plane.style.transform = `rotate(${final_rotation}deg)`;
+            plane.style.left = `${px - 16}px`;
+            plane.style.top = `${py - 16}px`;
+            plane.style.transform = `rotate(${angle}deg)`;
         }
-    }
+    };
 
-    const create_live_location_map = () => {
-        const root = document.createElement("div");
-        root.id = "travel-location-map"
-
-        // Set map background image
-        root.style.height = '400px';
+    // -------------------------------
+    // Create map container
+    // -------------------------------
+    const createMap = () => {
+        const root = document.createElement('div');
+        root.id = 'travel-location-map';
         root.style.position = 'relative';
-        root.style.background = 'url("https://github.com/justlucdewit/tampermonkey/blob/main/torn/live-location-travel-map/assets/map.png?raw=true")';
-        root.style.backgroundSize = 'cover';
+        root.style.width = '100%';
+        root.style.maxWidth = '1000px'; // prevent stretching
+        root.style.margin = '0 auto';
+        root.style.aspectRatio = '1000 / 600';
+        root.style.background = 'url("https://github.com/justlucdewit/tampermonkey/blob/main/torn/live-location-travel-map/assets/map.png?raw=true") center center / contain no-repeat';
 
-        // Draw the UI with the current flying location
-        const canvas = document.createElement("canvas");
-        const ctx = canvas.getContext('2d');
+        const canvas = document.createElement('canvas');
         canvas.style.width = '100%';
         canvas.style.height = '100%';
+        canvas.style.display = 'block';
+        const ctx = canvas.getContext('2d');
 
-        // Indicator of where you are currently flying
-        const map_location_indicator_plane = document.createElement("div");
-        map_location_indicator_plane.style.width = "32px";
-        map_location_indicator_plane.style.height = "32px";
-        map_location_indicator_plane.style.position = "absolute";
-        map_location_indicator_plane.style.left = "0px";
-        map_location_indicator_plane.style.top = "0px";
-        map_location_indicator_plane.innerText = "✈︎"
-        map_location_indicator_plane.style.color = "#F00";
-        map_location_indicator_plane.style.display = "flex";
-        map_location_indicator_plane.style.alignItems = "center";
-        map_location_indicator_plane.style.justifyContent = "center";
-        map_location_indicator_plane.style.fontSize = "32px";
-        map_location_indicator_plane.id = "plane-indicator";
-
-        // Set transform-origin to center so rotation happens correctly
-        map_location_indicator_plane.style.transformOrigin = "center center";
-
-
-        setInterval(() => {
-            render_frame(canvas, ctx);
-        }, 1000);
-        render_frame(canvas, ctx);
+        const plane = document.createElement('div');
+        plane.id = 'plane-indicator';
+        plane.style.position = 'absolute';
+        plane.style.width = '36px';
+        plane.style.height = '36px';
+        plane.style.fontSize = '36px';
+        plane.style.display = 'flex';
+        plane.style.alignItems = 'center';
+        plane.style.justifyContent = 'center';
+        plane.style.color = '#F00';
+        plane.style.transformOrigin = 'center center';
+        plane.innerText = '✈︎';
 
         root.appendChild(canvas);
-        root.appendChild(map_location_indicator_plane);
+        root.appendChild(plane);
+
+        // Redraw on resize
+        window.addEventListener('resize', () => render(canvas, ctx));
+        setInterval(() => render(canvas, ctx), 1000);
+        render(canvas, ctx);
 
         return root;
-    }
+    };
 
-    const initalize = () => {
+    // -------------------------------
+    // Initialize map on page
+    // -------------------------------
+    const initialize = () => {
         const travel_root = document.getElementById('travel-root');
-        const random_fact_box = travel_root.querySelector('div[class^="randomFactWrapper"]');
-        const original_flight_animation = travel_root.querySelector("figure");
+        if (!travel_root) return false;
 
-        if (!(random_fact_box && original_flight_animation)) {
-            return false;
-        }
+        const fact = travel_root.querySelector('div[class^="randomFactWrapper"]');
+        const original = travel_root.querySelector('figure.airspaceScene___yGSV_');
+        if (!(fact && original)) return false;
 
-        const location_map = create_live_location_map();
-        random_fact_box.remove();
-
-        original_flight_animation.replaceWith(location_map);
-
+        const map = createMap();
+        fact.remove();
+        original.replaceWith(map);
         return true;
-    }
+    };
 
-    const attempt_initialization = () => {
-        const result = initalize();
+    const attempt = () => {
+        if (!initialize()) requestAnimationFrame(attempt);
+    };
 
-        if (!result) {
-            requestAnimationFrame(attempt_initialization);
-        }
-    }
-
-    requestAnimationFrame(attempt_initialization);
-    })();
+    requestAnimationFrame(attempt);
+})();

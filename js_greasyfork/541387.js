@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Holotower Emote Menu
 // @namespace    http://holotower.org/
-// @version      1.26
+// @version      1.27
 // @author       anonymous
 // @license      CC0
 // @description  Adds an emote menu to the Quick Reply on Holotower
@@ -1333,6 +1333,15 @@
                         "amieat", "amiplot", "pink3", "broc", "amidig"
                     ]
                 }, {
+                    name: "Bibi Biscuit", id: "bibi", oshimark: "🥄🍪", emotes: [
+                        "Love", "Cheer", "Cry", "Pat", "Angry", "Despair",
+                        "Sparkle", "What", "Leash", "BiSign", "ByeSign",
+                        "DogSign", "EZSign", "GGSign", "HiSign", "NoSign",
+                        "WANSign", "YesSign", "1Sign", "Treat", "Blush",
+                        "Huh", "LOL", "Point", "Sleepy", "Smug", "Spoon",
+                        "Tail", "Tehe", "Menace"
+                    ]
+                }, {
                     name: "Blair Labri", id: "blair", oshimark: "📖🔆", emotes: [
                         "Standing", "Orz", "Heart", "Stocks", "Crying", "Salute",
                         "Looking", "Blushing", "Laughing", "Burp", "Headpat",
@@ -1354,6 +1363,36 @@
                         "Nerd", "Chomp"
                     ]
                 }, {
+                    name: "Clio Aite", id: "clio", oshimark: "📚⚔️", emotes: [
+                        "Life", "ICANT", "Caught", "Clueless", "Aware", "Awooga",
+                        "Business", "Notes", "Smug", "Nerd", "plus2", "take2",
+                        "cheese", "1984.gif", "Sobby", "HYPER", "Technology", "Wide1",
+                        "Wide2", "Wide3", "ThisIsFine", "Heart", "PointKEK",
+                        "Salute", "Cool", "Drink", "Pray", "Copium", "Blush",
+                        "Dead", "SillySaus", "Glorp.gif", "Sip", "Clown", "Bonk",
+                        "clioaiSleep", "clioaiHYPER", "clioaiFine", "clioaiBlush", "clioaiBigBrain",
+                        "clioaiSquibby.gif", "clioaiDoggoSquibby.gif", "clioaiWiggly.gif", "clioaiSausageDance.gif",
+                        "clioaiCuddleSquibby.gif", "clioaiLotteSquibby.gif", "clioaiNodders.gif", "clioaiNopers.gif",
+                        "clioaiPatting.gif", "clioaiBongos.gif", "clioaiLick.gif", "clioaiUUUU.gif", "clioaiGrowl.gif",
+                        "clioaiSqueak.gif", "clioaiShake.gif", "clioaiNapping.gif", "clioaiBark.gif",
+                        "clioaiPlushSpin.gif", "clioaiToeDance.gif", "clioaiTacoAus.gif", "clioaiTacoVen.gif",
+                        "clioaiTacoIre.gif", "clioaiTea.gif", "clioaiRunning.gif", "clioaiCliorb.gif",
+                        "clioaiCensorship.gif", "clioaiPlushFast.gif", "clioaiPlushZOOM.gif", "clioaiGlorp.gif",
+                        "clioaiKekpoint.gif", "clioaiLife.gif", "clioaiSmugg.gif", "clioaiNotes.gif", "clioaiNerd.gif",
+                        "clioaiICANT.gif", "clioaiCaught.gif", "clioaiClueless.gif", "clioaiBusiness.gif",
+                        "clioaiWave", "clioaiThumbsUp", "clioaiRead", "clioaiLaugh", "clioaiCry", "clioaiPog",
+                        "clioaiHeart", "clioaiHeadpat", "clioaiBonk", "clioaiClown", "clioaiTequila", "clioaiDead",
+                        "clioaiComfy", "clioaiSillySausage", "clioaiTacoGun", "clioaiSwole", "clioaiKEKW",
+                        "clioaiFacepalm", "clioaiCopium", "clioaiLFG", "clioaiHUH", "clioaiSalute", "clioaiRaid",
+                        "clioaiPray", "clioaiDisgust", "clioaiTechHelp", "clioaiPanic", "clioaiCool", "clioaiPeek",
+                        "clioaiPoint", "clioaiRNG", "clioaiAngry", "clioaiSip", "clioaiCheese", "clioaiPlus2",
+                        "clioaiMinus2", "clioaiAware", "clioaiAwooga", "clioaiPlushFastest.gif",
+                        "clioaiPlushFaster.gif", "clioaiUniSquibby.gif", "clioaiXmasSquibby.gif",
+                        "clioaiPoggers", "clioaiSalty", "clioaiDUM", "clioaiGoldHeart",
+                        "clioaiGosling", "clioaiSmug", "clioaiLOL", "clioaiSad"
+
+                    ]
+                }, {
                     name: "Daisy Dandelion", id: "daisy", oshimark: "🌼", emotes: [
                         "Pat", "TOT", "AHH", "Love", "Corn", "DDD",
                         "AAA", "III", "SSS", "YYY", "Hug", "Megao",
@@ -1362,11 +1401,16 @@
                         "Cheer", "Spray"
                     ]
                 }, {
-                    name: "Daiya Fortuna", id: "daiya", oshimark: "🎰 ♦️", emotes: [
+                    name: "Daiya Fortuna", id: "daiya", oshimark: "🎰♦️", emotes: [
                         "nou", "heart", "headpat", "rave", "chaos", "bonk", "cry",
                         "smug", "tskr", "wheeze", "dedmonmon", "hiyamonmon", "knifemon",
                         "nosemonmon", "monmog", "frothing", "BITE", "kazzoo", "fear",
                         "jackpot", "monpreg", "daiyabeam"
+                    ]
+                }, {
+                    name: "Eris Suzukami", id: "eris", oshimark: "🎣☁️", emotes: [
+                        "eriswave", "erisheart", "tobided", "tobicry",
+                        "erisangy", "erisbuffer", "erischeer", "erisNT"
                     ]
                 }, {
                     name: "Essie", id: "essie", oshimark: "🐑🌾", emotes: [
@@ -1392,6 +1436,13 @@
                         "FuyoBleeh", "FuyoQuestion", "FuyoHype", "FuyoCheerA", "FuyoCheerB", "FuyoPat",
                         "FuyoCringe", "FuyoAWOOGA", "FuyoStems", "FuyoCoolUp", "FuyoWheeze", "FuyoThonk",
                         "FuyoCat", "FuyoWIP2", "FuyoWIP3", "FuyoWIP4", "FuyoWIP5"
+                    ]
+                }, {
+                    name: "Fuzuki Miki", id: "miki", oshimark: "🎀✨", emotes: [
+                        "mikiCry", "glorpHeart", "mikiMonka", "mikiHuh", "mikiCool",
+                        "mikiSleep", "mikiPat", "mikiM", "mikiI", "mikiK", "mikiE",
+                        "mikiElim", "mikiAYAYA", "mikiBlush", "mikiPray", "mikiAngy",
+                        "mikiErm", "mikiGenius"
                     ]
                 }, {
                     name: "Kiba", id: "kibawoo", oshimark: "🐺🪫", emotes: [

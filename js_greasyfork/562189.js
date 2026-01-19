@@ -3,7 +3,7 @@
 // @description  Fetch jail list, calculate hardness, filter targets, and bust them.
 // @author       Allenone [2033011]
 // @namespace    https://torn.com/
-// @version      1.0.0
+// @version      1.1.0
 // @match        https://www.torn.com/jailview.php*
 // @icon         https://www.torn.com/favicon.ico
 // @grant        GM_getValue
@@ -258,6 +258,43 @@
             rowElement.style.backgroundColor = '#dc354599'; // fail fallback
         });
     }
+
+    /* ============================
+       KEYBOARD SHORTCUT (Q = bust lowest hardness)
+    ============================ */
+    document.addEventListener('keydown', (e) => {
+        // Only plain "Q"
+        if (e.key !== 'q' && e.key !== 'Q') return;
+        if (e.ctrlKey || e.altKey || e.metaKey || e.shiftKey) return;
+
+        // Don't trigger while typing
+        const tag = document.activeElement?.tagName;
+        if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+
+        if (!playersCache.length || !listEl) return;
+
+        const min = GM_getValue('hardnessMin', 0);
+        const max = GM_getValue('hardnessMax', Infinity);
+
+        const candidates = playersCache
+        .filter(p => p.hardness >= min && p.hardness <= max)
+        .sort((a, b) => a.hardness - b.hardness);
+
+        if (!candidates.length) return;
+
+        const target = candidates[0];
+
+        // Find the row that matches this user
+        const rows = [...listEl.children];
+        const row = rows.find(r => r.textContent.includes(target.name));
+
+        if (!row) return;
+
+        // Visual feedback
+        row.style.outline = '2px solid #ffc107';
+
+        bustPlayer(target.id, row);
+    });
 
     createPanel();
 })();

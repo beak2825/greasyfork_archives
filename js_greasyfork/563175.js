@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         Torn Company ID Harvester
 // @namespace    grimsnecrosis.company.id.harvester
-// @version      0.0.7
-// @description  Shift+Click the 👁 on job listings to save company IDs
+// @version      1.2.2
+// @description  Middle Click the 👁 on job listings to save company IDs (blocks new tab)
 // @author       Grimsnecrosis
 // @match        https://www.torn.com/joblist.php*
-// @run-at       document-end
+// @run-at       document-start
 // @grant        GM_addStyle
 // @license      GPL-3.0
 // @downloadURL https://update.greasyfork.org/scripts/563175/Torn%20Company%20ID%20Harvester.user.js
@@ -15,8 +15,32 @@
 (() => {
   "use strict";
 
-  const STORE_KEY = "grims_company_ids_v2";
-  const POS_KEY   = "grims_company_ids_panel_pos_v1";
+  const STORE_KEY = "grims_company_ids_v3";
+  const POS_KEY   = "grims_company_ids_panel_pos_v2";
+
+  // Middle-click behavior
+  const SAVE_ON_MIDDLE_CLICK = true;     // middle click the 👁 link to save
+  const BLOCK_NAV_ON_MIDDLE  = true;     // prevent opening a new tab on middle click
+
+  /**
+   * Optional: save even if the user clicks on the row (not just the 👁).
+   * Leave false for least interference.
+   */
+  const SAVE_ON_ROW_CLICK = false;
+
+  /**
+   * Auto-tagging rules (edit these to your taste).
+   * We tag based on nearby row text: company name/type/stars/pay text if visible.
+   */
+  const AUTO_TAG_RULES = [
+    { re: /\boil\s*rig\b/i, tag: "oil rig" },
+    { re: /\bmin(e|ing)\b/i, tag: "mining" },
+    { re: /\b10\*|\b10\s*star/i, tag: "10*" },
+    { re: /\b9\*|\b9\s*star/i, tag: "9*" },
+    { re: /\b8\*|\b8\s*star/i, tag: "8*" },
+    { re: /\bhigh\s*pay\b/i, tag: "high-pay" },
+    { re: /\bpayroll\b/i, tag: "payroll" },
+  ];
 
   // --- Utils
   const isoNow = () => new Date().toISOString();
@@ -51,18 +75,9 @@
     rec.tags = Array.from(set).sort();
 
     saveStore(store);
-    return { store, rec };
+    return { store, rec, isNew: rec.firstSeen === now };
   }
   function clearAll() { localStorage.removeItem(STORE_KEY); }
-
-  function promptTags(defaultTag = "") {
-    const raw = prompt(
-      "Add tags (comma-separated). Examples: oil rig, mining, psf, 10*, high-pay\nLeave blank for none.",
-      defaultTag
-    );
-    if (!raw) return [];
-    return raw.split(",").map(s => s.trim()).filter(Boolean);
-  }
 
   function escapeHtml(s) {
     return String(s)
@@ -93,7 +108,7 @@
     el.textContent = msg;
     el.style.display = "block";
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => (el.style.display = "none"), 2500);
+    toastTimer = setTimeout(() => (el.style.display = "none"), 2200);
   }
 
   // --- Panel
@@ -114,7 +129,7 @@
     #grimHarvesterPanel header .title{font-weight:800;font-size:13px;}
     #grimHarvesterPanel header .sub{font-size:11px;opacity:.75;margin-top:2px;}
     #grimHarvesterPanel .btnRow{
-      display:flex;gap:8px;padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.08);
+      display:flex;gap:8px;padding:10px 12px;border-bottom:1px solid rgba(255,255,255,0.08);
       flex-wrap:wrap;
     }
     #grimHarvesterPanel button,#grimHarvesterPanel input{
@@ -165,7 +180,7 @@
 
     body.innerHTML = `
       <div class="muted">Saved companies: <b>${ids.length}</b></div>
-      <div class="muted">Shift+Click 👁 (or the row) to save ID (blocks new tab)</div>
+      <div class="muted">Middle-click 👁 to save ${BLOCK_NAV_ON_MIDDLE ? "(stays on page)" : ""}</div>
       <hr style="border:0;border-top:1px solid rgba(255,255,255,0.08);margin:10px 0;">
       ${
         ids.length
@@ -209,6 +224,20 @@
     toast(`Downloaded ${filename}`);
   }
 
+  function downloadJson(filename, obj) {
+    const text = JSON.stringify(obj, null, 2);
+    const blob = new Blob([text], { type: "application/json;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    toast(`Downloaded ${filename}`);
+  }
+
   function buildPanel() {
     if (document.getElementById("grimHarvesterPanel")) return;
 
@@ -218,7 +247,7 @@
       <header>
         <div>
           <div class="title">🏢 Company ID Harvester</div>
-          <div class="sub muted">Shift+Click 👁 to save (no navigation)</div>
+          <div class="sub muted">Middle-click 👁 to save</div>
         </div>
         <div style="display:flex;gap:8px;align-items:center;">
           <button class="minBtn" id="grimMinBtn">–</button>
@@ -229,6 +258,7 @@
         <button id="grimCopyCsv" class="ok">Copy CSV</button>
         <button id="grimCopyEnv">Copy .env</button>
         <button id="grimExportTxt">Export .txt</button>
+        <button id="grimExportJson">Export JSON</button>
         <button id="grimClear" class="danger">Clear</button>
       </div>
 
@@ -268,6 +298,11 @@
         return `${id}${tags ? `\t${tags}` : ""}`;
       });
       downloadText(`company_ids_${new Date().toISOString().slice(0,10)}.txt`, lines.join("\n"));
+    });
+
+    document.getElementById("grimExportJson").addEventListener("click", () => {
+      const store = loadStore();
+      downloadJson(`company_ids_${new Date().toISOString().slice(0,10)}.json`, store);
     });
 
     document.getElementById("grimClear").addEventListener("click", () => {
@@ -311,104 +346,133 @@
 
   buildPanel();
 
-  // --- Finding the company ID (robust)
-  function extractCompanyIdFromText(s) {
-    if (!s) return null;
-    const m = String(s).match(/\bcorpinfo\b.*?\bID=(\d+)\b/i);
-    return m ? Number(m[1]) : null;
+  /**********************
+   * CORPINFO LINK PARSING
+   **********************/
+  function companyIdFromUrl(href) {
+    try {
+      const url = new URL(href, location.origin);
+
+      // A) Standard querystring: ?ID=123
+      const qid = url.searchParams.get("ID") || url.searchParams.get("id");
+      if (qid && /^\d+$/.test(qid)) return Number(qid);
+
+      // B) Hash / hashbang: #/p=corp&ID=16  or  #!p=corpinfo&ID=76299
+      const rawHash = (url.hash || "").replace(/^#\!?\/?/, "");
+      if (rawHash) {
+        const hp = new URLSearchParams(rawHash.replace(/\?/g, "&"));
+        const hid = hp.get("ID") || hp.get("id");
+        if (hid && /^\d+$/.test(hid)) return Number(hid);
+      }
+
+      return null;
+    } catch {
+      return null;
+    }
   }
 
-  function findIdNearTarget(target) {
-    if (!target) return null;
+  function isCorpInfoHref(href) {
+    if (!href) return false;
+    const s = String(href);
+    return s.includes("corpinfo") || s.includes("p=corpinfo") || s.includes("!p=corpinfo");
+  }
 
-    // 1) Walk up ancestors and inspect common link-like attributes
-    let node = target;
-    for (let i = 0; i < 10 && node; i++) {
-      if (node.getAttribute) {
-        const attrs = ["href", "data-href", "data-url", "data-link", "onclick"];
-        for (const a of attrs) {
-          const v = node.getAttribute(a);
-          const id = extractCompanyIdFromText(v);
-          if (id) return id;
-        }
-      }
-      node = node.parentElement;
+  function findCorpInfoAnchor(el) {
+    if (!el) return null;
+
+    const a0 = el.closest?.("a");
+    if (a0) {
+      const href0 =
+        a0.getAttribute("href") ||
+        a0.getAttribute("data-href") ||
+        a0.href ||
+        "";
+      if (isCorpInfoHref(href0)) return a0;
     }
 
-    // 2) If not found, search the closest row/container for any corpinfo link
-    const row =
-      target.closest?.("tr") ||
-      target.closest?.(".company-listing") ||
-      target.closest?.(".company") ||
-      target.closest?.(".content") ||
-      target.closest?.("table") ||
-      null;
-
+    const row = el.closest?.("tr") || el.closest?.("table") || null;
     if (row) {
-      // look for a descendant anchor with corpinfo
-      const a = row.querySelector?.("a[href*='corpinfo'][href*='ID='], a[data-href*='corpinfo'][data-href*='ID=']");
-      if (a) {
-        const v = a.getAttribute("href") || a.getAttribute("data-href") || "";
-        const id = extractCompanyIdFromText(v);
-        if (id) return id;
-      }
-      // last resort: regex against innerHTML (works even if link is built weird)
-      const id2 = extractCompanyIdFromText(row.innerHTML);
-      if (id2) return id2;
+      const a1 = row.querySelector?.("a[href*='corpinfo'], a[href*='p=corpinfo'], a[href*='!p=corpinfo']");
+      if (a1) return a1;
     }
 
     return null;
   }
 
-  // --- HARD BLOCK new tab/open behaviour when Shift is held
-  // (covers Torn handlers calling window.open, AND browser default for shift+click links)
-  window.__grimShiftDown = false;
-  document.addEventListener("keydown", (e) => { if (e.key === "Shift") window.__grimShiftDown = true; }, true);
-  document.addEventListener("keyup",   (e) => { if (e.key === "Shift") window.__grimShiftDown = false; }, true);
-
-  // In case Torn uses window.open
-  (function patchWindowOpen() {
-    const realOpen = window.open;
-    window.open = function (...args) {
-      try { if (window.__grimShiftDown) return null; } catch {}
-      return realOpen.apply(this, args);
-    };
-  })();
-
-  function blockEvent(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    e.stopImmediatePropagation?.();
+  function computeAutoTags(rowText) {
+    const tags = [];
+    const text = String(rowText || "");
+    for (const r of AUTO_TAG_RULES) {
+      if (r.re.test(text)) tags.push(r.tag);
+    }
+    return tags;
   }
 
   function harvestFromEvent(e) {
-    if (!e.shiftKey) return false;
+    const a = findCorpInfoAnchor(e.target);
+    if (!a) return false;
 
-    const id = findIdNearTarget(e.target);
-    if (!id || Number.isNaN(id)) return false;
+    const href = a.getAttribute("href") || a.getAttribute("data-href") || a.href || "";
+    const id = companyIdFromUrl(href);
+    if (!id) return false;
 
-    // block navigation / new tab
-    blockEvent(e);
+    const row =
+      e.target?.closest?.("tr") ||
+      e.target?.closest?.(".job") ||
+      e.target?.closest?.("table") ||
+      null;
+
+    const rowText = (row?.innerText || "").trim();
 
     const quickTag = (document.getElementById("grimTagInput")?.value || "").trim();
-    const tags = quickTag ? [quickTag] : promptTags("");
-    upsertRecord(id, tags);
+    const tags = [
+      ...(quickTag ? [quickTag] : []),
+      ...computeAutoTags(rowText),
+    ];
 
+    const { isNew } = upsertRecord(id, tags);
     renderPanel();
-    toast(`Saved company ID ${id}${tags.length ? ` (${tags.join(", ")})` : ""}`);
+    toast(`${isNew ? "Saved" : "Updated"} company ID ${id}${tags.length ? ` (${tags.join(", ")})` : ""}`);
+
+    if (quickTag) document.getElementById("grimTagInput").value = "";
+
     return true;
   }
 
-  // Intercept EARLY events so the browser never opens a new tab
-  // pointerdown + mousedown are earlier than click
-  for (const evt of ["pointerdown", "mousedown", "auxclick", "click"]) {
-    document.addEventListener(evt, (e) => {
-      // Only care when SHIFT is held
-      if (!e.shiftKey) return;
+  // -----------------------------------
+  // MIDDLE-CLICK INTERCEPTION
+  // -----------------------------------
+  function isMiddleClickEvent(e) {
+    return typeof e.button === "number" && e.button === 1;
+  }
 
-      // Attempt harvest; if success, we already blocked the event
-      harvestFromEvent(e);
-    }, true); // capture
+  for (const evt of ["pointerdown", "mousedown", "auxclick"]) {
+    document.addEventListener(evt, (e) => {
+      if (!SAVE_ON_MIDDLE_CLICK) return;
+
+      // Only handle middle clicks
+      const isMiddle =
+        (evt === "pointerdown" && (e.buttons & 4) === 4) ||
+        (evt !== "pointerdown" && isMiddleClickEvent(e));
+
+      if (!isMiddle) return;
+
+      // Optional: require the click to be on a corpinfo link unless SAVE_ON_ROW_CLICK
+      if (!SAVE_ON_ROW_CLICK) {
+        const a = e.target?.closest?.("a");
+        const href = a?.getAttribute?.("href") || a?.href || "";
+        if (!isCorpInfoHref(href)) return;
+      }
+
+      const saved = harvestFromEvent(e);
+      if (!saved) return;
+
+      if (BLOCK_NAV_ON_MIDDLE) {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation?.();
+      }
+    }, true);
   }
 
 })();

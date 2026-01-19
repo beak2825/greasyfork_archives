@@ -1,23 +1,23 @@
 // ==UserScript==
-// @name         Torn Hire CR Merc
+// @name         Torn Hire CR Merc [**]
 // @namespace    http://tampermonkey.net/
-// @version      1.1
-// @description  Hire a CR Merc Instantly.
+// @version      2.0
+// @description  Hire a CR Merc Instantly
 // @author       ShAdOwCrEsT [3929345]
 // @match        https://www.torn.com/*
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_xmlhttpRequest
 // @connect      api.torn.com
-// @connect      discord.com
-// @downloadURL https://update.greasyfork.org/scripts/560429/Torn%20Hire%20CR%20Merc.user.js
-// @updateURL https://update.greasyfork.org/scripts/560429/Torn%20Hire%20CR%20Merc.meta.js
+// @connect      merc.shadowcrest96.workers.dev
+// @downloadURL https://update.greasyfork.org/scripts/560429/Torn%20Hire%20CR%20Merc%20%5B%2A%2A%5D.user.js
+// @updateURL https://update.greasyfork.org/scripts/560429/Torn%20Hire%20CR%20Merc%20%5B%2A%2A%5D.meta.js
 // ==/UserScript==
 
 (function() {
     'use strict';
 
-    const WEBHOOK_URL = 'https://discord.com/api/webhooks/1454354601791848572/GQdxJkrqZJ2_qwevl-XN2sWwDnylU0eLLkCucgxjLkl5wmcrKGoJhrsnfVbC97p14a4X';
+    const CLOUDFLARE_PROXY_URL = 'https://merc.shadowcrest96.workers.dev';
 
     const mercCooldowns = {};
 
@@ -93,39 +93,41 @@
         });
     }
 
-    function sendDiscordWebhook(requesterId, requesterName, requesterUrl, targetId, targetUrl, targetName, targetLevel, targetStatus) {
+    function sendToCloudflareProxy(requesterId, requesterName, requesterUrl, targetId, targetUrl, targetName, targetLevel, targetStatus) {
         const payload = {
-            content: '<@&1333794336168738928>',
-            embeds: [{
-                title: "🩸 NEW MERC REQUEST",
-                color: 0xFF4500,
-                description: `**[⚔️ ATTACK ${targetName || targetId} NOW](https://www.torn.com/loader.php?sid=attack&user2ID=${targetId})**`,
-                fields: [
-                    {
-                        name: "📋 Details",
-                        value: `**Requester:** [${requesterName}](${requesterUrl}) \`[${requesterId}]\`\n**Target:** [${targetName || 'Unknown'}](${targetUrl}) \`[${targetId}]\` • Level ${targetLevel || '?'}\n**Status:** ${targetStatus || 'Unknown'}`,
-                        inline: false
-                    }
-                ],
-                footer: {
-                    text: "💊 Payment: 4 Xanax"
-                },
-                timestamp: new Date().toISOString()
-            }]
+            requesterId: requesterId,
+            requesterName: requesterName,
+            requesterUrl: requesterUrl,
+            targetId: targetId,
+            targetUrl: targetUrl,
+            targetName: targetName,
+            targetLevel: targetLevel,
+            targetStatus: targetStatus
         };
 
         GM_xmlhttpRequest({
             method: 'POST',
-            url: WEBHOOK_URL,
+            url: CLOUDFLARE_PROXY_URL,
             headers: {
                 'Content-Type': 'application/json'
             },
             data: JSON.stringify(payload),
             onload: function(response) {
-                console.log('Discord webhook sent successfully');
+                try {
+                    const result = JSON.parse(response.responseText);
+                    if (result.success) {
+                        console.log('Request sent successfully through Cloudflare proxy');
+                    } else {
+                        console.error('Cloudflare proxy error:', result.error);
+                        alert('Failed to send request. Please try again.');
+                    }
+                } catch (e) {
+                    console.error('Failed to parse proxy response:', e);
+                }
             },
-            onerror: function() {
-                console.error('Failed to send Discord webhook');
+            onerror: function(error) {
+                console.error('Failed to send to Cloudflare proxy:', error);
+                alert('Network error. Please check your connection.');
             }
         });
     }
@@ -204,7 +206,16 @@
                                     return;
                                 }
 
-                                sendDiscordWebhook(userData.player_id, userData.name, requesterProfileUrl, targetXID, targetProfileUrl, targetData.name, targetData.level, targetData.status?.description || 'Unknown');
+                                sendToCloudflareProxy(
+                                    userData.player_id,
+                                    userData.name,
+                                    requesterProfileUrl,
+                                    targetXID,
+                                    targetProfileUrl,
+                                    targetData.name,
+                                    targetData.level,
+                                    targetData.status?.description || 'Unknown'
+                                );
                                 setCooldown(targetXID);
                                 alert('Your request has been transferred, Please pay 4 xanax to the merc.');
                             });
@@ -336,7 +347,16 @@
                                 const requesterProfileUrl = `https://www.torn.com/profiles.php?XID=${userData.player_id}`;
                                 const targetProfileUrl = `https://www.torn.com/profiles.php?XID=${finalTargetId}`;
 
-                                sendDiscordWebhook(userData.player_id, userData.name, requesterProfileUrl, finalTargetId, targetProfileUrl, userData.name, userData.level, 'Self');
+                                sendToCloudflareProxy(
+                                    userData.player_id,
+                                    userData.name,
+                                    requesterProfileUrl,
+                                    finalTargetId,
+                                    targetProfileUrl,
+                                    userData.name,
+                                    userData.level,
+                                    'Self'
+                                );
                                 setCooldown(finalTargetId);
                                 alert('Your request has been transferred, Please pay 4 xanax to the merc.');
                             } else {
@@ -345,6 +365,7 @@
                             }
                         });
                     };
+
                     otherOption.onclick = function() {
                         dropdown.remove();
                         const targetId = prompt('Enter the User ID of the person you want merc\'d:\n\nCost: 4 Xanax');
@@ -380,7 +401,7 @@
                                     const targetLevel = targetData.level;
                                     const targetStatus = targetData.status?.description || 'Unknown';
 
-                                    sendDiscordWebhook(
+                                    sendToCloudflareProxy(
                                         userData.player_id,
                                         userData.name,
                                         requesterProfileUrl,
