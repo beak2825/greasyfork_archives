@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bitcointalk BRDb Score 
 // @namespace    http://tampermonkey.net/
-// @version      0.7
+// @version      0.8
 // @description  BRDb score + Dormant/Former/Reactivated + 120-day posts/merits chart + improved historical user filter
 // @author       Ace
 // @match        https://bitcointalk.org/index.php?action=profile;u=*
@@ -20,6 +20,16 @@ function getDateNDaysAgo(n) {
   const d = new Date();
   d.setDate(d.getDate() - n);
   return d.toISOString().split('T')[0];
+}
+
+/* ---------------- EXTRACT USERID (URL -> MERIT LINK) ---------------- */
+function extractUserIdFromPage() {
+  const meritLink = document.querySelector('a[href*="action=merit;u="]');
+  if (meritLink) {
+    const match = meritLink.href.match(/u=(\d+)/);
+    if (match) return match[1];
+  }
+  return null;
 }
 
 /* ---------------- FETCH 120D DATA ---------------- */
@@ -42,43 +52,31 @@ async function fetchMeritsAndPosts120(userUid) {
       onload: r => {
         try {
           const d = JSON.parse(r.responseText);
-          console.log("🔍 Dati API grezzi:", d); // Debug
 
-          // Estrai i dati corretti
           const postsHistogram = d[0]?.result?.data?.json?.histogram || [];
           const meritsHistogram = d[1]?.result?.data?.json?.histogram || [];
           const posts120 = d[2]?.result?.data?.json?.total_posts_count || 0;
 
-          // Crea array di 120 giorni per post e merit
           const postsLast120 = Array(120).fill(0);
           const meritsLast120 = Array(120).fill(0);
 
-          // Popola gli array con i dati reali
           postsHistogram.forEach(day => {
             const date = new Date(day.key_as_string);
-            const index = Math.floor((date - new Date(dateMin)) / (1000 * 60 * 60 * 24));
-            if (index >= 0 && index < 120) {
-              postsLast120[index] = day.doc_count || 0;
-            }
+            const index = Math.floor((date - new Date(dateMin)) / 86400000);
+            if (index >= 0 && index < 120) postsLast120[index] = day.doc_count || 0;
           });
 
           meritsHistogram.forEach(day => {
             const date = new Date(day.key_as_string);
-            const index = Math.floor((date - new Date(dateMin)) / (1000 * 60 * 60 * 24));
-            if (index >= 0 && index < 120) {
-              meritsLast120[index] = day.merits_sum?.value || 0;
-            }
+            const index = Math.floor((date - new Date(dateMin)) / 86400000);
+            if (index >= 0 && index < 120) meritsLast120[index] = day.merits_sum?.value || 0;
           });
 
-          // Calcola il totale merit negli ultimi 120 giorni
-          const merit120 = meritsLast120.reduce((sum, merit) => sum + merit, 0);
-
-          console.log("📊 Posts ultimi 120 giorni:", postsLast120);
-          console.log("💰 Merits ultimi 120 giorni:", meritsLast120);
+          const merit120 = meritsLast120.reduce((s, m) => s + m, 0);
 
           resolve({ merit120, posts120, postsLast120, meritsLast120 });
         } catch (e) {
-          console.error("❌ Errore nel parsing dei dati:", e);
+          console.error("❌ Parsing API error:", e);
           reject(e);
         }
       },
@@ -92,7 +90,9 @@ function getProfileNumber(label) {
   for (const r of document.querySelectorAll('tr')) {
     const b = r.querySelector('td b');
     if (b && b.textContent.includes(label)) {
-      return parseInt(r.querySelectorAll('td')[1].textContent.replace(/\D/g, '')) || 0;
+      const text = r.querySelectorAll('td')[1].textContent.trim();
+      const m = text.match(/(\d+)/); // prende solo il primo numero
+      return m ? parseInt(m[1], 10) : 0;
     }
   }
   return 0;
@@ -114,25 +114,20 @@ function calculateScores(posts, meritTotal, posts120, merit120, postsLast120, re
   const ageDays = Math.max((Date.now() - regDate) / 86400000, 1);
   const inactiveDays = Math.max((Date.now() - lastActiveDate) / 86400000, 0);
 
-  // Filtro per utenti storici E inattivi (età > 10 anni E nessuna attività recente)
   const isHistoricalUser = ageDays > 365 * 10 && posts120 === 0 && merit120 === 0;
   if (isHistoricalUser) {
-    console.log("🏛️ Utente storico e inattivo. Azzero attività recente.");
     postsLast120 = Array(120).fill(0);
     merit120 = 0;
   }
 
-  // Calcola Q_hist e Q_120
   const Q_hist = (meritTotal / Math.max(posts, 1)) * Math.sqrt(posts);
   const Q_120 = (posts120 > 0) ? (merit120 / posts120) * Math.sqrt(posts120) : 0;
 
-  // Calcola Reputation e Reliability
   const Reputation = 0.7 * Q_hist + 0.3 * Q_120;
   const relPosts = Math.min(posts / 100, 1);
   const relAge = Math.min(ageDays / 180, 1);
   const Reliability = relPosts * relAge;
 
-  // Determina lo stato dell'utente
   let badgeDormant = false, badgeFormer = false, badgeReactivated = false;
   if (inactiveDays > 730 && posts120 === 0 && merit120 === 0) badgeFormer = true;
   else if (inactiveDays > 120 && posts120 === 0) badgeDormant = true;
@@ -143,7 +138,6 @@ function calculateScores(posts, meritTotal, posts120, merit120, postsLast120, re
     badgeDormant = false;
   }
 
-  // Calcola FinalScore
   let FinalScore = Reputation * (0.4 + 0.6 * Reliability);
   if (badgeFormer || isHistoricalUser) FinalScore = 0;
 
@@ -153,10 +147,7 @@ function calculateScores(posts, meritTotal, posts120, merit120, postsLast120, re
 }
 
 function calcBRDb(Reputation, merit120, posts120, badgeFormer, isHistoricalUser) {
-  if (isHistoricalUser) {
-    console.log("🏛️ Utente storico e inattivo. BRDb forzato a 1.");
-    return 1; // BRDb = 1 solo per utenti storici E inattivi
-  }
+  if (isHistoricalUser) return 1;
 
   let base = Math.log10(Reputation + 1) * 3;
   const activityBoost = Math.min((merit120 + posts120 / 2) / 300, 1) * 2;
@@ -165,8 +156,8 @@ function calcBRDb(Reputation, merit120, posts120, badgeFormer, isHistoricalUser)
   return Math.max(1, Math.min(10, score));
 }
 
-function statusLabel(p, d, f, r, isHistorical) {
-  if (isHistorical) return 'Historical';
+function statusLabel(p, d, f, r, h) {
+  if (h) return 'Historical';
   if (p) return 'Promising';
   if (r) return 'Reactivated';
   if (f) return 'Former';
@@ -180,7 +171,7 @@ function statusColor(s) {
   if (s === 'Reactivated') return '#38bdf8';
   if (s === 'Former') return '#ef4444';
   if (s === 'Promising') return '#a855f7';
-  if (s === 'Historical') return '#999'; // Grigio per utenti storici
+  if (s === 'Historical') return '#999';
   return '#999';
 }
 
@@ -219,51 +210,24 @@ function attachDashboardTooltip(td, data) {
     const maxPosts = Math.max(...postsLast120, 1);
     const maxMerits = Math.max(...meritsLast120, 1);
 
-    let svg = `<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" style="background: #020617; border-radius: 10px; padding: 8px; margin-top: 10px;">`;
+    let svg = `<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" style="background:#020617;border-radius:10px;padding:8px;margin-top:10px;">`;
 
-    svg += `<polyline
-      fill="none"
-      stroke="#22c55e"
-      stroke-width="2"
+    svg += `<polyline fill="none" stroke="#22c55e" stroke-width="2"
       points="${postsLast120.map((p, i) => `${i * (width / 119)},${height - (p / maxPosts * (height - 16))}`).join(' ')}"
-      style="stroke-linecap: round; stroke-linejoin: round;"
-    />`;
+      style="stroke-linecap:round;stroke-linejoin:round;" />`;
 
-    svg += `<polyline
-      fill="none"
-      stroke="#38bdf8"
-      stroke-width="2"
+    svg += `<polyline fill="none" stroke="#38bdf8" stroke-width="2"
       points="${meritsLast120.map((m, i) => `${i * (width / 119)},${height - (m / maxMerits * (height - 16))}`).join(' ')}"
-      style="stroke-linecap: round; stroke-linejoin: round;"
-    />`;
+      style="stroke-linecap:round;stroke-linejoin:round;" />`;
 
     svg += `</svg>`;
     return svg;
   }
 
-  function generateLegend() {
-    return `
-      <div style="display: flex; justify-content: center; gap: 20px; margin-top: 8px; font-size: 11px;">
-        <div style="display: flex; align-items: center; gap: 4px;">
-          <div style="width: 12px; height: 12px; background: #22c55e; border-radius: 2px;"></div>
-          <span>Posts</span>
-        </div>
-        <div style="display: flex; align-items: center; gap: 4px;">
-          <div style="width: 12px; height: 12px; background: #38bdf8; border-radius: 2px;"></div>
-          <span>Merits</span>
-        </div>
-      </div>
-      <div style="text-align: center; font-size: 10px; opacity: 0.7; margin-top: 4px;">
-        Last 120 days activity
-      </div>
-    `;
-  }
-
   const finalRow = Math.abs(data.FinalScore - data.Reputation) > 0.01
     ? `<div style="margin-top:10px;padding:6px;border-radius:10px;background:#1f2933;text-align:center">
          🎯 Final Score <b>${data.FinalScore.toFixed(2)}</b>
-       </div>`
-    : '';
+       </div>` : '';
 
   tip.innerHTML = `
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
@@ -321,7 +285,6 @@ function attachDashboardTooltip(td, data) {
     <div style="margin-top:10px;text-align:center">
       <div style="font-size:11px;opacity:.7;margin-bottom:4px">Last 120 days</div>
       ${generateChart(data.postsLast120, data.meritsLast120)}
-      ${generateLegend()}
     </div>
 
     ${finalRow}
@@ -345,11 +308,15 @@ function attachDashboardTooltip(td, data) {
 
 /* ---------------- MAIN ---------------- */
 async function main() {
-  const m = location.search.match(/u=(\d+)/); if (!m) return;
-  const uid = m[1];
-
   try {
+    let uid = location.search.match(/u=(\d+)/)?.[1];
+    if (!uid) {
+      uid = extractUserIdFromPage();
+      if (!uid) return;
+    }
+
     const { merit120, posts120, postsLast120, meritsLast120 } = await fetchMeritsAndPosts120(uid);
+
     const posts = getProfileNumber('Posts');
     const meritTotal = getProfileNumber('Merit');
     const regDate = getProfileDate('Date Registered');
@@ -359,12 +326,6 @@ async function main() {
     const BRDb = calcBRDb(r.Reputation, merit120, posts120, r.badgeFormer, r.isHistoricalUser);
     const status = statusLabel(r.promising, r.badgeDormant, r.badgeFormer, r.badgeReactivated, r.isHistoricalUser);
 
-    const avgAll = posts > 0 ? meritTotal / posts : 0;
-    const avg120 = posts120 > 0 ? merit120 / posts120 : 0;
-
-    const impactAll = meritTotal * 1.5 + posts * 0.5;
-    const impact120 = merit120 * 1.5 + posts120 * 0.5;
-
     insertBRDbRow({
       BRDb, status,
       color: statusColor(status),
@@ -372,13 +333,18 @@ async function main() {
       Reliability: r.Reliability,
       FinalScore: r.FinalScore,
       posts120, merit120,
-      avgAll, avg120,
-      impactAll, impact120,
+      avgAll: posts > 0 ? meritTotal / posts : 0,
+      avg120: posts120 > 0 ? merit120 / posts120 : 0,
+      impactAll: meritTotal * 1.5 + posts * 0.5,
+      impact120: merit120 * 1.5 + posts120 * 0.5,
       postsLast120, meritsLast120
     });
 
-  } catch (e) { console.error('BRDb error', e); }
+  } catch (e) {
+    console.error("Errore BRDb:", e);
+  }
 }
 
-window.addEventListener('load', main);
+window.addEventListener('load', () => setTimeout(main, 800));
+
 })();

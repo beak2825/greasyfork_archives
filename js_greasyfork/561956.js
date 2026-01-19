@@ -17,15 +17,15 @@
 // @supportURL   https://github.com/Max46656/EverythingInGreasyFork/issues
 // @license      MPL2.0
 //
-// @version      1.4.0
+// @version      1.5.0
 // @match        https://exhentai.org/s/*/*
 // @match        https://e-hentai.org/s/*/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=e-hentai.org
-// @grant        GM_addStyle
-// @grant        GM_registerMenuCommand
+// @grant        GM_addStyle
+// @grant        GM_registerMenuCommand
 // @grant        GM_unregisterMenuCommand
-// @grant        GM_setValue
-// @grant        GM_getValue
+// @grant        GM_setValue
+// @grant        GM_getValue
 // @downloadURL https://update.greasyfork.org/scripts/561956/E-Hentai%20Image%20Auto%20Resize.user.js
 // @updateURL https://update.greasyfork.org/scripts/561956/E-Hentai%20Image%20Auto%20Resize.meta.js
 // ==/UserScript==
@@ -47,30 +47,37 @@ class ImageResizer {
 
     applyBaseStyles() {
         GM_addStyle(`
-                :root {
-                    --eh-mw: none; --eh-mh: none; --eh-w: auto; --eh-h: auto;
-                }
-                #img {
-                    max-width: var(--eh-mw) !important;
-                    max-height: var(--eh-mh) !important;
-                    width: var(--eh-w) !important;
-                    height: var(--eh-h) !important;
-                    display: block;
-                    margin: 0 auto;
-                }
-                .eh-resizer-select {
-                    margin-left: 10px;
-                    padding: 0 5px;
-                    background: #34353b;
-                    color: #fff;
-                    border: 1px solid #5c5c5c;
-                    cursor: pointer;
-                    font-size: 14px;
-                    vertical-align: middle;
-                }
-            `);
-            this.updateCSSVariables();
-        }
+            :root {
+                --eh-mw: none; --eh-mh: none; --eh-w: auto; --eh-h: auto;
+            }
+
+            #i1 {
+                width: 100% !important;
+            }
+
+            #img {
+                max-width: var(--eh-mw) !important;
+                max-height: var(--eh-mh) !important;
+                width: var(--eh-w) !important;
+                height: var(--eh-h) !important;
+                display: block !important;
+                margin: 0 auto !important;
+                flex-shrink: 0;
+            }
+
+            .eh-resizer-select {
+                margin-left: 10px;
+                padding: 0 5px;
+                background: #34353b;
+                color: #fff;
+                border: 1px solid #5c5c5c;
+                cursor: pointer;
+                font-size: 14px;
+                vertical-align: middle;
+            }
+        `);
+        this.updateCSSVariables();
+    }
 
     updateCSSVariables() {
         const modeConfig = Object.values(this.MODES).find(m => m.id === this.currentModeId) || this.MODES['1'];
@@ -103,7 +110,7 @@ class ImageResizer {
         this.menuId = GM_registerMenuCommand(menuLabel, () => {
             let menuPrompt = "Select Mode / 切換模式 (Enter Number):\n";
             for (const [num, config] of Object.entries(this.MODES)) {
-                const activeMarker = (config.id === this.currentModeId) ? " ▶ " : "   ";
+                const activeMarker = (config.id === this.currentModeId) ? " ▶ " : "    ";
                 menuPrompt += `${num}.${activeMarker}${config.label} (${config.id})\n`;
             }
 

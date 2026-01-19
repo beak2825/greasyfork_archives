@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LIMS 메인 대시보드 - LRS 수행팀
 // @namespace    http://tampermonkey.net/
-// @version      1.1.3
+// @version      1.1.4
 // @description  LRS 수행팀 전용 (PacBio / ONT) 실시간 작업 현황 + Demulti 실시간 알림
 // @author       김재형
 // @match        https://lims3.macrogen.com/main.do*
@@ -21,6 +21,8 @@
     const CACHE_TIME_KEY = 'LRS_STATUS_CACHE_TIME';
     const RUNNING_LIST_KEY = 'LRS_DEMULTI_RUNNING';
     const HOLD_LIST_KEY = 'LRS_DEMULTI_HOLD';
+    const PROGRESS_CACHE_KEY = 'LRS_PROGRESS_CACHE'; // 진행률 감시용 캐시
+    const MONITORING_YLD_KEY = 'LRS_MONITORING_YLD'; // 수율 모니터링 활성화 여부
 
     // 보안 토큰(CSRF) 추출 함수
     function getCsrfInfo() {
@@ -64,7 +66,7 @@
 
         setInterval(() => {
             updateStatusDashboard('demulti');
-        }, 5 * 60 * 1000);
+        }, 10 * 60 * 1000); // 사용자의 요청에 따라 10분 간격으로 조정
     }
 
     function initStatusSection() {
@@ -158,27 +160,64 @@
                     <span style="${labelStyle} padding-top: 2px;">RUN</span>
                     <span id="status-run-wait" style="font-size: 14px; font-weight: 900;">--</span>
                 </div>
-                <!-- Demulti -->
-                <div class="stat-cell" style="${cellBaseStyle} background: #eff6ff; border-color: #bfdbfe; cursor: pointer;" id="cell-demulti" title="PacBio Demultiplexing">
-                    <div style="${rowStyle} border-bottom: 1px dashed rgba(59, 130, 246, 0.1); height: 50%;">
-                        <span style="${labelStyle} color: #2563eb;">Ing</span>
-                        <span id="status-dem-run" style="${valueStyle} color: #2563eb;">--</span>
-                        <span style="${labelStyle} margin-left: 2px;">Hold</span>
-                        <span id="status-dem-hold" style="${valueStyle}">--</span>
-                    </div>
-                    <div style="${rowStyle} height: 50%;">
-                        <span style="${labelStyle}">Cnf (7d)</span>
-                        <span id="status-dem-cfmd" style="${valueStyle}">--</span>
+                <!-- YLD (기존 Demulti 섹션 개편) -->
+                <div class="stat-cell" style="${cellBaseStyle} background: #eff6ff; border-color: #bfdbfe; position: relative;" id="cell-yld" title="Revio Yield Check Monitoring">
+                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; width: 100%;">
+                        <div style="display: flex; align-items: center; gap: 4px;">
+                            <span style="font-size: 10px; font-weight: 800; color: #2563eb;">YLD</span>
+                            <span id="status-yld-count" style="font-size: 16px; font-weight: 950; color: #2563eb;">--</span>
+                        </div>
+                        <div id="status-monitoring-label" style="font-size: 8px; color: #94a3b8; margin-top: 1px;">(Progress 대기)</div>
+                        <button id="yld-stop-btn" style="display: none; position: absolute; bottom: 2px; width: 90%; font-size: 7px; padding: 1px 0; background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; border-radius: 2px; cursor: pointer; font-weight: 700;">모니터링 종료</button>
                     </div>
                 </div>
             `;
 
-            // 이벤트 리스너 등록 (onclick 대신 JS에서 바인딩하여 샌드박스 오류 방지)
-            const clickableIds = ['cell-lib', 'cell-run', 'cell-demulti'];
+            // 이벤트 리스너 등록
+            const clickableIds = ['cell-lib', 'cell-run', 'cell-yld'];
             clickableIds.forEach(id => {
                 const el = document.getElementById(id);
-                if (el) el.onclick = () => { if (window.openLrsModal) window.openLrsModal(); };
+                if (el) {
+                    if (id === 'cell-yld') {
+                        // YLD 셀 클릭 시 아무 동작 안 함 (필요 시 모달 연결 가능)
+                    } else {
+                        el.onclick = () => { if (window.openLrsModal) window.openLrsModal(); };
+                    }
+                }
             });
+
+            const stopBtn = document.getElementById('yld-stop-btn');
+            if (stopBtn) {
+                stopBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    GM_setValue(MONITORING_YLD_KEY, false);
+                    updateMonitoringUI(false);
+                    alert('수율 모니터링을 종료하고 진행률 감시 모드로 전환합니다.');
+                };
+            }
+        }
+    }
+
+    function updateMonitoringUI(isMonitoring) {
+        const labelEl = document.getElementById('status-monitoring-label');
+        const countEl = document.getElementById('status-yld-count');
+        const stopBtn = document.getElementById('yld-stop-btn');
+        const cellEl = document.getElementById('cell-yld');
+
+        if (isMonitoring) {
+            if (labelEl) labelEl.innerText = '🔍 모니터링 중';
+            if (labelEl) labelEl.style.color = '#2563eb';
+            if (stopBtn) stopBtn.style.display = 'block';
+            if (cellEl) cellEl.style.background = '#fffbeb';
+            if (cellEl) cellEl.style.borderColor = '#fef3c7';
+        } else {
+            if (labelEl) labelEl.innerText = '(Progress 대기)';
+            if (labelEl) labelEl.style.color = '#94a3b8';
+            if (stopBtn) stopBtn.style.display = 'none';
+            if (cellEl) cellEl.style.background = '#eff6ff';
+            if (cellEl) cellEl.style.borderColor = '#bfdbfe';
+            if (countEl) countEl.innerText = '--';
+            if (countEl) countEl.style.color = '#cbd5e1';
         }
     }
 
@@ -280,23 +319,27 @@
                 { id: 'status-lib-wait', group: 'lib-run', fn: () => fetchLimsData("https://lims3.macrogen.com/ngs/library/retrieveWaits.do", { "dataSet": { "frmWait": [{ "name": "searchLibTypeCd", "value": "PBL" }, { "name": "menuCd", "value": "NGS120100" }] } }) },
                 { id: 'status-run-wait', group: 'lib-run', fn: () => fetchLimsData("https://lims3.macrogen.com/ngs/amplification/retrieveNgsAmplificationSequalTwoList.do", { "dataSet": { "amplificationForm": [{ "name": "amplificationType", "value": "S2" }, { "name": "searchMode", "value": "PAC" }, { "name": "menuCd", "value": "NGS150500" }] } }) },
                 {
-                    id: 'demulti-data', group: 'demulti', fn: () => fetchLimsData("https://lims3.macrogen.com/ngs/demulti/retrievePacBioReportList.do", {
-                        "dataSet": {
-                            "demultiForm": [
-                                { "name": "searchMode", "value": "PAC" },
-                                { "name": "searchBeginDate_text", "value": getFormattedDate(lastWeek, '-') },
-                                { "name": "searchBeginDate", "value": getFormattedDate(lastWeek) },
-                                { "name": "searchEndDate_text", "value": getFormattedDate(today, '-') },
-                                { "name": "searchEndDate", "value": getFormattedDate(today) },
-                                { "name": "searchPltfomCd", "value": "" },
-                                { "name": "searchEqtbListSn", "value": "" },
-                                { "name": "searchDemStatCd", "value": "" },
-                                { "name": "searchBasicCd", "value": "01" },
-                                { "name": "searchBasicCn", "value": "" },
-                                { "name": "menuCd", "value": "NGS170201" }
-                            ]
-                        }
-                    })
+                    id: 'revio-yld-check', group: 'demulti', fn: async () => {
+                        const isMonitoring = GM_getValue(MONITORING_YLD_KEY, false);
+
+                        // 1. Pacbio Instrument Plate 리스트 확인 (항상 수행하여 Progress 감시)
+                        const plates = await fetchLimsData("https://lims3.macrogen.com/ngs/instrumentPlate/retrieveNgsInstrumentPlatePacbioList.do", {
+                            "dataSet": { "instrumentPlateForm": [{ "name": "menuCd", "value": "NGS160200" }] }
+                        });
+
+                        // progressRatio 변화 감지
+                        checkProgressChanges(plates);
+
+                        // 모니터링 모드가 아니면 여기서 종료
+                        if (!isMonitoring) return null;
+
+                        // 2. Yield Check 리스트에서 Revio 개수 확인
+                        const yields = await fetchLimsData("https://lims3.macrogen.com/ngs/demulti/retireveYieldCheckList.do", {
+                            "dataSet": { "demultiForm": [{ "name": "menuCd", "value": "NGS170600" }] }
+                        });
+
+                        return yields.filter(y => y.pltfomNm === 'Revio');
+                    }
                 }
             ];
 
@@ -309,8 +352,8 @@
                 const data = await q.fn();
                 const qId = q.id;
 
-                if (qId === 'demulti-data') {
-                    processDemultiData(data, sessionCounts);
+                if (qId === 'revio-yld-check') {
+                    processYldData(data, sessionCounts);
                 } else {
                     const isTarget = (item) => item && ['Revio', 'PromethION'].includes(item.pltfomNm || item.prfmPltfomNm);
                     const isRevioOnly = (item) => item && (item.pltfomNm || item.prfmPltfomNm) === 'Revio';
@@ -375,69 +418,55 @@
         }
     }
 
-    function processDemultiData(data, currentCounts) {
-        // 고유 키 생성 함수 (DATA ID[Raw Dir] + CELL 위치 조합으로 충돌 원천 봉쇄)
-        const getCellKey = (item) => {
-            const runId = item.imprtId || item.insId || '';
-            const cellPos = item.celPosition || '';
-            if (!runId && !cellPos) return null;
-            return `${runId}|${cellPos}`; // 구분자를 | 로 변경하여 ID 내 언더바(_) 혼동 방지
-        };
+    function checkProgressChanges(plates) {
+        const cachedProgress = GM_getValue(PROGRESS_CACHE_KEY, {});
+        const newProgress = {};
+        let changed = false;
 
-        const runningItems = data.filter(item => item.demStatNm === 'Running');
-        const holdItems = data.filter(item => item.demStatNm === 'Hold compl.');
-        const cfmdItems = data.filter(item => item.demStatNm === 'cfmd');
+        plates.forEach(p => {
+            const id = p.insId;
+            const currentRatio = p.progressRatio || '';
+            const status = p.plateStatNm || '';
 
-        const currentlyRunningKeys = runningItems.map(getCellKey).filter(k => k);
-        const currentlyHoldKeys = holdItems.map(getCellKey).filter(k => k);
-
-        const prevRunningKeys = GM_getValue(RUNNING_LIST_KEY, []);
-        const prevHoldKeys = GM_getValue(HOLD_LIST_KEY, []);
-
-        // 알림 처리 로직 통합 및 강화
-        const notifyIfCompleted = (prevKeys, statusLabel) => {
-            prevKeys.forEach(oldKey => {
-                if (!oldKey) return;
-                const currentItem = data.find(item => getCellKey(item) === oldKey);
-                // 이전 상태가 리스트에 있었는데 현재 cfmd 상태라면 알림
-                if (currentItem && currentItem.demStatNm === 'cfmd') {
-                    GM_notification({
-                        title: `🚀 디멀티플렉싱 완료! (${statusLabel})`,
-                        text: `PLATE: ${currentItem.insId || '-'}\nCELL: ${currentItem.celPosition || '-'}\nRUN: ${currentItem.imprtId || 'N/A'}\n작업이 완료되었습니다.`,
-                        onclick: () => window.focus()
-                    });
+            // Run Started 또는 Run Completed인 플레이트만 감시
+            if (status === 'Run Started' || status === 'Run Completed') {
+                newProgress[id] = currentRatio;
+                if (cachedProgress[id] && cachedProgress[id] !== currentRatio) {
+                    console.log(`[LRS] Progress Changed: ${id} (${cachedProgress[id]} -> ${currentRatio})`);
+                    changed = true;
                 }
+            }
+        });
+
+        GM_setValue(PROGRESS_CACHE_KEY, newProgress);
+
+        if (changed) {
+            console.log('[LRS] Triggering YLD Monitoring due to progress change...');
+            GM_setValue(MONITORING_YLD_KEY, true);
+            GM_notification({
+                title: "🚀 Revio 진행률 변경 감지",
+                text: "플레이트 진행률이 변경되어 수율 확인(YLD) 모니터링을 시작합니다.",
+                onclick: () => window.focus()
             });
-        };
-
-        if (prevRunningKeys.length > 0) notifyIfCompleted(prevRunningKeys, "Running");
-        if (prevHoldKeys.length > 0) notifyIfCompleted(prevHoldKeys, "Hold");
-
-        // 다음 비교를 위해 현재 상태 저장
-        GM_setValue(RUNNING_LIST_KEY, currentlyRunningKeys);
-        GM_setValue(HOLD_LIST_KEY, currentlyHoldKeys);
-
-        // UI 표시용 (모든 상태 Cell단위 수량 표시)
-        const runningCount = runningItems.length;
-        currentCounts['status-dem-run'] = runningCount;
-        currentCounts['status-dem-hold'] = holdItems.length;
-        currentCounts['status-dem-cfmd'] = cfmdItems.length;
-
-        const runEl = document.getElementById('status-dem-run');
-        const holdEl = document.getElementById('status-dem-hold');
-        const cfmdEl = document.getElementById('status-dem-cfmd');
-
-        if (runEl) {
-            runEl.innerText = runningCount;
-            runEl.style.color = runningCount > 0 ? '#2563eb' : '#cbd5e1';
         }
-        if (holdEl) {
-            holdEl.innerText = holdItems.length;
-            holdEl.style.color = getCountColor(holdItems.length);
+    }
+
+    function processYldData(data, currentCounts) {
+        const isMonitoring = GM_getValue(MONITORING_YLD_KEY, false);
+        updateMonitoringUI(isMonitoring);
+
+        if (!isMonitoring || data === null) {
+            currentCounts['status-yld-count'] = '--';
+            return;
         }
-        if (cfmdEl) {
-            cfmdEl.innerText = cfmdItems.length;
-            cfmdEl.style.color = getCountColor(cfmdItems.length);
+
+        const count = data.length;
+        currentCounts['status-yld-count'] = count;
+
+        const countEl = document.getElementById('status-yld-count');
+        if (countEl) {
+            countEl.innerText = count;
+            countEl.style.color = count > 0 ? '#2563eb' : '#cbd5e1';
         }
     }
 

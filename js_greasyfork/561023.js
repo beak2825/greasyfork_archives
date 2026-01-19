@@ -2,7 +2,7 @@
 // @name         MilkyWayIdle - Fullscreen Chat(摸鱼助手)
 // @name:zh-CN   MilkyWayIdle - 全屏聊天（摸鱼助手）
 // @namespace    https://github.com/ailec0623/MilkyWayIdle-FullscreenIDEChat
-// @version      0.21.0
+// @version      0.22.0
 // @description  Launch the game using the button in the bottom right corner of the game interface. Alternatively, use the shortcut Alt + I (MacOS: cmd + I). The chat interface can be switched to Excel mode in the top right corner; pressing ESC in Excel mode will return you to IDE mode.
 // @description:zh-CN  游戏界面右下角按钮启动。快捷键alt + I (MacOS: cmd + I). 聊天界面右上角可切换为Excel模式，Excel模式中按ESC可以退回到IDE模式。
 // @author       400BadRequest
@@ -175,9 +175,10 @@ const CHINA_PROVINCE = ['北京', '天津', '上海', '重庆', '河北', '山�
       border: 1px solid rgba(255,255,255,.18);
       background: rgba(15,17,26,.95); color: #cfd6e6;
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "JetBrains Mono", monospace;
-      font-size: 12px; cursor: pointer; user-select: none;
+      font-size: 12px; cursor: grab; user-select: none; touch-action: none;
       box-shadow: 0 8px 22px rgba(0,0,0,.35);
     }
+    #${CFG.toggleBtnId}.mw-dragging{ cursor: grabbing; }
     #${CFG.toggleBtnId}:hover{ border-color: rgba(255,255,255,.28); }
 
     #${CFG.overlayId}{
@@ -1401,6 +1402,20 @@ const CHINA_PROVINCE = ['北京', '天津', '上海', '重庆', '河北', '山�
     // Excel mode
     excelMode: getSetting('excelMode', false),
     excelTheme: getSetting('excelTheme', 'tencent'), // tencent, wps, office
+
+    // toggle button drag
+    toggleBtnPos: getSetting('toggleBtnPos', null),
+    toggleBtnDrag: {
+      isDragging: false,
+      moved: false,
+      pointerId: null,
+      startX: 0,
+      startY: 0,
+      startLeft: 0,
+      startTop: 0,
+      width: 0,
+      height: 0,
+    },
   };
   function readSelfIdFromPage() {
     // 1) 先锁定 Header 区域，避免撞到聊天消息里的 CharacterName_name__*
@@ -3526,6 +3541,91 @@ const CHINA_PROVINCE = ['北京', '天津', '上海', '重庆', '河北', '山�
     if (layout) layout.style.display = 'grid';
   }
 
+  function applyToggleBtnPosition() {
+    const btn = $('#' + CFG.toggleBtnId);
+    if (!btn) return;
+
+    const pos = state.toggleBtnPos;
+    if (!pos || typeof pos.x !== 'number' || typeof pos.y !== 'number') return;
+
+    btn.style.left = `${pos.x}px`;
+    btn.style.top = `${pos.y}px`;
+    btn.style.right = 'auto';
+    btn.style.bottom = 'auto';
+  }
+
+  function bindToggleBtnDrag() {
+    const btn = $('#' + CFG.toggleBtnId);
+    if (!btn || btn.__mwDragBound) return;
+    btn.__mwDragBound = true;
+
+    const clamp = (val, min, max) => Math.max(min, Math.min(max, val));
+
+    btn.addEventListener('pointerdown', (e) => {
+      if (e.button !== 0) return;
+
+      const rect = btn.getBoundingClientRect();
+      state.toggleBtnDrag.isDragging = true;
+      state.toggleBtnDrag.moved = false;
+      state.toggleBtnDrag.pointerId = e.pointerId;
+      state.toggleBtnDrag.startX = e.clientX;
+      state.toggleBtnDrag.startY = e.clientY;
+      state.toggleBtnDrag.startLeft = rect.left;
+      state.toggleBtnDrag.startTop = rect.top;
+      state.toggleBtnDrag.width = rect.width;
+      state.toggleBtnDrag.height = rect.height;
+
+      btn.classList.add('mw-dragging');
+      btn.setPointerCapture?.(e.pointerId);
+    });
+
+    btn.addEventListener('pointermove', (e) => {
+      if (!state.toggleBtnDrag.isDragging || state.toggleBtnDrag.pointerId !== e.pointerId) return;
+
+      const dx = e.clientX - state.toggleBtnDrag.startX;
+      const dy = e.clientY - state.toggleBtnDrag.startY;
+      const maxLeft = window.innerWidth - state.toggleBtnDrag.width;
+      const maxTop = window.innerHeight - state.toggleBtnDrag.height;
+
+      const nextLeft = clamp(state.toggleBtnDrag.startLeft + dx, 0, maxLeft);
+      const nextTop = clamp(state.toggleBtnDrag.startTop + dy, 0, maxTop);
+
+      btn.style.left = `${Math.round(nextLeft)}px`;
+      btn.style.top = `${Math.round(nextTop)}px`;
+      btn.style.right = 'auto';
+      btn.style.bottom = 'auto';
+
+      if (Math.abs(dx) > 3 || Math.abs(dy) > 3) {
+        state.toggleBtnDrag.moved = true;
+      }
+    });
+
+    const endDrag = (e) => {
+      if (!state.toggleBtnDrag.isDragging || state.toggleBtnDrag.pointerId !== e.pointerId) return;
+
+      state.toggleBtnDrag.isDragging = false;
+      state.toggleBtnDrag.pointerId = null;
+      btn.classList.remove('mw-dragging');
+      btn.releasePointerCapture?.(e.pointerId);
+
+      if (state.toggleBtnDrag.moved) {
+        const rect = btn.getBoundingClientRect();
+        const pos = { x: Math.round(rect.left), y: Math.round(rect.top) };
+        state.toggleBtnPos = pos;
+        setSetting('toggleBtnPos', pos);
+      }
+    };
+
+    btn.addEventListener('pointerup', endDrag);
+    btn.addEventListener('pointercancel', endDrag);
+  }
+
+  function shouldIgnoreToggleClick() {
+    if (!state.toggleBtnDrag?.moved) return false;
+    state.toggleBtnDrag.moved = false;
+    return true;
+  }
+
   /* ======= UI ======= */
   function createUI() {
     if ($('#' + CFG.overlayId)) return;
@@ -3578,7 +3678,13 @@ const CHINA_PROVINCE = ['北京', '天津', '上海', '重庆', '河北', '山�
       FontManager.updateButton();
     }
 
-    $('#' + CFG.toggleBtnId).addEventListener('click', () => toggleOverlay());
+    const toggleBtn = $('#' + CFG.toggleBtnId);
+    applyToggleBtnPosition();
+    bindToggleBtnDrag();
+    toggleBtn.addEventListener('click', () => {
+      if (shouldIgnoreToggleClick()) return;
+      toggleOverlay();
+    });
 
     $('#' + CFG.overlayId).addEventListener('click', (e) => {
       const btn = e.target?.closest('button[data-action]');

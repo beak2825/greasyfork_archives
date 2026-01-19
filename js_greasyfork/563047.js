@@ -1,8 +1,9 @@
 // ==UserScript==
 // @name         Platesmania Gallery Moderator Mode Toolbox
-// @version      1.0
+// @version      2.0
 // @description  Couple enhancements for moderator workflow.
 // @match        https://platesmania.com/*gallery*
+// @match        https://platesmania.com/*/nomer*
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_xmlhttpRequest
@@ -15,6 +16,14 @@
 // @downloadURL https://update.greasyfork.org/scripts/563047/Platesmania%20Gallery%20Moderator%20Mode%20Toolbox.user.js
 // @updateURL https://update.greasyfork.org/scripts/563047/Platesmania%20Gallery%20Moderator%20Mode%20Toolbox.meta.js
 // ==/UserScript==
+
+
+// known Issues:
+// - Brand/model selection on /nomer pages not working correctly.
+
+// TOdo:
+// - Add lookup tools on /nomer pages
+
 
 (() => {
     "use strict";
@@ -33,11 +42,90 @@
   i.sprite.pull-right {
   margin-left: 8px;
 }
-
+.pmx-edit-popup {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  background: rgba(0,0,0,0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pmx-edit-popup-content {
+  width: 70vw;
+  max-height: 90vh;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 16px 44px rgba(0,0,0,0.30);
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+}
+.pmx-edit-popup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+  background: #f8f9fa;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+.pmx-edit-popup-title {
+  font-weight: 700;
+  font-size: 14px;
+}
+.pmx-edit-popup-close {
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font-size: 22px;
+  line-height: 22px;
+  padding: 0 4px;
+}
+.pmx-edit-popup-body {
+  padding: 20px;
+  flex: 1 1 auto;
+  overflow: auto;
+}
+.ui-autocomplete,
+.ui-menu,
+.ui-widget-content.ui-autocomplete {
+  z-index: 1000001 !important;
+}
+.ui-autocomplete-input {
+  z-index: 1000000 !important;
+}
+.pmx-loading-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000000;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  color: #fff;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+.pmx-loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: pmx-spin 1s linear infinite;
+  margin-bottom: 15px;
+}
+@keyframes pmx-spin {
+  to { transform: rotate(360deg); }
+}
+.pmx-loading-text {
+  font-size: 16px;
+  font-weight: 500;
+}
 `);
 
-    // ---------- Storage ----------
-    const MODERATOR_KEY = "pm_moderator_mode_enabled"; // renamed
+    const MODERATOR_KEY = "pm_moderator_mode_enabled";
     const ZOOM_KEY = "pm_zoom_enabled";
 
     const gmGet = (key, fallback) => {
@@ -52,12 +140,30 @@
         } catch {}
     };
 
-    // ---------- Small helpers ----------
     const qs = (sel, root = document) => root.querySelector(sel);
     const qsa = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
+    function getCurrentPageInfo() {
+        const href = window.location.href || "";
+        const pathname = window.location.pathname || "";
+        const nomerMatch = pathname.match(/^\/([a-z]{2,4})\/nomer(\d+)/i);
+        if (nomerMatch) {
+            return {
+                isNomerPage: true,
+                id: nomerMatch[2],
+                param: pathname,
+                country: nomerMatch[1].toLowerCase()
+            };
+        }
+        return {
+            isNomerPage: false,
+            id: "",
+            param: "",
+            country: ""
+        };
+    }
+
     function safeOpen(url) {
-        // keep it synchronous in the click handler (popup blockers)
         window.open(url, "_blank", "noopener,noreferrer");
     }
 
@@ -116,11 +222,42 @@
         });
     }
 
+    function httpPost(url, data) {
+        return new Promise((resolve, reject) => {
+            const formData = new URLSearchParams();
+            for (const [key, value] of Object.entries(data)) {
+                formData.append(key, value);
+            }
+            if (typeof GM_xmlhttpRequest === "function") {
+                GM_xmlhttpRequest({
+                    method: "POST",
+                    url,
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                    },
+                    data: formData.toString(),
+                    onload: (res) => resolve(res.responseText),
+                    onerror: reject,
+                });
+            } else {
+                fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                    },
+                    body: formData.toString(),
+                })
+                    .then((r) => r.text())
+                    .then(resolve)
+                    .catch(reject);
+            }
+        });
+    }
+
     function escHtml(s) {
         return String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
     }
 
-    // ---------- UI: Moderator mode toggle (+ Zoom toggle) ----------
     function injectModeratorToggle() {
         if (qs("#pmx-moderator-toggle"))
             return { moderatorEnabled: !!gmGet(MODERATOR_KEY, false), zoomEnabled: !!gmGet(ZOOM_KEY, false) };
@@ -161,7 +298,6 @@
         labelMod.appendChild(textMod);
         wrap.appendChild(labelMod);
 
-        // Zoom toggle (only visible when Moderator mode is enabled)
         const labelZoom = document.createElement("label");
         labelZoom.id = "pmx-zoom-toggle";
         labelZoom.style.display = "inline-flex";
@@ -180,7 +316,6 @@
         labelZoom.appendChild(textZoom);
         wrap.appendChild(labelZoom);
 
-        // Insert
         if (anchor === document.body) {
             document.body.insertBefore(wrap, document.body.firstChild);
         } else if (anchor.parentNode) {
@@ -202,28 +337,40 @@
 
         cbMod.addEventListener("change", () => {
             gmSet(MODERATOR_KEY, cbMod.checked);
-
-            // Zoom toggle should appear/disappear immediately
             setZoomVisible(cbMod.checked);
 
             if (cbMod.checked) {
-                runModeratorPass();
-                applyZoomToAllTiles(!!gmGet(ZOOM_KEY, false));
+                const pageInfo = getCurrentPageInfo();
+                if (pageInfo.isNomerPage) {
+                    processNomerPage();
+                } else {
+                    runModeratorPass();
+                    applyZoomToAllTiles(!!gmGet(ZOOM_KEY, false));
+                }
             } else {
-                teardownModeratorPass();
+                if (getCurrentPageInfo().isNomerPage) {
+                    teardownNomerPage();
+                } else {
+                    teardownModeratorPass();
+                }
             }
         });
 
         cbZoom.addEventListener("change", () => {
             gmSet(ZOOM_KEY, cbZoom.checked);
-            // Apply instantly (no reload)
-            if (gmGet(MODERATOR_KEY, false)) applyZoomToAllTiles(cbZoom.checked);
+            if (gmGet(MODERATOR_KEY, false)) {
+                const pageInfo = getCurrentPageInfo();
+                if (pageInfo.isNomerPage) {
+                    applyZoomToNomerPage(cbZoom.checked);
+                } else {
+                    applyZoomToAllTiles(cbZoom.checked);
+                }
+            }
         });
 
         return { moderatorEnabled, zoomEnabled };
     }
 
-    // ---------- Moderator edit: floating iframe + popup ----------
     const EDIT_IFRAME_ID = "pmx-edit-overlay";
     const EDIT_IFRAME_NAME = "pmx_edit_iframe_target";
     const EDIT_POPUP_NAME = "pmx_edit_popup_target";
@@ -247,7 +394,6 @@
         overlay.style.alignItems = "center";
         overlay.style.justifyContent = "center";
         overlay.addEventListener("mousedown", (e) => {
-            // click outside closes
             if (e.target === overlay) closeEditOverlay();
         });
 
@@ -298,24 +444,25 @@
         iframe.style.flex = "1 1 auto";
         iframe.setAttribute("referrerpolicy", "no-referrer");
 
-        // auto-close when URL changes (user clicked a link in the iframe)
-        let baselineHref = null;
+        const ADMIN_PREFIX = "https://platesmania.com/admin/";
+
         let baselineSet = false;
+
         iframe.addEventListener("load", () => {
             try {
                 const href = iframe.contentWindow?.location?.href || "";
                 if (!href) return;
 
                 if (!baselineSet) {
-                    baselineHref = href;
+                    if (href === "about:blank") return;
                     baselineSet = true;
                     return;
                 }
 
-                if (href !== baselineHref) closeEditOverlay();
-            } catch {
-                closeEditOverlay();
-            }
+                if (!href.startsWith(ADMIN_PREFIX)) {
+                    closeEditOverlay();
+                }
+            } catch {}
         });
 
         panel.appendChild(header);
@@ -329,7 +476,6 @@
         const prevTarget = form.getAttribute("target");
         form.setAttribute("target", targetName);
         try {
-            // IMPORTANT: submit() bypasses submit event handlers (so our iframe handler won't interfere)
             form.submit();
         } catch {
             const btn = qs('button[type="submit"], input[type="submit"]', form);
@@ -348,7 +494,6 @@
     }
 
     function openEditInPopup(form) {
-        // NOTE: Do NOT use noopener/noreferrer here, it can break targeting in Firefox.
         const features = [
             "popup=1",
             "width=980",
@@ -364,13 +509,12 @@
         ].join(",");
 
         const w = window.open("about:blank", EDIT_POPUP_NAME, features);
-        if (!w) return; // popup blocked
+        if (!w) return;
 
         try {
             w.focus();
         } catch {}
 
-        // Target by the stable name we opened with (not w.name), then POST into it.
         submitFormToTarget(form, EDIT_POPUP_NAME);
     }
 
@@ -383,7 +527,6 @@
             return;
         }
 
-        // Intercept normal submit (keyboard / enter, etc.)
         form.addEventListener(
             "submit",
             (e) => {
@@ -394,7 +537,6 @@
             true
         );
 
-        // Intercept the original pencil click explicitly too
         btn.addEventListener(
             "click",
             (e) => {
@@ -405,10 +547,9 @@
             true
         );
 
-        // Duplicate button: pencil + "arrow to top right" (fa-external-link)
         const dup = document.createElement("button");
         dup.type = "button";
-        dup.className = btn.className; // keep styling identical
+        dup.className = btn.className;
         dup.style.marginRight = "6px";
         dup.title = "Open moderator edit in a popup window";
         dup.innerHTML = `${btn.innerHTML} <i class="fa fa-external-link" aria-hidden="true" style="margin-left:4px;"></i>`;
@@ -424,7 +565,6 @@
         form.dataset.pmxEditEnhanced = "1";
     }
 
-    // ---------- Moderator mode: core parsing ----------
     function parseTile(tile) {
         const nomerA = qs('a[href^="/"][href*="/nomer"]', tile) || qs('a[href*="/nomer"]', tile);
         const href = nomerA?.getAttribute("href") || "";
@@ -444,7 +584,6 @@
               null;
         const plate = (plateImg?.getAttribute("alt") || "").trim();
 
-        // IMPORTANT: zoom applies only to /m/ images (NOT /s/)
         const mImg = qs('img[src*="/m/"]', tile) || qs("img.img-responsive", tile);
         const mImgUrl = mImg?.getAttribute("src") || "";
         const oImgUrl = mImgUrl && /\/m\//.test(mImgUrl) ? mImgUrl.replace(/\/m\//, "/o/") : "";
@@ -454,7 +593,6 @@
         return { tile, href, country, photoId, username, userId, plate, mImg, mImgUrl, oImgUrl, editForm };
     }
 
-    // ---------- Buttons: insertion ----------
     function makeBtn(opts) {
         const btn = document.createElement("button");
         btn.type = "button";
@@ -497,7 +635,6 @@
         userA.insertAdjacentElement("afterend", btn);
     }
 
-    // ---------- Dropdown menu ----------
     let activeMenuCleanup = null;
 
     function closeAllMenus() {
@@ -592,7 +729,6 @@
         };
     }
 
-    // ---------- Floating info windows for API lookups ----------
     function makeFloatWindow(id, titleHtml, rows) {
         const existing = qs("#" + id);
         if (existing) existing.remove();
@@ -725,8 +861,8 @@
 
         const primary = Array.isArray(base) && base.length ? base[0] : {};
         const fuelTypes = (Array.isArray(fuel) ? fuel : [])
-            .map((x) => x.brandstof_omschrijving || x.brandstof_omschrijving_ || x.brandstof || "")
-            .filter(Boolean);
+        .map((x) => x.brandstof_omschrijving || x.brandstof_omschrijving_ || x.brandstof || "")
+        .filter(Boolean);
 
         const onlyYear = (yyyymmdd) => {
             if (!yyyymmdd || typeof yyyymmdd !== "string") return "unknown";
@@ -787,8 +923,8 @@
             const engine = item.querySelector("label engine");
             if (engine && !info.engine) {
                 const engineItems = Array.from(engine.querySelectorAll("item"))
-                    .map((n) => (n.textContent || "").trim())
-                    .filter(Boolean);
+                .map((n) => (n.textContent || "").trim())
+                .filter(Boolean);
                 if (engineItems.length) info.engine = engineItems.join(", ");
             }
 
@@ -798,7 +934,6 @@
         return info;
     }
 
-    // ---------- Lookup mapping ----------
     const lookupSites = {
         nl: [
             { name: "Finnik", base: "https://finnik.nl/kenteken/" },
@@ -946,7 +1081,7 @@
                         [
                             "Power",
                             (data.powerKw || data.powerHp)
-                                ? `${data.powerKw ?? ""}${data.powerKw ? " kW" : ""}${data.powerKw && data.powerHp ? " / " : ""}${data.powerHp ?? ""}${data.powerHp ? " hp" : ""}`
+                            ? `${data.powerKw ?? ""}${data.powerKw ? " kW" : ""}${data.powerKw && data.powerHp ? " / " : ""}${data.powerHp ?? ""}${data.powerHp ? " hp" : ""}`
                                 : "",
                         ],
                     ]);
@@ -995,7 +1130,6 @@
         return items;
     }
 
-    // ---------- Zoom lens (per tile, now controlled globally) ----------
     const zoomState = new WeakMap();
 
     function ensureImageWrapper(img) {
@@ -1099,7 +1233,6 @@
         }
     }
 
-    // ---------- Inject per-tile controls ----------
     function processTile(tile) {
         if (tile.dataset.pmxDone === "1") {
             const zoomOn = !!gmGet(ZOOM_KEY, false);
@@ -1161,19 +1294,641 @@
         ["pmx-rdw-win", "pmx-fi-win", "pmx-trodo-win"].forEach((id) => qs("#" + id)?.remove());
     }
 
-    // ---------- Boot ----------
-    const { moderatorEnabled } = injectModeratorToggle();
-    if (!moderatorEnabled) return;
+    function showLoadingOverlay() {
+        const existing = qs(".pmx-loading-overlay");
+        if (existing) existing.remove();
 
-    runModeratorPass();
-    applyZoomToAllTiles(!!gmGet(ZOOM_KEY, false));
+        const overlay = document.createElement("div");
+        overlay.className = "pmx-loading-overlay";
 
-    const mo = new MutationObserver(() => {
+        const spinner = document.createElement("div");
+        spinner.className = "pmx-loading-spinner";
+
+        const text = document.createElement("div");
+        text.className = "pmx-loading-text";
+        text.textContent = "Loading...";
+
+        overlay.appendChild(spinner);
+        overlay.appendChild(text);
+        document.body.appendChild(overlay);
+
+        // Auto-hide after 10 seconds
+        setTimeout(() => {
+            hideLoadingOverlay();
+        }, 10000);
+
+        return overlay;
+    }
+
+    function hideLoadingOverlay() {
+        const overlay = qs(".pmx-loading-overlay");
+        if (overlay) overlay.remove();
+    }
+
+    function closeEditPopup() {
+        const popup = qs(".pmx-edit-popup");
+        if (popup) popup.remove();
+        hideLoadingOverlay();
+    }
+
+    function showEditPopup(title, contentHtml) {
+        closeEditPopup();
+
+        const popup = document.createElement("div");
+        popup.className = "pmx-edit-popup";
+        popup.addEventListener("mousedown", (e) => {
+            if (e.target === popup) closeEditPopup();
+        });
+
+        const content = document.createElement("div");
+        content.className = "pmx-edit-popup-content";
+
+        const header = document.createElement("div");
+        header.className = "pmx-edit-popup-header";
+
+        const titleEl = document.createElement("div");
+        titleEl.className = "pmx-edit-popup-title";
+        titleEl.textContent = title;
+
+        const closeBtn = document.createElement("button");
+        closeBtn.className = "pmx-edit-popup-close";
+        closeBtn.textContent = "×";
+        closeBtn.title = "Close";
+        closeBtn.addEventListener("click", closeEditPopup);
+
+        header.appendChild(titleEl);
+        header.appendChild(closeBtn);
+
+        const body = document.createElement("div");
+        body.className = "pmx-edit-popup-body";
+        body.innerHTML = contentHtml;
+
+        content.appendChild(header);
+        content.appendChild(body);
+        popup.appendChild(content);
+        document.body.appendChild(popup);
+
+        // Execute scripts properly
+        const scripts = body.querySelectorAll("script");
+        scripts.forEach((script) => {
+            const newScript = document.createElement("script");
+            if (script.src) {
+                newScript.src = script.src;
+            } else {
+                newScript.textContent = script.textContent;
+            }
+            script.parentNode.replaceChild(newScript, script);
+        });
+
+        const form = body.querySelector("form");
+        if (form) {
+            form.action = "https://platesmania.com/admin/index_new.php?start=";
+            form.method = "post";
+            form.enctype = "application/x-www-form-urlencoded";
+
+            // Wait for scripts to execute and jQuery to be available
+            const initAutocompleteAndSelects = () => {
+                if (typeof jQuery === "undefined") {
+                    setTimeout(initAutocompleteAndSelects, 100);
+                    return;
+                }
+
+                // Fix select dropdowns - ensure changeBrand and changeModel work
+                const markaSelect = body.querySelector('select[name="markaavto"]');
+                const modelSelect = body.querySelector('select[name="model"]');
+                const modgenSelect = body.querySelector('select[name="modgen"]');
+
+                if (markaSelect) {
+                    // Remove existing listeners and add new one
+                    const newMarkaSelect = markaSelect.cloneNode(true);
+                    markaSelect.parentNode.replaceChild(newMarkaSelect, markaSelect);
+
+                    if (typeof window.changeBrand === "function") {
+                        newMarkaSelect.addEventListener("change", function() {
+                            window.changeBrand(this.value);
+                        });
+                    }
+                }
+
+                if (modelSelect) {
+                    // Remove existing listeners and add new one
+                    const newModelSelect = modelSelect.cloneNode(true);
+                    modelSelect.parentNode.replaceChild(newModelSelect, modelSelect);
+
+                    if (typeof window.changeModel === "function") {
+                        newModelSelect.addEventListener("change", function() {
+                            window.changeModel(this.value);
+                        });
+                    }
+                }
+
+                // Initialize autocomplete properly
+                const markamodtypeInput = body.querySelector("#markamodtype");
+                if (markamodtypeInput) {
+                    const $input = jQuery(markamodtypeInput);
+
+                    // Check if autocomplete is already initialized
+                    if ($input.autocomplete && $input.autocomplete("instance")) {
+                        const autocompleteInstance = $input.autocomplete("instance");
+
+                        // Fix menu positioning
+                        autocompleteInstance._appendTo = jQuery(popup);
+                        if (autocompleteInstance.menu && autocompleteInstance.menu.element) {
+                            jQuery(autocompleteInstance.menu.element).appendTo(popup);
+                            jQuery(autocompleteInstance.menu.element).css("z-index", "1000001");
+                        }
+
+                        // Ensure click events work on autocomplete items
+                        $input.off("autocompleteselect").on("autocompleteselect", function(event, ui) {
+                            event.preventDefault();
+                            if (ui && ui.item) {
+                                const value = ui.item.value || ui.item.label || "";
+                                $input.val(value);
+                                // Trigger change event to ensure form recognizes the value
+                                $input.trigger("change");
+                            }
+                        });
+
+                        // Also handle click events on menu items directly
+                        setTimeout(() => {
+                            const menu = autocompleteInstance.menu;
+                            if (menu && menu.element) {
+                                jQuery(menu.element).off("click").on("click", "li", function() {
+                                    const item = jQuery(this).data("ui-autocomplete-item");
+                                    if (item) {
+                                        $input.val(item.value || item.label || "");
+                                        $input.trigger("change");
+                                        menu.close();
+                                    }
+                                });
+                            }
+                        }, 200);
+                    } else {
+                        // Autocomplete might not be initialized yet, try again later
+                        setTimeout(initAutocompleteAndSelects, 200);
+                    }
+                }
+            };
+
+            // Try to initialize immediately, then retry if needed
+            setTimeout(initAutocompleteAndSelects, 100);
+            setTimeout(initAutocompleteAndSelects, 500);
+            setTimeout(initAutocompleteAndSelects, 1000);
+
+
+            form.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+
+                const formData = new FormData(form);
+                const formBody = new URLSearchParams();
+                for (const [key, value] of formData.entries()) {
+                    formBody.append(key, value);
+                }
+
+                try {
+                    const response = await fetch(form.action, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded",
+                        },
+                        credentials: "include",
+                        body: formBody.toString(),
+                        redirect: "follow"
+                    });
+
+                    await response.text();
+
+                    setTimeout(() => {
+                        closeEditPopup();
+                        window.location.reload();
+                    }, 500);
+                } catch (err) {
+                    console.error("Form submission error:", err);
+                    alert("Failed to save changes. Please try again.");
+                }
+            }, false);
+        }
+
+        const submitBtn = body.querySelector('input[type="submit"][name="Submit"]');
+        if (submitBtn && form) {
+            submitBtn.addEventListener("click", (e) => {
+                if (form.checkValidity && !form.checkValidity()) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    form.reportValidity();
+                    return;
+                }
+            });
+        }
+    }
+
+    async function fetchEditForm(id, param) {
+        try {
+            const html = await httpPost("https://platesmania.com/admin/edit_new.php", {
+                id: id,
+                from: "ind",
+                param: param
+            });
+            return html;
+        } catch (e) {
+            return null;
+        }
+    }
+
+    function extractMakeModelSection(html) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, "text/html");
+        const originalForm = doc.querySelector("form");
+        if (!originalForm) return null;
+
+        const makeModelRow = doc.querySelector('select[name="markaavto"]')?.closest(".row.margin-bottom-20");
+        const autocompleteSection = doc.querySelector("#markamodtype")?.closest(".col-sm-12");
+        const saveSection = doc.querySelector(".col-xs-12.bg-light");
+        if (!makeModelRow || !saveSection) return null;
+
+        const scripts = doc.querySelectorAll("script");
+        let scriptContent = "";
+        scripts.forEach((script) => {
+            if (script.textContent && (script.textContent.includes("bmObject") || script.textContent.includes("changeBrand") || script.textContent.includes("changeModel") || script.textContent.includes("markamodtype"))) {
+                scriptContent += script.outerHTML;
+            }
+        });
+
+        const form = document.createElement("form");
+        form.method = originalForm.method || "post";
+        if (originalForm.name) form.name = originalForm.name;
+        if (originalForm.id) form.id = originalForm.id;
+        form.action = "https://platesmania.com/admin/index_new.php?start=";
+        form.enctype = originalForm.enctype || "application/x-www-form-urlencoded";
+
+        const allInputs = originalForm.querySelectorAll("input, select, textarea");
+        const fieldsToShow = new Set(["markaavto", "model", "modgen", "markamodtype", "posted1", "id", "date", "param", "reason1", "Submit"]);
+
+        allInputs.forEach((input) => {
+            if (input.name && !fieldsToShow.has(input.name) && input.type !== "submit") {
+                if (input.type === "checkbox") {
+                    if (input.checked) {
+                        const hidden = document.createElement("input");
+                        hidden.type = "hidden";
+                        hidden.name = input.name;
+                        hidden.value = input.value || "1";
+                        form.appendChild(hidden);
+                    }
+                } else if (input.type === "radio") {
+                    if (input.checked) {
+                        const hidden = document.createElement("input");
+                        hidden.type = "hidden";
+                        hidden.name = input.name;
+                        hidden.value = input.value || "";
+                        form.appendChild(hidden);
+                    }
+                } else {
+                    const hidden = document.createElement("input");
+                    hidden.type = "hidden";
+                    hidden.name = input.name;
+                    if (input.tagName === "TEXTAREA") {
+                        hidden.value = input.value || "";
+                    } else if (input.tagName === "SELECT") {
+                        hidden.value = input.value || "";
+                    } else {
+                        hidden.value = input.value || "";
+                    }
+                    form.appendChild(hidden);
+                }
+            }
+        });
+
+        const clonedMakeModelRow = makeModelRow.cloneNode(true);
+        const hasAutocompleteInRow = clonedMakeModelRow.querySelector("#markamodtype");
+
+        form.appendChild(clonedMakeModelRow);
+
+        if (autocompleteSection && !hasAutocompleteInRow) {
+            const autocompleteParent = autocompleteSection.parentElement;
+            if (autocompleteParent && autocompleteParent.classList.contains("row") && autocompleteParent !== makeModelRow) {
+                form.appendChild(autocompleteParent.cloneNode(true));
+            } else {
+                const autocompleteRow = document.createElement("div");
+                autocompleteRow.className = "row margin-bottom-20";
+                autocompleteRow.appendChild(autocompleteSection.cloneNode(true));
+                form.appendChild(autocompleteRow);
+            }
+        }
+
+        form.appendChild(saveSection.cloneNode(true));
+
+        const container = document.createElement("div");
+        container.appendChild(form);
+        if (scriptContent) {
+            const tempDiv = document.createElement("div");
+            tempDiv.innerHTML = scriptContent;
+            while (tempDiv.firstChild) {
+                container.appendChild(tempDiv.firstChild);
+            }
+        }
+        return container.innerHTML;
+    }
+
+    function extractPlateSection(html) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, "text/html");
+        const originalForm = doc.querySelector("form");
+        if (!originalForm) return null;
+
+        const plateRow = doc.querySelector('input[name="nomer"]')?.closest(".row.margin-bottom-10");
+        const plateTypeRow = doc.querySelector('select[name="type"]')?.closest(".row.margin-bottom-20");
+        const saveSection = doc.querySelector(".col-xs-12.bg-light");
+        if (!plateRow || !plateTypeRow || !saveSection) return null;
+
+        const form = document.createElement("form");
+        form.method = originalForm.method || "post";
+        if (originalForm.name) form.name = originalForm.name;
+        if (originalForm.id) form.id = originalForm.id;
+        form.action = "https://platesmania.com/admin/index_new.php?start=";
+        form.enctype = originalForm.enctype || "application/x-www-form-urlencoded";
+
+        const allInputs = originalForm.querySelectorAll("input, select, textarea");
+        const fieldsToShow = new Set(["nomer", "glr", "type", "fon", "color", "region", "posted1", "id", "date", "param", "reason1", "Submit"]);
+
+        allInputs.forEach((input) => {
+            if (input.name && !fieldsToShow.has(input.name) && input.type !== "submit") {
+                if (input.type === "checkbox") {
+                    if (input.checked) {
+                        const hidden = document.createElement("input");
+                        hidden.type = "hidden";
+                        hidden.name = input.name;
+                        hidden.value = input.value || "1";
+                        form.appendChild(hidden);
+                    }
+                } else if (input.type === "radio") {
+                    if (input.checked) {
+                        const hidden = document.createElement("input");
+                        hidden.type = "hidden";
+                        hidden.name = input.name;
+                        hidden.value = input.value || "";
+                        form.appendChild(hidden);
+                    }
+                } else {
+                    const hidden = document.createElement("input");
+                    hidden.type = "hidden";
+                    hidden.name = input.name;
+                    if (input.tagName === "TEXTAREA") {
+                        hidden.value = input.value || "";
+                    } else if (input.tagName === "SELECT") {
+                        hidden.value = input.value || "";
+                    } else {
+                        hidden.value = input.value || "";
+                    }
+                    form.appendChild(hidden);
+                }
+            }
+        });
+
+        form.appendChild(plateRow.cloneNode(true));
+        form.appendChild(plateTypeRow.cloneNode(true));
+        form.appendChild(saveSection.cloneNode(true));
+
+        const container = document.createElement("div");
+        container.appendChild(form);
+        return container.innerHTML;
+    }
+
+    function injectMakeModelEditButton() {
+        const makeModelH3 = qs("h3.text-center.margin-bottom-10");
+        if (!makeModelH3 || makeModelH3.dataset.pmxMakeModelBtn) return;
+
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "btn-u btn-u-green btn-u-xs";
+        btn.style.marginLeft = "10px";
+        btn.innerHTML = '<i class="fa fa-pencil"></i> Edit';
+        btn.addEventListener("click", async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const pageInfo = getCurrentPageInfo();
+            if (!pageInfo.id || !pageInfo.param) return;
+
+            const loadingOverlay = showLoadingOverlay();
+            try {
+                const html = await fetchEditForm(pageInfo.id, pageInfo.param);
+                hideLoadingOverlay();
+                if (!html) {
+                    alert("Failed to load edit form");
+                    return;
+                }
+
+                const content = extractMakeModelSection(html);
+                if (!content) {
+                    alert("Failed to extract make/model section");
+                    return;
+                }
+
+                showEditPopup("Edit Make/Model", content);
+            } catch (err) {
+                hideLoadingOverlay();
+                alert("Failed to load edit form");
+            }
+        });
+
+        makeModelH3.appendChild(btn);
+        makeModelH3.dataset.pmxMakeModelBtn = "1";
+    }
+
+    function injectPlateEditButton() {
+        const genSmall = qs("small p.text-center");
+        if (!genSmall) return;
+
+        const panelBody = genSmall.closest(".panel-body");
+        if (!panelBody) return;
+
+        const plateImg = panelBody.querySelector('img[src*="/inf/"]');
+        if (!plateImg || plateImg.dataset.pmxPlateBtn) return;
+
+        const btnContainer = document.createElement("div");
+        btnContainer.style.textAlign = "center";
+        btnContainer.style.marginTop = "10px";
+
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "btn-u btn-u-green btn-u-xs";
+        btn.innerHTML = '<i class="fa fa-pencil"></i> Edit';
+        btn.addEventListener("click", async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const pageInfo = getCurrentPageInfo();
+            if (!pageInfo.id || !pageInfo.param) return;
+
+            const loadingOverlay = showLoadingOverlay();
+            try {
+                const html = await fetchEditForm(pageInfo.id, pageInfo.param);
+                hideLoadingOverlay();
+                if (!html) {
+                    alert("Failed to load edit form");
+                    return;
+                }
+
+                const content = extractPlateSection(html);
+                if (!content) {
+                    alert("Failed to extract plate section");
+                    return;
+                }
+
+                showEditPopup("Edit Plate", content);
+            } catch (err) {
+                hideLoadingOverlay();
+                alert("Failed to load edit form");
+            }
+        });
+
+        btnContainer.appendChild(btn);
+        plateImg.parentNode.insertBefore(btnContainer, plateImg.nextSibling);
+        plateImg.dataset.pmxPlateBtn = "1";
+    }
+
+    function applyZoomToNomerPage(enabled) {
+        const mainImg = qs('img[src*="/m/"]');
+        if (!mainImg) return;
+
+        const oImgUrl = mainImg.src.replace(/\/m\//, "/o/");
+        if (!oImgUrl || oImgUrl === mainImg.src) return;
+
+        if (enabled) {
+            const wrap = ensureImageWrapper(mainImg);
+            if (!wrap) return;
+
+            if (zoomState.get(mainImg)?.enabled) return;
+
+            const lens = document.createElement("div");
+            lens.className = "pmx-lens";
+            lens.style.position = "absolute";
+            lens.style.width = "140px";
+            lens.style.height = "140px";
+            lens.style.borderRadius = "50%";
+            lens.style.border = "2px solid rgba(0,0,0,0.35)";
+            lens.style.boxShadow = "0 10px 22px rgba(0,0,0,0.25)";
+            lens.style.pointerEvents = "none";
+            lens.style.display = "none";
+            lens.style.backgroundImage = `url("${oImgUrl}")`;
+            lens.style.backgroundRepeat = "no-repeat";
+            lens.style.backgroundColor = "#fff";
+
+            wrap.appendChild(lens);
+
+            const zoom = 3;
+
+            function move(e) {
+                const rect = mainImg.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                const displayedWidth = rect.width;
+                const displayedHeight = rect.height;
+                const naturalWidth = mainImg.naturalWidth || displayedWidth;
+                const naturalHeight = mainImg.naturalHeight || displayedHeight;
+
+                const scaleX = naturalWidth / displayedWidth;
+                const scaleY = naturalHeight / displayedHeight;
+
+                const cx = Math.max(0, Math.min(x, displayedWidth));
+                const cy = Math.max(0, Math.min(y, displayedHeight));
+
+                const lw = lens.offsetWidth || 140;
+                const lh = lens.offsetHeight || 140;
+
+                const wrapRect = wrap.getBoundingClientRect();
+                const left = e.clientX - wrapRect.left - lw / 2;
+                const top = e.clientY - wrapRect.top - lh / 2;
+
+                lens.style.left = `${left}px`;
+                lens.style.top = `${top}px`;
+
+                const bgW = naturalWidth * zoom;
+                const bgH = naturalHeight * zoom;
+                lens.style.backgroundSize = `${bgW}px ${bgH}px`;
+
+                const bx = -(cx * scaleX * zoom - lw / 2);
+                const by = -(cy * scaleY * zoom - lh / 2);
+                lens.style.backgroundPosition = `${bx}px ${by}px`;
+            }
+
+            function enter() {
+                lens.style.display = "block";
+            }
+            function leave() {
+                lens.style.display = "none";
+            }
+
+            mainImg.addEventListener("mousemove", move);
+            mainImg.addEventListener("mouseenter", enter);
+            mainImg.addEventListener("mouseleave", leave);
+
+            zoomState.set(mainImg, { enabled: true, img: mainImg, lens, move, enter, leave });
+        } else {
+            const st = zoomState.get(mainImg);
+            if (st?.enabled) {
+                try {
+                    mainImg.removeEventListener("mousemove", st.move);
+                    mainImg.removeEventListener("mouseenter", st.enter);
+                    mainImg.removeEventListener("mouseleave", st.leave);
+                } catch {}
+                try {
+                    st.lens?.remove();
+                } catch {}
+                zoomState.set(mainImg, { enabled: false });
+            }
+        }
+    }
+
+    function processNomerPage() {
         if (!gmGet(MODERATOR_KEY, false)) return;
+        injectMakeModelEditButton();
+        injectPlateEditButton();
+        applyZoomToNomerPage(!!gmGet(ZOOM_KEY, false));
+    }
+
+    function teardownNomerPage() {
+        closeEditPopup();
+        qsa(".btn-u-green.btn-u-xs").forEach((btn) => {
+            if (btn.textContent.includes("Edit")) btn.remove();
+        });
+        const mainImg = qs('img[src*="/m/"]');
+        if (mainImg) {
+            const st = zoomState.get(mainImg);
+            if (st?.enabled) {
+                try {
+                    mainImg.removeEventListener("mousemove", st.move);
+                    mainImg.removeEventListener("mouseenter", st.enter);
+                    mainImg.removeEventListener("mouseleave", st.leave);
+                } catch {}
+                try {
+                    st.lens?.remove();
+                } catch {}
+                zoomState.set(mainImg, { enabled: false });
+            }
+        }
+    }
+
+    const { moderatorEnabled } = injectModeratorToggle();
+    const pageInfo = getCurrentPageInfo();
+
+    if (pageInfo.isNomerPage) {
+        if (moderatorEnabled) {
+            processNomerPage();
+        }
+    } else {
+        if (!moderatorEnabled) return;
+
         runModeratorPass();
-        if (gmGet(ZOOM_KEY, false)) applyZoomToAllTiles(true);
-    });
-    mo.observe(document.documentElement, { childList: true, subtree: true });
+        applyZoomToAllTiles(!!gmGet(ZOOM_KEY, false));
+
+        const mo = new MutationObserver(() => {
+            if (!gmGet(MODERATOR_KEY, false)) return;
+            runModeratorPass();
+            if (gmGet(ZOOM_KEY, false)) applyZoomToAllTiles(true);
+        });
+        mo.observe(document.documentElement, { childList: true, subtree: true });
+    }
 
     window.addEventListener("scroll", () => closeAllMenus(), { passive: true });
 })();

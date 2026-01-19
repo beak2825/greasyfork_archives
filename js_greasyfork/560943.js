@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Autodarts – MatchInsights
 // @namespace    http://tampermonkey.net/
-// @version      0.14.155
+// @version      0.14.199
 // @author       ThunderB
 // @license      All Rights Reserved
 // @description  Holt aus deiner Historie neue Innsights für dein Spiel!
@@ -249,7 +249,7 @@ const DEBUG_ATC_FIELDS = false;
     const SCRIPT_VERSION =
           (typeof GM_info !== "undefined" && GM_info && GM_info.script && GM_info.script.version) ? GM_info.script.version :
     (typeof GM !== "undefined" && GM && GM.info && GM.info.script && GM.info.script.version) ? GM.info.script.version :
-    "0.14.155";
+    "0.14.199";
     // =========================
     // Settings
     // =========================
@@ -1068,6 +1068,235 @@ const DEBUG_ATC_FIELDS = false;
     function extractX01MatchesFromRows(rows) {
         const matches = [];
 
+        const detectOutMode = (payload) => {
+            try {
+                // boolean flags
+                const b1 = payload?.settings?.doubleOut;
+                const b2 = payload?.doubleOut;
+                if (b1 === true || b2 === true) return { outMode: 'DOUBLE', isDoubleOut: true };
+
+                const g0 = Array.isArray(payload?.games) ? payload.games[0] : null;
+                const cand = [
+                    payload?.settings?.outMode,
+                    payload?.settings?.out,
+                    payload?.settings?.checkoutMode,
+                    payload?.settings?.checkout,
+                    payload?.settings?.finishMode,
+                    payload?.settings?.finish,
+                    payload?.outMode,
+                    payload?.out,
+                    payload?.checkoutMode,
+                    payload?.checkout,
+                    payload?.finishMode,
+                    payload?.finish,
+                    g0?.settings?.outMode,
+                    g0?.settings?.out,
+                    g0?.settings?.checkoutMode,
+                    g0?.settings?.checkout,
+                    g0?.settings?.finishMode,
+                    g0?.settings?.finish,
+                ].filter(v => v != null);
+
+                for (const v of cand) {
+                    const s = String(v).toLowerCase();
+                    if (!s) continue;
+                    if (s.includes('double')) return { outMode: 'DOUBLE', isDoubleOut: true };
+                    if (s.includes('master')) return { outMode: 'MASTER', isDoubleOut: false };
+                    if (s.includes('triple')) return { outMode: 'TRIPLE', isDoubleOut: false };
+                    if (s.includes('single') || s.includes('straight')) return { outMode: 'SINGLE', isDoubleOut: false };
+                }
+            } catch { /* ignore */ }
+            return { outMode: 'UNKNOWN', isDoubleOut: false };
+        };
+
+
+
+
+        // Detect starting score for X01 (best-effort; falls back to 501) (0.14.190)
+        const detectStartScore = (payload) => {
+            try {
+                const g0 = Array.isArray(payload?.games) ? payload.games[0] : null;
+                const cand = [
+                    payload?.settings?.startScore,
+                    payload?.settings?.startingScore,
+                    payload?.settings?.x01StartingScore,
+                    payload?.settings?.x01Score,
+                    payload?.settings?.score,
+                    payload?.startScore,
+                    payload?.startingScore,
+                    payload?.x01Score,
+                    payload?.score,
+                    g0?.settings?.startScore,
+                    g0?.settings?.startingScore,
+                    g0?.settings?.x01Score,
+                    g0?.settings?.score,
+                ].filter(v => v != null);
+
+                for (const v of cand) {
+                    const n = Number(v);
+                    if (Number.isFinite(n) && n >= 101 && n <= 2001) return Math.round(n);
+                }
+
+                // infer from first turns: start ~= scoreAfter + points (or scoreAfter on bust)
+                const freq = new Map();
+                const add = (n) => {
+                    if (!Number.isFinite(n) || n < 101 || n > 2001) return;
+                    const k = Math.round(n);
+                    freq.set(k, (freq.get(k) || 0) + 1);
+                };
+
+                const games = Array.isArray(payload?.games) ? payload.games : [];
+                const seen = new Set();
+                for (const g of games) {
+                    const turns = asArray(g?.turns);
+                    for (const t of turns) {
+                        const pid = t?.playerId;
+                        if (pid == null) continue;
+                        const sk = String(pid);
+                        if (seen.has(sk)) continue;
+                        seen.add(sk);
+
+                        const pts = Number(t?.points);
+                        const scRaw = (t?.score != null) ? t.score
+                            : (t?.remaining != null) ? t.remaining
+                            : (t?.restScore != null) ? t.restScore
+                            : (t?.scoreAfter != null) ? t.scoreAfter
+                            : null;
+                        const sc = (scRaw != null) ? Number(scRaw) : NaN;
+                        if (Number.isFinite(sc)) {
+                            add(sc);
+                            if (Number.isFinite(pts)) add(sc + pts);
+                        }
+                    }
+                }
+
+                const preferred = [301, 501, 701, 1001];
+                let best = null;
+                let bestCnt = -1;
+                for (const k of preferred) {
+                    const c = freq.get(k) || 0;
+                    if (c > bestCnt) { bestCnt = c; best = k; }
+                }
+                if (bestCnt > 0 && best != null) return best;
+
+                for (const [k, c] of freq.entries()) {
+                    if (c > bestCnt) { bestCnt = c; best = k; }
+                }
+                if (best != null) return best;
+            } catch { /* ignore */ }
+            return 501;
+        };
+
+        // Parse a single dart throw (best-effort across payload variants) (0.14.190)
+        const parseThrow = (thr) => {
+            try {
+                const seg = (thr && typeof thr === 'object')
+                    ? (thr.segment ?? thr.field ?? thr.hit ?? thr)
+                    : null;
+
+                const mult = Number(seg?.multiplier ?? seg?.multi ?? thr?.multiplier ?? thr?.multi ?? 0) || 0;
+                const num = Number(seg?.number ?? seg?.value ?? thr?.number ?? thr?.num ?? thr?.n ?? 0) || 0;
+                const bed = seg?.bed ?? seg?.name ?? thr?.bed ?? thr?.name ?? '';
+
+                const ptsDirect = (thr && typeof thr === 'object')
+                    ? ((thr.points != null) ? Number(thr.points) : (thr.value != null) ? Number(thr.value) : NaN)
+                    : NaN;
+
+                const bedS = String(bed || '').toLowerCase();
+                const isBull = (bedS.includes('bull') || num === 25);
+
+                let pts = 0;
+                let key = 'MISS';
+
+                if (isBull) {
+                    if (Number.isFinite(ptsDirect) && ptsDirect > 0) pts = ptsDirect;
+                    else if (mult === 2) pts = 50;
+                    else pts = 25;
+                    key = (pts >= 50) ? 'BULL' : 'S25';
+                    return {
+                        key,
+                        points: pts,
+                        mult: (mult || (pts >= 50 ? 2 : 1)),
+                        num: 25,
+                        isDouble: (pts >= 50),
+                        isTriple: false,
+                        isBull: true,
+                        bed,
+                    };
+                }
+
+                if (Number.isFinite(ptsDirect) && ptsDirect > 0) pts = ptsDirect;
+                else if (num > 0 && mult > 0) pts = num * mult;
+                else if (num > 0) pts = num;
+                else pts = 0;
+
+                const pfx = (mult === 3) ? 'T' : (mult === 2) ? 'D' : 'S';
+                if (num > 0) key = `${pfx}${num}`;
+                else if (pts > 0) key = `P${Math.round(pts)}`;
+                else key = 'MISS';
+
+                return {
+                    key,
+                    points: pts,
+                    mult,
+                    num,
+                    isDouble: (mult === 2),
+                    isTriple: (mult === 3),
+                    isBull: false,
+                    bed,
+                };
+            } catch { /* ignore */ }
+            return { key: 'MISS', points: 0, mult: 0, num: 0, isDouble: false, isTriple: false, isBull: false, bed: '' };
+        };
+
+        const isValidFinishDart = (thrParsed, outMode) => {
+            const mode = String(outMode || '').toUpperCase();
+            if (mode === 'DOUBLE') return !!thrParsed?.isDouble;
+            if (mode === 'MASTER') return !!(thrParsed?.isDouble || thrParsed?.isTriple);
+            if (mode === 'TRIPLE') return !!thrParsed?.isTriple;
+            // SINGLE / UNKNOWN: allow any
+            return true;
+        };
+
+        // Simulate a turn if the payload doesn't provide a reliable restscore field (0.14.190)
+        const simulateX01Turn = (scoreBefore, throwsArr, pointsFallback, outMode) => {
+            const sb = Number(scoreBefore) || 0;
+            const parsed = (throwsArr || []).map(parseThrow);
+
+            // no throws → fall back to points
+            if (!parsed.length) {
+                const pts = Number(pointsFallback) || 0;
+                let after = sb - pts;
+                let bust = false;
+                const mode = String(outMode || '').toUpperCase();
+                if (after < 0) { bust = pts > 0; after = sb; }
+                if ((mode === 'DOUBLE' || mode === 'MASTER') && after === 1) { bust = pts > 0; after = sb; }
+                return { scoreAfter: after, isBust: bust, parsed };
+            }
+
+            let score = sb;
+            let bust = false;
+            for (let i = 0; i < parsed.length; i++) {
+                const p = parsed[i];
+                score -= (Number(p?.points) || 0);
+                if (score < 0) { bust = true; break; }
+
+                const mode = String(outMode || '').toUpperCase();
+                if ((mode === 'DOUBLE' || mode === 'MASTER') && score === 1) { bust = true; break; }
+
+                if (score === 0) {
+                    if (isValidFinishDart(p, outMode)) {
+                        bust = false;
+                    } else {
+                        bust = true;
+                    }
+                    break;
+                }
+            }
+
+            return { scoreAfter: bust ? sb : score, isBust: bust, parsed };
+        };
+
         for (const r of rows) {
             // Some API/cache shapes keep timestamps on the wrapper (e.g. r.stats.createdAt) instead of payload.
             // We keep the extracted payload for gameplay data, but also retain a reference to the wrapper for timestamp fallbacks.
@@ -1115,6 +1344,8 @@ const DEBUG_ATC_FIELDS = false;
             const finishedAt = payload.finishedAt || payload.endedAt || root?.finishedAt || root?.endedAt || null;
             const dayKey = parseIsoDateToDayKey(createdAt) || parseIsoDateToDayKey(finishedAt);
 
+            const { outMode, isDoubleOut } = detectOutMode(payload);
+
             const { legsWon, totalLegs } = computeX01Legs(payload, n);
             const winnerIndex = computeX01WinnerIndex(payload, legsWon);
 
@@ -1131,6 +1362,39 @@ const DEBUG_ATC_FIELDS = false;
             // totals from turns
             const pointsFromTurns = new Array(n).fill(0);
             const dartsFromTurns = new Array(n).fill(0);
+
+
+            // NEW: Derived X01 signals (Busts / Restscore leaves / Checkout routes) (0.14.190)
+            const derivedStartScore = detectStartScore(payload);
+            const derivedVisitsPerPlayer = new Array(n).fill(0);
+            const derivedBustsPerPlayer = new Array(n).fill(0);
+            const derivedBustPointsPerPlayer = new Array(n).fill(0);
+
+            const derivedLeaveBucketsPerPlayer = new Array(n).fill(null).map(() => ({ le40: 0, le80: 0, le120: 0, le170: 0, gt170: 0 }));
+            const derivedBogeyLeavesPerPlayer = new Array(n).fill(0);
+            const derivedOneDartLeavesPerPlayer = new Array(n).fill(0);
+
+            const derivedCheckoutOppsPerPlayer = new Array(n).fill(0);
+            const derivedCheckoutHitsPerPlayer = new Array(n).fill(0);
+
+            const derivedFirstDartCountsMap = new Array(n).fill(null).map(() => new Map());
+            const derivedRouteCountsMap = new Array(n).fill(null).map(() => new Map());
+
+            const BOGEY_SET = new Set([169, 168, 166, 165, 163, 162, 159]);
+            const isBogeyLeave = (v) => { try { return BOGEY_SET.has(Number(v)); } catch { return false; } };
+            const isOneDartFinishableLeave = (leave) => {
+                const v = Number(leave);
+                if (!Number.isFinite(v) || v <= 0) return false;
+                const mode = String(outMode || '').toUpperCase();
+                if (mode === 'DOUBLE') return (v === 50) || (v <= 40 && v >= 2 && (v % 2 === 0));
+                if (mode === 'MASTER') {
+                    if ((v === 50) || (v <= 40 && v >= 2 && (v % 2 === 0))) return true;
+                    return (v <= 60 && v >= 3 && (v % 3 === 0) && (v / 3) <= 20);
+                }
+                if (mode === 'TRIPLE') return (v <= 60 && v >= 3 && (v % 3 === 0) && (v / 3) <= 20);
+                // SINGLE / UNKNOWN
+                return v <= 60;
+            };
 
             // NEW: First 9 (per match, summed across legs)
             const first9PointsPerPlayer = new Array(n).fill(0);
@@ -1222,12 +1486,15 @@ const DEBUG_ATC_FIELDS = false;
                 const legF9Darts = new Array(n).fill(0);
                 const legF9SoFar = new Array(n).fill(0);
 
+                const legScores = new Array(n).fill(derivedStartScore);
+
                 for (const t of turns) {
                     const idx = playerIdToIndex.get(t?.playerId);
                     if (!Number.isFinite(Number(idx))) continue;
 
                     const pts = Number(t?.points) || 0;
-                    const darts = asArray(t?.throws).length; // 60+/100+/140+ (PDC-style: inclusive/overlapping buckets)
+                    const throwsArr = asArray(t?.throws);
+                    const darts = throwsArr.length; // 60+/100+/140+ (PDC-style: inclusive/overlapping buckets)
                     //  - 60+ counts every visit >= 60 (includes 100+/140+/170+/180)
                     //  - 100+ counts every visit >= 100 (includes 140+/170+/180)
                     //  - 140+ counts every visit >= 140 (includes 170+/180)
@@ -1244,6 +1511,94 @@ const DEBUG_ATC_FIELDS = false;
 
                     legPts[idx] += Number.isFinite(pts) ? pts : 0;
                     legDarts[idx] += Number.isFinite(darts) ? darts : 0;
+
+
+                    // Derived X01 (Bust / Leaves / Routes) (0.14.190)
+                    derivedVisitsPerPlayer[idx] += 1;
+
+                    const scoreBefore = Number(legScores[idx]) || derivedStartScore;
+                    let scoreAfter = NaN;
+                    let isBust = false;
+
+                    const sRaw = (t?.score != null) ? t.score
+                        : (t?.remaining != null) ? t.remaining
+                        : (t?.restScore != null) ? t.restScore
+                        : (t?.scoreAfter != null) ? t.scoreAfter
+                        : null;
+                    const sNum = (sRaw != null) ? Number(sRaw) : NaN;
+
+                    if (Number.isFinite(sNum)) {
+                        scoreAfter = sNum;
+                        if (scoreAfter === scoreBefore && pts > 0 && scoreBefore > 0 && scoreAfter > 0) isBust = true;
+                    } else {
+                        const sim = simulateX01Turn(scoreBefore, throwsArr, pts, outMode);
+                        scoreAfter = Number(sim?.scoreAfter);
+                        isBust = !!sim?.isBust;
+                    }
+
+                    if (!Number.isFinite(scoreAfter)) {
+                        scoreAfter = scoreBefore;
+                        isBust = false;
+                    }
+
+                    if (isBust) {
+                        derivedBustsPerPlayer[idx] += 1;
+                        derivedBustPointsPerPlayer[idx] += pts;
+                    }
+
+                    legScores[idx] = scoreAfter;
+
+                    // Restscore / leave profiling (exclude 0 = checkout)
+                    if (scoreAfter > 0) {
+                        const leave = Math.round(scoreAfter);
+                        const b = derivedLeaveBucketsPerPlayer[idx];
+                        if (leave <= 40) b.le40 += 1;
+                        else if (leave <= 80) b.le80 += 1;
+                        else if (leave <= 120) b.le120 += 1;
+                        else if (leave <= 170) b.le170 += 1;
+                        else b.gt170 += 1;
+
+                        if (isBogeyLeave(leave)) derivedBogeyLeavesPerPlayer[idx] += 1;
+                        if (isOneDartFinishableLeave(leave)) derivedOneDartLeavesPerPlayer[idx] += 1;
+                    }
+
+                    // Checkout routes (only when scoreBefore is in checkout range)
+                    if (scoreBefore > 0 && scoreBefore <= 170) {
+                        derivedCheckoutOppsPerPlayer[idx] += 1;
+
+                        const firstKey = (throwsArr && throwsArr.length)
+                            ? (parseThrow(throwsArr[0])?.key || 'UNKNOWN')
+                            : 'UNKNOWN';
+                        try {
+                            const mfd = derivedFirstDartCountsMap[idx];
+                            if (mfd) mfd.set(firstKey, (mfd.get(firstKey) || 0) + 1);
+                        } catch {}
+
+                        let routeStr = '';
+                        try {
+                            const keys = (throwsArr || []).map(th => (parseThrow(th)?.key || '')).filter(Boolean);
+                            routeStr = keys.join(' ');
+                        } catch {}
+                        if (!routeStr) routeStr = `PTS${Math.round(pts || 0)}`;
+
+                        try {
+                            const rm = derivedRouteCountsMap[idx];
+                            if (rm) {
+                                const cur = rm.get(routeStr) || { count: 0, hits: 0, busts: 0 };
+                                cur.count += 1;
+                                if (scoreAfter === 0) cur.hits += 1;
+                                if (isBust) cur.busts += 1;
+                                rm.set(routeStr, cur);
+                            }
+                        } catch {}
+
+                        if (scoreAfter === 0) derivedCheckoutHitsPerPlayer[idx] += 1;
+                    }
+
+                    if (scoreAfter === 0) {
+                        // Leg finished → stop processing further turns for this game
+                        break;
+                    }
 
                     // First 9: count up to 9 darts per player/leg (points proportional if a turn crosses the limit)
                     if (Number.isFinite(darts) && darts > 0) {
@@ -1380,6 +1735,51 @@ const DEBUG_ATC_FIELDS = false;
                 }
             }
 
+
+
+            // Serialize derived X01 signals for downstream analytics / GPT (0.14.190)
+            const firstDartCountsPerPlayer = derivedFirstDartCountsMap.map((mp) => {
+                const o = {};
+                try {
+                    for (const [k, v] of (mp?.entries?.() || [])) {
+                        if (!k) continue;
+                        o[String(k)] = Math.max(0, Math.round(Number(v || 0) || 0));
+                    }
+                } catch {}
+                return o;
+            });
+
+            const topRoutesPerPlayer = derivedRouteCountsMap.map((mp) => {
+                try {
+                    const arr = [];
+                    for (const [route, st] of (mp?.entries?.() || [])) {
+                        const r = String(route || '').trim();
+                        if (!r) continue;
+                        arr.push({
+                            route: r,
+                            count: Math.max(0, Math.round(Number(st?.count || 0) || 0)),
+                            hits: Math.max(0, Math.round(Number(st?.hits || 0) || 0)),
+                            busts: Math.max(0, Math.round(Number(st?.busts || 0) || 0)),
+                        });
+                    }
+                    arr.sort((a, b) => (b.count - a.count) || (b.hits - a.hits));
+                    return arr.slice(0, 12);
+                } catch { return []; }
+            });
+
+            const x01Derived = {
+                startScore: derivedStartScore,
+                visitsPerPlayer: derivedVisitsPerPlayer,
+                bustsPerPlayer: derivedBustsPerPlayer,
+                bustPointsPerPlayer: derivedBustPointsPerPlayer,
+                leaveBucketsPerPlayer: derivedLeaveBucketsPerPlayer,
+                bogeyLeavesPerPlayer: derivedBogeyLeavesPerPlayer,
+                oneDartLeavesPerPlayer: derivedOneDartLeavesPerPlayer,
+                checkoutOppsPerPlayer: derivedCheckoutOppsPerPlayer,
+                checkoutHitsPerPlayer: derivedCheckoutHitsPerPlayer,
+                firstDartCountsPerPlayer,
+                topRoutesPerPlayer,
+            };
             if (winnerIndex == null || !Number.isFinite(Number(winnerIndex)) || winnerIndex < 0) continue;
             if (!totalLegs || totalLegs <= 0) continue;
 
@@ -1389,6 +1789,8 @@ const DEBUG_ATC_FIELDS = false;
                 finishedAt,
                 dayKey,
                 durationSec,
+                outMode,
+                isDoubleOut,
                 players: players.map(p => ({ index: p.index, key: p.key, name: p.name })),
                 legsWon,
                 totalLegs,
@@ -1408,6 +1810,7 @@ const DEBUG_ATC_FIELDS = false;
                 scores170PlusPerPlayer,
                 scores180PerPlayer,
                 longestLegSecPerPlayer,
+                x01Derived,
             });
         }
 
@@ -1490,6 +1893,7 @@ const DEBUG_ATC_FIELDS = false;
                 }
             }
             let hits = 0, darts = 0;
+            let checkoutHits = 0, checkoutAttempts = 0;
             let atcMode = "FULL";
             let fieldsAgg = {};
             if (key === "ATC") {
@@ -1787,6 +2191,87 @@ const DEBUG_ATC_FIELDS = false;
                 }
             }
 
+            if (key === "RANDOM_CHECKOUT") {
+                // Best-effort: Hits/Darts + Checkout-Stats aus Payload lesen (keine Rohwurf-Rekonstruktion)
+                const getNumAny = (obj, keys) => {
+                    if (!obj) return 0;
+                    for (const k of keys) {
+                        const v = obj?.[k];
+                        if (Array.isArray(v)) return v.length;
+                        const n = Number(v);
+                        if (Number.isFinite(n)) return n;
+                    }
+                    return 0;
+                };
+
+                const addFrom = (obj) => {
+                    if (!obj || typeof obj !== "object") return;
+                    hits += getNumAny(obj, ["hits", "hit", "hitCount", "hit_count", "totalHits", "successfulHits", "successHits"]);
+                    darts += getNumAny(obj, ["darts", "dartsThrown", "darts_thrown", "throws", "throwsThrown", "attempts", "totalDarts", "totalThrows"]);
+                    checkoutHits += getNumAny(obj, ["checkoutHits", "checkoutsHit", "checkoutMade", "coHits", "coHit"]);
+                    checkoutAttempts += getNumAny(obj, ["checkoutAttempts", "checkoutChances", "checkouts", "coAttempts", "coOpps", "coOpp"]);
+                };
+
+                const addLegStats = (legStats) => {
+                    if (!Array.isArray(legStats) || !legStats.length) return;
+                    for (const st of legStats) {
+                        addFrom(st);
+                        const ss = st?.stats;
+                        if (Array.isArray(ss)) {
+                            for (const s of ss) addFrom(s);
+                        } else {
+                            addFrom(ss);
+                        }
+                    }
+                };
+
+                try { addLegStats(payload?.legStats); } catch {}
+                if (!(darts > 0 || checkoutAttempts > 0)) {
+                    try { addFrom(payload?.stats); addFrom(payload); } catch {}
+                }
+                if (!(darts > 0 || checkoutAttempts > 0)) {
+                    try {
+                        const games = payload?.games;
+                        if (Array.isArray(games) && games.length) {
+                            for (const g of games) {
+                                addFrom(g);
+                                addFrom(g?.stats);
+                                addLegStats(g?.legStats);
+                                darts += getNumAny(g?.settings, ["throws", "darts", "dartsThrown"]);
+                            }
+                        }
+                    } catch {}
+                }
+
+                // last fallback: raw arrays (nur bool hits zählen, wenn vorhanden)
+                if (!(darts > 0)) {
+                    try {
+                        const arr =
+                              (Array.isArray(payload?.throws) && payload.throws) ||
+                              (Array.isArray(payload?.darts) && payload.darts) ||
+                              (Array.isArray(payload?.dartsThrown) && payload.dartsThrown) ||
+                              (Array.isArray(payload?.attempts) && payload.attempts) ||
+                              null;
+                        if (arr && arr.length) {
+                            darts += arr.length;
+                            for (const it of arr) {
+                                if (it === true || it === 1) { hits += 1; continue; }
+                                if (it && typeof it === "object") {
+                                    const h = it.hit ?? it.success ?? it.isHit ?? it.isSuccess ?? it.ok;
+                                    if (h === true || h === 1) hits += 1;
+                                }
+                            }
+                        }
+                    } catch {}
+                }
+
+                hits = (Number.isFinite(hits) ? Math.max(0, hits) : 0);
+                darts = (Number.isFinite(darts) ? Math.max(0, darts) : 0);
+                checkoutHits = (Number.isFinite(checkoutHits) ? Math.max(0, checkoutHits) : 0);
+                checkoutAttempts = (Number.isFinite(checkoutAttempts) ? Math.max(0, checkoutAttempts) : 0);
+            }
+
+
             const obj = {
                 matchId,
                 activityKey: key,
@@ -1802,6 +2287,12 @@ const DEBUG_ATC_FIELDS = false;
                 obj.darts = darts;
                 obj.mode = atcMode;
                 obj.fieldsAgg = fieldsAgg;
+            }
+            if (key === "RANDOM_CHECKOUT") {
+                obj.hits = hits;
+                obj.darts = darts;
+                obj.checkoutHits = checkoutHits;
+                obj.checkoutAttempts = checkoutAttempts;
             }
             out.push(obj);
         }
@@ -2381,6 +2872,22 @@ const DEBUG_ATC_FIELDS = false;
       .ad-ext-kpi-value { font-size: 30px; font-weight: 900; letter-spacing: 0.4px; line-height: 1.05; font-variant-numeric: tabular-nums; }
       .ad-ext-kpi-sub { margin-top: 7px; font-size: 12px; opacity: 0.78; font-weight: 900; letter-spacing: 0.02em; font-variant-numeric: tabular-nums; }
 
+      
+
+      /* Chrono-Tracker: KPI-Subtext fixe Hoehe (immer Platz fuer 3 Zeilen) */
+      #ad-ext-time-kpi-thisweek-sub,
+      #ad-ext-time-kpi-range-sub,
+      #ad-ext-time-kpi-avg-sub,
+      #ad-ext-time-kpi-best-sub{
+        line-height: 1.25;
+        min-height: calc(3 * 1.25em);
+        max-height: calc(3 * 1.25em);
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+      }
+
       @media (max-width: 1100px) { .ad-ext-kpi-grid { grid-template-columns: 1fr 1fr; } .ad-ext-kpi-grid--x01 { grid-template-columns: 1fr 1fr; } }
       @media (max-width: 700px) { .ad-ext-kpi-grid { grid-template-columns: 1fr; } .ad-ext-kpi-grid--x01 { grid-template-columns: 1fr; } }
 
@@ -2768,6 +3275,9 @@ const DEBUG_ATC_FIELDS = false;
       .ad-ext-legend-item { display:flex; gap: 8px; align-items:center; }
             .ad-ext-legend--center { justify-content: center; }
 
+      /* Chrono-Tracker: Donut-Legende reserviert Platz fuer 2 Zeilen (verhindert Chart-Sprung) */
+      #ad-ext-time-share.ad-ext-legend { min-height: 40px; }
+
 .ad-ext-dot { width: 10px; height: 10px; border-radius: 50%; display:inline-block; box-shadow: 0 0 0 1px rgba(255,255,255,0.15); }
       .ad-ext-linekey { width: 14px; height: 3px; border-radius: 2px; display:inline-block; box-shadow: 0 0 0 1px rgba(255,255,255,0.12); }
 
@@ -3018,6 +3528,10 @@ const DEBUG_ATC_FIELDS = false;
   #ad-ext-time-week-body tr { cursor: pointer; }
   #ad-ext-time-week-body tr.ad-ext-row--selected td { background: rgba(140,190,255,0.12); }
   #ad-ext-time-week-body tr.ad-ext-row--selected td:first-child { box-shadow: inset 3px 0 0 rgba(140,190,255,0.65); }
+
+  /* Chrono-Tracker: Aktivitaet-Fokus (Spalten abdunkeln) */
+  #ad-ext-view-time [data-tt-col].ad-ext-tt-col--dim { opacity: .35; }
+
 
       /* Entfernt Fokus-Rahmen um Chart-Elemente (z.B. X01 Kacheln) */
       svg.ad-ext-chart-svg,
@@ -3613,6 +4127,9 @@ const DEBUG_ATC_FIELDS = false;
       .ad-train-controls .ad-ext-plan-week { width: 100%; min-width: 0; }
       /* Breiter Week-Select im Training-Header */
       #ad-ext-plan-week-select { width: min(720px, 100%); max-width: 100%; }
+      #ad-ext-view-training #ad-ext-plan-week-wrap { width: 100%; min-width: 0; margin: 0 0 12px 0; }
+      /* Week-Select soll im Training-Header immer unter den Sub-Tabs stehen (volle Zeile) */
+      #ad-train-week-host-top { width: 100%; flex-basis: 100%; }
 
       /* Nur Combobox sichtbar: Label/Sub (KW/Zeitraum) ausblenden */
       #ad-ext-view-training #ad-ext-plan-week-label { display:none; }
@@ -3671,13 +4188,15 @@ const DEBUG_ATC_FIELDS = false;
       .ad-train-layout[data-train-view="CHROMO"] .ad-train-segfokus { display:none !important; }
       .ad-train-layout[data-train-view="CHROMO"] { grid-template-columns: 1fr !important; }
 
-
       .ad-train-side {
-        border-radius: 18px;
-        border: 1px solid rgba(255,255,255,.08);
-        background: rgba(0,0,0,.10);
-        padding: 12px;
+        border-radius: 14px;
+        border: 1px solid rgba(170, 210, 255, 0.10);
+        background: linear-gradient(180deg, rgba(120, 170, 255, 0.10), rgba(18, 28, 62, 0.18));
+        box-shadow: inset 0 0 0 1px rgba(170, 210, 255, 0.08), 0 12px 40px rgba(0,0,0,0.14);
+        backdrop-filter: blur(6px);
+        padding: var(--ad-card-padding);
       }
+
 
       .ad-train-side-head { display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom: 10px; }
       .ad-train-side-title { font-weight: 700; opacity: .95; }
@@ -3694,7 +4213,7 @@ const DEBUG_ATC_FIELDS = false;
   line-height: 1;
   font-weight: 900;
   border: 1px solid rgba(255,255,255,.15);
-  background: rgba(0,0,0,.10);
+  background: rgba(255,255,255,.04);
   border-radius: 10px;
 }
 .ad-plan-menu-btn:hover { background: rgba(255,255,255,.06); }
@@ -3744,6 +4263,53 @@ const DEBUG_ATC_FIELDS = false;
   cursor: not-allowed;
 }
 
+/* Training: ChatGPT Actions (Hamburger Menu in Trainingsdaten) (0.14.184) */
+#ad-ext-ai-actions{
+  display:flex;
+  justify-content:flex-end;
+  align-items:center;
+  gap: 8px;
+  margin: 0 0 10px 0;
+  flex-wrap: wrap;
+}
+.ad-ai-menu-dropdown{ min-width: 320px; }
+.ad-ai-menu-title{ font-weight: 900; font-size: 13px; opacity: .95; margin-bottom: 2px; }
+.ad-ai-menu-field{ display:flex; flex-direction:column; gap: 6px; }
+.ad-ai-menu-label{ font-size: 12px; font-weight: 800; opacity: .75; }
+.ad-ai-menu-select{ width: 100%; }
+.ad-ai-menu-custom{ display:flex; align-items:center; gap: 6px; }
+.ad-ai-menu-custom .ad-ext-input{ width: 100%; }
+.ad-ai-menu-dropdown .ad-ext-select,
+.ad-ai-menu-dropdown .ad-ext-input{
+  background: rgba(255,255,255,.06);
+  border-color: rgba(255,255,255,.12);
+}
+.ad-ai-menu-status{ font-weight: 800; opacity: .9; }
+
+/* ChatGPT Button in Trainingsdaten: use icon instead of "≡" */
+.ad-ai-menu-btn{
+  padding: 6px 8px;
+  min-width: 38px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.ad-ai-menu-btn-icon{
+  width: 18px;
+  height: 18px;
+  display:block;
+  opacity: .95;
+  /* make dark favicons readable on dark UI */
+  filter: invert(1) brightness(1.1);
+}
+.ad-ai-menu-btn-fallback{
+  font-weight: 900;
+  font-size: 12px;
+  line-height: 1;
+  letter-spacing: .4px;
+}
+
       .ad-train-side-placeholder { font-size: 13px; opacity: .85; display:flex; flex-direction:column; gap: 8px; }
 
 
@@ -3758,7 +4324,7 @@ const DEBUG_ATC_FIELDS = false;
         padding: 8px 10px;
         border-radius: 12px;
         border: 1px solid rgba(255,255,255,.15);
-        background: rgba(0,0,0,.18);
+        background: rgba(255,255,255,.04);
         color: inherit;
       }
       .ad-plan-select option { background: #000; color: #fff; } /* best effort */
@@ -3769,7 +4335,7 @@ const DEBUG_ATC_FIELDS = false;
         padding: 4px;
         border-radius: 14px;
         border: 1px solid rgba(255,255,255,.12);
-        background: rgba(0,0,0,.10);
+        background: rgba(18, 28, 62, 0.55);
       }
       .ad-plan-seg-btn {
         padding: 6px 10px;
@@ -3783,7 +4349,7 @@ const DEBUG_ATC_FIELDS = false;
       .ad-plan-seg-btn.is-active {
         opacity: 1;
         border-color: rgba(255,255,255,.18);
-        background: rgba(0,0,0,.16);
+        background: rgba(140,190,255,0.16);
       }
       .ad-plan-seg-btn:disabled{ cursor:not-allowed; opacity:.45; }
 
@@ -3794,7 +4360,7 @@ const DEBUG_ATC_FIELDS = false;
         padding: 10px;
         border-radius: 14px;
         border: 1px solid rgba(255,255,255,.08);
-        background: rgba(0,0,0,.10);
+        background: rgba(255,255,255,.04);
         display:flex;
         flex-direction:column;
         gap: 8px;
@@ -3808,13 +4374,13 @@ const DEBUG_ATC_FIELDS = false;
         border-radius: 14px;
         overflow: hidden;
         border: 1px solid rgba(255,255,255,.08);
-        background: rgba(0,0,0,.08);
+        background: linear-gradient(180deg, rgba(120, 170, 255, 0.08), rgba(18, 28, 62, 0.14));
       }
 
       .ad-plan-table .ad-plan-row {
         display: grid;
         justify-content: stretch;
-        grid-template-columns: 1.35fr 0.75fr;
+        grid-template-columns: 1.35fr 0.55fr 0.65fr 0.75fr;
         gap: 8px;
         align-items: center;
         padding: 10px 10px;
@@ -3823,17 +4389,21 @@ const DEBUG_ATC_FIELDS = false;
       .ad-plan-table .ad-plan-row--head {
         font-weight: 700;
         opacity: .9;
-        background: rgba(0,0,0,.10);
+        background: rgba(140,190,255,0.08);
       }
       .ad-plan-table .ad-plan-row:nth-child(even):not(.ad-plan-row--head):not(.ad-plan-row--foot) {
         background: rgba(255,255,255,.03);
       }
       .ad-plan-table .ad-plan-row--foot {
         font-weight: 700;
-        background: rgba(0,0,0,.10);
+        background: rgba(140,190,255,0.08);
       }
 
       .ad-plan-cell-right { justify-self: end; text-align: right; }
+
+      .ad-plan-soll-head { justify-self:end; display:flex; align-items:center; gap:6px; }
+      .ad-plan-soll-label { display:inline-block; width:86px; text-align:left; }
+      .ad-plan-soll-unit { visibility:hidden; font-size:12px; opacity:.65; }
 
       .ad-plan-pill {
         justify-self: end;
@@ -3842,12 +4412,20 @@ const DEBUG_ATC_FIELDS = false;
         padding: 6px 10px;
         border-radius: 12px;
         border: 1px solid rgba(255,255,255,.14);
-        background: rgba(0,0,0,.10);
+        background: rgba(255,255,255,.04);
       }
 
       .ad-plan-input-wrap { justify-self:end; display:flex; align-items:center; gap:6px; }
       .ad-plan-unit { font-size:12px; opacity:.65; }
-      .ad-plan-input { width: 86px; text-align:right; padding: 6px 10px; border-radius: 12px; border:1px solid rgba(255,255,255,.16); background: rgba(0,0,0,.14); color: inherit; }
+      .ad-plan-input { width: 86px; text-align:right; padding: 6px 10px; border-radius: 12px; border:1px solid rgba(255,255,255,.16); background: rgba(255,255,255,.04); color: inherit; }
+      .ad-plan-est-cell{ justify-self:end; text-align:right; }
+      .ad-plan-est-muted{ font-size:12px; opacity:.65; }
+      .ad-plan-est-val{ font-variant-numeric: tabular-nums; }
+
+      .ad-plan-perleg-cell{ justify-self:end; text-align:right; font-size:12px; opacity:.85; }
+      .ad-plan-perleg-val{ font-variant-numeric: tabular-nums; }
+
+
 
 
       .ad-plan-activity { display:flex; align-items:center; gap: 8px; min-width:0; }
@@ -3857,7 +4435,7 @@ const DEBUG_ATC_FIELDS = false;
 
       @media(max-width: 520px){
         .ad-plan-table { overflow-x: auto; }
-        .ad-plan-table .ad-plan-row { min-width: 420px; font-size: 12px; }
+        .ad-plan-table .ad-plan-row { min-width: 640px; font-size: 12px; }
       }
 
       .ad-plan-actions {
@@ -4101,7 +4679,7 @@ const DEBUG_ATC_FIELDS = false;
         <div style="display:flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
           <div>
             <div class="ad-ext-title">Erweiterte Statistiken</div>
-            <div class="ad-ext-subtitle">🎯Insights aus deiner Match‑History</div>
+            <div class="ad-ext-subtitle">🎯 Dein Match‑Radar: Trends, Stärken und Baustellen aus deiner Match‑History. Scoring, Checkouts, Gegnerstärke und Training‑Fokus – filterbar nach Zeitraum. Dazu Trainingsplan & Notizen pro Woche.</div>
           </div>
           <div style="text-align:right;">
             <div class="ad-ext-header-actions">
@@ -4579,13 +5157,13 @@ const DEBUG_ATC_FIELDS = false;
                   <tr>
                     <th style="width: 70px;">KW</th>
                     <th style="width: 200px;">Zeitraum</th>
-                    <th style="width: 120px;">Gesamt</th>
-                    <th style="width: 120px;">ATC</th>
-                    <th style="width: 120px;">CountUp</th>
-                    <th style="width: 120px;">Cricket</th>
-                    <th style="width: 160px;">Random Checkout</th>
-                    <th style="width: 120px;">Segment</th>
-                    <th style="width: 120px;">X01 vs Bot</th>
+                    <th style="width: 120px;" data-tt-col="TOTAL">Gesamt</th>
+                    <th style="width: 120px;" data-tt-col="ATC">ATC</th>
+                    <th style="width: 120px;" data-tt-col="COUNTUP">CountUp</th>
+                    <th style="width: 120px;" data-tt-col="CRICKET">Cricket</th>
+                    <th style="width: 160px;" data-tt-col="RANDOM_CHECKOUT">Random Checkout</th>
+                    <th style="width: 120px;" data-tt-col="SEGMENT_TRAINING">Segment</th>
+                    <th style="width: 120px;" data-tt-col="X01_BOT">X01 vs Bot</th>
                     <th style="width: 90px;">Sessions</th>
                   </tr>
                 </thead>
@@ -4601,38 +5179,75 @@ const DEBUG_ATC_FIELDS = false;
         <div id="ad-ext-view-training" style="display:none;">
           <div class="ad-train-head">
             <div class="ad-train-controls">
-              <div class="ad-ext-plan-week">
-                <div class="ad-ext-plan-week-label" id="ad-ext-plan-week-label" style="display:none;">–</div>
-                <select id="ad-ext-plan-week-select" class="ad-ext-select ad-ext-plan-week-select">
-                  <option value="">—</option>
-                </select>
-                <div class="ad-ext-plan-week-sub" id="ad-ext-plan-week-sub" style="display:none;">—</div>
-              </div>
+              
 
               <div id="ad-train-controls-row" class="ad-train-controls-row">
                 <div class="ad-ext-segcontrol" id="ad-ext-train-view">
                   <button type="button" class="ad-ext-segbtn" data-view="DATA">Trainingsdaten</button>
                   <button type="button" class="ad-ext-segbtn" data-view="PLAN">Trainingsplan</button>
-                  <button type="button" class="ad-ext-segbtn" data-view="INSIGHTS">Erkenntnisse</button>
-                  <button type="button" class="ad-ext-segbtn" data-view="SEGFOCUS">Segment-Fokus</button>
+                                    <button type="button" class="ad-ext-segbtn" data-view="SEGFOCUS">Segment-Fokus</button>
                   <button type="button" class="ad-ext-segbtn" data-view="ATCFOCUS">ATC-Fokus</button>
             <button type="button" class="ad-ext-segbtn" data-view="CHROMO">Chrono-Tracker</button>
                 </div>
+              <div id="ad-train-week-host-top">
+                <div class="ad-ext-plan-week" id="ad-ext-plan-week-wrap">
+                                                <div class="ad-ext-plan-week-label" id="ad-ext-plan-week-label" style="display:none;">–</div>
+                                                <select id="ad-ext-plan-week-select" class="ad-ext-select ad-ext-plan-week-select">
+                                                  <option value="">—</option>
+                                                </select>
+                                                <div class="ad-ext-plan-week-sub" id="ad-ext-plan-week-sub" style="display:none;">—</div>
+                                              </div>
+              </div>
+
               </div>
             </div>
           </div>
 
           <div class="ad-train-layout" data-plan-open="0">
             <div class="ad-train-main">
+<div class="ad-ext-ai-actions" id="ad-ext-ai-actions">
+  <div class="ad-plan-menu ad-ai-menu" id="adAiMenu">
+    <button id="adAiMenuBtn" class="ad-ext-btn ad-ext-btn--secondary ad-plan-menu-btn ad-ai-menu-btn" type="button" title="ChatGPT Analyse" aria-label="ChatGPT Analyse" aria-haspopup="menu" aria-expanded="false">
+      <img class="ad-ai-menu-btn-icon" src="https://chatgpt.com/favicon.ico" alt="" referrerpolicy="no-referrer" onerror="this.style.display='none'; try{this.nextElementSibling.style.display='block'}catch{}" />
+      <span class="ad-ai-menu-btn-fallback" aria-hidden="true" style="display:none;">GPT</span>
+    </button>
+    <div id="adAiMenuDropdown" class="ad-plan-menu-dropdown ad-ai-menu-dropdown" hidden>
+      <div class="ad-ai-menu-title">ChatGPT Analyse</div>
+
+      <div class="ad-ai-menu-field">
+        <div class="ad-ai-menu-label">Zeitraum</div>
+        <select id="ad-ext-ai-range" class="ad-ext-select ad-ai-menu-select">
+          <option value="WEEK">Aktuelle KW (Filter)</option>
+          <option value="W4">Letzte 4 Wochen</option>
+          <option value="W8">Letzte 8 Wochen</option>
+          <option value="W12">Letzte 12 Wochen</option>
+          <option value="W16">Letzte 16 Wochen</option>
+          <option value="CUSTOM">Benutzerdefiniert</option>
+          <option value="ALL">Alles</option>
+        </select>
+        <div id="ad-ext-ai-range-custom" class="ad-ai-menu-custom" style="display:none;">
+          <input id="ad-ext-ai-from" class="ad-ext-input" type="date" />
+          <span class="ad-ext-muted">–</span>
+          <input id="ad-ext-ai-to" class="ad-ext-input" type="date" />
+        </div>
+      </div>
+
+      <div class="ad-ai-menu-field">
+        <div class="ad-ai-menu-label">Prompt</div>
+        <select id="ad-ext-ai-template" class="ad-ext-select ad-ai-menu-select">
+          <option value="LONG">Lang</option>
+          <option value="SHORT">Kurz</option>
+        </select>
+      </div>
+
+      <button id="ad-ext-ai-copy" class="ad-ext-btn ad-ext-btn--primary" type="button" title="Kopiert eine Markdown-Analyse + Lite-JSON in die Zwischenablage">📋 Analyse kopieren</button>
+      <button id="ad-ext-ai-open" class="ad-ext-btn ad-ext-btn--secondary" type="button" style="display:none;" title="Öffnet ChatGPT in einem neuen Tab">ChatGPT öffnen</button>
+      <div id="ad-ext-ai-status" class="ad-ext-muted ad-ai-menu-status" style="display:none; margin-top:8px;">Kopiert ✅</div>
+    </div>
+  </div>
+</div>
+
               <div class="ad-ext-kpi-grid ad-ext-kpi-grid--x01">
-                <div class="ad-ext-kpi-tile">
-                  <div class="ad-ext-kpi-title">Gesamt Soll</div>
-                  <div class="ad-ext-kpi-value" id="ad-ext-train-kpi-soll">—</div>
-                </div>
-                <div class="ad-ext-kpi-tile">
-                  <div class="ad-ext-kpi-title">Ist</div>
-                  <div class="ad-ext-kpi-value" id="ad-ext-train-kpi-ist">—</div>
-                </div>
                 <div class="ad-ext-kpi-tile">
                   <div class="ad-ext-kpi-title" title="Summe aller Trainingszeiten der Woche (inkl. Einheiten außerhalb des Plans bzw. außerhalb der geplanten Segment-Targets).">Trainingszeit (Gesamt)</div>
                   <div class="ad-ext-kpi-value" id="ad-ext-train-kpi-time">—</div>
@@ -4644,9 +5259,29 @@ const DEBUG_ATC_FIELDS = false;
                     <div class="ad-ext-progress-bar" id="ad-ext-train-kpi-progressbar" style="width:0%;"></div>
                   </div>
                 </div>
+                <div class="ad-ext-kpi-tile">
+                  <div class="ad-ext-kpi-title">Planerfüllungsgrad</div>
+                  <div class="ad-ext-kpi-value" id="adExtInsightsKpiPlanFulfill">—</div>
+                  <div class="ad-ext-kpi-sub" id="adExtInsightsKpiPlanFulfillSub">—</div>
+                </div>
+                <div class="ad-ext-kpi-tile">
+                  <div class="ad-ext-kpi-title">Ø Trainingsdauer / Woche</div>
+                  <div class="ad-ext-kpi-value" id="adExtInsightsKpiAvgWeekDur">—</div>
+                  <div class="ad-ext-kpi-sub" id="adExtInsightsKpiAvgWeekDurSub">—</div>
+                </div>
+                <div class="ad-ext-kpi-tile">
+                  <div class="ad-ext-kpi-title">TRAININGSTAGE / WOCHE</div>
+                  <div class="ad-ext-kpi-value" id="adExtInsightsKpiDaysPerWeek">—</div>
+                  <div class="ad-ext-kpi-sub" id="adExtInsightsKpiDaysPerWeekSub">—</div>
+                </div>
+                <div class="ad-ext-kpi-tile">
+                  <div class="ad-ext-kpi-title">TRAININGSMIX-INDEX</div>
+                  <div class="ad-ext-kpi-value" id="adExtInsightsKpiTmi">—</div>
+                  <div class="ad-ext-kpi-sub" id="adExtInsightsKpiTmiSub">—</div>
+                </div>
               </div>
 
-              <div class="ad-ext-card" style="padding:0; margin-bottom:12px;">
+<div class="ad-ext-card" style="padding:0; margin-bottom:12px;">
                 <div class="ad-ext-table-scroll">
                   <table class="ad-ext-table ad-ext-table--compact ad-ext-table--fixed">
                     <colgroup>
@@ -4689,29 +5324,7 @@ const DEBUG_ATC_FIELDS = false;
             </div>
 
             <div class="ad-train-insights" id="adTrainInsights">
-              <div class="ad-ext-kpi-grid" style="grid-template-columns: repeat(2, minmax(0, 1fr));">
-                <div class="ad-ext-kpi-tile">
-                  <div class="ad-ext-kpi-title">Planerfüllungsgrad</div>
-                  <div class="ad-ext-kpi-value" id="adExtInsightsKpiPlanFulfill">—</div>
-                  <div class="ad-ext-kpi-sub" id="adExtInsightsKpiPlanFulfillSub">—</div>
-                </div>
-                <div class="ad-ext-kpi-tile">
-                  <div class="ad-ext-kpi-title">Ø Trainingsdauer / Woche</div>
-                  <div class="ad-ext-kpi-value" id="adExtInsightsKpiAvgWeekDur">—</div>
-                  <div class="ad-ext-kpi-sub" id="adExtInsightsKpiAvgWeekDurSub">—</div>
-                </div>
-                <div class="ad-ext-kpi-tile">
-                  <div class="ad-ext-kpi-title">TRAININGSTAGE / WOCHE</div>
-                  <div class="ad-ext-kpi-value" id="adExtInsightsKpiDaysPerWeek">—</div>
-                  <div class="ad-ext-kpi-sub" id="adExtInsightsKpiDaysPerWeekSub">—</div>
-                </div>
-                <div class="ad-ext-kpi-tile">
-                  <div class="ad-ext-kpi-title">TRAININGSMIX-INDEX</div>
-                  <div class="ad-ext-kpi-value" id="adExtInsightsKpiTmi">—</div>
-                  <div class="ad-ext-kpi-sub" id="adExtInsightsKpiTmiSub">—</div>
-                </div>
-              </div>
-              <div class="ad-ext-grid-2 ad-ext-train-insights-analysis">
+                            <div class="ad-ext-grid-2 ad-ext-train-insights-analysis">
                 <div class="ad-ext-train-insights-leftcol">
                   <div class="ad-ext-card" style="padding:0;">
                                     <div style="padding:12px 14px 8px;">
@@ -4747,14 +5360,6 @@ const DEBUG_ATC_FIELDS = false;
                   </div>
                 </div>
                 <div class="ad-ext-train-insights-miniCharts">
-                  <div class="ad-ext-card" style="padding:0;">
-                    <div style="padding:12px 14px 8px;">
-                      <div class="ad-ext-section-title" style="margin:0;">Around the Clock (ATC) Fortschritt</div>
-                    </div>
-                    <div style="padding:0 14px 14px;">
-                      <canvas id="ad-ext-insights-mini-avg" class="ad-ext-mini-canvas" width="520" height="180"></canvas>
-                    </div>
-                  </div>
                   <div class="ad-ext-card" style="padding:0;">
                     <div style="padding:12px 14px 8px;">
                       <div class="ad-ext-section-title" style="margin:0;">Platzhalter 1</div>
@@ -4800,14 +5405,6 @@ const DEBUG_ATC_FIELDS = false;
               </div>
 
               <div class="ad-train-side-body">
-
-                <div class="ad-plan-controls">
-
-                  <div class="ad-plan-row">
-                    <div id="adPlanActiveWeekInfo" class="ad-plan-week-info">Aktive Woche: —</div>
-                  </div>
-                </div>
-
                 <div class="ad-plan-summary" id="adPlanSummary" hidden>
                   <div class="ad-plan-summary-item"><span>Gesamt Soll</span><strong id="adPlanSumTarget">0 LEGS</strong></div>
                 </div>
@@ -5154,7 +5751,7 @@ const DEBUG_ATC_FIELDS = false;
   </div>
 </div>
 
-        <div class="ad-ext-version">Autodarts – Erweiterte Statistiken v. ${SCRIPT_VERSION}</div>
+        <div class="ad-ext-version">ThunderB’s Match Insights for Autodarts (v${SCRIPT_VERSION})</div>
       </div>
     `;
     }
@@ -6162,6 +6759,16 @@ const DEBUG_ATC_FIELDS = false;
         if (!layout?.bars?.length) return null;
         for (const b of layout.bars) {
             if (pt.x >= b.x && pt.x <= b.x + b.w && pt.y >= b.y && pt.y <= b.y + b.h) return b;
+        }
+        return null;
+    }
+
+    function hitTestTimeStackSegments(layout, pt) {
+        if (!layout?.segments?.length) return null;
+        // reverse = topmost segment first
+        for (let i = layout.segments.length - 1; i >= 0; i--) {
+            const s = layout.segments[i];
+            if (pt.x >= s.x && pt.x <= s.x + s.w && pt.y >= s.y && pt.y <= s.y + s.h) return s;
         }
         return null;
     }
@@ -10727,7 +11334,7 @@ const DEBUG_ATC_FIELDS = false;
         }
         return out;
     }
-function drawWeeklyTimeStacked(canvas, weeksAsc) {
+function drawWeeklyTimeStacked(canvas, weeksAsc, opts = {}) {
         if (!canvas) return null;
         const ctx = canvas.getContext("2d");
         const W = canvas.width || 1200;
@@ -10745,8 +11352,25 @@ function drawWeeklyTimeStacked(canvas, weeksAsc) {
 
         const keys = timeTrackerKeysOrdered();
 
+        const selWeekKey = String(opts?.selectedWeekKey || "");
+        const selKey = String(opts?.selectedKey || "").toUpperCase().trim();
+
+        const secOf = (w, key) => {
+            try {
+                if (w?.byKeySec?.get) return Number(w.byKeySec.get(key) || 0) || 0;
+            } catch {}
+            // legacy fallback
+            const k = String(key || "").toUpperCase().trim();
+            if (k === "SEGMENT_TRAINING") return Number(w?.stSec || 0) || 0;
+            if (k === "X01_BOT") return Number(w?.x01Sec || 0) || 0;
+            if (k === "OTHER") return Number(w?.otherSec || 0) || 0;
+            return 0;
+        };
+
+        const valueWeek = (w) => selKey ? secOf(w, selKey) : Number(w?.totalSec || 0);
+
         let maxSec = 0;
-        for (const w of (weeksAsc || [])) maxSec = Math.max(maxSec, Number(w?.totalSec || 0));
+        for (const w of (weeksAsc || [])) maxSec = Math.max(maxSec, valueWeek(w));
         const maxY = Math.max(1, maxSec * 1.15);
 
         const yOf = (sec) => padT + chartH - (sec / maxY) * chartH;
@@ -10769,72 +11393,96 @@ function drawWeeklyTimeStacked(canvas, weeksAsc) {
         }
 
         const n = (weeksAsc || []).length;
-        const gap = n > 30 ? 3 : 6;
+        const gap = (n <= 8) ? 14 : ((n <= 16) ? 10 : (n > 30 ? 3 : 6));
         const barW = n > 0 ? Math.max(6, Math.floor((chartW - gap * (n - 1)) / n)) : 0;
 
         const bars = [];
+        const segments = [];
         let x = padL;
-
-        const secOf = (w, key) => {
-            try {
-                if (w?.byKeySec?.get) return Number(w.byKeySec.get(key) || 0) || 0;
-            } catch {}
-            // legacy fallback
-            const k = String(key || "").toUpperCase().trim();
-            if (k === "SEGMENT_TRAINING") return Number(w?.stSec || 0) || 0;
-            if (k === "X01_BOT") return Number(w?.x01Sec || 0) || 0;
-            if (k === "OTHER") return Number(w?.otherSec || 0) || 0;
-            return 0;
-        };
 
         for (let i = 0; i < n; i++) {
             const w = weeksAsc[i];
-            const total = Number(w?.totalSec || 0);
+            const wk = String(w?.weekKey || "");
+            const isSelWeek = !!selWeekKey && wk && wk === selWeekKey;
 
             const yBase = padT + chartH;
 
-            let yTop = yBase;
-
-            // Stacks in TRAINING_ACTIVITIES order (max ~6 Segmente)
-            for (const k of keys) {
-                const sec = secOf(w, k);
+            if (selKey) {
+                const sec = secOf(w, selKey);
                 const h = (sec / maxY) * chartH;
                 if (h > 0.5) {
-                    ctx.fillStyle = timeTrackerColor(k, 0.16);
-                    ctx.fillRect(x, yTop - h, barW, h);
+                    ctx.fillStyle = timeTrackerColor(selKey, isSelWeek ? 0.28 : 0.22);
+                    ctx.fillRect(x, yBase - h, barW, h);
 
-                    ctx.strokeStyle = timeTrackerStroke(k);
+                    ctx.strokeStyle = timeTrackerStroke(selKey);
                     ctx.lineWidth = 1;
-                    ctx.strokeRect(x + 0.5, yTop - h + 0.5, barW, h);
-                    yTop -= h;
+                    if (h > 6 && barW > 8) ctx.strokeRect(x + 0.5, yBase - h + 0.5, Math.max(1, barW - 1), Math.max(1, h - 1));
+
+                    segments.push({ x, y: yBase - h, w: barW, h, key: selKey, data: w, weekKey: wk });
                 }
+
+                // outline of the selected bar (week focus)
+                if (isSelWeek) {
+                    ctx.strokeStyle = "rgba(140,190,255,0.75)";
+                    ctx.lineWidth = 2;
+                    ctx.strokeRect(x + 1.5, padT + 1.5, Math.max(1, barW - 3), Math.max(1, chartH - 3));
+                }
+
+                const hHit = Math.max(1, h);
+                bars.push({ x, y: yBase - hHit, w: barW, h: hHit, data: w, weekKey: wk });
+
+            } else {
+                const total = Number(w?.totalSec || 0);
+                const hTotal = (total / maxY) * chartH;
+
+                let yTop = yBase;
+
+                // stacked bars
+                for (const k of keys) {
+                    const sec = secOf(w, k);
+                    const h = (sec / maxY) * chartH;
+                    if (h > 0.5) {
+                        const aFill = isSelWeek ? 0.20 : 0.16;
+                        ctx.fillStyle = timeTrackerColor(k, aFill);
+                        ctx.fillRect(x, yTop - h, barW, h);
+
+                        // reduce visual clutter on tiny segments
+                        if (h > 10 && barW > 10) {
+                            ctx.strokeStyle = timeTrackerStroke(k);
+                            ctx.lineWidth = 1;
+                            ctx.strokeRect(x + 0.5, yTop - h + 0.5, Math.max(1, barW - 1), Math.max(1, h - 1));
+                        }
+
+                        segments.push({ x, y: yTop - h, w: barW, h, key: String(k).toUpperCase().trim(), data: w, weekKey: wk });
+                        yTop -= h;
+                    }
+                }
+
+                // outline (total)
+                ctx.strokeStyle = "rgba(255,255,255,0.10)";
+                ctx.lineWidth = 1;
+                if (hTotal > 1) ctx.strokeRect(x + 0.5, yBase - hTotal + 0.5, Math.max(1, barW - 1), Math.max(1, hTotal - 1));
+
+                // selected week overlay
+                if (isSelWeek) {
+                    ctx.strokeStyle = "rgba(140,190,255,0.75)";
+                    ctx.lineWidth = 2;
+                    ctx.strokeRect(x + 1.5, padT + 1.5, Math.max(1, barW - 3), Math.max(1, chartH - 3));
+                }
+
+                // x label: only every Nth on many points
+                const showEvery = n > 45 ? 4 : (n > 30 ? 3 : (n > 20 ? 2 : 1));
+                if (i % showEvery === 0) {
+                    ctx.fillStyle = "rgba(255,255,255,0.70)";
+                    ctx.font = "11px system-ui, -apple-system, Segoe UI, Roboto, sans-serif";
+                    ctx.textAlign = "center";
+                    ctx.textBaseline = "alphabetic";
+                    const label = w?.kw ? `KW ${w.kw}` : "";
+                    ctx.fillText(label, x + barW / 2, H - 10);
+                }
+
+                bars.push({ x, y: yBase - hTotal, w: barW, h: hTotal, data: w, weekKey: wk });
             }
-
-            const hTotal = (total / maxY) * chartH;
-
-            // outline (gesamt)
-            ctx.strokeStyle = "rgba(255,255,255,0.10)";
-            ctx.lineWidth = 1;
-            ctx.strokeRect(x + 0.5, yBase - hTotal + 0.5, barW, hTotal);
-
-            // x label: nur jede 2. oder 3. KW bei vielen Daten
-            const showEvery = n > 45 ? 4 : (n > 30 ? 3 : (n > 20 ? 2 : 1));
-            if (i % showEvery === 0) {
-                ctx.fillStyle = "rgba(255,255,255,0.70)";
-                ctx.font = "11px system-ui, -apple-system, Segoe UI, Roboto, sans-serif";
-                ctx.textAlign = "center";
-                ctx.textBaseline = "alphabetic";
-                const label = w?.kw ? `KW ${w.kw}` : "";
-                ctx.fillText(label, x + barW / 2, H - 10);
-            }
-
-            bars.push({
-                x,
-                y: yBase - hTotal,
-                w: barW,
-                h: hTotal,
-                data: w,
-            });
 
             x += barW + gap;
         }
@@ -10847,7 +11495,7 @@ function drawWeeklyTimeStacked(canvas, weeksAsc) {
         ctx.lineTo(padL + chartW, padT + chartH);
         ctx.stroke();
 
-        return { bars, yOf };
+        return { bars, segments, yOf };
     }
 function renderMasterHallOfFame(panel) {
         const view = panel.querySelector("#ad-ext-view-masterhof");
@@ -11069,8 +11717,25 @@ function renderMasterHallOfFame(panel) {
         const weeksAsc = aggregateTimeWeeks(timeEntries, weekKeys);
         cache._time_weeksAsc = weeksAsc;
 
-        cache.trainingPlan = cache.trainingPlan || loadTrainingPlanState();
-        const selWeekKeyPlan = String(cache.trainingPlan?.selectedWeekKey || "");
+        // Chrono-Tracker selection (wired via clicks in Chart/Donut/Table)
+        let selWeekKey = String(cache.filtersTime?.selectedWeekKey || "");
+        let selKey = String(cache.filtersTime?.selectedKey || "").toUpperCase().trim();
+
+        // selection is only meaningful in ALL-mode (otherwise the mode already filters)
+        if (String(f.mode || "").toUpperCase().trim() !== "ALL") {
+            selKey = "";
+            try { cache.filtersTime.selectedKey = ""; } catch {}
+        }
+
+        if (selKey && !keysAll.some(k => String(k).toUpperCase().trim() === selKey)) {
+            selKey = "";
+            try { cache.filtersTime.selectedKey = ""; } catch {}
+        }
+
+        if (selWeekKey && !weeksAsc.some(w => String(w?.weekKey || "") === selWeekKey)) {
+            selWeekKey = "";
+            try { cache.filtersTime.selectedWeekKey = ""; } catch {}
+        }
 
         const secOf = (w, key) => {
             try { if (w?.byKeySec?.get) return Number(w.byKeySec.get(key) || 0) || 0; } catch {}
@@ -11103,9 +11768,13 @@ function renderMasterHallOfFame(panel) {
         // KPIs
         const thisWeekKey = weekKeyFromDate(new Date());
         const thisWeek = weeksAsc.find((w) => w.weekKey === thisWeekKey) || blankWeek();
+        const focusWeek = (selWeekKey ? (weeksAsc.find((w) => String(w.weekKey) === String(selWeekKey)) || null) : null) || thisWeek;
 
-        const rangeTotal = weeksAsc.reduce((a, w) => a + (Number(w.totalSec || 0)), 0);
-        const rangeTotalCount = weeksAsc.reduce((a, w) => a + (Number(w.totalCount || 0)), 0);
+        const valWeek = (w) => selKey ? secOf(w, selKey) : (Number(w.totalSec || 0));
+        const cntWeek = (w) => selKey ? cntOf(w, selKey) : (Number(w.totalCount || 0));
+
+        const rangeTotal = weeksAsc.reduce((a, w) => a + valWeek(w), 0);
+        const rangeTotalCount = weeksAsc.reduce((a, w) => a + cntWeek(w), 0);
 
         const rangeByKeySec = new Map(keysAll.map(k => [k, 0]));
         const rangeByKeyCount = new Map(keysAll.map(k => [k, 0]));
@@ -11121,7 +11790,7 @@ function renderMasterHallOfFame(panel) {
 
         let best = weeksAsc[0] || null;
         for (const w of weeksAsc) {
-            if (!best || (Number(w.totalSec || 0) > Number(best.totalSec || 0))) best = w;
+            if (!best || (valWeek(w) > valWeek(best))) best = w;
         }
 
         const partsByKey = (getVal) => {
@@ -11139,13 +11808,31 @@ function renderMasterHallOfFame(panel) {
         const countLabel = (k) => (String(k || "").toUpperCase().trim() === "X01_BOT") ? "Matches" : "Sessions";
         const subModeCount = (count) => `${fmtInt(Number(count || 0))} ${countLabel(f.mode)}`;
 
-        if (kThis) kThis.textContent = fmtHours(Number(thisWeek.totalSec || 0));
-        if (kThisSub) kThisSub.textContent = (f.mode === "ALL") ? subAllWeek(thisWeek) : `${modeLabel(f.mode)} · ${subModeCount(thisWeek.totalCount || 0)}`;
+        const focusTotal = valWeek(focusWeek);
+        const focusCount = cntWeek(focusWeek);
+
+        if (kThis) kThis.textContent = fmtHours(focusTotal);
+        if (kThisSub) {
+            const prefix = (selWeekKey && focusWeek?.kw) ? (`KW ${focusWeek.kw}${focusWeek.isoYear ? "/" + focusWeek.isoYear : ""} · `) : "";
+            if (f.mode === "ALL") {
+                if (selKey) {
+                    kThisSub.textContent = `${prefix}${modeLabel(selKey)} · ${fmtInt(Number(focusCount || 0))} ${countLabel(selKey)}`;
+                } else {
+                    kThisSub.textContent = prefix + subAllWeek(focusWeek);
+                }
+            } else {
+                kThisSub.textContent = `${modeLabel(f.mode)} · ${subModeCount(focusWeek.totalCount || 0)}`;
+            }
+        }
 
         if (kRange) kRange.textContent = fmtHours(rangeTotal);
         if (kRangeSub) {
             if (f.mode === "ALL") {
-                kRangeSub.textContent = subAllRange();
+                if (selKey) {
+                    kRangeSub.textContent = `${modeLabel(selKey)} · ${fmtInt(Number(rangeTotalCount || 0))} ${countLabel(selKey)}`;
+                } else {
+                    kRangeSub.textContent = subAllRange();
+                }
             } else {
                 kRangeSub.textContent = `${modeLabel(f.mode)} · ${subModeCount(rangeTotalCount)}`;
             }
@@ -11154,7 +11841,7 @@ function renderMasterHallOfFame(panel) {
         if (kAvg) kAvg.textContent = fmtHours(avgSec);
         if (kAvgSub) kAvgSub.textContent = `${weeksCount} Wochen`;
 
-        if (kBest) kBest.textContent = fmtHours(Number(best?.totalSec || 0));
+        if (kBest) kBest.textContent = fmtHours(valWeek(best || blankWeek()));
         if (kBestSub) {
             const kw = best?.kw ? `KW ${best.kw}` : "";
             const year = best?.isoYear ? `/${best.isoYear}` : "";
@@ -11166,11 +11853,16 @@ function renderMasterHallOfFame(panel) {
 
         let donutItems = [];
         if (f.mode === "ALL") {
+            let srcMap = rangeByKeySec;
+            if (selWeekKey && focusWeek && focusWeek.weekKey) {
+                srcMap = new Map(keysAll.map(k => [k, secOf(focusWeek, k)]));
+            }
             donutItems = keysAll
                 .map((k) => ({
                     label: modeLabel(k),
-                    value: Number(rangeByKeySec.get(k) || 0) || 0,
+                    value: Number(srcMap.get(k) || 0) || 0,
                     color: timeTrackerColor(k, 0.85),
+                    extra: { key: k },
                 }))
                 .filter((it) => (Number(it?.value) || 0) > 0);
         } else {
@@ -11178,6 +11870,7 @@ function renderMasterHallOfFame(panel) {
                 label: modeLabel(f.mode),
                 value: rangeTotal,
                 color: timeTrackerColor(f.mode, 0.85),
+                extra: { key: f.mode },
             }];
         }
 
@@ -11191,6 +11884,9 @@ function renderMasterHallOfFame(panel) {
             showCenterText: false,
             holeFill: false,
         });
+
+        try { applyTimeTrackerDonutFocus(donut, cache._time_layouts?.donut, selKey); } catch {}
+
 
         // Legend (wie Segment Training)
         if (share) {
@@ -11217,7 +11913,7 @@ function renderMasterHallOfFame(panel) {
 
         // Weekly chart
         const chart = panel.querySelector("#ad-ext-time-chart");
-        cache._time_layouts.weekChart = drawWeeklyTimeStacked(chart, weeksAsc);
+        cache._time_layouts.weekChart = drawWeeklyTimeStacked(chart, weeksAsc, { selectedWeekKey: selWeekKey, selectedKey: selKey });
 
         // Table (desc)
         if (tbody) {
@@ -11229,7 +11925,7 @@ function renderMasterHallOfFame(panel) {
                     .map((w) => {
                         const kw = w.kw ? `KW ${w.kw}` : "–";
                         const wk = String(w?.weekKey || "");
-                        const isSel = wk && wk === String(selWeekKeyPlan || "");
+                        const isSel = wk && wk === String(selWeekKey || "");
                         const cls = isSel ? "ad-ext-row--selected" : "";
                         const data = wk ? `data-week-key="${escapeHtml(wk)}"` : "";
 
@@ -11243,19 +11939,21 @@ function renderMasterHallOfFame(panel) {
                         return `<tr ${data} class="${cls}">
               <td>${kw}</td>
               <td>${w.rangeLabel || "–"}</td>
-              <td>${fmtHours(w.totalSec || 0)}</td>
-              <td>${fmtHours(atc)}</td>
-              <td>${fmtHours(cu)}</td>
-              <td>${fmtHours(cr)}</td>
-              <td>${fmtHours(rc)}</td>
-              <td>${fmtHours(st)}</td>
-              <td>${fmtHours(x01)}</td>
+              <td data-tt-col="TOTAL">${fmtHours(w.totalSec || 0)}</td>
+              <td data-tt-col="ATC">${fmtHours(atc)}</td>
+              <td data-tt-col="COUNTUP">${fmtHours(cu)}</td>
+              <td data-tt-col="CRICKET">${fmtHours(cr)}</td>
+              <td data-tt-col="RANDOM_CHECKOUT">${fmtHours(rc)}</td>
+              <td data-tt-col="SEGMENT_TRAINING">${fmtHours(st)}</td>
+              <td data-tt-col="X01_BOT">${fmtHours(x01)}</td>
               <td>${fmtInt(Number(w.totalCount || 0))}</td>
             </tr>`;
                     })
                     .join("");
             }
         }
+
+        try { applyTimeTrackerColumnFocus(panel, selKey); } catch {}
 
         // Source label oben rechts (wie bei Segment/X01)
         setSourceLabel(
@@ -11344,14 +12042,13 @@ function renderMasterHallOfFame(panel) {
         cache._training_weeksAsc = weeksAsc;
         renderTrainingPlan(panel, weeksAsc);
 
+        // Trainingsdaten nutzt auch Insights-KPIs → immer aktualisieren (Analysis nur im Insights-View)
+        try { renderInsights(panel); } catch {}
+
         // Training Subview: Segment-Fokus / Chromo-Tracker (DOM-move + render, ohne eigenen Haupt-Tab)
         try {
             const layout = panel.querySelector(".ad-train-layout");
             const tv = String(layout?.dataset?.trainView || "").toUpperCase();
-            // INSIGHTS: Wenn beim Laden bereits „Erkenntnisse“ aktiv ist, jetzt mit echten Daten füllen
-            if (tv === "INSIGHTS") {
-                try { renderInsights(panel); } catch {}
-            }
 
 
             // CHROMO: Zeit-Tracker wurde in den Trainings-Subview „Chromo-Tracker“ umgezogen
@@ -11880,7 +12577,14 @@ function renderMasterHallOfFame(panel) {
         }
 
 
-        // Insights: Analysis (Weak doubles + Mini charts) (0.14.111)
+        
+
+        // KPIs werden auch im Trainingsdaten-Tab angezeigt; dort nur KPI-Teil aktualisieren
+        try {
+            const tv = String(panel?.querySelector?.(".ad-train-layout")?.dataset?.trainView || "DATA").toUpperCase();
+            if (tv !== "INSIGHTS") return;
+        } catch {}
+// Insights: Analysis (Weak doubles + Mini charts) (0.14.111)
         try {
             const weakBody = panel.querySelector("#ad-ext-insights-weakdoubles-body");
             if (weakBody) {
@@ -11892,11 +12596,8 @@ function renderMasterHallOfFame(panel) {
                     try { renderWeakDoubles(panel, weakBody, fromKey, toKey); } catch {}
                 }
             }
-
-            const cMiniAvg = panel.querySelector("#ad-ext-insights-mini-avg");
             const cMiniP2 = panel.querySelector("#ad-ext-insights-mini-p2");
             const cMiniP3 = panel.querySelector("#ad-ext-insights-mini-p3");
-            if (cMiniAvg) drawAtcWeeklyTrend(cMiniAvg, weeksAsc, thisWeekKey);
             if (cMiniP2) drawEmpty(cMiniP2, "Platzhalter");
             if (cMiniP3) drawEmpty(cMiniP3, "Platzhalter");
         } catch {}
@@ -11914,19 +12615,23 @@ function renderMasterHallOfFame(panel) {
         };
 
         const byActivity = new Map();
-        for (const a of TRAINING_ACTIVITIES) byActivity.set(a.key, { sec: 0, count: 0, hits: 0, darts: 0 });
+        for (const a of TRAINING_ACTIVITIES) byActivity.set(a.key, { sec: 0, count: 0, hits: 0, darts: 0, checkoutHits: 0, checkoutAttempts: 0 });
 
         const stTargets = new Map(); // target -> {sec,count,hits,darts}
 
-        const add = (key, sec, cnt, hits = 0, darts = 0) => {
-            if (!byActivity.has(key)) byActivity.set(key, { sec: 0, count: 0, hits: 0, darts: 0 });
+        const add = (key, sec, cnt, hits = 0, darts = 0, coHit = 0, coAtt = 0) => {
+            if (!byActivity.has(key)) byActivity.set(key, { sec: 0, count: 0, hits: 0, darts: 0, checkoutHits: 0, checkoutAttempts: 0 });
             const obj = byActivity.get(key);
             if (obj.hits === undefined) obj.hits = 0;
             if (obj.darts === undefined) obj.darts = 0;
+            if (obj.checkoutHits === undefined) obj.checkoutHits = 0;
+            if (obj.checkoutAttempts === undefined) obj.checkoutAttempts = 0;
             obj.sec += Number(sec) || 0;
             obj.count += Number(cnt) || 0;
             obj.hits += Number(hits) || 0;
             obj.darts += Number(darts) || 0;
+            obj.checkoutHits += Number(coHit) || 0;
+            obj.checkoutAttempts += Number(coAtt) || 0;
         };
 
         // Segment Training (sessions already extracted)
@@ -11937,7 +12642,7 @@ function renderMasterHallOfFame(panel) {
             if (!inWeek(dk)) continue;
 
             const dSec = Number(s.durationSec) || 0;
-            add("SEGMENT_TRAINING", dSec, 1);
+            add("SEGMENT_TRAINING", dSec, 1, Number(s.hits) || 0, Number(s.darts) || 0);
 
             const target = String(s.target || "").trim();
             if (!target || target === "DRandom" || target === "SRandom") continue;
@@ -11975,16 +12680,1749 @@ function renderMasterHallOfFame(panel) {
             const key = String(s.activityKey || "").trim();
             if (!key) continue;
 
-            if (key === "ATC") {
-                add(key, Number(s.durationSec) || 0, Number(s.count) || 1, Number(s.hits) || 0, Number(s.darts) || 0);
-            } else {
-                add(key, Number(s.durationSec) || 0, Number(s.count) || 1);
-            }
+            const coHit = Number(s.checkoutHits ?? s.checkoutsHit ?? s.coHits ?? s.checkoutMade ?? s.coHit) || 0;
+            const coAtt = Number(s.checkoutAttempts ?? s.checkoutChances ?? s.coAttempts ?? s.coOpps ?? s.checkouts ?? s.coOpp) || 0;
+            add(key, Number(s.durationSec) || 0, Number(s.count) || 1, Number(s.hits) || 0, Number(s.darts) || 0, coHit, coAtt);
         }
 
         return { wk, byActivity, stTargets };
     }
 
+    function aggregateTrainingActualsForDayKeyRange(startKey, endKey) {
+        const sKey = String(startKey || '').trim();
+        const eKey = String(endKey || '').trim();
+        if (!sKey || !eKey) {
+            return { startKey: sKey || null, endKey: eKey || null, byActivity: new Map(), stTargets: new Map() };
+        }
+
+        const inRange = (dk) => {
+            const s = String(dk || '');
+            return s && s >= sKey && s <= eKey;
+        };
+
+        const byActivity = new Map();
+        for (const a of TRAINING_ACTIVITIES) byActivity.set(a.key, { sec: 0, count: 0, hits: 0, darts: 0, checkoutHits: 0, checkoutAttempts: 0 });
+
+        const stTargets = new Map();
+
+        const add = (key, sec, cnt, hits = 0, darts = 0, coHit = 0, coAtt = 0) => {
+            if (!byActivity.has(key)) byActivity.set(key, { sec: 0, count: 0, hits: 0, darts: 0, checkoutHits: 0, checkoutAttempts: 0 });
+            const obj = byActivity.get(key);
+            if (obj.hits === undefined) obj.hits = 0;
+            if (obj.darts === undefined) obj.darts = 0;
+            if (obj.checkoutHits === undefined) obj.checkoutHits = 0;
+            if (obj.checkoutAttempts === undefined) obj.checkoutAttempts = 0;
+            obj.sec += Number(sec) || 0;
+            obj.count += Number(cnt) || 0;
+            obj.hits += Number(hits) || 0;
+            obj.darts += Number(darts) || 0;
+            obj.checkoutHits += Number(coHit) || 0;
+            obj.checkoutAttempts += Number(coAtt) || 0;
+        };
+
+        // Segment Training
+        for (const s of (cache.sessions || [])) {
+            const dk = s.dayKey || (s.dayKey = parseIsoDateToDayKey(s.createdAt) || parseIsoDateToDayKey(s.finishedAt));
+            if (!inRange(dk)) continue;
+            const dSec = Number(s.durationSec) || 0;
+            add('SEGMENT_TRAINING', dSec, 1, Number(s.hits) || 0, Number(s.darts) || 0);
+
+            const target = String(s.target || '').trim();
+            if (!target || target === 'DRandom' || target === 'SRandom') continue;
+            if (!stTargets.has(target)) stTargets.set(target, { sec: 0, count: 0, hits: 0, darts: 0 });
+            const t = stTargets.get(target);
+            t.sec += dSec;
+            t.count += 1;
+            t.hits += Number(s.hits) || 0;
+            t.darts += Number(s.darts) || 0;
+        }
+
+        // X01 Matches
+        for (const m of (cache.x01Matches || [])) {
+            const dk = m.dayKey || (m.dayKey = parseIsoDateToDayKey(m.createdAt) || parseIsoDateToDayKey(m.finishedAt));
+            if (!inRange(dk)) continue;
+            const dSec = Number(m.durationSec) || 0;
+            const kind = classifyX01MatchKind(m);
+            const legs = Number(m.totalLegs) || (Array.isArray(m.legsWon) ? m.legsWon.reduce((a, b) => a + (Number(b || 0) || 0), 0) : 0) || 1;
+            add(kind === 'BOT' ? 'X01_BOT' : 'X01_HUMAN', dSec, legs);
+        }
+
+        // Other training modes
+        for (const s of (cache.otherTrainingSessions || [])) {
+            const dk = s.dayKey || (s.dayKey = parseIsoDateToDayKey(s.createdAt) || parseIsoDateToDayKey(s.finishedAt));
+            if (!inRange(dk)) continue;
+            const key = String(s.activityKey || '').trim();
+            if (!key) continue;
+            const coHit = Number(s.checkoutHits ?? s.checkoutsHit ?? s.coHits ?? s.checkoutMade ?? s.coHit) || 0;
+            const coAtt = Number(s.checkoutAttempts ?? s.checkoutChances ?? s.coAttempts ?? s.coOpps ?? s.checkouts ?? s.coOpp) || 0;
+            add(key, Number(s.durationSec) || 0, Number(s.count) || 1, Number(s.hits) || 0, Number(s.darts) || 0, coHit, coAtt);
+        }
+
+        return { startKey: sKey, endKey: eKey, byActivity, stTargets };
+    }
+
+
+    // 0.14.169: All-time aggregation (für Zeitschätzung im Trainingsplan)
+    function aggregateTrainingActualsAllTime() {
+        const byActivity = new Map();
+        for (const a of TRAINING_ACTIVITIES) {
+            byActivity.set(a.key, { sec: 0, count: 0, hits: 0, darts: 0, checkoutHits: 0, checkoutAttempts: 0 });
+        }
+
+        const stTargets = new Map();
+
+        const add = (key, sec, cnt, hits = 0, darts = 0, coHit = 0, coAtt = 0) => {
+            if (!byActivity.has(key)) byActivity.set(key, { sec: 0, count: 0, hits: 0, darts: 0, checkoutHits: 0, checkoutAttempts: 0 });
+            const obj = byActivity.get(key);
+            if (obj.hits === undefined) obj.hits = 0;
+            if (obj.darts === undefined) obj.darts = 0;
+            if (obj.checkoutHits === undefined) obj.checkoutHits = 0;
+            if (obj.checkoutAttempts === undefined) obj.checkoutAttempts = 0;
+            obj.sec += Number(sec) || 0;
+            obj.count += Number(cnt) || 0;
+            obj.hits += Number(hits) || 0;
+            obj.darts += Number(darts) || 0;
+            obj.checkoutHits += Number(coHit) || 0;
+            obj.checkoutAttempts += Number(coAtt) || 0;
+        };
+
+        // Segment Training
+        for (const s of (cache.sessions || [])) {
+            const dSec = Number(s.durationSec) || 0;
+            add("SEGMENT_TRAINING", dSec, 1, Number(s.hits) || 0, Number(s.darts) || 0);
+
+            const target = String(s.target || "").trim();
+            if (!target || target === "DRandom" || target === "SRandom") continue;
+
+            if (!stTargets.has(target)) stTargets.set(target, { sec: 0, count: 0, hits: 0, darts: 0 });
+            const t = stTargets.get(target);
+            t.sec += dSec;
+            t.count += 1;
+            t.hits += Number(s.hits) || 0;
+            t.darts += Number(s.darts) || 0;
+        }
+
+        // X01 Matches
+        for (const m of (cache.x01Matches || [])) {
+            const dSec = Number(m.durationSec) || 0;
+            const kind = classifyX01MatchKind(m);
+            const legs = Number(m.totalLegs) ||
+                (Array.isArray(m.legsWon) ? m.legsWon.reduce((a, b) => a + (Number(b || 0) || 0), 0) : 0) ||
+                1;
+            add(kind === "BOT" ? "X01_BOT" : "X01_HUMAN", dSec, legs);
+        }
+
+        // Other training modes
+        for (const s of (cache.otherTrainingSessions || [])) {
+            const key = String(s.activityKey || "").trim();
+            if (!key) continue;
+
+            const coHit = Number(s.checkoutHits ?? s.checkoutsHit ?? s.coHits ?? s.checkoutMade ?? s.coHit) || 0;
+            const coAtt = Number(s.checkoutAttempts ?? s.checkoutChances ?? s.coAttempts ?? s.coOpps ?? s.checkouts ?? s.coOpp) || 0;
+            add(key, Number(s.durationSec) || 0, Number(s.count) || 1, Number(s.hits) || 0, Number(s.darts) || 0, coHit, coAtt);
+        }
+
+        return { byActivity, stTargets };
+    }
+
+
+
+
+
+    // ---------------------------------------------------------------------------
+    // ChatGPT Copy (Training -> Trainingsdaten) (0.14.182)
+    // - erzeugt Markdown + Lite-JSON (Balance: Spiel vs Training)
+    // ---------------------------------------------------------------------------
+
+    function adExt_fmtWeekLabel(wkKey) {
+        try {
+            const r = weekRangeFromWeekKey(wkKey);
+            const isoYear = Number(r?.isoYear) || 0;
+            const week = String(r?.week ?? "").padStart(2, "0");
+            const s = dayKeyToGerman(r?.startKey);
+            const e = dayKeyToGerman(r?.endKey);
+            const sShort = String(s || "").replace(/\.\d{4}$/, ".");
+            const eShort = String(e || "").replace(/\.\d{4}$/, ".");
+            if (isoYear && week && sShort && eShort) return `KW ${week}/${isoYear} (${sShort}–${eShort})`;
+        } catch { /* ignore */ }
+        return String(wkKey || "");
+    }
+
+    function adExt_chooseAutoPlayerKeyNonBot(x01Matches) {
+        const counts = new Map();
+        for (const m of (x01Matches || [])) {
+            for (const p of (m?.players || [])) {
+                const key = p?.key;
+                const name = String(p?.name || "").trim();
+                if (!key) continue;
+                // Bot-Spieler explizit ausschließen
+                if (isBotLikePlayerName(name) || isBotLevelPlayerName(name)) continue;
+                counts.set(key, (counts.get(key) || 0) + 1);
+            }
+        }
+        let bestKey = null;
+        let bestCnt = -1;
+        for (const [k, c] of counts.entries()) {
+            if (c > bestCnt) { bestCnt = c; bestKey = k; }
+        }
+        return bestKey;
+    }
+
+    function adExt_copyToClipboard(text) {
+        const s = String(text || "");
+        if (!s) return Promise.reject(new Error("empty"));
+
+        // 1) Clipboard API
+        try {
+            if (navigator?.clipboard?.writeText) {
+                return navigator.clipboard.writeText(s);
+            }
+        } catch { /* ignore */ }
+
+        // 2) Fallback: textarea + execCommand
+        return new Promise((resolve, reject) => {
+            try {
+                const ta = document.createElement("textarea");
+                ta.value = s;
+                ta.setAttribute("readonly", "");
+                ta.style.position = "fixed";
+                ta.style.left = "-9999px";
+                ta.style.top = "-9999px";
+                document.body.appendChild(ta);
+                ta.select();
+                const ok = document.execCommand("copy");
+                document.body.removeChild(ta);
+                if (ok) resolve();
+                else reject(new Error("copy failed"));
+            } catch (e) {
+                reject(e);
+            }
+        });
+    }
+
+    function adExt_buildLiteJsonForTrainingWeek(weekKey) {
+        const wk = weekRangeFromWeekKey(weekKey);
+        const agg = aggregateTrainingActualsForWeek(weekKey);
+        const byActivity = agg?.byActivity || new Map();
+
+        const inWeekKey = (dk) => {
+            const s = String(dk || "");
+            return wk && s && s >= wk.startKey && s <= wk.endKey;
+        };
+
+        // --- X01 Matches: Bot vs Human (sessions + legs + time) ---
+        const x01All = (cache?.x01Matches || []).filter((m) => {
+            const dk = m?.dayKey || parseIsoDateToDayKey(m?.createdAt) || parseIsoDateToDayKey(m?.finishedAt);
+            return inWeekKey(dk);
+        });
+
+        const play = {
+            human: { sessions: 0, legs: 0, timeMin: 0 },
+            bot: { sessions: 0, legs: 0, timeMin: 0 },
+        };
+
+        for (const m of x01All) {
+            const kind = classifyX01MatchKind(m);
+            const legs = Number(m?.totalLegs) || 0;
+            const tmin = Math.max(0, Math.round((Number(m?.durationSec) || 0) / 60));
+            if (kind === "BOT") {
+                play.bot.sessions += 1;
+                play.bot.legs += legs;
+                play.bot.timeMin += tmin;
+            } else {
+                play.human.sessions += 1;
+                play.human.legs += legs;
+                play.human.timeMin += tmin;
+            }
+        }
+
+        // --- Training (alles außer X01) ---
+        const trainingBreakdown = {};
+        let trainingTimeMin = 0;
+        let trainingSessions = 0;
+
+        try {
+            for (const [k, rec] of (byActivity?.entries?.() || [])) {
+                const key = String(k || "").toUpperCase();
+                if (!key) continue;
+                if (key === "X01_BOT" || key === "X01_HUMAN") continue;
+
+                const sec = Number(rec?.sec || 0) || 0;
+                const cnt = Number(rec?.count || 0) || 0;
+
+                const tmin = Math.max(0, Math.round(sec / 60));
+                trainingTimeMin += tmin;
+                trainingSessions += Math.max(0, Math.round(cnt));
+
+                if (tmin > 0 || cnt > 0) {
+                    trainingBreakdown[key] = {
+                        timeMin: tmin,
+                        sessions: Math.max(0, Math.round(cnt)),
+                    };
+                }
+            }
+        } catch { /* ignore */ }
+
+        // Segment Training sub-breakdown by segment type (Single/Double/Triple) for better Checkout-signal (0.14.189)
+        let segmentTypeBreakdown = null;
+        try {
+            const segAll = (cache?.sessions || []).filter((s) => {
+                const dk = s?.dayKey || parseIsoDateToDayKey(s?.createdAt) || parseIsoDateToDayKey(s?.finishedAt);
+                return inPeriod(dk);
+            });
+
+            if (segAll && segAll.length) {
+                const mk = () => ({ timeMin: 0, sessions: 0, dartsThrown: 0, attempts: 0, hits: 0, hitPct: null, avgDartsPerAttempt: null });
+                const agg = { SINGLE: mk(), DOUBLE: mk(), TRIPLE: mk(), OTHER: mk() };
+
+                const typeOf = (s) => {
+                    const m = String(s?.mode || '').toLowerCase();
+                    if (m.startsWith('single')) return 'SINGLE';
+                    if (m.startsWith('double')) return 'DOUBLE';
+                    if (m.startsWith('triple')) return 'TRIPLE';
+                    return 'OTHER';
+                };
+
+                for (const s of segAll) {
+                    const k = typeOf(s);
+                    const r = agg[k] || agg.OTHER;
+                    r.sessions += 1;
+                    const tmin = Math.max(0, Math.round((Number(s?.durationSec || 0) || 0) / 60));
+                    r.timeMin += tmin;
+                    const darts = Math.max(0, Math.round(Number(s?.darts || 0) || 0));
+                    const hits = Math.max(0, Math.round(Number(s?.hits || 0) || 0));
+                    r.dartsThrown += darts;
+
+                    // keep the same attempts/hits definition as the default training aggregation:
+                    // attempts = dartsThrown, hits = hit-events (0.14.188)
+                    r.attempts += darts;
+                    r.hits += hits;
+                }
+
+                for (const r of Object.values(agg)) {
+                    r.hitPct = (Number(r.attempts) || 0) > 0 ? ((Number(r.hits) || 0) / (Number(r.attempts) || 1)) : null;
+                    r.avgDartsPerAttempt = (Number(r.attempts) || 0) > 0 ? ((Number(r.dartsThrown) || 0) / (Number(r.attempts) || 1)) : null;
+                }
+
+                segmentTypeBreakdown = agg;
+
+                // Attach human-friendly labels for the LLM (copy/paste)
+                try {
+                    if (segmentTypeBreakdown?.SINGLE) { segmentTypeBreakdown.SINGLE.label = trainingNameShort.SEGMENT_SINGLE; segmentTypeBreakdown.SINGLE.coachLabel = trainingNameCoach.SEGMENT_SINGLE; }
+                    if (segmentTypeBreakdown?.DOUBLE) { segmentTypeBreakdown.DOUBLE.label = trainingNameShort.SEGMENT_DOUBLE; segmentTypeBreakdown.DOUBLE.coachLabel = trainingNameCoach.SEGMENT_DOUBLE; }
+                    if (segmentTypeBreakdown?.TRIPLE) { segmentTypeBreakdown.TRIPLE.label = trainingNameShort.SEGMENT_TRIPLE; segmentTypeBreakdown.TRIPLE.coachLabel = trainingNameCoach.SEGMENT_TRIPLE; }
+                    if (segmentTypeBreakdown?.OTHER) { segmentTypeBreakdown.OTHER.label = 'Segment Training – OTHER'; segmentTypeBreakdown.OTHER.coachLabel = 'Segment Training – OTHER'; }
+                } catch { /* ignore */ }
+
+                if (trainingBreakdown?.SEGMENT_TRAINING) {
+                    trainingBreakdown.SEGMENT_TRAINING.segmentTypeBreakdown = segmentTypeBreakdown;
+                }
+            }
+        } catch { /* ignore */ }
+
+        // Checkout-related training summary: Random Checkout + Segment Training (Double) (0.14.189)
+        let checkoutRelatedTraining = null;
+        try {
+            const rc = trainingBreakdown?.RANDOM_CHECKOUT || null;
+            const sd = segmentTypeBreakdown?.DOUBLE || null;
+
+            const sumField = (a, b, k) => (Number(a?.[k] || 0) || 0) + (Number(b?.[k] || 0) || 0);
+            const timeMin = sumField(rc, sd, 'timeMin');
+            const sessions = sumField(rc, sd, 'sessions');
+            const dartsThrown = sumField(rc, sd, 'dartsThrown');
+            const attempts = sumField(rc, sd, 'attempts');
+            const hits = sumField(rc, sd, 'hits');
+
+            if (timeMin > 0 || sessions > 0 || dartsThrown > 0 || attempts > 0) {
+                checkoutRelatedTraining = {
+                    definition: 'Checkout-nahes Training = Random Checkout + Segment Training (Double).',
+                    timeMin,
+                    sessions,
+                    dartsThrown,
+                    attempts,
+                    hits,
+                    hitPct: (attempts > 0) ? (hits / attempts) : null,
+                    avgDartsPerAttempt: (attempts > 0) ? (dartsThrown / attempts) : null,
+                    sources: {
+                        randomCheckout: rc || null,
+                        segmentDouble: sd || null,
+                    }
+                };
+            }
+        } catch { /* ignore */ }
+
+        // --- Player perf (auto, non-bot) ---
+        const playerKey = adExt_chooseAutoPlayerKeyNonBot(x01All) || null;
+        let x01Perf = null;
+
+        try {
+            if (playerKey) {
+                const league = computeLeagueTable(x01All);
+                const row = (league || []).find(r => String(r?.key || "") === String(playerKey));
+
+                // Highscores / Brackets aus Match-Objekten summieren
+                let s100 = 0, s140 = 0, s180 = 0;
+                let legsPlayed = 0;
+                let matchesPlayed = 0;
+
+                for (const m of x01All) {
+                    const idx = (m?.players || []).find(p => String(p?.key || "") === String(playerKey))?.index;
+                    if (!Number.isFinite(Number(idx))) continue;
+                    matchesPlayed += 1;
+                    legsPlayed += Number(m?.totalLegs || 0) || 0;
+
+                    const a100 = Array.isArray(m?.scores100PlusPerPlayer) ? m.scores100PlusPerPlayer : [];
+                    const a140 = Array.isArray(m?.scores140PlusPerPlayer) ? m.scores140PlusPerPlayer : [];
+                    const a180 = Array.isArray(m?.scores180PerPlayer) ? m.scores180PerPlayer : [];
+                    s100 += Number(a100?.[idx] || 0) || 0;
+                    s140 += Number(a140?.[idx] || 0) || 0;
+                    s180 += Number(a180?.[idx] || 0) || 0;
+                }
+
+                if (row) {
+                    const avg = (Number(row?.pointsPerDart) || 0) * 3;
+                    const f9 = Number(row?.first9Avg);
+                    const coAtt = Number(row?.coAtt) || 0;
+                    const coHit = Number(row?.coHit) || 0;
+                    const coPct = (coAtt > 0) ? (coHit / coAtt) : null;
+
+                    x01Perf = {
+                        playerKey,
+                        playerName: String(row?.name || ""),
+                        matches: Number(row?.matches) || matchesPlayed,
+                        wins: Number(row?.wins) || 0,
+                        losses: Number(row?.losses) || 0,
+                        legsFor: Number(row?.legsFor) || 0,
+                        legsAgainst: Number(row?.legsAgainst) || 0,
+                        avg: Number.isFinite(avg) ? Math.round(avg * 100) / 100 : null,
+                        first9Avg: Number.isFinite(f9) ? Math.round(f9 * 100) / 100 : null,
+                        checkout: {
+                            attempts: coAtt,
+                            hits: coHit,
+                            pct: (coPct == null) ? null : Math.round(coPct * 10000) / 100,
+                        },
+                        scoring: {
+                            visits100Plus: s100,
+                            visits140Plus: s140,
+                            visits180: s180,
+                        },
+                    };
+                }
+            }
+        } catch { /* ignore */ }
+
+        let x01PerfSplit = null;
+        try {
+            if (playerKey) {
+                const buildPerf = (matches, scopeLabel) => {
+                    if (!Array.isArray(matches) || !matches.length) return null;
+                    const league = computeLeagueTable(matches);
+                    const row = (league || []).find(r => String(r?.key || "") === String(playerKey));
+
+                    let s100 = 0, s140 = 0, s180 = 0;
+                    let legsPlayed = 0;
+                    let matchesPlayed = 0;
+
+                    for (const m of matches) {
+                        const idx = (m?.players || []).find(p => String(p?.key || "") === String(playerKey))?.index;
+                        if (!Number.isFinite(Number(idx))) continue;
+                        matchesPlayed += 1;
+                        legsPlayed += Number(m?.totalLegs || 0) || 0;
+
+                        const a100 = Array.isArray(m?.scores100PlusPerPlayer) ? m.scores100PlusPerPlayer : [];
+                        const a140 = Array.isArray(m?.scores140PlusPerPlayer) ? m.scores140PlusPerPlayer : [];
+                        const a180 = Array.isArray(m?.scores180PerPlayer) ? m.scores180PerPlayer : [];
+                        s100 += Number(a100?.[idx] || 0) || 0;
+                        s140 += Number(a140?.[idx] || 0) || 0;
+                        s180 += Number(a180?.[idx] || 0) || 0;
+                    }
+
+                    if (!row) {
+                        // fallback: if row missing, still provide scoring-only split
+                        return {
+                            scope: scopeLabel,
+                            playerKey,
+                            playerName: "",
+                            matches: matchesPlayed,
+                            wins: null,
+                            losses: null,
+                            legsFor: null,
+                            legsAgainst: null,
+                            avg: null,
+                            first9Avg: null,
+                            checkout: { attempts: null, hits: null, pct: null },
+                            scoring: { visits100Plus: s100, visits140Plus: s140, visits180: s180 },
+                            meta: { legsPlayed }
+                        };
+                    }
+
+                    const avg = (Number(row?.pointsPerDart) || 0) * 3;
+                    const f9 = Number(row?.first9Avg);
+                    const coAtt = Number(row?.coAtt) || 0;
+                    const coHit = Number(row?.coHit) || 0;
+                    const coPct = (coAtt > 0) ? (coHit / coAtt) : null;
+
+                    return {
+                        scope: scopeLabel,
+                        playerKey,
+                        playerName: String(row?.name || ""),
+                        matches: Number(row?.matches) || matchesPlayed,
+                        wins: Number(row?.wins) || 0,
+                        losses: Number(row?.losses) || 0,
+                        legsFor: Number(row?.legsFor) || 0,
+                        legsAgainst: Number(row?.legsAgainst) || 0,
+                        avg: Number.isFinite(avg) ? Math.round(avg * 100) / 100 : null,
+                        first9Avg: Number.isFinite(f9) ? Math.round(f9 * 100) / 100 : null,
+                        checkout: {
+                            attempts: coAtt,
+                            hits: coHit,
+                            pct: (coPct == null) ? null : Math.round(coPct * 10000) / 100,
+                        },
+                        scoring: {
+                            visits100Plus: s100,
+                            visits140Plus: s140,
+                            visits180: s180,
+                        },
+                        meta: { legsPlayed }
+                    };
+                };
+
+                const kinds = (cache?.x01MatchKinds || {});
+                const kindOf = (m) => {
+                    try {
+                        const id = String(m?.matchId || m?.id || "");
+                        const cached = kinds?.[id];
+                        if (cached === 'BOT' || cached === 'HUMAN') return cached;
+                    } catch {}
+                    return classifyX01MatchKind(m);
+                };
+
+                const humanMatches = x01All.filter(m => kindOf(m) !== 'BOT');
+                const botMatches = x01All.filter(m => kindOf(m) === 'BOT');
+
+                x01PerfSplit = {
+                    human: buildPerf(humanMatches, 'HUMAN'),
+                    bot: buildPerf(botMatches, 'BOT'),
+                };
+            }
+        } catch { /* ignore */ }
+
+        // --- Opponent strength (AVG/Checkout/Bot level) (0.14.189) ---
+        let x01OpponentPerf = null;
+        let x01OpponentPerfSplit = null;
+        try {
+            if (playerKey) {
+                const parseBotLevel = (name) => {
+                    try {
+                        const s = String(name || '');
+                        const m = s.match(/bot\s*level\s*(\d+)/i);
+                        if (m && m[1]) {
+                            const n = Number(m[1]);
+                            return Number.isFinite(n) ? n : null;
+                        }
+                    } catch {}
+                    return null;
+                };
+
+                const buildOpp = (matches, scope) => {
+                    try {
+                        if (!matches || !matches.length) return null;
+                        let oppDarts = 0, oppScore = 0, oppCoAtt = 0, oppCoHit = 0;
+                        let opponents = 0;
+                        const botLevels = [];
+
+                        for (const m of matches) {
+                            const my = (m?.players || []).find(p => String(p?.key || '') === String(playerKey));
+                            const myIdx = Number(my?.index);
+                            if (!Number.isFinite(myIdx)) continue;
+
+                            const psArr = Array.isArray(m?.perPlayerStats) ? m.perPlayerStats : [];
+                            for (const p of (m?.players || [])) {
+                                const pi = Number(p?.index);
+                                if (!Number.isFinite(pi) || pi == myIdx) continue;
+                                opponents += 1;
+                                const st = psArr?.[pi] || null;
+
+                                const darts = Number(st?.dartsThrown || st?.darts || 0) || 0;
+                                const score = Number(st?.score || st?.points || 0) || 0;
+                                oppDarts += Math.max(0, darts);
+                                oppScore += Math.max(0, score);
+
+                                oppCoAtt += Math.max(0, Number(st?.checkouts || st?.checkoutAttempts || 0) || 0);
+                                oppCoHit += Math.max(0, Number(st?.checkoutsHit || st?.checkoutHits || 0) || 0);
+
+                                const lvl = parseBotLevel(p?.name || st?.name || '');
+                                if (lvl != null) botLevels.push(lvl);
+                            }
+                        }
+
+                        const avg = (oppDarts > 0) ? ((oppScore * 3) / oppDarts) : null;
+                        const coPct = (oppCoAtt > 0) ? (oppCoHit / oppCoAtt) : null;
+
+                        let botLevel = null;
+                        if (botLevels.length) {
+                            const s = botLevels.reduce((a, b) => a + b, 0);
+                            botLevel = {
+                                avg: Math.round((s / botLevels.length) * 100) / 100,
+                                min: Math.min(...botLevels),
+                                max: Math.max(...botLevels),
+                                count: botLevels.length,
+                            };
+                        }
+
+                        return {
+                            playerKey,
+                            scope,
+                            opponents,
+                            avg: Number.isFinite(avg) ? Math.round(avg * 100) / 100 : null,
+                            checkout: {
+                                attempts: oppCoAtt,
+                                hits: oppCoHit,
+                                pct: (coPct == null) ? null : Math.round(coPct * 10000) / 100,
+                            },
+                            botLevel,
+                        };
+                    } catch { return null; }
+                };
+
+                x01OpponentPerf = buildOpp(x01All, 'ALL');
+
+                const humanMatches = x01All.filter(m => classifyX01MatchKind(m) !== 'BOT');
+                const botMatches = x01All.filter(m => classifyX01MatchKind(m) === 'BOT');
+                x01OpponentPerfSplit = {
+                    human: buildOpp(humanMatches, 'HUMAN'),
+                    bot: buildOpp(botMatches, 'BOT'),
+                };
+            }
+        } catch { /* ignore */ }
+
+
+        const lite = {
+            schema: "ad-ext-lite-v1",
+            period: {
+                weekKey: String(weekKey || ""),
+                label: adExt_fmtWeekLabel(weekKey),
+                startDayKey: wk?.startKey || null,
+                endDayKey: wk?.endKey || null,
+            },
+            playReference: {
+                definition: "Alle X01 Spiele mit Double Out (sofern in der Historie vorhanden). Split: Gegner = Bot vs Human.",
+                x01DoubleOut: {
+                    human: play.human,
+                    bot: play.bot,
+                    total: {
+                        sessions: play.human.sessions + play.bot.sessions,
+                        legs: play.human.legs + play.bot.legs,
+                        timeMin: play.human.timeMin + play.bot.timeMin,
+                    },
+                },
+            },
+            training: {
+                definition: "Alle Trainingseinheiten (Segment Training, ATC, CountUp, Cricket, Random Checkout, …) ohne X01.",
+                total: {
+                    timeMin: trainingTimeMin,
+                    sessions: trainingSessions,
+                },
+                breakdown: trainingBreakdown,
+            },
+            x01Performance: x01Perf,
+            x01PerformanceSplit: x01PerfSplit,
+            x01OpponentPerformance: x01OpponentPerf,
+            x01OpponentPerformanceSplit: x01OpponentPerfSplit,
+            x01DerivedSignals: x01DerivedSignals,
+        };
+
+        return lite;
+    }
+
+    function adExt_buildLiteJsonForTrainingPeriod(period) {
+        const pType = String(period?.type || "WEEK").toUpperCase();
+        const startKey = String(period?.startDayKey || "").trim();
+        const endKey = String(period?.endDayKey || "").trim();
+        const label = String(period?.label || "").trim();
+        const weekKeyAnchor = String(period?.weekKeyAnchor || "").trim();
+
+        const inPeriod = (dk) => {
+            if (pType === "ALL") return true;
+            const s = String(dk || "");
+            if (!s) return false;
+            if (!startKey || !endKey) return true;
+            return s >= startKey && s <= endKey;
+        };
+
+        // --- X01 Matches in period ---
+        const x01InRange = (cache?.x01Matches || []).filter((m) => {
+            const dk = m?.dayKey || parseIsoDateToDayKey(m?.createdAt) || parseIsoDateToDayKey(m?.finishedAt);
+            return inPeriod(dk);
+        });
+
+        const isDouble = (m) => {
+            try {
+                if (m?.isDoubleOut === true) return true;
+                const s = String(m?.outMode || "").toLowerCase();
+                if (s.includes('double')) return true;
+            } catch {}
+            return false;
+        };
+
+        let x01All = x01InRange.filter(isDouble);
+        let outAssumed = false;
+        if (!x01All.length && x01InRange.length) {
+            // If we can't detect out mode reliably, fall back to all X01 in period and note it.
+            x01All = x01InRange;
+            outAssumed = true;
+        }
+
+        const playHuman = { sessions: 0, legs: 0, timeMin: 0 };
+        const playBot = { sessions: 0, legs: 0, timeMin: 0 };
+
+        for (const m of x01All) {
+            const kind = classifyX01MatchKind(m);
+            const legs = Number(m?.totalLegs) || 0;
+            const tmin = Math.max(0, Math.round((Number(m?.durationSec) || 0) / 60));
+            if (kind === "BOT") {
+                playBot.sessions += 1;
+                playBot.legs += legs;
+                playBot.timeMin += tmin;
+            } else {
+                playHuman.sessions += 1;
+                playHuman.legs += legs;
+                playHuman.timeMin += tmin;
+            }
+        }
+
+        // --- Training aggregation for period ---
+        let agg = null;
+        if (pType === 'ALL') {
+            agg = aggregateTrainingActualsAllTime();
+        } else {
+            agg = aggregateTrainingActualsForDayKeyRange(startKey, endKey);
+        }
+        const byActivity = agg?.byActivity || new Map();
+
+        // Extra task aggregation for ATC (fields attempted/solved), derived from best-effort fieldsAgg (0.14.188)
+        let atcTaskAttempts = 0;
+        let atcTaskHits = 0;
+        try {
+            for (const s of (cache?.otherTrainingSessions || [])) {
+                const key = String(s?.activityKey || '').trim().toUpperCase();
+                if (key !== 'ATC') continue;
+
+                const dk = s?.dayKey || parseIsoDateToDayKey(s?.createdAt) || parseIsoDateToDayKey(s?.finishedAt);
+                if (!inPeriod(dk)) continue;
+
+                const fa = s?.fieldsAgg;
+                if (fa && typeof fa === 'object') {
+                    let a = 0;
+                    let h = 0;
+                    for (const v of Object.values(fa)) {
+                        const d = Number(v?.darts || 0) || 0;
+                        const hh = Number(v?.hits || 0) || 0;
+                        if (d > 0) a += 1;
+                        if (hh > 0) h += 1;
+                    }
+                    atcTaskAttempts += a;
+                    atcTaskHits += h;
+                }
+            }
+        } catch { /* ignore */ }
+
+        const trainingBreakdown = {};
+        let trainingTimeMin = 0;
+        let trainingSessions = 0;
+        let trainingDartsThrown = 0;
+        let trainingAttempts = 0;
+        let trainingHits = 0;
+
+        // Training activity names MUST match the "Aktivität hinzufügen" templates in the Trainingsplan UI.
+        const trainingActivityNames = (() => {
+            const out = {};
+            try {
+                if (typeof PLAN_ACTIVITY_TEMPLATES !== "undefined" && Array.isArray(PLAN_ACTIVITY_TEMPLATES)) {
+                    for (const tpl of PLAN_ACTIVITY_TEMPLATES) {
+                        const t = String(tpl?.type || "").trim().toUpperCase();
+                        const n = String(tpl?.name || "").trim();
+                        if (t && n) out[t] = n;
+                    }
+                }
+            } catch {}
+            // Fallback defaults (keep in sync with PLAN_ACTIVITY_TEMPLATES)
+            if (!out.ATC) out.ATC = "ATC";
+            if (!out.COUNTUP) out.COUNTUP = "CountUp";
+            if (!out.CRICKET) out.CRICKET = "Cricket";
+            if (!out.RANDOM_CHECKOUT) out.RANDOM_CHECKOUT = "Random Checkout";
+            if (!out.SEGMENT_TRAINING) out.SEGMENT_TRAINING = "Segment Training";
+            if (!out.X01_BOT) out.X01_BOT = "X01 vs Bot";
+            if (!out.X01_HUMAN) out.X01_HUMAN = "X01 vs Mensch";
+            return out;
+        })();
+
+        // Training templates (for the LLM: use these names verbatim in the 7-day plan)
+        const trainingActivityTemplates = (() => {
+            try {
+                if (typeof PLAN_ACTIVITY_TEMPLATES !== "undefined" && Array.isArray(PLAN_ACTIVITY_TEMPLATES)) {
+                    return PLAN_ACTIVITY_TEMPLATES.map(t => ({
+                        type: String(t?.type || "").trim(),
+                        name: String(t?.name || "").trim(),
+                        defaultLegs: getDefaultSessionsForPlanType(String(t?.type || "")),
+                    })).filter(x => x.type && x.name);
+                }
+            } catch {}
+            return null;
+        })();
+
+        // Training naming vocabulary for the LLM (labels in breakdowns)
+        const trainingNameShort = {
+            ATC: trainingActivityNames.ATC,
+            COUNTUP: trainingActivityNames.COUNTUP,
+            CRICKET: trainingActivityNames.CRICKET,
+            RANDOM_CHECKOUT: trainingActivityNames.RANDOM_CHECKOUT,
+            SEGMENT_TRAINING: trainingActivityNames.SEGMENT_TRAINING,
+            X01_BOT: trainingActivityNames.X01_BOT,
+            X01_HUMAN: trainingActivityNames.X01_HUMAN,
+            SEGMENT_SINGLE: "Segment Training – SINGLE",
+            SEGMENT_DOUBLE: "Segment Training – DOUBLE",
+            SEGMENT_TRIPLE: "Segment Training – TRIPLE",
+        };
+        // Coach labels: keep EXACTLY the same strings as in the UI templates (copy/paste)
+        const trainingNameCoach = {
+            ATC: trainingActivityNames.ATC,
+            COUNTUP: trainingActivityNames.COUNTUP,
+            CRICKET: trainingActivityNames.CRICKET,
+            RANDOM_CHECKOUT: trainingActivityNames.RANDOM_CHECKOUT,
+            SEGMENT_TRAINING: trainingActivityNames.SEGMENT_TRAINING,
+            SEGMENT_SINGLE: trainingActivityNames.SEGMENT_TRAINING,
+            SEGMENT_DOUBLE: trainingActivityNames.SEGMENT_TRAINING,
+            SEGMENT_TRIPLE: trainingActivityNames.SEGMENT_TRAINING,
+            X01_BOT: trainingActivityNames.X01_BOT,
+            X01_HUMAN: trainingActivityNames.X01_HUMAN,
+        };
+
+        try {
+            for (const [k, rec] of (byActivity?.entries?.() || [])) {
+                const key = String(k || '').toUpperCase();
+                if (!key) continue;
+                if (key === "X01_BOT" || key === "X01_HUMAN") continue;
+
+                const sec = Number(rec?.sec || 0) || 0;
+                const cnt = Number(rec?.count || 0) || 0;
+                const tmin = Math.max(0, Math.round(sec / 60));
+
+                const dartsThrown = Math.max(0, Math.round(Number(rec?.darts || 0) || 0));
+
+                // Attempts/Hits definition per mode:
+                // - RANDOM_CHECKOUT: attempts = checkout opportunities, hits = checkouts hit
+                // - ATC: attempts/hits = fields attempted/solved (derived from fieldsAgg)
+                // - default: attempts = dartsThrown, hits = rec.hits (hit events)
+                let attempts = 0;
+                let hits = 0;
+
+                if (key === 'RANDOM_CHECKOUT') {
+                    attempts = Math.max(0, Math.round(Number(rec?.checkoutAttempts || 0) || 0));
+                    hits = Math.max(0, Math.round(Number(rec?.checkoutHits || 0) || 0));
+                } else if (key === 'ATC') {
+                    attempts = Math.max(0, Math.round(Number(atcTaskAttempts || 0) || 0));
+                    hits = Math.max(0, Math.round(Number(atcTaskHits || 0) || 0));
+                } else {
+                    attempts = dartsThrown;
+                    hits = Math.max(0, Math.round(Number(rec?.hits || 0) || 0));
+                }
+
+                const hitPct = attempts > 0 ? (hits / attempts) : null;
+                const avgDartsPerAttempt = attempts > 0 ? (dartsThrown / attempts) : null;
+
+                trainingTimeMin += tmin;
+                trainingSessions += Math.max(0, Math.round(cnt));
+
+                trainingDartsThrown += dartsThrown;
+                trainingAttempts += attempts;
+                trainingHits += hits;
+
+                if (tmin > 0 || cnt > 0 || dartsThrown > 0 || attempts > 0) {
+                    trainingBreakdown[key] = {
+                        label: trainingNameShort[key] || key,
+                        coachLabel: trainingNameCoach[key] || (trainingNameShort[key] || key),
+                        timeMin: tmin,
+                        sessions: Math.max(0, Math.round(cnt)),
+                        dartsThrown,
+                        attempts,
+                        hits,
+                        hitPct,
+                        avgDartsPerAttempt,
+                    };
+                }
+            }
+        } catch { /* ignore */ }
+
+
+
+        // Segment Training sub-breakdown by segment type (Single/Double/Triple) for better Checkout-signal (0.14.189)
+        let segmentTypeBreakdown = null;
+        try {
+            const segAll = (cache?.sessions || []).filter((s) => {
+                const dk = s?.dayKey || parseIsoDateToDayKey(s?.createdAt) || parseIsoDateToDayKey(s?.finishedAt);
+                return inPeriod(dk);
+            });
+
+            if (segAll && segAll.length) {
+                const mk = () => ({ timeMin: 0, sessions: 0, dartsThrown: 0, attempts: 0, hits: 0, hitPct: null, avgDartsPerAttempt: null });
+                const agg = { SINGLE: mk(), DOUBLE: mk(), TRIPLE: mk(), OTHER: mk() };
+
+                const typeOf = (s) => {
+                    const m = String(s?.mode || '').toLowerCase();
+                    if (m.startsWith('single')) return 'SINGLE';
+                    if (m.startsWith('double')) return 'DOUBLE';
+                    if (m.startsWith('triple')) return 'TRIPLE';
+                    return 'OTHER';
+                };
+
+                for (const s of segAll) {
+                    const k = typeOf(s);
+                    const r = agg[k] || agg.OTHER;
+                    r.sessions += 1;
+                    const tmin = Math.max(0, Math.round((Number(s?.durationSec || 0) || 0) / 60));
+                    r.timeMin += tmin;
+                    const darts = Math.max(0, Math.round(Number(s?.darts || 0) || 0));
+                    const hits = Math.max(0, Math.round(Number(s?.hits || 0) || 0));
+                    r.dartsThrown += darts;
+
+                    // keep the same attempts/hits definition as the default training aggregation:
+                    // attempts = dartsThrown, hits = hit-events (0.14.188)
+                    r.attempts += darts;
+                    r.hits += hits;
+                }
+
+                for (const r of Object.values(agg)) {
+                    r.hitPct = (Number(r.attempts) || 0) > 0 ? ((Number(r.hits) || 0) / (Number(r.attempts) || 1)) : null;
+                    r.avgDartsPerAttempt = (Number(r.attempts) || 0) > 0 ? ((Number(r.dartsThrown) || 0) / (Number(r.attempts) || 1)) : null;
+                }
+
+                segmentTypeBreakdown = agg;
+                if (trainingBreakdown?.SEGMENT_TRAINING) {
+                    trainingBreakdown.SEGMENT_TRAINING.segmentTypeBreakdown = segmentTypeBreakdown;
+                }
+            }
+        } catch { /* ignore */ }
+
+        // Checkout-related training summary: Random Checkout + Segment Training (Double) (0.14.189)
+        let checkoutRelatedTraining = null;
+        try {
+            const rc = trainingBreakdown?.RANDOM_CHECKOUT || null;
+            const sd = segmentTypeBreakdown?.DOUBLE || null;
+
+            const sumField = (a, b, k) => (Number(a?.[k] || 0) || 0) + (Number(b?.[k] || 0) || 0);
+            const timeMin = sumField(rc, sd, 'timeMin');
+            const sessions = sumField(rc, sd, 'sessions');
+            const dartsThrown = sumField(rc, sd, 'dartsThrown');
+            const attempts = sumField(rc, sd, 'attempts');
+            const hits = sumField(rc, sd, 'hits');
+
+            if (timeMin > 0 || sessions > 0 || dartsThrown > 0 || attempts > 0) {
+                checkoutRelatedTraining = {
+                    definition: 'Checkout-nahes Training = Random Checkout + Segment Training (Double).',
+                    timeMin,
+                    sessions,
+                    dartsThrown,
+                    attempts,
+                    hits,
+                    hitPct: (attempts > 0) ? (hits / attempts) : null,
+                    avgDartsPerAttempt: (attempts > 0) ? (dartsThrown / attempts) : null,
+                    sources: {
+                        randomCheckout: rc || null,
+                        segmentDouble: sd || null,
+                    }
+                };
+            }
+        } catch { /* ignore */ }
+
+        // --- Player perf (auto, non-bot) ---
+        const playerKey = adExt_chooseAutoPlayerKeyNonBot(x01All) || null;
+        let x01Perf = null;
+        try {
+            if (playerKey) {
+                const league = computeLeagueTable(x01All);
+                const row = (league || []).find(r => String(r?.key || "") === String(playerKey));
+
+                let s100 = 0, s140 = 0, s180 = 0;
+                let legsPlayed = 0;
+                let matchesPlayed = 0;
+
+                for (const m of x01All) {
+                    const idx = (m?.players || []).find(p => String(p?.key || "") === String(playerKey))?.index;
+                    if (!Number.isFinite(Number(idx))) continue;
+                    matchesPlayed += 1;
+                    legsPlayed += Number(m?.totalLegs || 0) || 0;
+
+                    const a100 = Array.isArray(m?.scores100PlusPerPlayer) ? m.scores100PlusPerPlayer : [];
+                    const a140 = Array.isArray(m?.scores140PlusPerPlayer) ? m.scores140PlusPerPlayer : [];
+                    const a180 = Array.isArray(m?.scores180PerPlayer) ? m.scores180PerPlayer : [];
+                    s100 += Number(a100?.[idx] || 0) || 0;
+                    s140 += Number(a140?.[idx] || 0) || 0;
+                    s180 += Number(a180?.[idx] || 0) || 0;
+                }
+
+                if (row) {
+                    const avg = (Number(row?.pointsPerDart) || 0) * 3;
+                    const f9 = Number(row?.first9Avg);
+                    const coAtt = Number(row?.coAtt) || 0;
+                    const coHit = Number(row?.coHit) || 0;
+                    const coPct = (coAtt > 0) ? (coHit / coAtt) : null;
+
+                    x01Perf = {
+                        playerKey,
+                        playerName: String(row?.name || ""),
+                        matches: Number(row?.matches) || matchesPlayed,
+                        wins: Number(row?.wins) || 0,
+                        losses: Number(row?.losses) || 0,
+                        legsFor: Number(row?.legsFor) || 0,
+                        legsAgainst: Number(row?.legsAgainst) || 0,
+                        avg: Number.isFinite(avg) ? Math.round(avg * 100) / 100 : null,
+                        first9Avg: Number.isFinite(f9) ? Math.round(f9 * 100) / 100 : null,
+                        checkout: {
+                            attempts: coAtt,
+                            hits: coHit,
+                            pct: (coPct == null) ? null : Math.round(coPct * 10000) / 100,
+                        },
+                        scoring: {
+                            visits100Plus: s100,
+                            visits140Plus: s140,
+                            visits180: s180,
+                        },
+                        meta: {
+                            legsPlayed,
+                        }
+                    };
+                }
+            }
+        } catch { /* ignore */ }
+
+        // --- Player perf split (vs Human / vs Bot) ---
+        let x01PerfSplit = null;
+        try {
+            if (playerKey) {
+                const humanMatches = x01All.filter(m => classifyX01MatchKind(m) !== 'BOT');
+                const botMatches = x01All.filter(m => classifyX01MatchKind(m) === 'BOT');
+
+                const buildPerf = (matches, scope) => {
+                    try {
+                        if (!matches || !matches.length) return null;
+                        const league = computeLeagueTable(matches);
+                        const row = (league || []).find(r => String(r?.key || '') === String(playerKey));
+                        if (!row) return null;
+
+                        let s100 = 0, s140 = 0, s180 = 0;
+                        let legsPlayed = 0;
+                        let matchesPlayed = 0;
+                        for (const m of matches) {
+                            const idx = (m?.players || []).find(p => String(p?.key || '') === String(playerKey))?.index;
+                            if (!Number.isFinite(Number(idx))) continue;
+                            matchesPlayed += 1;
+                            legsPlayed += Number(m?.totalLegs || 0) || 0;
+                            const a100 = Array.isArray(m?.scores100PlusPerPlayer) ? m.scores100PlusPerPlayer : [];
+                            const a140 = Array.isArray(m?.scores140PlusPerPlayer) ? m.scores140PlusPerPlayer : [];
+                            const a180 = Array.isArray(m?.scores180PerPlayer) ? m.scores180PerPlayer : [];
+                            s100 += Number(a100?.[idx] || 0) || 0;
+                            s140 += Number(a140?.[idx] || 0) || 0;
+                            s180 += Number(a180?.[idx] || 0) || 0;
+                        }
+
+                        const avg = (Number(row?.pointsPerDart) || 0) * 3;
+                        const f9 = Number(row?.first9Avg);
+                        const coAtt = Number(row?.coAtt) || 0;
+                        const coHit = Number(row?.coHit) || 0;
+                        const coPct = (coAtt > 0) ? (coHit / coAtt) : null;
+
+                        return {
+                            playerKey,
+                            playerName: String(row?.name || ''),
+                            matches: Number(row?.matches) || matchesPlayed,
+                            wins: Number(row?.wins) || 0,
+                            losses: Number(row?.losses) || 0,
+                            legsFor: Number(row?.legsFor) || 0,
+                            legsAgainst: Number(row?.legsAgainst) || 0,
+                            avg: Number.isFinite(avg) ? Math.round(avg * 100) / 100 : null,
+                            first9Avg: Number.isFinite(f9) ? Math.round(f9 * 100) / 100 : null,
+                            checkout: {
+                                attempts: coAtt,
+                                hits: coHit,
+                                pct: (coPct == null) ? null : Math.round(coPct * 10000) / 100,
+                            },
+                            scoring: {
+                                visits100Plus: s100,
+                                visits140Plus: s140,
+                                visits180: s180,
+                            },
+                            meta: { legsPlayed, scope }
+                        };
+                    } catch { return null; }
+                };
+
+                x01PerfSplit = {
+                    human: buildPerf(humanMatches, 'HUMAN'),
+                    bot: buildPerf(botMatches, 'BOT'),
+                };
+            }
+        } catch { /* ignore */ }
+
+        // --- Opponent strength (AVG/Checkout/Bot level) (0.14.189) ---
+        let x01OpponentPerf = null;
+        let x01OpponentPerfSplit = null;
+        try {
+            if (playerKey) {
+                const parseBotLevel = (name) => {
+                    try {
+                        const s = String(name || '').trim();
+                        if (!s) return null;
+                        const m = s.match(/bot\s*level\s*(\d+)/i);
+                        if (m && m[1]) {
+                            const n = Number(m[1]);
+                            return Number.isFinite(n) ? n : null;
+                        }
+                    } catch {}
+                    return null;
+                };
+
+                const buildOpp = (matches, scope) => {
+                    try {
+                        if (!matches || !matches.length) return null;
+                        let oppDarts = 0;
+                        let oppScore = 0;
+                        let oppCoAtt = 0;
+                        let oppCoHit = 0;
+                        let oppPlayers = 0;
+                        const botLevels = [];
+
+                        for (const m of matches) {
+                            const my = (m?.players || []).find(p => String(p?.key || '') === String(playerKey));
+                            const myIdx = Number(my?.index);
+                            if (!Number.isFinite(myIdx)) continue;
+
+                            const psArr = Array.isArray(m?.perPlayerStats) ? m.perPlayerStats : [];
+                            for (const p of (m?.players || [])) {
+                                const pi = Number(p?.index);
+                                if (!Number.isFinite(pi) || pi === myIdx) continue;
+                                oppPlayers += 1;
+
+                                const st = psArr?.[pi] || null;
+                                const darts = Math.max(0, Number(st?.dartsThrown || st?.darts || 0) || 0);
+                                const score = Math.max(0, Number(st?.score || st?.points || 0) || 0);
+                                oppDarts += darts;
+                                oppScore += score;
+
+                                oppCoAtt += Math.max(0, Number(st?.checkouts || st?.checkoutAttempts || 0) || 0);
+                                oppCoHit += Math.max(0, Number(st?.checkoutsHit || st?.checkoutHits || 0) || 0);
+
+                                const lvl = parseBotLevel(p?.name || st?.name || '');
+                                if (lvl != null) botLevels.push(lvl);
+                            }
+                        }
+
+                        const avg = (oppDarts > 0) ? ((oppScore * 3) / oppDarts) : null;
+                        const coPct = (oppCoAtt > 0) ? (oppCoHit / oppCoAtt) : null;
+
+                        let botLevel = null;
+                        if (botLevels.length) {
+                            const s = botLevels.reduce((a, b) => a + b, 0);
+                            botLevel = {
+                                avg: Math.round((s / botLevels.length) * 100) / 100,
+                                min: Math.min(...botLevels),
+                                max: Math.max(...botLevels),
+                                count: botLevels.length,
+                            };
+                        }
+
+                        return {
+                            playerKey,
+                            scope,
+                            opponents: oppPlayers,
+                            avg: Number.isFinite(avg) ? Math.round(avg * 100) / 100 : null,
+                            checkout: {
+                                attempts: Math.max(0, Math.round(oppCoAtt)),
+                                hits: Math.max(0, Math.round(oppCoHit)),
+                                pct: (coPct == null) ? null : Math.round(coPct * 10000) / 100,
+                            },
+                            botLevel,
+                            meta: { oppDarts: Math.max(0, Math.round(oppDarts)), oppScore: Math.max(0, Math.round(oppScore)) },
+                        };
+                    } catch { return null; }
+                };
+
+                x01OpponentPerf = buildOpp(x01All, 'ALL');
+
+                const humanMatches2 = x01All.filter(m => classifyX01MatchKind(m) !== 'BOT');
+                const botMatches2 = x01All.filter(m => classifyX01MatchKind(m) === 'BOT');
+
+                x01OpponentPerfSplit = {
+                    human: buildOpp(humanMatches2, 'HUMAN'),
+                    bot: buildOpp(botMatches2, 'BOT'),
+                };
+            }
+        } catch { /* ignore */ }
+
+
+
+        // --- Derived X01 signals: Busts / Restscore profile / Checkout routes (0.14.190) ---
+        let x01DerivedSignals = null;
+        try {
+            if (playerKey) {
+                let visits = 0;
+                let busts = 0;
+                let bustPoints = 0;
+
+                let le40 = 0, le80 = 0, le120 = 0, le170 = 0, gt170 = 0;
+                let bogey = 0;
+                let oneDart = 0;
+
+                let coOpp = 0;
+                let coHit = 0;
+
+                const firstDart = new Map();
+                const routes = new Map();
+                let startScore = null;
+
+                for (const m of (x01All || [])) {
+                    const idx = (m?.players || []).find(p => String(p?.key || '') === String(playerKey))?.index;
+                    if (!Number.isFinite(Number(idx))) continue;
+
+                    const dx = m?.x01Derived || null;
+                    if (!dx) continue;
+
+                    if (startScore == null && dx?.startScore != null && Number.isFinite(Number(dx.startScore))) {
+                        startScore = Math.round(Number(dx.startScore));
+                    }
+
+                    visits += Math.max(0, Number(dx?.visitsPerPlayer?.[idx] || 0) || 0);
+                    busts += Math.max(0, Number(dx?.bustsPerPlayer?.[idx] || 0) || 0);
+                    bustPoints += Math.max(0, Number(dx?.bustPointsPerPlayer?.[idx] || 0) || 0);
+
+                    const b = dx?.leaveBucketsPerPlayer?.[idx];
+                    if (b && typeof b === 'object') {
+                        le40 += Math.max(0, Number(b?.le40 || 0) || 0);
+                        le80 += Math.max(0, Number(b?.le80 || 0) || 0);
+                        le120 += Math.max(0, Number(b?.le120 || 0) || 0);
+                        le170 += Math.max(0, Number(b?.le170 || 0) || 0);
+                        gt170 += Math.max(0, Number(b?.gt170 || 0) || 0);
+                    }
+                    bogey += Math.max(0, Number(dx?.bogeyLeavesPerPlayer?.[idx] || 0) || 0);
+                    oneDart += Math.max(0, Number(dx?.oneDartLeavesPerPlayer?.[idx] || 0) || 0);
+
+                    coOpp += Math.max(0, Number(dx?.checkoutOppsPerPlayer?.[idx] || 0) || 0);
+                    coHit += Math.max(0, Number(dx?.checkoutHitsPerPlayer?.[idx] || 0) || 0);
+
+                    const fdObj = dx?.firstDartCountsPerPlayer?.[idx];
+                    if (fdObj && typeof fdObj === 'object') {
+                        for (const [k, v] of Object.entries(fdObj)) {
+                            const kk = String(k || '').trim();
+                            if (!kk) continue;
+                            const vv = Math.max(0, Number(v || 0) || 0);
+                            if (!vv) continue;
+                            firstDart.set(kk, (firstDart.get(kk) || 0) + vv);
+                        }
+                    }
+
+                    const rtArr = dx?.topRoutesPerPlayer?.[idx];
+                    if (Array.isArray(rtArr)) {
+                        for (const it of rtArr) {
+                            const route = String(it?.route || '').trim();
+                            if (!route) continue;
+                            const cur = routes.get(route) || { count: 0, hits: 0, busts: 0 };
+                            cur.count += Math.max(0, Number(it?.count || 0) || 0);
+                            cur.hits += Math.max(0, Number(it?.hits || 0) || 0);
+                            cur.busts += Math.max(0, Number(it?.busts || 0) || 0);
+                            routes.set(route, cur);
+                        }
+                    }
+                }
+
+                const leavesTotal = le40 + le80 + le120 + le170 + gt170;
+                const finishableLeaves = le40 + le80 + le120 + le170;
+                const bustPct = (visits > 0) ? (busts / visits) : null;
+                const coPct = (coOpp > 0) ? (coHit / coOpp) : null;
+
+                const firstDartTop = Array.from(firstDart.entries())
+                    .map(([k, v]) => ({ key: k, count: Math.max(0, Math.round(Number(v || 0) || 0)) }))
+                    .sort((a, b) => b.count - a.count)
+                    .slice(0, 10);
+
+                const topRoutes = Array.from(routes.entries())
+                    .map(([route, st]) => ({
+                        route,
+                        count: Math.max(0, Math.round(Number(st?.count || 0) || 0)),
+                        hits: Math.max(0, Math.round(Number(st?.hits || 0) || 0)),
+                        busts: Math.max(0, Math.round(Number(st?.busts || 0) || 0)),
+                    }))
+                    .sort((a, b) => (b.count - a.count) || (b.hits - a.hits))
+                    .slice(0, 12);
+
+                if (visits > 0 || leavesTotal > 0 || coOpp > 0) {
+                    x01DerivedSignals = {
+                        playerKey,
+                        startScore,
+                        bust: {
+                            visits: Math.max(0, Math.round(visits)),
+                            busts: Math.max(0, Math.round(busts)),
+                            bustPct: (bustPct == null) ? null : Math.round((bustPct * 100) * 100) / 100,
+                            bustPoints: Math.max(0, Math.round(bustPoints)),
+                            bustPointsPerBust: (busts > 0) ? Math.round((bustPoints / busts) * 100) / 100 : null,
+                        },
+                        restScore: {
+                            leavesTotal: Math.max(0, Math.round(leavesTotal)),
+                            buckets: { le40, le80, le120, le170, gt170 },
+                            finishableLeaves: Math.max(0, Math.round(finishableLeaves)),
+                            finishableLeavesPct: (leavesTotal > 0) ? Math.round(((finishableLeaves / leavesTotal) * 100) * 100) / 100 : null,
+                            bogeyLeaves: Math.max(0, Math.round(bogey)),
+                            bogeyLeavesPct: (leavesTotal > 0) ? Math.round(((bogey / leavesTotal) * 100) * 100) / 100 : null,
+                            oneDartLeaves: Math.max(0, Math.round(oneDart)),
+                            oneDartLeavesPct: (leavesTotal > 0) ? Math.round(((oneDart / leavesTotal) * 100) * 100) / 100 : null,
+                        },
+                        routes: {
+                            checkoutOpps: Math.max(0, Math.round(coOpp)),
+                            checkoutHits: Math.max(0, Math.round(coHit)),
+                            checkoutPct: (coPct == null) ? null : Math.round((coPct * 100) * 100) / 100,
+                            firstDartTop,
+                            topRoutes,
+                        }
+                    };
+                }
+            }
+        } catch { /* ignore */ }
+        const periodObj = {
+            type: pType,
+            label: label || (pType === 'ALL' ? 'Alles' : '—'),
+            weekKeyAnchor: weekKeyAnchor || null,
+            startDayKey: (pType === 'ALL') ? null : (startKey || null),
+            endDayKey: (pType === 'ALL') ? null : (endKey || null),
+        };
+
+        const balanceDef = {
+            playReference: outAssumed ? 'X01 (Out-Mode nicht erkannt → alle X01 im Zeitraum verwendet)' : 'X01 Double Out',
+            split: ['playHuman', 'playBot'],
+            trainingReference: 'all non X01-DoubleOut',
+            metricPriority: ['timeMin', 'sessions', 'legs'],
+        };
+
+        // Data availability flags to help the LLM avoid guessing and reduce "Datenlücken" chatter.
+        const dataAvailability = {
+            hasBustData: !!(x01DerivedSignals && (Number(x01DerivedSignals?.bust?.visits) || 0) > 0),
+            hasRestScoreData: !!(x01DerivedSignals && (Number(x01DerivedSignals?.restScore?.leavesTotal) || 0) > 0),
+            hasRouteData: !!(x01DerivedSignals && (Number(x01DerivedSignals?.routes?.checkoutOpps) || 0) > 0),
+            hasBotHumanSplit: !!(x01PerfSplit && (x01PerfSplit.human || x01PerfSplit.bot)),
+            hasTrainingOutcome: ((Number(trainingAttempts) || 0) > 0 || (Number(trainingDartsThrown) || 0) > 0),
+            hasCheckoutTrainingSignal: !!(checkoutRelatedTraining && ((Number(checkoutRelatedTraining?.timeMin) || 0) > 0 || (Number(checkoutRelatedTraining?.sessions) || 0) > 0)),
+            hasOpponentStrengthData: !!(x01OpponentPerf && (x01OpponentPerf.avg != null || (Number(x01OpponentPerf?.checkout?.attempts) || 0) > 0 || x01OpponentPerf.botLevel)),
+            notes: [],
+        };
+        if (outAssumed) dataAvailability.notes.push('outModeAssumed');
+        if (!x01Perf) dataAvailability.notes.push('noX01Performance');
+
+        const lite = {
+            schema: 'ad-ext-lite-v2',
+            meta: {
+                generatedAt: (new Date()).toISOString(),
+                source: 'MatchInsights userscript',
+                version: SCRIPT_VERSION,
+                trainingNames: {
+                    // Canonical activity names: MUST match "Aktivität hinzufügen" in Trainingsplan
+                    activities: trainingActivityNames,
+                    // Labels used in breakdowns (can include sub-modes like Segment DOUBLE)
+                    breakdownLabels: trainingNameShort,
+                    // Backwards-compat: coach labels (kept, but aligned with template names)
+                    coach: trainingNameCoach,
+                    note: 'Nutze meta.trainingActivityTemplates[].name (oder meta.trainingNames.activities) exakt als Trainingsnamen im 7-Tage-Plan (copy/paste). Wichtiger: Segment-Fokus (DOUBLE/SINGLE/TRIPLE) NICHT in den Namen schreiben, sondern in die Setup-Zeilen (z.B. "Modus: DOUBLE").',
+                },
+                trainingActivityTemplates: trainingActivityTemplates || undefined,
+            },
+            period: periodObj,
+            balanceDefinition: balanceDef,
+            dataAvailability,
+            balance: {
+                playHuman,
+                playBot,
+                training: {
+                    timeMin: trainingTimeMin,
+                    sessions: trainingSessions,
+                    dartsThrown: trainingDartsThrown,
+                    attempts: trainingAttempts,
+                    hits: trainingHits,
+                    hitPct: (Number(trainingAttempts) || 0) > 0 ? ((Number(trainingHits) || 0) / (Number(trainingAttempts) || 1)) : null,
+                    avgDartsPerAttempt: (Number(trainingAttempts) || 0) > 0 ? ((Number(trainingDartsThrown) || 0) / (Number(trainingAttempts) || 1)) : null,
+                    legs: null,
+                    breakdown: trainingBreakdown,
+                    checkoutRelated: checkoutRelatedTraining,
+                }
+            },
+            x01Performance: x01Perf,
+            x01PerformanceSplit: x01PerfSplit,
+            x01OpponentPerformance: x01OpponentPerf,
+            x01OpponentPerformanceSplit: x01OpponentPerfSplit,
+        };
+
+        return lite;
+    }
+
+
+    function adExt_buildMarkdownPrompt(liteJson, templateKey) {
+        const tpl = String(templateKey || "LONG").toUpperCase();
+        const jsonStr = JSON.stringify(liteJson, null, 2);
+
+        const header = `# Autodarts Analyse (Match + Training)
+
+` +
+`Du bist Darts-Coach & Performance-Analyst. Analysiere die Daten objektiv und belege Aussagen immer mit Zahlen aus dem JSON.
+
+` +
+`## Ziele
+` +
+`1) Leistung & Schwächen erkennen (Scoring, Checkout, Konstanz, Fehler)
+` +
+`2) Konkrete Trainingsaufgaben ableiten (nächste 7 Tage)
+` +
+`3) Verhältnis Spielen vs Training bewerten (X01 Double-Out als Spiel-Referenz; Bot vs Human getrennt)
+
+` +
+`## Kontext
+` +
+`- Zeitraum: **${liteJson?.period?.label || "—"}**
+` +
+`- Spiel-Referenz: **X01 Double-Out** (Split: **vs Human** / **vs Bot**)
+- Gegnerstärke: nutze **x01OpponentPerformance** / **x01OpponentPerformanceSplit** (Opponent AVG/Checkout/Bot-Level)
+` +
+`- Training: alle Trainingsmodi **ohne** X01
+
+` +
+`## Datenlage (wichtig)
+` +
+`Nutze im JSON das Objekt **dataAvailability** und halte dich strikt daran:
+` +
+`- Wenn **hasBustData/hasRestScoreData/hasRouteData = true**, nutze **x01DerivedSignals** (Busts/Restscore/Checkout-Routen) für direkte Aussagen.
+- Wenn **hasBustData/hasRestScoreData/hasRouteData = false**, dann mache keine direkten Aussagen zu Busts/Restscore/Checkout-Routen. Nutze stattdessen Proxy-Indikatoren aus den vorhandenen Feldern (z.B. Checkout%, AVG, First9, 100+/140+/180).
+` +
+`- Wenn **hasBotHumanSplit = false**, dann bewerte das Verhältnis Spielen/Training nur gesamt und erwähne den fehlenden Split kurz in Abschnitt 6.
+` +
+`- Wenn **hasTrainingOutcome = true**, bewerte Training auch über **Volumen/Output/Effizienz** (dartsThrown, attempts, hits, hitPct, avgDartsPerAttempt).
+- Für Checkout-Training nutze **balance.training.checkoutRelated** (Random Checkout + Segment Training **Double**).
+- Trainingsnamen: Verwende **meta.trainingActivityTemplates[].name** (oder **meta.trainingNames.activities**) im Trainingsplan (Abschnitt 4) **wortwörtlich** als Übungsnamen (copy/paste wie im "Aktivität hinzufügen"). Segment-Fokus (DOUBLE/SINGLE/TRIPLE) gehört in die Setup-Zeilen, nicht in den Namen.
+- Wenn **hasTrainingOutcome = false**, bewerte den Trainingsmix nach Zeitanteilen und nenne konkrete Messgrößen, die man künftig tracken sollte.
+` +
+`Abschnitt 6 (Warnungen/Datenlücken) bitte nur kurz und nur die wichtigsten Punkte.
+
+`;
+
+        const shortRules = (tpl === "SHORT")
+            ? `**Kurzmodus:** Halte die Antworten sehr kompakt.
+- Max. 5 Bulletpoints in Abschnitt 2
+- Genau 3 Insights in Abschnitt 3
+- Trainingsplan in Abschnitt 4: max. 20–30 Minuten/Tag oder klare Legs-Angaben
+- Abschnitt 5: 3 Sätze + 1 Empfehlung
+
+`
+            : ``;
+
+        const body = `## Output (bitte exakt so strukturieren)
+` +
+`### 1) Kurzfazit (3 Sätze)
+` +
+`- Was lief gut?
+- Was limitiert aktuell am meisten?
+- Größter Hebel für die nächste Woche?
+
+` +
+`### 2) Leistung im Überblick (Bulletpoints)
+` +
+`- Scoring
+- Checkout/Doubles
+- Konstanz
+- Fehler/Risiken (nur wenn Daten vorhanden; sonst Proxy-Indikatoren)
+
+` +
+`### 3) 5 wichtigste Insights (mit Zahlen)
+` +
+`- Insight → Beleg (Zahl) → Bedeutung
+
+` +
+`### 4) Trainingsempfehlung (7 Tage, sehr konkret)
+` +
+`- 3 Schwerpunkte (priorisiert)
+- pro Schwerpunkt: 2 Übungen (Dauer/Legs, Zielmetric)
+- Erfolgskriterien (konkrete Zielwerte)
+
+` +
+`### 5) Spiele vs Training (Balance)
+` +
+`- Spiel-Referenz: X01 Double-Out
+- getrennt: vs Human / vs Bot
+- Bewertung + Empfehlung (wie viel Training vs Spiel, worauf fokussieren)
+
+` +
+`### 6) Warnungen / Datenlücken
+` +
+`- Was fehlt/unklar ist und welche Annahme du gemacht hast
+
+`;
+
+        let out = header + shortRules + body;
+        if (tpl === "SHORT") {
+            out = out.replace("### 3) 5 wichtigste Insights", "### 3) 3 wichtigste Insights");
+        }
+
+        return out +
+`---
+
+## Daten (Lite JSON)
+
+\`\`\`json
+${jsonStr}
+\`\`\`
+`;
+    }
+
+    function wireTrainingChatGptCopy(panel) {
+        if (!panel) return;
+
+        const btnCopy = panel.querySelector("#ad-ext-ai-copy");
+        const btnOpen = panel.querySelector("#ad-ext-ai-open");
+        const status = panel.querySelector("#ad-ext-ai-status");
+
+        const selRange = panel.querySelector('#ad-ext-ai-range');
+        const selTpl = panel.querySelector('#ad-ext-ai-template');
+        const customWrap = panel.querySelector('#ad-ext-ai-range-custom');
+        const inpFrom = panel.querySelector('#ad-ext-ai-from');
+        const inpTo = panel.querySelector('#ad-ext-ai-to');
+
+        if (btnCopy && btnCopy.dataset.wired === "1") return;
+        if (!btnCopy) return;
+
+        btnCopy.dataset.wired = "1";
+
+        const LS_RANGE = 'ad_ext_ai_range_mode';
+        const LS_TPL = 'ad_ext_ai_prompt_tpl';
+        const LS_FROM = 'ad_ext_ai_range_from';
+        const LS_TO = 'ad_ext_ai_range_to';
+
+        let _aiStatusT = null;
+        const setStatus = (msg, showOpen = false, autoHideMs = 0) => {
+            try { if (_aiStatusT) clearTimeout(_aiStatusT); } catch {}
+            try {
+                if (status) {
+                    status.textContent = String(msg || "");
+                    status.style.display = msg ? "" : "none";
+                }
+            } catch {}
+            try {
+                if (btnOpen) btnOpen.style.display = showOpen ? "" : "none";
+            } catch {}
+            if (autoHideMs && msg) {
+                _aiStatusT = setTimeout(() => {
+                    try { if (status) status.style.display = "none"; } catch {}
+                }, autoHideMs);
+            }
+        };
+
+        const getSelectedWeekKey = () => {
+            const sel = panel.querySelector("#ad-ext-plan-week-select");
+            const v = String(sel?.value || "").trim();
+            if (v) return v;
+            const monday = startOfWeekMonday(new Date());
+            return monday ? dayKeyFromLocalDate(monday) : "";
+        };
+
+        const ensureCustomDefaults = () => {
+            try {
+                if (!inpFrom || !inpTo) return;
+                if (inpFrom.value && inpTo.value) return;
+                const wk = weekRangeFromWeekKey(getSelectedWeekKey());
+                if (!wk) return;
+                inpFrom.value = wk.startKey;
+                inpTo.value = wk.endKey;
+            } catch {}
+        };
+
+        const syncCustomVisibility = () => {
+            try {
+                const mode = String(selRange?.value || 'WEEK').toUpperCase();
+                if (customWrap) customWrap.style.display = (mode === 'CUSTOM') ? 'inline-flex' : 'none';
+                if (mode === 'CUSTOM') ensureCustomDefaults();
+            } catch {}
+        };
+
+        // init UI state
+        try {
+            if (selRange) {
+                const saved = String(localStorage.getItem(LS_RANGE) || 'WEEK').toUpperCase();
+                const allowed = new Set(['WEEK','W4','W8','W12','W16','CUSTOM','ALL']);
+                selRange.value = allowed.has(saved) ? saved : 'WEEK';
+            }
+            if (selTpl) {
+                const saved = String(localStorage.getItem(LS_TPL) || 'LONG').toUpperCase();
+                const allowed = new Set(['LONG','SHORT']);
+                selTpl.value = allowed.has(saved) ? saved : 'LONG';
+            }
+            if (inpFrom) inpFrom.value = String(localStorage.getItem(LS_FROM) || inpFrom.value || '');
+            if (inpTo) inpTo.value = String(localStorage.getItem(LS_TO) || inpTo.value || '');
+        } catch {}
+
+        syncCustomVisibility();
+
+        if (selRange && !selRange.dataset.wired) {
+            selRange.dataset.wired = '1';
+            selRange.addEventListener('change', () => {
+                try { localStorage.setItem(LS_RANGE, String(selRange.value || 'WEEK')); } catch {}
+                syncCustomVisibility();
+            });
+        }
+
+        if (selTpl && !selTpl.dataset.wired) {
+            selTpl.dataset.wired = '1';
+            selTpl.addEventListener('change', () => {
+                try { localStorage.setItem(LS_TPL, String(selTpl.value || 'LONG')); } catch {}
+            });
+        }
+
+        if (inpFrom && !inpFrom.dataset.wired) {
+            inpFrom.dataset.wired = '1';
+            inpFrom.addEventListener('change', () => {
+                try { localStorage.setItem(LS_FROM, String(inpFrom.value || '')); } catch {}
+            });
+        }
+        if (inpTo && !inpTo.dataset.wired) {
+            inpTo.dataset.wired = '1';
+            inpTo.addEventListener('change', () => {
+                try { localStorage.setItem(LS_TO, String(inpTo.value || '')); } catch {}
+            });
+        }
+
+        const buildPeriodFromUi = () => {
+            const weekKey = getSelectedWeekKey();
+            const wk = weekRangeFromWeekKey(weekKey);
+            const mode = String(selRange?.value || 'WEEK').toUpperCase();
+
+            if (mode === 'ALL') {
+                return { type: 'ALL', label: 'Alles', startDayKey: '', endDayKey: '', weekKeyAnchor: weekKey };
+            }
+
+            if (!wk) {
+                return { type: 'WEEK', label: String(weekKey || ''), startDayKey: weekKey, endDayKey: weekKey, weekKeyAnchor: weekKey };
+            }
+
+            if (mode === 'CUSTOM') {
+                const from = String(inpFrom?.value || '').trim();
+                const to = String(inpTo?.value || '').trim();
+                if (!/^\d{4}-\d{2}-\d{2}$/.test(from) || !/^\d{4}-\d{2}-\d{2}$/.test(to)) {
+                    throw new Error('invalid custom range');
+                }
+                const sKey = (from <= to) ? from : to;
+                const eKey = (from <= to) ? to : from;
+                const lab = `Zeitraum ${dayKeyToGerman(sKey)}–${dayKeyToGerman(eKey)}`;
+                return { type: 'CUSTOM', label: lab, startDayKey: sKey, endDayKey: eKey, weekKeyAnchor: weekKey };
+            }
+
+            if (mode === 'W4' || mode === 'W8' || mode === 'W12' || mode === 'W16') {
+                const weeks = (mode === 'W16') ? 16 : (mode === 'W12') ? 12 : (mode === 'W8') ? 8 : 4;
+                const deltaDays = -7 * (weeks - 1);
+                const sDate = addDaysLocal(wk.start, deltaDays);
+                const sKey = dayKeyFromLocalDate(sDate);
+                const eKey = wk.endKey;
+                const lab = `Letzte ${weeks} Wochen (bis ${adExt_fmtWeekLabel(weekKey)})`;
+                return { type: mode, label: lab, startDayKey: sKey, endDayKey: eKey, weekKeyAnchor: weekKey };
+            }
+
+            // default: WEEK
+            return { type: 'WEEK', label: adExt_fmtWeekLabel(weekKey), startDayKey: wk.startKey, endDayKey: wk.endKey, weekKeyAnchor: weekKey };
+        };
+
+        btnCopy.addEventListener("click", async () => {
+            try {
+                if (!cache?.loaded) {
+                    setStatus("Daten laden…", false, 2500);
+                    return;
+                }
+
+                const period = buildPeriodFromUi();
+                const tpl = String(selTpl?.value || 'LONG').toUpperCase();
+
+                const lite = adExt_buildLiteJsonForTrainingPeriod(period);
+                const md = adExt_buildMarkdownPrompt(lite, tpl);
+
+                await adExt_copyToClipboard(md);
+
+                btnCopy.dataset.lastCopied = String(Date.now());
+                setStatus("Kopiert ✅", true, 3500);
+            } catch (e) {
+                console.warn("[AD Ext] ChatGPT copy failed", e);
+                if (String(e?.message || '').includes('invalid custom range')) {
+                    setStatus("Zeitraum ungültig", false, 3500);
+                } else {
+                    setStatus("Kopieren fehlgeschlagen", false, 3500);
+                }
+            }
+        });
+
+        if (btnOpen) {
+            btnOpen.addEventListener("click", () => {
+                try {
+                    if (typeof GM_openInTab === "function") {
+                        GM_openInTab("https://chatgpt.com/", { active: true, insert: true, setParent: true });
+                    } else {
+                        window.open("https://chatgpt.com/", "_blank");
+                    }
+                } catch { window.open("https://chatgpt.com/", "_blank"); }
+            });
+        }
+    }
+
+    function wireTrainingChatGptMenu(panel) {
+        try {
+            if (!panel) return;
+            const menuBtn = panel.querySelector("#adAiMenuBtn");
+            const menuDd = panel.querySelector("#adAiMenuDropdown");
+            const menuWrap = panel.querySelector("#adAiMenu");
+            if (!menuBtn || !menuDd || !menuWrap) return;
+
+            try { menuDd.hidden = true; } catch {}
+            try { menuBtn.setAttribute("aria-expanded", "false"); } catch {}
+
+            if (menuBtn.dataset.adExtAiMenuWired !== "1") {
+                menuBtn.dataset.adExtAiMenuWired = "1";
+                menuBtn.addEventListener("click", (ev) => {
+                    try {
+                        ev.preventDefault();
+                        ev.stopPropagation();
+                        const open = !menuDd.hidden;
+                        menuDd.hidden = open;
+                        try { menuBtn.setAttribute("aria-expanded", open ? "false" : "true"); } catch {}
+                    } catch {}
+                });
+            }
+
+            if (!window.__adExtAiMenuGlobalWired) {
+                window.__adExtAiMenuGlobalWired = true;
+
+                document.addEventListener("click", (ev) => {
+                    try {
+                        const dd = document.querySelector("#adAiMenuDropdown");
+                        const btn = document.querySelector("#adAiMenuBtn");
+                        const wrap = document.querySelector("#adAiMenu");
+                        if (!dd || !btn || !wrap) return;
+                        if (dd.hidden) return;
+                        if (wrap.contains(ev.target)) return;
+                        dd.hidden = true;
+                        try { btn.setAttribute("aria-expanded", "false"); } catch {}
+                    } catch {}
+                }, true);
+
+                document.addEventListener("keydown", (ev) => {
+                    try {
+                        if (ev.key !== "Escape") return;
+                        const dd = document.querySelector("#adAiMenuDropdown");
+                        const btn = document.querySelector("#adAiMenuBtn");
+                        if (!dd || dd.hidden) return;
+                        dd.hidden = true;
+                        try { btn?.setAttribute("aria-expanded", "false"); } catch {}
+                    } catch {}
+                }, true);
+            }
+        } catch {}
+    }
 
     // ---------------------------------------------------------------------------
     // Training Tracker Adapter (Step 3 – Trainingsplan Sidebar)
@@ -14062,6 +16500,18 @@ function renderMasterHallOfFame(panel) {
         try { renderX01(panel); } catch (e) { console.warn("[AD Ext] renderX01 failed:", e); }
         try { renderTimeTab(panel); } catch (e) { console.warn("[AD Ext] renderTimeTab failed:", e); }
         try { renderTrainingTab(panel); } catch (e) { console.warn("[AD Ext] renderTrainingTab failed:", e); }
+
+        // 0.14.174: Trainingsplan-Zeitschätzung sofort nach Daten-Load aktualisieren (ohne erneuten Tab/Toggle-Klick)
+        try {
+            const layout = panel.querySelector('.ad-train-layout');
+            const tv = String(layout?.dataset?.trainView || localStorage.getItem(AD_EXT_TRAIN_VIEW_LS_KEY) || '').toUpperCase().trim();
+            if (tv === 'PLAN' && typeof cache._planSidebarRerender === 'function') {
+                setTimeout(() => {
+                    try { cache._planSidebarRerender(); } catch {}
+                }, 0);
+            }
+        } catch {}
+
         try { renderMasterHallOfFame(panel); } catch (e) { console.warn("[AD Ext] renderMasterHallOfFame failed:", e); }
 
     }
@@ -14070,7 +16520,37 @@ function renderMasterHallOfFame(panel) {
     // Wire Filters
     // =========================
 
+    function applyTimeTrackerColumnFocus(panel, selectedKey) {
+        const sel = String(selectedKey || "").toUpperCase().trim();
+        const els = panel?.querySelectorAll?.('[data-tt-col]') || [];
+        for (const el of els) {
+            const col = String(el.getAttribute('data-tt-col') || '').toUpperCase().trim();
+            const dim = !!sel && col && col !== 'TOTAL' && col !== sel;
+            el.classList.toggle('ad-ext-tt-col--dim', dim);
+        }
+    }
+
+    function applyTimeTrackerDonutFocus(donutSvg, donutLayout, selectedKey) {
+        const sel = String(selectedKey || "").toUpperCase().trim();
+        if (!donutSvg || String(donutSvg.tagName || "").toLowerCase() !== "svg") return;
+        const paths = donutSvg.querySelectorAll('path[data-ad-slice]');
+        for (const p of paths) {
+            const idx = Number(p.getAttribute('data-ad-slice'));
+            const slice = donutLayout?.slices?.find?.(s => Number(s.index) === idx);
+            const key = String(slice?.extra?.key || "").toUpperCase().trim();
+            if (sel && key && key !== sel) {
+                p.style.opacity = "0.28";
+            } else {
+                p.style.opacity = "1";
+            }
+        }
+    }
+
     function wireTimeFilters(panel) {
+        if (!panel) return;
+        if (panel.dataset.timeFiltersWired === "1") return;
+        panel.dataset.timeFiltersWired = "1";
+
         const selMode = panel.querySelector("#ad-ext-time-mode");
         const selRange = panel.querySelector("#ad-ext-time-range");
 
@@ -14078,6 +16558,7 @@ function renderMasterHallOfFame(panel) {
             selMode.addEventListener("change", () => {
                 cache.filtersTime.mode = selMode.value || "ALL";
                 localStorage.setItem("ad_ext_time_mode", cache.filtersTime.mode);
+                try { cache.filtersTime.selectedWeekKey = ""; cache.filtersTime.selectedKey = ""; } catch {}
                 renderTimeTab(panel);
             });
         }
@@ -14086,12 +16567,17 @@ function renderMasterHallOfFame(panel) {
             selRange.addEventListener("change", () => {
                 cache.filtersTime.range = selRange.value || "W12";
                 localStorage.setItem("ad_ext_time_range", cache.filtersTime.range);
+                try { cache.filtersTime.selectedWeekKey = ""; cache.filtersTime.selectedKey = ""; } catch {}
                 renderTimeTab(panel);
             });
         }
     }
 
     function wireTimeInteractions(panel) {
+
+        if (!panel) return;
+        if (panel.dataset.timeInteractionsWired === "1") return;
+        panel.dataset.timeInteractionsWired = "1";
         const chart = panel.querySelector("#ad-ext-time-chart");
         const donut = panel.querySelector("#ad-ext-time-donut");
 
@@ -14147,21 +16633,46 @@ function renderMasterHallOfFame(panel) {
                 tooltipShow(ev, html);
             });
             chart.addEventListener("mouseleave", tooltipHide);
+
+            chart.addEventListener("click", (ev) => {
+                const layout = cache._time_layouts?.weekChart;
+                if (!layout) return;
+
+                const pt = canvasPoint(ev, chart);
+                const seg = hitTestTimeStackSegments(layout, pt);
+                if (seg && seg.weekKey) {
+                    const wk = String(seg.weekKey || "");
+                    const key = String(seg.key || "").toUpperCase().trim();
+                    const same = (String(cache.filtersTime?.selectedWeekKey || "") === wk) && (String(cache.filtersTime?.selectedKey || "").toUpperCase().trim() === key);
+                    cache.filtersTime.selectedWeekKey = same ? "" : wk;
+                    cache.filtersTime.selectedKey = same ? "" : key;
+                    renderTimeTab(panel);
+                    return;
+                }
+
+                const b = hitTestBars(layout, pt);
+                if (b && b.weekKey) {
+                    const wk = String(b.weekKey || "");
+                    const same = String(cache.filtersTime?.selectedWeekKey || "") === wk;
+                    cache.filtersTime.selectedWeekKey = same ? "" : wk;
+                    renderTimeTab(panel);
+                }
+            });
         }
 
         if (donut) {
             const isSvg = String(donut.tagName || "").toLowerCase() === "svg";
 
             if (isSvg) {
-                // SVG: Event-Delegation über die <path data-ad-slice="..."> Elemente
+                // SVG: Event-Delegation über <path data-ad-slice>
                 donut.addEventListener("mousemove", (ev) => {
                     const layout = cache._time_layouts?.donut;
                     if (!layout) return tooltipHide();
 
-                    const p = ev.target?.closest?.("path[data-ad-slice]");
+                    const p = ev.target?.closest?.('path[data-ad-slice]');
                     if (!p) return tooltipHide();
 
-                    const idx = Number(p.getAttribute("data-ad-slice"));
+                    const idx = Number(p.getAttribute('data-ad-slice'));
                     const hit = layout.slices?.find(s => Number(s.index) === idx);
                     if (!hit) return tooltipHide();
 
@@ -14171,6 +16682,23 @@ function renderMasterHallOfFame(panel) {
                     tooltipShow(ev, `<div style="font-weight:650">${label}</div><div>${value} · ${pct}%</div>`);
                 });
                 donut.addEventListener("mouseleave", tooltipHide);
+
+                donut.addEventListener("click", (ev) => {
+                    const layout = cache._time_layouts?.donut;
+                    if (!layout) return;
+
+                    const p = ev.target?.closest?.('path[data-ad-slice]');
+                    if (!p) return;
+
+                    const idx = Number(p.getAttribute('data-ad-slice'));
+                    const hit = layout.slices?.find(s => Number(s.index) === idx);
+                    const key = String(hit?.extra?.key || "").toUpperCase().trim();
+                    if (!key) return;
+
+                    const same = String(cache.filtersTime?.selectedKey || "").toUpperCase().trim() === key;
+                    cache.filtersTime.selectedKey = same ? "" : key;
+                    renderTimeTab(panel);
+                });
             } else {
                 // Canvas (Fallback)
                 donut.addEventListener("mousemove", (ev) => {
@@ -14187,8 +16715,146 @@ function renderMasterHallOfFame(panel) {
                     tooltipShow(ev, `<div style="font-weight:650">${label}</div><div>${value} · ${pct}%</div>`);
                 });
                 donut.addEventListener("mouseleave", tooltipHide);
+
+                donut.addEventListener("click", (ev) => {
+                    const layout = cache._time_layouts?.donut;
+                    if (!layout) return;
+
+                    const pt = canvasPoint(ev, donut);
+                    const hit = hitTestDonut(layout, pt);
+                    const key = String(hit?.extra?.key || hit?.label || "").toUpperCase().trim();
+                    if (!key) return;
+
+                    const same = String(cache.filtersTime?.selectedKey || "").toUpperCase().trim() === key;
+                    cache.filtersTime.selectedKey = same ? "" : key;
+                    renderTimeTab(panel);
+                });
             }
         }
+
+        const tbody = panel.querySelector("#ad-ext-time-week-body");
+        if (tbody) {
+            tbody.addEventListener("click", (ev) => {
+                const tr = ev.target?.closest?.('tr[data-week-key]');
+                if (!tr) return;
+                const wk = String(tr.getAttribute('data-week-key') || '');
+                if (!wk) return;
+                const same = String(cache.filtersTime?.selectedWeekKey || '') === wk;
+                cache.filtersTime.selectedWeekKey = same ? '' : wk;
+                renderTimeTab(panel);
+            });
+        }
+
+    }
+
+
+    // Trainingsplan: Bemerkungen (Richtext) - Sanitizing + Normalizing (0.14.195)
+    // Speichert pro Woche HTML (Bullet-Listen, Fett, etc. aus GPT bleiben erhalten).
+    function isNotesHtmlEmpty(rawHtml) {
+        const s = String(rawHtml ?? "");
+        if (!s) return true;
+        const t = s
+            .replace(/<br\s*\/?>(?:\s|&nbsp;)*/gi, "")
+            .replace(/<\/?(div|p|span)[^>]*>/gi, " ")
+            .replace(/&nbsp;/gi, " ")
+            .replace(/<[^>]+>/g, " ")
+            .replace(/\s+/g, " ")
+            .trim();
+        return !t;
+    }
+
+    function sanitizeNotesHtml(rawHtml) {
+        const html = String(rawHtml ?? "");
+        if (!html) return "";
+        try {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(`<div>${html}</div>`, "text/html");
+            const root = (doc.body && doc.body.firstElementChild) ? doc.body.firstElementChild : doc.body;
+
+            const ALLOWED = new Set(["DIV","P","BR","UL","OL","LI","B","STRONG","I","EM","U","S","CODE","PRE","SPAN","A"]);
+
+            const unwrap = (el) => {
+                const parent = el.parentNode;
+                if (!parent) { try { el.remove(); } catch {} return; }
+                while (el.firstChild) parent.insertBefore(el.firstChild, el);
+                parent.removeChild(el);
+            };
+
+            const cleanEl = (el) => {
+                const tag = String(el.tagName || "").toUpperCase();
+                if (!tag) return;
+
+                if (tag === "SCRIPT" || tag === "STYLE" || tag === "IFRAME" || tag === "OBJECT" || tag === "EMBED") {
+                    try { el.remove(); } catch {}
+                    return;
+                }
+
+                if (!ALLOWED.has(tag)) {
+                    unwrap(el);
+                    return;
+                }
+
+                const attrs = Array.from(el.attributes || []);
+                for (const a of attrs) {
+                    const n = String(a.name || "").toLowerCase();
+                    if (!n) continue;
+
+                    if (n.startsWith("on")) {
+                        try { el.removeAttribute(a.name); } catch {}
+                        continue;
+                    }
+
+                    if (tag === "A") {
+                        if (n === "href") {
+                            const href = String(el.getAttribute("href") || "");
+                            if (/^\s*javascript:/i.test(href)) {
+                                try { el.removeAttribute("href"); } catch {}
+                            }
+                        } else if (n === "target" || n === "rel") {
+                            // keep
+                        } else {
+                            try { el.removeAttribute(a.name); } catch {}
+                        }
+                    } else {
+                        try { el.removeAttribute(a.name); } catch {}
+                    }
+                }
+
+                if (tag === "A") {
+                    const target = String(el.getAttribute("target") || "");
+                    const rel = String(el.getAttribute("rel") || "");
+                    if (target && !rel) {
+                        try { el.setAttribute("rel", "noopener noreferrer"); } catch {}
+                    }
+                }
+            };
+
+            const walk = (node) => {
+                const children = Array.from(node.childNodes || []);
+                for (const ch of children) {
+                    if (!ch) continue;
+                    if (ch.nodeType === 1) {
+                        cleanEl(ch);
+                        if (ch.parentNode) walk(ch);
+                    } else if (ch.nodeType === 8) {
+                        try { ch.remove(); } catch {}
+                    }
+                }
+            };
+
+            walk(root);
+
+            let out = root.innerHTML || "";
+            out = out.replace(/(?:<br\s*\/?>(?:\s|&nbsp;)*)+$/gi, "");
+            return out;
+        } catch (e) {
+            return html;
+        }
+    }
+
+    function normalizeNotesHtml(rawHtml) {
+        const safe = sanitizeNotesHtml(rawHtml);
+        return isNotesHtmlEmpty(safe) ? "" : safe;
     }
 
 
@@ -14263,6 +16929,8 @@ function renderMasterHallOfFame(panel) {
             // Sanitize planItems robust (IDs, strings, params etc.)
             let planItems = sanitizePlanItemsForStorage(Array.isArray(obj.planItems) ? obj.planItems : []);
 
+            let notesHtml = normalizeNotesHtml(obj.notesHtml);
+
             // 0.14.75: UI unterstützt nur noch Sessions/Legs.
             // Legacy-Migration: weekMode "time" -> "sessions" + best-effort Conversion der Ziele.
             if (isLegacyTime) {
@@ -14275,13 +16943,13 @@ function renderMasterHallOfFame(panel) {
 
                 // Persistiere Migration, damit "time" nicht wieder auftaucht
                 try {
-                    const migrated = { schemaVersion: 1, weekId: id, weekMode: "sessions", planItems };
+                    const migrated = { schemaVersion: 1, weekId: id, weekMode: "sessions", planItems, notesHtml };
                     localStorage.setItem(key, JSON.stringify(migrated));
                 } catch {}
             }
 
             // Immer sessions nach außen
-            return { schemaVersion: 1, weekId: id, weekMode: "sessions", planItems };
+            return { schemaVersion: 1, weekId: id, weekMode: "sessions", planItems, notesHtml };
         } catch (e) {
             // Robustheit: Parse-Fehler -> null
             return null;
@@ -14336,12 +17004,18 @@ function renderMasterHallOfFame(panel) {
             weekId,
             weekMode: normalizeWeekMode(p.weekMode),
             planItems: sanitizePlanItemsForStorage(p.planItems),
+            notesHtml: normalizeNotesHtml(p.notesHtml || p.notes || ""),
         };
 
         const key = WEEK_PLAN_STORAGE_PREFIX + weekId;
         try {
             localStorage.setItem(key, JSON.stringify(safe));
             try { window.dispatchEvent(new CustomEvent("ad-ext-plan-changed", { detail: { weekId } })); } catch {}
+            try {
+                const ts = Date.now();
+                _adPlanLastSavedAt = ts;
+                window.dispatchEvent(new CustomEvent("ad-ext-plan-saved", { detail: { weekId, ts } }));
+            } catch {}
         } catch (e) {
             // robust: ignore quota/private mode
         }
@@ -14362,6 +17036,7 @@ function renderMasterHallOfFame(panel) {
     let _adPlanSaveTimer = null;
     let _adPlanLastSavedJson = null;
     let _adPlanLastSavedWeekId = null;
+    let _adPlanLastSavedAt = 0;
 
     function saveCurrentWeekPlanNow() {
         const weekId = String(_adPlanActiveWeekId || "").trim();
@@ -14376,13 +17051,20 @@ function renderMasterHallOfFame(panel) {
             weekId,
             weekMode: normalizeWeekMode(weekMode),
             planItems: sanitizePlanItemsForStorage(planItems),
+            notesHtml: normalizeNotesHtml(planNotesHtml),
         };
 
         let json = "";
         try { json = JSON.stringify(safe); } catch (e) { return; }
 
         if (_adPlanLastSavedWeekId === weekId && _adPlanLastSavedJson === json) {
-            _adPlanDirty = false; // nichts zu speichern
+            // nothing to persist, but still emit a save event to clear UI hints (e.g. after clearing notes) (0.14.197)
+            _adPlanDirty = false;
+            try {
+                const ts = Date.now();
+                _adPlanLastSavedAt = ts;
+                window.dispatchEvent(new CustomEvent("ad-ext-plan-saved", { detail: { weekId, ts } }));
+            } catch (e) {}
             return;
         }
 
@@ -14390,6 +17072,11 @@ function renderMasterHallOfFame(panel) {
         try {
             localStorage.setItem(key, json);
             try { window.dispatchEvent(new CustomEvent("ad-ext-plan-changed", { detail: { weekId } })); } catch {}
+            try {
+                const ts = Date.now();
+                _adPlanLastSavedAt = ts;
+                window.dispatchEvent(new CustomEvent("ad-ext-plan-saved", { detail: { weekId, ts } }));
+            } catch {}
             _adPlanLastSavedWeekId = weekId;
             _adPlanLastSavedJson = json;
             _adPlanDirty = false;
@@ -14453,17 +17140,67 @@ function renderMasterHallOfFame(panel) {
           }
 
           .ad-plan-details { margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(0,0,0,.12); }
+          /* 0.14.194: Trainingsplan – Bemerkungen (Platzhalter, Schritt 1) */
+          .ad-plan-notes { margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(0,0,0,.12); }
+          .ad-plan-notes + .ad-plan-details { border-top: none; padding-top: 0; }
+          /* 0.14.198: Notes head layout (title + status left, clear button right) */
+.ad-plan-notes-head-left { display:flex; flex-direction: column; gap: 4px; min-width: 0; }
+.ad-plan-notes-head-right { display:flex; align-items:flex-start; gap: 8px; }
+          .ad-plan-notes-saved { font-size: 11px; opacity: .75; line-height: 1.1; }
+          .ad-plan-notes-saved.is-dirty { opacity: .95; }
+          .ad-plan-notes-clear { white-space: nowrap; }
+          .ad-plan-notes-editor {
+            height: 180px;
+            min-height: 180px;
+            max-height: 180px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            box-sizing: border-box;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(0,0,0,.18);
+            background: rgba(255,255,255,.06);
+            outline: none;
+            font-size: 13px;
+            line-height: 1.35;
+            white-space: pre-wrap;
+          }
+          .ad-plan-notes-editor:focus {
+            border-color: rgba(0, 140, 255, 0.35);
+            box-shadow: 0 0 0 2px rgba(0, 140, 255, 0.10);
+          }
+          .ad-plan-notes-editor:empty:before { content: attr(data-placeholder); opacity: .55; }
           .ad-plan-details-card { border: 1px solid rgba(0,0,0,.12); border-radius: 10px; padding: 10px; background: rgba(255,255,255,.04); }
           .ad-plan-details-head { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom: 8px; }
           .ad-plan-details-title { font-weight: 800; font-size: 14px; line-height: 1.2; }
           .ad-plan-details-sub { opacity: .75; font-size: 12px; margin-top: 2px; }
           .ad-plan-details-badge { display:inline-flex; margin-top: 4px; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; background: rgba(0,0,0,.10); opacity: .9; }
 
+          /* 0.14.176: Trainingsplan – Details Layout (UX) */
+          .ad-plan-details-grid { display:grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 10px; margin-top: 10px; align-items: stretch; }
+          .ad-plan-details-grid .ad-plan-details-box { height: 100%; box-sizing: border-box; }
+          .ad-plan-details-col { display:flex; flex-direction:column; gap: 10px; }
+                    @media (max-width: 980px) {
+            .ad-plan-details-grid { grid-template-columns: 1fr; }
+          }
+          .ad-plan-details-box { border: 1px solid rgba(0,0,0,.12); border-radius: 10px; padding: 10px; background: rgba(255,255,255,.03); }
+          .ad-plan-details-box-title { display:flex; align-items:center; justify-content:space-between; gap: 10px; font-weight: 800; font-size: 12px; opacity: .95; margin-bottom: 8px; }
+          .ad-plan-details-box-hint { font-size: 11px; font-weight: 700; opacity: .6; }
+                    .ad-plan-est-formula { max-width: 100%; }
+
+
           .ad-plan-details-section { margin-top: 10px; }
           .ad-plan-details-label { display:block; font-size: 12px; opacity: .8; margin-bottom: 4px; }
           .ad-plan-details-name { width: 100%; box-sizing: border-box; padding: 8px 10px; border-radius: 8px; border: 1px solid rgba(0,0,0,.18); background: rgba(255,255,255,.06); }
 
           .ad-plan-details-section-title { font-weight: 800; font-size: 12px; opacity: .9; margin-bottom: 6px; }
+
+          /* 0.14.170: Trainingsplan – Zeitschätzung (Details) */
+          .ad-plan-est-breakdown { display:grid; grid-template-columns: 1fr auto; gap: 4px 12px; font-size: 12px; }
+          .ad-plan-est-breakdown .ad-plan-est-k { opacity: .8; }
+          .ad-plan-est-breakdown .ad-plan-est-v { font-weight: 800; text-align: right; white-space: nowrap; }
+          .ad-plan-est-formula { margin-top: 6px; font-size: 11px; opacity: .7; line-height: 1.25; }
+
 
           .ad-plan-chip-row { display:flex; flex-wrap: wrap; gap: 6px; }
           .ad-plan-chip {
@@ -14472,6 +17209,10 @@ function renderMasterHallOfFame(panel) {
             border: 1px solid rgba(0,0,0,.14); background: rgba(0,0,0,.08);
             font-size: 12px; line-height: 1;
           }
+          .ad-plan-chip.ad-plan-chip--ghost { opacity: .55; }
+          .ad-plan-chip.ad-plan-chip--ghost .ad-plan-chip-handle,
+          .ad-plan-chip.ad-plan-chip--ghost .ad-plan-chip-x { display: none; }
+          .ad-plan-details-box--targets .ad-ext-btn:disabled { opacity: .55; cursor: not-allowed; }
           .ad-plan-chip-x {
             border: none; background: transparent; cursor: pointer;
             font-weight: 900; opacity: .7; padding: 0 2px; line-height: 1;
@@ -14647,6 +17388,8 @@ function renderMasterHallOfFame(panel) {
     // Start-State: wird beim Laden der Sidebar ggf. durch den gespeicherten Wochenplan überschrieben
     let planItems = [];
 
+    let planNotesHtml = ""; // Richtext (HTML) pro Woche
+
     function wireTrainingPlanSidebarScaffold(panel) {
         if (!panel) return;
 
@@ -14703,10 +17446,10 @@ function renderMasterHallOfFame(panel) {
                 }
             }
         } catch {}
-        // Persisted view: DATA | PLAN | INSIGHTS | SEGFOCUS | ATCFOCUS | CHROMO
+        // Persisted view: DATA | PLAN | SEGFOCUS | ATCFOCUS | CHROMO
         try {
             const raw = String(localStorage.getItem(AD_EXT_TRAIN_VIEW_LS_KEY) || trainView || "DATA").toUpperCase();
-            trainView = (raw === "PLAN") ? "PLAN" : (raw === "INSIGHTS") ? "INSIGHTS"
+            trainView = (raw === "PLAN") ? "PLAN"
             : (raw === "SEGFOCUS" || raw === "SEGFOKUS" || raw === "SEGMENT_FOCUS") ? "SEGFOCUS"
             : (raw === "ATCFOCUS" || raw === "ATCFOKUS" || raw === "ATC_FOCUS") ? "ATCFOCUS"
             : (raw === "CHROMO" || raw === "CHROMOTRACKER" || raw === "CHROMO_TRACKER") ? "CHROMO"
@@ -14723,6 +17466,26 @@ function renderMasterHallOfFame(panel) {
         const trainViewRoot = panel.querySelector("#ad-ext-view-training");
 
         if (!tabs || !layout || !side || !main) return;
+
+        // Week selector is only relevant for Trainingsdaten + Trainingsplan.
+        // It is mounted into the active subview (DATA: above KPIs, PLAN: above Plan) and hidden otherwise. (0.14.161)
+        const syncTrainWeekSelect = (forceView = null) => {
+            try {
+                const wrap = panel.querySelector("#ad-ext-plan-week-wrap");
+                if (!wrap) return;
+
+                const tv = String((forceView || layout?.dataset?.trainView || trainView || "DATA") || "DATA").toUpperCase();
+                const hostTop = panel.querySelector("#ad-train-week-host-top");
+
+                if (tv === "DATA" || tv === "PLAN") {
+                    if (hostTop && wrap.parentElement !== hostTop) hostTop.appendChild(wrap);
+                    try { wrap.style.display = ""; } catch {}
+                } else {
+                    try { wrap.style.display = "none"; } catch {}
+                }
+            } catch {}
+        };
+
 
         // Insights warmup (v0.14.107): KPIs vorberechnen ohne View-Wechsel
         let _insightsWarmupT = null;
@@ -14833,8 +17596,8 @@ function renderMasterHallOfFame(panel) {
                 </div>
 
                 <div class="ad-ext-card ad-ext-card-seg-donut">
-                  <div class="ad-ext-chart-title">Treffer % pro Feld</div>
-                  <svg id="ad-ext-atc-chart-donut" class="ad-ext-chart-svg" viewBox="0 0 520 220" width="520" height="220" role="img" aria-label="Treffer % pro Feld"></svg>
+                  <div class="ad-ext-chart-title">Around the Clock (ATC) Fortschritt</div>
+                  <canvas id="ad-ext-atc-chart-weektrend" class="ad-ext-chart-canvas" width="520" height="220"></canvas>
                 </div>
 
                 <div class="ad-ext-card ad-ext-card-seg-radar">
@@ -14888,10 +17651,10 @@ function renderMasterHallOfFame(panel) {
             try {
               const cBar = wrap.querySelector("#ad-ext-atc-chart-bar");
               const cRadar = wrap.querySelector("#ad-ext-atc-chart-radar");
-              const svg = wrap.querySelector("#ad-ext-atc-chart-donut");
+              const cTrend = wrap.querySelector("#ad-ext-atc-chart-weektrend");
               if (cBar) drawEmpty(cBar, "—");
               if (cRadar) drawEmpty(cRadar, "—");
-              if (svg) drawEmptySvg(svg, "—");
+              if (cTrend) drawEmpty(cTrend, "—");
             } catch {}
           }
 
@@ -15151,6 +17914,29 @@ function renderMasterHallOfFame(panel) {
               // Fields table (facet by day)
               renderAtcTableFields(panel, fieldAggFacet);
               applySelectedRowHighlightAtc(panel);
+
+              // Weekly trend: moved from Erkenntnisse -> ATC-Fokus (replaces "Treffer % pro Feld")
+              try {
+                const cTrend = wrap.querySelector("#ad-ext-atc-chart-weektrend");
+                if (cTrend) {
+                  let weeksAsc = [];
+                  try {
+                    const cached = cache._training_weeksAsc;
+                    const computed = computeTrainingWeeksAsc();
+                    weeksAsc = Array.isArray(cached) ? cached : (Array.isArray(computed) ? computed : []);
+                  } catch { weeksAsc = []; }
+
+                  const thisMonday = startOfWeekMonday(new Date());
+                  const thisWeekKey = thisMonday ? dayKeyFromLocalDate(thisMonday) : "";
+                  try {
+                    if (thisWeekKey) {
+                      weeksAsc = (weeksAsc || []).filter((w) => String(w?.weekKey || w || "") <= String(thisWeekKey));
+                    }
+                  } catch {}
+
+                  drawAtcWeeklyTrend(cTrend, weeksAsc, thisWeekKey);
+                }
+              } catch {}
             } catch (e) {
               console.error("[AD Ext][ATC] updateAtcFocus failed", e);
               try { renderAtcTableDay(panel, [], 10, null); } catch {}
@@ -15365,6 +18151,7 @@ function renderMasterHallOfFame(panel) {
                 cache._training_weeksAsc = weeks;
                 renderTrainingPlan(panel, weeks);
                 warmupInsights();
+                try { renderInsights(panel); } catch {}
             } catch {}
         };
 
@@ -15387,7 +18174,7 @@ function renderMasterHallOfFame(panel) {
 
         function setTrainView(view) {
             const v = String(view || "").toUpperCase();
-            trainView = (v === "PLAN") ? "PLAN" : (v === "INSIGHTS") ? "INSIGHTS"
+            trainView = (v === "PLAN") ? "PLAN"
             : (v === "SEGFOCUS" || v === "SEGFOKUS" || v === "SEGMENT_FOCUS") ? "SEGFOCUS"
             : (v === "ATCFOCUS" || v === "ATCFOKUS" || v === "ATC_FOCUS") ? "ATCFOCUS"
             : (v === "CHROMO" || v === "CHROMOTRACKER" || v === "CHROMO_TRACKER") ? "CHROMO"
@@ -15395,6 +18182,15 @@ function renderMasterHallOfFame(panel) {
             try { localStorage.setItem(AD_EXT_TRAIN_VIEW_LS_KEY, trainView); } catch {}
 
             layout.dataset.trainView = trainView;
+
+            // Mount / hide training week selector for this subview
+            try { syncTrainWeekSelect(trainView); } catch {}
+
+            // Trainingsdaten: ChatGPT Copy Bar nur im DATA-View zeigen
+            try {
+                const aiBar = panel.querySelector('#ad-ext-ai-actions');
+                if (aiBar) aiBar.style.display = (trainView === 'DATA') ? 'flex' : 'none';
+            } catch {}
 
             if (trainViewRoot) { try { trainViewRoot.dataset.trainView = trainView; } catch {} }
 
@@ -15414,8 +18210,12 @@ function renderMasterHallOfFame(panel) {
             // Beim Umschalten immer Trainingsdaten neu berechnen (Plan aus Storage)
             if (trainView === "DATA") {
                 rerenderTrainingMain();
-            } else if (trainView === "INSIGHTS") {
-                try { renderInsights(panel); } catch {}
+            } else if (trainView === "PLAN") {
+                // 0.14.173: Beim Öffnen des Trainingsplan-Subtabs Sidebar + Details sofort refreshen,
+                // damit die Zeitschätzung-Spalte direkt die berechneten Werte zeigt.
+                try { cache._planSidebarRerender?.(); } catch {}
+                // SPA-Rewire: Sidebar-Wiring kann minimal später stattfinden → next tick nochmal.
+                setTimeout(() => { try { cache._planSidebarRerender?.(); } catch {} }, 0);
             } else if (trainView === "ATCFOCUS") {
                 try { renderTrainAtcFocus(panel); } catch {}
             } else if (trainView === "CHROMO") {
@@ -15492,15 +18292,150 @@ function renderMasterHallOfFame(panel) {
         const drawerSearch = panel.querySelector("#adPlanDrawerSearch");
         const drawerList = panel.querySelector("#adPlanDrawerList");
 
-        if (!statusEl || !sumTarget || !table || !activeWeekInfo) return;
+        if (!statusEl || !sumTarget || !table) return;
+
+        // Step 2: Bemerkungen (Platzhalter, Schritt 1) + Detailbereich unterhalb der Liste (Plan-Items)
+        let notes = side.querySelector("#adPlanNotes");
+        if (!notes) {
+            notes = document.createElement("div");
+            notes.id = "adPlanNotes";
+            notes.className = "ad-plan-notes";
+            notes.innerHTML = `
+              <div class="ad-plan-details-card ad-plan-notes-card">
+                <div class="ad-plan-details-head ad-plan-notes-head">
+                  <div class="ad-plan-notes-head-left">
+                    <div class="ad-plan-details-title">Bemerkungen</div>
+                    <div class="ad-plan-notes-saved" id="adPlanNotesSaved" aria-live="polite">Keine Änderungen vorhanden</div>
+                  </div>
+                  <div class="ad-plan-notes-head-right">
+                    <button class="ad-ext-btn ad-ext-btn--secondary ad-plan-notes-clear" id="adPlanNotesClearBtn" type="button" title="Notizen leeren">🧹 Notizen leeren</button>
+                  </div>
+                </div>
+                <div class="ad-plan-notes-editor" id="adPlanNotesEditor" contenteditable="true"></div>
+              </div>
+            `;
+            table.insertAdjacentElement("afterend", notes);
+        }
+
+        // Bemerkungen: Speichern/Laden pro Woche (Richtext)
+        const notesEditor = side.querySelector("#adPlanNotesEditor");
+        if (notesEditor && notesEditor.dataset.adExtWired !== "1") {
+            notesEditor.dataset.adExtWired = "1";
+
+            const notesSavedEl = side.querySelector("#adPlanNotesSaved");
+            const btnClearNotes = side.querySelector("#adPlanNotesClearBtn");
+
+            const pad2 = (n) => String(n).padStart(2, "0");
+            const fmtSavedTime = (ts) => {
+                try {
+                    const d = new Date(ts);
+                    return `${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
+                } catch (e) { return ""; }
+            };
+
+            const setNotesHint = (kind, ts) => {
+                if (!notesSavedEl) return;
+                notesSavedEl.classList.toggle("is-dirty", kind === "dirty");
+                if (kind === "dirty") {
+                    notesSavedEl.textContent = "Wird gespeichert…";
+                } else if (kind === "saved") {
+                    const t = fmtSavedTime(ts || Date.now());
+                    notesSavedEl.textContent = `Letzte Änderung gespeichert: ${t}`;
+                } else {
+                    notesSavedEl.textContent = "Keine Änderungen vorhanden";
+                }
+            };
+
+            setNotesHint("idle");
+
+            // global: Save-Events -> update hint for active week
+            if (!window.__adExtPlanSavedListenerInstalled) {
+                window.__adExtPlanSavedListenerInstalled = true;
+                window.addEventListener("ad-ext-plan-saved", (ev) => {
+                    try {
+                        const d = ev && ev.detail ? ev.detail : {};
+                        const weekId = String(d.weekId || "").trim();
+                        if (!weekId) return;
+                        if (String(_adPlanActiveWeekId || "") !== weekId) return;
+
+                        const el = document.querySelector("#adPlanNotesSaved");
+                        if (!el) return;
+
+                        const ts = Number(d.ts) || Date.now();
+                        const t = (() => {
+                            try {
+                                const dd = new Date(ts);
+                                return `${String(dd.getHours()).padStart(2, "0")}:${String(dd.getMinutes()).padStart(2, "0")}`;
+                            } catch (e) { return ""; }
+                        })();
+
+                        el.classList.remove("is-dirty");
+                        el.textContent = t ? `Letzte Änderung gespeichert: ${t}` : "Letzte Änderung gespeichert";
+                    } catch (e) {}
+                });
+            }
+
+            // Clear button
+            if (btnClearNotes && btnClearNotes.dataset.adExtWired !== "1") {
+                btnClearNotes.dataset.adExtWired = "1";
+                btnClearNotes.addEventListener("click", () => {
+                    try {
+                        const cur = String(notesEditor.innerHTML || "");
+                        const empty = isNotesHtmlEmpty(cur);
+                        if (empty) return;
+
+                        if (!confirm("Notizen wirklich leeren?")) return;
+
+                        notesEditor.innerHTML = "";
+                        planNotesHtml = "";
+                        setNotesHint("dirty");
+                        scheduleSaveCurrentWeekPlan();
+                        flushSaveCurrentWeekPlan();
+                        try { syncCopyPrevWeekButton(); } catch {}
+                        try { syncResetWeekButton(); } catch {}
+                        try { notesEditor.focus(); } catch {}
+                    } catch (e) {}
+                });
+            }
+
+            const captureNotes = () => {
+                try { planNotesHtml = String(notesEditor.innerHTML || ""); } catch { planNotesHtml = ""; }
+            };
+
+            // Input: sofort merken + debounce-save
+            notesEditor.addEventListener("input", () => {
+                captureNotes();
+                try { setNotesHint("dirty"); } catch {}
+                scheduleSaveCurrentWeekPlan();
+                try { syncCopyPrevWeekButton(); } catch {}
+                try { syncResetWeekButton(); } catch {}
+            });
+
+            // Blur: sanitizen/normalisieren (ohne den Cursor waehrend des Tippens zu zerstoeren)
+            notesEditor.addEventListener("blur", () => {
+                try {
+                    const safe = normalizeNotesHtml(notesEditor.innerHTML);
+                    if (safe !== String(notesEditor.innerHTML || "")) {
+                        notesEditor.innerHTML = safe;
+                    }
+                    planNotesHtml = safe;
+                    try { setNotesHint("dirty"); } catch {}
+                    scheduleSaveCurrentWeekPlan();
+                    try { syncCopyPrevWeekButton(); } catch {}
+                    try { syncResetWeekButton(); } catch {}
+                } catch {}
+            });
+        }
 
         // Step 2: Detailbereich unterhalb der Liste (Plan-Items)
+
         let details = side.querySelector("#adPlanDetails");
         if (!details) {
             details = document.createElement("div");
             details.id = "adPlanDetails";
             details.className = "ad-plan-details";
-            table.insertAdjacentElement("afterend", details);
+            const anchor = side.querySelector("#adPlanNotes") || table;
+            anchor.insertAdjacentElement("afterend", details);
         }
 
         // Step 2: Segment-Targets UI state (RAM)
@@ -15762,6 +18697,56 @@ function renderMasterHallOfFame(panel) {
             return _sidebarAggCache;
         }
 
+        // 0.14.169: Zeitschätzung im Trainingsplan (All-time Ø Sekunden pro Leg/Session je Aktivität)
+        let _planEstAllCache = null;
+        let _planEstAllFp = null;
+
+        function getPlanEstimatesAllTime() {
+            const fp = sidebarTrackerFingerprint();
+            if (_planEstAllCache && _planEstAllFp === fp) return _planEstAllCache;
+
+            const out = {
+                hasAnyHistory: false,
+                avgSecPerLegByType: {},
+                totalSecByType: {},
+                totalLegsByType: {}
+            };
+
+            try {
+                if (!cache || !cache.loaded) {
+                    _planEstAllCache = out;
+                    _planEstAllFp = fp;
+                    return out;
+                }
+
+                const aggAll = aggregateTrainingActualsAllTime();
+                const byActivity = aggAll?.byActivity || new Map();
+
+                for (const [planType, trackerKey] of Object.entries(PLANITEM_TYPE_TO_TRACKER_KEY)) {
+                    const rec = byActivity.get(String(trackerKey)) || null;
+                    const sec = Math.max(0, Number(rec?.sec || 0) || 0);
+                    const cnt = Math.max(0, Number(rec?.count || 0) || 0);
+
+                    out.totalSecByType[planType] = sec;
+                    out.totalLegsByType[planType] = cnt;
+
+                    if (sec > 0 && cnt > 0) {
+                        out.avgSecPerLegByType[planType] = sec / cnt;
+                        out.hasAnyHistory = true;
+                    } else {
+                        out.avgSecPerLegByType[planType] = null;
+                    }
+                }
+            } catch (e) {
+                try { console.warn('[AD Ext][PLAN] getPlanEstimatesAllTime failed', e); } catch {}
+            }
+
+            _planEstAllCache = out;
+            _planEstAllFp = fp;
+            return out;
+        }
+
+
 
         function getSidebarViewMode() {
             // UI: seit 0.14.75 nur noch Sessions/Legs. Time bleibt intern als Fallback erhalten.
@@ -15800,12 +18785,14 @@ function renderMasterHallOfFame(panel) {
             if (loaded) {
                 weekMode = "sessions"; // UI: sessions-only (0.14.75)
                 planItems = sanitizePlanItemsForStorage(loaded.planItems);
+                planNotesHtml = normalizeNotesHtml(loaded.notesHtml || "");
                 _adPlanActiveWeekHasStoredPlan = true;
             } else {
                 // 0.14.42: Keine Auto-Templates/Auto-Speicherung mehr.
                 // Neue Wochen starten leer, bis der User aktiv etwas anlegt (z. B. +Aktivität).
                 weekMode = "sessions"; // UI: sessions-only (0.14.75)
                 planItems = [];
+                planNotesHtml = "";
                 _adPlanActiveWeekHasStoredPlan = false;
             }
 
@@ -15825,6 +18812,16 @@ function renderMasterHallOfFame(panel) {
             _adPlanDirty = false;
 
             syncModeButtons();
+
+            // Notes-Editor: pro Woche laden
+            try {
+                const ed = side.querySelector("#adPlanNotesEditor");
+                if (ed) ed.innerHTML = String(planNotesHtml || "");
+            } catch (e) {}
+            try {
+                const hint = side.querySelector("#adPlanNotesSaved");
+                if (hint) { hint.classList.remove("is-dirty"); hint.textContent = "Keine Änderungen vorhanden"; }
+            } catch (e) {}
         }
 
 
@@ -15880,7 +18877,7 @@ function renderMasterHallOfFame(panel) {
 
         function isPlanEmptyForCopy() {
             const arr = Array.isArray(planItems) ? planItems : [];
-            return (!arr.length) || isDefaultTemplatePlan(arr);
+            return (((!arr.length) || isDefaultTemplatePlan(arr)) && isNotesHtmlEmpty(planNotesHtml));
         }
 
         function syncCopyPrevWeekButton() {
@@ -15902,7 +18899,7 @@ function renderMasterHallOfFame(panel) {
             const weekId = weekIdFromWeekKey(wkKey);
 
             const arr = Array.isArray(planItems) ? planItems : [];
-            const isVirgin = (arr.length === 0) && (_adPlanActiveWeekHasStoredPlan === false) && (_adPlanDirty === false);
+            const isVirgin = (arr.length === 0) && isNotesHtmlEmpty(planNotesHtml) && (_adPlanActiveWeekHasStoredPlan === false) && (_adPlanDirty === false);
 
             const can = !!weekId && !isVirgin;
             btnResetWeek.disabled = !can;
@@ -15967,13 +18964,15 @@ function renderMasterHallOfFame(panel) {
 
             weekMode = normalizeWeekMode(prevPlan.weekMode);
             planItems = copied;
+            planNotesHtml = normalizeNotesHtml(prevPlan.notesHtml || "");
+            try { const ed = side.querySelector("#adPlanNotesEditor"); if (ed) ed.innerHTML = String(planNotesHtml || ""); } catch {}
 
             selectedPlanItemId = copied.length ? String(copied[0].id || "") : null;
             targetAddOpen = false;
             targetAddValue = "";
             targetAddError = "";
 
-            const safe = { schemaVersion: 1, weekId: curWeekId, weekMode, planItems: sanitizePlanItemsForStorage(planItems) };
+            const safe = { schemaVersion: 1, weekId: curWeekId, weekMode, planItems: sanitizePlanItemsForStorage(planItems), notesHtml: normalizeNotesHtml(planNotesHtml) };
 
             // Speichern (direkt)
             try { saveWeekPlan(safe); } catch (e) { /* ignore */ }
@@ -16004,7 +19003,7 @@ function renderMasterHallOfFame(panel) {
             }
 
             const arr = Array.isArray(planItems) ? planItems : [];
-            const isVirgin = (arr.length === 0) && (_adPlanActiveWeekHasStoredPlan === false) && (_adPlanDirty === false);
+            const isVirgin = (arr.length === 0) && isNotesHtmlEmpty(planNotesHtml) && (_adPlanActiveWeekHasStoredPlan === false) && (_adPlanDirty === false);
 
             if (isVirgin) {
                 setStatusTemp("Woche ist bereits leer.");
@@ -16118,6 +19117,8 @@ function renderMasterHallOfFame(panel) {
             const agg = getTrackerAggForSelectedWeek();
             const totals = computeSidebarTotals(agg);
 
+            const estAll = getPlanEstimatesAllTime();
+
             if (getSidebarViewMode() === "sessions") {
                 sumTarget.textContent = `${Math.round(totals.goal)} LEGS`;
             } else {
@@ -16130,13 +19131,19 @@ function renderMasterHallOfFame(panel) {
 
             const isSessions = getSidebarViewMode() === "sessions";
 
+            const unit = isSessions ? "LEGS" : "min";
+
             const agg = getTrackerAggForSelectedWeek();
             const totals = computeSidebarTotals(agg);
+
+            const estAll = getPlanEstimatesAllTime();
 
             const head = `
               <div class="ad-plan-row ad-plan-row--head">
                 <div>Aktivität</div>
-                <div>Soll</div>
+                <div class="ad-plan-cell-right" title="Geschätzte Zeit pro Leg">Ø Zeit / Leg</div>
+                <div class="ad-plan-cell-right">Geschätzte Zeit</div>
+                <div class="ad-plan-soll-head"><span class="ad-plan-soll-label">Soll</span><span class="ad-plan-soll-unit">${escapeHtml(unit)}</span></div>
               </div>
             `;
 
@@ -16148,6 +19155,10 @@ function renderMasterHallOfFame(panel) {
         const name = String(it?.name || "");
         const selected = String(selectedPlanItemId || "") === id;
 
+        const planType = String(it?.type || "");
+        const avgSec = estAll ? estAll.avgSecPerLegByType?.[planType] : null;
+        const hasAvg = Number.isFinite(Number(avgSec)) && Number(avgSec) > 0;
+
         const soll = isSessions ? getTargetSessions(it) : clampMinutes(Number(it?.targetMinutes));
         const inputValue = String(soll);
 
@@ -16156,6 +19167,23 @@ function renderMasterHallOfFame(panel) {
         const inputmode = "numeric";
         const pattern = "[0-9]*";
         const unit = isSessions ? "LEGS" : "min";
+
+
+        const plannedLegs = Math.max(0, Number(soll) || 0);
+        let estCellHtml = "—";
+        if (plannedLegs > 0) {
+            if (hasAvg) {
+                const estSec = Number(avgSec) * plannedLegs;
+                estCellHtml = `<span class="ad-plan-est-val">${escapeHtml(fmtHours(estSec))}</span>`;
+            } else {
+                estCellHtml = `<span class="ad-plan-est-muted">noch kein Training gespielt</span>`;
+            }
+        }
+
+        let perLegCellHtml = "—";
+        if (hasAvg) {
+            perLegCellHtml = `<span class="ad-plan-perleg-val">${escapeHtml(fmtMinPerLeg(Number(avgSec)))}</span>`;
+        }
 
         return `
                   <div class="ad-plan-row${selected ? " ad-plan-row--selected" : ""}" data-plan-item-id="${escapeHtml(id)}" role="button" tabindex="0" aria-selected="${selected ? "true" : "false"}">
@@ -16173,6 +19201,8 @@ function renderMasterHallOfFame(panel) {
                         </div>
                       </div>
                     </div>
+                    <div class="ad-plan-perleg-cell">${perLegCellHtml}</div>
+                    <div class="ad-plan-est-cell">${estCellHtml}</div>
                     <div class="ad-plan-input-wrap">
                       <input class="ad-plan-input" data-id="${escapeHtml(id)}" type="number" value="${escapeHtml(String(inputValue))}"
                         step="${escapeHtml(step)}" min="0" max="${escapeHtml(max)}" inputmode="${escapeHtml(inputmode)}" pattern="${escapeHtml(pattern)}" />
@@ -16188,14 +19218,49 @@ function renderMasterHallOfFame(panel) {
                       <div class="ad-plan-muted" style="margin-top:4px;">Klicke auf <span style="font-weight:900;">+ Aktivität</span>.</div>
                     </div>
                     <div class="ad-plan-cell-right">—</div>
+                    <div class="ad-plan-cell-right">—</div>
+                    <div class="ad-plan-cell-right">—</div>
                   </div>
                 `;
     const totalVal = Math.round(totals.goal);
     const totalUnit = isSessions ? "LEGS" : "min";
 
+    let totalEstSec = 0;
+    let totalEstLegs = 0;
+    let anyPlanned = false;
+    let anyEstimated = false;
+    for (const it of items) {
+        const pt = String(it?.type || "");
+        const avg = estAll ? estAll.avgSecPerLegByType?.[pt] : null;
+        const has = Number.isFinite(Number(avg)) && Number(avg) > 0;
+        const goalLegs = isSessions ? getTargetSessions(it) : clampMinutes(Number(it?.targetMinutes));
+        const planned = Math.max(0, Number(goalLegs) || 0);
+        if (planned <= 0) continue;
+        anyPlanned = true;
+        if (!has) continue;
+        anyEstimated = true;
+        totalEstSec += Number(avg) * planned;
+        totalEstLegs += planned;
+    }
+
+    let totalEstHtml = "—";
+    if (anyPlanned) {
+        totalEstHtml = anyEstimated
+            ? `<span class="ad-plan-est-val">${escapeHtml(fmtHours(totalEstSec))}</span>`
+            : `<span class="ad-plan-est-muted">noch kein Training gespielt</span>`;
+    }
+
+    let totalPerLegHtml = "—";
+    if (anyEstimated && totalEstLegs > 0 && totalEstSec > 0) {
+        totalPerLegHtml = `<span class="ad-plan-perleg-val">${escapeHtml(fmtMinPerLeg(totalEstSec / totalEstLegs))}</span>`;
+    }
+
+
     const foot = `
               <div class="ad-plan-row ad-plan-row--foot">
                 <div>Gesamt</div>
+                <div class="ad-plan-perleg-cell">${totalPerLegHtml}</div>
+                <div class="ad-plan-est-cell">${totalEstHtml}</div>
                 <div class="ad-plan-input-wrap">
                   <span class="ad-plan-pill" id="adPlanTotalSoll">${escapeHtml(String(totalVal))}</span>
                   <span class="ad-plan-unit" id="adPlanTotalSollUnit">${escapeHtml(totalUnit)}</span>
@@ -16230,6 +19295,53 @@ function renderMasterHallOfFame(panel) {
     const isSeg = type === "SEGMENT_TRAINING";
     const targets = (isSeg && it?.params && Array.isArray(it.params.targets)) ? it.params.targets : [];
 
+    // 0.14.171: Details – Zeitschätzung Breakdown (aus historischer Ø Zeit pro Leg)
+    const estAll = getPlanEstimatesAllTime();
+    const planType = String(it?.type || "");
+    const histLegs = Math.max(0, Math.round(Number(estAll?.totalLegsByType?.[planType] || 0)));
+    const histSec = Math.max(0, Math.round(Number(estAll?.totalSecByType?.[planType] || 0)));
+    const avgSec = Number(estAll?.avgSecPerLegByType?.[planType]);
+    const hasAvg = Number.isFinite(avgSec) && avgSec > 0 && histLegs > 0 && histSec > 0;
+
+    const plannedLegs = Math.max(0, getTargetSessions(it));
+    const estSec = (hasAvg && plannedLegs > 0) ? (avgSec * plannedLegs) : 0;
+
+    const histTxt = (histLegs > 0 && histSec > 0) ? `${histLegs} LEGS · ${fmtHours(histSec)}` : "—";
+    const avgTxt = hasAvg ? fmtMinPerLeg(avgSec) : "—";
+    const plannedTxt = `${plannedLegs} LEGS`;
+
+    let estValHtml = "—";
+    if (plannedLegs > 0) {
+        if (hasAvg) estValHtml = `<span class="ad-plan-est-val">${escapeHtml(fmtHours(estSec))}</span>`;
+        else estValHtml = `<span class="ad-plan-est-muted">noch kein Training gespielt</span>`;
+    }
+
+    let formulaTxt = "";
+    if (plannedLegs > 0 && hasAvg) {
+        formulaTxt = `Schätzung = ${plannedLegs} LEGS × Ø ${fmtMinPerLeg(avgSec)} pro Leg (Historie: ${histLegs} LEGS · ${fmtHours(histSec)})`;
+    } else if (plannedLegs > 0 && !hasAvg) {
+        formulaTxt = "Schätzung nicht möglich: noch kein Training gespielt.";
+    } else {
+        formulaTxt = "Setze Soll-LEGS > 0, um eine Schätzung zu sehen.";
+    }
+
+    const estBoxHtml = `
+      <div class="ad-plan-details-box ad-plan-details-box--estimate">
+        <div class="ad-plan-details-box-title">
+          <span>Zeitschätzung</span>
+          <span class="ad-plan-details-box-hint">aus Historie</span>
+        </div>
+        <div class="ad-plan-est-breakdown">
+          <div class="ad-plan-est-k">Historie</div><div class="ad-plan-est-v">${escapeHtml(histTxt)}</div>
+          <div class="ad-plan-est-k">Ø Zeit / Leg</div><div class="ad-plan-est-v">${escapeHtml(avgTxt)}</div>
+          <div class="ad-plan-est-k">Geplant</div><div class="ad-plan-est-v">${escapeHtml(plannedTxt)}</div>
+          <div class="ad-plan-est-k">Geschätzt</div><div class="ad-plan-est-v">${estValHtml}</div>
+        </div>
+        <div class="ad-plan-est-formula">${escapeHtml(formulaTxt)}</div>
+      </div>
+    `;
+
+
     const chipsHtml = isSeg
     ? (targets.length
        ? targets.map((t) => `
@@ -16263,16 +19375,25 @@ function renderMasterHallOfFame(panel) {
                     `
                   )
             : "";
-    const segBody = isSeg ? `
-              <div class="ad-plan-details-section">
-                <div class="ad-plan-details-section-title">Targets</div>
-                <div class="ad-plan-chip-row">${chipsHtml}</div>
-                <div class="ad-plan-target-add">${addUiHtml}</div>
-            ` : `
-              <div class="ad-plan-details-section">
-                <div class="ad-plan-muted">Keine Details für diesen Modus (kommt später).</div>
-              </div>
-            `;
+
+    const targetsBoxHtml = `
+      <div class="ad-plan-details-box ad-plan-details-box--targets">
+        <div class="ad-plan-details-box-title">
+          <span>Targets</span>
+          <span class="ad-plan-details-box-hint">${isSeg ? "ziehen zum Sortieren" : "Platzhalter"}</span>
+        </div>
+        <div class="ad-plan-chip-row">
+          ${isSeg ? chipsHtml : `
+            <span class="ad-plan-chip ad-plan-chip--ghost">
+              <span class="ad-plan-chip-text">—</span>
+            </span>
+          `}
+        </div>
+        <div class="ad-plan-target-add">
+          ${isSeg ? addUiHtml : `<button type="button" class="ad-ext-btn ad-ext-btn--secondary" disabled title="Targets kommen später auch für diesen Modus.">+ Target hinzufügen</button>`}
+        </div>
+      </div>
+    `;
 
     details.innerHTML = `
               <div class="ad-plan-details-card">
@@ -16283,13 +19404,16 @@ function renderMasterHallOfFame(panel) {
                   </div>
                 </div>
 
-                <div class="ad-plan-details-section">
-                  <label class="ad-plan-details-label" for="adPlanDetailName">Anzeigename</label>
+                <div class="ad-plan-details-grid">
+                  ${targetsBoxHtml}
+                  ${estBoxHtml}
+                </div>
+
+                <div class="ad-plan-details-box ad-plan-details-box--name">
+                  <div class="ad-plan-details-box-title"><span>Anzeigename</span></div>
                   <input id="adPlanDetailName" class="ad-plan-details-name" type="text"
                     data-id="${escapeHtml(String(it.id || ""))}" value="${escapeHtml(name)}" />
                 </div>
-
-                ${segBody}
               </div>
             `;
 
@@ -16311,7 +19435,14 @@ function renderMasterHallOfFame(panel) {
                 syncResetWeekButton();
                 renderSummary();
                 renderPlanTable();
-                renderPlanDetails();
+
+                // 0.14.173: Beim Wechsel in den Trainingsplan sofort den ersten Eintrag selektieren,
+                // damit Details + Zeitschätzung ohne Extra-Klick geladen sind.
+                try {
+                    const firstId = (Array.isArray(planItems) && planItems.length) ? String(planItems[0]?.id || "") : "";
+                    if (!selectedPlanItemId && firstId) selectedPlanItemId = firstId;
+                } catch {}
+                setSelectedPlanItemId(selectedPlanItemId || null);
             }
 
             // Drawer helpers
@@ -16569,12 +19700,19 @@ function renderMasterHallOfFame(panel) {
 
                         ensureSidebarWeekPlanLoaded(false);
 
+                        // ensure latest notes are included in export (0.14.197)
+                        try {
+                            const ed = side.querySelector("#adPlanNotesEditor");
+                            if (ed) planNotesHtml = String(ed.innerHTML || "");
+                        } catch (e) {}
+
                         const exportObj = {
                             kind: "autodarts-segmentdash-trainingplan",
                             schemaVersion: 1,
                             exportedAt: new Date().toISOString(),
                             weekMode: normalizeWeekMode(weekMode),
                             planItems: sanitizePlanItemsForStorage(planItems),
+                            notesHtml: normalizeNotesHtml(planNotesHtml),
                         };
 
                         const json = JSON.stringify(exportObj, null, 2);
@@ -16637,6 +19775,12 @@ function renderMasterHallOfFame(panel) {
                                     targetAddOpen = false;
                                     targetAddValue = "";
                                     targetAddError = "";
+
+                                    planNotesHtml = normalizeNotesHtml(obj?.notesHtml || "");
+                                    try {
+                                        const ed = side.querySelector("#adPlanNotesEditor");
+                                        if (ed) ed.innerHTML = String(planNotesHtml || "");
+                                    } catch (e) {}
 
                                     // Stop pending autosave & force-save now
                                     if (_adPlanSaveTimer) { try { clearTimeout(_adPlanSaveTimer); } catch {} _adPlanSaveTimer = null; }
@@ -16819,7 +19963,7 @@ function renderMasterHallOfFame(panel) {
                     const totalValEl = side.querySelector("#adPlanTotalSoll");
                     const totalUnitEl = side.querySelector("#adPlanTotalSollUnit");
                     if (totalValEl) totalValEl.textContent = String(Math.round(totals.goal));
-                    if (totalUnitEl) totalUnitEl.textContent = isSessions ? "LEGS" : "min";
+                    if (totalUnitEl) totalUnitEl.textContent = "LEGS";
                 } else {
                     // legacy fallback
                     const mins = clampMinutes(parseInt(cleaned, 10) || 0);
@@ -16835,11 +19979,77 @@ function renderMasterHallOfFame(panel) {
                     const totalValEl = side.querySelector("#adPlanTotalSoll");
                     const totalUnitEl = side.querySelector("#adPlanTotalSollUnit");
                     if (totalValEl) totalValEl.textContent = String(Math.round(totals.goal));
-                    if (totalUnitEl) totalUnitEl.textContent = isSessions ? "LEGS" : "min";
+                    if (totalUnitEl) totalUnitEl.textContent = "min";
                 }
 
                 scheduleSaveCurrentWeekPlan();
                 renderSummary();
+
+                // 0.14.170: Live-Update der Zeitschätzung (Row + Gesamt + Details)
+                try {
+                    const estAll2 = getPlanEstimatesAllTime();
+
+                    // Update row estimate cell
+                    const cur = planItems[idx];
+                    const pt = String(cur?.type || "");
+                    const avg2 = estAll2 ? estAll2.avgSecPerLegByType?.[pt] : null;
+                    const has2 = Number.isFinite(Number(avg2)) && Number(avg2) > 0;
+                    const planned2 = Math.max(0, getTargetSessions(cur));
+
+                    const rowSel = `.ad-plan-row[data-plan-item-id="${cssEscapeAttrValue(id)}"]`;
+                    const rowEl = table.querySelector(rowSel);
+                    const cellEl = rowEl ? rowEl.querySelector('.ad-plan-est-cell') : null;
+                    if (cellEl) {
+                        if (planned2 <= 0) cellEl.innerHTML = "—";
+                        else if (has2) cellEl.innerHTML = `<span class="ad-plan-est-val">${escapeHtml(fmtHours(Number(avg2) * planned2))}</span>`;
+                        else cellEl.innerHTML = `<span class="ad-plan-est-muted">noch kein Training gespielt</span>`;
+                    }
+
+                    // Update row per-leg cell
+                    const perLegEl = rowEl ? rowEl.querySelector('.ad-plan-perleg-cell') : null;
+                    if (perLegEl) {
+                        if (has2) perLegEl.innerHTML = `<span class="ad-plan-perleg-val">${escapeHtml(fmtMinPerLeg(Number(avg2)))}</span>`;
+                        else perLegEl.innerHTML = "—";
+                    }
+
+                    // Update footer total estimate
+                    let totalEstSec = 0;
+                    let totalEstLegs = 0;
+                    let anyPlanned = false;
+                    let anyEstimated = false;
+                    for (const it2 of (Array.isArray(planItems) ? planItems : [])) {
+                        const pt2 = String(it2?.type || "");
+                        const avgX = estAll2 ? estAll2.avgSecPerLegByType?.[pt2] : null;
+                        const hasX = Number.isFinite(Number(avgX)) && Number(avgX) > 0;
+                        const plannedX = Math.max(0, getTargetSessions(it2));
+                        if (plannedX <= 0) continue;
+                        anyPlanned = true;
+                        if (!hasX) continue;
+                        anyEstimated = true;
+                        totalEstSec += Number(avgX) * plannedX;
+                        totalEstLegs += plannedX;
+                    }
+                    const footCell = table.querySelector('.ad-plan-row--foot .ad-plan-est-cell');
+                    if (footCell) {
+                        if (!anyPlanned) footCell.innerHTML = "—";
+                        else if (anyEstimated) footCell.innerHTML = `<span class="ad-plan-est-val">${escapeHtml(fmtHours(totalEstSec))}</span>`;
+                        else footCell.innerHTML = `<span class="ad-plan-est-muted">noch kein Training gespielt</span>`;
+                    }
+
+                    
+                    const footPerLegCell = table.querySelector('.ad-plan-row--foot .ad-plan-perleg-cell');
+                    if (footPerLegCell) {
+                        if (!anyPlanned) footPerLegCell.innerHTML = "—";
+                        else if (anyEstimated && totalEstLegs > 0 && totalEstSec > 0) footPerLegCell.innerHTML = `<span class="ad-plan-perleg-val">${escapeHtml(fmtMinPerLeg(totalEstSec / totalEstLegs))}</span>`;
+                        else footPerLegCell.innerHTML = "—";
+                    }
+
+                    // Details refresh if affected
+                    if (String(selectedPlanItemId || "") === String(id || "")) {
+                        renderPlanDetails();
+                    }
+                } catch (e) { /* ignore */ }
+
             };
 
             table.onclick = (ev) => {
@@ -17659,6 +20869,13 @@ function renderMasterHallOfFame(panel) {
                         let sumLost = 0;
                         let coOpp = 0;
                         let coHit = 0;
+                        let botLvlCounts = wantBot ? new Map() : null;
+                        const normBotLvl = (nm) => {
+                            const s = String(nm || "").trim();
+                            if (!s) return null;
+                            const t = s.replace(/^bot\s*level\s*/i, "").trim();
+                            return t || s;
+                        };
 
                         for (const m of (cache.x01Matches || [])) {
                             if (!m) continue;
@@ -17673,6 +20890,12 @@ function renderMasterHallOfFame(panel) {
                             }
 
                             const players = Array.isArray(m.players) ? m.players : [];
+
+                            if (botLvlCounts) {
+                                const bp = players.find(p => isBotLevelPlayerName(p?.name));
+                                const lvl = normBotLvl(bp?.name);
+                                if (lvl) botLvlCounts.set(lvl, (botLvlCounts.get(lvl) || 0) + 1);
+                            }
 
                             let meIdx = -1;
                             if (meKey) {
@@ -17711,10 +20934,22 @@ function renderMasterHallOfFame(panel) {
                             coHit += Number(st?.checkoutsHit) || 0;
                         }
 
+                        let botLvl = null;
+                        if (botLvlCounts && botLvlCounts.size) {
+                            let best = null, bestC = -1;
+                            for (const [k, c] of botLvlCounts.entries()) {
+                                const cc = Number(c) || 0;
+                                if (cc > bestC) { bestC = cc; best = k; }
+                            }
+                            botLvl = best;
+                        }
+                        const botLine = (wantBot && botLvl) ? `<div class="ad-ext-train-details-perf">Bot-Level: ${escapeHtml(String(botLvl))}</div>` : "";
+
                         const coPct = (coOpp > 0) ? ((coHit / coOpp) * 100) : null;
                         const coTxt = (coPct === null) ? "—" : `${(Math.round(coPct * 10) / 10).toFixed(1).replace(/\.0$/, "")}%`;
 
                         inner += `
+                          ${botLine}
                           <div style="margin: 8px 0 6px; font-weight: 900; opacity: 0.92;">X01 (Ist)</div>
                           <table class="ad-ext-train-details-table">
                             <thead><tr>
@@ -18922,6 +22157,8 @@ function renderMasterHallOfFame(panel) {
         wireTrainingPlanSidebarScaffold(panel);
         wireTrainingPlanSidebarControls(panel);
         wireTrainingPlanInteractions(panel);
+        wireTrainingChatGptCopy(panel);
+        wireTrainingChatGptMenu(panel);
         wireX01Interactions(panel);
 
         refreshAll(panel);
@@ -20632,7 +23869,7 @@ async function ensureAtcDetail(matchId, preferredPlayerId) {
     // -------------------- Protokoll (Ringpuffer) --------------------
     const bulkLog = [];
     const BULK_LOG_MAX = 200;
-    const BULK_LOG_VISIBLE = 8;
+    const BULK_LOG_VISIBLE = BULK_LOG_MAX; // scrollable full buffer
 
     const bulkLogUi = {
         lastCollectPage: null,
@@ -20667,8 +23904,13 @@ async function ensureAtcDetail(matchId, preferredPlayerId) {
 
         const items = bulkLog.slice(-BULK_LOG_VISIBLE);
 
-        // Simple auto-scroll to bottom (good enough, max 8 visible lines)
-        const shouldScroll = true;
+        // Auto-scroll to bottom only if user is already near the bottom (so manual scroll-up is respected)
+        const shouldScroll = (() => {
+            try {
+                if (!bulkLogBodyEl) return true;
+                return (bulkLogBodyEl.scrollTop + bulkLogBodyEl.clientHeight) >= (bulkLogBodyEl.scrollHeight - 24);
+            } catch { return true; }
+        })();
 
         try { bulkLogListEl.innerHTML = ""; } catch {}
 

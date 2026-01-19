@@ -1,14 +1,14 @@
 // ==UserScript==
-// @name         Gemini Deep Research Exporter (Final Fix)
+// @name         Gemini Deep Research Exporter
 // @namespace    http://tampermonkey.net/
 // @version      1.3
-// @description  Deep Research 导出最终极速版（暴力强显按钮版）
+// @description  Deep Research 导出最终极速版
 // @author       Eddy
 // @match        https://gemini.google.com/*
 // @grant        GM_registerMenuCommand
 // @run-at       document-end
-// @downloadURL https://update.greasyfork.org/scripts/563106/Gemini%20Deep%20Research%20Exporter%20%28Final%20Fix%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/563106/Gemini%20Deep%20Research%20Exporter%20%28Final%20Fix%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/563106/Gemini%20Deep%20Research%20Exporter.user.js
+// @updateURL https://update.greasyfork.org/scripts/563106/Gemini%20Deep%20Research%20Exporter.meta.js
 // ==/UserScript==
 
 (function() {
