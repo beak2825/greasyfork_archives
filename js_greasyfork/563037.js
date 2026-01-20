@@ -1,746 +1,573 @@
 // ==UserScript==
-// @name         (Mobile) XenForo Conversations E2EE + No Draft Autosave
+// @name         (Mobile) XenForo Conversations E2EE
 // @namespace    xfenc-userscript
-// @version      0.7.1-mobile
-// @description  Mobile-friendly XenForo conversations E2EE + blocks draft autosave network calls. Uses GM storage if available, else localStorage.
+// @version      0.8-mobile
+// @description  MOBILE-ONLY: Encrypt outgoing XenForo conversation replies locally and decrypt incoming tokens. For Firefox Android + Violentmonkey / iOS Safari + Userscripts app.
 // @author       martyrdom
 // @license      GNU GPLv3
 // @match        *://*/conversations/*
-// @run-at       document-start
+// @include      *conversations*
+// @run-at       document-idle
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @grant        GM_registerMenuCommand
 // @grant        GM_addStyle
-// @downloadURL https://update.greasyfork.org/scripts/563037/%28Mobile%29%20XenForo%20Conversations%20E2EE%20%2B%20No%20Draft%20Autosave.user.js
-// @updateURL https://update.greasyfork.org/scripts/563037/%28Mobile%29%20XenForo%20Conversations%20E2EE%20%2B%20No%20Draft%20Autosave.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/563037/%28Mobile%29%20XenForo%20Conversations%20E2EE.user.js
+// @updateURL https://update.greasyfork.org/scripts/563037/%28Mobile%29%20XenForo%20Conversations%20E2EE.meta.js
 // ==/UserScript==
 
 (function () {
   "use strict";
 
-  // ============================================================
-  // 0) STORAGE (GM_* if available, otherwise localStorage)
-  // ============================================================
-
-  const hasGMStorage =
-    typeof GM_getValue === "function" &&
-    typeof GM_setValue === "function";
-
-  async function getValue(key, def = "") {
-    if (hasGMStorage) {
-      const v = await GM_getValue(key, def);
-      return (v === undefined || v === null) ? def : v;
-    }
+  // ========= DEBUG / FAILSAFE =========
+  function debugBanner(msg) {
     try {
-      const v = localStorage.getItem(key);
-      return v === null ? def : v;
-    } catch {
-      return def;
-    }
-  }
-
-  async function setValue(key, val) {
-    if (hasGMStorage) return GM_setValue(key, val);
-    try { localStorage.setItem(key, val); } catch {}
-  }
-
-  // ============================================================
-  // A) NO-DRAFT AUTOSAVE (block draft-save network calls)
-  // ============================================================
-
-  function installNoDraftAutosave() {
-    function toAbsUrl(u) {
-      try { return new URL(u, location.href); } catch { return null; }
-    }
-
-    function pathLooksLikeDraft(urlObj) {
-      if (!urlObj) return false;
-
-      const segments = urlObj.pathname
-        .split("/")
-        .filter(Boolean)
-        .map(s => s.toLowerCase());
-
-      if (segments.includes("draft") || segments.includes("drafts")) return true;
-      if (/auto-?draft/i.test(urlObj.pathname)) return true;
-
-      return false;
-    }
-
-    function bodyLooksLikeDraft(body) {
-      if (!body) return false;
-      try {
-        if (typeof URLSearchParams !== "undefined" && body instanceof URLSearchParams) {
-          const s = body.toString();
-          return /draft/i.test(s) || /draft_id=|conversation_id=|message=|title=/i.test(s);
-        }
-        if (typeof FormData !== "undefined" && body instanceof FormData) {
-          for (const [k, v] of body.entries()) {
-            const kv = `${k}=${typeof v === "string" ? v : ""}`;
-            if (/draft/i.test(kv) || /draft_id|conversation_id|message|title/i.test(kv)) return true;
-          }
-          return false;
-        }
-        if (typeof body === "object") {
-          const s = JSON.stringify(body);
-          return /draft/i.test(s) || /draft_id|conversation_id/i.test(s);
-        }
-        const s = String(body);
-        return /draft/i.test(s) || /draft_id|conversation_id/i.test(s);
-      } catch {
-        return false;
+      const id = "xfenc-mobile-debug";
+      let el = document.getElementById(id);
+      if (!el) {
+        el = document.createElement("div");
+        el.id = id;
+        el.style.cssText =
+          "position:fixed;z-index:2147483647;left:8px;bottom:8px;" +
+          "padding:8px 10px;border-radius:10px;font:12px/1.2 sans-serif;" +
+          "background:rgba(0,0,0,.8);color:#fff;max-width:80vw;word-break:break-word;";
+        document.documentElement.appendChild(el);
       }
-    }
-
-    function looksLikeActualSend(urlObj) {
-      if (!urlObj) return false;
-      const p = urlObj.pathname.toLowerCase();
-      return (
-        p.includes("/conversations/") &&
-        (p.includes("/reply") || p.includes("/add-reply") || p.includes("/reply-preview") || p.includes("/insert"))
-      );
-    }
-
-    function shouldBlock(url, init, method) {
-      const u = typeof url === "string" ? url : (url && url.url) || "";
-      const urlObj = toAbsUrl(u);
-      if (!urlObj) return false;
-
-      if (looksLikeActualSend(urlObj)) return false;
-
-      if (pathLooksLikeDraft(urlObj)) return true;
-
-      const m = (method || (init && init.method) || "").toUpperCase();
-      if (m === "POST" || m === "PUT" || m === "PATCH") {
-        if (bodyLooksLikeDraft(init && init.body)) return true;
-      }
-
-      return false;
-    }
-
-    function logBlocked(kind, url) {
-      // Comment this out if you want less console noise on mobile.
-      console.info("[XF no-drafts] Blocked", kind, url);
-    }
-
-    // Patch fetch
-    if (typeof window.fetch === "function") {
-      const origFetch = window.fetch.bind(window);
-      window.fetch = function (input, init) {
-        const url = (typeof input === "string") ? input : (input && input.url);
-        const method = (init && init.method) || (input && input.method) || "";
-        if (shouldBlock(url, init, method)) {
-          logBlocked("fetch", url);
-          return Promise.resolve(new Response("", { status: 204, statusText: "No Content" }));
-        }
-        return origFetch(input, init);
-      };
-    }
-
-    // Patch XHR
-    if (typeof window.XMLHttpRequest === "function") {
-      const OrigXHR = window.XMLHttpRequest;
-
-      function PatchedXHR() {
-        const xhr = new OrigXHR();
-        let _url = "";
-        let _method = "";
-
-        const origOpen = xhr.open;
-        const origSend = xhr.send;
-
-        xhr.open = function (method, url, ...rest) {
-          _method = method || "";
-          _url = url || "";
-          return origOpen.call(this, method, url, ...rest);
-        };
-
-        xhr.send = function (body) {
-          if (shouldBlock(_url, { body }, _method)) {
-            logBlocked(`XHR ${(_method || "").toUpperCase()}`, _url);
-            try { this.abort(); } catch {}
-            return;
-          }
-          return origSend.call(this, body);
-        };
-
-        return xhr;
-      }
-
-      PatchedXHR.prototype = OrigXHR.prototype;
-      window.XMLHttpRequest = PatchedXHR;
-    }
-
-    // Patch sendBeacon
-    if (navigator && typeof navigator.sendBeacon === "function") {
-      const origBeacon = navigator.sendBeacon.bind(navigator);
-      navigator.sendBeacon = function (url, data) {
-        if (shouldBlock(url, { body: data }, "POST")) {
-          logBlocked("sendBeacon", url);
-          return true;
-        }
-        return origBeacon(url, data);
-      };
-    }
-
-    // Best-effort: disable draft init markup once DOM exists
-    function disableDraftInit(root = document) {
-      const forms = root.querySelectorAll?.('form[data-xf-init]') || [];
-      for (const form of forms) {
-        const init = (form.getAttribute("data-xf-init") || "").trim();
-        if (!init) continue;
-
-        const parts = init.split(/\s+/);
-        if (!parts.includes("draft") && !parts.includes("draft-trigger")) continue;
-
-        const cleaned = parts.filter(p => p !== "draft" && p !== "draft-trigger").join(" ");
-        form.setAttribute("data-xf-init", cleaned);
-        form.setAttribute("data-auto-draft-autosave", "0");
-      }
-    }
-
-    window.addEventListener("DOMContentLoaded", () => disableDraftInit(document), { once: true });
-    document.addEventListener("xf:reinit", (e) => disableDraftInit(e.target || document));
-    document.addEventListener("xf:load", (e) => disableDraftInit(e.target || document));
+      el.textContent = "XFENC mobile: " + msg;
+    } catch {}
   }
 
-  // Install draft blockers ASAP
-  installNoDraftAutosave();
-
-  // ============================================================
-  // B) E2EE (mobile-friendly)
-  // ============================================================
-
-  const ENC_PREFIX = "[[XFENC:v1:";
-  const ENC_SUFFIX = "]]";
-
-  // Anti-emoji wrapper: prevents XenForo from converting parts of ciphertext into emojis/smilies.
-  // If your forum doesn't support [plain], switch to "code".
-  const WRAP_MODE = "plain"; // "plain" | "code"
-  const WRAP_PREFIX = WRAP_MODE === "plain" ? "[plain]" : "[code]";
-  const WRAP_SUFFIX = WRAP_MODE === "plain" ? "[/plain]" : "[/code]";
-
-  const PBKDF2_ITERATIONS = 250000;
-  const PBKDF2_HASH = "SHA-256";
-
-  const AES_ALGO = "AES-GCM";
-  const AES_KEY_BITS = 256;
-
-  const DECRYPTED_SPAN_CLASS = "xfenc-decrypted-span";
-  const DECRYPT_ERROR_CLASS = "xfenc-decrypt-error";
-
-  const SCAN_DEBOUNCE_MS = 150;
-
-  const state = {
-    convId: null,
-    keyStoreId: null,
-    passphrase: null,
-    scanTimer: null,
-    scanInProgress: false
-  };
-
-  const te = new TextEncoder();
-  const td = new TextDecoder();
-
-  function u8ToB64(u8) {
-    let s = "";
-    for (let i = 0; i < u8.length; i++) s += String.fromCharCode(u8[i]);
-    return btoa(s);
-  }
-
-  function b64ToU8(b64) {
-    const s = atob(b64);
-    const u8 = new Uint8Array(s.length);
-    for (let i = 0; i < s.length; i++) u8[i] = s.charCodeAt(i);
-    return u8;
-  }
-
-  function getConversationId() {
-    const m = location.pathname.match(/\/conversations\/(?:[^\/]+\.)?(\d+)\b/);
-    return m ? m[1] : "unknown";
-  }
-
-  function initConversationIdentity() {
-    state.convId = getConversationId();
-    state.keyStoreId = `xfenc:passphrase:${location.host}:${state.convId}`;
-  }
-
-  async function loadPassphrase() {
-    if (state.passphrase !== null) return state.passphrase;
-    state.passphrase = (await getValue(state.keyStoreId, "")) || "";
-    return state.passphrase;
-  }
-
-  async function savePassphrase(pw) {
-    state.passphrase = pw || "";
-    await setValue(state.keyStoreId, state.passphrase);
-  }
-
-  function stripWrapper(text) {
-    const t = (text || "").trim();
-    const low = t.toLowerCase();
-
-    if (low.startsWith("[plain]") && low.endsWith("[/plain]")) {
-      return t.slice(7, -8).trim();
-    }
-    if (low.startsWith("[code]") && low.endsWith("[/code]")) {
-      return t.slice(6, -7).trim();
-    }
-    return t;
-  }
-
-  async function deriveAesKey(passphrase, saltU8) {
-    const baseKey = await crypto.subtle.importKey(
-      "raw",
-      te.encode(passphrase),
-      "PBKDF2",
-      false,
-      ["deriveKey"]
-    );
-
-    return crypto.subtle.deriveKey(
-      {
-        name: "PBKDF2",
-        salt: saltU8,
-        iterations: PBKDF2_ITERATIONS,
-        hash: PBKDF2_HASH
+  // Wrap everything so one error doesn't kill the script silently
+  try {
+    // ----------------------------
+    // COMPAT LAYER (GM fallbacks)
+    // ----------------------------
+    const compat = {
+      async get(key, def = "") {
+        try { if (typeof GM_getValue === "function") return await GM_getValue(key, def); } catch {}
+        try { const v = localStorage.getItem(key); return v == null ? def : v; } catch {}
+        return def;
       },
-      baseKey,
-      { name: AES_ALGO, length: AES_KEY_BITS },
-      false,
-      ["encrypt", "decrypt"]
-    );
-  }
-
-  async function encryptText(plaintext, passphrase) {
-    const salt = crypto.getRandomValues(new Uint8Array(16));
-    const iv = crypto.getRandomValues(new Uint8Array(12));
-
-    const key = await deriveAesKey(passphrase, salt);
-
-    const pt = te.encode(plaintext);
-    const ctBuf = await crypto.subtle.encrypt({ name: AES_ALGO, iv }, key, pt);
-    const ct = new Uint8Array(ctBuf);
-
-    const token =
-      ENC_PREFIX +
-      `${u8ToB64(salt)}:${u8ToB64(iv)}:${u8ToB64(ct)}` +
-      ENC_SUFFIX;
-
-    return `${WRAP_PREFIX}${token}${WRAP_SUFFIX}`;
-  }
-
-  async function decryptToken(token, passphrase) {
-    token = stripWrapper(token);
-
-    const inner = token.slice(ENC_PREFIX.length, token.length - ENC_SUFFIX.length);
-    const parts = inner.split(":");
-    if (parts.length !== 3) throw new Error("Bad token format");
-
-    const salt = b64ToU8(parts[0]);
-    const iv = b64ToU8(parts[1]);
-    const ct = b64ToU8(parts[2]);
-
-    const key = await deriveAesKey(passphrase, salt);
-    const ptBuf = await crypto.subtle.decrypt({ name: AES_ALGO, iv }, key, ct);
-    return td.decode(ptBuf);
-  }
-
-  function isAlreadyEncrypted(text) {
-    const t = stripWrapper(text);
-    return t.startsWith(ENC_PREFIX) && t.endsWith(ENC_SUFFIX);
-  }
-
-  function findEditorRoot() {
-    return document.querySelector(".js-editor") || document;
-  }
-
-  function findMessageTextarea() {
-    return document.querySelector('textarea[name="message"]');
-  }
-
-  function findContentEditable() {
-    return document.querySelector('.fr-element[contenteditable="true"]');
-  }
-
-  function getEditorText() {
-    const ta = findMessageTextarea();
-    if (ta) return ta.value;
-
-    const ce = findContentEditable();
-    if (ce) return ce.innerText;
-
-    return "";
-  }
-
-  function setEditorText(newText) {
-    const ta = findMessageTextarea();
-    if (ta) {
-      ta.value = newText;
-      ta.dispatchEvent(new Event("input", { bubbles: true }));
-      ta.dispatchEvent(new Event("change", { bubbles: true }));
-      return true;
-    }
-
-    const ce = findContentEditable();
-    if (ce) {
-      ce.innerText = newText;
-      ce.dispatchEvent(new Event("input", { bubbles: true }));
-      ce.dispatchEvent(new Event("change", { bubbles: true }));
-      return true;
-    }
-
-    return false;
-  }
-
-  function findReplyForm() {
-    const forms = Array.from(document.querySelectorAll("form"));
-    return forms.find((f) => (f.getAttribute("action") || "").includes("/conversations/")) || null;
-  }
-
-  // Mobile-friendly CSS (larger tap targets)
-  const canStyle = typeof GM_addStyle === "function";
-  if (canStyle) {
-    GM_addStyle(`
-      .xfenc-bar {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        align-items: center;
-        margin: 10px 0;
-        padding: 10px 12px;
-        border: 1px solid rgba(0,0,0,.15);
-        border-radius: 14px;
-        font-size: 14px;
-        background: rgba(40, 46, 57, 0.95);
-        touch-action: manipulation;
-      }
-      .xfenc-btn {
-        cursor: pointer;
-        user-select: none;
-        padding: 10px 12px;
-        border-radius: 12px;
-        border: 1px solid rgba(0,0,0,.2);
-        background: rgba(40, 46, 57);
-        min-height: 40px;
-        display: inline-flex;
-        align-items: center;
-      }
-      .xfenc-btn:active { transform: scale(0.98); }
-      .xfenc-status { opacity: 0.9; padding: 6px 0; }
-      .${DECRYPTED_SPAN_CLASS} { white-space: pre-wrap; }
-      .${DECRYPT_ERROR_CLASS} { opacity: 0.75; text-decoration: underline dotted; }
-    `);
-  }
-
-  async function ensureUi() {
-    const root = findEditorRoot();
-    if (!root) return;
-    if (document.querySelector(".xfenc-bar")) return;
-
-    const bar = document.createElement("div");
-    bar.className = "xfenc-bar";
-
-    const btnSet = document.createElement("button");
-    btnSet.type = "button";
-    btnSet.className = "xfenc-btn";
-    btnSet.textContent = "🔐 Set key";
-
-    const btnEncrypt = document.createElement("button");
-    btnEncrypt.type = "button";
-    btnEncrypt.className = "xfenc-btn";
-    btnEncrypt.textContent = "Encrypt draft";
-
-    const btnRedecrypt = document.createElement("button");
-    btnRedecrypt.type = "button";
-    btnRedecrypt.className = "xfenc-btn";
-    btnRedecrypt.textContent = "Re-decrypt";
-
-    const status = document.createElement("div");
-    status.className = "xfenc-status";
-    status.textContent = "Key: (not set)";
-
-    async function refreshStatus() {
-      const pw = await loadPassphrase();
-      status.textContent = pw ? "Key: set ✅" : "Key: (not set)";
-    }
-
-    btnSet.addEventListener("click", async () => {
-      const current = await loadPassphrase();
-      const pw = prompt(
-        `Set passphrase for this conversation (ID ${state.convId}).\n\nShare this passphrase with the other participant safely.\n(Leaving blank clears it.)`,
-        current
-      );
-      if (pw === null) return;
-      await savePassphrase(pw);
-      await refreshStatus();
-      await redecryptPage();
-    });
-
-    btnEncrypt.addEventListener("click", async () => {
-      const pw = await loadPassphrase();
-      if (!pw) return alert("Set a passphrase first (🔐 Set key).");
-
-      const text = getEditorText();
-      if (!text.trim()) return;
-      if (isAlreadyEncrypted(text)) return alert("Draft already looks encrypted.");
-
-      const enc = await encryptText(text, pw);
-      if (!setEditorText(enc)) alert("Couldn't locate the XenForo editor input on this page.");
-    });
-
-    btnRedecrypt.addEventListener("click", async () => {
-      await redecryptPage();
-    });
-
-    bar.appendChild(btnSet);
-    bar.appendChild(btnEncrypt);
-    bar.appendChild(btnRedecrypt);
-    bar.appendChild(status);
-
-    const ta = findMessageTextarea();
-    const ce = findContentEditable();
-    const anchor = ta || ce || root;
-    anchor.parentElement?.insertBefore(bar, anchor);
-
-    await refreshStatus();
-  }
-
-  // Optional menu commands (may not show on many mobile setups)
-  if (typeof GM_registerMenuCommand === "function") {
-    GM_registerMenuCommand("XFENC: Set conversation key", async () => {
-      const current = await loadPassphrase();
-      const pw = prompt(`Set passphrase for conversation ID ${state.convId} (blank clears):`, current);
-      if (pw === null) return;
-      await savePassphrase(pw);
-      await redecryptPage();
-      alert("Saved.");
-    });
-
-    GM_registerMenuCommand("XFENC: Re-decrypt page", async () => {
-      await redecryptPage();
-      alert("Re-decrypt complete (if key matches).");
-    });
-  }
-
-  async function interceptSend() {
-    const form = findReplyForm();
-    if (!form) return;
-
-    if (form.__xfencHooked) return;
-    form.__xfencHooked = true;
-
-    form.addEventListener(
-      "submit",
-      async (ev) => {
+      async set(key, val) {
+        try { if (typeof GM_setValue === "function") return await GM_setValue(key, val); } catch {}
+        try { localStorage.setItem(key, String(val ?? "")); } catch {}
+      },
+      addStyle(css) {
+        try { if (typeof GM_addStyle === "function") return GM_addStyle(css); } catch {}
         try {
-          const pw = await loadPassphrase();
-          if (!pw) return;
-
-          const text = getEditorText();
-          if (!text.trim()) return;
-          if (isAlreadyEncrypted(text)) return;
-
-          ev.preventDefault();
-          ev.stopPropagation();
-
-          const enc = await encryptText(text, pw);
-          if (!setEditorText(enc)) throw new Error("Editor not found");
-
-          Promise.resolve().then(() => form.submit());
-        } catch (e) {
-          console.error("XFENC encrypt-on-send failed:", e);
-        }
+          const style = document.createElement("style");
+          style.textContent = css;
+          (document.head || document.documentElement).appendChild(style);
+        } catch {}
       },
-      true
-    );
-  }
+      registerMenu(name, fn) {
+        try { if (typeof GM_registerMenuCommand === "function") return GM_registerMenuCommand(name, fn); } catch {}
+      }
+    };
 
-  function findMessageContainers() {
-    const candidates = [
-      ...document.querySelectorAll(".message-body .bbWrapper"),
-      ...document.querySelectorAll(".message-body"),
-      ...document.querySelectorAll(".bbWrapper"),
-    ];
-    return Array.from(new Set(candidates));
-  }
+    function envOk() {
+      return !!(window.crypto && window.crypto.subtle && window.TextEncoder && window.TextDecoder);
+    }
 
-  function expandToIncludeWrapper(raw, startIdx, endIdx) {
-    const before = raw.slice(0, startIdx);
-    const after = raw.slice(endIdx);
+    // Don't instantiate TextEncoder/TextDecoder at top-level (can crash on some mobile setups)
+    function getEncoders() {
+      return { te: new TextEncoder(), td: new TextDecoder() };
+    }
 
-    const prefixMatch = before.match(/(\[plain\]|\[code\])\s*$/i);
-    if (prefixMatch) startIdx -= prefixMatch[0].length;
+    // ============================
+    // SETTINGS / STATE
+    // ============================
+    const ENC_PREFIX = "[[XFENC:v1:";
+    const ENC_SUFFIX = "]]";
+    const WRAP_PREFIX = "[plain]";
+    const WRAP_SUFFIX = "[/plain]";
+    const PBKDF2_ITERATIONS = 250000;
+    const PBKDF2_HASH = "SHA-256";
+    const AES_ALGO = "AES-GCM";
+    const AES_KEY_BITS = 256;
 
-    const suffixMatch = after.match(/^\s*(\[\/plain\]|\[\/code\])/i);
-    if (suffixMatch) endIdx += suffixMatch[0].length;
+    const DECRYPTED_SPAN_CLASS = "xfenc-decrypted-span";
+    const DECRYPT_ERROR_CLASS = "xfenc-decrypt-error";
+    const SCAN_DEBOUNCE_MS = 150;
 
-    return { startIdx, endIdx };
-  }
+    const state = {
+      convId: null,
+      keyStoreId: null,
+      passphrase: null,
+      scanTimer: null,
+      scanInProgress: false,
+      installedOnce: false
+    };
 
-  function extractTokensFromText(text) {
-    const tokens = [];
-    let idx = 0;
+    function getConversationId() {
+      const m = location.pathname.match(/\/conversations\/(?:[^\/]+\.)?(\d+)\b/);
+      return m ? m[1] : "unknown";
+    }
+    function initConversationIdentity() {
+      state.convId = getConversationId();
+      state.keyStoreId = `xfenc:passphrase:${location.host}:${state.convId}`;
+    }
 
-    while (true) {
-      let start = text.indexOf(ENC_PREFIX, idx);
-      if (start === -1) break;
+    async function loadPassphrase() {
+      if (state.passphrase !== null) return state.passphrase;
+      state.passphrase = (await compat.get(state.keyStoreId, "")) || "";
+      return state.passphrase;
+    }
+    async function savePassphrase(pw) {
+      state.passphrase = pw || "";
+      await compat.set(state.keyStoreId, state.passphrase);
+    }
 
-      let end = text.indexOf(ENC_SUFFIX, start + ENC_PREFIX.length);
-      if (end === -1) break;
+    // ============================
+    // BASE64
+    // ============================
+    function u8ToB64(u8) {
+      let s = "";
+      for (let i = 0; i < u8.length; i++) s += String.fromCharCode(u8[i]);
+      return btoa(s);
+    }
+    function b64ToU8(b64) {
+      const s = atob(b64);
+      const u8 = new Uint8Array(s.length);
+      for (let i = 0; i < s.length; i++) u8[i] = s.charCodeAt(i);
+      return u8;
+    }
 
-      end = end + ENC_SUFFIX.length;
+    function stripWrapper(text) {
+      const t = (text || "").trim();
+      if (t.toLowerCase().startsWith("[plain]") && t.toLowerCase().endsWith("[/plain]")) return t.slice(7, -8).trim();
+      if (t.toLowerCase().startsWith("[code]") && t.toLowerCase().endsWith("[/code]")) return t.slice(6, -7).trim();
+      return t;
+    }
+    function isAlreadyEncrypted(text) {
+      const t = stripWrapper(text);
+      return t.startsWith(ENC_PREFIX) && t.endsWith(ENC_SUFFIX);
+    }
 
-      const expanded = expandToIncludeWrapper(text, start, end);
+    // ============================
+    // CRYPTO
+    // ============================
+    async function deriveAesKey(passphrase, saltU8) {
+      const { te } = getEncoders();
+      const baseKey = await crypto.subtle.importKey("raw", te.encode(passphrase), "PBKDF2", false, ["deriveKey"]);
+      return crypto.subtle.deriveKey(
+        { name: "PBKDF2", salt: saltU8, iterations: PBKDF2_ITERATIONS, hash: PBKDF2_HASH },
+        baseKey,
+        { name: AES_ALGO, length: AES_KEY_BITS },
+        false,
+        ["encrypt", "decrypt"]
+      );
+    }
 
-      tokens.push({
-        token: text.slice(expanded.startIdx, expanded.endIdx),
-        start: expanded.startIdx,
-        end: expanded.endIdx,
+    async function encryptText(plaintext, passphrase) {
+      const { te } = getEncoders();
+      const salt = crypto.getRandomValues(new Uint8Array(16));
+      const iv = crypto.getRandomValues(new Uint8Array(12));
+      const key = await deriveAesKey(passphrase, salt);
+      const pt = te.encode(plaintext);
+      const ctBuf = await crypto.subtle.encrypt({ name: AES_ALGO, iv }, key, pt);
+      const ct = new Uint8Array(ctBuf);
+      const token = ENC_PREFIX + `${u8ToB64(salt)}:${u8ToB64(iv)}:${u8ToB64(ct)}` + ENC_SUFFIX;
+      return `${WRAP_PREFIX}${token}${WRAP_SUFFIX}`;
+    }
+
+    async function decryptToken(token, passphrase) {
+      const { td } = getEncoders();
+      token = stripWrapper(token);
+      const inner = token.slice(ENC_PREFIX.length, token.length - ENC_SUFFIX.length);
+      const parts = inner.split(":");
+      if (parts.length !== 3) throw new Error("Bad token format");
+      const salt = b64ToU8(parts[0]);
+      const iv = b64ToU8(parts[1]);
+      const ct = b64ToU8(parts[2]);
+      const key = await deriveAesKey(passphrase, salt);
+      const ptBuf = await crypto.subtle.decrypt({ name: AES_ALGO, iv }, key, ct);
+      return td.decode(ptBuf);
+    }
+
+    // ============================
+    // DOM: FIND EDITOR
+    // ============================
+    function findReplyForm() {
+      const forms = Array.from(document.querySelectorAll("form"));
+      const strong = forms.find(f =>
+        f.querySelector('textarea[name="message"], textarea[name="message_html"], .fr-element[contenteditable="true"]')
+      );
+      if (strong) return strong;
+
+      const ce = document.querySelector('.fr-element[contenteditable="true"]');
+      if (ce && ce.closest) return ce.closest("form");
+
+      const ta = document.querySelector('textarea[name="message"], textarea[name="message_html"]');
+      if (ta && ta.closest) return ta.closest("form");
+
+      return null;
+    }
+
+    function findContentEditableIn(form) {
+      return form ? form.querySelector('.fr-element[contenteditable="true"]') : null;
+    }
+    function findTextareaIn(form) {
+      return form ? form.querySelector('textarea[name="message"], textarea[name="message_html"]') : null;
+    }
+
+    function getEditorTextFromForm(form) {
+      const ce = findContentEditableIn(form);
+      if (ce) {
+        const t = ce.innerText || "";
+        if (t.trim()) return t;
+      }
+      const ta = findTextareaIn(form);
+      if (ta) return ta.value || "";
+      return "";
+    }
+
+    function setEditorTextInForm(form, newText) {
+      let ok = false;
+      const ce = findContentEditableIn(form);
+      if (ce) {
+        ce.innerText = newText;
+        ce.dispatchEvent(new Event("input", { bubbles: true }));
+        ce.dispatchEvent(new Event("change", { bubbles: true }));
+        ok = true;
+      }
+      const ta = findTextareaIn(form);
+      if (ta) {
+        ta.value = newText;
+        ta.dispatchEvent(new Event("input", { bubbles: true }));
+        ta.dispatchEvent(new Event("change", { bubbles: true }));
+        ok = true;
+      }
+      return ok;
+    }
+
+    // ============================
+    // UI
+    // ============================
+    compat.addStyle(`
+      .xfenc-bar { display:inline-flex; gap:8px; align-items:center; margin:8px 0; padding:6px 10px;
+        border:1px solid rgba(0,0,0,.15); border-radius:10px; font-size:12px; background:rgba(40,46,57); }
+      .xfenc-btn { cursor:pointer; user-select:none; padding:6px 10px; border-radius:10px; border:1px solid rgba(0,0,0,.2);
+        background:rgba(40,46,57); -webkit-tap-highlight-color:transparent; }
+      .xfenc-btn:active { transform:scale(0.98); }
+      .xfenc-status { opacity:0.85; }
+      .xfenc-decrypted-span { white-space: pre-wrap; }
+      .xfenc-decrypt-error { opacity:0.75; text-decoration: underline dotted; }
+    `);
+
+    async function ensureUi() {
+      if (document.querySelector(".xfenc-bar")) return;
+
+      const form = findReplyForm();
+      if (!form) return;
+
+      const anchor = findContentEditableIn(form) || findTextareaIn(form) || form;
+      if (!anchor || !anchor.parentElement) return;
+
+      const bar = document.createElement("div");
+      bar.className = "xfenc-bar";
+
+      const btnSet = document.createElement("div");
+      btnSet.className = "xfenc-btn";
+      btnSet.textContent = "🔐 Set key";
+
+      const btnEncrypt = document.createElement("div");
+      btnEncrypt.className = "xfenc-btn";
+      btnEncrypt.textContent = "Encrypt draft";
+
+      const btnRedecrypt = document.createElement("div");
+      btnRedecrypt.className = "xfenc-btn";
+      btnRedecrypt.textContent = "Re-decrypt";
+
+      const status = document.createElement("div");
+      status.className = "xfenc-status";
+      status.textContent = "Key: (not set)";
+
+      async function refresh() {
+        const pw = await loadPassphrase();
+        if (!envOk()) status.textContent = "XFENC: crypto unavailable ❌";
+        else status.textContent = pw ? "Key: set ✅" : "Key: (not set)";
+      }
+
+      btnSet.addEventListener("click", async () => {
+        const current = await loadPassphrase();
+        const pw = prompt(`Set passphrase for conversation ID ${state.convId} (blank clears):`, current);
+        if (pw === null) return;
+        await savePassphrase(pw);
+        await refresh();
+        await redecryptPage();
       });
 
-      idx = expanded.endIdx;
+      btnEncrypt.addEventListener("click", async () => {
+        if (!envOk()) return alert("XFENC: WebCrypto not available.");
+        const pw = await loadPassphrase();
+        if (!pw) return alert("Set a passphrase first (🔐 Set key).");
+
+        const text = getEditorTextFromForm(form);
+        if (!text.trim()) return;
+        if (isAlreadyEncrypted(text)) return alert("Draft already looks encrypted.");
+
+        const enc = await encryptText(text, pw);
+        setEditorTextInForm(form, enc);
+      });
+
+      btnRedecrypt.addEventListener("click", async () => {
+        await redecryptPage();
+      });
+
+      bar.appendChild(btnSet);
+      bar.appendChild(btnEncrypt);
+      bar.appendChild(btnRedecrypt);
+      bar.appendChild(status);
+
+      anchor.parentElement.insertBefore(bar, anchor);
+      await refresh();
     }
 
-    return tokens;
-  }
-
-  async function replaceTokensInTextNode(textNode, passphrase) {
-    const raw = textNode.nodeValue || "";
-    if (!raw.includes(ENC_PREFIX)) return false;
-
-    const tokens = extractTokensFromText(raw);
-    if (!tokens.length) return false;
-
-    const frag = document.createDocumentFragment();
-    let cursor = 0;
-
-    for (const t of tokens) {
-      if (t.start > cursor) {
-        frag.appendChild(document.createTextNode(raw.slice(cursor, t.start)));
-      }
-
-      const span = document.createElement("span");
-      span.className = DECRYPTED_SPAN_CLASS;
-      span.setAttribute("data-xfenc", "1");
-      span.setAttribute("data-xfenc-token", t.token);
-
-      try {
-        const pt = await decryptToken(t.token, passphrase);
-        span.textContent = pt;
-      } catch {
-        span.textContent = t.token;
-        span.classList.add(DECRYPT_ERROR_CLASS);
-        span.title = "Encrypted message (could not decrypt with current key OR token was altered by formatting)";
-      }
-
-      frag.appendChild(span);
-      cursor = t.end;
-    }
-
-    if (cursor < raw.length) {
-      frag.appendChild(document.createTextNode(raw.slice(cursor)));
-    }
-
-    textNode.parentNode.replaceChild(frag, textNode);
-    return true;
-  }
-
-  async function decryptWithinElement(el, passphrase) {
-    if (!el.textContent || !el.textContent.includes(ENC_PREFIX)) return;
-
-    const walker = document.createTreeWalker(
-      el,
-      NodeFilter.SHOW_TEXT,
-      {
-        acceptNode(node) {
-          if (!node.nodeValue || !node.nodeValue.includes(ENC_PREFIX)) {
-            return NodeFilter.FILTER_REJECT;
-          }
-
-          const parentEl = node.parentElement;
-          if (parentEl && parentEl.closest && parentEl.closest(`[data-xfenc="1"]`)) {
-            return NodeFilter.FILTER_REJECT;
-          }
-
-          return NodeFilter.FILTER_ACCEPT;
-        },
-      },
-      false
-    );
-
-    const targets = [];
-    let n;
-    while ((n = walker.nextNode())) targets.push(n);
-
-    for (const textNode of targets) {
-      // eslint-disable-next-line no-await-in-loop
-      await replaceTokensInTextNode(textNode, passphrase);
-    }
-  }
-
-  async function scanAndDecryptAll() {
-    if (state.scanInProgress) return;
-    state.scanInProgress = true;
-
-    try {
+    // ============================
+    // ENCRYPT ON SEND (MOBILE SAFE)
+    // ============================
+    async function encryptDraftIfNeeded(form) {
+      if (!envOk()) return false;
       const pw = await loadPassphrase();
-      if (!pw) return;
+      if (!pw) return false;
 
-      const els = findMessageContainers();
-      for (const el of els) {
-        // eslint-disable-next-line no-await-in-loop
-        await decryptWithinElement(el, pw);
+      const text = getEditorTextFromForm(form);
+      if (!text.trim()) return false;
+      if (isAlreadyEncrypted(text)) return true;
+
+      const enc = await encryptText(text, pw);
+      return setEditorTextInForm(form, enc);
+    }
+
+    function installEncryptOnSendButtons() {
+      const form = findReplyForm();
+      if (!form || form.__xfencSendInstalled) return;
+      form.__xfencSendInstalled = true;
+
+      const handler = async (e) => {
+        try {
+          const pw = await loadPassphrase();
+          if (!pw) return; // no key => allow normal send
+
+          e.preventDefault();
+          e.stopPropagation();
+
+          const ok = await encryptDraftIfNeeded(form);
+          if (!ok) return;
+
+          form.submit();
+        } catch (err) {
+          console.error("[XFENC mobile] encrypt-on-send failed:", err);
+          debugBanner("encrypt-on-send failed (see console)");
+        }
+      };
+
+      const submitters = form.querySelectorAll('button[type="submit"], input[type="submit"]');
+      for (const el of submitters) {
+        el.addEventListener("touchstart", handler, { capture: true, passive: false });
+        el.addEventListener("pointerdown", handler, true);
+        el.addEventListener("click", handler, true);
       }
-    } finally {
-      state.scanInProgress = false;
-    }
-  }
-
-  function scheduleScan() {
-    if (state.scanTimer) return;
-    state.scanTimer = setTimeout(async () => {
-      state.scanTimer = null;
-      await scanAndDecryptAll().catch(() => {});
-    }, SCAN_DEBOUNCE_MS);
-  }
-
-  async function redecryptPage() {
-    const spans = document.querySelectorAll(`[data-xfenc="1"][data-xfenc-token]`);
-    for (const sp of spans) {
-      const token = sp.getAttribute("data-xfenc-token");
-      if (!token) continue;
-      sp.replaceWith(document.createTextNode(token));
-    }
-    await scanAndDecryptAll();
-  }
-
-  function observeNewMessages() {
-    const target = document.body;
-    if (!target) return;
-
-    const obs = new MutationObserver(() => {
-      scheduleScan();
-      ensureUi().catch(() => {});
-      interceptSend().catch(() => {});
-    });
-
-    obs.observe(target, { childList: true, subtree: true });
-  }
-
-  (async function init() {
-    initConversationIdentity();
-    await loadPassphrase();
-
-    // Mobile environments can be late; wait for DOM for UI bits.
-    if (document.readyState === "loading") {
-      await new Promise((res) => document.addEventListener("DOMContentLoaded", res, { once: true }));
     }
 
-    await ensureUi();
-    await interceptSend();
-    await scanAndDecryptAll();
-    observeNewMessages();
-  })().catch(console.error);
+    // ============================
+    // DECRYPT
+    // ============================
+    function findMessageContainers() {
+      const candidates = [
+        ...document.querySelectorAll(".message-body .bbWrapper"),
+        ...document.querySelectorAll(".message-body"),
+        ...document.querySelectorAll(".bbWrapper"),
+      ];
+      return Array.from(new Set(candidates));
+    }
 
+    function expandToIncludeWrapper(raw, startIdx, endIdx) {
+      const before = raw.slice(0, startIdx);
+      const after = raw.slice(endIdx);
+      const prefixMatch = before.match(/(\[plain\]|\[code\])\s*$/i);
+      if (prefixMatch) startIdx -= prefixMatch[0].length;
+      const suffixMatch = after.match(/^\s*(\[\/plain\]|\[\/code\])/i);
+      if (suffixMatch) endIdx += suffixMatch[0].length;
+      return { startIdx, endIdx };
+    }
+
+    function extractTokensFromText(text) {
+      const tokens = [];
+      let idx = 0;
+      while (true) {
+        let start = text.indexOf(ENC_PREFIX, idx);
+        if (start === -1) break;
+        let end = text.indexOf(ENC_SUFFIX, start + ENC_PREFIX.length);
+        if (end === -1) break;
+        end = end + ENC_SUFFIX.length;
+        const expanded = expandToIncludeWrapper(text, start, end);
+        tokens.push({ token: text.slice(expanded.startIdx, expanded.endIdx), start: expanded.startIdx, end: expanded.endIdx });
+        idx = expanded.endIdx;
+      }
+      return tokens;
+    }
+
+    async function replaceTokensInTextNode(textNode, passphrase) {
+      const raw = textNode.nodeValue || "";
+      if (!raw.includes(ENC_PREFIX)) return false;
+      const tokens = extractTokensFromText(raw);
+      if (!tokens.length) return false;
+
+      const frag = document.createDocumentFragment();
+      let cursor = 0;
+
+      for (const t of tokens) {
+        if (t.start > cursor) frag.appendChild(document.createTextNode(raw.slice(cursor, t.start)));
+
+        const span = document.createElement("span");
+        span.className = DECRYPTED_SPAN_CLASS;
+        span.setAttribute("data-xfenc", "1");
+        span.setAttribute("data-xfenc-token", t.token);
+
+        try {
+          const pt = await decryptToken(t.token, passphrase);
+          span.textContent = pt;
+        } catch {
+          span.textContent = t.token;
+          span.classList.add(DECRYPT_ERROR_CLASS);
+          span.title = "Encrypted message (could not decrypt with current key OR token was altered by formatting)";
+        }
+
+        frag.appendChild(span);
+        cursor = t.end;
+      }
+
+      if (cursor < raw.length) frag.appendChild(document.createTextNode(raw.slice(cursor)));
+      textNode.parentNode.replaceChild(frag, textNode);
+      return true;
+    }
+
+    async function decryptWithinElement(el, passphrase) {
+      if (!el.textContent || !el.textContent.includes(ENC_PREFIX)) return;
+
+      const walker = document.createTreeWalker(
+        el,
+        NodeFilter.SHOW_TEXT,
+        {
+          acceptNode(node) {
+            if (!node.nodeValue || !node.nodeValue.includes(ENC_PREFIX)) return NodeFilter.FILTER_REJECT;
+            const p = node.parentElement;
+            if (p && p.closest && p.closest(`[data-xfenc="1"]`)) return NodeFilter.FILTER_REJECT;
+            return NodeFilter.FILTER_ACCEPT;
+          },
+        },
+        false
+      );
+
+      const targets = [];
+      let n;
+      while ((n = walker.nextNode())) targets.push(n);
+
+      for (const tn of targets) {
+        // eslint-disable-next-line no-await-in-loop
+        await replaceTokensInTextNode(tn, passphrase);
+      }
+    }
+
+    async function scanAndDecryptAll() {
+      if (state.scanInProgress) return;
+      state.scanInProgress = true;
+      try {
+        const pw = await loadPassphrase();
+        if (!pw) return;
+        const els = findMessageContainers();
+        for (const el of els) {
+          // eslint-disable-next-line no-await-in-loop
+          await decryptWithinElement(el, pw);
+        }
+      } finally {
+        state.scanInProgress = false;
+      }
+    }
+
+    function scheduleScan() {
+      if (state.scanTimer) return;
+      state.scanTimer = setTimeout(async () => {
+        state.scanTimer = null;
+        await scanAndDecryptAll().catch(() => {});
+      }, SCAN_DEBOUNCE_MS);
+    }
+
+    async function redecryptPage() {
+      const spans = document.querySelectorAll(`[data-xfenc="1"][data-xfenc-token]`);
+      for (const sp of spans) {
+        const token = sp.getAttribute("data-xfenc-token");
+        if (!token) continue;
+        sp.replaceWith(document.createTextNode(token));
+      }
+      await scanAndDecryptAll();
+    }
+
+    function observe() {
+      if (state.__obs) return;
+      state.__obs = true;
+      const target = document.body;
+      if (!target) return;
+
+      const obs = new MutationObserver(() => {
+        scheduleScan();
+        ensureUi().catch(() => {});
+        installEncryptOnSendButtons();
+      });
+      obs.observe(target, { childList: true, subtree: true });
+    }
+
+    // ============================
+    // DELAYED INIT / RETRIES
+    // ============================
+    async function installAll() {
+      initConversationIdentity();
+      await loadPassphrase();
+
+      // If script is running at all, show a debug banner once
+      if (!state.installedOnce) {
+        state.installedOnce = true;
+        debugBanner("loaded ✅");
+      }
+
+      await ensureUi();
+      installEncryptOnSendButtons();
+      await scanAndDecryptAll();
+      observe();
+
+      if (!envOk()) debugBanner("loaded ✅ (crypto unavailable ❌)");
+    }
+
+    async function retryInit() {
+      // Retry for up to ~8 seconds to catch editors injected late
+      const start = Date.now();
+      while (Date.now() - start < 8000) {
+        await installAll().catch((e) => {
+          console.error("[XFENC mobile] installAll error:", e);
+          debugBanner("error during init (see console)");
+        });
+
+        // If UI exists, we’re good
+        if (document.querySelector(".xfenc-bar")) return;
+
+        await new Promise(r => setTimeout(r, 300));
+      }
+      debugBanner("loaded ✅ (no editor/form found)");
+    }
+
+    // START
+    retryInit();
+
+    // XenForo AJAX navigation + Safari bfcache
+    document.addEventListener("xf:load", () => { retryInit().catch(() => {}); });
+    document.addEventListener("xf:reinit", () => { retryInit().catch(() => {}); });
+    window.addEventListener("pageshow", () => { retryInit().catch(() => {}); });
+
+  } catch (fatal) {
+    console.error("[XFENC mobile] fatal error:", fatal);
+    // If we can, show visible error
+    try { debugBanner("fatal error (see console)"); } catch {}
+  }
 })();

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         XenForo Conversations E2EE + No Draft Autosave
 // @namespace    xfenc-userscript
-// @version      0.8.3
+// @version      0.8.5-testing
 // @description  Encrypt outgoing XenForo conversation messages and decrypt incoming ones locally. Blocks draft autosave requests.
 // @author       martyrdom
 // @license      GNU GPLv3
@@ -50,12 +50,12 @@
       try {
         if (typeof URLSearchParams !== "undefined" && body instanceof URLSearchParams) {
           const s = body.toString();
-          return /draft/i.test(s) || /draft_id=|conversation_id=|message=|title=/i.test(s);
+          return /draft/i.test(s) || /draft_id=|conversation_id=|message=|message_html=|title=/i.test(s);
         }
         if (typeof FormData !== "undefined" && body instanceof FormData) {
           for (const [k, v] of body.entries()) {
             const kv = `${k}=${typeof v === "string" ? v : ""}`;
-            if (/draft/i.test(kv) || /draft_id|conversation_id|message|title/i.test(kv)) return true;
+            if (/draft/i.test(kv) || /draft_id|conversation_id|message|message_html|title/i.test(kv)) return true;
           }
           return false;
         }
@@ -106,8 +106,9 @@
     if (typeof window.fetch === "function") {
       const origFetch = window.fetch.bind(window);
       window.fetch = function (input, init) {
-        const url = (typeof input === "string") ? input : (input && input.url);
-        const method = (init && init.method) || (input && input.method) || "";
+        const isReq = (typeof Request !== "undefined" && input instanceof Request);
+        const url = isReq ? input.url : ((typeof input === "string") ? input : (input && input.url));
+        const method = (init && init.method) || (isReq ? input.method : (input && input.method)) || "";
 
         // 1) Block drafts
         if (shouldBlock(url, init, method)) {
@@ -118,11 +119,19 @@
         // 2) Rewrite outgoing reply body (async)
         return (async () => {
           try {
-            const headers = (init && init.headers) || (input && input.headers);
-            const body = init && "body" in init ? init.body : undefined;
+            const headers = (init && init.headers) || (isReq ? input.headers : (input && input.headers));
+            const body = (init && "body" in init) ? init.body : undefined;
+
             const rewritten = await rewriteOutgoingBodyIfNeeded(url, method, body, headers);
 
             if (rewritten !== null) {
+              // If input is a Request, create a new Request with same settings but new body.
+              if (isReq) {
+                const newReq = new Request(input, { body: rewritten });
+                // IMPORTANT: do not pass init again or it may override body
+                return origFetch(newReq);
+              }
+
               const newInit = Object.assign({}, init || {});
               newInit.body = rewritten;
               return origFetch(input, newInit);
@@ -249,6 +258,9 @@
   const DECRYPT_ERROR_CLASS = "xfenc-decrypt-error";
 
   const SCAN_DEBOUNCE_MS = 150;
+
+  // ADDED: message keys XenForo may use depending on mode/add-ons
+  const MESSAGE_KEYS = ["message", "message_html", "messageHtml"];
 
   // ----------------------------
   // 2) RUNTIME STATE
@@ -391,7 +403,7 @@
     return t.startsWith(ENC_PREFIX) && t.endsWith(ENC_SUFFIX);
   }
 
-    // ----------------------------
+  // ----------------------------
   // 6b) OUTGOING REQUEST REWRITE
   // ----------------------------
 
@@ -423,6 +435,24 @@
     return "";
   }
 
+  // ADDED: helper to locate the actual message key
+  function pickMessageKeyFromFormData(fd) {
+    for (const k of MESSAGE_KEYS) {
+      const v = fd.get(k);
+      if (typeof v === "string" && v.trim()) return k;
+    }
+    return null;
+  }
+
+  // ADDED: helper to locate the actual message key
+  function pickMessageKeyFromUrlSearchParams(usp) {
+    for (const k of MESSAGE_KEYS) {
+      const v = usp.get(k);
+      if (typeof v === "string" && v.trim()) return k;
+    }
+    return null;
+  }
+
   async function rewriteOutgoingBodyIfNeeded(url, method, body, headers) {
     const urlObj = toAbsUrl(url);
     if (!urlObj) return null;
@@ -438,8 +468,11 @@
 
     // ---- FormData ----
     if (typeof FormData !== "undefined" && body instanceof FormData) {
-      // Extract current message
-      const msg = body.get("message");
+      // CHANGED: support message_html variants
+      const keyFound = pickMessageKeyFromFormData(body);
+      if (!keyFound) return null;
+
+      const msg = body.get(keyFound);
       if (typeof msg !== "string" || !msg.trim()) return null;
       if (isAlreadyEncrypted(msg)) return null;
 
@@ -448,7 +481,7 @@
       // Clone FormData, replacing message
       const fd = new FormData();
       for (const [k, v] of body.entries()) {
-        if (k === "message") fd.append(k, enc);
+        if (k === keyFound) fd.append(k, enc);
         else fd.append(k, v);
       }
       return fd;
@@ -456,13 +489,17 @@
 
     // ---- URLSearchParams ----
     if (typeof URLSearchParams !== "undefined" && body instanceof URLSearchParams) {
-      const msg = body.get("message");
+      // CHANGED: support message_html variants
+      const keyFound = pickMessageKeyFromUrlSearchParams(body);
+      if (!keyFound) return null;
+
+      const msg = body.get(keyFound);
       if (!msg || !String(msg).trim()) return null;
       if (isAlreadyEncrypted(String(msg))) return null;
 
       const enc = await encryptText(String(msg), pw);
       const usp = new URLSearchParams(body.toString());
-      usp.set("message", enc);
+      usp.set(keyFound, enc);
       return usp;
     }
 
@@ -477,12 +514,17 @@
 
       if (looksForm) {
         const usp = new URLSearchParams(body);
-        const msg = usp.get("message");
+
+        // CHANGED: support message_html variants
+        const keyFound = pickMessageKeyFromUrlSearchParams(usp);
+        if (!keyFound) return null;
+
+        const msg = usp.get(keyFound);
         if (!msg || !String(msg).trim()) return null;
         if (isAlreadyEncrypted(String(msg))) return null;
 
         const enc = await encryptText(String(msg), pw);
-        usp.set("message", enc);
+        usp.set(keyFound, enc);
         return usp.toString();
       }
 
@@ -491,11 +533,19 @@
         try {
           const obj = JSON.parse(body);
           if (!obj || typeof obj !== "object") return null;
-          const msg = obj.message;
+
+          // CHANGED: support message_html variants
+          let keyFound = null;
+          for (const k of MESSAGE_KEYS) {
+            if (typeof obj[k] === "string" && obj[k].trim()) { keyFound = k; break; }
+          }
+          if (!keyFound) return null;
+
+          const msg = obj[keyFound];
           if (typeof msg !== "string" || !msg.trim()) return null;
           if (isAlreadyEncrypted(msg)) return null;
 
-          obj.message = await encryptText(msg, pw);
+          obj[keyFound] = await encryptText(msg, pw);
           return JSON.stringify(obj);
         } catch {
           return null;
@@ -509,7 +559,6 @@
     return null;
   }
 
-
   // ----------------------------
   // 7) FIND THE EDITOR
   // ----------------------------
@@ -518,48 +567,106 @@
     return document.querySelector(".js-editor") || document;
   }
 
+  // CHANGED: scope editor lookup to the actual reply form
+  function findReplyForm() {
+  // Prefer: form that actually contains the editor fields (works even if action="" or missing)
+  const forms = Array.from(document.querySelectorAll("form"));
+
+  // 1) Strong match: has message textarea or froala editable
+  const strong = forms.find(f =>
+    f.querySelector('textarea[name="message"], textarea[name="message_html"], .fr-element[contenteditable="true"]')
+  );
+  if (strong) return strong;
+
+  // 2) Next: closest form around a known editor element
+  const ce = document.querySelector('.fr-element[contenteditable="true"]');
+  if (ce && ce.closest) {
+    const f = ce.closest("form");
+    if (f) return f;
+  }
+  const ta = document.querySelector('textarea[name="message"], textarea[name="message_html"]');
+  if (ta && ta.closest) {
+    const f = ta.closest("form");
+    if (f) return f;
+  }
+
+  // 3) Last resort: original heuristic (action contains /conversations/)
+  return forms.find((f) => (f.getAttribute("action") || "").includes("/conversations/")) || null;
+}
+
+
+  // ADDED: scoped editor finders
+  function findMessageTextareaIn(form) {
+    if (!form) return null;
+    return form.querySelector('textarea[name="message"], textarea[name="message_html"]');
+  }
+
+  function findContentEditableIn(form) {
+    if (!form) return null;
+    return form.querySelector('.fr-element[contenteditable="true"]');
+  }
+
+  // CHANGED: read from the form being submitted (prevents grabbing wrong textarea)
+  function getEditorTextFromForm(form) {
+  // Prefer Froala visible content first (textarea may be unsynced until submit)
+  const ce = findContentEditableIn(form);
+  if (ce) {
+    const t = ce.innerText || "";
+    if (t.trim()) return t;
+  }
+
+  const ta = findMessageTextareaIn(form);
+  if (ta && typeof ta.value === "string") return ta.value;
+
+  return "";
+}
+
+
+  // CHANGED: write to the form being submitted
+  function setEditorTextInForm(form, newText) {
+  let ok = false;
+
+  // Write to Froala surface if present
+  const ce = findContentEditableIn(form);
+  if (ce) {
+    ce.innerText = newText;
+    ce.dispatchEvent(new Event("input", { bubbles: true }));
+    ce.dispatchEvent(new Event("change", { bubbles: true }));
+    ok = true;
+  }
+
+  // ALSO write to textarea so XF has the value even if it submits from textarea
+  const ta = findMessageTextareaIn(form);
+  if (ta) {
+    ta.value = newText;
+    ta.dispatchEvent(new Event("input", { bubbles: true }));
+    ta.dispatchEvent(new Event("change", { bubbles: true }));
+    ok = true;
+  }
+
+  return ok;
+}
+
+
+  // KEEP: legacy helpers for UI buttons; now they just route through reply form
   function findMessageTextarea() {
-    return document.querySelector('textarea[name="message"]');
+    const form = findReplyForm();
+    return form ? findMessageTextareaIn(form) : null;
   }
 
   function findContentEditable() {
-    return document.querySelector('.fr-element[contenteditable="true"]');
+    const form = findReplyForm();
+    return form ? findContentEditableIn(form) : null;
   }
 
   function getEditorText() {
-    const ta = findMessageTextarea();
-    if (ta) return ta.value;
-
-    const ce = findContentEditable();
-    if (ce) return ce.innerText;
-
-    return "";
+    const form = findReplyForm();
+    return form ? getEditorTextFromForm(form) : "";
   }
 
   function setEditorText(newText) {
-    const ta = findMessageTextarea();
-    if (ta) {
-      ta.value = newText;
-      ta.dispatchEvent(new Event("input", { bubbles: true }));
-      ta.dispatchEvent(new Event("change", { bubbles: true }));
-      return true;
-    }
-
-    const ce = findContentEditable();
-    if (ce) {
-      // Use textContent/innerText to avoid the editor interpreting HTML.
-      ce.innerText = newText;
-      ce.dispatchEvent(new Event("input", { bubbles: true }));
-      ce.dispatchEvent(new Event("change", { bubbles: true }));
-      return true;
-    }
-
-    return false;
-  }
-
-  function findReplyForm() {
-    const forms = Array.from(document.querySelectorAll("form"));
-    return forms.find((f) => (f.getAttribute("action") || "").includes("/conversations/")) || null;
+    const form = findReplyForm();
+    return form ? setEditorTextInForm(form, newText) : false;
   }
 
   // ----------------------------
@@ -696,10 +803,13 @@
       "submit",
       async (ev) => {
         try {
+          const f = ev.target || form;
+
           const pw = await loadPassphrase();
           if (!pw) return;
 
-          const text = getEditorText();
+          // CHANGED: scope to this form
+          const text = getEditorTextFromForm(f);
           if (!text.trim()) return;
           if (isAlreadyEncrypted(text)) return;
 
@@ -707,15 +817,193 @@
           ev.stopPropagation();
 
           const enc = await encryptText(text, pw);
-          if (!setEditorText(enc)) throw new Error("Editor not found");
+          if (!setEditorTextInForm(f, enc)) throw new Error("Editor not found");
 
-          Promise.resolve().then(() => form.submit());
+          Promise.resolve().then(() => f.submit());
         } catch (e) {
           console.error("XFENC encrypt-on-send failed:", e);
         }
       },
       true
     );
+  }
+
+  // ADDED: Ctrl+Enter capture hook (some XF setups bypass submit listener)
+  function installCtrlEnterEncrypt() {
+    if (document.__xfencCtrlEnterInstalled) return;
+    document.__xfencCtrlEnterInstalled = true;
+
+    document.addEventListener("keydown", async (e) => {
+      const isCtrlEnter =
+        (e.ctrlKey || e.metaKey) && (e.key === "Enter" || e.keyCode === 13);
+
+      if (!isCtrlEnter) return;
+
+      const form = findReplyForm();
+      if (!form) return;
+
+      const pw = await loadPassphrase();
+      if (!pw) return;
+
+      const text = getEditorTextFromForm(form);
+      if (!text.trim()) return;
+      if (isAlreadyEncrypted(text)) return;
+
+      e.preventDefault();
+      e.stopPropagation();
+
+      try {
+        const enc = await encryptText(text, pw);
+        setEditorTextInForm(form, enc);
+        Promise.resolve().then(() => (typeof form.requestSubmit === "function" ? form.requestSubmit() : form.submit()));
+      } catch (err) {
+        console.error("[XFENC] Ctrl+Enter encrypt failed:", err);
+      }
+    }, true);
+  }
+
+  // ADDED: patch native submit/requestSubmit to catch programmatic submits
+  function installNativeSubmitEncryption() {
+    if (HTMLFormElement.prototype.__xfencPatched) return;
+    HTMLFormElement.prototype.__xfencPatched = true;
+
+    const origSubmit = HTMLFormElement.prototype.submit;
+    const origRequestSubmit = HTMLFormElement.prototype.requestSubmit;
+
+    async function maybeEncryptAndThen(form, doSubmit) {
+      try {
+        const action = (form.getAttribute("action") || "");
+        if (!action.includes("/conversations/")) return doSubmit();
+
+        const pw = await loadPassphrase();
+        if (!pw) return doSubmit();
+
+        const text = getEditorTextFromForm(form);
+        if (!text.trim()) return doSubmit();
+        if (isAlreadyEncrypted(text)) return doSubmit();
+
+        const enc = await encryptText(text, pw);
+        setEditorTextInForm(form, enc);
+
+        return doSubmit();
+      } catch (e) {
+        console.warn("[XFENC] native submit hook failed:", e);
+        return doSubmit();
+      }
+    }
+
+    HTMLFormElement.prototype.submit = function () {
+      const form = this;
+      maybeEncryptAndThen(form, () => origSubmit.call(form));
+    };
+
+    if (typeof origRequestSubmit === "function") {
+      HTMLFormElement.prototype.requestSubmit = function (submitter) {
+        const form = this;
+        maybeEncryptAndThen(form, () => origRequestSubmit.call(form, submitter));
+      };
+    }
+  }
+
+  // ADDED: patch XF.ajax / jQuery.ajax (ctrl+enter can use these directly)
+  function installAjaxEncryptionHooks() {
+    if (window.__xfencAjaxHooksInstalled) return;
+    window.__xfencAjaxHooksInstalled = true;
+
+    function patchXF() {
+      if (!window.XF || typeof window.XF.ajax !== "function" || window.XF.ajax.__xfencPatched) return;
+
+      const orig = window.XF.ajax.bind(window.XF);
+
+      window.XF.ajax = function (url, data, success, options) {
+        const urlObj = toAbsUrl(url);
+        if (!isLikelyReplyEndpoint(urlObj)) return orig(url, data, success, options);
+
+        if (data && typeof data === "object" && !(data instanceof FormData) && !(data instanceof URLSearchParams)) {
+          (async () => {
+            try {
+              const pw = await loadPassphrase();
+              if (!pw) return orig(url, data, success, options);
+
+              const newData = Object.assign({}, data);
+              for (const k of MESSAGE_KEYS) {
+                if (typeof newData[k] === "string" && newData[k].trim() && !isAlreadyEncrypted(newData[k])) {
+                  newData[k] = await encryptText(newData[k], pw);
+                  break;
+                }
+              }
+              return orig(url, newData, success, options);
+            } catch (e) {
+              console.warn("[XFENC] XF.ajax encrypt failed:", e);
+              return orig(url, data, success, options);
+            }
+          })();
+          return;
+        }
+
+        return orig(url, data, success, options);
+      };
+
+      window.XF.ajax.__xfencPatched = true;
+      console.info("[XFENC] Patched XF.ajax");
+    }
+
+    function patchJQ() {
+      const $ = window.jQuery;
+      if (!$ || typeof $.ajax !== "function" || $.ajax.__xfencPatched) return;
+
+      const orig = $.ajax.bind($);
+
+      $.ajax = function (opts) {
+        try {
+          const url = (typeof opts === "string") ? opts : (opts && opts.url);
+          const data = opts && opts.data;
+
+          const urlObj = toAbsUrl(url);
+          if (!isLikelyReplyEndpoint(urlObj)) return orig(opts);
+
+          if (data && typeof data === "object" && !(data instanceof FormData) && !(data instanceof URLSearchParams)) {
+            return (async () => {
+              const pw = await loadPassphrase();
+              if (!pw) return orig(opts);
+
+              const newOpts = Object.assign({}, opts);
+              const newData = Object.assign({}, data);
+
+              for (const k of MESSAGE_KEYS) {
+                if (typeof newData[k] === "string" && newData[k].trim() && !isAlreadyEncrypted(newData[k])) {
+                  newData[k] = await encryptText(newData[k], pw);
+                  break;
+                }
+              }
+
+              newOpts.data = newData;
+              return orig(newOpts);
+            })();
+          }
+        } catch (e) {
+          console.warn("[XFENC] $.ajax encrypt failed:", e);
+        }
+
+        return orig(opts);
+      };
+
+      $.ajax.__xfencPatched = true;
+      console.info("[XFENC] Patched jQuery.ajax");
+    }
+
+    patchXF();
+    patchJQ();
+
+    const maxMs = 10000;
+    const start = Date.now();
+    const t = setInterval(() => {
+      patchXF();
+      patchJQ();
+      const okXF = window.XF && window.XF.ajax && window.XF.ajax.__xfencPatched;
+      const okJQ = window.jQuery && window.jQuery.ajax && window.jQuery.ajax.__xfencPatched;
+      if (okXF || okJQ || (Date.now() - start) > maxMs) clearInterval(t);
+    }, 250);
   }
 
   // ----------------------------
@@ -918,6 +1206,11 @@
     if (document.readyState === "loading") {
       await new Promise((res) => document.addEventListener("DOMContentLoaded", res, { once: true }));
     }
+
+    // ADDED: install extra send-path hooks
+    installCtrlEnterEncrypt();
+    installNativeSubmitEncryption();
+    installAjaxEncryptionHooks();
 
     await ensureUi();
     await interceptSend();

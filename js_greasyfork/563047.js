@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Platesmania Gallery Moderator Mode Toolbox
-// @version      2.0
+// @version      2.1.1
 // @description  Couple enhancements for moderator workflow.
 // @match        https://platesmania.com/*gallery*
 // @match        https://platesmania.com/*/nomer*
@@ -472,6 +472,143 @@
         return overlay;
     }
 
+    const SEARCH_IFRAME_ID = "pmx-search-overlay";
+    const SEARCH_IFRAME_NAME = "pmx_search_iframe_target";
+
+    function closeSearchOverlay() {
+        const el = qs("#" + SEARCH_IFRAME_ID);
+        if (el) el.remove();
+    }
+
+    function ensureSearchOverlay() {
+        let overlay = qs("#" + SEARCH_IFRAME_ID);
+        if (overlay) return overlay;
+
+        overlay = document.createElement("div");
+        overlay.id = SEARCH_IFRAME_ID;
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.zIndex = "999999";
+        overlay.style.background = "rgba(0,0,0,0.35)";
+        overlay.style.display = "flex";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.addEventListener("mousedown", (e) => {
+            if (e.target === overlay) closeSearchOverlay();
+        });
+
+        const panel = document.createElement("div");
+        panel.style.width = "80vw";
+        panel.style.height = "80vh";
+        panel.style.background = "#fff";
+        panel.style.borderRadius = "12px";
+        panel.style.boxShadow = "0 16px 44px rgba(0,0,0,0.30)";
+        panel.style.overflow = "hidden";
+        panel.style.display = "flex";
+        panel.style.flexDirection = "column";
+
+        const header = document.createElement("div");
+        header.style.display = "flex";
+        header.style.alignItems = "center";
+        header.style.justifyContent = "space-between";
+        header.style.padding = "10px 12px";
+        header.style.borderBottom = "1px solid rgba(0,0,0,0.08)";
+        header.style.background = "#f8f9fa";
+        header.style.fontFamily = "system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif";
+
+        const title = document.createElement("div");
+        title.textContent = "Double spots";
+        title.style.fontWeight = "700";
+        title.style.fontSize = "14px";
+
+        const close = document.createElement("button");
+        close.type = "button";
+        close.textContent = "×";
+        close.title = "Close";
+        close.style.border = "0";
+        close.style.background = "transparent";
+        close.style.cursor = "pointer";
+        close.style.fontSize = "22px";
+        close.style.lineHeight = "22px";
+        close.style.padding = "0 4px";
+        close.addEventListener("click", closeSearchOverlay);
+
+        header.appendChild(title);
+        header.appendChild(close);
+
+        const iframe = document.createElement("iframe");
+        iframe.name = SEARCH_IFRAME_NAME;
+        iframe.style.border = "0";
+        iframe.style.width = "100%";
+        iframe.style.height = "100%";
+        iframe.style.flex = "1 1 auto";
+
+        // Hide annoying elements inside the iframe after every load
+        iframe.addEventListener("load", () => {
+            try {
+                const doc = iframe.contentDocument;
+                if (!doc) return;
+
+                // Option 1: Inject CSS (fast + persistent-ish)
+                const style = doc.createElement("style");
+                style.textContent = `
+        .bg-info.text-center[style*="width: 100%"] { display: none !important; }
+        .header { display: none !important; }
+        div[style*="height: 112px"][style*="clear: both"] { display: none !important; }
+        .breadcrumbs { display: none !important; }
+
+        /* new stuff */
+        .col-md-3 { display: none !important; }
+        .row.no-margin { display: none !important; }
+        .text-center > ul.pagination { display: none !important; }
+        .footer-v1 { display: none !important; }
+
+        small span.text-highlights.text-highlights-blue { display: none !important; }
+
+        /* hide the whole <small> block that contains that span */
+        small:has(span.text-highlights.text-highlights-blue) { display: none !important; }
+
+        /* optional: remove top padding gaps */
+        body { padding-top: 0 !important; }
+        `;
+                doc.head?.appendChild(style);
+
+                // Option 2: Also brute-force hide by querying
+                const kill = (el) => { if (el) el.style.setProperty("display", "none", "important"); };
+
+                kill(doc.querySelector('.bg-info.text-center[style*="width: 100%"]'));
+                kill(doc.querySelector(".header"));
+                kill(doc.querySelector('div[style*="height: 112px"][style*="clear: both"]'));
+                kill(doc.querySelector(".breadcrumbs"));
+
+                // new stuff
+                kill(doc.querySelector(".col-md-3"));
+                kill(doc.querySelector(".row.no-margin"));
+                kill(doc.querySelector(".text-center ul.pagination"));
+                kill(doc.querySelector(".footer-v1"));
+
+                const lastBadge = doc.querySelector('small span.text-highlights.text-highlights-blue');
+                if (lastBadge) kill(lastBadge.closest("small"));
+            } catch {
+                // silently fail on cross-origin
+            }
+        });
+
+
+        panel.appendChild(header);
+        panel.appendChild(iframe);
+        overlay.appendChild(panel);
+        document.body.appendChild(overlay);
+        return overlay;
+    }
+
+    function openSearchInIframe(url) {
+        ensureSearchOverlay();
+        const iframe = qs(`#${SEARCH_IFRAME_ID} iframe[name="${SEARCH_IFRAME_NAME}"]`);
+        if (iframe) iframe.src = url;
+    }
+
+
     function submitFormToTarget(form, targetName) {
         const prevTarget = form.getAttribute("target");
         form.setAttribute("target", targetName);
@@ -636,6 +773,43 @@
     }
 
     let activeMenuCleanup = null;
+
+    function injectDoubleSpotSearchLink(tileInfo) {
+        const tile = tileInfo.tile;
+        if (!tile) return;
+
+        // Find the "double spot" indicator icon inside THIS tile only
+        const icon = Array.from(tile.querySelectorAll('li.pull-right > i.fa.fa-automobile.tooltips'))
+        .find(i => (i.getAttribute("data-original-title") || i.getAttribute("title") || "").toLowerCase().includes("plate"))
+        || tile.querySelector('li.pull-right > i.fa.fa-automobile.tooltips');
+        if (!icon) return;
+
+        // If it's already wrapped in a link, do nothing
+        if (icon.closest("a")) return;
+
+        const country = (tileInfo.country || "").trim();
+        const plate = (tileInfo.plate || "").trim();
+        if (!country || !plate) return;
+
+        const url = `https://platesmania.com/${encodeURIComponent(country)}/gallery.php?fastsearch=${encodeURIComponent(plate)}`;
+
+        const a = document.createElement("a");
+        a.href = "#";
+        a.style.color = "inherit";
+        a.style.textDecoration = "none";
+        a.title = icon.getAttribute("data-original-title") || "Show double spots";
+
+        a.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            openSearchInIframe(url);
+        });
+
+        icon.parentNode.insertBefore(a, icon);
+        a.appendChild(icon);
+
+    }
+
 
     function closeAllMenus() {
         if (typeof activeMenuCleanup === "function") {
@@ -1241,12 +1415,14 @@
             else disableLens(tile);
 
             if (info.editForm) enhanceModeratorEditForm(info.editForm);
+            injectDoubleSpotSearchLink(info);
             return;
         }
 
         const info = parseTile(tile);
 
         injectForumWarningButton(info);
+        injectDoubleSpotSearchLink(info);
 
         if (!info.editForm) {
             tile.dataset.pmxDone = "1";

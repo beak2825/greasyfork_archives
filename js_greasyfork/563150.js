@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Cookie Sync
 // @namespace    https://github.com/hxueh
-// @version      0.0.19
-// @description  Sync cookies across browsers using GitHub Gist with E2E encryption (AES-GCM + PBKDF2-SHA256). GitHub token is also encrypted.
+// @version      0.0.20
+// @description  Sync cookies across browsers using GitHub Gist with E2E encryption (AES-GCM + PBKDF2-SHA256). GitHub token is also encrypted. Fixed Safari cookie listing.
 // @author       hxueh
 // @license      MIT
 // @icon         data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23D2691E'/%3E%3Ccircle cx='35' cy='35' r='8' fill='%234A2C0A'/%3E%3Ccircle cx='60' cy='30' r='6' fill='%234A2C0A'/%3E%3Ccircle cx='25' cy='55' r='5' fill='%234A2C0A'/%3E%3Ccircle cx='55' cy='55' r='7' fill='%234A2C0A'/%3E%3Ccircle cx='70' cy='50' r='5' fill='%234A2C0A'/%3E%3Ccircle cx='40' cy='70' r='6' fill='%234A2C0A'/%3E%3Ccircle cx='65' cy='70' r='5' fill='%234A2C0A'/%3E%3C/svg%3E
@@ -330,7 +330,7 @@
     clearSessionPin() {
       try {
         sessionStorage.removeItem(SESSION_PIN_KEY);
-      } catch { }
+      } catch {}
     },
 
     async encryptPassword(password, pin) {
@@ -517,9 +517,10 @@
       return false;
     },
 
-    async getAllCookies() {
+    async getAllCookies(domain = null) {
       return new Promise((resolve, reject) => {
-        GM_cookie.list({}, (cookies, error) => {
+        const filter = domain ? { domain: domain } : {};
+        GM_cookie.list(filter, (cookies, error) => {
           if (error) {
             reject(new Error(error));
           } else {
@@ -530,10 +531,59 @@
     },
 
     async getCookiesForDomain(domain) {
-      const allCookies = await this.getAllCookies();
-      return allCookies.filter((cookie) =>
-        this.domainMatches(cookie.domain, domain),
-      );
+      // Try multiple domain formats to handle Safari's stricter cookie access
+      // Safari may not support listing all cookies, so we query by domain directly
+      const domainWithoutDot = domain.replace(/^\./, "");
+      const domainWithDot = "." + domainWithoutDot;
+
+      // Try different filter approaches and merge results
+      const cookieMap = new Map();
+
+      // Approach 1: Query with domain filter (with dot prefix)
+      try {
+        const cookies1 = await this.getAllCookies(domainWithDot);
+        cookies1.forEach((c) =>
+          cookieMap.set(`${c.domain}|${c.name}|${c.path}`, c),
+        );
+      } catch {}
+
+      // Approach 2: Query with domain filter (without dot prefix)
+      try {
+        const cookies2 = await this.getAllCookies(domainWithoutDot);
+        cookies2.forEach((c) =>
+          cookieMap.set(`${c.domain}|${c.name}|${c.path}`, c),
+        );
+      } catch {}
+
+      // Approach 3: Query with URL filter (for browsers that prefer URL-based filtering)
+      try {
+        const cookies3 = await new Promise((resolve, reject) => {
+          GM_cookie.list(
+            { url: `https://${domainWithoutDot}/` },
+            (cookies, error) => {
+              if (error) reject(new Error(error));
+              else resolve(cookies || []);
+            },
+          );
+        });
+        cookies3.forEach((c) =>
+          cookieMap.set(`${c.domain}|${c.name}|${c.path}`, c),
+        );
+      } catch {}
+
+      // Approach 4: Fallback to listing all cookies (works in Chrome/Firefox)
+      if (cookieMap.size === 0) {
+        try {
+          const allCookies = await this.getAllCookies();
+          allCookies
+            .filter((cookie) => this.domainMatches(cookie.domain, domain))
+            .forEach((c) =>
+              cookieMap.set(`${c.domain}|${c.name}|${c.path}`, c),
+            );
+        } catch {}
+      }
+
+      return Array.from(cookieMap.values());
     },
 
     async setCookie(cookie) {

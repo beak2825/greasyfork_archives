@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         C6 直播辅助
 // @namespace    ui-preview-enhanced
-// @version      1.1.1
+// @version      1.1.2
 // @match        *://*/*
 // @description  C6 直播辅助+盘口助手+直播助手
 // @grant        GM_setClipboard
@@ -375,34 +375,49 @@
         return round + league;
     }
 
-    function buildLiveReplyBBCode(m) {
-        const homeVal = m.homeVal || m.home || '';
-        const awayVal = m.awayVal || m.away || '';
-        const homeScore = m.homeScore ?? '';
-        const awayScore = m.awayScore ?? '';
+function buildLiveReplyBBCode(m) {
+    const homeVal = m.homeOdd ? `[${m.homeOdd}] ${m.home}` : (m.home || '');
+    const awayVal = m.awayOdd ? `[${m.awayOdd}] ${m.away}` : (m.away || '');
+    const homeScore = m.homeScore ?? '';
+    const awayScore = m.awayScore ?? '';
 
-        return (
-            `[color=green]${homeVal}[/color]　` +
-            `[color=#FF6600]${m.handicap || ''}[/color]　` +
-            `[color=green]${awayVal}[/color] ` +
-            `[color=orange]${m.progress || ''}[/color]\n` +
-            `[size=4]` +
-            `[backcolor=blue][color=white]　${homeScore}　[/color][/backcolor]` +
-            `　-　` +
-            `[backcolor=blue][color=white]　${awayScore}　[/color][/backcolor]` +
-            `[/size]`
-        );
-    }
+    return (
+        `[color=green]${homeVal}[/color]　` +
+        `[color=#FF6600]${m.handicap || ''}[/color]　` +
+        `[color=green]${awayVal}[/color] ` +
+        `[color=orange]${m.progress || ''}[/color]\n` +
+        `[size=4]` +
+        `[backcolor=blue][color=white]　${homeScore}　[/color][/backcolor]` +
+        `　-　` +
+        `[backcolor=blue][color=white]　${awayScore}　[/color][/backcolor]` +
+        `[/size]`
+    );
+}
 
     function generateLiveReplyText(matchList) {
-        const out = [];
-        matchList.forEach(m => {
-            if (m.status !== '自动' && m.status !== '手动') return;
-            out.push(buildLiveReplyHeader(m));
+    const groups = new Map();
+
+    // ① 先分组
+    matchList.forEach(m => {
+        const header = buildLiveReplyHeader(m);
+        if (!groups.has(header)) {
+            groups.set(header, []);
+        }
+        groups.get(header).push(m);
+    });
+
+    // ② 再输出
+    const out = [];
+    groups.forEach((matches, header) => {
+        out.push(header);
+        matches.forEach(m => {
             out.push(buildLiveReplyBBCode(m));
         });
-        return out.join('\n');
-    }
+    });
+
+    return out.join('\n');
+}
+
 
     // --- Standard Odds Table BBCode ---
     function buildTidTitle(item) {
