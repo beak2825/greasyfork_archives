@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name            WME Color Errors
-// @version         2026.01.12.02
+// @version         2026.01.19
 // @icon            data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAALuSURBVHja7Jots6swEIb7x6qiUFVVUVEoVBSqKioqU8EfqKpCRaE6FShMo5gjUCiOYebOzTXnvaKlhR44LbS9vcyQmVWdbt5nd7P5GGbr/eFjvT98jtQ+Zuv9oVzvDxiplbMTyVgBPieACWACmADeD/Bn7ABfE8D77PfYAfBUgFCt4DEKZz7H/Js5oMzDSoXPBPh6GCBSHAvSJviGkQW4it4HECmvI9IncygYY2ALcgPGgTccpD9AkQRwf4g4cQPEWYnzsDHkXRlxESTFawFixUDOkxIwIeEvLiKojFFclKPIDOJwhWWX6AWHWF35VPFrAEJeKwXHw9aUsIm8TO6GyE7S80iA3bUuCGRiUZotPKeWRR4+F0DXxBMeIrNHoUaRhhAAKCJei+htI8ocnZUGG7c+j34OQF08FTvk5xLJELJKiEICAEixWfbsRuySOSDHTtA+ED8D5Jo3nF3EA4CBqkR4p98KDd63nc4VTMNv3gga1/lwALeahCoYi6tRA5hzhFmJPFr1Kp92AADWQNHqd3cYQORX7Y1D52gZObQ3YAO7Nu86s5X7Wjb9qD/AOboihkX7SDfLhwGWm7TDu0UsLlnqDbATVR1SKGO7CEAfAqDo0m+NOvsmYjdsDXByq4wsYkkGAxDZkd1cN+YevIgbPb11IV8vuB52lz8CHhWP7QNG1foyC5CULZMWMWQfCCoRFy1+ygQBq+07yjxnJ65vLnMqELWVk82gBbvRRh24MuroOhFELQi0u+6HnYViSRuLT+gUbclAmSEOFVYeOx6nGQPzJbY6Qdb+B6RaNJoBlfFrTqNZ6DfuAIQJ6LTE0FGmGoKRRob8MHv9haY56RxkwaG0QV7am6JtkSHRCvzqokOY+Lc3slR3HJkdCuatoIIAwdmOJUWdtosMg9Dp++7EpiWad+0Bp6z9V68S6/0BgfTBvr1MOKCMwZfBs59Vfs3G/CZUvczZ6XV6ApgAJoAJYAIYM8DoP/YY9ec2fwcAaebQXj6i79wAAAAASUVORK5CYII=
 // @description     Colorise les erreurs d’édition françaises, sur la carte.
 // @match           https://*.waze.com/*/editor*
@@ -14,6 +14,7 @@
 // @downloadURL https://update.greasyfork.org/scripts/21186/WME%20Color%20Errors.user.js
 // @updateURL https://update.greasyfork.org/scripts/21186/WME%20Color%20Errors.meta.js
 // ==/UserScript==
+
 (() => {
     "use strict";
 
@@ -28,7 +29,48 @@
         streetNameSeg = "^(^Le |^La |^Les |Grande |Allée |[ ]?Avenue[]?|Boulevard |Chemin |Cité |Clos |Côte |Cour[s]? |Descente |Domaine |Hameau |Impasse |Levée |Lotissement |Mail |Montée |Parc |Parvis |Passage |Place |Placette |Pont |Promenade |Quai |Résidence[s]? |Route |[ ]?Rue[ ]?|Ruelle |Sente |Sentier |Square |Terrasse |Traverse |Venelle |Villa |Voie )",
         parkNamePoi = "(Parking[s]?|Parc-Relais|Placette|Aire|Arrêt|Emplacement|Place)",
         religiousPoi = "(Abbatiale|Abbaye|Basilique|Calvaire|Carmel|Cathédrale|Chapelle|Cloître|Collégiale|Conjuratoire|Couvent|Crypte|Dôme|Église|Grande Mosquée|Mandir|Maison Diocésaine|Monastère|Mosquée|Notre-Dame|Oratoire|Ordre|Pagode|Paroisse|Presbytère|Prieuré|Salle du Royaume|Sanctuaire|Stupa|Synagogue|Temple)",
-
+        VENUE_SUBCATEGORIES = [
+            ["CAR_SERVICES", 1], ["CAR_WASH", 2], ["CHARGING_STATION", 3], ["GARAGE_AUTOMOTIVE_SHOP", 4],
+            ["GAS_STATION", 5], ["CRISIS_LOCATIONS", 6], ["DONATION_CENTERS", 7],
+            ["SHELTER_LOCATIONS", 8], ["CULTURE_AND_ENTERTAINEMENT", 9], ["ART_GALLERY", 10],
+            ["CASINO", 11], ["CLUB", 12], ["TOURIST_ATTRACTION_HISTORIC_SITE", 13], ["MOVIE_THEATER", 14],
+            ["MUSEUM", 15], ["MUSIC_VENUE", 16], ["PERFORMING_ARTS_VENUE", 17], ["GAME_CLUB", 18],
+            ["STADIUM_ARENA", 19], ["THEME_PARK", 20], ["ZOO_AQUARIUM", 21], ["RACING_TRACK", 22],
+            ["THEATER", 23], ["FOOD_AND_DRINK", 24], ["RESTAURANT", 25], ["BAKERY", 26],
+            ["DESSERT", 27], ["CAFE", 28], ["FAST_FOOD", 29], ["FOOD_COURT", 30],
+            ["BAR", 31], ["ICE_CREAM", 32], ["LODGING", 33], ["HOTEL", 34],
+            ["HOSTEL", 35], ["CAMPING_TRAILER_PARK", 36], ["COTTAGE_CABIN", 37],
+            ["BED_AND_BREAKFAST", 38], ["NATURAL_FEATURES", 39], ["ISLAND", 40],
+            ["SEA_LAKE_POOL", 41], ["RIVER_STREAM", 42], ["FOREST_GROVE", 43],
+            ["FARM", 44], ["CANAL", 45], ["SWAMP_MARSH", 46], ["DAM", 47],
+            ["OTHER", 48], ["CONSTRUCTION_SITE", 49], ["OUTDOORS", 50], ["PARK", 51],
+            ["PLAYGROUND", 52], ["BEACH", 53], ["SPORTS_COURT", 54], ["GOLF_COURSE", 55],
+            ["PLAZA", 56], ["PROMENADE", 57], ["POOL", 58], ["SCENIC_LOOKOUT_VIEWPOINT", 59],
+            ["SKI_AREA", 60], ["PARKING_LOT", 61], ["PROFESSIONAL_AND_PUBLIC", 62],
+            ["COLLEGE_UNIVERSITY", 63], ["SCHOOL", 64], ["CONVENTIONS_EVENT_CENTER", 65],
+            ["GOVERNMENT", 66], ["LIBRARY", 67], ["CITY_HALL", 68],
+            ["ORGANIZATION_OR_ASSOCIATION", 69], ["PRISON_CORRECTIONAL_FACILITY", 70], ["COURTHOUSE", 71],
+            ["CEMETERY", 72], ["FIRE_DEPARTMENT", 73], ["POLICE_STATION", 74],
+            ["MILITARY", 75], ["HOSPITAL_URGENT_CARE", 76], ["DOCTOR_CLINIC", 77],
+            ["OFFICES", 78], ["POST_OFFICE", 79], ["RELIGIOUS_CENTER", 80],
+            ["KINDERGARDEN", 81], ["FACTORY_INDUSTRIAL", 82], ["EMBASSY_CONSULATE", 83],
+            ["INFORMATION_POINT", 84], ["EMERGENCY_SHELTER", 85], ["TRASH_AND_RECYCLING_FACILITIES", 86],
+            ["SHOPPING_AND_SERVICES", 87], ["ARTS_AND_CRAFTS", 88], ["BANK_FINANCIAL", 89],
+            ["SPORTING_GOODS", 90], ["BOOKSTORE", 91], ["PHOTOGRAPHY", 92],
+            ["CAR_DEALERSHIP", 93], ["FASHION_AND_CLOTHING", 94], ["CONVENIENCE_STORE", 95],
+            ["PERSONAL_CARE", 96], ["DEPARTMENT_STORE", 97], ["PHARMACY", 98],
+            ["ELECTRONICS", 99], ["FLOWERS", 100], ["FURNITURE_HOME_STORE", 101],
+            ["GIFTS", 102], ["GYM_FITNESS", 103], ["SWIMMING_POOL", 104],
+            ["HARDWARE_STORE", 105], ["MARKET", 106], ["SUPERMARKET_GROCERY", 107],
+            ["JEWELRY", 108], ["LAUNDRY_DRY_CLEAN", 109], ["SHOPPING_CENTER", 110],
+            ["MUSIC_STORE", 111], ["PET_STORE_VETERINARIAN_SERVICES", 112], ["TOY_STORE", 113],
+            ["TRAVEL_AGENCY", 114], ["ATM", 115], ["CURRENCY_EXCHANGE", 116],
+            ["CAR_RENTAL", 117], ["TELECOM", 118], ["TRANSPORTATION", 119],
+            ["AIRPORT", 120], ["BUS_STATION", 121], ["FERRY_PIER", 122],
+            ["SEAPORT_MARINA_HARBOR", 123], ["SUBWAY_STATION", 124], ["TRAIN_STATION", 125],
+            ["BRIDGE", 126], ["TUNNEL", 127], ["TAXI_STATION", 128],
+            ["JUNCTION_INTERCHANGE", 129], ["REST_AREAS", 130], ["CARPOOL_SPOT", 131],
+        ],
         segment = "ce-segments", nodes = "ce-nodes", places = "ce-places", pref = "ce-pref", autolock = "ce-autolock",
         ceErrorDB = [
             { lock: 0, type: "pref", cat: "ce-icon", id: "_iBack", text: `Fond blanc` },
@@ -91,14 +133,23 @@
             // auto lock
             { lock: 5, type: "title", cat: "ce-global-check-lock", id: null, text: `Auto-verrouillage` },
             { lock: 5, type: "global-choice", cat: "ce-lockBad", id: "_autoLock", text: `Auto-verrouillage` },
-            { lock: 5, type: "choice", cat: autolock, level: "#c577d2", id: "_Freeway", text: `5  Autoroute, voie express`, icon: `M287.9 96L211.7 96C182.3 96 156.6 116.1 149.6 144.6L65.4 484.5C57.9 514.7 80.8 544 112 544L287.9 544L287.9 480C287.9 462.3 302.2 448 319.9 448C337.6 448 351.9 462.3 351.9 480L351.9 544L528 544C559.2 544 582.1 514.7 574.6 484.5L490.5 144.6C483.4 116.1 457.8 96 428.3 96L351.9 96L351.9 160C351.9 177.7 337.6 192 319.9 192C302.2 192 287.9 177.7 287.9 160L287.9 96zM351.9 288L351.9 352C351.9 369.7 337.6 384 319.9 384C302.2 384 287.9 369.7 287.9 352L287.9 288C287.9 270.3 302.2 256 319.9 256C337.6 256 351.9 270.3 351.9 288z` },
-            { lock: 5, type: "choice", cat: autolock, level: "#b3bfb3", id: "_Ramp", text: `5  Bretelle`, icon: `M287.9 96L211.7 96C182.3 96 156.6 116.1 149.6 144.6L65.4 484.5C57.9 514.7 80.8 544 112 544L287.9 544L287.9 480C287.9 462.3 302.2 448 319.9 448C337.6 448 351.9 462.3 351.9 480L351.9 544L528 544C559.2 544 582.1 514.7 574.6 484.5L490.5 144.6C483.4 116.1 457.8 96 428.3 96L351.9 96L351.9 160C351.9 177.7 337.6 192 319.9 192C302.2 192 287.9 177.7 287.9 160L287.9 96zM351.9 288L351.9 352C351.9 369.7 337.6 384 319.9 384C302.2 384 287.9 369.7 287.9 352L287.9 288C287.9 270.3 302.2 256 319.9 256C337.6 256 351.9 270.3 351.9 288z` },
-            { lock: 5, type: "choice", cat: autolock, level: "#45b8d1", id: "_Major", text: `5  Route majeure`, icon: `M287.9 96L211.7 96C182.3 96 156.6 116.1 149.6 144.6L65.4 484.5C57.9 514.7 80.8 544 112 544L287.9 544L287.9 480C287.9 462.3 302.2 448 319.9 448C337.6 448 351.9 462.3 351.9 480L351.9 544L528 544C559.2 544 582.1 514.7 574.6 484.5L490.5 144.6C483.4 116.1 457.8 96 428.3 96L351.9 96L351.9 160C351.9 177.7 337.6 192 319.9 192C302.2 192 287.9 177.7 287.9 160L287.9 96zM351.9 288L351.9 352C351.9 369.7 337.6 384 319.9 384C302.2 384 287.9 369.7 287.9 352L287.9 288C287.9 270.3 302.2 256 319.9 256C337.6 256 351.9 270.3 351.9 288z` },
-            { lock: 5, type: "choice", cat: autolock, level: "#d1d0eb", id: "_Railway", text: `5  Voie ferrée`, icon: `M287.9 96L211.7 96C182.3 96 156.6 116.1 149.6 144.6L65.4 484.5C57.9 514.7 80.8 544 112 544L287.9 544L287.9 480C287.9 462.3 302.2 448 319.9 448C337.6 448 351.9 462.3 351.9 480L351.9 544L528 544C559.2 544 582.1 514.7 574.6 484.5L490.5 144.6C483.4 116.1 457.8 96 428.3 96L351.9 96L351.9 160C351.9 177.7 337.6 192 319.9 192C302.2 192 287.9 177.7 287.9 160L287.9 96zM351.9 288L351.9 352C351.9 369.7 337.6 384 319.9 384C302.2 384 287.9 369.7 287.9 352L287.9 288C287.9 270.3 302.2 256 319.9 256C337.6 256 351.9 270.3 351.9 288z` },
-            { lock: 5, type: "choice", cat: autolock, level: "#69bf88", id: "_Minor", text: `4  Route mineure`, icon: `M287.9 96L211.7 96C182.3 96 156.6 116.1 149.6 144.6L65.4 484.5C57.9 514.7 80.8 544 112 544L287.9 544L287.9 480C287.9 462.3 302.2 448 319.9 448C337.6 448 351.9 462.3 351.9 480L351.9 544L528 544C559.2 544 582.1 514.7 574.6 484.5L490.5 144.6C483.4 116.1 457.8 96 428.3 96L351.9 96L351.9 160C351.9 177.7 337.6 192 319.9 192C302.2 192 287.9 177.7 287.9 160L287.9 96zM351.9 288L351.9 352C351.9 369.7 337.6 384 319.9 384C302.2 384 287.9 369.7 287.9 352L287.9 288C287.9 270.3 302.2 256 319.9 256C337.6 256 351.9 270.3 351.9 288z` },
-            { lock: 5, type: "choice", cat: autolock, level: "#f0ea58", id: "_Primary", text: `3  Rue principale`, icon: `M287.9 96L211.7 96C182.3 96 156.6 116.1 149.6 144.6L65.4 484.5C57.9 514.7 80.8 544 112 544L287.9 544L287.9 480C287.9 462.3 302.2 448 319.9 448C337.6 448 351.9 462.3 351.9 480L351.9 544L528 544C559.2 544 582.1 514.7 574.6 484.5L490.5 144.6C483.4 116.1 457.8 96 428.3 96L351.9 96L351.9 160C351.9 177.7 337.6 192 319.9 192C302.2 192 287.9 177.7 287.9 160L287.9 96zM351.9 288L351.9 352C351.9 369.7 337.6 384 319.9 384C302.2 384 287.9 369.7 287.9 352L287.9 288C287.9 270.3 302.2 256 319.9 256C337.6 256 351.9 270.3 351.9 288z` },
-            { lock: 5, type: "choice", cat: autolock, level: "#ffffeb", id: "_Street", text: `1  Rue`, icon: `M287.9 96L211.7 96C182.3 96 156.6 116.1 149.6 144.6L65.4 484.5C57.9 514.7 80.8 544 112 544L287.9 544L287.9 480C287.9 462.3 302.2 448 319.9 448C337.6 448 351.9 462.3 351.9 480L351.9 544L528 544C559.2 544 582.1 514.7 574.6 484.5L490.5 144.6C483.4 116.1 457.8 96 428.3 96L351.9 96L351.9 160C351.9 177.7 337.6 192 319.9 192C302.2 192 287.9 177.7 287.9 160L287.9 96zM351.9 288L351.9 352C351.9 369.7 337.6 384 319.9 384C302.2 384 287.9 369.7 287.9 352L287.9 288C287.9 270.3 302.2 256 319.9 256C337.6 256 351.9 270.3 351.9 288z` },
-            { lock: 5, type: "choice", cat: autolock, level: "#64799a", id: "_Narrow", text: `1  Rue étroite`, icon: `M287.9 96L211.7 96C182.3 96 156.6 116.1 149.6 144.6L65.4 484.5C57.9 514.7 80.8 544 112 544L287.9 544L287.9 480C287.9 462.3 302.2 448 319.9 448C337.6 448 351.9 462.3 351.9 480L351.9 544L528 544C559.2 544 582.1 514.7 574.6 484.5L490.5 144.6C483.4 116.1 457.8 96 428.3 96L351.9 96L351.9 160C351.9 177.7 337.6 192 319.9 192C302.2 192 287.9 177.7 287.9 160L287.9 96zM351.9 288L351.9 352C351.9 369.7 337.6 384 319.9 384C302.2 384 287.9 369.7 287.9 352L287.9 288C287.9 270.3 302.2 256 319.9 256C337.6 256 351.9 270.3 351.9 288z` },
+            { lock: 5, type: "choice", cat: autolock, level: "#c577d2", id: "_auto_lock_3", text: `5 - Autoroute, voie express`, icon: `M287.9 96L211.7 96C182.3 96 156.6 116.1 149.6 144.6L65.4 484.5C57.9 514.7 80.8 544 112 544L287.9 544L287.9 480C287.9 462.3 302.2 448 319.9 448C337.6 448 351.9 462.3 351.9 480L351.9 544L528 544C559.2 544 582.1 514.7 574.6 484.5L490.5 144.6C483.4 116.1 457.8 96 428.3 96L351.9 96L351.9 160C351.9 177.7 337.6 192 319.9 192C302.2 192 287.9 177.7 287.9 160L287.9 96zM351.9 288L351.9 352C351.9 369.7 337.6 384 319.9 384C302.2 384 287.9 369.7 287.9 352L287.9 288C287.9 270.3 302.2 256 319.9 256C337.6 256 351.9 270.3 351.9 288z` },
+            { lock: 5, type: "choice", cat: autolock, level: "#b3bfb3", id: "_auto_lock_4", text: `5 - Bretelle`, icon: `M287.9 96L211.7 96C182.3 96 156.6 116.1 149.6 144.6L65.4 484.5C57.9 514.7 80.8 544 112 544L287.9 544L287.9 480C287.9 462.3 302.2 448 319.9 448C337.6 448 351.9 462.3 351.9 480L351.9 544L528 544C559.2 544 582.1 514.7 574.6 484.5L490.5 144.6C483.4 116.1 457.8 96 428.3 96L351.9 96L351.9 160C351.9 177.7 337.6 192 319.9 192C302.2 192 287.9 177.7 287.9 160L287.9 96zM351.9 288L351.9 352C351.9 369.7 337.6 384 319.9 384C302.2 384 287.9 369.7 287.9 352L287.9 288C287.9 270.3 302.2 256 319.9 256C337.6 256 351.9 270.3 351.9 288z` },
+            { lock: 5, type: "choice", cat: autolock, level: "#45b8d1", id: "_auto_lock_6", text: `5 - Route majeure`, icon: `M287.9 96L211.7 96C182.3 96 156.6 116.1 149.6 144.6L65.4 484.5C57.9 514.7 80.8 544 112 544L287.9 544L287.9 480C287.9 462.3 302.2 448 319.9 448C337.6 448 351.9 462.3 351.9 480L351.9 544L528 544C559.2 544 582.1 514.7 574.6 484.5L490.5 144.6C483.4 116.1 457.8 96 428.3 96L351.9 96L351.9 160C351.9 177.7 337.6 192 319.9 192C302.2 192 287.9 177.7 287.9 160L287.9 96zM351.9 288L351.9 352C351.9 369.7 337.6 384 319.9 384C302.2 384 287.9 369.7 287.9 352L287.9 288C287.9 270.3 302.2 256 319.9 256C337.6 256 351.9 270.3 351.9 288z` },
+            { lock: 5, type: "choice", cat: autolock, level: "#ddf", id: "_auto_lock_18", text: `5 - Voie ferrée`, icon: `M287.9 96L211.7 96C182.3 96 156.6 116.1 149.6 144.6L65.4 484.5C57.9 514.7 80.8 544 112 544L287.9 544L287.9 480C287.9 462.3 302.2 448 319.9 448C337.6 448 351.9 462.3 351.9 480L351.9 544L528 544C559.2 544 582.1 514.7 574.6 484.5L490.5 144.6C483.4 116.1 457.8 96 428.3 96L351.9 96L351.9 160C351.9 177.7 337.6 192 319.9 192C302.2 192 287.9 177.7 287.9 160L287.9 96zM351.9 288L351.9 352C351.9 369.7 337.6 384 319.9 384C302.2 384 287.9 369.7 287.9 352L287.9 288C287.9 270.3 302.2 256 319.9 256C337.6 256 351.9 270.3 351.9 288z` },
+            { lock: 5, type: "choice", cat: autolock, level: "#69bf88", id: "_auto_lock_7", text: `4 - Route mineure`, icon: `M287.9 96L211.7 96C182.3 96 156.6 116.1 149.6 144.6L65.4 484.5C57.9 514.7 80.8 544 112 544L287.9 544L287.9 480C287.9 462.3 302.2 448 319.9 448C337.6 448 351.9 462.3 351.9 480L351.9 544L528 544C559.2 544 582.1 514.7 574.6 484.5L490.5 144.6C483.4 116.1 457.8 96 428.3 96L351.9 96L351.9 160C351.9 177.7 337.6 192 319.9 192C302.2 192 287.9 177.7 287.9 160L287.9 96zM351.9 288L351.9 352C351.9 369.7 337.6 384 319.9 384C302.2 384 287.9 369.7 287.9 352L287.9 288C287.9 270.3 302.2 256 319.9 256C337.6 256 351.9 270.3 351.9 288z` },
+            { lock: 5, type: "choice", cat: autolock, level: "#f0ea58", id: "_auto_lock_2", text: `3 - Rue principale`, icon: `M287.9 96L211.7 96C182.3 96 156.6 116.1 149.6 144.6L65.4 484.5C57.9 514.7 80.8 544 112 544L287.9 544L287.9 480C287.9 462.3 302.2 448 319.9 448C337.6 448 351.9 462.3 351.9 480L351.9 544L528 544C559.2 544 582.1 514.7 574.6 484.5L490.5 144.6C483.4 116.1 457.8 96 428.3 96L351.9 96L351.9 160C351.9 177.7 337.6 192 319.9 192C302.2 192 287.9 177.7 287.9 160L287.9 96zM351.9 288L351.9 352C351.9 369.7 337.6 384 319.9 384C302.2 384 287.9 369.7 287.9 352L287.9 288C287.9 270.3 302.2 256 319.9 256C337.6 256 351.9 270.3 351.9 288z` },
+            { lock: 5, type: "choice", cat: autolock, level: "#ffffeb", id: "_auto_lock_1", text: `1 - Rue`, icon: `M287.9 96L211.7 96C182.3 96 156.6 116.1 149.6 144.6L65.4 484.5C57.9 514.7 80.8 544 112 544L287.9 544L287.9 480C287.9 462.3 302.2 448 319.9 448C337.6 448 351.9 462.3 351.9 480L351.9 544L528 544C559.2 544 582.1 514.7 574.6 484.5L490.5 144.6C483.4 116.1 457.8 96 428.3 96L351.9 96L351.9 160C351.9 177.7 337.6 192 319.9 192C302.2 192 287.9 177.7 287.9 160L287.9 96zM351.9 288L351.9 352C351.9 369.7 337.6 384 319.9 384C302.2 384 287.9 369.7 287.9 352L287.9 288C287.9 270.3 302.2 256 319.9 256C337.6 256 351.9 270.3 351.9 288z` },
+            { lock: 5, type: "choice", cat: autolock, level: "#867342", id: "_auto_lock_8", text: `1 - Chemin de terre`, icon: `M287.9 96L211.7 96C182.3 96 156.6 116.1 149.6 144.6L65.4 484.5C57.9 514.7 80.8 544 112 544L287.9 544L287.9 480C287.9 462.3 302.2 448 319.9 448C337.6 448 351.9 462.3 351.9 480L351.9 544L528 544C559.2 544 582.1 514.7 574.6 484.5L490.5 144.6C483.4 116.1 457.8 96 428.3 96L351.9 96L351.9 160C351.9 177.7 337.6 192 319.9 192C302.2 192 287.9 177.7 287.9 160L287.9 96zM351.9 288L351.9 352C351.9 369.7 337.6 384 319.9 384C302.2 384 287.9 369.7 287.9 352L287.9 288C287.9 270.3 302.2 256 319.9 256C337.6 256 351.9 270.3 351.9 288z` },
+            { lock: 5, type: "choice", cat: autolock, level: "#6bb0b7", id: "_auto_lock_15", text: `1 - Ferry`, icon: `M287.9 96L211.7 96C182.3 96 156.6 116.1 149.6 144.6L65.4 484.5C57.9 514.7 80.8 544 112 544L287.9 544L287.9 480C287.9 462.3 302.2 448 319.9 448C337.6 448 351.9 462.3 351.9 480L351.9 544L528 544C559.2 544 582.1 514.7 574.6 484.5L490.5 144.6C483.4 116.1 457.8 96 428.3 96L351.9 96L351.9 160C351.9 177.7 337.6 192 319.9 192C302.2 192 287.9 177.7 287.9 160L287.9 96zM351.9 288L351.9 352C351.9 369.7 337.6 384 319.9 384C302.2 384 287.9 369.7 287.9 352L287.9 288C287.9 270.3 302.2 256 319.9 256C337.6 256 351.9 270.3 351.9 288z` },
+            { lock: 5, type: "choice", cat: autolock, level: "#beba6c", id: "_auto_lock_17", text: `1 - Voie privée`, icon: `M287.9 96L211.7 96C182.3 96 156.6 116.1 149.6 144.6L65.4 484.5C57.9 514.7 80.8 544 112 544L287.9 544L287.9 480C287.9 462.3 302.2 448 319.9 448C337.6 448 351.9 462.3 351.9 480L351.9 544L528 544C559.2 544 582.1 514.7 574.6 484.5L490.5 144.6C483.4 116.1 457.8 96 428.3 96L351.9 96L351.9 160C351.9 177.7 337.6 192 319.9 192C302.2 192 287.9 177.7 287.9 160L287.9 96zM351.9 288L351.9 352C351.9 369.7 337.6 384 319.9 384C302.2 384 287.9 369.7 287.9 352L287.9 288C287.9 270.3 302.2 256 319.9 256C337.6 256 351.9 270.3 351.9 288z` },
+            { lock: 5, type: "choice", cat: autolock, level: "#222", id: "_auto_lock_19", text: `1 - Piste d'aéroport`, icon: `M287.9 96L211.7 96C182.3 96 156.6 116.1 149.6 144.6L65.4 484.5C57.9 514.7 80.8 544 112 544L287.9 544L287.9 480C287.9 462.3 302.2 448 319.9 448C337.6 448 351.9 462.3 351.9 480L351.9 544L528 544C559.2 544 582.1 514.7 574.6 484.5L490.5 144.6C483.4 116.1 457.8 96 428.3 96L351.9 96L351.9 160C351.9 177.7 337.6 192 319.9 192C302.2 192 287.9 177.7 287.9 160L287.9 96zM351.9 288L351.9 352C351.9 369.7 337.6 384 319.9 384C302.2 384 287.9 369.7 287.9 352L287.9 288C287.9 270.3 302.2 256 319.9 256C337.6 256 351.9 270.3 351.9 288z` },
+            { lock: 5, type: "choice", cat: autolock, level: "#ababab", id: "_auto_lock_20", text: `1 - Voie de parking`, icon: `M287.9 96L211.7 96C182.3 96 156.6 116.1 149.6 144.6L65.4 484.5C57.9 514.7 80.8 544 112 544L287.9 544L287.9 480C287.9 462.3 302.2 448 319.9 448C337.6 448 351.9 462.3 351.9 480L351.9 544L528 544C559.2 544 582.1 514.7 574.6 484.5L490.5 144.6C483.4 116.1 457.8 96 428.3 96L351.9 96L351.9 160C351.9 177.7 337.6 192 319.9 192C302.2 192 287.9 177.7 287.9 160L287.9 96zM351.9 288L351.9 352C351.9 369.7 337.6 384 319.9 384C302.2 384 287.9 369.7 287.9 352L287.9 288C287.9 270.3 302.2 256 319.9 256C337.6 256 351.9 270.3 351.9 288z` },
+            { lock: 5, type: "choice", cat: autolock, level: "#64799a", id: "_auto_lock_22", text: `1 - Rue étroite`, icon: `M287.9 96L211.7 96C182.3 96 156.6 116.1 149.6 144.6L65.4 484.5C57.9 514.7 80.8 544 112 544L287.9 544L287.9 480C287.9 462.3 302.2 448 319.9 448C337.6 448 351.9 462.3 351.9 480L351.9 544L528 544C559.2 544 582.1 514.7 574.6 484.5L490.5 144.6C483.4 116.1 457.8 96 428.3 96L351.9 96L351.9 160C351.9 177.7 337.6 192 319.9 192C302.2 192 287.9 177.7 287.9 160L287.9 96zM351.9 288L351.9 352C351.9 369.7 337.6 384 319.9 384C302.2 384 287.9 369.7 287.9 352L287.9 288C287.9 270.3 302.2 256 319.9 256C337.6 256 351.9 270.3 351.9 288z` },
+            { lock: 5, type: "choice", cat: autolock, level: "#faeacf", id: "_auto_lock_5", text: `1 - Chemin piéton`, icon: `M287.9 96L211.7 96C182.3 96 156.6 116.1 149.6 144.6L65.4 484.5C57.9 514.7 80.8 544 112 544L287.9 544L287.9 480C287.9 462.3 302.2 448 319.9 448C337.6 448 351.9 462.3 351.9 480L351.9 544L528 544C559.2 544 582.1 514.7 574.6 484.5L490.5 144.6C483.4 116.1 457.8 96 428.3 96L351.9 96L351.9 160C351.9 177.7 337.6 192 319.9 192C302.2 192 287.9 177.7 287.9 160L287.9 96zM351.9 288L351.9 352C351.9 369.7 337.6 384 319.9 384C302.2 384 287.9 369.7 287.9 352L287.9 288C287.9 270.3 302.2 256 319.9 256C337.6 256 351.9 270.3 351.9 288z` },
+            { lock: 5, type: "choice", cat: autolock, level: "#ed503b", id: "_auto_lock_9", text: `1 - Promenade`, icon: `M287.9 96L211.7 96C182.3 96 156.6 116.1 149.6 144.6L65.4 484.5C57.9 514.7 80.8 544 112 544L287.9 544L287.9 480C287.9 462.3 302.2 448 319.9 448C337.6 448 351.9 462.3 351.9 480L351.9 544L528 544C559.2 544 582.1 514.7 574.6 484.5L490.5 144.6C483.4 116.1 457.8 96 428.3 96L351.9 96L351.9 160C351.9 177.7 337.6 192 319.9 192C302.2 192 287.9 177.7 287.9 160L287.9 96zM351.9 288L351.9 352C351.9 369.7 337.6 384 319.9 384C302.2 384 287.9 369.7 287.9 352L287.9 288C287.9 270.3 302.2 256 319.9 256C337.6 256 351.9 270.3 351.9 288z` },
+            { lock: 5, type: "choice", cat: autolock, level: "#8f8575", id: "_auto_lock_10", text: `1 - Chemin piéton non-routable`, icon: `M287.9 96L211.7 96C182.3 96 156.6 116.1 149.6 144.6L65.4 484.5C57.9 514.7 80.8 544 112 544L287.9 544L287.9 480C287.9 462.3 302.2 448 319.9 448C337.6 448 351.9 462.3 351.9 480L351.9 544L528 544C559.2 544 582.1 514.7 574.6 484.5L490.5 144.6C483.4 116.1 457.8 96 428.3 96L351.9 96L351.9 160C351.9 177.7 337.6 192 319.9 192C302.2 192 287.9 177.7 287.9 160L287.9 96zM351.9 288L351.9 352C351.9 369.7 337.6 384 319.9 384C302.2 384 287.9 369.7 287.9 352L287.9 288C287.9 270.3 302.2 256 319.9 256C337.6 256 351.9 270.3 351.9 288z` },
+            { lock: 5, type: "choice", cat: autolock, level: "#aeb1fd", id: "_auto_lock_16", text: `1 - Escaliers`, icon: `M287.9 96L211.7 96C182.3 96 156.6 116.1 149.6 144.6L65.4 484.5C57.9 514.7 80.8 544 112 544L287.9 544L287.9 480C287.9 462.3 302.2 448 319.9 448C337.6 448 351.9 462.3 351.9 480L351.9 544L528 544C559.2 544 582.1 514.7 574.6 484.5L490.5 144.6C483.4 116.1 457.8 96 428.3 96L351.9 96L351.9 160C351.9 177.7 337.6 192 319.9 192C302.2 192 287.9 177.7 287.9 160L287.9 96zM351.9 288L351.9 352C351.9 369.7 337.6 384 319.9 384C302.2 384 287.9 369.7 287.9 352L287.9 288C287.9 270.3 302.2 256 319.9 256C337.6 256 351.9 270.3 351.9 288z` },
         ];
 
     // ************
@@ -185,6 +236,7 @@
         wmeSDK = getWmeSdk({ scriptId: "__wme_ce_2014", scriptName: "Color Errors" });
         WMECE_log("Initialisation en cours");
 
+        // Initialisation SDK
         (function waitSDK() {
             WMECE_log("Attente SDK");
 
@@ -196,7 +248,7 @@
             if (!wmeSDK.Events) { WMECE_log("wmeSDK.Events : NOK"); setTimeout(waitSDK, 1000); return; };
             if (!wmeSDK.State.getUserInfo()) { WMECE_log("wmeSDK.State.getUserInfo() : NOK"); setTimeout(waitSDK, 1000); return; };
 
-            wmeUserRank = wmeSDK.State.getUserInfo().rank + 1;
+            wmeUserRank = wmeSDK.State.getUserInfo().rank;
             WMECE_log("Utilisateur : " + wmeSDK.State.getUserInfo().userName + " | Niveau : " + wmeUserRank);
 
             // Gestion des évènements
@@ -214,12 +266,12 @@
             wmeSDK.Events.on({ eventName: "wme-after-undo", eventHandler: () => WMECE_errors() });
             wmeSDK.Events.on({ eventName: "wme-map-move-end", eventHandler: () => WMECE_errors() });
             wmeSDK.Events.on({ eventName: "wme-ready", eventHandler: () => WMECE_errors() });
+
             WMECE_log("SDK OK");
             initPrefs();
         })();
 
-        // Vérifie l'existence des paramètres dans le localStorage.
-        // Initialisation si vide ou incorrect
+        // Vérifie l'existence des paramètres dans le localStorage
         function initPrefs() {
             if (!localStorage.WMEColorErrors || !JSON.parse(localStorage.WMEColorErrors)) {
                 WMECE_log("Création des paramètres dans le stockage local");
@@ -296,8 +348,6 @@
         // Ajout de l'interface CE à l'onglet Script
         function initScriptTab() {
             wmeSDK.Sidebar.registerScriptTab().then((t) => {
-                // icon plus moderne mais refusé par glenan, à voir pour remettre
-                // t.tabLabel.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="#3d3d3d" viewBox="0 0 576 512" style="height: 100%;padding: 8px;"><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6-46.8 43.5-78.1 95.4-93 131.1-3.3 7.9-3.3 16.7 0 24.6 14.9 35.7 46.2 87.7 93 131.1 47.1 43.7 111.8 80.6 192.6 80.6s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1 3.3-7.9 3.3-16.7 0-24.6-14.9-35.7-46.2-87.7-93-131.1-47.1-43.7-111.8-80.6-192.6-80.6zM144 256a144 144 0 1 1 288 0 144 144 0 1 1 -288 0zm144-64c0 35.3-28.7 64-64 64-11.5 0-22.3-3-31.7-8.4-1 10.9-.1 22.1 2.9 33.2 13.7 51.2 66.4 81.6 117.6 67.9s81.6-66.4 67.9-117.6c-12.2-45.7-55.5-74.8-101.1-70.8 5.3 9.3 8.4 20.1 8.4 31.7z"/></svg>`;
                 t.tabLabel.innerHTML = "<span class='fa fa-eye' title='Color Errors'></span>";
                 t.tabPane.innerHTML = `
                     <div style="padding: 15px;">
@@ -440,6 +490,7 @@
     // ****************
     function setScriptTab() {
         let delId;
+        delId = $id("ce-icon"); if (delId) delId.innerHTML = `<div class="controls-container" style="display:none;"></div>`;
         delId = $id("ce-pref"); if (delId) delId.innerHTML = `<div class="controls-container" style="display:none;"></div>`;
         delId = $id("ce-segBad"); if (delId) delId.innerHTML = `<div class="controls-container" style="display:none;"></div>`;
         delId = $id("ce-poiBad"); if (delId) delId.innerHTML = `<div class="controls-container" style="display:none;"></div>`;
@@ -461,8 +512,6 @@
 
         ceErrorDB.forEach(el => {
             if (wmeUserRank < el.lock) return;
-            WMECE_log("Chargement pour niveau : " + wmeUserRank);
-            WMECE_log(el);
 
             let checked = "";
             if (el.id) {
@@ -479,8 +528,8 @@
                 svg.style.height = "20px";
                 svg.style.display = "flex";
                 svg.style.marginRight = "5px";
-                if (el.id === "_Street") svg.style.backgroundColor = "#888";
-                if (el.id === "_Street") svg.style.borderRadius = "3px";
+                if (el.id === "_auto_lock_1") svg.style.backgroundColor = "#888";
+                if (el.id === "_auto_lock_1") svg.style.borderRadius = "3px";
 
                 const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
                 path.setAttribute("d", el.icon);
@@ -578,6 +627,7 @@
             { id: "_seg_Bad", key: "seg_Bad", zone: "ce-segments" },
             { id: "_poi_Bad", key: "poi_Bad", zone: "ce-places" },
             { id: "_nod_Bad", key: "nod_Bad", zone: "ce-nodes" },
+            { id: "_autoLock", key: "autoLock", zone: "ce-autolock" },
             { id: "errSize", key: "size", input: "px", valueId: "sizeValue" },
             { id: "errOpacity", key: "opacity", input: "%", valueId: "opacityValue" }
         ].forEach(cfg => {
@@ -586,11 +636,13 @@
 
             // Gestion du mode d’affichage
             if (cfg.type === "display") {
-                el.addEventListener("click", () => {
+                if (el.onclick) return
+                el.onclick = () => {
                     ls.display = cfg.id.replace("ce-", "");
                     localStorage.setItem('WMEColorErrors', JSON.stringify(ls));
+                    WMECE_log("click");
                     setScriptTab();
-                });
+                };
                 return;
             }
 
@@ -675,7 +727,7 @@
 
             const row = ceErrorDB.find(e => e.id === el.err);
             if (!row) {
-                WMECE_log("ID introuvable :", el.err);
+                WMECE_log("ID introuvable : " + el.err);
                 return;
             }
 
@@ -714,18 +766,19 @@
     // ***************
     function WMECE_errors() {
         WMECE_log("🔎 Recherche des erreurs");
+        if (wmeSDK.State.isMapLoading()) {
+            WMECE_log("❌ Carte en cours de chargement");
+            setTimeout(WMECE_errors, 500);
+            return;
+        }
         if (ls.onlyFrErr) {
             const tc = wmeSDK.DataModel.Countries.getTopCountry();
-            if (!tc) {
-                WMECE_log("Pays non détecté.");
-                setTimeout(WMECE_errors, 500);
-                return;
-            }
+            if (!tc) { WMECE_log("Pays non détecté."); setTimeout(WMECE_errors, 500); return; }
             if (![3, 73, 74, 88, 141, 148, 152, 184].includes(tc.id)) return;
         }
 
         let lineFeature = []; ceErrorsFound = [];
-        try { W.map.getLayersByName("Color Errors")[0].destroyFeatures(); WMECE_log("Suppression des icônes de la couche CE"); } catch (error) { }
+        try { WMECE_log("Suppression des icônes de la couche CE"); W.map.getLayersByName("Color Errors")[0].destroyFeatures(); } catch (e) { WMECE_log(e) }
 
         // *********************************
         // **  Vérification des segments  **
@@ -735,48 +788,33 @@
                 if (!isEditable(seg) || !onScreen(seg.geometry)) return
                 WMECE_log("🔎 Recherche des erreurs pour le segment : " + seg.id);
 
-                let j = 0, newWidth = "", newColor = "", newOpacity = "0";
+                let j = 0, newWidth, newColor, newOpacity = "0";
 
                 // Récuperation de l'adresse du segment
-                let primaryCity, primaryCountry, primaryState, primaryStreet;
-                let primaryCityName, primaryCountryName, primaryStateName, primaryStreetName;
-                let altCity = [], altCountry = [], altState = [], altStreet = [];
-                let firstAltState;
-                let firstAltCityNames, firstAltCountryNames, firstAltStateNames, firstStreetNames;
-                let altCityNames = [], altCountryNames = [], altStateNames = [], altStreetNames = [];
-                let primaryRS, altRS = [];
+                let address = wmeSDK.DataModel.Segments.getAddress({ segmentId: seg.id }),
+                    primaryCity, primaryStreet,
+                    primaryCityName, primaryStreetName,
+                    altCity = [],
+                    firstStreetNames,
+                    altCityNames = [], altStreetNames = [],
+                    primaryRS, altRS = [];
 
-                let address = wmeSDK.DataModel.Segments.getAddress({ segmentId: seg.id })
                 if (address && !address.isEmpty) {
                     primaryCity = address.city; if (!primaryCity.isEmpty) primaryCityName = primaryCity.name;
-                    primaryCountry = address.country; if (!primaryCountry.isEmpty) primaryCountryName = primaryCountry.name;
-                    primaryState = address.state; if (!primaryState.isEmpty) primaryStateName = primaryState.name;
                     primaryStreet = address.street; if (!primaryStreet.isEmpty) primaryStreetName = primaryStreet.name;
                     if (!primaryStreet.isEmpty && primaryStreet.signText) primaryRS = primaryStreet.signText;
 
                     if (address.altStreets.length !== 0) {
                         address.altStreets.forEach((el, i) => {
                             altCity.push(el.city);
-                            altCountry.push(el.country);
-                            altState.push(el.state);
-                            altStreet.push(el.street);
-                            if (i = 0) {
-                                if (!el.city.isEmpty) firstAltCityNames = el.city.name;
-                                if (!el.country.isEmpty) firstAltCountryNames = el.country.name;
-                                if (!el.state.isEmpty) firstAltState = el.state;
-                                if (!el.state.isEmpty) firstAltStateNames = el.state.name;
-                                if (!el.street.isEmpty) firstStreetNames = el.street.name;
-                            }
+                            if (i === 0) if (!el.street.isEmpty) firstStreetNames = el.street.name;
                             if (!el.city.isEmpty) altCityNames.push(el.city.name);
-                            if (!el.country.isEmpty) altCountryNames.push(el.country.name);
-                            if (!el.state.isEmpty) altStateNames.push(el.state.name);
                             if (!el.street.isEmpty) altStreetNames.push(el.street.name);
                             if (!el.street.isEmpty && el.street.signText) altRS.push(el.street.signText);
                         });
                     }
                 }
 
-                if (ls.autoLock) setAutolock();
                 if (ls.seg_No_lane && wmeUserRank > 3) checkIfLane();
                 if (ls.seg_NotUnpaved) checkIfOffRoadUnpaved();
                 if (ls.seg_SameAlt) checkSameAlt();
@@ -800,9 +838,7 @@
                     nodeA.forEach(el => {
                         if (el !== seg.id && nodeB.includes(el)) {
                             j++; newColor = colorError; newWidth = 3; newOpacity = 0.95;
-                            addIconsOnMap("_seg_Loop", seg.geometry, j);
-                            ceErrorsFound.push({ err: "_seg_Loop", id: seg.id });
-                            WMECE_log("🔴 Erreur : _seg_Loop, pour le segment : " + seg.id);
+                            newError(j, "_seg_Loop", seg.geometry, seg.id);
                         }
                     });
                 }
@@ -811,27 +847,21 @@
                     if (seg.roadType != 4 && primaryStreetName && !primaryRS && /^[A-Za-z][0-9]/.test(primaryStreetName) && (primaryStreetName != primaryRS)
                         || altStreetNames.filter(name => /^[A-Za-z][0-9]/.test(name)).length > altRS.length) {
                         j++; newColor = colorError; newWidth = 3; newOpacity = 0.95;
-                        addIconsOnMap("_seg_Kartouche", seg.geometry, j);
-                        ceErrorsFound.push({ err: "_seg_Kartouche", id: seg.id });
-                        WMECE_log("🔴 Erreur : _seg_Kartouche, pour le segment : " + seg.id);
+                        newError(j, "_seg_Kartouche", seg.geometry, seg.id);
                     }
                 }
 
                 function checkNumStreet() {
                     if (primaryStreet && /^\d/.test(primaryStreet)) {
                         j++; newColor = colorError; newWidth = 3; newOpacity = 0.95;
-                        addIconsOnMap("_seg_Num_Street", seg.geometry, j);
-                        ceErrorsFound.push({ err: "_seg_Num_Street", id: seg.id });
-                        WMECE_log("🔴 Erreur : _seg_Num_Street, pour le segment : " + seg.id);
+                        newError(j, "_seg_Num_Street", seg.geometry, seg.id);
                     }
                 }
 
                 function checkBadCityAlt() {
                     if (altCityNames.some(name => /\(.*\)/.test(name))) {
                         j++; newColor = colorError; newWidth = 3; newOpacity = 0.95;
-                        addIconsOnMap("_seg_Bad_City_Alt", seg.geometry, j);
-                        ceErrorsFound.push({ err: "_seg_Bad_City_Alt", id: seg.id });
-                        WMECE_log("🔴 Erreur : _seg_Bad_City_Alt, pour le segment : " + seg.id);
+                        newError(j, "_seg_Bad_City_Alt", seg.geometry, seg.id);
                     }
                 }
 
@@ -839,18 +869,14 @@
                     if (![3, 4, 19].includes(seg.roadType) && !address.isEmpty && ((primaryCity.isEmpty && altCityNames.length === 0)
                         || (!primaryCity.isEmpty && altCityNames.length < altCity.length)) && !primaryStreet.isEmpty) {
                         j++; newColor = colorError; newWidth = 3; newOpacity = 0.95;
-                        addIconsOnMap("_seg_City_Missing", seg.geometry, j);
-                        ceErrorsFound.push({ err: "_seg_City_Missing", id: seg.id });
-                        WMECE_log("🔴 Erreur : _seg_City_Missing, pour le segment : " + seg.id);
+                        newError(j, "_seg_City_Missing", seg.geometry, seg.id);
                     }
                 }
 
                 function checkBadHN() {
-                    if (seg.hasHouseNumbers && (primaryCity.isEmpty || [14, 18, 19].includes(seg.roadType))) {
+                    if (seg.hasHouseNumbers && (primaryCity?.isEmpty || [14, 18, 19].includes(seg.roadType))) {
                         j++; newColor = colorError; newWidth = 3; newOpacity = 0.95;
-                        addIconsOnMap("_seg_Bad_HN", seg.geometry, j);
-                        ceErrorsFound.push({ err: "_seg_Bad_HN", id: seg.id });
-                        WMECE_log("🔴 Erreur : _seg_Bad_HN, pour le segment : " + seg.id);
+                        newError(j, "_seg_Bad_HN", seg.geometry, seg.id);
                     }
                 }
 
@@ -860,9 +886,7 @@
                             || (seg.isAtoB && (!seg.fromLanesInfo || seg.fromLanesInfo.numberOfLanes === 0))
                             || (seg.isBtoA && (!seg.toLanesInfo || seg.toLanesInfo.numberOfLanes === 0)))) {
                         j++; newColor = colorInfo; newWidth = 3; newOpacity = 0.95;
-                        addIconsOnMap("_seg_No_lane", seg.geometry, j);
-                        ceErrorsFound.push({ err: "_seg_No_lane", id: seg.id });
-                        WMECE_log("🔴 Erreur : _seg_No_lane, pour le segment : " + seg.id);
+                        newError(j, "_seg_No_lane", seg.geometry, seg.id);
                     }
                 }
 
@@ -885,36 +909,28 @@
                 function checkIfName() {
                     if (seg.primaryStreetId === null) {
                         j++; newColor = colorError; newWidth = 3; newOpacity = 0.95;
-                        addIconsOnMap("_seg_NoName", seg.geometry, j);
-                        ceErrorsFound.push({ err: "_seg_NoName", id: seg.id });
-                        WMECE_log("🔴 Erreur : _seg_NoName, pour le segment : " + seg.id);
+                        newError(j, "_seg_NoName", seg.geometry, seg.id);
                     }
                 }
 
                 function checkIfRampFreewayName() {
                     if (primaryCityName && /^(3|4)$/.test(seg.roadType)) {
                         j++; newColor = colorError; newWidth = 3; newOpacity = 0.95;
-                        addIconsOnMap("_seg_Ramp_city", seg.geometry, j);
-                        ceErrorsFound.push({ err: "_seg_Ramp_city", id: seg.id });
-                        WMECE_log("🔴 Erreur : _seg_Ramp_city, pour le segment : " + seg.id);
+                        newError(j, "_seg_Ramp_city", seg.geometry, seg.id);
                     }
                 }
 
                 function checkIfTollOnRampFreeway() {
                     if (/^[^3|4]$/.test(seg.roadType) && (seg.fwdToll || seg.revToll)) {
                         j++; newColor = colorError; newWidth = 3; newOpacity = 0.95;
-                        addIconsOnMap("_seg_Toll", seg.geometry, j);
-                        ceErrorsFound.push({ err: "_seg_Toll", id: seg.id });
-                        WMECE_log("🔴 Erreur : _seg_Toll, pour le segment : " + seg.id);
+                        newError(j, "_seg_Toll", seg.geometry, seg.id);
                     }
                 }
 
                 function checkIfOffRoadUnpaved() {
                     if (seg.roadType === 8 && seg.flagAttributes.unpaved === false) {
                         j++; newColor = colorWarn; newWidth = 3; newOpacity = 0.95;
-                        addIconsOnMap("_seg_NotUnpaved", seg.geometry, j);
-                        ceErrorsFound.push({ err: "_seg_NotUnpaved", id: seg.id });
-                        WMECE_log("🔴 Erreur : _seg_NotUnpaved, pour le segment : " + seg.id);
+                        newError(j, "_seg_NotUnpaved", seg.geometry, seg.id);
                         /*wmeSDK.DataModel.Segments.updateSegment({
                             segmentId: attributes.id,
                             flagAttributes: {
@@ -936,26 +952,38 @@
                         || (!!seg.revSpeedLimit && ((!primaryCity?.isEmpty && seg.revSpeedLimit > 70) || seg.revSpeedLimit < 10 || seg.revSpeedLimit === 0 || (seg.revSpeedLimit % 10 !== 0 && seg.revSpeedLimit % 10 !== 5))))
                         && seg.isFwdSpeedLimitVerified && seg.isRevSpeedLimitVerified) {
                         j++; newColor = colorWarn; newWidth = 3; newOpacity = 0.95;
-                        addIconsOnMap("_seg_BadSpeed", seg.geometry, j);
-                        ceErrorsFound.push({ err: "_seg_BadSpeed", id: seg.id });
-                        WMECE_log("🔴 Erreur : _seg_BadSpeed, pour le segment : " + seg.id);
+                        newError(j, "_seg_BadSpeed", seg.geometry, seg.id);
                     }
                 }
 
                 function checkLock() {
-                    if (seg.lockRank != 5) { // Ignore Lock 6;
-                        if (
-                            ((seg.flagAttributes.fwdSpeedCamera == 1 || seg.flagAttributes.revSpeedCamera == 1) && seg.lockRank != 4) || // Speedcam but not locked 5
-                            seg.flagAttributes.fwdSpeedCamera != 1 && seg.flagAttributes.revSpeedCamera != 1 && // no speedcam
-                            (/^(3|4|6|18)$/.test(seg.roadType) && seg.lockRank != 4 //Lock 5 for freeway, ramp, major and railroad
-                                || seg.roadType == 7 && seg.lockRank != 3 //Lock 4 for minor
-                                || seg.roadType == 2 && seg.lockRank != 2 //Lock 3 for primary
-                                || /^(1|8|17|19|22)$/.test(seg.roadType) === true && seg.lockRank != 0 && seg.lockRank != null) //Lock 1 for others (5,10,15,16,20)
-                        ) {
-                            j++; newColor = colorWarn; newWidth = 3; newOpacity = 0.95;
-                            addIconsOnMap("_seg_LockValue", seg.geometry, j);
-                            ceErrorsFound.push({ err: "_seg_LockValue", id: seg.id });
-                            WMECE_log("🔴 Erreur : _seg_LockValue, pour le segment : " + seg.id);
+                    if (seg.lockRank > 4) return; // Ignore Lock 6 and staff;
+
+                    // Info SDK : https://www.waze.com/editor/sdk/variables/index.SDK.ROAD_TYPE.html
+                    const fwdSC = seg.flagAttributes.fwdSpeedCamera, revSC = seg.flagAttributes.revSpeedCamera,
+                        lock = seg.lockRank, type = seg.roadType, speedCam = fwdSC || revSC, typeLock = [
+                            { type: 1, lock: 0 }, { type: 2, lock: 2 }, { type: 3, lock: 4 },
+                            { type: 4, lock: 4 }, { type: 5, lock: 0 }, { type: 6, lock: 4 },
+                            { type: 7, lock: 3 }, { type: 8, lock: 0 }, { type: 9, lock: 0 },
+                            { type: 10, lock: 0 }, { type: 15, lock: 0 }, { type: 16, lock: 0 },
+                            { type: 17, lock: 0 }, { type: 18, lock: 4 }, { type: 19, lock: 0 },
+                            { type: 20, lock: 0 }, { type: 22, lock: 0 }
+                        ];
+
+                    if ((speedCam && lock < 4) || // Speedcam but not locked 5
+                        !fwdSC && !revSC && lock !== typeLock.find(i => i.type === type).lock) {
+                        j++; newColor = colorWarn; newWidth = 3; newOpacity = 0.95;
+                        newError(j, "_seg_LockValue", seg.geometry, seg.id);
+
+                        if (ls.autoLock && wmeUserRank > 4) {
+                            if (speedCam && lock != 4) wmeSDK.DataModel.Segments.updateSegment({ segmentId: seg.id, lockRank: 4 }); // SpeedCam L5
+                            if (!speedCam) {
+                                const lockValue = typeLock.find(i => i.type === type).lock;
+                                const lockType = typeLock.find(i => i.type === type).type;
+                                const prefKey = `auto_lock_${lockType}`;
+                                if (ls[prefKey] !== true) return;
+                                wmeSDK.DataModel.Segments.updateSegment({ segmentId: seg.id, lockRank: lockValue });
+                            }
                         }
                     }
                 }
@@ -966,39 +994,29 @@
                     if (ls.seg_Park && primaryStreetName) { // Parking with name (But Place / Square)
                         if (seg.roadType === 20 && new RegExp("^(Aire |Place |Square )").test(primaryStreetName) === false) {
                             j++; newColor = colorError; newWidth = 3; newOpacity = 0.95;
-                            addIconsOnMap("_seg_Park", seg.geometry, j);
-                            ceErrorsFound.push({ err: "_seg_Park", id: seg.id });
-                            WMECE_log("🔴 Erreur : _seg_Park, pour le segment : " + seg.id);
+                            newError(j, "_seg_Park", seg.geometry, seg.id);
                         }
                     }
                     if (ls.seg_Rail && primaryStreetName) { // Railroad with bad name
                         if (seg.roadType === 18 && (firstStreetNames || primaryStreetName)) { //Railroad with name
                             j++; newColor = colorError; newWidth = 3; newOpacity = 0.95;
-                            addIconsOnMap("_seg_Rail", seg.geometry, j);
-                            ceErrorsFound.push({ err: "_seg_Rail", id: seg.id });
-                            WMECE_log("🔴 Erreur : _seg_Rail, pour le segment : " + seg.id);
+                            newError(j, "_seg_Rail", seg.geometry, seg.id);
                         }
                     }
                     if (ls.seg_Ramp_name && primaryStreetName) {
                         if (/^(3|4)$/.test(seg.roadType) && /\/.*\//.test(primaryStreetName)) { // Ramp with 3 directions or more
                             j++; newColor = colorError; newWidth = 3; newOpacity = 0.95;
-                            addIconsOnMap("_seg_Ramp_name", seg.geometry, j);
-                            ceErrorsFound.push({ err: "_seg_Ramp_name", id: seg.id });
-                            WMECE_log("🔴 Erreur : _seg_Ramp_name, pour le segment : " + seg.id);
+                            newError(j, "_seg_Ramp_name", seg.geometry, seg.id);
                         }
                         else if (/^(3|4)$/.test(seg.roadType) && /\//.test(primaryStreetName)) { // Ramp with 2 directions
                             j++; newColor = colorWarn; newWidth = 3; newOpacity = 0.95;
-                            addIconsOnMap("_seg_Ramp_name", seg.geometry, j);
-                            ceErrorsFound.push({ err: "_seg_Ramp_name", id: seg.id });
-                            WMECE_log("🔴 Erreur : _seg_Ramp_name, pour le segment : " + seg.id);
+                            newError(j, "_seg_Ramp_name", seg.geometry, seg.id);
                         }
                     }
                     if (ls.seg_Dir_name && primaryStreetName) { // Directions but not Ramp/Freeway/Major
                         if (/^[^3|4|6]$/.test(seg.roadType) && /[:|>]/.test(primaryStreetName)) {
                             j++; newColor = colorError; newWidth = 3; newOpacity = 0.95;
-                            addIconsOnMap("_seg_Dir_name", seg.geometry, j);
-                            ceErrorsFound.push({ err: "_seg_Dir_name", id: seg.id });
-                            WMECE_log("🔴 Erreur : _seg_Dir_name, pour le segment : " + seg.id);
+                            newError(j, "_seg_Dir_name", seg.geometry, seg.id);
                         }
                     }
 
@@ -1008,18 +1026,14 @@
                             !/^>/.test(primaryStreetName) && !/^[Sortie ]+[0-9]+/.test(primaryStreetName) &&
                             !/^(Rocade|Périphérique)/.test(primaryStreetName)) {
                             j++; newColor = colorError; newWidth = 3; newOpacity = 0.95;
-                            addIconsOnMap("_seg_HW_name", seg.geometry, j);
-                            ceErrorsFound.push({ err: "_seg_HW_name", id: seg.id });
-                            WMECE_log("🔴 Erreur : _seg_HW_name, pour le segment : " + seg.id);
+                            newError(j, "_seg_HW_name", seg.geometry, seg.id);
                         }
                     }
                     if (ls.seg_SegBadRS && primaryStreetName) { // RoadShield but bad type
                         if (/^(1|8|17|20)$/.test(seg.roadType) && (/^[A|D|N|M|R|T][0-9]+/.test(primaryStreetName)
                             || /^[A|D|N|M|R|T]$/.test(primaryStreetName))) {
                             j++; newColor = colorError; newWidth = 3; newOpacity = 0.95;
-                            addIconsOnMap("_seg_SegBadRS", seg.geometry, j);
-                            ceErrorsFound.push({ err: "_seg_SegBadRS", id: seg.id });
-                            WMECE_log("🔴 Erreur : _seg_SegBadRS, pour le segment : " + seg.id);
+                            newError(j, "_seg_SegBadRS", seg.geometry, seg.id);
                         }
                     }
 
@@ -1029,9 +1043,7 @@
                             || /^[A|D|N|M|R|T][0-9]+[a-z]?[0-9]? ?-[A-Za-z]/.test(primaryStreetName) ||
                             /^[A|D|N|M|R|T][0-9]+[a-z]?[0-9]?- ?[A-Za-z]/.test(primaryStreetName)) { // No space between RS and street name
                             j++; newColor = colorError; newWidth = 3; newOpacity = 0.95;
-                            addIconsOnMap("_seg_RShield", seg.geometry, j);
-                            ceErrorsFound.push({ err: "_seg_RShield", id: seg.id });
-                            WMECE_log("🔴 Erreur : _seg_RShield, pour le segment : " + seg.id);
+                            newError(j, "_seg_RShield", seg.geometry, seg.id);
                         }
                     }
 
@@ -1049,9 +1061,7 @@
                             }
                             if (BadAltRoadshield || NoRoadshield) {
                                 j++; newColor = colorError; newWidth = 3; newOpacity = 0.95;
-                                addIconsOnMap("_seg_SegRSWithoutCity", seg.geometry, j);
-                                ceErrorsFound.push({ err: "_seg_SegRSWithoutCity", id: seg.id });
-                                WMECE_log("🔴 Erreur : _seg_SegRSWithoutCity, pour le segment : " + seg.id);
+                                newError(j, "_seg_SegRSWithoutCity", seg.geometry, seg.id);
                             }
                         }
                     }
@@ -1059,9 +1069,7 @@
                     if (ls.seg_DleSpace && primaryStreetName) { // Double spacing in name
                         if (/  /.test(primaryStreetName)) {
                             j++; newColor = colorError; newWidth = 3; newOpacity = 0.95;
-                            addIconsOnMap("_seg_DleSpace", seg.geometry, j);
-                            ceErrorsFound.push({ err: "_seg_DleSpace", id: seg.id });
-                            WMECE_log("🔴 Erreur : _seg_DleSpace, pour le segment : " + seg.id);
+                            newError(j, "_seg_DleSpace", seg.geometry, seg.id);
                         }
                     }
 
@@ -1096,27 +1104,6 @@
                     lineFeature.push(new OpenLayers.Feature.Vector(new OpenLayers.Geometry.LineString(points),
                         null, { strokeWidth: newWidth, strokeColor: newColor, strokeOpacity: newOpacity }));
                 }
-
-                //Autolock
-                function setAutolock() {
-                    const lock = seg.lockRank;
-                    if (wmeUserRank > 4 && ((ls.myLvl && lock + 1 <= wmeUserRank) || !ls.myLvl) && lock !== 5 && !$id('_autoLock').disabled
-                        && onScreen(seg) && seg.flagAttributes.revSpeedCamera !== '1' && seg.flagAttributes.fwdSpeedCamera !== '1') {
-                        const frSegLockDB = { str_lvl: 0, pri_lvl: 2, min_lvl: 3, maj_lvl: 4, rmp_lvl: 4, fwy_lvl: 4, rwy_lvl: 4, nar_lvl: 0 };
-                        switch (seg.roadType) {
-                            case 1: if ((!lock || lock < frSegLockDB.str_lvl) && ls.Street) wmeSDK.DataModel.Segments.updateSegment({ segmentId: seg.id, lockRank: frSegLockDB.str_lvl }); break;
-                            case 2: if ((!lock || lock < frSegLockDB.pri_lvl) && ls.Primary) wmeSDK.DataModel.Segments.updateSegment({ segmentId: seg.id, lockRank: frSegLockDB.pri_lvl }); break;
-                            case 3: if ((!lock || lock < frSegLockDB.fwy_lvl) && ls.Freeway) wmeSDK.DataModel.Segments.updateSegment({ segmentId: seg.id, lockRank: frSegLockDB.fwy_lvl }); break;
-                            case 4: if ((!lock || lock < frSegLockDB.rmp_lvl) && ls.Ramp) wmeSDK.DataModel.Segments.updateSegment({ segmentId: seg.id, lockRank: frSegLockDB.rmp_lvl }); break;
-                            case 6: if ((!lock || lock < frSegLockDB.maj_lvl) && ls.Major) wmeSDK.DataModel.Segments.updateSegment({ segmentId: seg.id, lockRank: frSegLockDB.maj_lvl }); break;
-                            case 7: if ((!lock || lock < frSegLockDB.min_lvl) && ls.Minor) wmeSDK.DataModel.Segments.updateSegment({ segmentId: seg.id, lockRank: frSegLockDB.min_lvl }); break;
-                            case 18: if ((!lock || lock < frSegLockDB.rwy_lvl) && ls.Railway) wmeSDK.DataModel.Segments.updateSegment({ segmentId: seg.id, lockRank: frSegLockDB.rwy_lvl }); break;
-                            case 22: if ((!lock || lock < frSegLockDB.nar_lvl) && ls.Narrow) wmeSDK.DataModel.Segments.updateSegment({ segmentId: seg.id, lockRank: frSegLockDB.nar_lvl }); break;
-                        }
-                    }
-                    // Lock 5 if ASC
-                    if ((seg.flagAttributes.fwdSpeedCamera == '1' || seg.flagAttributes.revSpeedCamera == '1') && lock != '4') wmeSDK.DataModel.Segments.updateSegment({ segmentId: seg.id, lockRank: '4' });
-                }
             });
         }
 
@@ -1128,7 +1115,7 @@
                 if (!onScreen(node.geometry)) return;
                 WMECE_log("🔎 Recherche des erreurs pour le nœud : " + node.id);
 
-                let j = 0, newWidth = "", newColor = "", newOpacity = "0", gpoly = "";
+                let j = 0, newWidth, newColor, newOpacity = "0", gpoly = "";
 
                 if (ls.nod_Useless_Nodes) checkUselessNodes();
 
@@ -1220,9 +1207,7 @@
 
                     if (allSimilar) {
                         j++; newColor = colorError; newWidth = 3; newOpacity = 0.95;
-                        addIconsOnMap("_nod_Useless_Nodes", node.geometry, j);
-                        ceErrorsFound.push({ err: "_nod_Useless_Nodes", id: node.id });
-                        WMECE_log("🔴 Erreur : _nod_Useless_Nodes, pour le nœuds : " + node.id);
+                        newError(j, "_nod_Useless_Nodes", node.geometry, node.id);
                     }
                 }
             });
@@ -1251,6 +1236,12 @@
                     street = address.street; if (!street.isEmpty) streetName = street.name;
                 }
 
+                // Vérifie si l’un des numéros fournis correspond à une catégorie du lieu.
+                function hasCategory(poi, ...numbers) {
+                    const categoriesToCheck = VENUE_SUBCATEGORIES.filter(([name, num]) => numbers.includes(num)).map(([name]) => name);
+                    return poi.categories.some(cat => categoriesToCheck.includes(cat));
+                }
+
                 if (ls.poi_Resid) checkMaybeResid();// maybe a residential POI
                 if (ls.poi_Google) checkGoogle();//POI without Google link
                 if (ls.poi_Phone) checkPhone();//POI with bad phone number
@@ -1271,55 +1262,29 @@
                         !poi.categories.includes("PARKING_LOT")) {
                         j++; newColor = colorWarn; newWidth = 15; newOpacity = 0.5;
                         if (poi.geometry.type === "Point") newWidth = 26;
-                        addIconsOnMap("_poi_Resid", poi.geometry, j);
-                        ceErrorsFound.push({ err: "_poi_Resid", id: poi.id });
-                        WMECE_log("🔴 Erreur : _poi_Resid, pour le lieux : " + poi.id);
+                        newError(j, "_poi_Resid", poi.geometry, poi.id);
                     }
                 }
 
                 function checkGoogle() {
-                    if (!poi.isResidential && poi.externalProviderIds.length === 0
-                        && !new RegExp("(RIVER_STREAM|CANAL|SEA_LAKE_POOL|SWAMP_MARSH|ISLAND|FOREST_GROVE|BRIDGE|PARKING_LOT|JUNCTION_INTERCHANGE|CEMETERY|TUNNEL)").test(poi.categories)) {
+                    const cond1 = poi.externalProviderIds.length === 0 && !hasCategory(poi, 40, 41, 42, 43, 45, 46, 61, 72, 126, 127, 129);
+                    const cond2 = poi.externalProviderIds.length < 2 && hasCategory(poi, 68); // Mairie, mais n'a pas au moins 2 liason Google (ville ou mairie).
+                    if (!poi.isResidential && (cond1 || cond2)) {
                         j++; newColor = colorWarn; newWidth = 15; newOpacity = 0.5;
                         if (poi.geometry.type === "Point") newWidth = 26;
-                        addIconsOnMap("_poi_Google", poi.geometry, j);
-                        ceErrorsFound.push({ err: "_poi_Google", id: poi.id });
-                        WMECE_log("🔴 Erreur : _poi_Google, pour le lieux : " + poi.id);
+                        newError(j, "_poi_Google", poi.geometry, poi.id);
                     }
                 }
 
                 function checkPhone() {
-                    if (!poi.phone) return
-                    // Phone prefix
-                    //let prefPhone;
-                    //switch (wmeSDK.DataModel.Countries.getTopCountry().id) {
-                    //    case 3: prefPhone = '+213[ ](\\d{2})'; break; // format +213 (dd) xx xx xx @ Algeria
-                    //    case 73: prefPhone = '+33[ ]\\d[ ]\\d{2}'; break; // format +33 d xx xx xx xx @ France
-                    //    case 74: prefPhone = '+594[ ](594|694)'; break; // format +594 594 xx xx xx @ French Guiana
-                    //    case 88: prefPhone = '+590[ ](590|690)'; break; // format +590 590 xx xx xx @ Guadeloupe
-                    //    case 141: prefPhone = '+596[ ]596'; break; // format +596 596 xx xx xx @ Martinique
-                    //    case 148: prefPhone = '+377[ ]\\d{2}'; break; // format +377 xx xx xx xx @ Monaco
-                    //    case 152: prefPhone = '+212[ ](\\d{3})'; break; // format +212 xxx xx xx xx @ Morocco
-                    //    case 184: prefPhone = '+262[ ](262|263|692|693)'; // format +262 (262 ou 692) xx xx xx @ Reunion
-                    //    default: break;
-                    //}
-                    //if (new RegExp('^(\\' + prefPhone + ')([ ](\\d{2})){3}$').test(poi.phone) === false // Prefix + 4 digits
-                    //    && new RegExp('^(\\' + prefPhone + ')([ ](\\d{3})){2}$').test(poi.phone) === false // Prefix + 3 digits
-                    //    && (/^[13]\d[ ](\d{2})$/).test(poi.phone) === false // 1x xx or 3x xx
-                    //    && (/^(0[ ](8|9)\d{2})([ ](\d{3})){2}/).test(poi.phone) === false // 0 8xx xxx xxx
-                    //    && (/^(0[ ](8|9)\d{2})([ ](\d{2})){3}/).test(poi.phone) === false // 0 8xx xx xx xx
-                    //    && (/^(15|17|18|112|115)$/).test(poi.phone) === false // Emergency numbers
-                    //) null;
+                    if (!poi.phone || formatTelGoogle(poi.phone) === poi.phone) return;
 
-                    if (formatTelGoogle(poi.phone) === poi.phone) return;
                     j++; newColor = colorWarn; newWidth = 15; newOpacity = 0.5;
                     if (poi.geometry.type === "Point") newWidth = 26;
-                    addIconsOnMap("_poi_Phone", poi.geometry, j);
-                    ceErrorsFound.push({ err: "_poi_Phone", id: poi.id });
-                    WMECE_log("🔴 Erreur : _poi_Phone, pour le lieux : " + poi.id);
+                    newError(j, "_poi_Phone", poi.geometry, poi.id);
                     // AutoFix Tel
                     if (ls.poi_AutoFixTel && wmeSDK.DataModel.Venues.hasPermissions({ venueId: poi.id })
-                        && poi.approved && [3, 73, 74, 88, 141, 148, 152, 184].includes(country.id)) {
+                        && poi.approved && [3, 73, 74, 88, 141, 148, 152, 184].includes(country?.id)) {
                         const phoneTo = formatTelGoogle(poi.phone);
                         if (phoneTo !== '' && poi.venueUpdateRequests.length === 0) {
                             if (poi.phone != phoneTo) wmeSDK.DataModel.Venues.updateVenue({ venueId: poi.id, phone: phoneTo });
@@ -1331,9 +1296,7 @@
                     if (poi.categories.includes("OTHER") &&
                         !(/^Déchèterie/).test(poi.name)) {
                         j++; newColor = colorWarn; newWidth = 15; newOpacity = 0.5;
-                        addIconsOnMap("_poi_Other", poi.geometry, j);
-                        ceErrorsFound.push({ err: "_poi_Other", id: poi.id });
-                        WMECE_log("🔴 Erreur : _poi_Other, pour le lieux : " + poi.id);
+                        newError(j, "_poi_Other", poi.geometry, poi.id);
                         if (poi.geometry.type === "Point") newWidth = 26;
                     }
                 }
@@ -1342,9 +1305,7 @@
                     if (poi.geometry.type === "Polygon" && poi.navigationPoints.length === 0 &&
                         !new RegExp("(BRIDGE|CANAL|FOREST_GROVE|ISLAND|JUNCTION_INTERCHANGE|POOL|RIVER_STREAM|SEA_LAKE_POOL|SWAMP_MARSH|TUNNEL)").test(poi.categories)) {
                         j++; newColor = colorWarn; newWidth = 15; newOpacity = 0.5;
-                        addIconsOnMap("_poi_Entry", poi.geometry, j);
-                        ceErrorsFound.push({ err: "_poi_Entry", id: poi.id });
-                        WMECE_log("🔴 Erreur : _poi_Entry, pour le lieux : " + poi.id);
+                        newError(j, "_poi_Entry", poi.geometry, poi.id);
                     }
                 }
 
@@ -1355,9 +1316,7 @@
                         poi.name === "" || new RegExp('^' + parkNamePoi + '$').test(poi.name) ||
                         !wmeSDK.DataModel.Venues.ParkingLot.getParkingLotType({ venueId: poi.id })) {
                         j++; newColor = colorError; newWidth = 15; newOpacity = 0.5;
-                        addIconsOnMap("_poi_Park", poi.geometry, j);
-                        ceErrorsFound.push({ err: "_poi_Park", id: poi.id });
-                        WMECE_log("🔴 Erreur : _poi_Park, pour le lieux : " + poi.id);
+                        newError(j, "_poi_Park", poi.geometry, poi.id);
                         if (poi.geometry.type === "Point") newWidth = 26;
                     }
                 }
@@ -1373,13 +1332,9 @@
                     if (hasBadStreet || noStreet || noNumber || badCity) {
                         j++; newColor = colorError; newWidth = 15; newOpacity = 0.5;
                         if (hasBadStreet || noStreet || badCity) {
-                            addIconsOnMap("_poi_Address", poi.geometry, j);
-                            ceErrorsFound.push({ err: "_poi_Address", id: poi.id });
-                            WMECE_log("🔴 Erreur : _nod_Useless_Nodes, pour le lieux : " + poi.id);
+                            newError(j, "_poi_Address", poi.geometry, poi.id);
                         } else {
-                            addIconsOnMap("_poi_AddressWithoutNumber", poi.geometry, j);
-                            ceErrorsFound.push({ err: "_poi_AddressWithoutNumber", id: poi.id });
-                            WMECE_log("🔴 Erreur : _poi_AddressWithoutNumber, pour le lieux : " + poi.id);
+                            newError(j, "_poi_AddressWithoutNumber", poi.geometry, poi.id);
                         }
                         if (poi.geometry.type === "Point") newWidth = 26;
                     }
@@ -1388,9 +1343,7 @@
                 function checkLandmark() {
                     if (new RegExp("(RIVER_STREAM|CANAL|SEA_LAKE_POOL|SWAMP_MARSH|ISLAND|FOREST_GROVE|BRIDGE)").test(poi.categories) && poi.name === "" && (streetName || cityName?.name)) {
                         j++; newColor = colorError; newWidth = 15; newOpacity = 0.5;
-                        addIconsOnMap("_poi_LandM", poi.geometry, j);
-                        ceErrorsFound.push({ err: "_poi_LandM", id: poi.id });
-                        WMECE_log("🔴 Erreur : _poi_LandM, pour le lieux : " + poi.id);
+                        newError(j, "_poi_LandM", poi.geometry, poi.id);
                         if (poi.geometry.type === "Point") newWidth = 26;
                     }
                 }
@@ -1398,9 +1351,7 @@
                 function checkDblSpace() {
                     if (streetName?.includes("  ") || poi.name?.includes("  ")) {
                         j++; newColor = colorError; newWidth = 15; newOpacity = 0.5;
-                        addIconsOnMap("_poi_DleSpace", poi.geometry, j);
-                        ceErrorsFound.push({ err: "_poi_DleSpace", id: poi.id });
-                        WMECE_log("🔴 Erreur : _poi_DleSpace, pour le lieux : " + poi.id);
+                        newError(j, "_poi_DleSpace", poi.geometry, poi.id);
                         if (poi.geometry.type === "Point") newWidth = 26;
                     }
                 }
@@ -1410,9 +1361,7 @@
                         if (!new RegExp(streetNameSeg).test(poi.name)) return;
                         if (!/^(Station-service )/.test(poi.name)) {
                             j++; newColor = colorError; newWidth = 15; newOpacity = 0.5;
-                            addIconsOnMap("_poi_GasSta", poi.geometry, j);
-                            ceErrorsFound.push({ err: "_poi_GasSta", id: poi.id });
-                            WMECE_log("🔴 Erreur : _poi_GasSta, pour le lieux : " + poi.id);
+                            newError(j, "_poi_GasSta", poi.geometry, poi.id);
                             if (poi.geometry.type === "Point") newWidth = 26;
                         }
                     }
@@ -1431,9 +1380,7 @@
                                 && new RegExp('^' + "(Tram$|Métro$|Arrêt$|Gare$|Station$|Tram |Métro |Arrêt |Gare |Station )").test(poi.name)
                                 && !isBus && !isSubway && !isTrain)) {
                             j++; newColor = colorError; newWidth = 15; newOpacity = 0.5;
-                            addIconsOnMap("_poi_Transp", poi.geometry, j);
-                            ceErrorsFound.push({ err: "_poi_Transp", id: poi.id });
-                            WMECE_log("🔴 Erreur : _poi_Transp, pour le lieux : " + poi.id);
+                            newError(j, "_poi_Transp", poi.geometry, poi.id);
                             if (poi.geometry.type === "Point") newWidth = 26;
                         }
                     }
@@ -1446,9 +1393,7 @@
 
                     if ((!starts && hasRel) || (starts && !hasRel) || (exact && !hasRel)) {
                         j++; newColor = colorError; newWidth = 15; newOpacity = 0.5;
-                        addIconsOnMap("_poi_Relig", poi.geometry, j);
-                        ceErrorsFound.push({ err: "_poi_Relig", id: poi.id });
-                        WMECE_log("🔴 Erreur : _poi_Relig, pour le lieux : " + poi.id);
+                        newError(j, "_poi_Relig", poi.geometry, poi.id);
                         if (poi.geometry.type === "Point") newWidth = 26;
                     }
                 }
@@ -1457,10 +1402,8 @@
                     if (poi.modificationData.updatedBy && !poi.isResidential &&
                         new RegExp("(admin|avseu|WazeFeed|waze-maint-bot|Waze3rdparty|evcs feed 1|WazeParking1)").test(poi.modificationData.updatedBy)) {
                         j++; newColor = colorInfo; newWidth = 15; newOpacity = 0.5;
-                        if (poi.geometry.type === "Point") { newWidth = 26; newOpacity = 0.75; }
-                        addIconsOnMap("_poi_WazeBot", poi.geometry, j);
-                        ceErrorsFound.push({ err: "_poi_WazeBot", id: poi.id });
-                        WMECE_log("🔴 Erreur : _poi_WazeBot, pour le lieux : " + poi.id);
+                        newError(j, "_poi_WazeBot", poi.geometry, poi.id);
+                        if (poi.geometry.type === "Point") { newWidth = 26; newOpacity = 0.75; };
                     }
                 }
 
@@ -1474,8 +1417,7 @@
             });
         }
 
-        // Mise à jour du calque CE sur la carte WME
-        try { W.map.getLayersByName("Color Errors")[0].addFeatures(lineFeature); WMECE_log("Ajout des icônes sur la couche CE"); } catch ($) { }
+        try { WMECE_log("Ajout des icônes sur la couche CE"); W.map.getLayersByName("Color Errors")[0].addFeatures(lineFeature); } catch (e) { WMECE_log(e) }
 
         WMECE_log(ceErrorsFound);
 
@@ -1484,148 +1426,30 @@
             if (obj.lockRank + 1 > wmeUserRank) return false;
             return typeof obj.id === "string" ? wmeSDK.DataModel.Venues.hasPermissions({ venueId: obj.id }) : wmeSDK.DataModel.Segments.hasPermissions({ segmentId: obj.id });
         }
-    }
 
-    function formatTelCounty(venue) {
-        let phoneTo, phone, vPhone = venue.phone;
-        // num 0800 et 0900
-        if (vPhone.startsWith('08') == true) {
-            phoneTo = vPhone.replaceAll(/^0[.| |-]?8[.| |-]?([0-9])([0-9])[.| |-]?([0-9])([0-9])[.| |-]?([0-9])([0-9])[.| |-]?([0-9])([0-9])$/g, "0 8$1$2 $3$4$5 $6$7$8");
-        } else {
-            // rules by country
-            switch (wmeSDK.DataModel.Countries.getTopCountry().id) {
-                case 3: // Algeria
-                    if (vPhone.startsWith('+213') == true) {
-                        phoneTo = vPhone.replace(/^\+213[ ]?([0-9])[.| |-]?([0-9][0-9])[.| |-]?([0-9][0-9])[.| |-]?([0-9][0-9])[.| |-]?([0-9][0-9])$/g, "+213 $1 $2 $3 $4 $5");
-                    } else {
-                        phoneTo = vPhone.replace(/^0([0-9])[.| |-]?([0-9][0-9])[.| |-]?([0-9][0-9])[.| |-]?([0-9][0-9])[.| |-]?([0-9][0-9])$/g, "+213 $1 $2 $3 $4 $5");
-                    }
-                    break;
-                case 73: // France
-                    // Nettoyage initial : supprime les espaces, points, tirets et parenthèses
-                    phone = vPhone.replace(/[().\-]/g, ' ').replace(/\s+/g, ' ').trim();
-
-                    // Si déjà bien formaté → on ne touche pas
-                    if (/^\+33\s[1-9](\s\d{2}){4}$/.test(phone)) {
-                        phoneTo = phone;
-                        break;
-                    }
-
-                    // Supprime le (0) après +33, 0033, ou 33
-                    phone = phone.replace(/(\+33|0033|^33)\s*\(0\)/, '$1');
-
-                    // Cas des numéros commençant par +33, 0033, ou 33
-                    if (/^\+?0{0,2}33/.test(phone)) {
-                        phoneTo = phone
-                            .replace(/^(\+?0{0,2}33)\s*0?/, '+33 ') // remplace +33(0) ou 0033(0) par +33
-                            .replace(/\s+/g, ' ') // normalise les espaces
-                            .replace(/^\+33\s?([1-9])\s?(\d{2})\s?(\d{2})\s?(\d{2})\s?(\d{2})$/, "+33 $1 $2 $3 $4 $5");
-                    }
-
-                    // Cas des numéros français au format national
-                    else if (/^0[1-9]/.test(phone)) {
-                        // Numéros spéciaux (08)
-                        if (/^0\s*8/.test(phone)) {
-                            phoneTo = phone
-                                .replace(/^0\s*8/, "0 8")
-                                .replace(/\s+/g, '')
-                                .replace(/^0(\d{1})(\d{2})(\d{2})(\d{2})(\d{2})$/, "0$1 $2 $3 $4 $5");
-                        } else {
-                            phoneTo = phone
-                                .replace(/^0\s*([1-9])/, "+33 $1")
-                                .replace(/\s+/g, '')
-                                .replace(/^\+33([1-9])(\d{2})(\d{2})(\d{2})(\d{2})$/, "+33 $1 $2 $3 $4 $5");
-                        }
-                    }
-
-                    // Cas où il y aurait juste "33" sans +
-                    else if (/^33/.test(phone)) {
-                        phoneTo = phone
-                            .replace(/^33\s*0?/, "+33 ")
-                            .replace(/\s+/g, '')
-                            .replace(/^\+33([1-9])(\d{2})(\d{2})(\d{2})(\d{2})$/, "+33 $1 $2 $3 $4 $5");
-                    }
-
-                    // Par défaut, on laisse tel quel
-                    else {
-                        phoneTo = phone;
-                    }
-                    break;
-                case 74: // French Guiana
-                    if (vPhone.startsWith('+594 5 94') == true || vPhone.startsWith('+594594') == true) {
-                        phoneTo = vPhone.replace(/^\+594[ ]?([0-9])[.| |-]?([0-9][0-9])[.| |-]?([0-9][0-9])[.| |-]?([0-9][0-9])[.| |-]?([0-9][0-9])$/g, "+594 $1$2 $3 $4 $5");
-                    } else {
-                        phoneTo = vPhone.replace(/^0([0-9])[.| |-]?([0-9][0-9])[.| |-]?([0-9][0-9])[.| |-]?([0-9][0-9])[.| |-]?([0-9][0-9])$/g, "+594 $1$2 $3 $4 $5");
-                    }
-                    break;
-                case 88: // Guadeloupe
-                    if (vPhone.startsWith('+590 5 90') == true || vPhone.startsWith('+590590') == true) {
-                        phoneTo = vPhone.replace(/^\+590[ ]?([0-9])[.| |-]?([0-9][0-9])[.| |-]?([0-9][0-9])[.| |-]?([0-9][0-9])[.| |-]?([0-9][0-9])$/g, "+590 $1$2 $3 $4 $5");
-                    } else {
-                        phoneTo = vPhone.replace(/^0([0-9])[.| |-]?([0-9][0-9])[.| |-]?([0-9][0-9])[.| |-]?([0-9][0-9])[.| |-]?([0-9][0-9])$/g, "+590 $1$2 $3 $4 $5");
-                    }
-                    break;
-                case 141: // Martinique
-                    if (vPhone.startsWith('+596 5 96') == true || vPhone.startsWith('+596596') == true) {
-                        phoneTo = vPhone.replace(/^\+596[ ]?([0-9])[.| |-]?([0-9][0-9])[.| |-]?([0-9][0-9])[.| |-]?([0-9][0-9])[.| |-]?([0-9][0-9])$/g, "+596 $1$2 $3 $4 $5");
-                    } else {
-                        phoneTo = vPhone.replace(/^0([0-9])[.| |-]?([0-9][0-9])[.| |-]?([0-9][0-9])[.| |-]?([0-9][0-9])[.| |-]?([0-9][0-9])$/g, "+596 $1$2 $3 $4 $5");
-                    }
-                    break;
-                case 148: // Monaco
-                    if (vPhone.startsWith('+377') == true) {
-                        phoneTo = vPhone.replace(/^\+377[ ]?([0-9])[.| |-]?([0-9][0-9])[.| |-]?([0-9][0-9])[.| |-]?([0-9][0-9])[.| |-]?([0-9][0-9])$/g, "+377 $1 $2 $3 $4 $5");
-                    } else {
-                        phoneTo = vPhone.replace(/^0([0-9])[.| |-]?([0-9][0-9])[.| |-]?([0-9][0-9])[.| |-]?([0-9][0-9])[.| |-]?([0-9][0-9])$/g, "+377 $1 $2 $3 $4 $5");
-                    }
-                    break;
-                case 152: // Morocco
-                    if (vPhone.startsWith('+212') == true) {
-                        phoneTo = vPhone.replace(/^\+212[ ]?([0-9])[.| |-]?([0-9][0-9])[.| |-]?([0-9][0-9])[.| |-]?([0-9][0-9])[.| |-]?([0-9][0-9])$/g, "+212 $1 $2 $3 $4 $5");
-                    } else {
-                        phoneTo = vPhone.replace(/^0([0-9])[.| |-]?([0-9][0-9])[.| |-]?([0-9][0-9])[.| |-]?([0-9][0-9])[.| |-]?([0-9][0-9])$/g, "+212 $1 $2 $3 $4 $5");
-                    }
-                    break;
-                case 184: // Reunion 184
-                    let cleaned = vPhone.replace(/\D/g, '');
-                    if (cleaned.startsWith("262")) cleaned = cleaned.slice(3);
-                    if (cleaned.startsWith("0")) cleaned = cleaned.slice(1);
-                    if (cleaned.length === 9) {
-                        const bloc1 = cleaned.slice(0, 3);
-                        const bloc2 = cleaned.slice(3, 5);
-                        const bloc3 = cleaned.slice(5, 7);
-                        const bloc4 = cleaned.slice(7, 9);
-                        phoneTo = `+262 ${bloc1} ${bloc2} ${bloc3} ${bloc4}`;
-                    }
-                    else phoneTo = vPhone;
-                    break;
-                default: break;
-            }
+        function newError(pos, err, geo, id) {
+            addIconsOnMap(err, geo, pos);
+            ceErrorsFound.push({ err: err, id: id });
+            WMECE_log(`🔴 Erreur : ${err}, pour : ${id}`);
         }
-        return phoneTo;
     }
 
     function formatTelGoogle(phone) {
-        const lpn = libphonenumber,
-            pnu = lpn.PhoneNumberUtil.getInstance(),
-            pnf = lpn.PhoneNumberFormat,
-            pnt = lpn.PhoneNumberType
-
+        const lpn = libphonenumber, pnu = lpn.PhoneNumberUtil.getInstance(), pnf = lpn.PhoneNumberFormat, pnt = lpn.PhoneNumberType
         WMECE_log(`Formatage du numéro : ${phone}`);
+
+        // Numéro à 4 chiffres
+        phone = phone.replaceAll(/\s+/g, '').replaceAll(/\D/g, '');
+        if (phone.length === 4) return `${phone.slice(0, 2)} ${phone.slice(2)}`;
+
         try {
-            const phoneNumber = pnu.parseAndKeepRawInput(phone, phone.startsWith("+") ? null : "FR");
-            WMECE_log(`Analyse du numéro : ${phone}   type: ${Object.keys(pnt).find(key => pnt[key] === pnu.getNumberType(phoneNumber))}, national: ${pnu.format(phoneNumber, pnf.NATIONAL)}, international: ${pnu.format(phoneNumber, pnf.INTERNATIONAL)}`);
-            if (pnu.isValidNumber(phoneNumber)) {
-                if ([3, 4, 5].includes(pnu.getNumberType(phoneNumber))) return pnu.format(phoneNumber, pnf.NATIONAL); // Numéro de services
-                else return pnu.format(phoneNumber, pnf.INTERNATIONAL);
-            } else {
-                WMECE_log(`Numéro invalide : ${phone}`);
-                return "Erreur";
-            }
-        } catch (e) {
-            WMECE_log(`Erreur de parsing pour ${phone} :` + e.message);
-            return "Erreur";
-        }
+            const aPhone = pnu.parseAndKeepRawInput(phone, phone.startsWith("+") ? null : "FR");
+            WMECE_log(`Analyse du numéro : ${phone}   type: ${Object.keys(pnt).find(key => pnt[key] === pnu.getNumberType(aPhone))}, national: ${pnu.format(aPhone, pnf.NATIONAL)}, international: ${pnu.format(aPhone, pnf.INTERNATIONAL)}`);
+            if (pnu.isValidNumber(aPhone)) {
+                if ([3, 4, 5, 9].includes(pnu.getNumberType(aPhone))) return pnu.format(aPhone, pnf.NATIONAL); // Numéro de services
+                else return pnu.format(aPhone, pnf.INTERNATIONAL);
+            } else { WMECE_log(`Numéro invalide : ${phone}`); return "Erreur"; }
+        } catch (e) { WMECE_log(`Erreur de parsing pour ${phone} :` + e.message); return "Erreur"; }
     }
 
     function fixTel() {

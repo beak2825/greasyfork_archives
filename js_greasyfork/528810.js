@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Text Explainer
 // @namespace    http://tampermonkey.net/
-// @version      0.3.1
+// @version      0.3.3
 // @description  Explain selected text using LLM
 // @author       RoCry
 // @icon         data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwcHgiIGhlaWdodD0iODAwcHgiIHZpZXdCb3g9IjAgMCAxOTIgMTkyIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGZpbGw9Im5vbmUiPjxjaXJjbGUgY3g9IjExNiIgY3k9Ijc2IiByPSI1NCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEyIi8+PHBhdGggc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMTIiIGQ9Ik04Ni41IDEyMS41IDQxIDE2N2MtNC40MTggNC40MTgtMTEuNTgyIDQuNDE4LTE2IDB2MGMtNC40MTgtNC40MTgtNC40MTgtMTEuNTgyIDAtMTZsNDQuNS00NC41TTkyIDYybDEyIDMyIDEyLTMyIDEyIDMyIDEyLTMyIi8+PC9zdmc+
@@ -18,7 +18,7 @@
 // @require      https://update.greasyfork.org/scripts/528703/1732956/SimpleBalancer.js
 // @require      https://update.greasyfork.org/scripts/528704/1732957/SmolLLM.js
 // @require      https://update.greasyfork.org/scripts/528763/1732960/Text%20Explainer%20Settings.js
-// @require      https://update.greasyfork.org/scripts/528822/1732959/Selection%20Context.js
+// @require      https://update.greasyfork.org/scripts/528822/1737952/Selection%20Context.js
 // @license MIT
 // @downloadURL https://update.greasyfork.org/scripts/528810/Text%20Explainer.user.js
 // @updateURL https://update.greasyfork.org/scripts/528810/Text%20Explainer.meta.js
@@ -27,6 +27,9 @@
 (function () {
   "use strict";
 
+  // =========================
+  // Config/constants
+  // =========================
   const DEFAULT_SHORTCUT = {
     key: "d",
     ctrlKey: false,
@@ -76,28 +79,53 @@
     config: null,
     llm: null,
     isProcessing: false,
+    activeRequest: null,
+    requestSeq: 0,
+    abortedRequestId: null,
     floatingButton: null,
     selectionHandlers: null,
     isTouch: false,
   };
 
+  const INLINE_CONFIG = null; // Userscripts: set object to override settings.
+
+  // =========================
+  // Core utilities
+  // =========================
   function ensureDependency(name, value) {
     if (!value) {
       throw new Error(`${name} is required but not available`);
     }
   }
 
+  function getInlineConfig() {
+    const inlineConfig =
+      INLINE_CONFIG || globalThis.TEXT_EXPLAINER_INLINE_CONFIG;
+    if (!inlineConfig) return null;
+    if (typeof inlineConfig !== "object" || Array.isArray(inlineConfig)) {
+      throw new Error("INLINE_CONFIG must be a plain object");
+    }
+    return inlineConfig;
+  }
+
   function ensureGMCompat() {
     if (typeof GM_addStyle !== "function") {
-      GM_addStyle = function (cssText) {
-        if (!document.head) {
-          throw new Error("document.head is not available for GM_addStyle");
-        }
-        const style = document.createElement("style");
-        style.textContent = cssText;
-        document.head.appendChild(style);
-        return style;
-      };
+      if (typeof GM === "object" && typeof GM.addStyle === "function") {
+        GM_addStyle = function (cssText) {
+          GM.addStyle(cssText);
+          return cssText;
+        };
+      } else {
+        GM_addStyle = function (cssText) {
+          if (!document.head) {
+            throw new Error("document.head is not available for GM_addStyle");
+          }
+          const style = document.createElement("style");
+          style.textContent = cssText;
+          document.head.appendChild(style);
+          return style;
+        };
+      }
     }
 
     if (typeof GM_getValue !== "function") {
@@ -119,8 +147,12 @@
       };
     }
 
-    if (typeof GM_registerMenuCommand !== "function") {
-      throw new Error("GM_registerMenuCommand is required but not available");
+    if (
+      typeof GM_xmlhttpRequest !== "function" &&
+      typeof GM === "object" &&
+      typeof GM.xmlHttpRequest === "function"
+    ) {
+      GM_xmlhttpRequest = GM.xmlHttpRequest;
     }
   }
 
@@ -139,6 +171,22 @@
     };
   }
 
+  function mergeConfig(baseConfig, overrideConfig) {
+    if (!overrideConfig) return baseConfig;
+    return {
+      ...baseConfig,
+      ...overrideConfig,
+      shortcut: {
+        ...(baseConfig.shortcut || {}),
+        ...(overrideConfig.shortcut || {}),
+      },
+      floatingButton: {
+        ...(baseConfig.floatingButton || {}),
+        ...(overrideConfig.floatingButton || {}),
+      },
+    };
+  }
+
   function isEditableTarget(target) {
     if (!target) return false;
     if (target.isContentEditable) return true;
@@ -147,6 +195,9 @@
     return ["INPUT", "TEXTAREA", "SELECT"].includes(tag);
   }
 
+  // =========================
+  // Text/prompt helpers
+  // =========================
   function countWords(text) {
     const trimmed = (text || "").trim();
     if (!trimmed) return 0;
@@ -264,6 +315,9 @@ If "${selectedText}" is a technical term or jargon
     };
   }
 
+  // =========================
+  // Selection helpers
+  // =========================
   function getSelectionContext() {
     const getter =
       window.GetSelectionContext ||
@@ -272,7 +326,210 @@ If "${selectedText}" is a technical term or jargon
     return getter();
   }
 
-  async function callLLM(prompt, systemPrompt, progressCallback) {
+  // =========================
+  // Transport: GM_xmlhttpRequest to bypass CSP
+  // =========================
+  function canUseGMTransport() {
+    return (
+      typeof GM_xmlhttpRequest === "function" &&
+      state.llm &&
+      typeof state.llm.prepareRequestData === "function" &&
+      typeof state.llm.prepareHeaders === "function" &&
+      typeof state.llm.processStreamChunks === "function" &&
+      state.llm.balancer &&
+      typeof state.llm.balancer.choosePair === "function"
+    );
+  }
+
+  function abortActiveRequest() {
+    const active = state.activeRequest;
+    if (!active || typeof active.abort !== "function") return false;
+    state.abortedRequestId = active.id;
+    try {
+      active.abort();
+    } catch (error) {
+      console.warn("Failed to abort request:", error);
+    }
+    state.activeRequest = null;
+    state.isProcessing = false;
+    return true;
+  }
+
+  function askLLMWithGM({
+    prompt,
+    providerName,
+    systemPrompt = "",
+    model,
+    apiKey,
+    baseUrl,
+    handler = null,
+    timeout = 60000,
+    requestId = null,
+  }) {
+    const normalizedProvider = providerName.toLowerCase();
+    const trimmedKey = String(apiKey).trim();
+    const trimmedBaseUrl = String(baseUrl).trim();
+
+    let selectedKey;
+    let selectedUrl;
+
+    [selectedKey, selectedUrl] = state.llm.balancer.choosePair(
+      trimmedKey,
+      trimmedBaseUrl,
+    );
+
+    const { url, data } = state.llm.prepareRequestData(
+      prompt,
+      systemPrompt,
+      model,
+      normalizedProvider,
+      selectedUrl,
+    );
+    const headers = {
+      ...state.llm.prepareHeaders(normalizedProvider, selectedKey),
+      Accept: "text/event-stream",
+      "Cache-Control": "no-cache",
+    };
+    const apiKeyPreview = `${selectedKey.slice(0, 5)}...${selectedKey.slice(-4)}`;
+
+    state.llm.logger.info(
+      `[SmolLLM] GM Request: ${url} | model=${model} | provider=${normalizedProvider} | api_key=${apiKeyPreview} | prompt=${prompt.length}`,
+    );
+
+    state.llm.buffer = "";
+
+    return new Promise((resolve, reject) => {
+      let fullText = "";
+      let lastIndex = 0;
+      let streamingActive = false;
+      let settled = false;
+      const decoder = new TextDecoder();
+      const isTampermonkey =
+        typeof GM_info === "object" &&
+        /tampermonkey/i.test(GM_info.scriptHandler || "");
+      const useStreamResponse =
+        isTampermonkey && typeof ReadableStream !== "undefined";
+
+      const resolveOnce = (value) => {
+        if (settled) return;
+        settled = true;
+        resolve(value);
+      };
+
+      const rejectOnce = (error) => {
+        if (settled) return;
+        settled = true;
+        reject(error);
+      };
+
+      const appendChunk = (chunk) => {
+        const deltas = state.llm.processStreamChunks(chunk, normalizedProvider);
+        for (const delta of deltas) {
+          if (!delta) continue;
+          fullText += delta;
+          if (handler) handler(delta, fullText);
+        }
+      };
+
+      const pumpResponseText = (text) => {
+        if (!text) return;
+        const chunk = text.slice(lastIndex);
+        if (!chunk) return;
+        lastIndex = text.length;
+        appendChunk(chunk);
+      };
+
+      const startStreamReader = (stream) => {
+        if (streamingActive) return;
+        if (!stream || typeof stream.getReader !== "function") return;
+        streamingActive = true;
+
+        (async () => {
+          const reader = stream.getReader();
+          try {
+            while (true) {
+              const { done, value } = await reader.read();
+              if (done) break;
+              if (value) {
+                appendChunk(decoder.decode(value, { stream: true }));
+              }
+            }
+            if (state.llm.buffer) {
+              appendChunk("\n");
+            }
+            resolveOnce(fullText);
+          } catch (error) {
+            rejectOnce(error);
+          }
+        })();
+      };
+
+      const requestOptions = {
+        method: "POST",
+        url,
+        headers,
+        data: JSON.stringify(data),
+        ...(useStreamResponse ? { responseType: "stream" } : {}),
+        timeout,
+        onloadstart: (response) => {
+          startStreamReader(response.response);
+        },
+        onprogress: (event) => {
+          if (streamingActive) return;
+          pumpResponseText(event.responseText || "");
+        },
+        onreadystatechange: (response) => {
+          if (streamingActive) return;
+          startStreamReader(response.response);
+          if (response.readyState !== 3) return;
+          pumpResponseText(response.responseText || "");
+        },
+        onload: (response) => {
+          if (streamingActive) return;
+          if (response.status < 200 || response.status >= 300) {
+            rejectOnce(
+              new Error(
+                `HTTP error ${response.status}: ${response.responseText || response.statusText || "Unknown error"}`,
+              ),
+            );
+            return;
+          }
+
+          pumpResponseText(response.responseText || "");
+          if (state.llm.buffer) {
+            appendChunk("\n");
+          }
+          resolveOnce(fullText);
+        },
+        onerror: () => {
+          rejectOnce(new Error("Network error during GM_xmlhttpRequest"));
+        },
+        ontimeout: () => {
+          rejectOnce(new Error(`Request timed out after ${timeout}ms`));
+        },
+        onabort: () => {
+          rejectOnce(new Error("Request aborted"));
+        },
+      };
+
+      const requestHandle = GM_xmlhttpRequest(requestOptions);
+      if (requestId !== null) {
+        state.activeRequest = {
+          id: requestId,
+          abort: () => {
+            if (requestHandle && typeof requestHandle.abort === "function") {
+              requestHandle.abort();
+            }
+          },
+        };
+      }
+    });
+  }
+
+  // =========================
+  // LLM call path
+  // =========================
+  async function callLLM(prompt, systemPrompt, progressCallback, requestId) {
     const apiKey = (state.config.apiKey || "").trim();
     const baseUrl = (state.config.baseUrl || "").trim();
     const model = (state.config.model || "").trim();
@@ -297,7 +554,7 @@ If "${selectedText}" is a technical term or jargon
       );
     }
 
-    return state.llm.askLLM({
+    const request = {
       prompt,
       systemPrompt,
       model,
@@ -306,13 +563,25 @@ If "${selectedText}" is a technical term or jargon
       providerName: provider,
       handler: progressCallback,
       timeout: 60000,
-    });
+    };
+
+    if (canUseGMTransport()) {
+      return askLLMWithGM({ ...request, requestId });
+    }
+
+    return state.llm.askLLM(request);
   }
 
+  // =========================
+  // UI flow
+  // =========================
   async function runExplainer(selectionContext) {
-    if (state.isProcessing) return;
+    if (state.isProcessing) {
+      if (!abortActiveRequest()) return;
+    }
     state.isProcessing = true;
 
+    const requestId = (state.requestSeq += 1);
     const popup = window.TextExplainerUI.openPopup({
       isTouch: state.isTouch,
       isDark: window.TextExplainerUI.isPageDarkMode(),
@@ -336,6 +605,7 @@ If "${selectedText}" is a technical term or jargon
           window.TextExplainerUI.setLoading(popup, false);
           window.TextExplainerUI.updateContent(popup, responseText);
         },
+        requestId,
       );
 
       if (fullResponse && fullResponse.trim()) {
@@ -351,6 +621,9 @@ If "${selectedText}" is a technical term or jargon
         );
       }
     } catch (error) {
+      if (state.abortedRequestId === requestId) {
+        return;
+      }
       window.TextExplainerUI.showError(
         popup,
         error.message || "Error processing request",
@@ -358,10 +631,19 @@ If "${selectedText}" is a technical term or jargon
       console.error("Text Explainer error:", error);
       throw error;
     } finally {
+      if (state.activeRequest && state.activeRequest.id === requestId) {
+        state.activeRequest = null;
+      }
+      if (state.abortedRequestId === requestId) {
+        state.abortedRequestId = null;
+      }
       state.isProcessing = false;
     }
   }
 
+  // =========================
+  // Input handlers
+  // =========================
   function handleKeyPress(event) {
     if (isEditableTarget(event.target)) return;
 
@@ -414,6 +696,9 @@ If "${selectedText}" is a technical term or jargon
     return false;
   }
 
+  // =========================
+  // Touch + floating button
+  // =========================
   function handleSelectionChange() {
     if (!state.isTouch || !state.floatingButton) return;
     if (state.isProcessing) return;
@@ -458,7 +743,9 @@ If "${selectedText}" is a technical term or jargon
   }
 
   function handleFloatingButtonAction() {
-    if (state.isProcessing) return;
+    if (state.isProcessing) {
+      if (!abortActiveRequest()) return;
+    }
 
     const selectionContext = getSelectionContext();
     if (!selectionContext || !selectionContext.selectedText) {
@@ -491,7 +778,8 @@ If "${selectedText}" is a technical term or jargon
   }
 
   function onSettingsChanged(updatedConfig) {
-    state.config = normalizeConfig(updatedConfig);
+    const inlineConfig = getInlineConfig();
+    state.config = normalizeConfig(mergeConfig(updatedConfig, inlineConfig));
     resetFloatingButton();
   }
 
@@ -500,18 +788,34 @@ If "${selectedText}" is a technical term or jargon
     ensureDependency("SmolLLM", window.SmolLLM);
     ensureDependency("TextExplainerUI", window.TextExplainerUI);
 
+    const inlineConfig = getInlineConfig();
     ensureGMCompat();
 
     state.isTouch = window.TextExplainerUI.isTouchDevice();
-    state.settingsManager = new window.TextExplainerSettings();
+    state.settingsManager = new window.TextExplainerSettings(
+      inlineConfig || {},
+    );
+    if (inlineConfig) {
+      state.settingsManager.update(inlineConfig);
+    }
     state.config = normalizeConfig(state.settingsManager.getAll());
     state.llm = new window.SmolLLM();
 
     window.TextExplainerUI.ensureStyles();
 
-    GM_registerMenuCommand("Text Explainer Settings", () => {
-      state.settingsManager.openDialog(onSettingsChanged);
-    });
+    if (typeof GM_registerMenuCommand === "function") {
+      GM_registerMenuCommand("Text Explainer Settings", () => {
+        state.settingsManager.openDialog(onSettingsChanged);
+      });
+    } else if (!inlineConfig) {
+      throw new Error(
+        "GM_registerMenuCommand missing. Set INLINE_CONFIG or use Tampermonkey.",
+      );
+    } else {
+      console.info(
+        "GM_registerMenuCommand missing; edit INLINE_CONFIG to change settings.",
+      );
+    }
 
     document.addEventListener("keydown", handleKeyPress);
 

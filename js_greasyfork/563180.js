@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Google Places Link Checker
 // @namespace    https://greasyfork.org/de/users/863740-horst-wittlich
-// @version      19.01.2026
+// @version      2026.01.22
 // @description  Prüft Places auf Google-Verknüpfungen und listet fehlende/doppelte Verknüpfungen tabellarisch auf. Mit Auto-Scroll für große Bereiche.
 // @author       Hiwi234
 // @match        https://www.waze.com/editor*
@@ -41,6 +41,17 @@ const I18N = {
         placeType: 'Place Typ:',
         pointPlaces: 'Point Places',
         areaPlaces: 'Area Places',
+        scanArea: 'Scan-Bereich:',
+        scanOnlyEditable: 'Viewport editierbar',
+        scanEntireViewport: 'Gesamten Viewport',
+        scanSelectedAreas: 'Ausgewählte Gebiete',
+        selectEditableAreas: 'Editierbare Gebiete auswählen:',
+        selectAllAreas: 'Alle auswählen',
+        deselectAllAreas: 'Alle abwählen',
+        noEditableAreasFound: 'Keine editierbaren Gebiete gefunden',
+        analyzingEditableAreas: 'Analysiere editierbare Gebiete...',
+        scanOnlyEditableTooltip: 'Scannt nur editierbare Bereiche im aktuellen Viewport (basierend auf Ihrem Rang und Lock-Levels)',
+        scanEntireViewportTooltip: 'Scannt den gesamten sichtbaren Kartenbereich',
         startScan: 'Scan Starten',
         pause: 'Pause',
         resume: 'Fortsetzen',
@@ -154,6 +165,17 @@ const I18N = {
         placeType: 'Place Type:',
         pointPlaces: 'Point Places',
         areaPlaces: 'Area Places',
+        scanArea: 'Scan Area:',
+        scanOnlyEditable: 'Viewport editable',
+        scanEntireViewport: 'Entire viewport',
+        scanSelectedAreas: 'Selected areas',
+        selectEditableAreas: 'Select editable areas:',
+        selectAllAreas: 'Select all',
+        deselectAllAreas: 'Deselect all',
+        noEditableAreasFound: 'No editable areas found',
+        analyzingEditableAreas: 'Analyzing editable areas...',
+        scanOnlyEditableTooltip: 'Scans only editable areas in current viewport (based on your rank and lock levels)',
+        scanEntireViewportTooltip: 'Scans the entire visible map area',
         startScan: 'Start Scan',
         pause: 'Pause',
         resume: 'Resume',
@@ -264,6 +286,17 @@ const I18N = {
         placeType: 'Tipo Luogo:',
         pointPlaces: 'Luoghi Punto',
         areaPlaces: 'Luoghi Area',
+        scanArea: 'Area di Scansione:',
+        scanOnlyEditable: 'Viewport modificabile',
+        scanEntireViewport: 'Intero viewport',
+        scanSelectedAreas: 'Aree selezionate',
+        selectEditableAreas: 'Seleziona aree modificabili:',
+        selectAllAreas: 'Seleziona tutto',
+        deselectAllAreas: 'Deseleziona tutto',
+        noEditableAreasFound: 'Nessuna area modificabile trovata',
+        analyzingEditableAreas: 'Analizzando aree modificabili...',
+        scanOnlyEditableTooltip: 'Scansiona solo le aree modificabili nel viewport corrente (basato sul tuo rango e livelli di blocco)',
+        scanEntireViewportTooltip: 'Scansiona l\'intera area della mappa visibile',
         startScan: 'Avvia Scansione',
         pause: 'Pausa',
         resume: 'Riprendi',
@@ -356,6 +389,17 @@ const I18N = {
         placeType: 'Tipo de Lugar:',
         pointPlaces: 'Lugares Punto',
         areaPlaces: 'Lugares Área',
+        scanArea: 'Área de Escaneo:',
+        scanOnlyEditable: 'Viewport editable',
+        scanEntireViewport: 'Todo el viewport',
+        scanSelectedAreas: 'Áreas seleccionadas',
+        selectEditableAreas: 'Seleccionar áreas editables:',
+        selectAllAreas: 'Seleccionar todo',
+        deselectAllAreas: 'Deseleccionar todo',
+        noEditableAreasFound: 'No se encontraron áreas editables',
+        analyzingEditableAreas: 'Analizando áreas editables...',
+        scanOnlyEditableTooltip: 'Escanea solo áreas editables en el viewport actual (basado en tu rango y niveles de bloqueo)',
+        scanEntireViewportTooltip: 'Escanea toda el área visible del mapa',
         startScan: 'Iniciar Escaneo',
         pause: 'Pausa',
         resume: 'Reanudar',
@@ -448,6 +492,17 @@ const I18N = {
         placeType: 'Type de Lieu:',
         pointPlaces: 'Lieux Point',
         areaPlaces: 'Lieux Zone',
+        scanArea: 'Zone de Scan:',
+        scanOnlyEditable: 'Viewport éditable',
+        scanEntireViewport: 'Viewport entier',
+        scanSelectedAreas: 'Zones sélectionnées',
+        selectEditableAreas: 'Sélectionner zones éditables:',
+        selectAllAreas: 'Tout sélectionner',
+        deselectAllAreas: 'Tout désélectionner',
+        noEditableAreasFound: 'Aucune zone éditable trouvée',
+        analyzingEditableAreas: 'Analyse des zones éditables...',
+        scanOnlyEditableTooltip: 'Scanne seulement les zones éditables dans le viewport actuel (basé sur votre rang et niveaux de verrouillage)',
+        scanEntireViewportTooltip: 'Scanne toute la zone visible de la carte',
         startScan: 'Démarrer Scan',
         pause: 'Pause',
         resume: 'Reprendre',
@@ -540,6 +595,17 @@ const I18N = {
         placeType: 'Plaats Type:',
         pointPlaces: 'Punt Plaatsen',
         areaPlaces: 'Gebied Plaatsen',
+        scanArea: 'Scan Gebied:',
+        scanOnlyEditable: 'Viewport bewerkbaar',
+        scanEntireViewport: 'Hele viewport',
+        scanSelectedAreas: 'Geselecteerde gebieden',
+        selectEditableAreas: 'Selecteer bewerkbare gebieden:',
+        selectAllAreas: 'Alles selecteren',
+        deselectAllAreas: 'Alles deselecteren',
+        noEditableAreasFound: 'Geen bewerkbare gebieden gevonden',
+        analyzingEditableAreas: 'Analyseren bewerkbare gebieden...',
+        scanOnlyEditableTooltip: 'Scant alleen bewerkbare gebieden in de huidige viewport (gebaseerd op je rang en vergrendelniveaus)',
+        scanEntireViewportTooltip: 'Scant het hele zichtbare kaartgebied',
         startScan: 'Start Scan',
         pause: 'Pauze',
         resume: 'Hervatten',
@@ -628,7 +694,7 @@ function detectLanguage() {
         // Priorität 1: WME Sprache aus I18n (nach WME-Ready)
         // Versuche verschiedene Methoden
         let locale = null;
-
+        
         // Methode 1: I18n.locale (ältere WME Scripts)
         if (typeof I18n !== 'undefined' && I18n.locale) {
             locale = I18n.locale;
@@ -639,7 +705,7 @@ function detectLanguage() {
             locale = window.I18n.currentLocale();
             console.log(`${SCRIPT_NAME}: window.I18n.currentLocale() detected: ${locale}`);
         }
-
+        
         if (locale) {
             const lang = locale.split('-')[0].toLowerCase();
             console.log(`${SCRIPT_NAME}: Extracted language: ${lang}`);
@@ -648,7 +714,7 @@ function detectLanguage() {
                 return lang;
             }
         }
-
+        
         // Priorität 2: Browser-Sprache (nur als Fallback)
         const browserLang = navigator.language?.split('-')[0].toLowerCase();
         if (I18N[browserLang]) {
@@ -658,7 +724,7 @@ function detectLanguage() {
     } catch (e) {
         console.error(`${SCRIPT_NAME}: Error detecting language:`, e);
     }
-
+    
     console.log(`${SCRIPT_NAME}: Using default language: en`);
     return 'en';
 }
@@ -668,7 +734,7 @@ function startLanguageMonitoring() {
     if (languageCheckInterval) {
         clearInterval(languageCheckInterval);
     }
-
+    
     languageCheckInterval = setInterval(() => {
         const newLang = detectLanguage();
         if (newLang !== currentLang) {
@@ -681,20 +747,20 @@ function startLanguageMonitoring() {
 
 function updateUILanguage() {
     console.log(`${SCRIPT_NAME}: Aktualisiere UI auf Sprache: ${currentLang}`);
-
+    
     // Tab-Titel aktualisieren
     const tabLabel = document.querySelector('.sidebar-tab-label');
     if (tabLabel && tabLabel.textContent.includes('🔗')) {
         tabLabel.textContent = `🔗 ${t('tabName')}`;
         tabLabel.title = t('tabTitle');
     }
-
+    
     // Tab-Inhalt neu erstellen
     let tabPane = document.querySelector(`#sidepanel-${SCRIPT_ID}`);
-
+    
     // Fallback UI Container
     let fallbackContainer = document.getElementById('google-places-checker-ui');
-
+    
     if (tabPane || fallbackContainer) {
         // Aktuelle Werte speichern
         const categoryFilter = document.getElementById('gplc-category-filter');
@@ -703,11 +769,14 @@ function updateUILanguage() {
         const nameRegex = document.getElementById('gplc-name-regex');
         const filterPoint = document.getElementById('gplc-filter-point');
         const filterArea = document.getElementById('gplc-filter-area');
+        const scanEditable = document.getElementById('gplc-scan-editable');
+        const scanViewport = document.getElementById('gplc-scan-viewport');
+        const scanSelected = document.getElementById('gplc-scan-selected');
         const showNoLink = document.getElementById('gplc-show-nolink');
         const showDuplicateLinks = document.getElementById('gplc-show-duplicate');
         const showMultipleLinks = document.getElementById('gplc-show-multiple');
         const highlightOnMap = document.getElementById('gplc-highlight-map');
-
+        
         const savedValues = {
             categories: categoryFilter ? Array.from(categoryFilter.selectedOptions).map(o => o.value) : ['ALL'],
             lockLevel: lockFilter ? lockFilter.value : 'ALL',
@@ -715,12 +784,15 @@ function updateUILanguage() {
             nameRegexChecked: nameRegex ? nameRegex.checked : false,
             pointChecked: filterPoint ? filterPoint.checked : true,
             areaChecked: filterArea ? filterArea.checked : true,
+            scanEditableChecked: scanEditable ? scanEditable.checked : false,
+            scanViewportChecked: scanViewport ? scanViewport.checked : true,
+            scanSelectedChecked: scanSelected ? scanSelected.checked : false,
             showNoLinkChecked: showNoLink ? showNoLink.checked : true,
             showDuplicateChecked: showDuplicateLinks ? showDuplicateLinks.checked : true,
             showMultipleChecked: showMultipleLinks ? showMultipleLinks.checked : true,
             highlightChecked: highlightOnMap ? highlightOnMap.checked : false
         };
-
+        
         // UI neu erstellen
         if (tabPane) {
             tabPane.innerHTML = getTabContent();
@@ -733,15 +805,15 @@ function updateUILanguage() {
                 </div>
                 ${getTabContent()}
             `;
-
+            
             // Close button wieder verbinden
             document.getElementById('gplc-close-btn').onclick = () => {
                 fallbackContainer.style.display = 'none';
             };
         }
-
+        
         attachEventListeners();
-
+        
         // Werte wiederherstellen
         setTimeout(() => {
             const newCategoryFilter = document.getElementById('gplc-category-filter');
@@ -750,11 +822,14 @@ function updateUILanguage() {
             const newNameRegex = document.getElementById('gplc-name-regex');
             const newFilterPoint = document.getElementById('gplc-filter-point');
             const newFilterArea = document.getElementById('gplc-filter-area');
+            const newScanEditable = document.getElementById('gplc-scan-editable');
+            const newScanViewport = document.getElementById('gplc-scan-viewport');
+            const newScanSelected = document.getElementById('gplc-scan-selected');
             const newShowNoLink = document.getElementById('gplc-show-nolink');
             const newShowDuplicateLinks = document.getElementById('gplc-show-duplicate');
             const newShowMultipleLinks = document.getElementById('gplc-show-multiple');
             const newHighlightOnMap = document.getElementById('gplc-highlight-map');
-
+            
             if (newCategoryFilter) {
                 Array.from(newCategoryFilter.options).forEach(option => {
                     option.selected = savedValues.categories.includes(option.value);
@@ -765,18 +840,21 @@ function updateUILanguage() {
             if (newNameRegex) newNameRegex.checked = savedValues.nameRegexChecked;
             if (newFilterPoint) newFilterPoint.checked = savedValues.pointChecked;
             if (newFilterArea) newFilterArea.checked = savedValues.areaChecked;
+            if (newScanEditable) newScanEditable.checked = savedValues.scanEditableChecked;
+            if (newScanViewport) newScanViewport.checked = savedValues.scanViewportChecked;
+            if (newScanSelected) newScanSelected.checked = savedValues.scanSelectedChecked;
             if (newShowNoLink) newShowNoLink.checked = savedValues.showNoLinkChecked;
             if (newShowDuplicateLinks) newShowDuplicateLinks.checked = savedValues.showDuplicateChecked;
             if (newShowMultipleLinks) newShowMultipleLinks.checked = savedValues.showMultipleChecked;
             if (newHighlightOnMap) newHighlightOnMap.checked = savedValues.highlightChecked;
-
+            
             // Ergebnisse neu rendern falls vorhanden
             if (scanState.results.length > 0) {
                 renderResults();
             }
         }, 100);
     }
-
+    
     console.log(`${SCRIPT_NAME}: UI-Sprache aktualisiert`);
 }
 
@@ -818,11 +896,11 @@ class GridScanner {
 
     generateTiles() {
         const { minLon, minLat, maxLon, maxLat } = this.bounds;
-
+        
         // Berechne Anzahl der Tiles
         const latDelta = this.tileSize / 111320; // 1 Grad Lat ≈ 111.32 km
         const lonDelta = this.tileSize / (111320 * Math.cos((minLat + maxLat) / 2 * Math.PI / 180));
-
+        
         let lat = minLat;
         while (lat < maxLat) {
             let lon = minLon;
@@ -839,7 +917,7 @@ class GridScanner {
             }
             lat += latDelta;
         }
-
+        
         console.log(`${SCRIPT_NAME}: ${this.tiles.length} Tiles generiert`);
     }
 
@@ -872,13 +950,13 @@ const CoordUtils = {
             if (wmeSDK && wmeSDK.Map) {
                 const center = wmeSDK.Map.getMapCenter();
                 const zoom = wmeSDK.Map.getZoomLevel();
-
+                
                 if (center && center.lon !== undefined && center.lat !== undefined) {
                     const radiusMeters = Math.max(1000, 50000 / Math.pow(2, zoom - 10));
                     return this.getBoundsFromCenter(center.lon, center.lat, radiusMeters);
                 }
             }
-
+            
             // Fallback: W.map verwenden
             if (W && W.map) {
                 const extent = W.map.getExtent();
@@ -889,10 +967,10 @@ const CoordUtils = {
                         lat = 180 / Math.PI * (2 * Math.atan(Math.exp(lat * Math.PI / 180)) - Math.PI / 2);
                         return { lon, lat };
                     };
-
+                    
                     const bl = toWGS84(extent.left, extent.bottom);
                     const tr = toWGS84(extent.right, extent.top);
-
+                    
                     return {
                         minLon: bl.lon,
                         minLat: bl.lat,
@@ -916,6 +994,92 @@ const CoordUtils = {
             maxLon: centerLon + lonDelta,
             maxLat: centerLat + latDelta
         };
+    },
+
+    getEditableBounds() {
+        try {
+            // Methode 1: Verwende die aktuellen Edit-Rechte des Benutzers
+            if (W && W.loginManager && W.loginManager.user) {
+                const user = W.loginManager.user;
+                const userRank = user.attributes.rank;
+                
+                // Hole die aktuell sichtbaren Segmente und prüfe Editierbarkeit
+                if (W.model && W.model.segments) {
+                    const segments = W.model.segments.getObjectArray();
+                    const editableSegments = segments.filter(segment => {
+                        if (!segment || !segment.attributes) return false;
+                        
+                        // Prüfe ob das Segment editierbar ist basierend auf Lock-Level und User-Rank
+                        const lockRank = segment.attributes.lockRank || 0;
+                        return userRank >= lockRank;
+                    });
+                    
+                    if (editableSegments.length > 0) {
+                        // Berechne Bounding Box aller editierbaren Segmente
+                        let minLon = Infinity, minLat = Infinity;
+                        let maxLon = -Infinity, maxLat = -Infinity;
+                        
+                        editableSegments.forEach(segment => {
+                            const geometry = segment.getOLGeometry();
+                            if (geometry && geometry.getBounds) {
+                                const bounds = geometry.getBounds();
+                                
+                                // Konvertiere von Web Mercator zu WGS84
+                                const toWGS84 = (x, y) => {
+                                    const lon = x * 180 / 20037508.34;
+                                    let lat = y * 180 / 20037508.34;
+                                    lat = 180 / Math.PI * (2 * Math.atan(Math.exp(lat * Math.PI / 180)) - Math.PI / 2);
+                                    return { lon, lat };
+                                };
+                                
+                                const bl = toWGS84(bounds.left, bounds.bottom);
+                                const tr = toWGS84(bounds.right, bounds.top);
+                                
+                                minLon = Math.min(minLon, bl.lon);
+                                minLat = Math.min(minLat, bl.lat);
+                                maxLon = Math.max(maxLon, tr.lon);
+                                maxLat = Math.max(maxLat, tr.lat);
+                            }
+                        });
+                        
+                        if (minLon !== Infinity) {
+                            console.log(`${SCRIPT_NAME}: Editierbare Bereiche basierend auf Segmenten ermittelt`);
+                            return {
+                                minLon: minLon,
+                                minLat: minLat,
+                                maxLon: maxLon,
+                                maxLat: maxLat
+                            };
+                        }
+                    }
+                }
+            }
+            
+            // Methode 2: Verwende kleineren Bereich um aktuellen Standort (editierbare Bereiche sind meist lokal)
+            const currentBounds = this.getCurrentBounds();
+            if (currentBounds) {
+                // Reduziere den Bereich auf 50% der ursprünglichen Größe
+                const centerLon = (currentBounds.minLon + currentBounds.maxLon) / 2;
+                const centerLat = (currentBounds.minLat + currentBounds.maxLat) / 2;
+                const lonDelta = (currentBounds.maxLon - currentBounds.minLon) * 0.25; // 50% / 2
+                const latDelta = (currentBounds.maxLat - currentBounds.minLat) * 0.25; // 50% / 2
+                
+                console.log(`${SCRIPT_NAME}: Verwende reduzierten Bereich als editierbare Zone`);
+                return {
+                    minLon: centerLon - lonDelta,
+                    minLat: centerLat - latDelta,
+                    maxLon: centerLon + lonDelta,
+                    maxLat: centerLat + latDelta
+                };
+            }
+            
+            // Fallback: Verwende aktuellen Viewport
+            console.log(`${SCRIPT_NAME}: Konnte editierbare Bereiche nicht ermitteln, verwende Viewport`);
+            return currentBounds;
+        } catch (e) {
+            console.error(`${SCRIPT_NAME}: Fehler beim Abrufen der editierbaren Bounds:`, e);
+            return this.getCurrentBounds();
+        }
     }
 };
 
@@ -935,7 +1099,7 @@ class PlacesChecker {
         scanState.placesWithSharedLinks = 0;
         scanState.results = [];
         scanState.googleLinkMap = new Map(); // Reset der Link-Map
-
+        
         // Entferne alte Highlights
         clearHighlights();
 
@@ -970,15 +1134,15 @@ class PlacesChecker {
 
         if (scanState.isScanning) {
             scanState.isScanning = false;
-
+            
             // Nach dem Scan: Duplikate identifizieren
             this.identifyDuplicates();
-
+            
             // Highlights aktualisieren wenn aktiviert
             if (document.getElementById('gplc-highlight-map')?.checked) {
                 updateMapHighlights();
             }
-
+            
             log(`Scan abgeschlossen! ${scanState.placesFound} Places geprüft.`, 'success');
             log(`Ohne Link: ${scanState.placesWithoutLink}, Mehrere Links: ${scanState.placesWithDuplicateLinks}, Link mehreren POIs zugeordnet: ${scanState.placesWithSharedLinks}`, 'info');
             updateUI();
@@ -1002,11 +1166,11 @@ class PlacesChecker {
                     y = y * 20037508.34 / 180;
                     return { x, y };
                 };
-
+                
                 const center = toWebMercator(tile.centerLon, tile.centerLat);
                 W.map.setCenter(new OpenLayers.LonLat(center.x, center.y));
             }
-
+            
             await this.delay(800);
         } catch (e) {
             console.error(`${SCRIPT_NAME}: Fehler beim Zentrieren:`, e);
@@ -1017,15 +1181,15 @@ class PlacesChecker {
         return new Promise(resolve => {
             let attempts = 0;
             const maxAttempts = 20;
-
+            
             const checkData = () => {
                 attempts++;
-
+                
                 if (attempts >= maxAttempts) {
                     resolve();
                     return;
                 }
-
+                
                 // Prüfe ob Daten geladen sind
                 if (W && W.model && W.model.venues) {
                     const venues = W.model.venues.getObjectArray();
@@ -1034,10 +1198,10 @@ class PlacesChecker {
                         return;
                     }
                 }
-
+                
                 setTimeout(checkData, 200);
             };
-
+            
             checkData();
         });
     }
@@ -1047,7 +1211,7 @@ class PlacesChecker {
             if (!W || !W.model || !W.model.venues) return;
 
             const venues = W.model.venues.getObjectArray();
-
+            
             // Filter-Einstellungen holen
             const categoryFilter = getSelectedCategories();
             const lockFilter = document.getElementById('gplc-lock-filter')?.value || 'ALL';
@@ -1055,7 +1219,7 @@ class PlacesChecker {
             const useRegex = document.getElementById('gplc-name-regex')?.checked || false;
             const filterPoint = document.getElementById('gplc-filter-point')?.checked ?? true;
             const filterArea = document.getElementById('gplc-filter-area')?.checked ?? true;
-
+            
             for (const venue of venues) {
                 if (!venue || !venue.attributes) continue;
 
@@ -1066,22 +1230,22 @@ class PlacesChecker {
 
                 // Kategorie Filter
                 if (!categoryFilter.includes('ALL')) {
-                    const hasMatchingCategory = venue.attributes.categories.some(cat =>
+                    const hasMatchingCategory = venue.attributes.categories.some(cat => 
                         categoryFilter.includes(cat)
                     );
                     if (!hasMatchingCategory) continue;
                 }
-
+                
                 // Lock Level Filter
                 if (lockFilter !== 'ALL') {
                     if (venue.attributes.lockRank !== parseInt(lockFilter)) continue;
                 }
-
+                
                 // Namen Filter
                 if (nameFilter) {
                     const name = venue.attributes.name || '';
                     let matches = false;
-
+                    
                     if (useRegex) {
                         try {
                             const regex = new RegExp(nameFilter, 'i');
@@ -1093,7 +1257,7 @@ class PlacesChecker {
                     } else {
                         matches = name.toLowerCase().includes(nameFilter.toLowerCase());
                     }
-
+                    
                     if (!matches) continue;
                 }
 
@@ -1103,10 +1267,10 @@ class PlacesChecker {
                 const name = venue.attributes.name || 'Unbenannt';
                 const categories = this.getVenueCategories(venue);
                 const lockLevel = venue.attributes.lockRank + 1;
-
+                
                 // Prüfe Google Places Links
                 const googleLinks = this.getGooglePlacesLinks(venue);
-
+                
                 // Speichere Place-Info für spätere Duplikat-Erkennung
                 const placeInfo = {
                     venueId: venueId,
@@ -1116,7 +1280,7 @@ class PlacesChecker {
                     permalink: this.getPermalink(venue),
                     googleLinks: googleLinks
                 };
-
+                
                 if (googleLinks.length === 0) {
                     // Keine Google-Verknüpfung
                     scanState.placesWithoutLink++;
@@ -1136,7 +1300,7 @@ class PlacesChecker {
                             scanState.googleLinkMap.get(link.id).push(placeInfo);
                         }
                     });
-
+                    
                     // NICHT hier in results pushen - wir warten bis identifyDuplicates()
                     // um zu entscheiden ob es ein Problem gibt oder nicht
                 }
@@ -1145,13 +1309,13 @@ class PlacesChecker {
             console.error(`${SCRIPT_NAME}: Fehler beim Prüfen der Places:`, e);
         }
     }
-
+    
     identifyDuplicates() {
         // Durchsuche die googleLinkMap nach Links, die von mehreren Places verwendet werden
         // oder Places die mehrere Links haben
         const processedVenues = new Set(); // Verhindere doppelte Einträge
         const venuesWithMultipleLinks = new Set(); // Places die mehrere Links haben
-
+        
         // Erste Pass: Finde alle Places mit mehreren Links
         scanState.googleLinkMap.forEach((places, linkId) => {
             places.forEach(placeInfo => {
@@ -1160,24 +1324,24 @@ class PlacesChecker {
                 }
             });
         });
-
+        
         // Zweite Pass: Finde echte Duplikate (Links die von mehreren Places geteilt werden)
         scanState.googleLinkMap.forEach((places, linkId) => {
             if (places.length > 1) {
                 // Dieser Google Link wird von mehreren Places verwendet - ECHTES DUPLIKAT
                 scanState.placesWithSharedLinks += places.length; // Zähle alle betroffenen Places
-
+                
                 places.forEach((placeInfo, index) => {
                     if (processedVenues.has(placeInfo.venueId)) return;
-
+                    
                     const otherPlaces = places.filter((_, i) => i !== index);
-
+                    
                     // Prüfe ob dieser Place auch mehrere Links hat
                     let duplicateInfo = `Google Link wird von ${places.length} Places verwendet`;
                     if (venuesWithMultipleLinks.has(placeInfo.venueId)) {
                         duplicateInfo += ` (Place hat ${placeInfo.googleLinks.length} verschiedene Links)`;
                     }
-
+                    
                     scanState.results.push({
                         type: 'duplicate-links',
                         ...placeInfo,
@@ -1187,12 +1351,12 @@ class PlacesChecker {
                             venueId: p.venueId
                         }))
                     });
-
+                    
                     processedVenues.add(placeInfo.venueId);
                 });
             }
         });
-
+        
         // Dritte Pass: Finde Places mit mehreren verschiedenen Links (die noch nicht als Duplikate markiert wurden)
         scanState.googleLinkMap.forEach((places, linkId) => {
             places.forEach(placeInfo => {
@@ -1203,14 +1367,14 @@ class PlacesChecker {
                         ...placeInfo,
                         duplicateInfo: `Dieser Place hat ${placeInfo.googleLinks.length} verschiedene Google Links`
                     });
-
+                    
                     processedVenues.add(placeInfo.venueId);
                 }
             });
         });
-
+        
         // Zähle die Duplikate korrekt (nur Places mit mehreren verschiedenen Links, NICHT die geteilten)
-        scanState.placesWithDuplicateLinks = scanState.results.filter(r =>
+        scanState.placesWithDuplicateLinks = scanState.results.filter(r => 
             r.type === 'multiple-links-same-place'
         ).length;
     }
@@ -1230,18 +1394,18 @@ class PlacesChecker {
 
     getGooglePlacesLinks(venue) {
         const links = [];
-
+        
         try {
             // externalProviderIDs ist ein Array von Provider-Objekten
             // Jeder Provider hat ein attributes-Objekt mit uuid
             const externalProviders = venue.attributes.externalProviderIDs || [];
-
+            
             for (const provider of externalProviders) {
                 if (!provider || !provider.attributes) continue;
-
+                
                 // Die UUID ist in provider.attributes.uuid
                 const googleId = provider.attributes.uuid;
-
+                
                 if (googleId && typeof googleId === 'string') {
                     links.push({
                         provider: 'google',
@@ -1265,7 +1429,7 @@ class PlacesChecker {
         } catch (e) {
             console.error(`${SCRIPT_NAME}: Fehler beim Abrufen der Google Links:`, e);
         }
-
+        
         return links;
     }
 
@@ -1273,10 +1437,10 @@ class PlacesChecker {
         try {
             const venueId = venue.attributes.id;
             const geometry = venue.getOLGeometry();
-
+            
             if (geometry) {
                 let centerPoint;
-
+                
                 if (geometry.CLASS_NAME === 'OpenLayers.Geometry.Point') {
                     // Point Place - verwende direkt die Koordinaten
                     centerPoint = geometry;
@@ -1284,7 +1448,7 @@ class PlacesChecker {
                     // Area Place - berechne das Zentrum
                     centerPoint = geometry.getCentroid();
                 }
-
+                
                 if (centerPoint) {
                     // Konvertiere von Web Mercator zu WGS84
                     const toWGS84 = (x, y) => {
@@ -1293,12 +1457,12 @@ class PlacesChecker {
                         lat = 180 / Math.PI * (2 * Math.atan(Math.exp(lat * Math.PI / 180)) - Math.PI / 2);
                         return { lon, lat };
                     };
-
+                    
                     const coords = toWGS84(centerPoint.x, centerPoint.y);
                     return `https://www.waze.com/editor?env=row&lon=${coords.lon.toFixed(5)}&lat=${coords.lat.toFixed(5)}&zoomLevel=17&venues=${venueId}`;
                 }
             }
-
+            
             return `https://www.waze.com/editor?venues=${venueId}`;
         } catch (e) {
             console.error(`${SCRIPT_NAME}: Fehler beim Erstellen des Permalinks:`, e);
@@ -1343,6 +1507,352 @@ class PlacesChecker {
     }
 }
 
+// Editierbare Gebiete Analyzer
+class EditableAreasAnalyzer {
+    constructor() {
+        this.editableAreas = [];
+        this.selectedAreas = new Set();
+    }
+
+    async analyzeEditableAreas() {
+        try {
+            log(t('analyzingEditableAreas'), 'info');
+            this.editableAreas = [];
+            
+            // Methode 1: Versuche WME "Your areas" Panel zu finden
+            const areas = this.getAreasFromSidebar();
+            if (areas.length > 0) {
+                this.editableAreas = areas;
+                log(`${this.editableAreas.length} Gebiete aus "Your areas" Panel gefunden`, 'success');
+                return this.editableAreas;
+            }
+            
+            // Methode 2: Versuche über WME API/Model
+            const apiAreas = await this.getAreasFromAPI();
+            if (apiAreas.length > 0) {
+                this.editableAreas = apiAreas;
+                log(`${this.editableAreas.length} Gebiete über API gefunden`, 'success');
+                return this.editableAreas;
+            }
+            
+            // Methode 3: Fallback - Analysiere basierend auf Segmenten (alte Methode)
+            const segmentAreas = await this.getAreasFromSegments();
+            if (segmentAreas.length > 0) {
+                this.editableAreas = segmentAreas;
+                log(`${this.editableAreas.length} Gebiete über Segment-Analyse gefunden`, 'success');
+                return this.editableAreas;
+            }
+            
+            log('Keine editierbaren Gebiete gefunden', 'warning');
+            return [];
+            
+        } catch (e) {
+            console.error(`${SCRIPT_NAME}: Fehler bei der Gebietsanalyse:`, e);
+            log('Fehler bei der Gebietsanalyse', 'error');
+            return [];
+        }
+    }
+
+    getAreasFromSidebar() {
+        try {
+            const areas = [];
+            
+            // Suche nach "Your areas" Panel im DOM
+            const areaItems = document.querySelectorAll('.area-item');
+            
+            areaItems.forEach((item, index) => {
+                const titleElement = item.querySelector('.list-item-card-title');
+                const captionElement = item.querySelector('wz-caption');
+                
+                if (titleElement && captionElement) {
+                    const name = titleElement.textContent.trim();
+                    const sizeText = captionElement.textContent.trim();
+                    
+                    // Extrahiere Größe (z.B. "4900 km²" -> 4900)
+                    const sizeMatch = sizeText.match(/(\d+(?:\.\d+)?)\s*km²/);
+                    const sizeKm2 = sizeMatch ? parseFloat(sizeMatch[1]) : 0;
+                    
+                    // Versuche Bounds zu ermitteln (falls verfügbar)
+                    const bounds = this.estimateBoundsFromSize(sizeKm2);
+                    
+                    areas.push({
+                        id: `wme_area_${index}`,
+                        name: name,
+                        type: 'managed_area',
+                        country: 'Managed Area',
+                        bounds: bounds,
+                        sizeKm2: sizeKm2,
+                        segmentCount: Math.round(sizeKm2 * 50), // Grobe Schätzung: 50 Segmente pro km²
+                        element: item // Referenz auf DOM Element für weitere Aktionen
+                    });
+                }
+            });
+            
+            console.log(`${SCRIPT_NAME}: ${areas.length} Gebiete aus Sidebar gefunden:`, areas);
+            return areas;
+            
+        } catch (e) {
+            console.error(`${SCRIPT_NAME}: Fehler beim Lesen der Sidebar-Gebiete:`, e);
+            return [];
+        }
+    }
+
+    async getAreasFromAPI() {
+        try {
+            // Versuche über WME Model/API an die Gebietsdaten zu kommen
+            if (W && W.loginManager && W.loginManager.user) {
+                const user = W.loginManager.user;
+                
+                // Prüfe verschiedene mögliche Eigenschaften für Gebiete
+                const possibleAreaProps = [
+                    'managedAreas',
+                    'areas',
+                    'editableAreas',
+                    'assignedAreas',
+                    'userAreas'
+                ];
+                
+                for (const prop of possibleAreaProps) {
+                    if (user.attributes && user.attributes[prop]) {
+                        console.log(`${SCRIPT_NAME}: Gefunden: user.attributes.${prop}`, user.attributes[prop]);
+                        return this.parseAPIAreas(user.attributes[prop], prop);
+                    }
+                }
+                
+                // Prüfe auch direkt am User-Objekt
+                for (const prop of possibleAreaProps) {
+                    if (user[prop]) {
+                        console.log(`${SCRIPT_NAME}: Gefunden: user.${prop}`, user[prop]);
+                        return this.parseAPIAreas(user[prop], prop);
+                    }
+                }
+            }
+            
+            return [];
+        } catch (e) {
+            console.error(`${SCRIPT_NAME}: Fehler beim API-Zugriff:`, e);
+            return [];
+        }
+    }
+
+    parseAPIAreas(areasData, source) {
+        try {
+            const areas = [];
+            
+            if (Array.isArray(areasData)) {
+                areasData.forEach((area, index) => {
+                    if (area && (area.name || area.id)) {
+                        areas.push({
+                            id: `api_area_${source}_${area.id || index}`,
+                            name: area.name || `Area ${index + 1}`,
+                            type: 'api_area',
+                            country: area.country || 'API Area',
+                            bounds: area.bounds || this.estimateBoundsFromSize(1000),
+                            sizeKm2: area.size || 1000,
+                            segmentCount: area.segmentCount || 50000,
+                            source: source
+                        });
+                    }
+                });
+            }
+            
+            return areas;
+        } catch (e) {
+            console.error(`${SCRIPT_NAME}: Fehler beim Parsen der API-Gebiete:`, e);
+            return [];
+        }
+    }
+
+    async getAreasFromSegments() {
+        // Fallback zur alten Methode über Staaten/Länder
+        try {
+            if (!W || !W.model || !W.loginManager || !W.loginManager.user) {
+                return [];
+            }
+
+            const user = W.loginManager.user;
+            const userRank = user.attributes.rank;
+            const areas = [];
+            
+            // Sammle alle Staaten/Länder im aktuellen Viewport
+            const states = W.model.states?.getObjectArray() || [];
+            const countries = W.model.countries?.getObjectArray() || [];
+            
+            // Analysiere Staaten
+            for (const state of states) {
+                if (!state || !state.attributes) continue;
+                
+                const stateName = state.attributes.name;
+                const countryCode = state.attributes.countryID;
+                
+                // Hole das zugehörige Land
+                const country = countries.find(c => c.attributes.id === countryCode);
+                const countryName = country?.attributes?.name || 'Unbekannt';
+                
+                // Prüfe ob der Benutzer in diesem Staat editieren kann
+                const canEdit = this.canUserEditInState(state, userRank);
+                
+                if (canEdit) {
+                    const bounds = this.getStateBounds(state);
+                    if (bounds) {
+                        areas.push({
+                            id: `state_${state.attributes.id}`,
+                            name: stateName,
+                            type: 'state',
+                            country: countryName,
+                            countryCode: countryCode,
+                            bounds: bounds,
+                            segmentCount: this.estimateSegmentCount(bounds)
+                        });
+                    }
+                }
+            }
+            
+            return areas;
+        } catch (e) {
+            console.error(`${SCRIPT_NAME}: Fehler bei Segment-Analyse:`, e);
+            return [];
+        }
+    }
+
+    estimateBoundsFromSize(sizeKm2) {
+        // Grobe Schätzung: Quadratisches Gebiet um aktuellen Standort
+        const currentBounds = CoordUtils.getCurrentBounds();
+        if (!currentBounds) {
+            // Fallback: Deutschland-Zentrum
+            return {
+                minLon: 10.0,
+                minLat: 51.0,
+                maxLon: 11.0,
+                maxLat: 52.0
+            };
+        }
+        
+        // Berechne Seitenlänge eines quadratischen Gebiets
+        const sideLengthKm = Math.sqrt(sizeKm2);
+        const sideLengthDeg = sideLengthKm / 111.32; // Grobe Umrechnung km zu Grad
+        
+        const centerLon = (currentBounds.minLon + currentBounds.maxLon) / 2;
+        const centerLat = (currentBounds.minLat + currentBounds.maxLat) / 2;
+        
+        return {
+            minLon: centerLon - sideLengthDeg / 2,
+            minLat: centerLat - sideLengthDeg / 2,
+            maxLon: centerLon + sideLengthDeg / 2,
+            maxLat: centerLat + sideLengthDeg / 2
+        };
+    }
+
+    canUserEditInState(state, userRank) {
+        try {
+            // Prüfe Permissions des Staates
+            if (state.attributes.permissions) {
+                return state.attributes.permissions.some(perm => 
+                    perm.editable && (perm.rank === undefined || userRank >= perm.rank)
+                );
+            }
+            
+            // Fallback: Prüfe Lock-Level von Segmenten in diesem Staat
+            const segments = W.model.segments?.getObjectArray() || [];
+            const stateSegments = segments.filter(seg => 
+                seg.attributes.primaryStreetID && 
+                seg.attributes.state === state.attributes.id
+            );
+            
+            return stateSegments.some(seg => userRank >= (seg.attributes.lockRank || 0));
+        } catch (e) {
+            return false;
+        }
+    }
+
+    getStateBounds(state) {
+        try {
+            const geometry = state.getOLGeometry();
+            if (geometry && geometry.getBounds) {
+                return this.convertBoundsToWGS84(geometry.getBounds());
+            }
+        } catch (e) {
+            console.error('Fehler beim Abrufen der State-Bounds:', e);
+        }
+        return null;
+    }
+
+    convertBoundsToWGS84(bounds) {
+        const toWGS84 = (x, y) => {
+            const lon = x * 180 / 20037508.34;
+            let lat = y * 180 / 20037508.34;
+            lat = 180 / Math.PI * (2 * Math.atan(Math.exp(lat * Math.PI / 180)) - Math.PI / 2);
+            return { lon, lat };
+        };
+        
+        const bl = toWGS84(bounds.left, bounds.bottom);
+        const tr = toWGS84(bounds.right, bounds.top);
+        
+        return {
+            minLon: bl.lon,
+            minLat: bl.lat,
+            maxLon: tr.lon,
+            maxLat: tr.lat
+        };
+    }
+
+    estimateSegmentCount(bounds) {
+        // Grobe Schätzung basierend auf der Gebietsgröße
+        const area = (bounds.maxLon - bounds.minLon) * (bounds.maxLat - bounds.minLat);
+        return Math.round(area * 100000); // Sehr grobe Schätzung
+    }
+
+    getSelectedAreasBounds() {
+        if (this.selectedAreas.size === 0) return null;
+        
+        const selectedAreaObjects = this.editableAreas.filter(area => 
+            this.selectedAreas.has(area.id)
+        );
+        
+        if (selectedAreaObjects.length === 0) return null;
+        
+        // Berechne die kombinierte Bounding Box aller ausgewählten Gebiete
+        let minLon = Infinity, minLat = Infinity;
+        let maxLon = -Infinity, maxLat = -Infinity;
+        
+        selectedAreaObjects.forEach(area => {
+            minLon = Math.min(minLon, area.bounds.minLon);
+            minLat = Math.min(minLat, area.bounds.minLat);
+            maxLon = Math.max(maxLon, area.bounds.maxLon);
+            maxLat = Math.max(maxLat, area.bounds.maxLat);
+        });
+        
+        return {
+            minLon: minLon,
+            minLat: minLat,
+            maxLon: maxLon,
+            maxLat: maxLat
+        };
+    }
+
+    selectArea(areaId) {
+        this.selectedAreas.add(areaId);
+    }
+
+    deselectArea(areaId) {
+        this.selectedAreas.delete(areaId);
+    }
+
+    selectAllAreas() {
+        this.editableAreas.forEach(area => this.selectedAreas.add(area.id));
+    }
+
+    deselectAllAreas() {
+        this.selectedAreas.clear();
+    }
+
+    isAreaSelected(areaId) {
+        return this.selectedAreas.has(areaId);
+    }
+}
+
+const editableAreasAnalyzer = new EditableAreasAnalyzer();
+
 const placesChecker = new PlacesChecker();
 
 // Debug-Funktion: Teste aktuell ausgewählten Place
@@ -1373,11 +1883,11 @@ window.testCurrentPlace = function() {
         console.log('Alle Attribute Keys:', Object.keys(model.attributes));
         console.log('externalProviderIDs:', model.attributes.externalProviderIDs);
         console.log('aliases:', model.attributes.aliases);
-
+        
         // Suche nach Google-Feldern
         const googleFields = {};
         for (const [key, value] of Object.entries(model.attributes)) {
-            if (key.toLowerCase().includes('google') ||
+            if (key.toLowerCase().includes('google') || 
                 key.toLowerCase().includes('provider') ||
                 key.toLowerCase().includes('external') ||
                 (typeof value === 'string' && value.toLowerCase().includes('google'))) {
@@ -1385,12 +1895,12 @@ window.testCurrentPlace = function() {
             }
         }
         console.log('Google/Provider-bezogene Felder:', googleFields);
-
+        
         // Teste Link-Erkennung
         const links = placesChecker.getGooglePlacesLinks(model);
         console.log('Erkannte Google Links:', links);
         console.log('========================================');
-
+        
         return {
             name: model.attributes.name,
             attributes: model.attributes,
@@ -1401,7 +1911,49 @@ window.testCurrentPlace = function() {
     }
 };
 
-console.log(`${SCRIPT_NAME}: Debug-Funktion verfügbar! Wähle einen Place aus und führe in der Console aus: testCurrentPlace()`);
+// Debug-Funktion: Teste Gebiets-Erkennung
+window.testAreaDetection = function() {
+    console.log('========== AREA DETECTION DEBUG ==========');
+    
+    // Teste Sidebar-Methode
+    console.log('1. Teste Sidebar-Methode:');
+    const sidebarAreas = editableAreasAnalyzer.getAreasFromSidebar();
+    console.log('Sidebar Areas:', sidebarAreas);
+    
+    // Teste DOM-Elemente
+    console.log('2. DOM-Elemente:');
+    const areaItems = document.querySelectorAll('.area-item');
+    console.log('Gefundene .area-item Elemente:', areaItems.length);
+    areaItems.forEach((item, index) => {
+        const title = item.querySelector('.list-item-card-title')?.textContent;
+        const caption = item.querySelector('wz-caption')?.textContent;
+        console.log(`  Area ${index + 1}: ${title} (${caption})`);
+    });
+    
+    // Teste User-Objekt
+    console.log('3. User-Objekt:');
+    if (W && W.loginManager && W.loginManager.user) {
+        const user = W.loginManager.user;
+        console.log('User attributes:', Object.keys(user.attributes || {}));
+        console.log('User properties:', Object.keys(user));
+        
+        // Suche nach area-bezogenen Eigenschaften
+        const areaProps = [];
+        for (const key of Object.keys(user.attributes || {})) {
+            if (key.toLowerCase().includes('area') || key.toLowerCase().includes('manage')) {
+                areaProps.push({ key, value: user.attributes[key] });
+            }
+        }
+        console.log('Area-bezogene User-Eigenschaften:', areaProps);
+    }
+    
+    console.log('==========================================');
+    return { sidebarAreas, areaItems: areaItems.length };
+};
+
+console.log(`${SCRIPT_NAME}: Debug-Funktionen verfügbar!`);
+console.log('- testCurrentPlace(): Teste ausgewählten Place');
+console.log('- testAreaDetection(): Teste Gebiets-Erkennung');
 
 
 // UI im Sidebar-Tab erstellen
@@ -1467,7 +2019,7 @@ function createFallbackUI() {
     };
 
     attachEventListeners();
-
+    
     // Starte Sprachüberwachung
     startLanguageMonitoring();
 }
@@ -1527,8 +2079,8 @@ function getCategoryOptions() {
         { value: 'RESIDENTIAL', key: 'catResidential' },
         { value: 'NATURAL_FEATURES', key: 'catNaturalFeatures' }
     ];
-
-    return categories.map(cat =>
+    
+    return categories.map(cat => 
         `<option value="${cat.value}"${cat.value === 'ALL' ? ' selected' : ''}>${t(cat.key)}</option>`
     ).join('\n                        ');
 }
@@ -1539,8 +2091,8 @@ function getTabContent() {
         <div style="padding: 15px; overflow-y: auto; flex: 1;">
             <!-- Filter Section -->
             <div style="margin-bottom: 15px; padding: 10px; background: #f9f9f9; border-radius: 5px;">
-                <h4 style="margin: 5px 0 10px 0;">⚙️ Filter & Optionen</h4>
-
+                <h4 style="margin: 5px 0 10px 0;">⚙️ ${t('filterOptions')}</h4>
+                
                 <!-- Kategoriefilter -->
                 <div style="margin-bottom: 10px;">
                     <label style="font-weight: bold; display: block; margin-bottom: 5px;">${t('categories')}</label>
@@ -1549,7 +2101,7 @@ function getTabContent() {
                     </select>
                     <small style="color: #666;">${t('ctrlClickMulti')}</small>
                 </div>
-
+                
                 <!-- Lock Level Filter -->
                 <div style="margin-bottom: 10px;">
                     <label style="font-weight: bold; display: block; margin-bottom: 5px;">${t('lockLevel')}</label>
@@ -1563,7 +2115,7 @@ function getTabContent() {
                         <option value="5">🔒 Level 6</option>
                     </select>
                 </div>
-
+                
                 <!-- Namensfilter -->
                 <div style="margin-bottom: 10px;">
                     <label style="font-weight: bold; display: block; margin-bottom: 5px;">${t('nameContains')}</label>
@@ -1572,15 +2124,35 @@ function getTabContent() {
                         <input type="checkbox" id="gplc-name-regex"> ${t('useRegex')}
                     </label>
                 </div>
-
+                
                 <!-- Place Typ Filter -->
                 <div style="margin-bottom: 10px;">
                     <label style="font-weight: bold; display: block; margin-bottom: 5px;">${t('placeType')}</label>
                     <label><input type="checkbox" id="gplc-filter-point" checked> 📍 ${t('pointPlaces')}</label><br>
                     <label><input type="checkbox" id="gplc-filter-area" checked> ⬜ ${t('areaPlaces')}</label>
                 </div>
+                
+                <!-- Scan-Bereich Filter -->
+                <div style="margin-bottom: 10px;">
+                    <label style="font-weight: bold; display: block; margin-bottom: 5px;">${t('scanArea')}</label>
+                    <label title="${t('scanEntireViewportTooltip')}"><input type="radio" name="gplc-scan-area" id="gplc-scan-viewport" value="viewport" checked> 🗺️ ${t('scanEntireViewport')}</label><br>
+                    <label title="${t('scanOnlyEditableTooltip')}"><input type="radio" name="gplc-scan-area" id="gplc-scan-editable" value="editable"> 🔓 ${t('scanOnlyEditable')}</label><br>
+                    <label><input type="radio" name="gplc-scan-area" id="gplc-scan-selected" value="selected"> 🎯 ${t('scanSelectedAreas')}</label>
+                    
+                    <!-- Gebietsauswahl (nur sichtbar wenn "Ausgewählte Gebiete" aktiviert) -->
+                    <div id="gplc-area-selection" style="display: none; margin-top: 10px; padding: 8px; background: #f0f0f0; border-radius: 4px; max-height: 200px; overflow-y: auto;">
+                        <div style="margin-bottom: 8px;">
+                            <button type="button" id="gplc-analyze-areas" style="padding: 4px 8px; background: #2196f3; color: white; border: none; border-radius: 3px; font-size: 11px; cursor: pointer; margin-right: 5px;">🔍 Analysieren</button>
+                            <button type="button" id="gplc-select-all-areas" style="padding: 4px 8px; background: #4caf50; color: white; border: none; border-radius: 3px; font-size: 11px; cursor: pointer; margin-right: 5px;">${t('selectAllAreas')}</button>
+                            <button type="button" id="gplc-deselect-all-areas" style="padding: 4px 8px; background: #9e9e9e; color: white; border: none; border-radius: 3px; font-size: 11px; cursor: pointer;">${t('deselectAllAreas')}</button>
+                        </div>
+                        <div id="gplc-areas-list" style="font-size: 11px;">
+                            <div style="color: #666; font-style: italic;">${t('selectEditableAreas')}</div>
+                        </div>
+                    </div>
+                </div>
             </div>
-
+            
             <!-- Scan Controls -->
             <div style="margin-bottom: 15px;">
                 <button id="gplc-start-btn" style="width: 100%; padding: 10px; background: #4caf50; color: white; border: none; border-radius: 5px; font-size: 14px; font-weight: bold; cursor: pointer; margin-bottom: 5px;">
@@ -1614,7 +2186,7 @@ function getTabContent() {
 
             <div id="gplc-results" style="display: none;">
                 <h4 style="margin: 10px 0;">${t('results')}</h4>
-
+                
                 <!-- Sortierung und Aktionen -->
                 <div style="margin-bottom: 10px; display: flex; gap: 5px; flex-wrap: wrap;">
                     <select id="gplc-sort" style="flex: 1; min-width: 120px; padding: 5px;">
@@ -1632,7 +2204,7 @@ function getTabContent() {
                         🗑️ ${t('clear')}
                     </button>
                 </div>
-
+                
                 <!-- Ergebnisfilter -->
                 <div style="margin-bottom: 10px;">
                     <label><input type="checkbox" id="gplc-show-nolink" checked> ❌ ${t('showNoLink')}</label><br>
@@ -1640,7 +2212,7 @@ function getTabContent() {
                     <label><input type="checkbox" id="gplc-show-multiple" checked> ⚠️ ${t('showMultipleLinks')}</label><br>
                     <label><input type="checkbox" id="gplc-highlight-map"> 🗺️ ${t('highlightOnMap')}</label>
                 </div>
-
+                
                 <div id="gplc-results-table" style="max-height: 400px; overflow-y: auto; overflow-x: auto; border: 1px solid #ddd; border-radius: 5px;"></div>
             </div>
 
@@ -1661,15 +2233,95 @@ function attachEventListeners() {
     const sortSelect = document.getElementById('gplc-sort');
     const showNolinkCheckbox = document.getElementById('gplc-show-nolink');
     const showDuplicateCheckbox = document.getElementById('gplc-show-duplicate');
+    
+    // Scan-Bereich Radio Buttons
+    const scanViewportRadio = document.getElementById('gplc-scan-viewport');
+    const scanEditableRadio = document.getElementById('gplc-scan-editable');
+    const scanSelectedRadio = document.getElementById('gplc-scan-selected');
+    const areaSelectionDiv = document.getElementById('gplc-area-selection');
+    
+    // Gebietsauswahl Buttons
+    const analyzeAreasBtn = document.getElementById('gplc-analyze-areas');
+    const selectAllAreasBtn = document.getElementById('gplc-select-all-areas');
+    const deselectAllAreasBtn = document.getElementById('gplc-deselect-all-areas');
+
+    // Zeige/Verstecke Gebietsauswahl basierend auf Radio Button
+    function toggleAreaSelection() {
+        if (scanSelectedRadio && scanSelectedRadio.checked) {
+            areaSelectionDiv.style.display = 'block';
+        } else {
+            areaSelectionDiv.style.display = 'none';
+        }
+    }
+
+    if (scanViewportRadio) scanViewportRadio.onchange = toggleAreaSelection;
+    if (scanEditableRadio) scanEditableRadio.onchange = toggleAreaSelection;
+    if (scanSelectedRadio) scanSelectedRadio.onchange = toggleAreaSelection;
+
+    // Gebiete analysieren
+    if (analyzeAreasBtn) {
+        analyzeAreasBtn.onclick = async () => {
+            analyzeAreasBtn.disabled = true;
+            analyzeAreasBtn.textContent = '⏳ Analysiere...';
+            
+            try {
+                const areas = await editableAreasAnalyzer.analyzeEditableAreas();
+                renderAreasList(areas);
+            } catch (e) {
+                log('Fehler bei der Gebietsanalyse', 'error');
+            } finally {
+                analyzeAreasBtn.disabled = false;
+                analyzeAreasBtn.textContent = '🔍 Analysieren';
+            }
+        };
+    }
+
+    // Alle Gebiete auswählen/abwählen
+    if (selectAllAreasBtn) {
+        selectAllAreasBtn.onclick = () => {
+            editableAreasAnalyzer.selectAllAreas();
+            updateAreasListCheckboxes();
+        };
+    }
+
+    if (deselectAllAreasBtn) {
+        deselectAllAreasBtn.onclick = () => {
+            editableAreasAnalyzer.deselectAllAreas();
+            updateAreasListCheckboxes();
+        };
+    }
 
     if (startBtn) {
         startBtn.onclick = async () => {
-            const bounds = CoordUtils.getCurrentBounds();
-            if (!bounds) {
-                log('Fehler: Konnte Kartengrenzen nicht ermitteln', 'error');
-                return;
+            // Prüfe welcher Scan-Bereich ausgewählt ist
+            const scanEditableOnly = document.getElementById('gplc-scan-editable')?.checked || false;
+            const scanSelectedAreas = document.getElementById('gplc-scan-selected')?.checked || false;
+            
+            let bounds;
+            if (scanSelectedAreas) {
+                bounds = editableAreasAnalyzer.getSelectedAreasBounds();
+                if (!bounds) {
+                    log('Fehler: Keine Gebiete ausgewählt. Bitte erst Gebiete analysieren und auswählen.', 'error');
+                    return;
+                }
+                const selectedCount = editableAreasAnalyzer.selectedAreas.size;
+                log(`Scanne ${selectedCount} ausgewählte Gebiete...`, 'info');
+            } else if (scanEditableOnly) {
+                bounds = CoordUtils.getEditableBounds();
+                if (!bounds) {
+                    log('Fehler: Konnte editierbare Bereiche nicht ermitteln', 'error');
+                    return;
+                }
+                log('Scanne editierbare Bereiche im Viewport...', 'info');
+            } else {
+                bounds = CoordUtils.getCurrentBounds();
+                if (!bounds) {
+                    log('Fehler: Konnte Kartengrenzen nicht ermitteln', 'error');
+                    return;
+                }
+                log('Scanne gesamten Viewport...', 'info');
             }
-
+            
             await placesChecker.startScan(bounds);
         };
     }
@@ -1695,7 +2347,7 @@ function attachEventListeners() {
             exportResults('csv');
         };
     }
-
+    
     if (exportJsonBtn) {
         exportJsonBtn.onclick = () => {
             exportResults('json');
@@ -1709,14 +2361,14 @@ function attachEventListeners() {
             log('Ergebnisse gelöscht', 'info');
         };
     }
-
+    
     if (sortSelect) {
         sortSelect.onchange = () => {
             sortResults(sortSelect.value);
             updateResultsTable();
         };
     }
-
+    
     if (showNolinkCheckbox) {
         showNolinkCheckbox.onchange = () => {
             updateResultsTable();
@@ -1726,7 +2378,7 @@ function attachEventListeners() {
             }
         };
     }
-
+    
     if (showDuplicateCheckbox) {
         showDuplicateCheckbox.onchange = () => {
             updateResultsTable();
@@ -1736,7 +2388,7 @@ function attachEventListeners() {
             }
         };
     }
-
+    
     const showMultipleCheckbox = document.getElementById('gplc-show-multiple');
     if (showMultipleCheckbox) {
         showMultipleCheckbox.onchange = () => {
@@ -1747,7 +2399,7 @@ function attachEventListeners() {
             }
         };
     }
-
+    
     const highlightMapCheckbox = document.getElementById('gplc-highlight-map');
     if (highlightMapCheckbox) {
         highlightMapCheckbox.onchange = () => {
@@ -1758,6 +2410,95 @@ function attachEventListeners() {
             }
         };
     }
+}
+
+// Gebietsliste rendern
+function renderAreasList(areas) {
+    const areasListDiv = document.getElementById('gplc-areas-list');
+    if (!areasListDiv) return;
+
+    if (areas.length === 0) {
+        areasListDiv.innerHTML = `<div style="color: #f44336; font-style: italic;">${t('noEditableAreasFound')}</div>`;
+        return;
+    }
+
+    let html = '';
+    let currentCountry = '';
+    
+    areas.forEach(area => {
+        // Gruppiere nach Land/Typ
+        const groupName = area.type === 'managed_area' ? 'Your Areas' : area.country;
+        if (groupName !== currentCountry) {
+            if (currentCountry !== '') {
+                html += '</div>'; // Schließe vorherige Gruppe
+            }
+            currentCountry = groupName;
+            html += `<div style="margin-bottom: 8px;">`;
+            
+            const groupIcon = area.type === 'managed_area' ? '👤' : '🌍';
+            html += `<div style="font-weight: bold; color: #333; margin-bottom: 4px; border-bottom: 1px solid #ddd; padding-bottom: 2px;">${groupIcon} ${escapeHtml(currentCountry)}</div>`;
+        }
+        
+        const isSelected = editableAreasAnalyzer.isAreaSelected(area.id);
+        
+        // Icon basierend auf Typ
+        let typeIcon = '🏛️';
+        if (area.type === 'managed_area') typeIcon = '📍';
+        else if (area.type === 'api_area') typeIcon = '🔗';
+        else if (area.type === 'state') typeIcon = '🏛️';
+        else if (area.type === 'country') typeIcon = '🌍';
+        
+        // Größenanzeige
+        let sizeDisplay = '';
+        if (area.sizeKm2) {
+            sizeDisplay = `${area.sizeKm2.toLocaleString()} km²`;
+        } else {
+            sizeDisplay = `~${area.segmentCount.toLocaleString()} Segmente`;
+        }
+        
+        html += `
+            <label style="display: block; margin-bottom: 2px; cursor: pointer; padding: 2px 4px; border-radius: 3px; background: ${isSelected ? '#e3f2fd' : 'transparent'};">
+                <input type="checkbox" class="gplc-area-checkbox" data-area-id="${area.id}" ${isSelected ? 'checked' : ''}> 
+                ${typeIcon} ${escapeHtml(area.name)}
+                <span style="color: #666; font-size: 10px;">(${sizeDisplay})</span>
+            </label>
+        `;
+    });
+    
+    if (currentCountry !== '') {
+        html += '</div>'; // Schließe letzte Gruppe
+    }
+
+    areasListDiv.innerHTML = html;
+
+    // Event Listeners für Checkboxen hinzufügen
+    document.querySelectorAll('.gplc-area-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const areaId = this.getAttribute('data-area-id');
+            if (this.checked) {
+                editableAreasAnalyzer.selectArea(areaId);
+            } else {
+                editableAreasAnalyzer.deselectArea(areaId);
+            }
+            
+            // Aktualisiere Hintergrundfarbe des Labels
+            const label = this.parentElement;
+            label.style.background = this.checked ? '#e3f2fd' : 'transparent';
+        });
+    });
+}
+
+// Checkboxen in der Gebietsliste aktualisieren
+function updateAreasListCheckboxes() {
+    document.querySelectorAll('.gplc-area-checkbox').forEach(checkbox => {
+        const areaId = checkbox.getAttribute('data-area-id');
+        const isSelected = editableAreasAnalyzer.isAreaSelected(areaId);
+        checkbox.checked = isSelected;
+        
+        // Aktualisiere Hintergrundfarbe des Labels
+        const label = checkbox.parentElement;
+        label.style.background = isSelected ? '#e3f2fd' : 'transparent';
+    });
 }
 
 // UI aktualisieren
@@ -1779,7 +2520,7 @@ function updateUI() {
         pauseBtn.textContent = scanState.isPaused ? '▶️ Fortsetzen' : '⏸️ Pause';
 
         const progress = Math.round((scanState.currentTile / scanState.totalTiles) * 100);
-        document.getElementById('gplc-progress-text').textContent =
+        document.getElementById('gplc-progress-text').textContent = 
             `${scanState.currentTile} / ${scanState.totalTiles} (${progress}%)`;
         document.getElementById('gplc-progress-bar').style.width = `${progress}%`;
     } else {
@@ -1805,12 +2546,12 @@ function updateUI() {
 // Ergebnistabelle aktualisieren
 function updateResultsTable() {
     const tableDiv = document.getElementById('gplc-results-table');
-
+    
     // Filter-Einstellungen
     const showNolink = document.getElementById('gplc-show-nolink')?.checked ?? true;
     const showDuplicate = document.getElementById('gplc-show-duplicate')?.checked ?? true;
     const showMultiple = document.getElementById('gplc-show-multiple')?.checked ?? true;
-
+    
     // Gefilterte Ergebnisse
     const filteredResults = scanState.results.filter(result => {
         if (result.type === 'no-link' && !showNolink) return false;
@@ -1818,7 +2559,7 @@ function updateResultsTable() {
         if (result.type === 'multiple-links-same-place' && !showMultiple) return false;
         return true;
     });
-
+    
     let html = '<table style="width: 100%; border-collapse: collapse; font-size: 11px;">';
     html += '<thead><tr style="background: #f0f0f0; position: sticky; top: 0;">';
     html += '<th style="padding: 4px 6px; border: 1px solid #ddd; text-align: center; width: 30px;">St</th>';
@@ -1834,16 +2575,16 @@ function updateResultsTable() {
         for (const result of filteredResults) {
             const statusIcon = result.type === 'no-link' ? '❌' : '⚠️';
             const statusColor = result.type === 'no-link' ? '#ff9800' : '#f44336';
-
+            
             // Hintergrundfarbe NUR für echte Duplikate (Links die mit anderen Places geteilt werden)
             let rowBgColor = '';
             if (result.type === 'duplicate-links') {
                 rowBgColor = 'background: #ffebee;'; // Hellrot für echte Duplikate
             }
-
+            
             const shortName = result.name.length > 30 ? result.name.substring(0, 27) + '...' : result.name;
             const shortCat = result.categories.length > 20 ? result.categories.substring(0, 17) + '...' : result.categories;
-
+            
             // Info-Text erstellen
             let infoText = '';
             let infoTitle = '';
@@ -1880,7 +2621,7 @@ function updateResultsTable() {
 
     html += '</tbody></table>';
     tableDiv.innerHTML = html;
-
+    
     // Event Listener für Place-Links hinzufügen
     document.querySelectorAll('.gplc-place-link').forEach(link => {
         link.addEventListener('click', function(e) {
@@ -1895,11 +2636,11 @@ function updateResultsTable() {
 function exportResults(format = 'csv') {
     if (format === 'csv') {
         let csv = 'Status;Name;Kategorie;Lock Level;Google Links;Info;Permalink\n';
-
+        
         for (const result of scanState.results) {
             let status = '';
             let info = '';
-
+            
             if (result.type === 'no-link') {
                 status = 'Kein Link';
                 info = 'Keine Google-Verknüpfung';
@@ -1914,9 +2655,9 @@ function exportResults(format = 'csv') {
                 status = 'Mehrere Links';
                 info = `${result.googleLinks.length} verschiedene Google Links`;
             }
-
+            
             const googleLinksStr = result.googleLinks ? result.googleLinks.map(l => l.id).join(' | ') : '';
-
+            
             csv += `"${status}";"${result.name}";"${result.categories}";"${result.lockLevel}";"${googleLinksStr}";"${info}";"${result.permalink}"\n`;
         }
 
@@ -1943,7 +2684,7 @@ function exportResults(format = 'csv') {
 function getSelectedCategories() {
     const select = document.getElementById('gplc-category-filter');
     if (!select) return ['ALL'];
-
+    
     const selected = Array.from(select.selectedOptions).map(opt => opt.value);
     return selected.length > 0 ? selected : ['ALL'];
 }
@@ -1980,7 +2721,7 @@ function log(message, type = 'info') {
     const entry = document.createElement('div');
     entry.style.cssText = `margin-bottom: 3px; color: ${colors[type] || colors.info};`;
     entry.innerHTML = `<span style="color: #999;">[${time}]</span> ${escapeHtml(message)}`;
-
+    
     logDiv.appendChild(entry);
     logDiv.scrollTop = logDiv.scrollHeight;
 
@@ -1999,7 +2740,7 @@ function centerAndSelectPlace(venueId) {
     try {
         // Hole den Permalink aus den Ergebnissen
         const result = scanState.results.find(r => r.venueId === venueId);
-
+        
         if (result && result.permalink && result.permalink !== '#') {
             // Öffne den Permalink in einem neuen Tab
             window.open(result.permalink, '_blank');
@@ -2009,13 +2750,13 @@ function centerAndSelectPlace(venueId) {
             if (venue) {
                 const geometry = venue.getOLGeometry();
                 let centerPoint;
-
+                
                 if (geometry.CLASS_NAME === 'OpenLayers.Geometry.Point') {
                     centerPoint = geometry;
                 } else {
                     centerPoint = geometry.getCentroid();
                 }
-
+                
                 W.map.setCenter([centerPoint.x, centerPoint.y], Math.max(W.map.getZoom(), 17));
                 W.selectionManager.setSelectedModels([venue]);
             } else {
@@ -2031,23 +2772,23 @@ function centerAndSelectPlace(venueId) {
 function updateMapHighlights() {
     try {
         clearHighlights();
-
+        
         if (!W || !W.map) return;
-
+        
         // Hole Filter-Einstellungen
         const showNolink = document.getElementById('gplc-show-nolink')?.checked ?? true;
         const showDuplicate = document.getElementById('gplc-show-duplicate')?.checked ?? true;
         const showMultiple = document.getElementById('gplc-show-multiple')?.checked ?? true;
-
+        
         // Erstelle einen neuen Layer für Highlights
         scanState.highlightLayer = new OpenLayers.Layer.Vector("Google Places Duplicates", {
             displayInLayerSwitcher: false,
             uniqueName: "__gplc_highlights"
         });
-
+        
         W.map.addLayer(scanState.highlightLayer);
         scanState.highlightLayer.setZIndex(1000);
-
+        
         // Erstelle Styles für verschiedene Problemtypen
         const nolinkStyle = new OpenLayers.Style({
             strokeColor: "#ff9800",
@@ -2057,7 +2798,7 @@ function updateMapHighlights() {
             fillOpacity: 0.15,
             pointRadius: 10
         });
-
+        
         const duplicateStyle = new OpenLayers.Style({
             strokeColor: "#ff0000",
             strokeWidth: 4,
@@ -2066,7 +2807,7 @@ function updateMapHighlights() {
             fillOpacity: 0.2,
             pointRadius: 12
         });
-
+        
         const multipleStyle = new OpenLayers.Style({
             strokeColor: "#9c27b0",
             strokeWidth: 3,
@@ -2075,14 +2816,14 @@ function updateMapHighlights() {
             fillOpacity: 0.15,
             pointRadius: 10
         });
-
+        
         // Füge Features basierend auf Filter-Einstellungen hinzu
         const features = [];
-
+        
         scanState.results.forEach(result => {
             let shouldHighlight = false;
             let style = null;
-
+            
             // Prüfe ob dieser Typ angezeigt werden soll
             if (result.type === 'no-link' && showNolink) {
                 shouldHighlight = true;
@@ -2094,7 +2835,7 @@ function updateMapHighlights() {
                 shouldHighlight = true;
                 style = multipleStyle;
             }
-
+            
             if (shouldHighlight) {
                 const venue = W.model.venues.getObjectById(result.venueId);
                 if (venue) {
@@ -2105,9 +2846,9 @@ function updateMapHighlights() {
                 }
             }
         });
-
+        
         scanState.highlightLayer.addFeatures(features);
-
+        
         let message = `${features.length} Places auf der Karte hervorgehoben`;
         if (features.length > 0) {
             const counts = {
@@ -2150,7 +2891,7 @@ async function init() {
     if (unsafeWindow.SDK_INITIALIZED) {
         try {
             await unsafeWindow.SDK_INITIALIZED;
-
+            
             if (unsafeWindow.getWmeSdk) {
                 wmeSDK = unsafeWindow.getWmeSdk({
                     scriptId: SCRIPT_ID,
@@ -2164,7 +2905,7 @@ async function init() {
                 await wmeSDK.Events.once({ eventName: 'wme-ready' });
                 console.log(`${SCRIPT_NAME}: WME ist bereit`);
             }
-
+            
             // Sprache erkennen NACH WME-Ready
             currentLang = detectLanguage();
             console.log(`${SCRIPT_NAME}: Sprache: ${currentLang}`);

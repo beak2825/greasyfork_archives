@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Letterboxd Auto-Follow Auto-like
 // @description Adds a button to auto-follow users and auto-like reviews on dedicated pages for Letterboxd
-// @version     1.8
+// @version     1.8.1
 // @author      asadiqui
 // @namespace   http://asadiqui.dev/letterboxd
 // @icon        https://www.google.com/s2/favicons?sz=64&domain=letterboxd.com
@@ -90,7 +90,7 @@
 
     // Function to auto-like all reviews on a page
     async function startAutoLike() {
-        document.querySelectorAll('._trigger_x7tgy_1:not(._-is-liked_x7tgy_8)').forEach(btn => btn.click());
+        document.querySelectorAll('._trigger_129r2_1:not(._-is-liked_129r2_8)').forEach(btn => btn.click());
         alert("All reviews liked!");
     }
 

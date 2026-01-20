@@ -12,4 +12,68 @@
 // @updateURL https://update.greasyfork.org/scripts/549097/Sort%20directories%20before%20files.meta.js
 // ==/UserScript==
 
-(() => {"use strict";(()=>{let q=document.querySelector(".tree-list");if(!q||!(q instanceof Element))return;if(q.getAttribute("data-dir-sorted")==="true")return;let z=Array.from(q.children);if(z.length===0)return;let H=[],A=[],D=[];for(let j=0;j<z.length;j++){let k=z[j];if(!(k instanceof Element)||!k.classList.contains("name"))continue;H.push(k);let v=H.length-1;if(k.classList.contains("tree"))A.push(v);else if(k.classList.contains("blob"))D.push(v)}let J=z.length,E=H.length,G=E?J/E:0;if(!E||!G||G*E!==J)return;if(!A.length||!D.length)return;let K=document.createDocumentFragment(),M=(j)=>{let k=j*G;for(let v=0;v<G;v++){let N=z[k+v];if(N)K.appendChild(N)}};for(let j=0;j<A.length;j++){let k=A[j];if(typeof k==="number")M(k)}for(let j=0;j<D.length;j++){let k=D[j];if(typeof k==="number")M(k)}q.textContent="",q.appendChild(K),q.setAttribute("data-dir-sorted","true")})();})();
+// src/dir_to_file_sourcehut.ts
+(() => {
+  const treeListSelector = ".tree-list";
+  const nameCellClass = "name";
+  const directoryClass = "tree";
+  const fileClass = "blob";
+  const root = document.body;
+  const treeList = root.querySelector(treeListSelector) ?? (root.matches?.(treeListSelector) ? root : null);
+  if (!(treeList && treeList instanceof Element)) {
+    return;
+  }
+  const treeListChildren = Array.from(treeList.children);
+  if (treeListChildren.length === 0) {
+    return;
+  }
+  const nameColumnCells = [];
+  const directoryRowIndices = [];
+  const fileRowIndices = [];
+  for (const child of treeListChildren) {
+    if (!(child instanceof Element && child.classList.contains(nameCellClass))) {
+      continue;
+    }
+    nameColumnCells.push(child);
+    const rowIndex = nameColumnCells.length - 1;
+    if (child.classList.contains(directoryClass)) {
+      directoryRowIndices.push(rowIndex);
+    } else if (child.classList.contains(fileClass)) {
+      fileRowIndices.push(rowIndex);
+    }
+  }
+  const totalChildCount = treeListChildren.length;
+  const rowCount = nameColumnCells.length;
+  if (!rowCount) {
+    return;
+  }
+  if (totalChildCount % rowCount !== 0) {
+    return;
+  }
+  const columnsPerRow = totalChildCount / rowCount;
+  if (!Number.isInteger(columnsPerRow) || columnsPerRow <= 0) {
+    return;
+  }
+  if (!(directoryRowIndices.length > 0 && fileRowIndices.length > 0)) {
+    return;
+  }
+  const reorderedFragment = document.createDocumentFragment();
+  const appendRowToFragment = (rowIndex) => {
+    const start = rowIndex * columnsPerRow;
+    for (let c = 0;c < columnsPerRow; c++) {
+      const node = treeListChildren[start + c];
+      if (!node) {
+        continue;
+      }
+      reorderedFragment.appendChild(node);
+    }
+  };
+  for (const directoryRowIndex of directoryRowIndices) {
+    appendRowToFragment(directoryRowIndex);
+  }
+  for (const fileRowIndex of fileRowIndices) {
+    appendRowToFragment(fileRowIndex);
+  }
+  treeList.textContent = "";
+  treeList.appendChild(reorderedFragment);
+})();

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Geoguessr Better Breakdown UI
 // @namespace    https://greasyfork.org/users/1179204
-// @version      1.0.1
+// @version      1.0.4
 // @description  built-in StreetView Window to view where you guessed and the correct location
 // @author       KaKa, Alien Perfect
 // @match        https://www.geoguessr.com/*
@@ -46,6 +46,7 @@ let realTimePreviewTooltip = null;
 let gameLoopTimer = null;
 let currentGameToken = null;
 let coverageLayer = null;
+let peekMarker = null;
 let viewer = null;
 let gameLoopRunning = false;
 let isCoverageLayer = false;
@@ -105,7 +106,7 @@ async function getNearestPano(coords) {
             if (oldRadius && radius >= oldRadius) break;
 
             nearestPano.radius = radius;
-            nearestPano.location = coords
+            nearestPano.location = pano.data.location.latLng
             nearestPano.panoId = pano.data.location.pano
             nearestPano.heading = pano.data.tiles.originHeading
             nearestPano.pitch = pano.data.tiles.originPitch
@@ -125,25 +126,61 @@ function fetchAnswerPanoFromRoundData() {
     return{
         panoId: convertPanoId(data.panoId),
         heading: data.heading,
+        location: {lat:data.lat, lng:data.lng},
         pitch: data.pitch,
         radius: 0,
         error: false
     }
 }
 
+function offsetMapFocus(map, coords) {
+    if (!map || !coords) return;
+
+    map.setCenter(coords);
+
+    const mapDiv = map.getDiv();
+    const width = mapDiv.offsetWidth;
+
+    const offsetX = width / 4;
+
+    map.panBy(offsetX, 0);
+}
+
 function attachClickListener(map) {
     map.addListener("click", async (e) => {
+        lastClickedCoords = {
+            lat: e.latLng.lat(),
+            lng: e.latLng.lng()
+        };
         if (!document.querySelector(SELECTORS.roundEnd) &&
             !document.querySelector(SELECTORS.gameEnd)) {
-            lastClickedCoords = {
-                lat: e.latLng.lat(),
-                lng: e.latLng.lng()
-            };
             const pano = await getNearestPano(lastClickedCoords);
             const marker = document.querySelector(SELECTORS.markerList)
             if(marker)updateRealtimePreview(marker, pano);
         }
+        else{
+            if(!isCoverageLayer) return
+            const pano = await getNearestPano(lastClickedCoords);
+            if(!pano || pano.error) return
+            if (!peekMarker) {
+                peekMarker = new google.maps.Marker({
+                    position: pano.location,
+                    map,
+                    icon: {
+                        url: "https://www.geoguessr.com/_next/static/media/selected-pin-square.bcb5854f.webp",
+                        scaledSize: new google.maps.Size(28, 28),
+                        anchor: new google.maps.Point(14, 14)
+                    },
+                    zIndex: 10008
+                });
+            } else {
+                peekMarker.setPosition(pano.location);
+
+            }
+            openNativeStreetView(pano)
+        }
     });
+
 }
 
 
@@ -201,7 +238,7 @@ function starMapObserver() {
     mapObserver = new MutationObserver((mutations) => {
         if (!mutations.some(m => m.addedNodes.length > 0)) return;
 
-        const mapEl = document.querySelector(SELECTORS.guessMap);
+        const mapEl = document.querySelector(SELECTORS.guessMap) || document.querySelector(SELECTORS.resultMap);
         if (!mapEl) return;
 
         guessMap = getGuessMapInstance(mapEl);
@@ -242,7 +279,11 @@ async function gameLoop() {
         committedRounds.clear();
         lastClickedCoords = null;
     }
-
+    if(!isRoundEnd && !isGameEnd && isCoverageLayer){
+        coverageLayer.setMap(null);
+        isCoverageLayer=false;
+        removePeekMarker();
+    }
     await commitRoundResult({
         token,
         round,
@@ -250,6 +291,12 @@ async function gameLoop() {
         hasAnswerMarker: !!isRoundMarker
     });
     updateMarkersUI(token, round, isGameEnd);
+}
+
+function removePeekMarker(){
+    if(peekMarker) {
+        peekMarker.setMap(null);
+        peekMarker =null;}
 }
 
 function updateMarkersUI(token, currentRound, isFinal) {
@@ -410,6 +457,7 @@ function applyPanoToGuessMarker(marker, pano, roundId) {
         const clickHandler = (e) => {
             e.preventDefault();
             e.stopPropagation();
+            removePeekMarker();
             openNativeStreetView(pano);
         };
 
@@ -442,6 +490,7 @@ async function applyPanoToAnswerMarker(marker, pano, roundId) {
     const clickHandler = (e) => {
         e.preventDefault();
         e.stopPropagation();
+        removePeekMarker();
         openNativeStreetView(pano);
     };
 
@@ -482,12 +531,10 @@ function openNativeStreetView(pano) {
             e.stopPropagation();
             coverageLayer.setMap(null);
             isCoverageLayer = false;
-            splitContainer.classList.remove('active');
             if(shareDiv) shareDiv.style.display='block';
             if(xpDiv) xpDiv.style.opacity='1.0';
-            requestAnimationFrame(() => {
-                splitContainer.remove();
-            });
+            splitContainer.classList.remove('active');
+            removePeekMarker();
         };
 
         const panoDiv = splitContainer.querySelector('.peek-split-pano');
@@ -507,10 +554,13 @@ function openNativeStreetView(pano) {
         })
     }
     else {
-        viewer.setPanorama(pano.panoId)
+        viewer.setPano(pano.panoId)
+        viewer.setPov({ heading: pano.heading, pitch: pano.pitch})
+        viewer.setZoom(1)
     }
     requestAnimationFrame(() => {
         splitContainer.classList.add('active');
+        offsetMapFocus(guessMap, pano.location);
     });
 }
 
@@ -534,6 +584,7 @@ async function commitRoundResult({
     if (guessCoords) {
         try {
             pending.guess = await getNearestPano(guessCoords);
+            pending.guess.location = guessCoords
         } catch (err) {
             console.error("[commitRoundResult] getNearestPano failed", err);
         }

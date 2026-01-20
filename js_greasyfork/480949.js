@@ -2,7 +2,7 @@
 // @name         Show Youtube like/dislike ratios in video descriptions
 // @license      MIT
 // @namespace    https://github.com/2chen
-// @version      1.15
+// @version      1.16
 // @description  Add (dis)like percentage to Youtube video descriptions. Dislike count is provided by https://www.returnyoutubedislike.com/
 // @author       Yichen
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=greasyfork.org
@@ -132,11 +132,11 @@
                 }, backoffSeconds * 1_000);
             }
 
-            let videoNodes = document.querySelectorAll(".yt-lockup-metadata-view-model-wiz__text-container");
+            let videoNodes = document.querySelectorAll(".yt-lockup-metadata-view-model__text-container");
             videoNodes.forEach(videoNode => handleNode(
                 TYPES.homepage,
                 videoNode,
-                videoNode.querySelector("div.yt-content-metadata-view-model-wiz__metadata-row").nextSibling.firstChild,
+                videoNode.querySelector("div.yt-content-metadata-view-model__metadata-row"),
                 videoNode.querySelector("a").href.substring(32, 32+11))
             );
             videoNodes = document.querySelectorAll("ytd-rich-grid-slim-media");

@@ -2858,7 +2858,7 @@ body:not(.screen_mode):not(.fullScreen_mode):has(#sidebar.min) #webplayer_conten
             }
         });
     };
-    // 카테고리 차단 메뉴 추가(2026.01.12)
+   // 카테고리 차단 메뉴 추가
     function registerMenuBlockingCategory() {
         // GM 메뉴에 카테고리 차단 등록 메뉴를 추가합니다.
         GM_registerMenuCommand('카테고리 등록 | 카테고리에 포함시 차단', function() {
@@ -4011,10 +4011,10 @@ body:not(.screen_mode):not(.fullScreen_mode):has(#sidebar.min) #webplayer_conten
 
                 if (element.getAttribute('data-hover-tooltip-id') !== uniqueId) return;
 
-                // 방송 시간 && 이미지 && !게시판이미지
-                if (broadStart && imgSrc?.startsWith("http") && !imgSrc?.startsWith('https://stimg.')) {
+               // 방송 시간 && 이미지 && !게시판이미지
+                if (isReplaceEmptyThumbnailEnabled && broadStart && imgSrc?.startsWith("http") && !imgSrc?.startsWith('https://stimg.')) {
                     imgSrc += `?${Math.floor(randomTimeCode / 10000)}`;
-                } 
+                }
 
                 let durationText = broadStart
                 ? getElapsedTime(broadStart, "HH:MM")
@@ -4923,8 +4923,7 @@ body:not(.screen_mode):not(.fullScreen_mode):has(#sidebar.min) #webplayer_conten
                     <h3 id="management-title" class="section-title_v8xK4z">차단 관리 및 부가 설명</h3>
                     <p class="description_v8xK4z">⛔채널 차단: 본문 방송 목록 -> ⋮ 버튼 -> [이 브라우저에서 ... 숨기기]</p>
                     <p class="description_v8xK4z">⛔단어 등록/해제 및 차단 관리: Tampermonkey 아이콘을 눌러서 가능합니다.</p>
-                    <p class="description_v8xK4z">✅카테고리 탭 추가: 본문 방송 목록 -> ⋮ 버튼 -> [이 카테고리를 탭에 추가]</p>
-                    <p class="description_v8xK4z">✅카테고리 탭 해제: Tampermonkey 아이콘을 눌러서 가능합니다.</p>
+                    <p class="description_v8xK4z">✅카테고리 탭 등록/해제 및 차단 관리: Tampermonkey 아이콘을 눌러서 가능합니다.</p>
                     <div class="divider_v8xK4z"></div>
                     <p class="description_v8xK4z">1) MY 페이지에서 스트리머 고정 버튼(📌)을 누르면 사이드바에 고정이 됩니다.</p>
                     <p class="description_v8xK4z">2) 즐겨찾기 채널 중에서만 이동. 커스텀은 고정->알림->일반 순. 열린 탭 체크 후 이동.</p>
@@ -5390,41 +5389,60 @@ body:not(.screen_mode):not(.fullScreen_mode):has(#sidebar.min) #webplayer_conten
         });
     };
 
-const replaceThumbnails = (thumbsBoxLinks) => {
-        for (const thumbsBoxLink of thumbsBoxLinks) {
-            if (!thumbsBoxLink.classList.contains("thumbnail-checked")) {
-                thumbsBoxLink.classList.add("thumbnail-checked");
-                const hrefValue = thumbsBoxLink.getAttribute('href');
+function replaceThumbnails() {
+    // 1. 화면 내 '연령제한' 배지들을 모두 찾음
+    const adultBadges = document.querySelectorAll('.status.adult');
 
-                if (hrefValue && hrefValue.includes("sooplive.co.kr")) {
-                    const [ , , , id, broadNumber] = hrefValue.split('/');
+    adultBadges.forEach(badge => {
+        // 2. 배지가 속한 박스(.thumbs-box) 찾기
+        const container = badge.closest('.thumbs-box');
+        if (!container) return;
 
-                    thumbsBoxLink.dataset.lastMouseEnterTime = 0;
+        const link = container.querySelector('a');
+        const img = link ? link.querySelector('img') : null;
 
-                    thumbsBoxLink.addEventListener('mouseenter', async function(event) {
-                        event.preventDefault();
-                        event.stopPropagation();
+        // 유효성 검사 & 이미 이벤트를 붙였는지 확인 (중복 방지)
+        if (!link || !img || link.dataset.mouseEventAttached === 'true') return;
 
-                        const currentTime = Date.now();
-                        const lastMouseEnterTime = Number(thumbsBoxLink.dataset.lastMouseEnterTime);
+        // 3. "이벤트 리스너를 붙였다"는 표시를 남김
+        link.dataset.mouseEventAttached = 'true';
 
-                        if (currentTime - lastMouseEnterTime >= 30000) {
-                            thumbsBoxLink.dataset.lastMouseEnterTime = currentTime;
+        // 4. [핵심] 마우스가 올라갔을 때(mouseenter) 실행될 동작 정의
+        link.addEventListener('mouseenter', async () => {
+            // 이미 이미지를 로드해서 바꿨다면 다시 실행하지 않음
+            if (link.dataset.imageLoaded === 'true') return;
 
-                            const frameData = await getLatestFrameData(id, broadNumber);
-                            let imgElement = thumbsBoxLink.querySelector('img');
+            // 링크에서 아이디와 방송번호 추출
+            const href = link.getAttribute('href');
+            const matches = href && href.match(/play\.sooplive\.co\.kr\/([^/]+)\/(\d+)/);
 
-                            if (!imgElement) {
-                                imgElement = document.createElement('img');
-                                thumbsBoxLink.appendChild(imgElement);
-                            }
-                            imgElement.src = frameData;
-                        }
-                    });
+            if (matches) {
+                const broadcasterId = matches[1];
+                const broadNo = matches[2];
+
+                // (선택사항) 로딩 중임을 알리기 위해 투명도 조절
+                // img.style.opacity = '0.6';
+
+                try {
+                    // 방송 이미지 데이터 가져오기
+                    const frameData = await getLatestFrameData(broadcasterId, broadNo);
+
+                    if (frameData) {
+                        img.src = frameData;
+                        img.style.objectFit = 'cover';
+                        // (선택사항) 투명도 원상복구
+                        // img.style.opacity = '1';
+
+                        // 성공적으로 바꿨음을 표시 (다시 마우스 올려도 로드 안 함)
+                        link.dataset.imageLoaded = 'true';
+                    }
+                } catch (err) {
+                    console.error('썸네일 로드 실패:', err);
                 }
             }
-        }
-    };
+        });
+    });
+}
 
     /**
  * =================================================================
@@ -8438,16 +8456,18 @@ const replaceThumbnails = (thumbsBoxLinks) => {
                         if (allThumbsBoxLinks.length) previewModalManager.attachToThumbnails(allThumbsBoxLinks);
                     }
 
+                    /*// 빈 썸네일 대체
+                    if (isReplaceEmptyThumbnailEnabled){
+                        const noThumbsBoxLinks = document.querySelectorAll('[data-type=cBox] .thumbs-box > a[href].thumb-adult:not([href^="https://vod.sooplive.co.kr"])');
+                        if (noThumbsBoxLinks.length) replaceThumbnails(noThumbsBoxLinks);
+                    }*/
                     // 19금 썸네일 대체 기능
-                    const allThumbsBoxes = document.querySelectorAll('[data-type=cBox] .thumbs-box');
-                    const adultThumbLinks = Array.from(allThumbsBoxes)
-                        .filter(box => box.querySelector('span.status.adult'))
-                        .map(box => box.querySelector('a[href]:not([href^="https://vod.sooplive.co.kr"])'))
-                        .filter(link => link);
-
-                    if (adultThumbLinks.length) {
-                        replaceThumbnails(adultThumbLinks);
+                    if (isReplaceEmptyThumbnailEnabled) {
+                    if (document.querySelector('.status.adult')) {
+                        replaceThumbnails();
                     }
+                }
+
                     // 본문 방송 목록의 새 탭 열기 방지
                     if(!isOpenNewtabEnabled){
                         setTimeout(removeTargetFromLinks, 100);

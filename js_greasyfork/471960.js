@@ -9,7 +9,7 @@
 // @match        *://www.jeuxvideo.com/recherche/forums/0-*
 // @require      https://code.jquery.com/jquery-3.6.0.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/tipso/1.0.8/tipso.min.js
-// @version      0.4.3.v871
+// @version      0.4.3.v881
 // @icon         https://image.jeuxvideo.com/stickers/p/1jnh
 // @grant        none
 // @license      MIT
@@ -50,156 +50,156 @@ function initmainstart() {
     currentDiv = valeursachecker.includes(currentDiv) ? currentDiv : 'brid';
 
     // LISTS
-    const stickersOrg = "https://image.jeuxvideo.com/stickers/p";
+    const stickersOrg = "https://image.jeuxvideo.com/stickers/p/";
     //PROXY PULIC POUR EVITER CLOUD FLARE (Nombre de stickers eleves / Requete Reseau)
-    const stickersCacheStatic = "https://wsrv.nl/?url=https://image.jeuxvideo.com/stickers/p/st";
+    const stickersCacheStatic = "https://wsrv.nl/?url=https://image.jeuxvideo.com/stickers/p/st/";
     var _stickers_hap = [
-        "/1kki",
-        "/1kkn",
-        "/1lmk",
-        "/1kkl",
-        "/1lmh",
-        "/1ljr",
-        "/1kkh",
-        "/1kkk",
-        "/1lmn",
-        "/1ljm",
-        "/1ljl",
-        "/1kkm",
-        "/1rzw",
-        "/1kkj",
-        "/1kkg",
-        "/1ljq"
+        "1kki",
+        "1kkn",
+        "1lmk",
+        "1kkl",
+        "1lmh",
+        "1ljr",
+        "1kkh",
+        "1kkk",
+        "1lmn",
+        "1ljm",
+        "1ljl",
+        "1kkm",
+        "1rzw",
+        "1kkj",
+        "1kkg",
+        "1ljq"
     ];
     var _stickers_noel = [
-        "/1kkr",
-        "/1kko",
-        "/1kkp",
-        "/1ljj",
-        "/1ljn",
-        "/1kkq",
-        "/1kks",
-        "/1ljo",
-        "/1ljp",
-        "/1kkt",
-        "/1lmm",
-        "/1kku",
-        "/1kkv",
-        "/1mqw",
-        "/1rzs",
-        "/1mqz",
-        "/1nu9",
-        "/1kkg"
+        "1kkr",
+        "1kko",
+        "1kkp",
+        "1ljj",
+        "1ljn",
+        "1kkq",
+        "1kks",
+        "1ljo",
+        "1ljp",
+        "1kkt",
+        "1lmm",
+        "1kku",
+        "1kkv",
+        "1mqw",
+        "1rzs",
+        "1mqz",
+        "1nu9",
+        "1kkg"
     ];
     var _stickers_autres = [
-        "/1lmj",
-        "/1nua",
-        "/1nub",
-        "/1mqv",
-        "/1nu7",
-        "/1lmi",
-        "/1lml",
-        "/1lmo",
-        "/1lmp",
-        "/1mqx",
-        "/1mqy",
-        "/1mr0",
-        "/1mr1",
-        "/1nu6",
-        "/1nu8"
+        "1lmj",
+        "1nua",
+        "1nub",
+        "1mqv",
+        "1nu7",
+        "1lmi",
+        "1lml",
+        "1lmo",
+        "1lmp",
+        "1mqx",
+        "1mqy",
+        "1mr0",
+        "1mr1",
+        "1nu6",
+        "1nu8"
     ];
     var _stickers_brid = [
-        "/1jnd",
-        "/1jnc",
-        "/1jne",
-        "/1jnf",
-        "/1jng",
-        "/1jnh",
-        "/1jni",
-        "/1jnj"
+        "1jnd",
+        "1jnc",
+        "1jne",
+        "1jnf",
+        "1jng",
+        "1jnh",
+        "1jni",
+        "1jnj"
     ];
     var _stickers_rex = [
-        "/1lm9",
-        "/1lma",
-        "/1lmb",
-        "/1lmc",
-        "/1lmd",
-        "/1lme",
-        "/1lmf",
-        "/1lmg"
+        "1lm9",
+        "1lma",
+        "1lmb",
+        "1lmc",
+        "1lmd",
+        "1lme",
+        "1lmf",
+        "1lmg"
     ];
     var _stickers_fluffy = [
-        "/1kl8",
-        "/1klb",
-        "/1kl9",
-        "/1kl7",
-        "/1kl5",
-        "/1kl6",
-        "/1kl2",
-        "/1kl1",
-        "/1kl3",
-        "/1kky",
-        "/1kkz",
-        "/1kla",
-        "/1kl4",
-        "/1kl0"
+        "1kl8",
+        "1klb",
+        "1kl9",
+        "1kl7",
+        "1kl5",
+        "1kl6",
+        "1kl2",
+        "1kl1",
+        "1kl3",
+        "1kky",
+        "1kkz",
+        "1kla",
+        "1kl4",
+        "1kl0"
     ];
     var _stickers_grukk = [
-        "/1lgg",
-        "/1lgb",
-        "/1lga",
-        "/1lgc",
-        "/1lgd",
-        "/1lge",
-        "/1lgf",
-        "/1lgh"
+        "1lgg",
+        "1lgb",
+        "1lga",
+        "1lgc",
+        "1lgd",
+        "1lge",
+        "1lgf",
+        "1lgh"
     ];
     var _stickers_lamma = [
-        "/1kgx",
-        "/1kgv",
-        "/1kgw",
-        "/1kgy",
-        "/1kgu",
-        "/1kh0",
-        "/1kh1",
-        "/1kgz"
+        "1kgx",
+        "1kgv",
+        "1kgw",
+        "1kgy",
+        "1kgu",
+        "1kh0",
+        "1kh1",
+        "1kgz"
     ];
     var _stickers_bud = [
-        "/zuc",
-        "/zu2",
-        "/zu6",
-        "/zu7",
-        "/zu8",
-        "/zu9",
-        "/zua",
-        "/zub",
-        "/1f88",
-        "/1f89",
-        "/1f8a",
-        "/1f8b",
-        "/1f8d",
-        "/1f8e",
-        "/1f8f"
+        "zuc",
+        "zu2",
+        "zu6",
+        "zu7",
+        "zu8",
+        "zu9",
+        "zua",
+        "zub",
+        "1f88",
+        "1f89",
+        "1f8a",
+        "1f8b",
+        "1f8d",
+        "1f8e",
+        "1f8f"
     ];
     var _stickers_euro = [
-        "/1n1m",
-        "/1n1n",
-        "/1n1t",
-        "/1n1q",
-        "/1n1s",
-        "/1n1o"
+        "1n1m",
+        "1n1n",
+        "1n1t",
+        "1n1q",
+        "1n1s",
+        "1n1o"
     ];
     var _stickers_larspon = [
-        "/1lt9",
-        "/1lte",
-        "/1ltd",
-        "/1li4",
-        "/1jc3-fr",
-        "/1li5",
-        "/1n2d",
-        "/1n2i",
-        "/1n2j",
-        "/1n2m"
+        "1lt9",
+        "1lte",
+        "1ltd",
+        "1li4",
+        "1jc3-fr",
+        "1li5",
+        "1n2d",
+        "1n2i",
+        "1n2j",
+        "1n2m"
     ];
 
 
@@ -207,18 +207,18 @@ function initmainstart() {
 
     // MAIN APPEND
     var newStickers = $('<div id="intstickersbloc" style="position: relative">\
-                        <div id="hap" class="new-stickers"></div>\
-                        <div id="noel" class="new-stickers"></div>\
-                        <div id="autres" class="new-stickers"></div>\
-                        <div id="brid" class="new-stickers"></div>\
-                        <div id="rex" class="new-stickers"></div>\
-                        <div id="fluffy" class="new-stickers"></div>\
-                        <div id="grukk" class="new-stickers"></div>\
-                        <div id="lamma" class="new-stickers"></div>\
-                        <div id="bud" class="new-stickers"></div>\
-                        <div id="euro" class="new-stickers"></div>\
+                        <div id="hap"     class="new-stickers"></div>\
+                        <div id="noel"    class="new-stickers"></div>\
+                        <div id="autres"  class="new-stickers"></div>\
+                        <div id="brid"    class="new-stickers"></div>\
+                        <div id="rex"     class="new-stickers"></div>\
+                        <div id="fluffy"  class="new-stickers"></div>\
+                        <div id="grukk"   class="new-stickers"></div>\
+                        <div id="lamma"   class="new-stickers"></div>\
+                        <div id="bud"     class="new-stickers"></div>\
+                        <div id="euro"    class="new-stickers"></div>\
                         <div id="larspon" class="new-stickers"></div>\
-                        <div id="updown" class="new-stickers"></div>\
+                        <div id="updown"  class="new-stickers"></div>\
                       </div>');
     // Choisir position haut bas
     if (localStorage.getItem('stickersjvc-layout') === 'bottom') {
@@ -270,18 +270,18 @@ function initmainstart() {
     });
 
     function loadstickersfull() {
-        $(".new-stickers").append('<div class="grp-stickers hap" title="Hap"></div>\
-                                   <div class="grp-stickers noel" title="Noel"></div>\
-                                   <div class="grp-stickers autres" title="Autres"></div>\
-                                   <div class="grp-stickers brid" title="Bridgely"></div>\
-                                   <div class="grp-stickers rex" title="Rex ryder"></div>\
-                                   <div class="grp-stickers fluffy" title="Fluffy"></div>\
-                                   <div class="grp-stickers grukk" title="Grukk"></div>\
-                                   <div class="grp-stickers lamma" title="Lama"></div>\
-                                   <div class="grp-stickers bud" title="Bud"></div>\
-                                   <div class="grp-stickers euro" title="Euro"></div>\
-                                   <div class="grp-stickers larspon" title="Larry & Sponsos"></div>\
-                                   <div class="grp-stickers updown" title="Descendre-Monter Panneau"></div>');
+        $(".new-stickers").append('<div class="btn-stickers" data-id-set="hap"     title="Hap"></div>\
+                                   <div class="btn-stickers" data-id-set="noel"    title="Noel"></div>\
+                                   <div class="btn-stickers" data-id-set="autres"  title="Autres"></div>\
+                                   <div class="btn-stickers" data-id-set="brid"    title="Bridgely"></div>\
+                                   <div class="btn-stickers" data-id-set="rex"     title="Rex ryder"></div>\
+                                   <div class="btn-stickers" data-id-set="fluffy"  title="Fluffy"></div>\
+                                   <div class="btn-stickers" data-id-set="grukk"   title="Grukk"></div>\
+                                   <div class="btn-stickers" data-id-set="lamma"   title="Lama"></div>\
+                                   <div class="btn-stickers" data-id-set="bud"     title="Bud"></div>\
+                                   <div class="btn-stickers" data-id-set="euro"    title="Euro"></div>\
+                                   <div class="btn-stickers" data-id-set="larspon" title="Larry & Sponsos"></div>\
+                                   <div class="btn-stickers btn-up-down"           title="Descendre-Monter Panneau"></div>');
 
         // AJOUT STICKERS
         for (let i= 0; i < _stickers_hap.length; i++) {
@@ -349,24 +349,22 @@ function initmainstart() {
         stickersEvent();
 
         //Select_grp
-        $(".grp-stickers").not('.updown').click(function() {
-            var id = $(this)[0].classList[1]
+        $(".btn-stickers").not('.btn-up-down').click(function() {
+            const id = $(this).data("id-set");
             // Sauvegarde du choix dans le localStorage
             localStorage.setItem('stickersjvc-div', id);
 
-            $(".new-stickers").each(function() {
-                if ( $(this).attr("id") == id ) {
-                    $(this).show();
-                    if (currentDiv != id) {
-                        $("#"+currentDiv).hide();
-                        currentDiv = id;
-                    }
-                }
-            });
+            if (currentDiv !== id) {
+                $("#"+currentDiv).hide();
+                $("#"+id).show();
+                currentDiv = id;
+            } else {
+                $("#"+id).show();
+            }
         });
 
         // Change position haut bas
-        $('.grp-stickers.updown').on('click', e => {
+        $('.btn-stickers.btn-up-down').on('click', e => {
             e.preventDefault();
             const blocNewStickers = $('#intstickersbloc');
             const storageBottom = localStorage.getItem('stickersjvc-layout') === 'bottom';
@@ -386,11 +384,11 @@ function initmainstart() {
             var st = $(this).scrollTop();
             // Masquer dès qu'on commence à descendre
             if (st > lastScrollTop) {
-                $(".grp-stickers").hide();
+                $(".btn-stickers").hide();
             }
             // Afficher seulement si on est revenu tout en haut
             else if (st === 0) {
-                $(".grp-stickers").show();
+                $(".btn-stickers").show();
             }
             // Mise à jour du dernier scroll pour détecter la direction
             lastScrollTop = st;
@@ -398,7 +396,7 @@ function initmainstart() {
 
         // TOOLTIPS
         $(document).ready(function() {
-            $(".grp-stickers").not('.updown').each(function() {
+            $(".btn-stickers").not('.btn-up-down').each(function() {
                 $(this).tipso({
                     delay: 0,
                     speed: 120,
@@ -426,20 +424,20 @@ function initmainstart() {
     css.push(
         `.stickers-script { height: 50px; width: 50px; cursor: pointer; padding: 2px; }`,
 
-        `.grp-stickers:hover { border: none; }`,
-        `.grp-stickers.hap { left: 5px; background-image: url('${stickersOrg}/1kki'); }`,
-        `.grp-stickers.noel { left: 30px; background-image: url('${stickersOrg}/1kkr'); }`,
-        `.grp-stickers.autres { left: 55px; background-image: url('${stickersOrg}/1mqv'); }`,
-        `.grp-stickers.brid { left: 80px; background-image: url('${stickersOrg}/1jnh'); }`,
-        `.grp-stickers.rex { left: 105px; background-image: url('${stickersOrg}/1lme'); }`,
-        `.grp-stickers.fluffy { left: 130px; background-image: url('${stickersOrg}/st/1kl8'); }`,
-        `.grp-stickers.grukk { left: 155px; background-image: url('${stickersOrg}/1lgg'); }`,
-        `.grp-stickers.lamma { left: 180px; background-image: url('${stickersOrg}/1kgx'); }`,
-        `.grp-stickers.bud { left: 205px; background-image: url('${stickersOrg}/1f8a'); }`,
-        `.grp-stickers.euro { left: 230px; background-image: url('${stickersOrg}/1n1m'); }`,
-        `.grp-stickers.larspon { left: 255px; background-image: url('${stickersOrg}/1lte'); }`,
-        `.grp-stickers.updown { left: 280px; filter: saturate(0%) opacity(0.9); background-size: 120%; background-image: url(https://images.emojiterra.com/microsoft/fluent-emoji/15.1/128px/2195_color.png); }`,
-        //`.grp-stickers.updown { left: 280px; filter: saturate(0%); background-image: url('https://images.emojiterra.com/google/noto-emoji/unicode-16.0/color/128px/2195.png'); }`,
+        `.btn-stickers:hover { border: none; }`,
+        `.btn-stickers:nth-child(1) { left: ${5}px; background-image: url('${stickersOrg}1kki'); }`,
+        `.btn-stickers:nth-child(2) { left: ${5+ 25*1}px; background-image: url('${stickersOrg}1kkr'); }`,
+        `.btn-stickers:nth-child(3) { left: ${5+ 25*2}px; background-image: url('${stickersOrg}1mqv'); }`,
+        `.btn-stickers:nth-child(4) { left: ${5+ 25*3}px; background-image: url('${stickersOrg}1jnh'); }`,
+        `.btn-stickers:nth-child(5) { left: ${5+ 25*4}px; background-image: url('${stickersOrg}1lme'); }`,
+        `.btn-stickers:nth-child(6) { left: ${5+ 25*5}px; background-image: url('${stickersOrg}st/1kl8'); }`,
+        `.btn-stickers:nth-child(7) { left: ${5+ 25*6}px; background-image: url('${stickersOrg}1lgg'); }`,
+        `.btn-stickers:nth-child(8) { left: ${5+ 25*7}px; background-image: url('${stickersOrg}1kgx'); }`,
+        `.btn-stickers:nth-child(9) { left: ${5+ 25*8}px; background-image: url('${stickersOrg}1f8a'); }`,
+        `.btn-stickers:nth-child(10) { left: ${5+ 25*9}px; background-image: url('${stickersOrg}1n1m'); }`,
+        `.btn-stickers:nth-child(11) { left: ${5+ 25*10}px; background-image: url('${stickersOrg}1lte'); }`,
+        `.btn-stickers:nth-child(12) { left: ${5+ 25*11}px; filter: saturate(0%) opacity(0.9); background-size: 120%; background-image: url(https://images.emojiterra.com/microsoft/fluent-emoji/15.1/128px/2195_color.png); }`,
+        //`.btn-stickers:nth-child(12) { left: ${5+ 25*11}px; filter: saturate(0%); background-image: url('https://images.emojiterra.com/google/noto-emoji/unicode-16.0/color/128px/2195.png'); }`,
 
         `.script-title { font-family: 'robotoboldcondensed', Arial, Helvetica, sans-serif; text-transform: uppercase; font-size: 0.75rem; color: #656574; }`,
 
@@ -449,12 +447,12 @@ function initmainstart() {
         `.new-stickers:not(.bottom) { border-bottom: 1px solid var(--jv-border-color); }`,
         `.new-stickers.bottom { border-top: 1px solid var(--jv-border-color); }`,
 
-        //`.grp-stickers { position: absolute; top: 4px; background-color: #E6E6E6; box-shadow: 0px 2px 2px #e0e0e0; border: 1px solid #ccc; border-radius: 50px; height: 18px; width: 18px; cursor: pointer; background-size: cover; background-repeat: no-repeat; background-position: center center; }`,
-        `.grp-stickers { position: absolute; top: 3px; background-color: rgba(217, 217, 217, 0.55); box-shadow: 0px 2px 2px rgba(87, 87, 87, 0.4); border: 1px solid rgba(141, 141, 141, 0.45); border-radius: 50px; height: 18px; width: 18px; cursor: pointer; background-size: cover; background-repeat: no-repeat; background-position: center center; }`,
+        //`.btn-stickers { position: absolute; top: 4px; background-color: #E6E6E6; box-shadow: 0px 2px 2px #e0e0e0; border: 1px solid #ccc; border-radius: 50px; height: 18px; width: 18px; cursor: pointer; background-size: cover; background-repeat: no-repeat; background-position: center center; }`,
+        `.btn-stickers { position: absolute; top: 3px; background-color: rgba(217, 217, 217, 0.55); box-shadow: 0px 2px 2px rgba(87, 87, 87, 0.4); border: 1px solid rgba(141, 141, 141, 0.45); border-radius: 50px; height: 18px; width: 18px; cursor: pointer; background-size: cover; background-repeat: no-repeat; background-position: center center; }`,
 
         `.stickers-script:hover { background-color: rgba(185, 185, 185, 0.5); border-radius: 3px; }`,
 
-        `.grp-stickers:hover { box-shadow: 0px 2px 8px #b5b5b5; }`
+        `.btn-stickers:hover { box-shadow: 0px 2px 8px #b5b5b5; }`
     );
 
     // Insertion CSS

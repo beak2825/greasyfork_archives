@@ -1,27 +1,20 @@
 // ==UserScript==
-// @name                Gofile bypass frozen links
+// @name                Gofile bypass high traffic files
 // @namespace           https://greasyfork.org/users/821661
 // @match               https://gofile.io/*
 // @grant               none
-// @version             1.0
+// @version             1.1
 // @run-at              document-start
 // @author              hdyzen
-// @description         bypass frozen files in gofile
+// @description         bypass high traffic alert
 // @license             GPL-3.0-only
-// @downloadURL https://update.greasyfork.org/scripts/528475/Gofile%20bypass%20frozen%20links.user.js
-// @updateURL https://update.greasyfork.org/scripts/528475/Gofile%20bypass%20frozen%20links.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/528475/Gofile%20bypass%20high%20traffic%20files.user.js
+// @updateURL https://update.greasyfork.org/scripts/528475/Gofile%20bypass%20high%20traffic%20files.meta.js
 // ==/UserScript==
 
-function patchResponseJSON() {
-    try {
-        Response.prototype.json = async function () {
-            const resText = await this.text();
-            const modRes = resText.replaceAll('"isFrozen":true', '"isFrozen":false');
+Response.prototype.json = async function () {
+    const resText = await this.text();
+    const modRes = resText.replaceAll('"overloaded":true', '"overloaded":false');
 
-            return JSON.parse(modRes);
-        };
-    } catch (error) {
-        console.error("Error in replace Response.json(): ", error);
-    }
-}
-patchResponseJSON();
+    return JSON.parse(modRes);
+};

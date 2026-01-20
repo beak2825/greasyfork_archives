@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SOOP - 참여 통계 리캡
 // @namespace    https://www.afreecatv.com/
-// @version      4.1.8
+// @version      4.1.9
 // @description  참여 통계에 스트리머 별 총 시간을 표시합니다
 // @author       Jebibot
 // @match        *://broadstatistic.sooplive.co.kr/*
@@ -249,6 +249,7 @@
             preferCurrentTab: true,
           });
           status.textContent = "화면 녹화 준비 중..";
+          container.style.cursor = "none";
           const [track] = stream.getVideoTracks();
           await track.restrictTo(await RestrictionTarget.fromElement(svgNode));
 
@@ -269,8 +270,8 @@
           const gif = new unsafeWindow.GIF({
             workers: 4,
             workerScript,
-            dither: "FloydSteinberg-serpentine",
-            quality: 5,
+            dither: "FloydSteinberg",
+            quality: 4,
             width: w,
             height: w,
           });
@@ -303,6 +304,7 @@
           URL.revokeObjectURL(url);
           status.textContent = "";
           status.style.display = "none";
+          container.style.cursor = "";
         } catch (e) {
           alert(`오류가 발생했습니다: ${e}`);
         }

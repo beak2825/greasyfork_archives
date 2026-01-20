@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         仿M浏览器元素审查
 // @namespace    https://viayoo.com/81gzxv
-// @version      3.2
+// @version      3.3
 // @description  利用AI模仿并生成M浏览器的元素审查，在脚本菜单开启元素审查，专注AD规则生成，支持规则编辑。
 // @author       Via && Gemini
 // @match        *://*/*
@@ -247,42 +247,6 @@
         jsLog.prepend(div);
     }
 
-
-    (function initLogHook() {
-        const levels = { log: '', error: 'log-error', warn: 'log-warn', info: 'log-result' };
-        for (const key in levels) {
-            const original = console[key];
-            console[key] = (...args) => {
-                original.apply(console, args);
-                if (isDebugMode) {
-                    const content = args.length > 1 ? args.map(a => (typeof a === 'object' ? JSON.stringify(a) : String(a))).join(' ') : args[0];
-                    addLog(content, levels[key]);
-                }
-            };
-        }
-        window.addEventListener('error', e => {
-            if (isDebugMode) addLog(e.message, 'log-error');
-        });
-    })();
- 
-    function switchToPage(index) {
-        stage.style.transform = `translateX(-${index * 100}%)`;
-        const btnBack = document.getElementById('mb-btn-back');
-        if (btnBack) btnBack.style.display = index === 0 ? 'none' : 'inline';
-    }
-
-    function updateFoldState() {
-        if (isCollapsed) {
-            panel.style.height = '40px';
-            btnFold.innerText = '▲展开';
-        } else {
-            const adaptiveHeight = window.innerHeight < 600 ? '40%' : '50%';
-            panel.style.height = adaptiveHeight;
-            document.body.style.paddingBottom = adaptiveHeight.replace('%', 'vh');
-            btnFold.innerText = '▼收起';
-        }
-    }
-    
     function updateLogBtnUI() {
         if (isLogging) {
             btnLogSwitch.style.background = '#f1c40f';
@@ -314,6 +278,24 @@
             };
         }
     })();
+ 
+    function switchToPage(index) {
+        stage.style.transform = `translateX(-${index * 100}%)`;
+        const btnBack = document.getElementById('mb-btn-back');
+        if (btnBack) btnBack.style.display = index === 0 ? 'none' : 'inline';
+    }
+
+    function updateFoldState() {
+        if (isCollapsed) {
+            panel.style.height = '40px';
+            btnFold.innerText = '▲展开';
+        } else {
+            const adaptiveHeight = window.innerHeight < 600 ? '40%' : '50%';
+            panel.style.height = adaptiveHeight;
+            document.body.style.paddingBottom = adaptiveHeight.replace('%', 'vh');
+            btnFold.innerText = '▼收起';
+        }
+    }
 
     function startPicking() {
         isPicking = true;
@@ -355,123 +337,142 @@
     [混合规则](https://raw.githubusercontent.com/lingeringsound/adblock_auto/main/Rules/adblock_auto_lite.txt)
     !! 感谢 ！！
     */
-   function generateSmartRules(el) {
-    const domain = window.location.hostname;
-    const tagName = el.tagName.toLowerCase();
-    let rules = [];
-    const isInvalid = (str) => /^[:\d]/.test(str) || str.includes(':') || str.includes('(') || str.includes(')');
-    const adKeywords = /ad|ads|adv|banner|popup|modal|sponsor|gg|google|float|fixed|sticky|overlay|iframe|script|推广|广告/i;
+    function generateSmartRules(el) {
+        const domain = window.location.hostname;
+        const tagName = el.tagName.toLowerCase();
+        let rules = [];
+        const isInvalid = (str) => /^[:\d]/.test(str) || str.includes(':') || str.includes('(') || str.includes(')');
+        const adKeywords = /(?:(?:^|[-_ \b])(?:ad|popup|modal|gg|google|float|fixed|sticky|overlay|iframe|script)(?:$|[-_ \b]))|(?:ads|adv|banner|sponsor|推广|广告|棋牌|葡京|威尼斯|太阳城|新葡京|约炮|直播|成人|抖阴|黄播|博彩|体育|下注|开奖|娱乐城|美高梅|金沙|银河|皇冠|开元|利记|沙巴|亚星|迷情|春药)/i;
 
-    if (el.id && !isInvalid(el.id)) {
-        rules.push(`${domain}###${el.id}`);
-        if (adKeywords.test(el.id)) {
-            rules.push(`###${el.id}`);
+        const getAttr = (node, name) => node.getAttribute(name) || "";
+        const hasAttr = (node, name) => node.hasAttribute(name);
+
+        if (el.id && !isInvalid(el.id)) {
+            rules.push(`${domain}###${el.id}`);
+            if (adKeywords.test(el.id)) rules.push(`###${el.id}`);
         }
-    }
 
-    const classList = Array.from(el.classList).filter(c =>
-        !/\d{5,}/.test(c) && c.length < 35 && c !== 'mb-inspect-hl' && !isInvalid(c)
-    );
-    
-    if (classList.length > 0) {
-        classList.forEach(c => {
-            rules.push(`${domain}##.${c}`);
-            if (adKeywords.test(c)) {
-                rules.push(`##.${c}`);
-                rules.push(`${domain}##${tagName}.${c}`);
+        const classList = Array.from(el.classList).filter(c => 
+            !/\d{5,}/.test(c) && c.length < 35 && c !== 'mb-inspect-hl' && !isInvalid(c)
+        );
+        if (classList.length > 0) {
+            classList.forEach(c => {
+                rules.push(`${domain}##.${c}`);
+                if (adKeywords.test(c)) {
+                    rules.push(`##.${c}`);
+                    rules.push(`${domain}##${tagName}.${c}`);
+                }
+            });
+            if (classList.length >= 2) {
+                const pair = classList.slice(0, 2).join('.');
+                rules.push(`${domain}##.${pair}`);
+                if (adKeywords.test(pair)) rules.push(`##.${pair}`);
             }
+        }
+
+        if (el.previousElementSibling) {
+            const prev = el.previousElementSibling;
+            const prevS = prev.id ? `#${prev.id}` : (prev.classList.length ? `.${prev.classList[0]}` : '');
+            if (prevS && !isInvalid(prevS)) rules.push(`${domain}##${prevS} + ${tagName}`);
+        }
+        if (el.parentElement && el.parentElement.id && el.parentElement.tagName !== 'BODY') {
+            rules.push(`${domain}###${el.parentElement.id} > ${tagName}${classList.length ? '.' + classList[0] : ''}`);
+        }
+
+        let attrRules = [];
+        let sizeBundle = "";
+        for (let attr of el.attributes) {
+            let val = attr.value;
+            if (!val || ['id', 'class'].includes(attr.name)) continue;
+
+            if (['width', 'height'].includes(attr.name)) {
+                sizeBundle += `[${attr.name}="${val}"]`;
+                continue;
+            }
+
+            if (attr.name === 'style') {
+                const isFixed = /fixed|sticky|absolute/.test(val);
+                const isHighZ = /z-index\s*:\s*(99\d+|2147483647)/.test(val);
+                if (isFixed || isHighZ) {
+                    if (isFixed) rules.push(`${domain}##${tagName}[style*="fixed"]`);
+                    if (isHighZ) rules.push(`${domain}##${tagName}[style*="z-index"]`);
+                }
+                continue;
+            }
+
+            if (val.startsWith('data:')) {
+                const b64 = val.match(/^data:[^;]+;base64,[A-Za-z0-9+/=]{20,50}/);
+                if (b64) attrRules.push(`${tagName}[${attr.name}^="${b64[0]}"]`);
+                continue;
+            }
+
+            if (attr.name.startsWith('data-') || ['src', 'href', 'title', 'alt', 'ref', 'rel', 'onclick', 'aria-label'].includes(attr.name)) {
+                if (adKeywords.test(attr.name) || adKeywords.test(val)) {
+                    rules.push(`${domain}##${tagName}[${attr.name}]`);
+                    if (val.length > 0 && val.length < 50) {
+                        const subVal = val.split('-')[0].split(' ')[0].substring(0, 20);
+                        rules.push(`${domain}##${tagName}[${attr.name}*="${subVal}"]`);
+                    }
+                }
+
+                if (/^(https?:|)\/\//.test(val)) {
+                    const m = val.match(/^((?:https?:|)\/\/[^\/]+\/)/);
+                    if (m) attrRules.push(`${tagName}[${attr.name}^="${m[1]}"]`);
+                } else if (val.length > 0 && val.length < 100) {
+                    attrRules.push(`${tagName}[${attr.name}*="${val}"]`);
+                }
+            }
+        }
+
+        if (tagName === 'a' || (tagName === 'img' && el.closest('a'))) {
+            const anchor = tagName === 'a' ? el : el.closest('a');
+            const img = anchor.querySelector('img');
+            const aLabel = getAttr(anchor, 'aria-label') || getAttr(anchor, 'title');
+            const imgAlt = img ? (getAttr(img, 'alt') || getAttr(img, 'aria-label')) : "";
+            const keyLabel = (aLabel || imgAlt || "").split('-')[0].substring(0, 10);
+            
+            const aOnclick = hasAttr(anchor, 'onclick');
+            const aRef = getAttr(anchor, 'ref') || getAttr(anchor, 'rel');
+            
+            if (aOnclick || adKeywords.test(aRef)) {
+                let base = aOnclick ? `a[onclick]` : `a[ref*="sponsored"]`;
+                if (keyLabel) {
+                    rules.push(`${domain}##${base}[aria-label*="${keyLabel}"]`);
+                    if (img) rules.push(`${domain}##${base} > img[alt*="${keyLabel}"]`);
+                    if (img) rules.push(`${domain}##a[href] img[alt*="${keyLabel}"]`);
+                }
+                if (img && hasAttr(img, 'data-src')) rules.push(`${domain}##${base} img[data-src]`);
+            }
+        }
+
+        if (sizeBundle) rules.push(`${domain}##${tagName}${sizeBundle}`);
+        attrRules.forEach(r => rules.push(`${domain}##${r}`));
+
+        const adTags = ['iframe', 'embed', 'ins', 'object'];
+        if (adTags.includes(tagName)) rules.push(`${domain}##${tagName}`);
+
+        rules = [...new Set(rules)];
+        rules.sort((a, b) => {
+            const getWeight = (s) => {
+                const hasDomain = s.includes(domain);
+                if (adKeywords.test(s)) return hasDomain ? 1 : 2;
+                if (s.includes('[onclick]') || s.includes('[ref*=')) return 2;
+                if (s.includes('###') || s.includes('##.')) return hasDomain ? 3 : 4;
+                if (s.includes(' > ') || s.includes(' + ')) return 5;
+                return 6;
+            };
+            const wa = getWeight(a), wb = getWeight(b);
+            return wa !== wb ? wa - wb : a.length - b.length;
         });
-        if (classList.length >= 2) {
-            const pair = classList.slice(0, 2).join('.');
-            rules.push(`${domain}##.${pair}`);
-            if (adKeywords.test(pair)) rules.push(`##.${pair}`);
-        }
-    }
 
-    if (el.previousElementSibling) {
-        const prev = el.previousElementSibling;
-        const prevS = prev.id ? `#${prev.id}` : (prev.classList.length ? `.${prev.classList[0]}` : '');
-        if (prevS && !isInvalid(prevS)) rules.push(`${domain}##${prevS} + ${tagName}`);
-    }
-    if (el.parentElement && el.parentElement.id && el.parentElement.tagName !== 'BODY') {
-        rules.push(`${domain}###${el.parentElement.id} > ${tagName}${classList.length ? '.' + classList[0] : ''}`);
-    }
-
-    let attrRules = [];
-    let sizeBundle = "";
-    for (let attr of el.attributes) {
-        let val = attr.value;
-        if (!val || ['id', 'class'].includes(attr.name)) continue;
-
-        if (['width', 'height'].includes(attr.name)) {
-            sizeBundle += `[${attr.name}="${val}"]`;
-            continue;
-        }
-
-        if (attr.name === 'style') {
-            const isFixed = /fixed|sticky|absolute/.test(val);
-            const isHighZ = /z-index\s*:\s*(99\d+|2147483647)/.test(val);
-            if (isFixed || isHighZ) {
-                if (isFixed) rules.push(`${domain}##${tagName}[style*="fixed"]`);
-                if (isHighZ) rules.push(`${domain}##${tagName}[style*="z-index"]`);
-            }
-            continue;
-        }
-
-        if (val.startsWith('data:')) {
-            const b64 = val.match(/^data:[^;]+;base64,[A-Za-z0-9+/=]{20,50}/);
-            if (b64) attrRules.push(`${tagName}[${attr.name}^="${b64[0]}"]`);
-            continue;
-        }
-
-        if (attr.name.startsWith('data-')) {
-            if (adKeywords.test(attr.name) || adKeywords.test(val)) {
-                rules.push(`${domain}##${tagName}[${attr.name}]`);
-            }
-            if (val.length < 60) attrRules.push(`${tagName}[${attr.name}="${val}"]`);
-            continue;
-        }
-
-        if (['src', 'href', 'title', 'alt'].includes(attr.name)) {
-            if (adKeywords.test(val)) {
-                rules.push(`${domain}##${tagName}[${attr.name}*="${val.substring(0, 20)}"]`);
-            }
-            if (/^(https?:|)\/\//.test(val)) {
-                const m = val.match(/^((?:https?:|)\/\/[^\/]+\/)/);
-                if (m) attrRules.push(`${tagName}[${attr.name}^="${m[1]}"]`);
-            } else if (val.length > 0 && val.length < 100) {
-                attrRules.push(`${tagName}[${attr.name}*="${val}"]`);
-            }
-        }
-    }
-
-    if (sizeBundle) rules.push(`${domain}##${tagName}${sizeBundle}`);
-    attrRules.forEach(r => rules.push(`${domain}##${r}`));
-
-    const adTags = ['iframe', 'embed', 'ins', 'object'];
-    if (adTags.includes(tagName)) rules.push(`${domain}##${tagName}`);
-
-    rules = [...new Set(rules)];
-    rules.sort((a, b) => {
-        const getWeight = (s) => {
-            const hasDomain = s.includes(domain);
-            if (adKeywords.test(s)) return hasDomain ? 1 : 2;
-            if (s.includes('###') || s.includes('##.')) return hasDomain ? 3 : 4;
-            if (s.includes(' > ') || s.includes(' + ')) return 5;
-            return 6;
-        };
-        const wa = getWeight(a), wb = getWeight(b);
-        return wa !== wb ? wa - wb : a.length - b.length;
-    });
-
-    const genericTags = ['div', 'span', 'p', 'li', 'ul', 'ins', 'section', 'article', 'img', 'header', 'footer'];
+        const genericTags = ['div', 'span', 'p', 'li', 'ul', 'ins', 'section', 'article', 'img', 'header', 'footer'];
         return rules.filter(r => {
-         const sel = r.split(/###?/)[1];
-          if (!sel) return false;
-          if (genericTags.includes(sel.toLowerCase())) return false;
-          if (sel.includes('*=') && sel.includes('http') && sel.length > 120) return false;
-          return true;
-       });
+            const sel = r.split(/###?/)[1];
+            if (!sel) return false;
+            if (genericTags.includes(sel.toLowerCase())) return false;
+            if (sel.includes('*=') && sel.includes('http') && sel.length > 120) return false;
+            return true;
+        });
     }
 
     function renderAdPage() {
@@ -818,9 +819,11 @@
         }
         if (e.type === 'click' || e.type === 'pointerup' || e.type === 'touchend') {
             const touch = e.changedTouches ? e.changedTouches[0] : e; const diffX = Math.abs(touch.clientX - startX); const diffY = Math.abs(touch.clientY - startY);
-            if (diffX < 10 && diffY < 10) { e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation(); highlight(e.target); renderDOM();
-            if (isCollapsed) { isCollapsed = false;updateFoldState(); }
-              return false;
+            if (diffX < 10 && diffY < 10) { 
+                e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation(); 
+                highlight(e.target); renderDOM();
+                if (isCollapsed) { isCollapsed = false; updateFoldState(); }
+                return false;
             }
         }
     };

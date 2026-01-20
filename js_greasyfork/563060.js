@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gander
 // @namespace    waiter7@red
-// @version      1.3.6
+// @version      1.3.7
 // @description  Add preview popups for torrent/group links on redacted.sh and orpheus.network
 // @author       waiter7
 // @match        https://redacted.sh/*
@@ -273,6 +273,14 @@
 
             // Only add icon if it's a valid artist link
             if (!artistId) return;
+
+            // Skip if we're on artist.php and the link is to the same artist
+            if (window.location.pathname === '/artist.php') {
+                const currentArtistId = currentUrl.searchParams.get('id');
+                if (currentArtistId && artistId === currentArtistId) {
+                    return;
+                }
+            }
 
             // Create preview icon
             const icon = createPreviewIcon('Preview artist', (e) => {

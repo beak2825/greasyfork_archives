@@ -8,7 +8,7 @@
 // @grant         GM_getValue
 // @resource      theList https://files.catbox.moe/idfplf.json
 // @homepageURL   https://web.archive.org/web/20210415002314/https://holocaustdeprogrammingcourse.com/
-// @version       1488.0.6
+// @version       1488.0.7
 // @license       GNU GPLv3
 // @namespace https://greasyfork.org/users/1185877
 // @downloadURL https://update.greasyfork.org/scripts/480944/%22Nonfren%20Radar%22.user.js
@@ -20,7 +20,7 @@
 
   // Build a trie from the list of phrases
   var trie = theList.reduce(function (node, phrase) {
-    var words = phrase.toLowerCase().split(' ');
+    var words = phrase.toLowerCase().split(" ");
     var current = node;
     words.forEach(function (word) {
       if (!current[word]) {
@@ -36,74 +36,100 @@
   var isDisabled = GM_getValue(window.location.hostname, false);
 
   // Add a menu command to disable the script for the current site
-  GM_registerMenuCommand('Disable script for this site', function() {
+  GM_registerMenuCommand("Disable script for this site", function () {
     if (!isDisabled) {
       GM_setValue(window.location.hostname, true);
-      console.log('Script disabled for this site');
+      console.log("Script disabled for this site");
       location.reload(); // Reload the page to apply the changes
     } else {
-      console.log('Script is already disabled for this site');
+      console.log("Script is already disabled for this site");
     }
   });
 
   // Add a menu command to enable the script for the current site
-  GM_registerMenuCommand('Enable script for this site', function() {
+  GM_registerMenuCommand("Enable script for this site", function () {
     if (isDisabled) {
       GM_setValue(window.location.hostname, false);
-      console.log('Script enabled for this site');
+      console.log("Script enabled for this site");
       location.reload(); // Reload the page to apply the changes
     } else {
-      console.log('Script is already enabled for this site');
+      console.log("Script is already enabled for this site");
     }
   });
 
   if (isDisabled) {
-    console.log('Script is disabled for this site');
+    console.log("Script is disabled for this site");
     return;
   }
 
-  function searchTrie(node, trie) {
-    var text = node.nodeValue;
-    var words = text.split(/\s+/);
-    var output = [];
-    var i = 0;
+function searchTrie(node, trie) {
+  var text = node.nodeValue;
 
-    while (i < words.length) {
-      var current = trie;
-      var sequence = '';
-      var j = i;
+  // Split while preserving whitespace
+  var tokens = text.split(/(\s+)/);
+  var output = [];
+  var i = 0;
 
-      while (j < words.length && current[words[j].toLowerCase()]) {
-        current = current[words[j].toLowerCase()];
-        sequence += words[j] + ' ';
+  while (i < tokens.length) {
+    // If it's whitespace, keep it as-is
+    if (/^\s+$/.test(tokens[i])) {
+      output.push(tokens[i]);
+      i++;
+      continue;
+    }
+
+    var current = trie;
+    var sequence = "";
+    var matchedTokens = [];
+    var j = i;
+
+    // Try to match a phrase
+    while (j < tokens.length) {
+      // Skip whitespace tokens during matching
+      if (/^\s+$/.test(tokens[j])) {
         j++;
+        continue;
       }
 
-      if (current.isEndOfPhrase) {
-        output.push("(((" + sequence.trim() + ")))");
-        i = j;
+      if (current[tokens[j].toLowerCase()]) {
+        current = current[tokens[j].toLowerCase()];
+        matchedTokens.push(tokens[j]);
+        j++;
       } else {
-        output.push(words[i]);
-        i++;
+        break;
       }
     }
 
-    node.nodeValue = output.join(' ');
+    if (current.isEndOfPhrase && matchedTokens.length > 0) {
+      // Found a match - wrap it
+      output.push("(((" + matchedTokens.join(" ") + ")))");
+      // Skip all tokens that were part of the match (including whitespace between them)
+      i = j;
+    } else {
+      // No match - keep the original token
+      output.push(tokens[i]);
+      i++;
+    }
   }
+
+  node.nodeValue = output.join("");
+}
 
   function handleText(textNode) {
     var currentNode = textNode.parentNode;
     while (currentNode) {
       var nodeName = currentNode.nodeName.toLowerCase();
       // Skip processing if the text node is within an interactive or code-related element
-      if (nodeName === 'input' ||
-          nodeName === 'textarea' ||
-          nodeName === 'code' ||
-          nodeName === 'pre' ||
-          nodeName === 'kbd' ||
-          nodeName === 'samp' ||
-          nodeName === 'xmp' ||
-          currentNode.isContentEditable) {
+      if (
+        nodeName === "input" ||
+        nodeName === "textarea" ||
+        nodeName === "code" ||
+        nodeName === "pre" ||
+        nodeName === "kbd" ||
+        nodeName === "samp" ||
+        nodeName === "xmp" ||
+        currentNode.isContentEditable
+      ) {
         return;
       }
       currentNode = currentNode.parentNode;

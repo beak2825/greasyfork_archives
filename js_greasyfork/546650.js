@@ -16,7 +16,7 @@
 // @namespace            https://utags.pipecraft.net/
 // @homepageURL          https://github.com/utags/utags#readme
 // @supportURL           https://github.com/utags/utags/issues
-// @version              0.23.3
+// @version              0.23.6
 // @description          Enhance your browsing experience by adding custom tags and notes to users, posts, and videos across the web. Perfect for organizing content, identifying users, and filtering out unwanted posts. Also functions as a modern bookmark management tool. Supports 100+ popular websites including X (Twitter), Reddit, Facebook, Threads, Instagram, YouTube, TikTok, GitHub, Hacker News, Greasy Fork, pixiv, Twitch, and many more.
 // @description:zh-CN    为网页上的用户、帖子、视频添加自定义标签和备注，让你的浏览体验更加个性化和高效。轻松识别用户、整理内容、过滤无关信息。同时也是一个现代化的书签管理工具。支持 100+ 热门网站，包括 V2EX、X (Twitter)、YouTube、TikTok、Reddit、GitHub、B站、抖音、小红书、知乎、掘金、豆瓣、吾爱破解、pixiv、LINUX DO、小众软件、NGA、BOSS直聘等。
 // @description:zh-HK    為網頁上的用戶、帖子、視頻添加自定義標籤和備註，讓你的瀏覽體驗更加個性化和高效。輕鬆識別用戶、整理內容、過濾無關信息。同時也是一個現代化的書籤管理工具。支持 100+ 熱門網站，包括 X (Twitter)、Reddit、Facebook、Instagram、YouTube、TikTok、GitHub、Hacker News、Greasy Fork、pixiv、Twitch 等。
@@ -142,6 +142,7 @@
 // @include              https://simpcity.hk/*
 // @include              https://simpcity.rs/*
 // @include              https://simpcity.ax/*
+// @include              https://*.asia/*
 // @connect              dav.jianguoyun.com
 // @connect              localhost
 // @connect              *
@@ -871,7 +872,7 @@
     }
   }
   var style_default =
-    ':host{all:initial;--browser-extension-settings-background-color: #f2f2f7;--browser-extension-settings-text-color: #444444;--browser-extension-settings-link-color: #217dfc;--browser-extension-settings-border-radius: 8px;--sb-track-color: #00000000;--sb-thumb-color: #33334480;--sb-size: 2px;--font-family: "helvetica neue", "microsoft yahei", arial, sans-serif}:host .browser_extension_settings_v2_wrapper{position:fixed;top:10px;right:30px;display:none;z-index:2147483647;border-radius:var(--browser-extension-settings-border-radius);-webkit-box-shadow:0px 10px 39px 10px rgba(62,66,66,.22);-moz-box-shadow:0px 10px 39px 10px rgba(62,66,66,.22);box-shadow:0px 10px 39px 10px rgba(62,66,66,.22) !important;display:flex;background-color:var(--browser-extension-settings-background-color);font-family:var(--font-family);border-radius:var(--browser-extension-settings-border-radius)}:host .browser_extension_settings_v2_wrapper h1,:host .browser_extension_settings_v2_wrapper h2{border:none;color:var(--browser-extension-settings-text-color);padding:0;font-family:var(--font-family);line-height:normal;letter-spacing:normal}:host .browser_extension_settings_v2_wrapper h1{font-size:26px;font-weight:800;margin:18px 0}:host .browser_extension_settings_v2_wrapper h2{font-size:18px;font-weight:600;margin:14px 0}:host .browser_extension_settings_v2_wrapper footer{display:flex;justify-content:center;flex-direction:column;font-size:11px;margin:10px auto 0px;background-color:var(--browser-extension-settings-background-color);color:var(--browser-extension-settings-text-color);font-family:var(--font-family)}:host .browser_extension_settings_v2_wrapper footer a{color:var(--browser-extension-settings-link-color) !important;font-family:var(--font-family);text-decoration:none;padding:0}:host .browser_extension_settings_v2_wrapper footer p{text-align:center;padding:0;margin:2px;line-height:13px;font-size:11px;color:var(--browser-extension-settings-text-color);font-family:var(--font-family)}:host .thin_scrollbar{scrollbar-color:var(--sb-thumb-color) var(--sb-track-color);scrollbar-width:thin}:host .thin_scrollbar::-webkit-scrollbar{width:var(--sb-size)}:host .thin_scrollbar::-webkit-scrollbar-track{background:var(--sb-track-color);border-radius:10px}:host .thin_scrollbar::-webkit-scrollbar-thumb{background:var(--sb-thumb-color);border-radius:10px}.browser_extension_settings_v2_main{min-width:300px;max-height:90vh;overflow-y:auto;overflow-x:hidden;border-radius:var(--browser-extension-settings-border-radius);box-sizing:border-box;padding:10px 15px;background-color:var(--browser-extension-settings-background-color);color:var(--browser-extension-settings-text-color);font-family:var(--font-family)}.browser_extension_settings_v2_main h2{text-align:center;margin:5px 0 0}.browser_extension_settings_v2_main .close-button{cursor:pointer;width:18px;height:18px;opacity:.5;transition:opacity .2s}.browser_extension_settings_v2_main .close-button:hover{opacity:1}.browser_extension_settings_v2_main .option_groups{background-color:#fff;padding:6px 15px 6px 15px;border-radius:10px;display:flex;flex-direction:column;margin:10px 0 0}.browser_extension_settings_v2_main .option_groups .action{font-size:14px;padding:6px 0 6px 0;color:var(--browser-extension-settings-link-color);cursor:pointer}.browser_extension_settings_v2_main .bes_external_link{font-size:14px;padding:6px 0 6px 0}.browser_extension_settings_v2_main .bes_external_link a,.browser_extension_settings_v2_main .bes_external_link a:visited,.browser_extension_settings_v2_main .bes_external_link a:hover{color:var(--browser-extension-settings-link-color);font-family:var(--font-family);text-decoration:none;cursor:pointer}.browser_extension_settings_v2_main .option_groups textarea{background-color:var(--browser-extension-settings-background-color);color:var(--browser-extension-settings-text-color);font-size:12px;margin:10px 0 10px 0;padding:4px 8px;height:100px;width:100%;border:1px solid #a9a9a9;border-radius:4px;box-sizing:border-box}.browser_extension_settings_v2_main .switch_option,.browser_extension_settings_v2_main .select_option{display:flex;justify-content:space-between;align-items:center;padding:6px 0 6px 0;font-size:14px}.browser_extension_settings_v2_main .option_groups>*{border-top:1px solid #ccc}.browser_extension_settings_v2_main .option_groups>*:first-child{border-top:none}.browser_extension_settings_v2_main .bes_option>.bes_icon{width:24px;height:24px;margin-right:10px}.browser_extension_settings_v2_main .bes_option>.bes_title{margin-right:10px;flex-grow:1}.browser_extension_settings_v2_main .bes_option>.bes_select{color:var(--browser-extension-settings-text-color);box-sizing:border-box;background-color:#fff;height:24px;padding:0 2px 0 2px;margin:0;border-radius:6px;border:1px solid #ccc}.browser_extension_settings_v2_main .option_groups .bes_tip{position:relative;margin:0;padding:0 15px 0 0;border:none;max-width:none;font-size:14px}.browser_extension_settings_v2_main .option_groups .bes_tip .bes_tip_anchor{cursor:help;text-decoration:underline}.browser_extension_settings_v2_main .option_groups .bes_tip .bes_tip_content{position:absolute;bottom:15px;left:0;background-color:#fff;color:var(--browser-extension-settings-text-color);text-align:left;overflow-y:auto;max-height:300px;padding:10px;display:none;border-radius:5px;-webkit-box-shadow:0px 10px 39px 10px rgba(62,66,66,.22);-moz-box-shadow:0px 10px 39px 10px rgba(62,66,66,.22);box-shadow:0px 10px 39px 10px rgba(62,66,66,.22) !important}.browser_extension_settings_v2_main .option_groups .bes_tip .bes_tip_anchor:hover+.bes_tip_content,.browser_extension_settings_v2_main .option_groups .bes_tip .bes_tip_content:hover{display:block}.browser_extension_settings_v2_main .option_groups .bes_tip p,.browser_extension_settings_v2_main .option_groups .bes_tip pre{margin:revert;padding:revert}.browser_extension_settings_v2_main .option_groups .bes_tip pre{font-family:Consolas,panic sans,bitstream vera sans mono,Menlo,microsoft yahei,monospace;font-size:13px;letter-spacing:.015em;line-height:120%;white-space:pre;overflow:auto;background-color:#f5f5f5;word-break:normal;overflow-wrap:normal;padding:.5em;border:none}.browser_extension_settings_v2_main .bes_switch_container{--button-width: 51px;--button-height: 24px;--toggle-diameter: 20px;--color-off: #e9e9eb;--color-on: #34c759;width:var(--button-width);height:var(--button-height);position:relative;padding:0;margin:0;flex:none;user-select:none}.browser_extension_settings_v2_main input[type=checkbox]{opacity:0;width:0;height:0;position:absolute}.browser_extension_settings_v2_main .bes_switch{width:100%;height:100%;display:block;background-color:var(--color-off);border-radius:calc(var(--button-height)/2);border:none;cursor:pointer;transition:all .2s ease-out}.browser_extension_settings_v2_main .bes_switch::before{display:none}.browser_extension_settings_v2_main .bes_slider{width:var(--toggle-diameter);height:var(--toggle-diameter);position:absolute;left:2px;top:calc(50% - var(--toggle-diameter)/2);border-radius:50%;background:#fff;box-shadow:0px 3px 8px rgba(0,0,0,.15),0px 3px 1px rgba(0,0,0,.06);transition:all .2s ease-out;cursor:pointer}.browser_extension_settings_v2_main input[type=checkbox]:checked+.bes_switch{background-color:var(--color-on)}.browser_extension_settings_v2_main input[type=checkbox]:checked+.bes_switch .bes_slider{left:calc(var(--button-width) - var(--toggle-diameter) - 2px)}@media(max-width: 500px){:host{right:10px}.browser_extension_settings_v2_main{max-height:85%}}'
+    ':host{all:initial;--browser-extension-settings-background-color: #f2f2f7;--browser-extension-settings-text-color: #444444;--browser-extension-settings-link-color: #217dfc;--browser-extension-settings-border-radius: 8px;--browser-extension-settings-group-background-color: #ffffff;--browser-extension-settings-group-separator-color: #cccccc;--darkreader-border--browser-extension-settings-group-background-color: #303436;--darkreader-bg--browser-extension-settings-group-background-color: #303436;--darkreader-bg--browser-extension-settings-group-separator-color: #181a1b;--sb-track-color: #00000000;--sb-thumb-color: #33334480;--sb-size: 2px;--font-family: "helvetica neue", "microsoft yahei", arial, sans-serif}:host .browser_extension_settings_v2_wrapper{position:fixed;top:10px;right:30px;display:none;z-index:2147483647;border-radius:var(--browser-extension-settings-border-radius);-webkit-box-shadow:0px 10px 39px 10px rgba(62,66,66,.22);-moz-box-shadow:0px 10px 39px 10px rgba(62,66,66,.22);box-shadow:0px 10px 39px 10px rgba(62,66,66,.22) !important;display:flex;background-color:var(--browser-extension-settings-background-color);font-family:var(--font-family);border-radius:var(--browser-extension-settings-border-radius)}:host .browser_extension_settings_v2_wrapper h1,:host .browser_extension_settings_v2_wrapper h2{border:none;color:var(--browser-extension-settings-text-color);padding:0;font-family:var(--font-family);line-height:normal;letter-spacing:normal}:host .browser_extension_settings_v2_wrapper h1{font-size:26px;font-weight:800;margin:18px 0}:host .browser_extension_settings_v2_wrapper h2{font-size:18px;font-weight:600;margin:14px 0}:host .browser_extension_settings_v2_wrapper footer{display:flex;justify-content:center;flex-direction:column;font-size:11px;margin:10px auto 0px;background-color:var(--browser-extension-settings-background-color);color:var(--browser-extension-settings-text-color);font-family:var(--font-family)}:host .browser_extension_settings_v2_wrapper footer a{color:var(--browser-extension-settings-link-color) !important;font-family:var(--font-family);text-decoration:none;padding:0}:host .browser_extension_settings_v2_wrapper footer p{text-align:center;padding:0;margin:2px;line-height:13px;font-size:11px;color:var(--browser-extension-settings-text-color);font-family:var(--font-family)}:host .thin_scrollbar{scrollbar-color:var(--sb-thumb-color) var(--sb-track-color);scrollbar-width:thin}:host .thin_scrollbar::-webkit-scrollbar{width:var(--sb-size)}:host .thin_scrollbar::-webkit-scrollbar-track{background:var(--sb-track-color);border-radius:10px}:host .thin_scrollbar::-webkit-scrollbar-thumb{background:var(--sb-thumb-color);border-radius:10px}.browser_extension_settings_v2_main{min-width:300px;max-height:90vh;overflow-y:auto;overflow-x:hidden;border-radius:var(--browser-extension-settings-border-radius);box-sizing:border-box;padding:10px 15px;background-color:var(--browser-extension-settings-background-color);color:var(--browser-extension-settings-text-color);font-family:var(--font-family)}.browser_extension_settings_v2_main h2{text-align:center;margin:5px 0 0}.browser_extension_settings_v2_main .close-button{cursor:pointer;width:18px;height:18px;opacity:.5;transition:opacity .2s}.browser_extension_settings_v2_main .close-button:hover{opacity:1}.browser_extension_settings_v2_main .option_groups{background-color:var(--browser-extension-settings-group-separator-color);padding:0;border-style:solid;border-color:var(--browser-extension-settings-group-background-color);border-width:6px 15px;border-radius:10px;display:flex;flex-direction:column;gap:1px;margin:10px 0 0}.browser_extension_settings_v2_main .option_groups .action{font-size:14px;padding:6px 0 6px 0;color:var(--browser-extension-settings-link-color);cursor:pointer}.browser_extension_settings_v2_main .bes_external_link{font-size:14px;padding:6px 0 6px 0}.browser_extension_settings_v2_main .bes_external_link a,.browser_extension_settings_v2_main .bes_external_link a:visited,.browser_extension_settings_v2_main .bes_external_link a:hover{color:var(--browser-extension-settings-link-color);font-family:var(--font-family);text-decoration:none;cursor:pointer}.browser_extension_settings_v2_main .option_groups textarea{background-color:var(--browser-extension-settings-background-color);color:var(--browser-extension-settings-text-color);font-size:12px;margin:10px 0 10px 0;padding:4px 8px;height:100px;width:100%;border:1px solid #a9a9a9;border-radius:4px;box-sizing:border-box}.browser_extension_settings_v2_main .switch_option,.browser_extension_settings_v2_main .select_option{display:flex;justify-content:space-between;align-items:center;padding:6px 0 6px 0;font-size:14px}.browser_extension_settings_v2_main .option_groups>*{background-color:var(--browser-extension-settings-group-background-color)}.browser_extension_settings_v2_main .bes_option>.bes_icon{width:24px;height:24px;margin-right:10px}.browser_extension_settings_v2_main .bes_option>.bes_title{margin-right:10px;flex-grow:1}.browser_extension_settings_v2_main .bes_option>.bes_select{color:var(--browser-extension-settings-text-color);box-sizing:border-box;background-color:var(--browser-extension-settings-group-background-color);height:24px;padding:0 2px 0 2px;margin:0;border-radius:6px;border:1px solid #ccc}.browser_extension_settings_v2_main .option_groups .bes_tip{position:relative;margin:0;margin-top:-1px;padding:6px 15px 6px 0;border:none;max-width:none;font-size:14px}.browser_extension_settings_v2_main .option_groups .bes_tip .bes_tip_anchor{cursor:help;text-decoration:underline}.browser_extension_settings_v2_main .option_groups .bes_tip .bes_tip_content{position:absolute;bottom:15px;left:0;background-color:#fff;color:var(--browser-extension-settings-text-color);text-align:left;overflow-y:auto;max-height:300px;padding:10px;display:none;border-radius:5px;-webkit-box-shadow:0px 10px 39px 10px rgba(62,66,66,.22);-moz-box-shadow:0px 10px 39px 10px rgba(62,66,66,.22);box-shadow:0px 10px 39px 10px rgba(62,66,66,.22) !important}.browser_extension_settings_v2_main .option_groups .bes_tip .bes_tip_anchor:hover+.bes_tip_content,.browser_extension_settings_v2_main .option_groups .bes_tip .bes_tip_content:hover{display:block}.browser_extension_settings_v2_main .option_groups .bes_tip p,.browser_extension_settings_v2_main .option_groups .bes_tip pre{margin:revert;padding:revert}.browser_extension_settings_v2_main .option_groups .bes_tip pre{font-family:Consolas,panic sans,bitstream vera sans mono,Menlo,microsoft yahei,monospace;font-size:13px;letter-spacing:.015em;line-height:120%;white-space:pre;overflow:auto;background-color:#f5f5f5;word-break:normal;overflow-wrap:normal;padding:.5em;border:none}.browser_extension_settings_v2_main .bes_switch_container{--button-width: 51px;--button-height: 24px;--toggle-diameter: 20px;--color-off: #e9e9eb;--color-on: #34c759;width:var(--button-width);height:var(--button-height);position:relative;padding:0;margin:0;flex:none;user-select:none}.browser_extension_settings_v2_main input[type=checkbox]{opacity:0;width:0;height:0;position:absolute}.browser_extension_settings_v2_main .bes_switch{width:100%;height:100%;display:block;background-color:var(--color-off);border-radius:calc(var(--button-height)/2);border:none;cursor:pointer;transition:all .2s ease-out}.browser_extension_settings_v2_main .bes_switch::before{display:none}.browser_extension_settings_v2_main .bes_slider{width:var(--toggle-diameter);height:var(--toggle-diameter);position:absolute;left:2px;top:calc(50% - var(--toggle-diameter)/2);border-radius:50%;background:#fff;box-shadow:0px 3px 8px rgba(0,0,0,.15),0px 3px 1px rgba(0,0,0,.06);transition:all .2s ease-out;cursor:pointer}.browser_extension_settings_v2_main input[type=checkbox]:checked+.bes_switch{background-color:var(--color-on)}.browser_extension_settings_v2_main input[type=checkbox]:checked+.bes_switch .bes_slider{left:calc(var(--button-width) - var(--toggle-diameter) - 2px)}@media(max-width: 500px){:host{right:10px}.browser_extension_settings_v2_main{max-height:85%}}'
   function createSwitch(options = {}) {
     const container = createElement("label", { class: "bes_switch_container" })
     const checkbox = createElement(
@@ -1255,8 +1256,11 @@
   var settingsTable = {}
   var settings = {}
   async function getSettings() {
-    var _a
-    return (_a = await getValue2(storageKey)) != null ? _a : {}
+    let settings2 = await getValue2(storageKey)
+    if (!settings2 || typeof settings2 !== "object") {
+      settings2 = {}
+    }
+    return settings2
   }
   async function saveSettingsValue(key, value) {
     const settings2 = await getSettings()
@@ -1522,6 +1526,7 @@
             }
             case "action": {
               addElement2(optionGroup, "a", {
+                "data-key": key,
                 class: "action",
                 textContent: item.title,
                 onclick: item.onclick,
@@ -1533,6 +1538,7 @@
                 class: "bes_external_link",
               })
               addElement2(div4, "a", {
+                "data-key": key,
                 textContent: item.title,
                 href: item.url,
                 target: "_blank",
@@ -1596,7 +1602,7 @@
     }
     return settingsMain
   }
-  function addCommonSettings(settingsTable2) {
+  function addCommonSettings(settingsTable2, options) {
     let maxGroup = 0
     for (const key in settingsTable2) {
       if (Object.hasOwn(settingsTable2, key)) {
@@ -1607,12 +1613,14 @@
         }
       }
     }
-    settingsTable2.locale = {
-      title: i("settings.locale"),
-      type: "select",
-      defaultValue: "",
-      options: {},
-      group: ++maxGroup,
+    if (options.locale) {
+      settingsTable2.locale = {
+        title: i("settings.locale"),
+        type: "select",
+        defaultValue: "",
+        options: {},
+        group: ++maxGroup,
+      }
     }
   }
   function handleShowSettingsUrl() {
@@ -1654,9 +1662,13 @@
     resetI18n(lastLocale)
     const options = optionsProvider()
     settingsOptions = options
-    settingsTable = options.settingsTable || {}
-    addCommonSettings(settingsTable)
+    settingsTable = __spreadValues({}, options.settingsTable)
     const availableLocales3 = options.availableLocales
+    addCommonSettings(settingsTable, {
+      locale: Boolean(
+        availableLocales3 == null ? void 0 : availableLocales3.length
+      ),
+    })
     if (availableLocales3 == null ? void 0 : availableLocales3.length) {
       initAvailableLocales(availableLocales3)
       const localeSelect = settingsTable.locale
@@ -3839,6 +3851,7 @@
     return store
   }
   async function getBookmarksStore() {
+    console.log("Start getBookmarksStore")
     try {
       const bookmarksStore =
         (await getValue2(storageKey2)) || createEmptyBookmarksStore()
@@ -3856,13 +3869,28 @@
       return createEmptyBookmarksStore()
     }
   }
+  async function getBookmarksStoreFromRemote(bookmarksStore) {
+    console.log("Start getBookmarksStoreFromRemote")
+    try {
+      if (!bookmarksStore || !bookmarksStore.data || !bookmarksStore.meta) {
+        return await getBookmarksStore()
+      }
+      cachedUrlMap = filterDeleted(bookmarksStore.data)
+      return bookmarksStore
+    } catch (error) {
+      console.error("Error getting bookmarks store:", error)
+      return getBookmarksStore()
+    }
+  }
   async function serializeBookmarks() {
     const bookmarksStore = await getBookmarksStore()
     return JSON.stringify(bookmarksStore)
   }
   async function persistBookmarksStore(bookmarksStore) {
+    console.log("Start persistBookmarksStore")
     await setValue2(storageKey2, bookmarksStore)
     cachedUrlMap = bookmarksStore ? filterDeleted(bookmarksStore.data) : {}
+    console.log("Finish persistBookmarksStore")
   }
   async function deserializeBookmarks(data) {
     const bookmarksStore = data ? JSON.parse(data) : void 0
@@ -3883,6 +3911,7 @@
   var getTags = getBookmark
   async function saveBookmark(key, tags, meta) {
     var _a, _b, _c, _d
+    console.log("saveBookmark", key, tags, meta)
     const now = Date.now()
     const bookmarksStore = await getBookmarksStore()
     const urlMap = bookmarksStore.data
@@ -4175,11 +4204,15 @@
     return true
   }
   var dataUpdated = false
+  var cachedRemoteData
   async function initBookmarksStore() {
     console.log("Start init BookmarksStore")
     dataUpdated = false
     cachedUrlMap = {}
-    const bookmarksStore = await getBookmarksStore()
+    const bookmarksStore = cachedRemoteData
+      ? await getBookmarksStoreFromRemote(cachedRemoteData)
+      : await getBookmarksStore()
+    cachedRemoteData = void 0
     const meta = bookmarksStore.meta
     const isVersionCompatible = await checkVersion(meta)
     if (!isVersionCompatible) {
@@ -4211,25 +4244,30 @@
       setPolling(true)
       await addValueChangeListener2(
         storageKey2,
-        async (_key, _oldValue, _newValue, remote) => {
+        async (_key, _oldValue, newValue, remote) => {
           if (remote) {
             console.log("Data updated in other tab, clearing cache")
           } else {
             console.log("Data updated, clearing cache")
           }
           dataUpdated = true
+          cachedRemoteData = newValue
           if (doc.hidden) {
             return
           }
-          cachedUrlMap = {}
-          await initBookmarksStore()
+          requestAnimationFrame(() => {
+            cachedUrlMap = {}
+            void initBookmarksStore()
+          })
         }
       )
       addEventListener(doc, "visibilitychange", async () => {
-        console.log("visibilitychange", doc.hidden)
+        console.log("visibilitychange: hidden -", doc.hidden)
         if (!doc.hidden && dataUpdated) {
-          cachedUrlMap = {}
-          await initBookmarksStore()
+          requestAnimationFrame(() => {
+            cachedUrlMap = {}
+            void initBookmarksStore()
+          })
         }
       })
     }
@@ -11619,6 +11657,86 @@
       getCanonicalUrl: getCanonicalUrl2,
     }
   })()
+  var hotgirl_asia_default =
+    ":not(#a):not(#b):not(#c) *+.utags_ul_0{object-position:200% 50%;--utags-notag-ul-disply: var(--utags-notag-ul-disply-5);--utags-notag-ul-height: var(--utags-notag-ul-height-5);--utags-notag-ul-position: var(--utags-notag-ul-position-5);--utags-notag-ul-top: var(--utags-notag-ul-top-5);--utags-notag-captain-tag-top: var(--utags-notag-captain-tag-top-5);--utags-notag-captain-tag-left: var(--utags-notag-captain-tag-left-5);--utags-captain-tag-background-color: var( --utags-captain-tag-background-color-overlap )}:not(#a):not(#b):not(#c) *+.utags_ul_1{object-position:0% 200%}:not(#a):not(#b):not(#c) .vl-item .utags_ul_1{position:absolute;top:-9999px;margin-top:-4px !important;z-index:6}"
+  var hotgirl_asia_default2 = (() => {
+    const prefix2 = "https://hotgirl.asia/"
+    function getVideoUrl(url, exact = false) {
+      if (url.startsWith(prefix2)) {
+        const href2 = url.slice(prefix2.length)
+        if (exact) {
+          if (/^videos\/[\w-]+\/?$/.test(href2)) {
+            return prefix2 + href2.replace(/^(videos\/[\w-]+)\/?/, "$1/")
+          }
+        } else if (/^videos\/[\w-]+/.test(href2)) {
+          return prefix2 + href2.replace(/^(videos\/[\w-]+)\/?/, "$1/")
+        }
+      }
+      return void 0
+    }
+    return {
+      matches: /hotgirl\.asia/,
+      preProcess() {
+        setVisitedAvailable(true)
+      },
+      listNodesSelectors: [".vl-item"],
+      conditionNodesSelectors: [".vl-item a"],
+      validate(element) {
+        const href = element.href
+        if (!href.startsWith(prefix2)) {
+          return true
+        }
+        let key = getVideoUrl(href)
+        if (key) {
+          const title = getTrimmedTitle(element)
+          if (!title) {
+            return false
+          }
+          const meta = { type: "video", title }
+          setUtags(element, key, meta)
+          markElementWhetherVisited(key, element)
+          element.dataset.utags = element.dataset.utags || ""
+          if ($(".vli-info h2", element)) {
+            element.dataset.utags_position_selector = ".vli-info h2"
+          }
+          return true
+        }
+        return true
+      },
+      excludeSelectors: [
+        ...default_default2.excludeSelectors,
+        "header",
+        "nav",
+        "#bar-player",
+        ".player_nav",
+        ".breadcrumb",
+      ],
+      validMediaSelectors: [".vl-item"],
+      addExtraMatchedNodes(matchedNodesSet) {
+        const href = location.href
+        let key = getVideoUrl(href)
+        if (key) {
+          addVisited(key)
+          const element = $(".mvic-desc h3")
+          if (element) {
+            const title = getTrimmedTitle(element)
+            if (title) {
+              const meta = { title, type: "video" }
+              setUtags(element, key, meta)
+              element.dataset.utags_node_type = "link"
+              matchedNodesSet.add(element)
+              markElementWhetherVisited(key, element)
+            }
+          }
+        }
+      },
+      postProcess() {
+        const isDarkMode = true
+        doc.documentElement.dataset.utags_darkmode = isDarkMode ? "1" : "0"
+      },
+      getStyle: () => hotgirl_asia_default,
+    }
+  })()
   var sites = [
     github_com_default2,
     v2ex_default2,
@@ -11669,6 +11787,7 @@
     rule34video_com_default2,
     xsijishe_net_default2,
     simpcity_cr_default2,
+    hotgirl_asia_default2,
   ]
   var getCanonicalUrlFunctionList = [default_default2, ...sites]
     .map((site) => site.getCanonicalUrl)
@@ -11709,7 +11828,7 @@
     if (typeof currentSite.getStyle === "function" && !$("#utags_site_style")) {
       const styleText = currentSite.getStyle()
       if (styleText) {
-        addElement2("style", {
+        addElement2(doc.head, "style", {
           textContent: styleText,
           id: "utags_site_style",
         })
@@ -12192,7 +12311,7 @@
       if ($("#utags_custom_style")) {
         $("#utags_custom_style").textContent = customStyleValue
       } else {
-        addElement2("style", {
+        addElement2(doc.head, "style", {
           id: "utags_custom_style",
           textContent: customStyleValue,
         })
@@ -12209,7 +12328,7 @@
       if ($("#utags_custom_style_2")) {
         $("#utags_custom_style_2").textContent = customStyleValue2
       } else {
-        addElement2("style", {
+        addElement2(doc.head, "style", {
           id: "utags_custom_style_2",
           textContent: customStyleValue2,
         })
@@ -12409,7 +12528,9 @@
         addElement2(document.body, "div", {
           id: "utags_absolute_ul_container",
         })
-      container.append(ul)
+      if (container) {
+        container.append(ul)
+      }
     } else {
       element.after(ul)
     }
@@ -12523,10 +12644,10 @@
     await initBookmarksStore()
     await initSyncAdapter()
     addTagsValueChangeListener(() => {
-      console.log("Storage updated", doc.hidden)
+      console.log("Storage updated, hidden -", doc.hidden)
       if (!doc.hidden) {
         console.log("Start re-display tags")
-        setTimeout(displayTags)
+        void displayTags()
       }
     })
   }

@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         AI Studio Auto-Config
 // @namespace    http://tampermonkey.net/
-// @version      v1.0.0
+// @version      v1.0.1
 // @description  自动配置 Google AI Studio 系统指令
 // @author       Moonlit Night (for oy3o)
-// @match        https://aistudio.google.com/*
+// @match      https://aistudio.google.com/*
 // @grant        none
 // @license      MIT
 // @downloadURL https://update.greasyfork.org/scripts/558592/AI%20Studio%20Auto-Config.user.js
@@ -20,7 +20,7 @@
         // 你的自定义选项位置：默认取第2个选项 (nth-child(2))
         optionSelector: '.cdk-overlay-pane mat-option:nth-child(2)',
         selectors: {
-            btn: 'ms-prompt-run-settings > ms-system-instructions-panel > button', // 简化选择器
+            btn: 'ms-system-instructions-panel > button', // 简化选择器
             dropdown: 'mat-dialog-content mat-select',
             input: 'ms-prompt-renderer ms-prompt-box textarea' // 全局唯一的 textarea 通常就是输入框
         }

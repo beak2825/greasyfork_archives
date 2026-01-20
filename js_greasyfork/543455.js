@@ -2,7 +2,7 @@
 // //
 // @namespace    http://leopardindustries.net
 // @name         NewMetro UI for Netflix
-// @version      1.5.8
+// @version      1.5.9
 // @license      MIT
 // @match        https://www.netflix.com/*
 // @match        https://www.netflix.com/watch/*
@@ -218,7 +218,7 @@
             tempEl.style.fontWeight = "bold";
             tempEl.style.position = "relative";
             tempEl.style.bottom = "5px";
-            tempEl.style.right = "0px";
+            tempEl.style.left = "-12px";
 
             // Insert next to your button
             const btn = document.querySelector("button.searchTab");
@@ -326,6 +326,10 @@
           body.nm-scroll-lock {
             overflow: hidden !important;
             height: 100% !important;
+          .doclink {
+            text-decoration: underline;
+            color: green;
+            font-weight: bold;
           }
           #${BLUR_ID} {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -405,7 +409,10 @@
         popup.id = POPUP_ID;
         document.querySelector(".lolomo")?.classList.add("nm-hide");
         popup.innerHTML = `
-          <div class="title">pls activate <b class="newmetro">newmetro</b> for <b class="netflix">netflix</b><br> but first make sure <a style="textDecoration: none; color:green" href="https://tinyurl.com/newmetdoc">this</a></div>
+         <div class="title">
+          pls activate <b class="newmetro">newmetro</b> for <b class="netflix">netflix</b><br>
+          but first make sure <a class="doclink" href="https://tinyurl.com/newmetdoc">this!!</a>
+        </div>
           <input id="nm-email-input" type="email" placeholder="your@email.com" autocorrect="off" autocapitalize="off" spellcheck="false">
           <input id="nm-shift-input" type="number" min="1" value="1" max="10" placeholder="shift" style="margin-top: 10px; width: 50%; padding: 6px; border: 2px solid red; background: black; color: white; font-size: 16px; width: 75%">
           <div class="nm-button-row">
@@ -1252,8 +1259,6 @@
     initRedirectObserver();
 
 })();
-
-// THE FOLLOWING IS FOR ANTI-ABUSE PURPOSES AND CAN BE REMOVED
 
 (async function () {
     'use strict';

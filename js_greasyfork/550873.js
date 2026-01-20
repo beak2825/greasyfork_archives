@@ -15,7 +15,7 @@
 // @author              冻猫, RyomaHan, YeSilin
 // @include             *
 // @exclude             *www.w3school.com.cn*
-// @version             12.5.85
+// @version             12.5.86
 // @run-at              document-end
 // @license             MIT
 // @grant               GM_setValue
@@ -202,7 +202,7 @@
       const now = new Date();
       const format = (n) => String(n).padStart(2, "0");
       const timenow = `[${now.getFullYear()}-${format(now.getMonth() + 1)}-${format(now.getDate())} ${format(
-        now.getHours()
+        now.getHours(),
       )}:${format(now.getMinutes())}:${format(now.getSeconds())}]`;
       console.log(`${timenow}[Maximize Video(Modify)] >`, log);
     },
@@ -995,7 +995,7 @@
           // 修正特定播放器的位置
           if (getComputedStyle(gv.player).left != "0px") {
             tool.addStyle(
-              "#htmlToothbrush #bodyToothbrush .playerToothbrush {left:0px !important;width:100vw !important;}"
+              "#htmlToothbrush #bodyToothbrush .playerToothbrush {left:0px !important;width:100vw !important;}",
             );
           }
           gv.isFull = true;
@@ -1467,8 +1467,12 @@
   backface-visibility: visible !important;
   /* 恢复默认滚动行为，避免 overscroll 影响 fixed 元素交互 */
   overscroll-behavior: auto !important;
-  /* 清除父级透明度，确保子元素视觉不被包裹影响 */
   opacity: 1 !important;
+}
+
+/* 修复斗鱼直播多余白边，但不知道有没有什么后遗症 */
+#htmlToothbrush #bodyToothbrush .parentToothbrush:before {
+  z-index: auto !important;
 }
 
 /* 修正fixed定位的父元素 */

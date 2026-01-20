@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Rem4rk's Locked Items Manager
 // @namespace    https://www.torn.com/
-// @version      1.1
+// @version      1.2
 // @description  This userscript allows you to lock items in your inventory to prevent accidentally trading, selling, donating, or trashing them. Perfect for protecting high-value items, collections, or anything you want to keep safe!
 // @author       rem4rk [2375926] - https://www.torn.com/profiles.php?XID=2375926
 // @match        https://www.torn.com/item.php*
@@ -197,16 +197,19 @@
                 font-size: 14px;
                 z-index: 999998;
                 transition: all 0.3s ease;
+                opacity: .3;
             `;
 
             unlockBtn.addEventListener('mouseenter', () => {
                 unlockBtn.style.background = 'linear-gradient(to right, #449d44, #5cb85c)';
                 unlockBtn.style.transform = 'translateY(-50%) scale(1.05)';
+                unlockBtn.style.opacity = '1';
             });
 
             unlockBtn.addEventListener('mouseleave', () => {
                 unlockBtn.style.background = 'linear-gradient(to right, #5cb85c, #449d44)';
                 unlockBtn.style.transform = 'translateY(-50%) scale(1)';
+                unlockBtn.style.opacity = '.3';
             });
 
             unlockBtn.addEventListener('click', () => {

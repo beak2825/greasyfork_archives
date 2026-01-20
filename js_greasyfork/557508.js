@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Torn - Property Vault Quick Deposit (PC)
 // @namespace    quick.vault
-// @version      0.1
+// @version      0.2
 // @description  Adds a button below your name (on the sidebar view) that will vault all of your on-hand cash when clicked. A change to a value that isn't zero will turn the button red.
 // @author       Baccy
 // @match        https://www.torn.com/properties.php*
@@ -20,7 +20,7 @@ https://gist.githubusercontent.com/mitza0505/f400d1c33df959a9d31c8597a54f4e86/ra
 (function() {
     'use strict';
 
-	GM_addStyle(`
+    GM_addStyle(`
 		.quick-btn-restyled {
 			color: #f0f0f0;
 			background-color: #1e1e1e;
@@ -61,13 +61,32 @@ https://gist.githubusercontent.com/mitza0505/f400d1c33df959a9d31c8597a54f4e86/ra
     function addButton() {
         if (document.querySelector('.duckwowowvault')) return;
 
-        const id = Array.from(document.querySelectorAll('a'))
+        let id = Array.from(document.querySelectorAll('a'))
         .map(a => a.href.match(/p=properties&ID=(\d+)/))
         .find(match => match)?.[1];
-        if (!id || !/^\d+$/.test(id)) return;
 
-        const rfcv = getRFC();
-        if (!rfcv) return;
+        if (!id) {
+            const optionEl = Array.from(document.querySelectorAll('.options-list'))
+            .find(el => el.dataset.id && /^\d+$/.test(el.dataset.id));
+
+            if (optionEl) {
+                id = optionEl.dataset.id;
+            }
+        }
+
+        if (!id) {
+            setTimeout(addButton, 500);
+            return;
+        }
+
+        let rfc;
+        rfc = getRFC('v');
+        if (!rfc) rfc = getRFC('id');
+        if (!rfc) {
+            alert('RFC not found');
+            return;
+        }
+        const url = `https://www.torn.com/properties.php?rfcv=${rfc}`;
 
         let container = document.querySelector(`[class*='point-block']`);
         if(!container) container = document.querySelector(`[class='points-mobile___gpalH']`).children[0];
@@ -81,7 +100,7 @@ https://gist.githubusercontent.com/mitza0505/f400d1c33df959a9d31c8597a54f4e86/ra
             const deposit = document.querySelector('#user-money').getAttribute('data-money');
             if (!deposit || deposit === '0') return;
 
-            fetch(`https://www.torn.com/properties.php?rfcv=${rfcv}`, {
+            fetch(url, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
@@ -112,16 +131,19 @@ https://gist.githubusercontent.com/mitza0505/f400d1c33df959a9d31c8597a54f4e86/ra
         cashWatcher();
     }
 
-    function getRFC() {
+    function getRFC(id) {
         const cookies = document.cookie.split('; ');
         for (let i = 0; i < cookies.length; i++) {
             const [name, value] = cookies[i].split('=');
-            if (name === 'rfc_v') {
+            if (id === 'v' && name === 'rfc_v') {
+                return value;
+            } else if (id === 'id' && name === 'rfc_id') {
                 return value;
             }
         }
         return null;
     }
+
 
 
     const observer = new MutationObserver(() => {

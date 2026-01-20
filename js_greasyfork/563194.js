@@ -1,16 +1,14 @@
 // ==UserScript==
-// @namespace    Reveal Password On Hover
 // @name         Reveal Password On Hover
+// @namespace    https://greasyfork.org/en/scripts/563194-reveal-password-on-hover
 // @match        *://*/*
-// @description  Show password when focus on password field
+// @description  Temporarily shows password text while the field is focused
 // @author       webberLV
 // @license      MIT
 // @version      1.1
 // @downloadURL https://update.greasyfork.org/scripts/563194/Reveal%20Password%20On%20Hover.user.js
 // @updateURL https://update.greasyfork.org/scripts/563194/Reveal%20Password%20On%20Hover.meta.js
 // ==/UserScript==
-
-
 (function () {
   "use strict";
 

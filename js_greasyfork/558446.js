@@ -755,6 +755,7 @@
         "You have no unread notifications": "您没有未读通知",
         "You're receiving notifications because you're subscribed to this thread.": "您接收通知是因为您已订阅此主题",
         "You need to create and run a prompt in order to share it": "您需要创建并运行一个提示才能分享它",
+        "Your repository details have been saved.": "您的仓库详细信息已保存",
         "(experimental)": "(实验的)"
     };
 

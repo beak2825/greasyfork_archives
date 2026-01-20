@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bh3helper-enhancer
 // @namespace    4b8b542a-3500-49bd-b857-8d62413434c7
-// @version      1.1.1
+// @version      1.2.1
 // @description  在bh3helper（《崩坏3》剧情助手）上提供增强功能
 // @author       -
 // @match        https://bh3helper.xrysnow.xyz/*
@@ -12,14 +12,17 @@
 // @grant        GM_deleteValue
 // @grant        GM_listValues
 // @grant        GM_getResourceText
-// @require      https://unpkg.com/vue@3.5.26/dist/vue.global.prod.js#sha256-tAgDTQf3yKkfEX+epicjVa5F9Vy9oaStBwStjXA5gJU=
-// @require      https://unpkg.com/@chcs1013/vue-expose-to-window@1.0.1/index.js#sha256-0zwVsGUKw70iQnySKWxo81tEXaVhqZg7rF2yBH+0wAg=
-// @require      https://unpkg.com/vue-dialog-view@1.7.1/dist/cssless.umd.js#sha256-cH5113wW7G1+ZShZmyVUL1FVmBUEHzCzTO/Qy7+gMDg=
-// @require      https://unpkg.com/vue3-tree@0.11.5/dist/vue3-tree.js#sha256-cUAWVV0/sMo44jc45yFH2uEv6+AkMGKZod8QdY/vMqA=
-// @require      https://unpkg.com/fflate@0.8.2/umd/index.js#sha256-w7NPLp9edNTX1k4BysegwBlUxsQGQU1CGFx7U9aHXd8=
-// @require      https://unpkg.com/add-css-constructed@1.1.1/dist/umd.js#sha256-d0FJH11iwMemcFgueP8rpxVl9RdFyd3V8WJXX9SmB5I=
-// @resource     dialog_css https://unpkg.com/vue-dialog-view@1.7.1/dist/vue-dialog-view.css#sha256-HnPUNAFITfEE27CBFvnXJJBIw7snbNTkexmuZ95u160=
-// @resource     treeview_css https://unpkg.com/vue3-tree@0.11.5/dist/style.css#sha256-pMwswRTw7jawlpe60P8W2yItWloUeREwp4DwlZkp3OI=
+// @grant        GM_xmlhttpRequest
+// @connect      self
+// @require      https://cdn.jsdelivr.net/npm/vue@3.5.26/dist/vue.global.prod.js#sha256-tAgDTQf3yKkfEX+epicjVa5F9Vy9oaStBwStjXA5gJU=
+// @require      https://cdn.jsdelivr.net/npm/@chcs1013/vue-expose-to-window@1.0.1/index.js#sha256-0zwVsGUKw70iQnySKWxo81tEXaVhqZg7rF2yBH+0wAg=
+// @require      https://cdn.jsdelivr.net/npm/vue-dialog-view@1.7.1/dist/cssless.umd.js#sha256-cH5113wW7G1+ZShZmyVUL1FVmBUEHzCzTO/Qy7+gMDg=
+// @require      https://cdn.jsdelivr.net/npm/vue3-tree@0.11.5/dist/vue3-tree.js#sha256-cUAWVV0/sMo44jc45yFH2uEv6+AkMGKZod8QdY/vMqA=
+// @require      https://cdn.jsdelivr.net/npm/fflate@0.8.2/umd/index.js#sha256-w7NPLp9edNTX1k4BysegwBlUxsQGQU1CGFx7U9aHXd8=
+// @require      https://cdn.jsdelivr.net/npm/add-css-constructed@1.1.1/dist/umd.js#sha256-d0FJH11iwMemcFgueP8rpxVl9RdFyd3V8WJXX9SmB5I=
+// @require      https://cdn.jsdelivr.net/npm/lz-string@1.5.0/libs/lz-string.min.js#sha256-lfTRy/CZ9XFhtmS8BIQm7D35JjeAGkx5EW6DMVqnh+c=
+// @resource     dialog_css https://cdn.jsdelivr.net/npm/vue-dialog-view@1.7.1/dist/vue-dialog-view.css#sha256-HnPUNAFITfEE27CBFvnXJJBIw7snbNTkexmuZ95u160=
+// @resource     treeview_css https://cdn.jsdelivr.net/npm/vue3-tree@0.11.5/dist/style.css#sha256-pMwswRTw7jawlpe60P8W2yItWloUeREwp4DwlZkp3OI=
 // @inject-into  page
 // @run-at       document-start
 // @license      GPL-3.0
@@ -35,22 +38,12 @@
         EXPORT_WAIT_TIMEOUT: 1000 * 60 * 3,
         DIALOG_SWITCH_CD_TIME: 80,
         COMMON_PAGE_BASE_URL: '/pages/common.html',
+        SCRIPTS_BASE_URL: '/js/',
     };
 
     // ---------- //
 
     const { document } = window;
-
-    // ---------- //
-
-    // State load
-    const state = createStateStorage({
-        getItem: GM_getValue,
-        setItem: GM_setValue,
-        removeItem: GM_deleteValue,
-    });
-    const session = createStateStorage(context.sessionStorage, 'bh3helper-enhancer@');
-    const temp = Object.create(null);
 
     // ---------- //
 
@@ -71,6 +64,9 @@
         homepageStruct: {
             mainlineGroupTypo: {
                 "桔梗再次沉睡": "桔梗在此沉睡", // 😂还得帮忙改typo
+            },
+            mainlineChapterTitleTypo: {
+                "新生之羽": "新生之翼", // 第二十一章
             },
         },
         domPatch: [
@@ -101,6 +97,17 @@
     const DLUI_TEXT = {
         onBeforeZipStart: '正在压缩\n这可能需要一些时间，请耐心等待\n标签页可能会暂时失去响应，请不要强行退出',
     };
+
+    // ---------- //
+
+    // State load
+    const state = createStateStorage({
+        getItem: GM_getValue,
+        setItem: GM_setValue,
+        removeItem: GM_deleteValue,
+    });
+    const session = createStateStorage(context.sessionStorage, 'bh3helper-enhancer@');
+    const temp = Object.create(null);
 
     // ---------- //
 
@@ -622,7 +629,7 @@ details[open] > .dlg-help-summary::before {
         <dialog-view v-model="showMoreDownloadOptions">
             <template #title>更多下载选项</template>
             <div class="btn-group btn-group-vertical">
-                <button type="button" v-if="isHomePage" v-show=0 @click="showMoreDownloadOptions = false; showDownloadRawDataDlg = true">下载原始数据</button>
+                <button type="button" v-if="isHomePage" @click="showMoreDownloadOptions = false; showDownloadRawDataDlg = true">下载原始数据</button>
                 <button type="button" @click="showMoreDownloadOptions = false">取消</button>
             </div>
         </dialog-view>
@@ -670,7 +677,7 @@ details[open] > .dlg-help-summary::before {
                         outputFilenameFormat: '',
                         collectionFilenameFormat: '',
                         useColorTag: true,
-                        autoParseLzJs: false,
+                        autoParseLzJs: true,
                         includeContent_mainline: true,
                         includeContent_subplot: true,
                         includeContent_activity: true,
@@ -1137,7 +1144,10 @@ details[open] > .dlg-help-summary::before {
                                     if (!(lineWrapper.classList.contains(classname))) continue;
                                     extractRule = content; break;
                                 }
-                                lineTextBuffer[0] = FormatValueTemplate(extractRule, { TEXT: lineTextBuffer[0] }); // 只改第一个（因为可能是多个inline node）
+                                if (extractRule !== PG_DOWNLOAD_STRUCT.contentExtractRules.default) for (let i = 0; i < lineTextBuffer.length; i++) {
+                                    const formatted = FormatValueTemplate(extractRule, { TEXT: lineTextBuffer[i] });
+                                    if (formatted !== lineTextBuffer[i]) lineTextBuffer[i] = formatted;
+                                }
                                 if (field1) {
                                     // 为每一个条目添加actor字段（因为原网站对同一个说话者采取合并策略）
                                     for (let i = 0, l = lineTextBuffer.length; i < l; i++) {
@@ -1444,15 +1454,69 @@ details[open] > .dlg-help-summary::before {
         return result;
     }
 
-    function DownloadRawData(options) {
-        showMessage('暂未实现此功能！', 'error');
-    }
+    async function DownloadRawData(options) {
+        let lz = window.LZString;
+        if (options.autoParseLzJs && (!lz?.decompressFromBase64)) { 
+            showMessage('警告：页面上的 LZString 不可用！将使用内置 LZString 实现，可能遇到版本不兼容！', 'error', false);
+            lz = LZString;
+        }
+        const files = Object.create(null);
+        try {
+            ui.loading_indicator.show();
 
-    function findAllMainlineDialogs() {
-        // 去重
-        return Array.from(new Set(Array.from(document.querySelectorAll('.catalogue-card.catalogue-card-story > .story-item > a[href], .catalogue-card.catalogue-card-story-w > .story-item > a[href]'))
-            .map(el => el.href)
-            .filter(_ => !!_)));
+            if (typeof ScriptIndex !== 'object') {
+                throw new Error('ScriptIndex 不是对象！目标网站可能修改了结构，请考虑更新或反馈此问题。');
+            }
+
+            const keys = Reflect.ownKeys(ScriptIndex); // 目标网站的变量名
+            const total = keys.length;
+            const remoteBase = new URL(CONFIG.SCRIPTS_BASE_URL, window.location.href);
+            const updateProgress = (current, desc = '') => {
+                ui.loading_indicator.innerText = `正在处理第 ${current} (共 ${total} 个)\n${desc || '\u2060'}`;
+            };
+
+            // 逐个获取文件
+            for (let i = 0; i < total; i++) {
+                const key = keys[i];
+                const data = ScriptIndex[key];
+                const url = new URL(data, remoteBase.href);
+                updateProgress(i + 1, `正在下载 ${key}`);
+                const res = await LoadResource(new Request(url.href));
+                const text = await res.text(); let d = text, parsed = false;
+                if (options.autoParseLzJs && url.href.endsWith('.lz.js') && /^\s*?LoadDataLZ\(/.test(text)) try { 
+                    // 疑似lzstring数据
+                    let lzText, loader = (name, _) => lzText = _[0];
+                    const f = new window.Function('LoadDataLZ', text); // dangerous
+                    f(loader);
+                    d = lz.decompressFromBase64(lzText);
+                    parsed = true;
+                } catch (error) {
+                    console.warn('[bh3helper-downloader] decompress lzstring failed for file:', key);
+                    showMessage("警告：解压缩 LZString 数据失败: " + error, 'error');
+                }
+                // 解析文件名
+                let filename = url.pathname.split('/').pop();
+                if (parsed) filename = filename.replace(/\.lz\.js$/, '.json');
+                files[filename] = (new TextEncoder()).encode(d);
+            }
+            updateProgress(total, DLUI_TEXT.onBeforeZipStart);
+            await new Promise(resolve => setTimeout(resolve, 500));
+            // 创建压缩包
+            const zipBlob = new Blob([fflate.zipSync(files)], { type: 'application/zip' });
+            updateProgress(total, '正在完成');
+            DownloadFile(URL.createObjectURL(zipBlob), `${document.title} - 原始数据 - ${new Date().toLocaleString()}.zip`);
+            setTimeout(() => {
+                URL.revokeObjectURL(zipBlob);
+            }, 300000);
+            showMessage('下载成功！', 'info', false);
+        }
+        catch (error) {
+            console.error('[bh3helper-downloader] download raw data failed:', error);
+            showMessage("下载原始数据失败: " + error, 'error', false);
+        }
+        finally { 
+            ui.loading_indicator.hide();
+        }
     }
 
     async function getAllMainlinePageStructData() {
@@ -1535,6 +1599,9 @@ details[open] > .dlg-help-summary::before {
                     data2.label = j.title // 叶子节点，没有.nodes
                     e.chapter = j.chapter;
                     e.isCompanion = j.isCompanion;
+                }
+                if (TYPOFIX.homepageStruct.mainlineChapterTitleTypo?.[data2.label]) {
+                    data2.label = TYPOFIX.homepageStruct.mainlineChapterTitleTypo[data2.label];
                 }
                 if (e.chapter == 43) { // 别问为什么😂问就是硬编码
                     data2.orig_label = data2.label;
@@ -1727,6 +1794,7 @@ details[open] > .dlg-help-summary::before {
                 continue;
             }
             if (i.nodeType !== Node.ELEMENT_NODE) continue; // 元素节点
+            const addLinebreak = i => (isBlockElement(i) && i.nextElementSibling && index < (len - 1)) && value.push('\n');
             switch (i.tagName) {
                 case 'BR':
                 case 'HR':
@@ -1737,14 +1805,18 @@ details[open] > .dlg-help-summary::before {
                     {
                         const newCtx = context.structuredClone(ctx);
                         // ruby是文本，rt是标注
+                        // 我们假设一个ruby只包含一个rb(ruby base)，并且不包含rtc和rbc
                         newCtx.rtText = []; // 假设是规范的HTML，rt内容不会嵌套ruby
                         const text = extractNodeText(i, newCtx).join('');
                         value.push(`{RUBY_B#${newCtx.rtText.join('')}}${text}{RUBY_E#}`);
                     }
+                    addLinebreak(i);
                     break;
                 case 'RT':
                     ctx.rtText.push(...extractNodeText(i, ctx));
                     break;
+                case 'RP':
+                    break; //  <rp> 元素用于为那些不能使用 <ruby> 元素展示 ruby 注解的浏览器，提供随后的圆括号
                 case 'OL':
                 case 'UL':
                     {
@@ -1753,19 +1825,21 @@ details[open] > .dlg-help-summary::before {
                         newCtx.indent = (ctx.indent != undefined) ? (ctx.indent + PG_DOWNLOAD_STRUCT.listIndentCount) : 0;
                         value.push(...extractNodeText(i, newCtx));
                     }
+                    addLinebreak(i);
                     break;
                 case 'LI':
                     if (ctx.indent) value.push(' '.repeat(ctx.indent));
                     if (ctx.type === 'UL') value.push('· ', ...extractNodeText(i, ctx));
                     else if (ctx.type === 'OL') value.push((++ctx.index) + '. ', ...extractNodeText(i, ctx));
                     else value.push(...extractNodeText(i, ctx));
+                    addLinebreak(i);
                     break;
                 default:
                     const text = extractNodeText(i, ctx).join('');
                     if (text) {
                         const colorProp = i.style.getPropertyValue('--color');
                         value.push((colorProp && ctx.useColor) ? `<color=${colorProp}>${text}</color>` : text);
-                        if (isBlockElement(i) && i.nextElementSibling && index < (len - 1)) value.push('\n');
+                        addLinebreak(i);
                     }
             }
         }
@@ -1929,6 +2003,89 @@ details[open] > .dlg-help-summary::before {
             //     return source.keys();
             // },
         });
+    }
+
+    /**
+     * 加载资源, 优先使用页面上 fetch，其次使用 GM_xmlhttpRequest
+     * @param {Request} req 请求
+     * @param {boolean} fetchFirst 是否优先使用页面上 fetch
+     * @param {boolean} noFallback 是否不使用 GM_xmlhttpRequest 作为后备
+     * @param {number} fallbackTimeout GM_xmlhttpRequest 超时时间，单位毫秒
+     * @returns {Promise<Response>} 响应对象
+     */
+    function LoadResource(req, fetchFirst = true, noFallback = false, fallbackTimeout = 5000) {
+        const parseGMHeaders = headerString => {
+            const headers = new Headers();
+            if (headerString) {
+                const lines = headerString.trim().split(/[\r\n]+/);
+                for (const line of lines) {
+                    const parts = line.split(': ');
+                    const name = parts.shift();
+                    const value = parts.join(': ');
+                    if (name && value) {
+                        headers.append(name, value);
+                    }
+                }
+            }
+            return headers;
+        };
+        const buildGMHeaders = headers => {
+            if (!headers) return undefined;
+            // Request.headers 是 Headers 实例
+            if (headers instanceof Headers) {
+                const obj = Object.create(null);
+                for (const [k, v] of headers.entries()) {
+                    obj[k] = v;
+                }
+                return obj;
+            }
+            if (typeof headers === 'object') {
+                return headers;
+            }
+            return undefined;
+        };
+        const useGM = req => new Promise((resolve, reject) => {
+            const { url, method, headers, body } = req;
+            const { abort } = GM_xmlhttpRequest({
+                url,
+                method,
+                headers: buildGMHeaders(headers),
+                data: body,
+                responseType: 'blob',
+                timeout: fallbackTimeout,
+                onload(data) {
+                    resolve(new Response(data.response, {
+                        status: data.status,
+                        statusText: data.statusText,
+                        headers: parseGMHeaders(data.responseHeaders),
+                    }));
+                },
+                onerror: reject,
+                ontimeout: reject,
+            });
+            if (req.signal) {
+                req.signal.addEventListener('abort', () => abort());
+            }
+        });
+
+        return new Promise(async (resolve, reject) => {
+            if (!fetchFirst) {
+                return useGM(req).then(resolve).catch(reject);
+            }
+            try {
+                const res = await window.fetch(req);
+                if (!res.ok) {
+                    throw new Error(`HTTP error! status: ${res.status}`);
+                }
+                resolve(res);
+            } catch (error) {
+                if (noFallback) {
+                    reject(error);
+                } else {
+                    useGM(req).then(resolve).catch(reject);
+                }
+            }
+        })
     }
 
 })((typeof unsafeWindow !== "undefined" ? unsafeWindow : window), window))

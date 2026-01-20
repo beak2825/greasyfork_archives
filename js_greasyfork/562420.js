@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Torn Inventory Exporter 
 // @namespace    https://torn.com/
-// @version      0.4.1
+// @version      0.4.2
 // @description  Export Torn inventory items to clipboard (TSV) or download as CSV. script captures items while you scroll (no autoscroll).
 // @match        https://www.torn.com/item.php*
 // @match        https://www.torn.com/bazaar.php*
@@ -114,19 +114,20 @@
     style.id = STYLE_ID;
     style.textContent = `
       #${FLOAT_ID}{
-        position: fixed;
-        right: 16px;
-        top: 110px;
-        z-index: 2147483647;
-        padding: 9px 10px;
-        border-radius: 10px;
-        border: 1px solid rgba(255,255,255,0.25);
-        background: rgba(0,0,0,0.72);
-        color: #fff;
-        cursor: pointer;
-        font: 13px/1 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-        user-select: none;
-      }
+  position: fixed;
+  right: max(8px, env(safe-area-inset-right));
+  top: clamp(8px, 10vh, 140px);
+  z-index: 2147483647;
+  padding: 9px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.25);
+  background: rgba(0,0,0,0.72);
+  color: #fff;
+  cursor: pointer;
+  font: 13px/1 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  user-select: none;
+}
+
       #${FLOAT_ID}:hover{ background: rgba(0,0,0,0.86); }
       .ttItemExporterToast{
         position: fixed;
