@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MC-Skin
 // @namespace    https://viayoo.com/
-// @version      4.5
+// @version      4.6
 // @description  在网页里添加一个MC小人
 // @author       undefined303
 // @license      MIT
@@ -15,6 +15,7 @@
 // @grant        GM_setValue
 // @grant        GM_deleteValue
 // @grant        GM_xmlhttpRequest
+// @grant        GM_info
 // @require      data:text/javascript,const%20origdef%20%3D%20window.define%3B
 // @require      data:text/javascript,window.define%20%3F%20window.define%20%3D%20undefined%3A%20null%3B
 // @require      https://fastly.jsdelivr.net/npm/skinview3d@3.4.1/bundles/skinview3d.bundle.min.js
@@ -303,8 +304,8 @@
 		})
 		return;
 	}
-
-	console.log("%cMcSkin.js", "color:orange");
+	var lastModifiedTime = new Date(GM_info.script.lastModified);
+	console.log(`%cMcSkin.js%c ${GM_info.script.version}%c ${lastModifiedTime.getFullYear()}.${lastModifiedTime.getMonth()+1}.${lastModifiedTime.getDate()} ${lastModifiedTime.getHours()}:${lastModifiedTime.getMinutes()}`, "color:orange;font-weight:1000;font-size:1.5em", "font-weight:1000;font-size:1.2em", "font-weight:500;color:grey");
 	var defaultRotation = GM_getValue("defaultRotation", -0.25);
 	var mouseFollowMode = GM_getValue("mouseFollowMode", "bedrock");
 	const box = document.createElement("div");
@@ -820,6 +821,7 @@ margin-top:20px;
 			raycaster1.setFromCamera(mouse1, skinViewer.camera);
 			raycaster1.ray.intersectPlane(plane1, pointOfIntersection1);
 			skinViewer.playerObject.skin.lookAt(pointOfIntersection1);
+			skinViewer.playerObject.skin.rotation.z = 0;
 		}
 		return canvasRect;
 	}

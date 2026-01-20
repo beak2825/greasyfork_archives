@@ -1,6 +1,6 @@
 // ==UserScript==
-// @name         YouTube - Web tweaks (Performance tweaks + Anti-shorts/AI)
-// @version      2026.01.06
+// @name         YouTube - Web tweaks (Performance booster + De-shorts/AI)
+// @version      2026.01.20
 // @description  This is the script that tweaks other UI elements (that also includes removal of 'Shorts' and 'AI nonsense', along with performance tweaks such as disabling animations and hides most annoyances)
 // @author       Joey_JTS
 // @match        *://*.youtube.com/*
@@ -13,8 +13,8 @@
 // @run-at       document-start
 // @license      MIT
 // @namespace    https://greasyfork.org/en/users/761382
-// @downloadURL https://update.greasyfork.org/scripts/552336/YouTube%20-%20Web%20tweaks%20%28Performance%20tweaks%20%2B%20Anti-shortsAI%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/552336/YouTube%20-%20Web%20tweaks%20%28Performance%20tweaks%20%2B%20Anti-shortsAI%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/552336/YouTube%20-%20Web%20tweaks%20%28Performance%20booster%20%2B%20De-shortsAI%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/552336/YouTube%20-%20Web%20tweaks%20%28Performance%20booster%20%2B%20De-shortsAI%29.meta.js
 // ==/UserScript==
 
 (function() {
@@ -309,9 +309,6 @@ let css = `
 #expandable-metadata.ytd-video-renderer, #expandable-metadata.ytd-watch-flexy { display: none !important }
 ytd-expandable-metadata-renderer[has-video-summary] { display: none !important }
 /* #flexible-item-buttons button[aria-label^="Ask" i], ytd-menu-renderer button[aria-label^="Ask" i] { display: none !important } */
-/* Disable giant thumbnails on search results */
-ytd-two-column-search-results-renderer[use-bigger-thumbs][bigger-thumbs-style=BIG] #primary.ytd-two-column-search-results-renderer, ytd-search[has-search-header][has-bigger-thumbs] #header.ytd-search { max-width: 1096px !important }
-ytd-channel-renderer[use-bigger-thumbs][bigger-thumb-style=BIG] #avatar-section.ytd-channel-renderer, ytd-channel-renderer[use-bigger-thumbs] #avatar-section.ytd-channel-renderer, ytd-video-renderer[use-bigger-thumbs][bigger-thumbs-style=BIG] ytd-thumbnail.ytd-video-renderer, ytd-video-renderer[use-search-ui] ytd-thumbnail.ytd-video-renderer, ytd-playlist-renderer[use-bigger-thumbs][bigger-thumbs-style=BIG] ytd-playlist-thumbnail.ytd-playlist-renderer, ytd-playlist-renderer[use-bigger-thumbs] ytd-playlist-thumbnail.ytd-playlist-renderer, ytd-radio-renderer[use-bigger-thumbs][bigger-thumbs-style=BIG] ytd-thumbnail.ytd-radio-renderer, ytd-radio-renderer[use-bigger-thumbs] ytd-thumbnail.ytd-radio-renderer, ytd-radio-renderer[use-bigger-thumbs][bigger-thumbs-style=BIG] ytd-thumbnail.ytd-radio-renderer, ytd-radio-renderer[use-bigger-thumbs][bigger-thumbs-style=BIG] ytd-playlist-thumbnail.ytd-radio-renderer, ytd-movie-renderer[use-bigger-thumbs][bigger-thumbs-style=BIG] .thumbnail-container.ytd-movie-renderer, ytd-movie-renderer[use-bigger-thumbs] .thumbnail-container.ytd-movie-renderer, ytd-promoted-video-renderer[use-bigger-thumbs][bigger-thumbs-style=BIG] ytd-thumbnail.ytd-promoted-video-renderer, ytd-promoted-sparkles-web-renderer[web-search-layout][use-bigger-thumbs][bigger-thumbs-style=BIG] #thumbnail-container.ytd-promoted-sparkles-web-renderer, ytd-text-image-no-button-layout-renderer[use-bigger-thumbs][bigger-thumbs-style=BIG] #text-image-container.ytd-text-image-no-button-layout-renderer, .yt-lockup-view-model-wiz--horizontal .yt-lockup-view-model-wiz__content-image, .yt-lockup-view-model--horizontal .yt-lockup-view-model__content-image { max-width: 360px !important }
 /* Additional stuff and fixes for YT Performance Booster JS code */
 ytd-mealbear-promo-renderer, .toast-button.yt-notification-action-renderer, .paper-toast-open.yt-notification-action-renderer.style-scope.toast-button, ytd-video-quality-promo-renderer, tp-yt-iron-overlay-backdrop.opened { display: none !important }
 .ytSnackbarContainerClosed { animation: snackbar-slide-out-to-bottom .5s ease forwards !important }

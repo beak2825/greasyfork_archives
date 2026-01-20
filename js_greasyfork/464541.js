@@ -4,7 +4,7 @@
 // @namespace            https://github.com/utags/links-helper
 // @homepageURL          https://github.com/utags/links-helper#readme
 // @supportURL           https://github.com/utags/links-helper/issues
-// @version              0.12.0
+// @version              0.13.3
 // @description          Open external links in a new tab, open internal links matching the specified rules in a new tab, convert text to hyperlinks, convert image links to image tags(<img>), parse Markdown style links and image tags, parse BBCode style links and image tags
 // @description:zh-CN    支持所有网站在新标签页中打开第三方网站链接（外链），在新标签页中打开符合指定规则的本站链接，解析文本链接为超链接，微信公众号文本转可点击的超链接，图片链接转图片标签，解析 Markdown 格式链接与图片标签，解析 BBCode 格式链接与图片标签
 // @icon                 https://wsrv.nl/?w=128&h=128&url=https%3A%2F%2Fraw.githubusercontent.com%2Futags%2Flinks-helper%2Frefs%2Fheads%2Fmain%2Fassets%2Ficon.png
@@ -1633,6 +1633,8 @@
       "<p>Image proxy domain list</p>\n  <p>\n  - One domain per line (without http/https)<br>\n  - '*' matches all domains<br>\n  - Exclusion rules: prefix '!' to exclude specific domains<br>\n  <pre>i.imgur.com\nimgur.com\n!abc.com\n*</pre>\n  </p>",
     "settings.enableImageProxyWebp":
       "Convert proxied images to WebP when possible",
+    "settings.enableImageProxyConvertSvgToPng":
+      "Proxy SVG images (convert to PNG)",
     "settings.convertTextToLinks": "Convert text links to hyperlinks",
     "settings.convertLinksToImages": "Convert image links to image tags",
     "settings.eraseLinks": "Erase Links",
@@ -1682,6 +1684,8 @@
       "<p>\u56FE\u7247\u4EE3\u7406\u57DF\u540D\u5217\u8868</p>\n  <p>\n  - \u6BCF\u884C\u4E00\u4E2A\u57DF\u540D\uFF08\u4E0D\u9700\u8981 http/https\uFF09<br>\n  - '*' \u4EE3\u8868\u5339\u914D\u6240\u6709\u57DF\u540D<br>\n  - \u6392\u9664\u89C4\u5219\uFF1A\u4EE5 '!' \u5F00\u5934\u8868\u793A\u6392\u9664\u5BF9\u5E94\u57DF\u540D<br>\n  <pre>i.imgur.com\nimgur.com\n!abc.com\n*</pre>\n  </p>",
     "settings.enableImageProxyWebp":
       "\u5C06\u4EE3\u7406\u56FE\u7247\u5C3D\u91CF\u8F6C\u6362\u4E3A WebP \u683C\u5F0F",
+    "settings.enableImageProxyConvertSvgToPng":
+      "\u4EE3\u7406 SVG \u56FE\u7247\uFF08\u8F6C\u6362\u4E3A PNG\uFF09",
     "settings.convertTextToLinks":
       "\u5C06\u6587\u672C\u94FE\u63A5\u8F6C\u6362\u4E3A\u8D85\u94FE\u63A5",
     "settings.convertLinksToImages":
@@ -1905,6 +1909,7 @@
     enableProxy: false,
     domains: [],
     enableWebp: false,
+    enableConvertSvgToPng: false,
   }
   var setImageProxyOptions = (options) => {
     imageProxyOptions = __spreadValues(
@@ -1949,19 +1954,57 @@
     return false
   }
   var toProxyUrlIfNeeded = (url) => {
+    var _a
+    const allowedExtensions = imageProxyOptions.enableConvertSvgToPng
+      ? /\.(jpg|jpeg|png|webp|tiff|gif|svg)$/i
+      : /\.(jpg|jpeg|png|webp|tiff|gif)$/i
+    const urlWithoutQuery = url.split("?")[0]
+    const lastSegment =
+      (_a = urlWithoutQuery.split("/").pop()) != null ? _a : ""
+    if (lastSegment.includes(".") && !allowedExtensions.test(lastSegment)) {
+      return void 0
+    }
+    if (lastSegment === "svg" && !imageProxyOptions.enableConvertSvgToPng) {
+      return void 0
+    }
     if (!shouldProxyUrl(url)) {
       return void 0
     }
-    const isGif = /\.gif($|\?)/i.test(url)
+    const isGif = lastSegment.endsWith(".gif")
+    const isSvg = lastSegment.endsWith(".svg") || lastSegment === "svg"
     const urlEncoded = encodeURIComponent(url)
     const ddgUrl = "https://external-content.duckduckgo.com/iu/?u=".concat(
       urlEncoded
     )
+    const urlToUse = isSvg ? urlEncoded : encodeURIComponent(ddgUrl)
     const qp = ""
       .concat(isGif ? "&n=-1" : "")
       .concat(imageProxyOptions.enableWebp ? "&output=webp" : "", "&default=")
       .concat(urlEncoded)
-    return "https://wsrv.nl/?url=".concat(encodeURIComponent(ddgUrl)).concat(qp)
+    return "https://wsrv.nl/?url=".concat(urlToUse).concat(qp)
+  }
+  var proxySrcset = (srcset) => {
+    const parts = srcset.split(",")
+    const newParts = parts.map((part) => {
+      const trimmed = part.trim()
+      const match = /^(\S+)(?:\s+(.+))?$/.exec(trimmed)
+      if (!match) {
+        return part
+      }
+      const [, url, descriptor] = match
+      let absoluteUrl = url
+      try {
+        absoluteUrl = new URL(url, document.baseURI).href
+      } catch (e) {
+        return part
+      }
+      const proxied = toProxyUrlIfNeeded(absoluteUrl)
+      if (proxied) {
+        return descriptor ? "".concat(proxied, " ").concat(descriptor) : proxied
+      }
+      return part
+    })
+    return newParts.join(", ")
   }
   var processRule = (rule, href) => {
     var _a
@@ -2060,28 +2103,70 @@
   }
   var proxyExistingImages = (flag) => {
     for (const img of getAllImages()) {
-      const src = getAttribute(img, "src")
-      if (!src) {
+      const rawSrc = getAttribute(img, "src")
+      if (!rawSrc) {
         continue
       }
       if (img.__links_helper_scaned === flag) {
         continue
       }
+      const src = img.src || rawSrc
       const proxied = toProxyUrlIfNeeded(src)
       if (proxied && proxied !== src) {
+        setAttribute(img, "data-lh-src", rawSrc)
         img.removeAttribute("src")
         setAttribute(img, "loading", "lazy")
         setAttribute(img, "referrerpolicy", "no-referrer")
         setAttribute(img, "src", proxied)
         const parent = img.parentElement
         if (parent && parent.tagName === "A") {
-          const href = getAttribute(parent, "href")
-          if (href && href === src) {
-            setAttribute(parent, "href", proxied)
+          const parentAnchor = parent
+          if (parentAnchor.href === src) {
+            const rawHref = getAttribute(parentAnchor, "href")
+            if (rawHref) {
+              setAttribute(parentAnchor, "data-lh-href", rawHref)
+            }
+            setAttribute(parentAnchor, "href", proxied)
           }
         }
       }
+      const rawSrcset = getAttribute(img, "srcset")
+      if (rawSrcset) {
+        const proxiedSrcset = proxySrcset(rawSrcset)
+        if (proxiedSrcset && proxiedSrcset !== rawSrcset) {
+          setAttribute(img, "data-lh-srcset", rawSrcset)
+          setAttribute(img, "loading", "lazy")
+          setAttribute(img, "referrerpolicy", "no-referrer")
+          setAttribute(img, "srcset", proxiedSrcset)
+        }
+      }
       img.__links_helper_scaned = flag
+    }
+  }
+  var restoreProxiedImages = () => {
+    for (const img of getAllImages()) {
+      const rawSrc = getAttribute(img, "data-lh-src")
+      if (rawSrc) {
+        setAttribute(img, "src", rawSrc)
+        removeAttribute(img, "data-lh-src")
+        removeAttribute(img, "loading")
+        removeAttribute(img, "referrerpolicy")
+        const parent = img.parentElement
+        if (parent && parent.tagName === "A") {
+          const parentAnchor = parent
+          const rawHref = getAttribute(parentAnchor, "data-lh-href")
+          if (rawHref) {
+            setAttribute(parentAnchor, "href", rawHref)
+            removeAttribute(parentAnchor, "data-lh-href")
+          }
+        }
+      }
+      const rawSrcset = getAttribute(img, "data-lh-srcset")
+      if (rawSrcset) {
+        setAttribute(img, "srcset", rawSrcset)
+        removeAttribute(img, "data-lh-srcset")
+      }
+      delete img.__links_helper_scaned
     }
   }
   var base = location.origin
@@ -2515,6 +2600,48 @@
   var enableImageProxyWebp = false
   var imageProxyDomains = []
   var cachedFlag = 0
+  var IMAGE_PROXY_BLACKLIST = [
+    "github.com",
+    "developer.mozilla.org",
+    "twitter.com",
+    "x.com",
+    "facebook.com",
+    "instagram.com",
+    "linkedin.com",
+    "whatsapp.com",
+    "telegram.org",
+    "discord.com",
+    "reddit.com",
+    "youtube.com",
+    "google.com",
+  ]
+  var STORAGE_KEY_CSP_RESTRICTED = "links-helper:csp-restricted"
+  var isImageProxyBlacklisted = () =>
+    IMAGE_PROXY_BLACKLIST.some(
+      (domain) => hostname === domain || hostname.endsWith(".".concat(domain))
+    ) || Boolean(localStorage.getItem(STORAGE_KEY_CSP_RESTRICTED))
+  var handleCspDetected = () => {
+    if (localStorage.getItem(STORAGE_KEY_CSP_RESTRICTED)) {
+      return
+    }
+    localStorage.setItem(STORAGE_KEY_CSP_RESTRICTED, "true")
+    enableImageProxy = false
+    restoreProxiedImages()
+  }
+  var detectCsp = () => {
+    if (isImageProxyBlacklisted()) {
+      return
+    }
+    doc.addEventListener("securitypolicyviolation", (e) => {
+      if (
+        e.blockedURI &&
+        (e.blockedURI.includes("wsrv.nl") ||
+          e.blockedURI.includes("external-content.duckduckgo.com"))
+      ) {
+        handleCspDetected()
+      }
+    })
+  }
   if (false) {
     const runtime =
       (_c = (_a = globalThis.chrome) == null ? void 0 : _a.runtime) != null
@@ -2613,6 +2740,11 @@
         tipContent: i2("settings.imageProxyDomainsTipContent"),
         group: groupNumber,
       },
+      enableImageProxyConvertSvgToPng: {
+        title: i2("settings.enableImageProxyConvertSvgToPng"),
+        defaultValue: false,
+        group: groupNumber,
+      },
       enableImageProxyWebp: {
         title: i2("settings.enableImageProxyWebp"),
         defaultValue: false,
@@ -2703,9 +2835,9 @@
         "enableImageProxyForCurrentSite_".concat(host)
       )
       const globalSetting = getSettingsValue("enableImageProxyForAllSites")
-      enableImageProxy = Boolean(
-        siteSetting != null ? siteSetting : globalSetting
-      )
+      enableImageProxy = isImageProxyBlacklisted()
+        ? false
+        : Boolean(siteSetting != null ? siteSetting : globalSetting)
     }
     {
       const domainsValue =
@@ -2716,10 +2848,14 @@
         .filter(Boolean)
     }
     enableImageProxyWebp = Boolean(getSettingsValue("enableImageProxyWebp"))
+    const enableImageProxyConvertSvgToPng = Boolean(
+      getSettingsValue("enableImageProxyConvertSvgToPng")
+    )
     setImageProxyOptions({
       enableProxy: enableImageProxy,
       domains: imageProxyDomains,
       enableWebp: enableImageProxyWebp,
+      enableConvertSvgToPng: enableImageProxyConvertSvgToPng,
     })
     {
       const siteSetting = getSettingsValue(
@@ -2790,6 +2926,7 @@
     bindOnError()
   }, 500)
   async function main() {
+    detectCsp()
     setPolling(true)
     await initSettings(() => {
       const settingsTable2 = getSettingsTable()
@@ -2864,7 +3001,18 @@
             const globalSetting = getSettingsValue(
               "enableImageProxyForAllSites"
             )
-            if (globalSetting !== void 0 && siteSetting === void 0) {
+            if (isImageProxyBlacklisted()) {
+              const checkbox = settingsMainView.querySelector(
+                '[data-key="enableImageProxyForCurrentSite_'.concat(
+                  host,
+                  '"] input[type="checkbox"]'
+                )
+              )
+              if (checkbox) {
+                checkbox.checked = false
+                checkbox.disabled = true
+              }
+            } else if (globalSetting !== void 0 && siteSetting === void 0) {
               const checkbox = settingsMainView.querySelector(
                 '[data-key="enableImageProxyForCurrentSite_'.concat(
                   host,
@@ -2925,14 +3073,60 @@
       true
     )
     const observer = new MutationObserver((mutationsList) => {
+      if (enableImageProxy) {
+        let hasImg = false
+        for (const mutation of mutationsList) {
+          if (mutation.type === "childList") {
+            for (const node of mutation.addedNodes) {
+              if (node.nodeName === "IMG") {
+                hasImg = true
+                break
+              }
+              if (node.nodeType === 1 && node.querySelector("img")) {
+                hasImg = true
+                break
+              }
+            }
+          }
+          if (hasImg) break
+        }
+        if (hasImg) {
+          proxyExistingImages(cachedFlag)
+        }
+      }
       scanNodes()
     })
+    const observeShadow = (root) => {
+      observer.observe(root, {
+        childList: true,
+        subtree: true,
+        characterData: true,
+      })
+    }
+    const originalAttachShadow = Element.prototype.attachShadow
+    if (originalAttachShadow) {
+      Element.prototype.attachShadow = function (init) {
+        const shadowRoot = originalAttachShadow.call(this, init)
+        observeShadow(shadowRoot)
+        return shadowRoot
+      }
+    }
     const startObserver = () => {
       observer.observe(doc.body, {
         childList: true,
         subtree: true,
         characterData: true,
       })
+      const scanAndObserveShadowRoots = (root) => {
+        const elements = root.querySelectorAll("*")
+        for (const element of elements) {
+          if (element.shadowRoot) {
+            observeShadow(element.shadowRoot)
+            scanAndObserveShadowRoots(element.shadowRoot)
+          }
+        }
+      }
+      scanAndObserveShadowRoots(doc.body)
     }
     runWhenBodyExists(() => {
       startObserver()

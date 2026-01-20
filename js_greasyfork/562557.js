@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MegaLadder Stats Overlay
 // @namespace    http://tampermonkey.net/
-// @version      1.1.0
+// @version      1.2.0
 // @description  Overlay for MegaLadder, GAZ. Supports PiP mode for overlaying on game screen.
 // @author       21twentyone
 // @license      MIT
@@ -42,7 +42,8 @@
         fullFocusMode: JSON.parse(localStorage.getItem('ml_pip_full_focus_mode') ?? 'false'),
         showKills: JSON.parse(localStorage.getItem('ml_pip_show_kills') ?? 'true'),
         showLevel: JSON.parse(localStorage.getItem('ml_pip_show_level') ?? 'true'),
-        showDiff: JSON.parse(localStorage.getItem('ml_pip_show_diff') ?? 'true')
+        showDiff: JSON.parse(localStorage.getItem('ml_pip_show_diff') ?? 'true'),
+        showOvertimeTimer: JSON.parse(localStorage.getItem('ml_pip_show_overtime') ?? 'true')
     }
 
     // --- Profile System ---
@@ -165,6 +166,7 @@
             main_timer: 'Главный Таймер',
             stages: 'Номера Этапов',
             event_timers: 'Таймеры Событий',
+            overtime_timer: '⏱ Овертайм',
             my_bans: 'Мои баны',
             enemy_bans: 'Баны врага',
             common_bans: 'Общие баны',
@@ -199,7 +201,9 @@
             new_profile: 'Имя нового профиля:',
             s_kills: 'Убийства',
             s_level: 'Уровень',
-            s_diff: 'Сложность'
+            s_diff: 'Сложность',
+            test_mode: '🧪 ТЕСТ',
+            test_active: '🧪 ТЕСТ ✅'
         },
         en: {
             // UI
@@ -217,6 +221,7 @@
             main_timer: 'Main Timer',
             stages: 'Stage Numbers',
             event_timers: 'Event Timers',
+            overtime_timer: '⏱ Overtime',
             my_bans: 'My Bans',
             enemy_bans: 'Enemy Bans',
             common_bans: 'Common Bans',
@@ -252,7 +257,9 @@
             new_profile: 'New profile name:',
             s_kills: 'Kills',
             s_level: 'Level',
-            s_diff: 'Diff'
+            s_diff: 'Diff',
+            test_mode: '🧪 TEST',
+            test_active: '🧪 TEST ✅'
         }
     }
 
@@ -298,7 +305,7 @@
         const checkboxes = [
             'fullFocusMode', 'focusRival', 'separateTimers',
             'showAvatars', 'showNames', 'showMMR', 'showBuilds',
-            'showMainTimer', 'showStages', 'showEventTimers',
+            'showMainTimer', 'showStages', 'showEventTimers', 'showOvertimeTimer',
             'showLeftBans', 'showRightBans', 'showCommonBans', 'showStats',
             'showKills', 'showLevel', 'showDiff'
         ]
@@ -339,6 +346,82 @@
     let canvas, ctx, videoEl, controlPanel, visibilityPanel, settingsPanel
     let isPipActive = false
     let activePanel = null
+    let isTestMode = false
+
+    // Test data for overlay configuration without active game
+    const TEST_DATA = {
+        lName: 'Player_1', rName: 'Player_2',
+        lMMR: '1250', rMMR: '1180',
+        lTime: '32:15', rTime: '31:48',
+        lStage: 2, rStage: 2,
+        lEvent: null, // Will be set dynamically based on language
+        rEvent: null, // Will be set dynamically based on language
+        lKills: 2450, rKills: 2180,
+        lKpm: 183.2, rKpm: 165.8,
+        lLvl: 35, rLvl: 32,
+        lLpm: 2.6, rLpm: 2.4,
+        lDiff: 85, rDiff: 72,
+        lBans: [
+            'https://cdn.megabonk.su/media/heroes/fox-hero-megabonk_QHFo4Vk.webp',
+            'https://cdn.megabonk.su/media/weapons/Scythe.png',
+            'https://cdn.megabonk.su/media/tomes/PrecisionTome.webp',
+            'https://cdn.megabonk.su/media/items/skuleg-item-megabonk_zQKV8oi.webp',
+            'https://cdn.megabonk.su/media/items/creditcardred-item-megabonk_Ml4NfMX.webp',
+            'https://cdn.megabonk.su/media/items/kevin-item-megabonk_DhTbcpm.webp',
+            'https://cdn.megabonk.su/media/items/sucky-magnet-item-megabonk_Spq0QQ7.webp'
+        ],
+        rBans: [
+            'https://cdn.megabonk.su/media/heroes/bush-hero-megabonk_ZFLkwbt.webp',
+            'https://cdn.megabonk.su/media/weapons/dice-weapon-megabonk_azRand7.webp',
+            'https://cdn.megabonk.su/media/tomes/ChaosTome.webp',
+            'https://cdn.megabonk.su/media/items/wrench-item-megabonk_jUKLczY.webp',
+            'https://cdn.megabonk.su/media/items/creditcardred-item-megabonk_Ml4NfMX.webp',
+            'https://cdn.megabonk.su/media/items/grandmas-secret-tonic-item-megabonk_UNZAQch.webp',
+            'https://cdn.megabonk.su/media/items/soulharvester-item-megabonk_Z2jdkHZ.webp'
+        ],
+        commonBans: [
+            'https://cdn.megabonk.su/media/heroes/ogre_-hero-megabonk_LK1zrwa.webp',
+            'https://cdn.megabonk.su/media/weapons/aura-weapon-megabonk_vp8xMya.webp',
+            'https://cdn.megabonk.su/media/tomes/SizeTome.webp',
+            'https://cdn.megabonk.su/media/items/boss-buster-item-megabonk_4UewS6Z.webp',
+            'https://cdn.megabonk.su/media/items/idlejuice-item-megabonk_o8Fzix5.webp',
+            'https://cdn.megabonk.su/media/items/beefy-ring-item-megabonk_sPHMc8N.webp',
+            'https://cdn.megabonk.su/media/items/joes-dagger-item-megabonk_qUQOVQ6.webp'
+        ],
+        lStatus: { emoji: null, isWin: false },
+        rStatus: { emoji: null, isWin: false },
+        lRatingDiff: null, rRatingDiff: null,
+        lPaused: false, rPaused: false,
+        lOvertime: '3:06', rOvertime: '1:53',
+        lBuild: {
+            weapons: [
+                { src: 'https://cdn.megabonk.su/media/weapons/firestaff-weapon-megabonk_lS70Fxx.webp', lvl: '7' },
+                { src: 'https://cdn.megabonk.su/media/weapons/Scythe.png', lvl: '6' },
+                { src: 'https://cdn.megabonk.su/media/weapons/bloodmagic-weapon-megabonk_qfxMRBC.webp', lvl: '2' },
+                { src: 'https://cdn.megabonk.su/media/weapons/katana-weapon-megabonk_ewx3pUc.webp', lvl: '3' }
+            ],
+            tomes: [
+                { src: 'https://cdn.megabonk.su/media/tomes/LuckTome.webp', lvl: '7' },
+                { src: 'https://cdn.megabonk.su/media/tomes/ChaosTome.webp', lvl: '3' },
+                { src: 'https://cdn.megabonk.su/media/tomes/DamageTome.webp', lvl: '4' },
+                { src: 'https://cdn.megabonk.su/media/tomes/CursedTome.webp', lvl: '11' }
+            ]
+        },
+        rBuild: {
+            weapons: [
+                { src: 'https://cdn.megabonk.su/media/weapons/corruptsword-weapon-megabonk_vxJtpPE.webp', lvl: '6' },
+                { src: 'https://cdn.megabonk.su/media/weapons/axe-weapon-megabonk_bYVopVF.webp', lvl: '39' },
+                { src: 'https://cdn.megabonk.su/media/weapons/dragonsbreath-weapon-megabonk_IXSJvu4.webp', lvl: '5' },
+                { src: 'https://cdn.megabonk.su/media/weapons/katana-weapon-megabonk_ewx3pUc.webp', lvl: '26' }
+            ],
+            tomes: [
+                { src: 'https://cdn.megabonk.su/media/tomes/PrecisionTome.webp', lvl: '7' },
+                { src: 'https://cdn.megabonk.su/media/tomes/CursedTome.webp', lvl: '7' },
+                { src: 'https://cdn.megabonk.su/media/tomes/CooldownTome.webp', lvl: '4' },
+                { src: 'https://cdn.megabonk.su/media/tomes/DamageTome.webp', lvl: '2' }
+            ]
+        }
+    }
 
 
     const css = `
@@ -994,9 +1077,30 @@
             }
         }
 
+        // Overtime timer - shows pause/overtime time
+        let overtimeHeight = 0
+        if (SETTINGS.showOvertimeTimer && data.lRatingDiff === null && (data.lOvertime || data.rOvertime)) {
+            const overtimeY = (SETTINGS.showMainTimer ? boxY + boxH : (buildsBottomY > 0 ? buildsBottomY : buildStartY)) + (4 * SETTINGS.scale)
+            const overtimeFontSize = 12
+            const lOvertimeStr = data.lOvertime ? `⏱ ${data.lOvertime}` : ''
+            const rOvertimeStr = data.rOvertime ? `⏱ ${data.rOvertime}` : ''
+            const overtimeColor = '#999'
+
+            if (SETTINGS.separateTimers && !isFocus) {
+                if (lOvertimeStr) drawText(lOvertimeStr, leftContentPad, overtimeY + (10 * SETTINGS.scale), overtimeFontSize, overtimeColor, 'left', '600')
+                if (rOvertimeStr) drawText(rOvertimeStr, W - rightContentPad, overtimeY + (10 * SETTINGS.scale), overtimeFontSize, overtimeColor, 'right', '600')
+            } else if (isFocus) {
+                if (rOvertimeStr) drawText(rOvertimeStr, CX, overtimeY + (10 * SETTINGS.scale), overtimeFontSize, overtimeColor, 'center', '600')
+            } else {
+                if (lOvertimeStr) drawText(lOvertimeStr, boxX + (boxW * 0.25), overtimeY + (10 * SETTINGS.scale), overtimeFontSize, overtimeColor, 'center', '600')
+                if (rOvertimeStr) drawText(rOvertimeStr, boxX + (boxW * 0.75), overtimeY + (10 * SETTINGS.scale), overtimeFontSize, overtimeColor, 'center', '600')
+            }
+            overtimeHeight = (22 * SETTINGS.scale)
+        }
+
         let currentY;
-        if (SETTINGS.showMainTimer) {
-            currentY = boxY + boxH
+        if (SETTINGS.showMainTimer || SETTINGS.showOvertimeTimer) {
+            currentY = boxY + boxH + overtimeHeight
         } else {
             currentY = (buildsBottomY > 0 ? buildsBottomY : buildStartY) + (5 * SETTINGS.scale)
         }
@@ -1213,10 +1317,23 @@
         const setBtn = createBtn('ml-btn-set', t('set_btn'), () => togglePanel('set'))
         const mainBtn = createBtn('ml-btn-main', t('open_btn'), togglePiP, true)
 
+        const testBtn = createBtn('ml-btn-test', t('test_mode'), () => {
+            isTestMode = !isTestMode
+            const testBtnEl = document.getElementById('ml-btn-test')
+            if (testBtnEl) {
+                const dot = testBtnEl.querySelector('.ml-dot')
+                const txt = testBtnEl.querySelector('span:last-child')
+                if (dot) dot.classList.toggle('active', isTestMode)
+                if (txt) txt.textContent = isTestMode ? t('test_active') : t('test_mode')
+                testBtnEl.classList.toggle('active-btn', isTestMode)
+            }
+        }, true)
+
         controlPanel.appendChild(mainBtn)
         controlPanel.appendChild(document.createElement('div')).style.width = '5px'
         controlPanel.appendChild(visBtn)
         controlPanel.appendChild(setBtn)
+        controlPanel.appendChild(testBtn)
 
         document.body.appendChild(controlPanel)
     }
@@ -1243,6 +1360,7 @@
             { id: 'showMainTimer', label: t('main_timer') },
             { id: 'showStages', label: t('stages') },
             { id: 'showEventTimers', label: t('event_timers') },
+            { id: 'showOvertimeTimer', label: t('overtime_timer') },
             { id: 'showLeftBans', label: t('my_bans') },
             { id: 'showRightBans', label: t('enemy_bans') },
             { id: 'showCommonBans', label: t('common_bans') },
@@ -1616,6 +1734,14 @@
 
     async function togglePiP() {
         try {
+            // Check if PiP API is supported (not available in Firefox)
+            if (!document.pictureInPictureEnabled || typeof videoEl.requestPictureInPicture !== 'function') {
+                alert(SETTINGS.language === 'ru'
+                    ? 'Picture-in-Picture не поддерживается в этом браузере. Используйте Chrome, Edge или другой Chromium-браузер для режима PiP.'
+                    : 'Picture-in-Picture is not supported in this browser. Please use Chrome, Edge, or another Chromium-based browser for PiP mode.')
+                return
+            }
+
             if (document.pictureInPictureElement) {
                 await document.exitPictureInPicture()
                 isPipActive = false
@@ -1637,6 +1763,24 @@
     }
 
     function updateLoop() {
+        // If test mode is active, use test data instead of parsing DOM
+        if (isTestMode) {
+            // Load test avatars
+            const lTestAvatar = 'https://cdn.megabonk.su/media/heroes/fox-hero-megabonk_QHFo4Vk.webp'
+            const rTestAvatar = 'https://cdn.megabonk.su/media/heroes/sir_chadwell-hero-megabonk_5LHozY7.webp'
+            if (imgCache.lSrc !== lTestAvatar) { imgCache.lSrc = lTestAvatar; imgCache.lAvatar.src = lTestAvatar; }
+            if (imgCache.rSrc !== rTestAvatar) { imgCache.rSrc = rTestAvatar; imgCache.rAvatar.src = rTestAvatar; }
+            // Set localized events based on current language
+            const testData = {
+                ...TEST_DATA,
+                lEvent: { text: `${t('swarm')} (01:30)`, color: '#d2b4de' },
+                rEvent: { text: `${t('miniboss')} (00:45)`, color: '#f0b27a' }
+            }
+
+            drawOverlay(testData)
+            return
+        }
+
         const leftCol = document.querySelector('.lobby-page__player-column--left')
         if (!leftCol) return
 
@@ -1734,6 +1878,13 @@
             const lPaused = parsePaused(leftCol)
             const rPaused = parsePaused(rightCol)
 
+            const parseOvertime = (col) => {
+                const badge = col.querySelector('.run-card__pause-badge')
+                return badge ? badge.textContent.trim() : null
+            }
+            const lOvertime = parseOvertime(leftCol)
+            const rOvertime = parseOvertime(rightCol)
+
             drawOverlay({
                 lName, rName, lMMR, rMMR, lTime: lTimer, rTime: rTimer,
                 lStage, rStage, lEvent, rEvent,
@@ -1744,6 +1895,7 @@
                 lStatus, rStatus,
                 lRatingDiff, rRatingDiff,
                 lPaused, rPaused,
+                lOvertime, rOvertime,
                 lBuild, rBuild
             })
 

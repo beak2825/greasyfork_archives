@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Twitch - Expand your followed channels list automatically
 // @namespace    http://tampermonkey.net/
-// @version      0.9
+// @version      2.3
 // @description  Expand your followed channels list automatically with settings
 // @author       Jens Nordström
 // @match        https://www.twitch.tv/*
@@ -13,6 +13,12 @@
 // ==/UserScript==
 (function() {
     'use strict';
+
+    // -------------------------------------- SETTINGS -------------------------------------- //
+    // Change expandAmount to set how many times the followed channel list should be expanded //
+    // -------------------------------------------------------------------------------------- //
+
+    var expandAmount = 3;
 
     // Wait for the DOM to load
     function waitForElement(querySelector, timeout) {
@@ -34,13 +40,23 @@
     }
 
     // Initialize
-    waitForElement(".side-nav-show-more-toggle__button", 0).then(function() {
-
-        // Change this value with how many times the followed channel list should be expanded
-        var expandAmount = 3;
+    function clickExpandButton() {
+      waitForElement(".side-nav-show-more-toggle__button", 0).then(function() {
 
         for (var i = 0; i < expandAmount; i++) {
-            document.querySelector(".side-nav-show-more-toggle__button > button").click();
+          document.querySelector(".side-nav-show-more-toggle__button > button").click();
         }
-    })
+      })
+    };
+
+    // Run and expand per expandAmount value
+    var NumberOfClick = expandAmount;
+    var interval = 1000;
+
+    for (var i = 0; i < NumberOfClick; i++) {
+      setTimeout(function() {
+        clickExpandButton();
+      }, i * interval)
+    }
+
 })();

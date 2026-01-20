@@ -2,7 +2,7 @@
 // @name         SOOP (숲) - 사이드바 UI 변경(백업본)
 // @name:ko         SOOP (숲) - 사이드바 UI 변경(백업본)
 // @namespace    https://greasyfork.org/ko/scripts/551140
-// @version      20260120(08.01)
+// @version      20260120(08.01).ver2
 // @description  사이드바 UI 변경, 월별 리캡, 채팅 모아보기, 차단기능 등
 // @description:ko  사이드바 UI 변경, 월별 리캡, 채팅 모아보기, 차단기능 등
 // @author       askld / eldirna(복구)
@@ -3518,7 +3518,7 @@ body:not(.screen_mode):not(.fullScreen_mode):has(#sidebar.min) #webplayer_conten
         await initializeSidebar(false);
     };
 
-    const makeTopNavbarAndSidebar = (page) => {
+   /* const makeTopNavbarAndSidebar = (page) => {
         // .left_navbar를 찾거나 생성
         let leftNavbar = document.body.querySelector('.left_navbar');
         if (!leftNavbar) {
@@ -3527,6 +3527,36 @@ body:not(.screen_mode):not(.fullScreen_mode):has(#sidebar.min) #webplayer_conten
 
             (async () => {
                 const serviceHeaderDiv = await waitForElementAsync('#serviceHeader');
+                serviceHeaderDiv.prepend(leftNavbar);
+            })()
+        }*/
+    const makeTopNavbarAndSidebar = (page) => {
+
+        // [검문소 1] 시작하자마자 방송국이면 즉시 종료
+        if (window.location.href.includes('/station/') || window.location.href.includes('ch.sooplive.co.kr')) {
+            document.body.classList.remove('customSidebar');
+            return;
+        }
+
+        // .left_navbar를 찾거나 생성
+        let leftNavbar = document.body.querySelector('.left_navbar');
+        if (!leftNavbar) {
+            leftNavbar = document.createElement('div');
+            leftNavbar.className = 'left_navbar';
+
+            // ★★★ 여기가 핵심입니다 ★★★
+            (async () => {
+                // 헤더가 나올 때까지 기다림...
+                const serviceHeaderDiv = await waitForElementAsync('#serviceHeader');
+
+                // [검문소 2] 기다리는 동안 방송국으로 바뀌었는지 확인! (시간차 방어)
+                if (window.location.href.includes('/station/') || window.location.href.includes('ch.sooplive.co.kr')) {
+                    // 방송국이네? 그럼 붙이지 마!
+                    leftNavbar.remove(); // 혹시 메모리에 있으면 삭제
+                    return;
+                }
+
+                // 방송국이 아닐 때만 붙이기
                 serviceHeaderDiv.prepend(leftNavbar);
             })()
         }
@@ -8289,14 +8319,12 @@ function replaceThumbnails() {
     const processStreamers = () => {
         const processedLayers = new Set(); // 처리된 레이어를 추적
 
-        // 버튼 생성 및 클릭 이벤트 처리
+        // [수정 1] 숨기기 버튼 생성 (기존 유지)
         const createHideButton = (listItem, optionsLayer) => {
             const hideButton = document.createElement('button'); // "숨기기" 버튼 생성
             hideButton.type = 'button';
-
             const span = document.createElement('span');
             span.textContent = '이 브라우저에서 스트리머 숨기기';
-
             hideButton.appendChild(span);
 
             // 클릭 이벤트 추가
@@ -8305,9 +8333,8 @@ function replaceThumbnails() {
                 const userIdElement = listItem.querySelector('.cBox-info > a'); // 사용자 ID 요소
 
                 if (userNameElement && userIdElement) {
-                    const userId = userIdElement.href.split('/')[3]; // 사용자 ID 추출
+                    const userId = userIdElement.href.split('/')[4]; // 사용자 ID 추출
                     const userName = userNameElement.innerText; // 사용자 이름 추출
-
                     customLog.log(`Blocking user: ${userName}, ID: ${userId}`); // 로그 추가
 
                     if (userId && userName) {
@@ -8318,170 +8345,139 @@ function replaceThumbnails() {
                     customLog.log("User elements not found."); // 요소가 없을 경우 로그 추가
                 }
             });
-
             optionsLayer.appendChild(hideButton); // 옵션 레이어에 버튼 추가
         };
-        /*  */
+
+        // [수정 2] 카테고리 숨기기 버튼 (기능 끄기 위해 내용 비움 -> 에러 방지)
         const createCategoryHideButton = (listItem, optionsLayer) => {
-            const hideButton = document.createElement('button'); // "숨기기" 버튼 생성
-            hideButton.type = 'button';
-
-            const span = document.createElement('span');
-            span.textContent = '이 브라우저에서 해당 카테고리 숨기기';
-
-            hideButton.appendChild(span);
-
-            // 클릭 이벤트 추가 [data-type=cBox] .cBox-info .tag_wrap a.category
-            hideButton.addEventListener('click', () => {
-                const categoryElement = listItem.querySelector('.cBox-info .tag_wrap a.category');
-
-                if (categoryElement) {
-                    const categoryName = categoryElement.textContent;
-                    const categoryNo = getCategoryNo(categoryName);
-                    if (categoryName && categoryNo) {
-                        blockCategory(categoryName, categoryNo);
-                    }
-                } else {
-                    customLog.log("User elements not found."); // 요소가 없을 경우 로그 추가
-                }
-            });
-
-            optionsLayer.appendChild(hideButton); // 옵션 레이어에 버튼 추가
+            return;
         };
+
+        // [수정 3] 핀 버튼 (기능 끄기 위해 내용 비움 -> 에러 방지)
         const createCategoryPinButton = (listItem, optionsLayer) => {
-            const pinButton = document.createElement('button');
-            pinButton.type = 'button';
-            const span = document.createElement('span');
-            span.textContent = '이 카테고리를 탭에 추가';
-            pinButton.appendChild(span);
-            pinButton.addEventListener('click', () => {
-                const categoryElement = listItem.querySelector('.cBox-info .tag_wrap a.category');
-                if (categoryElement) {
-                    const categoryName = categoryElement.textContent;
-                    const categoryNo = getCategoryNo(categoryName);
-                    if (categoryName && categoryNo) {
-                        pinCategory(categoryName, categoryNo);
-                    }
-                }
-            });
-            const blockCategoryButton = Array.from(optionsLayer.querySelectorAll('button')).find(btn => btn.textContent.includes('카테고리 숨기기'));
-            if (blockCategoryButton) {
-                blockCategoryButton.insertAdjacentElement('afterend', pinButton);
-            } else {
-                optionsLayer.appendChild(pinButton);
-            }
+            return;
         };
 
-        // DOM 변경 감지 및 처리
+        // [수정 4] DOM 변경 감지 (렉 방지 최적화 적용됨)
         const handleDOMChange = (mutationsList) => {
+            let shouldUpdate = false;
+
+            // 1. 변화가 있는지 빠르게 스캔
             for (const mutation of mutationsList) {
                 if (mutation.type === 'childList') {
-                    const moreOptionsContainer = document.querySelector('div._moreDot_wrapper'); // 추가 옵션 컨테이너
-                    const optionsLayer = moreOptionsContainer ? moreOptionsContainer.querySelector('div._moreDot_layer') : null; // 옵션 레이어
+                    shouldUpdate = true;
+                }
+            }
 
-                    if (optionsLayer && optionsLayer.style.display !== 'none' && !processedLayers.has(optionsLayer)) {
-                        const activeButton = document.querySelector('button.more_dot.on'); // 활성화된 버튼
-                        const listItem = activeButton.closest('li[data-type="cBox"]'); // 가장 가까운 리스트 아이템 찾기
+            // 2. 변화가 있을 때만 딱 한 번 실행 (렉 해결 핵심)
+            if (shouldUpdate) {
+                // (A) 더보기 메뉴 버튼 처리
+                const moreOptionsContainer = document.querySelector('div._moreDot_wrapper');
+                const optionsLayer = moreOptionsContainer ? moreOptionsContainer.querySelector('div._moreDot_layer') : null;
 
-                        if (listItem) {
-                            createHideButton(listItem, optionsLayer); // 숨기기 버튼 생성
-                            createCategoryHideButton(listItem, optionsLayer);
-                            createCategoryPinButton(listItem, optionsLayer); // Add the pin button
-                            processedLayers.add(optionsLayer); // 이미 처리된 레이어로 추가
+                if (optionsLayer && optionsLayer.style.display !== 'none' && !processedLayers.has(optionsLayer)) {
+                    const activeButton = document.querySelector('button.more_dot.on');
+                    const listItem = activeButton ? activeButton.closest('li[data-type="cBox"]') : null;
+
+                    if (listItem) {
+                        createHideButton(listItem, optionsLayer); // 숨기기 버튼 생성
+                        createCategoryHideButton(listItem, optionsLayer);
+                        createCategoryPinButton(listItem, optionsLayer); // Add the pin button
+                        processedLayers.add(optionsLayer); // 이미 처리된 레이어로 추가
+                    }
+                } else if (!optionsLayer) {
+                    processedLayers.clear(); // 요소가 없을 때 처리된 레이어 초기화
+                }
+
+                // (B) 방송 목록 필터링
+                const cBoxListItems = document.querySelectorAll('div.cBox-list li[data-type="cBox"]:not(.hide-checked)');
+
+                for (const listItem of cBoxListItems) {
+                    listItem.classList.add('hide-checked');
+
+                    const userIdElement = listItem.querySelector('.cBox-info > a'); // 사용자 ID 요소
+                    const categoryElements = listItem.querySelectorAll('.cBox-info .tag_wrap a.category'); // 다중 카테고리
+                    const tagElements = listItem.querySelectorAll('.cBox-info .tag_wrap a:not(.category)');
+                    const titleElement = listItem.querySelector('.cBox-info .title a');
+
+                    // 유저 차단
+                    if (userIdElement) {
+                        const userId = userIdElement.href.split('/')[4];
+                        if (isUserBlocked(userId)) {
+                            // 차단된 사용자일 경우 li 삭제
+                            listItem.style.display = 'none';
+                            customLog.log(`Removed blocked user with ID: ${userId}`); // 로그 추가
                         }
-                    } else if (!optionsLayer) {
-                        processedLayers.clear(); // 요소가 없을 때 처리된 레이어 초기화
                     }
 
-                    // cBox-list의 리스트 아이템 처리
-                    const cBoxListItems = document.querySelectorAll('div.cBox-list li[data-type="cBox"]:not(.hide-checked)');
-
-                    // cBoxListItems를 for...of 루프로 반복
-                    for (const listItem of cBoxListItems) {
-                        listItem.classList.add('hide-checked');
-                        const userIdElement = listItem.querySelector('.cBox-info > a'); // 사용자 ID 요소
-                        const categoryElement = listItem.querySelector('.cBox-info .tag_wrap a.category');
-                        const tagElements = listItem.querySelectorAll('.cBox-info .tag_wrap a:not(.category)');
-                        const titleElement = listItem.querySelector('.cBox-info .title a');
-
-                        if (userIdElement) {
-                            const userId = userIdElement.href.split('/')[3]; // 사용자 ID 추출
-
-                            // 차단된 사용자일 경우 li 삭제
-                            if (isUserBlocked(userId)) {
-                                listItem.style.display = 'none';
-                                customLog.log(`Removed blocked user with ID: ${userId}`); // 로그 추가
-                            }
-                        }
-
-                        if (categoryElement) {
+                    // 카테고리 차단 (다중)
+                    if (categoryElements) {
+                        for (const categoryElement of categoryElements) {
                             const categoryName = categoryElement.textContent;
                             if (isCategoryBlocked(getCategoryNo(categoryName))) {
                                 listItem.style.display = 'none';
                                 customLog.log(`Removed blocked category with Name: ${categoryName}`); // 로그 추가
+                                break;
                             }
                         }
+                    }
 
-                        if (titleElement) {
-                            const broadTitle = titleElement.textContent;
+                    // 제목 차단
+                    if (titleElement) {
+                        const broadTitle = titleElement.textContent;
+                        for (const word of blockedWords) {
+                            if (broadTitle.toLowerCase().includes(word.toLowerCase())) {
+                                listItem.style.display = 'none';
+                                customLog.log(`Removed item with blocked word in title: ${broadTitle}`); // 로그 추가
+                                break;
+                            }
+                        }
+                    }
 
+                    // 태그 차단
+                    if (tagElements) {
+                        for (const tagElement of tagElements) {
+                            const tagTitle = tagElement.textContent;
                             // blockedWords에 포함된 단어가 broadTitle에 있는지 체크
                             for (const word of blockedWords) {
-                                if (broadTitle.toLowerCase().includes(word.toLowerCase())) {
+                                if (tagTitle.toLowerCase().includes(word.toLowerCase())) {
                                     listItem.style.display = 'none';
-                                    customLog.log(`Removed item with blocked word in title: ${broadTitle}`); // 로그 추가
+                                    customLog.log(`Removed item with blocked word in tag: ${tagTitle}`); // 로그 추가
                                     break; // 하나의 차단 단어가 발견되면 더 이상 확인할 필요 없음
                                 }
                             }
-                        }
-
-                        if (tagElements) {
-                            for (const tagElement of tagElements) {
-                                const tagTitle = tagElement.textContent;
-                                for (const word of blockedWords) {
-                                    if (tagTitle.toLowerCase().includes(word.toLowerCase())) {
-                                        listItem.style.display = 'none';
-                                        customLog.log(`Removed item with blocked word in tag: ${tagTitle}`); // 로그 추가
-                                        break;
-                                    }
-                                }
-                                if (listItem.style.display === 'none') break; // 이미 숨겼으면 루프 종료
-                            }
+                            if (listItem.style.display === 'none') break;
                         }
                     }
+                }
 
-                    // 프리뷰 모달 사용
-                    if (isPreviewModalEnabled) {
-                        const allThumbsBoxLinks = document.querySelectorAll('[data-type=cBox] .thumbs-box > a[href]:not([href^="https://vod.sooplive.co.kr"])');
-                        if (allThumbsBoxLinks.length) previewModalManager.attachToThumbnails(allThumbsBoxLinks);
-                    }
+                // (C) 썸네일 처리 (프리뷰, 19금 등)
+                if (isPreviewModalEnabled) {
+                    const allThumbsBoxLinks = document.querySelectorAll('[data-type=cBox] .thumbs-box > a[href]:not([href^="https://vod.sooplive.co.kr"])');
+                    if (allThumbsBoxLinks.length) previewModalManager.attachToThumbnails(allThumbsBoxLinks);
+                }
 
-                    /*// 빈 썸네일 대체
-                    if (isReplaceEmptyThumbnailEnabled){
-                        const noThumbsBoxLinks = document.querySelectorAll('[data-type=cBox] .thumbs-box > a[href].thumb-adult:not([href^="https://vod.sooplive.co.kr"])');
-                        if (noThumbsBoxLinks.length) replaceThumbnails(noThumbsBoxLinks);
-                    }*/
-                    // 19금 썸네일 대체 기능
-                    if (isReplaceEmptyThumbnailEnabled) {
+                // [수정됨] 19금 썸네일 호출부
+                if (isReplaceEmptyThumbnailEnabled) {
+                    // 화면에 연령제한 배지가 하나라도 있으면 함수 실행
+                    // (함수 내부에서 '마우스 오버 이벤트'를 부착하는 작업을 수행함)
                     if (document.querySelector('.status.adult')) {
                         replaceThumbnails();
                     }
                 }
 
-                    // 본문 방송 목록의 새 탭 열기 방지
-                    if(!isOpenNewtabEnabled){
-                        setTimeout(removeTargetFromLinks, 100);
-                    }
+                // 새 탭 방지
+                if(!isOpenNewtabEnabled){
+                    setTimeout(removeTargetFromLinks, 100);
                 }
             }
         };
 
         const observer = new MutationObserver(handleDOMChange); // DOM 변경 감지기
-
         const config = { childList: true, subtree: true };
-
         observer.observe(document.body, config);
     };
+
 
     /**
  * 채팅 메시지를 추적하고, 강퇴/지정 유저 메시지를 모달에 표시하는 함수

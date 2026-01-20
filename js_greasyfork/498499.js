@@ -29,6 +29,7 @@
 
   //Early return if match blackList
   if( Options.blackList.split(/[,;]/g).some( e=>!!e.trim()?location.host.includes( e.trim() ):false ) ) return;
+  if (window !== window.top) return;
 
   // --- Utility: human-friendly dict format ---
   function importDict(text) {
@@ -49,8 +50,8 @@
     const { dicts } = e.data;
 
     function buildTrie(dicts) {
-      const root = { children: {}, value: null, priority: 0 };
-      const sorted = Object.values(dicts).sort((a, b) => a.priority - b.priority);
+      const root = { children: Object.create(null), value: null, priority: 0 };
+      const sorted = Object.values(dicts).sort((a, b) => b.priority - a.priority);
 
       for (const {dict, priority} of sorted) {
         for (const key in dict) {
@@ -133,7 +134,7 @@
 
     const punctMap = { "。": ".", "！": "!", "？": "?", "，": ",", "：": ":", "；": ";" };
     let output = parts.join(" ").replace(/[。！？，：；]/g, c => punctMap[c]);
-    output = output.replace(/(^[\s\[]*\w|[.!?]\s*\w)/g, m => m.toUpperCase());
+    output = output.replace(/(^[\s\[]*\p{L}|[.!?]\s*\p{L})/ug, m => m.toUpperCase());
     output = output.replace(/(\s+?[.!?,:;])/g,m=>m.trim());
     // output = output.replace(/\s+/,' ');
     return output;

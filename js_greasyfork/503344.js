@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube - Force rounded corners + tweaks included
-// @version      2026.01.18
-// @description  This script forces the rounded version of the layout (which includes some fewer tweaks applied along with CSS fixes).
+// @version      2026.01.20
+// @description  This script forces the rounded version of the layout (which includes some fewer tweaks applied along with CSS fixes and disables most of experimental flags).
 // @author       Joey_JTS (original author: xX_LegendCraftd_Xx)
 // @license MIT
 // @match        *://www.youtube.com/*
@@ -855,6 +855,32 @@ display: none !important
 display: block !important
 }
 
+/* Revert giant search thumbnails back to normal size */
+ytd-two-column-search-results-renderer[use-bigger-thumbs][bigger-thumbs-style=BIG] #primary.ytd-two-column-search-results-renderer,
+ytd-search[has-search-header][has-bigger-thumbs] #header.ytd-search {
+max-width: 1096px !important
+}
+
+ytd-channel-renderer[use-bigger-thumbs][bigger-thumb-style=BIG] #avatar-section.ytd-channel-renderer,
+ytd-channel-renderer[use-bigger-thumbs] #avatar-section.ytd-channel-renderer,
+ytd-video-renderer[use-bigger-thumbs][bigger-thumbs-style=BIG] ytd-thumbnail.ytd-video-renderer,
+ytd-video-renderer[use-search-ui] ytd-thumbnail.ytd-video-renderer,
+ytd-playlist-renderer[use-bigger-thumbs][bigger-thumbs-style=BIG] ytd-playlist-thumbnail.ytd-playlist-renderer,
+ytd-playlist-renderer[use-bigger-thumbs] ytd-playlist-thumbnail.ytd-playlist-renderer,
+ytd-radio-renderer[use-bigger-thumbs][bigger-thumbs-style=BIG] ytd-thumbnail.ytd-radio-renderer,
+ytd-radio-renderer[use-bigger-thumbs] ytd-thumbnail.ytd-radio-renderer,
+ytd-radio-renderer[use-bigger-thumbs][bigger-thumbs-style=BIG] ytd-thumbnail.ytd-radio-renderer,
+ytd-radio-renderer[use-bigger-thumbs][bigger-thumbs-style=BIG] ytd-playlist-thumbnail.ytd-radio-renderer,
+ytd-movie-renderer[use-bigger-thumbs][bigger-thumbs-style=BIG] .thumbnail-container.ytd-movie-renderer,
+ytd-movie-renderer[use-bigger-thumbs] .thumbnail-container.ytd-movie-renderer,
+ytd-promoted-video-renderer[use-bigger-thumbs][bigger-thumbs-style=BIG] ytd-thumbnail.ytd-promoted-video-renderer,
+ytd-promoted-sparkles-web-renderer[web-search-layout][use-bigger-thumbs][bigger-thumbs-style=BIG] #thumbnail-container.ytd-promoted-sparkles-web-renderer,
+ytd-text-image-no-button-layout-renderer[use-bigger-thumbs][bigger-thumbs-style=BIG] #text-image-container.ytd-text-image-no-button-layout-renderer,
+.yt-lockup-view-model-wiz--horizontal .yt-lockup-view-model-wiz__content-image,
+.yt-lockup-view-model--horizontal .yt-lockup-view-model__content-image {
+max-width: 360px !important
+}
+
 /* Rename from 'Posts' to 'Community */
 yt-tab-shape[tab-title="Posts"]  .yt-tab-shape-wiz__tab,
 yt-tab-shape[tab-title="Posts"]  .yt-tab-shape__tab {
@@ -870,7 +896,7 @@ margin-left: -45px !important;
 text-align: center !important
 }
 
-/* Left sidebar tweaks (swaps 'Subscriptions' and 'You' sections */
+/* Left sidebar tweaks (swaps 'Subscriptions' and 'You' sections along with cleaning up items) */
 #sections {
 display: flex !important;
 flex-direction: column !important
@@ -900,7 +926,23 @@ order: 5 !important
 order: 6 !important
 }
 
-/* Other fixes (including the 'third' guide item removed to make in place for the Subscriptions tab) */
+ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(4) {
+display: none
+}
+
+ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-last-of-type(2) {
+display: none
+}
+
+ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-last-of-type(1) {
+display: block !important
+}
+
+ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(1) ytd-guide-entry-renderer.ytd-guide-section-renderer.style-scope:nth-of-type(3), .ytd-mini-guide-entry-renderer[href="/shorts/"] {
+display: none !important
+}
+
+/* Other fixes */
 #background.ytd-masthead {
 opacity: 1 !important
 }
@@ -927,10 +969,6 @@ margin-top: 8px !important
 
 .ytSearchboxComponentDesktop .ytSearchboxComponentClearButtonIcon {
 color: var(--yt-spec-text-primary) !important
-}
-
-ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(1) ytd-guide-entry-renderer.ytd-guide-section-renderer.style-scope:nth-of-type(3), .ytd-mini-guide-entry-renderer[href="/shorts/"] {
-display: none !important
 }`;
 if (typeof GM_addStyle !== "undefined") {
   GM_addStyle(css);

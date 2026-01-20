@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         HSGuru 中文美化脚本
 // @namespace    http://tampermonkey.net/
-// @version      34.4.0.5
+// @version      34.4.0.6
 // @description  将HSGuru网站的部分英文替换为中文，并提供界面美化。
 // @author       深海之鱼
 // @match        https://www.hsguru.com/*
@@ -2218,6 +2218,7 @@
             'Rafaam': '拉法姆',
             'LoGosh': '奇闻',
             'Elise': '伊莉斯',
+            'Blobxigar': '焦油奇闻',
             // 动态添加所有符文组合
             ...generateAllRuneCombinations()
         },

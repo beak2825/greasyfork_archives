@@ -9,7 +9,7 @@
 // @run-at      document-start
 // @license     MIT
 // @icon        https://www.google.com/s2/favicons?sz=64&domain=youtube.com
-// @version     1.7.5
+// @version     1.7.6
 // @grant       GM_info
 // @grant       GM_addStyle
 // @grant       GM_setValue
@@ -386,8 +386,7 @@
             'ytd-rich-section-renderer',
             'ytd-rich-shelf-renderer',
             'ytd-reel-shelf-renderer',
-            'grid-shelf-view-model',
-            'ytd-watch-next-secondary-results-renderer'
+            'grid-shelf-view-model'
         ],
         METADATA: {
             TEXT: '.inline-metadata-item, #metadata-line span, .yt-content-metadata-view-model__metadata-text, yt-content-metadata-view-model .yt-core-attributed-string',

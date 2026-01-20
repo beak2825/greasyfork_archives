@@ -1,17 +1,18 @@
 // ==UserScript==
 // @name         Disable YouTube Hotkeys with Modern Settings Page
 // @namespace    https://github.com/VKrishna04
-// @version      4.0
+// @version      4.1
 // @description  Disable various YouTube hotkeys with fine-grained control (Excludes Search/Comments)
 // @author       VKrishna04
+// @email        hello@vkrishna04.me
 // @match        *://www.youtube.com/*
-// @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
+// @icon         https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg
 // @grant        GM_registerMenuCommand
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_addStyle
 // @license      Apache-2.0
-// @homepageURL  https://github.com/Life-Experimentalist/Youtube-Keystrokes-Blocker
+// @homepageURL  https://yt-hotkeys.vkrishna04.me/
 // @supportURL   https://github.com/Life-Experimentalist/Youtube-Keystrokes-Blocker/issues
 // @downloadURL https://update.greasyfork.org/scripts/563265/Disable%20YouTube%20Hotkeys%20with%20Modern%20Settings%20Page.user.js
 // @updateURL https://update.greasyfork.org/scripts/563265/Disable%20YouTube%20Hotkeys%20with%20Modern%20Settings%20Page.meta.js
@@ -335,8 +336,8 @@
         input:checked + .yt-hk-slider { background-color: #ff0033; }
         input:checked + .yt-hk-slider:before { transform: translateX(20px); }
         .yt-hk-footer { padding: 12px 20px; text-align: right; border-top: 1px solid #3d3d3d; }
-        .yt-hk-save-btn { background: #ff0033; border: none; padding: 8px 16px; color: #0f0f0f; font-weight: 500; border-radius: 2px; cursor: pointer; text-transform: uppercase; font-size: 14px; }
-        .yt-hk-save-btn:hover { background: #ee000d; }
+        .yt-hk-save-btn { background: #ff0033; border: none; padding: 8px 16px; color: #fff; font-weight: 500; border-radius: 2px; cursor: pointer; text-transform: uppercase; font-size: 14px; transition: background-color 0.2s; }
+        .yt-hk-save-btn:hover { background: #CC0000; }
 
         /* NATIVE BUTTON STYLES (MATCHING SHARE BUTTON) */
         .yt-hk-native-pill-btn {

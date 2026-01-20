@@ -3,7 +3,7 @@
 // @name:en      Remove watermarks from short videos (supports TikTok web version)
 // @name:zh-CN   短视频去水印（支持抖音网页版）
 // @name:zh-TW   短影片去浮水印（支援抖音網頁版）
-// @version      1.3.5
+// @version      1.3.6
 // @license      MIT
 // @description  一款短视频去水印下载工具，支持抖音网页版视频无水印下载
 // @description:en  A short video watermark removal and download tool that supports downloading videos from the Douyin (TikTok) web version without watermarks
@@ -147,15 +147,21 @@
                 //推荐~朋友
                 let videoArr = videoClassArr.getElementsByClassName("page-recommend-container");
                 if (videoArr.length === 0) {
-                    //首页
+                    //精选
                     videoArr = videoClassArr.querySelectorAll('.dySwiperSlide[data-e2e="feed-item"]');
                 }
                 let videoItemDiv = videoArr[videoIndex];
 
                 let account = videoItemDiv.getElementsByClassName("account-name")[0].textContent;
-                let accountNameSpanNode = videoItemDiv.getElementsByClassName("title")[0].childNodes[0];
-                let title = accountNameSpanNode.firstElementChild.textContent;
-                let videoName = account + "-" + title;
+                let accountNameSpanNode = videoItemDiv.getElementsByClassName("title")[0];
+                let firstChild = accountNameSpanNode.childNodes[0].firstElementChild;
+                let title;
+                if(firstChild.tagName.toLowerCase() === 'span') {
+                    title = accountNameSpanNode.textContent;
+                }else{
+                    title = firstChild.firstElementChild.textContent;
+                }
+                let videoName = account + "-" + title.replace("展开", "");
                 if (videoName === "") {
                     videoName = "无标题视频";
                 }
@@ -319,8 +325,16 @@
         }
     }
 
+    var btnDownload = {
+        class: 'btnClickDownload',
+        title: '点击下载视频',
+        html: function () {
+            return `<img style="cursor:pointer" height="22" width="22" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAABmJLR0QA/wD/AP+gvaeTAAAB10lEQVRYhe2Yv0sCYRjHnyuVoyIC/4CwH1OrKbdJDQ4hDi0NbTU0RuIPKKvBKE2loUHQ/0FRF3WsqDOoCF1UcIqWCvP0NC69hlI0Ss97LxR6P9sdPN/nw3vDPe8DMOAQUoTojy75n97HbBRyvgw1oIFvQ9v2vOGjJckdkiTlD8GCqGBBVLAgKlgQFSyIChZEBQuiggVRETRR6w+vTEDw7l7Df7sKAADwBOzErdRBtwzBd4alY9o6RsrstuW50YkRhdCyNoosB85gqlxk391Rs3ZfSM2w0PBsInAxubhev848UepZpYKUCy5tk2PKNU/UIkyuJ0EAgGzcfy5Gsshy4AylS0y55o1YNHu99OztGL4kVQvrfDL3RKlnlPJukkyFA1coxZZEyIkSBADIJPznU7o1SOaeO0oyFQ6cwRTLsDVv2KzZFdNLlOCnZOBMpVuDZO6Fmp9WyklFexRT4cAVTLNMteYNmzR2sX2QMXro7ZXTm/LdwxufL9T5fKHO3z++8au+25LBQzv6JtZKq6TUcpLsZgAADB7aMU7KNwkCiNcqdxLZ0m5LlS0ZRjd9YHTTXf8OGEwLBEDnqaOfxGwU0Ry3vi8g+01jATrwA+vACzY/sVQ75X/HB6W6vNjikAp7AAAAAElFTkSuQmCC" />`;
+        }
+    }
+
     /**
-     * 首页/推荐/我的
+     * 精选/推荐/我的
      * @returns
      */
     function getIndexVideo() {
@@ -338,7 +352,7 @@
         //推荐~朋友
         let videoArr = videoClassArr.getElementsByClassName("page-recommend-container");
         if (videoArr.length === 0) {
-            //首页
+            //精选
             videoArr = videoClassArr.querySelectorAll('.dySwiperSlide[data-e2e="feed-item"]');
         }
         if (videoArr.length === 0) {
@@ -395,13 +409,6 @@
             return false;
         }
 
-        let btnDownload = {
-            class: 'btnClickDownload',
-            title: '点击下载视频',
-            html: function () {
-                return `<img height="26" width="26" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAABmJLR0QA/wD/AP+gvaeTAAAB10lEQVRYhe2Yv0sCYRjHnyuVoyIC/4CwH1OrKbdJDQ4hDi0NbTU0RuIPKKvBKE2loUHQ/0FRF3WsqDOoCF1UcIqWCvP0NC69hlI0Ss97LxR6P9sdPN/nw3vDPe8DMOAQUoTojy75n97HbBRyvgw1oIFvQ9v2vOGjJckdkiTlD8GCqGBBVLAgKlgQFSyIChZEBQuiggVRETRR6w+vTEDw7l7Df7sKAADwBOzErdRBtwzBd4alY9o6RsrstuW50YkRhdCyNoosB85gqlxk391Rs3ZfSM2w0PBsInAxubhev848UepZpYKUCy5tk2PKNU/UIkyuJ0EAgGzcfy5Gsshy4AylS0y55o1YNHu99OztGL4kVQvrfDL3RKlnlPJukkyFA1coxZZEyIkSBADIJPznU7o1SOaeO0oyFQ6cwRTLsDVv2KzZFdNLlOCnZOBMpVuDZO6Fmp9WyklFexRT4cAVTLNMteYNmzR2sX2QMXro7ZXTm/LdwxufL9T5fKHO3z++8au+25LBQzv6JtZKq6TUcpLsZgAADB7aMU7KNwkCiNcqdxLZ0m5LlS0ZRjd9YHTTXf8OGEwLBEDnqaOfxGwU0Ry3vi8g+01jATrwA+vACzY/sVQ75X/HB6W6vNjikAp7AAAAAElFTkSuQmCC"/>`;
-            }
-        }
         //如果是已有下载按钮，则不添加
         let buttonArr = btnShare.getElementsByClassName(btnDownload.class);
         if (buttonArr.length !== 0) {
@@ -424,7 +431,7 @@
     }
 
     /**
-     * 首页/推荐/我的-详情
+     * 精选/推荐/我的-详情
      * @returns
      */
     function getIndexDetailVideo() {
@@ -440,13 +447,6 @@
             return false;
         }
 
-        let btnDownload = {
-            class: 'btnClickDownload',
-            title: '点击下载视频',
-            html: function () {
-                return `<img height="26" width="26" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAABmJLR0QA/wD/AP+gvaeTAAAB10lEQVRYhe2Yv0sCYRjHnyuVoyIC/4CwH1OrKbdJDQ4hDi0NbTU0RuIPKKvBKE2loUHQ/0FRF3WsqDOoCF1UcIqWCvP0NC69hlI0Ss97LxR6P9sdPN/nw3vDPe8DMOAQUoTojy75n97HbBRyvgw1oIFvQ9v2vOGjJckdkiTlD8GCqGBBVLAgKlgQFSyIChZEBQuiggVRETRR6w+vTEDw7l7Df7sKAADwBOzErdRBtwzBd4alY9o6RsrstuW50YkRhdCyNoosB85gqlxk391Rs3ZfSM2w0PBsInAxubhev848UepZpYKUCy5tk2PKNU/UIkyuJ0EAgGzcfy5Gsshy4AylS0y55o1YNHu99OztGL4kVQvrfDL3RKlnlPJukkyFA1coxZZEyIkSBADIJPznU7o1SOaeO0oyFQ6cwRTLsDVv2KzZFdNLlOCnZOBMpVuDZO6Fmp9WyklFexRT4cAVTLNMteYNmzR2sX2QMXro7ZXTm/LdwxufL9T5fKHO3z++8au+25LBQzv6JtZKq6TUcpLsZgAADB7aMU7KNwkCiNcqdxLZ0m5LlS0ZRjd9YHTTXf8OGEwLBEDnqaOfxGwU0Ry3vi8g+01jATrwA+vACzY/sVQ75X/HB6W6vNjikAp7AAAAAElFTkSuQmCC"/>`;
-            }
-        }
         //如果是已有下载按钮，则不添加
         let buttonArr = btnShare.getElementsByClassName(btnDownload.class);
         if (buttonArr.length !== 0) {
@@ -488,13 +488,6 @@
 
         let btnGrid = videoDiv.getElementsByClassName('xg-right-grid');
 
-        let btnDownload = {
-            class: 'btnClickDownload',
-            title: '点击下载视频',
-            html: function () {
-                return `<img height="22" width="22" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAABmJLR0QA/wD/AP+gvaeTAAAB10lEQVRYhe2Yv0sCYRjHnyuVoyIC/4CwH1OrKbdJDQ4hDi0NbTU0RuIPKKvBKE2loUHQ/0FRF3WsqDOoCF1UcIqWCvP0NC69hlI0Ss97LxR6P9sdPN/nw3vDPe8DMOAQUoTojy75n97HbBRyvgw1oIFvQ9v2vOGjJckdkiTlD8GCqGBBVLAgKlgQFSyIChZEBQuiggVRETRR6w+vTEDw7l7Df7sKAADwBOzErdRBtwzBd4alY9o6RsrstuW50YkRhdCyNoosB85gqlxk391Rs3ZfSM2w0PBsInAxubhev848UepZpYKUCy5tk2PKNU/UIkyuJ0EAgGzcfy5Gsshy4AylS0y55o1YNHu99OztGL4kVQvrfDL3RKlnlPJukkyFA1coxZZEyIkSBADIJPznU7o1SOaeO0oyFQ6cwRTLsDVv2KzZFdNLlOCnZOBMpVuDZO6Fmp9WyklFexRT4cAVTLNMteYNmzR2sX2QMXro7ZXTm/LdwxufL9T5fKHO3z++8au+25LBQzv6JtZKq6TUcpLsZgAADB7aMU7KNwkCiNcqdxLZ0m5LlS0ZRjd9YHTTXf8OGEwLBEDnqaOfxGwU0Ry3vi8g+01jATrwA+vACzY/sVQ75X/HB6W6vNjikAp7AAAAAElFTkSuQmCC"/>`;
-            }
-        }
         //如果是已有下载按钮，则不添加
         let buttonArr = btnGrid[0].getElementsByClassName(btnDownload.class);
         if (buttonArr.length !== 0) {

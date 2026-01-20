@@ -3,7 +3,7 @@
 // @namespace    https://github.com/examplecode/useful-user-scripts
 // @homepageURL  https://scriptcat.org/zh-CN/users/157252
 // @author       examplecode && Aloazny && Gemini
-// @version      3.3
+// @version      3.4
 // @description  二改@examplecode的搜索脚本，感谢@examplecode，添加MD3配色+高斯模糊+编辑/添加搜索引擎功能+搜索栏切换顶部底部+搜索框，保留原本的X浏览器搜索引擎读取，排序等功能。
 // @match        *://*/*
 // @icon          data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADoAAAA6CAYAAADhu0ooAAAAAXNSR0IArs4c6QAAAARzQklUCAgICHwIZIgAAApKSURBVGiB1dt7kBTFHcDxb88+7/3iKa9D4A5QDkxMSJmUgBEhgrGigKmYCmJKDElRUUtJNEllY8oqJZZWiaGQ+DhNaRkhJj6iIqmApFCEQ7lDLtzxOoHjzuPer31O//LH3t7u3u7Bzt2K0H9s9XTP9PRnu6dnpntXkcbw2LrDOYa/e6Y2QjNBlQp6JqJKgRJEABAgGhcQEJFaUdQoLdVaUSNCdUZG7mcPPD67J111U8MtYP29FTcoJYsQfb0oVYYI/SQZCCMRGbdveKs/LlRpZLsB7/9u47z3h1PPIUGfuHf/VG3oVSKyEhgXi0gbEhCJSRNdD5SLQbln44KjVutsCfrkPRVjQ4Y8hGI14ByI+NKQ/fmCiARQbEKrP3o2L2hOO/RP9++/S2l5AiXZyRAXBAnRfKFdiV7j+cv1r6YF+qf7K0dB4Fkl6qb+037VyEiJAiK8agsaazzlC9qHDH1q7Scj/S7zHSXq6osRGYlrzV57yLboXNhBoY+tqxxv6OBOJUy5mJHhuAAc1CG95JEXFp1K5jGSJT6zusJhM4PPXzLIcBeehY3nVq+ucKQM7cyVZ4CFlwyyvwC1cITZsiGZKaHrrn9g37eVVrsUYlxKyEiaiJhKqeseeW7RrlhXXIt6PIecSqsXL1VkOCibaHnWs/yQc1Bodpf3PoVMSScyt9DJxKl5TJySR26h80tF9scV03xZp+6MtfV33afWfjIy4AgdFaVyh4ssmzuSkllFlJQVkizUVLZQV9vOgT2N+L2h9CL7yhChyR2UaZ6Xb+wEsEeK8jvM2xkmctqsQhbeOpm8QldSYCSUzi6idHYR85ZMYtuWoxzY05hWJACKUT6H/AjYBHFdV+4YDnLJ7VNZdtf08yJjgzvTzs0rp3PzT6bjctvShozWT/0wUpICWP/A3jnK5NPhIMvmjkoZmCw0nuqm/IlP8PaG0oQELSJGUKY++srS4+EWDbF4qMjrb5l8XqTfa+L3mufcZ8yEbBYtn5Y2pCAoUGJTKyB6jS4eCnLC1Fy+MX9s0op3tPrZtuUojae76WjxIwh5hW7GjM9i/tJiRo/PTjjmqmvGUlfbxqcfNgwbGRndNHox8Kh69FcVeSqom5SI0wpSgF94vp70mty7o56d/6oLt6L0HRP3RcK8JcXMX1qccGx7i4+ND+/B1xsaNlLC5/MbXtdoQwVDM4aCLJlVkBRZU9XCtq3HzokUEXa+fYI9/0l8/s4vcnPVNZelBdkXc4nTO8NA1ByrSBBKyooSKun3mrzx0mGixSVHRnZ4929HaDzdnVBOcWlBWpCRNNNQcwzgCqtIBCZNy0uo4Afn6a7J7pM73jqeUM6MOSPThgRQyAxDkAlWkeGBJbHbNp7utoQEoeFkV0I5AO4MW1qQgoBmkoFQbBU5WPi8tsMSUgTaW7xJyxo7MSc9SAGUHmMIkm8ZOYjV2dcKVp9dk4W0IcOxEQaC2ypysFYdMz7bMnL0hMT7KcCJmtZ0IRGtsu1KJF+UsozsaPUnXKfTZxdRV9uGw2Fg2BQOp4EywO4Y+BwbrVTJFYmjt88bShsy/KHddlHKZRUpIhyubGbugnFxFZxzzViOVbfS3RmIwmLyBz7WOV0G1y65PAFaV9NKwcgMfL1BerqDw0IKgqDcBlr7rSIBKj9qTKigy21j/k2Tz42M+bzu+1Ni3lqiof7zTjIyHeSPyGT0uGwysx1DRkZOaIDyWUUi8MWZHurrEm8Nl03KYentpWTnRWcyBt4TnS6DxctLmFxakHB8V4efw5Vn+7ur3W6QPyKDopGZGIYaAlIA7bNrJT4l5FlBCkLRiEw+3d3AuOKcpNhlP72Smqpmjte00d3hw+81KRqdyWXFOZR9c2zSlgSo2HU66TXpznSQXyS0NPVaQgogKJ96ZO3uoxCev00VmZXjJDc/3GIls4qYl+ThfKjB7zP5x4uf0dzYk7S7tjb30tsVSBkJIFqOGYg0W0ECZGRGW6OmqpnaqhYIBqEz+YpAwAfe5A9AdPWA1x/ddrlt/GDllRSNyUxAgpCd47SEDMel2S6KRmUBabMpHE5bXP6ZD6soOdUS3jc3D741HxzhCfOT1dDWEM7KLoApXwvHQyGoOBiGAlw+EaZMjGJvWTmL18sPcrYh8tAfhjmdNgy7wgxKikhQohoNhFOpIhHBsKm4fKdhMn9CS7RJOjug9hAA3W1RZGS7tW/7TFMUCXD8ZPy2y23jljuuZMSYrH5kX3Ww24yUkeEPfcwAfShVZH8Hiu1KrsgcTzScOdxI1d5GWpsCCXnd7SZVHzdwcP/ZhLzQgKJcbju3rprFiNFZ/cjIeVNHClpxxEAZB4aKFKDF66SlN35dp+pMBrvf/5ztb1QTCsXPFW1/s5L/bquj6URTPNLvJ9Cd+NsMl9vOrXeW9bWsdaQAIuqA7XvX/rItFPI9lCrSNIWsXGfcqs2RtizsSuMN2dhzpoATHW5EwDRDtLe1owyDnp5eThyvo6e3F4CAz4+3rQPDbsfb2cWZQ0eoqWykeGoBmdlxqwnY7QaTphVy4KPTmFpob/ZaQGqfXev7FMDDP9+1E2Te+ZCRbyGv0E1mtiOyS6Tk/nhsGrH5xCbF3ycj53C6bSxbFduC0fDWK4c4uK+BlrM9KSERQYt8sOG15fP7JrDlvVSRItDVEUBrSTsSIOALsfX5Spob47ux32dy8lg77W3elJECiFLvQd9Mvdb67VSRAGbIpK3Zm3ZkZHQN+MwE7AfvHKXhVAdmSKeMBCDEPyHmSvvDz3YcQKnZVt4nHQ6DgpGZ2OwqbcjYY0AYV5xHT1eQ/1U2EgyYlpAiunLDayvmQMzaiyjKLb00A4GA5ov6LtqavZiR0TWNyGBQU7W3gap99ZaRiIBW5ZHN/tU0txl6wWfYHgQ1KhVkbHft7Q7Q2x3A7jBwuW043XZshsLhsllC+gMhzKDg9wXx+UIE/WbKo2tCvshZv+KFSFLc0r5n9Y57RMmTVpAD02IRAhgK7E4jtqETkMGAian1gIonHzNSQgKCXvP0a7dtiiT3tygAATbhlDUoStKBDA/v4PeFEpBWX7UsImtjkTDwNwzlC3xKcZfW0n/BDQeZALoASNCaEHHL+glQAM8z392FUhsuTaQgmseffv223eeFAnxB3jrRbL/kkML2wIn23yYzJYVu3nx10OYNLAOqLxUkIp+p7sCyzfvvDqYMBfC8fGOnzacXiOi9FztSNBV+1Hc2vPvjzsE8g0IBPH9d1OQPcJ2IvHTxIuWlgD9j3uYtKzrOZUn5h8kPrto2VyGbUMxJPzIJ+LxIvU+btrV//vuyj1Opv6Wfmns8Yvjr3rtH4GEUWV9NS0oPWv2+aOuhJz14dKp1H9KfB36zatsEU5t3g9whinEXpCW1rhelXgyKbNy0ZUW91ToP++8gv175zg0afYOILFSosjQjq4B/iynbNmxdfuH/DjJYWHfnGzk6aJ+J6JkgpcBMQZeCKjknUqhFpEYU1SKqRild7ep1VK9/8+ZBZoOth/8DCKK66BFkSK4AAAAASUVORK5CYII=
@@ -224,6 +224,7 @@
                         <div style="font-size:14px;color:#49454f;margin-top:6px;opacity:0.8;">管理排序与引擎列表</div>
                     </div>
                     <div style="display:flex;gap:8px;">
+                        <div id="m-data-btn" style="cursor:pointer;font-size:20px;padding:8px;background:rgba(var(--qs-pri-rgb),0.1);border-radius:12px;color:var(--qs-pri);">💾</div>
                         <div id="m-ocd-btn" style="cursor:pointer;font-size:20px;padding:8px;background:rgba(var(--qs-pri-rgb),0.1);border-radius:12px;color:var(--qs-pri);">🧩</div>
                         <div id="m-theme-btn" style="cursor:pointer;font-size:20px;padding:8px;background:rgba(var(--qs-pri-rgb),0.1);border-radius:12px;color:var(--qs-pri);">🎨</div>
                     </div>
@@ -262,6 +263,26 @@
                     <button id="l-shrink" style="width:100%;margin-bottom:12px;padding:10px;border-radius:12px;border:none;background:${layout.shrinkMode?'var(--qs-pri)':'rgba(0,0,0,0.05)'};color:${layout.shrinkMode?'var(--qs-on-pri)':'#49454f'};font-weight:600;cursor:pointer;font-size:12px;">${layout.shrinkMode?'✅':'🚫'} 贴边收缩模式</button>
                     <div id="m-style-cycle" style="cursor:pointer;font-size:12px;padding:10px;background:var(--qs-pri);color:var(--qs-on-pri);border-radius:12px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:6px;box-shadow:0 2px 8px rgba(var(--qs-pri-rgb),0.2);">🔍搜索框样式 ${layout.inputStyle || 1}</div>
                 </div>
+                <div id="m-data-panel" style="display:none;margin-top:16px;padding:16px;background:rgba(var(--qs-pri-rgb),0.05);border-radius:20px;border:1px solid rgba(var(--qs-pri-rgb),0.1);font-size:13px;">
+                    <div style="display:flex;gap:10px;margin-bottom:12px;">
+                        <button id="d-export" style="flex:1;padding:10px;border-radius:12px;border:none;background:var(--qs-pri);color:var(--qs-on-pri);font-weight:600;cursor:pointer;font-size:12px;">导出配置</button>
+                        <button id="d-import" style="flex:1;padding:10px;border-radius:12px;border:none;background:var(--qs-pri);color:var(--qs-on-pri);font-weight:600;cursor:pointer;font-size:12px;">导入配置</button>
+                    </div>
+                    <div id="d-import-opts" style="display:none;padding:12px;background:rgba(255,255,255,0.5);border-radius:14px;border:1px solid rgba(0,0,0,0.05);">
+                        <div style="margin-bottom:10px;font-weight:600;text-align:center;">发现冲突，请选择导入方式：</div>
+                            <div style="font-size:11px;color:#666;line-height:1.5;margin-bottom:12px;padding:0 4px;opacity:0.8;">
+                                 • <b>合并：</b>保留当前所有配置，仅追加文件中独有的搜索引擎，且不改变当前主题颜色。<br>
+                                 • <b>覆盖：</b>清空当前所有配置，完全还原为文件中的状态（含引擎列表、排序及主题配色）。
+                            </div>
+                        <div style="display:flex;gap:8px;">
+                            <button id="d-merge" style="flex:1;padding:8px;border-radius:8px;border:none;background:#6750a4;color:#fff;font-size:11px;cursor:pointer;">保留现有+合并新项</button>
+                            <button id="d-cover" style="flex:1;padding:8px;border-radius:8px;border:none;background:#ba1a1a;color:#fff;font-size:11px;cursor:pointer;">完全覆盖旧数据</button>
+                            <br>
+                        </div>
+                        </div>
+                    </div>
+                    <input type="file" id="d-file" accept=".json" style="display:none;">
+                </div>
             </div>
             <div id="m-list" style="flex:1;overflow-y:auto;padding:0 16px 12px;scrollbar-width:none;"></div>
             <div id="m-add-form" style="display:none;padding:24px;background:rgba(var(--qs-pri-rgb),0.06);margin:0 16px 16px;border-radius:24px;border:1px solid rgba(var(--qs-pri-rgb),0.1);">
@@ -281,6 +302,53 @@
         `;
         overlay.appendChild(card);
         document.body.appendChild(overlay);
+        
+        let pendingData = null;
+        const applyImport = (isMerge) => {
+            if (!pendingData) return;
+            if (isMerge) {
+                if (pendingData[STORAGE_KEY]) {
+                    const local  = storage.load();
+                    const remote = pendingData[STORAGE_KEY];
+                    const localCustomIds = new Set(local.custom.map(e => e.id));
+                    const newCustom = remote.custom.filter(nc => !localCustomIds.has(nc.id));
+                    const mergedCustom = [...local.custom, ...newCustom];
+                    const mergedOrder = [ ...local.order, ...remote.order.filter(id => !local.order.includes(id))];
+                    const mergedHidden  = [...new Set([...(local.hidden  || []), ...(remote.hidden  || [])])];
+                    const mergedDeleted = [...new Set([...(local.deleted || []), ...(remote.deleted || [])])];
+                    const merged = {
+                        custom  : mergedCustom,
+                        order   : mergedOrder,
+                        hidden  : mergedHidden,
+                        deleted : mergedDeleted,
+                        cache   : null
+                    };
+                    if (typeof GM_setValue !== 'undefined') {
+                        GM_setValue(STORAGE_KEY, merged);
+                    } else {
+                        localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
+                    }
+                }
+            } 
+            else {
+                if (pendingData[THEME_KEY]) {
+                    storage.themeSave(pendingData[THEME_KEY]);
+                }
+                if (pendingData[LAYOUT_KEY]) {
+                    storage.layoutSave(pendingData[LAYOUT_KEY]);
+                }
+                if (pendingData[STORAGE_KEY]) {
+                    const d = pendingData[STORAGE_KEY];
+                    d.cache = null;
+                    if (typeof GM_setValue !== 'undefined') {
+                        GM_setValue(STORAGE_KEY, d);
+                    } else {
+                        localStorage.setItem(STORAGE_KEY, JSON.stringify(d));
+                    }
+                }
+            }
+          location.reload();
+        };
 
         const themeBtn = card.querySelector('#m-theme-btn'), themePanel = card.querySelector('#m-theme-panel');
         const ocdBtn = card.querySelector('#m-ocd-btn'), ocdPanel = card.querySelector('#m-ocd-panel');
@@ -289,14 +357,19 @@
         const styleCycleBtn = card.querySelector('#m-style-cycle');
         const styleSwitch = card.querySelector('#t-style-switch');
         const updateAll = () => { storage.themeSave(theme); applyTheme(); };
+        const dataBtn = card.querySelector('#m-data-btn'), dataPanel = card.querySelector('#m-data-panel');
+        const fileInput = card.querySelector('#d-file'), importOpts = card.querySelector('#d-import-opts');
+
 
         hexInput.oninput = (e) => { if (/^#[0-9A-Fa-f]{6}$/.test(e.target.value)) { theme.primary = e.target.value; colorPicker.value = e.target.value; updateAll(); } };
         hexInput.onkeydown = (e) => { if (e.key === 'Enter') { e.preventDefault(); hexInput.blur(); updateAll(); } };
         colorPicker.oninput = (e) => { theme.primary = e.target.value; hexInput.value = e.target.value; updateAll(); };
         opacitySlider.oninput = (e) => { theme.opacity = e.target.value / 100; card.querySelector('#v-opacity').innerText = e.target.value + '%'; updateAll(); };
         blurSlider.oninput = (e) => { theme.blur = e.target.value; card.querySelector('#v-blur').innerText = e.target.value + 'px'; updateAll(); };
+        fileInput.onchange = (e) => { const file = e.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = (ev) => { try { pendingData = JSON.parse(ev.target.result); importOpts.style.display = 'block'; } catch (err) { alert('无效的JSON文件'); } }; reader.readAsText(file); };
         themeBtn.onclick = () => { themePanel.style.display = themePanel.style.display === 'none' ? 'block' : 'none'; ocdPanel.style.display = 'none'; };
         ocdBtn.onclick = () => { ocdPanel.style.display = ocdPanel.style.display === 'none' ? 'block' : 'none'; themePanel.style.display = 'none'; };
+        dataBtn.onclick = () => { dataPanel.style.display = dataPanel.style.display === 'none' ? 'block' : 'none'; themePanel.style.display = ocdPanel.style.display = 'none'; };
         styleCycleBtn.onclick = () => { layout.inputStyle = ((parseInt(layout.inputStyle) || 1) % 3) + 1; storage.layoutSave(layout); styleCycleBtn.innerText = `🔍搜索框样式 ${layout.inputStyle}`; styleCycleBtn.style.transform = 'scale(0.95)'; styleCycleBtn.style.transition = 'transform 0.1s'; setTimeout(() => { styleCycleBtn.style.transform = 'scale(1)'; }, 100); };
         styleSwitch.onclick = () => { theme.themeStyle = (theme.themeStyle === 'MIUIX' ? 'MD3' : 'MIUIX'); styleSwitch.innerText = `✨ 当前风格: ${theme.themeStyle}`; updateAll(); applyTheme(); styleSwitch.style.transform = 'scale(0.95)'; styleSwitch.style.transition = 'transform 0.2s'; setTimeout(() => styleSwitch.style.transform = 'scale(1)', 150); };
 
@@ -304,7 +377,11 @@
         card.querySelector('#t-reset').onclick = () => { theme = {...defaultTheme}; updateAll(); overlay.remove(); showManager(); };
         card.querySelector('#l-pos-toggle').onclick = (e) => { layout.pos = layout.pos === 'top' ? 'bottom' : 'top'; storage.layoutSave(layout); e.target.innerText = layout.pos === 'top' ? '↑靠上' : '靠下↓'; };
         card.querySelector('#l-offset').oninput = (e) => { layout.offset = e.target.value; card.querySelector('#l-offset-val').innerText = layout.offset; storage.layoutSave(layout); };
-        
+        card.querySelector('#d-merge').onclick = () => applyImport(true);
+        card.querySelector('#d-cover').onclick = () => applyImport(false);
+        card.querySelector('#d-import').onclick = () => fileInput.click();
+        card.querySelector('#d-export').onclick = () => { const config = { [STORAGE_KEY]: storage.load(), [THEME_KEY]: storage.themeLoad(), [LAYOUT_KEY]: storage.layoutLoad() }; const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `search_bar_config_${new Date().getTime()}.json`; a.click(); };
+
 
         const updateLayoutBtn = (id, active, text) => {
             const btn = card.querySelector(id);

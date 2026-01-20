@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Toolasha
 // @namespace    http://tampermonkey.net/
-// @version      0.4.952
+// @version      0.4.953
 // @description  Toolasha - Enhanced tools for Milky Way Idle.
 // @author       Celasha and Claude, thank you to bot7420, DrDucky, Frotty, Truth_Light, AlphB, and sentientmilk for providing the basis for a lot of this. Thank you to Miku, Orvel, Jigglymoose, Incinarator, Knerd, and others for their time and help. Thank you to Steez for testing and helping me figure out where I'm wrong! Special thanks to Zaeter for the name.
 // @license      CC-BY-NC-SA-4.0
@@ -939,6 +939,13 @@
                     type: 'checkbox',
                     default: true,
                     help: 'Applies to tooltips, action panels, profit displays, and all number formatting throughout the UI'
+                },
+                ui_externalLinks: {
+                    id: 'ui_externalLinks',
+                    label: 'Left sidebar: Show external tool links',
+                    type: 'checkbox',
+                    default: true,
+                    help: 'Adds quick links to Combat Sim, Market Tracker, Enhancelator, and Milkonomy'
                 },
                 expPercentage: {
                     id: 'expPercentage',
@@ -8520,10 +8527,12 @@
             return null; // No drop table - nothing to calculate
         }
 
-        // Ensure market data is loaded
-        const marketData = await marketAPI.fetch();
-        if (!marketData) {
-            return null;
+        // Ensure market data is loaded (check in-memory first to avoid storage reads)
+        if (!marketAPI.isLoaded()) {
+            const marketData = await marketAPI.fetch();
+            if (!marketData) {
+                return null;
+            }
         }
 
         // Get character data
@@ -8684,11 +8693,19 @@
             const baseAvgAmount = (drop.minCount + drop.maxCount) / 2;
             const avgAmountPerAction = baseAvgAmount * (1 + totalGathering);
 
-            // Check if this item has a Processing conversion (look up dynamically from crafting recipes)
-            // Find a crafting action where this raw item is the input
+            // Check if this item has a Processing Tea conversion
+            // Processing Tea only applies to: Milk→Cheese, Log→Lumber, Cotton/Flax/Bamboo/Cocoon/Radiant→Fabric
+            // These are Cheesesmithing, Crafting (lumber), and Tailoring (fabric) actions
+            const validProcessingTypes = [
+                '/action_types/cheesesmithing',  // Milk → Cheese conversions
+                '/action_types/crafting',         // Log → Lumber conversions
+                '/action_types/tailoring'         // Cotton/Flax/Bamboo/Cocoon/Radiant → Fabric conversions
+            ];
+
             const processingActionHrid = Object.keys(gameData.actionDetailMap).find(actionHrid => {
                 const action = gameData.actionDetailMap[actionHrid];
-                return action.inputItems?.[0]?.itemHrid === drop.itemHrid &&
+                return validProcessingTypes.includes(action.type) &&
+                       action.inputItems?.[0]?.itemHrid === drop.itemHrid &&
                        action.outputItems?.[0]?.itemHrid; // Has an output
             });
 
@@ -13770,11 +13787,13 @@
         color: var(--text-color-secondary, #888);
         font-size: 0.9em;
         line-height: 1.6;
+        text-align: left;
     `;
         contentWrapper.appendChild(content);
 
         // Toggle functionality
-        header.addEventListener('click', () => {
+        header.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent event from bubbling to parent collapsible sections
             const isOpen = contentWrapper.style.display === 'block';
             contentWrapper.style.display = isOpen ? 'none' : 'block';
             if (summary) {
@@ -13790,6 +13809,86 @@
         section.appendChild(contentWrapper);
 
         return section;
+    }
+
+    /**
+     * Action Panel Display Helper
+     * Utilities for working with action detail panels (gathering, production, enhancement)
+     */
+
+    /**
+     * Find the action count input field within a panel
+     * @param {HTMLElement} panel - The action detail panel
+     * @returns {HTMLInputElement|null} The input element or null if not found
+     */
+    function findActionInput(panel) {
+        const inputContainer = panel.querySelector('[class*="maxActionCountInput"]');
+        if (!inputContainer) {
+            return null;
+        }
+
+        const inputField = inputContainer.querySelector('input');
+        return inputField || null;
+    }
+
+    /**
+     * Attach input listeners to an action panel for tracking value changes
+     * Sets up three listeners:
+     * - keyup: For manual typing
+     * - input: For quick input button clicks (React dispatches input events)
+     * - panel click: For any panel interactions with 50ms delay
+     *
+     * @param {HTMLElement} panel - The action detail panel
+     * @param {HTMLInputElement} input - The input element
+     * @param {Function} updateCallback - Callback function(value) called on input changes
+     * @param {Object} options - Optional configuration
+     * @param {number} options.clickDelay - Delay in ms for panel click handler (default: 50)
+     * @returns {Function} Cleanup function to remove all listeners
+     */
+    function attachInputListeners(panel, input, updateCallback, options = {}) {
+        const { clickDelay = 50 } = options;
+
+        // Handler for keyup and input events
+        const updateHandler = () => {
+            updateCallback(input.value);
+        };
+
+        // Handler for panel clicks (with delay to allow React updates)
+        const panelClickHandler = (event) => {
+            // Skip if click is on the input box itself
+            if (event.target === input) {
+                return;
+            }
+            setTimeout(() => {
+                updateCallback(input.value);
+            }, clickDelay);
+        };
+
+        // Attach all listeners
+        input.addEventListener('keyup', updateHandler);
+        input.addEventListener('input', updateHandler);
+        panel.addEventListener('click', panelClickHandler);
+
+        // Return cleanup function
+        return () => {
+            input.removeEventListener('keyup', updateHandler);
+            input.removeEventListener('input', updateHandler);
+            panel.removeEventListener('click', panelClickHandler);
+        };
+    }
+
+    /**
+     * Perform initial update if input already has a valid value
+     * @param {HTMLInputElement} input - The input element
+     * @param {Function} updateCallback - Callback function(value) called if valid
+     * @returns {boolean} True if initial update was performed
+     */
+    function performInitialUpdate(input, updateCallback) {
+        if (input.value && parseInt(input.value) > 0) {
+            updateCallback(input.value);
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -13833,7 +13932,7 @@
 
         // Revenue Section
         const revenueDiv = document.createElement('div');
-        revenueDiv.innerHTML = `<div style="font-weight: 500; color: var(--text-color-primary, ${config.COLOR_TEXT_PRIMARY}); margin-bottom: 4px;">Revenue: ${formatLargeNumber(revenue)}/hr</div>`;
+        revenueDiv.innerHTML = `<div style="font-weight: 500; color: ${config.COLOR_TOOLTIP_PROFIT}; margin-bottom: 4px;">Revenue: ${formatLargeNumber(revenue)}/hr</div>`;
 
         // Base Output subsection
         const baseOutputContent = document.createElement('div');
@@ -13930,7 +14029,7 @@
 
         // Costs Section
         const costsDiv = document.createElement('div');
-        costsDiv.innerHTML = `<div style="font-weight: 500; color: var(--text-color-primary, ${config.COLOR_TEXT_PRIMARY}); margin-top: 12px; margin-bottom: 4px;">Costs: ${formatLargeNumber(costs)}/hr</div>`;
+        costsDiv.innerHTML = `<div style="font-weight: 500; color: ${config.COLOR_TOOLTIP_LOSS}; margin-top: 12px; margin-bottom: 4px;">Costs: ${formatLargeNumber(costs)}/hr</div>`;
 
         // Drink Costs subsection
         const drinkCostsContent = document.createElement('div');
@@ -14013,7 +14112,7 @@
     `;
 
         // Add Net Profit line at top level (always visible when Profitability is expanded)
-        const profitColor = profit >= 0 ? '#4ade80' : '${config.COLOR_LOSS}'; // green if positive, red if negative
+        const profitColor = profit >= 0 ? '#4ade80' : config.COLOR_LOSS; // green if positive, red if negative
         const netProfitLine = document.createElement('div');
         netProfitLine.style.cssText = `
         font-weight: 500;
@@ -14025,7 +14124,7 @@
 
         const detailedBreakdownSection = createCollapsibleSection(
             '📊',
-            'Detailed Breakdown',
+            'Per hour breakdown',
             null,
             detailsContent,
             false,
@@ -14033,6 +14132,33 @@
         );
 
         topLevelContent.appendChild(detailedBreakdownSection);
+
+        // Add X actions breakdown section (updates dynamically with input)
+        const inputField = findActionInput(panel);
+        if (inputField) {
+            const inputValue = parseInt(inputField.value) || 0;
+
+            // Add initial X actions breakdown if input has value
+            if (inputValue > 0) {
+                const actionsBreakdown = buildGatheringActionsBreakdown(profitData, inputValue);
+                topLevelContent.appendChild(actionsBreakdown);
+            }
+
+            // Set up input listener to update X actions breakdown dynamically
+            attachInputListeners(panel, inputField, (newValue) => {
+                // Remove existing X actions breakdown
+                const existingBreakdown = topLevelContent.querySelector('.mwi-actions-breakdown');
+                if (existingBreakdown) {
+                    existingBreakdown.remove();
+                }
+
+                // Add new X actions breakdown if value > 0
+                if (newValue > 0) {
+                    const actionsBreakdown = buildGatheringActionsBreakdown(profitData, newValue);
+                    topLevelContent.appendChild(actionsBreakdown);
+                }
+            });
+        }
 
         // Create main profit section
         const profitSection = createCollapsibleSection(
@@ -14114,7 +14240,7 @@
 
         // Revenue Section
         const revenueDiv = document.createElement('div');
-        revenueDiv.innerHTML = `<div style="font-weight: 500; color: var(--text-color-primary, ${config.COLOR_TEXT_PRIMARY}); margin-bottom: 4px;">Revenue: ${formatLargeNumber(revenue)}/hr</div>`;
+        revenueDiv.innerHTML = `<div style="font-weight: 500; color: ${config.COLOR_TOOLTIP_PROFIT}; margin-bottom: 4px;">Revenue: ${formatLargeNumber(revenue)}/hr</div>`;
 
         // Base Output subsection
         const baseOutputContent = document.createElement('div');
@@ -14222,7 +14348,7 @@
 
         // Costs Section
         const costsDiv = document.createElement('div');
-        costsDiv.innerHTML = `<div style="font-weight: 500; color: var(--text-color-primary, ${config.COLOR_TEXT_PRIMARY}); margin-top: 12px; margin-bottom: 4px;">Costs: ${formatLargeNumber(costs)}/hr</div>`;
+        costsDiv.innerHTML = `<div style="font-weight: 500; color: ${config.COLOR_TOOLTIP_LOSS}; margin-top: 12px; margin-bottom: 4px;">Costs: ${formatLargeNumber(costs)}/hr</div>`;
 
         // Material Costs subsection
         const materialCostsContent = document.createElement('div');
@@ -14323,7 +14449,7 @@
     `;
 
         // Add Net Profit line at top level (always visible when Profitability is expanded)
-        const profitColor = profit >= 0 ? '#4ade80' : '${config.COLOR_LOSS}'; // green if positive, red if negative
+        const profitColor = profit >= 0 ? '#4ade80' : config.COLOR_LOSS; // green if positive, red if negative
         const netProfitLine = document.createElement('div');
         netProfitLine.style.cssText = `
         font-weight: 500;
@@ -14335,7 +14461,7 @@
 
         const detailedBreakdownSection = createCollapsibleSection(
             '📊',
-            'Detailed Breakdown',
+            'Per hour breakdown',
             null,
             detailsContent,
             false,
@@ -14343,6 +14469,33 @@
         );
 
         topLevelContent.appendChild(detailedBreakdownSection);
+
+        // Add X actions breakdown section (updates dynamically with input)
+        const inputField = findActionInput(panel);
+        if (inputField) {
+            const inputValue = parseInt(inputField.value) || 0;
+
+            // Add initial X actions breakdown if input has value
+            if (inputValue > 0) {
+                const actionsBreakdown = buildProductionActionsBreakdown(profitData, inputValue);
+                topLevelContent.appendChild(actionsBreakdown);
+            }
+
+            // Set up input listener to update X actions breakdown dynamically
+            attachInputListeners(panel, inputField, (newValue) => {
+                // Remove existing X actions breakdown
+                const existingBreakdown = topLevelContent.querySelector('.mwi-actions-breakdown');
+                if (existingBreakdown) {
+                    existingBreakdown.remove();
+                }
+
+                // Add new X actions breakdown if value > 0
+                if (newValue > 0) {
+                    const actionsBreakdown = buildProductionActionsBreakdown(profitData, newValue);
+                    topLevelContent.appendChild(actionsBreakdown);
+                }
+            });
+        }
 
         // Create main profit section
         const profitSection = createCollapsibleSection(
@@ -14373,6 +14526,422 @@
                 );
             }
         }
+    }
+
+    /**
+     * Build "X actions breakdown" section for gathering actions
+     * @param {Object} profitData - Profit calculation data
+     * @param {number} actionsCount - Number of actions from input field
+     * @returns {HTMLElement} Breakdown section element
+     */
+    function buildGatheringActionsBreakdown(profitData, actionsCount) {
+        const hoursNeeded = actionsCount / profitData.actionsPerHour;
+
+        // Calculate totals
+        const totalRevenue = Math.round(profitData.revenuePerHour * hoursNeeded);
+        const totalCosts = Math.round(profitData.drinkCostPerHour * hoursNeeded);
+        const totalProfit = totalRevenue - totalCosts;
+
+        const detailsContent = document.createElement('div');
+
+        // Revenue Section
+        const revenueDiv = document.createElement('div');
+        revenueDiv.innerHTML = `<div style="font-weight: 500; color: ${config.COLOR_TOOLTIP_PROFIT}; margin-bottom: 4px;">Revenue: ${formatLargeNumber(totalRevenue)}</div>`;
+
+        // Base Output subsection
+        const baseOutputContent = document.createElement('div');
+        if (profitData.baseOutputs && profitData.baseOutputs.length > 0) {
+            for (const output of profitData.baseOutputs) {
+                const totalItems = (output.itemsPerHour / profitData.actionsPerHour) * actionsCount;
+                const totalRevenueLine = output.revenuePerHour * hoursNeeded;
+                const line = document.createElement('div');
+                line.style.marginLeft = '8px';
+
+                if (output.isProcessed && output.processingChance) {
+                    const processingPercent = formatPercentage(output.processingChance, 1);
+                    line.textContent = `• ${output.name}: (${processingPercent}) ${totalItems.toFixed(1)} items @ ${formatWithSeparator(output.priceEach)} each → ${formatLargeNumber(Math.round(totalRevenueLine))}`;
+                } else {
+                    line.textContent = `• ${output.name}: ${totalItems.toFixed(1)} items @ ${formatWithSeparator(output.priceEach)} each → ${formatLargeNumber(Math.round(totalRevenueLine))}`;
+                }
+
+                baseOutputContent.appendChild(line);
+            }
+        }
+
+        const baseRevenue = profitData.baseOutputs?.reduce((sum, o) => sum + o.revenuePerHour * hoursNeeded, 0) || 0;
+        const baseOutputSection = createCollapsibleSection(
+            '',
+            `Base Output: ${formatLargeNumber(Math.round(baseRevenue))} (${profitData.baseOutputs?.length || 0} item${profitData.baseOutputs?.length !== 1 ? 's' : ''})`,
+            null,
+            baseOutputContent,
+            false,
+            1
+        );
+
+        // Bonus Drops subsections
+        const bonusDrops = profitData.bonusRevenue?.bonusDrops || [];
+        const essenceDrops = bonusDrops.filter(drop => drop.type === 'essence');
+        const rareFinds = bonusDrops.filter(drop => drop.type === 'rare_find');
+
+        // Essence Drops subsection
+        let essenceSection = null;
+        if (essenceDrops.length > 0) {
+            const essenceContent = document.createElement('div');
+            for (const drop of essenceDrops) {
+                const totalDrops = drop.dropsPerHour * hoursNeeded;
+                const totalRevenueLine = drop.revenuePerHour * hoursNeeded;
+                const line = document.createElement('div');
+                line.style.marginLeft = '8px';
+                const dropRatePct = formatPercentage(drop.dropRate, drop.dropRate < 0.01 ? 3 : 2);
+                line.textContent = `• ${drop.itemName}: ${totalDrops.toFixed(2)} drops (${dropRatePct}) → ${formatLargeNumber(Math.round(totalRevenueLine))}`;
+                essenceContent.appendChild(line);
+            }
+
+            const essenceRevenue = essenceDrops.reduce((sum, d) => sum + d.revenuePerHour * hoursNeeded, 0);
+            const essenceFindBonus = profitData.bonusRevenue?.essenceFindBonus || 0;
+            essenceSection = createCollapsibleSection(
+                '',
+                `Essence Drops: ${formatLargeNumber(Math.round(essenceRevenue))} (${essenceDrops.length} item${essenceDrops.length !== 1 ? 's' : ''}, ${essenceFindBonus.toFixed(1)}% essence find)`,
+                null,
+                essenceContent,
+                false,
+                1
+            );
+        }
+
+        // Rare Finds subsection
+        let rareFindSection = null;
+        if (rareFinds.length > 0) {
+            const rareFindContent = document.createElement('div');
+            for (const drop of rareFinds) {
+                const totalDrops = drop.dropsPerHour * hoursNeeded;
+                const totalRevenueLine = drop.revenuePerHour * hoursNeeded;
+                const line = document.createElement('div');
+                line.style.marginLeft = '8px';
+                const dropRatePct = formatPercentage(drop.dropRate, drop.dropRate < 0.01 ? 3 : 2);
+                line.textContent = `• ${drop.itemName}: ${totalDrops.toFixed(2)} drops (${dropRatePct}) → ${formatLargeNumber(Math.round(totalRevenueLine))}`;
+                rareFindContent.appendChild(line);
+            }
+
+            const rareFindRevenue = rareFinds.reduce((sum, d) => sum + d.revenuePerHour * hoursNeeded, 0);
+            const rareFindBonus = profitData.bonusRevenue?.rareFindBonus || 0;
+            rareFindSection = createCollapsibleSection(
+                '',
+                `Rare Finds: ${formatLargeNumber(Math.round(rareFindRevenue))} (${rareFinds.length} item${rareFinds.length !== 1 ? 's' : ''}, ${rareFindBonus.toFixed(1)}% rare find)`,
+                null,
+                rareFindContent,
+                false,
+                1
+            );
+        }
+
+        revenueDiv.appendChild(baseOutputSection);
+        if (essenceSection) {
+            revenueDiv.appendChild(essenceSection);
+        }
+        if (rareFindSection) {
+            revenueDiv.appendChild(rareFindSection);
+        }
+
+        // Costs Section
+        const costsDiv = document.createElement('div');
+        costsDiv.innerHTML = `<div style="font-weight: 500; color: ${config.COLOR_TOOLTIP_LOSS}; margin-top: 12px; margin-bottom: 4px;">Costs: ${formatLargeNumber(totalCosts)}</div>`;
+
+        // Drink Costs subsection
+        const drinkCostsContent = document.createElement('div');
+        if (profitData.drinkCosts && profitData.drinkCosts.length > 0) {
+            for (const drink of profitData.drinkCosts) {
+                const totalDrinks = drink.drinksPerHour * hoursNeeded;
+                const totalCostLine = drink.costPerHour * hoursNeeded;
+                const line = document.createElement('div');
+                line.style.marginLeft = '8px';
+                line.textContent = `• ${drink.name}: ${totalDrinks.toFixed(1)} drinks @ ${formatWithSeparator(drink.priceEach)} → ${formatLargeNumber(Math.round(totalCostLine))}`;
+                drinkCostsContent.appendChild(line);
+            }
+        }
+
+        const drinkCount = profitData.drinkCosts?.length || 0;
+        const drinkCostsSection = createCollapsibleSection(
+            '',
+            `Drink Costs: ${formatLargeNumber(totalCosts)} (${drinkCount} drink${drinkCount !== 1 ? 's' : ''})`,
+            null,
+            drinkCostsContent,
+            false,
+            1
+        );
+
+        costsDiv.appendChild(drinkCostsSection);
+
+        // Assemble breakdown
+        detailsContent.appendChild(revenueDiv);
+        detailsContent.appendChild(costsDiv);
+
+        // Add Net Profit at top
+        const topLevelContent = document.createElement('div');
+        const profitColor = totalProfit >= 0 ? '#4ade80' : config.COLOR_LOSS;
+        const netProfitLine = document.createElement('div');
+        netProfitLine.style.cssText = `
+        font-weight: 500;
+        color: ${profitColor};
+        margin-bottom: 8px;
+    `;
+        netProfitLine.textContent = `Net Profit: ${formatLargeNumber(totalProfit)}`;
+        topLevelContent.appendChild(netProfitLine);
+
+        const actionsBreakdownSection = createCollapsibleSection(
+            '',
+            `Revenue: ${formatLargeNumber(totalRevenue)} | Costs: ${formatLargeNumber(totalCosts)}`,
+            null,
+            detailsContent,
+            false,
+            1
+        );
+        topLevelContent.appendChild(actionsBreakdownSection);
+
+        const mainSection = createCollapsibleSection(
+            '📋',
+            `${formatWithSeparator(actionsCount)} actions breakdown`,
+            null,
+            topLevelContent,
+            false,
+            0
+        );
+        mainSection.className = 'mwi-collapsible-section mwi-actions-breakdown';
+
+        return mainSection;
+    }
+
+    /**
+     * Build "X actions breakdown" section for production actions
+     * @param {Object} profitData - Profit calculation data
+     * @param {number} actionsCount - Number of actions from input field
+     * @returns {HTMLElement} Breakdown section element
+     */
+    function buildProductionActionsBreakdown(profitData, actionsCount) {
+        const hoursNeeded = actionsCount / profitData.actionsPerHour;
+
+        // Calculate totals
+        const bonusRevenueTotal = profitData.bonusRevenue?.totalBonusRevenue || 0;
+        const totalRevenue = Math.round((profitData.itemsPerHour * profitData.priceAfterTax + profitData.gourmetBonusItems * profitData.priceAfterTax + bonusRevenueTotal) * hoursNeeded);
+        const totalCosts = Math.round((profitData.materialCostPerHour + profitData.totalTeaCostPerHour) * hoursNeeded);
+        const totalProfit = totalRevenue - totalCosts;
+
+        const detailsContent = document.createElement('div');
+
+        // Revenue Section
+        const revenueDiv = document.createElement('div');
+        revenueDiv.innerHTML = `<div style="font-weight: 500; color: ${config.COLOR_TOOLTIP_PROFIT}; margin-bottom: 4px;">Revenue: ${formatLargeNumber(totalRevenue)}</div>`;
+
+        // Base Output subsection
+        const baseOutputContent = document.createElement('div');
+        const totalBaseItems = profitData.itemsPerHour * hoursNeeded;
+        const totalBaseRevenue = totalBaseItems * profitData.priceAfterTax;
+        const baseOutputLine = document.createElement('div');
+        baseOutputLine.style.marginLeft = '8px';
+        baseOutputLine.textContent = `• Base Output: ${totalBaseItems.toFixed(1)} items @ ${formatWithSeparator(Math.round(profitData.priceAfterTax))} each → ${formatLargeNumber(Math.round(totalBaseRevenue))}`;
+        baseOutputContent.appendChild(baseOutputLine);
+
+        const baseOutputSection = createCollapsibleSection(
+            '',
+            `Base Output: ${formatLargeNumber(Math.round(totalBaseRevenue))}`,
+            null,
+            baseOutputContent,
+            false,
+            1
+        );
+
+        // Gourmet Bonus subsection
+        let gourmetSection = null;
+        if (profitData.gourmetBonusItems > 0) {
+            const gourmetContent = document.createElement('div');
+            const totalGourmetItems = profitData.gourmetBonusItems * hoursNeeded;
+            const totalGourmetRevenue = totalGourmetItems * profitData.priceAfterTax;
+            const gourmetLine = document.createElement('div');
+            gourmetLine.style.marginLeft = '8px';
+            gourmetLine.textContent = `• Gourmet Bonus: ${totalGourmetItems.toFixed(1)} items @ ${formatWithSeparator(Math.round(profitData.priceAfterTax))} each → ${formatLargeNumber(Math.round(totalGourmetRevenue))}`;
+            gourmetContent.appendChild(gourmetLine);
+
+            gourmetSection = createCollapsibleSection(
+                '',
+                `Gourmet Bonus: ${formatLargeNumber(Math.round(totalGourmetRevenue))} (${formatPercentage(profitData.gourmetBonus, 1)} gourmet)`,
+                null,
+                gourmetContent,
+                false,
+                1
+            );
+        }
+
+        revenueDiv.appendChild(baseOutputSection);
+        if (gourmetSection) {
+            revenueDiv.appendChild(gourmetSection);
+        }
+
+        // Bonus Drops subsections
+        const bonusDrops = profitData.bonusRevenue?.bonusDrops || [];
+        const essenceDrops = bonusDrops.filter(drop => drop.type === 'essence');
+        const rareFinds = bonusDrops.filter(drop => drop.type === 'rare_find');
+
+        // Essence Drops subsection
+        let essenceSection = null;
+        if (essenceDrops.length > 0) {
+            const essenceContent = document.createElement('div');
+            for (const drop of essenceDrops) {
+                const totalDrops = drop.dropsPerHour * hoursNeeded;
+                const totalRevenueLine = drop.revenuePerHour * hoursNeeded;
+                const line = document.createElement('div');
+                line.style.marginLeft = '8px';
+                const dropRatePct = formatPercentage(drop.dropRate, drop.dropRate < 0.01 ? 3 : 2);
+                line.textContent = `• ${drop.itemName}: ${totalDrops.toFixed(2)} drops (${dropRatePct}) → ${formatLargeNumber(Math.round(totalRevenueLine))}`;
+                essenceContent.appendChild(line);
+            }
+
+            const essenceRevenue = essenceDrops.reduce((sum, d) => sum + d.revenuePerHour * hoursNeeded, 0);
+            const essenceFindBonus = profitData.bonusRevenue?.essenceFindBonus || 0;
+            essenceSection = createCollapsibleSection(
+                '',
+                `Essence Drops: ${formatLargeNumber(Math.round(essenceRevenue))} (${essenceDrops.length} item${essenceDrops.length !== 1 ? 's' : ''}, ${essenceFindBonus.toFixed(1)}% essence find)`,
+                null,
+                essenceContent,
+                false,
+                1
+            );
+        }
+
+        // Rare Finds subsection
+        let rareFindSection = null;
+        if (rareFinds.length > 0) {
+            const rareFindContent = document.createElement('div');
+            for (const drop of rareFinds) {
+                const totalDrops = drop.dropsPerHour * hoursNeeded;
+                const totalRevenueLine = drop.revenuePerHour * hoursNeeded;
+                const line = document.createElement('div');
+                line.style.marginLeft = '8px';
+                const dropRatePct = formatPercentage(drop.dropRate, drop.dropRate < 0.01 ? 3 : 2);
+                line.textContent = `• ${drop.itemName}: ${totalDrops.toFixed(2)} drops (${dropRatePct}) → ${formatLargeNumber(Math.round(totalRevenueLine))}`;
+                rareFindContent.appendChild(line);
+            }
+
+            const rareFindRevenue = rareFinds.reduce((sum, d) => sum + d.revenuePerHour * hoursNeeded, 0);
+            const rareFindBonus = profitData.bonusRevenue?.rareFindBonus || 0;
+            rareFindSection = createCollapsibleSection(
+                '',
+                `Rare Finds: ${formatLargeNumber(Math.round(rareFindRevenue))} (${rareFinds.length} item${rareFinds.length !== 1 ? 's' : ''}, ${rareFindBonus.toFixed(1)}% rare find)`,
+                null,
+                rareFindContent,
+                false,
+                1
+            );
+        }
+
+        if (essenceSection) {
+            revenueDiv.appendChild(essenceSection);
+        }
+        if (rareFindSection) {
+            revenueDiv.appendChild(rareFindSection);
+        }
+
+        // Costs Section
+        const costsDiv = document.createElement('div');
+        costsDiv.innerHTML = `<div style="font-weight: 500; color: ${config.COLOR_TOOLTIP_LOSS}; margin-top: 12px; margin-bottom: 4px;">Costs: ${formatLargeNumber(totalCosts)}</div>`;
+
+        // Material Costs subsection
+        const materialCostsContent = document.createElement('div');
+        if (profitData.materialCosts && profitData.materialCosts.length > 0) {
+            for (const material of profitData.materialCosts) {
+                const totalMaterial = material.amount * actionsCount;
+                const totalMaterialCost = material.totalCost * actionsCount;
+                const line = document.createElement('div');
+                line.style.marginLeft = '8px';
+
+                let materialText = `• ${material.itemName}: ${totalMaterial.toFixed(1)} items`;
+
+                // Add Artisan reduction info if present
+                if (profitData.artisanBonus > 0 && material.baseAmount && material.amount !== material.baseAmount) {
+                    const baseTotalAmount = material.baseAmount * actionsCount;
+                    materialText += ` (${baseTotalAmount.toFixed(1)} base -${formatPercentage(profitData.artisanBonus, 1)} 🍵)`;
+                }
+
+                materialText += ` @ ${formatWithSeparator(Math.round(material.askPrice))} → ${formatLargeNumber(Math.round(totalMaterialCost))}`;
+
+                line.textContent = materialText;
+                materialCostsContent.appendChild(line);
+            }
+        }
+
+        const totalMaterialCost = profitData.materialCostPerHour * hoursNeeded;
+        const materialCostsSection = createCollapsibleSection(
+            '',
+            `Material Costs: ${formatLargeNumber(Math.round(totalMaterialCost))} (${profitData.materialCosts?.length || 0} material${profitData.materialCosts?.length !== 1 ? 's' : ''})`,
+            null,
+            materialCostsContent,
+            false,
+            1
+        );
+
+        // Tea Costs subsection
+        const teaCostsContent = document.createElement('div');
+        if (profitData.teaCosts && profitData.teaCosts.length > 0) {
+            for (const tea of profitData.teaCosts) {
+                const totalDrinks = tea.drinksPerHour * hoursNeeded;
+                const totalTeaCost = tea.totalCost * hoursNeeded;
+                const line = document.createElement('div');
+                line.style.marginLeft = '8px';
+                line.textContent = `• ${tea.itemName}: ${totalDrinks.toFixed(1)} drinks @ ${formatWithSeparator(Math.round(tea.pricePerDrink))} → ${formatLargeNumber(Math.round(totalTeaCost))}`;
+                teaCostsContent.appendChild(line);
+            }
+        }
+
+        const totalTeaCost = profitData.totalTeaCostPerHour * hoursNeeded;
+        const teaCount = profitData.teaCosts?.length || 0;
+        const teaCostsSection = createCollapsibleSection(
+            '',
+            `Drink Costs: ${formatLargeNumber(Math.round(totalTeaCost))} (${teaCount} drink${teaCount !== 1 ? 's' : ''})`,
+            null,
+            teaCostsContent,
+            false,
+            1
+        );
+
+        costsDiv.appendChild(materialCostsSection);
+        costsDiv.appendChild(teaCostsSection);
+
+        // Assemble breakdown
+        detailsContent.appendChild(revenueDiv);
+        detailsContent.appendChild(costsDiv);
+
+        // Add Net Profit at top
+        const topLevelContent = document.createElement('div');
+        const profitColor = totalProfit >= 0 ? '#4ade80' : config.COLOR_LOSS;
+        const netProfitLine = document.createElement('div');
+        netProfitLine.style.cssText = `
+        font-weight: 500;
+        color: ${profitColor};
+        margin-bottom: 8px;
+    `;
+        netProfitLine.textContent = `Net Profit: ${formatLargeNumber(totalProfit)}`;
+        topLevelContent.appendChild(netProfitLine);
+
+        const actionsBreakdownSection = createCollapsibleSection(
+            '',
+            `Revenue: ${formatLargeNumber(totalRevenue)} | Costs: ${formatLargeNumber(totalCosts)}`,
+            null,
+            detailsContent,
+            false,
+            1
+        );
+        topLevelContent.appendChild(actionsBreakdownSection);
+
+        const mainSection = createCollapsibleSection(
+            '📋',
+            `${formatWithSeparator(actionsCount)} actions breakdown`,
+            null,
+            topLevelContent,
+            false,
+            0
+        );
+        mainSection.className = 'mwi-collapsible-section mwi-actions-breakdown';
+
+        return mainSection;
     }
 
     /**
@@ -17812,86 +18381,6 @@
 
     // Create and export singleton instance
     const quickInputButtons = new QuickInputButtons();
-
-    /**
-     * Action Panel Display Helper
-     * Utilities for working with action detail panels (gathering, production, enhancement)
-     */
-
-    /**
-     * Find the action count input field within a panel
-     * @param {HTMLElement} panel - The action detail panel
-     * @returns {HTMLInputElement|null} The input element or null if not found
-     */
-    function findActionInput(panel) {
-        const inputContainer = panel.querySelector('[class*="maxActionCountInput"]');
-        if (!inputContainer) {
-            return null;
-        }
-
-        const inputField = inputContainer.querySelector('input');
-        return inputField || null;
-    }
-
-    /**
-     * Attach input listeners to an action panel for tracking value changes
-     * Sets up three listeners:
-     * - keyup: For manual typing
-     * - input: For quick input button clicks (React dispatches input events)
-     * - panel click: For any panel interactions with 50ms delay
-     *
-     * @param {HTMLElement} panel - The action detail panel
-     * @param {HTMLInputElement} input - The input element
-     * @param {Function} updateCallback - Callback function(value) called on input changes
-     * @param {Object} options - Optional configuration
-     * @param {number} options.clickDelay - Delay in ms for panel click handler (default: 50)
-     * @returns {Function} Cleanup function to remove all listeners
-     */
-    function attachInputListeners(panel, input, updateCallback, options = {}) {
-        const { clickDelay = 50 } = options;
-
-        // Handler for keyup and input events
-        const updateHandler = () => {
-            updateCallback(input.value);
-        };
-
-        // Handler for panel clicks (with delay to allow React updates)
-        const panelClickHandler = (event) => {
-            // Skip if click is on the input box itself
-            if (event.target === input) {
-                return;
-            }
-            setTimeout(() => {
-                updateCallback(input.value);
-            }, clickDelay);
-        };
-
-        // Attach all listeners
-        input.addEventListener('keyup', updateHandler);
-        input.addEventListener('input', updateHandler);
-        panel.addEventListener('click', panelClickHandler);
-
-        // Return cleanup function
-        return () => {
-            input.removeEventListener('keyup', updateHandler);
-            input.removeEventListener('input', updateHandler);
-            panel.removeEventListener('click', panelClickHandler);
-        };
-    }
-
-    /**
-     * Perform initial update if input already has a valid value
-     * @param {HTMLInputElement} input - The input element
-     * @param {Function} updateCallback - Callback function(value) called if valid
-     * @returns {boolean} True if initial update was performed
-     */
-    function performInitialUpdate(input, updateCallback) {
-        if (input.value && parseInt(input.value) > 0) {
-            updateCallback(input.value);
-            return true;
-        }
-        return false;
-    }
 
     /**
      * Output Totals Display Module
@@ -22338,6 +22827,132 @@
     skillExperiencePercentage.setupSettingListener();
 
     /**
+     * External Links
+     * Adds links to external MWI tools in the left sidebar navigation
+     */
+
+
+    class ExternalLinks {
+        constructor() {
+            this.unregisterObserver = null;
+            this.linksAdded = false;
+        }
+
+        /**
+         * Initialize external links feature
+         */
+        initialize() {
+            if (!config.getSetting('ui_externalLinks')) {
+                return;
+            }
+
+            this.setupObserver();
+        }
+
+        /**
+         * Setup DOM observer to watch for navigation bar
+         */
+        setupObserver() {
+            // Wait for the minor navigation links container
+            this.unregisterObserver = domObserver.onClass(
+                'ExternalLinks',
+                'NavigationBar_minorNavigationLinks',
+                (container) => {
+                    if (!this.linksAdded) {
+                        this.addLinks(container);
+                        this.linksAdded = true;
+                    }
+                }
+            );
+
+            // Check for existing container immediately
+            const existingContainer = document.querySelector('[class*="NavigationBar_minorNavigationLinks"]');
+            if (existingContainer && !this.linksAdded) {
+                this.addLinks(existingContainer);
+                this.linksAdded = true;
+            }
+        }
+
+        /**
+         * Add external tool links to navigation bar
+         * @param {HTMLElement} container - Navigation links container
+         */
+        addLinks(container) {
+            const links = [
+                {
+                    label: 'Combat Sim',
+                    url: 'https://shykai.github.io/MWICombatSimulatorTest/dist/'
+                },
+                {
+                    label: 'Milkyway Market',
+                    url: 'https://milkyway.market/'
+                },
+                {
+                    label: 'Enhancelator',
+                    url: 'https://doh-nuts.github.io/Enhancelator/'
+                },
+                {
+                    label: 'Milkonomy',
+                    url: 'https://milkonomy.pages.dev/#/dashboard'
+                }
+            ];
+
+            // Add each link (in reverse order so they appear in correct order when prepended)
+            for (let i = links.length - 1; i >= 0; i--) {
+                const link = links[i];
+                this.addLink(container, link.label, link.url);
+            }
+        }
+
+        /**
+         * Add a single external link to the navigation
+         * @param {HTMLElement} container - Navigation links container
+         * @param {string} label - Link label
+         * @param {string} url - External URL
+         */
+        addLink(container, label, url) {
+            const div = document.createElement('div');
+            div.setAttribute('class', 'NavigationBar_minorNavigationLink__31K7Y');
+            div.style.color = config.COLOR_ACCENT;
+            div.style.cursor = 'pointer';
+            div.textContent = label;
+
+            div.addEventListener('click', () => {
+                window.open(url, '_blank');
+            });
+
+            // Insert at the beginning (after Settings if it exists)
+            container.insertAdjacentElement('afterbegin', div);
+        }
+
+        /**
+         * Disable the external links feature
+         */
+        disable() {
+            if (this.unregisterObserver) {
+                this.unregisterObserver();
+                this.unregisterObserver = null;
+            }
+
+            // Remove added links
+            const container = document.querySelector('[class*="NavigationBar_minorNavigationLinks"]');
+            if (container) {
+                container.querySelectorAll('[style*="cursor: pointer"]').forEach(link => {
+                    // Only remove links we added (check if they have our color)
+                    if (link.style.color === config.COLOR_ACCENT) {
+                        link.remove();
+                    }
+                });
+            }
+
+            this.linksAdded = false;
+        }
+    }
+
+    // Create and export singleton instance
+    const externalLinks = new ExternalLinks();
+
+    /**
      * Task Profit Calculator
      * Calculates total profit for gathering and production tasks
      * Includes task rewards (coins, task tokens, Purple's Gift) + action profit
@@ -24983,8 +25598,10 @@
         async initialize() {
             if (this.isInitialized) return;
 
-            // Ensure market data is loaded
-            await marketAPI.fetch();
+            // Ensure market data is loaded (check in-memory first to avoid storage reads)
+            if (!marketAPI.isLoaded()) {
+                await marketAPI.fetch();
+            }
 
             this.isInitialized = true;
         }
@@ -26332,14 +26949,17 @@
             return createEmptyNetworthData();
         }
 
-        // Fetch market data and invalidate cache if needed
-        const marketData = await marketAPI.fetch();
-        if (!marketData) {
-            console.error('[Networth] Failed to fetch market data');
-            return createEmptyNetworthData();
+        // Ensure market data is loaded (check in-memory first to avoid storage reads)
+        if (!marketAPI.isLoaded()) {
+            const marketData = await marketAPI.fetch();
+            if (!marketData) {
+                console.error('[Networth] Failed to fetch market data');
+                return createEmptyNetworthData();
+            }
         }
 
-        networthCache.checkAndInvalidate(marketData);
+        // Invalidate cache if market data changed (wrap for cache compatibility)
+        networthCache.checkAndInvalidate({ marketData: marketAPI.marketData });
 
         // Get pricing mode from settings
         const pricingMode = config.getSettingValue('networth_pricingMode', 'ask');
@@ -28870,7 +29490,19 @@
         try {
             const gameData = dataManager.getInitClientData();
             const itemData = gameData?.itemDetailMap?.[itemHrid];
-            return itemData?.level || 0;
+
+            // First try direct level field (works for consumables, resources, etc.)
+            if (itemData?.level) {
+                return itemData.level;
+            }
+
+            // For equipment, check levelRequirements array
+            if (itemData?.equipmentDetail?.levelRequirements?.length > 0) {
+                // Return the level from the first requirement (highest requirement)
+                return itemData.equipmentDetail.levelRequirements[0].level;
+            }
+
+            return 0;
         } catch (error) {
             return 0;
         }
@@ -37733,6 +38365,14 @@
             initialize: () => skillExperiencePercentage.initialize(),
             async: false
         },
+        {
+            key: 'ui_externalLinks',
+            name: 'External Links',
+            category: 'UI',
+            initialize: () => externalLinks.initialize(),
+            disable: () => externalLinks.disable(),
+            async: false
+        },
 
         // Task Features
         {
@@ -38033,6 +38673,7 @@
             'equipmentLevelDisplay': equipmentLevelDisplay,
             'alchemyItemDimming': alchemyItemDimming,
             'skillExperiencePercentage': skillExperiencePercentage,
+            'ui_externalLinks': externalLinks,
             'taskProfitDisplay': taskProfitDisplay,
             'taskRerollTracker': taskRerollTracker,
             'taskSorter': taskSorter,
@@ -38098,9 +38739,22 @@
 
 
     /**
+     * Check if running on Steam client (no extension manager)
+     * @returns {boolean} True if on Steam client
+     */
+    function isSteamClient() {
+        return typeof GM === 'undefined' && typeof GM_setValue === 'undefined';
+    }
+
+    /**
      * Initialize combat sim integration (runs on sim page only)
      */
     function initialize() {
+        // Don't inject import button on Steam client (no cross-domain storage)
+        if (isSteamClient()) {
+            return;
+        }
+
         // Wait for simulator UI to load
         waitForSimulatorUI();
     }
@@ -38465,7 +39119,7 @@
         const targetWindow = typeof unsafeWindow !== 'undefined' ? unsafeWindow : window;
 
         targetWindow.Toolasha = {
-            version: '0.4.952',
+            version: '0.4.953',
 
             // Feature toggle API (for users to manage settings via console)
             features: {

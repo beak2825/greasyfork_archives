@@ -1,13 +1,13 @@
 // ==UserScript==
-// @name         KAAUH Lab Super Suite
-// @namespace    Violentmonkey Scripts
-// @version      14.3.5
-// @description  Merges verification buttons (F7/F8), dynamic alerts (including HbA1c check and improved 'No Result' detection), critical & amended result reporting, intelligently relocates misplaced alerts, and adds an advanced, flicker-free inline sample counter with a modern visual interface.
-// @match        *://his.kaauh.org/lab/*
-// @grant        GM_addStyle
-// @author       Hamad AlShegifi
-// @license      MIT
-// @run-at       document-idle
+// @name        KAAUH Lab Super Suite
+// @namespace   Violentmonkey Scripts
+// @version     15.0.0
+// @description Merges verification buttons (F7/F8), dynamic alerts (including HbA1c check and improved 'No Result' detection), critical & amended result reporting, intelligently relocates misplaced alerts, and adds an advanced, flicker-free inline sample counter with a modern visual interface. Includes Server Status Indicator.
+// @match       *://his.kaauh.org/lab/*
+// @grant       GM_addStyle
+// @author      Hamad AlShegifi
+// @license     MIT
+// @run-at      document-idle
 // @downloadURL https://update.greasyfork.org/scripts/541435/KAAUH%20Lab%20Super%20Suite.user.js
 // @updateURL https://update.greasyfork.org/scripts/541435/KAAUH%20Lab%20Super%20Suite.meta.js
 // ==/UserScript==
@@ -505,6 +505,7 @@
             .fa-hospital-alt:before { content: "\\f0f8"; } /* Using fa-hospital-o from v4 */
             .fa-barcode:before { content: "\\f02a"; }
             .fa-file-signature:before { content: "\\f0f6"; } /* Using fa-file-text-o from v4 */
+            .fa-ban:before { content: "\\f05e"; }
         `;
         const head = document.head || document.body;
         if (head) {
@@ -675,7 +676,7 @@
             'font-weight': '600',
             'cursor': 'pointer',
             'display': 'inline-flex',
-            'align-items:': 'center',
+            'align-items': 'center',
             'gap': '8px',
             'line-height': '1.5',
             'transition': 'background-color 0.2s, box-shadow 0.2s',
@@ -698,6 +699,96 @@
         button.onclick = initiateAmendedReport;
         return button;
     }
+
+   // --- New Functionality: Server Status Indicator ---
+function createServerStatusIndicator() {
+    const container = document.createElement('div');
+    container.id = 'server-status-indicator';
+    container.title = "Server Status: Checking...";
+    container.style.cssText = `
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        margin-left: 8px;
+        padding: 6px 12px;
+        border-radius: 16px;
+        background-color: #6c757d; /* Default Grey (Offline/Unknown) */
+        box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+        border: 1px solid #545b62;
+        cursor: help;
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        vertical-align: middle;
+    `;
+
+    // Add status dot
+    const statusDot = document.createElement('span');
+    statusDot.id = 'server-status-dot';
+    statusDot.style.cssText = `
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: #495057;
+        box-shadow: inset 0 1px 2px rgba(0,0,0,0.2);
+    `;
+
+    // Add status text
+    const statusText = document.createElement('span');
+    statusText.id = 'server-status-text';
+    statusText.textContent = 'Checking...';
+    statusText.style.cssText = `
+        color: #ffffff;
+        font-size: 13px;
+        font-weight: 600;
+        white-space: nowrap;
+    `;
+
+    container.appendChild(statusDot);
+    container.appendChild(statusText);
+
+    return container;
+}
+
+async function checkServerHealth() {
+    const indicator = document.getElementById('server-status-indicator');
+    const statusDot = document.getElementById('server-status-dot');
+    const statusText = document.getElementById('server-status-text');
+
+    if (!indicator || !statusDot || !statusText) return;
+
+    try {
+        // Using a short timeout to prevent long waits
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 2000);
+
+        // Fetch to root of local server (assuming same port as LOCAL_SERVER_SAVE_URL)
+        await fetch('http://localhost:5000/', {
+            method: 'GET',
+            signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+
+        // Success (Online)
+        indicator.style.backgroundColor = '#28a745'; // Green
+        indicator.style.borderColor = '#1e7e34';
+        indicator.style.boxShadow = '0 0 8px rgba(40, 167, 69, 0.6)'; // Green Glow
+        indicator.title = "Server Status: ONLINE (Connected)";
+
+        statusDot.style.backgroundColor = '#ffffff';
+        statusText.textContent = 'Connected';
+
+    } catch (error) {
+        // Error (Offline)
+        indicator.style.backgroundColor = '#6c757d'; // Grey
+        indicator.style.borderColor = '#545b62';
+        indicator.style.boxShadow = 'none';
+        indicator.title = "Server Status: OFFLINE (Ensure Python EXE is running)";
+
+        statusDot.style.backgroundColor = '#495057';
+        statusText.textContent = 'Disconnected';
+    }
+}
+
 
     function createToggleIcon(id, isActive, onClick) {
         const icon = document.createElement('span');
@@ -756,13 +847,27 @@
         }, 'verify2-btn');
         const reportAmendedButton = createReportAmendedResultButton();
         const reportCriticalButton = createReportCriticalResultButton();
+        // REMOVED: const rejectSampleButton = createRejectSampleButton();
 
         const verify1Icon = createToggleIcon('verify1Icon', verify1Toggle, () => handleVerifyToggle('verify1'));
         const verify2Icon = createToggleIcon('verify2Icon', verify2Toggle, () => handleVerifyToggle('verify2'));
 
-        buttonDiv.append(verify1Button, verify1Icon, verify2Button, verify2Icon, reportCriticalButton, reportAmendedButton);
+        // Added Server Status Indicator
+        const serverStatusIndicator = createServerStatusIndicator();
+
+        buttonDiv.append(
+            verify1Button, verify1Icon,
+            verify2Button, verify2Icon,
+            reportCriticalButton, reportAmendedButton,
+            serverStatusIndicator
+        );
         anchorElement.after(buttonDiv);
         logDebugMain("Custom buttons added after 'Re-Run Test' button.");
+
+        // Initialize Server Check
+        checkServerHealth();
+        // Poll every 5 seconds
+        setInterval(checkServerHealth, 5000);
     }
 
     function checkAllVisibleBoxesWithoutDuplicates() {
@@ -2595,7 +2700,118 @@
         isScanningActive = false;
     }
 
+    // --- New Functionality: Rejection Data Capture ---
+    function getRejectionData() {
+        // 1. Barcode
+        const barcodeSelect = document.getElementById('barcodecollection');
+        let barcodeVal = 'N/A';
+        if (barcodeSelect && barcodeSelect.selectedIndex >= 0) {
+            barcodeVal = barcodeSelect.options[barcodeSelect.selectedIndex].text.trim();
+        }
+
+        // 2. Criteria
+        const criteriaSelect = document.getElementById('criteria');
+        let criteriaVal = 'N/A';
+        if (criteriaSelect && criteriaSelect.selectedIndex >= 0) {
+            criteriaVal = criteriaSelect.options[criteriaSelect.selectedIndex].text.trim();
+        }
+
+        // 3. Total Tests
+        let totalTestsVal = 'N/A';
+        const spans = document.querySelectorAll('span');
+        for (const span of spans) {
+            if (span.textContent.includes('TOTAL TESTS:')) {
+                totalTestsVal = span.textContent.trim().replace('TOTAL TESTS:', '').trim();
+                break;
+            }
+        }
+
+        // 4. Location (Specific to Rejection Modal)
+        const locSpan = document.querySelector('.loc-text');
+        let locationVal = 'N/A';
+        if (locSpan) locationVal = locSpan.textContent.trim();
+
+        // 5. Remarks (Textarea)
+        // Use formcontrolname for specificity, fallback to ID if needed
+        const remarksTextarea = document.querySelector('textarea[formcontrolname="rejectionRemarks"]') || document.getElementById('remarks');
+        let remarksVal = 'N/A';
+        if (remarksTextarea) {
+            // Get value, clean up newlines, and sanitize against our delimiter '##'
+            remarksVal = remarksTextarea.value.trim().replace(/##/g, ' - ') || 'N/A';
+        }
+
+        return { barcodeVal, criteriaVal, totalTestsVal, locationVal, remarksVal };
+    }
+
+    async function handleRejectionSave(e) {
+        logDebugMain("Rejection Save Clicked. Capturing data...");
+        // Allow the default save action to proceed (no preventDefault)
+
+        const { barcodeVal, criteriaVal, totalTestsVal, locationVal, remarksVal } = getRejectionData();
+
+        // Get standard patient info
+        const patientInfoResult = await getPatientDataWithRetry({
+             name: CONFIG_ALERTS.PATIENT_NAME_SELECTOR,
+             mrn: CONFIG_ALERTS.PATIENT_MRN_SELECTOR,
+             location: CONFIG_ALERTS.PATIENT_LOCATION_SELECTOR,
+             barcode: CONFIG_ALERTS.SAMPLE_BARCODE_SELECTOR
+        }, 1000); // Short timeout
+
+        const pData = patientInfoResult.data;
+        // Override location with the specific one found in modal if valid
+        if (locationVal !== 'N/A') {
+            pData.patientLocation = locationVal;
+        }
+        // Override barcode if captured from the select dropdown
+        if (barcodeVal !== 'N/A' && barcodeVal !== '--Select--') {
+            pData.sampleBarcode = barcodeVal;
+        }
+
+        const userIdElement = document.querySelector(CONFIG_ALERTS.USER_NAME_SELECTOR);
+        const currentUserId = userIdElement ? userIdElement.textContent.trim() : 'N/A';
+
+        const payload = {
+            entryID: getNextEntryID(),
+            patientName: pData.patientName,
+            patientMRN: pData.patientId,
+            patientLocation: pData.patientLocation,
+            sampleBarcode: pData.sampleBarcode,
+            userName: currentUserId,
+            notifiedPersonName: 'Lab Rejection System', // Auto
+            notifiedPersonTelExt: 'N/A',
+            readBack: false,
+            amendmentReason: `Sample Rejection: ${criteriaVal}`,
+            alerts: [{
+                testName: 'Sample Rejection Event',
+                result: 'REJECTED',
+                uom: '',
+                flag: 'REJECTED',
+                type: 'sample_rejection',
+                // Updated comment format to include remarks with robust '##' delimiter
+                comment: `Criteria: ${criteriaVal} ## Total Tests Affected: ${totalTestsVal} ## Remarks: ${remarksVal}`
+            }]
+        };
+
+        logDebugMain("Sending Rejection Data: " + JSON.stringify(payload));
+        const success = await sendAlertDataToServer(payload);
+        if (success) {
+            logDebugMain("Rejection saved to server.");
+        } else {
+            console.error("Failed to save rejection to server.");
+        }
+    }
+
+    function setupRejectionSaveListener() {
+        const saveBtn = document.getElementById('savebtn-smplrejection');
+        if (saveBtn && !saveBtn.dataset.rejectionListenerAttached) {
+            saveBtn.addEventListener('click', handleRejectionSave);
+            saveBtn.dataset.rejectionListenerAttached = 'true';
+            logDebugMain("Attached listener to Rejection Save button.");
+        }
+    }
+
     setInterval(checkUrlAndTriggerClickForUndefined, CONFIG_MAIN.CHECK_INTERVALS.UNDEFINED_URL);
     setInterval(checkForDisabledButtons, CONFIG_MAIN.CHECK_INTERVALS.DISABLED_BTN_CHECK);
+    setInterval(setupRejectionSaveListener, 1000);
 
 })();

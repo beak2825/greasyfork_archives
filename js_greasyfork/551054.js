@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Скрипт для КФ/ЗГСФ/ГСФ || Blue
 // @namespace    http://tampermonkey.net/
-// @version      1.3
+// @version      1.4.1
 // @description  Скрипт для КФ/ЗГСФ/ГСФ
 // @author       David Rabadanov
 // @match https://forum.blackrussia.online/threads/*
@@ -334,7 +334,7 @@ title: '|Time коды не по форме|',
                   "[CENTER][URL='https://vk.com/away.php?to=https%3A%2F%2Fpostimg.cc%2FBjXrkC1t%5D%5Bimg%5Dhttps%3A%2F%2Fi.postimg.cc%2FqvLptbJc%2F1751738511210.jpg%5B%2Fimg%5D%5B%2Furl%5D%5Burl%3Dhttps%3A%2F%2Fpostimages.org%2Fru%2F%5D%D1%84%D0%BE%D1%82%D0%BE%D1%85%D0%BE%D1%81%D1%82%D0%B8%D0%BD%D0%B3&utf=1'][IMG]https://i.postimg.cc/qvLptbJc/1751738511210.jpg[/IMG][/URL][/CENTER]"+
                   "[HEADING=3][CENTER][COLOR=rgb(204, 204, 204)][SIZE=5][B]Здравствуйте, {{ user.name }} [/B][/SIZE][/COLOR][/CENTER][/HEADING]"+
                   "[HEADING=3][CENTER][COLOR=rgb(204, 204, 204)][SIZE=5][B]Ваша жалоба - [/B][/SIZE][/COLOR][SIZE=5][I][COLOR=#8B0000][B]Отказана.[/B][/COLOR][COLOR=rgb(204, 204, 204)][SIZE=5][B] Тайм-коды составлены не по форме, они должны иметь следующий вид:[/B][/SIZE][/COLOR][/I][/SIZE][/CENTER][/HEADING]"+
-                  "[URL='https://postimg.cc/XpswHptJ'][IMG]https://i.postimg.cc/T36CPb9r/image-1.png[/IMG][/URL][/CENTER]",
+                  "[CENTER][URL=https://yapx.ru/image/cqUPj][img]https://i.yapx.ru/cqUPjs.png[/img][/url][/CENTER]",
       prefix: UNACCСEPT_PREFIX,
 	  status: false,
 },
@@ -477,6 +477,33 @@ title: '| Био отказ (Ошибки) |',
 	  status: false,
 },
   {
+title: '| Био отказ(инфо о прошлом в настоящем времени) |',
+	  content:
+                  "[CENTER][URL='https://vk.com/away.php?to=https%3A%2F%2Fpostimg.cc%2FBjXrkC1t%5D%5Bimg%5Dhttps%3A%2F%2Fi.postimg.cc%2FqvLptbJc%2F1751738511210.jpg%5B%2Fimg%5D%5B%2Furl%5D%5Burl%3Dhttps%3A%2F%2Fpostimages.org%2Fru%2F%5D%D1%84%D0%BE%D1%82%D0%BE%D1%85%D0%BE%D1%81%D1%82%D0%B8%D0%BD%D0%B3&utf=1'][IMG]https://i.postimg.cc/qvLptbJc/1751738511210.jpg[/IMG][/URL][/CENTER]"+
+                  "[HEADING=3][CENTER][COLOR=rgb(204, 204, 204)][SIZE=5][B]Здравствуйте, {{ user.name }} [/B][/SIZE][/COLOR][/CENTER][/HEADING]"+
+                  "[HEADING=3][CENTER][COLOR=rgb(204, 204, 204)][SIZE=5][B]Ваша биография - [/B][/SIZE][/COLOR][SIZE=5][I][COLOR=#8B0000][B]Отказана.[/B][/COLOR][COLOR=rgb(204, 204, 204)][SIZE=5][B] В пункте Настоящее время вы рассказываете про свое прошлое, что противоречит его назначению. Составьте новую биографию учтя это.[/B][/SIZE][/COLOR][/I][/SIZE][/CENTER][/HEADING]",
+     prefix: UNACCСEPT_PREFIX,
+	  status: false,
+},
+  {
+title: '| Био отказ(инфо о взрослой жизни в детстве) |',
+	  content:
+                  "[CENTER][URL='https://vk.com/away.php?to=https%3A%2F%2Fpostimg.cc%2FBjXrkC1t%5D%5Bimg%5Dhttps%3A%2F%2Fi.postimg.cc%2FqvLptbJc%2F1751738511210.jpg%5B%2Fimg%5D%5B%2Furl%5D%5Burl%3Dhttps%3A%2F%2Fpostimages.org%2Fru%2F%5D%D1%84%D0%BE%D1%82%D0%BE%D1%85%D0%BE%D1%81%D1%82%D0%B8%D0%BD%D0%B3&utf=1'][IMG]https://i.postimg.cc/qvLptbJc/1751738511210.jpg[/IMG][/URL][/CENTER]"+
+                  "[HEADING=3][CENTER][COLOR=rgb(204, 204, 204)][SIZE=5][B]Здравствуйте, {{ user.name }} [/B][/SIZE][/COLOR][/CENTER][/HEADING]"+
+                  "[HEADING=3][CENTER][COLOR=rgb(204, 204, 204)][SIZE=5][B]Ваша биография - [/B][/SIZE][/COLOR][SIZE=5][I][COLOR=#8B0000][B]Отказана.[/B][/COLOR][COLOR=rgb(204, 204, 204)][SIZE=5][B] В пункте Детство вы рассказываете о своём будущем, что противоречит его назначению. Составьте новую биографию учтя это.[/B][/SIZE][/COLOR][/I][/SIZE][/CENTER][/HEADING]",
+     prefix: UNACCСEPT_PREFIX,
+	  status: false,
+},
+  {
+title: '| Био отказ(никнейм не совпадает) |',
+	  content:
+                  "[CENTER][URL='https://vk.com/away.php?to=https%3A%2F%2Fpostimg.cc%2FBjXrkC1t%5D%5Bimg%5Dhttps%3A%2F%2Fi.postimg.cc%2FqvLptbJc%2F1751738511210.jpg%5B%2Fimg%5D%5B%2Furl%5D%5Burl%3Dhttps%3A%2F%2Fpostimages.org%2Fru%2F%5D%D1%84%D0%BE%D1%82%D0%BE%D1%85%D0%BE%D1%81%D1%82%D0%B8%D0%BD%D0%B3&utf=1'][IMG]https://i.postimg.cc/qvLptbJc/1751738511210.jpg[/IMG][/URL][/CENTER]"+
+                  "[HEADING=3][CENTER][COLOR=rgb(204, 204, 204)][SIZE=5][B]Здравствуйте, {{ user.name }} [/B][/SIZE][/COLOR][/CENTER][/HEADING]"+
+                  "[HEADING=3][CENTER][COLOR=rgb(204, 204, 204)][SIZE=5][B]Ваша биография[/B][/SIZE][/COLOR][SIZE=5][I][COLOR=#8B0000][B]Отказана.[/B][/COLOR][COLOR=rgb(204, 204, 204)][SIZE=5][B] Никнейм в заголовке отличается от указанного в биографии.[/B][/SIZE][/COLOR][/I][/SIZE][/CENTER][/HEADING]",
+     prefix: UNACCСEPT_PREFIX,
+	  status: false,
+},
+  {
 title: '| Био отказ (Нонрп ник) |',
 	  content:
                   "[CENTER][URL='https://vk.com/away.php?to=https%3A%2F%2Fpostimg.cc%2FBjXrkC1t%5D%5Bimg%5Dhttps%3A%2F%2Fi.postimg.cc%2FqvLptbJc%2F1751738511210.jpg%5B%2Fimg%5D%5B%2Furl%5D%5Burl%3Dhttps%3A%2F%2Fpostimages.org%2Fru%2F%5D%D1%84%D0%BE%D1%82%D0%BE%D1%85%D0%BE%D1%81%D1%82%D0%B8%D0%BD%D0%B3&utf=1'][IMG]https://i.postimg.cc/qvLptbJc/1751738511210.jpg[/IMG][/URL][/CENTER]"+
@@ -560,7 +587,7 @@ title: '| Неофициальная Орг. Отказ |',
 },
  
 ];
- 
+
 $(document).ready(() => { 
  // Загрузка скрипта для обработки шаблонов 
  $(`body`).append(`<script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>`); 

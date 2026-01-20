@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         이미지 다운로더 + HR
-// @version         2.90.0.8.260118
+// @version         2.90.0.8.260120
 // @namespace       http://tampermonkey.net/
 // @description     Images can be extracted and batch downloaded from most websites. Especially for websites the right click fails or image can not save. Extra features: zip download / auto-enlarge image. See the script description at info page (suitable for chrome/firefox+tampermonkey)
 // @author          桃源隐叟-The hide oldman in taoyuan mountain, donghaerang
@@ -370,12 +370,14 @@ https://github.com/nodeca/pako/blob/master/LICENSE
                 const isJpgWebp = /(.jpg|.jpeg|.webp)/i.test(url) || 
                                  ['image/jpeg', 'image/jpg', 'image/webp', 'image/x-webp'].includes(typeTag);
 
-                // 규칙 1: tving 전용 조건
-                if (isTving && ((w === 1920 && h === 1080) || (w === 1280 && h === 720))) {
+                // 규칙 1: tving 전용 조건 (1080p 또는 720p)
+                const isPerfectTving = isTving && ((w === 1920 && h === 1080) || (w === 1280 && h === 720));
+
+                if (isPerfectTving) {
                     processImageAdvanced(this, w, h).then(b => saveAs(b, `${filename}.jpg`));
                 } 
-                // 규칙 3~8: JPG/WebP 대상 해상도 조절 (Rule 2보다 먼저 검사하여 우선순위를 높임)
-                else if (isJpgWebp) {
+                // 규칙 3~8: JPG/WebP이거나, 규칙 1에 해당하지 않는 티빙 이미지인 경우 리사이징 수행
+                else if (isJpgWebp || isTving) {
                     if (w > h) { // 가로형
                         if (w > 3840 || h > 2160) { // 규칙 3
                             processImageAdvanced(this, 3840, 2160).then(b => saveAs(b, `${filename}.jpg`));
@@ -396,10 +398,10 @@ https://github.com/nodeca/pako/blob/master/LICENSE
                         saveAs(blob, `${filename}.jpg`);
                     }
                 }
-                // 규칙 2: PNG 조건 (JPG가 아님이 확실할 때만 원본 저장)
+                // 규칙 2: 티빙이 아닌 사이트의 PNG 파일은 원본 그대로 저장
                 else if (!isTving && (typeTag === 'image/png' || url.toLowerCase().includes('.png'))) {
                     saveAs(blob, `${filename}.png`);
-                } 
+                }
                 // 규칙 9: 기타 모든 예외 상황
                 else {
                     let ext = typeTag.split('/')[1] ? typeTag.split('/')[1].split(';')[0].replace('jpeg', 'jpg') : 'jpg';

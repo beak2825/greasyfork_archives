@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         HDHive 添加IMDb和豆瓣评分以及SubHD链接
+// @name         HDHive添加IMDb和豆瓣评分以及SubHD、TMDB链接
 // @namespace    http://hdhive.demojameson.com/
-// @version      2.8
-// @description  HDHive 添加IMDb和豆瓣评分以及SubHD链接。
+// @version      2.9
+// @description  HDHive添加IMDb和豆瓣评分以及SubHD、TMDB链接。
 // @author       DemoJameson
 // @match        https://hdhive.online/tv/*
 // @match        https://hdhive.online/movie/*
@@ -15,8 +15,8 @@
 // @connect      api.themoviedb.org
 // @connect      subhd.tv
 // @license      MIT
-// @downloadURL https://update.greasyfork.org/scripts/538540/HDHive%20%E6%B7%BB%E5%8A%A0IMDb%E5%92%8C%E8%B1%86%E7%93%A3%E8%AF%84%E5%88%86%E4%BB%A5%E5%8F%8ASubHD%E9%93%BE%E6%8E%A5.user.js
-// @updateURL https://update.greasyfork.org/scripts/538540/HDHive%20%E6%B7%BB%E5%8A%A0IMDb%E5%92%8C%E8%B1%86%E7%93%A3%E8%AF%84%E5%88%86%E4%BB%A5%E5%8F%8ASubHD%E9%93%BE%E6%8E%A5.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/538540/HDHive%E6%B7%BB%E5%8A%A0IMDb%E5%92%8C%E8%B1%86%E7%93%A3%E8%AF%84%E5%88%86%E4%BB%A5%E5%8F%8ASubHD%E3%80%81TMDB%E9%93%BE%E6%8E%A5.user.js
+// @updateURL https://update.greasyfork.org/scripts/538540/HDHive%E6%B7%BB%E5%8A%A0IMDb%E5%92%8C%E8%B1%86%E7%93%A3%E8%AF%84%E5%88%86%E4%BB%A5%E5%8F%8ASubHD%E3%80%81TMDB%E9%93%BE%E6%8E%A5.meta.js
 // ==/UserScript==
 
 (function() {
@@ -31,12 +31,16 @@
         return CACHE_KEY_PREFIX + window.location.pathname;
     }
 
-    function saveToCache(imdbId, doubanData, imdbRating) {
+    function saveToCache(imdbId, doubanData, imdbRating, imdbVotes, tmdbId, mediaType) {
         const cacheData = {
             imdbId,
             doubanLink: doubanData?.alt?.replace('/movie/', '/subject/'),
             doubanRating: doubanData?.rating?.average || 'N/A',
+            doubanVotes: doubanData?.rating?.details?.get('all') || doubanData?.rating?.count || 'N/A', // 尝试取人数
             imdbRating,
+            imdbVotes: imdbVotes || 'N/A',
+            tmdbId,
+            mediaType,
             timestamp: Date.now()
         };
         localStorage.setItem(getCacheKey(), JSON.stringify(cacheData));
@@ -76,28 +80,35 @@
         });
     }
 
-    async function displayRatings(imdbId, doubanLink, doubanRating, imdbRating) {
+    async function displayRatings(imdbId, doubanLink, doubanRating, doubanVotes, imdbRating, imdbVotes, tmdbId, mediaType) {
         const titleEl = await waitForElement('h1');
         titleEl.querySelectorAll('.hdhive-rating').forEach(el => el.remove());
 
+        // IMDb 显示 + tips
         const ilink = document.createElement('a');
         ilink.className = 'hdhive-rating';
         ilink.href = `https://www.imdb.com/title/${imdbId}/`;
         ilink.textContent = `IMDb: ${imdbRating}`;
+        ilink.title = `${imdbVotes === 'N/A' ? '未知' : imdbVotes}人评分`;
         ilink.style.marginLeft = '10px';
         ilink.style.color = '#CCAA11';
         ilink.target = '_blank';
 
+        // 豆瓣 显示 + tips
         const dlink = document.createElement('a');
         dlink.className = 'hdhive-rating';
         dlink.href = doubanLink || '#';
         dlink.textContent = `豆瓣: ${doubanRating}`;
+        dlink.title = `${doubanVotes === 'N/A' ? '未知' : doubanVotes}人评分`;
         dlink.style.marginLeft = '10px';
         dlink.style.color = '#60CC88';
         dlink.target = '_blank';
 
+        titleEl.append(ilink, dlink);
+
         const doubanId = getDoubanId(doubanLink);
         if (doubanId) {
+            // SubHD
             const slink = document.createElement('a');
             slink.className = 'hdhive-rating';
             slink.href = `https://subhd.tv/d/${doubanId}`;
@@ -105,14 +116,25 @@
             slink.style.marginLeft = '10px';
             slink.style.color = '#1E90FF';
             slink.target = '_blank';
-            titleEl.append(ilink, dlink, slink);
-        } else {
-            titleEl.append(ilink, dlink);
+            titleEl.appendChild(slink);
+
+            // TMDB
+            if (tmdbId && mediaType) {
+                const tlink = document.createElement('a');
+                tlink.className = 'hdhive-rating';
+                tlink.href = `https://www.themoviedb.org/${mediaType}/${tmdbId}`;
+                tlink.textContent = 'TMDB';
+                tlink.style.marginLeft = '10px';
+                tlink.style.color = '#01B4E4';
+                tlink.target = '_blank';
+                titleEl.appendChild(tlink);
+            }
         }
     }
 
     function getIds() {
         let tmdbId = null;
+        let mediaType = window.location.pathname.includes('/tv/') ? 'tv' : 'movie';
         for (const script of document.scripts) {
             const txt = script.textContent;
             if (txt.includes('__next_f.push')) {
@@ -120,7 +142,7 @@
                 if (tm) tmdbId = tm[1];
             }
         }
-        return { tmdbId };
+        return { tmdbId, mediaType };
     }
 
     function fetchImdbIdFromTmdb(tmdbId, type = 'movie') {
@@ -143,7 +165,7 @@
         });
     }
 
-    function fetchImdbRating(imdbId) {
+    function fetchImdbRatingAndVotes(imdbId) {
         return new Promise(resolve => {
             GM_xmlhttpRequest({
                 method: 'GET',
@@ -153,20 +175,25 @@
                         try {
                             const doc = new DOMParser().parseFromString(res.responseText, 'text/html');
                             const scoreEl = doc.querySelector('[data-testid="hero-rating-bar__aggregate-rating__score"] span');
-                            resolve(scoreEl?.textContent.trim() || 'N/A');
+                            const ratingText = scoreEl?.textContent.trim() || 'N/A';
+                            const votes = scoreEl.parentElement.parentElement.lastElementChild.textContent.trim() || 'N/A';
+                            resolve({ rating: ratingText, votes });
                         } catch {
-                            resolve('N/A');
+                            resolve({ rating: 'N/A', votes: 'N/A' });
                         }
-                    } else resolve('N/A');
+                    } else {
+                        resolve({ rating: 'N/A', votes: 'N/A' });
+                    }
                 },
-                onerror: () => resolve('N/A')
+                onerror: () => resolve({ rating: 'N/A', votes: 'N/A' })
             });
         });
     }
 
-    async function searchDouban(imdbId) {
+    async function searchDouban(imdbId, tmdbId, mediaType) {
+        const imdbData = await fetchImdbRatingAndVotes(imdbId);
         const doubanApi = `https://api.douban.com/v2/movie/imdb/${imdbId}`;
-        const imdbRating = await fetchImdbRating(imdbId);
+
         GM_xmlhttpRequest({
             method: 'POST',
             url: doubanApi,
@@ -177,17 +204,33 @@
                 if (res.status === 200) {
                     try { data = JSON.parse(res.responseText); } catch {}
                 }
-                saveToCache(imdbId, data, imdbRating);
+
+                // 尝试取豆瓣评分人数（v2常见字段）
+                const doubanVotes = data?.rating?.numRaters || 'N/A';
+
+                saveToCache(
+                    imdbId,
+                    data,
+                    imdbData.rating,
+                    imdbData.votes,
+                    tmdbId,
+                    mediaType
+                );
+
                 displayRatings(
                     imdbId,
                     data?.alt?.replace('/movie/', '/subject/') || null,
                     data?.rating?.average || 'N/A',
-                    imdbRating
+                    doubanVotes,
+                    imdbData.rating,
+                    imdbData.votes,
+                    tmdbId,
+                    mediaType
                 );
             },
             onerror: () => {
-                saveToCache(imdbId, null, imdbRating);
-                displayRatings(imdbId, null, 'N/A', imdbRating);
+                saveToCache(imdbId, null, imdbData.rating, imdbData.votes, tmdbId, mediaType);
+                displayRatings(imdbId, null, 'N/A', 'N/A', imdbData.rating, imdbData.votes, tmdbId, mediaType);
             }
         });
     }
@@ -195,23 +238,34 @@
     async function waitForScript() {
         const cached = loadFromCache();
         if (cached) {
-            displayRatings(cached.imdbId, cached.doubanLink, cached.doubanRating, cached.imdbRating);
-            searchDouban(cached.imdbId);
+            displayRatings(
+                cached.imdbId,
+                cached.doubanLink,
+                cached.doubanRating,
+                cached.doubanVotes,
+                cached.imdbRating,
+                cached.imdbVotes,
+                cached.tmdbId,
+                cached.mediaType
+            );
+            // 后台更新（可选）
+            if (cached.imdbId) {
+                searchDouban(cached.imdbId, cached.tmdbId, cached.mediaType);
+            }
             return;
         }
 
         await waitForElement('script');
-        const { tmdbId } = getIds();
+        const { tmdbId, mediaType } = getIds();
         if (tmdbId) {
-            const type = window.location.pathname.includes('/tv/') ? 'tv' : 'movie';
-            const imdbId = await fetchImdbIdFromTmdb(tmdbId, type);
+            const imdbId = await fetchImdbIdFromTmdb(tmdbId, mediaType);
             if (imdbId) {
-                searchDouban(imdbId);
+                searchDouban(imdbId, tmdbId, mediaType);
             } else {
                 console.warn('无法通过 TMDB 获取 IMDb ID');
             }
         } else {
-            console.warn('脚本加载完毕，但未检测到 TMDB ID');
+            console.warn('未检测到 TMDB ID');
         }
     }
 

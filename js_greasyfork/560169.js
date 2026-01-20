@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         [Pokechill] EN-CN
 // @namespace    https://play-pokechill.github.io/
-// @version      2.5.1
+// @version      2.6.0
 // @description  Pokechill 全页面离线简体中文汉化
 // @author       GPT-DiamondMoo
 // @license      MIT
+// @icon         https://play-pokechill.github.io/img/icons/icon.png
 // @match        https://play-pokechill.github.io/*
 // @downloadURL https://update.greasyfork.org/scripts/560169/%5BPokechill%5D%20EN-CN.user.js
 // @updateURL https://update.greasyfork.org/scripts/560169/%5BPokechill%5D%20EN-CN.meta.js
@@ -31,10 +32,11 @@
         [/^Can hit regardless of the typing/i, '必定命中，无视属性回避效果'],
         [/^(\w+)-type pokemon can be hit with (\w+) and (\w+)-type moves/i, '$2和$3属性招式可命中$1属性宝可梦'],
         [/^Moves that are resisted by typing do instead normal damage/i, '被属性抵抗的招式造成正常伤害'],
-        [/^Secondary effect of moves are executed twice/i, '招式的追加效果触发概率翻倍'],
+        [/^Secondary effect of moves are executed twice/i, '招式的追加效果会执行两次(仅包含 进攻速度修正、招式伤害修正 的招式除外)'],
         [/^Inverts stat changes\. Positive changes become negative, and negative become positive/i, '反转能力变化，正面效果变负面，负面效果变正面'],
         [/^Stat changes on the user are boosted by a stage/i, '自身能力变化提升一个等级'],
         [/^Every turn, a stat rises by (\d+)% while one lowers by (\d+)%/i, '每回合随机一项能力提升$1%，一项能力降低$2%'],
+        [/^Every turn, raises (\w+) stats by (\d+)% for (\w+) turn/i, '每回合随机$1项能力提升$2%，持续$3回合'],
         [/^Moves are executed a second time, at half power/i, '招式执行两次，第二次执行的招式伤害变为原来的一半'],
         [/^Can only take damage from direct damaging moves/i, '仅能从进攻招式受到伤害'],
         [/^Increases the weight of (.+) item drops by (\d+\.?\d*)% \(Can stack\)/i, '$1物品掉落的权重提高$2%（可叠加）'],
@@ -52,10 +54,12 @@
         [/^Increases (.+) by (\d+)% to the entire team/i, '我方全队$1提升$2%'],
         [/^Increases (.+) and (.+) by (\d+)% to the entire team/i, '我方全队$1和$2提升$3%'],
         [/^Increases (.+) by (\d+)%/i, '$1提升$2%'],
+        [/^Increases (.+) by (\d+)%. Attacks x(\d+\.?\d*) (\w+) than usual/i, '$1提升$2%。进攻速度变$4为原来的$3倍'],
         [/^(\d+)% chance to increase All Stats by (\d+)%/i, '$1%概率使所有能力提升$2%'],
         [/^(\d+)% chance to increase (.+) by (\d+)%/i, '$1%概率使自身$2提升$3%'],
         [/^Decreases enemy (.+) by (\d+)% when the opposing Pokemon enters the battle/i, '敌方宝可梦出场时，敌方$1降低$2%'],
         [/^Decreases (.+) by (\d+)%/i, '$1降低$2%'],
+        [/^Decreases (.+) by (\d+)% and deals damage every turn/i, '$1降低$2%并且每回合造成伤害'],
         [/^Decreases (.+) and (.+) by (\d+)%/i, '$1和$2降低$3%'],
         [/^Decreases enemy (.+) by (\d+)%/i, '敌人的$1降低$2%'],
         [/^ and decreases enemy (.+) by (\d+)%/i, '并且敌人的$1降低$2%'],
@@ -66,21 +70,24 @@
         [/^Hits (\d+) times/i, '攻击$1次'],
         [/^Attacks x([\d\.]+) (\w+) than usual/i, '攻击速度为变$2为原来的$1倍'],
         [/^(\w+) and (\w+)-type moves are x([\d\.]+) (\w+) than usual/i, '$1和$2属性招式进攻速度变$4为原来的$3倍'],
+        [/^(\w+) and (\w+) moves are x([\d\.]+) (\w+) than usual/i, '$1和$2属性招式进攻速度变$4为原来的$3倍'],//特性疾风之翼漏type
         [/^Power doubles if the user is (\w+), (\w+) or (\w+)/i, '自身$1、$2或$3时威力翻倍'],
-        [/^Power doubles if the target is (\w+)/i, '目标$1时威力翻倍'],
+        [/^Power doubles if the target is (\w+)/i, '目标$1时招式威力翻倍'],
+        [/^Power doubles if the target is (\w+)-Type/i, '目标为$1属性时招式威力翻倍'],
         [/^Power randomly varies from x(\d+) to x(\d+)/i, '威力在$1倍到$2倍之间随机变化'],
         [/^Multiplies by (\d+\.?\d*)x the base damage of moves with equal or less than (\d+) power/i, '威力小于等于$2的招式威力乘以$1倍'],
         [/^Multiplies the damage by x(\d+\.?\d*) when the opposite Pokemon shares a type/i, '目标与自身属性相同时，伤害乘以$1倍'],
         [/^"([^"]+)"-related moves have their base damage multiplied by x([\d.]+)/i, '"$1"类招式基础威力乘以$2倍'],
         [/^"([^"]+)"-related moves are executed twice as fast/i, '"$1"类招式速度变快为原来的2倍'],
         [/^Multiplies Same-Type-Attack-Bonus by x(\d+\.?\d*)/i, '属性一致加成从1.5倍提升至1.7倍'],//原文属性一致加成乘以$1倍
-        [/^Positive secondary effect of damaging moves are removed, and their damage is multiplied by x([\d\.]+)/i, '移除进攻招式的正面追加效果（不含进攻速度修正），伤害乘以$1倍'],
+        [/^Positive secondary effect of damaging moves are removed, and their damage is multiplied by x([\d\.]+)/i, '移除进攻招式的正面追加效果，伤害乘以$1倍(仅包含 进攻速度修正、招式伤害修正 的招式除外)'],//实际作用不止有正面效果
         [/^Multiplies by x(\d+\.?\d*) the power of (\w+)-type moves of all team members/i, '我方全队$2属性招式威力乘以$1'],
         [/^Increases the Damage dealt by x(\d+\.?\d*) for every team member defeated/i, '每有一名队友倒下，造成伤害乘以$1倍'],
         [/^Increases the Damage dealt by x(\d+\.?\d*) when afflicted with (\w+), and nullifies the damage overtime caused by it/i, '处于$2状态时，造成伤害乘以$1倍，并免疫该状态的持续伤害'],
         [/^(\w+)-type moves are multiplied by x(\d+\.?\d*)/i, '$1属性招式威力乘以$2'],
         [/^(.+) stat is multiplied by x(\d+\.?\d*)/i, '$1能力值乘以$2'],
         [/^Increases the damage of (\w+)-Type moves by (\d+)% and reduces the damage of (\w+)-Type moves by (\d+)%/i, '提高$1属性招式伤害$2%，并降低$3属性招式伤害$4%'],
+        [/^Increases the damage of (\w+)-Type moves by (\d+)% and decreases the damage of (\w+)-Type moves by (\d+)%/i, '提高$1属性招式伤害$2%，并降低$3属性招式伤害$4%'],
         [/^Increases the damage of (\w+) and (\w+)-Type moves by (\d+)%/i, '提高$1和$2属性招式伤害$3%'],
         [/^Increases the damage of (\w+)-Type moves by (\d+)%/i, '提高$1属性招式伤害$2%'],
         [/^All moves become (\w+)-type moves, and their power is multiplied by x(\d+\.?\d*)/i, '所有招式变为$1属性，威力乘以$2倍'],
@@ -93,23 +100,7 @@
         [/^Nullifies received (\w+)-type moves/i, '免疫$1属性招式'],
         [/^Increases the power of (\w+)-type moves by (\d+)% below (\d+)% HP/i, 'HP低于$3%时，$1属性招式威力提升$2%'],
         [/^Increases (.+) by (\d+)% if no item is being held/i, '未携带道具时，$1提升$2%'],
-        [/^Genetics-aiding item: Multiplies by (\d+) the chance to inherit (.+) Iv's/i, '遗传辅助道具：$2个体值继承几率乘以$1倍'],
         [/^Increase the (.+) IV of a Pokemon by (\d+)/i, '使一只宝可梦的$1个体值提升$2点'],
-        [/^When held: Increase the power of (.+)-Type moves by (\d+)%/i, '持有时：提高持有者$1属性招式$2%伤害'],
-        [/^When held: Reduces the super-effective damage taken from (.+)-Type moves by (\d+)%/i, '持有时：降低持有者受到的$1属性招式$2%效果绝佳伤害'],
-        [/^When held: Increases the damage dealt by (.+) by x(\d+)/i, '$1持有时：造成的伤害乘以$2'],
-        [/^When held: Increases the weight of (.+) item drops by (\d+\.?\d*)%. Works always for everyone regardless of the holder/i, '持有时：$1物品掉落的权重提高$2%。无论由谁携带，效果始终对所有人生效。'],
-        [/^When held: Increases the weight of (.+) pokemon by (\d+\.?\d*)%. Works always for everyone regardless of the holder/i, '持有时：$1宝可梦出现的权重提高$2%。无论由谁携带，效果始终对所有人生效。'],
-        [/^When held: Increases the chance of encountering a wild (.+) pokemon by (\d+\.?\d*)%. Works always for everyone regardless of the holder/i, '持有时：提升野生$1宝可梦遭遇率$2%。无论由谁携带，效果始终对所有人生效。'],
-        [/^When held: Increases the duration of /i, '持有时：持有者引发'],
-        [/^ weather by (\d+) turns/i, '的持续时间提升$1回合'],
-        [/^When held: Increases the experience gained by the pokemon by (\d+)%/i, '持有时：持有者获得的经验值提升$1%'],
-        [/^When held: If a Pokemon has not fully evolved, increase overall defense by x(\d+\.?\d*). This does not apply to final-stage Pokemon with a Mega-Evolution/i, '持有时：如果持有者是未完全进化形态，物防与特防乘以$1。这个效果无法作用于最终形态但有Mega进化的宝可梦。'],
-        [/^When held: Increases the duration of positive buffs used by (\d+) turn and increases damage dealt by (\d+)%/i, '持有时：持有者增益效果持续时间提升$1回合，并提高持有者造成的伤害$2%'],
-        [/^When held: Decreases the duration of negative buffs received by (\d+) turn and decreases damage taken by (\d+)%/i, '持有时：持有者受到的负面效果持续时间降低$1回合，并减少持有者受到的伤害$2%'],
-        [/^When held: Increases the (.+) of the user by x(\d+\.?\d*), but inflicts /i, '持有时：持有者的$1乘以$2，但持有者会被施加'],
-        [/^When held: Increases the (.+) of the user by x(\d+\.?\d*), but prevents them from switching/i, '持有时：持有者的$1乘以$2，但持有者会被禁止交替'],
-        [/^When held: Increases the (.+) of the user by x(\d+\.?\d*), but loses (.+) of its max HP per turn/i, '持有时：持有者的$1乘以$2，但持有者每回合会损失$3最大生命值'],
         [/^Unlocks (.+) by using a (.+) at level (\d+)\+?(?=\s*[✔️❌]|$)/i, '在等级$3以上使用$2可解锁$1'],
         [/^Unlocks (.+) at level (\d+)(?=\s*[✔️❌]|$)/i, '在等级$2时解锁$1'],
         [/^(\d+)% chance for moves to fail to deal damage/i, '招式$1%概率无法造成伤害'],
@@ -131,16 +122,17 @@
         [/^Teach the move /i, '将'],
         [/^ to a (.+) Pokemon/i, '招式教给一只 $1 属性的宝可梦'],
         [/^Raises by (\d+)% two random stats/i, '随机提升两项能力$1%'],
-        [/^User transfers all of its stat changes and status to a random team member/i, '将自身所有能力变化和状态效果转移给一名随机的队友。'],
-        [/^Increases (.+) by (\d+)% but decreases (.+) and (.+) by (\d+)%/i, '$1提高$2%，但$3和$4降低$5%。'],
+        [/^User transfers all of its stat changes and status to a the entire team/i, '将自身所有能力变化和状态效果赋予我方全队'],
+        [/^User transfers all of its stat changes and status to the entire team/i, '将自身所有能力变化和状态效果赋予我方全队'],
+        [/^Increases (.+) by (\d+)% but decreases (.+) and (.+) by (\d+)%/i, '$1提高$2%，但$3和$4降低$5%'],
         [/^Once used,increases the weight of (.+) drops by (\d+\.?\d*)% for the current battle. Multiple uses wont stack. Works always for everyone regardless of the user/i, '使用后，本轮次战斗中$1物品掉落的权重提高$2%。多次使用不会叠加。无论由谁使用，效果始终对所有人生效。'],
         [/^Once used,increases the weight of (.+) Pokemon by (\d+\.?\d*)% for the current battle. Multiple uses wont stack. Works always for everyone regardless of the user/i, '使用后，本轮次战斗中$1宝可梦出现的权重提高$2%。多次使用不会叠加。无论由谁使用，效果始终对所有人生效。'],
         [/^User performs any move at random/i, '随机施放一个招式'],
-        [/^Perform the (\w+) move of the oponent, at (\w+) the power/i, '施放对手的$1个招式，威力变为原来的$2'],
+        [/^Perform the (\w+) move of the oponent, at (\w+) the base damage/i, '施放对手的$1个招式，招式威力变为原来的$2'],
         [/^Perform the (\w+) move of the oponent. Attacks x(\d+\.?\d*) (\w+) than usual/i, '施放对手的$1个招式，进攻速度为变$3为原来的$2倍'],
         [/^Changes the weather to /i, '将天气变为'],
         [/^ when entering or switching into the battle/i, '当进入战斗或交替进入战斗时'],
-        [/^Super-effective against (\w+)-types/i, '对$1属性效果绝佳'],
+        [/^(.+) against (\w+)-types/i, '对$2属性$1'],
         [/^Power doubles if the target is /i, '威力翻倍若目标状态效果处于'],
         [/^Grants immunity to /i, '免疫'],
         [/^Grants immunity to (\w+)-type moves/i, '免疫$1属性招式'],
@@ -174,7 +166,59 @@
         [/^Enemy damage over time from /i, '在该宝可梦登场期间敌人受到'],
         [/^ is doubled while this Pokemon is active/i, '的持续伤害翻倍'],
         [/^Evolve certain kinds of Pokemon \(Must be level (\d+)\+\)/i, '进化特定种类的宝可梦(必须达到$1级)'],
+        [/^Increase (.+) by (\d+)% when hit with a (.+) move$/i, '受到$3招式命中时，$1提升$2%'],
+        [/^(.+) damage taken multiplier is halved/i, '受到的$1伤害倍率减半'],
+        [/^Moves that execute (\w+) than usual have their move power multiplied by x(\d+\.?\d*)/i, '进攻速度变$1的招式，招式威力乘以$2倍'],
+        [/^Nullifies received (\w+)-type moves and increases (.+) by (\d+)% after being hit with one/i, '被$1属性招式攻击时免疫伤害并且$2提升$3%'],
+        [/^Power increases by x(\d+\.?\d*)-(\d+\.?\d*) if (.+)\/(.+) is risen/i, '若$3或$4能力提升100%则招式威力乘以$2，提升50%则招式威力乘以$1'],
+        [/^Attacks x(\d+\.?\d*) (\w+) than usual. Power increases by x(\d+\.?\d*)-(\d+\.?\d*) if (.+)\/(.+) is risen/i, '进攻速度变$2为原来的$1倍。若$5或$6能力提升100%则招式威力乘以$4，提升50%则招式威力乘以$3'],
+        [/^Decreases enemy (.+) by (\d+)%. Power increases by x(\d+\.?\d*)-(\d+\.?\d*) if (.+)\/(.+) is risen/i, '敌人的$1降低$2%。若$5或$6能力提升100%则招式威力乘以$4，提升50%则招式威力乘以$3'],
         [/^/i, ''],
+
+
+        //遗传辅助道具
+        [/^(.+): Multiplies by (\d+) the chance to inherit (.+) Iv's/i,
+         '$1：$3个体值继承几率乘以$2倍'],
+        [/^(.+): Rerolls the ability of the (.+). It has an increased chance to reroll (\w+) and (\w+) abilities/i,
+         '$1：$2获得一个新的随机特性，更高几率获得$3和$4特性'],
+        [/^(.+): Swaps the ability of the Pokemon with the sample. Can only be used with at least one level of compatibility/i,
+         '$1：将宿主宝可梦的特性与样本宝可梦的特性互相交换。至少具备一级兼容性才能使用'],
+        [/^(.+): Ensures the Pokemon will retain its original ability/i,
+         '$1：确保宿主宝可梦保留原有特性'],
+        [/^(.+): Transfers the currently equipped moves of the sample to the movepool of the host. The host will retain both its equipped moves and the newly transferred ones, but the sample will lose it's equipped ones. Can only be used with at least one level of compatibility/i,
+         '$1：将样本宝可梦当前装备的招式转移至宿主宝可梦的招式池中。宿主宝可梦将同时保留自身已装备的招式以及新转移的招式，但样本宝可梦会失去其已装备的招式。至少具备一级兼容性才能使用。'],
+
+        //持有物
+        [/^When held: Increase the power of (.+)-Type moves by (\d+)%/i,
+         '持有时：提高持有者$1属性招式$2%伤害'],
+        [/^When held: Reduces the (.+) damage taken from (.+)-Type moves by (\d+)%/i,
+         '持有时：降低持有者受到的$2属性招式$3%$1伤害'],
+        [/^When held: Increases the damage dealt by (.+) by x(\d+)/i,
+         '$1持有时：造成的伤害乘以$2'],
+        [/^When held: Increases the weight of (.+) item drops by (\d+\.?\d*)%. Works always for everyone regardless of the holder/i,
+         '持有时：$1物品掉落的权重提高$2%。无论由谁携带，效果始终对所有人生效。'],
+        [/^When held: Increases the weight of (.+) pokemon by (\d+\.?\d*)%. Works always for everyone regardless of the holder/i,
+         '持有时：$1宝可梦出现的权重提高$2%。无论由谁携带，效果始终对所有人生效。'],
+        [/^When held: Increases the chance of encountering a wild (.+) pokemon by (\d+\.?\d*)%. Works always for everyone regardless of the holder/i,
+         '持有时：提升野生$1宝可梦遭遇率$2%。无论由谁携带，效果始终对所有人生效。'],
+        [/^When held: Increases the duration of /i,
+         '持有时：持有者引发'],
+        [/^ weather by (\d+) turns/i,
+         '的持续时间提升$1回合'],
+        [/^When held: Increases the experience gained by the pokemon by (\d+)%/i,
+         '持有时：持有者获得的经验值提升$1%'],
+        [/^When held: If a Pokemon has not fully evolved, increase overall defense by x(\d+\.?\d*). This does not apply to final-stage Pokemon with a Mega-Evolution/i,
+         '持有时：如果持有者是未完全进化形态，物防与特防乘以$1。这个效果无法作用于最终形态但有Mega进化的宝可梦。'],
+        [/^When held: Increases the duration of positive buffs used by (\d+) turn and increases damage dealt by (\d+)%/i,
+         '持有时：持有者增益效果持续时间提升$1回合，并提高持有者造成的伤害$2%'],
+        [/^When held: Decreases the duration of negative buffs received by (\d+) turn and decreases damage taken by (\d+)%/i,
+         '持有时：持有者受到的负面效果持续时间降低$1回合，并减少持有者受到的伤害$2%'],
+        [/^When held: Increases the (.+) of the user by x(\d+\.?\d*), but inflicts /i,
+         '持有时：持有者的$1乘以$2，但持有者会被施加'],
+        [/^When held: Increases the (.+) of the user by x(\d+\.?\d*), but prevents them from switching/i,
+         '持有时：持有者的$1乘以$2，但持有者会被禁止交替'],
+        [/^When held: Increases the (.+) of the user by x(\d+\.?\d*), but loses (.+) of its max HP per turn/i,
+         '持有时：持有者的$1乘以$2，但持有者每回合会损失$3最大生命值(此伤害无法被阻挡)'],//2.6更新无法被魔法防守阻挡
 
         // 百科全书
         [/^Obtained as a random reward in the (.+)/i, '在 $1 中作为随机奖励获得'],
@@ -283,10 +327,8 @@
          '招式重置：完成一次操作后，宿主宝可梦除携带的四个招式外，其余招式都会被重置，使你可以在每次操作后尝试获取更强力的招式。'],
         [/Move Inheriting:\s*An advanced alternative to the previous, you can inherit moves from the sample that would otherwise not be available to you through learning/i,
          '招式继承：这是前者的进阶版本。宿主宝可梦可以从样本宝可梦身上继承原本无法通过学习获得的招式，样本宝可梦的所有技能均有概率继承（无需携带）。'],
-        [/Ability Relearn:\s*When completing an operation, your ability will reset, unless you use an (.+)\. This can be used to get more useful abilities in the process/i,
-         '特性重置：完成操作后，宿主宝可梦的特性将被重置，除非使用了$1。该机制可用于在过程中获取更有用的特性。'],
-        [/Ability Inheriting:\s*An advanced alternative to the previous\. Using a (.+), you can swap abilities with the sample, getting access to otherwise-impossible combinations/i,
-         '特性继承：这是前者的进阶版本。使用$1后，宿主宝可梦与样本宝可梦交换特性，从而获得无法自然获取的特性。'],
+        [/Ability Inheriting:\s*Using a (.+), you can swap abilities with the sample, getting access to otherwise-impossible combinations/i,
+         '特性继承：使用$1后，宿主宝可梦与样本宝可梦交换特性，从而获得无法自然获取的特性。'],
 
         // 遗传兼容性指南
         [/^Compatibility determines how similar the sample is to the host\. This influences various parameters such as the chances of inherit, or shiny mutations \(only if the sample is shiny\)$/i,
@@ -328,14 +370,14 @@
          '迷宫中的宝可梦无法捕获，但会掉落实用道具和经验值。迷宫同样每$1轮换'],
 
         // 活动指引
-        [/Events might house both items and Pokemon to get\. Events marked with a skull signify powerful foes that usually require an item to catch \(The item wont be consumed if failed to defeat\)\. All Events rotate every (.+)\./i,
-         '活动中可获取道具与宝可梦。带有骷髅标记的活动代表强大敌方，通常需要特定道具才能捕获（若未击败敌方，道具不会消耗）。所有活动每$1轮换一次'],
+        [/Events might house both items and Pokemon to get. Events marked with a skull signify powerful foes that usually require an item to catch \(The item wont be consumed if failed to defeat\) that can be adquired in the collection events. All Events rotate every(.+)\./i,
+         '活动中可获取道具与宝可梦。带有骷髅标记的活动代表强大敌方，通常需要特定道具才能捕获（若未击败敌方，道具不会消耗）。这些所需道具可以在收藏类事件中获得。所有活动每$1轮换一次'],
 
         // 遗传指引
         [/With genetics, you can modify the parameters of a level (\d+) Pokemon \(the host\) and influence them based on another Pokemon \(the sample\)/i,
          '通过遗传培育，你可以修改$1级宝可梦（宿主 左）的参数，并以另一只宝可梦（样本 右）为基础进行调整'],
-        [/Doing so, the level of the host will reset back to (\d+) while keeping all 4 of its currently selected moves, aswell as re-rolling its ability and a chance to increase its IV'?s/i,
-         '操作后，宿主宝可梦等级将重置为$1，但会保留当前携带的4个招式，同时重新随机特性，并有概率提升个体值'],
+        [/Doing so, the level of the host will reset back to (\d+) while keeping all 4 of its currently selected moves, and a chance to increase its IV'?s/i,
+         '操作后，宿主宝可梦等级将重置为$1，但会保留当前携带的4个招式，并有概率提升个体值'],
         [/Genetics can also be influenced by using genetic-aiding items, which you can use at the end of the operation/i,
          '遗传培育还可通过使用遗传辅助道具强化效果，你可在操作结束时使用该类道具'],
         [/You can find more information about the specifics of genetics in the guide section/i,
@@ -349,6 +391,10 @@
 
         // 宝可商店指引
         [/^You can buy items here with Bottle Caps. Yeah/i, '可使用瓶盖在此处购买道具。就是这样～'],
+
+        //宝可病毒指引
+        [/^Every (\d+) (\w+), some of your Pokemon will contract Pokerus. This virus is entirely beneficial, and will add one level of compatibility to the Pokemon in genetics when used as a host/i,
+         '每 $1 $2，你的一些宝可梦会感染宝可病毒。该病毒完全有益，在作为宿主宝可梦进行遗传操作时，会为该宝可梦额外增加一级兼容度。'],
 
         // 奖章
         [/^Awarded in special occasions/i, '在特殊场合授予'],
@@ -394,6 +440,11 @@
          '$1智慧花瓣$2'],
         [/^([\s\S]*?)Wormhole Residue([\s\S]*?)$/i,
          '$1虫洞残留物$2'],
+
+        //神秘礼物
+        [/^Long Press\/Right click the present below to receive a gift (.+)!/i, '长按/右键点击下方礼物即可获得$1!'],
+        [/^It will be (.+) and carrying an? (.+)/i, '它将$1并携带$2'],
+        [/^You have until (\w+) (\d+) to claim/i, '领取截止日期为 $1 $2日'],
 
     ];
 
@@ -1601,10 +1652,19 @@
         "Pyrolate": "火焰皮肤",
         "Chrysilate": "虫之皮肤",
         "Gloomilate": "黑暗皮肤",
-        "Espilate": "超能力皮肤",
+        "Espilate": "超能皮肤",
         "Verdify": "青草皮肤" ,
         "MetalHead": "铁头功" ,
-        "scorch": "灼热" ,
+        "Scorch": "灼热" ,
+        "Flash Electro": "电能引擎",//效果同原作电气引擎
+        "Flash Aqua": "流水引擎",
+        "Flash Pyro": "火炎引擎",
+        "Flash Umbra": "鬼怪引擎",
+        "Flash Venum": "剧毒引擎",
+        "Flash Cryo": "冰寒引擎",
+        "Flash Psycha": "超能引擎",
+        "Flash Fae": "妖精引擎",
+        "Flash Herba": "青草引擎",
 
         //官方特性
         "Stench": "恶臭",
@@ -2855,10 +2915,11 @@
 
         //独创招式
         "Fog":"浓雾",
-        "Shark Jaws": "鲨之颚",
+        "Shark Jaws": "鲨咬",
         "Poison Claw": "毒爪",
         "Aurora Punch": "极光拳",
         "Ionise":"电离",
+        "Razor Talons":"利爪",
 
         // 野外区域
         "Verdant Forest":"翠绿森林",
@@ -3283,7 +3344,9 @@
         "Bottle Cap":"瓶盖",
         "Golden Bottle Cap":"金色瓶盖",
         // 遗传道具
+        "Neverstone":"不变之石",//改名？
         "Everstone":"不变之石",
+        "Lock Capsule":"上锁的容器",
         "Power Anklet":"力量护踝-速度",
         "Power Band":"力量腰带-特防",
         "Power Belt":"力量束带-物防",
@@ -3404,10 +3467,17 @@
         "Endurance Ribbon":"耐力奖章",
         "Smile Ribbon":"欢笑奖章",
 
-        //神秘礼物 临时 2026.1.1奖品
-        "Long Press/Right click the present below to receive a gift Spinda!":"长按/右键点击下方礼物即可获得闪光晃晃斑",
-        "It will be shiny and carrying a Souvenir Ribbon":"它将闪闪发光并携带回忆奖章",
-        "You have until January 15 to claim":"领取截止日期为2026年1月15日",
+        //关键词指引
+        "Keyword":"关键词",
+        "Keywords":"关键词",
+        "Operator":"运算符",
+        "Operators":"运算符",
+        "![keyword]: Exclude from search":"![关键词]: 从搜索结果中排除该关键词。例：!water。",
+        "[keywordA] or [keywordB]: Search keywordA OR keywordB":"[关键词A] or 关键词B]: 搜索 关键词A 或 关键词B。例：water or fire",
+        "[keywordA] [keywordB]: Search for keywordA AND keywordB":"[关键词A] [关键词B]：同时搜索 关键词A 和 关键词B。例：water fire",
+        "shiny, pokerus, [type], [ability], [hidden ability], [level], [move]":"shiny, pokerus, [属性], [特性], [隐藏特性], [等级], [招式]",
+        "unobtainable, wild, park, event, frontier, shiny, caught, [type], [hidden ability]":"unobtainable, wild, park, event, frontier, shiny, caught, [属性], [隐藏特性]",
+        "physical, special, [type], [ability]":"physical, special, [属性], [特性]",
 
         //新手指引
         "Howdy! I have been assigned to show the ropes"
@@ -3438,6 +3508,8 @@
         "Nothing but time will be lost":"除了时间，别无损失",
         "Select a sample Pokemon":"选择一只样本宝可梦",
         "Select a host Pokemon":"选择一只宿主宝可梦",
+        "sample Pokemon":"样本宝可梦",
+        "host Pokemon":"宿主宝可梦",
 
         "Select a Pokemon to use the":"选择一只宝可梦使用",
         "Select a Pokemon to teach":"选择一只宝可梦教学",
@@ -3487,6 +3559,7 @@
         "Compatibility":"兼容性",
         "Power Cost":"能量消耗",
         "Attack":"物攻",
+        "Physical Attack":"物攻",
         "Special Attack":"特攻",
         "Defense":"物防",
         "Special Defense":"特防",
@@ -3500,6 +3573,8 @@
         "SDEF":"特防",
         "S. Defense":"特防",
         "SPE":"速度",
+        "PKRS":"病毒",
+        "Pokerus":"病毒",
         "All Stats":"所有能力",
         "Normal":"一般",
         "Fire":"火",
@@ -3561,7 +3636,7 @@
         "Up!":"提升!",
         "in total":"持有",
         "left for next level":"个到下一级",
-        "When held:":"持有时：",
+        "When held":"持有时",
         "Increase the power of":"提升",
         "-Type moves":"属性招式",
         "if afflicted with a status effect":"如果受到状态效果的影响",
@@ -3572,9 +3647,6 @@
         "Re-rolls the ability of a Pokemon":"随机重置一只宝可梦的特性",
 
         "Unlocks the hidden ability of a Pokemon":"解锁一只宝可梦的隐藏特性",
-        "Genetics-aiding item:":"遗传辅助道具：",
-        "Swaps the ability of the Pokemon with the sample. Can only be used with at least one level of compatibility":"将宿主宝可梦的特性与样本宝可梦的特性互相交换。至少具备一级兼容性才能使用。",
-        "Ensures the Pokemon will retain its original ability":"确保宿主宝可梦保留原有特性",
         "Can be used to catch event Pokemon. Expires after event finishes":"可用于捕捉活动宝可梦。活动结束后失效。",
         "in bag":"持有",
         "Teach the move":"教学招式",
@@ -3702,6 +3774,7 @@
         "increased":"增加",
         "Finish":"完成",
         "genetic-aiding item":"遗传辅助道具",
+        "Genetics-aiding item":"遗传辅助道具",
         "Mutation":"突变",
         "All":"所有",
         "Defeated":"被打败",
@@ -3773,10 +3846,20 @@
         "WIP":"开发中",
         "Not yet implemented":"尚未实装",
         "This move can only appear as the Signature Move of":"尚未实装",
+        "Super effective":"效果绝佳",
+        "Super-effective":"效果绝佳",
+        "Extremely effective":"效果无比绝佳",
+        "Extremel-effective":"效果无比绝佳",
+        "Effective":"有效果",
+        "Not very effective":"效果不好",
+        "Not-very-effective":"效果不好",
+        "Battle Summary":"战斗总结",
+        "Damage Dealt":"伤害总计",
+        "NaN":" ",
 
         // 数字
         "one": "一",
-        "two": "二",
+        "two": "两",
         "three": "三",
         "four": "四",
         "five": "五",
@@ -3802,6 +3885,20 @@
         "seventy": "七十",
         "eighty": "八十",
         "ninety": "九十",
+
+        //月份
+        "January": "1月",
+        "February": "2月",
+        "March": "3月",
+        "April": "4月",
+        "May": "5月",
+        "June": "6月",
+        "July": "7月",
+        "August": "8月",
+        "September": "9月",
+        "October": "10月",
+        "November": "11月",
+        "December": "12月",
 
         // 招式类型
         "Claw":"爪",

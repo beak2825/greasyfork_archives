@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bangumi 人物创建助手
 // @namespace    http://tampermonkey.net/
-// @version      0.2.10.2
+// @version      0.2.10.4
 // @description  将其他维基站点人物/组织条目和各个社交平台的用户添加到Bangumi现实人物
 // @author       Gemini / SilenceAkarin
 // @license MIT
@@ -40,6 +40,7 @@
 // @connect      tva2.sinaimg.cn
 // @connect      tvax4.sinaimg.cn
 // @connect      t.cn
+// @connect      t.co
 // @connect      googleusercontent.com
 // @connect      yt3.ggpht.com
 // @connect      static.vocadb.net
@@ -826,6 +827,20 @@
 
         // 修正后的提取数据逻辑
         async function collectXData() {
+            const data = {
+                name: '',
+                engName: '',
+                kana: '',
+                aliases: [],
+                birthdate: '',
+                bloodtype: '',
+                websites: [],
+                twitter: '',
+                avatarBase64: '',
+                summary: '',
+                fromSNS: true
+            };
+
             try {
                 // 定位主列容器，避免抓取到侧边栏自己的头像
                 const primaryColumn = document.querySelector('[data-testid="primaryColumn"]');
@@ -833,13 +848,52 @@
                 const userNameSection = primaryColumn?.querySelector('[data-testid="UserName"]');
                 const spans = userNameSection?.querySelectorAll('span');
                 const rawName = spans ? spans[0].innerText : "";
+                data.name = rawName.replace(/\s+/g, '');
 
-                let handle = "";
+                // let handle = "";
                 const allText = userNameSection?.innerText.split('\n') || [];
-                handle = allText.find(t => t.startsWith('@')) || "";
+                data.twitter = allText.find(t => t.startsWith('@')) || "";
 
-                const bio = primaryColumn?.querySelector('[data-testid="UserDescription"]')?.innerText || "";
-                const website = primaryColumn?.querySelector('[data-testid="UserUrl"]')?.innerText || "";
+                // 提取简介
+                // 1. 先获取 DOM 元素（不要直接加 .innerText）
+                const bioElement = primaryColumn?.querySelector('[data-testid="UserDescription"]');
+
+                // 2. 获取纯文本内容用于 summary 字段
+                const bioText = bioElement?.innerText || "";
+                data.summary = bioText
+
+                // 提取简介中的 URL (包括 A 标签中的 href 和文本中的链接)
+                if (bioElement) {
+                    const links = bioElement.querySelectorAll('a');
+                    // 使用 for...of 以便支持可能需要的异步还原
+                    for (const a of links) {
+                        const rawHref = a.href;
+                        // 排除掉 X 内部的链接（如话题标签 # 或 提及 @）
+                        if (rawHref.includes('t.co') || (!rawHref.startsWith('https://x.com') && !rawHref.startsWith('/'))) {
+                            // 这里调用还原函数，或者直接 processLink
+                            processLink(rawHref, data);
+                        }
+                    }
+                }
+                const urlRegex = /(https?:\/\/[^\s]+)/g;
+                const foundUrls = data.summary.match(urlRegex) || [];
+                foundUrls.forEach(url => processLink(url, data));
+
+                // const website = primaryColumn?.querySelector('[data-testid="UserUrl"]')?.innerText || "";
+                // 修复部分：获取 href 属性而不是 innerText
+                const urlElement = primaryColumn?.querySelector('[data-testid="UserUrl"]');
+                const websites = urlElement ? urlElement.getAttribute('href') : "";
+                console.log("抓取Website结果:", websites);
+                if (websites) {
+                    data.websites.push({ title: 'HP', url: `${websites}` });
+                }
+
+                // 如果 rawurl 已经是 t.co 链接，再进行还原
+                //                 let website = rawurl;
+
+                //                 if (rawurl && rawurl.includes('t.co')) {
+                //                     website = modifyTcoLink(rawurl);
+                //                 }
 
                 // --- 修正头像抓取逻辑 ---
                 // 在主栏目中寻找包含 profile_images 的图片，这通常是用户的大头像
@@ -848,22 +902,9 @@
                 if (avatarImg) {
                     // 转换成高清大图地址 (去掉 _normal, _400x400 等后缀)
                     avatarUrl = avatarImg.src.replace(/_(normal|400x400|200x200)\./, '.');
+                    data.avatarBase64 = avatarUrl ? await fetchImg(avatarUrl) : '';
                 }
                 // -----------------------
-
-                const data = {
-                    name: rawName.replace(/\s+/g, ''),
-                    engName: '',
-                    kana: '',
-                    aliases: [],
-                    birthdate: '',
-                    bloodtype: '',
-                    websites: website ? [{ title: 'HP', url: `https://${website}` }] : [],
-                    twitter: handle,
-                    avatarBase64: avatarUrl ? await fetchImg(avatarUrl) : '',
-                    summary: bio,
-                    fromSNS: true
-                };
 
                 GM_setValue('vgmdb_to_bgm_data', data);
                 window.open('https://bgm.tv/person/new', '_blank');
@@ -883,10 +924,10 @@
                 btn.innerText = '🚀 导入到 Bangumi';
                 const originalText = btn.innerText;
                 btn.className = 'vgm-btn'; // 复用你定义的样式
-                btn.onclick = (e) => {
+                btn.onclick = async (e) => {
                     btn.innerHTML = '⌛ 提取中...';
                     e.preventDefault();
-                    collectXData();
+                    await collectXData();
                     btn.innerText = '✅ 提取成功';
                 };
                 setTimeout(() => {
@@ -899,7 +940,9 @@
         };
 
         const observer = new MutationObserver(injectXBtn);
+        document.querySelectorAll("a").forEach(modifyTcoLink);
         observer.observe(document.body, { childList: true, subtree: true });
+        observeTwitterDOM();
     }
 
     // ================= Facebook 提取端 =================
@@ -1051,7 +1094,7 @@
                     birthdate: '',
                     bloodtype: '',
                     websites: [{ title: 'Bilibili', url: window.location.href }],
-                    twitter: '', 
+                    twitter: '',
                     // 转换头像为 Base64 (复用你代码中的 fetchImg)
                     avatarBase64: avatarUrl ? await fetchImg(avatarUrl) : '',
                     summary: description,
@@ -1370,36 +1413,6 @@
 
             console.log("抓取完成:", data);
             // alert("数据已抓取，请查看控制台 (F12)");
-            return data;
-        }
-
-        // 3. 链接分类处理逻辑
-        function processLink(realUrl, data) {
-            if (!realUrl || realUrl.startsWith('javascript:')) return;
-
-            // 处理 Twitter / X
-            if (realUrl.includes('twitter.com/') || realUrl.includes('x.com/')) {
-                const parts = realUrl.split('/').filter(p => p);
-                const twitterHandle = parts.pop().split('?')[0];
-                if (twitterHandle && !['twitter.com', 'x.com', 'intent', 'share'].includes(twitterHandle)) {
-                    data.twitter = '@' + twitterHandle;
-                }
-                return;
-            }
-
-            let title = "Website";
-            if (realUrl.includes('youtube.com/') || realUrl.includes('youtu.be/')) title = "YouTube";
-            else if (realUrl.includes('instagram.com/')) title = "Instagram";
-            else if (realUrl.includes('facebook.com/')) title = "Facebook";
-            else if (realUrl.includes('pixiv.net/')) {
-                title = "Pixiv";
-                const pixivMatch = realUrl.match(/users\/(\d+)/);
-                if (pixivMatch) data.PixivID = pixivMatch[1];
-            }
-
-            const exists = data.websites.some(item => item.url === realUrl);
-            if (!exists) data.websites.push({ title: title, url: realUrl });
-
             GM_setValue('vgmdb_to_bgm_data', data);
             window.open('https://bgm.tv/person/new', '_blank');
         }
@@ -1409,35 +1422,37 @@
         const WRAPPER_ID = 'nico-scraper-wrapper';
 
         function injectButton() {
-            const target = document.querySelector('.UserDetailsHeader-buttons');
+            const target = document.querySelector('.UserDetailsHeader-meta');
             // 1. 检查包装容器是否存在，防止重复注入
             if (!target || document.getElementById(WRAPPER_ID)) return;
 
-            // 2. 创建包装容器
-            const wrapper = document.createElement('span');
-            wrapper.id = WRAPPER_ID;
-            wrapper.style.display = 'inline-flex';
-            wrapper.style.alignItems = 'center';
-            wrapper.style.verticalAlign = 'middle';
-            wrapper.style.gap = '12px';
-            wrapper.style.marginLeft = '8px';
+            // 2. 创建包装层
+            const wrapper = document.createElement('div');
+            wrapper.id = 'nico-scraper-wrapper';
+            // 设置 margin-top 使其位于 meta 信息下方，flex 布局方便排列复选框
+            wrapper.style.cssText = `
+            margin-top: 12px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        `;
 
-            // 3. 创建抓取按钮
+            // 3. 创建抓取按钮 (粉色醒目样式)
             const btn = document.createElement('button');
-            btn.id = BUTTON_ID;
-            btn.innerHTML = '抓取信息';
+            btn.id = 'nico-scraper-btn';
+            btn.innerText = '🚀 导入到 Bangumi';
             btn.style.cssText = `
-        padding: 0 16px;
-        height: 32px;
-        background-color: #252525;
-        color: white;
-        border: none;
-        border-radius: 16px;
-        font-weight: bold;
-        cursor: pointer;
-        font-size: 12px;
-        white-space: nowrap;
-    `;
+            padding: 6px 16px;
+            background-color: #F09199;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        `;
 
             btn.onclick = async (e) => {
                 e.preventDefault();
@@ -1476,7 +1491,7 @@
             wrapper.appendChild(createCheckbox('nico_skip_summary', '不填充简介'));
 
             // 使用 append 确保插入到容器的最末尾（最右边）
-            target.appendChild(wrapper);
+            target.parentNode.insertBefore(wrapper, target.nextSibling);
         }
 
         // 5. 监听与防抖
@@ -1693,10 +1708,38 @@ ${data.PixivID ? '|Pixiv= id='+data.PixivID : ''}
             if(originalBtn) originalBtn.style.display = 'none';
 
             const btnParent = document.querySelector('td input[type="submit"]').parentNode;
+
             const previewContainer = document.createElement('div');
             previewContainer.id = 'vgm_preview_container';
-            previewContainer.innerHTML = `<img id="vgm_preview_img" src="${data.avatarBase64 || ''}" style="${data.avatarBase64 ? '' : 'display:none'}"><p class="paste-tip">💡 提示：按 <b>Ctrl+V</b> 可更换下方预览图</p>`;
+            // previewContainer.innerHTML = `<img id="vgm_preview_img" src="${data.avatarBase64 || ''}" style="${data.avatarBase64 ? '' : 'display:none'}"><p class="paste-tip">💡 提示：按 <b>Ctrl+V</b> 可更换下方预览图</p>`;
+            previewContainer.innerHTML = `
+    <img id="vgm_preview_img" src="${data.avatarBase64 || ''}" style="${data.avatarBase64 ? 'max-width:150px;display:block;margin:0 auto;' : 'display:none'}">
+    <div id="vgm_img_controls" style="${data.avatarBase64 ? 'margin-top:5px;' : 'display:none'}">
+        <button id="vgm_remove_img" type="button" style="
+            padding: 4px 12px;
+            font-size: 12px;
+            cursor: pointer;
+            background-color: #F09199;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: background 0.2s;">❌ 移除封面</button>
+    </div>
+    <p class="paste-tip">💡 提示：按 <b>Ctrl+V</b> 可更换下方预览图</p>
+`;
             btnParent.appendChild(previewContainer);
+
+            const removeBtn = document.getElementById('vgm_remove_img');
+            const imgNode = document.getElementById('vgm_preview_img');
+            const controlsNode = document.getElementById('vgm_img_controls');
+
+            removeBtn.onclick = function() {
+                data.avatarBase64 = ""; // 清空数据
+                imgNode.src = "";
+                imgNode.style.display = 'none';
+                controlsNode.style.display = 'none';
+            };
 
             const newBtn = document.createElement('button');
             newBtn.id = 'bgm_submit_btn';
@@ -1814,7 +1857,7 @@ ${data.PixivID ? '|Pixiv= id='+data.PixivID : ''}
         });
     }
 
-    // 还原短链接的函数
+    // 还原 t.cn 短链接的函数
     async function unshortenUrl(url) {
         const currentOrigin = window.location.origin + '/';
         if (!url.includes('t.cn')) return url; // 如果不是短链接则直接返回
@@ -1835,6 +1878,116 @@ ${data.PixivID ? '|Pixiv= id='+data.PixivID : ''}
                 onerror: () => res(url)
             });
         });
+    }
+
+    // 针对 Twitter 短链接的还原
+    // 推特 t.co 转直接链接 by CLDXiang
+    // https://greasyfork.org/zh-CN/scripts/480211
+    function modifyTcoLink(link) {
+        if (link.href.includes("t.co")) {
+            let urlText = link.innerText;
+            if (urlText.endsWith("\u2026"))
+                urlText = urlText.slice(0, -1);
+            if (urlText.startsWith("http"))
+                link.href = urlText;
+            else if (!urlText.startsWith("/"))
+                link.href = `https://${urlText}`;
+        }
+    }
+
+    function observeTwitterDOM() {
+        try {
+            new MutationObserver((mutations) => {
+                for (const mutation of mutations) {
+                    if (mutation.type === "childList") {
+                        mutation.addedNodes.forEach((node) => {
+                            if (node instanceof HTMLElement) {
+                                if (node instanceof HTMLAnchorElement)
+                                    modifyTcoLink(node);
+                                else
+                                    node.querySelectorAll("a").forEach(modifyTcoLink);
+                            }
+                        });
+                    }
+                }
+            }).observe(document.body, { childList: true, subtree: true });
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    // 链接分类处理逻辑
+    function processLink(realUrl, data) {
+        if (!realUrl || realUrl.startsWith('javascript:')) return;
+
+        try {
+            const urlObj = new URL(realUrl);
+            let hostname = urlObj.hostname.toLowerCase();
+
+            // 1. 处理 Twitter / X 的特殊逻辑
+            if (hostname === 'twitter.com' || hostname === 'x.com') {
+                const parts = urlObj.pathname.split('/').filter(p => p);
+                const twitterHandle = parts[0] ? parts[0].split('?')[0] : null;
+                if (twitterHandle && !['intent', 'share', 'home'].includes(twitterHandle)) {
+                    data.twitter = '@' + twitterHandle;
+                    return; // Twitter 通常作为社交账号处理，不一定放入 websites
+                }
+            }
+
+            // 2. 提取通用的 Title (例如从 apple.jp 提取 Apple)
+            let title = "Website";
+
+            // 特殊修正表（对于不规则的大小写或缩写）
+            const brandMap = {
+                'youtube': 'YouTube',
+                'youtu': 'YouTube',
+                'pixiv': 'Pixiv',
+                'soundcloud': 'Soundcloud',
+                'github': 'GitHub',
+                'bilibili': 'Bilibili'
+            };
+
+            // 1. 拆分域名
+            const parts = hostname.split('.');
+
+            let brand = "";
+
+            if (parts.length >= 2) {
+                // 逻辑：如果是 a.b.c 结构，brand 是 b (倒数第2个)
+                // 逻辑：如果是 a.b 结构，brand 是 a (倒数第2个)
+                // 这种方法能自动跳过任何开头的子域名
+                brand = parts[parts.length - 2];
+            } else if (parts.length === 1) {
+                // 只有一段的情况（如 localhost）
+                brand = parts[0];
+            }
+
+            // 2. 映射与格式化
+            if (brand) {
+                // 统一转成小写去匹配映射表，增加匹配成功率
+                const mappedTitle = brandMap[brand.toLowerCase()];
+                title = mappedTitle || (brand.charAt(0).toUpperCase() + brand.slice(1));
+            }
+
+            // 3. 特殊处理 PixivID
+            if (hostname.includes('pixiv.net')) {
+                const pixivMatch = realUrl.match(/users\/(\d+)/);
+                if (pixivMatch) data.PixivID = pixivMatch[1];
+            }
+
+            // 4. 去重并推入数组
+            const exists = data.websites.some(item => item.url === realUrl);
+            if (!exists) {
+                data.websites.push({ title: title, url: realUrl });
+            }
+
+            // 5. 存储并跳转
+            // GM_setValue('vgmdb_to_bgm_data', data);
+            // window.open('https://bgm.tv/person/new', '_blank');
+
+        } catch (e) {
+            console.error("Invalid URL:", realUrl);
+        }
     }
 
     const waitForElement = (selector) => {

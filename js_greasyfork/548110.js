@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Manarion Chinese Translation
 // @namespace    http://tampermonkey.net/
-// @version      0.18.4
+// @version      0.18.7
 // @description  Manarion Chinese Translation and Quest notification, on any issue occurred, please /whisper LemonApostle in game
 // @description:zh  Manarion 文本汉化，以及任务通知（非自动点击），如果汉化出现任何问题，可以游戏私信 LemonApostle，在 greasyfork 页面留下评论，或者通过其他方式联系我
 // @author       VoltaX-LemonApostle
@@ -359,6 +359,11 @@ const dotSVG = html(`<svg hidden="" height="10" width="10" version="1.1" xmlns="
 // #region Settings
 const popupSelector = 'div[data-slot="tooltip-content"]:not([translated]), div[data-slot="popover-content"]:not([translated]), div[data-radix-popper-content-wrapper]:not([translated])';
 const Translation = new Map([
+    ["Jewel", "宝石"],
+    ["Match", "匹配"],
+    ["Action", "行动"],
+    ["Favorite", "保护"],
+
     ["Clear", "清除"],
     ["Actions:", "行动次数"],
     ["Dungeon Skip ", "跳过地牢"],
@@ -493,6 +498,9 @@ const Translation = new Map([
     ["Infused", "已升级"],
     ["Min Quality", "最小品质"],
     ["Max Price", "最高售价"],
+    ["Resonance", "共鸣"],   
+    ["Luster", "光泽"],      
+    ["Clarity", "净度"],
     ["Buy Orders", "购买挂单"],
     ["Sell Orders", "出售挂单"],
     [" each", " 单价"],
@@ -657,6 +665,7 @@ const Translation = new Map([
     ["You found the following loot:", "你获得的战利品有："],
     ["Mana Regen Rate: ", "魔力回复率："],
     ["Mana Usage Rate: ", "魔力消耗率："],
+    ["Overflow Bonus Damage:", "溢流伤害增幅: "],
     // #region research text
     ["Increases base spellpower.", "增加基础法术强度。"],
     ["Increases base ward strength.", "增加基础抗性。"],
@@ -1077,7 +1086,10 @@ const Translation = new Map([
     ["Dungeon", "地牢"],
     ["Tower","塔"],
     ["Pets", "宠物"],
+    ["Gems","宝石"],
     ["Market", "市场"],
+    ["Shop","商店"],
+    ["Crafting","锻造"],
     ["Rankings", "排行榜"],
     ["Battle", "战斗"],
     ["Rules", "规则"],
@@ -1209,6 +1221,8 @@ const Translation = new Map([
     ["Meditation Sanctum", "冥想圣所"],
     ["Leyline Tap", "魔网节点"],
     ["Moonwell", "月亮井"],
+    ["Dust Collector", "尘加成器"],
+    ["Jeweler's Bench","珠宝工坊"],
     // #region pet text
     ["menuitem Activate", "激活"],
  
@@ -1271,8 +1285,78 @@ const Translation = new Map([
     ["View Loot", "查看掉落"],
     ["Sniffles", "嗅嗅"],
     ["View progress", "查看目前进度"],
+
+    // #region gem
+    ["Merge", "合成"],
+    ["Cut", "切割"],
+    ["Select", "选择"],
+    ["Gem", "宝石"],
+    ["Jewelcrafting", "珠宝锻造"],
+    ["Ruby", "红宝石"],
+    ["Sapphire", "蓝宝石"],
+    ["Emerald", "祖母绿"],
+    ["Diamond", "金刚石"],
+    ["Garnet", "石榴石"],
+    ["Aquamarine", "海蓝石"],
+    ["Jade", "碧玉石"],
+    ["Citrine", "黄水晶"],
+    ["Topaz", "托帕石"],
+    ["Amethyst", "紫水晶"],
+    ["Onyx", "黑曜石"],
+    ["Turquoise", "绿松石"],
+    ["Peridot", "橄榄石"],
+    ["Tanzanite", "坦桑石"],
+    ["Tourmaline", "电气石"],
+    ["Resonance", "共鸣"],   
+    ["Luster", "光泽"],      
+    ["Clarity", "净度"],
+    ["(", "("],
+    [")", ")"],
+    ["Mining XP", "采矿经验"],
+    ["Fishing XP", "捕鱼经验"],
+    ["Woodcutting XP", "伐木经验"],
+    ["Equipment Drop Rate", "装备掉落率"],
+    ["Gem Drop Rate", "宝石掉落率"],
+    ["Overflow", "溢流"],
+    ["Stamina", "耐力"],
+    ["Base Resource", "基础资源"],
+    ["Base Resource Amount", "基础资源量"],
+    ["Magical Accounting", "魔法账簿"],
+    ["Pet Bonus XP", "宠物加成经验"],
+    ...[
+        ["A gem that amplifies Fire magic", "增强火系魔法的宝石"],
+        ["A gem that amplifies Water magic", "增强水系魔法的宝石"],
+        ["A gem that amplifies Nature magic", "增强自然魔法的宝石"],
+        ["A gem that increases Intellect", "增加智力的宝石"],
+        ["A gem that increases experience while Mining", "增加采矿经验的宝石"],
+        ["A gem that increases experience while Fishing", "增加捕鱼经验的宝石"],
+        ["A gem that increases experience while Woodcutting", "增加伐木经验的宝石"],
+        ["A gem that increases the drop rate of Equipment", "增加装备掉落率的宝石"],
+        ["A gem that increases the drop rate of Gems", "增加宝石掉落率的宝石"],
+        ["A gem that makes use of excess mana regeneration", "利用超额魔力回复的宝石"],
+        ["A gem that increases Stamina", "增加耐力的宝石"],
+        ["A gem that increases Base Resource %", "增加基础资源百分比的宝石"],
+        ["A gem that increases Base Resource Amount", "增加基础资源量的宝石"],
+        ["A gem that increases Magical Accounting", "增加魔法账簿的宝石"],
+        ["A gem that increases Pet Bonus Experience", "增加宠物经验加成的宝石"],
+        ["Gem Tokens", "宝石代币"],
+    ].flatMap(([key, value]) => [
+        [key, value],
+        [` ${key}`, ` ${value}`],
+        [`${key}:`, `${value}:`],
+    ]),
+    ["Gem Tokens are earned by working on objectives in group dungeons", "宝石代币可通过完成团队地下城获取"],
+    ["Merge Gems", "宝石合成"],
+    ["Automation", "自动"],
+    ["s","s"],
+    ["Automatically combine identical jewels up to", "自动合成相同宝石直到"],
+    ["Clear selection after merge", "合成后清空选择"],
+    ["[Gem Tokens]", "[宝石代币]"],
+    ["Jewels", "宝石"],
+    ["Uncut Gems","未切割宝石"],
+    ["Build","建造"],
 ]);
-// #region SettingTrans
+// #region SettingTL
 const SettingsTranslation = new Map([
     ["Auto collect farm every 3 hours", "每 3 小时自动收获农场"],
     ["，", "，"],
@@ -1336,7 +1420,7 @@ const SettingsTranslation = new Map([
     ["rarity", "以下的掉落装备"],
     ["Block others from enchanting your equipment", "阻止其他人为你的装备附魔"],
 ]);
-// #region FarmTrans
+// #region FarmTL
 const FarmTranslation = new Map([
     ["Potion Boost", "药水增强"], // farm
     ["Increases the potency of potions.", "增强药水的效果"], // farm
@@ -1880,6 +1964,8 @@ const TowerTranslation = new Map([
     ["Meditation Sanctum", "冥想圣所"],
     ["Leyline Tap", "魔网节点"],
     ["Moonwell", "月亮井"],
+    ["Dust Collector", "尘加成器"],
+    ["Jeweler's Bench","珠宝工坊"],
     [" by ", " "],
     ["Increases Construction boost", "提升建筑速度加成"],
     ["Increases build queue", "提升建造队列"],
@@ -1892,6 +1978,8 @@ const TowerTranslation = new Map([
     ["Increases Focus stat drop amount", "提升专注属性掉落量"],
     ["Increases Spirit stat drop amount", "提升精神属性掉落量"],
     ["Increases Mana stat drop amount", "提升魔力属性掉落量"],
+    ["Increases Mana Dust collected", "提升收集的魔力粉尘量"],
+    ["Increases Jewelcrafting Skill", "提升珠宝制作技能"],
     ["Speed ", "速度 "],
     ["Build Speed: ", "建造速度："],
     ["Upgrades ", "建筑升级 "],
@@ -1900,49 +1988,68 @@ const TowerTranslation = new Map([
     ["You can adjust build speed, but material costs will also scale at the same rate", "你可以调整建造速度，但材料消耗也会以相同的比例增加"],
 ]);
 
-const equipRegex = /(?<lbracket>\[?)(?:(?:Sigil of (?<sigilType>[A-Za-z]+))|(?:(?<quality>Worn|Refined|Runed|Ascended|Eternal|Heirloom|Mythical) (?:(?<type>[A-Za-z']+) )?(?<part>[A-Za-z]+)(?<elementType> of Water| of Fire| of Nature)?(?<upgradeLevel> \+[0-9]+)?(?:\s*\((?<level>[0-9]+)\))?))(?<rbracket>\]?)/;
+const equipRegex = /(?<lbracket>\[?)(?:(?:Sigil of (?<sigilType>[A-Za-z]+))|(?:(?<gemName>[A-Za-z\s]+) \(?(?<gemStats>[A-Z]\/[A-Z]\/[A-Z])\)?)|(?<quality>Worn|Refined|Runed|Ascended|Eternal|Heirloom|Mythical) (?:(?<type>[A-Za-z']+) )?(?<part>[A-Za-z]+)(?<elementType> of Water| of Fire| of Nature)?(?<upgradeLevel> \+[0-9]+)?(?:\s*\((?<level>[0-9]+)\))?)(?<rbracket>\]?)/;
+
 const EquipTextTranslate = (text) => {
     const result = equipRegex.exec(text);
     if (!result) {
-        console.log(`equipRegex failed to match: ${text}`);
+        // 如果开启了调试模式才打印，减少正常使用的干扰
+        if (Settings.debug) console.log(`equipRegex failed to match: 【${text}】`);
         return "";
     }
  
     const group = result.groups;
-    if (!group) {
-        console.log(`equipRegex matched but no groups: ${text}`);
-        return "";
-    }
+    if (!group) return "";
  
+    // 分支 A：处理魔符 (Sigils)
     if (group.sigilType) {
-        return `${EquipTranslation.get(group.sigilType)}魔符`;
-    } else {
+        const tl = EquipTranslation.get(group.sigilType) || group.sigilType;
+        return `${group.lbracket || ""}${tl}魔符${group.rbracket || ""}`;
+    } 
+    
+    // 分支 B：处理宝石 (Gems) - 这是新加的逻辑
+    else if (group.gemName) {
+        const nameParts = group.gemName.trim().split(/\s+/);
+        // 对宝石名及其形容词逐词翻译（Discordant, Faint, Ruby...）
+        const translatedName = nameParts.map(word => {
+            return Translation.get(word) || word;
+        }).join('');
+        
+        // 保持原来的括号和层级格式
+        return `${group.lbracket || ""}${translatedName} (${group.gemStats})${group.rbracket || ""}`;
+    } 
+    
+    // 分支 C：处理普通装备 (Equipment)
+    else {
         const validParts = new Set([
             "Staff", "Hood", "Pendant", "Cloak", "Robes", "Gloves", "Sandals", "Ring",
             "Helmet", "Pickaxe", "Axe", "Rod", "Jacket", "Cape", "Boots", "Hat", "Tunic"
         ]);
+
         if (group.part && !validParts.has(group.part)) {
-            // 传承装备情况，重新进行 regex（去掉可选的 type 部分）
+            // 传承装备 (Heirloom) 特殊处理
             const equipRegex2 = /(?<lbracket>\[?)(?:Sigil of (?<sigilType>[A-Za-z]+))|(?:(?<quality>Worn|Refined|Runed|Ascended|Eternal|Heirloom|Mythical) (?<part>[A-Za-z]+)(?<elementType> of Water| of Fire| of Nature)?(?<upgradeLevel> \+[0-9]+)?(?:\s*\((?<level>[0-9]+)\))?(?<rbracket>\]?))/;
             const result2 = equipRegex2.exec(text);
             if (result2 && result2.groups) {
-                const group2 = result2.groups;
-                const quality = EquipTranslation.get(group2.quality) ?? group2.quality;
-                const part2 = EquipTranslation.get(group2.part) ?? group2.part;
-                const elementType = group2.elementType ? EquipTranslation.get(group2.elementType) : "";
-                const level = group2.level ? ` (${group2.level})` : "";
-                return `${group2.lbracket ?? ""}${quality}${elementType}${part2}${group2.upgradeLevel ?? ""}${level}${group2.rbracket ?? ""}`;
+                const g2 = result2.groups;
+                const quality = EquipTranslation.get(g2.quality) ?? g2.quality;
+                const part2 = EquipTranslation.get(g2.part) ?? g2.part;
+                const elementType = g2.elementType ? (EquipTranslation.get(g2.elementType.trim()) || g2.elementType) : "";
+                const level = g2.level ? ` (${g2.level})` : "";
+                return `${g2.lbracket ?? ""}${quality}${elementType}${part2}${g2.upgradeLevel ?? ""}${level}${g2.rbracket ?? ""}`;
             }
         }
-        // 正常情况的处理
+
+        // 正常装备翻译
         const quality = EquipTranslation.get(group.quality) ?? group.quality;
-        const type = group.type ? (EquipTranslation.get(group.type) ?? group.type) : "";
+        const type = group.type ? (EquipTranslation.get(group.type.trim()) ?? group.type) : "";
         const part = EquipTranslation.get(group.part) ?? group.part;
-        const elementType = group.elementType ? EquipTranslation.get(group.elementType) : "";
+        const elementType = group.elementType ? (EquipTranslation.get(group.elementType.trim()) ?? group.elementType) : "";
         const level = group.level ? ` (${group.level})` : "";
+        
         return `${group.lbracket ?? ""}${quality}${type}${elementType}${part}${group.upgradeLevel ?? ""}${level}${group.rbracket ?? ""}`;
     }
-}
+};
 const EquipTranslate = (ele) => {
     if (!ele || !ele.textContent) {
         console.log("EquipTranslate called with invalid element:", ele);
@@ -1983,11 +2090,25 @@ const __TypedTranslation = new Map([
     ["dungeons", DungeonsTranslation],
     ["tower", TowerTranslation],
 ]);
- 
+
+const translateLeafTextNodes = (rootNode, type = "default") => {
+    rootNode.childNodes.forEach(node => {
+        if (node.nodeType === Node.TEXT_NODE) {
+            const text = node.textContent.trim();
+            if (text) {
+                // 将 type 传给 _Translate
+                _Translate(node, type); 
+            }
+        } else if (node.nodeType === Node.ELEMENT_NODE) {
+            translateLeafTextNodes(node, type);
+        }
+    });
+};
+
 //#region _Translate()
 const _Translate = (ele, type = "default", keepOriginalText = false) => {
     if(ele?.nodeType !== Node.TEXT_NODE && (!ele || !ele.textContent || [...ele.childNodes].filter(node => node.nodeType !== Node.TEXT_NODE).length > 0)){
-        console.log("_Translate() return early");
+        // console.log("_Translate() return early");
         return;
     }
     
@@ -1995,13 +2116,28 @@ const _Translate = (ele, type = "default", keepOriginalText = false) => {
         console.log("_Translate() replace multiple childNodes", ele.outerHTML);
     }
     const text = ele.textContent;
-    
-    if (/^\d+(\.\d+)?[KMT]$/i.test(text.trim())) {
+    const trimmedText = text.trim();
+
+    // 1.单字符
+    if (trimmedText.length <= 1) {
         return true;
     }
- 
-    // 检查是否为纯数字，如果是则直接返回，不打印"未翻译"
-    if (/^\d+$/.test(text.trim())) {
+
+    // 2. 增强型数字与单位过滤
+    // 匹配规则：[可选正负号][数字][可选小数点及小数][可选单位 K/M/B/T/Q/S/%]
+    // 能够匹配：10, -5, +1.5, 2.00M, 10B, 100T, 1.2Q, 50%, +15% 等
+    if (/^[+-]?\d+(\.\d+)?([KMTBQS%])?$/i.test(trimmedText)) {
+        return true;
+    }
+
+    // 3. 过滤纯等级/品质缩写 (如 SS, SR, SSR) 
+    // 如果字典里没定义这些，就直接跳过不报错
+    if (/^[A-Z]{2,3}$/.test(trimmedText) && !Translation.has(trimmedText)) {
+        return true;
+    }
+    
+    // 4. 过滤常见的纯符号组合 (如 ->, =>, >>, ---)
+    if (/^[^a-zA-Z0-9\u4e00-\u9fa5]+$/.test(trimmedText)) {
         return true;
     }
  
@@ -2016,6 +2152,7 @@ const _Translate = (ele, type = "default", keepOriginalText = false) => {
     }
     else return true;
 };
+
 const _TypedTranslate = (type, keepOriginalText = false) => {
     return (ele) => _Translate(ele, type, keepOriginalText);
 };
@@ -2092,6 +2229,8 @@ function preprocessNodes(nodes) {
 }
  
 const LogTranslator = (channelType, nodes) => {
+    // console.log("正在处理日志:", channelType, nodes);
+    if (nodes.length === 0) return;
     if (nodes.length === 1 && nodes[0].nodeType === Node.ELEMENT_NODE) {
         nodes = [...nodes[0].childNodes];
     }
@@ -2187,7 +2326,7 @@ const LogTranslator = (channelType, nodes) => {
                 }).join("，");
                 nodes[spanInd[0]+1].textContent = ` 增强了力量（${boosts}）。`;
             }
-            else console.log(`cannot translate|${text}|(Activity Log)`);
+            else console.log(`cannot translate|括号内是文本（${text}）|(Activity Log)`);
             break;
         }
         //#region Guild↑ActLog
@@ -2844,15 +2983,16 @@ const FindAndReplaceText = () => {try {
                 if (playerPanel) {
                     _Translate(playerPanel.children[0]);
                     _Translate(playerPanel.children[1].childNodes[0]);
-                    _Translate(playerPanel.children[1].childNodes[2]);
+                    _Translate(playerPanel.children[1].childNodes[2]); // 魔力护盾大小
                     _Translate(playerPanel.children[2].childNodes[0]);
                     _Translate(playerPanel.children[3].childNodes[0]);
-                    _Translate(playerPanel.children[3].childNodes[2]);
+                    _Translate(playerPanel.children[3].childNodes[2]); // 你消耗了 xx 魔力
                     _Translate(playerPanel.children[4].childNodes[0]);
-                    _Translate(playerPanel.children[4].childNodes[4]);
-                    _Translate(playerPanel.children[5].children[0].childNodes[0]);
-                    _Translate(playerPanel.children[5].children[1].childNodes[0]);
-                    _Translate(playerPanel.children[5].children[2].childNodes[0]);
+                    _Translate(playerPanel.children[4].childNodes[4]); // 魔力回复率，魔力消耗率
+                    _Translate(playerPanel.children[5].childNodes[0]);
+                    _Translate(playerPanel.children[6].children[0].childNodes[0]);
+                    _Translate(playerPanel.children[6].children[1].childNodes[0]);
+                    _Translate(playerPanel.children[6].children[2].childNodes[0]);
                 }
  
                 const enemyPanel = div.children[1];
@@ -3268,8 +3408,78 @@ const FindAndReplaceText = () => {try {
 
             break;
         }
- 
+        // #endregion
+        // #region /jewel
+        case "/jewelcrafting": {
+            const baseSelector3 = "div.flex.max-w-screen.grow.flex-col.overflow-y-scroll.lg\\:flex-row.lg\\:flex-wrap>main>div>:nth-child(2)";
+            const base = document.querySelector(baseSelector3);
+            if (!base) break; // 如果找不到基础容器，直接跳出
+            
+            // 1. jewelcrafting 标题
+            const titleElement = base.children[0]?.children[0]?.children[0]?.children[0];
+            if (titleElement && !titleElement.hasAttribute("translated")) {
+                _Translate(titleElement.childNodes[0]);
+                titleElement.setAttribute("translated", ""); 
+            }
+
+            // 注意：切换到商店时，这个路径大概率会变，所以加问号
+            const contentElement = base.children[0]?.children[1]?.children[0]?.children[0]?.children[0]?.children[0];
+            if (contentElement && !contentElement.hasAttribute("translated")) {
+                _Translate(contentElement.childNodes[0]);
+                contentElement.setAttribute("translated", "");
+            }
+
+            // 3. 三个元素 (Resonance, Luster, Clarity)
+            const contentElement2 = base.children[0]?.children[1]?.children[0]?.children[0]?.children[2];
+            if (contentElement2 && !contentElement2.hasAttribute("translated")) {
+                translateLeafTextNodes(contentElement2);
+                contentElement2.setAttribute("translated", "");
+            }
+
+            // 4. 底部或其他元素
+            const contentElement3 = base.children[0]?.children[1]?.children[0]?.children[1]?.children[1];
+            if (contentElement3 && !contentElement3.hasAttribute("translated")) {
+                translateLeafTextNodes(contentElement3);
+                contentElement3.setAttribute("translated", "");
+            }
+            
+            // 宝石商店页面
+            const shopContent = document.querySelector('div[data-slot="tabs-content"] > div');
+            if (shopContent && !shopContent.hasAttribute("translated")) {
+                const balanceRow = shopContent.children[0];
+                if (balanceRow) {
+                    // 使用递归翻译文本节点，它会翻译 "You have" 和 "Gem Tokens"
+                    translateLeafTextNodes(balanceRow);
+                }
+
+                const rowsContainer = shopContent.children[1];
+                if (rowsContainer) {
+                    [...rowsContainer.children].forEach(row => {
+
+                        // 翻译描述列 (A gem that...)
+                        if (row.children[1]) {
+                            translateLeafTextNodes(row.children[1]);
+                        }
+
+                        // 翻译价格列 (2.00M Gem Tokens)
+                        if (row.children[3]) {
+                            translateLeafTextNodes(row.children[3]);
+                        }
+
+                        // 翻译购买按钮 (Buy)
+                        if (row.children[4]) {
+                            translateLeafTextNodes(row.children[4]);
+                        }
+                    });
+                }
+                
+                // 标记整个商店容器已翻译
+                shopContent.setAttribute("translated", "");
+            }
+            break;
+        }
     };
+    // #region 路径匹配结束
     // #region /profile
     if(window.location.pathname.startsWith("/profile")){
         CheckTranslation(document, 'div[data-slot="card"]:nth-child(1)>div[data-slot="card-content"]>p:nth-child(n+2)', (kv) => {
@@ -3333,7 +3543,15 @@ const FindAndReplaceText = () => {try {
         _Translate(a.parentElement.children[1]);
     });
     // #region dropdown
-    CheckTranslation(document, 'div[data-slot="dropdown-menu-item"]', (ele) => _Translate(ele, window.location.pathname.startsWith("/market") ?  "default" : window.location.pathname === "/shop" ? "equipment" : "menuitem"));
+    CheckTranslation(document, 'div[data-slot="dropdown-menu-item"]', (ele) => {
+        // 根据当前页面决定翻译字典类型
+        const type = window.location.pathname.startsWith("/market") ? "default" : 
+                     window.location.pathname === "/shop" ? "equipment" : "menuitem";
+        
+        // 关键：不再直接 _Translate(ele)，因为 ele 内部结构太复杂
+        // 使用递归函数深入到叶子节点去翻译每一个 span 里的文字
+        translateLeafTextNodes(ele, type);
+    });
     // #region nav
     document.querySelectorAll(`nav a:not([translated])`).forEach(a => {
         a.setAttribute("translated", "");
@@ -3394,20 +3612,45 @@ const FindAndReplaceText = () => {try {
             OnMutate(undefined, observer);
         }
     });
-    // #region item
+    // #region item notice：handle the popup [not] appear in the market
     if (!window.location.pathname.startsWith("/market")) {
         document.querySelectorAll('span[class*="rarity-"]:not([translated])').forEach(span => {
-            span.setAttribute("translated", "");
+
             const itemName = span.textContent;
+            // console.log(itemName);
             let result;
- 
+
+            // 如果存在名称，直接翻译就可以
             if(Translation.has(itemName)) {
+                span.setAttribute("translated", "");
                 span.textContent = Translation.get(itemName);
             }
             else if(result = /^ \+([^ ]+) ([A-Za-z ]+) $/.exec(span.textContent)){
+                span.setAttribute("translated", "");
                 span.textContent = ` +${result[1]} ${Translation.get(result[2].trim()) ?? result[2]} `;
             }
+            else if (result = /^(\[?)Uncut ([A-Za-z]+)(:?)(\]?)$/.exec(itemName)) {
+                span.setAttribute("translated", "");
+                const lbr = result[1];
+                const gemNameEN = result[2];
+                const colon = result[3];
+                const rbr = result[4];
+                
+                const gemNameCN = Translation.get(gemNameEN) ?? gemNameEN;
+                span.textContent = `${lbr}未切割的${gemNameCN}${colon}${rbr}`;
+            }
+            else if (result = /^(\[?)([A-Za-z]+) ([A-Z]\/[A-Z]\/[A-Z])(\]?)$/.exec(itemName)) {
+                span.setAttribute("translated", "");
+                const lbr = result[1];      // 左括号 [ (如果有)
+                const gemNameEN = result[2]; // 宝石名 Sapphire
+                const stats = result[3];    // 属性 B/C/B
+                const rbr = result[4];      // 右括号 ] (如果有)
+                
+                const gemNameCN = Translation.get(gemNameEN) ?? gemNameEN;
+                span.childNodes[1].textContent = `${gemNameCN} ${stats}`;
+            }
             else if(span.dataset.slot === "tooltip-trigger" || span.dataset.slot === "popover-trigger"){
+                span.setAttribute("translated", "");
                 // 检查是否在inventory界面的装备列表中
                 if(window.location.pathname === "/inventory" &&
                     (document.querySelector("main>div:nth-child(1)>div.space-y-1")?.contains(span) ||
@@ -3429,6 +3672,7 @@ const FindAndReplaceText = () => {try {
                 }
                 // 对于profile界面，使用克隆方式（保留原有逻辑）
                 else if(window.location.pathname.startsWith("/profile") && document.querySelector("main")?.contains(span)){
+                    span.setAttribute("translated", "");
                     // 检查是否已经存在克隆
                     if(!span.parentElement.querySelector(":scope span[clone]")){
                         const spanClone = span.cloneNode(true);
@@ -3459,6 +3703,7 @@ const FindAndReplaceText = () => {try {
                 }
                 // 对于其他界面，直接翻译
                 else{
+                    span.setAttribute("translated", "");
                     if (span.childNodes[1]) {
                         EquipTranslate(span.childNodes[1]);
                     }
@@ -3472,6 +3717,7 @@ const FindAndReplaceText = () => {try {
                     }).observe(span, {childList: true, subtree: true, characterData: true});
                 }
             }
+            // 无法翻译物品
             else console.log("cannot translate|"+itemName+"|");
         });
     }
@@ -3531,9 +3777,13 @@ const FindAndReplaceText = () => {try {
         });
     });
     // #region select
-    document.querySelectorAll(`div[role="option"][data-slot="select-item"] span[id^="radix-"]:not([translated])`).forEach(span => {
-        span.setAttribute("translated", "");
-        _Translate(span);
+    document.querySelectorAll(`div[role="option"][data-slot="select-item"] [id^="radix-"]:not([translated])`).forEach(rootEle => {
+        rootEle.setAttribute("translated", "");
+        translateLeafTextNodes(rootEle);
+    });
+    // #region select-trigger
+    document.querySelectorAll('button[data-slot="select-trigger"] span[data-slot="select-value"]:not([translated])').forEach(rootEle => {
+        translateLeafTextNodes(rootEle);
     });
     // #region placeholder
     CheckTranslation(document, 'input[placeholder][data-slot="input"]', input => input.placeholder = PlaceholderTranslation.get(input.placeholder) ?? input.placeholder);
@@ -3737,7 +3987,10 @@ const FindAndReplaceText = () => {try {
             span.textContent = `<${result[1]}>`;
         }
     })
-} catch(e) {console.error(e);}};
+} catch(e) {
+    console.error(e);
+    // console.log("TODO")
+}};
 // #region eventTrans
 const TranslateEventConfig = [
     {

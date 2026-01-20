@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name Script for complaining about players
 // @namespace https://forum.blackrussia.online
-// @version 1.3
+// @version 1.4
 // @description Специально для BlackRussia Curator Forum
 // @author Мастеrok
 // @match https://forum.blackrussia.online/threads/*
@@ -981,10 +981,10 @@ prefix: UNACCEPT_PREFIX,
 status: false,
 },
 {
-title : 'семья не полнос.' ,
+title : 'биография сущ. людей.' ,
 content:
 '[COLOR=rgb(255, 0, 0)][FONT=times new roman][SIZE=4][I]{{ greeting }}, уважаемый {{ user.mention }}.[/I][/FONT][/COLOR]<br><br>' +
-"[SIZE=4][FONT=times new roman][I][COLOR=rgb(209, 213, 216)]Ваша RolePlay - биография отказана т.к ваша семья расписана не полностью. [/COLOR]<br><br>" +
+"[SIZE=4][FONT=times new roman][I][COLOR=rgb(209, 213, 216)]Ваша RolePlay - биография отказана т.к она является биографией существующего человека. [/COLOR]<br><br>" +
 "[COLOR=rgb(209, 213, 216)]Внимательно прочитайте правила создания RP - биографий закрепленные в данном разделе [/COLOR][/I][COLOR=rgb(209, 213, 216)][/COLOR][/FONT][/SIZE]<br><br>" +
 '[FONT=book antiqua][SIZE=4][COLOR=rgb(209, 213, 216)][I]Приятной игры на BLACK RUSSIA [/I][/COLOR][I][COLOR=rgb(0, 255, 255)][/COLOR][/I][/SIZE][/FONT][COLOR=rgb(209, 213, 216)][FONT=book antiqua][SIZE=4][I].[/SIZE][/FONT][/COLOR]',
 prefix: UNACCEPT_PREFIX,

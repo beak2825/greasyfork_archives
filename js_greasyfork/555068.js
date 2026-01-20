@@ -2,8 +2,8 @@
 // @name         收藏插件
 // @namespace    https://www.milkywayidle.com/
 // @namespace    https://www.milkywayidlecn.com/
-// @version      1.462
-// @description  Alt+点击收藏市场商品和背包物品，区分铁牛标准牛；强化界面优化，保护等级快捷按钮，当前强化等级检测，自定义键触发停止按钮
+// @version      1.478
+// @description  Alt+点击收藏市场商品和背包物品，区分铁牛标准牛；强化界面优化，保护等级快捷按钮，当前强化等级检测，自定义键触发停止按；收录了UI增强：强化等级美化和展开市场价格；
 // @author       baozhi
 // @match        https://www.milkywayidle.com/*
 // @match        https://www.milkywayidlecn.com/*
@@ -11,7 +11,6 @@
 // @grant        GM_addStyle
 // @grant        GM_getValue
 // @grant        GM_setValue
-// @grant        GM_deleteValue
 // @grant        GM_registerMenuCommand
 // @icon         https://www.milkywayidle.com/favicon.svg
 // @license MIT 
@@ -27,89 +26,16 @@
     let currentCharacterId = null;
     let pluginInitialized = false;
 
-    // 获取主设置对象
-    function getMainSettings() {
-        return GM_getValue('mwc_settings', { characters: {}, ui: {} });
-    }
-
-    // 保存主设置对象
-    function saveMainSettings(settings) {
-        GM_setValue('mwc_settings', settings);
-    }
-
-    // 获取角色特定设置
-    function getCharacterSettings() {
-        updateCharacterId();
-        const settings = getMainSettings();
-        if (!settings.characters) {
-            settings.characters = {};
-        }
-        if (!settings.characters[currentCharacterId]) {
-            settings.characters[currentCharacterId] = {
-                favorites: [],
-                marketFavoriteEnhanceHighlight: true,
-                headerMonitorEnabled: false,
-                keyboardShortcutEnabled: false,
-                lazyButtonsEnabled: true,
-                enhanceThreshold: 0,
-                customShortcut: '`'
-            };
-        }
-        return settings.characters[currentCharacterId];
-    }
-
-    // 保存角色特定设置
-    function saveCharacterSettings(characterSettings) {
-        updateCharacterId();
-        const settings = getMainSettings();
-        if (!settings.characters) {
-            settings.characters = {};
-        }
-        settings.characters[currentCharacterId] = characterSettings;
-        saveMainSettings(settings);
-    }
-
-    // 获取全局UI设置
-    function getUISettings() {
-        const settings = getMainSettings();
-        if (!settings.ui) {
-            settings.ui = {
-                positions: {
-                    stopButton: null,
-                    alertOverlay: null
-                },
-                customCombinedLevels: [
-                    { enhanceLevel: 10, protectLevel: 5 },
-                    { enhanceLevel: 10, protectLevel: 6 },
-                    { enhanceLevel: 10, protectLevel: 7 },
-                    { enhanceLevel: 10, protectLevel: 8 }
-                ],
-                enhanceLevelButtons: [5, 7, 8, 10],
-                protectLevelButtons: [2, 5, 6, 7, 8],
-                repeatCountButtons: [2, 20, 200, 2000]
-            };
-        }
-        return settings.ui;
-    }
-
-    // 保存全局UI设置
-    function saveUISettings(uiSettings) {
-        const settings = getMainSettings();
-        settings.ui = uiSettings;
-        saveMainSettings(settings);
-    }
-
     // 获取自定义键盘快捷键
     function getCustomShortcut() {
-        const characterSettings = getCharacterSettings();
-        return characterSettings.customShortcut || '`';
+        const characterKey = getCharacterKey('mwc_custom_shortcut');
+        return GM_getValue(characterKey, '`'); // 默认反引号键
     }
 
     // 保存自定义键盘快捷键
     function saveCustomShortcut(key) {
-        const characterSettings = getCharacterSettings();
-        characterSettings.customShortcut = key;
-        saveCharacterSettings(characterSettings);
+        const characterKey = getCharacterKey('mwc_custom_shortcut');
+        GM_setValue(characterKey, key);
     }
 
     // 获取键盘快捷键对应的键盘码
@@ -230,45 +156,48 @@
         return currentCharacterId;
     }
 
+    // 获取角色特定的存储键
+    function getCharacterKey(baseKey) {
+        updateCharacterId();
+        return `${baseKey}_${currentCharacterId}`;
+    }
+
     // 获取收藏列表
     function getFavorites() {
-        const characterSettings = getCharacterSettings();
-        return characterSettings.favorites || [];
+        const characterKey = getCharacterKey('mwc_favorites');
+        return GM_getValue(characterKey, []);
     }
 
     // 保存收藏列表
     function saveFavorites(favorites) {
-        const characterSettings = getCharacterSettings();
-        characterSettings.favorites = favorites;
-        saveCharacterSettings(characterSettings);
+        const characterKey = getCharacterKey('mwc_favorites');
+        GM_setValue(characterKey, favorites);
     }
 
     // 获取市场强化装备高亮开关状态
     function getMarketFavoriteEnhanceHighlight() {
-        const characterSettings = getCharacterSettings();
-        return characterSettings.marketFavoriteEnhanceHighlight !== undefined ? characterSettings.marketFavoriteEnhanceHighlight : true;
+        const characterKey = getCharacterKey('mwc_market_fav_enhance_highlight');
+        return GM_getValue(characterKey, true);
     }
 
     // 保存开关状态
     function saveMarketFavoriteEnhanceHighlight(enabled) {
-        const characterSettings = getCharacterSettings();
-        characterSettings.marketFavoriteEnhanceHighlight = enabled;
-        saveCharacterSettings(characterSettings);
+        const characterKey = getCharacterKey('mwc_market_fav_enhance_highlight');
+        GM_setValue(characterKey, enabled);
     }
 
     // 获取所有角色的收藏统计
     function getAllCharactersFavorites() {
-        const settings = getMainSettings();
+        const allValues = GM_getValue(null) || {};
         const favoritesByCharacter = {};
 
-        if (settings.characters) {
-            for (const [characterId, characterSettings] of Object.entries(settings.characters)) {
-                if (characterSettings.favorites) {
-                    favoritesByCharacter[characterId] = {
-                        favorites: characterSettings.favorites,
-                        count: characterSettings.favorites.length
-                    };
-                }
+        for (const [key, value] of Object.entries(allValues)) {
+            if (key.startsWith('mwc_favorites_')) {
+                const characterId = key.replace('mwc_favorites_', '');
+                favoritesByCharacter[characterId] = {
+                    favorites: value,
+                    count: value.length
+                };
             }
         }
 
@@ -277,64 +206,116 @@
 
     // 获取头部信息监控开关状态
     function getHeaderMonitorEnabled() {
-        const characterSettings = getCharacterSettings();
-        return characterSettings.headerMonitorEnabled !== undefined ? characterSettings.headerMonitorEnabled : false;
+        const characterKey = getCharacterKey('mwc_header_monitor_enabled');
+        return GM_getValue(characterKey, false); // 默认不开启
     }
 
     // 保存头部信息监控开关状态
     function saveHeaderMonitorEnabled(enabled) {
-        const characterSettings = getCharacterSettings();
-        characterSettings.headerMonitorEnabled = enabled;
-        saveCharacterSettings(characterSettings);
+        const characterKey = getCharacterKey('mwc_header_monitor_enabled');
+        GM_setValue(characterKey, enabled);
     }
 
     // 获取键盘快捷键开关状态
     function getKeyboardShortcutEnabled() {
-        const characterSettings = getCharacterSettings();
-        return characterSettings.keyboardShortcutEnabled !== undefined ? characterSettings.keyboardShortcutEnabled : false;
+        const characterKey = getCharacterKey('mwc_keyboard_shortcut_enabled');
+        return GM_getValue(characterKey, false); // 默认不开启
     }
 
     // 保存键盘快捷键开关状态
     function saveKeyboardShortcutEnabled(enabled) {
-        const characterSettings = getCharacterSettings();
-        characterSettings.keyboardShortcutEnabled = enabled;
-        saveCharacterSettings(characterSettings);
+        const characterKey = getCharacterKey('mwc_keyboard_shortcut_enabled');
+        GM_setValue(characterKey, enabled);
     }
 
     // 获取懒鬼按钮功能开关状态
     function getLazyButtonsEnabled() {
-        const characterSettings = getCharacterSettings();
-        return characterSettings.lazyButtonsEnabled !== undefined ? characterSettings.lazyButtonsEnabled : true;
+        const characterKey = getCharacterKey('mwc_lazy_buttons_enabled');
+        return GM_getValue(characterKey, true); // 默认开启
     }
 
     // 保存懒鬼按钮功能开关状态
     function saveLazyButtonsEnabled(enabled) {
-        const characterSettings = getCharacterSettings();
-        characterSettings.lazyButtonsEnabled = enabled;
-        saveCharacterSettings(characterSettings);
+        const characterKey = getCharacterKey('mwc_lazy_buttons_enabled');
+        GM_setValue(characterKey, enabled);
+    }
+
+    // 获取强化等级美化开关状态
+    function getEnhancementLevelEnabled() {
+        const characterKey = getCharacterKey('mwc_enhancement_level_enabled');
+        return GM_getValue(characterKey, true); // 默认开启
+    }
+
+    // 保存强化等级美化开关状态
+    function saveEnhancementLevelEnabled(enabled) {
+        const characterKey = getCharacterKey('mwc_enhancement_level_enabled');
+        GM_setValue(characterKey, enabled);
+    }
+
+    // 获取展开市场价格开关状态
+    function getMarketPriceEnabled() {
+        const characterKey = getCharacterKey('mwc_market_price_enabled');
+        return GM_getValue(characterKey, true); // 默认开启
+    }
+
+    // 保存展开市场价格开关状态
+    function saveMarketPriceEnabled(enabled) {
+        const characterKey = getCharacterKey('mwc_market_price_enabled');
+        GM_setValue(characterKey, enabled);
     }
 
     // 获取强化等级检测阈值
     function getEnhanceThreshold() {
-        const characterSettings = getCharacterSettings();
-        const threshold = characterSettings.enhanceThreshold !== undefined ? characterSettings.enhanceThreshold : 0;
+        const characterKey = getCharacterKey('mwc_enhance_threshold');
+        const threshold = GM_getValue(characterKey, 0);
         // 确保阈值在0-20范围内
         return Math.min(20, Math.max(0, parseInt(threshold) || 0));
     }
 
     // 保存强化等级检测阈值
     function saveEnhanceThreshold(threshold) {
-        const characterSettings = getCharacterSettings();
+        const characterKey = getCharacterKey('mwc_enhance_threshold');
         // 限制在0-20范围内
         const safeThreshold = Math.min(20, Math.max(0, parseInt(threshold) || 0));
-        characterSettings.enhanceThreshold = safeThreshold;
-        saveCharacterSettings(characterSettings);
+        GM_setValue(characterKey, safeThreshold);
+    }
+
+    // 获取全局UI位置设置
+    function getUIPositions() {
+        // 获取统一的UI位置设置
+        const uiPositions = GM_getValue('mwc_ui_positions', {});
+
+        // 处理旧的存储格式，确保向后兼容
+        if (!uiPositions.stopButton) {
+            const oldStopPos = GM_getValue('mwc_stop_button_position', null);
+            if (oldStopPos) {
+                uiPositions.stopButton = oldStopPos;
+            }
+        }
+
+        if (!uiPositions.alertOverlay) {
+            const oldAlertPos = GM_getValue('mwc_alert_overlay_position', null);
+            if (oldAlertPos) {
+                uiPositions.alertOverlay = oldAlertPos;
+            }
+        }
+
+        // 保存整合后的设置（如果有旧数据需要迁移）
+        GM_setValue('mwc_ui_positions', uiPositions);
+
+        return uiPositions;
+    }
+
+    // 保存全局UI位置设置
+    function saveUIPositions(uiPositions) {
+        GM_setValue('mwc_ui_positions', uiPositions);
     }
 
     // 获取自定义联合按钮设置
     function getCustomCombinedLevels() {
-        const uiSettings = getUISettings();
-        return uiSettings.customCombinedLevels || [
+        const uiPositions = getUIPositions();
+        // 如果没有自定义设置，返回默认按钮配置
+        return uiPositions.customCombinedLevels || [
             { enhanceLevel: 10, protectLevel: 5 },
             { enhanceLevel: 10, protectLevel: 6 },
             { enhanceLevel: 10, protectLevel: 7 },
@@ -344,54 +325,93 @@
 
     // 保存自定义联合按钮设置
     function saveCustomCombinedLevels(levels) {
-        const uiSettings = getUISettings();
-        uiSettings.customCombinedLevels = levels;
-        saveUISettings(uiSettings);
+        const uiPositions = getUIPositions();
+        uiPositions.customCombinedLevels = levels;
+        saveUIPositions(uiPositions);
     }
 
     // 获取自定义强化等级按钮设置
     function getCustomEnhanceLevelButtons() {
-        const uiSettings = getUISettings();
-        return uiSettings.enhanceLevelButtons || [5, 7, 8, 10];
+        const uiPositions = getUIPositions();
+
+        // 处理旧的存储格式，确保向后兼容
+        let buttons = uiPositions.enhanceLevelButtons;
+
+        // 如果没有设置或使用的是旧格式（包含displayText），转换为新格式
+        if (!buttons) {
+            // 默认按钮配置
+            buttons = [5, 7, 8, 10];
+        } else if (buttons.length > 0 && typeof buttons[0] === 'object') {
+            // 转换旧格式为新格式
+            buttons = buttons.map(btn => btn.level);
+        }
+
+        return buttons;
     }
 
     // 保存自定义强化等级按钮设置
     function saveCustomEnhanceLevelButtons(levels) {
-        const uiSettings = getUISettings();
-        uiSettings.enhanceLevelButtons = levels;
-        saveUISettings(uiSettings);
+        const uiPositions = getUIPositions();
+        uiPositions.enhanceLevelButtons = levels;
+        saveUIPositions(uiPositions);
     }
 
     // 获取自定义保护等级按钮设置
     function getCustomProtectLevelButtons() {
-        const uiSettings = getUISettings();
-        return uiSettings.protectLevelButtons || [2, 5, 6, 7, 8];
+        const uiPositions = getUIPositions();
+
+        // 处理旧的存储格式，确保向后兼容
+        let buttons = uiPositions.protectLevelButtons;
+
+        // 如果没有设置或使用的是旧格式（包含displayText），转换为新格式
+        if (!buttons) {
+            // 默认按钮配置
+            buttons = [2, 5, 6, 7, 8];
+        } else if (buttons.length > 0 && typeof buttons[0] === 'object') {
+            // 转换旧格式为新格式
+            buttons = buttons.map(btn => btn.level);
+        }
+
+        return buttons;
     }
 
     // 保存自定义保护等级按钮设置
     function saveCustomProtectLevelButtons(levels) {
-        const uiSettings = getUISettings();
-        uiSettings.protectLevelButtons = levels;
-        saveUISettings(uiSettings);
+        const uiPositions = getUIPositions();
+        uiPositions.protectLevelButtons = levels;
+        saveUIPositions(uiPositions);
     }
 
     // 获取自定义重复次数按钮设置
     function getCustomRepeatCountButtons() {
-        const uiSettings = getUISettings();
-        return uiSettings.repeatCountButtons || [2, 20, 200, 2000];
+        const uiPositions = getUIPositions();
+
+        // 处理旧的存储格式，确保向后兼容
+        let buttons = uiPositions.repeatCountButtons;
+
+        // 如果没有设置，使用默认配置
+        if (!buttons) {
+            // 默认按钮配置
+            buttons = [2, 20, 200, 2000];
+        } else if (buttons.length > 0 && typeof buttons[0] === 'object') {
+            // 转换旧格式为新格式
+            buttons = buttons.map(btn => btn.count);
+        }
+
+        return buttons;
     }
 
     // 保存自定义重复次数按钮设置
     function saveCustomRepeatCountButtons(counts) {
-        const uiSettings = getUISettings();
-        uiSettings.repeatCountButtons = counts;
-        saveUISettings(uiSettings);
+        const uiPositions = getUIPositions();
+        uiPositions.repeatCountButtons = counts;
+        saveUIPositions(uiPositions);
     }
 
     // 获取停止按钮位置
     function getStopButtonPosition() {
-        const uiSettings = getUISettings();
-        const position = uiSettings.positions?.stopButton;
+        const uiPositions = getUIPositions();
+        const position = uiPositions.stopButton;
         if (position) {
             return { top: position.top || 30, left: position.left || 350 };
         }
@@ -400,18 +420,15 @@
 
     // 保存停止按钮位置
     function saveStopButtonPosition(top, left) {
-        const uiSettings = getUISettings();
-        if (!uiSettings.positions) {
-            uiSettings.positions = {};
-        }
-        uiSettings.positions.stopButton = { top, left };
-        saveUISettings(uiSettings);
+        const uiPositions = getUIPositions();
+        uiPositions.stopButton = { top, left };
+        saveUIPositions(uiPositions);
     }
 
     // 获取强化信息提示框位置
     function getAlertOverlayPosition() {
-        const uiSettings = getUISettings();
-        const position = uiSettings.positions?.alertOverlay;
+        const uiPositions = getUIPositions();
+        const position = uiPositions.alertOverlay;
         if (position) {
             return { top: position.top || 110, left: position.left || 230 };
         }
@@ -420,12 +437,9 @@
 
     // 保存强化信息提示框位置
     function saveAlertOverlayPosition(top, left) {
-        const uiSettings = getUISettings();
-        if (!uiSettings.positions) {
-            uiSettings.positions = {};
-        }
-        uiSettings.positions.alertOverlay = { top, left };
-        saveUISettings(uiSettings);
+        const uiPositions = getUIPositions();
+        uiPositions.alertOverlay = { top, left };
+        saveUIPositions(uiPositions);
     }
 
     // 严格检查是否为市场列表容器（仅市场列表触发模糊匹配）
@@ -582,6 +596,97 @@
 
     const throttledMarkFavorites = debounce(markFavorites, 200);
 
+    // 强化等级美化函数
+    function enhancementProcessed(element) {
+        if (element.classList.contains('enhancementProcessed')) return;
+        const levelText = element.textContent.trim();
+        const levelNumber = levelText.replace('+', '');
+        if (!isNaN(levelNumber) && levelNumber >= 1) {
+            element.classList.add('enhancementProcessed');
+            element.classList.add(`enhancementLevel_${levelNumber}`);
+        }
+    }
+
+    // 市场价格美化函数
+    function priceProcessed(element, removeProcessed) {
+        removeProcessed = removeProcessed || false;
+        if (removeProcessed) element.classList.remove('price-processed');
+        if (getMarketPriceEnabled()) {
+            if (element.classList.contains('price-processed')) {
+                if (element.querySelector('span span') !== null) {
+                    element.classList.remove('price-processed');
+                    priceProcessed(element)
+                }
+                return;
+            }
+            element.classList.add('price-processed');
+            const span = element.querySelector('span');
+            if (!span) return;
+            const originalText = span.textContent.trim();
+            const match = originalText.match(/^(\d+\.?\d*)([KMB])$/i);
+
+            let fullNumber;
+            if (match) {
+                const number = parseFloat(match[1]);
+                const unit = match[2].toUpperCase();
+
+                switch(unit) {
+                    case 'K': fullNumber = number * 1000; break;
+                    case 'M': fullNumber = number * 1000000; break;
+                    case 'B': fullNumber = number * 1000000000; break;
+                    default: return;
+                }
+            } else {
+                fullNumber = originalText;
+            }
+            const formatted = fullNumber.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            const parts = formatted.split(',');
+            let newHTML = '';
+
+            if (parts.length >= 4) {
+                newHTML = `<span class="price_b">${parts[0]},</span><span class="price_m">${parts[1]},</span><span class="price_k">${parts[2]},</span><span class="price_0">${parts.slice(3).join(',')}</span>`;
+            } else if (parts.length === 3) {
+                newHTML = `<span class="price_m">${parts[0]},</span><span class="price_k">${parts[1]},</span><span class="price_0">${parts[2]}</span>`;
+            } else if (parts.length === 2) {
+                newHTML = `<span class="price_k">${parts[0]},</span><span class="price_0">${parts[1]}</span>`;
+            } else {
+                newHTML = `<span class="price_0">${parts[0]}</span>`;
+            }
+            span.innerHTML = newHTML;
+        } else {
+            if (!element.classList.contains('price-processed')) return;
+            element.classList.remove('price-processed');
+            const span = element.querySelector('span');
+            if (!span) return;
+
+            const billionPart = span.querySelector('.price_b');
+            const millionPart = span.querySelector('.price_m');
+            const thousandPart = span.querySelector('.price_k');
+            const zeroPart = span.querySelector('.price_0');
+            let num = zeroPart ? parseInt(zeroPart.textContent) : 0;
+            if (billionPart) {
+                num += billionPart.textContent.replace(',', '') * 1000000000;
+            }
+            if (millionPart) {
+                num += millionPart.textContent.replace(',', '') * 1000000;
+            }
+            if (thousandPart) {
+                num += thousandPart.textContent.replace(',', '') * 1000;
+            }
+            let text;
+            if (num < 100000) {
+                text = num.toString();
+            } else if (num < 10000000) {
+                text = (num / 1000) + 'K';
+            } else if (num < 10000000000) {
+                text = (num / 1000000) + 'M';
+            } else {
+                text = (num / 1000000000) + 'B';
+            }
+            span.textContent = text;
+        }
+    }
+
     // 键盘快捷键：按下自定义键触发停止按钮
     let keyboardShortcutHandler = null;
     function setupKeyboardShortcuts() {
@@ -732,6 +837,21 @@
             background: rgba(255, 165, 0, 0.1) !important;
             border: 1px solid var(--color-orange-300) !important;
         }
+        /* 强化等级美化 */
+        body[data-enhancement="1"] .enhancementLevel_1,body[data-enhancement="1"] .enhancementLevel_2,body[data-enhancement="1"] .enhancementLevel_3,body[data-enhancement="1"] .enhancementLevel_4{color:var(--color-neutral-200)!important}
+        body[data-enhancement="1"] .enhancementLevel_5,body[data-enhancement="1"] .enhancementLevel_6,body[data-enhancement="1"] .enhancementLevel_7{color:var(--color-ocean-300)!important}
+        body[data-enhancement="1"] .enhancementLevel_10,body[data-enhancement="1"] .enhancementLevel_8,body[data-enhancement="1"] .enhancementLevel_9{color:#c98cff!important}
+        body[data-enhancement="1"] .enhancementLevel_11,body[data-enhancement="1"] .enhancementLevel_12,body[data-enhancement="1"] .enhancementLevel_13,body[data-enhancement="1"] .enhancementLevel_14{color:var(--color-orange-500)!important}
+        body[data-enhancement="1"] .enhancementLevel_15,body[data-enhancement="1"] .enhancementLevel_16,body[data-enhancement="1"] .enhancementLevel_17,body[data-enhancement="1"] .enhancementLevel_18,body[data-enhancement="1"] .enhancementLevel_19{color:#ff0097!important}
+        body[data-enhancement="1"] .enhancementLevel_20{position:relative;--gradient-angle:0deg;background:linear-gradient(var(--gradient-angle),var(--color-burble-300) 10%,var(--color-space-400) 25%,var(--color-ocean-400) 50%,var(--color-jade-500) 75%,var(--color-orange-300) 87%,var(--color-coral-500));-webkit-background-clip:text!important;background-clip:text!important;color:transparent!important;font-weight:700;text-shadow:0 0 5px var(--color-neutral-0-opacity-25)!important;animation:rotateGradient 3s linear infinite}
+        @keyframes rotateGradient{to{--gradient-angle:360deg}}
+        @property --gradient-angle{syntax:"<angle>";inherits:false;initial-value:0deg}
+
+        /* 展开市场价格 */
+        body[data-price="1"] .MarketplacePanel_price__hIzrY span{color:var(--color-orange-400)!important}
+        body[data-price="1"] .MarketplacePanel_price__hIzrY span.price_k{color:var(--color-orange-200)!important}
+        body[data-price="1"] .MarketplacePanel_price__hIzrY span.price_m{color:var(--color-jade-300)!important}
+        body[data-price="1"] .MarketplacePanel_price__hIzrY span.price_b{color:var(--color-ocean-300)!important}
 
         /* 键盘快捷键提示样式 */
         .keyboard-shortcut-hint {
@@ -1039,6 +1159,26 @@
                     </span>
                 </div>
 
+                <div class="mwc-toggle">
+                    <input type="checkbox" id="enhancement-level-toggle" ${getEnhancementLevelEnabled() ? 'checked' : ''}>
+                    <label for="enhancement-level-toggle">
+                        ✨ 强化等级美化（+1到+20等级不同颜色显示，+20会动）
+                    </label>
+                    <span class="mwc-toggle-status" id="enhancement-level-status">
+                        ${getEnhancementLevelEnabled() ? '已开启' : '已关闭'}
+                    </span>
+                </div>
+
+                <div class="mwc-toggle">
+                    <input type="checkbox" id="market-price-toggle" ${getMarketPriceEnabled() ? 'checked' : ''}>
+                    <label for="market-price-toggle">
+                        💲 展开市场价格（将K/M/B转换为完整数字并美化显示）
+                    </label>
+                    <span class="mwc-toggle-status" id="market-price-status">
+                        ${getMarketPriceEnabled() ? '已开启' : '已关闭'}
+                    </span>
+                </div>
+
                 <p style="color: var(--color-neutral-400); font-size: 12px; margin-bottom: 15px; line-height: 1.6;">
                     <strong>🎯 操作：</strong><kbd>Alt + 点击</kbd> 快速收藏/取消<br>
                     <strong>🎮 快捷键：</strong>自定义键触发停止按钮（可在上方设置）<br>
@@ -1187,6 +1327,44 @@
                 }
         });
 
+        // 强化等级美化开关事件
+        const enhancementLevelToggle = settings.querySelector('#enhancement-level-toggle');
+        const enhancementLevelStatus = settings.querySelector('#enhancement-level-status');
+        enhancementLevelToggle.addEventListener('change', () => {
+            const enabled = enhancementLevelToggle.checked;
+            saveEnhancementLevelEnabled(enabled);
+            enhancementLevelStatus.textContent = enabled ? '已开启' : '已关闭';
+
+            // 应用设置到body属性
+            if (enabled) {
+                document.body.setAttribute('data-enhancement', '1');
+            } else {
+                document.body.removeAttribute('data-enhancement');
+            }
+
+            // 重新处理所有强化等级
+            document.querySelectorAll('.Item_enhancementLevel__19g-e').forEach(enhancementProcessed);
+        });
+
+        // 展开市场价格开关事件
+        const marketPriceToggle = settings.querySelector('#market-price-toggle');
+        const marketPriceStatus = settings.querySelector('#market-price-status');
+        marketPriceToggle.addEventListener('change', () => {
+            const enabled = marketPriceToggle.checked;
+            saveMarketPriceEnabled(enabled);
+            marketPriceStatus.textContent = enabled ? '已开启' : '已关闭';
+
+            // 应用设置到body属性
+            if (enabled) {
+                document.body.setAttribute('data-price', '1');
+            } else {
+                document.body.removeAttribute('data-price');
+            }
+
+            // 重新处理所有市场价格
+            document.querySelectorAll('.MarketplacePanel_price__hIzrY').forEach(priceProcessed);
+        });
+
         // 自定义快捷键输入框事件
         const customShortcutInput = settings.querySelector('#custom-shortcut');
         if (customShortcutInput) {
@@ -1282,6 +1460,14 @@
 
     // 初始化插件
     function initPlugin() {
+        // 初始化设置
+        if (getEnhancementLevelEnabled()) {
+            document.body.setAttribute('data-enhancement', '1');
+        }
+        if (getMarketPriceEnabled()) {
+            document.body.setAttribute('data-price', '1');
+        }
+
         // 设置事件监听器
         document.addEventListener('click', (event) => {
             if ((event.altKey || event.metaKey) && event.button === 0) {
@@ -1306,6 +1492,38 @@
                 }
             }
         }, true);
+
+        // 添加MutationObserver来监听DOM变化，处理新出现的元素
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                mutation.addedNodes.forEach((node) => {
+                    if (node.nodeType === Node.ELEMENT_NODE) {
+                        // 处理新出现的强化等级元素
+                        if (getEnhancementLevelEnabled()) {
+                            node.querySelectorAll('.Item_enhancementLevel__19g-e').forEach(enhancementProcessed);
+                        }
+                        // 处理新出现的市场价格元素
+                        if (getMarketPriceEnabled()) {
+                            node.querySelectorAll('.MarketplacePanel_price__hIzrY').forEach(priceProcessed);
+                        }
+                    }
+                });
+            });
+        });
+
+        // 开始观察整个文档的变化
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+
+        // 初始处理页面上已有的元素
+        if (getEnhancementLevelEnabled()) {
+            document.querySelectorAll('.Item_enhancementLevel__19g-e').forEach(enhancementProcessed);
+        }
+        if (getMarketPriceEnabled()) {
+            document.querySelectorAll('.MarketplacePanel_price__hIzrY').forEach(priceProcessed);
+        }
 
         // 初始标记收藏
         throttledMarkFavorites();
@@ -1664,20 +1882,25 @@
             buttonOverlay.appendChild(floatingButton);
         }
 
+        // 跟踪历史高亮的等级
+        let highlightedLevels = [];
+
         // 高亮显示强化数据面板中当前等级对应的行
         function highlightCurrentLevelInEnhancementStats(currentLevel) {
             // 获取强化数据面板
             const statsContainer = document.getElementById('enhancementStatsContainer');
             if (!statsContainer) return;
 
-            // 移除所有之前的高亮样式
-            const allCells = statsContainer.querySelectorAll('div');
-            allCells.forEach(cell => {
-                cell.style.backgroundColor = '';
-                cell.style.fontWeight = '';
-            });
-
             if (currentLevel < 0) return;
+
+            // 更新高亮等级历史
+            if (!highlightedLevels.includes(currentLevel)) {
+                highlightedLevels.push(currentLevel);
+                // 最多保留最近的历史等级
+                if (highlightedLevels.length > 2) {
+                    highlightedLevels.shift(); // 移除最早的历史等级
+                }
+            }
 
             // 获取所有等级单元格
             const gridCells = Array.from(statsContainer.querySelectorAll('div'));
@@ -1685,18 +1908,39 @@
 
             // 跳过表头（前4个单元格）
             for (let i = totalColumns; i < gridCells.length; i += totalColumns) {
-                // 检查当前行是否是当前等级
                 const levelCell = gridCells[i];
-                if (levelCell && parseInt(levelCell.textContent) === currentLevel) {
-                    // 高亮整行
+                if (levelCell) {
+                    const cellLevel = parseInt(levelCell.textContent);
+
+                    // 清除当前行的样式
                     for (let j = 0; j < totalColumns; j++) {
                         const cell = gridCells[i + j];
                         if (cell) {
-                            cell.style.backgroundColor = 'rgba(255, 165, 0, 0.3)';
-                            cell.style.fontWeight = 'bold';
+                            cell.style.backgroundColor = '';
+                            cell.style.fontWeight = '';
                         }
                     }
-                    break;
+
+                    // 检查是否是当前等级或历史等级
+                    if (cellLevel === currentLevel) {
+                        // 当前等级：正常高亮
+                        for (let j = 0; j < totalColumns; j++) {
+                            const cell = gridCells[i + j];
+                            if (cell) {
+                                cell.style.backgroundColor = 'rgba(255, 165, 0, 0.3)';
+                                cell.style.fontWeight = 'bold';
+                            }
+                        }
+                    } else if (highlightedLevels.includes(cellLevel) && cellLevel !== currentLevel) {
+                        // 历史等级：浅亮显示
+                        for (let j = 0; j < totalColumns; j++) {
+                            const cell = gridCells[i + j];
+                            if (cell) {
+                                cell.style.backgroundColor = 'rgba(255, 165, 0, 0.1)';
+                                // 浅亮状态不加粗
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -2694,7 +2938,7 @@
                     simulateInput('.SkillActionDetail_protectionMinLevelInputContainer__1HSzb input.Input_input__2-t98', protectLevel);
 
                     // 设置重复次数：如果count存在且大于0则使用该值，否则设置为99999
-                    const repeatCount = (count && count > 0) ? count : 99999;
+                    const repeatCount = (count && count > 0) ? count : '∞';
                     simulateInput('.SkillActionDetail_maxActionCountInput__1C0Pw input.Input_input__2-t98', repeatCount);
                 });
 
@@ -3245,122 +3489,15 @@
             });
         }
 
-        // 数据迁移函数 - 将旧的存储格式迁移到新的统一存储结构
-    function migrateOldData() {
-        const allValues = GM_getValue(null) || {};
-        let needsMigration = false;
-        const migratedSettings = getMainSettings();
-        const migratedCharacters = {};
-        const migratedUI = migratedSettings.ui || {};
+        // 页面加载后或面板出现时调用
+        setTimeout(() => {
+            widenEnhancementContainer();
+            observeSkillPanelChanges();
+            initDualLevelButtons();
 
-        // 迁移角色特定数据
-        for (const [key, value] of Object.entries(allValues)) {
-            if (key.startsWith('mwc_favorites_') ||
-                key.startsWith('mwc_market_fav_enhance_highlight_') ||
-                key.startsWith('mwc_header_monitor_enabled_') ||
-                key.startsWith('mwc_keyboard_shortcut_enabled_') ||
-                key.startsWith('mwc_lazy_buttons_enabled_') ||
-                key.startsWith('mwc_enhance_threshold_') ||
-                key.startsWith('mwc_custom_shortcut_')) {
-
-                needsMigration = true;
-                const parts = key.split('_');
-                const characterId = parts.pop();
-                const baseKey = parts.join('_');
-
-                if (!migratedCharacters[characterId]) {
-                    migratedCharacters[characterId] = {
-                        favorites: [],
-                        marketFavoriteEnhanceHighlight: true,
-                        headerMonitorEnabled: false,
-                        keyboardShortcutEnabled: false,
-                        lazyButtonsEnabled: true,
-                        enhanceThreshold: 0,
-                        customShortcut: '`'
-                    };
-                }
-
-                switch (baseKey) {
-                    case 'mwc_favorites':
-                        migratedCharacters[characterId].favorites = value;
-                        break;
-                    case 'mwc_market_fav_enhance_highlight':
-                        migratedCharacters[characterId].marketFavoriteEnhanceHighlight = value;
-                        break;
-                    case 'mwc_header_monitor_enabled':
-                        migratedCharacters[characterId].headerMonitorEnabled = value;
-                        break;
-                    case 'mwc_keyboard_shortcut_enabled':
-                        migratedCharacters[characterId].keyboardShortcutEnabled = value;
-                        break;
-                    case 'mwc_lazy_buttons_enabled':
-                        migratedCharacters[characterId].lazyButtonsEnabled = value;
-                        break;
-                    case 'mwc_enhance_threshold':
-                        migratedCharacters[characterId].enhanceThreshold = value;
-                        break;
-                    case 'mwc_custom_shortcut':
-                        migratedCharacters[characterId].customShortcut = value;
-                        break;
-                }
-            }
-        }
-
-        // 迁移UI位置数据
-        if (allValues['mwc_ui_positions']) {
-            needsMigration = true;
-            migratedUI.positions = allValues['mwc_ui_positions'];
-        } else {
-            if (allValues['mwc_stop_button_position']) {
-                needsMigration = true;
-                if (!migratedUI.positions) migratedUI.positions = {};
-                migratedUI.positions.stopButton = allValues['mwc_stop_button_position'];
-            }
-            if (allValues['mwc_alert_overlay_position']) {
-                needsMigration = true;
-                if (!migratedUI.positions) migratedUI.positions = {};
-                migratedUI.positions.alertOverlay = allValues['mwc_alert_overlay_position'];
-            }
-        }
-
-        // 如果有需要迁移的数据，保存到新结构中
-        if (needsMigration) {
-            const finalSettings = {
-                characters: { ...migratedSettings.characters, ...migratedCharacters },
-                ui: migratedUI
-            };
-            saveMainSettings(finalSettings);
-
-            // 清理旧数据
-            for (const [key] of Object.entries(allValues)) {
-                if (key.startsWith('mwc_favorites_') ||
-                    key.startsWith('mwc_market_fav_enhance_highlight_') ||
-                    key.startsWith('mwc_header_monitor_enabled_') ||
-                    key.startsWith('mwc_keyboard_shortcut_enabled_') ||
-                    key.startsWith('mwc_lazy_buttons_enabled_') ||
-                    key.startsWith('mwc_enhance_threshold_') ||
-                    key.startsWith('mwc_custom_shortcut_') ||
-                    key === 'mwc_ui_positions' ||
-                    key === 'mwc_stop_button_position' ||
-                    key === 'mwc_alert_overlay_position') {
-                    GM_deleteValue(key);
-                }
-            }
-        }
-    }
-
-    // 页面加载后或面板出现时调用
-    setTimeout(() => {
-        // 先执行数据迁移
-        migrateOldData();
-
-        widenEnhancementContainer();
-        observeSkillPanelChanges();
-        initDualLevelButtons();
-
-        // 启动头部信息监听
-        setTimeout(monitorHeaderInfo, 2000);
-    }, 1000); // 延迟确保游戏界面加载完成
+            // 启动头部信息监听
+            setTimeout(monitorHeaderInfo, 2000);
+        }, 1000); // 延迟确保游戏界面加载完成
 
     })();
 })();

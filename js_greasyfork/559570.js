@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         视频网页全屏
 // @namespace    npm/vite-plugin-monkey
-// @version      3.8.9
+// @version      3.9.0
 // @author       Feny
 // @description  快捷键：P-网页全屏，Enter-全屏；支持侧边点击切换网页全屏；支持自动网页全屏
 // @license      GPL-3.0-only
@@ -19,7 +19,7 @@
 // @updateURL https://update.greasyfork.org/scripts/559570/%E8%A7%86%E9%A2%91%E7%BD%91%E9%A1%B5%E5%85%A8%E5%B1%8F.meta.js
 // ==/UserScript==
 
-(o=>{const e=Symbol("styleAdded"),t=document.createElement("style");t.textContent=o,window.gmStyle=t,document.addEventListener("addStyle",r=>{const{shadowRoot:n}=r.detail;n[e]||n instanceof Document||(n.prepend(t.cloneNode(!0)),n[e]=!0)}),(GM_addStyle??(()=>document.head.append(t.cloneNode(!0))))(o)})(' @charset "UTF-8";[gm_webfullscreen],body[gm_webfullscreen] [gm_webfullscreen]{top:0!important;left:0!important;margin:0!important;padding:0!important;zoom:normal!important;border:none!important;width:100vw!important;height:100vh!important;position:fixed!important;transform:none!important;max-width:none!important;max-height:none!important;border-radius:0!important;transition:none!important;z-index:2147483646!important;background-color:#000!important;flex-direction:column!important;overflow:hidden!important;display:flex!important}[gm_webfullscreen]~*:not(.monkey-web-fullscreen){display:none!important}[gm_webfullscreen] video,body[gm_webfullscreen] [gm_webfullscreen] video{top:0!important;left:0!important;width:100vw!important;border:none!important;transform:none!important;object-fit:contain!important;height:clamp(100vh - 100%,100vh,100%)!important}.video-edge-click{cursor:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAAXNSR0IArs4c6QAAAaBJREFUSEutlL8vBEEcxT9fpxSdVtQkGqqrHP8CoqDXSZTC7VpcRa3SCBJEclcgEQmNShDFKVRXKSj8atmv7Gbvsrd2Zydhus2+75v33rwZwXKpx0UAlTIlmxGxAQUY9dCI2GrGCvRn4tCu8CJLTCadmBTrCgcoPfGY2hRHgAmEwyR5FnHWzK8osoDq0hdm7NJoujEJSc24NdDJgCzwkHbAWqGfL+pp7kIBWa1QjyEpc2NqjQlj3QrbWjZxucQty3CHsMU3u+LylreRRDdqJAa8xmdaXB7D/rp00cFngmgPZUccTrM2SCNu4FNKnP42ykwKSdCQbaAqZe7i/3OjCFWvUsTnKsf+GUKVb2ri8mRFHJIvc48wmJct8AHMZdetQn+8w+oxC2xaEAeQdfMFgeFml7VCD188G4hfgRpKVRxq1lc6euECxYHy+LpEOKHAcdyh9SMU5TyGcN5GqyyKw1rSSTux4dlsPTzLXCEUo+93fEbF5dZIbHMw6jEPbIRY5UgcxtPmrOvWUuzQS4E60IUyJQ77/0IcZe0C3eKE6lPXDznkqgSwYj+tAAAAAElFTkSuQmCC),pointer!important;left:0!important;top:6%!important;width:25px!important;height:70%!important;position:absolute!important;z-index:2147483647!important;background-color:transparent!important;user-select:none!important;opacity:0!important}.video-edge-click.right{right:0!important;left:auto!important} ');
+(o=>{const e=Symbol("styleAdded"),t=document.createElement("style");t.textContent=o,window.gmStyle=t,document.addEventListener("addStyle",r=>{const{shadowRoot:n}=r.detail;n[e]||n instanceof Document||(n.prepend(t.cloneNode(!0)),n[e]=!0)}),(GM_addStyle??(()=>document.head.append(t.cloneNode(!0))))(o)})(' @charset "UTF-8";[gm_webfullscreen],body[gm_webfullscreen] [gm_webfullscreen]{top:0!important;left:0!important;margin:0!important;padding:0!important;zoom:normal!important;border:none!important;width:100vw!important;height:100vh!important;position:fixed!important;transform:none!important;max-width:none!important;max-height:none!important;border-radius:0!important;transition:none!important;z-index:2147483646!important;background-color:#000!important;flex-direction:column!important;overflow:hidden!important;display:flex!important}[gm_webfullscreen]~*:not(.monkey-web-fullscreen){display:none!important}[gm_webfullscreen] video,body[gm_webfullscreen] [gm_webfullscreen] video{top:0!important;left:0!important;width:100vw!important;border:none!important;transform:none!important;object-fit:contain!important;height:clamp(100vh - 100%,100vh,100%)!important}.__edgeClick{cursor:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAAXNSR0IArs4c6QAAAaBJREFUSEutlL8vBEEcxT9fpxSdVtQkGqqrHP8CoqDXSZTC7VpcRa3SCBJEclcgEQmNShDFKVRXKSj8atmv7Gbvsrd2Zydhus2+75v33rwZwXKpx0UAlTIlmxGxAQUY9dCI2GrGCvRn4tCu8CJLTCadmBTrCgcoPfGY2hRHgAmEwyR5FnHWzK8osoDq0hdm7NJoujEJSc24NdDJgCzwkHbAWqGfL+pp7kIBWa1QjyEpc2NqjQlj3QrbWjZxucQty3CHsMU3u+LylreRRDdqJAa8xmdaXB7D/rp00cFngmgPZUccTrM2SCNu4FNKnP42ykwKSdCQbaAqZe7i/3OjCFWvUsTnKsf+GUKVb2ri8mRFHJIvc48wmJct8AHMZdetQn+8w+oxC2xaEAeQdfMFgeFml7VCD188G4hfgRpKVRxq1lc6euECxYHy+LpEOKHAcdyh9SMU5TyGcN5GqyyKw1rSSTux4dlsPTzLXCEUo+93fEbF5dZIbHMw6jEPbIRY5UgcxtPmrOvWUuzQS4E60IUyJQ77/0IcZe0C3eKE6lPXDznkqgSwYj+tAAAAAElFTkSuQmCC),pointer!important;left:0!important;top:6%!important;width:25px!important;height:70%!important;position:absolute!important;z-index:2147483647!important;background-color:transparent!important;user-select:none!important;opacity:0!important}.__edgeClick.right{right:0!important;left:auto!important}.hide{display:none!important} ');
 
 (function () {
   'use strict';
@@ -70,7 +70,6 @@
   }
   const Consts = Object.freeze({
     P: "P",
-    EMPTY: "",
     HALF_SEC: 500,
     ONE_SEC: 1e3,
     webFull: "gm_webfullscreen",
@@ -91,6 +90,9 @@
     attr: (el, name, val) => el && name && el[val ? "setAttribute" : "removeAttribute"](name, val),
     emitEvent: (type, detail = {}) => document.dispatchEvent(new CustomEvent(type, { detail })),
     isInputable: (el) => ["INPUT", "TEXTAREA"].includes(el?.tagName) || el?.isContentEditable,
+    createElement: (name, attrs = {}) => Object.assign(document.createElement(name), attrs),
+    delCls: (el, ...cls) => el?.classList.remove(...cls),
+    addCls: (el, ...cls) => el?.classList.add(...cls),
     sendToIFrames(data) {
       this.getIFrames().forEach((el) => this.postMessage(el?.contentWindow, data));
     },
@@ -122,7 +124,7 @@
       if (parent instanceof ShadowRoot) return parent.host;
       return parent === document ? null : parent;
     },
-    getParents(el, self = false, max = Infinity) {
+    getParents(el, max = Infinity, self = true) {
       const parents = self && el ? [el] : [];
       for (let current = el, deep = 0; current && deep < max; deep++) {
         current = this.getParent(current);
@@ -174,7 +176,7 @@
   VideoEnhancer.hackAttachShadow();
   const Listen = {
     isMutedLoop: (video) => video?.muted && video?.loop,
-    isNoVideo: () => !window.videoInfo && !window.topWin,
+    isNoVideo: () => !window.vMeta && !window.topWin,
     init(isNonFirst = false) {
       this.docElement = document.documentElement;
       this.setupKeydownListener();
@@ -183,7 +185,7 @@
       this.setupVideoListeners();
       if (isNonFirst) return;
       this.setupDocumentObserver();
-      this.setupIgnoreUrlsChangeListener();
+      this.setupIgnoreChangeListener();
       this.setupShadowVideoListener();
     },
     setupDocumentObserver() {
@@ -219,14 +221,14 @@
       if (container instanceof Element && this.lacksRelativePosition(container)) {
         Tools.setStyle(container, "position", "relative");
       }
-      Tools.querys(".video-edge-click", container).forEach((el) => el.remove());
+      Tools.querys(".__edgeClick", container).forEach((el) => el.remove());
       if (video.lArea) return container.prepend(video.lArea, video.rArea);
       const createEdge = (cls = "") => {
-        const element = Object.assign(document.createElement("div"), { video, className: `video-edge-click ${cls}` });
+        const element = Tools.createElement("div", { video, className: `__edgeClick ${cls}` });
         element.onclick = (e) => {
           Tools.preventDefault(e);
           this.setPlayer(e.target.video);
-          Tools.microTask(() => this.dispatchShortcut(Consts.P, true));
+          Tools.sleep(5).then(() => this.dispatchShortcut(Consts.P, true));
         };
         return element;
       };
@@ -240,21 +242,15 @@
       return sroot ? parent : this.findVideoContainer(parent, void 0, false);
     },
     lacksRelativePosition(el) {
-      return Tools.getParents(el, true, 2).every((e) => e && getComputedStyle(e).position === "static");
+      return Tools.getParents(el, 2).every((e) => e && getComputedStyle(e).position === "static");
     }
   };
-  var _GM_addValueChangeListener = /* @__PURE__ */ (() => typeof GM_addValueChangeListener != "undefined" ? GM_addValueChangeListener : void 0)();
-  var _GM_getValue = /* @__PURE__ */ (() => typeof GM_getValue != "undefined" ? GM_getValue : void 0)();
-  var _GM_registerMenuCommand = /* @__PURE__ */ (() => typeof GM_registerMenuCommand != "undefined" ? GM_registerMenuCommand : void 0)();
-  var _GM_setValue = /* @__PURE__ */ (() => typeof GM_setValue != "undefined" ? GM_setValue : void 0)();
-  var _GM_unregisterMenuCommand = /* @__PURE__ */ (() => typeof GM_unregisterMenuCommand != "undefined" ? GM_unregisterMenuCommand : void 0)();
-  var _unsafeWindow = /* @__PURE__ */ (() => typeof unsafeWindow != "undefined" ? unsafeWindow : void 0)();
   const Keydown = {
     dispatchShortcut: (key, isTrusted = false) => Tools.postMessage(window.top, { key: key.toUpperCase(), isTrusted }),
     setupKeydownListener() {
-      _unsafeWindow.addEventListener("keydown", (e) => this.handleKeydown(e), true);
-      _unsafeWindow.addEventListener("message", ({ data }) => this.handleMessage(data));
-      _unsafeWindow.addEventListener("scroll", () => this.fsWrapper && Tools.scrollTop(this.fsWrapper.scrollY));
+      unsafeWindow.addEventListener("keydown", (e) => this.handleKeydown(e), true);
+      unsafeWindow.addEventListener("message", ({ data }) => this.handleMessage(data));
+      unsafeWindow.addEventListener("scroll", () => this.fsWrapper && Tools.scrollTop(this.fsWrapper.scrollY));
     },
     handleKeydown(e) {
       const { key, isTrusted } = e;
@@ -265,13 +261,13 @@
     },
     handleMessage(data) {
       if (!data?.source?.includes(Consts.MSG_SOURCE)) return;
-      if (data?.videoInfo) return this.syncVideoToParentWin(data.videoInfo);
+      if (data?.vMeta) return this.syncMetaToParentWin(data.vMeta);
       if ("isFullscreen" in data) this.isFullscreen = data.isFullscreen;
       if (data?.topWin) window.topWin = this.topWin = data.topWin;
       this.processEvent(data);
     },
     processEvent(data) {
-      if (this.videoInfo?.iFrame && this.player) delete this.player;
+      if (this.vMeta?.iFrame && this.player) delete this.player;
       if (!this.player) Tools.sendToIFrames(data);
       if (data?.key) this.execKeyActions(data);
     },
@@ -282,7 +278,7 @@
     videoEvts: ["loadedmetadata", "timeupdate", "playing"],
     setupVideoListeners(video) {
       const ctrl = new AbortController();
-      if (video) this.videoAborts.get(video)?.abort();
+      video && this.videoAborts.get(video)?.abort();
       const handle = (e) => this[e.type](video ?? e.target);
       this.videoEvts.forEach((t) => (video ?? document).addEventListener(t, handle, { capture: true, signal: ctrl.signal }));
       if (video) this.videoAborts.set(video, ctrl), this.unbindVideoEvts();
@@ -296,7 +292,7 @@
       });
     },
     unbindVideoEvts() {
-      if (this.videoAborts.size < 5 || Tools.isThrottle("cleanup")) return;
+      if (Tools.isThrottle("cleanup")) return;
       this.videoAborts.forEach((ctrl, video) => {
         if (Tools.isAttached(video)) return;
         ctrl.abort(), video.removeAttribute("received"), this.videoAborts.delete(video);
@@ -325,12 +321,12 @@
     },
     setPlayer(video) {
       this.player = video;
-      const videoInfo = { isLive: video.duration === Infinity, timestamp: Date.now() };
-      this.syncVideoToParentWin(videoInfo);
+      const vMeta = { isLive: video.duration === Infinity, timestamp: Date.now() };
+      this.syncMetaToParentWin(vMeta);
     },
-    syncVideoToParentWin(videoInfo) {
-      window.videoInfo = this.videoInfo = videoInfo;
-      if (!Tools.isTopWin()) return Tools.postMessage(window.parent, { videoInfo: { ...videoInfo, iFrame: location.href } });
+    syncMetaToParentWin(vMeta) {
+      window.vMeta = this.vMeta = vMeta;
+      if (!Tools.isTopWin()) return Tools.postMessage(window.parent, { vMeta: { ...vMeta, iFrame: location.href } });
       Tools.microTask(() => this.initMenuCmds());
       this.sendTopWinInfo();
     },
@@ -345,7 +341,7 @@
   class BasicStorage {
     constructor(name, defVal, parser = (v) => v) {
       Object.assign(this, { name, defVal, parser });
-      this.storage = { getItem: _GM_getValue, setItem: _GM_setValue };
+      this.storage = { getItem: GM_getValue, setItem: GM_setValue };
     }
     #getFinalKey(suffix) {
       if (!suffix) throw new Error(`${this.name} 后缀不能为空！`);
@@ -362,8 +358,9 @@
   const Storage = {
     IS_AUTO: new BasicStorage("IS_AUTO_", false, Boolean),
     DETACH_THRESHOLD: new BasicStorage("DETACH_THRESHOLD_", 20, Number),
-    CUSTOM_CONTAINER: new BasicStorage("CUSTOM_CONTAINER_", ""),
-    IGNORE_URLS: new BasicStorage("IGNORE_URLS_", "")
+    CUSTOM_CTN: new BasicStorage("CUSTOM_CTN_", ""),
+    IGNORE_URLS: new BasicStorage("IGNORE_URLS_", ""),
+    HIDE_ELEMENTS: new BasicStorage("HIDE_ELEMENTS_", "")
   };
   const WebFull = {
     toggleFullscreen() {
@@ -375,17 +372,18 @@
       if (this.isNoVideo() || Tools.isThrottle("toggleWeb")) return;
       if (this.isFullscreen && isTrusted) return document.fullscreenElement && document.exitFullscreen();
       this.fsWrapper ? this.exitWebFullscreen() : this.enterWebFullscreen();
+      requestAnimationFrame(() => this.hideRelatedOnFullscreen());
     },
     enterWebFullscreen() {
       const container = this.fsWrapper = this.getVideoHostContainer();
-      if (!container || container.matches(":is(html, body)")) return this.ensureWebFullscreen();
+      if (!container || container.matches(":is(html, body)")) return this.adaptToWebFullscreen();
       container.scrollY = window.scrollY;
-      const parents = Tools.getParents(container, true);
+      const parents = Tools.getParents(container);
       container instanceof HTMLIFrameElement || parents.length < Storage.DETACH_THRESHOLD.get(location.host) ? parents.forEach((el) => {
         Tools.emitEvent("addStyle", { shadowRoot: el.getRootNode() });
         Tools.attr(el, Consts.webFull, true);
       }) : this.detachForFullscreen();
-      this.ensureWebFullscreen();
+      this.adaptToWebFullscreen();
     },
     detachForFullscreen() {
       if (this.fsParent) return;
@@ -412,15 +410,15 @@
       return this.getVideoIFrame() ?? Tools.getIFrames().find(Tools.isVisible);
     },
     getVideoIFrame() {
-      if (!this.videoInfo?.iFrame) return null;
-      const { pathname, search } = new URL(this.videoInfo.iFrame);
+      if (!this.vMeta?.iFrame) return null;
+      const { pathname, search } = new URL(this.vMeta.iFrame);
       const partial = ((s) => s.slice(0, s.length * 0.8))(decodeURIComponent(search));
       return Tools.query(`iframe[src*="${pathname + partial}"]`);
     },
     getVideoContainer() {
-      const selector = Storage.CUSTOM_CONTAINER.get(this.topWin?.host ?? location.host)?.trim();
-      const container = selector ? this.player.closest(selector) ?? Tools.query(selector) : null;
-      return container ?? this.findVideoContainer(this.findCtrlContainer());
+      const selector = Storage.CUSTOM_CTN.get(this.topWin?.host)?.trim();
+      const ctn = selector ? this.player.closest(selector) ?? Tools.query(selector) : null;
+      return ctn ?? this.findVideoContainer(this.findCtrlContainer());
     },
     findCtrlContainer() {
       const ignore = ":not(.Drag-Control, .vjs-controls-disabled, .vjs-control-text, .xgplayer-prompt)";
@@ -447,21 +445,24 @@
     },
     hasExplicitlySize(el) {
       const style = el.style;
-      const sizeRegex = /^\d+(\.\d+)?(px|em|rem)$/;
+      const regex = /^\d+(\.\d+)?(px|em|rem)$/;
       return ["width", "height"].some((prop) => {
         const value = style?.getPropertyValue(prop);
-        return value && sizeRegex.test(value);
+        return value && regex.test(value);
       });
     },
-    ensureWebFullscreen() {
+    adaptToWebFullscreen() {
       const { vw, vh } = this.topWin;
-      const elements = [...this.videoParents].reverse();
-      for (const el of elements) {
-        if (!this.fsWrapper.contains(el)) continue;
+      [...this.videoParents].reverse().forEach((el) => {
+        if (!this.fsWrapper.contains(el)) return;
         const { offsetWidth: width, offsetHeight: height } = this.player;
-        if (width === vw && height === vh && el.offsetHeight === vh) continue;
+        if (width === vw && height === vh && el.offsetHeight === vh) return;
         Tools.attr(el, Consts.webFull, true);
-      }
+      });
+    },
+    hideRelatedOnFullscreen(cls = "hide") {
+      const selector = Storage.HIDE_ELEMENTS.get(this.topWin?.host);
+      selector && Tools.querys(selector).forEach((el) => this.fsWrapper ? Tools.addCls(el, cls) : Tools.delCls(el, cls));
     }
   };
   const Automatic = {
@@ -480,8 +481,8 @@
   };
   const Ignore = {
     initIgnoreUrls: () => App.urlFilter = App.getIgnoreUrls(),
-    setupIgnoreUrlsChangeListener() {
-      _GM_addValueChangeListener(Storage.IGNORE_URLS.name, (_, oldVal, newVal) => oldVal !== newVal && this.initIgnoreUrls());
+    setupIgnoreChangeListener() {
+      GM_addValueChangeListener(Storage.IGNORE_URLS.name, (_, oldVal, newVal) => oldVal !== newVal && this.initIgnoreUrls());
     },
     isIgnoreUrl() {
       if (!this.urlFilter) this.initIgnoreUrls();
@@ -489,7 +490,7 @@
     },
     getIgnoreUrls() {
       const urlsStr = Storage.IGNORE_URLS.get(this.topWin.host);
-      return urlsStr.split(/[;\n]/).filter((url) => url.trim());
+      return urlsStr.match(/[^\s;]+/g) || [];
     },
     isBlocked(urls = []) {
       const { href, pathname } = new URL(this.topWin.url);
@@ -497,10 +498,10 @@
     }
   };
   const Menu = {
-    isAuto: () => Storage.IS_AUTO.get(Tools.isTopWin() ? location.host : window.topWin?.host),
+    isAuto: () => Storage.IS_AUTO.get(window.topWin?.host ?? location.host),
     initMenuCmds() {
       if (this.hasMenu || !Tools.isTopWin()) return;
-      _GM_addValueChangeListener(Storage.IS_AUTO.name + location.host, () => this.setupMenuCmds());
+      GM_addValueChangeListener(Storage.IS_AUTO.name + location.host, () => this.setupMenuCmds());
       this.setupMenuCmds();
       this.hasMenu = true;
     },
@@ -509,14 +510,15 @@
       const isAuto = `此站${this.isAuto() ? "禁" : "启"}用自动网页全屏`;
       const configs = [
         { title: isAuto, cache: Storage.IS_AUTO, fn: (cache, val) => cache.set(!val, host) },
+        { title: "此站自动时忽略的网址", cache: Storage.IGNORE_URLS },
+        { title: "此站全屏时隐藏的元素", cache: Storage.HIDE_ELEMENTS },
         { title: "此站脱离式全屏阈值", cache: Storage.DETACH_THRESHOLD },
-        { title: "自动时忽略的网址", cache: Storage.IGNORE_URLS },
-        { title: "自定义视频容器", cache: Storage.CUSTOM_CONTAINER }
+        { title: "自定义此站视频容器", cache: Storage.CUSTOM_CTN }
       ];
       configs.forEach(({ title, cache, fn }) => {
         const id = `${cache.name}_MENU_ID`;
-        _GM_unregisterMenuCommand(this[id]);
-        this[id] = _GM_registerMenuCommand(title, () => {
+        GM_unregisterMenuCommand(this[id]);
+        this[id] = GM_registerMenuCommand(title, () => {
           const value = cache.get(host);
           if (fn) return fn.call(this, cache, value);
           const input = prompt(title, value);

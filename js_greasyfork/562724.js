@@ -1,12 +1,13 @@
 // ==UserScript==
 // @name         Comick Alternative Reading Sites+
 // @namespace    https://greasyfork.org/users/1470715
-// @version      1.6.2
+// @version      1.6.6
 // @description  Add button to show alternative reading sites for manga/manhwa
 // @author       cattishly6060
 // @author       ak,shh
 // @match        https://comick.dev/*
 // @match        https://mangafire.to/
+// @match        https://mangaball.net/search-advanced/
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=comick.dev
 // @license      MIT
 // @grant        none
@@ -27,43 +28,28 @@
     const input = document.querySelector("input[name='keyword']");
     if (input) {
       // Create spinner overlay
-      const spinnerOverlay = document.createElement('div');
-      spinnerOverlay.style.position = 'fixed';
-      spinnerOverlay.style.top = 0;
-      spinnerOverlay.style.left = 0;
-      spinnerOverlay.style.width = '100%';
-      spinnerOverlay.style.height = '100%';
-      spinnerOverlay.style.backgroundColor = 'rgba(0,0,0,0.5)';
-      spinnerOverlay.style.display = 'flex';
-      spinnerOverlay.style.alignItems = 'center';
-      spinnerOverlay.style.justifyContent = 'center';
-      spinnerOverlay.style.zIndex = 9999;
-
-      const spinner = document.createElement('div');
-      spinner.style.border = '8px solid #f3f3f3';
-      spinner.style.borderTop = '8px solid #3498db';
-      spinner.style.borderRadius = '50%';
-      spinner.style.width = '60px';
-      spinner.style.height = '60px';
-      spinner.style.animation = 'spin 1s linear infinite';
-
-      spinnerOverlay.appendChild(spinner);
-      document.body.appendChild(spinnerOverlay);
-
-      // Add keyframes for spinner animation
-      const style = document.createElement('style');
-      style.textContent = `
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-      `;
-      document.head.appendChild(style);
+      createSpinnerOverlay();
 
       // do query search
       const query = location.hash.replace(/^#search:/, "");
       input.value = decodeURIComponent(query);
-      input.dispatchEvent(new Event("change", { bubbles: true }));
+      input.dispatchEvent(new Event("change", {bubbles: true}));
+      input.parentElement?.requestSubmit();
+    }
+    return;
+  }
+
+  // for mangaball auto search handler
+  if (location.host.startsWith('mangaball')) {
+    if (!location.hash.startsWith('#search:')) {
+      return;
+    }
+    const input = document.querySelector("input#mainSearch");
+    if (input) {
+      // do query search
+      const query = location.hash.replace(/^#search:/, "");
+      input.value = decodeURIComponent(query);
+      input.dispatchEvent(new Event("change", {bubbles: true}));
       input.parentElement?.requestSubmit();
     }
     return;
@@ -121,10 +107,6 @@
       .replace(/00/g, '')
       .replace(/--+/g, '-')
       .replace(/^-+|-+$/g, '');
-  }
-
-  function encodeName(name) {
-    return encodeURIComponent(name.replace(/-/g, ' '));
   }
 
   function formatMangaName(name) {
@@ -210,7 +192,6 @@
    **********************************************************/
   function createPopup(rawName) {
     const displayName = formatMangaName(rawName);
-    const query = encodeName(rawName);
     const isMobile = /Android|iPhone|iPad/i.test(navigator.userAgent);
     const isDark =
       document.documentElement.classList.contains('dark') ||
@@ -279,17 +260,29 @@
     // TODO: removed
     // popup.appendChild(copyBtn);
 
+    // url encoder
+    function e(name, removeHyphen = true) {
+      if (removeHyphen) {
+        name = name.replace(/-/g, ' ');
+      }
+      return encodeURIComponent(name);
+    }
+
+    // query
+    const q = rawName;
+
     const sites = [
-      ['Comix', `https://comix.to/browser?keyword=${query}&order=relevance:desc`, 'https://static.everythingmoe.com/icons/comix.png'],
-      ['MangaFire', `https://mangafire.to/#search:${query}`],
-      ['WeebCentral', `https://weebcentral.com/search?text=${query}`],
-      ['Bato.to', `https://bato.ing/v4x-search?word=${query}`],
-      ['MangaKatana', `https://mangakatana.com/?search=${query}&search_by=book_name`],
-      ['MangaTaro', `https://mangataro.org/?s=${query}`],
-      ['MangaDex', `https://mangadex.org/search?q=${query}`],
-      ['Atsu', `https://atsu.moe/search?query=${query}`],
-      ['ReaperScans', `https://reaperscans.com/?s=${query}`],
-      ['MangaBuddy', `https://mangabuddy.com/search?q=${query}`],
+      ['Comix', `https://comix.to/browser?keyword=${e(q)}&order=relevance:desc`, 'https://static.everythingmoe.com/icons/comix.png'],
+      ['MangaFire', `https://mangafire.to/#search:${e(q)}`],
+      ['WeebCentral', `https://weebcentral.com/search?text=${e(q)}`],
+      ['MangaKatana', `https://mangakatana.com/?search=${e(q)}&search_by=book_name`],
+      ['MangaTaro', `https://mangataro.org/?s=${e(q)}`],
+      ['MangaDex', `https://mangadex.org/search?q=${e(q)}`],
+      ['Atsu', `https://atsu.moe/search?query=${e(q)}`],
+      ['Mangaball', `https://mangaball.net/search-advanced/#search:${e(q, false)}`],
+      ['MangaBuddy', `https://mangabuddy.com/search?q=${e(q)}`],
+      ['Mangago', `https://www.mangago.me/r/l_search/?name=${e(q)}`],
+      ['VyManga', `https://vymanga.com/search?q=${e(q)}`],
     ];
 
     sites.forEach(([name, url, optIcon]) => {
@@ -471,4 +464,45 @@
 
   // Initial run
   scheduleInit();
+
+  /**
+   * **********************
+   * elements
+   * **********************
+   */
+  function createSpinnerOverlay() {
+    // Create spinner overlay
+    const spinnerOverlay = document.createElement('div');
+    spinnerOverlay.style.position = 'fixed';
+    spinnerOverlay.style.top = 0;
+    spinnerOverlay.style.left = 0;
+    spinnerOverlay.style.width = '100%';
+    spinnerOverlay.style.height = '100%';
+    spinnerOverlay.style.backgroundColor = 'rgba(0,0,0,0.5)';
+    spinnerOverlay.style.display = 'flex';
+    spinnerOverlay.style.alignItems = 'center';
+    spinnerOverlay.style.justifyContent = 'center';
+    spinnerOverlay.style.zIndex = 9999;
+
+    const spinner = document.createElement('div');
+    spinner.style.border = '8px solid #f3f3f3';
+    spinner.style.borderTop = '8px solid #3498db';
+    spinner.style.borderRadius = '50%';
+    spinner.style.width = '60px';
+    spinner.style.height = '60px';
+    spinner.style.animation = 'spin 1s linear infinite';
+
+    spinnerOverlay.appendChild(spinner);
+    document.body.appendChild(spinnerOverlay);
+
+    // Add keyframes for spinner animation
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+      `;
+    document.head.appendChild(style);
+  }
 })();

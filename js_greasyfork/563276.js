@@ -8,6 +8,7 @@
 // @grant        none
 // @icon         https://github.com/user-attachments/assets/561bdeb7-22b7-4566-853a-7bb1cf39dfdd
 // @homepageURL  https://github.com/1Tdd/Pokemon-Zone-Exporter
+// @license      MIT
 // @downloadURL https://update.greasyfork.org/scripts/563276/Pokemon%20Zone%20Exporter.user.js
 // @updateURL https://update.greasyfork.org/scripts/563276/Pokemon%20Zone%20Exporter.meta.js
 // ==/UserScript==

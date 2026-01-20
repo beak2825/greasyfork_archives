@@ -3,7 +3,7 @@
 // @namespace    https://fanis.dev/userscripts
 // @author       Fanis Hatzidakis
 // @license      PolyForm-Internal-Use-1.0.0; https://polyformproject.org/licenses/internal-use/1.0.0/
-// @version      1.5.0
+// @version      1.6.0
 // @description  Summarize web articles via OpenAI API. Modular architecture with configurable selectors and inspection mode.
 // @match        *://*/*
 // @exclude      about:*
@@ -754,7 +754,7 @@
 
         const resText = await xhrPost('https://api.openai.com/v1/responses', body, apiHeaders(KEY));
         const payload = JSON.parse(resText);
-        log('API response payload:', JSON.stringify(payload, null, 2));
+        log('API response status:', payload.status, 'usage:', payload.usage);
 
         if (payload.usage) {
             updateApiTokens(storage, 'digest', payload.usage);
@@ -805,7 +805,7 @@
      * Handle API errors with friendly messages
      */
     function friendlyApiError(err, openKeyDialog, openInfo) {
-        console.log('API Error details:', err, 'Body:', err.body);
+        log('API error:', err?.status, err?.message);
         const s = err?.status || 0;
         if (s === 401) { openKeyDialog('Unauthorized (401). Please enter a valid OpenAI key.'); return; }
         if (s === 429) { openInfo('Rate limited by API (429). Try again in a minute.'); return; }
@@ -2243,6 +2243,39 @@
     }
 
     /**
+     * Clean container text by removing UI and excluded elements
+     * @param {Element} container - Container element
+     * @param {Object} EXCLUDE - Exclusion rules
+     * @returns {string} - Cleaned text
+     */
+    function cleanContainerText(container, EXCLUDE) {
+        const clone = container.cloneNode(true);
+
+        // Remove UI elements
+        clone.querySelectorAll(`[${UI_ATTR}]`).forEach(el => el.remove());
+
+        // Remove excluded elements (self)
+        if (EXCLUDE.self) {
+            for (const sel of EXCLUDE.self) {
+                try {
+                    clone.querySelectorAll(sel).forEach(el => el.remove());
+                } catch {}
+            }
+        }
+
+        // Remove excluded containers (ancestors)
+        if (EXCLUDE.ancestors) {
+            for (const sel of EXCLUDE.ancestors) {
+                try {
+                    clone.querySelectorAll(sel).forEach(el => el.remove());
+                } catch {}
+            }
+        }
+
+        return (clone.innerText ?? clone.textContent ?? '').trim();
+    }
+
+    /**
      * Extract article body using configured selectors
      * @param {string[]} SELECTORS - CSS selectors to find container
      * @param {Object} EXCLUDE - Exclusion rules
@@ -2252,17 +2285,76 @@
     function extractArticleBody(SELECTORS, EXCLUDE, minLength = 100) {
         let container = null;
 
-        // Try each selector in order
+        // Get total page text for comparison
+        const bodyText = (document.body.innerText ?? document.body.textContent ?? '').trim();
+        const bodyLength = bodyText.length || 1; // Avoid division by zero
+
+        // Collect all matching candidates with their text stats
+        const candidates = [];
         for (const selector of SELECTORS) {
             try {
-                container = document.querySelector(selector);
-                if (container) {
-                    log('Found container with selector:', selector);
-                    break;
-                }
+                const candidate = document.querySelector(selector);
+                if (!candidate) continue;
+
+                const rawText = (candidate.innerText ?? candidate.textContent ?? '').trim();
+                const percent = Math.round((rawText.length / bodyLength) * 100);
+
+                candidates.push({ candidate, selector, text: rawText, length: rawText.length, percent });
             } catch (e) {
                 // Invalid selector, skip
             }
+        }
+
+        if (candidates.length === 0) {
+            log('No article container found');
+            return { error: 'no_container' };
+        }
+
+        // Sort by text length descending
+        candidates.sort((a, b) => b.length - a.length);
+
+        // Log top candidates for debugging
+        const topCandidates = candidates.slice(0, 5).filter(c => c.length > 0);
+        if (topCandidates.length > 1) {
+            log('Container candidates:', topCandidates.map(c => `${c.selector} (${c.percent}%)`).join(', '));
+        }
+
+        const best = candidates[0];
+
+        // Check if one container is dominant (>70% of page, and next best is <50% of best)
+        const dominated = best.percent > 70 && (candidates.length < 2 || candidates[1].percent < best.percent * 0.5);
+
+        if (dominated) {
+            container = best.candidate;
+            log('Selected container:', best.selector, '(dominant, ' + best.percent + '% of page)');
+        } else {
+            // Multiple significant containers - combine non-nested ones
+            const significant = candidates.filter(c => c.percent >= 15 && c.length > minLength);
+
+            // Filter out nested containers (keep only if not ancestor/descendant of another)
+            const nonNested = significant.filter((c, i) =>
+                !significant.some((other, j) => i !== j &&
+                    (other.candidate.contains(c.candidate) || c.candidate.contains(other.candidate))
+                )
+            );
+
+            if (nonNested.length > 1) {
+                // Combine cleaned text from multiple containers
+                const combinedTexts = nonNested.map(c => cleanContainerText(c.candidate, EXCLUDE));
+                const combinedText = combinedTexts.join('\n\n');
+                log('Combined', nonNested.length, 'containers:', nonNested.map(c => c.selector).join(', '));
+
+                if (combinedText.length < minLength) {
+                    log(`Combined text too short: ${combinedText.length} < ${minLength}`);
+                    return { error: 'article_too_short', actualLength: combinedText.length, minLength };
+                }
+
+                log(`Extracted ${combinedText.length} characters from combined containers`);
+                return { text: combinedText, elements: null, container: nonNested[0].candidate, title: null };
+            }
+
+            container = best.candidate;
+            log('Selected container:', best.selector, 'with', best.length, 'chars', `(${best.percent}% of page)`);
         }
 
         if (!container) {
@@ -2291,32 +2383,8 @@
             }
         }
 
-        // Clone container to avoid modifying the DOM
-        const clone = container.cloneNode(true);
-
-        // Remove UI elements
-        clone.querySelectorAll(`[${UI_ATTR}]`).forEach(el => el.remove());
-
-        // Remove excluded elements (self)
-        if (EXCLUDE.self) {
-            for (const sel of EXCLUDE.self) {
-                try {
-                    clone.querySelectorAll(sel).forEach(el => el.remove());
-                } catch {}
-            }
-        }
-
-        // Remove excluded containers (ancestors)
-        if (EXCLUDE.ancestors) {
-            for (const sel of EXCLUDE.ancestors) {
-                try {
-                    clone.querySelectorAll(sel).forEach(el => el.remove());
-                } catch {}
-            }
-        }
-
-        // Get visible text content (innerText for browsers, textContent fallback for jsdom/tests)
-        const text = (clone.innerText ?? clone.textContent ?? '').trim();
+        // Get cleaned text from container
+        const text = cleanContainerText(container, EXCLUDE);
 
         if (!text) {
             log('No text found in container');
@@ -2374,6 +2442,14 @@
     let isDragging = false;
     let dragOffset = { x: 0, y: 0 };
     let autoCollapsedOverlay = false;
+    let autoCollapsedState = null;
+
+    const BADGE_WIDTH = 150;
+
+    /** Viewport width excluding scrollbar */
+    function viewportWidth() {
+        return document.documentElement.clientWidth;
+    }
 
     /**
      * Ensure CSS is loaded
@@ -2674,7 +2750,7 @@
         overlay.setAttribute(UI_ATTR, '');
 
         // Set initial position
-        const maxX = window.innerWidth - 170;
+        const maxX = viewportWidth() - BADGE_WIDTH;
         const maxY = window.innerHeight - 200;
         OVERLAY_POS.x = Math.max(0, Math.min(OVERLAY_POS.x, maxX));
         OVERLAY_POS.y = Math.max(0, Math.min(OVERLAY_POS.y, maxY));
@@ -2747,7 +2823,7 @@
         } else {
             overlay.classList.remove('collapsed');
             const currentY = parseInt(overlay.style.top) || OVERLAY_POS.y;
-            const rightEdgeX = window.innerWidth - 170;
+            const rightEdgeX = viewportWidth() - BADGE_WIDTH;
 
             overlay.style.right = '';
             overlay.style.transform = '';
@@ -2790,7 +2866,7 @@
             let newX = clientX - dragOffset.x;
             let newY = clientY - dragOffset.y;
 
-            const maxX = window.innerWidth - overlay.offsetWidth;
+            const maxX = viewportWidth() - overlay.offsetWidth;
             const maxY = window.innerHeight - overlay.offsetHeight;
             newX = Math.max(0, Math.min(newX, maxX));
             newY = Math.max(0, Math.min(newY, maxY));
@@ -2865,6 +2941,7 @@
         // Auto-collapse actions overlay on mobile to prevent overlap
         if (overlay && !OVERLAY_COLLAPSED.value) {
             autoCollapsedOverlay = true;
+            autoCollapsedState = OVERLAY_COLLAPSED;
             collapseOverlay(OVERLAY_COLLAPSED);
         }
 
@@ -2969,8 +3046,12 @@
      */
     function expandOverlay() {
         if (!overlay) return;
+        if (autoCollapsedState) {
+            autoCollapsedState.value = false;
+            autoCollapsedState = null;
+        }
         overlay.classList.remove('collapsed');
-        const rightEdgeX = window.innerWidth - 170;
+        const rightEdgeX = viewportWidth() - BADGE_WIDTH;
         overlay.style.right = '';
         overlay.style.transform = '';
         overlay.style.left = `${rightEdgeX}px`;
@@ -3063,7 +3144,7 @@
         let OVERLAY_COLLAPSED = { value: false };
         try { const v = await storage.get(STORAGE_KEYS.OVERLAY_COLLAPSED, ''); if (v !== '') OVERLAY_COLLAPSED.value = (v === true || v === 'true'); } catch {}
 
-        let OVERLAY_POS = { x: window.innerWidth - 170, y: 100 };
+        let OVERLAY_POS = { x: document.documentElement.clientWidth - BADGE_WIDTH, y: window.innerHeight * 0.7 };
         try { const v = await storage.get(STORAGE_KEYS.OVERLAY_POS, ''); if (v) OVERLAY_POS = JSON.parse(v); } catch {}
 
         // Auto-simplify setting

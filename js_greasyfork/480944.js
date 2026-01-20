@@ -6,11 +6,11 @@
 // @grant         GM_registerMenuCommand
 // @grant         GM_setValue
 // @grant         GM_getValue
-// @resource      theList https://files.catbox.moe/idfplf.json
-// @homepageURL   https://web.archive.org/web/20210415002314/https://holocaustdeprogrammingcourse.com/
-// @version       1488.0.7
+// @resource      theList https://files.catbox.moe/gzzaj4.json
+// @homepageURL   http://www.whatreallyhappened.info/ https://web.archive.org/web/20210528121829/https://holocaustdeprogrammingcourse.com/ https://web.archive.org/web/20230318003504/http://www.holohoax101.org/
+// @version       1488.0.8
+// @namespace     https://greasyfork.org/users/1185877
 // @license       GNU GPLv3
-// @namespace https://greasyfork.org/users/1185877
 // @downloadURL https://update.greasyfork.org/scripts/480944/%22Nonfren%20Radar%22.user.js
 // @updateURL https://update.greasyfork.org/scripts/480944/%22Nonfren%20Radar%22.meta.js
 // ==/UserScript==
@@ -62,58 +62,58 @@
     return;
   }
 
-function searchTrie(node, trie) {
-  var text = node.nodeValue;
+  function searchTrie(node, trie) {
+    var text = node.nodeValue;
 
-  // Split while preserving whitespace
-  var tokens = text.split(/(\s+)/);
-  var output = [];
-  var i = 0;
+    // Split while preserving whitespace
+    var tokens = text.split(/(\s+)/);
+    var output = [];
+    var i = 0;
 
-  while (i < tokens.length) {
-    // If it's whitespace, keep it as-is
-    if (/^\s+$/.test(tokens[i])) {
-      output.push(tokens[i]);
-      i++;
-      continue;
-    }
-
-    var current = trie;
-    var sequence = "";
-    var matchedTokens = [];
-    var j = i;
-
-    // Try to match a phrase
-    while (j < tokens.length) {
-      // Skip whitespace tokens during matching
-      if (/^\s+$/.test(tokens[j])) {
-        j++;
+    while (i < tokens.length) {
+      // If it's whitespace, keep it as-is
+      if (/^\s+$/.test(tokens[i])) {
+        output.push(tokens[i]);
+        i++;
         continue;
       }
 
-      if (current[tokens[j].toLowerCase()]) {
-        current = current[tokens[j].toLowerCase()];
-        matchedTokens.push(tokens[j]);
-        j++;
+      var current = trie;
+      var sequence = "";
+      var matchedTokens = [];
+      var j = i;
+
+      // Try to match a phrase
+      while (j < tokens.length) {
+        // Skip whitespace tokens during matching
+        if (/^\s+$/.test(tokens[j])) {
+          j++;
+          continue;
+        }
+
+        if (current[tokens[j].toLowerCase()]) {
+          current = current[tokens[j].toLowerCase()];
+          matchedTokens.push(tokens[j]);
+          j++;
+        } else {
+          break;
+        }
+      }
+
+      if (current.isEndOfPhrase && matchedTokens.length > 0) {
+        // Found a match - wrap it and add a space
+        output.push("(((" + matchedTokens.join(" ") + "))) ");
+        // Skip all tokens that were part of the match (including whitespace between them)
+        i = j;
       } else {
-        break;
+        // No match - keep the original token
+        output.push(tokens[i]);
+        i++;
       }
     }
 
-    if (current.isEndOfPhrase && matchedTokens.length > 0) {
-      // Found a match - wrap it
-      output.push("(((" + matchedTokens.join(" ") + ")))");
-      // Skip all tokens that were part of the match (including whitespace between them)
-      i = j;
-    } else {
-      // No match - keep the original token
-      output.push(tokens[i]);
-      i++;
-    }
+    node.nodeValue = output.join("");
   }
-
-  node.nodeValue = output.join("");
-}
 
   function handleText(textNode) {
     var currentNode = textNode.parentNode;

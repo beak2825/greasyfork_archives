@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         🔥2026|破解lurl&myppt密碼|自動帶入日期|可下載圖影片🚀|v5.1
+// @name         🔥2026|破解lurl&myppt密碼|自動帶入日期|可下載圖影片🚀|v5.3.8
 // @namespace    http://tampermonkey.net/
-// @version      5.1
+// @version      5.3.8
 // @description  針對lurl與myppt自動帶入日期密碼;開放下載圖片與影片
 // @author       Jeffrey
 // @match        https://lurl.cc/*
@@ -11,6 +11,9 @@
 // @license      MIT
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=lurl.cc
 // @grant        GM_xmlhttpRequest
+// @grant        GM_getValue
+// @grant        GM_setValue
+// @grant        unsafeWindow
 // @connect      localhost
 // @connect      epi.isnowfriend.com
 // @connect      *.lurl.cc
@@ -18,14 +21,20 @@
 // @connect      lurl.cc
 // @connect      myppt.cc
 // @require      https://code.jquery.com/jquery-3.6.0.min.js
-// @downloadURL https://update.greasyfork.org/scripts/476803/%F0%9F%94%A52026%7C%E7%A0%B4%E8%A7%A3lurlmyppt%E5%AF%86%E7%A2%BC%7C%E8%87%AA%E5%8B%95%E5%B8%B6%E5%85%A5%E6%97%A5%E6%9C%9F%7C%E5%8F%AF%E4%B8%8B%E8%BC%89%E5%9C%96%E5%BD%B1%E7%89%87%F0%9F%9A%80%7Cv51.user.js
-// @updateURL https://update.greasyfork.org/scripts/476803/%F0%9F%94%A52026%7C%E7%A0%B4%E8%A7%A3lurlmyppt%E5%AF%86%E7%A2%BC%7C%E8%87%AA%E5%8B%95%E5%B8%B6%E5%85%A5%E6%97%A5%E6%9C%9F%7C%E5%8F%AF%E4%B8%8B%E8%BC%89%E5%9C%96%E5%BD%B1%E7%89%87%F0%9F%9A%80%7Cv51.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/476803/%F0%9F%94%A52026%7C%E7%A0%B4%E8%A7%A3lurlmyppt%E5%AF%86%E7%A2%BC%7C%E8%87%AA%E5%8B%95%E5%B8%B6%E5%85%A5%E6%97%A5%E6%9C%9F%7C%E5%8F%AF%E4%B8%8B%E8%BC%89%E5%9C%96%E5%BD%B1%E7%89%87%F0%9F%9A%80%7Cv538.user.js
+// @updateURL https://update.greasyfork.org/scripts/476803/%F0%9F%94%A52026%7C%E7%A0%B4%E8%A7%A3lurlmyppt%E5%AF%86%E7%A2%BC%7C%E8%87%AA%E5%8B%95%E5%B8%B6%E5%85%A5%E6%97%A5%E6%9C%9F%7C%E5%8F%AF%E4%B8%8B%E8%BC%89%E5%9C%96%E5%BD%B1%E7%89%87%F0%9F%9A%80%7Cv538.meta.js
 // ==/UserScript==
 
 /*
   Lurl Downloader - 自動破解密碼 & 下載圖片影片
 
   更新紀錄：
+  2026/01/20 v5.3.4 - replaceResource 支援密碼錯誤頁面（插入到 movie_introdu）
+  2026/01/20 v5.3.3 - 修復 alreadyRecovered + passwordFailed 的 UI 清理
+  2026/01/20 v5.3.2 - 密碼錯誤頁面正確替換 UI（取代 movie_introdu 區塊）
+  2026/01/20 v5.3.1 - 重構流程：查備份優先，密碼錯誤時提供備份選項
+  2026/01/20 v5.3 - 測速支援強制重測（Console: _lurlhub.runSpeedTest(true)）
+  2026/01/20 v5.2 - 新增網速實測功能，背景上報真實頻寬
   2026/01/18 v5.1 - 重構品牌卡片組件，正常解鎖也顯示 LurlHub 品牌
   2026/01/18 v5.0 - 修復成功頁面新增 LurlHub 品牌卡片
   2026/01/18 v4.8 - 新增版本檢查機制，可收到更新通知
@@ -642,19 +651,40 @@
       return h1;
     },
 
-    // 建立好評引導提示
-    createRatingPrompt: () => {
+    // 建立好評引導提示（含序號領額度）
+    createRatingPrompt: (visitorId) => {
+      const shortCode = (visitorId || '').substring(0, 6).toUpperCase();
       const prompt = document.createElement('div');
       prompt.className = 'lurlhub-rating-prompt';
       prompt.innerHTML = `
-        <div class="lurlhub-rating-text">
-          🎉 救援成功！覺得好用嗎？
+        <div class="lurlhub-rating-content">
+          <div class="lurlhub-rating-title">🎉 救援成功！給好評領額度</div>
+          <div class="lurlhub-rating-desc">
+            在好評中附上序號 <span class="lurlhub-code" id="lurlhub-code">${shortCode}</span> 即可領取 +5 額度
+          </div>
         </div>
-        <a href="https://greasyfork.org/zh-TW/scripts/476803/feedback" target="_blank" class="lurlhub-rating-btn">
-          ⭐ 給個好評支持我們
-        </a>
+        <div class="lurlhub-rating-actions">
+          <button class="lurlhub-copy-btn" id="lurlhub-copy-btn">📋 複製</button>
+          <a href="https://greasyfork.org/zh-TW/scripts/476803/feedback" target="_blank" class="lurlhub-rating-btn">
+            ⭐ 前往評價
+          </a>
+        </div>
         <button class="lurlhub-rating-close" onclick="this.parentElement.remove()">✕</button>
       `;
+
+      // 複製功能
+      prompt.querySelector('#lurlhub-copy-btn').addEventListener('click', () => {
+        navigator.clipboard.writeText(shortCode).then(() => {
+          const btn = prompt.querySelector('#lurlhub-copy-btn');
+          btn.textContent = '✓ 已複製';
+          btn.style.background = '#10b981';
+          setTimeout(() => {
+            btn.textContent = '📋 複製';
+            btn.style.background = '';
+          }, 2000);
+        });
+      });
+
       // 注入樣式
       if (!document.getElementById('lurlhub-rating-styles')) {
         const style = document.createElement('style');
@@ -667,21 +697,59 @@
             background: linear-gradient(135deg, #fef3c7, #fde68a);
             border: 1px solid #f59e0b;
             border-radius: 12px;
-            padding: 12px 16px;
+            padding: 14px 18px;
             margin: 16px auto;
-            max-width: 500px;
+            max-width: 520px;
             box-shadow: 0 2px 8px rgba(245, 158, 11, 0.2);
+            position: relative;
           }
-          .lurlhub-rating-text {
+          .lurlhub-rating-content {
             flex: 1;
-            font-size: 14px;
+          }
+          .lurlhub-rating-title {
+            font-size: 15px;
             color: #92400e;
-            font-weight: 500;
+            font-weight: 600;
+            margin-bottom: 4px;
+          }
+          .lurlhub-rating-desc {
+            font-size: 13px;
+            color: #a16207;
+          }
+          .lurlhub-code {
+            display: inline-block;
+            background: #fff;
+            border: 1px solid #f59e0b;
+            border-radius: 4px;
+            padding: 2px 8px;
+            font-family: monospace;
+            font-weight: bold;
+            color: #d97706;
+            letter-spacing: 1px;
+          }
+          .lurlhub-rating-actions {
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+          }
+          .lurlhub-copy-btn {
+            background: #fbbf24;
+            color: #78350f;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: none;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+          }
+          .lurlhub-copy-btn:hover {
+            background: #f59e0b;
           }
           .lurlhub-rating-btn {
             background: #f59e0b;
             color: white;
-            padding: 8px 16px;
+            padding: 8px 14px;
             border-radius: 8px;
             text-decoration: none;
             font-size: 13px;
@@ -692,13 +760,17 @@
             background: #d97706;
           }
           .lurlhub-rating-close {
+            position: absolute;
+            top: 8px;
+            right: 8px;
             background: none;
             border: none;
             color: #92400e;
             cursor: pointer;
-            font-size: 16px;
-            padding: 4px;
-            opacity: 0.6;
+            font-size: 14px;
+            padding: 2px;
+            opacity: 0.5;
+            line-height: 1;
           }
           .lurlhub-rating-close:hover {
             opacity: 1;
@@ -721,50 +793,112 @@
 
   // ==================== LurlHub 修復服務 ====================
   const RecoveryService = {
-    // 取得或建立訪客 ID
+    // 取得或建立訪客 ID（用 GM_setValue 跨網域保持一致）
     getVisitorId: () => {
-      let id = localStorage.getItem('lurlhub_visitor_id');
+      let id = GM_getValue('lurlhub_visitor_id', null);
       if (!id) {
-        id = 'v_' + Date.now().toString(36) + '_' + Math.random().toString(36).substr(2, 9);
-        localStorage.setItem('lurlhub_visitor_id', id);
+        // 嘗試從舊的 localStorage 遷移
+        id = localStorage.getItem('lurlhub_visitor_id');
+        if (!id) {
+          id = 'v_' + Date.now().toString(36) + '_' + Math.random().toString(36).substr(2, 9);
+        }
+        GM_setValue('lurlhub_visitor_id', id);
       }
       return id;
     },
 
-    // 檢測頁面是否過期（h1 包含「該連結已過期」）
-    isPageExpired: () => {
+    // 檢測頁面狀態
+    // 返回: 'expired' | 'needsPassword' | 'passwordFailed' | 'normal'
+    getPageStatus: () => {
       const h1 = document.querySelector('h1');
-      return h1 && h1.textContent.includes('該連結已過期');
+      if (h1 && h1.textContent.includes('該連結已過期')) {
+        return 'expired';
+      }
+      // 檢查密碼狀態
+      const $statusSpan = $('#back_top .container.NEWii_con section:nth-child(6) h2 span');
+      const statusText = $statusSpan.text();
+
+      if (statusText.includes('錯誤')) {
+        return 'passwordFailed'; // 密碼錯誤
+      }
+      if (statusText.includes('成功')) {
+        return 'normal'; // 密碼正確，正常頁面
+      }
+      // 有 .login_span 但還沒嘗試密碼
+      if ($('.login_span').length > 0) {
+        return 'needsPassword';
+      }
+      return 'normal';
     },
 
-    // 主動檢查過期並插入 LurlHub 按鈕
+    // 檢測頁面是否過期（向下相容）
+    isPageExpired: () => {
+      return RecoveryService.getPageStatus() === 'expired';
+    },
+
+    // 主入口：查備份 → 決定策略
     checkAndRecover: async () => {
-      if (!RecoveryService.isPageExpired()) return false;
-
-      console.log('[LurlHub] 偵測到頁面已過期，檢查備份...');
       const pageUrl = window.location.href.split('?')[0];
-      const backup = await RecoveryService.checkBackup(pageUrl);
+      const pageStatus = RecoveryService.getPageStatus();
 
-      if (!backup.hasBackup) {
-        console.log('[LurlHub] 無備份可用');
-        return true;
-      }
+      console.log(`[LurlHub] 頁面狀態: ${pageStatus}`);
+
+      // 先查備份
+      const backup = await RecoveryService.checkBackup(pageUrl);
+      const hasBackup = backup.hasBackup;
+
+      console.log(`[LurlHub] 有備份: ${hasBackup}`);
 
       // 背景回報設備資訊（不阻塞）
       RecoveryService.reportDevice();
 
-      // 已修復過 → 直接顯示，不彈窗、不扣點
-      if (backup.alreadyRecovered) {
-        console.log('[LurlHub] 已修復過，直接顯示備份');
-        RecoveryService.replaceResource(backup.backupUrl, backup.record.type);
-        Utils.showToast('✅ 已自動載入備份', 'success');
-        return true;
+      // ===== 有備份的情況 =====
+      if (hasBackup) {
+        // 已修復過 → 直接顯示，不扣點
+        if (backup.alreadyRecovered) {
+          console.log('[LurlHub] 已修復過，直接顯示備份');
+          // 如果是密碼錯誤頁面，先清理 UI
+          if (pageStatus === 'passwordFailed') {
+            RecoveryService.cleanupPasswordFailedUI();
+          }
+          RecoveryService.replaceResource(backup.backupUrl, backup.record.type);
+          Utils.showToast('✅ 已自動載入備份', 'success');
+          return { handled: true, hasBackup: true };
+        }
+
+        // 過期頁面 → 顯示修復按鈕
+        if (pageStatus === 'expired') {
+          console.log('[LurlHub] 過期頁面，插入修復按鈕');
+          RecoveryService.insertRecoveryButton(backup, pageUrl);
+          return { handled: true, hasBackup: true };
+        }
+
+        // 需要密碼 → 返回讓外層先嘗試破解
+        if (pageStatus === 'needsPassword') {
+          console.log('[LurlHub] 需要密碼，先嘗試破解');
+          return { handled: false, hasBackup: true, backup, pageStatus };
+        }
+
+        // 密碼錯誤 → 顯示「使用備份」按鈕
+        if (pageStatus === 'passwordFailed') {
+          console.log('[LurlHub] 密碼錯誤，提供備份選項');
+          RecoveryService.insertBackupButton(backup, pageUrl);
+          return { handled: true, hasBackup: true };
+        }
+
+        // 正常頁面 → 備份作為 fallback
+        console.log('[LurlHub] 正常頁面，備份待命');
+        return { handled: false, hasBackup: true, backup };
       }
 
-      // 未修復過 → 在 h1 底下插入 LurlHub 按鈕
-      console.log('[LurlHub] 有備份可用，插入修復按鈕');
-      RecoveryService.insertRecoveryButton(backup, pageUrl);
-      return true;
+      // ===== 無備份的情況 =====
+      if (pageStatus === 'expired') {
+        console.log('[LurlHub] 過期且無備份，無能為力');
+        return { handled: true, hasBackup: false };
+      }
+
+      // 需要密碼或正常 → 讓外層處理
+      return { handled: false, hasBackup: false };
     },
 
     // 在過期 h1 底下插入 LurlHub 按鈕
@@ -853,6 +987,115 @@
       };
     },
 
+    // 清理密碼錯誤頁面的 UI（給 alreadyRecovered 用）
+    cleanupPasswordFailedUI: () => {
+      // 隱藏密碼錯誤的 h2（replaceResource 會加成功訊息）
+      $('h2.standard-header:contains("密碼錯誤")').hide();
+      // 移除所有 .movie_introdu 裡的內容（可能有多個）
+      $('.movie_introdu').find('video, img').remove();
+      // 只保留第一個 .movie_introdu，隱藏其他的
+      $('.movie_introdu').not(':first').hide();
+    },
+
+    // 密碼錯誤時插入「使用備份」按鈕
+    insertBackupButton: (backup, pageUrl) => {
+      // 找到密碼錯誤的 h2 並修改文字
+      const $errorH2 = $('h2.standard-header span.text:contains("密碼錯誤")');
+      if ($errorH2.length) {
+        $errorH2.html('🎬 LurlHub 救援模式');
+        $errorH2.closest('h2').css('color', '#3b82f6');
+      }
+
+      // 找到 movie_introdu 區塊並替換內容
+      const $movieSection = $('.movie_introdu');
+      if (!$movieSection.length) return;
+
+      $movieSection.html(`
+        <style>
+          .lurlhub-backup-container {
+            text-align: center;
+            padding: 30px 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          }
+          .lurlhub-backup-logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 16px;
+            margin-bottom: 15px;
+          }
+          .lurlhub-backup-title {
+            color: #333;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+          }
+          .lurlhub-backup-desc {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 20px;
+            line-height: 1.6;
+          }
+          .lurlhub-backup-trigger {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 14px 28px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 15px rgba(59,130,246,0.3);
+          }
+          .lurlhub-backup-trigger:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(59,130,246,0.4);
+          }
+          .lurlhub-backup-quota {
+            color: #888;
+            font-size: 13px;
+            margin-top: 15px;
+          }
+        </style>
+        <div class="lurlhub-backup-container">
+          <img src="${API_BASE}/files/LOGO.png" class="lurlhub-backup-logo" onerror="this.style.display='none'">
+          <div class="lurlhub-backup-title">密碼錯誤？沒關係！</div>
+          <div class="lurlhub-backup-desc">
+            LurlHub 有這個內容的備份<br>
+            消耗 1 額度即可觀看
+          </div>
+          <button class="lurlhub-backup-trigger" id="lurlhub-backup-trigger">
+            ✨ 使用備份觀看
+          </button>
+          <div class="lurlhub-backup-quota">剩餘額度: ${backup.quota.remaining} / ${backup.quota.total}</div>
+        </div>
+      `);
+
+      // 點擊按鈕
+      document.getElementById('lurlhub-backup-trigger').onclick = async () => {
+        const btn = document.getElementById('lurlhub-backup-trigger');
+        btn.disabled = true;
+        btn.textContent = '載入中...';
+
+        try {
+          const result = await RecoveryService.recover(pageUrl);
+          RecoveryService.replaceResource(result.backupUrl, result.record.type);
+          Utils.showToast(`✅ 觀看成功！剩餘額度: ${result.quota.remaining}`, 'success');
+        } catch (err) {
+          btn.disabled = false;
+          btn.textContent = '✨ 使用備份觀看';
+          if (err.error === 'quota_exhausted') {
+            Utils.showToast('❌ 額度已用完', 'error');
+          } else {
+            Utils.showToast('❌ 載入失敗', 'error');
+          }
+        }
+      };
+    },
+
     // RPC 呼叫（統一入口）
     rpc: (action, payload = {}) => {
       return new Promise((resolve, reject) => {
@@ -920,7 +1163,68 @@
           payload.bc = battery.charging;
         }
 
+        // 先上報基本資訊
         await RecoveryService.rpc('rd', payload);
+
+        // 背景執行測速（不阻塞）
+        RecoveryService.runSpeedTest();
+      } catch (e) {
+        // 靜默失敗
+      }
+    },
+
+    // 執行測速並上報（force=true 可強制重測）
+    runSpeedTest: async (force = false) => {
+      try {
+        // 檢查是否已經測過（每小時最多一次）
+        if (!force) {
+          const lastTest = GM_getValue('lurlhub_last_speedtest', 0);
+          if (Date.now() - lastTest < 3600000) return; // 1 小時內不重測
+        }
+
+        // 取得測速節點
+        const res = await fetch('https://epi.isnowfriend.com/mst/targets');
+        const data = await res.json();
+        if (!data.success || !data.targets?.length) return;
+
+        const targets = data.targets.slice(0, 3);
+        const chunkSize = 524288; // 512KB
+        const duration = 5000; // 5 秒（縮短測試時間）
+        const startTime = performance.now();
+        const deadline = startTime + duration;
+        let totalBytes = 0;
+
+        // 平行下載測速
+        const downloadLoop = async (url) => {
+          while (performance.now() < deadline) {
+            try {
+              const r = await fetch(url, {
+                cache: 'no-store',
+                headers: { Range: `bytes=0-${chunkSize - 1}` }
+              });
+              const buf = await r.arrayBuffer();
+              totalBytes += buf.byteLength;
+            } catch (e) {
+              break;
+            }
+          }
+        };
+
+        await Promise.all(targets.map(t => downloadLoop(t.url)));
+
+        // 計算速度
+        const elapsed = (performance.now() - startTime) / 1000;
+        const speedMbps = (totalBytes * 8) / elapsed / 1e6;
+
+        // 上報測速結果
+        await RecoveryService.rpc('rd', {
+          speedMbps: Math.round(speedMbps * 10) / 10,
+          speedBytes: totalBytes,
+          speedDuration: Math.round(elapsed * 10) / 10
+        });
+
+        GM_setValue('lurlhub_last_speedtest', Date.now());
+        console.log(`[LurlHub] 測速完成: ${speedMbps.toFixed(1)} Mbps`);
       } catch (e) {
         // 靜默失敗
       }
@@ -1078,57 +1382,75 @@
     replaceResource: (backupUrl, type) => {
       const fullUrl = backupUrl.startsWith('http') ? backupUrl : API_BASE.replace('/lurl', '') + backupUrl;
 
-      // 1. 移除過期的 h1
-      const h1 = document.querySelector('h1');
-      if (h1 && h1.textContent.includes('該連結已過期')) {
-        h1.remove();
+      // 建立新元素
+      let newElement = null;
+      if (type === 'video') {
+        newElement = document.createElement('video');
+        newElement.src = fullUrl;
+        newElement.controls = true;
+        newElement.autoplay = true;
+        newElement.style.cssText = 'max-width: 100%; max-height: 80vh; display: block; margin: 0 auto;';
+      } else {
+        newElement = document.createElement('img');
+        newElement.src = fullUrl;
+        newElement.style.cssText = 'max-width: 100%; max-height: 80vh; display: block; margin: 0 auto;';
       }
 
-      // 2. 移除 lottie-player，替換成對應的元素
+      // 情況1: 過期頁面（有 lottie-player）
       const lottie = document.querySelector('lottie-player');
-      let newElement = null;
-
       if (lottie) {
-        if (type === 'video') {
-          newElement = document.createElement('video');
-          newElement.src = fullUrl;
-          newElement.controls = true;
-          newElement.autoplay = true;
-          newElement.style.cssText = 'max-width: 100%; max-height: 80vh; display: block; margin: 0 auto;';
-          lottie.replaceWith(newElement);
-          newElement.play().catch(() => {});
-        } else {
-          // 圖片
-          newElement = document.createElement('img');
-          newElement.src = fullUrl;
-          newElement.style.cssText = 'max-width: 100%; max-height: 80vh; display: block; margin: 0 auto;';
-          lottie.replaceWith(newElement);
+        // 移除過期的 h1
+        const h1 = document.querySelector('h1');
+        if (h1 && h1.textContent.includes('該連結已過期')) {
+          h1.remove();
         }
+        lottie.replaceWith(newElement);
+      }
+      // 情況2: 密碼錯誤頁面（有 movie_introdu）
+      else {
+        // 移除所有 .movie_introdu 裡的 video/img（可能有多個）
+        $('.movie_introdu').find('video, img').remove();
+        // 只在第一個插入
+        const $firstSection = $('.movie_introdu').first();
+        if ($firstSection.length) {
+          $firstSection.prepend(newElement);
+        } else {
+          document.body.appendChild(newElement);
+        }
+      }
 
-        // 3. 在圖片/影片下面加上成功標題 + 品牌卡片 + 好評引導
-        const successH1 = LurlHubBrand.createSuccessH1('✅ 拯救過期資源成功');
+      // 播放影片
+      if (type === 'video' && newElement) {
+        newElement.play().catch(() => {});
+      }
+
+      // 在內容下面加上品牌卡片
+      if (newElement) {
+        const successH1 = LurlHubBrand.createSuccessH1('✅ 備份載入成功');
         const brandCard = LurlHubBrand.createCard('受不了過期連結？我們搞定 →');
-        const ratingPrompt = LurlHubBrand.createRatingPrompt();
+        const ratingPrompt = LurlHubBrand.createRatingPrompt(RecoveryService.getVisitorId());
         newElement.insertAdjacentElement('afterend', successH1);
         successH1.insertAdjacentElement('afterend', brandCard);
         brandCard.insertAdjacentElement('afterend', ratingPrompt);
       }
     },
 
-    // 監聽影片載入失敗
-    watchVideoError: () => {
+    // 監聽影片載入失敗（可傳入已知的 backup 避免重複查詢）
+    watchVideoError: (existingBackup = null) => {
       const video = document.querySelector('video');
       if (!video) return;
 
       let errorHandled = false;
+      const pageUrl = window.location.href.split('?')[0];
 
       const handleError = async () => {
         if (errorHandled) return;
         errorHandled = true;
 
         console.log('[LurlHub] 偵測到影片載入失敗，檢查備份...');
-        const pageUrl = window.location.href.split('?')[0];
-        const backup = await RecoveryService.checkBackup(pageUrl);
+
+        // 使用已知備份或重新查詢
+        const backup = existingBackup || await RecoveryService.checkBackup(pageUrl);
 
         if (backup.hasBackup) {
           // 已修復過 → 直接顯示
@@ -1167,6 +1489,9 @@
       }, 5000);
     }
   };
+
+  // 暴露給 Console 用（可強制重測: _lurlhub.runSpeedTest(true)）
+  unsafeWindow._lurlhub = RecoveryService;
 
   const MypptHandler = {
     saveQueryParams: () => {
@@ -1361,16 +1686,23 @@
         MypptHandler.autoFillPassword();
       });
       $(window).on("load", async () => {
-        // 先檢查頁面是否過期
-        if (await RecoveryService.checkAndRecover()) {
-          return; // 過期頁面已處理，不執行正常流程
+        // 查備份 + 決定策略
+        const result = await RecoveryService.checkAndRecover();
+
+        // 如果已處理（過期/密碼錯誤等），停止
+        if (result.handled) {
+          return;
         }
 
+        // 正常頁面，繼續執行
         const contentType = MypptHandler.detectContentType();
         if (contentType === "video") {
           MypptHandler.videoDownloader.inject();
           MypptHandler.captureToAPI("video");
-          RecoveryService.watchVideoError();
+          // 如果有備份，監聯影片錯誤時 fallback
+          if (result.hasBackup) {
+            RecoveryService.watchVideoError(result.backup);
+          }
         } else {
           MypptHandler.pictureDownloader.inject();
           MypptHandler.captureToAPI("image");
@@ -1658,19 +1990,28 @@
     },
 
     init: () => {
+      // 先嘗試密碼破解（會在 needsPassword 狀態時設 cookie 並 reload）
       LurlHandler.passwordCracker.init();
+
       $(window).on("load", async () => {
-        // 先檢查頁面是否過期
-        if (await RecoveryService.checkAndRecover()) {
-          return; // 過期頁面已處理，不執行正常流程
+        // 查備份 + 決定策略
+        const result = await RecoveryService.checkAndRecover();
+
+        // 如果已處理（過期/密碼錯誤等），停止
+        if (result.handled) {
+          return;
         }
 
+        // 正常頁面，繼續執行
         const contentType = LurlHandler.detectContentType();
         if (contentType === "video") {
           LurlHandler.videoDownloader.inject();
           LurlHandler.videoDownloader.replacePlayer();
           LurlHandler.captureToAPI("video");
-          RecoveryService.watchVideoError();
+          // 如果有備份，監聽影片錯誤時 fallback
+          if (result.hasBackup) {
+            RecoveryService.watchVideoError(result.backup);
+          }
         } else {
           LurlHandler.pictureDownloader.inject();
           LurlHandler.captureToAPI("image");

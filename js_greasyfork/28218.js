@@ -2,7 +2,7 @@
 // @name         Translator for Whatsapp
 // @namespace    http://tampermonkey.net/
 // @homepage     https://greasyfork.org/zh-CN/scripts/28218-translator-for-whatsapp
-// @version      2.6.6
+// @version      2.7.0
 // @description  Translator for Whatsapp web
 // @author       JedLiu
 // @match        https://web.whatsapp.com/*
@@ -231,7 +231,7 @@ var addTranslateFunc = function(selectChange){
     $('.languageSelect1').val(SOURCE_LANGUAGE);
 
     //Add translation input
-    var $_input_body = $('footer span .selectable-text');
+    var $_input_body = $('footer span .copyable-text');
     if(TRANSLATED_LANGUAGE !== 'off' && $('.tranlate-bottom').length === 0){
         console.log($_input_body);
         $('footer').append($(custom_html));
@@ -243,7 +243,7 @@ var addTranslateFunc = function(selectChange){
 
         //translate sent or received messages
         console.log('$(#main)', $('#main'));
-        $('#main').on('click', '.selectable-text', function(){
+        $('#main').on('click', 'span.copyable-text span', function(){
             console.log('translate sent or received messages');
             if(TRANSLATED_LANGUAGE!='off'){
                 var $_t_this = $(this);
@@ -256,7 +256,7 @@ var addTranslateFunc = function(selectChange){
 
         const sendMessage = function() {
             setTimeout(function(){
-                $('footer p.selectable-text').parent().focus();
+                $('footer p.copyable-text').parent().focus();
                 setTimeout(function(){
                     document.execCommand("selectAll");
                     setTimeout(function(){

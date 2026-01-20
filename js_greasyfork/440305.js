@@ -1,83 +1,118 @@
 // ==UserScript==
 // @name Greasy Fork Install Button at search
 // @namespace -
-// @version 1.0.0
+// @version 1.1.0
 // @description adds install button at search and at user pages.
 // @author NotYou
-// @match *://*sleazyfork.org/*
-// @match *://*greasyfork.org/*
-// @grant none
+// @match *://sleazyfork.org/*
+// @match *://greasyfork.org/*
+// @grant GM.addStyle
+// @grant GM.addElement
 // @run-at document-idle
 // @license GPL-3.0-or-later
 // @downloadURL https://update.greasyfork.org/scripts/440305/Greasy%20Fork%20Install%20Button%20at%20search.user.js
 // @updateURL https://update.greasyfork.org/scripts/440305/Greasy%20Fork%20Install%20Button%20at%20search.meta.js
 // ==/UserScript==
 
-(function() {
-    var $ = (s) => document.querySelector(s)
-
-    var $$ = (s) => document.querySelectorAll(s)
-
-    var appendHTML = function(el, html) {
-        el.insertAdjacentHTML('beforeend', html)
+!function() {
+    const { protocol, hostname } = location
+    const linkBuilder = {
+        createUserScriptLink: (scriptId, scriptName) => `${protocol}//${hostname}/scripts/${scriptId}/code/${scriptName}.user.js`,
+        createUserStyleLink: (styleId, styleName) => `${protocol}//${hostname}/scripts/${styleId}/code/${styleName}.user.css`,
+        createLibraryLink: (libraryId, libraryName) => `${protocol}//${hostname}/scripts/${libraryId}/code/${libraryName}.js`
     }
 
-    var domain = location.host
+    GM.addStyle(`
+    .install-link.custom-install-link, .install-link.custom-install-link:hover {
+      display: inline;
+      font-size: 0.75rem;
+      border-radius: 0.25rem;
+      text-decoration: none;
+      padding: 0.25em 0.5em;
+      margin-left: 0.5em;
+      transition: background-color 200ms;
+    }
 
-    // STYLES
-    appendHTML($('head'), ['<style>',
+    .custom-install-link:hover {
+      background-color: rgb(30, 151, 30);
+    }
+    `)
 
-    '.custom-install-link-parent {',
-      'text-decoration: none !important;',
-    '}',
+    // User Styles
 
-    '.custom-install-link-parent > * {',
-      'transform: scale(0.7);',
-    '}',
+    document.querySelectorAll(
+        '#user-script-list > li[data-script-language="css"] > article > h2 > a,' +
+        '#browse-script-list > li[data-script-language="css"] > article > h2 > a'
+    ).forEach(async ($styleLink) => {
+        const styleData = $styleLink.parentNode.parentNode.parentNode.dataset
 
-    '.custom-install-link {',
-      'margin-right: -15px !important;',
-      'margin-left: -6px !important;',
-    '}',
+        const $installAsStyleBtn = await GM.addElement('a', {
+            href: linkBuilder.createUserStyleLink(styleData.scriptId, styleData.scriptName),
+            class: 'install-link custom-install-link',
+            textContent: 'Install as style',
+            target: '_blank',
 
-    '.custom-install-style-link {',
-      'margin-left: -14px !important;',
-      'margin-right: -26px !important;',
-    '}',
+            'data-install-format': 'css',
+            'data-script-id': styleData.scriptId,
+            'data-script-name': styleData.scriptName,
+            'data-post-install-url': location.href
+        })
 
-    '</style>'].join(''))
-
-    // USER SCRIPT
-
-    $$('#user-script-list > li[data-script-type="public"] > article > h2 > a, #browse-script-list > li[data-script-type="public"] > article > h2 > a').forEach(function(e) {
-        var data = e.parentNode.parentNode.parentNode.dataset
-        var scriptId = data.scriptId
-        var scriptName = data.scriptName
-
-        appendHTML(e, '<span data-install-format="js" data-script-id="'+ scriptId +'" data-script-name="' + scriptName + '"><a href="https://' + domain + '/scripts/' + scriptId + '/code/' + scriptName + '.user.js" class="custom-install-link-parent"><span class="install-link custom-install-link">Install</span></a><span>')
+        $styleLink.after($installAsStyleBtn)
     })
 
-    // USER STYLE
+    // User Scripts
 
-    $$('#user-script-list > li[data-script-language="css"] > article > h2 > a, #browse-script-list > li[data-script-language="css"] > article > h2 > a').forEach(function(e) {
-        var data = e.parentNode.parentNode.parentNode.dataset
-        var scriptId = data.scriptId
-        var scriptName = data.scriptName
+    document.querySelectorAll(
+        '#user-script-list > li[data-script-type="public"] > article > h2 > a,' +
+        '#browse-script-list > li[data-script-type="public"] > article > h2 > a'
+    ).forEach(async ($scriptLink) => {
+        const scriptData = $scriptLink.parentNode.parentNode.parentNode.dataset
 
-        appendHTML(e, '<span data-install-format="css" data-script-id="'+ scriptId +'" data-script-name="' + scriptName + '"><a target="_blank" href="https://' + domain + '/scripts/' + scriptId + '/code/' + scriptName + '.user.css" class="custom-install-link-parent"><span class="install-link custom-install-link custom-install-style-link">Install as style</span></a><span>')
+        const $installBtn = await GM.addElement('a', {
+            href: linkBuilder.createUserScriptLink(scriptData.scriptId, scriptData.scriptName),
+            class: 'install-link custom-install-link',
+            textContent: 'Install',
+
+            'data-install-format': 'js',
+            'data-script-id': scriptData.scriptId,
+            'data-script-name': scriptData.scriptName,
+            'data-post-install-url': location.href
+        })
+
+        $scriptLink.after($installBtn)
     })
 
-    // LIBRARIES
+    // Libraries
 
-    $$('#user-library-script-list > li > article > h2 > a, #browse-script-list > li[data-script-type="library"] > article > h2 > a').forEach(function(e) {
-        var data = e.parentNode.parentNode.parentNode.dataset
-        var scriptId = data.scriptId
-        var scriptName = data.scriptName
-        var _scriptName = scriptName.replace(/\s/g, "-")
+    document.querySelectorAll(
+        '#user-library-script-list > li > article > h2 > a, ' +
+        '#browse-script-list > li[data-script-type="library"] > article > h2 > a'
+    ).forEach(async ($libraryLink) => {
+        const libraryData = $libraryLink.parentNode.parentNode.parentNode.dataset
+        const libraryName = libraryData.scriptName.replace(/\s/g, "-")
 
-        appendHTML(e, '<span data-install-format="js" data-script-id="'+ scriptId +'" data-script-name="' + scriptName + '"><a href=javascript:void(0) onclick=navigator.clipboard.writeText("https://' + domain + '/scripts/' + scriptId + '/code/' + _scriptName + '.js") class="custom-install-link-parent"><span class="install-link custom-install-link">Copy URL</span></a><span>')
+        const $copyUrlBtn = await GM.addElement('a', {
+            href: '#!',
+            class: 'install-link custom-install-link',
+            textContent: 'Copy URL'
+        })
+
+        $copyUrlBtn.addEventListener('click', ev => {
+            ev.preventDefault()
+
+            const libraryUrl = linkBuilder.createLibraryLink(libraryData.scriptId, libraryName)
+
+            navigator.clipboard.writeText(libraryUrl)
+
+            alert(`"${libraryUrl}" url is copied!`)
+        })
+
+        $libraryLink.after($copyUrlBtn)
+
+        // 'span data-install-format="js" data-script-id="'+ scriptId +'" data-script-name="' + scriptName + '"><a href=javascript:void(0) onclick=navigator.clipboard.writeText("https://' + domain + '/scripts/' + scriptId + '/code/' + _scriptName + '.js") class="install-link custom-install-link">Copy URL</a>'
     })
-})()
+}()
 
 
 

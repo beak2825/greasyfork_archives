@@ -1,13 +1,13 @@
 // ==UserScript==
 // @name         Chzzk Auto Refresh
 // @namespace    http://tampermonkey.net/
-// @version      2.4
-// @description  방송 시작은 즉시 감지하고,새로고침합니다.
-// @author       떱_
+// @version      3.0
+// @description  Web Worker를 사용하여 백그라운드 탭에서도 멈추지 않고 방송 시작을 감지합니다.
+// @author       You
 // @match        https://chzzk.naver.com/live/*
 // @icon         https://ssl.pstatic.net/static/nng/glive/icon/favicon.png
 // @grant        none
-// @license      MIT	
+// @license      MIT
 // @downloadURL https://update.greasyfork.org/scripts/563234/Chzzk%20Auto%20Refresh.user.js
 // @updateURL https://update.greasyfork.org/scripts/563234/Chzzk%20Auto%20Refresh.meta.js
 // ==/UserScript==
@@ -19,23 +19,50 @@
     const CHECK_INTERVAL = 3000;      // 3초마다 체크
     const COOLDOWN_TIME = 120000;     // 방송 종료 후 2분 대기
     const AUTO_REFRESH_SECONDS = 5;   // 자동 새로고침 대기 시간
-    const STUCK_THRESHOLD = 3;        // 이미 켜진 방송에서 멈춤 판단 기준 (3회)
+    const STUCK_THRESHOLD = 3;        // 로딩 오탐 방지 카운트
 
     let isPageLoaded = false;
     let hasAlerted = false;
     let lastPlayingTime = 0;
     let cooldownUntil = 0;
-    let mainIntervalId = null;
     let consecutiveStuckCount = 0;
-    
-    // [신규] 이전 방송 상태 기록 (null / 'OPEN' / 'CLOSE')
     let previousApiStatus = null;
+    let worker = null; // Web Worker 변수
 
     // 페이지 로드 후 5초 대기
     setTimeout(() => {
         isPageLoaded = true;
-        console.log("🟢 [Auto Refresh] 감시 시작");
+        console.log("🟢 [Auto Refresh] 감시 시작 (Worker 모드)");
+        startWorker(); // Worker 가동 시작
     }, 5000);
+
+    // --- Web Worker 설정 (백그라운드 스로틀링 회피용) ---
+    function startWorker() {
+        // Worker 내부 스크립트 정의 (별도의 쓰레드에서 돕니다)
+        const workerScript = `
+            self.onmessage = function(e) {
+                if (e.data === 'start') {
+                    setInterval(function() {
+                        self.postMessage('tick');
+                    }, ${CHECK_INTERVAL});
+                }
+            };
+        `;
+
+        // Blob으로 Worker 생성
+        const blob = new Blob([workerScript], { type: 'application/javascript' });
+        worker = new Worker(URL.createObjectURL(blob));
+
+        // Worker가 신호를 보낼 때마다 메인 로직 실행
+        worker.onmessage = function(e) {
+            if (e.data === 'tick') {
+                checkLiveStatus();
+            }
+        };
+
+        // 타이머 시작 명령
+        worker.postMessage('start');
+    }
 
     // --- 유틸리티 ---
     function isValidLiveUrl() {
@@ -55,7 +82,6 @@
         return !video.paused && video.readyState > 2 && video.currentTime > 0;
     }
 
-    // 강력 새로고침 (Cache Busting)
     function forceReload() {
         const currentUrl = new URL(window.location.href);
         currentUrl.searchParams.set('refresh', Date.now());
@@ -107,7 +133,7 @@
 
         document.getElementById('czk_cancel_btn').onclick = () => {
             clearInterval(countdownInterval);
-            if (mainIntervalId) clearInterval(mainIntervalId);
+            if (worker) worker.terminate(); // Worker 종료
             modal.remove();
             console.log("🚫 감지 중단됨.");
             alert("자동 새로고침이 취소되었습니다.");
@@ -120,24 +146,21 @@
         if (!isPageLoaded || hasAlerted) return;
         if (Date.now() < cooldownUntil) return;
 
-        // 1. 영상 시청 중
         if (isVideoPlaying()) {
             lastPlayingTime = Date.now();
             consecutiveStuckCount = 0;
-            previousApiStatus = 'OPEN'; // 보고 있으면 당연히 OPEN
+            previousApiStatus = 'OPEN';
             return;
         }
 
-        // 2. 방송 종료 판단
         if (lastPlayingTime > 0 && (Date.now() - lastPlayingTime < 30000)) {
             console.warn("🛑 방송 종료. 2분 대기");
             cooldownUntil = Date.now() + COOLDOWN_TIME;
             lastPlayingTime = 0;
-            previousApiStatus = 'CLOSE'; // 종료되었으므로 상태 업데이트
+            previousApiStatus = 'CLOSE';
             return;
         }
 
-        // 3. API 체크
         const channelId = getChannelId();
         if (!channelId) return;
 
@@ -147,31 +170,30 @@
             const currentStatus = data.content?.status;
 
             if (currentStatus === 'OPEN') {
-                // [핵심 로직]
-                // Case A: 방금 전까지 'CLOSE' 였다가 'OPEN'이 됨 -> 방송 시작! (즉시 발동)
+                // A. 방송 시작 즉시 감지 (이전 상태가 CLOSE 였을 때)
                 if (previousApiStatus === 'CLOSE') {
-                    console.warn("🚨 [EVENT] 방송 시작 감지 (즉시 반응)");
+                    console.warn("🚨 [EVENT] 방송 시작 감지 (Wake Up!)");
                     hasAlerted = true;
                     showCustomModal("방송이 시작되었습니다!");
+
+                    // [추가] 혹시나 브라우저 탭이 자고 있을 때를 대비해 소리로 깨우거나 타이틀을 변경할 수도 있음
+                    document.title = "🔴 방송 시작!!";
                     return;
                 }
 
-                // Case B: 처음부터 'OPEN' 이거나 기록이 없음 -> 로딩 중일 수 있음 (신중 모드)
+                // B. 로딩 중 오탐 방지 (3회 체크)
                 consecutiveStuckCount++;
-                console.log(`⚠️ 방송 중이나 화면 멈춤 (${consecutiveStuckCount}/${STUCK_THRESHOLD})`);
+                console.log(`⚠️ 방송 중/화면 멈춤 (${consecutiveStuckCount}/${STUCK_THRESHOLD})`);
 
                 if (consecutiveStuckCount >= STUCK_THRESHOLD) {
-                    console.warn("🚨 [EVENT] 화면 멈춤 지속 감지");
                     hasAlerted = true;
                     showCustomModal("화면이 멈춰있어 새로고침합니다.");
                 }
 
             } else {
-                // 방송 중 아님
                 consecutiveStuckCount = 0;
             }
-            
-            // 상태 기록 업데이트
+
             previousApiStatus = currentStatus;
 
         } catch (error) {
@@ -179,7 +201,14 @@
         }
     }
 
-    console.log("🟢 [Auto Refresh] v2.3 로드됨 (즉시 감지 & 오탐 방지)");
-    mainIntervalId = setInterval(checkLiveStatus, CHECK_INTERVAL);
+    // [보너스] 사용자가 탭을 다시 클릭했을 때(화면 복귀 시) 즉시 한 번 더 체크
+    document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === 'visible' && !hasAlerted) {
+            console.log("👀 탭 활성화 감지: 즉시 상태 확인");
+            checkLiveStatus();
+        }
+    });
+
+    console.log("🟢 [Auto Refresh] v3.0 로드됨 (강력한 백그라운드 감지)");
 
 })();

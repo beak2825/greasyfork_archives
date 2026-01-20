@@ -4,7 +4,7 @@
 // @namespace       https://github.com/catscarlet/Download-from-JiMeng-without-Watermark
 // @description     从即梦AI（jimeng.jianying.com）下载无水印视频. Download Origin Video from jimeng.jianying.com without Watermark
 // @description:en  Download Origin Video from jimeng.jianying.com without Watermark. 从即梦AI（jimeng.jianying.com）下载无水印视频
-// @version         0.0.3
+// @version         0.0.4
 // @author          catscarlet
 // @license         GNU Affero General Public License v3.0
 // @match           https://jimeng.jianying.com/ai-tool/*
@@ -29,16 +29,16 @@
 
             debounceTimer = setTimeout(() => {
 
-                document.querySelectorAll('.video-wrapper-syJsMl').forEach(videoWrapper => {
+                document.querySelectorAll('.video-wrapper-n_RhyO').forEach(videoWrapper => {
 
                     const grandParent1 = videoWrapper.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode;
 
-                    if (grandParent1.className == 'video-record-content-dejFeW') {
+                    if (grandParent1.className == 'video-record-content-JwGmeX') {
 
                         const checkBtn1 = grandParent1.querySelector('.noWaterMarkDownloadVideoButton');
 
                         if (!checkBtn1) {
-                            const promptNode = grandParent1.parentNode.previousSibling.querySelector('.prompt-DO1VXC');
+                            const promptNode = grandParent1.parentNode.previousSibling.querySelector('.prompt-P_8aF8');
                             const fileName = getFileName(promptNode);
                             const downloadVideoButton = generateDownloadVideoButton(fileName);
                             downloadVideoButton.addEventListener('click', async () => {
@@ -47,14 +47,14 @@
 
                             grandParent1.append(downloadVideoButton);
                         }
-                    } else if (grandParent1.className.includes('lv-modal')) {
+                    } else if (!grandParent1.className.includes('video-element-TQKQjt')) {
                         const grandParent2 = videoWrapper.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode;
 
-                        const checkBtn2 = grandParent2.querySelector('.publish-button-LkMPnt').querySelector('.noWaterMarkDownloadVideoButton');
+                        const checkBtn2 = grandParent2.querySelector('.publish-button-C80dLI').querySelector('.noWaterMarkDownloadVideoButton');
 
                         if (!checkBtn2) {
 
-                            const promptNode = grandParent2.querySelector('.prompt-value-text-Lf5Gx7');
+                            const promptNode = grandParent2.querySelector('.prompt-value-p42svP');
                             const fileName = getFileName(promptNode);
                             const downloadVideoButton = generateDownloadVideoButton(fileName);
 
@@ -62,7 +62,7 @@
                                 getCrossOriginVideo(videoWrapper, downloadVideoButton, fileName);
                             });
 
-                            grandParent2.querySelector('.publish-button-LkMPnt').prepend(downloadVideoButton);
+                            grandParent2.querySelector('.publish-button-C80dLI').prepend(downloadVideoButton);
                         }
 
                     } else {

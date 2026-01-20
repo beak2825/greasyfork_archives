@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name         AI语言学习专家 (V3.7 Minified)
+// @name         AI语言学习专家 (Deepseek驱动)
 // @namespace    http://tampermonkey.net/
-// @version      V3.7-Mini
+// @version      V3.12-Scrollbar-Fix
 // @license      MIT
-// @description  全DeepSeek驱动的英语学习专家。V3.7代码体积优化版：界面HTML与CSS深度压缩，功能与V3.7完全一致。
+// @description  全DeepSeek驱动的英语学习专家。V3.12更新：1. 边缘触发范围扩大至20px；2. 右侧增加滚动条避让逻辑，从滚动条左侧开始计算触发区。
 // @author       Gemini & 豆包编程助手
 // @match        *://*/*
 // @run-at       document-end
@@ -14,8 +14,8 @@
 // @grant        GM_setClipboard
 // @connect      api.deepseek.com
 // @connect      api.dictionaryapi.dev
-// @downloadURL https://update.greasyfork.org/scripts/563162/AI%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0%E4%B8%93%E5%AE%B6%20%28V37%20Minified%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/563162/AI%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0%E4%B8%93%E5%AE%B6%20%28V37%20Minified%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/563162/AI%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0%E4%B8%93%E5%AE%B6%20%28Deepseek%E9%A9%B1%E5%8A%A8%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/563162/AI%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0%E4%B8%93%E5%AE%B6%20%28Deepseek%E9%A9%B1%E5%8A%A8%29.meta.js
 // ==/UserScript==
 
 (function() {
@@ -104,7 +104,8 @@
             sidebarLockUntil: 0,
             lastAltUpTime: 0,
             isAltDown: false,
-            isRestoring: false
+            isRestoring: false,
+            edgeTimer: null
         },
         consts: {
             API_URL: 'https://api.deepseek.com/v1/chat/completions',
@@ -217,11 +218,13 @@
             targetEl.querySelectorAll(tag).forEach(el => {
                 if (exclude.some(es => el.closest(es))) return;
                 const text = el.innerText.trim();
-                if (text.length > 10 && !isChinese(text)) {
+                // 修改：不再限制最小字数（原为>10），只要有内容且非纯中文即可，同时移除报警
+                if (text.length > 0 && !isChinese(text)) {
                     count++;
                     const transSpan = document.createElement('div');
                     transSpan.className = 'web-inline-trans ds-full-page-trans ds-inline-loading';
                     transSpan.style.color = '#1E90FF';
+                    transSpan.style.fontSize = '0.95em';
                     transSpan.style.fontSize = '0.95em';
                     el.appendChild(transSpan);
                     streamDeepSeekInline(text, transSpan);
@@ -229,7 +232,7 @@
             });
         });
         if(count > 0) DS_CONFIG.runtime.isPageTranslated = true;
-        else alert("未找到足够的可翻译正文内容。");
+        // 修改：移除了 else alert(...)，静默处理
     }
 
     function clearAllInlineTranslations() {
@@ -515,8 +518,8 @@
                 if (!continueMessages && aiMsg.innerText === "...") aiMsg.innerText = "";
                 let html = fullText.replace(/\*\*(.*?)\*\*/g,"<strong>$1</strong>");
                 if (targetWord && mode!=="summary" && mode!=="custom") {
-                     const reg = new RegExp(`(${targetWord})`,'gi');
-                     html = html.replace(reg,"<span class=\"highlight-word\">$1</span>");
+                      const reg = new RegExp(`(${targetWord})`,'gi');
+                      html = html.replace(reg,"<span class=\"highlight-word\">$1</span>");
                 }
                 aiMsg.innerHTML = html;
                 const threshold = 150;
@@ -670,14 +673,19 @@
     function showSmartPopup(text, targetHighlight, context = "", isSelection = false) {
         if (!DOM.popup) return;
         if (DS_CONFIG.state.isPopupLocked) {
-             DOM.popup.style.left = DS_CONFIG.state.savedPopupPos.x + 'px'; DOM.popup.style.top = DS_CONFIG.state.savedPopupPos.y + 'px'; DOM.popup.style.transform = 'none';
+              DOM.popup.style.left = DS_CONFIG.state.savedPopupPos.x + 'px'; DOM.popup.style.top = DS_CONFIG.state.savedPopupPos.y + 'px'; DOM.popup.style.transform = 'none';
         } else {
             let rect;
             if (isSelection) {
-                 try { rect = window.getSelection().getRangeAt(0).getBoundingClientRect(); } catch(e) { return; }
+                  try { rect = window.getSelection().getRangeAt(0).getBoundingClientRect(); } catch(e) { return; }
             } else if (targetHighlight) {
-                 rect = targetHighlight.getBoundingClientRect();
-            } else { return; }
+                  rect = targetHighlight.getBoundingClientRect();
+            } else {
+                  // Fallback for hover (non-highlight, non-selection)
+                  // Construct a fake rect around mouse
+                  rect = { top: DS_CONFIG.runtime.lastY - 10, bottom: DS_CONFIG.runtime.lastY + 10, left: DS_CONFIG.runtime.lastX - 10, width: 20, height: 20 };
+            }
+
             const pWidth = parseInt(DOM.popup.style.width || DS_CONFIG.settings.popupWidth) || 600;
             const pHeight = parseInt(DOM.popup.style.height || DS_CONFIG.settings.popupHeight) || 350;
             const viewportHeight = window.innerHeight; const viewportWidth = window.innerWidth;
@@ -742,7 +750,90 @@
         const container = document.createElement('div'); container.id = 'ds-sidebar';
         const promptString = DS_CONFIG.settings.customPrompts.map(p => `${p.name}=${p.template}`).join('\n');
 
-        container.innerHTML = `<div id="ds-resizer"></div><div id="ds-header"><div id="ds-header-left"><div id="ds-cfg-toggle" class="header-action" title="设置">⚙️</div><div id="ds-clear-cache" class="header-action" title="清除缓存">🗑️</div><div id="ds-help-btn" class="header-action" title="使用说明">💡</div></div><div id="ds-tabs-wrapper"><div class="ds-tab active" data-tab="highlight" title="生词本">📖</div><div class="ds-tab" data-tab="ai" title="AI 助手">💬</div></div><div id="ds-header-right"><div id="ds-side-toggle" class="header-action" title="切换侧边栏方向">👈🏻</div><div id="ds-full-page-trans-btn" class="header-action" title="全文翻译开关">🌐</div><div id="ds-close" class="header-action" title="关闭">✖</div></div></div><div id="ds-confirm-modal"><div class="ds-confirm-box"><div class="ds-confirm-text">确定要清空所有生词和缓存吗？</div><div class="ds-confirm-btns"><button id="ds-confirm-yes" class="ds-btn ds-btn-yes">确定清空</button><button id="ds-confirm-no" class="ds-btn ds-btn-no">取消</button></div></div></div><div id="ds-config-panel"><div class="ds-config-title">⚙️ 设置</div><div class="cfg-row" style="flex-direction:column;align-items:flex-start;"><span>DeepSeek API Key:</span><input type="text" id="cfg-api-key" style="width:100%;margin-top:5px;padding:6px;" value="${DS_CONFIG.settings.apiKey}"></div><div class="cfg-row" style="flex-direction:column;align-items:flex-start;"><span class="ds-instruction-text">自定义Prompt格式：</span><span class="ds-instruction-text ds-instruction-highlight">按钮名=prompt具体指令</span><textarea id="cfg-prompts" placeholder="按钮名称=具体指令内容\n每行一条...">${promptString}</textarea></div><button id="save-api-key" class="ds-primary-btn">保存并退出</button></div><div id="ds-help-panel"><div class="ds-help-title">💡 使用说明</div><div class="ds-help-item"><span class="ds-help-key">Alt + Alt</span><span class="ds-help-desc">快速双击 Alt 呼出/隐藏侧边栏，选中文本时双击可查词。</span></div><div class="ds-help-item"><span class="ds-help-key">Alt + 1</span><span class="ds-help-desc">高亮生词并查词。</span></div><div class="ds-help-item"><span class="ds-help-key">Alt + 2</span><span class="ds-help-desc">删除高亮。</span></div><div class="ds-help-item"><span class="ds-help-key">Alt + 左键</span><span class="ds-help-desc">段落翻译。</span></div><button id="ds-help-close" class="ds-primary-btn">关闭说明</button></div><div id="ds-tab-content"><div class="tab-panel active" data-panel="highlight" id="ds-highlight-content"></div><div class="tab-panel" data-panel="ai" id="ds-ai-content"><div id="ds-chat-log"></div></div></div><div id="ds-fn-bar"></div><div id="ds-input-area"><div id="ds-input-wrapper"><textarea id="ds-input" placeholder="DeepSeek AI 等待您的指令..."></textarea><div id="ds-send-row"><button id="ds-summary-btn" class="ds-action-btn">🧠 总结</button><button id="ds-send" class="ds-action-btn">🚀 发送</button></div></div></div>`;
+        container.innerHTML = `
+        <div id="ds-resizer"></div>
+        <div id="ds-header">
+            <div id="ds-header-left">
+                <div id="ds-cfg-toggle" class="header-action" title="设置">⚙️</div>
+                <div id="ds-clear-cache" class="header-action" title="清除缓存">🗑️</div>
+                <div id="ds-help-btn" class="header-action" title="使用说明">💡</div>
+            </div>
+            <div id="ds-tabs-wrapper">
+                <div class="ds-tab active" data-tab="highlight" title="生词本">📖</div>
+                <div class="ds-tab" data-tab="ai" title="AI 助手">💬</div>
+            </div>
+            <div id="ds-header-right">
+                <div id="ds-side-toggle" class="header-action" title="切换侧边栏方向">👈🏻</div>
+                <div id="ds-full-page-trans-btn" class="header-action" title="全文翻译开关">🌐</div>
+                <div id="ds-close" class="header-action" title="关闭">✖</div>
+            </div>
+        </div>
+        <div id="ds-confirm-modal">
+            <div class="ds-confirm-box">
+                <div class="ds-confirm-text">确定要清空所有生词和缓存吗？</div>
+                <div class="ds-confirm-btns">
+                    <button id="ds-confirm-yes" class="ds-btn ds-btn-yes">确定清空</button>
+                    <button id="ds-confirm-no" class="ds-btn ds-btn-no">取消</button>
+                </div>
+            </div>
+        </div>
+        <div id="ds-config-panel">
+            <div class="ds-config-title">⚙️ 设置</div>
+            <div class="cfg-row" style="flex-direction:column;align-items:flex-start;">
+                <span>DeepSeek API Key:</span>
+                <input type="text" id="cfg-api-key" style="width:100%;margin-top:5px;padding:6px;" value="${DS_CONFIG.settings.apiKey}">
+            </div>
+            <div class="cfg-row" style="flex-direction:column;align-items:flex-start;">
+                <span class="ds-instruction-text">自定义Prompt格式：</span>
+                <span class="ds-instruction-text ds-instruction-highlight">按钮名=prompt具体指令</span>
+                <textarea id="cfg-prompts" placeholder="按钮名称=具体指令内容\n每行一条...">${promptString}</textarea>
+            </div>
+            <button id="save-api-key" class="ds-primary-btn">保存并退出</button>
+        </div>
+        <div id="ds-help-panel">
+            <div class="ds-help-title">💡 使用说明</div>
+            <div class="ds-help-item">
+                <span class="ds-help-key">Alt + Alt</span>
+                <span class="ds-help-desc">快速双击 Alt，可对被悬浮或被选中的文本展开浮窗进行查词。</span>
+            </div>
+            <div class="ds-help-item">
+                <span class="ds-help-key">Alt + 1</span>
+                <span class="ds-help-desc">可对被悬浮或被选中的文本进行高亮，并加入侧边栏高亮文本列表。</span>
+            </div>
+            <div class="ds-help-item">
+                <span class="ds-help-key">Alt + 2 或 右键</span>
+                <span class="ds-help-desc">可对被悬浮或被选中的文本移除高亮，并移出侧边栏高亮文本列表。</span>
+            </div>
+            <div class="ds-help-item">
+                <span class="ds-help-key">Alt + 左键</span>
+                <span class="ds-help-desc">（于有非中文文本的段落上）可对该段落进行文本翻译。</span>
+            </div>
+            <div class="ds-help-item">
+                <span class="ds-help-key">Alt 或 右键</span>
+                <span class="ds-help-desc">（于非浮窗/侧边栏区域上）可关闭浮窗/侧边栏。</span>
+            </div>
+            <div class="ds-help-item">
+                <span class="ds-help-key">鼠标移动至屏幕边缘停留0.5秒</span>
+                <span class="ds-help-desc">唤醒侧边栏，可由此查阅高亮文本列表或使用AI进阶功能。</span>
+            </div>
+            <button id="ds-help-close" class="ds-primary-btn">关闭说明</button>
+        </div>
+        <div id="ds-tab-content">
+            <div class="tab-panel active" data-panel="highlight" id="ds-highlight-content"></div>
+            <div class="tab-panel" data-panel="ai" id="ds-ai-content">
+                <div id="ds-chat-log"></div>
+            </div>
+        </div>
+        <div id="ds-fn-bar"></div>
+        <div id="ds-input-area">
+            <div id="ds-input-wrapper">
+                <textarea id="ds-input" placeholder="DeepSeek AI 等待您的指令..."></textarea>
+                <div id="ds-send-row">
+                    <button id="ds-summary-btn" class="ds-action-btn">🧠 总结</button>
+                    <button id="ds-send" class="ds-action-btn">🚀 发送</button>
+                </div>
+            </div>
+        </div>`;
 
         const popupEl = document.createElement('div'); popupEl.id = 'ds-popup';
         popupEl.style.width = DS_CONFIG.settings.popupWidth; popupEl.style.height = DS_CONFIG.settings.popupHeight;
@@ -791,6 +882,55 @@
         document.addEventListener('mousemove', e => {
             DS_CONFIG.runtime.lastX = e.clientX; DS_CONFIG.runtime.lastY = e.clientY;
             if (isTopWindow) {
+                // Edge Sidebar Trigger (Modification V3.12 with Scrollbar Smart Fix)
+                const edgeThreshold = 20; // 扩大到 20px
+                const clientWidth = document.documentElement.clientWidth || window.innerWidth;
+
+                const isLeftEdge = e.clientX < edgeThreshold;
+
+                // 核心修改：右侧触发范围，依据 clientWidth (不含滚动条的宽度) 计算
+                // 确保触发区域是 [内容右边界 - 20px] 到 [内容右边界]
+                // 且不延伸到滚动条区域 (即 <= clientWidth)
+                const isRightEdge = (e.clientX > clientWidth - edgeThreshold) && (e.clientX <= clientWidth);
+
+                if (!isSidebarVisible()) {
+                    if (isRightEdge || isLeftEdge) {
+                        // 进入边缘区域，启动计时器
+                        if (!DS_CONFIG.runtime.edgeTimer) {
+                            DS_CONFIG.runtime.edgeTimer = setTimeout(() => {
+                                // 0.5秒后再次检查鼠标位置，决定是否打开
+                                const currentX = DS_CONFIG.runtime.lastX;
+                                const curClientWidth = document.documentElement.clientWidth || window.innerWidth;
+                                const curRight = (currentX > curClientWidth - edgeThreshold) && (currentX <= curClientWidth);
+                                const curLeft = currentX < edgeThreshold;
+
+                                if (curRight) {
+                                     if (DS_CONFIG.settings.sidebarSide !== 'right') {
+                                         DS_CONFIG.settings.sidebarSide = 'right';
+                                         GM_setValue('ds_sidebar_side', 'right');
+                                         updateSidebarPosition(false);
+                                     }
+                                     showSidebar();
+                                } else if (curLeft) {
+                                     if (DS_CONFIG.settings.sidebarSide !== 'left') {
+                                         DS_CONFIG.settings.sidebarSide = 'left';
+                                         GM_setValue('ds_sidebar_side', 'left');
+                                         updateSidebarPosition(false);
+                                     }
+                                     showSidebar();
+                                }
+                                DS_CONFIG.runtime.edgeTimer = null;
+                            }, 500); // 500ms 延迟
+                        }
+                    } else {
+                        // 离开边缘区域，立即取消计时
+                        if (DS_CONFIG.runtime.edgeTimer) {
+                            clearTimeout(DS_CONFIG.runtime.edgeTimer);
+                            DS_CONFIG.runtime.edgeTimer = null;
+                        }
+                    }
+                }
+
                 if (DS_CONFIG.runtime.isResizingPopup && DOM.popup) {
                     const dx = e.clientX - DS_CONFIG.runtime.dragStartX; const dy = e.clientY - DS_CONFIG.runtime.dragStartY; const startRect = DS_CONFIG.runtime.resizeStartRect;
                     if (DS_CONFIG.runtime.resizeDirection.includes('e')) { DOM.popup.style.width = (startRect.width + dx) + 'px'; }
@@ -827,6 +967,9 @@
         });
 
         document.addEventListener('keydown', (e) => {
+            // 核心修复：如果按下的键不是Alt，立即作废双击计时
+            if (e.key !== 'Alt') { DS_CONFIG.runtime.lastAltUpTime = 0; }
+
             if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName) || document.activeElement.isContentEditable) return;
             if (e.key === 'Alt') { DS_CONFIG.runtime.isAltDown = true; }
             if (e.altKey && (e.key === '1' || e.code === 'Digit1')) {
@@ -855,19 +998,43 @@
                 if (e.key === 'Alt') {
                     DS_CONFIG.runtime.isAltDown = false; const now = Date.now();
                     if (now < DS_CONFIG.runtime.sidebarLockUntil) { DS_CONFIG.runtime.lastAltUpTime = 0; return; }
+
+                    // Double Alt Logic
                     if (now - DS_CONFIG.runtime.lastAltUpTime < 1000) {
                         const selText = window.getSelection().toString().trim();
-                        const isPopupOpen = DOM.popup && DOM.popup.style.display !== 'none';
-                        if (isPopupOpen && !DS_CONFIG.state.isPopupLocked) { DOM.popup.style.display = 'none'; DS_CONFIG.runtime.currentPopupTrigger = null; clearAllInlineTranslations(); }
-                        else if (selText.length > 0) {
+                        // 1. If selection exists -> Popup
+                        if (selText.length > 0) {
                              copyToClip(selText);
                              let context = ""; try { context = window.getSelection().getRangeAt(0).commonAncestorContainer.parentElement.innerText; } catch(e){}
                              showSmartPopup(selText, null, context, true);
-                        } else {
-                             if (isSidebarVisible()) hideSidebar(); else { showSidebar(); switchTab('highlight'); }
                         }
-                        DS_CONFIG.runtime.lastAltUpTime = 0;
-                    } else { DS_CONFIG.runtime.lastAltUpTime = now; }
+                        // 2. Hover Logic (New): If no selection, get word under cursor
+                        else {
+                            const wordObj = getCurrentSentence();
+                            if (wordObj && wordObj.text) {
+                                const context = wordObj.node.parentElement ? wordObj.node.parentElement.innerText : wordObj.text;
+                                showSmartPopup(wordObj.text, null, context, false);
+                            }
+                        }
+                        DS_CONFIG.runtime.lastAltUpTime = 0; // Reset
+                    }
+                    // Single Alt Logic (Close Action)
+                    else {
+                        let actionTaken = false;
+                        // Close Popup if open
+                        if (DOM.popup && DOM.popup.style.display !== 'none' && !DS_CONFIG.state.isPopupLocked) {
+                            DOM.popup.style.display = 'none'; DS_CONFIG.runtime.currentPopupTrigger = null; clearAllInlineTranslations();
+                            actionTaken = true;
+                        }
+                        // Close Sidebar if open
+                        if (isSidebarVisible()) {
+                             hideSidebar();
+                             actionTaken = true;
+                        }
+                        // If we closed something, we generally don't want to start a double-click timer immediately,
+                        // but to allow "Close then Open" quickly, we still set the time.
+                        DS_CONFIG.runtime.lastAltUpTime = now;
+                    }
                 }
             }, true);
         }

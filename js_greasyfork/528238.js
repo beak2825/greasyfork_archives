@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         snooker.org ZHCN
-// @version      2.0.26
+// @version      2.0.27
 // @description  Basic Chinese UI for snooker.org
 // @author       Nan Zhu
 // @include      *://*snooker.org/*
@@ -676,7 +676,12 @@ const translations = {
   "United Kingdom": "英国",
   "Great Britain": "英国",
   "Qatar": "卡塔尔",
-  "Albania": "阿尔巴尼亚"
+  "Albania": "阿尔巴尼亚",
+  "Italy": "意大利",
+  "Serbia": "塞尔维亚",
+  "Jordan": "约旦",
+  "Kuwait": "科威特",
+  "Syria": "叙利亚"
 };
 
 let nationalityTranslations = {};

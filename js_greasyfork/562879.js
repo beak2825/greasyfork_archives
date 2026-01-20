@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         大学生就业服务平台一键选择
 // @namespace    http://tampermonkey.net/
-// @version      2026-01-14
-// @description  大学生就业服务平台一键选择岗位，可以跳过指定公司与关键词，并设置同一家公司最大投递数
+// @version      2026-01-20
+// @description  大学生就业服务平台一键选择岗位，可以跳过指定公司与关键词，并设置同一家公司最大投递数；按左右键翻页
 // @author       卡布奇诺
 // @match        https://www.ncss.cn/student/jobs/index.html
 // @grant        none
@@ -19,7 +19,7 @@
   // 跳过公司
   const skipCorps = []
   // 跳过关键词
-  const skipKeywords = ['公告', '销售', '客服', '保险']
+  const skipKeywords = ['公告', '客服', '销售', '保险', '实习']
 
   // 读取已投递岗位
   const appliedJobs = JSON.parse(localStorage.getItem('appliedJobs')) || []
@@ -84,7 +84,7 @@
     }
 
     const n = document.querySelectorAll('.tobeSelected:checked').length
-    e.target.textContent = `选择(${n})`
+    e.target.textContent = `一键选择(${n})`
     if (n > 0) {
       // 点击'投递简历'按钮
       const multiApplyBtn = document.querySelector('.multiApply')
@@ -132,6 +132,17 @@
   // 点击'确认投递'按钮事件
   const ensureApplyBtn = document.querySelector('#ensureAppyjobMuti .ensureApply')
   ensureApplyBtn.addEventListener('click', updateJobs)
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowRight') {
+      const nextBtn = document.querySelector('.next')
+      if (nextBtn) { nextBtn.click() }
+    }
+    if (e.key === 'ArrowLeft') {
+      const prevBtn = document.querySelector('.prev')
+      if (prevBtn) { prevBtn.click() }
+    }
+  })
 })()
 
 /* 数据类型

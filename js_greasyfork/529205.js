@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         新球体育网亚盘统计
 // @namespace    http://dol.freevar.com/
-// @version      1.10
+// @version      1.11
 // @description  新球体育网（球探）手机端网页。在分析页面加入“统计”,“表格”,“开关”按钮，“统计”按钮统计当前页面这场比赛。“表格”按钮生成各个公司对已统计场次的命中率表格。“开关”按钮在最近赛事里显示统计按钮。根据命中率高的低水，和命中率低的高水判断赛果。
 // @author       Dolphin
 // @match        https://m.titan007.com/Analy/Analysis/*
@@ -273,7 +273,7 @@
             const totalCount = Object.keys(results).length;
 
             if (buttonElement) {
-                alert(`统计完成！共处理了${totalCount}家公司，命中${hitCount}家`);
+                alert(`已统计 ${totalCount} 家公司，${hitCount} 家命中`);
             }
 
             return { matchId, results, hitCount, totalCount };
@@ -368,6 +368,19 @@
 
         // 找到第一个小于等于目标时间的数据
         return instantData.find(item => item.ModifyTime <= targetTime);
+    }
+
+    // 查找最早的数据
+    function findEarliestData(data) {
+        // 过滤出HappenTime为空的数据
+        const instantData = data.filter(item => item.HappenTime === "");
+        if (instantData.length === 0) return null;
+
+        // 按时间排序（从早到晚）
+        instantData.sort((a, b) => a.ModifyTime.localeCompare(b.ModifyTime));
+
+        // 返回最早的数据
+        return instantData[0];
     }
 
     // 计算是否命中
@@ -480,6 +493,9 @@
                 const baseData = findLatestDataBeforeTime(data, baseTime);
                 if (!baseData) continue;
 
+                // 找到最早的数据
+                const earliestData = findEarliestData(data);
+
                 // 计算命中率
                 const stats = calculateCompanyStats(companyName);
 
@@ -489,7 +505,10 @@
                     hitRate: stats.hitRate,
                     homeOdds: baseData.HomeOdds,
                     panKou: baseData.PanKou,
-                    awayOdds: baseData.AwayOdds
+                    awayOdds: baseData.AwayOdds,
+                    earliestHomeOdds: earliestData.HomeOdds,
+                    earliestPanKou: earliestData.PanKou,
+                    earliestAwayOdds: earliestData.AwayOdds
                 });
             }
 
@@ -558,6 +577,9 @@
                 <th style="border: 1px solid #888;">主水</th>
                 <th style="border: 1px solid #888;">让球</th>
                 <th style="border: 1px solid #888;">客水</th>
+                <th style="border: 1px solid #888;">初主</th>
+                <th style="border: 1px solid #888;">初让</th>
+                <th style="border: 1px solid #888;">初客</th>
             </tr>
         `;
         table.appendChild(thead);
@@ -581,6 +603,9 @@
                 <td style="border: 1px solid #888; background: ${homeBg};">${row.homeOdds}</td>
                 <td style="border: 1px solid #888;">${row.panKou}</td>
                 <td style="border: 1px solid #888; background: ${awayBg};">${row.awayOdds}</td>
+                <td style="border: 1px solid #888;">${row.earliestHomeOdds}</td>
+                <td style="border: 1px solid #888;">${row.earliestPanKou}</td>
+                <td style="border: 1px solid #888;">${row.earliestAwayOdds}</td>
             `;
             tbody.appendChild(tr);
         });

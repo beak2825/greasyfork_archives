@@ -5,6 +5,7 @@
 // @version      1.1
 // @author       GPT-DiamondMoo
 // @license      MIT
+// @icon         https://play-pokechill.github.io/img/icons/icon.png
 // @match        https://play-pokechill.github.io/*
 // @match        https://g1tyx.github.io/play-pokechill/*
 // @downloadURL https://update.greasyfork.org/scripts/560607/%5BPokechill%5D%20Auto%20Rejoin%20Area.user.js

@@ -1,24 +1,28 @@
 // ==UserScript==
 // @name         Fix Mangapark Image Loading Issue
 // @namespace    http://tampermonkey.net/
-// @version      0.25
+// @version      0.26
 // @description  Auto-loads images from the main host to bypass CDN issues. Click "PICK" to manually change servers.
-// @match        https://mangapark.io/title/*-chapter-*
 // @match        https://mangapark.io/title/*-ch-*
-// @match        https://mangapark.io/title/*-prologue
+// @match        https://mangapark.io/title/*-chapter-*
 // @match        https://mangapark.io/title/*-oneshot
-// @match        https://mangapark.net/title/*-chapter-*
+// @match        https://mangapark.io/title/*-oneshot
+// @match        https://mangapark.io/title/*-prologue
 // @match        https://mangapark.net/title/*-ch-*
-// @match        https://mangapark.net/title/*-prologue
+// @match        https://mangapark.net/title/*-chapter-*
 // @match        https://mangapark.net/title/*-oneshot
-// @match        https://mpark.to/title/*-chapter-*
-// @match        https://mpark.to/title/*-ch-*
-// @match        https://mpark.to/title/*-prologue
-// @match        https://mpark.to/title/*-oneshot
-// @match        https://mangapark.to/title/*-chapter-*
+// @match        https://mangapark.net/title/*-prologue
+// @match        https://mangapark.net/title/*-volume-*
 // @match        https://mangapark.to/title/*-ch-*
-// @match        https://mangapark.to/title/*-prologue
+// @match        https://mangapark.to/title/*-chapter-*
 // @match        https://mangapark.to/title/*-oneshot
+// @match        https://mangapark.to/title/*-prologue
+// @match        https://mangapark.to/title/*-volume-*
+// @match        https://mpark.to/title/*-ch-*
+// @match        https://mpark.to/title/*-chapter-*
+// @match        https://mpark.to/title/*-oneshot
+// @match        https://mpark.to/title/*-prologue
+// @match        https://mpark.to/title/*-volume-*
 // @license      MIT
 // @grant        none
 // @run-at       document-idle

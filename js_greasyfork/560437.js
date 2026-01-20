@@ -1,22 +1,51 @@
 // ==UserScript==
-// @name         Gemini TTS Reader
+// @name         Gemini TTS Reader w/Console
 // @namespace    http://tampermonkey.net/
-// @version      1.3
-// @description  Read selected text using Gemini 2.5 Flash TTS with customizable Hotkey and System Prompts.
-// @author       gemini&Marco
+// @version      1.9
+// @description  Reads selected text using the Gemini 2.5 TTS model, then automatically downloads the audio file.
+// @author       Gemini&Marco
 // @match        *://*/*
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_registerMenuCommand
 // @grant        GM_xmlhttpRequest
+// @grant        GM_addStyle
 // @run-at       document-end
 // @license MIT
-// @downloadURL https://update.greasyfork.org/scripts/560437/Gemini%20TTS%20Reader.user.js
-// @updateURL https://update.greasyfork.org/scripts/560437/Gemini%20TTS%20Reader.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/560437/Gemini%20TTS%20Reader%20wConsole.user.js
+// @updateURL https://update.greasyfork.org/scripts/560437/Gemini%20TTS%20Reader%20wConsole.meta.js
 // ==/UserScript==
 
 (function() {
     'use strict';
+
+    // --- Styles ---
+    GM_addStyle(`
+        #gemini-config-modal {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: #ffffff; border-radius: 14px; box-shadow: 0 15px 50px rgba(0,0,0,0.3);
+            padding: 24px; z-index: 1000001; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            width: 480px; display: none; color: #1f2937; line-height: 1.5;
+        }
+        #gemini-config-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4); backdrop-filter: blur(2px); z-index: 1000000; display: none;
+        }
+        .gemini-title { margin: 0 0 20px 0; font-size: 20px; font-weight: 700; color: #111827; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        .gemini-section { margin-bottom: 16px; }
+        .gemini-label { font-size: 13px; font-weight: 600; color: #4b5563; display: block; margin-bottom: 6px; }
+        .gemini-input {
+            width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px;
+            box-sizing: border-box; font-size: 14px; transition: border 0.2s;
+        }
+        .gemini-input:focus { outline: none; border-color: #4f46e5; }
+        .gemini-textarea { height: 100px; font-family: ui-monospace, monospace; resize: vertical; }
+        .gemini-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .gemini-footer { text-align: right; margin-top: 25px; padding-top: 15px; border-top: 1px solid #eee; }
+        .gemini-btn { padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; font-size: 14px; }
+        .gemini-btn-primary { background: #4f46e5; color: white; }
+        .gemini-btn-secondary { background: #f3f4f6; color: #4b5563; margin-right: 10px; }
+    `);
 
     // --- Configuration ---
     const CONFIG = {
@@ -26,113 +55,111 @@
         defaultHotkey: 'alt+t'
     };
 
-    // --- State Management ---
     const State = {
-        get apiKey() { return GM_getValue('GEMINI_API_KEY', ''); },
-        set apiKey(v) { GM_setValue('GEMINI_API_KEY', v.trim()); },
-        
+        get apiKeys() { return GM_getValue('GEMINI_API_KEYS', []); },
+        set apiKeys(v) { GM_setValue('GEMINI_API_KEYS', v); },
         get voice() { return GM_getValue('GEMINI_VOICE', 'Kore'); },
         set voice(v) { GM_setValue('GEMINI_VOICE', v); },
-
         get hotkey() { return GM_getValue('GEMINI_HOTKEY', CONFIG.defaultHotkey); },
         set hotkey(v) { GM_setValue('GEMINI_HOTKEY', v.toLowerCase().replace(/\s/g, '')); },
-
         get systemPrompt() { return GM_getValue('GEMINI_SYSTEM_PROMPT', ''); },
         set systemPrompt(v) { GM_setValue('GEMINI_SYSTEM_PROMPT', v.trim()); }
     };
 
-    // --- Settings Menu ---
-    GM_registerMenuCommand("🔑 Set API Key", () => {
-        const input = prompt('Enter your Google Gemini API Key:', State.apiKey);
-        if (input !== null) { State.apiKey = input; showToast('API Key saved'); }
-    });
+    // --- UI Logic ---
+    const overlay = document.createElement('div');
+    overlay.id = 'gemini-config-overlay';
+    const modal = document.createElement('div');
+    modal.id = 'gemini-config-modal';
 
-    GM_registerMenuCommand("🗣️ Set Voice", () => {
-        const choice = prompt(`Choose a voice:\n${CONFIG.voices.join(', ')}`, State.voice);
-        if (choice && CONFIG.voices.includes(choice)) {
-            State.voice = choice;
-            showToast(`Voice set to ${choice}`);
-        } else if (choice) showToast('Invalid voice name', true);
-    });
+    document.body.appendChild(overlay);
+    document.body.appendChild(modal);
 
-    GM_registerMenuCommand("⌨️ Set Hotkey", () => {
-        const input = prompt('Enter Hotkey (e.g., alt+t, ctrl+shift+s):', State.hotkey);
-        if (input) { State.hotkey = input; showToast(`Hotkey set to ${State.hotkey}`); }
-    });
+    const renderModal = () => {
+        const voiceOptions = CONFIG.voices.map(v => `<option value="${v}" ${v === State.voice ? 'selected' : ''}>${v}</option>`).join('');
+        modal.innerHTML = `
+            <div class="gemini-title">Gemini TTS Configuration</div>
+            <div class="gemini-section">
+                <label class="gemini-label">API Keys (One per line)</label>
+                <textarea id="ui-keys" class="gemini-input gemini-textarea" placeholder="Enter API keys...">${State.apiKeys.join('\n')}</textarea>
+            </div>
+            <div class="gemini-section">
+                <label class="gemini-label">System Prompt</label>
+                <input id="ui-prompt" type="text" class="gemini-input" value="${State.systemPrompt}" placeholder="e.g. British accent...">
+            </div>
+            <div class="gemini-grid">
+                <div class="gemini-section">
+                    <label class="gemini-label">Voice</label>
+                    <select id="ui-voice" class="gemini-input">${voiceOptions}</select>
+                </div>
+                <div class="gemini-section">
+                    <label class="gemini-label">Hotkey</label>
+                    <input id="ui-hotkey" type="text" class="gemini-input" value="${State.hotkey}">
+                </div>
+            </div>
+            <div class="gemini-footer">
+                <button id="ui-cancel" class="gemini-btn gemini-btn-secondary">Cancel</button>
+                <button id="ui-save" class="gemini-btn gemini-btn-primary">Save All Settings</button>
+            </div>
+        `;
 
-    GM_registerMenuCommand("🧠 Set Custom Prompt", () => {
-        const input = prompt('Enter instructions for the voice (e.g., "British accent", "Speak excitedly"):', State.systemPrompt);
-        if (input !== null) { State.systemPrompt = input; showToast('System prompt saved'); }
-    });
+        document.getElementById('ui-cancel').onclick = closeModal;
+        document.getElementById('ui-save').onclick = () => {
+            State.apiKeys = document.getElementById('ui-keys').value.split('\n').map(k => k.trim()).filter(k => k.length > 5);
+            State.systemPrompt = document.getElementById('ui-prompt').value;
+            State.voice = document.getElementById('ui-voice').value;
+            State.hotkey = document.getElementById('ui-hotkey').value;
+            showToast("Settings Saved!");
+            closeModal();
+        };
+    };
 
-    // --- Hotkey Listener ---
+    const openModal = () => { renderModal(); overlay.style.display = 'block'; modal.style.display = 'block'; };
+    const closeModal = () => { overlay.style.display = 'none'; modal.style.display = 'none'; };
+    overlay.onclick = closeModal;
+
+    GM_registerMenuCommand("⚙️ Gemini TTS Settings", openModal);
+
+    // --- Main Logic ---
     document.addEventListener('keydown', (e) => {
         if (!matchesHotkey(e, State.hotkey)) return;
-        
         const text = window.getSelection().toString().trim();
-        if (!text) return; // Do nothing if no text selected
-
-        if (!State.apiKey) {
-            if (confirm('Gemini TTS: API Key missing. Set it now?')) {
-                const key = prompt('Enter API Key:');
-                if (key) State.apiKey = key;
-            }
-            return;
-        }
-
+        if (!text) return;
+        if (State.apiKeys.length === 0) { openModal(); return; }
         runTTS(text);
     });
 
     function matchesHotkey(event, hotkeyString) {
         const parts = hotkeyString.split('+');
         const mainKey = parts.pop();
-        const mods = {
-            alt: parts.includes('alt') || parts.includes('option'),
-            ctrl: parts.includes('ctrl') || parts.includes('control'),
-            meta: parts.includes('meta') || parts.includes('cmd') || parts.includes('command'),
-            shift: parts.includes('shift')
-        };
-        
-        return (
-            event.key.toLowerCase() === mainKey &&
-            event.altKey === mods.alt &&
-            event.ctrlKey === mods.ctrl &&
-            event.metaKey === mods.meta &&
-            event.shiftKey === mods.shift
-        );
+        const mods = { alt: parts.includes('alt'), ctrl: parts.includes('ctrl'), meta: parts.includes('meta') || parts.includes('cmd'), shift: parts.includes('shift') };
+        return event.key.toLowerCase() === mainKey && event.altKey === mods.alt && event.ctrlKey === mods.ctrl && event.metaKey === mods.meta && event.shiftKey === mods.shift;
     }
 
-    // --- Main Logic ---
     async function runTTS(text) {
-        const toastId = showToast('Generating Audio...', false, 0); // Persistent toast
-        
-        try {
-            await generateAndPlay(text, State.apiKey, State.voice, State.systemPrompt);
-            updateToast(toastId, 'Downloading...', 2000);
-        } catch (e) {
-            console.error(e);
-            updateToast(toastId, `Error: ${e.message}`, 4000, true);
+        const toastId = showToast('Generating...', false, 0);
+        const keys = State.apiKeys;
+        for (let i = 0; i < keys.length; i++) {
+            updateToast(toastId, `Trying Key ${i + 1}/${keys.length}...`, 0);
+            try {
+                await generateAndPlay(text, keys[i], State.voice, State.systemPrompt);
+                updateToast(toastId, 'Success & Downloading!', 2000);
+                return;
+            } catch (e) {
+                const isRetryable = e.message.includes('403') || e.message.includes('429');
+                if (!isRetryable || i === keys.length - 1) {
+                    updateToast(toastId, `Error: ${e.message}`, 5000, true);
+                    return;
+                }
+            }
         }
     }
 
     async function generateAndPlay(text, apiKey, voice, systemPrompt) {
-        // Fix 500 Error: Prepend the prompt to the text instead of using `systemInstruction`.
-        // Example result: "Speak excitedly: Hello world"
-        let finalText = text;
-        if (systemPrompt) {
-            finalText = `${systemPrompt}: ${text}`;
-        }
-
+        let finalText = systemPrompt ? `${systemPrompt}: ${text}` : text;
         const payload = {
             contents: [{ parts: [{ text: finalText }] }],
-            generationConfig: {
-                responseModalities: ["AUDIO"],
-                speechConfig: {
-                    voiceConfig: {
-                        prebuiltVoiceConfig: { voiceName: voice }
-                    }
-                }
-            }
+            generationConfig: { responseModalities: ["AUDIO"], speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: voice } } } }
         };
 
         return new Promise((resolve, reject) => {
@@ -142,111 +169,78 @@
                 headers: { "Content-Type": "application/json" },
                 data: JSON.stringify(payload),
                 onload: function(response) {
-                    if (response.status !== 200) {
-                        reject(new Error(`API Error ${response.status}: ${response.responseText}`));
-                        return;
-                    }
+                    if (response.status !== 200) return reject(new Error(`API ${response.status}`));
                     try {
                         const data = JSON.parse(response.responseText);
                         const base64Audio = data.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
-                        
-                        if (!base64Audio) throw new Error("No audio data found in response");
+                        if (!base64Audio) throw new Error("No audio data");
 
+                        // --- 下载与播放逻辑回归 ---
                         processAudio(base64Audio);
                         resolve();
-                    } catch (err) {
-                        reject(err);
-                    }
+                    } catch (err) { reject(err); }
                 },
-                onerror: function(err) {
-                    reject(new Error("Network error"));
-                }
+                onerror: () => reject(new Error("Network Error"))
             });
         });
     }
 
     function processAudio(base64) {
         const binaryString = atob(base64);
-        const len = binaryString.length;
-        const bytes = new Uint8Array(len);
-        for (let i = 0; i < len; i++) {
-            bytes[i] = binaryString.charCodeAt(i);
-        }
+        const bytes = new Uint8Array(binaryString.length);
+        for (let i = 0; i < binaryString.length; i++) bytes[i] = binaryString.charCodeAt(i);
 
         const wavBlob = createWavBlob(bytes, CONFIG.sampleRate);
         const url = URL.createObjectURL(wavBlob);
 
-        // Play
+        // 1. 播放
         const audio = new Audio(url);
         audio.play();
 
-        // Download
+        // 2. 自动下载 (回归逻辑)
         const a = document.createElement('a');
         a.href = url;
         a.download = `gemini-tts-${Date.now()}.wav`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
+
+        // 延时释放内存
+        setTimeout(() => URL.revokeObjectURL(url), 10000);
     }
 
-    function createWavBlob(pcmData, sampleRate = 24000, numChannels = 1) {
-        const wavHeader = new ArrayBuffer(44);
-        const view = new DataView(wavHeader);
-        const writeString = (offset, string) => {
-            for (let i = 0; i < string.length; i++) view.setUint8(offset + i, string.charCodeAt(i));
-        };
-
-        writeString(0, 'RIFF');
-        view.setUint32(4, 36 + pcmData.length, true);
-        writeString(8, 'WAVE');
-        writeString(12, 'fmt ');
-        view.setUint32(16, 16, true);
-        view.setUint16(20, 1, true);
-        view.setUint16(22, numChannels, true);
-        view.setUint32(24, sampleRate, true);
-        view.setUint32(28, sampleRate * numChannels * 2, true);
-        view.setUint16(32, numChannels * 2, true);
-        view.setUint16(34, 16, true);
-        writeString(36, 'data');
-        view.setUint32(40, pcmData.length, true);
-
-        return new Blob([wavHeader, pcmData], { type: 'audio/wav' });
+    function createWavBlob(pcmData, sampleRate) {
+        const header = new ArrayBuffer(44);
+        const view = new DataView(header);
+        const writeStr = (off, s) => { for (let i = 0; i < s.length; i++) view.setUint8(off + i, s.charCodeAt(i)); };
+        writeStr(0, 'RIFF'); view.setUint32(4, 36 + pcmData.length, true);
+        writeStr(8, 'WAVEfmt '); view.setUint32(16, 16, true);
+        view.setUint16(20, 1, true); view.setUint16(22, 1, true);
+        view.setUint32(24, sampleRate, true); view.setUint32(28, sampleRate * 2, true);
+        view.setUint16(32, 2, true); view.setUint16(34, 16, true);
+        writeStr(36, 'data'); view.setUint32(40, pcmData.length, true);
+        return new Blob([header, pcmData], { type: 'audio/wav' });
     }
 
-    // --- Toast Notification System ---
+    // --- Toast Notification ---
     function showToast(text, isError = false, duration = 3000) {
+        const id = `toast-${Date.now()}`;
         const div = document.createElement('div');
-        const id = Date.now();
-        div.id = `toast-${id}`;
-        div.textContent = text;
+        div.id = id; div.textContent = text;
         Object.assign(div.style, {
-            position: 'fixed',
-            bottom: '20px',
-            right: '20px',
-            padding: '12px 24px',
-            backgroundColor: isError ? '#ef4444' : '#4f46e5',
-            color: 'white',
-            borderRadius: '8px',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
-            zIndex: '1000000',
-            fontFamily: 'sans-serif',
-            fontSize: '14px',
-            transition: 'opacity 0.5s',
-            opacity: '0'
+            position: 'fixed', bottom: '20px', right: '20px', padding: '12px 24px',
+            backgroundColor: isError ? '#ef4444' : '#111827', color: 'white',
+            borderRadius: '10px', zIndex: '1000002', transition: 'all 0.4s ease',
+            opacity: '0', transform: 'translateY(20px)', fontFamily: 'sans-serif'
         });
         document.body.appendChild(div);
-        
-        // Fade in
-        requestAnimationFrame(() => div.style.opacity = '1');
-
-        if (duration > 0) {
-            setTimeout(() => removeToast(div), duration);
-        }
+        requestAnimationFrame(() => { div.style.opacity = '1'; div.style.transform = 'translateY(0)'; });
+        if (duration > 0) setTimeout(() => removeToast(div), duration);
         return id;
     }
 
     function updateToast(id, text, duration = 3000, isError = false) {
-        const div = document.getElementById(`toast-${id}`);
+        const div = document.getElementById(id.startsWith('toast-') ? id : `toast-${id}`);
         if (div) {
             div.textContent = text;
             if (isError) div.style.backgroundColor = '#ef4444';
@@ -255,8 +249,8 @@
     }
 
     function removeToast(div) {
+        if (!div) return;
         div.style.opacity = '0';
-        setTimeout(() => { if(div.parentNode) div.parentNode.removeChild(div); }, 500);
+        setTimeout(() => div.remove(), 500);
     }
-
 })();

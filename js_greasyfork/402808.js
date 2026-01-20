@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         知乎美化
 // @namespace    http://tampermonkey.net/
-// @version      2026.1.15
+// @version      2026.1.20
 // @description  1.【重要更新】增加夜间模式按钮     2.知乎题目栏增加举报、匿名、问题日志、快捷键四个按钮     3.知乎按钮图标在鼠标悬停时变色(题目按钮、回答下方按钮、评论按钮等)     4.回答的发布时间移至顶部     5.图片原图显示     6.文字和卡片链接从知乎跳转链接改为直链     7.隐藏侧边栏     8.GIF图自动播放【默认不开启】     9.问题增加创建时间和最后编辑时间     10.鼠标悬停在回答时显示浅蓝色聚焦框    11.引用角标高亮    12.首页信息流增加不感兴趣按钮  13.【重要更新】增加设置界面    14.显示信息流标签【默认不开启】
 // @author       AN drew
 // @match        *://*.zhihu.com/*
@@ -1022,8 +1022,8 @@ function pin() {
         GM_addStyle(`
         html[data-theme=light] body{background:white!important;}
         html[data-theme=dark] body{background:rgb(18,18,18)!important;}
-        .PinToolbar-menuContainer .Menu{display:none!important;}
-        .PinDetail{background: #191b1f; padding: 20px;}
+        html[data-theme=dark] .PinToolbar-menuContainer .Menu{display:none!important;}
+        html[data-theme=dark] .PinDetail{background: #191b1f; padding: 20px;}
         `);
         pinbg=1;
     }
@@ -1057,9 +1057,23 @@ function pin() {
     }
     */
 
+    //想法编辑按钮
+    $(".ZDI--PencilFill24").closest('.ContentItem-action').hover(function() {
+        $(this).attr("style", "color:#1772f6 !important");
+    }, function() {
+        $(this).attr("style", "color:#8590A6 !important");
+    });
+
+    //想法删除按钮
+    $(".ZDI--TrashFill24").closest('.ContentItem-action').hover(function() {
+        $(this).attr("style", "color:red !important");
+    }, function() {
+        $(this).attr("style", "color:#8590A6 !important");
+    });
+
 
     //想法举报按钮
-    if ($(".Zi--Report").length == 0) //未添加举报
+    if ($('.ZDI--PencilFill24').length==0 && $(".Zi--Report").length == 0) //未添加举报
     {
         let $lastchild = $(".ContentItem-actions").children().eq(-1);
         if ($lastchild.find(".ZDI--Dots24").length > 0)
@@ -1070,14 +1084,14 @@ function pin() {
             $lastchild.find("button").click();
             $(".PinToolbar-menuContainer .Menu").find("button").eq(-1).click();
         });
-        $lastchild.before($report);
+        $lastchild.after($report);
     }
 
     //有"编辑于"时，增加发布时间
-    if ($(".ContentItem-time:not(.css-18wtfyc)").find('a span').text().indexOf("编辑于") > -1 && !$(".ContentItem-time:not(.css-18wtfyc)").hasClass("done")) {
-        let data_tooltip = $(".ContentItem-time:not(.css-18wtfyc)").find('a span').attr('data-tooltip');
-        let old_text=$(".ContentItem-time:not(.css-18wtfyc)").find('a span').text();
-        $(".ContentItem-time:not(.css-18wtfyc)").find('a span').text(data_tooltip+ "\xa0\xa0，\xa0\xa0" + old_text);
+    if ($(".ContentItem-time:not(.css-18wtfyc)").find('a').text().indexOf("编辑于") > -1 && !$(".ContentItem-time:not(.css-18wtfyc)").hasClass("done")) {
+        let data_tooltip = $(".ContentItem-time:not(.css-18wtfyc)").find('a').attr('data-tooltip');
+        let old_text=$(".ContentItem-time:not(.css-18wtfyc)").find('a').text();
+        $(".ContentItem-time:not(.css-18wtfyc)").find('a').text(data_tooltip+ "\xa0\xa0，\xa0\xa0" + old_text);
         $(".ContentItem-time:not(.css-18wtfyc)").addClass("done");
     }
 
@@ -2577,16 +2591,19 @@ function index() {
     }, 500);
 
     if (Config.currentValues.hideIndexSidebar == 1) {
-        GM_addStyle(`
-        /*ring-feeds 圈子内容拉宽*/
+        if( !$('#ring-feeds-style').length )
+        {
+            GM_addStyle(`
+        /*ring-feeds 圈子-内容拉宽*/
         #TopstoryContent .css-1g878q7{
             width:100% !important
         };
-        /*ring-feeds 圈子想法居中*/
+        /*ring-feeds 圈子-想法居中*/
         #TopstoryContent .css-poklwr{
             width:100% !important
         }
-        `);
+        `).id='ring-feeds-style';
+        }
     }
 
     $(".Zi--Hot").find("path").css({
@@ -3006,7 +3023,7 @@ function addLocalCSS() {
     /* ==UserStyle==
 @name        zhihu-beautify
 @description zhihu
-@version     2026.1.4
+@version     2026.1.20
 @namespace   zhihu
 @license     MIT
 @downloadURL https://update.greasyfork.org/scripts/523346/zhihu-beautify.user.css
@@ -3043,6 +3060,7 @@ html[data-theme=dark] #nightmode:hover {
 .Reward {
     display: none !important
 }
+
 
 html[data-hover-visible] .VoterList-content .List-item:hover {
     -webkit-box-shadow: 0 0 0 2px #fff, 0.6px 0.4px 0 4px rgba(0, 132, 255, .3) inset;
@@ -3159,13 +3177,37 @@ html[data-theme=dark][data-hover-visible] .QuestionItem.css-1ob7sqq:hover {
 }
 
 html[data-hover-visible] .HotItem:hover {
+    position: relative;
+}
+
+html[data-hover-visible] .HotItem:hover::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -24px;
+    right: -16px;
+    bottom: 0;
     -webkit-box-shadow: 0 0 0 2px #fff, 0 0 0 3px rgba(0, 132, 255, .3) inset;
-    box-shadow: 0 0 0 2px #fff, 0 0 0 3px rgba(0, 132, 255, .3) inset
+    box-shadow: 0 0 0 2px #fff, 0 0 0 3px rgba(0, 132, 255, .3) inset;
+    pointer-events: none;
+    z-index: 1;
 }
 
 html[data-theme=dark][data-hover-visible] .HotItem:hover {
+    position: relative;
+}
+
+html[data-theme=dark][data-hover-visible] .HotItem:hover::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -24px;
+    right: -16px;
+    bottom: 0;
     -webkit-box-shadow: 0 0 0 2px #1a1a1a, 0 0 0 3px rgba(58, 118, 208, .6) inset;
     box-shadow: 0 0 0 2px #1a1a1a, 0 0 0 3px rgba(58, 118, 208, .6) inset
+    pointer-events: none;
+    z-index: 1;
 }
 
 html[data-hover-visible] .Card.TopstoryItem:hover {
@@ -9578,6 +9620,11 @@ html[data-theme=dark] .css-1851sov {
 
 
 /*==知乎首页==*/
+/*隐藏所有focus-visible的边框*/
+*:focus-visible{
+    box-shadow:none!important;
+}
+
 /*导航栏图标*/
 .css-16zsfw9 {
     color: black !important;
@@ -10048,10 +10095,10 @@ html[data-theme=dark] .css-1onritu::before{
 }
 
 /*评论区-回复按钮*/
-.css-1ij6qqc:focus-visible {
+.Comments-container .css-1ij6qqc:focus-visible {
     box-shadow:none !important;
 }
-.css-1ij6qqc:hover {
+.Comments-container .css-1ij6qqc:hover {
     color:#32CD32;
 }
 /*评论区-点赞按钮*/
@@ -10870,8 +10917,8 @@ html[data-theme=dark] .css-i9ss08{
 html[data-theme=dark] .css-dj639p{
     color: #d3d3d3!important;
 }
-/*固定导航栏-内容创作*/
-html[data-theme=dark] .css-15aftra > .css-4mbc0 + div{
+/*固定导航栏-发布内容*/
+html[data-theme=dark] .css-qd51c > .css-13gd32n + div{
     color: #d3d3d3!important;
     background: #151a23 !important;
 }
@@ -10884,6 +10931,119 @@ html[data-theme=dark] .css-1ooxkda:hover .ZDI{
 html[data-theme=dark] .css-1ooxkda:hover .css-vurnku{
     color:#0084ff!important;
 }
+
+/*固定导航栏-发布内容-发布想法-同步到圈子*/
+html[data-theme=dark] .css-ub81p9{
+    background:#8080801c!important;
+    border: none!important;
+}
+html[data-theme=dark] .css-1g4nb8p{
+    color:#d3d3d3!important;
+}
+
+/*固定导航栏-发布内容-发布想法-圈子标签文字*/
+html[data-theme=dark] .css-vs7vy3{
+    background:#8080801c!important;
+    border: none!important;
+}
+html[data-theme=dark] .css-1702hlz{
+    color:#d3d3d3!important;
+}
+/*固定导航栏-发布内容-发布想法-圈子标签图标*/
+html[data-theme=dark] .css-1ijh3tk{
+    color:#d3d3d3!important;
+}
+
+/*固定导航栏-发布内容-发布想法-发布成功弹窗*/
+html[data-theme=dark] .css-1im2v44{
+   background:#191b1f!important;
+}
+
+/*固定导航栏-发布内容-发布想法-发布成功弹窗-发布成功*/
+html[data-theme=dark] .css-t5fqv4{
+    color:#d3d3d3!important;
+}
+
+/*固定导航栏-发布内容-发布想法-发布成功弹窗-第X篇创作*/
+html[data-theme=dark] .css-1n74ksc{
+    color:#d3d3d3!important;
+}
+
+/*固定导航栏-发布内容-发布想法-发布成功弹窗-私信分享*/
+html[data-theme=dark] .css-1r0tya8{
+    color:#d3d3d3!important;
+}
+
+/*固定导航栏-发布内容-发布想法-发布成功弹窗-用户名*/
+html[data-theme=dark] .css-1dw4dzv{
+    color:#d3d3d3!important;
+}
+
+/*固定导航栏-发布内容-发布想法-发布成功弹窗-hover用户边框*/
+html[data-theme=dark] .css-7vp3l3:hover{
+    box-shadow: #0084ff 0px 0px 0px 1px, rgba(0, 0, 0, 0.2) 0px 4px 30px 0px;
+}
+
+
+/*固定导航栏-发布内容-发布想法-发布成功弹窗-分享方式*/
+html[data-theme=dark] .css-ajvqig{
+    color:#d3d3d3!important;
+}
+
+/*固定导航栏-发布内容-发布想法-发布成功弹窗-分享方式-hover*/
+html[data-theme=dark] .css-111wk8d:hover{
+    box-shadow: #0084ff 0px 0px 0px 1px, rgba(0, 0, 0, 0.2) 0px 4px 30px 0px;
+}
+
+/*固定导航栏-发布内容-发布想法-发布成功弹窗-分享方式（微信）-hover*/
+html[data-theme=dark] .css-x50qxi:hover{
+    box-shadow: #0084ff 0px 0px 0px 1px, rgba(0, 0, 0, 0.2) 0px 4px 30px 0px;
+}
+
+/*固定导航栏-发布内容-发布想法-发布成功弹窗-分享方式-二维码*/
+html[data-theme=dark] .css-cjwynm{
+    background:#191b1f!important;
+}
+
+/*固定导航栏-发布内容-发布想法-发布成功弹窗-搜索知友按钮*/
+html[data-theme=dark] .css-ylw5k8{
+    color:#d3d3d3!important;
+}
+
+/*固定导航栏-发布内容-发布想法-发布成功弹窗-搜索知友按钮-hover*/
+html[data-theme=dark] .css-ylw5k8:hover{
+    color:#0084ff!important;
+}
+
+/*固定导航栏-发布内容-发布想法-发布成功弹窗-搜索知友弹窗-私信知友*/
+html[data-theme=dark] .css-rykg68{
+    background:#191b1f!important;
+}
+html[data-theme=dark] .css-12za4io{
+    background:#191b1f!important;
+}
+
+/*固定导航栏-发布内容-发布想法-发布成功弹窗-搜索知友弹窗-搜索键*/
+html[data-theme=dark] .css-1n90lkc{
+   background:#191b1f!important;
+}
+
+/*固定导航栏-发布内容-发布想法-发布成功弹窗-搜索知友弹窗-用户名*/
+html[data-theme=dark] .css-4tb0t2{
+    color:#d3d3d3!important;
+}
+
+/*固定导航栏-发布内容-发布想法-发布成功弹窗-搜索知友弹窗-用户名-hover*/
+html[data-theme=dark] .css-8tciao:hover{
+    background:#1772f60f!important;
+}
+html[data-theme=dark] .css-8tciao:hover .css-4tb0t2{
+    color:#0084ff!important;
+}
+
+
+
+
 /*固定导航栏-大菜单*/
 html[data-theme=dark] .css-1b31wiw{
     color: #d3d3d3!important;
@@ -11158,6 +11318,11 @@ html[data-theme=dark] .css-13ev0i{
 html[data-theme=dark] .css-13ev0i:hover{
     color: #0084ff!important;
 }
+/*想法修改-编辑区*/
+html[data-theme=dark] .css-16fwoqo{
+    border: 1px solid #444!important;
+}
+
 
 
 /*创作助手-背景*/
@@ -11690,9 +11855,25 @@ html[data-theme=dark] .css-pjaw30{
 
 /*=知乎圈子=*/
 /*圈子背景*/
-html[data-theme=dark] .css-14pitda{
+html[data-theme=dark] .css-1g878q7{
     background: #191b1f!important;
 }
+
+/*圈子名称*/
+html[data-theme=dark] .css-1sd3305{
+    color: #d3d3d3!important;
+}
+
+/*圈子左翻页按钮 < */
+html[data-theme=dark] .css-54gsyx{
+    background: #d3d3d3!important;
+}
+
+/*圈子右翻页按钮 > */
+html[data-theme=dark] .css-14j7hjc{
+    background: #d3d3d3!important;
+}
+
 /*分享想法背景*/
 html[data-theme=dark] .css-17pkp3f{
     background: #191b1f!important;
@@ -12796,6 +12977,16 @@ html[data-theme=dark] .css-2habnn > a:hover{
 html[data-theme=dark] .css-6lgbq5:hover{
     color: #0084ff !important
 }
+/*搜索结果-最新讨论-中间边框*/
+html[data-theme=dark] .HotLanding-contentItem:not(:last-child){
+    border-bottom: 1px solid #444;
+}
+/*搜索结果-最新讨论-左边框*/
+html[data-theme=dark] .HotLanding-content{
+    border-left: 2px solid #444;
+}
+
+
 /*==搜索结果==*/
 
 
@@ -13198,6 +13389,7 @@ function gifPlaying() {
 
 }
 
+/*
 //盐选专栏、知乎讲书
 function xen() {
     if ($('.css-18vw6y4').length > 0)
@@ -13206,6 +13398,7 @@ function xen() {
     if ($('.IntroSummary-expandButton-iZSs9').length > 0)
         $('.IntroSummary-expandButton-iZSs9').get(0).click();
 }
+*/
 
 //创作中心
 function creator() {
@@ -13247,7 +13440,14 @@ function creator() {
 
 //无障碍
 function wza() {
-    GM_addStyle('html[data-theme=dark] .content{background:rgb(18,18,18);}');
+    if($('#wza-style').length==0)
+    {
+        GM_addStyle(`html[data-theme=dark] .content{background:#121212;}
+        html[data-theme=dark] .artic{border: 1px solid #444}
+        html[data-theme=dark] .artic .pages_content{border-top: 1px solid #444}
+        html[data-theme=dark] .artic .pages_content .pages_title{border-bottom: 1px solid #444}
+        `).id='wza-style';
+    }
 }
 
 
@@ -15341,7 +15541,7 @@ html[data-theme=dark] #settingLayer #settings-close{
     }
     document.addEventListener('copy', addLink);
 
-
+    
     //每个页面对应的功能函数
     if (window.location.href.indexOf("/topic/") > -1) //话题页
         setInterval(topic, 300);
@@ -15351,10 +15551,8 @@ html[data-theme=dark] #settingLayer #settings-close{
         setInterval(question, 300);
     else if (window.location.href.indexOf("/zvideo/") > -1) //知乎视频页
         setInterval(zvideo, 300);
-    /*
-    else if (window.location.href.indexOf("/club/") > -1) //知乎圈子页
-        setInterval(club, 300);
-    */
+    //else if (window.location.href.indexOf("/club/") > -1) //知乎圈子页
+    //    setInterval(club, 300);
     else if (window.location.href.indexOf("/ring/") > -1 || window.location.href.indexOf("/ring-feeds") > -1) //知乎圈子页
         setInterval(ring, 300);
     else if (window.location.href.indexOf("/search") > -1) //搜索结果页
@@ -15369,19 +15567,19 @@ html[data-theme=dark] #settingLayer #settings-close{
         setInterval(pin, 300);
     else if (window.location.href.indexOf("/people/") > -1 || window.location.href.indexOf("/org/") > -1) //用户主页
         setInterval(people, 300);
-    else if (window.location.href.indexOf("/draft") > -1) //草稿页
-        setInterval(draft, 300);
+    //else if (window.location.href.indexOf("/draft") > -1) //草稿页
+    //    setInterval(draft, 300);
     else if (window.location.href.indexOf("/roundtable/") > -1) //知乎圆桌页
         setInterval(roundtable, 300);
     else if (window.location.href.indexOf("/column/") > -1) //专栏列表
         setInterval(column, 300);
     else if (window.location.href.indexOf("cheese.") > -1) //芝士平台
         setInterval(cheese, 300);
-    else if (window.location.href.indexOf("/xen/") > -1 || window.location.href.indexOf("/remix/") > -1) //盐选专栏、知乎讲书
-        setInterval(xen, 300);
+    //else if (window.location.href.indexOf("/xen/") > -1 || window.location.href.indexOf("/remix/") > -1) //盐选专栏、知乎讲书
+    //    setInterval(xen, 300);
     else if (window.location.href.indexOf("/creator") > -1) //创作中心
         setInterval(creator, 300);
-    else if (window.location.href.indexOf("/wza/public/") > -1) //无障碍说明
+    else if (window.location.href.indexOf("/wza/") > -1) //无障碍说明
         setInterval(wza, 300);
     else if (window.location.href.indexOf("/recent-viewed") > -1) //最近浏览
         setInterval(recent, 300);
@@ -15389,5 +15587,6 @@ html[data-theme=dark] #settingLayer #settings-close{
         setInterval(zhihu_settings, 300);
     else
         setInterval(index, 300); //首页
+
 
 })();

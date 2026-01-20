@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         仿M浏览器元素审查
 // @namespace    https://viayoo.com/81gzxv
-// @version      3.3
+// @version      3.7
 // @description  利用AI模仿并生成M浏览器的元素审查，在脚本菜单开启元素审查，专注AD规则生成，支持规则编辑。
 // @author       Via && Gemini
 // @match        *://*/*
@@ -26,6 +26,7 @@
     let isCollapsed = false;
     let currentTarget = null;
     let activePreviewStyle = null;
+    let adUpdateTimer = null;
 
     const api = {
         addStyle: (css) => {
@@ -385,6 +386,10 @@
             let val = attr.value;
             if (!val || ['id', 'class'].includes(attr.name)) continue;
 
+            if (['srcid', 'tpl', 'data-module'].includes(attr.name)) {
+                rules.push(`${domain}##${tagName}[${attr.name}="${val}"]`);
+            }
+
             if (['width', 'height'].includes(attr.name)) {
                 sizeBundle += `[${attr.name}="${val}"]`;
                 continue;
@@ -456,31 +461,82 @@
             const getWeight = (s) => {
                 const hasDomain = s.includes(domain);
                 if (adKeywords.test(s)) return hasDomain ? 1 : 2;
-                if (s.includes('[onclick]') || s.includes('[ref*=')) return 2;
+                if (s.includes('[onclick]') || s.includes('[srcid') || s.includes('[tpl') || s.includes('[ref*=')) return 2;
                 if (s.includes('###') || s.includes('##.')) return hasDomain ? 3 : 4;
-                if (s.includes(' > ') || s.includes(' + ')) return 5;
-                return 6;
+                if (s.includes('[width')) return 5;
+                if (s.includes(' > ') || s.includes(' + ')) return 6;
+                return 7;
             };
             const wa = getWeight(a), wb = getWeight(b);
             return wa !== wb ? wa - wb : a.length - b.length;
         });
-
-        const genericTags = ['div', 'span', 'p', 'li', 'ul', 'ins', 'section', 'article', 'img', 'header', 'footer'];
+        const genericTags = ['div', 'span', 'p', 'li', 'ul', 'ins', 'section', 'article'];
         return rules.filter(r => {
-            const sel = r.split(/###?/)[1];
-            if (!sel) return false;
-            if (genericTags.includes(sel.toLowerCase())) return false;
-            if (sel.includes('*=') && sel.includes('http') && sel.length > 120) return false;
-            return true;
+            const selector = r.split(/###?/)[1];
+            if (selector.includes('[srcid') || selector.includes('[tpl')) return true;
+            return !genericTags.includes(selector);
         });
     }
 
     function renderAdPage() {
+        if (!adContent) return;
         adContent.innerHTML = '';
-        if (!currentTarget) return;
+        if (!currentTarget) {
+            adContent.innerHTML = '<div style="color:#999;padding:20px;">请先在网页上点击选取一个元素...</div>';
+            return;
+        }
         const rules = generateSmartRules(currentTarget);
+        // 优先调用window.via.record
+        // Via广告标记模拟函数
+        window.viaApiInject = function(rule) {
+            if (!rule) return;
+            let host = location.hostname;
+            let filter = rule.trim();
+            if (filter.includes('##')) {
+                const parts = filter.split('##');
+                host = parts[0].trim() || location.host;
+                filter = parts[1].trim();
+            }
+            if (typeof window.via === "object" && typeof window.via.record === "function") {
+                try {
+                    window.via.record(host, filter);
+                    window.via.toast(`添加一条自定义规则${host}${filter}`);
+                    return;
+                } catch (e) {
+                    console.error(e);
+                }
+            }
+            if (!window.via?.cmd) return;
+            let target = filter;
+            const _s = JSON.stringify;
+            JSON.stringify = function(a) {
+                if (target && a && typeof a === 'object') {
+                    if (a.action === 102 || a.action === 103) {
+                        a.host = host;
+                        a.filter = target;
+                        return _s.apply(this, [a]);
+                    }
+                }
+                return _s.apply(this, arguments);
+            };
+            via.cmd(517);
+            setTimeout(() => {
+                const el = document.createElement('via-proxy');
+                el.style.cssText = "position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;pointer-events:none;";
+                document.body.appendChild(el);
+                el.click();
+                if (window.__getMarkerFilter) window.__getMarkerFilter();
+                setTimeout(() => {
+                    el.remove();
+                    target = "";
+                    JSON.stringify = _s;
+                    if (window.__setMarkerEnabled) window.__setMarkerEnabled(false);
+                }, 300);
+            }, 100);
+        };
         if (rules.length === 0) {
             adContent.innerHTML = '<div style="color:#999;padding:20px;">该元素特征不足，未生成自动规则。</div>';
+            return;
         }
         rules.forEach(ruleText => {
             let currentRule = ruleText;
@@ -488,6 +544,10 @@
             const item = document.createElement('div');
             item.className = 'ad-rule-item';
             const updateUI = (isEditing = false) => {
+                const isVia = !!(window.via && window.via.cmd);
+                // 调用X浏览器Api添加广告规则
+                const isX = !!(window.mbrowser && window.mbrowser.addCustomAdRule);
+                let btnText = isVia ? '添加到Via' : (isX ? '添加到Xbrowser' : '复制');
                 item.innerHTML = `
                     <div class="ad-rule-display" ${isEditing ? 'contenteditable="true" style="border:1px solid #007bff; padding:5px; outline:none; background:var(--mb-bg);"' : ''}>${isEditing ? currentRule : highlightAdRule(currentRule)}</div>
                     <div class="ad-action-bar">
@@ -495,7 +555,7 @@
                             <button class="ad-mini-btn btn-save" style="background:#28a745; color:#fff; border:none;">保存</button>
                             <button class="ad-mini-btn btn-undo">撤销</button>
                         ` : `
-                            <button class="ad-mini-btn btn-copy">复制</button>
+                            <button class="ad-mini-btn btn-copy">${btnText}</button>
                             <button class="ad-mini-btn btn-pre">预览执行</button>
                             <button class="ad-mini-btn btn-res">恢复单条</button>
                             <button class="ad-mini-btn btn-edit">编辑</button>
@@ -508,7 +568,11 @@
                     item.querySelector('.btn-save').onclick = () => { currentRule = display.innerText.trim(); updateUI(false); };
                     item.querySelector('.btn-undo').onclick = () => { currentRule = originalRule; updateUI(false); };
                 } else {
-                    item.querySelector('.btn-copy').onclick = () => api.setClipboard(currentRule);
+                    item.querySelector('.btn-copy').onclick = () => {
+                        if (isX) window.mbrowser.addCustomAdRule(currentRule);
+                        else if (isVia) window.viaApiInject(currentRule);
+                        else api.setClipboard(currentRule);
+                    };
                     item.querySelector('.btn-edit').onclick = () => updateUI(true);
                     item.querySelector('.btn-pre').onclick = () => {
                         if (activePreviewStyle) activePreviewStyle.remove();
@@ -516,9 +580,7 @@
                         try {
                             const isIdRule = currentRule.includes('###');
                             let selector = currentRule.split(/###?/)[1];
-                            if (isIdRule && !selector.startsWith('#')) {
-                                selector = '#' + selector;
-                            }
+                            if (isIdRule && !selector.startsWith('#')) selector = '#' + selector;
                             activePreviewStyle.innerHTML = `${selector} { display: none !important; }`;
                             document.head.appendChild(activePreviewStyle);
                         } catch (e) { alert("语法错误"); }
@@ -530,7 +592,6 @@
             adContent.appendChild(item);
         });
     }
-
 
     function renderDataPage() {
         dataContent.innerHTML = '';
@@ -820,8 +881,15 @@
         if (e.type === 'click' || e.type === 'pointerup' || e.type === 'touchend') {
             const touch = e.changedTouches ? e.changedTouches[0] : e; const diffX = Math.abs(touch.clientX - startX); const diffY = Math.abs(touch.clientY - startY);
             if (diffX < 10 && diffY < 10) { 
-                e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation(); 
-                highlight(e.target); renderDOM();
+                e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation(); highlight(e.target); renderDOM();
+                const transform = stage.style.transform;
+                const isAtAdPage = transform.includes('translateX(-200%)');
+                if (isAtAdPage) {
+                    if (adUpdateTimer) clearTimeout(adUpdateTimer);
+                    adUpdateTimer = setTimeout(() => {
+                        renderAdPage();
+                    }, 500);
+                }
                 if (isCollapsed) { isCollapsed = false; updateFoldState(); }
                 return false;
             }

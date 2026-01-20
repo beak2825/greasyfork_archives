@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         小水书
 // @namespace    http://tampermonkey.net/
-// @version      1.1.29
+// @version      1.2
 // @description  瀑布流排版，自动提取帖子正文图片作为封面，内置设置面板
 // @author       十一世纪，codex
 // @match        https://shuiyuan.sjtu.edu.cn/*
@@ -62,7 +62,7 @@
     if (window.__xhsShuiyuanLoaded) return;
     window.__xhsShuiyuanLoaded = true;
 
-    const VERSION = '1.1.29';
+    const VERSION = '1.2';
 
     /* ============================================
      * 0. 早期防闪烁逻辑
@@ -2230,7 +2230,9 @@
                     if (!document.body.classList.contains('xhs-on')) return;
                     if (!Utils.isListLikePath()) return;
                     if (!this.container) return;
-                    this.ensureColumns(true);
+                    // iOS Safari 会在滚动时因地址栏/工具栏显隐频繁触发 resize（宽度不变，高度变化），
+                    // 若强制重建分列会导致卡片不断“洗牌”。这里只在列数确实需要变化时才重建。
+                    this.ensureColumns(false);
                 } catch {}
             }, 180));
         },

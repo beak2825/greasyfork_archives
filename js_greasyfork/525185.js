@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Full_Black_List
 // @namespace    Full_Black_List
-// @version      0.47.0
+// @version      0.54.0
 // @description  Supprime totalement les sujets des pseudo blacklistés depuis la blacklist JVC.
 // @author       Atlantis
 // @match        *://www.jeuxvideo.com/recherche/forums/0-*
@@ -69,8 +69,8 @@ async function getBLListMP() {
 
     //recupere pour chaque id
     listItems.forEach(user => {
-        let idAlias = user.getAttribute('data-id');
-        let hashTempo = user.getAttribute('data-hash');
+        let idAlias = user.dataset.id;
+        let hashTempo = user.dataset.hash;
         idListFetch.push(idAlias); // Get ID en liste
         hashListFetch.push(hashTempo); // Get hash temp (necessaire pour suppression)
     });
@@ -137,7 +137,7 @@ if (location.href.includes('jeuxvideo.com/forums/0-') || location.href.includes(
 if (location.href.includes('jeuxvideo.com/forums/0-')) {
 
     document.querySelector('.bloc-pagi-default .pagi-before-list-topic')?.insertAdjacentHTML('afterend', `
-        <div class="cust-btn-container">
+        <div>
             <span id="bl-refresh" class="btn btn-actu-new-list-forum icon-refresh"
                   title="Actualiser la blacklist des Sujets"
                   style="border-radius:6px; min-width:5rem;">
@@ -154,7 +154,7 @@ if (location.href.includes('jeuxvideo.com/forums/0-')) {
     `);
 
 
-    document.querySelector('.cust-btn-container #bl-refresh').addEventListener('click', async () => {
+    document.querySelector('#bl-refresh').addEventListener('click', async () => {
         await fonctionSynchBLForums();
         alert('Filtrage des topics actualisés avec la blacklist JVC ✅');
         location.reload();
@@ -165,22 +165,60 @@ if (location.href.includes('jeuxvideo.com/forums/0-')) {
 //6______MASQUAGE_____BLOC____MESSAGE____FORUM__(Topic_1_42)____
 if (location.href.includes('jeuxvideo.com/forums/1-') || location.href.includes('jeuxvideo.com/forums/42-') || location.href.includes('jeuxvideo.com/forums/message/')) {
 
-    //CSS pour declaratif et open quote (evite mutation observer inutile et lourd)
+    //HTML
+    document.querySelector('.bloc-pre-left .group-one > a')?.insertAdjacentHTML('afterend', `
+        <div>
+            <span id="show-msg" class="btn btn-actu-new-list-forum"
+                 title=""
+                 style="min-width:5rem;">
+                MSG BL
+            </span>
+        </div>
+    `);
+    //HTML-JS-IMPERATIF
+    const showMsgBtn = document.querySelector('#show-msg');
+    let countBlBtn = 0;
+    showMsgBtn.addEventListener('mouseover', () => {
+        countBlBtn = document.querySelectorAll('.msg-pseudo-blacklist, .msg-pseudo-blacklist-off').length;
+        showMsgBtn.title = `${countBlBtn} messages filtrés (Voir)`;
+    });
+    showMsgBtn.addEventListener('click', async () => {
+        document.querySelector('.conteneur-messages-pagi')?.classList.add('show-blacklist');
+        showMsgBtn.textContent = `(${countBlBtn}) BL`;
+    });
+
+    //CSS pour declaratif
     const style = document.createElement('style');
     style.textContent = `
-    .msg-pseudo-blacklist { display: none !important; } /*Topic Live*/
-    .blockquote-jv--blacklist:not(:focus) > * { display : none; }
-    .blockquote-jv--blacklist { background: rgba(0, 0, 0, .1) !important; }`;
+    /* Hide block*/
+    .msg-pseudo-blacklist { display: none;}
+
+    /* Hide Quote*/
+    .bloc-message-forum .blockquote-jv--blacklist { background: rgba(155, 155, 155, .1) !important; }
+    .bloc-message-forum .blockquote-jv--blacklist > * { 
+        display:none; 
+    }
+
+    /* Force Show block and Quotes*/
+    .conteneur-messages-pagi.show-blacklist .msg-pseudo-blacklist { display: block; }
+    .conteneur-messages-pagi.show-blacklist .bloc-message-forum .blockquote-jv--blacklist > * {
+        display: block; 
+    }
+    `;
     document.head.appendChild(style);
-    //Masquage_Message_avec_.msg-pseudo-blacklist
-    document.querySelectorAll('.msg-pseudo-blacklist').forEach(block => block.remove());
+
+    //Doublage Div pour eviter bug alternance couleur
+    document.querySelectorAll('.msg-pseudo-blacklist').forEach(block =>
+        block.insertAdjacentHTML("afterend", `<div class="msg-ghost-block" style="display:none;"></div>`)
+    );
 
     //ajout dun event au bouton blacklist
     const scopeForumBlocs = document.querySelector('.conteneur-messages-pagi');
     scopeForumBlocs.addEventListener('click', async(e) => {
-        let btnPicto;
+        const btnPicto = e.target.closest('.picto-msg-tronche');
+        const btnCancel = e.target.closest('.btn-blacklist-cancel');
         if (e.target.closest('#jvchat-main')) return; //dont touche if jvchat
-        if (btnPicto = e.target.closest('.picto-msg-tronche')) {
+        if (btnPicto) {
             sessionStorage.setItem('fullblacklistJVCAwait', 'true');
             /* TOPIC LIVE PATCH
             e.preventDefault(); e.stopImmediatePropagation();
@@ -188,6 +226,8 @@ if (location.href.includes('jeuxvideo.com/forums/1-') || location.href.includes(
             await fetch(`/forums/ajax_forum_blacklist.php?id_alias_msg=${btnPicto.dataset.idAlias}&action=add&ajax_hash=${hash}`);
             location.reload();
             */
+        } else if (btnCancel) {
+            sessionStorage.setItem('fullblacklistJVCAwait', 'true');
         }
     }, { capture: true });
 
@@ -198,9 +238,7 @@ if (location.href.includes('jeuxvideo.com/forums/1-') || location.href.includes(
             const pseudoIRC = p.textContent.startsWith("[") && p.textContent.split("<")[1]?.split(">")[0]?.toLowerCase(); //IRC
             const pseudo = p.textContent.replace(/\s+/g, ' ').split(" a écrit")[0]?.split(" ")?.pop()?.trim()?.toLowerCase(); //FOFO
             if (blacklistStorage.includes(pseudo) || blacklistStorage.includes(pseudoIRC)) {
-                const bq = p.closest(".blockquote-jv")
-                bq.classList.add("blockquote-jv--blacklist")
-                bq.setAttribute("tabindex", "0");
+                p.closest(".blockquote-jv").classList.add("blockquote-jv--blacklist");
             }
         });
     }
@@ -220,7 +258,7 @@ if (location.href.includes('jeuxvideo.com/messages-prives/message.php')) {
     // [1] Ajout d'un event sur les boutons "blacklist MP" pour quils agissent aussi sur la blacklist forum
     document.querySelectorAll('.picto-msg-tronche').forEach(btn => {
         btn.addEventListener('click', () => {
-            const idAlias = btn.getAttribute('data-url').match(/add_blacklist=(\d+)/)[1];
+            const idAlias = btn.dataset.url.match(/add_blacklist=(\d+)/)[1];
             sessionStorage.setItem('fullblacklistJVCidAlias', idAlias);
         });
     });
@@ -270,7 +308,7 @@ if (location.href.includes('jeuxvideo.com/messages-prives/indesirables.php')) {
     // Une suppression dans la BlackList MP => Suppression BL Forum + Suppression LocalStorage
     document.querySelectorAll('.mp_delete_blacklist').forEach(button => {
         button.addEventListener('click', () => {
-            const userId = button.getAttribute('data-id');
+            const userId = button.dataset.id;
             fetch(`/sso/ajax_delete_blacklist.php?id_alias_unblacklist=${userId}`);
             localStorage.removeItem('fullblacklistJVC');
         });
@@ -286,7 +324,7 @@ if (location.href.includes('jeuxvideo.com/sso/blacklist.php')) {
     // Suppression par pseudo
     document.querySelectorAll('.icon-cross-entypo').forEach(cross => {
         cross.addEventListener('click', async () => {
-            let idAlias = cross.closest('li')?.getAttribute('data-id-alias'); // Récupérer l'id
+            let idAlias = cross.closest('li')?.dataset.idAlias; // Récupérer l'id
             if (typeof hashMPListed === 'undefined') {
                 await getBLListMP(); //Get_MP_BL
                 hashMPListed = true;
@@ -317,7 +355,7 @@ if (location.href.includes('jeuxvideo.com/sso/blacklist.php')) {
         // Nettoyage de TOUT pseudo blacklistes
         let count = 1;
         for (const liItem of listItems) {
-            const idAlias = liItem.getAttribute('data-id-alias');
+            const idAlias = liItem.dataset.idAlias;
             await fetch(`/sso/ajax_delete_blacklist.php?id_alias_unblacklist=${idAlias}`);
             document.querySelector('#bl-clear').textContent = `Loading (${count})`;
             count++;
@@ -369,8 +407,8 @@ if (location.href.includes('jeuxvideo.com/sso/blacklist.php')) {
     function exportBlacklist() {
         const blacklistItems = [...document.querySelectorAll('#blacklist li')];
         const idList = blacklistItems.map(li => ({
-            id: li.getAttribute('data-id-alias'),
-            pseudo: li.querySelector('span')?.textContent.trim()
+            id: li.dataset.idAlias,
+            pseudo: li?.textContent.trim()
         }));
 
         const blob = new Blob([JSON.stringify(idList, null, 2)], { type: 'application/json' });
@@ -423,7 +461,7 @@ if (location.href.includes('jeuxvideo.com/sso/blacklist.php')) {
 /*
 MIT License
 
-Copyright (c) 2025 Atlantis (https://github.com/Lantea-Git)
+Copyright (c) 2026 Atlantis (https://github.com/Lantea-Git)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

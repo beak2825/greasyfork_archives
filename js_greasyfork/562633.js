@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Youtube 2 columns fix
 // @namespace    http://tampermonkey.net/
-// @version      1.05
+// @version      1.07
 // @description  Youtube watch page with 1 column videos
 // @author       You
 // @match        *://www.youtube.com/*
@@ -65,16 +65,18 @@ display: none !important;
 }
 ytd-watch-flexy #secondary-inner .yt-content-metadata-view-model__delimiter {
 visibility: hidden !important;
-margin: 2px !important;
+margin-left: 2px !important;
 }
 ytd-watch-flexy #secondary-inner .yt-content-metadata-view-model__delimiter--standalone {
 display: none;
 }
 ytd-watch-flexy #secondary-inner .yt-content-metadata-view-model__metadata-row--metadata-row-wrap {
 display: flex;
+height: 16px;
 }
 ytd-watch-flexy #secondary-inner .yt-content-metadata-view-model__badge {
 display: flex;
+height: 16px;
 }
 ytd-watch-flexy #secondary-inner .yt-content-metadata-view-model__metadata-row--metadata-row-inline {
 display: flex;
@@ -84,6 +86,17 @@ padding-bottom: 0 !important;
 }
 ytd-watch-flexy #secondary-inner .yt-lockup-metadata-view-model__avatar {
 display: none;
+}
+ytd-compact-radio-renderer #dismissible {
+flex-direction: row !important;
+margin: 0;
+height:92px;
+}
+ytd-compact-radio-renderer #dismissible .modern-collection-parent .ytd-compact-radio-renderer {
+width: 170px;
+}
+ytd-compact-radio-renderer #video-title {
+width: 230px;
 }`;
 style.textContent = cssOutput;
 document.head.appendChild(style);

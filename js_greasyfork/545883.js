@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AI Conversation Navigator
 // @namespace    https://greasyfork.org
-// @version      8.6
+// @version      8.9
 // @description  Floating navigator for your prompts in conversations. Applied for ChatGPT, Gemini, Aistudio, NotebookLM, Grok, Claude, Mistral, Perplexity, Meta, Poe, Deepai, Huggingface, Deepseek, Kimi, Qwen, Manus, Z.ai, Longcat, Chatglm, Chatboxai, Lmarena, Quillbot, Canva, Genspark, Character, Spacefrontiers, Scienceos, Evidencehunt, Playground (allen), Paperfigureqa (allen), Scira, Scispace, Exa.ai, Consensus, Openevidence, Pathway, Math-gpt.
 // @author       Bui Quoc Dung
 // @match        https://chatgpt.com/*
@@ -67,7 +67,10 @@
         scrollButtons.forEach(btn => {
             const isUser = btn.querySelector('.prompt-scrollbar-dot');
             if (isUser) {
-                const text = btn.getAttribute('aria-label');
+                let text = btn.getAttribute('aria-label');
+                if (!text && (btn.querySelector('img') || btn.querySelector('mat-icon'))) {
+                    text = "image:";
+                }
                 if (text) {
                     prompts.push({
                         element: btn,
@@ -500,7 +503,10 @@
         if (!CURRENT_SITE.userMessage) return prompts;
         const elements = document.querySelectorAll(CURRENT_SITE.userMessage);
         elements.forEach((element) => {
-            const text = element.textContent.trim();
+            let text = element.textContent.trim();
+            if (!text && (element.querySelector('img') || element.querySelector('canvas') || element.querySelector('svg'))) {
+                text = "image";
+            }
             if (text) prompts.push({ element, text });
         });
         if (CURRENT_SITE.reverse) prompts.reverse();
@@ -531,12 +537,42 @@
             if (parentList) parentList.querySelectorAll('.nav-list-item').forEach(li => li.classList.remove('active'));
             listItem.classList.add('active');
             activeMessageIndex = index;
+
             const targetElement = findPromptElementByIndex(index - 1);
             if (targetElement) {
-                targetElement.classList.add('nav-blink-active');
-                setTimeout(() => targetElement.classList.remove('nav-blink-active'), 2000);
-                if (CURRENT_SITE.useClick) targetElement.click();
-                else targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                const waitForImages = (element) => {
+                    const images = element.querySelectorAll('img');
+                    const promises = Array.from(images).map(img => {
+                        if (img.complete) return Promise.resolve();
+                        return new Promise((resolve) => {
+                            img.addEventListener('load', resolve);
+                            img.addEventListener('error', resolve);
+                            setTimeout(resolve, 3000);
+                        });
+                    });
+                    return Promise.all(promises);
+                };
+
+                if (CURRENT_SITE.useClick) {
+                    targetElement.click();
+                } else {
+                    targetElement.scrollIntoView({ behavior: 'instant', block: 'start' });
+                    waitForImages(targetElement).then(() => {
+                        targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    });
+                }
+
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            targetElement.classList.add('nav-blink-active');
+                            setTimeout(() => targetElement.classList.remove('nav-blink-active'), 2000);
+                            observer.unobserve(targetElement);
+                        }
+                    });
+                }, { threshold: 0.5 });
+
+                observer.observe(targetElement);
             }
         });
         return listItem;

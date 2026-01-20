@@ -1,7 +1,8 @@
 // ==UserScript==
 // @name            Better osm.org
 // @name:ru         Better osm.org
-// @version         1.5.3
+// @version         1.5.5
+// @changelog       v1.5.5: render child relations on relation page by hover
 // @changelog       v1.5.0: Shift + S: custom map layers, Shift + V: custom vector map styles, date for ESRI layer
 // @changelog       v1.5.0: KeyV: switch between raster and vector styles, render light:direction=* and direction=12-34
 // @changelog       v1.5.0: Initial OpenHistoricalMap support: changeset viewer
@@ -93,7 +94,7 @@
 // @icon         https://www.openstreetmap.org/favicon.ico
 // @require      https://raw.githubusercontent.com/deevroman/GM_config/fixed-for-chromium/gm_config.js#sha256=ea04cb4254619543f8bca102756beee3e45e861077a75a5e74d72a5c131c580b
 // @require      https://raw.githubusercontent.com/deevroman/osm-auth/d83736efcbec64a87d2c31ffdca3e3efc255f823/dist/osm-auth.iife.js#sha256=f9f85ed6209aa413097a5a4e1a4b6870d3a9ee94f267ac7c3ec35cee99b7dec9
-// @require      https://raw.githubusercontent.com/deevroman/exif-js/53b0c7c1951a23d255e37ed0a883462218a71b6f/exif.js#sha256=2235967d47deadccd9976244743e3a9be5ca5e41803cda65a40b8686ec713b74
+// @require      https://raw.githubusercontent.com/deevroman/exif-js/aad22d0e24726efd1440a008ad08ab704731fcfd/exif.js#sha256=79c449a11e9e485318ca8eff108e1cbcc0ec8b8aa3f0a40294021a2898319147
 // @require      https://raw.githubusercontent.com/deevroman/osmtogeojson/c97381a0c86c0a021641dd47d7bea01fb5514716/osmtogeojson.js#sha256=663bb5bbae47d5d12bff9cf1c87b8f973e85fab4b1f83453810aae99add54592
 // @require      https://raw.githubusercontent.com/deevroman/better-osm-org/5a949d7b1b0897472396758dd5c1aaa514bba6c6/misc/assets/snow-animation.js#sha256=3b6cd76818c5575ea49aceb7bf4dc528eb8a7cb228b701329a41bb50f0800a5d
 // @require      https://raw.githubusercontent.com/deevroman/opening_hours.js/f70889c71fcfd6e3ef7ba8df3b1263d8295b3dec/opening_hours+deps.min.js#sha256=e9a3213aba77dcf79ff1da9f828532acf1ebf7107ed1ce5f9370b922e023baff
@@ -1684,6 +1685,29 @@ function copyAnimation(e, text) {
         e.target.classList.add("was-copied")
         setTimeout(() => e.target.classList.remove("was-copied"), 300)
     }, 300)
+}
+
+/**
+ * @param {function(): boolean|void} fn
+ * @param {number} interval
+ * @param {number} timeout
+ */
+function tryApplyModule(fn, interval, timeout) {
+    const intervalTimerId = setInterval(async () => {
+        if ((await fn()) === true) {
+            console.debug("fast stop calling", fn.name)
+            clearInterval(intervalTimerId)
+            clearTimeout(timeoutTimerId)
+        }
+    }, interval)
+    const timeoutTimerId = setTimeout(() => {
+        clearInterval(intervalTimerId)
+        console.debug("stop calling", fn.name)
+    }, timeout)
+    if (fn() === true) {
+        clearInterval(intervalTimerId)
+        clearTimeout(timeoutTimerId)
+    }
 }
 
 //</editor-fold>
@@ -4275,14 +4299,7 @@ Press R for partial revert`
 
 function setupRevertButton() {
     if (!location.pathname.startsWith("/changeset")) return
-    const timerId = setInterval(() => {
-        if (addRevertButton()) clearInterval(timerId)
-    }, 100)
-    setTimeout(() => {
-        clearInterval(timerId)
-        console.debug("stop try add revert button")
-    }, 3000)
-    addRevertButton()
+    tryApplyModule(addRevertButton, 100, 3000)
 }
 
 // noinspection CssUnusedSymbol,CssUnresolvedCustomProperty
@@ -5043,6 +5060,143 @@ function addCreateNewPOIButton() {
     }
 }
 
+const noteHashtags = ["#added", "#fixed", "#irrelevant", "#alreadyfixed", "#needmoreinfo", "#notenoughinfo", "#inacurratelocation", "#needconfirmation"]
+
+function addAutoComplete() {
+    const container = document.querySelector("#sidebar")
+    const ta = document.querySelector("form.mb-3 .form-control")
+    let anchorPos = null // { left, top }
+    let anchorStart = null
+
+    const box = document.createElement("div")
+    box.style.position = "absolute"
+    box.style.border = "1px solid var(--bs-border-color)"
+    box.style.background = "var(--bs-body-bg)"
+    box.style.fontSize = "1rem"
+    box.style.display = "none"
+    box.style.zIndex = 1000
+    container.appendChild(box)
+
+    let items = []
+    let index = 0
+    let match = null
+
+    function findMatch(value, pos) {
+        const left = value.slice(0, pos)
+        const m = left.match(/(^|\s)(#\w*)$/)
+        if (!m) return null
+        return { start: pos - m[2].length, text: m[2] }
+    }
+
+    function caretCoords(ta, pos, container) {
+        const taRect = ta.getBoundingClientRect()
+        const cRect = container.getBoundingClientRect()
+
+        const div = document.createElement("div")
+        div.style.padding = getComputedStyle(ta).padding
+
+        div.style.position = "absolute"
+        div.style.visibility = "hidden"
+        div.style.top = taRect.top - cRect.top + container.scrollTop + "px"
+        div.style.left = taRect.left - cRect.left + container.scrollLeft + "px"
+
+        div.textContent = ta.value.slice(0, pos)
+
+        const span = document.createElement("span")
+        span.textContent = "\u200b"
+        div.appendChild(span)
+
+        container.appendChild(div)
+        const r = span.getBoundingClientRect()
+        container.removeChild(div)
+
+        return {
+            left: r.left - cRect.left + container.scrollLeft - ta.scrollLeft,
+            top: r.top - cRect.top + container.scrollTop - ta.scrollTop,
+            bottom: r.bottom - cRect.top + container.scrollTop - ta.scrollTop,
+        }
+    }
+
+    function render() {
+        box.innerHTML = ""
+        items.forEach((t, i) => {
+            const d = document.createElement("div")
+            d.textContent = t
+            d.style.padding = "0px 4px"
+            d.style.cursor = "pointer"
+            if (i === index) {
+                d.style.background = "var(--bs-border-color-translucent)"
+            }
+            d.onmousedown = e => {
+                e.preventDefault()
+                apply()
+            }
+            box.appendChild(d)
+        })
+        box.style.display = items.length ? "block" : "none"
+    }
+
+    function apply() {
+        if (!items.length || !match) {
+            return
+        }
+        ta.value = ta.value.slice(0, match.start) + items[index] + " " + ta.value.slice(match.start + match.text.length)
+        box.style.display = "none"
+    }
+
+    ta.addEventListener("input", () => {
+        const m = findMatch(ta.value, ta.selectionStart)
+        if (!m) {
+            box.style.display = "none"
+            anchorPos = null
+            anchorStart = null
+            return
+        }
+
+        if (anchorStart !== m.start) {
+            anchorStart = m.start
+            const r = caretCoords(ta, m.start, container)
+            anchorPos = { left: r.left - 4, top: r.bottom + 4 }
+        }
+
+        box.style.left = anchorPos.left + "px"
+        box.style.top = anchorPos.top + "px"
+
+        match = m
+        items = noteHashtags.filter(t => t.startsWith(match.text))
+        index = 0
+
+        if (!items.length) {
+            box.style.display = "none"
+            return
+        }
+
+        box.style.left = anchorPos.left + "px"
+        box.style.top = anchorPos.top + "px"
+        render()
+    })
+
+    ta.addEventListener("keydown", e => {
+        if (box.style.display === "none") {
+            return
+        }
+        if (e.key === "Tab" || e.key === "Enter") {
+            e.preventDefault()
+            apply()
+        } else if (e.key === "ArrowDown") {
+            e.preventDefault()
+            index = (index + 1) % items.length
+            render()
+        } else if (e.key === "ArrowUp") {
+            e.preventDefault()
+            index = (index - 1 + items.length) % items.length
+            render()
+        } else if (e.key === "Escape") {
+            box.style.display = "none"
+        }
+    })
+}
+
 function addResolveNotesButton() {
     if (!location.pathname.includes("/note")) return
     if (location.pathname.includes("/note/new")) {
@@ -5263,17 +5417,15 @@ out meta;
         })
         document.querySelectorAll("form.mb-3")[0].before(document.createElement("p"))
         document.querySelector("form.mb-3 .form-control").rows = 3
+        if (isDebug()) {
+            addAutoComplete()
+        }
     }
 }
 
-function setupResolveNotesButton(path) {
-    if (!path.startsWith("/note")) return
-    const timerId = setInterval(addResolveNotesButton, 100)
-    setTimeout(() => {
-        clearInterval(timerId)
-        console.debug("stop try add resolve note button")
-    }, 3000)
-    addResolveNotesButton()
+function setupResolveNotesButton() {
+    if (!location.pathname.startsWith("/note")) return
+    tryApplyModule(addResolveNotesButton, 100, 3000)
 }
 
 let updateNotesLayer = null
@@ -5583,12 +5735,9 @@ function addNotesFiltersButtons() {
 }
 
 function setupNotesFiltersButtons() {
-    const timerId = setInterval(addNotesFiltersButtons, 200)
-    setTimeout(() => {
-        clearInterval(timerId)
-        console.debug("stop try add notes filters buttons")
-    }, 5000)
-    addNotesFiltersButtons()
+    if (document.getElementById("map")) {
+        tryApplyModule(addNotesFiltersButtons, 200, 5000)
+    }
 }
 
 let mapDataSwitcherUnderSupervision = false
@@ -5628,12 +5777,7 @@ function hideNoteHighlight() {
 
 function setupHideNoteHighlight() {
     if (!location.pathname.startsWith("/note/")) return
-    const timerId = setInterval(hideNoteHighlight, 1000)
-    setTimeout(() => {
-        clearInterval(timerId)
-        console.debug("stop removing note highlight")
-    }, 5000)
-    hideNoteHighlight()
+    tryApplyModule(hideNoteHighlight, 1000, 5000)
 }
 
 //</editor-fold>
@@ -5694,13 +5838,8 @@ function addSpyGlassButtons() {
 }
 
 function setupSpyGlassButtons() {
-    if (isDebug()) {
-        const timerId = setInterval(addSpyGlassButtons, 500)
-        setTimeout(() => {
-            clearInterval(timerId)
-            console.debug("stop try add SpyGlass buttons")
-        }, 5000)
-        addSpyGlassButtons()
+    if (document.getElementById("map") && isDebug()) {
+        tryApplyModule(addSpyGlassButtons, 500, 5000)
     }
 }
 
@@ -5915,12 +6054,9 @@ function addGPXFiltersButtons() {
 }
 
 function setupGPXFiltersButtons() {
-    const timerId = setInterval(addGPXFiltersButtons, 100)
-    setTimeout(() => {
-        clearInterval(timerId)
-        console.debug("stop try add gpx filters buttons")
-    }, 3000)
-    addGPXFiltersButtons()
+    if (document.getElementById("map")) {
+        tryApplyModule(addGPXFiltersButtons, 100, 3000)
+    }
 }
 
 //</editor-fold>
@@ -6128,14 +6264,9 @@ function addDeleteButton() {
     }
 }
 
-function setupDeletor(path) {
-    if (!path.startsWith("/node/") && /*!path.startsWith("/way/") &&*/ path.startsWith("/relation/")) return
-    const timerId = setInterval(addDeleteButton, 100)
-    setTimeout(() => {
-        clearInterval(timerId)
-        console.debug("stop try add delete button")
-    }, 3000)
-    addDeleteButton()
+function setupDeletor() {
+    if (!location.pathname.startsWith("/node/") && /*!location.pathname.startsWith("/way/") &&*/ location.pathname.startsWith("/relation/")) return
+    tryApplyModule(addDeleteButton, 100, 3000)
 }
 
 //</editor-fold>
@@ -7177,6 +7308,11 @@ async function askCustomTileUrl() {
             about: "https://www.openrailwaymap.org",
             forceVector: true,
         },
+        // {
+        //     label: "F4map",
+        //     value: "https://tile.f4map.com/tiles/f4_3d/{z}/{x}/{y}.png",
+        //     about: "https://demo.f4map.com",
+        // },
         {
             label: "Hrvatska GeoPortal",
             value: "https://geoportal.dgu.hr/services/inspire/orthophoto_2021_2022/ows?FORMAT=image/png&TRANSPARENT=TRUE&VERSION=1.3.0&SERVICE=WMS&REQUEST=GetMap&LAYERS=OI.OrthoimageCoverage&STYLES=&CRS=EPSG:3857&WIDTH=256&HEIGHT=256&BBOX={bbox-epsg-3857}",
@@ -7823,12 +7959,9 @@ function addSatelliteLayers() {
 }
 
 function setupSatelliteLayers() {
-    const timerId = setInterval(addSatelliteLayers, 100)
-    setTimeout(() => {
-        clearInterval(timerId)
-        console.debug("stop try add resolve note button")
-    }, 3000)
-    addSatelliteLayers()
+    if (document.getElementById("map")) {
+        tryApplyModule(addSatelliteLayers, 100, 3000)
+    }
 }
 
 //</editor-fold>
@@ -8063,6 +8196,32 @@ function makeWikimediaCommonsValue(elem) {
     })
 }
 
+function makeRoofOrientationValue(elem) {
+    if (elem.textContent !== "across" && elem.textContent !== "along") {
+        elem.classList.add("fixme-tag")
+        elem.title = 'roof:orientation must be either "across" or "along"'
+    }
+}
+
+function makeConditionalValue(elem) {
+    if (!elem.textContent.includes("@")) {
+        elem.classList.add("fixme-tag")
+        elem.title = ':conditional tag value must be contain @'
+    }
+    if (elem.textContent.match(/@\s*$/)) {
+        elem.classList.add("fixme-tag")
+        elem.title = "empty part after @"
+    }
+    if (elem.textContent.match(/^\s*@/)) {
+        elem.classList.add("fixme-tag")
+        elem.title = "empty part before @"
+    }
+    if (elem.textContent.match(/@\s*@/)) {
+        elem.classList.add("fixme-tag")
+        elem.title = "empty part between @"
+    }
+}
+
 function makeRefBelpostValue(elem) {
     if (!GM_config.get("ImagesAndLinksInTags")) return
     if (elem.innerHTML.match(/^[0-9]+$/)) {
@@ -8190,6 +8349,45 @@ function makeLinksInVersionTagsClickable() {
                     renderDirectionTag(parseFloat(lat), parseFloat(lon), valueCell.textContent, c("#ff00e3"))
                 }
             }
+        } else if (key === "roof:direction") {
+            if (valueCell.textContent === "across" || valueCell.textContent === "along") {
+                // todo more
+                valueCell.classList.add("fixme-tag")
+                valueCell.title = "it seems to need to be changed to roof:orientation"
+            } else {
+                setTimeout(async () => {
+                    // todo
+                    const metadata = await loadWayMetadata()
+                    const nodes = metadata.elements.filter(i => i.type === "node")
+                    let lat = 0.0
+                    let lon = 0.0
+                    nodes.forEach(i => {
+                        lat += i.lat
+                        lon += i.lon
+                    })
+                    lat /= nodes.length
+                    lon /= nodes.length
+                    row.onmouseenter = () => {
+                        cleanObjectsByKey("activeObjects")
+                        renderDirectionTag(lat, lon, valueCell.textContent, c("#ff00e3"))
+                    }
+                    row.onmouseleave = () => {
+                        cleanObjectsByKey("activeObjects")
+                    }
+                })
+            }
+        } else if (key === "roof:orientation") {
+            makeRoofOrientationValue(valueCell)
+        } else if (
+            // prettier-ignore
+            key.endsWith(":conditional")
+            && !key.startsWith("fixme:")
+            && !key.startsWith("note:")
+            && !key.startsWith("source:")
+            && !key.startsWith("check_date:")
+            && !key.startsWith("description:")
+        ) {
+            makeConditionalValue(valueCell)
         } else if (
             key.startsWith("opening_hours") || // https://github.com/opening-hours/opening_hours.js/blob/master/scripts/related_tags.txt
             key.startsWith("happy_hours") ||
@@ -9965,7 +10163,7 @@ async function loadRelationVersionMembersViaOverpass(id, timestamp, cleanPrevObj
             isRestriction: isRestriction,
             restrictionRelationErrors: isRestriction ? validateRestriction(overpassGeom.elements[0]) : [],
         }
-        console.log(`${cache.length}/${wayCounts} for render`)
+        console.log(`${cache.geom.length}/${wayCounts} for render`)
     } else {
         overpassGeom.elements[0]?.members?.forEach(i => {
             if (i.type === "node") {
@@ -12116,7 +12314,8 @@ function addDiffInHistory(reason = "url_change") {
     }
 }
 
-function setupVersionsDiff(path) {
+function setupVersionsDiff() {
+    const path = location.pathname
     // prettier-ignore
     if (!path.includes("/history")
         || !path.startsWith("/node")
@@ -12124,12 +12323,7 @@ function setupVersionsDiff(path) {
         && !path.startsWith("/relation")) {
         return;
     }
-    const timerId = setInterval(addDiffInHistory, 500)
-    setTimeout(() => {
-        clearInterval(timerId)
-        console.debug("stop adding diff in history")
-    }, 25000)
-    addDiffInHistory()
+    tryApplyModule(addDiffInHistory, 500, 25000)
 }
 
 //</editor-fold>
@@ -12638,6 +12832,22 @@ function makeLinksInChangesetObjectRowClickable(row) {
                     valueCell.classList.add("fixme-tag")
                 }
             }
+        } else if (key === "roof:direction") {
+            if (valueCell.textContent === "across" || valueCell.textContent === "along") {
+                valueCell.classList.add("fixme-tag")
+                valueCell.title = "it seems to need to be changed to roof:orientation"
+            }
+        } else if (key === "roof:orientation") {
+            makeRoofOrientationValue(valueCell)
+        } else if (
+            // prettier-ignore
+            key.endsWith(":conditional")
+            && !key.startsWith("fixme:")
+            && !key.startsWith("source:")
+            && !key.startsWith("check_date:")
+            && !key.startsWith("description:")
+        ) {
+            makeConditionalValue(valueCell)
         }
     }
 }
@@ -15540,9 +15750,10 @@ function interceptRectangle() {
 */
 
 async function interceptMapManually() {
-    // if (!getWindow().rectangleIntercepted) {
-    //     interceptRectangle()
-    // }
+    if (!document.getElementById("map")) {
+        console.log("#map for manually intercepting not found")
+        return
+    }
     if (getWindow().mapIntercepted) return
     try {
         console.warn("try intercept map manually")
@@ -15646,14 +15857,9 @@ async function addChangesetQuickLook() {
     }
 }
 
-function setupChangesetQuickLook(path) {
-    if (!path.startsWith("/changeset")) return
-    const timerId = setInterval(addChangesetQuickLook, 100)
-    setTimeout(() => {
-        clearInterval(timerId)
-        console.debug("stop try add QuickLook")
-    }, 4000)
-    void addChangesetQuickLook()
+function setupChangesetQuickLook() {
+    if (!location.pathname.startsWith("/changeset")) return
+    tryApplyModule(addChangesetQuickLook, 100, 4000)
 }
 
 //</editor-fold>
@@ -15702,8 +15908,9 @@ async function createUploadSet(apiUrl, token, title) {
     return data.id || data.upload_set_id
 }
 
-async function uploadPhotoToSet(apiUrl, token, uploadSetId, file) {
+async function uploadPhotoToSet(apiUrl, token, uploadSetId, file, isBlurred) {
     const formData = new FormData()
+    formData.append("isBlurred", isBlurred)
     formData.append("file", file)
 
     const response = await externalFetch({
@@ -15719,6 +15926,24 @@ async function uploadPhotoToSet(apiUrl, token, uploadSetId, file) {
     if (response.status < 200 || response.status >= 300) {
         console.error(response)
         throw new Error(`Photo upload failed, HTTP ${response.status}:\n\n${response.response?.details?.error}\n\nFull log in browser console (F12)`)
+    }
+
+    return await response.response
+}
+
+async function deleteUploadSet(apiUrl, token, uploadSetId) {
+    const response = await externalFetch({
+        url: `${apiUrl}/api/upload_sets/${uploadSetId}`,
+        method: "DELETE",
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+        responseType: "json",
+    })
+
+    if (response.status !== 204) {
+        throw new Error("Failed to delete upload set: " + response.status)
     }
 
     return await response.response
@@ -15754,19 +15979,32 @@ GM.getValue("lastUploadedPanoramaxPicture").then(res => {
     }
 })
 
-async function uploadImage(token, file, title) {
+async function uploadImage(token, file, title, needBlur) {
     const uploadSetId = await createUploadSet(panoramaxInstance, token, title)
-    console.log("Upload set created:", uploadSetId, "Uploading...")
+    console.log(`Upload set created:${uploadSetId}. ${(needBlur ? "Upload with blurring" : "Upload without blurring")}. Uploading...`)
 
-    const uploadRes = await uploadPhotoToSet(panoramaxInstance, token, uploadSetId, file)
-    console.log("Uploaded file:", uploadRes, "Finishing...")
+    let picture_id
+    try {
+        const uploadRes = await uploadPhotoToSet(panoramaxInstance, token, uploadSetId, file, !needBlur)
+        picture_id = uploadRes.picture_id
+        console.log("Uploaded file:", uploadRes, "Finishing...")
+    } catch (e) {
+        console.log("failed upload. Cleaning uploadSet...")
+        try {
+            await deleteUploadSet(panoramaxInstance, token, uploadSetId)
+        } catch (e) {
+            console.error("Cleaning uploadSet failed", e)
+        }
+        console.log("uploadSet cleaned")
+        throw e
+    }
 
     try {
         const completeRes = await completeUploadSet(panoramaxInstance, token, uploadSetId)
         console.log("Upload set completed:", completeRes)
     } catch (e) {}
 
-    return uploadRes.picture_id
+    return picture_id
 }
 
 async function openOsmChangeset(comment) {
@@ -15836,17 +16074,22 @@ async function addPanoramaxTag(pictureId, object_type, object_id) {
 
 function addUploadPanoramaxBtn() {
     if (!isDebug() && !isMobile) return
+    if (!document.querySelector("#sidebar_content nav")) {
+        return
+    }
     if (!location.pathname.match(/\/(node|way|relation)\/[0-9]+\/?$/)) {
         return
     }
     if (document.querySelector(".upload-to-panoramax")) {
         return
     }
-    if (
-        !document.querySelector(':where(a[href*="Key:shop"], a[href*="Key:amenity"], a[href*="Key:tourism"])')
-    ) {
+
+    if (!document.querySelector('a[href*="https://wiki.openstreetmap.org/wiki/"]')) {
         return
     }
+    // if (!document.querySelector(':where(a[href*="Key:shop"], a[href*="Key:amenity"], a[href*="Key:tourism"], a[href*="Key:utility"], a[href*="Tag:natural=tree"])')) {
+    //     return
+    // }
     if (document.querySelector('a[href^="https://wiki.openstreetmap.org/wiki/Key:panoramax"]')) {
         return
     }
@@ -15855,8 +16098,11 @@ function addUploadPanoramaxBtn() {
     const firstBlock = document.createElement("div")
     const secondBlock = document.createElement("div")
     secondBlock.style.paddingTop = "5px"
+    const thirdBlock = document.createElement("div")
+    thirdBlock.style.paddingTop = "5px"
     wrapper.appendChild(firstBlock)
     wrapper.appendChild(secondBlock)
+    wrapper.appendChild(thirdBlock)
 
     firstBlock.appendChild(document.createTextNode("Upload photo to Panoramax"))
 
@@ -15865,10 +16111,19 @@ function addUploadPanoramaxBtn() {
     if (!isMobile) {
         fileInput.accept = "image/*"
     }
-    fileInput.onchange = () => {
+    const preview = document.createElement("img")
+    fileInput.onchange = async () => {
         uploadImgBtn.style.removeProperty("display")
         instanceInput.style.removeProperty("display")
+        needBlueLabel.style.removeProperty("display")
         instanceInput.value = panoramaxInstance
+        const fr = new FileReader()
+        fr.onload = function () {
+            preview.style.width = "100%"
+            preview.src = fr.result
+            thirdBlock.after(preview)
+        }
+        fr.readAsDataURL(fileInput.files[0])
     }
     firstBlock.appendChild(fileInput)
 
@@ -15903,20 +16158,18 @@ function addUploadPanoramaxBtn() {
             if (!token) {
                 return
             }
-            const uuid = await uploadImage(token, file, `Upload from better-osm-org for ${object_type}/${object_id}`)
+            const uuid = await uploadImage(token, file, `Upload from better-osm-org for ${object_type}/${object_id}`, needBlur.checked)
             await addPanoramaxTag(uuid, object_type, object_id)
             await GM.setValue("lastUploadedPanoramaxPicture", JSON.stringify({ uuid: uuid, instance: panoramaxInstance }))
             await sleep(1000)
             location.reload()
         } catch (err) {
             console.error(err)
-            alert(`Error: ${err.message}\n\n` + metadata ? `Info from EXIF:\nDateTime: ${metadata.DateTime}\nLat: ${metadata.GPSLatitude}\nLon: ${metadata.GPSLongitude}`: "")
+            alert(`Error: ${err.message}\n\n` + metadata ? `Info from EXIF:\nDateTime: ${metadata.DateTime}\nLat: ${metadata.GPSLatitude}\nLon: ${metadata.GPSLongitude}` : "")
         } finally {
             wrapper.classList.remove("is-loading")
         }
     }
-
-    document.querySelector("#sidebar_content").appendChild(wrapper)
 
     const datalistInstances = document.createElement("datalist")
     datalistInstances.id = "panoramax-instances"
@@ -15942,62 +16195,84 @@ function addUploadPanoramaxBtn() {
     secondBlock.appendChild(instanceInput)
     secondBlock.appendChild(datalistInstances)
     secondBlock.appendChild(uploadImgBtn)
+
+    const needBlur = document.createElement("input")
+    needBlur.type = "checkbox"
+    needBlur.checked = true
+    needBlur.style.marginRight = "5px"
+
+    const needBlueLabel = document.createElement("label")
+    needBlueLabel.textContent = "Blur faces"
+    needBlueLabel.style.display = "none"
+    needBlueLabel.prepend(needBlur)
+
+    thirdBlock.appendChild(needBlueLabel)
+
+    document.querySelector("#sidebar_content nav").appendChild(wrapper)
 }
 
 //</editor-fold>
 
 //<editor-fold desc="object-version-page" defaultstate="collapsed">
 
+let addHoverForNodesParentsLock = false
+
 async function addHoverForNodesParents() {
     if (!location.pathname.match(/^\/node\/(\d+)\/?$/)) {
         return
     }
-    document.querySelectorAll(`details [href^="/way/"]:not(.hover-added)`).forEach(elem => {
-        elem.classList.add("hover-added")
-        setTimeout(async () => {
-            const wayID = parseInt(elem.href.match(/way\/(\d+)/)[1])
-            const wayData = await loadWayMetadata(wayID)
-            const wayInfo = wayData.elements.find(i => i.id === wayID)
-            /*** @type {Map<string, NodeVersion>}*/
-            const nodesMap = new Map(
-                Object.entries(
-                    Object.groupBy(
-                        wayData.elements.filter(i => i.type === "node"),
-                        i => i.id,
-                    ),
-                ).map(([k, v]) => [k, v[0]]),
-            )
-            const wayLi = elem?.parentElement?.parentElement?.parentElement
-            wayLi.classList.add("node-last-version-parent")
-            wayLi.onmouseenter = () => {
-                const currentNodesList = wayInfo.nodes.map(i => [nodesMap.get(i.toString()).lat, nodesMap.get(i.toString()).lon])
-                const color = darkModeForMap || isDarkTiles() ? c("#ff00e3") : "#000000"
-                showActiveWay(currentNodesList, color)
-            }
-            wayLi.onclick = e => {
-                if (e.altKey) return
-                if (e.target.tagName === "A") return
-                const currentNodesList = wayInfo.nodes.map(i => [nodesMap.get(i.toString()).lat, nodesMap.get(i.toString()).lon])
-                const color = darkModeForMap || isDarkTiles() ? c("#ff00e3") : "#000000"
-                showActiveWay(currentNodesList, color, true)
-            }
-            wayLi.ondblclick = zoomToCurrentObject
-            if (wayInfo.tags) {
-                Object.entries(wayInfo.tags).forEach(([k, v]) => {
-                    wayLi.title += `\n${k}=${v}`
-                })
-                wayLi.title = wayLi.title.trim()
-            }
+    if (addHoverForNodesParentsLock) return
+    addHoverForNodesParentsLock = true
+    try {
+        document.querySelectorAll(`details [href^="/way/"]:not(.hover-added)`).forEach(elem => {
+            elem.classList.add("hover-added")
+            setTimeout(async () => {
+                const wayID = parseInt(elem.href.match(/way\/(\d+)/)[1])
+                const wayData = await loadWayMetadata(wayID)
+                const wayInfo = wayData.elements.find(i => i.id === wayID)
+                /*** @type {Map<string, NodeVersion>}*/
+                const nodesMap = new Map(
+                    Object.entries(
+                        Object.groupBy(
+                            wayData.elements.filter(i => i.type === "node"),
+                            i => i.id,
+                        ),
+                    ).map(([k, v]) => [k, v[0]]),
+                )
+                const wayLi = elem?.parentElement?.parentElement?.parentElement
+                wayLi.classList.add("node-last-version-parent")
+                wayLi.onmouseenter = () => {
+                    const currentNodesList = wayInfo.nodes.map(i => [nodesMap.get(i.toString()).lat, nodesMap.get(i.toString()).lon])
+                    const color = darkModeForMap || isDarkTiles() ? c("#ff00e3") : "#000000"
+                    showActiveWay(currentNodesList, color)
+                }
+                wayLi.onclick = e => {
+                    if (e.altKey) return
+                    if (e.target.tagName === "A") return
+                    const currentNodesList = wayInfo.nodes.map(i => [nodesMap.get(i.toString()).lat, nodesMap.get(i.toString()).lon])
+                    const color = darkModeForMap || isDarkTiles() ? c("#ff00e3") : "#000000"
+                    showActiveWay(currentNodesList, color, true)
+                }
+                wayLi.ondblclick = zoomToCurrentObject
+                if (wayInfo.tags) {
+                    Object.entries(wayInfo.tags).forEach(([k, v]) => {
+                        wayLi.title += `\n${k}=${v}`
+                    })
+                    wayLi.title = wayLi.title.trim()
+                }
+            })
         })
-    })
-    // prettier-ignore
-    document.querySelector(".node-last-version-parent")?.parentElement?.parentElement?.querySelector("summary")?.addEventListener("mouseenter", () => {
-        cleanObjectsByKey("activeObjects")
-    })
-    document.querySelector(".secondary-actions")?.addEventListener("mouseenter", () => {
-        cleanObjectsByKey("activeObjects")
-    })
-    console.log("addHoverForWayNodes finished")
+        // prettier-ignore
+        document.querySelector(".node-last-version-parent")?.parentElement?.parentElement?.querySelector("summary")?.addEventListener("mouseenter", () => {
+            cleanObjectsByKey("activeObjects")
+        })
+        document.querySelector(".secondary-actions")?.addEventListener("mouseenter", () => {
+            cleanObjectsByKey("activeObjects")
+        })
+        console.log("addHoverForWayNodes finished")
+    } finally {
+        addHoverForNodesParentsLock = true
+    }
 }
 
 /**
@@ -16007,7 +16282,7 @@ async function addHoverForNodesParents() {
  * @return {HTMLDivElement}
  */
 function makePolygonMeasureButtons(nodesIds, nodesMap, osm_type) {
-    const nodes = nodesIds.map(i => nodesMap.get(i.toString()))
+    const nodes = nodesIds.map(i => nodesMap.get(i.toString()) ?? nodesMap.get(i)) // todo dirty hack
     const bbox = {
         min_lat: Math.min(...nodes.map(i => i.lat)),
         min_lon: Math.min(...nodes.map(i => i.lon)),
@@ -16172,85 +16447,93 @@ function isDarkTiles() {
     return layers && (layers.includes("S") || layers.includes("T")) && isDarkMode()
 }
 
+let addHoverForWayNodesLock = false
+
 async function addHoverForWayNodes() {
     if (!location.pathname.match(/^\/way\/(\d+)\/?$/)) {
         return
     }
-    // todo relations
-    let infoBtn
-    if (!document.querySelector(".way-info-btn") && document.querySelector("#sidebar_content h4:last-of-type")) {
-        infoBtn = document.createElement("span")
-        infoBtn.textContent = "📐"
-        infoBtn.classList.add("way-info-btn")
-        infoBtn.classList.add("completed")
-        infoBtn.style.fontSize = "large"
-        infoBtn.style.cursor = "pointer"
+    if (addHoverForWayNodesLock) return
+    addHoverForWayNodesLock = true
+    try {
+        // todo relations
+        let infoBtn
+        if (!document.querySelector(".way-info-btn") && document.querySelector("#sidebar_content h4:last-of-type")) {
+            infoBtn = document.createElement("span")
+            infoBtn.textContent = "📐"
+            infoBtn.classList.add("way-info-btn")
+            infoBtn.classList.add("completed")
+            infoBtn.style.fontSize = "large"
+            infoBtn.style.cursor = "pointer"
 
-        document.querySelector("#sidebar_content h4:last-of-type").appendChild(document.createTextNode("\xA0"))
-        document.querySelector("#sidebar_content h4:last-of-type").appendChild(infoBtn)
-    }
+            document.querySelector("#sidebar_content h4:last-of-type").appendChild(document.createTextNode("\xA0"))
+            document.querySelector("#sidebar_content h4:last-of-type").appendChild(infoBtn)
+        }
 
-    const wayData = await loadWayMetadata().catch(() => {
+        const wayData = await loadWayMetadata().catch(() => {
+            if (infoBtn) {
+                infoBtn.style.display = "none"
+            }
+        })
+        if (!wayData) {
+            if (infoBtn) {
+                infoBtn.style.display = "none"
+            }
+            return
+        }
+        /*** @type {Map<string, NodeVersion>}*/
+        const nodesMap = new Map(
+            Object.entries(
+                Object.groupBy(
+                    wayData.elements.filter(i => i.type === "node"),
+                    i => i.id,
+                ),
+            ).map(([k, v]) => [k, v[0]]),
+        )
+        document.querySelectorAll(`details [href^="/node/"]:not(.hover-added)`).forEach(elem => {
+            elem.classList.add("hover-added")
+            const nodeInfo = nodesMap.get(elem.href.match(/node\/(\d+)/)[1])
+            const nodeLi = elem?.parentElement?.parentElement?.parentElement
+            nodeLi.classList.add("way-last-version-node")
+            nodeLi.onmouseenter = () => {
+                const color = darkModeForMap || isDarkTiles() ? c("#ff00e3") : "#000000"
+                showActiveNodeMarker(nodeInfo.lat.toString(), nodeInfo.lon.toString(), color, true, 6, 3)
+            }
+            nodeLi.onclick = e => {
+                if (e.altKey) return
+                panTo(nodeInfo.lat.toString(), nodeInfo.lon.toString())
+                const color = darkModeForMap || isDarkTiles() ? c("#ff00e3") : "#000000"
+                showActiveNodeMarker(nodeInfo.lat.toString(), nodeInfo.lon.toString(), color, true, 6, 3)
+            }
+            nodeLi.ondblclick = zoomToCurrentObject
+            if (nodeInfo.tags) {
+                Object.entries(nodeInfo.tags).forEach(([k, v]) => {
+                    nodeLi.title += `\n${k}=${v}`
+                })
+                nodeLi.title = nodeLi.title.trim()
+            }
+        })
+        // prettier-ignore
+        document.querySelector(".way-last-version-node")?.parentElement?.parentElement?.querySelector("summary")?.addEventListener("mouseenter", () => {
+            cleanObjectsByKey("activeObjects")
+        })
+        document.querySelector(".secondary-actions")?.addEventListener("mouseenter", () => {
+            cleanObjectsByKey("activeObjects")
+        })
+
         if (infoBtn) {
-            infoBtn.style.display = "none"
-        }
-    })
-    if (!wayData) {
-        if (infoBtn) {
-            infoBtn.style.display = "none"
-        }
-        return
-    }
-    /*** @type {Map<string, NodeVersion>}*/
-    const nodesMap = new Map(
-        Object.entries(
-            Object.groupBy(
-                wayData.elements.filter(i => i.type === "node"),
-                i => i.id,
-            ),
-        ).map(([k, v]) => [k, v[0]]),
-    )
-    document.querySelectorAll(`details [href^="/node/"]:not(.hover-added)`).forEach(elem => {
-        elem.classList.add("hover-added")
-        const nodeInfo = nodesMap.get(elem.href.match(/node\/(\d+)/)[1])
-        const nodeLi = elem?.parentElement?.parentElement?.parentElement
-        nodeLi.classList.add("way-last-version-node")
-        nodeLi.onmouseenter = () => {
-            const color = darkModeForMap || isDarkTiles() ? c("#ff00e3") : "#000000"
-            showActiveNodeMarker(nodeInfo.lat.toString(), nodeInfo.lon.toString(), color, true, 6, 3)
-        }
-        nodeLi.onclick = e => {
-            if (e.altKey) return
-            panTo(nodeInfo.lat.toString(), nodeInfo.lon.toString())
-            const color = darkModeForMap || isDarkTiles() ? c("#ff00e3") : "#000000"
-            showActiveNodeMarker(nodeInfo.lat.toString(), nodeInfo.lon.toString(), color, true, 6, 3)
-        }
-        nodeLi.ondblclick = zoomToCurrentObject
-        if (nodeInfo.tags) {
-            Object.entries(nodeInfo.tags).forEach(([k, v]) => {
-                nodeLi.title += `\n${k}=${v}`
-            })
-            nodeLi.title = nodeLi.title.trim()
-        }
-    })
-    // prettier-ignore
-    document.querySelector(".way-last-version-node")?.parentElement?.parentElement?.querySelector("summary")?.addEventListener("mouseenter", () => {
-        cleanObjectsByKey("activeObjects")
-    })
-    document.querySelector(".secondary-actions")?.addEventListener("mouseenter", () => {
-        cleanObjectsByKey("activeObjects")
-    })
+            const nodesIds = wayData.elements.find(i => i.type === "way").nodes
+            const infos = makePolygonMeasureButtons(nodesIds, nodesMap, "way")
+            document.querySelector("#sidebar_content h4:last-of-type").after(infos)
 
-    if (infoBtn) {
-        const nodesIds = wayData.elements.find(i => i.type === "way").nodes
-        const infos = makePolygonMeasureButtons(nodesIds, nodesMap, "way")
-        document.querySelector("#sidebar_content h4:last-of-type").after(infos)
-
-        infoBtn.onclick = () => {
-            infos.style.display = infos.style.display === "none" ? "" : "none"
+            infoBtn.onclick = () => {
+                infos.style.display = infos.style.display === "none" ? "" : "none"
+            }
         }
+        console.log("addHoverForWayNodes finished")
+    } finally {
+        addHoverForWayNodesLock = false
     }
-    console.log("addHoverForWayNodes finished")
 }
 
 /**
@@ -16270,6 +16553,8 @@ function showRestrictionValidationStatus(restrictionRelationErrors, targetElem) 
     }
 }
 
+let addHoverForRelationMembersLock = false
+
 async function addHoverForRelationMembers() {
     // todo make async safe
     const match = location.pathname.match(/^\/relation\/(\d+)\/?$/)
@@ -16277,247 +16562,340 @@ async function addHoverForRelationMembers() {
         return
     }
     const relation_id = parseInt(match[1])
-    let infoBtn
-    // eslint-disable-next-line no-constant-condition no-constant-binary-expression
-    if (!document.querySelector(".relation-info-btn")) {
-        infoBtn = document.createElement("span")
-        infoBtn.textContent = "📐"
-        infoBtn.classList.add("relation-info-btn")
-        infoBtn.classList.add("completed")
-        infoBtn.style.fontSize = "large"
-        infoBtn.style.cursor = "pointer"
+    if (addHoverForRelationMembersLock) return
+    addHoverForRelationMembersLock = true
+    try {
+        let infoBtn
+        if (!document.querySelector(".relation-info-btn")) {
+            infoBtn = document.createElement("span")
+            infoBtn.textContent = "📐"
+            infoBtn.classList.add("relation-info-btn")
+            infoBtn.classList.add("completed")
+            infoBtn.style.fontSize = "large"
+            infoBtn.style.cursor = "pointer"
 
-        document.querySelector("#sidebar_content h4:last-of-type").appendChild(document.createTextNode("\xA0"))
-        document.querySelector("#sidebar_content h4:last-of-type").appendChild(infoBtn)
-    }
-    const relationData = await loadRelationMetadata(relation_id)
-    if (!relationData) return
-    while (document.querySelector("details turbo-frame .spinner-border")) {
-        console.log("wait members list loading")
-        await sleep(1000)
-    }
-    /*** @type {Map<string, NodeVersion>}*/
-    const nodesMap = new Map(
-        Object.entries(
-            Object.groupBy(
-                relationData.elements.filter(i => i.type === "node"),
-                i => i.id,
-            ),
-        ).map(([k, v]) => [k, v[0]]),
-    )
-    /*** @type {Map<string, WayVersion>}*/
-    const waysMap = new Map(
-        Object.entries(
-            Object.groupBy(
-                relationData.elements.filter(i => i.type === "way"),
-                i => i.id,
-            ),
-        ).map(([k, v]) => [k, v[0]]),
-    )
-    /*** @type {Map<string, RelationVersion>}*/
-    const relationsMap = new Map(
-        Object.entries(
-            Object.groupBy(
-                relationData.elements.filter(i => i.type === "relation"),
-                i => i.id,
-            ),
-        ).map(([k, v]) => [k, v[0]]),
-    )
-    let restrictionArrows = []
-    const pinSign = document.createElement("span")
+            document.querySelector("#sidebar_content h4:last-of-type").appendChild(document.createTextNode("\xA0"))
+            document.querySelector("#sidebar_content h4:last-of-type").appendChild(infoBtn)
+        }
+        /** @type {{elements: (NodeVersion|WayVersion|RelationVersion)[]}} */
+        const topRelationData = await fetchJSONWithCache(osm_server.apiBase + "relation" + "/" + relation_id + "/full.json")
 
-    function bringRestrictionArrowsToFront() {
-        restrictionArrows.forEach(i => i.bringToFront())
-    }
+        if (!topRelationData) return
+        while (document.querySelector("details turbo-frame .spinner-border")) {
+            console.log("wait members list loading")
+            await sleep(1000)
+        }
+        /*** @type {Map<number, NodeVersion>}*/
+        const nodesMap = new Map(
+            Object.entries(
+                Object.groupBy(
+                    topRelationData.elements.filter(i => i.type === "node"),
+                    i => i.id,
+                ),
+            ).map(([k, v]) => [parseInt(k), v[0]]),
+        )
+        /*** @type {Map<number, WayVersion>}*/
+        const waysMap = new Map(
+            Object.entries(
+                Object.groupBy(
+                    topRelationData.elements.filter(i => i.type === "way"),
+                    i => i.id,
+                ),
+            ).map(([k, v]) => [parseInt(k), v[0]]),
+        )
+        let restrictionArrows = []
+        const pinSign = document.createElement("span")
 
-    let isRestriction = false
-    document.querySelectorAll(`details [href^="/node/"]:not(.hover-added)`).forEach(elem => {
-        elem.classList.add("hover-added")
-        const nodeInfo = nodesMap.get(elem.href.match(/node\/(\d+)/)[1])
-        const nodeLi = elem?.parentElement?.parentElement?.parentElement
-        nodeLi.classList.add("relation-last-version-member")
-        nodeLi.onmouseenter = () => {
-            const color = darkModeForMap || isDarkTiles() ? c("#ff00e3") : "#000000"
-            showActiveNodeMarker(nodeInfo.lat.toString(), nodeInfo.lon.toString(), color, true, 6, 3)
-            bringRestrictionArrowsToFront()
-            if (isRestriction && pinSign.classList.contains("pinned")) {
-                // https://github.com/deevroman/better-osm-org/pull/324#issuecomment-2993733516
-                injectJSIntoPage(`
-                (() => {
-                    let tmp = document.createElement("span")
-                    tmp.innerHTML = '<svg id="kek" width="100" height="100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="6" stroke="black" stroke-width="3" fill="none" /></svg>'
-                    window.prevdo = {
-                        maxWidth: 10,
-                        maxHeight: 10,
-                        className: "restriction-via-node-workaround",
-                        icon: L.icon({
-                            iconUrl: "data:image/svg+xml;base64," + btoa(tmp.innerHTML),
-                            iconSize: [100, 100],
-                            iconAnchor: [50, 50]
-                        })
-                    };
-                })()
-                `)
-                const m = getWindow().L.marker(getWindow().L.latLng(nodeInfo.lat, nodeInfo.lon), getWindow().prevdo)
-                layers["activeObjects"].push(m)
-                m.addTo(getMap())
+        function bringRestrictionArrowsToFront() {
+            restrictionArrows.forEach(i => i.bringToFront())
+        }
+
+        let isRestriction = false
+        document.querySelectorAll(`details [href^="/node/"]:not(.hover-added)`).forEach(elem => {
+            elem.classList.add("hover-added")
+            const nodeInfo = nodesMap.get(parseInt(elem.href.match(/node\/(\d+)/)[1]))
+            const nodeLi = elem?.parentElement?.parentElement?.parentElement
+            nodeLi.classList.add("relation-last-version-member")
+            nodeLi.onmouseenter = () => {
+                const color = darkModeForMap || isDarkTiles() ? c("#ff00e3") : "#000000"
+                showActiveNodeMarker(nodeInfo.lat.toString(), nodeInfo.lon.toString(), color, true, 6, 3)
+                bringRestrictionArrowsToFront()
+                if (isRestriction && pinSign.classList.contains("pinned")) {
+                    // https://github.com/deevroman/better-osm-org/pull/324#issuecomment-2993733516
+                    injectJSIntoPage(`
+                    (() => {
+                        let tmp = document.createElement("span")
+                        tmp.innerHTML = '<svg id="kek" width="100" height="100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="6" stroke="black" stroke-width="3" fill="none" /></svg>'
+                        window.prevdo = {
+                            maxWidth: 10,
+                            maxHeight: 10,
+                            className: "restriction-via-node-workaround",
+                            icon: L.icon({
+                                iconUrl: "data:image/svg+xml;base64," + btoa(tmp.innerHTML),
+                                iconSize: [100, 100],
+                                iconAnchor: [50, 50]
+                            })
+                        };
+                    })()
+                    `)
+                    const m = getWindow().L.marker(getWindow().L.latLng(nodeInfo.lat, nodeInfo.lon), getWindow().prevdo)
+                    layers["activeObjects"].push(m)
+                    m.addTo(getMap())
+                }
             }
-        }
-        nodeLi.onclick = e => {
-            if (e.altKey) return
-            panTo(nodeInfo.lat.toString(), nodeInfo.lon.toString())
-            const color = darkModeForMap || isDarkTiles() ? c("#ff00e3") : "#000000"
-            showActiveNodeMarker(nodeInfo.lat.toString(), nodeInfo.lon.toString(), color, true, 6, 3)
-            bringRestrictionArrowsToFront()
-        }
-        nodeLi.ondblclick = zoomToCurrentObject
-        if (nodeInfo.tags) {
-            Object.entries(nodeInfo.tags).forEach(([k, v]) => {
-                nodeLi.title += `\n${k}=${v}`
-            })
-            nodeLi.title = nodeLi.title.trim()
-        }
-    })
-    document.querySelectorAll(`details [href^="/way/"]:not(.hover-added)`).forEach(elem => {
-        elem.classList.add("hover-added")
-        const wayInfo = waysMap.get(elem.href.match(/way\/(\d+)/)[1])
-        const wayLi = elem?.parentElement?.parentElement?.parentElement
-        wayLi.classList.add("relation-last-version-member")
-        wayLi.onmouseenter = () => {
-            const currentNodesList = wayInfo.nodes.map(i => [nodesMap.get(i.toString()).lat, nodesMap.get(i.toString()).lon])
-            const color = darkModeForMap || isDarkTiles() ? c("#ff00e3") : "#000000"
-            showActiveWay(currentNodesList, color)
-            bringRestrictionArrowsToFront()
-        }
-        wayLi.onclick = e => {
-            if (e.altKey) return
-            if (e.target.tagName === "A") return
-            const currentNodesList = wayInfo.nodes.map(i => [nodesMap.get(i.toString()).lat, nodesMap.get(i.toString()).lon])
-            const color = darkModeForMap || isDarkTiles() ? c("#ff00e3") : "#000000"
-            showActiveWay(currentNodesList, color, true)
-            bringRestrictionArrowsToFront()
-        }
-        wayLi.ondblclick = zoomToCurrentObject
-        if (wayInfo.tags) {
-            Object.entries(wayInfo.tags).forEach(([k, v]) => {
-                wayLi.title += `\n${k}=${v}`
-            })
-            wayLi.title = wayLi.title.trim()
-        }
-    })
-    document.querySelectorAll(`details:last-of-type [href^="/relation/"]:not(.hover-added)`).forEach(elem => {
-        elem.classList.add("hover-added")
-        const relationInfo = relationsMap.get(elem.href.match(/relation\/(\d+)/)[1])
-        const relationLi = elem?.parentElement?.parentElement?.parentElement
-        relationLi.classList.add("relation-last-version-member")
-        relationLi.onmouseenter = () => {
-            relationInfo.members.forEach(i => {
+            nodeLi.onclick = e => {
+                if (e.altKey) return
+                panTo(nodeInfo.lat.toString(), nodeInfo.lon.toString())
                 const color = darkModeForMap || isDarkTiles() ? c("#ff00e3") : "#000000"
-                if (i.type === "node") {
-                    showActiveNodeMarker(nodesMap[i.id].lat.toString(), nodesMap[i.id].lon.toString(), color, true, 6, 3)
-                } else if (i.type === "way") {
-                    const currentNodesList = waysMap[i.id].nodes.map(i => [nodesMap.get(i.toString()).lat, nodesMap.get(i.toString()).lon])
-                    showActiveWay(currentNodesList, color)
-                } else {
-                    // todo
-                }
-            })
-            bringRestrictionArrowsToFront()
-        }
-        relationLi.onclick = e => {
-            if (e.altKey) return
-            if (e.target.tagName === "A") return
-            relationInfo.members.forEach(i => {
-                const color = darkModeForMap || isDarkTiles() ? c("#ff00e3") : "#000000"
-                if (i.type === "node") {
-                    if (e.altKey) return
-                    panTo(nodesMap[i.id].lat.toString(), nodesMap[i.id].lon.toString())
-                    showActiveNodeMarker(nodesMap[i.id].lat.toString(), nodesMap[i.id].lon.toString(), color, true, 6, 3)
-                } else if (i.type === "way") {
-                    const currentNodesList = waysMap[i.id].nodes.map(i => [nodesMap.get(i.toString()).lat, nodesMap.get(i.toString()).lon])
-                    showActiveWay(currentNodesList, color, true)
-                } else {
-                    // todo
-                }
-            })
-            bringRestrictionArrowsToFront()
-        }
-        relationLi.ondblclick = zoomToCurrentObject
-        if (relationInfo.tags) {
-            Object.entries(relationInfo.tags).forEach(([k, v]) => {
-                relationLi.title += `\n${k}=${v}`
-            })
-            relationLi.title = relationLi.title.trim()
-        }
-    })
-    // prettier-ignore
-    document.querySelector(".relation-last-version-member")?.parentElement?.parentElement?.querySelector("summary")?.addEventListener("mouseenter", () => {
-        cleanObjectsByKey("activeObjects")
-    })
-    document.querySelector(".secondary-actions")?.addEventListener("mouseenter", () => {
-        cleanObjectsByKey("activeObjects")
-    })
-    if (document.querySelector("#sidebar_content h2:not(.restriction-rendered)") && isRestrictionObj(relationsMap.get(relation_id.toString()).tags ?? {})) {
-        isRestriction = true
-        document.querySelector("#sidebar_content h2").classList.add("restriction-rendered")
-        const extendedRelationVersion = relationsMap.get(relation_id.toString())
-        extendedRelationVersion.members = extendedRelationVersion.members.map(mem => {
-            if (mem.type === "node") {
-                mem["lat"] = nodesMap.get(mem.ref.toString()).lat
-                mem["lon"] = nodesMap.get(mem.ref.toString()).lon
-                return /** @type {ExtendedRelationNodeMember} */ mem
-            } else if (mem.type === "way") {
-                mem["geometry"] = waysMap.get(mem.ref.toString()).nodes.map(n => ({
-                    lat: nodesMap.get(n.toString()).lat,
-                    lon: nodesMap.get(n.toString()).lon,
-                }))
-                return /** @type {ExtendedRelationWayMember} */ mem
-            } else if (mem.type === "relation") {
-                // todo
-                return /** @type {ExtendedRelationMember} */ mem
+                showActiveNodeMarker(nodeInfo.lat.toString(), nodeInfo.lon.toString(), color, true, 6, 3)
+                bringRestrictionArrowsToFront()
+            }
+            nodeLi.ondblclick = zoomToCurrentObject
+            if (nodeInfo.tags) {
+                Object.entries(nodeInfo.tags).forEach(([k, v]) => {
+                    nodeLi.title += `\n${k}=${v}`
+                })
+                nodeLi.title = nodeLi.title.trim()
             }
         })
-        const errors = validateRestriction(/** @type {ExtendedRelationVersion} */ extendedRelationVersion)
-        if (errors.length) {
-            showRestrictionValidationStatus(errors, document.querySelector("#sidebar_content > div:first-of-type details:last-of-type summary"))
-        } else {
-            restrictionArrows = renderRestriction(/** @type {ExtendedRelationVersion} */ extendedRelationVersion, restrictionColors[extendedRelationVersion.tags["restriction"]] ?? "#000", "customObjects")
-            pinSign.classList.add("pinned")
-            pinSign.textContent = "📌"
-            pinSign.tabIndex = 0
-            pinSign.title = "Pin restriction sign on map.\nYou can hide all the objects that better-osm-org adds by pressing ` or ~"
-            pinSign.style.cursor = "pointer"
-            pinSign.onkeypress = pinSign.onclick = async e => {
-                e.preventDefault()
-                e.stopImmediatePropagation()
-                if (pinSign.classList.contains("pinned")) {
-                    pinSign.style.cursor = "pointer"
-                    pinSign.classList.remove("pinned")
-                    pinSign.style.filter = "grayscale(1)"
-                    pinSign.title = "Hide restriction sign"
-                    restrictionArrows.forEach(i => (i.getElement().style.display = "none"))
-                } else {
-                    pinSign.title = "Hide restriction sign"
-                    pinSign.classList.add("pinned")
-                    pinSign.style.filter = ""
-                    restrictionArrows.forEach(i => (i.getElement().style.display = ""))
-                }
+        document.querySelectorAll(`details [href^="/way/"]:not(.hover-added)`).forEach(elem => {
+            elem.classList.add("hover-added")
+            const wayInfo = waysMap.get(parseInt(elem.href.match(/way\/(\d+)/)[1]))
+            const wayLi = elem?.parentElement?.parentElement?.parentElement
+            wayLi.classList.add("relation-last-version-member")
+            const color = darkModeForMap || isDarkTiles() ? c("#ff00e3") : "#000000"
+            wayLi.onmouseenter = () => {
+                const currentNodesList = wayInfo.nodes.map(i => [nodesMap.get(i).lat, nodesMap.get(i).lon])
+                showActiveWay(currentNodesList, color)
+                bringRestrictionArrowsToFront()
             }
-            document.querySelector("#sidebar_content > div:first-of-type details:last-of-type summary").appendChild(document.createTextNode(" "))
-            document.querySelector("#sidebar_content > div:first-of-type details:last-of-type summary").appendChild(pinSign)
-        }
-    }
+            wayLi.onclick = e => {
+                if (e.altKey) return
+                if (e.target.tagName === "A") return
+                const currentNodesList = wayInfo.nodes.map(i => [nodesMap.get(i).lat, nodesMap.get(i).lon])
+                showActiveWay(currentNodesList, color, true)
+                bringRestrictionArrowsToFront()
+            }
+            wayLi.ondblclick = zoomToCurrentObject
+            if (wayInfo.tags) {
+                Object.entries(wayInfo.tags).forEach(([k, v]) => {
+                    wayLi.title += `\n${k}=${v}`
+                })
+                wayLi.title = wayLi.title.trim()
+            }
+        })
 
-    if (infoBtn) {
-        const nodesIds = relationData.elements.filter(i => i.type === "way").flatMap(i => i.nodes)
-        const infos = makePolygonMeasureButtons(nodesIds, nodesMap, "relation")
-        document.querySelector("#sidebar_content h4:last-of-type").after(infos)
+        /** @type {RelationVersion[]}*/
+        const childRelations = topRelationData.elements.filter(i => i.type === "relation")
+        /*** @type {Map<number, RelationVersion>}*/
+        const relationsMap = new Map(Object.entries(Object.groupBy(childRelations, i => i.id)).map(([k, v]) => [parseInt(k), v[0]]))
+        const downloadedRelations = new Set([relation_id])
 
-        infoBtn.onclick = () => {
-            infos.style.display = infos.style.display === "none" ? "" : "none"
+        for (const elem of document.querySelectorAll(`details:last-of-type [href^="/relation/"]:not(.hover-added)`)) {
+            elem.classList.add("hover-added")
+            const childRelationId = parseInt(elem.href.match(/relation\/(\d+)/)[1])
+            if (!downloadedRelations.has(childRelationId)) {
+                elem.parentElement.style.cursor = "progress"
+                console.debug("downloading child relation", childRelationId)
+                downloadedRelations.add(childRelationId)
+                /** @type {{elements: (NodeVersion|WayVersion|RelationVersion)[]}} */
+                const relationData = await fetchJSONWithCache(osm_server.apiBase + "relation" + "/" + childRelationId + "/full.json")
+                elem.parentElement.style.cursor = ""
+                relationData?.elements?.forEach(i => {
+                    if (i.type === "node") {
+                        if (!nodesMap.has(i.id)) {
+                            nodesMap.set(i.id, i)
+                        }
+                    } else if (i.type === "way") {
+                        if (!waysMap.has(i.id)) {
+                            waysMap.set(i.id, i)
+                        }
+                    } else if (i.type === "relation") {
+                        if (!relationsMap.has(i.id)) {
+                            relationsMap.set(i.id, i)
+                        }
+                    }
+                })
+            }
+
+            const relationInfo = relationsMap.get(childRelationId)
+            const relationLi = elem?.parentElement?.parentElement?.parentElement
+            relationLi.classList.add("relation-last-version-member")
+
+            let cache
+
+            function renderRelation(relationInfo) {
+                const addStroke = darkModeForMap && isDarkMode()
+                const layer = "activeObjects"
+                const color = darkModeForMap || isDarkTiles() ? c("#ff00e3") : "#000000"
+                if (!cache) {
+                    let wayCounts = 0
+                    /** @type {LatLonPair[][]} */
+                    const mergedGeometry = []
+                    relationInfo.members?.forEach(i => {
+                        if (i.type === "way") {
+                            const w = waysMap.get(i.ref)
+                            wayCounts++
+                            const nodesList = w.nodes.map(i => nodesMap.get(i)).map(p => [p.lat, p.lon])
+                            if (mergedGeometry.length === 0) {
+                                mergedGeometry.push(nodesList)
+                            } else {
+                                const lastWay = mergedGeometry[mergedGeometry.length - 1]
+                                const [lastLat, lastLon] = lastWay[lastWay.length - 1]
+                                if (lastLat === nodesList[0][0] && lastLon === nodesList[0][1]) {
+                                    mergedGeometry[mergedGeometry.length - 1].push(...nodesList.slice(1))
+                                } else {
+                                    mergedGeometry.push(nodesList)
+                                }
+                            }
+                        } else if (i.type === "node") {
+                            showNodeMarker(nodesMap.get(i.ref).lat, nodesMap.get(i.ref).lon, color, null, layer)
+                        } else if (i.type === "relation") {
+                            // todo
+                        }
+                    })
+                    cache = {
+                        geom: mergedGeometry.map(i => intoPage(i)),
+                    }
+                    console.log(`${cache.geom.length}/${wayCounts} for render`)
+                } else {
+                    relationInfo.members?.forEach(i => {
+                        if (i.type === "node") {
+                            showNodeMarker(nodesMap.get(i.ref).lat, nodesMap.get(i.ref).lon, color, null, layer)
+                        }
+                    })
+                }
+
+                cache.geom.forEach(nodesList => {
+                    displayWay(nodesList, false, color, 4, null, layer, null, null, addStroke, true)
+                })
+            }
+            relationLi.onmouseenter = () => {
+                cleanObjectsByKey("activeObjects")
+                renderRelation(relationInfo)
+            }
+            relationLi.onclick = e => {
+                if (e.altKey) return
+                if (e.target.tagName === "A") return
+                cleanObjectsByKey("activeObjects")
+                renderRelation(relationInfo)
+
+                function zoomToRelation(relationInfo) {
+                    const nodes = []
+                    relationInfo.members.forEach(i => {
+                        if (i.type === "node") {
+                            nodes.push(nodesMap.get(i.ref))
+                        } else if (i.type === "way") {
+                            waysMap.get(i.ref).nodes.map(i => nodes.push(nodesMap.get(i)))
+                        } else {
+                            // todo
+                        }
+                    })
+                    const bbox = {
+                        min_lat: Math.min(...nodes.map(i => i.lat)),
+                        min_lon: Math.min(...nodes.map(i => i.lon)),
+                        max_lat: Math.max(...nodes.map(i => i.lat)),
+                        max_lon: Math.max(...nodes.map(i => i.lon)),
+                    }
+                    fitBounds([
+                        [bbox.min_lat, bbox.min_lon],
+                        [bbox.max_lat, bbox.max_lon],
+                    ])
+                }
+
+                zoomToRelation(relationInfo)
+            }
+            relationLi.ondblclick = () => {
+                const nodes = Array.from(nodesMap.values())
+                const bbox = {
+                    min_lat: Math.min(...nodes.map(i => i.lat)),
+                    min_lon: Math.min(...nodes.map(i => i.lon)),
+                    max_lat: Math.max(...nodes.map(i => i.lat)),
+                    max_lon: Math.max(...nodes.map(i => i.lon)),
+                }
+                fitBounds([
+                    [bbox.min_lat, bbox.min_lon],
+                    [bbox.max_lat, bbox.max_lon],
+                ])
+            }
+            if (relationInfo.tags) {
+                Object.entries(relationInfo.tags).forEach(([k, v]) => {
+                    relationLi.title += `\n${k}=${v}`
+                })
+                relationLi.title = relationLi.title.trim()
+            }
         }
+        // prettier-ignore
+        document.querySelector(".relation-last-version-member")?.parentElement?.parentElement?.querySelector("summary")?.addEventListener("mouseenter", () => {
+            cleanObjectsByKey("activeObjects")
+        })
+        document.querySelector(".secondary-actions")?.addEventListener("mouseenter", () => {
+            cleanObjectsByKey("activeObjects")
+        })
+        if (document.querySelector("#sidebar_content h2:not(.restriction-rendered)") && isRestrictionObj(relationsMap.get(relation_id).tags ?? {})) {
+            isRestriction = true
+            document.querySelector("#sidebar_content h2").classList.add("restriction-rendered")
+            const extendedRelationVersion = relationsMap.get(relation_id)
+            extendedRelationVersion.members = extendedRelationVersion.members.map(mem => {
+                if (mem.type === "node") {
+                    mem["lat"] = nodesMap.get(mem.ref).lat
+                    mem["lon"] = nodesMap.get(mem.ref).lon
+                    return /** @type {ExtendedRelationNodeMember} */ mem
+                } else if (mem.type === "way") {
+                    mem["geometry"] = waysMap.get(mem.ref).nodes.map(n => ({
+                        lat: nodesMap.get(n).lat,
+                        lon: nodesMap.get(n).lon,
+                    }))
+                    return /** @type {ExtendedRelationWayMember} */ mem
+                } else if (mem.type === "relation") {
+                    // todo
+                    return /** @type {ExtendedRelationMember} */ mem
+                }
+            })
+            const errors = validateRestriction(/** @type {ExtendedRelationVersion} */ extendedRelationVersion)
+            if (errors.length) {
+                showRestrictionValidationStatus(errors, document.querySelector("#sidebar_content > div:first-of-type details:last-of-type summary"))
+            } else {
+                restrictionArrows = renderRestriction(/** @type {ExtendedRelationVersion} */ extendedRelationVersion, restrictionColors[extendedRelationVersion.tags["restriction"]] ?? "#000", "customObjects")
+                pinSign.classList.add("pinned")
+                pinSign.textContent = "📌"
+                pinSign.tabIndex = 0
+                pinSign.title = "Pin restriction sign on map.\nYou can hide all the objects that better-osm-org adds by pressing ` or ~"
+                pinSign.style.cursor = "pointer"
+                pinSign.onkeypress = pinSign.onclick = async e => {
+                    e.preventDefault()
+                    e.stopImmediatePropagation()
+                    if (pinSign.classList.contains("pinned")) {
+                        pinSign.style.cursor = "pointer"
+                        pinSign.classList.remove("pinned")
+                        pinSign.style.filter = "grayscale(1)"
+                        pinSign.title = "Hide restriction sign"
+                        restrictionArrows.forEach(i => (i.getElement().style.display = "none"))
+                    } else {
+                        pinSign.title = "Hide restriction sign"
+                        pinSign.classList.add("pinned")
+                        pinSign.style.filter = ""
+                        restrictionArrows.forEach(i => (i.getElement().style.display = ""))
+                    }
+                }
+                document.querySelector("#sidebar_content > div:first-of-type details:last-of-type summary").appendChild(document.createTextNode(" "))
+                document.querySelector("#sidebar_content > div:first-of-type details:last-of-type summary").appendChild(pinSign)
+            }
+        }
+
+        if (infoBtn) {
+            const nodesIds = topRelationData.elements.filter(i => i.type === "way").flatMap(i => i.nodes)
+            const infos = makePolygonMeasureButtons(nodesIds, nodesMap, "relation")
+            document.querySelector("#sidebar_content h4:last-of-type").after(infos)
+
+            infoBtn.onclick = () => {
+                infos.style.display = infos.style.display === "none" ? "" : "none"
+            }
+        }
+        console.log("addHoverForRelationMembers finished")
+    } finally {
+        addHoverForRelationMembersLock = false
     }
-    console.log("addHoverForRelationMembers finished")
 }
 
 function makeHeaderPartsClickable() {
@@ -16896,12 +17274,7 @@ function setupMakeVersionPageBetter() {
     if (!match) {
         return
     }
-    const timerId = setInterval(makeVersionPageBetter, 500)
-    setTimeout(() => {
-        clearInterval(timerId)
-        console.debug("stop adding MakeVersionPageBetter")
-    }, 3000)
-    makeVersionPageBetter()
+    tryApplyModule(makeVersionPageBetter, 500, 3000)
 }
 
 //</editor-fold>
@@ -17038,6 +17411,7 @@ function runInOsmPageCode() {
         const proxyUrl = URL.createObjectURL(
             new OriginalBlob([fetchCode + window.maplibreWorkerSourceCode], { type: "application/javascript" }),
         )
+        // TODO FIXME proxyUrl = URL.createObjectURL — memory leak?
         console.count("newWorkerCounter")
         const maplibreOverriddenWorker = new OriginalWorker(proxyUrl, options);
         window.maplibreOverriddenWorker = maplibreOverriddenWorker
@@ -18491,12 +18865,7 @@ function addMassChangesetsActions() {
 
 function setupMassChangesetsActions() {
     if (location.pathname !== "/history" && location.pathname !== "/history/friends" && !(location.pathname.includes("/history") && location.pathname.includes("/user/"))) return
-    const timerId = setInterval(addMassChangesetsActions, 300)
-    setTimeout(() => {
-        clearInterval(timerId)
-        console.debug("stop try add mass changesets actions")
-    }, 5000)
-    addMassChangesetsActions()
+    tryApplyModule(addMassChangesetsActions, 300, 5000)
 }
 
 //</editor-fold>
@@ -18548,12 +18917,7 @@ function setupRelationVersionViewer() {
     if (!match) {
         return
     }
-    const timerId = setInterval(addRelationVersionView, 500)
-    setTimeout(() => {
-        clearInterval(timerId)
-        console.debug("stop adding RelationVersionView")
-    }, 25000)
-    addRelationVersionView()
+    tryApplyModule(addRelationVersionView, 500, 25000)
 }
 
 //</editor-fold>
@@ -18764,7 +19128,12 @@ async function makeEditorNormalizer() {
     }
 }
 
-async function betterUserStat(user) {
+async function betterUserStat() {
+    const match = location.pathname.match(/^\/user\/([^/]+)\/?$/)
+    if (!match) {
+        return
+    }
+    const user = decodeURI(match[1])
     if (!GM_config.get("BetterProfileStat") || !location.pathname.match(/^\/user\/([^/]+)\/?$/)) {
         return
     }
@@ -18995,7 +19364,7 @@ async function betterUserStat(user) {
             }
             filterInputByEditor.appendChild(item)
         })
-
+    filterInputByEditor.appendChild(document.createElement("hr"))
     Array.from(new Set(changesets.map(i => i.tags?.["created_by"])))
         .sort()
         .forEach(i => {
@@ -19007,6 +19376,7 @@ async function betterUserStat(user) {
 
     filterInputByEditor.after(filterInputByEditor)
     console.log("setuping filters finished")
+    return true
 }
 
 // https://osm.org/user/Молотов-Прибой
@@ -19456,7 +19826,10 @@ async function makeProfileForDeletedUser(user) {
     content.appendChild(div)
 }
 
-function addColorForActiveBlock() {
+/**
+ * @param {string} user
+ */
+function addColorForActiveBlock(user) {
     const blocksLink = document.querySelector('a[href$="/blocks"]')
     if (blocksLink?.nextElementSibling?.textContent > 0) {
         blocksLink.nextElementSibling.style.background = "rgba(255, 0, 0, 0.3)"
@@ -19477,20 +19850,20 @@ function addColorForActiveBlock() {
     }
 }
 
-async function setupHDYCInProfile(path) {
-    addColorForActiveBlock()
-    if (isOHMServer()) {
+async function setupHDYCInProfile() {
+    const match = location.pathname.match(/^\/user\/([^/]+)(\/|\/notes)?$/)
+    if (!match || location.pathname.includes("/history")) {
         return
     }
-    const match = path.match(/^\/user\/([^/]+)(\/|\/notes)?$/)
-    if (!match || path.includes("/history")) {
+    /** @type {string} **/
+    const user = match[1]
+    addColorForActiveBlock(user)
+    if (isOHMServer()) {
         return
     }
     if (document.getElementById("hdyc-iframe")) {
         return
     }
-    /** @type {string} **/
-    const user = match[1]
     if (user === "forgot-password" || user === "new") return
     document.querySelector(".content-body > .content-inner").style.paddingBottom = "0px"
     if (isDarkMode()) {
@@ -19659,13 +20032,7 @@ function setupBetterProfileStat() {
     if (!match) {
         return
     }
-    const user = match[1]
-    const timerId = setInterval(betterUserStat, 300, decodeURI(user))
-    setTimeout(() => {
-        clearInterval(timerId)
-        console.debug("stop try add heatmap filters")
-    }, 5000)
-    void betterUserStat(decodeURI(user))
+    tryApplyModule(betterUserStat, 300, 5000)
 }
 
 function inFrame() {
@@ -20529,14 +20896,20 @@ function makeExternalLinkEditable(targetLi, editorsListUl, nameValue = "", templ
     }
 }
 
-async function setupNewEditorsLinks(mutationsList) {
-    // little optimization for scroll
-    if (mutationsList.length === 1 && mutationsList[0].type === "attributes" && mutationsList[0].attributeName === "data-popper-placement") {
-        return
-    }
-    console.debug("setupNewEditorsLinks call")
-    if (mutationsList.length === 1 && mutationsList[0].type === "attributes" && mutationsList[0].attributeName === "aria-describedby") {
-        document.querySelector("#" + mutationsList[0].target.getAttribute("aria-describedby"))?.remove()
+async function setupNewEditorsLinks() {
+    await _setupNewEditorsLinks()
+}
+
+async function _setupNewEditorsLinks(mutationsList) {
+    if (mutationsList) {
+        // little optimization for scroll
+        if (mutationsList.length === 1 && mutationsList[0].type === "attributes" && mutationsList[0].attributeName === "data-popper-placement") {
+            return
+        }
+        console.debug("setupNewEditorsLinks call")
+        if (mutationsList.length === 1 && mutationsList[0].type === "attributes" && mutationsList[0].attributeName === "aria-describedby") {
+            document.querySelector("#" + mutationsList[0].target.getAttribute("aria-describedby"))?.remove()
+        }
     }
     addDropdownStyle()
     if (isMobile && document.querySelector("#map")) {
@@ -20706,7 +21079,7 @@ async function setupNewEditorsLinks(mutationsList) {
         }
     } finally {
         coordinatesObserver?.disconnect()
-        coordinatesObserver = new MutationObserver(setupNewEditorsLinks)
+        coordinatesObserver = new MutationObserver(_setupNewEditorsLinks)
         coordinatesObserver.observe(document.querySelector("#edit_tab"), { subtree: true, childList: true, attributes: true })
     }
 }
@@ -24116,14 +24489,7 @@ function addImageryOffsetsDB() {
 }
 
 function setupImageryOffsetsDB() {
-    const timerId = setInterval(() => {
-        if (addImageryOffsetsDB()) clearInterval(timerId)
-    }, 2000)
-    setTimeout(() => {
-        clearInterval(timerId)
-        console.debug("stop try add imagery offset")
-    }, 10000)
-    addImageryOffsetsDB()
+    tryApplyModule(addImageryOffsetsDB, 2000, 10000)
 }
 
 function setupIDframe() {
@@ -24160,7 +24526,7 @@ function setupIDframe() {
 // - для модулей, которые внедряются через setInterval можно сохранить таймер, чтобы предотвратить дублирование вызовов
 // - возможность сохранить результат внедрения
 
-/***@type {((function(string): Promise<void>|void))[]}*/
+/***@type {((function(): Promise<void>|void))[]}*/
 // prettier-ignore
 const modules = [
     setupDarkModeForMap,
@@ -24193,6 +24559,75 @@ const alwaysEnabledModules = [
     setupPrometheusLink
 ]
 
+function selectOverpassServer() {
+    if (isOHMServer()) {
+        overpass_server = OHM_OVERPASS_INSTANCE
+    } else if (GM_config.get("OverpassInstance") === MAILRU_OVERPASS_INSTANCE.name) {
+        overpass_server = MAILRU_OVERPASS_INSTANCE
+    } else if (GM_config.get("OverpassInstance") === PRIVATECOFFEE_OVERPASS_INSTANCE.name) {
+        overpass_server = PRIVATECOFFEE_OVERPASS_INSTANCE
+    } else {
+        overpass_server = MAIN_OVERPASS_INSTANCE
+    }
+}
+
+function applyModules(path) {
+    for (const module of modules.filter(module => GM_config.get(module.name.slice("setup".length)))) {
+        queueMicrotask(() => {
+            // console.log(module.name)
+            module(path)
+        })
+    }
+    for (const module of alwaysEnabledModules) {
+        queueMicrotask(() => {
+            // console.log(module.name)
+            void module(path)
+        })
+    }
+}
+
+function cleanupBeforeNewLocation(path) {
+    try {
+        shiftKeyZClicks = 0
+        abortPrevControllers(ABORT_ERROR_WHEN_PAGE_CHANGED)
+        tracksCounter = 0
+        cleanAllObjects()
+        getMap()?.attributionControl?.setPrefix("")
+        addSwipes()
+        document.querySelector("#fixed-rss-feed")?.remove()
+        buildingViewerIframe?.remove()
+        buildingViewerIframe = null
+        historyPagePaginationDeletingObserver?.disconnect()
+        historyPagePaginationDeletingObserver = null
+        paginationInHistoryStepObserver?.disconnect()
+        paginationInHistoryStepObserver = null
+        removePOIMoverMenu()
+        // prettier-ignore
+        if (!path.startsWith("/changeset") && !path.startsWith("/history") &&
+            !path.startsWith("/node") && !path.startsWith("/way") && path !== "/relation" &&
+            !path.startsWith("/note")) {
+            showSearchForm()
+        }
+    } catch {
+        /* empty */
+    }
+}
+
+function registerFastOneTimeModulesApplier(path) {
+    const sidebarContent = document.getElementById("sidebar_content")
+    if (!sidebarContent || sidebarContent.childNodes.length) return
+    try {
+        new MutationObserver(function (_, observer) {
+            observer.disconnect()
+            console.log("%c⚡️Fast modules apply!", "background: #000; color: #0f0")
+            console.log(path)
+            applyModules(path)
+        }).observe(sidebarContent, { subtree: true, childList: true })
+    } catch (e) {
+        console.error(e)
+    }
+}
+
 function setupOSMWebsite() {
     if (location.pathname === "/id") {
         setupIDframe()
@@ -24210,57 +24645,16 @@ function setupOSMWebsite() {
     }, 900)
 
     resetSearchFormFocus()
-    if (isOHMServer()) {
-        overpass_server = OHM_OVERPASS_INSTANCE
-    } else if (GM_config.get("OverpassInstance") === MAILRU_OVERPASS_INSTANCE.name) {
-        overpass_server = MAILRU_OVERPASS_INSTANCE
-    } else if (GM_config.get("OverpassInstance") === PRIVATECOFFEE_OVERPASS_INSTANCE.name) {
-        overpass_server = PRIVATECOFFEE_OVERPASS_INSTANCE
-    } else {
-        overpass_server = MAIN_OVERPASS_INSTANCE
-    }
+    selectOverpassServer()
     let lastPath = ""
     new MutationObserver(
         (function mainObserverHandler() {
             const path = location.pathname
             if (path === lastPath) return
-            try {
-                shiftKeyZClicks = 0
-                abortPrevControllers(ABORT_ERROR_WHEN_PAGE_CHANGED)
-                tracksCounter = 0
-                cleanAllObjects()
-                getMap()?.attributionControl?.setPrefix("")
-                addSwipes()
-                document.querySelector("#fixed-rss-feed")?.remove()
-                buildingViewerIframe?.remove()
-                buildingViewerIframe = null
-                historyPagePaginationDeletingObserver?.disconnect()
-                historyPagePaginationDeletingObserver = null
-                paginationInHistoryStepObserver?.disconnect()
-                paginationInHistoryStepObserver = null
-                removePOIMoverMenu()
-                // prettier-ignore
-                if (!path.startsWith("/changeset") && !path.startsWith("/history") &&
-                    !path.startsWith("/node") && !path.startsWith("/way") && path !== "/relation" &&
-                    !path.startsWith("/note")) {
-                    showSearchForm()
-                }
-            } catch {
-                /* empty */
-            }
+            cleanupBeforeNewLocation(path)
             lastPath = path
-            for (const module of modules.filter(module => GM_config.get(module.name.slice("setup".length)))) {
-                queueMicrotask(() => {
-                    // console.log(module.name)
-                    module(path)
-                })
-            }
-            for (const module of alwaysEnabledModules) {
-                queueMicrotask(() => {
-                    // console.log(module.name)
-                    void module(path)
-                })
-            }
+            applyModules(path)
+            registerFastOneTimeModulesApplier(path)
             return mainObserverHandler
         })(),
     ).observe(document, { subtree: true, childList: true })

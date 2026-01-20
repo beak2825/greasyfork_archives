@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Linux Do 自定义类别
 // @namespace    ddc/linux-do-custom-categories
-// @version      0.0.5
+// @version      0.0.6
 // @author       DDC(NaiveMagic)
 // @description  Linux Do Custom Categories
 // @license      MIT
@@ -28,6 +28,7 @@
   const CATEGORY_PATH_KEY = "categoryPathCache";
   const TAG_ICON_CACHE_KEY = "tagIconCache";
   const REQUEST_CONTROL_KEY = "requestControlSettings";
+  const OPEN_TOPIC_NEW_TAB_KEY = "customTopicOpenInNewTab";
   const DEFAULT_REQUEST_CONTROL_SETTINGS = {
     concurrency: 5,
     requestDelayMs: 200,
@@ -112,6 +113,12 @@
   }
   function resetRequestControlSettings() {
     _GM_setValue(REQUEST_CONTROL_KEY, DEFAULT_REQUEST_CONTROL_SETTINGS);
+  }
+  function getOpenTopicInNewTab() {
+    return _GM_getValue(OPEN_TOPIC_NEW_TAB_KEY, true) === true;
+  }
+  function setOpenTopicInNewTab(value) {
+    _GM_setValue(OPEN_TOPIC_NEW_TAB_KEY, value);
   }
   function waitForElement(selector, timeout = 1e4) {
     return new Promise((resolve, reject) => {
@@ -1447,6 +1454,13 @@
   const ACTIVE_CLASS = "active";
   const LISTENER_ATTACHED_ATTR = "data-custom-group-listener";
   let activeGroupId = null;
+  function buildCustomGroupHref(name) {
+    const trimmed = name.trim();
+    if (!trimmed) {
+      return "#";
+    }
+    return `${CUSTOM_URL_PREFIX}${encodeURIComponent(trimmed)}`;
+  }
   function clearActiveLinks(list) {
     list.querySelectorAll(".sidebar-section-link.active").forEach((link) => {
       link.classList.remove(ACTIVE_CLASS);
@@ -1557,7 +1571,10 @@
   }
   function createIconSvg(icon) {
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.setAttribute("class", `fa d-icon d-icon-${icon} svg-icon fa-width-auto svg-string`);
+    svg.setAttribute(
+      "class",
+      `fa d-icon d-icon-${icon} svg-icon fa-width-auto svg-string`
+    );
     svg.setAttribute("aria-hidden", "true");
     svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
     const use = document.createElementNS("http://www.w3.org/2000/svg", "use");
@@ -1616,17 +1633,25 @@
       createAction("编辑", "pencil", handleEdit),
       createAction("删除", "trash-can", handleDelete)
     );
-    const link = createEl("a", {
-      class: "sidebar-section-link sidebar-row",
-      href: "#",
-      "data-custom-group-id": group.id
-    }, [
-      createEl("span", { class: "sidebar-section-link-prefix icon" }, [
-        createEl("span", { style: "width: 1em; height: 1em; display: inline-block;" })
-      ]),
-      createEl("span", { class: "sidebar-section-link-content-text" }, [group.name]),
-      actions
-    ]);
+    const link = createEl(
+      "a",
+      {
+        class: "sidebar-section-link sidebar-row",
+        href: buildCustomGroupHref(group.name),
+        "data-custom-group-id": group.id
+      },
+      [
+        createEl("span", { class: "sidebar-section-link-prefix icon" }, [
+          createEl("span", {
+            style: "width: 1em; height: 1em; display: inline-block;"
+          })
+        ]),
+        createEl("span", { class: "sidebar-section-link-content-text" }, [
+          group.name
+        ]),
+        actions
+      ]
+    );
     link.addEventListener("click", (e) => {
       e.preventDefault();
       onGroupClick(group);
@@ -1684,10 +1709,19 @@
   let customViewObserver = null;
   const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
   const CATEGORY_ICON_CACHE = new Map();
+  const TOPIC_LINK_REL = "noopener noreferrer";
   let isTagIconFetchPending = false;
   let heatSettingsCache = null;
   function isMobileView() {
     return document.documentElement.classList.contains("mobile-view");
+  }
+  function applyTopicLinkTarget(link) {
+    if (!getOpenTopicInNewTab()) {
+      return link;
+    }
+    link.setAttribute("target", "_blank");
+    link.setAttribute("rel", TOPIC_LINK_REL);
+    return link;
   }
   function getLoadingIndicator() {
     return document.querySelector(LOADING_INDICATOR_SELECTOR);
@@ -2167,7 +2201,7 @@
       class: "topic-status --pinned pin-toggle-button"
     });
     link.appendChild(createSvgIcon("thumbtack"));
-    return link;
+    return applyTopicLinkTarget(link);
   }
   function createStatusIcon(iconId, className, title) {
     const status = createEl("span", { class: className, title });
@@ -2209,14 +2243,14 @@
         title: "新话题",
         class: "badge badge-notification new-topic"
       });
-      badges.appendChild(badge);
+      badges.appendChild(applyTopicLinkTarget(badge));
     }
     return badges;
   }
   function createTopicTitleLink(topic) {
     const titleText = getTopicTitle(topic);
     const titleSpan = createEl("span", { dir: "auto" }, [titleText]);
-    return createEl(
+    const link = createEl(
       "a",
       {
         href: `/t/${topic.slug}/${topic.id}`,
@@ -2225,6 +2259,7 @@
       },
       [titleSpan]
     );
+    return applyTopicLinkTarget(link);
   }
   function createTopicExcerpt(topic) {
     if (!topic.excerpt) {
@@ -2235,9 +2270,12 @@
       return null;
     }
     const excerptSpan = createEl("span", { dir: "auto" }, [excerptText]);
-    return createEl("a", { href: `/t/${topic.slug}/${topic.id}`, class: "topic-excerpt" }, [
-      excerptSpan
-    ]);
+    const link = createEl(
+      "a",
+      { href: `/t/${topic.slug}/${topic.id}`, class: "topic-excerpt" },
+      [excerptSpan]
+    );
+    return applyTopicLinkTarget(link);
   }
   function createCategoryBadge(category, categories) {
     const parentCategory = category.parent_category_id ? categories.get(category.parent_category_id) : void 0;
@@ -2478,7 +2516,7 @@
     if (likesHeat) {
       classes.push(likesHeat);
     }
-    return createEl("td", { class: classes.join(" ") }, [link]);
+    return createEl("td", { class: classes.join(" ") }, [applyTopicLinkTarget(link)]);
   }
   function createRepliesBadgeBlock(topic) {
     const replies = getReplyCount(topic);
@@ -2493,7 +2531,7 @@
     if (likesHeat) {
       classes.push(likesHeat);
     }
-    return createEl("div", { class: classes.join(" ") }, [link]);
+    return createEl("div", { class: classes.join(" ") }, [applyTopicLinkTarget(link)]);
   }
   function createViewsCell(topic) {
     const views = topic.views ?? 0;
@@ -2531,7 +2569,7 @@
       "data-format": "tiny"
     }, [formatRelativeTimeTiny(topic.bumped_at)]);
     link.appendChild(relativeDate);
-    return createEl("td", activityAttrs, [link]);
+    return createEl("td", activityAttrs, [applyTopicLinkTarget(link)]);
   }
   function createMobileAvatar(topic, users) {
     const poster = topic.posters[0];
@@ -2557,7 +2595,7 @@
       title: buildPosterTitle(user, poster)
     });
     link.appendChild(img);
-    const wrapper = createEl("div", { class: "pull-left" }, [link]);
+    const wrapper = createEl("div", { class: "pull-left" }, [applyTopicLinkTarget(link)]);
     return wrapper;
   }
   function createMobileActivityBlock(topic) {
@@ -2576,7 +2614,7 @@
       "data-format": "tiny"
     }, [formatRelativeTimeTiny(topic.bumped_at)]);
     link.appendChild(relativeDate);
-    const span = createEl("span", spanAttrs, [link]);
+    const span = createEl("span", spanAttrs, [applyTopicLinkTarget(link)]);
     return createEl("div", { class: "num activity last" }, [span]);
   }
   function createTopicRowMobile(topic, users, categories) {
@@ -2737,6 +2775,7 @@
     concurrency: "custom-category-request-concurrency",
     delay: "custom-category-request-delay",
     retry: "custom-category-request-retry",
+    openTopicInNewTab: "custom-category-topic-open-new-tab",
     reset: "custom-category-request-reset"
   };
   function unregisterMenuCommand(id) {
@@ -2746,7 +2785,10 @@
     }
   }
   function promptForNumber(label, currentValue, minValue) {
-    const input = window.prompt(`${label} (>= ${minValue})`, String(currentValue));
+    const input = window.prompt(
+      `${label} (>= ${minValue})`,
+      String(currentValue)
+    );
     if (input === null) {
       return null;
     }
@@ -2787,14 +2829,22 @@
   function formatRetryAttempts(value) {
     return value < 0 ? "无限" : String(value);
   }
+  function formatToggle(value) {
+    return value ? "开" : "关";
+  }
   function refreshMenuCommands() {
     Object.values(MENU_IDS).forEach((id) => unregisterMenuCommand(id));
     const settings = getRequestControlSettings();
+    const openInNewTab = getOpenTopicInNewTab();
     _GM_registerMenuCommand(
       `设置并发请求数量 (当前: ${settings.concurrency})`,
       () => {
         const currentSettings = getRequestControlSettings();
-        const nextValue = promptForNumber("请输入并发请求数量", currentSettings.concurrency, 1);
+        const nextValue = promptForNumber(
+          "请输入并发请求数量",
+          currentSettings.concurrency,
+          1
+        );
         if (nextValue === null || nextValue === currentSettings.concurrency) {
           return;
         }
@@ -2865,6 +2915,18 @@
         title: `恢复默认：并发 ${DEFAULT_REQUEST_CONTROL_SETTINGS.concurrency}，间隔 ${DEFAULT_REQUEST_CONTROL_SETTINGS.requestDelayMs} ms，重试 ${formatRetryAttempts(DEFAULT_REQUEST_CONTROL_SETTINGS.maxRetryAttempts)}`
       }
     );
+    _GM_registerMenuCommand(
+      `自定义类别帖子新标签页打开 (当前: ${formatToggle(openInNewTab)})`,
+      () => {
+        const nextValue = !getOpenTopicInNewTab();
+        setOpenTopicInNewTab(nextValue);
+        refreshMenuCommands();
+      },
+      {
+        id: MENU_IDS.openTopicInNewTab,
+        title: "控制自定义类别话题链接默认打开方式"
+      }
+    );
   }
   function initMenu() {
     refreshMenuCommands();
@@ -2877,12 +2939,12 @@
   let requestCounter = 0;
   let activeCustomUrl = null;
   let previousCategoryHref = null;
+  const CUSTOM_URL_PREFIX = "/custom-c/";
   const CATEGORY_LIST_SELECTOR = "#sidebar-section-content-categories";
   const CATEGORY_LINK_SELECTOR = "a.sidebar-section-link";
   const CUSTOM_GROUP_ATTR = "data-custom-group-id";
   const CUSTOM_LISTENER_ATTR = "data-custom-category-listener";
   const LOGO_LISTENER_ATTR = "data-custom-logo-listener";
-  const CUSTOM_URL_PREFIX = "/custom-c/";
   const LIST_AREA_SELECTOR = "#list-area";
   const PENDING_CUSTOM_GROUP_KEY = "custom-category-pending-group";
   function buildCustomUrl(name) {

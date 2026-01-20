@@ -5,6 +5,7 @@
 // @description  Display BP and Split on the DICT interface
 // @author       GPT-DiamondMoo
 // @license      MIT
+// @icon         https://play-pokechill.github.io/img/icons/icon.png
 // @match        https://play-pokechill.github.io/*
 // @match        https://g1tyx.github.io/play-pokechill/*
 // @downloadURL https://update.greasyfork.org/scripts/562970/%5BPokechill%5D%20Display%20BP%20and%20Split.user.js

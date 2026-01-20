@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         [Pokechill] CN-SEARCH
 // @namespace    https://play-pokechill.github.io/
-// @version      2.5.0
-// @description  Pokechill 中文模糊匹配 + 提示条 + Enter / ↑↓ / 数字键 / 鼠标 选择 + 输入框左键点击清空
+// @version      2.6.0
+// @description  Pokechill搜索框 中文匹配 + 提示条 + Enter / ↑↓ / 数字键 / 鼠标 选择 + 输入框左键点击清空
 // @author       GPT-DiamondMoo
 // @license      MIT
+// @icon         https://play-pokechill.github.io/img/icons/icon.png
 // @match        https://play-pokechill.github.io/*
 // @match        https://g1tyx.github.io/play-pokechill/*
 // @downloadURL https://update.greasyfork.org/scripts/561799/%5BPokechill%5D%20CN-SEARCH.user.js
@@ -14,7 +15,8 @@
 (function () {
     'use strict';
 
-    const EN_TO_CN = {
+    /*************** 字典 ***************/
+    const ABILITY_DICT = {
         //官方宝可梦译名
         "Bulbasaur": "妙蛙种子",
         "Ivysaur": "妙蛙草",
@@ -1194,10 +1196,19 @@
         "Pyrolate": "火焰皮肤",
         "Chrysilate": "虫之皮肤",
         "Gloomilate": "黑暗皮肤",
-        "Espilate": "超能力皮肤",
+        "Espilate": "超能皮肤",
         "Verdify": "青草皮肤" ,
         "MetalHead": "铁头功" ,
-        "scorch": "灼热" ,
+        "Scorch": "灼热" ,
+        "Flash Electro": "电能引擎",//效果同原作电气引擎
+        "Flash Aqua": "流水引擎",
+        "Flash Pyro": "火炎引擎",
+        "Flash Umbra": "鬼怪引擎",
+        "Flash Venum": "剧毒引擎",
+        "Flash Cryo": "冰寒引擎",
+        "Flash Psycha": "超能引擎",
+        "Flash Fae": "妖精引擎",
+        "Flash Herba": "青草引擎",
 
         //官方特性
         "Stench": "恶臭",
@@ -2448,190 +2459,332 @@
 
         //独创招式
         "Fog":"浓雾",
-        "Shark Jaws": "鲨之颚",
+        "Shark Jaws": "鲨咬",
         "Poison Claw": "毒爪",
         "Aurora Punch": "极光拳",
         "Ionise":"电离",
-};
+        "Razor Talons":"利爪",
+    };
 
-    const SEARCH_INPUT_IDS = [
-        'pokedex-search',
-        'dictionary-search'
-    ];
+    const KEYWORD_DICT = {
+        "Fire":"火",
+        "Water":"水",
+        "Grass":"草",
+        "Electric":"电",
+        "Ice":"冰",
+        "Fighting":"格斗",
+        "Poison":"毒",
+        "Ground":"地面",
+        "Flying":"飞行",
+        "Psychic":"超能力",
+        "Bug":"虫",
+        "Rock":"岩石",
+        "Ghost":"幽灵",
+        "Dragon":"龙",
+        "Dark":"恶",
+        "Steel":"钢",
+        "Fairy":"妖精",
+        "Bird": "鸟",//MissingNo.专属错误属性鸟
 
-    const CN_LIST = Object.entries(EN_TO_CN)
-    .map(([en, cn]) => ({ cn, en }));
+        "unobtainable": "不可获得",
+        "wild": "旷野",
+        "park": "公园",
+        "event": "活动",
+        "frontier": "开拓区",
+        "shiny": "闪光",
+        "pokerus": "宝可病毒",
+        "caught": "已捕获",
+        "physical": "物理",
+        "special": "特殊"
+    };
 
-    let hintBox;
-    let currentMatches = [];
+    const CN_LIST = [
+        ...Object.entries(ABILITY_DICT),
+        ...Object.entries(KEYWORD_DICT)
+    ].map(([en, cn]) => ({
+        cn,
+        en: en.toLowerCase().replace(/\s+/g, '')
+    }));
+
+    /*************** 状态 ***************/
+    const queryState = {
+        mode: 'AND',
+        negate: false
+    };
+
+    let originInputs = [];
+    let activeOriginInput = null;
+
+    let panel, helperInput, hintBox;
+    let matches = [];
     let activeIndex = -1;
-    let clickClearLock = false;
 
+    /*************** 初始化 ***************/
+    function init() {
+        originInputs = [
+            document.getElementById('dictionary-search'),
+            document.getElementById('pokedex-search')
+        ].filter(Boolean);
 
+        if (!originInputs.length) {
+            setTimeout(init, 300);
+            return;
+        }
+
+        buildPanel();
+        bindOriginInputs();
+        bindGlobalClick();
+        bindHelperInput();
+    }
+
+    function bindOriginInputs() {
+        originInputs.forEach(input => {
+            input.addEventListener('focus', () => activate(input));
+            input.addEventListener('mousedown', () => activate(input));
+        });
+    }
+
+    function activate(input) {
+        activeOriginInput = input;
+        showPanel(input);
+    }
+
+    /*************** 悬浮面板 ***************/
+    function buildPanel() {
+        panel = document.createElement('div');
+        panel.style.cssText = `
+            position:absolute;
+            z-index:9999;
+            background:#f5f9ff;
+            border:1px solid #b6cff2;
+            padding:6px;
+            width:260px;
+            display:none;
+        `;
+
+        panel.innerHTML = `
+            <div style="display:flex; gap:6px; margin-bottom:6px;">
+                <button data-mode="AND" class="qc-btn active">且</button>
+                <button data-mode="OR" class="qc-btn">或</button>
+                <button data-not class="qc-btn">非</button>
+                <button id="qc-clear" class="qc-btn" style="margin-left:auto;">清空</button>
+            </div>
+            <input id="qc-helper-input" type="text"
+                placeholder="中文关键词"
+                style="width:100%; padding:6px; box-sizing:border-box;">
+        `;
+
+        document.body.appendChild(panel);
+        helperInput = panel.querySelector('#qc-helper-input');
+
+        panel.querySelectorAll('[data-mode]').forEach(btn => {
+            btn.onclick = () => {
+                queryState.mode = btn.dataset.mode;
+                panel.querySelectorAll('[data-mode]')
+                    .forEach(b => b.classList.toggle('active', b === btn));
+            };
+        });
+
+        panel.querySelector('[data-not]').onclick = e => {
+            queryState.negate = !queryState.negate;
+            e.target.classList.toggle('active', queryState.negate);
+        };
+
+        panel.querySelector('#qc-clear').onclick = clearOrigin;
+
+        injectStyle();
+        createHintBox();
+    }
+
+    function showPanel(input) {
+        const r = input.getBoundingClientRect();
+        panel.style.left = r.left + window.scrollX + 'px';
+        panel.style.top = r.bottom + window.scrollY + 4 + 'px';
+        panel.style.display = 'block';
+    }
+
+    /*************** 清空 ***************/
+    function clearOrigin() {
+        if (!activeOriginInput) return;
+        activeOriginInput.value = '';
+        activeOriginInput.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+
+    /*************** 全局点击 ***************/
+    function bindGlobalClick() {
+        document.addEventListener('mousedown', e => {
+            if (
+                panel.contains(e.target) ||
+                hintBox.contains(e.target) ||
+                originInputs.some(i => i.contains(e.target))
+            ) return;
+
+            panel.style.display = 'none';
+            hideHints();
+        });
+    }
+
+    /*************** 提示框 ***************/
     function createHintBox() {
         hintBox = document.createElement('div');
         hintBox.style.cssText = `
-            position: fixed;
-            background: #2f3b66;
-            border: 1px solid #5b72a3;
-            z-index: 99999;
-            font-size: 14px;
-            display: none;
-            max-height: 260px;
-            overflow-y: auto;
-            box-shadow: 0 4px 12px rgba(0,0,0,.4);
+            position:absolute;
+            background:#ffffff;
+            border:1px solid #b6cff2;
+            z-index:10000;
+            font-size:14px;
+            display:none;
+            max-height:220px;
+            overflow-y:auto;
         `;
         document.body.appendChild(hintBox);
     }
 
-    function waitForInput() {
-        const inputs = SEARCH_INPUT_IDS
-        .map(id => document.getElementById(id))
-        .filter(Boolean);
-
-        if (!inputs.length) {
-            setTimeout(waitForInput, 300);
-            return;
-        }
-
-        inputs.forEach(input => bindInput(input));
+    function sortByRelevance(list, keyword) {
+        return list
+            .map(e => {
+                let score = 3;
+                if (e.cn === keyword) score = 0;
+                else if (e.cn.startsWith(keyword)) score = 1;
+                else if (e.cn.includes(keyword)) score = 2;
+                return { ...e, score };
+            })
+            .sort((a, b) =>
+                a.score - b.score || a.cn.length - b.cn.length
+            );
     }
 
-
-    function bindInput(input) {
-        if (!hintBox) createHintBox();
-
-        input.addEventListener('input', () => {
-            const value = input.value.trim();
-            if (!value || !/[\u4e00-\u9fa5]/.test(value)) return hideHints();
-
-            const matches = CN_LIST.filter(e => e.cn.includes(value));
-            if (!matches.length) return hideHints();
-
-            renderHints(matches, input);
-        });
-
-        input.addEventListener('keydown', e => {
-            if (hintBox.style.display !== 'block') return;
-
-            if (e.key === 'ArrowDown') {
-                e.preventDefault();
-                moveActive(1);
-            }
-            else if (e.key === 'ArrowUp') {
-                e.preventDefault();
-                moveActive(-1);
-            }
-            else if (e.key === 'Enter') {
-                e.preventDefault();
-                selectIndex(activeIndex >= 0 ? activeIndex : 0, input);
-            }
-            else if (/^[0-9]$/.test(e.key)) {
-                const idx = e.key === '0' ? 9 : Number(e.key) - 1;
-                if (idx < currentMatches.length) {
-                    e.preventDefault();
-                    selectIndex(idx, input);
-                }
-            }
-        });
-
-        input.addEventListener('blur', () => {
-            setTimeout(hideHints, 150);
-        });
-
-        input.addEventListener('mousedown', () => {
-            if (!input.value) return;
-
-            if (clickClearLock) return;
-
-            clickClearLock = true;
-            input.value = '';
-            input.dispatchEvent(new Event('input', { bubbles: true }));
-            input.dispatchEvent(new KeyboardEvent('keydown', {
-                key: 'Enter',
-                code: 'Enter',
-                bubbles: true
-            }));
-            setTimeout(() => {
-                input.focus();
-                clickClearLock = false;
-            }, 0);
-        });
-
-    }
-
-    function renderHints(matches, input) {
-        const rect = input.getBoundingClientRect();
-
-        currentMatches = matches;
-        activeIndex = -1;
-
-        hintBox.style.left = rect.left + 'px';
-        hintBox.style.top = rect.bottom + 'px';
-        hintBox.style.width = rect.width + 'px';
+    function renderHints(list) {
+        const r = helperInput.getBoundingClientRect();
+        hintBox.style.left = r.left + window.scrollX + 'px';
+        hintBox.style.top = r.bottom + window.scrollY + 'px';
+        hintBox.style.width = r.width + 'px';
         hintBox.style.display = 'block';
+
+        matches = list;
+        activeIndex = -1;
         hintBox.innerHTML = '';
 
-        matches.forEach(({ cn, en }, i) => {
-            let prefix = '';
-            if (i < 9) prefix = `${i + 1} `;
-            else if (i === 9) prefix = `0 `;
-            else prefix = `· `;
-
+        list.forEach((m, i) => {
             const row = document.createElement('div');
-            row.textContent = prefix + cn;
+            row.textContent = `${i < 9 ? i + 1 : 0}. ${m.cn}`;
             row.style.cssText = `
-                padding: 6px 10px;
-                cursor: pointer;
-                color: white;
+                padding:6px 8px;
+                cursor:pointer;
+                color:rgb(42, 92, 170);
             `;
-
-            row.addEventListener('mouseenter', () => setActive(i));
-            row.addEventListener('mousedown', e => {
-                e.preventDefault();
-                selectIndex(i, input);
-            });
-
+            row.onmouseenter = () => setActive(i);
+            row.onclick = () => commitTerm(m.en);
             hintBox.appendChild(row);
         });
     }
 
-    function setActive(index) {
-        const rows = hintBox.children;
-        if (!rows.length) return;
-
-        [...rows].forEach(r => r.style.background = 'transparent');
-        activeIndex = (index + rows.length) % rows.length;
-
-        const row = rows[activeIndex];
-        row.style.background = '#5b72a3';
-        row.scrollIntoView({ block: 'nearest' });
-    }
-
-    function moveActive(delta) {
-        setActive(activeIndex + delta);
-    }
-
-    function selectIndex(index, input) {
-        const match = currentMatches[index];
-        if (!match) return;
-
-        input.value = match.en;
-        input.dispatchEvent(new Event('input', { bubbles: true }));
-        input.dispatchEvent(new KeyboardEvent('keydown', {
-            key: 'Enter',
-            code: 'Enter',
-            bubbles: true
-        }));
-
-        hideHints();
-    }
-
     function hideHints() {
         hintBox.style.display = 'none';
-        currentMatches = [];
+        matches = [];
         activeIndex = -1;
     }
 
-    waitForInput();
+    function setActive(i) {
+        [...hintBox.children].forEach(c => c.style.background = 'transparent');
+        activeIndex = (i + matches.length) % matches.length;
+        hintBox.children[activeIndex].style.background = 'rgb(230, 238, 255)';
+        hintBox.children[activeIndex].scrollIntoView({ block: 'nearest' });
+    }
+
+    /*************** 输入处理 ***************/
+    function bindHelperInput() {
+        helperInput.addEventListener('input', () => {
+            let raw = helperInput.value.trim();
+            if (!raw) return hideHints();
+
+            // 显式 ! / ！ 才会开启“非”
+            if (/^[!！]/.test(raw)) {
+                raw = raw.replace(/^[!！]+/, '').trim();
+                queryState.negate = true;
+                panel.querySelector('[data-not]').classList.add('active');
+            }
+
+            if (!raw || !/[\u4e00-\u9fa5]/.test(raw)) {
+                hideHints();
+                return;
+            }
+
+            const list = sortByRelevance(
+                CN_LIST.filter(e => e.cn.includes(raw)),
+                raw
+            );
+
+            if (!list.length) return hideHints();
+            renderHints(list);
+        });
+
+        helperInput.addEventListener('keydown', e => {
+            if (hintBox.style.display !== 'block') return;
+
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActive(activeIndex + 1);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActive(activeIndex - 1);
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                commitTerm(matches[activeIndex >= 0 ? activeIndex : 0].en);
+            } else if (/^[0-9]$/.test(e.key)) {
+                const idx = e.key === '0' ? 9 : Number(e.key) - 1;
+                if (matches[idx]) {
+                    e.preventDefault();
+                    commitTerm(matches[idx].en);
+                }
+            }
+        });
+    }
+
+    /*************** 提交 ***************/
+    function commitTerm(term) {
+        if (!activeOriginInput) return;
+
+        const negate = queryState.negate ? '!' : '';
+        const connector =
+            activeOriginInput.value.trim()
+                ? (queryState.mode === 'OR' ? ' or ' : ' ')
+                : '';
+
+        activeOriginInput.value += connector + negate + term;
+
+        activeOriginInput.dispatchEvent(new Event('input', { bubbles: true }));
+        activeOriginInput.dispatchEvent(
+            new KeyboardEvent('keydown', {
+                key: 'Enter',
+                code: 'Enter',
+                bubbles: true
+            })
+        );
+
+        helperInput.value = '';
+        hideHints();
+        // ❗ 不再自动复位 negate
+    }
+
+    function injectStyle() {
+        const s = document.createElement('style');
+        s.textContent = `
+            .qc-btn {
+                padding:4px 10px;
+                border:1px solid #b6cff2;
+                background:rgb(230, 238, 255);
+                color:rgb(42, 92, 170);
+                cursor:pointer;
+                border-radius:4px;
+            }
+            .qc-btn.active {
+                background:#8fb9f0;
+                color:white;
+            }
+        `;
+        document.head.appendChild(s);
+    }
+
+    init();
 })();

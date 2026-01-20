@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         山东大学威海自动评教
 // @namespace    http://tampermonkey.net/
-// @version      2024-12-26.2
+// @version      2026.01.20
 // @description  sduwh自动化评教脚本
 // @author       wzl19371
 // @match        https://bkzhjx.wh.sdu.edu.cn/jsxsd/xspj/xspj_edit.do?*
@@ -17,8 +17,11 @@
     // 1. 筛选并点击所有 ID 以 "pj" 开头并以 "_1" 结尾的 radio 按钮
     var radioButtons = document.querySelectorAll('input[type="radio"][id^="pj"][id$="_1"]');
     radioButtons.forEach(function(radioButton) {
-        radioButton.click(); // 模拟点击每一个符合条件的 radio 按钮
+        radioButton.click();
     });
+
+    const one2 = document.querySelector('input[type="radio"][id^="pj"][id$="_2"]');
+    if (one2) one2.click();
 
     // 2. 选中并点击 name 为 "kctzdnd" 且 value 为 "3" 的单选按钮
     var kctzdndRadioButton = document.querySelector('input[type="radio"][name="kctzdnd"][value="3"]');

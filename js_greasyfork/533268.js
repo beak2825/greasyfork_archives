@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         8chanSS
-// @version      1.59.0
+// @version      1.59.1
 // @namespace    8chanss
 // @description  A userscript to add functionality to 8chan.
 // @author       otakudude
@@ -27,6 +27,9 @@
 // @connect      bsky.app
 // @connect      cdn.bsky.app
 // @connect      *.twimg.com
+// @connect      pastebin.com
+// @connect      rentry.co
+// @connect      rentry.org
 // @run-at       document-start
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAAAZlBMVEUAAABdlloAhl758AH58AH58AcAhl758ADj4CYAh14AhV4AhV0Ahl748AcChl4Chl0Ab2H58AIAhl758AD58AAAhl757wL48AD47wL78QL47wcAh1748AF3oFfs5yEAh1/68QDz7BM5qSu8AAAAH3RSTlMA/lg/OYtM8g/onXtoXzAaCdzBsIFzczMeaCXXyrmp9ddA3QAAANpJREFUSMft0tkOgjAQheFjtVCQVVxwnfr+L+kWM5FOC73TxP/6fBedFJwpyx5CtSpqSHXWpns4qYxo1cDtkNp7GoOW9KgSwM4+09KeEhmw4H0IuGJDAbCw79a8nwJYFDQCuO1gT8oLWCiKAXavKA5cZ78I5n/wBx7wfb+1TwOggpD2gxxSpvWBrIbY3AcUPK1lkMNbJ4FV4wd964KsQqBF6oAEwcoh2GAk/QlyjNYx4AeHMicGxxoTOrRvIB5IPtULJJhY+QIFJrd9gCUi0tdZjqgu5yYOGAO5G/kyc3TkciPeAAAAAElFTkSuQmCC
 // @downloadURL https://update.greasyfork.org/scripts/533268/8chanSS.user.js
@@ -123,7 +126,7 @@ onReady(async function () {
     const HIDDEN_POSTS_KEY = '8chanSS_hiddenPosts';
     const FILTERED_NAMES_KEY = '8chanSS_filteredNames';
     const FILTERED_IDS_KEY = '8chanSS_filteredIDs';
-    const VERSION = "1.59.0";
+    const VERSION = "1.59.1";
     const scriptSettings = {
         site: {
             _siteTWTitle: { type: "title", label: ":: Thread Watcher" },
@@ -381,7 +384,8 @@ onReady(async function () {
                     showIconsX: { label: "X.com", default: true },
                     showIconsBsky: { label: "Bluesky", default: true },
                     showIconsRentry: { label: "Rentry", default: true },
-                    showIconsCatbox: { label: "Catbox", default: true }
+                    showIconsCatbox: { label: "Catbox", default: true },
+                    showIconsPastebin: { label: "Pastebin", default: true }
                 }
             },
             enhanceLinks_showThumbnails: {
@@ -397,7 +401,9 @@ onReady(async function () {
                 default: false,
                 subOptions: {
                     enableEmbedsX: { label: "X.com", default: true },
-                    enableEmbedsBsky: { label: "Bluesky", default: true }
+                    enableEmbedsBsky: { label: "Bluesky", default: true },
+                    enableEmbedsRentry: { label: "Rentry", default: true },
+                    enableEmbedsPastebin: { label: "Pastebin", default: true }
                 }
             },
             enableTheSauce: {
@@ -2492,15 +2498,18 @@ onReady(async function () {
         const showIconsBsky = enableShowIcons && await getSetting("enhanceLinks_showIcons_showIconsBsky");
         const showIconsRentry = enableShowIcons && await getSetting("enhanceLinks_showIcons_showIconsRentry");
         const showIconsCatbox = enableShowIcons && await getSetting("enhanceLinks_showIcons_showIconsCatbox");
+        const showIconsPastebin = enableShowIcons && await getSetting("enhanceLinks_showIcons_showIconsPastebin");
         
         const showThumbnailsYoutube = enableShowThumbnails && await getSetting("enhanceLinks_showThumbnails_showThumbnailsYoutube");
         const showThumbnailsTwitch = enableShowThumbnails && await getSetting("enhanceLinks_showThumbnails_showThumbnailsTwitch");
         
         const enableEmbedsX = enableEmbeds && await getSetting("enhanceLinks_enableEmbeds_enableEmbedsX");
         const enableEmbedsBsky = enableEmbeds && await getSetting("enhanceLinks_enableEmbeds_enableEmbedsBsky");
-        if (!showIconsYoutube && !showIconsTwitch && !showIconsX && !showIconsBsky && !showIconsRentry && !showIconsCatbox &&
+        const enableEmbedsRentry = enableEmbeds && await getSetting("enhanceLinks_enableEmbeds_enableEmbedsRentry");
+        const enableEmbedsPastebin = enableEmbeds && await getSetting("enhanceLinks_enableEmbeds_enableEmbedsPastebin");
+        if (!showIconsYoutube && !showIconsTwitch && !showIconsX && !showIconsBsky && !showIconsRentry && !showIconsCatbox && !showIconsPastebin &&
             !showThumbnailsYoutube && !showThumbnailsTwitch &&
-            !enableEmbedsX && !enableEmbedsBsky) {
+            !enableEmbedsX && !enableEmbedsBsky && !enableEmbedsRentry && !enableEmbedsPastebin) {
             return;
         }
         const MAX_CACHE_SIZE = 350;
@@ -2511,6 +2520,11 @@ onReady(async function () {
         ];
         const YT_ICON = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="18" height="16" style="vertical-align:middle;margin-right:2px;"><path fill="#FF0000" d="M549.7 124.1c-6.3-23.7-24.9-42.4-48.6-48.6C456.5 64 288 64 288 64s-168.5 0-213.1 11.5c-23.7 6.3-42.4 24.9-48.6 48.6C16 168.5 16 256 16 256s0 87.5 10.3 131.9c6.3 23.7 24.9 42.4 48.6 48.6C119.5 448 288 448 288 448s168.5 0 213.1-11.5c23.7-6.3 42.4-24.9 48.6-48.6 10.3-44.4 10.3-131.9 10.3-131.9s0-87.5-10.3-131.9zM232 334.1V177.9L361 256 232 334.1z"/></svg>`;
         const TWITCH_ICON = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="18" height="16" style="vertical-align:middle;margin-right:2px;"><path fill="#9146FF" d="M391.17,103.47H352.54v109.7h38.63ZM285,103H246.37V212.75H285ZM120.83,0,24.31,91.42V420.58H140.14V512l96.53-91.42h77.25L487.69,256V0ZM449.07,237.75l-77.22,73.12H294.61l-67.6,64v-64H140.14V36.58H449.07Z"/></svg>`;
+        const RENTRY_ICON = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="16" style="vertical-align:middle;margin-right:2px;" fill="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"/></svg>`;
+        const PASTEBIN_ICON = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="16" style="vertical-align:middle;margin-right:2px;" fill="currentColor"><path d="M19.385 2.5H4.615A2.115 2.115 0 0 0 2.5 4.615v14.77a2.115 2.115 0 0 0 2.115 2.115h14.77a2.115 2.115 0 0 0 2.115-2.115V4.615A2.115 2.115 0 0 0 19.385 2.5M8.423 18.308v-7.423H6.154V6.5h5.888v1.154H8.423v3.462h3.462v1.154H8.423v5.039H6.154m8.654 0v-7.423h-2.269V6.5h5.888v1.154h-3.619v3.462h3.462v1.154h-3.462v5.039H15.077Z"/></svg>`;
+        const CATBOX_ICON = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="16" style="vertical-align:middle;margin-right:2px;" fill="currentColor"><path d="M20 6h-2.18c.11-.31.18-.65.18-1a2.996 2.996 0 0 0-5.5-1.65l-.5.67-.5-.68C10.96 2.54 10 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm11 15H4v-2h16v2zm0-5H4V8h5.08L7 10.83 8.62 12 11 8.76l1-1.36 1 1.36L15.38 12 17 10.83 14.92 8H20v6z"/></svg>`;
+        const X_ICON = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="16" style="vertical-align:middle;margin-right:2px;" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.48 11.25H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>`;
+        const BSKY_ICON = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 57" width="18" height="16" style="vertical-align:middle;margin-right:2px;"><path fill="#0085FF" d="M13.873 3.805C21.21 9.332 29.103 20.537 32 26.55v15.882c0-.338-.13.044-.41.867-1.512 4.456-7.418 21.847-20.923 7.944-7.111-7.32-3.819-14.64 9.125-16.85-7.405 1.264-15.73-.825-18.014-9.015C1.12 23.022 0 8.51 0 6.55 0-3.268 8.579-.182 13.873 3.805ZM50.127 3.805C42.79 9.332 34.897 20.537 32 26.55v15.882c0-.338.130.044.410.867 1.512 4.456 7.418 21.847 20.923 7.944 7.111-7.32 3.819-14.64-9.125-16.85 7.405 1.264 15.73-.825 18.014-9.015C62.88 23.022 64 8.51 64 6.55c0-9.818-8.578-6.732-13.873-2.745Z"/></svg>`;
         function loadCache(cacheKey) {
             try {
                 const data = localStorage.getItem(cacheKey);
@@ -2766,8 +2780,12 @@ onReady(async function () {
             link.addEventListener('mousemove', moveThumb);
             link.addEventListener('mouseleave', hideThumb);
         }
+        function isInsideCodeblock(link) {
+            return link.closest('.inlineCode, .aa, .katex, .katex-html, .hljs-built_in, .hljs-string, .embedContainer, .embed-wrapper, [data-embed], .embed') !== null;
+        }
         function processYouTubeLink(link) {
             if (link.dataset.enhanced) return;
+            if (isInsideCodeblock(link)) return;
             const ytInfo = getYouTubeInfo(link.href);
             if (!ytInfo) return;
             link.dataset.enhanced = "1";
@@ -2886,6 +2904,7 @@ onReady(async function () {
 
         function processTwitchLink(link) {
             if (link.dataset.enhanced) return;
+            if (isInsideCodeblock(link)) return;
             const twitchInfo = getTwitchInfo(link.href);
             if (!twitchInfo) return;
             
@@ -2935,14 +2954,61 @@ onReady(async function () {
             return false;
         }
 
+        function getRentryKey(url) {
+            try {
+                const u = new URL(url);
+                const match = u.pathname.match(/^\/([a-zA-Z0-9_-]+)\/?$/);
+                return match ? match[1] : null;
+            } catch (e) { }
+            return null;
+        }
+
         function processRentryLink(link) {
             if (link.dataset.enhanced) return;
+            if (isInsideCodeblock(link)) return;
             if (!isRentryLink(link.href)) return;
             link.dataset.enhanced = "1";
 
             if (showIconsRentry) {
                 const originalText = link.textContent.trim();
-                link.innerHTML = `<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAATlBMVEUAAABpaWlkZGQnJydOTk6ampqhoaFVVVUeHh4AAAAfHx9GRkYAAABWVlY0NDQAAAD////09PT39/fq6urW1tbm5ub4+Pjb29vJycmlpaVxvf/cAAAAEHRSTlMAtryBp/30nnLnwby5uLRc+iRAsgAAAGNJREFUGNNlj1kOgCAMRKWi4m4HcLn/RYVgaoD3+dJOZpqalpRAbRBkwR+wFITCIUBFwb9gEeh7ZIKXifOLzsWXs8hw95qLZ9yLl0tL6Daz9EAUwyAiVofX2iNVT+PIGErjKl4JVwl/6XPAZgAAAABJRU5ErkJggg==" width="18" height="16" style="vertical-align:middle;margin-right:2px;" alt="Rentry"> ${originalText}`;
+                link.innerHTML = `${RENTRY_ICON} ${originalText}`;
+            }
+            
+            if (enableEmbedsRentry && getRentryKey(link.href)) {
+                addEmbedButton(link, createRentryEmbed);
+            }
+        }
+
+        function isPastebinLink(url) {
+            try {
+                const u = new URL(url);
+                return u.hostname === 'pastebin.com' || u.hostname === 'www.pastebin.com';
+            } catch (e) { }
+            return false;
+        }
+
+        function getPastebinKey(url) {
+            try {
+                const u = new URL(url);
+                const match = u.pathname.match(/^\/(?:raw\/)?([a-zA-Z0-9]+)$/);
+                return match ? match[1] : null;
+            } catch (e) { }
+            return null;
+        }
+
+        function processPastebinLink(link) {
+            if (link.dataset.enhanced) return;
+            if (isInsideCodeblock(link)) return;
+            if (!isPastebinLink(link.href)) return;
+            link.dataset.enhanced = "1";
+
+            if (showIconsPastebin) {
+                const originalText = link.textContent.trim();
+                link.innerHTML = `${PASTEBIN_ICON} ${originalText}`;
+            }
+            
+            if (enableEmbedsPastebin && getPastebinKey(link.href)) {
+                addEmbedButton(link, createPastebinEmbed);
             }
         }
 
@@ -2956,12 +3022,13 @@ onReady(async function () {
 
         function processCatboxLink(link) {
             if (link.dataset.enhanced) return;
+            if (isInsideCodeblock(link)) return;
             if (!isCatboxLink(link.href)) return;
             link.dataset.enhanced = "1";
 
             if (showIconsCatbox) {
                 const originalText = link.textContent.trim();
-                link.innerHTML = `<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAApVBMVEUAAAD59/by7+3y6ebx7er03dfz3dfw4t/yzcTvxb325N7y2tPw1M7x5OH59PLu4OHKsavvy8vg0c729PKvmZP05+T34drpyMPy4dzpzsjizMfz5eHv29b29PH19PXk3Nrq19X+8+787un55eD0w7r93ND618v329Pp3tn3yL7t4dz94db2zsr5zsLSycHgyMHTv7i4sK2noZ2znZeKhHuQcWt1ZWM1yKHZAAAAIXRSTlMABw9CIv6Tiv784M/LXzEe/fr48O/q5+fYyMCzoJeFbFh1mpGHAAAApElEQVQY02WPVxKDMAxECTa9pfcmyTY1vdz/aMEEZshk/1azkt4arQbGj0xnY/YsY0simgeDLmdbSIhoRca+2XZ8ANTy40kTCcFCAAIoLdSX+BRqX1wIS3erB2yYAcDjlZKsZjv9cvyE273IFCmXWD1IRoDZGSCVJ5s3UOn1DVVthYi+0IFSUqpcCLvl4qHIc+F5C9ahJ+ujs4oPnBu9ql23f30AG0UPKlXkC0QAAAAASUVORK5CYII=" width="18" height="16" style="vertical-align:middle;margin-right:2px;" alt="Catbox"> ${originalText}`;
+                link.innerHTML = `${CATBOX_ICON} ${originalText}`;
             }
         }
 
@@ -3287,11 +3354,12 @@ onReady(async function () {
 
         function processXLink(link) {
             if (link.dataset.enhanced) return;
+            if (isInsideCodeblock(link)) return;
             if (!isXLink(link.href)) return;
             link.dataset.enhanced = "1";
 
             if (showIconsX) {
-                link.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="16" style="vertical-align:middle;margin-right:2px;" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.48 11.25H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg> ${link.textContent.trim()}`;
+                link.innerHTML = `${X_ICON} ${link.textContent.trim()}`;
             }
             
             if (enableEmbedsX && getXPostId(link.href)) {
@@ -3486,13 +3554,162 @@ onReady(async function () {
             return embedContainer;
         }
 
+        async function createRentryEmbed(url) {
+            const embedContainer = document.createElement('div');
+            embedContainer.className = 'embedContainer';
+            applyEmbedStyles(embedContainer);
+            
+            try {
+                const rentryKey = getRentryKey(url);
+                if (!rentryKey) {
+                    throw new Error('Invalid Rentry URL');
+                }
+                
+                const baseUrl = url.includes('rentry.org') ? 'https://rentry.org' : 'https://rentry.co';
+                const pageUrl = `${baseUrl}/${rentryKey}`;
+                
+                const html = await new Promise((resolve, reject) => {
+                    GM.xmlHttpRequest({
+                        method: 'GET',
+                        url: pageUrl,
+                        onload: (r) => {
+                            if (r.status === 200) {
+                                resolve(r.responseText);
+                            } else {
+                                reject(new Error(`HTTP ${r.status}`));
+                            }
+                        },
+                        onerror: reject,
+                        ontimeout: () => reject(new Error('Timeout'))
+                    });
+                });
+                
+                let title = null;
+                const titleMatch = html.match(/<title[^>]*>([^<]+)<\/title>/i);
+                if (titleMatch) {
+                    title = titleMatch[1].replace(/\s*-\s*rentry\.(co|org)/i, '').trim();
+                }
+                
+                let content = null;
+                const contentMatch = html.match(/<div[^>]*class="[^"]*markdown[^"]*"[^>]*>([\s\S]*?)<\/div>/i) ||
+                                    html.match(/<div[^>]*id=["']content["'][^>]*>([\s\S]*?)<\/div>/i) ||
+                                    html.match(/<article[^>]*>([\s\S]*?)<\/article>/i);
+                
+                if (contentMatch && contentMatch[1]) {
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = contentMatch[1];
+                    tempDiv.querySelectorAll('script, iframe, object, embed').forEach(el => el.remove());
+                    content = tempDiv.innerHTML;
+                }
+                
+                if (!content) {
+                    const textareaMatch = html.match(/<textarea[^>]*id=["']text["'][^>]*>([\s\S]*?)<\/textarea>/i);
+                    if (textareaMatch && textareaMatch[1]) {
+                        const tempDiv = document.createElement('div');
+                        tempDiv.innerHTML = textareaMatch[1].replace(/&amp;/g, '&');
+                        content = tempDiv.textContent || tempDiv.innerText || textareaMatch[1];
+                    }
+                }
+                
+                if (!content) {
+                    throw new Error('Could not extract content from Rentry page');
+                }
+                
+                const card = document.createElement('div');
+                card.style.display = 'flex';
+                card.style.flexDirection = 'column';
+                card.style.gap = '10px';
+                
+                const titleDiv = document.createElement('div');
+                titleDiv.style.cssText = 'font-weight:bold;color:var(--text-color,#fff)';
+                titleDiv.textContent = title ? `Rentry: ${title}` : `Rentry: ${rentryKey}`;
+                card.appendChild(titleDiv);
+                
+                const contentDiv = document.createElement('div');
+                contentDiv.style.cssText = 'padding:12px;border-radius:4px;overflow-x:auto;max-height:600px;overflow-y:auto;color:var(--text-color,#fff);word-wrap:break-word';
+                
+                if (content.includes('<')) {
+                    contentDiv.innerHTML = content;
+                    contentDiv.querySelectorAll('script').forEach(script => script.remove());
+                    contentDiv.querySelectorAll('a').forEach(link => {
+                        link.target = '_blank';
+                        link.rel = 'noopener noreferrer';
+                    });
+                } else {
+                    const pre = document.createElement('pre');
+                    pre.style.cssText = 'white-space:pre-wrap;word-wrap:break-word;font-family:monospace;font-size:12px;margin:0';
+                    pre.textContent = content;
+                    contentDiv.appendChild(pre);
+                }
+                
+                card.appendChild(contentDiv);
+                embedContainer.appendChild(card);
+            } catch (e) {
+                console.error('Rentry embed error:', e);
+                embedContainer.innerHTML = `<a href="${url}" target="_blank">${url}</a>`;
+            }
+            return embedContainer;
+        }
+
+        async function createPastebinEmbed(url) {
+            const embedContainer = document.createElement('div');
+            embedContainer.className = 'embedContainer';
+            applyEmbedStyles(embedContainer);
+            
+            try {
+                const pasteKey = getPastebinKey(url);
+                if (!pasteKey) {
+                    throw new Error('Invalid Pastebin URL');
+                }
+                
+                const rawUrl = `https://pastebin.com/raw/${pasteKey}`;
+                const content = await new Promise((resolve, reject) => {
+                    GM.xmlHttpRequest({
+                        method: 'GET',
+                        url: rawUrl,
+                        onload: (r) => {
+                            if (r.status === 200) {
+                                resolve(r.responseText);
+                            } else {
+                                reject(new Error(`HTTP ${r.status}`));
+                            }
+                        },
+                        onerror: reject,
+                        ontimeout: () => reject(new Error('Timeout'))
+                    });
+                });
+                
+                const card = document.createElement('div');
+                card.style.display = 'flex';
+                card.style.flexDirection = 'column';
+                card.style.gap = '10px';
+                
+                const titleDiv = document.createElement('div');
+                titleDiv.style.cssText = 'font-weight:bold;color:var(--text-color,#fff)';
+                titleDiv.textContent = `Pastebin: ${pasteKey}`;
+                card.appendChild(titleDiv);
+                
+                const contentDiv = document.createElement('pre');
+                contentDiv.style.cssText = 'padding:12px;border-radius:4px;overflow-x:auto;max-height:400px;overflow-y:auto;color:var(--text-color,#fff);white-space:pre-wrap;word-wrap:break-word;font-family:monospace;font-size:12px;margin:0';
+                contentDiv.textContent = content;
+                card.appendChild(contentDiv);
+                
+                embedContainer.appendChild(card);
+            } catch (e) {
+                console.error('Pastebin embed error:', e);
+                embedContainer.innerHTML = `<a href="${url}" target="_blank">${url}</a>`;
+            }
+            return embedContainer;
+        }
+
         function processBskyLink(link) {
             if (link.dataset.enhanced) return;
+            if (isInsideCodeblock(link)) return;
             if (!isBskyLink(link.href)) return;
             link.dataset.enhanced = "1";
 
             if (showIconsBsky) {
-                link.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 57" width="18" height="16" style="vertical-align:middle;margin-right:2px;"><path fill="#0085FF" d="M13.873 3.805C21.21 9.332 29.103 20.537 32 26.55v15.882c0-.338-.13.044-.41.867-1.512 4.456-7.418 21.847-20.923 7.944-7.111-7.32-3.819-14.64 9.125-16.85-7.405 1.264-15.73-.825-18.014-9.015C1.12 23.022 0 8.51 0 6.55 0-3.268 8.579-.182 13.873 3.805ZM50.127 3.805C42.79 9.332 34.897 20.537 32 26.55v15.882c0-.338.130.044.410.867 1.512 4.456 7.418 21.847 20.923 7.944 7.111-7.32 3.819-14.64-9.125-16.85 7.405 1.264 15.73-.825 18.014-9.015C62.88 23.022 64 8.51 64 6.55c0-9.818-8.578-6.732-13.873-2.745Z"/></svg> ${link.textContent.trim()}`;
+                link.innerHTML = `${BSKY_ICON} ${link.textContent.trim()}`;
             }
             
             if (enableEmbedsBsky && getBskyPostId(link.href)) {
@@ -3507,11 +3724,14 @@ onReady(async function () {
             if (showIconsTwitch || showThumbnailsTwitch) {
                 root.querySelectorAll('a[href*="twitch"]').forEach(processTwitchLink);
             }
-            if (showIconsRentry) {
+            if (showIconsRentry || enableEmbedsRentry) {
                 root.querySelectorAll('a[href*="rentry.co"], a[href*="rentry.org"]').forEach(processRentryLink);
             }
             if (showIconsCatbox) {
                 root.querySelectorAll('a[href*="catbox.moe"]').forEach(processCatboxLink);
+            }
+            if (showIconsPastebin || enableEmbedsPastebin) {
+                root.querySelectorAll('a[href*="pastebin.com"]').forEach(processPastebinLink);
             }
             if (showIconsX || enableEmbedsX) {
                 root.querySelectorAll('a[href*="x.com"], a[href*="twitter.com"]').forEach(processXLink);

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         文本框优化-默认值填充
 // @namespace    http://tampermonkey.net/
-// @version      0.1.1
+// @version      0.1.2
 // @description  美化
 // @author       HK
 // @match      https://ai.zjw.hk/*
@@ -286,6 +286,7 @@
         document.getElementById("blank2").value = "df.head()";
         document.querySelector('body > div.container > div.code-block > table > tbody > tr:nth-child(21) > td').innerHTML += "<b> 双[[]]，分类 </b>";
         document.getElementById("blank3").value = "pd.get_dummies";
+        document.querySelector('body > div.container > div.code-block > table > tbody > tr:nth-child(24) > td').innerHTML += "<b> 'Your age '后面不用跟空格，df.columns = df.columns.str.strip()已经处理 </b>";
         document.getElementById("blank4").value = "df['Your age'].apply";
         document.getElementById("blank5").value = "train_test_split";
         document.getElementById("blank6").value = "X,y,test_size=0.2";
