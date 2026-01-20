@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Text Explainer
 // @namespace    http://tampermonkey.net/
-// @version      0.3.3
+// @version      0.3.4
 // @description  Explain selected text using LLM
 // @author       RoCry
 // @icon         data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwcHgiIGhlaWdodD0iODAwcHgiIHZpZXdCb3g9IjAgMCAxOTIgMTkyIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGZpbGw9Im5vbmUiPjxjaXJjbGUgY3g9IjExNiIgY3k9Ijc2IiByPSI1NCIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjEyIi8+PHBhdGggc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMTIiIGQ9Ik04Ni41IDEyMS41IDQxIDE2N2MtNC40MTggNC40MTgtMTEuNTgyIDQuNDE4LTE2IDB2MGMtNC40MTgtNC40MTgtNC40MTgtMTEuNTgyIDAtMTZsNDQuNS00NC41TTkyIDYybDEyIDMyIDEyLTMyIDEyIDMyIDEyLTMyIi8+PC9zdmc+
@@ -26,6 +26,12 @@
 
 (function () {
   "use strict";
+
+  let GM_addStyle = globalThis.GM_addStyle;
+  let GM_getValue = globalThis.GM_getValue;
+  let GM_setValue = globalThis.GM_setValue;
+  let GM_xmlhttpRequest = globalThis.GM_xmlhttpRequest;
+  let GM_registerMenuCommand = globalThis.GM_registerMenuCommand;
 
   // =========================
   // Config/constants
@@ -110,13 +116,14 @@
 
   function ensureGMCompat() {
     if (typeof GM_addStyle !== "function") {
+      let addStyle = null;
       if (typeof GM === "object" && typeof GM.addStyle === "function") {
-        GM_addStyle = function (cssText) {
+        addStyle = function (cssText) {
           GM.addStyle(cssText);
           return cssText;
         };
       } else {
-        GM_addStyle = function (cssText) {
+        addStyle = function (cssText) {
           if (!document.head) {
             throw new Error("document.head is not available for GM_addStyle");
           }
@@ -126,25 +133,31 @@
           return style;
         };
       }
+      GM_addStyle = addStyle;
+      globalThis.GM_addStyle = addStyle;
     }
 
     if (typeof GM_getValue !== "function") {
       if (typeof localStorage === "undefined") {
         throw new Error("localStorage missing; cannot emulate GM_getValue");
       }
-      GM_getValue = function (key, defaultValue) {
+      const getValue = function (key, defaultValue) {
         const value = localStorage.getItem(`GM_${key}`);
         return value === null ? defaultValue : JSON.parse(value);
       };
+      GM_getValue = getValue;
+      globalThis.GM_getValue = getValue;
     }
 
     if (typeof GM_setValue !== "function") {
       if (typeof localStorage === "undefined") {
         throw new Error("localStorage missing; cannot emulate GM_setValue");
       }
-      GM_setValue = function (key, value) {
+      const setValue = function (key, value) {
         localStorage.setItem(`GM_${key}`, JSON.stringify(value));
       };
+      GM_setValue = setValue;
+      globalThis.GM_setValue = setValue;
     }
 
     if (
@@ -152,7 +165,17 @@
       typeof GM === "object" &&
       typeof GM.xmlHttpRequest === "function"
     ) {
-      GM_xmlhttpRequest = GM.xmlHttpRequest;
+      GM_xmlhttpRequest = GM.xmlHttpRequest.bind(GM);
+      globalThis.GM_xmlhttpRequest = GM_xmlhttpRequest;
+    }
+
+    if (
+      typeof GM_registerMenuCommand !== "function" &&
+      typeof GM === "object" &&
+      typeof GM.registerMenuCommand === "function"
+    ) {
+      GM_registerMenuCommand = GM.registerMenuCommand.bind(GM);
+      globalThis.GM_registerMenuCommand = GM_registerMenuCommand;
     }
   }
 

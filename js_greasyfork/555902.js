@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         GeoPixels Guild Overhaul
 // @namespace    http://tampermonkey.net/
-// @version      1.9.0
-// @description  Complete guild overhaul - draggable modal, XP tracking, message collapsing, responsive layout, and more in the future!
+// @version      2.0.0
+// @description  Complete guild overhaul - draggable modal, XP tracking, message collapsing, responsive layout, and coordinate display in XP tracker!
 // @author       ariapokoteng
 // @match        *://geopixels.net/*
 // @match        *://*.geopixels.net/*
@@ -208,6 +208,21 @@
         select {
             border: 2px solid #3b82f6 !important;
             border-radius: 4px;
+        }
+
+        /* User cell with coordinates */
+        .user-cell-content {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .user-name {
+            font-weight: 500;
+        }
+
+        .user-coords {
+            font-size: 13px;
         }
 
         /* Icons */
@@ -430,6 +445,90 @@
         return null;
     }
 
+    async function fetchAllGuildMembersData() {
+        const currentMembers = parseGuildMembers();
+        if (!currentMembers || Object.keys(currentMembers).length === 0) {
+            alert('No guild members found. Please wait for members to load.');
+            return null;
+        }
+
+        const memberNames = Object.keys(currentMembers);
+        const allUsersData = [];
+        let successCount = 0;
+        let failCount = 0;
+
+        // Show progress indicator
+        const progressDiv = document.createElement('div');
+        progressDiv.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 10000;
+            min-width: 300px;
+            text-align: center;
+        `;
+        progressDiv.innerHTML = `
+            <p style="font-weight: bold; margin-bottom: 10px;">Fetching guild member data...</p>
+            <p id="progressText" style="font-size: 14px; color: #666;">0/${memberNames.length}</p>
+            <div style="width: 100%; height: 20px; background: #e5e7eb; border-radius: 4px; margin-top: 10px; overflow: hidden;">
+                <div id="progressBar" style="height: 100%; background: #3b82f6; width: 0%; transition: width 0.3s;"></div>
+            </div>
+        `;
+        document.body.appendChild(progressDiv);
+
+        // Fetch data for each member
+        for (let i = 0; i < memberNames.length; i++) {
+            const memberName = memberNames[i];
+            const match = memberName.match(/#(\d+)$/);
+
+            if (match) {
+                const userId = match[1];
+                const data = await fetchUserProfile(userId);
+
+                if (data) {
+                    allUsersData.push(data);
+                    successCount++;
+                } else {
+                    failCount++;
+                }
+            } else {
+                failCount++;
+            }
+
+            // Update progress
+            const progressPercent = ((i + 1) / memberNames.length) * 100;
+            document.getElementById('progressBar').style.width = progressPercent + '%';
+            document.getElementById('progressText').textContent = `${i + 1}/${memberNames.length} (${successCount} fetched)`;
+        }
+
+        // Copy to clipboard
+        const jsonString = JSON.stringify(allUsersData, null, 2);
+        navigator.clipboard.writeText(jsonString).then(() => {
+            progressDiv.innerHTML = `
+                <p style="font-weight: bold; color: #10b981; margin-bottom: 5px;">✓ Success!</p>
+                <p style="font-size: 14px; color: #666;">
+                    Fetched: ${successCount} users<br>
+                    Failed: ${failCount} users<br><br>
+                    <strong>JSON copied to clipboard!</strong>
+                </p>
+            `;
+            setTimeout(() => progressDiv.remove(), 3000);
+        }).catch((err) => {
+            progressDiv.innerHTML = `
+                <p style="font-weight: bold; color: #dc2626;">Error copying to clipboard!</p>
+                <p style="font-size: 12px; color: #666;">${err.message}</p>
+            `;
+            setTimeout(() => progressDiv.remove(), 3000);
+        });
+
+        return allUsersData;
+    }
+
     function calculateXPChanges(oldMembers, newMembers) {
         const changes = [];
 
@@ -456,6 +555,44 @@
         }
 
         return changes;
+    }
+
+    // Helper function to get color based on coordinate quadrant and distance
+    function getCoordinateColor(coords) {
+        if (!coords || coords.length < 2) return { bg: '#f3f4f6', text: '#1f2937' };
+
+        const x = coords[0];
+        const y = coords[1];
+
+        // Calculate distance from origin
+        const distance = Math.sqrt(x * x + y * y);
+        const distanceBand = Math.floor(distance / 25000);
+
+        // Base colors for each quadrant with intensity variation (very light/transparent)
+        let baseColor;
+
+        if (x >= 0 && y >= 0) {
+            // Top Right - Green tint
+            const intensity = Math.min(distanceBand * 3, 15);
+            baseColor = `hsl(120, 50%, ${97 - intensity}%)`;
+        } else if (x < 0 && y >= 0) {
+            // Top Left - Red tint
+            const intensity = Math.min(distanceBand * 3, 15);
+            baseColor = `hsl(0, 50%, ${97 - intensity}%)`;
+        } else if (x < 0 && y < 0) {
+            // Bottom Left - Blue tint
+            const intensity = Math.min(distanceBand * 3, 15);
+            baseColor = `hsl(240, 50%, ${97 - intensity}%)`;
+        } else {
+            // Bottom Right (x >= 0, y < 0) - Orange tint
+            const intensity = Math.min(distanceBand * 3, 15);
+            baseColor = `hsl(30, 50%, ${97 - intensity}%)`;
+        }
+
+        return {
+            bg: baseColor,
+            text: '#1f2937'
+        };
     }
 
     // --- XP Changes Section (Embedded) ---
@@ -1697,6 +1834,20 @@
         };
         snapRow.appendChild(csvBtn);
 
+        const exportAllDataBtn = document.createElement('button');
+        exportAllDataBtn.innerHTML = '🎨 Export All User Data';
+        exportAllDataBtn.className = 'control-button';
+        exportAllDataBtn.style.color = '#a855f7';
+        exportAllDataBtn.title = 'Fetch and export all guild members\' data (including colors) as JSON';
+        exportAllDataBtn.onclick = async () => {
+            exportAllDataBtn.disabled = true;
+            exportAllDataBtn.style.opacity = '0.5';
+            await fetchAllGuildMembersData();
+            exportAllDataBtn.disabled = false;
+            exportAllDataBtn.style.opacity = '1';
+        };
+        snapRow.appendChild(exportAllDataBtn);
+
         const cleanBtn = document.createElement('button');
         cleanBtn.innerHTML = '🧹 Manage History';
         cleanBtn.className = 'control-button';
@@ -1899,14 +2050,17 @@
                 changes.forEach(change => {
                     const tr = document.createElement('tr');
 
-                    // User Cell with Buttons
+                    // User Cell with Buttons and Coordinates
                     const userTd = document.createElement('td');
                     userTd.style.display = 'flex';
                     userTd.style.alignItems = 'center';
                     userTd.style.gap = '4px';
 
+                    // Create user info (name only)
                     const nameSpan = document.createElement('span');
+                    nameSpan.className = 'user-name';
                     nameSpan.textContent = change.id;
+
                     userTd.appendChild(nameSpan);
 
                     // Extract ID
@@ -1984,6 +2138,53 @@
                             mapBtn.classList.add('visited');
                         };
                         userTd.appendChild(mapBtn);
+                    }
+
+                    // Display coordinates if available (right-aligned)
+                    if (change.coords) {
+                        const spacer = document.createElement('div');
+                        spacer.style.flex = '1';
+                        userTd.appendChild(spacer);
+
+                        const coordsSpan = document.createElement('span');
+                        coordsSpan.className = 'user-coords';
+
+                        // Get colors based on quadrant and distance
+                        const colors = getCoordinateColor(change.coords);
+                        coordsSpan.style.backgroundColor = colors.bg;
+                        coordsSpan.style.padding = '2px 6px';
+                        coordsSpan.style.borderRadius = '3px';
+
+                        // Create styled parts
+                        const openParen = document.createElement('span');
+                        openParen.style.color = colors.text;
+                        openParen.textContent = '(';
+
+                        const xVal = document.createElement('span');
+                        xVal.style.color = colors.text;
+                        xVal.style.fontWeight = '500';
+                        xVal.textContent = change.coords[0];
+
+                        const comma = document.createElement('span');
+                        comma.style.color = colors.text;
+                        comma.textContent = ', ';
+
+                        const yVal = document.createElement('span');
+                        yVal.style.color = colors.text;
+                        yVal.style.fontWeight = '500';
+                        yVal.textContent = change.coords[1];
+
+                        const closeParen = document.createElement('span');
+                        closeParen.style.color = colors.text;
+                        closeParen.textContent = ')';
+
+                        coordsSpan.appendChild(openParen);
+                        coordsSpan.appendChild(xVal);
+                        coordsSpan.appendChild(comma);
+                        coordsSpan.appendChild(yVal);
+                        coordsSpan.appendChild(closeParen);
+
+                        userTd.appendChild(coordsSpan);
                     }
 
                     let changeCell = '';
@@ -2500,6 +2701,6 @@
         init();
     }
 
-    console.log('[Guild Modal] v1.7 - Loaded');
+    console.log('[Guild Modal] v2.0 - Loaded with coordinate display');
 
 })();

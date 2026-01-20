@@ -5,7 +5,7 @@
 // @match       https://reports.adblockplus.org/*
 // @grant       none
 // @icon        https://abpvn.com/icon.png
-// @version     2.8
+// @version     2.9
 // @author      ABPVN
 // @run-at      document-end
 // @description Hide visisted link in ABP issue report tools, dark mode and responsive support
@@ -116,7 +116,7 @@ if (location.pathname === "/digest") {
   if (localStorage.getItem(location.pathname) === SUBMITED_VALUE) {
       // Remove key and back to list report page
       localStorage.removeItem(location.pathname);
-      if (history.length > 2) {
+      if (history.length > 3) {
         history.go(-2);
       } else {
         history.back();

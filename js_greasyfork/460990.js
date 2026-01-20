@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         Google搜索仅显示中文页面的结果【在任意位置四击鼠标左键跳转(包括四击以上)】
 // @namespace    https://github.com/dadaewqq/fun
-// @version      0.9
+// @version      1.0
 // @description  通过跳转页面增加`lr=lang_zh-CN|lang_zh-TW`参数实现谷歌搜索仅显示中文页面的结果(现在已去除zh-tw的结果，因zh-tw质量似乎并不是很好)
 // @author       dadaewqq
-// @match        https://www.google.com*search?q=*
+// @match        https://www.google.com/search?q=*
+// @match        https://www.google.com.hk/search?q=*
 // @icon         https://www.google.com/favicon.ico
 // @grant        none
 // @license      MIT

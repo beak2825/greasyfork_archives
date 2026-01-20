@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Zed汉化 & ZedTools
 // @namespace    http://tampermonkey.net/
-// @version      14.5
+// @version      15.0
 // @description  网页游戏Zed City的汉化和工具插件。Chinese translation and tools for the web game Zed City.
 // @author       bot7420
 // @license      CC-BY-NC-SA-4.0
@@ -26,8 +26,9 @@
 /* 状态栏显示无线电塔交易刷新 */
 /* 状态栏显示帮派突袭冷却计时 */
 /* 状态栏显示总BS */
+/* 状态栏显示废品券兑换冷却计时*/
 /* 倒计时弹窗 */
-/* 废品场屏蔽物品收售 */
+/* 废品店屏蔽物品出售 */
 /* 设置里添加功能开关 */
 /* 工具方法 */
 //------------ getOriTextFromElement(elem) { //获取元素的 “原始文本”（翻译前内容）
@@ -38,6 +39,7 @@
 /* 狩猎统计 */
 /* 锻炼细节显示 */
 /* Zed 熔炉内嵌废品店小窗口 */
+/* Zed 旅行完成提醒（仅自动跳转）相关变量 */
 /* 遠征 ZONE2 需求圖 */
 /* 显示车重 */
 /* 显示物价 */
@@ -65,8 +67,10 @@
 //----------------/ 装备专家
 //----------------/ 盔甲专家
 //----------------/ 武器专家
+//----------------/ 废品专家
 //1.4 地點
-//----1.4-1 天氣
+//----1.4.1 住宅
+//----1.4.2 天氣
 //1.5 庫存
 //----1.5-1 武器
 //----1.5-2 護甲
@@ -82,9 +86,11 @@
 //----1.5-5 子彈
 //----1.5-6 醫療
 //----1.5-7 增強
-//----------------/ 食物
-//----------------/ 能量
-//----------------/ 飲料
+//----------------/ 增強劑（食物）
+//----------------/ 增強劑（能量飲料）
+//----------------/ 增強劑（酒精）
+//----------------/ 增強劑（趣味）
+//----------------/ 增強劑（復活節）
 //----1.5-8 道具裝備
 //----1.5-9 雜項
 //----1.5-10 汽車零件
@@ -93,9 +99,14 @@
 //1.6 技能狀態
 //----------------/ 活動(Spa)
 //----------------/ 活動(輻射)
+//----------------/ 活動(幫派)
 //1.7 遠征
-//----1.7-1 前哨站
+//----1.7-1 遠征說明
+//----1.7-2 前哨站
 //1.8 貨幣
+//1.9 活動
+//----1.9-1 萬聖節
+//----1.9-2 聖誕節
 //2.0 怪物
 //2.1 任務
 //----------------/ NPC名稱
@@ -110,6 +121,9 @@
 //----------------/ Fuel Baron
 //----------------/ Animal Huntress
 //----------------/ Clothes Seamstress
+//----------------/ City Housing
+//----------------/ Halloween Quest
+//----------------/ Xmas Tree
 //----------------/ 觸發特別任務
 //2.2 規則
 //2.3 論壇
@@ -156,8 +170,8 @@
                     handleGetFaction(this.response);
                 } else if (this.responseURL === "https://api.zed.city/loadItems") {
                     handleLoadItems(this.response);
-                }
                 } else if (this.responseURL === "https://api.zed.city/getMarket") { //修復市場價格顯示161~179
+
                 try {
                     const raw = JSON.parse(this.response);
                     const items = raw.items || [];
@@ -177,7 +191,7 @@
                     console.error("❌ getMarket 响应解析失败", err);
                 }
             }
-        });
+        }});
         /* apply是 JavaScript 函数的方法，用于调用函数并指定this上下文和参数
            this指向当前的XMLHttpRequest实例（保证原生方法内部的this指向正确）
            arguments是传给重写后open方法的所有参数（保证原始调用的参数完整传递）
@@ -614,7 +628,7 @@
             insertToElem.parentNode.insertBefore(container, insertToElem);
         }
     }
-    setInterval(addFactionLogSearch, 500);
+    setInterval(addFactionLogSearch, 1000);
 
     /* 状态栏弹出显示XP增量 */
     if (!localStorage.getItem("script_getStats")) {
@@ -790,6 +804,9 @@
     if (!localStorage.getItem("script_estimate_levelup_time_switch")) {
         localStorage.setItem("script_estimate_levelup_time_switch", "enabled");
     }
+      if (!localStorage.getItem("script_levelup_experience_switch")) {
+        localStorage.setItem("script_levelup_experience_switch", "enabled");
+    }
 
     function updatePlayerXpDisplay() {
         const playerXp = Number(localStorage.getItem("script_playerXp_current"));
@@ -799,7 +816,11 @@
         let levelUpInText = "";
         if (localStorage.getItem("script_estimate_levelup_time_switch") === "enabled") {
             const levelUpInSec = Math.floor(((currentLevelMaxXP - playerXp) / 72) * 60 * 60);
-            levelUpInText = `${timeReadableNoSec(levelUpInSec)}后升级`;
+            levelUpInText = `(${timeReadableNoSec(levelUpInSec)}后升级)`;
+        }
+        if (localStorage.getItem("script_levelup_experience_switch") === "enabled") {
+            const levelExpRequired = Math.floor(currentLevelMaxXP - playerXp);
+            levelUpInText = `(${levelExpRequired})`;
         }
 
         const levelElem = document.body.querySelectorAll(".level-up-cont")[1];
@@ -827,7 +848,7 @@
             );
         }
     }
-    setInterval(updatePlayerXpDisplay, 500);
+    setInterval(updatePlayerXpDisplay, 1000);
 
     /* 状态栏显示能量和辐射溢出倒计时 */
     function updateBarsDisplay() {
@@ -841,75 +862,108 @@
             return;
         }
 
-        let timeLeftSec = Math.floor((localStorage.getItem("script_energyFullAtTimestamp") - Date.now()) / 1000);
+        // let timeLeftSec = Math.floor((localStorage.getItem("script_energyFullAtTimestamp") - Date.now()) / 1000);
+        let timeLeftSec = Math.floor((energyFullAtTimestamp - Date.now()) / 1000);
         let logoElem = document.body.querySelector("#script_energyBar_logo");
         if (!logoElem) {
             if (timeLeftSec > 0) {
                 insertToElem.insertAdjacentHTML(
                     "beforeend",
-                    `<div id="script_energyBar_logo" style="order: 1; cursor: pointer;" class="script_do_not_translate"><span class="script_do_not_translate" style="font-size: 12px;">能量 ${timeReadable(
-                        timeLeftSec
-                    )}</span></div>`
+                    `<div id="script_energyBar_logo" style="order: 1; cursor: pointer;" class="script_do_not_translate">
+                <span class="script_do_not_translate q-icon text-orange-4 fas fa-bolt" style="font-size: 14px; margin-right: 1px;"></span>
+                <span class="script_do_not_translate" style="font-size: 12px;">${timeReadable(timeLeftSec)}</span>
+            </div>`
                 );
-                insertToElem.querySelector("#script_energyBar_logo").addEventListener("click", () => {
-                    history.pushState(null, null, "https://www.zed.city/stronghold/" + localStorage.getItem("script_stronghold_id_gym"));
-                    history.pushState(null, null, "https://www.zed.city/stronghold/" + localStorage.getItem("script_stronghold_id_gym"));
-                    history.go(-1);
-                });
             } else {
                 insertToElem.insertAdjacentHTML(
                     "beforeend",
-                    `<div id="script_energyBar_logo" style="order: 1; cursor: pointer; " class="script_do_not_translate"><span class="script_do_not_translate" style="background-color: #ef5350; font-size: 12px;">能量已满</span></div>`
+                    `<div id="script_energyBar_logo" style="order: 1; cursor: pointer; " class="script_do_not_translate">
+                <span class="script_do_not_translate q-icon text-orange-4 fas fa-bolt" style="font-size: 14px; margin-right: 1px;"></span>
+                <span class="script_do_not_translate" style="background-color: #ef5350; font-size: 12px;">已满</span>
+            </div>`
                 );
-                insertToElem.querySelector("#script_energyBar_logo").addEventListener("click", () => {
-                    history.pushState(null, null, "https://www.zed.city/stronghold/" + localStorage.getItem("script_stronghold_id_gym"));
-                    history.pushState(null, null, "https://www.zed.city/stronghold/" + localStorage.getItem("script_stronghold_id_gym"));
-                    history.go(-1);
-                });
             }
+            insertToElem.querySelector("#script_energyBar_logo").addEventListener("click", () => {
+                history.pushState(null, null, "https://www.zed.city/stronghold/" + localStorage.getItem("script_stronghold_id_gym"));
+                history.pushState(null, null, "https://www.zed.city/stronghold/" + localStorage.getItem("script_stronghold_id_gym"));
+                history.go(-1);
+            });
         } else {
             if (timeLeftSec > 0) {
-                logoElem.innerHTML = `<span class="script_do_not_translate" style="font-size: 12px;">能量 ${timeReadable(timeLeftSec)}</span>`;
+                logoElem.innerHTML = `
+            <span class="script_do_not_translate q-icon text-orange-4 fas fa-bolt" style="font-size: 14px; margin-right: 1px;"></span>
+            <span class="script_do_not_translate" style="font-size: 12px;">${timeReadable(timeLeftSec)}</span>
+        `;
             } else {
-                logoElem.innerHTML = `<span class="script_do_not_translate" style="background-color: #ef5350; font-size: 12px;">能量已满</span>`;
+                logoElem.innerHTML = `
+            <span class="script_do_not_translate q-icon text-orange-4 fas fa-bolt" style="font-size: 14px; margin-right: 1px;"></span>
+            <span class="script_do_not_translate" style="background-color: #ef5350; font-size: 12px;">已满</span>
+        `;
             }
         }
 
+        // 新辐射显示代码（图标+文字）
         timeLeftSec = Math.floor((localStorage.getItem("script_radFullAtTimestamp") - Date.now()) / 1000);
         logoElem = document.body.querySelector("#script_radBar_logo");
         if (!logoElem) {
             if (timeLeftSec > 0) {
                 insertToElem.insertAdjacentHTML(
                     "beforeend",
-                    `<div id="script_radBar_logo" style="order: 2; cursor: pointer; " class="script_do_not_translate"><span class="script_do_not_translate" style="font-size: 12px;">辐射 ${timeReadable(
-                        timeLeftSec
-                    )}</span></div>`
+                    `<div id="script_radBar_logo" style="order: 2; cursor: pointer; " class="script_do_not_translate">
+                <span class="script_do_not_translate q-icon text-green-5 fas fa-radiation" style="font-size: 14px; margin-right: 1px;"></span>
+                <span class="script_do_not_translate" style="font-size: 12px;">${timeReadable(timeLeftSec)}</span>
+            </div>`
                 );
-                insertToElem.querySelector("#script_radBar_logo").addEventListener("click", () => {
-                    history.pushState(null, null, "https://www.zed.city/scavenge");
-                    history.pushState(null, null, "https://www.zed.city/scavenge");
-                    history.go(-1);
-                });
             } else {
                 insertToElem.insertAdjacentHTML(
                     "beforeend",
-                    `<div id="script_radBar_logo" style="order: 2; cursor: pointer; " class="script_do_not_translate"><span class="script_do_not_translate" style="background-color: #ef5350; font-size: 12px;">辐射已满</span></div>`
+                    `<div id="script_radBar_logo" style="order: 2; cursor: pointer; " class="script_do_not_translate">
+                <span class="script_do_not_translate q-icon text-green-5 fas fa-radiation" style="font-size: 14px; margin-right: 1px;"></span>
+                <span class="script_do_not_translate" style="background-color: #ef5350; font-size: 12px;">已满</span>
+            </div>`
                 );
-                insertToElem.querySelector("#script_radBar_logo").addEventListener("click", () => {
-                    history.pushState(null, null, "https://www.zed.city/scavenge");
-                    history.pushState(null, null, "https://www.zed.city/scavenge");
-                    history.go(-1);
-                });
             }
+            insertToElem.querySelector("#script_radBar_logo").addEventListener("click", () => {
+                history.pushState(null, null, "https://www.zed.city/scavenge");
+                history.pushState(null, null, "https://www.zed.city/scavenge");
+                history.go(-1);
+            });
         } else {
             if (timeLeftSec > 0) {
-                logoElem.innerHTML = `<span class="script_do_not_translate" style="font-size: 12px;">辐射 ${timeReadable(timeLeftSec)}</span>`;
+                logoElem.innerHTML = `
+            <span class="script_do_not_translate q-icon text-green-5 fas fa-radiation" style="font-size: 14px; margin-right: 1px;"></span>
+            <span class="script_do_not_translate" style="font-size: 12px;">${timeReadable(timeLeftSec)}</span>
+        `;
             } else {
-                logoElem.innerHTML = `<span class="script_do_not_translate" style="background-color: #ef5350; font-size: 12px;">辐射已满</span>`;
+                logoElem.innerHTML = `
+            <span class="script_do_not_translate q-icon text-green-5 fas fa-radiation" style="font-size: 14px; margin-right: 1px;"></span>
+            <span class="script_do_not_translate" style="background-color: #ef5350; font-size: 12px;">已满</span>
+        `;
             }
         }
     }
-    setInterval(updateBarsDisplay, 500);
+    setInterval(updateBarsDisplay, 1000);
+
+     /* 状态栏显示能量和辐射溢出倒计时 */
+    function marketBarsDisplay() {
+        const insertToElem = document.body.querySelector("#script_countdowns_container");
+        if (!insertToElem) {
+            return;
+        }
+        let logoElem = document.body.querySelector("#script_market_logo");
+        if (!logoElem) {
+            insertToElem.insertAdjacentHTML(
+                "beforeend",
+                `<div id="script_market_logo" style="order: 3; cursor: pointer; width:30px" class="script_do_not_translate"><a class="script_do_not_translate" style="font-size: 12px; text-decoration: none;" href="https://www.zed.city/market" onclick="return false;" >市场</a></div>`
+            );
+             insertToElem.querySelector("#script_market_logo").addEventListener("click", () => {
+                    history.pushState(null, null, "https://www.zed.city/market");
+                    history.pushState(null, null, "https://www.zed.city/market");
+                    history.go(-1);
+                });
+        }
+    }
+    setInterval(marketBarsDisplay, 1000);
 
     /* 状态栏显示商店重置倒计时 */
     if (!localStorage.getItem("script_junkStoreResetTimestamp")) {
@@ -968,7 +1022,7 @@
             if (timeLeftSec > 0) {
                 insertToElem.insertAdjacentHTML(
                     "beforeend",
-                    `<div id="script_junk_store_limit_logo" style="order: 4; cursor: pointer; " class="script_do_not_translate"><span class="script_do_not_translate" style="font-size: 12px;">商店 ${timeReadable(
+                    `<div id="script_junk_store_limit_logo" style="order: 5; cursor: pointer; " class="script_do_not_translate"><span class="script_do_not_translate" style="font-size: 12px;">商店 ${timeReadable(
                         timeLeftSec
                     )}</span></div>`
                 );
@@ -980,7 +1034,7 @@
             } else {
                 insertToElem.insertAdjacentHTML(
                     "beforeend",
-                    `<div id="script_junk_store_limit_logo" style="order: 4; cursor: pointer; " class="script_do_not_translate"><span class="script_do_not_translate" style="background-color: #ef5350; font-size: 12px;">商店已刷新</span></div>`
+                    `<div id="script_junk_store_limit_logo" style="order: 5; cursor: pointer; " class="script_do_not_translate"><span class="script_do_not_translate" style="background-color: #ef5350; font-size: 12px;">商店已刷新</span></div>`
                 );
                 insertToElem.querySelector("#script_junk_store_limit_logo").addEventListener("click", () => {
                     history.pushState(null, null, "https://www.zed.city/store/junk");
@@ -996,11 +1050,14 @@
             }
         }
     }
-    setInterval(updateStoreResetDisplay, 500);
+    setInterval(updateStoreResetDisplay, 1000);
 
     /* 状态栏显示熔炉工作 */
     if (!localStorage.getItem("script_forgeTimestamp")) {
         localStorage.setItem("script_forgeTimestamp", 0);
+    }
+    if (!localStorage.getItem("script_cooldownTimeExchangeScrap_at_ms")) {
+        localStorage.setItem("script_cooldownTimeExchangeScrap_at_ms", 0);
     }
     if (!localStorage.getItem("script_scavenge_records")) {
         localStorage.setItem("script_scavenge_records", "{}");
@@ -1030,6 +1087,16 @@
             const secLeft = perActionTime * (consumeItemNumber / perActionConsumeItemNumber);
             localStorage.setItem("script_forgeTimestamp", Date.now() + secLeft * 1000);
             localStorage.setItem("script_forgeIsAlreadyNotified", false);
+            return;
+        }
+
+        // 废品券
+        if (jobName?.startsWith("job_scrap_expert_")) {
+            const timeLeftSec = Math.floor((localStorage.getItem("script_cooldownTimeExchangeScrap_at_ms") - Date.now()) / 1000);
+            if(timeLeftSec <= 0) {
+                const timestamp = Date.now() + 60 * 60 * 24 * 3 * 1000; // 3days
+                localStorage.setItem("script_cooldownTimeExchangeScrap_at_ms", timestamp);
+            }
             return;
         }
 
@@ -1077,7 +1144,8 @@
 
         // 远征图6宝箱开箱倒计时 (新增代码)
         // 注意：'job_map6_chest_name' 是一个占位符，需要用浏览器的开发者工具(F12)查看网络请求，找到开启图6宝箱时对应的真实 jobName 并替换它。
-        if (jobName?.startsWith("data_center-Ccchns_F")) {
+        // 原為jobName?.startsWith("data_center-Ccchns_F")
+        if (jobName?.startsWith("job_vault_lockbox")) {
             const timestamp = Date.now() + 21600 * 1000; // 6 hours (6 * 60 * 60)
             localStorage.setItem("script_exploration_map6_cooldown_at_ms", timestamp);
         }
@@ -1137,11 +1205,25 @@
     function handleCompleteJob(r) {
         const response = JSON.parse(r);
         const jobName = response?.job?.codename;
-        if (jobName !== "furnace") {
+        if (jobName !== "furnace" && jobName !== "room_secure_panel" && jobName !== "room_secure_gate_2" && jobName !== "room_security_vault") {
             return;
         }
-        localStorage.setItem("script_forgeTimestamp", Date.now());
-        localStorage.setItem("script_forgeIsAlreadyNotified", true);
+        if (jobName?.startsWith("furnace")) {
+            localStorage.setItem("script_forgeTimestamp", Date.now());
+            localStorage.setItem("script_forgeIsAlreadyNotified", true);
+        }
+        if (jobName?.startsWith("room_secure_panel")) {
+            const timestamp = Date.now() + 60 * 60 * 24 * 7 * 1000; // 7days
+            localStorage.setItem("script_exploration_fuelTrade_openDoor_cooldown_at_ms", timestamp);
+        }
+        if (jobName?.startsWith("room_secure_gate_2")) {
+            const timestamp = Date.now() + 60 * 60 * 24 * 7 * 1000; // 7days
+            localStorage.setItem("script_exploration_map5_openDoor_cooldown_at_ms", timestamp);
+        }
+        if (jobName?.startsWith("room_security_vault")) {
+            const timestamp = Date.now() + 60 * 60 * 24 * 7 * 1000; // 7days
+            localStorage.setItem("script_exploration_map6_openDoor_cooldown_at_ms", timestamp);
+        }
     }
 
     function handleGetStronghold(r) {
@@ -1201,7 +1283,7 @@
             if (timeLeftSec > 0) {
                 insertToElem.insertAdjacentHTML(
                     "beforeend",
-                    `<div id="script_forge_logo" style="order: 3; cursor: pointer; " class="script_do_not_translate"><span class="script_do_not_translate" style="font-size: 12px;">熔炉 ${timeReadable(
+                    `<div id="script_forge_logo" style="order: 4; cursor: pointer; " class="script_do_not_translate"><span class="script_do_not_translate" style="font-size: 12px;">熔炉 ${timeReadable(
                         timeLeftSec
                     )}</span></div>`
                 );
@@ -1213,7 +1295,7 @@
             } else {
                 insertToElem.insertAdjacentHTML(
                     "beforeend",
-                    `<div id="script_forge_logo" style="order: 3; cursor: pointer; " class="script_do_not_translate"><span class="script_do_not_translate" style="background-color: #ef5350; font-size: 12px;">熔炉未工作</span></div>`
+                    `<div id="script_forge_logo" style="order: 4; cursor: pointer; " class="script_do_not_translate"><span class="script_do_not_translate" style="background-color: #ef5350; font-size: 12px;">熔炉未工作</span></div>`
                 );
                 insertToElem.querySelector("#script_forge_logo").addEventListener("click", () => {
                     history.pushState(null, null, "https://www.zed.city/stronghold/" + localStorage.getItem("script_stronghold_id_furnace"));
@@ -1229,7 +1311,7 @@
             }
         }
     }
-    setInterval(updateForgeDisplay, 500);
+    setInterval(updateForgeDisplay, 1000);
 
     /* 状态栏显示无线电塔交易刷新 */
     if (!localStorage.getItem("script_radioTowerTradeTimestamp")) {
@@ -1291,7 +1373,53 @@
             }
         }
     }
-    setInterval(updateRadioTowerDisplay, 500);
+    setInterval(updateRadioTowerDisplay, 1000);
+
+    //废品券兑换时间显示
+    function exchangeScrapDisplay() {
+        const isExchangeScrapEnabled = localStorage.getItem("script_cooldown_time_exchange_scrap_switch") === "enabled";
+        if(!isExchangeScrapEnabled){
+            return;
+        }
+        const insertToElem = document.body.querySelector("#script_countdowns_container");
+        if (!insertToElem) {
+            return;
+        }
+        const logoElem = document.body.querySelector("#script_cooldown_time_exchange_scrap");
+        const timeLeftSec = Math.floor((localStorage.getItem("script_cooldownTimeExchangeScrap_at_ms") - Date.now()) / 1000);
+        if (!logoElem) {
+            if (timeLeftSec > 0) {
+                insertToElem.insertAdjacentHTML(
+                    "beforeend",
+                    `<div id="script_cooldown_time_exchange_scrap" style="order: 7; cursor: pointer; " class="script_do_not_translate"><span class="script_do_not_translate" style="font-size: 12px;">废品 ${timeReadable(
+                        timeLeftSec
+                    )}</span></div>`
+                );
+                insertToElem.querySelector("#script_cooldown_time_exchange_scrap").addEventListener("click", () => {
+                    history.pushState(null, null, "https://www.zed.city/scrap-expert");
+                    history.pushState(null, null, "https://www.zed.city/scrap-expert");
+                    history.go(-1);
+                });
+            } else {
+                insertToElem.insertAdjacentHTML(
+                    "beforeend",
+                    `<div id="script_cooldown_time_exchange_scrap" style="order: 5; cursor: pointer; " class="script_do_not_translate"><span class="script_do_not_translate" style="background-color: #ef5350; font-size: 12px;">废品券OK</span></div>`
+                );
+                insertToElem.querySelector("#script_cooldown_time_exchange_scrap").addEventListener("click", () => {
+                    history.pushState(null, null, "https://www.zed.city/scrap-expert");
+                    history.pushState(null, null, "https://www.zed.city/scrap-expert");
+                    history.go(-1);
+                });
+            }
+        } else {
+            if (timeLeftSec > 0) {
+                logoElem.innerHTML = `<span class="script_do_not_translate" style="font-size: 12px;">废品 ${timeReadable(timeLeftSec)}</span>`;
+            } else {
+                logoElem.innerHTML = `<span class="script_do_not_translate" style="background-color: #ef5350; font-size: 12px;">废品券OK</span>`;
+            }
+        }
+    }
+    setInterval(exchangeScrapDisplay, 1000);
 
     /* 状态栏显示帮派突袭冷却计时 */
     if (!localStorage.getItem("script_raidTimestamp")) {
@@ -1340,7 +1468,7 @@
             }
         }
     }
-    setInterval(updateRaidDisplay, 500);
+    setInterval(updateRaidDisplay, 1000);
 
     /* 状态栏显示总BS */
     function updateBSDisplay() {
@@ -1368,7 +1496,7 @@
             )}</span>`;
         }
     }
-    setInterval(updateBSDisplay, 500);
+    setInterval(updateBSDisplay, 1000);
 
     /* 远征图1油泵交易倒计时 */
     function updateFuelTradeDisplay() {
@@ -1413,7 +1541,7 @@
             }
         }
     }
-    setInterval(updateFuelTradeDisplay, 500);
+    setInterval(updateFuelTradeDisplay, 1000);
 
     /* 远征图5炸药残骸开箱倒计时 */
     function updateMap5Display() {
@@ -1458,7 +1586,7 @@
             }
         }
     }
-    setInterval(updateMap5Display, 500);
+    setInterval(updateMap5Display, 1000);
 
     /* 远征图6宝箱开箱倒计时 (新增代码) */
     function updateMap6Display() {
@@ -1503,7 +1631,135 @@
             }
         }
     }
-    setInterval(updateMap6Display, 500);
+    setInterval(updateMap6Display, 1000);
+    /*Start Owen 远征图开门倒计时*/
+    /*油泵*/
+    function updateFuelOpenDoorDisplay() {
+        const isExporedOpenEnabled = localStorage.getItem("script_explored_open_door_switch") === "enabled";
+        if(!isExporedOpenEnabled){
+            return;
+        }
+        const insertToElemFuel = document.body.querySelector(".job-name[script_translated_from='Fuel Depot']");
+        if (!insertToElemFuel) {
+            return;
+        }
+        const logoElemFuel = document.body.querySelector("#script_fuelTrade_openDoor_logo");
+        const cooldownTimestamp = localStorage.getItem("script_exploration_fuelTrade_openDoor_cooldown_at_ms")
+            ? localStorage.getItem("script_exploration_fuelTrade_openDoor_cooldown_at_ms")
+            : 0;
+        const timeLeftSec = Math.floor((cooldownTimestamp - Date.now()) / 1000);
+        if (!logoElemFuel) {
+            if (timeLeftSec > 0) {
+                insertToElemFuel.insertAdjacentHTML(
+                    "beforeend",
+                    `<span id="script_fuelTrade_openDoor_logo" class="script_do_not_translate" style="font-size: 15px;">(关门倒计时：${timeReadable(
+                        timeLeftSec
+                    )})</span>`
+                );
+            } else {
+                insertToElemFuel.insertAdjacentHTML(
+                    "beforeend",
+                    `<span id="script_fuelTrade_openDoor_logo" class="script_do_not_translate" style="font-size: 15px;">(暂无关门数据)</span>`
+                );
+            }
+        } else {
+            if (timeLeftSec > 0) {
+                logoElemFuel.textContent = `(关门倒计时：${timeReadable(timeLeftSec)})`;
+            } else {
+                if(cooldownTimestamp ==0){
+                    logoElemFuel.textContent = `(暂无关门数据)`;
+                }else{
+                    logoElemFuel.textContent = `(已关门)`;
+                }
+            }
+        }
+    }
+    setInterval(updateFuelOpenDoorDisplay, 1000);
+     /* 拆除 */
+    function updateMp5OpenDoorDisplay() {
+        const isExporedOpenEnabled = localStorage.getItem("script_explored_open_door_switch") === "enabled";
+        if(!isExporedOpenEnabled){
+            return;
+        }
+        const insertToElemMp5 = document.body.querySelector(".job-name[script_translated_from='Demolition Site']");
+        if (!insertToElemMp5) {
+            return;
+        }
+        const logoElemMp5 = document.body.querySelector("#script_map5_openDoor_logo");
+        const cooldownTimestampMp5 = localStorage.getItem("script_exploration_map5_openDoor_cooldown_at_ms")
+            ? localStorage.getItem("script_exploration_map5_openDoor_cooldown_at_ms")
+            : 0;
+        const timeLeftSecMp5 = Math.floor((cooldownTimestampMp5 - Date.now()) / 1000);
+        if (!logoElemMp5) {
+            if (timeLeftSecMp5 > 0) {
+                insertToElemMp5.insertAdjacentHTML(
+                    "beforeend",
+                    `<span id="script_map5_openDoor_logo" class="script_do_not_translate" style="font-size: 15px;">(关门倒计时：${timeReadable(
+                        timeLeftSecMp5
+                    )})</span>`
+                );
+            } else {
+                insertToElemMp5.insertAdjacentHTML(
+                    "beforeend",
+                    `<span id="script_map5_openDoor_logo" class="script_do_not_translate" style="font-size: 15px;">(暂无关门数据)</span>`
+                );
+            }
+        } else {
+           if (timeLeftSecMp5 > 0) {
+                logoElemMp5.textContent = `(关门倒计时：${timeReadable(timeLeftSecMp5)})`;
+            } else {
+                if(cooldownTimestampMp5 ==0){
+                    logoElemMp5.textContent = `(暂无关门数据)`;
+                }else{
+                    logoElemMp5.textContent = `(已关门)`;
+                }
+            }
+        }
+    }
+    setInterval(updateMp5OpenDoorDisplay, 1000);
+    /*工地*/
+    function updateMp6OpenDoorDisplay() {
+        const isExporedOpenEnabled = localStorage.getItem("script_explored_open_door_switch") === "enabled";
+        if(!isExporedOpenEnabled){
+            return;
+        }
+        const insertToElemMp6 = document.body.querySelector(".job-name[script_translated_from='Construction Yard']");
+        if (!insertToElemMp6) {
+            return;
+        }
+        const logoElemMp6 = document.body.querySelector("#script_map6_openDoor_logo");
+        const cooldownTimestampMp6 = localStorage.getItem("script_exploration_map6_openDoor_cooldown_at_ms")
+        ? localStorage.getItem("script_exploration_map6_openDoor_cooldown_at_ms")
+        : 0;
+        const timeLeftSecMp6 = Math.floor((cooldownTimestampMp6 - Date.now()) / 1000);
+        if (!logoElemMp6) {
+            if (timeLeftSecMp6 > 0) {
+                insertToElemMp6.insertAdjacentHTML(
+                    "beforeend",
+                    `<span id="script_map6_openDoor_logo" class="script_do_not_translate" style="font-size: 15px;">(关门倒计时：${timeReadable(
+                        timeLeftSecMp6
+                    )})</span>`
+                );
+            } else {
+                insertToElemMp6.insertAdjacentHTML(
+                    "beforeend",
+                    `<span id="script_map6_openDoor_logo" class="script_do_not_translate" style="font-size: 15px;">(暂无关门数据)</span>`
+                );
+            }
+        } else {
+           if (timeLeftSecMp6 > 0) {
+                logoElemMp6.textContent = `(关门倒计时：${timeReadable(timeLeftSecMp6)})`;
+            } else {
+                if(cooldownTimestampMp6 ==0){
+                    logoElemMp6.textContent = `(暂无关门数据)`;
+                }else{
+                    logoElemMp6.textContent = `(已关门)`;
+                }
+            }
+        }
+    }
+    setInterval(updateMp6OpenDoorDisplay, 1000);
+    /*End Owen 远征图开门倒计时*/
 
     /* Zed 熔炉内嵌废品店小窗口 */ //（支持设置开关控制）
     // -------------------------- 1. 新增：开关状态工具函数（读取localStorage中的开关状态） --------------------------
@@ -1769,6 +2025,13 @@
 
             // 改进匹配逻辑：只匹配开头部分，忽略后续添加的图标文本
             targetJob = Array.from(jobNameElements).find(el => {
+
+                // 新增：优先读取你添加的 .original-text 隐藏元素
+                const originalTextEl = el.querySelector('.original-text');
+                if (originalTextEl) {
+                    return originalTextEl.textContent.trim() === targetText;
+                }
+
                 // 提取元素的直接文本节点内容（忽略子元素）
                 const directText = Array.from(el.childNodes)
                 .filter(node => node.nodeType === Node.TEXT_NODE) // 只保留文本节点
@@ -1844,7 +2107,7 @@
         const iconConfigurations = [
             {
                 targetSelector:isTranslationEnabled
-                ? '.col-12 .job-name[script_translated_from="Open Meadow"]'
+                ? '.col-12 .job-name[script_translated_from="Open Meadow"]' // 开阔草地
                 : { text: "Open Meadow" },
                 icons: [
                     {
@@ -1861,7 +2124,7 @@
             },
             {
                 targetSelector:isTranslationEnabled
-                ?'.col-12 .job-name[script_translated_from="Fuel Depot"]'
+                ?'.col-12 .job-name[script_translated_from="Fuel Depot"]' // 燃料库
                 : { text: "Fuel Depot" },
                 icons: [
                     {
@@ -1873,7 +2136,7 @@
             },
             {
                 targetSelector:isTranslationEnabled
-                ? '.col-12 .job-name[script_translated_from="Demolition Site"]'
+                ? '.col-12 .job-name[script_translated_from="Demolition Site"]' // 拆除现场
                 : { text: "Demolition Site" },
                 icons: [
                     {
@@ -1885,7 +2148,19 @@
             },
             {
                 targetSelector:isTranslationEnabled
-                ? '.col-12 .job-name[script_translated_from="Construction Yard"]'
+                ? '.col-12 .job-name[script_translated_from="Oil Refinery"]' // 炼油厂
+                : { text: "Demolition Site" },
+                icons: [
+                    {
+                        src: 'https://www.zed.city/items/splicer.png',
+                        alt: 'Splicer icon',
+                        count: 1
+                    }
+                ]
+            },
+            {
+                targetSelector:isTranslationEnabled
+                ? '.col-12 .job-name[script_translated_from="Construction Yard"]' // 建筑工地
                 : { text: "Construction Yard" },
                 icons: [
                     {
@@ -1902,7 +2177,7 @@
             },
             {
                 targetSelector:isTranslationEnabled
-                ? '.col-12 .job-name[script_translated_from="Data Center"]'
+                ? '.col-12 .job-name[script_translated_from="Data Center"]' // 资料中心
                 : { text: "Data Center" },
                 icons: [
                     {
@@ -1919,7 +2194,7 @@
             },
             {
                 targetSelector:isTranslationEnabled
-                ? '.col-12 .job-name[script_translated_from="Military Base"]'
+                ? '.col-12 .job-name[script_translated_from="Military Base"]' // 军事基地
                 : { text: "Military Base" },
                 icons: [
                     {
@@ -1936,9 +2211,60 @@
             },
             {
                 targetSelector:isTranslationEnabled
-                ?'.col-12 .job-name[script_translated_from="Research Facility"]'
+                ?'.col-12 .job-name[script_translated_from="Research Facility"]' // 研发设施
                 : { text: "Research Facility" },
                 icons: [
+                    {
+                        src: 'https://www.zed.city/items/splicer.png',
+                        alt: 'Splicer icon',
+                        count: 1
+                    }
+                ]
+            },
+            {
+                targetSelector:isTranslationEnabled
+                ?'.col-12 .job-name[script_translated_from="Abandoned Quarry"]' // 废弃采石场
+                : { text: "Research Facility" },
+                icons: [
+                    {
+                        src: 'https://www.zed.city/items/splicer.png',
+                        alt: 'Splicer icon',
+                        count: 1
+                    }
+                ]
+            },
+            {
+                targetSelector:isTranslationEnabled
+                ?'.col-12 .job-name[script_translated_from="Logging Camp"]' // 伐木营地
+                : { text: "Research Facility" },
+                icons: [
+                    {
+                        src: 'https://www.zed.city/items/craft_nails.png',
+                        alt: 'nails icon',
+                        count: 250
+                    },
+                    {
+                        src: 'https://www.zed.city/items/craft_planks.png',
+                        alt: 'craft planks icon',
+                        count: 250
+                    },
+                    {
+                        src: 'https://www.zed.city/items/craft_rope.png',
+                        alt: 'rope icon',
+                        count: 5
+                    }
+                ]
+            },
+            {
+                targetSelector:isTranslationEnabled
+                ? '.col-12 .job-name[script_translated_from="Junkyard"]' // 垃圾场
+                : { text: "Data Center" },
+                icons: [
+                    {
+                        src: 'https://www.zed.city/items/battery.png',
+                        alt: 'battery icon',
+                        count: 1
+                    },
                     {
                         src: 'https://www.zed.city/items/splicer.png',
                         alt: 'Splicer icon',
@@ -2024,7 +2350,6 @@
         setTimeout(setupMutationObserver, 1000);
     });
 
-
     /* 显示车重 */
     function updateVehicleWeightDisplay() {
         const insertToElem = document.body.querySelector("#script_countdowns_container_2");
@@ -2095,7 +2420,7 @@
             </span>`;
         }
     }
-    setInterval(updateVehicleWeightDisplay, 500);
+    setInterval(updateVehicleWeightDisplay, 1000);
 
     /**
     * 使用HSV色彩空间实现更平滑的绿→白→红过渡
@@ -2277,6 +2602,97 @@
         }
     }
 
+    /* Zed 旅行完成提醒（仅自动跳转）相关变量 */
+    let lastUrl = location.href;
+    let isTravelingPage = lastUrl.includes('/traveling');
+    let hasTravelNotified = false;
+    let userInteracted = false;
+    let interactionTimer = null;
+
+    /* 监听用户交互事件 */
+    function setupInteractionListener() {
+        const events = ['click', 'mousedown', 'keydown', 'touchstart'];
+
+        events.forEach(event => {
+            document.addEventListener(event, function() {
+                userInteracted = true;
+
+                // 重置交互状态（2秒后认为不是用户操作）
+                if (interactionTimer) clearTimeout(interactionTimer);
+                interactionTimer = setTimeout(() => {
+                    userInteracted = false;
+                }, 2000);
+            }, { once: false, passive: true });
+        });
+    }
+
+    /* 通用通知显示函数 - 优先使用 GM_notification */
+    function showNotification(title, message, url = null) {
+        // 使用 Tampermonkey 的 GM_notification
+        const notificationOptions = {
+            text: message,
+            title: title,
+            icon: "https://www.zed.city/icons/favicon.svg",
+            silent: false
+        };
+
+        // 如果提供了URL，点击通知时打开
+        if (url) {
+            notificationOptions.onclick = function() {
+                window.open(url, '_self');
+                this.close();
+            };
+        }
+
+        GM_notification(notificationOptions);
+    }
+
+    /* 检查URL变化 */
+    function checkUrlChange() {
+        // 新增：检查通知总开关是否启用
+        const isNotificationEnabled = localStorage.getItem("script_settings_notifications") === "enabled";
+        if (!isNotificationEnabled) return;
+
+        const currentUrl = location.href;
+
+        // URL发生变化
+        if (currentUrl !== lastUrl) {
+            console.log('URL变化:', {
+                from: lastUrl,
+                to: currentUrl,
+                wasTraveling: isTravelingPage,
+                isNowTraveling: currentUrl.includes('/traveling'),
+                userInteracted: userInteracted
+            });
+
+            // 如果是从旅行页面自动跳转（非用户操作）
+            if (isTravelingPage &&
+                !currentUrl.includes('/traveling') &&
+                !hasTravelNotified &&
+                !userInteracted) {
+
+                showNotification(
+                    "Zed City 旅行提醒",
+                    "🚗 旅行已完成！可以继续操作了！"
+                );
+                console.log('自动跳转提醒已触发');
+                hasTravelNotified = true;
+            }
+
+            // 重置用户交互状态（URL变化后）
+            userInteracted = false;
+
+            // 更新状态
+            isTravelingPage = currentUrl.includes('/traveling');
+            lastUrl = currentUrl;
+        }
+
+        // 如果又回到了旅行页面，重置提醒状态
+        if (currentUrl.includes('/traveling')) {
+            hasTravelNotified = false;
+        }
+    }
+
     /* 倒计时弹窗 */
     function pushSystemNotifications() {
         const savedState = localStorage.getItem("script_settings_notifications") === "enabled";
@@ -2284,6 +2700,7 @@
             return;
         }
 
+        // 熔炉完成提醒
         const forgeTimestamp = Number(localStorage.getItem("script_forgeTimestamp"));
         const forgeIsAlreadyNotified = localStorage.getItem("script_forgeIsAlreadyNotified");
         if (forgeTimestamp && forgeTimestamp > 0 && forgeIsAlreadyNotified !== "true") {
@@ -2291,14 +2708,15 @@
             if (timeLeftSec > -60 && timeLeftSec < 0) {
                 console.log("pushSystemNotification forge");
                 localStorage.setItem("script_forgeIsAlreadyNotified", true);
-                GM_notification({
-                    text: "熔炉已完成工作",
-                    title: "ZedTools",
-                    url: "https://www.zed.city/stronghold/" + localStorage.getItem("script_stronghold_id_furnace"),
-                });
+                showNotification(
+                    "ZedTools",
+                    "熔炉已完成工作",
+                    "https://www.zed.city/stronghold/" + localStorage.getItem("script_stronghold_id_furnace")
+                );
             }
         }
 
+        // 无线电塔交易刷新提醒
         const radioTowerTimestamp = Number(localStorage.getItem("script_radioTowerTradeTimestamp"));
         const radioTowerIsAlreadyNotified = localStorage.getItem("script_radioTowerIsAlreadyNotified");
         if (radioTowerTimestamp && radioTowerTimestamp > 0 && radioTowerIsAlreadyNotified !== "true") {
@@ -2306,14 +2724,15 @@
             if (timeLeftSec > -60 && timeLeftSec < 0) {
                 console.log("pushSystemNotification radioTower");
                 localStorage.setItem("script_radioTowerIsAlreadyNotified", true);
-                GM_notification({
-                    text: "无线电塔交易已刷新",
-                    title: "ZedTools",
-                    url: "https://www.zed.city/stronghold/" + localStorage.getItem("script_stronghold_id_radio_tower"),
-                });
+                showNotification(
+                    "ZedTools",
+                    "无线电塔交易已刷新",
+                    "https://www.zed.city/stronghold/" + localStorage.getItem("script_stronghold_id_radio_tower")
+                );
             }
         }
 
+        // 帮派突袭冷却提醒
         const raidTimestamp = Number(localStorage.getItem("script_raidTimestamp"));
         const raidIsAlreadyNotified = localStorage.getItem("script_raidIsAlreadyNotified");
         if (raidTimestamp && raidTimestamp > 0 && raidIsAlreadyNotified !== "true") {
@@ -2321,14 +2740,15 @@
             if (timeLeftSec > -60 && timeLeftSec < 0) {
                 console.log("pushSystemNotification raid");
                 localStorage.setItem("script_raidIsAlreadyNotified", true);
-                GM_notification({
-                    text: "帮派突袭已冷却",
-                    title: "ZedTools",
-                    url: "https://www.zed.city/raids",
-                });
+                showNotification(
+                    "ZedTools",
+                    "帮派突袭已冷却",
+                    "https://www.zed.city/raids"
+                );
             }
         }
 
+        // 废品店商店刷新提醒
         const junkStoreTimestamp = Number(localStorage.getItem("script_junkStoreResetTimestamp"));
         const junkStoreIsAlreadyNotified = localStorage.getItem("script_junkStoreIsAlreadyNotified");
         if (junkStoreTimestamp && junkStoreTimestamp > 0 && junkStoreIsAlreadyNotified !== "true") {
@@ -2336,14 +2756,15 @@
             if (timeLeftSec > -60 && timeLeftSec < 0) {
                 console.log("pushSystemNotification junkStore");
                 localStorage.setItem("script_junkStoreIsAlreadyNotified", true);
-                GM_notification({
-                    text: "废品店商店已刷新",
-                    title: "ZedTools",
-                    url: "https://www.zed.city/store/junk",
-                });
+                showNotification(
+                    "ZedTools",
+                    "废品店商店已刷新",
+                    "https://www.zed.city/store/junk"
+                );
             }
         }
 
+        // 能量条满提醒
         const energyTimestamp = Number(localStorage.getItem("script_energyFullAtTimestamp"));
         const energyIsAlreadyNotified = localStorage.getItem("script_energyFullAlreadyNotified");
         if (energyTimestamp && energyTimestamp > 0 && energyIsAlreadyNotified !== "true") {
@@ -2351,14 +2772,15 @@
             if (timeLeftSec > -60 && timeLeftSec < 0) {
                 console.log("pushSystemNotification energy bar");
                 localStorage.setItem("script_energyFullAlreadyNotified", true);
-                GM_notification({
-                    text: "能量条已满",
-                    title: "ZedTools",
-                    url: "https://www.zed.city/stronghold/" + localStorage.getItem("script_stronghold_id_gym"),
-                });
+                showNotification(
+                    "ZedTools",
+                    "能量条已满",
+                    "https://www.zed.city/stronghold/" + localStorage.getItem("script_stronghold_id_gym")
+                );
             }
         }
 
+        // 辐射免疫力条满提醒
         const radTimestamp = Number(localStorage.getItem("script_radFullAtTimestamp"));
         const radIsAlreadyNotified = localStorage.getItem("script_radFullAlreadyNotified");
         if (radTimestamp && radTimestamp > 0 && radIsAlreadyNotified !== "true") {
@@ -2366,37 +2788,85 @@
             if (timeLeftSec > -60 && timeLeftSec < 0) {
                 console.log("pushSystemNotification rad bar");
                 localStorage.setItem("script_radFullAlreadyNotified", true);
-                GM_notification({
-                    text: "辐射免疫力条已满",
-                    title: "ZedTools",
-                    url: "https://www.zed.city/scavenge",
-                });
+                showNotification(
+                    "ZedTools",
+                    "辐射免疫力条已满",
+                    "https://www.zed.city/scavenge"
+                );
             }
         }
     }
-    setInterval(pushSystemNotifications, 1000);
 
-    /* 废品场屏蔽物品收售 */
+    /* 统一的定时检查函数 */
+    function checkAllNotifications() {
+        checkUrlChange();
+        pushSystemNotifications();
+    }
+
+    /* 初始化 */
+    function init() {
+        setupInteractionListener();
+
+        // 监听URL变化
+        const observer = new MutationObserver(checkUrlChange);
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true,
+            attributes: true,
+            attributeFilter: ['href', 'src']
+        });
+
+        // 统一的定时检查
+        setInterval(checkAllNotifications, 1000);
+
+        console.log('Zed City 综合通知脚本已启动（适配 GM_notification）');
+    }
+
+    /* 页面加载完成后初始化 */
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+
+    /* 废品店屏蔽物品出售 */
     if (!localStorage.getItem("script_settings_junk")) {
         localStorage.setItem("script_settings_junk", "enabled");
     }
 
     function hideItems() {
-        if (window.location.href.includes("zed.city/store/junk") && localStorage.getItem("script_settings_junk") === "enabled") {
+        if (window.location.href.includes("zed.city/store/junk") &&
+            localStorage.getItem("script_settings_junk") === "enabled") {
+
             document.querySelectorAll(".q-item").forEach((item) => {
                 let label = item.querySelector(".q-item__label");
                 let buySpan = item.querySelector("span.block");
-                if (label && buySpan && getOriTextFromElement(label).startsWith("Nails") && getOriTextFromElement(buySpan) === "Buy") {
-                    item.style.display = "none";
-                } else if (label && buySpan && getOriTextFromElement(buySpan) === "Sell" &&
-                           !getOriTextFromElement(label).startsWith("Nails") &&
-                           !getOriTextFromElement(label).startsWith("Unrefined Plastic")){
-                    item.style.display = "none";
+
+                if (!label || !buySpan) return;
+
+                let name = getOriTextFromElement(label);
+                let action = getOriTextFromElement(buySpan); // Buy / Sell
+
+                // ----------- 保留永遠要顯示的項目（不受互相影響） -----------
+                const alwaysShow = ["Nails", "Unrefined Plastic", "Flux", "Tarp"];
+                const isAlwaysShow = alwaysShow.some(prefix => name.startsWith(prefix));
+
+                // ========== SELL 時的處理 ==========
+                // SELL 狀態下，只顯示 Nails & Unrefined Plastic
+                if (action === "Sell") {
+                    if (isAlwaysShow) {
+                        item.style.display = "";
+                    } else {
+                        item.style.display = "none";
+                    }
+                    return;
                 }
             });
         }
     }
-    setInterval(hideItems, 500);
+
+    setInterval(hideItems, 1000);
+
 
     /* 设置里添加功能开关 */
     function addSettingSwitches() {
@@ -2411,7 +2881,8 @@
         }
 
         // 查找目标容器 - 根据您提供的HTML结构
-        const targetContainer = document.querySelector('.q-tabs.row.no-wrap.items-center.q-tabs--not-scrollable.q-tabs--horizontal.q-tabs__arrows--inside.q-tabs--mobile-without-arrows.q-mb-md.submenu');
+        //const targetContainer = document.querySelector('.q-tabs.row.no-wrap.items-center.q-tabs--not-scrollable.q-tabs--horizontal.q-tabs__arrows--inside.q-tabs--mobile-without-arrows.q-mb-md.submenu');
+        const targetContainer = document.querySelector('.q-tabs.row.no-wrap.items-center.q-tabs--not-scrollable.q-tabs--horizontal.q-tabs__arrows--inside.q-tabs--mobile-without-arrows.q-mb-sm.submenu');
         if (!targetContainer) {
             console.log("未找到目标容器");
             return;
@@ -2500,11 +2971,11 @@
         optionsContainer.appendChild(createSwitch(
             "translate",
             "translation",
-            "启用汉化 Enable Chinese translation",
+            "【汉化】启用汉化 Enable Chinese translation",
             "Enable Chinese translation",
             function(isChecked) {
                 localStorage.setItem("script_translate", isChecked ? "enabled" : "disabled");
-                setTimeout(() => location.reload(), 500);
+                setTimeout(() => location.reload(), 1000);
             }
         ));
 
@@ -2512,7 +2983,7 @@
         optionsContainer.appendChild(createSwitch(
             "settings_notifications",
             "notifications",
-            "启用通知弹窗",
+            "【通知】启用通知弹窗",
             "Enable system notification popups"
         ));
 
@@ -2528,8 +2999,22 @@
         optionsContainer.appendChild(createSwitch(
             "estimate_levelup_time_switch",
             "levelup_time",
-            "状态栏显示预计下次人物升级时间（每小时72XP）",
+            "【状态栏】显示预计下次人物升级时间（每小时72XP）",
             "Show estimated player upgrade time in status bar (72XP per hour)"
+        ));
+        // 升级所需经验开关
+        optionsContainer.appendChild(createSwitch(
+            "levelup_experience_switch",
+            "levelup_experience",
+            "【状态栏】显示下次人物升级所需经验",
+            "Show experience required for player upgrades in status bar"
+        ));
+        // 显示废品券兑换冷却时间
+        optionsContainer.appendChild(createSwitch(
+            "cooldown_time_exchange_scrap_switch",
+            "cooldown_time_exchange_scrap",
+            "【状态栏】显示废品券兑换冷却时间",
+            "Show the cooldown time for exchanging scrapnotes"
         ));
 
         // 遠征 ZONE2 需求圖
@@ -2537,8 +3022,8 @@
         optionsContainer.appendChild(createSwitch(
             "expedition_zone2_icon",
             "zone2_demand", // 补充默认标签参数（原createSwitch函数需要5个参数）
-            "【远征ZONE2】显示开启 \" ZONE2 \" 需求图标",
-            "【Explored ZONE2】Show ZONE2 item required pics",
+            "【远征】显示开启 \" ZONE2 \" 需求图标",
+            "【Explored】Show ZONE2 item required pics",
             (isChecked, event) => { // 新增event参数，用于判断是否为手动触发
                 // 关键修复：只有用户手动点击（而非页面刷新导致的状态恢复）才执行操作
                 if (event && event.isTrusted) {
@@ -2554,7 +3039,13 @@
                 }
             }
         ));
-
+        //远征关门开关
+        optionsContainer.appendChild(createSwitch(
+            "explored_open_door_switch",
+            "explored_open_door",
+            "【远征】显示远征图关门时间",
+            "【Explored】Show the closing time of the expedition map"
+        ));
         // 【新增】Zed 熔炉内嵌废品店小窗口开关
         optionsContainer.appendChild(createSwitch(
             "furnace_junk_store", // 1. 开关唯一标识（存localStorage的键：script_furnace_junk_store）
@@ -2578,7 +3069,7 @@
         // 等待目标容器加载完成
         const checkContainerLoaded = () => {
             // 使用与 targetContainer 相同的选择器
-            return document.querySelector('.q-tabs.row.no-wrap.items-center.q-tabs--not-scrollable.q-tabs--horizontal.q-tabs__arrows--inside.q-tabs--mobile-without-arrows.q-mb-md.submenu');
+            return document.querySelector('.q-tabs.row.no-wrap.items-center.q-tabs--not-scrollable.q-tabs--horizontal.q-tabs__arrows--inside.q-tabs--mobile-without-arrows.q-mb-sm.submenu');
         };
 
         if (checkContainerLoaded()) {
@@ -2590,7 +3081,7 @@
                     clearInterval(interval);
                     addSettingSwitches();
                 }
-            }, 500);
+            }, 1000);
 
             // 10秒后超时
             setTimeout(() => clearInterval(interval), 10000);
@@ -2598,12 +3089,12 @@
     }
 
     // 监听页面变化
-    let lastUrl = location.href;
+    // let lastUrl = location.href; 重複申明
     const urlObserver = new MutationObserver(() => {
         if (location.href !== lastUrl) {
             lastUrl = location.href;
             if (location.href.includes("zed.city/settings")) {
-                setTimeout(initSettingsObserver, 500);
+                setTimeout(initSettingsObserver, 1000);
             }
         }
     });
@@ -2760,7 +3251,7 @@
             }
         });
     }
-    setInterval(addGymLocks, 500);
+    setInterval(addGymLocks, 1000);
 
     /* 生产和NPC商店买卖添加Max按钮 */
     function addMaxBuySellButton() {
@@ -2833,7 +3324,7 @@
             btn360.click();
         }
     }
-    setInterval(addMaxBuySellButton, 500);
+    setInterval(addMaxBuySellButton, 1000);
 
     /* 拾荒统计 */
     function addScavengeRecords() {
@@ -2874,7 +3365,7 @@
             textElem.innerHTML = `<div class="script_do_not_translate" style="font-size: 12px; ">${text}</div>`;
         }
     }
-    setInterval(addScavengeRecords, 500);
+    setInterval(addScavengeRecords, 1000);
 
     /* 狩猎统计 */
     // 战斗状态：
@@ -2892,6 +3383,7 @@
             if (mapName1 === "mall") {
                 mapName1 = "shopping mall";
             }
+
             const mapName2 = response?.job?.name;
 
             if (pendingFight.status !== 0) {
@@ -2912,6 +3404,9 @@
         const response = JSON.parse(r);
         const monsterName = response?.victim?.user?.username;
 
+        if (window.location.href.includes("https://www.zed.city/exploring/")) {
+            return;
+        }
         if (pendingFight.status !== 1) {
             console.error("handleGetFight previous status !== 1");
             console.error(pendingFight);
@@ -2924,6 +3419,10 @@
 
     function handleDoFight(r) {
         const response = JSON.parse(r);
+
+        if (window.location.href.includes("https://www.zed.city/exploring/")) {
+            return;
+        }
         if (pendingFight.status !== 2) {
             console.error("handleDoFight previous status !== 2");
             console.error(pendingFight);
@@ -3032,7 +3531,8 @@
             textElem.innerHTML = `<div class="script_do_not_translate" style="font-size: 12px; ">${text}</div>`;
         }
     }
-    setInterval(addHuntingRecordsToPage, 500);
+    setInterval(addHuntingRecordsToPage, 1000);
+
 
     /* ZedTools END */
 
@@ -3140,6 +3640,8 @@
         "Discuss trading strategies and tips": "讨论交易策略与技巧",
         Beginners: "新手",
         "Get help and support": "获取协助和支持",
+        Temporary: "暂时的",
+
 
         //----------------/ 登入首頁
         "Zed City": "Zed City",
@@ -3230,6 +3732,15 @@
         "Repeat Password": "重复密码",
         "Blocked Users": "已屏蔽用户",
         "No blocked users found": "无屏蔽用户",
+        "Defense Strategy": "防御策略",
+        "Melee": "近战",
+        "Ranged": "远程",
+        "Fists only": "仅用拳头",
+        "Update Strategy": "更新策略",
+        "Your defense strategy has been updated": "你的防御策略已更新",
+        Preferences: "偏好设置",
+        "Forum Notifications": "论坛通知",
+        "Your preferences have been updated": "你的偏好设置已更新",
 
         //----------------/ 戰鬥日誌
         "Opponent": "对手",
@@ -3319,6 +3830,8 @@
         "Trade not found": "未找到交易",
         "Finished Trading": "交易完成",
         "Finalize Trade": "最终确定交易",
+        "this market listing": "这项市场清单",
+        listing: "清单",
         Expired: "已过期",
         Cancelled: "已取消",
         "Are you sure you want to finalize this trade": "您确定要完成这笔交易吗",
@@ -3339,6 +3852,7 @@
         "Clothes Weaver": "服裝店",
         Toolsmith: "工具店",
         "Zed Mart": "丧尸商场",
+        "Carpenter": "木工店",
         "Rig Stop": "挂车店",
         "Premium Store": "会员商场",
         Premium: "会员",
@@ -3385,10 +3899,11 @@
         "Invalid price": "价格无效",
         "Offer not found": "未找到在售订单",
         "You have reached your buy limit": "已达购买上限",
+        "your market listing has sold": "你的市場上架已售出",
 
         //----------------/ 物品狀態(重量,類型)
         Weight: "重量",
-        kg: "千克",
+        kg: "kg",
         Weapons: "武器",
         Armour: "护甲",
         Resources: "资源",
@@ -3414,6 +3929,7 @@
         Fight: "战斗",
         "Auto Attack": "自动攻击",
         "Run Away": "逃跑",
+        "attacked you but Run Away": "攻击了你但隨即逃跑了",
         "Fight Log": "战斗日志",
         "started an attack on": "开始攻击",
         Fists: "拳头",
@@ -3433,6 +3949,8 @@
         DEFEATED: "击败",
         VS: "VS",
         WINNER: "胜利",
+        "Fight Expire": "战斗时效结束",
+
     };
 
     //1.2 幫派
@@ -3471,7 +3989,7 @@
         Raids: "突袭",
         View: "查看",
         Setup: "筹备",
-        Activity: "活动日志",
+        Activity: "活动",
         Rank: "排名",
         Members: "成员",
         Respect: "声望",
@@ -3501,6 +4019,13 @@
         Craft: "制作",
         "Extract Oils": "提取油料",
         "Refine Plastic": "精炼塑料",
+        "Are you sure you want to leave the Farm": "你确定要离开农场吗",
+        "Leave Farm": "离开农场",
+        "Smelt Alloys": "熔炼合金",
+        Forgers: "锻造者",
+        "Join Large Furnace": "加入大型熔炉",
+        "Join Refinery": "加入精炼厂",
+        "Scrapnote Multiplier": "废品券乘数",
 
         "Faction Activity": "帮派活动",
         "Setup Raid a Farm": "筹备突袭农场",
@@ -3578,6 +4103,8 @@
 
         //----------------/ 傳承跟日誌(待補充)
         "Active Effects": "当前效果",
+        "Active Effect": "当前效果",
+        "Passive Effects": "被动效果",
         Legacy: "传承",
         Survivalists: "生存者",
         Influence: "影响力",
@@ -3599,6 +4126,7 @@
         "Filter activity type": "筛选活动类型",
         "Are you sure you want to choose this legacy": "您确定要选择此传承吗",
         CONFIRM: "确认",
+        "Unlock Scrapnotes": "解锁废品券",
 
     };
 
@@ -3698,8 +4226,21 @@
         "Agility Upgrades": "敏捷度升级",
         "Basic Accuracy": "基础精准度",
         "Intermediate Accuracy": "中级精准度",
-        "Advanced Accuracy": "高级精准度"
+        "Advanced Accuracy": "高级精准度",
 
+        //----------------/ 废品专家
+        "Scrap Expert": "废品专家",
+        Scrapnote: "废品券 (Scrapnote)",
+        Limit: "限制",
+        "Redeem your scrapnotes": "兑换你的废品券",
+        "Exchange for 1 Vodka": "兑换 1 瓶伏特加",
+        "Exchange for 2 Tin Plate": "兑换 2 块锡板",
+        "Exchange for 1 Splicer": "兑换 1 个熔接机",
+        "Exchange for 3 Flux": "兑换 3 份助焊剂",
+        "Exchange for 50 Car Parts": "兑换 50 个汽车零件",
+        "Exchange for 10 Oil": "兑换 10 份油",
+        "These notes are used by Faction Leaders in Rations or direct trade to pay their Faction Members for completing Faction activities such as Mining, Donating and Working Jobs":
+            "此类票据由派系领袖用于配给物资或直接交易，用以向完成采矿、捐赠、任务劳作等派系活动的派系成员支付报酬",
 
         };
 
@@ -3717,6 +4258,7 @@
         "Armour Bench": "盔甲台",
         "Materials Bench": "材料工作台",
         "Tech Lab": "科技实验室",
+        "Furniture Workshop": "家具作坊",
         "Chem Bench": "化学工作台",
         "Coal Auto Mine": "煤炭自动矿机",
         "Iron Auto Mine": "铁矿自动矿机",
@@ -3802,24 +4344,31 @@
         "Effect Duration": "效果持续时间",
         "Mines Coal automatically": "自动开采煤炭",
         "Mines Iron Ore automatically": "自动开采铁矿石",
+        "Pack Away": "收纳",
+        "Pack Away Building": "收纳建筑",
+        "Are you sure you want to pack away this building": "你确定要收纳这座建筑吗",
+        "Packing Away": "收纳中",
 
         "Blueprint": "蓝图",
-        "Create Bandage": "制作绷带",
-        "Create Small Med Kit": "制作小型医疗包",
-        "Create Med Kit": "制作医疗包",
-        "Forge Nails": "锻造钉子",
-        "Smelt Scrap": "熔炼废铁",
-        "Smelt Iron Ore": "熔炼铁矿",
-        "Smelt Steel": "熔炼钢铁",
-        "Burn Coal": "烧煤",
-        "Craft Cloth Pants": "制作布裤",
-        "Craft Cloth Jacket": "制作布夹克",
+        "Create Bandage": "制作绷带 (Bandage)",
+        "Create Small Med Kit": "制作小型医疗包 (Small Med Kit)",
+        "Create Med Kit": "制作医疗包 (Med Kit)",
+        "Forge Nails": "锻造钉子 (Nails)",
+        "Smelt Scrap": "熔炼废铁 (Scrap)",
+        "Smelt Iron Ore": "熔炼铁矿 (Iron Ore)",
+        "Smelt Steel": "熔炼钢铁 (Steel)",
+        "Smelt Silicon": "熔炼硅 (Silicon)",
+        "Burn Coal": "烧煤 (Coal)",
+        "Craft Cloth Pants": "制作布裤 (Cloth Pants)",
+        "Craft Cloth Jacket": "制作布夹克 (Cloth Jacket)",
 
         // 熔炉
         "Deploy Defense Kit": "部署防御套件",
 
         // 烹飪
-        "Cooking Cooked Fish": "烹饪熟鱼",
+        "Cooking Cooked Fish": "烹饪熟鱼 (Cooked Fish)",
+        "Cooking Water": "煮水 (Water)",
+        "Cook Strange Gruel": "烹饪怪异稀粥 (Strange Gruel)",
         "Hardened Skin":"硬化皮肤",
         "Bolstered": "增强",
         "Hard Working": "勤奋",
@@ -3838,13 +4387,87 @@
         "Boosted Weight": "负重增加",
         "Boosted XP": "经验值提升",
 
+        // 家具作坊
+        "Hammer": "锤子 (Hammer)",
+        "Wooden Chair": "木椅 (Wooden Chair)",
+        "Sauna": "桑拿房 (Sauna)",
+        "Chessboard": "棋盘 (Chessboard)",
+        "Coffin": "棺材 (Coffin)",
+        "Catfish Trophy": "鲶鱼奖杯 (Catfish Trophy)",
+        "Small Fireplace": "小型壁炉 (Small Fireplace)",
+        "Regal Fabric": "华贵布料 (Regal Fabric)",
+        "Stone Baking Oven": "石制烤炉 (Stone Baking Oven)",
+        "Latrine": "厕所 (Latrine)",
+        "Barnaclefish Trophy": "藤壶鱼奖杯 (Barnaclefish Trophy)",
+        "Reinforced Pane": "加固窗格 (Reinforced Pane)",
+        "Dinner Table": "餐桌 (Dinner Table)",
+        "Pufferfish Trophy": "河豚奖杯 (Pufferfish Trophy)",
+        "Altar": "祭坛 (Altar)",
+        "Skull Pile": "骷髅堆 (Skull Pile)",
+        "Stone Pillar": "石柱 (Stone Pillar)",
+        "Minor Artwork": "小型工艺品 (Minor Artwork)",
+        "Gargoyle Statue": "石像鬼雕像 (Gargoyle Statue)",
+        "Lovers Bed": "情侣床 (Lovers Bed)",
+        "Retro Arcade": "复古街机 (Retro Arcade)",
+        "Minor Artwork ": "小型工艺品 (Minor Artwork )",
+        "Comfy Sofa": "舒适沙发 (Comfy Sofa)",
+        "Large Table": "大桌子 (Large Table)",
+        "Ritual Circle": "仪式法阵 (Ritual Circle)",
+        "Music Player": "音乐播放器 (Music Player)",
+        "Skull Spike": "骷髅尖刺 (Skull Spike)",
+        "fishing boat": "渔船 (fishing boat)",
+        "grand fireplace": "豪华壁炉 (grand fireplace)",
+        "grand Tapestry": "华贵挂毯 (grand Tapestry)",
+        "grand table": "大型餐桌 (grand table)",
+        "agility dojo": "敏捷道场 (agility dojo)",
+        "defense dojo": "防御道场 (defense dojo)",
+        "speed dojo": "速度道场 (speed dojo)",
+        "strength dojo": "力量道场 (strength dojo)",
+
         "You fished the Lake and caugh": "你在湖泊里钓了鱼并且钓到了",
         "You fished the Lake but didn't manage to find anything": "你在湖泊里钓了鱼，但什么也没钓到。",
     };
 
-    //----1.4.1 天氣
-    const dictWeather = {
+    //----1.4.1 住宅
+    const dictHouse = {
+        "HOUSE": "住宅",
+        "complex furniture for player housing": "用于玩家住宅的複雜傢俱",
+        "house permit": "住宅许可证",
+        "Shack": "简陋小屋",
+        "Cellar": "地窖",
+        "Homestead": "田园宅邸",
+        "Bunker": "掩体堡垒",
+        "Gallery": "藏品陈列室",
+        "Graveyard": "墓地",
+        "Torture Chamber": "刑讯室",
+        "Underground Bar": "地下酒吧",
+        "Hunting Lodge": "狩猎小屋",
+        "Pagoda": "塔楼",
+        "Dungeon": "地牢",
+        "Chapel": "礼拜堂",
+        "Empty Lot": "空地",
+        "Sq ft": "平方尺",
+        "Decor": "装饰",
+        "Entertainment": "娱乐",
+        "Comfort": "舒适",
+        "You can buy furniture from the Market or craft it in the Furniture Workshop": "你可以在市场购买家具，或在家具工坊自行打造",
+        "Furniture": "家具",
+        "A plain wooden chair with four legs": "一把简约的四腿木椅",
+        "Unlock Activities": "解锁活动",
+        "Relax in Sauna": "在桑拿房放松",
+        "A place to gather and celebrate": "一处欢聚休闲的场所",
+        "Host Small Celebration": "举办小型庆典",
+        "Bake Cake Slice": "烤制蛋糕切片",
+        "Host Small Celebration, Host Large Celebration": "举办小型庆典、举办大型庆典",
+        "Your House Comfort is not high enough": "你的住宅舒适度不足",
+        "A grand fireplace making the home more comfortable": "一个气派的壁炉，可以为住宅提升舒适度",
+        "You have not found this blueprint yet": "你尚未发现该蓝图",
 
+    };
+
+    //----1.4.2 天氣
+    const dictWeather = {
+        "Location Effects": "区域效果",
         "Toxic Fallout" : "毒性沉降",
         "Chemical Bliss": "化学愉悅",
         "Clean Air": "纯净空气",
@@ -3870,45 +4493,46 @@
     const dictWeapon = {
         "Weapons (melee": "武器（近战）",
         "Weapons (ranged": "武器（远程）",
-        "Baseball Bat": "棒球棒",
-        Spear: "长矛",
-        Bow: "弓",
+        "Baseball Bat": "棒球棒 (Baseball Bat)",
+        "Spear": "长矛 (Spear)",
+        "Bow": "弓 (Bow)",
 
         // 槍類
-        Handmade: "手工手枪",
-        Handgun: "手枪",
-        Pistol: "手枪",
-        "Desert Eagle": "沙漠之鹰",
-        "Scuff Shotgun": "钝口霰弹枪",
-        Shotgun: "霰弹枪",
+        "Handmade": "手工手枪 (Handmade)",
+        "Handgun": "手枪 (Handgun)",
+        "Pistol": "手枪 (Pistol)",
+        "Desert Eagle": "沙漠之鹰 (Desert Eagle)",
+        "Scuff Shotgun": "钝口霰弹枪 (Scuff Shotgun)",
+        "Shotgun": "霰弹枪 (Shotgun)",
         "AK-74u": "AK-74u",
-        AK: "AK",
-        MP: "MP",
-        Rifle: "步枪",
-        "Chain Shotgun": "链式霰弹枪",
-        Revolver: "左轮手枪",
-        SMG: "冲锋枪",
-        Sawnoff: "锯口霰弹枪",
-        Bullpop: "无托步枪",
-        "Evo Assault": "Evo突击步枪",
-        Famas: "Famas突击步枪",
-        Minigun: "加特林",
-        "Magnum Revolver": "马格南左轮",
-        "Smart Pistol": "智能手枪",
-        "Riot Prod": "电击棒",
+        "AK-47": "AK-47",
+        "AK": "AK",
+        "MP": "MP",
+        "Rifle": "步枪 (Rifle)",
+        "Chain Shotgun": "链式霰弹枪 (Chain Shotgun)",
+        "Revolver": "左轮手枪 (Revolver)",
+        "SMG": "冲锋枪 (SMG)",
+        "Sawnoff": "锯口霰弹枪 (Sawnoff)",
+        "Bullpup": "无托步枪 (Bullpup)",
+        "Evo Assault": "Evo突击步枪 (Evo Assault)",
+        "Famas": "Famas突击步枪 (Famas)",
+        "Minigun": "加特林 (Minigun)",
+        "Magnum Revolver": "马格南左轮 (Magnum Revolver)",
+        "Smart Pistol": "智能手枪 (Smart Pistol)",
+        "Riot Prod": "电击棒 (Riot Prod)",
 
-        Blunt: "钝器",
-        Chainsaw: "电锯",
-        Drill: "钻机",
-        "Fire Axe": "消防斧",
-        Machete: "砍刀",
-        "Meat Cleaver": "剁肉刀",
-        "Magazine Size": "弹匣容量",
+        "Blunt": "钝器 (Blunt)",
+        "Chainsaw": "电锯 (Chainsaw)",
+        "Drill": "钻机 (Drill)",
+        "Fire Axe": "消防斧 (Fire Axe)",
+        "Machete": "砍刀 (Machete)",
+        "Meat Cleaver": "剁肉刀 (Meat Cleaver)",
+        "Magazine Size": "弹匣容量 (Magazine Size)",
 
-        Baton: "警棍",
-        Bladed: "带刃",
-        Switchblade: "弹簧刀",
-        Wrench: "扳手",
+        "Baton": "警棍 (Baton)",
+        "Bladed": "带刃 (Bladed)",
+        "Switchblade": "弹簧刀 (Switchblade)",
+        "Wrench": "扳手 (Wrench)",
     };
 
     //----1.5-2 護甲
@@ -3919,73 +4543,126 @@
         "Armour (feet": "护甲（脚）",
 
         //----------------/ 頭
-        "Army Helmet": "军用头盔",
-        "Camo Hat": "迷彩帽",
-        "Cowboy Hat": "牛仔帽",
-        "Gas Mask": "防毒面具",
-        "Ranger Hat": "游侠帽",
-        "Riot Helmet": "防暴头盔",
-        Sunglasses: "太阳镜",
-        "Hockey Mask": "冰球面罩",
-        "Nano Helmet": "纳米头盔",
+        "Army Helmet": "军用头盔 (Army Helmet)",
+        "Bronze Mask": "青铜面具 (Bronze Mask)",
+        "Camo Hat": "迷彩帽 (Camo Hat)",
+        "Carbon Moto Helm": "碳纤维摩托车头盔 (Carbon Moto Helm)",
+        "Cowboy Hat": "牛仔帽 (Cowboy Hat)",
+        "Gas Mask": "防毒面具 (Gas Mask)",
+        "Hockey Mask": "冰球面罩 (Hockey Mask)",
+        "Ranger Hat": "游侠帽 (Ranger Hat)",
+        "Riot Helmet": "防暴头盔 (Riot Helmet)",
+        "Shawl": "披肩 (Shawl)",
+        "Steel Mask": "钢铁面具 (Steel Mask)",
+        "Sunglasses": "太阳镜 (Sunglasses)",
+        "Iron Mask": "铁面具 (Iron Mask)",
+        "Moto Helm": "摩托车头盔 (Moto Helm)",
+        "Nano Helmet": "纳米头盔 (Nano Helmet)",
 
         //----------------/ 身體
-        "Barrel Vest": "桶形背心",
-        "Body Vest": "防护背心",
-        "Camo Vest": "迷彩背心",
-        "Hazmat Jacket": "防护服夹克",
-        "Cloth Jacket": "布质夹克",
-        "Ranger Jacket": "游侠夹克",
-        "Leather Jacket": "皮夹克",
-        "Padded Vest": "衬垫背心",
-        "Nano Armour": "纳米装甲",
+        "Barrel Vest": "桶形背心 (Barrel Vest)",
+        "Blue Suit": "蓝色西装 (Blue Suit)",
+        "Body Vest": "防护背心 (Body Vest)",
+        "Camo Fleece": "迷彩抓绒衣 (Camo Fleece)",
+        "Camo Shirt": "迷彩衬衫 (Camo Shirt)",
+        "Camo Vest": "迷彩背心 (Camo Vest)",
+        "Hazmat Jacket": "防护服夹克 (Hazmat Jacket)",
+        "Cloth Jacket": "布质夹克 (Cloth Jacket)",
+        "Combat Pullover": "作战套头衫 (Combat Pullover)",
+        "Crew Sweater": "圆领毛衣 (Crew Sweater)",
+        "Heavy Sweater": "厚毛衣 (Heavy Sweater)",
+        "Ranger Jacket": "游侠夹克 (Ranger Jacket)",
+        "Leather Jacket": "皮夹克 (Leather Jacket)",
+        "Padded Vest": "衬垫背心 (Padded Vest)",
+        "Nano Armour": "纳米装甲 (Nano Armour)",
+        "Tracksuit": "运动套装 (Tracksuit)",
 
         //----------------/ 腿
-        "Armoured Pants": "装甲裤",
-        "Army Pants": "军裤",
-        "Camo Pants": "迷彩裤",
-        "Cargo Pants": "工装裤",
-        "Cargo Shorts": "工装短裤",
-        "Cloth Pants": "布裤",
-        "Heavily Armoured Pants": "重装甲裤",
-        Jeans: "牛仔裤",
-        "Ranger Jeans": "游侠牛仔裤",
-        "Jogging Bottoms": "跑步裤",
-        "Knee Pads": "护膝",
-        "Padded Pants": "衬垫裤",
-        "Sweat Pants": "运动裤",
-        "Swim Shorts": "游泳短裤",
+        "Armoured Pants": "装甲裤 (Armoured Pants)",
+        "Army Pants": "军裤 (Army Pants)",
+        "Camo Pants": "迷彩裤 (Camo Pants)",
+        "Cargo Pants": "工装裤 (Cargo Pants)",
+        "Cargo Shorts": "工装短裤 (Cargo Shorts)",
+        "Cloth Pants": "布裤 (Cloth Pants)",
+        "Heavily Armoured Pants": "重装甲裤 (Heavily Armoured Pants)",
+        "Jeans": "牛仔裤 (Jeans)",
+        "Ranger Jeans": "游侠牛仔裤 (Ranger Jeans)",
+        "Jogging Bottoms": "跑步裤 (Jogging Bottoms)",
+        "Knee Pads": "护膝 (Knee Pads)",
+        "Padded Pants": "衬垫裤 (Padded Pants)",
+        "Sweat Pants": "运动裤 (Sweat Pants)",
+        "Swim Shorts": "游泳短裤 (Swim Shorts)",
+        "Heavy Reinforced Legs": "重型加固护腿 (Heavy Reinforced Legs)",
+        "Kevlar Pants": "凯夫拉纤维长裤 (Kevlar Pants)",
 
         //----------------/ 腳
-        "Army Boots": "军靴",
-        "Camo Boots": "迷彩靴",
-        "Hazmat Boots": "防护靴",
-        "Ranger Boots": "游侠靴",
-        Sandals: "凉鞋",
-        "Soldier Boots": "士兵靴",
-        "Trekking Boots": "徒步靴",
-        "Work Boots": "工作靴",
+        "Army Boots": "军靴 (Army Boots)",
+        "Camo Boots": "迷彩靴 (Camo Boots)",
+        "Hazmat Boots": "防护靴 (Hazmat Boots)",
+        "Ranger Boots": "游侠靴 (Ranger Boots)",
+        "Sandals": "凉鞋 (Sandals)",
+        "Soldier Boots": "士兵靴 (Soldier Boots)",
+        "Trekking Boots": "徒步靴 (Trekking Boots)",
+        "Work Boots": "工作靴 (Work Boots)",
+        "Black Boots": "黑色靴子 (Black Boots)",
+        "Desert Boots": "沙漠靴 (Desert Boots)",
+        "Running Shoes": "跑鞋 (Running Shoes)",
 
         //----------------/ 黃裝
-        "Lesser Deep Pockets": "次级扩容槽",
-        "Lesser Lead Lining": "次级铅内衬",
-        "Lesser Inspired Refining": "次级精炼启发",
-        "Lesser Inspired Scavenging": "次级拾荒启发",
-        "Lesser Inspired Crafting": "次级制作启发",
-        "Lesser Inspired Farming": "次级耕作启发",
+        "Lesser Deep Pockets": "中级扩容槽",
+        "Lesser Lead Lining": "中级铅内衬",
+        "Lesser Inspired Refining": "中级精炼启发",
+        "Lesser Inspired Scavenging": "中级拾荒启发",
+        "Lesser Inspired Crafting": "中级制作启发",
+        "Lesser Inspired Farming": "中级耕作启发",
+        "Lesser Inspired Hunting": "中级狩猎启发",
         "Weak Deep Pockets": "低级扩容槽",
         "Weak Inspired Refining": "低级精炼",
+        "Weak Inspired Crafting": "低级制作",
+        "Weak Inspired Forging": "低级锻造",
         "Weak Lead Lining": "低级铅内衬",
         "Weak Inspired Distilling": "低级蒸馏启发",
         "Weak Inspired Hunting": "低级狩猎启发",
         "Weak Inspired Scavenging": "低级拾荒启发",
         Modified: "改装过的",
+        Appraised: "已鉴定",
+        "Minor Lucky": "小型幸运",
+        "Major Lucky": "大型幸运",
+        "Minor Increased Mining": "采矿小幅提升",
+        "Minor Lead Lining": "轻型铅衬里",
+        "Major Lead Lining": "重型铅衬里",
+        "Minor Increased Scavenging": "轻型增强拾荒",
+        "Major Increased Scavenging": "重型增强拾荒",
+        "Major Increased Mining": "重型增强",
+        "Minor Increased Crafting": "轻型增强制作",
+        "Major Increased Crafting": "重型增强制作",
+        "Minor Lead Lined Gas Mask": "轻型铅衬里防毒面具",
+        "Minor Lead Lined Hazmat": "轻型铅衬里防护服",
+        "Minor Scavenging Gas Mask": "轻型拾荒防毒面具",
+        "Minor Scavenging Hazmat": "轻型拾荒防护服",
+        "Major Lead Lined Gas Mask": "重型铅衬里防毒面具",
+        "Major Lead Lined Hazmat": "重型铅衬里防护服",
+        "Major Scavenging Gas Mask": "重型拾荒防毒面具",
+        "Major Scavenging Hazmat": "重型拾荒防护服",
+        "Minor Scavenging Nano Armour": "轻型拾荒纳米装甲",
+        "Minor Scavenging Nano Helmet": "轻型拾荒纳米头盔",
+        "Minor Lead Lined Nano Armour": "轻型铅衬里纳米装甲",
+        "Minor Lead Lined Nano Helmet": "轻型铅衬里纳米头盔",
+        "Major Scavenging Nano Armour": "重型拾荒纳米装甲",
+        "Major Scavenging Nano Helmet": "重型拾荒纳米头盔",
+        "Major Lead Lined Nano Armour": "重型铅衬里纳米装甲",
+        "Major Lead Lined Nano Helmet": "重型铅衬里纳米头盔",
+        "Minor Crafting Steel Mask": "小型锻造钢面具",
+        "Minor Mining Steel Mask": "小型采矿钢面具",
+        "Minor Lucky Steel Mask": "小型幸运钢面具",
+        "Major Mining Steel Mask": "大型采矿钢面具",
+        "Major Crafting Steel Mask": "大型锻造钢面具",
+        "Major Lucky Steel Mask": "大型幸运钢面具",
 
     };
 
     //----1.5-3 交通工具
     const dictVehicle = {
-
         Vehicle: "车辆",
         "vehicle_parts_tires": "车辆部件 - 轮胎",
         "vehicle_parts_turbo": "车辆部件 - 涡轮增压器",
@@ -4015,143 +4692,154 @@
         Resource: "资源",
 
         //----------------/ 材料
-        "Advanced Tools": "高级工具",
-        Barley: "大麦",
-        "Barley Seeds": "大麦种子",
-        Barricade: "路障",
-        Brick: "砖块",
-        Cement: "水泥",
-        Cloth: "布料",
-        Coal: "煤炭",
-        "Dirty Water": "脏水",
-        Explosives: "炸药",
-        "Fishing Reel": "鱼线轮",
-        Flux: "助焊剂",
-        Fuel: "燃料",
-        Gears: "齿轮",
-        "Gun Powder": "火药",
-        "Iron Bar": "铁锭",
-        "Iron Ore": "铁矿石",
-        Logs: "原木",
-        Nails: "钉子",
-        Oil: "油",
-        Plastic: "塑料",
-        Rock: "岩石",
-        Rope: "绳子",
-        Scrap: "废铁",
-        Steel: "钢铁",
-        Tarp: "防水布",
-        Thread: "线",
-        "Unrefined Plastic": "粗塑料",
-        Water: "水",
-        Wire: "铁丝",
-        "Zed Juice": "丧尸汁",
-        Oilcloth: "油布",
-        Ash: "灰烬",
-        "Purify Water": "净化水",
-        Tape: "胶带",
-        Planks: "木板",
-        Hide: "兽皮",
-        "Empty Fuel Container": "空燃料容器",
-        "Salvaged Tech": "硬盘",
-        "Broken Remote": "损坏的遥控器",
-        "Electrical Components": "电子元件",
-        "Broken Radio": "损坏的收音机",
-        "Broken Screen": "损坏的屏幕",
-        "Computer Board": "电脑主板",
-        "Automation Arm": "机械手臂",
-        "Nanites Cache": "纳米机器人储存舱",
-        "Serum": "血清",
-        "Fuel Container": "燃料容器",
-        "Bolts": "螺栓",
-        "Bone Offering": "骸骨祭品",
-        "Quartz": "石英",
-        "Accuracy Kit": "精准套件",
-        "Reclaimed Components": "回收组件",
-        "Silicon": "硅",
-        "Double Lining": "双层衬里",
-        "Reinforced Lining": "加强衬里",
-        "Amber": "琥珀",
-        "Nimble Lining": "灵活衬里",
-        "Tin Plate": "锡板",
-        "Light Lining": "轻型内衬",
-        "Damage Kit": "损坏套件",
-        "Defense Kit": "防御套件",
+        "Advanced Tools": "高级工具 (Advanced Tools)",
+        "Alloy Bar": "合金条 (Alloy Bar)",
+        "Bucket": "桶 (Bucket)",
+        "Crystal Water": "水晶水 (Crystal Water)",
+        "Rebar": "钢筋 (Rebar)",
+        "Sacrifice": "祭品 (Sacrifice)",
+        "Sand": "沙子 (Sand)",
+        "Water Bucket": "水桶 (Water Bucket)",
+        "Barley": "大麦 (Barley)",
+        "Barley Seeds": "大麦种子 (Barley Seeds)",
+        "Barricade": "路障 (Barricade)",
+        "Brick": "砖块 (Brick)",
+        "Cement": "水泥 (Cement)",
+        "Cloth": "布料 (Cloth)",
+        "Coal": "煤炭 (Coal)",
+        "Dirty Water": "脏水 (Dirty Water)",
+        "Explosives": "炸药 (Explosives)",
+        "Fishing Reel": "鱼线轮 (Fishing Reel)",
+        "Flux": "助焊剂 (Flux)",
+        "Fuel": "燃料 (Fuel)",
+        "Gears": "齿轮 (Gears)",
+        "Gun Powder": "火药 (Gun Powder)",
+        "Iron Bar": "铁锭 (Iron Bar)",
+        "Iron Ore": "铁矿石 (Iron Ore)",
+        "Logs": "原木 (Logs)",
+        "Nails": "钉子 (Nails)",
+        "Oil": "油 (Oil)",
+        "Plastic": "塑料 (Plastic)",
+        "Rock": "岩石 (Rock)",
+        "Rope": "绳子 (Rope)",
+        "Scrap": "废铁 (Scrap)",
+        "Steel": "钢铁 (Steel)",
+        "Tarp": "防水布 (Tarp)",
+        "Thread": "线 (Thread)",
+        "Unrefined Plastic": "粗塑料 (Unrefined Plastic)",
+        "Water": "水 (Water)",
+        "Wire": "铁丝 (Wire)",
+        "Zed Juice": "丧尸汁 (Zed Juice)",
+        "Oilcloth": "油布 (Oilcloth)",
+        "Ash": "灰烬 (Ash)",
+        "Purify Water": "净化水 (Purify Water)",
+        "Tape": "胶带 (Tape)",
+        "Planks": "木板 (Planks)",
+        "Hide": "兽皮 (Hide)",
+        "Empty Fuel Container": "空燃料容器 (Empty Fuel Container)",
+        "Salvaged Tech": "硬盘 (Salvaged Tech)",
+        "Broken Remote": "损坏的遥控器 (Broken Remote)",
+        "Electrical Components": "电子元件 (Electrical Components)",
+        "Broken Radio": "损坏的收音机 (Broken Radio)",
+        "Broken Screen": "损坏的屏幕 (Broken Screen)",
+        "Computer Board": "电脑主板 (Computer Board)",
+        "Automation Arm": "机械手臂 (Automation Arm)",
+        "Nanites Cache": "纳米机器人储存舱 (Nanites Cache)",
+        "Serum": "血清 (Serum)",
+        "Fuel Container": "燃料容器 (Fuel Container)",
+        "Bolts": "螺栓 (Bolts)",
+        "Bone Offering": "骸骨祭品 (Bone Offering)",
+        "Quartz": "石英 (Quartz)",
+        "Accuracy Kit": "精准套件 (Accuracy Kit)",
+        "Reclaimed Components": "回收组件 (Reclaimed Components)",
+        "Silicon": "硅 (Silicon)",
+        "Double Lining": "双层衬里 (Double Lining)",
+        "Reinforced Lining": "加强衬里 (Reinforced Lining)",
+        "Amber": "琥珀 (Amber)",
+        "Nimble Lining": "灵活衬里 (Nimble Lining)",
+        "Tin Plate": "锡板 (Tin Plate)",
+        "Light Lining": "轻型内衬 (Light Lining)",
+        "Damage Kit": "损坏套件 (Damage Kit)",
+        "Defense Kit": "防御套件 (Defense Kit)",
+        "seasonal gift": "节日礼物 (seasonal gift)",
 
         //----------------/ 魚
-        Angelfish: "天使鱼",
-        Barnaclefish: "藤壶鱼",
-        Bass: "黑鲈",
-        Carp: "鲤鱼",
-        Perch: "河鲈",
-        Rockfish: "石鱼",
-        Sandfish: "沙鱼",
+        "Angelfish": "天使鱼 (Angelfish)",
+        "Barnaclefish": "藤壶鱼 (Barnaclefish)",
+        "Bass": "黑鲈 (Bass)",
+        "Carp": "鲤鱼 (Carp)",
+        "Perch": "河鲈 (Perch)",
+        "Rockfish": "石鱼 (Rockfish)",
+        "Sandfish": "沙鱼 (Sandfish)",
 
-        "Raw Fish": "生鱼",
-        "Cooked Angelfish": "熟天使鱼",
-        "Cooked Barnaclefish": "熟藤壶鱼",
-        "Cooked Bass": "熟黑鲈", // Bass 对应黑鲈（如大嘴黑鲈，属鲈科下的黑鲈属）
-        "Cooked Carp": "熟鲤鱼",
-        "Cooked Perch": "熟河鲈", // Perch 对应河鲈（属鲈科鲈属，典型淡水鲈）
-        "Cooked Sandfish": "熟沙鱼",
+        "Raw Fish": "生鱼 (Raw Fish)",
+        "Cooked Angelfish": "熟天使鱼 (Cooked Angelfish)",
+        "Cooked Barnaclefish": "熟藤壶鱼 (Cooked Barnaclefish)",
+        "Cooked Bass": "熟黑鲈 (Cooked Bass)", // Bass 对应黑鲈（如大嘴黑鲈，属鲈科下的黑鲈属）
+        "Cooked Carp": "熟鲤鱼 (Cooked Carp)",
+        "Cooked Perch": "熟河鲈 (Cooked Perch)", // Perch 对应河鲈（属鲈科鲈属，典型淡水鲈）
+        "Cooked Sandfish": "熟沙鱼 (Cooked Sandfish)",
 
-        "Zen Egg": "禅蛋",
-        "Dino Egg": "恐龙蛋",
-        "ZedBull Egg": "丧尸红牛蛋",
-        "Survivor Egg": "幸存者蛋",
-        "Moon Egg": "月蛋",
-        "Corrupted Egg": "腐化之蛋",
-        "Luxury Egg": "奢华之蛋",
-        "Alien Egg": "外星蛋",
-        Tincture: "酊剂",
+        Tincture: "酊剂 (Tincture)",
 
-        // 說明
-        // 線
+        // 说明
+        // 线
         "A long, thin strand of cotton used in sewing": "一条用于缝纫的长而细的棉线",
         // 丧尸汁
         "Made by carefully crushing the head of Zeds between two rocks": "通过小心地将丧尸的头部夹在两块岩石之间来制作",
+        // 机械手臂
+        "A advanced automation arm which enables factories and mines to run without human intervention": "一款先进的自动化机械手臂，可实现工厂和矿山无人运行",
+        // 水晶水
+        "Crystal water used in ceremonies within a Temple": "寺庙仪式中使用的水晶水",
+        // 损坏的遥控器
+        "A broken remote control, useful for scrapping": "一台损坏的遥控器，适合拆解回收",
+        // 损坏的收音机
+        "A broken radio, useful for scrapping": "一台损坏的收音机，适合拆解回收",
+        // 损坏的屏幕
+        "A broken computer screen, useful for scrapping": "一块损坏的电脑屏幕，适合拆解回收",
+        // 硬盘
+        "Technical scrap which can be salvaged for it's parts and reused": "一种技术废料，可拆解回收零件并二次利用",
+        // 电池
+        "This battery has enough charge to power small equipment for a short amount of time": "这款电池剩余电量可驱动小型设备短时间运转",
+        // 电子元件
+        "These components can be combined, recycled and refashioned into useful technology for various means including hacking and construction": "这类元件可通过组合、回收与改造，制成适用于黑客入侵、建筑搭建等多种场景的实用科技道具",
+        // 电脑主板
+        "A platform for building advanced technology upon the ZedOS system": "基于ZedOS系统打造先进科技产品的核心硬件平台",
     };
 
     //----1.5-5 子彈
     const dictItemAmmo = {
-        Arrows: "箭",
-        "Simple Ammo": "简单弹药",
-        "Shotgun Slug": "霰弹枪弹丸",
-        "Rifle Ammo": "步枪弹药",
-        "Pistol Ammo": "手枪子弹",
+        "Arrows": "箭 (Arrows)",
+        "Simple Ammo": "简单弹药 (Simple Ammo)",
+        "Shotgun Slug": "霰弹枪弹丸 (Shotgun Slug)",
+        "Rifle Ammo": "步枪弹药 (Rifle Ammo)",
+        "Pistol Ammo": "手枪子弹 (Pistol Ammo)",
     };
 
     //----1.5-6 醫療
     const dictItemMedical = {
         "Med Booster": "医疗增强剂",
-        Bandage: "绷带",
-        "Effect: Reduce recovery time by 10 minutes, increases life by 10 and medical cooldown by 5 minutes":
-            "效果：减少10分钟的恢复时间，增加10点生命值，医疗冷却时间5分钟",
-        Morphine: "吗啡",
-        "Effect: Reduce recovery time by 20 minutes, increases life by 50 and medical cooldown by 15 minutes":
-            "效果：减少20分钟恢复时间，增加50点生命值，医疗冷却时间15分钟",
-        "Small Med Kit": "小型医疗包",
-        "Effect: Reduce recovery time by 30 minutes, increases life by 30 and medical cooldown by 10 minutes":
-            "效果：减少30分钟恢复时间，增加30点生命值，医疗冷却时间10分钟",
-        "Med Kit": "医疗包",
-        "Effect: Reduce recovery time by 1 hour, increases life by 150 and medical cooldown by 30 minutes":
-            "效果：减少1小时恢复时间，增加150点生命值，医疗冷却时间30分钟",
-        "Energy Vial": "能量瓶",
-        "Effect: Reduce recovery time by 10 minutes and increases life by": "效果：冷却时间10分钟并增加生命值",
-        "Health Vial": "生命瓶",
-        "Detox Vial": "解毒瓶",
+        Bandage: "绷带 (Bandage)",
+        "Effect: Reduce recovery time by 1 minute, increases life by 100 and medical cooldown by 30 minutes":
+            "效果：减少1分钟的恢复时间，增加100点生命值，医疗冷却时间30分钟",
+        Morphine: "吗啡 (Morphine)",
+        "Effect: Reduce recovery time by 60 minutes, increases life by 500 and medical cooldown by 15 minutes":
+            "效果：减少60分钟恢复时间，增加500点生命值，医疗冷却时间15分钟",
+        "Small Med Kit": "小型医疗包 (Small Med Kit)",
+        "Effect: Reduce recovery time by 30 minutes, increases life by 150 and medical cooldown by 30 minutes":
+            "效果：减少30分钟恢复时间，增加150点生命值，医疗冷却时间30分钟",
+        "Med Kit": "医疗包 (Med Kit)",
+        "Effect: Reduce recovery time by 1 hour, increases life by 400 and medical cooldown by 30 minutes":
+            "效果：减少1小时恢复时间，增加400点生命值，医疗冷却时间30分钟",
+        "Energy Vial": "能量瓶 (Energy Vial)",
+        "Effect: Reduce recovery time by 10 minutes and increases life by": "效果：减少冷却时间10分钟并增加生命值",
+        "Health Vial": "生命瓶 (Health Vial)",
+        "Detox Vial": "解毒瓶 (Detox Vial)",
         "Effect: Resets cooldown booster by 12 hours": "效果：重置增强剂冷却时间12小时",
     };
 
     //----1.5-7 增強
     const dictEnhance = {
-        "Chem Boosters": "化学增强剂",
-        "Energy Booster": "能量增强剂",
-        "Rad Booster": "辐射增强剂",
-        "Weight Booster": "负重增强剂",
-        "Worker Booster": "劳动增强剂",
-        "XP Booster": "经验值增强剂",
-
         "Booster (Medical)": "增强剂（医疗）",
         "Booster (Medical": "增强剂（医疗）",
         "Boosters (Medical": "增强剂（医疗）",
@@ -4166,22 +4854,25 @@
         "Boosters (Alcohol)": "增强剂（酒精）",
         "Boosters (Alcohol": "增强剂（酒精）",
         "Booster (Fish": "增强剂（鱼类）",
+        "Booster (Chem": "增益道具（趣味）",
 
-        //----------------/ 食物
-        "Animal Meat": "动物肉",
-        Chocolate: "巧克力",
-        "Canned Food": "罐装食物",
-        "Cooked Fish": "熟鱼",
-        "Cooked Meat": "熟肉",
-        "Fish Kebab": "鱼肉串",
-        Kwizine: "美食",
-        "Mixed Vegetables": "混合蔬菜",
-        "Pumpkin Pie": "南瓜派",
-        Sandwich: "三明治",
-        "Morale Vial": "士气瓶",
+        //----------------/ 增強劑（食物）
+        "Animal Meat": "动物肉 (Animal Meat)",
+        "Chocolate": "巧克力 (Chocolate)",
+        "Canned Food": "罐装食物 (Canned Food)",
+        "Cooked Fish": "熟鱼 (Cooked Fish)",
+        "Cooked Meat": "熟肉 (Cooked Meat)",
+        "Fish Kebab": "鱼肉串 (Fish Kebab)",
+        "Kwizine": "美食 (Kwizine)",
+        "Mixed Vegetables": "混合蔬菜 (Mixed Vegetables)",
+        "Pumpkin Pie": "南瓜派 (Pumpkin Pie)",
+        "Sandwich": "三明治 (Sandwich)",
+        "Morale Vial": "士气瓶 (Morale Vial)",
+        "Cake Slice": "蛋糕切片 (Cake Slice)",
 
         "Effect: Increases morale by 10 and booster cooldown by 30 minutes": "效果：增加10点士气，增强剂冷却时间30分钟",
         "Effect: Increases morale by 20 and booster cooldown by 30 minutes": "效果：增加20点士气，增强剂冷却时间30分钟",
+        "Effect: Increases morale by 40 and booster cooldown by 30 minutes": "效果：增加40点士气，增强剂冷却时间30分钟",
         "Effect: Increases morale by 50 and booster cooldown by 30 minutes": "效果：增加50点士气，增强剂冷却时间30分钟",
         "Effect: Increases morale by 50 and booster cooldown by 1 hour": "效果：增加50点士气，增强剂冷却时间1小时",
         "Effect: Increases morale by 65 and booster cooldown by 30 minutes": "效果：增加65点士气，增强剂冷却时间30分钟",
@@ -4189,55 +4880,82 @@
         "Effect: Increases morale by 100 and booster cooldown by 30 minutes": "效果：增加100点士气，增强剂冷却时间30分钟",
         "Effect: Increases morale by 125 and booster cooldown by 30 minutes": "效果：增加125点士气，增强剂冷却时间30分钟",
         "Effect: Increases morale by 300 and booster cooldown by 30 minutes": "效果：增加300点士气，增强剂冷却时间30分钟",
-        "Effect: Increases morale by 500 and booster cooldown by 30 minutes": "效果：增加500点士气，增强剂冷却时间30分钟",
+        "Effect: Grants Hardened Skin status effect (+5% strength) and increases booster cooldown by 60 minutes":
+            "效果：获得硬化皮肤状态（+5%力量），增强剂冷却时间60分钟",
         "Effect: Increases morale by": "效果：增加士气",
+        "Effect: Increases morale by 20 and booster cooldown by 30 minutes. Also adds Consumed Sweet Cake Status Effect":
+            "效果：增加20点士气，增强剂冷却时间延长30分钟，同时获得美味蛋糕状态",
 
-        //----------------/ 能量
-        Coffee: "咖啡",
-        "e-Cola": "原子可乐",
-        Eyebellini: "眼球鸡尾酒",
-        "Witch's Brew": "巫师饮品",
-        ZedBull: "丧尸红牛",
-        "Free ZedBull":"免费丧尸红牛",
-        "Adrenaline Booster": "肾上腺素增强剂",
+        //----------------/ 增強劑（能量飲料）
+        "Coffee": "咖啡 (Coffee)",
+        "e-Cola": "原子可乐 (e-Cola)",
+        "Eyebellini": "眼球鸡尾酒 (Eyebellini)",
+        "Witch's Brew": "巫师饮品 (Witch's Brew)",
+        "ZedBull": "丧尸红牛 (ZedBull)",
+        "Free ZedBull": "免费丧尸红牛 (Free ZedBull)",
+        "Adrenaline Booster": "肾上腺素增强剂 (Adrenaline Booster)",
+        "Strange Gruel": "怪异稀粥 (Strange Gruel)",
 
-        "Effect: Increases energy by 100 and booster cooldown by 30 minutes": "效果：增加100点能量，增强剂冷却时间半小时",
+        "Effect: Increases energy by 100 and booster cooldown by 30 minutes": "效果：增加100点能量，增强剂冷却时间30分钟",
         "Effect: Increases energy by 25 and booster cooldown by 2 hours": "效果：增加25点能量，增强剂冷却时间2小时",
+        "Effect: Increases energy by 55 and booster cooldown by 2 hours": "效果：增加55点能量，增强剂冷却时间2小时",
         "Effect: Increases energy by 250 and booster cooldown by 2 hours": "效果：增加250点能量，增强剂冷却时间2小时",
         "Effect: Increases energy by": "效果：增加能量",
 
-        //----------------/ 飲料
-        "Free Beer":"免费啤酒",
-        Beer: "啤酒",
-        Vodka: "伏特加",
-        Whiskey: "威士忌",
-        "Radiation Vial": "辐射瓶",
+        //----------------/ 增強劑（酒精）
+        "Free Beer": "免费啤酒 (Free Beer)",
+        "Beer": "啤酒 (Beer)",
+        "Vodka": "伏特加 (Vodka)",
+        "Whiskey": "威士忌 (Whiskey)",
+        "Radiation Vial": "辐射瓶 (Radiation Vial)",
 
-        "Effect: Increases rad immunity by 5 and booster cooldown by 30 minutes": "效果：增加5点辐射免疫力，增强剂冷却时间半小时",
-        "Effect: Increases rad immunity by 10 and booster cooldown by 30 minutes": "效果：增加10点辐射免疫力，增强剂冷却时间半小时",
-        "Effect: Increases rad immunity by 15 and booster cooldown by 10 minutes": "效果：增加15点辐射免疫力，增强剂冷却时间10分钟",
+        "Effect: Increases rad immunity by 5 and booster cooldown by 30 minutes": "效果：增加5点辐射免疫力，增强剂冷却时间30分钟",
+        "Effect: Increases rad immunity by 10 and booster cooldown by 30 minutes": "效果：增加10点辐射免疫力，增强剂冷却时间30分钟",
+        "Effect: Increases rad immunity by 15 and booster cooldown by 30 minutes": "效果：增加15点辐射免疫力，增强剂冷却时间30分钟",
         "Effect: Increases rad immunity by 15 and booster cooldown by 1 hour": "效果：增加15点辐射免疫力，增强剂冷却时间1小时",
         "Effect: Increases rad immunity by": "效果：增加辐射免疫力",
-        "Effect: Increases morale by 50, energy by 10, rad immunity by 5 and booster cooldown by 30 minutes":
-            "效果：增加50点士气、10点能量、5点辐射免疫力，增强剂冷却时间30分钟",
-        "Effect: Increases morale by 100, rad immunity by 10 and booster cooldown by 30 minutes":
-            "效果：增加100点士气，10点辐射免疫力，增强剂冷却时间30分钟",
         "Effect: Increases morale by 100, energy by 25 and booster cooldown by 30 minutes": "效果：增加100点士气、25点能量，增强剂冷却时间30分钟",
+
+        //----------------/ 增強劑（趣味）
+        "Chem Boosters": "化学增强剂 (Chem Boosters)",
+        "Energy Booster": "能量增强剂 (Energy Booster)",
+        "Rad Booster": "辐射增强剂 (Rad Booster)",
+        "Weight Booster": "负重增强剂 (Weight Booster)",
+        "Worker Booster": "劳动增强剂 (Worker Booster)",
+        "XP Booster": "经验值增强剂 (XP Booster)",
+
+        //----------------/ 增強劑（復活節）
+        "Zen Egg": "禅蛋 (Zen Egg)",
+        "Dino Egg": "恐龙蛋 (Dino Egg)",
+        "ZedBull Egg": "丧尸红牛蛋 (ZedBull Egg)",
+        "Survivor Egg": "幸存者蛋 (Survivor Egg)",
+        "Moon Egg": "月蛋 (Moon Egg)",
+        "Corrupted Egg": "腐化之蛋 (Corrupted Egg)",
+        "Luxury Egg": "奢华之蛋 (Luxury Egg)",
+        "Alien Egg": "外星蛋 (Alien Egg)",
+
+        "Effect: Increases morale by 75, energy by 5, rad immunity by 5 and booster cooldown by 30 minutes": "效果：增加75点士气、5点能量、5点辐射免疫力，增强剂冷却时间30分钟",
+        "Effect: Increases morale by 500, rad immunity by 20 and booster cooldown by 30 minutes": "效果：增加500点士气、20点辐射免疫力，增强剂冷却时间30分钟",
+        "Effect: Increases morale by 100, rad immunity by 10 and booster cooldown by 30 minutes": "效果：增加100点士气、10点辐射免疫力，增强剂冷却时间30分钟",
+        "Effect: Increases morale by 500, energy by 50 and booster cooldown by 30 minutes": "效果：增加500点士气、50点能量，增强剂冷却时间30分钟",
+        "Effect: Increases morale by 50, energy by 10, rad immunity by 5 and booster cooldown by 30 minutes": "效果：增加50点士气、10点能量、5点辐射免疫力，增强剂冷却时间30分钟",
+        "Effect: Increases morale by 500 and booster cooldown by 30 minutes": "效果：增加500点士气，增强剂冷却时间30分钟"
+
     };
 
     //----1.5-8 道具裝備
     const dictItemEquipment = {
-        "Arrow Quiver": "箭袋",
-        Battery: "电池",
-        Hatchet: "斧头",
-        "Mechanics Wrench": "扳手",
-        Pickaxe: "镐",
-        Shovel: "铲子",
-        "Wooden Fishing Rod": "木质钓鱼竿",
-        "Steel Fishing Rod": "钢制钓鱼竿",
-        "Pro Fishing Rod": "专业钓鱼竿",
-        "Steel Hatchet": "钢制斧头",
-        "Steel Pickaxe": "钢制镐",
+        "Arrow Quiver": "箭袋 (Arrow Quiver)",
+        "Battery": "电池 (Battery)",
+        "Hatchet": "斧头 (Hatchet)",
+        "Mechanics Wrench": "扳手 (Mechanics Wrench)",
+        "Pickaxe": "镐 (Pickaxe)",
+        "Shovel": "铲子 (Shovel)",
+        "Wooden Fishing Rod": "木质钓鱼竿 (Wooden Fishing Rod)",
+        "Steel Fishing Rod": "钢制钓鱼竿 (Steel Fishing Rod)",
+        "Pro Fishing Rod": "专业钓鱼竿 (Pro Fishing Rod)",
+        "Steel Hatchet": "钢制斧头 (Steel Hatchet)",
+        "Steel Pickaxe": "钢制镐 (Steel Pickaxe)",
 
         // 箭袋
         "A quiver is required when doing advanced hunting": "进行高阶狩猎时，需要配备箭袋",
@@ -4246,52 +4964,59 @@
 
     //----1.5-9 雜項
     const dictItemOther = {
-        "Barracks key": "军营钥匙",
-        "Buddys Pass": "伙伴通行证",
-        "Fuel Injector": "燃料喷射器",
-        "Generals RFID": "将军的射频ID",
-        Lighter: "打火机",
-        Lockpick: "开锁器",
-        "Lucky coin": "幸运硬币",
-        "Security Card": "安保卡",
-        "Bronze Key": "青铜钥匙",
-        "Silver key": "银钥匙",
-        "Police RFID": "警察射频ID",
-        Compass: "指南针",
-        Crowbar: "撬棍",
-        Flashlight: "手电筒",
-        Transceiver: "无线电收发器",
-        Binoculars: "双筒望远镜",
+        "Barracks key": "军营钥匙 (Barracks key)",
+        "Buddys Pass": "伙伴通行证 (Buddys Pass)",
+        "Fuel Injector": "燃料喷射器 (Fuel Injector)",
+        "Generals RFID": "将军的射频ID (Generals RFID)",
+        "Lighter": "打火机 (Lighter)",
+        "Lockpick": "开锁器 (Lockpick)",
+        "Lucky coin": "幸运硬币 (Lucky coin)",
+        "Security Card": "安保卡 (Security Card)",
+        "Bronze Key": "青铜钥匙 (Bronze Key)",
+        "Golden Key": "金钥匙 (Golden Key)",
+        "Silver key": "银钥匙 (Silver key)",
+        "Police RFID": "警察射频ID (Police RFID)",
+        "Compass": "指南针 (Compass)",
+        "Crowbar": "撬棍 (Crowbar)",
+        "Flashlight": "手电筒 (Flashlight)",
+        "Transceiver": "无线电收发器 (Transceiver)",
+        "Binoculars": "双筒望远镜 (Binoculars)",
+        "Splicer": "熔接机 (Splicer)",
         "Helps you see": "帮助你看得更清楚",
-        Splicer: "熔接机",
+
+        // 熔接机
+        "An advanced hacking unit, provides direct access to weak system mainframes": "一款高阶破解装置，可直接接入防护薄弱的系统主机",
+        // 双筒望远镜
+        "Used to scout for other players in explore locations": "用于在探索地点侦察其他玩家",
+
     };
 
     //----1.5-10 汽車零件
     const dictParts = {
-        "Car Parts": "汽车零件",
-        "Tire": "轮胎",
-        "Bulky Turbo": "大型涡轮",
-        "Eco Tire": "环保轮胎",
-        "Robust Tire": "耐用轮胎",
-        "Racing Tire": "赛车轮胎",
-        "Inline Turbo": "直列涡轮",
-        "Turbo": "涡轮",
-        "High Capacity Turbo": "高容量涡轮",
-        "Small Car Battery": "小型汽车电池",
-        "Experimental Car Battery": "实验性汽车电池",
-        "Heavy Duty Car Battery": "重型汽车电池"
+        "Car Parts": "汽车零件 (Car Parts)",
+        "Tire": "轮胎 (Tire)",
+        "Bulky Turbo": "大型涡轮 (Bulky Turbo)",
+        "Eco Tire": "环保轮胎 (Eco Tire)",
+        "Robust Tire": "耐用轮胎 (Robust Tire)",
+        "Racing Tire": "赛车轮胎 (Racing Tire)",
+        "Inline Turbo": "直列涡轮 (Inline Turbo)",
+        "Turbo": "涡轮 (Turbo)",
+        "High Capacity Turbo": "高容量涡轮 (High Capacity Turbo)",
+        "Small Car Battery": "小型汽车电池 (Small Car Battery)",
+        "Experimental Car Battery": "实验性汽车电池 (Experimental Car Battery)",
+        "Heavy Duty Car Battery": "重型汽车电池 (Heavy Duty Car Battery)",
 
     };
 
     //----1.5-11 掛車
     const dictrRigs = {
-        "Basic Cargo Rig": "基础货运挂车",
-        "Economy Cargo Rig": "经济型货运挂车",
-        "Lightweight Cargo Rig": "轻型货运挂车",
-        "Heavy Cargo Rig": "重型货运挂车",
-        "Tanker Rig": "油罐车挂车",
-        "Lightweight Rig": "轻型挂车",
-        "Streamline Rig": "流线型挂车",
+        "Basic Cargo Rig": "基础货运挂车 (Basic Cargo Rig)",
+        "Economy Cargo Rig": "经济型货运挂车 (Economy Cargo Rig)",
+        "Lightweight Cargo Rig": "轻型货运挂车 (Lightweight Cargo Rig)",
+        "Heavy Cargo Rig": "重型货运挂车 (Heavy Cargo Rig)",
+        "Tanker Rig": "油罐车挂车 (Tanker Rig)",
+        "Lightweight Rig": "轻型挂车 (Lightweight Rig)",
+        "Streamline Rig": "流线型挂车 (Streamline Rig)",
 
     };
 
@@ -4301,28 +5026,28 @@
         Trophy: "奖杯",
         "We thank you for taking part in alpha, your account has been reset and you have been awarded a special trophy for your help":
             "感谢你参与Alpha测试，你的账号已被重置，并为你的帮助颁发了一座特殊奖杯。",
-        "Alpha Survivor": "Alpha测试幸存者",
-        "Antique Watch": "古董手表",
-        "Everburning Lighter": "永燃打火机",
-        "Forever Lollipop": "永恒棒棒糖",
-        "Giant Pufferfish": "巨型河豚",
-        "Golden Egg": "金蛋",
-        "Golden Skull": "金色头骨",
-        "Handy Pliers": "便捷钳子",
-        "Hip Flask": "随身酒壶",
-        "Huge Pine Cone": "巨大松果",
-        "Lumberjack Gloves": "伐木工手套",
-        "Miners Gloves": "矿工手套",
-        "Miners Lamp": "矿工灯",
-        "Monster Catfish": "怪物鲶鱼",
-        "Old Gas Mask": "旧防毒面具",
-        "Pocket Watch": "怀表",
-        "Preserved Coffee": "罐装咖啡",
-        "Silver Spoon": "银勺子",
-        "Stale Donut": "不新鲜的甜甜圈",
-        "Strange Gas Can": "奇怪的汽油罐",
-        "Strong Carabiner": "结实的登山扣",
-        "Viper Barnaclefish": "毒蛇藤壶鱼",
+        "Alpha Survivor": "Alpha测试幸存者 (Alpha Survivor)",
+        "Antique Watch": "古董手表 (Antique Watch)",
+        "Everburning Lighter": "永燃打火机 (Everburning Lighter)",
+        "Forever Lollipop": "永恒棒棒糖 (Forever Lollipop)",
+        "Giant Pufferfish": "巨型河豚 (Giant Pufferfish)",
+        "Golden Egg": "金蛋 (Golden Egg)",
+        "Golden Skull": "金色头骨 (Golden Skull)",
+        "Handy Pliers": "便捷钳子 (Handy Pliers)",
+        "Hip Flask": "随身酒壶 (Hip Flask)",
+        "Huge Pine Cone": "巨大松果 (Huge Pine Cone)",
+        "Lumberjack Gloves": "伐木工手套 (Lumberjack Gloves)",
+        "Miners Gloves": "矿工手套 (Miners Gloves)",
+        "Miners Lamp": "矿工灯 (Miners Lamp)",
+        "Monster Catfish": "怪物鲶鱼 (Monster Catfish)",
+        "Old Gas Mask": "旧防毒面具 (Old Gas Mask)",
+        "Pocket Watch": "怀表 (Pocket Watch)",
+        "Preserved Coffee": "罐装咖啡 (Preserved Coffee)",
+        "Silver Spoon": "银勺子 (Silver Spoon)",
+        "Stale Donut": "不新鲜的甜甜圈 (Stale Donut)",
+        "Strange Gas Can": "奇怪的汽油罐 (Strange Gas Can)",
+        "Strong Carabiner": "结实的登山扣 (Strong Carabiner)",
+        "Viper Barnaclefish": "毒蛇藤壶鱼 (Viper Barnaclefish)",
 
         // 說明
         "Scavenging Rad Immunity": "拾荒辐射免疫力",
@@ -4396,6 +5121,9 @@
         "Life Regen": "生命回復",
         "Skill Bonus": "技能奖励",
         "Recently Rested": "近期已休息",
+        "Feeling Relaxed": "SPA放松",
+        Blessed: "受到祝福",
+        "Consumed Sweet Cake": "美味蛋糕",
 
         //----------------/ 活動(Spa)
         Activities: "活动",
@@ -4422,11 +5150,14 @@
         "Time Left": "剩余时间",
         "You must wait": "你必须等待",
         "before starting this activity again": "才能再次开始该活动",
+        "You have already completed this activity": "你已完成此次活动",
         "Relax in Spa ran out of time": "Spa已超時",
         "Relax in Spa was successful": "Spa已完成",
         "Relax in Spa has started": "Spa已开始",
         "Finish Activity": "完成活动",
         "In Process": "处理中",
+        "Relax in Sauna was successful": "桑拿已完成",
+        "Relax in Sauna has started": "桑拿已开始",
 
         //----------------/ 活動(輻射)
         "Visit Sleeping Quarters": "参观宿舍区",
@@ -4435,21 +5166,40 @@
         "In progress": "进行中",
         "Visit Sleeping Quarters was successful": "参观宿舍区成功",
         "Visit Sleeping Quarters has started": "参观宿舍区已开始",
+        "Time Limit": "时间限制",
+        "New Effects": "新增效果",
+        "Summary": "总结",
+        "Duration": "持续时间",
+        "Time Remaining": "剩余时间",
+        "Team Details": "团队详情",
+        "This activity will close in 60 seconds": "此活动将在 60 秒后结束",
+
+        //----------------/ 活動(幫派)
+        "Perform Bone Ritual": "执行骨祭仪式",
+        "Ritual Sacrifice": "仪式献祭",
+        "Lesser Ritual Sacrifice": "小型仪式献祭",
+        "ritualist": "仪式执行者",
+        "performers": "执行者",
+        "worshippers": "崇拜者",
+        "Perform Bone Ritual was successful": "骨祭仪式执行成功",
+        "Perform Bone Ritual has started": "骨祭仪式已启动",
+        "":"",
+        "":"",
+
 
     };
 
     //1.7 遠征
-    const dictExplore = {
+    const dictExplore1 = {
         // ----- 簡單
-        "Easy": "简单",
         "Open Meadow": "开阔草地",
         "Reclaim Zone": "回收区",
         "Fishing Reserve": "渔业保护区",
-
-        // ----- 中等
-        Medium: "中等",
         "Logging Camp": "伐木营地",
         "Fuel Depot": "燃料库",
+
+        // ----- 中等
+
         "Demolition Site": "拆除现场",
         "Oil Refinery": "炼油厂",
         "Construction Yard": "建筑工地",
@@ -4457,13 +5207,20 @@
         "Abandoned Quarry": "废弃采石场",
 
         // ----- 困難
-        "Hard": "困难",
         "Data Center": "资料中心",
         "The Reserve": "保护区",
         "Military Base": "军事基地",
         "Industrial Foundry": "工业铸造厂",
         Junkyard: "垃圾场",
 
+    };
+
+    //----1.7-2 遠征說明
+    const dictExplore2 = {
+
+        "Easy": "简单",
+        Medium: "中等",
+        "Hard": "困难",
         "Rations resupply": "配给补给",
         "Claim Rations": "领取配给",
         "Unload Items": "卸载物品",
@@ -4489,6 +5246,7 @@
         "This will destroy the item permanently": "这将永久销毁该物品",
         "Zone 2 is locked": "区域2已锁定",
         "Zone 3 is locked": "区域3已锁定",
+        "Zone 4 is locked": "区域4已锁定",
         "Are you sure you want to return to the city": "确定要返回城市吗",
         "Items have been unloaded": "物品已卸载",
         Open: "打开",
@@ -4507,17 +5265,31 @@
         "Travel to Construction Yard to access advanced refinery": "前往施工场可访问高级精炼厂",
         "Travel to Construction Yard to access abandoned scrapyard": "前往施工场可访问废弃废料场",
         "Scout": "侦察",
-        "Exit Scout": "退出侦察",
+        "Exit Scouting": "退出侦察",
         "Scout Location": "侦察位置",
         "Discovered": "已发现",
         "Time Here": "在此停留时间",
         "Area Size": "区域大小",
         "A You must be level 20 or higher to scout for survivors": "你必须达到 20 级或以上才能搜索幸存者",
+        Deliver: "交付",
 
+        // 炼油厂
+        "Extract Fuel Can": "提取燃油罐",
+        "Search Around": "四处搜查",
+        "Large Refinery": "大型炼油厂",
+        "Bypass Security Door": "破解安全门",
+        "Search for Materials": "搜寻物资",
+        "Access Hidden Armourer": "进入隐秘军械库",
+        "Not all NPCs in this zone have been defeated": "该区域内仍有未击败的NPC",
+        "Quick armour analysis": "护甲快速解析",
+        "Add small pocket": "加装小型口袋",
+        "Add medium pocket": "加装中型口袋",
+        "Add large pocket": "加装大型口袋",
 
     };
 
-    //----1.7-1 前哨站
+
+    //----1.7-2 前哨站
     const dictOutpost = {
         // ↓↓↓ Locations ↓↓↓
         // 開闊草地
@@ -4550,6 +5322,7 @@
         "Check traps": "检查陷阱",
         "Extract fuel": "提取燃料",
 
+        "Deliver Gifts": "交付礼物",
         "Hunt Large Game": "狩猎大型猎物",
         "Hunt Small Game": "狩猎小型猎物",
         "Hack Security Door": "破解安全门",
@@ -4600,7 +5373,7 @@
         "Generals Lockbox": "将军储物箱",
         "Secure Gatehouse": "警卫室",
         "Vehicle Lockup": "车辆封存区",
-        "Enter Barracks": "进入营房",
+        "Enter Barracks": "进入军营",
         "Enter Generals Quarters": "进入将军宿舍",
         "Generals Quarters": "将军宿舍",
 
@@ -4608,7 +5381,69 @@
 
     //1.8 貨幣
     const dictItemCurrencies = {
-        "Zed Coin": "丧尸币",
+        "Zed Coin": "丧尸币 (Zed Coin)",
+    };
+
+    //1.9 活動
+    //----1.9-1 萬聖節
+    const dictHalloween = {
+        "Explore Cellar": "探索地窖",
+        "Cross Necklace": "十字架项鍊",
+        "Head Hunter": "猎灵人",
+        "Ghost Hunter": "幽灵猎人",
+        "Invite Ghost Hunter": "邀请幽灵猎人",
+        "Explore Cellar ran out of time": "探索地窖已逾时",
+        "Explore Cellar has started": "探索地窖已开始",
+        "Explore Cellar was successful": "探索地窖已完成",
+        "Clues To Escape": "逃生线索",
+        "Ectoplasm Destroyed": "灵质已摧毁",
+        "Portal Instability": "传送门不稳定",
+        "Ectoplasm": "灵质",
+        "Destroy Ectoplasm": "摧毁灵质",
+        "Search for clues": "寻找线索",
+        "Mysterious Door": "神秘之门",
+        "You can leave and come back later if the activity is not complete": "若活动尚未完成，你可离开后稍后再来",
+        "You will still be rewarded if the activity completes": "若活动完成，你仍可获得奖励",
+        "The activity ends in": "活动将于倒计时结束后终止",
+        "Are you sure you want to leave the activity": "你确定要离开当前活动吗",
+        "Frail Ghost": "虚弱幽灵",
+        "Young Ghost": "小幽灵",
+        "Elder Ghost": "長老幽灵",
+        "Demon Stone": "恶魔之石 (Demon Stone)",
+        "Go deeper into underworld": "深入冥界",
+        "Ghost Follower": "幽灵追随者",
+        "Success Rate": "成功率",
+        "Efficiency Multiplier": "效率倍率",
+        "Your Rewards": "你的奖励",
+        "You must wait before starting this operation again": "你必须等到冷却时间结束才能再次开始此操作",
+        "Summon Higher Deity": "召唤更高阶神祇",
+        "Summon": "召唤",
+        "Failed": "失败",
+
+        // 灵质
+        "Ectoplasm from a Ghost. Will expire shortly after Halloween": "幽灵产出的灵质体，将在万圣节结束后不久过期",
+    };
+
+    //----1.9-2 聖誕節
+    const dictChristmas = {
+        "Explore Grotto": "探索洞穴",
+        "Summon Kris Kringle": "召唤圣诞老人",
+        "Snowball": "雪球 (Snowball)",
+        "Solstice Lantern": "冬至灯笼 (Solstice Lantern)",
+        "Wrapping Paper": "包装纸 (Wrapping Paper)",
+        "Dreide": "陀螺 (Dreide)",
+        "bauble": "装饰球 (bauble)",
+        "Candy Cane": "拐杖糖 (Candy Cane)",
+        "Gingerbread Man": "姜饼人 (Gingerbread Man)",
+        "Elf Assistant - Amber": "精灵助手 - 安珀",
+        "Elf Assistant - Alfred": "精灵助手 - 阿尔夫",
+        "Dreidel": "陀螺 (Dreidel)",
+
+        // 說明
+        // 拐杖糖
+        "Amber the Elf loves Candy Cane. Consume one and they're sure to show up": "精灵 - 安珀超爱拐杖糖——吃掉一根，它肯定会现身哦",
+        // 姜饼人
+        "Alfred the Elf loves Gingerbread men. Consume one and they're sure to show up": "精灵 - 阿尔夫超爱姜饼人——吃掉一个，它肯定会现身哦"
     };
 
     //2.0 怪物
@@ -5371,6 +6206,138 @@
         "Now you know everything you need to know": "现在你已经掌握了所有需要知道的东西",
         "Time to finish off upgrading your Armour Bench and start taking orders for Armour": "是时候完成盔甲台的升级，并开始承接护具订单了",
 
+        //----------------/ City Housing-1
+        "City Housing": "城市住宅",
+        "Earn permits for your house in the city": "获取城市住宅许可证",
+        "So a new survivor looking to move into the safety of our city huh? You'll sure have to earn your keep first, proving yourself as a valuable member of our hard working society":
+            "哟，是想搬进咱们安全城区的新幸存者吧？想在这儿落脚可得先自食其力，证明你能成为咱勤劳社群里的一份子。",
+        "Everytime you help us, we'll provide a land permit so you can expand your house. If you want to pickup more permits you can also buy them from the Carpenter in the city":
+            "你每帮我们一次，我们就会发一张土地许可证给你，用来扩建房屋。要是还想多拿许可证，也能去城里找木匠购买。",
+        "Well then, I suppose you best start making the rounds then. Go set up the traps in the meadow so we have a steady supply of food":
+            "那行，我看你现在就可以行动起来了。去牧场布置陷阱吧，这样咱们才能有稳定的食物来源。",
+        "Objective: Travel to Open Meadow and Set the Traps in Zone": "目标：前往（远征）开阔草地，布置陷阱于区域",
+        //----------------/ City Housing-2
+        "You made quick work of those traps, keep it up": "你布置这些陷阱的速度真快，继续保持下去",
+        "I've received word recently that our outpost in the Fuel Depot is running low on cash and it's really making work difficult. Customers arrive to buy fuel and we can't even give them the correct change":
+            "我最近收到消息，咱们在燃料站的前哨站现金快见底了，这给工作带来了很大麻烦。顾客来买燃料时，我们连找零都没法给对",
+        "I'm sure you could pick up some cheap fuel while you're over there and we'll get a bit more spare change to work with in the process. It sure would be helping out the citizens working out there":
+            "我相信你去那边的时候，能买到些便宜燃料，这样我们也能顺带多攒点备用零钱。这肯定能帮到在那儿工作的市民们",
+        "Head over to the fuel depot and buy some fuel": "前往燃料库，购买一些燃料",
+        "Objective: Travel to the Fuel Depot and Buy some Fuel in Zone": "目标：前往（远征）燃料库，购买一些燃料于区域",
+        //----------------/ City Housing-3
+        "Word just got back from the Fuel Depot. They sure are thankful you came. It turns out a big fuel buyer arrived just after you, had they not the right change things could have gotten really messy":
+            "燃料库那边传来消息了。他们对你的到来感激不尽。原来你刚走，就来了个大客户要买燃油，要是没你帮忙镇场，局面怕是要彻底失控",
+        "We've been thinking of expanding our fuel operations out to the Oil Refinery but that place has always been extremely dangerous. Bandits often attack any scouts we send there and steal any supplies they have":
+            "我们一直想把燃料生意拓展到炼油厂，但那地方向来凶险万分。土匪们经常袭击我们派去的侦察员，还把他们携带的补给洗劫一空。",
+        "We're wondering if we can count on you to help out our scouts. It's simple really, just head over there and Bypass the Security Door before they arrive":
+            "不知道你能不能帮我们的侦察员一把？事情很简单，你先赶去炼油厂，抢在他们抵达前**破解安全门**就行",
+        "We hope once the scouts are inside we can figure out if this is a worthwhile endeavour or not. Anything else you find there you can keep":
+            "我们希望侦察员能顺利进入厂区，评估这项计划是否值得推进。你在那里找到的其他任何东西，都归你所有",
+        "Objective: Travel to the Oil Refinery and Bypass the Security Door": "目标：前往（远征）炼油厂，破解安全门",
+        //----------------/ City Housing-4
+        "Only one of the scouts returned from the Oil Refinery, despite there being a huge opportunity there - I think it's just to dangerous for our people. Still though - thank you for your help getting our people in":
+            "尽管炼油厂藏着巨大的机遇，但派去的侦察员只有一人活着回来——那地方对我们的人来说实在太凶险了。不过还是要谢谢你，帮我们的人顺利潜入了那里。",
+        "This next ask is a little unusual but it's should also be a breeze for someone as skilful as you. It's simple really... The citizens here often deal with the hardships of life, never enjoying just an ounce of normality. Recently we've been starting a recovery project from old media. Things like music, movies. Y'know just leisure items":
+            "接下来这个请求有点特别，但对你这样身手不凡的人来说，应该就是小菜一碟。事情很简单……咱们这儿的居民常年在苦日子里挣扎，连半点安稳的消遣都没有。最近我们启动了一个旧媒体抢救计划，像音乐、电影这类东西，你懂的，就是些能让人放松的玩意儿",
+        "I know it's not exactly food to survive - but I think this is important to our people. To get started, if you could clear out the cinema, we could retrieve some of the old footage there":
+            "我知道这东西没法当救命的粮食，但我觉得这对大家至关重要。计划的第一步，得麻烦你去清理一下那家电影院，这样我们才能找回里面藏着的老影片",
+        "Objective: Clear 5 Zombies in the Cinemas Main Theater Room": "目标：在（狩猎）电影院內的主剧院室清除5只丧尸",
+        //----------------/ City Housing-5
+        "Jerry Buellers Day Off\"\? \"Back to the Furniture\"? These are some great finds! It's unbelievable! After you cleared out the cinema we came across all sorts of documentaries from before the dark times. Who would have known time travel was possible before": "《春天不是读书天》？《回到家具店》？这些宝贝可太赞了！简直难以置信！你清理完电影院后，我们找到了一大堆末日之前的纪录片。谁能想到，原来早在当年就已经有时间旅行的相关记载了",
+        "Incredible": "太不可思议了。",
+        "We must setup a viewing immediately! I can already imagine the smiles on everybody's faces. Oh, if we just had a battery for the projector":
+            "我们得马上组织一场电影放映！我都能想像出大家脸上洋溢的笑容了。唉，要是能有一块放映机用的电池就好了。",
+        "They're hard to come by but sometimes they're for sale in the market": "这玩意儿可不好找，但有时候市场上会有人卖。",
+        "You can craft them in a Tech Lab or find them at the Junkyard. What do you say? Fancy a movie night":
+            "你也可以去科技实验室自己制作，或者到垃圾场碰碰运气。怎么样？要不要来一场露天的电影之夜？",
+        "Objective: Provide a battery": "目标：寻获一块电池",
+        //----------------/ City Housing-6
+        "Outstanding! Magnificent! It's incredible how times were before the undead started walking the earth. Everyone in the city has been quite inspired by the showing. Some have already began devising their own stories and re-enactments of the documentaries. They've started calling these re-enactments \"\Plays":
+            "太棒了！真是太精彩了！那些行尸还没横行时的日子，简直让人不敢相信！城里所有人都被这场放映鼓舞到了——有人已经开始构思自己的故事，还打算重演那些纪录片里的情节。他们管这种重演叫“戏剧”",
+        "A lot of the younglings keep shouting about some robot terminator documentary and how they want to re-enact it. I don't know, something about wanting an authentic leather jacket and saying the iconic line \"\I'll return very soon":
+            "好多年轻人吵着要重演一部关于机器人终结者的纪录片，说是得有件正宗的皮夹克，还要喊那句标志性的台词：“我很快就回来”",
+        "I know it's asking a bit much, but acts like this will buy you real kudos in the community. So how about it. Do you want to help the younglings with their \"\Play":
+            "我知道这要求有点多，但这种事能让你在社区里收获不少声望。怎么样，要不要帮这些年轻人弄好他们的“戏剧”？",
+        "Objective: Provide a Leather Jacket": "目标：寻获一件皮夹克",
+        //----------------/ City Housing-7
+        "Woah woah woah! That was really graphic! I didn't expect a play about robots would be so graphic! Oh well, it really looks like a good time was had by all":
+            "哇——这也太逼真了吧！真没想到机器人主题的戏剧能这么写实！不过看大家的样子，倒是都玩得挺开心的",
+        "Say... It really intrigued me, the story... Were robots really used before the dark times? I've never seen a remnant of a robot and yet the footage was undeniable":
+            "话说…这故事真的勾起我的好奇心了…末日之前真的有人用机器人吗？我从没见过机器人的残骸，但那些影像又确实不像假的",
+        "I think we should launch an investigation into the robots of past, and I know the perfect place to look":
+            "我觉得咱们得调查一下过去的机器人，而且我知道该去哪儿找线索",
+        "We should break into the Data Center and rummage around. See if we find anything. After you break in our scouts can explore the area later on":
+            "咱们得潜入资料中心翻找一下，看看能不能发现点什么。你先破门进去，之后我们的侦察员会跟进探索这片区域",
+        "Objective: Break into the Security Room in the Data Center": "目标：潜入（远征）资料中心的安保室",
+        //----------------/ City Housing-8
+        "I'm really confused. We searched that Data Center high and low. We even recovered one or two devices that still worked. Not a single mention of robots. Not a damn thing but some small vacuum cleaner":
+            "我彻底懵了。我们把那座数据中心翻了个底朝天，好不容易找出一两台还能运转的设备，结果里面压根没提机器人的事——除了一个小型吸尘器，屁都没有",
+        "It just doesn't make sense. These archives exist and yet no evidence of robots exist. Unless... *long silence":
+            "这完全说不通啊。明明有这些档案，却找不到半点机器人存在的证据。除非……*长久的沉默",
+        "It's a cover up! Yeah! A coverup. That thing where the leaders would try to hide something from their citizens. In fact we've had a few cover-ups ourselves, if you catch my drift. Nobody wants to know when little Timmy gets mauled by a crawler for entering the Arcade":
+            "是掩盖真相！没错！就是刻意隐瞒！就是那些掌权者瞒着民众搞的鬼把戏。其实说白了，咱们自己也干过几次这种事，你懂的。就像小蒂米非要闯电玩城，结果被爬行者撕成了碎片，这种事谁会往外说啊",
+        "If it's a coverup then theres only one other place we can go. We should move our investigations onto the Military Base. If anyone had that kind of technology, it's sure to be them":
+            "如果真的是掩盖真相，那我们就只剩一个去处了——把调查重心转移到军事基地。要是这世上还有谁掌握着那种技术，那肯定非军方莫属。",
+        "Just gain entrance for my scouts again, they can do the rest. And hey, if you find anything - keep it":
+            "再帮我的侦察员们打开一道门就行，剩下的事他们会处理。对了，你在那儿找到的任何东西，都归你。",
+        "Objective: Enter the Barracks in the Military Base": "目标：潜入（远征）军事基地內的军营",
+        //----------------/ City Housing-9
+        "Nothing! Again! The scouts returned with not a damned thing close to the robot we saw in the movie. Not a shred of evidence":
+            "一无所获！又是这样！侦察员们回来后，连根毛都没找到和影片里那台机器人沾边的东西，半点证据都没有",
+        "I'm really to starting to wonder if this is just a waste of all of our time. It just doesn't make sense. We searched every archive for more information, turned over every rock in our hunt for an answer. Yet here we are, no better off than when we started":
+            "我真的开始怀疑，这一切根本就是在浪费我们所有人的时间。这完全说不通，我们翻遍了所有档案找线索，为了答案挖地三尺，可到头来，我们还是停在原地，和一开始没半点区别",
+        "That robot didn't seem to complex. I'm sure we could build our own. Just a few parts is all we need I'm sure":
+            "那台机器人看起来也没那么复杂，我相信我们自己也能造一台。我敢肯定，我们只需要几样零件就够了",
+        "If we collect the parts we need, we can resurrect the robots of old":
+            "只要集齐我们需要的零件，就能让昔日的机器人重获新生",
+        "We just need a Broken Screen for its Head, a Computer Board for it's Brain and a Battery for it's Heart. That will bring the robot to life":
+            "我们只需要一块损坏的屏幕做它的头，一块电脑主板做它的大脑，还有一块电池做它的心脏，就能让这台机器人活过来",
+        "Objective: Provide a Broken Screen, Computer Board and a Battery": "目标：收集并提损坏的屏幕、电脑主板与电池",
+
+        //----------------/ Halloween Quest-1
+        "Halloween Quest": "万圣节任务",
+        "Discover the delicacies of the underworld": "探索冥界美味",
+        "Woooooooweeeeee, you're back! Perfect timing": "哇哦，你回来啦！来得正好",
+        "I was just scouting out the Abandoned Cabin, and hoo boy—did I hear some downright unnatural noises coming from inside. Sounded like ghosts, or worse... maybe an entrance to the underworld itself! I don’t rightly know":
+            "我刚才正在探查那间废弃小屋，天呐 —— 我听到里面传来了非常诡异的声音。听着像鬼魂，或者更糟的是…… 可能是通往冥界的入口！我也说不准",
+        "Anyway, I stumbled across some Pumpkin Pie nearby, and let me tell ya—it was heavenly! Makes me wonder what kind of delicacies the underworld’s cooking up down there":
+            "不过，我在附近偶然发现了一些南瓜派，跟你说吧 —— 那味道简直绝了！这让我好奇冥界里到底在烹制什么样的美味",
+        "Tell you what—head on over to that cabin and bring me back some of that underworld grub. Do that, and I’ll trade you what I found there. It’s shiny":
+            "这样吧 —— 你去那间小屋，帮我带回一些冥界的食物。要是你能做到，我就用我在那儿找到的东西跟你交换。那东西亮晶晶的",
+        "And don't forget, you need a Cross Necklace to get into the underworld. I managed to find one in the Abandoned Cabin":
+            "还有别忘了，要进入冥界你需要一条十字架项链。我之前在废弃小屋里找到了一条",
+        "Objective: Find all the grub in the Abandoned Cabin Cellar": "目标：在（拾荒）废弃小屋的地窖里找到所有的食物",
+
+        //----------------/ Xmas Tree-1
+        "The perfect Christmas Tree": "完美圣诞树",
+        "Get ready to find and decorate the perfect tree - just in time for Christmas": "准备好寻找并装扮一棵完美的圣诞树吧——正好赶上圣诞佳节",
+        "Seasons Greetings loyal citizen of Zed City": "节日问候，泽德城的忠实市民",
+        "So you're looking to get yourself one of our famed perfected Christmas trees? You'll have to work for it first, we work hard to make the perfect glistening Christmas Tree for your own home":
+        "你是想入手一棵我们家大名鼎鼎的臻品圣诞树吧？那可得先付出点努力才行，我们可是花了不少心思，才培育出这些光彩夺目、适合摆在家中的完美圣诞树",
+        "First we'll need to make sure the Loggers prepare the best tree. We should send them a gift to show our appreciation and ensure we get one of the best trees":
+        "首先，我们得确保伐木工能备好最优的树苗。不如送他们一份薄礼表表心意，这样才能稳拿一棵上好的圣诞树",
+        "Get hold of some Wrapping Paper and I'll prepare a Seasonal Gift for you": "去弄些包装纸来，我会为你准备一份节日限定好礼",
+        "Objective: Craft 10 Wrapping Paper in the Materials Bench": "目标：在（据点）材料工作台制作10份包装纸",
+        //----------------/ Xmas Tree-2
+        "This gift should do perfect for the loggers. They work so hard all year round, I'm sure this gift will mean a lot to them":
+            "这份礼物送给伐木工们再合适不过了。他们一整年都辛苦劳作，我相信这份心意对他们来说意义非凡",
+        "Head over to the Logging Camp to deliver the Seasonal Gift": "前往伐木营地，交付这份节日礼物",
+        "And remember, Load the gift in your car first": "切记，先把礼物装上你的车辆",
+        "Objective: Deliver the Seasonal Gift to the Logging Camp (Remember to load the gift into your car":
+            "目标：将节日礼物送至（远征）伐木营地（记得先把礼物装上车辆）",
+        //----------------/ Xmas Tree-3
+        "The tree they've prepared looks absolutely magnificent. This is sure to make a house feel nice and cosy during winter":
+            "他们准备的这棵圣诞树简直美极了！有它在，这个冬天家里肯定会格外温馨舒适",
+        "Now for decorating the tree, no Christmas Tree is perfect without the right decorations. We'll need to get more Baubles for the tree. The Open Meadow is full of scavengers this time of year, collecting all sorts of different hides for winter":
+            "接下来该装饰圣诞树了——没有合适的装饰，再好看的树也算不上完美。我们得给树多准备些装饰球。每年这个时候，开阔草地上全是拾荒者，他们正忙着收集各种兽皮过冬呢",
+        "Let's put together another gift before heading over there. Provide some more wrapping paper and I'll get it wrapped up for you":
+            "咱们出发前先准备好另一份礼物吧。你再提供些包装纸，我来帮你把礼物打包好",
+        "Objective: Craft 15 Wrapping Paper in the Materials Bench": "目标：在（据点）材料工作台制作15份包装纸",
+        //----------------/ Xmas Tree-4
+        "This gift should do the job, I'm sure the scavengers at the Open Meadow will appreciate the gesture": "这份礼物应该能派上用场，我相信开阔草地上的拾荒者们一定会感激这份心意",
+        "You should head over to the Open Meadow now to deliver the gift": "你现在可以动身前往开阔草地，把这份礼物送过去了",
+        "Objective: Deliver the Seasonal Gift to the Open Meadow": "任务目标：将节日礼物送至（远征）开阔草地",
+
         //----------------/ 觸發特別任務
         "CORNERED WHILE LEAVING": "离开时陷入绝境",
         "Weeeilll hood on there just a moment!": "等一下！！！！！！！",
@@ -5449,6 +6416,7 @@
         "A place for general discussions": "一个进行综合讨论的地方",
         Ideas: "创意",
         "Ideas & Suggestions": "创意与建议",
+        "Buy, sell, and trade with other survivors": "与其他幸存者进行买卖和交易",
 
         Name: "名字",
         Topics: "话题",
@@ -5512,7 +6480,7 @@
         money: "金钱",
         Offline: "离线",
         Retry: "重试",
-        Lockpicks: "撬锁工具",
+        Lockpicks: "开锁器 (Lockpick)",
         "Coming Soon": "即将推出",
         "Donator House is coming soon": "捐赠者之家即将推出",
         min: "最低",
@@ -6038,9 +7006,13 @@
         ...dictMission,
         ...dictFaction,
         ...dictSkill,
-        ...dictExplore,
+        ...dictExplore1,
+        ...dictExplore2,
         ...dictItemCurrencies,
+        ...dictHalloween,
+        ...dictChristmas,
         ...dictMonster,
+        ...dictHouse,
         ...dictWeather,
         ...dictOutpost,
         ...dictInventory,
@@ -6146,6 +7118,48 @@
         if (!node.parentNode) {
             return;
         }
+
+        // ========== 遠征支援qol漢化搜尋 開始 ==========
+        // ========== 新增：识别job-name类节点 ==========
+        let isJobNameNode = false;
+        let currentNode = node;
+        while (currentNode) {
+            if (currentNode.classList && currentNode.classList.contains("job-name")) {
+                isJobNameNode = true;
+                break;
+            }
+            currentNode = currentNode.parentNode;
+        }
+
+        if (isJobNameNode) {
+            const originalText = node.textContent.trim();
+            if (Object.keys(dictExplore1).includes(originalText)) {
+                const translatedText = dictExplore1[originalText];
+                if (translatedText && translatedText !== originalText) {
+                    // 关键修改：保留原始属性以便图标逻辑识别
+                    const doubleTagHtml = `
+                <span style="display:none !important;" class="original-text">${originalText}</span>
+                <span class="translated-text">${translatedText}</span>`;
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = doubleTagHtml;
+
+                    if (node.parentNode) {
+                        const wrapper = document.createElement('span');
+                        // 保留原始job-name类和属性
+                        wrapper.classList.add('job-name');
+                        wrapper.setAttribute('script_translated_from', originalText);
+
+                        while (tempDiv.firstChild) {
+                            wrapper.appendChild(tempDiv.firstChild);
+                        }
+                        node.parentNode.replaceChild(wrapper, node);
+                    }
+                    return;
+                }
+            }
+        }
+        // ========== 遠征支援qol漢化搜尋 結束 ==========
+
 
         if (node.parentNode.classList.contains("script_do_not_translate")) {
             return;
@@ -6314,9 +7328,9 @@
         }
 
         // 帮派日志
-        if (/^([\w\s]+) has joined the faction$/.test(text)) {
-            let res = /^([\w\s]+) has joined the faction$/.exec(text);
-            return res[1] + " 加入了帮派";
+        if (/^([\w\s]+) has joined the (faction|activity)$/.test(text)) {
+            let res = /^([\w\s]+) has joined the (faction|activity)$/.exec(text);
+            return res[1] + " 加入了" + dict(res[2]);
         }
         if (/^([\w\s]+) has left the faction$/.test(text)) {
             let res = /^([\w\s]+) has left the faction$/.exec(text);
@@ -6414,6 +7428,7 @@
         if (
             !text.toLowerCase().startsWith("crafting bench") &&
             !text.toLowerCase().startsWith("crafting bench upgrade") &&
+            !text.toLowerCase().startsWith("crafting skill level") &&
             /^Crafting (?!XP Gain)([\w\s-']+)$/.test(text)) {// 添加了(?!XP Gain)否定前瞻
             let res = /^Crafting (?!XP Gain)([\w\s-']+)$/.exec(text);// 同样添加否定前瞻
             return "正在制作" + dict(res[1]);
@@ -6429,8 +7444,10 @@
             let res = /^Forge ([\w\s-']+)$/.exec(text);
             return "锻造" + dict(res[1]);
         }
-        if (/^Forging (?!XP Gain)([\w\s-']+)$/.test(text)) {
-            let res = /^Forging (?!XP Gain)([\w\s-']+)$/.exec(text);
+        if (/^Forging (?!(XP Gain|skill)\b)([\w\s-']+)$/.test(text)) {
+            // 建议复用正则（避免重复书写，提升性能）
+            const reg = /^Forging (?!(XP Gain|skill)\b)([\w\s-']+)$/;
+            let res = reg.exec(text);
             return "正在锻造" + dict(res[1]);
         }
         if (/^Farm ([\w\s-']+)$/.test(text)) {
@@ -6495,7 +7512,11 @@
             let res = /^([\w\s-']+) stole (\d+)x ([\w\s-']+) and (\d+)x ([\w\s-']+) from ([\w\s-']+)$/.exec(text);
             return res[1] + "偷取了" + res[2] + "x" + dict(res[3]) + "&" + res[4] + "x" + dict(res[5]) + "自" + res[6];
         }
-
+        // txwl fired their Ak-47 at Choms and took 475
+        if (/^([\w\s-']+) fired their ([\w\s-']+) at ([\w\s-']+) and took (\d+)$/.test(text)) {
+            let res = /^([\w\s-']+) fired their ([\w\s-']+) at ([\w\s-']+) and took (\d+)$/.exec(text);
+            return res[1] + "使用了" + dict(res[2]) + "攻击" + res[3] + "并造成" + res[4];
+        }
 
         // 掛車 Remove Basic Cargo Rig
         // Are you sure you want to remove
@@ -6547,6 +7568,16 @@
             return "你在" + dict(res[1]) + "钓鱼获得了";
         }
 
+        // 技能升級
+        // Crafting skill level increased to 51!
+        // 技能等级提升匹配：提取技能名称（如 Mining）和等级数字（如 41）
+        if (/^([\w\s-']+) skill level increased to$/.test(text)) {
+            let res = /^([\w\s-']+) skill level increased to$/.exec(text);
+            const skillName = dict(res[1]); // 技能名称（如 Mining → 采矿）
+            // 保留末尾可能存在的 !，保持文本一致性
+            return `${skillName}技能等级提升至`;
+        }
+
         // 據點
         // Each Crafting Bench cost will be increased up to 10x per Crafting Bench
         // Each Furnace cost will be increased up to 10x per Furnace
@@ -6596,6 +7627,37 @@
             let res = /^You bought ([\d+])([\w\s-']+)$/.exec(text);
             return "你购买了 " + res[1] + dict(res[2]);
         }
+        // 1810 bought 1x Nails and you gained $11, your market listing has sold 1/10
+        /*
+        if (/^([\w\s-']+) bought (\d+)x ([\w\s-']+) and you gained \$(\d+), your market listing has sold (\d+)\/(\d+)$/.test(text)) {
+            let res = /^([\w\s-']+) bought (\d+)x ([\w\s-']+) and you gained \$(\d+), your market listing has sold (\d+)\/(\d+)$/.exec(text);
+            return res[1] + " 购买了 " + res[2] + "x " + dict(res[3]) + " , 你获得了$ " + res[4] + " , 你的市場上架已售出 " + res[5] + " / " + res[6] ;
+        }
+        */
+        // 兼容 "sold 1/10"（部分售出）和 "sold out"（全部售罄）两种格式
+        if (/^bought (\d+)x ([\w\s-']+) and you gained \$([\d,]+)\s*, your market listing has sold (?:(\d+)\/(\d+)|out)$/.test(text)) {
+            let res = /^bought (\d+)x ([\w\s-']+) and you gained \$([\d,]+)\s*, your market listing has sold (?:(\d+)\/(\d+)|out)$/.exec(text);
+            // 精准匹配翻译：部分售出显示 "数字/数字"，售罄显示 "已售罄"
+            let soldPart = res[4] && res[5] ? `${res[4]} / ${res[5]}` : "已售罄";
+            // 保留金额原格式（含千位分隔符）
+            return `有人购买了 ${res[1]}x ${dict(res[2])}，你获得了 $${res[3]}，你的市場上架${soldPart}`;
+        }
+
+        if (/^bought (\d+)x ([\w\s-']+) and you gained \$([\d,]+)\s*$/.test(text)) {
+            let res = /^bought (\d+)x ([\w\s-']+) and you gained \$([\d,]+)\s*$/.exec(text);
+            // 移除多余的 soldPart 逻辑（原文本无售出状态信息）
+            // 保留金额原格式（含千位分隔符）
+            return `购买了 ${res[1]}x ${dict(res[2])}，你获得了 $${res[3]}`;
+        }
+
+        if (/^your market listing has sold (?:(\d+)\/(\d+)|out)$/.test(text)) {
+            let res = /^your market listing has sold (?:(\d+)\/(\d+)|out)$/.exec(text);
+            // 精准区分：部分售出显示「数字/数字」，售罄显示「已售罄」
+            let soldPart = res[1] && res[2] ? `${res[1]}/${res[2]}` : "已售罄";
+            // 仅返回市场上架的售出状态
+            return `你的市场上架${soldPart}`;
+        }
+
 
         // 帮派
         if (/^Kick ([\w]+)$/.test(text)) {
@@ -6621,7 +7683,10 @@
         }
         if (/^Are you sure you want to join ([\w\s-']+)$/.test(text)) {
             let res = /^Are you sure you want to join ([\w\s-']+)$/.exec(text);
-            return "是否确定加入" + dict(res[1]);
+            // 移除捕获内容中的 "the " 或 " the "（不区分大小写，避免残留空格）
+            const cleanedText = res[1].replace(/\bthe\b\s*/gi, '').trim();
+            // 此时 cleanedText 为 "Farm"，再翻译
+            return "是否确定加入" + dict(cleanedText);
         }
         if (/^Brew ([\w\s-']+)$/.test(text)) {
             let res = /^Brew ([\w\s-']+)$/.exec(text);
@@ -6651,10 +7716,27 @@
             return "你有 " + res[1] + " 点技能点可用";
         }
 
+        // 住宅
+        if (/^Unlock at (\d+) sq ft$/.test(text)) {
+            let res = /^Unlock at (\d+) sq ft$/.exec(text);
+            return "达 " + res[1] + " 平方尺时解锁";
+        }
+
+        if (/^Expand your house to at least (\d+) sq ft to access$/.test(text)) {
+            let res = /^Expand your house to at least (\d+) sq ft to access$/.exec(text);
+            return "将房屋扩建至至少 " + res[1] + " 平方尺以解锁使用权限";
+        }
+
         // Active XX 分鐘前
         if (/^(\d+) minutes ago$/.test(text)) {
             let res = /^(\d+) minutes ago$/.exec(text);
             return res[1] + " 分钟前";
+        }
+
+        // 開局獎勵
+        if (/^Bound ([\w\s-']+)$/.test(text)) {
+            let res = /^Bound ([\w\s-']+)$/.exec(text);
+            return "奖励" + dict(res[1]);
         }
 
         // 消除后面空格

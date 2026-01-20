@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Enable Text Select and Copy
 // @namespace    RW5hYmxlIFRleHQgU2VsZWN0IGFuZCBDb3B5
-// @version      1.2
+// @version      1.3
 // @description  Enables text selection and copying on websites that block it using CSS or JavaScript.
 // @author       smed79
 // @license      GPLv3
@@ -11,6 +11,7 @@
 // @exclude      https://*.proton.me/*
 // @exclude      https://*.github.com/*
 // @exclude      https://github.com/*
+// @exclude      https://www.yggtorrent.*/engine/*
 // @grant        none
 // @downloadURL https://update.greasyfork.org/scripts/553917/Enable%20Text%20Select%20and%20Copy.user.js
 // @updateURL https://update.greasyfork.org/scripts/553917/Enable%20Text%20Select%20and%20Copy.meta.js
@@ -38,13 +39,28 @@
     'ondragstart'
   ];
 
-  // Inject global CSS override
+  // Inject global CSS override but exclude form controls and editable areas
   const style = document.createElement('style');
-  style.innerHTML = props.map(p => `* { ${p}: text !important; }`).join('\n');
+  style.innerHTML = props.map(p =>
+    `*:not(input):not(textarea):not(select):not(option):not(button):not([contenteditable="true"]) { ${p}: text !important; }`
+  ).join('\n');
   document.head.appendChild(style);
 
-  // Apply fixes to all elements
+  // Helper: check if element should be skipped
+  const shouldSkip = el => {
+    if (!el || !el.tagName) return false;
+    const tag = el.tagName;
+    if (['INPUT','TEXTAREA','SELECT','OPTION','BUTTON'].includes(tag)) return true;
+    if (el.hasAttribute('contenteditable') && el.getAttribute('contenteditable') !== 'false') return true;
+    if (el.getAttribute('role') === 'textbox' || el.getAttribute('role') === 'combobox') return true;
+    if (el.hasAttribute('aria-haspopup') || el.hasAttribute('aria-expanded')) return true;
+    return false;
+  };
+
+  // Apply fixes to elements
   const applyFixes = el => {
+    if (shouldSkip(el)) return;
+
     props.forEach(prop => {
       el.style?.setProperty?.(prop, 'text', 'important');
     });

@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         bilibili,B站去广告
-// @version      1.0
+// @version      1.1
 // @description  bilibili,B站,去广告,屏蔽视频投票打分三连弹窗,屏蔽小火箭推广视频,屏蔽直播主页顶部自动播放的直播,修改自ES ighl
 // @author       yier
 // @match        *://*.bilibili.com/*

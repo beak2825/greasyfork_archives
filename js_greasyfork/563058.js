@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Linux Do 自定义类别
 // @namespace    ddc/linux-do-custom-categories
-// @version      0.0.4
+// @version      0.0.5
 // @author       DDC(NaiveMagic)
 // @description  Linux Do Custom Categories
 // @license      MIT
@@ -25,11 +25,13 @@
   var _GM_unregisterMenuCommand = (() => typeof GM_unregisterMenuCommand != "undefined" ? GM_unregisterMenuCommand : void 0)();
   const STORAGE_KEY = "categoryGroups";
   const CATEGORY_METADATA_KEY = "categoryMetadataCache";
+  const CATEGORY_PATH_KEY = "categoryPathCache";
   const TAG_ICON_CACHE_KEY = "tagIconCache";
   const REQUEST_CONTROL_KEY = "requestControlSettings";
   const DEFAULT_REQUEST_CONTROL_SETTINGS = {
     concurrency: 5,
-    requestDelayMs: 200
+    requestDelayMs: 200,
+    maxRetryAttempts: 3
   };
   function normalizeInteger(value, fallback, minValue) {
     const numeric = typeof value === "number" ? value : typeof value === "string" ? Number(value) : Number.NaN;
@@ -50,6 +52,11 @@
         base.requestDelayMs,
         DEFAULT_REQUEST_CONTROL_SETTINGS.requestDelayMs,
         0
+      ),
+      maxRetryAttempts: normalizeInteger(
+        base.maxRetryAttempts,
+        DEFAULT_REQUEST_CONTROL_SETTINGS.maxRetryAttempts,
+        -1
       )
     };
   }
@@ -88,6 +95,12 @@
   function saveTagIconCache(cache) {
     _GM_setValue(TAG_ICON_CACHE_KEY, cache);
   }
+  function getCategoryPathCache() {
+    return _GM_getValue(CATEGORY_PATH_KEY, null);
+  }
+  function saveCategoryPathCache(cache) {
+    _GM_setValue(CATEGORY_PATH_KEY, cache);
+  }
   function getRequestControlSettings() {
     const stored = _GM_getValue(REQUEST_CONTROL_KEY, null);
     return normalizeRequestControlSettings(stored);
@@ -100,7 +113,199 @@
   function resetRequestControlSettings() {
     _GM_setValue(REQUEST_CONTROL_KEY, DEFAULT_REQUEST_CONTROL_SETTINGS);
   }
-  const MAX_RETRY_ATTEMPTS = 3;
+  function waitForElement(selector, timeout = 1e4) {
+    return new Promise((resolve, reject) => {
+      const el = document.querySelector(selector);
+      if (el) {
+        resolve(el);
+        return;
+      }
+      const observer = new MutationObserver(() => {
+        const el2 = document.querySelector(selector);
+        if (el2) {
+          observer.disconnect();
+          resolve(el2);
+        }
+      });
+      observer.observe(document.body, { childList: true, subtree: true });
+      setTimeout(() => {
+        observer.disconnect();
+        reject(new Error(`Timeout waiting for ${selector}`));
+      }, timeout);
+    });
+  }
+  function createEl(tag, attrs, children) {
+    const el = document.createElement(tag);
+    if (attrs) {
+      Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
+    }
+    if (children) {
+      el.append(...children);
+    }
+    return el;
+  }
+  const PROGRESS_STYLE_ID = "custom-category-fetch-progress-style";
+  const PROGRESS_ID = "custom-category-fetch-progress";
+  const VISIBLE_CLASS = "custom-category-fetch-progress--visible";
+  const ERROR_CLASS = "custom-category-fetch-progress--error";
+  const SUCCESS_CLASS = "custom-category-fetch-progress--success";
+  const HIDE_DELAY_MS = 2400;
+  const HIDE_DELAY_MS_FAILURE = 5e3;
+  const NOOP_TRACKER = {
+    markSuccess: () => void 0,
+    markFailure: () => void 0,
+    finish: () => void 0
+  };
+  let hideTimeoutId = null;
+  function clearHideTimeout() {
+    if (hideTimeoutId === null) {
+      return;
+    }
+    window.clearTimeout(hideTimeoutId);
+    hideTimeoutId = null;
+  }
+  function ensureProgressStyles() {
+    if (document.getElementById(PROGRESS_STYLE_ID)) {
+      return;
+    }
+    const styles = `
+    #${PROGRESS_ID} {
+      position: fixed;
+      top: 12px;
+      right: 12px;
+      z-index: 1100;
+      max-width: calc(100vw - 24px);
+      padding: 6px 10px;
+      border-radius: 8px;
+      background: rgba(20, 20, 20, 0.45);
+      color: #f5f5f5;
+      font-size: 12px;
+      line-height: 1.4;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.16);
+      opacity: 0;
+      transform: translateY(-6px);
+      transition: opacity 0.2s ease, transform 0.2s ease, background 0.2s ease;
+      pointer-events: none;
+    }
+
+    #${PROGRESS_ID}.${VISIBLE_CLASS} {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    #${PROGRESS_ID}.${ERROR_CLASS} {
+      background: rgba(230, 80, 80, 0.22);
+      color: #4b1717;
+      box-shadow: 0 6px 16px rgba(230, 80, 80, 0.12);
+    }
+
+    #${PROGRESS_ID}.${SUCCESS_CLASS} {
+      background: rgba(70, 170, 110, 0.22);
+      color: #10341f;
+      box-shadow: 0 6px 16px rgba(70, 170, 110, 0.12);
+    }
+  `;
+    const styleEl = createEl("style", { id: PROGRESS_STYLE_ID }, [styles]);
+    document.head.appendChild(styleEl);
+  }
+  function ensureProgressElement() {
+    ensureProgressStyles();
+    const existing = document.getElementById(PROGRESS_ID);
+    if (existing instanceof HTMLDivElement) {
+      return existing;
+    }
+    const el = createEl("div", {
+      id: PROGRESS_ID,
+      role: "status",
+      "aria-live": "polite"
+    });
+    document.body.appendChild(el);
+    return el;
+  }
+  function updateProgressText(element, state2) {
+    element.textContent = `拉取中 ${state2.success}/${state2.total}`;
+  }
+  function updateFinalText(element, state2) {
+    if (state2.failed > 0) {
+      element.textContent = `拉取到 ${state2.success}/${state2.total} 种类别，${state2.failed} 条失败`;
+      return;
+    }
+    element.textContent = `拉取完成，共 ${state2.success} 种类别`;
+  }
+  function showProgress(element) {
+    element.classList.add(VISIBLE_CLASS);
+  }
+  function hideProgress(element) {
+    element.classList.remove(VISIBLE_CLASS);
+  }
+  function clampToTotal(value, total) {
+    if (value < 0) {
+      return 0;
+    }
+    return Math.min(value, total);
+  }
+  function startFetchProgress(total) {
+    if (total <= 0) {
+      return NOOP_TRACKER;
+    }
+    const state2 = {
+      total,
+      success: 0,
+      failed: 0,
+      done: false
+    };
+    const element = ensureProgressElement();
+    clearHideTimeout();
+    element.classList.remove(ERROR_CLASS);
+    element.classList.remove(SUCCESS_CLASS);
+    updateProgressText(element, state2);
+    showProgress(element);
+    const advance = (failed) => {
+      if (state2.done) {
+        return;
+      }
+      if (failed) {
+        state2.failed = clampToTotal(state2.failed + 1, state2.total);
+      } else {
+        state2.success = clampToTotal(state2.success + 1, state2.total);
+      }
+      updateProgressText(element, state2);
+      showProgress(element);
+    };
+    return {
+      markSuccess: () => advance(false),
+      markFailure: () => advance(true),
+      finish: (options) => {
+        if (state2.done) {
+          return;
+        }
+        state2.done = true;
+        clearHideTimeout();
+        if (options?.aborted) {
+          hideProgress(element);
+          element.classList.remove(ERROR_CLASS);
+          element.classList.remove(SUCCESS_CLASS);
+          return;
+        }
+        const hasFailed = state2.failed > 0;
+        if (hasFailed) {
+          element.classList.add(ERROR_CLASS);
+          element.classList.remove(SUCCESS_CLASS);
+        } else {
+          element.classList.remove(ERROR_CLASS);
+          element.classList.add(SUCCESS_CLASS);
+        }
+        updateFinalText(element, state2);
+        showProgress(element);
+        hideTimeoutId = window.setTimeout(
+          () => {
+            hideProgress(element);
+          },
+          hasFailed ? HIDE_DELAY_MS_FAILURE : HIDE_DELAY_MS
+        );
+      }
+    };
+  }
   const RETRY_BASE_DELAY_MS = 600;
   const HIERARCHICAL_CATEGORY_ENDPOINT = "https://linux.do/categories/hierarchical_search?term=";
   const HIERARCHICAL_CATEGORY_BATCH_SIZE = 4;
@@ -111,6 +316,8 @@
   let hierarchicalCategoryPromise = null;
   let hierarchicalCategoryCacheUpdatedAt = null;
   let prefetchTimeoutId = null;
+  const categoryPathCache = new Map();
+  let categoryPathCacheLoaded = false;
   function createAbortError() {
     return new DOMException("Aborted", "AbortError");
   }
@@ -154,6 +361,9 @@
   function isRetryableStatus(status) {
     return status === 429 || status === 403;
   }
+  function canRetry(attempt, maxRetryAttempts) {
+    return maxRetryAttempts < 0 || attempt < maxRetryAttempts;
+  }
   function getCsrfToken() {
     const meta = document.querySelector('meta[name="csrf-token"]');
     return meta?.content ?? null;
@@ -164,6 +374,67 @@
       map.set(category.id, category);
     });
     return map;
+  }
+  function loadCategoryPathCache() {
+    if (categoryPathCacheLoaded) {
+      return;
+    }
+    categoryPathCacheLoaded = true;
+    const stored = getCategoryPathCache();
+    if (!stored || typeof stored.updatedAt !== "number" || !stored.paths) {
+      return;
+    }
+    Object.entries(stored.paths).forEach(([key, value]) => {
+      const id = Number(key);
+      if (Number.isFinite(id) && value) {
+        categoryPathCache.set(id, value);
+      }
+    });
+  }
+  function persistCategoryPathCache() {
+    const paths = {};
+    categoryPathCache.forEach((value, key) => {
+      paths[String(key)] = value;
+    });
+    const updatedAt = Date.now();
+    saveCategoryPathCache({ updatedAt, paths });
+  }
+  function extractCategoryBasePath(url, categoryId) {
+    try {
+      const parsed = new URL(url, window.location.origin);
+      const path = parsed.pathname;
+      if (!path.startsWith("/c/")) {
+        return null;
+      }
+      const match = path.match(/\/(\d+)(?:\.json)?$/);
+      if (!match) {
+        return null;
+      }
+      if (Number(match[1]) !== categoryId) {
+        return null;
+      }
+      return path.replace(/\.json$/, "");
+    } catch (error) {
+      return null;
+    }
+  }
+  function updateCategoryPathCache(categoryId, url) {
+    const resolvedPath = extractCategoryBasePath(url, categoryId);
+    if (!resolvedPath) {
+      return;
+    }
+    const current = categoryPathCache.get(categoryId);
+    if (current !== resolvedPath) {
+      categoryPathCache.set(categoryId, resolvedPath);
+      persistCategoryPathCache();
+    }
+  }
+  function buildCategoryTopicsUrl(categoryId, page) {
+    loadCategoryPathCache();
+    const cachedPath = categoryPathCache.get(categoryId);
+    const basePath = cachedPath ?? `/c/${categoryId}`;
+    const suffix = page === 0 ? "" : `?page=${page}`;
+    return `${window.location.origin}${basePath}.json${suffix}`;
   }
   function loadCategoryMetadataCache() {
     if (hierarchicalCategoryCache) {
@@ -258,7 +529,7 @@
       description_text: incoming.description_text ?? base.description_text
     };
   }
-  async function fetchHierarchicalCategoryPage(page, signal) {
+  async function fetchHierarchicalCategoryPage(page, signal, maxRetryAttempts = getRequestControlSettings().maxRetryAttempts) {
     const url = `${HIERARCHICAL_CATEGORY_ENDPOINT}&page=${page}`;
     const headers = {
       Accept: "application/json, text/javascript, */*; q=0.01",
@@ -268,7 +539,8 @@
     if (csrfToken) {
       headers["X-CSRF-Token"] = csrfToken;
     }
-    for (let attempt = 0; attempt <= MAX_RETRY_ATTEMPTS; attempt += 1) {
+    let attempt = 0;
+    while (true) {
       if (signal?.aborted) {
         throw createAbortError();
       }
@@ -282,29 +554,31 @@
           const data = await response.json();
           return data.categories ?? [];
         }
-        if (!isRetryableStatus(response.status) || attempt === MAX_RETRY_ATTEMPTS) {
+        if (!isRetryableStatus(response.status) || !canRetry(attempt, maxRetryAttempts)) {
           console.warn(`Failed to fetch hierarchical categories: ${response.status}`);
           return [];
         }
         const retryAfter = parseRetryAfter(response.headers.get("Retry-After"));
         const backoffMs = retryAfter ?? RETRY_BASE_DELAY_MS * Math.pow(2, attempt);
+        attempt += 1;
         await delay(backoffMs, signal);
       } catch (error) {
         if (isAbortError$1(error)) {
           throw error;
         }
-        if (attempt === MAX_RETRY_ATTEMPTS) {
+        if (!canRetry(attempt, maxRetryAttempts)) {
           console.warn("Failed to fetch hierarchical categories:", error);
           return [];
         }
         const backoffMs = RETRY_BASE_DELAY_MS * Math.pow(2, attempt);
+        attempt += 1;
         await delay(backoffMs, signal);
       }
     }
-    return [];
   }
   async function fetchHierarchicalCategories(signal, options) {
     const cached = loadCategoryMetadataCache();
+    const maxRetryAttempts = getRequestControlSettings().maxRetryAttempts;
     const nowMs = Date.now();
     const hasCache = cached.map && cached.updatedAt !== null;
     const updatedAt = cached.updatedAt ?? 0;
@@ -328,7 +602,9 @@
           (_, index) => page + index
         );
         const results = await Promise.all(
-          pages.map((targetPage) => fetchHierarchicalCategoryPage(targetPage, signal))
+          pages.map(
+            (targetPage) => fetchHierarchicalCategoryPage(targetPage, signal, maxRetryAttempts)
+          )
         );
         let shouldStop = false;
         results.forEach((list) => {
@@ -400,37 +676,42 @@
       window.addEventListener("load", schedule, { once: true });
     }
   }
-  async function fetchCategoryTopics(categoryId, page = 0, signal) {
-    const url = page === 0 ? `https://linux.do/c/${categoryId}.json` : `https://linux.do/c/${categoryId}.json?page=${page}`;
-    for (let attempt = 0; attempt <= MAX_RETRY_ATTEMPTS; attempt += 1) {
+  async function fetchCategoryTopics(categoryId, page = 0, signal, maxRetryAttempts = getRequestControlSettings().maxRetryAttempts) {
+    const url = buildCategoryTopicsUrl(categoryId, page);
+    let attempt = 0;
+    while (true) {
       if (signal?.aborted) {
         throw createAbortError();
       }
       try {
         const response = await fetch(url, { signal });
+        if (response.redirected) {
+          updateCategoryPathCache(categoryId, response.url);
+        }
         if (response.ok) {
           return response.json();
         }
-        if (!isRetryableStatus(response.status) || attempt === MAX_RETRY_ATTEMPTS) {
+        if (!isRetryableStatus(response.status) || !canRetry(attempt, maxRetryAttempts)) {
           console.warn(`Failed to fetch category ${categoryId}: ${response.status}`);
           return null;
         }
         const retryAfter = parseRetryAfter(response.headers.get("Retry-After"));
         const backoffMs = retryAfter ?? RETRY_BASE_DELAY_MS * Math.pow(2, attempt);
+        attempt += 1;
         await delay(backoffMs, signal);
       } catch (error) {
         if (isAbortError$1(error)) {
           throw error;
         }
-        if (attempt === MAX_RETRY_ATTEMPTS) {
+        if (!canRetry(attempt, maxRetryAttempts)) {
           console.warn(`Failed to fetch category ${categoryId}:`, error);
           return null;
         }
         const backoffMs = RETRY_BASE_DELAY_MS * Math.pow(2, attempt);
+        attempt += 1;
         await delay(backoffMs, signal);
       }
     }
-    return null;
   }
   async function fetchMergedTopics(categoryIds, pageOffsets = new Map(), signal) {
     const users = new Map();
@@ -441,6 +722,8 @@
     const cachedMetadata = loadCategoryMetadataCache();
     const requestSettings = getRequestControlSettings();
     const requestDelayMs = requestSettings.requestDelayMs;
+    const maxRetryAttempts = requestSettings.maxRetryAttempts;
+    const progress = startFetchProgress(categoryIds.length);
     let nextIndex = 0;
     const worker = async () => {
       while (true) {
@@ -454,7 +737,15 @@
         nextIndex += 1;
         const categoryId = categoryIds[index];
         const page = pageOffsets.get(categoryId) ?? 0;
-        const response = await fetchCategoryTopics(categoryId, page, signal);
+        let response = null;
+        try {
+          response = await fetchCategoryTopics(categoryId, page, signal, maxRetryAttempts);
+        } catch (error) {
+          if (isAbortError$1(error)) {
+            throw error;
+          }
+          console.warn(`Failed to fetch category ${categoryId}:`, error);
+        }
         if (response) {
           response.users.forEach((u) => users.set(u.id, u));
           allTopics.push(...response.topic_list.topics);
@@ -476,6 +767,9 @@
             hasMore = true;
             newOffsets.set(categoryId, page + 1);
           }
+          progress.markSuccess();
+        } else {
+          progress.markFailure();
         }
         if (requestDelayMs > 0) {
           await delay(requestDelayMs, signal);
@@ -484,7 +778,17 @@
     };
     const concurrency = Math.min(requestSettings.concurrency, categoryIds.length);
     const workers = Array.from({ length: concurrency }, () => worker());
-    await Promise.all(workers);
+    try {
+      await Promise.all(workers);
+    } catch (error) {
+      if (isAbortError$1(error)) {
+        progress.finish({ aborted: true });
+        throw error;
+      }
+      progress.finish();
+      throw error;
+    }
+    progress.finish();
     if (cachedMetadata.map) {
       cachedMetadata.map.forEach((category, id) => {
         categories.set(id, mergeCategoryInfo(categories.get(id), category));
@@ -693,37 +997,6 @@
     } else {
       window.addEventListener("load", schedule, { once: true });
     }
-  }
-  function waitForElement(selector, timeout = 1e4) {
-    return new Promise((resolve, reject) => {
-      const el = document.querySelector(selector);
-      if (el) {
-        resolve(el);
-        return;
-      }
-      const observer = new MutationObserver(() => {
-        const el2 = document.querySelector(selector);
-        if (el2) {
-          observer.disconnect();
-          resolve(el2);
-        }
-      });
-      observer.observe(document.body, { childList: true, subtree: true });
-      setTimeout(() => {
-        observer.disconnect();
-        reject(new Error(`Timeout waiting for ${selector}`));
-      }, timeout);
-    });
-  }
-  function createEl(tag, attrs, children) {
-    const el = document.createElement(tag);
-    if (attrs) {
-      Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
-    }
-    if (children) {
-      el.append(...children);
-    }
-    return el;
   }
   const ADD_BTN_ID = "custom-category-add-btn";
   const TITLE_TEXT_CLASS = "custom-category-title-text";
@@ -2463,6 +2736,7 @@
   const MENU_IDS = {
     concurrency: "custom-category-request-concurrency",
     delay: "custom-category-request-delay",
+    retry: "custom-category-request-retry",
     reset: "custom-category-request-reset"
   };
   function unregisterMenuCommand(id) {
@@ -2487,6 +2761,31 @@
       return null;
     }
     return Math.max(minValue, Math.round(parsed));
+  }
+  function promptForRetryAttempts(label, currentValue) {
+    const input = window.prompt(`${label} (-1 表示无限)`, String(currentValue));
+    if (input === null) {
+      return null;
+    }
+    const trimmed = input.trim();
+    if (!trimmed) {
+      window.alert("请输入有效数字");
+      return null;
+    }
+    const parsed = Number(trimmed);
+    if (!Number.isFinite(parsed)) {
+      window.alert("请输入有效数字");
+      return null;
+    }
+    const rounded = Math.round(parsed);
+    if (rounded < -1) {
+      window.alert("请输入 -1 或非负整数");
+      return null;
+    }
+    return rounded;
+  }
+  function formatRetryAttempts(value) {
+    return value < 0 ? "无限" : String(value);
   }
   function refreshMenuCommands() {
     Object.values(MENU_IDS).forEach((id) => unregisterMenuCommand(id));
@@ -2534,6 +2833,28 @@
       }
     );
     _GM_registerMenuCommand(
+      `设置最大重试次数 (当前: ${formatRetryAttempts(settings.maxRetryAttempts)})`,
+      () => {
+        const currentSettings = getRequestControlSettings();
+        const nextValue = promptForRetryAttempts(
+          "请输入最大重试次数",
+          currentSettings.maxRetryAttempts
+        );
+        if (nextValue === null || nextValue === currentSettings.maxRetryAttempts) {
+          return;
+        }
+        saveRequestControlSettings({
+          ...currentSettings,
+          maxRetryAttempts: nextValue
+        });
+        refreshMenuCommands();
+      },
+      {
+        id: MENU_IDS.retry,
+        title: "设置失败重试上限，-1 表示无限重试"
+      }
+    );
+    _GM_registerMenuCommand(
       "重置请求设置",
       () => {
         resetRequestControlSettings();
@@ -2541,7 +2862,7 @@
       },
       {
         id: MENU_IDS.reset,
-        title: `恢复默认：并发 ${DEFAULT_REQUEST_CONTROL_SETTINGS.concurrency}，间隔 ${DEFAULT_REQUEST_CONTROL_SETTINGS.requestDelayMs} ms`
+        title: `恢复默认：并发 ${DEFAULT_REQUEST_CONTROL_SETTINGS.concurrency}，间隔 ${DEFAULT_REQUEST_CONTROL_SETTINGS.requestDelayMs} ms，重试 ${formatRetryAttempts(DEFAULT_REQUEST_CONTROL_SETTINGS.maxRetryAttempts)}`
       }
     );
   }
