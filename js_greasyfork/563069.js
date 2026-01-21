@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         C6 直播辅助
 // @namespace    ui-preview-enhanced
-// @version      1.1.2
+// @version      1.2.9527
 // @match        *://*/*
 // @description  C6 直播辅助+盘口助手+直播助手
 // @grant        GM_setClipboard
@@ -16,7 +16,7 @@
     'use strict';
 
     /* ==========================================================================
-       1. CONFIGURATION & CONSTANTS
+       1. CONFIGURATION (配置常量)
        ========================================================================== */
     const CONFIG = {
         HOURS_LIMIT: 24, // 抓取时效限制
@@ -37,12 +37,13 @@
         },
         WORDS: {
             FINISHED: ['完', '完结', '结束'],
+            // 明确的走盘/无效词汇
             VOIDED: ['走', '走盘']
         }
     };
 
     /* ==========================================================================
-       2. GLOBAL STATE
+       2. GLOBAL STATE (全局状态)
        ========================================================================== */
     const State = {
         panel: null,
@@ -64,11 +65,14 @@
     };
 
     /* ==========================================================================
-       3. UTILITIES (Helpers)
+       3. UTILITIES (通用工具函数)
        ========================================================================== */
     function loadData(key, def) {
-        try { return JSON.parse(localStorage.getItem(key)) || def; }
-        catch (e) { return def; }
+        try {
+            return JSON.parse(localStorage.getItem(key)) || def;
+        } catch (e) {
+            return def;
+        }
     }
 
     function saveData(key, val) {
@@ -80,27 +84,43 @@
         return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     }
 
-    /**
-     * Parse various time string formats into a Date object
-     */
+    function generateUUID() {
+        if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+            return crypto.randomUUID();
+        }
+        // Fallback for older environments or non-secure contexts
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    }
+
+    // --- Time Parsing Utils ---
+
     function parseTimeStr(str) {
         if (!str) return null;
         str = str.trim();
         const now = new Date();
 
-        // Format HH:mm
+        // Format HH:mm (自动补全为当天)
         if (/^\d{1,2}:\d{1,2}$/.test(str)) {
             const parts = str.split(':');
             const d = new Date();
             d.setHours(parseInt(parts[0]), parseInt(parts[1]), 0, 0);
             return d;
         }
-        // Format MM-DD HH:mm
+        // Format MM-DD HH:mm (自动补全为当年)
         if (/^\d{1,2}-\d{1,2}\s+\d{1,2}:\d{1,2}$/.test(str)) {
-            return new Date(`${now.getFullYear()}-${str}`);
+            // 补全年份并替换横杠，兼容手机
+            const year = now.getFullYear();
+            const safeStr = `${year}-${str}`.replace(/-/g, '/');
+            return new Date(safeStr);
         }
-        // Full Date string
-        const d = new Date(str);
+
+        // Full Date string (YYYY-MM-DD HH:mm)
+        // 核心修复：把所有 "-" 替换为 "/"，解决 Mobile Safari Invalid Date 问题
+        const safeStr = str.replace(/-/g, '/');
+        const d = new Date(safeStr);
         return isNaN(d.getTime()) ? null : d;
     }
 
@@ -113,15 +133,194 @@
         return null;
     }
 
-    /**
-     * Extracts the content of the first bracket in a title.
-     * e.g. "[Round1] League" -> "Round1"
-     */
+    function getNextDayMidnightStr(deadlineTs) {
+        const d = deadlineTs ? new Date(deadlineTs) : new Date();
+        d.setDate(d.getDate() + 1);
+        d.setHours(0, 0, 0, 0);
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${y}-${m}-${day} 00:00`;
+    }
+
+    function normalizeStartTime(str) {
+        if (!str) return '';
+        let s = str.trim();
+        s = s.replace(/：/g, ':').replace(/[．。]/g, '.');
+        s = s.replace(/(\d{4}-\d{2}-\d{2})\s+(\d{2})(\d{2})$/, (_, d, h, m) => `${d} ${h}:${m}`);
+        s = s.replace(/(\d{4}-\d{2}-\d{2})\s+(\d{1,2})[:.](\d{1,2})$/, (_, d, h, m) => `${d} ${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`);
+        return s;
+    }
+
+    function isValidStartTimeStrict(str) {
+        return /^\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}$/.test(str);
+    }
+
+    // --- String/Title Utils ---
+
     function extractFirstBracket(title) {
         if (!title) return '';
         const m = title.match(/^\s*\[([^\]]+)\]/);
         return m ? m[1] : '';
     }
+
+    function extractTitleBrackets(title) {
+        if (!title) return '';
+        const all = title.match(/\[[^\]]+]/g) || [];
+        if (!all.length) return '';
+        // 标题含“场次 / 場次” → 取前两个 []
+        if (/[场次|場次]/.test(title) && all.length >= 2) {
+            return all[0] + all[1];
+        }
+        return all[0];
+    }
+
+    function fetchRandomPoem() {
+        return new Promise(resolve => {
+            GM_xmlhttpRequest({
+                method: 'GET',
+                url: 'https://v1.jinrishici.com/rensheng.txt',
+                onload: res => {
+                    const text = (res.responseText || '').trim();
+                    resolve(text.replace(/\s+/g, ' '));
+                },
+                onerror: () => resolve('')
+            });
+        });
+    }
+
+    /* ==========================================================================
+       4. CORE LOGIC (核心业务逻辑)
+       ========================================================================== */
+
+    /**
+     * 计算比赛状态：自动/手动/走盘/已完结/未开赛
+     */
+    function calcMatchStatus(m) {
+        // 如果人工手动把状态设为 走盘，尊重人工设置
+        if (m.status === '走盘') return '走盘';
+
+        const now = Date.now();
+        const startTime = parseTimeStr(m.startTime);
+        const started = !!(startTime && now >= startTime.getTime());
+        const rawProgress = (m.progress || '').trim();
+        const progress = rawProgress || '';
+        const urlStat = (m.scoreUrlStatus || '').trim();
+        const manualTouched = m._manualProgress || m._manualScore || m._manualResult;
+
+        const norm = s => (s == null ? '' : String(s).trim());
+        const eqIgnoreCase = (a, b) => norm(a).toLowerCase() === norm(b).toLowerCase();
+        const isExact = (val, arr) => {
+            if (!val) return false;
+            for (const x of (arr || [])) {
+                if (eqIgnoreCase(val, x)) return true;
+            }
+            return false;
+        };
+
+        // 1) 走盘 —— 进度词匹配 VOIDED
+        if (isExact(progress, CONFIG.WORDS.VOIDED)) return '走盘';
+        // 2) 已完结 —— 进度词匹配 FINISHED
+        if (isExact(progress, CONFIG.WORDS.FINISHED)) return '已完结';
+        // 3) 未开赛
+        if (!startTime || !started) return '未开赛';
+        // 4) 手动干预或地址异常
+        if (manualTouched || !urlStat || /失败|异常|error/i.test(urlStat)) return '手动';
+        // 5) 自动
+        return '自动';
+    }
+
+    /**
+     * 根据比分和盘口计算赛果
+     */
+    function autoBuildResult(m) {
+        if (!m) return '';
+        if (m.status === '走盘') return '走盘';
+        if (m.homeScore === '' || m.awayScore === '' || m.homeScore == null || m.awayScore == null) return '';
+
+        const hs = Number(m.homeScore);
+        const as = Number(m.awayScore);
+        if (isNaN(hs) || isNaN(as)) return '';
+
+        const leagueText = m.league || '';
+        const pk = String(m.handicap || '').trim();
+
+        // 逻辑A: 大小球逻辑
+        if (/总分|大小球|大小/.test(leagueText) && /^(\d+(\.\d+)?)(\/\d+(\.\d+)?)?$/.test(pk)) {
+            const total = hs + as;
+            const parts = pk.includes('/') ? pk.split('/').map(Number) : [Number(pk)];
+            const bigTeam = m.home || '大球';
+            const smallTeam = m.away || '小球';
+            const bigOdds = m.homeOdd ? `[${m.homeOdd}] ` : '';
+            const smallOdds = m.awayOdd ? `[${m.awayOdd}] ` : '';
+
+            let bigWin = 0, smallWin = 0;
+            parts.forEach(p => {
+                if (total > p) bigWin++;
+                else if (total < p) smallWin++;
+            });
+
+            if (bigWin === 0 && smallWin === 0) return '走盘';
+            if (bigWin > smallWin) return `${bigOdds}${bigTeam}${bigWin < parts.length ? '（赢半）' : ''}`;
+            if (smallWin > bigWin) return `${smallOdds}${smallTeam}${smallWin < parts.length ? '（赢半）' : ''}`;
+            return '';
+        }
+
+        // 逻辑B: 让球逻辑
+        return judgeHandicapResultWithHalf(m, hs, as);
+    }
+
+    function judgeHandicapResultWithHalf(m, hs, as) {
+        const line = String(m.handicap || '').trim();
+        if (!line) return '';
+
+        const homeTeam = m.home || '';
+        const awayTeam = m.away || '';
+        const homeOdds = m.homeOdd ? `[${m.homeOdd}] ` : '';
+        const awayOdds = m.awayOdd ? `[${m.awayOdd}] ` : '';
+        const isHomeGive = line.startsWith('-');
+
+        const raw = line.replace(/[+-]/g, '');
+        const parts = raw.includes('/') ? raw.split('/').map(Number) : [Number(raw)];
+
+        let homeWin = 0, awayWin = 0;
+        parts.forEach(p => {
+            const adj = isHomeGive ? -p : p;
+            const diff = (hs - as) + adj;
+            if (diff > 0) homeWin++;
+            else if (diff < 0) awayWin++;
+        });
+
+        if (homeWin === 0 && awayWin === 0) return '走盘';
+        if (homeWin > awayWin) {
+            const half = homeWin < parts.length;
+            return `${homeOdds}${homeTeam}${half ? '（赢半）' : ''}`;
+        }
+        if (awayWin > homeWin) {
+            const half = awayWin < parts.length;
+            return `${awayOdds}${awayTeam}${half ? '（赢半）' : ''}`;
+        }
+        return '';
+    }
+
+    function resultChar(m) {
+        // 用于生成标题的简短结果符
+        if (m.status === '走盘') return '走';
+        if (m.status === '已完结') {
+            let r = (m.result || autoBuildResult(m) || '').trim();
+            if (!r) return '*';
+            const isHalf = /赢半/.test(r);
+            const clean = r.replace(/（.*?）/g, ''); // 去掉括号，避免干扰
+            if (m.home && clean.includes(m.home)) return isHalf ? '主(半)' : '主';
+            if (m.away && clean.includes(m.away)) return isHalf ? '客(半)' : '客';
+            return '*';
+        }
+        return '*';
+    }
+
+    /* ==========================================================================
+       5. DATA & NETWORK (数据抓取与解析)
+       ========================================================================== */
 
     function fetchRawHTML(url) {
         return new Promise((resolve, reject) => {
@@ -141,12 +340,6 @@
             });
         });
     }
-
-    /* ==========================================================================
-       4. CORE LOGIC (Parsing & Status Calculation)
-       ========================================================================== */
-
-    // --- Scrapers ---
 
     function extractTidsFromTodayHTML(html) {
         const doc = new DOMParser().parseFromString(html, 'text/html');
@@ -189,62 +382,6 @@
         return list;
     }
 
-    function extractMatchTableFromHTML(html, title) {
-        const doc = new DOMParser().parseFromString(html, 'text/html');
-        const contentDiv = doc.querySelector('#conttpc');
-        if (!contentDiv) return [];
-
-        const rows = Array.from(contentDiv.querySelectorAll('table tr')).filter(tr => !tr.querySelector('td[colspan]'));
-        if (rows.length === 0) return [];
-
-        const headerTds = rows[0].querySelectorAll('td');
-        const idx = { lm: -1, time: -1, ta: -1, pk: -1, tb: -1 };
-
-        headerTds.forEach((td, i) => {
-            const text = td.textContent.trim();
-            if (CONFIG.REGEX.LM.test(text)) idx.lm = i;
-            else if (CONFIG.REGEX.TIME.test(text)) idx.time = i;
-            else if (CONFIG.REGEX.HOME.test(text)) idx.ta = i;
-            else if (CONFIG.REGEX.HANDICAP.test(text)) idx.pk = i;
-            else if (CONFIG.REGEX.AWAY.test(text)) idx.tb = i;
-        });
-
-        if (idx.ta === -1 || idx.tb === -1) return [];
-
-        const parseTeamCell = (rawText) => {
-            const m = rawText.match(/^\[([\d\.]+)\](.*)$/);
-            return m ? { odd: m[1], name: m[2].trim() } : { odd: '', name: rawText };
-        };
-
-        const result = [];
-        for (let i = 1; i < rows.length; i++) {
-            const tds = rows[i].querySelectorAll('td');
-            if (tds.length < 3) continue;
-
-            const league = idx.lm > -1 && tds[idx.lm] ? tds[idx.lm].textContent.trim() : '';
-            const rawTime = idx.time > -1 && tds[idx.time] ? tds[idx.time].textContent.trim() : '';
-            const homeRaw = idx.ta > -1 && tds[idx.ta] ? tds[idx.ta].textContent.trim() : '';
-            const handicap = idx.pk > -1 && tds[idx.pk] ? tds[idx.pk].textContent.trim() : '';
-            const awayRaw = idx.tb > -1 && tds[idx.tb] ? tds[idx.tb].textContent.trim() : '';
-
-            if (!homeRaw && !league) continue;
-            const homeObj = parseTeamCell(homeRaw);
-            const awayObj = parseTeamCell(awayRaw);
-
-            result.push({
-                league: league,
-                home: homeObj.name, homeOdd: homeObj.odd,
-                handicap: handicap,
-                away: awayObj.name, awayOdd: awayObj.odd,
-                startTime: rawTime,
-                status: '未开赛',
-                _isManual: false,
-                roundTag: extractFirstBracket(title) // Initialize Tag
-            });
-        }
-        return result;
-    }
-
     function parseReadPageMeta(html) {
         const doc = new DOMParser().parseFromString(html, 'text/html');
         const meta = { title: '', author: '', deadline: null };
@@ -262,164 +399,243 @@
         return meta;
     }
 
-    // --- Status & Result Logic ---
+    function extractRawTablesFromHTML(html) {
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        const contentDiv = doc.querySelector('#conttpc');
+        if (!contentDiv) return [];
 
-    function calcMatchStatus(m) {
-        if (m.status === '走盘' || m.result === '走盘') return '走盘';
+        const tables = Array.from(contentDiv.querySelectorAll('table'));
+        const rawTables = [];
 
-        const now = Date.now();
-        const startTime = parseTimeStr(m.startTime);
-        const started = !!(startTime && now >= startTime.getTime());
-        const progress = (m.progress || '').trim();
-        const result = (m.result || '').trim();
-        const urlStat = (m.scoreUrlStatus || '').trim();
-        const manualTouched = m._manualProgress || m._manualScore || m._manualResult;
-        const isExact = (val, arr) => arr.includes(val);
+        tables.forEach((table, tableIndex) => {
+            const trs = Array.from(table.querySelectorAll('tr'))
+                .filter(tr => !tr.querySelector('td[colspan]'));
+            if (trs.length < 2) return;
 
-        // 1. Void
-        if (isExact(progress, CONFIG.WORDS.VOIDED) || isExact(result, CONFIG.WORDS.VOIDED)) return '走盘';
-        // 2. Finished
-        if (result !== '' || isExact(progress, CONFIG.WORDS.FINISHED)) return '已完结';
-        // 3. Not Started
-        if (!startTime || !started) return '未开赛';
-        // 4. Manual Intervention needed
-        if (manualTouched || !urlStat || /失败|异常|error/i.test(urlStat)) return '手动';
-        // 5. Auto
-        return '自动';
-    }
-
-    function autoBuildResult(m) {
-        if (m.status === '走盘') return '走盘';
-        if (!m || m.status !== '已完结') return '';
-        if (m.homeScore === '' || m.awayScore === '' || m.homeScore == null || m.awayScore == null) return '';
-
-        const hs = Number(m.homeScore);
-        const as = Number(m.awayScore);
-        if (isNaN(hs) || isNaN(as)) return '';
-
-        const leagueText = m.league || '';
-        const pk = String(m.handicap || '').trim();
-
-        // Type A: Over/Under
-        if (/总分|大小球|大小/.test(leagueText) && /^(\d+(\.\d+)?)(\/\d+(\.\d+)?)?$/.test(pk)) {
-            const total = hs + as;
-            const parts = pk.includes('/') ? pk.split('/').map(Number) : [Number(pk)];
-            const bigTeam = m.home || '大球';
-            const smallTeam = m.away || '小球';
-            const bigOdds = m.homeOdd ? `[${m.homeOdd}] ` : '';
-            const smallOdds = m.awayOdd ? `[${m.awayOdd}] ` : '';
-
-            let bigWin = 0, smallWin = 0;
-            parts.forEach(p => {
-                if (total > p) bigWin++;
-                else if (total < p) smallWin++;
+            // 表头
+            const headerTds = Array.from(trs[0].querySelectorAll('td'));
+            const headers = headerTds.map((td, i) => {
+                const text = td.textContent.replace(/\s+/g, '').trim();
+                let role = null;
+                if (CONFIG.REGEX.LM.test(text)) role = 'league';
+                else if (CONFIG.REGEX.TIME.test(text)) role = 'time';
+                else if (CONFIG.REGEX.HOME.test(text)) role = 'home';
+                else if (CONFIG.REGEX.HANDICAP.test(text)) role = 'handicap';
+                else if (CONFIG.REGEX.AWAY.test(text)) role = 'away';
+                return { index: i, text, role };
             });
 
-            if (bigWin === 0 && smallWin === 0) return '走盘';
-            if (bigWin > smallWin) {
-                const half = bigWin < parts.length;
-                return `${bigOdds}${bigTeam}${half ? '（赢半）' : ''}`;
+            if (!headers.some(h => h.role === 'home') || !headers.some(h => h.role === 'away')) {
+                return;
             }
-            if (smallWin > bigWin) {
-                const half = smallWin < parts.length;
-                return `${smallOdds}${smallTeam}${half ? '（赢半）' : ''}`;
-            }
-            return '';
-        }
 
-        // Type B: Handicap
-        return judgeHandicapResultWithHalf(m, hs, as);
-    }
+            // 数据行
+            const rows = trs.slice(1).map(tr => {
+                const tds = Array.from(tr.querySelectorAll('td'));
+                return tds.map((td, i) => ({
+                    text: td.textContent.trim(),
+                    rawHTML: td.innerHTML.trim(),
+                    role: headers[i]?.role || null
+                }));
+            });
 
-    function judgeHandicapResultWithHalf(m, hs, as) {
-        const line = String(m.handicap || '').trim();
-        if (!line) return '';
-
-        const homeTeam = m.home || '';
-        const awayTeam = m.away || '';
-        const homeOdds = m.homeOdd ? `[${m.homeOdd}] ` : '';
-        const awayOdds = m.awayOdd ? `[${m.awayOdd}] ` : '';
-        const isHomeGive = line.startsWith('-');
-        const raw = line.replace(/[+-]/g, '');
-        const parts = raw.includes('/') ? raw.split('/').map(Number) : [Number(raw)];
-
-        let homeWin = 0, awayWin = 0;
-        parts.forEach(p => {
-            const adj = isHomeGive ? -p : p;
-            const diff = (hs - as) + adj;
-            if (diff > 0) homeWin++;
-            else if (diff < 0) awayWin++;
+            rawTables.push({ tableIndex, headers, rows, rawHTML: table.outerHTML });
         });
 
-        if (homeWin === 0 && awayWin === 0) return '走盘';
-        if (homeWin > awayWin) {
-            const half = homeWin < parts.length;
-            return `${homeOdds}${homeTeam}${half ? '（赢半）' : ''}`;
+        return rawTables;
+    }
+
+    function rawTablesToMatches(rawTables, title) {
+        const deadlineTs = parseDeadline(title);
+        const defaultStartTime = getNextDayMidnightStr(deadlineTs);
+        const parseTeamCell = (rawText) => {
+            const m = rawText.match(/^\[([\d\.]+)\](.*)$/);
+            return m ? { odd: m[1], name: m[2].trim() } : { odd: '', name: rawText.trim() };
+        };
+
+        const matches = [];
+
+        rawTables.forEach(rt => {
+            rt.rows.forEach(row => {
+                let league = '', rawTime = '', homeRaw = '', handicap = '', awayRaw = '';
+
+                row.forEach(cell => {
+                    if (!cell.role) return;
+                    if (cell.role === 'league') league = cell.text;
+                    else if (cell.role === 'time') rawTime = cell.text;
+                    else if (cell.role === 'home') homeRaw = cell.text;
+                    else if (cell.role === 'handicap') handicap = cell.text;
+                    else if (cell.role === 'away') awayRaw = cell.text;
+                });
+
+                if (!homeRaw && !awayRaw && !league) return;
+
+                const homeObj = parseTeamCell(homeRaw);
+                const awayObj = parseTeamCell(awayRaw);
+
+                matches.push({
+                    _mid: generateUUID(),
+                    league,
+                    home: homeObj.name,
+                    homeOdd: homeObj.odd,
+                    handicap,
+                    away: awayObj.name,
+                    awayOdd: awayObj.odd,
+                    startTime: rawTime || defaultStartTime,
+                    status: '未开赛',
+                    _isManual: false,
+                    roundTag: extractFirstBracket(title)
+                });
+            });
+        });
+
+        return matches;
+    }
+
+    async function rebuildTodayOddsLogic() {
+        State.previewData.length = 0;
+        saveData(CONFIG.KEYS.PREVIEW_DATA, State.previewData);
+
+        const listHtml = await fetch('/thread0806.php?fid=23&search=today').then(r => r.text());
+        const tids = extractTidsFromTodayHTML(listHtml);
+        if (!tids.length) {
+            alert('未抓取到符合条件(类别/时间)的今日 TID');
+            return;
         }
-        if (awayWin > homeWin) {
-            const half = awayWin < parts.length;
-            return `${awayOdds}${awayTeam}${half ? '（赢半）' : ''}`;
+
+        for (const item of tids) {
+            try {
+                const readHtml = await fetchRawHTML(`/read.php?tid=${item.tid}&toread=1`);
+                const meta = parseReadPageMeta(readHtml);
+                const rawTables = extractRawTablesFromHTML(readHtml);
+                const matches = rawTablesToMatches(rawTables, meta.title);
+
+                State.previewData.push({
+                    tid: item.tid,
+                    title: meta.title,
+                    author: meta.author,
+                    deadline: meta.deadline,
+                    extra: { rawTables, matches, manualMatches: [] }
+                });
+            } catch (e) {
+                console.error(`TID ${item.tid} 抓取失败`, e);
+            }
+            await new Promise(r => setTimeout(r, CONFIG.DELAY));
         }
-        return '';
+
+        sortPreviewDataByDeadline();
+        saveData(CONFIG.KEYS.PREVIEW_DATA, State.previewData);
+    }
+
+    async function refreshSingleTid(tid) {
+        const item = State.previewData.find(x => String(x.tid) === String(tid));
+        if (!item) return;
+        try {
+            const html = await fetchRawHTML(`/read.php?tid=${tid}&toread=1`);
+            const meta = parseReadPageMeta(html);
+            if (meta.author) item.author = meta.author;
+            const rawTables = extractRawTablesFromHTML(html);
+            const matches = rawTablesToMatches(rawTables, meta.title || item.title);
+            item.extra.matches = matches;
+            item.extra.manualMatches = [];
+            saveData(CONFIG.KEYS.PREVIEW_DATA, State.previewData);
+        } catch (e) {
+            alert(`TID ${tid} 刷新失败`);
+        }
+    }
+
+    async function addCurrentPageSmart() {
+        let tid = null;
+        const m = location.href.match(/tid=(\d+)/) || location.href.match(/\/(\d+)\.html/);
+        tid = m ? m[1] : prompt("无法获取当前TID，请输入：", "");
+        if (!tid) return;
+        if (State.previewData.find(d => String(d.tid) === String(tid))) {
+            alert('该 TID 已存在列表中！');
+            return;
+        }
+
+        try {
+            const html = await fetchRawHTML(`/read.php?tid=${tid}&toread=1`);
+            const meta = parseReadPageMeta(html);
+            const rawTables = extractRawTablesFromHTML(html);
+            const matches = rawTablesToMatches(rawTables, meta.title);
+
+            State.previewData.push({
+                tid: String(tid),
+                title: meta.title || `TID ${tid}`,
+                author: meta.author || '未知',
+                deadline: meta.deadline,
+                extra: { rawTables, matches, manualMatches: [] }
+            });
+            sortPreviewDataByDeadline();
+            saveData(CONFIG.KEYS.PREVIEW_DATA, State.previewData);
+            renderPreviewData();
+        } catch (e) {
+            alert('抓取失败，请检查网络或页面结构');
+            console.error(e);
+        }
     }
 
     /* ==========================================================================
-       5. EXPORT & BBCODE GENERATION (Fixed)
+       6. EXPORT / BBCODE (发帖格式生成)
        ========================================================================== */
 
-    // --- Fixed Header Generation ---
+    async function buildAutoPostTitle() {
+        const dateStr = State.previewPanel?.querySelector('#liveDateInput')?.value || '';
+        const poem = await fetchRandomPoem();
+        const parts = [];
+
+        State.previewData.forEach(item => {
+            const tag = extractTitleBrackets(item.title);
+            if (!tag) return;
+            const all = [...(item.extra.matches || []), ...(item.extra.manualMatches || [])];
+            if (!all.length) return;
+            const resultStr = all.map(m => resultChar(m)).join('');
+            parts.push(`${tag}${resultStr}`);
+        });
+        return `${dateStr} ${poem}  ${parts.join(' ')}`.trim();
+    }
+
     function buildLiveReplyHeader(m) {
-        // Fix: Explicitly check roundTag existence
         const round = m.roundTag ? `[${m.roundTag}]` : '';
         const league = m.league ? `[${m.league}]` : '';
         return round + league;
     }
 
-function buildLiveReplyBBCode(m) {
-    const homeVal = m.homeOdd ? `[${m.homeOdd}] ${m.home}` : (m.home || '');
-    const awayVal = m.awayOdd ? `[${m.awayOdd}] ${m.away}` : (m.away || '');
-    const homeScore = m.homeScore ?? '';
-    const awayScore = m.awayScore ?? '';
+    function buildLiveReplyBBCode(m) {
+        const homeVal = m.homeOdd ? `[${m.homeOdd}] ${m.home}` : (m.home || '');
+        const awayVal = m.awayOdd ? `[${m.awayOdd}] ${m.away}` : (m.away || '');
+        const homeScore = m.homeScore ?? '';
+        const awayScore = m.awayScore ?? '';
 
-    return (
-        `[color=green]${homeVal}[/color]　` +
-        `[color=#FF6600]${m.handicap || ''}[/color]　` +
-        `[color=green]${awayVal}[/color] ` +
-        `[color=orange]${m.progress || ''}[/color]\n` +
-        `[size=4]` +
-        `[backcolor=blue][color=white]　${homeScore}　[/color][/backcolor]` +
-        `　-　` +
-        `[backcolor=blue][color=white]　${awayScore}　[/color][/backcolor]` +
-        `[/size]`
-    );
-}
+        return (
+            `[color=green]${homeVal}[/color]　` +
+            `[color=#FF6600]${m.handicap || ''}[/color]　` +
+            `[color=green]${awayVal}[/color] ` +
+            `[color=orange]${m.progress || ''}[/color]\n` +
+            `[size=4]` +
+            `[backcolor=blue][color=white]　${homeScore}　[/color][/backcolor]` +
+            `　-　` +
+            `[backcolor=blue][color=white]　${awayScore}　[/color][/backcolor]` +
+            `[/size]`
+        );
+    }
 
     function generateLiveReplyText(matchList) {
-    const groups = new Map();
-
-    // ① 先分组
-    matchList.forEach(m => {
-        const header = buildLiveReplyHeader(m);
-        if (!groups.has(header)) {
-            groups.set(header, []);
-        }
-        groups.get(header).push(m);
-    });
-
-    // ② 再输出
-    const out = [];
-    groups.forEach((matches, header) => {
-        out.push(header);
-        matches.forEach(m => {
-            out.push(buildLiveReplyBBCode(m));
+        const groups = new Map();
+        matchList.forEach(m => {
+            const header = buildLiveReplyHeader(m);
+            if (!groups.has(header)) groups.set(header, []);
+            groups.get(header).push(m);
         });
-    });
+        const out = [];
+        groups.forEach((matches, header) => {
+            out.push(header);
+            matches.forEach(m => out.push(buildLiveReplyBBCode(m)));
+        });
+        return out.join('\n');
+    }
 
-    return out.join('\n');
-}
-
-
-    // --- Standard Odds Table BBCode ---
     function buildTidTitle(item) {
         const d = item.deadline ? new Date(item.deadline) : null;
         const ym = d ? String(d.getFullYear()).slice(2) + String(d.getMonth() + 1).padStart(2, '0') : '';
@@ -463,7 +679,7 @@ function buildLiveReplyBBCode(m) {
     }
 
     /* ==========================================================================
-       6. UI CREATION & RENDERERS
+       7. UI CREATION (界面构建)
        ========================================================================== */
 
     function initUI() {
@@ -487,6 +703,16 @@ function buildLiveReplyBBCode(m) {
             .preview-header-sticky { position: sticky; top: 0; z-index: 3; background: #f0f0f0; }
         `;
         document.head.appendChild(style);
+      document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') {
+        refreshAllMatchStatus();
+        saveData(CONFIG.KEYS.PREVIEW_DATA, State.previewData);
+
+        if (State.previewVisible) renderPreviewData();
+        if (State.liveVisible) renderLiveData();
+    }
+});
+
 
         createFloatButton();
         createMainPanel();
@@ -500,7 +726,16 @@ function buildLiveReplyBBCode(m) {
         Object.assign(btn.style, {
             position: 'fixed', right: '20px', bottom: '60px', zIndex: 999999,
             padding: '10px 15px', background: '#007bff', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer'
-        });
+        });document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') {
+        refreshAllMatchStatus();
+        saveData(CONFIG.KEYS.PREVIEW_DATA, State.previewData);
+
+        if (State.previewVisible) renderPreviewData();
+        if (State.liveVisible) renderLiveData();
+    }
+});
+
         btn.onclick = () => { State.panel.style.display = State.panel.style.display === 'none' ? 'block' : 'none'; };
         document.body.appendChild(btn);
     }
@@ -512,7 +747,6 @@ function buildLiveReplyBBCode(m) {
             background: '#f9f9f9', border: '1px solid #999', fontSize: '13px',
             zIndex: 999998, display: 'none', boxShadow: '0 2px 10px rgba(0,0,0,0.2)'
         });
-
         const renderInputBlock = (label, key) => `
             <div style="padding:6px;border-bottom:1px solid #ddd;">
                 <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
@@ -569,7 +803,6 @@ function buildLiveReplyBBCode(m) {
             background: '#fff', border: '2px solid #555', zIndex: 999997, borderRadius: '4px',
             boxShadow: '0 0 20px rgba(0,0,0,0.5)', display: 'none', flexDirection: 'column', overflow: 'hidden'
         });
-
         const header = document.createElement('div');
         header.className = 'preview-header-sticky';
         header.style.cssText = `padding:10px; background:#f0f0f0; border-bottom:1px solid #ccc; position:sticky; top:0; z-index:10;`;
@@ -620,7 +853,7 @@ function buildLiveReplyBBCode(m) {
         State.previewPanel.addEventListener('click', handlePreviewClick);
         State.previewPanel.addEventListener('change', handlePreviewChange);
         State.previewPanel.addEventListener('input', handlePreviewInput);
-
+        State.previewPanel.addEventListener('focusout', handlePreviewBlur);
         document.body.appendChild(State.previewPanel);
     }
 
@@ -645,7 +878,64 @@ function buildLiveReplyBBCode(m) {
         `;
         State.livePanel.addEventListener('click', handleLiveClick);
         State.livePanel.addEventListener('input', handleLiveInput);
+        State.livePanel.addEventListener('focusout', handleLiveBlur);
         document.body.appendChild(State.livePanel);
+    }
+
+    function createMatchRowHTML(m, tidIdx, matchIdx) {
+        const isEdit = State.isEditMode;
+        const lockBasic = !isEdit ? 'disabled' : '';
+        const displayStatus = m.status || '未开赛';
+        const statusClass = displayStatus === '自动' ? 'status-live' : displayStatus === '未开赛' ? 'status-wait' : '';
+        const homeVal = m.homeOdd ? `[${m.homeOdd}] ${m.home}` : m.home;
+        const awayVal = m.awayOdd ? `[${m.awayOdd}] ${m.away}` : m.away;
+        m._homeDisplay = homeVal;
+        m._awayDisplay = awayVal;
+
+        let siteOpts = `<option value="">选择地址</option>`;
+        State.scoreSiteList.forEach(s => {
+            siteOpts += `<option value="${s.url}" ${s.url === m.scoreUrl ? 'selected' : ''}>${s.name}</option>`;
+        });
+        const isCustom = m.scoreUrl && !State.scoreSiteList.some(x => x.url === m.scoreUrl);
+        siteOpts += `<option value="__manual__" ${isCustom ? 'selected' : ''}>手动输入</option>`;
+
+        return `
+        <tr data-idx="${matchIdx}" data-manual="${m._isManual ? '1' : '0'}">
+            <td>
+                <select class="ipt-status ${statusClass}">
+                    ${['自动','手动','未开赛','已完结','走盘'].map(v => `<option value="${v}" ${v===displayStatus ? 'selected' : ''}>${v}</option>`).join('')}
+                </select>
+            </td>
+            <td><input class="ipt-time" value="${m.startTime||''}"></td>
+            <td><input class="ipt-league" value="${m.league||''}" ${lockBasic}></td>
+            <td><input class="ipt-home" value="${homeVal||''}" ${lockBasic}></td>
+            <td><input class="ipt-handicap" value="${m.handicap||''}" ${lockBasic}></td>
+            <td><input class="ipt-away" value="${awayVal||''}" ${lockBasic}></td>
+            <td><input class="ipt-progress" value="${m.progress||''}"></td>
+            <td><input class="ipt-hscore" value="${m.homeScore||''}"></td>
+            <td><input class="ipt-ascore" value="${m.awayScore||''}"></td>
+            <td><input class="ipt-result" value="${m.result||''}"></td>
+            <td><input class="ipt-score-url-status" value="${m.scoreUrlStatus||''}" ${lockBasic}></td>
+            <td class="col-score-url">
+                <select class="sel-score-site">${siteOpts}</select>
+                <input class="ipt-score-manual" value="${m.scoreUrl||''}" style="display:${isCustom?'block':'none'}" placeholder="http://...">
+            </td>
+            ${isEdit ? `<td><button data-action="match-del" style="color:red;">删</button></td>` : ''}
+        </tr>`;
+    }
+
+    function createLiveRowHTML(m) {
+        return `
+        <tr data-mid="${m._mid}">
+            <td>${m.status}</td>
+            <td>${m._homeDisplay || m.home}</td>
+            <td>${m.handicap}</td>
+            <td>${m._awayDisplay || m.away}</td>
+            <td><input class="live-progress" value="${m.progress || ''}"></td>
+            <td><input class="live-hs" value="${m.homeScore || ''}"></td>
+            <td><input class="live-as" value="${m.awayScore || ''}"></td>
+            <td><input class="live-result" value="${m.result || ''}"></td>
+        </tr>`;
     }
 
     function renderScoreSiteList() {
@@ -683,6 +973,7 @@ function buildLiveReplyBBCode(m) {
                         <button class="edit-ctrl-btn" style="color:red;" data-action="tid-del">删</button>
                     </div>` : ''}
                 </div>`;
+
             const allMatches = [...(item.extra.matches || []), ...(item.extra.manualMatches || [])];
             let rowsHtml = allMatches.length === 0
                 ? `<tr><td colspan="12" style="padding:10px;color:#999;">无盘口数据</td></tr>`
@@ -697,8 +988,7 @@ function buildLiveReplyBBCode(m) {
                                 <th class="col-status">状态</th> <th class="col-time">开赛时间</th> <th class="col-league">赛事</th>
                                 <th>主队</th> <th style="width:50px;">盘口</th> <th>客队</th> <th class="col-progress">进度</th>
                                 <th class="col-score">主</th> <th class="col-score">客</th> <th class="col-result">赛果</th>
-                                <th style="width:50px;">地址状态</th>
-                                <th class="col-score-url">比分地址</th>
+                                <th style="width:50px;">地址状态</th> <th class="col-score-url">比分地址</th>
                                 ${State.isEditMode ? `<th class="col-op">操作</th>` : ''}
                             </tr>
                         </thead>
@@ -710,71 +1000,11 @@ function buildLiveReplyBBCode(m) {
         });
     }
 
-    function createMatchRowHTML(m, tidIdx, matchIdx) {
-        const isEdit = State.isEditMode;
-        const lockBasic = !isEdit ? 'disabled' : '';
-        const displayStatus = m.status || '未开赛';
-        const statusClass = displayStatus === '自动' ? 'status-live' : displayStatus === '未开赛' ? 'status-wait' : '';
-        const homeVal = m.homeOdd ? `[${m.homeOdd}] ${m.home}` : m.home;
-        const awayVal = m.awayOdd ? `[${m.awayOdd}] ${m.away}` : m.away;
-        m._homeDisplay = homeVal;
-        m._awayDisplay = awayVal;
-
-        let siteOpts = `<option value="">选择地址</option>`;
-        State.scoreSiteList.forEach(s => {
-            siteOpts += `<option value="${s.url}" ${s.url === m.scoreUrl ? 'selected' : ''}>${s.name}</option>`;
-        });
-        const isCustom = m.scoreUrl && !State.scoreSiteList.some(x => x.url === m.scoreUrl);
-        siteOpts += `<option value="__manual__" ${isCustom ? 'selected' : ''}>手动输入</option>`;
-
-        return `
-        <tr data-idx="${matchIdx}" data-manual="${m._isManual ? '1' : '0'}">
-            <td>
-                <select class="ipt-status ${statusClass}">
-                    ${['自动','手动','未开赛','已完结','走盘']
-                        .map(v => `<option value="${v}" ${v===displayStatus ? 'selected' : ''}>${v}</option>`)
-                        .join('')}
-                </select>
-            </td>
-            <td><input class="ipt-time" value="${m.startTime||''}"></td>
-            <td><input class="ipt-league" value="${m.league||''}" ${lockBasic}></td>
-            <td><input class="ipt-home" value="${homeVal||''}" ${lockBasic}></td>
-            <td><input class="ipt-handicap" value="${m.handicap||''}" ${lockBasic}></td>
-            <td><input class="ipt-away" value="${awayVal||''}" ${lockBasic}></td>
-            <td><input class="ipt-progress" value="${m.progress||''}"></td>
-            <td><input class="ipt-hscore" value="${m.homeScore||''}"></td>
-            <td><input class="ipt-ascore" value="${m.awayScore||''}"></td>
-            <td><input class="ipt-result" value="${m.result||''}"></td>
-            <td><input class="ipt-score-url-status" value="${m.scoreUrlStatus||''}" ${lockBasic}></td>
-            <td class="col-score-url">
-                <select class="sel-score-site">${siteOpts}</select>
-                <input class="ipt-score-manual" value="${m.scoreUrl||''}" style="display:${isCustom?'block':'none'}" placeholder="http://...">
-            </td>
-            ${isEdit ? `<td><button data-action="match-del" style="color:red;">删</button></td>` : ''}
-        </tr>`;
-    }
-
-    function createLiveRowHTML(m) {
-        return `
-            <tr>
-                <td>${m.status}</td>
-                <td>${m._homeDisplay || m.home}</td>
-                <td>${m.handicap}</td>
-                <td>${m._awayDisplay || m.away}</td>
-                <td><input class="live-progress" data-ref="${m._id || ''}" value="${m.progress || ''}"></td>
-                <td><input class="live-hs" value="${m.homeScore || ''}"></td>
-                <td><input class="live-as" value="${m.awayScore || ''}"></td>
-                <td><input class="live-result" value="${m.result || ''}"></td>
-            </tr>
-        `;
-    }
-
     function renderLiveData() {
         if (!State.livePanel) return;
         const container = State.livePanel.querySelector('.live-content');
         if (!container) return;
         container.innerHTML = '';
-
         State.previewData.forEach(item => {
             const matches = [...item.extra.matches, ...(item.extra.manualMatches || [])]
                 .filter(m => ['自动', '手动'].includes(m.status));
@@ -784,7 +1014,6 @@ function buildLiveReplyBBCode(m) {
             const block = document.createElement('div');
             block.style.border = '1px solid #ccc';
             block.style.marginBottom = '12px';
-
             block.innerHTML = `
                 <div style="background:#fafafa;padding:6px;font-weight:bold;">${escapeHtml(item.title)}</div>
                 <table class="odds-table">
@@ -800,8 +1029,158 @@ function buildLiveReplyBBCode(m) {
         });
     }
 
+    function updatePreviewRowUI(tr, m) {
+        const sel = tr.querySelector('.ipt-status');
+        if (sel) {
+            sel.value = m.status;
+            sel.className = 'ipt-status';
+        }
+        const res = tr.querySelector('.ipt-result');
+        if (res) res.value = m.result || '';
+    }
+
     /* ==========================================================================
-       7. EVENT HANDLERS
+       8. DATA SYNC (数据同步)
+       ========================================================================== */
+
+    function sortPreviewDataByDeadline() {
+        State.previewData.sort((a, b) => {
+            const ta = a.deadline || 0;
+            const tb = b.deadline || 0;
+            if (!ta && !tb) return b.tid - a.tid;
+            if (!ta) return 1;
+            if (!tb) return -1;
+            return ta - tb;
+        });
+    }
+
+    function recalcAllFinishedResults() {
+        State.previewData.forEach(item => {
+            if (!item?.extra) return;
+            const allMatches = [...(item.extra.matches || []), ...(item.extra.manualMatches || [])];
+            allMatches.forEach(m => {
+                if (m.status !== '已完结') return;
+                const r = autoBuildResult(m);
+                if (r) m.result = r;
+            });
+        });
+    }
+
+    function refreshAllMatchStatus() {
+        State.previewData.forEach(item => {
+            const all = [...item.extra.matches, ...(item.extra.manualMatches || [])];
+            all.forEach(m => { m.status = calcMatchStatus(m); });
+        });
+    }
+
+    function tryRecalcRow(el) {
+        const tr = el.closest('tr');
+        if (!tr) return;
+        const tidIdx = Number(tr.closest('.tid-block').dataset.index);
+        const matchIdx = Number(tr.dataset.idx);
+        const item = State.previewData[tidIdx];
+        const allMatches = [...(item.extra.matches || []), ...(item.extra.manualMatches || [])];
+        const m = allMatches[matchIdx];
+        if (!m) return;
+
+        const statusEl = tr.querySelector('.ipt-status');
+        if (!statusEl) return;
+        const statusVal = statusEl.value;
+
+        const hs = tr.querySelector('.ipt-hscore');
+        const as = tr.querySelector('.ipt-ascore');
+        m.homeScore = hs ? hs.value : '';
+        m.awayScore = as ? as.value : '';
+
+        const r = autoBuildResult(m);
+        if (r && statusVal !== '手动') {
+            const ipt = tr.querySelector('.ipt-result');
+            if (ipt) ipt.value = r;
+            m.result = r;
+        }
+    }
+
+    function canCommitPreviewUI() {
+        const blocks = State.previewPanel.querySelectorAll('.tid-block');
+        for (const block of blocks) {
+            const rows = block.querySelectorAll('tbody tr');
+            for (const tr of rows) {
+                const time = tr.querySelector('.ipt-time')?.value.trim();
+                if (time && !isValidStartTimeStrict(time)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    function syncPreviewDataFromUI() {
+        if (!State.previewPanel) return;
+        const blocks = State.previewPanel.querySelectorAll('.tid-block');
+        blocks.forEach(block => {
+            const tidIdx = Number(block.dataset.index);
+            const item = State.previewData[tidIdx];
+            if (!item) return;
+
+            const all = [...(item.extra.matches || []), ...(item.extra.manualMatches || [])];
+            const rows = block.querySelectorAll('tbody tr');
+
+            rows.forEach((tr, idx) => {
+                const m = all[idx];
+                if (!m) return;
+                const v = cls => tr.querySelector(cls)?.value?.trim() || '';
+
+                m.status = v('.ipt-status');
+                m.startTime = v('.ipt-time');
+                m.progress = v('.ipt-progress');
+                m.homeScore = v('.ipt-hscore');
+                m.awayScore = v('.ipt-ascore');
+                m.result = v('.ipt-result');
+                m.scoreUrlStatus = v('.ipt-score-url-status');
+
+                const siteSel = tr.querySelector('.sel-score-site');
+                const siteManual = tr.querySelector('.ipt-score-manual');
+                if (siteSel) {
+                    m.scoreUrl = siteSel.value === '__manual__' ? (siteManual?.value.trim() || '') : siteSel.value;
+                }
+                m.roundTag = extractFirstBracket(item.title);
+            });
+        });
+    }
+
+    function syncLiveDataToPreview() {
+        const trs = State.livePanel.querySelectorAll('tbody tr');
+        trs.forEach(tr => {
+            const mid = tr.dataset.mid;
+            if (!mid) return;
+            let target = null;
+            for (const item of State.previewData) {
+                const all = [...item.extra.matches, ...(item.extra.manualMatches || [])];
+                const found = all.find(m => m._mid === mid);
+                if (found) { target = found; break; }
+            }
+            if (!target) return;
+            const get = sel => tr.querySelector(sel)?.value.trim() || '';
+            target.progress = get('.live-progress');
+            target.homeScore = get('.live-hs');
+            target.awayScore = get('.live-as');
+            target.result = get('.live-result');
+            target.status = calcMatchStatus(target);
+        });
+    }
+
+    function togglePreview(show) {
+    State.previewVisible = typeof show === 'boolean' ? show : !State.previewVisible;
+    State.previewPanel.style.display = State.previewVisible ? 'flex' : 'none';
+    if (State.previewVisible) {
+        refreshAllMatchStatus();
+        renderPreviewData();
+    }
+}
+
+
+    /* ==========================================================================
+       9. EVENT HANDLERS (事件处理)
        ========================================================================== */
 
     function handleMainPanelClick(e) {
@@ -824,15 +1203,21 @@ function buildLiveReplyBBCode(m) {
                 }
                 break;
             case 'load':
-                if (!textarea || !key) break;
-                // ===== REFACTOR: Fix Missing Tag in Live Reply =====
+                if (key === 'title') {
+                    (async () => {
+                        const title = await buildAutoPostTitle();
+                        textarea.value = title;
+                        State.auxData.title = title;
+                        saveData(CONFIG.KEYS.AUX_DATA, State.auxData);
+                    })();
+                    break;
+                }
                 if (key === 'reply') {
                     const matchList = [];
                     State.previewData.forEach(item => {
                         const all = [...(item.extra.matches || []), ...(item.extra.manualMatches || [])];
                         all.forEach(m => {
                             if (m.status === '自动' || m.status === '手动') {
-                                // Important: Ensure roundTag is populated from parent if missing (fix for bug)
                                 if (!m.roundTag && item.title) {
                                     m.roundTag = extractFirstBracket(item.title);
                                 }
@@ -853,10 +1238,10 @@ function buildLiveReplyBBCode(m) {
                     saveData(CONFIG.KEYS.AUX_DATA, State.auxData);
                     break;
                 }
+                if (!textarea || !key) break;
                 State.auxData = loadData(CONFIG.KEYS.AUX_DATA, {});
                 textarea.value = State.auxData[key] || '';
                 break;
-
             case 'copy':
                 if (textarea) {
                     textarea.select();
@@ -919,12 +1304,17 @@ function buildLiveReplyBBCode(m) {
                 await addCurrentPageSmart();
                 break;
             case 'reload-ui':
+                if (!canCommitPreviewUI()) {
+                    renderPreviewData(); // 回滚
+                    break;
+                }
                 syncPreviewDataFromUI();
                 refreshAllMatchStatus();
                 recalcAllFinishedResults();
                 renderPreviewData();
                 break;
             case 'save-all':
+                if (!canCommitPreviewUI()) return;
                 syncPreviewDataFromUI();
                 refreshAllMatchStatus();
                 recalcAllFinishedResults();
@@ -986,7 +1376,12 @@ function buildLiveReplyBBCode(m) {
             case 'match-add':
                 syncPreviewDataFromUI();
                 State.previewData[tidIdx].extra.manualMatches = State.previewData[tidIdx].extra.manualMatches || [];
-                State.previewData[tidIdx].extra.manualMatches.push({ _isManual: true, startTime: '', league: '', home: '', away: '' });
+                State.previewData[tidIdx].extra.manualMatches.push({
+                    _mid: generateUUID(),
+                    _isManual: true,
+                    startTime: getNextDayMidnightStr(),
+                    league: '', home: '', away: ''
+                });
                 saveData(CONFIG.KEYS.PREVIEW_DATA, State.previewData);
                 renderPreviewData();
                 break;
@@ -1073,255 +1468,152 @@ function buildLiveReplyBBCode(m) {
         const m = allMatches[matchIdx];
         if (!m) return;
 
+        // 【已删除】此处原有的 ipt-time 实时修正逻辑已移除，移至 blur 事件处理
+
         if (el.classList.contains('ipt-progress')) m._manualProgress = true;
         if (el.classList.contains('ipt-hscore') || el.classList.contains('ipt-ascore')) m._manualScore = true;
         if (el.classList.contains('ipt-result')) m._manualResult = true;
-        m.status = calcMatchStatus(m);
-    }
 
-    function handleLiveInput() {
-        syncPreviewDataFromUI();
-    }
-
-    /* ==========================================================================
-       8. SYNC & DATA MANIPULATION
-       ========================================================================== */
-
-    async function rebuildTodayOddsLogic() {
-        State.previewData.length = 0;
-        saveData(CONFIG.KEYS.PREVIEW_DATA, State.previewData);
-
-        const listHtml = await fetch('/thread0806.php?fid=23&search=today').then(r => r.text());
-        const tids = extractTidsFromTodayHTML(listHtml);
-        if (!tids.length) {
-            alert('未抓取到符合条件(类别/时间)的今日 TID');
-            return;
+        if (!['已完结', '走盘'].includes(m.status)) {
+            m.status = calcMatchStatus(m);
         }
 
-        for (const item of tids) {
-            try {
-                const readHtml = await fetchRawHTML(`/read.php?tid=${item.tid}&toread=1`);
-                const meta = parseReadPageMeta(readHtml);
-                const matches = extractMatchTableFromHTML(readHtml, meta.title || item.title);
-                State.previewData.push({
-                    tid: item.tid,
-                    title: meta.title || item.title,
-                    author: meta.author,
-                    deadline: meta.deadline || item.deadline,
-                    extra: { matches, manualMatches: [] }
-                });
-            } catch (e) { console.error(`TID ${item.tid} 抓取失败`, e); }
-            await new Promise(r => setTimeout(r, CONFIG.DELAY));
-        }
-        sortPreviewDataByDeadline();
-        saveData(CONFIG.KEYS.PREVIEW_DATA, State.previewData);
-    }
-
-    async function addCurrentPageSmart() {
-        let tid = null;
-        const m = window.location.href.match(/tid=(\d+)/) || window.location.href.match(/\/(\d+)\.html/);
-        tid = m ? m[1] : prompt("无法获取当前TID，请输入：", "");
-        if (!tid) return;
-
-        if (State.previewData.find(d => String(d.tid) === String(tid))) {
-            alert('该 TID 已存在列表中！');
-            return;
-        }
-
-        try {
-            const html = await fetchRawHTML(`/read.php?tid=${tid}&toread=1`);
-            const meta = parseReadPageMeta(html);
-            const matches = extractMatchTableFromHTML(html, meta.title);
-            State.previewData.push({
-                tid: String(tid),
-                title: meta.title || `TID ${tid}`,
-                author: meta.author || '未知',
-                deadline: meta.deadline,
-                extra: { matches, manualMatches: [] }
-            });
-            sortPreviewDataByDeadline();
-            saveData(CONFIG.KEYS.PREVIEW_DATA, State.previewData);
-            renderPreviewData();
-        } catch (e) { alert('抓取失败，请检查网络或页面结构'); }
-    }
-
-    async function refreshSingleTid(tid) {
-        const item = State.previewData.find(x => String(x.tid) === String(tid));
-        if (!item) return;
-        try {
-            const html = await fetchRawHTML(`/read.php?tid=${tid}&toread=1`);
-            const meta = parseReadPageMeta(html);
-            if (meta.author) item.author = meta.author;
-            item.extra.matches = extractMatchTableFromHTML(html, item.title);
-            item.extra.manualMatches = [];
-            saveData(CONFIG.KEYS.PREVIEW_DATA, State.previewData);
-        } catch (e) { alert(`TID ${tid} 刷新失败`); }
-    }
-
-    function sortPreviewDataByDeadline() {
-        State.previewData.sort((a, b) => {
-            const ta = a.deadline || 0;
-            const tb = b.deadline || 0;
-            if (!ta && !tb) return b.tid - a.tid;
-            if (!ta) return 1;
-            if (!tb) return -1;
-            return ta - tb;
-        });
-    }
-
-    function recalcAllFinishedResults() {
-        State.previewData.forEach(item => {
-            if (!item?.extra) return;
-            const allMatches = [...(item.extra.matches || []), ...(item.extra.manualMatches || [])];
-            allMatches.forEach(m => {
-                if (m.status !== '已完结') return;
-                const r = autoBuildResult(m);
-                if (r) m.result = r;
-            });
-        });
-    }
-
-    function refreshAllMatchStatus() {
-        State.previewData.forEach(item => {
-            const all = [...item.extra.matches, ...(item.extra.manualMatches || [])];
-            all.forEach(m => { m.status = calcMatchStatus(m); });
-        });
-    }
-
-    function tryRecalcRow(el) {
-        const tr = el.closest('tr');
-        if (!tr) return;
-        const tidIdx = Number(tr.closest('.tid-block').dataset.index);
-        const matchIdx = Number(tr.dataset.idx);
-
-        const item = State.previewData[tidIdx];
-        const allMatches = [...(item.extra.matches || []), ...(item.extra.manualMatches || [])];
-        const m = allMatches[matchIdx];
-        if (!m) return;
-
-        const statusEl = tr.querySelector('.ipt-status');
-        if (!statusEl) return;
-        const statusVal = statusEl.value;
-
-        const hs = tr.querySelector('.ipt-hscore');
-        const as = tr.querySelector('.ipt-ascore');
-        m.homeScore = hs ? hs.value : '';
-        m.awayScore = as ? as.value : '';
-
-        const r = autoBuildResult(m);
-        if (r && statusVal !== '手动') {
-            const ipt = tr.querySelector('.ipt-result');
-            if (ipt) ipt.value = r;
-            m.result = r;
+        // 输入比分时，实时计算赛果（不改状态）
+        if (el.classList.contains('ipt-hscore') || el.classList.contains('ipt-ascore')) {
+            const r = autoBuildResult(m);
+            if (r && m.result !== r) {
+                m.result = r;
+                const resultInput = tr.querySelector('.ipt-result');
+                if (resultInput) resultInput.value = r;
+            }
         }
     }
 
-    function togglePreview(show) {
-        State.previewVisible = typeof show === 'boolean' ? show : !State.previewVisible;
-        State.previewPanel.style.display = State.previewVisible ? 'flex' : 'none';
-        if (State.previewVisible) renderPreviewData();
-    }
+function handlePreviewBlur(e) {
+        const ipt = e.target;
 
-    function syncPreviewDataFromUI() {
-        if (!State.previewPanel) return;
-
-        const blocks = State.previewPanel.querySelectorAll('.tid-block');
-        blocks.forEach(block => {
-            const tidIdx = Number(block.dataset.index);
-            const item = State.previewData[tidIdx];
-            if (!item) return;
-
-            const rows = block.querySelectorAll('tbody tr');
-            const autoMatches = [];
-            const manualMatches = [];
-
-            rows.forEach(tr => {
-                const safe = cls => tr.querySelector(cls)?.value?.trim() || '';
-                const parseTeam = val => {
-                    const m = val.match(/^\s*\[([\d.]+)\]\s*(.*)$/);
-                    return m ? { odd: m[1], team: m[2] } : { odd: '', team: val };
-                };
-
-                const homeObj = parseTeam(safe('.ipt-home'));
-                const awayObj = parseTeam(safe('.ipt-away'));
-
-                const siteSel = tr.querySelector('.sel-score-site');
-                const siteManual = tr.querySelector('.ipt-score-manual');
-                const scoreUrl = siteSel
-                    ? (siteSel.value === '__manual__' ? siteManual?.value.trim() || '' : siteSel.value)
-                    : '';
-
-                const m = {
-                    status: safe('.ipt-status'),
-                    startTime: safe('.ipt-time'),
-                    progress: safe('.ipt-progress'),
-                    homeScore: safe('.ipt-hscore'),
-                    awayScore: safe('.ipt-ascore'),
-                    result: safe('.ipt-result'),
-                    scoreUrlStatus: safe('.ipt-score-url-status'),
-                    scoreUrl,
-                    _isManual: tr.dataset.manual === '1'
-                };
-
-                m.roundTag = extractFirstBracket(item.title);
-
-                if (State.isEditMode) {
-                    Object.assign(m, {
-                        league: safe('.ipt-league'),
-                        handicap: safe('.ipt-handicap'),
-                        home: homeObj.team,
-                        homeOdd: homeObj.odd,
-                        away: awayObj.team,
-                        awayOdd: awayObj.odd
-                    });
-                } else {
-                    const all = [...item.extra.matches, ...(item.extra.manualMatches || [])];
-                    const old = all[Number(tr.dataset.idx)];
-                    if (old) {
-                        Object.assign(m, {
-                            league: old.league,
-                            handicap: old.handicap,
-                            home: old.home,
-                            homeOdd: old.homeOdd,
-                            away: old.away,
-                            awayOdd: old.awayOdd,
-                            _manualProgress: old._manualProgress,
-                            _manualScore: old._manualScore,
-                            _manualResult: old._manualResult
-                        });
+        // --- 新增：时间输入框失去焦点时修正格式 ---
+        if (ipt.classList.contains('ipt-time')) {
+            const fixed = normalizeStartTime(ipt.value);
+            // 只有当格式确实变化了才更新 UI 和数据，避免不必要的闪烁
+            if (fixed !== ipt.value) {
+                ipt.value = fixed;
+                // 同步数据
+                const tr = ipt.closest('tr');
+                if (tr) {
+                    const tidBlock = tr.closest('.tid-block');
+                    const tidIdx = Number(tidBlock.dataset.index);
+                    const matchIdx = Number(tr.dataset.idx);
+                    const item = State.previewData[tidIdx];
+                    if (item) {
+                        const all = [...(item.extra.matches || []), ...(item.extra.manualMatches || [])];
+                        if (all[matchIdx]) {
+                            all[matchIdx].startTime = fixed;
+                            // 时间变了，可能影响“未开赛/自动”状态，重新计算一下
+                            all[matchIdx].status = calcMatchStatus(all[matchIdx]);
+                            updatePreviewRowUI(tr, all[matchIdx]);
+                        }
                     }
                 }
+            }
+            return; // 处理完时间直接返回
+        }
+        // ---------------------------------------
 
-                if (m._isManual) manualMatches.push(m);
-                else autoMatches.push(m);
-            });
+        if (!ipt.classList.contains('ipt-hscore') && !ipt.classList.contains('ipt-ascore') && !ipt.classList.contains('ipt-progress')) return;
 
-            item.extra.matches = autoMatches;
-            item.extra.manualMatches = manualMatches;
-        });
+        const tr = ipt.closest('tr');
+        if (!tr) return;
+
+        const tidBlock = tr.closest('.tid-block');
+        if (!tidBlock) return;
+        const tidIdx = Number(tidBlock.dataset.index);
+        const matchIdx = Number(tr.dataset.idx);
+        const item = State.previewData[tidIdx];
+        if (!item) return;
+        const all = [...(item.extra.matches || []), ...(item.extra.manualMatches || [])];
+        const m = all[matchIdx];
+        if (!m) return;
+
+        m.homeScore = tr.querySelector('.ipt-hscore')?.value.trim() || '';
+        m.awayScore = tr.querySelector('.ipt-ascore')?.value.trim() || '';
+        m.progress = tr.querySelector('.ipt-progress')?.value.trim() || '';
+
+        const r = autoBuildResult(m);
+        if (r) m.result = r;
+        updatePreviewRowUI(tr, m);
     }
 
-    function syncLiveDataToPreview() {
-        const trs = State.livePanel.querySelectorAll('tbody tr');
-        let idx = 0;
-        State.previewData.forEach(item => {
-            const all = [...item.extra.matches, ...(item.extra.manualMatches || [])];
-            all.forEach(m => {
-                if (!['自动', '手动'].includes(m.status)) return;
-                const tr = trs[idx++];
-                if (!tr) return;
-                const get = sel => tr.querySelector(sel)?.value.trim() || '';
-                m.progress  = get('.live-progress');
-                m.homeScore = get('.live-hs');
-                m.awayScore = get('.live-as');
-                m.result    = get('.live-result');
-                m.status = calcMatchStatus(m);
-            });
+    function handleLiveInput(e) {
+        if (!e || !e.target) return;
+        const el = e.target;
+        const tr = el.closest('tr');
+        if (!tr) return;
+        const mid = tr.dataset.mid;
+        if (!mid) return;
+
+        let target = null;
+        for (const item of State.previewData) {
+            const all = [...(item.extra.matches || []), ...(item.extra.manualMatches || [])];
+            const found = all.find(m => m._mid === mid);
+            if (found) { target = found; break; }
+        }
+        if (!target) return;
+
+        const get = sel => {
+            const v = tr.querySelector(sel);
+            return v ? (v.value ?? '').trim() : '';
+        };
+
+        target.progress = get('.live-progress');
+        target.homeScore = get('.live-hs');
+        target.awayScore = get('.live-as');
+        target.result = get('.live-result');
+
+        target._manualProgress = true;
+        target._manualScore = true;
+        target._manualResult = true;
+
+        if (el.classList.contains('live-progress')) {
+            target._manualProgress = true;
+            target.status = calcMatchStatus(target);
+        }
+        try { recalcAllFinishedResults(); } catch (err) { }
+        saveData(CONFIG.KEYS.PREVIEW_DATA, State.previewData);
+    }
+
+    function handleLiveBlur(e) {
+        const ipt = e.target;
+        if (!ipt.matches('.live-hs, .live-as')) return;
+        const tr = ipt.closest('tr');
+        if (!tr) return;
+        const mid = tr.dataset.mid;
+        if (!mid) return;
+
+        let m = null;
+        State.previewData.some(item => {
+            const all = [...(item.extra.matches || []), ...(item.extra.manualMatches || [])];
+            m = all.find(x => x._mid === mid);
+            return !!m;
         });
+        if (!m) return;
+
+        const get = (cls) => tr.querySelector(cls)?.value?.trim() || '';
+        m.progress = get('.live-progress');
+        m.homeScore = get('.live-hs');
+        m.awayScore = get('.live-as');
+
+        const r = autoBuildResult(m);
+        if (r) m.result = r;
+
+        const statusTd = tr.querySelector('td:first-child');
+        if (statusTd) statusTd.textContent = m.status;
+        const resIpt = tr.querySelector('.live-result');
+        if (resIpt) resIpt.value = m.result || '';
     }
 
     /* ==========================================================================
-       9. BOOTSTRAP
+       10. BOOTSTRAP
        ========================================================================== */
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initUI);

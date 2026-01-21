@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Torn Stocks - Dollar Input Box
-// @author       srsbsns
-// @version      2.4
-// @description  Adds a dollar input box that auto-calculates shares with $1M button
+// @author       srsbsns (modified by Claude)
+// @version      2.5
+// @description  Adds a dollar input box that auto-calculates shares with $1M button - accounts for 0.1% selling fee
 // @match        https://www.torn.com/page.php?sid=stocks*
 // @run-at       document-end
 // @grant        GM_addStyle
@@ -69,6 +69,17 @@
 
     .stock-million-btn:active {
       background: #1a1a1a;
+    }
+
+    .stock-fee-info {
+      color: #888;
+      font-size: 10px;
+      margin-top: 2px;
+      margin-left: 20px;
+    }
+
+    .stock-fee-info.selling {
+      color: #FFA500;
     }
   `);
 
@@ -140,10 +151,40 @@
     input.dispatchEvent(new Event('change', { bubbles: true }));
   }
 
-  // Convert dollar amount to number of shares
-  function dollarsToShares(dollarAmount, stockPrice) {
+  // Convert dollar amount to number of shares (BUYING - round down, no fee)
+  function dollarsToSharesBuying(dollarAmount, stockPrice) {
     if (!stockPrice) return 0;
     return Math.floor(dollarAmount / stockPrice);
+  }
+
+  // Convert dollar amount to number of shares (SELLING - round up, account for 0.1% fee)
+  function dollarsToSharesSelling(dollarAmount, stockPrice) {
+    if (!stockPrice) return 0;
+
+    // When selling, you want to receive AT LEAST dollarAmount after the 0.1% fee
+    // Formula: shares * price * 0.999 >= dollarAmount
+    // Therefore: shares >= dollarAmount / (price * 0.999)
+
+    const sharesNeeded = dollarAmount / (stockPrice * 0.999);
+    const sharesCeil = Math.ceil(sharesNeeded);
+
+    console.log(`Selling calculation: Target=$${dollarAmount}, Price=$${stockPrice}, Shares needed=${sharesNeeded.toFixed(2)}, Rounded up to=${sharesCeil}`);
+
+    return sharesCeil;
+  }
+
+  // Calculate actual proceeds after selling fee
+  function calculateSellingProceeds(shares, stockPrice) {
+    const gross = shares * stockPrice;
+    const fee = gross * 0.001; // 0.1% = 0.001
+    const net = gross - fee;
+    return { gross, fee, net };
+  }
+
+  // Detect if this is a buy or sell block
+  function isSellBlock(container) {
+    const sellBlock = container.closest('.sellBlock___A_yTW, [class*="sellBlock"]');
+    return !!sellBlock;
   }
 
   // Add dollar input box
@@ -159,6 +200,9 @@
       console.log('No stock price found, skipping');
       return;
     }
+
+    const isSelling = isSellBlock(sharesInput);
+    console.log(`This is a ${isSelling ? 'SELL' : 'BUY'} block`);
 
     // Create dollar input wrapper
     const wrapper = document.createElement('div');
@@ -179,6 +223,15 @@
       container.parentNode.insertBefore(wrapper, container.nextSibling);
     }
 
+    // Add fee info display (only for selling)
+    let feeInfoDiv = null;
+    if (isSelling) {
+      feeInfoDiv = document.createElement('div');
+      feeInfoDiv.className = 'stock-fee-info selling';
+      feeInfoDiv.textContent = 'Accounting for 0.1% selling fee';
+      wrapper.parentNode.insertBefore(feeInfoDiv, wrapper.nextSibling);
+    }
+
     const dollarInput = wrapper.querySelector('.stock-dollar-input');
     const millionBtn = wrapper.querySelector('.stock-million-btn');
 
@@ -191,12 +244,28 @@
         const freshPrice = getCurrentStockPrice();
         console.log('Calculating with fresh price:', freshPrice);
 
-        const shares = dollarsToShares(dollarAmount, freshPrice);
+        let shares;
+        if (isSelling) {
+          // SELLING: Round UP and account for 0.1% fee
+          shares = dollarsToSharesSelling(dollarAmount, freshPrice);
+
+          // Update fee info
+          if (feeInfoDiv) {
+            const proceeds = calculateSellingProceeds(shares, freshPrice);
+            feeInfoDiv.innerHTML = `💰 ${shares} shares × $${freshPrice.toFixed(2)} = $${proceeds.gross.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} - $${proceeds.fee.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} fee = <strong style="color: #00FF00;">$${proceeds.net.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</strong>`;
+          }
+        } else {
+          // BUYING: Round DOWN (normal behavior)
+          shares = dollarsToSharesBuying(dollarAmount, freshPrice);
+        }
 
         // Auto-fill the shares input
         setInputValue(sharesInput, shares.toString());
       } else {
         setInputValue(sharesInput, '');
+        if (feeInfoDiv && isSelling) {
+          feeInfoDiv.textContent = 'Accounting for 0.1% selling fee';
+        }
       }
     });
 
@@ -215,6 +284,9 @@
     sharesInput.addEventListener('input', () => {
       if (document.activeElement === sharesInput) {
         dollarInput.value = '';
+        if (feeInfoDiv && isSelling) {
+          feeInfoDiv.textContent = 'Accounting for 0.1% selling fee';
+        }
       }
     });
   }

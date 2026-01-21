@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SOOP (숲) - 사이드바 UI 변경 260119
 // @namespace    https://greasyfork.org/ko/scripts/484713
-// @version      20250801112
+// @version      20250801
 // @description  사이드바 UI 변경, 월별 리캡, 채팅 모아보기, 차단기능 등
 // @description:ko  사이드바 UI 변경, 월별 리캡, 채팅 모아보기, 차단기능 등
 // @author       askld(원제작자)

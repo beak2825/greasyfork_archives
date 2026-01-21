@@ -17,7 +17,7 @@
 // @supportURL   https://github.com/Max46656/EverythingInGreasyFork/issues
 // @license      MPL2.0
 //
-// @version      1.5.0
+// @version      1.5.1
 // @match        https://exhentai.org/s/*/*
 // @match        https://e-hentai.org/s/*/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=e-hentai.org
@@ -40,7 +40,7 @@ class ImageResizer {
         return {
             '1': { id: 'fit-window', label: '🞎', mw: '100vw', mh: '100vh', w: 'auto', h: 'auto' },
             '2': { id: 'fit-height', label: '⭿',  mw: 'none',  mh: '100vh', w: 'auto', h: '100vh' },
-            '3': { id: 'fit-width',  label: '⭾',  mw: '100vw', mh: 'none',   w: '100vw', h: 'auto' },
+            '3': { id: 'fit-width',  label: '⭾',  mw: '100%', mh: 'none',   w: '100vw', h: 'auto' },
             '4': { id: 'original',   label: '🞨',  mw: 'none',  mh: 'none',   w: 'auto', h: 'auto' }
         };
     }

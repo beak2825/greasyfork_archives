@@ -2,7 +2,7 @@
 // @name         气象继续教育
 // @license      MIT
 // @namespace    http://tampermonkey.net/
-// @version      3.49
+// @version      3.50
 // @description  气象学习综合工具：课程列表显示 + 视频播放控制 + 自动下一节 + 进度追踪
 // @author       You
 // @match        http://www.cmatc.cn/lms/app/lms/student/Userselectlesson/show.do*
@@ -24,10 +24,10 @@
         DEFAULT_DELAY: GM_getValue('defaultDelay', 8), // 默认延时（分钟），从本地存储读取
         UPDATE_INTERVAL: 1000, // 倒计时更新间隔（毫秒）
 
-        // 会话保持配置（秒）
-        SESSION_KEEPALIVE_MIN: GM_getValue('sessionKeepaliveMin', 300), // 最小间隔（秒），从本地存储读取
-        SESSION_KEEPALIVE_MAX: GM_getValue('sessionKeepaliveMax', 600), // 最大间隔（秒），从本地存储读取
-        
+        // 登录检测间隔（分钟）
+        SESSION_KEEPALIVE_MIN: GM_getValue('sessionKeepaliveMin', 3), // 最小间隔（分钟），从本地存储读取
+        SESSION_KEEPALIVE_MAX: GM_getValue('sessionKeepaliveMax', 5), // 最大间隔（分钟），从本地存储读取
+
         // 保持会话的请求URL列表，随机切换
         SESSION_KEEPALIVE_URLS: [
             'http://www.cmatc.cn/lms/app/lms/student/Userdashboardinfo/show.do', // 学院首页
@@ -35,16 +35,16 @@
             'http://www.cmatc.cn/lms/app/tms/sfi/StudyContent/year.do', // 个人中心
             'http://www.cmatc.cn/lms/app/appsecurity/user/Student/self.do' // 个人信息
         ],
-        
+
         // 日志显示配置
         LOG_LEVEL: GM_getValue('logLevel', 'simple'), // 日志级别，从本地存储读取
         SHOW_LEARN_TIME_LOGS: true, // 是否显示视频学习播放提交日志
-        
+
         // 自动播放配置
         AUTO_PLAY_NEXT: GM_getValue('autoPlayNext', true), // 是否自动播放下一节
         AUTO_PLAY_DELAY: GM_getValue('autoPlayDelay', 10), // 自动播放下一节的延迟时间（秒），从本地存储读取
         SKIP_COMPLETED: GM_getValue('skipCompleted', true), // 是否跳过已完成的视频
-        
+
         // 调试配置
         DEBUG_MODE: GM_getValue('debugMode', true) // 是否开启调试模式
     };
@@ -64,41 +64,45 @@
     let broadcastChannel = null; // 用于页面间通信
     let lastSentProgress = -1; // 上一次发送的进度，用于限制发送频率
     let isCourseCompleted = false; // 标记课程是否已完成（进度达到100%）
-    
+
     // 课程相关变量
     let currentCourseIndex = -1; // 当前课程索引
     let courseList = []; // 课程列表
-    
+
     // 日志去重和时间管理
     let lastLogTime = 0;
     let lastLogContent = '';
-    
+
+    // 会话管理变量
+    let sessionStartTime = Date.now(); // 会话开始时间
+    let isSessionExpired = false; // 会话是否已过期
+
     // 检测当前页面类型
     function detectPageType() {
         const currentUrl = window.location.href;
-        
+
         // 明确的课程列表页面
         if (currentUrl.includes('Userselectlesson/show.do')) {
             return 'courseList';
         }
-        
+
         // 明确的Learn/enter.do页面，直接标记为videoPlay
         if (currentUrl.includes('Learn/enter.do')) {
             return 'videoPlay';
         }
-        
 
-        
+
+
         return 'unknown';
     }
-    
+
     // 初始化广播频道
     function initBroadcastChannel() {
         broadcastChannel = new BroadcastChannel('cmc-video-learning');
-        
+
         broadcastChannel.addEventListener('message', function(e) {
             const data = e.data;
-            
+
             // 课程列表页面接收消息
             if (currentPageType === 'courseList') {
                 if (data.type === 'videoCompleted') {
@@ -115,24 +119,24 @@
                     sendCourseListReadyMessage();
                 }
             }
-            
+
             // 视频播放页面接收消息
             if (currentPageType === 'videoPlay') {
                 if (data.type === 'courseListReady') {
                     // 处理课程列表就绪消息
                     console.log('收到课程列表就绪消息:', data);
-                    
+
                     // 获取当前视频播放页的lessonId
                     const currentUrl = window.location.href;
                     const currentLessonId = currentUrl.match(/lessonId=(\d+)/)?.[1] || 'unknown';
-                    
+
                     // 只有当消息中的currentLessonId与当前视频播放页的lessonId一致时，才处理该消息
                     // 这样可以避免收到其他课程列表的消息
                     if (data.currentLessonId && currentLessonId && data.currentLessonId !== currentLessonId) {
                         console.log('收到的课程列表lessonId（', data.currentLessonId, '）与当前视频播放页lessonId（', currentLessonId, '）不一致，忽略该消息');
                         return;
                     }
-                    
+
                     // 只有当收到的课程列表数量大于当前课程列表数量，或者当前课程列表为空时，才更新课程列表
                     // 避免课程列表被覆盖为更小的列表
                     if (data.courseList.length > courseList.length || courseList.length === 0) {
@@ -141,12 +145,12 @@
                         console.log('已更新课程列表，共', courseList.length, '个课程');
                         // 打印课程列表信息到控制台
                         console.log('课程列表详情:', courseList);
-                        
+
                         // 存储课程列表到本地存储，使用当前课程的lessonId作为前缀
                         const storageKey = `courseList_${currentLessonId}`;
                         GM_setValue(storageKey, JSON.stringify(courseList));
                         console.log('已将课程列表存储到本地存储，存储key:', storageKey);
-                        
+
                         // 更新课程列表显示
                         updateCourseListDisplay();
                     } else {
@@ -155,17 +159,17 @@
                 }
             }
         });
-        
+
         console.log('广播频道已初始化');
     }
-    
+
     // 更新当前课程索引
     function updateCurrentCourseIndex() {
         if (courseList.length === 0) return;
-        
+
         const currentUrl = window.location.href;
         for (let i = 0; i < courseList.length; i++) {
-            if (currentUrl.includes(courseList[i].lessonId) && 
+            if (currentUrl.includes(courseList[i].lessonId) &&
                 currentUrl.includes(courseList[i].coursewareId)) {
                 currentCourseIndex = i;
                 console.log(`当前课程索引：${currentCourseIndex}，课程：${courseList[i].title}`);
@@ -173,30 +177,30 @@
             }
         }
     }
-    
+
     // 处理视频完成消息，支持没有currentIndex但有lessonId的情况
     function handleVideoCompleted(data) {
         console.log('收到视频完成消息，准备处理：', data);
-        
+
         // 只在课程列表页面显示课程完成提示，不再显示倒计时弹框和打开新窗口
         // 新视频的播放由视频播放页面自己处理
         console.log('视频播放页面会自行处理下一个视频播放，列表页面不做处理');
-        
+
         // 如果没有找到下一个课程，显示课程完成提示
         if (currentPageType === 'courseList') {
             console.log('在列表页面收到视频完成消息，不执行自动播放操作');
         }
     }
-    
+
     // 更新课程进度，只使用URL中的唯一标识符匹配，不使用标题匹配
     function updateCourseProgress(data) {
         const courseIdentifier = data.uniqueCourseTitle || data.courseTitle;
         console.log(`课程 ${courseIdentifier} 进度更新：${data.progress}%`);
-        
+
         // 查找对应的课程项
         const courseItems = document.querySelectorAll('#course-list-content div[data-lesson-id]');
         let foundItem = null;
-        
+
         // 只使用URL中的唯一标识符组合匹配课程：lessonId、coursewareId、lessonGkey
         // 不使用标题匹配，因为播放页标题可能相同
         if (data.lessonId && data.coursewareId) {
@@ -206,7 +210,7 @@
                 const itemLessonId = item.getAttribute('data-lesson-id');
                 const itemCoursewareId = item.getAttribute('data-courseware-id');
                 const itemLessonGkey = item.getAttribute('data-lesson-gkey');
-                
+
                 // 使用完整的唯一标识符组合匹配
                 if (itemLessonId === data.lessonId && itemCoursewareId === data.coursewareId) {
                     // 如果有lessonGkey，也需要匹配
@@ -217,7 +221,7 @@
                 }
             });
         }
-        
+
         // 移除标题匹配作为备选方案，因为播放页标题可能相同
         /*
         // 2. 如果没有找到，使用课程标题匹配作为备选方案
@@ -226,7 +230,7 @@
             courseItems.forEach(item => {
                 const itemText = item.textContent;
                 // 使用更精确的匹配方式：包含完整标题或唯一标题
-                if (itemText.includes(courseIdentifier) || 
+                if (itemText.includes(courseIdentifier) ||
                     (data.uniqueCourseTitle && itemText.includes(data.uniqueCourseTitle))) {
                     foundItem = item;
                     console.log(`找到匹配的课程项：${itemText}`);
@@ -234,13 +238,13 @@
             });
         }
         */
-        
+
         // 更新找到的课程项的进度
         if (foundItem) {
             // 更新进度条
             const progressBar = foundItem.querySelector('.progress-bar');
             const progressPercentage = foundItem.querySelector('.progress-percentage');
-            
+
             if (progressBar && progressPercentage) {
                 progressBar.style.width = `${data.progress}%`;
                 progressPercentage.textContent = `${data.progress}%`;
@@ -258,7 +262,7 @@
             });
         }
     }
-    
+
     // 发送视频完成消息，支持没有currentCourseIndex的情况
     function sendVideoCompletedMessage() {
         if (broadcastChannel) {
@@ -267,23 +271,23 @@
                 type: 'videoCompleted',
                 currentTime: Date.now()
             };
-            
+
             // 如果有currentCourseIndex，添加到消息中
             if (currentCourseIndex !== -1) {
                 messageData.currentIndex = currentCourseIndex;
             }
-            
+
             // 添加课程唯一标识符，确保列表页能识别是哪个课程完成了
             const courseIdentifier = parseCourseIdentifierFromUrl();
             messageData.lessonId = courseIdentifier.lessonId;
             messageData.coursewareId = courseIdentifier.coursewareId;
             messageData.lessonGkey = courseIdentifier.lessonGkey;
-            
+
             broadcastChannel.postMessage(messageData);
             console.log(`已发送视频完成消息，lessonId：${courseIdentifier.lessonId}`);
         }
     }
-    
+
     // 添加窗口关闭事件监听，只有当课程真正完成时才发送视频完成消息
     function addWindowCloseListener() {
         window.addEventListener('beforeunload', function() {
@@ -296,7 +300,7 @@
             }
         });
     }
-    
+
     // 从URL解析课程唯一标识符
     function parseCourseIdentifierFromUrl() {
         const urlParams = new URLSearchParams(window.location.search);
@@ -306,21 +310,21 @@
             lessonGkey: urlParams.get('lessonGkey') || ''
         };
     }
-    
-    // 发送进度更新消息，包含唯一课程标识符
+
+    // 保存进度到本地存储，不发送广播消息
     function sendProgressUpdateMessage(progress) {
-        // 本地保存课程进度，不发送广播消息
+        // 本地保存课程进度
         const courseIdentifier = parseCourseIdentifierFromUrl();
         const uniqueKey = `courseProgress_${courseIdentifier.lessonId}_${courseIdentifier.coursewareId}_${courseIdentifier.lessonGkey}`;
         GM_setValue(uniqueKey, progress);
         console.log(`已保存课程进度：${progress}%，存储key：${uniqueKey}`);
-        
+
         // 当进度达到100%时，标记课程已完成
         if (progress >= 100) {
             isCourseCompleted = true;
             console.log('课程已完成，进度达到100%');
         }
-        
+
         // 更新本地课程列表中的进度
         if (currentCourseIndex !== -1 && courseList[currentCourseIndex]) {
             courseList[currentCourseIndex].progress = progress;
@@ -329,14 +333,14 @@
             updateCourseListDisplay();
         }
     }
-    
+
     // 发送课程列表就绪消息
     function sendCourseListReadyMessage() {
         if (broadcastChannel && courseList.length > 0) {
             // 获取课程列表中第一个课程的lessonId作为当前lessonId
             // 避免从课程列表页面URL中获取，因为课程列表页面URL中没有lessonId参数
             const currentLessonId = courseList[0].lessonId || 'unknown';
-            
+
             broadcastChannel.postMessage({
                 type: 'courseListReady',
                 courseList: courseList,
@@ -344,13 +348,13 @@
                 currentTime: Date.now()
             });
             console.log('已发送课程列表就绪消息，使用第一个课程的lessonId:', currentLessonId);
-            
+
             // 存储课程列表到本地存储，使用第一个课程的lessonId作为前缀，避免不同课程之间的冲突
             GM_setValue(`courseList_${currentLessonId}`, JSON.stringify(courseList));
             console.log('已将课程列表存储到本地存储，存储key:', `courseList_${currentLessonId}`);
         }
     }
-    
+
     // 显示自动播放倒计时弹框
     function showAutoPlayCountdown(nextCourse, delaySeconds) {
         // 检查是否已存在弹框，如果存在则移除
@@ -358,7 +362,7 @@
         if (countdownDialog) {
             countdownDialog.remove();
         }
-        
+
         // 创建弹框容器
         countdownDialog = document.createElement('div');
         countdownDialog.id = 'auto-play-countdown';
@@ -380,7 +384,7 @@
             min-width: 350px;
             animation: entrance 0.5s ease-out;
         `;
-        
+
         // 创建标题
         const title = document.createElement('div');
         title.style.cssText = `
@@ -391,7 +395,7 @@
         `;
         title.textContent = '自动播放下一节';
         countdownDialog.appendChild(title);
-        
+
         // 创建课程信息
         const courseInfo = document.createElement('div');
         courseInfo.style.cssText = `
@@ -402,7 +406,7 @@
         `;
         courseInfo.innerHTML = `将播放：<br><strong style="color: #667eea;">${nextCourse.title}</strong>`;
         countdownDialog.appendChild(courseInfo);
-        
+
         // 创建倒计时显示
         const countdownDisplay = document.createElement('div');
         countdownDisplay.id = 'countdown-timer';
@@ -415,7 +419,7 @@
         `;
         countdownDisplay.textContent = delaySeconds;
         countdownDialog.appendChild(countdownDisplay);
-        
+
         // 创建提示信息
         const message = document.createElement('div');
         message.style.cssText = `
@@ -425,7 +429,7 @@
         `;
         message.textContent = '倒计时结束后将自动打开下一节视频';
         countdownDialog.appendChild(message);
-        
+
         // 创建立即播放按钮
         const playNowButton = document.createElement('button');
         playNowButton.style.cssText = `
@@ -449,7 +453,7 @@
             window.location.href = nextCourse.playUrl;
         });
         countdownDialog.appendChild(playNowButton);
-        
+
         // 创建取消按钮
         const cancelButton = document.createElement('button');
         cancelButton.style.cssText = `
@@ -470,16 +474,16 @@
             countdownDialog.remove();
         });
         countdownDialog.appendChild(cancelButton);
-        
+
         // 添加到页面
         document.body.appendChild(countdownDialog);
-        
+
         // 开始倒计时
         let remainingSeconds = delaySeconds;
         const countdownInterval = setInterval(() => {
             remainingSeconds--;
             countdownDisplay.textContent = remainingSeconds;
-            
+
             if (remainingSeconds <= 0) {
                 clearInterval(countdownInterval);
                 countdownDialog.remove();
@@ -497,7 +501,7 @@
             }
         }, 1000);
     }
-    
+
     // 显示课程完成提示
     function showCourseCompletedMessage() {
         // 检查是否已存在弹框，如果存在则移除
@@ -505,7 +509,7 @@
         if (completedDialog) {
             completedDialog.remove();
         }
-        
+
         // 创建弹框容器
         completedDialog = document.createElement('div');
         completedDialog.id = 'course-completed-dialog';
@@ -527,7 +531,7 @@
             min-width: 400px;
             animation: entrance 0.5s ease-out;
         `;
-        
+
         // 创建标题
         const title = document.createElement('div');
         title.style.cssText = `
@@ -538,7 +542,7 @@
         `;
         title.textContent = '🎉 课程学习完成';
         completedDialog.appendChild(title);
-        
+
         // 创建完成信息
         const message = document.createElement('div');
         message.style.cssText = `
@@ -549,7 +553,7 @@
         `;
         message.textContent = '恭喜您已完成本课程的所有视频学习！';
         completedDialog.appendChild(message);
-        
+
         // 创建关闭按钮（虽然不消失，但还是提供关闭选项）
         const closeButton = document.createElement('button');
         closeButton.style.cssText = `
@@ -571,31 +575,130 @@
             window.close();
         });
         completedDialog.appendChild(closeButton);
-        
+
         // 添加到页面
         document.body.appendChild(completedDialog);
     }
-    
+
+    // 显示会话过期提醒
+    function showSessionExpiredMessage() {
+        // 检查是否已存在弹框，如果存在则移除
+        let expiredDialog = document.getElementById('session-expired-dialog');
+        if (expiredDialog) {
+            expiredDialog.remove();
+        }
+
+        // 创建弹框容器
+        expiredDialog = document.createElement('div');
+        expiredDialog.id = 'session-expired-dialog';
+        expiredDialog.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.95);
+            color: #333333;
+            padding: 25px 30px;
+            border-radius: 15px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            z-index: 9999999;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(200, 200, 200, 0.3);
+            text-align: center;
+            min-width: 350px;
+            animation: entrance 0.5s ease-out;
+        `;
+
+        // 创建标题
+        const title = document.createElement('div');
+        title.style.cssText = `
+            font-size: 18px;
+            font-weight: 600;
+            color: #dc2626;
+            margin-bottom: 15px;
+        `;
+        title.textContent = '⚠️  会话已过期';
+        expiredDialog.appendChild(title);
+
+        // 创建过期信息
+        const message = document.createElement('div');
+        message.style.cssText = `
+            font-size: 14px;
+            color: #4a5568;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        `;
+        message.textContent = '您的登录会话已过期，请重新登录后继续学习！';
+        expiredDialog.appendChild(message);
+
+        // 创建刷新按钮
+        const refreshButton = document.createElement('button');
+        refreshButton.style.cssText = `
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+            margin-right: 10px;
+        `;
+        refreshButton.textContent = '刷新页面';
+        refreshButton.addEventListener('click', () => {
+            expiredDialog.remove();
+            // 刷新当前页面
+            window.location.reload();
+        });
+        expiredDialog.appendChild(refreshButton);
+
+        // 创建关闭按钮
+        const closeButton = document.createElement('button');
+        closeButton.style.cssText = `
+            background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e0 100%);
+            color: #4a5568;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 15px rgba(100, 100, 100, 0.1);
+        `;
+        closeButton.textContent = '稍后刷新';
+        closeButton.addEventListener('click', () => {
+            expiredDialog.remove();
+        });
+        expiredDialog.appendChild(closeButton);
+
+        // 添加到页面
+        document.body.appendChild(expiredDialog);
+    }
+
     // 视频播放页面相关函数
-    
+
     // 创建UI元素（视频播放页面）
     // 更新下一个待播放视频显示
     function updateCourseListDisplay() {
         const nextCourseContent = document.getElementById('next-course-content');
         if (!nextCourseContent) return;
-        
+
         if (courseList.length === 0) {
             nextCourseContent.innerHTML = '<div style="color: #666; font-style: italic;">暂无下一个视频</div>';
             return;
         }
-        
+
         // 查找下一个待播放视频
         let nextCourseIndex = -1;
-        
+
         // 如果当前有课程在播放，查找下一个课程
         if (currentCourseIndex !== -1) {
             nextCourseIndex = currentCourseIndex + 1;
-            
+
             // 如果启用了跳过已完成视频，寻找下一个未完成的视频
             if (CONFIG.SKIP_COMPLETED) {
                 for (let i = nextCourseIndex; i < courseList.length; i++) {
@@ -610,29 +713,29 @@
             // 如果没有当前课程，默认显示第一个课程
             nextCourseIndex = 0;
         }
-        
+
         // 检查下一个课程索引是否有效
         if (nextCourseIndex < 0 || nextCourseIndex >= courseList.length) {
             nextCourseContent.innerHTML = '<div style="color: #666; font-style: italic;">暂无下一个视频</div>';
             return;
         }
-        
+
         // 获取下一个待播放视频信息
         const nextCourse = courseList[nextCourseIndex];
-        
+
         // 更新显示内容
         nextCourseContent.innerHTML = `
             <div style="font-weight: 600; color: #2d3748;">待播放：${nextCourse.title}(${nextCourseIndex + 1}/${courseList.length})</div>
         `;
     }
-    
+
     function createVideoUI() {
         // 创建左侧综合面板
         const combinedPanel = document.createElement('div');
         combinedPanel.id = 'combined-panel';
         combinedPanel.style.cssText = `
             position: fixed;
-            top: auto;
+            top: 10px;
             right: 10px;
             bottom: 10px;
             left: auto;
@@ -649,7 +752,7 @@
             width: 300px;
             max-width: 300px;
             height: auto;
-            max-height: calc(100vh - 50px);
+            max-height: calc(100vh - 20px);
             box-sizing: border-box;
             overflow-y: auto;
             overflow-x: hidden;
@@ -658,7 +761,7 @@
             margin: 0;
             outline: none;
         `;
-        
+
         // 添加日志滚动条样式
         combinedPanel.innerHTML += `
             <style>
@@ -679,7 +782,7 @@
                 }
             </style>
         `;
-        
+
         // 创建面板控制按钮，固定在右下角
         const panelControl = document.createElement('button');
         panelControl.id = 'panel-control-btn';
@@ -709,27 +812,27 @@
             margin: 0;
             font-weight: bold;
         `;
-        
+
         // 添加悬停效果
         panelControl.onmouseenter = function() {
             this.style.background = 'linear-gradient(135deg, rgba(102, 126, 234, 1), rgba(118, 75, 162, 1))';
             this.style.transform = 'scale(1.1)';
             this.style.boxShadow = '0 4px 12px rgba(102, 126, 234, 0.5)';
         };
-        
+
         panelControl.onmouseleave = function() {
             this.style.background = 'linear-gradient(135deg, rgba(102, 126, 234, 0.8), rgba(118, 75, 162, 0.8))';
             this.style.transform = 'scale(1)';
             this.style.boxShadow = '0 2px 8px rgba(102, 126, 234, 0.3)';
         };
-        
+
         // 面板折叠状态变量 - 从本地存储读取初始状态
         let isPanelCollapsed = GM_getValue('isPanelCollapsed', false);
-        
+
         // 面板折叠/展开函数
         function togglePanelCollapse() {
             const panel = document.getElementById('combined-panel');
-            
+
             if (isPanelCollapsed) {
                 // 展开面板
                 panel.style.width = '300px';
@@ -749,7 +852,7 @@
                 panel.style.right = '10px';
                 panel.style.bottom = '10px';
                 panel.style.left = 'auto';
-                
+
                 // 显示面板内容
                 const children = panel.children;
                 for (let i = 0; i < children.length; i++) {
@@ -759,7 +862,7 @@
                         child.style.transform = 'none';
                     }
                 }
-                
+
                 panelControl.textContent = '−';
                 isPanelCollapsed = false;
                 // 保存状态到本地存储
@@ -770,17 +873,17 @@
                 panel.style.opacity = '0';
                 panel.style.visibility = 'hidden';
                 panel.style.pointerEvents = 'none';
-                
+
                 panelControl.textContent = '+';
                 isPanelCollapsed = true;
                 // 保存状态到本地存储
                 GM_setValue('isPanelCollapsed', isPanelCollapsed);
             }
         }
-        
+
         // 添加按钮点击事件，触发折叠/展开
         panelControl.addEventListener('click', togglePanelCollapse);
-        
+
         // 添加面板双击事件，双击空白位置触发折叠/展开
         combinedPanel.addEventListener('dblclick', function(e) {
             // 只有当点击的是面板本身（不是按钮或其他子元素）时才触发折叠
@@ -788,122 +891,61 @@
                 togglePanelCollapse();
             }
         });
-        
+
         // 面板控制按钮应该直接添加到document.body，而不是combinedPanel内部
         document.body.appendChild(panelControl);
-        
+
         // 视频时长显示
         const videoInfo = document.createElement('div');
         videoInfo.id = 'video-info';
         videoInfo.innerHTML = `视频时长：--:-- / --:--`;
-        videoInfo.style.marginBottom = '8px';
+        videoInfo.style.marginBottom = '6px';
         videoInfo.style.fontWeight = '500';
+        videoInfo.style.fontSize = '12px';
         combinedPanel.appendChild(videoInfo);
 
         // 倒计时设置
         const countdownSettings = document.createElement('div');
-        
-        // 构建基础HTML内容
+
+        // 构建基础HTML内容 - 只包含视频时长、延时设置、延时倒计时
         let countdownHtml = `
-            <div style="margin-bottom: 8px; display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
-                <div style="display: flex; align-items: center; gap: 8px;">
-                    <span style="font-weight: 500;">延时设置：</span>
+            <div style="margin-bottom: 6px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                <div style="display: flex; align-items: center; gap: 6px;">
+                    <span style="font-weight: 500; font-size: 11px;">延时设置：</span>
                     <input type="number" id="delay-input" value="${delayMinutes}"
-                           min="0" max="120" style="width: 80px; background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(150, 150, 150, 0.3); color: #333333; border-radius: 6px; padding: 4px 6px; font-size: 13px; outline: none; transition: all 0.2s ease;">
-                    <span>分钟</span>
+                           min="0" max="120" style="width: 80px; background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(150, 150, 150, 0.3); color: #333333; border-radius: 4px; padding: 3px 5px; font-size: 11px; outline: none; transition: all 0.2s ease;">
+                    <span style="font-size: 11px;">分钟</span>
                 </div>
-                <div id="countdown-display" style="font-weight: 600; font-size: 15px; color: #2d3748;">倒计时：--:--:--</div>
+                <div id="countdown-display" style="font-weight: 600; font-size: 12px; color: #2d3748;">延时倒计时：--:--:--</div>
             </div>
-            
-            <div style="margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
-                <span style="font-weight: 500;">日志显示设置：</span>
-                <select id="log-level-select" style="background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(150, 150, 150, 0.3); color: #333333; border-radius: 6px; padding: 4px 6px; font-size: 13px; outline: none; transition: all 0.2s ease; cursor: pointer;">
-                    <option value="simple" ${CONFIG.LOG_LEVEL === 'simple' ? 'selected' : ''}>简单日志</option>
-                    <option value="full" ${CONFIG.LOG_LEVEL === 'full' ? 'selected' : ''}>完整日志</option>
-                </select>
-            </div>
-            
-            <!-- 会话保持配置 -->
-            <div style="margin: 12px 0 8px 0; padding: 10px; background: rgba(240, 240, 240, 0.7); border-radius: 8px; font-size: 13px;">
-                <div style="margin-bottom: 8px; font-weight: 600; color: #4a5568;">会话保持配置（秒）</div>
-                <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
-                    <div style="display: flex; align-items: center; gap: 5px;">
-                        <span>最小间隔：</span>
-                        <input type="number" id="session-min-input" value="${CONFIG.SESSION_KEEPALIVE_MIN}"
-                               min="5" max="300" style="width: 80px; background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(150, 150, 150, 0.3); color: #333333; border-radius: 6px; padding: 4px 6px; font-size: 13px; outline: none; transition: all 0.2s ease;">
-                        <span>秒</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 5px;">
-                        <span>最大间隔：</span>
-                        <input type="number" id="session-max-input" value="${CONFIG.SESSION_KEEPALIVE_MAX}"
-                               min="10" max="600" style="width: 80px; background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(150, 150, 150, 0.3); color: #333333; border-radius: 6px; padding: 4px 6px; font-size: 13px; outline: none; transition: all 0.2s ease;">
-                        <span>秒</span>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- 自动播放配置 -->
-            <div style="margin: 12px 0 8px 0; padding: 10px; background: rgba(240, 240, 240, 0.7); border-radius: 8px; font-size: 13px;">
-                <div style="margin-bottom: 8px; font-weight: 600; color: #4a5568;">自动播放配置</div>
-                <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <input type="checkbox" id="auto-play-next" ${CONFIG.AUTO_PLAY_NEXT ? 'checked' : ''} style="width: 15px; height: 15px; cursor: pointer;">
-                        <label for="auto-play-next" style="cursor: pointer; font-size: 13px;">自动播放下一节</label>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <input type="checkbox" id="skip-completed" ${CONFIG.SKIP_COMPLETED ? 'checked' : ''} style="width: 15px; height: 15px; cursor: pointer;">
-                        <label for="skip-completed" style="cursor: pointer; font-size: 13px;">跳过已完成视频</label>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 8px; margin-top: 8px;">
-                        <span>播放延迟：</span>
-                        <input type="number" id="auto-play-delay" value="${CONFIG.AUTO_PLAY_DELAY}"
-                               min="1" max="60" style="width: 80px; background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(150, 150, 150, 0.3); color: #333333; border-radius: 6px; padding: 4px 6px; font-size: 13px; outline: none; transition: all 0.2s ease;">
-                        <span>秒</span>
-                    </div>
-                </div>
-            </div>`;
-        
-        // 根据DEBUG_MODE条件添加模拟按钮，放到原来倒计时的位置，居中显示
-        if (CONFIG.DEBUG_MODE) {
-            countdownHtml += `
-            <div style="margin: 12px 0 15px 0; display: flex; justify-content: center; gap: 10px;">
-                <button id="end-countdown" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 6px 14px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 500; box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3); transition: all 0.2s ease;">模拟结束</button>
-                <button id="debug-submit" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; border: none; padding: 6px 14px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 500; box-shadow: 0 2px 8px rgba(245, 87, 108, 0.3); transition: all 0.2s ease;">模拟时长</button>
-            </div>`;
-        } else {
-            countdownHtml += `
-            <div style="margin-bottom: 15px;"></div>`;
-        }
-        
-        countdownHtml += `
         `;
-        
+
         countdownSettings.innerHTML = countdownHtml;
         combinedPanel.appendChild(countdownSettings);
-        
-        // 下一个待播放视频标题和内容合并区域
+
+        // 下一个待播放视频标题和内容合并区域 - 放到延时倒计时下面
         const nextCourseContent = document.createElement('div');
         nextCourseContent.id = 'next-course-content';
         nextCourseContent.style.cssText = `
-            margin-bottom: 15px;
-            padding: 12px;
+            margin-bottom: 10px;
+            padding: 8px;
             background: rgba(250, 250, 250, 0.75);
-            border-radius: 10px;
-            font-size: 13px;
-            line-height: 1.5;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            border-radius: 6px;
+            font-size: 11px;
+            line-height: 1.4;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
             text-align: center;
         `;
         // 初始显示空内容
         nextCourseContent.innerHTML = '<div style="color: #666; font-style: italic;">暂无下一个视频</div>';
         combinedPanel.appendChild(nextCourseContent);
-        
-        // 添加学习时长提交日志区域
+
+        // 添加学习时长提交日志区域 - 放到待播放下面
         const learnTimeLog = document.createElement('div');
         learnTimeLog.id = 'learn-time-log';
         learnTimeLog.style.cssText = `
-            max-height: 180px;
-            min-height: 120px;
+            max-height: 500px;
+            min-height: 300px;
             overflow-y: auto;
             margin-top: 12px;
             margin-bottom: 15px;
@@ -911,13 +953,80 @@
             border-top: 1px solid rgba(200, 200, 200, 0.3);
             background: rgba(250, 250, 250, 0.75);
             border-radius: 10px;
-            font-size: 12px;
+            font-size: 9px;
             line-height: 1.6;
             box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.08);
         `;
         learnTimeLog.innerHTML = '';
         combinedPanel.appendChild(learnTimeLog);
-        
+
+        // 日志显示设置和其他配置 - 放到日志后面
+        const otherSettings = document.createElement('div');
+        let otherSettingsHtml = `
+            <div style="margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+                <span style="font-weight: 500; font-size: 11px;">日志显示设置：</span>
+                <select id="log-level-select" style="background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(150, 150, 150, 0.3); color: #333333; border-radius: 4px; padding: 3px 5px; font-size: 11px; outline: none; transition: all 0.2s ease; cursor: pointer;">
+                    <option value="simple" ${CONFIG.LOG_LEVEL === 'simple' ? 'selected' : ''}>简单日志</option>
+                    <option value="full" ${CONFIG.LOG_LEVEL === 'full' ? 'selected' : ''}>完整日志</option>
+                </select>
+            </div>
+
+            <!-- 登录检测间隔配置 -->
+            <div style="margin: 8px 0 6px 0; padding: 8px; background: rgba(240, 240, 240, 0.7); border-radius: 6px; font-size: 11px;">
+                <div style="margin-bottom: 6px; font-weight: 600; color: #4a5568; font-size: 11px;">登录检测间隔（分钟）</div>
+                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                    <div style="display: flex; align-items: center; gap: 5px;">
+                        <span style="font-size: 11px;">最小间隔：</span>
+                        <input type="number" id="session-min-input" value="${CONFIG.SESSION_KEEPALIVE_MIN}"
+                               min="1" max="30" style="width: 80px; background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(150, 150, 150, 0.3); color: #333333; border-radius: 4px; padding: 3px 5px; font-size: 11px; outline: none; transition: all 0.2s ease;">
+                        <span style="font-size: 11px;">分钟</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 5px;">
+                        <span style="font-size: 11px;">最大间隔：</span>
+                        <input type="number" id="session-max-input" value="${CONFIG.SESSION_KEEPALIVE_MAX}"
+                               min="1" max="60" style="width: 80px; background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(150, 150, 150, 0.3); color: #333333; border-radius: 4px; padding: 3px 5px; font-size: 11px; outline: none; transition: all 0.2s ease;">
+                        <span style="font-size: 11px;">分钟</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 自动播放配置 -->
+            <div style="margin: 8px 0 6px 0; padding: 8px; background: rgba(240, 240, 240, 0.7); border-radius: 6px; font-size: 11px;">
+                <div style="margin-bottom: 6px; font-weight: 600; color: #4a5568; font-size: 11px;">自动播放配置</div>
+                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                        <input type="checkbox" id="auto-play-next" ${CONFIG.AUTO_PLAY_NEXT ? 'checked' : ''} style="width: 13px; height: 13px; cursor: pointer;">
+                        <label for="auto-play-next" style="cursor: pointer; font-size: 11px;">自动播放下一节</label>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                        <input type="checkbox" id="skip-completed" ${CONFIG.SKIP_COMPLETED ? 'checked' : ''} style="width: 13px; height: 13px; cursor: pointer;">
+                        <label for="skip-completed" style="cursor: pointer; font-size: 11px;">跳过已完成视频</label>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 6px; margin-top: 6px;">
+                        <span style="font-size: 11px;">播放延迟：</span>
+                        <input type="number" id="auto-play-delay" value="${CONFIG.AUTO_PLAY_DELAY}"
+                               min="1" max="60" style="width: 80px; background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(150, 150, 150, 0.3); color: #333333; border-radius: 4px; padding: 3px 5px; font-size: 11px; outline: none; transition: all 0.2s ease;">
+                        <span style="font-size: 11px;">秒</span>
+                    </div>
+                </div>
+            </div>`;
+
+        // 根据DEBUG_MODE条件添加模拟按钮，放到配置区域下面，居中显示
+        if (CONFIG.DEBUG_MODE) {
+            otherSettingsHtml += `
+            <div style="margin: 8px 0 10px 0; display: flex; justify-content: center; gap: 8px;">
+                <button id="end-countdown" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 500; box-shadow: 0 2px 6px rgba(102, 126, 234, 0.3); transition: all 0.2s ease;">模拟结束</button>
+                <button id="debug-submit" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; border: none; padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 500; box-shadow: 0 2px 6px rgba(245, 87, 108, 0.3); transition: all 0.2s ease;">模拟时长</button>
+                <button id="simulate-session-expired" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; border: none; padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 500; box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3); transition: all 0.2s ease;">模拟登录过期</button>
+            </div>`;
+        } else {
+            otherSettingsHtml += `
+            <div style="margin-bottom: 15px;"></div>`;
+        }
+
+        otherSettings.innerHTML = otherSettingsHtml;
+        combinedPanel.appendChild(otherSettings);
+
         // 创建全屏提醒
         const fullscreenDiv = document.createElement('div');
         fullscreenDiv.id = 'fullscreen-notification';
@@ -1064,7 +1173,7 @@
 
         document.body.appendChild(combinedPanel);
         document.body.appendChild(fullscreenDiv);
-        
+
         // 根据初始状态设置面板样式
         if (isPanelCollapsed) {
             // 初始状态为折叠
@@ -1079,12 +1188,12 @@
             combinedPanel.style.pointerEvents = 'auto';
             panelControl.textContent = '−';
         }
-        
+
         // 初始更新课程列表显示
         updateCourseListDisplay();
 
         // 添加事件监听
-        
+
         // 基础事件监听（始终添加）
         document.getElementById('delay-input').addEventListener('input', handleDelayChange);
         document.getElementById('log-level-select').addEventListener('change', function() {
@@ -1094,28 +1203,28 @@
             GM_setValue('logLevel', CONFIG.LOG_LEVEL);
             console.log(`日志级别已切换为：${CONFIG.LOG_LEVEL}`);
         });
-        
-        // 会话保持最小间隔输入事件
+
+        // 登录检测最小间隔输入事件
         document.getElementById('session-min-input').addEventListener('input', function() {
             // 获取输入值
             let value = parseInt(this.value) || CONFIG.SESSION_KEEPALIVE_MIN;
             // 确保值在有效范围内
-            value = Math.max(5, Math.min(300, value));
+            value = Math.max(1, Math.min(30, value));
             // 更新配置
             CONFIG.SESSION_KEEPALIVE_MIN = value;
             // 保存到本地存储
             GM_setValue('sessionKeepaliveMin', CONFIG.SESSION_KEEPALIVE_MIN);
             // 更新输入框显示（如果输入值超出范围）
             this.value = value;
-            console.log(`会话保持最小间隔已更新为：${CONFIG.SESSION_KEEPALIVE_MIN}秒`);
+            console.log(`登录检测最小间隔已更新为：${CONFIG.SESSION_KEEPALIVE_MIN}分钟`);
         });
-        
-        // 会话保持最大间隔输入事件
+
+        // 登录检测最大间隔输入事件
         document.getElementById('session-max-input').addEventListener('input', function() {
             // 获取输入值
             let value = parseInt(this.value) || CONFIG.SESSION_KEEPALIVE_MAX;
             // 确保值在有效范围内
-            value = Math.max(10, Math.min(600, value));
+            value = Math.max(1, Math.min(60, value));
             // 确保最大值不小于最小值
             if (value < CONFIG.SESSION_KEEPALIVE_MIN) {
                 value = CONFIG.SESSION_KEEPALIVE_MIN;
@@ -1126,23 +1235,23 @@
             GM_setValue('sessionKeepaliveMax', CONFIG.SESSION_KEEPALIVE_MAX);
             // 更新输入框显示（如果输入值超出范围）
             this.value = value;
-            console.log(`会话保持最大间隔已更新为：${CONFIG.SESSION_KEEPALIVE_MAX}秒`);
+            console.log(`登录检测最大间隔已更新为：${CONFIG.SESSION_KEEPALIVE_MAX}分钟`);
         });
-        
+
         // 自动播放下一节选项
         document.getElementById('auto-play-next').addEventListener('change', function() {
             CONFIG.AUTO_PLAY_NEXT = this.checked;
             GM_setValue('autoPlayNext', CONFIG.AUTO_PLAY_NEXT);
             console.log(`自动播放下一节已${CONFIG.AUTO_PLAY_NEXT ? '开启' : '关闭'}`);
         });
-        
+
         // 跳过已完成视频选项
         document.getElementById('skip-completed').addEventListener('change', function() {
             CONFIG.SKIP_COMPLETED = this.checked;
             GM_setValue('skipCompleted', CONFIG.SKIP_COMPLETED);
             console.log(`跳过已完成视频已${CONFIG.SKIP_COMPLETED ? '开启' : '关闭'}`);
         });
-        
+
         // 自动播放延迟时间输入事件
         document.getElementById('auto-play-delay').addEventListener('input', function() {
             // 获取输入值
@@ -1157,7 +1266,7 @@
             this.value = value;
             console.log(`自动播放延迟时间已更新为：${CONFIG.AUTO_PLAY_DELAY}秒`);
         });
-        
+
         // 根据DEBUG_MODE条件添加模拟按钮事件监听
         if (CONFIG.DEBUG_MODE) {
             // 模拟结束按钮事件
@@ -1165,42 +1274,106 @@
             if (endCountdownBtn) {
                 endCountdownBtn.addEventListener('click', endCountdown);
             }
-            
-            // 调试提交按钮事件
+
+            // 调试提交按钮事件 - 模拟本地提交功能（恢复到原始状态）
             const debugSubmitBtn = document.getElementById('debug-submit');
             if (debugSubmitBtn) {
                 debugSubmitBtn.addEventListener('click', function() {
-                    // 模拟提交学习记录
-                    console.log('调试提交：模拟提交学习记录');
-                    
-                    // 构建模拟的学习时长提交数据
-                    const simulatedLearnTime = Math.floor(Math.random() * 100 + 60); // 1-2分钟的随机时长
-                    const newTotalTime = totalLearntime + simulatedLearnTime;
-                    
-                    // 计算进度百分比
-                    const progress = Math.min(100, Math.floor((newTotalTime / videoDuration) * 100));
-                    
-                    // 构建日志内容，添加进度百分比
-                    const logContent = `提交学习时长 ${formatSeconds(simulatedLearnTime)}，累计 ${formatSeconds(newTotalTime)}，进度 ${progress}%`;
-                    
-                    // 显示模拟提交日志
-                    displayDebugLog(logContent);
-                    
-                    // 更新累计时长
-                    totalLearntime += simulatedLearnTime;
-                    
-                    // 发送进度更新消息
-                    sendProgressUpdateMessage(progress);
-                    
-                    // 移除自动结束逻辑，即使学习时长超过视频总时长，也只更新进度，不自动触发结束
-                    // 只有倒计时结束或手动点击才会触发下一个视频播放
-                    
-                    console.log('调试提交完成');
+                    console.log('调试提交：开始模拟本地提交学习记录');
+
+                    try {
+                        // 模拟生成一个随机时长（5-8分钟），与recordLearnTime.js一致
+                        const minSeconds = 300; // 5分钟
+                        const maxSeconds = 480; // 8分钟
+                        const simulatedLearnTime = Math.floor(Math.random() * (maxSeconds - minSeconds + 1)) + minSeconds;
+
+                        // 更新累计学习时长
+                        const newTotalTime = totalLearntime + simulatedLearnTime;
+
+                        // 尝试获取当前视频时长，确保videoDuration不为0
+                        if (videoDuration <= 0) {
+                            // 立即尝试查找并更新视频元素和时长
+                            const currentVideo = findVideoElement();
+                            if (currentVideo && currentVideo.duration > 0) {
+                                videoElement = currentVideo;
+                                videoDuration = currentVideo.duration;
+                                console.log('调试提交：已获取视频时长', videoDuration);
+                            }
+                        }
+
+                        // 计算进度百分比
+                        let progress = 0;
+                        if (videoDuration > 0) {
+                            progress = Math.min(100, parseFloat(((newTotalTime / videoDuration) * 100).toFixed(2)));
+                        }
+
+                        // 检查累计时长是否超过视频时长
+                        let logSuffix = '';
+                        if (videoDuration > 0 && newTotalTime >= videoDuration) {
+                            logSuffix = ' （视频已播放完毕，可以立即结束播放）';
+                        }
+
+                        // 构造日志内容，添加进度百分比
+                        const logContent = `提交学习时长 ${formatSeconds(simulatedLearnTime)}，累计 ${formatSeconds(newTotalTime)}，进度 ${progress}%${logSuffix}`;
+
+                        // 更新累计时长
+                        totalLearntime += simulatedLearnTime;
+
+                        // 直接显示学习时长提交日志
+                        displayDebugLog(logContent);
+
+                        console.log('模拟提交完成，仅更新本地日志，未发送真实请求');
+                        console.log('模拟提交的学习时长：', simulatedLearnTime, '秒');
+                        console.log('累计学习时长：', totalLearntime, '秒');
+                        console.log('当前进度：', progress, '%');
+                    } catch (error) {
+                        console.error('模拟提交发生错误：', error);
+                        displayDebugLog(`❌ 模拟提交发生错误：${error.message}`);
+                    }
+                });
+            }
+
+            // 模拟登录过期按钮事件
+            const simulateSessionExpiredBtn = document.getElementById('simulate-session-expired');
+            if (simulateSessionExpiredBtn) {
+                simulateSessionExpiredBtn.addEventListener('click', function() {
+                    // 模拟会话过期检测
+                    console.log('调试提交：模拟登录过期');
+
+                    // 设置会话过期状态
+                    isSessionExpired = true;
+                    const sessionEndTime = Date.now();
+                    const sessionDuration = Math.round((sessionEndTime - sessionStartTime) / (1000 * 60)); // 分钟
+
+                    // 显示到界面日志
+                    displayDebugLog(`⚠️  会话已过期！模拟登录过期`);
+                    displayDebugLog(`✅  会话开始时间：${new Date(sessionStartTime).toLocaleString()}`);
+                    displayDebugLog(`✅  会话结束时间：${new Date(sessionEndTime).toLocaleString()}`);
+                    displayDebugLog(`⏱️  会话持续时长：${sessionDuration}分钟`);
+                    displayDebugLog(`登录过期，先去登录`);
+
+                    // 同时显示到控制台
+                    console.log(`⚠️  会话已过期！模拟登录过期`);
+                    console.log(`✅  会话开始时间：${new Date(sessionStartTime).toLocaleString()}`);
+                    console.log(`✅  会话结束时间：${new Date(sessionEndTime).toLocaleString()}`);
+                    console.log(`⏱️  会话持续时长：${sessionDuration}分钟`);
+                    console.log(`登录过期，先去登录`);
+
+                    // 显示会话过期弹窗
+                    showSessionExpiredMessage();
+
+                    // 暂停视频播放
+                    if (videoElement && !videoElement.paused) {
+                        videoElement.pause();
+                        console.log('视频已暂停，因为会话已过期');
+                    }
+
+                    console.log('模拟登录过期完成');
                 });
             }
         }
     }
-    
+
     // 显示调试日志
     function displayDebugLog(logContent) {
         const now = new Date();
@@ -1209,34 +1382,39 @@
             minute: '2-digit',
             second: '2-digit'
         });
-        
+
         const logArea = document.getElementById('learn-time-log');
         if (logArea) {
             const logEntry = document.createElement('div');
             logEntry.style.cssText = `
-                margin: 4px 0;
-                padding: 5px 8px;
-                border-radius: 6px;
+                margin: 2px 0;
+                padding: 3px 6px;
+                border-radius: 4px;
                 background: rgba(255, 255, 255, 0.85);
                 color: #333333;
-                font-size: 12px;
+                font-size: 9px;
                 text-align: left;
-                line-height: 1.5;
-                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+                line-height: 1.4;
+                box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
                 transition: all 0.2s ease;
+                max-width: 100%;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
             `;
             logEntry.onmouseenter = function() {
                 this.style.background = 'rgba(245, 245, 245, 0.9)';
             };
-            
+
             logEntry.onmouseleave = function() {
                 this.style.background = 'rgba(255, 255, 255, 0.85)';
             };
-            
-            logEntry.textContent = `${timeDisplay} - 调试：${logContent}`;
+
+            // 去掉"调试："前缀
+            logEntry.textContent = `${timeDisplay} - ${logContent}`;
             logArea.appendChild(logEntry);
             logArea.scrollTop = logArea.scrollHeight;
-            
+
             // 限制日志数量，最多保留50条
             const logEntries = logArea.querySelectorAll('div');
             if (logEntries.length > 51) { // 50条日志 + 1条标题
@@ -1245,7 +1423,7 @@
             }
         }
     }
-    
+
     // 查找视频元素
     function findVideoElement() {
         // 1. 首先尝试直接在页面中查找视频元素
@@ -1269,14 +1447,14 @@
             '#player-container video',
             '.player-container video'
         ];
-        
+
         for (const selector of commonVideoSelectors) {
             video = document.querySelector(selector);
             if (video) {
                 return video;
             }
         }
-        
+
         // 3. 尝试使用更通用的选择器
         const genericSelectors = [
             'div[id*="video"] video',
@@ -1289,7 +1467,7 @@
             '#video video',
             '#player video'
         ];
-        
+
         for (const selector of genericSelectors) {
             video = document.querySelector(selector);
             if (video) {
@@ -1302,13 +1480,13 @@
         for (const iframe of iframes) {
             try {
                 const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-                
+
                 // 直接查找iframe中的视频元素
                 video = iframeDoc.querySelector('video');
                 if (video) {
                     return video;
                 }
-                
+
                 // 尝试在iframe中查找常见播放器结构
                 for (const selector of commonVideoSelectors) {
                     video = iframeDoc.querySelector(selector);
@@ -1320,7 +1498,7 @@
                 // 跨域iframe无法访问，忽略
             }
         }
-        
+
         // 5. 最终检查，再次尝试直接查找video元素
         video = document.querySelector('video');
         if (video) {
@@ -1329,27 +1507,27 @@
 
         return null;
     }
-    
+
     // 添加MutationObserver监听视频元素的动态添加
     function addVideoMutationObserver() {
-        
+
         const observer = new MutationObserver((mutationsList, observer) => {
             // 如果视频元素已经存在，跳过查找
             if (videoElement) {
                 observer.disconnect();
                 return;
             }
-            
+
             const video = findVideoElement();
             if (video) {
                 // 停止监听
                 observer.disconnect();
-                
+
                 // 初始化视频元素
                 initVideoElement();
             }
         });
-        
+
         // 配置观察选项
         const config = {
             childList: true,
@@ -1357,15 +1535,19 @@
             attributes: true,
             attributeFilter: ['src', 'class', 'id']
         };
-        
+
         // 如果视频元素已经存在，直接返回，不启动监听
         if (videoElement) {
             return;
         }
-        
-        // 启动观察
-        observer.observe(document.body, config);
-        
+
+        // 启动观察，确保document.body是有效的Node对象
+        if (document.body && document.body instanceof Node) {
+            observer.observe(document.body, config);
+        } else {
+            console.error('document.body不是有效的Node对象，无法启动MutationObserver');
+        }
+
         // 10秒后停止观察，避免长时间监听
         setTimeout(() => {
             observer.disconnect();
@@ -1393,7 +1575,7 @@
             console.log('视频信息元素未找到，无法更新视频时长');
             return;
         }
-        
+
         if (!videoElement) {
             videoInfoElement.textContent = '视频时长：--:-- / --:--';
             return;
@@ -1406,62 +1588,25 @@
         if (duration > 0) {
             videoDuration = duration;
 
-            // 如果视频时长已可用且倒计时未运行，则自动启动倒计时
-            if (!isCountdownRunning) {
+            // 如果视频时长已可用且倒计时未运行，且课程未完成且视频未结束，则自动启动倒计时
+            if (!isCountdownRunning && !isCourseCompleted && !isVideoEnded) {
                 startCountdown();
             }
         }
 
-        // 检测视频是否结束
-        if (duration > 0 && currentTime >= duration - 0.1 && !isVideoEnded) {
-            // 视频已结束，开始独立倒计时
-            isVideoEnded = true;
-            countdownStartTime = Date.now();
-            console.log('视频已结束，开始独立倒计时');
-            
-            // 标记课程已完成
-            isCourseCompleted = true;
-            console.log('视频已结束，标记课程为已完成');
-            
-            // 直接将当前课程进度设置为100%并保存到本地存储
-            sendProgressUpdateMessage(100);
-            
-            // 发送视频完成消息
-            sendVideoCompletedMessage();
-            
-            // 在视频播放页面显示下一节播放提示
-            const nextCourse = findNextCourse();
-            if (nextCourse) {
-                console.log('将播放下一个课程：', nextCourse.title);
-                showVideoEndCountdown(nextCourse);
-            } else {
-                console.log('已播放完所有课程或没有找到下一个未完成的课程');
-                // 显示课程完成提示
-                showCourseCompletedMessage();
-            }
-
-            // 让视频在延迟时间内保持播放状态（循环播放或继续播放）
-            try {
-                // 设置视频循环播放
-                videoElement.loop = true;
-                // 重新开始播放视频
-                videoElement.currentTime = 0;
-                videoElement.play().catch(error => {
-                    console.log('视频循环播放失败:', error);
-                });
-                console.log('视频已设置为循环播放，保持播放状态');
-            } catch (e) {
-                console.log('设置视频循环播放时出错:', e);
-            }
+        // 计算当前进度百分比，始终显示两位小数
+        let progress = "0.00";
+        if (duration > 0) {
+            progress = ((currentTime / duration) * 100).toFixed(2);
         }
 
-        videoInfoElement.textContent = 
-            `视频时长：${formatTime(currentTime)} / ${formatTime(duration)}`;
-        
+        videoInfoElement.textContent =
+            `视频时长：${formatTime(currentTime)} / ${formatTime(duration)} (${progress}%)`;
+
         // 更新倒计时显示
         updateCountdown();
     }
-    
+
     // 注释掉实时进度更新，只在课程时长提交时发送更新
     // 进度条更新应该只有在课程时长提交时才触发，而不是实时触发
     /*
@@ -1482,29 +1627,24 @@
             console.log('倒计时元素未找到，无法更新倒计时');
             return;
         }
-        
+
         if (!isCountdownRunning || !videoElement) {
-            countdownElement.textContent = `倒计时：--:--:--`;
+            countdownElement.textContent = `延时倒计时：--:--:--`;
             return;
         }
 
         let totalRemainingSeconds;
+        let countdownText = `延时倒计时：--:--:--`;
 
         if (isVideoEnded) {
-            // 视频已结束，使用独立倒计时
+            // 视频已结束，显示延时倒计时
             const elapsedSeconds = Math.floor((Date.now() - countdownStartTime) / 1000);
             totalRemainingSeconds = (delayMinutes * 60) - elapsedSeconds;
-        } else {
-            // 视频未结束，基于视频播放时间计算
-            const currentPlaybackTime = videoElement.currentTime;
-            const remainingVideoTime = videoDuration - currentPlaybackTime;
-            totalRemainingSeconds = remainingVideoTime + (delayMinutes * 60);
+            remainingTime = Math.max(0, Math.floor(totalRemainingSeconds));
+            countdownText = `延时倒计时：${formatTime(remainingTime)}`;
         }
 
-        remainingTime = Math.max(0, Math.floor(totalRemainingSeconds));
-
-        countdownElement.textContent = 
-            `倒计时：${formatTime(remainingTime)}`;
+        countdownElement.textContent = countdownText;
 
         // 检查倒计时是否结束
         if (remainingTime <= 0 && isCountdownRunning) {
@@ -1519,13 +1659,11 @@
             clearInterval(countdownInterval);
         }
 
-        // 重置视频结束标记
-        isVideoEnded = false;
-
-        // 获取当前视频播放时间
-        initialPlaybackTime = videoElement.currentTime;
-
         isCountdownRunning = true;
+
+        // 初始化remainingTime为一个较大的值，避免页面刷新时立即触发endCountdown
+        // 只有在视频结束后，isVideoEnded为true时，才会开始真正的倒计时
+        remainingTime = 3600; // 1小时，足够大的初始值
 
         // 更新显示
         updateCountdown();
@@ -1536,15 +1674,14 @@
             updateVideoInfo();
         }, CONFIG.UPDATE_INTERVAL);
 
-        // 计算初始剩余时长
-        const remainingVideoTime = videoDuration - initialPlaybackTime;
-        const totalSeconds = remainingVideoTime + (delayMinutes * 60);
-        console.log(`倒计时已启动，初始剩余时长：${formatTime(totalSeconds)}`);
+        console.log(`倒计时定时器已启动`);
     }
 
     // 处理延时设置变化
     function handleDelayChange() {
-        delayMinutes = parseInt(document.getElementById('delay-input').value) || CONFIG.DEFAULT_DELAY;
+        const inputValue = document.getElementById('delay-input').value;
+        // 正确处理0值：只有当值为null、undefined或空字符串时，才使用默认值
+        delayMinutes = inputValue === '' ? CONFIG.DEFAULT_DELAY : parseInt(inputValue, 10);
         // 保存到本地存储
         GM_setValue('delayMinutes', delayMinutes);
         // 更新显示
@@ -1577,10 +1714,10 @@
     // 查找下一个要播放的视频
     function findNextCourse() {
         if (courseList.length === 0) return null;
-        
+
         let nextIndex = -1;
         let currentIndex = -1;
-        
+
         // 1. 如果有currentCourseIndex，直接使用它
         if (currentCourseIndex !== -1) {
             currentIndex = currentCourseIndex;
@@ -1590,7 +1727,7 @@
         else {
             const currentUrl = window.location.href;
             for (let i = 0; i < courseList.length; i++) {
-                if (currentUrl.includes(courseList[i].lessonId) && 
+                if (currentUrl.includes(courseList[i].lessonId) &&
                     currentUrl.includes(courseList[i].coursewareId)) {
                     currentIndex = i;
                     nextIndex = i + 1;
@@ -1598,14 +1735,14 @@
                 }
             }
         }
-        
+
         console.log('当前课程索引：', currentIndex, '，下一个开始索引：', nextIndex, '，课程总数：', courseList.length);
-        
+
         // 如果找到了当前课程的位置
         if (currentIndex !== -1) {
             let foundNext = false;
             let finalNextIndex = -1;
-            
+
             // 如果启用了跳过已完成视频，寻找下一个未完成的视频
             if (CONFIG.SKIP_COMPLETED) {
                 console.log('启用了跳过已完成视频，寻找下一个未完成的视频');
@@ -1632,7 +1769,7 @@
                     console.log('直接播放下一个课程，索引：', finalNextIndex);
                 }
             }
-            
+
             if (foundNext && finalNextIndex !== -1) {
                 console.log('返回下一个课程：', courseList[finalNextIndex].title);
                 return courseList[finalNextIndex];
@@ -1642,10 +1779,10 @@
         } else {
             console.log('无法确定当前课程位置，无法自动播放下一个课程');
         }
-        
+
         return null;
     }
-    
+
     // 显示视频播放页面的结束倒计时弹框
     function showVideoEndCountdown(nextCourse) {
         // 检查是否已存在弹框，如果存在则移除
@@ -1653,7 +1790,7 @@
         if (countdownDialog) {
             countdownDialog.remove();
         }
-        
+
         // 创建弹框容器
         countdownDialog = document.createElement('div');
         countdownDialog.id = 'video-end-countdown';
@@ -1675,7 +1812,7 @@
             min-width: 350px;
             animation: entrance 0.5s ease-out;
         `;
-        
+
         // 创建标题
         const title = document.createElement('div');
         title.style.cssText = `
@@ -1686,7 +1823,7 @@
         `;
         title.textContent = '本视频播放完毕';
         countdownDialog.appendChild(title);
-        
+
         // 创建课程信息
         const courseInfo = document.createElement('div');
         courseInfo.style.cssText = `
@@ -1697,7 +1834,7 @@
         `;
         courseInfo.innerHTML = `即将播放：<br><strong style="color: #667eea;">${nextCourse.title}</strong>`;
         countdownDialog.appendChild(courseInfo);
-        
+
         // 创建倒计时显示
         const countdownDisplay = document.createElement('div');
         countdownDisplay.id = 'countdown-timer';
@@ -1710,7 +1847,7 @@
         `;
         countdownDisplay.textContent = CONFIG.AUTO_PLAY_DELAY;
         countdownDialog.appendChild(countdownDisplay);
-        
+
         // 创建提示信息
         const message = document.createElement('div');
         message.style.cssText = `
@@ -1720,7 +1857,7 @@
         `;
         message.textContent = '倒计时结束后将自动播放下一节视频';
         countdownDialog.appendChild(message);
-        
+
         // 创建立即播放按钮
         const playNowButton = document.createElement('button');
         playNowButton.style.cssText = `
@@ -1746,7 +1883,7 @@
             // window.close();
         });
         countdownDialog.appendChild(playNowButton);
-        
+
         // 创建取消按钮
         const cancelButton = document.createElement('button');
         cancelButton.style.cssText = `
@@ -1767,18 +1904,18 @@
             countdownDialog.remove();
         });
         countdownDialog.appendChild(cancelButton);
-        
+
         // 添加到页面
         document.body.appendChild(countdownDialog);
-        
+
         // 开始倒计时
         let remainingSeconds = CONFIG.AUTO_PLAY_DELAY;
-        const countdownInterval = setInterval(() => {
+        const localCountdownInterval = setInterval(() => {
             remainingSeconds--;
             countdownDisplay.textContent = remainingSeconds;
-            
+
             if (remainingSeconds <= 0) {
-                clearInterval(countdownInterval);
+                clearInterval(localCountdownInterval);
                 countdownDialog.remove();
                 // 倒计时结束，尝试打开下一个视频
                 setTimeout(() => {
@@ -1795,21 +1932,21 @@
             }
         }, 1000);
     }
-    
+
     // 结束倒计时
     function endCountdown() {
         cancelCountdown();
         console.log('倒计时结束，准备处理视频完成');
-        
+
         // 标记课程已完成
         isCourseCompleted = true;
-        
+
         // 直接将当前课程进度设置为100%并保存到本地存储
         sendProgressUpdateMessage(100);
-        
+
         // 发送视频完成消息
         sendVideoCompletedMessage();
-        
+
         // 在视频播放页面显示下一节播放提示
         if (currentPageType === 'videoPlay') {
             const nextCourse = findNextCourse();
@@ -1822,8 +1959,11 @@
                 showCourseCompletedMessage();
             }
         }
-        
+
         console.log('视频完成消息已发送，调试阶段不自动关闭标签页');
+
+        // 重置视频结束标志，防止无限循环调用
+        isVideoEnded = false;
     }
 
     // 格式化秒数为分钟和秒的格式
@@ -1847,18 +1987,23 @@
 
     // 发送会话保持请求
     function sendSessionKeepaliveRequest(url, urlDesc) {
+        // 如果会话已过期，不再发送请求
+        if (isSessionExpired) {
+            return;
+        }
+
         // 获取当前页面的referer
         const referer = window.location.href;
-        
+
         // url和urlDesc由调用方传入，确保日志显示与实际请求一致
-        
+
         // 构建请求头
         const headers = {
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
             'Referer': referer,
             'User-Agent': navigator.userAgent
         };
-        
+
         // 根据配置决定是否显示详细日志
         if (CONFIG.LOG_LEVEL === 'full') {
             // 显示详细请求信息
@@ -1869,7 +2014,7 @@
             console.log(`当前页面Referer：${referer}`);
             console.log(`请求头：`, JSON.stringify(headers, null, 2));
         }
-        
+
         // 发送GET请求到选定的页面，保持会话活跃
         fetch(url, {
             method: 'GET',
@@ -1884,16 +2029,142 @@
                 console.log(`响应状态文本：${response.statusText}`);
                 console.log(`响应头：`, JSON.stringify(Object.fromEntries(response.headers.entries()), null, 2));
             }
-            
-            // 总是显示重要的成功/失败日志
-            if (response.ok) {
-                console.log(`✅  请求【${urlDesc}】成功`);
-            } else {
-                console.log(`❌  请求【${urlDesc}】失败`);
+
+            // 检测会话是否过期
+            if (response.status === 0) {
+                // 响应状态为0，判定会话过期
+                isSessionExpired = true;
+                const sessionEndTime = Date.now();
+                const sessionDuration = Math.round((sessionEndTime - sessionStartTime) / (1000 * 60)); // 分钟
+
+                // 显示到界面日志
+                displayDebugLog(`⚠️  会话已过期！响应状态为0`);
+                displayDebugLog(`✅  会话开始时间：${new Date(sessionStartTime).toLocaleString()}`);
+                displayDebugLog(`✅  会话结束时间：${new Date(sessionEndTime).toLocaleString()}`);
+                displayDebugLog(`⏱️  会话持续时长：${sessionDuration}分钟`);
+                displayDebugLog(`登录过期，先去登录`);
+
+                // 同时显示到控制台
+                console.log(`⚠️  会话已过期！响应状态为0`);
+                console.log(`✅  会话开始时间：${new Date(sessionStartTime).toLocaleString()}`);
+                console.log(`✅  会话结束时间：${new Date(sessionEndTime).toLocaleString()}`);
+                console.log(`⏱️  会话持续时长：${sessionDuration}分钟`);
+                console.log(`登录过期，先去登录`);
+
+                // 显示会话过期弹窗
+                showSessionExpiredMessage();
+
+                // 暂停视频播放
+                if (videoElement && !videoElement.paused) {
+                    videoElement.pause();
+                    console.log('视频已暂停，因为会话已过期');
+                }
+
+                // 不再启动下一次会话保持定时器
+                return;
             }
-            
-            // 请求完成后，启动下一次会话保持定时器
-            startSessionKeepalive();
+
+            // 读取响应内容
+            return response.text().then(text => {
+                // 打印响应内容（前200字符）
+                const truncatedText = text.length > 200 ? text.substring(0, 200) + '...' : text;
+                console.log(`📝  响应内容：${truncatedText}`);
+
+                // 移除了保存响应内容到HTML文件的逻辑
+                // 直接在控制台打印响应内容的前500个字符，用于调试
+                if (CONFIG.DEBUG_MODE) {
+                    const truncatedText = text.length > 500 ? text.substring(0, 500) + '...' : text;
+                    console.log(`📝  响应内容（前500字符）：${truncatedText}`);
+                }
+
+                // 检查响应内容是否包含登录页特征
+                let isLoginPage = false;
+                let matchedCondition = null;
+
+                // 条件1: title包含"登录入口"
+                const titleMatch = text.match(/<title>(.*?)<\/title>/i);
+                if (titleMatch && titleMatch[1].includes('登录入口')) {
+                    isLoginPage = true;
+                    matchedCondition = `title包含"登录入口"`;
+                }
+
+                // 条件2-4: 包含三种登录字样
+                const loginPatterns = [
+                    '用户ID登录',
+                    '身份证登录',
+                    '手机号登录'
+                ];
+
+                for (const pattern of loginPatterns) {
+                    if (text.includes(pattern)) {
+                        isLoginPage = true;
+                        matchedCondition = `包含"${pattern}"字样`;
+                        break;
+                    }
+                }
+
+                // 额外条件：检查是否包含登录相关的HTML结构
+                const loginStructures = [
+                    /<li[^>]*>用户ID登录<\/li>/i,
+                    /<li[^>]*>身份证登录<\/li>/i,
+                    /<li[^>]*>手机号登录<\/li>/i
+                ];
+
+                for (const pattern of loginStructures) {
+                    if (pattern.test(text)) {
+                        isLoginPage = true;
+                        matchedCondition = `匹配登录相关HTML结构`;
+                        break;
+                    }
+                }
+
+                if (isLoginPage) {
+                    // 响应是登录页，判定会话过期
+                    isSessionExpired = true;
+                    const sessionEndTime = Date.now();
+                    const sessionDuration = Math.round((sessionEndTime - sessionStartTime) / (1000 * 60)); // 分钟
+
+                    // 显示到界面日志
+                    displayDebugLog(`⚠️  会话已过期！返回登录页内容`);
+                    displayDebugLog(`🔍  匹配条件：${matchedCondition}`);
+                    displayDebugLog(`✅  会话开始时间：${new Date(sessionStartTime).toLocaleString()}`);
+                    displayDebugLog(`✅  会话结束时间：${new Date(sessionEndTime).toLocaleString()}`);
+                    displayDebugLog(`⏱️  会话持续时长：${sessionDuration}分钟`);
+                    displayDebugLog(`登录过期，先去登录`);
+
+                    // 同时显示到控制台
+                    console.log(`⚠️  会话已过期！返回登录页内容`);
+                    console.log(`🔍  匹配条件：${matchedCondition}`);
+                    console.log(`✅  会话开始时间：${new Date(sessionStartTime).toLocaleString()}`);
+                    console.log(`✅  会话结束时间：${new Date(sessionEndTime).toLocaleString()}`);
+                    console.log(`⏱️  会话持续时长：${sessionDuration}分钟`);
+                    console.log(`登录过期，先去登录`);
+
+                    // 显示会话过期弹窗
+                    showSessionExpiredMessage();
+
+                    // 暂停视频播放
+                    if (videoElement && !videoElement.paused) {
+                        videoElement.pause();
+                        console.log('视频已暂停，因为会话已过期');
+                    }
+
+                    // 不再启动下一次会话保持定时器，直接返回
+                    return;
+                }
+
+                // 只在会话未过期时显示成功/失败日志
+                if (!isSessionExpired) {
+                    if (response.ok) {
+                        console.log(`✅  请求【${urlDesc}】成功`);
+                    } else {
+                        console.log(`❌  请求【${urlDesc}】失败`);
+                    }
+
+                    // 只有会话未过期时才启动下一次会话保持定时器
+                    startSessionKeepalive();
+                }
+            });
         }).catch(error => {
             // 根据配置决定是否显示详细日志
             if (CONFIG.LOG_LEVEL === 'full') {
@@ -1901,40 +2172,42 @@
                 console.log(`请求URL：${url}（${urlDesc}）`);
                 console.log(`错误信息：`, error);
             }
-            
+
             // 总是显示重要的错误日志
             console.log(`❌  请求【${urlDesc}】发生错误：`, error);
-            
-            // 请求完成后，启动下一次会话保持定时器
-            startSessionKeepalive();
+
+            // 只有会话未过期时才启动下一次会话保持定时器
+            if (!isSessionExpired) {
+                startSessionKeepalive();
+            }
         });
     }
 
     // 启动会话保持定时器
     function startSessionKeepalive() {
-        // 将配置的秒转换为毫秒
-        const minMs = CONFIG.SESSION_KEEPALIVE_MIN * 1000;
-        const maxMs = CONFIG.SESSION_KEEPALIVE_MAX * 1000;
-        
+        // 将配置的分钟转换为毫秒
+        const minMs = CONFIG.SESSION_KEEPALIVE_MIN * 60 * 1000;
+        const maxMs = CONFIG.SESSION_KEEPALIVE_MAX * 60 * 1000;
+
         // 生成随机间隔时间（毫秒）
         const intervalMs = getRandomMs(minMs, maxMs);
         const intervalSeconds = Math.round(intervalMs / 1000);
-        
+
         // 计算下次执行的具体时间
         const nextExecutionTime = new Date();
         nextExecutionTime.setMilliseconds(nextExecutionTime.getMilliseconds() + intervalMs);
-        
+
         // 格式化时间显示
         const timeStr = nextExecutionTime.toLocaleTimeString('zh-CN', {
             hour: '2-digit',
             minute: '2-digit',
             second: '2-digit'
         });
-        
+
         // 提前选择下一次要请求的URL
         const randomIndex = Math.floor(Math.random() * CONFIG.SESSION_KEEPALIVE_URLS.length);
         const url = CONFIG.SESSION_KEEPALIVE_URLS[randomIndex];
-        
+
         // 获取URL的描述信息
         const urlDesc = {
             'http://www.cmatc.cn/lms/app/lms/student/Userdashboardinfo/show.do': '学院首页页面',
@@ -1942,10 +2215,10 @@
             'http://www.cmatc.cn/lms/app/tms/sfi/StudyContent/year.do': '个人中心页面',
             'http://www.cmatc.cn/lms/app/appsecurity/user/Student/self.do': '个人信息页面'
         }[url] || '未知页面';
-        
+
         // 使用新的日志格式
         console.log(`将在 ${intervalSeconds} 秒后${timeStr} 请求【${urlDesc}】`);
-        
+
         // 设置定时器
         setTimeout(() => {
             // 发送会话保持请求，传递选定的URL
@@ -1959,13 +2232,13 @@
         if (!videoElement) {
             videoElement = findVideoElement();
         }
-        
+
         if (videoElement) {
             // 设置静音
             if (!videoElement.muted) {
                 videoElement.muted = true;
             }
-            
+
             // 尝试自动播放
             try {
                 if (videoElement.paused) {
@@ -1976,7 +2249,7 @@
             } catch (error) {
                 // 忽略播放错误
             }
-            
+
             // 确保不重复添加事件监听器
             if (!videoElement.hasEventListenersAdded) {
                 // 标记事件监听器已添加
@@ -1984,146 +2257,115 @@
 
                 // 监听视频加载完成事件，获取准确时长
                 videoElement.addEventListener('loadedmetadata', () => {
-                    videoDuration = videoElement.duration;
-                    
-                    // 确保视频静音
-                    if (!videoElement.muted) {
-                        videoElement.muted = true;
-                    }
-                    
-                    // 视频加载完成后自动开始倒计时
-                    startCountdown();
-                    // 更新视频信息显示
-                    updateVideoInfo();
-                    
-                    // 只显示关键信息：视频查找成功、时长、静音状态
-                    console.log(`视频查找成功，时长：${formatTime(videoDuration)}，已设置静音`);
+                    handleVideoLoaded();
                 });
-                
+
                 // 监听视频播放进度变化事件，同时更新视频信息
                 videoElement.addEventListener('timeupdate', () => {
                     handlePlaybackProgressChange();
                     updateVideoInfo();
                 });
-                
+
                 // 监听视频播放事件，确保倒计时启动和静音
                 videoElement.addEventListener('play', () => {
                     // 确保视频静音
                     if (!videoElement.muted) {
                         videoElement.muted = true;
                     }
-                    
+
                     if (videoElement.duration > 0 && !isCountdownRunning) {
                         startCountdown();
                     }
                     // 更新视频信息显示
                     updateVideoInfo();
                 });
-                
+
                 // 监听视频结束事件
                 videoElement.addEventListener('ended', () => {
-                    isVideoEnded = true;
-                    countdownStartTime = Date.now();
-                    
-                    // 检测是否为多视频页面
-                    checkMultiVideoPage(videoElement);
+                    // 检查视频是否真的播放结束，避免页面刷新时误触发
+                    // 视频刚加载时currentTime和duration可能都为0或相近，需要排除这种情况
+                    if (videoElement.duration > 10 && videoElement.currentTime >= videoElement.duration - 0.1) {
+                        isVideoEnded = true;
+                        countdownStartTime = Date.now();
+                        console.log('视频已结束，开始延时倒计时');
+                    } else {
+                        console.log(`视频ended事件被触发，但视频可能刚加载，currentTime: ${videoElement.currentTime.toFixed(2)}s, duration: ${videoElement.duration.toFixed(2)}s`);
+                    }
                 });
             }
-            
-            // 立即检查视频是否已加载完成
+
+            // 立即检查视频是否已加载完成，如果是则直接处理
             if (videoElement.duration > 0) {
-                videoDuration = videoElement.duration;
-                if (!isCountdownRunning) {
-                    startCountdown();
-                }
+                handleVideoLoaded();
             }
-            
+
             // 立即更新视频信息和倒计时显示
             updateVideoInfo();
             updateCountdown();
         }
     }
-    
-    // 检测是否为多视频页面
-    function checkMultiVideoPage(video) {
-        // 检查是否存在章节目录元素
-        const introdiv = document.getElementById('introdiv');
-        if (introdiv) {
-            // 检测到多视频页面，检查当前播放的是否为最后一个视频
-            checkIfLastVideo(video);
+
+    // 处理视频加载完成逻辑，无论何时调用都能正确设置播放位置
+    function handleVideoLoaded() {
+        if (!videoElement) return;
+
+        videoDuration = videoElement.duration;
+
+        // 确保视频静音
+        if (!videoElement.muted) {
+            videoElement.muted = true;
+        }
+
+        // 视频加载完成后，根据初始进度和实际视频时长计算准确的学习时长
+        const courseIdentifier = parseCourseIdentifierFromUrl();
+        const uniqueKey = `courseProgress_${courseIdentifier.lessonId}_${courseIdentifier.coursewareId}_${courseIdentifier.lessonGkey}`;
+        const initialProgress = GM_getValue(uniqueKey, 0);
+        if (initialProgress > 0 && videoDuration > 0) {
+            // 根据实际视频时长和初始进度计算准确的学习时长
+            totalLearntime = Math.floor((initialProgress / 100) * videoDuration);
+
+            // 根据初始进度计算对应的播放时间，自动跳转到该位置
+            const playPosition = (initialProgress / 100) * videoDuration;
+
+            // 检查当前播放位置是否与预期位置相差较大，如果是则跳转
+            if (Math.abs(videoElement.currentTime - playPosition) > 1) {
+                videoElement.currentTime = playPosition;
+                console.log(`视频已加载，根据初始进度 ${initialProgress}% 跳转到 ${formatTime(playPosition)} 位置播放`);
+
+                // 显示修正后的初始进度信息到日志面板
+                const logContent = `📊  初始进度：${initialProgress}%，对应学习时长：${formatSeconds(totalLearntime)}（视频时长：${formatTime(videoDuration)}）`;
+                displayDebugLog(logContent);
+                displayDebugLog(`⏯️  已自动跳转到视频 ${formatTime(playPosition)} 位置继续播放`);
+            }
         } else {
-            // 单视频页面，直接标记课程完成
-            completeCourse();
-        }
-    }
-    
-    // 检查当前播放的是否为最后一个视频
-    function checkIfLastVideo(video) {
-        // 获取章节目录列表
-        const playerlist = document.getElementById('playerlist');
-        if (!playerlist) {
-            // 未找到章节目录列表，按单视频处理
-            completeCourse();
-            return;
-        }
-        
-        // 获取所有视频章节
-        const videoChapters = playerlist.querySelectorAll('li');
-        
-        // 获取当前正在播放的视频索引
-        let currentIndex = -1;
-        
-        // 查找显示播放图标的视频（display: inline）
-        for (let i = 0; i < videoChapters.length; i++) {
-            const chapter = videoChapters[i];
-            const img = chapter.querySelector('img.dhimg');
-            if (img && img.style.display === 'inline') {
-                currentIndex = i;
-                break;
+            // 如果初始进度为0，重置学习时长
+            totalLearntime = 0;
+            if (initialProgress === 0) {
+                // 显示初始进度为0的信息到日志面板
+                const logContent = `📊  初始进度：0%，开始新的学习`;
+                displayDebugLog(logContent);
             }
         }
-        
-        // 或者通过id解析索引
-        if (currentIndex === -1) {
-            for (let i = 0; i < videoChapters.length; i++) {
-                const chapter = videoChapters[i];
-                if (chapter.id.startsWith('vli_')) {
-                    const index = parseInt(chapter.id.replace('vli_', ''));
-                    // 检查是否有其他标记
-                    if (chapter.style.fontWeight === 'bold' || chapter.style.color === 'red') {
-                        currentIndex = index;
-                        break;
-                    }
-                }
-            }
+
+        // 视频加载完成后自动开始倒计时
+        if (!isCountdownRunning) {
+            startCountdown();
         }
-        
-        // 检查是否为最后一个视频
-        if (currentIndex === videoChapters.length - 1) {
-            // 当前视频是最后一个视频，所有视频播放完毕
-            completeCourse();
-        } else {
-            // 还有后续视频，等待自动播放
-            waitForNextVideo();
-        }
+        // 更新视频信息显示
+        updateVideoInfo();
+
+        // 只显示关键信息：视频查找成功、时长、静音状态
+        console.log(`视频查找成功，时长：${formatTime(videoDuration)}，已设置静音`);
     }
-    
-    // 等待下一个视频开始播放
-    function waitForNextVideo() {
-        // 重新初始化视频元素，等待下一个视频加载
-        setTimeout(() => {
-            initVideoElement();
-        }, 2000);
-    }
-    
+
     // 完成课程处理
     function completeCourse() {
         // 标记课程已完成
         isCourseCompleted = true;
-        
+
         // 直接将当前课程进度设置为100%并保存到本地存储
         sendProgressUpdateMessage(100);
-        
+
         // 发送视频完成消息
         sendVideoCompletedMessage();
     }
@@ -2155,10 +2397,10 @@
                 if (timeMatch && timeMatch[1]) {
                     seconds = parseInt(timeMatch[1]);
                     const newTotalTime = totalLearntime + seconds;
-                    
+
                     // 计算进度百分比
-                    const progress = Math.min(100, Math.floor((newTotalTime / videoDuration) * 100));
-                    
+                    const progress = Math.min(100, parseFloat(((newTotalTime / videoDuration) * 100).toFixed(2)));
+
                     // 检查累计时长是否超过视频时长
                     if (videoDuration > 0 && newTotalTime >= videoDuration) {
                         // 移除自动发送视频完成消息的逻辑，只显示提示
@@ -2177,10 +2419,10 @@
                 if (timeMatch && timeMatch[1]) {
                     seconds = parseInt(timeMatch[1]);
                     const newTotalTime = totalLearntime + seconds;
-                    
+
                     // 计算进度百分比
-                    const progress = Math.min(100, Math.floor((newTotalTime / videoDuration) * 100));
-                    
+                    const progress = Math.min(100, parseFloat(((newTotalTime / videoDuration) * 100).toFixed(2)));
+
                     // 检查累计时长是否超过视频时长
                     if (videoDuration > 0 && newTotalTime >= videoDuration) {
                         // 移除自动发送视频完成消息的逻辑，只显示提示
@@ -2200,11 +2442,11 @@
             const isTimerLog = logString.includes('将在') && logString.includes('请求【');
             const isResultLog = logString.startsWith('✅  请求【') || logString.startsWith('❌  请求【');
             const isSessionKeepaliveLog = isTimerLog || isResultLog;
-            
+
             // 检查是否为配置变更日志
-            const isConfigLog = logString.includes('已切换为') || 
+            const isConfigLog = logString.includes('已切换为') ||
                                logString.includes('已更新为');
-            
+
             if (isSessionKeepaliveLog) {
                 // 请求结果日志在所有模式下都显示，定时器日志只在完整日志模式下显示
                 if (CONFIG.LOG_LEVEL === 'full' || isResultLog) {
@@ -2238,13 +2480,13 @@
         // 更新累计时长（仅对学习时长日志）
         if (isLearnTimeLog) {
             totalLearntime += seconds;
-            
+
             // 计算进度百分比
-            const progress = Math.min(100, Math.floor((totalLearntime / videoDuration) * 100));
-            
+            const progress = Math.min(100, parseFloat(((totalLearntime / videoDuration) * 100).toFixed(2)));
+
             // 每次进度更新时都保存进度到本地存储
             sendProgressUpdateMessage(progress);
-            
+
             // 移除自动结束逻辑，即使学习时长超过视频总时长，也不自动发送视频完成消息
             // 只有倒计时结束或手动点击才会触发下一个视频播放
             if (videoDuration > 0 && totalLearntime >= videoDuration) {
@@ -2265,23 +2507,23 @@
 
         // 设置统一的日志样式，去掉不同颜色和晃动效果
         logEntry.style.cssText = `
-            margin: 4px 0;
-            padding: 5px 8px;
-            border-radius: 6px;
+            margin: 2px 0;
+            padding: 3px 6px;
+            border-radius: 4px;
             background: rgba(255, 255, 255, 0.85);
             color: #333333;
-            font-size: 12px;
+            font-size: 9px;
             text-align: left;
-            line-height: 1.5;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            line-height: 1.4;
+            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
             transition: all 0.2s ease;
         `;
-        
+
         // 移除悬停效果，避免晃动
         logEntry.onmouseenter = function() {
             this.style.background = 'rgba(245, 245, 245, 0.9)';
         };
-        
+
         logEntry.onmouseleave = function() {
             this.style.background = 'rgba(255, 255, 255, 0.85)';
         };
@@ -2310,29 +2552,51 @@
         const originalError = windowObj.console.error;
         const originalInfo = windowObj.console.info;
 
-        // 重写console.log
-        windowObj.console.log = function() {
-            originalLog.apply(windowObj.console, arguments);
-            displayConsoleLog.apply(this, arguments);
-        };
+        // 使用Object.defineProperty安全地重写console方法，处理只读属性的情况
+        try {
+            // 重写console.log
+            Object.defineProperty(windowObj.console, 'log', {
+                value: function() {
+                    originalLog.apply(windowObj.console, arguments);
+                    displayConsoleLog.apply(this, arguments);
+                },
+                writable: true,
+                configurable: true
+            });
 
-        // 重写console.warn
-        windowObj.console.warn = function() {
-            originalWarn.apply(windowObj.console, arguments);
-            displayConsoleLog.apply(this, arguments);
-        };
+            // 重写console.warn
+            Object.defineProperty(windowObj.console, 'warn', {
+                value: function() {
+                    originalWarn.apply(windowObj.console, arguments);
+                    displayConsoleLog.apply(this, arguments);
+                },
+                writable: true,
+                configurable: true
+            });
 
-        // 重写console.error
-        windowObj.console.error = function() {
-            originalError.apply(windowObj.console, arguments);
-            displayConsoleLog.apply(this, arguments);
-        };
+            // 重写console.error
+            Object.defineProperty(windowObj.console, 'error', {
+                value: function() {
+                    originalError.apply(windowObj.console, arguments);
+                    displayConsoleLog.apply(this, arguments);
+                },
+                writable: true,
+                configurable: true
+            });
 
-        // 重写console.info
-        windowObj.console.info = function() {
-            originalInfo.apply(windowObj.console, arguments);
-            displayConsoleLog.apply(this, arguments);
-        };
+            // 重写console.info
+            Object.defineProperty(windowObj.console, 'info', {
+                value: function() {
+                    originalInfo.apply(windowObj.console, arguments);
+                    displayConsoleLog.apply(this, arguments);
+                },
+                writable: true,
+                configurable: true
+            });
+        } catch (e) {
+            // 忽略可能的错误，如跨域iframe无法访问或console方法不可重写
+            console.log('无法重写console方法:', e.message);
+        }
     }
 
     // 拦截AJAX请求，捕获学习时长提交
@@ -2370,10 +2634,10 @@
                                 if (!(originalRequestKey === lastLogContent && nowTime - lastLogTime < 1000)) {
                                     // 更新累计时长
                                     totalLearntime += seconds;
-                                    
+
                                     // 计算进度百分比
                                     const progress = Math.min(100, Math.floor((totalLearntime / videoDuration) * 100));
-                                    
+
                                     // 检查累计时长是否超过视频时长
                                     let logSuffix = '';
                                     if (videoDuration > 0 && totalLearntime >= videoDuration) {
@@ -2409,7 +2673,7 @@
                                             this.style.background = 'linear-gradient(135deg, rgba(200, 198, 192, 0.9), rgba(180, 178, 172, 0.7));';
                                             this.style.transform = 'translateX(2px)';
                                         };
-                                        
+
                                         logEntry.onmouseleave = function() {
                                             this.style.background = 'linear-gradient(135deg, rgba(220, 218, 212, 0.8), rgba(200, 198, 192, 0.6))';
                                             this.style.transform = 'translateX(0)';
@@ -2429,7 +2693,7 @@
                                             logEntries[1].remove();
                                         }
                                     }
-                                    
+
                                     // 当进度达到100%时，不自动触发播放下一节视频逻辑
                                     // 只有倒计时结束或手动点击才会触发下一个视频播放
                                     if (videoDuration > 0 && totalLearntime >= videoDuration) {
@@ -2481,9 +2745,9 @@
         // 拦截AJAX请求，捕获学习时长提交
         interceptAjaxRequests();
     }
-    
+
     // 课程列表页面相关函数
-    
+
     // 创建右侧课程列表面板
     function createCoursePanel() {
         // 检查面板是否已存在
@@ -2493,7 +2757,7 @@
             panel.innerHTML = '';
             return panel;
         }
-        
+
         // 创建面板容器
         panel = document.createElement('div');
         panel.id = 'course-list-panel';
@@ -2512,7 +2776,7 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             overflow: hidden;
         `;
-        
+
         // 创建面板标题
         const title = document.createElement('div');
         title.style.cssText = `
@@ -2525,7 +2789,7 @@
         `;
         title.textContent = '课程列表';
         panel.appendChild(title);
-        
+
         // 创建课程列表容器
         const courseListContent = document.createElement('div');
         courseListContent.id = 'course-list-content';
@@ -2535,18 +2799,18 @@
             overflow-y: auto;
         `;
         panel.appendChild(courseListContent);
-        
+
         // 添加到页面
         document.body.appendChild(panel);
-        
+
         return panel;
     }
-    
+
     // 添加课程项到右侧面板，使用唯一标识符
     function addCourseToPanel(courseInfo) {
         const courseListContent = document.getElementById('course-list-content');
         if (!courseListContent) return;
-        
+
         // 创建课程项容器
         const courseItem = document.createElement('div');
         courseItem.style.cssText = `
@@ -2564,20 +2828,20 @@
         courseItem.setAttribute('data-lesson-gkey', courseInfo.lessonGkey);
         // 保留原有的data-course-id以便兼容
         courseItem.setAttribute('data-course-id', courseInfo.lessonId);
-        
+
         // 添加悬停效果
         courseItem.addEventListener('mouseenter', function() {
             this.style.background = 'rgba(230, 230, 230, 0.9)';
             this.style.transform = 'translateX(-5px)';
             this.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)';
         });
-        
+
         courseItem.addEventListener('mouseleave', function() {
             this.style.background = 'rgba(245, 245, 245, 0.8)';
             this.style.transform = 'translateX(0)';
             this.style.boxShadow = 'none';
         });
-        
+
         // 添加点击事件：在新标签打开视频播放页
         courseItem.addEventListener('click', function() {
             // 保存当前课程索引，用于自动播放
@@ -2585,7 +2849,7 @@
             window.open(courseInfo.playUrl, '_blank');
             console.log(`已在新标签打开课程：${courseInfo.title}`);
         });
-        
+
         // 创建课程标题
         const courseTitle = document.createElement('div');
         courseTitle.style.cssText = `
@@ -2600,14 +2864,14 @@
         `;
         courseTitle.textContent = courseInfo.title;
         courseItem.appendChild(courseTitle);
-        
+
         // 创建学习时长和进度条容器
         const progressContainer = document.createElement('div');
         progressContainer.style.cssText = `
             margin: 8px 0;
             font-size: 11px;
         `;
-        
+
         // 创建学习时长显示
         const learnTimeDisplay = document.createElement('div');
         learnTimeDisplay.className = 'learn-time-display';
@@ -2617,7 +2881,7 @@
         `;
         learnTimeDisplay.textContent = '学习时长：--:-- / --:--';
         progressContainer.appendChild(learnTimeDisplay);
-        
+
         // 创建进度条容器
         const progressBarContainer = document.createElement('div');
         progressBarContainer.style.cssText = `
@@ -2626,7 +2890,7 @@
             border-radius: 3px;
             overflow: hidden;
         `;
-        
+
         // 创建进度条
         const progressBar = document.createElement('div');
         progressBar.className = 'progress-bar';
@@ -2639,7 +2903,7 @@
         `;
         progressBarContainer.appendChild(progressBar);
         progressContainer.appendChild(progressBarContainer);
-        
+
         // 创建进度百分比显示
         const progressPercentage = document.createElement('div');
         progressPercentage.className = 'progress-percentage';
@@ -2652,9 +2916,9 @@
         `;
         progressPercentage.textContent = `${courseInfo.progress || 0}%`;
         progressContainer.appendChild(progressPercentage);
-        
+
         courseItem.appendChild(progressContainer);
-        
+
         // 创建课程信息行
         const courseInfoRow = document.createElement('div');
         courseInfoRow.style.cssText = `
@@ -2665,7 +2929,7 @@
             align-items: center;
             margin-top: 8px;
         `;
-        
+
         // 创建序号
         const courseNumber = document.createElement('span');
         courseNumber.textContent = `第 ${courseInfo.index + 1} 节`;
@@ -2677,7 +2941,7 @@
             font-weight: 500;
         `;
         courseInfoRow.appendChild(courseNumber);
-        
+
         // 创建播放图标
         const playIcon = document.createElement('span');
         playIcon.innerHTML = '▶';
@@ -2687,46 +2951,46 @@
             margin-left: 8px;
         `;
         courseInfoRow.appendChild(playIcon);
-        
+
         courseItem.appendChild(courseInfoRow);
-        
+
         // 添加到课程列表
         courseListContent.appendChild(courseItem);
     }
-    
+
     // 主函数：获取课程列表并构建播放URL
     function getCourseList() {
         console.log('=== 开始获取课程列表 ===');
-        
+
         // 清空全局课程列表，避免重复添加
         courseList = [];
-        
+
         // 尝试多种选择器匹配课程列表，只保留包含学习按钮的有效课程项
         let courseItems = [];
-        
+
         // 1. 查找所有学习按钮
         const allLearnButtons = document.querySelectorAll('.learn');
         console.log(`找到 ${allLearnButtons.length} 个学习按钮`);
-        
+
         if (allLearnButtons.length > 0) {
             // 遍历每个学习按钮，找到其对应的课程行
             courseItems = Array.from(allLearnButtons).map(button => {
                 // 找到按钮所在的课程行（tr元素）
                 let courseRow = button.parentElement;
-                
+
                 // 向上查找，直到找到tr元素或达到根元素
                 while (courseRow && courseRow.tagName.toLowerCase() !== 'tr') {
                     courseRow = courseRow.parentElement;
                     // 防止无限循环
                     if (!courseRow) break;
                 }
-                
+
                 return courseRow;
             }).filter(Boolean); // 过滤掉null值
-            
+
             console.log(`通过学习按钮关联找到 ${courseItems.length} 个课程行`);
         }
-        
+
         // 2. 如果没有找到课程行，尝试直接从学习按钮构建课程项
         if (courseItems.length === 0 && allLearnButtons.length > 0) {
             courseItems = Array.from(allLearnButtons).map(button => {
@@ -2746,14 +3010,14 @@
                 }
                 return null;
             }).filter(Boolean); // 过滤掉null值
-            
+
             console.log(`通过直接构建找到 ${courseItems.length} 个课程项`);
         }
-        
+
         // 去重处理：确保每个课程项唯一
         const uniqueCourseItems = [];
         const processedButtons = new Set();
-        
+
         courseItems.forEach(item => {
             // 获取学习按钮
             let button;
@@ -2764,30 +3028,30 @@
                 // DOM元素类型
                 button = item.querySelector('.learn');
             }
-            
+
             // 确保按钮存在且未被处理过
             if (button && !processedButtons.has(button)) {
                 processedButtons.add(button);
                 uniqueCourseItems.push(item);
             }
         });
-        
+
         courseItems = uniqueCourseItems;
         console.log(`去重后剩余 ${courseItems.length} 个有效课程项`);
-        
+
         if (courseItems.length === 0) {
             console.error('未找到课程列表');
             console.log('页面HTML结构预览：', document.body.innerHTML.substring(0, 1000) + '...');
             return;
         }
-        
+
         console.log(`共找到 ${courseItems.length} 个课程项`);
-        
+
         // 遍历课程项，获取课程信息
         courseItems.forEach((item, index) => {
             let courseTitle = '未知课程';
             let learnButton = null;
-            
+
             // 处理不同类型的课程项
             if (item.title && item.button) {
                 // 自定义对象类型
@@ -2797,7 +3061,7 @@
                 // DOM元素类型
                 // 获取学习按钮
                 learnButton = item.querySelector('.learn');
-                
+
                 // 直接从学习按钮所在行的td:first-child中的a标签获取课程标题
                 const titleCell = item.querySelector('td:first-child');
                 if (titleCell) {
@@ -2807,19 +3071,19 @@
                     }
                 }
             }
-            
+
             if (!learnButton) {
                 console.log(`课程 ${index + 1}：${courseTitle} - 未找到学习按钮`);
                 return;
             }
-            
+
             // 获取onclick事件中的startLesson函数调用
             const onclickAttr = learnButton.getAttribute('onclick');
             if (!onclickAttr) {
                 console.log(`课程 ${index + 1}：${courseTitle} - 学习按钮无onclick事件`);
                 return;
             }
-            
+
             // 解析startLesson函数的参数
             // 匹配模式：startLesson(lessonId,coursewareId,'lessonGkey')
             const paramMatch = onclickAttr.match(/startLesson\((\d+),([^,]+),['"]([^'"]+)['"]\)/);
@@ -2827,59 +3091,59 @@
                 console.log(`课程 ${index + 1}：${courseTitle} - 无法解析startLesson参数，onclick: ${onclickAttr}`);
                 return;
             }
-            
+
             const lessonId = paramMatch[1];
             const coursewareId = paramMatch[2].trim();
             const lessonGkey = paramMatch[3];
-            
+
             // 构建视频播放页面URL
             const playUrl = `http://www.cmatc.cn/lms/app/lms/student/Learn/enter.do?lessonId=${lessonId}&coursewareId=${coursewareId}&lessonGkey=${lessonGkey}&tclessonId=0&lessonOrigin=selflearn`;
-            
+
             // 每次刷新页面都从页面获取原有进度
             let actualProgress = 0;
-            
+
             // 查找页面上的课件章节列表，跳过表头行
             const lessonRows = document.querySelectorAll('.table-list tr');
-            
+
             // 遍历所有行，从第二行开始（跳过表头）
             for (let i = 1; i < lessonRows.length; i++) {
                 const row = lessonRows[i];
-                
+
                 // 获取当前行的所有单元格
                 const cells = row.querySelectorAll('td');
                 if (cells.length < 3) continue; // 确保至少有3个单元格
-                
+
                 // 第一列：课程标题
                 const titleCell = cells[0];
                 const titleText = titleCell.textContent.trim();
-                
+
                 // 精确匹配课程标题，只匹配完全一致的标题
                 // 或者匹配标题的前几个字符，确保能准确匹配
                 if (titleText === courseTitle || titleText.startsWith(courseTitle.split(' ')[0])) {
                     // 第二列：进度信息
                     const progressCell = cells[1];
-                    
+
                     // 从进度单元格的title属性获取进度
                     if (progressCell.title && progressCell.title.includes('%')) {
-                        const titleMatch = progressCell.title.match(/(\d+)%/);
+                        const titleMatch = progressCell.title.match(/([\d.]+)%/);
                         if (titleMatch && titleMatch[1]) {
-                            actualProgress = parseInt(titleMatch[1]);
+                            actualProgress = parseFloat(titleMatch[1]);
                             console.log(`从单元格title属性获取到课程 ${courseTitle} 进度：${actualProgress}%`);
                             break;
                         }
                     }
-                    
+
                     // 从进度单元格的文本内容获取进度
                     const progressText = progressCell.textContent.trim();
                     if (progressText.includes('%')) {
-                        const textMatch = progressText.match(/(\d+)%/);
+                        const textMatch = progressText.match(/([\d.]+)%/);
                         if (textMatch && textMatch[1]) {
-                            actualProgress = parseInt(textMatch[1]);
+                            actualProgress = parseFloat(textMatch[1]);
                             console.log(`从单元格文本获取到课程 ${courseTitle} 进度：${actualProgress}%`);
                             break;
                         }
                     }
-                    
+
                     // 从进度条元素获取进度
                     const jinduBG = progressCell.querySelector('.jinduBG');
                     if (jinduBG) {
@@ -2887,37 +3151,36 @@
                         if (jinduGreen) {
                             const widthStyle = jinduGreen.style.width;
                             if (widthStyle) {
-                                const styleMatch = widthStyle.match(/(\d+)%/);
+                                const styleMatch = widthStyle.match(/([\d.]+)%/);
                                 if (styleMatch && styleMatch[1]) {
-                                    actualProgress = parseInt(styleMatch[1]);
+                                    actualProgress = parseFloat(styleMatch[1]);
                                     console.log(`从进度条样式获取到课程 ${courseTitle} 进度：${actualProgress}%`);
                                     break;
                                 }
                             }
                         }
                     }
-                    
+
                     console.log(`无法从页面获取课程 ${courseTitle} 进度，使用默认值 0%`);
                     break;
                 }
             }
-            
+
             // 从本地存储获取已保存的进度，使用唯一key：lessonId_coursewareId_lessonGkey
             const uniqueKey = `courseProgress_${lessonId}_${coursewareId}_${lessonGkey}`;
             const savedProgress = GM_getValue(uniqueKey, -1);
-            
-            // 刷新页面时，优先显示页面原有进度，不被本地存储覆盖
-            // 只有在播放过程中更新的进度才会保存到本地存储
-            let finalProgress = actualProgress;
-            
-            console.log(`课程 ${courseTitle} 页面进度：${actualProgress}%，本地存储进度：${savedProgress === -1 ? '无' : savedProgress}%，存储key：${uniqueKey}`);
-            
-            // 首次访问时，保存页面进度到本地存储
-            if (savedProgress === -1) {
-                GM_setValue(uniqueKey, actualProgress);
-                console.log(`已将课程 ${courseTitle} 初始进度 ${actualProgress}% 保存到本地存储，存储key：${uniqueKey}`);
-            }
-            
+
+            // 刷新页面时，优先使用页面上的最新进度
+            // 始终以页面进度为准，更新本地存储
+            // 确保本地存储的进度与页面保持一致
+            const finalProgress = actualProgress;
+
+            console.log(`课程 ${courseTitle} 页面进度：${actualProgress}%，本地存储进度：${savedProgress === -1 ? '无' : savedProgress}%，最终使用页面进度：${finalProgress}%，存储key：${uniqueKey}`);
+
+            // 保存页面进度到本地存储，确保本地存储始终是最新的
+            GM_setValue(uniqueKey, finalProgress);
+            console.log(`已将课程 ${courseTitle} 页面进度 ${finalProgress}% 更新到本地存储，存储key：${uniqueKey}`);
+
             // 保存课程信息到全局列表
             const courseInfo = {
                 index: index,
@@ -2929,9 +3192,10 @@
                 progress: finalProgress
             };
             courseList.push(courseInfo);
-            
+
             // 打印课程信息和播放URL
-            console.log(`\n课程 ${index + 1}：`);
+            console.log(`\n=====================================`);
+            console.log(`课程 ${index + 1}：`);
             console.log(`  标题：${courseTitle}`);
             console.log(`  lessonId：${lessonId}`);
             console.log(`  coursewareId：${coursewareId}`);
@@ -2940,12 +3204,12 @@
             console.log(`  页面原有进度：${actualProgress}%`);
             console.log(`  本地保存进度：${savedProgress}%`);
             console.log(`  最终显示进度：${finalProgress}%`);
-            
+
             // 在原有学习按钮后添加自动学习按钮
             if (learnButton) {
                 // 隐藏原有学习按钮
                 learnButton.style.display = 'none';
-                
+
                 // 创建自动学习按钮
                 const autoLearnButton = document.createElement('a');
                 autoLearnButton.className = 'auto-learn';
@@ -2962,18 +3226,18 @@
                     transition: all 0.2s ease;
                     box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
                 `;
-                
+
                 // 添加悬停效果
                 autoLearnButton.addEventListener('mouseenter', function() {
                     this.style.transform = 'translateY(-1px)';
                     this.style.boxShadow = '0 4px 12px rgba(102, 126, 234, 0.4)';
                 });
-                
+
                 autoLearnButton.addEventListener('mouseleave', function() {
                     this.style.transform = 'translateY(0)';
                     this.style.boxShadow = '0 2px 8px rgba(102, 126, 234, 0.3)';
                 });
-                
+
                 // 添加点击事件，新标签打开视频播放页面
                 autoLearnButton.addEventListener('click', function(e) {
                     e.preventDefault();
@@ -2983,40 +3247,52 @@
                     window.open(courseInfo.playUrl, '_blank');
                     console.log(`已在新标签打开自动学习课程：${courseTitle}`);
                 });
-                
-                // 将自动学习按钮添加到原有学习按钮的父元素中
-                learnButton.parentNode.insertBefore(autoLearnButton, learnButton.nextSibling);
+
+                // 检查是否已经存在自动学习按钮，如果存在则跳过
+                const existingAutoLearnButtons = learnButton.parentNode.querySelectorAll('.auto-learn');
+                let buttonExists = false;
+                existingAutoLearnButtons.forEach(btn => {
+                    // 检查按钮是否已经添加到当前学习按钮之后
+                    if (btn === learnButton.nextSibling) {
+                        buttonExists = true;
+                    }
+                });
+
+                if (!buttonExists) {
+                    // 将自动学习按钮添加到原有学习按钮的父元素中
+                    learnButton.parentNode.insertBefore(autoLearnButton, learnButton.nextSibling);
+                }
             }
         });
-        
+
         // 发送课程列表就绪消息
         sendCourseListReadyMessage();
-        
+
         console.log('\n=== 课程列表获取完成 ===');
     }
-    
+
     // 等待课程内容加载
     function waitForCourseContent() {
         console.log('=== 等待课程内容加载 ===');
-        
+
         // 检查是否有课程列表
-        const hasCourseList = document.querySelector('.table-list') || 
+        const hasCourseList = document.querySelector('.table-list') ||
                              document.querySelectorAll('.learn').length > 0;
-        
+
         if (hasCourseList) {
             getCourseList();
         } else {
             // 等待2秒后重试，最多重试5次
             let retryCount = 0;
             const maxRetries = 5;
-            
+
             const retryInterval = setInterval(() => {
                 retryCount++;
                 console.log(`重试获取课程列表 (${retryCount}/${maxRetries})`);
-                
-                const hasCourseListNow = document.querySelector('.table-list') || 
+
+                const hasCourseListNow = document.querySelector('.table-list') ||
                                       document.querySelectorAll('.learn').length > 0;
-                
+
                 if (hasCourseListNow || retryCount >= maxRetries) {
                     clearInterval(retryInterval);
                     if (hasCourseListNow) {
@@ -3036,44 +3312,68 @@
             }, 2000);
         }
     }
-    
+
     // 视频播放页面初始化
     function initVideoPlayPage() {
         console.log('视频播放页面初始化');
-        
+
         // 初始化广播频道
         initBroadcastChannel();
-        
+
         // 立即重写console方法，确保能捕获所有日志
         initConsoleListener();
-        
+
+        // 从本地存储获取当前视频的初始进度
+        const courseIdentifier = parseCourseIdentifierFromUrl();
+        const uniqueKey = `courseProgress_${courseIdentifier.lessonId}_${courseIdentifier.coursewareId}_${courseIdentifier.lessonGkey}`;
+        const initialProgress = GM_getValue(uniqueKey, 0);
+        console.log(`从本地存储获取到当前视频的初始进度为 ${initialProgress}%，存储key: ${uniqueKey}`);
+
+        // 根据初始进度计算对应的学习时长，作为totalLearntime的初始值
+        // 注意：此时videoDuration可能还未获取，需要在视频加载完成后重新计算
+        if (initialProgress > 0) {
+            // 只在控制台显示估算信息，不在日志面板显示，避免用户看到不准确的估算值
+            console.log(`根据初始进度 ${initialProgress}% 估算初始学习时长，将在视频加载完成后显示准确值`);
+        }
+
         // 添加窗口关闭事件监听
         addWindowCloseListener();
-        
+
         // 从本地存储读取课程列表，使用当前课程的lessonId作为前缀
         const currentUrl = window.location.href;
         const currentLessonId = currentUrl.match(/lessonId=(\d+)/)?.[1] || 'unknown';
-        
+
         // 尝试使用当前lessonId读取课程列表
         const savedCourseList = GM_getValue(`courseList_${currentLessonId}`, null);
         if (savedCourseList) {
             try {
                 courseList = JSON.parse(savedCourseList);
-                
-                // 从本地存储中恢复每个课程的进度
-                courseList.forEach((course, index) => {
-                    // 使用唯一key：lessonId_coursewareId_lessonGkey
-                    const uniqueKey = `courseProgress_${course.lessonId}_${course.coursewareId}_${course.lessonGkey}`;
+
+                updateCurrentCourseIndex();
+
+                // 只恢复当前课程的进度，不恢复所有课程
+                if (currentCourseIndex !== -1 && courseList[currentCourseIndex]) {
+                    const currentCourse = courseList[currentCourseIndex];
+                    const uniqueKey = `courseProgress_${currentCourse.lessonId}_${currentCourse.coursewareId}_${currentCourse.lessonGkey}`;
                     const savedProgress = GM_getValue(uniqueKey, -1);
                     if (savedProgress !== -1) {
-                        course.progress = savedProgress;
-                        console.log(`已从本地存储恢复课程 "${course.title}" 的进度为 ${savedProgress}%，存储key: ${uniqueKey}`);
+                        currentCourse.progress = savedProgress;
+                        console.log(`已从本地存储恢复当前课程 "${currentCourse.title}" 的进度为 ${savedProgress}%，存储key: ${uniqueKey}`);
                     }
-                });
-                
-                updateCurrentCourseIndex();
+                }
+
                 console.log('从本地存储读取课程列表，共', courseList.length, '个课程，存储key:', `courseList_${currentLessonId}`);
-                console.log('课程列表详情:', courseList);
+
+                // 只打印当前课程的详情，不打印完整课程列表
+                if (currentCourseIndex !== -1 && courseList[currentCourseIndex]) {
+                    const currentCourse = courseList[currentCourseIndex];
+                    console.log('当前课程信息:', {
+                        title: currentCourse.title,
+                        lessonId: currentCourse.lessonId,
+                        coursewareId: currentCourse.coursewareId,
+                        progress: currentCourse.progress
+                    });
+                }
                 // 更新课程列表显示
                 updateCourseListDisplay();
             } catch (error) {
@@ -3083,53 +3383,53 @@
         } else {
             console.log('本地存储中没有找到匹配当前课程的课程列表，将尝试请求课程列表');
         }
-        
+
         // 等待DOM加载完成后再执行DOM相关操作
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => {
                 // 创建UI
                 createVideoUI();
-                
+
                 // 初始化视频元素
                 initVideoElement();
-                
+
                 // 如果没有找到视频元素，尝试定期查找
                 if (!videoElement) {
                     let searchAttempts = 0;
                     const maxAttempts = 20; // 最多尝试20次，每次间隔1秒
                     const videoCheckInterval = setInterval(() => {
                         searchAttempts++;
-                        
+
                         // 检查视频元素是否已经存在
                         if (videoElement) {
                             clearInterval(videoCheckInterval);
                             console.log('视频元素已存在，停止定期查找');
                             return;
                         }
-                        
+
                         // 检查是否已经尝试了足够次数
                         if (searchAttempts >= maxAttempts) {
                             clearInterval(videoCheckInterval);
                             console.log('已尝试多次查找视频元素，仍未找到');
                             return;
                         }
-                        
+
                         videoElement = findVideoElement();
                         if (videoElement) {
                             clearInterval(videoCheckInterval);
-                            
+
                             // 直接调用initVideoElement函数，避免重复代码
                             initVideoElement();
                         }
                     }, CONFIG.CHECK_INTERVAL);
                 }
-                
+
                 // 启动会话保持
                 startSessionKeepalive();
-                
+
                 // 启动视频元素变化监听
                 addVideoMutationObserver();
-                
+
                 // 如果本地存储中没有课程列表，主动请求课程列表
                 if (courseList.length === 0) {
                     console.log('本地存储中没有课程列表，主动请求课程列表');
@@ -3145,46 +3445,46 @@
             // DOM已加载完成，直接执行
             // 创建UI
             createVideoUI();
-            
+
             // 初始化视频元素
             initVideoElement();
-            
+
             // 启动视频元素变化监听
             addVideoMutationObserver();
-            
+
             // 如果没有找到视频元素，尝试定期查找
             if (!videoElement) {
                 let searchAttempts = 0;
                 const maxAttempts = 20; // 最多尝试20次，每次间隔1秒
                 const videoCheckInterval = setInterval(() => {
                     searchAttempts++;
-                    
+
                     // 检查视频元素是否已经存在
                     if (videoElement) {
                         clearInterval(videoCheckInterval);
                         return;
                     }
-                    
+
                     // 检查是否已经尝试了足够次数
                     if (searchAttempts >= maxAttempts) {
                         clearInterval(videoCheckInterval);
                         console.log('已尝试多次查找视频元素，仍未找到');
                         return;
                     }
-                    
+
                     videoElement = findVideoElement();
                     if (videoElement) {
                         clearInterval(videoCheckInterval);
-                        
+
                         // 直接调用initVideoElement函数，避免重复代码
                         initVideoElement();
                     }
                 }, CONFIG.CHECK_INTERVAL);
             }
-            
+
             // 启动会话保持
             startSessionKeepalive();
-            
+
             // 如果本地存储中没有课程列表，主动请求课程列表
             if (courseList.length === 0) {
                 console.log('本地存储中没有课程列表，主动请求课程列表');
@@ -3197,14 +3497,14 @@
             }
         }
     }
-    
+
     // 课程列表页面初始化
     function initCourseListPage() {
         console.log('课程列表页面初始化');
-        
+
         // 初始化广播频道
         initBroadcastChannel();
-        
+
         // 等待DOM加载完成后再执行DOM相关操作
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => {
@@ -3214,7 +3514,7 @@
             // DOM已加载完成，直接执行
             waitForCourseContent();
         }
-        
+
         // 添加DOM变化监听，确保动态加载内容也能被捕获
         const observer = new MutationObserver(() => {
             // 当DOM发生变化时，检查是否有新的学习按钮添加
@@ -3225,41 +3525,52 @@
                 getCourseList();
             }
         });
-        
+
         // 监听课程内容区域的变化
-        const contentContainer = document.querySelector('.contbox') || document.body;
-        observer.observe(contentContainer, { 
-            childList: true, 
-            subtree: true, 
-            attributes: false 
-        });
-        
+        let contentContainer = document.querySelector('.contbox');
+
+        // 确保contentContainer是有效的Node对象
+        if (!contentContainer || !(contentContainer instanceof Node)) {
+            contentContainer = document.body;
+        }
+
+        // 再次检查contentContainer是否有效
+        if (contentContainer && contentContainer instanceof Node) {
+            observer.observe(contentContainer, {
+                childList: true,
+                subtree: true,
+                attributes: false
+            });
+        } else {
+            console.error('无法获取有效的contentContainer，MutationObserver未启动');
+        }
+
         console.log('气象课程列表获取器已启动，正在等待课程内容加载...');
     }
-    
+
     // 主初始化函数
     function init() {
         // 获取当前页面URL
         const currentUrl = window.location.href;
-        
+
         // 检查是否已经创建了面板
         if (document.getElementById('combined-panel')) {
             console.log('气象学习综合工具：已经创建了面板，不再重复创建');
             return;
         }
-        
+
         // 检查是否在iframe中执行，只在顶层窗口执行
         if (window.self !== window.top) {
             console.log('气象学习综合工具：在iframe中执行，已自动退出');
             return;
         }
-        
+
         console.log('气象学习综合工具已启动');
-        
+
         // 检测当前页面类型
         currentPageType = detectPageType();
         console.log(`当前页面类型：${currentPageType}`);
-        
+
         // 根据页面类型执行不同的初始化操作
         if (currentPageType === 'videoPlay') {
             // 视频播放页面
@@ -3271,7 +3582,7 @@
             console.log('当前页面不是目标页面，脚本将不执行任何操作');
         }
     }
-    
+
     // 启动脚本
     init();
 })();

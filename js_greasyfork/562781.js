@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DemonicScans Unified Automator
 // @namespace    https://github.com/wverri/autods
-// @version      0.10.7-alpha
+// @version      0.11.2-alpha
 // @description  Consolidated automation suite for DemonicScans: wave battles, PvP, farming, UI enhancements, and image blocking.
 // @author       Willian Verri
 // @match        https://demonicscans.org/*
@@ -44,7 +44,10 @@ var version = GM_info.script.version;
         },
         stamina: {
             minThreshold: 0,  // Stamina mínima necessária para entrar em batalha (0 = sem verificação)
-            checkIntervalMs: 300000  // 5 minutos entre verificações quando aguardando regeneração
+            checkIntervalMs: 300000,  // 5 minutos entre verificações quando aguardando regeneração
+            useLargePotionBeforeFull: true,  // Preferir Large Stamina Potion antes de Full Stamina Potion
+            minLargePotionReserve: 0,  // Quantidade mínima de LSP para manter
+            minFullPotionReserve: 0  // Quantidade mínima de FSP para manter
         },
         wave: {
             enabled: false,
@@ -265,6 +268,17 @@ var version = GM_info.script.version;
             checkInterval: 300000,
             bossNames: ['General', 'Seraph', 'King', 'Empress', 'Bastion', 'Oathkeeper']
         },
+        randomBossFarm: {
+            enabled: false,
+            targetDamage: 1000000000,
+            skillId: -2,
+            parallelAttacks: 5,
+            minDelayBetweenAttacks: 50,
+            autoStaminaPotion: true,
+            minStaminaForPotion: 50,
+            lootDeadBeforeFSP: false,
+            checkInterval: 1800000
+        },
         imageBlocker: {
             enabled: false  // Block images to reduce bandwidth and improve performance
         },
@@ -292,8 +306,12 @@ var version = GM_info.script.version;
             links: [
                 { label: 'Wave 3', icon: '🌊', url: 'https://demonicscans.org/active_wave.php?gate=3&wave=8' },
                 { label: 'Olympus', icon: '⛰️', url: 'https://demonicscans.org/active_wave.php?gate=5&wave=9' },
+                { label: 'Colosseum', icon: '🏟️', url: 'https://demonicscans.org/colosseum.php' },
+                { label: 'Lunar Plague', icon: '🌙', url: 'https://demonicscans.org/lunar_plague.php' },
+                { label: 'Random Boss', icon: '🎲', url: 'https://demonicscans.org/random_boss_soon.php' },
                 { label: 'Adventurer', icon: '🗡️', url: 'https://demonicscans.org/adventurers_guild.php' },
                 { label: 'Legendary Forge', icon: '⚒️', url: 'https://demonicscans.org/legendary_forge.php' },
+                { label: 'Black Merchant', icon: '🛒', url: 'https://demonicscans.org/black_merchant.php' },
                 { label: 'Stamina Farm', icon: '⛽', url: 'https://demonicscans.org/manga/One-Piece' }
             ]
         }
@@ -1628,7 +1646,7 @@ var version = GM_info.script.version;
                 border-radius: var(--radius-md);
                 font-family: var(--font-mono);
                 font-size: var(--text-xs);
-                z-index: 2147483640;
+                z-index: 9999;
                 box-shadow: var(--shadow-lg);
                 overflow: hidden;
                 transition: all var(--transition-base);
@@ -2153,6 +2171,10 @@ var version = GM_info.script.version;
             if (saved) {
                 config = deepMerge(config, saved);
             }
+
+            // Always prefer code defaults for side drawer links
+            config.sideDrawerLinks = deepMerge({}, DEFAULT_CONFIG.sideDrawerLinks);
+
             const pvpChanged = importLegacyPvP(config, Boolean(saved));
             if (!saved && pvpChanged) {
                 storage.set('config', config);
@@ -2194,30 +2216,43 @@ var version = GM_info.script.version;
      * @param {Object} context - Script context (logger, config, etc.)
      * @returns {Object} Inventory service
      * @returns {function(): Promise<Object>} fetchInventoryData - Fetch all inventory data from /inventory.php
-     * @returns {function(): Promise<boolean>} useFullStaminaPotion - Use 1 Full Stamina Potion (item 35)
+    * @returns {function(): Promise<boolean>} useLargeStaminaPotion - Use 1 Large Stamina Potion (item 251)
+    * @returns {function(): Promise<boolean>} useFullStaminaPotion - Use 1 Full Stamina Potion (item 35) or Large if preferred
      * @returns {function(number): Promise<boolean>} useSmallStaminaPotion - Use N Small Stamina Potions (item 30)
      * @returns {function(): Promise<boolean>} useExpPotion - Use 1 EXP Potion (item 97)
-     * @returns {function(number): Promise<boolean>} useHealPotion - Use N Heal Potions (item 50)
+    * @returns {function(): Promise<boolean>} useHealPotion - Use 1 Heal Potion (item 50)
+    * @returns {function(string=): Promise<boolean>} useHealPotionDirect - Use heal potion via /user_heal_potion.php
      * 
      * @example
      * const inv = context.inventory;
      * const data = await inv.fetchInventoryData();
      * // { small: { invId: 123, quantity: 50, itemId: 30 }, full: {...}, ... }
      * 
-     * const success = await inv.useFullStaminaPotion();
+    * const success = await inv.useFullStaminaPotion();
      * if (success) console.log('FSP used!');
+    * 
+    * const lspUsed = await inv.useLargeStaminaPotion();
+    * if (lspUsed) console.log('LSP used!');
      * 
      * await inv.useSmallStaminaPotion(3); // Use 3 SSP
      */
     function createInventoryService(context) {
-        const { logger } = context;
+        const { logger, config } = context;
         
         const ITEM_IDS = {
             SMALL_STAMINA_POTION: 30,
             FULL_STAMINA_POTION: 35,
+            LARGE_STAMINA_POTION: 251,
             EXP_POTION: 97,
             HEAL_POTION: 50
         };
+
+        const healState = {
+            inFlight: false,
+            lastAttempt: 0
+        };
+
+        const HEAL_COOLDOWN_MS = 1500;
         
         async function fetchInventoryData() {
             try {
@@ -2243,6 +2278,8 @@ var version = GM_info.script.version;
                             inventory.small = { invId, quantity: parseInt(quantity, 10), itemId: itemIdNum };
                         } else if (itemIdNum === ITEM_IDS.FULL_STAMINA_POTION) {
                             inventory.full = { invId, quantity: parseInt(quantity, 10), itemId: itemIdNum };
+                        } else if (itemIdNum === ITEM_IDS.LARGE_STAMINA_POTION) {
+                            inventory.large = { invId, quantity: parseInt(quantity, 10), itemId: itemIdNum };
                         } else if (itemIdNum === ITEM_IDS.EXP_POTION) {
                             inventory.exp = { invId, quantity: parseInt(quantity, 10), itemId: itemIdNum };
                         } else if (itemIdNum === ITEM_IDS.HEAL_POTION) {
@@ -2285,16 +2322,110 @@ var version = GM_info.script.version;
                 return false;
             }
         }
+
+        async function useHealPotionDirect(referrer = window.location.href) {
+            const now = Date.now();
+            if (healState.inFlight || (now - healState.lastAttempt) < HEAL_COOLDOWN_MS) {
+                logger.debug('💊 Heal Potion já em uso ou em cooldown. Ignorando tentativa.');
+                return false;
+            }
+
+            healState.inFlight = true;
+            healState.lastAttempt = now;
+
+            try {
+                const inv = await fetchInventoryData();
+                const heal = inv.heal;
+
+                if (!heal || !heal.invId || !heal.quantity || heal.quantity < 1) {
+                    logger.warn('💊 Sem Heal Potion disponível');
+                    return false;
+                }
+
+                logger.info(`💊 Heal Potion disponível: ${heal.quantity}x (inv_id: ${heal.invId})`);
+
+                const response = await fetch('https://demonicscans.org/user_heal_potion.php', {
+                    credentials: 'include',
+                    headers: {
+                        'User-Agent': navigator.userAgent,
+                        'Accept': '*/*',
+                        'Accept-Language': 'pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7',
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Sec-GPC': '1',
+                        'Sec-Fetch-Dest': 'empty',
+                        'Sec-Fetch-Mode': 'cors',
+                        'Sec-Fetch-Site': 'same-origin',
+                        'Priority': 'u=0'
+                    },
+                    referrer: referrer || window.location.href,
+                    body: `inv_id=${heal.invId}`,
+                    method: 'POST',
+                    mode: 'cors'
+                });
+
+                const text = await response.text();
+                const lower = text.trim().toLowerCase();
+                const success = response.ok && !lower.includes('error');
+
+                if (success) {
+                    logger.info('✅ Heal Potion usada com sucesso!');
+                } else {
+                    logger.warn(`⚠️ Falha ao usar Heal Potion: ${text.substring(0, 100)}`);
+                }
+
+                return success;
+            } catch (error) {
+                logger.error('❌ Erro ao usar Heal Potion:', error);
+                return false;
+            } finally {
+                healState.inFlight = false;
+            }
+        }
         
         return {
             fetchInventoryData,
             
+            async useLargeStaminaPotion() {
+                const inv = await fetchInventoryData();
+                const lsp = inv.large;
+
+                if (!lsp || !lsp.invId || !lsp.quantity || lsp.quantity < 1) {
+                    logger.warn('💊 Sem Large Stamina Potion disponível');
+                    return false;
+                }
+
+                logger.info(`💊 LSP disponível: ${lsp.quantity}x (inv_id: ${lsp.invId})`);
+                return useItem(lsp.invId, 'Large Stamina Potion');
+            },
+
             async useFullStaminaPotion() {
                 const inv = await fetchInventoryData();
+                const preferLarge = config?.get()?.stamina?.useLargePotionBeforeFull ?? true;
+                const minLsp = Math.max(0, config?.get()?.stamina?.minLargePotionReserve ?? 0);
+                const minFsp = Math.max(0, config?.get()?.stamina?.minFullPotionReserve ?? 0);
+
+                if (preferLarge) {
+                    const lsp = inv.large;
+                    if (lsp?.invId && lsp.quantity > minLsp) {
+                        logger.info(`💊 Preferindo LSP antes do FSP (LSP: ${lsp.quantity}x, mínimo: ${minLsp}x)`);
+                        return useItem(lsp.invId, 'Large Stamina Potion');
+                    }
+                    if (lsp?.invId && lsp.quantity <= minLsp) {
+                        logger.info(`💊 LSP reservado (LSP: ${lsp.quantity}x, mínimo: ${minLsp}x). Tentando FSP...`);
+                    } else {
+                        logger.info('💊 LSP não disponível, tentando FSP...');
+                    }
+                }
+
                 const fsp = inv.full;
                 
                 if (!fsp || !fsp.invId || !fsp.quantity || fsp.quantity < 1) {
                     logger.warn('💊 Sem Full Stamina Potion disponível');
+                    return false;
+                }
+
+                if (fsp.quantity <= minFsp) {
+                    logger.warn(`💊 FSP reservado (FSP: ${fsp.quantity}x, mínimo: ${minFsp}x). Não usando poção.`);
                     return false;
                 }
                 
@@ -2343,7 +2474,9 @@ var version = GM_info.script.version;
                 
                 logger.info(`💊 Heal Potion disponível: ${heal.quantity}x`);
                 return useItem(heal.invId, 'Heal Potion');
-            }
+            },
+
+            useHealPotionDirect
         };
     }
 
@@ -3626,7 +3759,7 @@ var version = GM_info.script.version;
      * const cost = combat.getSkillCost(-2); // 50 stamina
      */
     function createCombatService(context) {
-        const { logger } = context;
+        const { logger, inventory, notifications } = context;
         
         const SKILL_COSTS = {
             STAMINA: { '0': 1, '-1': 10, '-2': 50, '-3': 100, '-4': 200 },
@@ -3671,7 +3804,7 @@ var version = GM_info.script.version;
                     onload: (response) => {
                         try {
                             const data = JSON.parse(response.responseText);
-                            resolve(parseAttackResponse(data, type));
+                            resolve(parseAttackResponse(data, type, referer));
                         } catch (e) {
                             resolve({ success: false, data: null, message: 'JSON parse error', error: 'Parse error' });
                         }
@@ -3686,7 +3819,25 @@ var version = GM_info.script.version;
             });
         }
         
-        function parseAttackResponse(data, type) {
+        function handleDeadResponse(data, referrer) {
+            const status = String(data?.status || '').trim().toLowerCase();
+            const message = String(data?.message || '').trim().toLowerCase();
+            if (status === 'error' && message === 'you are dead.') {
+                logger.warn('💀 Você está morto. Tentando usar Heal Potion...');
+                if (inventory?.useHealPotionDirect) {
+                    inventory.useHealPotionDirect(referrer || window.location.href);
+                } else if (inventory?.useHealPotion) {
+                    inventory.useHealPotion();
+                }
+                notifications?.warn?.('Você está morto. Tentando usar poção de vida.');
+                return true;
+            }
+            return false;
+        }
+
+        function parseAttackResponse(data, type, referrer) {
+            handleDeadResponse(data, referrer);
+
             // Robust success check: convert to string and trim (handles boolean/string/number)
             const success = String(data.status).trim() === 'success' || data.success === true;
             
@@ -3794,6 +3945,10 @@ var version = GM_info.script.version;
                         message: result.data.message || ''
                     };
                 }
+
+                if (result.data) {
+                    handleDeadResponse(result.data, referrer);
+                }
                 
                 // Check if monster is already dead
                 const errorMsg = (result.data?.message || result.message || result.error || '').toLowerCase();
@@ -3842,6 +3997,10 @@ var version = GM_info.script.version;
                         battleEnded: detectBattleEnd(result.data),
                         message: result.data.message || ''
                     };
+                }
+
+                if (result.data) {
+                    handleDeadResponse(result.data, referrer);
                 }
                 
                 // Check if monster is already dead
@@ -10214,6 +10373,356 @@ var version = GM_info.script.version;
         }
     };
 
+    /**
+     * Random Boss Farm Module
+     * Dedicated module for random boss in random_boss_soon.php
+     * Joins via battle.php?id=... and attacks until target damage
+     */
+    const randomBossFarmModule = {
+        id: 'randomBossFarm',
+        match: ({ location }) => /random_boss_soon\.php/i.test(location.pathname),
+
+        init(context) {
+            this.state = {
+                running: false,
+                stats: {
+                    bossesFound: 0,
+                    bossesCompleted: 0,
+                    totalAttacks: 0,
+                    totalDamage: 0,
+                    potionsUsed: 0,
+                    startTime: null
+                },
+                lastCheckTime: null
+            };
+        },
+
+        activate(context) {
+            const cfg = context.config.get();
+            if (!cfg.core.enabled || !cfg.randomBossFarm?.enabled) {
+                if (this.state) this.state.running = false;
+                return;
+            }
+
+            if (!this.state) this.init(context);
+            if (this.state.running) return;
+
+            this.state.running = true;
+            this.state.stats.startTime = Date.now();
+
+            context.logger.info('🎲 Random Boss Farm ativado!');
+
+            (async () => {
+                try {
+                    await this.runRandomBossLoop(context);
+                } catch (error) {
+                    context.logger.error('[RandomBossFarm] Erro fatal:', error);
+                } finally {
+                    this.state.running = false;
+                }
+            })();
+        },
+
+        async runRandomBossLoop(context) {
+            const { logger } = context;
+
+            logger.info('🎲 Iniciando loop do Random Boss Farm...');
+
+            while (/random_boss_soon\.php/i.test(context.location.pathname)) {
+                const cfg = context.config.get();
+
+                if (!cfg.core.enabled || !cfg.randomBossFarm?.enabled) {
+                    logger.info('🎲 Random Boss Farm desativado via configuração.');
+                    break;
+                }
+
+                const bossCfg = cfg.randomBossFarm;
+                const boss = this.findRandomBoss(context);
+
+                if (!boss) {
+                    const waitTime = bossCfg.checkInterval || 1800000; // 30 min default
+                    logger.info(`🎲 Nenhum Random Boss disponível. Aguardando ${Math.round(waitTime / 60000)} minuto(s)...`);
+                    this.state.lastCheckTime = Date.now();
+                    await sleep(waitTime);
+                    logger.info('🎲 Recarregando página para verificar novamente...');
+                    window.location.href = window.location.href;
+                    return;
+                }
+
+                logger.info(`🎲 Boss encontrado: ${boss.name} (ID: ${boss.monsterId})`);
+                this.state.stats.bossesFound += 1;
+
+                const joined = await this.joinRandomBoss(context, boss);
+                if (!joined) {
+                    logger.warn('🎲 Falha ao entrar na batalha. Aguardando 30s...');
+                    await sleep(30000);
+                    continue;
+                }
+
+                const attackResult = await this.attackRandomBossUltraFast(context, boss, bossCfg);
+
+                if (!attackResult.hadWork) {
+                    const waitTime = bossCfg.checkInterval || 1800000;
+                    logger.info(`🎲 Boss já completado. Aguardando ${Math.round(waitTime / 60000)} minuto(s)...`);
+                    this.state.lastCheckTime = Date.now();
+                    await sleep(waitTime);
+                    logger.info('🎲 Recarregando página para verificar novamente...');
+                    window.location.href = window.location.href;
+                    return;
+                }
+
+                logger.info('🎲 Boss processado. Recarregando para verificar novamente...');
+                await sleep(2000);
+                window.location.href = window.location.href;
+                return;
+            }
+        },
+
+        findRandomBoss(context) {
+            const { logger, dom } = context;
+            const links = dom.queryAll('a[href*="battle.php"][href*="id="]');
+            if (!links.length) return null;
+
+            const link = links.find((item) => /join the battle/i.test(item.textContent || ''));
+            if (!link) {
+                logger.info('🎲 Link de Join não encontrado (estado diferente de "Join the Battle").');
+                return null;
+            }
+            const href = link.getAttribute('href') || '';
+            const idMatch = href.match(/[?&]id=(\d+)/);
+            if (!idMatch) {
+                logger.warn('🎲 Link encontrado, mas ID não identificado.');
+                return null;
+            }
+
+            const container = link.closest('div')?.parentElement || link.closest('div');
+            const nameNode = container?.querySelector('div[style*="font-weight:900"], h3, h4, .monster-name, .boss-name');
+            const bossName = nameNode?.textContent?.trim() || 'Random Boss';
+
+            return {
+                name: bossName,
+                monsterId: idMatch[1],
+                link,
+                alreadyJoined: false
+            };
+        },
+
+        async joinRandomBoss(context, boss) {
+            const { logger } = context;
+            if (boss.alreadyJoined) {
+                logger.info(`✅ ${boss.name}: Já está na batalha`);
+                return true;
+            }
+
+            const referer = `${context.location.origin}/random_boss_soon.php`;
+            const result = await context.http.get(`/battle.php?id=${boss.monsterId}`, {
+                parseJson: false,
+                headers: {
+                    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                    'Referer': referer,
+                    'Alt-Used': 'demonicscans.org',
+                    'Upgrade-Insecure-Requests': '1',
+                    'Sec-Fetch-Dest': 'document',
+                    'Sec-Fetch-Mode': 'navigate',
+                    'Sec-Fetch-Site': 'same-origin',
+                    'Sec-Fetch-User': '?1',
+                    'Priority': 'u=0, i'
+                }
+            });
+
+            if (!result.success) {
+                logger.warn(`❌ ${boss.name}: Falha ao entrar - ${result.message || result.error || 'Erro desconhecido'}`);
+                return false;
+            }
+
+            logger.info(`✅ ${boss.name}: Entrou via GET battle.php`);
+            return true;
+        },
+
+        async attackRandomBossUltraFast(context, boss, cfg) {
+            const { logger } = context;
+            const targetDamage = cfg.targetDamage || 50000000;
+            const skillId = cfg.skillId ?? -2;
+            const parallelAttacks = cfg.parallelAttacks || 5;
+            const minDelayBetweenAttacks = cfg.minDelayBetweenAttacks || 30;
+            const skillCosts = { '0': 1, '-1': 10, '-2': 50, '-3': 100, '-4': 200 };
+            const skillCost = skillCosts[skillId.toString()] || 1;
+
+            await this.fetchCurrentDamage(context, boss);
+
+            if (boss.invalid) {
+                logger.warn(`🎲 ${boss.name}: Batalha inválida`);
+                return { hadWork: false, allCompleted: false };
+            }
+
+            if (boss.currentDamage >= targetDamage) {
+                logger.info(`✅ ${boss.name}: Já atingiu ${formatNumber(targetDamage)} dano (atual: ${formatNumber(boss.currentDamage)})`);
+                this.state.stats.bossesCompleted++;
+                return { hadWork: false, allCompleted: true };
+            }
+
+            logger.info(`🎲 ${boss.name}: Precisa de ${formatNumber(targetDamage - boss.currentDamage)} dano (atual: ${formatNumber(boss.currentDamage)})`);
+
+            const bossState = {
+                ...boss,
+                currentDamage: boss.currentDamage || 0,
+                attackCount: 0,
+                completed: false,
+                potionsUsed: 0
+            };
+
+            while (bossState.currentDamage < targetDamage && !bossState.dead) {
+                const remainingDamage = targetDamage - bossState.currentDamage;
+                if (remainingDamage <= 0) {
+                    bossState.completed = true;
+                    logger.info(`✅ 🎲 ${boss.name}: Alvo atingido! ${formatNumber(bossState.currentDamage)} dano`);
+                    this.state.stats.bossesCompleted++;
+                    break;
+                }
+
+                let currentStamina = context.stamina.getCurrent();
+
+                if (currentStamina < skillCost) {
+                    logger.info(`⏳ Stamina insuficiente (${currentStamina}/${skillCost}) - tratando...`);
+
+                    if (cfg.lootDeadBeforeFSP !== false && currentStamina < (cfg.minStaminaForPotion || 100)) {
+                        logger.info('💀 [RANDOM BOSS] Tentando lootar dead monsters antes de usar FSP...');
+                        const lootModule = context.moduleRegistry?.getModule('ultraFastLoot');
+                        if (lootModule && typeof lootModule.lootDeadMonsters === 'function') {
+                            const lootResult = await lootModule.lootDeadMonsters(context);
+                            if (lootResult.looted) {
+                                const newStamina = context.stamina.getCurrent();
+                                logger.info(`💀 [RANDOM BOSS] Loot concluído! Nova stamina: ${newStamina}`);
+                                if (lootResult.levelUp || newStamina >= skillCost) {
+                                    logger.info('🎉 [RANDOM BOSS] Stamina recuperada via loot! Continuando...');
+                                    continue;
+                                }
+                                logger.info(`💀 [RANDOM BOSS] Stamina ainda baixa (${newStamina}). Tentando FSP...`);
+                            }
+                        } else {
+                            logger.warn('⚠️ [RANDOM BOSS] ultraFastLootModule não disponível para loot dead.');
+                        }
+                    }
+
+                    if (cfg.autoStaminaPotion && currentStamina < (cfg.minStaminaForPotion || 100)) {
+                        logger.info('💊 [RANDOM BOSS] Tentando usar Full Stamina Potion...');
+                        try {
+                            const fspUsed = await context.inventory.useFullStaminaPotion();
+                            if (fspUsed) {
+                                logger.info('✅ [RANDOM BOSS] Full Stamina Potion usada! Recarregando página...');
+                                bossState.potionsUsed++;
+                                this.state.stats.potionsUsed++;
+                                await sleep(1000);
+                                window.location.href = window.location.href;
+                                return { hadWork: true };
+                            } else {
+                                logger.info('💊 [RANDOM BOSS] Sem poções disponíveis ou erro');
+                            }
+                        } catch (error) {
+                            logger.warn('💊 [RANDOM BOSS] Erro ao tentar usar poção:', error.message);
+                        }
+                    }
+
+                    logger.info('⏳ [RANDOM BOSS] Aguardando regeneração de stamina (30s)...');
+                    await sleep(30000);
+                    currentStamina = context.stamina.getCurrent();
+                    if (currentStamina < skillCost) {
+                        logger.warn(`⚠️ [RANDOM BOSS] Stamina ainda insuficiente (${currentStamina}/${skillCost}). Encerrando ataque.`);
+                        break;
+                    }
+                }
+
+                const possibleAttacks = Math.floor(currentStamina / skillCost);
+                const attackCount = Math.min(possibleAttacks, parallelAttacks);
+
+                if (attackCount <= 0) {
+                    await sleep(100);
+                    continue;
+                }
+
+                const results = await this.executeBossParallelAttacks(context, boss.monsterId, skillId, attackCount);
+
+                bossState.attackCount += results.successCount;
+                bossState.currentDamage += results.totalDamage;
+                this.state.stats.totalAttacks += results.successCount;
+                this.state.stats.totalDamage += results.totalDamage;
+
+                if (results.lastStamina !== null) {
+                    const staminaEl = document.querySelector('#stamina_span');
+                    if (staminaEl) staminaEl.textContent = Math.max(0, results.lastStamina).toLocaleString();
+                }
+
+                if (bossState.attackCount % 10 === 0) {
+                    const progress = ((bossState.currentDamage / targetDamage) * 100).toFixed(1);
+                    logger.info(`📊 ${boss.name}: ${formatNumber(bossState.currentDamage)}/${formatNumber(targetDamage)} (${progress}%) - ${bossState.attackCount} ataques`);
+                }
+
+                await sleep(minDelayBetweenAttacks);
+            }
+
+            if (bossState.completed) {
+                logger.info(`✅ 🎲 ${boss.name}: Concluído com ${formatNumber(bossState.currentDamage)} dano em ${bossState.attackCount} ataques (${bossState.potionsUsed} poções)`);
+            }
+
+            logger.info('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+            logger.info('🎲 RESUMO DO RANDOM BOSS FARM');
+            logger.info(`📈 Total: ${this.state.stats.totalAttacks} ataques, ${formatNumber(this.state.stats.totalDamage)} dano, ${this.state.stats.potionsUsed} poções`);
+            logger.info(`✅ Bosses completados: ${this.state.stats.bossesCompleted}`);
+            logger.info('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+
+            return { hadWork: true, allCompleted: true };
+        },
+
+        async executeBossParallelAttacks(context, monsterId, skillId, count) {
+            const { logger } = context;
+            const attackPromises = Array.from({ length: count }, () =>
+                context.combat.attackWaveMonsterDirect(monsterId, skillId)
+            );
+
+            const results = await Promise.all(attackPromises);
+
+            let totalDamage = 0, successCount = 0, lastStamina = null;
+            for (const r of results) {
+                if (r.success) {
+                    totalDamage += r.damageDealt || 0;
+                    successCount++;
+                    if (r.stamina !== undefined) lastStamina = r.stamina;
+                } else if (r.message && r.message.toLowerCase().includes('stamina')) {
+                    logger.warn('⚠️ [RandomBossAttack] Stamina insuficiente! Recarregando página...');
+                    await sleep(1000);
+                    window.location.href = window.location.href;
+                    return { totalDamage, successCount, lastStamina };
+                }
+            }
+
+            return { totalDamage, successCount, lastStamina };
+        },
+
+        async fetchCurrentDamage(context, boss) {
+            const { logger } = context;
+            const ultraFastWaveModule = context.moduleRegistry.getModule('ultraFastWave');
+            if (!ultraFastWaveModule) {
+                logger.warn('⚠️ ultraFastWaveModule não disponível para fetchBattleDamage');
+                return;
+            }
+
+            const result = await ultraFastWaveModule.fetchBattleDamage(context, boss.monsterId);
+
+            if (result.success) {
+                boss.currentDamage = result.damage || 0;
+                logger.debug(`[FetchDamage] ${boss.name}: ${formatNumber(boss.currentDamage)} dano (fonte: ${result.source})`);
+            } else {
+                boss.currentDamage = 0;
+                if (result.invalid) {
+                    boss.invalid = true;
+                    logger.warn(`[FetchDamage] ${boss.name}: Batalha inválida`);
+                } else {
+                    logger.debug(`[FetchDamage] ${boss.name}: Erro ao buscar dano`);
+                }
+            }
+        }
+    };
+
     // ============================================================================
     // ULTRA FAST ATTACK MODULE - Parallel batch operations for maximum speed
     // ============================================================================
@@ -14165,7 +14674,9 @@ var version = GM_info.script.version;
                 expPotionTimer: null,
                 expPotionEndTime: null,
                 inventoryData: null,
-                damageCalculatorVisible: false
+                damageCalculatorVisible: false,
+                battlePassClaimBox: null,
+                battlePassClaiming: false
             };
             this.POTION_STORAGE_KEY = 'autods_exp_potion_timer';
         },
@@ -14257,6 +14768,13 @@ var version = GM_info.script.version;
             if (cfg.floatingHelpers.loot.enabled && cfg.floatingHelpers.loot.showFloating) {
                 console.log('[FloatingHelpers] Adding loot box');
                 container.appendChild(this.createLootBox(context, cfg));
+            }
+
+            // Adicionar botão de Claim All no Battle Pass
+            const isBattlePassPage = /battle_pass\.php/i.test(window.location.pathname);
+            if (isBattlePassPage) {
+                console.log('[FloatingHelpers] Adding Battle Pass claim box');
+                container.appendChild(this.createBattlePassClaimBox(context, cfg));
             }
 
             // Adicionar botão de Ultra Fast Stamina (sempre visível)
@@ -14503,6 +15021,179 @@ var version = GM_info.script.version;
             });
 
             return box;
+        },
+
+        createBattlePassClaimBox(context) {
+            const box = document.createElement('div');
+            box.className = 'loot-box autods-floating-bp-claim-btn';
+            box.style.cssText = `
+                background: linear-gradient(135deg, rgba(166, 227, 161, 0.9), rgba(137, 180, 250, 0.9));
+                border: 2px solid rgba(166, 227, 161, 0.8);
+                border-radius: 6px;
+                padding: 8px 12px;
+                color: #1e1e2e;
+                font-weight: bold;
+                cursor: pointer;
+                transition: all 0.2s;
+                font-size: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 6px;
+                min-height: 36px;
+                position: relative;
+            `;
+
+            const icon = document.createElement('div');
+            icon.style.cssText = 'font-size: clamp(18px, 5vw, 24px); line-height: 1;';
+            icon.textContent = '🎟️';
+
+            const label = document.createElement('div');
+            label.style.cssText = 'font-size: clamp(10px, 2vw, 12px); color: inherit; font-weight: bold;';
+            label.textContent = 'Claim All';
+
+            const badge = document.createElement('div');
+            badge.style.cssText = `
+                position: absolute;
+                top: -4px;
+                right: -4px;
+                background: #1e1e2e;
+                color: #a6e3a1;
+                font-size: 10px;
+                font-weight: bold;
+                padding: 2px 5px;
+                border-radius: 6px;
+                border: 1px solid rgba(166, 227, 161, 0.7);
+                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+                z-index: 1;
+            `;
+            badge.textContent = '0';
+
+            box.appendChild(icon);
+            box.appendChild(label);
+            box.appendChild(badge);
+
+            box.addEventListener('click', () => {
+                if (this.state.battlePassClaiming) return;
+                this.claimAllBattlePassRewards(context);
+            });
+
+            box.addEventListener('mouseenter', () => {
+                box.style.transform = 'scale(1.05)';
+                box.style.boxShadow = '0 4px 12px rgba(166, 227, 161, 0.4)';
+            });
+            box.addEventListener('mouseleave', () => {
+                box.style.transform = 'scale(1)';
+                box.style.boxShadow = 'none';
+            });
+
+            this.state.battlePassClaimBox = { box, label, badge };
+            this.updateBattlePassClaimBox(context);
+            return box;
+        },
+
+        getBattlePassClaimables(context) {
+            const forms = context.dom.queryAll('.claim-area form');
+            if (!forms.length) return [];
+
+            return forms
+                .map((form) => {
+                    const action = form.querySelector('input[name="action"]')?.value || '';
+                    if (action !== 'claim_reward') return null;
+                    const trackId = form.querySelector('input[name="track_id"]')?.value || '';
+                    const levelIndex = form.querySelector('input[name="level_index"]')?.value || '';
+                    if (!trackId || !levelIndex) return null;
+                    return { form, trackId, levelIndex };
+                })
+                .filter(Boolean);
+        },
+
+        updateBattlePassClaimBox(context) {
+            const boxState = this.state.battlePassClaimBox;
+            if (!boxState?.box) return;
+
+            const claimables = this.getBattlePassClaimables(context);
+            const count = claimables.length;
+
+            boxState.badge.textContent = String(count);
+            if (count === 0) {
+                boxState.box.style.opacity = '0.55';
+                boxState.box.style.cursor = 'not-allowed';
+                boxState.label.textContent = 'No Claims';
+            } else {
+                boxState.box.style.opacity = '1';
+                boxState.box.style.cursor = 'pointer';
+                boxState.label.textContent = 'Claim All';
+            }
+        },
+
+        markBattlePassClaimed(form) {
+            if (!form) return;
+            const claimArea = form.closest('.claim-area');
+            if (claimArea) {
+                claimArea.innerHTML = '<div class="claimed-tag">Claimed ✓</div>';
+            } else {
+                form.remove();
+            }
+        },
+
+        async claimAllBattlePassRewards(context) {
+            const { logger, notifications, http } = context;
+            if (this.state.battlePassClaiming) return;
+
+            const pathname = window.location?.pathname || '';
+            if (!/battle_pass\.php/i.test(pathname)) {
+                notifications.warn('Battle Pass: abra a página do Battle Pass para usar o claim.');
+                return;
+            }
+
+            const claimables = this.getBattlePassClaimables(context);
+            if (!claimables.length) {
+                notifications.info('Battle Pass: nenhum prêmio disponível.');
+                this.updateBattlePassClaimBox(context);
+                return;
+            }
+
+            this.state.battlePassClaiming = true;
+            let successCount = 0;
+            const boxState = this.state.battlePassClaimBox;
+
+            if (boxState?.label) {
+                boxState.label.textContent = 'Claiming...';
+            }
+
+            for (let i = 0; i < claimables.length; i++) {
+                const { form, trackId, levelIndex } = claimables[i];
+                if (boxState?.label) {
+                    boxState.label.textContent = `Claim ${i + 1}/${claimables.length}`;
+                }
+
+                const params = new URLSearchParams();
+                params.set('action', 'claim_reward');
+                params.set('track_id', trackId);
+                params.set('level_index', levelIndex);
+
+                const result = await http.post('/battle_pass.php', params.toString(), { parseJson: false });
+                const isSuccess = result?.success || (result?.status >= 200 && result?.status < 300);
+
+                if (isSuccess) {
+                    successCount++;
+                    this.markBattlePassClaimed(form);
+                } else {
+                    logger.warn(`[BattlePass] Claim falhou: track=${trackId}, level=${levelIndex}`);
+                }
+
+                await sleep(200);
+            }
+
+            this.state.battlePassClaiming = false;
+            this.updateBattlePassClaimBox(context);
+
+            if (successCount > 0) {
+                notifications.success(`Battle Pass: ${successCount} prêmio(s) reivindicado(s).`);
+            } else {
+                notifications.warn('Battle Pass: nenhum prêmio foi reivindicado.');
+            }
         },
 
         createStaminaBox(context, cfg) {
@@ -17831,6 +18522,12 @@ var version = GM_info.script.version;
                                         </div>
                                         <div class="autods-status-item">
                                             <label class="autods-checkbox">
+                                                <input type="checkbox" data-config="randomBossFarm.enabled" data-label="Random Boss Farm" data-toast="0" />
+                                                <span>🎲 Random Boss Farm</span>
+                                            </label>
+                                        </div>
+                                        <div class="autods-status-item">
+                                            <label class="autods-checkbox">
                                                 <input type="checkbox" data-config="merchantAutoBuy.enabled" data-label="Merchant Auto-Buy" data-toast="1" />
                                                 <span>🛒 Merchant Auto-Buy</span>
                                             </label>
@@ -17955,6 +18652,25 @@ Event Monster" rows="2"></textarea>
                                     <input type="number" data-config="specialBossFarm.checkInterval" data-config-format="int" data-label="Check Interval" min="60000" step="60000" value="300000" />
                                 </label>
                                 <p class="autods-info" style="font-size:10px;margin-top:4px;">Wait time if no bosses found before reload (default: 5 minutes).</p>
+
+                                <hr style="margin:16px 0;border-color:rgba(255,255,255,0.08);" />
+
+                                <h4 style="margin-bottom: 12px; color: var(--accent-primary);">🎲 Random Boss Farm</h4>
+                                <label class="autods-checkbox">
+                                    <input type="checkbox" data-config="randomBossFarm.enabled" data-label="Random Boss Farm" data-toast="0" />
+                                    <span>🎲 Farm Random Boss (random_boss_soon.php)</span>
+                                </label>
+                                <div class="autods-field-row">
+                                    <label class="autods-field autods-field-small">
+                                        <span>Target Damage</span>
+                                        <input type="number" data-config="randomBossFarm.targetDamage" data-config-format="int" data-label="Random Boss Target Damage" min="1000000" step="1000000" />
+                                    </label>
+                                    <label class="autods-field autods-field-small">
+                                        <span>Recheck Interval (ms)</span>
+                                        <input type="number" data-config="randomBossFarm.checkInterval" data-config-format="int" data-label="Random Boss Interval" min="60000" step="60000" />
+                                    </label>
+                                </div>
+                                <p class="autods-info" style="font-size:10px;margin-top:4px;">Default interval: 30 minutes (1,800,000 ms).</p>
                             </div>
 
                             <!-- Tab: Ultra Fast Attack -->
@@ -18450,6 +19166,22 @@ Boss:100000000" rows="3"></textarea>
                                     <label class="autods-checkbox">
                                         <input type="checkbox" data-config="floatingHelpers.loot.enabled" data-label="Loot" data-toast="0" />
                                         <span>Loot buttons</span>
+                                    </label>
+                                </div>
+
+                                <div class="autods-subsection">
+                                    <h5>⚡ Stamina Potions</h5>
+                                    <label class="autods-checkbox">
+                                        <input type="checkbox" data-config="stamina.useLargePotionBeforeFull" data-label="Prefer LSP" data-toast="0" />
+                                        <span>Use Large Stamina Potion before Full Stamina Potion</span>
+                                    </label>
+                                    <label class="autods-field autods-field-small">
+                                        <span>Min LSP Reserve</span>
+                                        <input type="number" data-config="stamina.minLargePotionReserve" data-config-format="int" data-label="Min LSP" min="0" step="1" />
+                                    </label>
+                                    <label class="autods-field autods-field-small">
+                                        <span>Min FSP Reserve</span>
+                                        <input type="number" data-config="stamina.minFullPotionReserve" data-config-format="int" data-label="Min FSP" min="0" step="1" />
                                     </label>
                                 </div>
                                 
@@ -23389,7 +24121,7 @@ Boss:100000000" rows="3"></textarea>
         const notifications = createNotificationService(tempContext);
         
         // Initialize combat service AFTER http (needs http.attackWaveMonsterDirect etc.)
-        const combat = createCombatService({ ...tempContext, http });
+        const combat = createCombatService({ ...tempContext, http, inventory, notifications });
         
         // Initialize Wave View Navigation Service BEFORE context (needed in context object)
         const waveViewNavigation = createWaveViewNavigationService({ logger });
@@ -23556,6 +24288,7 @@ Boss:100000000" rows="3"></textarea>
         moduleRegistry.register(ultraFastStaminaModule);  // Ultra Fast Stamina - parallel chapter reactions
         moduleRegistry.register(ultraFastDungeonModule);  // Ultra Fast Dungeon - smart damage dungeon farming
         moduleRegistry.register(specialBossFarmModule);  // Special Boss Farm - dedicated farm for General/King/Empress/Bastion
+        moduleRegistry.register(randomBossFarmModule);  // Random Boss Farm - random_boss_soon.php automation
         moduleRegistry.register(ultraFastWaveModule);
         moduleRegistry.register(autoBossModule);  // AutoBoss - high-damage boss farming
         moduleRegistry.register(dungeonReportModule);  // Dungeon Report - participation reporting (Phase 5)

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bitcointalk BRDb Score 
 // @namespace    http://tampermonkey.net/
-// @version      0.8
+// @version      0.9
 // @description  BRDb score + Dormant/Former/Reactivated + 120-day posts/merits chart + improved historical user filter
 // @author       Ace
 // @match        https://bitcointalk.org/index.php?action=profile;u=*
@@ -11,6 +11,7 @@
 // @downloadURL https://update.greasyfork.org/scripts/562627/Bitcointalk%20BRDb%20Score.user.js
 // @updateURL https://update.greasyfork.org/scripts/562627/Bitcointalk%20BRDb%20Score.meta.js
 // ==/UserScript==
+
 
 (function() {
 'use strict';
@@ -22,11 +23,17 @@ function getDateNDaysAgo(n) {
   return d.toISOString().split('T')[0];
 }
 
-/* ---------------- EXTRACT USERID (URL -> MERIT LINK) ---------------- */
+/* ---------------- EXTRACT USERID ---------------- */
 function extractUserIdFromPage() {
+  // 1) da URL
+  let uid = location.search.match(/u=(\d+)/)?.[1];
+  if (uid) return uid;
+
+  // 2) dal link Merit nella pagina profilo
   const meritLink = document.querySelector('a[href*="action=merit;u="]');
   if (meritLink) {
-    const match = meritLink.href.match(/u=(\d+)/);
+    const href = meritLink.getAttribute('href'); // relativo
+    const match = href.match(/u=(\d+)/);
     if (match) return match[1];
   }
   return null;
@@ -35,7 +42,13 @@ function extractUserIdFromPage() {
 /* ---------------- FETCH 120D DATA ---------------- */
 async function fetchMeritsAndPosts120(userUid) {
   const dateMin = getDateNDaysAgo(120);
-  const dateMax = new Date().toISOString().split('T')[0];
+
+  // extend max date by +1 day (UTC cutoff fix)
+  const dMax = new Date();
+  dMax.setDate(dMax.getDate() + 1);
+  const dateMax = dMax.toISOString().split('T')[0];
+
+  const cacheBust = Date.now();
 
   const url = `https://bitlist.co/trpc/posts.posts_per_day_histogram,merits.user_merits_per_day_histogram,posts.top_boards_by_post_count?batch=1&input=${
     encodeURIComponent(JSON.stringify({
@@ -43,7 +56,7 @@ async function fetchMeritsAndPosts120(userUid) {
       "1": { "json": { "date_min": dateMin, "date_max": dateMax, "user_uid": +userUid, "type": "received", "interval": "day" } },
       "2": { "json": { "date_min": dateMin, "date_max": dateMax, "author_uid": +userUid, "interval": "day" } }
     }))
-  }`;
+  }&_=${cacheBust}`;
 
   return new Promise((resolve, reject) => {
     GM_xmlhttpRequest({
@@ -60,16 +73,21 @@ async function fetchMeritsAndPosts120(userUid) {
           const postsLast120 = Array(120).fill(0);
           const meritsLast120 = Array(120).fill(0);
 
+          const baseDate = new Date(dateMin);
+
           postsHistogram.forEach(day => {
             const date = new Date(day.key_as_string);
-            const index = Math.floor((date - new Date(dateMin)) / 86400000);
+            const index = Math.round((date - baseDate) / 86400000);
             if (index >= 0 && index < 120) postsLast120[index] = day.doc_count || 0;
           });
 
+          // ✅ FIX: somma cumulativa + Math.round
           meritsHistogram.forEach(day => {
             const date = new Date(day.key_as_string);
-            const index = Math.floor((date - new Date(dateMin)) / 86400000);
-            if (index >= 0 && index < 120) meritsLast120[index] = day.merits_sum?.value || 0;
+            const index = Math.round((date - baseDate) / 86400000);
+            if (index >= 0 && index < 120) {
+              meritsLast120[index] += day.merits_sum?.value || 0;
+            }
           });
 
           const merit120 = meritsLast120.reduce((s, m) => s + m, 0);
@@ -91,7 +109,7 @@ function getProfileNumber(label) {
     const b = r.querySelector('td b');
     if (b && b.textContent.includes(label)) {
       const text = r.querySelectorAll('td')[1].textContent.trim();
-      const m = text.match(/(\d+)/); // prende solo il primo numero
+      const m = text.match(/(\d+)/);
       return m ? parseInt(m[1], 10) : 0;
     }
   }
@@ -210,14 +228,19 @@ function attachDashboardTooltip(td, data) {
     const maxPosts = Math.max(...postsLast120, 1);
     const maxMerits = Math.max(...meritsLast120, 1);
 
-    let svg = `<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" style="background:#020617;border-radius:10px;padding:8px;margin-top:10px;">`;
+    let svg = `<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"
+      style="background:#020617;border-radius:10px;padding:8px;margin-top:10px;">`;
 
     svg += `<polyline fill="none" stroke="#22c55e" stroke-width="2"
-      points="${postsLast120.map((p, i) => `${i * (width / 119)},${height - (p / maxPosts * (height - 16))}`).join(' ')}"
+      points="${postsLast120.map((p, i) =>
+        `${i * (width / 119)},${height - (p / maxPosts * (height - 16))}`
+      ).join(' ')}"
       style="stroke-linecap:round;stroke-linejoin:round;" />`;
 
     svg += `<polyline fill="none" stroke="#38bdf8" stroke-width="2"
-      points="${meritsLast120.map((m, i) => `${i * (width / 119)},${height - (m / maxMerits * (height - 16))}`).join(' ')}"
+      points="${meritsLast120.map((m, i) =>
+        `${i * (width / 119)},${height - (m / maxMerits * (height - 16))}`
+      ).join(' ')}"
       style="stroke-linecap:round;stroke-linejoin:round;" />`;
 
     svg += `</svg>`;
@@ -285,6 +308,15 @@ function attachDashboardTooltip(td, data) {
     <div style="margin-top:10px;text-align:center">
       <div style="font-size:11px;opacity:.7;margin-bottom:4px">Last 120 days</div>
       ${generateChart(data.postsLast120, data.meritsLast120)}
+
+      <div style="display:flex;justify-content:center;gap:14px;margin-top:6px;font-size:11px;opacity:.8">
+        <span style="display:flex;align-items:center;gap:4px">
+          <span style="width:10px;height:2px;background:#22c55e;display:inline-block"></span> Posts
+        </span>
+        <span style="display:flex;align-items:center;gap:4px">
+          <span style="width:10px;height:2px;background:#38bdf8;display:inline-block"></span> Merits
+        </span>
+      </div>
     </div>
 
     ${finalRow}
@@ -309,11 +341,8 @@ function attachDashboardTooltip(td, data) {
 /* ---------------- MAIN ---------------- */
 async function main() {
   try {
-    let uid = location.search.match(/u=(\d+)/)?.[1];
-    if (!uid) {
-      uid = extractUserIdFromPage();
-      if (!uid) return;
-    }
+    const uid = extractUserIdFromPage();
+    if (!uid) return;
 
     const { merit120, posts120, postsLast120, meritsLast120 } = await fetchMeritsAndPosts120(uid);
 

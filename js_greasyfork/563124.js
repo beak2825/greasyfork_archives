@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Naver Webtoon Mobile Scroll Saver (Cloud Sync)
 // @namespace    https://greasyfork.org/en/users/1529082-minjae-kim
-// @version      3.05
+// @version      3.13
 // @description  Save and sync scroll position across devices via Pantry Cloud
 // @author       Minjae Kim
 // @match        https://m.comic.naver.com/webtoon/detail*
@@ -14,7 +14,7 @@
 // @downloadURL https://update.greasyfork.org/scripts/563124/Naver%20Webtoon%20Mobile%20Scroll%20Saver%20%28Cloud%20Sync%29.user.js
 // @updateURL https://update.greasyfork.org/scripts/563124/Naver%20Webtoon%20Mobile%20Scroll%20Saver%20%28Cloud%20Sync%29.meta.js
 // ==/UserScript==
-
+ 
 //HIDE ELEMENTS
 const style = document.createElement('style');
 style.innerHTML = `
@@ -23,21 +23,21 @@ style.innerHTML = `
     }
 `;
 document.head.appendChild(style);
-
-
+ 
+ 
 //CLONE NEXT EPISODE BUTTON BELOW COMMENTS
 const originalNext = document.querySelector('.link_next._moveArticle');
-
+ 
 if (originalNext) {
     // Clone the next episode button
     const cloneNext = originalNext.cloneNode(true);
-
+ 
     // Make the clone trigger the original when clicked
     cloneNext.addEventListener('click', (e) => {
         e.preventDefault(); // Prevent page from jumping due to href="#none"
         originalNext.click(); // Trigger the site's internal logic
     });
-
+ 
     // Place it at footer
     const destination = document.querySelector('.footer');
     destination.appendChild(cloneNext); 
@@ -45,30 +45,45 @@ if (originalNext) {
 //recently seen from viewer
 const titleArea = document.querySelector('.tit');
 titleArea.style.backgroundColor = 'rgba(0, 220, 99)';
+
+if (titleArea && titleArea.parentNode) {
+        // 2. Create the new anchor element
+        const wrapper = document.createElement('a');
+        wrapper.href = 'https://m.comic.naver.com/mypage/recentlyview';
+        
+        wrapper.style.textDecoration = 'none';
+        wrapper.style.color = 'inherit';
+        wrapper.style.display = 'block';
+
+        titleArea.parentNode.insertBefore(wrapper, titleArea);
+        wrapper.appendChild(titleArea);
+    }
+/*    
 if (titleArea) {
     titleArea.addEventListener('click', (e) => {
-        window.open('https://m.comic.naver.com/mypage/recentlyview','_self');
+        window.location.href = 'https://m.comic.naver.com/mypage/recentlyview';
     });
 }
-
+*/
+ 
 (function() {
     'use strict';
-
+ 
     // --- CONFIGURATION ---
     // 1. Go to getpantry.cloud, create a free pantry, and paste your ID here:
     const PANTRY_ID = "mink_pantry"; 
     const BASKET_NAME = "naver_webtoon_sync";
     const API_URL = `https://getpantry.cloud/apiv1/pantry/8e4ed0bc-741b-4c22-9868-9624ad6305ad/basket/naver_webtoon_sync`;
-
+ 
     const params = new URLSearchParams(window.location.search);
     const titleId = params.get('titleId');
     const episodeNo = params.get('no');
     if (!titleId || !episodeNo) return;
-
+ 
     const storageKey = `webtoon_pos_${titleId}`;
-
+ 
     // --- CLOUD SYNC FUNCTIONS ---
-
+ 
     const cloudSave = (data) => {
         // We get existing cloud data first to avoid overwriting other webtoons
         GM_xmlhttpRequest({
@@ -77,7 +92,7 @@ if (titleArea) {
             onload: (res) => {
                 let allData = res.status === 200 ? JSON.parse(res.responseText) : {};
                 allData[storageKey] = data; // Only update this specific webtoon's key
-
+ 
                 GM_xmlhttpRequest({
                     method: "POST",
                     url: API_URL,
@@ -88,7 +103,7 @@ if (titleArea) {
             }
         });
     };
-
+ 
     const cloudLoad = (callback) => {
         GM_xmlhttpRequest({
             method: "GET",
@@ -101,7 +116,7 @@ if (titleArea) {
             }
         });
     };
-
+ 
     // --- RESTORE LOGIC ---
     const restorePosition = (savedData) => {
         if (savedData && savedData.episode === episodeNo && savedData.imageId) {
@@ -116,11 +131,11 @@ if (titleArea) {
             }, 300);
         }
     };
-
+ 
     // Init: Load Local first (fast), then check Cloud (sync)
     const localData = GM_getValue(storageKey, null);
     if (localData) restorePosition(localData);
-
+ 
     cloudLoad((cloudData) => {
         // If cloud data is different/newer, update and re-scroll
         if (JSON.stringify(cloudData) !== JSON.stringify(localData)) {
@@ -129,7 +144,7 @@ if (titleArea) {
             restorePosition(cloudData);
         }
     });
-
+ 
     // --- SAVE LOGIC ---
     let isScrolling;
     window.addEventListener('scroll', () => {
@@ -137,7 +152,7 @@ if (titleArea) {
         isScrolling = setTimeout(() => {
             const images = document.querySelectorAll('[id^="toon_"]');
             let currentImageId = null;
-
+ 
             for (let img of images) {
                 const rect = img.getBoundingClientRect();
                 if (rect.top >= -100 && rect.top <= 300) {
@@ -145,7 +160,7 @@ if (titleArea) {
                     break;
                 }
             }
-
+ 
             if (currentImageId) {
                 const newData = {
                     episode: episodeNo,
@@ -157,5 +172,5 @@ if (titleArea) {
             }
         }, 1500); // Increased delay to avoid spamming the Cloud API
     }, { passive: true });
-
+ 
 })();

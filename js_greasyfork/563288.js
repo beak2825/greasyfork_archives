@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Open ATI modules in New Tab
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.1
 // @license      MIT
 // @description  Redirect navigation to ATI modules into a new tab instead of the current one
 // @author       beepbopboop
@@ -17,7 +17,7 @@
     'use strict';
 
     // For normal modules like the Foundations ones
-    const origPackageAJAXCall = Common.PackageAJAXCall;
+    const origPackageAJAXCall = Common.PackageAJAXCall.bind(Common);
     Common.PackageAJAXCall = function (Category, ServiceMethod, HttpVerbType, Data, ErrorFunction, DoneFunction, DontBlockUI, IncludeSessionKey) {
         if (ServiceMethod === 'TestPrepLMSActivity') {
             const NewDoneFunction = function (Content, Status, Result) {
@@ -37,7 +37,7 @@
     };
 
     // For things called 'Tutorial's: intercept Common.Navigate
-    const origNavigate = Common.Navigate;
+    const origNavigate = Common.Navigate.bind(Common);
     Common.Navigate = function (NewAction, NewInternalAction) {
         if (NewAction === 'Tutorial') {
             window.open('https://student.atitesting.com/Tutorial', '_blank', 'noopener');

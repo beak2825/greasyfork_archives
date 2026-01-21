@@ -3,7 +3,7 @@
 // @description  Fetch jail list, calculate hardness, filter targets, and bust them.
 // @author       Allenone [2033011]
 // @namespace    https://torn.com/
-// @version      1.1.0
+// @version      1.2.0
 // @match        https://www.torn.com/jailview.php*
 // @icon         https://www.torn.com/favicon.ico
 // @grant        GM_getValue
@@ -16,6 +16,19 @@
     'use strict';
     let minH = GM_getValue('hardnessMin', 0);
     let maxH = GM_getValue('hardnessMax', 300);
+
+    /* ============================
+       BAIL CONFIG
+    ============================ */
+    const MAX_BAIL = GM_getValue('maxBailAmount', 75000); // <-- change as desired
+    const BAIL_SKIP_TTL = 10 * 60 * 1000; // 10 minutes
+
+    // Runtime state
+    let bailIndex = 0;
+    let bailArmedUser = null;
+
+    // GM cache: { [userId]: timestamp }
+    let bailSkipCache = GM_getValue('bailSkipCache', {});
 
     /* ============================
        AUTH / TOKENS
@@ -49,10 +62,37 @@
         return match ? parseInt(match[1], 10) : 0;
     }
 
+    function isBailSkipped(userId) {
+        const ts = bailSkipCache[userId];
+        if (!ts) return false;
+        if (Date.now() - ts > BAIL_SKIP_TTL) {
+            delete bailSkipCache[userId];
+            GM_setValue('bailSkipCache', bailSkipCache);
+            return false;
+        }
+        return true;
+    }
+
+    function markBailSkipped(userId) {
+        bailSkipCache[userId] = Date.now();
+        GM_setValue('bailSkipCache', bailSkipCache);
+    }
+
+    function parseBailAmount(msg) {
+        // Matches $2,471,634
+        const m = msg?.match(/\$([\d,]+)/);
+        return m ? parseInt(m[1].replace(/,/g, ''), 10) : null;
+    }
+
     /* ============================
        PANEL CREATION (only once)
     ============================ */
     let panel, minInput, maxInput, listEl, playersCache = [];
+
+    const BAIL_SKIPPED_STYLE = `
+        background: linear-gradient(90deg, #444, #2a2a2a);
+        opacity: 0.75;
+    `;
 
     function createPanel() {
         panel = document.getElementById('jail-bust-panel');
@@ -188,6 +228,7 @@
 
         filtered.forEach(p => {
             const row = document.createElement('div');
+            row.dataset.userId = p.id;
             row.style.cssText = `
                 display:grid;
                 grid-template-columns: 1fr 60px 60px;
@@ -198,6 +239,11 @@
                 border-bottom:1px solid #333;
                 border-radius:4px;
             `;
+
+            if (isBailSkipped(p.id)) {
+                row.style.cssText += BAIL_SKIPPED_STYLE;
+                row.title = 'Skipped (bail over limit – cached)';
+            }
 
             row.innerHTML = `
                 <span title="${p.time} | lvl ${p.level}">${p.name}</span>
@@ -259,6 +305,64 @@
         });
     }
 
+    function bailStepBuy(user, row) {
+        const rfcv = getRfcvToken();
+        if (!rfcv) return;
+
+        const url = `https://www.torn.com/jailview.php?XID=${user.id}&action=rescue&step=buy&rfcv=${rfcv}&_=${Date.now()}`;
+
+        fetch(url, {
+            method: 'GET',
+            credentials: 'same-origin',
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+            .then(r => r.json())
+            .then(res => {
+            const bail = parseBailAmount(res.msg);
+
+            if (bail === null) {
+                markBailSkipped(user.id);
+                bailArmedUser = null;
+                return;
+            }
+
+            if (bail > MAX_BAIL) {
+                markBailSkipped(user.id);
+                row.style.backgroundColor = '#444';
+                bailArmedUser = null;
+                return;
+            }
+
+            // Arm second press
+            bailArmedUser = { user, row };
+            row.style.outline = '2px solid #17a2b8';
+        })
+            .catch(() => markBailSkipped(user.id));
+    }
+
+    function bailStepBuy1(user, row) {
+        const rfcv = getRfcvToken();
+        if (!rfcv) return;
+
+        const url = `https://www.torn.com/jailview.php?XID=${user.id}&action=rescue&step=buy1&rfcv=${rfcv}&_=${Date.now()}`;
+
+        fetch(url, {
+            method: 'GET',
+            credentials: 'same-origin',
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+            .then(r => r.json())
+            .then(res => {
+            if (res?.color === 'green') {
+                row.style.backgroundColor = '#28a74599';
+                setTimeout(() => row.remove(), 2000);
+            }
+            bailArmedUser = null;
+        })
+            .catch(() => bailArmedUser = null);
+    }
+
+
     /* ============================
        KEYBOARD SHORTCUT (Q = bust lowest hardness)
     ============================ */
@@ -295,6 +399,46 @@
 
         bustPlayer(target.id, row);
     });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key !== 'e' && e.key !== 'E') return;
+        if (e.ctrlKey || e.altKey || e.metaKey || e.shiftKey) return;
+
+        const tag = document.activeElement?.tagName;
+        if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+
+        if (!playersCache.length || !listEl) return;
+
+        // Second press: confirm bail
+        if (bailArmedUser) {
+            bailStepBuy1(bailArmedUser.user, bailArmedUser.row);
+            return;
+        }
+
+        // First press: find next eligible target
+        const min = GM_getValue('hardnessMin', 0);
+        const max = GM_getValue('hardnessMax', Infinity);
+
+        const candidates = playersCache
+        .filter(p =>
+                p.hardness >= min &&
+                p.hardness <= max &&
+                !isBailSkipped(p.id)
+               )
+        .sort((a, b) => a.hardness - b.hardness);
+
+        if (!candidates.length) return;
+
+        const user = candidates[bailIndex % candidates.length];
+        bailIndex++;
+
+        const row = [...listEl.children].find(r => r.textContent.includes(user.name));
+        if (!row) return;
+
+        row.style.outline = '2px dashed #0dcaf0';
+        bailStepBuy(user, row);
+    });
+
 
     createPanel();
 })();

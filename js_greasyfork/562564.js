@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TORN: Attack Assist Requesting
 // @namespace    dekleinekobini.private.attack-assist-requesting
-// @version      1.0.1
+// @version      1.0.2
 // @author       DeKleineKobini [2114440]
 // @description  Request assists for your attacks.
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=torn.com
@@ -88,7 +88,7 @@
     });
   }
   const API_BASE = "https://api.no1irishstig.co.uk";
-  const SOURCE = "Attack Assist Script";
+  const SOURCE = "Stig's Assist Script";
   async function fetchButtons(location2) {
     const response = await fetchGM(`${API_BASE}/abtns?locID=${encodeURIComponent(location2)}`);
     return Object.entries(response).map(([name, label]) => ({ name, label }));
@@ -279,9 +279,12 @@ Please check the location and try again.`);
       if (error.responseText !== null) {
         if (isJSON(error.responseText)) {
           const data = JSON.parse(error.responseText);
-          if ("error" in data) {
+          if (typeof data === "object" && "error" in data) {
             code = data.error;
             message = data.error;
+          } else if (typeof data === "string") {
+            code = data;
+            message = data;
           } else code = error.responseText;
         } else {
           code = error.responseText;

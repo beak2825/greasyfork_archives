@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Cookie Sync
 // @namespace    https://github.com/hxueh
-// @version      0.0.20
-// @description  Sync cookies across browsers using GitHub Gist with E2E encryption (AES-GCM + PBKDF2-SHA256). GitHub token is also encrypted. Fixed Safari cookie listing.
+// @version      0.1.0
+// @description  Sync cookies across browsers using GitHub Gist with E2E encryption (AES-GCM + PBKDF2-SHA256). GitHub token is also encrypted.
 // @author       hxueh
 // @license      MIT
 // @icon         data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23D2691E'/%3E%3Ccircle cx='35' cy='35' r='8' fill='%234A2C0A'/%3E%3Ccircle cx='60' cy='30' r='6' fill='%234A2C0A'/%3E%3Ccircle cx='25' cy='55' r='5' fill='%234A2C0A'/%3E%3Ccircle cx='55' cy='55' r='7' fill='%234A2C0A'/%3E%3Ccircle cx='70' cy='50' r='5' fill='%234A2C0A'/%3E%3Ccircle cx='40' cy='70' r='6' fill='%234A2C0A'/%3E%3Ccircle cx='65' cy='70' r='5' fill='%234A2C0A'/%3E%3C/svg%3E
@@ -517,10 +517,9 @@
       return false;
     },
 
-    async getAllCookies(domain = null) {
+    async getAllCookies() {
       return new Promise((resolve, reject) => {
-        const filter = domain ? { domain: domain } : {};
-        GM_cookie.list(filter, (cookies, error) => {
+        GM_cookie.list({}, (cookies, error) => {
           if (error) {
             reject(new Error(error));
           } else {
@@ -531,59 +530,10 @@
     },
 
     async getCookiesForDomain(domain) {
-      // Try multiple domain formats to handle Safari's stricter cookie access
-      // Safari may not support listing all cookies, so we query by domain directly
-      const domainWithoutDot = domain.replace(/^\./, "");
-      const domainWithDot = "." + domainWithoutDot;
-
-      // Try different filter approaches and merge results
-      const cookieMap = new Map();
-
-      // Approach 1: Query with domain filter (with dot prefix)
-      try {
-        const cookies1 = await this.getAllCookies(domainWithDot);
-        cookies1.forEach((c) =>
-          cookieMap.set(`${c.domain}|${c.name}|${c.path}`, c),
-        );
-      } catch {}
-
-      // Approach 2: Query with domain filter (without dot prefix)
-      try {
-        const cookies2 = await this.getAllCookies(domainWithoutDot);
-        cookies2.forEach((c) =>
-          cookieMap.set(`${c.domain}|${c.name}|${c.path}`, c),
-        );
-      } catch {}
-
-      // Approach 3: Query with URL filter (for browsers that prefer URL-based filtering)
-      try {
-        const cookies3 = await new Promise((resolve, reject) => {
-          GM_cookie.list(
-            { url: `https://${domainWithoutDot}/` },
-            (cookies, error) => {
-              if (error) reject(new Error(error));
-              else resolve(cookies || []);
-            },
-          );
-        });
-        cookies3.forEach((c) =>
-          cookieMap.set(`${c.domain}|${c.name}|${c.path}`, c),
-        );
-      } catch {}
-
-      // Approach 4: Fallback to listing all cookies (works in Chrome/Firefox)
-      if (cookieMap.size === 0) {
-        try {
-          const allCookies = await this.getAllCookies();
-          allCookies
-            .filter((cookie) => this.domainMatches(cookie.domain, domain))
-            .forEach((c) =>
-              cookieMap.set(`${c.domain}|${c.name}|${c.path}`, c),
-            );
-        } catch {}
-      }
-
-      return Array.from(cookieMap.values());
+      const allCookies = await this.getAllCookies();
+      return allCookies.filter((cookie) =>
+        this.domainMatches(cookie.domain, domain),
+      );
     },
 
     async setCookie(cookie) {
@@ -1061,7 +1011,7 @@
         * {
           box-sizing: border-box;
         }
-
+ 
         .cs-pin-overlay {
           position: fixed;
           top: 0;
@@ -1071,7 +1021,7 @@
           background: rgba(0, 0, 0, 0.3);
           z-index: 2147483647;
         }
-
+ 
         .cs-pin-modal {
           position: fixed;
           top: 20px;
@@ -1086,7 +1036,7 @@
           z-index: 2147483647;
           animation: cs-slide-in 0.2s ease-out;
         }
-
+ 
         @keyframes cs-slide-in {
           from {
             opacity: 0;
@@ -1097,7 +1047,7 @@
             transform: translateY(0);
           }
         }
-
+ 
         .cs-pin-title {
           font-size: 15px;
           font-weight: 600;
@@ -1108,11 +1058,11 @@
           align-items: center;
           gap: 8px;
         }
-
+ 
         .cs-pin-input-group {
           margin-bottom: 12px;
         }
-
+ 
         .cs-pin-input {
           width: 100%;
           padding: 10px 12px;
@@ -1123,34 +1073,34 @@
           font-size: 14px;
           transition: border-color 0.2s, box-shadow 0.2s;
         }
-
+ 
         .cs-pin-input:focus {
           outline: none;
           border-color: #00d9ff;
           box-shadow: 0 0 0 2px rgba(0, 217, 255, 0.1);
         }
-
+ 
         .cs-pin-input::placeholder {
           color: #555;
         }
-
+ 
         .cs-pin-error {
           color: #ff4757;
           font-size: 12px;
           margin-top: 6px;
           display: none;
         }
-
+ 
         .cs-pin-error.visible {
           display: block;
         }
-
+ 
         .cs-pin-buttons {
           display: flex;
           gap: 8px;
           margin-top: 14px;
         }
-
+ 
         .cs-pin-btn {
           flex: 1;
           padding: 9px 14px;
@@ -1164,32 +1114,32 @@
           align-items: center;
           justify-content: center;
         }
-
+ 
         .cs-pin-btn-cancel {
           background: #1b3a5a;
           color: #e0e0e0;
         }
-
+ 
         .cs-pin-btn-cancel:hover {
           background: #234567;
         }
-
+ 
         .cs-pin-btn-submit {
           background: linear-gradient(135deg, #00d9ff 0%, #00a8cc 100%);
           color: #0d1b2a;
         }
-
+ 
         .cs-pin-btn-submit:hover {
           transform: translateY(-1px);
           box-shadow: 0 4px 12px rgba(0, 217, 255, 0.3);
         }
-
+ 
         .cs-pin-btn:disabled {
           opacity: 0.5;
           cursor: not-allowed;
           transform: none !important;
         }
-
+ 
         .cs-loading {
           display: inline-block;
           width: 14px;
@@ -1199,11 +1149,11 @@
           border-radius: 50%;
           animation: cs-spin 0.8s linear infinite;
         }
-
+ 
         @keyframes cs-spin {
           to { transform: rotate(360deg); }
         }
-
+ 
         /* Toast notification styles */
         .cs-notif-container {
           position: fixed;
@@ -1211,7 +1161,7 @@
           right: 20px;
           z-index: 2147483647;
         }
-
+ 
         .cs-notif {
           padding: 12px 20px;
           border-radius: 8px;
@@ -1224,17 +1174,17 @@
           white-space: nowrap;
           margin-bottom: 8px;
         }
-
+ 
         .cs-notif.success {
           background: linear-gradient(135deg, #2ed573 0%, #26a65b 100%);
           color: white;
         }
-
+ 
         .cs-notif.error {
           background: linear-gradient(135deg, #ff4757 0%, #c0392b 100%);
           color: white;
         }
-
+ 
         @keyframes cs-notif-in {
           from {
             opacity: 0;
@@ -1245,7 +1195,7 @@
             transform: translateX(0);
           }
         }
-
+ 
         @keyframes cs-notif-out {
           from {
             opacity: 1;
@@ -1278,11 +1228,11 @@
           display: none;
           overflow: hidden;
         }
-
+ 
         #cookie-sync-panel.visible {
           display: block;
         }
-
+ 
         #cookie-sync-header {
           background: linear-gradient(90deg, #0f3460 0%, #1a1a2e 100%);
           padding: 12px 16px;
@@ -1292,7 +1242,7 @@
           align-items: center;
           border-bottom: 1px solid #0f3460;
         }
-
+ 
         #cookie-sync-header h3 {
           margin: 0;
           font-size: 16px;
@@ -1302,11 +1252,11 @@
           align-items: center;
           gap: 8px;
         }
-
+ 
         #cookie-sync-header h3::before {
           content: '🔐';
         }
-
+ 
         #cookie-sync-close {
           background: none;
           border: none;
@@ -1317,34 +1267,34 @@
           line-height: 1;
           transition: color 0.2s;
         }
-
+ 
         #cookie-sync-close:hover {
           color: #ff4757;
         }
-
+ 
         #cookie-sync-content {
           padding: 16px;
           max-height: calc(80vh - 60px);
           overflow-y: auto;
         }
-
+ 
         #cookie-sync-content::-webkit-scrollbar {
           width: 6px;
         }
-
+ 
         #cookie-sync-content::-webkit-scrollbar-track {
           background: #1a1a2e;
         }
-
+ 
         #cookie-sync-content::-webkit-scrollbar-thumb {
           background: #0f3460;
           border-radius: 3px;
         }
-
+ 
         .cs-section {
           margin-bottom: 20px;
         }
-
+ 
         .cs-section-title {
           font-size: 12px;
           font-weight: 600;
@@ -1355,18 +1305,18 @@
           padding-bottom: 6px;
           border-bottom: 1px solid #0f3460;
         }
-
+ 
         .cs-input-group {
           margin-bottom: 12px;
         }
-
+ 
         .cs-input-group label {
           display: block;
           font-size: 12px;
           color: #888;
           margin-bottom: 4px;
         }
-
+ 
         .cs-input {
           width: 100%;
           padding: 10px 12px;
@@ -1378,42 +1328,42 @@
           box-sizing: border-box;
           transition: border-color 0.2s, box-shadow 0.2s;
         }
-
+ 
         .cs-input:focus {
           outline: none;
           border-color: #00d9ff;
           box-shadow: 0 0 0 2px rgba(0, 217, 255, 0.1);
         }
-
+ 
         .cs-input::placeholder {
           color: #555;
         }
-
+ 
         .cs-checkbox-group {
           display: flex;
           align-items: center;
           gap: 8px;
           margin-bottom: 12px;
         }
-
+ 
         .cs-checkbox {
           width: 18px;
           height: 18px;
           accent-color: #00d9ff;
         }
-
+ 
         .cs-checkbox-label {
           font-size: 13px;
           color: #bbb;
         }
-
+ 
         .cs-btn-group {
           display: grid;
           grid-template-columns: 1fr 1fr;
           gap: 10px;
           margin-bottom: 10px;
         }
-
+ 
         .cs-btn {
           padding: 10px 16px;
           border: none;
@@ -1427,46 +1377,46 @@
           justify-content: center;
           gap: 6px;
         }
-
+ 
         .cs-btn-primary {
           background: linear-gradient(135deg, #00d9ff 0%, #00a8cc 100%);
           color: #0d1b2a;
         }
-
+ 
         .cs-btn-primary:hover {
           transform: translateY(-1px);
           box-shadow: 0 4px 12px rgba(0, 217, 255, 0.3);
         }
-
+ 
         .cs-btn-secondary {
           background: #1b3a5a;
           color: #e0e0e0;
         }
-
+ 
         .cs-btn-secondary:hover {
           background: #234567;
         }
-
+ 
         .cs-btn-danger {
           background: linear-gradient(135deg, #ff4757 0%, #c0392b 100%);
           color: white;
         }
-
+ 
         .cs-btn-danger:hover {
           transform: translateY(-1px);
           box-shadow: 0 4px 12px rgba(255, 71, 87, 0.3);
         }
-
+ 
         .cs-btn-full {
           grid-column: 1 / -1;
         }
-
+ 
         .cs-btn:disabled {
           opacity: 0.5;
           cursor: not-allowed;
           transform: none !important;
         }
-
+ 
         .cs-cookie-list {
           max-height: 200px;
           overflow-y: auto;
@@ -1475,7 +1425,7 @@
           border-radius: 6px;
           padding: 8px;
         }
-
+ 
         .cs-cookie-item {
           display: flex;
           align-items: center;
@@ -1484,20 +1434,20 @@
           border-radius: 4px;
           transition: background 0.2s;
         }
-
+ 
         .cs-cookie-item:hover {
           background: #1b3a5a;
         }
-
+ 
         .cs-cookie-item input {
           flex-shrink: 0;
         }
-
+ 
         .cs-cookie-info {
           flex: 1;
           min-width: 0;
         }
-
+ 
         .cs-cookie-name {
           font-size: 12px;
           font-weight: 500;
@@ -1506,7 +1456,7 @@
           overflow: hidden;
           text-overflow: ellipsis;
         }
-
+ 
         .cs-cookie-domain {
           font-size: 10px;
           color: #666;
@@ -1514,7 +1464,7 @@
           overflow: hidden;
           text-overflow: ellipsis;
         }
-
+ 
         .cs-status {
           padding: 10px 12px;
           border-radius: 6px;
@@ -1526,29 +1476,29 @@
           overflow-y: auto;
           word-break: break-word;
         }
-
+ 
         .cs-status.visible {
           display: block;
         }
-
+ 
         .cs-status.success {
           background: rgba(46, 213, 115, 0.15);
           border: 1px solid #2ed573;
           color: #2ed573;
         }
-
+ 
         .cs-status.error {
           background: rgba(255, 71, 87, 0.15);
           border: 1px solid #ff4757;
           color: #ff4757;
         }
-
+ 
         .cs-status.info {
           background: rgba(0, 217, 255, 0.15);
           border: 1px solid #00d9ff;
           color: #00d9ff;
         }
-
+ 
         .cs-loading {
           display: inline-block;
           width: 14px;
@@ -1558,17 +1508,17 @@
           border-radius: 50%;
           animation: cs-spin 0.8s linear infinite;
         }
-
+ 
         @keyframes cs-spin {
           to { transform: rotate(360deg); }
         }
-
+ 
         .cs-info-text {
           font-size: 11px;
           color: #666;
           margin-top: 8px;
         }
-
+ 
         .cs-sync-keys-info {
           display: flex;
           justify-content: space-between;
@@ -1580,15 +1530,15 @@
           background: #0d1b2a;
           border-radius: 4px;
         }
-
+ 
         .cs-sync-keys-info strong {
           color: #00d9ff;
         }
-
+ 
         .cs-sync-mode {
           color: #2ed573;
         }
-
+ 
         .cs-gist-id {
           font-size: 11px;
           color: #00d9ff;
@@ -1598,7 +1548,7 @@
           background: #0d1b2a;
           border-radius: 4px;
         }
-
+ 
         .cs-tabs {
           display: flex;
           gap: 4px;
@@ -1607,7 +1557,7 @@
           padding: 4px;
           border-radius: 8px;
         }
-
+ 
         #cookie-sync-domain-bar {
           background: #0d1b2a;
           padding: 8px 16px;
@@ -1617,17 +1567,17 @@
           align-items: center;
           gap: 8px;
         }
-
+ 
         .cs-domain-label {
           color: #888;
         }
-
+ 
         .cs-domain-value {
           color: #00d9ff;
           font-weight: 500;
           font-family: monospace;
         }
-
+ 
         .cs-tab {
           flex: 1;
           padding: 8px 12px;
@@ -1640,24 +1590,24 @@
           border-radius: 6px;
           transition: all 0.2s;
         }
-
+ 
         .cs-tab.active {
           background: #1b3a5a;
           color: #00d9ff;
         }
-
+ 
         .cs-tab:hover:not(.active) {
           color: #bbb;
         }
-
+ 
         .cs-tab-content {
           display: none;
         }
-
+ 
         .cs-tab-content.active {
           display: block;
         }
-
+ 
         /* Notification toast */
         #cookie-sync-notif {
           position: fixed;
@@ -1665,7 +1615,7 @@
           right: 20px;
           z-index: 2147483647;
         }
-
+ 
         .cs-notif {
           padding: 12px 20px;
           border-radius: 8px;
@@ -1678,17 +1628,17 @@
           white-space: nowrap;
           margin-bottom: 8px;
         }
-
+ 
         .cs-notif.success {
           background: linear-gradient(135deg, #2ed573 0%, #26a65b 100%);
           color: white;
         }
-
+ 
         .cs-notif.error {
           background: linear-gradient(135deg, #ff4757 0%, #c0392b 100%);
           color: white;
         }
-
+ 
         @keyframes cs-notif-in {
           from {
             opacity: 0;
@@ -1699,7 +1649,7 @@
             transform: translateX(0);
           }
         }
-
+ 
         @keyframes cs-notif-out {
           from {
             opacity: 1;
@@ -1710,7 +1660,7 @@
             transform: translateX(20px);
           }
         }
-
+ 
         /* PIN Modal - positioned at top right */
         .cs-modal-overlay {
           position: fixed;
@@ -1721,7 +1671,7 @@
           background: rgba(0, 0, 0, 0.3);
           z-index: 2147483647;
         }
-
+ 
         .cs-modal {
           position: fixed;
           top: 20px;
@@ -1734,7 +1684,7 @@
           box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
           animation: cs-slide-in 0.2s ease-out;
         }
-
+ 
         @keyframes cs-slide-in {
           from {
             opacity: 0;
@@ -1745,7 +1695,7 @@
             transform: translateY(0);
           }
         }
-
+ 
         .cs-modal-title {
           font-size: 15px;
           font-weight: 600;
@@ -1756,28 +1706,28 @@
           align-items: center;
           gap: 8px;
         }
-
+ 
         .cs-modal-error {
           color: #ff4757;
           font-size: 12px;
           margin-top: 6px;
           display: none;
         }
-
+ 
         .cs-modal-error.visible {
           display: block;
         }
-
+ 
         .cs-modal-buttons {
           display: flex;
           gap: 8px;
           margin-top: 14px;
         }
-
+ 
         .cs-modal-buttons .cs-btn {
           flex: 1;
         }
-
+ 
         .cs-pin-status {
           display: flex;
           align-items: center;
@@ -1787,28 +1737,28 @@
           border-radius: 6px;
           margin-bottom: 12px;
         }
-
+ 
         .cs-pin-status-icon {
           font-size: 16px;
         }
-
+ 
         .cs-pin-status-text {
           flex: 1;
           font-size: 12px;
         }
-
+ 
         .cs-pin-status.enabled {
           border: 1px solid #2ed573;
         }
-
+ 
         .cs-pin-status.enabled .cs-pin-status-text {
           color: #2ed573;
         }
-
+ 
         .cs-pin-status.disabled {
           border: 1px solid #ff4757;
         }
-
+ 
         .cs-pin-status.disabled .cs-pin-status-text {
           color: #ff4757;
         }
@@ -1831,7 +1781,7 @@
             <button class="cs-tab" data-tab="cookies">Cookies</button>
             <button class="cs-tab" data-tab="settings">Settings</button>
           </div>
-
+ 
           <!-- Sync Tab -->
           <div class="cs-tab-content active" data-tab="sync">
             <div class="cs-section">
@@ -1849,14 +1799,14 @@
                 </button>
               </div>
             </div>
-
+ 
             <div class="cs-section">
               <div class="cs-section-title">Status</div>
               <div id="cs-gist-info" class="cs-info-text">No Gist configured</div>
               <div id="cs-status" class="cs-status"></div>
             </div>
           </div>
-
+ 
           <!-- Cookies Tab -->
           <div class="cs-tab-content" data-tab="cookies">
             <div class="cs-section">
@@ -1876,7 +1826,7 @@
               </div>
             </div>
           </div>
-
+ 
           <!-- Settings Tab -->
           <div class="cs-tab-content" data-tab="settings">
             <div class="cs-section">
@@ -1925,7 +1875,7 @@
                 </button>
               </div>
             </div>
-
+ 
             <div class="cs-section">
               <div class="cs-section-title">GitHub Gist</div>
               <div class="cs-input-group">
@@ -1940,7 +1890,7 @@
                 Create a fine-grained token at GitHub → Settings → Developer settings → Personal access tokens → Fine-grained tokens. Grant "Gists" read/write permission.
               </div>
             </div>
-
+ 
             <div class="cs-section">
               <button class="cs-btn cs-btn-primary cs-btn-full" id="cs-save-settings">
                 <span>💾</span> Save Settings

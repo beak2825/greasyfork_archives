@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         gibbon-ui-tweaks
 // @namespace    http://tampermonkey.net/
-// @version      3.4.673
+// @version      3.4.674
 // @description  A script written with Copilot AI to customize the look of gibbonedu, features are manually tested and refined.
 // @match        https://gibbon.ichk.edu.hk/*
 // @grant        none
@@ -769,6 +769,117 @@
     });
   });
   nameObserver.observe(document.body, { childList: true, subtree: true });
+
+  // --- Super Cheung Easter Egg (Cheung Cheung botten integration) ---
+  let superCheungActive = false;
+
+  function activateSuperCheungMode(scope = document) {
+    const REPLACEMENT_URL = 'https://gibbon.ichk.edu.hk/uploads/2025/04/scheung6.jpg';
+
+    // Inject CSS for RGB glow animation (only once)
+    if (!document.getElementById('superCheungGlow')) {
+      const style = document.createElement('style');
+      style.id = 'superCheungGlow';
+      style.textContent = `
+        @keyframes rgbGlow {
+          0%   { box-shadow: 0 0 12px 4px red; }
+          25%  { box-shadow: 0 0 12px 4px orange; }
+          50%  { box-shadow: 0 0 12px 4px lime; }
+          75%  { box-shadow: 0 0 12px 4px cyan; }
+          100% { box-shadow: 0 0 12px 4px magenta; }
+        }
+        .super-cheung-glow {
+          border-radius: 6px;
+          animation: rgbGlow 3s linear infinite;
+        }
+      `;
+      document.head.appendChild(style);
+    }
+
+    function replaceIcons(s = scope) {
+      // Replace all <img>
+      const imgs = s.querySelectorAll('img');
+      imgs.forEach(img => {
+        if (!img.dataset.originalSrc) img.dataset.originalSrc = img.src;
+        img.src = REPLACEMENT_URL;
+        img.style.objectFit = 'contain';
+        img.classList.add('super-cheung-glow');
+      });
+
+      // Replace all <svg>
+      const svgs = s.querySelectorAll('svg');
+      svgs.forEach(svg => {
+        const img = document.createElement('img');
+        img.src = REPLACEMENT_URL;
+        img.style.width = svg.getAttribute('width') || '24px';
+        img.style.height = svg.getAttribute('height') || '24px';
+        img.style.display = 'inline-block';
+        img.classList.add('super-cheung-glow');
+        svg.replaceWith(img);
+      });
+    }
+
+    // Initial run
+    replaceIcons();
+
+    // Keep effect on DOM changes
+    if (!scope._superCheungObserver) {
+      scope._superCheungObserver = new MutationObserver(() => replaceIcons());
+      scope._superCheungObserver.observe(scope.body || scope, { childList: true, subtree: true });
+    }
+
+    superCheungActive = true;
+    applyAllStyles();
+  }
+
+  function revertSuperCheungMode(scope = document) {
+    // Restore original images if stored
+    const imgs = scope.querySelectorAll('img');
+    imgs.forEach(img => {
+      if (img.dataset.originalSrc) {
+        img.src = img.dataset.originalSrc;
+        delete img.dataset.originalSrc;
+      }
+      img.classList.remove('super-cheung-glow');
+    });
+
+    // Disconnect observer if active
+    if (scope._superCheungObserver) {
+      scope._superCheungObserver.disconnect();
+      delete scope._superCheungObserver;
+    }
+
+    // Only refresh once when leaving Super Cheung mode
+    if (superCheungActive) {
+      superCheungActive = false;
+      location.reload();
+    }
+  }
+
+  // Update replaceCustomName to handle activation/reversion
+  function replaceCustomName(scope = document) {
+    if (getLS(LS.masterToggle, DEFAULTS.masterToggle.toString()) === 'false') return;
+    const name = (getLS(LS.customName, DEFAULTS.customName) || '').trim();
+
+    if (name) {
+      const targets = scope.querySelectorAll('header .user-name, .sidebar .user-name');
+      targets.forEach(el => el.textContent = name);
+    }
+
+    if (name === 'Super Cheung') {
+      activateSuperCheungMode(scope);
+      return;
+    } else {
+      revertSuperCheungMode(scope);
+    }
+
+    if (name === 'Steve Cheung') {
+      applySteveCheungEasterEgg(scope);
+    } else {
+      revertSteveCheungEasterEgg(scope);
+    }
+  }
+
 
   // --- Stream-only Unload Images + Smart Unload Past Images ---
   function isStreamPage() {

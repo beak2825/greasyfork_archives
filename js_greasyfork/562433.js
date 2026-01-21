@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Whanau Contracts Monitor
 // @namespace    http://tampermonkey.net/
-// @version      4.0
+// @version      4.3
 // @description  Monitor active contracts - Whanau
 // @author       Leofierus
 // @match        https://www.torn.com/*
@@ -11,6 +11,7 @@
 // @grant        GM_xmlhttpRequest
 // @grant        GM_setValue
 // @grant        GM_getValue
+// @grant        GM_addValueChangeListener
 // @grant        GM_addStyle
 // @license      MIT
 // @downloadURL https://update.greasyfork.org/scripts/562433/Whanau%20Contracts%20Monitor.user.js
@@ -28,20 +29,20 @@
 
     // --- STATE MANAGEMENT ---
     let apiKey = GM_getValue('tornApiKey', '');
+
+    // Optimization: Store full monitor state { timer: ID, secs: Number }
     let activeMonitors = {};
+    let statusCache = GM_getValue('statusCache', {});
 
     // --- STYLES ---
     GM_addStyle(`
         #merc-widget {
-            position: fixed;
-            /* Default: Top Right */
-            top: 50px; right: 20px;
+            position: fixed; top: 50px; right: 20px;
             background: #1e1e1e; color: #ddd;
             border-radius: 6px; font-family: 'Segoe UI', Arial, sans-serif;
             z-index: 999999; box-shadow: 0 4px 15px rgba(0,0,0,0.6);
             font-size: 12px; border: 1px solid #333;
             width: auto; max-width: 95vw;
-            /* Critical for smooth expansion */
             transition: width 0.2s ease, min-width 0.2s ease;
             box-sizing: border-box;
         }
@@ -68,7 +69,6 @@
         .merc-input-interval { width: 30px; background: #333; border: 1px solid #444; color: #fff; text-align: center; border-radius: 3px; padding: 2px; }
         .merc-checkbox { cursor: pointer; }
 
-        /* DOTS */
         .dot { height: 10px; width: 10px; border-radius: 50%; display: inline-block; border: 1px solid #000; margin-right: 2px; }
         .dot-green { background-color: #2ecc71; box-shadow: 0 0 2px #2ecc71; }
         .dot-red { background-color: #e74c3c; }
@@ -120,7 +120,7 @@
         return data;
     }
 
-    // --- API & UI ---
+    // --- STATE & UI ---
     function checkApiKey() {
         if (apiKey === '') {
             const input = prompt("Enter Torn API Key:\n(Enter '-' to disable API features)");
@@ -140,17 +140,11 @@
         container.id = 'merc-widget';
         if (GM_getValue('isCollapsed', false)) container.classList.add('collapsed');
 
-        // --- RESTORE SMART POSITION ---
         const savedPos = GM_getValue('widgetPos', null);
         if (savedPos) {
             container.style.top = savedPos.top;
-            if (savedPos.anchor === 'right') {
-                container.style.right = savedPos.right;
-                container.style.left = 'auto'; // Force growth to left
-            } else {
-                container.style.left = savedPos.left;
-                container.style.right = 'auto'; // Force growth to right
-            }
+            if (savedPos.anchor === 'right') { container.style.right = savedPos.right; container.style.left = 'auto'; }
+            else { container.style.left = savedPos.left; container.style.right = 'auto'; }
         }
 
         container.innerHTML = `
@@ -169,23 +163,36 @@
         `;
         document.body.appendChild(container);
 
-        // --- SMART DRAG LOGIC ---
+        // --- OPTIMIZATION: EVENT DELEGATION ---
+        // Single listener for all inputs/buttons in the content area
+        const contentDiv = document.getElementById('merc-content');
+
+        contentDiv.addEventListener('change', (e) => {
+            if (e.target.classList.contains('monitor-toggle')) {
+                const tid = e.target.getAttribute('data-id');
+                const input = contentDiv.querySelector(`.merc-input-interval[data-id="${tid}"]`);
+                toggleMonitor(tid, e.target, input);
+            }
+        });
+
+        contentDiv.addEventListener('click', (e) => {
+            if (e.target.classList.contains('manual-refresh')) {
+                const btn = e.target;
+                const tid = btn.getAttribute('data-id');
+                btn.style.color = '#fff';
+                fetchTornStatus(tid, () => { btn.style.color = '#666'; }); // Callback resets color
+            }
+        });
+
+        // --- DRAG & HEADER LOGIC ---
         const header = container.querySelector('#merc-header');
         let isDragging = false, startX, startY, startLeft, startTop;
 
         header.addEventListener('mousedown', (e) => {
             if (e.target.tagName === 'BUTTON') return;
-            isDragging = false;
-            startX = e.clientX;
-            startY = e.clientY;
-
-            // Switch to absolute LEFT for dragging stability
-            const rect = container.getBoundingClientRect();
-            startLeft = rect.left;
-            startTop = rect.top;
-
-            container.style.right = 'auto';
-            container.style.left = `${startLeft}px`;
+            isDragging = false; startX = e.clientX; startY = e.clientY;
+            const rect = container.getBoundingClientRect(); startLeft = rect.left; startTop = rect.top;
+            container.style.right = 'auto'; container.style.left = `${startLeft}px`;
 
             const onMouseMove = (ev) => {
                 isDragging = true;
@@ -196,22 +203,14 @@
             const onMouseUp = () => {
                 document.removeEventListener('mousemove', onMouseMove);
                 document.removeEventListener('mouseup', onMouseUp);
-
                 if (isDragging) {
-                    // CALCULATE ANCHOR ON DROP
                     const finalRect = container.getBoundingClientRect();
                     const centerX = finalRect.left + (finalRect.width / 2);
-                    const screenMid = window.innerWidth / 2;
-
-                    if (centerX > screenMid) {
-                        // Right Side -> Anchor Right
+                    if (centerX > window.innerWidth / 2) {
                         const rightDist = window.innerWidth - finalRect.right;
-                        container.style.left = 'auto';
-                        container.style.right = `${rightDist}px`;
+                        container.style.left = 'auto'; container.style.right = `${rightDist}px`;
                         GM_setValue('widgetPos', { top: container.style.top, right: `${rightDist}px`, anchor: 'right' });
                     } else {
-                        // Left Side -> Anchor Left
-                        // container.style.left is already set correctly from drag
                         container.style.right = 'auto';
                         GM_setValue('widgetPos', { top: container.style.top, left: container.style.left, anchor: 'left' });
                     }
@@ -223,25 +222,17 @@
 
         document.getElementById('merc-key-btn').addEventListener('click', updateApiKey);
         document.getElementById('merc-refresh-all').addEventListener('click', () => fetchSheetData(true));
-       header.addEventListener('click', (e) => {
-           if (e.target.tagName === 'BUTTON' || isDragging) return;
 
-           container.classList.toggle('collapsed');
-           GM_setValue('isCollapsed', container.classList.contains('collapsed'));
+        header.addEventListener('click', (e) => {
+            if (e.target.tagName === 'BUTTON' || isDragging) return;
+            container.classList.toggle('collapsed');
+            GM_setValue('isCollapsed', container.classList.contains('collapsed'));
+            document.getElementById('merc-toggle-icon').textContent = container.classList.contains('collapsed') ? '▼' : '▲';
 
-           document.getElementById('merc-toggle-icon').textContent =
-               container.classList.contains('collapsed') ? '▼' : '▲';
-
-           // 🔑 FORCE EXPANSION DIRECTION
-           const pos = GM_getValue('widgetPos', null);
-           if (pos?.anchor === 'right') {
-               container.style.left = 'auto';
-               container.style.right = pos.right;
-           } else {
-               container.style.right = 'auto';
-               container.style.left = pos.left;
-           }
-       });
+            const pos = GM_getValue('widgetPos', null);
+            if (pos?.anchor === 'right') { container.style.left = 'auto'; container.style.right = pos.right; }
+            else if (pos?.anchor === 'left') { container.style.right = 'auto'; container.style.left = pos.left; }
+        });
     }
 
     // --- DATA HANDLING ---
@@ -273,6 +264,34 @@
         });
     }
 
+    // --- CROSS-TAB SYNC ---
+    GM_addValueChangeListener('cachedSheetData', function(key, oldVal, newVal, remote) {
+        if (remote) renderTable(newVal);
+    });
+
+    GM_addValueChangeListener('statusCache', function(key, oldVal, newVal, remote) {
+        if (remote) {
+            statusCache = newVal;
+            // Only update rows that exist in current view
+            Object.keys(statusCache).forEach(id => {
+               if(document.getElementById(`row-${id}`)) applyStatusToRow(id, statusCache[id]);
+            });
+        }
+    });
+
+    function saveStatusToCache(tornId, profile) {
+        const newData = {
+            online: profile.last_action.status,
+            relative: profile.last_action.relative,
+            state: profile.status.state,
+            desc: profile.status.description,
+            ts: Date.now()
+        };
+        statusCache[tornId] = newData;
+        GM_setValue('statusCache', statusCache);
+        applyStatusToRow(tornId, newData);
+    }
+
     function fetchTornStatus(tornId, callback) {
         if (!apiKey || apiKey === '-') return;
         GM_xmlhttpRequest({
@@ -280,7 +299,13 @@
             url: `https://api.torn.com/v2/user/${tornId}/profile?striptags=true`,
             headers: { "accept": "application/json", "Authorization": `ApiKey ${apiKey}` },
             onload: function(response) {
-                if (response.status === 200) { try { callback(JSON.parse(response.responseText)); } catch (e) {} }
+                if (response.status === 200) {
+                    try {
+                        const data = JSON.parse(response.responseText);
+                        saveStatusToCache(tornId, data.profile);
+                        if(callback) callback();
+                    } catch (e) {}
+                }
                 else if (response.status === 429) { document.getElementById('merc-footer').textContent = "⚠️ Rate Limit!"; }
             }
         });
@@ -290,34 +315,41 @@
         if (checkbox.checked) {
             const intervalSecs = parseInt(intervalInput.value) || DEFAULT_MONITOR_INTERVAL;
             if(intervalSecs < 2) intervalInput.value = 2;
-            fetchTornStatus(tornId, (data) => updateRowStatus(tornId, data));
-            if (activeMonitors[tornId]) clearInterval(activeMonitors[tornId]);
-            activeMonitors[tornId] = setInterval(() => { fetchTornStatus(tornId, (data) => updateRowStatus(tornId, data)); }, intervalSecs * 1000);
+
+            fetchTornStatus(tornId); // Immediate check
+            if (activeMonitors[tornId]?.timer) clearInterval(activeMonitors[tornId].timer);
+
+            const timerId = setInterval(() => { fetchTornStatus(tornId); }, intervalSecs * 1000);
+
+            // Optimization: Store full state
+            activeMonitors[tornId] = { timer: timerId, secs: intervalSecs };
             intervalInput.disabled = true;
         } else {
-            if (activeMonitors[tornId]) { clearInterval(activeMonitors[tornId]); delete activeMonitors[tornId]; }
+            if (activeMonitors[tornId]) {
+                clearInterval(activeMonitors[tornId].timer);
+                delete activeMonitors[tornId];
+            }
             intervalInput.disabled = false;
         }
     }
 
-    function updateRowStatus(tornId, data) {
-        if (!data || !data.profile) return;
-        const p = data.profile;
+    function applyStatusToRow(tornId, data) {
+        if (!data) return;
         const dot = document.getElementById(`status-dot-${tornId}`);
         if (dot) {
             dot.className = 'dot';
-            if (p.last_action.status === 'Online') dot.classList.add('dot-green');
-            else if (p.last_action.status === 'Idle') dot.classList.add('dot-orange');
+            if (data.online === 'Online') dot.classList.add('dot-green');
+            else if (data.online === 'Idle') dot.classList.add('dot-orange');
             else dot.classList.add('dot-grey');
-            dot.title = `Last Action: ${p.last_action.relative}`;
+            dot.title = `Last Action: ${data.relative}`;
         }
         const hospDot = document.getElementById(`hosp-dot-${tornId}`);
         if (hospDot) {
             hospDot.className = 'dot';
-            const isOkay = p.status.state === 'Okay';
+            const isOkay = data.state === 'Okay';
             if(isOkay) hospDot.classList.add('dot-green');
             else hospDot.classList.add('dot-red');
-            hospDot.title = `${p.status.state} (${p.status.description})`;
+            hospDot.title = `${data.state} (${data.desc})`;
         }
     }
 
@@ -325,6 +357,9 @@
         const contentDiv = document.getElementById('merc-content');
         if (!data || data.length === 0) { contentDiv.innerHTML = `<div style="padding:15px;">No active contracts.</div>`; return; }
         const apiDisabled = (apiKey === '-' || !apiKey);
+
+        // Optimization: Clean up orphaned monitors (IDs no longer in sheet)
+        const newIds = new Set();
 
         let html = `
             <table id="merc-table">
@@ -356,6 +391,8 @@
 
             activeCount++;
             const id = row.ID;
+            newIds.add(String(id)); // Track for cleanup
+
             const name = row.Name || row.ID;
             const isTrue = (val) => {
                 if (val === true) return true;
@@ -373,6 +410,11 @@
             let linkAttr = `data-placeholder="0" target="_blank"`;
             let monitorCheck, intervalInput, statusDot, hospDot, refreshBtn;
 
+            // Optimization: Restore State for checkboxes/inputs
+            const isMonitored = activeMonitors[id] ? 'checked' : '';
+            const isDisabled = activeMonitors[id] ? 'disabled' : '';
+            const intervalVal = activeMonitors[id] ? activeMonitors[id].secs : DEFAULT_MONITOR_INTERVAL;
+
             if (isFaction) {
                 linkUrl = `https://www.torn.com/factions.php?step=profile&ID=${id}`;
                 linkClass = "col-name";
@@ -383,8 +425,12 @@
                 hospDot = `<span style="color:#444">-</span>`;
                 refreshBtn = ``;
             } else {
-                monitorCheck = apiDisabled ? `<span style="color:#555">-</span>` : `<input type="checkbox" class="merc-checkbox monitor-toggle" data-id="${id}">`;
-                intervalInput = apiDisabled ? `<span style="color:#555">-</span>` : `<input type="number" class="merc-input-interval" value="${DEFAULT_MONITOR_INTERVAL}" min="5" data-id="${id}">`;
+                monitorCheck = apiDisabled ? `<span style="color:#555">-</span>` :
+                    `<input type="checkbox" class="merc-checkbox monitor-toggle" data-id="${id}" ${isMonitored}>`;
+
+                intervalInput = apiDisabled ? `<span style="color:#555">-</span>` :
+                    `<input type="number" class="merc-input-interval" value="${intervalVal}" min="5" data-id="${id}" ${isDisabled}>`;
+
                 statusDot = `<span id="status-dot-${id}" class="dot dot-empty" title="Unknown"></span>`;
                 hospDot = `<span id="hosp-dot-${id}" class="dot dot-empty" title="Unknown"></span>`;
                 refreshBtn = apiDisabled ? '' : `<button class="merc-row-refresh manual-refresh" data-id="${id}" title="Check Now">↻</button>`;
@@ -415,20 +461,19 @@
         html += `</tbody></table>`;
         contentDiv.innerHTML = html;
 
-        if (!apiDisabled) {
-            contentDiv.querySelectorAll('.monitor-toggle').forEach(chk => {
-                chk.addEventListener('change', (e) => {
-                    const tid = e.target.getAttribute('data-id');
-                    const input = contentDiv.querySelector(`.merc-input-interval[data-id="${tid}"]`);
-                    toggleMonitor(tid, e.target, input);
-                });
-            });
-            contentDiv.querySelectorAll('.manual-refresh').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const tid = e.target.getAttribute('data-id');
-                    btn.style.color = '#fff';
-                    fetchTornStatus(tid, (data) => updateRowStatus(tid, data));
-                });
+        // Optimization: Cleanup Orphans
+        Object.keys(activeMonitors).forEach(id => {
+            if (!newIds.has(id)) {
+                console.log(`Cleaning up orphan monitor: ${id}`);
+                clearInterval(activeMonitors[id].timer);
+                delete activeMonitors[id];
+            }
+        });
+
+        // Restore Status from Cache
+        if (statusCache) {
+            Object.keys(statusCache).forEach(tornId => {
+                applyStatusToRow(tornId, statusCache[tornId]);
             });
         }
     }

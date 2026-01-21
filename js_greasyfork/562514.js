@@ -1,12 +1,12 @@
 // ==UserScript==
-// @name         Phantom Portal v2.3.1
+// @name         Phantom Portal v2.5.7
 // @namespace    http://tampermonkey.net/
-// @version      2.3.1
-// @description  Torn to Discord sync system for my faction and friends.
+// @version      2.5.7
+// @description  Torn to Discord sync system with Glass Theme for My Faction and Allies
 // @author       Daturax
 // @license      GPLv3
 // @match        https://www.torn.com/*
-// @icon         https://images2.imgbox.com/86/79/2ag63Ut3_o.png
+// @icon         https://images2.imgbox.com/cc/75/V2yuzaa8_o.png
 // @grant        GM_xmlhttpRequest
 // @grant        GM_getValue
 // @grant        GM_setValue
@@ -17,8 +17,8 @@
 // @connect      *.supabase.co
 // @connect      cdn.pixabay.com
 // @run-at       document-end
-// @downloadURL https://update.greasyfork.org/scripts/562514/Phantom%20Portal%20v231.user.js
-// @updateURL https://update.greasyfork.org/scripts/562514/Phantom%20Portal%20v231.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/562514/Phantom%20Portal%20v257.user.js
+// @updateURL https://update.greasyfork.org/scripts/562514/Phantom%20Portal%20v257.meta.js
 // ==/UserScript==
 
 (function() {
@@ -26,11 +26,177 @@
 
     const TORN_API_KEY = '###PDA-APIKEY###';
 
-    if (window._phantomPortalV2_3_1) return;
-    window._phantomPortalV2_3_1 = true;
+    if (window._phantomPortalV2_5_7) {
+        console.warn('[Phantom Portal] Already initialized');
+        return;
+    }
+    window._phantomPortalV2_5_7 = true;
 
+    // Safe GM Functions Wrapper
+    const SafeGM = {
+        getValue: (key, defaultValue) => {
+            try {
+                return GM_getValue(key, defaultValue);
+            } catch (e) {
+                console.warn('[Phantom Portal] GM_getValue failed, using fallback');
+                try {
+                    const value = localStorage.getItem(`pp_${key}`);
+                    return value ? JSON.parse(value) : defaultValue;
+                } catch {
+                    return defaultValue;
+                }
+            }
+        },
+        setValue: (key, value) => {
+            try {
+                GM_setValue(key, value);
+            } catch (e) {
+                console.warn('[Phantom Portal] GM_setValue failed, using fallback');
+                try {
+                    localStorage.setItem(`pp_${key}`, JSON.stringify(value));
+                } catch {}
+            }
+        },
+        deleteValue: (key) => {
+            try {
+                GM_deleteValue(key);
+            } catch (e) {
+                console.warn('[Phantom Portal] GM_deleteValue failed, using fallback');
+                try {
+                    localStorage.removeItem(`pp_${key}`);
+                } catch {}
+            }
+        },
+        addStyle: (css) => {
+            try {
+                GM_addStyle(css);
+            } catch (e) {
+                console.warn('[Phantom Portal] GM_addStyle failed, using fallback');
+                const style = document.createElement('style');
+                style.textContent = css;
+                document.head.appendChild(style);
+            }
+        },
+        notification: (details) => {
+            try {
+                GM_notification(details);
+            } catch (e) {
+                console.warn('[Phantom Portal] GM_notification failed');
+            }
+        },
+        xmlhttpRequest: (details) => {
+            try {
+                return GM_xmlhttpRequest(details);
+            } catch (e) {
+                console.warn('[Phantom Portal] GM_xmlhttpRequest failed');
+                if (details.onerror) details.onerror(e);
+            }
+        }
+    };
+
+    // Nano Theme Manager with Glass Morphism
+    class NanoThemeManager {
+        constructor() {
+            this.currentTheme = this.loadTheme();
+            this.applyTheme();
+        }
+
+        loadTheme() {
+            try {
+                const saved = SafeGM.getValue('pp_nano_theme', null);
+                if (saved) return saved;
+                
+                return {
+                    primaryColor: '#00ff41',
+                    borderColor: '#00ff41',
+                    frostBlur: 15,
+                    buttonGlow: true,
+                    transparency: 0.3,
+                    contentOpacity: 0.95,
+                    version: '1.3.0'
+                };
+            } catch (error) {
+                console.warn('[Nano Theme] Failed to load theme');
+                return this.getDefaultTheme();
+            }
+        }
+
+        getDefaultTheme() {
+            return {
+                primaryColor: '#00ff41',
+                borderColor: '#00ff41',
+                frostBlur: 15,
+                buttonGlow: true,
+                transparency: 0.3,
+                contentOpacity: 0.95,
+                version: '1.3.0'
+            };
+        }
+
+        saveTheme() {
+            try {
+                SafeGM.setValue('pp_nano_theme', this.currentTheme);
+                return true;
+            } catch (error) {
+                console.error('[Nano Theme] Failed to save theme');
+                return false;
+            }
+        }
+
+        applyTheme() {
+            const theme = this.currentTheme;
+            
+            const hexToRgb = (hex) => {
+                const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+                return result ? {
+                    r: parseInt(result[1], 16),
+                    g: parseInt(result[2], 16),
+                    b: parseInt(result[3], 16)
+                } : { r: 0, g: 255, b: 65 };
+            };
+            
+            const primaryRgb = hexToRgb(theme.primaryColor);
+            const borderRgb = hexToRgb(theme.borderColor || theme.primaryColor);
+            
+            document.documentElement.style.setProperty('--nano-primary-color', theme.primaryColor);
+            document.documentElement.style.setProperty('--nano-border-color', theme.borderColor || theme.primaryColor);
+            document.documentElement.style.setProperty('--nano-frost-blur', `${theme.frostBlur || 15}px`);
+            document.documentElement.style.setProperty('--nano-transparency', theme.transparency || '0.3');
+            document.documentElement.style.setProperty('--nano-content-opacity', theme.contentOpacity || '0.95');
+            document.documentElement.style.setProperty('--nano-primary-r', primaryRgb.r);
+            document.documentElement.style.setProperty('--nano-primary-g', primaryRgb.g);
+            document.documentElement.style.setProperty('--nano-primary-b', primaryRgb.b);
+            document.documentElement.style.setProperty('--nano-border-r', borderRgb.r);
+            document.documentElement.style.setProperty('--nano-border-g', borderRgb.g);
+            document.documentElement.style.setProperty('--nano-border-b', borderRgb.b);
+            
+            document.documentElement.style.setProperty('--primary-color', theme.primaryColor);
+        }
+
+        updateTheme(updates) {
+            this.currentTheme = { ...this.currentTheme, ...updates };
+            this.applyTheme();
+            this.saveTheme();
+            return this.currentTheme;
+        }
+
+        resetToDefaults() {
+            this.currentTheme = this.getDefaultTheme();
+            this.applyTheme();
+            this.saveTheme();
+            return this.currentTheme;
+        }
+
+        getTheme() {
+            return { ...this.currentTheme };
+        }
+    }
+
+    // Main Phantom Portal Class
     class PhantomPortal {
         constructor() {
+            console.log('[Phantom Portal v2.5.7] Initializing');
+            
             this.supabaseUrl = 'https://gsxihumaebabhkvowqzs.supabase.co';
             this.supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdzeGlodW1hZWJhYmhrdm93cXpzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc3MDkzMzQsImV4cCI6MjA4MzI4NTMzNH0.OyOMGVdMEXlg6IiLKt1wElQ8AeVvVROr9YQI1-hwKlk';
 
@@ -42,45 +208,37 @@
                 '1080875283160252516': { name: 'War Room', type: 'war' }
             };
 
-            // Milestone numbers for celebrations
-            this.milestoneNumbers = [10, 25, 50, 100, 250, 500, 1000, 2500, 5000, 10000, 25000, 50000, 100000];
-            this.bonusNumbers = [9, 24, 49, 99, 249, 499, 999, 2499, 4999, 9999, 24999, 49999, 99999];
-
             this.state = {
-                profile: GM_getValue('pp_profile', null),
-                faction: GM_getValue('pp_faction', null),
-                lastProfileFetch: GM_getValue('pp_profile_time', 0),
-                selectedRoom: GM_getValue('pp_selected_room', '1451524832767250543'),
-                buttonCooldowns: GM_getValue('pp_button_cooldowns', {}),
+                profile: SafeGM.getValue('pp_profile', null),
+                faction: SafeGM.getValue('pp_faction', null),
+                lastProfileFetch: SafeGM.getValue('pp_profile_time', 0),
+                selectedRoom: SafeGM.getValue('pp_selected_room', '1451524832767250543'),
+                buttonCooldowns: SafeGM.getValue('pp_button_cooldowns', {}),
                 messageCache: new Map(),
                 lastSync: 0,
-                roomMessages: GM_getValue('pp_room_messages', {}),
-                settings: GM_getValue('pp_settings', {
-                    showNotifications: true,
+                roomMessages: SafeGM.getValue('pp_room_messages', {}),
+                settings: SafeGM.getValue('pp_settings', {
+                    showNotifications: false,
                     autoScroll: true,
                     soundEnabled: false,
-                    confirmQuickActions: true
+                    confirmQuickActions: true,
+                    messageInputOffset: 10,
+                    showToasts: false
                 }),
-                isInAllowedFaction: GM_getValue('pp_is_in_allowed_faction', false),
-                messageStats: GM_getValue('pp_message_stats', {
+                isInAllowedFaction: SafeGM.getValue('pp_is_in_allowed_faction', false),
+                messageStats: SafeGM.getValue('pp_message_stats', {
                     sent: 0,
                     received: 0,
                     lastLatency: 0,
                     lastMessageTime: 0
                 }),
-                chainData: GM_getValue('pp_chain_data', null),
-                lastChainFetch: GM_getValue('pp_last_chain_fetch', 0),
-                lastAPICall: GM_getValue('pp_last_api_call', 0),
-                apiCallCount: GM_getValue('pp_api_call_count', 0),
-                chainEndTime: GM_getValue('pp_chain_end_time', 0),
-                chainCurrentSnapshot: GM_getValue('pp_chain_current_snapshot', 0),
-                chainFetchLatency: 0,
-                fabPosition: GM_getValue('pp_fab_position', { x: 20, y: 20 }),
-                chainWarningShown: false,
-                previousChainValue: GM_getValue('pp_previous_chain_value', 0),
-                isCelebrating: false,
-                celebrationActive: false,
-                bountyTarget: GM_getValue('pp_bounty_target', null)
+                fabPosition: SafeGM.getValue('pp_fab_position', { x: 20, y: 20 }),
+                apiCallCount: SafeGM.getValue('pp_api_call_count', 0),
+                lastAPICall: SafeGM.getValue('pp_last_api_call', 0),
+                lastFactionCheck: SafeGM.getValue('pp_last_faction_check', 0),
+                pollingInterval: 3000,
+                refreshCooldown: 0,
+                lastOfflineTime: SafeGM.getValue('pp_last_offline_time', 0)
             };
 
             Object.keys(this.rooms).forEach(roomId => {
@@ -89,16 +247,14 @@
                 }
             });
 
+            this.themeManager = new NanoThemeManager();
+            
             this.isOpen = false;
             this.isPolling = false;
             this.pendingMessages = new Set();
             this.pendingNotifications = new Set();
             this.fabPulsing = false;
             this.unreadMessages = 0;
-            this.chainTimer = null;
-            this.lastChainUpdate = 0;
-            this.chainUpdateInterval = null;
-            this.lastServerTime = 0;
             this.isDragging = false;
             this.isLongPressing = false;
             this.longPressTimer = null;
@@ -106,53 +262,192 @@
             this.dragStartY = 0;
             this.fabStartX = 0;
             this.fabStartY = 0;
-            this.fabPulseInterval = null;
-            this.celebrationInterval = null;
-            this.celebrationElements = [];
+            this.bountyTargetId = null;
+            this.snapThreshold = 5;
+            this.lastToastTime = 0;
+            this.toastCooldown = 1000;
+            this.initialHistoryLoaded = false;
+            
+            this.intervals = {
+                sync: null,
+                cooldown: null,
+                stats: null,
+                backgroundPoll: null,
+                factionDaily: null
+            };
+            
+            this.domCache = {
+                messages: null,
+                input: null,
+                sendButton: null,
+                profileDisplay: null,
+                roomSelector: null,
+                quickActions: null,
+                messagesContainer: null
+            };
 
             this.alertSoundUrl = 'https://cdn.pixabay.com/download/audio/2025/07/20/376885_b3d2f14d7d.mp3?filename=notification-bell-sound-1-376885.mp3';
             this.audioCache = null;
+            this.buttonObserver = null;
 
-            setTimeout(() => this.init(), 100);
+            this.initWithRetry();
+        }
+
+        async initWithRetry() {
+            let attempts = 0;
+            const maxAttempts = 3;
+            
+            const tryInit = async () => {
+                attempts++;
+                try {
+                    await this.init();
+                } catch (error) {
+                    if (attempts < maxAttempts) {
+                        setTimeout(tryInit, 1000);
+                    } else {
+                        console.error('[Phantom Portal] All initialization attempts failed');
+                    }
+                }
+            };
+            
+            setTimeout(tryInit, 100);
         }
 
         async init() {
-            console.log('[Phantom Portal] v2.3.1 initialized');
-
-            await this.checkUserOverrides();
             this.injectStyles();
             this.createUI();
-            this.updateProfileDisplay();
-            this.updateChainDisplay();
 
             try {
+                await this.checkUserOverrides();
                 await this.fetchProfile();
-                await this.fetchFaction();
+                await this.checkFaction();
+                
                 this.startSyncLoop();
                 this.startCooldownTicker();
                 this.startStatsUpdater();
-                this.startChainUpdater();
+                this.startBackgroundPolling();
+                this.startFactionCheck();
+                
+                window.addEventListener('beforeunload', () => this.cleanup());
+                this.setupViewportHandling();
+                this.exposeNanoSnapAPI();
             } catch (error) {
-                this.showToast('Portal loaded with limited features', 'warning');
+                console.error('[Phantom Portal] Partial initialization error');
+            }
+        }
+
+        cleanup() {
+            Object.values(this.intervals).forEach(interval => {
+                if (interval) clearInterval(interval);
+            });
+            
+            if (this.audioCache) {
+                this.audioCache.pause();
+                this.audioCache.src = '';
+                this.audioCache = null;
+            }
+            
+            if (this.longPressTimer) clearTimeout(this.longPressTimer);
+            if (this.buttonObserver) this.buttonObserver.disconnect();
+            
+            delete window.PhantomPortalFAB;
+        }
+
+        exposeNanoSnapAPI() {
+            window.PhantomPortalFAB = {
+                id: 'phantom-portal-fab',
+                version: '2.5.7',
+                
+                getPosition: () => {
+                    if (!this.toggleBtn) return null;
+                    const rect = this.toggleBtn.getBoundingClientRect();
+                    return {
+                        x: rect.left,
+                        y: rect.top,
+                        width: rect.width,
+                        height: rect.height,
+                        centerX: rect.left + rect.width / 2,
+                        centerY: rect.top + rect.height / 2
+                    };
+                },
+                
+                getSnapPoints: () => {
+                    if (!this.toggleBtn) return [];
+                    const rect = this.toggleBtn.getBoundingClientRect();
+                    return [
+                        { side: 'left', x: rect.left - 5, y: rect.top },
+                        { side: 'right', x: rect.right + 5, y: rect.top },
+                        { side: 'top', x: rect.left, y: rect.top - 5 },
+                        { side: 'bottom', x: rect.left, y: rect.bottom + 5 }
+                    ];
+                },
+                
+                isVisible: () => this.toggleBtn && this.toggleBtn.offsetParent !== null
+            };
+        }
+
+        setupViewportHandling() {
+            if (window.visualViewport) {
+                window.visualViewport.addEventListener('resize', this.debounce(() => {
+                    this.adjustForKeyboard();
+                }, 100));
+            }
+            
+            window.addEventListener('resize', this.debounce(() => {
+                this.adjustForKeyboard();
+            }, 100));
+        }
+
+        debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        adjustForKeyboard() {
+            if (!this.isOpen || !this.container) return;
+            
+            const offset = this.state.settings.messageInputOffset || 10;
+            
+            if (this.domCache.messagesContainer) {
+                this.domCache.messagesContainer.style.paddingBottom = `${offset}px`;
+            }
+            
+            if (window.visualViewport && window.innerHeight > window.visualViewport.height) {
+                const keyboardHeight = window.innerHeight - window.visualViewport.height;
+                this.container.style.bottom = `${keyboardHeight + offset}px`;
+                this.container.style.transform = 'translate(-50%, 0)';
+                this.container.style.top = 'auto';
+            } else {
+                this.container.style.bottom = 'auto';
+                this.container.style.transform = 'translate(-50%, -50%)';
+                this.container.style.top = '50%';
             }
         }
 
         async checkUserOverrides() {
             try {
-                const userUrl = GM_getValue('supabase_url');
-                const userKey = GM_getValue('supabase_key');
+                const userUrl = SafeGM.getValue('supabase_url');
+                const userKey = SafeGM.getValue('supabase_key');
                 if (userUrl && userKey) {
                     this.supabaseUrl = userUrl;
                     this.supabaseKey = userKey;
                 }
             } catch (error) {
-                // Override check failed silently
+                console.warn('[Phantom Portal] Override check failed');
             }
         }
 
         async fetchProfile() {
             const now = Date.now();
             if (this.state.profile && (now - this.state.lastProfileFetch < 3600000)) {
+                this.updateProfileDisplay();
                 return;
             }
 
@@ -167,6 +462,7 @@
                 }
 
                 const profile = await this.makeTornRequest('/user/basic?selections=profile&striptags=true');
+                
                 if (profile?.profile) {
                     this.state.profile = {
                         name: this.sanitizeHTML(profile.profile.name),
@@ -174,15 +470,31 @@
                         level: parseInt(profile.profile.level) || 0
                     };
                     this.state.lastProfileFetch = now;
-                    GM_setValue('pp_profile', this.state.profile);
-                    GM_setValue('pp_profile_time', now);
+                    SafeGM.setValue('pp_profile', this.state.profile);
+                    SafeGM.setValue('pp_profile_time', now);
                     this.updateProfileDisplay();
                 } else {
                     throw new Error('Invalid profile response');
                 }
             } catch (error) {
-                throw error;
+                console.error('[Phantom Portal] Profile fetch error');
+                this.updateProfileDisplay();
             }
+        }
+
+        async checkFaction() {
+            const now = Date.now();
+            const oneHour = 60 * 60 * 1000;
+            
+            if (this.state.faction && (now - this.state.lastFactionCheck < oneHour)) {
+                this.state.isInAllowedFaction = (this.state.faction.id === this.allowedFactionId);
+                this.updateUIBasedOnFaction();
+                return;
+            }
+            
+            await this.fetchFaction();
+            this.state.lastFactionCheck = now;
+            SafeGM.setValue('pp_last_faction_check', now);
         }
 
         async fetchFaction() {
@@ -210,8 +522,8 @@
                     
                     this.state.isInAllowedFaction = (this.state.faction.id === this.allowedFactionId);
                     
-                    GM_setValue('pp_faction', this.state.faction);
-                    GM_setValue('pp_is_in_allowed_faction', this.state.isInAllowedFaction);
+                    SafeGM.setValue('pp_faction', this.state.faction);
+                    SafeGM.setValue('pp_is_in_allowed_faction', this.state.isInAllowedFaction);
                     
                     this.updateProfileDisplay();
                     this.updateUIBasedOnFaction();
@@ -219,347 +531,37 @@
                     this.handleNoFactionData();
                 }
             } catch (error) {
+                console.error('[Phantom Portal] Faction fetch error');
                 this.handleNoFactionData();
             }
         }
 
-        async fetchChainData() {
-            // Only fetch chain data for faction members
-            if (!this.state.isInAllowedFaction || !this.state.faction?.id) {
-                this.state.chainData = null;
-                GM_setValue('pp_chain_data', null);
-                this.updateChainDisplay();
-                return;
-            }
-
-            const now = Date.now();
+        startFactionCheck() {
+            if (this.intervals.factionDaily) clearInterval(this.intervals.factionDaily);
             
-            // Check if we should fetch new data (every 30 seconds max when chain is active)
-            if (this.state.chainData && (now - this.state.lastChainFetch < 30000)) {
-                return;
-            }
-
-            try {
-                const apiKey = this.getApiKey();
-                if (!apiKey || !this.canMakeAPICall()) {
-                    return;
-                }
-
-                const startTime = Date.now();
-                const chainResponse = await this.makeTornRequest('/faction/chain?');
-                const endTime = Date.now();
-                this.state.chainFetchLatency = endTime - startTime;
-                
-                if (chainResponse?.chain) {
-                    const serverTimestamp = Math.floor(Date.now() / 1000);
-                    
-                    this.state.chainData = {
-                        id: parseInt(chainResponse.chain.id) || 0,
-                        current: parseInt(chainResponse.chain.current) || 0,
-                        max: parseInt(chainResponse.chain.max) || 0,
-                        timeout: parseInt(chainResponse.chain.timeout) || 0,
-                        modifier: parseFloat(chainResponse.chain.modifier) || 1.0,
-                        cooldown: parseInt(chainResponse.chain.cooldown) || 0,
-                        start: parseInt(chainResponse.chain.start) || 0,
-                        end: parseInt(chainResponse.chain.end) || 0
-                    };
-                    
-                    // Check for milestone celebrations
-                    this.checkForMilestoneCelebrations(this.state.chainData.current);
-                    
-                    // Calculate adjusted end time accounting for API latency
-                    if (this.state.chainData.end > 0) {
-                        // Use Torn's end timestamp as authoritative source
-                        this.state.chainEndTime = this.state.chainData.end;
-                        this.state.chainCurrentSnapshot = this.state.chainData.current;
-                        this.lastServerTime = serverTimestamp;
-                        
-                        GM_setValue('pp_chain_end_time', this.state.chainEndTime);
-                        GM_setValue('pp_chain_current_snapshot', this.state.chainCurrentSnapshot);
-                    } else if (this.state.chainData.timeout > 0) {
-                        // Fallback to timeout calculation if no end timestamp
-                        this.state.chainEndTime = serverTimestamp + this.state.chainData.timeout;
-                        this.state.chainCurrentSnapshot = this.state.chainData.current;
-                        this.lastServerTime = serverTimestamp;
-                        
-                        GM_setValue('pp_chain_end_time', this.state.chainEndTime);
-                        GM_setValue('pp_chain_current_snapshot', this.state.chainCurrentSnapshot);
-                    }
-                    
-                    this.state.lastChainFetch = now;
-                    GM_setValue('pp_chain_data', this.state.chainData);
-                    GM_setValue('pp_last_chain_fetch', now);
-                    
-                    this.updateChainDisplay();
-                    
-                    // Start real-time countdown timer
-                    this.startRealtimeCountdown();
-                } else {
-                    this.state.chainData = null;
-                    this.state.chainEndTime = 0;
-                    GM_setValue('pp_chain_data', null);
-                    GM_setValue('pp_chain_end_time', 0);
-                    this.updateChainDisplay();
-                    this.stopRealtimeCountdown();
-                }
-            } catch (error) {
-                this.state.chainData = null;
-                this.state.chainEndTime = 0;
-                GM_setValue('pp_chain_data', null);
-                GM_setValue('pp_chain_end_time', 0);
-                this.updateChainDisplay();
-                this.stopRealtimeCountdown();
-            }
-        }
-
-        checkForMilestoneCelebrations(currentChain) {
-            // Check if we reached a milestone (current chain exactly matches milestone number)
-            if (currentChain > 0 && currentChain !== this.state.previousChainValue) {
-                // Check for milestone celebrations
-                if (this.milestoneNumbers.includes(currentChain)) {
-                    this.triggerMilestoneCelebration(currentChain);
-                }
-                
-                // Update previous value
-                this.state.previousChainValue = currentChain;
-                GM_setValue('pp_previous_chain_value', currentChain);
-            }
-        }
-
-        triggerMilestoneCelebration(chainValue) {
-            if (this.state.celebrationActive) return;
-            
-            this.state.celebrationActive = true;
-            this.showToast(`🎉 CHAIN MILESTONE! ${chainValue.toLocaleString()} HITS! 🎉`, 'success');
-            
-            // Determine celebration intensity based on chain value
-            let intensity = 1;
-            if (chainValue >= 1000) intensity = 2;
-            if (chainValue >= 10000) intensity = 3;
-            if (chainValue >= 50000) intensity = 4;
-            
-            this.createCelebration(intensity);
-            
-            // Auto-clear celebration after 5 seconds
-            setTimeout(() => {
-                this.clearCelebration();
-                this.state.celebrationActive = false;
-            }, 5000);
-        }
-
-        createCelebration(intensity) {
-            const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ff8800', '#88ff00'];
-            
-            // Create multiple celebration elements based on intensity
-            const elementCount = 20 + (intensity * 30);
-            
-            for (let i = 0; i < elementCount; i++) {
-                setTimeout(() => {
-                    const element = document.createElement('div');
-                    element.className = 'pp-celebration-element';
-                    
-                    // Random position
-                    const left = Math.random() * 100;
-                    const top = Math.random() * 100;
-                    
-                    // Random size
-                    const size = 10 + Math.random() * 30;
-                    
-                    // Random rotation
-                    const rotation = Math.random() * 360;
-                    
-                    // Random shape (confetti, streamer, popper)
-                    const shapeType = Math.floor(Math.random() * 3);
-                    let shape = '●';
-                    if (shapeType === 1) shape = '■';
-                    if (shapeType === 2) shape = '▲';
-                    
-                    element.textContent = shape;
-                    element.style.cssText = `
-                        position: fixed;
-                        left: ${left}%;
-                        top: ${top}%;
-                        font-size: ${size}px;
-                        color: ${colors[Math.floor(Math.random() * colors.length)]};
-                        z-index: 99999;
-                        pointer-events: none;
-                        transform: rotate(${rotation}deg);
-                        opacity: 0.8;
-                        text-shadow: 0 0 10px currentColor, 0 0 20px currentColor;
-                        animation: pp-celebration-fall 3s ease-in forwards;
-                    `;
-                    
-                    document.body.appendChild(element);
-                    this.celebrationElements.push(element);
-                }, i * 50); // Stagger creation for wave effect
-            }
-        }
-
-        clearCelebration() {
-            this.celebrationElements.forEach(element => {
-                if (element && element.parentNode) {
-                    element.parentNode.removeChild(element);
-                }
-            });
-            this.celebrationElements = [];
-        }
-
-        startRealtimeCountdown() {
-            this.stopRealtimeCountdown();
-            
-            if (!this.state.chainEndTime || this.state.chainEndTime <= 0) {
-                return;
-            }
-
-            this.chainUpdateInterval = setInterval(() => {
-                this.updateRealtimeChainDisplay();
-            }, 1000);
-            
-            this.updateRealtimeChainDisplay();
-        }
-
-        stopRealtimeCountdown() {
-            if (this.chainUpdateInterval) {
-                clearInterval(this.chainUpdateInterval);
-                this.chainUpdateInterval = null;
-            }
-        }
-
-        updateRealtimeChainDisplay() {
-            const now = Math.floor(Date.now() / 1000);
-            let remainingSeconds = this.state.chainEndTime - now;
-            
-            // Add latency compensation (half of last measured API latency)
-            const latencyCompensation = Math.floor(this.state.chainFetchLatency / 2000);
-            remainingSeconds -= latencyCompensation;
-            
-            // Ensure we don't go negative
-            if (remainingSeconds < 0) {
-                remainingSeconds = 0;
-            }
-            
-            const chainCurrentEl = document.querySelector('.pp-chain-current');
-            const chainTimeoutEl = document.querySelector('.pp-chain-timeout');
-            const chainDisplay = document.querySelector('.pp-chain-display');
-            
-            if (!chainCurrentEl || !chainTimeoutEl || !chainDisplay) {
-                return;
-            }
-
-            // Get current chain value
-            const currentChain = this.state.chainCurrentSnapshot || this.state.chainData?.current || 0;
-            
-            // Update current chain value
-            chainCurrentEl.textContent = currentChain.toLocaleString();
-            
-            // Format timeout as MM:SS
-            const minutes = Math.floor(remainingSeconds / 60);
-            const seconds = remainingSeconds % 60;
-            const timeStr = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-            chainTimeoutEl.textContent = timeStr;
-            
-            // Update display state based on chain activity
-            const hasActiveChain = currentChain > 0;
-            
-            if (hasActiveChain) {
-                chainDisplay.classList.add('active');
-                chainCurrentEl.classList.add('active');
-                chainTimeoutEl.classList.add('active');
-                
-                // Remove all color classes first
-                chainDisplay.classList.remove('neon-blue', 'neon-green', 'neon-yellow', 'neon-red', 'flash-red', 'flash-gold');
-                chainCurrentEl.classList.remove('flash-gold');
-                
-                // Apply color based on remaining time
-                if (remainingSeconds <= 10) {
-                    // Flash Red for last 10 seconds
-                    chainDisplay.classList.add('flash-red');
-                } else if (remainingSeconds <= 30) {
-                    // Neon Red for last 30 seconds
-                    chainDisplay.classList.add('neon-red');
-                } else if (remainingSeconds <= 90) {
-                    // Neon Yellow for last 90 seconds
-                    chainDisplay.classList.add('neon-yellow');
-                } else if (remainingSeconds <= 180) {
-                    // Neon Green for 3 minutes
-                    chainDisplay.classList.add('neon-green');
-                } else {
-                    // Neon Blue for >5 minutes
-                    chainDisplay.classList.add('neon-blue');
-                }
-                
-                // Check for bonus numbers (flash gold)
-                if (this.bonusNumbers.includes(currentChain)) {
-                    chainDisplay.classList.add('flash-gold');
-                    chainCurrentEl.classList.add('flash-gold');
-                }
-                
-                // Check for chain warning condition
-                if (currentChain > 10 && remainingSeconds <= 90 && remainingSeconds > 0) {
-                    if (!this.state.chainWarningShown) {
-                        this.showToast(`⚠️ Chain is ${currentChain} with ${timeStr} remaining! Keep the chain alive!`, 'warning');
-                        this.state.chainWarningShown = true;
-                    }
-                } else if (remainingSeconds > 90) {
-                    // Reset warning when time goes above threshold
-                    this.state.chainWarningShown = false;
-                }
-            } else {
-                // No active chain - disable display
-                chainDisplay.classList.remove('active', 'neon-blue', 'neon-green', 'neon-yellow', 'neon-red', 'flash-red', 'flash-gold');
-                chainCurrentEl.classList.remove('active', 'flash-gold');
-                chainTimeoutEl.classList.remove('active');
-                this.state.chainWarningShown = false;
-            }
-            
-            // Auto-refresh when chain is about to expire (less than 10 seconds)
-            if (remainingSeconds <= 10 && remainingSeconds > 0) {
-                const nowMs = Date.now();
-                if (nowMs - this.lastChainUpdate > 5000) {
-                    this.lastChainUpdate = nowMs;
-                    this.fetchChainData();
-                }
-            }
-            
-            // Auto-refresh when chain expires
-            if (remainingSeconds <= 0) {
-                this.state.chainWarningShown = false;
-                this.lastChainUpdate = Date.now();
-                this.fetchChainData();
-            }
-        }
-
-        updateChainDisplay() {
-            this.updateRealtimeChainDisplay();
+            this.intervals.factionDaily = setInterval(() => {
+                this.checkFaction();
+            }, 60 * 60 * 1000);
         }
 
         canMakeAPICall() {
             const now = Date.now();
             const lastCall = this.state.lastAPICall || 0;
             
-            // Reset count if more than 60 seconds have passed
             if (now - lastCall > 60000) {
                 this.state.apiCallCount = 0;
                 this.state.lastAPICall = now;
-                GM_setValue('pp_api_call_count', 0);
-                GM_setValue('pp_last_api_call', now);
+                SafeGM.setValue('pp_api_call_count', 0);
+                SafeGM.setValue('pp_last_api_call', now);
             }
             
-            // Check if we can make another call (max 20 per minute)
-            if (this.state.apiCallCount >= 20) {
-                const waitTime = Math.ceil((60000 - (now - lastCall)) / 1000);
-                return false;
-            }
-            
-            // Ensure at least 3 seconds between calls
-            if (now - lastCall < 3000) {
-                return false;
-            }
+            if (this.state.apiCallCount >= 20) return false;
+            if (now - lastCall < 3000) return false;
             
             this.state.apiCallCount++;
             this.state.lastAPICall = now;
-            GM_setValue('pp_api_call_count', this.state.apiCallCount);
-            GM_setValue('pp_last_api_call', now);
+            SafeGM.setValue('pp_api_call_count', this.state.apiCallCount);
+            SafeGM.setValue('pp_last_api_call', now);
             
             return true;
         }
@@ -567,45 +569,16 @@
         handleNoFactionData() {
             this.state.isInAllowedFaction = false;
             this.state.faction = null;
-            this.state.chainData = null;
-            this.state.chainEndTime = 0;
-            GM_setValue('pp_faction', null);
-            GM_setValue('pp_is_in_allowed_faction', false);
-            GM_setValue('pp_chain_data', null);
-            GM_setValue('pp_chain_end_time', 0);
+            SafeGM.setValue('pp_faction', null);
+            SafeGM.setValue('pp_is_in_allowed_faction', false);
             this.updateUIBasedOnFaction();
-            this.updateChainDisplay();
-            this.stopRealtimeCountdown();
-        }
-
-        async refreshProfileWithRealtimeCheck() {
-            try {
-                this.state.lastProfileFetch = 0;
-                await this.fetchProfile();
-                await this.fetchFaction();
-                await this.fetchChainData();
-                return {
-                    success: true,
-                    profile: this.state.profile,
-                    faction: this.state.faction,
-                    isInAllowedFaction: this.state.isInAllowedFaction,
-                    chainData: this.state.chainData
-                };
-            } catch (error) {
-                return {
-                    success: false,
-                    error: error.message
-                };
-            }
         }
 
         updateUIBasedOnFaction() {
-            const roomSelector = document.querySelector('.pp-room-selector');
-            const quickActions = document.querySelector('.pp-quick-actions');
-            
-            if (!roomSelector || !quickActions) return;
+            this.updateDOMCache();
+            if (!this.domCache.roomSelector || !this.domCache.quickActions) return;
 
-            roomSelector.innerHTML = '';
+            this.domCache.roomSelector.innerHTML = '';
             
             Object.entries(this.rooms).forEach(([id, room]) => {
                 if (room.type === 'general' || this.state.isInAllowedFaction) {
@@ -615,47 +588,49 @@
                     btn.textContent = room.name;
                     btn.dataset.roomId = id;
                     btn.addEventListener('click', () => this.switchRoom(id));
-                    roomSelector.appendChild(btn);
+                    this.domCache.roomSelector.appendChild(btn);
                 }
             });
 
-            const bankerBtn = quickActions.querySelector('.pp-action-btn.banker');
+            const bankerBtn = this.domCache.quickActions.querySelector('.pp-action-btn.banker');
             if (bankerBtn) {
                 bankerBtn.style.display = this.state.isInAllowedFaction ? '' : 'none';
             }
 
-            // BUG FIX: Proper room accessibility check
             if (!this.isRoomAccessible(this.state.selectedRoom)) {
                 const portalChatId = '1451524832767250543';
                 this.state.selectedRoom = portalChatId;
-                GM_setValue('pp_selected_room', portalChatId);
+                SafeGM.setValue('pp_selected_room', portalChatId);
                 
-                document.querySelectorAll('.pp-room-btn').forEach(b => b.classList.remove('active'));
-                const activeBtn = document.querySelector(`.pp-room-btn[data-room-id="${portalChatId}"]`);
+                this.domCache.roomSelector.querySelectorAll('.pp-room-btn').forEach(b => b.classList.remove('active'));
+                const activeBtn = this.domCache.roomSelector.querySelector(`.pp-room-btn[data-room-id="${portalChatId}"]`);
                 if (activeBtn) activeBtn.classList.add('active');
                 
                 this.state.messageCache.clear();
-                const messagesEl = document.querySelector('.pp-messages');
-                if (messagesEl) messagesEl.innerHTML = '';
+                if (this.domCache.messagesContainer) {
+                    this.domCache.messagesContainer.innerHTML = '';
+                }
                 this.loadRoomHistory();
             }
         }
 
         switchRoom(roomId) {
-            // BUG FIX: Clear pending messages and notifications when switching rooms
-            this.pendingMessages.clear();
-            this.pendingNotifications.clear();
+            const inputWasFocused = this.domCache.input && document.activeElement === this.domCache.input;
             
             this.state.selectedRoom = roomId;
-            GM_setValue('pp_selected_room', roomId);
+            SafeGM.setValue('pp_selected_room', roomId);
             
-            document.querySelectorAll('.pp-room-btn').forEach(b => b.classList.remove('active'));
-            const activeBtn = document.querySelector(`.pp-room-btn[data-room-id="${roomId}"]`);
+            this.updateDOMCache();
+            if (!this.domCache.roomSelector) return;
+            
+            this.domCache.roomSelector.querySelectorAll('.pp-room-btn').forEach(b => b.classList.remove('active'));
+            const activeBtn = this.domCache.roomSelector.querySelector(`.pp-room-btn[data-room-id="${roomId}"]`);
             if (activeBtn) activeBtn.classList.add('active');
             
             this.state.messageCache.clear();
-            const messagesEl = document.querySelector('.pp-messages');
-            if (messagesEl) messagesEl.innerHTML = '';
+            if (this.domCache.messagesContainer) {
+                this.domCache.messagesContainer.innerHTML = '';
+            }
             
             this.loadRoomHistory();
             
@@ -664,9 +639,11 @@
                 this.updateFABPulse();
             }
             
-            // BUG FIX: Clear unread count for current room
-            this.unreadMessages = 0;
-            this.updateFABPulse();
+            if (inputWasFocused && this.domCache.input) {
+                setTimeout(() => {
+                    this.domCache.input.focus();
+                }, 10);
+            }
         }
 
         async makeTornRequest(endpoint) {
@@ -677,7 +654,7 @@
                 const hasQuery = endpoint.includes('?');
                 const url = `https://api.torn.com/v2${endpoint}${hasQuery ? '&' : '?'}key=${apiKey}`;
                 
-                GM_xmlhttpRequest({
+                SafeGM.xmlhttpRequest({
                     method: 'GET',
                     url: url,
                     headers: { 'Accept': 'application/json' },
@@ -685,8 +662,7 @@
                     onload: (response) => {
                         if (response.status === 200) {
                             try {
-                                const data = JSON.parse(response.responseText);
-                                resolve(data);
+                                resolve(JSON.parse(response.responseText));
                             } catch (error) {
                                 reject(error);
                             }
@@ -710,55 +686,43 @@
                 if (script.textContent.includes('apiKey') || script.textContent.includes('PDA-APIKEY')) {
                     const match = script.textContent.match(/"apiKey"\s*:\s*"([^"]+)"/) ||
                                  script.textContent.match(/"###PDA-APIKEY###":\s*"([^"]+)"/);
-                    if (match) return this.sanitizeAPIKey(match[1]);
+                    if (match) {
+                        return this.sanitizeAPIKey(match[1]);
+                    }
                 }
             }
+            
             return null;
         }
 
         sanitizeHTML(str) {
             if (typeof str !== 'string') return '';
+            
             const div = document.createElement('div');
             div.textContent = str;
-            return div.innerHTML.replace(/[<>]/g, '');
+            
+            let sanitized = div.innerHTML
+                .replace(/<[^>]*>/g, '')
+                .replace(/javascript:/gi, '')
+                .replace(/on\w+\s*=\s*["'][^"']*["']/gi, '')
+                .replace(/href\s*=\s*["']javascript:[^"']*["']/gi, 'href="#"')
+                .replace(/src\s*=\s*["']javascript:[^"']*["']/gi, 'src=""');
+            
+            if (sanitized.includes('<') || sanitized.includes('>')) {
+                sanitized = sanitized.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            }
+            
+            return sanitized;
         }
 
         sanitizeAPIKey(key) {
             if (typeof key !== 'string') return '';
             return key.replace(/[^a-zA-Z0-9]/g, '');
         }
-        
-        // NEW: Function to decode HTML entities
-        decodeHTMLEntities(str) {
-            if (typeof str !== 'string') return '';
-            const textarea = document.createElement('textarea');
-            textarea.innerHTML = str;
-            return textarea.value;
-        }
-        
-        // NEW: Function to extract clean URLs from text
-        extractCleanURLs(text) {
-            const urlRegex = /(https?:\/\/[^\s<]+)/g;
-            const matches = text.match(urlRegex);
-            if (!matches) return text;
-            
-            // Replace HTML encoded URLs with clean URLs
-            let cleanText = text;
-            matches.forEach(url => {
-                const cleanUrl = this.decodeHTMLEntities(url)
-                    .replace(/&amp;/g, '&')
-                    .replace(/&lt;/g, '<')
-                    .replace(/&gt;/g, '>')
-                    .replace(/&quot;/g, '"')
-                    .replace(/&#39;/g, "'");
-                cleanText = cleanText.replace(url, cleanUrl);
-            });
-            return cleanText;
-        }
 
         updateProfileDisplay() {
-            const display = document.querySelector('.pp-profile-display');
-            if (!display) return;
+            this.updateDOMCache();
+            if (!this.domCache.profileDisplay) return;
 
             if (this.state.profile?.name) {
                 let displayText = this.state.profile.name;
@@ -769,12 +733,12 @@
                     displayTitle += ` | ${this.state.faction.name} | ${this.state.faction.position}`;
                 }
                 
-                display.textContent = displayText;
-                display.title = displayTitle;
-                display.className = 'pp-profile-display connected';
+                this.domCache.profileDisplay.textContent = displayText;
+                this.domCache.profileDisplay.title = displayTitle;
+                this.domCache.profileDisplay.className = 'pp-profile-display connected';
             } else {
-                display.textContent = 'API Key Required';
-                display.className = 'pp-profile-display guest';
+                this.domCache.profileDisplay.textContent = 'API Key Required';
+                this.domCache.profileDisplay.className = 'pp-profile-display guest';
             }
         }
 
@@ -796,13 +760,7 @@
                 const btn = document.createElement('button');
                 btn.className = `pp-action-btn ${action.id}`;
                 btn.innerHTML = action.icon;
-                
-                // Update bounty button title if target is set
-                if (action.id === 'bounty' && this.state.bountyTarget) {
-                    btn.title = `${action.label} - ${action.role} (Target: ${this.state.bountyTarget})`;
-                } else {
-                    btn.title = action.label + (action.role ? ` - ${action.role}` : '');
-                }
+                btn.title = action.label + (action.role ? ` - ${action.role}` : '');
                 
                 const cooldown = this.state.buttonCooldowns[action.id];
                 if (cooldown && Date.now() - cooldown < 10000) {
@@ -822,13 +780,11 @@
         }
 
         async handleQuickAction(action) {
-            // Banker button requires faction membership
             if (action.id === 'banker' && !this.state.isInAllowedFaction) {
                 this.showToast('Banker access requires faction membership', 'error');
                 return;
             }
 
-            // Check cooldown
             const now = Date.now();
             const cooldown = this.state.buttonCooldowns[action.id];
             if (cooldown && now - cooldown < 10000) {
@@ -837,16 +793,36 @@
                 return;
             }
 
-            // Check for confirmation if enabled
-            if (this.state.settings.confirmQuickActions) {
-                if (!confirm(`Are you sure you want to request ${action.label}?`)) {
+            if (action.id === 'bounty') {
+                const targetId = prompt('Enter Torn Profile ID for the bounty target:');
+                if (!targetId) {
+                    this.showToast('Bounty cancelled', 'warning');
+                    return;
+                }
+                
+                if (!/^\d+$/.test(targetId.trim())) {
+                    this.showToast('Invalid Profile ID. Please enter numbers only.', 'error');
+                    return;
+                }
+                
+                this.bountyTargetId = targetId.trim();
+            }
+
+            if (this.state.settings.confirmQuickActions && action.id !== 'settings') {
+                const confirmed = await this.showConfirmation(
+                    `Send ${action.label} request?`,
+                    `This will send a request to ${action.role || 'the channel'}.`,
+                    action.label
+                );
+                
+                if (!confirmed) {
+                    this.bountyTargetId = null;
                     return;
                 }
             }
 
-            // Apply cooldown
             this.state.buttonCooldowns[action.id] = now;
-            GM_setValue('pp_button_cooldowns', this.state.buttonCooldowns);
+            SafeGM.setValue('pp_button_cooldowns', this.state.buttonCooldowns);
 
             const btn = document.querySelector(`.pp-action-btn.${action.id}`);
             if (btn) {
@@ -854,119 +830,99 @@
                 setTimeout(() => btn.classList.remove('cooldown'), 10000);
             }
 
-            // Show action toast
-            this.showToast(`${action.label} Needed!`, 'warning');
+            if (this.state.settings.showToasts) {
+                let toastMessage = '';
+                const userName = this.state.profile?.name || 'Someone';
+                
+                switch(action.id) {
+                    case 'revive': toastMessage = `${userName} needs a Revive`; break;
+                    case 'assist': toastMessage = `${userName} needs Assistance`; break;
+                    case 'mercenary': toastMessage = `${userName} needs a Mercenary`; break;
+                    case 'banker': toastMessage = `${userName} needs a Banker`; break;
+                    case 'trader': toastMessage = `${userName} wants to Trade`; break;
+                    case 'bounty': toastMessage = `${userName} request a Bounty`; break;
+                    default: toastMessage = `${userName} needs ${action.label}`;
+                }
+                
+                this.showToast(toastMessage, 'warning');
+            }
 
-            // Determine message and room based on action
             let message = '';
-            let roomId = '1451524832767250543'; // Default to portal chat
-            
-            // BUG FIX: Always include user name in alerts
-            const userName = this.state.profile?.name || 'Unknown User';
+            let roomId = '1451524832767250543';
             
             switch(action.id) {
                 case 'revive':
                     if (this.state.profile?.id) {
-                        const profileUrl = `https://www.torn.com/profiles.php?XID=${this.state.profile.id}`;
-                        // BUG FIX: Include user name and clean URL
-                        const cleanUrl = profileUrl.replace(/&amp;/g, '&');
-                        message = `${action.role} - ${userName} needs revive! ${cleanUrl}`;
+                        const profileUrl = this.cleanLink(`https://www.torn.com/profiles.php?XID=${this.state.profile.id}`);
+                        message = `${action.role} ${this.state.profile.name} needs a Revive: ${profileUrl}`;
                     } else {
-                        message = `${action.role} - ${userName} needs revive!`;
+                        message = `${action.role} Someone needs a Revive`;
                     }
                     break;
                     
                 case 'assist':
                     const currentUrl = window.location.href;
-                    // Check if user is on attack page with target ID
                     if (currentUrl.includes('loader.php?sid=attack') && currentUrl.includes('user2ID=')) {
                         const urlParams = new URLSearchParams(window.location.search);
                         const targetId = urlParams.get('user2ID');
                         if (targetId) {
-                            // BUG FIX: Clean URL encoding
-                            const attackUrl = `https://www.torn.com/loader.php?sid=attack&user2ID=${targetId}`;
-                            message = `${action.role} - ${userName} needs assist! Attack link: ${attackUrl}`;
+                            const attackUrl = this.cleanLink(`https://www.torn.com/loader.php?sid=attack&user2ID=${targetId}`);
+                            message = `${action.role} ${this.state.profile?.name || 'Someone'} needs Assistance: ${attackUrl}`;
                         } else {
-                            message = `${action.role} - ${userName} needs assist! (No target ID found)`;
+                            message = `${action.role} ${this.state.profile?.name || 'Someone'} needs Assistance`;
                         }
                     } else {
-                        this.showToast('Assist only works on attack pages with a target selected', 'warning');
-                        return; // Don't send message if not on attack page
+                        message = `${action.role} ${this.state.profile?.name || 'Someone'} needs Assistance`;
                     }
                     break;
                     
                 case 'trader':
                     if (this.state.profile?.id) {
-                        const tradeUrl = `https://www.torn.com/trade.php#step=start&userID=${this.state.profile.id}`;
-                        // BUG FIX: Clean URL encoding
-                        const cleanUrl = tradeUrl.replace(/&amp;/g, '&');
-                        message = `${action.role} - ${userName} needs trader! Trade link: ${cleanUrl}`;
+                        const tradeUrl = this.cleanLink(`https://www.torn.com/trade.php#step=start&userID=${this.state.profile.id}`);
+                        message = `${action.role} ${this.state.profile.name} wants to Trade: ${tradeUrl}`;
                     } else {
-                        message = `${action.role} - ${userName} needs trader!`;
+                        message = `${action.role} Someone wants to Trade`;
                     }
                     break;
                     
                 case 'bounty':
-                    // Handle bounty target selection
-                    if (!this.state.bountyTarget) {
-                        const target = prompt('Enter Torn Profile ID (XID) for bounty target:');
-                        if (target && !isNaN(target) && target.trim() !== '') {
-                            this.state.bountyTarget = target.trim();
-                            GM_setValue('pp_bounty_target', this.state.bountyTarget);
-                            
-                            // Update bounty button title
-                            const bountyBtn = document.querySelector('.pp-action-btn.bounty');
-                            if (bountyBtn) {
-                                bountyBtn.title = `${action.label} - ${action.role} (Target: ${this.state.bountyTarget})`;
-                            }
-                            
-                            this.showToast(`Bounty target set to ${this.state.bountyTarget}. Click again to send.`, 'info');
-                        } else {
-                            this.showToast('Invalid Torn Profile ID', 'error');
-                        }
-                        return; // Don't send message, wait for next click
-                    }
-                    
-                    // Send bounty alert with stored target
-                    const bountyUrl = `https://www.torn.com/bounties.php?p=add&XID=${this.state.bountyTarget}`;
-                    // BUG FIX: Clean URL encoding
-                    const cleanBountyUrl = bountyUrl.replace(/&amp;/g, '&');
-                    message = `${action.role} - ${userName} requests bounty on ${this.state.bountyTarget}! ${cleanBountyUrl}`;
-                    
-                    // Clear bounty target after sending
-                    this.state.bountyTarget = null;
-                    GM_deleteValue('pp_bounty_target');
-                    
-                    // Update bounty button title
-                    const bountyBtn = document.querySelector('.pp-action-btn.bounty');
-                    if (bountyBtn) {
-                        bountyBtn.title = `${action.label} - ${action.role}`;
+                    if (this.bountyTargetId) {
+                        const bountyUrl = this.cleanLink(`https://www.torn.com/bounties.php?p=add&XID=${this.bountyTargetId}`);
+                        message = `${action.role} ${this.state.profile?.name || 'Someone'} request a Bounty: ${bountyUrl}`;
+                        this.bountyTargetId = null;
+                    } else {
+                        message = `${action.role} ${this.state.profile?.name || 'Someone'} request a Bounty`;
                     }
                     break;
                     
                 case 'banker':
-                    // Banker messages go only to banking room for faction members
                     roomId = '1080875329888997429';
-                    message = `${action.role} - ${userName} needs banker!`;
+                    const bankerUrl = this.cleanLink('https://www.torn.com/factions.php?step=your&type=1#/tab=controls');
+                    message = `${action.role} ${this.state.profile?.name || 'Someone'} needs a Banker: ${bankerUrl}`;
                     break;
                     
                 case 'mercenary':
-                    message = `${action.role} - ${userName} needs mercenary!`;
+                    if (this.state.profile?.id) {
+                        const mercenaryUrl = this.cleanLink(`https://www.torn.com/profiles.php?XID=${this.state.profile.id}`);
+                        message = `${action.role} ${this.state.profile.name} needs a Mercenary: ${mercenaryUrl}`;
+                    } else {
+                        message = `${action.role} Someone needs a Mercenary`;
+                    }
                     break;
                     
                 default:
-                    message = `${action.role} - ${userName} needs ${action.label.toLowerCase()}!`;
+                    message = `${action.role} ${this.state.profile?.name || 'Someone'} needs ${action.label}`;
             }
 
-            // Send message
-            const messageHash = this.generateMessageHash(message, now);
+            const messageHash = this.generateMessageHash(message, now, roomId);
             this.pendingMessages.add(messageHash);
 
             const success = await this.sendToSupabase(message, roomId, true);
 
             if (success) {
-                this.addMessage(message, 'out', action.label, null, now, `temp_${messageHash}`);
-                this.showAlertToast(message);
+                if (roomId === this.state.selectedRoom) {
+                    this.addMessage(message, 'out', action.label, null, now, `temp_${messageHash}`);
+                }
                 setTimeout(() => this.pendingMessages.delete(messageHash), 30000);
             } else {
                 this.showToast(`${action.label} failed to send`, 'error');
@@ -974,14 +930,55 @@
             }
         }
 
+        cleanLink(url) {
+            return url.replace(/amp;/g, '');
+        }
+
+        async showConfirmation(title, message, actionLabel) {
+            return new Promise((resolve) => {
+                const modal = document.createElement('div');
+                modal.className = 'pp-confirm-modal';
+                
+                modal.innerHTML = `
+                    <div class="pp-confirm-content">
+                        <div class="pp-confirm-header">
+                            <h4>${title}</h4>
+                            <button class="pp-confirm-close">&times;</button>
+                        </div>
+                        <div class="pp-confirm-body">
+                            <p>${message}</p>
+                        </div>
+                        <div class="pp-confirm-buttons">
+                            <button class="pp-confirm-btn confirm" data-action="confirm">Send ${actionLabel}</button>
+                            <button class="pp-confirm-btn cancel" data-action="cancel">Cancel</button>
+                        </div>
+                    </div>
+                `;
+
+                document.body.appendChild(modal);
+
+                const closeModal = (result) => {
+                    modal.remove();
+                    resolve(result);
+                };
+
+                modal.querySelector('.pp-confirm-close').addEventListener('click', () => closeModal(false));
+                modal.querySelector('.pp-confirm-btn.confirm').addEventListener('click', () => closeModal(true));
+                modal.querySelector('.pp-confirm-btn.cancel').addEventListener('click', () => closeModal(false));
+                
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) closeModal(false);
+                });
+            });
+        }
+
         async sendToSupabase(message, roomId, alert = false) {
-            if (!this.state.profile?.name) return false;
+            if (!this.state.profile?.name) {
+                return false;
+            }
 
             try {
-                // BUG FIX: Clean message before sending
-                let sanitizedMessage = this.sanitizeHTML(message);
-                sanitizedMessage = this.extractCleanURLs(sanitizedMessage);
-                
+                const sanitizedMessage = this.sanitizeHTML(message);
                 const sanitizedName = this.sanitizeHTML(this.state.profile.name);
                 
                 const response = await this.supabaseRequest('POST', '/rest/v1/rpc/insert_message_from_torn', {
@@ -991,51 +988,48 @@
                     p_message: sanitizedMessage,
                     p_alert: alert
                 });
+                
                 return !!response;
             } catch (error) {
-                console.error('Supabase send error:', error);
+                console.error('[Phantom Portal] Supabase send error');
                 return false;
             }
         }
 
         async sendMessage() {
-            const input = document.querySelector('.pp-input');
-            const message = input?.value.trim();
+            this.updateDOMCache();
+            if (!this.domCache.input) return;
+            
+            const message = this.domCache.input.value.trim();
             if (!message) return;
 
-            let sanitizedMessage = this.sanitizeHTML(message);
-            sanitizedMessage = this.extractCleanURLs(sanitizedMessage);
-            
+            const sanitizedMessage = this.sanitizeHTML(message);
             if (!sanitizedMessage) {
                 this.showToast('Invalid message', 'error');
                 return;
             }
 
             const now = Date.now();
-            const messageHash = this.generateMessageHash(sanitizedMessage, now);
+            const messageHash = this.generateMessageHash(sanitizedMessage, now, this.state.selectedRoom);
             if (this.pendingMessages.has(messageHash)) return;
 
             this.pendingMessages.add(messageHash);
+            this.domCache.input.value = '';
             this.addMessage(sanitizedMessage, 'out', 'normal', null, now, `temp_${messageHash}`);
 
             const success = await this.sendToSupabase(sanitizedMessage, this.state.selectedRoom, false);
 
             if (success) {
-                input.value = '';
-                input.focus();
                 setTimeout(() => this.pendingMessages.delete(messageHash), 30000);
-                
-                // BUG FIX: Auto-scroll to latest message
-                this.scrollToLatestMessage();
             } else {
                 this.showToast('Send failed', 'error');
                 this.pendingMessages.delete(messageHash);
                 this.removeTemporaryMessage(`temp_${messageHash}`);
+                this.domCache.input.value = sanitizedMessage;
             }
         }
 
-        async fetchMessages() {
-            // BUG FIX: Prevent cross-posting by checking room accessibility before polling
+        async fetchMessages(showToasts = false, forceRefresh = false) {
             if (this.isPolling || !this.isRoomAccessible(this.state.selectedRoom)) {
                 this.isPolling = false;
                 return;
@@ -1044,50 +1038,66 @@
             this.isPolling = true;
             try {
                 const now = Date.now();
-                if (now - this.state.lastSync < 2000) {
+                if (now - this.state.lastSync < 1000 && !forceRefresh) {
                     this.isPolling = false;
                     return;
                 }
 
-                const fiveMinutesAgo = new Date(now - 5 * 60000).toISOString();
+                // Calculate time window - include messages since last offline or last 5 minutes
+                let timeWindow = new Date(now - 5 * 60000); // Default: last 5 minutes
+                
+                // Check if we have offline time stored and need to get older messages
+                if (this.state.lastOfflineTime > 0 && !this.initialHistoryLoaded) {
+                    const offlineTime = new Date(this.state.lastOfflineTime);
+                    // Get messages from the later of: last offline time or 1 hour ago (to prevent loading too much)
+                    const oneHourAgo = new Date(now - 60 * 60000);
+                    timeWindow = new Date(Math.min(offlineTime.getTime(), oneHourAgo.getTime()));
+                    console.log('[Phantom Portal] Loading messages since last offline time:', timeWindow);
+                }
+                
+                const timeWindowISO = timeWindow.toISOString();
+                
                 const response = await this.supabaseRequest('GET',
                     `/rest/v1/portal_messages?room_id=eq.${this.state.selectedRoom}` +
-                    `&created_at=gt.${fiveMinutesAgo}` +
-                    `&order=created_at.desc&limit=50`
+                    `&created_at=gt.${timeWindowISO}` +
+                    `&order=created_at.asc&limit=100` // Changed to asc to get messages in chronological order
                 );
 
                 if (response && Array.isArray(response) && response.length > 0) {
-                    response.reverse().forEach(msg => {
-                        // BUG FIX: Double-check room accessibility for each message
-                        if (!this.isRoomAccessible(msg.room_id)) return;
+                    const messagesToAdd = [];
+                    
+                    for (const msg of response) {
+                        if (!this.isRoomAccessible(msg.room_id)) continue;
 
                         let sanitizedMessage = this.sanitizeHTML(msg.message || '');
-                        sanitizedMessage = this.extractCleanURLs(sanitizedMessage);
+                        sanitizedMessage = this.cleanLink(sanitizedMessage);
                         
                         const sanitizedSender = this.sanitizeHTML(msg.torn_profile_name || msg.discord_name || 'Unknown');
                         const msgHash = this.generateMessageHash(
                             sanitizedMessage, 
                             new Date(msg.created_at || Date.now()).getTime(),
-                            sanitizedSender
+                            sanitizedSender,
+                            msg.room_id
                         );
                         
                         if (this.pendingMessages.has(msgHash) || this.state.messageCache.has(msg.sync_id)) {
-                            return;
+                            continue;
                         }
 
-                        if (this.findExistingMessage(sanitizedMessage, new Date(msg.created_at).getTime(), sanitizedSender)) {
+                        if (this.findExistingMessage(sanitizedMessage, new Date(msg.created_at).getTime(), sanitizedSender, msg.room_id)) {
                             this.state.messageCache.set(msg.sync_id, true);
-                            return;
+                            continue;
                         }
 
-                        this.addMessage(
-                            sanitizedMessage,
-                            msg.discord_id ? 'in' : 'out',
-                            msg.alert ? 'alert' : 'normal',
-                            sanitizedSender,
-                            msg.created_at || new Date().toISOString(),
-                            msg.sync_id
-                        );
+                        if (msg.room_id === this.state.selectedRoom) {
+                            messagesToAdd.push({
+                                msg,
+                                sanitizedMessage,
+                                sanitizedSender,
+                                msgHash,
+                                sync_id: msg.sync_id
+                            });
+                        }
 
                         this.state.messageCache.set(msg.sync_id, true);
                         this.addToRoomHistory({
@@ -1096,40 +1106,116 @@
                             torn_profile_name: sanitizedSender
                         });
 
-                        // Increment unread count if chat is closed
-                        if (!this.isOpen) {
-                            this.unreadMessages++;
-                            this.updateFABPulse();
-                        }
-
-                        // Update message stats for received messages
                         if (msg.discord_id) {
                             this.state.messageStats.received++;
                             this.state.messageStats.lastMessageTime = Date.now();
-                            GM_setValue('pp_message_stats', this.state.messageStats);
+                            SafeGM.setValue('pp_message_stats', this.state.messageStats);
                         }
 
-                        // Show alerts if enabled
-                        if (msg.alert && !msg.discord_id && this.state.settings.showNotifications) {
+                        if (msg.alert && !msg.discord_id) {
                             const messageTime = new Date(msg.created_at || Date.now()).getTime();
                             if (now - messageTime < 300000 && !this.pendingNotifications.has(msg.sync_id)) {
-                                this.showImmediateAlert(sanitizedMessage, sanitizedSender);
+                                this.showAlertToast(sanitizedMessage, sanitizedSender);
                                 this.pendingNotifications.add(msg.sync_id);
                                 setTimeout(() => this.pendingNotifications.delete(msg.sync_id), 300000);
                             }
                         }
 
+                        if (showToasts && !msg.alert && msg.discord_id && now - new Date(msg.created_at).getTime() < 30000) {
+                            const shortMessage = sanitizedMessage.length > 50 
+                                ? sanitizedMessage.substring(0, 47) + '...' 
+                                : sanitizedMessage;
+                            this.showToast(`${sanitizedSender}: ${shortMessage}`, 'info');
+                        }
+                    }
+                    
+                    if (this.isOpen || forceRefresh) {
+                        messagesToAdd.forEach(({ msg, sanitizedMessage, sanitizedSender }) => {
+                            this.addMessage(
+                                sanitizedMessage,
+                                msg.discord_id ? 'in' : 'out',
+                                msg.alert ? 'alert' : 'normal',
+                                sanitizedSender,
+                                msg.created_at || new Date().toISOString(),
+                                msg.sync_id
+                            );
+                        });
+                    }
+                    
+                    if (!this.isOpen && messagesToAdd.length > 0 && !forceRefresh) {
+                        this.unreadMessages += messagesToAdd.length;
+                        this.updateFABPulse();
                         if (!this.isOpen) this.triggerFABPulse();
-                    });
+                    }
+                    
+                    // Mark initial history as loaded
+                    if (this.state.lastOfflineTime > 0 && !this.initialHistoryLoaded) {
+                        this.initialHistoryLoaded = true;
+                        this.state.lastOfflineTime = 0;
+                        SafeGM.setValue('pp_last_offline_time', 0);
+                    }
+                    
                     this.cleanupMessageCache();
                 }
                 this.state.lastSync = now;
             } catch (error) {
-                // Network errors are handled silently
-                console.error('Fetch messages error:', error);
+                console.error('[Phantom Portal] Fetch messages error');
             } finally {
                 this.isPolling = false;
             }
+        }
+
+        async startBackgroundPolling() {
+            if (this.intervals.backgroundPoll) clearInterval(this.intervals.backgroundPoll);
+            
+            this.intervals.backgroundPoll = setInterval(async () => {
+                try {
+                    for (const [roomId, room] of Object.entries(this.rooms)) {
+                        if (!this.isRoomAccessible(roomId)) continue;
+                        
+                        const now = Date.now();
+                        const oneMinuteAgo = new Date(now - 60000).toISOString();
+                        
+                        const response = await this.supabaseRequest('GET',
+                            `/rest/v1/portal_messages?room_id=eq.${roomId}` +
+                            `&created_at=gt.${oneMinuteAgo}` +
+                            `&order=created_at.desc&limit=5`
+                        );
+
+                        if (response && Array.isArray(response) && response.length > 0) {
+                            for (const msg of response.reverse()) {
+                                let sanitizedMessage = this.sanitizeHTML(msg.message || '');
+                                sanitizedMessage = this.cleanLink(sanitizedMessage);
+                                
+                                const sanitizedSender = this.sanitizeHTML(msg.torn_profile_name || msg.discord_name || 'Unknown');
+                                const msgHash = this.generateMessageHash(
+                                    sanitizedMessage, 
+                                    new Date(msg.created_at || Date.now()).getTime(),
+                                    sanitizedSender,
+                                    msg.room_id
+                                );
+                                
+                                if (this.pendingMessages.has(msgHash) || this.state.messageCache.has(msg.sync_id)) {
+                                    continue;
+                                }
+
+                                this.state.messageCache.set(msg.sync_id, true);
+                                
+                                if (msg.alert && !msg.discord_id) {
+                                    const messageTime = new Date(msg.created_at || Date.now()).getTime();
+                                    if (now - messageTime < 300000 && !this.pendingNotifications.has(msg.sync_id)) {
+                                        this.showAlertToast(sanitizedMessage, sanitizedSender);
+                                        this.pendingNotifications.add(msg.sync_id);
+                                        setTimeout(() => this.pendingNotifications.delete(msg.sync_id), 300000);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } catch (error) {
+                    // Silent error - background polling failures shouldn't break the app
+                }
+            }, 5000);
         }
 
         isRoomAccessible(roomId) {
@@ -1147,47 +1233,56 @@
                     this.audioCache = new Audio(this.alertSoundUrl);
                     this.audioCache.preload = 'auto';
                 }
+                
+                const now = Date.now();
+                const lastPlay = this.audioPlaybackAttempts || 0;
+                if (now - lastPlay < 1000) return;
+                
                 this.audioCache.currentTime = 0;
-                await this.audioCache.play().catch(() => {
-                    // Audio playback errors are handled silently
-                });
+                await this.audioCache.play();
+                this.audioPlaybackAttempts = now;
             } catch (error) {
-                // Sound errors are silent
+                console.warn('[Phantom Portal] Audio play error');
             }
         }
 
-        showImmediateAlert(message, sender) {
-            this.playAlertSound();
-            this.showAlertToast(`Alert from ${sender}: ${message.substring(0, 100)}...`);
+        showAlertToast(message, sender) {
+            if (!this.state.settings.showToasts) return;
             
-            if (this.state.settings.showNotifications && typeof Notification !== 'undefined' && Notification.permission === 'granted') {
-                try {
-                    new Notification('Phantom Portal Alert', {
-                        body: `${sender}: ${message.substring(0, 200)}`,
-                        icon: 'https://images2.imgbox.com/86/79/2ag63Ut3_o.png'
-                    });
-                } catch (error) {
-                    // Notification permission errors are silent
-                }
+            let toastMessage = message;
+            
+            toastMessage = toastMessage.replace(/https?:\/\/[^\s]+/g, '');
+            toastMessage = toastMessage.replace(/@\w+\s*/g, '');
+            toastMessage = toastMessage.replace(/\s+/g, ' ').trim();
+            toastMessage = toastMessage.replace(/:\s*$/, '');
+            
+            if (sender && toastMessage.includes(sender)) {
+                toastMessage = toastMessage.replace(new RegExp(`^${sender}\\s*`, 'i'), '');
             }
+            
+            toastMessage = toastMessage.charAt(0).toUpperCase() + toastMessage.slice(1);
+            
+            this.showToast(toastMessage, 'warning');
         }
 
-        generateMessageHash(content, timestamp, sender = null) {
-            const data = `${content}|${timestamp}|${sender}`;
+        generateMessageHash(content, timestamp, sender = null, roomId = null) {
+            const data = `${content}|${timestamp}|${sender}|${roomId}|${Math.random().toString(36).substr(2, 9)}`;
             let hash = 0;
             for (let i = 0; i < data.length; i++) {
                 const char = data.charCodeAt(i);
                 hash = ((hash << 5) - hash) + char;
                 hash = hash & hash;
             }
-            return hash.toString();
+            return `${hash.toString(36)}_${Date.now().toString(36)}`;
         }
 
-        findExistingMessage(content, timestamp, sender) {
-            const messagesEl = document.querySelector('.pp-messages');
-            if (!messagesEl) return null;
+        findExistingMessage(content, timestamp, sender, roomId) {
+            if (roomId !== this.state.selectedRoom) return null;
+            
+            this.updateDOMCache();
+            if (!this.domCache.messagesContainer) return null;
 
-            const messages = messagesEl.querySelectorAll('.pp-message');
+            const messages = this.domCache.messagesContainer.querySelectorAll('.pp-message');
             for (const msgEl of messages) {
                 const textEl = msgEl.querySelector('.message-text');
                 const timeEl = msgEl.querySelector('.message-time');
@@ -1214,112 +1309,68 @@
         }
 
         addToRoomHistory(msg) {
-            if (!this.state.roomMessages[this.state.selectedRoom]) {
-                this.state.roomMessages[this.state.selectedRoom] = [];
+            const roomId = msg.room_id || this.state.selectedRoom;
+            if (!this.state.roomMessages[roomId]) {
+                this.state.roomMessages[roomId] = [];
             }
 
-            const roomMessages = this.state.roomMessages[this.state.selectedRoom];
+            const roomMessages = this.state.roomMessages[roomId];
             const exists = roomMessages.some(existing => existing.sync_id === msg.sync_id);
 
             if (!exists) {
+                if (roomMessages.length >= 200) {
+                    roomMessages.shift();
+                }
                 roomMessages.push({
                     sync_id: msg.sync_id,
                     message: msg.message,
                     created_at: msg.created_at,
                     torn_profile_name: msg.torn_profile_name,
                     discord_name: msg.discord_name,
-                    alert: msg.alert
+                    alert: msg.alert,
+                    room_id: roomId
                 });
 
-                if (roomMessages.length > 50) roomMessages.shift();
-                GM_setValue('pp_room_messages', this.state.roomMessages);
+                SafeGM.setValue('pp_room_messages', this.state.roomMessages);
             }
         }
 
         loadRoomHistory() {
-            const messagesEl = document.querySelector('.pp-messages');
-            if (!messagesEl) return;
+            this.updateDOMCache();
+            if (!this.domCache.messagesContainer) return;
 
-            messagesEl.innerHTML = '';
+            this.domCache.messagesContainer.innerHTML = '';
             const roomHistory = this.state.roomMessages[this.state.selectedRoom] || [];
             
-            // BUG FIX: Lazy load - only show recent messages initially
-            const recentHistory = roomHistory.slice(-20); // Show last 20 messages
-            
-            recentHistory.forEach(msg => {
-                let sanitizedMessage = this.sanitizeHTML(msg.message || '');
-                sanitizedMessage = this.extractCleanURLs(sanitizedMessage);
-                
-                this.addMessage(
-                    sanitizedMessage,
-                    msg.discord_name ? 'in' : 'out',
-                    msg.alert ? 'alert' : 'normal',
-                    msg.torn_profile_name || msg.discord_name || 'Unknown',
-                    msg.created_at || new Date().toISOString(),
-                    msg.sync_id,
-                    true // Mark as history
-                );
-                if (msg.sync_id) this.state.messageCache.set(msg.sync_id, true);
-            });
-            
-            // BUG FIX: Add "Load more" button if there are older messages
-            if (roomHistory.length > 20) {
-                const loadMoreBtn = document.createElement('button');
-                loadMoreBtn.className = 'pp-load-more';
-                loadMoreBtn.textContent = `Load ${roomHistory.length - 20} older messages...`;
-                loadMoreBtn.addEventListener('click', () => this.loadMoreHistory(roomHistory));
-                messagesEl.insertBefore(loadMoreBtn, messagesEl.firstChild);
-            }
-            
-            // BUG FIX: Auto-scroll to latest message
-            setTimeout(() => this.scrollToLatestMessage(), 100);
-        }
-        
-        loadMoreHistory(fullHistory) {
-            const messagesEl = document.querySelector('.pp-messages');
-            if (!messagesEl) return;
-            
-            // Remove "Load more" button
-            const loadMoreBtn = messagesEl.querySelector('.pp-load-more');
-            if (loadMoreBtn) loadMoreBtn.remove();
-            
-            // Load all messages
-            messagesEl.innerHTML = '';
-            fullHistory.forEach(msg => {
-                let sanitizedMessage = this.sanitizeHTML(msg.message || '');
-                sanitizedMessage = this.extractCleanURLs(sanitizedMessage);
-                
-                this.addMessage(
-                    sanitizedMessage,
-                    msg.discord_name ? 'in' : 'out',
-                    msg.alert ? 'alert' : 'normal',
-                    msg.torn_profile_name || msg.discord_name || 'Unknown',
-                    msg.created_at || new Date().toISOString(),
-                    msg.sync_id,
-                    true
-                );
-            });
-            
-            // Scroll to bottom to show latest messages
-            this.scrollToLatestMessage();
-        }
-        
-        // NEW: Function to scroll to latest message
-        scrollToLatestMessage() {
-            if (this.state.settings.autoScroll) {
-                const messagesEl = document.querySelector('.pp-messages');
-                if (messagesEl) {
-                    setTimeout(() => {
-                        messagesEl.scrollTop = messagesEl.scrollHeight;
-                    }, 10);
+            roomHistory.forEach(msg => {
+                if (msg.room_id === this.state.selectedRoom || !msg.room_id) {
+                    this.addMessage(
+                        msg.message || '',
+                        msg.discord_name ? 'in' : 'out',
+                        msg.alert ? 'alert' : 'normal',
+                        msg.torn_profile_name || msg.discord_name || 'Unknown',
+                        msg.created_at || new Date().toISOString(),
+                        msg.sync_id
+                    );
+                    if (msg.sync_id) this.state.messageCache.set(msg.sync_id, true);
                 }
-            }
+            });
+            
+            // After loading local history, fetch any newer messages from server
+            this.fetchMessages(false, true);
         }
 
         cleanupMessageCache() {
-            if (this.state.messageCache.size > 200) {
-                const keysToDelete = Array.from(this.state.messageCache.keys()).slice(0, 100);
-                keysToDelete.forEach(key => this.state.messageCache.delete(key));
+            if (this.state.messageCache.size > 500) {
+                const iterator = this.state.messageCache.keys();
+                let count = 0;
+                while (count < 200 && this.state.messageCache.size > 200) {
+                    const key = iterator.next().value;
+                    if (key) {
+                        this.state.messageCache.delete(key);
+                        count++;
+                    }
+                }
             }
         }
 
@@ -1330,9 +1381,9 @@
             }
         }
 
-        addMessage(content, direction, type = 'normal', sender = null, timestamp = null, sync_id = null, isHistory = false) {
-            const messagesEl = document.querySelector('.pp-messages');
-            if (!messagesEl) return;
+        addMessage(content, direction, type = 'normal', sender = null, timestamp = null, sync_id = null) {
+            this.updateDOMCache();
+            if (!this.domCache.messagesContainer) return;
 
             const msgEl = document.createElement('div');
             msgEl.className = `pp-message message-${direction}`;
@@ -1351,8 +1402,7 @@
                 msgEl.appendChild(senderEl);
             }
 
-            if (type === 'alert' || type === 'Revive' || type === 'Assist' || type === 'Merc' || 
-                type === 'Banker' || type === 'Trader' || type === 'Bounty') {
+            if (type === 'alert') {
                 const badge = document.createElement('span');
                 badge.className = 'message-badge alert';
                 badge.textContent = 'ALERT';
@@ -1361,7 +1411,8 @@
 
             const textEl = document.createElement('div');
             textEl.className = 'message-text';
-            textEl.innerHTML = this.linkify(content);
+            const cleanedContent = this.cleanLink(content);
+            textEl.innerHTML = this.linkify(cleanedContent);
             msgEl.appendChild(textEl);
 
             const timeEl = document.createElement('div');
@@ -1372,59 +1423,58 @@
             });
             msgEl.appendChild(timeEl);
 
-            messagesEl.appendChild(msgEl);
+            this.domCache.messagesContainer.appendChild(msgEl);
 
-            // Update message stats for sent messages
             if (direction === 'out' && !sync_id?.startsWith('temp_')) {
                 this.state.messageStats.sent++;
                 this.state.messageStats.lastMessageTime = Date.now();
-                GM_setValue('pp_message_stats', this.state.messageStats);
+                SafeGM.setValue('pp_message_stats', this.state.messageStats);
             }
 
-            // BUG FIX: Only auto-scroll for non-history messages or when opening chat
-            if (this.state.settings.autoScroll && !isHistory) {
-                this.scrollToLatestMessage();
+            if (this.state.settings.autoScroll) {
+                setTimeout(() => {
+                    if (this.domCache.messagesContainer) {
+                        this.domCache.messagesContainer.scrollTop = this.domCache.messagesContainer.scrollHeight;
+                    }
+                }, 10);
             }
         }
 
         linkify(text) {
-            // BUG FIX: Proper URL detection with HTML entity decoding
-            const urlRegex = /(https?:\/\/[^\s<]+)/g;
-            return text.replace(urlRegex, function(url) {
-                // Decode HTML entities in URLs
-                const cleanUrl = url
-                    .replace(/&amp;/g, '&')
-                    .replace(/&lt;/g, '<')
-                    .replace(/&gt;/g, '>')
-                    .replace(/&quot;/g, '"')
-                    .replace(/&#39;/g, "'");
-                return '<a href="' + cleanUrl + '" target="_blank" rel="noopener noreferrer" style="color: #00ff88; text-decoration: underline;">' + cleanUrl + '</a>';
+            const urlRegex = /(https?:\/\/[^\s]+)/g;
+            return text.replace(urlRegex, (url) => {
+                const cleanUrl = url.replace(/[<>"'`]/g, '').replace(/amp;/g, '');
+                return '<a href="' + cleanUrl + '" target="_blank" rel="noopener noreferrer" style="color: var(--nano-primary-color); text-decoration: underline;">' + cleanUrl + '</a>';
             });
         }
 
-        showAlertToast(message) {
-            const toast = document.createElement('div');
-            toast.className = 'pp-alert-toast';
-            toast.textContent = `Alert: ${message.substring(0, 100)}...`;
-            document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 5000);
-        }
-
         showToast(message, type = 'info') {
+            if (!this.state.settings.showToasts && type !== 'error') return;
+            
+            const now = Date.now();
+            if (now - this.lastToastTime < this.toastCooldown) return;
+            this.lastToastTime = now;
+            
+            document.querySelectorAll('.pp-toast').forEach(toast => toast.remove());
+            
             const toast = document.createElement('div');
             toast.className = `pp-toast ${type}`;
             toast.textContent = message;
             document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
+            
+            setTimeout(() => {
+                if (toast.parentNode) toast.remove();
+            }, 3000);
         }
 
         triggerFABPulse() {
             if (this.fabPulsing) return;
             this.fabPulsing = true;
             this.toggleBtn.classList.add('pulsing');
-            
-            // Start continuous pulsing until chat is opened
-            this.startContinuousPulse();
+            setTimeout(() => {
+                this.toggleBtn.classList.remove('pulsing');
+                this.fabPulsing = false;
+            }, 10000);
         }
 
         updateFABPulse() {
@@ -1432,30 +1482,76 @@
                 if (!this.fabPulsing) {
                     this.fabPulsing = true;
                     this.toggleBtn.classList.add('pulsing');
-                    this.startContinuousPulse();
                 }
             } else {
-                this.stopContinuousPulse();
                 this.fabPulsing = false;
                 this.toggleBtn.classList.remove('pulsing');
             }
         }
 
-        startContinuousPulse() {
-            if (this.fabPulseInterval) return;
+        findNearbyFABs(x, y) {
+            const allElements = document.querySelectorAll('*');
+            const nearbyFABs = [];
             
-            this.fabPulseInterval = setInterval(() => {
-                if (this.toggleBtn) {
-                    this.toggleBtn.classList.add('pulsing');
+            for (const element of allElements) {
+                if (element === this.toggleBtn) continue;
+                
+                const style = window.getComputedStyle(element);
+                if (style.position !== 'fixed') continue;
+                
+                const rect = element.getBoundingClientRect();
+                if (rect.width < 40 || rect.width > 100) continue;
+                if (rect.height < 40 || rect.height > 100) continue;
+                
+                const elementCenterX = rect.left + rect.width / 2;
+                const elementCenterY = rect.top + rect.height / 2;
+                const distance = Math.sqrt(
+                    Math.pow(x - elementCenterX, 2) + 
+                    Math.pow(y - elementCenterY, 2)
+                );
+                
+                if (distance < this.snapThreshold) {
+                    nearbyFABs.push({
+                        element: element,
+                        rect: rect,
+                        distance: distance
+                    });
                 }
-            }, 2000);
+            }
+            
+            nearbyFABs.sort((a, b) => a.distance - b.distance);
+            return nearbyFABs;
         }
 
-        stopContinuousPulse() {
-            if (this.fabPulseInterval) {
-                clearInterval(this.fabPulseInterval);
-                this.fabPulseInterval = null;
+        snapToNearbyFAB(x, y) {
+            const nearbyFABs = this.findNearbyFABs(x, y);
+            if (nearbyFABs.length === 0) return { x, y };
+            
+            const closest = nearbyFABs[0];
+            const fabRect = this.toggleBtn.getBoundingClientRect();
+            const targetRect = closest.rect;
+            
+            const leftDistance = Math.abs(x - targetRect.left);
+            const rightDistance = Math.abs(x - targetRect.right);
+            const topDistance = Math.abs(y - targetRect.top);
+            const bottomDistance = Math.abs(y - targetRect.bottom);
+            
+            let snappedX = x;
+            let snappedY = y;
+            
+            if (leftDistance < rightDistance) {
+                snappedX = targetRect.left - fabRect.width - 5;
+            } else {
+                snappedX = targetRect.right + 5;
             }
+            
+            if (topDistance < bottomDistance) {
+                snappedY = targetRect.top;
+            } else {
+                snappedY = targetRect.bottom - fabRect.height;
+            }
+            
+            return { x: snappedX, y: snappedY };
         }
 
         openSettings() {
@@ -1467,21 +1563,14 @@
             const factionName = this.state.faction?.name || 'No faction';
             const factionAccess = this.state.isInAllowedFaction ? '✓ Full Access' : '✗ Limited Access';
             
-            // Calculate latency
             const now = Date.now();
             const lastMsgTime = this.state.messageStats.lastMessageTime;
             const latency = lastMsgTime > 0 ? Math.max(0, Math.floor((now - lastMsgTime) / 1000)) : 0;
             
-            // Chain info
-            const chainCurrent = this.state.chainCurrentSnapshot || this.state.chainData?.current || 0;
-            const chainMax = this.state.chainData?.max || 0;
-            const chainTimeout = this.state.chainEndTime > 0 ? Math.max(0, this.state.chainEndTime - Math.floor(Date.now() / 1000)) : 0;
-            const chainCooldown = this.state.chainData?.cooldown || 0;
-            
             modal.innerHTML = `
                 <div class="pp-settings-content">
                     <div class="pp-settings-header">
-                        <h3>Phantom Portal Settings v2.3.1</h3>
+                        <h3>Phantom Portal Settings v2.5.7</h3>
                         <button class="pp-settings-close">&times;</button>
                     </div>
                     <div class="pp-settings-body">
@@ -1505,32 +1594,6 @@
                             </div>
                         </div>
                         
-                        ${this.state.isInAllowedFaction ? `
-                        <div class="pp-settings-section">
-                            <h4>Faction Chain Information</h4>
-                            <div class="pp-info-item">
-                                <span class="pp-info-label">Current Chain:</span>
-                                <span class="pp-info-value ${chainCurrent > 0 ? 'access-granted' : ''}" id="pp-chain-current">${chainCurrent.toLocaleString()}</span>
-                            </div>
-                            <div class="pp-info-item">
-                                <span class="pp-info-label">Max Chain:</span>
-                                <span class="pp-info-value" id="pp-chain-max">${chainMax.toLocaleString()}</span>
-                            </div>
-                            <div class="pp-info-item">
-                                <span class="pp-info-label">Timeout:</span>
-                                <span class="pp-info-value" id="pp-chain-timeout">${chainTimeout}s</span>
-                            </div>
-                            <div class="pp-info-item">
-                                <span class="pp-info-label">Cooldown:</span>
-                                <span class="pp-info-value" id="pp-chain-cooldown">${chainCooldown}s</span>
-                            </div>
-                            <div class="pp-info-item">
-                                <span class="pp-info-label">API Latency:</span>
-                                <span class="pp-info-value" id="pp-chain-latency">${this.state.chainFetchLatency}ms</span>
-                            </div>
-                        </div>
-                        ` : ''}
-                        
                         <div class="pp-settings-section">
                             <h4>Message Statistics</h4>
                             <div class="pp-info-item">
@@ -1552,7 +1615,7 @@
                             <div class="pp-setting-item">
                                 <label>
                                     <input type="checkbox" class="pp-setting-checkbox" data-setting="showNotifications" ${this.state.settings.showNotifications ? 'checked' : ''}>
-                                    Show Notifications
+                                    Show Browser Notifications
                                 </label>
                             </div>
                             <div class="pp-setting-item">
@@ -1573,14 +1636,32 @@
                                     Confirm Quick Actions
                                 </label>
                             </div>
+                            <div class="pp-setting-item">
+                                <label>
+                                    <input type="checkbox" class="pp-setting-checkbox" data-setting="showToasts" ${this.state.settings.showToasts ? 'checked' : ''}>
+                                    Show Toasts
+                                </label>
+                            </div>
+                            <div class="pp-setting-item">
+                                <label>
+                                    Message Input Offset (px):
+                                    <input type="number" class="pp-setting-input" data-setting="messageInputOffset" value="${this.state.settings.messageInputOffset || 10}" min="0" max="100" step="1">
+                                </label>
+                            </div>
                         </div>
                         
                         <div class="pp-settings-buttons">
-                            <button class="pp-settings-btn" id="pp-refresh-profile">
-                                🔄 Refresh Profile & Chain
+                            <button class="pp-settings-btn" id="pp-refresh-profile" ${this.state.refreshCooldown > Date.now() ? 'disabled' : ''}>
+                                ${this.state.refreshCooldown > Date.now() ? '⏳ Cooldown...' : '🔄 Refresh Profile'}
+                            </button>
+                            <button class="pp-settings-btn" id="pp-theme-settings">
+                                🎨 Glass Theme Settings
                             </button>
                             <button class="pp-settings-btn" id="pp-clear-messages">
                                 🗑️ Clear Messages
+                            </button>
+                            <button class="pp-settings-btn" id="pp-reload-messages">
+                                📥 Reload Recent Messages
                             </button>
                         </div>
                     </div>
@@ -1600,62 +1681,69 @@
                 checkbox.addEventListener('change', (e) => {
                     const setting = e.target.dataset.setting;
                     this.state.settings[setting] = e.target.checked;
-                    GM_setValue('pp_settings', this.state.settings);
+                    SafeGM.setValue('pp_settings', this.state.settings);
                     this.showToast('Settings saved', 'success');
                 });
             });
 
+            const offsetInput = modal.querySelector('.pp-setting-input[data-setting="messageInputOffset"]');
+            if (offsetInput) {
+                offsetInput.addEventListener('change', (e) => {
+                    const value = parseInt(e.target.value) || 10;
+                    this.state.settings.messageInputOffset = Math.max(0, Math.min(100, value));
+                    SafeGM.setValue('pp_settings', this.state.settings);
+                    this.adjustForKeyboard();
+                    this.showToast('Offset saved', 'success');
+                });
+            }
+
             const refreshBtn = modal.querySelector('#pp-refresh-profile');
             refreshBtn.addEventListener('click', async () => {
+                if (this.state.refreshCooldown > Date.now()) {
+                    const remaining = Math.ceil((this.state.refreshCooldown - Date.now()) / 1000);
+                    this.showToast(`Please wait ${remaining}s before refreshing again`, 'warning');
+                    return;
+                }
+                
                 refreshBtn.textContent = 'Checking...';
                 refreshBtn.disabled = true;
                 
                 try {
-                    const result = await this.refreshProfileWithRealtimeCheck();
+                    this.state.lastProfileFetch = 0;
+                    await this.fetchProfile();
+                    await this.fetchFaction();
                     
-                    if (result.success) {
-                        const profileNameEl = modal.querySelector('#pp-current-profile-name');
-                        const profileIdEl = modal.querySelector('#pp-current-profile-id');
-                        const factionNameEl = modal.querySelector('#pp-current-faction-name');
-                        const accessEl = modal.querySelector('#pp-current-access');
-                        const chainCurrentEl = modal.querySelector('#pp-chain-current');
-                        const chainMaxEl = modal.querySelector('#pp-chain-max');
-                        const chainTimeoutEl = modal.querySelector('#pp-chain-timeout');
-                        const chainCooldownEl = modal.querySelector('#pp-chain-cooldown');
-                        const chainLatencyEl = modal.querySelector('#pp-chain-latency');
-                        
-                        if (profileNameEl) profileNameEl.textContent = result.profile?.name || 'Not loaded';
-                        if (profileIdEl) profileIdEl.textContent = result.profile?.id || 'N/A';
-                        if (factionNameEl) factionNameEl.textContent = result.faction?.name || 'No faction';
-                        
-                        const newAccess = result.isInAllowedFaction ? '✓ Full Access' : '✗ Limited Access';
-                        if (accessEl) {
-                            accessEl.textContent = newAccess;
-                            accessEl.className = `pp-info-value ${result.isInAllowedFaction ? 'access-granted' : 'access-denied'}`;
-                        }
-                        
-                        if (chainCurrentEl && result.chainData) {
-                            chainCurrentEl.textContent = result.chainData.current.toLocaleString();
-                            chainCurrentEl.className = `pp-info-value ${result.chainData.current > 0 ? 'access-granted' : ''}`;
-                        }
-                        if (chainMaxEl && result.chainData) chainMaxEl.textContent = result.chainData.max.toLocaleString();
-                        if (chainTimeoutEl && result.chainData) {
-                            const timeout = this.state.chainEndTime > 0 ? Math.max(0, this.state.chainEndTime - Math.floor(Date.now() / 1000)) : 0;
-                            chainTimeoutEl.textContent = timeout + 's';
-                        }
-                        if (chainCooldownEl && result.chainData) chainCooldownEl.textContent = result.chainData.cooldown + 's';
-                        if (chainLatencyEl) chainLatencyEl.textContent = this.state.chainFetchLatency + 'ms';
-                        
-                        this.showToast('Profile, faction and chain refreshed successfully!', 'success');
-                    } else {
-                        this.showToast(`Refresh failed: ${result.error}`, 'error');
+                    this.state.refreshCooldown = Date.now() + 60000;
+                    
+                    const profileNameEl = modal.querySelector('#pp-current-profile-name');
+                    const profileIdEl = modal.querySelector('#pp-current-profile-id');
+                    const factionNameEl = modal.querySelector('#pp-current-faction-name');
+                    const accessEl = modal.querySelector('#pp-current-access');
+                    
+                    if (profileNameEl) profileNameEl.textContent = this.state.profile?.name || 'Not loaded';
+                    if (profileIdEl) profileIdEl.textContent = this.state.profile?.id || 'N/A';
+                    if (factionNameEl) factionNameEl.textContent = this.state.faction?.name || 'No faction';
+                    
+                    const newAccess = this.state.isInAllowedFaction ? '✓ Full Access' : '✗ Limited Access';
+                    if (accessEl) {
+                        accessEl.textContent = newAccess;
+                        accessEl.className = `pp-info-value ${this.state.isInAllowedFaction ? 'access-granted' : 'access-denied'}`;
                     }
+                    
+                    this.showToast('Profile and faction refreshed!', 'success');
                 } catch (error) {
+                    console.error('[Phantom Portal] Settings refresh error');
                     this.showToast('Refresh failed', 'error');
                 } finally {
-                    refreshBtn.textContent = '🔄 Refresh Profile & Chain';
+                    refreshBtn.textContent = '🔄 Refresh Profile';
                     refreshBtn.disabled = false;
                 }
+            });
+
+            const themeBtn = modal.querySelector('#pp-theme-settings');
+            themeBtn.addEventListener('click', () => {
+                modal.remove();
+                this.openGlassThemeSettings();
             });
 
             const clearBtn = modal.querySelector('#pp-clear-messages');
@@ -1664,21 +1752,203 @@
                     this.state.roomMessages = {};
                     Object.keys(this.rooms).forEach(roomId => this.state.roomMessages[roomId] = []);
                     this.state.messageCache.clear();
-                    GM_setValue('pp_room_messages', this.state.roomMessages);
+                    SafeGM.setValue('pp_room_messages', this.state.roomMessages);
                     
-                    const messagesEl = document.querySelector('.pp-messages');
-                    if (messagesEl) messagesEl.innerHTML = '';
+                    if (this.domCache.messagesContainer) {
+                        this.domCache.messagesContainer.innerHTML = '';
+                    }
                     
                     this.showToast('Messages cleared', 'success');
                     modal.remove();
                 }
             });
+
+            const reloadBtn = modal.querySelector('#pp-reload-messages');
+            reloadBtn.addEventListener('click', async () => {
+                reloadBtn.textContent = 'Loading...';
+                reloadBtn.disabled = true;
+                
+                try {
+                    // Force reload of recent messages
+                    this.state.lastOfflineTime = Date.now() - 60 * 60000; // Last hour
+                    this.initialHistoryLoaded = false;
+                    SafeGM.setValue('pp_last_offline_time', this.state.lastOfflineTime);
+                    
+                    await this.fetchMessages(false, true);
+                    this.showToast('Recent messages reloaded', 'success');
+                } catch (error) {
+                    console.error('[Phantom Portal] Message reload error');
+                    this.showToast('Reload failed', 'error');
+                } finally {
+                    reloadBtn.textContent = '📥 Reload Recent Messages';
+                    reloadBtn.disabled = false;
+                }
+            });
+        }
+
+        openGlassThemeSettings() {
+            const modal = document.createElement('div');
+            modal.className = 'pp-settings-modal';
+            
+            const theme = this.themeManager.getTheme();
+            
+            modal.innerHTML = `
+                <div class="pp-settings-content">
+                    <div class="pp-settings-header">
+                        <h3>Glass Theme Settings</h3>
+                        <button class="pp-settings-close">&times;</button>
+                    </div>
+                    <div class="pp-settings-body">
+                        <div class="pp-settings-section">
+                            <h4>Theme Configuration</h4>
+                            <div class="pp-setting-item">
+                                <label>
+                                    Primary Color:
+                                    <input type="color" id="nano-primary-color" value="${theme.primaryColor}">
+                                </label>
+                            </div>
+                            <div class="pp-setting-item">
+                                <label>
+                                    Border Color:
+                                    <input type="color" id="nano-border-color" value="${theme.borderColor || theme.primaryColor}">
+                                </label>
+                            </div>
+                            <div class="pp-setting-item">
+                                <label>
+                                    Transparency (Window & FAB):
+                                    <input type="range" class="pp-setting-slider" id="nano-transparency-slider" 
+                                           min="0" max="100" step="5" value="${Math.round((theme.transparency || 0.3) * 100)}">
+                                    <span id="nano-transparency-value">${Math.round((theme.transparency || 0.3) * 100)}%</span>
+                                </label>
+                            </div>
+                            <div class="pp-setting-item">
+                                <label>
+                                    Content Opacity (Text & Icons):
+                                    <input type="range" class="pp-setting-slider" id="nano-content-opacity-slider" 
+                                           min="50" max="100" step="5" value="${Math.round((theme.contentOpacity || 0.95) * 100)}">
+                                    <span id="nano-content-opacity-value">${Math.round((theme.contentOpacity || 0.95) * 100)}%</span>
+                                </label>
+                            </div>
+                            <div class="pp-setting-item">
+                                <label>
+                                    Frost Effect (Blur):
+                                    <input type="range" class="pp-setting-slider" id="nano-frost-slider" 
+                                           min="0" max="30" step="1" value="${theme.frostBlur || 15}">
+                                    <span id="nano-frost-value">${theme.frostBlur || 15}px</span>
+                                </label>
+                            </div>
+                            <div class="pp-setting-item">
+                                <label>
+                                    <input type="checkbox" id="nano-button-glow" ${theme.buttonGlow ? 'checked' : ''}>
+                                    Enable Button Glow Effects
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="pp-settings-buttons">
+                            <button class="pp-settings-btn" id="nano-apply-theme">
+                                ✅ Apply Theme
+                            </button>
+                            <button class="pp-settings-btn" id="nano-reset-theme">
+                                🔄 Reset to Defaults
+                            </button>
+                            <button class="pp-settings-btn" id="nano-close-theme">
+                                ✕ Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+
+            const closeBtn = modal.querySelector('.pp-settings-close');
+            closeBtn.addEventListener('click', () => modal.remove());
+            modal.addEventListener('click', (e) => { 
+                if (e.target === modal) modal.remove(); 
+            });
+
+            const colorPicker = modal.querySelector('#nano-primary-color');
+            if (colorPicker) {
+                colorPicker.addEventListener('input', (e) => {
+                    this.themeManager.updateTheme({ primaryColor: e.target.value });
+                });
+            }
+
+            const borderColorPicker = modal.querySelector('#nano-border-color');
+            if (borderColorPicker) {
+                borderColorPicker.addEventListener('input', (e) => {
+                    this.themeManager.updateTheme({ borderColor: e.target.value });
+                });
+            }
+
+            const transparencySlider = modal.querySelector('#nano-transparency-slider');
+            const transparencyValue = modal.querySelector('#nano-transparency-value');
+            if (transparencySlider && transparencyValue) {
+                transparencySlider.addEventListener('input', (e) => {
+                    const value = parseInt(e.target.value);
+                    transparencyValue.textContent = `${value}%`;
+                    this.themeManager.updateTheme({ transparency: value / 100 });
+                });
+            }
+
+            const contentOpacitySlider = modal.querySelector('#nano-content-opacity-slider');
+            const contentOpacityValue = modal.querySelector('#nano-content-opacity-value');
+            if (contentOpacitySlider && contentOpacityValue) {
+                contentOpacitySlider.addEventListener('input', (e) => {
+                    const value = parseInt(e.target.value);
+                    contentOpacityValue.textContent = `${value}%`;
+                    this.themeManager.updateTheme({ contentOpacity: value / 100 });
+                });
+            }
+
+            const frostSlider = modal.querySelector('#nano-frost-slider');
+            const frostValue = modal.querySelector('#nano-frost-value');
+            if (frostSlider && frostValue) {
+                frostSlider.addEventListener('input', (e) => {
+                    const value = parseInt(e.target.value);
+                    frostValue.textContent = `${value}px`;
+                    this.themeManager.updateTheme({ frostBlur: value });
+                });
+            }
+
+            const glowToggle = modal.querySelector('#nano-button-glow');
+            if (glowToggle) {
+                glowToggle.addEventListener('change', (e) => {
+                    this.themeManager.updateTheme({ buttonGlow: e.target.checked });
+                });
+            }
+
+            const applyBtn = modal.querySelector('#nano-apply-theme');
+            if (applyBtn) {
+                applyBtn.addEventListener('click', () => {
+                    this.themeManager.saveTheme();
+                    this.showToast('Theme applied successfully', 'success');
+                    modal.remove();
+                });
+            }
+
+            const resetBtn = modal.querySelector('#nano-reset-theme');
+            if (resetBtn) {
+                resetBtn.addEventListener('click', () => {
+                    this.themeManager.resetToDefaults();
+                    this.showToast('Theme reset to defaults', 'success');
+                    modal.remove();
+                });
+            }
+
+            const closeThemeBtn = modal.querySelector('#nano-close-theme');
+            if (closeThemeBtn) {
+                closeThemeBtn.addEventListener('click', () => {
+                    modal.remove();
+                });
+            }
         }
 
         async supabaseRequest(method, endpoint, data = null) {
             return new Promise((resolve, reject) => {
                 const url = `${this.supabaseUrl}${endpoint}`;
-                GM_xmlhttpRequest({
+                SafeGM.xmlhttpRequest({
                     method: method,
                     url: url,
                     headers: {
@@ -1688,16 +1958,16 @@
                         'Prefer': 'return=representation'
                     },
                     data: data ? JSON.stringify(data) : null,
-                    timeout: 8000,
+                    timeout: 5000,
                     onload: (response) => {
                         const now = Date.now();
                         this.state.messageStats.lastLatency = now - this.state.messageStats.lastMessageTime;
-                        GM_setValue('pp_message_stats', this.state.messageStats);
+                        SafeGM.setValue('pp_message_stats', this.state.messageStats);
                         
                         if (response.status >= 200 && response.status < 300) {
                             try {
                                 resolve(response.responseText ? JSON.parse(response.responseText) : {});
-                            } catch {
+                            } catch (error) {
                                 resolve({});
                             }
                         } else {
@@ -1711,15 +1981,15 @@
         }
 
         startSyncLoop() {
-            const sync = () => {
-                if (this.isOpen) this.fetchMessages();
-                setTimeout(sync, 3000);
-            };
-            setTimeout(sync, 1000);
+            if (this.intervals.sync) clearInterval(this.intervals.sync);
+            this.intervals.sync = setInterval(() => {
+                if (this.isOpen) this.fetchMessages(true);
+            }, this.state.pollingInterval);
         }
 
         startCooldownTicker() {
-            setInterval(() => {
+            if (this.intervals.cooldown) clearInterval(this.intervals.cooldown);
+            this.intervals.cooldown = setInterval(() => {
                 const now = Date.now();
                 let changed = false;
                 Object.keys(this.state.buttonCooldowns).forEach(id => {
@@ -1728,12 +1998,17 @@
                         changed = true;
                     }
                 });
-                if (changed) GM_setValue('pp_button_cooldowns', this.state.buttonCooldowns);
+                if (changed) SafeGM.setValue('pp_button_cooldowns', this.state.buttonCooldowns);
+                
+                if (this.state.refreshCooldown > 0 && this.state.refreshCooldown <= now) {
+                    this.state.refreshCooldown = 0;
+                }
             }, 1000);
         }
 
         startStatsUpdater() {
-            setInterval(() => {
+            if (this.intervals.stats) clearInterval(this.intervals.stats);
+            this.intervals.stats = setInterval(() => {
                 const now = Date.now();
                 const lastMsgTime = this.state.messageStats.lastMessageTime;
                 const latency = lastMsgTime > 0 ? Math.max(0, Math.floor((now - lastMsgTime) / 1000)) : 0;
@@ -1746,46 +2021,50 @@
             }, 1000);
         }
 
-        startChainUpdater() {
-            const updateChain = () => {
-                if (this.state.isInAllowedFaction) {
-                    this.fetchChainData();
-                }
-                setTimeout(updateChain, 30000); // Update every 30 seconds when active
-            };
-            setTimeout(updateChain, 3000); // Initial delay
+        updateDOMCache() {
+            if (!this.domCache.messagesContainer) {
+                this.domCache.messagesContainer = document.querySelector('.pp-messages');
+            }
+            if (!this.domCache.input) {
+                this.domCache.input = document.querySelector('.pp-input');
+            }
+            if (!this.domCache.sendButton) {
+                this.domCache.sendButton = document.querySelector('.pp-send');
+            }
+            if (!this.domCache.profileDisplay) {
+                this.domCache.profileDisplay = document.querySelector('.pp-profile-display');
+            }
+            if (!this.domCache.roomSelector) {
+                this.domCache.roomSelector = document.querySelector('.pp-room-selector');
+            }
+            if (!this.domCache.quickActions) {
+                this.domCache.quickActions = document.querySelector('.pp-quick-actions');
+            }
         }
 
         createUI() {
             this.toggleBtn = document.createElement('div');
             this.toggleBtn.className = 'pp-toggle';
-            this.toggleBtn.innerHTML = '<img src="https://images2.imgbox.com/86/79/2ag63Ut3_o.png" class="pp-toggle-icon" alt="PP">';
-            this.toggleBtn.title = 'Phantom Portal v2.3.1 - Long press to move, tap to open';
+            this.toggleBtn.innerHTML = '<img src="https://images2.imgbox.com/cc/75/V2yuzaa8_o.png" class="pp-toggle-icon" alt="PP">';
+            this.toggleBtn.title = 'Phantom Portal v2.5.7 - Long press to move, tap to open';
             
-            // Apply saved position
             this.toggleBtn.style.position = 'fixed';
             this.toggleBtn.style.left = `${this.state.fabPosition.x}px`;
             this.toggleBtn.style.top = `${this.state.fabPosition.y}px`;
             this.toggleBtn.style.zIndex = '9999';
+            this.toggleBtn.style.display = 'flex';
 
             this.container = document.createElement('div');
             this.container.className = 'pp-container';
             this.container.innerHTML = `
                 <div class="pp-header">
                     <div class="pp-title">
-                        <img src="https://images2.imgbox.com/86/79/2ag63Ut3_o.png" class="pp-header-icon" alt="">
-                        Phantom Portal v2.3.1
-                        <button class="pp-close-btn" title="Close window">✕</button>
+                        <img src="https://images2.imgbox.com/cc/75/V2yuzaa8_o.png" class="pp-header-icon" alt="">
+                        Phantom Portal v2.5.7
                     </div>
                     <div class="pp-header-right">
-                        <div class="pp-chain-display">
-                            <div class="pp-chain-label">CHAIN</div>
-                            <div class="pp-chain-values">
-                                <div class="pp-chain-current">0</div>
-                                <div class="pp-chain-timeout">00:00</div>
-                            </div>
-                        </div>
                         <div class="pp-profile-display">Loading...</div>
+                        <button class="pp-close-btn" title="Close window">✕</button>
                     </div>
                 </div>
                 <div class="pp-quick-actions"></div>
@@ -1801,14 +2080,20 @@
             document.body.appendChild(this.container);
 
             const quickActionsEl = this.container.querySelector('.pp-quick-actions');
-            quickActionsEl.appendChild(this.createQuickActions());
+            if (quickActionsEl) {
+                quickActionsEl.appendChild(this.createQuickActions());
+            }
 
             this.createRoomSelector();
             this.setupEvents();
+            this.updateDOMCache();
+            this.updateProfileDisplay();
         }
 
         createRoomSelector() {
-            const selectorEl = this.container.querySelector('.pp-room-selector');
+            this.updateDOMCache();
+            if (!this.domCache.roomSelector) return;
+            
             Object.entries(this.rooms).forEach(([id, room]) => {
                 if (room.type === 'general' || this.state.isInAllowedFaction) {
                     const btn = document.createElement('button');
@@ -1817,7 +2102,7 @@
                     btn.textContent = room.name;
                     btn.dataset.roomId = id;
                     btn.addEventListener('click', () => this.switchRoom(id));
-                    selectorEl.appendChild(btn);
+                    this.domCache.roomSelector.appendChild(btn);
                 }
             });
         }
@@ -1825,8 +2110,7 @@
         setupEvents() {
             // Mobile touch events for FAB
             this.toggleBtn.addEventListener('touchstart', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
+                if (e.touches.length > 1) return;
                 
                 const touch = e.touches[0];
                 this.fabStartX = this.toggleBtn.offsetLeft;
@@ -1834,27 +2118,21 @@
                 this.dragStartX = touch.clientX;
                 this.dragStartY = touch.clientY;
                 
-                // Start long press detection
                 this.isLongPressing = false;
                 this.longPressTimer = setTimeout(() => {
                     this.isLongPressing = true;
                     this.isDragging = false;
                     this.toggleBtn.classList.add('dragging');
                 }, 500);
-                
-                // Prevent context menu
-                e.target.addEventListener('contextmenu', (ev) => ev.preventDefault());
             });
 
             this.toggleBtn.addEventListener('touchmove', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
+                if (e.touches.length > 1) return;
                 
                 const touch = e.touches[0];
                 const deltaX = touch.clientX - this.dragStartX;
                 const deltaY = touch.clientY - this.dragStartY;
                 
-                // Check if we've moved enough to start dragging (deadzone of 5px)
                 if (!this.isDragging && !this.isLongPressing) {
                     const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
                     if (distance > 5) {
@@ -1862,19 +2140,23 @@
                     }
                 }
                 
-                // If long press detected, start dragging
                 if (this.isLongPressing) {
                     const newX = this.fabStartX + deltaX;
                     const newY = this.fabStartY + deltaY;
                     
-                    // Constrain to viewport
                     const viewportWidth = window.innerWidth;
                     const viewportHeight = window.innerHeight;
-                    const fabWidth = this.toggleBtn.offsetWidth;
-                    const fabHeight = this.toggleBtn.offsetHeight;
+                    const fabRect = this.toggleBtn.getBoundingClientRect();
                     
-                    const constrainedX = Math.max(0, Math.min(newX, viewportWidth - fabWidth));
-                    const constrainedY = Math.max(0, Math.min(newY, viewportHeight - fabHeight));
+                    let constrainedX = Math.max(0, Math.min(newX, viewportWidth - fabRect.width));
+                    let constrainedY = Math.max(0, Math.min(newY, viewportHeight - fabRect.height));
+                    
+                    const snapped = this.snapToNearbyFAB(constrainedX, constrainedY);
+                    constrainedX = snapped.x;
+                    constrainedY = snapped.y;
+                    
+                    constrainedX = Math.max(0, Math.min(constrainedX, viewportWidth - fabRect.width));
+                    constrainedY = Math.max(0, Math.min(constrainedY, viewportHeight - fabRect.height));
                     
                     this.toggleBtn.style.left = `${constrainedX}px`;
                     this.toggleBtn.style.top = `${constrainedY}px`;
@@ -1885,73 +2167,65 @@
             });
 
             this.toggleBtn.addEventListener('touchend', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
+                if (e.touches.length > 0) return;
                 
                 clearTimeout(this.longPressTimer);
                 
-                // Save position if we were dragging
                 if (this.isDragging) {
-                    GM_setValue('pp_fab_position', this.state.fabPosition);
+                    SafeGM.setValue('pp_fab_position', this.state.fabPosition);
                 } else {
-                    // If not dragging and not long pressing, it's a tap - toggle chat
                     if (!this.isLongPressing) {
                         this.toggleChat();
                     }
                 }
                 
-                // Reset states
                 this.isDragging = false;
                 this.isLongPressing = false;
                 this.toggleBtn.classList.remove('dragging');
-                
-                // Remove context menu prevention
-                e.target.removeEventListener('contextmenu', (ev) => ev.preventDefault());
             });
 
-            // Close button in header
-            const closeBtn = this.container.querySelector('.pp-close-btn');
-            closeBtn.addEventListener('click', () => {
-                this.isOpen = false;
-                this.container.style.display = 'none';
-            });
-
-            const sendBtn = this.container.querySelector('.pp-send');
-            const input = this.container.querySelector('.pp-input');
-            sendBtn.addEventListener('click', () => this.sendMessage());
-            input.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    this.sendMessage();
+            // Desktop click event
+            this.toggleBtn.addEventListener('click', (e) => {
+                if (!this.isDragging && !this.isLongPressing) {
+                    this.toggleChat();
                 }
             });
 
-            // Close chat when tapping outside (mobile-friendly)
-            const closeChatHandler = (e) => {
-                if (this.isOpen && !this.container.contains(e.target) && !this.toggleBtn.contains(e.target)) {
+            // Close button
+            const closeBtn = this.container.querySelector('.pp-close-btn');
+            if (closeBtn) {
+                closeBtn.addEventListener('click', () => {
                     this.isOpen = false;
                     this.container.style.display = 'none';
-                }
-            };
-            
-            document.addEventListener('click', closeChatHandler);
-            document.addEventListener('touchstart', closeChatHandler);
+                });
+            }
+
+            // Message input events
+            this.updateDOMCache();
+            if (this.domCache.sendButton && this.domCache.input) {
+                this.domCache.sendButton.addEventListener('click', () => this.sendMessage());
+                this.domCache.input.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        this.sendMessage();
+                    }
+                });
+                
+                this.domCache.input.addEventListener('focus', () => this.adjustForKeyboard());
+                this.domCache.input.addEventListener('blur', () => this.adjustForKeyboard());
+            }
         }
 
         toggleChat() {
             this.isOpen = !this.isOpen;
             this.container.style.display = this.isOpen ? 'flex' : 'none';
             if (this.isOpen) {
-                document.querySelector('.pp-input')?.focus();
                 this.loadRoomHistory();
                 this.fetchMessages();
-                this.stopContinuousPulse();
                 this.toggleBtn.classList.remove('pulsing');
                 this.fabPulsing = false;
                 this.unreadMessages = 0;
-                
-                // BUG FIX: Auto-scroll to latest message when opening chat
-                setTimeout(() => this.scrollToLatestMessage(), 100);
+                this.adjustForKeyboard();
             }
         }
 
@@ -1959,6 +2233,21 @@
             if (document.querySelector('style[data-phantom-portal]')) return;
             
             const css = `
+                :root {
+                    --nano-primary-color: #00ff41;
+                    --nano-border-color: #00ff41;
+                    --nano-frost-blur: 15px;
+                    --nano-transparency: 0.3;
+                    --nano-content-opacity: 0.95;
+                    --nano-primary-r: 0;
+                    --nano-primary-g: 255;
+                    --nano-primary-b: 65;
+                    --nano-border-r: 0;
+                    --nano-border-g: 255;
+                    --nano-border-b: 65;
+                    --primary-color: var(--nano-primary-color);
+                }
+
                 .pp-container {
                     position: fixed;
                     top: 50%;
@@ -1970,27 +2259,34 @@
                     height: 70vh;
                     min-height: 500px;
                     max-height: 800px;
-                    background: rgba(10, 15, 10, 0.98);
-                    border: 2px solid #00ff41;
+                    background: rgba(0, 0, 0, var(--nano-transparency));
+                    border: 2px solid var(--nano-border-color);
                     border-radius: 12px;
-                    box-shadow: 0 8px 32px rgba(0, 255, 65, 0.3);
+                    box-shadow: 
+                        0 8px 32px rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.4),
+                        0 0 20px rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.2) inset,
+                        0 0 30px rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.3);
                     z-index: 10000;
                     display: none;
                     flex-direction: column;
-                    backdrop-filter: blur(10px);
+                    backdrop-filter: blur(var(--nano-frost-blur)) !important;
+                    -webkit-backdrop-filter: blur(var(--nano-frost-blur)) !important;
                     font-family: 'Segoe UI', sans-serif;
                     overflow: hidden;
-                    color: #c8ffd0;
+                    color: rgba(255, 255, 255, var(--nano-content-opacity));
+                    transition: bottom 0.3s ease, transform 0.3s ease, opacity 0.3s ease;
                 }
 
                 .pp-header {
-                    background: linear-gradient(135deg, #001500 0%, #003000 100%);
-                    color: #00ff41;
+                    background: rgba(var(--nano-primary-r), var(--nano-primary-g), var(--nano-primary-b), 0.15);
+                    color: var(--nano-primary-color);
                     padding: 12px 15px;
-                    border-bottom: 1px solid #004400;
+                    border-bottom: 1px solid rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.4);
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
+                    backdrop-filter: blur(10px);
+                    -webkit-backdrop-filter: blur(10px);
                 }
 
                 .pp-title {
@@ -2000,29 +2296,8 @@
                     font-weight: bold;
                     font-size: 14px;
                     flex: 1;
-                }
-
-                .pp-close-btn {
-                    background: none;
-                    border: none;
-                    color: #80ff80;
-                    font-size: 16px;
-                    cursor: pointer;
-                    padding: 2px 8px;
-                    border-radius: 4px;
-                    margin-left: 10px;
-                    transition: all 0.2s;
-                }
-
-                .pp-close-btn:hover {
-                    background: rgba(255, 0, 0, 0.2);
-                    color: #ff6666;
-                }
-
-                .pp-header-icon {
-                    width: 20px;
-                    height: 20px;
-                    border-radius: 3px;
+                    text-shadow: 0 0 10px rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.5);
+                    color: rgba(255, 255, 255, var(--nano-content-opacity));
                 }
 
                 .pp-header-right {
@@ -2031,157 +2306,34 @@
                     gap: 10px;
                 }
 
-                .pp-chain-display {
+                .pp-close-btn {
+                    background: rgba(255, 0, 0, 0.2);
+                    border: 1px solid rgba(255, 0, 0, 0.5);
+                    color: rgba(255, 102, 102, var(--nano-content-opacity));
+                    font-size: 16px;
+                    cursor: pointer;
+                    padding: 2px 8px;
+                    border-radius: 4px;
+                    transition: all 0.2s;
+                    backdrop-filter: blur(5px);
+                    min-width: 32px;
+                    height: 32px;
                     display: flex;
-                    flex-direction: column;
                     align-items: center;
-                    padding: 6px 10px;
-                    background: rgba(0, 5, 0, 0.9);
-                    border: 2px solid #002200;
-                    border-radius: 10px;
-                    min-width: 90px;
-                    font-family: 'Courier New', monospace;
-                    transition: all 0.3s ease;
-                    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.8);
+                    justify-content: center;
                 }
 
-                .pp-chain-display.active {
-                    background: rgba(0, 10, 0, 0.95);
-                    border-color: #00aa00;
-                    box-shadow: 0 0 15px rgba(0, 255, 0, 0.3), inset 0 0 20px rgba(0, 255, 0, 0.1);
-                }
-
-                .pp-chain-display.neon-blue {
-                    border-color: #0066ff;
-                    box-shadow: 0 0 20px rgba(0, 102, 255, 0.7), inset 0 0 25px rgba(0, 102, 255, 0.3);
-                    background: rgba(0, 10, 20, 0.95);
-                }
-
-                .pp-chain-display.neon-green {
-                    border-color: #00ff00;
-                    box-shadow: 0 0 25px rgba(0, 255, 0, 0.8), inset 0 0 30px rgba(0, 255, 0, 0.4);
-                    background: rgba(0, 20, 0, 0.95);
-                }
-
-                .pp-chain-display.neon-yellow {
-                    border-color: #ffff00;
-                    box-shadow: 0 0 30px rgba(255, 255, 0, 0.9), inset 0 0 35px rgba(255, 255, 0, 0.5);
-                    background: rgba(20, 20, 0, 0.95);
-                }
-
-                .pp-chain-display.neon-red {
+                .pp-close-btn:hover {
+                    background: rgba(255, 0, 0, 0.3);
                     border-color: #ff0000;
-                    box-shadow: 0 0 35px rgba(255, 0, 0, 1), inset 0 0 40px rgba(255, 0, 0, 0.6);
-                    background: rgba(20, 0, 0, 0.95);
                 }
 
-                .pp-chain-display.flash-red {
-                    border-color: #ff0000;
-                    background: rgba(20, 0, 0, 0.95);
-                    animation: flashRed 0.5s infinite alternate;
-                }
-
-                .pp-chain-display.flash-gold {
-                    border-color: #ffd700;
-                    background: rgba(30, 20, 0, 0.95);
-                    animation: flashGold 0.8s infinite alternate;
-                }
-
-                .pp-chain-label {
-                    font-size: 9px;
-                    color: #80ff80;
-                    letter-spacing: 2px;
-                    text-transform: uppercase;
-                    margin-bottom: 3px;
-                    text-shadow: 0 0 5px currentColor;
-                }
-
-                .pp-chain-values {
-                    display: flex;
-                    justify-content: space-between;
-                    width: 100%;
-                    align-items: center;
-                }
-
-                .pp-chain-current {
-                    font-size: 18px;
-                    font-weight: bold;
-                    color: #80ff80;
-                    text-shadow: 0 0 8px rgba(128, 255, 128, 0.7);
-                    transition: all 0.3s ease;
-                    font-family: 'Courier New', monospace;
-                    letter-spacing: 1px;
-                }
-
-                .pp-chain-current.active {
-                    color: #00ff00;
-                    text-shadow: 0 0 15px #00ff00, 0 0 30px #00ff00;
-                }
-
-                .pp-chain-current.flash-gold {
-                    color: #ffd700;
-                    text-shadow: 0 0 20px #ffd700, 0 0 40px #ffd700;
-                    animation: flashGoldText 0.8s infinite alternate;
-                }
-
-                .pp-chain-timeout {
-                    font-size: 14px;
-                    color: #80ff80;
-                    align-self: flex-end;
-                    letter-spacing: 2px;
-                    transition: all 0.3s ease;
-                    font-family: 'Courier New', monospace;
-                    font-weight: bold;
-                    text-shadow: 0 0 5px currentColor;
-                }
-
-                .pp-chain-timeout.active {
-                    color: #00ff00;
-                    text-shadow: 0 0 10px #00ff00;
-                }
-
-                @keyframes flashRed {
-                    0% { 
-                        box-shadow: 0 0 10px #ff0000, inset 0 0 10px #ff0000;
-                        border-color: #ff0000;
-                    }
-                    100% { 
-                        box-shadow: 0 0 40px #ff0000, 0 0 60px #ff0000, inset 0 0 20px #ff0000;
-                        border-color: #ffffff;
-                    }
-                }
-
-                @keyframes flashGold {
-                    0% { 
-                        box-shadow: 0 0 15px #ffd700, inset 0 0 15px #ffd700;
-                        border-color: #ffd700;
-                    }
-                    100% { 
-                        box-shadow: 0 0 50px #ffd700, 0 0 80px #ffd700, inset 0 0 25px #ffd700;
-                        border-color: #ffff00;
-                    }
-                }
-
-                @keyframes flashGoldText {
-                    0% { 
-                        text-shadow: 0 0 10px #ffd700, 0 0 20px #ffd700;
-                        color: #ffd700;
-                    }
-                    100% { 
-                        text-shadow: 0 0 25px #ffd700, 0 0 50px #ffd700, 0 0 75px #ffd700;
-                        color: #ffff00;
-                    }
-                }
-
-                @keyframes pp-celebration-fall {
-                    0% {
-                        transform: translateY(-100px) rotate(0deg);
-                        opacity: 1;
-                    }
-                    100% {
-                        transform: translateY(100vh) rotate(360deg);
-                        opacity: 0;
-                    }
+                .pp-header-icon {
+                    width: 20px;
+                    height: 20px;
+                    border-radius: 3px;
+                    opacity: var(--nano-content-opacity);
+                    filter: drop-shadow(0 0 3px rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.7));
                 }
 
                 .pp-profile-display {
@@ -2192,28 +2344,33 @@
                     overflow: hidden;
                     text-overflow: ellipsis;
                     white-space: nowrap;
+                    backdrop-filter: blur(10px);
+                    -webkit-backdrop-filter: blur(10px);
+                    border: 1px solid rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.3);
+                    text-shadow: 0 0 5px rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.5);
+                    color: rgba(255, 255, 255, var(--nano-content-opacity));
                 }
 
                 .pp-profile-display.connected {
-                    background: rgba(0, 255, 65, 0.1);
-                    border: 1px solid rgba(0, 255, 65, 0.3);
-                    color: #80ff80;
+                    background: rgba(var(--nano-primary-r), var(--nano-primary-g), var(--nano-primary-b), 0.15);
+                    color: rgba(var(--nano-primary-r), var(--nano-primary-g), var(--nano-primary-b), var(--nano-content-opacity));
                 }
 
                 .pp-profile-display.guest {
-                    background: rgba(255, 165, 0, 0.1);
-                    border: 1px solid rgba(255, 165, 0, 0.3);
-                    color: #ffb366;
+                    background: rgba(255, 165, 0, 0.15);
+                    color: rgba(255, 165, 0, var(--nano-content-opacity));
                 }
 
                 .pp-quick-actions {
                     display: flex;
                     justify-content: space-between;
                     padding: 8px 10px;
-                    background: rgba(0, 10, 0, 0.8);
-                    border-bottom: 1px solid #004400;
+                    background: rgba(0, 0, 0, 0.2);
+                    border-bottom: 1px solid rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.3);
                     flex-wrap: wrap;
                     gap: 5px;
+                    backdrop-filter: blur(10px);
+                    -webkit-backdrop-filter: blur(10px);
                 }
 
                 .pp-action-btn {
@@ -2223,16 +2380,22 @@
                     border: none;
                     font-size: 16px;
                     cursor: pointer;
-                    background: rgba(0, 20, 0, 0.8);
-                    color: white;
-                    transition: transform 0.2s, background-color 0.2s;
+                    background: rgba(var(--nano-primary-r), var(--nano-primary-g), var(--nano-primary-b), 0.15);
+                    color: rgba(255, 255, 255, var(--nano-content-opacity));
+                    transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
                     display: flex;
                     align-items: center;
                     justify-content: center;
+                    backdrop-filter: blur(5px);
+                    border: 1px solid rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.3);
+                    opacity: var(--nano-content-opacity);
+                    box-shadow: 0 0 10px rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.3);
                 }
 
                 .pp-action-btn:hover {
                     transform: scale(1.1);
+                    background: rgba(var(--nano-primary-r), var(--nano-primary-g), var(--nano-border-b), 0.25);
+                    box-shadow: 0 0 15px rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.5);
                 }
 
                 .pp-action-btn.cooldown {
@@ -2241,43 +2404,56 @@
                 }
 
                 .pp-action-btn.settings {
-                    background: rgba(50, 50, 50, 0.8);
+                    background: rgba(128, 128, 128, 0.2);
+                    border-color: rgba(128, 128, 128, 0.3);
                 }
 
                 .pp-action-btn.settings:hover {
-                    background: rgba(70, 70, 70, 0.9);
+                    background: rgba(128, 128, 128, 0.3);
                 }
 
                 .pp-room-selector {
                     display: flex;
                     padding: 5px;
-                    background: rgba(0, 15, 0, 0.6);
-                    border-bottom: 1px solid #003300;
+                    background: rgba(0, 0, 0, 0.15);
+                    border-bottom: 1px solid rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.3);
                     gap: 5px;
+                    backdrop-filter: blur(10px);
+                    -webkit-backdrop-filter: blur(10px);
                 }
 
                 .pp-room-btn {
                     flex: 1;
                     padding: 6px;
-                    background: rgba(0, 25, 0, 0.6);
-                    border: 1px solid #005500;
-                    color: #aaffaa;
+                    background: rgba(var(--nano-primary-r), var(--nano-primary-g), var(--nano-primary-b), 0.1);
+                    border: 1px solid rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.3);
+                    color: rgba(var(--nano-primary-r), var(--nano-primary-g), var(--nano-primary-b), var(--nano-content-opacity));
                     border-radius: 6px;
                     cursor: pointer;
                     font-size: 12px;
+                    transition: all 0.2s;
+                    backdrop-filter: blur(5px);
+                    text-shadow: 0 0 5px rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.5);
+                }
+
+                .pp-room-btn:hover {
+                    background: rgba(var(--nano-primary-r), var(--nano-primary-g), var(--nano-primary-b), 0.2);
+                    box-shadow: 0 0 10px rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.3);
                 }
 
                 .pp-room-btn.active {
-                    background: rgba(0, 255, 65, 0.2);
-                    border-color: #00ff41;
-                    color: #00ff41;
+                    background: rgba(var(--nano-primary-r), var(--nano-primary-g), var(--nano-primary-b), 0.3);
+                    border-color: var(--nano-border-color);
+                    color: var(--nano-border-color);
+                    box-shadow: 0 0 15px rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.5);
                 }
 
                 .pp-messages {
                     flex: 1;
                     overflow-y: auto;
                     padding: 10px;
-                    background: rgba(0, 5, 0, 0.5);
+                    background: rgba(0, 0, 0, 0.1);
+                    transition: padding-bottom 0.3s ease;
                 }
 
                 .pp-message {
@@ -2287,6 +2463,9 @@
                     max-width: 85%;
                     word-wrap: break-word;
                     transition: opacity 0.3s;
+                    backdrop-filter: blur(10px);
+                    -webkit-backdrop-filter: blur(10px);
+                    border: 1px solid rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.2);
                 }
 
                 .pp-message.temporary {
@@ -2294,14 +2473,14 @@
                 }
 
                 .message-in {
-                    background: rgba(0, 40, 0, 0.4);
-                    border: 1px solid #005500;
+                    background: rgba(var(--nano-primary-r), var(--nano-primary-g), var(--nano-primary-b), 0.1);
+                    border: 1px solid rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.3);
                     align-self: flex-start;
                 }
 
                 .message-out {
-                    background: rgba(0, 30, 40, 0.4);
-                    border: 1px solid #0088aa;
+                    background: rgba(100, 100, 255, 0.1);
+                    border: 1px solid rgba(100, 100, 255, 0.3);
                     align-self: flex-end;
                     margin-left: auto;
                 }
@@ -2310,6 +2489,8 @@
                     font-size: 11px;
                     opacity: 0.8;
                     margin-bottom: 2px;
+                    color: rgba(var(--nano-primary-r), var(--nano-primary-g), var(--nano-primary-b), var(--nano-content-opacity));
+                    text-shadow: 0 0 3px rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.5);
                 }
 
                 .message-badge {
@@ -2319,21 +2500,24 @@
                     border-radius: 4px;
                     font-size: 10px;
                     margin-right: 6px;
+                    font-weight: bold;
                 }
 
                 .message-text {
                     font-size: 13px;
                     line-height: 1.4;
+                    color: rgba(255, 255, 255, var(--nano-content-opacity));
                 }
 
                 .message-text a {
-                    color: #00ff88;
+                    color: var(--nano-primary-color);
                     text-decoration: underline;
                     word-break: break-all;
+                    text-shadow: 0 0 5px rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.5);
                 }
 
                 .message-text a:hover {
-                    color: #88ffcc;
+                    color: rgba(var(--nano-primary-r), var(--nano-primary-g), var(--nano-primary-b), 0.8);
                 }
 
                 .message-time {
@@ -2341,84 +2525,124 @@
                     opacity: 0.7;
                     margin-top: 4px;
                     text-align: right;
+                    color: rgba(255, 255, 255, 0.6);
                 }
 
                 .pp-input-area {
                     padding: 10px;
-                    border-top: 1px solid #004400;
-                    background: rgba(0, 10, 0, 0.8);
+                    border-top: 1px solid rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.3);
+                    background: rgba(0, 0, 0, 0.2);
                     display: flex;
                     gap: 8px;
+                    backdrop-filter: blur(10px);
+                    -webkit-backdrop-filter: blur(10px);
                 }
 
                 .pp-input {
                     flex: 1;
                     padding: 8px 12px;
-                    background: rgba(0, 20, 0, 0.6);
-                    border: 1px solid #006600;
+                    background: rgba(var(--nano-primary-r), var(--nano-primary-g), var(--nano-primary-b), 0.1);
+                    border: 1px solid rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.4);
                     border-radius: 20px;
-                    color: #e0ffe0;
+                    color: rgba(255, 255, 255, var(--nano-content-opacity));
                     font-size: 14px;
                     outline: none;
+                    transition: all 0.2s;
+                    backdrop-filter: blur(5px);
+                    box-shadow: 0 0 10px rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.2) inset;
+                }
+
+                .pp-input:focus {
+                    border-color: var(--nano-border-color);
+                    background: rgba(var(--nano-primary-r), var(--nano-primary-g), var(--nano-primary-b), 0.15);
+                    box-shadow: 
+                        0 0 10px rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.3) inset,
+                        0 0 15px rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.2);
                 }
 
                 .pp-send {
                     width: 36px;
                     height: 36px;
                     border-radius: 50%;
-                    background: linear-gradient(135deg, #003300 0%, #006600 100%);
-                    border: 1px solid #00aa00;
-                    color: #00ff41;
+                    background: rgba(var(--nano-primary-r), var(--nano-primary-g), var(--nano-primary-b), 0.2);
+                    border: 1px solid rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.4);
+                    color: var(--nano-primary-color);
                     cursor: pointer;
                     display: flex;
                     align-items: center;
                     justify-content: center;
+                    transition: all 0.2s;
+                    backdrop-filter: blur(5px);
+                    box-shadow: 0 0 10px rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.3);
+                    opacity: var(--nano-content-opacity);
+                }
+
+                .pp-send:hover {
+                    background: rgba(var(--nano-primary-r), var(--nano-primary-g), var(--nano-primary-b), 0.3);
+                    transform: scale(1.05);
+                    box-shadow: 0 0 15px rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.5);
                 }
 
                 .pp-toggle {
                     position: fixed;
                     width: 60px;
                     height: 60px;
-                    background: linear-gradient(135deg, #002200 0%, #006600 100%);
+                    background: rgba(var(--nano-primary-r), var(--nano-primary-g), var(--nano-primary-b), var(--nano-transparency));
                     border-radius: 50%;
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    color: #00ff41;
+                    color: var(--nano-primary-color);
                     cursor: pointer;
-                    box-shadow: 0 4px 20px rgba(0, 255, 65, 0.3);
-                    border: 1px solid #00aa00;
-                    transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+                    box-shadow: 
+                        0 4px 20px rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.4),
+                        0 0 20px rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.3),
+                        0 0 30px rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.2) inset;
+                    border: 2px solid rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.6);
+                    transition: transform 0.3s, box-shadow 0.3s, left 0.2s ease, top 0.2s ease;
                     user-select: none;
                     touch-action: manipulation;
                     -webkit-tap-highlight-color: transparent;
+                    backdrop-filter: blur(var(--nano-frost-blur));
+                    -webkit-backdrop-filter: blur(var(--nano-frost-blur));
+                    z-index: 9999;
                 }
 
                 .pp-toggle:hover {
-                    box-shadow: 0 4px 25px rgba(0, 255, 65, 0.4);
+                    box-shadow: 
+                        0 4px 25px rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.6),
+                        0 0 25px rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.4),
+                        0 0 35px rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.3) inset;
                     transform: scale(1.05);
+                    background: rgba(var(--nano-primary-r), var(--nano-primary-g), var(--nano-primary-b), calc(var(--nano-transparency) + 0.05));
                 }
 
                 .pp-toggle.pulsing {
-                    border-color: #00ff00;
-                    animation: pulseGlow 2s infinite alternate;
+                    animation: pulseGlow 1s infinite alternate;
                 }
 
                 .pp-toggle.dragging {
                     cursor: grabbing;
                     opacity: 0.9;
                     transform: scale(1.1);
-                    box-shadow: 0 6px 30px rgba(0, 255, 65, 0.6);
+                    box-shadow: 
+                        0 6px 30px rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.8),
+                        0 0 30px rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.6),
+                        0 0 40px rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.4) inset;
                 }
 
                 @keyframes pulseGlow {
-                    0% {
-                        box-shadow: 0 0 10px rgba(0, 255, 65, 0.5), 0 0 20px rgba(0, 255, 65, 0.3);
-                        border-color: #00aa00;
+                    from { 
+                        box-shadow: 
+                            0 0 10px rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.7), 
+                            0 0 20px rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.5),
+                            0 0 30px rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.3) inset;
                     }
-                    100% {
-                        box-shadow: 0 0 20px rgba(0, 255, 65, 0.8), 0 0 40px rgba(0, 255, 65, 0.5), 0 0 60px rgba(0, 255, 65, 0.3);
-                        border-color: #00ff00;
+                    to { 
+                        box-shadow: 
+                            0 0 20px rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 1), 
+                            0 0 40px rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.7),
+                            0 0 50px rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.5) inset;
                     }
                 }
 
@@ -2427,6 +2651,8 @@
                     height: 35px;
                     border-radius: 50%;
                     pointer-events: none;
+                    opacity: var(--nano-content-opacity);
+                    filter: drop-shadow(0 0 5px rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.8));
                 }
 
                 .pp-toast {
@@ -2434,34 +2660,135 @@
                     top: 20px;
                     right: 20px;
                     padding: 12px 20px;
-                    background: rgba(0, 20, 0, 0.9);
-                    border: 1px solid #00ff41;
+                    background: rgba(0, 0, 0, 0.4);
+                    border: 1px solid var(--nano-border-color);
                     border-radius: 8px;
-                    color: #c8ffd0;
+                    color: rgba(255, 255, 255, var(--nano-content-opacity));
                     z-index: 10001;
                     animation: slideIn 0.3s, fadeOut 0.3s 2.7s;
                     max-width: 300px;
                     pointer-events: none;
+                    font-weight: bold;
+                    backdrop-filter: blur(var(--nano-frost-blur)) !important;
+                    -webkit-backdrop-filter: blur(var(--nano-frost-blur)) !important;
+                    box-shadow: 
+                        0 8px 32px rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.4),
+                        0 0 15px rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.3);
+                    text-shadow: 0 0 5px rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.5);
                 }
 
-                .pp-toast.success { border-color: #44ff44; }
-                .pp-toast.warning { border-color: #ffaa00; }
-                .pp-toast.error { border-color: #ff4444; }
+                .pp-toast.success { 
+                    border-color: rgba(68, 255, 68, 0.8); 
+                    background: rgba(0, 40, 0, 0.4); 
+                }
+                .pp-toast.warning { 
+                    border-color: rgba(255, 170, 0, 0.8); 
+                    background: rgba(255, 165, 0, 0.4); 
+                    color: #fff; 
+                }
+                .pp-toast.error { 
+                    border-color: rgba(255, 68, 68, 0.8); 
+                    background: rgba(255, 0, 0, 0.2); 
+                }
+                .pp-toast.info { 
+                    border-color: rgba(0, 170, 255, 0.8); 
+                    background: rgba(0, 100, 200, 0.4); 
+                    color: #fff; 
+                }
 
-                .pp-alert-toast {
+                .pp-confirm-modal {
                     position: fixed;
-                    top: 80px;
-                    right: 20px;
-                    padding: 12px 20px;
-                    background: rgba(20, 0, 0, 0.9);
-                    border: 2px solid #ff4444;
-                    border-radius: 8px;
-                    color: #ffcccc;
-                    z-index: 10001;
-                    animation: slideIn 0.3s, pulse 2s infinite;
-                    max-width: 300px;
-                    pointer-events: none;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.7);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 10003;
+                }
+
+                .pp-confirm-content {
+                    background: rgba(0, 0, 0, var(--nano-transparency));
+                    border: 2px solid var(--nano-border-color);
+                    border-radius: 12px;
+                    width: 90%;
+                    max-width: 400px;
+                    padding: 20px;
+                    backdrop-filter: blur(var(--nano-frost-blur)) !important;
+                    -webkit-backdrop-filter: blur(var(--nano-frost-blur)) !important;
+                    box-shadow: 
+                        0 8px 32px rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.5),
+                        0 0 20px rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.3);
+                }
+
+                .pp-confirm-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: 15px;
+                }
+
+                .pp-confirm-header h4 {
+                    margin: 0;
+                    color: var(--nano-primary-color);
+                    text-shadow: 0 0 10px rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.5);
+                }
+
+                .pp-confirm-close {
+                    background: none;
+                    border: none;
+                    color: var(--nano-primary-color);
+                    font-size: 24px;
+                    cursor: pointer;
+                    line-height: 1;
+                    text-shadow: 0 0 5px rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.5);
+                }
+
+                .pp-confirm-body {
+                    margin-bottom: 20px;
+                    color: rgba(255, 255, 255, var(--nano-content-opacity));
+                }
+
+                .pp-confirm-buttons {
+                    display: flex;
+                    gap: 10px;
+                    justify-content: flex-end;
+                }
+
+                .pp-confirm-btn {
+                    padding: 8px 16px;
+                    border-radius: 6px;
+                    border: none;
+                    cursor: pointer;
                     font-weight: bold;
+                    transition: all 0.2s;
+                    backdrop-filter: blur(5px);
+                }
+
+                .pp-confirm-btn.confirm {
+                    background: rgba(var(--nano-primary-r), var(--nano-primary-g), var(--nano-primary-b), 0.2);
+                    color: var(--nano-primary-color);
+                    border: 1px solid rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.4);
+                    box-shadow: 0 0 10px rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.3);
+                }
+
+                .pp-confirm-btn.confirm:hover {
+                    background: rgba(var(--nano-primary-r), var(--nano-primary-g), var(--nano-primary-b), 0.3);
+                    box-shadow: 0 0 15px rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.5);
+                }
+
+                .pp-confirm-btn.cancel {
+                    background: rgba(255, 0, 0, 0.2);
+                    color: #ff6666;
+                    border: 1px solid rgba(255, 0, 0, 0.4);
+                    box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
+                }
+
+                .pp-confirm-btn.cancel:hover {
+                    background: rgba(255, 0, 0, 0.3);
+                    box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
                 }
 
                 .pp-settings-modal {
@@ -2478,37 +2805,46 @@
                 }
 
                 .pp-settings-content {
-                    background: rgba(10, 20, 10, 0.95);
-                    border: 2px solid #00ff41;
+                    background: rgba(0, 0, 0, var(--nano-transparency));
+                    border: 2px solid var(--nano-border-color);
                     border-radius: 12px;
                     width: 90%;
                     max-width: 450px;
                     max-height: 80vh;
                     overflow-y: auto;
+                    backdrop-filter: blur(var(--nano-frost-blur)) !important;
+                    -webkit-backdrop-filter: blur(var(--nano-frost-blur)) !important;
+                    box-shadow: 
+                        0 8px 32px rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.5),
+                        0 0 20px rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.3);
                 }
 
                 .pp-settings-header {
-                    background: linear-gradient(135deg, #001500 0%, #003000 100%);
-                    color: #00ff41;
+                    background: rgba(var(--nano-primary-r), var(--nano-primary-g), var(--nano-primary-b), 0.2);
+                    color: var(--nano-primary-color);
                     padding: 15px;
-                    border-bottom: 1px solid #004400;
+                    border-bottom: 1px solid rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.4);
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
+                    backdrop-filter: blur(10px);
+                    -webkit-backdrop-filter: blur(10px);
                 }
 
                 .pp-settings-header h3 {
                     margin: 0;
                     font-size: 16px;
+                    text-shadow: 0 0 10px rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.5);
                 }
 
                 .pp-settings-close {
                     background: none;
                     border: none;
-                    color: #00ff41;
+                    color: var(--nano-primary-color);
                     font-size: 24px;
                     cursor: pointer;
                     line-height: 1;
+                    text-shadow: 0 0 5px rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.5);
                 }
 
                 .pp-settings-body {
@@ -2516,20 +2852,22 @@
                 }
 
                 .pp-profile-info {
-                    background: rgba(0, 30, 0, 0.3);
+                    background: rgba(var(--nano-primary-r), var(--nano-primary-g), var(--nano-primary-b), 0.15);
                     border-radius: 8px;
                     padding: 15px;
                     margin-bottom: 20px;
-                    border: 1px solid #005500;
+                    border: 1px solid rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.3);
+                    backdrop-filter: blur(5px);
                 }
 
                 .pp-profile-info h4 {
                     margin-top: 0;
                     margin-bottom: 15px;
-                    color: #80ff80;
+                    color: var(--nano-primary-color);
                     font-size: 14px;
-                    border-bottom: 1px solid #004400;
+                    border-bottom: 1px solid rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.4);
                     padding-bottom: 8px;
+                    text-shadow: 0 0 5px rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.5);
                 }
 
                 .pp-info-item {
@@ -2540,12 +2878,12 @@
                 }
 
                 .pp-info-label {
-                    color: #aaffaa;
+                    color: rgba(var(--nano-primary-r), var(--nano-primary-g), var(--nano-primary-b), 0.9);
                     font-weight: bold;
                 }
 
                 .pp-info-value {
-                    color: #c8ffd0;
+                    color: rgba(255, 255, 255, var(--nano-content-opacity));
                     max-width: 60%;
                     overflow: hidden;
                     text-overflow: ellipsis;
@@ -2554,11 +2892,13 @@
                 .pp-info-value.access-granted {
                     color: #44ff44;
                     font-weight: bold;
+                    text-shadow: 0 0 5px rgba(68, 255, 68, 0.5);
                 }
 
                 .pp-info-value.access-denied {
                     color: #ff6666;
                     font-weight: bold;
+                    text-shadow: 0 0 5px rgba(255, 102, 102, 0.5);
                 }
 
                 .pp-settings-section {
@@ -2568,31 +2908,51 @@
                 .pp-settings-section h4 {
                     margin-top: 0;
                     margin-bottom: 15px;
-                    color: #80ff80;
+                    color: var(--nano-primary-color);
                     font-size: 14px;
-                    border-bottom: 1px solid #004400;
+                    border-bottom: 1px solid rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.4);
                     padding-bottom: 8px;
+                    text-shadow: 0 0 5px rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.5);
                 }
 
                 .pp-setting-item {
                     margin-bottom: 15px;
                     display: flex;
                     align-items: center;
+                    justify-content: space-between;
                 }
 
                 .pp-setting-item label {
                     display: flex;
                     align-items: center;
                     gap: 10px;
-                    color: #c8ffd0;
+                    color: rgba(255, 255, 255, var(--nano-content-opacity));
                     cursor: pointer;
                     font-size: 14px;
+                    flex: 1;
                 }
 
                 .pp-setting-checkbox {
                     width: 18px;
                     height: 18px;
-                    accent-color: #00ff41;
+                    accent-color: var(--nano-primary-color);
+                }
+
+                .pp-setting-input {
+                    width: 60px;
+                    padding: 4px 8px;
+                    background: rgba(var(--nano-primary-r), var(--nano-primary-g), var(--nano-primary-b), 0.1);
+                    border: 1px solid rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.4);
+                    border-radius: 4px;
+                    color: rgba(255, 255, 255, var(--nano-content-opacity));
+                    text-align: center;
+                    backdrop-filter: blur(5px);
+                }
+
+                .pp-setting-slider {
+                    width: 100px;
+                    margin: 0 10px;
+                    accent-color: var(--nano-primary-color);
                 }
 
                 .pp-settings-buttons {
@@ -2604,9 +2964,9 @@
 
                 .pp-settings-btn {
                     padding: 12px;
-                    background: rgba(0, 30, 0, 0.8);
-                    border: 1px solid #006600;
-                    color: #aaffaa;
+                    background: rgba(var(--nano-primary-r), var(--nano-primary-g), var(--nano-primary-b), 0.2);
+                    border: 1px solid rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.4);
+                    color: rgba(255, 255, 255, var(--nano-content-opacity));
                     border-radius: 6px;
                     cursor: pointer;
                     font-size: 14px;
@@ -2615,12 +2975,15 @@
                     align-items: center;
                     justify-content: center;
                     gap: 8px;
+                    backdrop-filter: blur(5px);
+                    box-shadow: 0 0 10px rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.3);
                 }
 
                 .pp-settings-btn:hover {
-                    background: rgba(0, 50, 0, 0.9);
-                    border-color: #00aa00;
+                    background: rgba(var(--nano-primary-r), var(--nano-primary-g), var(--nano-primary-b), 0.3);
+                    border-color: var(--nano-border-color);
                     transform: translateY(-1px);
+                    box-shadow: 0 0 15px rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.5);
                 }
 
                 .pp-settings-btn:disabled {
@@ -2630,32 +2993,14 @@
                 }
 
                 .pp-settings-btn#pp-clear-messages {
-                    background: rgba(50, 0, 0, 0.8);
-                    border-color: #660000;
+                    background: rgba(255, 0, 0, 0.2);
+                    border-color: rgba(255, 0, 0, 0.4);
                 }
 
                 .pp-settings-btn#pp-clear-messages:hover {
-                    background: rgba(80, 0, 0, 0.9);
+                    background: rgba(255, 0, 0, 0.3);
                     border-color: #ff0000;
-                }
-
-                .pp-load-more {
-                    display: block;
-                    width: 100%;
-                    padding: 8px;
-                    margin: 10px 0;
-                    background: rgba(0, 40, 0, 0.6);
-                    border: 1px solid #006600;
-                    color: #aaffaa;
-                    border-radius: 6px;
-                    cursor: pointer;
-                    font-size: 12px;
-                    text-align: center;
-                }
-
-                .pp-load-more:hover {
-                    background: rgba(0, 60, 0, 0.8);
-                    border-color: #00aa00;
+                    box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
                 }
 
                 @keyframes slideIn {
@@ -2668,26 +3013,11 @@
                     to { opacity: 0; }
                 }
 
-                @keyframes pulse {
-                    0% { border-color: #ff4444; }
-                    50% { border-color: #ff8888; }
-                    100% { border-color: #ff4444; }
-                }
+                ::-webkit-scrollbar { width: 6px; }
+                ::-webkit-scrollbar-track { background: rgba(var(--nano-primary-r), var(--nano-primary-g), var(--nano-primary-b), 0.1); }
+                ::-webkit-scrollbar-thumb { background: rgba(var(--nano-primary-r), var(--nano-primary-g), var(--nano-primary-b), 0.3); border-radius: 3px; }
+                ::-webkit-scrollbar-thumb:hover { background: rgba(var(--nano-primary-r), var(--nano-primary-g), var(--nano-primary-b), 0.5); }
 
-                ::-webkit-scrollbar {
-                    width: 6px;
-                }
-
-                ::-webkit-scrollbar-track {
-                    background: rgba(0, 20, 0, 0.3);
-                }
-
-                ::-webkit-scrollbar-thumb {
-                    background: rgba(0, 255, 65, 0.3);
-                    border-radius: 3px;
-                }
-
-                /* Mobile-specific improvements */
                 @media (max-width: 768px) {
                     .pp-container {
                         width: 98vw;
@@ -2726,48 +3056,46 @@
                         max-width: 90%;
                     }
                     
-                    .pp-chain-display {
-                        min-width: 80px;
-                        padding: 4px 8px;
+                    .pp-confirm-content {
+                        width: 95%;
                     }
                     
-                    .pp-chain-current {
-                        font-size: 16px;
-                    }
-                    
-                    .pp-chain-timeout {
-                        font-size: 12px;
+                    .pp-toast {
+                        max-width: 90%;
+                        right: 5%;
                     }
                 }
             `;
 
-            const style = document.createElement('style');
-            style.setAttribute('data-phantom-portal', 'true');
-            style.textContent = css;
-            document.head.appendChild(style);
+            SafeGM.addStyle(css);
         }
     }
 
     function initialize() {
         try {
-            if (!window.location.href.includes('torn.com')) return;
-            if (typeof GM_xmlhttpRequest === 'undefined') return;
-
-            setTimeout(() => {
-                try {
-                    new PhantomPortal();
-                } catch (error) {
-                    // Initialization errors are silent for user experience
-                }
-            }, 500);
+            if (!window.location.href.includes('torn.com')) {
+                return;
+            }
+            
+            if (typeof GM_xmlhttpRequest === 'undefined') {
+                console.error('[Phantom Portal] GM_xmlhttpRequest is not available');
+                return;
+            }
+            
+            try {
+                new PhantomPortal();
+            } catch (error) {
+                console.error('[Phantom Portal] Failed to create instance');
+            }
+            
         } catch (error) {
-            // Top-level errors are silent
+            console.error('[Phantom Portal] Initialization error');
         }
     }
 
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initialize);
     } else {
-        setTimeout(initialize, 1000);
+        setTimeout(initialize, 100);
     }
 })();
