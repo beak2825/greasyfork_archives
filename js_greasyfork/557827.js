@@ -1,14 +1,14 @@
 // ==UserScript==
 // @name         USPS Address Validation - View Page
 // @namespace    https://github.com/nate-kean/
-// @version      2026.01.08.1
+// @version      2026.1.20
 // @description  Integrate USPS address validation into the Address field.
 // @author       Nate Kean
 // @match        https://jamesriver.fellowshiponego.com/members/view/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=fellowshiponego.com
 // @grant        none
 // @license      MIT
-// @require      https://update.greasyfork.org/scripts/555040/1730304/USPS%20Address%20Validation%20-%20Common.js
+// @require      https://update.greasyfork.org/scripts/555040/1738446/USPS%20Address%20Validation%20-%20Common.js
 // @downloadURL https://update.greasyfork.org/scripts/557827/USPS%20Address%20Validation%20-%20View%20Page.user.js
 // @updateURL https://update.greasyfork.org/scripts/557827/USPS%20Address%20Validation%20-%20View%20Page.meta.js
 // ==/UserScript==

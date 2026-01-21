@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         Mass Contact message title: use all space
 // @namespace    https://github.com/nate-kean/
-// @version      2026.1.13.1
+// @version      2026.1.20.1
 // @description  Grow the text in the Message Title column to the entire width it has.
 // @author       Nate Kean
-// @match        https://jamesriver.fellowshiponego.com/massContact
+// @match        https://jamesriver.fellowshiponego.com/massContact*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=fellowshiponego.com
 // @grant        none
 // @run-at       document-end
@@ -33,7 +33,7 @@
     `);
 
     function go () {
-        for (const a of document.querySelectorAll("#massContact-table td > a")) {
+        for (const a of document.querySelectorAll("#massContact-table td.mc-message-title > a")) {
             a.textContent = a.getAttribute("data-original-title");
             $(a).tooltip("disable");
             const wrapper = document.createElement("div");

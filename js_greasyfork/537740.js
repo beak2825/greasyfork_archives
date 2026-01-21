@@ -1,9 +1,8 @@
 // ==UserScript==
 // @name         GreasyFork 脚本过滤器
 // @namespace    http://tampermonkey.net/
-// @version      1.2
-// @description  根据标题关键字过滤 GreasyFork 脚本，并提供侧边栏管理过滤器，支持导入导出关键字txt文件
-// @author       Yourname
+// @version      1.4.1
+// @description  标题模糊过滤 + 作者名称精确屏蔽，支持导入导出
 // @match        https://greasyfork.org/zh-CN/scripts*
 // @grant        none
 // @downloadURL https://update.greasyfork.org/scripts/537740/GreasyFork%20%E8%84%9A%E6%9C%AC%E8%BF%87%E6%BB%A4%E5%99%A8.user.js
@@ -13,7 +12,6 @@
 (function () {
   'use strict';
 
-  // 等待 DOM 元素加载完成
   function waitForElement(selector, callback) {
     const el = document.querySelector(selector);
     if (el) return callback(el);
@@ -27,290 +25,271 @@
     observer.observe(document.body, { childList: true, subtree: true });
   }
 
-  waitForElement('.script-list', initFilterUI);
+  waitForElement('.script-list', init);
 
-  function initFilterUI() {
-    const savedKeywords = JSON.parse(localStorage.getItem('gf_filter_keywords') || '[]');
-    let keywords = savedKeywords;
+  function init() {
+    let rules = JSON.parse(localStorage.getItem('gf_filter_keywords') || '[]');
+
+    rules = rules.map(r => ({
+      type: r.type || 'title',
+      text: r.text,
+      caseSensitive: !!r.caseSensitive
+    }));
+
+    /* ========= UI ========= */
 
     const sidebar = document.createElement('div');
     sidebar.id = 'gf-filter-sidebar';
     sidebar.innerHTML = `
-  <h2>关键词过滤器</h2>
-  <div id="input-container">
-    <input id="new-keyword" type="text" placeholder="添加关键字">
-    <label style="font-size: 12px; margin-left: 6px;">
-      <input type="checkbox" id="case-sensitive"> 区分大小写
-    </label>
-    <button id="add-btn">添加</button>
-  </div>
-  <ul id="keyword-list"></ul>
-  <div id="bottom-buttons" style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; gap: 10px; flex-wrap: wrap;">
-    <div style="display: flex; gap: 10px;">
-      <button id="delete-selected-btn" style="background: #d9534f; color: white; border-radius: 4px; padding: 6px 10px; border: none; cursor: pointer;">删除已选中</button>
-      <button id="delete-all-btn" style="background: #c9302c; color: white; border-radius: 4px; padding: 6px 10px; border: none; cursor: pointer;">删除所有</button>
-    </div>
-    <div style="display: flex; gap: 10px;">
-      <button id="export-btn" style="background: #007bff; color: white; border: none; border-radius: 4px; padding: 6px 10px; cursor: pointer;">导出关键字</button>
-      <button id="import-btn" style="background: #28a745; color: white; border: none; border-radius: 4px; padding: 6px 10px; cursor: pointer;">导入关键字</button>
-      <input type="file" id="import-file" accept=".txt" style="display:none">
-    </div>
-  </div>
-`;
-      // 添加“删除所有关键字”按钮事件
-sidebar.querySelector('#delete-all-btn').addEventListener('click', () => {
-  if (confirm('确定要删除所有关键字吗？此操作不可撤销！')) {
-    keywords = [];
-    saveKeywords();
-    renderKeywords();
-    applyFilter();
-  }
-});
+      <h2>脚本过滤器</h2>
+      <div id="input-box">
+        <select id="rule-type">
+          <option value="title">标题（模糊）</option>
+          <option value="author">作者（精确）</option>
+        </select>
+        <input id="rule-text" placeholder="关键字 / 作者全名">
+        <label><input type="checkbox" id="case-sensitive"> 区分大小写</label>
+        <button id="add-rule">添加</button>
+      </div>
+
+      <ul id="rule-list"></ul>
+
+      <div id="actions">
+        <button id="select-all">全选</button>
+        <button id="delete-selected">删除选中</button>
+        <button id="export">导出</button>
+        <button id="import">导入</button>
+        <input type="file" id="import-file" accept=".txt" style="display:none">
+      </div>
+    `;
     document.body.appendChild(sidebar);
 
-    const toggleBtn = document.createElement('div');
-    toggleBtn.id = 'gf-filter-toggle';
-    toggleBtn.innerText = '☰';
-    document.body.appendChild(toggleBtn);
+    const toggle = document.createElement('div');
+    toggle.id = 'gf-filter-toggle';
+    toggle.textContent = '☰';
+    document.body.appendChild(toggle);
 
     const style = document.createElement('style');
     style.textContent = `
       #gf-filter-sidebar {
-        position: fixed;
-        top: 0;
-        left: 0;
-        height: 100%;
-        width: 220px;
-        max-width: 80vw;
-        background: #ffffff;
-        box-shadow: 2px 0 8px rgba(0,0,0,0.2);
-        padding: 16px;
-        transform: translateX(-100%);
-        transition: transform 0.3s ease;
-        z-index: 9999;
-        font-family: sans-serif;
-        overflow-y: auto;
-      }
-      #gf-filter-sidebar.open {
-        transform: translateX(0);
-      }
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 250px;
+  height: 100%;
+  background: #fff;
+  padding: 12px;
+  box-shadow: 2px 0 8px rgba(0,0,0,.2);
+  transform: translateX(-100%);
+  transition: .3s;
+  z-index: 9999;
+  font-family: sans-serif;
+
+  display: flex;
+  flex-direction: column;
+}
+      #gf-filter-sidebar.open { transform: translateX(0); }
       #gf-filter-toggle {
         position: fixed;
-        top: 900px;
         left: 0;
-        width: 40px;
-        height: 40px;
+        top: 95%;
+        width: 36px;
+        height: 36px;
         background: #007acc;
-        color: white;
-        font-size: 20px;
+        color: #fff;
         display: flex;
-        justify-content: center;
         align-items: center;
-        border-top-right-radius: 8px;
-        border-bottom-right-radius: 8px;
-        box-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+        justify-content: center;
         cursor: pointer;
+        border-radius: 0 6px 6px 0;
         z-index: 10000;
-        transition: background 0.3s;
       }
-      #gf-filter-toggle:hover {
-        background: #005fa3;
-      }
-      #input-container {
-        position: sticky;
-        top: 0;
-        background: white;
-        padding-bottom: 10px;
-        z-index: 1;
+      #input-box {
         display: flex;
         flex-wrap: wrap;
         gap: 6px;
-        align-items: center;
-        border-bottom: 1px solid #ddd;
         margin-bottom: 10px;
       }
-      #input-container input[type="text"] {
-        flex: 1;
-        padding: 4px 6px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-      }
-      #input-container button {
-        padding: 4px 8px;
-        background: #28a745;
-        border: none;
-        color: white;
-        border-radius: 4px;
-        cursor: pointer;
-      }
-      #keyword-list {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        max-height: calc(100vh - 260px);
-        overflow-y: auto;
-      }
-      #keyword-list li {
+     #rule-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  flex: 1;
+  overflow-y: auto;
+}
+      #rule-list li {
         display: flex;
-        align-items: center;
         gap: 6px;
-        padding: 4px 0;
+        align-items: center;
+        font-size: 13px;
         border-bottom: 1px dashed #ddd;
-        font-size: 14px;
+        padding: 4px 0;
       }
-      #keyword-list .remove-btn {
+      .remove {
         margin-left: auto;
-        background: transparent;
-        border: none;
-        color: #d00;
         cursor: pointer;
-        font-weight: bold;
+        color: #c00;
       }
+     #actions {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+
+  position: sticky;
+  bottom: 0;
+  background: #fff;
+  padding-top: 8px;
+  border-top: 1px solid #ddd;
+}
     `;
     document.head.appendChild(style);
 
-    function renderKeywords() {
-      const list = sidebar.querySelector('#keyword-list');
-      list.innerHTML = '';
-      keywords.forEach((keyword, index) => {
-        const li = document.createElement('li');
-        li.innerHTML = `
-          <input type="checkbox" class="keyword-checkbox" data-index="${index}">
-          <span class="keyword-text" title="${keyword.text}">${keyword.text}${keyword.caseSensitive ? ' (区分大小写)' : ''}</span>
-          <button class="remove-btn" data-index="${index}">✕</button>
-        `;
-        list.appendChild(li);
-      });
+    /* ========= 核心逻辑 ========= */
 
-      list.querySelectorAll('.remove-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const index = Number(btn.dataset.index);
-          keywords.splice(index, 1);
-          saveKeywords();
-          renderKeywords();
-          applyFilter();
-        });
-      });
-    }
-
-    function saveKeywords() {
-      localStorage.setItem('gf_filter_keywords', JSON.stringify(keywords));
+    function getAuthors(li) {
+      const raw = li.getAttribute('data-script-authors');
+      if (!raw) return [];
+      try {
+        const obj = JSON.parse(raw.replace(/&quot;/g, '"'));
+        return Object.values(obj);
+      } catch {
+        return [];
+      }
     }
 
     function applyFilter() {
-      const items = document.querySelectorAll('.script-list li');
-      items.forEach(item => {
-        const titleEl = item.querySelector('h2 a');
-        if (!titleEl) return;
-        const title = titleEl.textContent;
-        const hidden = keywords.some(k => {
-          return k.caseSensitive
-            ? title.includes(k.text)
-            : title.toLowerCase().includes(k.text.toLowerCase());
+      document.querySelectorAll('.script-list li').forEach(li => {
+        const title = li.querySelector('h2 a')?.textContent || '';
+        const authors = getAuthors(li);
+
+        const hide = rules.some(r => {
+          if (r.type === 'title') {
+            return r.caseSensitive
+              ? title.includes(r.text)
+              : title.toLowerCase().includes(r.text.toLowerCase());
+          }
+          return authors.some(a =>
+            r.caseSensitive
+              ? a === r.text
+              : a.toLowerCase() === r.text.toLowerCase()
+          );
         });
-        item.style.display = hidden ? 'none' : '';
+
+        li.style.display = hide ? 'none' : '';
       });
     }
 
-    sidebar.querySelector('#add-btn').addEventListener('click', () => {
-      const input = sidebar.querySelector('#new-keyword');
-      const checkbox = sidebar.querySelector('#case-sensitive');
-      const text = input.value.trim();
-      const caseSensitive = checkbox.checked;
-      if (text && !keywords.some(k => k.text === text && k.caseSensitive === caseSensitive)) {
-        keywords.push({ text, caseSensitive });
-        saveKeywords();
-        renderKeywords();
-        applyFilter();
-        input.value = '';
-        checkbox.checked = false;
-      }
-    });
+    function save() {
+      localStorage.setItem('gf_filter_keywords', JSON.stringify(rules));
+    }
 
-    sidebar.querySelector('#new-keyword').addEventListener('keydown', e => {
-      if (e.key === 'Enter') {
-        sidebar.querySelector('#add-btn').click();
-      }
-    });
+    function render() {
+      const ul = sidebar.querySelector('#rule-list');
+      ul.innerHTML = '';
+      rules.forEach((r, i) => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <input type="checkbox" data-i="${i}">
+          <span>[${r.type === 'author' ? '作者精确' : '标题'}] ${r.text}</span>
+          <span class="remove" data-i="${i}">✕</span>
+        `;
+        ul.appendChild(li);
+      });
 
-    sidebar.querySelector('#delete-selected-btn').addEventListener('click', () => {
-      const checkedBoxes = sidebar.querySelectorAll('.keyword-checkbox:checked');
-      if (checkedBoxes.length === 0) return;
-      const toDeleteIndices = Array.from(checkedBoxes).map(box => Number(box.dataset.index));
-      toDeleteIndices.sort((a, b) => b - a).forEach(i => keywords.splice(i, 1));
-      saveKeywords();
-      renderKeywords();
+      ul.querySelectorAll('.remove').forEach(btn => {
+        btn.onclick = () => {
+          rules.splice(btn.dataset.i, 1);
+          save();
+          render();
+          applyFilter();
+        };
+      });
+    }
+
+    /* ========= 事件 ========= */
+
+    sidebar.querySelector('#add-rule').onclick = () => {
+      const text = sidebar.querySelector('#rule-text').value.trim();
+      if (!text) return;
+
+      rules.push({
+        type: sidebar.querySelector('#rule-type').value,
+        text,
+        caseSensitive: sidebar.querySelector('#case-sensitive').checked
+      });
+
+      save();
+      render();
       applyFilter();
-    });
+      sidebar.querySelector('#rule-text').value = '';
+    };
 
-    // 导出关键字
-    sidebar.querySelector('#export-btn').addEventListener('click', () => {
-      if (keywords.length === 0) {
-        alert('没有关键字可导出！');
-        return;
-      }
-      // 每行：关键字\t区分大小写(true/false)
-      const content = keywords.map(k => `${k.text}\t${k.caseSensitive}`).join('\n');
-      const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
-      const url = URL.createObjectURL(blob);
+    sidebar.querySelector('#select-all').onclick = () => {
+      sidebar.querySelectorAll('#rule-list input[type="checkbox"]')
+        .forEach(cb => cb.checked = true);
+    };
 
+    sidebar.querySelector('#delete-selected').onclick = () => {
+      const idx = [...sidebar.querySelectorAll('#rule-list input:checked')]
+        .map(cb => cb.dataset.i)
+        .sort((a, b) => b - a);
+
+      idx.forEach(i => rules.splice(i, 1));
+      save();
+      render();
+      applyFilter();
+    };
+
+    sidebar.querySelector('#export').onclick = () => {
+      if (!rules.length) return alert('没有可导出的规则');
+      const text = rules.map(r => `${r.type}\t${r.text}\t${r.caseSensitive}`).join('\n');
+      const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
       const a = document.createElement('a');
-      a.href = url;
-      a.download = 'gf_filter_keywords.txt';
+      a.href = URL.createObjectURL(blob);
+      a.download = 'gf_filter_rules.txt';
       a.click();
-      URL.revokeObjectURL(url);
-    });
+    };
 
-    // 导入关键字
-    const importFileInput = sidebar.querySelector('#import-file');
-    sidebar.querySelector('#import-btn').addEventListener('click', () => {
-      importFileInput.value = null;
-      importFileInput.click();
-    });
+    sidebar.querySelector('#import').onclick = () => {
+      sidebar.querySelector('#import-file').click();
+    };
 
-    importFileInput.addEventListener('change', (e) => {
+    sidebar.querySelector('#import-file').onchange = e => {
       const file = e.target.files[0];
       if (!file) return;
       const reader = new FileReader();
-      reader.onload = (ev) => {
-        const text = ev.target.result;
-        // 按行解析，每行格式：关键字\t区分大小写(true/false)
-        const lines = text.split(/\r?\n/);
-        let addedCount = 0;
-        lines.forEach(line => {
-          const [word, cs] = line.split('\t');
-          if (word && cs) {
-            const caseSensitive = cs.trim().toLowerCase() === 'true';
-            if (!keywords.some(k => k.text === word && k.caseSensitive === caseSensitive)) {
-              keywords.push({ text: word, caseSensitive });
-              addedCount++;
-            }
+      reader.onload = ev => {
+        ev.target.result.split(/\r?\n/).forEach(line => {
+          const [type, text, cs] = line.split('\t');
+          if (!type || !text) return;
+          if (!rules.some(r => r.type === type && r.text === text)) {
+            rules.push({
+              type,
+              text,
+              caseSensitive: cs === 'true'
+            });
           }
         });
-        if (addedCount > 0) {
-          saveKeywords();
-          renderKeywords();
-          applyFilter();
-          alert(`成功导入 ${addedCount} 条关键字`);
-        } else {
-          alert('没有导入任何新关键字');
-        }
+        save();
+        render();
+        applyFilter();
       };
       reader.readAsText(file);
-    });
+    };
 
-    toggleBtn.addEventListener('click', e => {
+    toggle.onclick = e => {
       e.stopPropagation();
       sidebar.classList.toggle('open');
-    });
-
+    };
     document.addEventListener('click', e => {
-      if (!sidebar.contains(e.target) && !toggleBtn.contains(e.target)) {
+      if (!sidebar.contains(e.target) && !toggle.contains(e.target)) {
         sidebar.classList.remove('open');
       }
     });
 
-    renderKeywords();
+    render();
     applyFilter();
   }
 })();

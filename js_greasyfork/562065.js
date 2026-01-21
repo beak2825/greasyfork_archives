@@ -1,22 +1,24 @@
 // ==UserScript==
-// @name         ClaimCoin Multi Faucet Rotator PRO
+// @name         ClaimCoin Multi Faucet Rotator PRO (With Reset)
 // @namespace    https://claimcoin.in/
-// @version      1.2
-// @description  Auto Login + Smart UI + 100 Claims Per Faucet + Auto Faucet Rotator + Smart Result Detection + Auto Click After Recaptcha V3 + Auto Go Claim
+// @version      1.3
+// @description  Auto Login + Smart UI + 100 Claims Per Faucet + Auto Faucet Rotator + Reset Button
 // @author       Rubystance
 // @license      MIT
 // @match        https://claimcoin.in/*
 // @grant        GM_setValue
 // @grant        GM_getValue
+// @grant        GM_listValues
+// @grant        GM_deleteValue
 // @run-at       document-end
-// @downloadURL https://update.greasyfork.org/scripts/562065/ClaimCoin%20Multi%20Faucet%20Rotator%20PRO.user.js
-// @updateURL https://update.greasyfork.org/scripts/562065/ClaimCoin%20Multi%20Faucet%20Rotator%20PRO.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/562065/ClaimCoin%20Multi%20Faucet%20Rotator%20PRO%20%28With%20Reset%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/562065/ClaimCoin%20Multi%20Faucet%20Rotator%20PRO%20%28With%20Reset%29.meta.js
 // ==/UserScript==
 
 (function () {
     'use strict';
 
-    const EMAIL = "YOUR_FAUCETPAY_EMAIL_HERE"; // << YOUR_FAUCETPAY_EMAIL
+    const EMAIL = "izeonix19@gmail.com";
     const MAX_CLAIMS = 100;
     const REF_URL = "https://claimcoin.in/multi/?r=783";
 
@@ -48,6 +50,7 @@
     }
 
     let current = GM_getValue("currentFaucet", 0);
+    if (current >= faucets.length) current = 0;
     let faucet = faucets[current];
 
     if (!location.href.includes(faucet.url)) {
@@ -77,16 +80,31 @@
     z-index:99999;
     width:230px;
     box-shadow:0 0 15px #00ffd5;">
-    <b>CLAIMCOIN PRO</b><br>
-    Faucet: ${faucet.name}<br>
-    Claims: ${claims}/${MAX_CLAIMS}<br>
-    <button id="nextF" style="margin-top:10px;width:100%;background:#00ffd5;border:none;padding:8px;border-radius:6px;font-weight:bold;">
-    NEXT
+    <b style="font-size:16px;">CLAIMCOIN PRO</b><br>
+    <small>Status: Running</small><hr style="border:0.5px solid #1a2635">
+    Faucet: <b>${faucet.name}</b><br>
+    Claims: <b>${claims}/${MAX_CLAIMS}</b><br>
+
+    <button id="nextF" style="margin-top:10px;width:100%;background:#00ffd5;border:none;padding:8px;border-radius:6px;font-weight:bold;cursor:pointer;color:#0b1320;">
+    NEXT FAUCET
+    </button>
+
+    <button id="resetF" style="margin-top:5px;width:100%;background:#ff4d4d;border:none;padding:8px;border-radius:6px;font-weight:bold;cursor:pointer;color:white;">
+    RESET ALL CLAIMS
     </button>
     </div>`;
     document.body.appendChild(ui);
 
+    // Funções dos Botões
     document.getElementById("nextF").onclick = () => nextFaucet();
+    document.getElementById("resetF").onclick = () => {
+        if(confirm("Do you want to reset all claim counters?")) {
+            faucets.forEach(f => GM_setValue("claims_" + f.name, 0));
+            GM_setValue("currentFaucet", 0);
+            alert("All claims reset to 0!");
+            location.reload();
+        }
+    };
 
     setTimeout(() => {
         const claimInterval = setInterval(() => {
@@ -145,14 +163,11 @@
 
     function autoGoClaim() {
         const buttons = document.querySelectorAll("a.btn.btn-primary");
-
         for (let btn of buttons) {
             if (btn.innerText.toLowerCase().includes("go claim")) {
                 if (!btn.dataset.clicked) {
                     btn.dataset.clicked = "true";
-
                     const delay = 1000 + Math.random() * 2000;
-
                     setTimeout(() => {
                         btn.dispatchEvent(new MouseEvent("mouseover", { bubbles: true }));
                         btn.dispatchEvent(new MouseEvent("mousedown", { bubbles: true }));

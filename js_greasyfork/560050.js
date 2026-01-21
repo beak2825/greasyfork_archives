@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         shopline店铺订单编辑query计价接口数据对比v2
 // @namespace    http://tampermonkey.net/
-// @version      1.27
+// @version      1.31
 // @description  捕捉所有GET请求的URL并输出到控制台
 // @author       skyhuang
-// @include      https://*.myshoplinestg.com/admin/*
+// @include      https://*.myshopline*.com/admin/*
 // @grant        none
 // @license      MIT
 // @downloadURL https://update.greasyfork.org/scripts/560050/shopline%E5%BA%97%E9%93%BA%E8%AE%A2%E5%8D%95%E7%BC%96%E8%BE%91query%E8%AE%A1%E4%BB%B7%E6%8E%A5%E5%8F%A3%E6%95%B0%E6%8D%AE%E5%AF%B9%E6%AF%94v2.user.js
@@ -193,6 +193,7 @@ function compareObject(sourceObj, targetObj) {
             // 在这里可以对响应进行处理，比如记录响应数据等
             // 克隆响应以便我们可以读取其内容
             const responseClone = response.clone();
+            url = url.replace(/\?.*$/, '')
             if ( url === '/admin/api/bff-web/trade/ofc/modify/order/settle/query') {
                     responseClone.json().then(data => {
                     console.log('go的接口响应结果:', data);

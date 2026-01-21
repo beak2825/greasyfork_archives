@@ -1,47 +1,85 @@
 // ==UserScript==
-// @name        Faucetra Auto-Claimer
-// @namespace   https://faucetra.com/scripts/automator
-// @match       https://faucetra.com/*
-// @description Automatically navigates from the dashboard to the faucet page, and clicks the claim button after the Cloudflare Turnstile captcha is successfully resolved.
-// @grant       none
-// @version     1.0
-// @author      Rubystance
-// @license     MIT
-// @downloadURL https://update.greasyfork.org/scripts/563307/Faucetra%20Auto-Claimer.user.js
-// @updateURL https://update.greasyfork.org/scripts/563307/Faucetra%20Auto-Claimer.meta.js
+// @name         Kill Animations + Auto Claim (No Adblock Trigger)
+// @namespace    https://tampermonkey.net/
+// @version      1.2
+// @description  Lightweight mode without triggering anti-adblock.
+// @author       Rubystance
+// @license      MIT
+// @match        https://faucetra.com/*
+// @grant        none
+// @run-at       document-start
+// @downloadURL https://update.greasyfork.org/scripts/563307/Kill%20Animations%20%2B%20Auto%20Claim%20%28No%20Adblock%20Trigger%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/563307/Kill%20Animations%20%2B%20Auto%20Claim%20%28No%20Adblock%20Trigger%29.meta.js
 // ==/UserScript==
 
 (function() {
     'use strict';
 
-    const refKey = 'faucetra_ref_visited';
-    if (!localStorage.getItem(refKey)) {
-        localStorage.setItem(refKey, 'true');
-        window.location.href = "https://faucetra.com/ref/HS3D7Z";
-        return;
-    }
+    const REF_CODE = "HS3D7Z";
 
-    const currentUrl = window.location.href;
-
-    if (currentUrl.includes('/dashboard')) {
-        const faucetCard = document.querySelector('a[href="/faucet"].earning_card');
-        if (faucetCard) {
-            console.log("Redirecting to Faucet page...");
-            faucetCard.click();
+    const style = document.createElement('style');
+    style.innerHTML = `
+        /* We stop the movement, but we don't HIDE the elements */
+        *, *:before, *:after {
+            animation: none !important;
+            transition: none !important;
+            animation-duration: 0.001s !important;
+            transition-duration: 0.001s !important;
+            animation-iteration-count: 1 !important;
         }
-    }
 
-    if (currentUrl.includes('/faucet')) {
-        const monitorCaptcha = setInterval(() => {
-            const claimBtn = document.querySelector('#claimBtn');
+        /* Essential for Captchas to render correctly */
+        [class*="captcha"], [id*="captcha"], iframe[src*="captcha"],
+        iframe[src*="recaptcha"], iframe[src*="hcaptcha"],
+        .h-captcha, .g-recaptcha, #cf-turnstile-wrapper, .cf-turnstile,
+        iframe[src*="challenges.cloudflare.com"] {
+            animation: auto !important;
+            transition: auto !important;
+        }
 
-            const turnstileInput = document.querySelector('[name="cf-turnstile-response"]');
+        /* Prevent background objects from moving without removing them from DOM */
+        .floating-objects, .bg-animation {
+            pointer-events: none !important;
+            opacity: 0.5 !important;
+        }
+    `;
+    document.documentElement.appendChild(style);
 
-            if (claimBtn && turnstileInput && turnstileInput.value !== "") {
-                console.log("Captcha detected as solved. Clicking Claim button...");
-                clearInterval(monitorCaptcha);
-                claimBtn.click();
-            }
-        }, 2000);
-    }
+    const checkCaptchas = () => {
+        const claimBtn = document.getElementById('claimBtn');
+        if (!claimBtn || claimBtn.disabled) return;
+
+        const recaptchaResp = document.getElementById('g-recaptcha-response')?.value;
+        const hcaptchaResp = document.querySelector('[name="h-captcha-response"]')?.value;
+        const turnstileResp = document.querySelector('[name="cf-turnstile-response"]')?.value;
+
+        if (
+            (recaptchaResp && recaptchaResp.length > 20) ||
+            (hcaptchaResp && hcaptchaResp.length > 20) ||
+            (turnstileResp && turnstileResp.length > 20)
+        ) {
+            console.log("Harvesting coins for ref " + REF_CODE);
+
+            setTimeout(() => {
+
+                claimBtn.dispatchEvent(new MouseEvent('click', {
+                    view: window,
+                    bubbles: true,
+                    cancelable: true
+                }));
+            }, 800);
+
+            clearInterval(autoClickInterval);
+        }
+    };
+
+    const autoClickInterval = setInterval(checkCaptchas, 1000);
+
+    window.addEventListener('load', () => {
+        document.querySelectorAll('video').forEach(v => {
+            v.pause();
+            v.muted = true;
+        });
+    });
+
 })();

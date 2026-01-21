@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Spotless for eBay
 // @namespace    https://github.com/OsborneLabs
-// @version      2.4.0
+// @version      2.4.1
 // @description  Hides sponsored listings, removes sponsored items, cleans links, & prevents tracking
 // @author       Osborne Labs
 // @license      GPL-3.0-only
@@ -397,7 +397,7 @@
     }
 
     function determineCarouselDetection() {
-        return isCheckoutPage() || isListingPage();
+        return isListingPage();
     }
 
     function observeURLMutation() {

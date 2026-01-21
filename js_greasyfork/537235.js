@@ -307,6 +307,7 @@
 	var lastModifiedTime = new Date(GM_info.script.lastModified);
 	console.log(`%cMcSkin.js%c ${GM_info.script.version}%c ${lastModifiedTime.getFullYear()}.${lastModifiedTime.getMonth()+1}.${lastModifiedTime.getDate()} ${lastModifiedTime.getHours()}:${lastModifiedTime.getMinutes()}`, "color:orange;font-weight:1000;font-size:1.5em", "font-weight:1000;font-size:1.2em", "font-weight:500;color:grey");
 	var defaultRotation = GM_getValue("defaultRotation", -0.25);
+	var isRotationReset;
 	var mouseFollowMode = GM_getValue("mouseFollowMode", "bedrock");
 	const box = document.createElement("div");
 	document.documentElement.append(box);
@@ -632,6 +633,9 @@ margin-top:20px;
 			player.cape.rotation.x = Math.sin(t) * 0.01 + basicCapeRotationX;
 			if (mouseFollowMode != "java") {
 				player.rotation.y = defaultRotation;
+			} else if (!isRotationReset) {
+				player.rotation.y = 0;
+				isRotationReset = true;
 			}
 			addAnimation(player, pr)
 		}
@@ -645,6 +649,10 @@ margin-top:20px;
 	const plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), -10);
 	const raycaster = new THREE.Raycaster();
 	const mouse = new THREE.Vector2();
+	const plane1 = new THREE.Plane(new THREE.Vector3(0, 0, 1), -25);
+	const raycaster1 = new THREE.Raycaster();
+	const pointOfIntersection1 = new THREE.Vector3();
+	const mouse1 = mouse;
 	const pointOfIntersection = new THREE.Vector3();
 	const head = skinViewer.playerObject.skin.head;
 	var isPlayingAfkAnimation;
@@ -811,10 +819,6 @@ margin-top:20px;
 		raycaster.ray.intersectPlane(plane, pointOfIntersection);
 		head.lookAt(pointOfIntersection);
 		if (mouseFollowMode == "java") {
-			const plane1 = new THREE.Plane(new THREE.Vector3(0, 0, 1), -25);
-			const raycaster1 = new THREE.Raycaster();
-			const pointOfIntersection1 = new THREE.Vector3();
-			const mouse1 = mouse;
 			mouse1.x *= Math.abs(Math.cos(skinViewer.playerObject.skin.rotation.y)); //鼠标平面x对应空间y
 			mouse1.y += 1.1;
 			mouse1.y *= 0.9;
@@ -937,6 +941,9 @@ margin-top:20px;
 			}
 			if (mouseFollowMode != "java") {
 				player.rotation.y = defaultRotation;
+			} else if (!isRotationReset) {
+				player.rotation.y = 0;
+				isRotationReset = true;
 			}
 			const t = (progress - progress0) * 20;
 			player.skin.rightArm.rotation.x = -0.4537860552 * 2 + 2 * Math.sin(t + Math.PI) * 0.3;
@@ -1204,6 +1211,7 @@ ${GM_getValue("positionLeft")?"位置:left "+GM_getValue("positionLeft")+" top:"
 		skinViewer.scene.remove(light);
 		if (mouseFollowMode == "bedrock") {
 			mouseFollowMode = "java";
+			isRotationReset = false;
 			changeMouseModeMenu = GM_registerMenuCommand("切换鼠标跟随至基岩版模式", changeMouseFollowMode);
 			skinViewer.globalLight.intensity = 1;
 			skinViewer.cameraLight.intensity = 0;

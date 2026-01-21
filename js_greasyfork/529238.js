@@ -32,9 +32,9 @@
     "###PDA-APIKEY###";
   const sort_enemies = true;
   let ever_sorted = false;
-  const CONTENT = "data-twse-content";
   const TRAVELING = "data-twse-traveling";
   const HIGHLIGHT = "data-twse-highlight";
+  const STATUS_DIFFERS = "data-twse-status-differs";
 
   try {
     GM_registerMenuCommand("Set Api Key", function () {
@@ -71,13 +71,23 @@
 
   GM_addStyle(`
 .members-list li:has(div.status[data-twse-highlight="true"]) {
-  background-color: #afa5 !important;
+  background-color: #99EB99 !important;
 }
-`);
-
-  GM_addStyle(`
+.members-list li:has(div.status[data-twse-status-differs="true"]) {
+  background-color: #C4974C !important;
+}
 .members-list div.status[data-twse-traveling="true"]::after {
-  color: #F287FF !important;
+  color: #696026 !important;
+}
+
+:root .dark-mode .members-list li:has(div.status[data-twse-highlight="true"]) {
+  background-color: #446944 !important;
+}
+:root .dark-mode .members-list li:has(div.status[data-twse-status-differs="true"]) {
+  background-color: #795315 !important;
+}
+:root .dark-mode .members-list div.status[data-twse-traveling="true"]::after {
+  color: #FFED76 !important;
 }
 `);
 
@@ -87,7 +97,7 @@
   color: transparent !important;
 }
 .members-list div.status::after {
-  content: attr(data-twse-content);
+  content: var(--twse-content);
   position: absolute;
   top: 0;
   left: 0;
@@ -102,7 +112,6 @@
 .members-list .ok.status::after {
     color: var(--user-status-green-color);
 }
-
 
 .members-list .not-ok.status::after {
     color: var(--user-status-red-color);
@@ -437,7 +446,10 @@
       }
       if (!status || !running) {
         // Make sure the user sees something before we've downloaded state
-        deferredWrites.push([status_DIV, CONTENT, status_DIV.textContent]);
+        status_DIV.style.setProperty(
+          "--twse-content",
+          `"${status_DIV.textContent}"`,
+        );
         return;
       }
 
@@ -449,65 +461,96 @@
       switch (status.state) {
         case "Abroad":
         case "Traveling":
+          // API says they're traveling but site has updated. Trust the site and sort them to the top.
           if (
             !(
               status_DIV.classList.contains("traveling") ||
               status_DIV.classList.contains("abroad")
             )
           ) {
-            deferredWrites.push([status_DIV, CONTENT, status_DIV.textContent]);
+            if (status_DIV.textContent == "Okay") {
+              if (li.getAttribute("data-sortA") != "0") {
+                deferredWrites.push([li, "data-sortA", "0"]);
+                dirtySort = true;
+              }
+              deferredWrites.push([status_DIV, STATUS_DIFFERS, "true"]);
+            }
+            status_DIV.style.setProperty(
+              "--twse-content",
+              `"${status_DIV.textContent}"`,
+            );
             break;
           }
+          deferredWrites.push([status_DIV, STATUS_DIFFERS, "false"]);
           if (status.description.includes("Traveling to ")) {
-            if (li.getAttribute("data-sortA") != "4") {
-              deferredWrites.push([li, "data-sortA", "4"]);
+            if (li.getAttribute("data-sortA") != "5") {
+              deferredWrites.push([li, "data-sortA", "5"]);
               dirtySort = true;
             }
             const content = "► " + status.description.split("Traveling to ")[1];
             data_location = content;
-            deferredWrites.push([status_DIV, CONTENT, content]);
+            status_DIV.style.setProperty("--twse-content", `"${content}"`);
           } else if (status.description.includes("In ")) {
-            if (li.getAttribute("data-sortA") != "3") {
-              deferredWrites.push([li, "data-sortA", "3"]);
+            if (li.getAttribute("data-sortA") != "4") {
+              deferredWrites.push([li, "data-sortA", "4"]);
               dirtySort = true;
             }
             const content = status.description.split("In ")[1];
             data_location = content;
-            deferredWrites.push([status_DIV, CONTENT, content]);
+            status_DIV.style.setProperty("--twse-content", `"${content}"`);
           } else if (status.description.includes("Returning")) {
-            if (li.getAttribute("data-sortA") != "2") {
-              deferredWrites.push([li, "data-sortA", "2"]);
+            if (li.getAttribute("data-sortA") != "3") {
+              deferredWrites.push([li, "data-sortA", "3"]);
               dirtySort = true;
             }
             const content =
               "◄ " + status.description.split("Returning to Torn from ")[1];
             data_location = content;
-            deferredWrites.push([status_DIV, CONTENT, content]);
+            status_DIV.style.setProperty("--twse-content", `"${content}"`);
           } else if (status.description.includes("Traveling")) {
-            if (li.getAttribute("data-sortA") != "5") {
-              deferredWrites.push([li, "data-sortA", "5"]);
+            if (li.getAttribute("data-sortA") != "6") {
+              deferredWrites.push([li, "data-sortA", "6"]);
               dirtySort = true;
             }
             const content = "Traveling";
             data_location = content;
-            deferredWrites.push([status_DIV, CONTENT, content]);
+            status_DIV.style.setProperty("--twse-content", `"${content}"`);
           }
           break;
         case "Hospital":
         case "Jail":
+          let now = new Date().getTime() / 1000;
+          if (window.getCurrentTimestamp) {
+            now = window.getCurrentTimestamp() / 1000;
+          }
+          const hosp_time_remaining = Math.round(status.until - now);
           if (
             !(
               status_DIV.classList.contains("hospital") ||
               status_DIV.classList.contains("jail")
             )
           ) {
-            deferredWrites.push([status_DIV, CONTENT, status_DIV.textContent]);
+            // Catch the natural but special case where someone meds out.
+            // Our API knowledge will be that they still have hospital time
+            // but they will be Okay.
+            if (hosp_time_remaining >= 0) {
+              if (li.getAttribute("data-sortA") != "0") {
+                deferredWrites.push([li, "data-sortA", "0"]);
+                dirtySort = true;
+              }
+              deferredWrites.push([status_DIV, STATUS_DIFFERS, "true"]);
+            }
+            status_DIV.style.setProperty(
+              "--twse-content",
+              `"${status_DIV.textContent}"`,
+            );
             deferredWrites.push([status_DIV, TRAVELING, "false"]);
             deferredWrites.push([status_DIV, HIGHLIGHT, "false"]);
             break;
           }
-          if (li.getAttribute("data-sortA") != "1") {
-            deferredWrites.push([li, "data-sortA", "1"]);
+          deferredWrites.push([status_DIV, STATUS_DIFFERS, "false"]);
+          if (li.getAttribute("data-sortA") != "2") {
+            deferredWrites.push([li, "data-sortA", "2"]);
             dirtySort = true;
           }
           if (status.description.includes("In a")) {
@@ -516,11 +559,6 @@
             deferredWrites.push([status_DIV, TRAVELING, "false"]);
           }
 
-          let now = new Date().getTime() / 1000;
-          if (window.getCurrentTimestamp) {
-            now = window.getCurrentTimestamp() / 1000;
-          }
-          const hosp_time_remaining = Math.round(status.until - now);
           if (hosp_time_remaining <= 0) {
             deferredWrites.push([status_DIV, HIGHLIGHT, "false"]);
             return;
@@ -530,9 +568,7 @@
           const h = Math.floor(hosp_time_remaining / 60 / 60);
           const time_string = `${pad_with_zeros(h)}:${pad_with_zeros(m)}:${pad_with_zeros(s)}`;
 
-          if (status_DIV.getAttribute(CONTENT) != time_string) {
-            deferredWrites.push([status_DIV, CONTENT, time_string]);
-          }
+          status_DIV.style.setProperty("--twse-content", `"${time_string}"`);
 
           if (hosp_time_remaining < 300) {
             deferredWrites.push([status_DIV, HIGHLIGHT, "true"]);
@@ -542,13 +578,17 @@
           break;
 
         default:
-          deferredWrites.push([status_DIV, CONTENT, status_DIV.textContent]);
-          if (li.getAttribute("data-sortA") != "0") {
-            deferredWrites.push([li, "data-sortA", "0"]);
+          status_DIV.style.setProperty(
+            "--twse-content",
+            `"${status_DIV.textContent}"`,
+          );
+          if (li.getAttribute("data-sortA") != "1") {
+            deferredWrites.push([li, "data-sortA", "1"]);
             dirtySort = true;
           }
           deferredWrites.push([status_DIV, TRAVELING, "false"]);
           deferredWrites.push([status_DIV, HIGHLIGHT, "false"]);
+          deferredWrites.push([status_DIV, STATUS_DIFFERS, "false"]);
           break;
       }
       if (li.getAttribute("data-location") != data_location) {

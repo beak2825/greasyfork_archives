@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name X.com Enhanced Gallery
 // @namespace https://github.com/PiesP/xcom-enhanced-gallery
-// @version 1.7.0
+// @version 1.7.1
 // @description Media viewer and download functionality for X.com
 // @author PiesP
 // @license MIT
@@ -34,7 +34,7 @@
 /*
  * Third-Party Licenses
  * ====================
- * Source: https://github.com/PiesP/xcom-enhanced-gallery/tree/v1.7.0/LICENSES
+ * Source: https://github.com/PiesP/xcom-enhanced-gallery/tree/v1.7.1/LICENSES
  *
  * MIT License
  *
@@ -60,7 +60,7 @@
  * SOFTWARE.
  *
  */
-(function(){if(typeof document==='undefined')return;var css="@layer xeg.components{:root{--xtt:opacity var(--xdt) var(--xeo), transform var(--xdt) var(--xeo), visibility 0ms;--xeg-spacing-gallery:clamp(var(--xs-s), 2.5vw, var(--xs-l));--xeg-spacing-mobile:clamp(var(--xs-xs), 2vw, var(--xs-m));--xeg-spacing-compact:clamp(.25rem, 1.5vw, var(--xs-s));--xth-o:0;--xth-v:hidden;--xth-pe:none}} @media (prefers-reduced-motion:reduce){@layer xeg.components{:root{--xtt:none} .xg-X9gZ{scroll-behavior:auto;transition:none} .xg-meO3{transition:none}}} .xg-X9gZ{position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:var(--xz-g, 10000);background:var(--xg-b);display:flex;flex-direction:column;transform:var(--xgh);will-change:opacity, transform;contain:layout style paint;opacity:1;visibility:visible;transition:var(--xten);cursor:default;pointer-events:auto;container-type:size;container-name:gallery-container;scroll-behavior:smooth;overscroll-behavior:none} .xg-meO3{position:fixed;top:0;left:0;right:0;height:auto;z-index:var(--xz-t, 2147483620);opacity:var(--toolbar-opacity, 0);visibility:var(--toolbar-visibility, hidden);display:block;transition:var(--xtt);will-change:transform, opacity, visibility;contain:layout style;transform:var(--xgh);backface-visibility:var(--xbv);pointer-events:var(--toolbar-pointer-events, none);background:transparent;border:none;border-radius:0;margin:0;padding-block-end:var(--xeg-spacing-gallery)} .xg-meO3:is(:hover,:focus-within){--toolbar-opacity:1;--toolbar-visibility:visible;--toolbar-pointer-events:auto} .xg-meO3:focus-within{transition:var(--xtef)} .xg-meO3 *{pointer-events:inherit} .xg-meO3 [data-gallery-element=\"settings-panel\"][data-expanded=\"true\"]{pointer-events:auto} .xg-meO3:has([data-gallery-element=\"settings-panel\"][data-expanded=\"true\"]){--toolbar-opacity:1;--toolbar-visibility:visible;--toolbar-pointer-events:auto} .xg-X9gZ.xg-9abg{cursor:none} .xg-X9gZ.xg-sOsS[data-xeg-gallery=\"true\"][data-xeg-role=\"gallery\"] .xg-meO3{--toolbar-opacity:var(--xth-o, 0);--toolbar-visibility:var(--xth-v, hidden);--toolbar-pointer-events:var(--xth-pe, none)} .xg-X9gZ *{pointer-events:auto} .xg-gmRW{flex:1;display:flex;flex-direction:column;overflow:auto;position:relative;z-index:0;contain:layout style;transform:var(--xgh);overscroll-behavior:contain;scrollbar-gutter:stable;pointer-events:auto;container-type:size;container-name:items-list} .xg-gmRW::-webkit-scrollbar{width:var(--xsw)} .xg-gmRW::-webkit-scrollbar-track{background:transparent} .xg-gmRW::-webkit-scrollbar-thumb{background:var(--xcn3);border-radius:var( --xsbr );transition:background-color var(--xdn) var(--xe-s)} .xg-gmRW::-webkit-scrollbar-thumb:hover{background:var(--xcn4)} .xg-X9gZ.xg-9abg .xg-meO3{pointer-events:none;opacity:0;transition:opacity var(--xdf) var(--xeo)} .xg-X9gZ.xg-9abg [data-xeg-role=\"items-list\"], .xg-X9gZ.xg-9abg .xg-gmRW{pointer-events:auto} .xg-X9gZ.xg-yhK-{justify-content:center;align-items:center} .xg-EfVa{position:relative;margin-bottom:var(--xs-m, 1rem);border-radius:var(--xr-l, .5rem);transition:var(--xten);contain:layout style;transform:var(--xgh)} .xg-LxHL{position:relative;z-index:1} .xg-sfF0{height:calc(100vh - var(--xeg-toolbar-height, 3.75rem));min-height:50vh;pointer-events:none;user-select:none;flex-shrink:0;background:transparent;opacity:0;contain:strict;content-visibility:auto} .xg-gC-m{position:fixed;top:0;left:0;right:0;height:var(--xhzh);z-index:var(--xz-th, 2147483618);background:transparent;pointer-events:auto} .xg-gC-m:hover{z-index:var(--xz-th);background:transparent} .xg-X9gZ.xg-Canm:not([data-settings-expanded=\"true\"]) .xg-gC-m, .xg-X9gZ:has(.xg-meO3:hover):not([data-settings-expanded=\"true\"]) .xg-gC-m{pointer-events:none} .xg-X9gZ.xg-Canm .xg-meO3, .xg-X9gZ:has(.xg-gC-m:hover) .xg-meO3{--toolbar-opacity:1;--toolbar-visibility:visible;--toolbar-pointer-events:auto} .xg-meO3 [class*=\"galleryToolbar\"]{opacity:var(--toolbar-opacity, 0);visibility:var(--toolbar-visibility, hidden);display:flex;pointer-events:var(--toolbar-pointer-events, none)} .xg-meO3 button, .xg-meO3 [role=\"button\"], .xg-meO3 .xg-e06X{pointer-events:auto;position:relative;z-index:10} .xg-fwsr{text-align:center;color:var(--xct-s);max-inline-size:min(25rem, 90vw);padding:clamp(1.875rem, 5vw, 2.5rem)} .xg-fwsr h3{margin:0 0 clamp(.75rem, 2vw, 1rem);font-size:clamp(1.25rem, 4vw, 1.5rem);font-weight:600;color:var(--xct-p);line-height:1.2} .xg-fwsr p{margin:0;font-size:clamp(.875rem, 2.5vw, 1rem);line-height:1.5;color:var(--xct-t)} @container gallery-container (max-width:48rem){.xg-gmRW{padding:var(--xeg-spacing-mobile);gap:var(--xeg-spacing-mobile)} .xg-meO3{padding-block-end:var(--xeg-spacing-mobile)}} @container gallery-container (max-width:30rem){.xg-gmRW{padding:var(--xeg-spacing-compact);gap:var(--xeg-spacing-compact)}} @media (prefers-reduced-motion:reduce){.xg-gmRW{scroll-behavior:auto;will-change:auto;transform:none}} @media (prefers-reduced-motion:reduce){.xg-meO3:hover, .xg-meO3:focus-within{transform:none}} .xg-X9gZ [class*=\"galleryToolbar\"]:hover{--toolbar-opacity:1;--toolbar-pointer-events:auto} .xg-huYo{position:relative;margin-bottom:var(--xs-m);margin-inline:auto;border-radius:var(--xr-l);overflow:visible;transition:var(--xti);cursor:pointer;border:.0625rem solid var(--xcb-p);background:var(--xcbg-s);padding:var(--xs-s);width:fit-content;max-width:100%;text-align:center;display:flex;flex-direction:column;align-items:center;pointer-events:auto;transform:var(--xgh);will-change:transform;contain:layout style} .xg-huYo[data-fit-mode=\"original\"]{max-width:none;flex-shrink:0;width:max-content;align-self:center} .xg-huYo:hover{transform:var(--xhl);background:var(--xc-se);border-color:var(--xbe)} .xg-huYo:focus-visible{border-color:var(--xfic, var(--xcb-p))} .xg-huYo.xg-xm-1{border-color:var(--xbe, var(--xcb-s));transition:var(--xti)} .xg-huYo.xg-xm-1:focus-visible{border-color:var(--xfic, var(--xcb-s))} .xg-huYo.xg-luqi{border-color:var(--xfic, var(--xcb-p));transition:var(--xti)} .xg-8-c8{position:relative;background:var(--xcbg-s);width:fit-content;max-width:100%;margin:0 auto;display:flex;justify-content:center;align-items:center;contain:layout paint} .xg-huYo[data-fit-mode=\"original\"] .xg-8-c8{width:auto;max-width:none} .xg-huYo[data-media-loaded=\"false\"] .xg-8-c8{min-height:var(--xs-3);aspect-ratio:var(--xad)} .xg-lhkE{position:absolute;top:0;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;background:var(--xsk-b);min-height:var(--xs-3)} .xg-6YYD{--xsp-s:var(--xs-l);--xsp-bw:.125rem;--xsp-tc:var(--xcb-p);--xsp-ic:var(--xc-p)} .xg-FWlk, .xg-GUev{display:block;border-radius:var(--xr-m);object-fit:contain;pointer-events:auto;user-select:none;-webkit-user-drag:none;transform:var(--xgh);will-change:opacity;transition:opacity var(--xdn) var(--xeo)}:is(.xg-FWlk, .xg-GUev).xg-8Z3S{opacity:0}:is(.xg-FWlk, .xg-GUev).xg-y9iP{opacity:1} .xg-GUev{inline-size:100%;overflow:clip}:is(.xg-FWlk, .xg-GUev).xg-yYtG{inline-size:auto;block-size:auto;max-inline-size:none;max-block-size:none;object-fit:none}:is(.xg-FWlk, .xg-GUev).xg-Uc0o{inline-size:auto;block-size:auto;max-inline-size:100%;max-block-size:none;object-fit:scale-down}:is(.xg-FWlk, .xg-GUev).xg-M9Z6{inline-size:auto;block-size:auto;max-inline-size:calc(100vw - var(--xs-l) * 2);max-block-size:var(--xvhc);object-fit:scale-down}:is(.xg-FWlk, .xg-GUev).xg--Mlr{inline-size:auto;block-size:auto;max-inline-size:100%;max-block-size:var(--xvhc);object-fit:contain} .xg-Wno7{font-size:var(--xfs-2);margin-bottom:var(--xs-s)} .xg-8-wi{font-size:var(--xfs-s);text-align:center} .xg-Gswe{position:absolute;top:0;left:0;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--xc-e-bg);color:var(--xc-e);min-height:var(--xs-3)} .xg-huYo[data-media-loaded=\"false\"][data-fit-mode=\"original\"]{inline-size:min(var(--xgi-w, 100%), 100%);max-inline-size:min(var(--xgi-w, 100%), 100%);max-block-size:min( var(--xgi-h, var(--xs-5)), var(--xvhc) )} .xg-huYo[data-media-loaded=\"false\"][data-fit-mode=\"original\"] .xg-FWlk, .xg-huYo[data-media-loaded=\"false\"][data-fit-mode=\"original\"] .xg-GUev{inline-size:min(var(--xgi-w, 100%), 100%);max-inline-size:min(var(--xgi-w, 100%), 100%);max-block-size:min( var(--xgi-h, var(--xs-5)), var(--xvhc) )} .xg-huYo[data-media-loaded=\"false\"][data-has-intrinsic-size=\"true\"][data-fit-mode=\"fitHeight\"], .xg-huYo[data-media-loaded=\"false\"][data-has-intrinsic-size=\"true\"][data-fit-mode=\"fitContainer\"]{--xgf-ht:min( var(--xgi-h, var(--xs-5)), var(--xvhc) );max-block-size:var(--xgf-ht);inline-size:min( 100%, calc(var(--xgf-ht) * var(--xgi-r, 1)) );max-inline-size:min( 100%, calc(var(--xgf-ht) * var(--xgi-r, 1)) )} .xg-huYo[data-media-loaded=\"false\"][data-has-intrinsic-size=\"true\"]:is( [data-fit-mode=\"fitHeight\"], [data-fit-mode=\"fitContainer\"] ):is(.xg-FWlk, .xg-GUev){max-block-size:var(--xgf-ht);max-inline-size:min( 100%, calc(var(--xgf-ht) * var(--xgi-r, 1)) )} @media (prefers-reduced-motion:reduce){.xg-huYo{will-change:auto;transition:none} .xg-huYo:hover{transform:none}:where(.xg-FWlk, .xg-GUev){will-change:auto;transition:none}} .xg-EeSh{display:flex;flex-direction:column;gap:var(--xse-g);padding:var(--xse-p)} .xg-nm9B{gap:var(--sps)} .xg-PI5C{display:flex;flex-direction:column;gap:var(--xse-cg)} .xg-VUTt{gap:var(--spx)} .xg-vhT3{font-size:var(--xse-lf);font-weight:var(--xse-lw);color:var(--xct-p)} .xg-Y62M{font-size:var(--fsx);color:var(--xct-s);letter-spacing:.04em;text-transform:uppercase} .xg-jpiS{width:100%;padding:var(--xse-sp);font-size:var(--xse-sf);color:var(--xct-p);background-color:var(--xte-b);border:var(--bwt) solid var(--xt-b);border-radius:var(--xr-m);cursor:pointer;line-height:1.375;min-height:2.75em;transform:none;overflow:visible;transition:border-color var(--xdf) var(--xe-s), background-color var(--xdf) var(--xe-s), box-shadow var(--xdf) var(--xe-s)} .xg-jpiS:hover{border-color:var(--xcb-h);background-color:var(--xte-bs);box-shadow:0 0 0 2px color-mix(in oklch, var(--xt-b) 20%, transparent 80%)} .xg-jpiS:focus, .xg-jpiS:focus-visible{border-color:var(--xfic);box-shadow:0 0 0 3px color-mix(in oklch, var(--xfic) 25%, transparent 75%)} .xg-jpiS option{padding:.5em .75em;line-height:1.5} .xg-4eoj{color:var(--xtt-c, var(--xct-p));cursor:pointer;font-size:.875em;font-weight:500;width:var(--xsb-m);height:var(--xsb-m);min-width:var(--xsb-m);min-height:var(--xsb-m);padding:.5em;aspect-ratio:1;position:relative;overflow:clip;border-radius:var(--xr-m);background:transparent;border:none;transition:var(--xts), transform var(--xdf) var(--xe-s)} .xg-4eoj:focus, .xg-4eoj:focus-visible{background:var(--xte-b, var(--xcn1))} .xg-fLg7{--toolbar-surface-base:var( --xtp-s, var(--xt-s, var(--xcbg-p, Canvas)) );--toolbar-surface-border:var(--xt-b);background:var(--toolbar-surface-base);border:none;border-radius:var(--xr-l);position:fixed;top:1.25em;left:50%;transform:translateX(-50%);z-index:var(--xz-t, 2147483620);display:var(--toolbar-display, inline-flex);align-items:center;justify-content:space-between;height:3em;padding:.5em 1em;gap:0;color:var(--xtt-c, var(--xct-p));visibility:var(--toolbar-visibility, visible);opacity:var(--toolbar-opacity, 1);pointer-events:var(--toolbar-pointer-events, auto);transition:var(--xten);user-select:none;overscroll-behavior:contain} .xg-fLg7.xg-ZpP8, .xg-fLg7.xg-t4eq{border-radius:var(--xr-l) var(--xr-l) 0 0} .xg-fLg7.xg-ojCW{--toolbar-opacity:1;--toolbar-pointer-events:auto;--toolbar-visibility:visible;--toolbar-display:inline-flex} .xg-fLg7.xg-Y6KF, .xg-fLg7.xg-n-ab, .xg-fLg7.xg-bEzl{--toolbar-opacity:1;--toolbar-pointer-events:auto;--toolbar-visibility:visible;--toolbar-display:inline-flex} .xg-f8g4{display:flex;align-items:center;justify-content:center;width:100%;max-width:100%;overflow:hidden} .xg-Ix3j{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:var(--xs-xs);width:100%} .xg-Ix3j > *{flex:0 0 auto} .xg-0EHq{display:flex;align-items:center;justify-content:center;padding-inline:var(--xs-s);min-width:5em} .xg-FKnO{color:var(--xtt-m, var(--xct-p));margin:0 .125em}:where(.xg-4eoj[aria-pressed=\"true\"]){background:var(--xte-bs, var(--xcn2))} .xg-4eoj:disabled{color:var(--xtt-m, var(--xcn4));cursor:not-allowed} @media (hover:hover){.xg-4eoj:hover:not(:disabled){background:var(--xte-b, var(--xcn1));transform:translateY(var(--xb-l))}} .xg-4eoj:active:not(:disabled){background:var(--xte-bs, var(--xcn2));transform:translateY(0)} .xg-njlf{} .xg-AU-d{} .xg-Vn14{} .xg-atmJ{position:relative} .xg-GG86{position:relative;gap:0;min-width:5em;min-height:2.5em;padding-bottom:.5em;box-sizing:border-box} .xg-2cjm{color:var(--xtt-c, var(--xct-p));font-size:var(--xfs-m);font-weight:600;text-align:center;white-space:nowrap;line-height:1;background:transparent;padding:.25em .5em;border-radius:var(--xr-m);border:none} .xg-JEXm{color:var(--xtt-c, var(--xct-p));font-weight:700} .xg-d1et{color:var(--xtt-c, var(--xct-p))} .xg-vB6N{position:absolute;left:50%;bottom:.125em;transform:translateX(-50%);width:3.75em;height:.125em;background:var(--xtp-pt, var(--xcn2));border-radius:var(--xr-s);overflow:clip} .xg-LWQw{width:100%;height:100%;background:var(--xtt-c, var(--xct-p));border-radius:var(--xr-s);transition:var(--xtwn);transform-origin:left} .xg-Q7dU, button.xg-Q7dU{transition:var(--xti);position:relative;z-index:10;pointer-events:auto} .xg-Q7dU[data-selected=\"true\"]{} .xg-Q7dU:focus, .xg-Q7dU:focus-visible{border:none} @media (prefers-reduced-transparency:reduce){.xg-fLg7{background:var(--xtp-s, var(--xt-s))} [data-theme=\"dark\"] .xg-fLg7{background:var(--xtp-s, var(--xt-s))}} @media (prefers-reduced-motion:reduce){.xg-4eoj:hover:not(:disabled), .xg-atmJ:hover:not(:disabled), .xg-Vn14:hover:not(:disabled), .xg-Q7dU:hover{transform:none}}:where(.xg-JcF-, .xg-yRtv){position:absolute;top:100%;left:0;right:0;width:100%;display:flex;flex-direction:column;gap:var(--xs-m);padding:var(--xs-l);max-height:var(--xtp-mh);overflow:hidden;opacity:0;transform:translateY(-.5em);visibility:hidden;pointer-events:none;transition:var(--xtp-t), transform var(--xdn) var(--xe-s), visibility 0s var(--xdn);background:var( --toolbar-surface-base, var(--xtp-s, var(--xt-s)) );border-top:var(--bwt) solid var(--toolbar-surface-border, var(--xt-b));border-radius:0 0 var(--xr-l) var(--xr-l);z-index:var(--xz-tp);will-change:transform, opacity;overscroll-behavior:contain} .xg-JcF-{height:var(--xtp-h)} .xg-yRtv{min-height:var(--xtp-h)}:where(.xg-JcF-, .xg-yRtv).xg-4a2L{height:auto;opacity:1;transform:translateY(0);visibility:visible;pointer-events:auto;border-top-color:var(--toolbar-surface-border, var(--xt-b));transition:var(--xtp-t), transform var(--xdn) var(--xe-s), visibility 0s 0s;z-index:var(--xz-ta)} .xg-w56C{display:flex;flex-direction:column;gap:var(--xs-s)} .xg-rSWg{display:flex;align-items:center;padding-bottom:var(--xs-xs);border-bottom:var(--bwt) solid var(--toolbar-surface-border);margin-bottom:var(--xs-s)} .xg-jd-V{font-size:var(--xfs-s);font-weight:var(--xfw-s);color:var(--xtt-c);text-transform:uppercase;letter-spacing:.04em} .xg-jmjG{padding:var(--xs-s) var(--xs-m);font-size:var(--xfs-b);line-height:var(--xeg-line-height-snug);color:var(--xtt-c, var(--xct-p));background:var( --toolbar-surface-base, var(--xtp-s, var(--xt-s)) );border:var(--bwt) solid var(--toolbar-surface-border, var(--xt-b));border-radius:var(--xr-m);white-space:pre-wrap;word-wrap:break-word;overflow-y:auto;overscroll-behavior:contain;max-height:18em;transition:var(--xts);user-select:text;-webkit-user-select:text;cursor:text} .xg-jmjG::-webkit-scrollbar{width:.5em} .xg-jmjG::-webkit-scrollbar-track{background:var(--xts-t, var(--xcn2));border-radius:var(--xr-s)} .xg-jmjG::-webkit-scrollbar-thumb{background:var(--xts-th, var(--xcn4));border-radius:var(--xr-s)} .xg-jmjG::-webkit-scrollbar-thumb:hover{background:var(--xte-bs, var(--xcn5))} .xg-jmjG a{color:var(--xc-p);text-decoration:none;font-weight:var(--xfw-m);padding:.125em .25em;margin:-.125em -.25em;border-radius:var(--xr-xs);overflow-wrap:break-word;transition:color var(--xdf) var(--xe-s), background-color var(--xdf) var(--xe-s);cursor:pointer} .xg-jmjG a:hover{color:var(--xc-ph);background:var(--xte-b);text-decoration:underline;text-decoration-thickness:.0625rem;text-underline-offset:.125em} .xg-jmjG a:focus, .xg-jmjG a:focus-visible{background:var(--xte-bs, var(--xcn2));color:var(--xc-ph);border-radius:var(--xr-xs)} .xg-jmjG a:active{color:var(--xc-p-active)} .xg-0Eeq{display:flex;align-items:center;gap:var(--xs-xs);padding:var(--xs-s);margin-bottom:var(--xs-s);background:var(--xte-bs);border:var(--bwt) solid var(--toolbar-surface-border, var(--xt-b));border-radius:var(--xr-s);transition:var(--xts)} .xg-0Eeq:hover{background:color-mix( in oklch, var(--xte-bs) 85%, var(--xc-p) 15% );border-color:var(--xcb-h)} .xg-AVKe{display:flex;align-items:center;gap:.375em;width:100%;color:var(--xc-p);text-decoration:none;font-size:var(--xfs-s);font-weight:500;transition:color var(--xdf) var(--xe-s)} .xg-AVKe:hover{color:var(--xc-ph)} .xg-AVKe:focus, .xg-AVKe:focus-visible{outline:.125rem solid var(--xfic);outline-offset:.125rem;border-radius:var(--xr-xs)} .xg-5RjR{flex-shrink:0;width:.875em;height:.875em;stroke:currentColor} .xg-8Stf{flex-shrink:0;color:var(--xtt-m, var(--xct-s));font-weight:600} .xg-3pwZ{flex:1;color:var(--xc-p);overflow:hidden;text-overflow:ellipsis;white-space:nowrap} .xg-sltl{width:100%;height:var(--bwt);background:color-mix(in oklch, var(--toolbar-surface-border) 60%, transparent 40%);margin:var(--xs-m) 0;border-radius:var(--xr-s)} @layer xeg.features{:where(.xeg-surface, .xeg-glass-surface){background:var(--xsu-b);border:var(--bwt) solid var(--xsu-br);border-radius:var(--xr-2);isolation:isolate;transition:opacity var(--xdn) var(--xe-s)}:where(.xeg-surface, .xeg-glass-surface):hover{background:var(--xsu-bh, var(--xsu-b))} .xeg-gallery-renderer[data-renderer=\"gallery\"]{display:block;width:0;height:0;overflow:visible} .xeg-gallery-overlay{display:flex;align-items:center;justify-content:center;position:fixed;inset:0;z-index:var(--xz-g, 10000);background:var(--xg-b);opacity:1;transition:opacity var(--xdn) var(--xe-s);pointer-events:auto} .xeg-gallery-container{position:relative;width:100%;height:100%;max-width:100vw;max-height:100vh;display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;scrollbar-gutter:stable both-edges}} @layer xeg.tokens, xeg.base, xeg.utilities, xeg.components, xeg.features, xeg.overrides;@layer xeg.tokens{:where(:root, .xeg-theme-scope){--cbw:oklch(1 0 0);--cbb:oklch(0 0 0);--cg0:oklch(.97 .002 206.2);--cg1:oklch(.943 .006 206.2);--cg2:oklch(.896 .006 206.2);--cg3:oklch(.796 .006 206.2);--cg4:oklch(.696 .006 286.3);--cg5:oklch(.598 .006 286.3);--cg6:oklch(.488 .006 286.3);--cg7:oklch(.378 .005 286.3);--cg8:oklch(.306 .005 282);--cg9:oklch(.234 .006 277.8);--spx:.25rem;--sps:.5rem;--spm:1rem;--spl:1.5rem;--rs:.25em;--rm:.375em;--rl:.5em;--r2:1em;--rf:50%;--ffp:\"TwitterChirp\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif;--fsx:.75rem;--fss:.875rem;--fsb:.9375rem;--fsm:1rem;--fs2:1.5rem;--fwm:500;--fws:600;--fwb:700;--df:150ms;--dn:250ms;--bwt:.0625rem;--line-height-snug:1.375;--lhn:1.5}} @layer xeg.tokens{:where(:root, .xeg-theme-scope){--xcbg-p:var(--cbw);--xcbg-s:var(--cg0);--xeg-color-bg-surface:var(--cbw);--xeg-color-bg-elevated:var(--cbw);--xbgt:var(--xeg-color-bg-surface);--xt-b:var(--xcb-p);--xt-s:var(--xbgt);--xtp-s:var(--xt-s);--xg-bl:var(--cbp);--xg-bd:var(--cg9);--xg-b:var(--xg-bl);--xad:4 / 3;--xct-p:var(--cbb);--xct-s:var(--cg6);--xeg-color-border-default:var(--cg2);--xeg-color-border-emphasis:var(--cg5);--xcb-p:var(--xeg-color-border-default);--xcb-h:var(--cg3);--xcb-s:var(--xeg-color-border-emphasis);--xtt-c:var(--xct-p);--xtt-m:var(--xct-s);--xte-b:color-mix( in oklch, var(--xbgt) 80%, var(--cbw) 20% );--xte-bs:color-mix( in oklch, var(--xbgt) 65%, var(--cbw) 35% );--xte-br:color-mix( in oklch, var(--xt-b) 85%, var(--cbw) 15% );--xtp-pt:color-mix( in oklch, var(--xte-b) 60%, var(--xte-br) 40% );--xts-t:color-mix( in oklch, var(--xte-b) 50%, var(--cbw) 50% );--xts-th:color-mix( in oklch, var(--xte-br) 80%, var(--cbw) 20% );--xc-e:var(--cg8);--xc-e-bg:var(--cg1);--xc-p:var(--cg9);--xc-ph:var(--cg7);--xc-p-active:var(--cg8);--xcn1:var(--cg1);--xcn2:var(--cg2);--xcn3:var(--cg3);--xcn4:var(--cg4);--xcn5:var(--cg5);--xct-p:var(--cbb);--xct-s:var(--cg6);--xct-t:var(--cg5);--xsb-m:2.5em;--xfic:var(--xcb-p);--xfs-s:var(--fss);--xfs-b:var(--fsb);--xfs-m:var(--fsm);--xfs-2:var(--fs2);--xfw-m:var(--fwm);--xfw-s:var(--fws);--xeg-line-height-snug:var(--line-height-snug);--xdf:var(--df);--xdn:var(--dn);--xdt:var(--dn);--xsu-b:var(--xeg-color-bg-surface);--xsu-br:var(--xeg-color-border-default);--xsu-bh:var(--xcbg-s);--xc-se:var(--xeg-color-bg-elevated);--xsk-b:var(--xcbg-s);--xbe:var(--xeg-color-border-emphasis);--xz-g:2147483600;--xz-th:2147483618;--xz-t:2147483620;--xz-tp:2147483622;--xz-ta:2147483624;--xe-s:cubic-bezier(.4, 0, .2, 1);--xe-d:cubic-bezier(0, 0, .2, 1);--xe-a:cubic-bezier(.4, 0, 1, 1);--xeo:cubic-bezier(.4, 0, .2, 1);--xel:linear;--xlh:var(--lhn, 1.5);--xb-l:-.0625rem;--xhl:translateY(-.125rem);--xr-s:var(--rs);--xr-m:var(--rm);--xr-l:var(--rl);--xr-2:var(--r2);--xr-f:var(--rf);--xeg-scrollbar-thumb-color:var(--cg4);--xeg-scrollbar-thumb-hover-color:var(--cg5)}:where(:root, .xeg-theme-scope)[data-theme=\"light\"]{--xcbg-p:var(--cbw);--xct-p:var(--cbb);--xct-s:var(--cg6);--xg-b:var(--xg-bl)}:where(:root, .xeg-theme-scope)[data-theme=\"dark\"]{--xcbg-p:var(--cg9);--xeg-color-bg-surface:var(--cg9);--xeg-color-bg-elevated:var(--cg7);--xct-p:var(--cbw);--xct-s:var(--cg4);--xbgt:var(--cg8);--xcb-p:var(--cg6);--xt-b:var(--cg6);--xcbg-s:var(--cg8);--xg-b:var(--xg-bd);--xtt-c:var(--xct-p);--xtt-m:var(--cg3);--xte-b:color-mix( in oklch, var(--xbgt) 85%, var(--cbb) 15% );--xte-bs:color-mix( in oklch, var(--xbgt) 70%, var(--cbb) 30% );--xte-br:color-mix( in oklch, var(--xt-b) 75%, var(--cbb) 25% );--xtp-pt:color-mix( in oklch, var(--xt-b) 65%, var(--xbgt) 35% );--xts-t:color-mix( in oklch, var(--xte-b) 80%, var(--cbb) 20% );--xts-th:color-mix( in oklch, var(--xte-br) 85%, var(--cbb) 15% );--xc-p:var(--cg1);--xc-ph:var(--cg2);--xc-p-active:var(--cg3);--xsu-b:var(--cg9);--xsu-br:var(--cg6);--xsu-bh:var(--cg8)} @media (prefers-reduced-motion:reduce){:where(:root, .xeg-theme-scope){--xdf:0ms;--xts:none;--xten:none;--xtef:none;--xti:none;--xtwn:none}}:where(:root, .xeg-theme-scope){--xse-g:var(--spm);--xse-p:var(--spm);--xse-cg:var(--sps);--xse-lf:var(--fss);--xse-lw:var(--fwb);--xse-sf:var(--fss);--xse-sp:var(--sps) var(--spm)}} @layer xeg.tokens{:where(:root, .xeg-theme-scope){--xtp-t:height var(--xdn) var(--xe-s), opacity var(--xdf) var(--xe-s);--xtp-h:0;--xtp-mh:17.5rem;--xsw:.5rem;--xhzh:7.5rem;--xsp-sd:1rem;--xsp-bw:.125rem;--xsp-tc:color-mix(in oklch, var(--xcn4) 60%, transparent);--xsp-ic:var(--xc-p, currentColor);--xsp-d:var(--xdn);--xsp-e:var(--xel);--xts:background-color var(--xdf) var(--xe-s), border-color var(--xdf) var(--xe-s), color var(--xdf) var(--xe-s);--xten:transform var(--xdn) var(--xe-s), opacity var(--xdn) var(--xe-s);--xtef:transform var(--xdf) var(--xe-s), opacity var(--xdf) var(--xe-s);--xti:background-color var(--xdf) var(--xeo), border-color var(--xdf) var(--xeo), color var(--xdf) var(--xeo), transform var(--xdf) var(--xeo);--xtwn:width var(--xdn) var(--xe-s);--xs-xs:var(--spx);--xs-s:var(--sps);--xs-m:var(--spm);--xs-l:var(--spl);--xvhc:90vh} @media (prefers-reduced-transparency:reduce){:where(:root, .xeg-theme-scope){--xsu-b:var(--xcbg-p)}}} @layer xeg.components{.xeg-surface{background:var(--xsu-b);border:.0625rem solid var(--xsu-br);border-radius:var(--xr-l)} .xeg-spinner{display:inline-block;width:var(--xsp-s, var(--xsp-sd));height:var(--xsp-s, var(--xsp-sd));border-radius:var(--xr-f);border:var(--xsp-bw) solid var(--xsp-tc);border-top-color:var(--xsp-ic);animation:xeg-spin var(--xsp-d) var(--xsp-e) infinite;box-sizing:border-box} @media (prefers-reduced-motion:reduce){.xeg-spinner{animation:none}} @keyframes xeg-fade-in{from{opacity:0} to{opacity:1}} @keyframes xeg-fade-out{from{opacity:1} to{opacity:0}} @keyframes xeg-spin{from{transform:rotate(0deg)} to{transform:rotate(360deg)}}} @layer xeg.base{:where(.xeg-gallery-root, .xeg-gallery-root *),:where(.xeg-gallery-root *::before, .xeg-gallery-root *::after){box-sizing:border-box;margin:0;padding:0} .xeg-gallery-root button{border:none;background:none;cursor:pointer;font:inherit;color:inherit} .xeg-gallery-root a{color:inherit;text-decoration:none} .xeg-gallery-root img{max-width:100%;height:auto;display:block} .xeg-gallery-root ul, .xeg-gallery-root ol{list-style:none} .xeg-gallery-root input, .xeg-gallery-root textarea, .xeg-gallery-root select{font:inherit;color:inherit;background:transparent} .xeg-gallery-root::-webkit-scrollbar{width:var(--xsw, .5rem);height:var(--xsw, .5rem)} .xeg-gallery-root::-webkit-scrollbar-track{background:transparent} .xeg-gallery-root::-webkit-scrollbar-thumb{background:var(--xeg-scrollbar-thumb-color);border-radius:var(--xr-s, .25rem)} .xeg-gallery-root::-webkit-scrollbar-thumb:hover{background:var(--xeg-scrollbar-thumb-hover-color)}} @layer xeg.utilities{.xeg-row-center{display:flex;align-items:center} .xeg-inline-center{display:inline-flex;align-items:center;justify-content:center} .xeg-gap-sm{gap:var(--xs-s)}} @layer xeg.utilities{.xeg-fade-in{animation:xeg-fade-in var(--xdn) var(--xe-d);animation-fill-mode:both} .xeg-fade-out{animation:xeg-fade-out var(--xdf) var(--xe-a);animation-fill-mode:both} @media (prefers-reduced-motion:reduce){.xeg-fade-in, .xeg-fade-out{animation:none}}} @layer xeg.base{.xeg-gallery-root{all:unset;box-sizing:border-box;scroll-behavior:smooth;font-family:var(--ffp);font-size:var(--fsb, .9375rem);line-height:var(--xlh, 1.5);color:var(--xct-p, currentColor);position:fixed;inset:0;width:100vw;height:100vh;display:block;z-index:var(--xz-g, 10000);isolation:isolate;contain:style paint;overscroll-behavior:contain;background:var(--xg-b, var(--xcbg-p, Canvas));pointer-events:auto;user-select:none;transform:translateZ(0);will-change:opacity, transform;-webkit-text-size-adjust:100%;-moz-text-size-adjust:100%;text-size-adjust:100%;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}}";var s=document.getElementById('xeg-injected-styles');if(!s){s=document.createElement('style');s.id='xeg-injected-styles';(document.head||document.documentElement).appendChild(s);}s.textContent=css;})();
+(function(){if(typeof document==='undefined')return;var css="@layer xeg.components{:root{--xtt:opacity var(--xdt) var(--xeo), transform var(--xdt) var(--xeo), visibility 0ms;--xeg-spacing-gallery:clamp(var(--xs-s), 2.5vw, var(--xs-l));--xeg-spacing-mobile:clamp(var(--xs-xs), 2vw, var(--xs-m));--xeg-spacing-compact:clamp(.25rem, 1.5vw, var(--xs-s));--xth-o:0;--xth-v:hidden;--xth-pe:none}} @media (prefers-reduced-motion:reduce){@layer xeg.components{:root{--xtt:none} .xg-X9gZ{scroll-behavior:auto;transition:none} .xg-meO3{transition:none}}} .xg-X9gZ{position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:var(--xz-g, 10000);background:var(--xg-b);display:flex;flex-direction:column;transform:var(--xgh);will-change:opacity, transform;contain:layout style paint;opacity:1;visibility:visible;transition:var(--xten);cursor:default;pointer-events:auto;container-type:size;container-name:gallery-container;scroll-behavior:smooth;overscroll-behavior:none} .xg-meO3{position:fixed;top:0;left:0;right:0;height:auto;z-index:var(--xz-t, 2147483620);opacity:var(--toolbar-opacity, 0);visibility:var(--toolbar-visibility, hidden);display:block;transition:var(--xtt);will-change:transform, opacity, visibility;contain:layout style;transform:var(--xgh);backface-visibility:var(--xbv);pointer-events:var(--toolbar-pointer-events, none);background:transparent;border:none;border-radius:0;margin:0;padding-block-end:var(--xeg-spacing-gallery)} .xg-meO3:is(:hover,:focus-within){--toolbar-opacity:1;--toolbar-visibility:visible;--toolbar-pointer-events:auto} .xg-meO3:focus-within{transition:var(--xtef)} .xg-meO3 *{pointer-events:inherit} .xg-meO3 [data-gallery-element=\"settings-panel\"][data-expanded=\"true\"]{pointer-events:auto} .xg-meO3:has([data-gallery-element=\"settings-panel\"][data-expanded=\"true\"]){--toolbar-opacity:1;--toolbar-visibility:visible;--toolbar-pointer-events:auto} .xg-X9gZ.xg-9abg{cursor:none} .xg-X9gZ.xg-sOsS[data-xeg-gallery=\"true\"][data-xeg-role=\"gallery\"] .xg-meO3{--toolbar-opacity:var(--xth-o, 0);--toolbar-visibility:var(--xth-v, hidden);--toolbar-pointer-events:var(--xth-pe, none)} .xg-X9gZ *{pointer-events:auto} .xg-gmRW{flex:1;display:flex;flex-direction:column;overflow:auto;position:relative;z-index:0;contain:layout style;transform:var(--xgh);overscroll-behavior:contain;scrollbar-gutter:stable;pointer-events:auto;container-type:size;container-name:items-list} .xg-gmRW::-webkit-scrollbar{width:var(--xsw)} .xg-gmRW::-webkit-scrollbar-track{background:transparent} .xg-gmRW::-webkit-scrollbar-thumb{background:var(--xcn3);border-radius:var( --xsbr );transition:background-color var(--xdn) var(--xe-s)} .xg-gmRW::-webkit-scrollbar-thumb:hover{background:var(--xcn4)} .xg-X9gZ.xg-9abg .xg-meO3{pointer-events:none;opacity:0;transition:opacity var(--xdf) var(--xeo)} .xg-X9gZ.xg-9abg [data-xeg-role=\"items-list\"], .xg-X9gZ.xg-9abg .xg-gmRW{pointer-events:auto} .xg-X9gZ.xg-yhK-{justify-content:center;align-items:center} .xg-EfVa{position:relative;margin-bottom:var(--xs-m, 1rem);border-radius:var(--xr-l, .5rem);transition:var(--xten);contain:layout style;transform:var(--xgh)} .xg-LxHL{position:relative;z-index:1} .xg-sfF0{height:calc(100vh - var(--xeg-toolbar-height, 3.75rem));min-height:50vh;pointer-events:none;user-select:none;flex-shrink:0;background:transparent;opacity:0;contain:strict;content-visibility:auto} .xg-gC-m{position:fixed;top:0;left:0;right:0;height:var(--xhzh);z-index:var(--xz-th, 2147483618);background:transparent;pointer-events:auto} .xg-gC-m:hover{z-index:var(--xz-th);background:transparent} .xg-X9gZ.xg-Canm:not([data-settings-expanded=\"true\"]) .xg-gC-m, .xg-X9gZ:has(.xg-meO3:hover):not([data-settings-expanded=\"true\"]) .xg-gC-m{pointer-events:none} .xg-X9gZ.xg-Canm .xg-meO3, .xg-X9gZ:has(.xg-gC-m:hover) .xg-meO3{--toolbar-opacity:1;--toolbar-visibility:visible;--toolbar-pointer-events:auto} .xg-meO3 [class*=\"galleryToolbar\"]{opacity:var(--toolbar-opacity, 0);visibility:var(--toolbar-visibility, hidden);display:flex;pointer-events:var(--toolbar-pointer-events, none)} .xg-meO3 button, .xg-meO3 [role=\"button\"], .xg-meO3 .xg-e06X{pointer-events:auto;position:relative;z-index:10} .xg-fwsr{text-align:center;color:var(--xct-s);max-inline-size:min(25rem, 90vw);padding:clamp(1.875rem, 5vw, 2.5rem)} .xg-fwsr h3{margin:0 0 clamp(.75rem, 2vw, 1rem);font-size:clamp(1.25rem, 4vw, 1.5rem);font-weight:600;color:var(--xct-p);line-height:1.2} .xg-fwsr p{margin:0;font-size:clamp(.875rem, 2.5vw, 1rem);line-height:1.5;color:var(--xct-t)} @container gallery-container (max-width:48rem){.xg-gmRW{padding:var(--xeg-spacing-mobile);gap:var(--xeg-spacing-mobile)} .xg-meO3{padding-block-end:var(--xeg-spacing-mobile)}} @container gallery-container (max-width:30rem){.xg-gmRW{padding:var(--xeg-spacing-compact);gap:var(--xeg-spacing-compact)}} @media (prefers-reduced-motion:reduce){.xg-gmRW{scroll-behavior:auto;will-change:auto;transform:none}} @media (prefers-reduced-motion:reduce){.xg-meO3:hover, .xg-meO3:focus-within{transform:none}} .xg-X9gZ [class*=\"galleryToolbar\"]:hover{--toolbar-opacity:1;--toolbar-pointer-events:auto} .xg-huYo{position:relative;margin-bottom:var(--xs-m);margin-inline:auto;border-radius:var(--xr-l);overflow:visible;transition:var(--xti);cursor:pointer;border:.0625rem solid var(--xcb-p);background:var(--xcbg-s);padding:var(--xs-s);width:fit-content;max-width:100%;text-align:center;display:flex;flex-direction:column;align-items:center;pointer-events:auto;transform:var(--xgh);will-change:transform;contain:layout style} .xg-huYo[data-fit-mode=\"original\"]{max-width:none;flex-shrink:0;width:max-content;align-self:center} .xg-huYo:hover{transform:var(--xhl);background:var(--xc-se);border-color:var(--xbe)} .xg-huYo:focus-visible{border-color:var(--xfic, var(--xcb-p))} .xg-huYo.xg-xm-1{border-color:var(--xbe, var(--xcb-s));transition:var(--xti)} .xg-huYo.xg-xm-1:focus-visible{border-color:var(--xfic, var(--xcb-s))} .xg-huYo.xg-luqi{border-color:var(--xfic, var(--xcb-p));transition:var(--xti)} .xg-8-c8{position:relative;background:var(--xcbg-s);width:fit-content;max-width:100%;margin:0 auto;display:flex;justify-content:center;align-items:center;contain:layout paint} .xg-huYo[data-fit-mode=\"original\"] .xg-8-c8{width:auto;max-width:none} .xg-huYo[data-media-loaded=\"false\"] .xg-8-c8{min-height:var(--xs-3);aspect-ratio:var(--xgi-r, var(--xad))} .xg-lhkE{position:absolute;top:0;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;background:var(--xsk-b);min-height:var(--xs-3)} .xg-6YYD{--xsp-s:var(--xs-l);--xsp-bw:.125rem;--xsp-tc:var(--xcb-p);--xsp-ic:var(--xc-p)} .xg-FWlk, .xg-GUev{display:block;border-radius:var(--xr-m);object-fit:contain;pointer-events:auto;user-select:none;-webkit-user-drag:none;transform:var(--xgh);will-change:opacity;transition:opacity var(--xdn) var(--xeo)}:is(.xg-FWlk, .xg-GUev).xg-8Z3S{opacity:0}:is(.xg-FWlk, .xg-GUev).xg-y9iP{opacity:1} .xg-GUev{inline-size:100%;overflow:clip}:is(.xg-FWlk, .xg-GUev).xg-yYtG{inline-size:auto;block-size:auto;max-inline-size:none;max-block-size:none;object-fit:none}:is(.xg-FWlk, .xg-GUev).xg-Uc0o{inline-size:auto;block-size:auto;max-inline-size:100%;max-block-size:none;object-fit:scale-down}:is(.xg-FWlk, .xg-GUev).xg-M9Z6{inline-size:auto;block-size:auto;max-inline-size:calc(100vw - var(--xs-l) * 2);max-block-size:var(--xvhc);object-fit:scale-down}:is(.xg-FWlk, .xg-GUev).xg--Mlr{inline-size:auto;block-size:auto;max-inline-size:100%;max-block-size:var(--xvhc);object-fit:contain} .xg-Wno7{font-size:var(--xfs-2);margin-bottom:var(--xs-s)} .xg-8-wi{font-size:var(--xfs-s);text-align:center} .xg-Gswe{position:absolute;top:0;left:0;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--xc-e-bg);color:var(--xc-e);min-height:var(--xs-3)} .xg-huYo[data-media-loaded=\"false\"][data-fit-mode=\"original\"]{inline-size:min(var(--xgi-w, 100%), 100%);max-inline-size:min(var(--xgi-w, 100%), 100%);max-block-size:min( var(--xgi-h, var(--xs-5)), var(--xvhc) )} .xg-huYo[data-media-loaded=\"false\"][data-fit-mode=\"original\"] .xg-FWlk, .xg-huYo[data-media-loaded=\"false\"][data-fit-mode=\"original\"] .xg-GUev{inline-size:min(var(--xgi-w, 100%), 100%);max-inline-size:min(var(--xgi-w, 100%), 100%);max-block-size:min( var(--xgi-h, var(--xs-5)), var(--xvhc) )} .xg-huYo[data-media-loaded=\"false\"][data-has-intrinsic-size=\"true\"][data-fit-mode=\"fitHeight\"], .xg-huYo[data-media-loaded=\"false\"][data-has-intrinsic-size=\"true\"][data-fit-mode=\"fitContainer\"]{--xgf-ht:min( var(--xgi-h, var(--xs-5)), var(--xvhc) );max-block-size:var(--xgf-ht);inline-size:min( 100%, calc(var(--xgf-ht) * var(--xgi-r, 1)) );max-inline-size:min( 100%, calc(var(--xgf-ht) * var(--xgi-r, 1)) )} .xg-huYo[data-media-loaded=\"false\"][data-has-intrinsic-size=\"true\"]:is( [data-fit-mode=\"fitHeight\"], [data-fit-mode=\"fitContainer\"] ):is(.xg-FWlk, .xg-GUev){max-block-size:var(--xgf-ht);max-inline-size:min( 100%, calc(var(--xgf-ht) * var(--xgi-r, 1)) )} @media (prefers-reduced-motion:reduce){.xg-huYo{will-change:auto;transition:none} .xg-huYo:hover{transform:none}:where(.xg-FWlk, .xg-GUev){will-change:auto;transition:none}} .xg-EeSh{display:flex;flex-direction:column;gap:var(--xse-g);padding:var(--xse-p)} .xg-nm9B{gap:var(--sps)} .xg-PI5C{display:flex;flex-direction:column;gap:var(--xse-cg)} .xg-VUTt{gap:var(--spx)} .xg-vhT3{font-size:var(--xse-lf);font-weight:var(--xse-lw);color:var(--xct-p)} .xg-Y62M{font-size:var(--fsx);color:var(--xct-s);letter-spacing:.04em;text-transform:uppercase} .xg-jpiS{width:100%;padding:var(--xse-sp);font-size:var(--xse-sf);color:var(--xct-p);background-color:var(--xte-b);border:var(--bwt) solid var(--xt-b);border-radius:var(--xr-m);cursor:pointer;line-height:1.375;min-height:2.75em;transform:none;overflow:visible;transition:border-color var(--xdf) var(--xe-s), background-color var(--xdf) var(--xe-s), box-shadow var(--xdf) var(--xe-s)} .xg-jpiS:hover{border-color:var(--xcb-h);background-color:var(--xte-bs);box-shadow:0 0 0 2px color-mix(in oklch, var(--xt-b) 20%, transparent 80%)} .xg-jpiS:focus, .xg-jpiS:focus-visible{border-color:var(--xfic);box-shadow:0 0 0 3px color-mix(in oklch, var(--xfic) 25%, transparent 75%)} .xg-jpiS option{padding:.5em .75em;line-height:1.5} .xg-4eoj{color:var(--xtt-c, var(--xct-p));cursor:pointer;font-size:.875em;font-weight:500;width:var(--xsb-m);height:var(--xsb-m);min-width:var(--xsb-m);min-height:var(--xsb-m);padding:.5em;aspect-ratio:1;position:relative;overflow:clip;border-radius:var(--xr-m);background:transparent;border:none;transition:var(--xts), transform var(--xdf) var(--xe-s)} .xg-4eoj:focus, .xg-4eoj:focus-visible{background:var(--xte-b, var(--xcn1))} .xg-fLg7{--toolbar-surface-base:var( --xtp-s, var(--xt-s, var(--xcbg-p, Canvas)) );--toolbar-surface-border:var(--xt-b);background:var(--toolbar-surface-base);border:none;border-radius:var(--xr-l);position:fixed;top:1.25em;left:50%;transform:translateX(-50%);z-index:var(--xz-t, 2147483620);display:var(--toolbar-display, inline-flex);align-items:center;justify-content:space-between;height:3em;padding:.5em 1em;gap:0;color:var(--xtt-c, var(--xct-p));visibility:var(--toolbar-visibility, visible);opacity:var(--toolbar-opacity, 1);pointer-events:var(--toolbar-pointer-events, auto);transition:var(--xten);user-select:none;overscroll-behavior:contain} .xg-fLg7.xg-ZpP8, .xg-fLg7.xg-t4eq{border-radius:var(--xr-l) var(--xr-l) 0 0} .xg-fLg7.xg-ojCW{--toolbar-opacity:1;--toolbar-pointer-events:auto;--toolbar-visibility:visible;--toolbar-display:inline-flex} .xg-fLg7.xg-Y6KF, .xg-fLg7.xg-n-ab, .xg-fLg7.xg-bEzl{--toolbar-opacity:1;--toolbar-pointer-events:auto;--toolbar-visibility:visible;--toolbar-display:inline-flex} .xg-f8g4{display:flex;align-items:center;justify-content:center;width:100%;max-width:100%;overflow:hidden} .xg-Ix3j{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:var(--xs-xs);width:100%} .xg-Ix3j > *{flex:0 0 auto} .xg-0EHq{display:flex;align-items:center;justify-content:center;padding-inline:var(--xs-s);min-width:5em} .xg-FKnO{color:var(--xtt-m, var(--xct-p));margin:0 .125em}:where(.xg-4eoj[aria-pressed=\"true\"]){background:var(--xte-bs, var(--xcn2))} .xg-4eoj:disabled{color:var(--xtt-m, var(--xcn4));cursor:not-allowed} @media (hover:hover){.xg-4eoj:hover:not(:disabled){background:var(--xte-b, var(--xcn1));transform:translateY(var(--xb-l))}} .xg-4eoj:active:not(:disabled){background:var(--xte-bs, var(--xcn2));transform:translateY(0)} .xg-njlf{} .xg-AU-d{} .xg-Vn14{} .xg-atmJ{position:relative} .xg-GG86{position:relative;gap:0;min-width:5em;min-height:2.5em;padding-bottom:.5em;box-sizing:border-box} .xg-2cjm{color:var(--xtt-c, var(--xct-p));font-size:var(--xfs-m);font-weight:600;text-align:center;white-space:nowrap;line-height:1;background:transparent;padding:.25em .5em;border-radius:var(--xr-m);border:none} .xg-JEXm{color:var(--xtt-c, var(--xct-p));font-weight:700} .xg-d1et{color:var(--xtt-c, var(--xct-p))} .xg-vB6N{position:absolute;left:50%;bottom:.125em;transform:translateX(-50%);width:3.75em;height:.125em;background:var(--xtp-pt, var(--xcn2));border-radius:var(--xr-s);overflow:clip} .xg-LWQw{width:100%;height:100%;background:var(--xtt-c, var(--xct-p));border-radius:var(--xr-s);transition:var(--xtwn);transform-origin:left} .xg-Q7dU, button.xg-Q7dU{transition:var(--xti);position:relative;z-index:10;pointer-events:auto} .xg-Q7dU[data-selected=\"true\"]{} .xg-Q7dU:focus, .xg-Q7dU:focus-visible{border:none} @media (prefers-reduced-transparency:reduce){.xg-fLg7{background:var(--xtp-s, var(--xt-s))} [data-theme=\"dark\"] .xg-fLg7{background:var(--xtp-s, var(--xt-s))}} @media (prefers-reduced-motion:reduce){.xg-4eoj:hover:not(:disabled), .xg-atmJ:hover:not(:disabled), .xg-Vn14:hover:not(:disabled), .xg-Q7dU:hover{transform:none}}:where(.xg-JcF-, .xg-yRtv){position:absolute;top:100%;left:0;right:0;width:100%;display:flex;flex-direction:column;gap:var(--xs-m);padding:var(--xs-l);max-height:var(--xtp-mh);overflow:hidden;opacity:0;transform:translateY(-.5em);visibility:hidden;pointer-events:none;transition:var(--xtp-t), transform var(--xdn) var(--xe-s), visibility 0s var(--xdn);background:var( --toolbar-surface-base, var(--xtp-s, var(--xt-s)) );border-top:var(--bwt) solid var(--toolbar-surface-border, var(--xt-b));border-radius:0 0 var(--xr-l) var(--xr-l);z-index:var(--xz-tp);will-change:transform, opacity;overscroll-behavior:contain} .xg-JcF-{height:var(--xtp-h)} .xg-yRtv{min-height:var(--xtp-h)}:where(.xg-JcF-, .xg-yRtv).xg-4a2L{height:auto;opacity:1;transform:translateY(0);visibility:visible;pointer-events:auto;border-top-color:var(--toolbar-surface-border, var(--xt-b));transition:var(--xtp-t), transform var(--xdn) var(--xe-s), visibility 0s 0s;z-index:var(--xz-ta)} .xg-w56C{display:flex;flex-direction:column;gap:var(--xs-s)} .xg-rSWg{display:flex;align-items:center;padding-bottom:var(--xs-xs);border-bottom:var(--bwt) solid var(--toolbar-surface-border);margin-bottom:var(--xs-s)} .xg-jd-V{font-size:var(--xfs-s);font-weight:var(--xfw-s);color:var(--xtt-c);text-transform:uppercase;letter-spacing:.04em} .xg-jmjG{padding:var(--xs-s) var(--xs-m);font-size:var(--xfs-b);line-height:var(--xeg-line-height-snug);color:var(--xtt-c, var(--xct-p));background:var( --toolbar-surface-base, var(--xtp-s, var(--xt-s)) );border:var(--bwt) solid var(--toolbar-surface-border, var(--xt-b));border-radius:var(--xr-m);white-space:pre-wrap;word-wrap:break-word;overflow-y:auto;overscroll-behavior:contain;max-height:18em;transition:var(--xts);user-select:text;-webkit-user-select:text;cursor:text} .xg-jmjG::-webkit-scrollbar{width:.5em} .xg-jmjG::-webkit-scrollbar-track{background:var(--xts-t, var(--xcn2));border-radius:var(--xr-s)} .xg-jmjG::-webkit-scrollbar-thumb{background:var(--xts-th, var(--xcn4));border-radius:var(--xr-s)} .xg-jmjG::-webkit-scrollbar-thumb:hover{background:var(--xte-bs, var(--xcn5))} .xg-jmjG a{color:var(--xc-p);text-decoration:none;font-weight:var(--xfw-m);padding:.125em .25em;margin:-.125em -.25em;border-radius:var(--xr-xs);overflow-wrap:break-word;transition:color var(--xdf) var(--xe-s), background-color var(--xdf) var(--xe-s);cursor:pointer} .xg-jmjG a:hover{color:var(--xc-ph);background:var(--xte-b);text-decoration:underline;text-decoration-thickness:.0625rem;text-underline-offset:.125em} .xg-jmjG a:focus, .xg-jmjG a:focus-visible{background:var(--xte-bs, var(--xcn2));color:var(--xc-ph);border-radius:var(--xr-xs)} .xg-jmjG a:active{color:var(--xc-p-active)} .xg-0Eeq{display:flex;align-items:center;gap:var(--xs-xs);padding:var(--xs-s);margin-bottom:var(--xs-s);background:var(--xte-bs);border:var(--bwt) solid var(--toolbar-surface-border, var(--xt-b));border-radius:var(--xr-s);transition:var(--xts)} .xg-0Eeq:hover{background:color-mix( in oklch, var(--xte-bs) 85%, var(--xc-p) 15% );border-color:var(--xcb-h)} .xg-AVKe{display:flex;align-items:center;gap:.375em;width:100%;color:var(--xc-p);text-decoration:none;font-size:var(--xfs-s);font-weight:500;transition:color var(--xdf) var(--xe-s)} .xg-AVKe:hover{color:var(--xc-ph)} .xg-AVKe:focus, .xg-AVKe:focus-visible{outline:.125rem solid var(--xfic);outline-offset:.125rem;border-radius:var(--xr-xs)} .xg-5RjR{flex-shrink:0;width:.875em;height:.875em;stroke:currentColor} .xg-8Stf{flex-shrink:0;color:var(--xtt-m, var(--xct-s));font-weight:600} .xg-3pwZ{flex:1;color:var(--xc-p);overflow:hidden;text-overflow:ellipsis;white-space:nowrap} .xg-sltl{width:100%;height:var(--bwt);background:color-mix(in oklch, var(--toolbar-surface-border) 60%, transparent 40%);margin:var(--xs-m) 0;border-radius:var(--xr-s)} @layer xeg.features{:where(.xeg-surface, .xeg-glass-surface){background:var(--xsu-b);border:var(--bwt) solid var(--xsu-br);border-radius:var(--xr-2);isolation:isolate;transition:opacity var(--xdn) var(--xe-s)}:where(.xeg-surface, .xeg-glass-surface):hover{background:var(--xsu-bh, var(--xsu-b))} .xeg-gallery-renderer[data-renderer=\"gallery\"]{display:block;width:0;height:0;overflow:visible} .xeg-gallery-overlay{display:flex;align-items:center;justify-content:center;position:fixed;inset:0;z-index:var(--xz-g, 10000);background:var(--xg-b);opacity:1;transition:opacity var(--xdn) var(--xe-s);pointer-events:auto} .xeg-gallery-container{position:relative;width:100%;height:100%;max-width:100vw;max-height:100vh;display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;scrollbar-gutter:stable both-edges}} @layer xeg.tokens, xeg.base, xeg.utilities, xeg.components, xeg.features, xeg.overrides;@layer xeg.tokens{:where(:root, .xeg-theme-scope){--cbw:oklch(1 0 0);--cbb:oklch(0 0 0);--cg0:oklch(.97 .002 206.2);--cg1:oklch(.943 .006 206.2);--cg2:oklch(.896 .006 206.2);--cg3:oklch(.796 .006 206.2);--cg4:oklch(.696 .006 286.3);--cg5:oklch(.598 .006 286.3);--cg6:oklch(.488 .006 286.3);--cg7:oklch(.378 .005 286.3);--cg8:oklch(.306 .005 282);--cg9:oklch(.234 .006 277.8);--spx:.25rem;--sps:.5rem;--spm:1rem;--spl:1.5rem;--rs:.25em;--rm:.375em;--rl:.5em;--r2:1em;--rf:50%;--ffp:\"TwitterChirp\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif;--fsx:.75rem;--fss:.875rem;--fsb:.9375rem;--fsm:1rem;--fs2:1.5rem;--fwm:500;--fws:600;--fwb:700;--df:150ms;--dn:250ms;--bwt:.0625rem;--line-height-snug:1.375;--lhn:1.5}} @layer xeg.tokens{:where(:root, .xeg-theme-scope){--xcbg-p:var(--cbw);--xcbg-s:var(--cg0);--xeg-color-bg-surface:var(--cbw);--xeg-color-bg-elevated:var(--cbw);--xbgt:var(--xeg-color-bg-surface);--xt-b:var(--xcb-p);--xt-s:var(--xbgt);--xtp-s:var(--xt-s);--xg-bl:var(--cbp);--xg-bd:var(--cg9);--xg-b:var(--xg-bl);--xad:4 / 3;--xct-p:var(--cbb);--xct-s:var(--cg6);--xeg-color-border-default:var(--cg2);--xeg-color-border-emphasis:var(--cg5);--xcb-p:var(--xeg-color-border-default);--xcb-h:var(--cg3);--xcb-s:var(--xeg-color-border-emphasis);--xtt-c:var(--xct-p);--xtt-m:var(--xct-s);--xte-b:color-mix( in oklch, var(--xbgt) 80%, var(--cbw) 20% );--xte-bs:color-mix( in oklch, var(--xbgt) 65%, var(--cbw) 35% );--xte-br:color-mix( in oklch, var(--xt-b) 85%, var(--cbw) 15% );--xtp-pt:color-mix( in oklch, var(--xte-b) 60%, var(--xte-br) 40% );--xts-t:color-mix( in oklch, var(--xte-b) 50%, var(--cbw) 50% );--xts-th:color-mix( in oklch, var(--xte-br) 80%, var(--cbw) 20% );--xc-e:var(--cg8);--xc-e-bg:var(--cg1);--xc-p:var(--cg9);--xc-ph:var(--cg7);--xc-p-active:var(--cg8);--xcn1:var(--cg1);--xcn2:var(--cg2);--xcn3:var(--cg3);--xcn4:var(--cg4);--xcn5:var(--cg5);--xct-t:var(--cg5);--xsb-m:2.5em;--xfic:var(--xcb-p);--xfs-s:var(--fss);--xfs-b:var(--fsb);--xfs-m:var(--fsm);--xfs-2:var(--fs2);--xfw-m:var(--fwm);--xfw-s:var(--fws);--xeg-line-height-snug:var(--line-height-snug);--xdf:var(--df);--xdn:var(--dn);--xdt:var(--dn);--xsu-b:var(--xeg-color-bg-surface);--xsu-br:var(--xeg-color-border-default);--xsu-bh:var(--xcbg-s);--xc-se:var(--xeg-color-bg-elevated);--xsk-b:var(--xcbg-s);--xbe:var(--xeg-color-border-emphasis);--xz-g:2147483600;--xz-th:2147483618;--xz-t:2147483620;--xz-tp:2147483622;--xz-ta:2147483624;--xe-s:cubic-bezier(.4, 0, .2, 1);--xe-d:cubic-bezier(0, 0, .2, 1);--xe-a:cubic-bezier(.4, 0, 1, 1);--xeo:cubic-bezier(.4, 0, .2, 1);--xel:linear;--xlh:var(--lhn, 1.5);--xb-l:-.0625rem;--xhl:translateY(-.125rem);--xr-s:var(--rs);--xr-m:var(--rm);--xr-l:var(--rl);--xr-2:var(--r2);--xr-f:var(--rf);--xeg-scrollbar-thumb-color:var(--cg4);--xeg-scrollbar-thumb-hover-color:var(--cg5)}:where(:root, .xeg-theme-scope)[data-theme=\"light\"]{--xcbg-p:var(--cbw);--xct-p:var(--cbb);--xct-s:var(--cg6);--xg-b:var(--xg-bl)}:where(:root, .xeg-theme-scope)[data-theme=\"dark\"]{--xcbg-p:var(--cg9);--xeg-color-bg-surface:var(--cg9);--xeg-color-bg-elevated:var(--cg7);--xct-p:var(--cbw);--xct-s:var(--cg4);--xbgt:var(--cg8);--xcb-p:var(--cg6);--xt-b:var(--cg6);--xcbg-s:var(--cg8);--xg-b:var(--xg-bd);--xtt-c:var(--xct-p);--xtt-m:var(--cg3);--xte-b:color-mix( in oklch, var(--xbgt) 85%, var(--cbb) 15% );--xte-bs:color-mix( in oklch, var(--xbgt) 70%, var(--cbb) 30% );--xte-br:color-mix( in oklch, var(--xt-b) 75%, var(--cbb) 25% );--xtp-pt:color-mix( in oklch, var(--xt-b) 65%, var(--xbgt) 35% );--xts-t:color-mix( in oklch, var(--xte-b) 80%, var(--cbb) 20% );--xts-th:color-mix( in oklch, var(--xte-br) 85%, var(--cbb) 15% );--xc-p:var(--cg1);--xc-ph:var(--cg2);--xc-p-active:var(--cg3);--xsu-b:var(--cg9);--xsu-br:var(--cg6);--xsu-bh:var(--cg8)} @media (prefers-reduced-motion:reduce){:where(:root, .xeg-theme-scope){--xdf:0ms;--xts:none;--xten:none;--xtef:none;--xti:none;--xtwn:none}}:where(:root, .xeg-theme-scope){--xse-g:var(--spm);--xse-p:var(--spm);--xse-cg:var(--sps);--xse-lf:var(--fss);--xse-lw:var(--fwb);--xse-sf:var(--fss);--xse-sp:var(--sps) var(--spm)}} @layer xeg.tokens{:where(:root, .xeg-theme-scope){--xtp-t:height var(--xdn) var(--xe-s), opacity var(--xdf) var(--xe-s);--xtp-h:0;--xtp-mh:17.5rem;--xsw:.5rem;--xhzh:7.5rem;--xsp-sd:1rem;--xsp-bw:.125rem;--xsp-tc:color-mix(in oklch, var(--xcn4) 60%, transparent);--xsp-ic:var(--xc-p, currentColor);--xsp-d:var(--xdn);--xsp-e:var(--xel);--xts:background-color var(--xdf) var(--xe-s), border-color var(--xdf) var(--xe-s), color var(--xdf) var(--xe-s);--xten:transform var(--xdn) var(--xe-s), opacity var(--xdn) var(--xe-s);--xtef:transform var(--xdf) var(--xe-s), opacity var(--xdf) var(--xe-s);--xti:background-color var(--xdf) var(--xeo), border-color var(--xdf) var(--xeo), color var(--xdf) var(--xeo), transform var(--xdf) var(--xeo);--xtwn:width var(--xdn) var(--xe-s);--xs-xs:var(--spx);--xs-s:var(--sps);--xs-m:var(--spm);--xs-l:var(--spl);--xvhc:90vh} @media (prefers-reduced-transparency:reduce){:where(:root, .xeg-theme-scope){--xsu-b:var(--xcbg-p)}}} @layer xeg.components{.xeg-surface{background:var(--xsu-b);border:.0625rem solid var(--xsu-br);border-radius:var(--xr-l)} .xeg-spinner{display:inline-block;width:var(--xsp-s, var(--xsp-sd));height:var(--xsp-s, var(--xsp-sd));border-radius:var(--xr-f);border:var(--xsp-bw) solid var(--xsp-tc);border-top-color:var(--xsp-ic);animation:xeg-spin var(--xsp-d) var(--xsp-e) infinite;box-sizing:border-box} @media (prefers-reduced-motion:reduce){.xeg-spinner{animation:none}} @keyframes xeg-fade-in{from{opacity:0} to{opacity:1}} @keyframes xeg-fade-out{from{opacity:1} to{opacity:0}} @keyframes xeg-spin{from{transform:rotate(0deg)} to{transform:rotate(360deg)}}} @layer xeg.base{:where(.xeg-gallery-root, .xeg-gallery-root *),:where(.xeg-gallery-root *::before, .xeg-gallery-root *::after){box-sizing:border-box;margin:0;padding:0} .xeg-gallery-root button{border:none;background:none;cursor:pointer;font:inherit;color:inherit} .xeg-gallery-root a{color:inherit;text-decoration:none} .xeg-gallery-root img{max-width:100%;height:auto;display:block} .xeg-gallery-root ul, .xeg-gallery-root ol{list-style:none} .xeg-gallery-root input, .xeg-gallery-root textarea, .xeg-gallery-root select{font:inherit;color:inherit;background:transparent} .xeg-gallery-root::-webkit-scrollbar{width:var(--xsw, .5rem);height:var(--xsw, .5rem)} .xeg-gallery-root::-webkit-scrollbar-track{background:transparent} .xeg-gallery-root::-webkit-scrollbar-thumb{background:var(--xeg-scrollbar-thumb-color);border-radius:var(--xr-s, .25rem)} .xeg-gallery-root::-webkit-scrollbar-thumb:hover{background:var(--xeg-scrollbar-thumb-hover-color)}} @layer xeg.utilities{.xeg-row-center{display:flex;align-items:center} .xeg-inline-center{display:inline-flex;align-items:center;justify-content:center} .xeg-gap-sm{gap:var(--xs-s)}} @layer xeg.utilities{.xeg-fade-in{animation:xeg-fade-in var(--xdn) var(--xe-d);animation-fill-mode:both} .xeg-fade-out{animation:xeg-fade-out var(--xdf) var(--xe-a);animation-fill-mode:both} @media (prefers-reduced-motion:reduce){.xeg-fade-in, .xeg-fade-out{animation:none}}} @layer xeg.base{.xeg-gallery-root{all:unset;box-sizing:border-box;scroll-behavior:smooth;font-family:var(--ffp);font-size:var(--fsb, .9375rem);line-height:var(--xlh, 1.5);color:var(--xct-p, currentColor);position:fixed;inset:0;width:100vw;height:100vh;display:block;z-index:var(--xz-g, 10000);isolation:isolate;contain:style paint;overscroll-behavior:contain;background:var(--xg-b, var(--xcbg-p, Canvas));pointer-events:auto;user-select:none;transform:translateZ(0);will-change:opacity, transform;-webkit-text-size-adjust:100%;-moz-text-size-adjust:100%;text-size-adjust:100%;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}}";var s=document.getElementById('xeg-injected-styles');if(!s){s=document.createElement('style');s.id='xeg-injected-styles';(document.head||document.documentElement).appendChild(s);}s.textContent=css;})();
 (function () {
 'use strict';
 const SERVICE_KEYS = {
@@ -72,15 +72,11 @@ MEDIA_SERVICE: "media.service",
 SETTINGS: "settings.manager",
 THEME: "ui.theme"
 };
-const BASE_PREFIX = "[XEG]";
+const BASE_PREFIX = "[X]";
 const noop$1 = () => {
 };
 const hasConsole = typeof console !== "undefined";
-function buildErrorOnlyLogger(prefix) {
-if (!hasConsole) {
-return { info: noop$1, warn: noop$1, error: noop$1, debug: noop$1, trace: noop$1 };
-}
-return {
+const createErrorOnlyLogger = (prefix) => ({
 info: noop$1,
 warn: noop$1,
 debug: noop$1,
@@ -88,7 +84,10 @@ trace: noop$1,
 error: (...args) => {
 console.error(prefix, ...args);
 }
-};
+});
+const noopLogger = { info: noop$1, warn: noop$1, error: noop$1, debug: noop$1, trace: noop$1 };
+function buildErrorOnlyLogger(prefix) {
+return !hasConsole ? noopLogger : createErrorOnlyLogger(prefix);
 }
 function createLogger(config = {}) {
 const prefix = config.prefix ?? BASE_PREFIX;
@@ -306,7 +305,7 @@ return strings;
 const defaultStrings = TRANSLATION_REGISTRY[DEFAULT_LANGUAGE];
 if (!defaultStrings) {
 throw new Error(
-`Fatal: Default language '${DEFAULT_LANGUAGE}' not found in TRANSLATION_REGISTRY. This indicates a critical configuration error.`
+`Fatal: Default language '${DEFAULT_LANGUAGE}' not found in TRANSLATION_REGISTRY.`
 );
 }
 return defaultStrings;
@@ -796,22 +795,10 @@ getEffectiveLanguage() {
 return this.currentLanguage === "auto" ? this.detectLanguage() : this.currentLanguage;
 }
 }
-function formatErrorMessage(error, mode) {
-if (error instanceof Error) {
-return mode === "normalized" ? error.message || error.name || "Error" : error.message;
-}
-if (typeof error === "string") {
-return error;
-}
-if (error == null) {
-return mode === "normalized" ? String(error) : "";
-}
-if (typeof error === "object") {
-const record = error;
+const extractFromError = (error, mode) => mode === "normalized" ? error.message || error.name || "Error" : error.message;
+const extractFromObject = (record, mode) => {
 const message = record.message;
-if (typeof message === "string") {
-return message;
-}
+if (typeof message === "string") return message;
 if (mode === "raw") {
 return "message" in record ? String(message ?? "") : String(record);
 }
@@ -820,6 +807,19 @@ return JSON.stringify(record);
 } catch {
 return String(record);
 }
+};
+function formatErrorMessage(error, mode) {
+if (error instanceof Error) {
+return extractFromError(error, mode);
+}
+if (typeof error === "string") {
+return error;
+}
+if (error == null) {
+return mode === "normalized" ? String(error) : "";
+}
+if (typeof error === "object") {
+return extractFromObject(error, mode);
 }
 return String(error);
 }
@@ -1078,15 +1078,16 @@ return this.timers.size;
 }
 }
 const globalTimerManager = new TimerManager();
-const getIdleAPIs = () => {
+function getIdleAPIs() {
 const source = typeof globalThis !== "undefined" ? globalThis : void 0;
 if (!source || typeof source !== "object") {
 return { ric: null, cic: null };
 }
-const ric = "requestIdleCallback" in source ? source.requestIdleCallback || null : null;
-const cic = "cancelIdleCallback" in source ? source.cancelIdleCallback || null : null;
-return { ric, cic };
+return {
+ric: ("requestIdleCallback" in source ? source.requestIdleCallback : void 0) ?? null,
+cic: ("cancelIdleCallback" in source ? source.cancelIdleCallback : void 0) ?? null
 };
+}
 function scheduleIdle(task) {
 const { ric, cic } = getIdleAPIs();
 if (ric) {
@@ -1311,13 +1312,10 @@ const hostname = parsed.hostname.toLowerCase();
 const allowSubdomains = options.allowSubdomains === true;
 return allowedHosts.some((host) => {
 const normalized = host.toLowerCase();
-if (hostname === normalized) {
-return true;
-}
-return allowSubdomains && hostname.endsWith(`.${normalized}`);
+return hostname === normalized || allowSubdomains && hostname.endsWith(`.${normalized}`);
 });
 }
-const RESERVED_TWITTER_PATHS_ARRAY = [
+const RESERVED_TWITTER_PATHS_ARRAY = Object.freeze([
 "home",
 "explore",
 "notifications",
@@ -1328,10 +1326,10 @@ const RESERVED_TWITTER_PATHS_ARRAY = [
 "intent",
 "compose",
 "hashtag"
-];
+]);
 const RESERVED_TWITTER_PATHS = new Set(RESERVED_TWITTER_PATHS_ARRAY);
 const TWITTER_USERNAME_PATTERN = /^[a-zA-Z0-9_]{1,15}$/u;
-const TWITTER_HOSTS = ["twitter.com", "x.com"];
+const TWITTER_HOSTS = Object.freeze(["twitter.com", "x.com"]);
 function extractUsernameFromUrl(url, options = {}) {
 if (!url || typeof url !== "string") {
 return null;
@@ -1373,7 +1371,7 @@ return null;
 }
 }
 const DEFAULT_TWEET_ORIGIN = "https://x.com";
-function normalizeTweetUrl$1(inputUrl) {
+const normalizeTweetUrl$1 = (inputUrl) => {
 try {
 const url = new URL(inputUrl, DEFAULT_TWEET_ORIGIN);
 const hostname = url.hostname.toLowerCase();
@@ -1387,12 +1385,9 @@ url.protocol = "https:";
 }
 return url.toString();
 } catch {
-if (inputUrl.startsWith("/")) {
-return `${DEFAULT_TWEET_ORIGIN}${inputUrl}`;
+return inputUrl.startsWith("/") ? `${DEFAULT_TWEET_ORIGIN}${inputUrl}` : inputUrl;
 }
-return inputUrl;
-}
-}
+};
 const extractFromElement = (element) => {
 const dataId = element.dataset.tweetId;
 if (dataId && /^\d+$/.test(dataId)) {
@@ -1731,18 +1726,15 @@ return getMediaDedupKey(item) === clickedKey;
 });
 return newIndex >= 0 ? newIndex : 0;
 }
-function resolveDimensionsFromApiMedia(apiMedia) {
+const resolveDimensionsFromApiMedia = (apiMedia) => {
 const widthFromOriginal = normalizeDimension(apiMedia.original_width);
 const heightFromOriginal = normalizeDimension(apiMedia.original_height);
-if (widthFromOriginal && heightFromOriginal) {
-return {
+return widthFromOriginal && heightFromOriginal ? {
 width: widthFromOriginal,
 height: heightFromOriginal
+} : null;
 };
-}
-return null;
-}
-function createMediaInfoFromAPI(apiMedia, tweetInfo, index, tweetTextHTML) {
+const createMediaInfoFromAPI = (apiMedia, tweetInfo, index, tweetTextHTML) => {
 try {
 const mediaType = apiMedia.type === "photo" ? "image" : "video";
 const dimensions = resolveDimensionsFromApiMedia(apiMedia);
@@ -1776,7 +1768,7 @@ metadata
 } catch (error) {
 return null;
 }
-}
+};
 async function convertAPIMediaToMediaInfo(apiMedias, tweetInfo, tweetTextHTML) {
 const mediaItems = [];
 for (let i = 0; i < apiMedias.length; i++) {
@@ -1874,12 +1866,12 @@ maxAttempts: 3,
 baseDelayMs: 200,
 maxDelayMs: 1e4
 };
-function calculateBackoff(attempt, baseDelayMs, maxDelayMs) {
+const calculateBackoff = (attempt, baseDelayMs, maxDelayMs) => {
 const exponentialDelay = getExponentialBackoffDelayMs(attempt, baseDelayMs);
 const jitter = Math.random() * 0.25 * exponentialDelay;
 const totalDelay = exponentialDelay + jitter;
 return Math.min(Math.floor(totalDelay), maxDelayMs);
-}
+};
 async function withRetry(operation, options = {}) {
 const {
 maxAttempts = DEFAULT_OPTIONS.maxAttempts,
@@ -1957,49 +1949,41 @@ for (const input of inputs) {
 if (!input) continue;
 if (typeof input === "string" || typeof input === "number") {
 classes.push(String(input));
-continue;
-}
-if (Array.isArray(input)) {
+} else if (Array.isArray(input)) {
 const nested = cx(...input);
 if (nested) classes.push(nested);
-continue;
-}
-if (typeof input === "object") {
-for (const key in input) {
-if (input[key]) {
-classes.push(key);
-}
+} else if (typeof input === "object") {
+for (const [key, value] of Object.entries(input)) {
+if (value) classes.push(key);
 }
 }
 }
 return classes.join(" ");
 }
 let cachedCookieAPI;
-function decode(value) {
+const decode = (value) => {
 if (!value) return void 0;
 try {
 return decodeURIComponent(value);
 } catch {
 return value;
 }
-}
-function resolveCookieAPI() {
+};
+const resolveCookieAPI = () => {
 try {
 const userscript = getUserscript();
-if (userscript.cookie) {
-return userscript.cookie;
-}
+return userscript.cookie ?? null;
 } catch (error) {
-}
 return null;
 }
-function getCookieAPI() {
+};
+const getCookieAPI = () => {
 if (cachedCookieAPI === void 0) {
 cachedCookieAPI = resolveCookieAPI();
 }
 return cachedCookieAPI;
-}
-function listFromDocument(options) {
+};
+const listFromDocument = (options) => {
 if (typeof document === "undefined" || typeof document.cookie !== "string") {
 return [];
 }
@@ -2007,22 +1991,18 @@ const domain = typeof document.location?.hostname === "string" ? document.locati
 const records = document.cookie.split(";").map((entry) => entry.trim()).filter(Boolean).map((entry) => {
 const [rawName, ...rest] = entry.split("=");
 const nameDecoded = decode(rawName);
-if (!nameDecoded) {
-return null;
-}
-const value = decode(rest.join("=")) ?? "";
+if (!nameDecoded) return null;
 const record = {
 name: nameDecoded,
-value,
+value: decode(rest.join("=")) ?? "",
 path: "/",
 session: true,
 ...domain ? { domain } : {}
 };
 return record;
 }).filter((record) => !!record);
-const filtered = options?.name ? records.filter((record) => record.name === options.name) : records;
-return filtered;
-}
+return options?.name ? records.filter((r) => r.name === options.name) : records;
+};
 async function listCookies(options) {
 const gmCookie = getCookieAPI();
 if (!gmCookie?.list) {
@@ -2062,10 +2042,8 @@ const BASE_RETRY_DELAY_MS = 100;
 let _csrfToken;
 let _tokensInitialized = false;
 let _initPromise = null;
-function getBackoffDelay(attempt) {
-return getExponentialBackoffDelayMs(attempt, BASE_RETRY_DELAY_MS);
-}
-async function fetchTokenWithRetry() {
+const getBackoffDelay = (attempt) => getExponentialBackoffDelayMs(attempt, BASE_RETRY_DELAY_MS);
+const fetchTokenWithRetry = async () => {
 const syncToken = getCookieValueSync("ct0");
 if (syncToken) {
 return syncToken;
@@ -2090,8 +2068,8 @@ await delay(delayMs);
 }
 }
 return void 0;
-}
-function initializeTokensSync() {
+};
+const initializeTokensSync = () => {
 if (_tokensInitialized) {
 return;
 }
@@ -2100,8 +2078,8 @@ if (syncToken) {
 _csrfToken = syncToken;
 _tokensInitialized = true;
 }
-}
-async function initTokens() {
+};
+const initTokens = async () => {
 if (_tokensInitialized && _csrfToken) {
 return _csrfToken;
 }
@@ -2119,7 +2097,7 @@ _initPromise = null;
 }
 })();
 return _initPromise;
-}
+};
 function getCsrfToken() {
 initializeTokensSync();
 return _csrfToken;
@@ -2134,17 +2112,14 @@ function resolveDimensions(media, mediaUrl) {
 const dimensionsFromUrl = extractDimensionsFromUrl(mediaUrl);
 const widthFromOriginal = normalizeDimension(media.original_info?.width);
 const heightFromOriginal = normalizeDimension(media.original_info?.height);
-const widthFromUrl = normalizeDimension(dimensionsFromUrl?.width);
-const heightFromUrl = normalizeDimension(dimensionsFromUrl?.height);
-const width = widthFromOriginal ?? widthFromUrl;
-const height = heightFromOriginal ?? heightFromUrl;
-const result = {
-...width !== null && width !== void 0 && { width },
-...height !== null && height !== void 0 && { height }
+const widthFromUrl = dimensionsFromUrl?.width;
+const heightFromUrl = dimensionsFromUrl?.height;
+return {
+...widthFromOriginal ?? widthFromUrl ? { width: widthFromOriginal ?? widthFromUrl } : {},
+...heightFromOriginal ?? heightFromUrl ? { height: heightFromOriginal ?? heightFromUrl } : {}
 };
-return result;
 }
-function removeUrlTokensFromText(text, urls) {
+const removeUrlTokensFromText = (text, urls) => {
 let result = text;
 for (const url of urls) {
 if (!url) continue;
@@ -2152,10 +2127,9 @@ const token = escapeRegExp(url);
 const re = new RegExp(`(^|\\s+)${token}(?=\\s+|$)`, "g");
 result = result.replace(re, (_match, leadingWs) => leadingWs);
 }
-result = result.replace(/[ \t\f\v\u00A0]{2,}/g, " ").replace(/ ?\n ?/g, "\n").replace(/\n{3,}/g, "\n\n");
-return result.trim();
-}
-function resolveAspectRatio(media, dimensions) {
+return result.replace(/[ \t\f\v\u00A0]{2,}/g, " ").replace(/ ?\n ?/g, "\n").replace(/\n{3,}/g, "\n\n").trim();
+};
+const resolveAspectRatio = (media, dimensions) => {
 const aspectRatioValues = Array.isArray(media.video_info?.aspect_ratio) ? media.video_info?.aspect_ratio : void 0;
 const aspectRatioWidth = normalizeDimension(aspectRatioValues?.[0]);
 const aspectRatioHeight = normalizeDimension(aspectRatioValues?.[1]);
@@ -2166,8 +2140,8 @@ if (dimensions.width && dimensions.height) {
 return [dimensions.width, dimensions.height];
 }
 return void 0;
-}
-function getPhotoHighQualityUrl(mediaUrlHttps) {
+};
+const getPhotoHighQualityUrl = (mediaUrlHttps) => {
 if (!mediaUrlHttps) return mediaUrlHttps;
 const isAbsolute = /^(https?:)?\/\//i.test(mediaUrlHttps);
 const parsed = tryParseUrl(mediaUrlHttps, "https://pbs.twimg.com");
@@ -2185,9 +2159,7 @@ params.set("name", "orig");
 const query = params.toString();
 return query ? `${pathPart}?${query}` : pathPart;
 }
-const hasParamCaseInsensitive = (key) => {
-return Array.from(parsed.searchParams.keys()).some((k) => k.toLowerCase() === key);
-};
+const hasParamCaseInsensitive = (key) => Array.from(parsed.searchParams.keys()).some((k) => k.toLowerCase() === key);
 const setParamCaseInsensitive = (key, value) => {
 for (const k of Array.from(parsed.searchParams.keys())) {
 if (k !== key && k.toLowerCase() === key) {
@@ -2205,18 +2177,17 @@ setParamCaseInsensitive("format", ext);
 setParamCaseInsensitive("name", "orig");
 if (isAbsolute) return parsed.toString();
 return `${parsed.pathname}${parsed.search}`;
-}
-function getVideoHighQualityUrl(media) {
+};
+const getVideoHighQualityUrl = (media) => {
 const variants = media.video_info?.variants ?? [];
 const mp4Variants = variants.filter((v) => v.content_type === "video/mp4");
 if (mp4Variants.length === 0) return null;
-const bestVariant = mp4Variants.reduce((best, current) => {
+return mp4Variants.reduce((best, current) => {
 const bestBitrate = best.bitrate ?? 0;
 const currentBitrate = current.bitrate ?? 0;
 return currentBitrate > bestBitrate ? current : best;
-});
-return bestVariant.url;
-}
+}).url;
+};
 function getHighQualityMediaUrl(media) {
 if (media.type === "photo") {
 return getPhotoHighQualityUrl(media.media_url_https) ?? null;
@@ -2226,11 +2197,11 @@ return getVideoHighQualityUrl(media);
 }
 return null;
 }
-function createMediaEntry(media, mediaUrl, screenName, tweetId, tweetText, index, sourceLocation) {
+const createMediaEntry = (media, mediaUrl, screenName, tweetId, tweetText, index, sourceLocation) => {
 const mediaType = media.type === "animated_gif" ? "video" : media.type;
 const dimensions = resolveDimensions(media, mediaUrl);
 const aspectRatio = resolveAspectRatio(media, dimensions);
-const entry = {
+return {
 screen_name: screenName,
 tweet_id: tweetId,
 download_url: mediaUrl,
@@ -2249,8 +2220,7 @@ sourceLocation,
 ...dimensions.height && { original_height: dimensions.height },
 ...aspectRatio && { aspect_ratio: aspectRatio }
 };
-return entry;
-}
+};
 function extractMediaFromTweet(tweetResult, tweetUser, sourceLocation = "original") {
 const quotedResult = tweetResult.quoted_status_result?.result;
 const parseTarget = sourceLocation === "quoted" && quotedResult ? quotedResult : tweetResult;
@@ -2343,7 +2313,7 @@ mutableUser.name = mutableUser.legacy.name;
 }
 }
 }
-function resolveTwitterApiHost(hostname, supportedHosts, defaultHost) {
+const resolveTwitterApiHost = (hostname, supportedHosts, defaultHost) => {
 if (!hostname) {
 return defaultHost;
 }
@@ -2355,14 +2325,12 @@ candidate = "x.com";
 candidate = "twitter.com";
 }
 return candidate && supportedHosts.includes(candidate) ? candidate : defaultHost;
-}
-function getSafeHost() {
-return resolveTwitterApiHost(
+};
+const getSafeHost = () => resolveTwitterApiHost(
 getSafeHostname(),
 TWITTER_API_CONFIG.SUPPORTED_HOSTS,
 TWITTER_API_CONFIG.DEFAULT_HOST
 );
-}
 class TwitterAPI {
 static async getTweetMedias(tweetId) {
 const url = TwitterAPI.createTweetEndpointUrl(tweetId);
@@ -2571,26 +2539,18 @@ return value;
 }
 return null;
 }
-function determineClickedIndex(clickedElement, mediaItems) {
+const determineClickedIndex = (clickedElement, mediaItems) => {
 try {
-const mediaElement = findMediaElementInDOM(clickedElement);
-if (!mediaElement) return 0;
-const elementUrl = extractMediaUrlFromElement(mediaElement);
+const elementUrl = resolveClickedElementUrl(clickedElement);
 if (!elementUrl) return 0;
 const normalizedElementUrl = normalizeMediaUrl(elementUrl);
 if (!normalizedElementUrl) return 0;
-const index = mediaItems.findIndex((item, i) => {
+const index = mediaItems.findIndex((item) => {
 if (!item) return false;
-const itemUrl = item.url || item.originalUrl;
-if (itemUrl && normalizeMediaUrl(itemUrl) === normalizedElementUrl) {
-if (false) ;
-return true;
-}
-if (item.thumbnailUrl && normalizeMediaUrl(item.thumbnailUrl) === normalizedElementUrl) {
-if (false) ;
-return true;
-}
-return false;
+const normalizedCandidates = getNormalizedMediaCandidates(item);
+const matched = normalizedCandidates.includes(normalizedElementUrl);
+if (matched && false) ;
+return matched;
 });
 if (index !== -1) return index;
 if (false) ;
@@ -2598,20 +2558,62 @@ return 0;
 } catch (error) {
 return 0;
 }
+};
+const resolveClickedElementUrl = (clickedElement) => {
+const mediaElement = findMediaElementInDOM(clickedElement);
+const elementUrl = mediaElement ? extractMediaUrlFromElement(mediaElement) : null;
+if (elementUrl) return elementUrl;
+const fallbackTarget = mediaElement ?? clickedElement;
+return extractBackgroundImageUrl(fallbackTarget, 3);
+};
+const extractBackgroundImageUrl = (element, maxAncestorHops) => {
+if (!element) return null;
+let current = element;
+for (let hops = 0; hops <= maxAncestorHops && current; hops += 1) {
+const style = globalThis.getComputedStyle?.(current);
+const backgroundImage = style?.backgroundImage ?? "";
+const url = extractUrlFromCssValue(backgroundImage);
+if (url) return url;
+current = current.parentElement;
 }
+return null;
+};
+const extractUrlFromCssValue = (value) => {
+if (!value || value === "none") return null;
+const match = value.match(/url\((?:"|')?(.*?)(?:"|')?\)/i);
+return match?.[1]?.trim() || null;
+};
+const getNormalizedMediaCandidates = (item) => {
+const candidates = [
+item.url,
+item.originalUrl,
+item.thumbnailUrl
+];
+const metadata = item.metadata;
+const apiData = metadata?.apiData;
+if (apiData) {
+candidates.push(
+getStringValue(apiData, "download_url"),
+getStringValue(apiData, "preview_url"),
+getStringValue(apiData, "expanded_url"),
+getStringValue(apiData, "short_expanded_url"),
+getStringValue(apiData, "short_tweet_url")
+);
+}
+const normalized = candidates.map((candidate) => candidate ? normalizeMediaUrl(candidate) : null).filter((candidate) => !!candidate);
+return Array.from(new Set(normalized));
+};
+const getStringValue = (record, key) => {
+const value = record[key];
+return typeof value === "string" && value.trim() ? value : null;
+};
 function extractTweetTextHTML(tweetArticle) {
 if (!tweetArticle) return void 0;
 try {
 const tweetTextElement = tweetArticle.querySelector(TWEET_TEXT_SELECTOR);
-if (!tweetTextElement) {
-if (false) ;
-return void 0;
-}
+if (!tweetTextElement) return void 0;
 const text = tweetTextElement.textContent?.trim();
-if (!text) {
-if (false) ;
-return void 0;
-}
+if (!text) return void 0;
 if (false) ;
 return text;
 } catch (error) {
@@ -2626,55 +2628,8 @@ return extractTweetTextHTML(tweetArticle);
 }
 return void 0;
 }
-class TwitterAPIExtractor {
-async extract(tweetInfo, clickedElement, _options, extractionId) {
-const now = typeof performance !== "undefined" && typeof performance.now === "function" ? () => performance.now() : () => Date.now();
-const startedAt = now();
-try {
-if (false) ;
-const apiMedias = await TwitterAPI.getTweetMedias(tweetInfo.tweetId);
-if (!apiMedias || apiMedias.length === 0) {
-const totalProcessingTime2 = Math.max(0, now() - startedAt);
-const failure = this.createFailureResult("No media found in API response");
-return {
-...failure,
-metadata: {
-...failure.metadata ?? {},
-totalProcessingTime: totalProcessingTime2
-}
-};
-}
-const tweetTextHTML = extractTweetTextHTMLFromClickedElement(clickedElement);
-const mediaItems = await convertAPIMediaToMediaInfo(apiMedias, tweetInfo, tweetTextHTML);
-const clickedIndex = determineClickedIndex(clickedElement, mediaItems);
-const totalProcessingTime = Math.max(0, now() - startedAt);
-return {
-success: true,
-mediaItems,
-clickedIndex,
-metadata: {
-extractedAt: Date.now(),
-sourceType: "twitter-api",
-strategy: "api-extraction",
-totalProcessingTime,
-apiMediaCount: apiMedias.length
-},
-tweetInfo
-};
-} catch (error) {
-const totalProcessingTime = Math.max(0, now() - startedAt);
-const failure = this.createFailureResult(getErrorMessage(error) || "API extraction failed");
-return {
-...failure,
-metadata: {
-...failure.metadata ?? {},
-totalProcessingTime
-}
-};
-}
-}
-createFailureResult(error) {
-return {
+const getTimestamp = () => typeof performance !== "undefined" && typeof performance.now === "function" ? performance.now() : Date.now();
+const createFailureResult = (error) => ({
 success: false,
 mediaItems: [],
 clickedIndex: 0,
@@ -2686,7 +2641,53 @@ error,
 totalProcessingTime: 0
 },
 tweetInfo: null
+});
+class TwitterAPIExtractor {
+async extract(tweetInfo, clickedElement, _options, extractionId) {
+const startedAt = getTimestamp();
+try {
+if (false) ;
+const apiMedias = await TwitterAPI.getTweetMedias(tweetInfo.tweetId);
+if (!apiMedias || apiMedias.length === 0) {
+return {
+...createFailureResult("No media found in API response"),
+metadata: {
+extractedAt: Date.now(),
+sourceType: "twitter-api",
+strategy: "api-extraction-failed",
+error: "No media found in API response",
+totalProcessingTime: Math.max(0, getTimestamp() - startedAt)
+}
 };
+}
+const tweetTextHTML = extractTweetTextHTMLFromClickedElement(clickedElement);
+const mediaItems = await convertAPIMediaToMediaInfo(apiMedias, tweetInfo, tweetTextHTML);
+const clickedIndex = determineClickedIndex(clickedElement, mediaItems);
+return {
+success: true,
+mediaItems,
+clickedIndex,
+metadata: {
+extractedAt: Date.now(),
+sourceType: "twitter-api",
+strategy: "api-extraction",
+totalProcessingTime: Math.max(0, getTimestamp() - startedAt),
+apiMediaCount: apiMedias.length
+},
+tweetInfo
+};
+} catch (error) {
+return {
+...createFailureResult(getErrorMessage(error) || "API extraction failed"),
+metadata: {
+extractedAt: Date.now(),
+sourceType: "twitter-api",
+strategy: "api-extraction-failed",
+error: getErrorMessage(error) || "API extraction failed",
+totalProcessingTime: Math.max(0, getTimestamp() - startedAt)
+}
+};
+}
 }
 }
 class ExtractionError extends Error {
@@ -2713,60 +2714,16 @@ INVALID_URL: "INVALID_URL",
 PERMISSION_DENIED: "PERMISSION_DENIED"
 };
 function createId() {
-try {
-if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+if (typeof crypto !== "undefined" && crypto.randomUUID) {
 return crypto.randomUUID().replaceAll("-", "");
-}
-} catch {
 }
 return `${Date.now().toString(36)}${Math.random().toString(36).slice(2)}`;
 }
 function createPrefixedId(prefix, separator = "_") {
 return `${prefix}${separator}${createId()}`;
 }
-class MediaExtractionService {
-tweetInfoExtractor;
-apiExtractor;
-constructor() {
-this.tweetInfoExtractor = new TweetInfoExtractor();
-this.apiExtractor = new TwitterAPIExtractor();
-}
-async extractFromClickedElement(element, options = {}) {
-const extractionId = this.generateExtractionId();
-try {
-const tweetInfo = await this.tweetInfoExtractor.extract(element);
-if (!tweetInfo?.tweetId) {
-if (false) ;
-return this.createErrorResult("No tweet information found");
-}
-const apiResult = await this.apiExtractor.extract(tweetInfo, element, options, extractionId);
-if (apiResult.success && apiResult.mediaItems.length > 0) {
-return this.finalizeResult({
-...apiResult,
-tweetInfo: this.mergeTweetInfoMetadata(tweetInfo, apiResult.tweetInfo)
-});
-}
-if (false) ;
-return this.createApiErrorResult(apiResult, tweetInfo);
-} catch (error) {
-return this.createErrorResult(error);
-}
-}
-async extractAllFromContainer(container, options = {}) {
-try {
-const firstMedia = container.querySelector(TWITTER_MEDIA_SELECTOR);
-if (!firstMedia || !(firstMedia instanceof HTMLElement)) {
-return this.createErrorResult("No media found in container");
-}
-return this.extractFromClickedElement(firstMedia, options);
-} catch (error) {
-return this.createErrorResult(error);
-}
-}
-generateExtractionId() {
-return createPrefixedId("simp");
-}
-createErrorResult(error) {
+const generateExtractionId = () => createPrefixedId("simp");
+const createErrorResult = (error) => {
 const errorMessage = getErrorMessage(error) || "Unknown error";
 return {
 success: false,
@@ -2781,10 +2738,9 @@ error: errorMessage
 tweetInfo: null,
 errors: [new ExtractionError(ErrorCode.NO_MEDIA_FOUND, errorMessage)]
 };
-}
-createApiErrorResult(apiResult, tweetInfo) {
+};
+const createApiErrorResult = (apiResult, tweetInfo) => {
 const apiErrorMessage = apiResult.metadata?.error ?? apiResult.errors?.[0]?.message ?? "API extraction failed";
-const mergedTweetInfo = this.mergeTweetInfoMetadata(tweetInfo, apiResult.tweetInfo);
 return {
 success: false,
 mediaItems: [],
@@ -2794,11 +2750,23 @@ metadata: {
 strategy: "api-extraction",
 sourceType: "extraction-failed"
 },
-tweetInfo: mergedTweetInfo,
+tweetInfo: mergeTweetInfoMetadata(tweetInfo, apiResult.tweetInfo),
 errors: [new ExtractionError(ErrorCode.NO_MEDIA_FOUND, apiErrorMessage)]
 };
+};
+const mergeTweetInfoMetadata = (base, override) => {
+if (!base) return override ?? null;
+if (!override) return base;
+return {
+...base,
+...override,
+metadata: {
+...base.metadata ?? {},
+...override.metadata ?? {}
 }
-finalizeResult(result) {
+};
+};
+const finalizeResult = (result) => {
 if (!result.success) return result;
 const uniqueItems = removeDuplicateMediaItems(result.mediaItems);
 if (uniqueItems.length === 0) {
@@ -2814,18 +2782,45 @@ return {
 mediaItems: uniqueItems,
 clickedIndex: adjustedIndex
 };
-}
-mergeTweetInfoMetadata(base, override) {
-if (!base) return override ?? null;
-if (!override) return base;
-return {
-...base,
-...override,
-metadata: {
-...base.metadata ?? {},
-...override.metadata ?? {}
-}
 };
+class MediaExtractionService {
+tweetInfoExtractor;
+apiExtractor;
+constructor() {
+this.tweetInfoExtractor = new TweetInfoExtractor();
+this.apiExtractor = new TwitterAPIExtractor();
+}
+async extractFromClickedElement(element, options = {}) {
+const extractionId = generateExtractionId();
+try {
+const tweetInfo = await this.tweetInfoExtractor.extract(element);
+if (!tweetInfo?.tweetId) {
+if (false) ;
+return createErrorResult("No tweet information found");
+}
+const apiResult = await this.apiExtractor.extract(tweetInfo, element, options, extractionId);
+if (apiResult.success && apiResult.mediaItems.length > 0) {
+return finalizeResult({
+...apiResult,
+tweetInfo: mergeTweetInfoMetadata(tweetInfo, apiResult.tweetInfo)
+});
+}
+if (false) ;
+return createApiErrorResult(apiResult, tweetInfo);
+} catch (error) {
+return createErrorResult(error);
+}
+}
+async extractAllFromContainer(container, options = {}) {
+try {
+const firstMedia = container.querySelector(TWITTER_MEDIA_SELECTOR);
+if (!firstMedia || !(firstMedia instanceof HTMLElement)) {
+return createErrorResult("No media found in container");
+}
+return this.extractFromClickedElement(firstMedia, options);
+} catch (error) {
+return createErrorResult(error);
+}
 }
 }
 class MediaService {
@@ -3056,7 +3051,6 @@ this.cleanup();
 }
 addListener(element, type, listener, options, context) {
 if (this.isDestroyed) {
-;
 return null;
 }
 const id = addListener(element, type, listener, options, context);
@@ -3128,6 +3122,19 @@ listeners =  new Set();
 boundSettingsService = null;
 settingsUnsubscribe = null;
 observer = null;
+observedThemeScopes =  new WeakSet();
+applyThemeToScopes(scopes) {
+const newScopes = [];
+for (const scope of scopes) {
+if (!this.observedThemeScopes.has(scope)) {
+this.observedThemeScopes.add(scope);
+newScopes.push(scope);
+}
+}
+if (newScopes.length > 0) {
+syncThemeAttributes(this.currentTheme, { scopes: newScopes });
+}
+}
 static singleton = createSingleton(() => new ThemeService());
 static getInstance() {
 return ThemeService.singleton.get();
@@ -3146,18 +3153,22 @@ this.observer = new MutationObserver((mutations) => {
 for (const m of mutations) {
 m.addedNodes.forEach((node) => {
 if (node instanceof Element) {
+const scopes = [];
 if (node.classList.contains("xeg-theme-scope")) {
-syncThemeAttributes(this.currentTheme, { scopes: [node] });
+scopes.push(node);
 }
 node.querySelectorAll(".xeg-theme-scope").forEach((scope) => {
-syncThemeAttributes(this.currentTheme, { scopes: [scope] });
+scopes.push(scope);
 });
+if (scopes.length > 0) {
+this.applyThemeToScopes(scopes);
+}
 }
 });
 }
 });
-if (document.documentElement) {
-this.observer.observe(document.documentElement, {
+if (document.body) {
+this.observer.observe(document.body, {
 childList: true,
 subtree: true
 });
@@ -3287,6 +3298,7 @@ this.settingsUnsubscribe();
 this.settingsUnsubscribe = null;
 }
 this.listeners.clear();
+this.observedThemeScopes =  new WeakSet();
 if (this.observer) {
 this.observer.disconnect();
 this.observer = null;
@@ -3364,20 +3376,19 @@ core.register(SERVICE_KEYS.MEDIA_SERVICE, MediaService.getInstance());
 }
 }
 async function initializeCoreBaseServices() {
-const coreService = CoreService.getInstance();
 try {
 registerCoreServices();
-const theme = coreService.get(SERVICE_KEYS.THEME);
-if (theme && typeof theme.initialize === "function") {
-await theme.initialize();
+const coreService = CoreService.getInstance();
+const serviceKeys = [
+SERVICE_KEYS.THEME,
+SERVICE_KEYS.LANGUAGE,
+SERVICE_KEYS.MEDIA_SERVICE
+];
+for (const key of serviceKeys) {
+const service = coreService.get(key);
+if (service?.initialize) {
+await service.initialize();
 }
-const language = coreService.get(SERVICE_KEYS.LANGUAGE);
-if (language && typeof language.initialize === "function") {
-await language.initialize();
-}
-const media = coreService.get(SERVICE_KEYS.MEDIA_SERVICE);
-if (media && typeof media.initialize === "function") {
-await media.initialize();
 }
 if (false) ;
 } catch (error) {
@@ -3403,9 +3414,9 @@ mutator(namespace);
 }
 function setupDevNamespace(galleryAppInstance, actions) {
 mutateDevNamespace((namespace) => {
-const mainNamespace = namespace.main ?? (namespace.main = {
+const mainNamespace = namespace.main ??= {
 ...actions
-});
+};
 mainNamespace.start = actions.start;
 mainNamespace.createConfig = actions.createConfig;
 mainNamespace.cleanup = actions.cleanup;
@@ -3558,20 +3569,23 @@ useBlobUrl: hasProvidedBlob
 }
 return { strategy: "none", filename, error: "No download method" };
 }
+function generateDesiredName(media, nowMs) {
+return nowMs === void 0 ? generateMediaFilename(media) : generateMediaFilename(media, { nowMs });
+}
+function generateZipName(items, nowMs) {
+return nowMs === void 0 ? generateZipFilename(items) : generateZipFilename(items, { nowMs });
+}
 function planBulkDownload(input) {
 const items = input.mediaItems.map((media) => ({
 url: media.url,
-desiredName: input.nowMs === void 0 ? generateMediaFilename(media) : generateMediaFilename(media, { nowMs: input.nowMs }),
+desiredName: generateDesiredName(media, input.nowMs),
 blob: input.prefetchedBlobs?.get(media.url)
 }));
-const zipFilename = input.zipFilename ?? (input.nowMs === void 0 ? generateZipFilename(input.mediaItems) : generateZipFilename(input.mediaItems, { nowMs: input.nowMs }));
+const zipFilename = input.zipFilename ?? generateZipName(input.mediaItems, input.nowMs);
 return { items, zipFilename };
 }
 function planZipSave(method) {
-if (method === "gm_download") {
-return "gm_download";
-}
-return "none";
+return method === "gm_download" ? "gm_download" : "none";
 }
 const GM_API_CHECKS = {
 getValue: (gm) => typeof gm.getValue === "function",
@@ -3593,7 +3607,7 @@ return false;
 function asGMDownloadFunction(value) {
 return typeof value === "function" ? value : void 0;
 }
-function detectDownloadCapability() {
+const detectDownloadCapability = () => {
 const gmDownload = asGMDownloadFunction(resolveGMDownload());
 const hasGMDownload = !!gmDownload && isGMAPIAvailable("download");
 return {
@@ -3601,7 +3615,7 @@ hasGMDownload,
 method: hasGMDownload ? "gm_download" : "none",
 gmDownload: hasGMDownload ? gmDownload : void 0
 };
-}
+};
 function toActionCommand(plan, timeoutMs) {
 if (plan.strategy === "gm_download") {
 return {
@@ -3616,12 +3630,7 @@ return { type: "FAIL", filename: plan.filename, error: plan.error };
 }
 function createSingleDownloadCommands(input) {
 const timeoutMs = input.timeoutMs ?? 3e4;
-const plan = planSingleDownload({
-method: input.method,
-mediaUrl: input.mediaUrl,
-filename: input.filename,
-hasProvidedBlob: input.hasProvidedBlob
-});
+const plan = planSingleDownload(input);
 const action = toActionCommand(plan, timeoutMs);
 const shouldReportPreparing = action.type === "DOWNLOAD_WITH_GM_DOWNLOAD" || action.type === "FAIL";
 return shouldReportPreparing ? [
@@ -3636,7 +3645,7 @@ action
 }
 const SINGLE_DOWNLOAD_TOTAL = 1;
 const DOWNLOAD_TIMEOUT_MESSAGE = "Download timeout";
-function reportSingleProgress(onProgress, payload) {
+const reportSingleProgress = (onProgress, payload) => {
 if (!onProgress) return;
 const current = payload.current ?? SINGLE_DOWNLOAD_TOTAL;
 const total = payload.total ?? SINGLE_DOWNLOAD_TOTAL;
@@ -3646,18 +3655,18 @@ onProgress({
 current,
 total
 });
-}
-function calculatePercentage$1(loaded, total) {
+};
+const calculatePercentage$1 = (loaded, total) => {
 if (total <= 0) return 0;
 return Math.min(100, Math.max(0, Math.round(loaded / total * 100)));
-}
-function createAbortResult(signal) {
+};
+const createAbortResult = (signal) => {
 const abortError = getUserCancelledAbortErrorFromSignal(signal);
 return {
 success: false,
 error: getErrorMessage(abortError) || "Download cancelled by user"
 };
-}
+};
 async function executeSingleDownloadCommand(cmd, options, capability, blob) {
 const onProgress = options.onProgress;
 const filename = cmd.filename;
@@ -3686,18 +3695,13 @@ return { success: false, error: "Blob unavailable" };
 url = URL.createObjectURL(blob);
 isBlobUrl = true;
 }
-return await new Promise((resolve) => {
+return new Promise((resolve) => {
 let timer;
-const cleanup = () => {
-if (isBlobUrl) {
-URL.revokeObjectURL(url);
-}
-if (timer) {
-globalTimerManager.clearTimeout(timer);
-timer = void 0;
-}
-};
 let settled = false;
+const cleanup = () => {
+if (isBlobUrl) URL.revokeObjectURL(url);
+if (timer) globalTimerManager.clearTimeout(timer);
+};
 const settle = (result, completePercentage) => {
 if (settled) return;
 settled = true;
@@ -3731,8 +3735,7 @@ ontimeout: () => {
 settle({ success: false, error: DOWNLOAD_TIMEOUT_MESSAGE }, 0);
 },
 onprogress: (progress) => {
-if (settled) return;
-if (!onProgress || progress.total <= 0) return;
+if (settled || !onProgress || progress.total <= 0) return;
 reportSingleProgress(onProgress, {
 phase: "downloading",
 percentage: calculatePercentage$1(progress.loaded, progress.total),
@@ -3935,23 +3938,18 @@ return concat([...this.chunks, centralDir, endOfCentralDir]);
 }
 const DEFAULT_BACKOFF_BASE_MS = 200;
 class HttpStatusError extends Error {
-status;
 constructor(status) {
 super(`HTTP status ${status}`);
-this.name = "HttpStatusError";
 this.status = status;
 }
+name = "HttpStatusError";
 }
-function isRetryableStatus(status) {
-return status === 0 || status === 408 || status === 425 || status === 429 || status >= 500 && status < 600;
-}
-function getStatusFromError(error) {
-if (error && typeof error === "object" && "status" in error) {
+const isRetryableStatus = (status) => status === 0 || status === 408 || status === 425 || status === 429 || status >= 500 && status < 600;
+const getStatusFromError = (error) => {
+if (!error || typeof error !== "object" || !("status" in error)) return null;
 const statusValue = error.status;
-if (typeof statusValue === "number") return statusValue;
-}
-return null;
-}
+return typeof statusValue === "number" ? statusValue : null;
+};
 async function fetchArrayBufferWithRetry(url, retries, signal, backoffBaseMs = DEFAULT_BACKOFF_BASE_MS) {
 if (signal?.aborted) {
 throw getUserCancelledAbortErrorFromSignal(signal);
@@ -3963,12 +3961,11 @@ async () => {
 if (signal?.aborted) {
 throw getUserCancelledAbortErrorFromSignal(signal);
 }
-const options = {
+const response = await httpService.get(url, {
 responseType: "arraybuffer",
 timeout: 3e4,
 ...signal ? { signal } : {}
-};
-const response = await httpService.get(url, options);
+});
 if (!response.ok) {
 throw new HttpStatusError(response.status);
 }
@@ -3981,8 +3978,7 @@ baseDelayMs: backoffBaseMs,
 shouldRetry: (error) => {
 if (isAbortError(error)) return false;
 const status = getStatusFromError(error);
-if (status === null) return false;
-return isRetryableStatus(status);
+return status !== null && isRetryableStatus(status);
 }
 }
 );
@@ -3992,12 +3988,9 @@ return result.data;
 if (signal?.aborted) {
 throw getUserCancelledAbortErrorFromSignal(signal);
 }
-if (isAbortError(result.error)) {
 throw result.error;
 }
-throw result.error;
-}
-function ensureUniqueFilenameFactory() {
+const ensureUniqueFilenameFactory = () => {
 const usedNames =  new Set();
 const baseCounts =  new Map();
 return (desired) => {
@@ -4020,35 +4013,33 @@ baseCounts.set(baseKey, count);
 usedNames.add(candidate);
 return candidate;
 };
-}
+};
 const MAX_CONCURRENCY = 8;
 const MIN_CONCURRENCY = 1;
 const DEFAULT_CONCURRENCY = 4;
 const DEFAULT_RETRIES = 3;
-function clampConcurrency(value) {
+const clampConcurrency = (value) => {
 const resolved = value ?? DEFAULT_CONCURRENCY;
 return Math.min(MAX_CONCURRENCY, Math.max(MIN_CONCURRENCY, resolved));
-}
-function clampRetries(value) {
-return Math.max(0, value ?? DEFAULT_RETRIES);
-}
-function calculatePercentage(current, total) {
+};
+const clampRetries = (value) => Math.max(0, value ?? DEFAULT_RETRIES);
+const calculatePercentage = (current, total) => {
 if (total <= 0) return 0;
 return Math.min(100, Math.max(0, Math.round(current / total * 100)));
-}
-function reportProgress(onProgress, payload) {
+};
+const reportProgress = (onProgress, payload) => {
 if (!onProgress) return;
 const percentage = payload.percentage ?? calculatePercentage(payload.current, payload.total);
 onProgress({
 ...payload,
 percentage
 });
-}
-function throwIfAborted(signal) {
+};
+const throwIfAborted = (signal) => {
 if (signal?.aborted) {
 throw getUserCancelledAbortErrorFromSignal(signal);
 }
-}
+};
 async function downloadAsZip(items, options = {}) {
 const writer = new StreamingZipWriter();
 const concurrency = clampConcurrency(options.concurrency);
@@ -4144,10 +4135,7 @@ onDestroy() {
 this.capability = null;
 }
 getCapability() {
-if (!this.capability) {
-this.capability = detectDownloadCapability();
-}
-return this.capability;
+return this.capability ??= detectDownloadCapability();
 }
 async downloadSingle(media, options = {}) {
 const capability = this.getCapability();
@@ -5061,24 +5049,17 @@ return catchError(() => props.children, setErrored);
 }
 function createSignalSafe(initial) {
 const [read, write] = createSignal(initial, { equals: false });
-const setSignal = write;
 const subscribers =  new Set();
 const notify = (value) => {
-for (const subscriber of subscribers) {
-subscriber(value);
-}
+subscribers.forEach((subscriber) => subscriber(value));
 };
 const setValue = (value) => {
-if (typeof value === "function") {
-setSignal(() => value);
-} else {
-setSignal(value);
-}
+write(() => value);
 notify(value);
 };
 const updateValue = (updater) => {
 const nextValue = updater(read());
-setSignal(updater);
+write(() => nextValue);
 notify(nextValue);
 };
 const subscribe = (callback) => {
@@ -5110,12 +5091,8 @@ lastSource: createSignalSafe(INITIAL_NAVIGATION_STATE.lastSource),
 lastTimestamp: createSignalSafe(INITIAL_NAVIGATION_STATE.lastTimestamp),
 lastNavigatedIndex: createSignalSafe(INITIAL_NAVIGATION_STATE.lastNavigatedIndex)
 };
-function resolveNowMs(nowMs) {
-return nowMs ?? Date.now();
-}
-function isManualSource(source) {
-return source === "button" || source === "keyboard";
-}
+const resolveNowMs = (nowMs) => nowMs ?? Date.now();
+const isManualSource = (source) => source === "button" || source === "keyboard";
 function recordNavigation(targetIndex, source, nowMs) {
 const timestamp = resolveNowMs(nowMs);
 const currentIndex = navigationSignals.lastNavigatedIndex.value;
@@ -5194,7 +5171,7 @@ listeners.clear();
 }
 };
 }
-const batch = batch$1;
+const batch = (fn) => batch$1(fn);
 const INITIAL_STATE$2 = {
 isOpen: false,
 mediaItems: [],
@@ -5273,10 +5250,7 @@ to: validIndex,
 trigger
 });
 batch(() => {
-galleryState.value = {
-...state,
-currentIndex: validIndex
-};
+galleryState.value = { ...state, currentIndex: validIndex };
 gallerySignals.focusedIndex.value = validIndex;
 });
 galleryIndexEvents.emit("navigate:complete", { index: validIndex, trigger });
@@ -5298,84 +5272,79 @@ navigateToItem(newIndex, trigger, source);
 function getCurrentActiveIndex() {
 return gallerySignals.focusedIndex.value ?? galleryState.value.currentIndex;
 }
-const videoPlaybackStateMap =  new WeakMap();
-function getCurrentGalleryVideo(video) {
-if (video) {
+const playbackStateMap =  new WeakMap();
+function executeVideoControl(action, options = {}) {
+try {
+const video = getGalleryVideo(options.video);
+if (!video) {
+if (false) ;
+return;
+}
+switch (action) {
+case "play":
+playVideo(video, options.context);
+break;
+case "pause":
+pauseVideo(video);
+break;
+case "togglePlayPause":
+togglePlayPause(video, options.context);
+break;
+case "volumeUp":
+adjustVolume(video, 0.1);
+break;
+case "volumeDown":
+adjustVolume(video, -0.1);
+break;
+case "mute":
+video.muted = true;
+break;
+case "toggleMute":
+video.muted = !video.muted;
+break;
+}
+if (false) ;
+} catch (error) {
+logger.error("Video control error", { error, action, context: options.context });
+}
+}
+function getGalleryVideo(video) {
+if (video instanceof HTMLVideoElement) {
 return video;
 }
 const signaled = gallerySignals.currentVideoElement.value;
 return signaled instanceof HTMLVideoElement ? signaled : null;
 }
-function executeVideoControl(action, options = {}) {
-const { video, context } = options;
-try {
-const videoElement = getCurrentGalleryVideo(video);
-if (!videoElement) {
-if (false) ;
-return;
-}
-switch (action) {
-case "play": {
-const maybePromise = videoElement.play?.();
-if (maybePromise && typeof maybePromise.then === "function") {
-maybePromise.then(() => videoPlaybackStateMap.set(videoElement, { playing: true })).catch(() => {
-videoPlaybackStateMap.set(videoElement, { playing: false });
-if (false) ;
+function playVideo(video, context) {
+const promise = video.play?.();
+if (promise && typeof promise.then === "function") {
+promise.then(() => playbackStateMap.set(video, { playing: true })).catch(() => {
+playbackStateMap.set(video, { playing: false });
 });
 } else {
-videoPlaybackStateMap.set(videoElement, { playing: true });
+playbackStateMap.set(video, { playing: true });
 }
-break;
 }
-case "pause":
-videoElement.pause?.();
-videoPlaybackStateMap.set(videoElement, { playing: false });
-break;
-case "togglePlayPause": {
-const current = videoPlaybackStateMap.get(videoElement)?.playing ?? !videoElement.paused;
-const next = !current;
-if (next) {
-const maybePromise = videoElement.play?.();
-if (maybePromise && typeof maybePromise.then === "function") {
-maybePromise.then(() => videoPlaybackStateMap.set(videoElement, { playing: true })).catch(() => {
-videoPlaybackStateMap.set(videoElement, { playing: false });
-if (false) ;
-});
+function pauseVideo(video) {
+video.pause?.();
+playbackStateMap.set(video, { playing: false });
+}
+function togglePlayPause(video, context) {
+const isPlaying = playbackStateMap.get(video)?.playing ?? !video.paused;
+if (isPlaying) {
+pauseVideo(video);
 } else {
-videoPlaybackStateMap.set(videoElement, { playing: true });
+playVideo(video);
 }
-} else {
-videoElement.pause?.();
-videoPlaybackStateMap.set(videoElement, { playing: false });
 }
-break;
+function adjustVolume(video, delta) {
+const newVolume = Math.max(0, Math.min(1, Math.round((video.volume + delta) * 100) / 100));
+video.volume = newVolume;
+if (newVolume > 0 && video.muted) {
+video.muted = false;
 }
-case "volumeUp": {
-const newVolume = Math.min(1, Math.round((videoElement.volume + 0.1) * 100) / 100);
-videoElement.volume = newVolume;
-if (newVolume > 0 && videoElement.muted) {
-videoElement.muted = false;
-}
-break;
-}
-case "volumeDown": {
-const newVolume = Math.max(0, Math.round((videoElement.volume - 0.1) * 100) / 100);
-videoElement.volume = newVolume;
-if (newVolume === 0 && !videoElement.muted) {
-videoElement.muted = true;
-}
-break;
-}
-case "mute":
-videoElement.muted = true;
-break;
-case "toggleMute":
-videoElement.muted = !videoElement.muted;
-break;
-}
-if (false) ;
-} catch (error) {
-logger.error("[VideoControl] Unexpected error", { error, action, context });
+if (newVolume === 0 && !video.muted) {
+video.muted = true;
 }
 }
 let keyboardDebounceState = {
@@ -5400,7 +5369,7 @@ lastExecutionTime: 0,
 lastKey: ""
 };
 }
-const NAVIGATION_KEYS = [
+const NAVIGATION_KEYS =  new Set([
 "Home",
 "End",
 "PageDown",
@@ -5408,18 +5377,45 @@ const NAVIGATION_KEYS = [
 "ArrowLeft",
 "ArrowRight",
 "?"
-];
-const VIDEO_CONTROL_KEYS = ["ArrowUp", "ArrowDown", "m", "M"];
-function checkGalleryOpen() {
-return gallerySignals.isOpen.value;
+]);
+const VIDEO_CONTROL_KEYS =  new Set(["ArrowUp", "ArrowDown", "m", "M"]);
+function handleKeyboardEvent(event, handlers, options) {
+if (!options.enableKeyboard) return;
+try {
+const key = event.key;
+const isGalleryOpen = gallerySignals.isOpen.value;
+if (key === "Escape" && isGalleryOpen) {
+handlers.onGalleryClose();
+event.preventDefault();
+event.stopPropagation();
+return;
 }
-function isNavigationOrHelpKey(key) {
-return NAVIGATION_KEYS.includes(key) || key === " " || key === "Space";
+if (!isGalleryOpen) {
+handlers.onKeyboardEvent?.(event);
+return;
 }
-function isVideoControlKey(key) {
-return VIDEO_CONTROL_KEYS.includes(key) || key === " " || key === "Space";
+const isNavKey = NAVIGATION_KEYS.has(key) || key === " " || key === "Space";
+const isVideoKey = VIDEO_CONTROL_KEYS.has(key) || key === " " || key === "Space";
+if (!isNavKey && !isVideoKey) {
+handlers.onKeyboardEvent?.(event);
+return;
 }
-function handleNavigationKey(key) {
+event.preventDefault();
+event.stopPropagation();
+if (key === "?") {
+showKeyboardHelp();
+} else if (NAVIGATION_KEYS.has(key) || key === " " || key === "Space") {
+handleNavigation(key);
+} else {
+handleVideoControl(key);
+}
+handlers.onKeyboardEvent?.(event);
+} catch (error) {
+}
+}
+function handleNavigation(key) {
+const current = gallerySignals.currentIndex.value;
+const total = gallerySignals.mediaItems.value.length;
 switch (key) {
 case "ArrowLeft":
 navigatePrevious("keyboard");
@@ -5430,44 +5426,18 @@ break;
 case "Home":
 navigateToItem(0, "keyboard");
 break;
-case "End": {
-const lastIndex = Math.max(0, gallerySignals.mediaItems.value.length - 1);
-navigateToItem(lastIndex, "keyboard");
+case "End":
+navigateToItem(Math.max(0, total - 1), "keyboard");
 break;
-}
-case "PageDown": {
-navigateToItem(
-Math.min(gallerySignals.mediaItems.value.length - 1, gallerySignals.currentIndex.value + 5),
-"keyboard"
-);
+case "PageUp":
+navigateToItem(Math.max(0, current - 5), "keyboard");
 break;
-}
-case "PageUp": {
-navigateToItem(Math.max(0, gallerySignals.currentIndex.value - 5), "keyboard");
+case "PageDown":
+navigateToItem(Math.min(total - 1, current + 5), "keyboard");
 break;
 }
 }
-}
-function handleHelpKey() {
-if (!shouldExecuteKeyboardAction("?", 500)) return;
-try {
-const languageService = getLanguageService();
-const title = languageService.translate("msg.kb.t");
-const text = [
-languageService.translate("msg.kb.prev"),
-languageService.translate("msg.kb.next"),
-languageService.translate("msg.kb.cls"),
-languageService.translate("msg.kb.toggle")
-].join("\n");
-void NotificationService.getInstance().show({
-title,
-text,
-timeout: 6e3
-});
-} catch {
-}
-}
-function handleVideoControlKey(key) {
+function handleVideoControl(key) {
 switch (key) {
 case " ":
 case "Space":
@@ -5493,39 +5463,21 @@ executeVideoControl("toggleMute");
 break;
 }
 }
-function handleKeyboardEvent(event, handlers, options) {
-if (!options.enableKeyboard) return;
+function showKeyboardHelp() {
+if (!shouldExecuteKeyboardAction("?", 500)) return;
 try {
-const key = event.key;
-if (checkGalleryOpen()) {
-const isNavKey = isNavigationOrHelpKey(key);
-const isVideoKey = isVideoControlKey(key);
-if (isNavKey || isVideoKey) {
-event.preventDefault();
-event.stopPropagation();
-if (key === "?") {
-handleHelpKey();
-} else if (isNavKey) {
-handleNavigationKey(key);
-} else {
-handleVideoControlKey(key);
-}
-if (handlers.onKeyboardEvent) {
-handlers.onKeyboardEvent(event);
-}
-return;
-}
-}
-if (event.key === "Escape" && checkGalleryOpen()) {
-handlers.onGalleryClose();
-event.preventDefault();
-event.stopPropagation();
-return;
-}
-if (handlers.onKeyboardEvent) {
-handlers.onKeyboardEvent(event);
-}
-} catch (error) {
+const lang = getLanguageService();
+void NotificationService.getInstance().show({
+title: lang.translate("msg.kb.t"),
+text: [
+lang.translate("msg.kb.prev"),
+lang.translate("msg.kb.next"),
+lang.translate("msg.kb.cls"),
+lang.translate("msg.kb.toggle")
+].join("\n"),
+timeout: 6e3
+});
+} catch {
 }
 }
 const VIDEO_CONTROL_DATASET_PREFIXES = [
@@ -5651,7 +5603,7 @@ const SCHEME_WHITESPACE_REGEX = /[\u0000-\u001F\u007F\s]+/g;
 const EXPLICIT_SCHEME_REGEX = /^[a-zA-Z][a-zA-Z0-9+.-]*:/;
 const MAX_DECODE_ITERATIONS = 3;
 const MAX_SCHEME_PROBE_LENGTH = 64;
-const DEFAULT_BLOCKED_PROTOCOL_HINTS = Object.freeze([
+const DEFAULT_BLOCKED_PROTOCOL_HINTS = [
 "javascript:",
 "vbscript:",
 "file:",
@@ -5672,7 +5624,10 @@ const DEFAULT_BLOCKED_PROTOCOL_HINTS = Object.freeze([
 "data:application",
 "data:video",
 "data:audio"
-]);
+];
+Object.freeze(
+new Set(["http:", "https:", "blob:"])
+);
 function isUrlAllowed(rawUrl, policy) {
 if (!rawUrl || typeof rawUrl !== "string") {
 return false;
@@ -5687,7 +5642,7 @@ return false;
 }
 const lower = normalized.toLowerCase();
 if (lower.startsWith("data:")) {
-return policy.allowDataUrls === true;
+return policy.allowDataUrls === true && isAllowedDataUrl(lower, policy.allowedDataMimePrefixes);
 }
 if (lower.startsWith("//")) {
 return handleProtocolRelative();
@@ -5728,13 +5683,24 @@ break;
 }
 return Array.from(variants.values());
 }
+function isAllowedDataUrl(lowerCaseValue, allowedPrefixes) {
+if (!allowedPrefixes || allowedPrefixes.length === 0) {
+return false;
+}
+const metaSection = lowerCaseValue.slice("data:".length);
+const [mime] = metaSection.split(";", 1);
+if (!mime) {
+return false;
+}
+return allowedPrefixes.some((prefix) => mime.startsWith(prefix));
+}
 function handleProtocolRelative(url, policy) {
 {
 return false;
 }
 }
 const MAX_URL_LENGTH = 2048;
-const ALLOWED_MEDIA_HOSTS = MEDIA.HOSTS.MEDIA_CDN;
+const ALLOWED_MEDIA_HOSTS = Object.freeze(MEDIA.HOSTS.MEDIA_CDN);
 function isValidMediaUrl(url) {
 if (typeof url !== "string" || url.length > MAX_URL_LENGTH) {
 return false;
@@ -5751,9 +5717,7 @@ return false;
 }
 return isAllowedMediaPath(parsed.hostname, parsed.pathname);
 }
-function isHttpProtocol(protocol) {
-return protocol === "https:" || protocol === "http:";
-}
+const isHttpProtocol = (protocol) => protocol === "https:" || protocol === "http:";
 function isAllowedMediaPath(hostname, pathname) {
 if (hostname === "pbs.twimg.com") {
 return checkPbsMediaPath(pathname);
@@ -5763,12 +5727,8 @@ return checkVideoMediaPath(pathname);
 }
 return false;
 }
-function checkPbsMediaPath(pathname) {
-return pathname.startsWith("/media/") || pathname.startsWith("/ext_tw_video_thumb/") || pathname.startsWith("/tweet_video_thumb/") || pathname.startsWith("/video_thumb/") || pathname.startsWith("/amplify_video_thumb/");
-}
-function checkVideoMediaPath(pathname) {
-return pathname.startsWith("/ext_tw_video/") || pathname.startsWith("/tweet_video/") || pathname.startsWith("/amplify_video/") || pathname.startsWith("/dm_video/");
-}
+const checkPbsMediaPath = (pathname) => pathname.startsWith("/media/") || pathname.startsWith("/ext_tw_video_thumb/") || pathname.startsWith("/tweet_video_thumb/") || pathname.startsWith("/video_thumb/") || pathname.startsWith("/amplify_video_thumb/");
+const checkVideoMediaPath = (pathname) => pathname.startsWith("/ext_tw_video/") || pathname.startsWith("/tweet_video/") || pathname.startsWith("/amplify_video/") || pathname.startsWith("/dm_video/");
 const MEDIA_LINK_SELECTORS = [
 STATUS_LINK_SELECTOR,
 'a[href*="/photo/"]',
@@ -5847,15 +5807,12 @@ if (isVideoControlElement(target)) {
 return { handled: false, reason: "Video control element" };
 }
 if (!isProcessableMedia(target)) {
-return { handled: false, reason: "Non-processable media target" };
+return { handled: false, reason: "Non-processable media" };
 }
 event.stopImmediatePropagation();
 event.preventDefault();
 await handlers.onMediaClick(target, event);
-return {
-handled: true,
-reason: "Media click handled"
-};
+return { handled: true, reason: "Media click processed" };
 }
 const DEFAULT_GALLERY_EVENT_OPTIONS = {
 enableKeyboard: true,
@@ -5864,94 +5821,66 @@ debugMode: false,
 preventBubbling: true,
 context: "gallery"
 };
-const initialLifecycleState = {
-initialized: false,
-options: null,
-handlers: null,
-keyListener: null,
-clickListener: null,
-listenerContext: null,
-eventTarget: null
-};
-let lifecycleState$1 = { ...initialLifecycleState };
+let lifecycleState$1 = { initialized: false, context: null };
 function sanitizeContext(context) {
 const trimmed = context?.trim();
 return trimmed && trimmed.length > 0 ? trimmed : DEFAULT_GALLERY_EVENT_OPTIONS.context;
 }
 function resolveInitializationInput(optionsOrRoot) {
 if (optionsOrRoot instanceof HTMLElement) {
-return {
-options: { ...DEFAULT_GALLERY_EVENT_OPTIONS },
-root: optionsOrRoot
-};
+return { options: { ...DEFAULT_GALLERY_EVENT_OPTIONS }, root: optionsOrRoot };
 }
 const partial = optionsOrRoot ?? {};
-const merged = {
+return {
+options: {
 ...DEFAULT_GALLERY_EVENT_OPTIONS,
 ...partial,
 context: sanitizeContext(partial.context)
-};
-return {
-options: merged,
+},
 root: null
 };
 }
 function resolveEventTarget(explicitRoot) {
 return explicitRoot || document.body || document.documentElement || document;
 }
+function registerListeners(eventManager, target, handlers, options, context) {
+const listenerOptions = { capture: true, passive: false };
+if (options.enableKeyboard) {
+const keyHandler = (evt) => {
+handleKeyboardEvent(evt, handlers, options);
+};
+eventManager.addListener(target, "keydown", keyHandler, listenerOptions, context);
+}
+if (options.enableMediaDetection) {
+const clickHandler = async (evt) => {
+await handleMediaClick(evt, handlers, options);
+};
+eventManager.addListener(target, "click", clickHandler, listenerOptions, context);
+}
+}
 async function initializeGalleryEvents(handlers, optionsOrRoot) {
 if (lifecycleState$1.initialized) {
 cleanupGalleryEvents();
 }
 if (!handlers) {
-return () => {
-};
+return cleanupGalleryEvents;
 }
 const { options: finalOptions, root: explicitGalleryRoot } = resolveInitializationInput(optionsOrRoot);
-const listenerContext = sanitizeContext(finalOptions.context);
-const keyHandler = (evt) => {
-const event = evt;
-handleKeyboardEvent(event, handlers, finalOptions);
-};
-const clickHandler = async (evt) => {
-const event = evt;
-await handleMediaClick(event, handlers, finalOptions);
-};
+const context = sanitizeContext(finalOptions.context);
 const target = resolveEventTarget(explicitGalleryRoot);
-const listenerOptions = {
-capture: true,
-passive: false
-};
 const eventManager = EventManager.getInstance();
-if (finalOptions.enableKeyboard) {
-eventManager.addListener(target, "keydown", keyHandler, listenerOptions, listenerContext);
-}
-if (finalOptions.enableMediaDetection) {
-eventManager.addListener(target, "click", clickHandler, listenerOptions, listenerContext);
-}
+registerListeners(eventManager, target, handlers, finalOptions, context);
 resetKeyboardDebounceState();
-lifecycleState$1 = {
-initialized: true,
-options: finalOptions,
-handlers,
-keyListener: keyHandler,
-clickListener: clickHandler,
-listenerContext,
-eventTarget: target
-};
-return () => {
-cleanupGalleryEvents();
-};
+lifecycleState$1 = { initialized: true, context };
+return cleanupGalleryEvents;
 }
 function cleanupGalleryEvents() {
-if (!lifecycleState$1.initialized) {
-return;
-}
-if (lifecycleState$1.listenerContext) {
-EventManager.getInstance().removeByContext(lifecycleState$1.listenerContext);
+if (!lifecycleState$1.initialized) return;
+if (lifecycleState$1.context) {
+EventManager.getInstance().removeByContext(lifecycleState$1.context);
 }
 resetKeyboardDebounceState();
-lifecycleState$1 = { ...initialLifecycleState };
+lifecycleState$1 = { initialized: false, context: null };
 }
 const ZERO_RESULT = {
 pausedCount: 0,
@@ -6107,39 +6036,29 @@ scope
 }
 let guardDispose = null;
 let guardSubscribers = 0;
-function ensureGuardEffect() {
-if (guardDispose) {
-return;
-}
+const ensureGuardEffect = () => {
+if (guardDispose) return;
 guardDispose = gallerySignals.isOpen.subscribe((isOpen) => {
 if (!isOpen) return;
 const result = pauseAmbientVideosForGallery({
 trigger: "guard",
 reason: "guard"
 });
-if (result.pausedCount <= 0) {
-return;
-}
+if (result.pausedCount <= 0) return;
 });
-}
-function startAmbientVideoGuard() {
+};
+const startAmbientVideoGuard = () => {
 guardSubscribers += 1;
 ensureGuardEffect();
-return () => {
-stopAmbientVideoGuard();
+return stopAmbientVideoGuard;
 };
-}
-function stopAmbientVideoGuard() {
-if (guardSubscribers === 0) {
-return;
-}
+const stopAmbientVideoGuard = () => {
+if (guardSubscribers === 0) return;
 guardSubscribers -= 1;
-if (guardSubscribers > 0) {
-return;
-}
+if (guardSubscribers > 0) return;
 guardDispose?.();
 guardDispose = null;
-}
+};
 class GalleryApp {
 galleryRenderer = null;
 isInitialized = false;
@@ -6158,13 +6077,14 @@ await this.setupEventHandlers();
 this.ambientVideoGuardDispose = this.ambientVideoGuardDispose ?? startAmbientVideoGuard();
 this.isInitialized = true;
 } catch (error) {
+this.isInitialized = false;
+this.galleryRenderer = null;
 galleryErrorReporter.critical(error, {
 code: "GALLERY_APP_INIT_FAILED"
 });
 }
 }
 async setupEventHandlers() {
-try {
 const settingsService = tryGetSettingsManager();
 const enableKeyboardSetting = settingsService?.get?.("gallery.enableKeyboardNav");
 const enableKeyboard = typeof enableKeyboardSetting === "boolean" ? enableKeyboardSetting : true;
@@ -6186,11 +6106,6 @@ preventBubbling: true,
 context: "gallery"
 }
 );
-} catch (error) {
-galleryErrorReporter.critical(error, {
-code: "EVENT_HANDLERS_SETUP_FAILED"
-});
-}
 }
 async handleMediaClick(element, _event) {
 try {
@@ -6742,18 +6657,14 @@ function resolve(value) {
 return typeof value === "function" ? value() : value;
 }
 function resolveOptional(value) {
-if (value === void 0) {
-return void 0;
-}
-return resolve(value);
+return value === void 0 ? void 0 : resolve(value);
 }
 function toAccessor(value) {
 return typeof value === "function" ? value : () => value;
 }
 function toRequiredAccessor(resolver, fallback) {
 return () => {
-const value = resolver();
-const resolved = resolveOptional(value);
+const resolved = resolveOptional(resolver());
 return resolved ?? fallback;
 };
 }
@@ -7087,13 +6998,14 @@ FADE_OUT: "xeg-fade-out"
 function runCssAnimation(element, className) {
 return new Promise((resolve) => {
 try {
-const handleAnimationEnd = () => {
+const cleanup = () => {
+element.removeEventListener("animationend", cleanup);
 element.classList.remove(className);
 resolve();
 };
-element.addEventListener("animationend", handleAnimationEnd, { once: true });
+element.addEventListener("animationend", cleanup, { once: true });
 element.classList.add(className);
-} catch (error) {
+} catch {
 resolve();
 }
 });
@@ -7645,8 +7557,8 @@ pendingArgs = null;
 const flush = () => {
 if (timeoutId !== null && pendingArgs !== null) {
 globalTimerManager.clearTimeout(timeoutId);
-timeoutId = null;
 const args = pendingArgs;
+timeoutId = null;
 pendingArgs = null;
 fn(...args);
 }
@@ -7655,8 +7567,8 @@ const debounced = ((...args) => {
 cancel();
 pendingArgs = args;
 timeoutId = globalTimerManager.setTimeout(() => {
-timeoutId = null;
 const savedArgs = pendingArgs;
+timeoutId = null;
 pendingArgs = null;
 if (savedArgs !== null) {
 fn(...savedArgs);
@@ -8055,8 +7967,8 @@ var _tmpl$$8 =  template(`<button>`);
 function IconButton(props) {
 return (() => {
 var _el$ = _tmpl$$8();
-addEventListener(_el$, "click", props.onClick, true);
 addEventListener(_el$, "mousedown", props.onMouseDown, true);
+addEventListener(_el$, "click", props.onClick, true);
 var _ref$ = props.ref;
 typeof _ref$ === "function" ? use(_ref$, _el$) : props.ref = _el$;
 insert(_el$, () => props.children);
@@ -8092,7 +8004,7 @@ u: void 0
 return _el$;
 })();
 }
-delegateEvents(["mousedown", "click"]);
+delegateEvents(["click", "mousedown"]);
 var _tmpl$$7 =  template(`<svg xmlns=http://www.w3.org/2000/svg viewBox="0 0 24 24"fill=none stroke="var(--xeg-icon-color, currentColor)"stroke-width=var(--xeg-icon-stroke-width) stroke-linecap=round stroke-linejoin=round>`);
 function Icon({
 size = "var(--xeg-icon-size)",
@@ -8108,7 +8020,7 @@ setAttribute(_el$, "height", sizeValue);
 setAttribute(_el$, "class", className);
 setAttribute(_el$, "role", ariaLabel ? "img" : void 0);
 setAttribute(_el$, "aria-label", ariaLabel);
-setAttribute(_el$, "aria-hidden", ariaLabel ? void 0 : "true");
+setAttribute(_el$, "aria-hidden", !ariaLabel);
 insert(_el$, children);
 return _el$;
 })();
@@ -8190,14 +8102,14 @@ switch (tag) {
 case "path":
 return (() => {
 var _el$ = _tmpl$$6();
-createRenderEffect(() => setAttribute(_el$, "d", String(attrs.d ?? "")));
+createRenderEffect(() => setAttribute(_el$, "d", attrs.d));
 return _el$;
 })();
 case "circle":
 return (() => {
 var _el$2 = _tmpl$2$3();
 createRenderEffect((_p$) => {
-var _v$ = String(attrs.cx ?? ""), _v$2 = String(attrs.cy ?? ""), _v$3 = String(attrs.r ?? "");
+var _v$ = attrs.cx, _v$2 = attrs.cy, _v$3 = attrs.r;
 _v$ !== _p$.e && setAttribute(_el$2, "cx", _p$.e = _v$);
 _v$2 !== _p$.t && setAttribute(_el$2, "cy", _p$.t = _v$2);
 _v$3 !== _p$.a && setAttribute(_el$2, "r", _p$.a = _v$3);
@@ -8280,54 +8192,46 @@ ja: languageService.translate("st.langJa")
 }
 };
 });
-const selectClass = cx("xeg-inline-center", styles$1.select);
-const containerClass = cx(styles$1.body, props.compact && styles$1.bodyCompact);
-const settingClass = cx(styles$1.setting, props.compact && styles$1.settingCompact);
-const labelClass = cx(styles$1.label, props.compact && styles$1.compactLabel);
-const themeValue = createMemo(() => resolve(props.currentTheme));
-const languageValue = createMemo(() => resolve(props.currentLanguage));
-const themeSelectId = props["data-testid"] ? `${props["data-testid"]}-theme-select` : "settings-theme-select";
-const languageSelectId = props["data-testid"] ? `${props["data-testid"]}-language-select` : "settings-language-select";
-const themeStrings = () => strings().theme;
-const languageStrings = () => strings().language;
+const themeValue = () => resolve(props.currentTheme);
+const languageValue = () => resolve(props.currentLanguage);
 return (() => {
 var _el$ = _tmpl$$5(), _el$2 = _el$.firstChild, _el$3 = _el$2.firstChild, _el$4 = _el$3.nextSibling, _el$5 = _el$2.nextSibling, _el$6 = _el$5.firstChild, _el$7 = _el$6.nextSibling;
-className(_el$, containerClass);
-className(_el$2, settingClass);
-setAttribute(_el$3, "for", themeSelectId);
-className(_el$3, labelClass);
-insert(_el$3, () => themeStrings().title);
+insert(_el$3, () => strings().theme.title);
 addEventListener(_el$4, "change", props.onThemeChange);
-setAttribute(_el$4, "id", themeSelectId);
-className(_el$4, selectClass);
 insert(_el$4, () => THEME_OPTIONS.map((option) => (() => {
 var _el$8 = _tmpl$2$2();
 _el$8.value = option;
-insert(_el$8, () => themeStrings().labels[option]);
+insert(_el$8, () => strings().theme.labels[option]);
 return _el$8;
 })()));
-className(_el$5, settingClass);
-setAttribute(_el$6, "for", languageSelectId);
-className(_el$6, labelClass);
-insert(_el$6, () => languageStrings().title);
+insert(_el$6, () => strings().language.title);
 addEventListener(_el$7, "change", props.onLanguageChange);
-setAttribute(_el$7, "id", languageSelectId);
-className(_el$7, selectClass);
 insert(_el$7, () => LANGUAGE_OPTIONS.map((option) => (() => {
 var _el$9 = _tmpl$2$2();
 _el$9.value = option;
-insert(_el$9, () => languageStrings().labels[option]);
+insert(_el$9, () => strings().language.labels[option]);
 return _el$9;
 })()));
 createRenderEffect((_p$) => {
-var _v$ = void 0, _v$2 = themeStrings().title, _v$3 = themeStrings().title, _v$4 = void 0, _v$5 = languageStrings().title, _v$6 = languageStrings().title, _v$7 = void 0;
-_v$ !== _p$.e && setAttribute(_el$, "data-testid", _p$.e = _v$);
-_v$2 !== _p$.t && setAttribute(_el$4, "aria-label", _p$.t = _v$2);
-_v$3 !== _p$.a && setAttribute(_el$4, "title", _p$.a = _v$3);
-_v$4 !== _p$.o && setAttribute(_el$4, "data-testid", _p$.o = _v$4);
-_v$5 !== _p$.i && setAttribute(_el$7, "aria-label", _p$.i = _v$5);
-_v$6 !== _p$.n && setAttribute(_el$7, "title", _p$.n = _v$6);
-_v$7 !== _p$.s && setAttribute(_el$7, "data-testid", _p$.s = _v$7);
+var _v$ = cx(styles$1.body, props.compact && styles$1.bodyCompact), _v$2 = void 0, _v$3 = cx(styles$1.setting, props.compact && styles$1.settingCompact), _v$4 = props["data-testid"] ? `${props["data-testid"]}-theme-select` : "settings-theme-select", _v$5 = cx(styles$1.label, props.compact && styles$1.compactLabel), _v$6 = props["data-testid"] ? `${props["data-testid"]}-theme-select` : "settings-theme-select", _v$7 = cx("xeg-inline-center", styles$1.select), _v$8 = strings().theme.title, _v$9 = strings().theme.title, _v$0 = void 0, _v$1 = cx(styles$1.setting, props.compact && styles$1.settingCompact), _v$10 = props["data-testid"] ? `${props["data-testid"]}-language-select` : "settings-language-select", _v$11 = cx(styles$1.label, props.compact && styles$1.compactLabel), _v$12 = props["data-testid"] ? `${props["data-testid"]}-language-select` : "settings-language-select", _v$13 = cx("xeg-inline-center", styles$1.select), _v$14 = strings().language.title, _v$15 = strings().language.title, _v$16 = void 0;
+_v$ !== _p$.e && className(_el$, _p$.e = _v$);
+_v$2 !== _p$.t && setAttribute(_el$, "data-testid", _p$.t = _v$2);
+_v$3 !== _p$.a && className(_el$2, _p$.a = _v$3);
+_v$4 !== _p$.o && setAttribute(_el$3, "for", _p$.o = _v$4);
+_v$5 !== _p$.i && className(_el$3, _p$.i = _v$5);
+_v$6 !== _p$.n && setAttribute(_el$4, "id", _p$.n = _v$6);
+_v$7 !== _p$.s && className(_el$4, _p$.s = _v$7);
+_v$8 !== _p$.h && setAttribute(_el$4, "aria-label", _p$.h = _v$8);
+_v$9 !== _p$.r && setAttribute(_el$4, "title", _p$.r = _v$9);
+_v$0 !== _p$.d && setAttribute(_el$4, "data-testid", _p$.d = _v$0);
+_v$1 !== _p$.l && className(_el$5, _p$.l = _v$1);
+_v$10 !== _p$.u && setAttribute(_el$6, "for", _p$.u = _v$10);
+_v$11 !== _p$.c && className(_el$6, _p$.c = _v$11);
+_v$12 !== _p$.w && setAttribute(_el$7, "id", _p$.w = _v$12);
+_v$13 !== _p$.m && className(_el$7, _p$.m = _v$13);
+_v$14 !== _p$.f && setAttribute(_el$7, "aria-label", _p$.f = _v$14);
+_v$15 !== _p$.y && setAttribute(_el$7, "title", _p$.y = _v$15);
+_v$16 !== _p$.g && setAttribute(_el$7, "data-testid", _p$.g = _v$16);
 return _p$;
 }, {
 e: void 0,
@@ -8336,7 +8240,18 @@ a: void 0,
 o: void 0,
 i: void 0,
 n: void 0,
-s: void 0
+s: void 0,
+h: void 0,
+r: void 0,
+d: void 0,
+l: void 0,
+u: void 0,
+c: void 0,
+w: void 0,
+m: void 0,
+f: void 0,
+y: void 0,
+g: void 0
 });
 createRenderEffect(() => _el$4.value = themeValue());
 createRenderEffect(() => _el$7.value = languageValue());
@@ -8469,12 +8384,10 @@ const PROTOCOL_PREFIX = /^https?:\/\//;
 const buildHashtagUrl = (tag) => `https://x.com/hashtag/${encodeURIComponent(tag)}`;
 const splitUrlTrailingPunctuation = (value) => {
 const match = value.match(URL_TRAILING_PUNCTUATION);
-if (!match) {
-return {
+if (!match) return {
 url: value,
 trailing: ""
 };
-}
 const trailing = match[0] ?? "";
 const url = value.slice(0, Math.max(0, value.length - trailing.length));
 return {
@@ -8549,13 +8462,10 @@ return tokens;
 };
 const normalizeTweetUrl = (value) => {
 const trimmed = value?.trim();
-if (!trimmed) return null;
-if (!isUrlAllowed(trimmed, TWEET_TEXT_URL_POLICY)) return null;
-return trimmed;
+return trimmed && isUrlAllowed(trimmed, TWEET_TEXT_URL_POLICY) ? trimmed : null;
 };
 const formatTweetUrlLabel = (url) => url.replace(PROTOCOL_PREFIX, "");
-const renderTweetTokens = (tokens) => {
-return tokens.map((token) => {
+const renderTweetTokens = (tokens) => tokens.map((token) => {
 if ((token.type === "url" || token.type === "hashtag") && token.href) {
 return (() => {
 var _el$ = _tmpl$$4();
@@ -8566,7 +8476,6 @@ return _el$;
 }
 return token.value;
 });
-};
 function TweetUrlLink(props) {
 const translate = useTranslation();
 return (() => {
@@ -8646,14 +8555,13 @@ tolerance: SCROLL_LOCK_TOLERANCE
 });
 };
 function ToolbarView(props) {
-const totalCount = createMemo(() => resolve(props.totalCount));
-const currentIndex = createMemo(() => resolve(props.currentIndex));
-const displayedIndex = createMemo(() => props.displayedIndex());
-const isToolbarDisabled = createMemo(() => !!resolveOptional(props.disabled));
-const activeFitMode = createMemo(() => props.activeFitMode());
-const tweetText = createMemo(() => resolveOptional(props.tweetText) ?? null);
-const tweetTextHTML = createMemo(() => resolveOptional(props.tweetTextHTML) ?? null);
-const tweetUrl = createMemo(() => resolveOptional(props.tweetUrl) ?? null);
+const totalCount = () => resolve(props.totalCount);
+const currentIndex = () => resolve(props.currentIndex);
+const isToolbarDisabled = () => !!resolveOptional(props.disabled);
+const activeFitMode = () => props.activeFitMode();
+const tweetText = () => resolveOptional(props.tweetText) ?? null;
+const tweetTextHTML = () => resolveOptional(props.tweetTextHTML) ?? null;
+const tweetUrl = () => resolveOptional(props.tweetUrl) ?? null;
 const [toolbarElement, setToolbarElement] = createSignal(null);
 const [counterElement, setCounterElement] = createSignal(null);
 const [settingsPanelEl, setSettingsPanelEl] = createSignal(null);
@@ -8670,14 +8578,15 @@ setSettingsPanelEl(element);
 props.settingsController.assignSettingsPanelRef(element);
 };
 createEffect(() => {
-const current = String(currentIndex());
-const focused = String(displayedIndex());
 const toolbar = toolbarElement();
+const counter = counterElement();
+if (!toolbar && !counter) return;
+const current = String(currentIndex());
+const focused = String(props.displayedIndex());
 if (toolbar) {
 toolbar.dataset.currentIndex = current;
 toolbar.dataset.focusedIndex = focused;
 }
-const counter = counterElement();
 if (counter) {
 counter.dataset.currentIndex = current;
 counter.dataset.focusedIndex = focused;
@@ -8686,8 +8595,7 @@ counter.dataset.focusedIndex = focused;
 const hasTweetContent = () => !!(tweetTextHTML() ?? tweetText() ?? tweetUrl());
 const toolbarButtonClass = (...extra) => cx(styles.toolbarButton, "xeg-inline-center", ...extra);
 const toolbarStateClass = () => {
-const state = props.toolbarDataState();
-switch (state) {
+switch (props.toolbarDataState()) {
 case "loading":
 return styles.stateLoading;
 case "downloading":
@@ -8699,10 +8607,8 @@ return styles.stateIdle;
 }
 };
 const handlePanelWheel = (event) => {
-if (shouldAllowWheelDefault(event)) {
+if (!shouldAllowWheelDefault(event)) return;
 event.stopPropagation();
-return;
-}
 };
 const preventScrollChaining = (event) => {
 if (shouldAllowWheelDefault(event)) {
@@ -8795,7 +8701,7 @@ size: 18
 use((element) => {
 setCounterElement(element);
 }, _el$6);
-insert(_el$7, () => displayedIndex() + 1);
+insert(_el$7, () => props.displayedIndex() + 1);
 insert(_el$9, totalCount);
 insert(_el$3, () => props.fitModeOrder.map(({
 mode,
@@ -9130,13 +9036,11 @@ try {
 const setting = themeManager.getCurrentTheme();
 setCurrentTheme(toThemeOption(setting));
 } catch (error) {
-;
 }
 };
 syncThemeFromService();
 if (typeof themeManager.isInitialized === "function" && !themeManager.isInitialized()) {
 void themeManager.initialize().then(syncThemeFromService).catch((error) => {
-;
 });
 }
 createEffect(() => {
@@ -9283,7 +9187,6 @@ void settingsService.set("gallery.theme", theme).catch((error) => {
 });
 }
 } catch (error) {
-;
 }
 };
 const handleLanguageChange = (event) => {
@@ -9415,25 +9318,6 @@ iconName: "move-vertical"
 mode: "fitContainer",
 iconName: "minimize-2"
 }];
-const resolveDisplayedIndex = ({
-total,
-currentIndex,
-focusedIndex
-}) => {
-if (total <= 0) {
-return 0;
-}
-if (typeof focusedIndex === "number" && focusedIndex >= 0 && focusedIndex < total) {
-return focusedIndex;
-}
-return clampIndex(currentIndex, total);
-};
-const calculateProgressWidth = (index, total) => {
-if (total <= 0) {
-return "0%";
-}
-return `${(index + 1) / total * 100}%`;
-};
 const computeNavigationState = ({
 total,
 toolbarDisabled,
@@ -9441,12 +9325,10 @@ downloadBusy
 }) => {
 const hasItems = total > 0;
 const canNavigate = hasItems && total > 1;
-const prevDisabled = toolbarDisabled || !canNavigate;
-const nextDisabled = toolbarDisabled || !canNavigate;
 const downloadDisabled = toolbarDisabled || downloadBusy || !hasItems;
 return {
-prevDisabled,
-nextDisabled,
+prevDisabled: toolbarDisabled || !canNavigate,
+nextDisabled: toolbarDisabled || !canNavigate,
 canDownloadAll: total > 1,
 downloadDisabled,
 anyActionDisabled: toolbarDisabled
@@ -9455,9 +9337,7 @@ anyActionDisabled: toolbarDisabled
 const createGuardedHandler = (guard, action) => {
 return (event) => {
 safeEventPrevent(event);
-if (guard()) {
-return;
-}
+if (guard()) return;
 action?.();
 };
 };
@@ -9486,12 +9366,19 @@ const [tweetExpanded, setTweetExpanded] = createSignal(false);
 const toolbarClass = createMemo(() => cx(styles.toolbar, styles.galleryToolbar, local.className));
 const totalItems = createMemo(() => Math.max(0, totalCount()));
 const currentIndexForNav = createMemo(() => clampIndex(currentIndex(), totalItems()));
-const displayedIndex = createMemo(() => resolveDisplayedIndex({
-total: totalItems(),
-currentIndex: currentIndexForNav(),
-focusedIndex: focusedIndex()
-}));
-const progressWidth = createMemo(() => calculateProgressWidth(displayedIndex(), totalItems()));
+const displayedIndex = createMemo(() => {
+const total = totalItems();
+const currentIdx = currentIndexForNav();
+const focusIdx = focusedIndex();
+if (total <= 0) return 0;
+if (typeof focusIdx === "number" && focusIdx >= 0 && focusIdx < total) return focusIdx;
+return currentIdx;
+});
+const progressWidth = createMemo(() => {
+const total = totalItems();
+const idx = displayedIndex();
+return total <= 0 ? "0%" : `${(idx + 1) / total * 100}%`;
+});
 const toolbarDataState = createMemo(() => getToolbarDataState(toolbarState));
 const navState = createMemo(() => computeNavigationState({
 total: totalItems(),
@@ -9528,39 +9415,27 @@ toolbarActions.setDownloading(!!value);
 }));
 const setSettingsExpanded = (expanded) => {
 setSettingsExpandedSignal(expanded);
-if (expanded) {
-setTweetExpanded(false);
-}
+if (expanded) setTweetExpanded(false);
 };
-const toggleSettings = () => {
-setSettingsExpanded(!settingsExpandedSignal());
-};
+const toggleSettings = () => setSettingsExpanded(!settingsExpandedSignal());
 const toggleTweet = () => {
 setTweetExpanded((prev) => {
-const next = !prev;
-if (next) {
-setSettingsExpanded(false);
-}
-return next;
+if (!prev) setSettingsExpanded(false);
+return !prev;
 });
 };
 const isToolbarDisabled = () => !!isDisabled();
 const isFitDisabled = (mode) => {
-if (isToolbarDisabled()) {
-return true;
-}
+if (isToolbarDisabled()) return true;
 const handler = fitModeHandlers()[mode];
-if (!handler) {
-return true;
-}
+if (!handler) return true;
 return activeFitMode() === mode;
 };
 const handleFitModeClick = (mode) => (event) => {
 safeEventPreventAll(event);
-if (isToolbarDisabled()) {
-return;
-}
+if (!isToolbarDisabled()) {
 fitModeHandlers()[mode]?.(event);
+}
 };
 const handlePrevious = createGuardedHandler(() => navState().prevDisabled, local.handlers.navigation.onPrevious);
 const handleNext = createGuardedHandler(() => navState().nextDisabled, local.handlers.navigation.onNext);
@@ -9649,13 +9524,13 @@ queue: [],
 isProcessing: false
 };
 let downloadStateSignal = null;
-function getDownloadState() {
+const getDownloadState = () => {
 if (!downloadStateSignal) {
 downloadStateSignal = createSignalSafe(INITIAL_STATE);
 }
 return downloadStateSignal;
-}
-function setProcessingFlag(isProcessing) {
+};
+const setProcessingFlag = (isProcessing) => {
 const currentState = downloadState.value;
 if (currentState.isProcessing === isProcessing) {
 return;
@@ -9664,7 +9539,7 @@ downloadState.value = {
 ...currentState,
 isProcessing
 };
-}
+};
 function acquireDownloadLock() {
 setProcessingFlag(true);
 return () => {
@@ -9696,19 +9571,13 @@ if (safeCount === 0) return [];
 const indices = [];
 for (let i = 1; i <= safeCount; i += 1) {
 const idx = safeIndex - i;
-if (idx >= 0) {
-indices.push(idx);
-} else {
-break;
-}
+if (idx >= 0) indices.push(idx);
+else break;
 }
 for (let i = 1; i <= safeCount; i += 1) {
 const idx = safeIndex + i;
-if (idx < safeTotal) {
-indices.push(idx);
-} else {
-break;
-}
+if (idx < safeTotal) indices.push(idx);
+else break;
 }
 return indices;
 }
@@ -9750,6 +9619,18 @@ itemsContainerEl,
 onClose: local.onClose
 });
 const translate = useTranslation();
+const debouncedScrollCorrection = createDebounced((index, mediaId) => {
+if (!isVisible()) {
+return;
+}
+if (index !== currentIndex() || activeMedia()?.id !== mediaId) {
+return;
+}
+scroll.scrollToItem(index);
+}, 120);
+onCleanup(() => {
+debouncedScrollCorrection.cancel();
+});
 createEffect(() => {
 if (!isVisible() || navigation.lastNavigationTrigger()) {
 return;
@@ -9917,6 +9798,7 @@ return actualIndex === focus.focusedIndex();
 forceVisible: forcePreload,
 fitMode: imageFitMode,
 onClick: () => handleMediaItemClick(actualIndex),
+onMediaLoad: (mediaId, indexValue) => debouncedScrollCorrection(indexValue, mediaId),
 get className() {
 return cx(styles$3.galleryItem, actualIndex === currentIndex() && styles$3.itemActive);
 },
@@ -9960,27 +9842,19 @@ host[DISPOSE_SYMBOL]?.();
 delete host[DISPOSE_SYMBOL];
 container.replaceChildren();
 }
-function GalleryContainer({
-children,
-onClose,
-className: className$1,
-registerEscapeListener
-}) {
-const classes = cx("xeg-gallery-overlay", "xeg-gallery-container", className$1);
-const hasCloseHandler = typeof onClose === "function";
+function GalleryContainer(props) {
+const [local] = splitProps(props, ["children", "onClose", "className", "registerEscapeListener"]);
+const classes = cx("xeg-gallery-overlay", "xeg-gallery-container", local.className);
 const escapeListener = (event) => {
-if (!hasCloseHandler) {
-return;
-}
 const keyboardEvent = event;
 if (keyboardEvent.key === "Escape") {
 keyboardEvent.preventDefault();
 keyboardEvent.stopPropagation();
-onClose?.();
+local.onClose?.();
 }
 };
 createEffect(() => {
-if (!hasCloseHandler) {
+if (!local.onClose) {
 return;
 }
 const eventManager = EventManager.getInstance();
@@ -9994,15 +9868,13 @@ eventManager.removeListener(listenerId);
 return (() => {
 var _el$ = _tmpl$$1();
 className(_el$, classes);
-insert(_el$, children);
+insert(_el$, () => local.children);
 return _el$;
 })();
 }
 var _tmpl$ =  template(`<div aria-live=polite data-xeg-error-boundary role=alert><p class=xeg-error-boundary__title></p><p class=xeg-error-boundary__body></p><button class=xeg-error-boundary__action type=button>Retry`);
 function stringifyError(error) {
-if (error instanceof Error && error.message) {
-return error.message;
-}
+if (error instanceof Error && error.message) return error.message;
 try {
 return String(error);
 } catch {
@@ -10011,10 +9883,10 @@ return "Unknown error";
 }
 function translateError(error) {
 try {
-const languageService = getLanguageService();
+const lang = getLanguageService();
 return {
-title: languageService.translate("msg.err.t"),
-body: languageService.translate("msg.err.b", {
+title: lang.translate("msg.err.t"),
+body: lang.translate("msg.err.b", {
 error: stringifyError(error)
 })
 };
@@ -10026,46 +9898,36 @@ title: "Unexpected error"
 }
 }
 function ErrorBoundary(props) {
-let lastReportedError;
+let lastError;
 const [caughtError, setCaughtError] = createSignal(void 0);
-const [boundaryMounted, setBoundaryMounted] = createSignal(true);
+const [mounted, setMounted] = createSignal(true);
 const notifyError = (error) => {
-if (lastReportedError === error) return;
-lastReportedError = error;
-const copy = translateError(error);
+if (lastError === error) return;
+lastError = error;
 try {
-NotificationService.getInstance().error(copy.title, copy.body);
-} catch {
-}
-};
-const handleRetry = () => {
-lastReportedError = void 0;
-setCaughtError(void 0);
-setBoundaryMounted(false);
-queueMicrotask(() => setBoundaryMounted(true));
-};
-const renderFallback = (error) => {
 const {
 title,
 body
 } = translateError(error);
-return (() => {
-var _el$ = _tmpl$(), _el$2 = _el$.firstChild, _el$3 = _el$2.nextSibling, _el$4 = _el$3.nextSibling;
-insert(_el$2, title);
-insert(_el$3, body);
-_el$4.$$click = handleRetry;
-return _el$;
-})();
+NotificationService.getInstance().error(title, body);
+} catch {
+}
+};
+const handleRetry = () => {
+lastError = void 0;
+setCaughtError(void 0);
+setMounted(false);
+queueMicrotask(() => setMounted(true));
 };
 return [createComponent(Show, {
 get when() {
-return boundaryMounted();
+return mounted();
 },
 get children() {
 return createComponent(ErrorBoundary$1, {
-fallback: (boundaryError) => {
-notifyError(boundaryError);
-setCaughtError(boundaryError);
+fallback: (error) => {
+notifyError(error);
+setCaughtError(error);
 return null;
 },
 get children() {
@@ -10077,7 +9939,19 @@ return props.children;
 get when() {
 return caughtError();
 },
-children: (error) => renderFallback(error())
+children: (error) => {
+const {
+title,
+body
+} = translateError(error());
+return (() => {
+var _el$ = _tmpl$(), _el$2 = _el$.firstChild, _el$3 = _el$2.nextSibling, _el$4 = _el$3.nextSibling;
+insert(_el$2, title);
+insert(_el$3, body);
+_el$4.$$click = handleRetry;
+return _el$;
+})();
+}
 })];
 }
 delegateEvents(["click"]);
@@ -10320,6 +10194,7 @@ return !!(this.container && gallerySignals.isOpen.value);
 }
 destroy() {
 this.stateUnsubscribe?.();
+this.stateUnsubscribe = null;
 this.cleanupGallery();
 }
 }
@@ -10442,27 +10317,21 @@ try {
 const stored = await this.storage.getJson(APP_SETTINGS_STORAGE_KEY);
 if (!stored) {
 const defaults = createDefaultSettings();
-try {
-await this.persist(defaults);
-} catch (persistError) {
-}
+await this.persist(defaults).catch(() => {
+});
 return globalThis.structuredClone(defaults);
 }
 const nowMs = Date.now();
 const migrated = migrateSettings(stored, nowMs);
 if (stored.__schemaHash !== this.schemaHash) {
-try {
-await this.persist(migrated);
-} catch (persistError) {
-}
+await this.persist(migrated).catch(() => {
+});
 }
 return globalThis.structuredClone(migrated);
 } catch (error) {
 const defaults = createDefaultSettings();
-try {
-await this.persist(defaults);
-} catch (persistError) {
-}
+await this.persist(defaults).catch(() => {
+});
 return globalThis.structuredClone(defaults);
 }
 }
@@ -10532,16 +10401,18 @@ current = existing;
 current[last] = value;
 return true;
 }
-const FEATURE_DEFAULTS = Object.freeze({ ...DEFAULT_SETTINGS.features });
 function normalizeFeatureFlags(features) {
-const featureKeys = Object.keys(FEATURE_DEFAULTS);
-return featureKeys.reduce(
+const featureKeys = Object.keys(DEFAULT_SETTINGS.features);
+const featureDefaults = DEFAULT_SETTINGS.features;
+return Object.freeze(
+featureKeys.reduce(
 (acc, key) => {
 const candidate = features?.[key];
-acc[key] = typeof candidate === "boolean" ? candidate : FEATURE_DEFAULTS[key];
+acc[key] = typeof candidate === "boolean" ? candidate : featureDefaults[key];
 return acc;
 },
 {}
+)
 );
 }
 class SettingsService {
@@ -10750,6 +10621,13 @@ if (false) ;
 settingsErrorReporter.warn(error, {
 code: "SETTINGS_SERVICE_INIT_FAILED"
 });
+try {
+await NotificationService.getInstance().error(
+"Settings unavailable",
+"Defaults will be used until settings load."
+);
+} catch (notifyError) {
+}
 }
 try {
 const themeService = getThemeService();
@@ -10791,7 +10669,7 @@ const DEFAULT_BOOTSTRAP_RETRY_ATTEMPTS = 3;
 const DEFAULT_BOOTSTRAP_RETRY_DELAY_MS = 100;
 const importMetaEnv = resolveImportMetaEnv();
 const nodeEnv = resolveNodeEnv();
-const buildVersion = "1.7.0" ;
+const buildVersion = "1.7.1" ;
 const rawVersion = resolveStringValue(
 buildVersion,
 importMetaEnv.VITE_VERSION,
@@ -10910,30 +10788,13 @@ controller = null;
 errorListenerId = null;
 rejectionListenerId = null;
 errorListener = (event) => {
-this.formatErrorLocation(event.filename, event.lineno, event.colno);
 };
 rejectionListener = (event) => {
-this.formatRejectionMessage(event.reason);
 };
 static getInstance() {
 return GlobalErrorHandler.singleton.get();
 }
 constructor() {
-}
-formatErrorLocation(filename, lineno, colno) {
-if (!filename) {
-return void 0;
-}
-return `${filename}:${lineno ?? 0}:${colno ?? 0}`;
-}
-formatRejectionMessage(reason) {
-if (reason instanceof Error) {
-return reason.message;
-}
-if (typeof reason === "string") {
-return reason;
-}
-return `Unhandled rejection: ${String(reason)}`;
 }
 initialize() {
 if (this.isInitialized || typeof window === "undefined") {

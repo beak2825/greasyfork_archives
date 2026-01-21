@@ -1,10 +1,9 @@
 // ==UserScript==
 // @name         Disable YouTube Hotkeys with Modern Settings Page
 // @namespace    https://github.com/VKrishna04
-// @version      4.1
+// @version      4.2
 // @description  Disable various YouTube hotkeys with fine-grained control (Excludes Search/Comments)
 // @author       VKrishna04
-// @email        hello@vkrishna04.me
 // @match        *://www.youtube.com/*
 // @icon         https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg
 // @grant        GM_registerMenuCommand
@@ -148,7 +147,7 @@
     let options = [
       {
         id: "disableNumericKeys",
-        label: "Disable Numbers (0–9)",
+        label: "Disable Numbers (0-9)",
         checked: settings.disableNumericKeys,
       },
       {
@@ -323,11 +322,11 @@
         .yt-hk-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 9999; opacity: 0; transition: opacity 0.2s; }
         .yt-hk-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 350px; background: #212121; color: #eee; border-radius: 12px; z-index: 10000; font-family: 'Roboto', sans-serif; box-shadow: 0 12px 24px rgba(0,0,0,0.6); border: 1px solid #333; opacity: 0; transition: opacity 0.2s; }
         .yt-hk-header { padding: 16px 20px; border-bottom: 1px solid #3d3d3d; display: flex; justify-content: space-between; align-items: center; }
-        .yt-hk-header h2 { margin: 0; font-size: 16px; font-weight: 500; color: #fff; }
-        .yt-hk-close { cursor: pointer; font-size: 24px; color: #aaa; }
+        .yt-hk-header h2 { margin: 0; font-size: 18px; font-weight: 500; color: #fff; }
+        .yt-hk-close { cursor: pointer; font-size: 28px; color: #aaa; }
         .yt-hk-close:hover { color: #fff; }
-        .yt-hk-content { padding: 10px 0; max-height: 400px; overflow-y: auto; }
-        .yt-hk-row { padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2a2a2a; }
+        .yt-hk-content { padding: 10px 0; }
+        .yt-hk-row { padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2a2a2a; font-size: 15px; }
         .yt-hk-row:hover { background: #2a2a2a; }
         .yt-hk-switch { position: relative; width: 40px; height: 20px; display: inline-block; }
         .yt-hk-switch input { opacity: 0; width: 0; height: 0; }
@@ -336,7 +335,7 @@
         input:checked + .yt-hk-slider { background-color: #ff0033; }
         input:checked + .yt-hk-slider:before { transform: translateX(20px); }
         .yt-hk-footer { padding: 12px 20px; text-align: right; border-top: 1px solid #3d3d3d; }
-        .yt-hk-save-btn { background: #ff0033; border: none; padding: 8px 16px; color: #fff; font-weight: 500; border-radius: 2px; cursor: pointer; text-transform: uppercase; font-size: 14px; transition: background-color 0.2s; }
+        .yt-hk-save-btn { background: #ff0033; border: none; padding: 10px 18px; color: #fff; font-weight: 500; border-radius: 8px; cursor: pointer; text-transform: uppercase; font-size: 15px; transition: background-color 0.2s; }
         .yt-hk-save-btn:hover { background: #CC0000; }
 
         /* NATIVE BUTTON STYLES (MATCHING SHARE BUTTON) */

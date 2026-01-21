@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME - RightClick Functions
 // @author       GreekCaptain
-// @version      0.1.0
+// @version      0.2.0
 // @description  Right-click segment tools
 // @match        https://www.waze.com/*/editor*
 // @match        https://www.waze.com/editor*
@@ -46,10 +46,12 @@
   const menuState = {
     root: null,
     sub: null,
+    sub2: null,
     subCloseTimer: null,
     outsideCloseHandler: null,
     escHandler: null,
     subContext: null,
+    sub2Context: null,
   };
 
   const ICONS = {
@@ -235,11 +237,21 @@
     }, 1400);
   }
 
-  function closeSubMenu() {
+  function clearSubCloseTimer() {
     if (menuState.subCloseTimer) {
       clearTimeout(menuState.subCloseTimer);
       menuState.subCloseTimer = null;
     }
+  }
+
+  function closeSubMenu2() {
+    if (menuState.sub2) menuState.sub2.remove();
+    menuState.sub2 = null;
+    menuState.sub2Context = null;
+  }
+
+  function closeSubMenu() {
+    closeSubMenu2();
     if (menuState.sub) menuState.sub.remove();
     menuState.sub = null;
     menuState.subContext = null;
@@ -259,21 +271,35 @@
   }
 
   function closeAllMenus() {
-    if (menuState.subCloseTimer) {
-      clearTimeout(menuState.subCloseTimer);
-      menuState.subCloseTimer = null;
-    }
+    clearSubCloseTimer();
+    if (menuState.sub2) menuState.sub2.remove();
     if (menuState.sub) menuState.sub.remove();
     if (menuState.root) menuState.root.remove();
+    menuState.sub2 = null;
     menuState.sub = null;
     menuState.root = null;
+    menuState.sub2Context = null;
     menuState.subContext = null;
+    menuState.selectionSnapshot = null;
     detachOutsideHandlers();
   }
 
-  function scheduleCloseSub(delay = 160) {
-    if (menuState.subCloseTimer) clearTimeout(menuState.subCloseTimer);
-    menuState.subCloseTimer = setTimeout(() => closeSubMenu(), delay);
+  function scheduleCloseSub(delay = 160, mode = "auto") {
+    clearSubCloseTimer();
+    menuState.subCloseTimer = setTimeout(() => {
+      if (mode === "sub2") {
+        closeSubMenu2();
+        return;
+      }
+      if (mode === "all") {
+        closeSubMenu2();
+        closeSubMenu();
+        return;
+      }
+      // auto: close deepest first
+      if (menuState.sub2) closeSubMenu2();
+      else closeSubMenu();
+    }, delay);
   }
 
   function positionMenu(menu, x, y) {
@@ -455,7 +481,7 @@
     }
 
     if (!spec.isSub) {
-      menu.addEventListener("mouseleave", () => scheduleCloseSub(180));
+      menu.addEventListener("mouseleave", () => scheduleCloseSub(180, "all"));
       menu.addEventListener("mouseenter", () => {
         if (menuState.subCloseTimer) { clearTimeout(menuState.subCloseTimer); menuState.subCloseTimer = null; }
       });
@@ -468,20 +494,57 @@
     const handler = (e) => {
       const root = menuState.root;
       const sub = menuState.sub;
+      const sub2 = menuState.sub2;
       const t = e.target;
       if (root && (root === t || root.contains(t))) return;
       if (sub && (sub === t || sub.contains(t))) return;
+      if (sub2 && (sub2 === t || sub2.contains(t))) return;
+
+      const snap = menuState.selectionSnapshot;
+
+      let cx = e.clientX, cy = e.clientY;
+      if (e.touches && e.touches[0]) { cx = e.touches[0].clientX; cy = e.touches[0].clientY; }
+
+      const isLeftMouse = (e.type === "mousedown") && (e.button === 0);
+      const isLeftTouch = (e.type === "touchstart");
+      const isLeft = isLeftMouse || isLeftTouch;
+
+      const mapClick = isLeft && Number.isFinite(cx) && Number.isFinite(cy) && isMapClick(cx, cy);
+      const hasSnap = Array.isArray(snap) && snap.length;
+      const noMods = !(e.shiftKey || e.ctrlKey || e.metaKey || e.altKey);
+
+      // When you left-click the map just to close the menu, WME clears selection.
+      // We close the menu AND swallow that click so selection stays intact.
+      const shouldKeepSelection = mapClick && hasSnap && noMods;
+
+      if (shouldKeepSelection) {
+        try { e.preventDefault(); } catch {}
+        try { e.stopImmediatePropagation(); } catch {}
+        try { e.stopPropagation(); } catch {}
+      }
+
       closeAllMenus();
+
+      if (shouldKeepSelection) {
+        // Extra safety: restore on the next paint (some WME builds clear selection on mouseup/click)
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            try { setSelectionToSegmentIdsSilent(snap); } catch {}
+          });
+        });
+      }
     };
 
     menuState.outsideCloseHandler = handler;
     document.addEventListener("mousedown", handler, true);
-    document.addEventListener("touchstart", handler, true);
     document.addEventListener("contextmenu", handler, true);
+    document.addEventListener("touchstart", handler, { capture: true, passive: false });
 }
+
 
   function openRootMenu(x, y, headerLeft, headerRight, items) {
     closeAllMenus();
+    menuState.selectionSnapshot = selectedSegmentIds();
     const root = buildMenuElement({ headerLeft, headerRight, items, isSub: false });
     menuState.root = root;
     positionMenu(root, x, y);
@@ -490,13 +553,27 @@
 
   function openSubMenuForRow(rowEl, items, opts = {}) {
     const keepCtx = !!opts.keepContext;
-    const prevCtx = menuState.subContext;
+    const prevCtx1 = menuState.subContext;
+    const prevCtx2 = menuState.sub2Context;
 
-    closeSubMenu();
+    // Support a second submenu level (submenu inside submenu)
+    const parentMenu = rowEl?.closest?.('.wmeRcMenu');
+    const fromRoot = !!(parentMenu && menuState.root && parentMenu === menuState.root);
+
+    if (fromRoot) {
+      // Opening/refreshing level-1 submenu
+      closeSubMenu();
+    } else {
+      // Opening/refreshing level-2 submenu
+      closeSubMenu2();
+    }
+
     if (!items || !items.length) return;
 
     const sub = buildMenuElement({ headerLeft: "", headerRight: "", items, isSub: true });
-    menuState.sub = sub;
+
+    if (fromRoot) menuState.sub = sub;
+    else menuState.sub2 = sub;
 
     const rr = rowEl.getBoundingClientRect();
     const margin = 8;
@@ -515,18 +592,25 @@
     positionMenu(sub, x, y);
 
     sub.addEventListener("mouseenter", () => {
-      if (menuState.subCloseTimer) { clearTimeout(menuState.subCloseTimer); menuState.subCloseTimer = null; }
+      clearSubCloseTimer();
     });
-    sub.addEventListener("mouseleave", () => scheduleCloseSub(180));
 
-    if (keepCtx && prevCtx) {
-      menuState.subContext = prevCtx;
+    sub.addEventListener("mouseleave", () => {
+      // If this is a 2nd-level submenu, only close itself. Otherwise close deepest.
+      scheduleCloseSub(180, fromRoot ? "auto" : "sub2");
+    });
+
+    if (keepCtx) {
+      if (fromRoot && prevCtx1) menuState.subContext = prevCtx1;
+      else if (!fromRoot && prevCtx2) menuState.sub2Context = prevCtx2;
     } else {
-      menuState.subContext = {
+      const ctx = {
         kind: String(opts.kind || "generic"),
         anchorEl: rowEl,
         getItems: typeof opts.getItems === "function" ? opts.getItems : () => items,
       };
+      if (fromRoot) menuState.subContext = ctx;
+      else menuState.sub2Context = ctx;
     }
   }
 
@@ -636,6 +720,15 @@ header.querySelector("#wmeRcModalClose").addEventListener("click", close);
   }
 
   function fmt(n) { return Number(n).toFixed(6); }
+
+  function escapeHtml(s) {
+    return String(s)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/\"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
 
   async function setClipboard(text) {
     try { if (typeof GM_setClipboard === "function") { GM_setClipboard(text); return true; } } catch {}
@@ -979,6 +1072,35 @@ function setSegLevelById(segmentId, level) {
     toast("Selection API not available (WME changed).");
     return false;
   }
+
+  function setSelectionToSegmentIdsSilent(ids) {
+    const uniq = Array.from(new Set((ids || []).map(Number).filter(Number.isFinite)));
+    if (!uniq.length) return false;
+
+    try {
+      if (sdk?.Editing?.ObjectType?.SEGMENT != null && typeof sdk?.Editing?.setSelection === "function") {
+        sdk.Editing.setSelection({
+          selection: uniq.map((id) => ({ objectType: sdk.Editing.ObjectType.SEGMENT, objectId: id })),
+        });
+        return true;
+      }
+    } catch {}
+
+    try {
+      const sm = UW?.W?.selectionManager;
+      const segs = UW?.W?.model?.segments;
+      if (sm && segs && typeof segs.getObjectById === "function") {
+        const models = uniq.map((id) => segs.getObjectById(id)).filter(Boolean);
+        if (models.length) {
+          if (typeof sm.setSelectedModels === "function") { sm.setSelectedModels(models); return true; }
+          if (typeof sm.setSelectedItems === "function") { sm.setSelectedItems(models); return true; }
+        }
+      }
+    } catch {}
+
+    return false;
+  }
+
 
   function getSegmentsLockInfo(segIds) {
     const locks = [];
@@ -1495,6 +1617,17 @@ function setSegLevelById(segmentId, level) {
 
   function gmapsUrlFromLonLat(ll) {
     return `${GMAPS_BASE}${fmt(ll.lat)},${fmt(ll.lon)}`;
+  }
+
+  function osmUrlFromLonLat(ll, zoom = 19) {
+    const z = Number.isFinite(zoom) ? zoom : 19;
+    return `https://www.openstreetmap.org/?mlat=${fmt(ll.lat)}&mlon=${fmt(ll.lon)}#map=${z}/${fmt(ll.lat)}/${fmt(ll.lon)}`;
+  }
+
+  function wazeLiveMapUrlFromLonLat(ll, zoom = 17) {
+    const z = Number.isFinite(zoom) ? zoom : 17;
+    // Live Map URL formats have changed in the past; keep this best-effort + harmless if it redirects.
+    return `https://www.waze.com/live-map?zoom=${z}&lat=${fmt(ll.lat)}&lon=${fmt(ll.lon)}`;
   }
 
   function getZoomLevelBestEffort() {
@@ -2245,7 +2378,84 @@ async function actionPasteAttributesToSelection(segIds) {
     });
   }
 
-  function buildToolsSubmenuForSegments(segIds) {
+  function roadTypeNameBestEffort(roadType) {
+    const rt = (roadType == null ? null : Number(roadType));
+    if (!Number.isFinite(rt)) return null;
+    try {
+      const rtObj = UW?.W?.model?.roadTypes?.getObjectById?.(rt) || null;
+      const name = rtObj?.name || rtObj?.title || rtObj?.localizedName || null;
+      if (name) return String(name);
+    } catch {}
+    return null;
+  }
+
+  function getStreetAndCityForSegmentId(segId) {
+    let streetName = null;
+    let cityName = null;
+    try {
+      const seg = sdkSegGetById(segId);
+      const streetId = seg?.primaryStreetId;
+      if (streetId != null) {
+        const street = sdkStreetsGetById(streetId);
+        streetName = street?.streetName ?? street?.name ?? street?.englishName ?? null;
+        cityName = street?.cityName ?? null;
+        const cityId = street?.cityId ?? street?.cityID ?? null;
+        if (!cityName && cityId != null) {
+          try {
+            const c = UW?.W?.model?.cities?.getObjectById?.(Number(cityId));
+            cityName = c?.name ?? null;
+          } catch {}
+        }
+      }
+    } catch {}
+
+    if (!streetName) {
+      try {
+        streetName = getStreetNameForSegmentId(segId);
+        if (streetName && String(streetName).startsWith("(")) streetName = null;
+      } catch {}
+    }
+
+    // W.model fallback for city
+    if (!cityName) {
+      try {
+        const segW = segWGetById(segId);
+        const streetIdW = segW?.primaryStreetID ?? segW?.primaryStreetId ?? segW?.attributes?.primaryStreetID ?? segW?.attributes?.primaryStreetId ?? null;
+        if (streetIdW != null) {
+          const st = UW?.W?.model?.streets?.getObjectById?.(Number(streetIdW));
+          if (!streetName) streetName = st?.name ?? null;
+          const cId = st?.cityID ?? st?.cityId ?? st?.attributes?.cityID ?? st?.attributes?.cityId ?? null;
+          if (cId != null) {
+            const c = UW?.W?.model?.cities?.getObjectById?.(Number(cId));
+            cityName = c?.name ?? null;
+          }
+        }
+      } catch {}
+    }
+
+    return {
+      street: streetName ? String(streetName) : "(unknown)",
+      city: cityName ? String(cityName) : "(unknown)",
+    };
+  }
+
+  function summarizeValues(values) {
+    const clean = (values || []).map(v => (v == null ? "(unknown)" : String(v)));
+    const counts = new Map();
+    for (const v of clean) counts.set(v, (counts.get(v) || 0) + 1);
+    const uniq = Array.from(counts.keys());
+    const mixed = uniq.length > 1;
+    if (!mixed) return { mixed: false, text: uniq[0] || "(unknown)", detail: "" };
+    const top = Array.from(counts.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 4)
+      .map(([k, c]) => `${k} (${c})`);
+    const more = counts.size > 4 ? ` +${counts.size - 4} more` : "";
+    return { mixed: true, text: `mixed (${counts.size})`, detail: top.join(" • ") + more };
+  }
+
+  function buildToolsSubmenuForSegments(segIds, ctxLL) {
+    const ll = ctxLL || lastLonLat;
     return [
       { label: withIcon(ICONS.tools, "Tools"), sub: "Quick utilities", disabled: true },
       { type: "sep" },
@@ -2318,7 +2528,7 @@ async function actionPasteAttributesToSelection(segIds) {
       { type: "sep" },
       { label: withIcon(ICONS.zoom, "Zoom to"), sub: segIds.length === 1 ? "Center on segment" : "Fit selection", onClick: () => actionZoomTo(segIds) },
       { type: "sep" },
-      { label: withIcon(ICONS.tools, "More"), sub: "Tools & utilities", submenu: true, submenuKind: "tools", getSubmenuItems: () => buildToolsSubmenuForSegments(segIds) },
+      { label: withIcon(ICONS.tools, "More"), sub: "Tools & utilities", submenu: true, submenuKind: "tools", getSubmenuItems: () => buildToolsSubmenuForSegments(segIds, ll) },
     ]);
   }
 

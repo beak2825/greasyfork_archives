@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         光遇公告同步
 // @namespace    https://github.com/haihe8177
-// @version      1.2.4
+// @version      1.2.5
 // @description  转换光遇国服公告至光遇Biliwiki
 // @author       Haihe
 // @license MIT
@@ -101,19 +101,43 @@
         for (const img of images) {
             const originalSrc = img.src;
             if (!originalSrc) continue;
+
             const filename = `${date}${articleType}图${imageIndex}.jpg`;
             const wikiFormat = `<br>\n[[File:${filename}|600px|link=]]<br>\n`;
             img.replaceWith(wikiFormat);
+
             if (shouldDownload) {
                 try {
-                    await GM_download({
-                        url: originalSrc,
-                        name: filename,
-                        onload: () => GM_log(`下载成功: ${filename}`),
-                        onerror: (e) => GM_log(`下载失败: ${filename} - ${e.error}`)
-                    });
+                    // 1. 加载图片
+                    const imageBitmap = await createImageBitmap(await fetch(originalSrc).then(r => r.blob()));
+                    // 2. 创建 canvas 并绘制
+                    const canvas = document.createElement('canvas');
+                    canvas.width = imageBitmap.width;
+                    canvas.height = imageBitmap.height;
+                    const ctx = canvas.getContext('2d');
+                    // 填充白色背景（避免 PNG 透明变黑）
+                    ctx.fillStyle = '#fff';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(imageBitmap, 0, 0);
+
+                    // 3. 转换为 JPEG 格式的 Blob（质量可调）
+                    const jpegBlob = await new Promise(resolve =>
+                        canvas.toBlob(resolve, 'image/jpeg', 0.9) // 0.9 是质量（0～1）
+                    );
+
+                    // 4. 下载
+                    const url = URL.createObjectURL(jpegBlob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = filename;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+
+                    GM_log(`格式转换并下载成功: ${filename}`);
                 } catch (error) {
-                    GM_log(`图片下载错误: ${error}`);
+                    GM_log(`图片处理失败: ${filename} - ${error.message}`);
                 }
             }
             imageIndex++;

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Nurbo Mod + glotus
 // @namespace    http://youtube.com
-// @version      1.5.8.9
+// @version      1.5.9.1
 // @description  Shift=Insta,  Traps/Spikes. [ AutoBiomhat ] [Autoheal] [Bull] [Shadow wings]   and upgrades.
 // @icon         https://static.wikia.nocookie.net/moom/images/7/70/Cookie.png/revision/latest?cb=20190223141839
 // @author       Nurbo Mod
@@ -469,7 +469,7 @@ function handleMessage(m) {
 
                     // Одеваем samurai helmet (20) после инсты
                     setTimeout(() => {
-                        storeEquip(20, 0); // samurai helmet
+                        storeEquip(6, 0); // samurai helmet
                     }, 170);
                 }, useSecondary ? 120 : 0);
             }, useSecondary ? 120 : 0);
@@ -516,7 +516,7 @@ function handleMessage(m) {
         autoSpikeEnabled = !autoSpikeEnabled;
 
         if (autoSpikeEnabled) {
-            sendChatMessage("AS on");
+            sendChatMessage("AS hehe");
         } else {
             sendChatMessage("As off");
         }
@@ -830,7 +830,7 @@ function handleMessage(m) {
                         <input type="checkbox" id="autoSpikeToggle" ${autoSpikeEnabled ? 'checked' : ''}>
                         <span class="toggle-slider"></span>
                     </label>
-                    <span class="hotkey-info">[U]</span>
+                    <span class="hotkey-info">] </span>
                 </div>
             </div>
 
@@ -848,7 +848,10 @@ function handleMessage(m) {
                 <h4>🔥 Hotkeys:</h4>
                 <div class="hotkey-item">Shift - Insta Attack</div>
                 <div class="hotkey-item">E - Auto Attack Toggle</div>
-                <div class="hotkey-item">S - Auto Spike Surround Toggle</div>
+                <div class="hotkey-item">] - Auto Spike Surround Toggle</div>
+                <div class="hotkey-item">= - Samurai Hat</div>
+                <div class="hotkey-item">0 - fast walK</div>
+
 
                 <div class="hotkey-item">Right Click - Fast Break</div>
                 <div class="hotkey-item">ESC - Open/Close Menu</div>
@@ -905,12 +908,20 @@ function handleMessage(m) {
         toggleAutoAttack();
     }
 
-    if (e.key.toLowerCase() === 'u') { // S key - Auto Spike
+       if (e.key.toLowerCase() === ']') { // S key - Auto Spike
         toggleAutoSpike();
     }
+    if (e.key.toLowerCase() === '0') { // S key - Auto Spike
+       storeEquip(11, 0);
+        storeEquip(12, 0);
+    }
+    if (e.key.toLowerCase() === '=') { // H key
 
-    if (e.key.toLowerCase() === 'h') { // H key
+        storeEquip(20, 0);
+    }
+        if (e.key.toLowerCase() === 'p') { // H key
         sendChatMessage("hi fk me Hypbo");
+
     }
 
     if (e.key.toLowerCase() === 'v') { // V key - Place Spike
@@ -939,27 +950,16 @@ function handleMessage(m) {
         startPlacingStructure('g', turretType);
     }
 
-    if (e.key.toLowerCase() === 't') { // T key - Test/Other
-        sendChatMessage("test");
-    }
+ 
 
     if (e.key.toLowerCase() === 'r') { // R key - Reverse Insta
         performReverseInsta();
     }
 
-    if (e.key.toLowerCase() === 'y') { // Y key - Chat Message
-        sendChatMessage("y run?");
-    }
+   
 
-    if (e.key.toLowerCase() === ',') { // Comma key - AntiTrap
-        antiTrap = !antiTrap;
-        sendChatMessage("AntiTrap: " + (antiTrap ? "ON" : "OFF"));
-    }
 
-    if (e.key.toLowerCase() === 'm') { // M key - AutoMills
-        walkmillhaha = !walkmillhaha;
-        sendChatMessage("Auto Mills: " + (walkmillhaha ? "ON" : "OFF"));
-    }
+  
 
 
 
@@ -2613,7 +2613,7 @@ function handleMessage(m) {
         autospawn: false,
         autoaccept: false,
         menuTransparency: false,
-        storeItems: [ [ 6, 40, 15, 7, 53, 12, 26, 11, 31, 20, 56 ], [ 11, 17, 16, 13, 19, 18, 21 ] ]
+        storeItems: [ [ 6, 40, 15,7, 31 ], [ 11 ]]
     };
     defaultSettings.storeItems;
     const settings = {

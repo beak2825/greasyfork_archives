@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MAL List Exporter
 // @namespace    http://tampermonkey.net/
-// @version      2026-01-17
+// @version      2026-01-20
 // @description  Export any MyAnimeList.net list you have access to as XML.
 // @author       Nutzboie Funnimanne
 // @license      AGPL-3.0-only
@@ -22,6 +22,7 @@
 // Uses the previously converted jsonToXml function (import/define it above or include inline).
 let userid = 0;
 let username = window.location.pathname.split("/").pop();
+let update_on_import = false
 if(username.indexOf("?") != -1){
     username = username.split("?")[0];
 }
@@ -161,9 +162,9 @@ const btntitle = "\n<span class=\"text\">Export</span>";
   // jsonToXml function (concise inline version). If you already have a module, remove this block.
   const dic = [
     { x: { id:"series_animedb_id", title:"series_title", type:"series_type", seps:"series_episodes",
-           weps:"my_watched_episodes", sdate:"my_start_date", fdate:"my_finish_date",
-           score:"my_score", store:"my_storage", storev:"my_storage_value", stat:"my_status",
-           notes:"my_comments", pri:"my_priority", tags:"my_tags", rew:"my_rewatching" },
+           weps:"my_watched_episodes", sdate:"my_start_date", fdate:"my_finish_date", score:"my_score",
+           store:"my_storage", storev:"my_storage_value", stat:"my_status", notes:"my_comments",
+           pri:"my_priority", tags:"my_tags", rew:"my_rewatching", updimp: "update_on_import" },
       j: { id:"anime_id", title:"anime_title", type:"anime_media_type_string", seps:"anime_num_episodes",
            weps:"num_watched_episodes", sdate:"start_date_string", fdate:"finish_date_string",
            score:"score", store:"storage_string", stat:"status", notes:"editable_notes", pri:"priority_string",
@@ -171,7 +172,7 @@ const btntitle = "\n<span class=\"text\">Export</span>";
     { x: { id:"manga_mangadb_id", title:"manga_title", mvol:"manga_volumes", mch:"manga_chapters",
            rvol:"my_read_volumes", rch:"my_read_chapters", sdate:"my_start_date", fdate:"my_finish_date",
            score:"my_score", ret:"my_retail_volumes", stat:"my_status", notes:"my_comments",
-           tags:"my_tags", pri:"my_priority", rew:"my_rereading" },
+           tags:"my_tags", pri:"my_priority", rew:"my_rereading", updimp: "update_on_import" },
       j: { id:"id", title:"manga_title", mvol:"manga_num_volumes", mch:"manga_num_chapters",
            rvol:"num_read_volumes", rch:"num_read_chapters", sdate:"start_date_string",
            fdate:"finish_date_string", score:"score", ret:"retail_string", stat:"status",
@@ -193,6 +194,25 @@ const btntitle = "\n<span class=\"text\">Export</span>";
     const dd = d.getDate().toString().padStart(2,"0");
     return `${yyyy}-${mm}-${dd}`;
   }
+  
+  function parseStore(s) {
+    let store = {"store": "", "storev": "0.00"};
+    const storedic = {
+        "RDVD": "Retail DVD",
+        "EHD": "External HD",
+        "VHS": "VHS",
+        "": "",
+        "HD":"Hard Drive",
+        "NAS": "NAS",
+        "DVD": "DVD / CD"
+    };
+    if (s) {
+        s = s.split(" ");
+        store["store"] = storedic[s[0]];
+        store["storev"] = s[1]+"0";
+    }
+    return store;
+  }
 
   function jsonToXml(loadjsonArr = []) {
     let lstype = 0, lstypestr = "anime";
@@ -201,16 +221,25 @@ const btntitle = "\n<span class=\"text\">Export</span>";
     }
     const newlist = [];
     for (const jsonentry of loadjsonArr) {
-      const obj = {}; obj[lstypestr] = {};
+      newlist.push({[lstypestr]: {}});
       for (const prop in dic[lstype].j) {
+        let obj = {};
         const jsonKey = dic[lstype].j[prop];
         let propval = jsonentry[jsonKey];
-        if (prop === "title" || prop === "notes" || prop === "tags") propval = CD(propval);
-        else if (prop === "pri") propval = propval ? String(propval).toUpperCase() : propval;
-        else if (prop.includes("date")) propval = formatDateToYMD(propval);
-        obj[lstypestr][prop] = propval;
+        if (prop === "title" || prop === "notes" || prop === "tags")
+          obj = {[prop]: CD(propval)};
+        else if (prop === "pri")
+          obj = {[prop]: String(propval).toUpperCase()};
+        else if (prop.includes("date"))
+          obj = {[prop]: formatDateToYMD(propval)};
+        else if (prop == "store")
+          obj = parseStore(propval);
+        else
+          obj = {[prop]: propval}
+
+        Object.assign(newlist[newlist.length - 1][lstypestr], obj);
       }
-      newlist.push(obj);
+      newlist[newlist.length - 1][[lstypestr]].updimp = String(Number(update_on_import));
     }
 
     let xml = '<?xml version="1.0" encoding="UTF-8" ?>\n\t\t<myanimelist>\n\t\t\n';
@@ -241,6 +270,7 @@ const btntitle = "\n<span class=\"text\">Export</span>";
           console.error('Could not load load.json and no page variable found.');
           return;
       }
+      update_on_import = confirm("Enable update_on_import?");
       // Convert and either download the XML or log it to console
       const xmlOutput = jsonToXml(loadjson);
       // Create a download link and click it to save as load.xml

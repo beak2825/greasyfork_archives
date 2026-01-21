@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Yes, I'm here, YouTube Music
 // @namespace    https://gitlab.com/user890104
-// @version      20250801
-// @description  Clicks on the annoying button for you
+// @version      20260120
+// @description  Clicks on the annoying buttons for you
 // @author       Vencislav Atanasov
 // @license      MIT
 // @match        https://music.youtube.com/*
@@ -20,19 +20,29 @@
     console.log(`${tag}Script loaded`);
 
     setInterval(() => {
+        // Still watching? Video will pause soon
+        const notification = document.querySelector('yt-formatted-string.yt-notification-action-renderer');
+
+        if (notification?.offsetParent !== null) {
+            const notificationButton = notification?.parentElement?.nextElementSibling?.querySelector('button');
+
+            if (notificationButton) {
+                notificationButton.click();
+                console.log(`${tag}[Notification] Yes button clicked`);
+            }
+        }
+
+        // Video paused. Continue watching?
         const popup = document.querySelector('yt-formatted-string.ytmusic-you-there-renderer');
 
-        if (!popup) {
-            return;
+        if (popup?.offsetParent !== null) {
+            const popupButton = popup?.nextElementSibling?.querySelector('button');
+
+            if (popupButton) {
+                popupButton.click();
+                console.log(`${tag}[Popup] Yes button clicked`);
+            }
         }
 
-        const button = popup?.nextElementSibling?.querySelector('button');
-
-        if (!button) {
-            return;
-        }
-
-        button.click();
-        console.log(`${tag}Yes button clicked`);
     }, 1_000);
 })();

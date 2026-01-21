@@ -3,7 +3,7 @@
 // @name:en      Facebook Login Wall Remover
 // @name:zh-TW   Facebook 登入牆移除器
 // @name:ja      Facebook ログインウォールリムーバー
-// @version      0.8.0
+// @version      0.8.1
 // @description  This script improves the guest browsing experience on the Facebook desktop site. It aims to remove common interruptions and add helpful features for users who are not logged in.
 // @description:en This script improves the guest browsing experience on the Facebook desktop site. It aims to remove common interruptions and add helpful features for users who are not logged in.
 // @description:zh-TW 這個腳本的用途是改善在 Facebook 桌面版網站上未登入狀態的瀏覽體驗。它會移除一些常見的干擾，並加入一些方便的功能。
@@ -197,7 +197,12 @@
                     FLOATING_NAV_BOTTOM: '20px',
                     FLOATING_NAV_RIGHT: '35px'
                 },
-                HEATMAP_THRESHOLDS: [0.95, 0.85, 0.75, 0.65, 0.55, 0.45, 0.35, 0.20, 0.10]
+                HEATMAP_THRESHOLDS: [0.95, 0.85, 0.75, 0.65, 0.55, 0.45, 0.35, 0.20, 0.10],
+                HEATMAP_WEIGHTS: {
+                    REACTION: 1,
+                    COMMENT: 2,
+                    SHARE: 3
+                }
             },
             SETTINGS_DEFAULTS: {
                 AUTO_OPEN_MEDIA: true,
@@ -792,9 +797,11 @@
                     `.gm-floating-nav button:active { transform: scale(0.95); }`,
                     `.gm-floating-nav svg { width: 20px; height: 20px; fill: #65676b; }`,
                     // --- Timeline Navigator ---
-                    `#gm-timeline-container { position: fixed; right: 0; top: 10vh; bottom: 10vh; z-index: ${C.UI.Z_INDEX.TIMELINE}; background: rgba(255, 255, 255, 0.1); border-top-left-radius: 12px; border-bottom-left-radius: 12px; padding: 12px 0; backdrop-filter: blur(2px); display: flex; flex-direction: column; align-items: flex-end; gap: 2px; width: fit-content; max-width: 28px; transition: max-width 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), background-color 0.2s, box-shadow 0.2s; box-shadow: -1px 0 4px rgba(0,0,0,0.02); overflow-y: auto; overflow-x: hidden; scrollbar-width: none; }`,
+                    `#gm-timeline-container { position: fixed; right: 0; top: 10vh; bottom: 10vh; z-index: ${C.UI.Z_INDEX.TIMELINE}; background: rgba(255, 255, 255, 0.1); border-top-left-radius: 12px; border-bottom-left-radius: 12px; padding: 12px 0; backdrop-filter: blur(2px); display: flex; flex-direction: column; align-items: flex-end; gap: 2px; width: fit-content; max-width: 28px; transition: max-width 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), background-color 0.2s, box-shadow 0.2s; box-shadow: -1px 0 4px rgba(0,0,0,0.02); overflow: hidden; }`,
                     `#gm-timeline-container:hover { max-width: ${C.TIMELINE.WIDTH_MAX_LIMIT}; background: rgba(255, 255, 255, 0.98); box-shadow: -4px 0 16px rgba(0,0,0,0.12); }`,
-                    `#gm-timeline-container::-webkit-scrollbar { display: none; }`,
+                    `.gm-timeline-header { flex-shrink: 0; width: 100%; display: flex; justify-content: flex-end; padding-bottom: 4px; padding-right: 2px; }`,
+                    `.gm-timeline-scroll-area { overflow-y: auto; overflow-x: hidden; flex-grow: 1; width: 100%; display: flex; flex-direction: column; align-items: flex-end; scrollbar-width: none; overscroll-behavior: contain; }`,
+                    `.gm-timeline-scroll-area::-webkit-scrollbar { display: none; }`,
                     `.gm-timeline-row { display: flex; align-items: center; justify-content: flex-end; width: 100%; height: ${C.TIMELINE.ROW_HEIGHT}; padding-right: 8px; padding-left: 14px; cursor: pointer; user-select: none; flex-shrink: 0; white-space: nowrap; }`,
                     `.gm-timeline-info { display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin-right: 12px; opacity: 0; transform: translateX(10px); transition: opacity 0.2s ease, transform 0.2s ease; pointer-events: none; }`,
                     `#gm-timeline-container:hover .gm-timeline-info { opacity: 1; transform: translateX(0); transition-delay: 0.05s; }`,
@@ -1311,9 +1318,6 @@
                             break;
                         case 'timelineNavEnabled':
                             if (newValue) TN.init(this.app); else TN.deinit();
-                            break;
-                        case 'floatingNav_showAutoLoad':
-                        case 'floatingNav_showBatchCopy':
                             if (FN && this.app.state.settings.floatingNavEnabled) {
                                 FN.deinit();
                                 FN.init(this.app);
@@ -2856,10 +2860,36 @@
                 init(app) {
                     this.app = app;
                     this.lastUrl = window.location.href;
+                    if (!this.checkScope()) return;
                     this.createUI();
                     this.initObserver();
                     this.startWatcher();
                     this.refresh();
+                },
+
+                /**
+                 * Checks if the Timeline Navigator should be active on this page.
+                 * @returns {boolean} True if allowed.
+                 */
+                checkScope() {
+                    const path = window.location.pathname;
+                    const U = this.app.utils;
+
+                    // 1. Strict Home Exclusion
+                    if (path === '/' || path === '/home.php') return false;
+
+                    // 2. Use isFeedPage for broad rejection (handles posts, watch, etc.)
+                    if (!U.isFeedPage()) return false;
+
+                    // 3. Supplemental Rejection (Things isFeedPage misses or we want to be stricter about)
+                    // Note: isFeedPage already covers 'watch', 'marketplace', 'posts', 'video', 'reel', 'events', 'photo'
+                    const extraExclude = [
+                        '/search', '/ad_center', '/notes', '/ads', '/help', '/privacy',
+                        '/settings', '/saved', '/bookmarks'
+                    ];
+                    if (extraExclude.some(p => path.startsWith(p))) return false;
+
+                    return true;
                 },
 
                 /**
@@ -2876,13 +2906,48 @@
                 createUI() {
                     const U = this.app.utils;
                     this.container = U.createStyledElement('div', {}, { id: 'gm-timeline-container' });
+
+                    // Fixed Header for Sort Button
+                    this.header = U.createStyledElement('div', {}, { className: 'gm-timeline-header' });
+
+                    // Scroll Area for Rows
+                    this.scrollArea = U.createStyledElement('div', {}, { className: 'gm-timeline-scroll-area' });
+
+                    // Create Sort Button immediately
+                    this.sortBtn = this.app.utils.createStyledElement('button', {}, {
+                        className: 'gm-timeline-sort-btn',
+                        innerHTML: this.sortMode === 'time' ? '⏱️' : '🔥',
+                        title: this.app.state.T.timelineSortTooltip || 'Switch Sort Mode',
+                        on: {
+                            click: (e) => {
+                                e.stopPropagation();
+                                this.sortMode = this.sortMode === 'time' ? 'heat' : 'time';
+                                this.sortBtn.innerHTML = this.sortMode === 'time' ? '⏱️' : '🔥';
+                                this.refresh(true); // Force refresh to re-sort
+                            }
+                        }
+                    });
+                    this.header.appendChild(this.sortBtn);
+
+                    this.container.appendChild(this.header);
+                    this.container.appendChild(this.scrollArea);
                     document.body.appendChild(this.container);
                 },
                 /**
                  * Refreshes the timeline UI, rebuilding points based on current posts.
                  */
                 refresh(force = false) {
-                    if (!this.container) return;
+                    // Safety check for scope on every refresh (URL might change in SPA)
+                    if (!this.checkScope()) {
+                        if (this.container) this.container.style.display = 'none';
+                        return;
+                    }
+
+                    if (!this.container) {
+                        this.createUI();
+                    }
+                    this.container.style.display = 'flex';
+
                     if (this.lastUrl !== window.location.href) {
                         this.cachedMaxLogScore = 0;
                         this.lastUrl = window.location.href;
@@ -2891,24 +2956,11 @@
                     const Core = this.app.modules.postNavigatorCore;
                     const settings = this.app.state.settings;
                     const posts = Core.getSortedPosts();
-                    if (!force && this.container.childElementCount === posts.length + 1) return; // +1 for sort button
+                    if (!force && this.scrollArea.childElementCount === posts.length) return;
 
-                    this.container.innerHTML = '';
+                    this.scrollArea.innerHTML = '';
 
-
-                    const sortBtn = this.app.utils.createStyledElement('button', {}, {
-                        className: 'gm-timeline-sort-btn',
-                        innerHTML: this.sortMode === 'time' ? '⏱️' : '🔥',
-                        title: this.app.state.T.timelineSortTooltip || 'Switch Sort Mode',
-                        on: {
-                            click: (e) => {
-                                e.stopPropagation();
-                                this.sortMode = this.sortMode === 'time' ? 'heat' : 'time';
-                                this.refresh(true); // Force refresh to re-sort
-                            }
-                        }
-                    });
-                    this.container.appendChild(sortBtn);
+                    // Button is now in static header, no need to recreate
 
                     const useHeatmap = settings.timelineHeatmapEnabled;
                     let displayItems = posts.map((post, index) => ({
@@ -2989,28 +3041,29 @@
 
                             // Manually highlight this row in Heat Mode
                             if (this.sortMode === 'heat') {
-                                Array.from(this.container.children).forEach(child => child.classList.remove('active'));
+                                Array.from(this.scrollArea.children).forEach(child => child.classList.remove('active'));
                                 row.classList.add('active');
                             }
                         });
 
-                        this.container.appendChild(row);
+                        this.scrollArea.appendChild(row);
                         if (this.observer && this.sortMode === 'time') this.observer.observe(post);
                     });
                 },
 
                 /**
                  * Calculates an engagement score for a post to determine heatmap color.
-                 * @param {HTMLElement} postEl 
+                 * @param {HTMLElement} postEl
                  * @returns {number} The calculated score.
                  */
                 getPostScore(postEl) {
                     let score = 0;
+                    const weights = this.app.config.UI.HEATMAP_WEIGHTS || { REACTION: 1, COMMENT: 2, SHARE: 3 };
 
-                    // 1. Total Reactions
+                    // 1. Total Reactions (Counts as 1x usually)
                     const totalReactions = this.extractTotalReactions(postEl);
                     if (totalReactions > 0) {
-                        score += totalReactions;
+                        score += totalReactions * weights.REACTION;
                     } else {
                         // Fallback: Aria Label
                         const ariaNodes = postEl.querySelectorAll('[aria-label]');
@@ -3018,19 +3071,27 @@
                             if (node.tagName === 'A') continue;
                             const label = node.getAttribute('aria-label');
                             if (label && /[:：]\s*[\d,.]+/.test(label)) {
-                                score += this.parseMetric(label);
+                                score += this.parseMetric(label) * weights.REACTION;
                                 break;
                             }
                         }
                     }
 
                     // 2. Deep Interactions (Comments & Shares)
-                    score += this.extractIconStats(postEl);
+                    // Now returns an object { comments: number, shares: number }
+                    const deepStats = this.extractIconStats(postEl);
+                    score += (deepStats.comments * weights.COMMENT);
+                    score += (deepStats.shares * weights.SHARE);
 
                     return score;
                 },
 
-                // Smart Skip for Numbering (Already verified working)
+                /**
+                 * Extracts total reaction count from the post footer.
+                 * @private
+                 * @param {HTMLElement} postEl - The post element.
+                 * @returns {number} The total reaction count.
+                 */
                 /**
                  * Extracts total reaction count from the post footer.
                  * @private
@@ -3038,56 +3099,104 @@
                  * @returns {number} The total reaction count.
                  */
                 extractTotalReactions(postEl) {
-                    const candidates = postEl.querySelectorAll('div');
-                    for (const div of candidates) {
-                        const text = div.textContent.trim();
-                        if (this.TOTAL_REACTION_KEYWORDS.some(kw => text.includes(kw))) {
-                            let nextEl = div.nextElementSibling;
-                            let attempts = 0;
-                            while (nextEl && attempts < 3) {
-                                const rawValue = nextEl.textContent.replace(/\u00a0/g, ' ').trim();
-                                if (!rawValue.includes('#') && (rawValue.length > 3 || /[KkMm萬億万]/.test(rawValue) || parseFloat(rawValue.replace(/,/g, '')) > 500)) {
-                                    const val = this.parseMetric(rawValue);
-                                    if (val > 0) return val;
+                    // Sometimes "All reactions" text exists separately
+                    let maxVal = 0;
+                    const divs = postEl.querySelectorAll('div, span');
+                    divs.forEach(div => {
+                        // Optimization & Safety check
+                        if (div.childElementCount > 0) return; // Leaf nodes preferred
+                        if (div.closest('[data-ad-rendering-role="story_message"]')) return;
+                        const closestArticle = div.closest('[role="article"]');
+                        if (closestArticle && closestArticle !== postEl) return;
+
+                        // EXCLUSION: If this element is part of a button that has a specific Comment/Share icon, ignore it.
+                        // Ideally checking for "Comment" text logic is good, but sprites are safer for mislabeled buttons.
+                        // We check the parent button or container for the specific icon.
+                        const btn = div.closest('[role="button"]');
+                        if (btn) {
+                            const icon = btn.querySelector('i[data-visualcompletion="css-img"]');
+                            if (icon && icon.style.backgroundPosition) {
+                                const match = icon.style.backgroundPosition.match(/0px\s+(-?\d+)px/);
+                                if (match) {
+                                    const yPos = parseInt(match[1], 10);
+                                    // -1037: Comment, -1054/-1071: Share
+                                    if (Math.abs(yPos - (-1037)) < 5 || Math.abs(yPos - (-1054)) < 5 || Math.abs(yPos - (-1071)) < 5) return;
                                 }
-                                nextEl = nextEl.nextElementSibling;
-                                attempts++;
                             }
                         }
-                    }
-                    return 0;
+
+                        const text = div.innerText;
+                        if (!text || text.length > 20) return; // Short labels only
+
+                        // Check for specific keywords not normally in content
+                        // e.g., "Comments", "Shares", "Reactions" (localized)
+                        // This uses a looser heuristic: if it looks JUST like a metric
+                        if (/^[\d.,KkMm萬億万\s]+$/.test(text)) {
+                            const val = this.parseMetric(text);
+                            if (val > maxVal) maxVal = val;
+                        }
+                    });
+                    return maxVal;
                 },
 
                 /**
                  * Extracts deep interaction stats (comments/shares) using sprite position analysis.
                  * @private
                  * @param {HTMLElement} postEl - The post element.
-                 * @returns {number} The calculated score based on interactions.
+                 * @returns {object} The breakdown { comments, shares }.
                  */
                 extractIconStats(postEl) {
-                    let localScore = 0;
-                    const icons = postEl.querySelectorAll('i[data-visualcompletion="css-img"]');
-                    const SPRITES = this.app.config.CONSTANTS.SPRITE_OFFSETS;
+                    let totalComments = 0;
+                    let totalShares = 0;
 
+                    // Look for SVG icons that usually denote Likes/Comments
+                    // Exclude icons inside the "Content Body" or "Nested Comments"
+                    // Strategy: Find all relevant icons, then filter valid ones.
+                    const icons = postEl.querySelectorAll('svg, i, [role="img"]');
                     icons.forEach(icon => {
-                        const style = icon.getAttribute('style') || '';
-                        const match = style.match(/background-position:\s*0px\s+(-?\d+)px/);
-                        if (match) {
-                            const yPos = parseInt(match[1], 10);
-                            const isComment = Math.abs(yPos - SPRITES.COMMENT) < SPRITES.TOLERANCE;
-                            const isShare = Math.abs(yPos - SPRITES.SHARE) < SPRITES.TOLERANCE;
+                        // EXCLUSION 1: Skip if inside post content body
+                        if (icon.closest('[data-ad-rendering-role="story_message"]')) return;
 
-                            if (isComment || isShare) {
-                                const text = this.findNearbyNumber(icon);
-                                const val = this.parseMetric(text);
-                                if (val > 0) {
-                                    // Weighted: Share x3, Comment x2
-                                    localScore += val * (isShare ? 3 : 2);
-                                }
+                        // EXCLUSION 2: Skip if inside a nested reply/comment (sub-article), unless it's the post itself
+                        const closestArticle = icon.closest('[role="article"]');
+                        if (closestArticle && closestArticle !== postEl) return;
+
+                        // Check if it looks like a metric label container
+                        const parent = icon.parentElement;
+                        if (!parent) return;
+
+                        // SPRITE CHECK: Only allow if it matches Comment or Share sprites
+                        // This prevents random icons from being counted
+                        let isComment = false;
+                        let isShare = false;
+
+                        if (icon.tagName === 'I' && icon.getAttribute('data-visualcompletion') === 'css-img' && icon.style.backgroundPosition) {
+                            const match = icon.style.backgroundPosition.match(/0px\s+(-?\d+)px/);
+                            if (match) {
+                                const yPos = parseInt(match[1], 10);
+                                if (Math.abs(yPos - (-1037)) < 5) isComment = true;
+                                else if (Math.abs(yPos - (-1054)) < 5 || Math.abs(yPos - (-1071)) < 5) isShare = true;
+                            }
+                        }
+
+                        if (!isComment && !isShare) return;
+
+                        // Try to find text siblings or parent's text
+                        const text = parent.innerText || parent.parentElement?.innerText || '';
+                        // Simple regex check: does it contain a number?
+                        if (/\d/.test(text)) {
+                            // Extract numbers
+                            const matches = text.match(/(\d+(?:[.,]\d+)?)\s*([KkMm萬億万]?)/g);
+                            if (matches) {
+                                matches.forEach(m => {
+                                    const val = this.parseMetric(m);
+                                    if (isComment) totalComments += val;
+                                    else if (isShare) totalShares += val;
+                                });
                             }
                         }
                     });
-                    return localScore;
+                    return { comments: totalComments, shares: totalShares };
                 },
 
                 // Strict Single-Number Check to prevent grabbing parent rows
@@ -3205,12 +3314,12 @@
                  * @param {number} index - The index of the active post.
                  */
                 setActive(index) {
-                    if (!this.container) return;
+                    if (!this.scrollArea) return;
                     if (this.sortMode === 'heat') return; // Disable auto-active in Heat Mode
 
-                    const rows = this.container.children;
-                    // Skip the first child (button)
-                    const rowOffset = 1;
+                    const rows = this.scrollArea.children;
+                    // Skip the first child (button) <- OLD logic, now rows are direct children of scrollArea
+                    const rowOffset = 0;
 
                     for (let i = rowOffset; i < rows.length; i++) {
                         // rows[i] corresponds to post index i - rowOffset
@@ -3228,8 +3337,9 @@
                  */
                 ensureVisible(row) {
                     if (this.container.matches(':hover')) return;
-                    const cRect = this.container.getBoundingClientRect();
+                    const cRect = this.scrollArea.getBoundingClientRect();
                     const rRect = row.getBoundingClientRect();
+                    // Padding checks
                     if (rRect.top < cRect.top + 20 || rRect.bottom > cRect.bottom - 20) {
                         row.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     }
@@ -3246,6 +3356,11 @@
                     this.app.modules.postNavigatorCore.updateActivePost(index, 'timeline', forceSmooth);
                     if (this.scrollTimeout) clearTimeout(this.scrollTimeout);
                     this.scrollTimeout = setTimeout(() => { this.isManualScrolling = false; }, this.app.config.TIMEOUTS.SCROLL_LOCK);
+
+                    // Manually highlight UI if in Heat Mode (since scroll observer is skipped or might jump)
+                    if (this.sortMode === 'heat') {
+                        // Logic moved to click listener inside refresh to capture closure reference
+                    }
                 },
 
                 startWatcher() {
@@ -4224,30 +4339,34 @@
                             if (order) headerLine += `[#${order}] `;
                         }
 
-                        // Author Name
-                        const authorEl = postEl.querySelector('div[data-ad-rendering-role="profile_name"] h2 strong a, div[data-ad-rendering-role="profile_name"] h2 a');
-                        if (settings.copy_meta_author_name && authorEl) {
-                            headerLine += authorEl.textContent.trim();
-                        }
+                        // Author Name & Link (Support Multiple Authors)
+                        // Selector: Find both strong>a (primary) and h2>a (secondary/backup)
+                        const authorEls = postEl.querySelectorAll('div[data-ad-rendering-role="profile_name"] h2 strong a, div[data-ad-rendering-role="profile_name"] h2 a');
 
-                        // Author Link (Mention Style)
-                        if (settings.copy_meta_author_link && authorEl && authorEl.href) {
-                            try {
-                                const authorUrlObj = new URL(authorEl.href);
-                                this.app.utils.cleanUrlParams(authorUrlObj);
-                                let authorUrl = authorUrlObj.href;
-                                if (!authorUrl.includes('profile.php')) {
-                                    authorUrl = authorUrl.replace(/\/$/, '');
-                                }
+                        if (settings.copy_meta_author_name && authorEls.length > 0) {
+                            const authorStrings = [];
+                            authorEls.forEach(authorEl => {
+                                let part = authorEl.textContent.trim();
 
-                                if (headerLine) {
-                                    headerLine += ` (${authorUrl})`;
-                                } else {
-                                    headerLine += authorUrl;
+                                if (settings.copy_meta_author_link && authorEl.href) {
+                                    try {
+                                        const authorUrlObj = new URL(authorEl.href);
+                                        this.app.utils.cleanUrlParams(authorUrlObj);
+                                        let authorUrl = authorUrlObj.href;
+                                        if (!authorUrl.includes('profile.php')) {
+                                            authorUrl = authorUrl.replace(/\/$/, '');
+                                        }
+                                        // Format: Name (Link)
+                                        part += ` (${authorUrl})`;
+                                    } catch (e) {
+                                        part += ` (${authorEl.href})`;
+                                    }
                                 }
-                            } catch (e) {
-                                if (headerLine) headerLine += ` (${authorEl.href})`;
-                                else headerLine += authorEl.href;
+                                authorStrings.push(part);
+                            });
+
+                            if (authorStrings.length > 0) {
+                                headerLine += authorStrings.join(' & ');
                             }
                         }
 
@@ -4354,8 +4473,41 @@
                                         for (const btn of footerButtons) {
                                             if (btn.closest('div[role="article"] div[role="article"]')) continue;
                                             if (btn.hasAttribute('aria-label') && /Like|Love|讚|怒|いいね/.test(btn.getAttribute('aria-label'))) continue;
+
+                                            // Sprite Check for Fallback: Verify if this button contains a specific icon
+                                            let isCommentBtn = false;
+                                            let isShareBtn = false;
+                                            const btnIcon = btn.querySelector('i[data-visualcompletion="css-img"]');
+                                            if (btnIcon) {
+                                                const bgPos = btnIcon.style.backgroundPosition;
+                                                if (bgPos) {
+                                                    const match = bgPos.match(/0px\s+(-?\d+)px/);
+                                                    if (match) {
+                                                        const yPos = parseInt(match[1], 10);
+                                                        if (Math.abs(yPos - (-1037)) < 5) isCommentBtn = true;
+                                                        else if (Math.abs(yPos - (-1054)) < 5 || Math.abs(yPos - (-1071)) < 5) isShareBtn = true;
+                                                    }
+                                                }
+                                            }
+
                                             const txt = btn.textContent.trim();
-                                            if (txt && new RegExp(`^${numberPatternStr}$`).test(txt)) { if (!commentCount) commentCount = txt.replace(/\s+|人/g, ''); else if (!shareCount) shareCount = txt.replace(/\s+|人/g, ''); }
+                                            if (txt && new RegExp(`^${numberPatternStr}$`).test(txt)) {
+                                                // If we identified it as a comment button, ONLY assign to commentCount if empty
+                                                if (isCommentBtn) {
+                                                    if (!commentCount) commentCount = txt.replace(/\s+|人/g, '');
+                                                    // Do NOT let it pass to shareCount
+                                                    continue;
+                                                }
+                                                // If we identified it as a share button
+                                                if (isShareBtn) {
+                                                    if (!shareCount) shareCount = txt.replace(/\s+|人/g, '');
+                                                    continue;
+                                                }
+
+                                                // Original weak fallback (only if no sprite matched)
+                                                if (!commentCount) commentCount = txt.replace(/\s+|人/g, '');
+                                                else if (!shareCount) shareCount = txt.replace(/\s+|人/g, '');
+                                            }
                                         }
                                     }
                                     if (commentCount) stats.push(`💬 ${commentCount}`);

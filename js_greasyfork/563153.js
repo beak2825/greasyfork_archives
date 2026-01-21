@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         Restore OG Car Names
+// @name         MoDuL's: Restore OG Car Names
 // @namespace    torn.restore.og.cars
 // @version      1.2.9
-// @description  Restores original car names from Torn fictional ones across Torn (Racing, Item Market, Items, Bazaar, Logs) including all descriptions/text. PDA-friendly (debounced observer + burst).
+// @description  Restores original car names from Torn fictional ones across Torn (Racing, Item Market, Items, Bazaar, Logs) including all descriptions/text. MoDuL's Race Filter & TornPDA Compatible.
 // @author       MoDuL
 // @license      MIT
 //
@@ -16,8 +16,8 @@
 // @match        https://torn.com/bazaar.php*
 // @run-at       document-idle
 // @grant        none
-// @downloadURL https://update.greasyfork.org/scripts/563153/Restore%20OG%20Car%20Names.user.js
-// @updateURL https://update.greasyfork.org/scripts/563153/Restore%20OG%20Car%20Names.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/563153/MoDuL%27s%3A%20Restore%20OG%20Car%20Names.user.js
+// @updateURL https://update.greasyfork.org/scripts/563153/MoDuL%27s%3A%20Restore%20OG%20Car%20Names.meta.js
 // ==/UserScript==
 
 (function () {

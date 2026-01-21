@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bilibili关灯及快捷操作
 // @namespace    hhh2000
-// @version      1.0.3.5
+// @version      1.0.3.6
 // @description  bilibili关灯及快捷操作(把被新版B站藏起来的关灯按钮揪出来，在关闭弹幕按钮左边，还可以用快捷键，默认'A')、非全屏滚轮音量控制、弹幕控制快捷操作等
 // @author       hhh2000
 // @include      http*://www.bilibili.com/*
@@ -793,8 +793,10 @@ var hhh_lightoff_main = {
                             listFilter: { text: '合集类视频过滤', status: ON, tip: '过滤框在合集列表上方，根据关键字过滤，输入前缀字符使用以下功能——#正则表达式、@标题字数，例子：#第.+集，@12', fn: 'list_filter' },
                             showListItemInControlBar: { text: '宽屏时在控制栏显示选集按钮', status: OFF, tip: '与全屏时效果相同', fn: 'show_list_item_in_control_bar' },
                             
-                            normalVideoPlayCount: { text: '标题抬头显示播放次数', status: ON, tip: '开启后会自动记忆播放次数，关闭后停止计数',
+                            normalVideoPlayCount: { text: '视频标题抬头显示播放次数', status: ON, tip: '开启后会自动记忆播放次数，关闭后停止计数', fn: 'normal_video_play_count',
                                                     args:{ second: 0, opt: { step: 1, min: 0, tip: ['可指定播放X秒后开始计数，0表示打开网页即计数（默认0）'] } } },
+                                                    
+                            addTagsToVideoTitle: { text: '视频标题抬头显示tags', status: ON, tip: '视频属于哪个区等', fn: 'add_tags_to_video_title' },
 
                             addDMInfoToTopTitle: { text: '加入已填装弹幕等信息到视频顶部标题', status: ON, tip: '全屏时显示', fn: 'add_dm_info_to_top_title' },
                             resetVideo: { text: '打开视频后强制从最开始播放', status: OFF, tip: 'B站默认会记忆视频播放进度，开启后会强制从最开始播放' },
@@ -3514,6 +3516,8 @@ var hhh_lightoff_main = {
                     eval(`${fn}(${status}, [ ${args.opacity} ])`)
                 } else if(key === 'toolbarCloneToDmRoot' || key === 'isRemoveVideoInfo'){
                     eval(`${config.getCheckboxSettingFn('toolbarCloneToDmRoot')}(${config.getCheckboxSettingStatus('toolbarCloneToDmRoot')}, [ ${config.getCheckboxSettingStatus('isRemoveVideoInfo')} ])`)
+                } else if(key === 'normalVideoPlayCount'){
+                    eval(`${fn}(${status}, ${args.second})`)
                 } else if(!!fn){ // openHotKey | removeVideoTopMask 等
                     eval(`${fn}(${status})`)
                     //new Function(`${fn}(${status})`)();  //与eval相比作用域不同
@@ -4787,9 +4791,11 @@ var hhh_lightoff_main = {
         }
         
         //标题抬头显示tags（视频属于哪个区）
-        function add_tags_to_video_title(){
+        function add_tags_to_video_title(open=ON){
             let tags = []
             $('#hhh_tags').remove('span')
+            if(open === OFF) return false
+
             $('.tag-panel .tag-link:first, .tag-panel .tag-link:eq(1)').each(function(){
                 tags.push($(this).text())
             })
@@ -5156,7 +5162,7 @@ var hhh_lightoff_main = {
         }
 
         //常规视频播放计数
-        function run_normal_video_play_count(open=ON, second=0){
+        function normal_video_play_count(open=ON, second=0){
             if(open === OFF) { remove_play_count_to_video_title(); return false}
             
             function get_bv() { return $('meta[itemprop=url]').attr('content')?.match(/BV\w+/)?.[0] }
@@ -5302,7 +5308,7 @@ var hhh_lightoff_main = {
             add_tags_to_video_title()
             
             //常规视频播放计数
-            run_normal_video_play_count(config.getCheckboxSettingStatus('normalVideoPlayCount'), config.getCheckboxSettingArgs('normalVideoPlayCount', 'second'))
+            normal_video_play_count(config.getCheckboxSettingStatus('normalVideoPlayCount'), config.getCheckboxSettingArgs('normalVideoPlayCount', 'second'))
 
             //播放设置控制
             play_setting_box()
@@ -7222,6 +7228,7 @@ let s = {'color': "var(--Ga1_t)"}
                                     height: 28px;
                                     outline: none;
                                     border-radius: 0 4px 4px 0;
+                                    background: inherit;
                                 ">
                                 </div>`;
             if($('#hhh_collection_input').length === 0){
@@ -7296,6 +7303,7 @@ let s = {'color': "var(--Ga1_t)"}
                                     height: 28px;
                                     outline: none;
                                     border-radius: 0 4px 4px 0;
+                                    background: inherit;
                                 ">
                                 </div>`;
             if($('#hhh_collection_input').length === 0){
@@ -8279,7 +8287,10 @@ let s = {'color': "var(--Ga1_t)"}
 
                     //多video-sections-item small-mode，每个sections-item添加视频数量
                     function add_section_item(){
-                        if($('.video-pod .video-pod__slide').length > 0){
+                        const silde = document.querySelector('.video-pod .video-pod__slide')
+                        if(silde){
+                            // if(silde.hasAttribute('data-hhh-video-count')) return
+                            // silde.dataset.hhhVideoCount = ''
                             $('.video-pod__slide .slide-inner .slide-item').each((i, item)=>{
                                 let $item = $(item)
                                 $item.css({display: 'flex', 'flex-direction': 'column', 'justify-content': 'center', 'height': '42px', 'line-height': 'normal'})
@@ -8693,6 +8704,10 @@ let s = {'color': "var(--Ga1_t)"}
                                     border-right: 1px solid #ffbbbb;
                                     /*height: 36|30px;*/
                                 }
+/*                                 .hhh_check_mark {
+                                    position: absolute;
+                                    margin-left: 4px;
+                                } */
                             `
                         )
                     }
@@ -8734,559 +8749,656 @@ let s = {'color': "var(--Ga1_t)"}
 
                 // Test
                 let timeEnd = console.timeEnd
-                let log = ()=>{}
+                let log = (...args)=>{0 && console.log(...args)}
                 timeEnd = ()=>{}
 
                 //inti sort
-                async function init_sort(open, only_change_width = OFF){
-                    log('-----init__sort-----')
+                class ListSort{
+                    // log('-----init__sort-----')
+
+                    /* 分为2个函数，一个list插入播放量等信息，一个只处理排序，包括插入head和排序事件
+                       
+                    */
+                    //list插入播放量等
+                        //清理旧状态
+                    // $('.hhh_episode_view').remove()
+                    // $('#hhh_style_episode').remove()
+                    //     //前置检查
+                    // if(open === OFF) { return false }
+                    // if(['合集', '视频选集'].includes(video_type) === false) return false // '视频选集', '合集', '收藏列表'
+                        //获取数据
+                        //渲染UI
+                        //应用样式
+                        //对齐内部表格
+                        
+                    //添加排序功能
+                        //创建排序表头
+                        //根据list item UI调整表头宽度
+                        //绑定排序事件
 
                     //判断是否是同一个item，如是则不改变宽度
                     // log('判断是否是同一个item2', $('.video-pod')[0].hhh_sort_slide_id, get_slide_id())
                     // if($('.video-pod')[0].hhh_sort_slide_id === get_slide_id() && change_width === OFF) return
                     // $('.video-pod')[0].hhh_sort_slide_id = get_slide_id()
 
-                    let is_addDateKey = config.getCheckboxSettingStatus('addDateKey') && video_type === '合集'
-                    let header_column_names = video_type === '合集' ? ['重置', 'Title', 'View', 'DM', 'TM'] : ['重置', 'Title', 'DM', 'TM']
-                    if(is_addDateKey) header_column_names.splice(header_column_names.length - 1, 0, 'Date')
+                    static is_addDateKey = config.getCheckboxSettingStatus('addDateKey') && video_type === '合集'
 
-                    if(only_change_width === ON){
-                        add_listsort()
-                        header_sort()
-                        return
-                    }
+                    // ====================================================================
+                    // ==================== 添加和格式化合集等列表项目 ====================
+                    // ====================================================================
+                    static AddAndFormatPodItem = {
+                        //清理旧状态
+                        cleanup(){
+                            $('.hhh_episode_view').remove()
+                            $('#hhh_style_episode').remove()
+                        },
 
-                    $('#hhh_listsort').off('click.hhh_listsort')
-                    $('#hhh_listsort').remove()
-                    $('#hhh_style_listsort').remove()
-                    $('.hhh_episode_view').remove()
+                        //前置检查
+                        is_run(open, video_type){
+                            return open === ON && ['合集', '视频选集'].includes(video_type) === true
 
-                    if(open === OFF) { return false }
-                    if(['合集', '视频选集'].includes(video_type) === false) return false // '视频选集', '合集', '收藏列表'
+                            // if(open === OFF) { return false }
+                            // if(['合集', '视频选集'].includes(video_type) === false) return false // '视频选集', '合集', '收藏列表'
+                        },
+                        
+                        // ==================== 数据获取模块 ====================
+                        //取得【views, dms, durations, show_views, show_dms】【date】
+                        DataFetcher: {
+                            get_合集_视频选集_$cur_list() { return $('.video-pod')[0].__vue__.podCurArcList },
+                            get_合集_视频选集_counts() { return $('.video-pod')[0].__vue__.podCurArcList.length },
+                            
+                            get_合集_infos(){
+                                function get_合集_episodes() { return $('.video-pod')[0].__vue__.sectionsInfo.sections[
+                                    $('.video-pod__slide').length > 0 ? $('.slide-item.active').index() : 0
+                                    ].episodes }
+                                let podCurArcList = this.get_合集_视频选集_$cur_list()
+                                let episodes = get_合集_episodes()
+                                let views = {}, dms = {}, durations = {}, show_views = {}, show_dms = {}, data_keys = {}, pubdate = {}, show_pubdate = {}
+                                podCurArcList.forEach((v,i) => {
+                                    views[i] = episodes[i].arc.stat.view
+                                    dms[i] = episodes[i].arc.stat.danmaku
+                                    durations[i] = episodes[i].arc.duration
+                                    show_views[i] = v.view
+                                    show_dms[i] = v.danmaku
+                                    data_keys[i] = v.bvid
+                                    //可选
+                                    pubdate[i] = episodes[i].arc.ctime
+                                    //直接获取 YYYY-MM-DD（瑞典语本地化刚好是这个格式，前端常用的小技巧）
+                                    show_pubdate[i] = new Date(episodes[i].arc.ctime*1000).toLocaleDateString('sv-SE')
+                                    // show_pubdate[i] = new Date(episodes[i].arc.ctime*1000).Format("yyyy-MM-dd")
+                                })
+                                // log(views, dms, durations, show_views, show_dms)
+                                return [views, dms, durations, show_views, show_dms, data_keys, pubdate, show_pubdate]
+                            },
 
-                    // console.log('init_sort', $('.hhh_episode_view').length)
+                            async get_视频选集_infos(){
+                                function load_视频选集_dms(){
+                                    function get_a_dm(cid, p){
+                                        var xhr = new XMLHttpRequest()
+                                        let url = `https://api.bilibili.com/x/v2/dm/web/view?type=1&oid=${cid}`
+                                        // if(page.page == 2) { cid = 'xxx'; log('cid err'); url = `https://api.bilibili.com/x/v2/dm/web/view?type=1&oid=${cid}` }
+                                        // if(page.page == 3) { log('url err'); url = `https://api.bilibili.com/x/v2/dm/web/viewxxxx?type=1&oid=${cid}` }
+                                        xhr.open('GET', url, true)
+                                        xhr.responseType = 'arraybuffer';  // 设置响应类型为 'arraybuffer' 以接收二进制数据
+                                        xhr.onload = function() {
+                                            if (xhr.status === 200) {
+                                                dms[p] = 'status 200 err'
+                                                let o = message.toObject(message.decode(new Uint8Array(xhr.response)))
+                                                
+                                                // console.log(cid, p, o.count)
 
-                    //取得【views, dms, durations, show_views, show_dms】【date】
-                    async function get_infos(){
-                        function get_合集_视频选集_$cur_list() { return $('.video-pod')[0].__vue__.podCurArcList }
-                        function get_合集_视频选集_counts() { return $('.video-pod')[0].__vue__.podCurArcList.length }
-
-                        function get_合集_infos(){
-                            function get_合集_episodes() { return $('.video-pod')[0].__vue__.sectionsInfo.sections[
-                                $('.video-pod__slide').length > 0 ? $('.slide-item.active').index() : 0
-                                ].episodes }
-                            let podCurArcList = get_合集_视频选集_$cur_list()
-                            let episodes = get_合集_episodes()
-                            let views = {}, dms = {}, durations = {}, show_views = {}, show_dms = {}, data_keys = {}, pubdate = {}, show_pubdate = {}
-                            podCurArcList.forEach((v,i) => {
-                                views[i] = episodes[i].arc.stat.view
-                                dms[i] = episodes[i].arc.stat.danmaku
-                                durations[i] = episodes[i].arc.duration
-                                show_views[i] = v.view
-                                show_dms[i] = v.danmaku
-                                data_keys[i] = v.bvid
-                                //可选
-                                pubdate[i] = episodes[i].arc.ctime
-                                show_pubdate[i] = new Date(episodes[i].arc.ctime*1000).Format("yyyy-MM-dd")
-                            })
-                            // log(views, dms, durations, show_views, show_dms)
-                            return [views, dms, durations, show_views, show_dms, data_keys, pubdate, show_pubdate]
-                        }
-
-                        async function get_视频选集_infos(){
-
-                            function load_视频选集_dms(){
-                                function get_a_dm(cid, p){
-                                    var xhr = new XMLHttpRequest()
-                                    let url = `https://api.bilibili.com/x/v2/dm/web/view?type=1&oid=${cid}`
-                                    // if(page.page == 2) { cid = 'xxx'; log('cid err'); url = `https://api.bilibili.com/x/v2/dm/web/view?type=1&oid=${cid}` }
-                                    // if(page.page == 3) { log('url err'); url = `https://api.bilibili.com/x/v2/dm/web/viewxxxx?type=1&oid=${cid}` }
-                                    xhr.open('GET', url, true)
-                                    xhr.responseType = 'arraybuffer';  // 设置响应类型为 'arraybuffer' 以接收二进制数据
-                                    xhr.onload = function() {
-                                        if (xhr.status === 200) {
-                                            dms[p] = 'status 200 err'
-                                            let Root = window.protobuf.Root.fromJSON(jsonDescriptor)
-                                            let message = Root.lookupType("bilibili.community.service.dm.v1.DmWebViewReply")
-                                            let o = message.toObject(message.decode(new Uint8Array(xhr.response)))
-                                            
-                                            // console.log(cid, p, o.count)
-                                            test_dms.push([p, o.count, cid])
-                                            dms[p] = o.count ?? 0
-                                        } else { dms[p] = 'status other err'; console.error('请求失败，状态码：', xhr.status) }
+                                                test_dms.push([p, o.count, cid])
+                                                dms[p] = o.count ?? 0
+                                            } else { dms[p] = 'status other err'; console.error('请求失败，状态码：', xhr.status) }
+                                        }
+                                        xhr.onerror = function(err){ dms[p] = 'onerror'; console.error('请求出错', err) }
+                                        xhr.send()
                                     }
-                                    xhr.onerror = function(err){ dms[p] = 'onerror'; console.error('请求出错', err) }
-                                    xhr.send()
+            
+                                    let jsonDescriptor = JSON.parse('{"nested":{"bilibili":{"nested":{"community":{"nested":{"service":{"nested":{"dm":{"nested":{"v1":{"nested":{"DmWebViewReply":{"fields":{"count":{"type":"int64","id":8}}}}}}}}}}}}}}}')
+                                    let Root = window.protobuf.Root.fromJSON(jsonDescriptor)
+                                    let message = Root.lookupType("bilibili.community.service.dm.v1.DmWebViewReply")
+                                    let test_dms = []
+            
+                                    let len = cids.length > 30000 ? 30000 : cids.length
+                                    // len = 2
+                                    for(let i=0; i<len; i++){
+                                        if(typeof dms[i] !== 'number') get_a_dm(cids[i], i)
+                                    }
                                 }
-        
-                                let jsonDescriptor = JSON.parse('{"nested":{"bilibili":{"nested":{"community":{"nested":{"service":{"nested":{"dm":{"nested":{"v1":{"nested":{"DmWebViewReply":{"fields":{"count":{"type":"int64","id":8}}}}}}}}}}}}}}}')
-                                let test_dms = []
-        
-                                let len = cids.length > 30000 ? 30000 : cids.length
-                                // len = 2
-                                for(let i=0; i<len; i++){
-                                    if(typeof dms[i] !== 'number') get_a_dm(cids[i], i)
-                                }
+
+                                function get_视频选集_pages() { return $('.video-pod')[0].__vue__.videoData.pages }
+                                let podCurArcList = this.get_合集_视频选集_$cur_list()
+                                let list_counts = this.get_合集_视频选集_counts()
+                                let cids = podCurArcList.map((v)=>v.cid)
+                                let dms = {}
+                                cids.forEach((v,i)=> dms[i] = undefined)
+
+                                // console.log(cids, dms)
+                                load_视频选集_dms()
+                        
+                                log = console.log
+                                //加载
+                                log('数据共:', list_counts)
+                                if(await isTimeout(()=>{
+                                    function ready_data_count()   { return Object.values(dms).filter(v => typeof v === 'number' && v >= 0).length }
+                                    // function insert_data_count()  { return Object.values(infos.dms).filter(v => typeof v === 'number' && v < 0).length }
+                                    function unxhr_data_count()   { return Object.values(dms).filter(v => v === undefined).length }
+                                    function xhr_err_data_count() { return Object.values(dms).filter(v => typeof v === 'string').length }
+            
+                                    let ready_count = ready_data_count()
+                                    log('已读取:', ready_count)
+                                    //加载完成
+                                    if(ready_count === list_counts) { log('OK 加载完成:', ready_count); timeEnd('main'); console.time('main2'); return true }
+                                    //如果还有未加载数据，继续等待读取
+                                    let unxhr_count = unxhr_data_count()
+                                    if(unxhr_count > 0) { log('还有未加载数据:', unxhr_count, '，继续'); return false }
+                                    //上一轮加载循环完成，重新加载错误数据
+                                    let xhr_err_count = xhr_err_data_count()
+                                    if(xhr_err_count > 0) { log('上一轮加载循环完成，重新加载错误数据:', 'xhr_err_count'); load_视频选集_dms(); return false }
+            
+                                    return false
+                                })) { err('load_视频选集_dms timeout'); return }
+
+                                //durations, show_dms
+                                let durations = {}, show_dms = {}, data_keys = {}
+                                let pages = get_视频选集_pages()
+                                pages.forEach((v,i)=>{
+                                    durations[i] = pages[i].duration
+                                    show_dms[i] = formatPlayCount(dms[i])
+                                    data_keys[i] = pages[i].cid
+                                })
+                                
+                                // log('dms:', dms, show_dms, durations)
+                                return [dms, durations, show_dms, data_keys]
+                            },
+
+                            async get_infos(){
+                                let infos = {}
+                                if(video_type === '合集') { [infos.views, infos.dms, infos.durations, infos.show_views, infos.show_dms, infos.data_keys, infos.pubdate, infos.show_pubdate] = this.get_合集_infos() }
+                                else if(video_type === '视频选集') { [infos.dms, infos.durations, infos.show_dms, infos.data_keys] = await this.get_视频选集_infos() }
+
+                                log(infos.views, infos.dms, infos.durations, infos.show_views, infos.show_dms)
+                                return infos
                             }
+                        },
 
-                            function get_视频选集_pages() { return $('.video-pod')[0].__vue__.videoData.pages }
-                            let podCurArcList = get_合集_视频选集_$cur_list()
-                            let list_counts = get_合集_视频选集_counts()
-                            let cids = podCurArcList.map((v)=>v.cid)
-                            let dms = {}
-                            cids.forEach((v,i)=> dms[i] = undefined)
+                        // ==================== view等节点插入模块 ====================
+                        EpisodeInsert : {
+                            //返回一个episode节点
+                            create_episode_element(video_type, is_addDateKey){
+                                //定义&克隆 view dm等
+                                let $view = $('.video-info-detail-list .view.item:first').clone()
+                                let $dm = $('.video-info-detail-list .dm.item:first').clone()
 
-                            // log(cids, dms)
-                            load_视频选集_dms()
-                    
-                            //加载
-                            log('数据共:', list_counts)
-                            if(await isTimeout(()=>{
-                                function ready_data_count()   { return Object.values(dms).filter(v => typeof v === 'number' && v >= 0).length }
-                                // function insert_data_count()  { return Object.values(infos.dms).filter(v => typeof v === 'number' && v < 0).length }
-                                function unxhr_data_count()   { return Object.values(dms).filter(v => v === undefined).length }
-                                function xhr_err_data_count() { return Object.values(dms).filter(v => typeof v === 'string').length }
+                                //定义episode
+                                let $episode = $('<div class="hhh_episode_view"></div>')
         
-                                let ready_count = ready_data_count()
-                                log('已读取:', ready_count)
-                                //加载完成
-                                if(ready_count === list_counts) { log('OK 加载完成:', ready_count); timeEnd('main'); console.time('main2'); return true }
-                                //如果还有未加载数据，继续等待读取
-                                let unxhr_count = unxhr_data_count()
-                                if(unxhr_count > 0) { log('还有未加载数据:', unxhr_count, '，继续'); return false }
-                                //上一轮加载循环完成，重新加载错误数据
-                                let xhr_err_count = xhr_err_data_count()
-                                if(xhr_err_count > 0) { log('上一轮加载循环完成，重新加载错误数据:', 'xhr_err_count'); load_视频选集_dms(); return false }
-        
-                                return false
-                            })) { err('load_视频选集_dms timeout'); return }
+                                if(video_type === '合集') $episode.append($view)
+                                $episode.append($dm)
 
-                            //durations, show_dms
-                            let durations = {}, show_dms = {}, data_keys = {}
-                            let pages = get_视频选集_pages()
-                            pages.forEach((v,i)=>{
-                                durations[i] = pages[i].duration
-                                show_dms[i] = formatPlayCount(dms[i])
-                                data_keys[i] = pages[i].cid
-                            })
-                            
-                            // log('dms:', dms, show_dms, durations)
-                            return [dms, durations, show_dms, data_keys]
+                                if(is_addDateKey) $episode.append($view.clone().find('svg').remove().end().removeClass('view').addClass('pubdate'))
+        
+                                return $episode
+                            },
+
+                            populate_element($el, i, [view, dm, duration, show_view, show_dm, data_key, pubdate, show_pubdate], is_addDateKey){
+                                // 填充数据 - 使用原生 lastChild 操作速度最快
+                                const viewNode = $el.find('.view')[0]
+                                if (viewNode) viewNode.lastChild.textContent = show_view
+
+                                const dmNode = $el.find('.dm')[0]
+                                if (dmNode) dmNode.lastChild.textContent = show_dm
+
+                                const pubNode = $el.find('.pubdate')[0]
+                                if (pubNode) pubNode.lastChild.textContent = show_pubdate
+
+                                $el.attr({
+                                    'view'    : view,
+                                    'dm'      : dm,
+                                    'TM'      : duration,
+                                    'real_idx': i,
+                                    ...(is_addDateKey && {pubdate: pubdate})
+                                })
+
+                                return $el[0]
+                            },
+
+                            batch_insert(infos, video_type, is_addDateKey) {
+                                console.time('---插入$episode1')
+
+                                const $items = $('.video-pod__list .video-pod__item')
+                                let $template = this.create_episode_element(video_type, is_addDateKey)
+                                $items.each((i, el) => {
+                                    // console.log(i,el,$episode)
+                                    const $episode = $template.clone()
+                                    const episode_node = this.populate_element($episode, i, [infos?.views?.[i], infos.dms[i], infos.durations[i], infos?.show_views?.[i], infos.show_dms[i], infos.data_keys[i], infos?.pubdate?.[i], infos?.show_pubdate?.[i]], is_addDateKey)
+                                    const stats = el.querySelector('.stats')
+                                    if(stats) stats.insertBefore(episode_node, stats.firstChild)
+                                })
+
+                                timeEnd('---插入$episode1')
+                            },
+
+
+                            inject_layout(){
+                                const style_content = `
+                                    .simple-base-item .stats {
+                                        display: inline-flex;
+                                        align-items: center;
+                                        gap: 10px;
+                                    }
+
+                                    /* 1. 定义外层容器的基本文字属性 */
+                                    .hhh_episode_view {
+                                        display: inline-flex;
+                                        align-items: center;
+                                        color: var(--text3);
+                                        font-size: 12px;
+                                        gap: 10px;
+                                        /* margin-right: 5px; */
+                                    }
+
+                                    /* 2. 定义内部各项的公共布局 (Flex 对齐) */
+                                    .hhh_episode_view .view, 
+                                    .hhh_episode_view .dm, 
+                                    .hhh_episode_view .pubdate {
+                                        display: inline-flex;
+                                        align-items: center; /* 垂直居中 */
+                                        justify-content: center; /* 两端对齐预留空间 */
+                                        background2: #61666d;
+                                        /* margin-right: 4px; */
+                                    }
+
+                                    /* 3. 修正 SVG 大小 (使用 :is 简化选择器) */
+                                    .hhh_episode_view :is(.view, .dm) svg {
+                                        width: 12px !important;
+                                        height: 12px !important;
+                                        fill: currentColor; /* 颜色跟随文字 */
+                                    }
+
+                                    /* 4. 单独微调 .dm 的间距 */
+                                    .hhh_episode_view .dm {
+                                        /* margin-right: 7px; */
+                                    }
+
+                                    /* 2-2. 统一数据列样式 */
+                                    .simple-base-item .stat-item {
+                                        text-align: right;
+                                        background2: #61666d;
+                                    }
+
+                                    /* 2-2. 统一数据列样式 */
+                                    .simple-base-item .title {
+                                        background2: #61666d;
+                                    }
+                                `
+
+                                const style_id = 'hhh_style_episode'
+                                $(`#${style_id}`).remove()
+                                
+                                $('<style>')
+                                    .attr('id', style_id)
+                                    .html(style_content)
+                                    .appendTo('.video-pod:first')
+                            },
+
+
+                            get_max_width(selectors, is_reset_width = false) {
+                                const views = document.querySelectorAll(selectors);
+                                let maxWidth = 0;
+
+                                // 1. 重置宽度，让浏览器重新计算自然宽度
+                                is_reset_width && views.forEach(el => el.style.width = 'max-content')
+
+                                // 2. 找出最宽的像素值
+                                views.forEach(el => {
+                                    const width = el.getBoundingClientRect().width;
+                                    //if(width>461) console.log(width, el)
+                                    if (width > maxWidth) maxWidth = width;
+                                });
+                                
+                                is_reset_width && views.forEach(el => el.style.width = '')
+
+                                return maxWidth
+                            },
+
+                            set_max_width(selectors, max_width) {
+                                const views = document.querySelectorAll(selectors)
+                                views.forEach(el => el.style.width = max_width)
+                            },
+
+                            align_poditem_columns(){
+                                let max_w_view = this.get_max_width('.video-pod__item .view') + 2
+                                let max_w_dm   = this.get_max_width('.video-pod__item .dm') + 2
+                                let max_w_pubdate = this.get_max_width('.video-pod__item .pubdate') + 2
+
+                                const check_marks = document.querySelectorAll('.video-pod__item .stat-item .hhh_check_mark')
+                                check_marks.forEach(el => el.style.display = 'none')
+                                let max_w_duration = this.get_max_width('.video-pod__item .stat-item') + ($('.video-pod__item:first .stat-item')[0].style.width === '' ? 2 + 15 : 0)
+                                check_marks.forEach(el => el.style.display = '')
+
+                                this.set_max_width('.video-pod__item .view', max_w_view+'px')
+                                this.set_max_width('.video-pod__item .dm', max_w_dm+'px')
+                                this.set_max_width('.video-pod__item .pubdate', max_w_pubdate+'px')
+                                this.set_max_width('.video-pod__item .stat-item', max_w_duration+'px')
+                            },
+
+                        },
+
+                        async init(open, video_type){
+                            this.cleanup()
+                            if(this.is_run(open, video_type) === false) return false
+                            let infos = await this.DataFetcher.get_infos()
+                            this.EpisodeInsert.batch_insert(infos, video_type, ListSort.is_addDateKey)
+                            this.EpisodeInsert.inject_layout()
+                            this.EpisodeInsert.align_poditem_columns()
                         }
 
-                        let infos = {}
-                        if(video_type === '合集') { [infos.views, infos.dms, infos.durations, infos.show_views, infos.show_dms, infos.data_keys, infos.pubdate, infos.show_pubdate] = get_合集_infos() }
-                        else if(video_type === '视频选集') { [infos.dms, infos.durations, infos.show_dms, infos.data_keys] = await get_视频选集_infos() }
-
-                        // log(infos.views, infos.dms, infos.durations, infos.show_views, infos.show_dms)
-                        return infos
                     }
 
-                    // let sort_items_filter = ['view', 'dm', 'TM', 'pubdate']
-                    // sort_items_filter = ['view', 'dm', 'TM']
-                    // let is_addDateKey = sort_items_filter.includes('pubdate')
-                    
-                    function set_episode(){
-                        // log('---set_episode---')
+                    // ====================================================================
+                    // ======================== 添加排序表头、排序 ========================
+                    // ====================================================================
+                    static SortManager = {
+                        create_header_node(header_column_names){
+                            // let [Index, Title, View, DM, TM] = ['重置', 'Title', 'View', 'DM', 'TM']
+                            $('#hhh_listsort').remove()
+                            $('.video-pod__body').before(` 
+                                <div id="hhh_listsort">
+                                    ${(function add_span(){
+                                        let spans = ''
+                                        header_column_names.forEach((v)=>{ spans += `<span class="hhh-listsort-head" sort="none" > ${v}</span>` })
+                                        return spans
+                                    })()}
+                                </div>
+                            `)
+                        },
 
-                        if($('.hhh_episode_view').length > 0) return  //已插入
+                        get_header_item_width(is_addDateKey){
+                            const max_w = {}
+                            const $pod = $('.video-pod__item:first')
+                            const pod = $pod[0]
 
-                        //返回一个episode节点
-                        function return_episode_dom(types){
-                            //定义&克隆 view dm等
-                            let $view = $('.video-info-detail-list .view.item:first').clone()
-                            let $dm = $('.video-info-detail-list .dm.item:first').clone()
-                            // $view.add($dm).css({'border': '1px solid'})
-                            $view.add($dm).css({'margin-right': '4px', 'display': 'inline-flex', 'align-items': 'baseline', 'justify-content': 'center'})
-                                          .find('svg').css({'width': '12px', 'height': '12px', 'margin-right': '2px'})
-                            $dm.css({'margin-right': '7px'})
-                            $view.find('svg')[0].setAttribute('viewBox', '-2 -2 20 20')
-                            $dm.find('svg')[0].setAttribute('viewBox'  , '-2 -2 20 20')
+                            // 1. 记录原始样式
+                            const originalStyle = pod.style.cssText
+                            pod.style.display = 'block'
 
-                            //定义episode
-                            let $episode = $('<div class="hhh_episode_view"></div>')
-                            // $episode.css({'color': 'var(--text3)', 'font-size': '12px', 'display': 'flex', 'justify-content': 'space-between', 'margin-right': '5px' })
-                            $episode.css({'color': 'var(--text3)', 'font-size': '12px', 'justify-content': 'space-between', 'margin-right': '5px' })
-    
-                            types.includes(VIEW) && $episode.append($view.clone())
-                            types.includes(DM  ) && $episode.append($dm.clone())
+                            max_w.max_w_title    = $pod.find('.title')[0].getBoundingClientRect().width
+                            max_w.max_w_view     = $pod.find('.view')[0].getBoundingClientRect().width
+                            max_w.max_w_dm       = $pod.find('.dm')[0].getBoundingClientRect().width
+                            max_w.max_w_pubdate  = $pod.find('.pubdate')[0].getBoundingClientRect().width
+                            max_w.max_w_duration = $pod.find('.stat-item')[0].getBoundingClientRect().width
 
-                            if(is_addDateKey) $episode.append($view.clone().find('svg').remove().end().removeClass('view').addClass('pubdate'))
-                            // if(is_addDateKey) $episode.append($view.clone().removeClass('view').addClass('pubdate'))
-    
-                            return $episode
-                        }
+                            // const $video_pod_item = $('.video-pod__item:first')
+                            const $item = video_type === '合集' ? $pod.find('.simple-base-item:first'): $pod
+                            const $stats = $pod.find('.stats:first')
+                            const $episode = $pod.find('.hhh_episode_view:first')
 
-                        console.time('return_episode_dom')
-                        const [VIEW, DM] = ['VIEW', 'DM']
-                        let $episode = return_episode_dom(video_type === '合集' ? [VIEW, DM] : [DM])
-                        timeEnd('return_episode_dom')
-
-                        function insert_episode(i, [view, dm, duration, show_view, show_dm, data_key, pubdate, show_pubdate]){
-                            // log(view, dm, duration, show_view, show_dm)
-                            if($episode.find('.view')[0]) $episode.find('.view')[0].lastChild.textContent = show_view
-                            if($episode.find('.dm'  )[0]) $episode.find('.dm'  )[0].lastChild.textContent = show_dm
-                            $episode.attr('view', view)
-                            $episode.attr('dm', dm)
-                            $episode.attr('TM', duration)
-                            $episode.attr('real_idx', i)
-
-                            if(is_addDateKey) {
-                                if($episode.find('.pubdate')[0]) $episode.find('.pubdate')[0].lastChild.textContent = show_pubdate
-                                $episode.attr('pubdate', pubdate)
-                            }
-    
-                            //let $insert_position = video_type === '合集' ? $(`.video-section-list .video-episode-card__info-title:eq(${i})`1) : $(`.list-box .link-content:eq(${i})`)
-                            let index = get_$item(data_key).index()
-                            // log(index, i)
-                            let $viedo_pod_item = $(`.video-pod__item:eq(${index})`)
-                            $viedo_pod_item.find('.stats').prepend($episode.clone())
-                            // if($viedo_pod_item.find('.single-p').length > 0){
-                            //     $viedo_pod_item.find('.stats').prepend($episode.clone())
-                            // }else if($viedo_pod_item.find('.multi-p').length > 0){
-                            //     // $viedo_pod_item.find('.page-list .stats').prepend($episode.clone())
-                            //     $viedo_pod_item.find('.stats').prepend($episode.clone())
-                            // }
-                        }
-
-                        console.time('插入$episode')
-                        $('.hhh_episode_view').remove()
-                        //插入$episode（view / dm）
-                        for( let[i,v] of Object.entries(infos.show_dms)){
-                            if(video_type === '合集') insert_episode(i, [infos.views[i], infos.dms[i], infos.durations[i], infos.show_views[i], infos.show_dms[i], infos.data_keys[i], infos.pubdate[i], infos.show_pubdate[i]])
-                            else if(video_type === '视频选集') insert_episode(i, [null, infos.dms[i], infos.durations[i], null, infos.show_dms[i], infos.data_keys[i], null, null])
+                            const item_padding  = parseInt($item.css('padding-left')) || 0
+                            const stats_margin_left = parseInt($stats.css('margin-left')) || 0
+                            const stats_gap = parseInt($stats.css('gap')) || 0
+                            const episode_gap = parseInt($episode.css('gap')) || 0
+                        
+                            // 4. 立即还原
+                            pod.style.cssText = originalStyle
                             
-                            $(`.video-pod__item:eq(${i}) .stats`).css({'display': 'flex', 'justify-content': 'space-between'})
-                            $(`.video-pod__item:eq(${i}) .duration`).css({'text-align': 'right'})
-                            // $(`.video-pod__item:eq(${k}) .duration`).css({'border': '1px solid'})
-                        }
-                        timeEnd('插入$episode')
+                            const w_reset    = 32
+                            const w_title    = max_w.max_w_title + item_padding + stats_margin_left/2 - w_reset
+                            const w_view     = Math.max(max_w.max_w_view, 1) + stats_margin_left/2 + episode_gap/2
+                            const w_dm       = Math.max(max_w.max_w_dm, 1) + episode_gap/2 + (is_addDateKey ? episode_gap/2 : stats_gap/2)
+                            const w_pubdate  = is_addDateKey ? Math.max(max_w.max_w_pubdate, 1) + episode_gap/2 + stats_gap/2 : 0
+                            const w_duration = Math.max(max_w.max_w_duration, 1) + stats_gap/2 + item_padding
 
-                        console.time('video-pod__list')
-                        //设置为统一宽度
-                        $('.video-pod__list .duration').width('')
-                        timeEnd('video-pod__list')
-                        console.time('设置为统一宽度')
-                        let maxw1 = -1, maxw2 = -1, maxw3 = -1, maxw4 = -1
-                        //记录最大宽度
-                        // $('.video-pod__list .stats').each((i,v)=>{
-                        //     maxw1 = maxw1 < $(v).find('.view').width() ? $(v).find('.view').width() : maxw1
-                        //     maxw2 = maxw2 < $(v).find('.dm').width() ? $(v).find('.dm').width() : maxw2
-                        //     if($(v).find('.duration .hhh_check_mark').length === 0){
-                        //         maxw3 = maxw3 < $(v).find('.duration').width() ? $(v).find('.duration').width() : maxw3
-                        //     }else{
-                        //         maxw3 = maxw3 < $(v).find('.duration').width() - 15 ? $(v).find('.duration').width() - 15 : maxw3
-                        //     }
-                        //     maxw4 = maxw4 < $(v).find('.pubdate').width() ? $(v).find('.pubdate').width() : maxw4
-                        //     // log('设置为统一宽度:',maxw1,maxw2,maxw4,maxw3,$(v).find('.duration .hhh_check_mark').length)
-                        // })
-                        $('.video-pod__list .stats').each((i,v)=>{
-                            let $v = $(v)
-                            let view_width = $v.find('.view').width()
-                            let dm_width = $v.find('.dm').width()
-                            maxw1 = maxw1 < view_width ? view_width : maxw1
-                            maxw2 = maxw2 < dm_width ? dm_width : maxw2
-                            let duration_width = $v.find('.duration').width()
-                            if($v.find('.duration .hhh_check_mark').length === 0){
-                                maxw3 = maxw3 < duration_width ? duration_width : maxw3
-                            }else{
-                                maxw3 = maxw3 < duration_width - 15 ? duration_width - 15 : maxw3
+                            let widths
+                            if (video_type === '合集') {
+                                // [重置, Title, View, DM, Date(opt), TM]
+                                widths = [
+                                    w_reset,        // '重置' 按钮固定宽度
+                                    w_title,        // 'Title' 涵盖标题区域并减去重置按钮
+                                    w_view,         // 'View'
+                                    w_dm,           // 'DM'
+                                    w_duration      // 'TM'
+                                ]
+                            } else {
+                                // [重置, Title, DM, Date(opt), TM]
+                                widths = [
+                                    w_reset, 
+                                    w_title, 
+                                    w_dm, 
+                                    w_duration
+                                ]
                             }
-                            let pubdate_width = $v.find('.pubdate').width()
-                            maxw4 = maxw4 < pubdate_width ? pubdate_width : maxw4
-                            // log('设置为统一宽度:',maxw1,maxw2,maxw4,maxw3,$v.find('.duration .hhh_check_mark').length)
-                        })
-                        timeEnd('设置为统一宽度')
-                        console.time('设置为统一宽度2')
-                        // console.log(++w1,++w2,w3)
-                        let view_margin_right = +parseInt($('.video-pod__list .stats .view:first').css('margin-right'))
-                        let dm_margin_right = +parseInt($('.video-pod__list .stats .dm:first').css('margin-right'))
-                        let pubdate_margin_right = +parseInt($('.video-pod__list .stats .pubdate:first').css('margin-right'))
-                        $('.video-pod__list .stats').each((i,v)=>{
-                            let $v = $(v)
-                            $v.find('.view').width(maxw1+view_margin_right)
-                            $v.find('.dm').width(maxw2+dm_margin_right)
-                            $v.find('.duration').width(maxw3+15)
-                            if(is_addDateKey) $v.find('.pubdate').width(maxw4+pubdate_margin_right)
-                        })
-                        $('.video-pod__list .stats .expand-btn').width(maxw3+15).css('text-align', 'right')
-                        timeEnd('设置为统一宽度2')
-                    }
 
-                    console.time('sort_main')
-                    requestAnimationFrame(()=>true)
+                            // 如果有日期，在 TM 前插入日期宽
+                            if (is_addDateKey) {
+                                widths.splice(widths.length - 1, 0, w_pubdate)
+                            }
 
-                    // log('------start------')
+                            log('widths:', widths)
 
-                    console.time('get_infos')
-                    let infos = await get_infos()
-                    timeEnd('get_infos')
-                    // log('infos:',infos)
-                    // log(Object.values(infos.views).reduce((acc, val) => acc + val, 0))
-
-                    console.time('set_episode')
-                    set_episode()
-                    timeEnd('set_episode')
-
-                    //加入排序HEAD
-                    function add_listsort(){
-
-                        if($('.hhh_episode_view').length <= 0) return
+                            return widths
+                        },
 
                         //Sort Head CSS
-                        $('#hhh_style_listsort').remove()
-                        if($('#hhh_style_listsort').length <= 0){
-                            append_style($('.video-pod'), 'hhh_style_listsort',
-                                `
-                                    .hhh-listsort-head {
-                                        background-repeat: no-repeat;
-                                        background-position: center right;
-                                        padding: 4px 0px 4px 0px;
-                                        white-space: normal;
-                                        cursor: pointer;
-                                        border: 1px solid #cdcdcd;
-                                        border-right-width: 0px;
-                                        background-color: #99bfe6;  /*#99bfe6*/
-                                        background-image: url(data:image/gif;base64,R0lGODlhFQAJAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAkAAAIXjI+AywnaYnhUMoqt3gZXPmVg94yJVQAAOw==);
-                                        font-weight: bold;
-                                        text-shadow: 0 1px 0 rgb(204 204 204 / 70%);
-                                        opacity: 0.7;
-                                        user-select: none;
-                                        white-space: pre;
+                        inject_layout(widths){
+                            $('#hhh_style_listsort').remove()
+                            const item_template = widths.join('px ') + 'px'
+                            const styleContent = `
+                                /* 1. 设置列表项容器为 Grid 布局 */
+                                #hhh_listsort {
+                                    display: grid;
+                                    grid-template-columns: ${item_template};
+                                    gap: 0px;
+                                    align-items: center;
+                                    width: 100%;
+                                    line-height:18px;
+                                    /* padding: 0 10px; */
+                                    box-sizing: border-box;
+                                    margin-left: ${parseInt($('.video-pod__body').css('margin-left')) + parseInt($('.video-pod__list').css('margin-left'))}px;
+                                    margin-top: ${video_type === '合集' ? '0px' : '10px'};
+                                    margin-bottom: 1px;
+                                }
+                                .hhh-listsort-head:first-of-type {
+                                    background-image: none !important;
+                                }
+                                .hhh-listsort-head {
+                                    background-repeat: no-repeat;
+                                    background-position: center right;
+                                    padding: 4px 0px 4px 0px;
+                                    white-space: normal;
+                                    cursor: pointer;
+                                    border: 1px solid #cdcdcd;
+                                    border-right-width: 0px;
+                                    background-color: #99bfe6;  /*#99bfe6*/
+                                    background-image: url(data:image/gif;base64,R0lGODlhFQAJAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAkAAAIXjI+AywnaYnhUMoqt3gZXPmVg94yJVQAAOw==);
+                                    font-weight: bold;
+                                    text-shadow: 0 1px 0 rgb(204 204 204 / 70%);
+                                    opacity: 0.7;
+                                    user-select: none;
+                                    white-space: pre;
 
-                                        /*background-color: #9fbfdf;*/
-                                        /*background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjI8Bya2wnINUMopZAQA7); ascending*/
-                                        /*background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjB+gC+jP2ptn0WskLQA7); descending*/
-                                    }
-                                    .hhh-listsort-head-asc {
-                                        /*opacity: 0.91;*/
-                                        background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjI8Bya2wnINUMopZAQA7);
-                                    }
-                                    .hhh-listsort-head-desc {
-                                        /*opacity: 0.91;*/
-                                        background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjB+gC+jP2ptn0WskLQA7);
-                                    }
-                                `
-                            )
-                        }
+                                    /*background-color: #9fbfdf;*/
+                                    /*background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjI8Bya2wnINUMopZAQA7); ascending*/
+                                    /*background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjB+gC+jP2ptn0WskLQA7); descending*/
+                                }
+                                .hhh-listsort-head-asc {
+                                    /*opacity: 0.91;*/
+                                    background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjI8Bya2wnINUMopZAQA7);
+                                }
+                                .hhh-listsort-head-desc {
+                                    /*opacity: 0.91;*/
+                                    background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjB+gC+jP2ptn0WskLQA7);
+                                }
+                            `
+                            $('<style>')
+                                .attr('id', 'hhh_style_listsort')
+                                .html(styleContent)
+                                .appendTo('.video-pod:first')
+                        },
 
-                        function get_header_item_width(video_type, is_addDateKey){
-                            let reset    = 32
-                            let view     = $('.video-pod__item:first .view').width() + 3
-                            let dm       = ($('.video-pod__item:first .dm').width() < 35 ? 35 : $('.video-pod__item:first .dm').width()) + 5
-                            let pubdate  = is_addDateKey ? $('.video-pod__item:first .pubdate').width() + 5 : 0
-                            let duration = $('.video-pod__item:first .duration').width() + 15
-                            let title    = $('.video-pod__list').width()-reset-view-dm-pubdate-duration
+                        refresh_header_layout(){
+                            // console.log('===refresh_header_layout')
+                            const widths = this.get_header_item_width(ListSort.is_addDateKey)
+                            this.inject_layout(widths)
+                        },
 
-                            let ret = video_type === '合集' ? [reset, title, view, dm, duration] : [reset, title, dm, duration]
-                            if(is_addDateKey) ret.splice(ret.length - 1, 0, pubdate)
-
-                            return ret
-
-                            // if(video_type === '合集') return [reset, title, view, dm, duration]
-                            // else if(video_type === '视频选集') return [reset, title, dm, duration]
-                        }
-
-                        let total_w = $('.video-pod__list').width() // + parseInt($('.video-pod__list').css('margin-right'))
-                        // log($('.video-pod__body').css('margin-left').match(/[-\d]+/)?.[0], $('.video-pod__list').css('margin-left').match(/[-\d]+/)?.[0])
-                        let margin_left = +$('.video-pod__body').css('margin-left').match(/[-\d]+/)?.[0] + (+$('.video-pod__list').css('margin-left').match(/[-\d]+/)?.[0])
-                        let margin_top, margin_bottom
-                        if(video_type === '合集'){
-                            margin_top = 0, margin_bottom = 1
-                        }else if(video_type === '视频选集'){
-                            margin_top = 10, margin_bottom = 1
-                        }
-                        let widths = get_header_item_width(video_type, is_addDateKey)
-
-                        // let [Index, Title, View, DM, TM] = ['重置', 'Title', 'View', 'DM', 'TM']
-                        $('#hhh_listsort').remove()
-                        $('.video-pod__body').before(`
-                            <div id="hhh_listsort" style="margin-left: ${margin_left}px; margin-top: ${margin_top}px; margin-bottom: ${margin_bottom}px; width:${total_w}px; line-height:18px; display: flex;">
-                                ${(function add_span(){
-                                    let spans = ''
-                                    widths.forEach((v,i)=>{ spans += `<span class="hhh-listsort-head" sort="none" style="width:${v}px"> ${header_column_names[i]}</span>` })
-                                    return spans
-                                })()}
-                            </div>
-                        `)
-                        $('#hhh_listsort span:first').css({'background-image': 'none'})
-                        $('#hhh_listsort span:last ').css({'border-right-width': '1px'})
-                    }
-    
-                    // window.removeEventListener('resize', add_listsort)
-                    // window.addEventListener('resize', add_listsort)
-
-                    //修改bilibili setSize函数，修改对应语句,重置right-container宽度，适配插入的节点listsort（主要是点击量和弹幕量）
-                    function reset_setSize(){
-                        // if(video_type !== '合集') return
-
-                        // //n = 1680 < innerWidth ? 411 : 350
-                        // let reg = /(n\s*=\s*\d+\s*<\s*innerWidth\s*\?\s*)(\d+)\s*:\s*(\d+)/
-                        // let new_w = Math.max($('.right-container').width(), 411)
-                        // window.setSize = eval(`(${window.setSize.toString().replace(reg, `$1${new_w}:${new_w}`)})`)
-
-                        //d < 668 && (d = 668), | 558
-                        // let reg2 = /d\s*<\s*(\d+)\s*&&\s*\(d\s*=\s*(\d+)\),/
-                        // let new_d = 558
-                        // window.setSize = eval(`(${window.setSize.toString().replace(reg2, `d < ${new_d} && (d = ${new_d}),`)})`)
-
-                        // let diff_width = new_w - 411
-                        //o = parseInt(16 * (i - (1690 < innerWidth ? 318 : 308)) / 9)
-                        // let reg3 = /318\s*:\s*(308)/
-                        // let new_318 = 318 + diff_width
-                        // window.setSize = eval(`(${window.setSize.toString().replace(reg3, `${new_318} : $1`)})`)
-
-                        //r = t - 112 - n
-                        // log('diff_width:', diff_width, new_w)
-                        // let reg4 = /t\s*-\s*\d+\s*-\s*n/
-                        // let new_112 = 112 + diff_width
-                        // window.setSize = eval(`(${window.setSize.toString().replace(reg4, `t - ${new_112} - n`)})`)
-
-                        // window.dispatchEvent(new Event('resize'))
-                    }
-                    
-                    function header_sort(){
-                        //['重置', 'Title', 'View', 'DM', 'TM', 'TM_str', 'View_fmt', 'DM_fmt'] ...
+                        //加入排序HEAD
+                        add_header(is_addDateKey, header_column_names){
+                            this.create_header_node(header_column_names)
+                            let widths = this.get_header_item_width(is_addDateKey)
+                            this.inject_layout(widths)
+                        },
                         
-                        //【listsort】事件
-                        //video-section-list section-0 section-1 section-2 ...
-                        function store(){
-                            let $video_items = $('.video-pod__list>.video-pod__item')
-                            let video_items_array = Array.from($video_items)
-                            return video_items_array
-                        }
-                        function bulid_sort_arr(video_items_array){
-                            let unsorted_data_columns_arr = []
-                            //保存排序数据
-                            console.time('bulid_sort_arr')
-                            $(video_items_array).each((i,v)=>{
-                                let $v = $(v)
-                                let Title = $v?.find('.title')?.attr('title')
+                        sort(is_addDateKey, header_column_names){
+                            //['重置', 'Title', 'View', 'DM', 'TM', 'TM_str', 'View_fmt', 'DM_fmt'] ...
+                            
+                            //【listsort】事件
+                            //video-section-list section-0 section-1 section-2 ...
+                            function store(){
+                                let $video_items = $('.video-pod__list>.video-pod__item')
+                                let video_items_array = Array.from($video_items)
+                                return video_items_array
+                            }
+                            function bulid_sort_arr(video_items_array, is_addDateKey){
+                                let unsorted_data_columns_arr = []
+                                //保存排序数据
+                                console.time('bulid_sort_arr')
+                                $(video_items_array).each((i,v)=>{
+                                    let $v = $(v)
+                                    let Title = $v?.find('.title')?.attr('title')
 
-                                let $episode = $v.find('.hhh_episode_view')
-                                let [real_idx, View, DM, Date,TM] = [+$episode.attr('real_idx'), +$episode.attr('view'), +$episode.attr('dm'), +$episode.attr('pubdate'), +$episode.attr('TM')]
+                                    let $episode = $v.find('.hhh_episode_view')
+                                    let [real_idx, View, DM, Date, TM] = [+$episode.attr('real_idx'), +$episode.attr('view'), +$episode.attr('dm'), +$episode.attr('pubdate'), +$episode.attr('TM')]
 
-                                // '合集' ? ['重置', 'Title', 'View', 'DM', 'TM'] : ['重置', 'Title', 'DM', 'TM']
-                                let unsorted_data_columns = video_type === '合集' ? [real_idx, Title, View, DM, TM] : [real_idx, Title, DM, TM]
-                                if(is_addDateKey) unsorted_data_columns.splice(unsorted_data_columns.length - 1, 0, Date)
+                                    // '合集' ? ['重置', 'Title', 'View', 'DM', 'TM'] : ['重置', 'Title', 'DM', 'TM']
+                                    let unsorted_data_columns = video_type === '合集' ? [real_idx, Title, View, DM, TM] : [real_idx, Title, DM, TM]
+                                    if(is_addDateKey) unsorted_data_columns.splice(unsorted_data_columns.length - 1, 0, Date)
+                                        
+                                    // let header_column_names = video_type === '合集' ? ['重置', 'Title', 'View', 'DM', 'TM'] : ['重置', 'Title', 'DM', 'TM']
+                                    // if(ListSort.is_addDateKey) header_column_names.splice(header_column_names.length - 1, 0, 'Date')
 
-                                // log(header_column_names, unsorted_data_columns)
-                                unsorted_data_columns_arr.push(unsorted_data_columns)
-                            })
-                            timeEnd('bulid_sort_arr')
-                            return unsorted_data_columns_arr
-                        }
-                        //sort
-                        function arr_sort(unsorted_data_columns_arr, order, i){  //ascending, descending
-                            let sorted_data_columns_arr
-                            if(order === 'ascending') {
-                                sorted_data_columns_arr = [...unsorted_data_columns_arr].sort(function(a, b) {
-                                    if(typeof a[i] === 'string'){
-                                        return a[i].localeCompare(b[i])
-                                    }else{
-                                        return a[i] - b[i]
-                                    }
+                                    // log(header_column_names, unsorted_data_columns)
+                                    unsorted_data_columns_arr.push(unsorted_data_columns)
                                 })
-                            }else if(order === 'descending') {
-                                sorted_data_columns_arr = [...unsorted_data_columns_arr].sort(function(b, a) {
-                                    if(typeof a[i] === 'string'){
-                                        return a[i].localeCompare(b[i])
-                                    }else{
-                                        return a[i] - b[i]
-                                    }
+                                timeEnd('bulid_sort_arr')
+                                return unsorted_data_columns_arr
+                            }
+                            function arr_sort(unsorted_data_columns_arr, order, i){  //ascending, descending
+                                let sorted_data_columns_arr
+                                if(order === 'ascending') {
+                                    sorted_data_columns_arr = [...unsorted_data_columns_arr].sort(function(a, b) {
+                                        if(typeof a[i] === 'string'){
+                                            return a[i].localeCompare(b[i])
+                                        }else{
+                                            return a[i] - b[i]
+                                        }
+                                    })
+                                }else if(order === 'descending') {
+                                    sorted_data_columns_arr = [...unsorted_data_columns_arr].sort(function(b, a) {
+                                        if(typeof a[i] === 'string'){
+                                            return a[i].localeCompare(b[i])
+                                        }else{
+                                            return a[i] - b[i]
+                                        }
+                                    })
+                                }else{err('[arr_sort] Out of range')}
+                                return sorted_data_columns_arr
+                            }
+                            function restore(sorted_data_columns_arr, unsorted_data_columns_arr, video_items_array){
+                                //建立排序后和真实顺序的对应关系，范围：1~length
+                                let real_to_draw = []
+                                unsorted_data_columns_arr.forEach(function(v,i){
+                                    real_to_draw[v[0]] = i
                                 })
-                            }else{err('[arr_sort] Out of range')}
-                            return sorted_data_columns_arr
-                        }
-                        function restore(sorted_data_columns_arr, unsorted_data_columns_arr, video_items_array){
-                            //建立排序后和真实顺序的对应关系，范围：1~length
-                            let real_to_draw = []
-                            unsorted_data_columns_arr.forEach(function(v,i){
-                                real_to_draw[v[0]] = i
-                            })
 
-                            let new_video_items_array = []
-                            sorted_data_columns_arr.forEach(function(v,i){
-                                new_video_items_array[i] = video_items_array[real_to_draw[v[0]]]
-                                // log(i,v,v[0],real_to_draw[v[0]])
-                            })
+                                let new_video_items_array = []
+                                sorted_data_columns_arr.forEach(function(v,i){
+                                    new_video_items_array[i] = video_items_array[real_to_draw[v[0]]]
+                                    // log(i,v,v[0],real_to_draw[v[0]])
+                                })
 
-                            let video_list = $('.video-pod__list')[0]
-                            video_list.innerHTML = ''
-                            new_video_items_array.forEach(function(v,i){
-                                video_list.appendChild(v)
-                            })
-                        }
-
-                        //list_sort
-                        function list_sort(order, i){
-                            //[index, Title, View, DM, tm_str, TM, view_fmt, dm_fmt] = [0, 1, 2, 3, 4, 5, 6, 7]
-                            //let header_column_names = ['重置', 'Title', 'View', 'DM', 'TM_str', 'TM', 'View_fmt', 'DM_fmt']
-                            let video_items_array = store()
-                            
-                            let unsorted_data_columns_arr = bulid_sort_arr(video_items_array)
-
-                            let sorted_data_columns_arr = arr_sort(unsorted_data_columns_arr, order, i)
-                            
-                            restore(sorted_data_columns_arr, unsorted_data_columns_arr, video_items_array)
-                        }
-
-                        $('#hhh_listsort').off('click.hhh_listsort')
-                        $('#hhh_listsort').on('click.hhh_listsort', function(e){
-
-                            $('.hhh-listsort-head').css('opacity', 0.7)
-
-                            let $head = $(e.target)
-                            let sort = $head.attr('sort')
-                            let text = $head.text().trim()
-                            $head.css('opacity', 0.91)
-                            
-                            if(sort === 'none'){
-                                $head.attr('sort', 'descending')
-                                    .removeClass('hhh-listsort-head-asc')
-                                    .addClass('hhh-listsort-head-desc')
-                            }else if(sort === 'ascending'){
-                                $head.attr('sort', 'descending')
-                                    .removeClass('hhh-listsort-head-asc')
-                                    .addClass('hhh-listsort-head-desc')
-                            }else if(sort === 'descending'){
-                                $head.attr('sort', 'ascending')
-                                    .removeClass('hhh-listsort-head-desc')
-                                    .addClass('hhh-listsort-head-asc')
-                            }else{err('[hhh_listsort click] Out of range')}
-
-                            if(text === '重置'){
-                                list_sort('ascending', header_column_names.indexOf(text))
-                                $('.hhh-listsort-head').removeClass('hhh-listsort-head-asc')
-                                                       .removeClass('hhh-listsort-head-desc')
-                            }else{
-                                console.time('click.hhh_listsort')
-                                list_sort($head.attr('sort'), header_column_names.indexOf(text))
-                                timeEnd('click.hhh_listsort')
+                                let video_list = $('.video-pod__list')[0]
+                                video_list.replaceChildren(...new_video_items_array)
+                                // video_list.innerHTML = ''
+                                // new_video_items_array.forEach(function(v,i){
+                                //     video_list.appendChild(v)
+                                // })
                             }
 
-                            // reals_to_draws = bulid_real_to_draw()
-                            // log('click.hhh_listsort:', reals_to_draws)
+                            //list_sort
+                            function list_sort(order, i, is_addDateKey){
+                                //[index, Title, View, DM, tm_str, TM, view_fmt, dm_fmt] = [0, 1, 2, 3, 4, 5, 6, 7]
+                                //let header_column_names = ['重置', 'Title', 'View', 'DM', 'TM_str', 'TM', 'View_fmt', 'DM_fmt']
+                                let video_items_array = store()
+                                
+                                let unsorted_data_columns_arr = bulid_sort_arr(video_items_array, is_addDateKey)
+
+                                let sorted_data_columns_arr = arr_sort(unsorted_data_columns_arr, order, i)
+                                
+                                restore(sorted_data_columns_arr, unsorted_data_columns_arr, video_items_array)
+                            }
+
+                            $('#hhh_listsort').off('click.hhh_listsort')
+                            $('#hhh_listsort').on('click.hhh_listsort', function(e){
+
+                                $('.hhh-listsort-head').css('opacity', 0.7)
+
+                                let $head = $(e.target)
+                                let sort = $head.attr('sort')
+                                let text = $head.text().trim()
+                                $head.css('opacity', 0.91)
+                                
+                                if(sort === 'none'){
+                                    $head.attr('sort', 'descending')
+                                        .removeClass('hhh-listsort-head-asc')
+                                        .addClass('hhh-listsort-head-desc')
+                                }else if(sort === 'ascending'){
+                                    $head.attr('sort', 'descending')
+                                        .removeClass('hhh-listsort-head-asc')
+                                        .addClass('hhh-listsort-head-desc')
+                                }else if(sort === 'descending'){
+                                    $head.attr('sort', 'ascending')
+                                        .removeClass('hhh-listsort-head-desc')
+                                        .addClass('hhh-listsort-head-asc')
+                                }else{err('[hhh_listsort click] Out of range')}
+
+                                if(text === '重置'){
+                                    list_sort('ascending', header_column_names.indexOf(text), is_addDateKey)
+                                    $('.hhh-listsort-head').removeClass('hhh-listsort-head-asc')
+                                                        .removeClass('hhh-listsort-head-desc')
+                                }else{
+                                    console.time('click.hhh_listsort')
+                                    list_sort($head.attr('sort'), header_column_names.indexOf(text), is_addDateKey)
+                                    timeEnd('click.hhh_listsort')
+                                }
+
+                                // reals_to_draws = bulid_real_to_draw()
+                                // log('click.hhh_listsort:', reals_to_draws)
+                                
+                            })
+                        },
+
+                        init(){
+                            $('#hhh_listsort').off('click.hhh_listsort').remove()
+                            $('#hhh_style_listsort').remove()
+                            if($('.hhh_episode_view').length <= 0) return
                             
-                        })
+                            let header_column_names = video_type === '合集' ? ['重置', 'Title', 'View', 'DM', 'TM'] : ['重置', 'Title', 'DM', 'TM']
+                            if(ListSort.is_addDateKey) header_column_names.splice(header_column_names.length - 1, 0, 'Date')
+                            this.add_header(ListSort.is_addDateKey, header_column_names)
+                            this.sort(ListSort.is_addDateKey, header_column_names)
+                        }
                     }
 
-                    console.time('add_listsort')
-                    add_listsort()
-                    timeEnd('add_listsort')
-                    // reset_setSize()
-                    console.time('header_sort')
-                    header_sort()
-                    timeEnd('header_sort')
-
-                    requestAnimationFrame(()=>false)
-                    
-                    timeEnd('sort_main')
-                    // log('------end------')
-
-                    return infos
-                    
-                    // })
+                    static async init(open, video_type){
+                        console.time('sort_main')
+                        requestAnimationFrame(()=>true)
+                        await this.AddAndFormatPodItem.init(open, video_type)
+                        this.SortManager.init()
+                        requestAnimationFrame(()=>false)                    
+                        timeEnd('sort_main')
+                    }
                     
                 }
 
@@ -9299,67 +9411,47 @@ let s = {'color': "var(--Ga1_t)"}
                     if($('.video-pod')[0].hhh_change_width_slide_id === get_slide_id()) return
                     $('.video-pod')[0].hhh_change_width_slide_id = get_slide_id()
                     $('.video-pod')[0].hhh_sort_slide_id = undefined
-                    
-                    //展开合集标题
-                    async function expand_title(open = ON, default_title_diff_width = 300){
-                        // log('---合集标题展开---', default_title_diff_width, $('.right-container').width(), config.getCheckboxSettingArgs('expandTitle', 'old_width'))
-                        // log(open,'==========hasClass==========',$('#hhh_expand_title .switch-button').length, $('#hhh_expand_title .switch-button').hasClass('on'))
-                        g_fn_arr[expand_title.name] = expand_title
-                        // log(g_fn_arr, expand_title)
 
-                        function set_right_container_width(left_container_width, right_container_width){
-                            let right_container_width_limit = Math.min(right_container_width, $('#mirror-vdcon').width() - left_container_width - 112)
-                            $('.right-container').width(right_container_width_limit)
+                    // 重构后的 expand_title 函数
+                    async function expand_title(open = ON, default_title_diff_width = 300){
+                        g_fn_arr[expand_title.name] = expand_title
+
+                        // const BREAKPOINT = 1680
+                        // const WIDTH_NARROW = 350
+                        const WIDTH_WIDE = 411
+
+                        //记录初始差值
+                        const title_ = $('.video-pod__list .title:first').outerWidth(true)
+                        const right_ = $('.right-container').width()
+                        const BASE_WIDTH_DIFF = right_ - title_
+                        // console.log('title', title_, 'right', right_, 'right-title', BASE_WIDTH_DIFF)
+
+                        const STATE = {
+                            OFF: 'switch-btn',
+                            HALF: 'switch-btn halfon-forward',
+                            ON: 'switch-btn on',
+                            HALF_BACK: 'switch-btn halfon-backward'
                         }
-                        function get_title_curr_width() {
-                            log('title_curr_width:', $('.video-pod__list .title:first').width())
-                            return $('.video-pod__list .title:first').width()
-                        }
-                        function get_title_max_width(){
-                            let $items = $('.video-pod__list .title-txt')
-                            $items.width('max-content')
-                            let left_edges = []
-                            $items.each((i,v)=>{ left_edges.push($(v).width()) })
-                            let title_max_width = Math.max(...left_edges)
-                            $items.width('')
-                            log('title_max_width:', title_max_width)
-                            return title_max_width
-                        }
-                        function get_title_max_width_diffW(){
-                            let diffW = 0
-                            let default_right_container_width = 1680 < $('#mirror-vdcon').width() ? 411 : 350  //列表宽度
-                            diffW = $('.right-container').width() - default_right_container_width + get_title_max_width() - get_title_curr_width() + 2
-                            log('curr_width - default_width - title_max_width - title_curr_width:', $('.right-container').width(), default_right_container_width, get_title_max_width(), get_title_curr_width())
-                            return diffW
-                        }
-                        function set_title_max_width(){
-                            let $items = $('.video-pod__list .title-txt')
-                            $items.width('max-content')
-                            let left_edges = []
-                            $items.each((i,v)=>{ left_edges.push($(v).width()) })
-                            let title_max_width = Math.max(...left_edges)
-                            $items.width(title_max_width)
-                            return title_max_width
-                        }
-                        function setSize2(diffW) {
+
+                        //替换b站setSize函数，加宽right-container后，缩放时正确响应，默认411
+                        window.hhh_right_container_width = WIDTH_WIDE
+                        window.setSize =  function() {
                             var e = window.isWide
-                                , w = $('#mirror-vdcon').width()
-                                , i = window.innerHeight
-                                // , t = Math.max(document.body && document.body.clientWidth || window.innerWidth, 1100)  //屏幕宽度
-                                , t = Math.max(document.body && w, 1100)  //屏幕宽度
-                                , n = 1680 < w ? 411+diffW : 350+diffW  //列表宽度
-                                // , r = parseInt(16 * (i - (1690 < innerWidth ? 318+diffW : 308+diffW)) / 9)
-                                , r = parseInt(16 * (i - (1690 < w ? 318 : 308)) / 9)
-                                , o = t - 112 - n  //去掉列表和两边空白后的宽度
-                                , a = o < r ? o : r;
+                            , i = window.innerHeight
+                            , t = Math.max(document.body && document.body.clientWidth || window.innerWidth, 1100)
+                            //, n = 1680 < innerWidth ? 411 : 350 
+                            //, n = new_w < 411 ? 411 : new_w > (t - 112 - 668) ? (t - 112 - 668) : new_w
+                            , n = window.hhh_right_container_width
+                            , r = parseInt(16 * (i - (1690 < innerWidth ? 318 : 308)) / 9)
+                            , o = t - 112 - n
+                            , a = o < r ? o : r;
                             a < 668 && (a = 668),
                             1694 < a && (a = 1694);
                             var d, l = a + n;
                             window.isWide && (l -= 125,
                             a -= 100),
-                            d = window.hasBlackSide && !window.isWide ? Math.round((a - 14 + (e ? n : 0)) * (9 / 16) + (1680 < w ? 56 : 46)) + 96 : Math.round((a + (e ? n : 0)) * (9 / 16)) + (1680 < innerWidth ? 56 : 46);
+                            d = window.hasBlackSide && !window.isWide ? Math.round((a - 14 + (e ? n : 0)) * (9 / 16) + (1680 < innerWidth ? 56 : 46)) + 96 : Math.round((a + (e ? n : 0)) * (9 / 16)) + (1680 < innerWidth ? 56 : 46);
                             var c = l - n;
-                            // log('left-container:', c)
                             var s = constructStyleString(".video-container-v1", {
                                 width: "auto",
                                 padding: "0 10px"
@@ -9380,95 +9472,129 @@ let s = {'color': "var(--Ga1_t)"}
                                 "margin-left": (l - n) / 2 + "px"
                             });
                             setSizeStyle.innerHTML = s
-                            // log(s)
-                            return { 'left_container_width': l - n, 'right_container_width': n, 'container_width': l }
                         }
 
-                        // if(open !== ON) { if($('#hhh_expand_title .switch-btn')?.hasClass('on') === true) $('#hhh_expand_title')?.click() }
-                        $('#hhh_expand_title .switch-btn')?.removeClass('on')?.removeClass('halfon-forward') ?.removeClass('halfon-backward')  //初始不展开状态
+                        $('#hhh_expand_title .switch-btn')?.removeClass('on')?.removeClass('halfon-forward')?.removeClass('halfon-backward')
                         $('#hhh_expand_title')?.remove()
                         if(open !== ON) return false
-                        if(video_type !== '合集') return false  //不是合集
+                        if(video_type !== '合集') return false
 
-                        let $next_button = $('.auto-play:contains(自动连播)')
+                        const $next_button = $('.auto-play:contains(自动连播)')
                         $next_button.clone().appendTo($('.header-top>.right'))
-                                            .attr({'id': 'hhh_expand_title', 'title': ''})
-                                            .css({'margin-top': '5px'})
-                                            .find('.txt').text(`展开标题`).end()
-                                            // .find('.switch-btn').css({'background': 'red', '--switch-btn-width': '40px'}).end()
-                                            .parent().css({'display': 'flex', 'flex-direction': 'column'})
+                            .attr({id: 'hhh_expand_title', title: ''})
+                            .css({'margin-top': '5px'})
+                            .find('.txt').text('展开标题').end()
+                            .parent().css({display: 'flex', 'flex-direction': 'column'})
                         $('#hhh_expand_title .switch-btn')[0].style.setProperty('--switch-btn-width','40px')
-                        
+
                         $('#hhh_style_expand_title').remove()
                         if($('#hhh_style_expand_title').length <= 0){
-                            append_style($('#hhh_expand_title'), 'hhh_style_expand_title',
-                                `
-                                    #hhh_expand_title .switch-btn.halfon-forward,
-                                    #hhh_expand_title .switch-btn.halfon-backward {
-                                        background: var(--Lb6);
-                                    }
-                                    #hhh_expand_title .switch-btn.halfon-forward .switch-block,
-                                    #hhh_expand_title .switch-btn.halfon-backward .switch-block {
-                                        left: calc(calc(var(--switch-btn-width) - var(--switch-btn-height)) / 2 + var(--switch-btn-gap));
-                                    }
-                                `
-                            )
+                            append_style($('#hhh_expand_title'), 'hhh_style_expand_title', `
+                                #hhh_expand_title .switch-btn.halfon-forward,
+                                #hhh_expand_title .switch-btn.halfon-backward {
+                                    background: var(--Lb6);
+                                }
+                                #hhh_expand_title .switch-btn.halfon-forward .switch-block,
+                                #hhh_expand_title .switch-btn.halfon-backward .switch-block {
+                                    left: calc(calc(var(--switch-btn-width) - var(--switch-btn-height)) / 2 + var(--switch-btn-gap));
+                                }
+                            `)
                         }
+
+                        tip_create_3_X({
+                            target: $('#hhh_expand_title'),
+                            tip_target: $('#hhh_tip'),
+                            gap: 6,
+                            title: `展开标题，Title默认增加宽度: ${config.getCheckboxSettingArgs('expandTitle', 'width')}px | 最大宽度`
+                        })
                         
-                        tip_create_3_X({ target: $('#hhh_expand_title'), tip_target: $('#hhh_tip'), gap: 6,
-                                         title: `展开标题，Title默认增加宽度: ${config.getCheckboxSettingArgs('expandTitle', 'width')}px | 最大宽度` })
+                        function limit_width(right_container_width){
+                            const t = Math.max(document.body && document.body.clientWidth || window.innerWidth, 1100)
+                            const limit_right_container_width = Math.max(411, Math.min(right_container_width, t - 112 - 668))
+                            // console.log('t',t, 'old_right_container_width', $('.right-container').width(), 'right_container_width', right_container_width, 'limit_right_container_width', limit_right_container_width)
+                            return limit_right_container_width
+                        }
 
-                        let $switch_button = $('#hhh_expand_title .switch-btn')
+                        function get_title_max_width() {
+                            const $items = $('.video-pod__list .title-txt')
+                            if ($items.length === 0) return { current: 0, max: 0 }
 
-                        async function handle_event(class_name){
+                            const canvas = get_title_max_width.canvas || (get_title_max_width.canvas = document.createElement('canvas'))
+                            const ctx = canvas.getContext('2d')
+
+                            if (!get_title_max_width.font) {
+                                const style = window.getComputedStyle($items[0])
+                                get_title_max_width.font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`
+                            }
+                            ctx.font = get_title_max_width.font
+
+                            let max_txt_width = 0
+                            $items.each((i, v) => {
+                                const width = ctx.measureText($(v).text().trim()).width
+                                if (width > max_txt_width) max_txt_width = width
+                            })
+
+                            const gif_width = $('.video-pod__list .playing-gif:first').outerWidth(true)
+                            // console.log('max_txt_width', max_txt_width)
+                            // console.log('old_title_width', $('.video-pod__list .title:first').outerWidth(true),'maxWidth', parseInt(max_txt_width + gif_width) + 1)
+                            return parseInt(max_txt_width + gif_width) + 1
+                        }
+
+                        const $switch_button = $('#hhh_expand_title .switch-btn')
+
+                        function handle_event(class_name){
                             $switch_button[0].className = class_name
 
-                            let diffW = 0
-                            default_title_diff_width = +default_title_diff_width
-                            config.setCheckboxSettingArgs('expandTitle', 'is_expand', ON)
-                            if(default_title_diff_width === -1){
-                                set_title_max_width()
-                                diffW = 0
+                            let title = $('.video-pod__list .title:first').outerWidth(true)
+                            let right = $('.right-container').width()
+                            log('title', title, 'right', right, 'right-title', right-title)
+                            
+                            let new_right_container_width = WIDTH_WIDE
+                            let title_max_width = 0
+                            // const old_right_container_width = $('.right-container').width()
+                            // const old_title_width = $('.video-pod__list .title:first').outerWidth(true)
+
+                            const default_title_width =  parseInt(default_title_diff_width)
+
+                            if(default_title_width === 0){
+                                new_right_container_width = limit_width(WIDTH_WIDE)
+                            }if(default_title_width === -1){
+                                title_max_width = get_title_max_width()
+                                new_right_container_width = title_max_width + BASE_WIDTH_DIFF
+                                config.setCheckboxSettingArgs('expandTitle', 'is_expand', ON)
                             }else{
-                                if(class_name === 'switch-btn'){
-                                    config.setCheckboxSettingArgs('expandTitle', 'is_expand', OFF)
-                                    diffW = 0
-                                }else if(class_name === 'switch-btn halfon-forward' || class_name === 'switch-btn halfon-backward'){
-                                    log('default vs max:', default_title_diff_width, get_title_max_width_diffW())
-                                    diffW = default_title_diff_width === 0
-                                            ? get_title_max_width_diffW()
-                                            : Math.min(default_title_diff_width, get_title_max_width_diffW())
-                                }else if(class_name === 'switch-btn on'){
-                                    diffW = get_title_max_width_diffW()
-                                }else{ err('hhh_expand_title 未定义 className') }
+                                const is_off = class_name === STATE.OFF
+                                config.setCheckboxSettingArgs('expandTitle', 'is_expand', is_off ? OFF : ON)
+
+                                if(!is_off){
+                                    title_max_width = get_title_max_width()
+                                    new_right_container_width = class_name === STATE.ON
+                                        ? title_max_width + BASE_WIDTH_DIFF
+                                        : default_title_width + BASE_WIDTH_DIFF
+                                }
                             }
                             config.storageCheckboxSetting()
 
-                            console.time('setSize2')
-                            let container_width_obj = setSize2(diffW)
-                            timeEnd('setSize2')
-                            log(`diffW: ${diffW}`, $('.video-container-v1').width(), container_width_obj)
-                            console.time('set_right_container_width')
-                            set_right_container_width(container_width_obj.left_container_width, container_width_obj.right_container_width)
-                            timeEnd('set_right_container_width')
-
-                            await init_sort(status, ON)
-                            
-                            // console.log(c, next_c, diffW, `left: ${$('.left-container').width()}`)
+                            // const container = setSize2(diffW)
+                            // set_right_container_width(container.left_container_width, container.right_container_width)
+                            new_right_container_width = limit_width(new_right_container_width)
+                            window.hhh_right_container_width = new_right_container_width
+                            $('.right-container').width(new_right_container_width)
+                            ListSort.SortManager.refresh_header_layout()
                         }
-                        
-                        $('#hhh_expand_title').off('click.hhh_expand_title')
-                        $('#hhh_expand_title').on('click.hhh_expand_title', async function(){
-                            let class_list = ['switch-btn', 'switch-btn halfon-forward', 'switch-btn on', 'switch-btn halfon-backward']
-                            let c = $switch_button[0].className
-                            let next_c = class_list[(class_list.indexOf(c) + 1 ) % class_list.length]
 
-                            handle_event(next_c)
+                        $('#hhh_expand_title').off('click.hhh_expand_title')
+                        $('#hhh_expand_title').on('click.hhh_expand_title', function(){
+                            const states = [STATE.OFF, STATE.HALF, STATE.ON, STATE.HALF_BACK]
+                            const current = $switch_button[0].className
+                            const next = states[(states.indexOf(current) + 1) % states.length]
+                            
+                            console.time('hhh_expand_title')
+                            handle_event(next)
+                            timeEnd('hhh_expand_title')
                         })
 
-                        // $switch_button.removeClass().addClass('switch-btn')
-                        if(config.getCheckboxSettingArgs('expandTitle', 'is_expand')) handle_event('switch-btn halfon-forward')
-                        else handle_event('switch-btn')
+                        handle_event(config.getCheckboxSettingArgs('expandTitle', 'is_expand') ? STATE.HALF : STATE.OFF)
                     }
                     expand_title(config.getCheckboxSettingStatus('expandTitle'), config.getCheckboxSettingArgs('expandTitle', 'width'))
 
@@ -9635,7 +9761,7 @@ let s = {'color': "var(--Ga1_t)"}
                     //         console.log(`元素新尺寸: ${newWidth}px x ${newHeight}px`)
 
                     //         console.log(status)
-                    //         await init_sort(status)
+                    //         await ListSort(status)
                     //         // change_title_width()
                     //     }
                     // })
@@ -9646,54 +9772,30 @@ let s = {'color': "var(--Ga1_t)"}
     
                 old_obj_convert_new()
                 init(open)
-                // return
-                // const $multipart_progress = init(open)
-                // if($multipart_progress === OFF) return false
-
-                //update_obj()
-                // counter_obj()
                 
                 update_progress()
                 update_title()
-                // config.getCheckboxSettingStatus('expandTitle') === ON ? change_title_width() : await init_sort(status)
-                await init_sort(status)
+
+                await ListSort.init(status, video_type)
+
                 change_title_width()
+
                 once()
                 other()
                 
-                //多合集刷新时更新单个合集
                 if($('.video-pod__slide').length > 0) {
-                    let is_change_break = null
-                    $('.video-pod__list')[0]?.hhh_ob2?.disconnect()
-                    let ob = new MutationObserver((mutations, observer) => {
-                        for (var mutation of mutations) {
-                            let target = mutation.target
-                            if(typeof target.className === 'string' && !!$(target).text()){
-                                // log($(target).find('.title-txt:first').text())
-                                clearTimeout(is_change_break)
-                                is_change_break = setTimeout(async function() {
-                                    log("合集刷新完毕")
-                                    init(open)
-                                    update_progress()
-                                    update_title()
-                                    // config.getCheckboxSettingStatus('expandTitle') === ON ? change_title_width() : await init_sort(status)
-                                    await init_sort(status)
-                                    change_title_width()
-                                    other()
-                                }, 50)
-                            }
-                        }
+                    // console.log('多合集刷新时更新单个合集')
+                    const $slide = $('.video-pod__slide')
+                    $slide.off('click.hhh_slide').on('click.hhh_slide', '.slide-item', async function () {
+                        init(open)
+                        update_progress()
+                        update_title()
+                        await ListSort.init(status, video_type)
+                        change_title_width()
+                        other()
+                        console.log("合集刷新完毕")
                     })
-                    ob.observe($('.video-pod__list')[0], { childList: true })
-                    $('.video-pod__list')[0].hhh_ob2 = ob
                 }
-
-                // new_video_scroll()
-
-                // function run(open, run_count){
-                // }
-
-                // run(open, run_count++)
             }
             memory_multipart_progress(config.getCheckboxSettingStatus('memoryProgress'), [config.getCheckboxSettingStatus('sortList')])
         }

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Comick Alternative Reading Sites+
 // @namespace    https://greasyfork.org/users/1470715
-// @version      1.6.6
+// @version      1.6.7
 // @description  Add button to show alternative reading sites for manga/manhwa
 // @author       cattishly6060
 // @author       ak,shh
@@ -96,7 +96,8 @@
     }
 
     if (pathCount < 3) {
-      title = document.querySelector('main h1')?.textContent?.trim();
+      title = document.querySelector('meta[property="og:title"]')?.content?.trim()
+        || document.querySelector('main h1')?.textContent?.trim();
       if (title) return title;
     }
 
@@ -261,7 +262,7 @@
     // popup.appendChild(copyBtn);
 
     // url encoder
-    function e(name, removeHyphen = true) {
+    const e = (name, removeHyphen = true) => {
       if (removeHyphen) {
         name = name.replace(/-/g, ' ');
       }
@@ -276,7 +277,7 @@
       ['MangaFire', `https://mangafire.to/#search:${e(q)}`],
       ['WeebCentral', `https://weebcentral.com/search?text=${e(q)}`],
       ['MangaKatana', `https://mangakatana.com/?search=${e(q)}&search_by=book_name`],
-      ['MangaTaro', `https://mangataro.org/?s=${e(q)}`],
+      ['MangaTaro', `https://mangataro.org/?s=${e(q, false)}`],
       ['MangaDex', `https://mangadex.org/search?q=${e(q)}`],
       ['Atsu', `https://atsu.moe/search?query=${e(q)}`],
       ['Mangaball', `https://mangaball.net/search-advanced/#search:${e(q, false)}`],

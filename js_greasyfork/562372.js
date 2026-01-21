@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         仿M浏览器元素审查
 // @namespace    https://viayoo.com/81gzxv
-// @version      3.7
+// @version      4.0
 // @description  利用AI模仿并生成M浏览器的元素审查，在脚本菜单开启元素审查，专注AD规则生成，支持规则编辑。
 // @author       Via && Gemini
 // @match        *://*/*
@@ -28,15 +28,17 @@
     let activePreviewStyle = null;
     let adUpdateTimer = null;
 
+    const host = document.createElement('div');
+    host.id = 'mb-debug-host';
+    host.style.cssText = 'position:absolute;top:0;left:0;width:0;height:0;z-index:2147483647;';
+    document.documentElement.appendChild(host);
+    const shadow = host.attachShadow({ mode: 'open' });
+
     const api = {
         addStyle: (css) => {
-            if (typeof GM_addStyle !== 'undefined') {
-                GM_addStyle(css);
-            } else {
-                const style = document.createElement('style');
-                style.textContent = css;
-                document.head.appendChild(style);
-            }
+            const style = document.createElement('style');
+            style.textContent = css;
+            shadow.appendChild(style);
         },
         setClipboard: (text) => {
             if (typeof GM_setClipboard !== 'undefined') {
@@ -74,15 +76,45 @@
             }
         }
     };
+    
+    const formatAndHighlight = (code, lang) => {
+        if (!code) return "";
+        let fmt = code.replace(/\{/g, ' {\n    ').replace(/\}/g, '\n}\n').replace(/;/g, ';\n    ').replace(/\n\s*\n/g, '\n');
+        let level = 0;
+        let result = fmt.split('\n').map(line => {
+            line = line.trim();
+            if (line.includes('}')) level--;
+            let l = '    '.repeat(Math.max(0, level)) + line;
+            if (line.includes('{')) level++;
+            return l;
+        }).join('\n');
+
+        if (result.length > 15000) result = result.substring(0, 15000) + "\n...[此处代码过长已截断]";
+        const escapeHTML = (str) => str.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#039;"}[m]));
+        
+        if (lang === 'js') {
+            let safeJS = escapeHTML(result);
+            return safeJS
+                .replace(/(&quot;.*?&quot;|&#039;.*?&#039;|`.*?`)/g, '<span style="color:#7fb4ca">$1</span>')
+                .replace(/\b(var|let|const|function|if|else|return|for|while|new|try|catch|async|await|case|switch|break|default)\b/g, '<span style="color:#d197d9">$1</span>');
+        } else {
+            let safeCSS = escapeHTML(result);
+            return safeCSS
+                .replace(/^(\s*)([^{}\n]+)(\s*\{)/gm, '$1<span style="color:#deb887">$2</span>$3')
+                .replace(/:(\s*)([^;#}\n]+)(;|\n)/g, ':<span style="color:#7fb4ca">$1$2</span>$3');
+        }
+    };
 
     api.addStyle(`
-        :root {
+        :host {
             --mb-bg: #ffffff; --mb-text: #333; --mb-header-bg: #f1f1f1; --mb-border: #ddd; --mb-item-bg: #fdfdfd;
             --mb-code-key: #881280; --mb-code-attr: #994500; --mb-code-val: #1a1aa6;
             --mb-glass-bg: rgba(255, 255, 255, 0.7); --mb-glass-border: rgba(255, 255, 255, 0.5);
+            font-weight: 700 !important;
+            font-size: 14px !important; line-height: 1.4 !important; font-family: sans-serif !important; -webkit-text-size-adjust: 100% !important;
         }
         @media (prefers-color-scheme: dark) {
-            :root {
+            :host {
                 --mb-bg: #1e1e1e; --mb-text: #ccc; --mb-header-bg: #2d2d2d; --mb-border: #444; --mb-item-bg: #252525;
                 --mb-code-key: #d197d9; --mb-code-attr: #deb887; --mb-code-val: #7fb4ca;
                 --mb-glass-bg: rgba(45, 45, 45, 0.7); --mb-glass-border: rgba(255, 255, 255, 0.1);
@@ -92,10 +124,10 @@
             position: fixed; left: 0; bottom: 0; width: 100%; height: 50%;
             background: var(--mb-bg) !important; z-index: 2147483647 !important; 
             display: none; flex-direction: column; box-shadow: 0 -2px 15px rgba(0,0,0,0.3);
-            font-family: sans-serif !important; border-top: 1px solid var(--mb-border);
+            border-top: 1px solid var(--mb-border);
             transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1); color: var(--mb-text);
         }
-        #mb-debug-panel * { text-align: left; }
+        #mb-debug-panel * { text-align: left; box-sizing: border-box; font-size: 14px; }
         #mb-main-stage { display: flex; flex-wrap: nowrap; width: auto; height: calc(100% - 40px); transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .mb-page { width: 100%; flex: 0 0 100%; height: 100%; display: flex; flex-direction: column; overflow: hidden; }
 
@@ -115,51 +147,48 @@
         .hl-domain { color: #ff8c00; } .hl-sep { color: #007bff; } .hl-selector { color: #808080; } .hl-url { color: #ff0000; }
 
         .ad-action-bar, .data-action-bar { display: flex; flex-wrap: wrap; gap: 8px; }
-        .ad-mini-btn { padding: 5px 12px; font-size: 12px; border: 1px solid var(--mb-border); background: var(--mb-bg); cursor: pointer; border-radius: 4px; color: var(--mb-text); }
+        .ad-mini-btn { padding: 5px 12px; font-size: 12px !important; border: 1px solid var(--mb-border); background: var(--mb-bg); cursor: pointer; border-radius: 4px; color: var(--mb-text); }
         
-        .icon-config-row { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
-        .icon-input { width: 80px; padding: 4px; border: 1px solid var(--mb-border); background: var(--mb-bg); color: var(--mb-text); border-radius: 4px; }
+        .icon-config-row { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; font-size: 14px; }
+        .icon-config-row span { font-size: 14px; }
+        .icon-input { width: 80px; padding: 4px; border: 1px solid var(--mb-border); background: var(--mb-bg); color: var(--mb-text); border-radius: 4px; font-size: 14px; }
         .icon-area { width: 100%; height: 80px; margin-top: 8px; font-family: monospace; font-size: 12px; padding: 6px; border: 1px solid var(--mb-border); background: var(--mb-bg); color: var(--mb-text); resize: none; }
 
         .data-item-card { border-top: 1px solid var(--mb-border); padding: 8px 0; margin-top: 8px; }
-        .data-key-label { color: var(--mb-code-attr); font-weight: bold; }
+        .data-key-label { color: var(--mb-code-attr); font-weight: bold; font-size: 13px; }
 
-        .mb-inspect-hl { outline: 2px dashed #ff4757 !important; outline-offset: 2px !important; background: rgba(255, 71, 87, 0.1) !important; }
-        .node-wrapper { margin-left: 14px; border-left: 1px solid var(--mb-border); font-family: monospace; }
-        .node-row { padding: 2px 4px; cursor: pointer; white-space: pre-wrap; word-break: break-all; display: flex; color: var(--mb-text); }
+        .node-wrapper { margin-left: 14px; border-left: 1px solid var(--mb-border); font-family: monospace; font-size: 13px; }
+        .node-row { padding: 2px 4px; cursor: pointer; white-space: pre-wrap; word-break: break-all; display: flex; color: var(--mb-text); font-size: 13px; }
         .node-row.selected { background: rgba(30, 144, 255, 0.2); outline: 1px solid #1e90ff; }
+        .node-row span { font-size: 13px; }
         .toggle-btn { width: 18px; flex-shrink: 0; text-align: center; font-size: 10px; color: #999; cursor: pointer; }
 
-        #mb-debug-trigger { position: fixed; right: 16px; width: 32px; height: 32px; background: var(--mb-glass-bg); backdrop-filter: blur(15px) saturate(160%); -webkit-backdrop-filter: blur(15px) saturate(160%); border-radius: 14px; border: 1.5px solid var(--glass-border); box-shadow: 0 6px 16px rgba(0,0,0,0.12), inset 0 0 2px rgba(255,255,255,0.8); cursor: pointer; z-index: 2147483646; display: none; align-items: center; justify-content: center; transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); user-select: none; -webkit-tap-highlight-color: transparent; }
-        #mb-debug-trigger:active { transform: scale(0.92); }
-        #mb-debug-trigger svg { width: 22px; height: 22px; filter: drop-shadow(0 1px 1.5px rgba(0,0,0,0.15)); }
+        #mb-debug-trigger { position: fixed; right: 16px; width: 32px; height: 32px; background: var(--mb-glass-bg); backdrop-filter: blur(15px) saturate(160%); -webkit-backdrop-filter: blur(15px) saturate(160%); border-radius: 14px; border: 1.5px solid var(--mb-glass-border); box-shadow: 0 6px 16px rgba(0,0,0,0.12), inset 0 0 2px rgba(255,255,255,0.8); cursor: pointer; z-index: 2147483646; display: none; align-items: center; justify-content: center; transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); user-select: none; -webkit-tap-highlight-color: transparent; }
+        #mb-debug-trigger svg { filter: drop-shadow(0 1px 1.5px rgba(0,0,0,0.15)); }
 
         #mb-js-content {height: 100%;display: flex;flex-direction: column; padding: 10px; box-sizing: border-box;background: var(--mb-bg) !important;}
         #mb-js-log {flex: 1; margin-top: 10px;overflow-y: auto !important;font-family: monospace;font-size: 11px;border-top: 1px solid var(--mb-border);padding-top: 5px;-webkit-overflow-scrolling: touch;}
-        #mb-js-input {flex-shrink: 0; height: 100px;}
-        .mb-tool-btn.log-active { color: #f1c40f !important; font-weight: bold; text-shadow: 0 0 5px rgba(241, 196, 15, 0.5); }
+        #mb-js-input {flex-shrink: 0; height: 100px; background: var(--mb-bg); color: var(--mb-text); border: 1px solid var(--mb-border); padding: 8px; font-size: 13px;}
         .log-item { border-bottom: 0.5px solid var(--mb-border); padding: 4px 0; white-space: pre-wrap; font-size: 11px;}
         .log-warn { color: #f1c40f; }
         .log-error { color: #ff4757; background: rgba(255, 71, 87, 0.05); }
         .log-result { color: #2ecc71; }
- 
-        body.mb-picking-mode { cursor: crosshair !important; }
-        body.mb-picking-mode a, body.mb-picking-mode button, body.mb-picking-mode [onclick],body.mb-picking-mode input[type="button"], body.mb-picking-mode input[type="submit"] { 
-          cursor: crosshair !important; 
-          pointer-events: auto !important; 
-         }
 
         @media (min-width: 768px) {
-            #mb-debug-panel { height: 45% !important; }
             #mb-js-content { flex-direction: row; gap: 12px; }
             #mb-js-input { flex: 1; height: auto !important; }
             #mb-js-log { flex: 1; margin-top: 0; border-top: none; border-left: 1px solid var(--mb-border); padding-left: 10px; }
             #mb-ad-content, #mb-data-content, #mb-icon-content { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; align-content: start; }
-            #mb-debug-content { max-width: 900px; margin: 0 auto; }
-            .ad-rule-item, .data-group-box, .icon-config-card { margin-bottom: 0; }
         }
     `);
 
+    const globalStyle = document.createElement('style');
+    globalStyle.textContent = `
+        .mb-inspect-hl { outline: 2px dashed #ff4757 !important; outline-offset: 2px !important; background: rgba(255, 71, 87, 0.1) !important; }
+        body.mb-picking-mode { cursor: crosshair !important; }
+        body.mb-picking-mode a, body.mb-picking-mode button, body.mb-picking-mode [onclick], body.mb-picking-mode input { cursor: crosshair !important; pointer-events: auto !important; }
+    `;
+    document.head.appendChild(globalStyle);
 
     const panel = document.createElement('div');
     panel.id = 'mb-debug-panel';
@@ -213,20 +242,33 @@
             <div class="mb-page" id="page-icon">
                 <div id="mb-icon-content"></div>
             </div>
+            
+            <div class="mb-page" id="page-code">
+                <div id="mb-debug-header-code" style="display:flex; align-items:center; background:var(--mb-header-bg); height:40px; border-bottom:1px solid var(--mb-border);">
+                    <div class="mb-header-left"><span class="mb-tool-btn" id="mb-btn-code-back">⬅ 返回</span></div>
+                    <div class="mb-header-middle"><span id="mb-code-title" style="font-size:12px;opacity:0.8;">代码查看</span></div>
+                    <div class="mb-header-right"><span class="mb-tool-btn" id="mb-btn-code-copy">复制全部</span></div>
+                </div>
+                <div id="mb-code-display" style="flex:1; overflow:auto; padding:15px; font-family:monospace; font-size:12px; white-space:pre; background:var(--mb-item-bg); line-height:1.5;"></div>
+            </div>
         </div>
     `;
+    shadow.appendChild(panel);
 
-    document.body.appendChild(panel);
+    const trigger = document.createElement('div');
+    trigger.id = 'mb-debug-trigger';
+    shadow.appendChild(trigger);
 
-    const domContent = document.getElementById('mb-debug-content');
-    const adContent = document.getElementById('mb-ad-content');
-    const dataContent = document.getElementById('mb-data-content');
-    const stage = document.getElementById('mb-main-stage');
-    const btnPick = document.getElementById('mb-btn-pick');
-    const btnFold = document.getElementById('mb-btn-fold');
-    const jsLog = document.getElementById('mb-js-log');
-    const jsInput = document.getElementById('mb-js-input');
-    const btnLogSwitch = document.getElementById('btn-log-switch');
+    const domContent = shadow.getElementById('mb-debug-content');
+    const adContent = shadow.getElementById('mb-ad-content');
+    const dataContent = shadow.getElementById('mb-data-content');
+    const iconContent = shadow.getElementById('mb-icon-content');
+    const stage = shadow.getElementById('mb-main-stage');
+    const btnPick = shadow.getElementById('mb-btn-pick');
+    const btnFold = shadow.getElementById('mb-btn-fold');
+    const jsLog = shadow.getElementById('mb-js-log');
+    const jsInput = shadow.getElementById('mb-js-input');
+    const btnLogSwitch = shadow.getElementById('btn-log-switch');
 
     function addLog(msg, type = '') {
         const isManualRun = (type === 'log-result' || type === 'log-error');
@@ -282,8 +324,8 @@
  
     function switchToPage(index) {
         stage.style.transform = `translateX(-${index * 100}%)`;
-        const btnBack = document.getElementById('mb-btn-back');
-        if (btnBack) btnBack.style.display = index === 0 ? 'none' : 'inline';
+        const btnBack = shadow.getElementById('mb-btn-back');
+        if (btnBack) btnBack.style.display = (index === 0 || index === 5) ? 'none' : 'inline';
     }
 
     function updateFoldState() {
@@ -684,7 +726,6 @@
         });
     }
     
-    const iconContent = document.getElementById('mb-icon-content');
     const DEFAULT_SVG = `<svg viewBox="0 0 24 24"> <rect x="6" y="6" width="14" height="14" rx="2.5" stroke="currentColor" stroke-width="1.8" fill="none" style="color:var(--mb-text); opacity:0.7;"/> <path d="M9 10h8M9 13h5M9 16h8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" style="color:var(--mb-text); opacity:0.4;"/><g transform="translate(2, 2)"><path d="M4.5 4.5l6.5 6.5M4.5 4.5v5.5M4.5 4.5h5.5" stroke="#007aff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></g></svg>`;
 
     function renderIconPage() {
@@ -705,15 +746,15 @@
                 </div>
             </div>
         `;
-        document.getElementById('btn-icon-save').onclick = () => {
-            api.setValue('mb_icon_size', parseInt(document.getElementById('in-icon-size').value));
-            api.setValue('mb_icon_bottom', parseInt(document.getElementById('in-icon-bottom').value));
-            api.setValue('mb_icon_right', parseInt(document.getElementById('in-icon-right').value));
-            api.setValue('mb_icon_svg', document.getElementById('in-icon-svg').value);
+        shadow.getElementById('btn-icon-save').onclick = () => {
+            api.setValue('mb_icon_size', parseInt(shadow.getElementById('in-icon-size').value));
+            api.setValue('mb_icon_bottom', parseInt(shadow.getElementById('in-icon-bottom').value));
+            api.setValue('mb_icon_right', parseInt(shadow.getElementById('in-icon-right').value));
+            api.setValue('mb_icon_svg', shadow.getElementById('in-icon-svg').value);
             updateIconStyle();
             alert('保存成功');
         };
-        document.getElementById('btn-icon-reset').onclick = () => {
+        shadow.getElementById('btn-icon-reset').onclick = () => {
             if(confirm('确定恢复默认图标设置吗？')){
                 api.setValue('mb_icon_size', 32);
                 api.setValue('mb_icon_bottom', 95);
@@ -723,15 +764,13 @@
                 updateIconStyle();
             }
         };
-        document.getElementById('btn-icon-temp-hide').onclick = () => {
-            const trigger = document.getElementById('mb-debug-trigger');
+        shadow.getElementById('btn-icon-temp-hide').onclick = () => {
             if (trigger) trigger.style.display = 'none';
             alert('图标已临时隐藏，刷新页面即可恢复。');
         };
     }
 
     function updateIconStyle() {
-        const trigger = document.getElementById('mb-debug-trigger');
         if (!trigger) return;
         const size = api.getValue('mb_icon_size', 32);
         const bottom = api.getValue('mb_icon_bottom', 95);
@@ -759,7 +798,7 @@
             const textDiv = document.createElement('div');
             textDiv.className = 'node-row';
             textDiv.style.cssText = "margin-left: 18px; white-space: pre-wrap; cursor: default;";
-            textDiv.innerText = text;
+            textDiv.innerText = text.length > 8000 ? text.substring(0, 8000) + "..." : text;
             return textDiv;
         }
         if (el.nodeType !== 1) return null;
@@ -783,6 +822,24 @@
         const label = document.createElement('span');
         label.innerHTML = html;
         row.appendChild(label);
+        const isInternalScript = el.tagName === 'SCRIPT' && !el.hasAttribute('src') && el.textContent.trim().length > 0;
+        const isInternalStyle = el.tagName === 'STYLE' && !el.hasAttribute('href') && el.textContent.trim().length > 0;
+        if (isInternalScript || isInternalStyle) {
+            const viewBtn = document.createElement('span');
+            viewBtn.innerText = ' [查看代码]';
+            viewBtn.style.cssText = "color:#007aff; cursor:pointer; font-weight:bold; margin-left:8px;";
+            viewBtn.onclick = (e) => {
+                e.stopPropagation();
+                const display = shadow.getElementById('mb-code-display');
+                const title = shadow.getElementById('mb-code-title');
+                const isJS = el.tagName === 'SCRIPT';
+                title.innerText = isJS ? 'JavaScript 格式化查看' : 'CSS 格式化查看';
+                display.innerHTML = formatAndHighlight(el.textContent, isJS ? 'js' : 'css');
+                shadow.getElementById('mb-btn-code-copy').onclick = () => api.setClipboard(el.textContent);
+                switchToPage(5); 
+            };
+            row.appendChild(viewBtn);
+        }
         wrapper.appendChild(row);
         const cBox = document.createElement('div');
         if (hasChildren && (isRoot || isSelected)) {
@@ -793,7 +850,9 @@
         arrow.onclick = (e) => {
             e.stopPropagation();
             if (cBox.style.display === 'none') {
-                if (cBox.innerHTML === '') { Array.from(el.childNodes).forEach(c => { const childNode = buildTree(c, false); if (childNode) cBox.appendChild(childNode); }); }
+                if (cBox.innerHTML === '') { 
+                    Array.from(el.childNodes).forEach(c => { const childNode = buildTree(c, false); if (childNode) cBox.appendChild(childNode); }); 
+                }
                 cBox.style.display = 'block'; arrow.innerText = '▼';
             } else { cBox.style.display = 'none'; arrow.innerText = '▶'; }
         };
@@ -826,7 +885,6 @@
     }
     
     function updateTriggerVisibility() {
-        const trigger = document.getElementById('mb-debug-trigger');
         if (trigger) {
             trigger.style.display = api.getValue('mb_icon_visible', true) ? 'flex' : 'none';
         }
@@ -839,29 +897,25 @@
     }
 
     function createDebugTrigger() {
-        if (document.getElementById('mb-debug-trigger')) return;
-        const trigger = document.createElement('div');
-        trigger.id = 'mb-debug-trigger';
-        trigger.onclick = () => togglePanel(!isDebugMode);
-        document.body.appendChild(trigger);
         updateIconStyle();
         updateTriggerVisibility();
     }
 
     btnPick.onclick = (e) => { e.stopPropagation(); isPicking ? stopPicking() : startPicking(); };
     btnFold.onclick = (e) => { e.stopPropagation(); isCollapsed = !isCollapsed; updateFoldState(); };
-    document.getElementById('mb-btn-to-js').onclick = () => switchToPage(1);
-    document.getElementById('mb-btn-to-ad').onclick = () => { if (!currentTarget) return; renderAdPage(); switchToPage(2); };
-    document.getElementById('mb-btn-to-data').onclick = () => { renderDataPage(); switchToPage(3); };
-    document.getElementById('mb-btn-to-icon').onclick = () => { renderIconPage(); switchToPage(4); };
-    document.getElementById('mb-btn-back').onclick = () => switchToPage(0);
-    document.getElementById('mb-btn-close').onclick = () => togglePanel(false);
-    document.getElementById('mb-btn-copy-html').onclick = () => { if (currentTarget) {const clone = currentTarget.cloneNode(true);clone.classList.remove('mb-inspect-hl');if (clone.classList.length === 0) clone.removeAttribute('class');api.setClipboard(clone.outerHTML);}};
-    document.getElementById('mb-btn-parent').onclick = () => { if (currentTarget && currentTarget.parentElement) { highlight(currentTarget.parentElement); renderDOM(); } };
-    document.getElementById('mb-btn-restore').onclick = () => { if (activePreviewStyle) { activePreviewStyle.remove(); activePreviewStyle = null; } };
-    document.getElementById('btn-js-clear').onclick = () => { jsLog.innerHTML = ''; };
-    document.getElementById('btn-js-run').onclick = () => { const code = jsInput.value.trim(); if (!code) return; try { const result = window.eval(code); if (result !== undefined) addLog(result, 'log-result'); } catch (e) { addLog(e.stack || e.message, 'log-error');}};
-    document.getElementById('btn-js-copy-all').onclick = () => { const logs = Array.from(jsLog.querySelectorAll('.log-item')); if (logs.length === 0) { alert('没有可复制的日志'); return;} const text = logs.map(el => el.innerText).reverse().join('\n'); api.setClipboard(text);};
+    shadow.getElementById('mb-btn-to-js').onclick = () => switchToPage(1);
+    shadow.getElementById('mb-btn-to-ad').onclick = () => { if (!currentTarget) return; renderAdPage(); switchToPage(2); };
+    shadow.getElementById('mb-btn-to-data').onclick = () => { renderDataPage(); switchToPage(3); };
+    shadow.getElementById('mb-btn-to-icon').onclick = () => { renderIconPage(); switchToPage(4); };
+    shadow.getElementById('mb-btn-back').onclick = () => switchToPage(0);
+    shadow.getElementById('mb-btn-code-back').onclick = () => switchToPage(0);
+    shadow.getElementById('mb-btn-close').onclick = () => togglePanel(false);
+    shadow.getElementById('mb-btn-copy-html').onclick = () => { if (currentTarget) {const clone = currentTarget.cloneNode(true);clone.classList.remove('mb-inspect-hl');if (clone.classList.length === 0) clone.removeAttribute('class');api.setClipboard(clone.outerHTML);}};
+    shadow.getElementById('mb-btn-parent').onclick = () => { if (currentTarget && currentTarget.parentElement) { highlight(currentTarget.parentElement); renderDOM(); } };
+    shadow.getElementById('mb-btn-restore').onclick = () => { if (activePreviewStyle) { activePreviewStyle.remove(); activePreviewStyle = null; } };
+    shadow.getElementById('btn-js-clear').onclick = () => { jsLog.innerHTML = ''; };
+    shadow.getElementById('btn-js-run').onclick = () => { const code = jsInput.value.trim(); if (!code) return; try { const result = window.eval(code); if (result !== undefined) addLog(result, 'log-result'); } catch (e) { addLog(e.stack || e.message, 'log-error');}};
+    shadow.getElementById('btn-js-copy-all').onclick = () => { const logs = Array.from(jsLog.querySelectorAll('.log-item')); if (logs.length === 0) { alert('没有可复制的日志'); return;} const text = logs.map(el => el.innerText).reverse().join('\n'); api.setClipboard(text);};
 
     api.registerMenu("开启/关闭审查面板", () => togglePanel(!isDebugMode));
     api.registerMenu("显示/隐藏悬浮图标", () => toggleIconVisible());
@@ -869,11 +923,11 @@
     if (document.readyState === 'complete') createDebugTrigger();
     else window.addEventListener('load', createDebugTrigger);
     
+    trigger.onclick = () => togglePanel(!isDebugMode);
+
     let startX, startY;
     const handler = (e) => {
-        if (!isDebugMode || !isPicking) return;
-        const trigger = document.getElementById('mb-debug-trigger');
-        if (panel.contains(e.target) || (trigger && trigger.contains(e.target))) return;
+        if (!isDebugMode || !isPicking || host.contains(e.target)) return;
         if (e.type === 'mousedown' || e.type === 'touchstart' || e.type === 'pointerdown') {
             const touch = e.touches ? e.touches[0] : e; startX = touch.clientX; startY = touch.clientY;
             return; 
@@ -881,7 +935,12 @@
         if (e.type === 'click' || e.type === 'pointerup' || e.type === 'touchend') {
             const touch = e.changedTouches ? e.changedTouches[0] : e; const diffX = Math.abs(touch.clientX - startX); const diffY = Math.abs(touch.clientY - startY);
             if (diffX < 10 && diffY < 10) { 
-                e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation(); highlight(e.target); renderDOM();
+                e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation(); highlight(e.target);
+                if (e.target.tagName === 'SCRIPT' || e.target.tagName === 'STYLE') {
+                    if (window.mbFormatTimer) clearTimeout(window.mbFormatTimer);
+                    window.mbFormatTimer = setTimeout(() => { if (currentTarget === e.target) renderDOM(); }, 600);
+                }
+                renderDOM();
                 const transform = stage.style.transform;
                 const isAtAdPage = transform.includes('translateX(-200%)');
                 if (isAtAdPage) {

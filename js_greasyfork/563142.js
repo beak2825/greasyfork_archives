@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name         AnMe
 // @author       zjw
-// @version      9.7.4
+// @version      9.7.6
 // @namespace    https://github.com/Zhu-junwei/AnMe
 // @description  通用网站多账号切换器
 // @description:zh  通用网站多账号切换器
 // @description:en  Universal Multi-Site Account Switcher
-// @icon         data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>👥</text></svg>
+// @icon         data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMWVtIiBoZWlnaHQ9IjFlbSIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0yMSAxNy41QzIxIDE5LjQzMyAxOS40MzMgMjEgMTcuNSAyMUMxNS41NjcgMjEgMTQgMTkuNDMzIDE0IDE3LjVDMTQgMTUuNTY3IDE1LjU2NyAxNCAxNy41IDE0QzE5LjQzMyAxNCAyMSAxNS41NjcgMjEgMTcuNVoiIHN0cm9rZT0iY3VycmVudENvbG9yIiBzdHJva2Utd2lkdGg9IjEuNSIvPjxwYXRoIGQ9Ik0yIDExSDIyIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxwYXRoIGQ9Ik00IDExTDQuNjEzOCA4LjU0NDc5QzUuMTU5NDcgNi4zNjIxMSA1LjQzMjMxIDUuMjcwNzcgNi4yNDYwOSA0LjYzNTM4QzcuMDU5ODggNCA4LjE4NDggNCAxMC40MzQ3IDRIMTMuNTY1M0MxNS44MTUyIDQgMTYuOTQwMSA0IDE3Ljc1MzkgNC42MzUzOEMxOC41Njc3IDUuMjcwNzcgMTguODQwNSA2LjM2MjExIDE5LjM4NjIgOC41NDQ3OUwyMCAxMSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cGF0aCBkPSJNMTAgMTcuNUMxMCAxOS40MzMgOC40MzMgMjEgNi41IDIxQzQuNTY3IDIxIDMgMTkuNDMzIDMgMTcuNUMzIDE1LjU2NyA0LjU2NyAxNCA2LjUgMTRDOC40MzMgMTQgMTAgMTUuNTY3IDEwIDE3LjVaIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIxLjUiLz48cGF0aCBkPSJNMTAgMTcuNDk5OUwxMC42NTg0IDE3LjE3MDdDMTEuNTAyOSAxNi43NDg0IDEyLjQ5NzEgMTYuNzQ4NCAxMy4zNDE2IDE3LjE3MDdMMTQgMTcuNDk5OSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48L3N2Zz4=
 // @match        *://*/*
 // @license      MIT
 // @run-at       document-end
@@ -18,7 +18,6 @@
 // @grant        GM_addStyle
 // @grant        GM_registerMenuCommand
 // @grant        GM_info
-// @connect      *
 // @downloadURL https://update.greasyfork.org/scripts/563142/AnMe.user.js
 // @updateURL https://update.greasyfork.org/scripts/563142/AnMe.meta.js
 // ==/UserScript==
@@ -39,6 +38,19 @@
             LANG: 'cfg_lang',
             FAB_MODE: 'cfg_fab_mode',
             FAB_POS: 'cfg_fab_pos'
+        },
+        ICONS: {
+            LOGO: `<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 17.5C21 19.433 19.433 21 17.5 21C15.567 21 14 19.433 14 17.5C14 15.567 15.567 14 17.5 14C19.433 14 21 15.567 21 17.5Z" stroke="currentColor" stroke-width="1.5"/><path d="M2 11H22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M4 11L4.6138 8.54479C5.15947 6.36211 5.43231 5.27077 6.24609 4.63538C7.05988 4 8.1848 4 10.4347 4H13.5653C15.8152 4 16.9401 4 17.7539 4.63538C18.5677 5.27077 18.8405 6.36211 19.3862 8.54479L20 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M10 17.5C10 19.433 8.433 21 6.5 21C4.567 21 3 19.433 3 17.5C3 15.567 4.567 14 6.5 14C8.433 14 10 15.567 10 17.5Z" stroke="currentColor" stroke-width="1.5"/><path d="M10 17.4999L10.6584 17.1707C11.5029 16.7484 12.4971 16.7484 13.3416 17.1707L14 17.4999" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>`,
+            SWITCH: `<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 12H6C4.11438 12 3.17157 12 2.58579 12.5858C2 13.1716 2 14.1144 2 16V18C2 19.8856 2 20.8284 2.58579 21.4142C3.17157 22 4.11438 22 6 22H8C9.88562 22 10.8284 22 11.4142 21.4142C12 20.8284 12 19.8856 12 18V17" stroke="currentColor" stroke-width="1.5"/><path d="M12 7H11C9.11438 7 8.17157 7 7.58579 7.58579C7 8.17157 7 9.11438 7 11V13C7 14.8856 7 15.8284 7.58579 16.4142C8.17157 17 9.11438 17 11 17H13C14.8856 17 15.8284 17 16.4142 16.4142C17 15.8284 17 14.8856 17 13V12" stroke="currentColor" stroke-width="1.5"/><path d="M12 6C12 4.11438 12 3.17157 12.5858 2.58579C13.1716 2 14.1144 2 16 2H18C19.8856 2 20.8284 2 21.4142 2.58579C22 3.17157 22 4.11438 22 6V8C22 9.88562 22 10.8284 21.4142 11.4142C20.8284 12 19.8856 12 18 12H16C14.1144 12 13.1716 12 12.5858 11.4142C12 10.8284 12 9.88562 12 8V6Z" stroke="currentColor" stroke-width="1.5"/></svg>`,
+            USER: `<svg width="1em" height="1em" viewBox="0 0 24 24"  fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="6" r="4" stroke="currentColor" stroke-width="1.5"/><ellipse cx="12" cy="17" rx="7" ry="4" stroke="currentColor" stroke-width="1.5"/></svg>`,
+            SETTINGS: `<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.84308 3.80211C9.8718 2.6007 10.8862 2 12 2C13.1138 2 14.1282 2.6007 16.1569 3.80211L16.8431 4.20846C18.8718 5.40987 19.8862 6.01057 20.4431 7C21 7.98943 21 9.19084 21 11.5937V12.4063C21 14.8092 21 16.0106 20.4431 17C19.8862 17.9894 18.8718 18.5901 16.8431 19.7915L16.1569 20.1979C14.1282 21.3993 13.1138 22 12 22C10.8862 22 9.8718 21.3993 7.84308 20.1979L7.15692 19.7915C5.1282 18.5901 4.11384 17.9894 3.55692 17C3 16.0106 3 14.8092 3 12.4063V11.5937C3 9.19084 3 7.98943 3.55692 7C4.11384 6.01057 5.1282 5.40987 7.15692 4.20846L7.84308 3.80211Z" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.5"/></svg>`,
+            HELP: `<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 17.75C12.4142 17.75 12.75 17.4142 12.75 17V11C12.75 10.5858 12.4142 10.25 12 10.25C11.5858 10.25 11.25 10.5858 11.25 11V17C11.25 17.4142 11.5858 17.75 12 17.75Z" fill="currentColor"/><path d="M12 7C12.5523 7 13 7.44772 13 8C13 8.55228 12.5523 9 12 9C11.4477 9 11 8.55228 11 8C11 7.44772 11.4477 7 12 7Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M1.25 12C1.25 6.06294 6.06294 1.25 12 1.25C17.9371 1.25 22.75 6.06294 22.75 12C22.75 17.9371 17.9371 22.75 12 22.75C6.06294 22.75 1.25 17.9371 1.25 12ZM12 2.75C6.89137 2.75 2.75 6.89137 2.75 12C2.75 17.1086 6.89137 21.25 12 21.25C17.1086 21.25 21.25 17.1086 21.25 12C21.25 6.89137 17.1086 2.75 12 2.75Z" fill="currentColor"/></svg>`,
+            LOCK: `<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M5.25 9.30277V8C5.25 4.27208 8.27208 1.25 12 1.25C15.7279 1.25 18.75 4.27208 18.75 8V9.30277C18.9768 9.31872 19.1906 9.33948 19.3918 9.36652C20.2919 9.48754 21.0497 9.74643 21.6517 10.3483C22.2536 10.9503 22.5125 11.7081 22.6335 12.6082C22.75 13.4752 22.75 14.5775 22.75 15.9451V16.0549C22.75 17.4225 22.75 18.5248 22.6335 19.3918C22.5125 20.2919 22.2536 21.0497 21.6517 21.6516C21.0497 22.2536 20.2919 22.5125 19.3918 22.6335C18.5248 22.75 17.4225 22.75 16.0549 22.75H7.94513C6.57754 22.75 5.47522 22.75 4.60825 22.6335C3.70814 22.5125 2.95027 22.2536 2.34835 21.6516C1.74643 21.0497 1.48754 20.2919 1.36652 19.3918C1.24996 18.5248 1.24998 17.4225 1.25 16.0549V15.9451C1.24998 14.5775 1.24996 13.4752 1.36652 12.6082C1.48754 11.7081 1.74643 10.9503 2.34835 10.3483C2.95027 9.74643 3.70814 9.48754 4.60825 9.36652C4.80938 9.33948 5.02317 9.31872 5.25 9.30277ZM6.75 8C6.75 5.10051 9.10051 2.75 12 2.75C14.8995 2.75 17.25 5.10051 17.25 8V9.25344C16.8765 9.24999 16.4784 9.24999 16.0549 9.25H7.94513C7.52161 9.24999 7.12353 9.24999 6.75 9.25344V8ZM3.40901 11.409C3.68577 11.1322 4.07435 10.9518 4.80812 10.8531C5.56347 10.7516 6.56459 10.75 8 10.75H16C17.4354 10.75 18.4365 10.7516 19.1919 10.8531C19.9257 10.9518 20.3142 11.1322 20.591 11.409C20.8678 11.6858 21.0482 12.0743 21.1469 12.8081C21.2484 13.5635 21.25 14.5646 21.25 16C21.25 17.4354 21.2484 18.4365 21.1469 19.1919C21.0482 19.9257 20.8678 20.3142 20.591 20.591C20.3142 20.8678 19.9257 21.0482 19.1919 21.1469C18.4365 21.2484 17.4354 21.25 16 21.25H8C6.56459 21.25 5.56347 21.2484 4.80812 21.1469C4.07435 21.0482 3.68577 20.8678 3.40901 20.591C3.13225 20.3142 2.9518 19.9257 2.85315 19.1919C2.75159 18.4365 2.75 17.4354 2.75 16C2.75 14.5646 2.75159 13.5635 2.85315 12.8081C2.9518 12.0743 3.13225 11.6858 3.40901 11.409Z" fill="currentColor"/></svg>`,
+            EXPORT: `<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 15C3 17.8284 3 19.2426 3.87868 20.1213C4.75736 21 6.17157 21 9 21H15C17.8284 21 19.2426 21 20.1213 20.1213C21 19.2426 21 17.8284 21 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 16V3M12 3L16 7.375M12 3L8 7.375" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+            MUTIEXPORT: `<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17 9.00195C19.175 9.01406 20.3529 9.11051 21.1213 9.8789C22 10.7576 22 12.1718 22 15.0002V16.0002C22 18.8286 22 20.2429 21.1213 21.1215C20.2426 22.0002 18.8284 22.0002 16 22.0002H8C5.17157 22.0002 3.75736 22.0002 2.87868 21.1215C2 20.2429 2 18.8286 2 16.0002L2 15.0002C2 12.1718 2 10.7576 2.87868 9.87889C3.64706 9.11051 4.82497 9.01406 7 9.00195" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M12 15L12 2M12 2L15 5.5M12 2L9 5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+            IMPORT: `<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0,24) scale(1,-1)"><path d="M3 15C3 17.8284 3 19.2426 3.87868 20.1213C4.75736 21 6.17157 21 9 21H15C17.8284 21 19.2426 21 20.1213 20.1213C21 19.2426 21 17.8284 21 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 16V3M12 3L16 7.375M12 3L8 7.375" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+            DELETE: `<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.1709 4C9.58273 2.83481 10.694 2 12.0002 2C13.3064 2 14.4177 2.83481 14.8295 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M20.5001 6H3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M18.8332 8.5L18.3732 15.3991C18.1962 18.054 18.1077 19.3815 17.2427 20.1907C16.3777 21 15.0473 21 12.3865 21H11.6132C8.95235 21 7.62195 21 6.75694 20.1907C5.89194 19.3815 5.80344 18.054 5.62644 15.3991L5.1665 8.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M9.5 11L10 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M14.5 11L14 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>`,
+            DONATE: `<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.28441 11.2661C3.15113 9.26687 3.08449 8.26726 3.67729 7.63363C4.27009 7 5.27191 7 7.27555 7H12.7245C14.7281 7 15.7299 7 16.3227 7.63363C16.9155 8.26726 16.8489 9.26687 16.7156 11.2661L16.3734 16.3991C16.1964 19.054 16.1079 20.3815 15.2429 21.1907C14.3779 22 13.0475 22 10.3867 22H9.61333C6.95253 22 5.62212 22 4.75712 21.1907C3.89211 20.3815 3.80361 19.054 3.62662 16.3991L3.28441 11.2661Z" stroke="currentColor" stroke-width="1.5"/><path d="M17 17H18C20.2091 17 22 15.2091 22 13C22 10.7909 20.2091 9 18 9H17" stroke="currentColor" stroke-width="1.5"/><path d="M16 18H4" stroke="currentColor" stroke-width="1.5"/><path d="M6.05081 5.0614L6.46143 4.48574C6.6882 4.16781 6.61431 3.72623 6.29638 3.49945C5.97845 3.27267 5.90455 2.8311 6.13133 2.51317L6.54195 1.9375M14.0508 5.0614L14.4614 4.48574C14.6882 4.16781 14.6143 3.72623 14.2964 3.49945C13.9784 3.27267 13.9046 2.8311 14.1313 2.51317L14.5419 1.9375M10.0508 5.0614L10.4614 4.48574C10.6882 4.16781 10.6143 3.72623 10.2964 3.49945C9.97845 3.27267 9.90455 2.8311 10.1313 2.51317L10.5419 1.9375" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>`,
         },
         HOST: location.hostname,
         META: {
@@ -123,7 +135,7 @@
         * { box-sizing: border-box; }
 
         #acc-mgr-fab, .acc-panel, .acc-dialog-mask { pointer-events: auto; }
-        #acc-mgr-fab { position: fixed; bottom: 100px; right: 30px; width: 44px; height: 44px; background: #2196F3; color: white; border-radius: 50%; display: none; align-items: center; justify-content: center; font-size: 20px; cursor: move; z-index: 1000000; box-shadow: 0 8px 30px rgba(0,0,0,0.25); user-select: none; border: none; touch-action: none; transition: transform 0.1s; }
+        #acc-mgr-fab { padding: 10px;position: fixed; bottom: 100px; right: 30px; width: 44px; height: 44px; background: #2196F3; color: white; border-radius: 50%; display: none; align-items: center; justify-content: center; font-size: 20px; cursor: move; z-index: 1000000; box-shadow: 0 8px 30px rgba(0,0,0,0.25); user-select: none; border: none; touch-action: none; transition: transform 0.1s; }
         #acc-mgr-fab:active { transform: scale(0.95); }
 
         .acc-panel { position: fixed; width: 340px; background: white; border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.25); z-index: 1000001; display: flex; flex-direction: column; font-family: inherit; border: 1px solid #ddd; overflow: hidden; height: 480px; overscroll-behavior: none !important; opacity: 0; visibility: hidden; transform: translateY(20px) scale(0.95); transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s cubic-bezier(0.4, 0, 0.2, 1); pointer-events: none; }
@@ -199,9 +211,9 @@
         .acc-btn-blue { flex: 1; background: #2196F3; color: white; }
         .acc-btn-plus { width: 38px; height: 38px; background: #fff; color: #666; border: 1px solid #ddd; font-size: 20px; }
         .acc-btn-plus:hover { border-color: #2196F3; color: #2196F3; }
-        .acc-help-tip, .acc-lock-tip { display: inline-block; width: 16px; height: 16px; border-radius: 50%; font-size: 11px; line-height: 16px; text-align: center; cursor: help; margin-left: 2px; }
-        .acc-help-tip { background: #eee; color: #999; }
-        .acc-lock-tip { background: transparent; font-size: 12px; margin-left: 8px; }
+        .acc-help-tip, .acc-lock-tip { display: inline-block; width: 16px; height: 16px; line-height: 16px; text-align: center; cursor: help; font-size: 16px; }
+        .acc-help-tip { color:#f5a623; margin-left: 10px;}
+        .acc-lock-tip { color: #999; }
         .acc-set-group { margin-bottom: 10px; }
         .acc-set-title { font-size: 12px; font-weight: bold; color: #999; margin-bottom: 8px; }
         .acc-set-row { display: flex; gap: 10px; margin-bottom: 10px; padding: 0 3px;}
@@ -212,7 +224,8 @@
         .acc-notice-content h4 { margin: 15px 0 8px 0; color: #333; border-left: 3px solid #2196F3; padding-left: 8px; }
         .acc-link-btn { color: #2196F3; cursor: pointer; text-decoration: underline; font-size: 12px; }
         .acc-select-ui { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; background: #fff; cursor: pointer; outline: none; color: #333; }
-        .acc-chk-label { display: inline-flex !important; align-items: center !important; cursor: pointer !important; margin-right: 8px !important; user-select: none; font-size: 12px; color: #666; }
+        .aac-chk {display:flex; align-items:center; flex-wrap:wrap; font-size:11px; color:#666; margin:10px 0;}
+        .acc-chk-label { display: inline-flex !important; align-items: center !important; cursor: pointer !important; user-select: none; font-size: 12px; color: #666; }
         .acc-custom-chk { appearance: none !important; width: 14px !important; height: 14px !important; border: 1px solid #ccc !important; border-radius: 3px !important; margin-right: 4px !important; cursor: pointer !important; position: relative !important; background: #fff; }
         .acc-custom-chk:checked { background-color: #2196F3 !important; border-color: #2196F3 !important; }
         .acc-custom-chk:checked::after { content: ''; position: absolute !important; left: 4px !important; top: 1px !important; width: 3px !important; height: 7px !important; border: solid white !important; border-width: 0 2px 2px 0 !important; transform: rotate(45deg) !important; }
@@ -429,18 +442,18 @@
                 <select id="host-sel" style="width:100%; padding:6px; margin-bottom:10px; font-size:12px; border:1px solid #eee; border-radius:4px; outline:none; cursor:pointer; background:#fff; color:#333;"></select>
                 <div class="acc-scroll-area" id="mgr-list-area"></div>
                 <div class="acc-action-fixed" id="mgr-fixed-actions">
-                    <div style="display:flex; align-items:center; flex-wrap:wrap; font-size:11px; color:#666; margin-bottom:10px;">
+                    <div class="acc-chk">
                         <label class="acc-chk-label"><input type="checkbox" id="c-ck" class="acc-custom-chk" checked> Cookie</label>
                         <label class="acc-chk-label"><input type="checkbox" id="c-ls" class="acc-custom-chk"> LS</label>
                         <label class="acc-chk-label"><input type="checkbox" id="c-ss" class="acc-custom-chk"> SS</label>
-                        <span class="acc-help-tip" title="${Utils.t('tip_help')}">?</span>
-                        <span class="acc-lock-tip" title="${Utils.t('tip_lock')}">🔒</span>
+                        <span class="acc-help-tip" title="${Utils.t('tip_help')}">${CONST.ICONS.HELP}</span>
+                        <span class="acc-lock-tip" title="${Utils.t('tip_lock')}">${CONST.ICONS.LOCK}</span>
                     </div>
                     <input type="text" id="acc-new-name" class="acc-input-text" placeholder="${Utils.t('placeholder_name')}">
 
                     <div class="acc-row-btn">
-                        <button id="do-save" class="acc-btn acc-btn-blue"><span>💾</span> ${Utils.t('btn_save')}</button>
-                        <button id="do-clean" class="acc-btn acc-btn-plus" title="${Utils.t('btn_clean')}">🧹</button>
+                        <button id="do-save" class="acc-btn acc-btn-blue">${Utils.t('btn_save')}</button>
+                        <button id="do-clean" class="acc-btn acc-btn-plus" title="${Utils.t('btn_clean')}">+</button>
                     </div>
                 </div>
             </div>
@@ -462,10 +475,10 @@
                     <div class="acc-set-group">
                         <div class="acc-set-title">${Utils.t('set_backup')}</div>
                         <div class="acc-backup-row">
-                            <button class="acc-icon-btn" id="btn-export-curr" title="${Utils.t('btn_exp_curr')}">⤴️</button>
-                            <button class="acc-icon-btn" id="btn-export-all" title="${Utils.t('btn_exp_all')}">⏫</button>
-                            <button class="acc-icon-btn" id="btn-import-trigger" title="${Utils.t('btn_imp')}">⤵️</button>
-                            <button class="acc-icon-btn danger" id="btn-clear-all" title="${Utils.t('btn_clear_all')}">🗑️</button>
+                            <button class="acc-icon-btn" id="btn-export-curr" title="${Utils.t('btn_exp_curr')}">${CONST.ICONS.EXPORT}</button>
+                            <button class="acc-icon-btn" id="btn-export-all" title="${Utils.t('btn_exp_all')}">${CONST.ICONS.MUTIEXPORT}</button>
+                            <button class="acc-icon-btn" id="btn-import-trigger" title="${Utils.t('btn_imp')}">${CONST.ICONS.IMPORT}</button>
+                            <button class="acc-icon-btn danger" id="btn-clear-all" title="${Utils.t('btn_clear_all')}">${CONST.ICONS.DELETE}</button>
                             <input type="file" id="inp-import-file" accept=".json" style="display:none">
                         </div>
                     </div>
@@ -484,7 +497,7 @@
                  <div class="acc-scroll-area">
                     <div class="acc-about-content">
                         <div class="acc-about-header">
-                            <div class="acc-about-logo">👥</div>
+                            <div class="acc-about-logo">${CONST.ICONS.LOGO}</div>
                             <div class="acc-about-name">${CONST.META.NAME}</div>
                             <div class="acc-about-ver">Version ${CONST.META.VERSION}</div>
                             <div style="margin:3px 0; color:#666;">${Utils.t('about_desc')}</div>
@@ -493,7 +506,7 @@
                         <div class="acc-about-item"><span class="acc-about-label">License</span><span>MIT</span></div>
                         <div class="acc-about-item"><span class="acc-about-label">Github</span><a href="${CONST.META.LINKS.PROJECT}" target="_blank" style="color:#2196F3">View Repo</a></div>
                         <div style="text-align:center;margin-top:20px;">
-                            <a href="${CONST.META.LINKS.DONATE}" target="_blank" class="acc-btn acc-btn-blue" style="text-decoration:none; display:inline-flex; width:80%;">☕ ${Utils.t('donate')}</a>
+                            <a href="${CONST.META.LINKS.DONATE}" target="_blank" class="acc-btn acc-btn-blue" style="text-decoration:none; display:inline-flex; width:80%;">${CONST.ICONS.DONATE} ${Utils.t('donate')}</a>
                         </div>
                     </div>
                  </div>
@@ -505,16 +518,16 @@
             </div>
 
             <div class="acc-tabs-footer">
-                <div class="acc-tab-btn active" data-pg="pg-switch" data-title="${Utils.t('nav_switch')}"><span>🔃</span>${Utils.t('nav_switch')}</div>
-                <div class="acc-tab-btn" data-pg="pg-mgr" data-title="${Utils.t('nav_mgr')}"><span>👥</span>${Utils.t('nav_mgr')}</div>
-                <div class="acc-tab-btn" data-pg="pg-set" data-title="${Utils.t('nav_set')}"><span>⚙️</span>${Utils.t('nav_set')}</div>
+                <div class="acc-tab-btn active" data-pg="pg-switch" data-title="${Utils.t('nav_switch')}"><span>${CONST.ICONS.SWITCH}</span>${Utils.t('nav_switch')}</div>
+                <div class="acc-tab-btn" data-pg="pg-mgr" data-title="${Utils.t('nav_mgr')}"><span>${CONST.ICONS.LOGO}</span>${Utils.t('nav_mgr')}</div>
+                <div class="acc-tab-btn" data-pg="pg-set" data-title="${Utils.t('nav_set')}"><span>${CONST.ICONS.SETTINGS}</span>${Utils.t('nav_set')}</div>
             </div>
         `},
         switchCard: (key, data) => `
             <div class="acc-switch-card" data-key="${key}">
-                <span class="acc-card-name">👤 ${Utils.extractName(key)}</span>
+                <span class="acc-card-name">${CONST.ICONS.USER} ${Utils.extractName(key)}</span>
                 <div class="acc-card-meta">
-                    <span class="acc-mini-tag">🕒 ${data.time || 'N/A'}</span>
+                    <span class="acc-mini-tag">${data.time || 'N/A'}</span>
                     ${(data.cookies?.length || 0) ? `<span class="acc-mini-tag acc-click-tag" data-type="cookies">${Utils.t('tag_ck')}: ${data.cookies.length}</span>` : ''}
                     ${Object.keys(data.localStorage || {}).length ? `<span class="acc-mini-tag acc-click-tag" data-type="localStorage">${Utils.t('tag_ls')}: ${Object.keys(data.localStorage).length}</span>` : ''}
                     ${Object.keys(data.sessionStorage || {}).length ? `<span class="acc-mini-tag acc-click-tag" data-type="sessionStorage">${Utils.t('tag_ss')}: ${Object.keys(data.sessionStorage).length}</span>` : ''}
@@ -695,7 +708,8 @@
 
         createFab() {
             if (this.qs('#acc-mgr-fab')) { fab = this.qs('#acc-mgr-fab'); return; }
-            fab = document.createElement('div'); fab.id = 'acc-mgr-fab'; fab.innerHTML = '👤';
+            fab = document.createElement('div'); fab.id = 'acc-mgr-fab';
+            fab.innerHTML = CONST.ICONS.LOGO;
             uiRoot.appendChild(fab); // Append to Shadow Root
 
             const savedPos = GM_getValue(CONST.CFG.FAB_POS);

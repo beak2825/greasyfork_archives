@@ -3,7 +3,7 @@
 // @namespace    https://fanis.dev/userscripts
 // @author       Fanis Hatzidakis
 // @license      PolyForm-Internal-Use-1.0.0; https://polyformproject.org/licenses/internal-use/1.0.0/
-// @version      2.0.0
+// @version      2.1.0
 // @description  Tone down sensationalist titles via OpenAI API. Auto-detect + manual selectors, exclusions, per-domain configs, domain allow/deny, caching, Android-safe storage.
 // @match        *://*/*
 // @exclude      about:*
@@ -38,7 +38,7 @@
    */
 
   const CFG = {
-    model: 'gpt-4o-mini',
+    model: 'gpt-4.1-nano-priority',  // Default model (can be changed via settings)
     temperature: 0.2,
     maxBatch: 24,
     DEBUG: false,
@@ -74,6 +74,56 @@
 
   const UI_ATTR = 'data-neutralizer-ui';
 
+  // Available models with pricing
+  // Pricing source: https://openai.com/api/pricing/ (as of 2025-01-20)
+  const MODEL_OPTIONS = {
+    'gpt-5-nano': {
+      name: 'GPT-5 Nano',
+      apiModel: 'gpt-5-nano',
+      description: 'Ultra-affordable latest generation - Best value',
+      inputPer1M: 0.05,
+      outputPer1M: 0.40,
+      recommended: false,
+      priority: false
+    },
+    'gpt-5-mini': {
+      name: 'GPT-5 Mini',
+      apiModel: 'gpt-5-mini',
+      description: 'Better quality, still very affordable',
+      inputPer1M: 0.25,
+      outputPer1M: 2.00,
+      recommended: false,
+      priority: false
+    },
+    'gpt-4.1-nano-priority': {
+      name: 'GPT-4.1 Nano Priority',
+      apiModel: 'gpt-4.1-nano',
+      description: 'Fast processing, affordable - Best for headlines',
+      inputPer1M: 0.20,
+      outputPer1M: 0.80,
+      recommended: true,
+      priority: true
+    },
+    'gpt-5-mini-priority': {
+      name: 'GPT-5 Mini Priority',
+      apiModel: 'gpt-5-mini',
+      description: 'Better quality + faster processing',
+      inputPer1M: 0.45,
+      outputPer1M: 3.60,
+      recommended: false,
+      priority: true
+    },
+    'gpt-5.2-priority': {
+      name: 'GPT-5.2 Priority',
+      apiModel: 'gpt-5.2',
+      description: 'Premium quality + fastest processing (most expensive)',
+      inputPer1M: 2.50,
+      outputPer1M: 20.00,
+      recommended: false,
+      priority: true
+    }
+  };
+
   // Temperature levels mapping
   const TEMPERATURE_LEVELS = {
     'Minimal': 0.0,
@@ -106,6 +156,7 @@
     API_TOKENS: 'neutralizer_api_tokens_v1',
     PRICING: 'neutralizer_pricing_v1',
     CACHE: 'neutralizer_cache_v1',
+    MODEL: 'neutralizer_model_v1',
     OPENAI_KEY: 'OPENAI_KEY'
   };
 
@@ -122,12 +173,12 @@
     ancestors: ['footer', 'nav', 'aside', '[role="navigation"]', '.breadcrumbs', '[aria-label*="breadcrumb" i]']
   };
 
-  // Default API pricing (gpt-4o-mini as of January 2025)
+  // Default API pricing (gpt-4.1-nano-priority as of January 2025)
   const DEFAULT_PRICING = {
-    model: 'gpt-4o-mini',
-    inputPer1M: 0.15,    // USD per 1M input tokens
-    outputPer1M: 0.60,   // USD per 1M output tokens
-    lastUpdated: '2025-01-25',
+    model: 'GPT-4.1 Nano Priority',
+    inputPer1M: 0.20,    // USD per 1M input tokens
+    outputPer1M: 0.80,   // USD per 1M output tokens
+    lastUpdated: '2025-01-20',
     source: 'https://openai.com/api/pricing/'
   };
 
@@ -735,13 +786,30 @@
       ' If the headline contains a direct quote inside quotation marks (English "…", Greek «…»), keep that quoted text verbatim.' +
       ' Aim ≤ 110 characters when possible. Return ONLY a JSON array of strings, same order as input.';
 
-    const body = JSON.stringify({
-      model: CFG.model,
-      temperature: CFG.temperature,
+    // Get model config (apiModel and priority flag)
+    const modelConfig = MODEL_OPTIONS[CFG.model] || MODEL_OPTIONS['gpt-4.1-nano-priority'];
+    const apiModel = modelConfig.apiModel;
+
+    const bodyObj = {
+      model: apiModel,
       max_output_tokens: 1000,
       instructions,
       input: JSON.stringify(safeInputs)
-    });
+    };
+
+    // GPT-5 models are reasoning models - use minimal reasoning instead of temperature
+    if (apiModel.startsWith('gpt-5')) {
+      bodyObj.reasoning = { effort: 'minimal' };
+    } else {
+      bodyObj.temperature = CFG.temperature;
+    }
+
+    // Add service_tier for priority models
+    if (modelConfig.priority) {
+      bodyObj.service_tier = 'priority';
+    }
+
+    const body = JSON.stringify(bodyObj);
 
     const resText = await xhrPost('https://api.openai.com/v1/responses', body, apiHeaders(KEY));
     const payload = JSON.parse(resText);
@@ -752,9 +820,23 @@
     }
 
     const outStr = extractOutputText(payload);
+    log('API response payload:', JSON.stringify(payload).substring(0, 500));
+    log('Extracted output:', outStr ? outStr.substring(0, 200) : 'null');
+
     if (!outStr) throw Object.assign(new Error('No output_text/content from API'), { status: 400 });
-    const cleaned = outStr.replace(/^```json\s*|\s*```$/g, '');
-    const arr = JSON.parse(cleaned);
+
+    // Strip markdown code fences if present
+    const cleaned = outStr.replace(/^```json\s*|\s*```$/g, '').trim();
+
+    // Try to parse as JSON array
+    let arr;
+    try {
+      arr = JSON.parse(cleaned);
+    } catch (e) {
+      log('JSON parse failed, raw output:', cleaned.substring(0, 300));
+      throw Object.assign(new Error(`Failed to parse API response as JSON: ${e.message}`), { status: 400 });
+    }
+
     if (!Array.isArray(arr)) throw Object.assign(new Error('API did not return a JSON array'), { status: 400 });
     return arr;
   }
@@ -1343,7 +1425,7 @@
         </ol>
       </div>
       <p style="font-size:13px;color:#666;margin-top:16px"><strong>Domain control:</strong> By default, all websites are disabled. After setup, you can enable websites one by one via the menu, or toggle to "All domains with Denylist" mode to enable everywhere.</p>
-      <p style="font-size:13px;color:#666">The script uses gpt-4o-mini (cost-effective). Your key is stored locally and never shared.</p>
+      <p style="font-size:13px;color:#666">The script uses GPT-4.1 Nano Priority by default (fast processing for headlines). You can change the model anytime via the menu. Your key is stored locally and never shared.</p>
       <div class="actions">
         <button class="btn secondary cancel">Maybe Later</button>
         <button class="btn primary continue">Set Up API Key</button>
@@ -1459,6 +1541,106 @@
   }
 
   /**
+   * Show model selection dialog
+   */
+  function openModelSelectionDialog(storage, currentModel, onSelect) {
+    const host = document.createElement('div');
+    host.setAttribute(UI_ATTR, '');
+    const shadow = host.attachShadow({ mode: 'open' });
+    const style = document.createElement('style');
+    style.textContent = `
+    .wrap{position:fixed;inset:0;z-index:2147483647;background:rgba(0,0,0,.5);
+          display:flex;align-items:center;justify-content:center}
+    .modal{background:#fff;max-width:600px;width:90%;border-radius:12px;
+           box-shadow:0 10px 40px rgba(0,0,0,.3);padding:24px;box-sizing:border-box}
+    h3{margin:0 0 8px;font:600 18px/1.2 system-ui,sans-serif;color:#1a1a1a}
+    .subtitle{margin:0 0 20px;font:13px/1.4 system-ui,sans-serif;color:#666}
+    .option{padding:16px;margin:10px 0;border:2px solid #e0e0e0;border-radius:8px;
+            cursor:pointer;transition:all 0.2s;position:relative}
+    .option:hover{border-color:#1a73e8;background:#f8f9ff}
+    .option.selected{border-color:#1a73e8;background:#1a73e8;color:#fff}
+    .option-header{display:flex;justify-content:space-between;align-items:start;margin-bottom:8px}
+    .option-title{font:600 16px/1.2 system-ui,sans-serif}
+    .option-badge{font:600 10px/1.2 system-ui,sans-serif;padding:4px 8px;
+                  border-radius:4px;background:#34a853;color:#fff;text-transform:uppercase}
+    .option.selected .option-badge{background:rgba(255,255,255,0.3)}
+    .option-desc{font:13px/1.5 system-ui,sans-serif;opacity:0.85;margin-bottom:8px}
+    .option-pricing{font:12px/1.3 system-ui,sans-serif;opacity:0.7;font-family:ui-monospace,monospace}
+    .actions{display:flex;gap:8px;justify-content:flex-end;margin-top:20px}
+    .btn{padding:10px 20px;border-radius:8px;border:none;cursor:pointer;
+         font:600 14px system-ui,sans-serif}
+    .btn-save{background:#1a73e8;color:#fff}
+    .btn-save:hover{background:#1557b0}
+    .btn-cancel{background:#e0e0e0;color:#333}
+    .btn-cancel:hover{background:#d0d0d0}
+  `;
+
+    const wrap = document.createElement('div');
+    wrap.className = 'wrap';
+
+    const optionsHtml = Object.keys(MODEL_OPTIONS).map(modelId => {
+      const model = MODEL_OPTIONS[modelId];
+      const isSelected = modelId === currentModel;
+      const badge = model.recommended ? '<span class="option-badge">Recommended</span>' : '';
+      return `
+      <div class="option ${isSelected ? 'selected' : ''}" data-model="${modelId}">
+        <div class="option-header">
+          <div class="option-title">${model.name}</div>
+          ${badge}
+        </div>
+        <div class="option-desc">${model.description}</div>
+        <div class="option-pricing">$${model.inputPer1M.toFixed(2)}/1M input - $${model.outputPer1M.toFixed(2)}/1M output</div>
+      </div>
+    `;
+    }).join('');
+
+    wrap.innerHTML = `
+    <div class="modal">
+      <h3>AI Model Selection</h3>
+      <p class="subtitle">Choose the OpenAI model for headline neutralization. Higher-tier models cost more but may produce better results.</p>
+      ${optionsHtml}
+      <div class="actions">
+        <button class="btn btn-cancel">Cancel</button>
+        <button class="btn btn-save">Save & Reload</button>
+      </div>
+    </div>
+  `;
+    shadow.append(style, wrap);
+    document.body.appendChild(host);
+
+    let selectedModel = currentModel;
+
+    const options = shadow.querySelectorAll('.option');
+    options.forEach(opt => {
+      opt.addEventListener('click', () => {
+        options.forEach(o => o.classList.remove('selected'));
+        opt.classList.add('selected');
+        selectedModel = opt.dataset.model;
+      });
+    });
+
+    const btnSave = shadow.querySelector('.btn-save');
+    const btnCancel = shadow.querySelector('.btn-cancel');
+
+    const close = () => host.remove();
+
+    btnSave.addEventListener('click', async () => {
+      if (!MODEL_OPTIONS[selectedModel]) return;
+      await onSelect(selectedModel);
+      btnSave.textContent = 'Saved! Reloading...';
+      btnSave.style.background = '#34a853';
+      setTimeout(() => location.reload(), 800);
+    });
+
+    btnCancel.addEventListener('click', close);
+    wrap.addEventListener('click', e => { if (e.target === wrap) close(); });
+    shadow.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+
+    wrap.setAttribute('tabindex', '-1');
+    wrap.focus();
+  }
+
+  /**
    * Show API pricing configuration dialog
    */
   function openPricingDialog(storage, PRICING, updatePricing, resetPricingToDefaults, openInfo) {
@@ -1548,9 +1730,9 @@
     });
 
     btnReset.addEventListener('click', async () => {
-      if (confirm('Reset pricing to gpt-4o-mini defaults ($0.15 input, $0.60 output per 1M tokens)?')) {
+      if (confirm('Reset pricing to GPT-4.1 Nano Priority defaults ($0.20 input, $0.80 output per 1M tokens)?')) {
         await resetPricingToDefaults(storage);
-        openInfo('Pricing reset to defaults (gpt-4o-mini: $0.15 input, $0.60 output per 1M tokens)');
+        openInfo('Pricing reset to defaults (GPT-4.1 Nano Priority: $0.20 input, $0.80 output per 1M tokens)');
         close();
       }
     });
@@ -2547,7 +2729,7 @@
   // @namespace    https://fanis.dev/userscripts
   // @author       Fanis Hatzidakis
   // @license      PolyForm-Internal-Use-1.0.0; https://polyformproject.org/licenses/internal-use/1.0.0/
-  // @version      1.8.0
+  // @version      2.1.0
   // @description  Tone down sensationalist titles via OpenAI API. Auto-detect + manual selectors, exclusions, per-domain configs, domain allow/deny, caching, Android-safe storage.
   // @match        *://*/*
   // @exclude      about:*
@@ -2567,6 +2749,11 @@
 
 
   (async () => {
+    
+    // Only run in top-level window, not in iframes
+    if (window.self !== window.top) {
+        return;
+    }  
 
     const HOST = location.hostname;
     const storage = new Storage();
@@ -2605,6 +2792,14 @@
       }
     } catch {}
 
+    // Load model setting
+    try {
+      const v = await storage.get(STORAGE_KEYS.MODEL, '');
+      if (v !== '' && MODEL_OPTIONS[v]) {
+        CFG.model = v;
+      }
+    } catch {}
+
     // Settings functions
     async function setDebug(on) { CFG.DEBUG = !!on; await storage.set(STORAGE_KEYS.DEBUG, String(CFG.DEBUG)); location.reload(); }
     async function setAutoDetect(on) { CFG.autoDetect = !!on; await storage.set(STORAGE_KEYS.AUTO_DETECT, String(CFG.autoDetect)); location.reload(); }
@@ -2615,6 +2810,20 @@
       CFG.temperature = TEMPERATURE_LEVELS[level];
       await storage.set(STORAGE_KEYS.TEMPERATURE, level);
       location.reload();
+    }
+    async function setModel(modelId) {
+      if (!MODEL_OPTIONS[modelId]) return;
+      CFG.model = modelId;
+      await storage.set(STORAGE_KEYS.MODEL, modelId);
+      // Update pricing to match selected model
+      const modelConfig = MODEL_OPTIONS[modelId];
+      await updatePricing(storage, {
+        model: modelConfig.name,
+        inputPer1M: modelConfig.inputPer1M,
+        outputPer1M: modelConfig.outputPer1M
+      });
+      // Clear cache when model changes
+      await cache.clear();
     }
 
     // Domain mode + lists
@@ -2825,6 +3034,7 @@
         }
       });
     });
+    GM_registerMenuCommand?.(`AI model (${MODEL_OPTIONS[CFG.model]?.name || CFG.model})`, () => openModelSelectionDialog(storage, CFG.model, setModel));
     GM_registerMenuCommand?.('Configure API pricing', () => openPricingDialog(storage, PRICING, updatePricing, resetPricingToDefaults, openInfo));
 
     GM_registerMenuCommand?.('Edit GLOBAL target selectors', () => {

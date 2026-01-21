@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        WME WazeMY
 // @namespace   https://www.github.com/junyian/
-// @version     2026.01.13.1
+// @version     2026.01.19.1
 // @author      junyianl <junyian@gmail.com>
 // @source      https://github.com/junyian/wme-wazemy
 // @license     MIT
@@ -719,6 +719,8 @@ function showTooltip() {
     });
     // Manual check of settings because unregistering event is not working.
     if ($("#wazemySettings_tooltip_enable").prop("checked") === true) {
+        // W. object: SDK lacks feature query API for highlighted rendering
+        // Alternative would require re-architecting tooltip to use selection events
         const landmark = W.map.venueLayer.getFeatureBy("renderIntent", "highlight");
         const segment = W.map.segmentLayer.getFeatureBy("renderIntent", "highlight");
         if (landmark) {
@@ -792,13 +794,14 @@ function showTooltip() {
                 let tooltipX = pixel.x + window.scrollX + 15;
                 let tooltipY = pixel.y + window.scrollY + 15;
                 // Handle cases where tooltip is too near the edge.
-                if (tooltipX + tw > W.map.$map.innerWidth()) {
+                const mapElement = sdk.Map.getMapViewportElement();
+                if (tooltipX + tw > mapElement.offsetWidth) {
                     tooltipX -= tw + 20; // 20 = scroll bar size
                     if (tooltipX < 0) {
                         tooltipX = 0;
                     }
                 }
-                if (tooltipY + th > W.map.$map.innerHeight()) {
+                if (tooltipY + th > mapElement.offsetHeight) {
                     tooltipY -= th + 20;
                     if (tooltipY < 0) {
                         tooltipY = 0;
@@ -884,6 +887,10 @@ class PluginCopyLatLon {
 
 class PluginTrafficCameras {
     constructor() {
+        this.sdk = unsafeWindow.getWmeSdk({
+            scriptId: "wme-wazemy-trafcam",
+            scriptName: "WazeMY",
+        });
         this.initialize();
     }
     initialize() {
@@ -1024,9 +1031,9 @@ class PluginTrafficCameras {
         const camIcon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAAGXcA1uAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYxIDY0LjE0MDk0OSwgMjAxMC8xMi8wNy0xMDo1NzowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDpBRDNGNTkwRTYzQThFMzExQTc4MDhDNjAwODdEMzdEQSIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDo2OUI0RUEyN0IwRjcxMUUzOERFM0E1OTJCRUY3NTFBOCIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDo2OUI0RUEyNkIwRjcxMUUzOERFM0E1OTJCRUY3NTFBOCIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1LjEgV2luZG93cyI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjZGOEJBMzExNkZCMEUzMTFCOEY5QTU3QUQxM0M2MjI5IiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOkFEM0Y1OTBFNjNBOEUzMTFBNzgwOEM2MDA4N0QzN0RBIi8+IDwvcmRmOkRlc2NyaXB0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";
         const size = new OpenLayers.Size(20, 20);
         const icon = new OpenLayers.Icon(camIcon, size);
-        const epsg4326 = new OpenLayers.Projection("EPSG:4326"); // WGS 1984 projection. Malaysia uses EPSG:900913
-        const projectTo = W.map.getProjectionObject();
-        const lonLat = new OpenLayers.LonLat(spec.lon, spec.lat).transform(epsg4326, projectTo);
+        const epsg4326 = new OpenLayers.Projection("EPSG:4326"); // WGS 1984 projection
+        const webMercator = new OpenLayers.Projection("EPSG:900913"); // Web Mercator projection used by WME
+        const lonLat = new OpenLayers.LonLat(spec.lon, spec.lat).transform(epsg4326, webMercator);
         const newMarker = new OpenLayers.Marker(lonLat, icon);
         newMarker.idx = spec.idx;
         newMarker.title = spec.desc;
@@ -1054,17 +1061,23 @@ class PluginTrafficCameras {
                 <tr><td colspan=2><div id="mycamstatus"></div></td></tr>
             </table></div>`;
         document.body.insertAdjacentHTML("afterbegin", popupHTML);
+        // Get SDK instance for map viewport
+        const sdk = unsafeWindow.getWmeSdk({
+            scriptId: "wme-wazemy-trafcam",
+            scriptName: "WazeMY",
+        });
         // Handle cases where popup is too near the edge.
         let tw = $("#gmPopupContainerCam").width();
         let th = $("#gmPopupContainerCam").height() + 200;
         var tooltipX = e.clientX + window.scrollX + 15;
         var tooltipY = e.clientY + window.scrollY + 15;
-        if (tooltipX + tw > W.map.$map.innerWidth()) {
+        const mapElement = sdk.Map.getMapViewportElement();
+        if (tooltipX + tw > mapElement.offsetWidth) {
             tooltipX -= tw + 20; // 20 = scroll bar size
             if (tooltipX < 0)
                 tooltipX = 0;
         }
-        if (tooltipY + th > W.map.$map.innerHeight()) {
+        if (tooltipY + th > mapElement.offsetHeight) {
             tooltipY -= th + 20;
             if (tooltipY < 0)
                 tooltipY = 0;
@@ -1271,6 +1284,10 @@ class PluginKVMR {
                 color: "#ff0033",
             },
         ];
+        this.sdk = unsafeWindow.getWmeSdk({
+            scriptId: "wme-wazemy-kvmr",
+            scriptName: "WazeMY",
+        });
         this.initialize();
     }
     initialize() {
@@ -1294,65 +1311,28 @@ class PluginKVMR {
             });
         };
         // Add MR polygon overlay.
-        const mro_Map = W.map;
-        const mro_OL = OpenLayers;
-        // const mro_mapLayers = mro_Map.getLayersBy("uniqueName", "__KlangValley");
-        this.raid_mapLayer = new mro_OL.Layer.Vector("KlangValley", {
+        this.raid_mapLayer = new OpenLayers.Layer.Vector("KlangValley", {
             displayInLayerSwitcher: true,
             uniqueName: "__KlangValley",
         });
-        mro_Map.addLayer(this.raid_mapLayer);
+        // W. object: Complex polygon vector layer with custom styling
+        // SDK layer system is designed for GeoJSON; refactoring would have low ROI
+        W.map.addLayer(this.raid_mapLayer);
+        // Register layer for cross-plugin access
+        PluginManager.instance.registerLayer("__KlangValley", this.raid_mapLayer);
         this.areas.forEach((area) => {
             const geometry = parseWKT(area.geometry);
             this.addRaidPolygon(this.raid_mapLayer, geometry, area.color, area.name);
         });
-        mro_Map.events.register("moveend", W.map, function () {
-            currentRaidLocation();
-        });
-        mro_Map.events.register("zoomend", W.map, function () {
-            currentRaidLocation();
+        // Create event handler reference for cleanup
+        this.handleMapUpdate = () => this.currentRaidLocation();
+        // Register SDK events for map updates
+        // Note: wme-map-move-end fires after both panning and zooming
+        this.sdk.Events.on({
+            eventName: "wme-map-move-end",
+            eventHandler: this.handleMapUpdate,
         });
         console.log("PluginKVMR initialized.");
-        /**
-         * Updates the current raid location on the map based on the user's current location.
-         *
-         * @return {void} This function does not return anything.
-         */
-        function currentRaidLocation() {
-            // Only run if the plugin is enabled. Workaround because unregistering events doesn't work.
-            if ($("#wazemySettings_kvmr_enable").is(":checked") === false) {
-                return;
-            }
-            var mro_Map = W.map;
-            const mro_mapLayers = mro_Map.getLayersBy("uniqueName", "__KlangValley")[0];
-            for (let i = 0; i < mro_mapLayers.features?.length; i++) {
-                var raidMapCenter = mro_Map.getCenter();
-                var raidCenterPoint = new OpenLayers.Geometry.Point(raidMapCenter.lon, raidMapCenter.lat);
-                const raid_mapLayer = mro_Map.getLayersBy("uniqueName", "__KlangValley")[0];
-                var raidCenterCheck = raid_mapLayer.features[i].geometry.components[0].containsPoint(raidCenterPoint);
-                var holes = raid_mapLayer.features[i].attributes.holes;
-                if (raidCenterCheck === true) {
-                    var str = $("#topbar-container > div > div.location-info-region > div").text();
-                    const location = str.split(" - ");
-                    if (location.length > 1) {
-                        location[1] =
-                            "Klang Valley MapRaid " +
-                                raid_mapLayer.features[i].attributes.number;
-                    }
-                    else {
-                        location.push("Klang Valley MapRaid " +
-                            raid_mapLayer.features[i].attributes.number);
-                    }
-                    const raidLocationLabel = location.join(" - ");
-                    setTimeout(function () {
-                        $("#topbar-container > div > div.location-info-region > div").text(raidLocationLabel);
-                    }, 200);
-                    if (holes === "false") {
-                        break;
-                    }
-                }
-            }
-        }
         function parseWKT(wkt) {
             let trimmed;
             if (wkt.startsWith("POLYGON")) {
@@ -1366,15 +1346,56 @@ class PluginKVMR {
             return coordinates;
         }
     }
+    /**
+     * Updates the current raid location on the map based on the user's current location.
+     *
+     * @return {void} This function does not return anything.
+     */
+    currentRaidLocation() {
+        // Only run if the plugin is enabled. Workaround because unregistering events doesn't work.
+        if ($("#wazemySettings_kvmr_enable").is(":checked") === false) {
+            return;
+        }
+        for (let i = 0; i < this.raid_mapLayer.features?.length; i++) {
+            // W. object: Using W.map.getCenter() for map center in Web Mercator coordinates
+            // Used for polygon containment check with OpenLayers geometry
+            var raidMapCenter = W.map.getCenter();
+            var raidCenterPoint = new OpenLayers.Geometry.Point(raidMapCenter.lon, raidMapCenter.lat);
+            var raidCenterCheck = this.raid_mapLayer.features[i].geometry.components[0].containsPoint(raidCenterPoint);
+            var holes = this.raid_mapLayer.features[i].attributes.holes;
+            if (raidCenterCheck === true) {
+                var str = $("#topbar-container > div > div.location-info-region > div").text();
+                const location = str.split(" - ");
+                if (location.length > 1) {
+                    location[1] =
+                        "Klang Valley MapRaid " +
+                            this.raid_mapLayer.features[i].attributes.number;
+                }
+                else {
+                    location.push("Klang Valley MapRaid " +
+                        this.raid_mapLayer.features[i].attributes.number);
+                }
+                const raidLocationLabel = location.join(" - ");
+                setTimeout(function () {
+                    $("#topbar-container > div > div.location-info-region > div").text(raidLocationLabel);
+                }, 200);
+                if (holes === "false") {
+                    break;
+                }
+            }
+        }
+    }
     enable() {
         this.raid_mapLayer.setVisibility(true);
         console.log("PluginKVMR enabled.");
     }
     disable() {
         this.raid_mapLayer.setVisibility(false);
-        const mro_map = W.map;
-        mro_map.events.unregister("moveend", W.map);
-        mro_map.events.unregister("zoomend", W.map);
+        // Unregister SDK events
+        this.sdk.Events.off({
+            eventName: "wme-map-move-end",
+            eventHandler: this.handleMapUpdate,
+        });
         console.log("PluginKVMR disabled.");
     }
     updateSettings(settings) {
@@ -1387,8 +1408,6 @@ class PluginKVMR {
         console.log("PluginKVMR settings updated", settings);
     }
     addRaidPolygon(raidLayer, groupPoints, groupColor, groupNumber) {
-        var mro_Map = W.map;
-        var mro_OL = OpenLayers;
         var raidGroupLabel = "KlangValley " + groupNumber;
         var groupName = "RaidGroup " + groupNumber;
         var style = {
@@ -1410,14 +1429,16 @@ class PluginKVMR {
             number: groupNumber,
         };
         var pnt = [];
+        const wgs84 = new OpenLayers.Projection("EPSG:4326");
+        const webMercator = new OpenLayers.Projection("EPSG:900913");
         for (let i = 0; i < groupPoints.length; i++) {
-            const convPoint = new OpenLayers.Geometry.Point(groupPoints[i].lon, groupPoints[i].lat).transform(new OpenLayers.Projection("EPSG:4326"), mro_Map.getProjectionObject());
+            const convPoint = new OpenLayers.Geometry.Point(groupPoints[i].lon, groupPoints[i].lat).transform(wgs84, webMercator);
             //console.log('MapRaid: ' + JSON.stringify(groupPoints[i]) + ', ' + groupPoints[i].lon + ', ' + groupPoints[i].lat);
             pnt.push(convPoint);
         }
-        var ring = new mro_OL.Geometry.LinearRing(pnt);
-        var polygon = new mro_OL.Geometry.Polygon([ring]);
-        var feature = new mro_OL.Feature.Vector(polygon, attributes, style);
+        var ring = new OpenLayers.Geometry.LinearRing(pnt);
+        var polygon = new OpenLayers.Geometry.Polygon([ring]);
+        var feature = new OpenLayers.Feature.Vector(polygon, attributes, style);
         raidLayer.addFeatures([feature]);
     }
 }
@@ -1666,30 +1687,34 @@ class PluginPlaces {
             sidebarResult.tabLabel.title = "WazeMY Places";
             sidebarResult.tabPane.innerHTML = this.tabHTML;
             // Populate select options with polygons from KVMR.
-            const map = W.map.getLayersBy("uniqueName", "__KlangValley");
-            map[0].features.forEach((feature) => {
-                $("#wazemyPlaces_polygons").append($("<option>", {
-                    value: feature.data.number,
-                    text: feature.data.number,
-                }));
-            });
+            const kvmrLayer = PluginManager.instance.getLayer("__KlangValley");
+            if (kvmrLayer) {
+                kvmrLayer.features.forEach((feature) => {
+                    $("#wazemyPlaces_polygons").append($("<option>", {
+                        value: feature.data.number,
+                        text: feature.data.number,
+                    }));
+                });
+            }
             // Handle Scan button.
             $("#wazemyPlaces_scan").on("click", async () => {
                 $("#wazemyPlaces_scanStatus").text("Scanning tiles.");
                 $("#wazemyPlaces_venues > tbody").empty();
-                const map = W.map.getLayersBy("uniqueName", "__KlangValley");
-                if (map.length === 0) {
+                const kvmrLayer = PluginManager.instance.getLayer("__KlangValley");
+                if (!kvmrLayer) {
                     console.log("[PluginPlaces] No KVMR layer found. Aborting scan.");
                     return false;
                 }
-                const mr = map[0].getFeaturesByAttribute("number", $("#wazemyPlaces_polygons option:selected")[0].innerText);
+                const mr = kvmrLayer.getFeaturesByAttribute("number", $("#wazemyPlaces_polygons option:selected")[0].innerText);
                 if (mr.length === 0) {
                     console.log("[PluginPlaces] No polygon found. Aborting scan.");
                     return false;
                 }
                 const feature = mr[0];
                 let bounds = feature.geometry.getBounds().clone();
-                bounds = bounds.transform(W.map.getProjectionObject(), "EPSG:4326");
+                const webMercator = new OpenLayers.Projection("EPSG:900913");
+                const wgs84 = new OpenLayers.Projection("EPSG:4326");
+                bounds = bounds.transform(webMercator, wgs84);
                 const venues = await getAllVenues(bounds);
                 let purCount = 0;
                 let totalCount = 0;
@@ -1713,8 +1738,12 @@ class PluginPlaces {
                         row.attr("id", `${lon}:${lat}:${venue.id}`);
                         row.on("click", (e) => {
                             const target = e.currentTarget.id.split(":"); // split to lon:lat:id
-                            const xy = OpenLayers.Layer.SphericalMercator.forwardMercator(parseFloat(target[0]), parseFloat(target[1]));
-                            W.map.setCenter(xy);
+                            this.sdk.Map.setMapCenter({
+                                lonLat: {
+                                    lon: parseFloat(target[0]),
+                                    lat: parseFloat(target[1]),
+                                },
+                            });
                         });
                         let purHTML = ``;
                         if (isPUR) {
@@ -2236,6 +2265,7 @@ class PluginFactory {
 class PluginManager {
     constructor(settings) {
         this.plugins = {};
+        this.layerRegistry = new Map();
         this.settingsStorage = settings;
     }
     /**
@@ -2300,13 +2330,32 @@ class PluginManager {
             this.settingsStorage.updateSetting(key, settings);
         }
     }
+    /**
+     * Registers a layer in the layer registry for cross-plugin access.
+     *
+     * @param {string} name - The unique name of the layer.
+     * @param {any} layer - The layer object to register.
+     * @return {void} This function does not return anything.
+     */
+    registerLayer(name, layer) {
+        this.layerRegistry.set(name, layer);
+    }
+    /**
+     * Retrieves a layer from the layer registry.
+     *
+     * @param {string} name - The unique name of the layer.
+     * @return {any} The layer object, or undefined if not found.
+     */
+    getLayer(name) {
+        return this.layerRegistry.get(name);
+    }
 }
 PluginManager.instance = new PluginManager(SettingsStorage.instance);
 
 ;// ./src/index.ts
 
 
-const updateMessage = `Version 2026.01.13.1: Fixed full-size image display for Place Update Requests (PURs) by fetching via blob URL and displaying in a modal popup.`;
+const updateMessage = `Version 2026.01.19.1: Migrated from W. object to WME SDK equivalents. Increased SDK adoption from ~20% to ~80%, reducing direct W. object usage from 22 to 4 instances.`;
 var sdk;
 console.log("[WazeMY] Script started");
 unsafeWindow.SDK_INITIALIZED.then(initScript);

@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         Marte - itch.io Power Suite
 // @namespace    http://tampermonkey.net/
-// @version      3.2
-// @description  Silent pages, fix images, block users/games. Includes Import/Export & Manager.
-// @author       00FACE/Armando Cornaglia
+// @version      4.2
+// @description  Silent pages, fix images, block users/games/tags. Includes Import/Export & Manager.
+// @author       Armando Cornaglia
 // @license      MIT
 // @match        https://itch.io/*
 // @match        https://*.itch.io/*
@@ -16,21 +16,20 @@
 // @updateURL https://update.greasyfork.org/scripts/563198/Marte%20-%20itchio%20Power%20Suite.meta.js
 // ==/UserScript==
 
-// Notes: Figure out why tags don't work for filtering.
-
 (function() {
     'use strict';
 
-    console.log("Marte: Sandbox Mode Initialized.");
+    console.log("Marte v2.0: Tag Filtering Engine Online.");
 
-    const STORAGE_KEY = 'marte_data_v1';
+    const STORAGE_KEY = 'marte_data_v2';
 
     let state;
     try {
-        state = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{"games":[], "users":[], "comments":[]}');
+        const raw = localStorage.getItem(STORAGE_KEY) || localStorage.getItem('marte_data_v1') || '{"games":[], "users":[], "comments":[], "tags":[]}';
+        state = JSON.parse(raw);
+        if (!state.tags) state.tags = [];
     } catch (e) {
-        console.error("Marte: Storage read error", e);
-        state = {games: [], users: [], comments: []};
+        state = {games: [], users: [], comments: [], tags: []};
     }
 
     let isLoading = false;
@@ -56,7 +55,7 @@
         #marte-heart.active { transform: rotate(45deg); background: #333; }
 
         #marte-panel {
-            position: fixed; bottom: 70px; right: 20px; width: 240px;
+            position: fixed; bottom: 70px; right: 20px; width: 250px;
             background: #1a1a1a; border: 1px solid #333; color: #ccc;
             border-radius: 8px; font-family: sans-serif;
             font-size: 13px; z-index: 2147483646;
@@ -71,8 +70,18 @@
             display: flex; justify-content: space-between; align-items: center;
         }
         .marte-body { padding: 15px; }
-        .marte-row { display: flex; justify-content: space-between; margin-bottom: 8px; color: #888; }
+        .marte-row { display: flex; justify-content: space-between; margin-bottom: 6px; color: #888; font-size: 12px; }
         .marte-val { color: #fff; font-family: monospace; font-weight: bold; }
+
+        .marte-input-group { display: flex; gap: 5px; margin-bottom: 10px; margin-top: 10px; border-top: 1px solid #333; padding-top: 10px; }
+        #marte-tag-input {
+            flex: 1; background: #333; border: 1px solid #444; color: #fff;
+            padding: 5px; border-radius: 4px; font-size: 12px;
+        }
+        #marte-add-tag-btn {
+            background: #fa5c5c; color: white; border: none; padding: 0 10px;
+            border-radius: 4px; cursor: pointer; font-weight: bold;
+        }
 
         .marte-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
         .marte-btn {
@@ -154,6 +163,9 @@
 
         const elComments = document.getElementById('marte-stat-comments');
         if(elComments) elComments.innerText = state.comments.length;
+
+        const elTags = document.getElementById('marte-stat-tags');
+        if(elTags) elTags.innerText = state.tags.length;
     }
 
     const refreshManagerList = (tab) => {
@@ -166,6 +178,7 @@
         if (tab === 'games') data = state.games;
         else if (tab === 'users') data = state.users;
         else if (tab === 'comments') data = state.comments;
+        else if (tab === 'tags') data = state.tags;
 
         if (data.length === 0) {
             listEl.innerHTML = '<li class="marte-item" style="justify-content:center; color:#666;">List is empty</li>';
@@ -187,6 +200,10 @@
             } else if (tab === 'users') {
                 label = item.slug;
                 idToRemove = item.slug;
+            } else if (tab === 'tags') {
+                label = item;
+                meta = 'Filtered Tag';
+                idToRemove = item;
             } else {
                 label = `Comment #${item}`;
                 idToRemove = item;
@@ -200,6 +217,7 @@
             li.querySelector('.marte-unhide').onclick = () => {
                 if (tab === 'games') unhideGame(idToRemove);
                 else if (tab === 'users') unblockUser(idToRemove);
+                else if (tab === 'tags') unblockTag(idToRemove);
                 else unhideComment(idToRemove);
             };
 
@@ -213,7 +231,6 @@
             saveState();
         }
     }
-
     function unhideGame(id) {
         state.games = state.games.filter(g => g.id !== id);
         saveState();
@@ -226,7 +243,6 @@
             saveState();
         }
     }
-
     function unblockUser(slug) {
         state.users = state.users.filter(u => u.slug !== slug);
         saveState();
@@ -239,11 +255,23 @@
             saveState();
         }
     }
-
     function unhideComment(id) {
         state.comments = state.comments.filter(c => c !== id);
         saveState();
         refreshManagerList('comments');
+    }
+
+    function blockTag(tag) {
+        const t = tag.toLowerCase().trim();
+        if(t && !state.tags.includes(t)) {
+            state.tags.push(t);
+            saveState();
+        }
+    }
+    function unblockTag(tag) {
+        state.tags = state.tags.filter(t => t !== tag);
+        saveState();
+        refreshManagerList('tags');
     }
 
     function exportSettings() {
@@ -251,6 +279,7 @@
         const header = `# Marte Blocklist Export (${dateStr})\n\n`;
         const humanReadable =
             `### Users Blocked (${state.users.length})\n` + state.users.map(u => `- ${u.slug}`).join('\n') +
+            `\n\n### Tags Blocked (${state.tags.length})\n` + state.tags.map(t => `- ${t}`).join('\n') +
             `\n\n### Games Hidden (${state.games.length})\n` + state.games.map(g => `- ${g.title} (ID: ${g.id})`).join('\n');
 
         const rawData = `\n\n---\n\n${JSON.stringify(state)}\n`;
@@ -270,7 +299,6 @@
             const text = e.target.result;
             const startMarker = '';
             const endMarker = '';
-
             const startIndex = text.indexOf(startMarker);
             const endIndex = text.indexOf(endMarker);
 
@@ -278,19 +306,18 @@
                 try {
                     const jsonStr = text.substring(startIndex + startMarker.length, endIndex).trim();
                     const importedState = JSON.parse(jsonStr);
-
                     importedState.users.forEach(u => blockUser(u.slug));
                     importedState.games.forEach(g => hideGame(g.id, g.title));
                     importedState.comments.forEach(c => hideComment(c));
+                    if(importedState.tags) importedState.tags.forEach(t => blockTag(t));
 
                     alert('Marte: Import Successful!');
                     location.reload();
                 } catch (err) {
                     alert('Marte: Error parsing import file.');
-                    console.error(err);
                 }
             } else {
-                alert('Marte: Invalid file format. Markers not found.');
+                alert('Marte: Invalid file format.');
             }
         };
         reader.readAsText(file);
@@ -315,16 +342,29 @@
         return null;
     }
 
+    function getGameTags(node) {
+        let tags = [];
+        const tagLinks = node.querySelectorAll('.cell_tags a');
+        tagLinks.forEach(a => tags.push(a.innerText.toLowerCase().replace('#', '').trim()));
+
+        const genre = node.querySelector('.game_genre');
+        if (genre) tags.push(genre.innerText.toLowerCase().trim());
+
+        return tags;
+    }
+
     function processGame(node) {
         const id = node.getAttribute('data-game_id');
         const author = getAuthor(node, 'game');
         const titleEl = node.querySelector('.title');
         const title = titleEl ? titleEl.innerText : 'Unknown';
+        const gameTags = getGameTags(node);
 
         const isGameBlocked = state.games.some(g => g.id === id);
         const isUserBlocked = author && state.users.some(u => u.slug === author);
+        const isTagBlocked = gameTags.some(t => state.tags.includes(t));
 
-        if (isGameBlocked || isUserBlocked) node.classList.add('marte-hidden');
+        if (isGameBlocked || isUserBlocked || isTagBlocked) node.classList.add('marte-hidden');
         else node.classList.remove('marte-hidden');
 
         const tools = node.querySelector('.cell_tools, .game_cell_tools');
@@ -396,7 +436,6 @@
     }
 
     function findMainGrid() {
-
         const allCells = document.querySelectorAll('.game_cell');
         if (allCells.length === 0) return null;
         const parentCounts = new Map();
@@ -448,9 +487,8 @@
                 setTimeout(fetchNext, 1000);
             }
         } catch (e) {
-            console.error('Marte Loader Error', e);
             stopLoading = true;
-            btn.innerText = 'Error (Click to Retry)';
+            btn.innerText = 'Error (Retry)';
             isLoading = false;
             btn.classList.remove('loading');
         }
@@ -479,11 +517,17 @@
     const panel = document.createElement('div');
     panel.id = 'marte-panel';
     panel.innerHTML = `
-        <div class="marte-header">Marte <span style="font-size:10px; color:#666">v1.4</span></div>
+        <div class="marte-header">Marte <span style="font-size:10px; color:#666">v2.0</span></div>
         <div class="marte-body">
             <div class="marte-row"><span>Hidden Games</span> <span id="marte-stat-games" class="marte-val">0</span></div>
             <div class="marte-row"><span>Blocked Users</span> <span id="marte-stat-users" class="marte-val">0</span></div>
             <div class="marte-row"><span>Hidden Comments</span> <span id="marte-stat-comments" class="marte-val">0</span></div>
+            <div class="marte-row"><span>Filtered Tags</span> <span id="marte-stat-tags" class="marte-val">0</span></div>
+
+            <div class="marte-input-group">
+                <input type="text" id="marte-tag-input" placeholder="Tag to block (e.g. horror)">
+                <button id="marte-add-tag-btn">+</button>
+            </div>
 
             <div class="marte-actions">
                 <button id="marte-load-btn" class="marte-btn primary">Start Silent Load</button>
@@ -506,6 +550,7 @@
             <div class="marte-modal-tabs">
                 <div class="marte-tab active" data-tab="games">Games</div>
                 <div class="marte-tab" data-tab="users">Users</div>
+                <div class="marte-tab" data-tab="tags">Tags</div>
                 <div class="marte-tab" data-tab="comments">Comments</div>
             </div>
             <ul class="marte-list" id="marte-manager-list"></ul>
@@ -530,6 +575,16 @@
     document.getElementById('marte-export-btn').onclick = exportSettings;
     document.getElementById('marte-import-btn').onclick = () => document.getElementById('marte-file-input').click();
     document.getElementById('marte-file-input').onchange = (e) => importSettings(e.target.files[0]);
+
+    const tagInput = document.getElementById('marte-tag-input');
+    const tagBtn = document.getElementById('marte-add-tag-btn');
+    tagBtn.onclick = () => {
+        const val = tagInput.value;
+        if(val) { blockTag(val); tagInput.value = ''; }
+    };
+    tagInput.onkeypress = (e) => {
+        if(e.key === 'Enter') { blockTag(tagInput.value); tagInput.value = ''; }
+    };
 
     const modalOverlay = document.getElementById('marte-modal-overlay');
     document.getElementById('marte-manage-btn').onclick = () => {

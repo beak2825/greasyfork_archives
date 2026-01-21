@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         Irongete Helper
 // @namespace    http://tampermonkey.net/
-// @version      1.2
+// @version      1.3
 // @description  Product filter for irongete haven market page
-// @author       Black Beard
+// @author       Black Beard & Hillary
 // @match        https://irongete.com/haven/trade*
 // @match        https://irongete.com/haven/trade/*
 // @match        http://brodgar.io/trade/*
@@ -31,9 +31,9 @@
     const getHeaderNode = (itm, name) => {
         switch (name) {
             case 'product':
-                return itm.childNodes[3].lastChild.textContent;
+                return itm.childNodes[7].lastChild.textContent;
             case 'price':
-                return itm.childNodes[4].lastChild.previousSibling.textContent;
+                return itm.childNodes[9].lastChild.previousSibling.previousSibling.textContent;
         }
     }
 
@@ -87,7 +87,7 @@
 
     const oldSearch = document.querySelector("#table-search");
     const products = document.querySelector("#products");
-    const allProducts = products.childNodes[1].childNodes;
+    const allProducts = products.childNodes[3].childNodes;
 
     const myFilter = document.createElement("input");
     myFilter.type = 'text';
@@ -98,7 +98,7 @@
     oldSearch.parentNode.insertBefore(myFilter, oldSearch);
     const search = document.querySelector("#myFilter");
 
-    search.onkeydown = function(evt) {
+    search.onkeyup = function(evt) {
         // evt.preventDefault();
         // console.log("fltr", evt);
         const filters = updateFilters(evt.currentTarget.value);

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         98手机网页浏览助手
 // @namespace    http://tampermonkey.net/
-// @version      1.5
+// @version      1.7
 // @description  只适用于手机网页版的98手机网页浏览助手
 // @author       bbbyqq
 // @license      MIT
@@ -330,13 +330,41 @@
   // 只在帖子页面生效
   if (location.href.includes('forum.php')) {
     document.querySelectorAll('.blockbtn').forEach(btn => {
-      btn?.addEventListener('click', () => {
-        const id = btn.getAttribute('data-clipboard-target')
+      const targetId = btn.getAttribute('data-clipboard-target')
+      const targetEl = document.querySelector(targetId)
+      const container = targetEl.parentNode
+
+      // ===== 页面加载时就判断 li a 是否存在 =====
+      let linkList = container.querySelectorAll('li a')
+
+      // ===== 如果不存在，则给每个 li 补 a 标签 =====
+      if (!linkList || linkList.length === 0) {
+        container.querySelectorAll('li').forEach(li => {
+          const text = li.innerText.trim()
+          if (!text) return
+
+          const a = document.createElement('a')
+          a.href = text
+          a.innerText = text
+          a.style.cssText = `
+            color: inherit;
+            text-decoration: none;
+          `
+
+          li.innerHTML = ''
+          li.appendChild(a)
+        })
+      }
+
+      // ===== 点击复制 =====
+      btn.addEventListener('click', () => {
         const code = []
-        document.querySelector(id).parentNode.querySelectorAll('li a').forEach(item => {
+        container.querySelectorAll('li a').forEach(item => {
           code.push(item.innerText)
         })
+
         const codeText = code.join('\n')
+
         setTimeout(() => {
           copyContent(codeText)
         }, 500)
@@ -785,6 +813,41 @@
         }, 1000)
       }
     }
+  }
+
+  /**
+   * 98手机网页版 - 置顶按钮修复
+   *
+   * @author: bbbyqq
+   * @date: 2026-01-21
+   * @description: 解决98手机网页版浏览帖子页面置顶按钮失效问题
+   */
+
+  // 只在帖子页面生效
+  if (location.href.includes('forum.php')) {
+    document.addEventListener('click', e => {
+      const btn = e.target.closest('a.scrolltop')
+      if (!btn) return
+
+      // 阻止原站点的点击逻辑
+      e.preventDefault()
+      e.stopPropagation()
+
+      // 返回顶部
+      if (!btn.classList.contains('bottom')) {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        })
+      }
+      // 返回底部
+      else {
+        window.scrollTo({
+          top: document.documentElement.scrollHeight,
+          behavior: 'smooth'
+        })
+      }
+    }, true)
   }
 
 })()

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Instagram Reels Volume Control
 // @namespace    http://tampermonkey.net/
-// @version      4.3
+// @version      5.1
 // @description  Нативный контроль громкости, перемотка и скорость в Instagram Reels
 // @author       You
 // @match        https://www.instagram.com/*
@@ -12,13 +12,14 @@
 // @updateURL https://update.greasyfork.org/scripts/562892/Instagram%20Reels%20Volume%20Control.meta.js
 // ==/UserScript==
 
-(function() {
+(function () {
     'use strict';
 
     let savedVolume = GM_getValue('reelsVolume', 0.5);
     let savedSpeed = GM_getValue('reelsSpeed', 1);
     const processedVideos = new WeakSet();
     const processedContainers = new WeakSet();
+    const processedComments = new WeakSet();
     const videoControls = new WeakMap();
 
     const style = document.createElement('style');
@@ -340,13 +341,13 @@
 
         updateSpeedButton(video, button, menu);
 
-        button.addEventListener('click', function(e) {
+        button.addEventListener('click', function (e) {
             e.stopPropagation();
             menu.classList.toggle('active');
         });
 
         options.forEach(option => {
-            option.addEventListener('click', function(e) {
+            option.addEventListener('click', function (e) {
                 e.stopPropagation();
                 const speed = parseFloat(this.dataset.speed);
                 savedSpeed = speed;
@@ -379,7 +380,7 @@
         const timeDisplay = seekWrapper.querySelector('.time-display');
         let isSeeking = false;
 
-        video.addEventListener('timeupdate', function() {
+        video.addEventListener('timeupdate', function () {
             if (!isSeeking && video.duration) {
                 const percent = (video.currentTime / video.duration) * 100;
                 seekBar.value = percent;
@@ -388,11 +389,11 @@
             }
         });
 
-        video.addEventListener('loadedmetadata', function() {
+        video.addEventListener('loadedmetadata', function () {
             timeDisplay.textContent = `0:00 / ${formatTime(video.duration)}`;
         });
 
-        seekBar.addEventListener('input', function(e) {
+        seekBar.addEventListener('input', function (e) {
             e.stopPropagation();
             isSeeking = true;
             this.style.setProperty('--progress', `${this.value}%`);
@@ -400,7 +401,7 @@
             timeDisplay.textContent = `${formatTime(time)} / ${formatTime(video.duration)}`;
         });
 
-        seekBar.addEventListener('change', function(e) {
+        seekBar.addEventListener('change', function (e) {
             e.stopPropagation();
             const time = (this.value / 100) * video.duration;
             video.currentTime = time;
@@ -435,7 +436,7 @@
         controls.volumeIcon = icon;
         videoControls.set(video, controls);
 
-        slider.addEventListener('input', function(e) {
+        slider.addEventListener('input', function (e) {
             e.stopPropagation();
             savedVolume = this.value / 100;
             GM_setValue('reelsVolume', savedVolume);
@@ -444,7 +445,7 @@
             updateVolumeIcon(icon, savedVolume);
         });
 
-        icon.addEventListener('click', function(e) {
+        icon.addEventListener('click', function (e) {
             e.stopPropagation();
             if (savedVolume > 0) {
                 slider.value = 0;
@@ -480,12 +481,12 @@
         video.volume = savedVolume;
         video.playbackRate = savedSpeed;
 
-        video.addEventListener('loadedmetadata', function() {
+        video.addEventListener('loadedmetadata', function () {
             this.volume = savedVolume;
             this.playbackRate = savedSpeed;
         });
 
-        video.addEventListener('play', function() {
+        video.addEventListener('play', function () {
             this.volume = savedVolume;
             this.playbackRate = savedSpeed;
         });
@@ -531,22 +532,170 @@
     }
 
 
+    function findAndProcessComments() {
+        // Instagram использует CSS-переменные для размеров панели комментариев
+        // Ищем контейнер со style="--x-maxHeight: XXX; --x-width: YYY;"
+
+        const allDivs = document.querySelectorAll('div[style*="--x-maxHeight"][style*="--x-width"]');
+
+        for (const target of allDivs) {
+            // Проверяем, что это действительно панель комментариев
+            if (target.offsetHeight < 300 || target.offsetWidth < 200) continue;
+
+            // Пропускаем уже обработанные
+            if (processedComments.has(target)) continue;
+
+            processedComments.add(target);
+
+            console.log('🎯 Найдена панель комментариев Instagram!', target);
+
+            // Получаем текущие размеры из CSS-переменных
+            const currentStyle = target.getAttribute('style') || '';
+            const maxHeightMatch = currentStyle.match(/--x-maxHeight:\s*([\d.]+)px/);
+            const widthMatch = currentStyle.match(/--x-width:\s*([\d.]+)px/);
+
+            const defaultHeight = maxHeightMatch ? parseFloat(maxHeightMatch[1]) : 600;
+            const defaultWidth = widthMatch ? parseFloat(widthMatch[1]) : 400;
+
+            // Загружаем сохраненные размеры
+            const savedWidth = GM_getValue('commentsWidth', defaultWidth);
+            const savedHeight = GM_getValue('commentsHeight', defaultHeight);
+
+            console.log('📐 Сохраненные размеры:', savedWidth, 'x', savedHeight);
+
+            // УБИРАЕМ CSS-переменные и делаем контейнер resizable
+            target.style.setProperty('--x-maxHeight', 'none', 'important');
+            target.style.setProperty('--x-width', 'auto', 'important');
+
+            // Устанавливаем обычные CSS-свойства с сохраненными размерами
+            target.style.width = savedWidth + 'px';
+            target.style.height = savedHeight + 'px';
+            target.style.minWidth = '350px';
+            target.style.minHeight = '400px';
+            target.style.maxWidth = '95vw';
+            target.style.maxHeight = '95vh';
+            target.style.resize = 'both';
+            target.style.overflow = 'auto';
+            target.style.border = '2px solid rgba(255, 255, 255, 0.3)';
+            target.style.borderRadius = '12px';
+            target.style.boxShadow = '0 4px 30px rgba(0,0,0,0.3)';
+            target.style.display = 'flex';
+            target.style.flexDirection = 'column';
+            target.style.position = 'relative';
+
+            // Добавляем визуальный индикатор resize
+            const resizeHint = document.createElement('div');
+            resizeHint.className = 'resize-hint-instagram-comments';
+            resizeHint.style.cssText = `
+                position: absolute;
+                bottom: 0;
+                right: 0;
+                width: 20px;
+                height: 20px;
+                background: linear-gradient(135deg, transparent 50%, rgba(255,255,255,0.3) 50%);
+                cursor: nwse-resize;
+                pointer-events: none;
+                border-bottom-right-radius: 10px;
+            `;
+            target.appendChild(resizeHint);
+
+            // Функция для адаптации содержимого
+            const fixContent = () => {
+                // Находим все прямые дети
+                const children = Array.from(target.children);
+
+                children.forEach((child, index) => {
+                    if (child.className === 'resize-hint-instagram-comments') return;
+
+                    const childStyle = window.getComputedStyle(child);
+
+                    // Первый ребенок (обычно header) - фиксированный
+                    if (index === 0 || child.offsetHeight < 100) {
+                        child.style.flexShrink = '0';
+                        child.style.flexGrow = '0';
+                    } else {
+                        // Остальное содержимое - растягивается
+                        child.style.flex = '1 1 auto';
+                        child.style.minHeight = '0';
+                        child.style.overflow = 'auto';
+                        child.style.display = 'flex';
+                        child.style.flexDirection = 'column';
+                    }
+                });
+
+                // Все скроллируемые элементы внутри
+                const scrollables = target.querySelectorAll('[style*="flex: 1 1 auto"]');
+                scrollables.forEach(el => {
+                    if (el !== target) {
+                        el.style.minHeight = '0';
+                        el.style.height = 'auto';
+                        el.style.maxHeight = 'none';
+
+                        // Убираем CSS-переменные у вложенных элементов
+                        el.style.setProperty('--x-maxHeight', 'none', 'important');
+                        el.style.setProperty('--x-minHeight', '0', 'important');
+                    }
+                });
+            };
+
+            // Применяем фикс
+            fixContent();
+
+            // Отслеживаем изменения
+            const observer = new MutationObserver(() => {
+                requestAnimationFrame(fixContent);
+            });
+
+            observer.observe(target, {
+                childList: true,
+                subtree: true,
+                attributes: true,
+                attributeFilter: ['style', 'class']
+            });
+
+            // Отслеживаем resize и СОХРАНЯЕМ размеры
+            let saveTimeout;
+            const resizeObserver = new ResizeObserver(() => {
+                fixContent();
+
+                // Сохраняем размеры с небольшой задержкой (чтобы не спамить при изменении)
+                clearTimeout(saveTimeout);
+                saveTimeout = setTimeout(() => {
+                    const newWidth = parseInt(target.style.width);
+                    const newHeight = parseInt(target.style.height);
+
+                    if (newWidth && newHeight) {
+                        GM_setValue('commentsWidth', newWidth);
+                        GM_setValue('commentsHeight', newHeight);
+                        console.log('💾 Размеры сохранены:', newWidth, 'x', newHeight);
+                    }
+                }, 500); // Сохраняем через 500мс после окончания изменения размера
+            });
+            resizeObserver.observe(target);
+
+            console.log('✅ Панель комментариев теперь resizable с автосохранением!');
+        }
+    }
+
+
     function findAndProcessVideos() {
         const videos = document.querySelectorAll('video');
         videos.forEach(video => {
             setupVideo(video);
 
             const container = video.closest('div[role="presentation"]') ||
-                             video.closest('article') ||
-                             video.parentElement;
+                video.closest('article') ||
+                video.parentElement;
 
             if (container && !processedContainers.has(container)) {
                 processContainer(container, video);
             }
         });
+
+        findAndProcessComments();
     }
 
-    setInterval(function() {
+    setInterval(function () {
         document.querySelectorAll('video').forEach(video => {
             if (Math.abs(video.volume - savedVolume) > 0.05) {
                 video.volume = savedVolume;
@@ -568,12 +717,12 @@
     }, 1000);
 
     let debounceTimer;
-    const observer = new MutationObserver(function() {
+    const observer = new MutationObserver(function () {
         clearTimeout(debounceTimer);
         debounceTimer = setTimeout(findAndProcessVideos, 150);
     });
 
-    window.addEventListener('load', function() {
+    window.addEventListener('load', function () {
         observer.observe(document.body, {
             childList: true,
             subtree: true
@@ -582,11 +731,11 @@
     });
 
     let lastUrl = location.href;
-    new MutationObserver(function() {
+    new MutationObserver(function () {
         const url = location.href;
         if (url !== lastUrl) {
             lastUrl = url;
             setTimeout(findAndProcessVideos, 200);
         }
-    }).observe(document, {subtree: true, childList: true});
+    }).observe(document, { subtree: true, childList: true });
 })();

@@ -2,7 +2,7 @@
 // @name         Discuz! 论坛助手 (Discuz! Forum Assistant)
 // @name:en      Discuz! Forum Assistant
 // @namespace    http://tampermonkey.net/
-// @version      13.35.5
+// @version      13.35.9
 // @description  Discuz! 论坛全能助手：智能抓取模式（Alt+键只抓作者前3页）、全量抓取模式（Ctrl+Alt+键抓所有）；一键提取图片（自动修复文件名/格式/并发下载）；沉浸式阅读；自定义下载路径。
 // @description:en Discuz! Forum Assistant: Smart scraping (Alt+keys for author's first 3 pages), full scraping (Ctrl+Alt+keys); One-click image download (auto-fix filenames/extensions/concurrent); Immersive reading; Custom download path.
 // @license      GPL-3.0
@@ -157,13 +157,10 @@
         },
         renderTemplate: function(tpl, data) {
             if (!tpl) return "";
-            var res = tpl;
-            for (var key in data) {
-                var regex = new RegExp('{{' + key + '}}', 'g');
-                var val = String(data[key] || '');
-                res = res.replace(regex, val);
-            }
-            return Utils.sanitizeFilename(res);
+            // Optimize: use single regex replace instead of loop + new RegExp
+            return Utils.sanitizeFilename(tpl.replace(/\{\{(\w+)\}\}/g, function(match, key) {
+                return (data && key in data) ? String(data[key] || '') : match;
+            }));
         },
         getThreadTitle: function(doc) {
             var el = doc.getElementById('thread_subject');
@@ -176,7 +173,25 @@
             
             return doc.title.split(' - ')[0].trim();
         },
+        debounce: function(func, delay) {
+            var timeout;
+            return function() {
+                var context = this;
+                var args = arguments;
+                clearTimeout(timeout);
+                timeout = setTimeout(function() {
+                    func.apply(context, args);
+                }, delay);
+            };
+        },
         saveHistory: function() { localStorage.setItem(App.historyKey, JSON.stringify(Array.from(App.downloadHistory))); },
+        _debouncedSaveHistory: null,
+        debouncedSaveHistory: function() {
+            if (!this._debouncedSaveHistory) {
+                this._debouncedSaveHistory = this.debounce(this.saveHistory, 1000);
+            }
+            this._debouncedSaveHistory.apply(this, arguments);
+        },
         exportHistory: function() {
             var content = JSON.stringify(Array.from(App.downloadHistory));
             var blob = new Blob([content], {type: "application/json"});
@@ -198,7 +213,7 @@
                         var arr = JSON.parse(e.target.result);
                         if (Array.isArray(arr)) {
                             arr.forEach(function(id) { App.downloadHistory.add(id); });
-                            Utils.saveHistory(); UI.showToast("✅ 导入 " + arr.length + " 条");
+                            Utils.debouncedSaveHistory(); UI.showToast("✅ 导入 " + arr.length + " 条");
                         }
                     } catch(err) { alert("文件错误"); }
                 };
@@ -209,7 +224,7 @@
         clearHistory: function() {
             if (confirm("⚠️ 确定要清空历史记录吗？")) {
                 App.downloadHistory.clear();
-                Utils.saveHistory(); UI.showToast("🗑️ 记录已清空");
+                Utils.debouncedSaveHistory(); UI.showToast("🗑️ 記錄已清空");
             }
         }
     };
@@ -219,13 +234,16 @@
             var css = [
                 '#gm-start-panel { position: fixed; z-index: 2147483647 !important; display: flex; flex-direction: column; gap: 8px; background: rgba(255,255,255,0.95); backdrop-filter: blur(5px); padding: 12px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); border: 1px solid rgba(0,0,0,0.05); width: 170px; box-sizing: border-box; transition: opacity 0.3s; }',
                 '.gm-drag-handle { padding: 0 0 6px 0; cursor: move; text-align: center; font-size: 10px; color: #999; border-bottom: 1px solid rgba(0,0,0,0.05); margin-bottom: 4px; user-select: none; }',
-                '.gm-btn-main { padding: 10px 0; border: none; border-radius: 8px; color: white; cursor: pointer; font-size: 14px; font-weight: 600; box-shadow: 0 2px 8px rgba(0,0,0,0.1); text-align: center; width: 100%; box-sizing: border-box; }',
+                '.gm-btn-main { padding: 10px 0; border: none; border-radius: 8px; color: white; cursor: pointer; font-size: 14px; font-weight: 600; box-shadow: 0 2px 8px rgba(0,0,0,0.1); text-align: center; width: 100%; box-sizing: border-box; font-family: inherit; }',
                 '.gm-btn-main:hover { transform: translateY(-2px); filter: brightness(1.1); }',
+                '.gm-btn-main:focus-visible { outline: 2px solid #fff; box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.5); z-index: 10; }',
                 '.gm-btn-main:disabled { background-color: #bdc3c7 !important; cursor: not-allowed; transform: none; pointer-events: none; }',
                 '.gm-shortcut-hint { font-size: 9px; opacity: 0.7; display: block; margin-top: 2px; font-weight: normal; font-family: monospace; }',
                 '.gm-split-group { display: flex; width: 100%; gap: 1px; }',
-                '.gm-btn-split-l { flex: 1; border-radius: 8px 0 0 8px; background-color: #3498db; color: white; border: none; padding: 10px 0; cursor: pointer; font-size: 14px; font-weight: 600; text-align: center; display:flex; align-items:center; justify-content:center; flex-direction:column; white-space: nowrap; overflow: hidden; pointer-events: auto !important; box-sizing: border-box; min-width: 0; }',
-                '.gm-btn-split-r { width: 40px; border-radius: 0 8px 8px 0; background-color: #2980b9; color: white; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; pointer-events: auto !important; box-sizing: border-box; }',
+                '.gm-btn-split-l { flex: 1; border-radius: 8px 0 0 8px; background-color: #3498db; color: white; border: none; padding: 10px 0; cursor: pointer; font-size: 14px; font-weight: 600; text-align: center; display:flex; align-items:center; justify-content:center; flex-direction:column; white-space: nowrap; overflow: hidden; pointer-events: auto !important; box-sizing: border-box; min-width: 0; font-family: inherit; }',
+                '.gm-btn-split-l:focus-visible { outline: 2px solid #fff; box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.5); z-index: 10; }',
+                '.gm-btn-split-r { width: 40px; border-radius: 0 8px 8px 0; background-color: #2980b9; color: white; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; pointer-events: auto !important; box-sizing: border-box; font-family: inherit; }',
+                '.gm-btn-split-r:focus-visible { outline: 2px solid #fff; box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.5); z-index: 10; }',
                 '#gm-folder-popup, #gm-filter-popup { position: fixed; width: 280px; background: #ffffff; border-radius: 8px; padding: 12px; box-shadow: 0 5px 25px rgba(0,0,0,0.25); display: none; border: 1px solid #eee; z-index: 2147483651; box-sizing: border-box; text-align: left; font-family: system-ui, sans-serif; }',
                 '.gm-popup-title { font-size: 14px; font-weight: bold; color: #333; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 6px; display:flex; justify-content:space-between; align-items:center; }',
                 '.gm-popup-subtitle { font-size: 11px; font-weight: bold; color: #666; margin-top: 10px; margin-bottom: 5px; padding-left: 2px; border-left: 3px solid #8e44ad; }',
@@ -280,7 +298,15 @@
     };
 
     var Reader = {
+        threadStarterId: '0',
+        isAuthorOnly: false,
+
         open: function() {
+            // 尝试识别楼主ID
+            var starter = App.textData.find(function(p){ return p.floor === '1' || p.floor === '1#' || p.floor === '楼主'; });
+            if (!starter && App.textData.length > 0) starter = App.textData[0];
+            this.threadStarterId = starter ? starter.uid : (App.meta.authorid || '0');
+
             var html = this.buildHTML();
             var overlay = document.createElement('div');
             overlay.id = 'gm-reader-overlay';
@@ -300,8 +326,9 @@
                 '<div id="gm-reader-scroll-box"><div class="gm-content-wrapper" id="gm-content-area"></div></div>',
                 '<div id="gm-fab-menu">☰</div>',
                 '<div id="gm-reader-toolbar">',
-                '   <span class="gm-toolbar-title" style="max-width:60%;overflow:hidden;white-space:nowrap;font-size:16px;font-weight:600;">' + title + '</span>',
+                '   <span class="gm-toolbar-title" style="max-width:50%;overflow:hidden;white-space:nowrap;font-size:16px;font-weight:600;">' + title + '</span>',
                 '   <div style="display:flex;align-items:center;">',
+                '       <button class="gm-tool-btn" id="gm-btn-author-only">👤 只看楼主</button>',
                 '       <button class="gm-tool-btn" id="gm-btn-toc">📑 目录</button>',
                 '       <button class="gm-tool-btn" id="gm-btn-set">⚙️ 设置</button>',
                 '       <button class="gm-tool-btn" id="gm-btn-exit">❌ 关闭</button>',
@@ -324,10 +351,21 @@
                 var pid = 'gm-post-' + idx;
                 var div = document.createElement('div');
                 div.className = 'gm-post-item'; div.id = pid;
-                div.innerHTML = '<div class="gm-post-meta">[' + post.floor + '楼] ' + post.date + '</div><div class="gm-post-text">' + post.text + '</div>';
+                div.setAttribute('data-uid', post.uid);
+                var metaDiv = document.createElement('div');
+                metaDiv.className = 'gm-post-meta';
+                metaDiv.textContent = '[' + post.floor + '楼] ' + post.date;
+                div.appendChild(metaDiv);
+
+                var textDiv = document.createElement('div');
+                textDiv.className = 'gm-post-text';
+                textDiv.textContent = post.text;
+                div.appendChild(textDiv);
+
                 cFrag.appendChild(div);
                 var item = document.createElement('div');
                 item.className = 'gm-toc-item'; 
+                item.setAttribute('data-uid', post.uid);
                 // 使用摘要作为目录标题
                 item.innerText = post.floor + ' - ' + (post.title || (post.text.substring(0, 15) + '...'));
                 item.onclick = function() { Reader.scrollTo(pid); };
@@ -366,6 +404,8 @@
         },
         bindEvents: function() {
             document.getElementById('gm-btn-exit').onclick = this.close;
+            document.getElementById('gm-btn-author-only').onclick = function() { Reader.toggleAuthorOnly(); };
+
             var toggle = function(id) {
                 var el = document.getElementById(id);
                 var showing = !el.classList.contains('visible');
@@ -386,6 +426,31 @@
             bind('inp-size', 'fontSize'); bind('inp-line', 'lineHeight'); bind('inp-width', 'widthMode'); bind('inp-font', 'fontFamily');
             document.getElementById('btn-night').onclick = function() { App.userConfig.bgColor='#1a1a1a'; App.userConfig.paperColor='#2c2c2c'; App.userConfig.textColor='#a0a0a0'; Reader.save(); };
             document.getElementById('btn-warm').onclick = function() { App.userConfig.bgColor='#f7f1e3'; App.userConfig.paperColor='#fffef8'; App.userConfig.textColor='#2d3436'; Reader.save(); };
+        },
+        toggleAuthorOnly: function() {
+            this.isAuthorOnly = !this.isAuthorOnly;
+            var btn = document.getElementById('gm-btn-author-only');
+            if (btn) btn.innerText = this.isAuthorOnly ? '👥 查看全部' : '👤 只看楼主';
+
+            var posts = document.querySelectorAll('.gm-post-item');
+            var tocItems = document.querySelectorAll('.gm-toc-item');
+            var targetId = this.threadStarterId;
+
+            var toggleFn = function(list) {
+                list.forEach(function(el) {
+                    var uid = el.getAttribute('data-uid');
+                    if (Reader.isAuthorOnly) {
+                        el.style.display = (uid === targetId) ? '' : 'none';
+                    } else {
+                        el.style.display = '';
+                    }
+                });
+            };
+
+            toggleFn(posts);
+            toggleFn(tocItems);
+
+            UI.showToast(this.isAuthorOnly ? '只看楼主' : '查看全部');
         }
     };
 
@@ -658,7 +723,7 @@
             if(btn) btn.onclick = function() { SpaceCrawler.stopDownload(); };
             UI.updateProgress(SpaceCrawler.processedCount, SpaceCrawler.totalThreads);
             Scraper.fetchThreadAndDownload(task, function(success) {
-                if (success) { App.downloadHistory.add(task.tid); Utils.saveHistory(); }
+                if (success) { App.downloadHistory.add(task.tid); Utils.debouncedSaveHistory(); }
                 setTimeout(function() { SpaceCrawler.processQueue(); }, 1000);
             });
         }
@@ -826,7 +891,7 @@
                                             updateUI();
                                             check();
                                             App.downloadHistory.add(App.meta.tid);
-                                            Utils.saveHistory();
+                                            Utils.debouncedSaveHistory();
                                         },
                                         onerror: function(err) { 
                                             Logger.warn('GM_download(Blob) 失败，尝试 GM_download(URL) 直连: ' + filename);
@@ -910,7 +975,7 @@
                 onload: function() { 
                     URL.revokeObjectURL(url); UI.hideProgress(); UI.updateStatus('完成', '#27ae60'); setTimeout(function() { UI.resetButtons(); }, 2000); 
                     // Add single download to history
-                    App.downloadHistory.add(App.meta.tid); Utils.saveHistory();
+                    App.downloadHistory.add(App.meta.tid); Utils.debouncedSaveHistory();
                 }
             });
         },
@@ -927,6 +992,13 @@
                 if(div.innerText.length<2) continue;
                 var floor = Scraper.getFloor(div);
                 var date = Scraper.getDate(div);
+                var uid = '0';
+                var authLink = div.querySelector('.authi a[href*="uid"]');
+                if (authLink) {
+                    var m = authLink.href.match(/uid=(\d+)/);
+                    if (m) uid = m[1];
+                }
+
                 var contentDiv = div.querySelector('.t_f') || div.querySelector('.pcb');
                 if(contentDiv) {
                     var temp = contentDiv.cloneNode(true);
@@ -939,7 +1011,7 @@
                     var firstLine = text.split('\n')[0].replace(/##BR##/g,'');
                     var title = firstLine.length > 20 ? (firstLine.substring(0,20)+'...') : firstLine;
 
-                    if(text) results.push({floor:floor, text: text, date: date, title: title});
+                    if(text) results.push({floor:floor, text: text, date: date, title: title, uid: uid});
                 }
             }
             return results;
@@ -1128,7 +1200,9 @@
         },
         loopPage: function(page) {
             UI.updateStatus('P ' + page, '#e67e22');
-            var url = Utils.buildUrl(App.meta.tid, page, App.meta.authorid);
+            // 阅读模式下强制抓取全部，以便支持切换；其他模式保持原逻辑
+            var targetAuthorId = (App.currentMode === 'read') ? null : App.meta.authorid;
+            var url = Utils.buildUrl(App.meta.tid, page, targetAuthorId);
             var currentPage = Utils.getCurrentPageNumber();
             if (page === currentPage) {
                  if (App.currentMode === 'images') {
@@ -1189,12 +1263,13 @@
                 var g = document.createElement('div');
                 g.className = 'gm-split-group';
                 
-                var bMain = document.createElement('div'); bMain.className = 'gm-btn-split-l'; bMain.id='gm-btn-batch-run';
+                var bMain = document.createElement('button'); bMain.className = 'gm-btn-split-l'; bMain.id='gm-btn-batch-run';
                 bMain.innerText = '⚡ 批量下载'; bMain.style.backgroundColor = '#8e44ad';
                 bMain.onclick = function() { SpaceCrawler.startScan(); }; // 点击左侧直接开始
                 
-                var bSet = document.createElement('div');
+                var bSet = document.createElement('button');
                 bSet.className = 'gm-btn-split-r'; bSet.innerText = '⚙️'; bSet.style.backgroundColor='#7d3c98';
+                bSet.setAttribute('aria-label', '批量设置'); bSet.title = '批量设置';
                 bSet.onclick = function(e) { e.stopPropagation(); UI.togglePopup('gm-filter-popup', this); };
                 // 点击右侧打开设置，传入this作为定位锚点
                 
@@ -1208,27 +1283,29 @@
                 // 普通模式
                 var g1 = document.createElement('div');
                 g1.className = 'gm-split-group';
-                var b1 = document.createElement('div'); b1.className = 'gm-btn-split-l'; b1.id='gm-btn-text'; b1.innerHTML = '💾 文本 <span class="gm-shortcut-hint">Alt+D</span>'; b1.style.backgroundColor='#3498db';
+                var b1 = document.createElement('button'); b1.className = 'gm-btn-split-l'; b1.id='gm-btn-text'; b1.innerHTML = '💾 文本 <span class="gm-shortcut-hint">Alt+D</span>'; b1.style.backgroundColor='#3498db';
                 b1.onclick = function(){ Scraper.init('download', true); };
                 g1.appendChild(b1);
-                var s1 = document.createElement('div'); s1.className = 'gm-btn-split-r'; s1.innerText='⚙️'; s1.style.backgroundColor='#2980b9';
+                var s1 = document.createElement('button'); s1.className = 'gm-btn-split-r'; s1.innerText='⚙️'; s1.style.backgroundColor='#2980b9';
+                s1.setAttribute('aria-label', '下载设置'); s1.title = '下载设置';
                 s1.onclick = function(e){ e.stopPropagation();
                 UI.togglePopup('gm-folder-popup', this); };
                 g1.appendChild(s1);
                 p.appendChild(g1);
  
                 var g2 = document.createElement('div'); g2.className = 'gm-split-group';
-                var b2 = document.createElement('div'); b2.className = 'gm-btn-split-l'; b2.id='gm-btn-img';
+                var b2 = document.createElement('button'); b2.className = 'gm-btn-split-l'; b2.id='gm-btn-img';
                 b2.innerHTML = '🖼️ 图片 <span class="gm-shortcut-hint">Alt+I</span>'; b2.style.backgroundColor='#9b59b6';
                 b2.onclick = function(){ Scraper.init('images', true); };
                 g2.appendChild(b2);
-                var s2 = document.createElement('div');
+                var s2 = document.createElement('button');
                 s2.className = 'gm-btn-split-r'; s2.innerText='⚙️'; s2.style.backgroundColor='#8e44ad';
+                s2.setAttribute('aria-label', '下载设置'); s2.title = '下载设置';
                 s2.onclick = function(e){ e.stopPropagation(); UI.togglePopup('gm-folder-popup', this); };
                 g2.appendChild(s2);
                 p.appendChild(g2);
                 // 阅读按钮
-                var btnRead = document.createElement('div');
+                var btnRead = document.createElement('button');
                 btnRead.id = 'gm-btn-read'; btnRead.className = 'gm-btn-main';
                 btnRead.innerHTML = '📖 阅读 <span class="gm-shortcut-hint">Alt+R</span>'; btnRead.style.backgroundColor = '#e67e22';
                 btnRead.onclick = function() { Scraper.init('read', true); };

@@ -62,19 +62,33 @@
             e.stopImmediatePropagation();
 
             // 触发发送按钮的点击事件
-            const sendButton = document.querySelector('button[aria-label*="Submit"], button[aria-label*="Send"], button[type="submit"]');
-            if (sendButton) {
-                sendButton.click();
-            } else {
-                // 备选方案：查找可能的发送按钮
+            // 策略1: 先尝试标准属性
+            let sendButton = document.querySelector('button[aria-label*="Submit"], button[aria-label*="Send"], button[type="submit"]');
+
+            // 策略2: 在 .scrollable-container 内查找
+            if (!sendButton) {
+                const container = document.querySelector('.scrollable-container');
+                if (container) {
+                    // 找到容器底部固定的按钮区域
+                    const buttonArea = container.querySelector('.erp-sidecar\\:fixed button, div[class*="sidecar"] button');
+                    if (buttonArea) sendButton = buttonArea;
+                }
+            }
+
+            // 策略3: 查找包含箭头图标的按钮
+            if (!sendButton) {
                 const buttons = document.querySelectorAll('button');
                 for (const btn of buttons) {
                     const svg = btn.querySelector('svg');
-                                        if (svg && (btn.innerHTML.includes('arrow') || btn.classList.contains('send'))) {
-                        btn.click();
+                    if (svg && (btn.innerHTML.includes('arrow') || btn.classList.contains('send'))) {
+                        sendButton = btn;
                         break;
                     }
                 }
+            }
+
+            if (sendButton) {
+                sendButton.click();
             }
         }
     }, true); // 使用捕获阶段

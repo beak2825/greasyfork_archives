@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Devabit Jira+
 // @namespace    http://tampermonkey.net/
-// @version      4.0.2
+// @version      4.0.3
 // @description  Jira enhancements.
 // @match        https://devabit.atlassian.net/browse/*
 // @match        https://devabit.atlassian.net/jira/*
@@ -288,6 +288,7 @@
     function feature_updateJiraTime() {
         const selectors = [
             ".css-v44io0",
+            "._19pkidpf._2hwxidpf._otyridpf._18u0idpf._1i4qfg65._11c8wadc._y3gn1h6o",
             "._19pkidpf._2hwxidpf._otyridpf._18u0idpf._1i4qfg65._11c81o8v._y3gn1h6o",
             "span > span > ._k48p1wq8",
             'span[data-testid="issue.issue-view.common.logged-time.value"]',
@@ -339,8 +340,8 @@
             // img.src = "https://media.tenor.com/vX-qFMkapQQAAAAj/cat-dancing.gif";
             img.src = "https://media.tenor.com/gfILJ_kUMhQAAAAj/frog-happy.gif";
             img.className = "devabit-gif";
-            img.style.height = "28px",
-                img.style.width = "auto";
+            img.style.height = "28px";
+            img.style.width = "auto";
             img.style.verticalAlign = "middle";
             logoWrapper.appendChild(img);
         }
@@ -351,7 +352,7 @@
         );
         if (!target) return;
 
-        target.textContent = "тут був Андрій Л :)";
+        target.textContent = "тут був Андрій Литвин :)";
     }
 
     function feature_setupLiveDeadlineCountdown() {
@@ -552,7 +553,7 @@
             left: "0",
             width: "100%",
             height: "100%",
-            opacity: "10%",
+            opacity: "3%",
             zIndex: "10", // behind everything
             pointerEvents: "none", // allow clicks through
             backgroundImage: 'url("https://www.animationsoftware7.com/img/agifs/snow02.gif")',
@@ -581,7 +582,7 @@
         });
     }
 
-    // setJiraBackgroundGIF();
+    //setJiraBackgroundGIF();
 
 
     function runAllEnhancements() {
@@ -589,7 +590,7 @@
 
         feature_hideAIMate();
         feature_highlightIfPOisReceived();
-        // feature_bailando();
+        //feature_bailando();
         feature_setupLiveDeadlineCountdown();
         feature_updateLiveDeadlineCountdown();
         feature_highlightIfMonthBilledIsIncorrect();

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GGn Steam Uploady
 // @namespace    https://gazellegames.net/
-// @version      48
+// @version      49
 // @description  Fill upload form with Steam info
 // @author       ingts
 // @match        https://gazellegames.net/upload.php*
@@ -15,16 +15,11 @@
 // @grant        GM_addValueChangeListener
 // @grant        GM_removeValueChangeListener
 // @connect      *
-// @require      https://update.greasyfork.org/scripts/548332/1727369/GGn%20Uploady.js
+// @require      https://update.greasyfork.org/scripts/548332/1738389/GGn%20Uploady.js
 // @require      https://update.greasyfork.org/scripts/540511/1737488/GGn%20Formatters.js
 // @downloadURL https://update.greasyfork.org/scripts/479713/GGn%20Steam%20Uploady.user.js
 // @updateURL https://update.greasyfork.org/scripts/479713/GGn%20Steam%20Uploady.meta.js
 // ==/UserScript==
-
-const settings = loadSettings({
-    get_languages: true,
-    extra_info: 'steamdb'
-})
 
 const allowedTags = new Set([
     // "Casual", allowed but too common
@@ -176,6 +171,11 @@ const tagMap = new Map([
     ["Real Time Tactics", ["real.time, tactics"]],
 ])
 
+const settings = loadSettings({
+    get_languages: true,
+    extra_info: 'steamdb'
+})
+
 let platform = ''
 const coverInput = document.querySelector("input[name='image']")
 
@@ -316,8 +316,7 @@ function cleanAliases(name, aliases) {
         .filter(Boolean)
 }
 
-/** @returns {Promise<{aliases: string[], cover2x: string}> | {}} */
-function getExtraInfo(appid) {
+async function getExtraInfo(appid) {
     if (settings.extra_info === null) return {}
     const usingSteamdb = settings.extra_info === 'steamdb'
 

@@ -1,46 +1,69 @@
 // ==UserScript==
 // @name         RA-See More
 // @namespace    https://metalsnake.space/
-// @version      0.1
-// @description  Clicks the "see more" button on the user page
+// @version      0.6.1
+// @description  Clicks the "see more" button on the user and game page
 // @author       MetalSnake
-// @match        *://retroachievements.org/user/*
+// @match        *://retroachievements.org/*
 // @grant        none
 // @license      MIT
 // @downloadURL https://update.greasyfork.org/scripts/507105/RA-See%20More.user.js
 // @updateURL https://update.greasyfork.org/scripts/507105/RA-See%20More.meta.js
 // ==/UserScript==
 
-var l_foundButton = false;
+(function () {
+    'use strict';
 
-function clickButton() {
-    // Suche nach dem Button
-    const buttons = document.querySelectorAll('button.absolute');
-    buttons.forEach((button) => {
-        if (button.innerText == "see more2") {
-            button.click();
-            l_foundButton = true;
+    const TARGETS = ["see more"];
+    let lastUrl = location.href;
+
+    function clickButton() {
+        const buttons = document.querySelectorAll("button");
+
+        for (const button of buttons) {
+            const text = button.innerText.trim().toLowerCase();
+            if (TARGETS.includes(text)) {
+                button.click();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function onUrlChange() {
+        // kleiner Delay, damit der neue DOM aufgebaut werden kann
+        setTimeout(clickButton, 50);
+    }
+
+    // Initialer Seitenaufruf
+    clickButton();
+
+    // pushState / replaceState hooken
+    const originalPushState = history.pushState;
+    const originalReplaceState = history.replaceState;
+
+    history.pushState = function (...args) {
+        originalPushState.apply(this, args);
+        if (location.href !== lastUrl) {
+            lastUrl = location.href;
+            onUrlChange();
+        }
+    };
+
+    history.replaceState = function (...args) {
+        originalReplaceState.apply(this, args);
+        if (location.href !== lastUrl) {
+            lastUrl = location.href;
+            onUrlChange();
+        }
+    };
+
+    // Browser zurück / vor
+    window.addEventListener('popstate', () => {
+        if (location.href !== lastUrl) {
+            lastUrl = location.href;
+            onUrlChange();
         }
     });
 
-    if (!l_foundButton) {
-        let textNode = findTextNode(document.body, "see more");
-        if (textNode) {
-            textNode.parentNode.click();
-        }
-    }
-}
-
-function findTextNode(root, text) {
-    let walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null, false);
-    let node;
-    while (node = walker.nextNode()) {
-        if (node.nodeValue.trim() === text) {
-            return node;
-        }
-    }
-    return null;
-}
-
-clickButton();
-
+})();

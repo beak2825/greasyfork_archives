@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Geopixels - Paint Brush Swap
 // @namespace    http://tampermonkey.net/
-// @version      1.5
+// @version      1.6.0
 // @description  Cache and swap between custom brush patterns with a compact dropdown
 // @author       ariapokoteng
 // @match        *://geopixels.net/*
@@ -117,9 +117,9 @@
                 maxX = Math.max(maxX, x);
                 minY = Math.min(minY, y);
                 maxY = Math.max(maxY, y);
-                
+
                 // Find center marker
-                if (cell.dataset.isCenter === 'true') {
+                if (cell.dataset.isCenter === 'true' || cell.dataset.isCenter === 'true') {
                     centerX = x;
                     centerY = y;
                 }
@@ -133,7 +133,7 @@
 
         // Calculate brush size from grid bounds
         const brushSize = Math.max(maxX - minX + 1, maxY - minY + 1);
-        
+
         // If center wasn't found (shouldn't happen), use grid center
         if (centerX === -1 || centerY === -1) {
             centerX = Math.floor(brushSize / 2);
@@ -585,7 +585,7 @@
         const dropdown = document.createElement('div');
         dropdown.id = 'brush-swap-dropdown';
         dropdown.className = 'bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 shadow-lg';
-        
+
         const itemsContainer = document.createElement('div');
         itemsContainer.className = 'brush-swap-items';
         dropdown.appendChild(itemsContainer);
@@ -624,17 +624,17 @@
 
     // ============================================
 
-    function hookSaveBrushConfig() {
-        if (typeof window.saveBrushConfig !== 'function') {
-            console.warn('Brush Swap: saveBrushConfig not yet available, retrying...');
+    function hookSaveBrushToPreset() {
+        if (typeof window.saveBrushToPreset !== 'function') {
+            console.warn('Brush Swap: saveBrushToPreset not yet available, retrying...');
             return false;
         }
 
-        const originalSave = window.saveBrushConfig;
+        const originalSave = window.saveBrushToPreset;
 
-        window.saveBrushConfig = function() {
+        window.saveBrushToPreset = function(slotIndex) {
             // Call original function
-            originalSave.call(this);
+            originalSave.call(this, slotIndex);
 
             // After save, capture brush from DOM grid
             const brushData = captureBrushFromDOM();
@@ -647,7 +647,7 @@
             }
         };
 
-        if (DEBUG) console.log('Brush Swap: Successfully hooked saveBrushConfig');
+        if (DEBUG) console.log('Brush Swap: Successfully hooked saveBrushToPreset');
         return true;
     }
 
@@ -662,7 +662,7 @@
         // Inject CSS
         injectCSS();
 
-        // Wait for bottomControls and saveBrushConfig to be ready
+        // Wait for bottomControls and saveBrushToPreset to be ready
         let attempts = 0;
         const maxAttempts = 120; // 60 seconds at 500ms intervals
 
@@ -670,16 +670,16 @@
             attempts++;
 
             const bottomControls = document.getElementById('bottomControls');
-            const hasSaveBrushConfig = typeof window.saveBrushConfig === 'function';
+            const hasSaveBrushToPreset = typeof window.saveBrushToPreset === 'function';
 
-            if (bottomControls && hasSaveBrushConfig && attempts <= maxAttempts) {
+            if (bottomControls && hasSaveBrushToPreset && attempts <= maxAttempts) {
                 clearInterval(initInterval);
 
                 // Create UI
                 createUI(bottomControls);
 
-                // Hook into saveBrushConfig (now guaranteed to exist)
-                hookSaveBrushConfig();
+                // Hook into saveBrushToPreset (now guaranteed to exist)
+                hookSaveBrushToPreset();
 
                 // Hook into toggleBrushEditor for dimension dropdown
                 hookToggleBrushEditor();
@@ -687,9 +687,9 @@
                 if (DEBUG) console.log('Brush Swap initialized successfully');
             } else if (attempts > maxAttempts) {
                 clearInterval(initInterval);
-                console.warn('Brush Swap: Could not initialize - bottomControls or saveBrushConfig not found', {
+                console.warn('Brush Swap: Could not initialize - bottomControls or saveBrushToPreset not found', {
                     hasBottomControls: !!bottomControls,
-                    hasSaveBrushConfig: hasSaveBrushConfig
+                    hasSaveBrushToPreset: hasSaveBrushToPreset
                 });
             }
         }, 500);

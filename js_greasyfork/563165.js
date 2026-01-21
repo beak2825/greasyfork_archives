@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         Firefox MIUI Tab KeepAlive
 // @namespace    https://github.com/DJ-Flitzefinger/firefox-miui-tab-keepalive
-// @version      1.2.1
-// @description  Prevents Firefox Mobile tabs from being discarded or reloaded by MIUI's aggressive memory management on Xiaomi phones, using a silent phantom MediaSession and background playback support on whitelisted sites.
+// @version      2.0.0
+// @description  Prevents Firefox Mobile from being killed/discarded by MIUI by keeping one dedicated YouTube tab "active" via a silent phantom MediaSession.
 // @license      GPL-3.0-or-later
-// @match        *://*/*
+// @match        https://www.youtube.com/*
+// @match        https://m.youtube.com/*
 // @run-at       document-idle
 // @grant        GM_getValue
 // @grant        GM_setValue
@@ -16,111 +17,113 @@
 (() => {
   'use strict';
 
-  // UI should only be injected in the top-level document (avoid iframes)
+  // Only run in the top-level document (avoid iframes).
   if (window.top !== window.self) return;
 
-  // Prevent duplicate UI injection in the same document
+  // Prevent duplicate UI injection in the same document.
   const BADGE_ID = 'ffka-lock-badge';
   if (document.getElementById(BADGE_ID)) return;
 
   // ============================================================
-  // Configuration
+  // USER TUNING (battery vs. stability)
+  //
+  // Important:
+  // - On many MIUI builds the Android media notification/player must stay "alive"
+  //   continuously, otherwise the workaround stops working.
+  // - This script therefore keeps a silent phantom video + MediaSession running
+  //   permanently in the MASTER tab.
+  //
+  // UI:
+  // - Circle  = keepalive badge (always visible on YouTube pages)
+  // - Lock    = THIS tab is the current MASTER tab (only the master runs keepalive)
+  //
+  // Force-claim (simplicity):
+  // - Clicking the circle ALWAYS makes the current tab the new MASTER.
+  // - Clicking the circle in the current MASTER tab disables the keepalive.
   // ============================================================
 
-  /**
-   * Domains where background-play support is enabled.
-   * Suffix match: "youtube.com" matches "m.youtube.com", "www.youtube.com", etc.
-   */
-  const BGPLAY_HOST_SUFFIXES = [
-    // 'your-domain.tld',
-    'amazon.com',
-    'amazon.de',
-    'audible.com',
-    'audible.de',
-    'brightcove.com',
-    'coursera.org',
-    'dailymotion.com',
-    'disneyplus.com',
-    'facebook.com',
-    'instagram.com',
-    'jwplayer.com',
-    'loom.com',
-    'metacafe.com',
-    'mixcloud.com',
-    'netflix.com',
-    'open.spotify.com',
-    'primevideo.com',
-    'soundcloud.com',
-    'streamable.com',
-    'tiktok.com',
-    'tv.apple.com',
-    'twitch.tv',
-    'twitter.com',
-    'udemy.com',
-    'vidyard.com',
-    'vimeo.com',
-    'x.com',
-    'youtube-nocookie.com',
-    'youtube.com',
-  ];
+  const SETTINGS = {
+    // --------------------------------------------------------
+    // Media notification / MediaSession stability
+    // --------------------------------------------------------
+    mediaSession: {
+      /**
+       * How often to re-assert the MediaSession metadata + playback state.
+       *
+       * Effects:
+       * - smaller  => more aggressive (notification/player tends to stay alive)
+       * - larger   => less overhead, but notification might disappear more easily
+       * - 0        => disable refresh (only use if your device stays stable)
+       */
+      refreshIntervalMs: 10000,
 
-  /**
-   * Background-play "owner" parameters.
-   * Only the owner tab fakes visibility and emits lightweight activity ticks.
-   */
-  const OWNER_HEARTBEAT_MS = 3000;
-  const OWNER_TTL_MS = 12000;
+      /**
+       * Best-effort safeguard: do NOT refresh the phantom MediaSession while this page
+       * is currently playing real media (any audio/video element except the phantom one).
+       */
+      skipIfRealMediaOnPage: true,
+    },
 
-  /**
-   * Compare-and-swap delay for owner claim verification.
-   * Allows other tabs time to potentially claim ownership.
-   */
-  const OWNER_CLAIM_VERIFY_DELAY_MS = 50;
+    // --------------------------------------------------------
+    // Phantom video stability
+    // --------------------------------------------------------
+    phantomVideo: {
+      /**
+       * Backoff for retrying video.play() if the browser blocks/resets it.
+       *
+       * Effects:
+       * - smaller retryDelayMinMs => faster recovery, more wakeups
+       * - larger retryDelayMaxMs  => fewer wakeups, but longer without playback
+       */
+      retryDelayMinMs: 15000,
+      retryDelayMaxMs: 120000,
 
-  /**
-   * Synthetic user-activity tick interval (owner tab only).
-   * Keep this large (60–120s) to minimize wakeups while still helping sites that stop playback on inactivity.
-   */
-  const USER_ACTIVITY_TICK_MS = 60000;
+      /**
+       * FPS for the canvas-based video stream.
+       * Higher values may consume more battery.
+       */
+      canvasStreamFps: 0.5,
+    },
 
-  /**
-   * MediaSession refresh interval.
-   * Set to 0 to disable periodic refresh (avoids interrupting other audio apps).
-   */
-  const MEDIASESSION_REFRESH_MS = 0;
+    // --------------------------------------------------------
+    // Optional lightweight extra activity signals
+    // --------------------------------------------------------
+    extras: {
+      /**
+       * Web Locks API:
+       * Holds an exclusive lock to make the tab look less "idle" to the browser.
+       * Low cost, usefulness depends on ROM/device.
+       */
+      webLock: true,
 
-  /**
-   * Backoff watchdog parameters for resuming phantom playback.
-   * The watchdog only retries play(); it does not refresh MediaSession.
-   */
-  const RETRY_DELAY_MIN = 15000;
-  const RETRY_DELAY_MAX = 120000;
+      /**
+       * IndexedDB heartbeat:
+       * Very small periodic DB write to create an extra activity "pulse".
+       */
+      indexedDBHeartbeat: true,
+    },
 
-  /**
-   * Canvas stream framerate for fallback phantom video.
-   * Lower values reduce CPU usage.
-   */
-  const CANVAS_STREAM_FPS = 0.5;
-
-  /**
-   * IndexedDB heartbeat interval.
-   * Periodic writes to keep the database connection active.
-   */
-  const INDEXEDDB_HEARTBEAT_MS = 15000;
+    indexedDB: {
+      /**
+       * How often the IndexedDB heartbeat is written.
+       * Smaller values create more activity/wakeups.
+       */
+      heartbeatIntervalMs: 15000,
+    },
+  };
 
   // ============================================================
-  // Global state (Tampermonkey storage, cross-domain)
+  // Shared state (Tampermonkey storage, shared across YouTube tabs)
   // ============================================================
 
-  const KEY_ENABLED = 'ffka_enabled_global';     // boolean
-  const KEY_OWNER_ID = 'ffka_bg_owner_id';       // string
-  const KEY_OWNER_TS = 'ffka_bg_owner_ts';       // number (ms epoch)
+  const KEY_MASTER_ID = 'ffka_master_tabid';        // string|null
+  const KEY_MASTER_ENABLED = 'ffka_master_enabled'; // boolean
 
   async function gmGet(key, defVal) {
     try {
       const v = GM_getValue(key, defVal);
       return (v && typeof v.then === 'function') ? await v : v;
-    } catch (_) {
+    } catch {
       return defVal;
     }
   }
@@ -129,42 +132,15 @@
     try {
       const r = GM_setValue(key, val);
       if (r && typeof r.then === 'function') await r;
-    } catch (_) {}
+    } catch {}
   }
 
   function gmOnChange(key, cb) {
     try {
       if (typeof GM_addValueChangeListener === 'function') {
-        GM_addValueChangeListener(key, (_name, _oldV, newV, _remote) => cb(newV));
+        GM_addValueChangeListener(key, (_name, _oldV, _newV, _remote) => cb());
       }
-    } catch (_) {}
-  }
-
-  async function getGlobalEnabled() {
-    return !!(await gmGet(KEY_ENABLED, false));
-  }
-
-  async function setGlobalEnabled(on) {
-    await gmSet(KEY_ENABLED, !!on);
-  }
-
-  // ============================================================
-  // Helpers
-  // ============================================================
-
-  const now = () => Date.now();
-
-  function hostMatchesSuffixList(hostname, suffixList) {
-    const h = String(hostname || '').toLowerCase();
-    return suffixList.some((suf) => {
-      const s = String(suf || '').toLowerCase().trim();
-      if (!s) return false;
-      return h === s || h.endsWith('.' + s);
-    });
-  }
-
-  function isBgPlayDomain() {
-    return hostMatchesSuffixList(location.hostname, BGPLAY_HOST_SUFFIXES);
+    } catch {}
   }
 
   const tabId = (() => {
@@ -173,48 +149,24 @@
     return [...a].map(x => x.toString(16).padStart(8, '0')).join('');
   })();
 
-  async function getOwnerState() {
-    const id = String(await gmGet(KEY_OWNER_ID, ''));
-    const ts = Number(await gmGet(KEY_OWNER_TS, 0)) || 0;
-    return { id, ts };
+  async function readMasterState() {
+    const id = await gmGet(KEY_MASTER_ID, null);
+    const enabled = !!(await gmGet(KEY_MASTER_ENABLED, false));
+    return { id: (typeof id === 'string' ? id : null), enabled };
   }
 
-  async function isOwnerAlive() {
-    const { id, ts } = await getOwnerState();
-    if (!id || !ts) return false;
-    return (now() - ts) <= OWNER_TTL_MS;
+  async function clearMasterState() {
+    await gmSet(KEY_MASTER_ENABLED, false);
+    await gmSet(KEY_MASTER_ID, null);
   }
 
-  async function isMeOwner() {
-    const { id, ts } = await getOwnerState();
-    if (!id || !ts) return false;
-    if (id !== tabId) return false;
-    return (now() - ts) <= OWNER_TTL_MS;
+  async function setMasterStateAsThisTab() {
+    await gmSet(KEY_MASTER_ID, tabId);
+    await gmSet(KEY_MASTER_ENABLED, true);
   }
 
-  /**
-   * Claim ownership for bg-play features using compare-and-swap pattern.
-   * Returns true if this tab successfully claimed ownership, false otherwise.
-   */
-  async function claimOwner(reason) {
-    void reason;
-    if (!(await getGlobalEnabled())) return false;
-
-    // Write our claim
-    await gmSet(KEY_OWNER_ID, tabId);
-    await gmSet(KEY_OWNER_TS, now());
-
-    // Brief delay to allow concurrent claims to settle
-    await new Promise(r => setTimeout(r, OWNER_CLAIM_VERIFY_DELAY_MS));
-
-    // Verify we're still the owner (compare-and-swap verification)
-    const currentOwner = await gmGet(KEY_OWNER_ID, '');
-    if (currentOwner !== tabId) {
-      // Another tab claimed ownership after us
-      return false;
-    }
-
-    return true;
+  function isThisTabMaster(state) {
+    return !!(state?.enabled && state?.id && state.id === tabId);
   }
 
   // ============================================================
@@ -245,7 +197,6 @@
     user-select: none;
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
-    /* Dual-contrast outline for light/dark backgrounds, still transparent */
     box-shadow: 0 0 0 1px rgba(0,0,0,0.18);
   `;
 
@@ -255,28 +206,39 @@
   lockSvg.setAttribute('height', '22');
   lockSvg.style.opacity = '0';
   lockSvg.style.transition = 'opacity 120ms linear';
+
+  // Lock icon with outline so it remains visible on light backgrounds.
   lockSvg.innerHTML = `
+    <!-- Shackle -->
     <path d="M7 11V8.5C7 6.01 9.01 4 11.5 4S16 6.01 16 8.5V11"
-      fill="none" stroke="rgba(255,255,255,0.60)" stroke-width="1.6" stroke-linecap="round"/>
+      fill="none" stroke="rgba(0,0,0,0.45)" stroke-width="3.2" stroke-linecap="round"/>
+    <path d="M7 11V8.5C7 6.01 9.01 4 11.5 4S16 6.01 16 8.5V11"
+      fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="1.6" stroke-linecap="round"/>
+
+    <!-- Body -->
     <path d="M6.5 11.2h11c.83 0 1.5.67 1.5 1.5v6.3c0 .83-.67 1.5-1.5 1.5h-11c-.83 0-1.5-.67-1.5-1.5v-6.3c0-.83.67-1.5 1.5-1.5z"
-      fill="none" stroke="rgba(255,255,255,0.60)" stroke-width="1.6" stroke-linejoin="round"/>
+      fill="none" stroke="rgba(0,0,0,0.45)" stroke-width="3.2" stroke-linejoin="round"/>
+    <path d="M6.5 11.2h11c.83 0 1.5.67 1.5 1.5v6.3c0 .83-.67 1.5-1.5 1.5h-11c-.83 0-1.5-.67-1.5-1.5v-6.3c0-.83.67-1.5 1.5-1.5z"
+      fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="1.6" stroke-linejoin="round"/>
   `;
+
   badge.appendChild(lockSvg);
   document.documentElement.appendChild(badge);
 
-  function setUi(on) {
-    lockSvg.style.opacity = on ? '1' : '0';
-    badge.style.borderColor = on ? 'rgba(255,255,255,0.72)' : 'rgba(255,255,255,0.60)';
+  function setUiState(isMaster) {
+    lockSvg.style.opacity = isMaster ? '1' : '0';
+    badge.style.borderColor = isMaster ? 'rgba(255,255,255,0.78)' : 'rgba(255,255,255,0.60)';
   }
 
   // ============================================================
-  // Web Locks API (prevents tab from being considered idle)
+  // Web Locks API (optional extra "not idle" signal)
   // ============================================================
 
   let webLockHeld = false;
   let webLockAbortController = null;
 
   async function acquireWebLock() {
+    if (!SETTINGS.extras.webLock) return;
     if (webLockHeld) return;
     if (!('locks' in navigator)) return;
 
@@ -284,16 +246,14 @@
       webLockAbortController = new AbortController();
       webLockHeld = true;
 
-      // Request an exclusive lock that we hold indefinitely
       navigator.locks.request(
-        'ffka-keepalive-' + tabId,
+        'ffka-keepalive',
         { mode: 'exclusive', signal: webLockAbortController.signal },
-        () => new Promise(() => {}) // Never resolves = hold lock forever
+        () => new Promise(() => {})
       ).catch(() => {
-        // Lock was aborted or failed
         webLockHeld = false;
       });
-    } catch (_) {
+    } catch {
       webLockHeld = false;
     }
   }
@@ -306,17 +266,18 @@
         webLockAbortController.abort();
         webLockAbortController = null;
       }
-    } catch (_) {}
+    } catch {}
 
     webLockHeld = false;
   }
 
   // ============================================================
-  // IndexedDB Heartbeat (keeps database connection active)
+  // IndexedDB heartbeat (optional tiny periodic DB write)
   // ============================================================
 
   const IDB_NAME = 'ffka-keepalive-db';
   const IDB_STORE = 'heartbeat';
+
   let idbDatabase = null;
   let idbHeartbeatTimer = null;
 
@@ -332,13 +293,8 @@
           }
         };
 
-        request.onsuccess = (event) => {
-          resolve(event.target.result);
-        };
-
-        request.onerror = () => {
-          reject(request.error);
-        };
+        request.onsuccess = (event) => resolve(event.target.result);
+        request.onerror = () => reject(request.error);
       } catch (e) {
         reject(e);
       }
@@ -347,15 +303,15 @@
 
   async function writeIndexedDBHeartbeat() {
     if (!idbDatabase) return;
-
     try {
       const tx = idbDatabase.transaction(IDB_STORE, 'readwrite');
       const store = tx.objectStore(IDB_STORE);
-      store.put({ id: tabId, ts: Date.now(), url: location.href });
-    } catch (_) {}
+      store.put({ id: tabId, ts: Date.now() });
+    } catch {}
   }
 
   async function startIndexedDBHeartbeat() {
+    if (!SETTINGS.extras.indexedDBHeartbeat) return;
     if (idbHeartbeatTimer) return;
 
     try {
@@ -363,11 +319,11 @@
       await writeIndexedDBHeartbeat();
 
       idbHeartbeatTimer = setInterval(() => {
-        if (!enabledLocal) return;
-        writeIndexedDBHeartbeat();
-      }, INDEXEDDB_HEARTBEAT_MS);
-    } catch (_) {
-      // IndexedDB not available, continue without it
+        if (!runningKeepAlive) return;
+        void writeIndexedDBHeartbeat();
+      }, Math.max(5000, Number(SETTINGS.indexedDB.heartbeatIntervalMs) || 15000));
+    } catch {
+      // IndexedDB may be unavailable; continue without it.
     }
   }
 
@@ -376,84 +332,22 @@
       clearInterval(idbHeartbeatTimer);
       idbHeartbeatTimer = null;
     }
-
     if (idbDatabase) {
-      try {
-        idbDatabase.close();
-      } catch (_) {}
+      try { idbDatabase.close(); } catch {}
       idbDatabase = null;
     }
   }
 
   // ============================================================
-  // KeepAlive core (phantom media)
+  // Phantom media core (silent hidden video + MediaSession)
   // ============================================================
 
-  const USE_MEDIA_SESSION = true;
+  let runningKeepAlive = false;
 
-  let enabledLocal = false;
   let videoEl = null;
-
-  let retryDelayMs = RETRY_DELAY_MIN;
+  let retryDelayMs = SETTINGS.phantomVideo.retryDelayMinMs;
   let watchdogTimer = null;
   let mediaSessionTimer = null;
-
-  function setMediaSessionPlaying(isPlaying) {
-    if (!USE_MEDIA_SESSION) return;
-    try {
-      if (!('mediaSession' in navigator)) return;
-
-      if (isPlaying) {
-        navigator.mediaSession.metadata = new MediaMetadata({
-          title: 'Phantom KeepAlive',
-          artist: 'Firefox',
-          album: 'MIUI workaround'
-        });
-        navigator.mediaSession.playbackState = 'playing';
-
-        const safe = (action, fn) => {
-          try { navigator.mediaSession.setActionHandler(action, fn); } catch (_) {}
-        };
-        safe('play', async () => { try { await videoEl?.play(); } catch (_) {} });
-        safe('pause', () => { try { videoEl?.pause(); } catch (_) {} });
-        safe('stop', () => { stopKeepAlive(); });
-      } else {
-        navigator.mediaSession.playbackState = 'none';
-        navigator.mediaSession.metadata = null;
-
-        const safe = (action) => {
-          try { navigator.mediaSession.setActionHandler(action, null); } catch (_) {}
-        };
-        safe('play'); safe('pause'); safe('stop');
-      }
-    } catch (_) {}
-  }
-
-  function startMediaSessionRefresh() {
-    if (!USE_MEDIA_SESSION) return;
-    if (MEDIASESSION_REFRESH_MS <= 0) return;
-
-    stopMediaSessionRefresh();
-    mediaSessionTimer = setInterval(() => {
-      if (!enabledLocal) return;
-      setMediaSessionPlaying(true);
-    }, MEDIASESSION_REFRESH_MS);
-  }
-
-  function stopMediaSessionRefresh() {
-    if (mediaSessionTimer) {
-      clearInterval(mediaSessionTimer);
-      mediaSessionTimer = null;
-    }
-  }
-
-  /**
-   * Minimal valid MP4 video (black frame, no audio).
-   * This is a widely compatible ftyp+moov+moof structure.
-   */
-  const DATA_MP4 =
-    'data:video/mp4;base64,' +
-    'AAAAHGZ0eXBpc29tAAACAGlzb21pc28yYXZjMW1wNDEAAABsbW9vdgAAAGxtdmhkAAAAAAAAAAAAAAAAAAAD6AAAA+gAAQAAAQAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAABR0cmFrAAAAXHRraGQAAAADAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAABAAAAAEAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAJtZGlhAAAAIG1kaGQAAAAAAAAAAAAAAAAAAAPoAAAD6AABAAAAAAAALWhkbHIAAAAAAAAAAHZpZGUAAAAAAAAAAAAAAABWaWRlb0hhbmRsZXIAAAABGm1pbmYAAAAUdm1oZAAAAAEAAAAAAAAAAAAAACRkaW5mAAAAHGRyZWYAAAABAAAAAQAAABx1cmwgAAAAAQAAAFJzdGJsAAAAQHN0c2QAAAABAAAAAAAwYXZjMQAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAABAAAAAQAAAAAAAAAAAAAAAAAAAAAAABj//wAAACRzdHRzAAAAAQAAAAEAAAABAAAAHGN0dHMAAAABAAAAAQAAAAEAAAAUc3RzYwAAAAEAAAABAAAAAQAAAAEAAAAUc3RzegAAAAEAAAABAAAAAQAAABRzdGNvAAAAAQAAAAEAAAABAAAAHG1vb2YAAAAMbWZoZAAAAAEAAAAA';
 
   async function ensureVideoElement() {
     if (videoEl) return;
@@ -466,44 +360,41 @@
     v.muted = true;
     v.volume = 0;
 
-    v.src = DATA_MP4;
-
-    v.addEventListener('error', () => {
-      try {
-        const canvas = document.createElement('canvas');
-        canvas.width = 2;
-        canvas.height = 2;
-        const ctx = canvas.getContext('2d');
-        if (ctx) {
-          ctx.fillStyle = 'black';
-          ctx.fillRect(0, 0, 2, 2);
-        }
-        const stream = canvas.captureStream(CANVAS_STREAM_FPS);
-        v.srcObject = stream;
-      } catch (_) {}
-    }, { once: true });
+    // Canvas-based video stream (low FPS to save battery).
+    const canvas = document.createElement('canvas');
+    canvas.width = 2;
+    canvas.height = 2;
+    const ctx = canvas.getContext('2d');
+    if (ctx) {
+      ctx.fillStyle = 'black';
+      ctx.fillRect(0, 0, 2, 2);
+    }
+    const stream = canvas.captureStream(SETTINGS.phantomVideo.canvasStreamFps);
+    v.srcObject = stream;
 
     document.documentElement.appendChild(v);
     videoEl = v;
   }
 
   async function tryResumePhantomVideo() {
-    if (!enabledLocal || !videoEl) return;
+    if (!runningKeepAlive) return;
+    if (!videoEl) return;
     if (!videoEl.paused) return;
 
     try {
       await videoEl.play();
-      retryDelayMs = RETRY_DELAY_MIN;
-    } catch (_) {
-      retryDelayMs = Math.min(RETRY_DELAY_MAX, Math.floor(retryDelayMs * 1.6));
+      retryDelayMs = SETTINGS.phantomVideo.retryDelayMinMs;
+    } catch {
+      retryDelayMs = Math.min(
+        SETTINGS.phantomVideo.retryDelayMaxMs,
+        Math.floor(retryDelayMs * 1.6)
+      );
     }
   }
 
   function scheduleWatchdogLoop() {
-    if (!enabledLocal) return;
-
     const loop = async () => {
-      if (!enabledLocal) return;
+      if (!runningKeepAlive) return;
       await tryResumePhantomVideo();
       watchdogTimer = setTimeout(loop, retryDelayMs);
     };
@@ -518,357 +409,232 @@
     }
   }
 
+  function isOtherMediaPlayingOnPage() {
+    try {
+      const els = document.querySelectorAll('audio,video');
+      for (const el of els) {
+        if (el === videoEl) continue;
+        if (el && !el.paused && !el.ended && el.readyState > 2) return true;
+      }
+    } catch {}
+    return false;
+  }
+
+  function setMediaSessionPlaying(isPlaying) {
+    try {
+      if (!('mediaSession' in navigator)) return;
+
+      if (isPlaying) {
+        navigator.mediaSession.metadata = new MediaMetadata({
+          title: 'Phantom KeepAlive',
+          artist: 'Firefox',
+          album: 'MIUI workaround',
+        });
+        navigator.mediaSession.playbackState = 'playing';
+
+        const safe = (action, fn) => {
+          try { navigator.mediaSession.setActionHandler(action, fn); } catch {}
+        };
+
+        safe('play', async () => { try { await videoEl?.play(); } catch {} });
+        safe('pause', () => { try { videoEl?.pause(); } catch {} });
+
+        // If the user stops playback from the Android notification, disable the keepalive.
+        safe('stop', async () => {
+          try {
+            const st = await readMasterState();
+            if (isThisTabMaster(st)) await clearMasterState();
+          } catch {}
+        });
+      } else {
+        navigator.mediaSession.playbackState = 'none';
+        navigator.mediaSession.metadata = null;
+
+        const safe = (action) => {
+          try { navigator.mediaSession.setActionHandler(action, null); } catch {}
+        };
+        safe('play');
+        safe('pause');
+        safe('stop');
+      }
+    } catch {}
+  }
+
+  function refreshPhantomMediaSession() {
+    if (!runningKeepAlive) return;
+
+    if (SETTINGS.mediaSession.skipIfRealMediaOnPage && isOtherMediaPlayingOnPage()) {
+      return;
+    }
+
+    // Re-assert metadata/playbackState (Android may restore the notification/player).
+    setMediaSessionPlaying(true);
+
+    // Also ensure the phantom video is actually playing.
+    void tryResumePhantomVideo();
+  }
+
+  function startMediaSessionRefresh() {
+    const interval = Number(SETTINGS.mediaSession.refreshIntervalMs) || 0;
+    if (interval <= 0) return;
+
+    stopMediaSessionRefresh();
+
+    mediaSessionTimer = setInterval(() => {
+      if (!runningKeepAlive) return;
+      refreshPhantomMediaSession();
+    }, Math.max(2000, interval));
+  }
+
+  function stopMediaSessionRefresh() {
+    if (mediaSessionTimer) {
+      clearInterval(mediaSessionTimer);
+      mediaSessionTimer = null;
+    }
+  }
+
   async function startKeepAlive() {
-    if (enabledLocal) return;
-    enabledLocal = true;
+    if (runningKeepAlive) return;
+    runningKeepAlive = true;
 
-    setUi(true);
-
-    // Acquire Web Lock
     await acquireWebLock();
-
-    // Start IndexedDB heartbeat
     await startIndexedDBHeartbeat();
 
     await ensureVideoElement();
-    try { await videoEl.play(); } catch (_) {}
+    try { await videoEl?.play(); } catch {}
 
     setMediaSessionPlaying(true);
 
-    retryDelayMs = RETRY_DELAY_MIN;
+    retryDelayMs = SETTINGS.phantomVideo.retryDelayMinMs;
     clearWatchdogLoop();
     scheduleWatchdogLoop();
 
-    // MediaSession is set once above via setMediaSessionPlaying(true)
-    // No periodic refresh to avoid interrupting other audio apps
+    startMediaSessionRefresh();
   }
 
   function stopKeepAlive() {
-    if (!enabledLocal) return;
-    enabledLocal = false;
-
-    setUi(false);
-
-    stopUserActivityTick();
-    stopOwnerHeartbeatLoop();
+    if (!runningKeepAlive) return;
+    runningKeepAlive = false;
 
     stopMediaSessionRefresh();
     setMediaSessionPlaying(false);
 
     clearWatchdogLoop();
-    retryDelayMs = RETRY_DELAY_MIN;
+    retryDelayMs = SETTINGS.phantomVideo.retryDelayMinMs;
 
-    // Release Web Lock
     releaseWebLock();
-
-    // Stop IndexedDB heartbeat
     stopIndexedDBHeartbeat();
 
     try {
       if (videoEl) {
         videoEl.pause();
+
         const so = videoEl.srcObject;
-        if (so && so.getTracks) so.getTracks().forEach(t => { try { t.stop(); } catch (_) {} });
+        if (so && so.getTracks) {
+          so.getTracks().forEach(t => { try { t.stop(); } catch {} });
+        }
 
         videoEl.srcObject = null;
         videoEl.removeAttribute('src');
         videoEl.load();
         videoEl.remove();
       }
-    } catch (_) {}
+    } catch {}
+
     videoEl = null;
-
-    localOwnerFlag = false;
-
-    // Restore original visibility API when disabled
-    uninstallVisibilityHooks();
   }
 
   // ============================================================
-  // Background-play support (whitelisted domains, owner tab only)
+  // Master state application (queued, avoids lost updates)
   // ============================================================
 
-  const origVisibilityState = Object.getOwnPropertyDescriptor(Document.prototype, 'visibilityState')
-    || Object.getOwnPropertyDescriptor(document, 'visibilityState');
-  const origHidden = Object.getOwnPropertyDescriptor(Document.prototype, 'hidden')
-    || Object.getOwnPropertyDescriptor(document, 'hidden');
+  let applying = false;
+  let applyQueued = false;
+  let localMasterActive = false;
 
-  function getRealVisibilityState() {
-    try {
-      const d = origVisibilityState;
-      if (d && typeof d.get === 'function') return d.get.call(document);
-      return document.visibilityState;
-    } catch (_) {
-      return 'visible';
-    }
-  }
+  async function setLocalMasterMode(isMaster) {
+    setUiState(isMaster);
 
-  function getRealHidden() {
-    try {
-      const d = origHidden;
-      if (d && typeof d.get === 'function') return d.get.call(document);
-      return document.hidden;
-    } catch (_) {
-      return false;
-    }
-  }
+    if (isMaster === localMasterActive) return;
+    localMasterActive = isMaster;
 
-  let visibilityHooksInstalled = false;
-  let localOwnerFlag = false;
-  let visibilityBlockerRef = null;
-
-  async function refreshLocalOwnerFlag() {
-    localOwnerFlag = await isMeOwner();
-  }
-
-  function installVisibilityHooks() {
-    if (visibilityHooksInstalled) return;
-    visibilityHooksInstalled = true;
-
-    try {
-      Object.defineProperty(document, 'visibilityState', {
-        configurable: true,
-        get() {
-          if (enabledLocal && isBgPlayDomain() && localOwnerFlag) return 'visible';
-          return getRealVisibilityState();
-        }
-      });
-    } catch (_) {}
-
-    try {
-      Object.defineProperty(document, 'hidden', {
-        configurable: true,
-        get() {
-          if (enabledLocal && isBgPlayDomain() && localOwnerFlag) return false;
-          return getRealHidden();
-        }
-      });
-    } catch (_) {}
-
-    // Store reference so we can remove it later
-    visibilityBlockerRef = (ev) => {
-      if (enabledLocal && isBgPlayDomain() && localOwnerFlag) ev.stopImmediatePropagation();
-    };
-    document.addEventListener('visibilitychange', visibilityBlockerRef, true);
-    document.addEventListener('webkitvisibilitychange', visibilityBlockerRef, true);
-  }
-
-  function uninstallVisibilityHooks() {
-    if (!visibilityHooksInstalled) return;
-
-    // Restore original visibilityState property
-    try {
-      if (origVisibilityState) {
-        Object.defineProperty(document, 'visibilityState', origVisibilityState);
-      } else {
-        delete document.visibilityState;
-      }
-    } catch (_) {}
-
-    // Restore original hidden property
-    try {
-      if (origHidden) {
-        Object.defineProperty(document, 'hidden', origHidden);
-      } else {
-        delete document.hidden;
-      }
-    } catch (_) {}
-
-    // Remove event blockers
-    if (visibilityBlockerRef) {
-      try {
-        document.removeEventListener('visibilitychange', visibilityBlockerRef, true);
-        document.removeEventListener('webkitvisibilitychange', visibilityBlockerRef, true);
-      } catch (_) {}
-      visibilityBlockerRef = null;
-    }
-
-    visibilityHooksInstalled = false;
-  }
-
-  // ============================================================
-  // Synthetic user activity (owner tab only)
-  // ============================================================
-
-  /**
-   * Emit synthetic mouse/pointer events with realistic coordinates.
-   * Note: isTrusted will still be false, but coordinates are plausible.
-   */
-  function emitSyntheticActivity() {
-    const clientX = Math.random() * (window.innerWidth || 800);
-    const clientY = Math.random() * (window.innerHeight || 600);
-
-    try {
-      const mouseEvt = new MouseEvent('mousemove', {
-        bubbles: true,
-        cancelable: true,
-        clientX: clientX,
-        clientY: clientY,
-        screenX: clientX + (window.screenX || 0),
-        screenY: clientY + (window.screenY || 0),
-        view: window
-      });
-      document.dispatchEvent(mouseEvt);
-    } catch (_) {}
-
-    try {
-      const pointerEvt = new PointerEvent('pointermove', {
-        bubbles: true,
-        cancelable: true,
-        clientX: clientX,
-        clientY: clientY,
-        screenX: clientX + (window.screenX || 0),
-        screenY: clientY + (window.screenY || 0),
-        view: window,
-        pointerType: 'touch',
-        isPrimary: true
-      });
-      document.dispatchEvent(pointerEvt);
-    } catch (_) {}
-  }
-
-  // ============================================================
-  // Owner-only user activity tick (no focus)
-  // ============================================================
-
-  let userActivityTimer = null;
-
-  function startUserActivityTick() {
-    if (userActivityTimer) return;
-
-    userActivityTimer = setInterval(() => {
-      if (!enabledLocal) return;
-      if (!isBgPlayDomain()) return;
-      if (!localOwnerFlag) return;
-
-      try { window.__ffkaLastActivity = Date.now(); } catch (_) {}
-      emitSyntheticActivity();
-    }, Math.max(5000, USER_ACTIVITY_TICK_MS));
-  }
-
-  function stopUserActivityTick() {
-    if (userActivityTimer) {
-      clearInterval(userActivityTimer);
-      userActivityTimer = null;
-    }
-  }
-
-  // ============================================================
-  // Owner heartbeat (owner tab only)
-  // ============================================================
-
-  let ownerHeartbeatTimer = null;
-
-  function startOwnerHeartbeatLoop() {
-    if (ownerHeartbeatTimer) return;
-
-    ownerHeartbeatTimer = setInterval(async () => {
-      if (!(await getGlobalEnabled())) return;
-      if (!isBgPlayDomain()) return;
-      if (!(await isMeOwner())) return;
-      await gmSet(KEY_OWNER_TS, now());
-    }, OWNER_HEARTBEAT_MS);
-  }
-
-  function stopOwnerHeartbeatLoop() {
-    if (ownerHeartbeatTimer) {
-      clearInterval(ownerHeartbeatTimer);
-      ownerHeartbeatTimer = null;
-    }
-  }
-
-  // ============================================================
-  // Global state application
-  // ============================================================
-
-  async function applyGlobalEnabledState() {
-    const on = await getGlobalEnabled();
-    setUi(on);
-
-    if (on) {
-      installVisibilityHooks();
+    if (isMaster) {
       await startKeepAlive();
-
-      const alive = await isOwnerAlive();
-      if (!alive) await claimOwner('fallback-enable');
-      await refreshLocalOwnerFlag();
-
-      startOwnerHeartbeatLoop();
-      startUserActivityTick();
     } else {
       stopKeepAlive();
     }
   }
 
-  // ============================================================
-  // Ownership policy
-  // ============================================================
-
-  /**
-   * Make the "last played" tab the owner.
-   * This triggers on actual media playback in the page.
-   */
-  document.addEventListener('play', async (ev) => {
-    if (!(await getGlobalEnabled())) return;
-    if (!isBgPlayDomain()) return;
-    if (!ev || !ev.target) return;
-
-    const claimed = await claimOwner('media-play');
-    if (claimed) {
-      await refreshLocalOwnerFlag();
+  async function applyMasterState() {
+    if (applying) {
+      applyQueued = true;
+      return;
     }
-  }, true);
+
+    applying = true;
+
+    try {
+      const st = await readMasterState();
+      await setLocalMasterMode(isThisTabMaster(st));
+    } finally {
+      applying = false;
+
+      if (applyQueued) {
+        applyQueued = false;
+        void applyMasterState();
+      }
+    }
+  }
 
   // ============================================================
   // Event wiring
   // ============================================================
 
-  gmOnChange(KEY_ENABLED, async () => {
-    await applyGlobalEnabledState();
-    await refreshLocalOwnerFlag();
-  });
+  // React to shared master state changes.
+  gmOnChange(KEY_MASTER_ID, () => void applyMasterState());
+  gmOnChange(KEY_MASTER_ENABLED, () => void applyMasterState());
 
-  gmOnChange(KEY_OWNER_ID, async () => {
-    await refreshLocalOwnerFlag();
-  });
-
-  gmOnChange(KEY_OWNER_TS, async () => {
-    await refreshLocalOwnerFlag();
-  });
-
+  // Best-effort resume phantom playback + ensure MediaSession (master only).
   document.addEventListener('visibilitychange', async () => {
-    if (!enabledLocal) return;
+    if (!runningKeepAlive) return;
     await tryResumePhantomVideo();
     setMediaSessionPlaying(true);
-    await refreshLocalOwnerFlag();
   }, { passive: true });
 
+  // Badge behavior (force-claim):
+  // - If this tab is master: disable keepalive.
+  // - Otherwise: make THIS tab master (overwrites any previous master).
   badge.addEventListener('click', async () => {
-    const newOn = !(await getGlobalEnabled());
-    await setGlobalEnabled(newOn);
+    const st = await readMasterState();
 
-    if (newOn) {
-      await startKeepAlive();
-
-      const alive = await isOwnerAlive();
-      if (!alive) await claimOwner('fallback-enable');
-      await refreshLocalOwnerFlag();
-
-      installVisibilityHooks();
-      startOwnerHeartbeatLoop();
-      startUserActivityTick();
-    } else {
-      stopKeepAlive();
+    if (isThisTabMaster(st)) {
+      await clearMasterState();
+      await applyMasterState();
+      return;
     }
+
+    await setMasterStateAsThisTab();
+    await applyMasterState();
   }, { passive: true });
+
+  // If the master tab is closed, best-effort clear the master state.
+  // Note: OS-kills may skip unload, but force-claim makes recovery easy.
+  const tryClearIfMaster = async () => {
+    try {
+      const st = await readMasterState();
+      if (isThisTabMaster(st)) {
+        await clearMasterState();
+      }
+    } catch {}
+  };
+
+  window.addEventListener('pagehide', () => { void tryClearIfMaster(); }, { passive: true });
+  window.addEventListener('beforeunload', () => { void tryClearIfMaster(); }, { passive: true });
 
   // ============================================================
   // Initialization
   // ============================================================
 
-  (async () => {
-    await applyGlobalEnabledState();
-    await refreshLocalOwnerFlag();
-  })();
+  void applyMasterState();
 
 })();

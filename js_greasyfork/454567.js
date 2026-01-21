@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         快速查包
 // @namespace    fsh
-// @version      1.0.15
+// @version      1.0.16
 // @description  快速跳转至指定包或指定分支
 // @author       05128
 // @match        *://ci.meitu.city/*
@@ -21,7 +21,7 @@
 // ==/UserScript==
 
 // Auto-generated bundle - DO NOT EDIT DIRECTLY
-// Generated at: 2026-01-19T06:41:20.924Z
+// Generated at: 2026-01-21T03:28:57.881Z
 
 // 兼容性函数
 function sleep(ms) {
@@ -176,14 +176,16 @@ const ConfigManager = {
     LOG_WORK_CATEGORIES: [
       "海外",
       "闪传",
-      "AI垂类",
-      "非AI垂类",
+      "垂类",
       "美化",
       "美容",
       "拼图",
       "相机",
       "视频美化",
       "视频美容",
+      "隐私整改",
+      "live",
+      "渠道协议适配",
       "证件照",
       "素材中心",
       "订阅",

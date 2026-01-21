@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         图寻复盘工具 PRO
 // @namespace    https://greasyfork.org/users/1179204
-// @version      2.0.5
+// @version      2.0.6
 // @description  增加复盘小地图，全面提升复盘效果
 // @match        *://tuxun.fun/replay-pano?gameId=*&round=*
 // @icon         data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgNDggNDgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgZmlsbD0iIzAwMDAwMCI+PGcgaWQ9IlNWR1JlcG9fYmdDYXJyaWVyIiBzdHJva2Utd2lkdGg9IjAiPjwvZz48ZyBpZD0iU1ZHUmVwb190cmFjZXJDYXJyaWVyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjwvZz48ZyBpZD0iU1ZHUmVwb19pY29uQ2FycmllciI+PHRpdGxlPjcwIEJhc2ljIGljb25zIGJ5IFhpY29ucy5jbzwvdGl0bGU+PHBhdGggZD0iTTI0LDEuMzJjLTkuOTIsMC0xOCw3LjgtMTgsMTcuMzhBMTYuODMsMTYuODMsMCwwLDAsOS41NywyOS4wOWwxMi44NCwxNi44YTIsMiwwLDAsMCwzLjE4LDBsMTIuODQtMTYuOEExNi44NCwxNi44NCwwLDAsMCw0MiwxOC43QzQyLDkuMTIsMzMuOTIsMS4zMiwyNCwxLjMyWiIgZmlsbD0iI2ZmOTQyNyI+PC9wYXRoPjxwYXRoIGQ9Ik0yNS4zNywxMi4xM2E3LDcsMCwxLDAsNS41LDUuNUE3LDcsMCwwLDAsMjUuMzcsMTIuMTNaIiBmaWxsPSIjZmZmZmZmIj48L3BhdGg+PC9nPjwvc3ZnPg==
@@ -1183,7 +1183,8 @@
     async function getGoogleSL(panoId, loc, h, t, z) {
         const url = 'https://www.google.com/maps/rpc/shorturl';
         const y=calculateFOV(z)
-        const pb = `!1shttps://www.google.com/maps/@${loc.lat()},${loc.lng()},3a,${y}y,${h}h,${t+90}t/data=*213m7*211e1*213m5*211s${panoId}*212e0*216shttps%3A%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fpanoid%3D${panoId}%26cb_client%3Dmaps_sv.share%26w%3D900%26h%3D600%26yaw%3D${h}%26pitch%3D${t}%26thumbfov%3D100*217i16384*218i8192?coh=205410&entry=tts&g_ep=EgoyMDI0MDgyOC4wKgBIAVAD!2m2!1sH5TSZpaqObbBvr0PvKOJ0AI!7e81!6b1`;
+
+        const pb = `!1shttps://www.google.com/maps/@${loc.lat()},${loc.lng()},3a,${y}y,${h}h,${90+t}t/data=*213m5*211e1*213m3*211s${panoId}*212e0*216shttps%3A%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fpanoid%3D${panoId}%26cb_client%3Dmaps_sv.share%26w%3D900%26h%3D600%26yaw%3D${h}%26pitch%3D${(t)*-1}%26thumbfov%3D100*217i16384*218i8192?coh=205410&entry=tts!2m1!7e81!6b1`;
 
         const params = new URLSearchParams({
             authuser: '0',

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          Google Gemini Mod (Toolbar, Folders & Download)
 // @namespace     http://tampermonkey.net/
-// @version       0.0.19
+// @version       0.0.23
 // @description   Enhances Google Gemini with a configurable toolbar and sidebar folders to organize conversations.
 // @description[de] Verbessert Google Gemini mit einer konfigurierbaren Symbolleiste und Ordnern in der Seitenleiste, um Konversationen zu organisieren.
 // @author        Adromir
@@ -18,7 +18,7 @@
 // @require       https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js
 // @require       https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js
 // @require       https://cdn.jsdelivr.net/gh/adromir/scripts@ef4eeb9853f8d32d5cff2f37133fe8bddfb19972/userscripts/gemini-snippets/gemini_mod_styles.js#sha256-bXQDm5Zj7+t4jYaFvTGvx/jUgo08EQmLdHve9CIRVoQ=
-// @require       https://cdn.jsdelivr.net/gh/adromir/scripts@ef4eeb9853f8d32d5cff2f37133fe8bddfb19972/userscripts/gemini-snippets/gemini_mod_utils.js#sha256-fuVgPZwMZpc70L35bG2B9oVdzD7YYYnQQp3xyJ/C/IM=
+// @require       https://cdn.jsdelivr.net/gh/adromir/scripts@bba070d4de424d81a5d6df9211b28492553726f5/userscripts/gemini-snippets/gemini_mod_utils.js
 // @require       https://cdn.jsdelivr.net/gh/adromir/scripts@ef4eeb9853f8d32d5cff2f37133fe8bddfb19972/userscripts/gemini-snippets/gemini_mod_drive.js#sha256-Sf+ByWwt60J4l8gAbxP7jzBd004RVfvwpWhkeyWUcmg=
 // @downloadURL https://update.greasyfork.org/scripts/536192/Google%20Gemini%20Mod%20%28Toolbar%2C%20Folders%20%20Download%29.user.js
 // @updateURL https://update.greasyfork.org/scripts/536192/Google%20Gemini%20Mod%20%28Toolbar%2C%20Folders%20%20Download%29.meta.js
@@ -106,6 +106,8 @@
 	const showPrompt = GeminiMod.utils.showCustomPromptDialog;
 	const showColorPicker = GeminiMod.utils.showColorPickerDialog;
 	const injectCSS = GeminiMod.utils.injectCustomCSS;
+	const getReactProps = GeminiMod.utils.getReactProps;
+	const getClassProperty = GeminiMod.utils.getClassProperty;
 
 	// --- Text Insertion Logic ---
 
@@ -1263,54 +1265,112 @@
 	// kept as is, but ensuring they use displayUserscriptMessage via helper
 
 	function getCanvasContent() {
-		// More robust detection of the panel
-		const panels = document.querySelectorAll('code-immersive-panel, immersive-panel, .immersive-panel-container');
+		console.log("Gemini Mod: Starting Content Extraction (Accessing via unsafeWindow)...");
+		// Access raw DOM via unsafeWindow
+		const rawDoc = unsafeWindow.document;
 
+		// 1. Try Monaco Editor directly via Global API (Most Robust for Code)
+		if (unsafeWindow.monaco && unsafeWindow.monaco.editor) {
+			console.log("Gemini Mod: Found Global Monaco API. Checking editors...");
+			try {
+				const editors = unsafeWindow.monaco.editor.getEditors();
+				// Priority 1: Editor inside code-immersive-panel (Code Canvas)
+				let canvasEditor = editors.find(e => {
+					let node = e.getContainerDomNode();
+					// Handle Xray wrapper
+					if (node.wrappedJSObject) node = node.wrappedJSObject;
+					return node.closest('code-immersive-panel') && rawDoc.body.contains(node) && node.offsetParent !== null;
+				});
+
+				// Priority 2: Fallback to any visible editor
+				if (!canvasEditor) {
+					canvasEditor = editors.find(e => {
+						let node = e.getContainerDomNode();
+						if (node.wrappedJSObject) node = node.wrappedJSObject;
+						return rawDoc.body.contains(node) && node.offsetParent !== null;
+					});
+				}
+
+				if (canvasEditor) {
+					console.log("Gemini Mod: Found Active Monaco Editor.");
+					const model = canvasEditor.getModel();
+					if (model) {
+						let title = "code_snippet";
+						// Retrieve title
+						let node = canvasEditor.getContainerDomNode();
+						if (node.wrappedJSObject) node = node.wrappedJSObject;
+
+						const parentPanel = node.closest('code-immersive-panel');
+						if (parentPanel) {
+							const header = parentPanel.querySelector('h2, [data-test-id="canvas-title"], .title, .filename');
+							if (header && header.textContent.trim()) {
+								title = header.textContent.trim();
+							}
+						}
+
+						if (title === "code_snippet") {
+							const broadTitle = rawDoc.querySelector('code-immersive-panel h2');
+							if (broadTitle && broadTitle.textContent.trim()) {
+								title = broadTitle.textContent.trim();
+							}
+						}
+
+						console.log(`Gemini Mod: Extracted ${model.getValue().length} chars from Monaco.`);
+						return { type: 'code', text: model.getValue(), title: title };
+					}
+				}
+			} catch (e) {
+				console.warn("Gemini Mod: Failed to access Monaco API", e);
+			}
+		}
+
+		// 2. Try ProseMirror (Document Editor)
+		const pmEditor = rawDoc.querySelector('.ProseMirror');
+		if (pmEditor) {
+			console.log("Gemini Mod: Found ProseMirror editor (raw).");
+			if (pmEditor.pmView) {
+				console.log("Gemini Mod: Found pmView. Extracting text...");
+				const titleEl = rawDoc.querySelector(GEMINI_DOC_CANVAS_TITLE_SELECTOR);
+				const title = titleEl ? titleEl.textContent.trim() : "GEMINI_DOCUMENT";
+				try {
+					const text = pmEditor.pmView.state.doc.textContent;
+					return { type: 'text', text: text, title: title };
+				} catch (e) {
+					console.warn("Gemini Mod: Failed to read ProseMirror state", e);
+				}
+			}
+		}
+
+		// 3. Fallback: DOM Text Extraction (standard document)
+		console.log("Gemini Mod: Fallback to DOM text.");
+		// Use standard document for fallback selectors as they might rely on standard DOM API behavior
+		const panels = document.querySelectorAll('code-immersive-panel, immersive-panel, .immersive-panel-container');
 		for (const panel of panels) {
-			// Helper to check a root (Light or Shadow)
 			const checkRoot = (root) => {
 				if (!root) return null;
-
-				const titleEl = root.querySelector('h2.title-text, .title, span[data-test-id="title"]');
+				const titleEl = root.querySelector('h2.title-text, .title');
 				const title = titleEl ? titleEl.textContent.trim() : "gemini_artifact";
 
-				// 1. Try Monaco Editor (Gemini Canvas Code)
-				// Monaco uses virtualized rendering, but usually puts lines in .view-lines.
-				// This selector tries to find the main content area of monaco.
 				const monacoEditor = root.querySelector('.monaco-editor');
 				if (monacoEditor) {
 					const viewLines = monacoEditor.querySelector('.view-lines');
-					if (viewLines) {
-						// innerText of view-lines usually preserves formatting reasonably well for copy
-						return { type: 'code', text: viewLines.innerText, title: title };
-					}
+					if (viewLines) return { type: 'code', text: viewLines.innerText, title: title };
 				}
-
-				// 2. Try Standard Code Extraction (pre/code)
 				const codeBlock = root.querySelector('code, pre');
-				if (codeBlock) {
-					return { type: 'code', text: codeBlock.textContent, title: title };
-				}
-
-				// 3. Try Document Extraction (ProseMirror / ContentEditable)
-				// Use the constant if available in scope, ensuring we match the defined selectors
+				if (codeBlock) return { type: 'code', text: codeBlock.textContent, title: title };
 				const editor = root.querySelector(GEMINI_DOC_CANVAS_EDITOR_SELECTOR) || root.querySelector('[contenteditable="true"]');
-				if (editor) {
-					const docTitle = title === "gemini_artifact" ? "GEMINI_DOCUMENT" : title;
-					return { type: 'text', text: editor.innerText, title: docTitle };
-				}
+				if (editor) return { type: 'text', text: editor.innerText, title: title };
+
 				return null;
 			};
 
-			// Check Shadow DOM first (most likely for custom elements)
+			// Check Shadow DOM
 			if (panel.shadowRoot) {
-				const shadowResult = checkRoot(panel.shadowRoot);
-				if (shadowResult) return shadowResult;
+				const res = checkRoot(panel.shadowRoot);
+				if (res) return res;
 			}
-
-			// Check Light DOM
-			const lightResult = checkRoot(panel);
-			if (lightResult) return lightResult;
+			const res = checkRoot(panel);
+			if (res) return res;
 		}
 
 		return null;
@@ -1365,40 +1425,55 @@
 			return;
 		}
 
-		const { jsPDF } = window.jspdf;
-		const doc = new jsPDF();
+		try {
+			const { jsPDF } = window.jspdf;
+			// Use 'pt' units for consistency with bridge.js logic
+			const doc = new jsPDF({ unit: 'pt', format: 'a4' });
 
-		const margins = { top: 20, bottom: 20, left: 20, right: 20 };
-		const pageWidth = doc.internal.pageSize.getWidth();
-		const pageHeight = doc.internal.pageSize.getHeight();
-		const maxLineWidth = pageWidth - margins.left - margins.right;
+			const margins = { top: 40, bottom: 40, left: 40, right: 40 };
+			const pageWidth = doc.internal.pageSize.getWidth();
+			const pageHeight = doc.internal.pageSize.getHeight();
+			const maxLineWidth = pageWidth - margins.left - margins.right;
+			const lineHeight = 12;
 
-		doc.setFont("courier", "normal");
-		doc.setFontSize(10);
+			// sanitize content: replace tabs with spaces for correct width calc
+			const textContent = (content.text || "")
+				.replace(/\t/g, '    ')
+				.replace(/\u00A0/g, ' ');
 
-		let y = margins.top;
-		if (content.title) {
+			let title = content.title || "gemini_export";
+
+
+			// Title
 			doc.setFont("helvetica", "bold");
 			doc.setFontSize(14);
-			doc.text(content.title, margins.left, y);
-			y += 10;
+			doc.text(title, margins.left, margins.top);
+
+			let y = margins.top + 25;
+
+			// Content
 			doc.setFont("courier", "normal");
 			doc.setFontSize(10);
+
+			// Split text to fit width
+			const lines = doc.splitTextToSize(textContent, maxLineWidth);
+
+			lines.forEach(line => {
+				if (y > pageHeight - margins.bottom) {
+					doc.addPage();
+					y = margins.top;
+				}
+				doc.text(line, margins.left, y);
+				y += lineHeight;
+			});
+
+			const filename = title.replace(INVALID_FILENAME_CHARS_REGEX, "_") + ".pdf";
+			doc.save(filename);
+
+		} catch (e) {
+			console.error("Gemini Mod: PDF Generation Failed", e);
+			displayMessage("PDF Generation Failed: " + e.message);
 		}
-
-		const lines = doc.splitTextToSize(content.text, maxLineWidth);
-
-		lines.forEach(line => {
-			if (y + 10 > pageHeight - margins.bottom) {
-				doc.addPage();
-				y = margins.top;
-			}
-			doc.text(line, margins.left, y);
-			y += 5; // Line height
-		});
-
-		const filename = (content.title || "gemini_export").replace(INVALID_FILENAME_CHARS_REGEX, "_") + ".pdf";
-		doc.save(filename);
 	}
 
 

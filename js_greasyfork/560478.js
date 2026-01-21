@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bh3helper-enhancer
 // @namespace    4b8b542a-3500-49bd-b857-8d62413434c7
-// @version      1.2.1
+// @version      1.2.3
 // @description  在bh3helper（《崩坏3》剧情助手）上提供增强功能
 // @author       -
 // @match        https://bh3helper.xrysnow.xyz/*
@@ -23,7 +23,7 @@
 // @require      https://cdn.jsdelivr.net/npm/lz-string@1.5.0/libs/lz-string.min.js#sha256-lfTRy/CZ9XFhtmS8BIQm7D35JjeAGkx5EW6DMVqnh+c=
 // @resource     dialog_css https://cdn.jsdelivr.net/npm/vue-dialog-view@1.7.1/dist/vue-dialog-view.css#sha256-HnPUNAFITfEE27CBFvnXJJBIw7snbNTkexmuZ95u160=
 // @resource     treeview_css https://cdn.jsdelivr.net/npm/vue3-tree@0.11.5/dist/style.css#sha256-pMwswRTw7jawlpe60P8W2yItWloUeREwp4DwlZkp3OI=
-// @inject-into  page
+// @supportURL   https://github.com/shc0743/MyUtility/issues/new?title=bh3helper-enhancer:%20
 // @run-at       document-start
 // @license      GPL-3.0
 // @downloadURL https://update.greasyfork.org/scripts/560478/bh3helper-enhancer.user.js
@@ -38,7 +38,7 @@
         EXPORT_WAIT_TIMEOUT: 1000 * 60 * 3,
         DIALOG_SWITCH_CD_TIME: 80,
         COMMON_PAGE_BASE_URL: '/pages/common.html',
-        SCRIPTS_BASE_URL: '/js/',
+        PAGE_BASE_URL: '/pages/',
     };
 
     // ---------- //
@@ -88,6 +88,37 @@
                 patch: '桔梗在此沉睡',
                 condition: [
                     ["pathname", "eq", "/"],
+                ],
+                errorAction: "Continue",
+            },
+            {
+                id: 3,
+                selector: 'a[href="pages/common.html?id=21"] .brief-title-main-w',
+                patch: '第二十一章：新生之翼',
+                multiple: true,
+                condition: [
+                    ["pathname", "eq", "/"],
+                    ["innerText", "eq", '第二十一章：新生之羽'],
+                ],
+                errorAction: "Continue",
+            },
+            {
+                id: 4,
+                selector: '.main-title',
+                patch: '第二十一章 新生之翼',
+                condition: [
+                    ["pathname", "eq", "/pages/common.html"],
+                    ["commonid", "eq", '21'],
+                ],
+                errorAction: "Continue",
+            },
+            {
+                id: 5,
+                selector: '#基本信息 > div.content > table > tbody > tr:nth-child(1) > td:nth-child(2) > div > div > p',
+                patch: '新生之翼',
+                condition: [
+                    ["pathname", "eq", "/pages/common.html"],
+                    ["commonid", "eq", '21'],
                 ],
                 errorAction: "Continue",
             },
@@ -1106,18 +1137,16 @@ details[open] > .dlg-help-summary::before {
                         if (column1.querySelector(".dialog-actor > .dialog-actor-option")) {
                             // 选项
                             const dialogActorOption = column1.querySelector('.dialog-actor-option');
-                            const optionText = (dialogActorOption && dialogActorOption.innerText) ? `${dialogActorOption.innerText}：` : '- ';
+                            const optionText = (dialogActorOption && dialogActorOption.innerText) ? `${extractNodeText(dialogActorOption, nodeTextExt).join('')}：` : '- ';
                             const options = column2.querySelectorAll('.dialog-line-option');
                             for (const option of options) {
-                                contents.push(`${optionText}${option.innerText}`);
+                                contents.push(`${optionText}${extractNodeText(option, nodeTextExt).join('')}`);
                             }
                         }
                         else {
                             // 对话
                             const isDialogSection = table.classList.contains('dialog-viewer-section');
-                            const field1 = column1.innerText ? (isDialogSection ? `${column1.innerText}\uff1a` : `${column1.innerText}\n`) : '';
-                            //let lines = column2.querySelectorAll('.dialog-line');
-                            //if (!lines || !lines.length) lines = [column2];
+                            const field1 = column1.innerText ? (extractNodeText(column1, nodeTextExt).join('') + (isDialogSection ? '\uff1a' : '\n')) : '';
                             const lines = column2.childNodes[0]?.childNodes || [column2];
                             for (const lineWrapper of lines) {
                                 if (!includeSynopsis && lineWrapper.classList.contains('dialog-synopsis-line')) continue;
@@ -1468,9 +1497,49 @@ details[open] > .dlg-help-summary::before {
                 throw new Error('ScriptIndex 不是对象！目标网站可能修改了结构，请考虑更新或反馈此问题。');
             }
 
-            const keys = Reflect.ownKeys(ScriptIndex); // 目标网站的变量名
+            const filesData = Object.assign({
+                '/index.html': '/index.html',
+                '/pages/common.html': '/pages/common.html',
+                '/pages/search.html': '/pages/search.html',
+                '/res/img/favicon.png': '/res/img/favicon.png',
+            }, structuredClone(ScriptIndex));
+            // 寻找页面上的CSS
+            try { 
+                const responses = await Promise.all([
+                    LoadResource(new Request(new URL('/', window.location.href))),
+                    LoadResource(new Request(new URL('/pages/common.html', window.location.href))),
+                    LoadResource(new Request(new URL('/pages/search.html', window.location.href)))
+                ]);
+                const [indexPage, commonPage, searchPage] = await Promise.all(
+                    responses.map(response => response.text())
+                );
+
+                // 使用parser解析DOM
+                const parser = new DOMParser();
+                const indexDoc = parser.parseFromString(indexPage, 'text/html');
+                const commonDoc = parser.parseFromString(commonPage, 'text/html');
+                const searchDoc = parser.parseFromString(searchPage, 'text/html');
+
+                // 寻找CSS
+                const indexCss = indexDoc.querySelectorAll('link[rel="stylesheet"]');
+                const commonCss = commonDoc.querySelectorAll('link[rel="stylesheet"]');
+                const searchCss = searchDoc.querySelectorAll('link[rel="stylesheet"]');
+
+                // 合并所有CSS
+                const allCss = [...indexCss, ...commonCss, ...searchCss];
+                for (const css of allCss) {
+                    const href = css.href;
+                    if (href) {
+                        filesData[href] = href;
+                    }
+                }
+            } catch (error) {
+                console.warn('[bh3helper-downloader] find css failed:', error);
+                showMessage("警告：寻找页面上的 CSS 失败: " + error, 'error');
+            }
+            const keys = Reflect.ownKeys(filesData); // 目标网站的变量名
             const total = keys.length;
-            const remoteBase = new URL(CONFIG.SCRIPTS_BASE_URL, window.location.href);
+            const remoteBase = new URL(CONFIG.PAGE_BASE_URL, window.location.href);
             const updateProgress = (current, desc = '') => {
                 ui.loading_indicator.innerText = `正在处理第 ${current} (共 ${total} 个)\n${desc || '\u2060'}`;
             };
@@ -1478,26 +1547,31 @@ details[open] > .dlg-help-summary::before {
             // 逐个获取文件
             for (let i = 0; i < total; i++) {
                 const key = keys[i];
-                const data = ScriptIndex[key];
+                const data = filesData[key];
                 const url = new URL(data, remoteBase.href);
                 updateProgress(i + 1, `正在下载 ${key}`);
                 const res = await LoadResource(new Request(url.href));
-                const text = await res.text(); let d = text, parsed = false;
-                if (options.autoParseLzJs && url.href.endsWith('.lz.js') && /^\s*?LoadDataLZ\(/.test(text)) try { 
-                    // 疑似lzstring数据
-                    let lzText, loader = (name, _) => lzText = _[0];
-                    const f = new window.Function('LoadDataLZ', text); // dangerous
-                    f(loader);
-                    d = lz.decompressFromBase64(lzText);
-                    parsed = true;
-                } catch (error) {
-                    console.warn('[bh3helper-downloader] decompress lzstring failed for file:', key);
-                    showMessage("警告：解压缩 LZString 数据失败: " + error, 'error');
+                let d, parsed = false;
+                if (/\.lz\.js$/.test(url.href)) {
+                    const text = await res.text(); d = text, parsed = false;
+                    if (options.autoParseLzJs && /^\s*?LoadDataLZ\(/.test(text)) try {
+                        // 疑似lzstring数据
+                        let lzText, loader = (name, _) => lzText = _[0];
+                        const f = new window.Function('LoadDataLZ', text); // dangerous,以后改
+                        f(loader);
+                        d = lz.decompressFromBase64(lzText);
+                        parsed = true;
+                    } catch (error) {
+                        console.warn('[bh3helper-downloader] decompress lzstring failed for file:', key);
+                        showMessage("警告：解压缩 LZString 数据失败: " + error, 'error');
+                    }
+                    d = new TextEncoder().encode(d);
                 }
+                else d = new Uint8Array(await res.arrayBuffer());
                 // 解析文件名
-                let filename = url.pathname.split('/').pop();
+                let filename = url.pathname.substring(1); // 去掉开头的/
                 if (parsed) filename = filename.replace(/\.lz\.js$/, '.json');
-                files[filename] = (new TextEncoder()).encode(d);
+                files[filename] = d;
             }
             updateProgress(total, DLUI_TEXT.onBeforeZipStart);
             await new Promise(resolve => setTimeout(resolve, 500));
@@ -1706,6 +1780,7 @@ details[open] > .dlg-help-summary::before {
                 case 'commonid': return (new URL(window.location.href)).searchParams.get('id');
                 case 'textContent': return ctx.node?.textContent;
                 case 'innerHTML': return ctx.node?.innerHTML;
+                case 'innerText': return ctx.node?.innerText;
                 default: return null;
             }
         }
@@ -1730,7 +1805,7 @@ details[open] > .dlg-help-summary::before {
             let hasDomCondition = false;
             const conditionContext = {};
             if (rule.condition) for (const condition of rule.condition) {
-                if (condition[0] === 'innerHTML' || condition[0] === 'textContent') {
+                if (condition[0] === 'innerHTML' || condition[0] === 'textContent' || condition[0] === 'innerText') {
                     hasDomCondition = true;
                     continue;
                 }

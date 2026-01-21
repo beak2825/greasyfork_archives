@@ -25,45 +25,13 @@
 // @updateURL https://update.greasyfork.org/scripts/476803/%F0%9F%94%A52026%7C%E7%A0%B4%E8%A7%A3lurlmyppt%E5%AF%86%E7%A2%BC%7C%E8%87%AA%E5%8B%95%E5%B8%B6%E5%85%A5%E6%97%A5%E6%9C%9F%7C%E5%8F%AF%E4%B8%8B%E8%BC%89%E5%9C%96%E5%BD%B1%E7%89%87%F0%9F%9A%80%7Cv538.meta.js
 // ==/UserScript==
 
-/*
-  Lurl Downloader - 自動破解密碼 & 下載圖片影片
-
-  更新紀錄：
-  2026/01/20 v5.3.4 - replaceResource 支援密碼錯誤頁面（插入到 movie_introdu）
-  2026/01/20 v5.3.3 - 修復 alreadyRecovered + passwordFailed 的 UI 清理
-  2026/01/20 v5.3.2 - 密碼錯誤頁面正確替換 UI（取代 movie_introdu 區塊）
-  2026/01/20 v5.3.1 - 重構流程：查備份優先，密碼錯誤時提供備份選項
-  2026/01/20 v5.3 - 測速支援強制重測（Console: _lurlhub.runSpeedTest(true)）
-  2026/01/20 v5.2 - 新增網速實測功能，背景上報真實頻寬
-  2026/01/18 v5.1 - 重構品牌卡片組件，正常解鎖也顯示 LurlHub 品牌
-  2026/01/18 v5.0 - 修復成功頁面新增 LurlHub 品牌卡片
-  2026/01/18 v4.8 - 新增版本檢查機制，可收到更新通知
-  2026/01/17 v4.7 - 移除貢獻者追蹤與 VIP 提示（保持低調）
-  2026/01/17 v4.5 - 分塊上傳（10MB/塊），解決大檔案 postMessage 限制
-  2026/01/17 v4.4 - 上傳改回 GM_xmlhttpRequest（繞過 CORS），>50MB 靠後端 cookie
-  2026/01/17 v4.3 - Cookie 轉發，讓後端可用 cookie 下載（雙重保險）
-  2026/01/17 v4.2 - 上傳改用原生 fetch（解決 GM_xmlhttpRequest 64MB postMessage 限制）
-  2026/01/17 v4.1 - 移除 fetch credentials 避免 CORS 錯誤
-  2026/01/17 v4.0 - 修復重複 URL 但檔案遺失時不會重新上傳的問題
-  2026/01/17 v3.9 - 改用頁面原生 fetch 下載（解決 Cloudflare cookie 問題）
-  2026/01/17 v3.8 - 前端下載 blob 並上傳後端（解決 CDN 時效問題）
-  2026/01/17 v3.7 - API 回報加入 ref 欄位（D卡文章連結）
-  2026/01/17 v3.6 - 支援多張圖片下載與 API 回報
-  2026/01/17 v3.5 - 修復 myppt reload 導致 title 遺失問題
-  2026/01/17 v3.4 - Dcard 攔截 myppt 連結、新增回到D卡按鈕
-  2026/01/17 v3.3 - myppt 支援下載與 API 回報
-  2026/01/17 v3.2 - Dcard 多連結編號、修復重複下載按鈕
-  2026/01/17 v3.1 - 修復影片 URL 取得邏輯，整合 API 回報
-  2025/09/19 v3.0 - 重構為 functional 風格，採用 jQuery
-  2025/09/19 v2.1 - 新增 myppt 密碼自動帶入
-  2025/07/29 v2.0 - 修復 lurl 邏輯改變問題
-*/
+/* Lurl Downloader - https://github.com/anthropics/lurl-download-userscript */
 
 (function ($) {
   "use strict";
 
   // 腳本版本（用於版本檢查）
-  const SCRIPT_VERSION = '4.9';
+  const SCRIPT_VERSION = '5.3.8';
 
   // API 驗證 Token
   const CLIENT_TOKEN = 'lurl-script-2026';

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gemini Prompt Renderer
 // @namespace    https://github.com/samsilveira/gemini-prompt-renderer
-// @version      1.0.1
+// @version      1.1.0
 // @description  Render Markdown in messages sent by users on Gemini Web
 // @author       samsilveira
 // @match        https://gemini.google.com/*
@@ -16,7 +16,6 @@
 
 (function() {
     'use strict';
-
     // Trusted Types Configuration
     let trustedTypesPolicy;
     if (window.trustedTypes && window.trustedTypes.createPolicy) {
@@ -24,8 +23,7 @@
             trustedTypesPolicy = window.trustedTypes.createPolicy('gemini-user-md-policy', {
                 createHTML: (string) => string
             });
-        } catch (e) {
-        }
+        } catch (e) {}
     }
     // Load libraries (Fallback)
     function loadLibrary(url, callback) {
@@ -38,9 +36,38 @@
         script.onload = callback;
         document.head.appendChild(script);
     }
-
     // CSS Styles
     const customStyles = `
+        /* Light Mode */
+        :root {
+            --gpr-bg-color: #ffffff;
+            --gpr-text-color: #1f1f1f;
+            --gpr-border-color: #e0e0e0;
+            --gpr-code-bg: #f5f7f9;
+            --gpr-code-border: #d0d7de;
+            --gpr-table-bg: #ffffff;
+            --gpr-table-header: #f6f8fa;
+            --gpr-btn-color: #5f6368;
+            --gpr-btn-border: rgba(0, 0, 0, 0.1);
+            --gpr-btn-hover-bg: rgba(0, 0, 0, 0.05);
+            --gpr-btn-hover-text: #202124;
+        }
+
+        /* Dark Mode */
+        body.gpr-dark-mode {
+            --gpr-bg-color: transparent;
+            --gpr-text-color: #e3e3e3; 
+            --gpr-border-color: #444;
+            --gpr-code-bg: #1e1e1e;
+            --gpr-code-border: #333;
+            --gpr-table-bg: rgba(255, 255, 255, 0.03);
+            --gpr-table-header: rgba(255, 255, 255, 0.1);
+            --gpr-btn-color: #aaa;
+            --gpr-btn-border: rgba(128, 128, 128, 0.3);
+            --gpr-btn-hover-bg: rgba(255, 255, 255, 0.1);
+            --gpr-btn-hover-text: #fff;
+        }
+
         user-query .query-text {
             position: relative;
             padding-right: 30px;
@@ -52,22 +79,22 @@
             top: 6px;
             right: 0px;
             background: transparent;
-            border: 1px solid rgba(128, 128, 128, 0.3);
+            border: 1px solid var(--gpr-btn-border);
             border-radius: 4px;
             cursor: pointer;
             padding: 4px;
-            color: #aaa;
+            color: var(--gpr-btn-color);
             display: flex;
             align-items: center;
             justify-content: center;
             transition: all 0.2s;
             z-index: 10;
-            opacity: 0.6;
+            opacity: 0.7;
         }
         .md-toggle-btn:hover {
             opacity: 1;
-            background-color: rgba(255, 255, 255, 0.1);
-            color: #fff;
+            background-color: var(--gpr-btn-hover-bg);
+            color: var(--gpr-btn-hover-text);
         }
         .md-toggle-btn svg {
             width: 16px;
@@ -80,48 +107,63 @@
             font-family: 'Google Sans', 'Roboto', sans-serif;
             font-size: 1rem;
             line-height: 1.6;
-            color: inherit;
+            color: var(--gpr-text-color);
             width: 100%;
             margin-top: 0;
         }
-        .custom-markdown-render p { margin-bottom: 0.5em; }
+        
+        body:not(.gpr-dark-mode) .custom-markdown-render { 
+            color: #37352f;
+        }
+        .custom-markdown-render p { 
+            margin-bottom: 0.5em; 
+        }
 
         /* Tables */
         .custom-markdown-render table {
             border-collapse: collapse;
             width: 100%;
             margin: 10px 0;
-            background-color: rgba(128, 128, 128, 0.05);
+            background-color: var(--gpr-table-bg);
             border-radius: 8px;
-            border: 1px solid rgba(128, 128, 128, 0.2);
+            border: 1px solid var(--gpr-border-color);
+            overflow: hidden;
         }
         .custom-markdown-render th, .custom-markdown-render td {
             padding: 8px 12px;
-            border: 1px solid rgba(128, 128, 128, 0.2);
+            border: 1px solid var(--gpr-border-color);
         }
         .custom-markdown-render th { 
             font-weight: 700; 
-            background-color: rgba(128, 128, 128, 0.1); 
+            background-color: var(--gpr-table-header); 
         }
 
         /* Code Blocks */
         .custom-markdown-render pre {
-            background-color: #1e1e1e;
-            color: #e0e0e0;
-            padding: 10px;
+            background-color: var(--gpr-code-bg);
+            color: var(--gpr-text-color);
+            padding: 12px;
             border-radius: 6px;
             overflow-x: auto;
-            border: 1px solid #333;
+            border: 1px solid var(--gpr-code-border);
+            margin: 8px 0;
         }
+        
+        /* Ensure dark color for code in light mode */
+        body:not(.gpr-dark-mode) .custom-markdown-render pre { 
+            color: #24292e;
+        }
+
         .custom-markdown-render :not(pre) > code {
             font-family: 'Roboto Mono', monospace;
-            background-color: rgba(130, 130, 130, 0.25);
+            background-color: var(--gpr-code-bg);
             padding: 2px 5px;
             border-radius: 4px;
             font-size: 0.9em;
+            border: 1px solid var(--gpr-code-border);
+            color: var(--gpr-text-color);
         }
     `;
-
     function injectStyles() {
         if (document.getElementById('gemini-md-styles')) return;
         const style = document.createElement('style');
@@ -129,7 +171,6 @@
         style.textContent = customStyles;
         document.head.appendChild(style);
     }
-
     // Secure HTML Functions
     function setHTML(element, htmlString) {
         if (trustedTypesPolicy) {
@@ -138,80 +179,93 @@
             element.innerHTML = htmlString;
         }
     }
-
-    // SVG icons for the button
+    function updateTheme() {
+        // Optimization: Only run heavy style calculation
+        const bgColor = window.getComputedStyle(document.body).backgroundColor;
+        const rgb = bgColor.match(/\d+/g);
+        let isDark = false;
+        if (rgb) {
+            const luminance = (0.299 * parseInt(rgb[0]) + 0.587 * parseInt(rgb[1]) + 0.114 * parseInt(rgb[2])) / 255;
+            isDark = luminance < 0.5;
+        }
+        if (isDark && !document.body.classList.contains('gpr-dark-mode')) {
+            document.body.classList.add('gpr-dark-mode');
+        } else if (!isDark && document.body.classList.contains('gpr-dark-mode')) {
+            document.body.classList.remove('gpr-dark-mode');
+        }
+    }
     const ICON_EYE = `<svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>`;
     const ICON_CODE = `<svg viewBox="0 0 24 24"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>`;
-
     // Main Rendering
     function renderUserMessages() {
         const textContainers = document.querySelectorAll('user-query .query-text');
-
         textContainers.forEach(container => {
             if (container.querySelector('.md-toggle-btn')) return;
-
             const paragraphs = container.querySelectorAll('.query-text-line');
             let fullRawText = "";
-
             if (paragraphs.length > 0) {
                 fullRawText = Array.from(paragraphs).map(p => p.innerText).join('\n');
             } else {
                 fullRawText = container.innerText;
-
             }
-
             if (!fullRawText || fullRawText.trim().length === 0) return;
-
-            // --- CREATION OF ELEMENTS ---
-
-            // Markdown Rendering Div
             const renderDiv = document.createElement('div');
             renderDiv.className = 'custom-markdown-render';
-            const mdContent = DOMPurify.sanitize(marked.parse(fullRawText, { breaks: true, gfm: true }));
+            let mdContent = "";
+            try {
+                const rawHTML = marked.parse(fullRawText, { breaks: true, gfm: true });
+                mdContent = typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(rawHTML) : rawHTML;
+            } catch (e) {
+                mdContent = marked.parse(fullRawText, { breaks: true, gfm: true });
+            }
             setHTML(renderDiv, mdContent);
-
-            // Toggle Button
             const toggleBtn = document.createElement('button');
             toggleBtn.className = 'md-toggle-btn';
-            toggleBtn.title = "Ver Texto Original (Raw)";
+            toggleBtn.title = "View Raw Text";
             setHTML(toggleBtn, ICON_CODE);
-
-            // --- TOGGLE LOGIC ---
             let isMarkdownMode = true;
-
             if (paragraphs.length > 0) paragraphs.forEach(p => p.style.display = 'none');
+            if (paragraphs.length === 0) {
+                const originalContent = container.innerHTML;
+                container.innerHTML = '';
+                const rawSpan = document.createElement('span');
+                rawSpan.className = 'raw-text-content';
+                rawSpan.style.display = 'none';
+                rawSpan.innerHTML = originalContent;
+                container.appendChild(rawSpan);
+            }
             renderDiv.style.display = 'block';
-
             toggleBtn.onclick = (e) => {
-                e.stopPropagation(); 
+                e.stopPropagation();
+                e.preventDefault();
                 isMarkdownMode = !isMarkdownMode;
-
+                const rawSpan = container.querySelector('.raw-text-content');
                 if (isMarkdownMode) {
-                    // MARKDOWN MODE
                     renderDiv.style.display = 'block';
                     if (paragraphs.length > 0) paragraphs.forEach(p => p.style.display = 'none');
+                    if (rawSpan) rawSpan.style.display = 'none';
                     setHTML(toggleBtn, ICON_CODE);
-                    toggleBtn.title = "Ver Texto Original";
+                    toggleBtn.title = "View Raw Text";
                 } else {
-                    // Pure Text Mode (RAW)
                     renderDiv.style.display = 'none';
                     if (paragraphs.length > 0) paragraphs.forEach(p => p.style.display = 'block');
+                    if (rawSpan) rawSpan.style.display = 'block';
                     setHTML(toggleBtn, ICON_EYE);
-                    toggleBtn.title = "Ver Renderização Markdown";
+                    toggleBtn.title = "View Rendered Markdown";
                 }
             };
-
-            // Insertion into the DOM
             container.appendChild(toggleBtn);
             container.appendChild(renderDiv);
         });
     }
-
-    // Initialization
     function init() {
         injectStyles();
+        if (typeof marked === 'undefined') {
+            loadLibrary('https://cdn.jsdelivr.net/npm/marked/marked.min.js', init);
+            return;
+        }
         renderUserMessages();
-
+        updateTheme(); // Initial theme check
         let timeout = null;
         const observer = new MutationObserver((mutations) => {
             clearTimeout(timeout);
@@ -223,13 +277,16 @@
                         break;
                     }
                 }
+                // Safe check inside debounce
+                updateTheme();
                 if (shouldRender) renderUserMessages();
             }, 300);
         });
-
         observer.observe(document.body, { childList: true, subtree: true });
     }
-
-    loadLibrary('https://cdn.jsdelivr.net/npm/marked/marked.min.js', init);
-
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
 })();

@@ -4,7 +4,7 @@
 // @namespace            https://github.com/utags/links-helper
 // @homepageURL          https://github.com/utags/links-helper#readme
 // @supportURL           https://github.com/utags/links-helper/issues
-// @version              0.13.3
+// @version              0.13.4
 // @description          Open external links in a new tab, open internal links matching the specified rules in a new tab, convert text to hyperlinks, convert image links to image tags(<img>), parse Markdown style links and image tags, parse BBCode style links and image tags
 // @description:zh-CN    支持所有网站在新标签页中打开第三方网站链接（外链），在新标签页中打开符合指定规则的本站链接，解析文本链接为超链接，微信公众号文本转可点击的超链接，图片链接转图片标签，解析 Markdown 格式链接与图片标签，解析 BBCode 格式链接与图片标签
 // @icon                 https://wsrv.nl/?w=128&h=128&url=https%3A%2F%2Fraw.githubusercontent.com%2Futags%2Flinks-helper%2Frefs%2Fheads%2Fmain%2Fassets%2Ficon.png
@@ -1911,6 +1911,11 @@
     enableWebp: false,
     enableConvertSvgToPng: false,
   }
+  var DDG_BLACK_LIST = ["i.ytimg.com"]
+  var isDdgBlacklisted = (hostname2) =>
+    DDG_BLACK_LIST.some(
+      (domain) => hostname2 === domain || hostname2.endsWith(".".concat(domain))
+    )
   var setImageProxyOptions = (options) => {
     imageProxyOptions = __spreadValues(
       __spreadValues({}, imageProxyOptions),
@@ -1972,16 +1977,28 @@
     }
     const isGif = lastSegment.endsWith(".gif")
     const isSvg = lastSegment.endsWith(".svg") || lastSegment === "svg"
+    const enableWebp = imageProxyOptions.enableWebp
+    const hostname2 = getHostname(url)
     const urlEncoded = encodeURIComponent(url)
+    const buildWsrvProxyUrl = (urlEncoded2, defaultUrlEncoded) => {
+      const qp = ""
+        .concat(isGif ? "&n=-1" : "")
+        .concat(enableWebp ? "&output=webp" : "", "&default=")
+        .concat(defaultUrlEncoded)
+      return "https://wsrv.nl/?url=".concat(urlEncoded2).concat(qp)
+    }
+    const level1 = buildWsrvProxyUrl(urlEncoded, urlEncoded)
+    if (isSvg || isDdgBlacklisted(hostname2)) {
+      return level1
+    }
     const ddgUrl = "https://external-content.duckduckgo.com/iu/?u=".concat(
       urlEncoded
     )
-    const urlToUse = isSvg ? urlEncoded : encodeURIComponent(ddgUrl)
-    const qp = ""
-      .concat(isGif ? "&n=-1" : "")
-      .concat(imageProxyOptions.enableWebp ? "&output=webp" : "", "&default=")
-      .concat(urlEncoded)
-    return "https://wsrv.nl/?url=".concat(urlToUse).concat(qp)
+    const level2 = buildWsrvProxyUrl(
+      encodeURIComponent(ddgUrl),
+      encodeURIComponent(level1)
+    )
+    return level2
   }
   var proxySrcset = (srcset) => {
     const parts = srcset.split(",")
@@ -2602,18 +2619,15 @@
   var cachedFlag = 0
   var IMAGE_PROXY_BLACKLIST = [
     "github.com",
-    "developer.mozilla.org",
+    "mozilla.org",
+    "google.com",
+    "tiktok.com",
     "twitter.com",
     "x.com",
     "facebook.com",
     "instagram.com",
-    "linkedin.com",
     "whatsapp.com",
-    "telegram.org",
     "discord.com",
-    "reddit.com",
-    "youtube.com",
-    "google.com",
   ]
   var STORAGE_KEY_CSP_RESTRICTED = "links-helper:csp-restricted"
   var isImageProxyBlacklisted = () =>

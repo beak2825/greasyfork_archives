@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Youtube - Always loop playlists
 // @namespace    http://tampermonkey.net/
-// @version      0.5
+// @version      1.4
 // @description  Loop youtube playlists
 // @author       Jens Nordström
 // @match        https://www.youtube.com/*

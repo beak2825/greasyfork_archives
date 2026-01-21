@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         Toolasha
 // @namespace    http://tampermonkey.net/
-// @version      0.4.953
+// @version      0.4.958
 // @description  Toolasha - Enhanced tools for Milky Way Idle.
-// @author       Celasha and Claude, thank you to bot7420, DrDucky, Frotty, Truth_Light, AlphB, and sentientmilk for providing the basis for a lot of this. Thank you to Miku, Orvel, Jigglymoose, Incinarator, Knerd, and others for their time and help. Thank you to Steez for testing and helping me figure out where I'm wrong! Special thanks to Zaeter for the name.
+// @author       Celasha and Claude, thank you to bot7420, DrDucky, Frotty, Truth_Light, AlphB, qu, and sentientmilk, for providing the basis for a lot of this. Thank you to Miku, Orvel, Jigglymoose, Incinarator, Knerd, and others for their time and help. Thank you to Steez for testing and helping me figure out where I'm wrong! Special thanks to Zaeter for the name.
 // @license      CC-BY-NC-SA-4.0
 // @run-at       document-start
 // @match        https://www.milkywayidle.com/*
@@ -23,7 +23,7 @@
 // @downloadURL https://update.greasyfork.org/scripts/562662/Toolasha.user.js
 // @updateURL https://update.greasyfork.org/scripts/562662/Toolasha.meta.js
 // ==/UserScript==
-// Note: Combat Sim export requires Tampermonkey for cross-domain storage sharing. Not available on Steam.
+// Note: Combat Sim auto-import requires Tampermonkey for cross-domain storage. Not available on Steam (use manual clipboard copy/paste instead).
 
 (function () {
     'use strict';
@@ -1496,6 +1496,37 @@
     const settingsStorage = new SettingsStorage();
 
     /**
+     * Profile Cache Module
+     * Stores current profile in memory for Steam users
+     */
+
+    // Module-level variable to hold current profile in memory
+    let currentProfileCache = null;
+
+    /**
+     * Set current profile in memory
+     * @param {Object} profileData - Profile data from profile_shared message
+     */
+    function setCurrentProfile(profileData) {
+        currentProfileCache = profileData;
+    }
+
+    /**
+     * Get current profile from memory
+     * @returns {Object|null} Current profile or null
+     */
+    function getCurrentProfile() {
+        return currentProfileCache;
+    }
+
+    /**
+     * Clear current profile from memory
+     */
+    function clearCurrentProfile() {
+        currentProfileCache = null;
+    }
+
+    /**
      * WebSocket Hook Module
      * Intercepts WebSocket messages from the MWI game server
      *
@@ -1667,6 +1698,9 @@
                         return;
                     }
 
+                    // Store in memory for Steam users (works without GM storage)
+                    setCurrentProfile(parsed);
+
                     // Load existing profile list from GM storage (cross-origin accessible)
                     const profileListJson = await this.loadFromStorage('toolasha_profile_list', '[]');
                     let profileList = JSON.parse(profileListJson);
@@ -1779,9 +1813,11 @@
             this.characterSkills = null;
             this.characterItems = null;
             this.characterActions = [];
+            this.characterQuests = [];  // Active quests including tasks
             this.characterEquipment = new Map();
             this.characterHouseRooms = new Map();  // House room HRID -> {houseRoomHrid, level}
             this.actionTypeDrinkSlotsMap = new Map();  // Action type HRID -> array of drink items
+            this.monsterSortIndexMap = new Map();  // Monster HRID -> combat zone sortIndex
 
             // Character tracking for switch detection
             this.currentCharacterId = null;
@@ -1892,6 +1928,10 @@
                     const data = localStorageUtil.getInitClientData();
                     if (data && Object.keys(data).length > 0) {
                         this.initClientData = data;
+
+                        // Build monster sort index map for task sorting
+                        this.buildMonsterSortIndexMap();
+
                         return true;
                     }
                 }
@@ -1962,6 +2002,7 @@
                     this.characterSkills = null;
                     this.characterItems = null;
                     this.characterActions = [];
+                    this.characterQuests = [];
                     this.characterEquipment.clear();
                     this.characterHouseRooms.clear();
                     this.actionTypeDrinkSlotsMap.clear();
@@ -1985,6 +2026,7 @@
                 this.characterSkills = data.characterSkills;
                 this.characterItems = data.characterItems;
                 this.characterActions = [...data.characterActions];
+                this.characterQuests = data.characterQuests || [];
 
                 // Build equipment map
                 this.updateEquipmentMap(data.characterItems);
@@ -2342,6 +2384,147 @@
          */
         getMarketListings() {
             return this.characterData?.myMarketListings ? [...this.characterData.myMarketListings] : [];
+        }
+
+        /**
+         * Get active task action HRIDs
+         * @returns {Array<string>} Array of action HRIDs that are currently active tasks
+         */
+        getActiveTaskActionHrids() {
+            if (!this.characterQuests || this.characterQuests.length === 0) {
+                return [];
+            }
+
+            return this.characterQuests
+                .filter(quest =>
+                    quest.category === '/quest_category/random_task' &&
+                    quest.status === '/quest_status/in_progress' &&
+                    quest.actionHrid
+                )
+                .map(quest => quest.actionHrid);
+        }
+
+        /**
+         * Check if an action is currently an active task
+         * @param {string} actionHrid - Action HRID to check
+         * @returns {boolean} True if action is an active task
+         */
+        isTaskAction(actionHrid) {
+            const activeTasks = this.getActiveTaskActionHrids();
+            return activeTasks.includes(actionHrid);
+        }
+
+        /**
+         * Get task speed bonus from equipped task badges
+         * @returns {number} Task speed percentage (e.g., 15 for 15%)
+         */
+        getTaskSpeedBonus() {
+            if (!this.characterEquipment || !this.initClientData) {
+                return 0;
+            }
+
+            let totalTaskSpeed = 0;
+
+            // Task badges are in trinket slot
+            const trinketLocation = '/item_locations/trinket';
+            const equippedItem = this.characterEquipment.get(trinketLocation);
+
+            if (!equippedItem || !equippedItem.itemHrid) {
+                return 0;
+            }
+
+            const itemDetail = this.initClientData.itemDetailMap[equippedItem.itemHrid];
+            if (!itemDetail || !itemDetail.equipmentDetail) {
+                return 0;
+            }
+
+            const taskSpeed = itemDetail.equipmentDetail.noncombatStats?.taskSpeed || 0;
+            if (taskSpeed === 0) {
+                return 0;
+            }
+
+            // Calculate enhancement bonus
+            // Note: noncombatEnhancementBonuses already includes slot multiplier (5× for trinket)
+            const enhancementLevel = equippedItem.enhancementLevel || 0;
+            const enhancementBonus = itemDetail.equipmentDetail.noncombatEnhancementBonuses?.taskSpeed || 0;
+            const totalEnhancementBonus = enhancementBonus * enhancementLevel;
+
+            // Total taskSpeed = base + enhancement
+            totalTaskSpeed = (taskSpeed + totalEnhancementBonus) * 100; // Convert to percentage
+
+            return totalTaskSpeed;
+        }
+
+        /**
+         * Build monster-to-sortIndex mapping from combat zone data
+         * Used for sorting combat tasks by zone progression order
+         * @private
+         */
+        buildMonsterSortIndexMap() {
+            if (!this.initClientData || !this.initClientData.actionDetailMap) {
+                return;
+            }
+
+            this.monsterSortIndexMap.clear();
+
+            // Extract combat zones (non-dungeon only)
+            for (const [zoneHrid, action] of Object.entries(this.initClientData.actionDetailMap)) {
+                // Skip non-combat actions and dungeons
+                if (action.type !== '/action_types/combat' || action.combatZoneInfo?.isDungeon) {
+                    continue;
+                }
+
+                const sortIndex = action.sortIndex;
+
+                // Get regular spawn monsters
+                const regularMonsters = action.combatZoneInfo?.fightInfo?.randomSpawnInfo?.spawns || [];
+
+                // Get boss monsters (every 10 battles)
+                const bossMonsters = action.combatZoneInfo?.fightInfo?.bossSpawns || [];
+
+                // Combine all monsters from this zone
+                const allMonsters = [...regularMonsters, ...bossMonsters];
+
+                // Map each monster to this zone's sortIndex
+                for (const spawn of allMonsters) {
+                    const monsterHrid = spawn.combatMonsterHrid;
+                    if (!monsterHrid) continue;
+
+                    // If monster appears in multiple zones, use earliest zone (lowest sortIndex)
+                    if (!this.monsterSortIndexMap.has(monsterHrid) || sortIndex < this.monsterSortIndexMap.get(monsterHrid)) {
+                        this.monsterSortIndexMap.set(monsterHrid, sortIndex);
+                    }
+                }
+            }
+        }
+
+        /**
+         * Get zone sortIndex for a monster (for task sorting)
+         * @param {string} monsterHrid - Monster HRID (e.g., "/monsters/rat")
+         * @returns {number} Zone sortIndex (999 if not found)
+         */
+        getMonsterSortIndex(monsterHrid) {
+            return this.monsterSortIndexMap.get(monsterHrid) || 999;
+        }
+
+        /**
+         * Get monster HRID from display name (for task sorting)
+         * @param {string} monsterName - Monster display name (e.g., "Jerry")
+         * @returns {string|null} Monster HRID or null if not found
+         */
+        getMonsterHridFromName(monsterName) {
+            if (!this.initClientData || !this.initClientData.combatMonsterDetailMap) {
+                return null;
+            }
+
+            // Search for monster by display name
+            for (const [hrid, monster] of Object.entries(this.initClientData.combatMonsterDetailMap)) {
+                if (monster.name === monsterName) {
+                    return hrid;
+                }
+            }
+
+            return null;
         }
 
         /**
@@ -4689,21 +4872,89 @@
     }
 
     /**
+     * Enhancement percentage table (based on game mechanics)
+     * Each enhancement level provides a percentage boost to base stats
+     */
+    const ENHANCEMENT_PERCENTAGES = {
+        0: 0.00,
+        1: 0.020,  // 2.0%
+        2: 0.042,  // 4.2%
+        3: 0.066,  // 6.6%
+        4: 0.092,  // 9.2%
+        5: 0.120,  // 12.0%
+        6: 0.150,  // 15.0%
+        7: 0.182,  // 18.2%
+        8: 0.216,  // 21.6%
+        9: 0.252,  // 25.2%
+        10: 0.290, // 29.0%
+        11: 0.334, // 33.4%
+        12: 0.384, // 38.4%
+        13: 0.440, // 44.0%
+        14: 0.502, // 50.2%
+        15: 0.570, // 57.0%
+        16: 0.644, // 64.4%
+        17: 0.724, // 72.4%
+        18: 0.810, // 81.0%
+        19: 0.902, // 90.2%
+        20: 1.000  // 100.0%
+    };
+
+    /**
+     * Slot multipliers for enhancement bonuses
+     * Accessories get 5× bonus, weapons/armor get 1× bonus
+     * Keys use item_locations (not equipment_types) to match characterEquipment map keys
+     */
+    const SLOT_MULTIPLIERS = {
+        '/item_locations/neck': 5,      // Necklace
+        '/item_locations/ring': 5,      // Ring
+        '/item_locations/earrings': 5,  // Earrings
+        '/item_locations/back': 5,      // Back/Cape
+        '/item_locations/trinket': 5,   // Trinket
+        '/item_locations/charm': 5,     // Charm
+        '/item_locations/main_hand': 1, // Main hand weapon
+        '/item_locations/two_hand': 1,  // Two-handed weapon
+        '/item_locations/off_hand': 1,  // Off-hand/shield
+        '/item_locations/head': 1,      // Head armor
+        '/item_locations/body': 1,      // Body armor
+        '/item_locations/legs': 1,      // Leg armor
+        '/item_locations/hands': 1,     // Hand armor
+        '/item_locations/feet': 1,      // Feet armor
+        '/item_locations/pouch': 1      // Pouch
+    };
+
+    /**
      * Calculate enhancement scaling for equipment stats
-     * Uses item-specific enhancement bonus from noncombatEnhancementBonuses
-     * @param {number} baseValue - Base stat value from item
-     * @param {number} enhancementBonus - Enhancement bonus per level from item data
+     * Uses percentage-based enhancement system with slot multipliers
+     *
+     * Formula: base × (1 + enhancementPercentage × slotMultiplier)
+     *
+     * @param {number} baseValue - Base stat value from item data
      * @param {number} enhancementLevel - Enhancement level (0-20)
+     * @param {string} slotHrid - Equipment slot HRID (e.g., "/equipment_types/neck")
      * @returns {number} Scaled stat value
      *
      * @example
-     * calculateEnhancementScaling(0.15, 0.003, 0) // 0.15
-     * calculateEnhancementScaling(0.15, 0.003, 10) // 0.18
-     * calculateEnhancementScaling(0.3, 0.006, 10) // 0.36
+     * // Philosopher's Necklace +4 (4% base speed, neck slot 5×)
+     * calculateEnhancementScaling(0.04, 4, '/equipment_types/neck')
+     * // = 0.04 × (1 + 0.092 × 5) = 0.04 × 1.46 = 0.0584 (5.84%)
+     *
+     * // Lumberjack's Top +10 (10% base efficiency, body slot 1×)
+     * calculateEnhancementScaling(0.10, 10, '/equipment_types/body')
+     * // = 0.10 × (1 + 0.290 × 1) = 0.10 × 1.29 = 0.129 (12.9%)
      */
-    function calculateEnhancementScaling(baseValue, enhancementBonus, enhancementLevel) {
-        // Formula: base + (enhancementBonus × enhancementLevel)
-        return baseValue + (enhancementBonus * enhancementLevel);
+    function calculateEnhancementScaling(baseValue, enhancementLevel, slotHrid) {
+        if (enhancementLevel === 0) {
+            return baseValue;
+        }
+
+        // Get enhancement percentage from table
+        const enhancementPercentage = ENHANCEMENT_PERCENTAGES[enhancementLevel] || 0;
+
+        // Get slot multiplier (default to 1× if slot not found)
+        const slotMultiplier = SLOT_MULTIPLIERS[slotHrid] || 1;
+
+        // Apply formula: base × (1 + percentage × multiplier)
+        return baseValue * (1 + enhancementPercentage * slotMultiplier);
     }
 
     /**
@@ -4756,16 +5007,12 @@
             // Get enhancement level from equipped item
             const enhancementLevel = equippedItem.enhancementLevel || 0;
 
-            // Get enhancement bonuses for this item
-            const enhancementBonuses = itemDetails.equipmentDetail.noncombatEnhancementBonuses;
-
             // Check for skill-specific stat (e.g., brewingSpeed, brewingEfficiency, brewingRareFind)
             if (skillSpecificField) {
                 const baseValue = noncombatStats[skillSpecificField];
 
                 if (baseValue && baseValue > 0) {
-                    const enhancementBonus = (enhancementBonuses && enhancementBonuses[skillSpecificField]) || 0;
-                    const scaledValue = calculateEnhancementScaling(baseValue, enhancementBonus, enhancementLevel);
+                    const scaledValue = calculateEnhancementScaling(baseValue, enhancementLevel, slotHrid);
                     totalBonus += scaledValue;
                 }
             }
@@ -4775,8 +5022,7 @@
                 const baseValue = noncombatStats[genericField];
 
                 if (baseValue && baseValue > 0) {
-                    const enhancementBonus = (enhancementBonuses && enhancementBonuses[genericField]) || 0;
-                    const scaledValue = calculateEnhancementScaling(baseValue, enhancementBonus, enhancementLevel);
+                    const scaledValue = calculateEnhancementScaling(baseValue, enhancementLevel, slotHrid);
                     totalBonus += scaledValue;
                 }
             }
@@ -4954,12 +5200,7 @@
             for (const [statName, value] of Object.entries(noncombatStats)) {
                 if (statName.endsWith('Speed') && value > 0) {
                     const enhancementLevel = equippedItem.enhancementLevel || 0;
-
-                    // Get enhancement bonus from item data
-                    const enhancementBonuses = itemDetails.equipmentDetail.noncombatEnhancementBonuses;
-                    const enhancementBonus = (enhancementBonuses && enhancementBonuses[statName]) || 0;
-
-                    const scaledValue = calculateEnhancementScaling(value, enhancementBonus, enhancementLevel);
+                    const scaledValue = calculateEnhancementScaling(value, enhancementLevel, slotHrid);
 
                     bonuses.push({
                         itemName: itemDetails.name,
@@ -4967,7 +5208,6 @@
                         slot: slotHrid,
                         speedType: statName,
                         baseBonus: value,
-                        enhancementBonus,
                         enhancementLevel,
                         scaledBonus: scaledValue
                     });
@@ -15523,6 +15763,7 @@
      * @param {Array} options.skills - Character skills array
      * @param {Array} options.equipment - Character equipment array
      * @param {Object} options.itemDetailMap - Item detail map from game data
+     * @param {string} options.actionHrid - Action HRID for task detection (optional)
      * @param {boolean} options.includeCommunityBuff - Include community buff in efficiency (default: false)
      * @param {boolean} options.includeBreakdown - Include detailed breakdown data (default: false)
      * @param {boolean} options.floorActionLevel - Floor Action Level bonus for requirement calculation (default: true)
@@ -15533,6 +15774,7 @@
             skills,
             equipment,
             itemDetailMap,
+            actionHrid,
             includeCommunityBuff = false,
             includeBreakdown = false,
             floorActionLevel = true
@@ -15543,14 +15785,20 @@
             const baseTime = actionDetails.baseTimeCost / 1e9; // nanoseconds to seconds
 
             // Get equipment speed bonus
-            const speedBonus = parseEquipmentSpeedBonuses(
+            let speedBonus = parseEquipmentSpeedBonuses(
                 equipment,
                 actionDetails.type,
                 itemDetailMap
             );
 
-            // Calculate actual action time with speed
-            const actionTime = baseTime / (1 + speedBonus);
+            // Calculate action time with equipment speed
+            let actionTime = baseTime / (1 + speedBonus);
+
+            // Apply task speed multiplicatively (if action is an active task)
+            if (actionHrid && dataManager.isTaskAction(actionHrid)) {
+                const taskSpeedBonus = dataManager.getTaskSpeedBonus(); // Returns percentage (e.g., 15 for 15%)
+                actionTime = actionTime / (1 + taskSpeedBonus / 100); // Apply multiplicatively
+            }
 
             // Calculate efficiency
             const skillLevel = getSkillLevel$1(skills, actionDetails.type);
@@ -16052,6 +16300,7 @@
                 skills,
                 equipment,
                 itemDetailMap,
+                actionHrid: action.actionHrid, // Pass action HRID for task detection
                 includeCommunityBuff: true,
                 includeBreakdown: false,
                 floorActionLevel: true
@@ -16313,9 +16562,10 @@
         /**
          * Calculate action time for a given action
          * @param {Object} actionDetails - Action details from data manager
+         * @param {string} actionHrid - Action HRID for task detection (optional)
          * @returns {Object} {actionTime, totalEfficiency} or null if calculation fails
          */
-        calculateActionTime(actionDetails) {
+        calculateActionTime(actionDetails, actionHrid = null) {
             const skills = dataManager.getSkills();
             const equipment = dataManager.getEquipment();
             const itemDetailMap = dataManager.getInitClientData()?.itemDetailMap || {};
@@ -16325,6 +16575,7 @@
                 skills,
                 equipment,
                 itemDetailMap,
+                actionHrid, // Pass action HRID for task detection
                 includeCommunityBuff: true,
                 includeBreakdown: false,
                 floorActionLevel: true
@@ -16596,7 +16847,7 @@
                                 const artisanBonus = parseArtisanBonus(activeDrinks, itemDetailMap, drinkConcentration);
 
                                 // Calculate action stats to get efficiency
-                                const timeData = this.calculateActionTime(actionDetails);
+                                const timeData = this.calculateActionTime(actionDetails, currentAction.actionHrid);
                                 if (timeData) {
                                     const { actionTime, totalEfficiency } = timeData;
                                     const materialLimit = this.calculateMaterialLimit(actionDetails, inventory, artisanBonus, totalEfficiency, currentAction);
@@ -16614,7 +16865,7 @@
                                 }
                             } else {
                                 const count = currentAction.maxCount - currentAction.currentCount;
-                                const timeData = this.calculateActionTime(actionDetails);
+                                const timeData = this.calculateActionTime(actionDetails, currentAction.actionHrid);
                                 if (timeData) {
                                     const { actionTime, totalEfficiency } = timeData;
 
@@ -16672,7 +16923,7 @@
                     const isInfinite = !actionObj.hasMaxCount || actionObj.actionHrid.includes('/combat/');
 
                     // Calculate action time first to get efficiency
-                    const timeData = this.calculateActionTime(actionDetails);
+                    const timeData = this.calculateActionTime(actionDetails, actionObj.actionHrid);
                     if (!timeData) continue;
 
                     const { actionTime, totalEfficiency } = timeData;
@@ -17424,11 +17675,19 @@
             `;
 
                 const speedLines = [];
-                speedLines.push(`Base: ${baseTime.toFixed(2)}s → ${actionTime.toFixed(2)}s`);
+
+                // Check if task speed applies (need to calculate before display)
+                const isTaskAction = actionDetails.hrid && dataManager.isTaskAction(actionDetails.hrid);
+                const taskSpeedBonus = isTaskAction ? dataManager.getTaskSpeedBonus() : 0;
+
+                // Calculate intermediate time (after equipment speed, before task speed)
+                const timeAfterEquipment = baseTime / (1 + speedBonus);
+
+                speedLines.push(`Base: ${baseTime.toFixed(2)}s → ${timeAfterEquipment.toFixed(2)}s`);
                 if (speedBonus > 0) {
-                    speedLines.push(`Speed: +${formatPercentage(speedBonus, 1)} | ${(3600 / actionTime).toFixed(0)}/hr`);
+                    speedLines.push(`Speed: +${formatPercentage(speedBonus, 1)} | ${(3600 / timeAfterEquipment).toFixed(0)}/hr`);
                 } else {
-                    speedLines.push(`${(3600 / actionTime).toFixed(0)}/hr`);
+                    speedLines.push(`${(3600 / timeAfterEquipment).toFixed(0)}/hr`);
                 }
 
                 // Add speed breakdown
@@ -17449,6 +17708,33 @@
                             ` (${item.baseSpeed.toFixed(1)}% × ${(1 + item.drinkConcentration / 100).toFixed(2)})` :
                             '';
                         speedLines.push(`  - ${item.name}: +${item.speed.toFixed(1)}%${detailText}`);
+                    }
+                }
+
+                // Task Speed section (multiplicative, separate from equipment speed)
+                if (isTaskAction && taskSpeedBonus > 0) {
+                    speedLines.push(''); // Empty line separator
+                    speedLines.push(`<span style="font-weight: 500;">Task Speed (multiplicative): +${taskSpeedBonus.toFixed(1)}%</span>`);
+                    speedLines.push(`${timeAfterEquipment.toFixed(2)}s → ${actionTime.toFixed(2)}s | ${(3600 / actionTime).toFixed(0)}/hr`);
+
+                    // Find equipped task badge for details
+                    const trinketSlot = equipment.get('/item_locations/trinket');
+                    if (trinketSlot && trinketSlot.itemHrid) {
+                        const itemDetails = itemDetailMap[trinketSlot.itemHrid];
+                        if (itemDetails) {
+                            const enhText = trinketSlot.enhancementLevel > 0 ? ` +${trinketSlot.enhancementLevel}` : '';
+
+                            // Calculate breakdown
+                            const baseTaskSpeed = itemDetails.equipmentDetail?.noncombatStats?.taskSpeed || 0;
+                            const enhancementBonus = itemDetails.equipmentDetail?.noncombatEnhancementBonuses?.taskSpeed || 0;
+                            const enhancementLevel = trinketSlot.enhancementLevel || 0;
+
+                            const detailText = enhancementBonus > 0 ?
+                                ` (${(baseTaskSpeed * 100).toFixed(1)}% + ${(enhancementBonus * enhancementLevel * 100).toFixed(1)}%)` :
+                                '';
+
+                            speedLines.push(`  - ${itemDetails.name}${enhText}: +${taskSpeedBonus.toFixed(1)}%${detailText}`);
+                        }
                     }
                 }
 
@@ -17732,7 +18018,8 @@
             // Find action by matching name
             for (const [hrid, details] of Object.entries(actionDetailMap)) {
                 if (details.name === actionName) {
-                    return details;
+                    // Include hrid in returned object for task detection
+                    return { ...details, hrid };
                 }
             }
 
@@ -17756,6 +18043,7 @@
                 skills,
                 equipment,
                 itemDetailMap,
+                actionHrid: actionDetails.hrid, // Pass action HRID for task detection
                 includeCommunityBuff: true,
                 includeBreakdown: true,
                 floorActionLevel: true
@@ -18465,7 +18753,7 @@
         updateOutputTotals(detailPanel, inputBox) {
             const amount = parseFloat(inputBox.value);
 
-            // Remove existing totals (cloned outputs)
+            // Remove existing totals (cloned outputs and XP)
             detailPanel.querySelectorAll('.mwi-output-total').forEach(el => el.remove());
 
             // No amount entered - nothing to calculate
@@ -18511,6 +18799,9 @@
                     }
                 }
             });
+
+            // Process XP element
+            this.processXpElement(detailPanel, amount);
         }
 
         /**
@@ -18614,6 +18905,90 @@
             }
 
             return clone;
+        }
+
+        /**
+         * Extract action HRID from detail panel
+         * @param {HTMLElement} detailPanel - The action detail panel element
+         * @returns {string|null} Action HRID or null
+         */
+        getActionHridFromPanel(detailPanel) {
+            // Find action name element
+            const nameElement = detailPanel.querySelector('[class*="SkillActionDetail_name"]');
+
+            if (!nameElement) {
+                return null;
+            }
+
+            const actionName = nameElement.textContent.trim();
+
+            // Look up action by name in game data
+            const initData = dataManager.getInitClientData();
+            if (!initData) {
+                return null;
+            }
+
+            for (const [hrid, action] of Object.entries(initData.actionDetailMap)) {
+                if (action.name === actionName) {
+                    return hrid;
+                }
+            }
+
+            return null;
+        }
+
+        /**
+         * Process XP element and display total XP
+         * @param {HTMLElement} detailPanel - The action detail panel
+         * @param {number} amount - Number of actions
+         */
+        processXpElement(detailPanel, amount) {
+            // Find XP element
+            const xpElement = detailPanel.querySelector('[class*="SkillActionDetail_expGain"]');
+            if (!xpElement) {
+                return;
+            }
+
+            // Get action HRID
+            const actionHrid = this.getActionHridFromPanel(detailPanel);
+            if (!actionHrid) {
+                return;
+            }
+
+            // Get action details
+            const actionDetails = dataManager.getActionDetails(actionHrid);
+            if (!actionDetails || !actionDetails.experienceGain) {
+                return;
+            }
+
+            // Calculate experience multiplier (Wisdom + Charm Experience)
+            const skillHrid = actionDetails.experienceGain.skillHrid;
+            const xpData = calculateExperienceMultiplier(skillHrid, actionDetails.type);
+
+            // Calculate total XP
+            const baseXP = actionDetails.experienceGain.value;
+            const modifiedXP = baseXP * xpData.totalMultiplier;
+            const totalXP = modifiedXP * amount;
+
+            // Create clone for total display
+            const clone = xpElement.cloneNode(true);
+            clone.classList.add('mwi-output-total');
+
+            // Apply blue color for XP
+            clone.style.cssText = `
+            color: ${config.COLOR_INFO};
+            font-weight: 600;
+            margin-top: 2px;
+        `;
+
+            // Set total XP text (formatted with 1 decimal place and thousand separators)
+            clone.childNodes[0].textContent = totalXP.toLocaleString('en-US', {
+                minimumFractionDigits: 1,
+                maximumFractionDigits: 1
+            });
+
+            // Insert after original XP element
+            xpElement.parentNode.insertBefore(clone, xpElement.nextSibling);
         }
 
         /**
@@ -20859,19 +21234,32 @@
      */
 
 
+    // Detect if we're running on Tampermonkey or Steam
+    const hasScriptManager$1 = typeof GM_info !== 'undefined';
+
     /**
      * Get saved character data from storage
      * @returns {Promise<Object|null>} Parsed character data or null
      */
     async function getCharacterData$1() {
         try {
-            const data = await webSocketHook.loadFromStorage('toolasha_init_character_data', null);
-            if (!data) {
+            // Tampermonkey: Use GM storage (cross-domain, persisted)
+            if (hasScriptManager$1) {
+                const data = await webSocketHook.loadFromStorage('toolasha_init_character_data', null);
+                if (!data) {
+                    console.error('[Combat Sim Export] No character data found. Please refresh game page.');
+                    return null;
+                }
+                return JSON.parse(data);
+            }
+
+            // Steam: Use dataManager (RAM only, no GM storage available)
+            const characterData = dataManager.characterData;
+            if (!characterData) {
                 console.error('[Combat Sim Export] No character data found. Please refresh game page.');
                 return null;
             }
-
-            return JSON.parse(data);
+            return characterData;
         } catch (error) {
             console.error('[Combat Sim Export] Failed to get character data:', error);
             return null;
@@ -20902,13 +21290,23 @@
      */
     async function getClientData() {
         try {
-            const data = await webSocketHook.loadFromStorage('toolasha_init_client_data', null);
-            if (!data) {
+            // Tampermonkey: Use GM storage (cross-domain, persisted)
+            if (hasScriptManager$1) {
+                const data = await webSocketHook.loadFromStorage('toolasha_init_client_data', null);
+                if (!data) {
+                    console.warn('[Combat Sim Export] No client data found');
+                    return null;
+                }
+                return JSON.parse(data);
+            }
+
+            // Steam: Use dataManager (RAM only, no GM storage available)
+            const clientData = dataManager.getInitClientData();
+            if (!clientData) {
                 console.warn('[Combat Sim Export] No client data found');
                 return null;
             }
-
-            return JSON.parse(data);
+            return clientData;
         } catch (error) {
             console.error('[Combat Sim Export] Failed to get client data:', error);
             return null;
@@ -21015,7 +21413,7 @@
 
         // Initialize abilities (5 slots)
         for (let i = 0; i < 5; i++) {
-            playerObj.abilities[i] = { abilityHrid: '', level: '1' };
+            playerObj.abilities[i] = { abilityHrid: '', level: 1 };
         }
 
         // Extract equipped abilities
@@ -21031,13 +21429,13 @@
                 // Special ability goes in slot 0
                 playerObj.abilities[0] = {
                     abilityHrid: ability.abilityHrid,
-                    level: String(ability.level || 1)
+                    level: ability.level || 1
                 };
             } else if (normalAbilityIndex < 5) {
                 // Normal abilities go in slots 1-4
                 playerObj.abilities[normalAbilityIndex++] = {
                     abilityHrid: ability.abilityHrid,
-                    level: String(ability.level || 1)
+                    level: ability.level || 1
                 };
             }
         }
@@ -21147,7 +21545,7 @@
 
         // Initialize abilities (5 slots)
         for (let i = 0; i < 5; i++) {
-            playerObj.abilities[i] = { abilityHrid: '', level: '1' };
+            playerObj.abilities[i] = { abilityHrid: '', level: 1 };
         }
 
         // Extract equipped abilities from profile
@@ -21163,13 +21561,13 @@
                 // Special ability goes in slot 0
                 playerObj.abilities[0] = {
                     abilityHrid: ability.abilityHrid,
-                    level: String(ability.level || 1)
+                    level: ability.level || 1
                 };
             } else if (normalAbilityIndex < 5) {
                 // Normal abilities go in slots 1-4
                 playerObj.abilities[normalAbilityIndex++] = {
                     abilityHrid: ability.abilityHrid,
-                    level: String(ability.level || 1)
+                    level: ability.level || 1
                 };
             }
         }
@@ -21203,9 +21601,10 @@
     /**
      * Construct full export object (solo or party)
      * @param {string|null} externalProfileId - Optional profile ID (for viewing other players' profiles)
+     * @param {boolean} singlePlayerFormat - If true, returns player object instead of multi-player format
      * @returns {Object} Export object with player data, IDs, positions, and zone info
      */
-    async function constructExportObject(externalProfileId = null) {
+    async function constructExportObject(externalProfileId = null, singlePlayerFormat = false) {
         const characterObj = await getCharacterData$1();
         if (!characterObj) {
             return null;
@@ -21216,20 +21615,48 @@
         const profileList = await getProfileList();
 
         // Blank player template (as string, like MCS)
-        const BLANK = '{"player":{"attackLevel":1,"magicLevel":1,"meleeLevel":1,"rangedLevel":1,"defenseLevel":1,"staminaLevel":1,"intelligenceLevel":1,"equipment":[]},"food":{"/action_types/combat":[{"itemHrid":""},{"itemHrid":""},{"itemHrid":""}]},"drinks":{"/action_types/combat":[{"itemHrid":""},{"itemHrid":""},{"itemHrid":""}]},"abilities":[{"abilityHrid":"","level":"1"},{"abilityHrid":"","level":"1"},{"abilityHrid":"","level":"1"},{"abilityHrid":"","level":"1"},{"abilityHrid":"","level":"1"}],"triggerMap":{},"houseRooms":{"/house_rooms/dairy_barn":0,"/house_rooms/garden":0,"/house_rooms/log_shed":0,"/house_rooms/forge":0,"/house_rooms/workshop":0,"/house_rooms/sewing_parlor":0,"/house_rooms/kitchen":0,"/house_rooms/brewery":0,"/house_rooms/laboratory":0,"/house_rooms/observatory":0,"/house_rooms/dining_room":0,"/house_rooms/library":0,"/house_rooms/dojo":0,"/house_rooms/gym":0,"/house_rooms/armory":0,"/house_rooms/archery_range":0,"/house_rooms/mystical_study":0},"achievements":{}}';
+        const BLANK = '{"player":{"attackLevel":1,"magicLevel":1,"meleeLevel":1,"rangedLevel":1,"defenseLevel":1,"staminaLevel":1,"intelligenceLevel":1,"equipment":[]},"food":{"/action_types/combat":[{"itemHrid":""},{"itemHrid":""},{"itemHrid":""}]},"drinks":{"/action_types/combat":[{"itemHrid":""},{"itemHrid":""},{"itemHrid":""}]},"abilities":[{"abilityHrid":"","level":1},{"abilityHrid":"","level":1},{"abilityHrid":"","level":1},{"abilityHrid":"","level":1},{"abilityHrid":"","level":1}],"triggerMap":{},"zone":"/actions/combat/fly","simulationTime":"100","houseRooms":{"/house_rooms/dairy_barn":0,"/house_rooms/garden":0,"/house_rooms/log_shed":0,"/house_rooms/forge":0,"/house_rooms/workshop":0,"/house_rooms/sewing_parlor":0,"/house_rooms/kitchen":0,"/house_rooms/brewery":0,"/house_rooms/laboratory":0,"/house_rooms/observatory":0,"/house_rooms/dining_room":0,"/house_rooms/library":0,"/house_rooms/dojo":0,"/house_rooms/gym":0,"/house_rooms/armory":0,"/house_rooms/archery_range":0,"/house_rooms/mystical_study":0},"achievements":{}}';
 
         // Check if exporting another player's profile
         if (externalProfileId && externalProfileId !== characterObj.character.id) {
-            // Find the profile in storage
-            const profile = profileList.find(p => p.characterID === externalProfileId);
+            // Try to find profile in GM storage first, then fall back to memory cache
+            let profile = profileList.find(p => p.characterID === externalProfileId);
+
+            // If not found in GM storage, check memory cache (works on Steam)
+            const cachedProfile = getCurrentProfile();
+            if (!profile && cachedProfile && cachedProfile.characterID === externalProfileId) {
+                profile = cachedProfile;
+            }
+
             if (!profile) {
                 console.error('[Combat Sim Export] Profile not found for:', externalProfileId);
                 return null; // Profile not in cache
             }
 
-            // Export the other player as a solo player
+            // Construct the player object
+            const playerObj = constructPartyPlayer(profile, clientObj, battleObj);
+
+            // If single-player format requested, return player object directly
+            if (singlePlayerFormat) {
+                // Add name field and remove zone/simulationTime for single-player format
+                playerObj.name = profile.characterName;
+                delete playerObj.zone;
+                delete playerObj.simulationTime;
+
+                return {
+                    exportObj: playerObj,
+                    playerIDs: [profile.characterName, 'Player 2', 'Player 3', 'Player 4', 'Player 5'],
+                    importedPlayerPositions: [true, false, false, false, false],
+                    zone: '/actions/combat/fly',
+                    isZoneDungeon: false,
+                    difficultyTier: 0,
+                    isParty: false
+                };
+            }
+
+            // Multi-player format (for auto-import storage)
             const exportObj = {};
-            exportObj[1] = JSON.stringify(constructPartyPlayer(profile, clientObj, battleObj));
+            exportObj[1] = JSON.stringify(playerObj);
 
             // Fill other slots with blanks
             for (let i = 2; i <= 5; i++) {
@@ -21312,6 +21739,27 @@
             isZoneDungeon = clientObj?.actionDetailMap?.[zone]?.combatZoneInfo?.isDungeon || false;
         }
 
+        // If single-player format requested, return just the player object
+        if (singlePlayerFormat && exportObj[1]) {
+            // Parse the player JSON string back to an object
+            const playerObj = JSON.parse(exportObj[1]);
+
+            // Add name field and remove zone/simulationTime for single-player format
+            playerObj.name = playerIDs[0];
+            delete playerObj.zone;
+            delete playerObj.simulationTime;
+
+            return {
+                exportObj: playerObj,  // Single player object instead of multi-player format
+                playerIDs,
+                importedPlayerPositions,
+                zone,
+                isZoneDungeon,
+                difficultyTier,
+                isParty: false  // Single player export is never party format
+            };
+        }
+
         return {
             exportObj,
             playerIDs,
@@ -21329,19 +21777,32 @@
      */
 
 
+    // Detect if we're running on Tampermonkey or Steam
+    const hasScriptManager = typeof GM_info !== 'undefined';
+
     /**
      * Get character data from storage
      * @returns {Promise<Object|null>} Character data or null
      */
     async function getCharacterData() {
         try {
-            const data = await webSocketHook.loadFromStorage('toolasha_init_character_data', null);
-            if (!data) {
+            // Tampermonkey: Use GM storage (cross-domain, persisted)
+            if (hasScriptManager) {
+                const data = await webSocketHook.loadFromStorage('toolasha_init_character_data', null);
+                if (!data) {
+                    console.error('[Milkonomy Export] No character data found');
+                    return null;
+                }
+                return JSON.parse(data);
+            }
+
+            // Steam: Use dataManager (RAM only, no GM storage available)
+            const characterData = dataManager.characterData;
+            if (!characterData) {
                 console.error('[Milkonomy Export] No character data found');
                 return null;
             }
-
-            return JSON.parse(data);
+            return characterData;
         } catch (error) {
             console.error('[Milkonomy Export] Failed to get character data:', error);
             return null;
@@ -21788,9 +22249,15 @@
          * @param {Object} profileData - Profile data from WebSocket
          */
         async handleProfileShared(profileData) {
-            // Clear any stale profile ID from storage (defensive cleanup)
-            // When viewing your own profile, this should always be null
-            await storage.set('currentProfileId', null, 'combatExport', true);
+            // Extract character ID from profile data
+            const characterId = profileData.profile.sharableCharacter?.id ||
+                               profileData.profile.characterSkills?.[0]?.characterID ||
+                               profileData.profile.character?.id;
+
+            // Store the profile ID so export button can find it
+            await storage.set('currentProfileId', characterId, 'combatExport', true);
+
+            // Note: Memory cache is handled by websocket.js listener (don't duplicate here)
 
             // Wait for profile panel to appear in DOM
             const profilePanel = await this.waitForProfilePanel();
@@ -22127,8 +22594,8 @@
                 // Get current profile ID (if viewing someone else's profile)
                 const currentProfileId = await storage.get('currentProfileId', 'combatExport', null);
 
-                // Get export data (pass profile ID if viewing external profile)
-                const exportData = await constructExportObject(currentProfileId);
+                // Get export data in single-player format (for pasting into "Player 1 import" field)
+                const exportData = await constructExportObject(currentProfileId, true);
                 if (!exportData) {
                     button.textContent = '✗ No Data';
                     button.style.background = '${config.COLOR_LOSS}';
@@ -22172,6 +22639,7 @@
                 // Defensive: ensure currentProfileId is null when exporting own profile
                 // This prevents stale data from blocking export
                 await storage.set('currentProfileId', null, 'combatExport', true);
+                clearCurrentProfile();
 
                 // Get current profile ID (should be null for own profile)
                 const currentProfileId = await storage.get('currentProfileId', 'combatExport', null);
@@ -25279,15 +25747,48 @@
          */
         getTaskOrder(taskCard) {
             const parsed = this.parseTaskCard(taskCard);
-            if (!parsed) return 999; // Unknown tasks go to end
+            if (!parsed) return { skillOrder: 999, taskName: '', isCombat: false, monsterSortIndex: 999 };
 
             const skillOrder = this.TASK_ORDER[parsed.skillType] || 999;
+            const isCombat = parsed.skillType === 'Defeat';
+
+            // For combat tasks, get monster sort index from game data
+            let monsterSortIndex = 999;
+            if (isCombat) {
+                // Extract monster name from task name (e.g., "Granite GolemZ9" -> "Granite Golem")
+                const monsterName = this.extractMonsterName(parsed.taskName);
+                if (monsterName) {
+                    const monsterHrid = dataManager.getMonsterHridFromName(monsterName);
+                    if (monsterHrid) {
+                        monsterSortIndex = dataManager.getMonsterSortIndex(monsterHrid);
+                    }
+                }
+            }
 
             return {
                 skillOrder,
                 taskName: parsed.taskName,
-                skillType: parsed.skillType
+                skillType: parsed.skillType,
+                isCombat,
+                monsterSortIndex
             };
+        }
+
+        /**
+         * Extract monster name from combat task name
+         * @param {string} taskName - Task name (e.g., "Granite Golem Z9")
+         * @returns {string|null} Monster name or null if not found
+         */
+        extractMonsterName(taskName) {
+            // Combat task format from parseTaskCard: "[Monster Name]Z[number]" (may or may not have space)
+            // Strip the zone suffix "Z\d+" from the end
+            const match = taskName.match(/^(.+?)\s*Z\d+$/);
+            if (match) {
+                return match[1].trim();
+            }
+
+            // Fallback: return as-is if no zone suffix found
+            return taskName.trim();
         }
 
         /**
@@ -25297,12 +25798,19 @@
             const orderA = this.getTaskOrder(cardA);
             const orderB = this.getTaskOrder(cardB);
 
-            // First sort by skill type
+            // First sort by skill type (combat vs non-combat)
             if (orderA.skillOrder !== orderB.skillOrder) {
                 return orderA.skillOrder - orderB.skillOrder;
             }
 
-            // Within same skill type, sort alphabetically by task name
+            // Within combat tasks, sort by zone progression (sortIndex)
+            if (orderA.isCombat && orderB.isCombat) {
+                if (orderA.monsterSortIndex !== orderB.monsterSortIndex) {
+                    return orderA.monsterSortIndex - orderB.monsterSortIndex;
+                }
+            }
+
+            // Within same skill type (or same zone for combat), sort alphabetically by task name
             return orderA.taskName.localeCompare(orderB.taskName);
         }
 
@@ -32376,6 +32884,13 @@
                     for (const msg of messages) {
                         const text = msg.textContent || '';
 
+                        // FILTER: Skip player messages (format: "username: [timestamp] message")
+                        // System messages start directly with timestamp (format: "[timestamp] message")
+                        // Check if text starts with non-timestamp text followed by colon (username pattern)
+                        if (/^[^\[]+:/.test(text)) {
+                            continue; // Skip player messages
+                        }
+
                         // Look for "Battle started:" messages
                         if (text.includes('Battle started:')) {
                             // Try to extract timestamp
@@ -33268,6 +33783,13 @@
                 // Extract all relevant events: key counts, party failed, battle ended, battle started
                 for (const msg of messages) {
                     const text = msg.textContent || '';
+
+                    // FILTER: Skip player messages (format: "username: [timestamp] message")
+                    // System messages start directly with timestamp (format: "[timestamp] message")
+                    // Check if text starts with non-timestamp text followed by colon (username pattern)
+                    if (/^[^\[]+:/.test(text)) {
+                        continue; // Skip player messages
+                    }
 
                     // Parse timestamp from message display format: [MM/DD HH:MM:SS]
                     const timestampMatch = text.match(/\[(\d{1,2}\/\d{1,2})\s+(\d{1,2}):(\d{2}):(\d{2})\s*([AP]M)?\]/);
@@ -36565,13 +37087,18 @@
                     communityEfficiency = communityBonus * 100; // Convert to percentage
                 }
 
+                // Get achievement buffs (Adept tier: +2% efficiency per tier)
+                const achievementBuffs = dataManager.getAchievementBuffs(actionTypeHrid);
+                const achievementEfficiency = (achievementBuffs.efficiency || 0) * 100; // Convert to percentage
+
                 // Stack all efficiency bonuses additively
                 const totalEfficiency = stackAdditive(
                     levelEfficiency,
                     houseEfficiency,
                     teaEfficiency,
                     equipmentEfficiency,
-                    communityEfficiency
+                    communityEfficiency,
+                    achievementEfficiency
                 );
 
                 return {
@@ -36580,11 +37107,12 @@
                     house: houseEfficiency,
                     tea: teaEfficiency,
                     equipment: equipmentEfficiency,
-                    community: communityEfficiency
+                    community: communityEfficiency,
+                    achievement: achievementEfficiency
                 };
             } catch (error) {
                 console.error('[AlchemyProfit] Failed to extract efficiency:', error);
-                return { total: 0, level: 0, house: 0, tea: 0, equipment: 0, community: 0 };
+                return { total: 0, level: 0, house: 0, tea: 0, equipment: 0, community: 0, achievement: 0 };
             }
         }
 
@@ -36989,15 +37517,31 @@
                 if (itemHrid === '/items/coin') {
                     ask = bid = 1;
                 } else {
-                    const priceData = marketAPI.getPrice(itemHrid, enhancementLevel);
-                    if (priceData && (priceData.ask > 0 || priceData.bid > 0)) {
-                        // Market data exists for this specific enhancement level
-                        ask = priceData.ask || 0;
-                        bid = priceData.bid || 0;
+                    // Check if this is an openable container (loot crate)
+                    const itemDetails = dataManager.getItemDetails(itemHrid);
+                    if (itemDetails?.isOpenable) {
+                        // Use expected value calculator for openable containers
+                        const containerValue = expectedValueCalculator.getCachedValue(itemHrid);
+                        if (containerValue !== null && containerValue > 0) {
+                            ask = bid = containerValue;
+                        } else {
+                            // Fallback to marketplace if EV not available
+                            const priceData = marketAPI.getPrice(itemHrid, enhancementLevel);
+                            ask = priceData?.ask || 0;
+                            bid = priceData?.bid || 0;
+                        }
                     } else {
-                        // No market data for this enhancement level - calculate cost
-                        ask = this.calculateEnhancementCost(itemHrid, enhancementLevel, 'ask');
-                        bid = this.calculateEnhancementCost(itemHrid, enhancementLevel, 'bid');
+                        // Regular item - use marketplace price
+                        const priceData = marketAPI.getPrice(itemHrid, enhancementLevel);
+                        if (priceData && (priceData.ask > 0 || priceData.bid > 0)) {
+                            // Market data exists for this specific enhancement level
+                            ask = priceData.ask || 0;
+                            bid = priceData.bid || 0;
+                        } else {
+                            // No market data for this enhancement level - calculate cost
+                            ask = this.calculateEnhancementCost(itemHrid, enhancementLevel, 'ask');
+                            bid = this.calculateEnhancementCost(itemHrid, enhancementLevel, 'bid');
+                        }
                     }
                 }
 
@@ -37112,7 +37656,13 @@
 
                 // Calculate income per attempt
                 const incomePerAttempt = data.drops.reduce((sum, drop, index) => {
-                    const price = sellType === 'ask' ? drop.ask : drop.bid;
+                    // Special handling for coins (no marketplace price)
+                    let price;
+                    if (drop.itemHrid === '/items/coin') {
+                        price = 1; // Coins are worth 1 coin each
+                    } else {
+                        price = sellType === 'ask' ? drop.ask : drop.bid;
+                    }
 
                     // Identify drop type
                     const isEssence = (index === data.drops.length - 2); // Second-to-last
@@ -37191,7 +37741,13 @@
 
                 // Build detailed drop revenues breakdown
                 const dropRevenues = data.drops.map((drop, index) => {
-                    const price = sellType === 'ask' ? drop.ask : drop.bid;
+                    // Special handling for coins (no marketplace price)
+                    let price;
+                    if (drop.itemHrid === '/items/coin') {
+                        price = 1; // Coins are worth 1 coin each
+                    } else {
+                        price = sellType === 'ask' ? drop.ask : drop.bid;
+                    }
                     const isEssence = (index === data.drops.length - 2);
                     const isRare = (index === data.drops.length - 1);
 
@@ -37861,6 +38417,13 @@
                     const line = document.createElement('div');
                     line.style.marginLeft = '8px';
                     line.textContent = `• Community Buff: +${effBreakdown.community.toFixed(1)}%`;
+                    effContent.appendChild(line);
+                }
+
+                if (effBreakdown.achievement > 0) {
+                    const line = document.createElement('div');
+                    line.style.marginLeft = '8px';
+                    line.textContent = `• Achievement Bonus: +${effBreakdown.achievement.toFixed(1)}%`;
                     effContent.appendChild(line);
                 }
 
@@ -39119,7 +39682,7 @@
         const targetWindow = typeof unsafeWindow !== 'undefined' ? unsafeWindow : window;
 
         targetWindow.Toolasha = {
-            version: '0.4.953',
+            version: '0.4.958',
 
             // Feature toggle API (for users to manage settings via console)
             features: {

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ORANGE | Кнопки переходники между разделами
 // @namespace    https://forum.blackrussia.online
-// @version      0.0.8
+// @version      0.0.9
 // @description  Кнопки с автоматическим переносом
 // @author       Dany_Forbs
 // @match        https://forum.blackrussia.online/*
@@ -51,7 +51,17 @@
             { text: "ОБЩ ПРАВИЛА", href: "https://forum.blackrussia.online/threads/Общие-правила-серверов.312571/" },
             { text: "ГОСС ПРАВИЛА", href: "https://forum.blackrussia.online/threads/Общие-правила-для-государственных-организаций.655011/" },
             { text: "АРХИВ", href: "https://forum.blackrussia.online/threads/test.14011327/" },
-            { text: "ID МАШИН", href: "https://forum.blackrussia.online/threads/id-транспортных-средств-новые-в-конце.13940012/" }
+            { text: "ID МАШИН", href: "https://forum.blackrussia.online/threads/id-транспортных-средств-новые-в-конце.13940012/" },
+            { text: "ОТЧЕТ ГОС", href: "https://forum.blackrussia.online/threads/Ежедневная-отчетность-лидеров-l-orange.8112931/page-201#post-61224173" },
+            { text: "ОТЧЕТ ОПГ", href: "https://forum.blackrussia.online/threads/Ежедневная-норма-лидеров-ОПГ-orange.1272973/page-165" },
+            { text: "НЕАКТИВ ГОС", href: "https://forum.blackrussia.online/threads/Заявление-на-неактив-orange.8113045/page-66#post-61223621" },
+            { text: "НЕАКТИВ ОПГ", href: "https://forum.blackrussia.online/threads/Заявление-на-неактив-orange.5802219/" },
+            { text: "ЛИДЕРС", href: "https://forum.blackrussia.online/forums/Лидерский-раздел.255/" },
+            { text: "ЖБ НА ЛД", href: "https://forum.blackrussia.online/forums/Жалобы-на-лидеров.272/" },
+            { text: "ГОС ОРГ", href: "https://forum.blackrussia.online/categories/Государственные-организации.248/" },
+            { text: "КРИМ ОРГ", href: "https://forum.blackrussia.online/categories/Криминальные-организации.249/" }
+
+
         ];
         
         // Создаем кнопки

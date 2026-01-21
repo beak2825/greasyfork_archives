@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         GeoGuessr Better Breakdown UI
+// @name         Geoguessr Better Breakdown UI
 // @namespace    https://greasyfork.org/users/1179204
-// @version      1.0.6
+// @version      1.0.8
 // @description  built-in StreetView Window to view where you guessed and the correct location
 // @author       KaKa, Alien Perfect
 // @match        https://www.geoguessr.com/*
@@ -11,20 +11,23 @@
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @grant        GM_deleteValue
+// @grant        GM_setClipboard
+// @grant        GM_xmlhttpRequest
 // @grant        GM_openInTab
 // @grant        unsafeWindow
 // @license      MIT
-// @downloadURL https://update.greasyfork.org/scripts/563091/GeoGuessr%20Better%20Breakdown%20UI.user.js
-// @updateURL https://update.greasyfork.org/scripts/563091/GeoGuessr%20Better%20Breakdown%20UI.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/563091/Geoguessr%20Better%20Breakdown%20UI.user.js
+// @updateURL https://update.greasyfork.org/scripts/563091/Geoguessr%20Better%20Breakdown%20UI.meta.js
 // ==/UserScript==
 
 "use strict";
 
-/* =======================
-   Config & Constants
-======================= */
 const SEARCH_RADIUS = 250000;
 const STORAGE_CAP = 50;
+const committedRounds = new Set();
+const MWSTMM_STATE = defaultState();
+const MONTHS_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const MONTHS_FULL = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 const SELECTORS = {
     markerList: "[class*='map-pin_']:not([data-qa='correct-location-marker'])",
     roundMarker:"[data-qa='correct-location-marker']",
@@ -35,9 +38,21 @@ const SELECTORS = {
     resultMap:"[class*='coordinate-result-map_map']"
 };
 
-/* =======================
-   State Management
-======================= */
+const SVG_SOURCE = {
+    COPY: `<svg height="24" width="24" viewBox="0 0 24 24">
+    <path d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"
+      fill="currentColor" stroke-linecap="round" stroke-linejoin="round"></path></svg>`,
+    LOADING: `<svg height="24" width="24" viewBox="0 0 24 24">
+    <path d="M12,18A6,6 0 0,1 6,12C6,11 6.25,10.03 6.7,9.2L5.24,7.74C4.46,8.97 4,10.43 4,12A8,8 0 0,0 12,20V23L16,19L12,15M12,4V1L8,5L12,9V6A6,6 0 0,1 18,12C18,13 17.75,13.97 17.3,14.8L18.76,16.26C19.54,15.03 20,13.57 20,12A8,8 0 0,0 12,4Z"
+      fill="currentColor"></path></svg>`,
+    SUCCESS: `<svg height="24" width="24" viewBox="0 0 24 24">
+    <path d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"
+      fill="currentColor"></path></svg>`,
+    SAVE:`<svg viewBox="0 0 24 24" fill="none" width="24" height="24">
+                  <path d="M9 6L12 3M12 3L15 6M12 3V13M7.00023 10C6.06835 10 5.60241 10 5.23486 10.1522C4.74481 10.3552 4.35523 10.7448 4.15224 11.2349C4 11.6024 4 12.0681 4 13V17.8C4 18.9201 4 19.4798 4.21799 19.9076C4.40973 20.2839 4.71547 20.5905 5.0918 20.7822C5.5192 21 6.07899 21 7.19691 21H16.8036C17.9215 21 18.4805 21 18.9079 20.7822C19.2842 20.5905 19.5905 20.2839 19.7822 19.9076C20 19.4802 20 18.921 20 17.8031V13C20 12.0681 19.9999 11.6024 19.8477 11.2349C19.6447 10.7448 19.2554 10.3552 18.7654 10.1522C18.3978 10 17.9319 10 17 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>`
+};
+
 let svs = null;
 let viewer = null;
 let guessMap = null;
@@ -49,26 +64,19 @@ let markerObserver = null;
 let currentGameToken = null;
 let lastClickedCoords = null;
 let realTimePreviewTooltip = null;
+
 let isSVFullScreen = false;
 let isCoverageLayer = false;
 let gameLoopRunning = false;
 let clickListenerAttached = false;
-let MAP_MAKING_API_KEY=GM_getValue("MAP_MAKING_API_KEY", "PASTE_YOUR_KEY_HERE");
 
+let MAP_MAKING_API_KEY = GM_getValue("MAP_MAKING_API_KEY", "PASTE_YOUR_KEY_HERE");
 let isRealTimeTooltip = GM_getValue("realTimeTooltip", false);
 let MAP_LIST;
 let LOCATION;
-let previousMapId=JSON.parse(GM_getValue('previousMapId', null));
-let previousTags=JSON.parse(GM_getValue('previousTags', '[]'));
-const committedRounds = new Set();
-const MWSTMM_STATE = defaultState();
-const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun','Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-const full_months=['January', 'February', 'March', 'April', 'May', 'June','July', 'August', 'September', 'October', 'November', 'December']
+let previousMapId = JSON.parse(GM_getValue('previousMapId', null));
+let previousTags = JSON.parse(GM_getValue('previousTags', '[]'));
 
-
-/* =======================
-   Utility Functions
-======================= */
 function getReactFiber(el) {
     if (!el) return null;
     const key = Object.keys(el).find(k => k.startsWith("__reactFiber"));
@@ -241,7 +249,7 @@ function stopMarkerObserver() {
 }
 
 
-function starMapObserver() {
+function startMapObserver() {
     stopMapObserver();
 
     const targetNode = document.body;
@@ -277,16 +285,14 @@ function stopMapObserver() {
 
 function toggleCoverageLayer(action) {
     if (!guessMap) return;
-    if(!coverageLayer) coverageLayer = new google.maps.StreetViewCoverageLayer();
-    if (isCoverageLayer && action !="on") {
+    if (!coverageLayer) coverageLayer = new google.maps.StreetViewCoverageLayer();
+    
+    if (isCoverageLayer && action !== "on") {
         coverageLayer.setMap(null);
         isCoverageLayer = false;
-        return
-    }
-    if(!isCoverageLayer && action !="off"){
+    } else if (!isCoverageLayer && action !== "off") {
         coverageLayer.setMap(guessMap);
         isCoverageLayer = true;
-        return
     }
 }
 
@@ -321,10 +327,11 @@ async function gameLoop() {
     updateMarkersUI(token, round, isGameEnd);
 }
 
-function removePeekMarker(){
-    if(peekMarker) {
+function removePeekMarker() {
+    if (peekMarker) {
         peekMarker.setMap(null);
-        peekMarker =null;}
+        peekMarker = null;
+    }
 }
 
 function updateMarkersUI(token, currentRound, isFinal) {
@@ -368,13 +375,9 @@ function positionTooltip(marker, tooltip) {
     const mapRect = mapContainer.getBoundingClientRect();
 
     const TOOLTIP_WIDTH = 300;
-    const TOOLTIP_HEIGHT = 180;
     const BUFFER = 10;
 
-    const spaceAbove = markerRect.top - mapRect.top;
-    const spaceBelow = mapRect.bottom - markerRect.bottom;
-
-    if (markerRect.top >= mapRect.height/2) {
+    if (markerRect.top >= mapRect.height / 2) {
 
         tooltip.style.bottom = "100%";
         tooltip.style.top = "auto";
@@ -411,15 +414,10 @@ function positionTooltip(marker, tooltip) {
 }
 
 function updateRealtimePreview(marker, pano) {
-    if(!realTimePreviewTooltip){
+    if (!realTimePreviewTooltip) {
         realTimePreviewTooltip = document.createElement("div");
         realTimePreviewTooltip.className = "peek-realtime-tooltip";
-        if(isRealTimeTooltip){
-            realTimePreviewTooltip.style.display='block'
-        }
-        else{
-            realTimePreviewTooltip.style.display='none'
-        }
+        realTimePreviewTooltip.style.display = isRealTimeTooltip ? 'block' : 'none';
         realTimePreviewTooltip.innerHTML = `
             <button class="peek-close-btn">×</button>
             <div class="peek-body">
@@ -429,9 +427,9 @@ function updateRealtimePreview(marker, pano) {
         `;
         realTimePreviewTooltip.querySelector(".peek-close-btn")?.addEventListener("click", (e) => {
             e.stopPropagation();
-            isRealTimeTooltip=false
+            isRealTimeTooltip = false;
             saveRealTimeTooltipState(false);
-            realTimePreviewTooltip.style.display = "none"
+            realTimePreviewTooltip.style.display = "none";
         });
 
         marker.style.cursor = "pointer";
@@ -441,18 +439,20 @@ function updateRealtimePreview(marker, pano) {
     const imgEl = realTimePreviewTooltip.querySelector(".peek-thumb");
     const peakBody = realTimePreviewTooltip.querySelector(".peek-body");
     const peakError = realTimePreviewTooltip.querySelector(".peek-error");
+    
     if (pano.error) {
-        peakError.style.display='block'
+        peakError.style.display = 'block';
         peakBody.style.display = "none";
-    }
-    else{
-        peakError.style.display='none'
-        peakBody.style.display='block'
+    } else {
+        peakError.style.display = 'none';
+        peakBody.style.display = 'block';
         imgEl.src = getStreetViewThumbUrl(pano);
     }
 
-    positionTooltip(marker,realTimePreviewTooltip)
-    if(!marker.querySelector('.peek-realtime-tooltip'))marker.appendChild(realTimePreviewTooltip)
+    positionTooltip(marker, realTimePreviewTooltip);
+    if (!marker.querySelector('.peek-realtime-tooltip')) {
+        marker.appendChild(realTimePreviewTooltip);
+    }
 
 }
 
@@ -624,10 +624,13 @@ function parseMeta(data) {
         if(['IN','PR'].includes(country))camera='smallcam'
         else if (['NA', 'PA' , 'OM', 'QA', 'EC'].includes(country))camera='gen4trekker'
     }
-    let isNewRoad= !history ? 'newroad' : false
-    const tagFields = [formattedDate, `${year}-${month}`, `${String(year).slice(2,4)}-${month}`, year, months[month-1], full_months[month-1],
-                       country, region, locality, road,
-                       generation, camera, altitude?altitude.toFixed(2)+'m':null, isNewRoad].filter(Boolean);
+    const isNewRoad = !history ? 'newroad' : false;
+    const tagFields = [
+        formattedDate, `${year}-${month}`, `${String(year).slice(2, 4)}-${month}`, year,
+        MONTHS_SHORT[month - 1], MONTHS_FULL[month - 1],
+        country, region, locality, road,
+        generation, camera, altitude ? altitude.toFixed(2) + 'm' : null, isNewRoad
+    ].filter(Boolean);
     return {
         lat,
         lng,
@@ -704,6 +707,71 @@ async function getLOCATION(){
     }
 }
 
+function calculateFOV(zoom) {
+    const pi = Math.PI;
+    const argument = (3 / 4) * Math.pow(2, 1 - zoom);
+    const radians = Math.atan(argument);
+    const degrees = (360 / pi) * radians;
+    return degrees;
+}
+
+async function getShortLink() {
+    const url = 'https://www.google.com/maps/rpc/shorturl';
+    if (!viewer) {
+        return fallbackLink();
+    }
+
+    const aElements = document.querySelectorAll('[rel="noopener"]');
+    if (!aElements || aElements.length < 2) {
+        return fallbackLink();
+    }
+
+    const ShareLinkElement = aElements[aElements.length - 2];
+    const regex = /@(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)a,(-?\d+(?:\.\d+)?)y,(-?\d+(?:\.\d+)?)h,(-?\d+(?:\.\d+)?)t\/data=!3m4!1e\d+!3m2!1s([^!]+)!2e\d+(?:\?.*)?/;
+    const shareLink = ShareLinkElement.getAttribute('href');
+    const match = shareLink.match(regex);
+
+    if (match) {
+        const [ , lat, lng, , y, h, t, panoId ] = match;
+        const payload = `!1shttps://www.google.com/maps/@${lat},${lng},3a,${y}y,${h}h,${t}t/data=*213m5*211e1*213m3*211s${panoId}*212e0*216shttps%3A%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fpanoid%3D${panoId}%26cb_client%3Dmaps_sv.share%26w%3D900%26h%3D600%26yaw%3D${h}%26pitch%3D${90-parseFloat(t)}%26thumbfov%3D100*217i16384*218i8192?coh=205410&entry=tts!2m1!7e81!6b1`;
+
+        const params = new URLSearchParams({
+            authuser: '0',
+            hl: 'en',
+            gl: 'us',
+            pb: payload
+        }).toString();
+        return new Promise((resolve) => {
+            GM_xmlhttpRequest({
+                method: 'GET',
+                url: `${url}?${params}`,
+                onload: function (response) {
+                    if (response.status >= 200 && response.status < 300) {
+                        const text = response.responseText;
+                        const match = text.match(/"([^"]+)"/);
+                        if (match && match[1]) {
+                            resolve(match[1]);
+                        } else {
+                            resolve(fallbackLink());
+                        }
+                    } else {
+                        resolve(fallbackLink());
+                    }
+                },
+                onerror: function () {
+                    resolve(fallbackLink());
+                }
+            });
+        });
+    } else {
+        return fallbackLink();
+    }
+
+    function fallbackLink() {
+        return `https://www.google.com/maps/@?api=1&map_action=pano&heading=${viewer.getPov().heading}&pitch=${viewer.getPov().pitch}&fov=${calculateFOV(viewer.getZoom())}&pano=${viewer.getPano()}`;
+    }
+}
+
 async function updatePanoSelector(panoId, selector) {
     if (!svs) initSVS();
     const panoData = await new Promise((resolve, reject) => {
@@ -716,37 +784,31 @@ async function updatePanoSelector(panoId, selector) {
         });
     });
     if(!panoData || !panoData.time || !panoData.imageDate)return
-    const optionsNeeded = 1 + (panoData.time ? panoData.time.length : 0);
-    const existingOptions = selector.options.length;
-
-    while (selector.options.length < optionsNeeded) {
-        selector.add(new Option());
-    }
-
+    const frag = document.createDocumentFragment();
+    let [defaultYear, defaultMonth] = panoData.imageDate.split("-");
     if (panoData.imageDate && panoData.location?.pano) {
-        const [year, month] = panoData.imageDate.split('-');
-        selector.options[0].value = panoData.location.pano;
-        selector.options[0].text = `${full_months[parseInt(month, 10) - 1]} ${year} (Default)`;
-        selector.options[0].hidden = false;
+        frag.appendChild(new Option(
+            `${MONTHS_FULL[defaultMonth - 1]} ${defaultYear} (Current)`,
+            panoData.location.pano
+        ));
     }
 
-    if (Array.isArray(panoData.time)) {
-        let idx = 1;
+    if (Array.isArray(panoData.time)&&panoData.time.length>1) {
         for (const entry of panoData.time) {
             const date = extractDate(entry);
             if (!date) continue;
-            const year = date.getUTCFullYear();
-            const month = date.getUTCMonth() + 1;
-            selector.options[idx].value = entry.pano;
-            selector.options[idx].text = `${full_months[month - 1]} ${year}`;
-            selector.options[idx].hidden = false;
-            idx++;
-        }
-
-        for (; idx < selector.options.length; idx++) {
-            selector.options[idx].hidden = true;
+            const year = date.getFullYear();
+            const month = date.getMonth() + 1;
+            if (year == defaultYear && month == defaultMonth) continue;
+            frag.appendChild(new Option(
+                `${MONTHS_FULL[month - 1]} ${year}`,
+                entry.pano
+            ));
         }
     }
+
+    selector.replaceChildren(frag);
+
 }
 
 
@@ -763,8 +825,8 @@ function openNativeStreetView(pano) {
     const xpDiv=document.querySelector("[class*='level-up-xp-button']")
     if(xpDiv) xpDiv.style.opacity='0'
     const mapContainer = document.querySelector(SELECTORS.resultMap);
-    let coverageLayerControl= document.querySelector('#layer-toggle');
-    if(!coverageLayerControl){
+    let coverageLayerControl = document.querySelector('#layer-toggle');
+    if (!coverageLayerControl) {
         coverageLayerControl = document.createElement('button');
         coverageLayerControl.className = 'peek-map-control';
         coverageLayerControl.id = 'layer-toggle'
@@ -772,26 +834,59 @@ function openNativeStreetView(pano) {
             <img alt="Coverage Layer Toggle" loading="lazy" width="24" height="24" decoding="async" data-nimg="1" src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2023%2038%22%3E%3Cpath%20d%3D%22M16.6%2038.1h-5.5l-.2-2.9-.2%202.9h-5.5L5%2025.3l-.8%202a1.53%201.53%200%2001-1.9.9l-1.2-.4a1.58%201.58%200%2001-1-1.9v-.1c.3-.9%203.1-11.2%203.1-11.2a2.66%202.66%200%20012.3-2l.6-.5a6.93%206.93%200%20014.7-12%206.8%206.8%200%20014.9%202%207%207%200%20012%204.9%206.65%206.65%200%2001-2.2%205l.7.5a2.78%202.78%200%20012.4%202s2.9%2011.2%202.9%2011.3a1.53%201.53%200%2001-.9%201.9l-1.3.4a1.63%201.63%200%2001-1.9-.9l-.7-1.8-.1%2012.7zm-3.6-2h1.7L14.9%2020.3l1.9-.3%202.4%206.3.3-.1c-.2-.8-.8-3.2-2.8-10.9a.63.63%200%2000-.6-.5h-.6l-1.1-.9h-1.9l-.3-2a4.83%204.83%200%20003.5-4.7A4.78%204.78%200%200011%202.3H10.8a4.9%204.9%200%2000-1.4%209.6l-.3%202h-1.9l-1%20.9h-.6a.74.74%200%2000-.6.5c-2%207.5-2.7%2010-3%2010.9l.3.1L4.8%2020l1.9.3.2%2015.8h1.6l.6-8.4a1.52%201.52%200%20011.5-1.4%201.5%201.5%200%20011.5%201.4l.9%208.4zm-10.9-9.6zm17.5-.1z%22%20style%3D%22isolation%3Aisolate%22%20fill%3D%22%23333%22%20opacity%3D%22.7%22/%3E%3Cpath%20d%3D%22M5.9%2013.6l1.1-.9h7.8l1.2.9%22%20fill%3D%22%23ce592c%22/%3E%3Cellipse%20cx%3D%2210.9%22%20cy%3D%2213.1%22%20rx%3D%222.7%22%20ry%3D%22.3%22%20style%3D%22isolation%3Aisolate%22%20fill%3D%22%23ce592c%22%20opacity%3D%22.5%22/%3E%3Cpath%20d%3D%22M20.6%2026.1l-2.9-11.3a1.71%201.71%200%2000-1.6-1.2H5.699999999999999a1.69%201.69%200%2000-1.5%201.3l-3.1%2011.3a.61.61%200%2000.3.7l1.1.4a.61.61%200%2000.7-.3l2.7-6.7.2%2016.8h3.6l.6-9.3a.47.47%200%2001.44-.5h.06c.4%200%20.4.2.5.5l.6%209.3h3.6L15.7%2020.3l2.5%206.6a.52.52%200%2000.66.31l1.2-.4a.57.57%200%2000.5-.7z%22%20fill%3D%22%23fdbf2d%22/%3E%3Cpath%20d%3D%22M7%2013.6l3.9%206.7%203.9-6.7%22%20style%3D%22isolation%3Aisolate%22%20fill%3D%22%23cf572e%22%20opacity%3D%22.6%22/%3E%3Ccircle%20cx%3D%2210.9%22%20cy%3D%227%22%20r%3D%225.9%22%20fill%3D%22%23fdbf2d%22/%3E%3C/svg%3E" style="color: transparent;">
         `;
         mapContainer.appendChild(coverageLayerControl);
-        coverageLayerControl.onclick = (e) =>{
-            toggleCoverageLayer()}
+        coverageLayerControl.onclick = () => toggleCoverageLayer();
     }
 
     let splitContainer = mapContainer.querySelector('.peek-split-container');
+    let panoSelector = document.createElement("select");
     if (!splitContainer) {
         splitContainer = document.createElement('div');
         splitContainer.className = 'peek-split-container';
         splitContainer.innerHTML = `
             <div class="peek-split-resizer"></div>
-            <button class="peek-control" id="peek-split-close">×</button>
-            <button class="peek-control" id="peek-save" title="Save to MapMaking">
-              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" width="24" height="24">
-                <path d="M9 6L12 3M12 3L15 6M12 3V13M7.00023 10C6.06835 10 5.60241 10 5.23486 10.1522C4.74481 10.3552 4.35523 10.7448 4.15224 11.2349C4 11.6024 4 12.0681 4 13V17.8C4 18.9201 4 19.4798 4.21799 19.9076C4.40973 20.2839 4.71547 20.5905 5.0918 20.7822C5.5192 21 6.07899 21 7.19691 21H16.8036C17.9215 21 18.4805 21 18.9079 20.7822C19.2842 20.5905 19.5905 20.2839 19.7822 19.9076C20 19.4802 20 18.921 20 17.8031V13C20 12.0681 19.9999 11.6024 19.8477 11.2349C19.6447 10.7448 19.2554 10.3552 18.7654 10.1522C18.3978 10 17.9319 10 17 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </button>
-            <div class="peek-split-pano"></div>
+            <div class="peek-split-pano">
+              </button>
+            </div>
         `;
         mapContainer.appendChild(splitContainer);
-        document.getElementById('peek-save').addEventListener('click', async () => {
+
+        const panoDiv = splitContainer.querySelector('.peek-split-pano');
+        viewer=new google.maps.StreetViewPanorama(panoDiv, {
+            pano: pano.panoId,
+            pov: {
+                heading: pano.heading || 0,
+                pitch: pano.pitch || 0
+            },
+            zoom: 1,
+            addressControl: true,
+            showRoadLabels: false,
+            enableCloseButton: false,
+            zoomControl:true,
+            clickToGo: true
+        })
+        viewer.addListener("pano_changed", function() {
+            updatePanoSelector(viewer.getPano(),panoSelector)
+        });
+
+        const closeControl=document.createElement('button')
+        closeControl.className='peek-control'
+        closeControl.id='peek-split-close'
+        closeControl.textContent= '×'
+        closeControl.onclick = (e) => {
+            e.stopPropagation();
+            if(shareDiv) shareDiv.style.display='block';
+            if(xpDiv) xpDiv.style.opacity='1.0';
+            splitContainer.classList.remove('active');
+            removePeekMarker();
+        };
+        viewer.controls[google.maps.ControlPosition.RIGHT_TOP].push(closeControl);
+
+        const saveControl=document.createElement('button')
+        saveControl.className='peek-control'
+        saveControl.id='peek-save'
+        saveControl.title = 'Save to MapMaking'
+        saveControl.innerHTML=SVG_SOURCE.SAVE
+        saveControl.addEventListener('click', async () => {
             await getLOCATION()
             if (MAP_MAKING_API_KEY === 'PASTE_YOUR_KEY_HERE') {
                 await Swal.fire({
@@ -835,54 +930,45 @@ function openNativeStreetView(pano) {
                 showMapList()
             }
         });
+        viewer.controls[google.maps.ControlPosition.RIGHT_TOP].push(saveControl);
 
-        splitContainer.querySelector('#peek-split-close').onclick = (e) => {
-            e.stopPropagation();
-            if(shareDiv) shareDiv.style.display='block';
-            if(xpDiv) xpDiv.style.opacity='1.0';
-            splitContainer.classList.remove('active');
-            removePeekMarker();
-        };
+        const copyControl = document.createElement('button')
+        copyControl.className='peek-control'
+        copyControl.id='peek-copy'
+        copyControl.title = 'Copy Link'
+        copyControl.innerHTML=SVG_SOURCE.COPY
+        copyControl.addEventListener("click", async () => {
+            copyControl.innerHTML = SVG_SOURCE.LOADING;
+            const shortUrl = await getShortLink();
+            copyControl.innerHTML = SVG_SOURCE.SUCCESS;
+            await GM_setClipboard(shortUrl);
 
-        const panoDiv = splitContainer.querySelector('.peek-split-pano');
-
-        viewer=new google.maps.StreetViewPanorama(panoDiv, {
-            pano: pano.panoId,
-            pov: {
-                heading: pano.heading || 0,
-                pitch: pano.pitch || 0
-            },
-            zoom: 1,
-            addressControl: true,
-            showRoadLabels: false,
-            enableCloseButton: false,
-            zoomControl:true,
-            clickToGo: true
-        })
-        viewer.addListener("pano_changed", function() {
-            updatePanoSelector(viewer.getPano(),panoSelector)
+            setTimeout(() => {
+                copyControl.innerHTML = SVG_SOURCE.COPY;
+            }, 1500);
         });
+        viewer.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(copyControl);
+
+
+        panoSelector.id = "pano-select";
+        panoSelector.addEventListener('change', function() {
+            if(viewer)viewer.setPano(panoSelector.value);
+        });
+        viewer.controls[google.maps.ControlPosition.BOTTOM_CENTER].push(panoSelector);
     }
     else {
         viewer.setPano(pano.panoId)
         viewer.setPov({ heading: pano.heading, pitch: pano.pitch})
         viewer.setZoom(1)
     }
-    let panoSelector = document.getElementById('pano-select');
-    if(!panoSelector){
-        panoSelector = document.createElement("select");
-        panoSelector.id = "pano-select";
-        panoSelector.addEventListener('change', function() {
-            if(viewer)viewer.setPano(panoSelector.value);
-        });
-        if(splitContainer)splitContainer.appendChild(panoSelector);
-    }
+
     requestAnimationFrame(() => {
         updatePanoSelector(pano.panoId, panoSelector)
         splitContainer.classList.add('active');
         offsetMapFocus(guessMap, pano.location);
     });
 }
+
 function showMapList() {
     if(document.getElementById('mwstmm-map-list')) return;
 
@@ -1012,8 +1098,8 @@ function addLocationToMap(e) {
     e.target.parentNode.classList.add('is-added');
 
     const id = parseInt(e.target.dataset.id);
-    previousMapId=id
-    GM_setValue('previousMapId', JSON.stringify(previousMapId));
+    previousMapId = id;
+    GM_setValue('previousMapId', JSON.stringify(id));
 
 
     MWSTMM_STATE.recentMaps = MWSTMM_STATE.recentMaps.filter(e => e.id !== id).slice(0, 2);
@@ -1049,12 +1135,10 @@ function defaultState() {
 }
 
 function loadState() {
-    const data = GM_getValue('mwstmm_state', null)
-    if(!data) return;
+    const data = GM_getValue('mwstmm_state', null);
+    if (!data) return;
 
     const dataJson = JSON.parse(data);
-    if(!data) return;
-
     Object.assign(MWSTMM_STATE, defaultState(), dataJson);
     saveState();
 }
@@ -1255,15 +1339,15 @@ function inResults() {
 
 function main() {
     startMarkerObserver();
-    starMapObserver();
+    startMapObserver();
     loadState();
     window.addEventListener("urlchange", () => {
         startMarkerObserver();
-        starMapObserver();
+        startMapObserver();
         loadState();
     });
     let onKeyDown = async (e) => {
-        if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA' || event.target.isContentEditable) {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) {
             return;
         }
         e.stopPropagation();
@@ -1388,6 +1472,7 @@ function main() {
             border: 0px;
             color:#b3b3b3;
             font-size:32px;
+            margin: 8px;
             padding: 0px;
             text-transform: none;
             appearance: none;
@@ -1407,7 +1492,6 @@ function main() {
         }
 
         .peek-map-control {
-            position:absolute;
             background: rgb(0, 0, 0, 0.8);
             border: 0px;
             padding: 8px;
@@ -1427,16 +1511,6 @@ function main() {
 
         .peek-map-control:hover {
             opacity: 1.0;
-        }
-
-        #peek-save{
-            top: 110px;
-            right: 10px;
-        }
-
-        #peek-split-close{
-            top: 60px;
-            right: 10px;
         }
 
         #layer-toggle{
@@ -1646,8 +1720,7 @@ function main() {
   font-size: 14px;
   color: #FFFFFF;
   position: absolute;
-  bottom: 2px;
-  right: 320px;
+  bottom: 4px !important;
   border-radius: 5px;
   box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px;
   border: none;

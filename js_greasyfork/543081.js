@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         WME Level Highlighter
 // @namespace    https://greasyfork.org/de/users/863740-horst-wittlich
-// @version      2025.07.22
-// @description  Level highlighter for Waze Map Editor
+// @version      2026.01.21
+// @description  Level highlighter for Waze Map Editor with multi-level selection and statistics
 // @icon         https://i.ibb.co/ckSvk59/waze-icon.png
 // @author       Assistant
 // @include      https://www.waze.com/editor*
@@ -18,15 +18,15 @@
 
 (function() {
     'use strict';
-    
+
     console.log("=== WME Level Highlighter LOADING ===");
-    
-    var SCRIPT_VERSION = "2025.07.22";
+
+    var SCRIPT_VERSION = "2026.01.21";
     var highlightedSegmentIds = [];
     var foundSegmentsList = [];
     var autoRefreshInterval = null;
     var autoRefreshEnabled = false;
-    
+
     var HIGHLIGHT_ORANGE = "#ff5000";
     var HIGHLIGHT_MAGENTA = "#ff00dd";
     var HIGHLIGHT_OPACITY = 0.7;
@@ -34,11 +34,12 @@
 
     // Local storage keys
     var STORAGE_KEYS = {
-        selectedLevel: 'wme_level_highlighter_level',
+        selectedLevels: 'wme_level_highlighter_levels', // Changed to support multiple levels
         daysOld: 'wme_level_highlighter_days',
         colorMode: 'wme_level_highlighter_color_mode',
         customColor: 'wme_level_highlighter_custom_color',
-        autoRefresh: 'wme_level_highlighter_auto_refresh'
+        autoRefresh: 'wme_level_highlighter_auto_refresh',
+        showStatistics: 'wme_level_highlighter_show_stats'
     }
 
     function toggleAutoRefresh() {
@@ -54,7 +55,7 @@
                 console.log("Auto-refresh: Running highlighter...");
                 runHighlighter();
             }, 5000); // 5 seconds
-            
+
             // Update button text
             var runButton = getId('_btnRunHighlighter');
             if (runButton) {
@@ -67,7 +68,7 @@
                 clearInterval(autoRefreshInterval);
                 autoRefreshInterval = null;
             }
-            
+
             // Reset button text
             var runButton = getId('_btnRunHighlighter');
             if (runButton) {
@@ -102,11 +103,23 @@
         return document.getElementById(node);
     }
 
+    // NEW: Get selected levels (supports multiple)
+    function getSelectedLevels() {
+        var levels = [];
+        for (var i = 1; i <= 6; i++) {
+            var checkbox = getId('_cbLevel' + i);
+            if (checkbox && checkbox.checked) {
+                levels.push(i - 1); // Convert to internal level (0-based)
+            }
+        }
+        return levels.length > 0 ? levels : [0]; // Default to level 1 if none selected
+    }
+
     function getColorMode() {
         var orange = getId('_rbHilightOrange');
         var magenta = getId('_rbHilightMagenta');
         var custom = getId('_rbHilightCustom');
-        
+
         if (orange && orange.checked) return 'orange';
         if (magenta && magenta.checked) return 'magenta';
         if (custom && custom.checked) return 'custom';
@@ -130,16 +143,25 @@
 
     function resetAllHighlights() {
         console.log("=== RESETTING ALL HIGHLIGHTS ===");
-        
+
         if (!window.W || !window.W.model || !window.W.model.segments) return;
 
         var resetCount = 0;
         for (var seg in W.model.segments.objects) {
             var segment = W.model.segments.getObjectById(seg);
             if (!segment || !segment.attributes) continue;
-            
+
             try {
-                var line = W.userscripts.getFeatureElementByDataModel(segment);
+                var line = null;
+
+                // Try to use the new Waze API for getting feature elements
+                if (window.W && window.W.userscripts && window.W.userscripts.getFeatureElementByDataModel) {
+                    line = window.W.userscripts.getFeatureElementByDataModel(segment);
+                } else {
+                    // Fallback to old method
+                    line = W.userscripts.getFeatureElementByDataModel(segment);
+                }
+
                 if (line) {
                     line.removeAttribute("stroke");
                     line.removeAttribute("stroke-opacity");
@@ -147,9 +169,11 @@
                     line.removeAttribute("stroke-dasharray");
                     resetCount++;
                 }
-            } catch (e) {}
+            } catch (e) {
+                console.warn("Error resetting segment", seg, ":", e);
+            }
         }
-        
+
         console.log("Reset highlights on", resetCount, "segments");
         highlightedSegmentIds = [];
         foundSegmentsList = [];
@@ -164,7 +188,7 @@
             if (segment) {
                 W.selectionManager.unselectAll();
                 W.selectionManager.setSelectedModels([segment]);
-                
+
                 // Try to zoom to segment using modern APIs
                 setTimeout(function() {
                     try {
@@ -175,7 +199,7 @@
                                 return;
                             }
                         }
-                        
+
                         // Method 2: Try using modern geometry API
                         if (segment.getOLGeometry) {
                             var olGeometry = segment.getOLGeometry();
@@ -195,7 +219,7 @@
                                 }
                             }
                         }
-                        
+
                         // Method 3: Try using OpenLayers center
                         if (segment.getOLGeometry) {
                             var olGeometry = segment.getOLGeometry();
@@ -215,7 +239,7 @@
                                 }
                             }
                         }
-                        
+
                         // Method 4: Fallback - try legacy geometry (only if modern fails)
                         if (segment.geometry && segment.geometry.getCentroid) {
                             var centroid = segment.geometry.getCentroid();
@@ -226,9 +250,9 @@
                                 }
                             }
                         }
-                        
+
                         console.log("Successfully zoomed to segment:", segmentId);
-                        
+
                     } catch (zoomError) {
                         console.log("Zoom failed for segment", segmentId, ":", zoomError);
                     }
@@ -249,11 +273,11 @@
                     editorSegments.push(foundSegmentsList[i]);
                 }
             }
-            
+
             if (editorSegments.length === 0) return;
-            
+
             W.selectionManager.unselectAll();
-            
+
             var segmentsToSelect = [];
             for (var j = 0; j < editorSegments.length; j++) {
                 var segment = W.model.segments.getObjectById(editorSegments[j].segmentId);
@@ -261,14 +285,84 @@
                     segmentsToSelect.push(segment);
                 }
             }
-            
+
             if (segmentsToSelect.length > 0) {
                 W.selectionManager.setSelectedModels(segmentsToSelect);
             }
-            
+
         } catch (error) {
             console.error("Error selecting segments by editor:", error);
         }
+    }
+
+    // NEW: Calculate statistics
+    function calculateStatistics(segments) {
+        var stats = {
+            totalSegments: segments.length,
+            editorCount: {},
+            levelDistribution: {}
+        };
+
+        segments.forEach(function(seg) {
+            // Editor statistics
+            if (!stats.editorCount[seg.editorName]) {
+                stats.editorCount[seg.editorName] = 0;
+            }
+            stats.editorCount[seg.editorName]++;
+
+            // Level distribution
+            if (!stats.levelDistribution[seg.editorLevel]) {
+                stats.levelDistribution[seg.editorLevel] = 0;
+            }
+            stats.levelDistribution[seg.editorLevel]++;
+        });
+
+        return stats;
+    }
+
+    // NEW: Update statistics display
+    function updateStatisticsDisplay() {
+        var statsElement = getId('_statisticsDisplay');
+        if (!statsElement || foundSegmentsList.length === 0) return;
+
+        var stats = calculateStatistics(foundSegmentsList);
+
+        var html = '<div style="background: #f9f9f9; padding: 10px; border-radius: 4px; margin-top: 10px;">';
+        html += '<h4 style="margin: 0 0 10px 0;">📊 Statistics</h4>';
+
+        // Top editors
+        var topEditors = Object.keys(stats.editorCount)
+            .map(function(editor) {
+                return [editor, stats.editorCount[editor]];
+            })
+            .sort(function(a, b) {
+                return b[1] - a[1];
+            })
+            .slice(0, 5);
+
+        html += '<div style="margin-bottom: 10px;"><strong>Top Editors:</strong><br>';
+        topEditors.forEach(function(editorData) {
+            html += '<span style="margin-left: 10px;">' + editorData[0] + ': ' + editorData[1] + ' segments</span><br>';
+        });
+        html += '</div>';
+
+        // Level distribution
+        html += '<div><strong>Level Distribution:</strong><br>';
+        Object.keys(stats.levelDistribution)
+            .map(function(level) {
+                return [level, stats.levelDistribution[level]];
+            })
+            .sort(function(a, b) {
+                return parseInt(a[0]) - parseInt(b[0]);
+            })
+            .forEach(function(levelData) {
+                html += '<span style="margin-left: 10px;">Level ' + levelData[0] + ': ' + levelData[1] + ' segments</span><br>';
+            });
+        html += '</div>';
+
+        html += '</div>';
+
+        statsElement.innerHTML = html;
     }
 
     function updateEditorsDisplay() {
@@ -300,15 +394,15 @@
         containerDiv.style.background = '#f9f9f9';
         containerDiv.style.borderRadius = '4px';
         containerDiv.style.marginBottom = '15px';
-        
+
         var editorNames = Object.keys(editorGroups);
         for (var k = 0; k < editorNames.length; k++) {
             var editorName = editorNames[k];
             var segments = editorGroups[editorName];
-            
+
             var editorDiv = document.createElement('div');
             editorDiv.style.marginBottom = '15px';
-            
+
             var editorNameSpan = document.createElement('span');
             editorNameSpan.style.color = '#2196F3';
             editorNameSpan.style.cursor = 'pointer';
@@ -317,37 +411,45 @@
             editorNameSpan.style.fontSize = '14px';
             editorNameSpan.textContent = editorName;
             editorNameSpan.title = 'Click to select all segments by ' + editorName;
-            
+
             (function(name) {
                 editorNameSpan.addEventListener('click', function() {
                     selectSegmentsByEditor(name);
                 });
             })(editorName);
-            
+
             var segmentCountSpan = document.createElement('span');
             segmentCountSpan.style.color = '#666';
             segmentCountSpan.style.marginLeft = '8px';
             segmentCountSpan.textContent = '(' + segments.length + ' segments)';
-            
+
             editorDiv.appendChild(editorNameSpan);
             editorDiv.appendChild(segmentCountSpan);
             editorDiv.appendChild(document.createElement('br'));
-            
+
             var maxShow = 4;
-            for (var m = 0; m < Math.min(maxShow, segments.length); m++) {
+            var segmentsContainer = document.createElement('div');
+
+            for (var m = 0; m < segments.length; m++) {
                 var seg = segments[m];
                 var editDate = new Date(seg.editDate);
                 var daysAgo = Math.floor((new Date() - editDate) / 86400000);
-                
+
                 var segmentDiv = document.createElement('div');
                 segmentDiv.style.color = '#888';
                 segmentDiv.style.marginLeft = '15px';
                 segmentDiv.style.marginTop = '3px';
                 segmentDiv.style.fontSize = '12px';
-                
+
+                // Hide segments beyond maxShow initially
+                if (m >= maxShow) {
+                    segmentDiv.style.display = 'none';
+                    segmentDiv.className = 'hidden-segment';
+                }
+
                 var idLabel = document.createTextNode('ID: ');
                 segmentDiv.appendChild(idLabel);
-                
+
                 var segmentIdSpan = document.createElement('span');
                 segmentIdSpan.style.color = '#2196F3';
                 segmentIdSpan.style.cursor = 'pointer';
@@ -355,34 +457,61 @@
                 segmentIdSpan.style.fontWeight = 'bold';
                 segmentIdSpan.textContent = seg.segmentId;
                 segmentIdSpan.title = 'Click to select segment ' + seg.segmentId;
-                
+
                 (function(segId) {
                     segmentIdSpan.addEventListener('click', function() {
                         selectSegmentById(segId);
                     });
                 })(seg.segmentId);
-                
+
                 var daysLabel = document.createTextNode(' - ' + daysAgo + ' days ago');
-                
+
                 segmentDiv.appendChild(segmentIdSpan);
                 segmentDiv.appendChild(daysLabel);
-                editorDiv.appendChild(segmentDiv);
+                segmentsContainer.appendChild(segmentDiv);
             }
-            
+
+            editorDiv.appendChild(segmentsContainer);
+
             if (segments.length > maxShow) {
-                var moreDiv = document.createElement('div');
-                moreDiv.style.color = '#888';
-                moreDiv.style.marginLeft = '15px';
-                moreDiv.style.fontStyle = 'italic';
-                moreDiv.style.fontSize = '12px';
-                moreDiv.style.marginTop = '3px';
-                moreDiv.textContent = '... and ' + (segments.length - maxShow) + ' more segments';
-                editorDiv.appendChild(moreDiv);
+                var toggleDiv = document.createElement('div');
+                toggleDiv.style.color = '#2196F3';
+                toggleDiv.style.marginLeft = '15px';
+                toggleDiv.style.cursor = 'pointer';
+                toggleDiv.style.textDecoration = 'underline';
+                toggleDiv.style.fontSize = '12px';
+                toggleDiv.style.marginTop = '5px';
+                toggleDiv.style.fontWeight = 'bold';
+                toggleDiv.textContent = '▼ Show ' + (segments.length - maxShow) + ' more segments';
+                toggleDiv.title = 'Click to show/hide additional segments';
+
+                var isExpanded = false;
+                toggleDiv.addEventListener('click', function() {
+                    var hiddenSegments = segmentsContainer.querySelectorAll('.hidden-segment');
+
+                    if (!isExpanded) {
+                        // Show all segments
+                        for (var i = 0; i < hiddenSegments.length; i++) {
+                            hiddenSegments[i].style.display = 'block';
+                        }
+                        toggleDiv.textContent = '▲ Hide ' + (segments.length - maxShow) + ' segments';
+                        isExpanded = true;
+                    } else {
+                        // Hide segments beyond maxShow
+                        for (var i = 0; i < hiddenSegments.length; i++) {
+                            hiddenSegments[i].style.display = 'none';
+                        }
+                        toggleDiv.textContent = '▼ Show ' + (segments.length - maxShow) + ' more segments';
+                        isExpanded = false;
+                    }
+                });
+
+                editorDiv.appendChild(toggleDiv);
             }
-            
+
             containerDiv.appendChild(editorDiv);
         }
-        
+
         editorsElement.appendChild(containerDiv);
     }
 
@@ -395,7 +524,7 @@
 
         try {
             W.selectionManager.unselectAll();
-            
+
             var segmentsToSelect = [];
             for (var i = 0; i < highlightedSegmentIds.length; i++) {
                 var segment = W.model.segments.getObjectById(highlightedSegmentIds[i]);
@@ -403,11 +532,11 @@
                     segmentsToSelect.push(segment);
                 }
             }
-            
+
             if (segmentsToSelect.length > 0) {
                 W.selectionManager.setSelectedModels(segmentsToSelect);
             }
-            
+
         } catch (error) {
             console.error("Error selecting segments:", error);
         }
@@ -415,7 +544,7 @@
 
     function runHighlighter() {
         console.log("=== RUNNING HIGHLIGHTER ===");
-        
+
         if (!window.W || !window.W.model || !window.W.model.segments) {
             console.log("W.model not ready, retrying...");
             setTimeout(runHighlighter, 2000);
@@ -424,22 +553,16 @@
 
         resetAllHighlights();
 
-        var selectedLevel = getId('_selectEditorLevel');
+        var selectedLevels = getSelectedLevels(); // NEW: Multi-level support
         var daysInput = getId('_txtDaysOld');
         var customColorPicker = getId('_customColorPicker');
-        var opacitySlider = getId('_opacitySlider');
 
-        var selectedDisplayLevel = selectedLevel ? parseInt(selectedLevel.value) || 1 : 1;
-        var selectedInternalLevel = selectedDisplayLevel - 1;
         var daysOld = daysInput ? parseInt(daysInput.value) || 30 : 30;
         var colorMode = getColorMode();
         var customColor = customColorPicker ? customColorPicker.value : HIGHLIGHT_ORANGE;
-        var opacity = opacitySlider ? parseFloat(opacitySlider.value) || 0.7 : 0.7;
 
         // Save current settings to localStorage
-        if (selectedLevel) {
-            saveToLocalStorage(STORAGE_KEYS.selectedLevel, selectedLevel.value);
-        }
+        saveToLocalStorage(STORAGE_KEYS.selectedLevels, JSON.stringify(selectedLevels.map(l => l + 1)));
         if (daysInput) {
             saveToLocalStorage(STORAGE_KEYS.daysOld, daysInput.value);
         }
@@ -447,16 +570,13 @@
         if (customColorPicker) {
             saveToLocalStorage(STORAGE_KEYS.customColor, customColorPicker.value);
         }
-        if (opacitySlider) {
-            saveToLocalStorage(STORAGE_KEYS.opacity, opacitySlider.value);
-        }
-        
+
         var autoRefreshCheckbox = getId('_cbAutoRefresh');
         if (autoRefreshCheckbox) {
             saveToLocalStorage(STORAGE_KEYS.autoRefresh, autoRefreshCheckbox.checked.toString());
         }
 
-        console.log("Level:", selectedDisplayLevel, "Days:", daysOld);
+        console.log("Levels:", selectedLevels.map(l => l + 1), "Days:", daysOld);
 
         var totalSegments = 0;
         var matchingSegments = 0;
@@ -466,27 +586,27 @@
         for (var seg in W.model.segments.objects) {
             var segment = W.model.segments.getObjectById(seg);
             if (!segment || !segment.attributes) continue;
-            
+
             totalSegments++;
             var attributes = segment.attributes;
             var updatedBy = attributes.updatedBy || attributes.createdBy;
-            
+
             if (!updatedBy) continue;
-            
+
             var editDate = attributes.updatedOn || attributes.createdOn;
             var editDays = editDate ? (today.getTime() - editDate) / 86400000 : 9999;
-            
+
             if (editDays > daysOld) continue;
-            
+
             try {
                 var user = W.model.users.getObjectById(parseInt(updatedBy));
                 if (!user || !user.attributes || !user.attributes.userName || user.attributes.userName === 'Inactive User') continue;
-                
+
                 var userInternalLevel = user.attributes.rank;
-                if (userInternalLevel !== selectedInternalLevel) continue;
-                
+                if (selectedLevels.indexOf(userInternalLevel) === -1) continue; // NEW: Check multiple levels
+
                 matchingSegments++;
-                
+
                 var segmentInfo = {
                     segmentId: seg,
                     editorName: user.attributes.userName,
@@ -494,9 +614,18 @@
                     editDate: editDate
                 };
                 foundSegmentsList.push(segmentInfo);
-                
+
                 try {
-                    var line = W.userscripts.getFeatureElementByDataModel(segment);
+                    var line = null;
+
+                    // Try to use the new Waze API for getting feature elements
+                    if (window.W && window.W.userscripts && window.W.userscripts.getFeatureElementByDataModel) {
+                        line = window.W.userscripts.getFeatureElementByDataModel(segment);
+                    } else {
+                        // Fallback to old method
+                        line = W.userscripts.getFeatureElementByDataModel(segment);
+                    }
+
                     if (line) {
                         var highlightColor = getHighlightColor(colorMode, customColor);
                         line.setAttribute("stroke", highlightColor);
@@ -506,8 +635,10 @@
                         highlightedSegments++;
                         highlightedSegmentIds.push(seg);
                     }
-                } catch (e) {}
-                
+                } catch (e) {
+                    console.warn("Error highlighting segment", seg, ":", e);
+                }
+
             } catch (userError) {
                 console.warn("Error accessing user", updatedBy, userError);
             }
@@ -515,34 +646,91 @@
 
         var counterElement = getId('_highlightCounter');
         if (counterElement) {
-            counterElement.innerHTML = 
-                '<strong>Found ' + matchingSegments + ' segments by Level ' + selectedDisplayLevel + ' editors</strong><br>' +
+            var counterText = '<strong>Found ' + matchingSegments + ' segments by Level ' + selectedLevels.map(l => l + 1).join(', ') + ' editors</strong><br>' +
                 '<strong>Highlighted ' + highlightedSegments + ' segments</strong><br>' +
                 '<span style="color: #888;">(' + totalSegments + ' total segments checked)</span>';
+
+            counterElement.innerHTML = counterText;
         }
 
         updateEditorsDisplay();
+
+        // NEW: Update statistics if enabled
+        var showStatsCheckbox = getId('_cbShowStats');
+        if (showStatsCheckbox && showStatsCheckbox.checked) {
+            updateStatisticsDisplay();
+        }
 
         console.log("Found:", matchingSegments, "Highlighted:", highlightedSegments);
     }
 
     function createUI() {
         console.log("=== CREATING UI ===");
-        
+
+        // Try to use the new Waze API first
+        if (window.W && window.W.userscripts && window.W.userscripts.registerSidebarTab) {
+            try {
+                console.log("Using new Waze API for tab registration");
+                var result = window.W.userscripts.registerSidebarTab("wme-level-highlighter");
+                var tabLabel = result.tabLabel;
+                var tabPane = result.tabPane;
+
+                // Set tab label
+                tabLabel.textContent = "LH " + levelIcon;
+                tabLabel.title = "Level Highlighter";
+
+                // Wait for tab pane to be connected to DOM
+                if (window.W.userscripts.waitForElementConnected) {
+                    window.W.userscripts.waitForElementConnected(tabPane).then(function() {
+                        console.log("Tab pane connected to DOM via new API");
+                        createUIContent(tabPane);
+                    });
+                } else {
+                    // Fallback if waitForElementConnected is not available
+                    tabPane.addEventListener("element-connected", function() {
+                        console.log("Tab pane connected to DOM via event listener");
+                        createUIContent(tabPane);
+                    }, { once: true });
+                }
+
+                console.log("Successfully registered tab using new Waze API");
+                return;
+
+            } catch (error) {
+                console.log("Failed to use new Waze API, falling back to old method:", error);
+            }
+        }
+
+        // Fallback to old method if new API not available
+        console.log("Using fallback method for tab creation");
+        createUIFallback();
+    }
+
+    function createUIFallback() {
         var userTabs = getId('user-info');
         if (!userTabs) {
-            setTimeout(createUI, 1000);
+            setTimeout(createUIFallback, 1000);
             return;
         }
-        
+
         var navTabs = userTabs.querySelector('.nav-tabs');
         var tabContentContainer = userTabs.querySelector('.tab-content');
-        
+
         if (!navTabs || !tabContentContainer) {
-            setTimeout(createUI, 1000);
+            setTimeout(createUIFallback, 1000);
             return;
         }
-        
+
+        // Remove existing tab if it exists
+        var existingTab = navTabs.querySelector('a[href="#levelPanel"]');
+        if (existingTab) {
+            existingTab.parentElement.remove();
+        }
+        var existingPane = getId('levelPanel');
+        if (existingPane) {
+            existingPane.remove();
+        }
+
         var newtab = document.createElement('li');
         var tabLink = document.createElement('a');
         tabLink.title = "Level Highlighter";
@@ -550,68 +738,88 @@
         tabLink.setAttribute('data-toggle', 'tab');
         tabLink.textContent = "LH " + levelIcon;
         newtab.appendChild(tabLink);
+
+        // Add our tab at the end initially
         navTabs.appendChild(newtab);
-        
+        console.log("Added LH tab using fallback method");
+
         var tabPane = document.createElement('div');
         tabPane.id = "levelPanel";
         tabPane.className = "tab-pane";
         tabContentContainer.appendChild(tabPane);
 
+        // Continue with UI creation...
+        createUIContent(tabPane);
+    }
+
+    function createUIContent(tabPane) {
+
         var section = document.createElement('div');
         section.style.padding = "15px";
         section.style.fontFamily = "Arial, sans-serif";
-        
+
         // Title
         var titleDiv = document.createElement('div');
         titleDiv.style.marginBottom = "20px";
         titleDiv.innerHTML = '<h3 style="margin: 0; color: #333;">' + levelIcon + ' Level Highlighter</h3>';
         section.appendChild(titleDiv);
-        
-        // Controls
-        var controlsDiv = document.createElement('div');
-        controlsDiv.style.marginBottom = "20px";
-        
-        var controlsLabel = document.createElement('div');
-        controlsLabel.style.fontSize = "14px";
-        controlsLabel.style.marginBottom = "8px";
-        controlsLabel.innerHTML = '<strong>Find segments edited by Level:</strong>';
-        controlsDiv.appendChild(controlsLabel);
-        
-        var inputGroup = document.createElement('div');
-        inputGroup.style.display = "flex";
-        inputGroup.style.alignItems = "center";
-        inputGroup.style.gap = "8px";
-        
-        var selectElement = document.createElement('select');
-        selectElement.id = "_selectEditorLevel";
-        selectElement.style.padding = "5px";
-        selectElement.style.border = "1px solid #ccc";
-        selectElement.style.borderRadius = "3px";
-        selectElement.style.fontSize = "14px";
-        
+
         // Load saved values or use defaults
-        var savedLevel = loadFromLocalStorage(STORAGE_KEYS.selectedLevel, '1');
+        var savedLevels = JSON.parse(loadFromLocalStorage(STORAGE_KEYS.selectedLevels, '[1]'));
         var savedDays = loadFromLocalStorage(STORAGE_KEYS.daysOld, '30');
         var savedColorMode = loadFromLocalStorage(STORAGE_KEYS.colorMode, 'orange');
         var savedCustomColor = loadFromLocalStorage(STORAGE_KEYS.customColor, HIGHLIGHT_ORANGE);
         var savedAutoRefresh = loadFromLocalStorage(STORAGE_KEYS.autoRefresh, 'false') === 'true';
-        var savedOpacity = loadFromLocalStorage(STORAGE_KEYS.opacity, '0.7');
-        
+        var savedShowStats = loadFromLocalStorage(STORAGE_KEYS.showStatistics, 'false') === 'true';
+
+        // NEW: Multi-level selection
+        var levelDiv = document.createElement('div');
+        levelDiv.style.marginBottom = "20px";
+
+        var levelLabel = document.createElement('div');
+        levelLabel.style.fontSize = "14px";
+        levelLabel.style.marginBottom = "8px";
+        levelLabel.innerHTML = '<strong>Find segments edited by Level:</strong>';
+        levelDiv.appendChild(levelLabel);
+
+        var levelCheckboxes = document.createElement('div');
+        levelCheckboxes.style.display = "grid";
+        levelCheckboxes.style.gridTemplateColumns = "repeat(3, 1fr)";
+        levelCheckboxes.style.gap = "8px";
+        levelCheckboxes.style.marginBottom = "10px";
+
         for (var i = 1; i <= 6; i++) {
-            var option = document.createElement('option');
-            option.value = i;
-            option.text = i;
-            if (i.toString() === savedLevel) option.selected = true;
-            selectElement.appendChild(option);
+            var checkboxLabel = document.createElement('label');
+            checkboxLabel.style.display = "flex";
+            checkboxLabel.style.alignItems = "center";
+            checkboxLabel.style.gap = "5px";
+            checkboxLabel.style.cursor = "pointer";
+
+            var checkbox = document.createElement('input');
+            checkbox.type = "checkbox";
+            checkbox.id = "_cbLevel" + i;
+            checkbox.checked = savedLevels.includes(i);
+
+            var labelText = document.createElement('span');
+            labelText.textContent = "Level " + i;
+
+            checkboxLabel.appendChild(checkbox);
+            checkboxLabel.appendChild(labelText);
+            levelCheckboxes.appendChild(checkboxLabel);
         }
-        
-        inputGroup.appendChild(selectElement);
-        
+
+        levelDiv.appendChild(levelCheckboxes);
+
+        var inputGroup = document.createElement('div');
+        inputGroup.style.display = "flex";
+        inputGroup.style.alignItems = "center";
+        inputGroup.style.gap = "8px";
+
         var withinLabel = document.createElement('span');
         withinLabel.textContent = 'within the last';
         withinLabel.style.fontSize = "14px";
         inputGroup.appendChild(withinLabel);
-        
+
         var daysInput = document.createElement('input');
         daysInput.type = "number";
         daysInput.min = "0";
@@ -624,17 +832,17 @@
         daysInput.style.fontSize = "14px";
         daysInput.id = "_txtDaysOld";
         daysInput.value = savedDays;
-        
+
         inputGroup.appendChild(daysInput);
-        
+
         var daysLabel = document.createElement('span');
         daysLabel.textContent = 'days';
         daysLabel.style.fontSize = "14px";
         inputGroup.appendChild(daysLabel);
-        
-        controlsDiv.appendChild(inputGroup);
-        section.appendChild(controlsDiv);
-        
+
+        levelDiv.appendChild(inputGroup);
+        section.appendChild(levelDiv);
+
         // Status
         var statusDiv = document.createElement('div');
         statusDiv.id = "_highlightCounter";
@@ -646,27 +854,27 @@
         statusDiv.style.fontSize = "14px";
         statusDiv.innerHTML = 'Ready to search for segments';
         section.appendChild(statusDiv);
-        
+
         // Results
         var resultsDiv = document.createElement('div');
         resultsDiv.id = "_editorsDisplay";
         section.appendChild(resultsDiv);
-        
+
         // Color section
         var colorDiv = document.createElement('div');
         colorDiv.style.marginBottom = "20px";
-        
+
         var colorLabel = document.createElement('div');
         colorLabel.style.fontSize = "14px";
         colorLabel.style.marginBottom = "8px";
         colorLabel.innerHTML = '<strong>Color:</strong>';
         colorDiv.appendChild(colorLabel);
-        
+
         var radioGroup = document.createElement('div');
         radioGroup.style.display = "flex";
         radioGroup.style.flexDirection = "column";
         radioGroup.style.gap = "5px";
-        
+
         // Orange
         var orangeDiv = document.createElement('div');
         var orangeRadio = document.createElement('input');
@@ -681,7 +889,7 @@
         orangeDiv.appendChild(orangeRadio);
         orangeDiv.appendChild(orangeLabel);
         radioGroup.appendChild(orangeDiv);
-        
+
         // Magenta
         var magentaDiv = document.createElement('div');
         var magentaRadio = document.createElement('input');
@@ -696,7 +904,7 @@
         magentaDiv.appendChild(magentaRadio);
         magentaDiv.appendChild(magentaLabel);
         radioGroup.appendChild(magentaDiv);
-        
+
         // Custom
         var customDiv = document.createElement('div');
         customDiv.style.display = "flex";
@@ -722,72 +930,54 @@
         customDiv.appendChild(customLabel);
         customDiv.appendChild(colorPicker);
         radioGroup.appendChild(customDiv);
-        
+
         colorDiv.appendChild(radioGroup);
         section.appendChild(colorDiv);
-        
-        // Auto-refresh option (moved here)
+
+        // Auto-refresh option
         var autoRefreshDiv = document.createElement('div');
         autoRefreshDiv.style.marginBottom = "20px";
-        
+
         var autoRefreshCheckbox = document.createElement('input');
         autoRefreshCheckbox.type = "checkbox";
         autoRefreshCheckbox.id = "_cbAutoRefresh";
         autoRefreshCheckbox.checked = savedAutoRefresh;
         autoRefreshCheckbox.style.marginRight = "8px";
-        
+
         var autoRefreshLabel = document.createElement('label');
         autoRefreshLabel.style.fontSize = "14px";
         autoRefreshLabel.style.cursor = "pointer";
         autoRefreshLabel.appendChild(autoRefreshCheckbox);
         autoRefreshLabel.appendChild(document.createTextNode('Auto-refresh every 5 seconds'));
-        
+
         autoRefreshDiv.appendChild(autoRefreshLabel);
         section.appendChild(autoRefreshDiv);
-        
-        // Opacity section
-        var opacityDiv = document.createElement('div');
-        opacityDiv.style.marginBottom = "20px";
-        
-        var opacityLabel = document.createElement('div');
-        opacityLabel.style.fontSize = "14px";
-        opacityLabel.style.marginBottom = "8px";
-        opacityLabel.innerHTML = '<strong>Opacity:</strong>';
-        opacityDiv.appendChild(opacityLabel);
-        
-        var opacityGroup = document.createElement('div');
-        opacityGroup.style.display = "flex";
-        opacityGroup.style.alignItems = "center";
-        opacityGroup.style.gap = "10px";
-        
-        var opacitySlider = document.createElement('input');
-        opacitySlider.type = "range";
-        opacitySlider.id = "_opacitySlider";
-        opacitySlider.min = "0.1";
-        opacitySlider.max = "1.0";
-        opacitySlider.step = "0.01";
-        opacitySlider.value = savedOpacity;
-        opacitySlider.style.flex = "1";
-        opacitySlider.style.height = "20px";
-        
-        var opacityValue = document.createElement('span');
-        opacityValue.id = "_opacityValue";
-        opacityValue.style.fontSize = "14px";
-        opacityValue.style.minWidth = "40px";
-        opacityValue.style.textAlign = "center";
-        opacityValue.textContent = Math.round(parseFloat(savedOpacity) * 100) + '%';
-        
-        opacityGroup.appendChild(opacitySlider);
-        opacityGroup.appendChild(opacityValue);
-        opacityDiv.appendChild(opacityGroup);
-        section.appendChild(opacityDiv);
-        
+
+        // NEW: Statistics option
+        var statsDiv = document.createElement('div');
+        statsDiv.style.marginBottom = "20px";
+
+        var statsCheckbox = document.createElement('input');
+        statsCheckbox.type = "checkbox";
+        statsCheckbox.id = "_cbShowStats";
+        statsCheckbox.checked = savedShowStats;
+        statsCheckbox.style.marginRight = "8px";
+
+        var statsLabel = document.createElement('label');
+        statsLabel.style.fontSize = "14px";
+        statsLabel.style.cursor = "pointer";
+        statsLabel.appendChild(statsCheckbox);
+        statsLabel.appendChild(document.createTextNode('Show statistics'));
+
+        statsDiv.appendChild(statsLabel);
+        section.appendChild(statsDiv);
+
         // Buttons
         var buttonGroup = document.createElement('div');
         buttonGroup.style.display = "flex";
         buttonGroup.style.gap = "10px";
         buttonGroup.style.marginBottom = "20px";
-        
+
         var runButton = document.createElement('button');
         runButton.id = "_btnRunHighlighter";
         runButton.style.padding = "10px 20px";
@@ -800,7 +990,7 @@
         runButton.style.cursor = "pointer";
         runButton.textContent = savedAutoRefresh ? "AUTO REFRESH ON" : "RUN HIGHLIGHTER";
         buttonGroup.appendChild(runButton);
-        
+
         var resetButton = document.createElement('button');
         resetButton.style.padding = "10px 20px";
         resetButton.style.background = "#f44336";
@@ -811,9 +1001,9 @@
         resetButton.style.cursor = "pointer";
         resetButton.textContent = "RESET";
         buttonGroup.appendChild(resetButton);
-        
+
         section.appendChild(buttonGroup);
-        
+
         var selectButton = document.createElement('button');
         selectButton.style.padding = "8px 16px";
         selectButton.style.background = "#2196F3";
@@ -825,7 +1015,12 @@
         selectButton.style.marginBottom = "20px";
         selectButton.textContent = "SELECT HIGHLIGHTED";
         section.appendChild(selectButton);
-        
+
+        // NEW: Statistics display
+        var statisticsDisplay = document.createElement('div');
+        statisticsDisplay.id = "_statisticsDisplay";
+        section.appendChild(statisticsDisplay);
+
         // Version
         var versionDiv = document.createElement('div');
         versionDiv.style.fontSize = "12px";
@@ -835,10 +1030,22 @@
         section.appendChild(versionDiv);
 
         tabPane.appendChild(section);
-        
+
         // Event handlers
-        runButton.addEventListener('click', runHighlighter);
-        
+        runButton.addEventListener('click', function() {
+            // If auto-refresh is on, toggle it off when clicking the button
+            if (autoRefreshEnabled) {
+                var autoRefreshCheckbox = getId('_cbAutoRefresh');
+                if (autoRefreshCheckbox) {
+                    autoRefreshCheckbox.checked = false;
+                    toggleAutoRefresh();
+                }
+            } else {
+                // Normal run highlighter
+                runHighlighter();
+            }
+        });
+
         resetButton.addEventListener('click', function() {
             resetAllHighlights();
             var counterElement = getId('_highlightCounter');
@@ -846,90 +1053,68 @@
                 counterElement.innerHTML = "All highlights cleared";
             }
         });
-        
+
         selectButton.addEventListener('click', selectHighlightedSegments);
-        
+
         // Save settings when changed
-        selectElement.addEventListener('change', function() {
-            saveToLocalStorage(STORAGE_KEYS.selectedLevel, this.value);
-        });
-        
+        for (var i = 1; i <= 6; i++) {
+            getId('_cbLevel' + i).addEventListener('change', function() {
+                var selectedLevels = getSelectedLevels().map(l => l + 1);
+                saveToLocalStorage(STORAGE_KEYS.selectedLevels, JSON.stringify(selectedLevels));
+            });
+        }
+
         daysInput.addEventListener('change', function() {
             saveToLocalStorage(STORAGE_KEYS.daysOld, this.value);
         });
-        
+
         orangeRadio.addEventListener('change', function() {
             if (this.checked) {
                 saveToLocalStorage(STORAGE_KEYS.colorMode, 'orange');
                 updateCustomColorVisibility();
             }
         });
-        
+
         magentaRadio.addEventListener('change', function() {
             if (this.checked) {
                 saveToLocalStorage(STORAGE_KEYS.colorMode, 'magenta');
                 updateCustomColorVisibility();
             }
         });
-        
+
         customRadio.addEventListener('change', function() {
             if (this.checked) {
                 saveToLocalStorage(STORAGE_KEYS.colorMode, 'custom');
                 updateCustomColorVisibility();
             }
         });
-        
+
         colorPicker.addEventListener('change', function() {
             saveToLocalStorage(STORAGE_KEYS.customColor, this.value);
         });
-        
+
         // Auto-refresh checkbox
         autoRefreshCheckbox.addEventListener('change', toggleAutoRefresh);
-        
-        // Opacity slider
-        opacitySlider.addEventListener('input', function() {
-            var value = parseFloat(this.value);
-            var percentage = Math.round(value * 100);
-            var opacityValueElement = getId('_opacityValue');
-            if (opacityValueElement) {
-                opacityValueElement.textContent = percentage + '%';
+
+        // NEW: Statistics checkbox
+        statsCheckbox.addEventListener('change', function() {
+            saveToLocalStorage(STORAGE_KEYS.showStatistics, this.checked.toString());
+            if (this.checked && foundSegmentsList.length > 0) {
+                updateStatisticsDisplay();
+            } else {
+                getId('_statisticsDisplay').innerHTML = '';
             }
-            saveToLocalStorage(STORAGE_KEYS.opacity, this.value);
-            
-            // Update existing highlights with new opacity
-            updateHighlightOpacity(value);
         });
-        
-        // Update highlight opacity function
-        function updateHighlightOpacity(newOpacity) {
-            if (!window.W || !window.W.model || !window.W.model.segments) return;
-            
-            for (var i = 0; i < highlightedSegmentIds.length; i++) {
-                var segId = highlightedSegmentIds[i];
-                var segment = W.model.segments.getObjectById(segId);
-                if (!segment) continue;
-                
-                try {
-                    var line = W.userscripts.getFeatureElementByDataModel(segment);
-                    if (line && line.getAttribute("stroke")) {
-                        line.setAttribute("stroke-opacity", newOpacity);
-                    }
-                } catch (e) {
-                    // Ignore errors
-                }
-            }
-            console.log("Updated opacity for", highlightedSegmentIds.length, "highlights to", Math.round(newOpacity * 100) + "%");
-        }
 
         // Global functions for clicking
         window.selectSegmentById = selectSegmentById;
         window.selectSegmentsByEditor = selectSegmentsByEditor;
 
         console.log("=== UI CREATED ===");
-        
+
         // Apply saved custom color visibility
         updateCustomColorVisibility();
-        
+
         // Initialize auto-refresh if enabled
         if (savedAutoRefresh) {
             autoRefreshEnabled = true;
@@ -939,17 +1124,36 @@
             }, 5000);
             console.log("Auto-refresh initialized from saved settings");
         }
-        
+
         setTimeout(runHighlighter, 2000);
     }
 
     function initialize() {
-        if (!window.W) {
-            setTimeout(initialize, 1000);
-            return;
+        console.log("=== INITIALIZING WME Level Highlighter ===");
+
+        // Use the new Waze API events for proper initialization
+        if (window.W && window.W.userscripts && window.W.userscripts.state) {
+            if (window.W.userscripts.state.isReady) {
+                console.log("WME is already ready, creating UI immediately");
+                createUI();
+            } else {
+                console.log("Waiting for wme-ready event");
+                document.addEventListener("wme-ready", function() {
+                    console.log("wme-ready event received, creating UI");
+                    createUI();
+                }, { once: true });
+            }
+        } else {
+            // Fallback for older WME versions
+            console.log("Using fallback initialization method");
+            if (!window.W) {
+                setTimeout(initialize, 1000);
+                return;
+            }
+
+            // Wait for Waze to load, then create UI
+            setTimeout(createUI, 3000);
         }
-        
-        setTimeout(createUI, 2000);
     }
 
     setTimeout(initialize, 1000);

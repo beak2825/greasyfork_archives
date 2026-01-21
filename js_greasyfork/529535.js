@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bangumi Wiki 终极增强套件
 // @namespace    https://tampermonkey.net/
-// @version      3.1.2.5
+// @version      3.1.2.6
 // @description  集成Wiki按钮、关联按钮、封面上传、批量关联、批量分集编辑、内容快捷填充、单行本快捷创建、编辑预览功能
 // @author       Bios (improved Claude & Gemini)
 // @include      /^https?:\/\/(bgm|bangumi|chii)\.tv\/(subject|character|person|new_subject)\/.*/
@@ -2185,9 +2185,9 @@
 
         <div id="tab-range" class="tab-panel">
           <div class="flex-row" style="justify-content: center">
-            <input id="id_start" type="number" placeholder="起始ID" class="input-number">
+            <input id="id_start" type="number" min="0" placeholder="起始ID" class="input-number">
             <span style="line-height: 30px">～</span>
-            <input id="id_end" type="number" placeholder="结束ID" class="input-number">
+            <input id="id_end" type="number" min="0" placeholder="结束ID" class="input-number">
           </div>
         </div>
 
@@ -2225,6 +2225,7 @@
             enableExistingRelationCheck = $(this).prop('checked');
             console.log("已关联条目检查功能:", enableExistingRelationCheck ? "已启用" : "已禁用");
         });
+
         // 添加关联类型选择器
         $('.Relation_item_type').append(generateTypeSelector());
         $('.Relation_item_type select').prepend('<option value="-999">请选择关联类型</option>').val('-999');
@@ -2236,6 +2237,20 @@
         });
         $('.tab-nav button').on('click', function() {
             switchTab($(this).data('tab'));
+        });
+
+        // 新增：结束ID输入框聚焦时自动填充
+        $('#id_end').on('focus', function() {
+            const currentEndValue = $(this).val().trim();
+            const startValue = $('#id_start').val().trim();
+
+            // 如果结束ID为空且起始ID有有效值
+            if (!currentEndValue && startValue) {
+                const startID = parseInt(startValue, 10);
+                if (!isNaN(startID)) {
+                    $(this).val(startID + 1);
+                }
+            }
         });
     }
 
@@ -2555,7 +2570,7 @@
             // 通用配置，所有页面（除person）都会包含
             const commonConfig = {
                 "价格, 定价, 售价": {
-                    options: ["¥", "¥(税込)", "¥(税抜)", "$", "NT$", "HK$", "₩", "€", "£", "฿"],
+                    options: ["¥", "¥(税込)", "¥(税抜)", "$", "NT$", "HK$", "₩", "€", "£", "฿", "元", "円", "円(税込)", "円(税抜)"],
                     mode: "append",
                     display: "horizontal"
                 },
@@ -2571,7 +2586,7 @@
                 case 'game':
                     return {
                         ...commonConfig,
-                        "": {
+                        "平台": {
                             options: ["Android", "iOS", "PC", "macOS", "Linux", "PS4", "PS5", "Xbox 360", "Xbox One", "Xbox Series X/S",
                                       "Nintendo Switch", "Nintendo Switch 2", "SteamOS"],
                             mode: "replace",
@@ -2599,7 +2614,7 @@
                         "游戏引擎": {
                             "options": [
                                 "Unity Engine", "Unreal Engine", "Godot Engine", "Source Engine", "Source 2 Engine",
-                                "RPGMaker Engine", "GameMaker Studio", "CryEngine", "Frostbite Engine", "Cocos2d-x Engine",
+                                "RPGMaker Engine", "GameMaker", "CryEngine", "Frostbite Engine", "Cocos2d-x Engine",
                                 "Ren'Py Engine", "Cocos Engine", "PyGame", "GDevelop Engine", "Electron Container",
                                 "Red Engine", "RAGE", "Anvil Engine", "Snowdrop Engine", "IW Engine",
                                 "Creation Engine", "DECIMA Engine", "Avalanche Engine", "Id Tech Engine",

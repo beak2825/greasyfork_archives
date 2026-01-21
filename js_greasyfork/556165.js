@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Arson bang for buck
 // @namespace    Para_Thenics.torn.com
-// @version      1.00.009
+// @version      1.00.010
 // @description  Display profit per nerve and how to perform
 // @author       Para_Thenics, auboli77
 // @match        https://www.torn.com/page.php?sid=crimes*
@@ -1731,13 +1731,23 @@ async function getPricesFromAPI() {
     "Stoke: ",
     "Dampen: "
 ],
-        "House Edge": [
+                "House Edge": [
+                    [
+            "Payout: 190K",
+    "Profit/Nerve: ",
+    "Flamethrower: No",
+    "Place: 5 Gasoline",
+    "Stoke: ",
+    "Dampen: "
+],
+        [
             "Payout: 130K",
     "Profit/Nerve: ",
     "Flamethrower: Yes",
     "Place: 3 Gasoline",
     "Stoke: ",
     "Dampen: "
+            ]
 ],
    "House of Cards": [
     "Payout: 610K",

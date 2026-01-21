@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         导航面板
 // @namespace    http://tampermonkey.net/
-// @version      7.1
+// @version      7.4
 // @description  多功能导航面板，支持侧边栏/顶栏/底栏显示，可自定义位置、颜色、搜索引擎。支持收藏管理、镜像站点数据共享、拖拽排序等功能。默认关闭，可在油猴菜单中为任意网站启用。
 // @author       You
 // @match        *://*/*
@@ -35,8 +35,8 @@
     }
 
     // 注册油猴菜单命令 - 单一动态菜单项
-    // 尝试在所有窗口注册，但优先在顶层窗口
-    const shouldRegisterMenu = window.self === window.top || !window.frameElement;
+    // 只在顶层窗口注册，避免在iframe中重复注册
+    const shouldRegisterMenu = window.self === window.top;
 
     if (shouldRegisterMenu) {
         try {
@@ -44,6 +44,7 @@
                 ? '✅ 当前网站已启用 - 点击禁用'
                 : '❌ 当前网站已禁用 - 点击启用';
 
+            // 使用固定ID避免重复注册
             GM_registerMenuCommand(menuText, () => {
                 const currentStatus = isEnabledForCurrentSite();
                 setEnabledForCurrentSite(!currentStatus);
@@ -53,6 +54,9 @@
                     alert('导航面板已在当前网站启用,页面将刷新');
                 }
                 window.top.location.reload();
+            }, {
+                id: 'navigation-panel-toggle',
+                autoClose: true
             });
         } catch (e) {
             console.error('导航面板: 菜单注册失败', e);
@@ -1010,9 +1014,13 @@
         .button-container-right { display: flex; gap: 8px; }
         .compact-button { width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center; font-size: 16px; }
         #settings-panel { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10001; width: 90%; max-width: 800px; max-height: 85vh; background-color: white; border-radius: 10px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); display: none; flex-direction: column; overflow: hidden; }
-        #settings-panel.show { display: flex; }
-        .settings-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background-color: ${headerColor}; color: white; font-weight: bold; font-size: 16px; }
-        .settings-content { padding: 20px; overflow-y: auto; flex: 1; }
+        #settings-panel.show { display: flex !important; }
+        .settings-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background-color: ${headerColor}; color: white; font-weight: bold; font-size: 16px; flex-shrink: 0; }
+        .settings-content { padding: 20px; overflow-y: auto !important; overflow-x: hidden !important; flex: 1 1 auto; min-height: 0; scrollbar-width: thin; scrollbar-color: #d0d0d0 #f5f5f5; }
+        .settings-content::-webkit-scrollbar { width: 8px; }
+        .settings-content::-webkit-scrollbar-track { background: #f5f5f5; }
+        .settings-content::-webkit-scrollbar-thumb { background: #d0d0d0; border-radius: 4px; }
+        .settings-content::-webkit-scrollbar-thumb:hover { background: #b0b0b0; }
         .setting-section { margin-bottom: 25px; }
         .setting-section h3 { margin: 0 0 15px 0; font-size: 16px; color: ${primaryColor}; font-weight: 600; border-bottom: 2px solid ${lightenColor(primaryColor, 30)}; padding-bottom: 8px; text-align: left; }
         .setting-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #eee; }
@@ -1027,15 +1035,15 @@
         .radio-option { padding: 5px 15px; border: 2px solid ${primaryColor}; border-radius: 5px; cursor: pointer; transition: all 0.3s; font-size: 13px; color: #000; background-color: transparent; }
         .radio-option.active { background-color: ${primaryColor}; color: white; }
         .style-list { margin-top: 10px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
-        .style-item { display: flex; align-items: center; gap: 10px; padding: 12px; background-color: #f8f8f8; border-radius: 8px; transition: all 0.3s; }
+        .style-item { display: flex; align-items: center; gap: 6px; padding: 8px; background-color: #f8f8f8; border-radius: 6px; transition: all 0.3s; }
         .style-item:hover { background-color: #f0f0f0; }
         .style-item.dragging { opacity: 0.5; }
         .style-item.drag-over { border-top: 3px solid ${primaryColor}; }
-        .drag-handle { font-size: 18px; color: #999; cursor: grab; padding: 0 5px; }
+        .drag-handle { font-size: 14px; color: #999; cursor: grab; padding: 0 3px; }
         .drag-handle:active { cursor: grabbing; }
-        .style-item-name { flex: 1; font-size: 14px; font-weight: 500; color: #000; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .style-item-name { flex: 1; font-size: 12px; font-weight: 500; color: #000; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .shared-domains-list .style-item-name { color: #000; }
-        .style-controls { display: flex; gap: 8px; align-items: center; }
+        .style-controls { display: flex; gap: 4px; align-items: center; }
         .color-picker-wrapper { position: relative; }
         .color-preview { width: 16px; height: 16px; border-radius: 3px; cursor: pointer; border: none; transition: all 0.3s; }
         .color-preview:hover { border-color: ${primaryColor}; transform: scale(1.1); }
@@ -1047,7 +1055,7 @@
         .color-swatch-mini.custom { background: linear-gradient(45deg, #f00, #ff0, #0f0, #0ff, #00f, #f0f, #f00); display: flex; align-items: center; justify-content: center; font-size: 16px; }
         .custom-color-input { width: 100%; height: 32px; border: 1px solid #ddd; border-radius: 4px; cursor: pointer; }
         .size-picker-wrapper { position: relative; }
-        .size-preview { width: 40px; height: 32px; border-radius: 5px; cursor: pointer; border: 2px solid #ddd; transition: all 0.3s; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; background: white; color: #000; }
+        .size-preview { width: 32px; height: 24px; border-radius: 4px; cursor: pointer; border: 1px solid #ddd; transition: all 0.3s; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; background: white; color: #000; }
         .size-preview:hover { border-color: ${primaryColor}; transform: scale(1.1); }
         .size-dropdown { display: none; position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); margin-bottom: 5px; padding: 6px; background: white; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 1000; min-width: 60px; }
         .size-dropdown.show { display: block; }
@@ -1055,9 +1063,9 @@
         .size-option:last-child { margin-bottom: 0; }
         .size-option:hover { background-color: ${lightenColor(primaryColor, 40)}; border-color: ${primaryColor}; }
         .size-option.active { background-color: ${primaryColor}; color: white; border-color: ${primaryColor}; }
-        .delete-btn-mini { padding: 6px 12px; background-color: #e74c3c; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; transition: all 0.3s; }
+        .delete-btn-mini { padding: 4px 8px; background-color: #e74c3c; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 11px; transition: all 0.3s; }
         .delete-btn-mini:hover { background-color: #c0392b; }
-        .rename-btn-mini { padding: 6px 12px; background-color: ${primaryColor}; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; transition: all 0.3s; }
+        .rename-btn-mini { padding: 4px 8px; background-color: ${primaryColor}; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 11px; transition: all 0.3s; }
         .rename-btn-mini:hover { background-color: ${darkenColor(primaryColor, 10)}; }
         .search-engine-list { margin-top: 10px; }
         .search-engine-item { display: flex; justify-content: space-between; align-items: center; padding: 8px; background-color: #f5f5f5; border-radius: 5px; margin-bottom: 5px; }
@@ -1248,7 +1256,7 @@
                 <div class="setting-section">
                     <h3>搜索引擎管理</h3>
                     <div class="search-engine-list" id="search-engine-list"></div>
-                    <button class="add-search-btn">+ 添加搜索引擎</button>
+                    <button class="add-search-btn" id="add-search-engine-btn">+ 添加搜索引擎</button>
                 </div>
                 <div class="setting-section top-only" style="display: ${siteConfig.position === 'top' || siteConfig.position === 'bottom' ? 'block' : 'none'};">
                     <h3>顶栏底栏模块排序</h3>
@@ -1487,7 +1495,7 @@
             const colorInput = document.createElement('input');
             colorInput.type = 'color';
             colorInput.value = color;
-            colorInput.style.cssText = 'width: 32px; height: 32px; border: none; border-radius: 4px; cursor: pointer;';
+            colorInput.style.cssText = 'width: 24px; height: 24px; border: none; border-radius: 3px; cursor: pointer;';
             colorInput.title = '选择颜色';
             colorInput.oninput = () => {
                 platformUsers[index].color = colorInput.value;
@@ -1529,6 +1537,29 @@
                 document.querySelectorAll('.size-dropdown').forEach(d => d !== sizeDropdown && d.classList.remove('show'));
                 sizeDropdown.classList.toggle('show');
             };
+
+            // 隐藏/显示按钮
+            const hideBtn = document.createElement('button');
+            hideBtn.className = 'rename-btn-mini';
+            hideBtn.textContent = user.hidden ? '👁' : '👁‍🗨';
+            hideBtn.title = user.hidden ? '显示' : '隐藏';
+            hideBtn.style.opacity = user.hidden ? '0.5' : '1';
+            hideBtn.onclick = () => {
+                platformUsers[index].hidden = !platformUsers[index].hidden;
+                saveUsers();
+                renderPanel();
+                // 更新按钮状态
+                hideBtn.textContent = platformUsers[index].hidden ? '👁' : '👁‍🗨';
+                hideBtn.title = platformUsers[index].hidden ? '显示' : '隐藏';
+                hideBtn.style.opacity = platformUsers[index].hidden ? '0.5' : '1';
+                item.style.opacity = platformUsers[index].hidden ? '0.6' : '1';
+            };
+            controls.appendChild(hideBtn);
+
+            // 如果项目被隐藏，设置半透明样式
+            if (user.hidden) {
+                item.style.opacity = '0.6';
+            }
 
             // 重命名按钮
             const renameBtn = document.createElement('button');
@@ -1655,6 +1686,29 @@
                 <div class="search-engine-url" style="font-size: 11px; color: #666; margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${engine.urlTemplate}</div>
             `;
             item.appendChild(infoDiv);
+
+            // 隐藏/显示按钮
+            const hideBtn = document.createElement('button');
+            hideBtn.className = 'rename-btn-mini';
+            hideBtn.textContent = engine.hidden ? '👁' : '👁‍🗨';
+            hideBtn.title = engine.hidden ? '显示' : '隐藏';
+            hideBtn.style.opacity = engine.hidden ? '0.5' : '1';
+            hideBtn.onclick = () => {
+                siteConfig.searchEngines[index].hidden = !siteConfig.searchEngines[index].hidden;
+                saveSiteConfig();
+                renderPanel();
+                // 更新按钮状态
+                hideBtn.textContent = siteConfig.searchEngines[index].hidden ? '👁' : '👁‍🗨';
+                hideBtn.title = siteConfig.searchEngines[index].hidden ? '显示' : '隐藏';
+                hideBtn.style.opacity = siteConfig.searchEngines[index].hidden ? '0.5' : '1';
+                item.style.opacity = siteConfig.searchEngines[index].hidden ? '0.6' : '1';
+            };
+            item.appendChild(hideBtn);
+
+            // 如果搜索引擎被隐藏，设置半透明样式
+            if (engine.hidden) {
+                item.style.opacity = '0.6';
+            }
 
             // 删除按钮
             const deleteBtn = document.createElement('button');
@@ -1896,7 +1950,7 @@
             };
         });
 
-        settingsPanel.querySelector('.add-search-btn').onclick = () => {
+        settingsPanel.querySelector('#add-search-engine-btn').onclick = () => {
             const name = prompt('请输入搜索引擎名称（例如：Google）：');
             if (!name) return;
             const urlTemplate = prompt('请输入搜索URL模板（使用 {query} 作为搜索词占位符）：\n例如：https://www.google.com/search?q={query}');
@@ -2253,6 +2307,9 @@
             const buttonsGrid = document.createElement('div');
             buttonsGrid.id = 'buttons-grid';
             platformUsers.forEach((user) => {
+                // 跳过被隐藏的项目
+                if (user.hidden) return;
+
                 const wrapper = document.createElement('div');
                 wrapper.className = 'button-wrapper';
                 wrapper.dataset.size = user.size || '1x';
@@ -2272,6 +2329,9 @@
                 searchContainer.className = 'search-engines-container';
                 searchContainer.style.cssText = 'width: 100%; margin-bottom: 10px;';
                 siteConfig.searchEngines.forEach((engine) => {
+                    // 跳过被隐藏的搜索引擎
+                    if (engine.hidden) return;
+
                     const searchItem = document.createElement('div');
                     searchItem.className = 'search-engine-item';
                     const searchInput = document.createElement('input');
@@ -2402,6 +2462,9 @@
                 const searchContainer = document.createElement('div');
                 searchContainer.className = 'search-engines-container';
                 siteConfig.searchEngines.forEach((engine, index) => {
+                    // 跳过被隐藏的搜索引擎
+                    if (engine.hidden) return;
+
                     const searchItem = document.createElement('div');
                     searchItem.className = 'search-engine-item';
                     if (index > 0) {
@@ -2438,6 +2501,9 @@
                 buttonsGrid.id = 'buttons-grid';
                 buttonsGridRef = buttonsGrid; // 保存引用
                 platformUsers.forEach((user) => {
+                    // 跳过被隐藏的项目
+                    if (user.hidden) return;
+
                     const wrapper = document.createElement('div');
                     wrapper.className = 'button-wrapper';
                     wrapper.dataset.size = user.size || '1x';
@@ -2597,6 +2663,9 @@
 
             // 为每个搜索引擎创建一个搜索框
             siteConfig.searchEngines.forEach((engine) => {
+                // 跳过被隐藏的搜索引擎
+                if (engine.hidden) return;
+
                 const searchBox = document.createElement('div');
                 searchBox.className = 'search-box';
                 searchBox.style.marginBottom = '6px';
@@ -2640,6 +2709,9 @@
         const buttonsGrid = document.createElement('div');
         buttonsGrid.id = 'buttons-grid';
         displayUsers.forEach((user) => {
+            // 跳过被隐藏的项目
+            if (user.hidden) return;
+
             const wrapper = document.createElement('div');
             wrapper.className = 'button-wrapper';
             wrapper.dataset.size = user.size || '1x';

@@ -12,9 +12,9 @@
 // @description:de  Speichert Kemono-Bilder und Animationen direkt in Eagle
 // @description:es  Guarda imágenes y animaciones de Kemono directamente en Eagle
 //
-// @version      1.4.0
+// @version      1.4.1
 // @match        https://kemono.cr/*/user/*/post/*
-// @match        https://kemono.cr/*/user/*/post/*
+// @match        https://coomer.st/*/user/*/post/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=kemono.cr
 // @grant        GM_registerMenuCommand
 // @grant        GM_xmlhttpRequest
@@ -256,8 +256,9 @@ class KemonoEagleUI {
             timeoutWarning.style.display = "none";
             container.appendChild(folderLabel);
             container.appendChild(select);
-            section.appendChild(container);
-            section.appendChild(timeoutWarning);
+            //section.appendChild(container);
+            //section.appendChild(timeoutWarning);
+            section.after(container,timeoutWarning);
             const lastFolderId = await GM.getValue("eagle_last_folder");
             const timeoutPromise = new Promise((_, reject) =>
                 setTimeout(() => reject(new Error("TIMEOUT")), 2000)

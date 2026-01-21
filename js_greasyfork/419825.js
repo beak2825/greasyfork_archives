@@ -2,9 +2,11 @@
 // @name                 AIGPT Everywhere
 // @namespace            OperaBrowserGestures
 // @description          Mini A.I. floating menu that can define words, answer questions, translate, and much more in a single click and with your custom prompts. Includes useful click to search on Google and copy selected text buttons, along with Rocker+Mouse Gestures and Units+Currency+Time zone Converters, all features can be easily modified or disabled
-// @version              80
+// @version              81
 // @author               hacker09
 // @include              *
+// @tag                  MINE!
+// @tag                  AI
 // @exclude              https://accounts.google.com/v3/signin/*
 // @icon                 https://i.imgur.com/8iw8GOm.png
 // @grant                GM_unregisterMenuCommand
@@ -19,12 +21,13 @@
 // @grant                GM_setValue
 // @grant                GM_getValue
 // @connect              google.com
+// @connect              image.pollinations.ai
 // @connect              generativelanguage.googleapis.com
 // @resource             AIMenuContent https://cyber-sec0.github.io/AIMenu.html
 // @require              https://update.greasyfork.org/scripts/506699/marked.js
 // @require              https://unpkg.com/@highlightjs/cdn-assets/highlight.min.js
 // @require              https://update.greasyfork.org/scripts/519002/Units%20Converter.js
-// @require              https://update.greasyfork.org/scripts/538628/Gemini%20AI%20Stream%20Parser.js
+// @require              https://update.greasyfork.org/scripts/538628/Geminmarkedi%20AI%20Stream%20Parser.js
 // @downloadURL https://update.greasyfork.org/scripts/419825/AIGPT%20Everywhere.user.js
 // @updateURL https://update.greasyfork.org/scripts/419825/AIGPT%20Everywhere.meta.js
 // ==/UserScript==
@@ -361,7 +364,7 @@ if (GM_getValue("SearchHighlight") === true) //If the SearchHighlight is enabled
     FinalPrompt = button.match('translate') ? `Translate into ${Lang} the following text:\n\n"${Prompt}"\n${ShortTXTPrompt}${UniqueLangs.length > 1 ? `\n\nYou must answer using only 1 language first, then use only the other language, don't mix both languages!\nAlso, be sure to say which language is the translated text from, if the text isn't into ${Lang}!\n\n"${Prompt}" should be translated for the other languages.\nUse ---  ${UniqueLangs.length-1}x to divide your answer into language sections.` : ''}` : button.match('Prompt') ? context : `${responsePrompt}: "${Prompt}"`;
     FinalPrompt = button.match(/Rewrite|Tweak|Spellcheck/) ? `${button} the following text: "${Prompt}"` : FinalPrompt;
     FinalPrompt = button.match('Writer') ? Prompt : FinalPrompt;
-    const data = { contents: [{ parts: [{ text: FinalPrompt }] }], generationConfig: { response_modalities: isImagePrompt ? ['TEXT','IMAGE'] : ['TEXT'] } };
+    const data = { contents: [{ parts: [{ text: FinalPrompt }] }], generationConfig: { response_modalities: ['TEXT'] } };
 
     shadowRoot.querySelectorAll('.action-buttons, .insert-to-page-btn').forEach(el => {
       el.style.display = button.match(/Rewrite|Tweak|Spellcheck|Writer/) ? 'flex' : 'none';
@@ -372,15 +375,43 @@ if (GM_getValue("SearchHighlight") === true) //If the SearchHighlight is enabled
     shadowRoot.querySelector("#msg-txt").innerText = button.match(/Rewrite|Tweak|Spellcheck/) ? `${button} the following text: "${Prompt}"` : button.match('Writer') ? Prompt : taskTXT;
     shadowRoot.querySelector("#msg-txt").innerText = shadowRoot.querySelector("#msg-txt").innerText.length > 240 ? shadowRoot.querySelector("#msg-txt").innerText.slice(0, 240) + '…' : shadowRoot.querySelector("#msg-txt").innerText;
 
-    if (!isImagePrompt) {
-      data.systemInstruction = { parts: [{ text: `List of things you aren't allowed to say/do anything like:\n1 "Based on the provided text"\n2 "The text is already in"\n3 "No translation is needed"\n4 Ask for more context\n5 "You haven't provided context"\n6 Use bullet points for Synonyms` }] };
-      data.safetySettings = ["HARASSMENT", "HATE_SPEECH", "SEXUALLY_EXPLICIT", "DANGEROUS_CONTENT"].map(cat => ({ category: `HARM_CATEGORY_${cat}`, threshold: "BLOCK_NONE" }));
+    data.systemInstruction = { parts: [{ text: `List of things you aren't allowed to say/do anything like:\n1 "Based on the provided text"\n2 "The text is already in"\n3 "No translation is needed"\n4 Ask for more context\n5 "You haven't provided context"\n6 Use bullet points for Synonyms` }] };
+    data.safetySettings = ["HARASSMENT", "HATE_SPEECH", "SEXUALLY_EXPLICIT", "DANGEROUS_CONTENT"].map(cat => ({ category: `HARM_CATEGORY_${cat}`, threshold: "BLOCK_NONE" }));
+
+    if (isImagePrompt) {
+      handleState('load');
+      shadowRoot.querySelector("#finalanswer-txt").innerHTML = toHTML(`<p>Generating Image...</p>`);
+
+      GM.xmlHttpRequest({
+        method: "GET",
+        url: `https://image.pollinations.ai/prompt/${Prompt.replace(/^(generate|create|draw|make)\s*(me|an?|the|this|that)?\s*(image|picture|photo|drawing)?\s*(of|about|showing|depicting|illustrating)?\s*/i, '').replace(/\s+/g, '+')}?nologo=true&key=plln_sk_QjAANLJe2kERQ2KhWO8sx9DXSNeiU7F4`,
+        responseType: 'blob',
+        onload: (r) => {
+          if (r.status === 200 && r.response.type.startsWith('image')) { // Success: It's an image
+            const img = new Image();
+            img.src = URL.createObjectURL(r.response);
+            img.onload = () => {
+              shadowRoot.querySelector("#finalanswer-txt").innerHTML = toHTML(`<p>Generated Image:</p>`);
+              shadowRoot.querySelector("#finalanswer-txt").appendChild(img);
+              shadowRoot.querySelector("#IMGOverlay").querySelector(".overlay-image").src = img.src;
+              img.onclick = () => shadowRoot.querySelector("#IMGOverlay").classList.add("show");
+            };
+          } else { // Fail: It's text/JSON
+            r.response.text().then(errTxt => {
+              shadowRoot.querySelector("#finalanswer-txt").innerHTML = toHTML(`<p>Error: ${errTxt}</p>`);
+            });
+          }
+        }
+      });
+
+      isImagePrompt = false;
+      return;
     }
 
     request = GM.xmlHttpRequest({
       method: "POST",
-      url: `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-${isImagePrompt ? 'image' : 'lite'}:${isImagePrompt ? `g` : `streamG`}enerateContent?key=${GM_getValue("APIKey")}`,
-      responseType: isImagePrompt ? 'json' : 'stream',
+      url: `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:streamGenerateContent?key=${GM_getValue("APIKey")}`,
+      responseType: 'stream',
       headers: { "Content-Type": "application/json" },
       data: JSON.stringify(data),
       onerror: (err) => {
@@ -389,16 +420,6 @@ if (GM_getValue("SearchHighlight") === true) //If the SearchHighlight is enabled
       },
       onload: (res) => {
         handleState('load');
-        if (isImagePrompt) {
-          if (res.response.error?.message) shadowRoot.querySelector("#finalanswer-txt").innerHTML = toHTML(`<p>${res.response.error?.message}</p>`); //Show the AI error message
-          shadowRoot.querySelector("#finalanswer-txt").innerHTML = toHTML(`<p>${res.response.candidates?.[0]?.content?.parts?.[0]?.text.replace(/I will (.)/i,(_,c)=>c.toUpperCase()) || 'Generated Image:'}</p><img src="data:image/png;base64,${res.response.candidates?.[0]?.content?.parts.find(p=>p.inlineData).inlineData.data}">`);
-          shadowRoot.querySelector("#IMGOverlay").querySelector(".overlay-image").src = shadowRoot.querySelector("#finalanswer-txt img").src;
-
-          shadowRoot.querySelector("#finalanswer-txt img").onclick = function() {
-            shadowRoot.querySelector("#IMGOverlay").classList.add("show");
-          };
-          isImagePrompt = false;
-        }
       },
       onabort: (response) => {
         handleState('abort');
@@ -407,7 +428,6 @@ if (GM_getValue("SearchHighlight") === true) //If the SearchHighlight is enabled
       onloadstart: async function(response) {
         handleState('start');
         shadowRoot.querySelector("#prompt").focus(); //Focus
-        if (isImagePrompt) return;
         const reader = response.response.getReader();
         await window.parseGeminiStream(reader, (item, markdown) => { //Call the stream parser
           if (item.error?.message && retryCount < 2) (AskAI(Prompt, button), retryCount++); //Retry 2x on error
@@ -441,7 +461,12 @@ if (GM_getValue("SearchHighlight") === true) //If the SearchHighlight is enabled
   });
 
   shadowRoot.querySelector(".download-button").onclick = () => {
-    Object.assign(document.createElement('a'), { href: shadowRoot.querySelector(".overlay-image").src, download: 'AI_Img.png' }).click();
+    GM.xmlHttpRequest({
+      method: 'GET',
+      url: shadowRoot.querySelector(".overlay-image").src,
+      responseType: 'blob',
+      onload: r => Object.assign(document.createElement('a'), { href: URL.createObjectURL(r.response), download: 'AI_Img.png' }).click()
+    });
   };
 
   document.addEventListener('contextmenu', e => {
@@ -504,6 +529,7 @@ if (GM_getValue("SearchHighlight") === true) //If the SearchHighlight is enabled
 
   shadowRoot.querySelector("#finalanswer-txt").addEventListener('click', (e) => {
     const button = e.target.closest('button[data-action]'); //Get the clicked action button
+    if (!button) return; //Exit if the click wasn't on a button
 
     if (button.dataset.action === 'copy') {
       GM_setClipboard(button.closest('.code-block-wrapper').querySelector('pre > code').innerText); //Copy code to clipboard

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube hotkeys
 // @namespace    http://tampermonkey.net/
-// @version      1.4
+// @version      1.4.0.1
 // @description  quick hotkeys for quality, speed, time jumps, subtitles and replay (for RU, UA, EN, DE, FR, SP)
 // @author       Roman Sergeev aka naxombl4 aka Brutal Doomer
 // @license      MIT
@@ -13,6 +13,7 @@
 // ==/UserScript==
 
 /**
+ * V1.4.0.1 hotfix for switch case propagation; added some naming sugar
  * v1.4   changed some functionality from div#player to video tag
  *        as a consequence, speed change is now uncapped
  *        changed speed steps to 0.0625x -> 0.125x -> 0.1875x -> 0.25x -> +0.25x per step onwards
@@ -80,12 +81,27 @@ div#`+POPUP_ID2+` {
 }
     `);
 
+    const UK = { // used keys. keyCode is deprecated, but oh well, see when it breaks.
+        LEFT: 37,
+        RIGHT: 39,
+        QUALITY: 81,
+        RESTART: 82,
+        SPEED: 83,
+        SUBTITLES: 88,
+        SPEEDUP: 107,
+        SPEEDDOWN: 109
+    };
+    const MOD = { // key press modifiers
+        ALT: 1,
+        SHIFT: 2,
+        CTRL: 4
+    };
     const PLAYER_ID = "movie_player";
     const DISPATCH = {
-        "81": /Качество|Якість|Quality|Qualität|Qualité|Calidad/i, // q: quality regexp
-        "83": /Скорость|Швидкість|Speed|Wiedergabegeschwindigkeit|Vitesse de lecture|Velocidad de reproducción/i, // s: speed regexp
-        "88": /Субтитры|Субтитри|Subtitles|Untertitel|Sous-titres|Subtítulos/i // x: subtitles regexp
-    }
+        [UK.QUALITY  ]: /Качество|Якість|Quality|Qualität|Qualité|Calidad/i, // q: quality regexp
+        [UK.SPEED    ]: /Скорость|Швидкість|Speed|Wiedergabegeschwindigkeit|Vitesse de lecture|Velocidad de reproducción/i, // s: speed regexp
+        [UK.SUBTITLES]: /Субтитры|Субтитри|Subtitles|Untertitel|Sous-titres|Subtítulos/i // x: subtitles regexp
+    };
 
     const CONSECUTIVE_CLICK_EMULATION_DELAY = 100; // milliseconds delay for YouTube elements to pop up (some hotkeys call the player menus)
     const SPEEDALT = 0.25; // precise binary values so no error accumulation
@@ -275,7 +291,7 @@ div#`+POPUP_ID2+` {
 
     // quality selection function: alt+click = 480p, ctrl+click = 720p, shift+click = 1080p. Highest resolution available up to desirable is selected.
     function changeQuality(asc) {
-        var desiredQuality = (asc&2) ? "hd1080" : (asc&4) ? "hd720" : (asc&1) ? "large" : -1;
+        var desiredQuality = (asc&MOD.SHIFT) ? "hd1080" : (asc&MOD.CTRL) ? "hd720" : (asc&MOD.ALT) ? "large" : -1;
         player.setQualityByText(desiredQuality);
     }
 
@@ -311,7 +327,7 @@ div#`+POPUP_ID2+` {
     }
 
     function changeTime(forward, asc) {
-        if (!asc || asc&4) return;
+        if (!asc || asc&MOD.CTRL) return;
         var delta = TIMESHIFT[asc][0] * (forward ? 1 : -1);
         var text = TIMESHIFT[asc][1];
         player.shift(delta, text);
@@ -319,15 +335,10 @@ div#`+POPUP_ID2+` {
 
     function isTypingContext(elem) {
         if (!elem) return false;
-
-        // Native text inputs
-        if (elem.tagName === "INPUT" || elem.tagName === "TEXTAREA") {
+        if (elem.tagName === "INPUT" || elem.tagName === "TEXTAREA") { // Native text inputs
             return !elem.readOnly && !elem.disabled;
         }
-
-        // contenteditable or inside it
-        if (elem.isContentEditable) return true;
-
+        if (elem.isContentEditable) return true; // contenteditable or inside it
         return false;
     }
 
@@ -340,24 +351,28 @@ div#`+POPUP_ID2+` {
         var key = event.keyCode;
 
         switch (key) {
-            case 37: // left and right with alt/shift for advanced jumps
-            case 39: if (asc&1) event.preventDefault(); // comment out after colon sign to restore browser default behavior on alt+arrow
-                return changeTime(key == 39, asc);
-            case 81: // q for quality
+            case UK.LEFT: // left and right with alt/shift for advanced jumps
+            case UK.RIGHT: if (asc&MOD.ALT) event.preventDefault(); // comment out after colon sign to restore browser default behavior on alt+arrow
+                return changeTime(key == UK.RIGHT, asc);
+            case UK.QUALITY: // q for quality
                 if (asc) changeQuality(asc);
-            case 83: // s for speed
-                if (asc == 1) resetSpeed();
-            case 88: // x for subtitles
+                else clickMenu(DISPATCH[key]);
+                break;
+            case UK.SPEED: // s for speed
+                if (asc == MOD.ALT) resetSpeed();
+                if (!asc) clickMenu(DISPATCH[key]);
+                break;
+            case UK.SUBTITLES: // x for subtitles
                 return !asc && clickMenu(DISPATCH[key]);
-            case 107:
-            case 109: // + and - for speed. Default +(=) and - are untouched, because in YT they change captions size
-                if (asc&4) return; // do not conflict with default zoom (ctrl plus/minus)
-                var shift = (key == 109 ? -1 : 1) * Math.max(1, event.shiftKey * 2 + event.altKey * 4); // any formula you want
+            case UK.SPEEDUP:
+            case UK.SPEEDDOWN: // + and - for speed. Default +(=) and - are untouched, because in YT they change captions size
+                if (asc&MOD.CTRL) return; // do not conflict with default zoom (ctrl plus/minus)
+                var shift = (key == UK.SPEEDDOWN ? -1 : 1) * Math.max(1, event.shiftKey * 2 + event.altKey * 4); // any formula you want
                 changeSpeed(shift);
                 player.closeSettings();
                 break;
-            //case 68: if(!acs) cn("html5-video-info-panel").classList.toggle("displayNone"); break; // doesn't work (stats for nerds)
-            case 82: if(!asc && player.atTheEnd()) player.restart(); // replay
+            //case 68: if(!asc) cn("html5-video-info-panel").classList.toggle("displayNone"); break; // doesn't work (stats for nerds)
+            case UK.RESTART: if(!asc && player.atTheEnd()) player.restart(); // replay
         }
     });
 

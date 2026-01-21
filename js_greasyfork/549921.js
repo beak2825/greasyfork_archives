@@ -40,50 +40,50 @@
 // @name:ug             مېنىڭ پرومپتۇم
 // @name:vi             Lời nhắc của tôi
 // @namespace           https://github.com/0H4S
-// @version             3.9
-// @description         Save and use your personalized prompts in your own library. Use Dynamic Prompt mode to insert interactive information and adapt commands as needed. Attach and reuse files anytime without reselections. Compatible with: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, and Google AI Mode.
-// @description:pt-BR   Salve e use seus prompts personalizados na sua própria biblioteca de prompts. Use o modo Prompt Dinâmico para inserir informações interativas e adaptar comandos conforme sua necessidade. Anexe e use arquivos sempre que quiser, sem precisar selecionar tudo de novo. Compatível com: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM e Google Modo IA.
-// @description:zh-CN   保存并在您自己的库中使用自定义提示词。使用动态提示词模式插入交互信息并根据需要调整指令。随时附加和使用文件，无需重新选择。兼容：ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, 腾讯元宝, ChatGLM, Google AI Mode。
-// @description:zh-TW   儲存並在您自己的資料庫中使用自訂提示詞。使用動態提示詞模式插入互動資訊並根據需要調整指令。隨時附加和使用檔案，無需重新選取。相容於：ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, 騰訊元寶, ChatGLM, Google AI Mode。
-// @description:fr-CA   Sauvegardez et utilisez vos prompts personnalisés dans votre bibliothèque. Utilisez le mode Prompt Dynamique pour insérer des informations interactives et adapter les commandes. Joignez et réutilisez des fichiers à tout moment sans resélection. Compatible avec : ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode.
-// @description:ckb     پرۆمپتە تایبەتەکانت لە کتێبخانەی خۆتدا پاشەکەوت بکە و بەکاریان بهێنە. دۆخی پرۆمپتی داینامیکی بەکاربهێنە بۆ تێکردنی زانیاری کارلێککارانە و گونجاندنی فەرمانەکان بەپێی پێویست. فایلەکان لە هەر کاتێکدا لکێنە و بەکاریان بهێنەوە بەبێ هەڵبژاردنەوە. گونجاوە لەگەڵ: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode.
-// @description:ar      احفظ واستخدم مطالباتك المخصصة في مكتبتك الخاصة. استخدم وضع المطالبة الديناميكية (Dynamic Prompt) لإدراج معلومات تفاعلية وتكييف الأوامر حسب الحاجة. أرفق الملفات واستخدمها في أي وقت دون الحاجة إلى إعادة التحديد. متوافق مع: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode.
-// @description:be      Захоўвайце і выкарыстоўвайце свае персаналізаваныя падказкі ў уласнай бібліятэцы. Выкарыстоўвайце рэжым Dynamic Prompt для ўстаўкі інтэрактыўнай інфармацыі і адаптацыі каманд па меры неабходнасці. Далучайце і выкарыстоўвайце файлы ў любы час без паўторнага выбару. Сумяшчальна з: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode.
-// @description:bg      Запазете и използвайте вашите персонализирани подкани (prompts) в собствената си библиотека. Използвайте режима Dynamic Prompt за вмъкване на интерактивна информация и адаптиране на командите. Прикачвайте и използвайте файлове по всяко време без повторен избор. Съвместим с: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode.
-// @description:cs      Ukládejte a používejte své přizpůsobené prompty ve vlastní knihovně. Použijte režim Dynamic Prompt pro vkládání interaktivních informací a přizpůsobení příkazů podle potřeby. Připojujte a používejte soubory kdykoli bez nutnosti nového výběru. Kompatibilní s: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode.
-// @description:da      Gem og brug dine personlige prompts i dit eget bibliotek. Brug Dynamic Prompt-tilstand til at indsætte interaktiv information og tilpasse kommandoer efter behov. Vedhæft og brug filer når som helst uden at skulle vælge dem igen. Kompatibel med: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode.
-// @description:de      Speichern und verwenden Sie Ihre personalisierten Prompts in Ihrer eigenen Bibliothek. Nutzen Sie den Dynamic Prompt-Modus, um interaktive Informationen einzufügen und Befehle anzupassen. Hängen Sie Dateien jederzeit an und verwenden Sie sie wieder, ohne sie erneut auswählen zu müssen. Kompatibel mit: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode.
-// @description:el      Αποθηκεύστε και χρησιμοποιήστε τις εξατομικευμένες προτροπές σας στη δική σας βιβλιοθήκη. Χρησιμοποιήστε τη λειτουργία Dynamic Prompt για να εισάγετε διαδραστικές πληροφορίες και να προσαρμόσετε τις εντολές ανάλογα με τις ανάγκες σας. Επισυνάψτε και χρησιμοποιήστε αρχεία ανά πάσα στιγμή χωρίς εκ νέου επιλογή. Συμβατό με: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI
-// @description:en      Save and use your personalized prompts in your own library. Use Dynamic Prompt mode to insert interactive information and adapt commands as needed. Attach and reuse files anytime without reselections. Compatible with: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, and Google AI Mode.
-// @description:eo      Konservu kaj uzu viajn personigitajn invitojn en via propra biblioteko. Uzu la reĝimon Dinamika Invito por enmeti interagajn informojn kaj adapti ordonojn laŭbezone. Aldonu kaj uzu dosierojn iam ajn sen reelekto. Kongrua kun: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode.
-// @description:es      Guarde y utilice sus prompts personalizados en su propia biblioteca. Use el modo Prompt Dinámico para insertar información interactiva y adaptar comandos según sus necesidades. Adjunte y reutilice archivos en cualquier momento sin tener que volver a seleccionarlos. Compatible con: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode.
-// @description:fi      Tallenna ja käytä mukautettuja kehotteita omassa kirjastossasi. Käytä Dynamic Prompt -tilaa interaktiivisten tietojen lisäämiseen ja komentojen mukauttamiseen tarpeen mukaan. Liitä ja käytä tiedostoja milloin tahansa ilman uudelleenvalintaa. Yhteensopiva seuraavien kanssa: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode.
-// @description:fr      Sauvegardez et utilisez vos prompts personnalisés dans votre bibliothèque. Utilisez le mode Prompt Dynamique pour insérer des informations interactives et adapter les commandes. Joignez et réutilisez des fichiers à tout moment sans resélection. Compatible avec : ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode.
-// @description:he      שמור והשתמש בפוסטים המותאמים אישית שלך בספרייה משלך. השתמש במצב Dynamic Prompt כדי להוסיף מידע אינטראקטיבי ולהתאים פקודות לפי הצורך. צרף והשתמש בקבצים בכל עת ללא צורך בבחירה מחדש. תואם ל: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode.
-// @description:hr      Spremite i koristite svoje personalizirane upite u vlastitoj knjižnici. Koristite način Dynamic Prompt za umetanje interaktivnih informacija i prilagodbu naredbi prema potrebi. Priložite i koristite datoteke u bilo kojem trenutku bez ponovnog odabira. Kompatibilno s: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode.
-// @description:hu      Mentse el és használja személyre szabott promptjait a saját könyvtárában. Használja a Dynamic Prompt módot interaktív információk beillesztéséhez és a parancsok szükség szerinti módosításához. Csatoljon és használjon fájlokat bármikor újra kiválasztás nélkül. Kompatibilis: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode.
-// @description:id      Simpan dan gunakan prompt pribadi Anda di perpustakaan Anda sendiri. Gunakan mode Dynamic Prompt untuk menyisipkan informasi interaktif dan menyesuaikan perintah sesuai kebutuhan. Lampirkan dan gunakan file kapan saja tanpa perlu memilih ulang. Kompatibel dengan: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode.
-// @description:it      Salva e usa i tuoi prompt personalizzati nella tua libreria. Usa la modalità Dynamic Prompt per inserire informazioni interattive e adattare i comandi secondo necessità. Allega e usa file in qualsiasi momento senza doverli selezionare di nuovo. Compatibile con: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode.
-// @description:ja      独自のライブラリでパーソナライズされたプロンプトを保存して使用します。Dynamic Promptモードを使用して、対話型の情報を挿入し、必要に応じてコマンドを適応させます。再選択することなく、いつでもファイルを添付して使用できます。対応プラットフォーム：ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode.
-// @description:ka      შეინახეთ და გამოიყენეთ თქვენი პერსონალიზებული მოთხოვნები თქვენს ბიბლიოთეკაში. გამოიყენეთ Dynamic Prompt რეჟიმი ინტერაქტიული ინფორმაციის ჩასასმელად და ბრძანებების ადაპტირებისთვის. მიამაგრეთ და გამოიყენეთ ფაილები ნებისმიერ დროს ხელახალი არჩევის გარეშე. თავსებადია: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode.
-// @description:ko      사용자 지정 프롬프트를 자신의 라이브러리에 저장하고 사용하세요. Dynamic Prompt 모드를 사용하여 대화형 정보를 삽입하고 필요에 따라 명령을 조정할 수 있습니다. 다시 선택할 필요 없이 언제든지 파일을 첨부하고 사용할 수 있습니다. 호환 대상: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode.
-// @description:mr      आपल्या स्वतःच्या लायब्ररीमध्ये आपले वैयक्तिक प्रॉम्प्ट जतन करा आणि वापरा. परस्परसंवादी माहिती समाविष्ट करण्यासाठी आणि आवश्यकतेनुसार आदेश जुळवून घेण्यासाठी डायनॅमिक प्रॉम्प्ट मोड वापरा. पुन्हा निवड न करता कधीही फायली जोडा आणि वापरा. यासह सुसंगत: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode.
-// @description:nb      Lagre og bruk dine personlige ledetekster i ditt eget bibliotek. Bruk Dynamic Prompt-modus for å sette inn interaktiv informasjon og tilpasse kommandoer etter behov. Legg ved og bruk filer når som helst uten å måtte velge dem på nytt. Kompatibel med: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode.
-// @description:nl      Bewaar en gebruik uw gepersonaliseerde prompts in uw eigen bibliotheek. Gebruik de Dynamic Prompt-modus om interactieve informatie in te voegen en opdrachten aan te passen. Voeg bestanden toe en gebruik ze op elk moment zonder opnieuw te selecteren. Compatibel met: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode.
-// @description:pl      Zapisuj i używaj spersonalizowanych promptów w własnej bibliotece. Używaj trybu Dynamic Prompt do wstawiania interaktywnych informacji i dostosowywania poleceń. Dołączaj i używaj plików w dowolnym momencie bez ponownego wyboru. Kompatybilne z: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode.
-// @description:ro      Salvați și utilizați prompturile personalizate în propria bibliotecă. Utilizați modul Dynamic Prompt pentru a insera informații interactive și a adapta comenzile după cum este necesar. Atașați și utilizați fișiere oricând, fără a le selecta din nou. Compatibil cu: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode.
-// @description:ru      Сохраняйте и используйте свои персонализированные промпты в собственной библиотеке. Используйте режим Dynamic Prompt для вставки интерактивной информации и адаптации команд. Прикрепляйте и используйте файлы в любое время без повторного выбора. Совместимо с: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode.
-// @description:sk      Uložte a používajte svoje prispôsobené prompty vo vlastnej knižnici. Použite režim Dynamic Prompt na vkladanie interaktívnych informácií a prispôsobenie príkazov podľa potreby. Pripájajte a používajte súbory kedykoľvek bez potreby nového výberu. Kompatibilné s: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode.
-// @description:sr      Сачувајте и користите своје прилагођене промпте у сопственој библиотеци. Користите режим Dynamic Prompt за уметање интерактивних информација и прилагођавање команди по потреби. Приложите и користите датотеке у било ком тренутку без поновног избора. Компатибилно са: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode.
-// @description:sv      Spara och använd dina personliga prompts i ditt eget bibliotek. Använd Dynamic Prompt-läget för att infoga interaktiv information och anpassa kommandon efter behov. Bifoga och använd filer när som helst utan att behöva välja dem igen. Kompatibel med: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode.
-// @description:th      บันทึกและใช้พรอมต์ส่วนตัวของคุณในไลบรารีของคุณเอง ใช้โหมด Dynamic Prompt เพื่อแทรกข้อมูลเชิงโต้ตอบและปรับเปลี่ยนคำสั่งตามต้องการ แนบและใช้ไฟล์ได้ตลอดเวลาโดยไม่ต้องเลือกใหม่ รองรับ: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode
-// @description:tr      Özelleştirilmiş istemlerinizi (prompts) kendi kütüphanenizde kaydedin ve kullanın. Etkileşimli bilgiler eklemek ve komutları ihtiyaca göre uyarlamak için Dinamik İstem modunu kullanın. Dosyaları yeniden seçmeye gerek kalmadan istediğiniz zaman ekleyin ve kullanın. Şunlarla uyumludur: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode.
-// @description:uk      Зберігайте та використовуйте свої персоналізовані промпти у власній бібліотеці. Використовуйте режим Dynamic Prompt для вставки інтерактивної інформації та адаптації команд за потребою. Долучайте та використовуйте файли в будь-який час без повторного вибору. Сумісно з: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode.
-// @description:ug      خاسلاشتۇرۇلغان ئەسكەرتىمىلىرىڭىزنى ئۆزىڭىزنىڭ ئامبىرىدا ساقلاڭ ۋە ئىشلىتىڭ. Dynamic Prompt ھالىتى ئارقىلىق ئۆز-ئارا تەسىر كۆرسىتىدىغان ئۇچۇرلارنى قىستۇرۇڭ ۋە بۇيرۇقلارنى ئېھتىياجغا ئاساسەن تەڭشەڭ. ھۆججەتلەرنى قايتا تاللىماي ھەر ۋاقىت قوشۇڭ ۋە ئىشلىتىڭ. ماسلىشىشچانلىقى: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode.
-// @description:vi      Lưu và sử dụng các prompt tùy chỉnh trong thư viện của riêng bạn. Sử dụng chế độ Dynamic Prompt để chèn thông tin tương tác và điều chỉnh lệnh theo nhu cầu. Đính kèm và sử dụng tệp bất cứ lúc nào mà không cần chọn lại. Tương thích với: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI Mode.
+// @version             4.0
+// @description         Save and use custom prompts in your own library. Use Dynamic Prompt mode for interactive input. Attach and use files anytime. Compatible with: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI and Copilot.
+// @description:pt-BR   Salve e use prompts personalizados em sua biblioteca. Use o modo Prompt Dinâmico para comandos interativos. Anexe e use arquivos sempre que quiser. Compatível com: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google Modo IA e Copilot.
+// @description:zh-CN   在个人库中保存并使用自定义提示词。利用动态提示词模式进行交互。随时附加并使用文件。兼容：ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, 豆包, Claude, Kimi, 通义千问, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, 腾讯元宝, ChatGLM, Google AI 模式 和 Copilot。
+// @description:zh-TW   在個人庫中儲存並使用自定義提示詞。利用動態提示詞模式進行互動。隨時附加並使用檔案。相容：ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, 豆包, Claude, Kimi, 通義千問, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, 騰訊元寶, ChatGLM, Google AI 模式 和 Copilot。
+// @description:fr-CA   Enregistrez vos invites personnalisées. Utilisez le mode Prompt Dynamique pour des commandes interactives. Joignez des fichiers sans re-sélection. Compatible avec: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google IA et Copilot.
+// @description:ckb     پڕۆمپتە تایبەتەکانت پاشەکەوت بکە. مۆدی داینامیکی بەکاربهێنە بۆ فەرمانی کارلێکەر. پەڕگەکان هاوپێچ بکە. گونجاوە لەگەڵ: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI & Copilot.
+// @description:ar      حفظ واستخدام قوالب الأوامر الخاصة بك. استخدم وضع المطالبة الديناميكية للأوامر التفاعلية. أرفق الملفات واستخدمها في أي وقت. متوافق مع: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI & Copilot.
+// @description:be      Захоўвайце ўласныя падказкі. Выкарыстоўвайце рэжым дынамічных падказак для каманд. Далучайце файлы ў любы час. Сумяшчальны з: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI & Copilot.
+// @description:bg      Запазвайте персонализирани подкани. Използвайте динамичен режим за интерактивни команди. Прикачвайте файлове по всяко време. Съвместим с: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI & Copilot.
+// @description:cs      Ukládejte vlastní prompty. Používejte režim dynamických promptů pro interaktivní příkazy. Připojujte soubory kdykoli. Kompatibilní s: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI & Copilot.
+// @description:da      Gem brugerdefinerede prompts. Brug Dynamisk Prompt-tilstand til interaktive kommandoer. Vedhæft filer når som helst. Kompatibel med: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI & Copilot.
+// @description:de      Eigene Prompts speichern. Nutzen Sie den dynamischen Prompt-Modus für interaktive Befehle. Dateien jederzeit anhängen. Kompatibel mit: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI & Copilot.
+// @description:el      Αποθηκεύστε προσαρμοσμένα prompts. Χρησιμοποιήστε τη λειτουργία Δυναμικού Prompt για διαδραστικές εντολές. Συμβατό με: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI & Copilot.
+// @description:en      Save and use custom prompts in your own library. Use Dynamic Prompt mode for interactive input. Attach and use files anytime. Compatible with: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI and Copilot.
+// @description:eo      Konservu proprajn komandojn. Uzu dinamikan reĝimon por interagaj ordonoj. Alonĝu dosierojn iam ajn. Kongrua kun: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI & Copilot.
+// @description:es      Guarde prompts personalizados. Use el modo de Prompt Dinámico para comandos interactivos. Adjunte archivos en cualquier momento. Compatible con: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI y Copilot.
+// @description:fi      Tallenna mukautetut kehotteet. Käytä dynaamista tilaa vuorovaikutteisiin komentoihin. Liitä tiedostoja milloin tahansa. Yhteensopiva: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI & Copilot.
+// @description:fr      Enregistrez vos propres invites. Utilisez le mode Invite Dynamique pour des commandes interactives. Joignez des fichiers à tout moment. Compatible avec: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI et Copilot.
+// @description:he      שמור פרומפטים מותאמים אישית. השתמש במצב פרומפט דינמי לפקודות אינטראקטיביות. צרף קבצים בכל עת. תואם ל: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI & Copilot.
+// @description:hr      Spremite prilagođene upute. Koristite način rada Dinamički upit za interaktivne naredbe. Priložite datoteke bilo kada. Kompatibilno s: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI & Copilot.
+// @description:hu      Saját promptok mentése. Használja a Dinamikus Prompt módot interaktív parancsokhoz. Fájlok csatolása bármikor. Kompatibilis: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI & Copilot.
+// @description:id      Simpan prompt khusus. Gunakan mode Prompt Dinamis untuk perintah interaktif. Lampirkan file kapan saja. Kompatibel dengan: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI & Copilot.
+// @description:it      Salva prompt personalizzati. Usa la modalità Prompt Dinamico per comandi interattivi. Allega file in qualsiasi momento. Compatibile con: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI e Copilot.
+// @description:ja      カスタムプロンプトを保存。動的プロンプトモードで対話的な入力を実現。いつでもファイルを添付可能。対応: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI, Copilot.
+// @description:ka      შეინახეთ პრომპტები. გამოიყენეთ დინამიური პრომპტის რეჟიმი ინტერაქტიული ბრძანებებისთვის. მიამაგრეთ ფაილები. თავსებადია: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI & Copilot.
+// @description:ko      커스텀 프롬프트 저장. 대화형 명령을 위해 동적 프롬프트 모드 사용. 언제든지 파일 첨부 가능. 호환: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI, Copilot.
+// @description:mr      सानुकूल प्रॉम्प्ट जतन करा. परस्परसंवादी कमांडसाठी डायनॅमिक प्रॉम्प्ट मोड वापरा. कधीही फाइल्स जोडा. सुसंगत: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI & Copilot.
+// @description:nb      Lagre egne ledetekster. Bruk Dynamisk ledetekst-modus for interaktive kommandoer. Legg ved filer når som helst. Kompatibel med: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI & Copilot.
+// @description:nl      Sla aangepaste prompts op. Gebruik de Dynamische Prompt-modus voor interactieve commando's. Voeg bestanden toe wanneer u maar wilt. Compatibel met: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI en Copilot.
+// @description:pl      Zapisuj własne prompty. Używaj trybu dynamicznych promptów dla interaktywnych poleceń. Załączaj pliki w dowolnym momencie. Kompatybilny z: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI i Copilot.
+// @description:ro      Salvați prompturi personalizate. Utilizați modul Prompt Dinamic pentru comenzi interactive. Atașați fișiere oricând. Compatibil cu: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI și Copilot.
+// @description:ru      Сохраняйте свои подсказки. Используйте режим динамических подсказок для интерактивных команд. Прикрепляйте файлы в любое время. Совместим с: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI и Copilot.
+// @description:sk      Ukladajte vlastné prompty. Používajte režim dynamických promptov pre interaktívne príkazy. Pripájajte súbory kedykoľvek. Kompatibilné s: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI & Copilot.
+// @description:sr      Sačuvajte sopstvene upite. Koristite režim dinamičkog upita za interaktivne komande. Priložite datoteke u bilo kom trenutku. Kompatibilno sa: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI & Copilot.
+// @description:sv      Spara anpassade prompts. Använd Dynamisk Prompt-läge för interaktiva kommandon. Bifoga filer när som helst. Kompatibel med: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI & Copilot.
+// @description:th      บันทึกพรอมต์ส่วนตัว ใช้โหมดพรอมต์ไดนามิกสำหรับคำสั่งโต้ตอบ แนบไฟล์ได้ทุกเมื่อ รองรับ: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI และ Copilot.
+// @description:tr      Özel istemleri saklayın. Etkileşimli komutlar için Dinamik İstem modunu kullanın. İstediğiniz zaman dosya ekleyin. Uyumluluk: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI ve Copilot.
+// @description:uk      Зберігайте власні підказки. Використовуйте режим динамічних підказок для інтерактивних команд. Додавайте файли будь-коли. Сумісність: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI та Copilot.
+// @description:ug      ئۆزىڭىزنىڭ ئەسكەرتىشلىرىنى ساقلاڭ. ھەرىكەتچان ئەسكەرتىش ھالىتىنى ئىشلىتىڭ. ھۆججەت قوشۇڭ. ماسلىشىشچانلىقى: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI & Copilot.
+// @description:vi      Lưu các lời nhắc tùy chỉnh. Sử dụng chế độ Lời nhắc động cho các lệnh tương tác. Đính kèm tệp bất cứ lúc nào. Tương thích với: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, Google AI và Copilot.
 // @author              OHAS
 // @homepage            https://github.com/0H4S
-// @icon                https://files.catbox.moe/rvp3fn.svg
+// @icon                https://files.catbox.moe/1nriwc.svg
 // @license             CC-BY-NC-ND-4.0
 // @copyright           2026 OHAS. All Rights Reserved.
 // @match               *://poe.com/*
@@ -109,6 +109,7 @@
 // @require             https://update.greasyfork.org/scripts/549920.js
 // @connect             files.catbox.moe
 // @connect             gist.github.com
+// @connect             i.imgur.com
 // @grant               GM_getValue
 // @grant               GM_setValue
 // @grant               GM_xmlhttpRequest
@@ -180,7 +181,7 @@
     }
 
     // --- NOTIFICADOR ---
-    const SCRIPT_CONFIG = {notificationsUrl:'https://gist.github.com/0H4S/b2f9a9f92259deadc35bdccb11cd9a75', scriptVersion: '3.9',};
+    const SCRIPT_CONFIG = {notificationsUrl:'https://gist.github.com/0H4S/b2f9a9f92259deadc35bdccb11cd9a75', scriptVersion: '4.0',};
     const notifier      = new ScriptNotifier(SCRIPT_CONFIG);
     notifier.run();
 
@@ -281,7 +282,8 @@
             getMoreThemes:      "Obter novos temas",
             editorSettings:     'Configurações do Editor',
             smartPredict:       'Previsão de Texto Inteligente',
-            smartPredictDesc:   'Fecha parênteses, expande macros #start e sugere variáveis.'
+            smartPredictDesc:   'Fecha parênteses, expande macros #start e sugere variáveis.',
+            getMorePrompts:     'Obtenha Novos Prompts'
 
         },
     'en': {
@@ -351,7 +353,8 @@
             getMoreThemes:      "Get more themes",
             editorSettings:     'Editor Settings',
             smartPredict:       'Smart Text Prediction',
-            smartPredictDesc:   'Closes parentheses, expands #start macros, and suggests variables.'
+            smartPredictDesc:   'Closes parentheses, expands #start macros, and suggests variables.',
+            getMorePrompts:     'Get More Prompts'
         },
     'zh-CN': {
             langName:           '简体中文',
@@ -420,7 +423,8 @@
             getMoreThemes:      "获取更多主题",
             editorSettings:     '编辑器设置',
             smartPredict:       '智能文本预测',
-            smartPredictDesc:   '自动闭合括号，展开 #start 宏并建议变量。'
+            smartPredictDesc:   '自动闭合括号，展开 #start 宏并建议变量。',
+            getMorePrompts:     '获取更多提示词'
         },
     'es': {
             langName:           'Español',
@@ -489,7 +493,8 @@
             getMoreThemes:      "Obtener más temas",
             editorSettings:     'Configuraciones del Editor',
             smartPredict:       'Predicción de Texto Inteligente',
-            smartPredictDesc:   'Cierra paréntesis, expande macros #start y sugiere variables.'
+            smartPredictDesc:   'Cierra paréntesis, expande macros #start y sugiere variables.',
+            getMorePrompts:     'Obtener más prompts'
         },
     'fr': {
             langName:           'Français',
@@ -558,7 +563,8 @@
             getMoreThemes:      "Obtenir plus de thèmes",
             editorSettings:     'Paramètres de l’éditeur',
             smartPredict:       'Prédiction de texte intelligente',
-            smartPredictDesc:   'Ferme les parenthèses, développe les macros #start et suggère des variables.'
+            smartPredictDesc:   'Ferme les parenthèses, développe les macros #start et suggère des variables.',
+            getMorePrompts:     'Obtenir plus de prompts'
         },
     'ru': {
             langName:           'Русский',
@@ -627,7 +633,8 @@
             getMoreThemes:      "Получить больше тем",
             editorSettings:     'Настройки редактора',
             smartPredict:       'Интеллектуальное предсказание текста',
-            smartPredictDesc:   'Закрывает скобки, разворачивает макросы #start и предлагает переменные.'
+            smartPredictDesc:   'Закрывает скобки, разворачивает макросы #start и предлагает переменные.',
+            getMorePrompts:     'Получить больше промптов'
         },
     'ja': {
             langName:           '日本語',
@@ -696,7 +703,8 @@
             getMoreThemes:      "テーマをもっと入手",
             editorSettings:     'エディター設定',
             smartPredict:       'スマートテキスト予測',
-            smartPredictDesc:   '括弧を閉じ、#start マクロを展開し、変数を提案します。'
+            smartPredictDesc:   '括弧を閉じ、#start マクロを展開し、変数を提案します。',
+            getMorePrompts:     'もっとプロンプトを取得'
         },
     'ko': {
             langName:           '한국어',
@@ -765,7 +773,8 @@
             getMoreThemes:      "더 많은 테마 가져오기",
             editorSettings:     '편집기 설정',
             smartPredict:       '스마트 텍스트 예측',
-            smartPredictDesc:   '괄호를 닫고, #start 매크로를 확장하며, 변수를 제안합니다.'
+            smartPredictDesc:   '괄호를 닫고, #start 매크로를 확장하며, 변수를 제안합니다.',
+            getMorePrompts:     '프롬프트 더 가져오기'
         },
     };
 
@@ -1658,7 +1667,8 @@
             }
 
             .mp-modal-close-btn,
-            .mp-modal-info-btn {
+            .mp-modal-info-btn,
+            .mp-modal-shop-btn {
                 position: absolute;
                 top: 12px;
                 background: none;
@@ -1684,12 +1694,17 @@
                 right: 88px;
             }
 
+            .mp-modal-shop-btn {
+                right: 126px;
+            }
+
             .mp-modal-close-btn:hover {
                 transform: rotate(90deg);
                 color: var(--mp-accent-close);
                 background-color: color-mix(in srgb, var(--mp-accent-close) 15%, transparent);
             }
 
+            .mp-modal-shop-btn:hover,
             .mp-modal-info-btn:hover {
                 transform: scale(1.1);
                 color: var(--mp-accent-primary);
@@ -1697,7 +1712,8 @@
             }
 
             .mp-modal-close-btn svg,
-            .mp-modal-info-btn svg {
+            .mp-modal-info-btn svg,
+            .mp-modal-shop-btn svg {
                 width: 20px;
                 height: 20px;
                 stroke: currentColor;
@@ -1735,7 +1751,8 @@
                 background-color: color-mix(in srgb, var(--mp-accent-primary) 15%, transparent);
             }
 
-            .mp-modal-expand-btn svg {
+            .mp-modal-expand-btn svg,
+            .mp-modal-shop-btn svg {
                 width: 20px;
                 height: 20px;
                 stroke: currentColor;
@@ -3126,6 +3143,7 @@
                 z-index: 100000 !important;
                 position: relative !important;
             }
+
         `);
         document.head.appendChild(styleElement);
     }
@@ -3200,6 +3218,7 @@
         info:       `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M10 2a8 8 0 1 0 0 16 8 8 0 0 0 0-16Zm0 14a6 6 0 1 1 0-12 6 6 0 0 1 0 12ZM9 5h2v2H9V5Zm0 4h2v6H9V9Z"/></svg>`,
         setaCima:   `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17 16"><path fill="currentColor" fill-rule="evenodd" d="M15.81 9.9a1 1 0 0 1-.65-.2L8.93 5.54 2.9 9.74a1.2 1.2 0 0 1-1.63-.33 1.17 1.17 0 0 1 .32-1.63l6.69-4.63a1.2 1.2 0 0 1 1.3 0l6.88 4.59a1.18 1.18 0 0 1-.65 2.16"/></svg>`,
         setaBaixo:  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17 17"><path fill="currentColor" fill-rule="evenodd" d="M2.16 6.246c.225 0 .45.062.65.196l6.229 4.156 6.037-4.197a1.175 1.175 0 0 1 1.304 1.958l-6.688 4.63a1.17 1.17 0 0 1-1.304.002l-6.88-4.589a1.178 1.178 0 0 1 .652-2.156"/></svg>`,
+        shop:       `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.0" d="m21.05 11.5.28-1.66c.18-1.09.27-1.63-.02-1.98s-.82-.36-1.9-.36H4.6c-1.07 0-1.61 0-1.9.36-.3.35-.2.9-.02 1.98l1.2 7.18c.4 2.38.6 3.57 1.42 4.28.81.7 1.98.7 4.33.7H12m2-4h8m-4 4v-8m-.5-6.5a5.5 5.5 0 1 0-11 0" color="currentColor"/></svg>`,
         cart:       `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>`
     };
     const DEFAULT_ICONS = { ...ICONS };
@@ -4022,9 +4041,11 @@
         box.id = '__ap_modal_box_el';
         box.style.cssText = 'overflow-y: auto; padding-bottom: 24px;';
         box.onclick = e => e.stopPropagation();
+
         setSafeInnerHTML(box, `
-            <!-- BOTÕES (EXPANDIR/RECOLHER, INFO, FECHAR) -->
+            <!-- BOTÕES (EXPANDIR/RECOLHER, SHOP, INFO, FECHAR) -->
             <button id="__ap_expand_btn" class="mp-modal-expand-btn" title="${getTranslation('expand')}">${ICONS.expand}</button>
+            <button id="__ap_shop_btn" class="mp-modal-shop-btn">${ICONS.shop}</button>
             <button id="__ap_info_btn" class="mp-modal-info-btn" title="${getTranslation('infoTitle')}">${ICONS.info}</button>
             <button id="__ap_close_prompt" class="mp-modal-close-btn" title="${getTranslation('close')}">${ICONS.close}</button>
 
@@ -4045,14 +4066,19 @@
                 </div>
             </div>
 
-            <! -- INTERRUPTORES DE CONFIGURAÇÃO (PROMPT DINÂMICO, EXECUÇÃO AUTOMÁTICA E SALVAR) -->
+            <!-- INTERRUPTORES DE CONFIGURAÇÃO (PROMPT DINÂMICO, EXECUÇÃO AUTOMÁTICA E SALVAR) -->
                 <div class="mp-switch-container" style="flex-shrink:0;">
                     <div class="mp-switch"><input type="checkbox" id="__ap_use_placeholders" /><label for="__ap_use_placeholders">Toggle</label><span class="switch-text" onclick="document.getElementById('__ap_use_placeholders').click()">${getTranslation('enablePlaceholders')}</span></div>
-                    <div class="mp-switch"><input type="checkbox" id="__ap_auto_execute" /><label for="__ap_auto_execute">Toggle</label><span class="switch-text" onclick="document.getElementById('__ap_auto_execute').click()">${getTranslation('autoExecute')}</span></div>
-                </div>
+                    <div class="mp-switch"><input type="checkbox" id="__ap_auto_execute" /><label for="__ap_auto_execute">Toggle</label><span class="switch-text" onclick="document.getElementById('__ap_auto_execute').click()">${getTranslation('autoExecute')}</span></div></div>
                 <div class="modal-footer" style="flex-shrink:0; margin-top: auto;"><button id="__ap_save" class="save-button">${getTranslation('save')}</button></div>
         `);
         overlay.appendChild(box);
+        const shopBtn = box.querySelector('#__ap_shop_btn');
+        createCustomTooltip(shopBtn, getTranslation('getMorePrompts'), 'bottom');
+        shopBtn.onclick = (e) => {
+            e.stopPropagation();
+            window.open('https://ohas.gumroad.com', '_blank');
+        };
         const textarea = box.querySelector('#__ap_text');
         attachSmartEditorLogic(textarea);
         const fileScrollWrapper = box.querySelector('#__ap_file_scroll_wrapper');

@@ -1,12 +1,13 @@
 // ==UserScript==
 // @name         Claude Project Files Extractor
 // @namespace    http://tampermonkey.net/
-// @version      3.0
-// @description  Download/extract all files from a Claude project as a single ZIP
+// @version      4.0.0
+// @description  Download/extract all files from a Claude project as a single ZIP - Fixed filenames, PDF support, CSV handling
 // @author       sharmanhall
 // @match        https://claude.ai/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=claude.ai
-// @grant        none
+// @grant        GM_download
+// @grant        GM_xmlhttpRequest
 // @license      MIT
 // @downloadURL https://update.greasyfork.org/scripts/541467/Claude%20Project%20Files%20Extractor.user.js
 // @updateURL https://update.greasyfork.org/scripts/541467/Claude%20Project%20Files%20Extractor.meta.js
@@ -15,501 +16,817 @@
 (function() {
     'use strict';
 
-    // Load JSZip from CDN first
+    // ============================================================
+    // CHANGELOG v4.0.0
+    // ============================================================
+    // - Complete rewrite of filename extraction logic
+    // - Fixed duplicate extension bug (.md.md.md -> .md)
+    // - Added PDF export via modal download link
+    // - Added CSV handling with fallback to unexportable status
+    // - Clean collision handling with __2, __3 suffixes
+    // - Comprehensive metadata with export method tracking
+    // - Verbose logging throughout
+    // ============================================================
+
+    // ============================================================
+    // SELECTOR MAP (matched to provided DOM snippets)
+    // ============================================================
+    // FILE_GRID_CONTAINER: ul.grid - contains all file cards
+    // TEXT_FILE_CARD: [data-testid="file-thumbnail"] button - clickable text file card
+    // PDF_FILE_CARD: div[data-testid$=".pdf"] button, .group\/thumbnail div[data-testid] button - PDF thumbnails
+    // FILENAME_H3: h3.text-\[12px\] - filename text in text cards
+    // TYPE_BADGE: p.uppercase.truncate - file type indicator (md, txt, pdf, csv)
+    // LINE_COUNT: p.text-\[10px\] - shows "X lines"
+    // PDF_IMG_ALT: img[alt$=".pdf"] - PDF thumbnail image with filename in alt
+    // MODAL_DIALOG: [role="dialog"] - opened modal
+    // PDF_DOWNLOAD_LINK: a[href*="/document_pdf"] - PDF download link in modal
+    // MODAL_CONTENT: pre code, pre, .whitespace-pre-wrap - text content in modal
+    // MODAL_CLOSE: button with X icon, first button in modal header
+    // ============================================================
+
+    const CONFIG = {
+        SCROLL_WAIT_MS: 1500,
+        MODAL_WAIT_MS: 2000,
+        MODAL_CONTENT_WAIT_MS: 1000,
+        BETWEEN_FILES_MS: 800,
+        MAX_SCROLL_ATTEMPTS: 20,
+        MIN_CONTENT_LENGTH: 10
+    };
+
+    const LOG_PREFIX = '[Claude Exporter]';
+
+    // Logging utilities
+    const log = {
+        info: (msg, ...args) => console.log(`${LOG_PREFIX} ℹ️ ${msg}`, ...args),
+        success: (msg, ...args) => console.log(`${LOG_PREFIX} ✅ ${msg}`, ...args),
+        warn: (msg, ...args) => console.warn(`${LOG_PREFIX} ⚠️ ${msg}`, ...args),
+        error: (msg, ...args) => console.error(`${LOG_PREFIX} ❌ ${msg}`, ...args),
+        debug: (msg, ...args) => console.log(`${LOG_PREFIX} 🔍 ${msg}`, ...args),
+        file: (domName, normalizedName, type, strategy, status) => {
+            const emoji = status === 'success' ? '✅' : status === 'failed' ? '❌' : '⚠️';
+            console.log(`${LOG_PREFIX} ${emoji} FILE: "${domName}" → "${normalizedName}" [${type}] via ${strategy} = ${status}`);
+        }
+    };
+
+    // ============================================================
+    // FILENAME NORMALIZATION
+    // ============================================================
+
+    /**
+     * Normalize a filename for cross-platform compatibility
+     * - Removes illegal characters for Windows/macOS
+     * - Collapses duplicate extensions
+     * - Handles collision suffixes properly
+     */
+    function normalizeFilename(rawName) {
+        if (!rawName || typeof rawName !== 'string') {
+            return 'unnamed_file';
+        }
+
+        let name = rawName.trim();
+
+        // Step 1: Remove illegal characters (Windows/macOS)
+        // Illegal: \ / : * ? " < > | and control chars (0x00-0x1F)
+        name = name.replace(/[\\/:*?"<>|]/g, '_');
+        name = name.replace(/[\x00-\x1F]/g, '');
+
+        // Step 2: Collapse multiple spaces/underscores
+        name = name.replace(/\s+/g, ' ');
+        name = name.replace(/_+/g, '_');
+        name = name.replace(/[ _]+/g, '_');
+
+        // Step 3: Trim trailing dots and spaces (Windows issue)
+        name = name.replace(/[. ]+$/, '');
+        name = name.replace(/^[. ]+/, '');
+
+        // Step 4: Fix duplicate extensions
+        name = collapseDuplicateExtensions(name);
+
+        // Step 5: Ensure we have something
+        if (!name || name === '_') {
+            name = 'unnamed_file';
+        }
+
+        return name;
+    }
+
+    /**
+     * Collapse duplicate extensions like .md.md.md -> .md
+     * Also handles cases like .csvcsv -> .csv
+     */
+    function collapseDuplicateExtensions(filename) {
+        // Known extensions to check for duplicates
+        const extensions = ['md', 'txt', 'csv', 'json', 'xml', 'pdf', 'docx', 'doc', 'xlsx', 'xls', 'srt', 'html', 'htm'];
+
+        let result = filename;
+
+        for (const ext of extensions) {
+            // Pattern: .ext.ext.ext... at end of filename -> .ext
+            const repeatedExtPattern = new RegExp(`(\\.${ext})+$`, 'gi');
+            result = result.replace(repeatedExtPattern, `.${ext}`);
+
+            // Pattern: extextSelect_file or similar garbage
+            const garbagePattern = new RegExp(`\\.${ext}${ext}[A-Za-z_]*`, 'gi');
+            result = result.replace(garbagePattern, `.${ext}`);
+        }
+
+        // Handle weird patterns like "txt9_.csv" -> remove the garbage
+        result = result.replace(/\d+_\.(csv|txt|md)$/i, '.$1');
+
+        return result;
+    }
+
+    /**
+     * Get the extension from a filename (lowercase, without dot)
+     */
+    function getExtension(filename) {
+        const match = filename.match(/\.([a-zA-Z0-9]+)$/);
+        return match ? match[1].toLowerCase() : null;
+    }
+
+    /**
+     * Check if filename already has a valid extension
+     */
+    function hasValidExtension(filename) {
+        const validExts = ['md', 'txt', 'csv', 'json', 'xml', 'pdf', 'docx', 'doc', 'xlsx', 'xls', 'srt', 'html', 'htm', 'js', 'py', 'ts', 'jsx', 'tsx', 'css', 'scss'];
+        const ext = getExtension(filename);
+        return ext && validExts.includes(ext);
+    }
+
+    /**
+     * Add extension only if needed
+     */
+    function ensureExtension(filename, detectedType) {
+        if (hasValidExtension(filename)) {
+            return filename;
+        }
+
+        // Map type badge to extension
+        const typeToExt = {
+            'md': 'md',
+            'txt': 'txt',
+            'text': 'txt',
+            'csv': 'csv',
+            'pdf': 'pdf',
+            'docx': 'docx',
+            'doc': 'doc',
+            'xlsx': 'xlsx',
+            'xls': 'xls',
+            'json': 'json',
+            'xml': 'xml',
+            'html': 'html'
+        };
+
+        const ext = typeToExt[detectedType?.toLowerCase()] || 'txt';
+        return `${filename}.${ext}`;
+    }
+
+    // ============================================================
+    // COLLISION HANDLING
+    // ============================================================
+
+    /**
+     * Handle filename collisions by adding __2, __3, etc. BEFORE extension
+     */
+    function handleCollision(filename, usedNames) {
+        if (!usedNames.has(filename.toLowerCase())) {
+            usedNames.add(filename.toLowerCase());
+            return filename;
+        }
+
+        const ext = getExtension(filename);
+        const base = ext ? filename.slice(0, -(ext.length + 1)) : filename;
+
+        let counter = 2;
+        let newName;
+        do {
+            newName = ext ? `${base}__${counter}.${ext}` : `${base}__${counter}`;
+            counter++;
+        } while (usedNames.has(newName.toLowerCase()));
+
+        usedNames.add(newName.toLowerCase());
+        return newName;
+    }
+
+    // ============================================================
+    // JSZip LOADER
+    // ============================================================
+
     function loadJSZip() {
         return new Promise((resolve, reject) => {
             if (typeof JSZip !== 'undefined') {
-                console.log('JSZip already available');
+                log.debug('JSZip already loaded');
                 resolve();
                 return;
             }
 
-            console.log('Loading JSZip from CDN...');
+            log.info('Loading JSZip from CDN...');
             const script = document.createElement('script');
             script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
             script.onload = () => {
-                console.log('JSZip script loaded');
                 setTimeout(() => {
                     if (typeof JSZip !== 'undefined') {
-                        console.log('JSZip is now available');
+                        log.success('JSZip loaded');
                         resolve();
                     } else {
                         reject(new Error('JSZip loaded but not available'));
                     }
-                }, 500);
+                }, 300);
             };
-            script.onerror = () => {
-                console.error('Failed to load JSZip');
-                reject(new Error('Failed to load JSZip'));
-            };
+            script.onerror = () => reject(new Error('Failed to load JSZip'));
             document.head.appendChild(script);
         });
     }
 
-    // Helper function to wait for modal to appear
-    async function waitForModal(timeout = 5000) {
+    // ============================================================
+    // DOM UTILITIES
+    // ============================================================
+
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async function waitForElement(selector, parent = document, timeout = 5000) {
         const startTime = Date.now();
         while (Date.now() - startTime < timeout) {
-            const modal = document.querySelector('[role="dialog"]');
-            if (modal && modal.offsetHeight > 0) {
-                // Wait a bit more for content to load
-                await new Promise(resolve => setTimeout(resolve, 1000));
-                return modal;
-            }
-            await new Promise(resolve => setTimeout(resolve, 100));
+            const el = parent.querySelector(selector);
+            if (el) return el;
+            await sleep(100);
         }
         return null;
     }
 
-    // Helper function to wait for modal to close
-    async function waitForModalClose(timeout = 3000) {
+    async function waitForModal(timeout = CONFIG.MODAL_WAIT_MS) {
         const startTime = Date.now();
         while (Date.now() - startTime < timeout) {
             const modal = document.querySelector('[role="dialog"]');
-            if (!modal || modal.offsetHeight === 0) return true;
-            await new Promise(resolve => setTimeout(resolve, 100));
+            if (modal && modal.offsetHeight > 0) {
+                await sleep(CONFIG.MODAL_CONTENT_WAIT_MS);
+                return modal;
+            }
+            await sleep(100);
         }
-        return false;
+        return null;
     }
 
-    // Function to close modal
     async function closeModal() {
-        console.log('🔄 Attempting to close modal...');
+        log.debug('Closing modal...');
 
-        // Try multiple close methods
+        // Method 1: Find close button (X button in header)
         const closeSelectors = [
-            'button[aria-label*="close"]',
-            'button[aria-label*="Close"]',
-            '[data-testid*="close"]',
-            'button[title*="close"]',
-            'button[title*="Close"]',
-            '.modal button:last-child',
-            '[role="dialog"] button:first-child',
-            '[role="dialog"] button[type="button"]'
+            '[role="dialog"] button[type="button"]:first-of-type',
+            '[role="dialog"] button svg[viewBox="0 0 20 20"]',
+            'button[aria-label*="close" i]',
+            'button[aria-label*="Close" i]'
         ];
 
         for (const selector of closeSelectors) {
-            const buttons = document.querySelectorAll(selector);
-            for (const btn of buttons) {
-                try {
-                    console.log(`Trying close button: ${selector}`);
-                    btn.click();
-                    await new Promise(resolve => setTimeout(resolve, 300));
-                    if (await waitForModalClose(1000)) {
-                        console.log('✅ Modal closed successfully');
+            try {
+                const btn = document.querySelector(selector);
+                if (btn) {
+                    const clickTarget = btn.closest('button') || btn;
+                    clickTarget.click();
+                    await sleep(300);
+                    if (!document.querySelector('[role="dialog"]')) {
+                        log.debug('Modal closed via button');
                         return true;
                     }
-                } catch (e) {
-                    console.log('Close button failed:', e);
                 }
+            } catch (e) { /* continue */ }
+        }
+
+        // Method 2: Escape key
+        for (let i = 0; i < 3; i++) {
+            document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+            await sleep(200);
+            if (!document.querySelector('[role="dialog"]')) {
+                log.debug('Modal closed via Escape');
+                return true;
             }
         }
 
-        // Press Escape multiple times
-        for (let i = 0; i < 3; i++) {
-            document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
-            document.dispatchEvent(new KeyboardEvent('keyup', { key: 'Escape', bubbles: true }));
-            await new Promise(resolve => setTimeout(resolve, 200));
+        // Method 3: Click overlay
+        const overlay = document.querySelector('.fixed.z-modal.inset-0');
+        if (overlay) {
+            const rect = overlay.getBoundingClientRect();
+            overlay.click();
+            await sleep(300);
         }
 
-        // Click outside modal
-        const modal = document.querySelector('[role="dialog"]');
-        if (modal) {
-            const rect = modal.getBoundingClientRect();
-            document.elementFromPoint(rect.left - 10, rect.top)?.click();
-        }
-
-        const closed = await waitForModalClose();
-        console.log(closed ? '✅ Modal closed' : '❌ Failed to close modal');
+        const closed = !document.querySelector('[role="dialog"]');
+        log.debug(closed ? 'Modal closed' : 'Failed to close modal');
         return closed;
     }
 
-    // Better file name extraction
-    function extractFileName(element) {
-        const text = element.textContent.trim();
-        console.log('🔍 Analyzing element text:', text);
+    // ============================================================
+    // FILE DISCOVERY
+    // ============================================================
 
-        // Look for common file patterns
-        const patterns = [
-            // Pattern: filename.ext followed by size info
-            /^(.+\.(?:pdf|txt|md|json|xml|csv|doc|docx|xlsx?))\s*\d+\s*lines?/i,
-            // Pattern: filename followed by extension indicator
-            /^(.+?)\s*\d+\s*lines?\s*(pdf|txt|text|md|json|xml|csv)/i,
-            // Pattern: clear filename at start
-            /^([^0-9]+?)(?:\s*\d+\s*lines?|$)/i
-        ];
+    /**
+     * Find all file cards in the project, handling lazy loading
+     */
+    async function discoverAllFiles(statusCallback) {
+        log.info('Discovering files...');
+        statusCallback?.('Scanning for files...');
 
-        for (const pattern of patterns) {
-            const match = text.match(pattern);
-            if (match) {
-                let filename = match[1].trim();
-                console.log('📝 Extracted filename:', filename);
-                return filename;
+        const fileGrid = document.querySelector('ul.grid');
+        if (!fileGrid) {
+            log.error('File grid not found');
+            return [];
+        }
+
+        let lastCount = 0;
+        let stableCount = 0;
+
+        // Scroll to load all files
+        for (let attempt = 0; attempt < CONFIG.MAX_SCROLL_ATTEMPTS; attempt++) {
+            fileGrid.scrollTop = fileGrid.scrollHeight;
+            window.scrollTo(0, document.body.scrollHeight);
+            await sleep(CONFIG.SCROLL_WAIT_MS);
+
+            const currentCount = fileGrid.querySelectorAll(':scope > div').length;
+            log.debug(`Scroll attempt ${attempt + 1}: found ${currentCount} file cards`);
+
+            if (currentCount === lastCount) {
+                stableCount++;
+                if (stableCount >= 3) {
+                    log.info(`File count stable at ${currentCount}`);
+                    break;
+                }
+            } else {
+                stableCount = 0;
+            }
+            lastCount = currentCount;
+        }
+
+        // Now collect all file cards
+        const fileCards = [];
+        const cardContainers = fileGrid.querySelectorAll(':scope > div');
+
+        for (const container of cardContainers) {
+            const fileInfo = extractFileInfo(container);
+            if (fileInfo) {
+                fileCards.push({ element: container, ...fileInfo });
             }
         }
 
-        // Fallback: take first meaningful part
-        const words = text.split(/\s+/).filter(word =>
-            word.length > 2 &&
-            !word.match(/^\d+$/) &&
-            !word.match(/^(lines?|pdf|txt|text|md|json|xml|csv)$/i)
-        );
+        log.success(`Discovered ${fileCards.length} files`);
+        return fileCards;
+    }
 
-        if (words.length > 0) {
-            const filename = words.slice(0, 3).join(' ');
-            console.log('📝 Fallback filename:', filename);
-            return filename;
+    /**
+     * Extract file information from a card element
+     */
+    function extractFileInfo(cardContainer) {
+        // Check for PDF first (has data-testid on inner div or img with .pdf alt)
+        const pdfTestId = cardContainer.querySelector('div[data-testid$=".pdf"]');
+        const pdfImg = cardContainer.querySelector('img[alt$=".pdf"]');
+
+        if (pdfTestId || pdfImg) {
+            // It's a PDF
+            let filename;
+            if (pdfTestId) {
+                filename = pdfTestId.getAttribute('data-testid');
+            } else if (pdfImg) {
+                filename = pdfImg.getAttribute('alt');
+            }
+
+            if (filename) {
+                return {
+                    domFilename: filename,
+                    type: 'pdf',
+                    isPdf: true,
+                    lineCount: null
+                };
+            }
         }
 
-        return 'Unknown_File';
+        // Check for text-based file (has [data-testid="file-thumbnail"])
+        const fileThumbnail = cardContainer.querySelector('[data-testid="file-thumbnail"]');
+        if (fileThumbnail) {
+            const h3 = fileThumbnail.querySelector('h3');
+            const typeBadge = fileThumbnail.querySelector('p.uppercase');
+            const lineCountEl = fileThumbnail.querySelector('p.text-\\[10px\\]');
+
+            if (h3) {
+                const filename = h3.textContent.trim();
+                const type = typeBadge?.textContent?.trim()?.toLowerCase() || 'txt';
+                const lineCount = lineCountEl?.textContent?.trim() || null;
+
+                return {
+                    domFilename: filename,
+                    type: type,
+                    isPdf: false,
+                    lineCount: lineCount
+                };
+            }
+        }
+
+        // Fallback: try to find any filename
+        const anyH3 = cardContainer.querySelector('h3');
+        const anyTypeBadge = cardContainer.querySelector('p.uppercase');
+        if (anyH3) {
+            return {
+                domFilename: anyH3.textContent.trim(),
+                type: anyTypeBadge?.textContent?.trim()?.toLowerCase() || 'txt',
+                isPdf: false,
+                lineCount: null
+            };
+        }
+
+        return null;
     }
 
-    // Better file type detection
-    function detectFileType(filename, content) {
-        const lower = filename.toLowerCase();
+    // ============================================================
+    // CONTENT EXTRACTION
+    // ============================================================
 
-        // Check filename extension first
-        if (lower.includes('.pdf')) return 'pdf.txt';
-        if (lower.includes('.json')) return 'json';
-        if (lower.includes('.xml')) return 'xml';
-        if (lower.includes('.md')) return 'md';
-        if (lower.includes('.csv')) return 'csv';
-        if (lower.includes('.xlsx') || lower.includes('.xls')) return 'xlsx.txt';
-        if (lower.includes('.doc')) return 'doc.txt';
-        if (lower.includes('.eml')) return 'eml.txt';
-
-        // Check content patterns
-        if (content.includes('{') && content.includes('}') && content.includes('"')) return 'json';
-        if (content.includes('<') && content.includes('>')) return 'xml';
-        if (content.includes('##') || content.includes('**')) return 'md';
-        if (content.includes(',') && content.split('\n').length > 1) return 'csv';
-
-        return 'txt';
-    }
-
-    // Better content extraction from modal
-    function extractContentFromModal(modal) {
-        console.log('📖 Extracting content from modal...');
-
-        // Try different content containers
+    /**
+     * Extract text content from an open modal
+     */
+    function extractTextContent(modal) {
         const contentSelectors = [
             'pre code',
             'pre',
             '.whitespace-pre-wrap',
             '.font-mono',
             '.overflow-auto pre',
-            '.text-sm.whitespace-pre-wrap',
-            '[class*="content"]',
-            '.modal-body',
-            '.dialog-content'
+            '[class*="content"]'
         ];
 
         for (const selector of contentSelectors) {
-            const element = modal.querySelector(selector);
-            if (element && element.textContent.trim().length > 50) {
-                console.log(`✅ Found content in: ${selector}`);
-                return element.textContent.trim();
+            const el = modal.querySelector(selector);
+            if (el && el.textContent.trim().length > CONFIG.MIN_CONTENT_LENGTH) {
+                return el.textContent;
             }
         }
 
-        // Fallback: get all text but filter out UI elements
-        const allText = modal.textContent;
+        // Fallback: get modal body text, filtering UI elements
+        const allText = modal.textContent || '';
         const lines = allText.split('\n')
-            .map(line => line.trim())
-            .filter(line => line.length > 3)
-            .filter(line => !line.match(/^(Close|Download|Export|PDF|TEXT|Select|Cancel|OK|\d+\s*lines?|View|Edit)$/i))
-            .filter(line => !line.includes('claude.ai'))
-            .filter(line => line.length < 200); // Remove very long UI text
+            .map(l => l.trim())
+            .filter(l => l.length > 3)
+            .filter(l => !l.match(/^(Close|Download|Export|PDF|Select|Cancel|OK|\d+\s*lines?|View|Edit|pages?)$/i))
+            .filter(l => !l.includes('claude.ai'))
+            .filter(l => l.length < 500);
 
-        const content = lines.join('\n').trim();
-        console.log(`📄 Extracted ${content.length} characters using fallback method`);
-        return content;
+        return lines.join('\n');
     }
 
-    // Find file elements in the project knowledge panel
-    function findFileElements() {
-        console.log('🔍 Searching for file elements...');
-
-        // Look for elements in the project knowledge area
-        const knowledgePanel = document.querySelector('[class*="project"], [class*="knowledge"]') || document;
-
-        // Find clickable elements that look like files
-        const selectors = [
-            'button[class*="cursor-pointer"]',
-            'div[class*="cursor-pointer"]',
-            '[role="button"]',
-            '.clickable',
-            'button[type="button"]'
-        ];
-
-        const fileElements = [];
-
-        for (const selector of selectors) {
-            const elements = knowledgePanel.querySelectorAll(selector);
-
-            for (const element of elements) {
-                const text = element.textContent.trim();
-
-                // Check if this looks like a file
-                if (text.includes('lines') ||
-                    text.match(/\.(pdf|txt|md|json|xml|csv|doc|docx|xlsx|eml)/i) ||
-                    (text.length > 10 && text.length < 200 &&
-                     !text.includes('claude.ai') &&
-                     !text.match(/^(Export|Download|Close|Cancel|OK|Edit|View|Settings)$/i))) {
-
-                    console.log(`📄 Found potential file: ${text.substring(0, 50)}...`);
-                    fileElements.push(element);
-                }
-            }
+    /**
+     * Extract PDF download URL from modal
+     */
+    function extractPdfUrl(modal) {
+        // Look for the download link
+        const downloadLink = modal.querySelector('a[href*="/document_pdf"]');
+        if (downloadLink) {
+            return downloadLink.href;
         }
 
-        console.log(`✅ Found ${fileElements.length} file elements`);
-        return fileElements;
+        // Try to find any API file link
+        const anyApiLink = modal.querySelector('a[href*="/api/"][href*="/files/"]');
+        if (anyApiLink) {
+            return anyApiLink.href;
+        }
+
+        return null;
     }
 
-    // Extract project knowledge files
-    async function extractProjectFiles() {
-        const files = [];
+    /**
+     * Extract CSV content - try download URL first, then table reconstruction
+     */
+    async function extractCsvContent(modal, fileInfo) {
+        // Check if there's a download link (similar to PDF)
+        const downloadLink = modal.querySelector('a[href*="/files/"]');
+        if (downloadLink && downloadLink.href) {
+            return { method: 'download_url', url: downloadLink.href };
+        }
 
-        console.log('🔍 Looking for project knowledge files...');
-
-        const fileElements = findFileElements();
-
-        for (let i = 0; i < fileElements.length; i++) {
-            const element = fileElements[i];
-
-            try {
-                const rawFilename = extractFileName(element);
-                console.log(`\n📄 Processing file ${i + 1}/${fileElements.length}: ${rawFilename}`);
-
-                // Click the element
-                console.log('⚡ Clicking element...');
-                element.scrollIntoView();
-                await new Promise(resolve => setTimeout(resolve, 500));
-                element.click();
-
-                // Wait for modal to appear
-                console.log('⏳ Waiting for modal...');
-                const modal = await waitForModal();
-
-                if (!modal) {
-                    console.log('❌ No modal appeared, skipping...');
-                    continue;
-                }
-
-                // Extract content
-                const content = extractContentFromModal(modal);
-
-                if (content.length < 50) {
-                    console.log('❌ Content too short, skipping...');
-                    await closeModal();
-                    continue;
-                }
-
-                // Determine file type and create filename
-                const fileType = detectFileType(rawFilename, content);
-                const cleanFilename = rawFilename
-                    .replace(/[^a-zA-Z0-9\s\-_\.]/g, '_')
-                    .replace(/\s+/g, '_')
-                    .replace(/_+/g, '_')
-                    .trim();
-
-                const finalFilename = `${cleanFilename}.${fileType}`;
-
-                console.log(`✅ Extracted ${content.length} characters`);
-                console.log(`📁 Final filename: ${finalFilename}`);
-
-                files.push({
-                    filename: finalFilename,
-                    content: content,
-                    originalName: rawFilename
+        // Try to find table content
+        const table = modal.querySelector('table');
+        if (table) {
+            const rows = [];
+            table.querySelectorAll('tr').forEach(tr => {
+                const cells = [];
+                tr.querySelectorAll('td, th').forEach(cell => {
+                    cells.push(cell.textContent.trim().replace(/,/g, ';'));
                 });
-
-                // Close modal and wait
-                await closeModal();
-                await new Promise(resolve => setTimeout(resolve, 1000));
-
-            } catch (error) {
-                console.error(`❌ Error processing file: ${error}`);
-                await closeModal();
-                await new Promise(resolve => setTimeout(resolve, 500));
+                if (cells.length > 0) {
+                    rows.push(cells.join(','));
+                }
+            });
+            if (rows.length > 0) {
+                return { method: 'table_reconstruction', content: rows.join('\n') };
             }
         }
 
-        console.log(`\n🎉 Successfully extracted ${files.length} files`);
-        return files;
+        // Try text content that looks like CSV
+        const textContent = extractTextContent(modal);
+        if (textContent && textContent.includes(',')) {
+            return { method: 'text_scrape', content: textContent };
+        }
+
+        return { method: 'unexportable', reason: 'No download URL, table, or CSV-like content found' };
     }
 
-    // Create and download ZIP
-    async function createZIP(files, projectName) {
-        try {
-            console.log('📦 Creating ZIP with JSZip...');
+    // ============================================================
+    // FILE EXPORT
+    // ============================================================
 
-            if (typeof JSZip === 'undefined') {
-                throw new Error('JSZip not available');
+    /**
+     * Export a single file and return metadata
+     */
+    async function exportFile(fileCard, usedNames, statusCallback) {
+        const { element, domFilename, type, isPdf, lineCount } = fileCard;
+
+        log.debug(`Processing: "${domFilename}" (type: ${type}, isPdf: ${isPdf})`);
+
+        // Normalize the filename
+        let normalizedName = normalizeFilename(domFilename);
+        normalizedName = ensureExtension(normalizedName, type);
+        normalizedName = handleCollision(normalizedName, usedNames);
+
+        const metadata = {
+            originalDomFilename: domFilename,
+            normalizedFilename: normalizedName,
+            detectedType: type,
+            sourceUrl: null,
+            exportMethod: null,
+            status: 'pending',
+            error: null,
+            lineCount: lineCount
+        };
+
+        statusCallback?.(`Exporting: ${domFilename}`);
+
+        try {
+            // Click to open the file
+            const clickTarget = element.querySelector('button') || element;
+            clickTarget.scrollIntoView({ behavior: 'instant', block: 'center' });
+            await sleep(200);
+            clickTarget.click();
+
+            const modal = await waitForModal();
+            if (!modal) {
+                throw new Error('Modal did not open');
             }
 
-            const zip = new JSZip();
+            let content = null;
 
-            // Add each file to ZIP
-            files.forEach((file, index) => {
-                console.log(`📁 Adding to ZIP [${index + 1}]: ${file.filename}`);
-                zip.file(file.filename, file.content);
-            });
+            if (isPdf || type === 'pdf') {
+                // Handle PDF
+                const pdfUrl = extractPdfUrl(modal);
+                if (pdfUrl) {
+                    metadata.sourceUrl = pdfUrl;
+                    metadata.exportMethod = 'pdf_download_url';
 
-            // Add metadata
-            const metadata = {
-                exportDate: new Date().toISOString(),
-                projectTitle: projectName,
-                url: window.location.href,
-                fileCount: files.length,
-                files: files.map(f => ({
-                    filename: f.filename,
-                    originalName: f.originalName,
-                    size: f.content.length
-                }))
-            };
+                    // Fetch the PDF
+                    const response = await fetch(pdfUrl, { credentials: 'include' });
+                    if (!response.ok) {
+                        throw new Error(`PDF fetch failed: ${response.status}`);
+                    }
+                    const blob = await response.blob();
+                    content = blob;
+                    metadata.status = 'success';
+                    log.file(domFilename, normalizedName, 'pdf', 'download_url', 'success');
+                } else {
+                    throw new Error('Could not find PDF download URL');
+                }
 
-            zip.file('_export_metadata.json', JSON.stringify(metadata, null, 2));
+            } else if (type === 'csv') {
+                // Handle CSV
+                const csvResult = await extractCsvContent(modal, fileCard);
+                metadata.exportMethod = csvResult.method;
 
-            console.log('🔄 Generating ZIP blob...');
+                if (csvResult.method === 'download_url') {
+                    metadata.sourceUrl = csvResult.url;
+                    const response = await fetch(csvResult.url, { credentials: 'include' });
+                    if (!response.ok) {
+                        throw new Error(`CSV fetch failed: ${response.status}`);
+                    }
+                    content = await response.text();
+                    metadata.status = 'success';
+                    log.file(domFilename, normalizedName, 'csv', 'download_url', 'success');
 
-            // Generate ZIP
-            const zipBlob = await zip.generateAsync({
-                type: "blob",
-                compression: "DEFLATE",
-                compressionOptions: { level: 6 }
-            });
+                } else if (csvResult.method === 'table_reconstruction' || csvResult.method === 'text_scrape') {
+                    content = csvResult.content;
+                    metadata.status = 'success';
+                    log.file(domFilename, normalizedName, 'csv', csvResult.method, 'success');
 
-            console.log(`✅ ZIP created! Size: ${zipBlob.size} bytes`);
+                } else {
+                    metadata.status = 'unexportable';
+                    metadata.error = csvResult.reason;
+                    metadata.exportMethod = 'unexportable';
+                    log.file(domFilename, normalizedName, 'csv', 'unexportable', 'failed');
+                }
 
-            // Download ZIP
-            const timestamp = new Date().toISOString().replace(/[:.]/g, '-').substring(0, 16);
-            const filename = `${projectName.replace(/[^a-zA-Z0-9]/g, '_')}_export_${timestamp}.zip`;
+            } else {
+                // Handle text-based files (md, txt, docx, etc.)
+                content = extractTextContent(modal);
 
-            const url = URL.createObjectURL(zipBlob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = filename;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
+                if (content && content.length > CONFIG.MIN_CONTENT_LENGTH) {
+                    metadata.exportMethod = 'text_scrape';
+                    metadata.status = 'success';
+                    log.file(domFilename, normalizedName, type, 'text_scrape', 'success');
+                } else {
+                    throw new Error(`Content too short (${content?.length || 0} chars)`);
+                }
+            }
 
-            return true;
+            await closeModal();
+            await sleep(CONFIG.BETWEEN_FILES_MS);
+
+            return { metadata, content, filename: normalizedName };
 
         } catch (error) {
-            console.error('❌ ZIP creation failed:', error);
-            return false;
+            metadata.status = 'failed';
+            metadata.error = error.message;
+            metadata.exportMethod = metadata.exportMethod || 'failed';
+            log.file(domFilename, normalizedName, type, 'error', 'failed');
+            log.error(`Failed to export "${domFilename}": ${error.message}`);
+
+            await closeModal();
+            await sleep(CONFIG.BETWEEN_FILES_MS);
+
+            return { metadata, content: null, filename: normalizedName };
         }
     }
 
-    // Download individual files as fallback
-    function downloadIndividualFiles(files, projectName) {
-        console.log('📥 Falling back to individual downloads...');
+    // ============================================================
+    // ZIP CREATION
+    // ============================================================
 
-        files.forEach((file, index) => {
-            setTimeout(() => {
-                const blob = new Blob([file.content], { type: 'text/plain' });
-                const url = URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = file.filename;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                URL.revokeObjectURL(url);
-                console.log(`📥 Downloaded: ${file.filename}`);
-            }, index * 500); // Stagger downloads
-        });
-    }
+    async function createAndDownloadZip(exportedFiles, projectName, statusCallback) {
+        log.info('Creating ZIP archive...');
+        statusCallback?.('Creating ZIP...');
 
-    // Get project title
-    function getProjectTitle() {
-        const titleSelectors = [
-            'h1',
-            '[data-testid*="title"]',
-            '.text-xl',
-            '.text-2xl',
-            '.font-bold',
-            'title'
-        ];
+        const zip = new JSZip();
+        const allMetadata = [];
 
-        for (const selector of titleSelectors) {
-            const element = document.querySelector(selector);
-            if (element && element.textContent.trim()) {
-                const title = element.textContent.trim();
-                if (title !== 'Claude' && title.length > 2) {
-                    return title;
+        let successCount = 0;
+        let failedCount = 0;
+        let pdfCount = 0;
+        let csvCount = 0;
+        let unexportableCount = 0;
+
+        for (const { metadata, content, filename } of exportedFiles) {
+            allMetadata.push(metadata);
+
+            if (content !== null) {
+                if (content instanceof Blob) {
+                    zip.file(filename, content);
+                    pdfCount++;
+                } else {
+                    zip.file(filename, content);
+                    if (metadata.detectedType === 'csv') csvCount++;
+                }
+                successCount++;
+            } else {
+                if (metadata.status === 'unexportable') {
+                    unexportableCount++;
+                } else {
+                    failedCount++;
                 }
             }
         }
 
-        // Fallback: extract from URL
-        const urlMatch = window.location.pathname.match(/\/([^\/]+)$/);
-        if (urlMatch) {
-            return urlMatch[1].replace(/[-_]/g, ' ');
-        }
+        // Add metadata JSON
+        const metadataJson = {
+            exportDate: new Date().toISOString(),
+            projectTitle: projectName,
+            url: window.location.href,
+            exporterVersion: '4.0.0',
+            summary: {
+                total: exportedFiles.length,
+                exported: successCount,
+                failed: failedCount,
+                unexportable: unexportableCount,
+                pdfExported: pdfCount,
+                csvExported: csvCount
+            },
+            files: allMetadata
+        };
 
-        return 'Claude_Project';
+        zip.file('_export_metadata.json', JSON.stringify(metadataJson, null, 2));
+
+        // Generate and download
+        log.info('Generating ZIP blob...');
+        const zipBlob = await zip.generateAsync({
+            type: 'blob',
+            compression: 'DEFLATE',
+            compressionOptions: { level: 6 }
+        });
+
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 16);
+        const safeName = projectName.replace(/[^a-zA-Z0-9]/g, '_');
+        const zipFilename = `${safeName}_export_${timestamp}.zip`;
+
+        const url = URL.createObjectURL(zipBlob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = zipFilename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+
+        // Final summary
+        log.success('='.repeat(50));
+        log.success('EXPORT COMPLETE');
+        log.success('='.repeat(50));
+        log.info(`Total files:       ${exportedFiles.length}`);
+        log.info(`Exported:          ${successCount}`);
+        log.info(`Failed:            ${failedCount}`);
+        log.info(`Unexportable:      ${unexportableCount}`);
+        log.info(`PDFs exported:     ${pdfCount}`);
+        log.info(`CSVs exported:     ${csvCount}`);
+        log.success('='.repeat(50));
+
+        return { zipFilename, ...metadataJson.summary };
     }
 
-    // Main export function
+    // ============================================================
+    // MAIN EXPORT FUNCTION
+    // ============================================================
+
     async function exportProject() {
         const button = document.querySelector('#claude-export-btn');
+        const updateStatus = (msg) => {
+            if (button) button.textContent = `🔄 ${msg}`;
+            log.info(msg);
+        };
 
         try {
-            // Update button status
-            const updateStatus = (msg) => {
-                if (button) button.textContent = `🔄 ${msg}`;
-                console.log(`\n🚀 ${msg}`);
-            };
-
-            updateStatus('Loading ZIP library...');
+            updateStatus('Loading JSZip...');
             await loadJSZip();
 
-            updateStatus('Scanning for files...');
-            const files = await extractProjectFiles();
+            updateStatus('Discovering files...');
+            const fileCards = await discoverAllFiles(updateStatus);
 
-            if (files.length === 0) {
-                updateStatus('❌ No files found');
+            if (fileCards.length === 0) {
+                updateStatus('No files found!');
+                log.error('No files found in project');
                 setTimeout(() => {
                     if (button) button.textContent = '📁 Export Project Files';
                 }, 3000);
                 return;
             }
 
-            const projectName = getProjectTitle();
-            updateStatus(`Creating ZIP (${files.length} files)...`);
+            updateStatus(`Found ${fileCards.length} files, exporting...`);
 
-            const zipSuccess = await createZIP(files, projectName);
+            const usedNames = new Set();
+            const exportedFiles = [];
 
-            if (zipSuccess) {
-                updateStatus(`✅ ZIP exported! (${files.length} files)`);
-                setTimeout(() => {
-                    if (button) button.textContent = '📁 Export Project Files';
-                }, 3000);
-            } else {
-                updateStatus('ZIP failed - downloading individual files...');
-                downloadIndividualFiles(files, projectName);
-                setTimeout(() => {
-                    if (button) button.textContent = '📁 Export Project Files';
-                }, 3000);
+            for (let i = 0; i < fileCards.length; i++) {
+                updateStatus(`Exporting ${i + 1}/${fileCards.length}: ${fileCards[i].domFilename}`);
+                const result = await exportFile(fileCards[i], usedNames, updateStatus);
+                exportedFiles.push(result);
             }
 
+            // Get project name
+            const projectName = getProjectTitle();
+
+            updateStatus('Creating ZIP...');
+            const summary = await createAndDownloadZip(exportedFiles, projectName, updateStatus);
+
+            updateStatus(`✅ Exported ${summary.exported}/${summary.total} files`);
+            setTimeout(() => {
+                if (button) button.textContent = '📁 Export Project Files';
+            }, 5000);
+
         } catch (error) {
-            console.error('💥 Export failed:', error);
-            if (button) button.textContent = '❌ Export Failed';
+            log.error('Export failed:', error);
+            updateStatus('❌ Export failed');
             setTimeout(() => {
                 if (button) button.textContent = '📁 Export Project Files';
             }, 3000);
         }
     }
 
-    // Add export button with better styling
+    function getProjectTitle() {
+        // Try various title selectors
+        const selectors = ['h1', '[data-testid*="title"]', '.text-xl', '.text-2xl'];
+        for (const sel of selectors) {
+            const el = document.querySelector(sel);
+            if (el && el.textContent.trim() && el.textContent.trim() !== 'Claude') {
+                return el.textContent.trim();
+            }
+        }
+
+        // Fallback to URL
+        const urlMatch = window.location.pathname.match(/\/project\/([^\/]+)/);
+        if (urlMatch) return urlMatch[1];
+
+        return 'Claude_Project';
+    }
+
+    // ============================================================
+    // UI BUTTON
+    // ============================================================
+
     function addExportButton() {
-        const existingButton = document.querySelector('#claude-export-btn');
-        if (existingButton) existingButton.remove();
+        const existing = document.querySelector('#claude-export-btn');
+        if (existing) existing.remove();
 
         const button = document.createElement('button');
         button.id = 'claude-export-btn';
@@ -533,12 +850,10 @@
             text-align: center;
         `;
 
-        // Add hover effect
         button.addEventListener('mouseenter', () => {
             button.style.transform = 'translateY(-2px)';
             button.style.boxShadow = '0 6px 20px rgba(0,0,0,0.3)';
         });
-
         button.addEventListener('mouseleave', () => {
             button.style.transform = 'translateY(0)';
             button.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
@@ -546,13 +861,15 @@
 
         button.addEventListener('click', exportProject);
         document.body.appendChild(button);
-
-        console.log('✅ Export button added');
+        log.success('Export button added');
     }
 
-    // Initialize
+    // ============================================================
+    // INITIALIZATION
+    // ============================================================
+
     function init() {
-        console.log('🚀 Claude Project Files Extractor - Fixed v3.0');
+        log.info('Claude Project Files Exporter v4.0.0 initialized');
 
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', addExportButton);
@@ -568,7 +885,6 @@
                 setTimeout(addExportButton, 1000);
             }
         });
-
         observer.observe(document.body, { childList: true, subtree: true });
     }
 
