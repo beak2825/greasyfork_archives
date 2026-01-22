@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name Minimalize for YouTube SuperAssistant
 // @namespace djshigel
-// @version 0.8
+// @version 0.9
 // @description Transparent description and improve theater mode for: https://greasyfork.org/ja/scripts/521538-youtubeᴾˡᵘˢ-super-assistant-video-downloader-no-ads-new-layout-for-yt
 // @license MIT
 // @grant GM_addStyle
@@ -112,6 +112,10 @@ secondary-wrapper:not(:has(#chat-container > ytd-live-chat-frame)):not(:has(> #c
 
 #material-tabs > a {
     background-color: var(--yt-active-playlist-panel-background-color) !important;
+}
+
+ytd-playlist-panel-renderer {
+    z-index: 9999;
 }
 
 .ytp-button[aria-label="Hide chats"], .ytp-button[aria-label="Show chats"] {

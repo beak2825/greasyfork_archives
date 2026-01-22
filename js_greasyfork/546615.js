@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         B站缓冲解限
 // @namespace    http://tampermonkey.net/
-// @version      1.3
-// @description  解限B站播放器缓冲时长，将缓冲状态集成到播放器统计信息中。
-// @author       \7. with GPT-5
+// @version      2.0
+// @description  解限B站播放器缓冲时长，智能防止内存溢出，播放器统计信息UI集成
+// @author       \7. with Gemini 3 Pro
 // @match        *://*.bilibili.com/*
 // @match        *://bilibili.com/*
 // @grant        none
@@ -13,217 +13,154 @@
 // @updateURL https://update.greasyfork.org/scripts/546615/B%E7%AB%99%E7%BC%93%E5%86%B2%E8%A7%A3%E9%99%90.meta.js
 // ==/UserScript==
 
-(function() {
+(function () {
     'use strict';
 
-    // 配置：缓冲时间设置（秒），以及检查间隔（秒）
-    const BUFFER_TIME = 300;
-    const SETTING_RECHECK_INTERVAL = 10; // 设置检查间隔
-    const MONITOR_RECHECK_INTERVAL = 1;  // 监控更新间隔
+    // === 配置区域 ===
+    const CONFIG = {
+        MAX_TIME_LIMIT: 300,                // 时间上限 300秒
+        SAFE_BYTE_LIMIT: 120 * 1024 * 1024, // 空间上限 120MB
+        CHECK_INTERVAL: 3000,               // 内核检查间隔 3000毫秒
+        UI_REFRESH_RATE: 1000               // UI 刷新间隔 1000毫秒
+    };
 
-    // 状态标记
-    let isRunning = false;
-    let isMonitoring = false;
-
-    // 日志函数
-    function log(message) {
-        const timestamp = new Date().toLocaleTimeString();
-        console.log(`[B站缓冲解限] [${timestamp}] ${message}`);
-    }
-
-    // 获取播放器实例的核心函数
-    function getPlayer() {
-        try {
-            if (window.player && typeof window.player.__core === 'function') {
-                const core = window.player.__core();
-                if (typeof core.setStableBufferTime === 'function') {
-                    return core;
-                }
-            }
-        } catch (e) {}
-        return null;
-    }
-
-    // 应用缓冲优化（此函数现在会定期被调用）
-    function applyBufferOptimization(player) {
-        if (isRunning) {
-            return;
+    const Utils = {
+        version: (typeof GM_info !== 'undefined' && GM_info.script) ? GM_info.script.version : '2.0',
+        formatTime: (s) => {
+            if (!Number.isFinite(s) || s < 0) return '0s';
+            if (s < 60) return Math.floor(s) + 's';
+            return Math.floor(s / 60) + 'm' + Math.floor(s % 60) + 's';
+        },
+        formatSize: (bytes) => {
+            if (bytes === 0) return '0M';
+            return (bytes / (1024 * 1024)).toFixed(0) + 'M';
         }
+    };
 
-        isRunning = true;
+    const CoreManager = {
+        getCore: () => window.player && window.player.__core ? window.player.__core() : null,
 
-        if (!player) {
-            isRunning = false;
-            return;
-        }
-
-        try {
-            const currentBuffer = player.getStableBufferTime();
-            if (currentBuffer < BUFFER_TIME) {
-                player.setStableBufferTime(BUFFER_TIME);
-                log(`✅ 缓冲设置已更新: ${currentBuffer}s → ${BUFFER_TIME}s`);
-            } else {
-                // log(`✅ 缓冲时间已是目标值: ${currentBuffer}s`);
-            }
-        } catch (e) {
-            log(`❌ 应用优化失败: ${e.message}`);
-        } finally {
-            isRunning = false;
-        }
-    }
-
-    // 监听统计面板的显示/隐藏，并注入信息
-    function monitorStatsPanelVisibility(player) {
-        if (isMonitoring) return;
-        isMonitoring = true;
-
-        const containerSelector = '#bilibili-player .bpx-player-info-container';
-        try {
-            if (window.__biliBufferInfoVisibilityPoll) clearInterval(window.__biliBufferInfoVisibilityPoll);
-        } catch (e) {}
-
-        window.__biliBufferInfoVisibilityPoll = setInterval(() => {
+        getCurrentBytesPerSecond: () => {
             try {
-                const container = document.querySelector(containerSelector);
-                if (!container) return;
-                const panelLikelyVisible = !!container.querySelector('.info-line .info-title');
-                const overlay = container.querySelector('.bilibili-buffer-info-overlay');
-                if (panelLikelyVisible) {
-                    if (!overlay) {
-                        injectBufferInfo(container, player);
-                    } else if (overlay.style.display === 'none') {
-                        overlay.style.display = 'block';
+                const core = CoreManager.getCore();
+                if (!core || !core.state || !core.state.mediaInfo) return 0;
+                return ((core.state.mediaInfo.videoDataRate || 0) + (core.state.mediaInfo.audioDataRate || 0)) / 8;
+            } catch (e) { return 0; }
+        },
+
+        calculateSafeDuration: () => {
+            const bps = CoreManager.getCurrentBytesPerSecond();
+            if (bps <= 0) return CONFIG.MAX_TIME_LIMIT;
+            const safeSeconds = CONFIG.SAFE_BYTE_LIMIT / bps;
+            return Math.max(10, Math.min(CONFIG.MAX_TIME_LIMIT, Math.floor(safeSeconds)));
+        },
+
+        applyOptimization: () => {
+            try {
+                const core = CoreManager.getCore();
+                if (!core || typeof core.setStableBufferTime !== 'function') return;
+
+                const currentSafeTarget = CoreManager.calculateSafeDuration();
+                const currentSetting = core.getStableBufferTime();
+
+                if (Math.abs(currentSetting - currentSafeTarget) > 3 || currentSetting < currentSafeTarget) {
+                    core.setStableBufferTime(currentSafeTarget);
+                }
+            } catch (e) { }
+        },
+
+        getStats: () => {
+            try {
+                const core = CoreManager.getCore();
+                const video = document.querySelector('video');
+                const bps = CoreManager.getCurrentBytesPerSecond();
+
+                let targetTime = CONFIG.MAX_TIME_LIMIT;
+
+                if (core && core.getStableBufferTime) {
+                    targetTime = CoreManager.calculateSafeDuration();
+                    if (core.getStableBufferTime() !== targetTime) {
+                        CoreManager.applyOptimization();
                     }
-                } else if (overlay) {
-                    overlay.style.display = 'none';
                 }
-            } catch (e) {}
-        }, MONITOR_RECHECK_INTERVAL * 1000);
-    }
 
-    // 注入缓冲信息到统计面板容器
-    function injectBufferInfo(statsPanel, player) {
-        try {
-            log('🔍 开始注入缓冲信息...');
-            const container = statsPanel.closest('#bilibili-player .bpx-player-info-container') || statsPanel.parentElement;
-            if (!container) {
-                log('❌ 未找到统计面板容器，放弃注入');
-                return;
-            }
-
-            let bufferLayer = container.querySelector('.bilibili-buffer-info-overlay');
-            if (!bufferLayer) {
-                bufferLayer = document.createElement('div');
-                bufferLayer.className = 'bilibili-buffer-info-overlay';
-                bufferLayer.style.cssText = [
-                    'margin: 0', 'padding: 8px 12px', 'border-top: 1px solid rgba(255,255,255,0.2)',
-                    'font-size: 12px', 'color: #fff', 'display: block'
-                ].join(';');
-                container.appendChild(bufferLayer);
-                log('✅ 已创建缓冲信息覆盖层');
-            } else {
-                log('ℹ️ 缓冲信息覆盖层已存在，复用');
-                bufferLayer.style.display = 'block';
-            }
-
-            const updateBufferInfo = () => {
-                try {
-                    const currentBufferTarget = (() => {
-                        try {
-                            const val = Number(player.getStableBufferTime ? player.getStableBufferTime() : NaN);
-                            return Number.isFinite(val) && val > 0 ? val : BUFFER_TIME;
-                        } catch (_) {
-                            return BUFFER_TIME;
-                        }
-                    })();
-
-                    const bufferedTime = player.getBufferLength("video");
-                    const formatTime = (seconds) => {
-                        if (!Number.isFinite(seconds) || seconds < 0) return '0s';
-                        if (seconds < 60) return Math.floor(seconds) + 's';
-                        const minutes = Math.floor(seconds / 60);
-                        const remainingSeconds = Math.floor(seconds % 60);
-                        return minutes + 'm' + remainingSeconds + 's';
-                    };
-
-                    const percentRaw = currentBufferTarget > 0 ? (bufferedTime / currentBufferTarget) * 100 : 0;
-                    const percentClamped = Math.max(0, Math.min(100, percentRaw));
-                    const percentText = (Number.isFinite(percentClamped) ? (percentClamped < 10 ? percentClamped.toFixed(1) : Math.round(percentClamped)) : 0) + '%';
-
-                    bufferLayer.innerHTML = '<div class="info-line">\n                <span class="info-title">缓冲状态:</span>\n                <span class="info-data" style="color: #52c41a; font-weight: bold;">' +
-                        formatTime(bufferedTime) + ' / ' + formatTime(currentBufferTarget) + ' [' + percentText + ']' +
-                        '</span>\n            </div>';
-                } catch (e) {
-                    bufferLayer.innerHTML = '<div class="info-line">\n                <span class="info-title">缓冲状态:</span>\n                <span class="info-data" style="color: #faad14;">获取失败</span>\n            </div>';
+                let bufferedTime = 0;
+                if (core && typeof core.getBufferLength === 'function') {
+                    bufferedTime = core.getBufferLength('video');
                 }
-            };
-
-            if (bufferLayer.dataset.bufferUpdater === 'active') {
-                updateBufferInfo();
-                return;
-            }
-
-            updateBufferInfo();
-            const updateInterval = setInterval(updateBufferInfo, 1000);
-            bufferLayer.dataset.bufferUpdater = 'active';
-
-            const gcObserver = new MutationObserver(() => {
-                if (!document.body.contains(container)) {
-                    clearInterval(updateInterval);
-                    delete bufferLayer.dataset.bufferUpdater;
-                    gcObserver.disconnect();
-                    log('📊 统计面板容器已移除，停止缓冲信息更新');
+                if (!bufferedTime && video && video.buffered.length > 0) {
+                    const end = video.buffered.end(video.buffered.length - 1);
+                    bufferedTime = Math.max(0, end - video.currentTime);
                 }
-            });
-            gcObserver.observe(document.body, { childList: true, subtree: true });
 
-        } catch (e) {
-            log(`❌ 注入缓冲信息失败: ${e.message}`);
+                return {
+                    time: {
+                        current: bufferedTime || 0,
+                        target: targetTime,
+                        percent: targetTime > 0 ? (bufferedTime / targetTime) * 100 : 0
+                    },
+                    memory: {
+                        current: bufferedTime * bps,
+                        limit: CONFIG.SAFE_BYTE_LIMIT
+                    }
+                };
+            } catch (e) {
+                return null;
+            }
         }
-    }
+    };
 
-    // 页面加载完成后执行
-    function main() {
-        log('🚀 脚本启动，启动定时任务...');
+    const UIManager = {
+        timer: null,
+        inject: () => {
+            const container = document.querySelector('#bilibili-player .bpx-player-info-container');
+            if (!container) return;
+            if (!container.querySelector('.info-line .info-title')) return;
 
-        let player = getPlayer();
-
-        // 定期检查并应用缓冲设置
-        applyBufferOptimization(player);
-        setInterval(() => {
-            if (!player) {
-                player = getPlayer();
+            let myPanel = container.querySelector('#my-buffer-overlay');
+            if (!myPanel) {
+                myPanel = document.createElement('div');
+                myPanel.id = 'my-buffer-overlay';
+                // 字体样式优化：继承父元素字体，确保与B站一致
+                myPanel.style.cssText = `margin:0;padding:8px 12px;border-top:1px solid rgba(255,255,255,0.2);font-size:12px;color:#fff;display:block;font-family:inherit;`;
+                container.appendChild(myPanel);
             }
-            if (player) {
-                applyBufferOptimization(player);
-            }
-        }, SETTING_RECHECK_INTERVAL * 1000);
 
-        // 定期监控并注入面板信息
-        setInterval(() => {
-            if (!player) {
-                player = getPlayer();
+            const stats = CoreManager.getStats();
+            if (stats) {
+                const isTimeHealthy = stats.time.current > 10 && stats.time.percent > 30;
+                const timeColor = isTimeHealthy ? '#52c41a' : '#faad14';
+                const memColor = '#bae637';
+                // 紧凑型单行布局 - 修复间距过大问题
+                myPanel.innerHTML = `
+                    <div class="info-line" style="display:flex; align-items:center;">
+                        <span class="info-title" style="color:#999; margin-right:8px;">缓冲</span>
+                        <span class="info-data" style="font-weight:bold;">
+                            <span style="color:${timeColor}">${Utils.formatTime(stats.time.current)}</span>
+                            <span style="color:#666; margin:0 1px;">/</span>
+                            <span style="color:#888">${Utils.formatTime(stats.time.target)}</span>
+                            
+                            <span style="display:inline-block; width:1px; height:10px; background:#444; margin:0 6px;"></span>
+                            
+                            <span style="color:${memColor}">${Utils.formatSize(stats.memory.current)}</span>
+                            <span style="color:#666; margin:0 1px;">/</span>
+                            <span style="color:#888; font-size:11px;">${Utils.formatSize(stats.memory.limit)}</span>
+                        </span>
+                    </div>
+                `;
             }
-            if (player) {
-                monitorStatsPanelVisibility(player);
-            }
-        }, MONITOR_RECHECK_INTERVAL * 1000);
-    }
-
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', main);
-    } else {
-        main();
-    }
-
-    // 监听页面变化（SPA应用）
-    let lastUrl = location.href;
-    new MutationObserver(() => {
-        if (location.href !== lastUrl) {
-            lastUrl = location.href;
-            log('🔄 页面变化，重新启动任务...');
-            main();
+        },
+        start: () => {
+            if (!UIManager.timer) UIManager.timer = setInterval(UIManager.inject, CONFIG.UI_REFRESH_RATE);
         }
-    }).observe(document, {subtree: true, childList: true});
+    };
 
+    const main = () => {
+        console.log(`[B站缓冲解限] 🚀 脚本已加载 (v${Utils.version})`);
+        setInterval(CoreManager.applyOptimization, CONFIG.CHECK_INTERVAL);
+        UIManager.start();
+        setTimeout(CoreManager.applyOptimization, 2000);
+    };
+
+    main();
 })();

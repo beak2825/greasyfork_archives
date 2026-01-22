@@ -2,7 +2,7 @@
 // @name         收藏插件
 // @namespace    https://www.milkywayidle.com/
 // @namespace    https://www.milkywayidlecn.com/
-// @version      1.478
+// @version      1.479
 // @description  Alt+点击收藏市场商品和背包物品，区分铁牛标准牛；强化界面优化，保护等级快捷按钮，当前强化等级检测，自定义键触发停止按；收录了UI增强：强化等级美化和展开市场价格；
 // @author       baozhi
 // @match        https://www.milkywayidle.com/*
@@ -278,6 +278,36 @@
         // 限制在0-20范围内
         const safeThreshold = Math.min(20, Math.max(0, parseInt(threshold) || 0));
         GM_setValue(characterKey, safeThreshold);
+    }
+
+    // 获取强化数据面板高亮行数
+    function getEnhanceStatsHighlightRows() {
+        const uiPositions = getUIPositions();
+        const rows = uiPositions.enhanceStatsHighlightRows;
+        // 确保行数在1-8范围内
+        return Math.min(8, Math.max(1, parseInt(rows) || 2));
+    }
+
+    // 保存强化数据面板高亮行数
+    function saveEnhanceStatsHighlightRows(rows) {
+        const uiPositions = getUIPositions();
+        // 限制在1-8范围内
+        const safeRows = Math.min(8, Math.max(1, parseInt(rows) || 2));
+        uiPositions.enhanceStatsHighlightRows = safeRows;
+        saveUIPositions(uiPositions);
+    }
+
+    // 获取强化数据面板高亮功能开关
+    function getEnhanceStatsHighlightEnabled() {
+        const uiPositions = getUIPositions();
+        return uiPositions.enhanceStatsHighlightEnabled !== false; // 默认开启
+    }
+
+    // 保存强化数据面板高亮功能开关
+    function saveEnhanceStatsHighlightEnabled(enabled) {
+        const uiPositions = getUIPositions();
+        uiPositions.enhanceStatsHighlightEnabled = enabled;
+        saveUIPositions(uiPositions);
     }
 
     // 获取全局UI位置设置
@@ -1110,42 +1140,34 @@
                     </span>
                 </div>
 
-                <div class="mwc-toggle">
-                    <input type="checkbox" id="header-monitor-toggle" ${headerMonitorEnabled ? 'checked' : ''}>
-                    <label for="header-monitor-toggle">
+                <div class="mwc-toggle" style="align-items: center; flex-wrap: nowrap;">
+                    <input type="checkbox" id="header-monitor-toggle" ${headerMonitorEnabled ? 'checked' : ''} style="margin-right: 10px;">
+                    <label for="header-monitor-toggle" style="flex: 1; margin-right: 15px;">
                         🔔 强化等级提醒与停止按钮放大
                     </label>
-                    <span class="mwc-toggle-status" id="header-monitor-status">
+                    <div style="display: flex; align-items: center; gap: 10px; ${headerMonitorEnabled ? '' : 'display: none;'} " id="threshold-setting">
+                        <label for="enhance-threshold" style="margin: 0; font-size: 13px;">提醒等级:</label>
+                        <input type="number" id="enhance-threshold" class="mwc-threshold-input"
+                               min="0" max="20" value="${enhanceThreshold}" style="width: 60px;">
+                    </div>
+                    <span class="mwc-toggle-status" id="header-monitor-status" style="margin-left: auto;">
                         ${headerMonitorEnabled ? '已开启' : '已关闭'}
                     </span>
                 </div>
 
-                <div class="mwc-threshold-setting" id="threshold-setting" style="${headerMonitorEnabled ? '' : 'display: none;'}">
-                    <label for="enhance-threshold">强化等级阈值:</label>
-                    <input type="number" id="enhance-threshold" class="mwc-threshold-input"
-                           min="0" max="20" value="${enhanceThreshold}">
-                    <span class="mwc-threshold-hint">
-                        ${enhanceThreshold === 0 ? '0: 检测是否有+号' : `${enhanceThreshold}: 检测是否达到+${enhanceThreshold}`}
-                    </span>
-                </div>
-
-                <div class="mwc-toggle">
-                    <input type="checkbox" id="keyboard-shortcut-toggle" ${keyboardShortcutEnabled ? 'checked' : ''}>
-                    <label for="keyboard-shortcut-toggle">
+                <div class="mwc-toggle" style="align-items: center; flex-wrap: nowrap;">
+                    <input type="checkbox" id="keyboard-shortcut-toggle" ${keyboardShortcutEnabled ? 'checked' : ''} style="margin-right: 10px;">
+                    <label for="keyboard-shortcut-toggle" style="flex: 1; margin-right: 15px;">
                         ⌨️ 键盘快捷键触发停止按钮
                     </label>
-                    <span class="mwc-toggle-status" id="keyboard-shortcut-status">
+                    <div style="display: flex; align-items: center; gap: 10px; ${keyboardShortcutEnabled ? '' : 'display: none;'} " id="shortcut-setting">
+                        <label for="custom-shortcut" style="margin: 0; font-size: 13px;">自定义快捷键:</label>
+                        <input type="text" id="custom-shortcut" class="mwc-threshold-input"
+                               maxlength="10" value="${customShortcut}" placeholder="例如: \`, F1, Space"
+                               style="width: 120px;">
+                    </div>
+                    <span class="mwc-toggle-status" id="keyboard-shortcut-status" style="margin-left: auto;">
                         ${keyboardShortcutEnabled ? '已开启' : '已关闭'}
-                    </span>
-                </div>
-
-                <div class="mwc-threshold-setting" id="shortcut-setting" style="${keyboardShortcutEnabled ? '' : 'display: none;'}">
-                    <label for="custom-shortcut">自定义快捷键:</label>
-                    <input type="text" id="custom-shortcut" class="mwc-threshold-input"
-                           maxlength="10" value="${customShortcut}" placeholder="例如: \`, F1, Space"
-                           style="width: 120px;">
-                    <span class="mwc-threshold-hint">
-                        当前: <kbd>${customShortcut}</kbd> (点击输入框后按任意键设置)
                     </span>
                 </div>
 
@@ -1176,6 +1198,24 @@
                     </label>
                     <span class="mwc-toggle-status" id="market-price-status">
                         ${getMarketPriceEnabled() ? '已开启' : '已关闭'}
+                    </span>
+                </div>
+
+                <div class="mwc-toggle" style="align-items: center; flex-wrap: nowrap;">
+                    <input type="checkbox" id="enhance-stats-highlight-toggle" ${getEnhanceStatsHighlightEnabled() ? 'checked' : ''} style="margin-right: 10px;">
+                    <label for="enhance-stats-highlight-toggle" style="flex: 1; margin-right: 15px;">
+                        ✨ 强化数据面板高亮显示
+                    </label>
+                    <div style="display: flex; align-items: center; gap: 10px; ${getEnhanceStatsHighlightEnabled() ? '' : 'display: none;'} " id="enhance-stats-highlight-setting">
+                        <label for="enhance-stats-highlight-rows" style="margin: 0; font-size: 13px;">高亮行数:</label>
+                        <input type="number" id="enhance-stats-highlight-rows" class="mwc-threshold-input"
+                               min="1" max="8" value="${getEnhanceStatsHighlightRows()}" style="width: 60px;">
+                        <span class="mwc-threshold-hint" style="margin: 0;">
+                            ${getEnhanceStatsHighlightRows()}: 高亮最近${getEnhanceStatsHighlightRows()}个等级
+                        </span>
+                    </div>
+                    <span class="mwc-toggle-status" id="enhance-stats-highlight-status" style="margin-left: auto;">
+                        ${getEnhanceStatsHighlightEnabled() ? '已开启' : '已关闭'}
                     </span>
                 </div>
 
@@ -1237,7 +1277,7 @@
             const enabled = headerToggle.checked;
             saveHeaderMonitorEnabled(enabled);
             headerStatus.textContent = enabled ? '已开启' : '已关闭';
-            thresholdSetting.style.display = enabled ? '' : 'none';
+            thresholdSetting.style.display = enabled ? 'flex' : 'none';
 
             // 如果关闭监控，立即移除所有悬浮元素
             if (!enabled) {
@@ -1280,6 +1320,51 @@
             }, 100);
         });
 
+        // 强化数据面板高亮功能开关事件
+        const enhanceStatsHighlightToggle = settings.querySelector('#enhance-stats-highlight-toggle');
+        const enhanceStatsHighlightStatus = settings.querySelector('#enhance-stats-highlight-status');
+        const enhanceStatsHighlightSetting = settings.querySelector('#enhance-stats-highlight-setting');
+
+        enhanceStatsHighlightToggle.addEventListener('change', () => {
+            const enabled = enhanceStatsHighlightToggle.checked;
+            saveEnhanceStatsHighlightEnabled(enabled);
+            enhanceStatsHighlightStatus.textContent = enabled ? '已开启' : '已关闭';
+            enhanceStatsHighlightSetting.style.display = enabled ? 'flex' : 'none';
+
+            // 立即应用新设置
+            setTimeout(() => {
+                const checkHeaderContent = window.checkHeaderContent;
+                if (typeof checkHeaderContent === 'function') {
+                    checkHeaderContent();
+                }
+            }, 100);
+        });
+
+        // 强化数据面板高亮行数输入事件
+        const highlightRowsInput = settings.querySelector('#enhance-stats-highlight-rows');
+        const highlightRowsHint = settings.querySelector('#enhance-stats-highlight-rows').parentElement.querySelector('.mwc-threshold-hint');
+        highlightRowsInput.addEventListener('input', () => {
+            const rows = parseInt(highlightRowsInput.value) || 1;
+            // 限制在1-8范围内
+            const safeRows = Math.min(8, Math.max(1, rows));
+            highlightRowsInput.value = safeRows;
+
+            // 更新提示文本
+            const hintText = `${safeRows}: 高亮最近${safeRows}个等级`;
+            highlightRowsHint.textContent = hintText;
+
+            // 保存设置
+            saveEnhanceStatsHighlightRows(safeRows);
+
+            // 立即应用新设置
+            setTimeout(() => {
+                const checkHeaderContent = window.checkHeaderContent;
+                if (typeof checkHeaderContent === 'function') {
+                    checkHeaderContent();
+                }
+            }, 100);
+        });
+
         // 键盘快捷键开关事件
         const keyboardToggle = settings.querySelector('#keyboard-shortcut-toggle');
         const keyboardStatus = settings.querySelector('#keyboard-shortcut-status');
@@ -1289,7 +1374,7 @@
             const enabled = keyboardToggle.checked;
             saveKeyboardShortcutEnabled(enabled);
             keyboardStatus.textContent = enabled ? '已开启' : '已关闭';
-            shortcutSetting.style.display = enabled ? '' : 'none';
+            shortcutSetting.style.display = enabled ? 'flex' : 'none';
         });
 
         // 懒鬼按钮功能开关事件
@@ -1893,11 +1978,45 @@
 
             if (currentLevel < 0) return;
 
+            // 检查高亮功能是否开启
+            const highlightEnabled = getEnhanceStatsHighlightEnabled();
+
+            // 清除所有现有的高亮覆盖层
+            const existingOverlays = statsContainer.querySelectorAll('.mwc-highlight-overlay');
+            existingOverlays.forEach(overlay => overlay.remove());
+
+            // 如果功能未开启，则不高亮任何行
+            if (!highlightEnabled) {
+                // 清除所有行的样式
+                const gridCells = Array.from(statsContainer.querySelectorAll('div'));
+                const totalColumns = 4; // 等级、成功、失败、概率
+
+                // 跳过表头（前4个单元格）
+                for (let i = totalColumns; i < gridCells.length; i += totalColumns) {
+                    for (let j = 0; j < totalColumns; j++) {
+                        const cell = gridCells[i + j];
+                        if (cell) {
+                            cell.style.backgroundColor = '';
+                            cell.style.fontWeight = '';
+                            cell.style.color = '';
+                            cell.style.background = '';
+                            cell.style.webkitBackgroundClip = '';
+                            cell.style.backgroundClip = '';
+                            cell.style.textShadow = '';
+                        }
+                    }
+                }
+                return;
+            }
+
+            // 获取自定义高亮行数设置
+            const highlightRows = getEnhanceStatsHighlightRows();
+
             // 更新高亮等级历史
             if (!highlightedLevels.includes(currentLevel)) {
                 highlightedLevels.push(currentLevel);
                 // 最多保留最近的历史等级
-                if (highlightedLevels.length > 2) {
+                if (highlightedLevels.length > highlightRows) {
                     highlightedLevels.shift(); // 移除最早的历史等级
                 }
             }
@@ -1905,6 +2024,30 @@
             // 获取所有等级单元格
             const gridCells = Array.from(statsContainer.querySelectorAll('div'));
             const totalColumns = 4; // 等级、成功、失败、概率
+
+            // 强化等级颜色映射
+            const levelColors = {
+                1: 'var(--color-neutral-200)',
+                2: 'var(--color-neutral-200)',
+                3: 'var(--color-neutral-200)',
+                4: 'var(--color-neutral-200)',
+                5: 'var(--color-ocean-300)',
+                6: 'var(--color-ocean-300)',
+                7: 'var(--color-ocean-300)',
+                8: '#c98cff',
+                9: '#c98cff',
+                10: '#c98cff',
+                11: 'var(--color-orange-500)',
+                12: 'var(--color-orange-500)',
+                13: 'var(--color-orange-500)',
+                14: 'var(--color-orange-500)',
+                15: '#ff0097',
+                16: '#ff0097',
+                17: '#ff0097',
+                18: '#ff0097',
+                19: '#ff0097',
+                20: 'transparent'
+            };
 
             // 跳过表头（前4个单元格）
             for (let i = totalColumns; i < gridCells.length; i += totalColumns) {
@@ -1918,26 +2061,81 @@
                         if (cell) {
                             cell.style.backgroundColor = '';
                             cell.style.fontWeight = '';
+                            cell.style.color = '';
+                            cell.style.background = '';
+                            cell.style.webkitBackgroundClip = '';
+                            cell.style.backgroundClip = '';
+                            cell.style.textShadow = '';
+                        }
+                    }
+
+                    // 为等级列应用美化颜色
+                    if (levelColors[cellLevel]) {
+                        const levelCell = gridCells[i];
+                        if (cellLevel === 20) {
+                            // +20等级特殊处理
+                            levelCell.style.position = 'relative';
+                            levelCell.style.background = 'linear-gradient(135deg, var(--color-burble-300) 10%, var(--color-space-400) 25%, var(--color-ocean-400) 50%, var(--color-jade-500) 75%, var(--color-orange-300) 87%, var(--color-coral-500))';
+                            levelCell.style.webkitBackgroundClip = 'text';
+                            levelCell.style.backgroundClip = 'text';
+                            levelCell.style.color = 'transparent';
+                            levelCell.style.fontWeight = '700';
+                            levelCell.style.textShadow = '0 0 5px var(--color-neutral-0-opacity-25)';
+                        } else {
+                            levelCell.style.color = levelColors[cellLevel];
+                            levelCell.style.fontWeight = 'bold';
                         }
                     }
 
                     // 检查是否是当前等级或历史等级
-                    if (cellLevel === currentLevel) {
-                        // 当前等级：正常高亮
-                        for (let j = 0; j < totalColumns; j++) {
-                            const cell = gridCells[i + j];
-                            if (cell) {
-                                cell.style.backgroundColor = 'rgba(255, 165, 0, 0.3)';
-                                cell.style.fontWeight = 'bold';
+                    if (cellLevel === currentLevel || (highlightedLevels.includes(cellLevel) && cellLevel !== currentLevel)) {
+                        // 获取行的第一个和最后一个单元格，用于计算覆盖层的位置和宽度
+                        const firstCell = gridCells[i];
+                        const lastCell = gridCells[i + totalColumns - 1];
+
+                        if (firstCell && lastCell) {
+                            // 获取单元格的位置信息
+                            const firstRect = firstCell.getBoundingClientRect();
+                            const lastRect = lastCell.getBoundingClientRect();
+                            const containerRect = statsContainer.getBoundingClientRect();
+
+                            // 创建覆盖层元素
+                            const overlay = document.createElement('div');
+                            overlay.className = 'mwc-highlight-overlay';
+
+                            // 设置覆盖层样式
+                            overlay.style.position = 'absolute';
+                            overlay.style.left = `${firstRect.left - containerRect.left}px`;
+                            overlay.style.top = `${firstRect.top - containerRect.top}px`;
+                            overlay.style.width = `${lastRect.right - firstRect.left}px`;
+                            overlay.style.height = `${firstRect.height}px`;
+                            overlay.style.borderRadius = '4px';
+                            overlay.style.pointerEvents = 'none';
+                            overlay.style.zIndex = '1';
+
+                            // 根据是否是当前等级设置不同的透明度
+                            if (cellLevel === currentLevel) {
+                                // 当前等级：最亮高亮
+                                overlay.style.backgroundColor = 'rgba(255, 165, 0, 0.4)';
+                            } else {
+                                // 历史等级：根据在历史中的位置设置不同的透明度
+                                const levelIndex = highlightedLevels.indexOf(cellLevel);
+                                const opacity = 0.1 + (levelIndex * 0.2) / (highlightedLevels.length - 1);
+                                overlay.style.backgroundColor = `rgba(255, 165, 0, ${opacity})`;
                             }
-                        }
-                    } else if (highlightedLevels.includes(cellLevel) && cellLevel !== currentLevel) {
-                        // 历史等级：浅亮显示
-                        for (let j = 0; j < totalColumns; j++) {
-                            const cell = gridCells[i + j];
-                            if (cell) {
-                                cell.style.backgroundColor = 'rgba(255, 165, 0, 0.1)';
-                                // 浅亮状态不加粗
+
+                            // 将覆盖层添加到强化数据面板中
+                            statsContainer.style.position = 'relative';
+                            statsContainer.appendChild(overlay);
+
+                            // 为行中的所有单元格设置加粗
+                            for (let j = 0; j < totalColumns; j++) {
+                                const cell = gridCells[i + j];
+                                if (cell) {
+                                    cell.style.fontWeight = 'bold';
+                                    cell.style.position = 'relative';
+                                    cell.style.zIndex = '2';
+                                }
                             }
                         }
                     }

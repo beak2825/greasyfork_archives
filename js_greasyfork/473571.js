@@ -1,13 +1,14 @@
 // ==UserScript==
 // @name         网址本地笔记备份(Douban Bilibili URL backup)
 // @namespace    http://tampermonkey.net/
-// @version      0.13
+// @version      0.14
 // @description  网址信息本地笔记备份小助手，支持豆瓣、B站、STEAM、网易云音乐, 知乎，备份链接信息并提供搜索功能
 // @author       Lepturus
 // @match        *://*.douban.com/*
 // @match        *://music.163.com/*
 // @match        *://*.bilibili.com/video/*
 // @match        *://store.steampowered.com/sale/*
+// @match        *://store.steampowered.com/app/*
 // @match        *://*.zhihu.com/*
 // @icon         https://img1.doubanio.com/favicon.ico
 // @icon         https://www.bilibili.com/favicon.ico
@@ -68,10 +69,26 @@
           background-color: #e8f5e9 !important;
           color: #2e7d32 !important;
           transform: scale(1.02);
-        }`);
+        }
+        #download-subs-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 4px 12px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+          }
+  
+          #download-subs-btn:hover {
+            background-color: #007bb5; /* A slightly darker blue */
+            transform: translateY(-1px);
+          }`);
 
     function copy(e, isHTML = true) {
-        let obj = document.createElement('input');
+        let obj = document.createElement('textarea'); 
         document.body.appendChild(obj);
         obj.value = isHTML ? e.innerText : e.innerHTML;
         obj.select();
@@ -145,11 +162,52 @@
         }
 
     }
+function downloadSubtitles() {
+    const videoTitleElement = document.querySelector('h1.video-title');
+    const fileName = videoTitleElement 
+        ? videoTitleElement.textContent.trim().replace(/[\\/:*?"<>|]/g, '_') + '_字幕.txt' 
+        : 'Bilibili_Subtitles.txt';
+    let allSubtitlesText = [];
+    
+    const aiSubtitles = document.querySelectorAll('[class*="_Text_"]');
+    aiSubtitles.forEach(sub => allSubtitlesText.push(sub.innerText));
+
+    const liveSubtitles = document.querySelectorAll('[class*="bili-subtitle-x-subtitle-panel-text"]');
+    liveSubtitles.forEach(sub => allSubtitlesText.push(sub.innerText));
+
+    if (allSubtitlesText.length === 0) {
+        alert('未找到可下载的字幕内容。请确保字幕已加载。');
+        return;
+    }
+    const fullText = allSubtitlesText.join('\n');
+    const blob = new Blob([fullText], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
 
 function Bilibili() {
     let b_title = document.querySelector('h1');
     let b_infos = document.querySelector('.tag-panel');
     let b_up = document.querySelector('.up-detail-top');
+    const tipsElements = document.querySelector('[class*="_Tips_"]');
+    if (tipsElements && !document.getElementById('download-subs-btn')) {
+        const parentContainer = tipsElements;
+        const downloadBtn = document.createElement('button');
+        downloadBtn.id = 'download-subs-btn';
+        downloadBtn.textContent = '下载全部字幕';
+        downloadBtn.title = '将当前所有已加载的字幕下载为 .txt 文件';
+
+        downloadBtn.addEventListener('click', downloadSubtitles);
+        parentContainer.appendChild(downloadBtn);
+    }
 
     document.getElementsByTagName("img").forEach((ele) => { ele.src = ele.src.replace(/@.*\.avif/g,"")}); //replace avif extension
 
@@ -157,8 +215,8 @@ function Bilibili() {
     let aiSummaryElements = document.querySelectorAll('[class*="_Summary_"]');
     if (aiSummaryElements.length > 0) {
         aiSummaryElements.forEach((summaryElement) => {
-            if (!summaryElement.classList.contains('copyTEXT')) {
-                summaryElement.classList.add('copyTEXT');
+            if (!summaryElement.classList.contains('bli_copyTEXT')) {
+                summaryElement.classList.add('bli_copyTEXT');
                 summaryElement.style.cursor = 'pointer';
                 summaryElement.title = '点击复制内容';
             }
@@ -169,8 +227,8 @@ function Bilibili() {
     let subtitleElements = document.querySelectorAll('[class*="_Text_"]');
     if (subtitleElements.length > 0) {
         subtitleElements.forEach((subElement) => {
-            if (!subElement.classList.contains('copyTEXT')) {
-                subElement.classList.add('copyTEXT');
+            if (!subElement.classList.contains('bli_copyTEXT')) {
+                subElement.classList.add('bli_copyTEXT');
                 subElement.style.cursor = 'pointer';
                 subElement.title = '点击复制字幕';
             }
@@ -181,8 +239,8 @@ function Bilibili() {
     let liveSubtitleElements = document.querySelectorAll('[class*="bili-subtitle-x-subtitle-panel-text"]');
     if (liveSubtitleElements.length > 0) {
         liveSubtitleElements.forEach((liveSubElement) => {
-            if (!liveSubElement.classList.contains('copyTEXT')) {
-                liveSubElement.classList.add('copyTEXT');
+            if (!liveSubElement.classList.contains('bli_copyTEXT')) {
+                liveSubElement.classList.add('bli_copyTEXT');
                 liveSubElement.style.cursor = 'pointer';
 
                 // 根据data-type设置不同的提示
@@ -201,8 +259,8 @@ function Bilibili() {
     if (b_infos) {
         let bilibili_url = document.createElement("div");
         let bilibili_title = document.createElement("div");
-        bilibili_url.classList.add("copyTEXT", "custom-backup-element");
-        bilibili_title.classList.add("copyTEXT", "custom-backup-element");
+        bilibili_url.classList.add("bli_copyTEXT", "custom-backup-element");
+        bilibili_title.classList.add("bli_copyTEXT", "custom-backup-element");
         bilibili_title.style.cssText = `
             padding: 8px 12px;
             background: var(--bg-color);
@@ -232,7 +290,7 @@ function Bilibili() {
         bilibili_date = dt.getFullYear() + "." + (dt.getMonth()+1);
         bilibili_url.innerHTML = 'Bilibili链接：' + url_parse.protocol + "//" + url_parse.hostname+ url_parse.pathname + "   BY:" + bilibili_up.outerHTML + "   " + bilibili_date;
 
-        let kws = document.getElementsByClassName("copyTEXT");
+        let kws = document.getElementsByClassName("bli_copyTEXT");
         for (let i = 0; i < kws.length; i++) {
             kws[i].onclick = function () {
                 let originalHTML = kws[i].innerHTML;
@@ -252,7 +310,7 @@ function Bilibili() {
             }
         }
 
-        if (!b_infos.lastElementChild.classList.contains('copyTEXT')) {
+        if (!b_infos.lastElementChild.classList.contains('bli_copyTEXT')) {
             b_infos.appendChild(document.createElement("br"));
             b_infos.appendChild(document.createElement("br"));
             b_infos.appendChild(bilibili_title);
@@ -361,6 +419,132 @@ function Bilibili() {
         });
     }
 
+    function SteamApp() {
+        const glance = document.querySelector('.glance_ctn');
+        if (!glance || glance.querySelector('.steam-backup-tools')) return;
+
+        let title = document.querySelector('#appHubAppName')?.textContent.trim() || document.querySelector('.apphub_AppName')?.textContent.trim();
+        if (!title) return;
+
+        // Create Container
+        const toolsDiv = document.createElement('div');
+        toolsDiv.className = 'steam-backup-tools';
+        toolsDiv.style.marginTop = '15px';
+
+        // 1. Search Buttons
+        const searchDiv = document.createElement('div');
+        searchDiv.className = 'search-link-container';
+        searchDiv.appendChild(searche(title, "https://www.baidu.com/s?ie=UTF-8&wd=", "百度搜索"));
+        searchDiv.appendChild(searche(title, "https://www.google.com.hk/search?q=", "谷歌搜索"));
+        searchDiv.appendChild(searche(title, "https://www.douban.com/search?source=suggest&q=", "豆瓣搜索"));
+        searchDiv.appendChild(searche(title, "https://www.xiaoheihe.cn/app/search?q=", "小黑盒搜索"));
+        
+        // 2. Action Buttons Container
+        const btnsDiv = document.createElement('div');
+        btnsDiv.style.marginTop = '8px';
+
+        // Button Style (Matching Bilibili style)
+        const btnStyle = `
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            margin-right: 10px;
+            transition: opacity 0.2s;
+        `;
+
+        // Copy Tags Button
+        const copyTagsBtn = document.createElement('button');
+        copyTagsBtn.textContent = "复制热门标签";
+        copyTagsBtn.style.cssText = btnStyle;
+        copyTagsBtn.onclick = function() {
+            let tags = [];
+            document.querySelectorAll('.popular_tags .app_tag').forEach(tag => {
+                const t = tag.textContent.trim();
+                if (t && t !== '+') tags.push(t);
+            });
+            copy({ innerText: tags.join(' ') });
+            
+            let original = this.textContent;
+            this.textContent = "✓ 已复制";
+            setTimeout(() => { this.textContent = original; }, 1000);
+        };
+
+        // Copy All Info Button
+        const copyInfoBtn = document.createElement('button');
+        copyInfoBtn.textContent = "复制游戏信息";
+        copyInfoBtn.style.cssText = btnStyle;
+        copyInfoBtn.onclick = function() {
+            let releaseDate = document.querySelector('.release_date .date')?.textContent.trim() || "";
+            let dev = "", pub = "";
+            document.querySelectorAll('.dev_row').forEach(row => {
+                let sub = row.querySelector('.subtitle')?.textContent;
+                let val = row.querySelector('.summary a')?.textContent.trim();
+                if (sub && sub.includes("开发")) dev = val;
+                if (sub && sub.includes("发行")) pub = val;
+            });
+            let desc = document.querySelector('.game_description_snippet')?.textContent.trim() || "";
+            let appIdMatch = window.location.href.match(/\/app\/(\d+)/);
+            let url = appIdMatch ? `https://store.steampowered.com/app/${appIdMatch[1]}` : window.location.href.split('?')[0];
+             // 提取封面图并生成Markdown格式
+            let headerImg = document.querySelector('img.game_header_image_full');
+            let coverMd = headerImg ? `![${title}](${headerImg.src})` : "";            
+            let tags = [];
+            document.querySelectorAll('.popular_tags .app_tag').forEach(tag => {
+                const t = tag.textContent.trim();
+                if (t && t !== '+') tags.push(t);
+            });
+
+            let info = `${coverMd}\n**游戏名**：${title}\n**发行日期**：${releaseDate}\n**开发者**：${dev}\n**发行商**：${pub}\n**Steam链接**：${url}\n**游戏标签**：${tags.join(' ')}\n**游戏简介**：${desc}`;
+            
+            copy({ innerText: info });
+
+            let original = this.textContent;
+            this.textContent = "✓ 已复制";
+            setTimeout(() => { this.textContent = original; }, 1000);
+        };
+        const copyDescBtn = document.createElement('button');
+        copyDescBtn.textContent = "复制简介(MD)";
+        copyDescBtn.style.cssText = btnStyle;
+        copyDescBtn.onclick = function() {
+            const descContainer = document.querySelector('#game_area_description');
+            if (!descContainer) {
+                alert("未找到游戏简介区域");
+                return;
+            }
+
+            let clone = descContainer.cloneNode(true);
+            let header = clone.querySelector('h2');
+            if (header && header.textContent.includes("关于此游戏")) {
+                header.remove();
+            }
+            clone.querySelectorAll('img, video, .bb_img_ctn, .bb_img_icons, script, style').forEach(el => el.remove());
+            clone.querySelectorAll('br').forEach(br => br.replaceWith('\n'));
+            clone.querySelectorAll('p, div.bb_paragraph, h3, h4').forEach(el => {
+                el.append('\n\n');
+            });
+            let text = clone.textContent;
+            text = text.replace(/\n\s*\n/g, '\n\n').trim();
+
+            copy({ innerText: text });
+
+            let original = this.textContent;
+            this.textContent = "✓ 已复制";
+            setTimeout(() => { this.textContent = original; }, 1000);
+        };
+
+        btnsDiv.appendChild(copyTagsBtn);
+        btnsDiv.appendChild(copyInfoBtn);
+        btnsDiv.appendChild(copyDescBtn); 
+        toolsDiv.appendChild(searchDiv);
+        toolsDiv.appendChild(btnsDiv);
+        glance.appendChild(toolsDiv);
+    }
+
     if (/douban/.test(document.URL)) {
         setInterval(Douban, 2000);
     }
@@ -384,5 +568,7 @@ function Bilibili() {
     if (/store\.steampowered\.com\/sale/.test(document.URL)) {
         setInterval(SteamSale, 2000);
     }
-
+    if (/store\.steampowered\.com\/app/.test(document.URL)) {
+        setInterval(SteamApp, 2000);
+    }
 })();

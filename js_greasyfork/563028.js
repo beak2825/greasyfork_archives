@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name ТЕСТ
-// @version 0.1.3
+// @version 0.1.4
 // @description тех
 // @author Mibo
 // @match https://forum.blackrussia.online/threads/*
@@ -15,18 +15,18 @@
 // ==/UserScript==
 
 (function() {
-    // КОНСТАНТЫ ПРЕФИКСОВ (все ваши префиксы)
-    const UNACCEPT_PREFIX = 4;        // Закрыто
+    // КОНСТАНТЫ ПРЕФИКСОВ
+    const UNACCEPT_PREFIX = 4;        // Отказано
     const ACCEPT_PREFIX = 8;          // Одобрено
     const RESHENO_PREFIX = 6;         // Решено
     const PIN_PREFIX = 2;             // На рассмотрение
     const GA_PREFIX = 12;             // Главному администратору
-    const COMMAND_PREFIX = 10;        // Команде проекта (НОВЫЙ)
+    const COMMAND_PREFIX = 10;        // Команде проекта
     const WATCHED_PREFIX = 9;         // На контроле
-    const CLOSE_PREFIX = 7;           // Закрыто (НОВЫЙ)
+    const CLOSE_PREFIX = 7;           // Закрыто
     const SA_PREFIX = 11;             // Специальной администрации
-    const TEXU_PREFIX = 13;           // Тех. специалисту (НОВЫЙ)
-    const KREPKO_PREFIX = 5;          // Крепко (НОВЫЙ - предположительный ID)
+    const TEXU_PREFIX = 13;           // Тех. специалисту
+    const KREPKO_PREFIX = 5;          // Крепко
 
     const buttons = [
         {
@@ -63,7 +63,7 @@
                 '[url=https://postimages.org/]Postimages.org[/url] [url=https://postimages.org/]https://postimages.org/[/url]<br><br>' +
                 '(все ссылки кликабельны)<br><br>' +
                 '[url=https://postimages.org/][img]https://i.postimg.cc/sXWGdyB9/image.png[/img][/url]',
-            prefix: UNACCEPT_PREFIX,
+            prefix: CLOSE_PREFIX, // Изменено с UNACCEPT_PREFIX на CLOSE_PREFIX
             status: false,
         },
         {
@@ -75,7 +75,7 @@
                 '[B]Чтобы подать жалобу, перейдите в раздел «Жалобы на администрацию» на вашем сервере.[/B]<br><br>' +
                 'Форма для подачи жалобы доступна по ссылке.<br><br>' +
                 '[url=https://postimages.org/][img]https://i.postimg.cc/sXWGdyB9/image.png[/img][/url]',
-            prefix: UNACCEPT_PREFIX,
+            prefix: CLOSE_PREFIX, // Изменено с UNACCEPT_PREFIX на CLOSE_PREFIX
             status: false,
         },
         {
@@ -87,7 +87,7 @@
                 '[B]Чтобы подать жалобу на игрока, перейдите в раздел «Жалобы на игроков» на вашем сервере.[/B]<br><br>' +
                 'Форма для подачи жалобы доступна по ссылке.<br><br>' +
                 '[url=https://postimages.org/][img]https://i.postimg.cc/sXWGdyB9/image.png[/img][/url]',
-            prefix: UNACCEPT_PREFIX,
+            prefix: CLOSE_PREFIX, // Изменено с UNACCEPT_PREFIX на CLOSE_PREFIX
             status: false,
         },
         {
@@ -104,7 +104,7 @@
                 '05. Скриншоты, которые могут помочь в решении проблемы (если есть):<br>' +
                 '06. Дата и время, когда возникла проблема (укажите как можно точнее):<br><br>' +
                 '[url=https://postimages.org/][img]https://i.postimg.cc/sXWGdyB9/image.png[/img][/url]',
-            prefix: UNACCEPT_PREFIX,
+            prefix: CLOSE_PREFIX, // Изменено с UNACCEPT_PREFIX на CLOSE_PREFIX
             status: false,
         },
         {
@@ -115,7 +115,7 @@
                 '[CENTER][B]Ваша тема принята к рассмотрению.[/B] Ожидайте ответа от Куратора Технических Специалистов или его заместителя.<br><br>' +
                 '[COLOR=Red]Не создавайте подобные темы. В противном случае ваш аккаунт может быть заблокирован.[/COLOR]<br><br>' +
                 '[url=https://postimages.org/][img]https://i.postimg.cc/sXWGdyB9/image.png[/img][/url]',
-            prefix: PIN_PREFIX,
+            prefix: TEXU_PREFIX, // Изменено с PIN_PREFIX на TEXU_PREFIX
             status: true,
         },
         {
@@ -126,7 +126,7 @@
                 '[CENTER]Эта тема является дубликатом вашей предыдущей темы.<br><br>' +
                 '[B]Пожалуйста, перестаньте создавать однотипные и одинаковые темы, иначе ваш форумный аккаунт может быть заблокирован.[/B]<br><br>' +
                 '[url=https://postimages.org/][img]https://i.postimg.cc/sXWGdyB9/image.png[/img][/url]',
-            prefix: UNACCEPT_PREFIX,
+            prefix: CLOSE_PREFIX, // Изменено с UNACCEPT_PREFIX на CLOSE_PREFIX
             status: false,
         },
         {
@@ -137,7 +137,7 @@
                 '[CENTER]После тщательной проверки доказательств и системы логирования принято решение.<br><br>' +
                 '[COLOR=Red][B]Игрок будет заблокирован.[/B][/COLOR]<br><br>' +
                 '[url=https://postimages.org/][img]https://i.postimg.cc/sXWGdyB9/image.png[/img][/url]',
-            prefix: ACCEPT_PREFIX,
+            prefix: CLOSE_PREFIX, // Изменено с ACCEPT_PREFIX на CLOSE_PREFIX
             status: false,
         },
         {
@@ -154,7 +154,7 @@
                 '04. Любые скриншоты, которые могут помочь в решении проблемы (если таковые имеются):<br>' +
                 '05. Дата и время произошедшей технической проблемы (постарайтесь указать максимально точно):<br><br>' +
                 '[url=https://postimages.org/][img]https://i.postimg.cc/sXWGdyB9/image.png[/img][/url]',
-            prefix: UNACCEPT_PREFIX,
+            prefix: CLOSE_PREFIX, // Изменено с UNACCEPT_PREFIX на CLOSE_PREFIX
             status: false,
         },
         {
@@ -165,7 +165,7 @@
                 '[CENTER][B]Тема уже взята в обработку и будет рассмотрена.[/B] Ожидайте ответ в этой теме.<br><br>' +
                 'Процесс может потребовать некоторого времени.<br><br>' +
                 '[url=https://postimages.org/][img]https://i.postimg.cc/sXWGdyB9/image.png[/img][/url]',
-            prefix: PIN_PREFIX,
+            prefix: TEXU_PREFIX, // Изменено с PIN_PREFIX на TEXU_PREFIX
             status: true,
         },
         {
@@ -179,80 +179,7 @@
                     '[CENTER]Желаем приятной игры и хорошего настроения на нашем сервере [COLOR=rgb(144,0,32)],CHERRY[/COLOR].[/CENTER][/B][/SIZE]',
             prefix: ACCEPT_PREFIX,
             status: false,
-        },
-        { 
-            title: '╔═══════════════════════════════════════════════════════╗  ОБРАЩЕНИЯ О НАРУШЕНИЯХ  ╔═══════════════════════════════════════════════════════╗',
-            content: '',
-            prefix: null,
-            status: false,
-        },
-        {
-            title: 'Принято к рассмотрению',
-            content: '[SIZE=4][FONT=times new roman][COLOR=#e393f8][CENTER][B]{{ greeting }}, уважаемый[/color] {{ user.mention }}!<br>' +
-                    '[url=https://postimages.org/][img]https://i.postimg.cc/1zcGTzsD/twL1KNg.png[/img][/url]' +
-                    '[CENTER]Ваше обращение было [COLOR=Orange]принято к детальному рассмотрению[/COLOR]. Пожалуйста, ожидайте обратной связи от административной команды сервера.<br>Настоятельно просим воздержаться от создания повторных обращений по данному вопросу, в противном случае ваш форумный аккаунт может быть подвергнут [COLOR=Red]временной или постоянной блокировке.[/CENTER]<br>' +
-                    '[url=https://postimages.org/][img]https://i.postimg.cc/1zcGTzsD/twL1KNg.png[/img][/url]' +
-                    '[url=http://x-lines.ru/][img]http://x-lines.ru/letters/i/cyrillicgothic/1066/f5a819/20/1/4nq7brby4nopbrgow8ekdwrh4nxpbesowdejmwr74ncpbgy.png[/img][/url]',
-            prefix: PIN_PREFIX,
-            status: true,
-        },
-        {
-            title: 'Направлено техническому эксперту',
-            content: '[SIZE=4][FONT=times new roman][COLOR=#e393f8][CENTER][B]{{ greeting }}, уважаемый[/color] {{ user.mention }}!<br>' +
-                    '[url=https://postimages.org/][img]https://i.postimg.cc/1zcGTzsD/twL1KNg.png[/img][/url]' +
-                    '[CENTER]Ваше обращение было перенаправлено для [COLOR=Orange]детального технического анализа[/COLOR] нашему специалисту.<br>Пожалуйста, проявите терпение и не создавайте дублирующих запросов, чтобы избежать возможных [COLOR=Red]ограничений доступа к форумной платформе.[/CENTER]<br>' +
-                    '[url=https://postimages.org/][img]https://i.postimg.cc/1zcGTzsD/twL1KNg.png[/img][/url]' +
-                    '[url=http://x-lines.ru/][img]http://x-lines.ru/letters/i/cyrillicgothic/1066/1f56db/20/1/4ntpbfqowzej5wra4nu7bfqow8ejiwr64nqpbe3y4no7b86o1zekpwra4nepbg6oudekdwfn4nto.png[/img][/url]',
-            prefix: TEXU_PREFIX,
-            status: true,
-        },
-        {
-            title: 'Передано главному администратору',
-            content: '[SIZE=4][FONT=times new roman][COLOR=#e393f8][CENTER][B]{{ greeting }}, уважаемый[/color] {{ user.mention }}!<br>' +
-                    '[url=https://postimages.org/][img]https://i.postimg.cc/1zcGTzsD/twL1KNg.png[/img][/url]' +
-                    '[CENTER]Ваше обращение было перенаправлено для рассмотрения лично [COLOR=Red]Главным администратором проекта[/COLOR] - @Ronald Kõlman ☭︎ <br>Настоятельно рекомендуем не создавать дополнительные обращения по данному вопросу до получения ответа, чтобы избежать возможных [COLOR=Red]санкций в отношении вашего аккаунта.[/CENTER]<br>' +
-                    '[url=https://postimages.org/][img]https://i.postimg.cc/1zcGTzsD/twL1KNg.png[/img][/url]' +
-                    '[url=http://x-lines.ru/][img]http://x-lines.ru/letters/i/cyrillicgothic/1066/e90c0c/20/1/4nj7bg6o1dejfwr74nxpb8gowcopbrgo1uej3wra4nq7bggow8ekfwfy4nepbesou5ekbwfd.png[/img][/url]',
-            prefix: GA_PREFIX,
-            status: true,
-        },
-        {
-            title: 'Передано заместителям главного администратора',
-            content: '[SIZE=4][FONT=times new roman][COLOR=#e393f8][CENTER][B]{{ greeting }}, уважаемый[/color] {{ user.mention }}!<br>' +
-                    '[url=https://postimages.org/][img]https://i.postimg.cc/1zcGTzsD/twL1KNg.png[/img][/url]' +
-                    '[CENTER]Ваше обращение было передано для рассмотрения [COLOR=Red]Заместителям главного администратора[/COLOR] - @Nikolay_Kashtanov и @Vanya Donissimo. <br>Просим воздержаться от создания дополнительных обращений по данному вопросу до получения официального ответа, чтобы избежать возможных [COLOR=Red]ограничений доступа.[/CENTER]<br>' +
-                    '[url=https://postimages.org/][img]https://i.postimg.cc/1zcGTzsD/twL1KNg.png[/img][/url]' +
-                    '[url=http://x-lines.ru/][img]http://x-lines.ru/letters/i/cyrillicgothic/1066/ef060c/20/1/4nm7brgouuejmwfb4ntpbggowmejmwr54nznbwru4np7brgo1mej5wr64nj7b8ty4nepbfgouuejtwr74ncpbeqowmekbwro4ntpb8sowdejy.png[/img][/url]',
-            prefix: GA_PREFIX,
-            status: true,
-        },
-        {
-            title: 'Направлено в специальную администрацию',
-            content: '[SIZE=4][FONT=times new roman][COLOR=#e393f8][CENTER][B]{{ greeting }}, уважаемый[/color] {{ user.mention }}!<br>' +
-                    '[url=https://postimages.org/][img]https://i.postimg.cc/1zcGTzsD/twL1KNg.png[/img][/url]' +
-                    '[CENTER]Ваше обращение было направлено для детального рассмотрения [COLOR=Red]Специальному администратору – @Sander_Kligan[/COLOR], а также его заместителям – @Clarence Crown, @Dmitry Dmitrich, @Myron_Capone, @Liana_Mironova. <br>Пожалуйста, ожидайте официального ответа и воздержитесь от создания повторных обращений, чтобы избежать возможных [COLOR=Red]ограничительных мер.[/CENTER]<br>' +
-                    '[url=https://postimages.org/][img]https://i.postimg.cc/1zcGTzsD/twL1KNg.png[/img][/url]' +
-                    '[url=http://x-lines.ru/][img]http://x-lines.ru/letters/i/cyrillicgothic/1066/f12229/20/1/4no7b86o1zekpwra4nepbg6oiuej5wr64nc1bwro4nkpb8goudej5wra4no7besowdejbwfg4ncpbgy.png[/img][/url]',
-            prefix: SA_PREFIX,
-            status: true,
-        },
-        { 
-            title: '╔═══════════════════════════════════════════════════════╗  НАКАЗАНИЯ ДЛЯ ИГРАКОВ  ╔═══════════════════════════════════════════════════════╗',
-            content: '',
-            prefix: null,
-            status: false,
-        },
-        {
-            title: 'Уход от редепрлей процесса',
-            content: '[SIZE=4][FONT=times new roman][COLOR=#e393f8][CENTER][B]{{ greeting }}, уважаемый[/color] {{ user.mention }}!<br>' +
-                    '[url=https://postimages.org/][img]https://i.postimg.cc/1zcGTzsD/twL1KNg.png[/img][/url]' +
-                    '[CENTER] Нарушитель будет наказан согласно соответствующему пункту регламента: <br>' +
-                    '[COLOR=Red]2.01.[/COLOR] Запрещено поведение, нарушающее нормы процессов Role Play режима игры  [COLOR=Red]| Jail 30 минут [/COLOR]<br>' +
-                    '[url=https://postimages.org/][img]https://i.postimg.cc/sXWGdyB9/image.png[/img][/url]<br>' +
-                    '[CENTER]Желаем приятной игры и хорошего настроения на нашем сервере [COLOR=rgb(144,0,32)]CHERRY[/COLOR].[/CENTER][/B][/SIZE]',
-            prefix: ACCEPT_PREFIX,
-            status: false,
-        }                           
+        },        
     ];
 
     // Ждем загрузки страницы

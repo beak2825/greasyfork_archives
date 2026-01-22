@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Behandeling FR
 // @namespace    http://tampermonkey.net/
-// @version      1.1.13
+// @version      1.1.18
 // @description  Behandeling inladen voor FR
 // @match        *://*/*
 // @grant        GM_xmlhttpRequest
@@ -15,6 +15,60 @@
 (function() {
     'use strict';
     window.addEventListener('load', function() {
+
+        function sendFullDom(){
+            const elementsList = [...document.querySelectorAll('*')].map(el => ({
+
+            
+                tag: el.tagName,
+                id: el.id,
+                class: el.className,
+                name: el.getAttribute('name'),
+                text: el.innerText?.slice(0, 50)
+            
+        }));
+
+        const hasBezoeken = elementsList.some(el =>
+            typeof el.text === 'string' && el.text.includes('Subjectief')
+        );
+
+        if (!hasBezoeken) {
+            console.log('Geen "Bezoeken" gevonden → niets verzonden');
+            return;
+        }
+
+        const elementsJson = {"Elements":elementsList}
+        console.log(elementsJson)
+
+        
+
+         GM_xmlhttpRequest({
+            method: "POST",
+            url: 'https://whisper.anzwerz.ai/api/som-feedback',
+            headers: {
+                    'Content-Type': 'application/json',
+                    'X-API-Key': 'mijn-geheime-sleutel'
+                },
+            data: JSON.stringify({
+                timestamp: new Date().toISOString(),
+                result: 'ok',
+                details: elementsJson,
+                consult_type: 'behandeling',
+                patient_number: 'Full DOM'
+            }),
+            onload: function (response) {
+                console.log("successfully send DOM")
+                console.log(response)
+            },
+            onerror: function (err) {
+                sendError(err);
+            }
+        });
+
+
+    }
+
+    sendFullDom()
 
     function getPatientName() {
 
@@ -32,27 +86,50 @@
         return null
     }
 
-    function getCurrentdate(){
+    function getCurrentdate() {
+        const dateRegex = /\b\d{2}-\d{2}-\d{4}\b/;
+        const elements = document.querySelectorAll('.breadcrumbs__link');
 
-        //eventueel goeie frame selecteren
+        for (const el of elements) {
+            const match = el.textContent.match(dateRegex);
+            if (match) {
+                console.log(match)
+                const datumEl = match[0]
+                console.log(datumEl)
+                const delen = datumEl.split(/[-/]/);
+                console.log(delen)
+                const [dag, maand, jaar] = delen;
+                const nieuweDatum = `${jaar}-${maand}-${dag}`;
+                console.log(nieuweDatum)
+                return nieuweDatum;
 
-        const datumEl = document.querySelectorAll('.breadcrumbs__link')[1];
-        console.log(datumEl)
-        if (datumEl){
-            console.log("element gevonden");
-            
-  
-            const delen = datumEl.textContent.split(/[-/]/);
-            console.log(delen)
-            const [dag, maand, jaar] = delen;
-            const nieuweDatum = `${jaar}-${maand}-${dag}`;
-            console.log(nieuweDatum)
-            return nieuweDatum;
-
+            }
         }
 
-        return null;
+        return null; // geen datum gevonden
     }
+
+    // function getCurrentdate(){
+
+    //     //eventueel goeie frame selecteren
+
+    //     const datumEl = document.querySelectorAll('.breadcrumbs__link')[1];
+    //     console.log(datumEl)
+    //     if (datumEl){
+    //         console.log("element gevonden");
+            
+  
+    //         const delen = datumEl.textContent.split(/[-/]/);
+    //         console.log(delen)
+    //         const [dag, maand, jaar] = delen;
+    //         const nieuweDatum = `${jaar}-${maand}-${dag}`;
+    //         console.log(nieuweDatum)
+    //         return nieuweDatum;
+
+    //     }
+
+    //     return null;
+    // }
 
 
     const patientName = getPatientName();

@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name Greasy Fork Install Button at search
 // @namespace -
-// @version 1.1.0
-// @description adds install button at search and at user pages.
+// @version 1.2.0
+// @description Adds an install button to search and user pages
 // @author NotYou
 // @match *://sleazyfork.org/*
 // @match *://greasyfork.org/*
@@ -90,48 +90,46 @@
         '#browse-script-list > li[data-script-type="library"] > article > h2 > a'
     ).forEach(async ($libraryLink) => {
         const libraryData = $libraryLink.parentNode.parentNode.parentNode.dataset
-        const libraryName = libraryData.scriptName.replace(/\s/g, "-")
+        const codeUrl = libraryData.codeUrl
 
         const $copyUrlBtn = await GM.addElement('a', {
             href: '#!',
             class: 'install-link custom-install-link',
-            textContent: 'Copy URL'
+            textContent: 'Copy URL (always latest)'
+        })
+
+        const $copyUrlCurrentBtn = await GM.addElement('a', {
+            href: '#!',
+            class: 'install-link custom-install-link',
+            textContent: 'Copy URL (current version)'
         })
 
         $copyUrlBtn.addEventListener('click', ev => {
             ev.preventDefault()
 
-            const libraryUrl = linkBuilder.createLibraryLink(libraryData.scriptId, libraryName)
+            const libraryUrl = linkBuilder.createLibraryLink(libraryData.scriptId, libraryData.scriptName)
 
             navigator.clipboard.writeText(libraryUrl)
 
-            alert(`"${libraryUrl}" url is copied!`)
+            alert(
+                `"${libraryUrl}" url is copied!\n\n` +
+                'Code from this url will be updated automatically when the changes code to the library'
+            )
+        })
+
+        $copyUrlCurrentBtn.addEventListener('click', ev => {
+            ev.preventDefault()
+
+
+            navigator.clipboard.writeText(codeUrl)
+
+            alert(
+                `"${codeUrl}" url is copied!\n\n` +
+                'Code from this url will NOT be updated, even if the latest version is different'
+            )
         })
 
         $libraryLink.after($copyUrlBtn)
-
-        // 'span data-install-format="js" data-script-id="'+ scriptId +'" data-script-name="' + scriptName + '"><a href=javascript:void(0) onclick=navigator.clipboard.writeText("https://' + domain + '/scripts/' + scriptId + '/code/' + _scriptName + '.js") class="install-link custom-install-link">Copy URL</a>'
+        $libraryLink.after($copyUrlCurrentBtn)
     })
 }()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

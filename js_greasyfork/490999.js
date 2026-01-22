@@ -2,18 +2,23 @@
 // @name        Faster Bing
 // @name:en     Faster Bing
 // @namespace   CoderJiang
-// @version     1.1.4
+// @version     1.1.5
 // @description 将 Bing 的重定向 url 转换为真实 url
 // @description:en  Convert Bing's redirect url to a real url
 // @author      CoderJiang
 // @match       *://*.bing.com/*
 // @icon        https://cdn.coderjiang.com/pic-go/2024/faster-bing-logo-v1.png!pure
 // @license     MIT
-// @grant       none
+// @grant       GM_getValue
+// @grant       GM_setValue
+// @grant       GM_registerMenuCommand
+// @grant       GM_unregisterMenuCommand
+// @note        2026-01-21 v1.1.5
+//                  - 功能：统计并在菜单中显示累计优化的重定向链接数量，提升用户体验。
 // @note        2024-12-26 v1.1.4
 //                  - 功能：修复一些动态创建的链接（例如第一条人工智能生成的解答）无法解析的问题，同时解决在 v1.1.2 中无法解析的问题
 // @note        2024-07-19 v1.1.3
-//                  - 功能：对于 e.so.com/search/eclk 的链接，需要再次解析（示例：https://cn.bing.com/search?q=ui%E8%AE%BE%E8%AE%A1%E7%BD%91%E7%AB%99&first=1&FORM=PERE）
+//                  - 功能：对于 e.so.com/search/eclk 的链接，需要再次解析（示例：Firefox 访问 https://cn.bing.com/search?q=ui%E8%AE%BE%E8%AE%A1%E7%BD%91%E7%AB%99&first=1&FORM=PERE 时）
 // @note        2024-07-18 v1.1.2
 //                  - 修复：修复在 Edge 浏览器中第二次之后搜索无法解析的问题
 //                  - 功能：提供对 aclick 的中转链接解析支持
@@ -70,6 +75,17 @@
             }
         }
     }
+    const CONSTANTS = {
+        STORAGE_KEYS: {
+            totalSuccessConverted: 'Converted-Bing',
+        }
+    };
+    const SYSTEM = {
+        MENU_ID: {
+            counter: null,
+        },
+    }
+
     const logo = `
    ________)                  ______
   (, /                       (, /    ) ,
@@ -77,6 +93,68 @@
  ) /     (_(_/_)_(___(/_/ (_) / ____)_(_/ (_(_/_
 (_/                        (_/ (           .-/
                                           (_/`;
+
+    /**
+     * =============================
+     * 存储功能
+     * =============================
+     */
+
+    /**
+     * 获取总共成功转换的链接数
+     * @returns {number|number}
+     */
+    function getTotalSuccessConverted() {
+        return Number(GM_getValue(CONSTANTS.STORAGE_KEYS.totalSuccessConverted, 0)) || 0;
+    }
+
+    /**
+     * 添加总共成功转换的链接数
+     * @param delta 增加的数量
+     * @returns {*|number}
+     */
+    function addTotalSuccessConverted(delta) {
+        const add = Number(delta) || 0;
+        if (add <= 0) return getTotalSuccessConverted();
+        const next = getTotalSuccessConverted() + add;
+        GM_setValue(CONSTANTS.STORAGE_KEYS.totalSuccessConverted, next);
+        // 刷新菜单标题
+        renderMenu()
+        return next;
+    }
+
+    /**
+     * =============================
+     * 菜单功能
+     * =============================
+     */
+
+    /**
+     * 渲染菜单
+     */
+    function renderMenu() {
+        const total = getTotalSuccessConverted();
+        const title = `🚀 累计优化 ${total} 个重定向链接`;
+
+        if (SYSTEM.MENU_ID.counter !== null) {
+            try {
+                GM_unregisterMenuCommand(SYSTEM.MENU_ID.counter);
+            } catch (e) {
+                // 忽略：某些情况下可能无法注销
+            }
+            SYSTEM.MENU_ID.counter = null;
+        }
+
+        SYSTEM.MENU_ID.counter = GM_registerMenuCommand(title, () => {
+            // 无操作
+        });
+    }
+
+    /**
+     * =============================
+     * 主要功能函数
+     * =============================
+     */
 
     /**
      * 获取url中的参数
@@ -179,6 +257,8 @@
                 failedUrls.push(originalUrl);
             }
         }
+        // 更新总共成功转换的链接数
+        addTotalSuccessConverted(processedUrls.length);
         return {
             processedUrls,
             failedUrls
@@ -265,7 +345,15 @@
         console.table(details);
     }
 
+    /**
+     * =============================
+     * 脚本入口
+     * =============================
+     */
+
     console.log(logo);
+
+    renderMenu();
 
     const result = convertBingRedirectUrls();
     if (Config.log.enable) {

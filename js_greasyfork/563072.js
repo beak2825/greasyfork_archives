@@ -1,10 +1,11 @@
 // ==UserScript==
-// @name         河北教师教育网-2025年中小学幼儿园教师全员远程培训项目（高等教育出版社）网课程助手
-// @namespace    http://tampermonkey.net/zzzzzzys_河北教师教育网-2025年中小学幼儿园教师全员远程培训项目（高等教育出版社）课程助手
-// @version      1.0.0
+// @name         河北教师教育网-2025年中小学幼儿园教师全员远程培训项目网课程助手
+// @namespace    http://tampermonkey.net/zzzzzzys_河北教师教育网-2025年中小学幼儿园教师全员远程培训项目课程助手
+// @version      1.0.1
 // @copyright    zzzzzzys.All Rights Reserved.
-// @description  河北教师教育网-2025年中小学幼儿园教师全员远程培训项目（高等教育出版社）。可全自动学习所有未完成课程！
+// @description  河北教师教育网-2025年中小学幼儿园教师全员远程培训项目。目前已经适配高等教育出版社，奥鹏教育，项目不同，可用的倍速不同，可全自动学习所有未完成课程！后续还会发布电视台项目。
 // @match        https://px.chinabett.com/*
+// @match        https://activity.ourteacher.com.cn/*
 // @match        https://mingshi8.hbte.com.cn/*
 // @require      https://fastly.jsdelivr.net/npm/crypto-js@4.2.0/crypto-js.min.js
 // @resource     https://cdn.staticfile.org/limonte-sweetalert2/11.7.1/sweetalert2.min.css
@@ -21,8 +22,8 @@
 // @grant        GM_addStyle
 // @run-at       document-start
 // @license
-// @downloadURL https://update.greasyfork.org/scripts/563072/%E6%B2%B3%E5%8C%97%E6%95%99%E5%B8%88%E6%95%99%E8%82%B2%E7%BD%91-2025%E5%B9%B4%E4%B8%AD%E5%B0%8F%E5%AD%A6%E5%B9%BC%E5%84%BF%E5%9B%AD%E6%95%99%E5%B8%88%E5%85%A8%E5%91%98%E8%BF%9C%E7%A8%8B%E5%9F%B9%E8%AE%AD%E9%A1%B9%E7%9B%AE%EF%BC%88%E9%AB%98%E7%AD%89%E6%95%99%E8%82%B2%E5%87%BA%E7%89%88%E7%A4%BE%EF%BC%89%E7%BD%91%E8%AF%BE%E7%A8%8B%E5%8A%A9%E6%89%8B.user.js
-// @updateURL https://update.greasyfork.org/scripts/563072/%E6%B2%B3%E5%8C%97%E6%95%99%E5%B8%88%E6%95%99%E8%82%B2%E7%BD%91-2025%E5%B9%B4%E4%B8%AD%E5%B0%8F%E5%AD%A6%E5%B9%BC%E5%84%BF%E5%9B%AD%E6%95%99%E5%B8%88%E5%85%A8%E5%91%98%E8%BF%9C%E7%A8%8B%E5%9F%B9%E8%AE%AD%E9%A1%B9%E7%9B%AE%EF%BC%88%E9%AB%98%E7%AD%89%E6%95%99%E8%82%B2%E5%87%BA%E7%89%88%E7%A4%BE%EF%BC%89%E7%BD%91%E8%AF%BE%E7%A8%8B%E5%8A%A9%E6%89%8B.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/563072/%E6%B2%B3%E5%8C%97%E6%95%99%E5%B8%88%E6%95%99%E8%82%B2%E7%BD%91-2025%E5%B9%B4%E4%B8%AD%E5%B0%8F%E5%AD%A6%E5%B9%BC%E5%84%BF%E5%9B%AD%E6%95%99%E5%B8%88%E5%85%A8%E5%91%98%E8%BF%9C%E7%A8%8B%E5%9F%B9%E8%AE%AD%E9%A1%B9%E7%9B%AE%E7%BD%91%E8%AF%BE%E7%A8%8B%E5%8A%A9%E6%89%8B.user.js
+// @updateURL https://update.greasyfork.org/scripts/563072/%E6%B2%B3%E5%8C%97%E6%95%99%E5%B8%88%E6%95%99%E8%82%B2%E7%BD%91-2025%E5%B9%B4%E4%B8%AD%E5%B0%8F%E5%AD%A6%E5%B9%BC%E5%84%BF%E5%9B%AD%E6%95%99%E5%B8%88%E5%85%A8%E5%91%98%E8%BF%9C%E7%A8%8B%E5%9F%B9%E8%AE%AD%E9%A1%B9%E7%9B%AE%E7%BD%91%E8%AF%BE%E7%A8%8B%E5%8A%A9%E6%89%8B.meta.js
 // ==/UserScript==
 class Runner {
     constructor() {
@@ -409,20 +410,20 @@ class Utils {
     static flag = 'hnedu123_VIP'
     static js_Flag = 'hnedu123_jsCode'
     static vipSign = 'hnedu123_vipSign'
-    static vipText = '请下载软件使用！河北教师2025(高等教育出版社）项目网课助手'
+    static vipText = '请下载软件使用！河北教师2025全员远程培训项目网课助手'
     /*
     * 以下  配置项 按网站修改
     */
     // 基础功能 展示文字
-    static baseText = '请下载软件使用！(河北教师教育网-2025年中小学幼儿园教师全员远程培训项目（高等教育出版社）网课程助手)'
+    static baseText = '请下载软件使用！(河北教师2025全员远程培训项目网课助手)'
     // 高级功能按钮文字
-    static vipBtnText="目前适配河北教师教育网-2025年中小学幼儿园教师全员远程培训项目（高等教育出版社）。https://px.chinabett.com/，河北省教师教育网还有师学通和电视台项目，后续更新 。"
+    static vipBtnText="目前已经适配高等教育出版社，奥鹏教育，继教网，项目不同可用的倍速不同，可全自动学习所有未完成课程！后续还会发布电视台项目"
     // 网站ID，设置后可跳转到对应文档
     static webId='6953679e3f1a47e81a682ae0'
     // 脚本启动弹窗 的文字介绍，软件功能简介
-    static swFireText="目前适配河北教师教育网-2025年中小学幼儿园教师全员远程培训项目（高等教育出版社）。https://px.chinabett.com/，河北省教师教育网还有师学通和电视台项目，后续更新 。"
+    static swFireText="目前已经适配高等教育出版社，奥鹏教育，继教网，项目不同可用的倍速不同，可全自动学习所有未完成课程！后续还会发布电视台项目 。"
     // 详细的弹窗介绍文本，软件功能，可详细说明
-    static softIntro="目前适配河北教师教育网-2025年中小学幼儿园教师全员远程培训项目（高等教育出版社）。https://px.chinabett.com/，河北省教师教育网还有师学通和电视台项目，后续更新 。"
+    static softIntro="目前已经适配高等教育出版社最高50倍速，奥鹏教育常速，继教网，项目不同可用的倍速不同，可全自动学习所有未完成课程！后续还会发布电视台项目。"
     // 跳转的软件链接，可修改主机地址，一般不用动
     static docLink="https://zzzzzzys.lovestoblog.com?webId="+Utils.webId
     // 阿里云盘下载链接，一般不用动

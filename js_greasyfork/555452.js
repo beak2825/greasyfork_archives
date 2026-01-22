@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Unified Lab Assistant & Receiver plus
-// @version      18.6
-// @description  v18.5: Fixed Patient Type badge for 'ER' status.
+// @version      18.9
+// @description  v18.8: Enhanced Rapid Receiver with STOP button, Reset Status, and performance optimizations for 'ER' status.
 // @match        https://his.kaauh.org/lab/*
 // @author       Hamad AlShegifi 
 // @grant        GM_addStyle
@@ -173,368 +173,350 @@
     // --- RAPID BARCODE RECEIVER FUNCTIONS ---
     // ==========================================
 
-// ===============================================
-// --- RAPID BARCODE RECEIVER UI (UI-ONLY MODE) ---
-// Delegates actual receiving/processing to Script #1 (Batch Collector v3)
-// Requires Script #1 to expose: window.BatchCollectorV3.addMany() + process()
-// ===============================================
+// ==========================================
+    // --- RAPID BARCODE RECEIVER FUNCTIONS ---
+    // ==========================================
 
-function initializeScript() {
-    const closeButtonSelector = "#closebtn-smplrecieve, #btnclose-smplcollection";
+    /* ==========================================================================
+       UTILITY FUNCTIONS
+       ========================================================================== */
 
-    waitForKeyElements(closeButtonSelector, function(closeButton) {
-        // Avoid duplicate injection
-        if (closeButton.parent().find("#rapidReceiveBtn").length > 0) return;
+    // Polyfill for GM_addStyle (already exists globally, but ensuring compatibility)
+    function addRapidReceiverStyle(css) {
+        if (typeof GM_addStyle !== 'undefined') {
+            GM_addStyle(css);
+        } else {
+            const head = document.getElementsByTagName('head')[0];
+            if (!head) return;
+            const style = document.createElement('style');
+            style.type = 'text/css';
+            style.innerHTML = css;
+            head.appendChild(style);
+        }
+    }
 
-        // Add Rapid Receiver button near existing close button
-        let rapidReceiveBtn = $('<button type="button" class="btn btn-color-1" id="rapidReceiveBtn">Rapid Receiver</button>');
-        rapidReceiveBtn.css("margin-right", "5px");
-        closeButton.before(rapidReceiveBtn);
+    /* ==========================================================================
+       RAPID RECEIVER LOGIC
+       ========================================================================== */
 
-        // Create modal only once
-        if ($("#rapidReceiveModal").length === 0) {
-            let modalHTML = `
-                <div id="rapidReceiveModal" class="rr-modal-backdrop">
-                    <div class="rr-modal-content">
-                        <div class="rr-modal-header">
-                            <h2>Rapid Barcode Processor</h2>
-                            <span class="rr-close-button">&times;</span>
+    const INTER_BARCODE_DELAY = 1200; // ms between processing items
+
+    // PERF FIX 1: Global Set for O(1) duplicate checking (removes lag)
+    const existingBarcodes = new Set();
+
+    // FLAG: Controls the processing loop
+    let stopProcessingFlag = false;
+
+    function initializeScript() {
+        const closeButtonSelector = "#closebtn-smplrecieve, #btnclose-smplcollection";
+
+        console.log("Rapid Receiver: Initializing...");
+
+        waitForKeyElements(closeButtonSelector, (closeButton) => {
+            if (closeButton.parent().find('#rapidReceiveBtn').length > 0) return;
+
+            let rapidReceiveBtn = $('<button type="button" class="btn btn-color-1" id="rapidReceiveBtn">Rapid Receiver</button>');
+            rapidReceiveBtn.css('margin-right', '5px');
+            closeButton.before(rapidReceiveBtn);
+
+            if ($('#rapidReceiveModal').length === 0) {
+                injectModal();
+                injectRapidReceiverStyles();
+                attachRapidReceiverEventListeners();
+            }
+
+            closeButton.parent().off('click', '#rapidReceiveBtn').on('click', '#rapidReceiveBtn', openRapidReceiver);
+
+            console.log("Rapid Receiver: Button attached.");
+        }, false);
+    }
+
+    function injectModal() {
+        // Added 'Reset Status' and 'Stop' buttons to the footer
+        let modalHTML = `
+            <div id="rapidReceiveModal" class="rr-modal-backdrop">
+                <div class="rr-modal-content">
+                    <div class="rr-modal-header">
+                        <h2>Rapid Barcode Processor</h2>
+                        <span class="rr-close-button">&times;</span>
+                    </div>
+                    <div class="rr-modal-body">
+                        <input type="text" id="newBarcodeEntry" placeholder="Scan or paste barcodes here and press Enter">
+                        <div id="rr-table-container">
+                            <table id="barcodeTable">
+                                <thead>
+                                    <tr>
+                                        <th class="rr-th-no">No.</th>
+                                        <th class="rr-th-barcode">Barcode</th>
+                                        <th class="rr-th-location">Location</th>
+                                        <th class="rr-th-status">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="barcodeListBody"></tbody>
+                            </table>
                         </div>
-
-                        <div class="rr-modal-body">
-                            <input type="text" id="newBarcodeEntry" placeholder="Scan or paste barcodes here and press Enter">
-                            <div id="rr-table-container">
-                                <table id="barcodeTable">
-                                    <thead>
-                                        <tr>
-                                            <th class="rr-th-no">No.</th>
-                                            <th class="rr-th-barcode">Barcode</th>
-                                            <th class="rr-th-location">Location</th>
-                                            <th class="rr-th-status">Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="barcodeListBody"></tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                        <div class="rr-modal-footer">
-                            <span id="rr-counter" class="rr-counter-style">0 Barcodes Entered</span>
-                            <div>
-                                <button id="clearBarcodesBtn" class="btn btn-danger">Clear</button>
-                                <button id="processBarcodesBtn" class="btn btn-success">Process</button>
-                            </div>
+                    </div>
+                    <div class="rr-modal-footer">
+                        <span id="rr-counter" class="rr-counter-style">0 Barcodes Entered</span>
+                        <div style="display: flex; gap: 5px;">
+                            <button id="resetStatusBtn" class="btn btn-info" title="Reset checkmarks so you can process again">Reset Status</button>
+                            <button id="clearBarcodesBtn" class="btn btn-danger">Clear All</button>
+                            <button id="stopProcessBtn" class="btn btn-warning" style="display:none; font-weight:bold;">STOP</button>
+                            <button id="processBarcodesBtn" class="btn btn-success">Process</button>
                         </div>
                     </div>
                 </div>
-            `;
-            $("body").append(modalHTML);
+            </div>
+        `;
+        $('body').append(modalHTML);
 
-            GM_addStyle(`
-                .rr-modal-backdrop {
-                    display: none;
-                    position: fixed;
-                    z-index: 9999;
-                    left: 0;
-                    top: 0;
-                    width: 100%;
-                    height: 100%;
-                    overflow: auto;
-                    background-color: rgba(0,0,0,0.6);
-                }
-                .rr-modal-content {
-                    display: flex;
-                    flex-direction: column;
-                    background-color: #f8f9fa;
-                    margin: 5% auto;
-                    padding: 25px;
-                    border: none;
-                    width: 90%;
-                    max-width: 900px;
-                    border-radius: 8px;
-                    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-                    height: 80vh;
-                }
-                .rr-modal-header {
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    border-bottom: 1px solid #dee2e6;
-                    padding-bottom: 15px;
-                    margin-bottom: 15px;
-                }
-                .rr-modal-header h2 {
-                    margin: 0;
-                    font-size: 1.5rem;
-                    color: #343a40;
-                }
-                .rr-modal-body {
-                    flex-grow: 1;
-                    display: flex;
-                    flex-direction: column;
-                    overflow: hidden;
-                }
-                .rr-modal-footer {
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    border-top: 1px solid #dee2e6;
-                    padding-top: 15px;
-                    margin-top: 15px;
-                }
-                .rr-close-button {
-                    color: #aaa;
-                    font-size: 32px;
-                    font-weight: bold;
-                    cursor: pointer;
-                    line-height: 1;
-                    width: 32px;
-                    text-align: center;
-                }
-                .rr-close-button:hover { color: black; }
-
-                #newBarcodeEntry {
-                    width: 100%;
-                    padding: 10px;
-                    font-size: 16px;
-                    margin-bottom: 15px;
-                    border: 1px solid #ced4da;
-                    border-radius: 4px;
-                    box-sizing: border-box;
-                }
-                #newBarcodeEntry:focus {
-                    border-color: #80bdff;
-                    outline: 0;
-                    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
-                }
-                #rr-table-container {
-                    flex-grow: 1;
-                    overflow-y: auto;
-                    border: 1px solid #dee2e6;
-                    border-radius: 4px;
-                    background-color: #fff;
-                }
-                #barcodeTable {
-                    width: 100%;
-                    border-collapse: collapse;
-                    table-layout: fixed;
-                }
-                #barcodeTable th, #barcodeTable td {
-                    padding: 4px 15px;
-                    text-align: left;
-                    border-bottom: 1px solid #e9ecef;
-                    vertical-align: middle;
-                }
-                #barcodeTable th {
-                    background-color: #e9ecef;
-                    color: #495057;
-                    position: sticky;
-                    top: 0;
-                    z-index: 5;
-                }
-                #barcodeTable th:not(:last-child),
-                #barcodeTable td:not(:last-child) {
-                    border-right: 1px solid #dee2e6 !important;
-                }
-                #barcodeTable tbody tr:nth-child(even) { background-color: #f8f9fa; }
-
-                .rr-th-no { width: 5%; }
-                .rr-th-barcode { width: 35%; }
-                .rr-th-location { width: 15%; }
-                .rr-th-status { width: 45%; }
-
-                td.status-cell { font-weight: bold; }
-                td.status-cell.success { text-align: center; color: green; font-size: 1.2rem; }
-
-                .rr-counter-style { font-size: 14px; font-weight: bold; color: #555; }
-                #clearBarcodesBtn { margin-right: 10px; }
-                .rr-error-text { color: #D8000C; font-weight: bold; font-size: 12px; }
-
-                .JCLRgrip { background-color: #007bff !important; width: 3px !important; z-index: 99999 !important; }
-            `);
-
-            // Delay initialization to prevent conflicts
-            setTimeout(() => {
-                try {
-                    $("#barcodeTable").colResizable({
-                        liveDrag: true,
-                        gripInnerHtml: "<div class='JCLRgrip'></div>",
-                        minWidth: 30
-                    });
-                } catch (e) {
-                    // ignore if plugin not ready
-                }
-            }, 100);
-        }
-
-        // Cache elements
-        const rapidReceiveModal = $("#rapidReceiveModal");
-        const barcodeListBody = $("#barcodeListBody");
-        const newBarcodeEntry = $("#newBarcodeEntry");
-        const rrCounter = $("#rr-counter");
-        const processBtn = $("#processBarcodesBtn");
-        const clearBtn = $("#clearBarcodesBtn");
-
-        // ---------- UI Helpers ----------
-        function calculateLocation(index) {
-            const letter = String.fromCharCode(65 + Math.floor(index / 10));
-            const number = (index % 10) + 1;
-            return `${letter}${number}`;
-        }
-
-        function updateBarcodeCount() {
-            const count = barcodeListBody.find("tr").length;
-            rrCounter.text(`${count} Barcodes Entered`).css("color", "#555");
-        }
-
-        function clearAllBarcodes() {
-            barcodeListBody.empty();
-            newBarcodeEntry.val("").prop("disabled", false);
-            updateBarcodeCount();
-        }
-
-        function addBarcodeToTable(barcode) {
-            barcode = (barcode || "").trim();
-            if (!barcode) return;
-
-            // prevent duplicates
-            const current = new Set();
-            barcodeListBody.find("td:nth-child(2)").each(function() {
-                current.add($(this).text().trim());
-            });
-            if (current.has(barcode)) return;
-
-            const rowIndex = barcodeListBody.find("tr").length;
-            const rowNum = rowIndex + 1;
-            const location = calculateLocation(rowIndex);
-
-            const newRow = $(`
-                <tr>
-                    <td>${rowNum}</td>
-                    <td>${barcode}</td>
-                    <td>${location}</td>
-                    <td class="status-cell"></td>
-                </tr>
-            `);
-
-            barcodeListBody.append(newRow);
-            updateBarcodeCount();
-        }
-
-        function handleBarcodeEntry(event) {
-            if (event.key === "Enter") {
-                event.preventDefault();
-                const barcode = $(this).val();
-                addBarcodeToTable(barcode);
-                $(this).val("");
-            }
-        }
-
-        function handleBarcodePaste(event) {
-            event.preventDefault();
-            const pastedText = (event.originalEvent && event.originalEvent.clipboardData)
-                ? event.originalEvent.clipboardData.getData("text/plain")
-                : "";
-
-            const barcodes = pastedText
-                .split(/\r?\n|,|\t|;/)
-                .map(x => x.trim())
-                .filter(Boolean);
-
-            barcodes.forEach(addBarcodeToTable);
-            $(this).val("");
-        }
-
-        // ---------- Delegated Processing (to Script #1) ----------
-        async function processBarcodes() {
-            const rowsToProcess = barcodeListBody.find("tr");
-
-            if (rowsToProcess.length === 0) {
-                alert("No barcodes to process.");
-                return;
-            }
-
-            if (!window.BatchCollectorV3 || !window.BatchCollectorV3.isReady || !window.BatchCollectorV3.isReady()) {
-                alert("Batch Collector v3 (script #1) is not ready. Enable it and open the page that contains #barcodecollection.");
-                return;
-            }
-
-            processBtn.prop("disabled", true).text("Sending...");
-            clearBtn.prop("disabled", true);
-            newBarcodeEntry.prop("disabled", true);
-
-            try {
-                const barcodes = [];
-                rowsToProcess.each(function() {
-                    const barcode = $(this).find("td:nth-child(2)").text().trim();
-                    if (barcode) barcodes.push(barcode);
+        setTimeout(() => {
+            if ($.fn.colResizable) {
+                $('#barcodeTable').colResizable({
+                    liveDrag: true,
+                    gripInnerHtml: "<div class='JCLRgrip'></div>",
+                    minWidth: 30
                 });
-
-                // send to Script #1 queue
-                window.BatchCollectorV3.addMany(barcodes);
-
-                // mark as queued in THIS UI
-                rowsToProcess.each(function() {
-                    $(this).find("td.status-cell")
-                        .removeClass("success")
-                        .html('<span style="color:#17a2b8; font-weight:bold; font-size:11px;">Queued</span>');
-                });
-
-                rrCounter.text(`Queued ${barcodes.length}. Processing...`).css("color", "#17a2b8");
-
-                // trigger Script #1 processing
-                window.BatchCollectorV3.process();
-
-                rrCounter.text("Sent to Batch Collector ✔").css("color", "green");
-            } catch (e) {
-                console.error(e);
-                rrCounter.text("Error").css("color", "red");
-                alert("Error while sending barcodes to Batch Collector.");
-            } finally {
-                processBtn.prop("disabled", false).text("Process");
-                clearBtn.prop("disabled", false);
-                newBarcodeEntry.prop("disabled", false).focus();
             }
-        }
+        }, 100);
+    }
 
-        function openRapidReceiver() {
-            rapidReceiveModal.show();
-            clearAllBarcodes();
-            newBarcodeEntry.focus();
-            rrCounter.css("color", "#555");
-            processBtn.prop("disabled", false).text("Process");
-            clearBtn.prop("disabled", false);
-        }
+    function injectRapidReceiverStyles() {
+        GM_addStyle(`
+            .rr-modal-backdrop { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); }
+            .rr-modal-content { display: flex; flex-direction: column; background-color: #f8f9fa; margin: 5% auto; padding: 25px; border: none; width: 90%; max-width: 900px; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); height: 80vh; }
+            .rr-modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #dee2e6; padding-bottom: 15px; margin-bottom: 15px; }
+            .rr-modal-header h2 { margin: 0; font-size: 1.5rem; color: #343a40; }
+            .rr-modal-body { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
+            .rr-modal-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #dee2e6; padding-top: 15px; margin-top: 15px; }
+            .rr-close-button { color: #aaa; font-size: 32px; font-weight: bold; cursor: pointer; line-height: 1; width: 32px; text-align: center; }
+            .rr-close-button:hover { color: black; }
+            #newBarcodeEntry { width: 100%; padding: 10px; font-size: 16px; margin-bottom: 15px; border: 1px solid #ced4da; border-radius: 4px; box-sizing: border-box; }
+            #newBarcodeEntry:focus { border-color: #80bdff; outline: 0; box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25); }
+            #rr-table-container { flex-grow: 1; overflow-y: auto; border: 1px solid #dee2e6; border-radius: 4px; background-color: #fff; }
+            #barcodeTable { width: 100%; border-collapse: collapse; table-layout: fixed; }
+            #barcodeTable th, #barcodeTable td { padding: 4px 15px; text-align: left; border-bottom: 1px solid #e9ecef; vertical-align: middle; }
+            #barcodeTable th { background-color: #e9ecef; color: #495057; position: sticky; top: 0; z-index: 10; }
+            #barcodeTable th:not(:last-child), #barcodeTable td:not(:last-child) { border-right: 1px solid #dee2e6 !important; }
+            #barcodeTable tbody tr:nth-child(even) { background-color: #f8f9fa; }
+            .rr-th-no { width: 5%; }
+            .rr-th-barcode { width: 35%; }
+            .rr-th-location { width: 15%; }
+            .rr-th-status { width: 45%; }
+            td.status-cell { font-weight: bold; text-align: left; }
+            td.status-cell.success { text-align: center; color: green; font-size: 1.2rem; }
+            .rr-counter-style { font-size: 14px; font-weight: bold; color: #555; }
+            .rr-error-text { color: #D8000C; font-weight: bold; font-size: 12px; }
+            .JCLRgrip { background-color: #007bff !important; width: 3px !important; z-index: 99999 !important; }
+        `);
+    }
 
-        // ---------- Event bindings (prevent duplicates) ----------
-        $("body").off("click.rr", ".rr-close-button");
-        $("body").on("click.rr", ".rr-close-button", () => rapidReceiveModal.hide());
-
-        $(window).off("click.rr");
-        $(window).on("click.rr", (event) => {
-            if ($(event.target).is(rapidReceiveModal)) rapidReceiveModal.hide();
+    function attachRapidReceiverEventListeners() {
+        $('body').off('click', '.rr-close-button').on('click', '.rr-close-button', () => $('#rapidReceiveModal').hide());
+        $(window).off('click.rr-modal').on('click.rr-modal', (event) => {
+            if ($(event.target).is('#rapidReceiveModal')) $('#rapidReceiveModal').hide();
         });
 
-        $("body").off("click.rr", "#processBarcodesBtn");
-        $("body").on("click.rr", "#processBarcodesBtn", processBarcodes);
+        $('body').off('click', '#processBarcodesBtn').on('click', '#processBarcodesBtn', processBarcodes);
+        $('body').off('click', '#clearBarcodesBtn').on('click', '#clearBarcodesBtn', clearAllBarcodes);
 
-        $("body").off("click.rr", "#clearBarcodesBtn");
-        $("body").on("click.rr", "#clearBarcodesBtn", clearAllBarcodes);
+        // New Buttons
+        $('body').off('click', '#stopProcessBtn').on('click', '#stopProcessBtn', () => { 
+            stopProcessingFlag = true;
+            $('#stopProcessBtn').prop('disabled', true).text('Stopping...');
+        });
+        $('body').off('click', '#resetStatusBtn').on('click', '#resetStatusBtn', resetStatuses);
 
-        $("body").off("keydown.rr", "#newBarcodeEntry");
-        $("body").on("keydown.rr", "#newBarcodeEntry", handleBarcodeEntry);
+        // Input handling
+        $('body').off('keydown', '#newBarcodeEntry').on('keydown', '#newBarcodeEntry', handleBarcodeEntry);
+        $('body').off('paste', '#newBarcodeEntry').on('paste', '#newBarcodeEntry', handleBarcodePaste);
+    }
 
-        $("body").off("paste.rr", "#newBarcodeEntry");
-        $("body").on("paste.rr", "#newBarcodeEntry", handleBarcodePaste);
+    function openRapidReceiver() {
+        $('#rapidReceiveModal').show();
+        clearAllBarcodes();
+        $('#newBarcodeEntry').focus();
+        $('#rr-counter').css('color', '');
+        $('#processBarcodesBtn, #clearBarcodesBtn, #resetStatusBtn').prop('disabled', false);
+        $('#stopProcessBtn').hide();
+        $('#processBarcodesBtn').show().text('Process');
+    }
 
-        closeButton.parent().off("click.rr", "#rapidReceiveBtn");
-        closeButton.parent().on("click.rr", "#rapidReceiveBtn", openRapidReceiver);
-    }, true);
-}
+    function clearAllBarcodes() {
+        $('#barcodeListBody').empty();
+        $('#newBarcodeEntry').val('').prop('disabled', false);
+        existingBarcodes.clear(); // PERF FIX: Clear Set
+        updateBarcodeCount();
+    }
 
-// Start Rapid Receiver UI lifecycle
-initializeScript();
+    // FEATURE: Reset Statuses
+    function resetStatuses() {
+        const rowCount = $('#barcodeListBody tr').length;
+        if(rowCount === 0) return;
 
+        // Simple confirmation to prevent accidental resets
+        if(confirm(`Reset status for all ${rowCount} barcodes? This allows you to reprocess them.`)) {
+            $('.status-cell').empty().removeClass('success');
+            $('#rr-counter').text('Statuses Reset. Ready to Process.').css('color', 'blue');
+        }
+    }
+
+    function updateBarcodeCount() {
+        const count = $('#barcodeListBody tr').length;
+        $('#rr-counter').text(`${count} Barcodes Entered`);
+    }
+
+    function addBarcodeToTable(barcode) {
+        barcode = barcode.trim();
+        if (barcode === '') return;
+
+        // PERF FIX 1: Use Set instead of DOM Loop
+        // This makes adding 500+ items instant
+        if (existingBarcodes.has(barcode)) return;
+        existingBarcodes.add(barcode);
+
+        const rowIndex = $('#barcodeListBody tr').length;
+        const rowNum = rowIndex + 1;
+
+        const letter = String.fromCharCode(65 + Math.floor(rowIndex / 10));
+        const number = (rowIndex % 10) + 1;
+        const location = `${letter}${number}`;
+
+        const newRow = `
+            <tr>
+                <td>${rowNum}</td>
+                <td>${barcode}</td>
+                <td>${location}</td>
+                <td class="status-cell"></td>
+            </tr>
+        `;
+        $('#barcodeListBody').append(newRow);
+        updateBarcodeCount();
+    }
+
+    function handleBarcodeEntry(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            const barcodeInput = $(this);
+            const barcode = barcodeInput.val();
+            addBarcodeToTable(barcode);
+            barcodeInput.val('');
+        }
+    }
+
+    function handleBarcodePaste(event) {
+        event.preventDefault();
+        const pastedText = (event.originalEvent || event).clipboardData.getData('text/plain');
+        const barcodes = pastedText.split(/\r?\n/).filter(line => line.trim() !== '');
+        barcodes.forEach(barcode => addBarcodeToTable(barcode));
+        $(this).val('');
+    }
+
+    // --- Processing Logic ---
+
+    const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+    const dispatchEvent = (element, eventType) => element.dispatchEvent(new Event(eventType, { bubbles: true }));
+
+    const simulateEnter = async (element) => {
+        const commonEventProps = { key: 'Enter', code: 'Enter', keyCode: 13, which: 13, bubbles: true, cancelable: true };
+        element.dispatchEvent(new KeyboardEvent('keydown', commonEventProps));
+        await sleep(50);
+        element.dispatchEvent(new KeyboardEvent('keyup', commonEventProps));
+    };
+
+    async function processBarcodes() {
+        const barcodeInput = $('#barcodecollection');
+        const processButton = $('#processBarcodesBtn');
+        const clearButton = $('#clearBarcodesBtn');
+        const resetStatusBtn = $('#resetStatusBtn');
+        const stopButton = $('#stopProcessBtn');
+        const entryInput = $('#newBarcodeEntry');
+        const counterElement = $('#rr-counter');
+
+        const rowsToProcess = $('#barcodeListBody tr').filter(function() {
+            const status = $(this).find('td.status-cell').text().trim();
+            return status !== '✔️';
+        });
+
+        if (rowsToProcess.length === 0) {
+            alert('No new or failed barcodes to process.');
+            return;
+        }
+        if (barcodeInput.length === 0) {
+            alert('Error: Main barcode input field "#barcodecollection" not found.');
+            return;
+        }
+
+        // --- LOCK UI & SHOW STOP BUTTON ---
+        stopProcessingFlag = false;
+        processButton.hide(); // Hide process button
+        stopButton.show().prop('disabled', false).text('STOP'); // Show stop button
+
+        clearButton.prop('disabled', true);
+        resetStatusBtn.prop('disabled', true);
+        entryInput.prop('disabled', true);
+
+        let processedCount = 0;
+
+        for (const row of rowsToProcess) {
+            // STOP CHECK
+            if (stopProcessingFlag) {
+                counterElement.text('⚠️ Processing Stopped by User').css('color', 'orange');
+                break;
+            }
+
+            processedCount++;
+            counterElement.text(`Processing: ${processedCount} / ${rowsToProcess.length}`);
+
+            const $row = $(row);
+            const barcode = $row.find('td:nth-child(2)').text();
+            const statusCell = $row.find('td.status-cell');
+            statusCell.removeClass('success').html('...');
+
+            try {
+                const inputElement = barcodeInput[0];
+                inputElement.value = barcode;
+                dispatchEvent(inputElement, 'input');
+                dispatchEvent(inputElement, 'change');
+
+                await sleep(100);
+
+                inputElement.focus();
+                await simulateEnter(inputElement);
+
+                await sleep(600);
+
+                const $errorAlert = $("div.alert.alert-danger:visible");
+                if ($errorAlert.length > 0) {
+                    const errorMessage = $errorAlert.find('strong').text().trim() || 'Unknown Error';
+                    statusCell.html(`<span class="rr-error-text">${errorMessage}</span>`);
+                } else {
+                    statusCell.addClass('success').html('✔️');
+                }
+
+                $('.alert-dismissable .close').click();
+
+            } catch (e) {
+                console.error(e);
+                statusCell.html(`<span class="rr-error-text">Script Error</span>`);
+            }
+
+            await sleep(INTER_BARCODE_DELAY - 600);
+        }
+
+        // --- UNLOCK UI ---
+        stopButton.hide();
+        processButton.show().prop('disabled', false).text('Process');
+        clearButton.prop('disabled', false);
+        resetStatusBtn.prop('disabled', false);
+        entryInput.prop('disabled', false).focus();
+
+        if (!stopProcessingFlag) {
+            counterElement.text('✅ Complete!').css('color', 'green');
+        }
+    }
+
+    initializeScript();
 
     // --- END OF RAPID BARCODE RECEIVER FUNCTIONS ---
 

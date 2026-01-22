@@ -2,7 +2,7 @@
 // @name         Bilibili 账号已注销修正
 // @name:zh-CN   Bilibili 账号已注销修正
 // @namespace    http://tampermonkey.net/
-// @version      2.7.1
+// @version      2.7.2
 // @license      MIT
 // @description  修正Bilibili 账户已注销的主页链接，修改为 https://www.bilibili.com/list/$UID
 // @description:zh-CN  修正Bilibili 账户已注销的主页链接，修改为 https://www.bilibili.com/list/$UID
@@ -71,7 +71,7 @@
     let regular = true;
     if (
       ["space.bilibili.com", "search.bilibili.com", "bilibili.com/opus"].some(
-        (prefix) => (location.hostname + location.pathname).includes(prefix)
+        (prefix) => (location.hostname + location.pathname).includes(prefix),
       )
     ) {
       text = tag.textContent.split(" ").filter((s) => s.trim() !== "")[0];
@@ -88,7 +88,7 @@
         const uid =
           window.__INITIAL_STATE__?.detail?.basic?.uid ??
           window.__INITIAL_STATE__?.detail?.modules?.find(
-            (m) => m.module_author
+            (m) => m.module_author,
           )?.module_author?.mid;
         if (!uid) return;
         makeLinkPreview(tag, `https://www.bilibili.com/list/${uid}`);
@@ -98,7 +98,7 @@
             e.preventDefault();
             window.open(`https://www.bilibili.com/list/${uid}`, "_blank");
           },
-          { capture: true }
+          { capture: true },
         );
         tag.querySelector(".opus-module-author__name").textContent =
           str + uidToShortId(uid);
@@ -109,11 +109,18 @@
       else
         tag.textContent = tag.textContent.replace(
           str,
-          str + uidToShortId(match[1])
+          str + uidToShortId(match[1]),
         );
-      if (tag.scrollWidth > tag.clientWidth) {
-        // 内容溢出就加悬停提示
+      if (
+        tag.scrollWidth > tag.clientWidth ||
+        tag.scrollHeight > tag.clientHeight
+      ) {
         tag.title = tag.textContent;
+        if (tag.textContent.includes(" · "))
+          tag.textContent = tag.textContent.replace(
+            / · 收藏于\d+-\d+-\d+$/,
+            "",
+          );
       }
       if (match && type == "normal") {
         tag.href = `https://www.bilibili.com/list/${match[1]}`;
@@ -144,10 +151,10 @@
       }
       processRichTextLinks(bili);
       const replies = renderer.shadowRoot.querySelector(
-        "bili-comment-replies-renderer"
+        "bili-comment-replies-renderer",
       );
       const replyNodes = replies.shadowRoot.querySelectorAll(
-        "bili-comment-reply-renderer"
+        "bili-comment-reply-renderer",
       );
       replyNodes.forEach((reply) => {
         const rUser = reply.shadowRoot
@@ -166,7 +173,7 @@
     const startElement = document.querySelector("bili-comments");
     if (startElement && startElement.shadowRoot) {
       const allElements = startElement.shadowRoot.querySelectorAll(
-        "bili-comment-thread-renderer:not([data-processed])"
+        "bili-comment-thread-renderer:not([data-processed])",
       );
       processCommentRenderers(allElements);
     }
@@ -234,7 +241,7 @@
 
   // === 用户输入事件 ===
   ["mousemove", "mousedown", "keydown", "wheel", "touchstart"].forEach((e) =>
-    window.addEventListener(e, onUserActive, { passive: true })
+    window.addEventListener(e, onUserActive, { passive: true }),
   );
 
   // === 页面可见性 ===

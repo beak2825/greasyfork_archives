@@ -5,7 +5,7 @@
 // @match https://www.geocaching.com/geocache/*
 // @match http://geocaching.com/geocache/*
 // @match https://geocaching.com/geocache/*
-// @version 1.8
+// @version 1.81
 // @namespace https://greasyfork.org/en/scripts/464566-geocaching-puzzle-helper
 // @homepage https://greasyfork.org/en/scripts/464566-geocaching-puzzle-helper
 // @license MIT
@@ -124,67 +124,7 @@
        });
     }
 
-    // Utility functions for data extraction
-    function getAllComments(rootElem) {
-        const iterator = document.createNodeIterator(rootElem, NodeFilter.SHOW_COMMENT, null, false);
-        const comments = [];
-        let curNode;
-        while ((curNode = iterator.nextNode())) {
-            comments.push(curNode.nodeValue);
-        }
-        return comments;
-    }
 
-    function getAllLinks(rootElem, hostedLinks, extraTextLinks) {
-        const allLinks = Array.from(rootElem.querySelectorAll('a'));
-        const uniqueLinks = allLinks
-        .map(link => link.href)
-        .filter(link => {
-            const lowerLink = link.toLowerCase();
-            return !hostedLinks.map(l => l.toLowerCase()).includes(lowerLink) &&
-                !extraTextLinks.map(l => l.toLowerCase()).includes(lowerLink);
-        });
-        return [...new Set(uniqueLinks)]; // Ensure no duplicates with original case preserved
-    }
-
-    function getHostedLinks(rootElem, otherArray) {
-        const imgs = Array.from(rootElem.getElementsByTagName('img'));
-        return imgs
-            .map(img => img.src) // Preserve original case
-            .filter(src => {
-            const lowerSrc = src.toLowerCase();
-            return (
-                (!lowerSrc.includes("s3.amazonaws.com/gs-geo-images") &&
-                 !lowerSrc.includes(".geocaching.com") &&
-                 !lowerSrc.includes(".groundspeak.com")) ||
-                lowerSrc.includes("?")
-            );
-        })
-            .filter(src => !otherArray.includes(src));
-    }
-
-    function getImageMapLinks(rootElem) {
-    return Array.from(rootElem.querySelectorAll('map area[href]'))
-        .map(area => area.href);
-    }
-
-    function getWhiteText(rootElem) {
-        const whiteColors = ["#ffffff", "white", "rgb(255, 255, 255)"].map(c => c.toLowerCase());
-        return Array.from(rootElem.getElementsByTagName("*"))
-            .filter(el => {
-            const styleColor = el.style.color?.toLowerCase();
-            const attrColor = el.getAttribute("color")?.toLowerCase();
-            return whiteColors.includes(styleColor) || whiteColors.includes(attrColor);
-        })
-            .map(el => el.innerHTML);
-    }
-
-    function getExtraText(rootElem, hostedLinks) {
-    const attributes = ["alt", "name", "id", "title"];
-    return Array.from(rootElem.getElementsByTagName("*"))
-        .flatMap(el => attributes.map(attr => el.getAttribute(attr)).filter(Boolean))
-        .filter(text => !hostedLinks.includes(text.toLowerCase())); // Exclude links in hostedLinks
-    }
 
 
     function addButton(parent, text, title, onclick, append = false) {
@@ -245,6 +185,67 @@
         descriptionheader.appendChild(buttondiv);
     }
 
+        // Utility functions for data extraction
+    function getAllComments(rootElem) {
+        const iterator = document.createNodeIterator(rootElem, NodeFilter.SHOW_COMMENT, null, false);
+        const comments = [];
+        let curNode;
+        while ((curNode = iterator.nextNode())) {
+            comments.push(curNode.nodeValue);
+        }
+        return comments;
+    }
+
+    function getAllLinks(rootElem, hostedLinks, extraTextLinks) {
+        const allLinks = Array.from(rootElem.querySelectorAll('a'));
+        const uniqueLinks = allLinks
+        .map(link => link.href)
+        .filter(link => {
+            const lowerLink = link.toLowerCase();
+            return !hostedLinks.map(l => l.toLowerCase()).includes(lowerLink) &&
+                !extraTextLinks.map(l => l.toLowerCase()).includes(lowerLink);
+        });
+        return [...new Set(uniqueLinks)]; // Ensure no duplicates with original case preserved
+    }
+
+    function getHostedLinks(rootElem, otherArray) {
+        const imgs = Array.from(rootElem.getElementsByTagName('img'));
+        return imgs
+            .map(img => img.src) // Preserve original case
+            .filter(src => {
+            const lowerSrc = src.toLowerCase();
+            return (
+                (!lowerSrc.includes("s3.amazonaws.com/gs-geo-images") &&
+                 !lowerSrc.includes(".geocaching.com") &&
+                 !lowerSrc.includes(".groundspeak.com")) ||
+                lowerSrc.includes("?")
+            );
+        })
+            .filter(src => !otherArray.includes(src));
+    }
+
+    function getImageMapLinks(rootElem) {
+    return Array.from(rootElem.querySelectorAll('map area[href]'))
+        .map(area => area.href);
+    }
+
+    function getWhiteText(rootElem) {
+        const whiteColors = ["#ffffff", "white", "rgb(255, 255, 255)"].map(c => c.toLowerCase());
+        return Array.from(rootElem.getElementsByTagName("*"))
+            .filter(el => {
+            const styleColor = el.style.color?.toLowerCase();
+            const attrColor = el.getAttribute("color")?.toLowerCase();
+            return whiteColors.includes(styleColor) || whiteColors.includes(attrColor);
+        })
+            .map(el => el.innerHTML);
+    }
+
+    function getExtraText(rootElem, hostedLinks) {
+    const attributes = ["alt", "name", "id", "title"];
+    return Array.from(rootElem.getElementsByTagName("*"))
+        .flatMap(el => attributes.map(attr => el.getAttribute(attr)).filter(Boolean))
+        .filter(text => !hostedLinks.includes(text.toLowerCase())); // Exclude links in hostedLinks
+    }
 
     /**
      * Handles click events for buttons.

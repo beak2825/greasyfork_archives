@@ -2,7 +2,7 @@
 // @name         SOOP (숲) - 사이드바 UI 변경(백업본)
 // @name:ko         SOOP (숲) - 사이드바 UI 변경(백업본)
 // @namespace    https://greasyfork.org/ko/scripts/551140
-// @version      20260120(08.01).ver2
+// @version      20260121(08.01)
 // @description  사이드바 UI 변경, 월별 리캡, 채팅 모아보기, 차단기능 등
 // @description:ko  사이드바 UI 변경, 월별 리캡, 채팅 모아보기, 차단기능 등
 // @author       askld / eldirna(복구)
@@ -3531,99 +3531,181 @@ body:not(.screen_mode):not(.fullScreen_mode):has(#sidebar.min) #webplayer_conten
             })()
         }*/
     const makeTopNavbarAndSidebar = (page) => {
-
-        // [검문소 1] 시작하자마자 방송국이면 즉시 종료
-        if (window.location.href.includes('/station/') || window.location.href.includes('ch.sooplive.co.kr')) {
-            document.body.classList.remove('customSidebar');
-            return;
-        }
-
-        // .left_navbar를 찾거나 생성
+        // [1] 확장프로그램용 왼쪽 사이드바(메뉴바) 관리
         let leftNavbar = document.body.querySelector('.left_navbar');
+
+        // 메뉴바가 없을 때만 생성 (중복 실행 방지)
         if (!leftNavbar) {
             leftNavbar = document.createElement('div');
             leftNavbar.className = 'left_navbar';
 
-            // ★★★ 여기가 핵심입니다 ★★★
-            (async () => {
-                // 헤더가 나올 때까지 기다림...
-                const serviceHeaderDiv = await waitForElementAsync('#serviceHeader');
+            // 1-1. 버튼 생성 로직
+            const buttonFragment = document.createDocumentFragment();
+            BUTTON_DATA.reverse().forEach(data => {
+                const newButton = document.createElement('a');
+                newButton.innerHTML = `<button type="button" class="left_nav_button">${data.text}</button>`;
 
-                // [검문소 2] 기다리는 동안 방송국으로 바뀌었는지 확인! (시간차 방어)
-                if (window.location.href.includes('/station/') || window.location.href.includes('ch.sooplive.co.kr')) {
-                    // 방송국이네? 그럼 붙이지 마!
-                    leftNavbar.remove(); // 혹시 메모리에 있으면 삭제
-                    return;
+                const isTargetUrl = CURRENT_URL.startsWith("https://www.sooplive.co.kr");
+                const triggerClick = (event) => {
+                    event.preventDefault();
+                    const targetElement = isTargetUrl && data.onClickTarget ? document.querySelector(data.onClickTarget) : null;
+                    if (targetElement) {
+                        targetElement.click();
+                    } else {
+                        customLog.warn("타겟 요소를 찾을 수 없음:", data.onClickTarget);
+                    }
+                };
+
+                if (isTargetUrl && data.onClickTarget) {
+                    const observer = new MutationObserver((mutations, obs) => {
+                        const targetElement = document.querySelector(data.onClickTarget);
+                        if (targetElement) {
+                            obs.disconnect();
+                            newButton.addEventListener('click', triggerClick);
+                        }
+                    });
+                    observer.observe(document.body, { childList: true, subtree: true });
+                } else {
+                    newButton.href = data.href;
+                    newButton.target = isOpenNewtabEnabled ? "_blank" : "_self";
+                }
+                buttonFragment.appendChild(newButton);
+            });
+            leftNavbar.appendChild(buttonFragment);
+
+            // 1-2. 헤더에 메뉴바 붙이기 (비동기)
+            (async () => {
+                const serviceHeaderDiv = await waitForElementAsync('#serviceHeader');
+                serviceHeaderDiv.prepend(leftNavbar);
+            })();
+
+                // 1-3. [핵심] 방송국 vs 일반 페이지 레이아웃 관리자
+            const maintainStationLayout = () => {
+                // (1) 왼쪽 강제 여백 제거 & 우측 사이드바 삭제
+                if (document.body.classList.contains('customSidebar')) {
+                    document.body.classList.remove('customSidebar');
+                }
+                const oldSidebar = document.getElementById('sidebar');
+                if (oldSidebar) oldSidebar.remove();
+
+               // (2) 중앙 레이아웃(메인) 강제 확장
+                const stationMain = document.querySelector('div[class*="layout_stationMain"]');
+                if (stationMain) {
+                    stationMain.style.setProperty('max-width', 'none', 'important');
+                    stationMain.style.setProperty('width', '100%', 'important');
+                    stationMain.style.setProperty('grid-template-columns', '1fr', 'important');
+                    stationMain.style.setProperty('padding-right', '0px', 'important');
                 }
 
-                // 방송국이 아닐 때만 붙이기
-                serviceHeaderDiv.prepend(leftNavbar);
-            })()
-        }
+                // ★★★ (3) [방송국 전용] 상단 버튼 & 로고 위치 조정 ★★★
+                const btnFlexible = document.querySelector('.btn_flexible');
+                if (btnFlexible) {
+                    btnFlexible.style.setProperty('margin-left', '-20px', 'important');
+                }
 
-        // 버튼을 미리 만들어 DocumentFragment에 추가
-        const buttonFragment = document.createDocumentFragment();
+                const logoWrap = document.querySelector('.logo_wrap');
+                if (logoWrap) {
+                    logoWrap.style.setProperty('margin-left', '-25px', 'important');
+                }
 
-        BUTTON_DATA.reverse().forEach(data => {
-            const newButton = document.createElement('a');
-            newButton.innerHTML = `<button type="button" class="left_nav_button">${data.text}</button>`;
-
-            const isTargetUrl = CURRENT_URL.startsWith("https://www.sooplive.co.kr");
-
-            // 이벤트 리스너 함수 정의
-            const triggerClick = (event) => {
-                event.preventDefault();
-                const targetElement = isTargetUrl && data.onClickTarget ? document.querySelector(data.onClickTarget) : null;
-                if (targetElement) {
-                    targetElement.click(); // 타겟 요소 클릭
-                } else {
-                    customLog.warn("타겟 요소를 찾을 수 없음:", data.onClickTarget);
+                // (4) [방송국 전용] 확장프로그램 메뉴바 위치 이동
+                if (leftNavbar) {
+                    leftNavbar.style.setProperty('left', '130px', 'important');
                 }
             };
 
-            // MutationObserver 설정: 타겟 요소가 로드될 때까지 기다림
-            if (isTargetUrl && data.onClickTarget) {
-                const observer = new MutationObserver((mutations, observer) => {
-                    const targetElement = document.querySelector(data.onClickTarget);
-                    if (targetElement) {
-                        observer.disconnect(); // 요소가 확인되면 Observer 중지
-                        newButton.addEventListener('click', triggerClick);
+            const restoreDefaultLayout = () => {
+                // (일반 모드) 왼쪽 강제 여백 복구
+                if (!document.body.classList.contains('customSidebar')) {
+                    document.body.classList.add('customSidebar');
+                }
+
+                // ★★★ [복구] 상단 버튼 & 로고 위치 초기화 (방송국 설정 제거) ★★★
+                const btnFlexible = document.querySelector('.btn_flexible');
+                if (btnFlexible) {
+                    btnFlexible.style.removeProperty('margin-left'); // 원래대로
+                }
+
+                const logoWrap = document.querySelector('.logo_wrap');
+                if (logoWrap) {
+                    logoWrap.style.removeProperty('margin-left'); // 원래대로
+                }
+
+            // 메뉴바 위치 원상복구
+                if (leftNavbar) {
+                    leftNavbar.style.removeProperty('left');
+                }
+
+                // 삭제된 사이드바 부활 및 내용물 채우기
+                if (!document.getElementById('sidebar')) {
+                    const sidebarClass = isSidebarMinimized ? "min" : "max";
+                    const sidebarHtml = `<div id="sidebar" class="${sidebarClass}"></div>`;
+
+                    if (window.location.href.includes('/player/')) {
+                        document.body.insertAdjacentHTML('beforeend', sidebarHtml);
+                    } else {
+                        const gnb = document.getElementById('soop-gnb');
+                        if (gnb) gnb.insertAdjacentHTML('afterend', sidebarHtml);
                     }
-                });
-                observer.observe(document.body, { childList: true, subtree: true });
-            } else {
-                // 기본 링크 설정
-                newButton.href = data.href;
-                newButton.target = isOpenNewtabEnabled ? "_blank" : "_self";
+
+                    // 내용물 다시 채워 넣기 (초기화)
+                    if (typeof initializeSidebar === 'function') {
+                        initializeSidebar(false);
+                    }
+
+                    // 툴팁 컨테이너 복구
+                    if (!document.querySelector('.tooltip-container')) {
+                        const tooltipContainer = document.createElement('div');
+                        tooltipContainer.classList.add('tooltip-container');
+                        document.body.appendChild(tooltipContainer);
+                    }
+                }
+            };
+
+            // 1-4. 페이지 변화 감시 시작 (URL 변경 감지)
+            const observer = new MutationObserver(() => {
+                const currentUrl = window.location.href;
+                const isStation = currentUrl.includes('/station/') || currentUrl.includes('ch.sooplive.co.kr');
+
+                if (isStation) {
+               maintainStationLayout();
+           } else {
+                    restoreDefaultLayout();
+                }
+            });
+
+            observer.observe(document.body, { childList: true, subtree: true });
+
+            // 1-5. 최초 실행 (새로고침 직후)
+            // 방송국일 때만 실행 (일반 페이지는 건드리지 않음 -> 중복 생성 방지)
+            const initialUrl = window.location.href;
+            if (initialUrl.includes('/station/') || initialUrl.includes('ch.sooplive.co.kr')) {
+                maintainStationLayout();
             }
 
-            buttonFragment.appendChild(newButton);
-        });
+        } // if (!leftNavbar) 닫힘
 
-        leftNavbar.appendChild(buttonFragment); // 한 번에 추가
-
-        const tooltipContainer = document.createElement('div');
-        tooltipContainer.classList.add('tooltip-container');
-
+        // [2] 페이지별 사이드바 컨텐츠 생성 (최초 로딩 시 사용 - 원래 기능)
         const sidebarClass = isSidebarMinimized ? "min" : "max";
+        const existingSidebar = document.getElementById('sidebar');
 
-        if (page === "main") {
-            const newHtml = `
-            <div id="sidebar" class="max"></div>
-            `;
+        if (!document.querySelector('.tooltip-container')) {
+            const tooltipContainer = document.createElement('div');
+            tooltipContainer.classList.add('tooltip-container');
+            document.body.appendChild(tooltipContainer);
+        }
+
+        if (page === "main" && !existingSidebar) {
+            const newHtml = `<div id="sidebar" class="max"></div>`;
             const serviceLnbElement = document.getElementById('soop-gnb');
             if (serviceLnbElement) {
                 serviceLnbElement.insertAdjacentHTML('afterend', newHtml);
             }
-            document.body.appendChild(tooltipContainer);
         }
 
-        if (page === "player") {
-            const sidebarHtml = `
-            <div id="sidebar" class="${sidebarClass}"></div>
-            `;
+        if (page === "player" && !existingSidebar) {
+            const sidebarHtml = `<div id="sidebar" class="${sidebarClass}"></div>`;
             document.body.insertAdjacentHTML('beforeend', sidebarHtml);
-            document.body.appendChild(tooltipContainer);
         }
     };
 

@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name        Ficbook FB2 & EPUB Export
 // @namespace   http://tampermonkey.net/
-// @version     1.1.4
-// @build       2025-12-28 15:08
+// @version     1.2.3
+// @build       2026-01-21 23:34
 // @description Download books from Ficbook in FB2 and EPUB formats
 // @author      tsuki8neko
 // @match       https://ficbook.net/readfic/*
@@ -108,12 +108,56 @@ function textToParagraphs(text) {
         .join("\n");
 }
 
+;// ./src/utils/delay.js
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 ;// ./src/core/getChapter.js
 
 
-async function getChapter(url) {
-    let res = await fetch(url);
+
+async function getChapter(url, attempt = 1) {
+    const MAX_ATTEMPTS = 7; // Количество попыток повторного скачивания
+
+    // Задержка после успешной загрузки
+    await delay(500 + Math.random() * 300);
+
+    let res;
+    try {
+        res = await fetch(url);
+    } catch (e) {
+        console.warn(`Ошибка сети при загрузке ${url}: ${e}`);
+        if (attempt < MAX_ATTEMPTS) {
+            await delay(1000 * attempt);
+            return getChapter(url, attempt + 1);
+        }
+        throw e;
+    }
+
     let html = await res.text();
+
+    // --- Универсальная проверка на пустой/битый HTML ---
+    const looksEmpty =
+        !html ||
+        html.length < 500 ||
+        html.includes("cf-browser-verification") ||
+        html.includes("Cloudflare") ||
+        html.includes("Too Many Requests") ||
+        html.includes("<title>429") ||
+        html.includes("<title>502");
+
+    if (looksEmpty) {
+        console.warn(`Пустой HTML — попытка ${attempt}/${MAX_ATTEMPTS}`);
+
+        if (attempt < MAX_ATTEMPTS) {
+            await delay(1200 * attempt + Math.random() * 500);
+            return getChapter(url, attempt + 1);
+        }
+
+        throw new Error(`Не удалось загрузить ${url}: пустой HTML`);
+    }
+
     let doc = new DOMParser().parseFromString(html, "text/html");
 
     let title = doc.querySelector(".title-area h2, .part-title h3")?.innerText.trim() || "Глава";
@@ -124,30 +168,41 @@ async function getChapter(url) {
     // Удаляем дату и отзывы на странице содержания
     doc.querySelectorAll(".part-info").forEach(el => el.remove());
 
+    // Для многочастных фанфиков
     let contentNode = doc.querySelector("#part_content");
-    if (contentNode) {
 
-        // Удаляем служебные элементы внутри текста
+    // Для одноглавных фанфиков (нет оглавления)
+    if (!contentNode) {
+        contentNode = doc.querySelector("#content.js-part-text, #content.part_text, #content");
+    }
+
+    if (contentNode) {
         contentNode.querySelectorAll(
             ".js-collapsible, .js-text-settings-collapse-button, .ad, .part-footer, .chapter-time, .text_settings, .tags"
         ).forEach(el => el.remove());
 
-        // Удаляем заголовки внутри текста
         contentNode.querySelector("h1, h2, h3")?.remove();
     }
 
-    let content = contentNode ? contentNode.innerText : "";
+    let content = contentNode ? contentNode.innerText.trim() : "";
+
+    // --- Проверка: глава пустая ---
+    if (!content) {
+        console.warn(`Контент пустой — попытка ${attempt}/${MAX_ATTEMPTS}`);
+
+        if (attempt < MAX_ATTEMPTS) {
+            await delay(1200 * attempt + Math.random() * 500);
+            return getChapter(url, attempt + 1);
+        }
+
+        throw new Error(`Не удалось загрузить ${url}: контент пустой`);
+    }
 
     return {
         title,
-        plain: content.trim(),
+        plain: content,
         xhtml: textToParagraphs(content)
     };
-}
-
-;// ./src/utils/delay.js
-function delay(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 ;// ./src/utils/generateFileName.js
@@ -303,6 +358,14 @@ async function createFB2(onProgress = () => {}, isCancelled = () => false) {
             return /^\d+$/.test(last);
         });
 
+    // Если список глав пуст — значит глава одна, и она уже открыта
+    if (rawChapters.length === 0) {
+        rawChapters = [{
+            href: location.href
+        }];
+    }
+
+
     let chapters = [];
     let seen = new Set();
     for (let ch of rawChapters) {
@@ -314,39 +377,94 @@ async function createFB2(onProgress = () => {}, isCancelled = () => false) {
 
     const total = chapters.length;
 
+    // 🔥 список неудачных глав
+    let failedChapters = [];
+
+    // ---------------------------
+    //   ПЕРВЫЙ ПРОХОД
+    // ---------------------------
     for (let chapter of chapters) {
 
         if (isCancelled()) throw new Error("cancelled");
 
         onProgress(chapterIndex, total);
 
-        if (isCancelled()) throw new Error("cancelled");
-
         await delay(800 + Math.random() * 700);
 
-        if (isCancelled()) throw new Error("cancelled");
+        try {
+            let { title: chTitle, xhtml } = await getChapter(chapter.href);
 
-        let { title: chTitle, xhtml } = await getChapter(chapter.href);
+            tocEntries.push({
+                id: `ch${chapterIndex}`,
+                title: `•\u2003${chTitle}`
+            });
 
-        if (isCancelled()) throw new Error("cancelled");
+            fb2Chapters += `
+            <section id="ch${chapterIndex}">
+                <title><p>•\u2003${chTitle}</p></title>
+                ${xhtml}
+            </section>`;
 
-        // НУМЕРАЦИЯ В ОГЛАВЛЕНИИ (теперь с •)
-        tocEntries.push({
-            id: `ch${chapterIndex}`,
-            title: `•\u2003${chTitle}`
-        });
-
-        // НУМЕРАЦИЯ В ТЕКСТЕ FB2 (теперь с •)
-        fb2Chapters += `
-        <section id="ch${chapterIndex}">
-            <title><p>•\u2003${chTitle}</p></title>
-            ${xhtml}
-        </section>`;
-
+        } catch (err) {
+            console.warn("Не удалось загрузить главу:", chapter.href, err);
+            failedChapters.push({ chapter, index: chapterIndex });
+        }
 
         chapterIndex++;
     }
 
+    // ---------------------------
+    //   ВТОРОЙ ПРОХОД (повторная загрузка)
+    // ---------------------------
+    if (failedChapters.length > 0) {
+        console.warn("Повторная загрузка неудачных глав:", failedChapters.length);
+
+        for (let item of failedChapters) {
+            const { chapter, index } = item;
+
+            await delay(1500 + Math.random() * 1000);
+
+            try {
+                let { title: chTitle, xhtml } = await getChapter(chapter.href);
+
+                // обновляем оглавление
+                tocEntries[index - 1] = {
+                    id: `ch${index}`,
+                    title: `•\u2003${chTitle}`
+                };
+
+                // добавляем текст главы
+                fb2Chapters += `
+                <section id="ch${index}">
+                    <title><p>•\u2003${chTitle}</p></title>
+                    ${xhtml}
+                </section>`;
+
+                item.success = true;
+
+            } catch (err) {
+                console.warn("Повторно не удалось загрузить:", chapter.href);
+                item.success = false;
+            }
+        }
+
+        // оставшиеся неудачные
+        failedChapters = failedChapters.filter(ch => !ch.success);
+    }
+
+    // ---------------------------
+    //   Если остались ошибки
+    // ---------------------------
+    if (failedChapters.length > 0) {
+        alert(
+            "Некоторые главы не удалось загрузить:\n" +
+            failedChapters.map(f => f.chapter.href).join("\n")
+        );
+    }
+
+    // ---------------------------
+    //   Сборка FB2
+    // ---------------------------
     let fb2Toc = buildFb2Toc(tocEntries);
     let fb2Body = buildFb2Body(fb2Chapters);
 
@@ -598,12 +716,6 @@ function buildNcx(title, chapters) {
 
 
 
-/**
- * createEPUB(onProgress, isCancelled)
- *
- * onProgress(current, total) — вызывается перед загрузкой каждой главы
- * isCancelled() — функция, возвращающая true, если пользователь нажал "Остановить"
- */
 async function createEPUB(onProgress = () => {}, isCancelled = () => false) {
     // JSZip loader
     if (!window.JSZip) {
@@ -628,7 +740,7 @@ async function createEPUB(onProgress = () => {}, isCancelled = () => false) {
     const { fandom, size, tags, description, notes, otherPublication } = getExtraData();
     const { direction, rating, status } = getDirectionRatingStatus();
 
-    // ---------- СБОР СПИСКА ГЛАВ (как в FB2) ----------
+    // ---------- СБОР СПИСКА ГЛАВ ----------
     let rawChapters = Array.from(document.querySelectorAll(".list-of-fanfic-parts .part-link"))
         .filter(ch => {
             if (!ch.href) return false;
@@ -637,6 +749,14 @@ async function createEPUB(onProgress = () => {}, isCancelled = () => false) {
             let last = clean.split("/").pop();
             return /^\d+$/.test(last);
         });
+
+    // Если список глав пуст — значит глава одна, и она уже открыта
+    if (rawChapters.length === 0) {
+        rawChapters = [{
+            href: location.href
+        }];
+    }
+
 
     let chaptersList = [];
     let seen = new Set();
@@ -651,47 +771,83 @@ async function createEPUB(onProgress = () => {}, isCancelled = () => false) {
     const chapters = [];
     let index = 1;
 
-    // ---------- ЗАГРУЗКА ГЛАВ ----------
+    // 🔥 список неудачных глав
+    let failedChapters = [];
+
+    // ---------- ПЕРВЫЙ ПРОХОД ----------
     for (let chapter of chaptersList) {
 
-        // Проверяем отмену ДО загрузки
         if (isCancelled()) throw new Error("cancelled");
 
-        // Прогресс
         onProgress(index, total);
 
-        // Проверяем отмену
         if (isCancelled()) throw new Error("cancelled");
 
-        // Делаем задержку (как FB2)
         await new Promise(r => setTimeout(r, 800 + Math.random() * 700));
 
-        // Проверяем отмену
         if (isCancelled()) throw new Error("cancelled");
 
-        // Загружаем главу
-        let { title: chTitle, xhtml } = await getChapter(chapter.href);
+        try {
+            let { title: chTitle, xhtml } = await getChapter(chapter.href);
 
-        // Проверяем отмену
-        if (isCancelled()) throw new Error("cancelled");
+            chapters.push({
+                id: `chapter${index}`,
+                file: `chapter${index}.xhtml`,
+                title: chTitle,
+                content: xhtml
+            });
 
-        chapters.push({
-            id: `chapter${index}`,
-            file: `chapter${index}.xhtml`,
-            title: chTitle,
-            content: xhtml
-        });
+        } catch (err) {
+            console.warn("Не удалось загрузить главу:", chapter.href, err);
+            failedChapters.push({ chapter, index });
+        }
 
         index++;
+    }
+
+    // ---------- ВТОРОЙ ПРОХОД ----------
+    if (failedChapters.length > 0) {
+        console.warn("Повторная загрузка неудачных глав:", failedChapters.length);
+
+        for (let item of failedChapters) {
+            const { chapter, index } = item;
+
+            await new Promise(r => setTimeout(r, 1500 + Math.random() * 1000));
+
+            try {
+                let { title: chTitle, xhtml } = await getChapter(chapter.href);
+
+                chapters[index - 1] = {
+                    id: `chapter${index}`,
+                    file: `chapter${index}.xhtml`,
+                    title: chTitle,
+                    content: xhtml
+                };
+
+                item.success = true;
+
+            } catch (err) {
+                console.warn("Повторно не удалось загрузить:", chapter.href);
+                item.success = false;
+            }
+        }
+
+        failedChapters = failedChapters.filter(ch => !ch.success);
+    }
+
+    // ---------- Если остались ошибки ----------
+    if (failedChapters.length > 0) {
+        alert(
+            "Некоторые главы не удалось загрузить:\n" +
+            failedChapters.map(f => f.chapter.href).join("\n")
+        );
     }
 
     // ---------- СБОР EPUB ----------
     const zip = new JSZip();
 
-    // mimetype
     zip.file("mimetype", "application/epub+zip", { compression: "STORE" });
 
-    // META-INF/container.xml
     zip.file("META-INF/container.xml", `<?xml version="1.0" encoding="UTF-8"?>
 <container version="1.0"
     xmlns="urn:oasis:names:tc:opendocument:xmlns:container">
@@ -701,10 +857,8 @@ async function createEPUB(onProgress = () => {}, isCancelled = () => false) {
     </rootfiles>
 </container>`);
 
-    // CSS
     zip.file("OEBPS/style.css", epubCss.trim());
 
-    // Title page
     zip.file("OEBPS/titlepage.xhtml", buildTitlePage({
         title,
         mainAuthor,
@@ -720,15 +874,12 @@ async function createEPUB(onProgress = () => {}, isCancelled = () => false) {
         fandom
     }));
 
-    // Chapters
     chapters.forEach(ch => {
         zip.file(`OEBPS/${ch.file}`, buildChapterPage(ch));
     });
 
-    // TOC XHTML
     zip.file("OEBPS/toc.xhtml", buildTocXhtml(chapters));
 
-    // content.opf
     zip.file("OEBPS/content.opf", buildOpf({
         title,
         mainAuthor,
@@ -736,10 +887,8 @@ async function createEPUB(onProgress = () => {}, isCancelled = () => false) {
         chapters
     }));
 
-    // toc.ncx
     zip.file("OEBPS/toc.ncx", buildNcx(title, chapters));
 
-    // ---------- Генерация EPUB ----------
     const baseName = generateFileBaseName(mainAuthor.name, title);
     const fileName = `${baseName}.epub`;
 

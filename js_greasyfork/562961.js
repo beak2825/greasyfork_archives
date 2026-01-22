@@ -1,62 +1,46 @@
 // ==UserScript==
-// @name         Brainslug: Racing Banner Changer (PDA Safe)
+// @name         BrainSlug's Racing Theme Changer
 // @namespace    brainslug.torn.racing
 // @version      0.6.5
-// @description  Banner class changer (PDA Compatible)
-// @author       Brainslug
-// @contributor  MoDuL (PDA compatibility conversion)
+// @description  Banner Theme Changer (OG Car Names, PDA compatible) 
+// @author       BrainSlug
+// @TornPDA      MoDuL
 // @match        https://www.torn.com/page.php?sid=racing*
 // @match        https://www.torn.com/loader.php?sid=racing*
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @grant        GM_addStyle
-// @downloadURL https://update.greasyfork.org/scripts/562961/Brainslug%3A%20Racing%20Banner%20Changer%20%28PDA%20Safe%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/562961/Brainslug%3A%20Racing%20Banner%20Changer%20%28PDA%20Safe%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/562961/BrainSlug%27s%20Racing%20Theme%20Changer.user.js
+// @updateURL https://update.greasyfork.org/scripts/562961/BrainSlug%27s%20Racing%20Theme%20Changer.meta.js
 // ==/UserScript==
 
 (function () {
   "use strict";
 
-  // Prevent double-inject
-  if (window.__Brainslug_BANNER_LOADED_V065__) return;
-  window.__Brainslug_BANNER_LOADED_V065__ = true;
+  if (window.__BrainSlug_BANNER_LOADED_V064__) return;
+  window.__BrainSlug_BANNER_LOADED_V064__ = true;
 
-  // -------------------- Config --------------------
   var KEY = "BR_CRB_BANNER";
   var CLASSES = ["A", "B", "C", "D", "E"];
 
-  // Position mode:
-  //  - "bannerBR" => bottom-right of the banner
-  //  - "ribbon"   => under the CLASS ribbon
-  var POSITION_MODE = "ribbon";
-
-  // Bottom-right padding (bannerBR)
-  var BANNER_RIGHT_PAD = 2;
-  var BANNER_BOTTOM_PAD = 2;
-
-  // Ribbon offsets
-  var X_OFFSET = 6;
-  var Y_OFFSET = -36;
-
-  // Behaviour
-  var STOP_WHEN_BANNER_OFFSCREEN = true;
-  var OFFSCREEN_MARGIN_PX = 40;
-
-  // UI IDs
-  var ROOT_ID = "brainslug_banner_root";
-  var BTN_ID = "brainslug_banner_btn";
-  var PANEL_ID = "brainslug_banner_panel";
-  var SELECT_ID = "brainslug_banner_select";
-  var STYLE_ID = "brainslug_banner_style";
+  var ROOT_ID = "BrainSlug_banner_root";
+  var BTN_ID  = "BrainSlug_banner_btn";
+  var PANEL_ID = "BrainSlug_banner_panel";
+  var SELECT_ID = "BrainSlug_banner_select";
+  var STYLE_ID = "BrainSlug_banner_style";
 
   var BTN_SIZE = 28;
-  var EDGE_PAD = 6;
+var STOP_WHEN_BANNER_OFFSCREEN = true;
+  // Position tuning
+  var X_OFFSET = 6;     // move left from ribbon right edge
+  var Y_OFFSET = -36;     // move down from ribbon bottom edge
+  var EDGE_PAD = 6;     // clamp to viewport
+  var IO_MARGIN = "250px 0px 250px 0px";
 
-  // State
+  var bannerInView = true;
   var selected = gmGet(KEY, "A");
   var raf = 0;
 
-  // -------------------- Storage helpers --------------------
   function gmGet(k, def) {
     try { if (typeof GM_getValue === "function") return GM_getValue(k, def); } catch (e) {}
     try {
@@ -71,7 +55,6 @@
     try { localStorage.setItem(k, v); } catch (e2) {}
   }
 
-  // -------------------- CSS --------------------
   function injectCssOnce() {
     if (document.getElementById(STYLE_ID)) return;
 
@@ -97,17 +80,15 @@
     } catch (e) {}
   }
 
-  // -------------------- Pencil SVG --------------------
   function pencilSvg() {
     return (
-      '<svg viewBox="0 0 24 24">' +
+      '<svg viewBox="0 0 24 24" aria-hidden="true">' +
         '<path fill="currentColor" d="M3 17.25V21h3.75L19.81 7.94l-3.75-3.75L3 17.25z"/>' +
         '<path fill="rgba(255,255,255,0.85)" d="M20.71 6.04a1.003 1.003 0 0 0 0-1.42L19.37 3.29a1.003 1.003 0 0 0-1.42 0l-1.13 1.13 3.75 3.75 1.14-1.13z"/>' +
       "</svg>"
     );
   }
 
-  // -------------------- Overlay --------------------
   function ensureOverlay() {
     var root = document.getElementById(ROOT_ID);
     if (root && document.contains(root)) return root;
@@ -127,129 +108,164 @@
     document.body.appendChild(root);
 
     var sel = root.querySelector("#" + SELECT_ID);
-    CLASSES.forEach(function (c) {
-      var o = document.createElement("option");
-      o.value = c;
-      o.textContent = "Class " + c;
-      sel.appendChild(o);
-    });
+    for (var i = 0; i < CLASSES.length; i++) {
+      var opt = document.createElement("option");
+      opt.value = CLASSES[i];
+      opt.textContent = "Class " + CLASSES[i];
+      sel.appendChild(opt);
+    }
     sel.value = selected;
 
-    root.querySelector("#" + BTN_ID).onclick = function (e) {
+    var btn = root.querySelector("#" + BTN_ID);
+
+    btn.addEventListener("click", function (e) {
       e.stopPropagation();
       root.classList.toggle("open");
-    };
+    });
 
-    sel.onchange = function () {
-      selected = sel.value;
+    sel.addEventListener("change", function (e) {
+      selected = e.target.value;
       gmSet(KEY, selected);
+
       var banner = document.querySelector(".racing-main-wrap");
       if (banner) applyBannerClass(banner, selected);
+
       root.classList.remove("open");
       schedule();
-    };
+    });
 
     document.addEventListener("pointerdown", function (e) {
-      if (!root.contains(e.target)) root.classList.remove("open");
+      var r = document.getElementById(ROOT_ID);
+      if (!r) return;
+      if (!r.contains(e.target)) r.classList.remove("open");
     }, true);
 
     return root;
   }
 
-function setHidden(hidden) {
-  var root = document.getElementById(ROOT_ID);
-  if (!root) return;
-
-  if (hidden) {
-    root.classList.remove("open");
-    root.style.display = "none";       // HARD hide (prevents PDA “locking”)
-    root.style.left = "-9999px";       // park offscreen just in case
-    root.style.top  = "-9999px";
-  } else {
-    root.style.display = "block";
-  }
-} 
-
-  // -------------------- Banner logic --------------------
   function applyBannerClass(banner, raceClass) {
-    CLASSES.forEach(function (c) {
-      banner.classList.remove("class-" + c);
-    });
+    for (var i = 0; i < CLASSES.length; i++) banner.classList.remove("class-" + CLASSES[i]);
     banner.classList.add("class-" + raceClass);
   }
 
+  // Find the CLASS ribbon quickly (no full scan):
+  // try common candidates near top-right; fallback to first element that contains "CLASS"
   function findClassRibbon() {
     var banner = document.querySelector(".racing-main-wrap");
     if (!banner) return null;
-    var nodes = banner.querySelectorAll("div,span,strong,b");
+
+    // 1) Prefer elements that literally contain text "CLASS"
+    var el = banner.querySelector("*:not(script):not(style)");
+    // quick text search (bounded)
+    var nodes = banner.querySelectorAll("div,span,a,strong,b");
     for (var i = 0; i < nodes.length && i < 250; i++) {
-      if (/^class\b/i.test((nodes[i].textContent || "").trim())) {
-        return nodes[i].parentElement || nodes[i];
-      }
+      var t = (nodes[i].textContent || "").trim();
+      if (/^class\b/i.test(t)) return nodes[i].parentElement || nodes[i];
     }
     return null;
   }
 
   function parseRgb(rgb) {
-    var m = String(rgb || "").match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
-    return m ? { r:+m[1], g:+m[2], b:+m[3] } : null;
+    var m = String(rgb || "").match(/rgba?\(\s*(\d+)[^\d]+(\d+)[^\d]+(\d+)/i);
+    if (!m) return null;
+    return { r: +m[1], g: +m[2], b: +m[3] };
   }
 
   function applyAutoColor(ribbon) {
     var btn = document.getElementById(BTN_ID);
-    if (!btn || !ribbon) return;
-    var rgb = parseRgb(getComputedStyle(ribbon).color);
+    if (!btn) return;
+
+    var rgb = null;
+    try {
+      // if ribbon contains the text element, use its computed color
+      var target = ribbon;
+      var kids = ribbon.querySelectorAll("*");
+      for (var i = 0; i < kids.length && i < 50; i++) {
+        var t = (kids[i].textContent || "").trim();
+        if (/^class\b/i.test(t)) { target = kids[i]; break; }
+      }
+      rgb = parseRgb(window.getComputedStyle(target).color);
+    } catch (e) {}
+
     if (!rgb) return;
 
     btn.style.color = "rgb(" + rgb.r + "," + rgb.g + "," + rgb.b + ")";
     btn.style.background = "rgba(" + rgb.r + "," + rgb.g + "," + rgb.b + ",0.10)";
-    btn.style.borderColor = "rgba(" + rgb.r + "," + rgb.g + "," + rgb.b + ",0.25)";
+    btn.style.borderColor = "rgba(" + rgb.r + "," + rgb.g + "," + rgb.b + ",0.22)";
+    btn.style.boxShadow =
+      "0 0 0 1px rgba(" + rgb.r + "," + rgb.g + "," + rgb.b + ",0.18), " +
+      "0 6px 18px rgba(0,0,0,0.38), " +
+      "0 0 14px rgba(" + rgb.r + "," + rgb.g + "," + rgb.b + ",0.18)";
   }
 
-  // -------------------- Positioning --------------------
+  function viewportW() {
+    return (window.visualViewport && window.visualViewport.width) ? window.visualViewport.width : window.innerWidth;
+  }
+  function viewportH() {
+    return (window.visualViewport && window.visualViewport.height) ? window.visualViewport.height : window.innerHeight;
+  }
+
+  function setHidden(hidden) {
+    var btn = document.getElementById(BTN_ID);
+    if (!btn) return;
+    btn.style.opacity = hidden ? "0" : "1";
+    btn.style.pointerEvents = hidden ? "none" : "auto";
+    var root = document.getElementById(ROOT_ID);
+    if (hidden && root) root.classList.remove("open");
+  }
+
   function position() {
+    if (!bannerInView) return;
+
     var root = ensureOverlay();
     var banner = document.querySelector(".racing-main-wrap");
-    if (!banner) { setHidden(true); return; }
+    if (!banner) return;
 
+    // hide if banner truly off-screen
     var br = banner.getBoundingClientRect();
-    var vh = window.innerHeight || document.documentElement.clientHeight;
-
-    // If banner off-screen: hide and STOP (no ribbon scan, no color work)
     if (STOP_WHEN_BANNER_OFFSCREEN) {
-      var inView =
-        (br.bottom >= -OFFSCREEN_MARGIN_PX) &&
-        (br.top <= vh + OFFSCREEN_MARGIN_PX);
-
-      if (!inView) { setHidden(true); return; }
+      var vh = viewportH();
+      var inViewNow = (br.bottom >= -40) && (br.top <= vh + 40);
+      if (!inViewNow) { setHidden(true); bannerInView = false; return; }
     }
 
     setHidden(false);
 
-    // Only do the expensive stuff when in view
     var ribbon = findClassRibbon();
-    if (ribbon) applyAutoColor(ribbon);
-
-    var left, top;
-
-    if (POSITION_MODE === "bannerBR") {
-      left = br.right - BTN_SIZE - BANNER_RIGHT_PAD;
-      top  = br.bottom - BTN_SIZE - BANNER_BOTTOM_PAD;
-    } else {
-      var rr = ribbon ? ribbon.getBoundingClientRect() : br;
-      left = rr.right - BTN_SIZE - X_OFFSET;
-      top  = rr.bottom + Y_OFFSET;
+    if (!ribbon) {
+      // fallback: put pencil top-right INSIDE banner area (screen coords)
+      var left0 = Math.round(br.right - BTN_SIZE - 10);
+      var top0  = Math.round(br.top + 10);
+      placeFixed(root, left0, top0);
+      return;
     }
 
-    // Clamp a bit
-    left = Math.max(EDGE_PAD, left);
-    top  = Math.max(EDGE_PAD, top);
+    applyAutoColor(ribbon);
+
+    var rr = ribbon.getBoundingClientRect();
+
+    // place UNDER ribbon, aligned near its right edge
+    var left = Math.round(rr.right - BTN_SIZE - X_OFFSET);
+    var top  = Math.round(rr.bottom + Y_OFFSET);
+
+    placeFixed(root, left, top);
+  }
+
+  function placeFixed(root, left, top) {
+    var vw = viewportW();
+    var vh = viewportH();
+
+    if (left < EDGE_PAD) left = EDGE_PAD;
+    if (top < EDGE_PAD) top = EDGE_PAD;
+    if (left + BTN_SIZE > vw - EDGE_PAD) left = vw - BTN_SIZE - EDGE_PAD;
+    if (top + BTN_SIZE > vh - EDGE_PAD) top = vh - BTN_SIZE - EDGE_PAD;
 
     root.style.left = left + "px";
     root.style.top  = top + "px";
   }
 
   function schedule() {
+    if (!bannerInView) return;
     if (raf) return;
     raf = requestAnimationFrame(function () {
       raf = 0;
@@ -257,24 +273,54 @@ function setHidden(hidden) {
     });
   }
 
-  // -------------------- Boot --------------------
-  function boot() {
-    var t = setInterval(function () {
-      var banner = document.querySelector(".racing-main-wrap");
-      if (!banner) return;
+  function setupVisibilityObserver(banner) {
+    if (!banner || typeof IntersectionObserver !== "function") return;
 
+    var io = new IntersectionObserver(function (entries) {
+      var ent = entries && entries[0];
+      bannerInView = !!(ent && ent.isIntersecting);
+      setHidden(!bannerInView);
+      if (bannerInView) schedule();
+    }, { root: null, rootMargin: IO_MARGIN, threshold: 0.01 });
+
+    io.observe(banner);
+  }
+
+  function boot() {
+    var tries = 0;
+    var t = setInterval(function () {
+      tries++;
+      var banner = document.querySelector(".racing-main-wrap");
+      if (!banner) {
+        if (tries > 80) clearInterval(t);
+        return;
+      }
       clearInterval(t);
+
       ensureOverlay();
       applyBannerClass(banner, selected);
+      setupVisibilityObserver(banner);
       schedule();
 
-      window.addEventListener("scroll", schedule, { passive:true });
-      window.addEventListener("resize", schedule, { passive:true });
+      // light observers / events
+      window.addEventListener("resize", schedule, { passive: true });
+      window.addEventListener("scroll", schedule, { passive: true });
 
       if (window.visualViewport) {
-        window.visualViewport.addEventListener("scroll", schedule, { passive:true });
-        window.visualViewport.addEventListener("resize", schedule, { passive:true });
+        window.visualViewport.addEventListener("resize", schedule, { passive: true });
+        window.visualViewport.addEventListener("scroll", schedule, { passive: true });
       }
+
+      // small delayed repositions for PDA layout
+      setTimeout(schedule, 300);
+      setTimeout(schedule, 900);
+
+      // mutation observer, but throttled via rAF
+      var obs = new MutationObserver(function () {
+        if (!bannerInView) return;
+        schedule();
+      });
+      obs.observe(document.documentElement, { childList: true, subtree: true });
     }, 250);
   }
 

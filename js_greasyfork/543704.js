@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gemini-UX-Customizer
 // @namespace    https://github.com/p65536
-// @version      2.3.1
+// @version      2.4.0
 // @license      MIT
 // @description  Fully customize the chat UI. Automatically applies themes based on chat names to control everything from avatar icons and standing images to bubble styles and backgrounds. Adds powerful navigation features like a message jump list with search.
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=gemini.google.com
@@ -432,6 +432,7 @@
 
             // --- Canvas ---
             CANVAS_CONTAINER: 'immersive-panel',
+            CANVAS_CLOSE_BUTTON: 'button[data-test-id="close-button"]',
 
             // --- File Panel ---
             FILE_PANEL_CONTAINER: 'context-sidebar',
@@ -1539,15 +1540,19 @@
                         DISAPPEAR_TIMEOUT_MS: 5000,
                         // The grace period (in ms) after navigation to allow messages to load before deciding not to scroll.
                         GRACE_PERIOD_MS: 2000,
+                        // The maximum time (in ms) to wait for Canvas to close before aborting scroll.
+                        CANVAS_CLOSE_TIMEOUT_MS: 1000,
                     };
 
                     /**
                      * @param {ConfigManager} configManager
                      * @param {MessageCacheManager} messageCacheManager
+                     * @param {ToastManager} toastManager
                      */
-                    constructor(configManager, messageCacheManager) {
+                    constructor(configManager, messageCacheManager, toastManager) {
                         this.configManager = configManager;
                         this.messageCacheManager = messageCacheManager;
+                        this.toastManager = toastManager;
                         this.scrollContainer = null;
                         this.observerContainer = null;
                         this.isEnabled = false;
@@ -1631,6 +1636,38 @@
 
                     async start() {
                         if (this.isScrolling) return;
+
+                        // Canvas (Immersive Panel) Handling
+                        // If Canvas is open, it changes the DOM structure and causes freezing during scroll.
+                        // We must close it before starting the scroll process.
+                        const canvas = document.querySelector(CONSTANTS.SELECTORS.CANVAS_CONTAINER);
+                        if (canvas) {
+                            Logger.badge('AUTOSCROLL', LOG_STYLES.BLUE, 'debug', 'Canvas detected. Attempting to close...');
+
+                            // Scope the search strictly within the canvas container to avoid false positives
+                            const closeBtn = canvas.querySelector(CONSTANTS.SELECTORS.CANVAS_CLOSE_BUTTON);
+
+                            if (closeBtn instanceof HTMLElement) {
+                                closeBtn.click();
+                                // Notify user about the action
+                                if (this.toastManager) {
+                                    this.toastManager.show('Canvas closed for auto-scroll', false);
+                                }
+
+                                // Wait for Canvas to disappear from DOM
+                                const startWait = Date.now();
+                                while (document.querySelector(CONSTANTS.SELECTORS.CANVAS_CONTAINER)) {
+                                    if (Date.now() - startWait > AutoScrollManager.CONFIG.CANVAS_CLOSE_TIMEOUT_MS) {
+                                        Logger.badge('AUTOSCROLL WARN', LOG_STYLES.YELLOW, 'warn', 'Timed out waiting for Canvas to close. Aborting scroll.');
+                                        return;
+                                    }
+                                    await new Promise((r) => requestAnimationFrame(r));
+                                }
+                            } else {
+                                Logger.badge('AUTOSCROLL WARN', LOG_STYLES.YELLOW, 'warn', 'Canvas active but close button not found. Aborting scroll to prevent freeze.');
+                                return;
+                            }
+                        }
 
                         // Set the flag immediately to prevent re-entrancy from other events.
                         this.isScrolling = true;
@@ -1823,7 +1860,7 @@
                         this.navigationStartTime = Date.now();
                     }
                 }
-                automatorInstance.autoScrollManager = new AutoScrollManager(automatorInstance.configManager, automatorInstance.messageCacheManager);
+                automatorInstance.autoScrollManager = new AutoScrollManager(automatorInstance.configManager, automatorInstance.messageCacheManager, automatorInstance.toastManager);
                 automatorInstance.autoScrollManager.init();
             },
 
@@ -3851,7 +3888,7 @@
                     .map((p) => p.trim())
                     .filter(Boolean) || [],
             setValue: (el, value) => {
-                el.value = Array.isArray(value) ? value.join('\n') : value ?? '';
+                el.value = Array.isArray(value) ? value.join('\n') : (value ?? '');
             },
         },
         select: {

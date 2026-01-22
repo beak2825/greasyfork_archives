@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Spotless for eBay
 // @namespace    https://github.com/OsborneLabs
-// @version      2.4.1
+// @version      2.4.2
 // @description  Hides sponsored listings, removes sponsored items, cleans links, & prevents tracking
 // @author       Osborne Labs
 // @license      GPL-3.0-only
@@ -378,10 +378,6 @@
         const isCompletedPage = params.get("LH_Complete") === "1";
         const isSoldPage = params.get("LH_Sold") === "1";
         return isSearchPage && !isAdvancedSearchPage && !isVisuallySimilarPage && !isSellerPage && !isCompletedPage && !isSoldPage;
-    }
-
-    function isCheckoutPage() {
-        return /^https:\/\/cart(\.[a-z0-9-]+)?\.ebay\.[a-z.]+/.test(location.href);
     }
 
     function isListingPage() {
@@ -1213,9 +1209,6 @@
                 labelSponsored(carousel);
             }
         });
-        if (isCheckoutPage()) {
-            document.querySelectorAll('.merch-container, .dynamic-banner').forEach(el => el.remove());
-        }
         if (!window.__ebaySponsoredMediaBlocked) {
             window.__ebaySponsoredMediaBlocked = true;
             const origFetch = window.fetch;
@@ -1529,9 +1522,9 @@
 
     function cleanGeneralClutter() {
         const GENERAL_CLUTTER_SELECTORS = [
-            '.d-sell-now--filmstrip-margin', '.madrona-banner', '.s-faq-list', '.s-feedback', '.su-faqs',
-            '.srp-river-answer--CAQ_PLACEHOLDER', '.x-goldin-module', '[class*="BOS_PLACEHOLDER"]', '[class*="EBAY_LIVE_ENTRY"]',
-            '[class*="FAQ_KW_SRP_MODULE"]', '[class*="LIVE_EVENTS_CAROUSEL"]', '[class*="START_LISTING_BANNER"]'
+            '[class*="BOS_PLACEHOLDER"]', '[class*="EBAY_LIVE_ENTRY"]', '[class*="FAQ_KW_SRP_MODULE"]', '[class*="LIVE_EVENTS_CAROUSEL"]',
+            '[class*="START_LISTING_BANNER"]', '.bos-item-loader', '.d-sell-now--filmstrip-margin', '.dynamic-banner', '.madrona-banner',
+            '.s-faq-list', '.s-feedback', '.srp-river-answer--CAQ_PLACEHOLDER', '.su-faqs', '.x-goldin-module'
         ];
         const elements = document.querySelectorAll(GENERAL_CLUTTER_SELECTORS.join(','));
         elements.forEach(el => el.remove());

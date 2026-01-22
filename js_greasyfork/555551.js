@@ -1,2118 +1,840 @@
 // ==UserScript==
-// @name         OpenFrontIO Auto-Join Lobby
-// @namespace    http://tampermonkey.net/
-// @version      1.4.7
-// @description  Auto-join lobbies based on game mode preferences (FFA, Team with all team configurations, player filters). Tested and 100% functional against OpenFront v0.26.16
-// @author       DeLoVaN
+// @name         OpenFront.io Bundle: Player List + Auto-Join
+// @namespace    https://openfront.io/
+// @version      2.3.0
+// @description  Merges "Lobby Player List" and "Auto-Join Lobby" into one efficient script. Shared API calls to prevent 429 errors. Compatible with OpenFront.io v0.29.0+
 // @homepageURL  https://github.com/DeLoWaN/openfront-autojoin-lobby
-// @match        https://openfront.io/*
-// @match        https://*.openfront.io/*
-// @grant        GM_setValue
+// @author       DeLoVaN + SyntaxMenace + DeepSeek + Claude
+// @match        https://openfront.io/
 // @grant        GM_getValue
+// @grant        GM_setValue
 // @grant        GM_addStyle
-// @downloadURL https://update.greasyfork.org/scripts/555551/OpenFrontIO%20Auto-Join%20Lobby.user.js
-// @updateURL https://update.greasyfork.org/scripts/555551/OpenFrontIO%20Auto-Join%20Lobby.meta.js
+// @license      UNLICENSED
+// @downloadURL https://update.greasyfork.org/scripts/555551/OpenFrontio%20Bundle%3A%20Player%20List%20%2B%20Auto-Join.user.js
+// @updateURL https://update.greasyfork.org/scripts/555551/OpenFrontio%20Bundle%3A%20Player%20List%20%2B%20Auto-Join.meta.js
 // ==/UserScript==
 
-(function() {
-    'use strict';
-
-    // Tested and 100% functional against OpenFront v0.26.16
-
-    // Configuration
-    const CONFIG = {
-        pollInterval: 1000, // ms - how often to check for matching lobbies
-        rootURL: 'https://openfront.io/' // Root URL for lobby detection
-    };
-
-    // State
-    let autoJoinEnabled = true; // Always start with ON (search active by default)
-    let criteriaList = []; // List of criteria (can contain multiple modes)
-    let monitoringInterval = null;
-    let timerInterval = null;
-    let gameInfoInterval = null; // Interval for updating current game info display
-    let joinedLobbies = new Set(); // To avoid double joins
-    let searchStartTime = null; // Timestamp when auto-join search started
-    let gameFoundTime = null; // Timestamp when game was found (for fixed timer display)
-    let isJoining = false; // Prevent concurrent join attempts
-    let soundEnabled = true; // Sound notification enabled by default
-    let recentlyLeftLobbyID = null; // Track lobby ID that was just left to prevent auto-rejoin
-    let joinMode = 'notify'; // 'autojoin' or 'notify' - default to 'notify'
-    let notifiedLobbies = new Set(); // Track lobbies we've notified about
-    let lastNotifiedGameID = null; // Track the last game we notified about (for timer reset)
-    let notificationTimeout = null; // Timeout for auto-dismissing notification
-    let gameFoundAudio = null; // Preloaded audio for game found notification
-    let gameStartAudio = null; // Preloaded audio for game start bell
-
-    // Load settings from storage
-    function loadSettings() {
-        const saved = GM_getValue('autoJoinSettings', null);
-        if (saved) {
-            // Always keep search enabled
-            autoJoinEnabled = true;
-            criteriaList = saved.criteria || [];
-            soundEnabled = saved.soundEnabled !== undefined ? saved.soundEnabled : true;
-            joinMode = saved.joinMode || 'notify'; // Default to 'notify'
-        }
+"use strict";(()=>{var s={bgPrimary:"rgba(10, 14, 22, 0.92)",bgSecondary:"rgba(18, 26, 40, 0.75)",bgHover:"rgba(35, 48, 70, 0.6)",textPrimary:"#e7f1ff",textSecondary:"rgba(231, 241, 255, 0.7)",textMuted:"rgba(231, 241, 255, 0.5)",accent:"rgba(46, 211, 241, 0.95)",accentHover:"rgba(99, 224, 255, 0.95)",accentMuted:"rgba(46, 211, 241, 0.18)",accentAlt:"rgba(99, 110, 255, 0.9)",success:"rgba(20, 220, 170, 0.9)",successSolid:"#38d9a9",warning:"#f2c94c",error:"#ff7d87",highlight:"rgba(88, 211, 255, 0.2)",border:"rgba(120, 140, 180, 0.3)",borderAccent:"rgba(46, 211, 241, 0.55)"},f={display:"'Trebuchet MS', 'Segoe UI', Tahoma, Verdana, sans-serif",body:"'Segoe UI', Tahoma, Verdana, sans-serif",mono:"'Consolas', 'Courier New', monospace"},d={xs:"4px",sm:"8px",md:"12px",lg:"16px",xl:"20px",xxl:"24px"},x={sm:"4px",md:"6px",lg:"8px",xl:"12px"},M={sm:"0 2px 8px rgba(3, 8, 18, 0.35)",md:"0 10px 22px rgba(3, 8, 18, 0.45)",lg:"0 24px 40px rgba(2, 6, 16, 0.55), 0 0 24px rgba(46, 211, 241, 0.08)"},g={fast:"0.12s",normal:"0.2s",slow:"0.3s"};var G={threadCount:20,lobbyPollingRate:1e3},L={autoJoinSettings:"OF_AUTOJOIN_SETTINGS",autoJoinPanelPosition:"OF_AUTOJOIN_PANEL_POSITION",playerListPanelPosition:"OF_PLAYER_LIST_PANEL_POSITION",playerListPanelSize:"OF_PLAYER_LIST_PANEL_SIZE",playerListShowOnlyClans:"OF_PLAYER_LIST_SHOW_ONLY_CLANS",playerListCollapseStates:"OF_PLAYER_LIST_COLLAPSE_STATES",playerListRecentTags:"OF_PLAYER_LIST_RECENT_TAGS",playerListAutoRejoin:"OF_PLAYER_LIST_AUTO_REJOIN"},P={panel:9998,panelOverlay:9999,modal:1e4,notification:2e4};function Y(){return`
+    /* Body layout wrapper for flexbox */
+    #of-game-layout-wrapper {
+      display: flex;
+      height: 100vh;
+      width: 100vw;
+    }
+    #of-game-content {
+      flex: 1;
+      overflow: auto;
+      min-width: 0;
     }
 
-    // Save settings to storage
-    function saveSettings() {
-        GM_setValue('autoJoinSettings', {
-            enabled: autoJoinEnabled,
-            criteria: criteriaList,
-            soundEnabled: soundEnabled,
-            joinMode: joinMode
-        });
+    :root {
+      --of-hud-accent: ${s.accent};
+      --of-hud-accent-soft: ${s.accentMuted};
+      --of-hud-accent-alt: ${s.accentAlt};
+      --of-hud-border: ${s.border};
+      --of-hud-border-strong: ${s.borderAccent};
+      --of-hud-bg: ${s.bgPrimary};
+      --of-hud-bg-2: ${s.bgSecondary};
+      --of-hud-text: ${s.textPrimary};
     }
 
-    // Update search timer display
-    function updateSearchTimer() {
-        const timerElement = document.getElementById('search-timer');
-        if (!timerElement) return;
-
-        if (!autoJoinEnabled || searchStartTime === null) {
-            timerElement.style.display = 'none';
-            gameFoundTime = null;
-            return;
-        }
-
-        // If game was found, show fixed time
-        if (gameFoundTime !== null) {
-            const elapsed = Math.floor((gameFoundTime - searchStartTime) / 1000); // seconds
-            const minutes = Math.floor(elapsed / 60);
-            const seconds = elapsed % 60;
-            timerElement.textContent = `Game found! (${minutes}m ${seconds}s)`;
-            timerElement.style.display = 'inline';
-            return;
-        }
-
-        // Otherwise show live timer
-        const elapsed = Math.floor((Date.now() - searchStartTime) / 1000); // seconds
-        const minutes = Math.floor(elapsed / 60);
-        const seconds = elapsed % 60;
-
-        timerElement.textContent = `Searching: ${minutes}m ${seconds}s`;
-        timerElement.style.display = 'inline';
+    @keyframes ofPanelEnter {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    // Update current game info display (players per team for team games)
-    function updateCurrentGameInfo() {
-        const gameInfoElement = document.getElementById('current-game-info');
-        if (!gameInfoElement) return;
+    .of-panel {
+      position: fixed;
+      background: linear-gradient(145deg, rgba(12, 18, 30, 0.98) 0%, rgba(10, 16, 26, 0.94) 60%, rgba(8, 12, 20, 0.96) 100%);
+      border: 1px solid ${s.border};
+      border-radius: ${x.lg};
+      box-shadow: ${M.lg};
+      font-family: ${f.body};
+      color: ${s.textPrimary};
+      user-select: none;
+      z-index: ${P.panel};
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      animation: ofPanelEnter ${g.slow} ease;
+    }
+    .of-panel input[type="checkbox"] { accent-color: ${s.accent}; }
+    .of-panel.hidden { display: none; }
+    .of-header {
+      padding: ${d.md} ${d.lg};
+      background: linear-gradient(90deg, rgba(20, 30, 46, 0.85), rgba(12, 18, 30, 0.6));
+      font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+      font-size: 0.85em;
+      border-bottom: 1px solid ${s.border};
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-family: ${f.display};
+    }
+    .of-header-title {
+      display: flex;
+      align-items: center;
+      gap: ${d.sm};
+    }
+    .of-player-list-title {
+      font-size: 1em;
+      color: ${s.textPrimary};
+    }
+    .of-player-list-header {
+      position: relative;
+    }
+    .of-player-list-header::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(46, 211, 241, 0.7), transparent);
+      pointer-events: none;
+    }
+    .autojoin-header {
+      cursor: pointer;
+      gap: ${d.sm};
+      padding: ${d.sm} ${d.md};
+      font-size: 0.85em;
+      position: relative;
+    }
+    .autojoin-header:hover {
+      background: ${s.bgHover};
+    }
+    .autojoin-header::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(46, 211, 241, 0.7), transparent);
+      pointer-events: none;
+    }
+    .autojoin-title {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .autojoin-title-text {
+      color: ${s.textPrimary};
+      font-weight: 700;
+    }
+    .autojoin-title-sub {
+      font-size: 0.72em;
+      color: ${s.textMuted};
+      letter-spacing: 0.2em;
+    }
+    .autojoin-collapse-button {
+      background: transparent;
+      border: 1px solid transparent;
+      color: ${s.textPrimary};
+      border-radius: ${x.sm};
+      padding: 2px 8px;
+      cursor: pointer;
+      font-size: 1em;
+      line-height: 1;
+      transition: transform ${g.fast}, border-color ${g.fast}, background ${g.fast};
+    }
+    .autojoin-collapse-button:hover {
+      border-color: ${s.borderAccent};
+      background: ${s.bgHover};
+    }
+    .autojoin-panel.autojoin-collapsed .autojoin-collapse-button {
+      transform: rotate(-90deg);
+    }
+    .of-content { flex: 1; overflow-y: auto; scrollbar-width: thin; scrollbar-color: rgba(80,110,160,0.4) transparent; }
+    .of-content::-webkit-scrollbar { width: 7px; }
+    .of-content::-webkit-scrollbar-thumb { background: rgba(80,110,160,0.4); border-radius: 5px; }
+    .of-footer {
+      padding: ${d.sm} ${d.lg};
+      display: flex;
+      justify-content: space-between;
+      background: ${s.bgSecondary};
+      flex-shrink: 0;
+      border-top: 1px solid ${s.border};
+    }
+    .of-button {
+      background: ${s.bgHover};
+      border: 1px solid ${s.border};
+      color: ${s.textPrimary};
+      padding: ${d.sm} ${d.md};
+      border-radius: ${x.md};
+      cursor: pointer;
+      font-size: 0.95em;
+      font-weight: 600;
+      transition: background ${g.fast}, border-color ${g.fast}, color ${g.fast};
+      outline: none;
+    }
+    .of-button:hover { background: rgba(80,110,160,0.5); border-color: ${s.borderAccent}; }
+    .of-button.primary { background: ${s.accent}; color: #04131a; }
+    .of-button.primary:hover { background: ${s.accentHover}; }
+    .of-input {
+      padding: ${d.sm};
+      background: rgba(20, 30, 46, 0.7);
+      border: 1px solid ${s.border};
+      border-radius: ${x.md};
+      color: ${s.textPrimary};
+      font-size: 0.95em;
+      outline: none;
+      transition: border ${g.fast};
+    }
+    .of-input:focus { border-color: ${s.accent}; }
+    .of-badge {
+      background: ${s.accentMuted};
+      border: 1px solid ${s.borderAccent};
+      border-radius: ${x.xl};
+      padding: 2px 10px;
+      font-size: 0.75em;
+      color: ${s.textPrimary};
+    }
+    .of-toggle {
+      width: 34px;
+      height: 18px;
+      border-radius: 11px;
+      background: rgba(35, 48, 70, 0.9);
+      border: 1px solid ${s.border};
+      position: relative;
+      transition: background ${g.fast}, border-color ${g.fast};
+      cursor: pointer;
+    }
+    .of-toggle.on { background: ${s.successSolid}; }
+    .of-toggle-ball {
+      position: absolute; left: 2px; top: 2px; width: 14px; height: 14px;
+      border-radius: 50%; background: #fff; transition: left ${g.fast};
+    }
+    .of-toggle.on .of-toggle-ball { left: 18px; }
 
-        // Only show on lobby page
-        if (!isOnLobbyPage()) {
-            gameInfoElement.style.display = 'none';
-            return;
-        }
+    .of-player-list-container {
+      width: var(--player-list-width, 320px);
+      min-width: 240px;
+      max-width: 50vw;
+      height: 100vh;
+      flex-shrink: 0;
+      position: relative;
+      background: linear-gradient(180deg, rgba(12, 18, 30, 0.98), rgba(8, 12, 20, 0.95));
+      border: 1px solid ${s.border};
+      border-left: 1px solid ${s.borderAccent};
+      border-radius: 0;
+      box-shadow: ${M.lg};
+      font-family: ${f.body};
+      color: ${s.textPrimary};
+      user-select: none;
+      z-index: ${P.panel};
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      resize: none;
+    }
+    .of-autojoin-slot {
+      width: 100%;
+      flex-shrink: 0;
+    }
+    .of-resize-handle {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 4px;
+      height: 100%;
+      background: linear-gradient(180deg, ${s.accent}, rgba(46, 211, 241, 0.1));
+      cursor: ew-resize;
+      z-index: ${P.panel+1};
+      opacity: 0.35;
+      transition: opacity ${g.fast}, box-shadow ${g.fast};
+    }
+    .of-resize-handle:hover {
+      opacity: 0.8;
+      box-shadow: 0 0 12px rgba(46, 211, 241, 0.4);
+    }
+    .of-resize-handle.dragging {
+      opacity: 1;
+    }
+    .of-player-list-count { font-size: 0.72em; letter-spacing: 0.12em; font-family: ${f.mono}; }
+    .of-player-debug-info { font-size: 0.75em; color: rgba(148, 170, 210, 0.7); padding: 2px 6px; display: none; font-family: ${f.mono}; }
 
-        // Always show the element to avoid resizing, but update content based on game type
-        gameInfoElement.style.display = 'block';
-
-        // Get current displayed lobby
-        const publicLobby = document.querySelector('public-lobby');
-        if (!publicLobby || !publicLobby.lobbies || !Array.isArray(publicLobby.lobbies) || publicLobby.lobbies.length === 0) {
-            gameInfoElement.textContent = 'Current game: No game';
-            gameInfoElement.classList.add('not-applicable');
-            return;
-        }
-
-        const currentLobby = publicLobby.lobbies[0];
-        if (!currentLobby || !currentLobby.gameConfig) {
-            gameInfoElement.textContent = 'Current game: No game';
-            gameInfoElement.classList.add('not-applicable');
-            return;
-        }
-
-        const config = currentLobby.gameConfig;
-        
-        // Check if it's a team game
-        if (config.gameMode !== 'Team') {
-            gameInfoElement.textContent = 'Current game: Not a team game';
-            gameInfoElement.classList.add('not-applicable');
-            return;
-        }
-
-        // Get game capacity
-        const gameCapacity = currentLobby.maxClients || config.maxClients || config.maxPlayers || null;
-        if (gameCapacity === null) {
-            gameInfoElement.textContent = 'Current game: Capacity unknown';
-            gameInfoElement.classList.add('not-applicable');
-            return;
-        }
-
-        // Get team configuration
-        const playerTeams = config.playerTeams;
-        
-        // Display the info for team games
-        // For Duos/Trios/Quads, show the mode name directly
-        if (playerTeams === 'Duos') {
-            gameInfoElement.textContent = 'Current game: Duos';
-            gameInfoElement.classList.remove('not-applicable');
-        } else if (playerTeams === 'Trios') {
-            gameInfoElement.textContent = 'Current game: Trios';
-            gameInfoElement.classList.remove('not-applicable');
-        } else if (playerTeams === 'Quads') {
-            gameInfoElement.textContent = 'Current game: Quads';
-            gameInfoElement.classList.remove('not-applicable');
-        } else if (typeof playerTeams === 'number') {
-            // For modes with number of teams, show players per team
-            const playersPerTeam = getPlayersPerTeam(playerTeams, gameCapacity);
-            if (playersPerTeam === null) {
-                gameInfoElement.textContent = 'Current game: Team configuration unknown';
-                gameInfoElement.classList.add('not-applicable');
-                return;
-            }
-            gameInfoElement.textContent = `Current game: ${playersPerTeam} players per team (${playerTeams} teams)`;
-            gameInfoElement.classList.remove('not-applicable');
-        } else {
-            gameInfoElement.textContent = 'Current game: Team configuration unknown';
-            gameInfoElement.classList.add('not-applicable');
-        }
+    .of-quick-tag-switch {
+      padding: ${d.md} ${d.lg};
+      background: rgba(14, 22, 34, 0.75);
+      border-bottom: 1px solid ${s.border};
+      display: flex;
+      align-items: center;
+      gap: ${d.sm};
+      flex-shrink: 0;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+    }
+    .of-quick-tag-switch::-webkit-scrollbar { height: 5px; }
+    .of-quick-tag-switch::-webkit-scrollbar-thumb { background: rgba(80,110,160,0.45); border-radius: 4px; }
+    .of-quick-tag-label {
+      font-size: 0.75em;
+      color: ${s.textMuted};
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+    }
+    .of-quick-tag-item {
+      display: flex;
+      align-items: center;
+      gap: ${d.xs};
+    }
+    .of-quick-tag-btn {
+      padding: 4px 12px;
+      font-size: 0.8em;
+      background: rgba(22, 34, 52, 0.9);
+      color: ${s.textPrimary};
+      border: 1px solid ${s.border};
+      border-radius: ${x.md};
+      cursor: pointer;
+      transition: all ${g.fast};
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-family: ${f.display};
+    }
+    .of-quick-tag-btn:hover {
+      background: ${s.accentMuted};
+      border-color: ${s.accent};
+    }
+    .of-quick-tag-remove {
+      width: 16px;
+      height: 16px;
+      padding: 0;
+      font-size: 11px;
+      line-height: 1;
+      background: rgba(255, 125, 135, 0.15);
+      color: ${s.error};
+      border: 1px solid rgba(255, 125, 135, 0.6);
+      border-radius: 50%;
+      cursor: pointer;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: background ${g.fast}, border-color ${g.fast}, transform ${g.fast};
+    }
+    .of-quick-tag-remove:hover {
+      background: rgba(255, 117, 117, 0.25);
+      border-color: ${s.error};
+      transform: scale(1.05);
     }
 
-    // Helper function to get players per team from playerTeams
-    // When playerTeams is a string like 'Quads', 'Trios', 'Duos', it represents players per team directly
-    // When playerTeams is a number, it represents the number of teams, so we calculate players per team
-    function getPlayersPerTeam(playerTeams, gameCapacity) {
-        // String values represent players per team directly
-        if (playerTeams === 'Duos') return 2;
-        if (playerTeams === 'Trios') return 3;
-        if (playerTeams === 'Quads') return 4;
-        // Number values represent the number of teams
-        if (typeof playerTeams === 'number' && playerTeams > 0) {
-            return Math.floor(gameCapacity / playerTeams);
-        }
-        return null;
+    .of-clan-checkbox-filter {
+      padding: ${d.md} ${d.lg};
+      background: rgba(14, 22, 34, 0.75);
+      border-bottom: 1px solid ${s.border};
+      display: flex;
+      align-items: center;
+      gap: ${d.sm};
+      flex-shrink: 0;
+    }
+    .of-clan-checkbox-filter input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      margin: 0;
+    }
+    .of-clan-checkbox-filter label {
+      cursor: pointer;
+      color: ${s.textPrimary};
+      font-size: 0.85em;
+      user-select: none;
+      flex: 1;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-family: ${f.display};
     }
 
-    // Check if lobby matches criteria
-    function matchesCriteria(lobby, criteriaList) {
-        if (!lobby || !lobby.gameConfig || !criteriaList || criteriaList.length === 0) {
-            return false;
-        }
-
-        const config = lobby.gameConfig;
-        // Get game capacity (max players the game can hold)
-        // Try common property names for capacity
-        const gameCapacity = lobby.maxClients || config.maxClients || config.maxPlayers || null;
-
-        // Check if lobby matches at least one criterion
-        for (const criteria of criteriaList) {
-            let matches = false;
-
-            if (criteria.gameMode === 'FFA') {
-                if (config.gameMode !== 'Free For All') {
-                    continue; // Move to next criterion
-                }
-                matches = true;
-            } else if (criteria.gameMode === 'Team') {
-                if (config.gameMode !== 'Team') {
-                    continue;
-                }
-
-                // If a team count is specified, check it
-                if (criteria.teamCount !== null && criteria.teamCount !== undefined) {
-                    const playerTeams = config.playerTeams;
-
-                    // Handle special modes
-                    // Note: Duos/Trios/Quads are game modes (players per team), NOT team counts
-                    // They should only match their exact string values, not numeric team counts
-                    if (criteria.teamCount === 'Duos') {
-                        if (playerTeams !== 'Duos') {
-                            continue;
-                        }
-                    } else if (criteria.teamCount === 'Trios') {
-                        if (playerTeams !== 'Trios') {
-                            continue;
-                        }
-                    } else if (criteria.teamCount === 'Quads') {
-                        if (playerTeams !== 'Quads') {
-                            continue;
-                        }
-                    } else if (typeof criteria.teamCount === 'number') {
-                        if (playerTeams !== criteria.teamCount) {
-                            continue;
-                        }
-                    }
-                }
-
-                matches = true;
-            }
-
-            // If mode matches, check player filters
-            if (matches) {
-                if (criteria.gameMode === 'FFA') {
-                    // For FFA, check based on game capacity (total players)
-                    if (gameCapacity === null) {
-                        // No capacity info available, skip capacity filtering
-                        return true;
-                    }
-
-                    // Check minPlayers (minimum game capacity)
-                    if (criteria.minPlayers !== null && criteria.minPlayers !== undefined) {
-                        if (gameCapacity < criteria.minPlayers) {
-                            continue; // Game capacity is less than minimum required
-                        }
-                    }
-
-                    // Check maxPlayers (maximum game capacity)
-                    if (criteria.maxPlayers !== null && criteria.maxPlayers !== undefined) {
-                        if (gameCapacity > criteria.maxPlayers) {
-                            continue; // Game capacity exceeds maximum allowed
-                        }
-                    }
-                } else if (criteria.gameMode === 'Team') {
-                    // For Team games, check based on players per team
-                    // BUT: Duos/Trios/Quads always have 2/3/4 players per team by definition,
-                    // so we skip the players per team filter for these modes
-                    const playerTeams = config.playerTeams;
-                    const isFixedPlayersPerTeam = playerTeams === 'Duos' || playerTeams === 'Trios' || playerTeams === 'Quads';
-                    
-                    // Only apply players per team filter for modes with number of teams (2/3/4/5/6/7 teams)
-                    if (!isFixedPlayersPerTeam) {
-                        if (gameCapacity === null) {
-                            // No capacity info available, skip capacity filtering
-                            return true;
-                        }
-
-                        // Get players per team
-                        const playersPerTeam = getPlayersPerTeam(playerTeams, gameCapacity);
-                        
-                        if (playersPerTeam === null) {
-                            // Cannot determine players per team, skip capacity filtering
-                            return true;
-                        }
-
-                        // Check minPlayers (minimum players per team)
-                        if (criteria.minPlayers !== null && criteria.minPlayers !== undefined) {
-                            if (playersPerTeam < criteria.minPlayers) {
-                                continue; // Players per team is less than minimum required
-                            }
-                        }
-
-                        // Check maxPlayers (maximum players per team)
-                        if (criteria.maxPlayers !== null && criteria.maxPlayers !== undefined) {
-                            if (playersPerTeam > criteria.maxPlayers) {
-                                continue; // Players per team exceeds maximum allowed
-                            }
-                        }
-                    }
-                    // For Duos/Trios/Quads, skip players per team filtering (always 2/3/4 by definition)
-                }
-
-                // All criteria satisfied
-                return true;
-            }
-        }
-
-        // No criterion matches
-        return false;
+    .of-clan-group {
+      margin: 8px ${d.md};
+      border: 1px solid rgba(90, 110, 150, 0.35);
+      border-radius: ${x.md};
+      background: rgba(14, 20, 32, 0.78);
+      overflow: hidden;
+      box-shadow: 0 10px 18px rgba(2, 6, 16, 0.35);
     }
-
-    // Helper function to check if we're on the lobby page (allowing hash/path variations)
-    function isOnLobbyPage() {
-        try {
-            // Parse the configured root URL
-            const configUrl = new URL(CONFIG.rootURL);
-            const configOrigin = configUrl.origin;
-            const configHostname = configUrl.hostname;
-
-            // Get current location base
-            const currentOrigin = window.location.origin;
-            const currentHostname = window.location.hostname;
-
-            // Check if origins/hostnames match
-            if (currentOrigin !== configOrigin && currentHostname !== configHostname) {
-                return false;
-            }
-
-            // Get current pathname and hash (normalize)
-            const currentPath = window.location.pathname;
-            const currentHash = window.location.hash;
-
-            // Normalize path: remove trailing slashes and check if it's root or lobby-related
-            const normalizedPath = currentPath.replace(/\/+$/, '') || '/';
-            const isRootPath = normalizedPath === '/';
-
-            // Check if path is a lobby-related path suffix (e.g., /public-lobby)
-            const isLobbyPath = normalizedPath === '/public-lobby' || normalizedPath.startsWith('/public-lobby/');
-
-            // Allow hash fragments like #/public-lobby or empty hash
-            const isLobbyHash = !currentHash || currentHash === '#' || currentHash === '#/public-lobby' || currentHash.startsWith('#/public-lobby/');
-
-            // Consider it the lobby page if:
-            // 1. Origin/hostname matches AND
-            // 2. Either:
-            //    - Path is root/empty AND hash is empty or lobby-related, OR
-            //    - Path is a lobby path (path-based routing, hash doesn't matter)
-            return (isRootPath && isLobbyHash) || isLobbyPath;
-        } catch (error) {
-            // Fallback to strict comparison if URL parsing fails
-            console.warn('[Auto-Join] Error checking lobby page, using fallback:', error);
-            return location.href === CONFIG.rootURL;
-        }
+    .of-clan-group-enter {
+      animation: clanGroupEnter ${g.slow} cubic-bezier(.27,.82,.48,1.06) forwards;
     }
-
-    // Check lobbies and auto-join if match found
-    async function checkLobbies() {
-        try {
-            // Always update current game info display
-            updateCurrentGameInfo();
-
-            // Prevent concurrent join attempts
-            if (isJoining) {
-                return;
-            }
-
-            // Check if we have criteria
-            if (!criteriaList || criteriaList.length === 0) {
-                console.warn('[Auto-Join] No criteria configured. Please select at least one game mode.');
-                return;
-            }
-
-            // Check we're not already in a game
-            if (!isOnLobbyPage()) {
-                return;
-            }
-
-            // Get lobbies from the public-lobby component
-            const publicLobby = document.querySelector('public-lobby');
-            if (!publicLobby || !publicLobby.lobbies || !Array.isArray(publicLobby.lobbies)) {
-                return; // Component not ready yet
-            }
-            const lobbies = publicLobby.lobbies;
-
-            // In notify mode, check if we need to reset the timer when a new game appears
-            if (joinMode === 'notify' && gameFoundTime !== null && lastNotifiedGameID !== null) {
-                // Check if the currently displayed lobby is different from the one we notified about
-                const currentLobby = lobbies.length > 0 ? lobbies[0] : null;
-                const currentLobbyID = currentLobby ? currentLobby.gameID : null;
-                
-                // If current lobby is different from the one we notified about, reset timer and continue searching
-                if (currentLobbyID !== lastNotifiedGameID) {
-                    gameFoundTime = null;
-                    lastNotifiedGameID = null;
-                    // Restart timer if it was stopped
-                    if (!timerInterval) {
-                        timerInterval = setInterval(() => {
-                            updateSearchTimer();
-                        }, 1000);
-                    }
-                    updateSearchTimer();
-                    updateUI({ status: null });
-                }
-            }
-
-            // Search for a lobby matching criteria
-            for (const lobby of lobbies) {
-
-                if (matchesCriteria(lobby, criteriaList)) {
-                    // Skip if this is the lobby we just left (permanently block auto-rejoin)
-                    if (recentlyLeftLobbyID === lobby.gameID) {
-                        continue;
-                    }
-                    
-                    if (joinMode === 'notify') {
-                        // Notify mode: show notification instead of joining
-                        if (!notifiedLobbies.has(lobby.gameID)) {
-                            showGameFoundNotification(lobby);
-                            playGameFoundSound(); // Chime when match is found
-                            notifiedLobbies.add(lobby.gameID);
-                            // Mark that game was found and stop timer updates
-                            gameFoundTime = Date.now();
-                            lastNotifiedGameID = lobby.gameID;
-                            stopTimer();
-                            updateSearchTimer();
-                            // Update UI status
-                            updateUI({ status: 'found', gameID: lobby.gameID });
-                            return; // Only notify about one lobby at a time
-                        }
-                    } else {
-                        // Auto-join mode: existing behavior
-                        // Check we haven't already joined this lobby
-                        if (!joinedLobbies.has(lobby.gameID)) {
-                            joinLobby(lobby);
-                            joinedLobbies.add(lobby.gameID);
-                            // Clear recently left lobby ID since we're joining a different one
-                            recentlyLeftLobbyID = null;
-                            return; // Only join one lobby at a time
-                        }
-                    }
-                }
-            }
-        } catch (error) {
-            console.error('[Auto-Join] Error checking lobbies:', error);
-        }
+    @keyframes clanGroupEnter {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
-
-
-    // Preload audio files for better performance
-    function preloadSounds() {
-        try {
-            gameFoundAudio = new Audio('https://github.com/DeLoWaN/openfront-autojoin-lobby/raw/refs/heads/main/notification_sounds/new-notification-014-363678.mp3');
-            gameFoundAudio.volume = 0.5;
-            gameFoundAudio.preload = 'auto';
-            
-            gameStartAudio = new Audio('https://github.com/DeLoWaN/openfront-autojoin-lobby/raw/refs/heads/main/notification_sounds/opening-bell-421471.mp3');
-            gameStartAudio.volume = 0.5;
-            gameStartAudio.preload = 'auto';
-            
-        } catch (error) {
-            console.warn('[Auto-Join] Could not preload audio files:', error);
-        }
+    .of-clan-group-exit {
+      animation: clanGroupExit 0.25s cubic-bezier(.51,.01,1,1.01) forwards;
     }
-
-    // Play sound notification (chime) when a game is found
-    function playGameFoundSound() {
-        if (!soundEnabled || !gameFoundAudio) return;
-
-        try {
-            gameFoundAudio.currentTime = 0; // Reset to start
-            gameFoundAudio.play().catch(error => {
-                console.warn('[Auto-Join] Could not play game found sound:', error);
-            });
-        } catch (error) {
-            console.warn('[Auto-Join] Could not play game found sound:', error);
-        }
+    @keyframes clanGroupExit {
+      from { opacity: 1; transform: translateY(0); }
+      to { opacity: 0; transform: translateY(-8px); }
     }
-
-    // Play boxing ring bell sound when game starts/joins
-    function playGameStartSound() {
-        if (!soundEnabled || !gameStartAudio) return;
-
-        try {
-            gameStartAudio.currentTime = 0; // Reset to start
-            gameStartAudio.play().catch(error => {
-                console.warn('[Auto-Join] Could not play game start sound:', error);
-            });
-        } catch (error) {
-            console.warn('[Auto-Join] Could not play game start sound:', error);
-        }
+    .of-clan-group-header {
+      padding: calc(${d.sm} - 2px) ${d.md};
+      background: rgba(22, 32, 48, 0.9);
+      cursor: default;
+      display: flex;
+      align-items: center;
+      gap: ${d.sm};
+      transition: background ${g.fast}, border-color ${g.fast};
+      flex-wrap: wrap;
+      font-family: ${f.display};
     }
-
-    // Get formatted game details text for notification
-    function getGameDetailsText(lobby) {
-        if (!lobby || !lobby.gameConfig) {
-            return 'Game Found!';
-        }
-
-        const config = lobby.gameConfig;
-        const gameCapacity = lobby.maxClients || config.maxClients || config.maxPlayers || null;
-
-        if (config.gameMode === 'Free For All') {
-            if (gameCapacity !== null) {
-                return `Game Found! FFA - ${gameCapacity} players`;
-            }
-            return 'Game Found! FFA';
-        } else if (config.gameMode === 'Team') {
-            const playerTeams = config.playerTeams;
-            
-            let teamCountText = '';
-            if (playerTeams === 'Duos') {
-                teamCountText = 'Duos';
-            } else if (playerTeams === 'Trios') {
-                teamCountText = 'Trios';
-            } else if (playerTeams === 'Quads') {
-                teamCountText = 'Quads';
-            } else if (typeof playerTeams === 'number') {
-                teamCountText = `${playerTeams} teams`;
-            } else {
-                teamCountText = 'Team';
-            }
-
-            // For Duos/Trios/Quads, just show the mode name (always 2/3/4 players per team)
-            if (playerTeams === 'Duos' || playerTeams === 'Trios' || playerTeams === 'Quads') {
-                return `Game Found! Team (${teamCountText})`;
-            }
-            
-            // For modes with number of teams, show players per team
-            if (typeof playerTeams === 'number' && gameCapacity !== null) {
-                const playersPerTeam = getPlayersPerTeam(playerTeams, gameCapacity);
-                if (playersPerTeam !== null) {
-                    return `Game Found! Team (${teamCountText}) - ${playersPerTeam} players per team`;
-                }
-            }
-            
-            return `Game Found! Team (${teamCountText})`;
-        }
-
-        return 'Game Found!';
+    .of-clan-group-header:hover {
+      background: rgba(28, 40, 60, 0.95);
     }
-
-    // Dismiss notification
-    function dismissNotification(targetElement = null) {
-        const elements = targetElement
-            ? [targetElement]
-            : Array.from(document.querySelectorAll('.game-found-notification'));
-
-        if (elements.length === 0) {
-            if (notificationTimeout) {
-                clearTimeout(notificationTimeout);
-                notificationTimeout = null;
-            }
-            return;
-        }
-
-        elements.forEach(element => {
-            if (!element.classList.contains('notification-dismissing')) {
-                element.classList.add('notification-dismissing');
-            }
-            setTimeout(() => element.remove(), 300);
-        });
-
-        if (notificationTimeout) {
-            clearTimeout(notificationTimeout);
-            notificationTimeout = null;
-        }
+    .of-clan-group.current-player-clan .of-clan-group-header {
+      background: rgba(46, 211, 241, 0.18) !important;
+      border-left: 3px solid ${s.accent} !important;
+      padding-left: calc(${d.sm} - 3px);
     }
-
-    // Show game found notification
-    function showGameFoundNotification(lobby) {
-        // If notification already exists, dismiss it first (show only latest)
-        const existingNotification = document.getElementById('game-found-notification');
-        if (existingNotification) {
-            dismissNotification(existingNotification);
-            // Wait a bit for the dismiss animation
-            setTimeout(() => {
-                createNewNotification(lobby);
-            }, 50);
-        } else {
-            createNewNotification(lobby);
-        }
+    .of-clan-group.current-player-clan .of-player-item {
+      background: rgba(46, 211, 241, 0.12) !important;
+      border-left: 3px solid rgba(46, 211, 241, 0.6) !important;
+      padding-left: calc(${d.md} + 20px - 3px) !important;
     }
-
-    // Create new notification element
-    function createNewNotification(lobby) {
-        const notification = document.createElement('div');
-        notification.id = 'game-found-notification';
-        notification.className = 'game-found-notification';
-        
-        const message = getGameDetailsText(lobby);
-        notification.textContent = message;
-        
-        // Click to dismiss
-        notification.addEventListener('click', () => dismissNotification(notification));
-        
-        // Add to body
-        document.body.appendChild(notification);
-        
-        // Trigger animation
-        setTimeout(() => {
-            notification.classList.add('notification-visible');
-        }, 10);
-        
-        // Auto-dismiss after 10 seconds
-        notificationTimeout = setTimeout(() => {
-            dismissNotification(notification);
-        }, 10000);
+    .of-clan-arrow {
+      font-size: 0.8em;
+      color: ${s.textSecondary};
+      transition: transform ${g.fast};
+      width: 16px;
+      display: inline-block;
     }
-
-    // Join a lobby - only join if we can click the button (for visual feedback)
-    function joinLobby(lobby) {
-        // Prevent concurrent joins
-        if (isJoining) {
-            return;
-        }
-
-        // Try to get the public lobby component and check if the lobby matches
-        const publicLobby = document.querySelector('public-lobby');
-        const lobbyButton = publicLobby?.querySelector('button');
-
-        // Only join if we can click the button (lobby must be displayed and button enabled)
-        if (!publicLobby || !lobbyButton || lobbyButton.disabled) {
-            // Remove from joinedLobbies so we can retry later
-            joinedLobbies.delete(lobby.gameID);
-            return;
-        }
-
-        // Get current displayed lobby (public-lobby shows lobbies[0])
-        const currentLobby = publicLobby.lobbies?.[0];
-        if (!currentLobby || currentLobby.gameID !== lobby.gameID) {
-            // Remove from joinedLobbies so we can retry when it becomes visible
-            joinedLobbies.delete(lobby.gameID);
-            return;
-        }
-
-        // All conditions met - proceed with join
-        isJoining = true;
-
-        // Mark that game was found and stop timer updates
-        gameFoundTime = Date.now();
-        stopTimer();
-        updateSearchTimer();
-
-        // Play sound notification (chime when match is found)
-        playGameFoundSound();
-
-        // Click the button - component will handle join with visual feedback (green highlight)
-        lobbyButton.click();
-
-        // Update UI to indicate we joined
-        updateUI({ status: 'joined', gameID: lobby.gameID });
-
-        // Reset joining flag after a delay (allows time for join to process)
-        setTimeout(() => {
-            isJoining = false;
-        }, 2000);
+    .of-clan-group.collapsed .of-clan-arrow {
+      transform: rotate(-90deg);
     }
-
-    // Try to auto-start search if conditions are met
-    function tryAutoStartSearch() {
-        // Only auto-start if:
-        // 1. We're in lobby
-        // 2. Search is enabled
-        // 3. We have valid criteria
-        // 4. We're not already monitoring
-        if (!isOnLobbyPage()) {
-            return;
-        }
-
-        if (!autoJoinEnabled) {
-            return;
-        }
-
-        // Build criteria from UI
-        criteriaList = buildCriteriaFromUI();
-
-        if (!criteriaList || criteriaList.length === 0) {
-            return;
-        }
-
-        // Start monitoring if not already running
-        if (!monitoringInterval) {
-            startMonitoring();
-            saveSettings();
-            updateUI();
-        }
+    .of-clan-tag {
+      font-weight: 700;
+      color: ${s.textPrimary};
+      font-size: 0.85em;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-family: ${f.display};
     }
-
-    // Start monitoring lobbies
-    function startMonitoring() {
-        if (monitoringInterval) return; // Already monitoring
-
-        searchStartTime = Date.now();
-        gameFoundTime = null; // Reset game found time
-        lastNotifiedGameID = null; // Reset last notified game ID
-        // Clear notified lobbies when starting new search
-        notifiedLobbies.clear();
-        updateSearchTimer();
-
-        // Update timer display every second
-        timerInterval = setInterval(() => {
-            updateSearchTimer();
-        }, 1000);
-
-        // Start checking lobbies
-        monitoringInterval = setInterval(checkLobbies, CONFIG.pollInterval);
+    .of-clan-count {
+      font-size: 0.75em;
+      color: ${s.textPrimary};
+      background: rgba(46, 211, 241, 0.18);
+      padding: 2px 7px;
+      border-radius: ${x.xl};
+      border: 1px solid ${s.borderAccent};
+      letter-spacing: 0.1em;
+      font-family: ${f.mono};
     }
-
-    // Stop monitoring lobbies
-    function stopMonitoring() {
-        if (monitoringInterval) {
-            clearInterval(monitoringInterval);
-            monitoringInterval = null;
-        }
-        stopTimer();
-        searchStartTime = null;
-        gameFoundTime = null;
-        lastNotifiedGameID = null;
-        updateSearchTimer();
-        // Dismiss any active notification
-        dismissNotification();
-        // Clear notified lobbies
-        notifiedLobbies.clear();
-        // Reset status to inactive when stopping
-        updateUI({ status: null });
+    .of-clan-actions {
+      display: flex;
+      gap: ${d.xs};
+      flex-wrap: wrap;
+      align-items: center;
+      margin-left: auto;
     }
-
-    // Stop timer interval
-    function stopTimer() {
-        if (timerInterval) {
-            clearInterval(timerInterval);
-            timerInterval = null;
-        }
+    .of-clan-stats {
+      display: flex;
+      gap: ${d.xs};
+      font-size: 0.66em;
+      color: ${s.textSecondary};
+      flex-wrap: wrap;
+      font-family: ${f.mono};
+      line-height: 1.2;
     }
-
-    // Start game info update interval
-    function startGameInfoUpdates() {
-        if (gameInfoInterval) return; // Already running
-        
-        // Update immediately
-        updateCurrentGameInfo();
-        
-        // Update every second
-        gameInfoInterval = setInterval(() => {
-            updateCurrentGameInfo();
-        }, 1000);
+    .of-clan-stats span {
+      white-space: nowrap;
     }
-
-    // Stop game info update interval
-    function stopGameInfoUpdates() {
-        if (gameInfoInterval) {
-            clearInterval(gameInfoInterval);
-            gameInfoInterval = null;
-        }
-        // Hide the display
-        const gameInfoElement = document.getElementById('current-game-info');
-        if (gameInfoElement) {
-            gameInfoElement.style.display = 'none';
-        }
+    .of-clan-use-btn {
+      padding: 4px 10px;
+      font-size: 0.75em;
+      background: rgba(46, 211, 241, 0.15);
+      color: ${s.textPrimary};
+      border: 1px solid ${s.borderAccent};
+      border-radius: ${x.sm};
+      cursor: pointer;
+      transition: all ${g.fast};
+      font-weight: 700;
+      white-space: nowrap;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-family: ${f.display};
     }
-
-    // Update slider visual fill and sync with hidden inputs
-    function updateSliderRange(minSliderId, maxSliderId, minInputId, maxInputId, fillId, minValueId, maxValueId) {
-        const minSlider = document.getElementById(minSliderId);
-        const maxSlider = document.getElementById(maxSliderId);
-        const minInput = document.getElementById(minInputId);
-        const maxInput = document.getElementById(maxInputId);
-        const fill = document.getElementById(fillId);
-        const minValueDisplay = document.getElementById(minValueId);
-        const maxValueDisplay = document.getElementById(maxValueId);
-
-        if (!minSlider || !maxSlider || !fill) return;
-
-        const minVal = parseInt(minSlider.value, 10);
-        const maxVal = parseInt(maxSlider.value, 10);
-        const min = parseInt(minSlider.min, 10);
-        const max = parseInt(minSlider.max, 10);
-
-        // Ensure min <= max
-        if (minVal > maxVal) {
-            if (document.activeElement === minSlider) {
-                maxSlider.value = minVal;
-                if (maxInput) maxInput.value = minVal === max ? '' : minVal;
-            } else {
-                minSlider.value = maxVal;
-                if (minInput) minInput.value = maxVal === min ? '' : maxVal;
-            }
-            return updateSliderRange(minSliderId, maxSliderId, minInputId, maxInputId, fillId, minValueId, maxValueId);
-        }
-
-        // Calculate fill position and width
-        const minPercent = ((minVal - min) / (max - min)) * 100;
-        const maxPercent = ((maxVal - min) / (max - min)) * 100;
-
-        fill.style.left = minPercent + '%';
-        fill.style.width = (maxPercent - minPercent) + '%';
-
-        // Update hidden inputs
-        if (minInput) {
-            minInput.value = minVal === min ? '' : minVal;
-        }
-        if (maxInput) {
-            maxInput.value = maxVal === max ? '' : maxVal;
-        }
-
-        // Update displayed values
-        if (minValueDisplay) {
-            minValueDisplay.textContent = minVal === min ? 'Any' : minVal;
-        }
-        if (maxValueDisplay) {
-            maxValueDisplay.textContent = maxVal === max ? 'Any' : maxVal;
-        }
+    .of-clan-use-btn:hover {
+      background: ${s.accent};
+      border-color: ${s.accent};
+      color: #04131a;
     }
-
-    // Initialize slider from hidden input values
-    function initializeSlider(minSliderId, maxSliderId, minInputId, maxInputId, fillId, minValueId, maxValueId) {
-        const minSlider = document.getElementById(minSliderId);
-        const maxSlider = document.getElementById(maxSliderId);
-        const minInput = document.getElementById(minInputId);
-        const maxInput = document.getElementById(maxInputId);
-
-        if (!minSlider || !maxSlider) return;
-
-        const min = parseInt(minSlider.min, 10);
-        const max = parseInt(minSlider.max, 10);
-
-        // Get values from hidden inputs or use defaults
-        let minVal = min;
-        let maxVal = max;
-
-        if (minInput && minInput.value) {
-            minVal = Math.max(min, Math.min(max, parseInt(minInput.value, 10)));
-        }
-        if (maxInput && maxInput.value) {
-            maxVal = Math.max(min, Math.min(max, parseInt(maxInput.value, 10)));
-        }
-
-        // Ensure min <= max
-        if (minVal > maxVal) {
-            minVal = maxVal;
-        }
-
-        minSlider.value = minVal;
-        maxSlider.value = maxVal;
-
-        updateSliderRange(minSliderId, maxSliderId, minInputId, maxInputId, fillId, minValueId, maxValueId);
+    .of-clan-group-players {
+      overflow: hidden;
+      transition: max-height ${g.normal} ease-in-out;
+      border-top: 1px solid rgba(60, 80, 120, 0.35);
     }
-
-    // Get number value from input
-    function getNumberValue(id) {
-        const input = document.getElementById(id);
-        if (!input || !input.value) return null;
-        const value = parseInt(input.value, 10);
-        return isNaN(value) ? null : value;
+    .of-clan-group.collapsed .of-clan-group-players {
+      max-height: 0;
     }
-
-    // Helper function to update mode label styles
-    function updateModeLabels(isAutoJoin) {
-        const labelLeft = document.querySelector('.mode-label-left');
-        const labelRight = document.querySelector('.mode-label-right');
-        if (labelLeft && labelRight) {
-            if (isAutoJoin) {
-                labelLeft.style.opacity = '0.6';
-                labelLeft.style.color = 'rgba(255, 255, 255, 0.7)';
-                labelRight.style.opacity = '1';
-                labelRight.style.color = 'rgba(255, 255, 255, 0.95)';
-            } else {
-                labelLeft.style.opacity = '1';
-                labelLeft.style.color = 'rgba(255, 255, 255, 0.95)';
-                labelRight.style.opacity = '0.6';
-                labelRight.style.color = 'rgba(255, 255, 255, 0.7)';
-            }
-        }
+    .of-clan-group-players .of-player-item {
+      padding-left: calc(${d.md} + 20px);
+      background: transparent;
+      cursor: default;
     }
-
-    // Get all selected team counts from UI (returns array)
-    function getAllTeamCountValues() {
-        const selectedCounts = [];
-        const teamCountIds = [
-            { id: 'autojoin-team-duos', value: 'Duos' },
-            { id: 'autojoin-team-trios', value: 'Trios' },
-            { id: 'autojoin-team-quads', value: 'Quads' },
-            { id: 'autojoin-team-2', value: 2 },
-            { id: 'autojoin-team-3', value: 3 },
-            { id: 'autojoin-team-4', value: 4 },
-            { id: 'autojoin-team-5', value: 5 },
-            { id: 'autojoin-team-6', value: 6 },
-            { id: 'autojoin-team-7', value: 7 }
-        ];
-
-        teamCountIds.forEach(({ id, value }) => {
-            const checkbox = document.getElementById(id);
-            if (checkbox && checkbox.checked) {
-                selectedCounts.push(value);
-            }
-        });
-
-        return selectedCounts.length > 0 ? selectedCounts : null;
+    .of-player-list-content { flex: 1; padding: ${d.xs} 0; }
+    .of-player-item {
+      padding: 6px ${d.md};
+      border-bottom: 1px solid rgba(60, 80, 120, 0.35);
+      font-size: 0.85em;
+      line-height: 1.4;
+      position: relative;
+      transition: background-color ${g.slow}, border-color ${g.slow};
+      cursor: default;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
-
-    // Helper function for select/deselect all team counts
-    function setAllTeamCounts(checked) {
-        const checkboxes = [
-            'autojoin-team-2', 'autojoin-team-3', 'autojoin-team-4', 'autojoin-team-5',
-            'autojoin-team-6', 'autojoin-team-7', 'autojoin-team-duos', 'autojoin-team-trios',
-            'autojoin-team-quads'
-        ];
-        checkboxes.forEach(id => {
-            const checkbox = document.getElementById(id);
-            if (checkbox) checkbox.checked = checked;
-        });
+    .of-player-item:hover {
+      background: rgba(24, 34, 52, 0.7);
+      border-bottom-color: rgba(80, 110, 160, 0.5);
     }
+    .of-player-name { color: ${s.textPrimary}; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 400; flex: 1; }
+    .of-player-highlighted { background: linear-gradient(90deg, ${s.highlight} 40%, rgba(46, 211, 241, 0.05)); border-left: 3px solid ${s.accent}; }
+    .of-player-enter { animation: playerEnter ${g.slow} cubic-bezier(.27,.82,.48,1.06) forwards; }
+    .of-player-enter-stagger-1 { animation-delay: 30ms; }
+    .of-player-enter-stagger-2 { animation-delay: 60ms; }
+    .of-player-enter-stagger-3 { animation-delay: 90ms; }
+    .of-player-enter-stagger-4 { animation-delay: 120ms; }
+    .of-player-enter-highlight { background-color: rgba(110,160,255,0.14) !important; }
+    .of-player-exit-highlight { background-color: rgba(220, 70, 90, 0.18); }
+    .of-player-exit { animation: playerExit 0.25s cubic-bezier(.51,.01,1,1.01) forwards; }
+    @keyframes playerEnter { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes playerExit { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-8px); } }
+    .of-player-list-footer { padding: ${d.sm} ${d.lg}; display: flex; justify-content: space-between; background: ${s.bgSecondary}; font-size: 0.95em; flex-shrink: 0; border-top: 1px solid ${s.border}; }
+    .of-player-list-button { background: ${s.bgHover}; border: 1px solid ${s.border}; color: ${s.textPrimary}; padding: 6px 13px; border-radius: ${x.md}; cursor: pointer; font-size: 0.9em; font-weight: 600; transition: background ${g.fast}, border-color ${g.fast}; outline: none; }
+    .of-player-list-button:hover { background: rgba(80,110,160,0.5); border-color: ${s.borderAccent}; }
 
-    // Build criteria list from UI
-    function buildCriteriaFromUI() {
-        const criteriaList = [];
-
-        // Check FFA
-        const ffaChecked = document.getElementById('autojoin-ffa').checked;
-        if (ffaChecked) {
-            const ffaCriteria = {
-                gameMode: 'FFA',
-                minPlayers: getNumberValue('autojoin-ffa-min') || null,
-                maxPlayers: getNumberValue('autojoin-ffa-max') || null
-            };
-            criteriaList.push(ffaCriteria);
-        }
-
-        // Check Team
-        const teamChecked = document.getElementById('autojoin-team').checked;
-        if (teamChecked) {
-            const selectedTeamCounts = getAllTeamCountValues();
-            const minPlayers = getNumberValue('autojoin-team-min') || null;
-            const maxPlayers = getNumberValue('autojoin-team-max') || null;
-
-            if (selectedTeamCounts === null) {
-                // No specific team counts selected, create one criteria that accepts all Team modes
-                const teamCriteria = {
-                    gameMode: 'Team',
-                    teamCount: null,
-                    minPlayers: minPlayers,
-                    maxPlayers: maxPlayers
-                };
-                criteriaList.push(teamCriteria);
-            } else {
-                // Create a separate criteria for each selected team count
-                for (const teamCount of selectedTeamCounts) {
-                    // Duos/Trios/Quads are game modes with fixed players per team (2/3/4)
-                    // Player per team filters do NOT apply to these modes
-                    const isFixedPlayersPerTeam = teamCount === 'Duos' || teamCount === 'Trios' || teamCount === 'Quads';
-                    
-                    const teamCriteria = {
-                        gameMode: 'Team',
-                        teamCount: teamCount,
-                        // Only include player filters for modes with variable team counts (2/3/4/5/6/7 teams)
-                        minPlayers: isFixedPlayersPerTeam ? null : minPlayers,
-                        maxPlayers: isFixedPlayersPerTeam ? null : maxPlayers
-                    };
-                    criteriaList.push(teamCriteria);
-                }
-            }
-        }
-
-        return criteriaList;
+    .autojoin-panel {
+      position: relative;
+      width: 100%;
+      max-width: none;
+      max-height: none;
+      margin: 0;
+      border: none;
+      border-bottom: 1px solid ${s.border};
+      border-radius: 0;
+      box-shadow: none;
+      transition: opacity ${g.slow}, transform ${g.slow};
+      cursor: default;
     }
-
-    // Update UI based on state
-    function updateUI(options = {}) {
-        const statusIndicator = document.querySelector('#autojoin-status .status-indicator');
-        const statusText = document.querySelector('#autojoin-status .status-text');
-
-        if (statusIndicator) {
-            // Always show as active (search is always on)
-            statusIndicator.classList.add('active');
-        }
-
-        if (statusText) {
-            // Show "Joined" if explicitly set
-            if (options.status === 'joined') {
-                statusText.textContent = 'Joined';
-            } else {
-                // In notify mode, always show "Searching" (timer will show "Game found!" when applicable)
-                statusText.textContent = joinMode === 'notify' ? 'Searching' : 'Active';
-            }
-        }
-
-        updateSearchTimer();
+    .autojoin-panel::after { display: none; }
+    .autojoin-panel.hidden { display: none; }
+    .autojoin-panel.autojoin-collapsed .autojoin-body { display: none; }
+    .autojoin-body { display: flex; flex-direction: column; }
+    .autojoin-content { display: flex; flex-direction: column; gap: ${d.sm}; padding: ${d.sm} ${d.md} ${d.md}; }
+    .autojoin-status-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: ${d.sm};
+      flex-wrap: wrap;
+      padding: ${d.sm} ${d.md};
+      background: rgba(18, 26, 40, 0.75);
+      border: 1px solid ${s.border};
+      border-radius: ${x.md};
     }
-
-    // Create UI
-    function createUI() {
-        // Check if UI already exists
-        if (document.getElementById('openfront-autojoin-panel')) {
-            return;
-        }
-
-        const panel = document.createElement('div');
-        panel.id = 'openfront-autojoin-panel';
-        panel.className = 'autojoin-panel';
-        panel.innerHTML = `
-            <div class="autojoin-header" id="autojoin-header-drag">
-                <h3>Auto-Join Lobby</h3>
+    .autojoin-action-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: ${d.sm};
+    }
+    .autojoin-clanmate-button {
+      width: 100%;
+      background: rgba(22, 34, 52, 0.9);
+      border: 1px solid ${s.border};
+      color: ${s.textPrimary};
+      padding: ${d.sm} ${d.md};
+      border-radius: ${x.md};
+      font-size: 0.8em;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background ${g.fast}, border-color ${g.fast};
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-family: ${f.display};
+    }
+    .autojoin-clanmate-button:hover { background: rgba(30, 44, 66, 0.95); border-color: ${s.borderAccent}; }
+    .autojoin-clanmate-button.armed { background: ${s.accent}; border-color: ${s.accentHover}; color: #04131a; box-shadow: 0 0 12px rgba(46, 211, 241, 0.35); }
+    .autojoin-clanmate-button:disabled { opacity: 0.6; cursor: not-allowed; }
+    .autojoin-config-grid { display: flex; flex-direction: column; gap: ${d.sm}; }
+    .autojoin-config-card { flex: 1 1 auto; min-width: 0; width: 100%; background: rgba(14, 22, 34, 0.7); border: 1px solid ${s.border}; border-radius: ${x.md}; }
+    .autojoin-mode-inner {
+      display: flex;
+      flex-direction: column;
+      gap: ${d.xs};
+      margin-top: ${d.xs};
+    }
+    .autojoin-section {
+      display: flex;
+      flex-direction: column;
+      gap: ${d.xs};
+    }
+    .autojoin-section-title {
+      font-size: 0.72em;
+      color: ${s.textMuted};
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-family: ${f.display};
+      margin-top: ${d.xs};
+    }
+    .autojoin-footer { align-items: center; justify-content: flex-start; gap: ${d.sm}; flex-wrap: wrap; padding: ${d.sm} ${d.md}; background: rgba(14, 22, 34, 0.75); border-top: 1px solid ${s.border}; }
+    .autojoin-main-button {
+      width: auto;
+      flex: 1 1 160px;
+      padding: ${d.sm} ${d.md};
+      border: 1px solid ${s.border};
+      border-radius: ${x.md};
+      font-size: 0.8em;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all ${g.slow};
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-family: ${f.display};
+    }
+    .autojoin-main-button.active { background: ${s.accent}; color: #04131a; border-color: ${s.accentHover}; box-shadow: 0 0 14px rgba(46, 211, 241, 0.35); }
+    .autojoin-main-button.inactive { background: rgba(28, 38, 58, 0.9); color: ${s.textSecondary}; }
+    .autojoin-mode-config { margin-bottom: ${d.xs}; padding: ${d.sm}; background: rgba(18, 26, 40, 0.8); border-radius: ${x.md}; border: 1px solid rgba(90, 110, 150, 0.35); }
+    .mode-checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-bottom: 6px;
+      font-size: 0.8em;
+      color: ${s.textPrimary};
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-family: ${f.display};
+    }
+    .mode-checkbox-label input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; }
+    .player-filter-info { margin-bottom: 4px; padding: 2px 0; }
+    .player-filter-info small { color: ${s.textSecondary}; font-size: 0.8em; }
+    .capacity-range-wrapper { margin-top: 4px; }
+    .capacity-range-visual { position: relative; padding: 8px 0 4px 0; }
+    .capacity-track { position: relative; height: 6px; background: rgba(46, 211, 241, 0.2); border-radius: 3px; margin-bottom: ${d.sm}; }
+    .team-count-options-centered { display: flex; justify-content: space-between; gap: 10px; margin: ${d.xs} 0; }
+    .team-count-column { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 0; background: rgba(12, 18, 30, 0.6); padding: 5px; border-radius: ${x.sm}; border: 1px solid rgba(90, 110, 150, 0.25); }
+    .team-count-column label { display: flex; align-items: center; gap: 5px; cursor: pointer; font-size: 0.78em; color: ${s.textPrimary}; white-space: nowrap; user-select: none; }
+    .team-count-column input[type="checkbox"] { width: 16px; height: 16px; margin: 0; }
+    .select-all-btn { background: rgba(46, 211, 241, 0.15); color: ${s.textPrimary}; border: 1px solid ${s.borderAccent}; border-radius: ${x.sm}; padding: ${d.xs} ${d.sm}; font-size: 0.75em; cursor: pointer; flex: 1; text-align: center; margin: 0 2px; text-transform: uppercase; letter-spacing: 0.1em; font-family: ${f.display}; }
+    .select-all-btn:hover { background: rgba(46, 211, 241, 0.25); }
+    .team-count-section > div:first-of-type { display: flex; gap: 5px; margin-bottom: ${d.xs}; }
+    .team-count-section > label { font-size: 0.8em; color: ${s.textPrimary}; font-weight: 600; margin-bottom: 4px; display: block; text-transform: uppercase; letter-spacing: 0.08em; font-family: ${f.display}; }
+    .capacity-labels { display: flex; justify-content: space-between; align-items: center; margin-top: ${d.sm}; }
+    .three-times-checkbox { display: flex; align-items: center; gap: ${d.xs}; font-size: 0.78em; color: ${s.textPrimary}; margin: 0 5px; }
+    .three-times-checkbox input[type="checkbox"] { width: 15px; height: 15px; }
+    .capacity-range-fill { position: absolute; height: 100%; background: rgba(46, 211, 241, 0.5); border-radius: 3px; pointer-events: none; opacity: 0.7; transition: left 0.1s ease, width 0.1s ease; }
+    .capacity-slider { position: absolute; width: 100%; height: 6px; top: 0; left: 0; background: transparent; outline: none; -webkit-appearance: none; pointer-events: none; margin: 0; }
+    .capacity-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: ${s.accent}; cursor: pointer; pointer-events: all; border: 2px solid rgba(5, 20, 26, 0.9); box-shadow: ${M.sm}; }
+    .capacity-slider-min { z-index: 2; }
+    .capacity-slider-max { z-index: 1; }
+    .capacity-label-group { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+    .capacity-label-group label { font-size: 0.8em; color: ${s.textSecondary}; font-weight: 600; margin: 0; text-transform: uppercase; letter-spacing: 0.08em; font-family: ${f.display}; }
+    .capacity-value { font-size: 0.85em; color: #FFFFFF; font-weight: 600; min-width: 40px; text-align: center; }
+    .capacity-inputs-hidden { display: none; }
+    .autojoin-status { display: flex; align-items: center; gap: 8px; cursor: pointer; white-space: nowrap; }
+    .autojoin-status-lines { display: flex; flex-direction: column; gap: 2px; }
+    @keyframes statusPulse {
+      0% { box-shadow: 0 0 0 0 rgba(20, 220, 170, 0.4); }
+      70% { box-shadow: 0 0 0 8px rgba(20, 220, 170, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(20, 220, 170, 0); }
+    }
+    .status-indicator { width: 8px; height: 8px; border-radius: 50%; background: ${s.success}; box-shadow: 0 0 10px rgba(20, 220, 170, 0.4); }
+    .status-indicator.active { animation: statusPulse 2s infinite; }
+    .status-indicator.inactive { animation: none; box-shadow: none; }
+    .status-text { font-size: 0.8em; color: ${s.textPrimary}; text-transform: uppercase; letter-spacing: 0.12em; font-family: ${f.display}; }
+    .search-timer { font-size: 0.8em; color: rgba(147, 197, 253, 0.9); font-weight: 500; font-family: ${f.mono}; }
+    .autojoin-settings { display: flex; align-items: center; gap: ${d.sm}; flex-wrap: wrap; }
+    .autojoin-toggle-label { display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 0.8em; color: ${s.textPrimary}; font-family: ${f.display}; text-transform: uppercase; letter-spacing: 0.08em; }
+    .autojoin-toggle-label input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; }
+    .current-game-info { margin: 6px 0; padding: 6px ${d.sm}; background: rgba(46, 211, 241, 0.1); border-radius: ${x.sm}; font-size: 0.8em; color: rgba(147, 197, 253, 0.9); text-align: center; border: 1px solid rgba(46, 211, 241, 0.25); }
+    .current-game-info.not-applicable { background: rgba(100, 100, 100, 0.1); color: ${s.textMuted}; border-color: rgba(100, 100, 100, 0.2); font-style: italic; }
+    .game-found-notification {
+      position: fixed;
+      top: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-100px);
+      background: linear-gradient(135deg, rgba(12, 20, 32, 0.95) 0%, rgba(10, 16, 28, 0.9) 100%);
+      border: 1px solid ${s.borderAccent};
+      border-radius: ${x.lg};
+      padding: ${d.xl} 30px;
+      z-index: ${P.notification};
+      color: ${s.textPrimary};
+      font-family: ${f.display};
+      font-size: 0.9em;
+      font-weight: 700;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      cursor: pointer;
+      box-shadow: ${M.md};
+      transition: transform ${g.slow}, opacity ${g.slow};
+      opacity: 0;
+      min-width: 300px;
+      max-width: 520px;
+    }
+    .game-found-notification .notification-title {
+      font-size: 1.1em;
+    }
+    .game-found-notification .notification-detail {
+      font-size: 0.85em;
+      margin-top: ${d.sm};
+      text-transform: none;
+      letter-spacing: 0.06em;
+      color: ${s.textSecondary};
+      font-family: ${f.mono};
+    }
+    .game-found-notification .notification-hint {
+      font-size: 0.7em;
+      margin-top: 6px;
+      text-transform: none;
+      letter-spacing: 0.08em;
+      color: ${s.textMuted};
+    }
+    .game-found-notification.notification-visible { transform: translateX(-50%) translateY(0); opacity: 1; }
+    .game-found-notification.notification-dismissing { transform: translateX(-50%) translateY(-100px); opacity: 0; }
+    .game-found-notification:hover { background: rgba(16, 26, 40, 0.96); border-color: ${s.accentHover}; box-shadow: 0 0 18px rgba(46, 211, 241, 0.2); }
+  `}var A={gameFoundAudio:null,gameStartAudio:null,audioUnlocked:!1,preloadSounds(){try{this.gameFoundAudio=new Audio("https://github.com/DeLoWaN/openfront-autojoin-lobby/raw/refs/heads/main/notification_sounds/new-notification-014-363678.mp3"),this.gameFoundAudio.volume=.5,this.gameFoundAudio.preload="auto",this.gameStartAudio=new Audio("https://github.com/DeLoWaN/openfront-autojoin-lobby/raw/refs/heads/main/notification_sounds/opening-bell-421471.mp3"),this.gameStartAudio.volume=.5,this.gameStartAudio.preload="auto",this.setupAudioUnlock()}catch(i){console.warn("[SoundUtils] Could not preload audio:",i)}},setupAudioUnlock(){let i=()=>{if(this.audioUnlocked)return;let e=[];this.gameFoundAudio&&(this.gameFoundAudio.volume=.01,e.push(this.gameFoundAudio.play().then(()=>{this.gameFoundAudio&&(this.gameFoundAudio.pause(),this.gameFoundAudio.currentTime=0,this.gameFoundAudio.volume=.5)}).catch(()=>{}))),this.gameStartAudio&&(this.gameStartAudio.volume=.01,e.push(this.gameStartAudio.play().then(()=>{this.gameStartAudio&&(this.gameStartAudio.pause(),this.gameStartAudio.currentTime=0,this.gameStartAudio.volume=.5)}).catch(()=>{}))),Promise.all(e).then(()=>{this.audioUnlocked=!0,console.log("[SoundUtils] Audio unlocked successfully"),document.removeEventListener("click",i),document.removeEventListener("keydown",i),document.removeEventListener("touchstart",i)})};document.addEventListener("click",i,{once:!0}),document.addEventListener("keydown",i,{once:!0}),document.addEventListener("touchstart",i,{once:!0})},playGameFoundSound(){this.gameFoundAudio?(console.log("[SoundUtils] Attempting to play game found sound"),this.gameFoundAudio.currentTime=0,this.gameFoundAudio.play().catch(i=>{console.warn("[SoundUtils] Failed to play game found sound:",i)})):console.warn("[SoundUtils] Game found audio not initialized")},playGameStartSound(){this.gameStartAudio?(console.log("[SoundUtils] Attempting to play game start sound"),this.gameStartAudio.currentTime=0,this.gameStartAudio.play().catch(i=>{console.warn("[SoundUtils] Failed to play game start sound:",i)})):console.warn("[SoundUtils] Game start audio not initialized")}};var E={callbacks:[],lastUrl:location.href,initialized:!1,init(){if(this.initialized)return;this.initialized=!0;let i=()=>{location.href!==this.lastUrl&&(this.lastUrl=location.href,this.notify())};window.addEventListener("popstate",i),window.addEventListener("hashchange",i);let e=history.pushState,t=history.replaceState;history.pushState=function(...n){e.apply(history,n),setTimeout(i,0)},history.replaceState=function(...n){t.apply(history,n),setTimeout(i,0)},setInterval(i,200)},subscribe(i){this.callbacks.push(i),this.init()},notify(){this.callbacks.forEach(i=>i(location.href))}};var W={subscribers:[],ws:null,fallbackInterval:null,lastLobbies:[],pollingRate:G.lobbyPollingRate,wsConnectionAttempts:0,maxWsAttempts:3,reconnectTimeout:null,start(){this.ws||this.fallbackInterval||(console.log("[Bundle] Starting LobbyDataManager with WebSocket"),this.wsConnectionAttempts=0,this.connectWebSocket())},stop(){this.ws&&(this.ws.close(),this.ws=null),this.reconnectTimeout&&(clearTimeout(this.reconnectTimeout),this.reconnectTimeout=null),this.stopFallbackPolling()},subscribe(i){this.subscribers.push(i)},connectWebSocket(){try{let e=`${window.location.protocol==="https:"?"wss:":"ws:"}//${window.location.host}/lobbies`;this.ws=new WebSocket(e),this.ws.addEventListener("open",()=>{console.log("[Bundle] WebSocket connected"),this.wsConnectionAttempts=0,this.stopFallbackPolling(),this.reconnectTimeout&&(clearTimeout(this.reconnectTimeout),this.reconnectTimeout=null)}),this.ws.addEventListener("message",t=>{try{let n=JSON.parse(t.data);n.type==="lobbies_update"&&(this.lastLobbies=n.data?.lobbies??[],this.notifySubscribers())}catch(n){console.error("[Bundle] WebSocket parse error:",n)}}),this.ws.addEventListener("close",()=>{console.log("[Bundle] WebSocket disconnected"),this.ws=null,this.wsConnectionAttempts++,this.wsConnectionAttempts>=this.maxWsAttempts?(console.log("[Bundle] Max WebSocket attempts reached, falling back to HTTP"),this.startFallbackPolling()):this.reconnectTimeout=setTimeout(()=>this.connectWebSocket(),3e3)}),this.ws.addEventListener("error",t=>{console.error("[Bundle] WebSocket error:",t)})}catch(i){console.error("[Bundle] WebSocket connection error:",i),this.wsConnectionAttempts++,this.wsConnectionAttempts>=this.maxWsAttempts&&this.startFallbackPolling()}},startFallbackPolling(){this.fallbackInterval||(console.log("[Bundle] Starting HTTP fallback polling"),this.fetchData(),this.fallbackInterval=setInterval(()=>this.fetchData(),this.pollingRate))},stopFallbackPolling(){this.fallbackInterval&&(clearInterval(this.fallbackInterval),this.fallbackInterval=null)},async fetchData(){if(!(location.pathname!=="/"&&!location.pathname.startsWith("/public-lobby")))try{let i=await fetch("/api/public_lobbies");if(i.status===429){console.warn("[Bundle] Rate limited.");return}let e=await i.json();this.lastLobbies=e.lobbies||[],this.notifySubscribers()}catch(i){console.error("[Bundle] API Error:",i),this.lastLobbies=[],this.notifySubscribers()}},notifySubscribers(){this.subscribers.forEach(i=>i(this.lastLobbies))}};var k={data:null,dataByTag:null,fetching:!1,fetched:!1,async fetch(){if(this.fetched||this.fetching)return this.data||[];this.fetching=!0;let i=async()=>{let e=await fetch("https://api.openfront.io/public/clans/leaderboard");if(!e.ok)throw new Error(`HTTP ${e.status}`);return e.json()};try{let e=await i();this.data=e.clans||[],this.dataByTag=new Map;for(let t of this.data)this.dataByTag.set(t.clanTag.toLowerCase(),t);this.fetched=!0,console.log("[Bundle] Clan leaderboard cached:",this.data.length,"clans")}catch(e){console.warn("[Bundle] Clan fetch failed, retrying...",e instanceof Error?e.message:String(e)),await new Promise(t=>setTimeout(t,5e3));try{let t=await i();this.data=t.clans||[],this.dataByTag=new Map;for(let n of this.data)this.dataByTag.set(n.clanTag.toLowerCase(),n);this.fetched=!0,console.log("[Bundle] Clan leaderboard cached (retry):",this.data.length,"clans")}catch(t){console.error("[Bundle] Clan leaderboard unavailable:",t instanceof Error?t.message:String(t)),this.data=[],this.dataByTag=new Map,this.fetched=!0}}return this.fetching=!1,this.data||[]},getStats(i){return!this.dataByTag||!i?null:this.dataByTag.get(i.toLowerCase())||null}};var B=class{constructor(e,t,n=null,a=200,o=50){this.isDragging=!1;this.startX=0;this.startWidth=0;this.el=e,this.onResize=t,this.storageKey=n,this.minWidth=a,this.maxWidthVw=o,this.handleMouseDown=this._handleMouseDown.bind(this),this.handleMouseMove=this._handleMouseMove.bind(this),this.handleMouseUp=this._handleMouseUp.bind(this),this.handle=this.createHandle(),e.appendChild(this.handle),n&&this.loadWidth()}createHandle(){let e=document.createElement("div");return e.className="of-resize-handle",e.addEventListener("mousedown",this.handleMouseDown),e}loadWidth(){if(!this.storageKey)return;let e=GM_getValue(this.storageKey,null);if(e&&e.width){let t=this.clampWidth(e.width);this.el.style.width=t+"px",this.onResize(t)}}saveWidth(){this.storageKey&&GM_setValue(this.storageKey,{width:this.el.offsetWidth})}clampWidth(e){let t=window.innerWidth*(this.maxWidthVw/100);return Math.max(this.minWidth,Math.min(e,t))}_handleMouseDown(e){e.preventDefault(),e.stopPropagation(),this.isDragging=!0,this.startX=e.clientX,this.startWidth=this.el.offsetWidth,this.handle.classList.add("dragging"),document.addEventListener("mousemove",this.handleMouseMove),document.addEventListener("mouseup",this.handleMouseUp)}_handleMouseMove(e){if(!this.isDragging)return;let t=this.startX-e.clientX,n=this.clampWidth(this.startWidth+t);this.el.style.width=n+"px",this.onResize(n)}_handleMouseUp(){this.isDragging&&(this.isDragging=!1,this.handle.classList.remove("dragging"),document.removeEventListener("mousemove",this.handleMouseMove),document.removeEventListener("mouseup",this.handleMouseUp),this.saveWidth())}destroy(){this.handle.removeEventListener("mousedown",this.handleMouseDown),document.removeEventListener("mousemove",this.handleMouseMove),document.removeEventListener("mouseup",this.handleMouseUp),this.handle.parentNode&&this.handle.parentNode.removeChild(this.handle)}};var C={lastActionTime:0,debounceDelay:800,getLobbyButton(){return document.querySelector("public-lobby")?.querySelector("button.group.relative.isolate")},canJoinLobby(){let i=document.querySelector("public-lobby");if(!i)return!1;let e=this.getLobbyButton();return!!(e&&!i.isLobbyHighlighted&&i.lobbies&&i.lobbies.length>0&&!e.disabled&&e.offsetParent!==null)},verifyState(i){let e=document.querySelector("public-lobby");if(!e)return!1;let t=this.getLobbyButton();return!t||t.disabled||t.offsetParent===null?!1:i==="in"?e.isLobbyHighlighted===!0:i==="out"?!!(!e.isLobbyHighlighted&&e.lobbies&&e.lobbies.length>0):!1},tryJoinLobby(){let i=Date.now();if(i-this.lastActionTime<this.debounceDelay)return!1;let e=this.getLobbyButton(),t=document.querySelector("public-lobby");return e&&t&&!t.isLobbyHighlighted&&t.lobbies&&t.lobbies.length>0&&!e.disabled&&e.offsetParent!==null?(this.lastActionTime=i,e.click(),setTimeout(()=>{this.verifyState("in")||console.warn("[LobbyUtils] Join may have failed, state not updated")},100),!0):!1},isOnLobbyPage(){let i=document.getElementById("page-game");if(i&&!i.classList.contains("hidden"))return!1;let e=document.querySelector("canvas");if(e&&e.offsetParent!==null){let o=e.getBoundingClientRect();if(o.width>100&&o.height>100)return!1}let t=document.querySelector("public-lobby");if(t&&t.offsetParent!==null)return!0;if(t&&t.offsetParent===null)return!1;let n=document.getElementById("page-play");if(n&&!n.classList.contains("hidden")&&t)return!0;let a=window.location.pathname.replace(/\/+$/,"")||"/";return a==="/"||a==="/public-lobby"}};var Q={showPlayerCount:!0,animationsEnabled:!0,debug:!1};function F(i){if(!i)return null;let e=i.trim().match(/\[([a-zA-Z0-9]{2,5})\]/);return e?e[1]??null:null}function X(i){let e=new Map,t=[];for(let a of i){let o=F(a);if(o){let l=o.toLowerCase();e.has(l)?e.get(l).players.push(a):e.set(l,{tag:o,players:[a]})}else t.push(a)}return{clanGroups:Array.from(e.values()),untaggedPlayers:t}}function ae(i){let e=0;for(let t=0;t<i.length;t++)e=(e<<5)-e+i.charCodeAt(t),e|=0;return Math.abs(e)}function Z(i){return ae(i)%G.threadCount}async function ee(i,e){try{let t=await fetch(`/w${e}/api/game/${i}`);if(t.headers.get("content-type")?.includes("text/html"))throw new Error("Game started");return await t.json()}catch{return{clients:{}}}}function te(i,e,t,n,a,o){let l=new Set(e),r=new Set,c=new Set;for(let h of e)i.has(h)||r.add(h);for(let h of i)l.has(h)||c.add(h);let u=new Map;for(let h of t)u.set(h.tag.toLowerCase(),new Set(h.players));let p=new Map;for(let h of n)p.set(h.tag.toLowerCase(),new Set(h.players));let v=new Map,b=new Map;for(let[h,N]of p){let I=u.get(h);if(!I)continue;let w=[];for(let j of N)I.has(j)||w.push(j);w.length>0&&v.set(h,w)}for(let[h,N]of u){let I=p.get(h);if(!I)continue;let w=[];for(let j of N)I.has(j)||w.push(j);w.length>0&&b.set(h,w)}let m=[],y=[];for(let h of n)u.has(h.tag.toLowerCase())||m.push(h.tag);for(let h of t)p.has(h.tag.toLowerCase())||y.push(h.tag);let T=new Set(a),S=new Set(o),$=[],U=[];for(let h of o)T.has(h)||$.push(h);for(let h of a)S.has(h)||U.push(h);return{added:r,removed:c,addedByClan:v,removedByClan:b,addedUntagged:$,removedUntagged:U,newClans:m,removedClans:y}}var H=null,_=null,O=class{constructor(){this.currentPlayers=[];this.clanGroups=[];this.untaggedPlayers=[];this.previousPlayers=new Set;this.previousClanGroups=[];this.previousUntaggedPlayers=[];this.debugSequence=[];this.showOnlyClans=!0;this.recentTags=[];this.usernameCheckInterval=null;this.usernameAttachInterval=null;this.debugKeyHandler=null;this.lastFetchedGameId=null;this.lastFetchTime=0;this.fetchDebounceMs=1500;this.currentPlayerUsername="";this.selectedClanTag=null;this.playerListUpdateSubscribers=[];this.settings={...Q},this.sleeping=!C.isOnLobbyPage(),this.loadSettings(),this.initUI(),this.initDebugKey(),this.updateSleepState(),E.subscribe(()=>this.updateSleepState()),k.fetch()}async receiveLobbyUpdate(e){if(this.sleeping)return;if(!e||!e.length){H=_=null,this.lastFetchedGameId=null,this.updateListWithNames([]);return}let t=e[0];if(!t)return;let n=t.gameID,a=Z(n),o=Date.now();if(!(this.lastFetchedGameId===n&&o-this.lastFetchTime<this.fetchDebounceMs)){this.lastFetchedGameId=n,this.lastFetchTime=o,H=n,_=a;try{let l=await ee(n,a),r=Object.values(l.clients||{}).map(c=>c.username);this.updateListWithNames(r)}catch(l){console.warn("[PlayerList] Failed to fetch game data:",l)}}}onPlayerListUpdate(e){this.playerListUpdateSubscribers.push(e)}updateListWithNames(e){this.currentPlayers=e,this.settings.debug&&H!=null&&(this.debugInfo.textContent=`GameID: ${H} | WorkerID: ${_}`);let t=new Set(e),n=this.previousPlayers&&this.previousPlayers.size===t.size&&e.every(u=>this.previousPlayers.has(u)),a=this.lastRenderedShowOnlyClans===this.showOnlyClans,o=this.getActiveClanTag(),l=this.lastRenderedSelectedClanTag===o;if(n&&a&&l)return;let{clanGroups:r,untaggedPlayers:c}=X(e);if(this.previousClanGroups=this.clanGroups,this.previousUntaggedPlayers=this.untaggedPlayers,this.clanGroups=r,this.untaggedPlayers=c,this.renderPlayerList(),this.settings.showPlayerCount){let u=this.header.querySelector(".of-player-list-count");u&&(u.textContent=String(e.length))}this.previousPlayers=t,this.lastRenderedShowOnlyClans=this.showOnlyClans,this.notifyPlayerListUpdate()}notifyPlayerListUpdate(){if(this.playerListUpdateSubscribers.length===0)return;let e=this.getActiveClanTag(),t=this.hasClanmateMatch(e),n={activeClanTag:e,hasClanmateMatch:t};this.playerListUpdateSubscribers.forEach(a=>a(n))}hasClanmateMatch(e){if(!e)return!1;let t=e.toLowerCase(),n=this.currentPlayerUsername.trim();for(let a of this.clanGroups)if(a.tag.toLowerCase()===t)return n?a.players.some(o=>o.trim()!==n):a.players.length>0;return!1}initUI(){this.container=document.createElement("div"),this.container.className="of-panel of-player-list-container";let e=document.getElementById("of-game-layout-wrapper");e?e.appendChild(this.container):(console.warn("[PlayerList] Layout wrapper not found, appending to body"),document.body.appendChild(this.container));let t=document.createElement("div");t.id="of-autojoin-slot",t.className="of-autojoin-slot",this.container.appendChild(t),this.header=document.createElement("div"),this.header.className="of-header of-player-list-header",this.header.innerHTML=`
+      <div class="of-header-title">
+        <span class="of-player-list-title">Lobby Intel</span>
+        <span class="of-badge of-player-list-count">0</span>
+      </div>
+    `,this.container.appendChild(this.header),this.debugInfo=document.createElement("div"),this.debugInfo.className="of-player-debug-info",this.header.appendChild(this.debugInfo),this.quickTagSwitch=document.createElement("div"),this.quickTagSwitch.className="of-quick-tag-switch";let n=document.createElement("span");n.className="of-quick-tag-label",n.textContent="Quick tags",this.quickTagSwitch.appendChild(n),this.container.appendChild(this.quickTagSwitch),this.checkboxFilter=document.createElement("div"),this.checkboxFilter.className="of-clan-checkbox-filter";let a=document.createElement("input");a.type="checkbox",a.id="show-only-clans-checkbox",a.checked=this.showOnlyClans,a.addEventListener("change",l=>{if(this.showOnlyClans=l.target.checked,this.saveSettings(),this.renderPlayerList(),this.settings.showPlayerCount){let r=this.header.querySelector(".of-player-list-count");r&&(r.textContent=String(this.currentPlayers.length))}});let o=document.createElement("label");o.htmlFor="show-only-clans-checkbox",o.textContent="Show only players with clan tags",this.checkboxFilter.appendChild(a),this.checkboxFilter.appendChild(o),this.container.appendChild(this.checkboxFilter),this.content=document.createElement("div"),this.content.className="of-content of-player-list-content",this.container.appendChild(this.content),this.resizeHandler=new B(this.container,l=>{document.documentElement.style.setProperty("--player-list-width",l+"px")},L.playerListPanelSize,200,50),this.applySavedPanelSize(),this.resizeObserver=new ResizeObserver(()=>{if(!C.isOnLobbyPage())return;let l=this.container.offsetWidth,r=this.container.offsetHeight;l<=0||r<=0||GM_setValue(L.playerListPanelSize,{width:l,height:r})}),this.resizeObserver.observe(this.container),this.applySettings(),this.renderQuickTagSwitch(),this.monitorUsernameInput()}monitorUsernameInput(){let e=()=>{let l=document.querySelector("username-input");if(!l)return null;let r=l.querySelector('input[maxlength="5"]'),c=l.querySelector('input:not([maxlength="5"])');return{clanInput:r,nameInput:c,component:l}},t="",n=()=>{let l=e();if(!l)return;let r=l.clanInput?.value||"",c=l.nameInput?.value||"",u=r?`[${r}] ${c}`:c,p=r||F(u);p&&p.length>=2&&this.addRecentTag(p)},a=()=>{let l=e();if(!l)return;let r=l.clanInput?.value||"",c=l.nameInput?.value||"",u=r?`[${r}] ${c}`:c;if(u!==t){t=u,this.currentPlayerUsername=u;let p=F(u);!this.setSelectedClanTag(r||p)&&this.clanGroups.length>0&&this.renderPlayerList()}};a(),this.usernameCheckInterval=setInterval(a,1e3);let o=()=>{let l=e(),r=l?.clanInput,c=l?.nameInput;r&&!r.dataset.ofMonitored&&(r.dataset.ofMonitored="true",r.addEventListener("input",a),r.addEventListener("change",()=>{a(),n()})),c&&!c.dataset.ofMonitored&&(c.dataset.ofMonitored="true",c.addEventListener("input",a),c.addEventListener("change",()=>{a(),n()}))};o(),this.usernameAttachInterval=setInterval(o,5e3)}loadSettings(){let e=GM_getValue(L.playerListShowOnlyClans);e!==void 0&&(e==="true"?this.showOnlyClans=!0:e==="false"?this.showOnlyClans=!1:this.showOnlyClans=!!e);let t=GM_getValue(L.playerListRecentTags);t&&Array.isArray(t)&&(this.recentTags=t)}saveSettings(){GM_setValue(L.playerListShowOnlyClans,this.showOnlyClans)}getAutoRejoinOnClanChange(){let e=GM_getValue(L.autoJoinSettings,null);return e&&typeof e.autoRejoinOnClanChange=="boolean"?e.autoRejoinOnClanChange:GM_getValue(L.playerListAutoRejoin)??!1}applyClanTagToNickname(e){this.setSelectedClanTag(e);let t=document.querySelector("username-input");if(!t)return;let n=t.querySelector('input[maxlength="5"]');if(n){let a=e.toUpperCase(),o=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,"value")?.set;o&&(o.call(n,a),n.dispatchEvent(new Event("input",{bubbles:!0})),n.dispatchEvent(new Event("change",{bubbles:!0})),this.getAutoRejoinOnClanChange()&&this.performLobbyRejoin())}}addRecentTag(e){let t=e.toUpperCase();this.recentTags.includes(t)||(this.recentTags.unshift(t),this.recentTags.length>3&&(this.recentTags=this.recentTags.slice(0,3)),GM_setValue(L.playerListRecentTags,this.recentTags),this.renderQuickTagSwitch())}renderQuickTagSwitch(){this.quickTagSwitch.querySelectorAll(".of-quick-tag-item").forEach(t=>t.remove());for(let t of this.recentTags){let n=document.createElement("div");n.className="of-quick-tag-item";let a=document.createElement("button");a.type="button",a.className="of-quick-tag-btn",a.textContent=t,a.title=`Apply [${t}] to your username`,a.addEventListener("click",()=>{this.applyClanTagToNickname(t)});let o=document.createElement("button");o.type="button",o.className="of-quick-tag-remove",o.textContent="x",o.title="Remove from recent tags",o.setAttribute("aria-label",`Remove ${t} from recent tags`),o.addEventListener("click",l=>{l.stopPropagation(),this.recentTags=this.recentTags.filter(r=>r!==t),GM_setValue(L.playerListRecentTags,this.recentTags),this.renderQuickTagSwitch()}),n.appendChild(a),n.appendChild(o),this.quickTagSwitch.appendChild(n)}}createClanGroupEl(e,t,n,a=!1){let o=document.createElement("div");o.className="of-clan-group",o.setAttribute("data-clan-tag",e.toLowerCase()),a&&o.classList.add("of-clan-group-enter");let l=document.createElement("div");l.className="of-clan-group-header";let r="";if(n){let p=n.wins&&n.losses?(n.wins/n.losses).toFixed(2):n.weightedWLRatio?.toFixed(2)||"0.00",v=n.wins?.toLocaleString()||0,b=n.losses?.toLocaleString()||0;r=`
+        <span>W ${v}</span>
+        <span>\u2022</span>
+        <span>L ${b}</span>
+        <span>\u2022</span>
+        <span>R ${p}</span>
+      `}l.innerHTML=`
+      <span class="of-clan-tag">[${e}]</span>
+      <span class="of-clan-count">${t.length}</span>
+      <div class="of-clan-actions">
+        ${r?`<div class="of-clan-stats">${r}</div>`:""}
+        <button class="of-clan-use-btn" title="Apply [${e}] to your username">Use tag</button>
+      </div>
+    `;let c=l.querySelector(".of-clan-use-btn");c&&c.addEventListener("click",p=>{p.stopPropagation(),this.applyClanTagToNickname(e)});let u=document.createElement("div");u.className="of-clan-group-players";for(let p of t)u.appendChild(this.createPlayerEl(p));return o.appendChild(l),o.appendChild(u),o}createPlayerEl(e,t=!1){let n=document.createElement("div");n.className="of-player-item",n.setAttribute("data-player-name",e),t&&n.classList.add("of-player-enter");let a=document.createElement("span");return a.className="of-player-name",a.textContent=e,n.appendChild(a),n}normalizeClanTag(e){if(!e)return null;let t=e.trim();return t?t.toLowerCase():null}setSelectedClanTag(e){let t=this.normalizeClanTag(e);return t===this.selectedClanTag?!1:(this.selectedClanTag=t,this.renderPlayerList(),this.notifyPlayerListUpdate(),!0)}getActiveClanTag(){return this.selectedClanTag?this.selectedClanTag:this.currentPlayerUsername?this.normalizeClanTag(F(this.currentPlayerUsername)):null}sortClanGroupsWithPlayerFirst(e,t){let n=t??this.getActiveClanTag();if(!n)return e;let a=e.findIndex(o=>o.tag.toLowerCase()===n);return a>0?[e[a],...e.slice(0,a),...e.slice(a+1)]:e}async performLobbyRejoin(){let e=document.querySelector("public-lobby"),t=C.getLobbyButton();if(!t||!e){console.warn("[PlayerList] Cannot rejoin - lobby elements not found");return}if(e.isLobbyHighlighted===!0&&(t.click(),await new Promise(o=>setTimeout(o,900)),!C.verifyState("out"))){console.warn("[PlayerList] Failed to leave lobby");return}await new Promise(o=>setTimeout(o,200)),C.tryJoinLobby()||console.warn("[PlayerList] Failed to join lobby")}renderPlayerList(){let e=te(this.previousPlayers,this.currentPlayers,this.previousClanGroups,this.clanGroups,this.previousUntaggedPlayers,this.untaggedPlayers),t=this.previousPlayers.size===0,n=this.lastRenderedShowOnlyClans!==this.showOnlyClans,a=this.getActiveClanTag(),o=this.lastRenderedSelectedClanTag!==a;t||n||o?this.renderPlayerListFull(a):this.renderPlayerListDifferential(e,a),this.lastRenderedSelectedClanTag=a}renderPlayerListFull(e){this.content.innerHTML="";let t=e??this.getActiveClanTag(),n=this.sortClanGroupsWithPlayerFirst(this.clanGroups,t);for(let a of n){let o=k.getStats(a.tag),l=this.createClanGroupEl(a.tag,a.players,o,!1);t&&a.tag.toLowerCase()===t&&l.classList.add("current-player-clan"),this.content.appendChild(l)}if(!this.showOnlyClans)for(let a of this.untaggedPlayers)this.content.appendChild(this.createPlayerEl(a,!1))}renderPlayerListDifferential(e,t){for(let l of e.removedClans){let r=this.content.querySelector(`[data-clan-tag="${l.toLowerCase()}"]`);r&&this.removeClanGroupWithAnimation(r)}for(let[l,r]of e.removedByClan){let c=this.content.querySelector(`[data-clan-tag="${l.toLowerCase()}"]`);if(c)for(let u of r){let p=c.querySelector(`[data-player-name="${CSS.escape(u)}"]`);p&&this.removePlayerWithAnimation(p)}}if(!this.showOnlyClans)for(let l of e.removedUntagged){let r=this.content.querySelector(`.of-player-item[data-player-name="${CSS.escape(l)}"]`);r&&!r.closest(".of-clan-group")&&this.removePlayerWithAnimation(r)}let n=t??this.getActiveClanTag(),a=this.sortClanGroupsWithPlayerFirst(this.clanGroups,n);for(let l of e.newClans){let r=a.find(p=>p.tag===l);if(!r)continue;let c=k.getStats(r.tag),u=this.createClanGroupEl(r.tag,r.players,c,!0);n&&r.tag.toLowerCase()===n&&u.classList.add("current-player-clan"),this.insertClanGroupInOrder(u,a),u.addEventListener("animationend",()=>{u.classList.remove("of-clan-group-enter")},{once:!0})}let o=0;for(let[l,r]of e.addedByClan){let c=this.content.querySelector(`[data-clan-tag="${l.toLowerCase()}"]`);if(!c)continue;let u=c.querySelector(".of-clan-group-players");if(!u)continue;let p=c.classList.contains("collapsed");for(let v of r){let b=this.createPlayerEl(v,!0);o>0&&o<=4&&b.classList.add(`of-player-enter-stagger-${o}`),o++,p&&b.classList.remove("of-player-enter"),u.appendChild(b),p||b.addEventListener("animationend",()=>{b.classList.remove("of-player-enter");for(let m=1;m<=4;m++)b.classList.remove(`of-player-enter-stagger-${m}`)},{once:!0})}this.updateClanCount(c)}if(!this.showOnlyClans)for(let l of e.addedUntagged){let r=this.createPlayerEl(l,!0);o>0&&o<=4&&r.classList.add(`of-player-enter-stagger-${o}`),o++,this.content.appendChild(r),r.addEventListener("animationend",()=>{r.classList.remove("of-player-enter");for(let c=1;c<=4;c++)r.classList.remove(`of-player-enter-stagger-${c}`)},{once:!0})}for(let l of a){let r=this.content.querySelector(`[data-clan-tag="${l.tag.toLowerCase()}"]`);r&&this.updateClanCount(r)}}removePlayerWithAnimation(e){e.classList.add("of-player-exit"),e.addEventListener("animationend",()=>{e.remove()},{once:!0})}removeClanGroupWithAnimation(e){e.classList.add("of-clan-group-exit"),e.addEventListener("animationend",()=>{e.remove()},{once:!0})}insertClanGroupInOrder(e,t){let n=e.getAttribute("data-clan-tag");if(!n){this.content.appendChild(e);return}let a=t.findIndex(l=>l.tag.toLowerCase()===n);if(a===-1){this.content.appendChild(e);return}let o=null;for(let l=a+1;l<t.length;l++){let r=t[l].tag.toLowerCase(),c=this.content.querySelector(`[data-clan-tag="${r}"]`);if(c){o=c;break}}if(o)this.content.insertBefore(e,o);else{let l=this.content.querySelector(".of-player-item:not(.of-clan-group .of-player-item)");l?this.content.insertBefore(e,l):this.content.appendChild(e)}}updateClanCount(e){let t=e.querySelector(".of-clan-count"),n=e.querySelector(".of-clan-group-players");if(t&&n){let a=n.querySelectorAll(".of-player-item").length;t.textContent=String(a)}}applySettings(){this.settings.debug&&(this.debugInfo.style.display="block")}applySavedPanelSize(){let e=GM_getValue(L.playerListPanelSize);e&&e.width&&(this.container.style.width=e.width+"px",document.documentElement.style.setProperty("--player-list-width",e.width+"px"))}updateSleepState(){let e=C.isOnLobbyPage();this.sleeping=!e,this.sleeping?this.container.classList.add("hidden"):this.container.classList.remove("hidden")}initDebugKey(){this.debugKeyHandler=e=>{e.ctrlKey&&e.shiftKey&&e.key==="D"&&(this.debugSequence.push("D"),this.debugSequence.length>3&&this.debugSequence.shift(),this.debugSequence.join("")==="DDD"&&(this.settings.debug=!this.settings.debug,this.applySettings(),console.log("[PlayerList] Debug mode:",this.settings.debug),this.debugSequence=[]))},document.addEventListener("keydown",this.debugKeyHandler)}cleanup(){this.usernameCheckInterval&&clearInterval(this.usernameCheckInterval),this.usernameAttachInterval&&clearInterval(this.usernameAttachInterval),this.debugKeyHandler&&document.removeEventListener("keydown",this.debugKeyHandler),this.resizeObserver&&this.resizeObserver.disconnect(),this.resizeHandler&&this.resizeHandler.destroy(),this.container&&this.container.parentNode&&this.container.parentNode.removeChild(this.container)}};function J(i,e){return!i||!e?null:i==="Duos"?2:i==="Trios"?3:i==="Quads"?4:typeof i=="number"&&i>0?Math.floor(e/i):null}function oe(i){if(!i)return null;let e=i.toLowerCase().trim();return e==="free for all"||e==="ffa"?"FFA":e==="team"||e==="teams"?"Team":null}function q(i){return oe(i.gameConfig?.gameMode)}function z(i){let e=i.gameConfig;if(!e)return null;if(e.playerTeams)return e.playerTeams;let t=e.teamCount??e.teams;return typeof t=="number"?t:null}function V(i){let e=i.gameConfig;return e?e.maxClients??e.maxPlayers??e.maxPlayersPerGame??i.maxClients??null:null}function K(i){let e=q(i),t=z(i),n=V(i);if(e==="FFA")return n!==null?`FFA (${n} max players)`:"FFA";if(e==="Team"){if(t==="Duos")return"Duos";if(t==="Trios")return"Trios";if(t==="Quads")return"Quads";if(typeof t=="number"&&n!==null){let a=J(t,n);return a!==null?`${t} teams (${a} per team)`:`${t} teams`}return"Team"}return"Unknown"}var D=class{matchesCriteria(e,t){if(!e||!e.gameConfig||!t||t.length===0)return!1;let n=V(e),a=q(e);for(let o of t){let l=!1;if(o.gameMode==="FFA"&&a==="FFA")l=!0;else if(o.gameMode==="Team"&&a==="Team"){if(o.teamCount!==null&&o.teamCount!==void 0){let r=z(e);if(o.teamCount==="Duos"&&r!=="Duos"||o.teamCount==="Trios"&&r!=="Trios"||o.teamCount==="Quads"&&r!=="Quads"||typeof o.teamCount=="number"&&r!==o.teamCount)continue}l=!0}if(l){if(o.gameMode==="FFA"){if(n===null)return!0;if(o.minPlayers!==null&&n<o.minPlayers||o.maxPlayers!==null&&n>o.maxPlayers)continue}else if(o.gameMode==="Team"){let r=z(e),c=J(r,n);if(c===null)return!0;if(o.minPlayers!==null&&c<o.minPlayers||o.maxPlayers!==null&&c>o.maxPlayers)continue}return!0}}return!1}};var R=class{constructor(){this.autoJoinEnabled=!0;this.criteriaList=[];this.joinedLobbies=new Set;this.searchStartTime=null;this.gameFoundTime=null;this.isJoining=!1;this.soundEnabled=!0;this.recentlyLeftLobbyID=null;this.joinMode="autojoin";this.notifiedLobbies=new Set;this.lastNotifiedGameID=null;this.isTeamThreeTimesMinEnabled=!1;this.sleeping=!1;this.autoRejoinOnClanChange=!1;this.clanmateWatcherArmed=!1;this.lastClanmateMatch=!1;this.lastActiveClanTag=null;this.timerInterval=null;this.gameInfoInterval=null;this.notificationTimeout=null;this.isCollapsed=!1;this.engine=new D,this.loadSettings(),this.createUI(),this.updateSleepState(),E.subscribe(()=>this.updateSleepState())}receiveLobbyUpdate(e){this.processLobbies(e)}handleClanmateUpdate(e){if(this.lastActiveClanTag=e.activeClanTag,this.lastClanmateMatch=e.hasClanmateMatch,this.updateClanmateButtonState(),!!this.clanmateWatcherArmed){if(!e.activeClanTag){this.setClanmateWatcherArmed(!1);return}e.hasClanmateMatch&&this.attemptClanmateJoin()}}migrateSettings(){let e="autoJoinSettings",t=L.autoJoinSettings,n="autoJoinPanelPosition",a=L.autoJoinPanelPosition,o=L.playerListAutoRejoin,l=GM_getValue(e),r=GM_getValue(t);l&&!r&&GM_setValue(t,l);let c=GM_getValue(n),u=GM_getValue(a);c&&!u&&GM_setValue(a,c);let p=GM_getValue(o);if(p!==void 0){let v=GM_getValue(t,null);v?v.autoRejoinOnClanChange===void 0&&GM_setValue(t,{...v,autoRejoinOnClanChange:p}):GM_setValue(t,{criteria:[],autoJoinEnabled:!0,soundEnabled:!0,joinMode:"autojoin",isTeamThreeTimesMinEnabled:!1,autoRejoinOnClanChange:p})}}loadSettings(){this.migrateSettings();let e=GM_getValue(L.autoJoinSettings,null);e&&(this.criteriaList=e.criteria||[],this.soundEnabled=e.soundEnabled!==void 0?e.soundEnabled:!0,this.joinMode=e.joinMode||"autojoin",this.isTeamThreeTimesMinEnabled=e.isTeamThreeTimesMinEnabled||!1,this.autoJoinEnabled=e.autoJoinEnabled!==void 0?e.autoJoinEnabled:!0,this.autoRejoinOnClanChange=e.autoRejoinOnClanChange!==void 0?e.autoRejoinOnClanChange:!1)}saveSettings(){GM_setValue(L.autoJoinSettings,{criteria:this.criteriaList,autoJoinEnabled:this.autoJoinEnabled,soundEnabled:this.soundEnabled,joinMode:this.joinMode,isTeamThreeTimesMinEnabled:this.isTeamThreeTimesMinEnabled,autoRejoinOnClanChange:this.autoRejoinOnClanChange})}updateSearchTimer(){let e=document.getElementById("search-timer");if(!e)return;if(!this.autoJoinEnabled||this.searchStartTime===null||!this.criteriaList||this.criteriaList.length===0){e.style.display="none",this.gameFoundTime=null;return}if(this.gameFoundTime!==null){let n=Math.floor((this.gameFoundTime-this.searchStartTime)/1e3);e.textContent=`Game found! (${Math.floor(n/60)}m ${n%60}s)`,e.style.display="inline";return}let t=Math.floor((Date.now()-this.searchStartTime)/1e3);e.textContent=`Searching: ${Math.floor(t/60)}m ${t%60}s`,e.style.display="inline"}updateCurrentGameInfo(){let e=document.getElementById("current-game-info");if(!e||!C.isOnLobbyPage()){e&&(e.style.display="none");return}e.style.display="block";let t=document.querySelector("public-lobby");if(!t||!t.lobbies||t.lobbies.length===0){e.textContent="Current game: No game",e.classList.add("not-applicable");return}let n=t.lobbies[0];if(!n||!n.gameConfig){e.textContent="Current game: No game",e.classList.add("not-applicable");return}let a=K(n);e.textContent=`Current game: ${a}`,e.classList.remove("not-applicable")}processLobbies(e){try{if(this.updateCurrentGameInfo(),this.isJoining||!this.autoJoinEnabled||!this.criteriaList||this.criteriaList.length===0||!C.isOnLobbyPage())return;this.joinMode==="notify"&&this.gameFoundTime!==null&&this.lastNotifiedGameID!==null&&(e.length>0?e[0]:null)?.gameID!==this.lastNotifiedGameID&&(this.gameFoundTime=null,this.lastNotifiedGameID=null,this.syncSearchTimer({resetStart:!0}));for(let t of e)if(this.engine.matchesCriteria(t,this.criteriaList)){if(this.recentlyLeftLobbyID===t.gameID)continue;if(this.joinMode==="notify"){this.notifiedLobbies.has(t.gameID)||(this.showGameFoundNotification(t),console.log("[AutoJoin] Sound enabled:",this.soundEnabled),this.soundEnabled&&A.playGameFoundSound(),this.notifiedLobbies.add(t.gameID),this.gameFoundTime=Date.now(),this.lastNotifiedGameID=t.gameID);return}else{this.joinedLobbies.has(t.gameID)||(this.joinLobby(t),this.joinedLobbies.add(t.gameID));return}}}catch(t){console.error("[AutoJoin] Error processing lobbies:",t)}}showGameFoundNotification(e){this.dismissNotification();let t=this.createNewNotification(e);document.body.appendChild(t),requestAnimationFrame(()=>{t.classList.add("notification-visible")}),this.notificationTimeout=setTimeout(()=>{this.dismissNotification(t)},1e4)}createNewNotification(e){let t=document.createElement("div");t.className="game-found-notification";let n=K(e);return t.innerHTML=`
+      <div class="notification-title">Game Found</div>
+      <div class="notification-detail">${n}</div>
+      <div class="notification-hint">Click to dismiss</div>
+    `,t.addEventListener("click",()=>{this.dismissNotification(t)}),t}dismissNotification(e=null){this.notificationTimeout&&(clearTimeout(this.notificationTimeout),this.notificationTimeout=null);let t=e?[e]:Array.from(document.querySelectorAll(".game-found-notification"));for(let n of t)n.classList.remove("notification-visible"),n.classList.add("notification-dismissing"),setTimeout(()=>{n.parentNode&&n.parentNode.removeChild(n)},300)}joinLobby(e){if(this.isJoining)return;console.log("[AutoJoin] Attempting to join lobby:",e.gameID),this.isJoining=!0,this.gameFoundTime=Date.now(),setTimeout(()=>{C.tryJoinLobby()?(console.log("[AutoJoin] Join initiated"),this.soundEnabled&&A.playGameStartSound(),this.recentlyLeftLobbyID=e.gameID,setTimeout(()=>{this.recentlyLeftLobbyID=null},5e3)):console.warn("[AutoJoin] Failed to join lobby"),this.isJoining=!1},100)}stopTimer(){this.timerInterval&&(clearInterval(this.timerInterval),this.timerInterval=null)}startGameInfoUpdates(){this.stopGameInfoUpdates(),this.updateCurrentGameInfo(),this.gameInfoInterval=setInterval(()=>this.updateCurrentGameInfo(),1e3)}stopGameInfoUpdates(){this.gameInfoInterval&&(clearInterval(this.gameInfoInterval),this.gameInfoInterval=null)}syncSearchTimer(e={}){let{resetStart:t=!1}=e;this.stopTimer(),t&&(this.searchStartTime=null,this.gameFoundTime=null,this.notifiedLobbies.clear(),this.lastNotifiedGameID=null),this.autoJoinEnabled&&this.criteriaList&&this.criteriaList.length>0?(this.searchStartTime===null&&(this.searchStartTime=Date.now()),this.timerInterval=setInterval(()=>this.updateSearchTimer(),100)):(this.searchStartTime=null,this.gameFoundTime=null),this.updateSearchTimer()}setAutoJoinEnabled(e,t={}){let{resetTimer:n=!1}=t;this.autoJoinEnabled=e,this.saveSettings(),this.updateUI(),this.syncSearchTimer({resetStart:n})}setCollapsed(e){this.isCollapsed=e,this.panel.classList.toggle("autojoin-collapsed",e);let t=document.getElementById("autojoin-collapse-toggle");t&&(t.setAttribute("aria-expanded",String(!e)),t.setAttribute("title",e?"Expand":"Collapse"))}setClanmateWatcherArmed(e){this.clanmateWatcherArmed=e,this.updateClanmateButtonState()}updateClanmateButtonState(){let e=document.getElementById("autojoin-clanmate-button");if(!e)return;let t="One-shot. Uses clan tag input. Independent of Auto-Join status.",n=!!this.lastActiveClanTag,a=this.lastActiveClanTag?this.lastActiveClanTag.toUpperCase():null;e.disabled=!n,e.setAttribute("title",t),this.clanmateWatcherArmed?(e.textContent="Waiting for clanmate...",e.classList.add("armed")):(e.textContent=n?`Join the game if any member of [${a}] is in the lobby`:"Set your clan tag to enable",e.classList.remove("armed"))}attemptClanmateJoin(){if(!this.clanmateWatcherArmed)return;this.setClanmateWatcherArmed(!1),C.tryJoinLobby()||console.warn("[AutoJoin] Clanmate auto-join attempt failed")}getNumberValue(e){let t=document.getElementById(e);if(!t)return null;let n=parseInt(t.value,10);return isNaN(n)?null:n}getAllTeamCountValues(){let e=[],t=["autojoin-team-duos","autojoin-team-trios","autojoin-team-quads","autojoin-team-2","autojoin-team-3","autojoin-team-4","autojoin-team-5","autojoin-team-6","autojoin-team-7"];for(let n of t){let a=document.getElementById(n);if(a?.checked){let o=a.value;if(o==="Duos"||o==="Trios"||o==="Quads")e.push(o);else{let l=parseInt(o,10);isNaN(l)||e.push(l)}}}return e}setAllTeamCounts(e){let t=["autojoin-team-duos","autojoin-team-trios","autojoin-team-quads","autojoin-team-2","autojoin-team-3","autojoin-team-4","autojoin-team-5","autojoin-team-6","autojoin-team-7"];for(let n of t){let a=document.getElementById(n);a&&(a.checked=e)}}buildCriteriaFromUI(){let e=[];if(document.getElementById("autojoin-ffa")?.checked&&e.push({gameMode:"FFA",minPlayers:this.getNumberValue("autojoin-ffa-min"),maxPlayers:this.getNumberValue("autojoin-ffa-max")}),document.getElementById("autojoin-team")?.checked){let a=this.getAllTeamCountValues();if(a.length===0)e.push({gameMode:"Team",teamCount:null,minPlayers:this.getNumberValue("autojoin-team-min"),maxPlayers:this.getNumberValue("autojoin-team-max")});else for(let o of a)e.push({gameMode:"Team",teamCount:o,minPlayers:this.getNumberValue("autojoin-team-min"),maxPlayers:this.getNumberValue("autojoin-team-max")})}return e}updateUI(){let e=document.getElementById("autojoin-main-button"),t=document.querySelector(".status-text"),n=document.querySelector(".status-indicator");e&&(this.joinMode==="autojoin"?(e.textContent="Auto-Join",e.classList.add("active"),e.classList.remove("inactive")):(e.textContent="Notify Only",e.classList.remove("active"),e.classList.add("inactive"))),t&&n&&(this.autoJoinEnabled?(t.textContent="Active",n.style.background="#38d9a9",n.classList.add("active"),n.classList.remove("inactive")):(t.textContent="Inactive",n.style.background="#888",n.classList.remove("active"),n.classList.add("inactive")))}loadUIFromSettings(){let e=document.getElementById("autojoin-ffa"),t=document.getElementById("ffa-config"),n=this.criteriaList.some(m=>m.gameMode==="FFA");e&&(e.checked=n,t&&(t.style.display=n?"block":"none"));let a=document.getElementById("autojoin-team"),o=document.getElementById("team-config"),l=this.criteriaList.some(m=>m.gameMode==="Team");a&&(a.checked=l,o&&(o.style.display=l?"block":"none"));let r=this.criteriaList.filter(m=>m.gameMode==="Team"),c=r.map(m=>m.teamCount).filter(m=>m!==null);for(let m of c){let y=null;m==="Duos"?y=document.getElementById("autojoin-team-duos"):m==="Trios"?y=document.getElementById("autojoin-team-trios"):m==="Quads"?y=document.getElementById("autojoin-team-quads"):typeof m=="number"&&(y=document.getElementById(`autojoin-team-${m}`)),y&&(y.checked=!0)}let u=this.criteriaList.find(m=>m.gameMode==="FFA");if(u){let m=document.getElementById("autojoin-ffa-min"),y=document.getElementById("autojoin-ffa-max");m&&u.minPlayers!==null&&(m.value=String(u.minPlayers)),y&&u.maxPlayers!==null&&(y.value=String(u.maxPlayers))}let p=r[0];if(p){let m=document.getElementById("autojoin-team-min"),y=document.getElementById("autojoin-team-max");m&&p.minPlayers!==null&&(m.value=String(p.minPlayers)),y&&p.maxPlayers!==null&&(y.value=String(p.maxPlayers))}let v=document.getElementById("autojoin-sound-toggle");v&&(v.checked=this.soundEnabled);let b=document.getElementById("autojoin-auto-rejoin");b&&(b.checked=this.autoRejoinOnClanChange)}initializeSlider(e,t,n,a,o,l,r){let c=document.getElementById(e),u=document.getElementById(t),p=document.getElementById(n),v=document.getElementById(a);if(!c||!u||!p||!v)return;let b=parseInt(p.value,10),m=parseInt(v.value,10);Number.isNaN(b)||(c.value=String(b)),Number.isNaN(m)||(u.value=String(m));let y=()=>{this.updateSliderRange(e,t,n,a,o,l,r),this.criteriaList=this.buildCriteriaFromUI(),this.saveSettings(),this.syncSearchTimer({resetStart:!0})};c.addEventListener("input",y),u.addEventListener("input",y),this.updateSliderRange(e,t,n,a,o,l,r)}updateSliderRange(e,t,n,a,o,l,r){let c=document.getElementById(e),u=document.getElementById(t),p=document.getElementById(n),v=document.getElementById(a),b=document.getElementById(o),m=document.getElementById(l),y=document.getElementById(r);if(!c||!u||!p||!v)return;let T=parseInt(c.value,10),S=parseInt(u.value,10);if(e.includes("team")&&this.isTeamThreeTimesMinEnabled&&(S=Math.min(parseInt(u.max,10),Math.max(1,3*T)),u.value=String(S)),T>S&&(T=S,c.value=String(T)),p.value=String(T),v.value=String(S),m&&(m.textContent=T===1?"Any":String(T)),y&&(y.textContent=S===parseInt(u.max,10)?"Any":String(S)),b){let $=(T-parseInt(c.min,10))/(parseInt(c.max,10)-parseInt(c.min,10))*100,U=(S-parseInt(c.min,10))/(parseInt(c.max,10)-parseInt(c.min,10))*100;b.style.left=$+"%",b.style.width=U-$+"%"}}setupEventListeners(){document.getElementById("autojoin-main-button")?.addEventListener("click",()=>{this.joinMode=this.joinMode==="autojoin"?"notify":"autojoin",this.saveSettings(),this.updateUI()}),document.getElementById("autojoin-status")?.addEventListener("click",()=>{this.setAutoJoinEnabled(!this.autoJoinEnabled,{resetTimer:!0})}),document.getElementById("autojoin-clanmate-button")?.addEventListener("click",()=>{if(this.clanmateWatcherArmed){this.setClanmateWatcherArmed(!1);return}if(!this.lastActiveClanTag){this.setClanmateWatcherArmed(!1);return}this.setClanmateWatcherArmed(!0),this.lastClanmateMatch&&this.attemptClanmateJoin()}),this.panel.querySelector(".autojoin-header")?.addEventListener("click",r=>{r.target.closest("#autojoin-collapse-toggle")||this.setCollapsed(!this.isCollapsed)}),document.getElementById("autojoin-collapse-toggle")?.addEventListener("click",r=>{r.stopPropagation(),this.setCollapsed(!this.isCollapsed)});let e=document.getElementById("autojoin-ffa");e&&e.addEventListener("change",()=>{let r=document.getElementById("ffa-config");r&&(r.style.display=e.checked?"block":"none"),this.criteriaList=this.buildCriteriaFromUI(),this.saveSettings(),this.syncSearchTimer({resetStart:!0})});let t=document.getElementById("autojoin-team");t&&t.addEventListener("change",()=>{let r=document.getElementById("team-config");r&&(r.style.display=t.checked?"block":"none"),this.criteriaList=this.buildCriteriaFromUI(),this.saveSettings(),this.syncSearchTimer({resetStart:!0})});let n=document.getElementById("autojoin-team-three-times");n&&(n.checked=this.isTeamThreeTimesMinEnabled,n.addEventListener("change",()=>{this.isTeamThreeTimesMinEnabled=n.checked,this.saveSettings(),this.updateUI();let r=document.getElementById("autojoin-team-min-slider"),c=document.getElementById("autojoin-team-max-slider");if(r&&c){let u=parseInt(r.value,10);c.value=this.isTeamThreeTimesMinEnabled?String(Math.min(50,Math.max(1,3*u))):c.value,this.updateSliderRange("autojoin-team-min-slider","autojoin-team-max-slider","autojoin-team-min","autojoin-team-max","team-range-fill","team-min-value","team-max-value")}})),document.getElementById("autojoin-team-select-all")?.addEventListener("click",()=>{this.setAllTeamCounts(!0),this.criteriaList=this.buildCriteriaFromUI(),this.saveSettings(),this.syncSearchTimer({resetStart:!0})}),document.getElementById("autojoin-team-deselect-all")?.addEventListener("click",()=>{this.setAllTeamCounts(!1),this.criteriaList=this.buildCriteriaFromUI(),this.saveSettings(),this.syncSearchTimer({resetStart:!0})});let a=["autojoin-team-2","autojoin-team-3","autojoin-team-4","autojoin-team-5","autojoin-team-6","autojoin-team-7","autojoin-team-duos","autojoin-team-trios","autojoin-team-quads"];for(let r of a)document.getElementById(r)?.addEventListener("change",()=>{this.criteriaList=this.buildCriteriaFromUI(),this.saveSettings(),this.syncSearchTimer({resetStart:!0})});let o=document.getElementById("autojoin-sound-toggle");o&&o.addEventListener("change",()=>{this.soundEnabled=o.checked,this.saveSettings()});let l=document.getElementById("autojoin-auto-rejoin");l&&l.addEventListener("change",()=>{this.autoRejoinOnClanChange=l.checked,this.saveSettings()})}createUI(){if(document.getElementById("openfront-autojoin-panel"))return;this.panel=document.createElement("div"),this.panel.id="openfront-autojoin-panel",this.panel.className="of-panel autojoin-panel",this.panel.innerHTML=`
+      <div class="of-header autojoin-header">
+        <div class="autojoin-title">
+          <span class="autojoin-title-text">Tactical Auto-Join</span>
+          <span class="autojoin-title-sub">HUD ACTIVE</span>
+        </div>
+        <button type="button" id="autojoin-collapse-toggle" class="autojoin-collapse-button" aria-label="Collapse Auto-Join" title="Collapse">\u25BE</button>
+      </div>
+      <div class="autojoin-body">
+        <div class="of-content autojoin-content">
+          <div class="autojoin-status-bar">
+            <div class="autojoin-status" id="autojoin-status">
+              <span class="status-indicator"></span>
+              <div class="autojoin-status-lines">
+                <span class="status-text">Active</span>
+                <span class="search-timer" id="search-timer" style="display: none;"></span>
+              </div>
             </div>
-
-            <div class="autojoin-content">
-                <!-- Mode Selector -->
-                <div class="join-mode-selector">
-                    <span class="mode-label-left">Notify Only</span>
-                    <label class="mode-toggle-switch">
-                        <input type="checkbox" id="join-mode-toggle">
-                        <span class="mode-toggle-slider"></span>
-                    </label>
-                    <span class="mode-label-right">Auto-Join</span>
-                </div>
-
-                <!-- FFA Section -->
-                <div class="autojoin-mode-section">
-                    <label class="mode-checkbox-label">
-                        <input type="checkbox" id="autojoin-ffa" name="gameMode" value="FFA">
-                        <span>FFA</span>
-                    </label>
-
-                    <div class="autojoin-mode-config" id="ffa-config" style="display: none;">
-                        <div class="player-filter-info">
-                            <small>Filter by max players:</small>
-                        </div>
-                        <div class="capacity-range-wrapper">
-                            <div class="capacity-range-visual">
-                                <div class="capacity-track">
-                                    <div class="capacity-range-fill" id="ffa-range-fill"></div>
-                                    <input type="range" id="autojoin-ffa-min-slider" min="1" max="100" value="1" class="capacity-slider capacity-slider-min">
-                                    <input type="range" id="autojoin-ffa-max-slider" min="1" max="100" value="100" class="capacity-slider capacity-slider-max">
-                                </div>
-                                <div class="capacity-labels">
-                                    <div class="capacity-label-group">
-                                        <label for="autojoin-ffa-min-slider">Min:</label>
-                                        <span class="capacity-value" id="ffa-min-value">Any</span>
-                                    </div>
-                                    <div class="capacity-label-group">
-                                        <label for="autojoin-ffa-max-slider">Max:</label>
-                                        <span class="capacity-value" id="ffa-max-value">Any</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="capacity-inputs-hidden">
-                                <input type="number" id="autojoin-ffa-min" min="1" max="100" style="display: none;">
-                                <input type="number" id="autojoin-ffa-max" min="1" max="100" style="display: none;">
-                            </div>
-                        </div>
+            <label class="autojoin-toggle-label">
+              <input type="checkbox" id="autojoin-sound-toggle">
+              <span>Sound</span>
+            </label>
+          </div>
+          <div class="autojoin-action-row">
+            <button type="button" id="autojoin-main-button" class="autojoin-main-button active">Auto-Join</button>
+            <button type="button" id="autojoin-clanmate-button" class="autojoin-clanmate-button">Join the game if any member of your clan is in the lobby</button>
+          </div>
+          <div class="autojoin-section">
+            <div class="autojoin-section-title">Modes</div>
+            <div class="autojoin-config-grid">
+            <div class="autojoin-mode-config autojoin-config-card">
+              <label class="mode-checkbox-label"><input type="checkbox" id="autojoin-ffa" name="gameMode" value="FFA"><span>FFA</span></label>
+              <div class="autojoin-mode-inner" id="ffa-config" style="display: none;">
+                <div class="player-filter-info"><small>Filter by max players:</small></div>
+                <div class="capacity-range-wrapper">
+                  <div class="capacity-range-visual">
+                    <div class="capacity-track">
+                      <div class="capacity-range-fill" id="ffa-range-fill"></div>
+                      <input type="range" id="autojoin-ffa-min-slider" min="1" max="100" value="1" class="capacity-slider capacity-slider-min">
+                      <input type="range" id="autojoin-ffa-max-slider" min="1" max="100" value="100" class="capacity-slider capacity-slider-max">
                     </div>
-                </div>
-
-                <!-- Team Section -->
-                <div class="autojoin-mode-section">
-                    <label class="mode-checkbox-label">
-                        <input type="checkbox" id="autojoin-team" name="gameMode" value="Team">
-                        <span>Team</span>
-                    </label>
-
-                    <div class="autojoin-mode-config" id="team-config" style="display: none;">
-                        <!-- Fixed Team Modes (Duos/Trios/Quads) - No player filters -->
-                        <div class="team-mode-panel fixed-modes-panel">
-                            <div class="panel-header">
-                                <label style="display: block; margin-bottom: 6px; font-size: 0.9em; font-weight: 600;">Fixed Team Modes (Duos/Trios/Quads):</label>
-                                <div style="display: flex; gap: 4px; margin-bottom: 6px;">
-                                    <button type="button" id="autojoin-fixed-select-all" class="select-all-btn">Select All</button>
-                                    <button type="button" id="autojoin-fixed-deselect-all" class="select-all-btn">Deselect All</button>
-                                </div>
-                            </div>
-                            <div class="team-count-options">
-                                <label><input type="checkbox" id="autojoin-team-duos" value="Duos"> Duos</label>
-                                <label><input type="checkbox" id="autojoin-team-trios" value="Trios"> Trios</label>
-                                <label><input type="checkbox" id="autojoin-team-quads" value="Quads"> Quads</label>
-                            </div>
-                        </div>
-
-                        <!-- Variable Team Counts (2-7 teams) - With player filters -->
-                        <div class="team-mode-panel variable-modes-panel">
-                            <div class="panel-header">
-                                <label style="display: block; margin-bottom: 6px; font-size: 0.9em; font-weight: 600;">Variable Team Counts (2-7 teams):</label>
-                                <div style="display: flex; gap: 4px; margin-bottom: 6px;">
-                                    <button type="button" id="autojoin-variable-select-all" class="select-all-btn">Select All</button>
-                                    <button type="button" id="autojoin-variable-deselect-all" class="select-all-btn">Deselect All</button>
-                                </div>
-                            </div>
-                            <div class="team-count-options">
-                                <label><input type="checkbox" id="autojoin-team-2" value="2"> 2 teams</label>
-                                <label><input type="checkbox" id="autojoin-team-3" value="3"> 3 teams</label>
-                                <label><input type="checkbox" id="autojoin-team-4" value="4"> 4 teams</label>
-                                <label><input type="checkbox" id="autojoin-team-5" value="5"> 5 teams</label>
-                                <label><input type="checkbox" id="autojoin-team-6" value="6"> 6 teams</label>
-                                <label><input type="checkbox" id="autojoin-team-7" value="7"> 7 teams</label>
-                            </div>
-                            <div class="player-filter-info">
-                                <small>Filter by players per team:</small>
-                            </div>
-                            <div class="capacity-range-wrapper">
-                                <div class="capacity-range-visual">
-                                    <div class="capacity-track">
-                                        <div class="capacity-range-fill" id="team-range-fill"></div>
-                                        <input type="range" id="autojoin-team-min-slider" min="0" max="50" value="0" class="capacity-slider capacity-slider-min">
-                                        <input type="range" id="autojoin-team-max-slider" min="0" max="50" value="50" class="capacity-slider capacity-slider-max">
-                                    </div>
-                                    <div class="capacity-labels">
-                                        <div class="capacity-label-group">
-                                            <label for="autojoin-team-min-slider">Min:</label>
-                                            <span class="capacity-value" id="team-min-value">Any</span>
-                                        </div>
-                                        <div class="capacity-label-group">
-                                            <label for="autojoin-team-max-slider">Max:</label>
-                                            <span class="capacity-value" id="team-max-value">Any</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="capacity-inputs-hidden">
-                                    <input type="number" id="autojoin-team-min" min="0" max="50" style="display: none;">
-                                    <input type="number" id="autojoin-team-max" min="0" max="50" style="display: none;">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="current-game-info" id="current-game-info" style="display: none;"></div>
+                    <div class="capacity-labels">
+                      <div class="capacity-label-group"><label for="autojoin-ffa-min-slider">Min:</label><span class="capacity-value" id="ffa-min-value">Any</span></div>
+                      <div class="capacity-label-group"><label for="autojoin-ffa-max-slider">Max:</label><span class="capacity-value" id="ffa-max-value">Any</span></div>
                     </div>
+                  </div>
+                  <div class="capacity-inputs-hidden">
+                    <input type="number" id="autojoin-ffa-min" min="1" max="100" style="display: none;">
+                    <input type="number" id="autojoin-ffa-max" min="1" max="100" style="display: none;">
+                  </div>
                 </div>
-
-                <div class="autojoin-status" id="autojoin-status">
-                    <span class="status-label">Status:</span>
-                    <span class="status-indicator"></span>
-                    <span class="status-text">Searching</span>
-                    <span class="search-timer" id="search-timer" style="display: none;"></span>
-                </div>
-
-                <div class="autojoin-settings">
-                    <label class="sound-toggle-label">
-                        <input type="checkbox" id="autojoin-sound-toggle">
-                        <span>🔔 Sound</span>
-                    </label>
-                </div>
+              </div>
             </div>
-        `;
-
-        document.body.appendChild(panel);
-
-        // Make panel draggable
-        makePanelDraggable(panel);
-
-        // Setup event listeners
-        setupEventListeners();
-
-        // Load saved settings into UI
-        loadUIFromSettings();
-
-        // Initialize sliders (in case no saved settings)
-        initializeSlider('autojoin-ffa-min-slider', 'autojoin-ffa-max-slider', 'autojoin-ffa-min', 'autojoin-ffa-max', 'ffa-range-fill', 'ffa-min-value', 'ffa-max-value');
-        initializeSlider('autojoin-team-min-slider', 'autojoin-team-max-slider', 'autojoin-team-min', 'autojoin-team-max', 'team-range-fill', 'team-min-value', 'team-max-value');
-
-        // Update UI
-        updateUI();
-
-        // Auto-start search if criteria exist and we're in lobby
-        setTimeout(() => {
-            tryAutoStartSearch();
-        }, 500); // Small delay to ensure page is ready
-    }
-
-    // Make panel draggable
-    function makePanelDraggable(panel) {
-        const header = document.getElementById('autojoin-header-drag');
-        if (!header) return;
-
-        let isDragging = false;
-        let currentX;
-        let currentY;
-        let initialX;
-        let initialY;
-        let xOffset = 0;
-        let yOffset = 0;
-
-        // Load saved position
-        const savedPos = GM_getValue('autoJoinPanelPosition', null);
-        if (savedPos) {
-            panel.style.left = savedPos.x + 'px';
-            panel.style.top = savedPos.y + 'px';
-            xOffset = savedPos.x;
-            yOffset = savedPos.y;
-        }
-
-        header.addEventListener('mousedown', dragStart);
-        document.addEventListener('mousemove', drag);
-        document.addEventListener('mouseup', dragEnd);
-
-        function dragStart(e) {
-
-            initialX = e.clientX - xOffset;
-            initialY = e.clientY - yOffset;
-
-            if (e.target === header || header.contains(e.target)) {
-                isDragging = true;
-                header.style.cursor = 'grabbing';
-            }
-        }
-
-        function drag(e) {
-            if (isDragging) {
-                e.preventDefault();
-                currentX = e.clientX - initialX;
-                currentY = e.clientY - initialY;
-
-                xOffset = currentX;
-                yOffset = currentY;
-
-                panel.style.left = currentX + 'px';
-                panel.style.top = currentY + 'px';
-                panel.style.right = 'auto';
-            }
-        }
-
-        function dragEnd(e) {
-            initialX = currentX;
-            initialY = currentY;
-            isDragging = false;
-            header.style.cursor = 'grab';
-
-            // Save position
-            GM_setValue('autoJoinPanelPosition', { x: xOffset, y: yOffset });
-        }
-    }
-
-    // Setup event listeners
-    function setupEventListeners() {
-
-        // FFA checkbox - show/hide config
-        const ffaCheckbox = document.getElementById('autojoin-ffa');
-        const ffaConfig = document.getElementById('ffa-config');
-        if (ffaCheckbox && ffaConfig) {
-            ffaCheckbox.addEventListener('change', () => {
-                ffaConfig.style.display = ffaCheckbox.checked ? 'block' : 'none';
-                criteriaList = buildCriteriaFromUI();
-                saveSettings();
-                // Auto-start search if criteria are valid and we're in lobby
-                tryAutoStartSearch();
-            });
-        }
-
-        // Team checkbox - show/hide config
-        const teamCheckbox = document.getElementById('autojoin-team');
-        const teamConfig = document.getElementById('team-config');
-        if (teamCheckbox && teamConfig) {
-            teamCheckbox.addEventListener('change', () => {
-                teamConfig.style.display = teamCheckbox.checked ? 'block' : 'none';
-                criteriaList = buildCriteriaFromUI();
-                saveSettings();
-                // Auto-start search if criteria are valid and we're in lobby
-                tryAutoStartSearch();
-            });
-        }
-
-        // Select All / Deselect All buttons for fixed modes (Duos/Trios/Quads)
-        const fixedSelectAllBtn = document.getElementById('autojoin-fixed-select-all');
-        const fixedDeselectAllBtn = document.getElementById('autojoin-fixed-deselect-all');
-        if (fixedSelectAllBtn) {
-            fixedSelectAllBtn.addEventListener('click', () => {
-                const checkboxes = ['autojoin-team-duos', 'autojoin-team-trios', 'autojoin-team-quads'];
-                checkboxes.forEach(id => {
-                    const checkbox = document.getElementById(id);
-                    if (checkbox) checkbox.checked = true;
-                });
-                criteriaList = buildCriteriaFromUI();
-                saveSettings();
-                tryAutoStartSearch();
-            });
-        }
-        if (fixedDeselectAllBtn) {
-            fixedDeselectAllBtn.addEventListener('click', () => {
-                const checkboxes = ['autojoin-team-duos', 'autojoin-team-trios', 'autojoin-team-quads'];
-                checkboxes.forEach(id => {
-                    const checkbox = document.getElementById(id);
-                    if (checkbox) checkbox.checked = false;
-                });
-                criteriaList = buildCriteriaFromUI();
-                saveSettings();
-                tryAutoStartSearch();
-            });
-        }
-
-        // Select All / Deselect All buttons for variable modes (2-7 teams)
-        const variableSelectAllBtn = document.getElementById('autojoin-variable-select-all');
-        const variableDeselectAllBtn = document.getElementById('autojoin-variable-deselect-all');
-        if (variableSelectAllBtn) {
-            variableSelectAllBtn.addEventListener('click', () => {
-                const checkboxes = ['autojoin-team-2', 'autojoin-team-3', 'autojoin-team-4', 'autojoin-team-5', 'autojoin-team-6', 'autojoin-team-7'];
-                checkboxes.forEach(id => {
-                    const checkbox = document.getElementById(id);
-                    if (checkbox) checkbox.checked = true;
-                });
-                criteriaList = buildCriteriaFromUI();
-                saveSettings();
-                tryAutoStartSearch();
-            });
-        }
-        if (variableDeselectAllBtn) {
-            variableDeselectAllBtn.addEventListener('click', () => {
-                const checkboxes = ['autojoin-team-2', 'autojoin-team-3', 'autojoin-team-4', 'autojoin-team-5', 'autojoin-team-6', 'autojoin-team-7'];
-                checkboxes.forEach(id => {
-                    const checkbox = document.getElementById(id);
-                    if (checkbox) checkbox.checked = false;
-                });
-                criteriaList = buildCriteriaFromUI();
-                saveSettings();
-                tryAutoStartSearch();
-            });
-        }
-
-        // Listen to all team count checkbox changes
-        const teamCountCheckboxes = [
-            'autojoin-team-2', 'autojoin-team-3', 'autojoin-team-4', 'autojoin-team-5',
-            'autojoin-team-6', 'autojoin-team-7', 'autojoin-team-duos', 'autojoin-team-trios',
-            'autojoin-team-quads'
-        ];
-        teamCountCheckboxes.forEach(id => {
-            const checkbox = document.getElementById(id);
-            if (checkbox) {
-                checkbox.addEventListener('change', () => {
-                    criteriaList = buildCriteriaFromUI();
-                    saveSettings();
-                    tryAutoStartSearch();
-                });
-            }
-        });
-
-        // Setup slider event listeners
-        const sliderPairs = [
-            {
-                minSlider: 'autojoin-ffa-min-slider',
-                maxSlider: 'autojoin-ffa-max-slider',
-                minInput: 'autojoin-ffa-min',
-                maxInput: 'autojoin-ffa-max',
-                fill: 'ffa-range-fill',
-                minValue: 'ffa-min-value',
-                maxValue: 'ffa-max-value'
-            },
-            {
-                minSlider: 'autojoin-team-min-slider',
-                maxSlider: 'autojoin-team-max-slider',
-                minInput: 'autojoin-team-min',
-                maxInput: 'autojoin-team-max',
-                fill: 'team-range-fill',
-                minValue: 'team-min-value',
-                maxValue: 'team-max-value'
-            }
-        ];
-
-        sliderPairs.forEach(pair => {
-            const minSlider = document.getElementById(pair.minSlider);
-            const maxSlider = document.getElementById(pair.maxSlider);
-
-            if (minSlider) {
-                minSlider.addEventListener('input', () => {
-                    updateSliderRange(pair.minSlider, pair.maxSlider, pair.minInput, pair.maxInput, pair.fill, pair.minValue, pair.maxValue);
-                    criteriaList = buildCriteriaFromUI();
-                    saveSettings();
-                    tryAutoStartSearch();
-                });
-            }
-
-            if (maxSlider) {
-                maxSlider.addEventListener('input', () => {
-                    updateSliderRange(pair.minSlider, pair.maxSlider, pair.minInput, pair.maxInput, pair.fill, pair.minValue, pair.maxValue);
-                    criteriaList = buildCriteriaFromUI();
-                    saveSettings();
-                    tryAutoStartSearch();
-                });
-            }
-        });
-
-        // Sound toggle
-        const soundToggle = document.getElementById('autojoin-sound-toggle');
-        if (soundToggle) {
-            soundToggle.checked = soundEnabled;
-            soundToggle.addEventListener('change', () => {
-                soundEnabled = soundToggle.checked;
-                saveSettings();
-            });
-        }
-
-        // Mode selector toggle
-        const modeToggle = document.getElementById('join-mode-toggle');
-        if (modeToggle) {
-            modeToggle.addEventListener('change', (e) => {
-                joinMode = e.target.checked ? 'autojoin' : 'notify';
-                updateModeLabels(e.target.checked);
-                saveSettings();
-                // Restart search if already running to apply mode change
-                if (autoJoinEnabled && monitoringInterval) {
-                    stopMonitoring();
-                    startMonitoring();
-                }
-                // Update UI to reflect mode change
-                updateUI();
-            });
-        }
-        
-
-        // Listen for leave-lobby event - restart search when user manually leaves
-        document.addEventListener('leave-lobby', () => {
-            if (autoJoinEnabled) {
-                // Get the lobby ID that was just left
-                // Try to get it from the current lobby display first
-                let leftLobbyID = null;
-                const publicLobby = document.querySelector('public-lobby');
-                if (publicLobby && publicLobby.lobbies && publicLobby.lobbies.length > 0) {
-                    const currentLobby = publicLobby.lobbies[0];
-                    if (currentLobby && currentLobby.gameID) {
-                        leftLobbyID = currentLobby.gameID;
-                    }
-                }
-                // If not found in display, check joinedLobbies before clearing
-                if (!leftLobbyID && joinedLobbies.size > 0) {
-                    // Get the first (and likely only) lobby ID from the set
-                    leftLobbyID = Array.from(joinedLobbies)[0];
-                }
-                if (leftLobbyID) {
-                    recentlyLeftLobbyID = leftLobbyID;
-                }
-                // Clear joined lobbies to allow rejoining other lobbies
-                joinedLobbies.clear();
-                // Clear notified lobbies
-                notifiedLobbies.clear();
-                // Reset game found time
-                gameFoundTime = null;
-                lastNotifiedGameID = null;
-                // Restart monitoring (this will reset the search timer)
-                stopMonitoring();
-                startMonitoring();
-                saveSettings();
-                updateUI();
-            }
-        });
-    }
-
-    // Load settings into UI
-    function loadUIFromSettings() {
-        // Load join mode
-        const modeToggle = document.getElementById('join-mode-toggle');
-        if (modeToggle) {
-            modeToggle.checked = joinMode === 'autojoin';
-            updateModeLabels(joinMode === 'autojoin');
-        }
-
-        // Load criteria into UI
-        let teamCheckboxChecked = false;
-        let teamMinPlayers = null;
-        let teamMaxPlayers = null;
-
-        for (const criteria of criteriaList) {
-            if (criteria.gameMode === 'FFA') {
-                const ffaCheckbox = document.getElementById('autojoin-ffa');
-                if (ffaCheckbox) {
-                    ffaCheckbox.checked = true;
-                    const ffaConfig = document.getElementById('ffa-config');
-                    if (ffaConfig) ffaConfig.style.display = 'block';
-
-                    if (criteria.minPlayers) {
-                        const minInput = document.getElementById('autojoin-ffa-min');
-                        if (minInput) minInput.value = criteria.minPlayers;
-                    }
-                    if (criteria.maxPlayers) {
-                        const maxInput = document.getElementById('autojoin-ffa-max');
-                        if (maxInput) maxInput.value = criteria.maxPlayers;
-                    }
-                    // Initialize FFA slider from loaded values
-                    initializeSlider('autojoin-ffa-min-slider', 'autojoin-ffa-max-slider', 'autojoin-ffa-min', 'autojoin-ffa-max', 'ffa-range-fill', 'ffa-min-value', 'ffa-max-value');
-                }
-            } else if (criteria.gameMode === 'Team') {
-                // Mark team checkbox as checked (only once)
-                if (!teamCheckboxChecked) {
-                    const teamCheckbox = document.getElementById('autojoin-team');
-                    if (teamCheckbox) {
-                        teamCheckbox.checked = true;
-                        teamCheckboxChecked = true;
-                        const teamConfig = document.getElementById('team-config');
-                        if (teamConfig) teamConfig.style.display = 'block';
-                    }
-                }
-
-                // Store min/max players (they should be the same for all Team criteria)
-                if (criteria.minPlayers !== null && criteria.minPlayers !== undefined) {
-                    teamMinPlayers = criteria.minPlayers;
-                }
-                if (criteria.maxPlayers !== null && criteria.maxPlayers !== undefined) {
-                    teamMaxPlayers = criteria.maxPlayers;
-                }
-
-                // Set team count checkbox (can have multiple)
-                if (criteria.teamCount !== null && criteria.teamCount !== undefined) {
-                    if (criteria.teamCount === 'Duos') {
-                        const checkbox = document.getElementById('autojoin-team-duos');
-                        if (checkbox) checkbox.checked = true;
-                    } else if (criteria.teamCount === 'Trios') {
-                        const checkbox = document.getElementById('autojoin-team-trios');
-                        if (checkbox) checkbox.checked = true;
-                    } else if (criteria.teamCount === 'Quads') {
-                        const checkbox = document.getElementById('autojoin-team-quads');
-                        if (checkbox) checkbox.checked = true;
-                    } else if (typeof criteria.teamCount === 'number') {
-                        const checkbox = document.getElementById(`autojoin-team-${criteria.teamCount}`);
-                        if (checkbox) checkbox.checked = true;
-                    }
-                }
-            }
-        }
-
-        // Set min/max players for Team (use the last values found, they should be consistent)
-        if (teamCheckboxChecked) {
-            if (teamMinPlayers !== null) {
-                const minInput = document.getElementById('autojoin-team-min');
-                if (minInput) minInput.value = teamMinPlayers;
-            }
-            if (teamMaxPlayers !== null) {
-                const maxInput = document.getElementById('autojoin-team-max');
-                if (maxInput) maxInput.value = teamMaxPlayers;
-            }
-            // Initialize Team slider from loaded values
-            initializeSlider('autojoin-team-min-slider', 'autojoin-team-max-slider', 'autojoin-team-min', 'autojoin-team-max', 'team-range-fill', 'team-min-value', 'team-max-value');
-        }
-    }
-
-    // Add CSS styles
-    GM_addStyle(`
-        .autojoin-panel {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            width: 460px;
-            max-height: 90vh;
-            overflow-y: auto;
-            background: rgba(25, 25, 30, 0.85);
-            border: 1px solid rgba(59, 130, 246, 0.4);
-            border-radius: 8px;
-            padding: 0;
-            z-index: 10000;
-            color: rgba(255, 255, 255, 0.9);
-            font-family: sans-serif;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-            transition: opacity 0.3s ease, transform 0.3s ease;
-        }
-
-        .autojoin-panel.hidden {
-            display: none;
-        }
-
-        .autojoin-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-            border-bottom: 1px solid rgba(59, 130, 246, 0.3);
-            padding: 8px 12px 6px 12px;
-            cursor: grab;
-            user-select: none;
-        }
-
-        .autojoin-header:active {
-            cursor: grabbing;
-        }
-
-        .autojoin-content {
-            padding: 0 12px 10px 12px;
-        }
-
-        .autojoin-header h3 {
-            margin: 0;
-            font-size: 1.05em;
-            color: rgba(255, 255, 255, 0.95);
-        }
-
-
-        .autojoin-mode-section {
-            margin-bottom: 8px;
-            padding: 6px;
-            background: rgba(59, 130, 246, 0.08);
-            border-radius: 4px;
-        }
-
-        .mode-checkbox-label {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-bottom: 6px;
-            font-size: 0.95em;
-            color: rgba(255, 255, 255, 0.95);
-        }
-
-        .mode-checkbox-label input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-        }
-
-        .autojoin-mode-config {
-            margin-left: 26px;
-            margin-top: 6px;
-            padding: 6px;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 4px;
-        }
-
-
-        .player-filter-info {
-            margin-bottom: 6px;
-            padding: 3px 0;
-        }
-
-        .player-filter-info small {
-            color: rgba(255, 255, 255, 0.75);
-            font-size: 0.9em;
-        }
-
-        .capacity-range-wrapper {
-            margin-top: 6px;
-        }
-
-        .capacity-range-visual {
-            position: relative;
-            padding: 12px 0 6px 0;
-        }
-
-        .capacity-track {
-            position: relative;
-            height: 6px;
-            background: rgba(59, 130, 246, 0.2);
-            border-radius: 3px;
-            margin-bottom: 8px;
-        }
-
-        .capacity-range-fill {
-            position: absolute;
-            height: 100%;
-            background: rgba(59, 130, 246, 0.5);
-            border-radius: 3px;
-            pointer-events: none;
-            opacity: 0.7;
-            transition: left 0.1s ease, width 0.1s ease;
-        }
-
-        .capacity-slider {
-            position: absolute;
-            width: 100%;
-            height: 6px;
-            top: 0;
-            left: 0;
-            background: transparent;
-            outline: none;
-            -webkit-appearance: none;
-            pointer-events: none;
-            margin: 0;
-        }
-
-        .capacity-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            background: rgba(59, 130, 246, 0.8);
-            cursor: pointer;
-            pointer-events: all;
-            border: 2px solid rgba(255, 255, 255, 0.9);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-            transition: transform 0.1s ease;
-        }
-
-        .capacity-slider::-webkit-slider-thumb:hover {
-            transform: scale(1.1);
-            background: rgba(96, 165, 250, 0.9);
-        }
-
-        .capacity-slider::-moz-range-thumb {
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            background: rgba(59, 130, 246, 0.8);
-            cursor: pointer;
-            pointer-events: all;
-            border: 2px solid rgba(255, 255, 255, 0.9);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-            transition: transform 0.1s ease;
-        }
-
-        .capacity-slider::-moz-range-thumb:hover {
-            transform: scale(1.1);
-            background: rgba(96, 165, 250, 0.9);
-        }
-
-        .capacity-slider-min {
-            z-index: 2;
-        }
-
-        .capacity-slider-max {
-            z-index: 1;
-        }
-
-        .capacity-labels {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 6px;
-        }
-
-        .capacity-label-group {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 3px;
-        }
-
-        .capacity-label-group label {
-            font-size: 0.9em;
-            color: rgba(255, 255, 255, 0.8);
-            font-weight: normal;
-            margin: 0;
-        }
-
-        .capacity-value {
-            font-size: 0.9em;
-            color: rgba(255, 255, 255, 0.95);
-            font-weight: 500;
-            min-width: 40px;
-            text-align: center;
-        }
-
-        .capacity-inputs-hidden {
-            display: none;
-        }
-
-
-        .team-mode-panel {
-            margin-bottom: 12px;
-            padding: 8px;
-            background: rgba(0, 0, 0, 0.15);
-            border-radius: 4px;
-            border: 1px solid rgba(59, 130, 246, 0.2);
-        }
-
-        .team-mode-panel:last-child {
-            margin-bottom: 0;
-        }
-
-        .fixed-modes-panel {
-            border-color: rgba(147, 197, 253, 0.3);
-        }
-
-        .variable-modes-panel {
-            border-color: rgba(16, 185, 129, 0.3);
-        }
-
-        .panel-header {
-            margin-bottom: 6px;
-        }
-
-        .team-count-options {
-            display: flex;
-            flex-direction: column;
-            gap: 3px;
-            margin-top: 3px;
-        }
-
-        .team-count-options label {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            cursor: pointer;
-            font-size: 0.9em;
-            color: rgba(255, 255, 255, 0.9);
-        }
-
-        .autojoin-status {
-            margin: 8px 0;
-            padding: 6px;
-            background: rgba(59, 130, 246, 0.15);
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .status-label {
-            font-weight: 600;
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 0.9em;
-        }
-
-        .status-indicator {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: rgba(239, 68, 68, 0.8);
-        }
-
-        .status-indicator.active {
-            background: rgba(16, 185, 129, 0.8);
-            animation: pulse 1s infinite;
-        }
-
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        .search-timer {
-            margin-left: auto;
-            font-size: 0.9em;
-            color: rgba(147, 197, 253, 0.9);
-            font-weight: 500;
-        }
-
-        .select-all-btn {
-            background: rgba(59, 130, 246, 0.2);
-            color: rgba(255, 255, 255, 0.9);
-            border: 1px solid rgba(59, 130, 246, 0.4);
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.85em;
-            padding: 3px 8px;
-            flex: 1;
-        }
-
-        .select-all-btn:hover {
-            background: rgba(59, 130, 246, 0.35);
-        }
-
-        .autojoin-settings {
-            margin: 8px 0 0 0;
-            padding: 6px;
-            background: rgba(59, 130, 246, 0.08);
-            border-radius: 4px;
-        }
-
-        .sound-toggle-label {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            cursor: pointer;
-            font-size: 0.9em;
-            color: rgba(255, 255, 255, 0.9);
-        }
-
-        .sound-toggle-label input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-        }
-
-        /* Remove any extra spacing/margins that might cause gray bar */
-        .autojoin-status {
-            margin-bottom: 8px;
-        }
-
-        .current-game-info {
-            margin: 6px 0;
-            padding: 5px 8px;
-            background: rgba(59, 130, 246, 0.12);
-            border-radius: 4px;
-            font-size: 0.9em;
-            color: rgba(147, 197, 253, 0.9);
-            text-align: center;
-            border: 1px solid rgba(59, 130, 246, 0.25);
-        }
-
-        .current-game-info.not-applicable {
-            background: rgba(100, 100, 100, 0.1);
-            color: rgba(255, 255, 255, 0.5);
-            border-color: rgba(100, 100, 100, 0.2);
-            font-style: italic;
-        }
-
-        .join-mode-selector {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 8px;
-            padding: 6px;
-            background: rgba(59, 130, 246, 0.08);
-            border-radius: 4px;
-            justify-content: center;
-        }
-
-        .mode-label-left,
-        .mode-label-right {
-            font-size: 0.9em;
-            color: rgba(255, 255, 255, 0.9);
-            font-weight: 500;
-            user-select: none;
-            transition: opacity 0.3s, color 0.3s;
-        }
-
-        .mode-label-left {
-            opacity: 1;
-            color: rgba(255, 255, 255, 0.95);
-        }
-
-        .mode-label-right {
-            opacity: 0.6;
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        .mode-toggle-switch {
-            position: relative;
-            display: inline-block;
-            width: 50px;
-            height: 26px;
-            cursor: pointer;
-        }
-
-        .mode-toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .mode-toggle-slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(59, 130, 246, 0.3);
-            transition: 0.3s;
-            border-radius: 26px;
-        }
-
-        .mode-toggle-slider:before {
-            position: absolute;
-            content: "";
-            height: 20px;
-            width: 20px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: 0.3s;
-            border-radius: 50%;
-        }
-
-        .mode-toggle-switch input:checked + .mode-toggle-slider {
-            background-color: rgba(16, 185, 129, 0.6);
-        }
-
-        .mode-toggle-switch input:checked + .mode-toggle-slider:before {
-            transform: translateX(24px);
-        }
-
-        .mode-toggle-switch:hover .mode-toggle-slider {
-            box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
-        }
-
-        .game-found-notification {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%) translateY(-100px);
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-            border: 3px solid #60a5fa;
-            border-radius: 8px;
-            padding: 20px 30px;
-            z-index: 20000;
-            color: white;
-            font-family: sans-serif;
-            font-size: 1.1em;
-            font-weight: 600;
-            text-align: center;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), 0 0 20px rgba(59, 130, 246, 0.5);
-            transition: transform 0.3s ease, opacity 0.3s ease;
-            opacity: 0;
-            min-width: 300px;
-            max-width: 500px;
-            animation: notificationPulse 2s infinite;
-        }
-
-        .game-found-notification.notification-visible {
-            transform: translateX(-50%) translateY(0);
-            opacity: 1;
-        }
-
-        .game-found-notification.notification-dismissing {
-            transform: translateX(-50%) translateY(-100px);
-            opacity: 0;
-        }
-
-        @keyframes notificationPulse {
-            0%, 100% {
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), 0 0 0 0 rgba(59, 130, 246, 0.7);
-            }
-            50% {
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), 0 0 0 8px rgba(59, 130, 246, 0);
-            }
-        }
-
-        .game-found-notification:hover {
-            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-            border-color: #93c5fd;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), 0 0 25px rgba(59, 130, 246, 0.7);
-        }
-    `);
-
-    // Update panel visibility based on game state (URL-based detection)
-    function updatePanelVisibility() {
-        const panel = document.getElementById('openfront-autojoin-panel');
-        if (!panel) return;
-
-        const isLobby = isOnLobbyPage();
-        const wasInGame = panel.dataset.wasInGame === 'true';
-
-        if (!isLobby) {
-            // In game → hide panel
-            panel.classList.add('hidden');
-            stopGameInfoUpdates(); // Stop updating game info when not in lobby
-            // Dismiss notification when game starts
-            dismissNotification();
-            // If we just entered a game, disable auto-join only if we joined via auto-join mode
-            if (!wasInGame) {
-                // Play boxing ring bell sound when game starts
-                playGameStartSound();
-                // Only disable search if we joined via auto-join mode
-                if (autoJoinEnabled && joinMode === 'autojoin') {
-                    autoJoinEnabled = false;
-                    stopMonitoring();
-                    saveSettings();
-                    updateUI();
-                } else if (autoJoinEnabled && joinMode === 'notify') {
-                    // In notify mode, keep search active (user manually joined)
-                }
-            }
-            panel.dataset.wasInGame = 'true';
-        } else {
-            // In lobby → show panel and clear joined lobbies
-            panel.classList.remove('hidden');
-            startGameInfoUpdates(); // Start updating game info when in lobby
-            joinedLobbies.clear(); // Clear to allow rejoining same lobby if needed
-
-            // If we just returned to lobby, auto-start search in notify mode
-            if (wasInGame) {
-                // Always enable search when returning to lobby
-                autoJoinEnabled = true;
-                // Set to notify mode by default when returning to lobby
-                joinMode = 'notify';
-                // Update toggle and labels
-                const modeToggle = document.getElementById('join-mode-toggle');
-                if (modeToggle) {
-                    modeToggle.checked = false;
-                    updateModeLabels(false);
-                }
-                // Save settings and auto-start search if criteria exist
-                saveSettings();
-                updateUI();
-                tryAutoStartSearch();
-            }
-            // Clear notified lobbies when returning to lobby
-            notifiedLobbies.clear();
-            lastNotifiedGameID = null;
-            gameFoundTime = null;
-            panel.dataset.wasInGame = 'false';
-        }
-    }
-
-    // Observe URL changes to update panel visibility (event-based approach)
-    function observeURL() {
-        // Use popstate for browser navigation (back/forward buttons)
-        window.addEventListener('popstate', updatePanelVisibility);
-
-        // Use hashchange for hash changes
-        window.addEventListener('hashchange', updatePanelVisibility);
-
-        // Use pushstate/replacestate interception for programmatic navigation
-        const originalPushState = history.pushState;
-        const originalReplaceState = history.replaceState;
-
-        history.pushState = function(...args) {
-            originalPushState.apply(history, args);
-            setTimeout(updatePanelVisibility, 0);
-        };
-
-        history.replaceState = function(...args) {
-            originalReplaceState.apply(history, args);
-            setTimeout(updatePanelVisibility, 0);
-        };
-
-        // Initial check
-        updatePanelVisibility();
-    }
-
-    // Initialize
-    function init() {
-        loadSettings();
-        createUI();
-
-        // Preload audio files
-        preloadSounds();
-
-        // Monitor URL changes to show/hide panel (event-based, more efficient)
-        observeURL();
-    }
-
-    // Start when DOM is ready (immediate check like lobby_player_list.js)
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
-    } else {
-        // Initialize immediately (no delay needed with URL-based detection)
-        init();
-    }
-
-})();
+            <div class="autojoin-mode-config autojoin-config-card">
+              <label class="mode-checkbox-label"><input type="checkbox" id="autojoin-team" name="gameMode" value="Team"><span>Team</span></label>
+              <div class="autojoin-mode-inner" id="team-config" style="display: none;">
+                <div class="team-count-section">
+                  <label>Teams (optional):</label>
+                  <div>
+                    <button type="button" id="autojoin-team-select-all" class="select-all-btn">Select All</button>
+                    <button type="button" id="autojoin-team-deselect-all" class="select-all-btn">Deselect All</button>
+                  </div>
+                  <div class="team-count-options-centered">
+                    <div class="team-count-column">
+                      <label><input type="checkbox" id="autojoin-team-duos" value="Duos"> Duos</label>
+                      <label><input type="checkbox" id="autojoin-team-trios" value="Trios"> Trios</label>
+                      <label><input type="checkbox" id="autojoin-team-quads" value="Quads"> Quads</label>
+                    </div>
+                    <div class="team-count-column">
+                      <label><input type="checkbox" id="autojoin-team-2" value="2"> 2 teams</label>
+                      <label><input type="checkbox" id="autojoin-team-3" value="3"> 3 teams</label>
+                      <label><input type="checkbox" id="autojoin-team-4" value="4"> 4 teams</label>
+                    </div>
+                    <div class="team-count-column">
+                      <label><input type="checkbox" id="autojoin-team-5" value="5"> 5 teams</label>
+                      <label><input type="checkbox" id="autojoin-team-6" value="6"> 6 teams</label>
+                      <label><input type="checkbox" id="autojoin-team-7" value="7"> 7 teams</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="player-filter-info"><small>Filter by players per team:</small></div>
+                <div class="capacity-range-wrapper">
+                  <div class="capacity-range-visual">
+                    <div class="capacity-track">
+                      <div class="capacity-range-fill" id="team-range-fill"></div>
+                      <input type="range" id="autojoin-team-min-slider" min="1" max="50" value="1" class="capacity-slider capacity-slider-min">
+                      <input type="range" id="autojoin-team-max-slider" min="1" max="50" value="50" class="capacity-slider capacity-slider-max">
+                    </div>
+                    <div class="capacity-labels">
+                      <div class="capacity-label-group"><label for="autojoin-team-min-slider">Min:</label><span class="capacity-value" id="team-min-value">1</span></div>
+                      <div class="three-times-checkbox"><label for="autojoin-team-three-times">3\xD7</label><input type="checkbox" id="autojoin-team-three-times"></div>
+                      <div class="capacity-label-group"><label for="autojoin-team-max-slider">Max:</label><span class="capacity-value" id="team-max-value">50</span></div>
+                    </div>
+                  </div>
+                  <div class="capacity-inputs-hidden">
+                    <input type="number" id="autojoin-team-min" min="1" max="50" style="display: none;">
+                    <input type="number" id="autojoin-team-max" min="1" max="50" style="display: none;">
+                  </div>
+                </div>
+                <div class="current-game-info" id="current-game-info" style="display: none;"></div>
+              </div>
+            </div>
+          </div>
+          </div>
+        </div>
+        <div class="of-footer autojoin-footer">
+          <div class="autojoin-settings">
+            <label class="autojoin-toggle-label"><input type="checkbox" id="autojoin-auto-rejoin"><span>Auto rejoin on clan tag apply</span></label>
+          </div>
+        </div>
+      </div>
+    `;let e=document.getElementById("of-autojoin-slot");e?e.appendChild(this.panel):(console.warn("[AutoJoin] Auto-join slot not found, appending to body"),document.body.appendChild(this.panel)),this.setupEventListeners(),this.setCollapsed(!1),this.loadUIFromSettings(),this.updateClanmateButtonState(),this.initializeSlider("autojoin-ffa-min-slider","autojoin-ffa-max-slider","autojoin-ffa-min","autojoin-ffa-max","ffa-range-fill","ffa-min-value","ffa-max-value"),this.initializeSlider("autojoin-team-min-slider","autojoin-team-max-slider","autojoin-team-min","autojoin-team-max","team-range-fill","team-min-value","team-max-value"),this.updateUI(),this.syncSearchTimer(),this.startGameInfoUpdates()}updateSleepState(){let e=C.isOnLobbyPage();this.sleeping=!e,this.sleeping?(this.panel.classList.add("hidden"),this.stopTimer(),this.stopGameInfoUpdates()):(this.panel.classList.remove("hidden"),this.syncSearchTimer(),this.startGameInfoUpdates())}cleanup(){this.stopTimer(),this.stopGameInfoUpdates(),this.notificationTimeout&&clearTimeout(this.notificationTimeout),this.panel&&this.panel.parentNode&&this.panel.parentNode.removeChild(this.panel),this.dismissNotification()}};function ne(){if(!document.body){console.warn("[OpenFront Bundle] Body not ready, retrying layout wrapper injection..."),setTimeout(ne,100);return}if(document.getElementById("of-game-layout-wrapper")){console.log("[OpenFront Bundle] Layout wrapper already exists");return}let i=document.body,e=document.createElement("div");e.id="of-game-layout-wrapper";let t=document.createElement("div");for(t.id="of-game-content";i.firstChild;)t.appendChild(i.firstChild);e.appendChild(t),i.appendChild(e);let a=GM_getValue(L.playerListPanelSize)?.width||300;document.documentElement.style.setProperty("--player-list-width",a+"px"),console.log("[OpenFront Bundle] Layout wrapper injected \u2705")}(function(){"use strict";console.log("[OpenFront Bundle] Initializing v2.3.0..."),GM_addStyle(Y()),console.log("[OpenFront Bundle] Styles injected \u2705"),ne(),A.preloadSounds(),console.log("[OpenFront Bundle] Sound system initialized \u2705"),E.init(),console.log("[OpenFront Bundle] URL observer initialized \u2705"),W.start(),console.log("[OpenFront Bundle] Lobby data manager started \u2705"),k.fetch(),console.log("[OpenFront Bundle] Clan leaderboard caching started \u2705");let i=new O;console.log("[OpenFront Bundle] Player list initialized \u2705");let e=new R;console.log("[OpenFront Bundle] Auto-join initialized \u2705"),i.onPlayerListUpdate(t=>{e.handleClanmateUpdate(t)}),W.subscribe(t=>{i.receiveLobbyUpdate(t),e.receiveLobbyUpdate(t)}),console.log("[OpenFront Bundle] Modules subscribed to lobby updates \u2705"),console.log("[OpenFront Bundle] Ready! \u{1F680}")})();})();

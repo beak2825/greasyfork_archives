@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         云崽高亮器
 // @namespace    https://github.com/hinotoyk/contrail_progeny
-// @version      2.0.0
+// @version      2.1.0
 // @description  一键高亮云崽并展示相关数据
 // @author       hinotoyk
 // @license      CC BY-NC-SA 4.0
@@ -52,6 +52,42 @@
                 .replace(/>/g, '>')
                 .replace(/"/g, '"')
                 .replace(/'/g, '&#039;');
+        },
+
+        /**
+         * 円 → 日式金额显示（万円 / 億）
+         * @param {number|string} amount
+         * @returns {string}
+         */
+        formatJPY(amount) {
+            if (amount === null || amount === undefined || amount === '') return '';
+
+            // 移除逗号
+            const cleanAmount = String(amount).replace(/,/g, '');
+            const num = Number(cleanAmount);
+            if (Number.isNaN(num)) return '';
+
+            const YEN_PER_MAN = 10000;
+            const YEN_PER_OKU = 100000000;
+
+            // 小于 1 亿
+            if (num < YEN_PER_OKU) {
+                const man = num / YEN_PER_MAN;
+                // 保留 1 位小数，去掉多余 0
+                const manStr = man.toFixed(1).replace(/\.0$/, '');
+                return `${manStr}万円`;
+            }
+
+            // 大于等于 1 亿
+            const oku = Math.floor(num / YEN_PER_OKU);
+            const rest = num % YEN_PER_OKU;
+            const man = Math.floor(rest / YEN_PER_MAN);
+
+            if (man > 0) {
+                return `${oku}億${man}万円`;
+            } else {
+                return `${oku}億`;
+            }
         },
 
         nl2br(str) {
@@ -360,7 +396,9 @@
                     debutDate: '初出走',
                     winDate: '初勝利',
                     registerDate: '登録日',
-                    retireDate: '抹消日'
+                    retireDate: '抹消日',
+                    prizeMoney: '獲得賞金(円)',
+                    earnings: '収得賞金(円)'
                 },
                 cacheKey: Constants.SHEET_CACHE_KEY,
                 cacheTTL: Constants.SHEET_CACHE_EXPIRY
@@ -740,7 +778,20 @@
                 ? majorWins.map(w => {
                     const name = Utils.escapeHTML(w.raceName);
                     const grade = (w.grade || '').trim();
-                    const displayName = grade ? `${name}(${grade})` : name;
+
+                    // 判断是否为 OP 及以上
+                    const isOpOrHigher = grade && Constants.GRADE_ORDER.indexOf(grade) !== -1 && Constants.GRADE_ORDER.indexOf(grade) <= 7;
+
+                    let displayName;
+                    if (isOpOrHigher) {
+                        // OP及以上：25'xxx(G1)
+                        const yy = w.date ? String(new Date(w.date).getFullYear()).slice(-2) : '';
+                        const prefix = yy ? `${yy}'` : '';
+                        displayName = `${prefix}${name}(${grade})`;
+                    } else {
+                        // 条件赛：xxx
+                        displayName = name;
+                    }
 
                     if (grade === 'GI' || grade === 'JpnI') {
                         return `<b style="color:#d32f2f">${displayName}</b>`; // G1 wins highlighted red
@@ -751,9 +802,16 @@
 
             // 前走
             const latest = Utils.getLatestRace(races);
-            const latestStr = latest
-                ? `${Utils.escapeHTML(latest.raceName)} <span style="font-weight:bold; color:${latest.result == 1 ? '#d32f2f' : 'inherit'}">(${Utils.escapeHTML(latest.result)})</span>`
-                : '-';
+            let latestStr = '-';
+            if (latest) {
+                const name = Utils.escapeHTML(latest.raceName);
+                const grade = (latest.grade || '').trim();
+                const isOpOrHigher = grade && Constants.GRADE_ORDER.indexOf(grade) !== -1 && Constants.GRADE_ORDER.indexOf(grade) <= 7;
+
+                const displayName = isOpOrHigher ? `${name}(${grade})` : name;
+
+                latestStr = `${displayName} <span style="font-weight:bold; color:${latest.result == 1 ? '#d32f2f' : 'inherit'}">(${Utils.escapeHTML(latest.result)})</span>`;
+            }
 
             return `
             <div class="tt-stats-card">
@@ -817,10 +875,12 @@
                         ${this.row('马主', horse['馬主'])}
                     </div>
                     
-                    ${this.row('初出走', Utils.formatDate(horse['debutDate']))}
-                    ${this.row('初胜利', Utils.formatDate(horse['winDate']))}
                     ${this.row('注册日', Utils.formatDate(horse['registerDate']))}
                     ${this.row('抹消日', Utils.formatDate(horse['retireDate']))}
+                    ${this.row('初出走', Utils.formatDate(horse['debutDate']))}
+                    ${this.row('初胜利', Utils.formatDate(horse['winDate']))}
+                    ${this.row('赏金', Utils.formatJPY(horse['prizeMoney']))}
+                    ${this.row('收得', Utils.formatJPY(horse['earnings']))}
                 </div>
 
                 ${this.raceStats(horse.races)}

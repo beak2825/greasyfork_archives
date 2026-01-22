@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         SWDR4 German Translation
 // @namespace    http://tampermonkey.net/
-// @version      3.1
-// @description  Übersetzt die SWDR4-Oberfläche ins Deutsche (Chat-Nachrichten werden ignoriert)
+// @version      3.2
+// @description  Übersetzt die SWDR4-Oberfläche ins Deutsche.
 // @author       Bravura
 // @match        https://rj.td2.info.pl/swdr*
 // @match        https://rj.td2.info.pl/live*

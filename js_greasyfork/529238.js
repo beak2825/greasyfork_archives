@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Torn War Stuff Enhanced
 // @namespace    namespace
-// @version      1.9.2
+// @version      1.10
 // @description  Show travel status and hospital time and sort by hospital time on war page. Fork of https://greasyfork.org/en/scripts/448681-torn-war-stuff
 // @author       xentac
 // @license      MIT

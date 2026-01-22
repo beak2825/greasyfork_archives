@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         GreasyFork显示优化
 // @namespace    http://tampermonkey.net/
-// @version      2.6
-// @description  链接改为图标按钮
+// @version      2.7
+// @description  链接改为图标按钮，面板可折叠
 // @author       ssnangua
 // @match        https://greasyfork.org/*
+// @match        https://sleazyfork.org/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=greasyfork.org
 // @grant        GM_addStyle
 // @license      MIT
@@ -85,7 +86,9 @@
     if (!$p) return;
     const $new = document.createElement("p");
     $new.className = "icon-button-list";
-    $p.querySelectorAll("a").forEach(($a) => $new.appendChild(createIconButton($a)));
+    $p.querySelectorAll("a").forEach(($a) =>
+      $new.appendChild(createIconButton($a)),
+    );
     if ($new.children.length > 0) $p.replaceWith($new);
   }
 
@@ -96,7 +99,9 @@
   }
 
   function apply() {
-    replaceLinkListToIconButtonList($$("#about-user>section, #about-user>p").pop());
+    replaceLinkListToIconButtonList(
+      $$("#about-user>section, #about-user>p").pop(),
+    );
     replaceLinkListToIconButtonList($$("#user-discussions>section>p").pop());
     replaceLinkToIconButton($("#user-conversations a"));
 
@@ -109,7 +114,9 @@
     if ($ul) {
       const $new = document.createElement("p");
       $new.className = "icon-button-list";
-      $ul.querySelectorAll("a").forEach(($a) => $new.appendChild(createIconButton($a)));
+      $ul
+        .querySelectorAll("a")
+        .forEach(($a) => $new.appendChild(createIconButton($a)));
       $ul.replaceWith($new);
     }
   }
@@ -126,11 +133,42 @@
   const $aboutUser = $("#about-user");
   const $sidebarred = $(".sidebarred");
   if ($aboutUser && $sidebarred) {
-    $sidebarred.parentElement.insertBefore($sidebarred, $aboutUser.nextElementSibling);
+    $sidebarred.parentElement.insertBefore(
+      $sidebarred,
+      $aboutUser.nextElementSibling,
+    );
     $sidebarred.parentElement.style.paddingBottom = "40px";
   }
 
+  // 折叠内容
+  document
+    .querySelectorAll(
+      [
+        "#user-script-list-section",
+        "#user-unlisted-script-list-section",
+        "#user-library-list-section",
+        "#user-discussions-on-scripts-written",
+        "#user-discussions",
+        "#user-conversations",
+        "#user-script-sets-section",
+      ].join(", "),
+    )
+    .forEach(($section) => {
+      const $details = document.createElement("details");
+      $details.id = $section.id;
+      $details.open = true;
+      const $summary = document.createElement("summary");
+      $summary.appendChild($section.children[0]);
+      $details.appendChild($summary);
+      $details.appendChild($section.children[0]);
+      $section.replaceWith($details);
+    });
+
   GM_addStyle(`
+    .ad-rb {
+      display: none;
+    }
+
     a {
       text-decoration: none;
       &:hover {
@@ -142,6 +180,16 @@
       display: flex;
       flex-flow: row wrap;
       gap: 4px;
+    }
+
+    summary {
+      margin-top: 20px;
+      & > header {
+        display: inline-block;
+        & h3 {
+          margin: 0;
+        }
+      }
     }
   `);
 })();

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         搜索引擎屏蔽搜索结果
 // @namespace    http://example.com
-// @version      3.4
+// @version      4.0
 // @description  基于uBlacklist规则的Bing/Google/DuckDuckGo搜索结果屏蔽工具
 // @author       南雪莲
 // @license      MIT
@@ -203,16 +203,16 @@
         return 'other';
     }
     
-    // DuckDuckGo选择器
+    // 选择器
     const selectors = {
         bing: 'li.b_algo, div.b_algo',
         google: 'div.g, div[data-snf], div[data-hveid]',
-        // 扩展
+        // duckduckgo
         duckduckgo: '[data-testid="result"], .result, .web-result, .tile, .tile--ad',
         other: 'div.g, li.b_algo'
     };
     
-    // 规则转换为正则表达式的函数
+    // 规则转换为正则表达式函数
     function ruleToRegex(rule) {
         // 标题规则处理
         if (rule.startsWith('title/')) {
@@ -225,7 +225,7 @@
                 flags = flagMatch[1];
                 pattern = pattern.substring(flagMatch[0].length);
                 
-                // 特殊处理 (?s) 标志 - 将 . 替换为 [\s\S]
+                // 特殊处理(?s)标志 将.替换为[\s\S]
                 if (flags.includes('s')) {
                     pattern = pattern.replace(/\./g, '[\\s\\S]');
                     flags = flags.replace('s', '');
@@ -417,7 +417,7 @@
         } else if (engine === 'google') {
             return result.querySelector('a[href]');
         } else if (engine === 'duckduckgo') {
-            // DuckDuckGo选择器
+            // DuckDuckGo
             return result.querySelector('a[data-testid="result-extras-url-link"]') ||
                    result.querySelector('a[data-testid="result-title-a"]') ||
                    result.querySelector('.result__url') ||
@@ -427,14 +427,14 @@
         return result.querySelector('a[href]');
     }
     
-    // 标题获取
+    // 获取标题
     function getResultTitle(result, engine) {
         if (engine === 'bing') {
             return result.querySelector('h2 a')?.textContent?.trim() || 
                    result.querySelector('a h2')?.textContent?.trim() || 
                    result.querySelector('.b_title')?.textContent?.trim() || '';
         } else if (engine === 'google') {
-            // Google选择器
+            // Google
             return result.querySelector('h3')?.textContent?.trim() || 
                    result.querySelector('div[role="heading"]')?.textContent?.trim() ||
                    result.querySelector('.LC20lb')?.textContent?.trim() ||
@@ -444,7 +444,7 @@
                    result.querySelector('a h3')?.textContent?.trim() ||
                    '';
         } else if (engine === 'duckduckgo') {
-            // DuckDuckGo标题获取
+            // DuckDuckGo
             return result.querySelector('a[data-testid="result-title-a"]')?.textContent?.trim() ||
                    result.querySelector('.result__title')?.textContent?.trim() ||
                    result.querySelector('.tile__title')?.textContent?.trim() ||
@@ -607,7 +607,7 @@
             box-sizing: border-box;
         `;
         
-        // 创建悬浮球位置选项
+        // 悬浮球位置
         const positionOptions = [
             { value: 'top-left', label: '左上' },
             { value: 'top-right', label: '右上' },
@@ -615,7 +615,7 @@
             { value: 'bottom-right', label: '右下' }
         ];
         
-        // 创建悬浮球大小选项
+        // 悬浮球大小
         const sizeOptions = [
             { value: 'medium', label: '中' },
             { value: 'large', label: '大' },
@@ -660,7 +660,7 @@
                 <textarea id="searchfilter-rules" placeholder="每行一个规则&#10;示例：*://*.example.com/*&#10;示例：title/.*广告.*">${currentConfig.rules.join('\n')}</textarea>
                 <div style="font-size: 10px; color: #718096; margin-top: 4px;">
                     支持uBlacklist格式，每行一个规则<br>
-                    示例: *://*.example.com/* | title/.*广告.* | title/(?i).*广告abc.* #忽略大小写
+                    示例: *://*.example.com/* | title/.*广告.* | title/(?i).*广告abc.* // 忽略大小写
                 </div>
             </div>
             
@@ -749,7 +749,7 @@
         const engine = getSearchEngine();
         const results = document.querySelectorAll(selectors[engine]);
         
-        // 统计每个规则匹配的数量和错误
+        // 统计每个规则匹配数量和错误
         const ruleStats = {};
         const ruleErrors = {};
         

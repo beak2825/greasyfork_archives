@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          FF14物价查询补充-Universalis+Wiki
 // @namespace     FF14-Universalis-CN-L10n
-// @version       1.2.1
+// @version       1.2.2
 // @description   Universalis 新版本物品搜索补全；FF14 灰机Wiki 物品页增加物价链接。
 // @author        桀桀大王@红茶川
 // @match         https://ff14.huijiwiki.com/wiki/*
@@ -9,6 +9,7 @@
 // @grant         GM_xmlhttpRequest
 // @grant         GM_setValue
 // @grant         GM_getValue
+// @grant         GM_deleteValue
 // @grant         GM_registerMenuCommand
 // @connect       www.garlandtools.cn
 // @connect       universalis.app
@@ -26,7 +27,7 @@
         KEYS: {
             WIKI: 'CFG_WIKI_ENABLED',      // Wiki模块开关
             UNI: 'CFG_UNI_ENABLED',        // Universalis模块开关
-            CACHE: 'DATA_CACHE',           // 可交易物品ID集合
+            CACHE: 'DATA_BITSET',          // 可交易物品Bitset位图缓存
             TIME: 'DATA_TIMESTAMP'         // 缓存更新时间戳(ms)
         },
         API: {
@@ -35,15 +36,35 @@
             GT_ICON: 'https://www.garlandtools.cn/files/icons/item/',
             GT_DOC: 'https://www.garlandtools.cn/db/doc/item/chs/3/'
         },
-        CACHE_TTL: 2592000000,  // 30天
+        CACHE_TTL: 604800000,   // 7天
         ASSETS: {
-            LOGO: 'data:image/webp;base64,UklGRsIEAABXRUJQVlA4TLYEAAAvF8AFEPXIz7btfJ7M8tWKndS2bTv+KfpZsW3Utq0ROkA3Cb4VnmqKjtD/ukwX6ALdAI5s221bUawUgI8M/vxhunZpiAEApG36/y2dB4fgEql7FNZH5AYCQACO/0urtTWH7R/Ara0NjEFsl7YRJ1X6mwAYOq2/k2e1XK9redAK46S+rN1zSymZjSURJju3jinqWqbdn/N77St0JtRBqrYoYXh7yvVGWUr/ousYOd60uhSfSOvrh7f1qf6oIiWLILrCq5IX7pIiyaEsrcOuMQ8F40zUUhT8TH++fK3MVo67dyoin1m4KyeiccRbpy2JSy2NtZX1eaEvOWPU3PpOOfZ6fX1ORMCUY+ZFmGkJUFcgZVjGqLpCAdcOa4dShUTL1ubN1dcYPsKYpvlH70pMGDSUPCEXCSgbUhWkp9Bl/ZN0zq3BIWosv+923mcrxmA2/HcNU36GpLOp/XFzfUPDopmrI3CRgbwSLUeiD3VCooPtgkxRpEniNPjpEC1ZDcO/Oam0665d6IAGcoPUlZQzmClpYm5IpSPIdfojObXuvom8Lz69iUf1VwWJvDFZF5pMXCWM754dphVdm1IU1yYAwArjYGJJURcY4+qC/e1phTdqZ394+rp6VyTclMOROCNCxDjqjQPe85hXUqq4mFXlcWnIYyGAFcaJ+NZk4wSmmoTUDEgebOO+uv3uvBzUoYg8rsUEyzBSYCCnWF4xxKwDdhBSi0FjYRlOF/VjJJjz0s0tJxIcLVyTkMv257D2xFd0e0KO44hMXZnQ4/2jYNhN/NUUqOyY4DXBBa8E56R1bB0YYB4GbVpLHK2VEUo0Lq6U37W97eD29wfpCqdSgqkn68PDeyt2qC5VWoxIUWNDIq0mqXBOGl5KFpbpyQpz/O/V9XkfY4ExpcKIRyJPSUqIkaJUEEsrdYW+tPlXS6CiEJcJqCnG/whEGP9xcxAMto0bQ5pKQZ3XvrO9R5vFqRDqCjaSeNQSzPQRKQpwCf/0GSs6kXJKCu5nPDjmSKg7gTA8FByeB7q89CquTcCyaxdhhHyIzURWbsc+wnqUUi6LTFmwmlRu7B8XGSoakTaKOlrgMehjuNxD3KMfxWfO0XGgh3USQD/nXHNaLogdnMSObzSiKqSISTNRFej+/autWFGJiHOSccjjMUf7E3gs/7FwsRw90dQyDADWNqUYcl5b2man2k5cuIgwLcTiSjQYaCuRcEE4tZQTVGiYWmh43K+CqxVC63jfUefSrLg2AQCg+9+FKiG3L4Txb5Qk1qXKjaWESylRFqDIQM4Y/AlkJTDTkN8oGhzCXnpzq8rrj+U9pQ4AaNLSeqQfSC75zWiuSlIFMmoCUdfpSzWwtCFOD/gfyedejAWhGcpclmH47L9NmD6vq/iMOKkFUONYQ8NLG5YzhFQJEe+st84/kehSZxCLy/jdVJe0EfDPkqYzbAasKmekc0xaDgn26NEOu9hpZ6ekVyGkP6CVMP5XQa6DMY0jFxjSvHeonxAYeNlzUISRQ7GWIK67gGgzFsL0pYJSBWNb6jtaXUq/Gdabze3m+NzxzAidwbnWWV2Grzn1f8FShkyY7KJ0S9SXXKYpuVedy5QS8ogqry2/YCg='
+            LOGO: 'data:image/webp;base64,UklGRvIBAABXRUJQVlA4WAoAAAAQAAAAFwAAFwAAQUxQSLMAAAABgFvbtqltfw6t1MZfh+2/AKe2OjAKsR3atqM/f773lBAREwDVQFXPSFu+D7zBsSdBed5lY8t7ELQ3siy5PwLrcVQr+Cqwr1g0pgTeVjX/B9dfk0lRLRDOBwH0UAgnOcAwiXBgQxuN0Id8oluP54pGKEAnUQesOzQjQOqYpA9AcJGiDgBMTb9cPyEF0MA1B3XzAsd7WAPBQ6b/SjBmNxleS8Hs6DpXeZ2OgddX2DHaXx+GKgBWUDggGAEAADAGAJ0BKhgAGAA+kUKbSiWjoiGoCACwEglsAJ0zkzwKg7y3Qrkv/5k06q4SygYmUDTzkrTu7gBQgwAA/kR2IPzlGkHyO9/yYVHFBJlggdMt0ymazv3QWRFA7Fmk9rlsNX4g9q3rJK55Fykqc5VycWXdPM1RNG+4YrizU2ZKmGJChyYWidUZvOC0rT+3b0G3XnZlb7FZ7Uew6jEPA8qp88h9cOMq41aHeM4JjjOhGGv1v8JxdVefvvkWlEsxOkiRkqtKcw0msu8ELYGcWvx7EvAHX4FHxctAGmqV6EXDsvR1pO1nozqRu6zQ2bak21hKa2F33FA5l+3kvzLvMyk1MTP+y4FJdTqsHDWEO4b/OcBiGwSju1oAAAA='
         }
+    };
+
+    // Bitset 运算
+    const Bitset = {
+        SIZE: 8192,
+        encode: ids => {
+            const b = new Uint8Array(Bitset.SIZE);
+            ids.forEach(id => { if (id >= 0 && id < 65536) b[id >> 3] |= (1 << (id & 7)); });
+            return btoa(String.fromCharCode(...b));
+        },
+        decode: s => {
+            if (!s) return null;
+            try {
+                const bin = atob(s), b = new Uint8Array(Bitset.SIZE);
+                for (let i = 0; i < bin.length; i++) b[i] = bin.charCodeAt(i);
+                return b;
+            } catch(e) { return null; }
+        },
+        has: (b, id) => b && id >= 0 && id < 65536 && (b[id >> 3] & (1 << (id & 7))) !== 0
     };
 
     const STATE = {
         wiki: GM_getValue(CONF.KEYS.WIKI, true),
-        uni: GM_getValue(CONF.KEYS.UNI, true)
+        uni: GM_getValue(CONF.KEYS.UNI, true),
+        bitset: Bitset.decode(GM_getValue(CONF.KEYS.CACHE, ""))
     };
 
     // ═════════════════════════════════════════════════════════════════════════════════════════════
@@ -59,18 +80,22 @@
             this.observeDOM();
         },
 
-        // 同步 Universalis 可交易物品缓存，30天更新一次
+        // 自动管理位图缓存 (7天一更新)
         syncCache() {
             const now = Date.now();
             const last = GM_getValue(CONF.KEYS.TIME, 0);
-            if (!GM_getValue(CONF.KEYS.CACHE) || (now - last > CONF.CACHE_TTL)) {
+            if (!STATE.bitset || (now - last > CONF.CACHE_TTL)) {
+                GM_deleteValue('DATA_CACHE'); // 自动清理旧版JSON缓存
                 GM_xmlhttpRequest({
                     method: 'GET', url: CONF.API.UNI_MARKET,
                     onload: r => {
-                        if (r.responseText.length > 100) {
-                            GM_setValue(CONF.KEYS.CACHE, r.responseText);
+                        try {
+                            const ids = JSON.parse(r.responseText);
+                            const encoded = Bitset.encode(ids);
+                            GM_setValue(CONF.KEYS.CACHE, encoded);
                             GM_setValue(CONF.KEYS.TIME, now);
-                        }
+                            STATE.bitset = Bitset.decode(encoded);
+                        } catch(e) {}
                     }
                 });
             }
@@ -149,11 +174,9 @@
                         let data = [];
                         try {
                             const raw = JSON.parse(r.responseText);
-                            const cacheStr = GM_getValue(CONF.KEYS.CACHE);
-                            const allowed = cacheStr ? new Set(JSON.parse(cacheStr)) : null;
                             data = raw
                                 .map(x => ({ ID: parseInt(x.obj.i), Name: x.obj.n, Icon: x.obj.c, LevelItem: x.obj.l }))
-                                .filter(x => !allowed || allowed.has(x.ID));
+                                .filter(x => Bitset.has(STATE.bitset, x.ID));
                         } catch(err) {}
                         window.dispatchEvent(new CustomEvent('GT_RES', { detail: { data, reqId } }));
                     }

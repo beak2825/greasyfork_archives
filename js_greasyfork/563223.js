@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         HWM Telegram Notifier
 // @name:ru      HWM Telegram Уведомления
-// @version      1.1
+// @version      1.2
 // @description  Delayed Telegram notifications for work, smith repair, enchantment, premium, and faction potions in HeroeswM/LordsWM
 // @description:ru  Отложенные Telegram-уведомления о работе, ремонте, улучшениях, премиуме и зельях фракций в HeroeswM/LordsWM
 // @author       Vladislav Dobromyslov
@@ -151,21 +151,20 @@
     return /^[a-zA-Z0-9_-]{16,}$/.test(token);
   }
 
-  function updateTokenStatus(statusElement) {
-    const TOKEN_STATUS_COLORS = {
-      configured: "#5a7a3a",
-      notConfigured: "#a05a5a",
-    };
+  const TOKEN_STATUS_COLORS = {
+    configured: "#5a7a3a",
+    notConfigured: "#a05a5a",
+  };
 
+  function updateTokenStatus(statusElement) {
     const hasToken = GM_getValue("api_token", null) !== null;
 
-    if (hasToken) {
-      statusElement.textContent = T.tokenConfigured;
-      statusElement.style.color = TOKEN_STATUS_COLORS.configured;
-    } else {
-      statusElement.textContent = T.noTokenConfigured;
-      statusElement.style.color = TOKEN_STATUS_COLORS.notConfigured;
-    }
+    statusElement.textContent = hasToken
+      ? T.tokenConfigured
+      : T.noTokenConfigured;
+    statusElement.style.color = hasToken
+      ? TOKEN_STATUS_COLORS.configured
+      : TOKEN_STATUS_COLORS.notConfigured;
 
     return hasToken;
   }
@@ -208,48 +207,53 @@
   // RU format: "06-02-24 11:07" (DD-MM-YY HH:MM)
   // Game always displays dates in Moscow time (UTC+3)
   function parseMoscowDate(dateText) {
-    if (isEn) {
-      const dateMatch = /(\d{4})-(\d{2})-(\d{2}) (\d{1,2}):(\d{2})/.exec(
-        dateText,
-      );
-      if (!dateMatch) {
-        return null;
-      }
-      const year = parseInt(dateMatch[1], 10);
-      const month = parseInt(dateMatch[2], 10);
-      const day = parseInt(dateMatch[3], 10);
-      const hours = parseInt(dateMatch[4], 10);
-      const minutes = parseInt(dateMatch[5], 10);
-      return new Date(Date.UTC(year, month - 1, day, hours - 3, minutes, 0));
-    } else {
-      const dateMatch = /(\d{2})-(\d{2})-(\d{2}) (\d{1,2}):(\d{2})/.exec(
-        dateText,
-      );
-      if (!dateMatch) {
-        return null;
-      }
-      const day = parseInt(dateMatch[1], 10);
-      const month = parseInt(dateMatch[2], 10);
-      const year = 2000 + parseInt(dateMatch[3], 10);
-      const hours = parseInt(dateMatch[4], 10);
-      const minutes = parseInt(dateMatch[5], 10);
-      return new Date(Date.UTC(year, month - 1, day, hours - 3, minutes, 0));
+    const pattern = isEn
+      ? /(\d{4})-(\d{2})-(\d{2}) (\d{1,2}):(\d{2})/
+      : /(\d{2})-(\d{2})-(\d{2}) (\d{1,2}):(\d{2})/;
+    const match = pattern.exec(dateText);
+    if (!match) {
+      return null;
     }
+
+    let year, month, day, hours, minutes;
+
+    if (isEn) {
+      year = parseInt(match[1], 10);
+      month = parseInt(match[2], 10);
+      day = parseInt(match[3], 10);
+      hours = parseInt(match[4], 10);
+      minutes = parseInt(match[5], 10);
+    } else {
+      day = parseInt(match[1], 10);
+      month = parseInt(match[2], 10);
+      year = 2000 + parseInt(match[3], 10);
+      hours = parseInt(match[4], 10);
+      minutes = parseInt(match[5], 10);
+    }
+
+    return new Date(Date.UTC(year, month - 1, day, hours - 3, minutes, 0));
   }
 
   // Buffer added to timeout to ensure notification arrives after the event expires
   const EXPIRATION_BUFFER_SECS = 60;
 
+  function formatTimeout(timeoutSecs) {
+    const hours = Math.floor(timeoutSecs / 3600);
+    const minutes = Math.floor((timeoutSecs % 3600) / 60);
+    return `${hours}h ${minutes}m (${timeoutSecs}s)`;
+  }
+
+  function logTimeout(label, timeoutSecs) {
+    console.log(`HWM Notifier: ${label}, ${formatTimeout(timeoutSecs)}`);
+  }
+
   // Calculate timeout in seconds from an expiration date
   // Returns null if already expired, otherwise timeout with buffer
   function calculateTimeoutFromExpiration(expirationDate) {
-    const now = new Date();
-    const timeoutMs = expirationDate.getTime() - now.getTime();
-
+    const timeoutMs = expirationDate.getTime() - Date.now();
     if (timeoutMs <= 0) {
       return null;
     }
-
     return Math.ceil(timeoutMs / 1000) + EXPIRATION_BUFFER_SECS;
   }
 
@@ -602,12 +606,10 @@
           "3. Copy the token it sends you",
       );
 
-      if (token && token.trim()) {
-        token = token.trim();
-        GM_setValue("api_token", token);
-      } else {
+      if (!token || !(token = token.trim())) {
         return null;
       }
+      GM_setValue("api_token", token);
     }
 
     return token;
@@ -657,21 +659,25 @@
 
   function checkWorkEnrollment(apiToken) {
     const WORK_TIMEOUT_SECS = 3600;
+    const WORK_PATHS = ["/object_do.php", "/object-info.php"];
 
     if (
-      location.pathname === "/object_do.php" ||
-      location.pathname === "/object-info.php"
+      !WORK_PATHS.includes(location.pathname) ||
+      !document.body.innerHTML.includes(T.successfullyEnrolled) ||
+      !isNotificationEnabled("work")
     ) {
-      if (document.body.innerHTML.includes(T.successfullyEnrolled)) {
-        if (isNotificationEnabled("work")) {
-          sendNotification(apiToken, "work", WORK_TIMEOUT_SECS);
-        }
-      }
+      return;
     }
+
+    sendNotification(apiToken, "work", WORK_TIMEOUT_SECS);
   }
 
   function checkSmithRepair(apiToken) {
     if (location.pathname !== "/mod_workbench.php") {
+      return;
+    }
+
+    if (!isNotificationEnabled("smith")) {
       return;
     }
 
@@ -680,31 +686,16 @@
 
     for (const table of tables) {
       const tableText = table.innerText;
-
-      // Check if this table has repair info
-      if (!tableText.includes(T.underRepair)) {
-        continue;
+      if (tableText.includes(T.underRepair)) {
+        timeoutSecs = parseRepairTime(tableText);
+        break;
       }
-
-      // Parse remaining time for timeout calculation
-      timeoutSecs = parseRepairTime(tableText);
-      break;
     }
 
-    if (!timeoutSecs) {
-      return;
+    if (timeoutSecs) {
+      sendNotification(apiToken, "smith", timeoutSecs);
+      logTimeout("Smith repair", timeoutSecs);
     }
-
-    if (!isNotificationEnabled("smith")) {
-      return;
-    }
-
-    sendNotification(apiToken, "smith", timeoutSecs);
-    const hours = Math.floor(timeoutSecs / 3600);
-    const minutes = Math.floor((timeoutSecs % 3600) / 60);
-    console.log(
-      `HWM Notifier: Smith repair detected, ${hours}h ${minutes}m (${timeoutSecs}s)`,
-    );
   }
 
   function checkEnchantment(apiToken) {
@@ -720,59 +711,44 @@
 
     for (const table of tables) {
       const tableText = table.innerText;
-
-      // Check if this table has enchantment info
-      if (!tableText.includes(T.inProgress)) {
-        continue;
-      }
-
-      // Skip if this is a repair table (already handled by checkSmithRepair)
-      if (tableText.includes(T.underRepair)) {
+      if (
+        !tableText.includes(T.inProgress) ||
+        tableText.includes(T.underRepair)
+      ) {
         continue;
       }
 
       const timeoutSecs = parseRepairTime(tableText);
-
-      if (!timeoutSecs) {
-        continue;
+      if (timeoutSecs) {
+        sendNotification(apiToken, "enchantment", timeoutSecs);
+        logTimeout("Enchantment", timeoutSecs);
       }
-
-      sendNotification(apiToken, "enchantment", timeoutSecs);
-      const hours = Math.floor(timeoutSecs / 3600);
-      const minutes = Math.floor((timeoutSecs % 3600) / 60);
-      console.log(
-        `HWM Notifier: Enchantment detected, ${hours}h ${minutes}m (${timeoutSecs}s)`,
-      );
     }
   }
 
   function checkClanRepair(apiToken) {
-    if (location.pathname !== "/sklad_info.php") {
+    if (
+      location.pathname !== "/sklad_info.php" ||
+      !isNotificationEnabled("smith")
+    ) {
       return;
     }
 
-    if (!isNotificationEnabled("smith")) {
-      return;
-    }
-
-    // Step 1: Check for confirmed repairs (items in "Ваша аренда" with "В ремонте")
     checkConfirmedClanRepairs(apiToken);
-
-    // Step 2: Attach click handlers to repair links
     attachClanRepairHandlers();
   }
 
   function checkConfirmedClanRepairs(apiToken) {
     // Game formula: 4000 gold = 1 hour of repair time
     const REPAIR_RATE_GOLD_PER_HOUR = 4000;
+    const PENDING_TTL_MS = 5 * 60 * 1000; // 5 minutes
 
-    // Find "Ваша аренда" / "Your rental" section - look for the header text
+    // Find "Ваша аренда" / "Your rental" section
     const allTds = document.querySelectorAll("td.wblight");
     let rentalSection = null;
 
     for (const td of allTds) {
       if (td.innerText.includes(T.yourRental)) {
-        // The rental items are in the next sibling row
         rentalSection = td.closest("tr")?.nextElementSibling;
         break;
       }
@@ -782,7 +758,6 @@
       return;
     }
 
-    // Find items with "В ремонте" in the rental section
     const itemCells = rentalSection.querySelectorAll("td");
 
     for (const cell of itemCells) {
@@ -791,7 +766,6 @@
       }
 
       // Extract artifact ID from art_info.php link
-      // Try current cell first, then parent container (mobile layout has them in sibling cells)
       let artLink = cell.querySelector('a[href*="art_info.php"]');
       if (!artLink) {
         const parentContainer = cell.closest("td[bgcolor]");
@@ -804,7 +778,6 @@
         continue;
       }
 
-      // Check if we have pending repair data for this artifact
       const pendingData = GM_getValue(
         `pending_clan_repair_${artifactId}`,
         null,
@@ -814,26 +787,19 @@
       }
 
       // Verify it's recent (within last 5 minutes to avoid stale data)
-      const now = Date.now();
-      if (now - pendingData.timestamp > 5 * 60 * 1000) {
+      if (Date.now() - pendingData.timestamp > PENDING_TTL_MS) {
         GM_deleteValue(`pending_clan_repair_${artifactId}`);
         continue;
       }
 
-      // Calculate timeout and send notification
-      // Add 60 seconds buffer to ensure notification arrives after repair completes
-      const price = pendingData.price;
       const timeoutSecs =
-        Math.ceil((price / REPAIR_RATE_GOLD_PER_HOUR) * 3600) + 60;
-      const hours = Math.floor(timeoutSecs / 3600);
-      const minutes = Math.floor((timeoutSecs % 3600) / 60);
+        Math.ceil((pendingData.price / REPAIR_RATE_GOLD_PER_HOUR) * 3600) + 60;
 
       sendNotification(apiToken, "smith", timeoutSecs);
       console.log(
-        `HWM Notifier: Clan repair confirmed for ${artifactId}, price ${price}, ${hours}h ${minutes}m (${timeoutSecs}s)`,
+        `HWM Notifier: Clan repair confirmed for ${artifactId}, price ${pendingData.price}, ${formatTimeout(timeoutSecs)}`,
       );
 
-      // Clear pending data to prevent duplicate notifications
       GM_deleteValue(`pending_clan_repair_${artifactId}`);
     }
   }
@@ -842,29 +808,23 @@
     const repairLinks = document.querySelectorAll('a[href*="action=repair"]');
 
     for (const link of repairLinks) {
-      // Find the container with repair price info
       const container = link.closest("td");
       if (!container) {
         continue;
       }
 
       const containerText = container.innerText;
-
-      // Extract repair price: "Ремонт: 8,700" or "Repair: 8,700"
       const priceMatch = T.repairPricePattern.exec(containerText);
 
       if (!priceMatch) {
         continue;
       }
 
-      // Parse price: "8,700" -> 8700
       const price = parseInt(priceMatch[1].replace(/,/g, ""), 10);
       if (isNaN(price) || price <= 0) {
         continue;
       }
 
-      // Extract artifact ID from nearby art_info.php link
-      // Try immediate container first, then parent (mobile layout may have them in sibling cells)
       let artLink = container.querySelector('a[href*="art_info.php"]');
       if (!artLink) {
         const parentContainer = container.closest("td[bgcolor]");
@@ -873,26 +833,15 @@
         }
       }
       const artifactId = extractArtifactId(artLink);
-      if (!artifactId) {
-        continue;
-      }
-
-      // Skip if we already have pending data for this artifact
-      const existingPending = GM_getValue(
-        `pending_clan_repair_${artifactId}`,
-        null,
-      );
-      if (existingPending) {
-        continue;
-      }
-
-      // Skip if we already attached a handler to this link (prevent duplicates)
-      if (link.dataset.hwmNotifierHandler === "true") {
+      if (
+        !artifactId ||
+        GM_getValue(`pending_clan_repair_${artifactId}`, null) ||
+        link.dataset.hwmNotifierHandler === "true"
+      ) {
         continue;
       }
       link.dataset.hwmNotifierHandler = "true";
 
-      // Attach click handler to store pending repair data
       link.addEventListener("click", function () {
         GM_setValue(`pending_clan_repair_${artifactId}`, {
           price: price,
@@ -906,15 +855,13 @@
   }
 
   function checkPremiumExpiration(apiToken) {
-    if (location.pathname !== "/home.php") {
+    if (
+      location.pathname !== "/home.php" ||
+      !isNotificationEnabled("premium")
+    ) {
       return;
     }
 
-    if (!isNotificationEnabled("premium")) {
-      return;
-    }
-
-    // Look for premium star image
     const starImage =
       document.querySelector("img[src$='i/star_extend.png']") ||
       document.querySelector("img[src$='i/star.png']");
@@ -923,7 +870,6 @@
       return;
     }
 
-    // Get expiration info from title or hint attribute
     const expirationInfo = starImage.title || starImage.getAttribute("hint");
     if (!expirationInfo) {
       return;
@@ -939,21 +885,16 @@
       return;
     }
 
-    // Check if we already scheduled a notification for this expiration time
-    const storedExpiration = GM_getValue("premium_expiration_notified", 0);
+    const storageKey = "premium_expiration_notified";
+    const storedExpiration = GM_getValue(storageKey, 0);
     if (storedExpiration === expirationDate.getTime()) {
       return;
     }
 
-    // Store to avoid duplicate notifications
-    GM_setValue("premium_expiration_notified", expirationDate.getTime());
+    GM_setValue(storageKey, expirationDate.getTime());
 
     sendNotification(apiToken, "premium", timeoutSecs);
-    const hoursLeft = Math.floor(timeoutSecs / 3600);
-    const minutesLeft = Math.floor((timeoutSecs % 3600) / 60);
-    console.log(
-      `HWM Notifier: Premium expiration detected, ${hoursLeft}h ${minutesLeft}m (${timeoutSecs}s)`,
-    );
+    logTimeout("Premium expiration detected", timeoutSecs);
   }
 
   // Map localized faction names to API faction identifiers
@@ -1013,30 +954,25 @@
   }
 
   function checkFactionPotions(apiToken) {
-    if (location.pathname !== "/pl_info.php") {
+    if (
+      location.pathname !== "/pl_info.php" ||
+      !isNotificationEnabled("faction_potion")
+    ) {
       return;
     }
 
-    if (!isNotificationEnabled("faction_potion")) {
-      return;
-    }
-
-    // Get player ID from cookie
+    // Get player ID from cookie and verify viewing own profile
     const playerIdMatch = document.cookie.match(/pl_id=(\d+)/);
     if (!playerIdMatch) {
       return;
     }
-    const playerId = playerIdMatch[1];
 
-    // Check if viewing own profile (id parameter should match player ID or be absent)
     const urlParams = new URLSearchParams(location.search);
     const profileId = urlParams.get("id");
-    if (profileId && profileId !== playerId) {
-      return; // Viewing someone else's profile
+    if (profileId && profileId !== playerIdMatch[1]) {
+      return;
     }
 
-    // Parse faction potion dates from page body
-    // The info appears in various table layouts, so search the whole body
     const potions = parseFactionPotionsFromHtml(document.body.innerHTML);
     for (const { factionId, expirationDate } of potions) {
       scheduleFactionPotionNotification(apiToken, factionId, expirationDate);
@@ -1053,67 +989,51 @@
       return;
     }
 
-    // Check if we already scheduled a notification for this faction+expiration
     const storageKey = `faction_potion_${factionId}_notified`;
     const storedExpiration = GM_getValue(storageKey, 0);
     if (storedExpiration === expirationDate.getTime()) {
       return;
     }
 
-    // Store to avoid duplicate notifications
     GM_setValue(storageKey, expirationDate.getTime());
 
-    // Send notification with faction-specific message type
     const messageType = `faction_potion_${factionId}`;
     sendNotification(apiToken, messageType, timeoutSecs);
 
-    const hoursLeft = Math.floor(timeoutSecs / 3600);
-    const minutesLeft = Math.floor((timeoutSecs % 3600) / 60);
     console.log(
-      `HWM Notifier: Faction potion (${factionId}) expiration detected, ${hoursLeft}h ${minutesLeft}m (${timeoutSecs}s)`,
+      `HWM Notifier: Faction potion (${factionId}) expiration detected, ${formatTimeout(timeoutSecs)}`,
     );
   }
 
   function checkInventoryFactionPotion(apiToken) {
-    if (location.pathname !== "/inventory.php") {
+    if (
+      location.pathname !== "/inventory.php" ||
+      !isNotificationEnabled("faction_potion")
+    ) {
       return;
     }
 
-    if (!isNotificationEnabled("faction_potion")) {
-      return;
-    }
-
-    // Attach click handler to the "use" button
     const useButton = document.querySelector("#inv_menu_use_a");
-    if (!useButton) {
-      return;
-    }
-
-    // Skip if handler already attached
-    if (useButton.dataset.hwmNotifierHandler === "true") {
+    if (!useButton || useButton.dataset.hwmNotifierHandler === "true") {
       return;
     }
     useButton.dataset.hwmNotifierHandler = "true";
 
     useButton.addEventListener("click", function () {
-      // Check if selected item is a faction potion
       const selectedItem = document.querySelector(".art_is_selected");
       if (!selectedItem) {
         return;
       }
 
-      // Get hint from the item image
       const itemImage = selectedItem.querySelector("img.cre_mon_image2");
       const hint = itemImage?.getAttribute("hint") || "";
 
-      // Check if this is a faction potion by hint text
       if (!hint.includes(T.factionPotionHint)) {
         return;
       }
 
       console.log("HWM Notifier: Faction potion use detected");
 
-      // Wait for server to process the action, then fetch profile
       setTimeout(function () {
         fetchProfileAndScheduleFactionPotion(apiToken);
       }, 1500);
@@ -1133,7 +1053,6 @@
           return;
         }
 
-        // Parse faction potions from the profile HTML
         const potions = parseFactionPotionsFromHtml(response.responseText);
 
         if (potions.length === 0) {
@@ -1141,7 +1060,6 @@
           return;
         }
 
-        // Schedule notifications for all found potions
         for (const { factionId, expirationDate } of potions) {
           scheduleFactionPotionNotification(
             apiToken,
@@ -1167,11 +1085,17 @@
   // INITIALIZATION
   // ============================================
 
-  // Create settings menu first (always show, even without token)
+  // Create settings menu only on home.php page
+  function initSettingsMenu() {
+    if (location.pathname === "/home.php") {
+      createSettingsMenu();
+    }
+  }
+
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", createSettingsMenu);
+    document.addEventListener("DOMContentLoaded", initSettingsMenu);
   } else {
-    createSettingsMenu();
+    initSettingsMenu();
   }
 
   const API_TOKEN = getToken();

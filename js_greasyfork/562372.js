@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         仿M浏览器元素审查
 // @namespace    https://viayoo.com/81gzxv
-// @version      4.0
-// @description  利用AI模仿并生成M浏览器的元素审查，在脚本菜单开启元素审查，专注AD规则生成，支持规则编辑。
+// @version      4.8
+// @description  利用AI模仿并生成M浏览器的元素审查（感谢M浏览器原生交互灵感），在脚本菜单开启元素审查，专注精准AD规则生成与编辑，支持DOM树浏览、实时编辑（文字/代码/删除/换图/撤销）、存储管理、JS终端等功能。
 // @author       Via && Gemini
 // @match        *://*/*
 // @grant        GM_addStyle
@@ -27,6 +27,7 @@
     let currentTarget = null;
     let activePreviewStyle = null;
     let adUpdateTimer = null;
+    let historyStack = [];
 
     const host = document.createElement('div');
     host.id = 'mb-debug-host';
@@ -173,6 +174,14 @@
         .log-warn { color: #f1c40f; }
         .log-error { color: #ff4757; background: rgba(255, 71, 87, 0.05); }
         .log-result { color: #2ecc71; }
+ 
+        #mb-debug-content { display: flex; flex-direction: column; height: 100%; padding: 0 !important; margin: 0; }
+        #mb-dom-tree { flex: 1; overflow-y: auto; padding: 10px; }
+        #mb-node-actions { display: none; gap: 8px; padding: 10px; background: var(--mb-header-bg); border-top: 1px solid var(--mb-border); flex-wrap: wrap; flex-shrink: 0; }
+        .edit-btn { padding: 6px 12px; border-radius: 4px; border: 1px solid var(--mb-border); background: var(--mb-bg); color: var(--mb-text); cursor: pointer; font-size: 12px; font-weight: bold; }
+        .edit-btn.active { background: #ff4757; color: #fff; border-color: #ff4757; }
+        .html-edit-area { background: #1e1e1e !important; color: #fab1a0 !important; width: calc(100% - 20px); min-height: 80px; outline: none; padding: 8px; margin: 5px 0 5px 18px; font-family: monospace; font-size: 12px; display: none; white-space: pre-wrap; word-break: break-all; border: 1px dashed #ff4757; position: relative; z-index: 10; }
+        body.mb-editing-text a, body.mb-editing-text button { pointer-events: none !important; }
 
         @media (min-width: 768px) {
             #mb-js-content { flex-direction: row; gap: 12px; }
@@ -214,8 +223,16 @@
         </div>
 
         <div id="mb-main-stage">
-            <div class="mb-page" id="page-dom">
-                <div id="mb-debug-content"></div>
+            <div class="mb-page" id="page-dom" style="padding:0;">
+                <div id="mb-debug-content">
+                    <div id="mb-dom-tree"></div>
+                    <div id="mb-node-actions">
+                        <button class="edit-btn" id="btn-edit-html">🏗️代码模式</button>
+                        <button class="edit-btn" id="btn-edit-node">📝文字模式</button>
+                        <button class="edit-btn" id="btn-edit-img" style="display:none;">🖼️换图</button>
+                        <button class="edit-btn" id="btn-del-node" style="color:#e74c3c;">✂️删除</button>
+                    </div>
+                </div>
             </div>
 
             <div class="mb-page" id="page-js">
@@ -270,25 +287,82 @@
     const jsInput = shadow.getElementById('mb-js-input');
     const btnLogSwitch = shadow.getElementById('btn-log-switch');
 
-    function addLog(msg, type = '') {
+    function addLog(args, type = '') {
         const isManualRun = (type === 'log-result' || type === 'log-error');
         if (!isManualRun && !isLogging && !type.startsWith('script')) return;
-        if (jsLog.childNodes.length >= 100) jsLog.lastChild.remove();
-        let output = '';
-        try {
-            if (msg === null) output = 'null';
-            else if (typeof msg === 'object') {
-                try {
-                    const raw = JSON.stringify(msg);
-                    output = raw.length > 1000 ? raw.substring(0, 1000) + "..." : raw;
-                } catch (e) { output = Object.prototype.toString.call(msg); }
-            } else output = String(msg);
-        } catch (e) { output = "[解析失败]"; }
+        if (jsLog.childNodes.length >= 300) jsLog.lastChild.remove();
         const div = document.createElement('div');
         div.className = `log-item ${type}`;
-        div.innerText = `[${new Date().toLocaleTimeString(undefined, {hour12: false})}] ${output}`;
+        div.style.cssText = "word-break:break-all;line-height:1.4;margin-bottom:2px;font-size:12px;";
+        const time = `[${new Date().toLocaleTimeString(undefined, {hour12: false})}] `;
+        const ArrayArgs = Array.isArray(args) ? args : [args];
+        if (type === 'log-table' || (ArrayArgs.length === 1 && ArrayArgs[0] && typeof ArrayArgs[0] === 'object' && !ArrayArgs[0].nodeType)) {
+            try {
+                const data = ArrayArgs[0];
+                const table = document.createElement('table');
+                table.style.cssText = "border-collapse:collapse;width:100%;margin:5px 0;border:1px solid var(--mb-border);font-size:10px;";
+                const isArr = Array.isArray(data);
+                const keys = isArr ? (data[0] && typeof data[0] === 'object' ? Object.keys(data[0]) : ['Value']) : Object.keys(data);
+                
+                const head = table.insertRow();
+                ['(idx)', ...keys].forEach(k => {
+                    const th = document.createElement('th');
+                    th.style.cssText = "border:1px solid var(--mb-border);padding:2px;background:var(--mb-header-bg);";
+                    th.innerText = k;
+                    head.appendChild(th);
+                });
+                const rows = isArr ? data : [data];
+                rows.forEach((row, i) => {
+                    const tr = table.insertRow();
+                    tr.insertCell().innerText = i;
+                    keys.forEach(k => {
+                        const td = tr.insertCell();
+                        td.style.border = "1px solid var(--mb-border)";
+                        const val = (isArr && typeof row !== 'object') ? row : row[k];
+                        td.innerText = val !== undefined ? String(val) : '';
+                    });
+                });
+                div.innerText = time;
+                div.appendChild(table);
+            } catch (e) { div.innerText = time + "[Table解析失败] " + String(ArrayArgs[0]); }
+        }
+        else if (typeof ArrayArgs[0] === 'string' && ArrayArgs[0].includes('%c')) {
+            div.innerText = time;
+            let parts = ArrayArgs[0].split('%c'), styles = ArrayArgs.slice(1);
+            if (parts[0]) div.appendChild(document.createTextNode(parts[0]));
+            for (let i = 1; i < parts.length; i++) {
+                const span = document.createElement('span');
+                span.innerText = parts[i];
+                if (styles[i-1]) span.style.cssText = styles[i-1];
+                div.appendChild(span);
+            }
+        }
+        else {
+            const out = ArrayArgs.map(arg => {
+                if (arg === null) return 'null';
+                if (typeof arg === 'object') {
+                    try { return JSON.stringify(arg, (k,v) => typeof v === 'bigint' ? v.toString() : v, 2); }
+                    catch(e) { return Object.prototype.toString.call(arg); }
+                }
+                return String(arg);
+            }).join(' ');
+            div.innerText = time + (out.length > 5000 ? out.substring(0, 5000) + "..." : out);
+        }
         jsLog.prepend(div);
     }
+    (function initLogHook() {
+        const levels = { log:'', error:'log-error', warn:'log-warn', info:'log-result', table:'log-table' };
+        for (const key in levels) {
+            const original = console[key];
+            console[key] = function(...args) {
+                original.apply(console, args);
+                const isStackIdx = new Error().stack?.includes('eval') || new Error().stack?.includes('anonymous');
+                if (isLogging || isStackIdx || key === 'error') {
+                    addLog(args, levels[key]);
+                }
+            };
+        }
+    })();
 
     function updateLogBtnUI() {
         if (isLogging) {
@@ -301,26 +375,11 @@
             btnLogSwitch.innerText = '监听网页日志';
         }
     }
-
     btnLogSwitch.onclick = () => {
         isLogging = !isLogging;
         updateLogBtnUI();
         isLogging ? addLog("已开启网页日志监听", "log-result") : addLog("已停止网页日志监听", "log-warn");
     };
-
-    (function initLogHook() {
-        const levels = { log: '', error: 'log-error', warn: 'log-warn', info: 'log-result' };
-        for (const key in levels) {
-            const original = console[key];
-            console[key] = (...args) => {
-                original.apply(console, args);
-                if (isLogging) {
-                    const content = args.length > 1 ? args.map(a => (typeof a === 'object' ? JSON.stringify(a) : String(a))).join(' ') : args[0];
-                    addLog(content, levels[key]);
-                }
-            };
-        }
-    })();
  
     function switchToPage(index) {
         stage.style.transform = `translateX(-${index * 100}%)`;
@@ -384,11 +443,23 @@
         const domain = window.location.hostname;
         const tagName = el.tagName.toLowerCase();
         let rules = [];
-        const isInvalid = (str) => /^[:\d]/.test(str) || str.includes(':') || str.includes('(') || str.includes(')');
+        const isInvalid = (str) => !str || /^[:\d]/.test(str) || str.includes(':') || str.includes('(') || str.includes(')');
         const adKeywords = /(?:(?:^|[-_ \b])(?:ad|popup|modal|gg|google|float|fixed|sticky|overlay|iframe|script)(?:$|[-_ \b]))|(?:ads|adv|banner|sponsor|推广|广告|棋牌|葡京|威尼斯|太阳城|新葡京|约炮|直播|成人|抖阴|黄播|博彩|体育|下注|开奖|娱乐城|美高梅|金沙|银河|皇冠|开元|利记|沙巴|亚星|迷情|春药)/i;
 
         const getAttr = (node, name) => node.getAttribute(name) || "";
         const hasAttr = (node, name) => node.hasAttribute(name);
+
+        const getBestSubSelector = (node) => {
+            if (node.id && !isInvalid(node.id)) return '#' + node.id;
+            const classes = Array.from(node.classList).filter(c => !isInvalid(c) && c !== 'mb-inspect-hl' && !/\d{5,}/.test(c));
+            if (classes.length > 0) return node.tagName.toLowerCase() + '.' + classes[0];
+            const style = getAttr(node, 'style');
+            if (style) {
+                const parts = style.split(';').map(s => s.trim()).filter(s => s.includes(':') && !s.includes('url'));
+                if (parts.length > 0) return node.tagName.toLowerCase() + '[style*="' + parts[0].split(':')[0] + '"]';
+            }
+            return node.tagName.toLowerCase();
+        };
 
         if (el.id && !isInvalid(el.id)) {
             rules.push(`${domain}###${el.id}`);
@@ -415,11 +486,14 @@
 
         if (el.previousElementSibling) {
             const prev = el.previousElementSibling;
-            const prevS = prev.id ? `#${prev.id}` : (prev.classList.length ? `.${prev.classList[0]}` : '');
-            if (prevS && !isInvalid(prevS)) rules.push(`${domain}##${prevS} + ${tagName}`);
+            const prevS = getBestSubSelector(prev);
+            const currS = getBestSubSelector(el);
+            if (prevS && currS) rules.push(`${domain}##${prevS} + ${currS}`);
         }
+
         if (el.parentElement && el.parentElement.id && el.parentElement.tagName !== 'BODY') {
-            rules.push(`${domain}###${el.parentElement.id} > ${tagName}${classList.length ? '.' + classList[0] : ''}`);
+            const currS = getBestSubSelector(el);
+            rules.push(`${domain}###${el.parentElement.id} > ${currS}`);
         }
 
         let attrRules = [];
@@ -501,12 +575,13 @@
         rules = [...new Set(rules)];
         rules.sort((a, b) => {
             const getWeight = (s) => {
+                if (s.includes(' + ')) return 0;
                 const hasDomain = s.includes(domain);
                 if (adKeywords.test(s)) return hasDomain ? 1 : 2;
                 if (s.includes('[onclick]') || s.includes('[srcid') || s.includes('[tpl') || s.includes('[ref*=')) return 2;
                 if (s.includes('###') || s.includes('##.')) return hasDomain ? 3 : 4;
                 if (s.includes('[width')) return 5;
-                if (s.includes(' > ') || s.includes(' + ')) return 6;
+                if (s.includes(' > ')) return 6;
                 return 7;
             };
             const wa = getWeight(a), wb = getWeight(b);
@@ -515,10 +590,11 @@
         const genericTags = ['div', 'span', 'p', 'li', 'ul', 'ins', 'section', 'article'];
         return rules.filter(r => {
             const selector = r.split(/###?/)[1];
-            if (selector.includes('[srcid') || selector.includes('[tpl')) return true;
+            if (selector.includes('[srcid') || selector.includes('[tpl') || r.includes(' + ')) return true;
             return !genericTags.includes(selector);
         });
     }
+
 
     function renderAdPage() {
         if (!adContent) return;
@@ -770,6 +846,217 @@
         };
     }
 
+    const clearAllHighlights = () => {
+        const highlighters = shadow.querySelectorAll('[id^="mb-highlighter"]');
+        highlighters.forEach(el => el.remove());
+        if (currentTarget) {
+            currentTarget.classList.remove('mb-inspect-hl');
+            currentTarget.contentEditable = 'false';
+            currentTarget.style.outline = '';
+            currentTarget.style.backgroundColor = '';
+        }
+    };
+    
+    const preventInteraction = (e) => {
+          if (host.contains(e.target)) return;
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+          return false;
+    };
+
+    function updateNodeActions() {
+        const actionsBar = shadow.getElementById('mb-node-actions');
+        if (!currentTarget || !actionsBar) return;
+        actionsBar.style.display = 'flex';
+        if (!shadow.getElementById('btn-hide-inspect')) {
+            const hideBtn = document.createElement('button');
+            hideBtn.className = 'edit-btn';
+            hideBtn.id = 'btn-hide-inspect';
+            hideBtn.style.cssText = 'color:#95a5a6; border-color:#95a5a6;';
+            hideBtn.innerText = '🚫隐藏选取';
+            actionsBar.appendChild(hideBtn);
+        }
+        if (!shadow.getElementById('btn-undo-node')) {
+            const undoBtn = document.createElement('button');
+            undoBtn.className = 'edit-btn';
+            undoBtn.id = 'btn-undo-node';
+            undoBtn.style.cssText = 'color:#2ecc71; border-color:#2ecc71;';
+            undoBtn.innerText = '↩️撤销';
+            actionsBar.appendChild(undoBtn);
+        }
+        const btnHtml = shadow.getElementById('btn-edit-html');
+        const btnEdit = shadow.getElementById('btn-edit-node');
+        const btnImg = shadow.getElementById('btn-edit-img');
+        const btnDel = shadow.getElementById('btn-del-node');
+        const btnUndo = shadow.getElementById('btn-undo-node');
+        const btnHide = shadow.getElementById('btn-hide-inspect');
+        const selectedRow = shadow.querySelector('.node-row.selected');
+        const editArea = selectedRow ? selectedRow.querySelector('.html-edit-area') : null;
+        const isHtmlEditing = editArea && editArea.style.display === 'block';
+
+        btnHtml.innerText = isHtmlEditing ? '✅同步代码' : '🏗️代码模式';
+        btnHtml.classList.toggle('active', isHtmlEditing);
+        btnEdit.innerText = (currentTarget.contentEditable === 'true' || currentTarget.getAttribute('contenteditable') === 'true') ? '✅完成文字' : '📝文字模式';
+        btnEdit.classList.toggle('active', (currentTarget.contentEditable === 'true' || currentTarget.getAttribute('contenteditable') === 'true'));
+        btnUndo.style.display = historyStack.length > 0 ? 'block' : 'none';
+
+        const isImg = currentTarget.tagName === 'IMG';
+        const hasBg = window.getComputedStyle(currentTarget).backgroundImage !== 'none';
+        btnImg.style.display = (isImg || hasBg) ? 'block' : 'none';
+        const saveHistory = () => {
+            const parent = currentTarget.parentElement;
+            if (!parent) return;
+            const index = Array.from(parent.children).indexOf(currentTarget);
+            historyStack.push({
+                parent: parent,
+                index: index,
+                outerHTML: currentTarget.outerHTML
+            });
+        };
+        const finishTextEdit = () => {
+            if (currentTarget.contentEditable === 'true' || currentTarget.getAttribute('contenteditable') === 'true') {
+                currentTarget.setAttribute('contenteditable', 'false');
+                currentTarget.style.outline = '';
+                currentTarget.style.backgroundColor = '';
+                currentTarget.onblur = null;
+                currentTarget.onkeydown = null;
+                ['click', 'mousedown', 'mouseup', 'submit'].forEach(evName => { document.removeEventListener(evName, preventInteraction, { capture: true }); });
+                isCollapsed = false;
+                updateFoldState();
+                startPicking();
+                clearAllHighlights();
+                renderDOM();
+                highlight(currentTarget);
+                updateNodeActions();
+            }
+        };
+        btnHide.onclick = (e) => {
+            e.stopPropagation();
+            clearAllHighlights();
+            currentTarget = null;
+            renderDOM();
+        };
+        btnHtml.onclick = (e) => {
+            e.stopPropagation();
+            if (!editArea) return;
+            if (editArea.style.display !== 'block') {
+                saveHistory();
+                editArea.style.display = 'block';
+                const contentSpan = selectedRow.querySelector('.node-content');
+                if (contentSpan) contentSpan.style.display = 'none';
+                editArea.setAttribute('contenteditable', 'true');
+                editArea.innerText = currentTarget.innerHTML;
+                setTimeout(() => editArea.focus(), 50);
+            } else {
+                currentTarget.innerHTML = editArea.innerText;
+                clearAllHighlights();
+                renderDOM();
+                highlight(currentTarget);
+            }
+            updateNodeActions();
+        };
+        btnEdit.onclick = (e) => {
+            e.stopPropagation();
+            if (currentTarget.contentEditable !== 'true' && currentTarget.getAttribute('contenteditable') !== 'true') {
+                saveHistory();
+                stopPicking();
+                ['click', 'mousedown', 'mouseup', 'submit'].forEach(evName => { document.addEventListener(evName, preventInteraction, { capture: true });});
+                isCollapsed = true;
+                updateFoldState();
+                currentTarget.setAttribute('contenteditable', 'true');
+                currentTarget.style.outline = '2px dashed #ff4757';
+                setTimeout(() => {
+                    currentTarget.focus();
+                    try {
+                        const range = document.createRange();
+                        const sel = window.getSelection();
+                        range.selectNodeContents(currentTarget);
+                        range.collapse(false);
+                        sel.removeAllRanges();
+                        sel.addRange(range);
+                    } catch (err) {}
+                }, 0);
+                currentTarget.onblur = () => finishTextEdit();
+                currentTarget.onkeydown = (ev) => {
+                    if (ev.key === 'Enter' && !ev.shiftKey) {
+                        ev.preventDefault();
+                        currentTarget.blur();
+                    }
+                };
+            } else {
+                finishTextEdit();
+            }
+            updateNodeActions();
+        };
+        btnDel.onclick = (e) => {
+            e.stopPropagation();
+            if (confirm('确定删除该元素？')) {
+                saveHistory();
+                clearAllHighlights();
+                const p = currentTarget.parentElement;
+                const nextTarget = currentTarget.nextElementSibling || currentTarget.previousElementSibling || p;
+                currentTarget.remove();
+                currentTarget = (nextTarget && nextTarget !== document.documentElement) ? nextTarget : null;
+                renderDOM();
+                if (currentTarget) highlight(currentTarget);
+            }
+        };
+        btnImg.onclick = (e) => {
+            e.stopPropagation();
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = ev => {
+                const file = ev.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (rev) => {
+                    saveHistory();
+                    clearAllHighlights();
+                    if (currentTarget.tagName === 'IMG') {
+                        currentTarget.src = rev.target.result;
+                    } else {
+                        currentTarget.style.backgroundImage = `url(${rev.target.result})`;
+                    }
+                    renderDOM();
+                    highlight(currentTarget);
+                };
+                reader.readAsDataURL(file);
+            };
+            input.click();
+        };
+        btnUndo.onclick = (e) => {
+            e.stopPropagation();
+            const last = historyStack.pop();
+            if (!last || !last.parent) return;
+            if (currentTarget) {
+                currentTarget.setAttribute('contenteditable', 'false');
+                currentTarget.onblur = null;
+                currentTarget.onkeydown = null;
+                currentTarget.style.outline = '';
+                ['click', 'mousedown', 'mouseup', 'submit'].forEach(evName => { document.removeEventListener(evName, preventInteraction, { capture: true }); });
+            }            
+            clearAllHighlights();
+            const temp = document.createElement('div');
+            temp.innerHTML = last.outerHTML;
+            const restoredNode = temp.firstElementChild;
+            const existingNode = last.parent.children[last.index];
+            if (existingNode) {
+                existingNode.replaceWith(restoredNode);
+            } else {
+                last.parent.appendChild(restoredNode);
+            }
+            currentTarget = restoredNode;
+            isCollapsed = false;
+            updateFoldState();
+            startPicking();
+            renderDOM();
+            highlight(currentTarget);
+            updateNodeActions();
+        };
+    }
+
     function updateIconStyle() {
         if (!trigger) return;
         const size = api.getValue('mb_icon_size', 32);
@@ -820,8 +1107,21 @@
         }
         html += `<span style="color:var(--mb-code-key);font-weight:bold;">&gt;</span>`;
         const label = document.createElement('span');
+        label.className = 'node-content';
         label.innerHTML = html;
         row.appendChild(label);
+        if (isSelected) {
+            const editArea = document.createElement('div');
+            editArea.className = 'html-edit-area';
+            editArea.innerText = el.innerHTML;
+            editArea.onclick = (e) => e.stopPropagation();
+            editArea.onkeydown = (e) => e.stopPropagation();
+            row.appendChild(editArea);
+            if (el.contentEditable === 'true') {
+                el.style.outline = '2px dashed #ff4757';
+                el.style.backgroundColor = 'rgba(255,71,87,0.1)';
+            }
+        }
         const isInternalScript = el.tagName === 'SCRIPT' && !el.hasAttribute('src') && el.textContent.trim().length > 0;
         const isInternalStyle = el.tagName === 'STYLE' && !el.hasAttribute('href') && el.textContent.trim().length > 0;
         if (isInternalScript || isInternalStyle) {
@@ -859,22 +1159,22 @@
         row.onclick = (e) => { e.stopPropagation(); highlight(el); renderDOM(); };
         return wrapper;
     }
-
+    
     function renderDOM() {
-        domContent.innerHTML = '';
-        if (!currentTarget) return;
-        const parent = currentTarget.parentElement;
-        if (parent) domContent.appendChild(buildTree(parent, true));
-        else domContent.appendChild(buildTree(currentTarget, true));
+        const treeContainer = shadow.getElementById('mb-dom-tree');
+        if (!treeContainer) return;
+        treeContainer.innerHTML = '';
+        if (!currentTarget) {
+            const bar = shadow.getElementById('mb-node-actions');
+            if (bar) bar.style.display = 'none';
+            return;
+        }
+        const parent = currentTarget.parentElement || currentTarget;
+        treeContainer.appendChild(buildTree(parent, true));
+        updateNodeActions();
         setTimeout(() => {
-            const selectedNode = domContent.querySelector('.node-row.selected');
-            if (selectedNode) {
-                selectedNode.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'center',
-                    inline: 'nearest'
-                });
-            }
+            const selected = treeContainer.querySelector('.node-row.selected');
+            if (selected) selected.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }, 50);
     }
 

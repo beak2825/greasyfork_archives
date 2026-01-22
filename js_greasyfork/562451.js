@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         CryptoClicks Automation - Pro Edition (SCAM)
+// @name         CryptoClicks Automation - Pro Edition
 // @namespace    https://tampermonkey.net/
 // @version      1.6
 // @description  Automates Roll, Captcha selection, handles "Loading" stuck and anti-ad/stuck logic
@@ -9,8 +9,8 @@
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @run-at       document-end
-// @downloadURL https://update.greasyfork.org/scripts/562451/CryptoClicks%20Automation%20-%20Pro%20Edition%20%28SCAM%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/562451/CryptoClicks%20Automation%20-%20Pro%20Edition%20%28SCAM%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/562451/CryptoClicks%20Automation%20-%20Pro%20Edition.user.js
+// @updateURL https://update.greasyfork.org/scripts/562451/CryptoClicks%20Automation%20-%20Pro%20Edition.meta.js
 // ==/UserScript==
 
 (function() {

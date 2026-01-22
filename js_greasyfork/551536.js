@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bumpyball.io/Pucks.io MOD
 // @namespace    https://greasyfork.org/en/users/1462379-3lectr0n-nj
-// @version      2
+// @version      3
 // @description  Enjoy the MOD
 // @author       3lectr0N!nj@
 // @match        https://www.pucks.io/*
@@ -13,6 +13,7 @@
 // @downloadURL https://update.greasyfork.org/scripts/551536/BumpyballioPucksio%20MOD.user.js
 // @updateURL https://update.greasyfork.org/scripts/551536/BumpyballioPucksio%20MOD.meta.js
 // ==/UserScript==
+let ranked=false
 let MOD = window.MOD = {
     changeteam:false,
     changeskin:false,
@@ -91,6 +92,13 @@ let MOD = window.MOD = {
         }
         if(j[8][2]==4){
             delete server.playerdetails[(data[8][2])]
+        }
+        if(j[8][2]==5){
+            let data = j[18][2]
+            let msg = data[18][2]
+            if(msg=="/ranked"){
+                ranked=true
+            }
         }
         if(j[8][2]==6){
             if(data[8][2]==server.client.eid){
@@ -180,7 +188,6 @@ let MOD = window.MOD = {
             if(_j[8][2]==5){
                 let data = _j[18][2]
             let msg = data[18][2]
-            console.log(msg)
             if(msg.includes("!magic8ball")){
                 const responses = [
         "Yes, definitely!",
@@ -321,6 +328,7 @@ WebSocket.prototype.send = function (data) {
                this.om(msg);
            }
    }
+    if(this.url.includes("community")||ranked==true){this.close()}
     data= new Uint8Array(data)
     let json = new BR().Sdecoder(data)
     json = MOD.handlepackets(json)

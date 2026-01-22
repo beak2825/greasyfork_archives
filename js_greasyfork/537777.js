@@ -1,85 +1,203 @@
 // ==UserScript==
 // @name         Gemini Canvas Infographic
 // @namespace    http://tampermonkey.net/
-// @version      1.0
-// @description  Add a button on Gemini to auto-fill an infographic prompt, select Canvas, and send.
+// @version      2.5
+// @description  在Gemini添加一键生成信息图按钮，自动选择Canvas工具
+// @match        https://gemini.google.com/*
 // @match        *://gemini.google.com/*
 // @grant        none
+// @run-at       document-end
 // @license      MIT
 // @downloadURL https://update.greasyfork.org/scripts/537777/Gemini%20Canvas%20Infographic.user.js
 // @updateURL https://update.greasyfork.org/scripts/537777/Gemini%20Canvas%20Infographic.meta.js
 // ==/UserScript==
 
-(function() {
+(function () {
     'use strict';
 
-    const INFOGRAPHIC_BUTTON_ID = 'gemini-infographic-btn';
-    const INFOGRAPHIC_PROMPT = '创建一个单页HTML信息图，它将基于我上面提出的问题和你的回答，以视觉化方式呈现关键信息。此信息图将使用简体中文，并遵循您指定的技术和样式要求，包括使用Tailwind CSS、Chart.js进行图表绘制（确保Canvas渲染、标签换行和工具提示配置），并且不使用SVG或Mermaid JS。结尾给出引用视频或网页的链接。使用PPT4大原则和ppt撰写金字塔原理，使得信息图更加美观，专业，高级。根据认知心理学的相关知识，让信息图更利于我学习和理解此知识，优化排版，减少认知负荷但不减少信息量，开启友好初学者模式。重点细节务必保留。';
+    console.log('=== Gemini Infographic v2.5 ===');
 
-    function clickCanvasButton() {
-        const buttons = document.querySelectorAll('button.toolbox-drawer-item-button');
-        for (const btn of buttons) {
-            const label = btn.querySelector('div.toolbox-drawer-button-label');
-            if (label && label.textContent.trim() === 'Canvas') {
+    const INFOGRAPHIC_PROMPT = `基于我上面的问题和你的回答，创建一个专业级信息图（单页HTML）。
+
+## 设计规范
+- **苹果极简主义**：大量留白、渐变配色、圆角卡片
+- **金字塔结构**：核心结论在顶部，支撑论据向下展开
+- **数据可视化**：使用Chart.js图表，关键数字放大显示
+- **认知优化**：分类标签、图标辅助、避免墙式文字
+
+## 技术要求
+- 使用 Tailwind CSS + Chart.js
+- 纯HTML单文件
+- 结尾提供原始来源链接`;
+
+    // 样式
+    const style = document.createElement('style');
+    style.textContent = `
+        #gemini-infographic-btn {
+            position: fixed;
+            top: 14px;
+            right: 80px;
+            z-index: 999999;
+            height: 36px;
+            padding: 0 14px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, #4285f4, #1a73e8);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            font-family: "Google Sans", Roboto, sans-serif;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+        #gemini-infographic-btn:hover {
+            background: linear-gradient(135deg, #1a73e8, #1557b0);
+            transform: translateY(-1px);
+        }
+    `;
+    document.head.appendChild(style);
+
+    // 第一步：点击"工具"按钮打开菜单
+    async function openToolsMenu() {
+        console.log('[Infographic] 尝试打开工具菜单...');
+
+        // 查找包含"工具"文字的按钮
+        const allButtons = document.querySelectorAll('button');
+        for (const btn of allButtons) {
+            const text = btn.textContent?.trim() || '';
+            if (text === '工具' || text.includes('工具')) {
+                console.log('[Infographic] 找到工具按钮，点击...');
                 btn.click();
+                await new Promise(r => setTimeout(r, 500));
                 return true;
             }
         }
+
+        // 备用：查找带有特定class的工具按钮
+        const toolBtns = document.querySelectorAll('[class*="tool"] button, button[aria-haspopup="true"]');
+        for (const btn of toolBtns) {
+            console.log('[Infographic] 尝试点击备用工具按钮...');
+            btn.click();
+            await new Promise(r => setTimeout(r, 500));
+            return true;
+        }
+
+        console.log('[Infographic] 未找到工具按钮');
         return false;
     }
 
-    function sendPrompt(prompt) {
-        const textarea = document.querySelector('textarea, div[contenteditable="true"]');
-        if (!textarea) return;
+    // 第二步：选择Canvas
+    async function selectCanvas() {
+        console.log('[Infographic] 查找Canvas选项...');
 
-        if (textarea.isContentEditable) {
-            textarea.textContent = prompt;
-        } else {
-            textarea.value = prompt;
-        }
+        // 现在菜单应该打开了，查找Canvas
+        const matListItems = document.querySelectorAll('.mat-mdc-list-item, [class*="mat-mdc-list-item"]');
+        console.log('[Infographic] mat-list-item数量:', matListItems.length);
 
-        textarea.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
-        textarea.dispatchEvent(new Event('change', { bubbles: true, cancelable: true }));
-
-        clickCanvasButton();
-
-        setTimeout(() => {
-            const sendBtn = document.querySelector('button[aria-label*="Send"],button[aria-label*="发送"],button[aria-label*="提交"],button[aria-label*="Run"],button[aria-label*="Submit"]');
-            if (sendBtn && !sendBtn.disabled) {
-                sendBtn.click();
+        for (const item of matListItems) {
+            const text = item.textContent?.trim() || '';
+            if (text.includes('Canvas')) {
+                console.log('[Infographic] 找到Canvas，点击...');
+                item.click();
+                return true;
             }
-        }, 300);
-    }
-
-    function addInfographicButton() {
-        if (document.getElementById(INFOGRAPHIC_BUTTON_ID)) return;
-
-        const btn = document.createElement('button');
-        btn.id = INFOGRAPHIC_BUTTON_ID;
-        btn.textContent = '📊 信息图';
-        Object.assign(btn.style, {
-            position: 'fixed',
-            bottom: '780px',
-            right: '170px',
-            zIndex: 99999,
-            padding: '8px 12px',
-            borderRadius: '4px',
-            backgroundColor: '#1a73e8',
-            color: '#fff',
-            border: 'none',
-            cursor: 'pointer',
-            fontSize: '14px'
-        });
-
-        btn.addEventListener('click', () => sendPrompt(INFOGRAPHIC_PROMPT));
-        document.body.appendChild(btn);
-    }
-
-    if (window.location.hostname.includes('gemini.google.com')) {
-        if (document.readyState === 'complete' || document.readyState === 'interactive') {
-            addInfographicButton();
-        } else {
-            window.addEventListener('DOMContentLoaded', addInfographicButton, { once: true });
         }
+
+        // 遍历所有包含Canvas文字的元素
+        const allElements = document.querySelectorAll('*');
+        for (const el of allElements) {
+            if (el.children.length === 0 && el.textContent?.trim() === 'Canvas') {
+                // 向上查找可点击的父元素
+                let parent = el.parentElement;
+                for (let i = 0; i < 6 && parent; i++) {
+                    if (parent.tagName === 'BUTTON' ||
+                        parent.classList.contains('mat-mdc-list-item') ||
+                        parent.getAttribute('role') === 'menuitem' ||
+                        parent.getAttribute('role') === 'option') {
+                        console.log('[Infographic] 找到Canvas父元素，点击...');
+                        parent.click();
+                        return true;
+                    }
+                    parent = parent.parentElement;
+                }
+            }
+        }
+
+        console.log('[Infographic] 未找到Canvas选项');
+        return false;
     }
+
+    // 主函数
+    async function generateInfographic() {
+        console.log('[Infographic] === 开始生成信息图 ===');
+
+        // 1. 打开工具菜单
+        await openToolsMenu();
+        await new Promise(r => setTimeout(r, 600));
+
+        // 2. 选择Canvas
+        const selected = await selectCanvas();
+        console.log('[Infographic] Canvas选择结果:', selected);
+        await new Promise(r => setTimeout(r, 500));
+
+        // 3. 填入提示词
+        const textareas = document.querySelectorAll('div[contenteditable="true"], textarea, [role="textbox"]');
+        let textarea = null;
+        for (const t of textareas) {
+            if (t.offsetWidth > 0 && t.offsetHeight > 0) {
+                textarea = t;
+                break;
+            }
+        }
+
+        if (textarea) {
+            textarea.focus();
+            if (textarea.isContentEditable) {
+                textarea.textContent = INFOGRAPHIC_PROMPT;
+            } else {
+                textarea.value = INFOGRAPHIC_PROMPT;
+            }
+            textarea.dispatchEvent(new Event('input', { bubbles: true }));
+            console.log('[Infographic] 提示词已填入');
+        } else {
+            console.log('[Infographic] 未找到输入框');
+            return;
+        }
+
+        // 4. 发送
+        await new Promise(r => setTimeout(r, 800));
+        const allBtns = document.querySelectorAll('button');
+        for (const b of allBtns) {
+            const label = b.getAttribute('aria-label') || '';
+            if ((label.includes('Send') || label.includes('发送')) && !b.disabled) {
+                b.click();
+                console.log('[Infographic] 已发送');
+                return;
+            }
+        }
+        console.log('[Infographic] 请手动发送');
+    }
+
+    // 添加按钮
+    function addButton() {
+        if (document.getElementById('gemini-infographic-btn')) return;
+        const btn = document.createElement('button');
+        btn.id = 'gemini-infographic-btn';
+        btn.textContent = '📊 信息图';
+        btn.onclick = generateInfographic;
+        document.body.appendChild(btn);
+        console.log('[Infographic] 按钮已添加');
+    }
+
+    addButton();
+    setTimeout(addButton, 1000);
+    setTimeout(addButton, 3000);
+    new MutationObserver(() => {
+        if (!document.getElementById('gemini-infographic-btn')) addButton();
+    }).observe(document.body, { childList: true, subtree: true });
+
 })();

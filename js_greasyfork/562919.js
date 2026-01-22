@@ -111,7 +111,7 @@
             width: 100%;
             margin-top: 0;
         }
-        
+
         body:not(.gpr-dark-mode) .custom-markdown-render { 
             color: #37352f;
         }
@@ -148,7 +148,7 @@
             border: 1px solid var(--gpr-code-border);
             margin: 8px 0;
         }
-        
+
         /* Ensure dark color for code in light mode */
         body:not(.gpr-dark-mode) .custom-markdown-render pre { 
             color: #24292e;

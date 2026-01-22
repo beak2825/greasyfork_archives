@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Deepseek Chat Monitor
-// @version      2.0.0
+// @version      2.0.1
 // @description  The blocked thinking and response will be displayed on the right interface. 右侧界面会显示输出后被屏蔽的思考和回复内容。
 // @match        https://chat.deepseek.com/*
 // @grant        none
@@ -12,9 +12,9 @@
 (function() {
     'use strict';
 
-    const VERSION = '2.0.0';
+    const VERSION = '2.0.1';
     const logStyle = 'background: #222; color: #bada55; font-size: 12px';
-    console.log(`%c[Deepseek Monitor] v${VERSION} 布局修复版启动...`, logStyle);
+    console.log(`%c[Deepseek Monitor] v${VERSION} 稳定内核版启动...`, logStyle);
 
     // ==========================================
     // 全局状态与解析逻辑
@@ -38,23 +38,21 @@
         updateUIStatus('准备接收新回复...');
     }
 
-    function parseChunk(chunk) {
-        const lines = chunk.split('\n');
-        for (const line of lines) {
-            if (line.startsWith('data: ')) {
-                const jsonStr = line.substring(6).trim();
-                if (jsonStr === '[DONE]') {
-                    updateUIStatus('接收完成');
-                    saveToHistory();
-                    return;
-                }
-                try {
-                    const data = JSON.parse(jsonStr);
-                    processJsonData(data);
-                } catch (e) {
-                    // 忽略不完整的 JSON
-                }
-            }
+    // 单行解析逻辑 (从 parseChunk 拆分出来)
+    function parseLine(line) {
+        if (!line.startsWith('data: ')) return;
+
+        const jsonStr = line.substring(6).trim();
+        if (jsonStr === '[DONE]') {
+            updateUIStatus('接收完成');
+            saveToHistory();
+            return;
+        }
+        try {
+            const data = JSON.parse(jsonStr);
+            processJsonData(data);
+        } catch (e) {
+            // 忽略 JSON 错误，这通常是因为流结束时的空行
         }
     }
 
@@ -99,45 +97,61 @@
     }
 
     // ==========================================
-    // 拦截器 1: Fetch
+    // 拦截器 1: Fetch (带缓冲区修复)
     // ==========================================
     const originalFetch = window.fetch;
 
     window.fetch = async function(input, init) {
         let url = 'unknown';
-
         try {
             if (typeof input === 'string') url = input;
             else if (input instanceof Request) url = input.url;
             else if (input instanceof URL) url = input.toString();
-        } catch(e) {
-            console.warn('[DS-Debug] URL解析失败', e);
-        }
+        } catch(e) {}
 
-        // 匹配逻辑
-        const isTarget = url && (url.includes('chat/completion') || url.includes('chat/completions') || url.includes('/api/v0/chat'));
-
-        if (isTarget) {
-            console.log(`%c[DS-Monitor] Fetch 拦截激活: ${url}`, 'color: green; font-weight: bold');
-        }
+        // 放宽匹配规则，适配更多地区/版本
+        const isTarget = url && (
+            url.includes('/chat/completion') ||
+            url.includes('api/v0/chat')
+        );
 
         const response = await originalFetch(input, init);
 
         if (isTarget) {
+            console.log(`%c[DS-Monitor] Fetch 锁定流: ${url}`, 'color: green');
             const clone = response.clone();
             const reader = clone.body.getReader();
             const decoder = new TextDecoder();
 
             resetStreamState();
 
+            // === 关键修复：引入 buffer 处理分包 ===
+            let buffer = '';
+
             (async () => {
                 try {
                     while (true) {
                         const { done, value } = await reader.read();
                         if (done) break;
-                        const chunk = decoder.decode(value, { stream: true });
-                        parseChunk(chunk);
+
+                        // 将新收到的数据拼接到缓冲区
+                        buffer += decoder.decode(value, { stream: true });
+
+                        // 按换行符切割
+                        const lines = buffer.split('\n');
+
+                        // 最后一个元素可能是截断的半行，保留它到下一次循环处理
+                        // pop() 会移除并返回最后一个元素
+                        buffer = lines.pop();
+
+                        // 处理完整的行
+                        for (const line of lines) {
+                            if (line.trim()) parseLine(line);
+                        }
                     }
+                    // 处理剩余的 buffer（如果有）
+                    if (buffer.trim()) parseLine(buffer);
+
                 } catch (err) {
                     console.error('[DS-Error] Fetch Stream:', err);
                 }
@@ -148,7 +162,7 @@
     };
 
     // ==========================================
-    // 拦截器 2: XHR (确保兼容性)
+    // 拦截器 2: XHR (带缓冲区修复)
     // ==========================================
     const originalXHR = window.XMLHttpRequest;
 
@@ -156,6 +170,7 @@
         const xhr = new originalXHR();
         let lastLength = 0;
         let targetUrl = '';
+        let buffer = ''; // XHR 专用的缓冲区
 
         const originalOpen = xhr.open;
         xhr.open = function(method, url) {
@@ -164,16 +179,29 @@
         };
 
         xhr.addEventListener('progress', function() {
-            const isTarget = targetUrl && (targetUrl.includes('chat/completion') || targetUrl.includes('chat/completions') || targetUrl.includes('/api/v0/chat'));
+            const isTarget = targetUrl && (
+                targetUrl.includes('/chat/completion') ||
+                targetUrl.includes('api/v0/chat')
+            );
 
             if (isTarget) {
                 if (lastLength === 0) {
-                     console.log(`%c[DS-Monitor] XHR 拦截激活: ${targetUrl}`, 'color: orange');
                      resetStreamState();
                 }
+
+                // 获取新增的部分
                 const newChunk = xhr.responseText.substring(lastLength);
                 lastLength = xhr.responseText.length;
-                if (newChunk) parseChunk(newChunk);
+
+                if (newChunk) {
+                    buffer += newChunk;
+                    const lines = buffer.split('\n');
+                    buffer = lines.pop(); // 保留未完成的行
+
+                    for (const line of lines) {
+                        if (line.trim()) parseLine(line);
+                    }
+                }
             }
         });
 
@@ -181,7 +209,7 @@
     };
 
     // ==========================================
-    // UI 界面 (布局修复版)
+    // UI 界面 (保持布局修复)
     // ==========================================
     const containerId = 'ds-monitor-container';
     function initUI() {
@@ -193,100 +221,50 @@
         const style = document.createElement('style');
         style.textContent = `
             :host {
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                width: 350px;
-                height: 80vh;
-                max-height: 600px;
-                z-index: 99999;
-                font-family: sans-serif;
-                font-size: 14px;
+                position: fixed; top: 20px; right: 20px;
+                width: 350px; height: 80vh; max-height: 600px;
+                z-index: 99999; font-family: sans-serif; font-size: 14px;
                 transition: transform 0.3s ease;
-                /* 注意：背景和边框移到了 .wrapper 以确保布局正确 */
             }
             .wrapper {
-                display: flex;
-                flex-direction: column;
-                height: 100%;          /* 关键：强制占满宿主高度 */
-                width: 100%;
-                background: #f8f9fa;
-                border: 1px solid #e9ecef;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-                border-radius: 8px;
+                display: flex; flex-direction: column;
+                height: 100%; width: 100%;
+                background: #f8f9fa; border: 1px solid #e9ecef;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15); border-radius: 8px;
             }
             .header {
-                padding: 10px 15px;
-                background: #2c3e50;
-                color: white;
-                border-radius: 8px 8px 0 0;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                flex-shrink: 0;
+                padding: 10px 15px; background: #2c3e50; color: white;
+                border-radius: 8px 8px 0 0; display: flex;
+                justify-content: space-between; align-items: center; flex-shrink: 0;
             }
             .content-area {
-                flex: 1;               /* 自动占据剩余空间 */
-                overflow-y: auto;      /* 仅此处滚动 */
-                min-height: 0;         /* 关键：防止 flex 子元素溢出 */
-                padding: 15px;
-                display: flex;
-                flex-direction: column;
-                gap: 15px;
+                flex: 1; overflow-y: auto; min-height: 0; padding: 15px;
+                display: flex; flex-direction: column; gap: 15px;
             }
             .block {
-                background: white;
-                padding: 10px;
-                border-radius: 6px;
-                border: 1px solid #dee2e6;
-                white-space: pre-wrap;
-                word-wrap: break-word;
+                background: white; padding: 10px; border-radius: 6px;
+                border: 1px solid #dee2e6; white-space: pre-wrap; word-wrap: break-word;
             }
-            .think-block {
-                background: #f1f3f5;
-                color: #495057;
-                border-left: 3px solid #ced4da;
-            }
-            .response-block {
-                border-left: 3px solid #27ae60;
-            }
+            .think-block { background: #f1f3f5; color: #495057; border-left: 3px solid #ced4da; }
+            .response-block { border-left: 3px solid #27ae60; }
             .controls {
-                padding: 10px;
-                border-top: 1px solid #dee2e6;
-                display: flex;
-                gap: 5px;
-                background: #fff;
-                border-radius: 0 0 8px 8px;
-                flex-shrink: 0;        /* 禁止压缩 */
+                padding: 10px; border-top: 1px solid #dee2e6; display: flex;
+                gap: 5px; background: #fff; border-radius: 0 0 8px 8px; flex-shrink: 0;
             }
             button {
-                flex: 1;
-                padding: 6px;
-                cursor: pointer;
-                border: 1px solid #ccc;
-                background: #eee;
-                border-radius: 4px;
+                flex: 1; padding: 6px; cursor: pointer; border: 1px solid #ccc;
+                background: #eee; border-radius: 4px;
             }
             button:hover { background: #ddd; }
             #toggle-btn {
-                position: absolute;
-                left: -40px;
-                top: 10px;
-                width: 30px;
-                height: 30px;
-                background: #2c3e50;
-                color: white;
-                border: none;
-                border-radius: 50%;
-                cursor: pointer;
-                display: flex;
-                align-items: center;
-                justify-content: center;
+                position: absolute; left: -40px; top: 10px; width: 30px; height: 30px;
+                background: #2c3e50; color: white; border: none; border-radius: 50%;
+                cursor: pointer; display: flex; align-items: center; justify-content: center;
             }
         `;
 
         const wrapper = document.createElement('div');
-        wrapper.className = 'wrapper'; // 添加类名以应用 flex 布局
+        wrapper.className = 'wrapper';
         wrapper.innerHTML = `
             <button id="toggle-btn">👁️</button>
             <div class="header"><span>DS Monitor v${VERSION}</span><span id="status-text" style="font-size:12px">运行中</span></div>
@@ -319,7 +297,6 @@
         if (response) { respBox.style.display = 'block'; shadow.getElementById('response-content').innerText = response; }
         else respBox.style.display = 'none';
 
-        // 自动滚动
         const scroll = shadow.getElementById('scroll-box');
         scroll.scrollTop = scroll.scrollHeight;
     }

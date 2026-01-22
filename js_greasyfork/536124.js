@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Page Text Downloader
 // @namespace    https://greasyfork.org/en/users/1462137-piknockyou
-// @version      7.7
+// @version      8.0
 // @author       Piknockyou (vibe-coded)
 // @license      AGPL-3.0
 // @description  Floating button to download page text, selected text, or clipboard. Click: download, Hold: copy, Shift+Click: clipboard.
@@ -72,8 +72,7 @@
         timing: {
             copyHoldThreshold: 300,
             doubleClickThreshold: 350,
-            hideTemporarilyDuration: 5000,
-            hoverCheckInterval: 100
+            hideTemporarilyDuration: 5000
         }
     };
 
@@ -318,7 +317,7 @@
 
         // Show modal and focus
         modal.classList.add('visible');
-        
+
         // Double RAF to ensure rendering is complete
         requestAnimationFrame(() => {
             requestAnimationFrame(() => {
@@ -491,6 +490,7 @@
                 padding: 0;
                 margin: 0;
                 transform: scale(${cfg.scale.default});
+                transition: opacity 0.3s, transform 0.2s;
                 touch-action: manipulation;
                 -webkit-tap-highlight-color: transparent;
             }
@@ -886,10 +886,8 @@
         let isLongPress = false;
         let lastClickTime = 0;
         let hideTimeout = null;
-        let hoverCheckInterval = null;
-        let lastMouseX = 0;
-        let lastMouseY = 0;
         let isHovering = false;
+        let cachedRect = null;
 
         const setHover = (val) => {
             if (isHovering === val) return;
@@ -906,59 +904,52 @@
             progressCircle.setAttribute('stroke-dashoffset', '100.53');
         };
 
-        const isInsideButton = (x, y) => {
-            const rect = btn.getBoundingClientRect();
-            const tolerance = 2;
-            return x >= rect.left - tolerance &&
-                   x <= rect.right + tolerance &&
-                   y >= rect.top - tolerance &&
-                   y <= rect.bottom + tolerance;
-        };
-
-        const onGlobalMouseMove = (e) => {
-            lastMouseX = e.clientX;
-            lastMouseY = e.clientY;
+        // Robust coordinate check to fix "stuck" highlight on sites like Instagram
+        const onDocumentMouseMove = (e) => {
+            if (!cachedRect) return;
+            const x = e.clientX, y = e.clientY, t = 2;
+            if (x < cachedRect.left - t || x > cachedRect.right + t ||
+                y < cachedRect.top - t || y > cachedRect.bottom + t) {
+                setHover(false);
+                stopHoverTracking();
+            }
         };
 
         const startHoverTracking = () => {
-            if (hoverCheckInterval) return;
-
-            document.addEventListener('mousemove', onGlobalMouseMove, { passive: true });
-
-            hoverCheckInterval = setInterval(() => {
-                if (!isInsideButton(lastMouseX, lastMouseY)) {
-                    setHover(false);
-                    stopHoverTracking();
-                }
-            }, CONFIG.timing.hoverCheckInterval);
+            cachedRect = btn.getBoundingClientRect();
+            document.addEventListener('mousemove', onDocumentMouseMove, { capture: true, passive: true });
         };
 
         const stopHoverTracking = () => {
-            if (hoverCheckInterval) {
-                clearInterval(hoverCheckInterval);
-                hoverCheckInterval = null;
-            }
-            document.removeEventListener('mousemove', onGlobalMouseMove);
+            cachedRect = null;
+            document.removeEventListener('mousemove', onDocumentMouseMove, { capture: true });
         };
 
         //================================================================================
         // MOUSE EVENTS
         //================================================================================
 
-        btn.addEventListener('mouseenter', (e) => {
-            lastMouseX = e.clientX;
-            lastMouseY = e.clientY;
+        // Hover events (Pure Event-Based: Zero timers, robust cross-site)
+        btn.addEventListener('mouseenter', () => {
             setHover(true);
             startHoverTracking();
         });
 
         btn.addEventListener('mouseleave', () => {
+            setHover(false);
+            stopHoverTracking();
             if (pressTimer) {
                 clearTimeout(pressTimer);
                 pressTimer = null;
                 setActive(false);
                 resetProgressRing();
             }
+        });
+
+        // Pointerleave fallback for modern touch/hybrid support
+        btn.addEventListener('pointerleave', () => {
+            setHover(false);
+            stopHoverTracking();
         });
 
         btn.addEventListener('mousedown', (e) => {

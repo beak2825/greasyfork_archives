@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         36-40 | Скрипт для технических специалистов
 // @namespace    https://forum.blackrussia.online
-// @version      0.0.3
+// @version      0.0.4
 // @description  -
 // @author       Soul Crown
 // @match        https://forum.blackrussia.online/*

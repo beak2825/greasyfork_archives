@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         网页调试
 // @namespace    https://github.com/WhiteSevs/TamperMonkeyScript
-// @version      2026.1.3
+// @version      2026.1.21.21
 // @author       WhiteSevs
 // @description  内置多种网页调试工具，包括：Eruda、vConsole、PageSpy、Chii，可在设置菜单中进行详细配置
 // @license      GPL-3.0-only
@@ -9,12 +9,12 @@
 // @supportURL   https://github.com/WhiteSevs/TamperMonkeyScript/issues
 // @match        *://*/*
 // @require      https://fastly.jsdelivr.net/gh/WhiteSevs/TamperMonkeyScript@86be74b83fca4fa47521cded28377b35e1d7d2ac/lib/CoverUMD/index.js
-// @require      https://fastly.jsdelivr.net/gh/WhiteSevs/TamperMonkeyScript@734ba267afee2a5995d15dc419e754a19532cbf4/lib/Eruda/index.js
+// @require      https://fastly.jsdelivr.net/gh/WhiteSevs/TamperMonkeyScript@c984536247d5a8caceb6d1b0bffb7d29cad8ca3c/lib/Eruda/index.js
 // @require      https://fastly.jsdelivr.net/gh/WhiteSevs/TamperMonkeyScript@9f63667d501ec8df5bdb4af680f37793f393754f/lib/VConsole/index.js
 // @require      https://fastly.jsdelivr.net/gh/WhiteSevs/TamperMonkeyScript@b2f37e0ef04aafbccbdbd52733f795c2076acd87/lib/PageSpy/index.js
 // @require      https://fastly.jsdelivr.net/npm/@whitesev/utils@2.9.10/dist/index.umd.js
-// @require      https://fastly.jsdelivr.net/npm/@whitesev/domutils@1.8.8/dist/index.umd.js
-// @require      https://fastly.jsdelivr.net/npm/@whitesev/pops@3.1.3/dist/index.umd.js
+// @require      https://fastly.jsdelivr.net/npm/@whitesev/domutils@1.9.1/dist/index.umd.js
+// @require      https://fastly.jsdelivr.net/npm/@whitesev/pops@3.2.0/dist/index.umd.js
 // @require      https://fastly.jsdelivr.net/npm/qmsg@1.6.2/dist/index.umd.js
 // @resource     Resource_erudaBenchmark       https://fastly.jsdelivr.net/npm/eruda-benchmark@2.0.1
 // @resource     Resource_erudaCode            https://fastly.jsdelivr.net/npm/eruda-code@2.2.0
@@ -339,8 +339,8 @@
       let maxTimeout = timeout - intervalTime;
       let intervalTimeCount = intervalTime;
       let loop = async (isTimeout) => {
-        let result = await fn(isTimeout);
-        if ((typeof result === "boolean" && !result) || isTimeout) {
+        const result = await fn(isTimeout);
+        if ((typeof result === "boolean" && result) || isTimeout) {
           utils.workerClearTimeout(timeId);
           return;
         }
@@ -503,8 +503,8 @@
     clearInterval: _unsafeWindow.clearInterval.bind(_unsafeWindow),
   };
   const addStyle = domUtils.addStyle.bind(domUtils);
-  DOMUtils.selector.bind(DOMUtils);
-  DOMUtils.selectorAll.bind(DOMUtils);
+  const $ = DOMUtils.selector.bind(DOMUtils);
+  const $$ = DOMUtils.selectorAll.bind(DOMUtils);
   const cookieManager = new utils.GM_Cookie();
   const KEY = "GM_Panel";
   const ATTRIBUTE_INIT = "data-init";
@@ -1254,7 +1254,7 @@
           });
         }
         if (!menuDefaultConfig.size) {
-          log.warn(["请先配置键", config]);
+          log.warn("请先配置键", config);
           return;
         }
         if (config.type === "switch") {
@@ -1581,15 +1581,15 @@
     ) {
       this.$data.$panel = null;
       this.$data.panelContent = [];
-      let checkHasBottomVersionContentConfig =
+      const checkHasBottomVersionContentConfig =
         content.findIndex((it) => {
-          let isBottom = typeof it.isBottom === "function" ? it.isBottom() : Boolean(it.isBottom);
+          const isBottom = typeof it.isBottom === "function" ? it.isBottom() : Boolean(it.isBottom);
           return isBottom && it.id === "script-version";
         }) !== -1;
       if (!preventDefaultContentConfig && !checkHasBottomVersionContentConfig) {
         content.push(...PanelContent.getDefaultBottomContentConfig());
       }
-      let $panel = __pops__.panel({
+      const $panel = __pops__.panel({
         ...{
           title: {
             text: title,
@@ -1622,6 +1622,15 @@
           height: PanelUISize.setting.height,
           drag: true,
           only: true,
+          style: `
+        .pops-switch-shortcut-wrapper{
+          margin-right: 5px;
+          display: inline-flex;
+        }
+        .pops-switch-shortcut-wrapper:hover .pops-bottom-icon{
+          cursor: pointer;
+        }
+        `,
         },
         ...this.$data.panelConfig,
       });
@@ -2052,42 +2061,10 @@
     },
   };
   const unsafeWin = typeof _unsafeWindow === "object" && _unsafeWindow != null ? _unsafeWindow : window;
-  const console$1 = unsafeWin.console;
+  const console = unsafeWin.console;
   const copy = _GM_setClipboard || utils.copy.bind(utils);
-  const WebSiteDebugUtil = {
-    evalPlugin: (...args) => {
-      if (args.length === 0) {
-        return;
-      }
-      const codeText = args.join("\n");
-      return unsafeWin.eval(`
-(()=>{
-	try{
-		var exports=void 0;
-	}catch(error){
-		console.warn(error);
-	}
-
-	try{
-		var module=void 0;
-	}catch(error){
-		console.warn(error);
-	}
-
-	try{
-		var define=void 0;
-	}catch(error){
-		console.warn(error);
-	}
-		
-	${codeText}
-		
-})()
-`);
-    },
-  };
   const versionJSON =
-    '{\n  "eruda": {\n    "version": "3.4.3",\n    "plugin": {\n      "eruda-monitor": "1.1.2",\n      "eruda-features": "2.1.0",\n      "eruda-timing": "2.0.1",\n      "eruda-code": "2.2.0",\n      "eruda-benchmark": "2.0.1",\n      "eruda-orientation": "2.1.1",\n      "eruda-vue": "1.1.1",\n      "eruda-touches": "2.1.0",\n      "eruda-outline-plugin": "0.0.5",\n      "eruda-pixel": "1.0.13"\n    }\n  },\n  "vconsole": {\n    "version": "3.15.1",\n    "plugin": {\n      "vue-vconsole-devtools": "1.0.9"\n    }\n  },\n  "@huolala-tech/page-spy-browser": {\n    "version": "2.2.9"\n  }\n}';
+    '{\n  "eruda": {\n    "version": "3.4.3",\n    "plugin": {\n      "eruda-monitor": "1.1.2",\n      "eruda-features": "2.1.0",\n      "eruda-timing": "2.0.1",\n      "eruda-code": "2.2.0",\n      "eruda-benchmark": "2.0.1",\n      "eruda-orientation": "2.1.1",\n      "eruda-vue": "1.1.1",\n      "eruda-touches": "2.1.0",\n      "eruda-outline-plugin": "0.0.5",\n      "eruda-pixel": "1.0.13"\n    }\n  },\n  "vconsole": {\n    "version": "3.15.1",\n    "plugin": {\n      "vue-vconsole-devtools": "1.0.9"\n    }\n  },\n  "@huolala-tech/page-spy-browser": {\n    "version": "2.2.10"\n  }\n}';
   const DebugToolVersionConfig = JSON.parse(versionJSON);
   const DebugToolConfig = {
     eruda: {
@@ -2137,6 +2114,10 @@
     eruda_auto_open_panel: {
       key: "eruda-auto-open-panel",
       defaultValue: false,
+    },
+    eruda_language: {
+      key: "eruda-language",
+      defaultValue: "en-US",
     },
     eruda_default_show_panel_name: {
       key: "eruda-default-show-panel-name",
@@ -2367,14 +2348,238 @@
       defaultValue: parseInt((window.innerHeight / 2).toString()),
     },
   };
-  const Eruda = () => {
+  const WebSiteDebugUtil = {
+    evalPlugin: async (codeText, exportName) => {
+      const tempExportName = `${exportName}_${Math.random().toString(36).substring(2)}`;
+      let addElement = _GM_addElement;
+      if (typeof addElement !== "function") {
+        addElement = (tagName, attrs) => {
+          const $el = domUtils.createElement(tagName, attrs);
+          if (["meta", "link", "script", "style"].indexOf(tagName.toLowerCase()) !== -1) {
+            (document.head || document.documentElement).appendChild($el);
+          } else {
+            (document.body || document.documentElement).appendChild($el);
+          }
+          return $el;
+        };
+      }
+      await addElement("script", {
+        textContent: `window["${tempExportName}"] = (() => { 
+		try{
+			var exports=void 0;
+		}catch(error){
+			console.warn(error);
+		}
+
+		try{
+			var module=void 0;
+		}catch(error){
+			console.warn(error);
+		}
+
+		try{
+			var define=void 0;
+		}catch(error){
+			console.warn(error);
+		}
+
+		${codeText}
+
+		return ${exportName}; 
+	})()`,
+      });
+      const result = unsafeWin[tempExportName];
+      delete unsafeWin[tempExportName];
+      delete unsafeWin[exportName];
+      return result;
+    },
+  };
+  const Console = {
+    Console: "控制台",
+    console: "控制台",
+    All: "所有",
+    Info: "信息",
+    Warning: "警告",
+    Error: "错误",
+    Cancel: "取消",
+    Execute: "执行",
+  };
+  const Elements = {
+    Elements: "元素",
+    elements: "元素",
+    "Catch Event Listeners": "捕获事件监听器",
+    Attributes: "属性",
+    Styles: "样式",
+    "Computed Style": "已计算",
+    "Event Listeners": "事件监听器",
+  };
+  const Network = {
+    Network: "网络",
+    network: "网络",
+    Name: "名称",
+    Method: "请求方法",
+    Status: "状态代码",
+    Type: "响应类型",
+    Size: "大小",
+    Time: "时间",
+    "Request Payload": "请求负载",
+    "View source": "查看源",
+    "View parsed": "视图已分析",
+    "Response Content": "响应内容",
+    "Response Headers": "响应标头",
+    "Request Headers": "请求标头",
+  };
+  const Resources = {
+    Resources: "资源",
+    resources: "资源",
+    "Local Storage": "本地存储",
+    "Session Storage": "会话存储",
+    Cookie: "Cookie",
+    Empty: "空",
+    Script: "脚本",
+    Stylesheet: "样式表",
+    Iframe: "Iframe",
+    Image: "图片",
+  };
+  const Sources = {
+    Sources: "源代码",
+    sources: "源代码",
+    "Sorry, unable to fetch source code:(": "抱歉，无法获取源代码:(",
+  };
+  const Info = {
+    Info: "信息",
+    info: "信息",
+    Location: "链接",
+    "User Agent": "用户代理",
+    Device: "设备",
+    screen: "屏幕",
+    viewport: "视口",
+    "pixel ratio": "像素比",
+    System: "系统",
+    browser: "浏览器",
+    "Sponsor this Project": "赞助本项目",
+    About: "关于",
+  };
+  const Snippets = {
+    Snippets: "代码片段",
+    snippets: "代码片段",
+    "Border All": "全部显示边框",
+    "Add color borders to all elements": "为所有元素添加带颜色的边框",
+    "Refresh Page": "刷新页面",
+    "Add timestamp to url and refresh": "添加时间戳参数到 URL 并刷新",
+    "Search Text": "搜索文本",
+    "Highlight given text on page": "为页面搜索到的文本添加高亮显示",
+    "Edit Page": "编辑页面",
+    "Toggle body contentEditable": "切换 body contentEditable",
+    "Fit Screen": "适应屏幕",
+    "Scale down the whole page to fit screen": "缩小页面以适应屏幕",
+    "Load Vue Plugin": "加载 Vue 插件",
+    "Vue devtools": "Vue 开发者工具",
+    "Load Monitor Plugin": "加载监控插件",
+    "Display page fps, memory and dom nodes": "显示页面帧数、内存和 DOM 节点",
+    "Load Features Plugin": "加载功能插件",
+    "Browser feature detections": "浏览器特性检测",
+    "Load Timing Plugin": "加载检测耗时插件",
+    "Show performance and resource timing": "显示性能和耗时",
+    "Load Code Plugin": "加载代码插件",
+    "Edit and run JavaScript": "编辑并运行 JavaScript",
+    "Load Benchmark Plugin": "加载测试插件",
+    "Run JavaScript benchmarks": "运行 JavaScript 测试",
+    "Load Geolocation Plugin": "加载地理位置插件",
+    "Test geolocation": "测试地理位置",
+    "Load Orientation Plugin": "加载方向插件",
+    "Test orientation api": "测试方向api",
+    "Load Touches Plugin": "加载触摸插件",
+    "Visualize screen touches": "显示触摸点位在屏幕上的位置",
+  };
+  const General = {
+    "Enter the text": "输入文本",
+    Filter: "过滤",
+    Key: "键",
+    Value: "值",
+    Refreshed: "已刷新",
+    Copied: "已复制",
+  };
+  const Settings = {
+    Settings: "设置",
+    settings: "设置",
+    "Remember Entry Button Position": "记住入口按钮位置",
+    Theme: "主题",
+    Transparency: "透明度",
+    "Display Size": "显示大小",
+    "Restore defaults and reload": "恢复默认并重新加载",
+    "Asynchronous Rendering": "异步渲染",
+    "Enable JavaScript Execution": "允许执行 JavaScript",
+    "Catch Global Errors": "捕获全局错误",
+    "Override Console": "覆盖 Console",
+    "Auto Display If Error Occurs": "当发生错误时自动显示",
+    "Display Extra Information": "显示额外信息",
+    "Display Unenumerable Properties": "显示不可枚举属性",
+    "Access Getter Value": "访问 Getter 值",
+    "Lazy Evaluation": "懒求值",
+    "Max Log Number": "最大日志数量",
+    "Catch Event Listeners": "捕获事件监听器",
+    "Hide Eruda Setting": "隐藏 Eruda 设置",
+    "Auto Refresh Elements": "自动刷新元素",
+    "Show Line Numbers": "显示行号",
+  };
+  const Plugins = {
+    monitor: "监控",
+    features: "功能",
+    timing: "耗时",
+    code: "代码",
+    benchmark: "测试",
+    geolocation: "地理位置",
+    orientation: "方向",
+    touches: "触摸",
+    outline: "边框",
+  };
+  const zh_CN_language = {
+    ...General,
+    ...Console,
+    ...Elements,
+    ...Network,
+    ...Resources,
+    ...Sources,
+    ...Info,
+    ...Snippets,
+    ...Settings,
+    ...Plugins,
+  };
+  const ErudaLanguage = {
+    $data: {},
+    data: [
+      {
+        text: "English",
+        lng: "en-US",
+      },
+      {
+        text: "中文",
+        lng: "zh-CN",
+        data: zh_CN_language,
+      },
+    ],
+    init() {
+      const Eruda2 = unsafeWin.Eruda || globalThis.Eruda;
+      if (!Eruda2) return;
+      const i18n = Eruda2._i18n;
+      this.data.forEach((item) => {
+        if (item.data == null) return;
+        i18n.addResources(item.lng, "translation", item.data);
+      });
+      const lng = Panel.getValue(GlobalSettingConfig.eruda_language.key);
+      log.success(`切换语言：${lng}`);
+      i18n.changeLanguage(lng);
+    },
+  };
+  const Eruda = async () => {
     initEruda("Eruda", unsafeWin);
-    let Eruda2 = unsafeWin.Eruda || globalThis.Eruda;
+    const Eruda2 = unsafeWin.Eruda || globalThis.Eruda;
     if (!Eruda2) {
       alert("调试工具【eruda】注册全局失败，请反馈开发者");
       return;
     }
-    let inintPanelList = [];
+    const inintPanelList = [];
     if (Panel.getValue(GlobalSettingConfig.eruda_panel_console.key)) {
       inintPanelList.push("console");
     }
@@ -2397,114 +2602,132 @@
       inintPanelList.push("snippets");
     }
     DebugToolConfig.eruda.version = Eruda2.version;
+    ErudaLanguage.init();
     Eruda2.init({
       tool: inintPanelList,
     });
-    console$1.log(`eruda当前版本：${Eruda2.version}`);
-    console$1.log(`eruda项目地址：${DebugToolConfig.eruda.homeUrl}`);
-    console$1.log("eruda的全局变量名: Eruda");
+    console.log(`eruda当前版本：${Eruda2.version}`);
+    console.log(`eruda项目地址：${DebugToolConfig.eruda.homeUrl}`);
+    console.log("eruda的全局变量名: Eruda");
     if (Panel.getValue(GlobalSettingConfig.eruda_plugin_Resource_erudaMonitor.key)) {
       try {
-        WebSiteDebugUtil.evalPlugin(
-          _GM_getResourceText(GlobalSettingConfig.eruda_plugin_Resource_erudaMonitor.resource)
+        const plugin = await WebSiteDebugUtil.evalPlugin(
+          _GM_getResourceText(GlobalSettingConfig.eruda_plugin_Resource_erudaMonitor.resource),
+          "erudaMonitor"
         );
-        Eruda2.add(erudaMonitor);
+        Eruda2.add(plugin);
       } catch (error) {
-        console$1.error("插件【eruda-monitor】加载失败，原因：", error);
+        console.error("插件【eruda-monitor】加载失败，原因：", error);
       }
     }
     if (Panel.getValue(GlobalSettingConfig.eruda_plugin_Resource_erudaFeatures.key)) {
       try {
-        WebSiteDebugUtil.evalPlugin(
-          _GM_getResourceText(GlobalSettingConfig.eruda_plugin_Resource_erudaFeatures.resource)
+        const plugin = await WebSiteDebugUtil.evalPlugin(
+          _GM_getResourceText(GlobalSettingConfig.eruda_plugin_Resource_erudaFeatures.resource),
+          "erudaFeatures"
         );
-        Eruda2.add(erudaFeatures);
+        Eruda2.add(plugin);
       } catch (error) {
-        console$1.error("插件【eruda-features】加载失败，原因：", error);
+        console.error("插件【eruda-features】加载失败，原因：", error);
       }
     }
     if (Panel.getValue(GlobalSettingConfig.eruda_plugin_Resource_erudaTiming.key)) {
       try {
-        WebSiteDebugUtil.evalPlugin(
-          _GM_getResourceText(GlobalSettingConfig.eruda_plugin_Resource_erudaTiming.resource)
+        const plugin = await WebSiteDebugUtil.evalPlugin(
+          _GM_getResourceText(GlobalSettingConfig.eruda_plugin_Resource_erudaTiming.resource),
+          "erudaTiming"
         );
-        Eruda2.add(erudaTiming);
+        Eruda2.add(plugin);
       } catch (error) {
-        console$1.error("插件【eruda-timing】加载失败，原因：", error);
+        console.error("插件【eruda-timing】加载失败，原因：", error);
       }
     }
     if (Panel.getValue(GlobalSettingConfig.eruda_plugin_Resource_erudaCode.key)) {
       try {
-        WebSiteDebugUtil.evalPlugin(_GM_getResourceText(GlobalSettingConfig.eruda_plugin_Resource_erudaCode.resource));
-        Eruda2.add(erudaCode);
+        const plugin = await WebSiteDebugUtil.evalPlugin(
+          _GM_getResourceText(GlobalSettingConfig.eruda_plugin_Resource_erudaCode.resource),
+          "erudaCode"
+        );
+        Eruda2.add(plugin);
       } catch (error) {
-        console$1.error("插件【eruda-code】加载失败，原因：", error);
+        console.error("插件【eruda-code】加载失败，原因：", error);
       }
     }
     if (Panel.getValue(GlobalSettingConfig.eruda_plugin_Resource_erudaBenchmark.key)) {
       try {
-        WebSiteDebugUtil.evalPlugin(
-          _GM_getResourceText(GlobalSettingConfig.eruda_plugin_Resource_erudaBenchmark.resource)
+        const plugin = await WebSiteDebugUtil.evalPlugin(
+          _GM_getResourceText(GlobalSettingConfig.eruda_plugin_Resource_erudaBenchmark.resource),
+          "erudaBenchmark"
         );
-        Eruda2.add(erudaBenchmark);
+        Eruda2.add(plugin);
       } catch (error) {
-        console$1.error("插件【eruda-benchmark】加载失败，原因：", error);
+        console.error("插件【eruda-benchmark】加载失败，原因：", error);
       }
     }
     if (Panel.getValue(GlobalSettingConfig.eruda_plugin_Resource_erudaGeolocation.key)) {
       try {
-        WebSiteDebugUtil.evalPlugin(
-          _GM_getResourceText(GlobalSettingConfig.eruda_plugin_Resource_erudaGeolocation.resource)
+        const plugin = await WebSiteDebugUtil.evalPlugin(
+          _GM_getResourceText(GlobalSettingConfig.eruda_plugin_Resource_erudaGeolocation.resource),
+          "erudaGeolocation"
         );
-        Eruda2.add(erudaGeolocation);
+        Eruda2.add(plugin);
       } catch (error) {
-        console$1.error("插件【eruda-geolocation】加载失败，原因：", error);
+        console.error("插件【eruda-geolocation】加载失败，原因：", error);
       }
     }
     if (Panel.getValue(GlobalSettingConfig.eruda_plugin_Resource_erudaOrientation.key)) {
       try {
-        WebSiteDebugUtil.evalPlugin(
-          _GM_getResourceText(GlobalSettingConfig.eruda_plugin_Resource_erudaOrientation.resource)
+        const plugin = await WebSiteDebugUtil.evalPlugin(
+          _GM_getResourceText(GlobalSettingConfig.eruda_plugin_Resource_erudaOrientation.resource),
+          "erudaOrientation"
         );
-        Eruda2.add(erudaOrientation);
+        Eruda2.add(plugin);
       } catch (error) {
-        console$1.error("插件【eruda-orientation】加载失败，原因：", error);
+        console.error("插件【eruda-orientation】加载失败，原因：", error);
       }
     }
     if (Panel.getValue(GlobalSettingConfig.eruda_plugin_Resource_erudaTouches.key)) {
       try {
-        WebSiteDebugUtil.evalPlugin(
-          _GM_getResourceText(GlobalSettingConfig.eruda_plugin_Resource_erudaTouches.resource)
+        const plugin = await WebSiteDebugUtil.evalPlugin(
+          _GM_getResourceText(GlobalSettingConfig.eruda_plugin_Resource_erudaTouches.resource),
+          "erudaTouches"
         );
-        Eruda2.add(erudaTouches);
+        Eruda2.add(plugin);
       } catch (error) {
-        console$1.error("插件【eruda-touches】加载失败，原因：", error);
+        console.error("插件【eruda-touches】加载失败，原因：", error);
       }
     }
     if (Panel.getValue(GlobalSettingConfig.eruda_plugin_Resource_erudaOutlinePlugin.key)) {
       try {
-        WebSiteDebugUtil.evalPlugin(
-          _GM_getResourceText(GlobalSettingConfig.eruda_plugin_Resource_erudaOutlinePlugin.resource)
+        const plugin = await WebSiteDebugUtil.evalPlugin(
+          _GM_getResourceText(GlobalSettingConfig.eruda_plugin_Resource_erudaOutlinePlugin.resource),
+          "erudaOutlinePlugin"
         );
-        Eruda2.add(erudaOutlinePlugin);
+        Eruda2.add(plugin);
       } catch (error) {
-        console$1.error("插件【eruda-outline-plugin】加载失败，原因：", error);
+        console.error("插件【eruda-outline-plugin】加载失败，原因：", error);
       }
     }
     if (Panel.getValue(GlobalSettingConfig.eruda_plugin_Resource_erudaPixel.key)) {
       try {
-        WebSiteDebugUtil.evalPlugin(_GM_getResourceText(GlobalSettingConfig.eruda_plugin_Resource_erudaPixel.resource));
-        Eruda2.add(erudaPixel);
+        const plugin = await WebSiteDebugUtil.evalPlugin(
+          _GM_getResourceText(GlobalSettingConfig.eruda_plugin_Resource_erudaPixel.resource),
+          "erudaPixel"
+        );
+        Eruda2.add(plugin);
       } catch (error) {
-        console$1.error("插件【eruda-pixel】加载失败，原因：", error);
+        console.error("插件【eruda-pixel】加载失败，原因：", error);
       }
     }
     if (Panel.getValue(GlobalSettingConfig.eruda_plugin_Resource_erudaVue.key)) {
       try {
-        WebSiteDebugUtil.evalPlugin(_GM_getResourceText(GlobalSettingConfig.eruda_plugin_Resource_erudaVue.resource));
-        Eruda2.add(erudaVue);
+        const plugin = await WebSiteDebugUtil.evalPlugin(
+          _GM_getResourceText(GlobalSettingConfig.eruda_plugin_Resource_erudaVue.resource),
+          "erudaVue"
+        );
+        Eruda2.add(plugin);
       } catch (error) {
-        console$1.error("插件【eruda-vue】加载失败，原因：", error);
+        console.error("插件【eruda-vue】加载失败，原因：", error);
       }
     }
     if (Panel.getValue(GlobalSettingConfig.eruda_auto_open_panel.key)) {
@@ -2685,7 +2908,7 @@
             statusButton.addEventListener("click", (event) => {
               const currentType = event.target.dataset.type;
               if (currentType.toString() === "2" && !(self.performance && self.performance.memory)) {
-                console$1.error("浏览器不支持window.performance或者window.performance.memory");
+                console.error("浏览器不支持window.performance或者window.performance.memory");
                 return;
               }
               this.changePanel(currentType);
@@ -2813,7 +3036,7 @@
       init() {
         const vConsoleExportLogs = new this.VConsole.VConsolePlugin("exportLog", "exportLog");
         vConsoleExportLogs.on("ready", () => {
-          console$1.log("[vConsole-exportlog-plugin] -- load");
+          console.log("[vConsole-exportlog-plugin] -- load");
         });
         vConsoleExportLogs.on("renderTab", (callback) => {
           const html = `<div class="vconsole-exportlog"></div>`;
@@ -2866,7 +3089,7 @@
     }
     return new VConsoleOutputLogsPlugin(vConsole2, VConsole);
   };
-  const vConsole = () => {
+  const vConsole = async () => {
     initVConsole("VConsole", unsafeWin);
     let VConsole = unsafeWin.VConsole || globalThis.VConsole;
     if (!VConsole) {
@@ -2927,32 +3150,32 @@
     });
     DebugToolConfig.vConsole.version = vConsole2.version;
     unsafeWin.vConsole = vConsole2;
-    console$1.log(`VConsole当前版本：${vConsole2.version}`);
-    console$1.log(`VConsole项目地址：${DebugToolConfig.vConsole.homeUrl}`);
-    console$1.log("VConsole的实例化的全局变量名: vConsole");
+    console.log(`VConsole当前版本：${vConsole2.version}`);
+    console.log(`VConsole项目地址：${DebugToolConfig.vConsole.homeUrl}`);
+    console.log("VConsole的实例化的全局变量名: vConsole");
     if (Panel.getValue(GlobalSettingConfig.vConsole_plugin_Resource_vConsole_Stats.key)) {
       try {
         vConsolePluginState(vConsole2, VConsole);
       } catch (error) {
-        console$1.error("插件【vconsole-stats-plugin】加载失败，原因：", error);
+        console.error("插件【vconsole-stats-plugin】加载失败，原因：", error);
       }
     }
     if (Panel.getValue(GlobalSettingConfig.vConsole_plugin_Resource_vConsole_ExportLog.key)) {
       try {
         vConsolePluginExportLog(vConsole2, VConsole);
       } catch (error) {
-        console$1.error("插件【vconsole-outputlog-plugin】加载失败，原因：", error);
+        console.error("插件【vconsole-outputlog-plugin】加载失败，原因：", error);
       }
     }
     if (Panel.getValue(GlobalSettingConfig.vConsole_plugin_Resource_vConsoleVueDevtools.key)) {
       try {
-        WebSiteDebugUtil.evalPlugin(
-          _GM_getResourceText(GlobalSettingConfig.vConsole_plugin_Resource_vConsoleVueDevtools.resource)
+        const plugin = await WebSiteDebugUtil.evalPlugin(
+          _GM_getResourceText(GlobalSettingConfig.vConsole_plugin_Resource_vConsoleVueDevtools.resource),
+          "vueVconsoleDevtools"
         );
-        const Devtools = unsafeWin.vueVconsoleDevtools;
-        Devtools.initPlugin(vConsole2);
+        plugin.initPlugin(vConsole2);
       } catch (error) {
-        console$1.error("插件【vconsole-vue-devtools-plugin】加载失败，原因：", error);
+        console.error("插件【vconsole-vue-devtools-plugin】加载失败，原因：", error);
       }
     }
     if (Panel.getValue(GlobalSettingConfig.vconsole_auto_open_panel.key)) {
@@ -2966,28 +3189,28 @@
       }, 250);
     }
   };
-  const PageSpy = () => {
-    let api = Panel.getValue(GlobalSettingConfig.pagespy_api.key, GlobalSettingConfig.pagespy_api.defaultValue);
+  const PageSpy = async () => {
+    const api = Panel.getValue(GlobalSettingConfig.pagespy_api.key, GlobalSettingConfig.pagespy_api.defaultValue);
     let clientOrigin = Panel.getValue(
       GlobalSettingConfig.pagespy_clientOrigin.key,
       GlobalSettingConfig.pagespy_clientOrigin.defaultValue
     );
     if (Panel.getValue(GlobalSettingConfig.pagespy_disable_run_in_debug_client.key)) {
       if (window.location.hostname.includes(api)) {
-        console$1.log("禁止在调试端运行 ==> hostname包含api");
+        console.log("禁止在调试端运行 ==> hostname包含api");
         return;
       }
       if (window.location.origin.includes(clientOrigin)) {
-        console$1.log("禁止在调试端运行 ==> origin包含clientOrigin");
+        console.log("禁止在调试端运行 ==> origin包含clientOrigin");
         return;
       }
     }
-    let __pageSpy__ = new initPageSpy(unsafeWin);
+    const __pageSpy__ = new initPageSpy(unsafeWin);
     if (!__pageSpy__) {
       alert("调试工具【PageSpy】获取失败，请反馈开发者");
       return;
     }
-    let $pageSpy = new __pageSpy__({
+    const $pageSpy = new __pageSpy__({
       api,
       clientOrigin,
       project: Panel.getValue(
@@ -3027,9 +3250,9 @@
       ),
     });
     unsafeWin.$pageSpy = $pageSpy;
-    console$1.log($pageSpy);
+    console.log($pageSpy);
     DebugToolConfig.pageSpy.version = unsafeWin.$pageSpy.version;
-    console$1.log("PageSpy全局变量：$pageSpy");
+    console.log("PageSpy全局变量：$pageSpy");
   };
   const ChiiPluginHeight = {
     $data: {
@@ -3059,7 +3282,7 @@
     },
     setLocalHeight(value) {
       if (typeof value !== "number") {
-        console$1.log(value);
+        console.log(value);
         throw new TypeError(`${this.$data.key}的值必须是number`);
       }
       let storageValue = value.toString();
@@ -3077,14 +3300,14 @@
     },
     setGMLocalHeight(value) {
       if (typeof value !== "number") {
-        console$1.log(value);
+        console.log(value);
         throw new TypeError(`${this.$data.key}的值必须是number`);
       }
       Panel.setValue(this.$data.key, value);
     },
   };
   const Chii = () => {
-    let debugUrl = Panel.getValue(
+    const debugUrl = Panel.getValue(
       GlobalSettingConfig.chii_debug_url.key,
       GlobalSettingConfig.chii_debug_url.defaultValue
     );
@@ -3095,7 +3318,7 @@
         GlobalSettingConfig.chii_disable_run_in_debug_url.defaultValue
       )
     ) {
-      console$1.log("禁止在调试端运行 ==> href包含debugUrl");
+      console.log("禁止在调试端运行 ==> href包含debugUrl");
       return;
     }
     Panel.execMenu(GlobalSettingConfig.chii_embedded_height_enable.key, () => {
@@ -3103,7 +3326,7 @@
     });
     if (Panel.getValue(GlobalSettingConfig.chii_check_script_load.key)) {
       let checkChiiScriptLoad = function (event) {
-        if (event.target === scriptNode) {
+        if (event.target === $script) {
           globalThis.alert(
             `调试工具【Chii】脚本加载失败
       可能原因1：CSP策略阻止了加载第三方域的js文件
@@ -3118,21 +3341,21 @@
         capture: true,
       });
     }
-    let scriptJsUrl = Panel.getValue(
+    const scriptJsUrl = Panel.getValue(
       GlobalSettingConfig.chii_target_js.key,
       GlobalSettingConfig.chii_target_js.defaultValue
     );
-    let scriptEmbedded = Panel.getValue(
+    const scriptEmbedded = Panel.getValue(
       GlobalSettingConfig.chii_script_embedded.key,
       GlobalSettingConfig.chii_script_embedded.defaultValue
     );
-    let scriptNode = document.createElement("script");
-    scriptNode.src = scriptJsUrl;
-    scriptNode.setAttribute("type", "application/javascript");
+    const $script = document.createElement("script");
+    $script.src = scriptJsUrl;
+    $script.setAttribute("type", "application/javascript");
     if (scriptEmbedded) {
-      scriptNode.setAttribute("embedded", "true");
+      $script.setAttribute("embedded", "true");
     }
-    (document.head || document.body || document.documentElement).appendChild(scriptNode);
+    (document.head || document.body || document.documentElement).appendChild($script);
   };
   const DebugTool = {
     $data: {
@@ -3154,7 +3377,7 @@
       try {
         top.console.log("iframe信息：" + window.location.href);
       } catch (error) {
-        console$1.error(error);
+        console.error(error);
       }
       MenuRegister.add({
         key: "iframeUrl",
@@ -3170,38 +3393,38 @@
       });
       return true;
     },
-    execDebugTool() {
+    async execDebugTool() {
       let debugTool = Panel.getValue(GlobalSettingConfig.debugTool.key);
       debugTool = debugTool.toString().toLowerCase();
-      console$1.log(`网页调试：当前使用的调试工具【${debugTool}】`);
+      console.log(`网页调试：当前使用的调试工具【${debugTool}】`);
       if (debugTool === "vconsole") {
         this.$data.isLoadDebugTool = true;
         this.$data.loadDebugToolName = "vconsole";
-        vConsole();
+        await vConsole();
       } else if (debugTool === "pagespy") {
         this.$data.isLoadDebugTool = true;
         this.$data.loadDebugToolName = "pagespy";
-        PageSpy();
+        await PageSpy();
       } else if (debugTool === "eruda") {
         this.$data.isLoadDebugTool = true;
         this.$data.loadDebugToolName = "eruda";
-        Eruda();
+        await Eruda();
       } else if (debugTool === "chii") {
         this.$data.isLoadDebugTool = true;
         this.$data.loadDebugToolName = "chii";
-        Chii();
+        await Chii();
       } else {
-        console$1.error("当前未配置该调试工具的运行");
+        console.error("当前未配置该调试工具的运行");
       }
     },
     registerDebugToolMenuControls() {
       if (!Panel.isTopWindow()) {
-        console$1.warn("不在iframe内重复添加菜单按钮");
+        console.warn("不在iframe内重复添加菜单按钮");
         return;
       }
       let menuData = {
         key: "debug_tool_show_hide_control",
-        text: "☯ 加载并显示调试工具",
+        text: "☯ 加载并显示",
         autoReload: false,
         isStoreValue: false,
         showText(text) {
@@ -3215,16 +3438,16 @@
         if (DebugTool.$data.isLoadDebugTool) {
           if (DebugTool.$ele.hideDebugToolCSSNode) {
             this.showCurrentDebugTool();
-            menuData.text = "🌑 隐藏调试工具";
+            menuData.text = "🌑 隐藏";
             MenuRegister.update(menuData);
           } else {
             this.hideCurrentDebugTool();
-            menuData.text = "🌕 显示调试工具";
+            menuData.text = "🌕 显示";
             MenuRegister.update(menuData);
           }
         } else {
           this.showCurrentDebugTool();
-          menuData.text = "🌑 隐藏调试工具";
+          menuData.text = "🌑 隐藏";
           MenuRegister.update(menuData);
         }
       };
@@ -3262,22 +3485,22 @@
     },
     hideCurrentDebugTool() {
       if (this.$ele.hideDebugToolCSSNode == null) {
-        console$1.log("未创建隐藏【调试工具】的style元素 => 创建元素");
+        console.log("未创建隐藏【调试工具】的style元素 => 创建元素");
         this.$ele.hideDebugToolCSSNode = this.createDebugToolHideCSS();
       }
       if (!this.isInjectDebugToolHideCSS()) {
-        console$1.log("页面不存在隐藏【调试工具】的style元素 => 添加元素");
+        console.log("页面不存在隐藏【调试工具】的style元素 => 添加元素");
         document.documentElement.appendChild(this.$ele.hideDebugToolCSSNode);
       }
     },
     showCurrentDebugTool() {
       if (this.$ele.hideDebugToolCSSNode) {
-        console$1.log("页面存在隐藏【调试工具】的style元素 => 移除元素");
+        console.log("页面存在隐藏【调试工具】的style元素 => 移除元素");
         document.documentElement.removeChild(this.$ele.hideDebugToolCSSNode);
         this.$ele.hideDebugToolCSSNode = void 0;
       }
       if (!this.$data.isLoadDebugTool) {
-        console$1.log("尚未运行【调试工具】 => 运行调试工具");
+        console.log("尚未运行【调试工具】 => 运行调试工具");
         this.execDebugTool();
       }
     },
@@ -3490,7 +3713,8 @@
     description,
     afterAddToUListCallBack,
     disabled,
-    valueChangeCallBack
+    valueChangeCallBack,
+    shortCutOption
   ) {
     const result = {
       text,
@@ -3516,7 +3740,7 @@
         const storageApiValue = this.props[PROPS_STORAGE_API];
         storageApiValue.set(key, value);
       },
-      afterAddToUListCallBack,
+      afterAddToUListCallBack: (...args) => {},
     };
     Reflect.set(result.attributes, ATTRIBUTE_KEY, key);
     Reflect.set(result.attributes, ATTRIBUTE_DEFAULT_VALUE, defaultValue);
@@ -3584,6 +3808,9 @@
         log.info(`选择：${isSelectedInfo.text}`);
         const storageApiValue = this.props[PROPS_STORAGE_API];
         storageApiValue.set(key, value);
+        if (typeof valueChangeCallBack === "function") {
+          valueChangeCallBack(isSelectedInfo);
+        }
       },
       data,
     };
@@ -3599,7 +3826,7 @@
     });
     return result;
   };
-  const PanelUI_globalSetting = {
+  const PanelUI_general = {
     id: "debug-panel-config-all",
     title: "总设置",
     headerTitle: "总设置",
@@ -3614,44 +3841,42 @@
             GlobalSettingConfig.debugTool.defaultValue,
             [
               {
-                value: "eruda",
                 text: "Eruda",
+                value: "eruda",
               },
               {
-                value: "vconsole",
                 text: "VConsole",
+                value: "vconsole",
               },
               {
-                value: "pagespy",
                 text: "PageSpy",
+                value: "pagespy",
               },
               {
-                value: "chii",
                 text: "Chii",
+                value: "chii",
               },
             ],
             void 0,
             void 0
           ),
           UISwitch(
-            "允许在iframe内加载",
-            GlobalSettingConfig.allowRunInIframe.key,
-            GlobalSettingConfig.allowRunInIframe.defaultValue,
-            void 0,
-            "如果指定本脚本的容器并没有在iframe内执行本脚本，那么该功能将不会生效"
-          ),
-          UISwitch(
-            "主动加载调试工具",
+            "自动执行",
             GlobalSettingConfig.autoLoadDebugTool.key,
             GlobalSettingConfig.autoLoadDebugTool.defaultValue,
             void 0,
-            "关闭后将会在脚本菜单注册按钮，有3种状态【加载并显示调试工具】、【隐藏调试工具】、【显示调试工具】"
+            "关闭后将会在脚本菜单注册按钮，有3种状态【☯ 加载并显示】、【🌑 隐藏】、【🌕 显示】"
+          ),
+          UISwitch(
+            "允许在iframe内加载",
+            GlobalSettingConfig.allowRunInIframe.key,
+            GlobalSettingConfig.allowRunInIframe.defaultValue
           ),
           UIInput(
-            "注册调试Api",
+            "全局挂载调试Api",
             GlobalSettingConfig.registerDebugBridgeApi.key,
             GlobalSettingConfig.registerDebugBridgeApi.defaultValue,
-            "自定义调试Api名，留空则为不注册"
+            "自定义全局挂载的Api的名称，留空则为不挂载"
           ),
         ],
       },
@@ -3714,6 +3939,23 @@
             GlobalSettingConfig.eruda_auto_open_panel.defaultValue,
             void 0,
             "加载完毕后自动显示面板内容"
+          ),
+          UISelect(
+            "语言",
+            GlobalSettingConfig.eruda_language.key,
+            GlobalSettingConfig.eruda_language.defaultValue,
+            ErudaLanguage.data.map((it) => {
+              return {
+                text: it.text,
+                value: it.lng,
+              };
+            }),
+            void 0,
+            void 0,
+            () => {
+              ErudaLanguage.init();
+              window.location.reload();
+            }
           ),
           UISelect(
             "默认展示的面板元素",
@@ -4375,10 +4617,7 @@
                   ok: {
                     text: "前往了解更多",
                     callback() {
-                      window.open(
-                        "https://github.com/HuolalaTech/page-spy-web/wiki/%F0%9F%90%9E-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E8%A7%A3%E7%AD%94#user-content-testjikejishucom-%E6%98%AF%E5%AE%98%E6%96%B9%E6%8F%90%E4%BE%9B%E7%9A%84%E5%9F%9F%E5%90%8D%E5%90%97%E4%B8%80%E7%9B%B4%E5%8F%AF%E4%BB%A5%E7%94%A8%E5%90%97",
-                        "_blank"
-                      );
+                      window.open("https://www.pagespy.org/#/docs/faq#test-domain", "_blank");
                     },
                   },
                 },
@@ -4721,7 +4960,8 @@
       };
       const otherApi = {
         OriginPrototype,
-        addStyle,
+        $,
+        $$,
         AnyTouch,
         cookieManager,
         log: new utils.Log(_GM_info, _unsafeWindow.console || console),
@@ -4771,13 +5011,7 @@
       console.log(`Debug Api${Panel.isTopWindow() ? "" : "（iframe）"}：` + exportName);
     },
   };
-  PanelContent.addContentConfig([
-    PanelUI_globalSetting,
-    PanelUI_eruda,
-    PanelUI_vConsole,
-    PanelUI_pagespy,
-    PanelUI_chii,
-  ]);
+  PanelContent.addContentConfig([PanelUI_general, PanelUI_eruda, PanelUI_vConsole, PanelUI_pagespy, PanelUI_chii]);
   Panel.$data.panelConfig = {
     style: `
 	aside.pops-panel-aside{

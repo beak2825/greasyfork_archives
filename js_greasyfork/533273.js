@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Waifugame swiper next
 // @namespace    http://tampermonkey.net/
-// @version      2026-01-03
+// @version      2026-01-21
 // @description  Move your cards to boxes from the swiper page, and various other sometimes helpful options.
 // @author       Lulu5239
 // @match        https://waifugame.com/*
@@ -162,7 +162,7 @@
     )
     let swiperNextButtons = document.querySelector("#swiperNextButtons")
     
-    let selected = 1
+    let selected = settings.defaultDestinations ? +settings.defaultDestinations : GM_getValue("lastDestination", 1)
     let selectedOnce = null
     let getSelected = ()=>(selectedOnce===null ? selected : selectedOnce)
     let mainButton = document.querySelector("#love")
@@ -230,6 +230,7 @@
           selected = i
           selectedOnce = null
           button.style.border = "solid 2px #"+colors.selected
+          GM_setValue("lastDestination", selected)
         return}
         if(selectedOnce!==null){
           document.querySelector(`.swiperNextButton[data-nextaction="${selectedOnce}"]`).style.border = null
@@ -239,7 +240,7 @@
         document.querySelector(`.swiperNextButton[data-nextaction="${selected}"]`).style.border = "solid 2px #"+colors.selectedNotNow
         updateMainButton()
       })
-      if(i===1){
+      if(i===selected){
         button.style.border = "solid 2px #"+colors.selected
       }
     }
@@ -299,7 +300,7 @@
 
     let wishedCards = GM_getValue("wishedCards") || []
 
-    let flirtAnyways
+    let flirtAnyways; let noNextCard = true
     let originalPostServer = postServer
     postServer = (...args)=>{
       let card = $('.tinder--card[data-encounterid=' + args[0] + ']').data("data")
@@ -311,7 +312,9 @@
       let nextCard = document.querySelector(".tinder--cards :nth-child(1 of div.tinder--card:not(.removed))")
       let nextCardData = nextCard && $(nextCard).data("data")
       let nextAction = nextCardData && (settings.wishedCardDestination && wishedCards.includes(""+nextCardData.card_id) ? settings.wishedCardDestination : +cardActions[""+nextCardData.card_id]!==selected && +cardActions[""+nextCardData.card_id])
-      if(nextAction){
+      if(!nextCard){
+        noNextCard = true
+      }else if(nextAction){
         selectedOnce = nextAction
         document.querySelector(`.swiperNextButton[data-nextaction="${selected}"]`).style.border = "solid 3px #"+colors.selectedNotNow
         document.querySelector(`.swiperNextButton[data-nextaction="${selectedOnce}"]`).style.border = "solid 3px #"+colors.selectedOnce
@@ -359,6 +362,15 @@
         button.dataset.battlemode = !button.dataset.forceflirt && (+settings.replaceFlirtWithBattle||charisma-7)>data.card.rarity ? true : ""
         button.innerText = button.dataset.battlemode ? (data.card.element==="???" ? "Auto-battle" : settings.crushManualBattles ? "Crush" : "Battle") : "Disenchant"
         updateMainButton()
+      }
+      if(noNextCard){
+        noNextCard = false
+        let nextAction = settings.wishedCardDestination && wishedCards.includes(""+data.card_id) ? settings.wishedCardDestination : +cardActions[""+data.card_id]!==selected && +cardActions[""+data.card_id]
+        if(nextAction){
+          selectedOnce = nextAction
+          document.querySelector(`.swiperNextButton[data-nextaction="${selected}"]`).style.border = "solid 3px #"+colors.selectedNotNow
+          document.querySelector(`.swiperNextButton[data-nextaction="${selectedOnce}"]`).style.border = "solid 3px #"+colors.selectedOnce
+        }
       }
       return originalApplyEncounterStyle(...args)
     }
@@ -676,6 +688,15 @@
           After executing the card actions, the script usually deletes the actions from its storage but you can disable that here.<br>
           On the swiper page, the saved card action will become automatically selected.<br>
           ${settingCheckbox("keepActions", "Keep card actions")}<br>
+          The default destination to be selected on the swiper page:<br>
+          ${settingSelect("defaultDestination", [
+            {value: "", name: "Same as last time"},
+            {value: "0", name: "Disenchant"},
+            {value: "1", name: "Portfolio"},
+            {value: "2", name: "Box 1"},
+            {value: "3", name: "Box 2"},
+            {value: "4", name: "Box 3"},
+          ])}<br>
           When selecting disenchant, replace flirt button with battle button if:<br>
           ${settingSelect("replaceFlirtWithBattle", [
             {value:0, name:"Enough charisma for guaranteed flirt success"},

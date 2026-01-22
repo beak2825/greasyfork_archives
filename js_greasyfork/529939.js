@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Dark Mode (kid4rm90s fork)
 // @namespace    https://greasyfork.org/en/users/1434751-poland-fun
-// @version      1.10
+// @version      1.11
 // @description  Enable dark mode in WME.
 // @author       poland_fun
 // @contributor	 kid4rm90s and luan_tavares_127
@@ -167,6 +167,8 @@ Version
 		- Fixed for WME Bookmarks
 		- Fixed for UR Colors
 		- Other bug fixes and memory leaks improvements
+1.11 - Fixed - 
+		- Fixed for place opening hours delete icon showing incorrect color
 
 */
 
@@ -178,7 +180,7 @@ Version
 
 (function main() {
   ('use strict');
-  const updateMessage = '<strong>Fixed :</strong><br> - Fixed for visual + towards instruction icons in turn instructions panel<br>- Fixed for URC-E comment box close button color <br>- Fixed for WME Bookmarks<br>- Fixed for UR Colors<br>- Other bug fixes and memory leaks improvements <br>';
+  const updateMessage = '<strong>Fixed :</strong><br> - Fixed for place opening hours delete icon showing incorrect color <br>';
   const scriptName = GM_info.script.name;
   const scriptVersion = GM_info.script.version;
 	const downloadUrl = 'https://greasyfork.org/scripts/529939-wme-dark-mode-kid4rm90s-fork/code/WME%20Dark%20Mode%20%28kid4rm90s%20fork%29.user.js';
@@ -1305,6 +1307,11 @@ Version
 			[wz-theme="dark"] .aliases .alias-item-actions {
 				--wz-button-background-color: var(--always_dark_surface_default);
 			}
+
+	/*Place opening hours delete icon*/
+			[wz-theme="dark"] wz-button.opening-hours-delete {
+  			--wz-button-background-color: var(--always_dark_surface_default);
+		}
 
 	/*Lanes and road width*/
 			[wz-theme="dark"] .direction-lanes .lane-instruction .drawing .letter-circle {

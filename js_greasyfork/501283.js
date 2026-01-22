@@ -1,11 +1,13 @@
 // ==UserScript==
 // @name         Jump to Anna's Archive From Z-Library
 // @namespace    http://tampermonkey.net/
-// @version      20241111.2
+// @version      20260121
 // @description  Jump to Anna's Archive From Z-Library's book information page
 // @author       lefty
 // @match       https://*.z-lib.gs/*
 // @match       https://z-lib.gs/*
+// @match       https://*.z-lib.gd/*
+// @match       https://z-lib.gd/*
 // @match       https://z-library.sk/*
 // @match       https://*.z-library.sk/*
 // @icon          https://www.google.com/s2/favicons?sz=64&domain=1lib.sk
@@ -29,37 +31,21 @@
     }
 
     let anna_url = "https://annas-archive.li/search?q=%22zlib:" + zlib_id + "%22";
-    let btn = document.createElement("button");
-    btn.innerHTML = "Anna's Archive";
-    btn.onclick = function () {
-        window.open(anna_url, '_blank');
-    };
 
-    let paperback_button = document.querySelector('.btn.btn-default.dropdown-toggle.button-paperback');
+    // 查找书名元素
+    let bookTitleElement = document.querySelector('.book-title');
 
-    // 创建包含类名 "book-details-button" 的 div 元素
-    let bookDetailsButtonDiv = document.createElement('div');
-    bookDetailsButtonDiv.className = 'book-details-button';
+    if (bookTitleElement) {
+        // 创建链接元素
+        let annaLink = document.createElement('a');
+        annaLink.href = anna_url;
+        annaLink.className = 'color1';
+        annaLink.textContent = ' -> Anna\'s Archive';
+        annaLink.target = '_blank'; // 在新标签页中打开链接
 
-    // 创建包含类名 "btn-group" 的子 div 元素
-    let btnGroupDiv = document.createElement('div');
-    btnGroupDiv.className = 'btn-group';
-
-    // 创建包含类名 "btn btn-default dropdown-toggle button-anna" 的 button 元素，并设置其文本内容
-    let buttonElement = document.createElement('button');
-    buttonElement.type = 'button';
-    buttonElement.className = 'btn btn-default dropdown-toggle button-paperback';
-    buttonElement.textContent = "Anna's Archive";
-    buttonElement.onclick = function () {
-        window.open(anna_url, '_blank');
-    };
-
-    // 将 button 元素添加到 btn-group div 元素
-    btnGroupDiv.appendChild(buttonElement);
-
-    // 将 btn-group div 元素添加到 book-details-button div 元素
-    bookDetailsButtonDiv.appendChild(btnGroupDiv);
-    let paperbackDetailsButtonDiv = paperback_button.parentElement.parentElement;
-    paperbackDetailsButtonDiv.parentElement.insertBefore(bookDetailsButtonDiv,paperbackDetailsButtonDiv.nextSibling);
-    // Your code here...
+        // 将链接添加到书名元素后面
+        bookTitleElement.appendChild(annaLink);
+    } else {
+        console.log('Book title element not found');
+    }
 })();

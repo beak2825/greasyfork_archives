@@ -92,7 +92,7 @@
 // @match          https://www.youtube.com/redirect?*
 // @match          https://wx.mail.qq.com/xmspamcheck/xmsafejump?*
 // @exclude        https://mp.weixin.qq.com/cgi-bin/*
-// @version        1.14.6
+// @version        1.14.7
 // @run-at         document-idle
 // @namespace      https://old-panda.com/
 // @require        https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js
@@ -145,7 +145,7 @@ const fuckers = {
   kdocs: { match: 'https://www.kdocs.cn/etapps/query/link?target=', redirect: "target" },
   kook: { match: 'https://www.kookapp.cn/go-wild.html?url=', redirect: "url" },
   latexstudio: { match: 'https://ask.latexstudio.net/go/index?url=', redirect: "url" },
-  leetcode: { match: 'https://leetcode.cn/link/?target', redirect: "target" },
+  leetcode: { match: 'https://leetcode.cn/link/?target', redirect: function () { window.location.replace(curURL.split("target=").pop()) } },
   linkedin: { match: 'https://www.linkedin.com/safety/go?url=', redirect: "url" },
   logonews: { match: 'https://link.logonews.cn/?', redirect: "url" },
   luogu: { match: 'https://www.luogu.com.cn/paste/', redirect: function () { if (document.getElementById("url")) { window.location.href = $("#url").text() } } },
@@ -352,15 +352,9 @@ function removeFwinDialog() {
 function redirect(fakeURLStr, trueURLParam, enableBase64 = false) {
   let fakeURL = new URL(fakeURLStr);
   let trueURL = fakeURL.searchParams.get(trueURLParam);
-  if (trueURL.startsWith(fuckers.wechat1.match)) {
-    // there could be multiple `&`s in url of a wechat link, so all of them
-    // have to be included in the trueURL.
-    trueURL = fakeURL.search.split(`${trueURLParam}=`).pop();
-  } else {
-    if (enableBase64) trueURL = window.atob(trueURL);
-    if (trueURL.indexOf("http://") !== 0 && trueURL.indexOf("https://") !== 0) {
-      trueURL = "https://" + trueURL;
-    }
+  if (enableBase64) trueURL = window.atob(trueURL);
+  if (trueURL.indexOf("http://") !== 0 && trueURL.indexOf("https://") !== 0) {
+    trueURL = "https://" + trueURL;
   }
   trueURL = decodeURIComponent(trueURL)
   window.location.replace(trueURL);

@@ -1598,27 +1598,26 @@
       return this.generate(confs, render);
     },
     genIgnore() {
-      const disabled = Site.isGmMatch() && !Site.isBiliLive();
+      const disd = Site.isGmMatch() && !Site.isBiliLive();
       const confs = [
-        { name: "custCtn", text: "自定义此站视频容器", cache: Storage.CUSTOM_CTN, disabled, useHost: true },
-        { name: "hideEle", text: "此站全屏时隐藏相关元素（用 , 隔开）", cache: Storage.HIDE_ELEMENTS, disabled, useHost: true },
-        { name: "ignoreNext", text: "自动切换下集时忽略的网址列表（用 ; 隔开）", cache: Storage.NEXT_IGNORE_URLS },
-        { name: "ignoreFs", text: "自动网页全屏时忽略的网址列表（用 ; 隔开）", cache: Storage.FULL_IGNORE_URLS }
+        { name: "custCtn", text: "自定义此站视频容器", cache: Storage.CUSTOM_CTN, disable: disd, useHost: true },
+        { name: "hideEle", text: "此站全屏时隐藏的元素（用 , 隔开）", cache: Storage.HIDE_ELEMENTS, disable: disd, useHost: true },
+        { name: "ignoreNext", text: "自动切换下集时忽略的网址（用 ; 隔开）", cache: Storage.NEXT_IGNORE_URLS },
+        { name: "ignoreFs", text: "自动网页全屏时忽略的网址（用 ; 隔开）", cache: Storage.FULL_IGNORE_URLS }
       ];
-      const render = ({ text, name, value, dataset, disabled: disabled2 }) => `
+      const render = ({ text, name, value, dataset, disable }) => `
         <div class="text-group"><p>${text}</p>
-          <textarea name="${name}" ${dataset} ${disabled2 ? "disabled" : ""} spellcheck="false" autocomplete="off">${value}</textarea>
+          <textarea name="${name}" ${dataset} ${disable ? "disabled" : ""} spellcheck="false" autocomplete="off">${value}</textarea>
         </div>`;
       return this.generate(confs, render);
     },
     generate(confs, render) {
-      const getDataset = (attrs = [], host) => attrs.map((key) => `data-${key}="${key === "host" ? host : true}"`).join(" ");
       const finalConfs = confs.map((conf) => {
         const { cache, attrs = [], useHost } = conf;
         const host = useHost ? this.host : Consts.EMPTY;
-        const value = useHost ? cache.get(this.host) : cache.get();
-        if (useHost && !attrs.includes("host")) attrs.push("host");
-        return { ...conf, host, value, dataset: getDataset(attrs, this.host) };
+        let dataset = attrs.map((key) => `data-${key}="true"`).join(" ");
+        if (host) dataset = `${dataset} data-host="${host}"`.trim();
+        return { ...conf, dataset, value: cache.get(host) };
       });
       const html = finalConfs.map((conf) => render(conf)).join(Consts.EMPTY);
       const eCache = Object.fromEntries(finalConfs.map((e) => [e.name, e.cache]));

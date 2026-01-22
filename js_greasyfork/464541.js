@@ -4,7 +4,7 @@
 // @namespace            https://github.com/utags/links-helper
 // @homepageURL          https://github.com/utags/links-helper#readme
 // @supportURL           https://github.com/utags/links-helper/issues
-// @version              0.13.4
+// @version              0.13.5
 // @description          Open external links in a new tab, open internal links matching the specified rules in a new tab, convert text to hyperlinks, convert image links to image tags(<img>), parse Markdown style links and image tags, parse BBCode style links and image tags
 // @description:zh-CN    支持所有网站在新标签页中打开第三方网站链接（外链），在新标签页中打开符合指定规则的本站链接，解析文本链接为超链接，微信公众号文本转可点击的超链接，图片链接转图片标签，解析 Markdown 格式链接与图片标签，解析 BBCode 格式链接与图片标签
 // @icon                 https://wsrv.nl/?w=128&h=128&url=https%3A%2F%2Fraw.githubusercontent.com%2Futags%2Flinks-helper%2Frefs%2Fheads%2Fmain%2Fassets%2Ficon.png
@@ -2118,6 +2118,24 @@
       anchorElementToImgElement(anchor, finalHref, text)
     }
   }
+  var isReactJsImg = (elemnt) =>
+    getAttribute(elemnt, "node") === "[object Object]"
+  var cloneImgWithParent = (img) => {
+    try {
+      const parent = img.parentElement
+      const newParentElm = parent.cloneNode(true)
+      parent.after(newParentElm)
+      const newImg = newParentElm.querySelector("img")
+      if (newImg) {
+        parent.remove()
+        return newImg
+      }
+      newParentElm.remove()
+      return void 0
+    } catch (e) {
+      return void 0
+    }
+  }
   var proxyExistingImages = (flag) => {
     for (const img of getAllImages()) {
       const rawSrc = getAttribute(img, "src")
@@ -2129,13 +2147,24 @@
       }
       const src = img.src || rawSrc
       const proxied = toProxyUrlIfNeeded(src)
+      const orgImg = img
       if (proxied && proxied !== src) {
-        setAttribute(img, "data-lh-src", rawSrc)
-        img.removeAttribute("src")
-        setAttribute(img, "loading", "lazy")
-        setAttribute(img, "referrerpolicy", "no-referrer")
-        setAttribute(img, "src", proxied)
-        const parent = img.parentElement
+        const img2 = isReactJsImg(orgImg)
+          ? cloneImgWithParent(orgImg) || orgImg
+          : orgImg
+        setAttribute(img2, "data-lh-src", rawSrc)
+        img2.removeAttribute("src")
+        setAttribute(img2, "loading", "lazy")
+        setAttribute(img2, "referrerpolicy", "no-referrer")
+        img2.addEventListener("error", (e) => {
+          const target = e.target
+          if (target && target.src === src) {
+            e.stopImmediatePropagation()
+            e.stopPropagation()
+          }
+        })
+        setAttribute(img2, "src", proxied)
+        const parent = img2.parentElement
         if (parent && parent.tagName === "A") {
           const parentAnchor = parent
           if (parentAnchor.href === src) {

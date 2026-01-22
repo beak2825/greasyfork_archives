@@ -3,7 +3,7 @@
 // @namespace    https://github.com/examplecode/useful-user-scripts
 // @homepageURL  https://scriptcat.org/zh-CN/users/157252
 // @author       examplecode && Aloazny && Gemini
-// @version      3.5
+// @version      3.6
 // @description  二改@examplecode的搜索脚本，感谢@examplecode，添加MD3配色+高斯模糊+编辑/添加搜索引擎功能+搜索栏切换顶部底部+搜索框，保留原本的X浏览器搜索引擎读取，排序等功能。
 // @match        *://*/*
 // @icon          data:image/png;base64,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
@@ -22,7 +22,7 @@
     const STORAGE_KEY = 'quick_search_bar_final';
     const THEME_KEY = 'quick_search_theme_v2';
     const LAYOUT_KEY = 'quick_search_layout_v1';
-    const queryParams = ["q", "s", "p", "wd", "word", "keyword", "text", "query", "key", "result" ];
+    const queryParams = ["q", "s", "p", "wd", "word", "keyword", "text", "query", "key", "result", "searchWord", "search-result" ];
 
     const defaultTheme = { primary: '#6750a4', opacity: 0.7, blur: 18, themeStyle: 'MIUIX' };
     const defaultLayout = { pos: 'bottom', offset: 24, autoHide: false, showInput: false, inputStyle: 1, shrinkMode: false };
@@ -455,7 +455,7 @@
             }
             // 2. 路径提取逻辑 (分级过滤)
             // 长信号：可以稍微宽泛一点（允许结尾匹配）
-            const longSignals = ['search', 'category', 'find', 'query', 'result', 'tags', 'tag'];
+            const longSignals = ['search', 'search-result', 'category', 'find', 'query', 'result', 'tags', 'tag'];
             // 短信号：必须严格匹配（必须前后都有斜杠，如 /s/ 或 /k/）
             const strictSignals = ['s', 'k', 'p'];
             const pathLower = url.pathname.toLowerCase();

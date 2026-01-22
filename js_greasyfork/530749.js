@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Waifugame battle elements help
 // @namespace    http://tampermonkey.net/
-// @version      2025-12-29
+// @version      2026-01-04
 // @description  Instead of remembering all of the elemental advantages, this little script will display them where it's the most useful.
 // @author       Lulu5239
 // @match        https://waifugame.com/*
@@ -378,7 +378,7 @@
       if(busy){return}
       window.scrollTo(0, 185)
       if(!battleHelpVars.auto || document.querySelector("#action_block").style.display==="none"){return}
-      if(document.querySelector("#swapForXPoption").dataset.card){
+      if(document.querySelector("#swapForXPoption").dataset.card && lastSequenceData.output.foes.alive <= 2){
         document.querySelector("#btn_swapForXP").click()
       }else if(!window.battleHelpVars.usingBest || currentCard.hp<50 && currentCard.level<maximumLevel){
         document.querySelector("#btn_swapToBest").click()

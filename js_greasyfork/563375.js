@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Dead Frontier Quick link - Floating Pill
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.1
 // @description  This is a convenience button script with floating pill design
 // @author       Catss
 // @match        *fairview.deadfrontier.com/onlinezombiemmo/index.php*
@@ -38,7 +38,7 @@
         container.style.borderRadius = '50px';
         container.style.display = 'flex';
         container.style.flexDirection = 'row';
-        container.style.gap = '8px';
+        container.style.gap = '16px';
         container.style.alignItems = 'center';
         container.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.4)';
         container.style.border = '1px solid rgba(255, 255, 255, 0.1)';
@@ -53,7 +53,6 @@
             { name: 'Bank', link: 'https://fairview.deadfrontier.com/onlinezombiemmo/index.php?page=15', icon: '🏦' },
             { name: 'Storage', link: 'https://fairview.deadfrontier.com/onlinezombiemmo/index.php?page=50', icon: '📦' },
             { name: 'Yard', link: 'https://fairview.deadfrontier.com/onlinezombiemmo/index.php?page=24', icon: '🏠' },
-            { name: 'OP', link: 'https://fairview.deadfrontier.com/onlinezombiemmo/index.php?page=0', icon: '⚙️' },
         ];
 
         buttons.forEach(function(buttonInfo) {

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         鱼派小尾巴和单词功能
 // @namespace    http://tampermonkey.net/
-// @version      1.0.12
+// @version      1.0.14
 // @description  整合小尾巴和单词功能的精简版脚本   try to thank APTX-4869!
 // @author       ZeroDream
 // @match        https://fishpi.cn/cr
@@ -12,9 +12,11 @@
 // @updateURL https://update.greasyfork.org/scripts/556762/%E9%B1%BC%E6%B4%BE%E5%B0%8F%E5%B0%BE%E5%B7%B4%E5%92%8C%E5%8D%95%E8%AF%8D%E5%8A%9F%E8%83%BD.meta.js
 // ==/UserScript==
 // ZeroDream  2026-01-19添加单词小尾巴独立控制开关
+// ZeroDream  2026-01-21 适配的新的引用
+// ZeroDream  2026-01-21 修复小尾巴复读时对错误移除
 (function () {
     'use strict';
-    const version_us = "v1.0.12";
+    const version_us = "v1.0.14";
 
     // 小尾巴开关状态
     var suffixFlag = window.localStorage['xwb_flag'] ? JSON.parse(window.localStorage['xwb_flag']) : true;
@@ -1185,6 +1187,12 @@
                         // 获取原始消息内容
                         let originalContent = t;
                         
+                        // 新版引用处理：如果有引用数据，拼接到消息前面
+                        if (typeof ChatRoom !== 'undefined' && ChatRoom.quoteData && ChatRoom.quoteData.userName && ChatRoom.quoteData.content) {
+                            let quoteMd = ChatRoom.quoteData.content.replace(/\n/g, "\n> ");
+                            originalContent = originalContent + `\n\n##### 引用 @${ChatRoom.quoteData.userName} [↩](${Label.servePath}/cr#chatroom${ChatRoom.quoteData.messageId} "跳转至原消息")  \n> ${quoteMd}\n`;
+                        }
+                        
                         // 替换为与快捷功能相同的小尾巴处理逻辑
                         let strOriginalContent = String(originalContent);
                         // 小尾巴固定关键字
@@ -1210,7 +1218,11 @@
                                 }
                             }
                             //截取原消息
-                            originalContent = wbStartMsg;
+                            // 修复：如果是引用消息，保留完整内容
+                            if (!strOriginalContent.includes(tab_keyword)) {
+                                originalContent = wbStartMsg;
+                            }
+                            // 引用消息保留完整内容
                         }
                         
                         // 获取当前小尾巴文本
@@ -1240,12 +1252,14 @@
                     $("#form button.red").attr("disabled", "disabled").css("opacity", "0.3")
                 },
                 success: function (e) {
-                    0 === e.code ? $("#chatContentTip").removeClass("error succ").html("") : ($("#chatContentTip").addClass("error").html("<ul><li>" + e.msg + "</li></ul>"),
+                    0 === e.code ? ($("#chatContentTip").removeClass("error succ").html(""), 
+                        typeof ChatRoom !== 'undefined' && ChatRoom.cancelQuote && ChatRoom.cancelQuote()) : ($("#chatContentTip").addClass("error").html("<ul><li>" + e.msg + "</li></ul>"),
                         ChatRoom.editor.setValue(t))
                 },
                 error: function (e) {
                     $("#chatContentTip").addClass("error").html("<ul><li>" + e.statusText + "</li></ul>"),
-                        ChatRoom.editor.setValue(t)
+                        ChatRoom.editor.setValue(t),
+                        typeof ChatRoom !== 'undefined' && ChatRoom.cancelQuote && ChatRoom.cancelQuote()
                 },
                 complete: function (e, t) {
                     ChatRoom.isSend = !1,

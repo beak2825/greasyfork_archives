@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         Nurbo Mod + glotus
+// @name         n-Hypbo client 
 // @namespace    http://youtube.com
-// @version      1.5.9.1
-// @description  Shift=Insta,  Traps/Spikes. [ AutoBiomhat ] [Autoheal] [Bull] [Shadow wings]   and upgrades.
+// @version      1.6.0.1
+// @description  Shift=Insta,  Traps/Spikes. AutoBiomhat Autoheal esc = Menu F,V,C,B  = Trap Sike 4Spike 4Traps .
 // @icon         https://static.wikia.nocookie.net/moom/images/7/70/Cookie.png/revision/latest?cb=20190223141839
 // @author       Nurbo Mod
 // @match        *://moomoo.io/*
@@ -14,8 +14,8 @@
 // @require      https://update.greasyfork.org/scripts/480301/1322984/CowJS.js
 // @require      https://cdn.jsdelivr.net/npm/fontfaceobserver@2.1.0/fontfaceobserver.standalone.min.js
 // @license      MIT
-// @downloadURL https://update.greasyfork.org/scripts/560817/Nurbo%20Mod%20%2B%20glotus.user.js
-// @updateURL https://update.greasyfork.org/scripts/560817/Nurbo%20Mod%20%2B%20glotus.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/560817/n-Hypbo%20client.user.js
+// @updateURL https://update.greasyfork.org/scripts/560817/n-Hypbo%20client.meta.js
 // ==/UserScript==
 
 //Utility
@@ -247,16 +247,7 @@ document.addEventListener("keyup", e => {
     const k = e.key.toLowerCase();
     stopPlacingStructure(k);
 
-    if (e.keyCode == 32 && gInterval) { // Space
-        clearInterval(gInterval);
-        gInterval = null;
-
-        if (nearestEnemy) {
-            doNewSend(["9", [myPlayer.dir]]);
-            place(spikeType, nearestEnemyAngle - Math.PI / 4);
-            place(spikeType, nearestEnemyAngle + Math.PI / 4);
-        }
-    }
+    
 });
 
 // Обнови функцию updateItems чтобы находить boostType, windmillType, turretType
@@ -469,7 +460,8 @@ function handleMessage(m) {
 
                     // Одеваем samurai helmet (20) после инсты
                     setTimeout(() => {
-                        storeEquip(6, 0); // samurai helmet
+
+                        storeEquip(12, 0); // samurai helmet
                     }, 170);
                 }, useSecondary ? 120 : 0);
             }, useSecondary ? 120 : 0);
@@ -501,7 +493,7 @@ function handleMessage(m) {
             doNewSend(["F", [1, attackAngle]]);
             setTimeout(() => doNewSend(["F", [0, attackAngle]]), 20);
 
-        }, 100); // 100ms = 10 атак в секунду
+        }, 300); // 100ms = 10 атак в секунду
     }
 
     function stopAutoAttack() {
@@ -911,15 +903,16 @@ function handleMessage(m) {
        if (e.key.toLowerCase() === ']') { // S key - Auto Spike
         toggleAutoSpike();
     }
-    if (e.key.toLowerCase() === '0') { // S key - Auto Spike
-       storeEquip(11, 0);
-        storeEquip(12, 0);
-    }
+  // Вместо storeEquip попробуйте:
+if (e.key.toLowerCase() === '0') {
+    doNewSend(["c", [0, 11, 0]]);
+
+}
     if (e.key.toLowerCase() === '=') { // H key
 
-        storeEquip(20, 0);
+doNewSend(["c", [0,20, 0]]);
     }
-        if (e.key.toLowerCase() === 'p') { // H key
+        if (e.key.toLowerCase() === 'alt') { // H key
         sendChatMessage("hi fk me Hypbo");
 
     }
@@ -952,9 +945,7 @@ function handleMessage(m) {
 
  
 
-    if (e.key.toLowerCase() === 'r') { // R key - Reverse Insta
-        performReverseInsta();
-    }
+    
 
    
 
@@ -964,30 +955,7 @@ function handleMessage(m) {
 
 
     if (e.keyCode === 32) { // Space key - Boost+Spike
-        if (!nearestEnemy) return;
-
-        const dx = myPlayer.x - nearestEnemy[1];
-        const dy = myPlayer.y - nearestEnemy[2];
-        const distance = Math.sqrt(dx * dx + dy * dy);
-
-        if (distance > 700) {
-            sendChatMessage("Враг слишком далеко для Boost+Spike");
-            return;
-        }
-
-        doNewSend(["9", [nearestEnemyAngle]]);
-        place(boostType, nearestEnemyAngle);
-        place(spikeType, nearestEnemyAngle + Math.PI / 4);
-        place(spikeType, nearestEnemyAngle - Math.PI / 4);
-
-        if (!gInterval) {
-            gInterval = setInterval(() => {
-                if (nearestEnemy) {
-                    doNewSend(["9", [nearestEnemyAngle]]);
-                    place(boostType, nearestEnemyAngle);
-                }
-            }, 80);
-        }
+       
     }
 
     if (e.keyCode === 27) { // ESC key
@@ -2562,17 +2530,17 @@ function handleMessage(m) {
         toggleChat: "Enter",
         toggleShop: "Tab",
         toggleClan: "ControlLeft",
-        toggleMenu: "",
+        toggleMenu: "`",
         biomehats: true,
         autoemp: false,
-        antienemy: false,
-        antianimal: false,
+        antienemy: true,
+        antianimal: true,
         antispike: true,
         autoheal: true,
-        healingSpeed: 25,
+        healingSpeed: 40,
         automill: false,
-        autoplacer: false,
-        autobreak: false,
+        autoplacer: true,
+        autobreak: true,
         enemyTracers: false,
         enemyTracersColor: "#cc5151",
         teammateTracers: false,
@@ -2598,7 +2566,7 @@ function handleMessage(m) {
         objectTurretReloadBarColor: "#66d9af",
         itemHealthBar: false,
         itemHealthBarColor: "#6b449e",
-        itemCounter: false,
+        itemCounter: true,
         renderGrid: true,
         windmillRotation: false,
         entityDanger: false,
@@ -2613,7 +2581,7 @@ function handleMessage(m) {
         autospawn: false,
         autoaccept: false,
         menuTransparency: false,
-        storeItems: [ [ 6, 40, 15,7, 31 ], [ 11 ]]
+        storeItems: [ [], []]
     };
     defaultSettings.storeItems;
     const settings = {
@@ -3535,9 +3503,9 @@ function handleMessage(m) {
         get placementScale() {
             const item = Items[this.type];
             if (21 === item.id) {
-                return item.blocker;
+                return item.blocker*0.5;
             }
-            return this.scale;
+            return this.scale * 0.5 ;
         }
     }
     class SpatialHashGrid {
@@ -7624,7 +7592,7 @@ function handleMessage(m) {
                     }
                     span.setAttribute("data-id", group + "");
                     const {count, limit} = myClient.myPlayer.getItemCount(group);
-                    span.textContent = `${count}/${limit}`;
+                    span.textContent = `${count}`;
                     actionBar[i].appendChild(span);
                 }
             }
@@ -7668,7 +7636,7 @@ function handleMessage(m) {
             const items = document.querySelectorAll(`span.itemCounter[data-id='${group}']`);
             const {count, limit} = myClient.myPlayer.getItemCount(group);
             for (const item of items) {
-                item.textContent = `${count}/${limit}`;
+                item.textContent = `${count}`;
             }
         }
         init() {

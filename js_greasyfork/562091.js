@@ -2,7 +2,7 @@
 // @name         Discuz! 论坛助手 (Discuz! Forum Assistant)
 // @name:en      Discuz! Forum Assistant
 // @namespace    http://tampermonkey.net/
-// @version      13.35.9
+// @version      13.36.0
 // @description  Discuz! 论坛全能助手：智能抓取模式（Alt+键只抓作者前3页）、全量抓取模式（Ctrl+Alt+键抓所有）；一键提取图片（自动修复文件名/格式/并发下载）；沉浸式阅读；自定义下载路径。
 // @description:en Discuz! Forum Assistant: Smart scraping (Alt+keys for author's first 3 pages), full scraping (Ctrl+Alt+keys); One-click image download (auto-fix filenames/extensions/concurrent); Immersive reading; Custom download path.
 // @license      GPL-3.0
@@ -70,7 +70,8 @@
             maxConcurrency: 3,
             downloadDelay: 300, 
             scanDelay: 800,
-            scanStartMode: '1' 
+            scanStartMode: '1',
+            debugLogging: false
         },
         userConfig: {},
         downloadHistory: new Set()
@@ -89,6 +90,28 @@
         var hist = localStorage.getItem(App.historyKey);
         if (hist) App.downloadHistory = new Set(JSON.parse(hist));
     } catch(e) {}
+
+    var REGEX_TEMPLATE = /\{\{(\w+)\}\}/g;
+    var REGEX_INVALID_CHARS = /[\\:*?"<>|]/g;
+    var REGEX_CONTROL_CHARS = /[\r\n\t]/g;
+    var REGEX_WHITESPACE = /\s+/g;
+    var REGEX_TRAILING_DOTS = /\.+$/;
+    var REGEX_BLOCK_TAGS = /^(DIV|P|BLOCKQUOTE|H[1-6]|LI|UL|OL|TR|TABLE|TBODY|THEAD|TFOOT)$/;
+    var REGEX_POST_ID = /post_\d+$/;
+    var REGEX_AMP = /&amp;/g;
+    var REGEX_DIGITS = /\d+/;
+    var REGEX_NEW_LINES = /[\r\n]/g;
+    var REGEX_PAGE_PARAM = /[?&]page=(\d+)/;
+    var REGEX_PAGE_REPLACE = /(page=)\d+/;
+    var REGEX_PAGE_HTML = /-(\d+)\.html/;
+    var REGEX_FORUM_HTML = /forum-\d+-\d+\.html/;
+    var REGEX_FORUM_REPLACE = /-(\d+)\.html/;
+    var REGEX_TID = /tid=(\d+)/;
+    var REGEX_UID = /uid=(\d+)/;
+    var REGEX_DATE = /(\d{4})[-/](\d{1,2})[-/](\d{1,2})/;
+    var REGEX_BRACKETS = /\[.*?\]/g;
+    var cachedDecoder = null;
+    var cachedGbkDecoder = null;
 
     var Utils = {
         safeAddStyle: function(css) {
@@ -111,9 +134,9 @@
         },
         getCurrentPageNumber: function(url) {
             var u = url || window.location.href;
-            var match = u.match(/[?&]page=(\d+)/);
+            var match = u.match(REGEX_PAGE_PARAM);
             if (match) return parseInt(match[1]);
-            match = u.match(/-(\d+)\.html/); 
+            match = u.match(REGEX_PAGE_HTML);
             if (match) return parseInt(match[1]);
             return 1;
         },
@@ -130,26 +153,40 @@
                 onload: function(response) {
                     if (response.status !== 200) { if (errCallback) errCallback('HTTP ' + response.status); return; }
                     var buffer = response.response;
-                    var decoder = new TextDecoder(document.characterSet || 'utf-8');
-                    var text = decoder.decode(buffer);
-                    if (text.indexOf('</html>') === -1 || (text.indexOf('发表于') === -1 && text.indexOf('div') !== -1)) {
-                        text = new TextDecoder('gbk').decode(buffer);
+                    // Performance: Reuse TextDecoder instance to avoid repeated instantiation overhead
+                    if (!cachedDecoder) {
+                        // Optimize: Reuse TextDecoder instance to reduce object creation overhead
+                        try {
+                            cachedDecoder = new TextDecoder(document.characterSet || 'utf-8');
+                        } catch (e) {
+                            cachedDecoder = new TextDecoder('utf-8');
+                        }
                     }
-                    callback(new DOMParser().parseFromString(text, "text/html"));
+                    var text = cachedDecoder.decode(buffer);
+                    if (text.indexOf('</html>') === -1 || (text.indexOf('发表于') === -1 && text.indexOf('div') !== -1)) {
+                        if (!cachedGbkDecoder) {
+                            cachedGbkDecoder = new TextDecoder('gbk');
+                        }
+                        text = cachedGbkDecoder.decode(buffer);
+                    }
+                    if (!Utils.parser) Utils.parser = new DOMParser();
+                    callback(Utils.parser.parseFromString(text, "text/html"));
                 },
                 onerror: function(e) { if (errCallback) errCallback('Network Error'); }
             });
         },
         sanitizeFilename: function(name) {
-            return name.replace(/[\\:*?"<>|]/g, '_')
-                       .replace(/[\r\n\t]/g, '')
-                       .replace(/\s+/g, ' ')
+            // Optimize: early return for empty string and ensure string type
+            if (!name) return '';
+            return String(name).replace(REGEX_INVALID_CHARS, '_')
+                       .replace(REGEX_CONTROL_CHARS, '')
+                       .replace(REGEX_WHITESPACE, ' ')
                        .trim()
-                       .replace(/\.+$/, '') 
+                       .replace(REGEX_TRAILING_DOTS, '')
                        .substring(0, 150);
         },
         extractDate: function(str) {
-            var match = str.match(/(\d{4})[-/](\d{1,2})[-/](\d{1,2})/);
+            var match = str.match(REGEX_DATE);
             if (match) {
                 return match[1] + match[2].padStart(2, '0') + match[3].padStart(2, '0');
             }
@@ -158,7 +195,7 @@
         renderTemplate: function(tpl, data) {
             if (!tpl) return "";
             // Optimize: use single regex replace instead of loop + new RegExp
-            return Utils.sanitizeFilename(tpl.replace(/\{\{(\w+)\}\}/g, function(match, key) {
+            return Utils.sanitizeFilename(tpl.replace(REGEX_TEMPLATE, function(match, key) {
                 return (data && key in data) ? String(data[key] || '') : match;
             }));
         },
@@ -169,7 +206,7 @@
             if (h1) return h1.innerText.trim();
             // 尝试获取手机版标题或列表标题
             var h2 = doc.querySelector('#postlist h2') || doc.querySelector('.postlist h2');
-            if (h2) return h2.innerText.replace(/\[.*?\]/g, '').trim();
+            if (h2) return h2.innerText.replace(REGEX_BRACKETS, '').trim();
             
             return doc.title.split(' - ')[0].trim();
         },
@@ -191,6 +228,14 @@
                 this._debouncedSaveHistory = this.debounce(this.saveHistory, 1000);
             }
             this._debouncedSaveHistory.apply(this, arguments);
+        },
+        saveConfig: function() { localStorage.setItem(App.key, JSON.stringify(App.userConfig)); },
+        _debouncedSaveConfig: null,
+        debouncedSaveConfig: function() {
+            if (!this._debouncedSaveConfig) {
+                this._debouncedSaveConfig = this.debounce(this.saveConfig, 500);
+            }
+            this._debouncedSaveConfig.apply(this, arguments);
         },
         exportHistory: function() {
             var content = JSON.stringify(Array.from(App.downloadHistory));
@@ -394,7 +439,7 @@
             var setVal = function(id, v) { var e=document.getElementById(id); if(e) e.value=v; };
             setVal('inp-size', c.fontSize); setVal('inp-line', c.lineHeight); setVal('inp-width', c.widthMode); setVal('inp-font', c.fontFamily);
         },
-        save: function() { localStorage.setItem(App.key, JSON.stringify(App.userConfig)); this.applyConfig(); },
+        save: function() { Utils.debouncedSaveConfig(); this.applyConfig(); },
         close: function() {
             var ov = document.getElementById('gm-reader-overlay');
             if (ov) ov.remove();
@@ -458,132 +503,18 @@
         queue: [],
         totalThreads: 0,
         processedCount: 0,
+        activeThreads: 0,
+        activeWorkers: 0,
         filters: {},
         isScanning: false,
- 
-        showFilterDialog: function() {
-            var popup = document.getElementById('gm-filter-popup');
-            if (popup) { popup.style.display = 'block'; return; }
- 
-            popup = document.createElement('div');
-            popup.id = 'gm-filter-popup';
-            popup.style.top = '100px'; popup.style.left = '50%'; popup.style.transform = 'translateX(-50%)';
-            var html = `
-                <div class="gm-popup-title">
-                    <span>🔍 批量下载设置</span>
-                    <span style="cursor:pointer" onclick="document.getElementById('gm-filter-popup').style.display='none'">❌</span>
-                </div>
-                <div class="gm-popup-subtitle">扫描设置</div>
-                <div class="gm-input-group">
-                    <span class="gm-input-label">扫描间隔 (ms)</span>
-                    <input class="gm-popup-input" type="number" id="inp-scan-delay" value="${App.userConfig.scanDelay}" min="0" step="100">
-                </div>
-                <div class="gm-input-group">
-                    <div class="gm-checkbox-row" style="margin-top:0;">
-                        <input type="radio" name="gm-scan-mode" id="gm-scan-mode-1" value="1" ${App.userConfig.scanStartMode !== 'current'?'checked':''}>
-                        <label for="gm-scan-mode-1" style="margin-right:15px;">从第 1 页开始</label>
-                        <input type="radio" name="gm-scan-mode" id="gm-scan-mode-curr" value="current" ${App.userConfig.scanStartMode === 'current'?'checked':''}>
-                        <label for="gm-scan-mode-curr">从当前页开始</label>
-                    </div>
-                </div>
-                <div class="gm-popup-subtitle">下载设置</div>
-                <div class="gm-check-group">
-                    <label class="gm-check-item"><input type="checkbox" id="gm-opt-text" ${App.userConfig.batchText?'checked':''}>文本</label>
-                    <label class="gm-check-item"><input type="checkbox" id="gm-opt-img" ${App.userConfig.batchImg?'checked':''}>图片</label>
-                    <label class="gm-check-item"><input type="checkbox" id="gm-opt-video" ${App.userConfig.batchVideo?'checked':''}>视频</label>
-                </div>
-                <div class="gm-input-group" style="display:flex; gap:10px; margin-top:5px;">
-                    <div style="flex:1"><span class="gm-input-label">并发数</span><input class="gm-popup-input" type="number" id="inp-max-threads" value="${App.userConfig.maxConcurrency}" min="1"></div>
-                    <div style="flex:1"><span class="gm-input-label">下载间隔(ms)</span><input class="gm-popup-input" type="number" id="inp-download-delay" value="${App.userConfig.downloadDelay}" min="0"></div>
-                </div>
-                <div class="gm-popup-subtitle">高级选项</div>
-                <div class="gm-checkbox-row">
-                    <input type="checkbox" id="gm-opt-dup" ${App.userConfig.allowDuplicate?'checked':''}>
-                    <label for="gm-opt-dup">允许重复下载 (忽略历史)</label>
-                </div>
-                <div class="gm-checkbox-row">
-                    <input type="checkbox" id="gm-opt-batch-retain" ${App.userConfig.batchRetainOriginal?'checked':''}>
-                    <label for="gm-opt-batch-retain">保留原始文件名 (图片)</label>
-                </div>
-                <div class="gm-input-group" style="margin-top:10px;">
-                    <span class="gm-input-label">批量图片/视频目录</span>
-                    <input class="gm-popup-input" id="inp-batch-img-folder" value="${App.userConfig.batchImgFolder||''}">
-                </div>
-                <div class="gm-input-group">
-                    <span class="gm-input-label">批量图片文件名</span>
-                    <input class="gm-popup-input" id="inp-batch-img-file" value="${App.userConfig.batchImgFileName||''}">
-                </div>
-                <div class="gm-input-group">
-                    <span class="gm-input-label">批量文本目录</span>
-                    <input class="gm-popup-input" id="inp-batch-txt-folder" value="${App.userConfig.batchTextFolder||''}">
-                </div>
-                <div class="gm-input-group">
-                     <span class="gm-input-label">批量文本文件名</span>
-                    <input class="gm-popup-input" id="inp-batch-txt-file" value="${App.userConfig.batchTextFileName||''}">
-                </div>
-                <div class="gm-tags-container-small">
-                    <div class="gm-tag-small" onclick="UI.insertTag('{{author}}')">昵称</div>
-                    <div class="gm-tag-small" onclick="UI.insertTag('{{author_id}}')">UID</div>
-                    <div class="gm-tag-small" onclick="UI.insertTag('{{title}}')">标题</div>
-                    <div class="gm-tag-small" onclick="UI.insertTag('{{date}}')">日期</div>
-                    <div class="gm-tag-small" onclick="UI.insertTag('{{index}}')">序号</div>
-                </div>
-                <div style="margin-top:10px; padding-top:10px; border-top:1px dashed #eee; text-align:right;">
-                    <span style="font-size:11px;color:#999;cursor:pointer;margin-right:10px;" onclick="if(confirm('清空历史记录？')) {App.downloadHistory.clear();localStorage.setItem(App.historyKey,'[]');alert('已清空')}">🗑️ 清空历史</span>
-                </div>
-            `;
-            document.body.appendChild(popup);
-            
-            var inputs = ['gm-opt-text', 'gm-opt-img', 'gm-opt-video', 'gm-opt-dup', 'gm-opt-batch-retain', 
-                          'inp-batch-img-folder', 'inp-batch-img-file', 'inp-batch-txt-folder', 'inp-batch-txt-file',
-                          'inp-max-threads', 'inp-download-delay', 'inp-scan-delay'];
-            
-            inputs.forEach(function(id) {
-                var el = document.getElementById(id);
-                if(!el) return;
-                if(el.type === 'checkbox') {
-                    el.onchange = function() {
-                        if(id === 'gm-opt-text') App.userConfig.batchText = this.checked;
-                        if(id === 'gm-opt-img') App.userConfig.batchImg = this.checked;
-                        if(id === 'gm-opt-video') App.userConfig.batchVideo = this.checked;
-                        if(id === 'gm-opt-dup') App.userConfig.allowDuplicate = this.checked;
-                        if(id === 'gm-opt-batch-retain') App.userConfig.batchRetainOriginal = this.checked;
-                        localStorage.setItem(App.key, JSON.stringify(App.userConfig));
-                    };
-                } else {
-                    el.onfocus = function() { UI.lastFocusedInput = this; };
-                    el.oninput = function() {
-                        if(id === 'inp-batch-img-folder') App.userConfig.batchImgFolder = this.value;
-                        if(id === 'inp-batch-img-file') App.userConfig.batchImgFileName = this.value;
-                        if(id === 'inp-batch-txt-folder') App.userConfig.batchTextFolder = this.value;
-                        if(id === 'inp-batch-txt-file') App.userConfig.batchTextFileName = this.value;
-                        if(id === 'inp-max-threads') App.userConfig.maxConcurrency = parseInt(this.value) || 5;
-                        if(id === 'inp-download-delay') App.userConfig.downloadDelay = parseInt(this.value) || 100;
-                        if(id === 'inp-scan-delay') App.userConfig.scanDelay = parseInt(this.value) || 800;
-                        localStorage.setItem(App.key, JSON.stringify(App.userConfig));
-                    };
-                }
-            });
-            document.getElementById('gm-scan-mode-1').onchange = function() { if(this.checked) { App.userConfig.scanStartMode = '1'; localStorage.setItem(App.key, JSON.stringify(App.userConfig)); } };
-            document.getElementById('gm-scan-mode-curr').onchange = function() { if(this.checked) { App.userConfig.scanStartMode = 'current'; localStorage.setItem(App.key, JSON.stringify(App.userConfig)); } };
-            document.getElementById('gm-btn-start-batch').onclick = function() {
-                if (!App.userConfig.batchText && !App.userConfig.batchImg && !App.userConfig.batchVideo) {
-                    alert("请至少勾选一种下载内容！");
-                    return;
-                }
-                popup.style.display = 'none';
-                SpaceCrawler.startScan();
-            };
-            document.getElementById('gm-btn-import').onclick = Utils.importHistory;
-            document.getElementById('gm-btn-export').onclick = Utils.exportHistory;
-            document.getElementById('gm-btn-clear').onclick = Utils.clearHistory;
-        },
  
         stopDownload: function() {
             if(App.isDownloading || SpaceCrawler.isScanning) {
                 App.isDownloading = false;
                 SpaceCrawler.isScanning = false;
                 SpaceCrawler.queue = [];
+                SpaceCrawler.processedCount = 0;
+                SpaceCrawler.activeThreads = 0;
                 UI.updateStatus('已停止', '#e74c3c');
                 setTimeout(function(){ UI.resetButtons(); UI.hideProgress(); }, 1500);
             }
@@ -596,10 +527,10 @@
             if (App.userConfig.scanStartMode === 'current') {
                 startPage = Utils.getCurrentPageNumber(url);
             } else {
-                if (url.match(/[?&]page=\d+/)) {
-                    url = url.replace(/(page=)\d+/, '$11');
-                } else if (url.match(/forum-\d+-\d+\.html/)) {
-                    url = url.replace(/-(\d+)\.html/, '-1.html');
+                if (url.match(REGEX_PAGE_PARAM)) {
+                    url = url.replace(REGEX_PAGE_REPLACE, '$11');
+                } else if (url.match(REGEX_FORUM_HTML)) {
+                    url = url.replace(REGEX_FORUM_REPLACE, '-1.html');
                 } else {
                     url += (url.indexOf('?') !== -1 ? '&' : '?') + 'page=1';
                 }
@@ -608,6 +539,8 @@
             UI.updateStatus('准备开始...', '#f39c12');
             UI.showProgress();
             this.queue = [];
+            this.processedCount = 0;
+            this.activeThreads = 0;
             this.scanPage(url, startPage);
         },
  
@@ -639,7 +572,7 @@
                          var titleLink = tr.querySelector('a.xst') || tr.querySelector('th > a[href*="tid"]') || tr.querySelector('h3.xw0 a');
                          if(!titleLink) return;
                         
-                         var tidMatch = titleLink.href.match(/tid=(\d+)/);
+                         var tidMatch = titleLink.href.match(REGEX_TID);
                          if (!tidMatch) return;
                          var tid = tidMatch[1];
                          var title = titleLink.innerText.trim();
@@ -648,7 +581,7 @@
                          var authorName = authLink ? authLink.innerText.trim() : "匿名";
                          var uid = '0';
                        
-                         if(authLink && authLink.href.match(/uid=(\d+)/)) uid = authLink.href.match(/uid=(\d+)/)[1];
+                         if(authLink && authLink.href.match(REGEX_UID)) uid = authLink.href.match(REGEX_UID)[1];
                          var dateEm = item.querySelector('.by em span') || item.querySelector('.by em');
                          var date = dateEm ? dateEm.innerText.trim() : "";
                          
@@ -663,7 +596,7 @@
                         if (!titleTh) return;
                         var titleLink = titleTh.querySelector('a[href*="tid"]');
                         if (!titleLink) return;
-                        var tidMatch = titleLink.href.match(/tid=(\d+)/);
+                        var tidMatch = titleLink.href.match(REGEX_TID);
                         if (!tidMatch) return;
                         var tid = tidMatch[1];
              
@@ -710,22 +643,44 @@
         
         processQueue: function() {
             if (!App.isDownloading) return;
-            if (this.queue.length === 0) {
-                UI.updateStatus('全部完成!', '#27ae60');
-                App.isDownloading = false;
-                setTimeout(function(){ UI.resetButtons(); UI.hideProgress(); }, 3000);
-                return;
-            }
-            var task = this.queue.shift();
-            SpaceCrawler.processedCount++;
-            UI.updateStatus('处理: ' + SpaceCrawler.processedCount + '/' + SpaceCrawler.totalThreads + ' [⏹️]', '#c0392b');
-            var btn = document.getElementById('gm-btn-batch-run');
-            if(btn) btn.onclick = function() { SpaceCrawler.stopDownload(); };
-            UI.updateProgress(SpaceCrawler.processedCount, SpaceCrawler.totalThreads);
-            Scraper.fetchThreadAndDownload(task, function(success) {
-                if (success) { App.downloadHistory.add(task.tid); Utils.debouncedSaveHistory(); }
-                setTimeout(function() { SpaceCrawler.processQueue(); }, 1000);
-            });
+
+            // Start concurrent workers
+            var max = (App.userConfig && parseInt(App.userConfig.maxConcurrency)) || 3;
+            var self = this;
+
+            var spawn = function() {
+                if (!App.isDownloading) return;
+
+                // All tasks processed and no active threads => Done
+                if (self.processedCount >= self.totalThreads && self.activeThreads === 0) {
+                    UI.updateStatus('全部完成!', '#27ae60');
+                    App.isDownloading = false;
+                    setTimeout(function(){ UI.resetButtons(); UI.hideProgress(); }, 3000);
+                    return;
+                }
+
+                while (self.activeThreads < max && self.processedCount < self.totalThreads) {
+                    self.activeThreads++;
+                    var task = self.queue[self.processedCount];
+                    self.processedCount++;
+
+                    UI.updateStatus('处理: ' + self.processedCount + '/' + self.totalThreads + ' [⏹️]', '#c0392b');
+                    var btn = document.getElementById('gm-btn-batch-run');
+                    if(btn) btn.onclick = function() { SpaceCrawler.stopDownload(); };
+                    UI.updateProgress(self.processedCount, self.totalThreads);
+
+                    (function(t) {
+                        Scraper.fetchThreadAndDownload(t, function(success) {
+                            if (success) { App.downloadHistory.add(t.tid); Utils.debouncedSaveHistory(); }
+                            self.activeThreads--;
+                            // Optimized: Check queue immediately after a task finishes
+                            spawn();
+                        });
+                    })(task);
+                }
+            };
+
+            spawn();
         }
     };
  
@@ -742,7 +697,7 @@
                     var authLink = doc.querySelector('.authi .xw1') || doc.querySelector('.authi a[href*="uid"]');
                     if(authLink) {
                         authorName = authLink.innerText.trim();
-                        if(authLink.href.match(/uid=(\d+)/)) authorId = authLink.href.match(/uid=(\d+)/)[1];
+                        if(authLink.href.match(REGEX_UID)) authorId = authLink.href.match(REGEX_UID)[1];
                     }
                 }
  
@@ -757,9 +712,12 @@
                 };
                 var allMedia = [];
                 var hasContent = false;
- 
+
+                // [优化] 预先获取节点，避免重复查询 DOM
+                var postNodes = Scraper.getPostNodes(doc);
+
                 if (App.userConfig.batchText) {
-                    var posts = Scraper.parsePosts(doc);
+                    var posts = Scraper.parsePosts(doc, postNodes);
                     if (posts.length > 0) {
                         var content = "=== " + threadContext.title + " ===\nUID: " + threadContext.author_id + "\nLink: " + url + "\n\n";
                         content += posts.map(function(p) { return "### " + p.floor + "楼\n\n" + p.text; }).join('\n\n' + '-'.repeat(30) + '\n\n');
@@ -770,7 +728,7 @@
                 }
  
                 if (App.userConfig.batchImg) {
-                    var imgs = Scraper.parseImages(doc);
+                    var imgs = Scraper.parseImages(doc, postNodes);
                     Logger.log('解析图片数量: ' + imgs.length); 
                     imgs.forEach(function(img) {
                         allMedia.push({ url: img.url, floor: img.floor, date: img.date, type: img.type || 'img', fileName: img.fileName });
@@ -779,7 +737,7 @@
                 }
  
                 if (App.userConfig.batchVideo) {
-                    var videos = Scraper.parseVideos(doc);
+                    var videos = Scraper.parseVideos(doc, postNodes);
                     videos.forEach(function(vid) {
                         var ext = vid.ext || '.mp4';
                         allMedia.push({ url: vid.url, floor: vid.floor, date: vid.date, type: 'video', ext: ext });
@@ -811,9 +769,11 @@
             });
             var active = 0; 
             var max = parseInt(App.userConfig.maxConcurrency) || 5; 
-            var delay = parseInt(App.userConfig.downloadDelay) || 100;
+            var delay = parseInt(App.userConfig.downloadDelay);
+            if (isNaN(delay)) delay = 100;
             var finished = 0;
             var total = uniqueItems.length;
+            var itemIndex = 0;
             
             // [关键修复] 优先使用传入的上下文数据（批量模式），否则使用全局数据（单贴模式）
             var globalData = contextData || Scraper.getTemplateData();
@@ -842,7 +802,7 @@
             var process = function() { 
                if(!App.isRunning && App.currentMode==='images') return;
                try {
-                   while(active < max && queue.length > 0) { active++; down(queue.shift()); } 
+                   while(active < max && itemIndex < queue.length) { active++; down(queue[itemIndex++]); }
                } catch(e) {
                    Logger.error("Queue process error: ", e);
                }
@@ -876,7 +836,7 @@
                     if (baseName.endsWith('.txt')) baseName = baseName.slice(0, -4);
                     var filename = (folderName ? (folderName + '/') : '') + baseName + ext;
                     if (item.type === 'img' || item.type === 'xs0' || item.type === 'tattl') {
-                        Logger.log('开始下载: ' + filename);
+                        // Logger.log('开始下载: ' + filename);
                         GM_xmlhttpRequest({
                             method: "GET", url: item.url, responseType: 'blob', headers: { 'Referer': window.location.href },
                             onload: function(res) {
@@ -886,7 +846,7 @@
                                      GM_download({
                                         url: u, name: filename, saveAs: false,
                                         onload: function() { 
-                                            setTimeout(function() { URL.revokeObjectURL(u); }, 60000); 
+                                            setTimeout(function() { URL.revokeObjectURL(u); }, 0);
                                             active--; finished++; 
                                             updateUI();
                                             check();
@@ -902,7 +862,7 @@
                                                 saveAs: false,
                                                 headers: { 'Referer': window.location.href },
                                                 onload: function() { 
-                                                    setTimeout(function() { URL.revokeObjectURL(u); }, 60000);
+                                                    setTimeout(function() { URL.revokeObjectURL(u); }, 0);
                                                     active--; finished++; updateUI(); check(); 
                                                 },
                                                 onerror: function(e2) {
@@ -944,7 +904,8 @@
                 
                 function check() { 
                     if (finished === total) doneCallback();
-                    else setTimeout(process, delay); 
+                    else if (delay > 0) setTimeout(process, delay);
+                    else process();
                 }
             };
             process();
@@ -979,13 +940,46 @@
                 }
             });
         },
- 
-        parsePosts: function(doc) {
-            var results = [];
+
+        getPostNodes: function(doc) {
             // [修复] 仅查找 post_ 开头的数字 ID div，避免选中干扰项
             var postDivs = doc.querySelectorAll('div[id^="post_"]:not([id*="rate"]):not([id*="new"])');
-            // 如果没找到，降级使用 .plc
             if (postDivs.length === 0) postDivs = doc.querySelectorAll('.plc');
+            return postDivs;
+        },
+
+        extractThreadContent: function(root) {
+            var chunks = [];
+
+            function walk(node) {
+                if (node.nodeType === 1) { // Element
+                    var tag = node.tagName.toUpperCase();
+                    if (tag === 'SCRIPT' || tag === 'STYLE') return;
+                    if (node.classList && (node.classList.contains('jammer') || node.classList.contains('pstatus'))) return;
+
+                    if (tag === 'BR') {
+                        chunks.push('\n');
+                    } else {
+                        var child = node.firstChild;
+                        while(child) {
+                            walk(child);
+                            child = child.nextSibling;
+                        }
+                        if (regexBlockTags.test(tag)) chunks.push('\n');
+                    }
+                } else if (node.nodeType === 3) { // Text
+                    chunks.push(node.nodeValue);
+                }
+            }
+            walk(root);
+            return chunks.join('').replace(/\u00a0/g, ' ').trim();
+        },
+
+ 
+        parsePosts: function(doc, postNodes) {
+            var results = [];
+            var postDivs = postNodes || Scraper.getPostNodes(doc);
+
             for(var i=0; i<postDivs.length; i++){
                 var div = postDivs[i];
                 if(div.id && (div.id === 'post_new' || div.id.indexOf('post_rate') !== -1)) continue;
@@ -995,20 +989,16 @@
                 var uid = '0';
                 var authLink = div.querySelector('.authi a[href*="uid"]');
                 if (authLink) {
-                    var m = authLink.href.match(/uid=(\d+)/);
+                    var m = authLink.href.match(REGEX_UID);
                     if (m) uid = m[1];
                 }
 
                 var contentDiv = div.querySelector('.t_f') || div.querySelector('.pcb');
                 if(contentDiv) {
-                    var temp = contentDiv.cloneNode(true);
-                    var garbage = temp.querySelectorAll('script, style, .jammer, .pstatus');
-                    garbage.forEach(g => g.remove());
-                    temp.innerHTML = temp.innerHTML.replace(/<br\s*\/?>/gi, '##BR##');
-                    var text = temp.innerText.replace(/##BR##/g, '\n').replace(/\u00a0/g, ' ').trim();
+                    var text = this.extractThreadContent(contentDiv);
                     
                     // [新增] 提取标题摘要用于目录
-                    var firstLine = text.split('\n')[0].replace(/##BR##/g,'');
+                    var firstLine = text.split('\n')[0];
                     var title = firstLine.length > 20 ? (firstLine.substring(0,20)+'...') : firstLine;
 
                     if(text) results.push({floor:floor, text: text, date: date, title: title, uid: uid});
@@ -1017,21 +1007,34 @@
             return results;
         },
  
-        parseImages: function(doc) {
+        parseImages: function(doc, postNodes) {
             var images = [];
-            // [修复] 仅查找 post_ 开头的数字 ID div
-            var postDivs = doc.querySelectorAll('div[id^="post_"]:not([id*="rate"]):not([id*="new"])');
-            if (postDivs.length === 0) postDivs = doc.querySelectorAll('.plc');
+            // Optimize: Use passed nodes or fetch them
+            var postDivs = postNodes;
+            if (!postDivs) {
+                postDivs = Scraper.getPostNodes(doc);
+            }
             
+            // Helper to check ancestry safely (ES5 compatible)
+            var hasClassInAncestry = function(el, className, limitEl) {
+                if (el.closest) return el.closest('.' + className);
+                var curr = el.parentNode;
+                while (curr && curr !== limitEl && curr !== document) {
+                    if (curr.classList && curr.classList.contains(className)) return curr;
+                    curr = curr.parentNode;
+                }
+                return null;
+            };
+
             Logger.log('找到帖子块数量: ' + postDivs.length);
             postDivs.forEach(function(div) {
                 // 再次检查 ID 格式，确保是数字结尾
-                if (div.id && !/post_\d+$/.test(div.id) && div.className.indexOf('plc') === -1) return;
+                if (div.id && !REGEX_POST_ID.test(div.id) && div.className.indexOf('plc') === -1) return;
                 
                 var floor = Scraper.getFloor(div);
                 var date = Scraper.getDate(div);
                 
-                // 1. 优先解析 .xs0 附件块
+                // 1. 优先解析 .xs0 附件块 (Original logic preserved for text-only attachments)
                 var xs0Divs = div.querySelectorAll('.xs0');
                 if (xs0Divs.length > 0) Logger.log('楼层 ' + floor + ' 找到 .xs0 数量: ' + xs0Divs.length);
                 
@@ -1040,9 +1043,9 @@
                     var link = xs0.querySelector('a[href*="mod=attachment"]');
                     if (strong && link) {
                          var fn = strong.innerText.trim();
-                         if (['.jpg','.png','.gif','.jpeg','.webp','.bmp'].some(e => fn.toLowerCase().endsWith(e))) {
+                         if (['.jpg','.png','.gif','.jpeg','.webp','.bmp'].some(function(e){ return fn.toLowerCase().endsWith(e); })) {
                              var src = link.href;
-                             if (src.indexOf('mod=attachment') !== -1) src = src.replace(/&amp;/g, '&');
+                             if (src.indexOf('mod=attachment') !== -1) src = src.replace(REGEX_AMP, '&');
                              if (src.indexOf('http') !== 0) { try { src = new URL(src, window.location.href).href;
                              } catch(e) { src = window.location.origin + '/' + src;
                              } }
@@ -1054,8 +1057,7 @@
                     }
                 });
 
-                // 2. [新增] 专门解析 .tattl 附件列表（支持用户提供的结构）
-                // 结构通常是: dl.tattl > dd > div.mbn.savephotop > img
+                // 2. 解析 .tattl 附件列表 (Original logic preserved)
                 var tattlDivs = div.querySelectorAll('dl.tattl');
                 tattlDivs.forEach(function(dl) {
                      var dds = dl.querySelectorAll('dd');
@@ -1065,66 +1067,67 @@
                              var src = img.getAttribute('zoomfile') || img.getAttribute('file') || img.src;
                              if (!src) return;
                              
-                             if (src.indexOf('mod=attachment') !== -1) src = src.replace(/&amp;/g, '&');
+                             if (src.indexOf('mod=attachment') !== -1) src = src.replace(REGEX_AMP, '&');
                              if (src.indexOf('http') !== 0) { try { src = new URL(src, window.location.href).href; } catch(e) { src = window.location.origin + '/' + src; } }
 
-                             // 获取文件名：优先尝试同级或上级 .mbn a 的链接文本（文件名更全）
+                             // 获取文件名
                              var fn = '';
                              var link = dd.querySelector('p.mbn a') || dd.querySelector('a');
                              if (link) fn = link.innerText.trim();
                              if (!fn) fn = img.getAttribute('alt') || img.getAttribute('title');
 
-                             // 标记该图片已处理，防止后续通用逻辑重复添加
+                             // 标记该图片已处理
                              img.setAttribute('data-gm-processed', '1');
                              images.push({ url: src, floor: floor, date: date, fileName: fn, type: 'tattl' });
                          }
                      });
                 });
 
-                // 3. 解析常规图片
-                var imgs = div.querySelectorAll('.t_f img, .savephotop img, .mbn img, .tattl img, img[zoomfile], img[file], .message img');
-                imgs.forEach(function(img) {
-                    // 检查是否已被 .xs0 或 .tattl 逻辑处理过
-                    if (img.getAttribute('data-gm-processed') === '1') return;
+                // 3. [优化] 常规图片解析：统一查找并在 JS 中筛选，替代复杂的 selector
+                var allImgs = div.getElementsByTagName('img');
+                var len = allImgs.length; // Cache length
 
-                    // 显式忽略 ignore_js_op 包裹的图片（防止与 .xs0 重复）
-                    if (img.closest('ignore_js_op')) return;
+                for (var i = 0; i < len; i++) {
+                    var img = allImgs[i];
+
+                    // 检查是否已被处理
+                    if (img.getAttribute('data-gm-processed') === '1') continue;
+
+                    // 显式忽略 ignore_js_op 包裹的图片
+                    if (hasClassInAncestry(img, 'ignore_js_op', div)) continue;
  
                     var src = img.getAttribute('zoomfile') || img.getAttribute('file') || img.src;
-                    if (!src) return;
+                    if (!src) continue;
                     if (src.indexOf('mod=attachment') !== -1) {
-                         src = src.replace('&noupdate=yes', '').replace(/&amp;/g, '&');
+                         src = src.replace('&noupdate=yes', '').replace(REGEX_AMP, '&');
                     }
-                    if (src.indexOf('http') !== 0) { try { src = new URL(src, window.location.href).href; } catch(e) { src = window.location.origin + '/' + src; } }
                     
+                    if (src.indexOf('http') !== 0) { try { src = new URL(src, window.location.href).href; } catch(e) { src = window.location.origin + '/' + src; } }
+
                     var lowSrc = src.toLowerCase();
-                    if (lowSrc.includes('smilies/') || lowSrc.includes('common/back.gif') || lowSrc.includes('common/none.gif') || 
-                        lowSrc.includes('avatar.php') || lowSrc.includes('uc_server') || lowSrc.includes('uid=') || 
-                        lowSrc.includes('sign') || lowSrc.includes('icon') || lowSrc.includes('btn') || 
-                        lowSrc.includes('rleft.gif') || lowSrc.includes('rright.gif') || lowSrc.includes('nophoto')) {
-                        return;
-                    }
- 
-                    if (img.className && img.className.indexOf('vm') !== -1) return;
+                    if (Scraper.isGarbageImage(lowSrc)) continue;
+
+                    if (img.className && img.className.indexOf('vm') !== -1) continue;
                     var originalName = '';
                     if (!originalName || originalName.length < 3) originalName = img.getAttribute('title') || '';
                     if (!originalName || originalName.length < 3) originalName = img.getAttribute('alt') || '';
                     images.push({ url: src, floor: floor, date: date, fileName: originalName });
-                });
+                }
             });
             return images;
         },
  
-        parseVideos: function(doc) {
+        parseVideos: function(doc, postNodes) {
             var videos = [];
-            var postDivs = doc.querySelectorAll('div[id^="post_"]');
-            if (postDivs.length === 0) postDivs = doc.querySelectorAll('.plc');
+            var postDivs = postNodes || Scraper.getPostNodes(doc);
+
             postDivs.forEach(function(div) {
                 var floor = Scraper.getFloor(div);
                 var date = Scraper.getDate(div);
                 var vTags = div.querySelectorAll('video source, video');
                 vTags.forEach(function(v) {
-                    var src = v.src || v.querySelector('source')?.src;
+                    var source = v.querySelector('source');
+                    var src = v.src || (source ? source.src : null);
                     if (src) {
                         if (src.indexOf('http') !== 0) src = window.location.origin + '/' + src;
                         videos.push({ url: src, floor: floor, date: date, ext: '.mp4' });
@@ -1142,18 +1145,24 @@
         },
  
         getFloor: function(div) {
+            if (div._gm_floor) return div._gm_floor;
             var floor = "?";
             var floorEm = div.querySelector('.pi strong a') || div.querySelector('.pi a em');
             if (floorEm) { var txt = floorEm.innerText.trim();
-                var num = txt.match(/\d+/); floor = num ? num[0] : txt;
+                var num = txt.match(REGEX_DIGITS); floor = num ? num[0] : txt;
             }
             else { var mFloor = div.querySelector('.authi li.grey em');
-                if (mFloor) floor = mFloor.innerText.replace(/[\r\n]/g, '').replace('^#', '').trim(); }
+                if (mFloor) floor = mFloor.innerText.replace(REGEX_CONTROL_CHARS, '').replace('^#', '').trim(); }
             return floor;
         },
         getDate: function(div) {
+            if (div._gm_date) return div._gm_date;
             var authi = div.querySelector('.authi em') || div.querySelector('.authi .rela');
-            if (authi) { return Utils.extractDate(authi.innerText); }
+            if (authi) {
+                var d = Utils.extractDate(authi.innerText);
+                div._gm_date = d;
+                return d;
+            }
             return "";
         },
         isGarbageImage: function(lowSrc) {
@@ -1187,7 +1196,7 @@
              var authorid = Utils.getQuery(window.location.href, 'authorid');
              if(!authorid) {
                  var a = document.querySelector('.authi .xw1') || document.querySelector('.authi a[href*="uid"]');
-                 if(a) { var m = a.href.match(/uid=(\d+)/); if(m) authorid = m[1];
+                 if(a) { var m = a.href.match(REGEX_UID); if(m) authorid = m[1];
                  }
              }
              App.meta.authorid = authorid || '0';
@@ -1205,22 +1214,29 @@
             var url = Utils.buildUrl(App.meta.tid, page, targetAuthorId);
             var currentPage = Utils.getCurrentPageNumber();
             if (page === currentPage) {
+                 // [优化] 使用缓存的 postNodes
+                 var postNodes = Scraper.getPostNodes(document);
                  if (App.currentMode === 'images') {
-                     var imgs = Scraper.parseImages(document);
-                     if (imgs.length > 0) App.imgData = App.imgData.concat(imgs);
+                     var imgs = Scraper.parseImages(document, postNodes);
+                     // Optimize: use push.apply to avoid creating new arrays on every iteration
+                     if (imgs.length > 0) Array.prototype.push.apply(App.imgData, imgs);
                  } else {
-                     var posts = Scraper.parsePosts(document);
-                     if (posts.length > 0) App.textData = App.textData.concat(posts);
+                     var posts = Scraper.parsePosts(document, postNodes);
+                     if (posts.length > 0) Array.prototype.push.apply(App.textData, posts);
                  }
                  var nextBtn = document.querySelector('.pg .nxt') || document.querySelector('#pgt .nxt');
                  if (nextBtn) { setTimeout(function() { Scraper.loopPage(page + 1); }, 600); } else { Scraper.finish();
                  }
             } else {
                 Utils.fetchDoc(url, function(doc) {
+                     // [优化] 预获取节点
+                     var postNodes = Scraper.getPostNodes(doc);
                      if (App.currentMode === 'images') {
-                         var imgs = Scraper.parseImages(doc); if (imgs.length > 0) App.imgData = App.imgData.concat(imgs);
+                         var imgs = Scraper.parseImages(doc, postNodes);
+                         if (imgs.length > 0) Array.prototype.push.apply(App.imgData, imgs);
                      } else {
-                         var posts = Scraper.parsePosts(doc); if (posts.length > 0) App.textData = App.textData.concat(posts);
+                         var posts = Scraper.parsePosts(doc, postNodes);
+                         if (posts.length > 0) Array.prototype.push.apply(App.textData, posts);
                      }
                      var nextBtn = doc.querySelector('.pg .nxt') || doc.querySelector('#pgt .nxt');
                      if (nextBtn) { setTimeout(function() { Scraper.loopPage(page + 1); }, 600); } else { Scraper.finish(); }
@@ -1324,7 +1340,7 @@
                 
                 <div class="gm-popup-subtitle">高级设置 (全局)</div>
                 <div class="gm-input-group" style="display:flex; gap:10px;">
-                    <div style="flex:1"><span class="gm-input-label">并发数</span><input class="gm-popup-input" 
+                    <div style="flex:1"><span class="gm-input-label">并发数</span><input class="gm-popup-input"
                     type="number" id="inp-tpl-max-threads" value="${App.userConfig.maxConcurrency}" min="1"></div>
                     <div style="flex:1"><span class="gm-input-label">间隔(ms)</span><input class="gm-popup-input" type="number" id="inp-tpl-download-delay" value="${App.userConfig.downloadDelay}" min="0"></div>
                 </div>
@@ -1361,21 +1377,21 @@
             `;
             document.body.appendChild(popup);
             
-            var bind = function(id, k) { var el=document.getElementById(id); if(el) { el.onfocus=function(){UI.lastFocusedInput=this}; el.oninput=function(){ App.userConfig[k]=this.value; localStorage.setItem(App.key, JSON.stringify(App.userConfig)); }; } };
+            var bind = function(id, k) { var el=document.getElementById(id); if(el) { el.onfocus=function(){UI.lastFocusedInput=this}; el.oninput=function(){ App.userConfig[k]=this.value; Utils.debouncedSaveConfig(); }; } };
             bind('inp-tpl-img-folder', 'tplImgFolder'); bind('inp-tpl-img-file', 'tplImgFileName');
             bind('inp-tpl-txt-folder', 'tplTextFolder'); bind('inp-tpl-txt-file', 'tplTextFileName');
             // New inputs bindings for single panel
             var elThreads = document.getElementById('inp-tpl-max-threads');
-            if(elThreads) elThreads.oninput = function() { App.userConfig.maxConcurrency = parseInt(this.value) || 5; localStorage.setItem(App.key, JSON.stringify(App.userConfig)); };
+            if(elThreads) elThreads.oninput = function() { App.userConfig.maxConcurrency = parseInt(this.value) || 5; Utils.debouncedSaveConfig(); };
             
             var elDelay = document.getElementById('inp-tpl-download-delay');
-            if(elDelay) elDelay.oninput = function() { App.userConfig.downloadDelay = parseInt(this.value) || 100; localStorage.setItem(App.key, JSON.stringify(App.userConfig)); };
+            if(elDelay) elDelay.oninput = function() { App.userConfig.downloadDelay = parseInt(this.value) || 100; Utils.debouncedSaveConfig(); };
             
             var elDup = document.getElementById('gm-opt-single-dup');
-            if(elDup) elDup.onchange = function() { App.userConfig.allowDuplicate = this.checked; localStorage.setItem(App.key, JSON.stringify(App.userConfig)); };
+            if(elDup) elDup.onchange = function() { App.userConfig.allowDuplicate = this.checked; Utils.debouncedSaveConfig(); };
  
             var ck = document.getElementById('gm-opt-retain-name');
-            if(ck) ck.onchange = function() { App.userConfig.retainOriginalFiles = this.checked; localStorage.setItem(App.key, JSON.stringify(App.userConfig)); };
+            if(ck) ck.onchange = function() { App.userConfig.retainOriginalFiles = this.checked; Utils.debouncedSaveConfig(); };
             // Bind history buttons for single mode
             document.getElementById('gm-btn-import-single').onclick = Utils.importHistory;
             document.getElementById('gm-btn-export-single').onclick = Utils.exportHistory;
@@ -1388,6 +1404,20 @@
             popup.innerHTML = `
                 <div class="gm-popup-title">⚙️ 批量下载设置 <span style="cursor:pointer;float:right" onclick="this.parentNode.parentNode.style.display='none'">❌</span></div>
                 
+                <div class="gm-popup-subtitle">扫描设置</div>
+                <div class="gm-input-group">
+                    <span class="gm-input-label">扫描间隔 (ms)</span>
+                    <input class="gm-popup-input" type="number" id="inp-scan-delay" value="${App.userConfig.scanDelay}" min="0" step="100">
+                </div>
+                <div class="gm-input-group">
+                    <div class="gm-checkbox-row" style="margin-top:0;">
+                        <input type="radio" name="gm-scan-mode" id="gm-scan-mode-1" value="1" ${App.userConfig.scanStartMode !== 'current'?'checked':''}>
+                        <label for="gm-scan-mode-1" style="margin-right:15px;">从第 1 页开始</label>
+                        <input type="radio" name="gm-scan-mode" id="gm-scan-mode-curr" value="current" ${App.userConfig.scanStartMode === 'current'?'checked':''}>
+                        <label for="gm-scan-mode-curr">从当前页开始</label>
+                    </div>
+                </div>
+
                 <div class="gm-popup-subtitle">下载内容选择</div>
                 <div class="gm-check-group">
                     <label class="gm-check-item"><input type="checkbox" id="gm-opt-text" 
@@ -1445,7 +1475,7 @@
             // 绑定事件
             var inputs = ['gm-opt-text', 'gm-opt-img', 'gm-opt-video', 'gm-opt-dup', 'gm-opt-batch-retain', 
                           'inp-batch-img-folder', 'inp-batch-img-file', 'inp-batch-txt-folder', 'inp-batch-txt-file',
-                          'inp-max-threads', 'inp-download-delay'];
+                          'inp-max-threads', 'inp-download-delay', 'inp-scan-delay'];
             
             inputs.forEach(function(id) {
                 var el = document.getElementById(id);
@@ -1458,7 +1488,7 @@
                         if(id === 'gm-opt-video') App.userConfig.batchVideo = this.checked;
                         if(id === 'gm-opt-dup') App.userConfig.allowDuplicate = this.checked;
                         if(id === 'gm-opt-batch-retain') App.userConfig.batchRetainOriginal = this.checked;
-                        localStorage.setItem(App.key, JSON.stringify(App.userConfig));
+                        Utils.debouncedSaveConfig();
                     };
                 } else {
                     el.onfocus = function() { UI.lastFocusedInput = this; };
@@ -1469,10 +1499,14 @@
                         if(id === 'inp-batch-txt-file') App.userConfig.batchTextFileName = this.value;
                         if(id === 'inp-max-threads') App.userConfig.maxConcurrency = parseInt(this.value) || 5;
                         if(id === 'inp-download-delay') App.userConfig.downloadDelay = parseInt(this.value) || 100;
-                        localStorage.setItem(App.key, JSON.stringify(App.userConfig));
+                        if(id === 'inp-scan-delay') App.userConfig.scanDelay = parseInt(this.value) || 800;
+                        Utils.debouncedSaveConfig();
                     };
                 }
             });
+
+            document.getElementById('gm-scan-mode-1').onchange = function() { if(this.checked) { App.userConfig.scanStartMode = '1'; Utils.debouncedSaveConfig(); } };
+            document.getElementById('gm-scan-mode-curr').onchange = function() { if(this.checked) { App.userConfig.scanStartMode = 'current'; Utils.debouncedSaveConfig(); } };
         },
  
         hidePanel: function() {
@@ -1568,8 +1602,51 @@
         if(!t) { t=document.createElement('div'); t.className='gm-toast'; document.body.appendChild(t); } t.innerText = msg; t.classList.add('show'); setTimeout(function(){ t.classList.remove('show'); }, 3000);
         },
         makeDraggable: function(el, handle) {
-            var pos1=0,pos2=0,pos3=0,pos4=0;
-            handle.onmousedown = function(e) { e.preventDefault(); pos3=e.clientX; pos4=e.clientY; document.onmouseup=function(){document.onmouseup=null;document.onmousemove=null;}; document.onmousemove=function(e){ e.preventDefault(); pos1=pos3-e.clientX; pos2=pos4-e.clientY; pos3=e.clientX; pos4=e.clientY; el.style.top=(el.offsetTop-pos2)+"px"; el.style.left=(el.offsetLeft-pos1)+"px"; }; };
+            handle.onmousedown = function(e) {
+                e.preventDefault();
+                var startX = e.clientX;
+                var startY = e.clientY;
+                var startLeft = el.offsetLeft;
+                var startTop = el.offsetTop;
+                var ticking = false;
+                var rafId = null;
+                var currentX = e.clientX;
+                var currentY = e.clientY;
+
+                var onMove = function(e) {
+                    e.preventDefault();
+                    currentX = e.clientX;
+                    currentY = e.clientY;
+
+                    if (!ticking) {
+                        rafId = requestAnimationFrame(function() {
+                            var dx = currentX - startX;
+                            var dy = currentY - startY;
+                            // Optimize: Use transform for smooth 60fps drag without layout thrashing
+                            el.style.transform = 'translate3d(' + dx + 'px, ' + dy + 'px, 0)';
+                            ticking = false;
+                        });
+                        ticking = true;
+                    }
+                };
+
+                var onUp = function() {
+                    document.removeEventListener('mousemove', onMove);
+                    document.removeEventListener('mouseup', onUp);
+
+                    if (rafId) cancelAnimationFrame(rafId);
+
+                    // Commit final position and clear transform
+                    var dx = currentX - startX;
+                    var dy = currentY - startY;
+                    el.style.transform = '';
+                    el.style.left = (startLeft + dx) + "px";
+                    el.style.top = (startTop + dy) + "px";
+                };
+
+                document.addEventListener('mousemove', onMove, { passive: false });
+                document.addEventListener('mouseup', onUp);
+            };
         }
     };
     

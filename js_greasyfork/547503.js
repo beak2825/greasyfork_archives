@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         无限暖暖网页活动-快速跳过
 // @namespace    http://tampermonkey.net/
-// @version      2025.12.17
-// @description  支持: 1.9家园合成小游戏, 2.0果园消消乐
+// @version      2026.01.22
+// @description  支持: 2.1森林大冒险, 2.0果园消消乐, 1.9家园合成小游戏
 // @author       浩劫者12345
 // @match        https://infinitynikki.nuanpaper.com/proj/*
+// @match        https://assets.papegames.com/cocos/online-game/*
 // @icon         https://assets.papegames.com/resources/cdn/20240412/8bea8d0de8e91973.ico
 // @grant        none
 // @license      MIT
@@ -15,166 +16,204 @@
 (function () {
     'use strict';
 
-    function addMenu(innerHTML) {
+    function addMenu(innerHTML, style = 'position: fixed; top: 8px; right: 8px; z-index: 99999;') {
         const menu = document.createElement('div')
         document.body.appendChild(menu)
         menu.outerHTML = /*html*/`
-            <div style="position: fixed; top: 8px; right: 8px; z-index: 99999;">
+            <div style="${style}">
                 ${innerHTML}
             </div>
         `
     }
 
     // 判断活动页面
-    if (location.href.includes('NikkiHome')) {
-        let gameId
-        let verifyCode
-        let source
+    if (location.href.includes('infinitynikki.nuanpaper.com/proj')) { // 外层页面
+        if (location.href.includes('NikkiHome')) { // 1.9
+            let gameId
+            let verifyCode
+            let source
 
-        function checkInfo() {
-            if (gameId == null) {
-                console.log('`game_id` is not present')
-            }
-            if (!verifyCode) {
-                console.log('`verify_code` is not present')
-            }
-            if (!source) {
-                console.log('`__source` is not present')
-            }
+            function checkInfo() {
+                if (gameId == null) {
+                    console.log('`game_id` is not present')
+                }
+                if (!verifyCode) {
+                    console.log('`verify_code` is not present')
+                }
+                if (!source) {
+                    console.log('`__source` is not present')
+                }
 
-            if (gameId != null && verifyCode && source) {
-                return true
-            } else {
-                window.alert('你还没有进入游戏')
-                return false
-            }
-        }
-
-        // Hook XHR send, 截获游戏id
-        const origSend = XMLHttpRequest.prototype.send
-        XMLHttpRequest.prototype.send = function (body) {
-            origSend.apply(this, arguments)
-
-            let r
-            try {
-                r = JSON.parse(body)
-            } catch (e) {
-                return
+                if (gameId != null && verifyCode && source) {
+                    return true
+                } else {
+                    window.alert('你还没有进入游戏')
+                    return false
+                }
             }
 
-            // console.log('Intercepted XHR payload:', r)
+            // Hook XHR send, 截获游戏id
+            const origSend = XMLHttpRequest.prototype.send
+            XMLHttpRequest.prototype.send = function (body) {
+                origSend.apply(this, arguments)
 
-            const id = r?.game_id  // 游戏id
-            if (id) {
-                gameId = id
-                console.log('Intercepted `game_id`:', gameId)
-            }
-        }
-
-        // Hook XHR open, 截获验证码
-        const origOpen = XMLHttpRequest.prototype.open
-        XMLHttpRequest.prototype.open = function (method, url, async, user, password) {
-            const xhr = this
-
-            xhr.addEventListener('load', () => {
                 let r
                 try {
-                    r = JSON.parse(xhr.response)
+                    r = JSON.parse(body)
                 } catch (e) {
                     return
                 }
 
-                // console.log('Intercepted XHR response:', r)
+                // console.log('Intercepted XHR payload:', r)
 
-                const code = r?.data?.verify_code  // 验证码
-                if (code) {
-                    verifyCode = code
-                    console.log('Intercepted `verify_code`:', verifyCode)
+                const id = r?.game_id  // 游戏id
+                if (id) {
+                    gameId = id
+                    console.log('Intercepted `game_id`:', gameId)
+                }
+            }
+
+            // Hook XHR open, 截获验证码
+            const origOpen = XMLHttpRequest.prototype.open
+            XMLHttpRequest.prototype.open = function (method, url, async, user, password) {
+                const xhr = this
+
+                xhr.addEventListener('load', () => {
+                    let r
+                    try {
+                        r = JSON.parse(xhr.response)
+                    } catch (e) {
+                        return
+                    }
+
+                    // console.log('Intercepted XHR response:', r)
+
+                    const code = r?.data?.verify_code  // 验证码
+                    if (code) {
+                        verifyCode = code
+                        console.log('Intercepted `verify_code`:', verifyCode)
+                    }
+                })
+
+                origOpen.apply(this, arguments)
+            }
+
+            // 监听 message 事件截获 __source
+            window.addEventListener('message', e => {
+                const src = e.data?.__source
+                if (src) {
+                    source = src
+                    console.log('Intercepted `__source`:', source)
                 }
             })
 
-            origOpen.apply(this, arguments)
-        }
+            window.skipGame = () => {
+                if (!checkInfo()) return
 
-        // 监听 message 事件截获 __source
-        window.addEventListener('message', e => {
-            const src = e.data?.__source
-            if (src) {
-                source = src
-                console.log('Intercepted `__source`:', source)
+                // 发送游戏过关事件
+                window.postMessage({
+                    "name": "game-cocos",
+                    "type": 9,  // 9=过关
+                    "value": {
+                        "ret": 0,
+                        "msg": "cocos->游戏过关数据",
+                        "data": {
+                            "score": 1206,  // 得分
+                            "game_id": gameId,  // 游戏id
+                            "verify_code": verifyCode,  // 验证码
+                            "status": 3
+                        }
+                    },
+                    "__source": source
+                })
             }
-        })
 
-        window.skipGame = () => {
-            if (!checkInfo()) return
+            window.unlockEgg = () => {
+                if (!checkInfo()) return
 
-            // 发送游戏过关事件
-            window.postMessage({
-                "name": "game-cocos",
-                "type": 9,  // 9=过关
-                "value": {
-                    "ret": 0,
-                    "msg": "cocos->游戏过关数据",
-                    "data": {
-                        "score": 1206,  // 得分
-                        "game_id": gameId,  // 游戏id
-                        "verify_code": verifyCode,  // 验证码
-                        "status": 3
-                    }
-                },
-                "__source": source
-            })
+                // 发送彩蛋触发事件
+                window.postMessage({
+                    "name": "game-cocos",
+                    "type": 6,  // 6=彩蛋
+                    "value": {
+                        "ret": 0,
+                        "msg": "触发彩蛋了",
+                        "data": {
+                            "game_id": gameId,  // 游戏id
+                            "verify_code": verifyCode,  // 验证码
+                        }
+                    },
+                    "__source": source
+                })
+
+                window.alert('解锁成功')
+            }
+
+            addMenu(/*html*/`
+                <button style="background-color: #0ff;" onclick="unlockEgg()">解锁彩蛋</button>
+                <button style="background-color: #0f0;" onclick="skipGame()">一键跳关</button>
+            `)
         }
 
-        window.unlockEgg = () => {
-            if (!checkInfo()) return
-
-            // 发送彩蛋触发事件
-            window.postMessage({
-                "name": "game-cocos",
-                "type": 6,  // 6=彩蛋
-                "value": {
-                    "ret": 0,
-                    "msg": "触发彩蛋了",
-                    "data": {
-                        "game_id": gameId,  // 游戏id
-                        "verify_code": verifyCode,  // 验证码
+        else if (location.href.includes('NikkiOrchard')) { // 2.0
+            window.skipGame = () => {
+                window.postMessage({
+                    "name": "game-cocos",
+                    "type": 2,
+                    "value": {
+                        "ret": 0,
+                        "msg": "",
+                        "data": {
+                            "saveArray": [
+                                {
+                                    "id": 1,
+                                    "num": 1206
+                                }
+                            ]
+                        }
                     }
-                },
-                "__source": source
-            })
+                })
+            }
 
-            window.alert('解锁成功')
+            addMenu(/*html*/`
+                <button style="background-color: #0f0;" onclick="skipGame()">一键完成当前关卡</button>
+            `)
         }
-
-        addMenu(/*html*/`
-            <button style="background-color: #0ff;" onclick="unlockEgg()">解锁彩蛋</button>
-            <button style="background-color: #0f0;" onclick="skipGame()">一键跳关</button>
-        `)
     }
 
-    else if (location.href.includes('NikkiOrchard')) {
-        window.skipGame = () => {
-            window.postMessage({
-                "name": "game-cocos",
-                "type": 2,
-                "value": {
-                    "ret": 0,
-                    "msg": "",
-                    "data": {
-                        "saveArray": [
-                            {
-                                "id": 1,
-                                "num": 1206
-                            }
-                        ]
-                    }
-                }
-            })
-        }
+    else if (location.href.includes('assets.papegames.com/cocos/online-game')) { // 内层iframe
+        if (location.href.includes('tgx-infinity-fly-bird-game')) { // 2.1内层cocos页面
+            window.skipGame = () => {
+                window.parent.postMessage({
+                    "name": "game-cocos",
+                    "type": 2,
+                    "value": {
+                        "ret": 0,
+                        "msg": "提交游戏数据",
+                        "data": {
+                            "score": 126,
+                            "item_count": 5
+                        }
+                    },
+                    // "__source": "abcdefghi"
+                }, '*')
+            }
 
-        addMenu(/*html*/`
-            <button style="background-color: #0f0;" onclick="skipGame()">一键完成当前关卡</button>
-        `)
+            window.godMode = () => {
+                try {
+                    let module = Object.values(System[Object.getOwnPropertySymbols(System)[0]]['chunks:///_virtual/RoleItem.ts']).find(x => x.RoleItem)
+                    module.RoleItem.prototype.onBeginContact = () => undefined;
+
+                    window.alert('无敌效果将在下一局生效（需要先死一次）\n注意：游戏过程中无敌效果无法解除，所以不会结算分数')
+                } catch (error) {
+                    window.alert('开启失败')
+                }
+            }
+
+            addMenu(/*html*/`
+                <button style="background-color: #ff0; font-size: 2vh;" onclick="godMode()">无敌模式</button>
+                <button style="background-color: #0f0; font-size: 2vh;" onclick="skipGame()">过关一次</button>
+            `, 'position: fixed; bottom: 8px; right: 8px; z-index: 99999;')
+        }
     }
 })();

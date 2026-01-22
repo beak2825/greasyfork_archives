@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Ranged Way Idle
-// @version      6.22
+// @version      6.23
 // @author       AlphB
 // @description  一些超级有用的MWI的QoL功能
 // @match        https://*.milkywayidle.com/*
@@ -163,7 +163,7 @@
     };
 
     const globalVariables = {
-        scriptVersion: GM_info?.script?.version || "6.22",
+        scriptVersion: GM_info?.script?.version || "6.23",
         marketAPIUrl: "https://www.milkywayidle.com/game_data/marketplace.json",
         initCharacterData: null,
         documentObserver: null,
@@ -528,34 +528,44 @@
                 }
             };
 
-            const OriginalWebSocket = unsafeWindow.WebSocket;
+            // get
+            const oriGet = Object.getOwnPropertyDescriptor(MessageEvent.prototype, "data").get;
 
-            class WrappedWebSocket extends OriginalWebSocket {
-                constructor(...args) {
-                    super(...args);
-                    if (this.url.startsWith("wss://api.milkywayidle.com/ws") ||
-                        this.url.startsWith("wss://api-test.milkywayidle.com/ws")) {
-                        this.addEventListener("message", e => globalVariables.webSocketMessageProcessor(e.data, 'get'));
-                        this._isGameSocket = true;
-                    } else {
-                        this._isGameSocket = false;
-                    }
+            function hookedGet() {
+                const socket = this.currentTarget;
+                if (!(socket instanceof WebSocket) || !socket.url) {
+                    return oriGet.call(this);
                 }
-
-                send(data) {
-                    if (this._isGameSocket) {
-                        globalVariables.webSocketMessageProcessor(data, 'get');
-                    }
-                    return super.send(data);
+                if (!socket.url.includes("wss://api.milkywayidle") && !socket.url.includes("wss://api-test.milkywayidle")) {
+                    return oriGet.call(this);
                 }
+                const message = oriGet.call(this);
+                try {
+                    globalVariables.webSocketMessageProcessor(message, 'get')
+                } catch (err) {
+                    console.error(err);
+                }
+                return message;
             }
 
-            WrappedWebSocket.CONNECTING = OriginalWebSocket.CONNECTING;
-            WrappedWebSocket.OPEN = OriginalWebSocket.OPEN;
-            WrappedWebSocket.CLOSING = OriginalWebSocket.CLOSING;
-            WrappedWebSocket.CLOSED = OriginalWebSocket.CLOSED;
+            Object.defineProperty(MessageEvent.prototype, "data", {
+                get: hookedGet, configurable: true, enumerable: true
+            });
 
-            unsafeWindow.WebSocket = WrappedWebSocket;
+            // send
+            const originalSend = WebSocket.prototype.send;
+
+            WebSocket.prototype.send = function (message) {
+                if (!this.url || !this.url.includes("wss://api.milkywayidle")) {
+                    return originalSend.call(this, message);
+                }
+                try {
+                    globalVariables.webSocketMessageProcessor(message, 'send');
+                } catch (err) {
+                    console.error(err);
+                }
+                return originalSend.call(this, message);
+            }
         }
 
         function initDocumentObserver() {

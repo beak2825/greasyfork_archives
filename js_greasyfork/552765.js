@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         [银河奶牛] 战斗市场小助手
 // @namespace    http://tampermonkey.net/
-// @version      1.4
+// @version      1.5
 // @description  基于生产采集增强的自动补货和自动售出功能，支持网页多开
 // @author       RERoger
 // @license      CC-BY-NC-SA-4.0
@@ -191,6 +191,8 @@
         constructor() {
             this.api = window.MWIModules.api;
             this.isReady = false;
+            this.lastMarketDataRequest = 0; // 跟踪上次市场数据请求时间
+            this.minRequestInterval = 1000; // 最小请求间隔1秒
             this.init();
         }
 
@@ -228,11 +230,23 @@
 
             const fullItemHrid = itemHrid.startsWith('/items/') ? itemHrid : `/items/${itemHrid}`;
 
-            // 检查缓存
+            // 检查缓存（增加缓存时间到5分钟以减少网络请求）
             const cached = window.marketDataCache?.get(fullItemHrid);
-            if (cached && Date.now() - cached.timestamp < 60000) {
+            if (cached && Date.now() - cached.timestamp < 300000) {
                 return cached.data;
             }
+
+            // API频率限制：确保两次市场数据请求之间至少间隔1秒
+            const now = Date.now();
+            const timeSinceLastRequest = now - this.lastMarketDataRequest;
+            if (timeSinceLastRequest < this.minRequestInterval) {
+                const waitTime = this.minRequestInterval - timeSinceLastRequest;
+                console.log(`[API] 市场数据请求过于频繁，等待 ${waitTime}ms`);
+                await utils.delay(waitTime);
+            }
+
+            // 更新最后请求时间
+            this.lastMarketDataRequest = Date.now();
 
             // 等待市场数据响应
             const responsePromise = window.PGE.waitForMessage(
@@ -290,6 +304,7 @@
             this.countdownInterval = null; // 倒计时定时器
             this.nextExecutionTime = null; // 下次执行时间
             this.lastExecutionTime = null; // 上次执行时间
+            this.isExecuting = false; // 执行锁，防止重复执行
             this.init();
         }
 
@@ -417,13 +432,22 @@
                 this.checkIntervalMs = 1000;
             }
             if (this.isEnabled && this.items.size > 0) {
-                // 检查是否需要立即执行
-                this.checkAndExecuteRestock();
+                // 始终根据 lastExecutionTime 重新计算 nextExecutionTime，确保刷新后倒计时准确
+                this.calculateNextExecutionTime();
 
-                // 设置定时检测（更频繁的检查，但基于时间距离判断是否执行）
+                const now = Date.now();
+                
+                // 如果已过期且未在执行中，延迟100ms执行避免与定时器冲突
+                if (now >= this.nextExecutionTime && !this.isExecuting) {
+                    setTimeout(() => {
+                        this.checkAndExecuteRestock();
+                    }, 100);
+                }
+
+                // 设置定时检测（降低频率以减少CPU占用）
                 this.checkInterval = setInterval(() => {
                     this.checkAndExecuteRestock();
-                }, 1000); // 每1秒检查一次
+                }, 30000); // 每30秒检查一次
 
                 // 启动倒计时显示
                 this.startCountdown();
@@ -432,17 +456,30 @@
 
         // 检查并执行补货（基于上次执行时间的距离）
         async checkAndExecuteRestock() {
+            // 防止重复执行
+            if (this.isExecuting) {
+                console.log('[AutoRestock] 正在执行中，跳过本次检查');
+                return;
+            }
+
             const now = Date.now();
 
             // 优先使用已保存的 nextExecutionTime，避免刷新时重置倒计时
             if (!this.nextExecutionTime) {
                 // 如果没有 nextExecutionTime，则尝试基于 lastExecutionTime 计算
                 if (!this.lastExecutionTime) {
-                    await this.checkAndRestock();
-                    this.lastExecutionTime = Date.now();
-                    this.nextExecutionTime = this.lastExecutionTime + this.checkIntervalMs;
-                    this.saveLastExecutionTime();
-                    this.saveNextExecutionTime();
+                    this.isExecuting = true;
+                    try {
+                        await this.checkAndRestock();
+                        this.lastExecutionTime = Date.now();
+                        this.nextExecutionTime = this.lastExecutionTime + this.checkIntervalMs;
+                        this.saveLastExecutionTime();
+                        this.saveNextExecutionTime();
+                    } catch (error) {
+                        console.error('[AutoRestock] 执行失败:', error);
+                    } finally {
+                        this.isExecuting = false;
+                    }
                     return;
                 }
                 this.nextExecutionTime = this.lastExecutionTime + this.checkIntervalMs;
@@ -450,11 +487,18 @@
 
             // 当到达或超过下次执行时间时，执行补货，并在完成后刷新下次执行时间
             if (now >= this.nextExecutionTime) {
-                await this.checkAndRestock();
-                this.lastExecutionTime = Date.now();
-                this.nextExecutionTime = this.lastExecutionTime + this.checkIntervalMs;
-                this.saveLastExecutionTime();
-                this.saveNextExecutionTime();
+                this.isExecuting = true;
+                try {
+                    await this.checkAndRestock();
+                    this.lastExecutionTime = Date.now();
+                    this.nextExecutionTime = this.lastExecutionTime + this.checkIntervalMs;
+                    this.saveLastExecutionTime();
+                    this.saveNextExecutionTime();
+                } catch (error) {
+                    console.error('[AutoRestock] 执行失败:', error);
+                } finally {
+                    this.isExecuting = false;
+                }
             }
         }
 
@@ -487,15 +531,24 @@
         calculateNextExecutionTime() {
             const now = Date.now();
 
-            // 如果已经存在 nextExecutionTime（例如从本地存储加载），则保持不改动，避免刷新时重置倒计时
-            if (this.nextExecutionTime) return;
+            // 如果 nextExecutionTime 已存在且未过期，保持不变
+            if (this.nextExecutionTime && this.nextExecutionTime > now) {
+                return;
+            }
 
+            // 如果 nextExecutionTime 不存在或已过期，重新计算
             if (!this.lastExecutionTime) {
                 // 如果没有上次执行时间，下次执行时间就是现在
                 this.nextExecutionTime = now;
             } else {
                 // 基于上次执行时间计算下次执行时间
                 this.nextExecutionTime = this.lastExecutionTime + this.checkIntervalMs;
+                
+                // 如果计算出的时间仍然小于当前时间（说明间隔很久没检查了）
+                // 则推进到下一个有效周期
+                while (this.nextExecutionTime <= now) {
+                    this.nextExecutionTime += this.checkIntervalMs;
+                }
             }
         }
 
@@ -1444,6 +1497,7 @@
             this.countdownInterval = null; // 倒计时定时器
             this.nextExecutionTime = null; // 下次执行时间
             this.lastExecutionTime = null; // 上次执行时间
+            this.isExecuting = false; // 执行锁，防止重复执行
             this.init();
         }
 
@@ -1566,13 +1620,22 @@
                 this.checkIntervalMs = 1000;
             }
             if (this.isEnabled && this.items.size > 0) {
-                // 检查是否需要立即执行
-                this.checkAndExecuteSell();
+                // 始终根据 lastExecutionTime 重新计算 nextExecutionTime，确保刷新后倒计时准确
+                this.calculateNextExecutionTime();
 
-                // 设置定时检测（更频繁的检查，但基于时间距离判断是否执行）
+                const now = Date.now();
+                
+                // 如果已过期且未在执行中，延迟100ms执行避免与定时器冲突
+                if (now >= this.nextExecutionTime && !this.isExecuting) {
+                    setTimeout(() => {
+                        this.checkAndExecuteSell();
+                    }, 100);
+                }
+
+                // 设置定时检测（降低频率以减少CPU占用）
                 this.checkInterval = setInterval(() => {
                     this.checkAndExecuteSell();
-                }, 1000); // 每1秒检查一次
+                }, 30000); // 每30秒检查一次
 
                 // 启动倒计时显示
                 this.startCountdown();
@@ -1581,17 +1644,30 @@
 
         // 检查并执行出售（基于上次执行时间的距离）
         async checkAndExecuteSell() {
+            // 防止重复执行
+            if (this.isExecuting) {
+                console.log('[AutoSell] 正在执行中，跳过本次检查');
+                return;
+            }
+
             const now = Date.now();
 
             // 优先使用已保存的 nextExecutionTime，避免刷新时重置倒计时
             if (!this.nextExecutionTime) {
                 // 如果没有 nextExecutionTime，则尝试基于 lastExecutionTime 计算
                 if (!this.lastExecutionTime) {
-                    await this.checkAndSell();
-                    this.lastExecutionTime = Date.now();
-                    this.nextExecutionTime = this.lastExecutionTime + this.checkIntervalMs;
-                    this.saveLastExecutionTime();
-                    this.saveNextExecutionTime();
+                    this.isExecuting = true;
+                    try {
+                        await this.checkAndSell();
+                        this.lastExecutionTime = Date.now();
+                        this.nextExecutionTime = this.lastExecutionTime + this.checkIntervalMs;
+                        this.saveLastExecutionTime();
+                        this.saveNextExecutionTime();
+                    } catch (error) {
+                        console.error('[AutoSell] 执行失败:', error);
+                    } finally {
+                        this.isExecuting = false;
+                    }
                     return;
                 }
                 this.nextExecutionTime = this.lastExecutionTime + this.checkIntervalMs;
@@ -1599,11 +1675,18 @@
 
             // 当到达或超过下次执行时间时，执行出售，并在完成后刷新下次执行时间
             if (now >= this.nextExecutionTime) {
-                await this.checkAndSell();
-                this.lastExecutionTime = Date.now();
-                this.nextExecutionTime = this.lastExecutionTime + this.checkIntervalMs;
-                this.saveLastExecutionTime();
-                this.saveNextExecutionTime();
+                this.isExecuting = true;
+                try {
+                    await this.checkAndSell();
+                    this.lastExecutionTime = Date.now();
+                    this.nextExecutionTime = this.lastExecutionTime + this.checkIntervalMs;
+                    this.saveLastExecutionTime();
+                    this.saveNextExecutionTime();
+                } catch (error) {
+                    console.error('[AutoSell] 执行失败:', error);
+                } finally {
+                    this.isExecuting = false;
+                }
             }
         }
 
@@ -1636,15 +1719,24 @@
         calculateNextExecutionTime() {
             const now = Date.now();
 
-            // 如果已经存在 nextExecutionTime（例如从本地存储加载），则保持不改动，避免刷新时重置倒计时
-            if (this.nextExecutionTime) return;
+            // 如果 nextExecutionTime 已存在且未过期，保持不变
+            if (this.nextExecutionTime && this.nextExecutionTime > now) {
+                return;
+            }
 
+            // 如果 nextExecutionTime 不存在或已过期，重新计算
             if (!this.lastExecutionTime) {
                 // 如果没有上次执行时间，下次执行时间就是现在
                 this.nextExecutionTime = now;
             } else {
                 // 基于上次执行时间计算下次执行时间
                 this.nextExecutionTime = this.lastExecutionTime + this.checkIntervalMs;
+                
+                // 如果计算出的时间仍然小于当前时间（说明间隔很久没检查了）
+                // 则推进到下一个有效周期
+                while (this.nextExecutionTime <= now) {
+                    this.nextExecutionTime += this.checkIntervalMs;
+                }
             }
         }
 
@@ -3350,13 +3442,7 @@
                 // 初始化全选按钮状态
                 this.restockManager.updateSelectAllState();
                 this.sellManager.updateSelectAllState();
-                // 启动自动检测（如果启用且有项目）
-                if (this.restockManager.isEnabled && this.restockManager.items.size > 0) {
-                    this.restockManager.startAutoCheck();
-                }
-                if (this.sellManager.isEnabled && this.sellManager.items.size > 0) {
-                    this.sellManager.startAutoCheck();
-                }
+                // 注意：自动检测已在各管理器的init()方法中启动，避免重复调用
             }, 0);
         }
 

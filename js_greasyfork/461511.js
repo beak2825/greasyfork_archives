@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        网页加载速度测试
 // @author      DeepSeek
-// @version     3.1.7
+// @version     3.1.8
 // @description 测试网页加载速度
 // @match       *://*/*
 // @run-at      document-start
@@ -105,7 +105,7 @@
       width: 100%;
       height: 100%;
       background: linear-gradient(135deg, #007aff, #34c759);
-      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M11 20v-6.07A7.961 7.961 0 0 1 4 7.07V4h16v3.07c0 3.89-2.56 7.17-6.09 8.27L13 20h-2z'/%3E%3C/svg%3E");
+      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z'/%3E%3Cpath fill='currentColor' d='M12 6c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z'/%3E%3Ccircle cx='12' cy='12' r='1' fill='currentColor'/%3E%3Cpath fill='currentColor' d='M13 12h5' stroke='currentColor' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
       mask-size: contain;
       mask-repeat: no-repeat;
       mask-position: center;

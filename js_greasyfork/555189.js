@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TorrentBD Shoutbox Manager
 // @namespace    TBD-Shoutbox-Manager
-// @version      1.2.4
+// @version      1.2.6.1
 // @description  Complete shoutbox overhaul
 // @author       CornHub
 // @license      MIT
@@ -2863,6 +2863,9 @@ const MemeCreatorModule = {
                 transition: all 0.15s;
                 position: relative;
                 background: #202225;
+                min-height: 115px;
+                display: flex;
+                flex-direction: column;
             }
             .meme-template:hover { border-color: #00bfff; transform: scale(1.03); }
             .meme-template.selected { border-color: #00ff00; box-shadow: 0 0 0 2px #00ff00; }
@@ -3303,7 +3306,12 @@ const MemeCreatorModule = {
         this.editorArea.classList.add('active');
         document.getElementById('meme-result').innerHTML = '';
 
+        setTimeout(() => {
+            this.constrainToViewport();
+        }, 0);
+
         document.getElementById('meme-generate').onclick = () => this.generateMeme();
+
     },
 
     createTextInputs(count) {
@@ -3337,7 +3345,6 @@ const MemeCreatorModule = {
 
         const btn = document.getElementById('meme-generate');
         btn.disabled = true;
-        btn.textContent = 'Generating...';
         this.showStatus('Creating meme...', 'info');
 
         let formData = `template_id=${this.currentTemplate.id}&username=${this.IMGFLIP_CONFIG.username}&password=${this.IMGFLIP_CONFIG.password}`;

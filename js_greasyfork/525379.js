@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         全国统一规范电子税务局税号填写辅助工具
 // @namespace    http://tampermonkey.net/
-// @version      3.4
+// @version      4.0
 // @description  在电子税务局旁边显示一个小窗口，方便登录与切换不同的企业，支持批量添加和制表符分隔导入
 // @author       Herohub
 // @match        https://*.chinatax.gov.cn:8443/*
@@ -14,12 +14,43 @@
 (function () {
     'use strict';
 
-    // 判断是否为登录页面或切换企业页面，若都不是则直接退出脚本执行
+    // 判断是否为登录页面或切换企业页面
     const isLoginPage = window.location.href.includes('login?redirect_uri');
     const isIdentitySwitchPage = window.location.href.includes('identitySwitch');
-    if (!isLoginPage &&!isIdentitySwitchPage) return;
+    
+    // 定义全局变量
+    let isEditMode = false;
+    let lastSelectedItem = GM_getValue('lastSelectedItem', null);
+    let originalWidth = null;
+    let windowWidth = GM_getValue('windowWidth', 450); // 统一窗口宽度
+    let isAutoFillAccount = GM_getValue('isAutoFillAccount', false);
+    let accountInfo = GM_getValue('accountInfo', null);
+    let isCollapsed = GM_getValue('isCollapsed', false);
+    let isInitialLoad = true; // 标记是否为初始加载
+    let maxRowsPerPage = GM_getValue('maxRowsPerPage', 10); // 每页最大行数，默认为10
+    let currentPage = 1; // 当前页码
+    let isPaginationEnabled = GM_getValue('isPaginationEnabled', true); // 分页功能开关，默认为启用
+    let displayMode = GM_getValue('displayMode', 'both'); // 显示模式：'login' 仅登录窗口，'switch' 仅切换窗口，'both' 两者都显示
+    let showItemNumbers = GM_getValue('showItemNumbers', false); // 展示序号开关，默认为禁用
+    let markedItems = GM_getValue('markedItems', []); // 标记的公司列表
+    // 拖动相关变量
+    let draggedItem = null;
+    let initialY = 0;
+    let initialOffsetY = 0;
+    
+    // 根据显示模式决定是否在当前页面显示辅助工具
+    let shouldShowTool = false;
+    if (displayMode === 'both') {
+        shouldShowTool = isLoginPage || isIdentitySwitchPage;
+    } else if (displayMode === 'login') {
+        shouldShowTool = isLoginPage;
+    } else if (displayMode === 'switch') {
+        shouldShowTool = isIdentitySwitchPage;
+    }
+    
+    if (!shouldShowTool) return;
 
-// 创建浮窗元素并设置样式
+    // 创建浮窗元素并设置样式
     const createFloatWindow = () => {
         const floatWindow = document.createElement('div');
         Object.assign(floatWindow.style, {
@@ -65,12 +96,26 @@
     // 创建按钮元素并设置样式和点击事件
     const createButton = (text, clickHandler, isDelete = false, customStyles = {}) => {
         const button = document.createElement('button');
+        
+        // 检查是否为开启/关闭类型的按钮
+        const isToggleButton = text === '开启' || text === '关闭';
+        
+        // 根据按钮类型和状态设置颜色
+        let backgroundColor;
+        if (isToggleButton) {
+            // 开启状态为蓝色，关闭状态为红色
+            backgroundColor = text === '开启'? '#007BFF' : '#dc3545';
+        } else {
+            // 其他按钮使用原有逻辑
+            backgroundColor = isDelete? '#dc3545' : '#007BFF';
+        }
+        
         const styles = {
             marginRight: '5px',
             padding: '5px 10px',
             border: 'none',
             borderRadius: '3px',
-            background: isDelete? '#dc3545' : '#007BFF',
+            background: backgroundColor,
             color: '#fff',
             cursor: 'pointer',
             transition: 'background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease',
@@ -79,17 +124,36 @@
         Object.assign(button.style, styles);
         button.textContent = text;
         button.addEventListener('click', clickHandler);
+        
         // 鼠标悬停效果
         button.addEventListener('mouseover', () => {
-            button.style.background = isDelete? '#c82333' : '#0056b3';
+            let hoverColor;
+            if (isToggleButton) {
+                // 开启状态悬停为深蓝色，关闭状态悬停为深红色
+                hoverColor = button.textContent === '开启'? '#0056b3' : '#c82333';
+            } else {
+                // 其他按钮使用原有逻辑
+                hoverColor = isDelete? '#c82333' : '#0056b3';
+            }
+            button.style.background = hoverColor;
             button.style.transform = 'translateY(-1px)';
             button.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
         });
+        
         button.addEventListener('mouseout', () => {
-            button.style.background = isDelete? '#dc3545' : '#007BFF';
+            let originalColor;
+            if (isToggleButton) {
+                // 恢复到开启/关闭状态的颜色
+                originalColor = button.textContent === '开启'? '#007BFF' : '#dc3545';
+            } else {
+                // 其他按钮使用原有逻辑
+                originalColor = isDelete? '#dc3545' : '#007BFF';
+            }
+            button.style.background = originalColor;
             button.style.transform = 'translateY(0)';
             button.style.boxShadow = 'none';
         });
+        
         return button;
     };
 
@@ -139,20 +203,6 @@
 
         return dragButton;
     };
-
-    // 定义全局变量
-    let isEditMode = false;
-    let lastSelectedItem = GM_getValue('lastSelectedItem', null);
-    let originalWidth = null;
-    let windowWidth = GM_getValue('windowWidth', 450); // 统一窗口宽度
-    let isAutoFillAccount = GM_getValue('isAutoFillAccount', false);
-    let accountInfo = GM_getValue('accountInfo', null);
-    let isCollapsed = GM_getValue('isCollapsed', false);
-    let isInitialLoad = true; // 标记是否为初始加载
-    // 拖动相关变量
-    let draggedItem = null;
-    let initialY = 0;
-    let initialOffsetY = 0;
 
     // 收起/展开按钮
     const toggleCollapseButton = document.createElement('div');
@@ -243,15 +293,82 @@
     if (isCollapsed) {
         floatWindow.style.width = '0px';
         floatWindow.style.padding = '0';
+        floatWindow.style.border = 'none'; // 宽度为0时去掉边框，消除白边
     } else {
         floatWindow.style.width = windowWidth + 'px';
     }
 
+    // 渲染带分页的企业列表
+    function renderItemsWithPagination() {
+        const savedItems = GM_getValue('autoFillItems', []);
+        
+        // 清空现有列表
+        itemList.innerHTML = '';
+        
+        let currentItems = savedItems;
+        let totalPages = 1;
+        
+        // 如果启用了分页功能
+        if (isPaginationEnabled) {
+            // 计算分页信息
+            const totalItems = savedItems.length;
+            totalPages = Math.ceil(totalItems / maxRowsPerPage);
+            const startIndex = (currentPage - 1) * maxRowsPerPage;
+            const endIndex = startIndex + maxRowsPerPage;
+            currentItems = savedItems.slice(startIndex, endIndex);
+        }
+        
+        // 渲染企业
+        currentItems.forEach((item, index) => {
+            const itemDiv = addItemToWindow(item.content, item.note, itemList);
+            // 设置序号
+            if (showItemNumbers) {
+                // 查找序号元素（第二个子元素，因为第一个是dragContainer）
+                const children = itemDiv.children;
+                let numberSpan = null;
+                for (let i = 0; i < children.length; i++) {
+                    if (children[i].tagName === 'SPAN') {
+                        numberSpan = children[i];
+                        break;
+                    }
+                }
+                if (numberSpan) {
+                    // 计算实际序号（考虑当前页码）
+                    const actualIndex = (currentPage - 1) * maxRowsPerPage + index + 1;
+                    numberSpan.textContent = actualIndex + '.';
+                }
+            }
+        });
+        
+        // 如果当前处于编辑模式，显示编辑和删除按钮
+        if (isEditMode) {
+            setTimeout(() => {
+                const items = document.querySelectorAll('.tax-item');
+                items.forEach((item, index) => {
+                    const dragContainer = item.querySelector('.drag-container');
+                    const editBtn = item.querySelector('.edit-btn');
+                    const deleteBtn = item.querySelector('.delete-btn');
+                    
+                    if (dragContainer) dragContainer.style.display = 'flex';
+                    if (editBtn) editBtn.style.display = 'inline-block';
+                    if (deleteBtn) deleteBtn.style.display = 'inline-block';
+                    
+                    if (dragContainer) dragContainer.style.opacity = '1';
+                    if (editBtn) editBtn.style.opacity = '1';
+                    if (deleteBtn) deleteBtn.style.opacity = '1';
+                    
+                    const textSpan = item.querySelector('span');
+                    if (textSpan) textSpan.style.cursor = 'default';
+                });
+            }, 100);
+        }
+        
+        // 渲染分页控件（仅当启用分页功能时）
+        renderPaginationControls(totalPages);
+    }
+
     // 加载已保存的税号内容
-    const savedItems = GM_getValue('autoFillItems', []);
-    savedItems.forEach(item => {
-        addItemToWindow(item.content, item.note, itemList);
-    });
+    renderItemsWithPagination();
 
     // 收起/展开功能
     function toggleCollapse() {
@@ -260,19 +377,40 @@
 
         if (isCollapsed) {
             // 收起状态逻辑
+            // 先隐藏内容，避免内容在动画过程中可见
             mainContent.style.display = 'none';
+            
+            // 立即移除边框，避免动画过程中出现白条
+            floatWindow.style.border = 'none';
+            
+            // 然后开始宽度动画
             floatWindow.style.width = '0px';
             floatWindow.style.padding = '0';
-            floatWindow.style.border = 'none'; // 关键：宽度为0时去掉边框，消除白边
+            
+            // 更新按钮状态
             toggleCollapseButton.innerHTML = '≪';
             toggleCollapseButton.style.right = '0';
         } else {
             // 展开状态逻辑
-            mainContent.style.display = 'block';
+            // 先设置边框，但暂时设为透明
+            floatWindow.style.border = '1px solid transparent';
+            floatWindow.style.borderRight = 'none';
+            
+            // 开始宽度动画
             floatWindow.style.width = windowWidth + 'px';
             floatWindow.style.padding = '15px';
-            floatWindow.style.border = '1px solid #ccc'; // 重新显示边框
-            floatWindow.style.borderRight = 'none';
+            
+            // 延迟显示内容和边框，确保动画流畅
+            setTimeout(() => {
+                // 显示内容
+                mainContent.style.display = 'block';
+                
+                // 显示边框
+                floatWindow.style.border = '1px solid #ccc';
+                floatWindow.style.borderRight = 'none';
+            }, 100);
+            
+            // 更新按钮状态
             toggleCollapseButton.innerHTML = '≫';
             toggleCollapseButton.style.right = windowWidth + 'px';
         }
@@ -542,12 +680,10 @@
             const newItems = [...existingItems,...validItems];
             GM_setValue('autoFillItems', newItems);
 
-            // 批量添加到窗口列表（带动画）
-            validItems.forEach((item, i) => {
-                setTimeout(() => {
-                    addItemToWindow(item.taxNumber, item.note, itemList);
-                }, i * 100);
-            });
+            // 批量添加完成后重新渲染带分页的列表
+            setTimeout(() => {
+                renderItemsWithPagination();
+            }, validItems.length * 100 + 100);
 
             // 关闭模态框
             modal.style.opacity = '0';
@@ -753,6 +889,226 @@
 
         accountSettings.appendChild(accountCredentials);
         modal.appendChild(accountSettings);
+        
+        // 分页设置区域
+        const paginationSettings = document.createElement('div');
+        paginationSettings.style.display = 'flex';
+        paginationSettings.style.flexDirection = 'column';
+        paginationSettings.style.gap = '10px';
+        
+        const paginationTitle = document.createElement('div');
+        paginationTitle.style.fontWeight = 'bold';
+        paginationTitle.textContent = '分页设置';
+        paginationSettings.appendChild(paginationTitle);
+
+        // 分页功能开关
+        const paginationSwitchContainer = document.createElement('div');
+        paginationSwitchContainer.style.display = 'flex';
+        paginationSwitchContainer.style.alignItems = 'center';
+        paginationSwitchContainer.style.justifyContent = 'space-between';
+        
+        const paginationSwitchLabel = document.createElement('span');
+        paginationSwitchLabel.textContent = '启用分页功能';
+        paginationSwitchContainer.appendChild(paginationSwitchLabel);
+        
+        const paginationSwitch = createButton(
+            isPaginationEnabled? '开启' : '关闭',
+            () => togglePagination(paginationSwitch),
+            isPaginationEnabled? false : true,
+            { padding: '5px 15px' }
+        );
+        paginationSwitchContainer.appendChild(paginationSwitch);
+        paginationSettings.appendChild(paginationSwitchContainer);
+
+        const maxRowsContainer = document.createElement('div');
+        maxRowsContainer.style.display = 'flex';
+        maxRowsContainer.style.alignItems = 'center';
+        maxRowsContainer.style.justifyContent = 'space-between';
+        maxRowsContainer.style.display = isPaginationEnabled? 'flex' : 'none';
+        
+        const maxRowsLabel = document.createElement('span');
+        maxRowsLabel.textContent = '每页最大行数';
+        maxRowsContainer.appendChild(maxRowsLabel);
+        
+        const maxRowsInput = document.createElement('input');
+        maxRowsInput.type = 'number';
+        maxRowsInput.min = '1';
+        maxRowsInput.max = '50';
+        maxRowsInput.value = maxRowsPerPage;
+        maxRowsInput.style.width = '80px';
+        maxRowsInput.style.padding = '5px';
+        maxRowsInput.style.border = '1px solid #ccc';
+        maxRowsInput.style.borderRadius = '3px';
+        maxRowsContainer.appendChild(maxRowsInput);
+        
+        paginationSettings.appendChild(maxRowsContainer);
+
+        const saveMaxRowsButton = createButton('保存设置', () => {
+            const newValue = parseInt(maxRowsInput.value);
+            if (newValue >= 1 && newValue <= 50) {
+                maxRowsPerPage = newValue;
+                GM_setValue('maxRowsPerPage', maxRowsPerPage);
+                
+                // 保存成功提示
+                saveMaxRowsButton.textContent = '已保存！';
+                saveMaxRowsButton.style.background = '#28a745';
+                
+                // 重新渲染企业列表
+                setTimeout(() => {
+                    currentPage = 1; // 重置到第一页
+                    renderItemsWithPagination();
+                }, 500);
+                
+                // 恢复按钮状态
+                setTimeout(() => {
+                    saveMaxRowsButton.textContent = '保存设置';
+                    saveMaxRowsButton.style.background = '#007BFF';
+                }, 1500);
+            } else {
+                alert('请输入1-50之间的数值');
+            }
+        });
+        saveMaxRowsButton.style.display = isPaginationEnabled? 'block' : 'none';
+        paginationSettings.appendChild(saveMaxRowsButton);
+
+        // 将分页设置区域添加到模态窗口中
+        modal.appendChild(paginationSettings);
+
+        // 序号显示设置区域
+        const numberSettings = document.createElement('div');
+        numberSettings.style.display = 'flex';
+        numberSettings.style.flexDirection = 'column';
+        numberSettings.style.gap = '10px';
+        
+        const numberTitle = document.createElement('div');
+        numberTitle.style.fontWeight = 'bold';
+        numberTitle.textContent = '序号显示设置';
+        numberSettings.appendChild(numberTitle);
+
+        // 序号显示开关
+        const numberSwitchContainer = document.createElement('div');
+        numberSwitchContainer.style.display = 'flex';
+        numberSwitchContainer.style.alignItems = 'center';
+        numberSwitchContainer.style.justifyContent = 'space-between';
+        
+        const numberSwitchLabel = document.createElement('span');
+        numberSwitchLabel.textContent = '启用序号显示';
+        numberSwitchContainer.appendChild(numberSwitchLabel);
+        
+        const numberSwitch = createButton(
+            showItemNumbers? '开启' : '关闭',
+            () => toggleNumberDisplay(numberSwitch),
+            showItemNumbers? false : true,
+            { padding: '5px 15px' }
+        );
+        numberSwitchContainer.appendChild(numberSwitch);
+        numberSettings.appendChild(numberSwitchContainer);
+
+        // 将序号设置区域添加到模态窗口中
+        modal.appendChild(numberSettings);
+
+        // 序号显示切换函数
+        function toggleNumberDisplay(switchButton) {
+            showItemNumbers =!showItemNumbers;
+            switchButton.textContent = showItemNumbers? '开启' : '关闭';
+            switchButton.style.background = showItemNumbers? '#007BFF' : '#dc3545';
+            GM_setValue('showItemNumbers', showItemNumbers);
+
+            // 重新渲染企业列表
+            setTimeout(() => {
+                renderItemsWithPagination();
+            }, 500);
+        }
+
+        // 分页功能切换函数
+        function togglePagination(switchButton) {
+            isPaginationEnabled =!isPaginationEnabled;
+            switchButton.textContent = isPaginationEnabled? '开启' : '关闭';
+            switchButton.style.background = isPaginationEnabled? '#007BFF' : '#dc3545';
+            GM_setValue('isPaginationEnabled', isPaginationEnabled);
+
+            // 显示/隐藏每页最大行数设置
+            maxRowsContainer.style.display = isPaginationEnabled? 'flex' : 'none';
+            saveMaxRowsButton.style.display = isPaginationEnabled? 'block' : 'none';
+
+            // 重新渲染企业列表
+            setTimeout(() => {
+                renderItemsWithPagination();
+            }, 500);
+        }
+
+        // 显示模式设置区域
+        const displayModeSettings = document.createElement('div');
+        displayModeSettings.style.display = 'flex';
+        displayModeSettings.style.flexDirection = 'column';
+        displayModeSettings.style.gap = '10px';
+        
+        const displayModeTitle = document.createElement('div');
+        displayModeTitle.style.fontWeight = 'bold';
+        displayModeTitle.textContent = '显示模式设置';
+        displayModeSettings.appendChild(displayModeTitle);
+
+        const displayModeContainer = document.createElement('div');
+        displayModeContainer.style.display = 'flex';
+        displayModeContainer.style.flexDirection = 'column';
+        displayModeContainer.style.gap = '8px';
+        
+        // 创建显示模式选项
+        const createDisplayModeOption = (value, label) => {
+            const optionContainer = document.createElement('div');
+            optionContainer.style.display = 'flex';
+            optionContainer.style.alignItems = 'center';
+            optionContainer.style.gap = '8px';
+            
+            const radioButton = document.createElement('input');
+            radioButton.type = 'radio';
+            radioButton.name = 'displayMode';
+            radioButton.value = value;
+            radioButton.checked = displayMode === value;
+            radioButton.style.cursor = 'pointer';
+            
+            const optionLabel = document.createElement('span');
+            optionLabel.textContent = label;
+            optionLabel.style.cursor = 'pointer';
+            
+            // 点击标签也能选中单选按钮
+            optionLabel.addEventListener('click', () => {
+                radioButton.checked = true;
+            });
+            
+            optionContainer.appendChild(radioButton);
+            optionContainer.appendChild(optionLabel);
+            return optionContainer;
+        };
+        
+        // 添加三个显示模式选项
+        displayModeContainer.appendChild(createDisplayModeOption('both', '登录与切换窗口全部显示'));
+        displayModeContainer.appendChild(createDisplayModeOption('login', '仅登录窗口显示'));
+        displayModeContainer.appendChild(createDisplayModeOption('switch', '仅切换窗口显示'));
+        
+        displayModeSettings.appendChild(displayModeContainer);
+
+        // 保存显示模式设置按钮
+        const saveDisplayModeButton = createButton('保存显示模式设置', () => {
+            const selectedOption = document.querySelector('input[name="displayMode"]:checked');
+            if (selectedOption) {
+                displayMode = selectedOption.value;
+                GM_setValue('displayMode', displayMode);
+                
+                // 保存成功提示
+                saveDisplayModeButton.textContent = '已保存！';
+                saveDisplayModeButton.style.background = '#28a745';
+                
+                // 恢复按钮状态
+                setTimeout(() => {
+                    saveDisplayModeButton.textContent = '保存显示模式设置';
+                    saveDisplayModeButton.style.background = '#007BFF';
+                }, 1500);
+            }
+        });
+        displayModeSettings.appendChild(saveDisplayModeButton);
+
+        modal.appendChild(displayModeSettings);
 
         // 按钮区域
         const buttonContainer = document.createElement('div');
@@ -915,18 +1271,32 @@
         dragContainer.appendChild(dragButton);
         itemDiv.appendChild(dragContainer);
 
+        // 创建序号元素
+        const numberSpan = document.createElement('span');
+        numberSpan.style.marginRight = '10px';
+        numberSpan.style.fontWeight = 'bold';
+        numberSpan.style.color = '#666';
+        numberSpan.style.minWidth = '20px';
+        numberSpan.style.textAlign = 'center';
+        numberSpan.style.display = showItemNumbers? 'inline-block' : 'none';
+        itemDiv.appendChild(numberSpan);
+
         const textSpan = document.createElement('span');
         textSpan.textContent = note;
         textSpan.style.flexGrow = 1;
         textSpan.style.overflow = 'hidden';
         textSpan.style.textOverflow = 'ellipsis';
         textSpan.style.whiteSpace = 'nowrap';
+        textSpan.style.flexBasis = '0'; // 确保文本区域能够充分利用可用空间
         itemDiv.appendChild(textSpan);
 
         // 创建编辑和删除按钮容器
         const buttonContainer = document.createElement('div');
         buttonContainer.className = 'action-buttons';
         buttonContainer.style.display = 'flex';
+        buttonContainer.style.width = 'auto'; // 宽度自适应
+        buttonContainer.style.minWidth = isEditMode? '80px' : '0'; // 编辑模式下设置最小宽度，非编辑模式下最小宽度为0
+        buttonContainer.style.whiteSpace = 'nowrap'; // 防止按钮换行
 
         // 编辑按钮
         const editBtn = createButton(
@@ -1106,8 +1476,99 @@
         });
 
         itemDiv.addEventListener('mouseout', () => {
-            itemDiv.style.background = '#fff';
+            // 如果不是标记状态，恢复默认背景
+            if (!markedItems.includes(content)) {
+                itemDiv.style.background = '#fff';
+            }
         });
+
+        // 右键菜单功能
+        itemDiv.addEventListener('contextmenu', function(e) {
+            // 阻止默认右键菜单和事件冒泡
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // 创建右键菜单
+            const contextMenu = document.createElement('div');
+            Object.assign(contextMenu.style, {
+                position: 'fixed',
+                top: `${e.clientY}px`,
+                left: `${e.clientX}px`,
+                background: '#fff',
+                border: '1px solid #ccc',
+                borderRadius: '4px',
+                boxShadow: '0 2px 10px rgba(0,0,0,0.15)',
+                zIndex: '999999', // 使用更高的z-index确保菜单显示在最前面
+                padding: '5px 0',
+                minWidth: '120px',
+                fontFamily: 'Arial, sans-serif',
+                fontSize: '14px'
+            });
+            
+            // 创建菜单项
+            const createMenuItem = (text, clickHandler) => {
+                const menuItem = document.createElement('div');
+                menuItem.textContent = text;
+                Object.assign(menuItem.style, {
+                    padding: '8px 12px',
+                    cursor: 'pointer',
+                    transition: 'background-color 0.2s ease'
+                });
+                
+                menuItem.addEventListener('mouseover', function() {
+                    this.style.backgroundColor = '#f0f0f0';
+                });
+                
+                menuItem.addEventListener('mouseout', function() {
+                    this.style.backgroundColor = 'transparent';
+                });
+                
+                menuItem.addEventListener('click', function() {
+                    clickHandler();
+                    if (document.contains(contextMenu)) {
+                        document.body.removeChild(contextMenu);
+                    }
+                });
+                
+                return menuItem;
+            };
+            
+            // 检查当前公司是否已标记
+            const isMarked = markedItems.includes(content);
+            
+            // 添加菜单项
+            if (!isMarked) {
+                contextMenu.appendChild(createMenuItem('标记', () => markItem(content, itemDiv)));
+            } else {
+                contextMenu.appendChild(createMenuItem('取消标记', () => unmarkItem(content, itemDiv)));
+            }
+            
+            contextMenu.appendChild(createMenuItem('取消所有标记', () => unmarkAllItems()));
+            
+            // 添加菜单到页面
+            document.body.appendChild(contextMenu);
+            
+            // 点击页面其他地方关闭菜单
+            const closeContextMenu = function() {
+                if (document.contains(contextMenu)) {
+                    document.body.removeChild(contextMenu);
+                }
+                document.removeEventListener('click', closeContextMenu);
+                document.removeEventListener('contextmenu', closeContextMenu);
+            };
+            
+            // 立即添加事件监听器
+            setTimeout(() => {
+                document.addEventListener('click', closeContextMenu);
+                document.addEventListener('contextmenu', closeContextMenu);
+            }, 0);
+        });
+
+        // 检查并应用标记状态
+        if (markedItems.includes(content)) {
+            itemDiv.style.background = '#fff3cd';
+            itemDiv.style.borderLeft = '3px solid #ffc107';
+        }
 
         itemDiv.dataset.content = content;
         container.appendChild(itemDiv);
@@ -1123,6 +1584,7 @@
         const dragContainer = dragButton.parentElement;
         let originalRect = null;
         let originalIndex = 0;
+        let initialOffsetY = 0;
 
         // 拖动开始
         dragButton.addEventListener('mousedown', (e) => {
@@ -1137,9 +1599,12 @@
             draggedItem = itemDiv;
             draggedItem.classList.add('dragging');
 
-            initialY = e.clientY;
+            // 计算鼠标相对于元素的初始偏移量
             initialOffsetY = e.clientY - originalRect.top;
 
+            // 添加平滑过渡效果
+            draggedItem.style.transition = 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)';
+            
             // 拖动样式
             draggedItem.style.opacity = '0.9';
             draggedItem.style.transform = 'scale(1.02)';
@@ -1148,56 +1613,80 @@
             draggedItem.style.background = '#f0f7ff';
             draggedItem.style.borderRadius = '4px';
             draggedItem.style.margin = '5px 0';
-            draggedItem.style.position = 'relative';
+            draggedItem.style.position = 'absolute';
             draggedItem.style.width = `${originalRect.width}px`;
+            draggedItem.style.left = `${originalRect.left}px`;
+            draggedItem.style.top = `${originalRect.top}px`;
+            draggedItem.style.pointerEvents = 'none';
 
             // 创建占位符
             const placeholder = document.createElement('div');
             placeholder.className = 'drag-placeholder';
             placeholder.style.height = `${originalRect.height}px`;
-            placeholder.style.opacity = '0.3';
+            placeholder.style.opacity = '0';
             placeholder.style.backgroundColor = '#e9ecef';
             placeholder.style.borderRadius = '4px';
             placeholder.style.margin = '5px 0';
-            placeholder.style.transition = 'all 0.2s ease';
+            placeholder.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
             itemDiv.parentNode.insertBefore(placeholder, itemDiv);
             itemDiv.placeholder = placeholder;
 
+            // 占位符淡入动画
             setTimeout(() => {
-                draggedItem.style.opacity = '0';
-            }, 10);
+                placeholder.style.opacity = '0.5';
+            }, 50);
+            
+            // 拖动元素淡出动画
+            setTimeout(() => {
+                draggedItem.style.opacity = '0.8';
+            }, 100);
         });
 
         // 拖动结束
         document.addEventListener('mouseup', () => {
             if (!isDragging ||!isEditMode ||!draggedItem) return;
 
-            draggedItem.classList.remove('dragging');
-            // 恢复样式
-            draggedItem.style.opacity = '';
-            draggedItem.style.transform = '';
-            draggedItem.style.zIndex = '';
-            draggedItem.style.boxShadow = '';
-            draggedItem.style.background = '';
-            draggedItem.style.borderRadius = '';
-            draggedItem.style.margin = '';
-            draggedItem.style.position = '';
-            draggedItem.style.width = '';
-            draggedItem.style.top = '';
-
-            // 移动元素到占位符位置
-            if (draggedItem.placeholder && draggedItem.placeholder.parentNode) {
-                draggedItem.placeholder.parentNode.insertBefore(draggedItem, draggedItem.placeholder);
-                draggedItem.placeholder.parentNode.removeChild(draggedItem.placeholder);
+            // 拖动元素淡入动画
+            draggedItem.style.opacity = '1';
+            draggedItem.style.transform = 'scale(1)';
+            draggedItem.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
+            draggedItem.style.pointerEvents = 'auto';
+            
+            // 占位符淡出动画
+            if (draggedItem.placeholder) {
+                draggedItem.placeholder.style.opacity = '0';
             }
 
-            // 重置状态
-            isDragging = false;
-            draggedItem.placeholder = null;
-            draggedItem = null;
+            // 延迟恢复样式和移动元素，让动画完成
+            setTimeout(() => {
+                draggedItem.classList.remove('dragging');
+                // 恢复样式
+                draggedItem.style.transition = 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)';
+                draggedItem.style.transform = '';
+                draggedItem.style.zIndex = '';
+                draggedItem.style.boxShadow = '';
+                draggedItem.style.background = '';
+                draggedItem.style.borderRadius = '';
+                draggedItem.style.margin = '';
+                draggedItem.style.position = '';
+                draggedItem.style.width = '';
+                draggedItem.style.left = '';
+                draggedItem.style.top = '';
 
-            // 更新顺序
-            updateItemOrder();
+                // 移动元素到占位符位置
+                if (draggedItem.placeholder && draggedItem.placeholder.parentNode) {
+                    draggedItem.placeholder.parentNode.insertBefore(draggedItem, draggedItem.placeholder);
+                    draggedItem.placeholder.parentNode.removeChild(draggedItem.placeholder);
+                }
+
+                // 重置状态
+                isDragging = false;
+                draggedItem.placeholder = null;
+                draggedItem = null;
+
+                // 更新顺序
+                updateItemOrder();
+            }, 300);
         });
 
         // 鼠标移动时处理拖动
@@ -1206,14 +1695,13 @@
 
             e.preventDefault();
 
-            // 计算新位置
+            // 计算新位置，确保元素跟随鼠标指针
             const listRect = itemList.getBoundingClientRect();
-            const newTop = e.clientY - listRect.top - initialOffsetY;
+            const newTop = e.clientY - initialOffsetY;
 
-            // 限制拖动范围
-            if (newTop > 0 && newTop < listRect.height - draggedItem.offsetHeight) {
-                draggedItem.style.top = `${newTop}px`;
-            }
+            // 应用新位置
+            draggedItem.style.transition = 'none';
+            draggedItem.style.top = `${newTop}px`;
 
             // 确定放置位置
             const afterElement = getDragAfterElement(itemList, e.clientY);
@@ -1239,6 +1727,44 @@
                 }
             }, { offset: Number.NEGATIVE_INFINITY }).element;
         }
+    }
+
+    // 标记公司
+    function markItem(content, itemDiv) {
+        if (!markedItems.includes(content)) {
+            markedItems.push(content);
+            GM_setValue('markedItems', markedItems);
+            
+            // 应用标记样式
+            itemDiv.style.background = '#fff3cd';
+            itemDiv.style.borderLeft = '3px solid #ffc107';
+        }
+    }
+
+    // 取消标记公司
+    function unmarkItem(content, itemDiv) {
+        const index = markedItems.indexOf(content);
+        if (index!== -1) {
+            markedItems.splice(index, 1);
+            GM_setValue('markedItems', markedItems);
+            
+            // 移除标记样式
+            itemDiv.style.background = '#fff';
+            itemDiv.style.borderLeft = 'none';
+        }
+    }
+
+    // 取消所有标记
+    function unmarkAllItems() {
+        markedItems = [];
+        GM_setValue('markedItems', markedItems);
+        
+        // 移除所有公司的标记样式
+        const items = document.querySelectorAll('.tax-item');
+        items.forEach(item => {
+            item.style.background = '#fff';
+            item.style.borderLeft = 'none';
+        });
     }
 
     // 触发输入框事件
@@ -1273,6 +1799,7 @@
             const dragContainer = item.querySelector('.drag-container');
             const editBtn = item.querySelector('.edit-btn');
             const deleteBtn = item.querySelector('.delete-btn');
+            const buttonContainer = item.querySelector('.action-buttons');
 
             if (isEditMode) {
                 setTimeout(() => {
@@ -1282,6 +1809,11 @@
                     dragContainer.style.opacity = '0';
                     editBtn.style.opacity = '0';
                     deleteBtn.style.opacity = '0';
+
+                    // 编辑模式下设置按钮容器最小宽度
+                    if (buttonContainer) {
+                        buttonContainer.style.minWidth = '80px';
+                    }
 
                     setTimeout(() => {
                         dragContainer.style.opacity = '1';
@@ -1293,6 +1825,11 @@
                 dragContainer.style.opacity = '0';
                 editBtn.style.opacity = '0';
                 deleteBtn.style.opacity = '0';
+
+                // 非编辑模式下设置按钮容器最小宽度为0
+                if (buttonContainer) {
+                    buttonContainer.style.minWidth = '0';
+                }
 
                 setTimeout(() => {
                     dragContainer.style.display = 'none';
@@ -1323,6 +1860,11 @@
                 importButton.style.display = 'none';
                 exportButton.style.display = 'none';
             }, 200);
+
+            // 退出编辑模式后重新渲染列表，更新序号
+            setTimeout(() => {
+                renderItemsWithPagination();
+            }, 300);
         }
 
         leftResizeHandle.style.display = isEditMode? 'block' : 'none';
@@ -1428,6 +1970,11 @@
                 }
 
                 itemDiv.style.opacity = '1';
+                
+                // 编辑完成后重新渲染带分页的列表
+                setTimeout(() => {
+                    renderItemsWithPagination();
+                }, 300);
 
                 // 关闭模态框
                 modal.style.opacity = '0';
@@ -1486,17 +2033,46 @@
                 lastSelectedItem = null;
                 GM_setValue('lastSelectedItem', null);
             }
+            
+            // 删除完成后重新渲染带分页的列表
+            renderItemsWithPagination();
         }, 300);
     }
 
     // 更新条目顺序
     function updateItemOrder() {
-        const items = Array.from(document.querySelectorAll('.tax-item'));
-        const newItemOrder = items.map(item => {
-            const note = item.querySelector('span').textContent;
-            const content = item.dataset.content;
-            return { content, note };
+        // 获取当前页面上显示的公司
+        const displayedItems = Array.from(document.querySelectorAll('.tax-item'));
+        const displayedItemContents = displayedItems.map(item => item.dataset.content);
+        
+        // 获取所有公司数据
+        const allItems = GM_getValue('autoFillItems', []);
+        
+        // 创建一个映射，方便查找公司数据
+        const itemMap = new Map();
+        allItems.forEach(item => {
+            itemMap.set(item.content, item);
         });
+        
+        // 首先添加当前页面上显示的公司（按当前顺序）
+        const newItemOrder = [];
+        displayedItems.forEach(item => {
+            const content = item.dataset.content;
+            if (itemMap.has(content)) {
+                newItemOrder.push(itemMap.get(content));
+                itemMap.delete(content);
+            }
+        });
+        
+        // 然后添加剩余的公司（保持原有顺序）
+        allItems.forEach(item => {
+            if (itemMap.has(item.content)) {
+                newItemOrder.push(item);
+                itemMap.delete(item.content);
+            }
+        });
+        
+        // 保存排序后的所有公司数据
         GM_setValue('autoFillItems', newItemOrder);
     }
 
@@ -1560,11 +2136,12 @@
                 const newList = [...existing, ...importedItems];
                 GM_setValue('autoFillItems', newList);
 
-                // 立即在界面上渲染新导入的项
-                importedItems.forEach(item => addItemToWindow(item.content, item.note, itemList));
-
-                alert(`成功导入 ${importedItems.length} 条数据！`);
-                closeModal();
+                // 导入完成后重新渲染带分页的列表
+                setTimeout(() => {
+                    renderItemsWithPagination();
+                    alert(`成功导入 ${importedItems.length} 条数据！`);
+                    closeModal();
+                }, 100);
             } catch (e) { alert('导入失败: ' + e.message); }
         });
 
@@ -1577,6 +2154,130 @@
         importModal.appendChild(createButton('取消', closeModal, true));
         overlay.onclick = closeModal;
         document.body.appendChild(importModal);
+    }
+
+    // 渲染分页控件
+    function renderPaginationControls(totalPages) {
+        // 检查是否已存在分页控件容器，如果存在则清空
+        let paginationContainer = document.querySelector('.pagination-container');
+        if (!paginationContainer) {
+            paginationContainer = document.createElement('div');
+            paginationContainer.className = 'pagination-container';
+            Object.assign(paginationContainer.style, {
+                marginTop: '15px',
+                paddingTop: '15px',
+                borderTop: '1px solid #e0e0e0',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                gap: '5px',
+                flexWrap: 'wrap'
+            });
+            mainContent.appendChild(paginationContainer);
+        } else {
+            paginationContainer.innerHTML = '';
+        }
+        
+        // 如果分页功能未启用或只有一页，不显示分页控件
+        if (!isPaginationEnabled || totalPages <= 1) {
+            paginationContainer.style.display = 'none';
+            return;
+        }
+        
+        paginationContainer.style.display = 'flex';
+        
+        // 上一页按钮
+        const prevButton = createButton('上一页', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                renderItemsWithPagination();
+            }
+        }, false, { padding: '4px 10px', fontSize: '12px' });
+        prevButton.disabled = currentPage === 1;
+        if (prevButton.disabled) {
+            prevButton.style.opacity = '0.5';
+            prevButton.style.cursor = 'not-allowed';
+            prevButton.removeEventListener('click', prevButton.onclick);
+        }
+        paginationContainer.appendChild(prevButton);
+        
+        // 页码按钮
+        const maxVisiblePages = 5; // 最大显示的页码数
+        let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+        let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+        
+        // 调整起始页码，确保显示足够的页码
+        if (endPage - startPage + 1 < maxVisiblePages) {
+            startPage = Math.max(1, endPage - maxVisiblePages + 1);
+        }
+        
+        // 第一页按钮（如果当前页范围不包含第一页）
+        if (startPage > 1) {
+            const firstPageButton = createButton('1', () => {
+                currentPage = 1;
+                renderItemsWithPagination();
+            }, false, { padding: '4px 8px', fontSize: '12px' });
+            paginationContainer.appendChild(firstPageButton);
+            
+            if (startPage > 2) {
+                const ellipsis1 = document.createElement('span');
+                ellipsis1.textContent = '...';
+                ellipsis1.style.margin = '0 5px';
+                paginationContainer.appendChild(ellipsis1);
+            }
+        }
+        
+        // 中间页码按钮
+        for (let i = startPage; i <= endPage; i++) {
+            const pageButton = createButton(i.toString(), () => {
+                currentPage = i;
+                renderItemsWithPagination();
+            }, false, { 
+                padding: '4px 8px', 
+                fontSize: '12px',
+                background: i === currentPage ? '#28a745' : '#007BFF'
+            });
+            paginationContainer.appendChild(pageButton);
+        }
+        
+        // 最后一页按钮（如果当前页范围不包含最后一页）
+        if (endPage < totalPages) {
+            if (endPage < totalPages - 1) {
+                const ellipsis2 = document.createElement('span');
+                ellipsis2.textContent = '...';
+                ellipsis2.style.margin = '0 5px';
+                paginationContainer.appendChild(ellipsis2);
+            }
+            
+            const lastPageButton = createButton(totalPages.toString(), () => {
+                currentPage = totalPages;
+                renderItemsWithPagination();
+            }, false, { padding: '4px 8px', fontSize: '12px' });
+            paginationContainer.appendChild(lastPageButton);
+        }
+        
+        // 下一页按钮
+        const nextButton = createButton('下一页', () => {
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderItemsWithPagination();
+            }
+        }, false, { padding: '4px 10px', fontSize: '12px' });
+        nextButton.disabled = currentPage === totalPages;
+        if (nextButton.disabled) {
+            nextButton.style.opacity = '0.5';
+            nextButton.style.cursor = 'not-allowed';
+            nextButton.removeEventListener('click', nextButton.onclick);
+        }
+        paginationContainer.appendChild(nextButton);
+        
+        // 页码信息
+        const pageInfo = document.createElement('span');
+        pageInfo.textContent = `第 ${currentPage}/${totalPages} 页`;
+        pageInfo.style.marginLeft = '10px';
+        pageInfo.style.fontSize = '12px';
+        pageInfo.style.color = '#666';
+        paginationContainer.appendChild(pageInfo);
     }
 
     // 导出数据

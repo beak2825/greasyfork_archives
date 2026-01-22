@@ -1,7 +1,7 @@
 // ==UserScript==
 // @match https://www.youtube.com/*
 // @match https://www.youtube.com/live_chat*
-// @version 0.7.1
+// @version 0.7.2
 // @run-at document-start
 // @name Return YouTube Comment Username
 // @name:ja YouTubeコメント欄の名前を元に戻す
@@ -249,77 +249,173 @@ status: ${res.status}`),
         ? async (settings) => {
             Promise.resolve().then(() => syncSettings(settings));
           }
-        : async (settings) => {};
-    var chat = document.querySelector("#chat");
+        : async () => {};
     var cache = {};
-    if (chat !== null) {
-      const itemList = chat.querySelector("#item-list");
-      if (itemList !== null) {
-        startRewriting();
-        const itemListOb = new MutationObserver(() => {
-          startRewriting();
-        });
-        itemListOb.observe(itemList, {
-          childList: true,
-          attributes: true,
-        });
-      }
-    }
-    function startRewriting() {
-      const scroller = document.querySelector("#item-scroller");
-      if (scroller !== null) {
-        const items = scroller.querySelector("#items");
-        if (items !== null) {
-          const messageRenderers = document.querySelectorAll(
-            "yt-live-chat-text-message-renderer",
-          );
-          rewrite(messageRenderers);
-          const observer = new MutationObserver((record) => {
-            const nodes = record[0].addedNodes;
-            rewrite(nodes);
-          });
-          observer.observe(items, {
-            characterData: true,
-            childList: true,
-          });
+    var app = document.querySelector("yt-live-chat-app");
+    if (app !== null) {
+      const showMoreObserver = new MutationObserver((e) => {
+        if (e[0].attributeName === "style") {
+          rewriteAll();
         }
+      });
+      const showMore = document.querySelector("#show-more");
+      if (showMore !== null) {
+        showMoreObserver.observe(showMore, { attributes: true });
       }
+      rewriteAll();
+      app.addEventListener("yt-action", (e) => {
+        switch (e.detail.actionName) {
+          case "yt-live-chat-reload-success":
+          case "yt-live-chat-resume-replay":
+            setTimeout(() => {
+              showMoreObserver.disconnect();
+              const showMore2 = document.querySelector("#show-more");
+              if (showMore2 !== null) {
+                showMoreObserver.observe(showMore2, { attributes: true });
+              }
+            }, 100);
+            break;
+          case "yt-live-chat-actions":
+            if (isAddChatItemAction(e.detail)) {
+              chatActions(e.detail);
+            }
+            break;
+          default:
+            break;
+        }
+      });
     }
-    function rewrite(nodes, async = true) {
+    function chatActions(action) {
+      const rewiteAllArgs = (addActions) => {
+        let id = "";
+        let messageElement = null;
+        addActions.forEach((addAction) => {
+          const renderer = addAction.addChatItemAction.item;
+          if (isTextMessage(renderer)) {
+            id = renderer.liveChatTextMessageRenderer.id;
+            messageElement = document.querySelector(
+              `yt-live-chat-text-message-renderer[id="${id}"]`,
+            );
+          } else if (isPaidMessage(renderer)) {
+            id = renderer.liveChatPaidMessageRenderer.id;
+            messageElement = document.querySelector(
+              `yt-live-chat-paid-message-renderer[id="${id}"]`,
+            );
+          } else if (isMembershipMessage(renderer)) {
+            id = renderer.liveChatMembershipItemRenderer.id;
+            messageElement = document.querySelector(
+              `yt-live-chat-membership-item-renderer[id="${id}"]`,
+            );
+          } else if (isGiftRedemptionAnnouncement(renderer)) {
+            id =
+              renderer
+                .liveChatSponsorshipsLiveChatGiftRedemptionAnnouncementRenderer
+                .id;
+            messageElement = document.querySelector(
+              `ytd-sponsorships-live-chat-gift-redemption-announcement-renderer[id="${id}"]`,
+            );
+          } else if (isGiftPurchaseAnnouncement(renderer)) {
+            id =
+              renderer
+                .liveChatSponsorshipsLiveChatGiftPurchaseAnnouncementRenderer
+                .id;
+            messageElement = document.querySelector(
+              `ytd-sponsorships-live-chat-gift-purchase-announcement-renderer",[id="${id}"]`,
+            );
+          }
+          if (messageElement !== null) {
+            rewrite(messageElement);
+          }
+        });
+      };
+      rewiteAllArgs(action.args[0]);
+    }
+    function rewriteAll() {
+      const renderers = document.querySelectorAll(
+        "#items > yt-live-chat-text-message-renderer",
+      );
+      const paidRenderers = document.querySelectorAll(
+        "#items > yt-live-chat-paid-message-renderer",
+      );
+      const memberRenderers = document.querySelectorAll(
+        "#items > yt-live-chat-membership-item-renderer",
+      );
+      const sponserPurchases = document.querySelectorAll(
+        "#items > ytd-sponsorships-live-chat-gift-purchase-announcement-renderer",
+      );
+      const sponserRedemptions = document.querySelectorAll(
+        "#items > ytd-sponsorships-live-chat-gift-redemption-announcement-renderer",
+      );
+      [
+        ...paidRenderers,
+        ...memberRenderers,
+        ...renderers,
+        ...sponserPurchases,
+        ...sponserRedemptions,
+      ].forEach((renderer) => {
+        rewrite(renderer);
+      });
+    }
+    function isAddChatItemAction(obj) {
+      if (
+        typeof obj?.args[0] === "object" &&
+        typeof obj?.args[0][0]?.addChatItemAction !== "undefined"
+      ) {
+        return true;
+      }
+      return false;
+    }
+    function isTextMessage(item) {
+      return "liveChatTextMessageRenderer" in item;
+    }
+    function isMembershipMessage(item) {
+      return "liveChatMembershipItemRenderer" in item;
+    }
+    function isPaidMessage(item) {
+      return "liveChatPaidMessageRenderer" in item;
+    }
+    function isGiftRedemptionAnnouncement(item) {
+      return (
+        "liveChatSponsorshipsLiveChatGiftRedemptionAnnouncementRenderer" in item
+      );
+    }
+    function isGiftPurchaseAnnouncement(item) {
+      return (
+        "liveChatSponsorshipsLiveChatGiftPurchaseAnnouncementRenderer" in item
+      );
+    }
+    function rewrite(node, async = true) {
       if (async) {
         asyncSyncSettings(parent.window.__rycu.settings).then(() => {
-          handleRewrite(nodes);
+          handleRewrite(node);
         });
       } else {
         if (getRunningRuntime() === "Extension") {
           syncSettings(parent.window.__rycu.settings);
         }
-        handleRewrite(nodes);
+        handleRewrite(node);
       }
     }
-    function handleRewrite(nodes) {
+    function handleRewrite(node) {
       const settings = parent.window.__rycu.settings;
       if (!settings.isReplaceLiveChats) {
         return;
       }
-      nodes.forEach((node) => {
-        const nameElem = node.querySelector("#author-name");
-        if (nameElem !== null) {
-          const msgData =
-            nameElem.__shady.parentNode.host.__dataHost.__data.data;
-          const { authorExternalChannelId } = msgData;
-          const userHandle = msgData.authorName.simpleText;
-          const cachedUserName = cache[authorExternalChannelId];
-          const pullUserName =
-            cachedUserName !== void 0
-              ? Promise.resolve(cachedUserName)
-              : getUserName(authorExternalChannelId);
-          pullUserName.then((name) => {
-            cache[authorExternalChannelId] = name;
-            nameElem.textContent = formatUserName(name, userHandle, settings);
-          });
-        }
-      });
+      const nameElem = node.querySelector("#author-name");
+      if (nameElem !== null) {
+        const msgData = node.polymerController.data;
+        const { authorExternalChannelId, authorName } = msgData;
+        const userHandle = authorName.simpleText;
+        const cachedUserName = cache[authorExternalChannelId];
+        const pullUserName =
+          cachedUserName !== void 0
+            ? Promise.resolve(cachedUserName)
+            : getUserName(authorExternalChannelId);
+        pullUserName.then((name) => {
+          cache[authorExternalChannelId] = name;
+          nameElem.textContent = formatUserName(name, userHandle, settings);
+        });
+      }
     }
   })();
 }
@@ -394,7 +490,7 @@ function c3JjL2luZGV4LnRz() {
     // package.json
     var package_default = {
       name: "return-youtube-comment-username",
-      version: "0.7.1",
+      version: "0.7.2",
       devDependencies: {
         "@types/chrome": "^0.0.263",
         "@types/encoding-japanese": "^2.0.5",

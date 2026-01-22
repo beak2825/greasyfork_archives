@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TGFC论坛WAP助手
 // @namespace    http://tampermonkey.net/
-// @version      0.5.6
+// @version      0.5.7
 // @description  TGFC论坛WAP版增强：热门话题、关注话题、用户屏蔽、Tag标签、楼主高亮、快速链接、卡片式美化、Markdown渲染、URL参数自定义、静默引用
 // @author       Heiren + AI
 // @match        https://wap.tgfcer.com/*
@@ -212,7 +212,7 @@
             window.GM_info = {
                 script: {
                     name: 'TGFC论坛WAP助手',
-                    version: '0.5.3'
+                    version: '0.5.7'
                 }
             };
         }
@@ -867,7 +867,7 @@
             font-size: 9px !important;
         }
 
-        .tgfc-wap-tags, .tgfc-wap-tag-item, .tgfc-wap-ban-btn, .tgfc-wap-set-btn, .tgfc-wap-only-btn, .tgfc-op-badge, .tgfc-md-btn {
+        .tgfc-wap-tags, .tgfc-wap-tag-item, .tgfc-wap-ban-btn, .tgfc-wap-set-btn, .tgfc-wap-only-btn, .tgfc-op-badge, .tgfc-md-btn, .tgfc-report-btn {
             display: inline-flex !important;
             align-items: center !important;
             justify-content: center !important;
@@ -923,6 +923,115 @@
         .tgfc-md-btn.tgfc-md-btn-on:hover {
             background: #2a7fd9 !important;
         }
+
+        /* 报告按钮 - 右对齐 */
+        .tgfc-report-btn {
+            padding: 0 3px !important; font-size: 10px !important;
+            color: #fff !important; background: #e74c3c !important; border-radius: 3px !important; cursor: pointer !important; text-decoration: none !important;
+            margin-left: auto !important; /* 推到信息条最右端 */
+        }
+        .tgfc-report-btn:hover {
+            background: #c0392b !important;
+        }
+
+        /* 报告弹窗 */
+        .tgfc-report-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 10003;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .tgfc-report-modal {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            width: 90%;
+            max-width: 360px;
+            overflow: hidden;
+        }
+        .tgfc-report-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 15px;
+            background: #f5f5f5;
+            border-bottom: 1px solid #ddd;
+        }
+        .tgfc-report-header h4 {
+            margin: 0;
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+        }
+        .tgfc-report-close {
+            background: none;
+            border: none;
+            color: #999;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+        }
+        .tgfc-report-close:hover {
+            color: #333;
+        }
+        .tgfc-report-body {
+            padding: 15px;
+        }
+        .tgfc-report-label {
+            display: block;
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        .tgfc-report-textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            resize: vertical;
+            box-sizing: border-box;
+        }
+        .tgfc-report-textarea:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        .tgfc-report-footer {
+            padding: 10px 15px 15px;
+            text-align: center;
+        }
+        .tgfc-report-submit {
+            background: linear-gradient(135deg, #f1c40f 0%, #f39c12 100%);
+            color: #333;
+            border: none;
+            padding: 8px 30px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .tgfc-report-submit:hover {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+        }
+        .tgfc-report-submit:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .tgfc-report-msg {
+            font-size: 12px;
+            margin-top: 10px;
+            text-align: center;
+        }
+        .tgfc-report-msg.success { color: #27ae60; }
+        .tgfc-report-msg.error { color: #e74c3c; }
 
         .tgfc-wap-blocked-tip { 
             background:#f9f9f9 !important; color:#999 !important; text-align:center !important; 
@@ -1170,6 +1279,16 @@
             border-radius: 4px !important;
             padding: 6px !important;
             margin: 0 0 6px 0 !important;
+        }
+        /* 编辑/发帖页面标题输入框 - 与内容框宽度一致 */
+        input[name="subject"],
+        #postform input[name="subject"] {
+            width: 100% !important;
+            box-sizing: border-box !important;
+            border: 1px solid #ccc !important;
+            border-radius: 4px !important;
+            padding: 6px !important;
+            margin: 5px 0 !important;
         }
         #postform .button {
             background: linear-gradient(135deg, #3498db 0%, #2980b9 100%) !important;
@@ -1732,6 +1851,152 @@
                     authorLink.parentNode.insertBefore(mdBtn, insertAfter.nextSibling);
                 } else {
                     authorLink.parentNode.appendChild(mdBtn);
+                }
+            }
+
+            // 5. 报告按钮 (仅内容页添加，放在MD按钮之后)
+            if (location.href.includes('action=thread') && !container.querySelector('.tgfc-report-btn')) {
+                // 获取当前楼层的 pid（从楼层号链接中提取）
+                const floorLink = container.querySelector('a[href*="pid="]');
+                if (floorLink) {
+                    const pidMatch = floorLink.href.match(/pid=(\d+)/);
+                    if (pidMatch) {
+                        const pid = pidMatch[1];
+                        const tid = getThreadId();
+                        const currentUrl = new URL(location.href);
+                        const page = currentUrl.searchParams.get('page') || '1';
+
+                        // 获取 fid（从面包屑导航中提取）
+                        let fid = null;
+                        const breadcrumbLinks = document.querySelectorAll('a[href*="action=forum"][href*="fid="]');
+                        breadcrumbLinks.forEach(link => {
+                            const fidMatch = link.href.match(/fid=(\d+)/);
+                            if (fidMatch) fid = fidMatch[1];
+                        });
+
+                        if (tid && fid) {
+                            const reportBtn = document.createElement('a');
+                            reportBtn.className = 'tgfc-report-btn';
+                            reportBtn.textContent = '报';
+                            reportBtn.href = 'javascript:;';
+                            reportBtn.title = '举报此楼';
+
+                            // 缓存参数
+                            const reportParams = { fid, tid, pid, page };
+
+                            reportBtn.onclick = (e) => {
+                                e.preventDefault();
+
+                                // 创建模态弹窗
+                                const overlay = document.createElement('div');
+                                overlay.className = 'tgfc-report-overlay';
+                                overlay.innerHTML = `
+                                    <div class="tgfc-report-modal">
+                                        <div class="tgfc-report-header">
+                                            <h4>报告</h4>
+                                            <button class="tgfc-report-close">×</button>
+                                        </div>
+                                        <div class="tgfc-report-body">
+                                            <label class="tgfc-report-label">我的意见</label>
+                                            <textarea class="tgfc-report-textarea" placeholder="请输入举报理由..."></textarea>
+                                        </div>
+                                        <div class="tgfc-report-footer">
+                                            <button class="tgfc-report-submit">报告</button>
+                                            <div class="tgfc-report-msg"></div>
+                                        </div>
+                                    </div>
+                                `;
+                                document.body.appendChild(overlay);
+
+                                const textarea = overlay.querySelector('.tgfc-report-textarea');
+                                const submitBtn = overlay.querySelector('.tgfc-report-submit');
+                                const msgDiv = overlay.querySelector('.tgfc-report-msg');
+
+                                // 关闭弹窗事件
+                                const closeModal = () => overlay.remove();
+                                overlay.querySelector('.tgfc-report-close').onclick = closeModal;
+                                overlay.onclick = (evt) => {
+                                    if (evt.target === overlay) closeModal();
+                                };
+
+                                // 提交报告
+                                submitBtn.onclick = () => {
+                                    const reason = textarea.value.trim() || '我对这个帖子有异议，特向您报告';
+                                    submitBtn.disabled = true;
+                                    submitBtn.textContent = '提交中...';
+                                    msgDiv.textContent = '';
+
+                                    // 先获取formhash
+                                    const reportPageUrl = `https://s.tgfcer.com/misc.php?action=report&fid=${reportParams.fid}&tid=${reportParams.tid}&pid=${reportParams.pid}&page=${reportParams.page}`;
+
+                                    GM_xmlhttpRequest({
+                                        method: 'GET',
+                                        url: reportPageUrl,
+                                        onload: function (res) {
+                                            // 提取formhash
+                                            const formhashMatch = res.responseText.match(/name="formhash"\s+value="([^"]+)"/);
+                                            if (!formhashMatch) {
+                                                msgDiv.className = 'tgfc-report-msg error';
+                                                msgDiv.textContent = '获取表单失败，请重试';
+                                                submitBtn.disabled = false;
+                                                submitBtn.textContent = '报告';
+                                                return;
+                                            }
+                                            const formhash = formhashMatch[1];
+
+                                            // 提交报告
+                                            const postData = `formhash=${formhash}&to%5B3%5D=yes&reason=${encodeURIComponent(reason)}&tid=${reportParams.tid}&fid=${reportParams.fid}&pid=${reportParams.pid}&page=${reportParams.page}&reportsubmit=true`;
+
+                                            GM_xmlhttpRequest({
+                                                method: 'POST',
+                                                url: 'https://s.tgfcer.com/misc.php?action=report&inajax=1&reportsubmit=yes',
+                                                headers: {
+                                                    'Content-Type': 'application/x-www-form-urlencoded'
+                                                },
+                                                data: postData,
+                                                onload: function (postRes) {
+                                                    if (postRes.responseText.includes('报告已经提交') || postRes.responseText.includes('succeed') || postRes.status === 200) {
+                                                        msgDiv.className = 'tgfc-report-msg success';
+                                                        msgDiv.textContent = '报告已提交！';
+                                                        submitBtn.textContent = '完成';
+                                                        setTimeout(closeModal, 1500);
+                                                    } else {
+                                                        msgDiv.className = 'tgfc-report-msg error';
+                                                        msgDiv.textContent = '提交失败，请重试';
+                                                        submitBtn.disabled = false;
+                                                        submitBtn.textContent = '报告';
+                                                    }
+                                                },
+                                                onerror: function () {
+                                                    msgDiv.className = 'tgfc-report-msg error';
+                                                    msgDiv.textContent = '网络错误，请重试';
+                                                    submitBtn.disabled = false;
+                                                    submitBtn.textContent = '报告';
+                                                }
+                                            });
+                                        },
+                                        onerror: function () {
+                                            msgDiv.className = 'tgfc-report-msg error';
+                                            msgDiv.textContent = '网络错误，请重试';
+                                            submitBtn.disabled = false;
+                                            submitBtn.textContent = '报告';
+                                        }
+                                    });
+                                };
+                            };
+
+                            // 插入到MD按钮之后（信息条末尾）
+                            const mdBtn = container.querySelector('.tgfc-md-btn');
+                            if (mdBtn && mdBtn.nextSibling) {
+                                authorLink.parentNode.insertBefore(reportBtn, mdBtn.nextSibling);
+                            } else if (mdBtn) {
+                                authorLink.parentNode.appendChild(reportBtn);
+                            } else {
+                                // 如果没有MD按钮，直接追加到末尾
+                                authorLink.parentNode.appendChild(reportBtn);
+                            }
+                        }
+                    }
                 }
             }
 
@@ -2449,7 +2714,7 @@
 
         async function fetchWapThreads(fid, forceRefresh = false) {
             // WAP 版没有日期信息，固定抓取前3页，按回复数排序
-            const maxPages = 3;
+            const maxPages = 5;
 
             const allThreads = [];
             const seenTids = new Set();
@@ -2491,7 +2756,7 @@
             }
 
             allThreads.sort((a, b) => b.replies - a.replies);
-            return allThreads.slice(0, 20);
+            return allThreads.slice(0, 30);
         }
 
         function renderTop10List(container, threads) {
@@ -3153,7 +3418,7 @@
             const tagCount = Object.keys(cfg.highlighted || {}).length;
 
             p.innerHTML = `
-            <div style="text-align:center;font-size:14px;font-weight:bold;margin-bottom:6px">WAP助手设置 <span style="font-size:10px;color:#fff;font-weight:normal;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;margin-left:4px">v0.5.6</span></div>
+            <div style="text-align:center;font-size:14px;font-weight:bold;margin-bottom:6px">WAP助手设置 <span style="font-size:10px;color:#fff;font-weight:normal;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;margin-left:4px">v0.5.7</span></div>
             
             <div style="font-size:11px;line-height:1.4">
                 <!-- 屏蔽 ID -->

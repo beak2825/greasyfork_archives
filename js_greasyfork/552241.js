@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LAPLACE 弹幕助手 - 哔哩哔哩直播间独轮车、弹幕发送
 // @namespace    https://greasyfork.org/users/1524935
-// @version      2.2.0
+// @version      2.2.1
 // @description  这是 bilibili 直播间简易版独轮车，基于 quiet/thusiant cmd 版本 https://greasyfork.org/scripts/421507 继续维护而来
 // @author       laplace-live
 // @license      AGPL-3.0
@@ -954,16 +954,16 @@ let replacementMap = null
       // appendToLimitedLog(msgLogs, `✅ 已添加替换规则：${from} → ${to}`, maxLogLines);
     })
 
-    // Allow Enter key to add rule in replace inputs
-    replaceFromInput.addEventListener('keypress', e => {
-      if (e.key === 'Enter') {
+    // Allow Enter key to add rule in replace inputs (but not during IME composition)
+    replaceFromInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && !e.isComposing) {
         e.preventDefault()
         addRuleBtn.click()
       }
     })
 
-    replaceToInput.addEventListener('keypress', e => {
-      if (e.key === 'Enter') {
+    replaceToInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && !e.isComposing) {
         e.preventDefault()
         addRuleBtn.click()
       }
@@ -1114,9 +1114,9 @@ let replacementMap = null
       GM_setValue('aiEvasion', aiEvasionInput.checked)
     })
 
-    // Allow Enter to send message
+    // Allow Enter to send message (but not during IME composition)
     fasongInput.addEventListener('keydown', e => {
-      if (e.key === 'Enter' && !e.shiftKey) {
+      if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) {
         e.preventDefault()
         sendMessage()
       }

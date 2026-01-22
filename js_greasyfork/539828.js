@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Audio Output Picker
 // @namespace    https://greasyfork.org/en/users/670188-hacker09?sort=daily_installs
-// @version      2
+// @version      3
 // @description  Pick a preferred audio output device for HTML5 audio and video elements.
 // @author       hacker09
 // @include      *
@@ -33,10 +33,11 @@
   const setDevice = (id) => mediaElement.setSinkId(id);
 
   const applySavedDevice = async () => {
-    const id = GM_getValue(location.href) || GM_getValue(location.hostname);
-    if (id) { //Only act if a saved setting exists.
+    const savedLabel = GM_getValue(location.href) || GM_getValue(location.hostname); //Retrieve saved Name/Label instead of ID.
+    if (savedLabel) { //Only act if a saved setting exists.
       const devices = await getDevicesWithPermission();
-      if(devices && devices.some(d => d.deviceId === id)){ setDevice(id); }
+      const target = devices.find(d => d.label === savedLabel); //Find the current ID for the saved Name.
+      if(target){ setDevice(target.deviceId); }
     }
   };
 
@@ -47,7 +48,7 @@
     const choice = parseInt(prompt(devices.map((d,i) => `${i+1}: ${d.label||`Device ${i+1}`}`).join('\n')), 10)-1;
     if(devices[choice]) {
       const key = scope === 'URL' ? location.href : location.hostname;
-      GM_setValue(key, devices[choice].deviceId);
+      GM_setValue(key, devices[choice].label); //Save the label (Name) to persist across ID changes.
       setDevice(devices[choice].deviceId);
       location.reload(); //Reload to apply the setting and update the menu text from "Save" to "DELETE".
     }
@@ -66,4 +67,5 @@
   });
 
   mediaElement.addEventListener('loadedmetadata', applySavedDevice);
+  applySavedDevice(); //Attempt to apply immediately in case metadata is already loaded.
 })();

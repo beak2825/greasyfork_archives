@@ -3,7 +3,7 @@
 // @name:en      Facebook Login Wall Remover
 // @name:zh-TW   Facebook 登入牆移除器
 // @name:ja      Facebook ログインウォールリムーバー
-// @version      0.8.1
+// @version      0.8.2
 // @description  This script improves the guest browsing experience on the Facebook desktop site. It aims to remove common interruptions and add helpful features for users who are not logged in.
 // @description:en This script improves the guest browsing experience on the Facebook desktop site. It aims to remove common interruptions and add helpful features for users who are not logged in.
 // @description:zh-TW 這個腳本的用途是改善在 Facebook 桌面版網站上未登入狀態的瀏覽體驗。它會移除一些常見的干擾，並加入一些方便的功能。
@@ -137,6 +137,7 @@
                     DIALOG: '[role="dialog"]',
                     LOGIN_FORM: 'form#login_form, form[id="login_popup_cta_form"]',
                     MEDIA_LINK: `a[href*="/photo"], a[href*="fbid="], a[href*="/videos/"], a[href*="/watch/"], a[href*="/reel/"]`,
+                    VIDEO_PAGE_TOOLBAR_ROOT: 'div[role="banner"], .xzkaem6',
                     CLOSE_BUTTON: [
                         "Close", "關閉", "閉じる", "Cerrar", "Fermer", "Schließen", "Fechar", "Chiudi", "Sluiten", "Закрыть", "Kapat", "Zamknij",
                         "Tutup", "Đóng", "ปิด", "Zatvori", "Zavrieť", "Zavřít", "Bezárás", "Stäng", "Luk", "Lukk", "Sulje", "Κλείσιμο",
@@ -166,7 +167,8 @@
                 OBSERVER: {
                     ROOT_MARGIN: '-45% 0px -45% 0px',
                     THRESHOLD: 0.01
-                }
+                },
+                FOLLOW_BUTTON_LABELS: ["Follow", "追蹤", "关注", "フォローする", "팔로우", "Seguir"]
             },
             TIMEOUTS: {
                 THROTTLE_DEFAULT: 250,
@@ -195,7 +197,7 @@
                     BADGE_MIN_WIDTH: '280px',
                     BADGE_MAX_WIDTH: '320px',
                     FLOATING_NAV_BOTTOM: '20px',
-                    FLOATING_NAV_RIGHT: '35px'
+                    FLOATING_NAV_RIGHT: '50px'
                 },
                 HEATMAP_THRESHOLDS: [0.95, 0.85, 0.75, 0.65, 0.55, 0.45, 0.35, 0.20, 0.10],
                 HEATMAP_WEIGHTS: {
@@ -225,13 +227,17 @@
                 FLOATING_NAV: true,
                 SHOW_AUTO_LOAD: true,
                 SHOW_BATCH_COPY: true,
+                FLOATING_OPACITY: true,
                 BATCH_SIZE: 20,
                 TIMELINE_NAV: true,
                 NAV_HIGHLIGHTER: true,
+                HEATMAP_BORDER: true,
                 TIMELINE_HEATMAP: true,
                 WHEEL_NAV: true,
                 WHEEL_MODIFIER: 'shiftKey',
+                WHEEL_MODIFIER: 'shiftKey',
                 SCROLL_ALIGNMENT: 'top',
+                RESTORE_ALIGNMENT: 'bottom',
                 SMOOTH_SCROLL: true,
                 NAV_INTERVAL: 500,
                 PERMALINK_COPIER: true,
@@ -332,23 +338,28 @@
                     menuSettings: '⚙️ Settings',
                     settingsColumnGeneral: 'General',
                     settingsColumnNavigation: 'Navigation',
-                    settingsColumnTools: 'Tools',
+                    settingsColumnTools: 'Tools & Utilities',
+                    settingsDetailsMetadata: 'Advanced Metadata Options',
+                    setting_autoLoadEnabled: 'Auto Load Content',
 
                     // --- Navigation ---
                     keyboardNavEnabled: 'Enable keyboard navigation',
                     navHighlighterEnabled: 'Highlight active post border',
+                    heatmapBorderEnabled: 'Apply heat color to border',
                     keyNavNextPrimary: 'Next (J)',
                     keyNavPrevPrimary: 'Prev (K)',
                     keyNavNextSecondary: 'Next (Right)',
                     keyNavPrevSecondary: 'Prev (Left)',
                     floatingNavEnabled: 'Enable floating buttons',
-                    floatingNavPrevTooltip: 'Previous Post',
-                    floatingNavNextTooltip: 'Next Post',
+                    floatingNavPrevTooltip: 'Previous Post (Right-Click: First)',
+                    floatingNavNextTooltip: 'Next Post (Right-Click: Last)',
                     timelineHeatmapEnabled: 'Show Interaction Heatmap (Color Dots)',
                     timelineNavEnabled: 'Enable Timeline Navigator',
+                    scrollRestorerAlignment: 'Scroll Restorer Alignment',
                     navigationScrollAlignment: 'Alignment',
                     scrollAlignmentCenter: 'Center',
                     scrollAlignmentTop: 'Top',
+                    scrollAlignmentBottom: 'Bottom',
                     enableSmoothScrolling: 'Smooth Scroll',
                     continuousNavInterval: 'Nav Interval',
                     wheelNavEnabled: 'Wheel Nav',
@@ -364,7 +375,7 @@
                     copier_fetchPermalinkSmart: 'Permalink (Smart)',
                     copier_fetchPermalinkDirect: 'Permalink (Direct)',
                     copier_copyContent: 'Copy Post Content',
-                    copier_copyContentSuccess: '✅ Content Copied',
+                    copier_copyContentSuccess: '✅ Content Copied ({count} chars)',
                     copier_copyContentFailed: '❌ Copy Failed',
                     copier_processing: 'Processing...',
                     copier_successPermalink: '✅ Copied',
@@ -394,11 +405,22 @@
                     autoLoad_status_success: 'Done.',
                     autoLoad_status_stopped: 'Stopped.',
                     autoLoad_status_deadlock: 'Deadlock.',
+                    autoLoad_mode_incremental: 'Mode: Incremental (+{n})',
+                    autoLoad_mode_target: 'Mode: Target Total ({n})',
+                    autoLoad_target_reached: 'Target count ({n}) already reached.',
+                    autoLoad_tooltip_incremental: 'Auto Load (+{n})\nRight-click: Switch to Target Mode',
+                    autoLoad_tooltip_target: 'Auto Load (Target {n})\nRight-click: Switch to Incremental Mode',
                     batchCopy_start: 'Processing {count} posts...',
-                    batchCopy_success: '✅ Copied {count} posts.',
-                    batchCopy_empty: 'No posts.',
+                    batchCopy_success: 'Copied {count} posts to clipboard! ({chars} chars)',
+                    batchCopy_download_success: 'Downloaded {count} posts! ({chars} chars)',
+                    batchCopy_empty: 'No posts available to copy.',
+                    batchCopy_mode_clipboard: 'Batch Mode: Clipboard Copy',
+                    batchCopy_mode_download: 'Batch Mode: Download as File',
+
+                    // --- Deadlock & Error Recovery ---
                     floatingNav_showAutoLoad: 'Show Auto-Load',
                     floatingNav_showBatchCopy: 'Show Batch Copy',
+                    floatingNav_opacity: 'Semi-Transparent when idle',
 
                     // --- Copy Metadata ---
                     copy_includeMetadata: 'Include Metadata',
@@ -506,20 +528,24 @@
                     menuSettings: '⚙️ 設定',
                     settingsColumnGeneral: '一般設定',
                     settingsColumnNavigation: '導覽設定',
-                    settingsColumnTools: '貼文工具',
+                    settingsColumnTools: '工具與實用程式',
+                    settingsDetailsMetadata: '進階中繼資料選項',
+                    setting_autoLoadEnabled: '自動載入內容',
 
                     // --- 導覽功能 ---
-                    keyboardNavEnabled: '啟用鍵盤導覽',
-                    navHighlighterEnabled: '啟用使用中貼文的高亮邊框',
-                    keyNavNextPrimary: '下一篇 (主要按鍵)',
+                    keyboardNavEnabled: '啟用鍵盤導覽 (J/K)',
+                    navHighlighterEnabled: '高亮顯示當前貼文邊框',
+                    heatmapBorderEnabled: '使用互動熱度顏色標示貼文邊框',
+                    keyNavNextPrimary: '下一篇 (J)',
                     keyNavPrevPrimary: '上一篇 (主要按鍵)',
                     keyNavNextSecondary: '下一篇 (次要按鍵)',
                     keyNavPrevSecondary: '上一篇 (次要按鍵)',
                     floatingNavEnabled: '啟用浮動導覽按鈕',
-                    floatingNavPrevTooltip: '上一篇貼文',
-                    floatingNavNextTooltip: '下一篇貼文',
+                    floatingNavPrevTooltip: '上一篇貼文 (右鍵：第一篇)',
+                    floatingNavNextTooltip: '下一篇貼文 (右鍵：最後一篇)',
                     timelineHeatmapEnabled: '顯示互動熱點圖 (彩色圓點)',
                     timelineNavEnabled: '啟用時間軸導覽 (右側捷徑)',
+                    scrollRestorerAlignment: '瀏覽位置復原對齊',
                     navigationScrollAlignment: '導覽滾動對齊',
                     scrollAlignmentCenter: '置中',
                     scrollAlignmentTop: '貼齊頂部',
@@ -538,7 +564,7 @@
                     copier_fetchPermalinkSmart: '永久連結 (智慧)',
                     copier_fetchPermalinkDirect: '永久連結 (直接)',
                     copier_copyContent: '複製貼文內容',
-                    copier_copyContentSuccess: '✅ 內容已複製',
+                    copier_copyContentSuccess: '✅ 內容已複製 ({count} 字)',
                     copier_copyContentFailed: '❌ 複製失敗',
                     copier_processing: '處理中...',
                     copier_successPermalink: '✅ 已複製',
@@ -561,18 +587,29 @@
                     autoLoader_batchSize: '自動載入批次數量',
                     tooltipAutoLoadStart: '自動載入貼文',
                     tooltipAutoLoadStop: '停止載入',
-                    tooltipBatchCopy: '批次複製所有貼文',
+                    tooltipBatchCopy: '批次複製所有已載入貼文 (右鍵切換模式)',
                     batchCopy_includeHeader: '批次複製包含頁首資訊',
                     autoLoad_status_loading: '載入中... ({current}/{target})',
                     autoLoad_status_retrying: '重試中... ({count}/{max})',
                     autoLoad_status_success: '自動載入完成。',
                     autoLoad_status_stopped: '使用者手動停止。',
                     autoLoad_status_deadlock: '偵測到阻擋，載入已停止。',
+                    autoLoad_mode_incremental: '模式：遞增載入 (+{n})',
+                    autoLoad_mode_target: '模式：目標總數 ({n})',
+                    autoLoad_target_reached: '已達到目標數量 ({n})。',
+                    autoLoad_tooltip_incremental: '自動載入 (+{n})\n右鍵：切換至目標模式',
+                    autoLoad_tooltip_target: '自動載入 (達到 {n})\n右鍵：切換至遞增模式',
                     batchCopy_start: '正在處理 {count} 篇貼文...',
-                    batchCopy_success: '✅ 已複製 {count} 篇貼文。',
-                    batchCopy_empty: '沒有貼文可複製。',
+                    batchCopy_success: '已複製 {count} 篇貼文到剪貼簿！({chars} 字)',
+                    batchCopy_download_success: '已下載 {count} 篇貼文！({chars} 字)',
+                    batchCopy_empty: '沒有可複製的貼文。',
+                    batchCopy_mode_clipboard: '批次模式：複製到剪貼簿',
+                    batchCopy_mode_download: '批次模式：下載為檔案',
+
+                    // --- Deadlock & Error Recovery ---
                     floatingNav_showAutoLoad: '顯示 自動載入按鈕',
                     floatingNav_showBatchCopy: '顯示 批次複製按鈕',
+                    floatingNav_opacity: '閒置時半透明 (降低干擾)',
 
                     // --- 複製中繼資料 ---
                     copy_includeMetadata: '複製內容包含中繼資料',
@@ -600,6 +637,9 @@
                     preview_label_link: '連結',
 
                     // --- 其他提示 ---
+                    timelineSortTooltip: '切換排序模式',
+                    scrollRestorerAlignment: '瀏覽位置復原對齊',
+                    scrollAlignmentBottom: '靠下',
                     tooltipAds: '前往 廣告檔案庫 (關於)',
                     tooltipTransparency: '查看 粉絲專頁資訊透明度',
                     notificationReelSearchError: '無法取得目前頁面名稱以進行連續短片搜尋。',
@@ -680,19 +720,25 @@
                     menuSettings: '⚙️ 設定',
                     settingsColumnGeneral: '一般',
                     settingsColumnNavigation: 'ナビ',
-                    settingsColumnTools: 'ツール',
+                    settingsColumnTools: 'ツールとユーティリティ',
+                    settingsDetailsMetadata: '高度なメタデータ設定',
+                    setting_autoLoadEnabled: 'コンテンツの自動読み込み',
 
                     // --- ナビゲーション ---
                     keyboardNavEnabled: 'キーボードナビゲーションを有効にする',
-                    navHighlighterEnabled: 'アクティブな投稿を強調表示する',
+                    navHighlighterEnabled: 'アクティブな投稿を強調表示 (枠線)',
+                    heatmapBorderEnabled: 'ヒートマップカラーを枠線に適用',
                     keyNavNextPrimary: '次の投稿 (J)',
                     keyNavPrevPrimary: '前の投稿 (K)',
                     keyNavNextSecondary: '次の投稿 (→)',
                     keyNavPrevSecondary: '前の投稿 (←)',
                     floatingNavEnabled: 'フローティングボタンを有効にする',
-                    floatingNavPrevTooltip: '前の投稿',
-                    floatingNavNextTooltip: '次の投稿',
+                    floatingNavPrevTooltip: '前の投稿 (右クリック：最初へ)',
+                    floatingNavNextTooltip: '次の投稿 (右クリック：最後へ)',
                     timelineHeatmapEnabled: 'インタラクションヒートマップを表示',
+                    timelineSortTooltip: 'ソートモードを切り替える',
+                    scrollRestorerAlignment: 'スクロール復元位置',
+                    scrollAlignmentBottom: '下部',
                     timelineNavEnabled: 'タイムラインナビゲーションを有効にする',
                     navigationScrollAlignment: 'スクロール位置',
                     scrollAlignmentCenter: '中央',
@@ -712,7 +758,7 @@
                     copier_fetchPermalinkSmart: '固定リンク (スマート)',
                     copier_fetchPermalinkDirect: '固定リンク (直接)',
                     copier_copyContent: '投稿内容をコピー',
-                    copier_copyContentSuccess: '✅ コピーしました',
+                    copier_copyContentSuccess: '✅ コピーしました ({count} 文字)',
                     copier_copyContentFailed: '❌ 失敗しました',
                     copier_processing: '処理中...',
                     copier_successPermalink: '✅ コピーしました',
@@ -735,18 +781,29 @@
                     autoLoader_batchSize: '自動読み込みバッチ数',
                     tooltipAutoLoadStart: '投稿を自動読み込み',
                     tooltipAutoLoadStop: '読み込み停止',
-                    tooltipBatchCopy: '全投稿を一括コピー',
+                    tooltipBatchCopy: '読み込まれたすべての投稿を一括コピー (右クリックでモード切替)',
                     batchCopy_includeHeader: '一括コピーにヘッダーを含める',
                     autoLoad_status_loading: '読み込み中... ({current}/{target})',
                     autoLoad_status_retrying: '再試行中... ({count}/{max})',
                     autoLoad_status_success: '自動読み込み完了。',
                     autoLoad_status_stopped: 'ユーザーにより停止。',
                     autoLoad_status_deadlock: 'ブロックを検出。停止します。',
+                    autoLoad_mode_incremental: 'モード：追加読み込み (+{n})',
+                    autoLoad_mode_target: 'モード：目標到達まで ({n})',
+                    autoLoad_target_reached: '目標件数 ({n}) に到達済みです。',
+                    autoLoad_tooltip_incremental: '自動読み込み (+{n})\n右クリック：目標モードへ切替',
+                    autoLoad_tooltip_target: '自動読み込み (目標 {n})\n右クリック：増分モードへ切替',
                     batchCopy_start: '{count} 件の投稿を処理中...',
-                    batchCopy_success: '✅ {count} 件の投稿をコピーしました。',
-                    batchCopy_empty: 'コピーする投稿がありません。',
+                    batchCopy_success: '{count} 件の投稿をクリップボードにコピーしました！ ({chars} 文字)',
+                    batchCopy_download_success: '{count} 件の投稿をダウンロードしました！ ({chars} 文字)',
+                    batchCopy_empty: 'コピーできる投稿がありません。',
+                    batchCopy_mode_clipboard: '一括モード: クリップボードにコピー',
+                    batchCopy_mode_download: '一括モード: ファイルとしてダウンロード',
+
+                    // --- Deadlock & Error Recovery ---
                     floatingNav_showAutoLoad: '自動読み込みボタンを表示',
                     floatingNav_showBatchCopy: '一括コピーボタンを表示',
+                    floatingNav_opacity: '待機時に半透明にする',
 
                     // --- メタデータコピー ---
                     copy_includeMetadata: 'メタデータを含める (作成者、日付、リンク...)',
@@ -790,26 +847,40 @@
                     `div[data-nosnippet], div[role="banner"]:has(a[href*="/reg/"]) { display: none !important; }`,
                     // --- Post Highlights ---
                     `.${C.SELECTORS.NAVIGATOR.HIGHLIGHT_CLASS} { outline: 3px solid #1877F2 !important; box-shadow: 0 0 15px rgba(24, 119, 242, 0.5) !important; border-radius: 8px; z-index: 10 !important; }`,
+                    // Heatmap Border Colors
+                    `.${C.SELECTORS.NAVIGATOR.HIGHLIGHT_CLASS}[data-heat="1"] { outline-color: #B2DFDB !important; box-shadow: 0 0 15px rgba(178, 223, 219, 0.5) !important; }`,
+                    `.${C.SELECTORS.NAVIGATOR.HIGHLIGHT_CLASS}[data-heat="2"] { outline-color: #80CBC4 !important; box-shadow: 0 0 15px rgba(128, 203, 196, 0.5) !important; }`,
+                    `.${C.SELECTORS.NAVIGATOR.HIGHLIGHT_CLASS}[data-heat="3"] { outline-color: #26A69A !important; box-shadow: 0 0 15px rgba(38, 166, 154, 0.5) !important; }`,
+                    `.${C.SELECTORS.NAVIGATOR.HIGHLIGHT_CLASS}[data-heat="4"] { outline-color: #66BB6A !important; box-shadow: 0 0 15px rgba(102, 187, 106, 0.5) !important; }`,
+                    `.${C.SELECTORS.NAVIGATOR.HIGHLIGHT_CLASS}[data-heat="5"] { outline-color: #D4E157 !important; box-shadow: 0 0 15px rgba(212, 225, 87, 0.5) !important; }`,
+                    `.${C.SELECTORS.NAVIGATOR.HIGHLIGHT_CLASS}[data-heat="6"] { outline-color: #FFEE58 !important; box-shadow: 0 0 15px rgba(255, 238, 88, 0.5) !important; }`,
+                    `.${C.SELECTORS.NAVIGATOR.HIGHLIGHT_CLASS}[data-heat="7"] { outline-color: #FFCA28 !important; box-shadow: 0 0 15px rgba(255, 202, 40, 0.5) !important; }`,
+                    `.${C.SELECTORS.NAVIGATOR.HIGHLIGHT_CLASS}[data-heat="8"] { outline-color: #FB8C00 !important; box-shadow: 0 0 15px rgba(251, 140, 0, 0.5) !important; }`,
+                    `.${C.SELECTORS.NAVIGATOR.HIGHLIGHT_CLASS}[data-heat="9"] { outline-color: #F44336 !important; box-shadow: 0 0 15px rgba(244, 67, 54, 0.5) !important; }`,
                     // --- Floating Nav ---
-                    `.gm-floating-nav { position: fixed; bottom: ${C.UI.DIMENSIONS.FLOATING_NAV_BOTTOM}; right: ${C.UI.DIMENSIONS.FLOATING_NAV_RIGHT}; z-index: ${C.UI.Z_INDEX.FLOATING_NAV}; display: flex; flex-direction: column; gap: 8px; }`,
-                    `.gm-floating-nav button { background-color: rgba(255, 255, 255, 0.95); border: 1px solid #ddd; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.15); transition: background-color 0.2s, transform 0.1s; position: relative; }`,
-                    `.gm-floating-nav button:hover { background-color: #f0f2f5; }`,
+                    `.gm-floating-nav { position: fixed; bottom: ${C.UI.DIMENSIONS.FLOATING_NAV_BOTTOM}; right: ${C.UI.DIMENSIONS.FLOATING_NAV_RIGHT}; z-index: ${C.UI.Z_INDEX.FLOATING_NAV}; display: flex; flex-direction: column; gap: 12px; transition: opacity 0.3s; }`,
+                    `.gm-floating-nav[data-opacity="true"] { opacity: 0.1; }`,
+                    `.gm-floating-nav[data-opacity="true"]:hover { opacity: 1; }`,
+                    `.gm-floating-nav button { background-color: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: none; border-radius: 50%; width: 44px; height: 44px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; color: #65676B; }`,
+                    `.gm-floating-nav button:hover { background-color: #FFFFFF; transform: scale(1.1); box-shadow: 0 6px 16px rgba(0,0,0,0.2); }`,
                     `.gm-floating-nav button:active { transform: scale(0.95); }`,
-                    `.gm-floating-nav svg { width: 20px; height: 20px; fill: #65676b; }`,
+                    `.gm-floating-nav svg { width: 22px; height: 22px; fill: currentColor; }`,
+
                     // --- Timeline Navigator ---
-                    `#gm-timeline-container { position: fixed; right: 0; top: 10vh; bottom: 10vh; z-index: ${C.UI.Z_INDEX.TIMELINE}; background: rgba(255, 255, 255, 0.1); border-top-left-radius: 12px; border-bottom-left-radius: 12px; padding: 12px 0; backdrop-filter: blur(2px); display: flex; flex-direction: column; align-items: flex-end; gap: 2px; width: fit-content; max-width: 28px; transition: max-width 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), background-color 0.2s, box-shadow 0.2s; box-shadow: -1px 0 4px rgba(0,0,0,0.02); overflow: hidden; }`,
-                    `#gm-timeline-container:hover { max-width: ${C.TIMELINE.WIDTH_MAX_LIMIT}; background: rgba(255, 255, 255, 0.98); box-shadow: -4px 0 16px rgba(0,0,0,0.12); }`,
-                    `.gm-timeline-header { flex-shrink: 0; width: 100%; display: flex; justify-content: flex-end; padding-bottom: 4px; padding-right: 2px; }`,
-                    `.gm-timeline-scroll-area { overflow-y: auto; overflow-x: hidden; flex-grow: 1; width: 100%; display: flex; flex-direction: column; align-items: flex-end; scrollbar-width: none; overscroll-behavior: contain; }`,
+                    `#gm-timeline-container { position: fixed; right: 0; top: 60px; bottom: 20px; z-index: ${C.UI.Z_INDEX.TIMELINE}; background: transparent; border-top-left-radius: 16px; border-bottom-left-radius: 16px; padding: 16px 0; backdrop-filter: none; -webkit-backdrop-filter: none; display: flex; flex-direction: column; align-items: flex-end; gap: 4px; width: fit-content; max-width: 32px; transition: max-width 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), background-color 0.2s, box-shadow 0.2s, backdrop-filter 0.2s; box-shadow: none; overflow: hidden; border-left: none; }`,
+                    `@supports (-moz-appearance:none) { #gm-timeline-container { right: 8px !important; } }`,
+                    `#gm-timeline-container:hover { max-width: ${C.TIMELINE.WIDTH_MAX_LIMIT}; background: rgba(255, 255, 255, 0.95); box-shadow: -8px 0 24px rgba(0,0,0,0.15); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-left: 1px solid rgba(255,255,255,0.5); }`,
+                    `.gm-timeline-header { flex-shrink: 0; width: 100%; display: flex; justify-content: flex-end; padding-bottom: 4px; padding-right: 4px; }`,
+                    `.gm-timeline-scroll-area { overflow-y: auto; overflow-x: hidden; flex-grow: 1; width: 100%; display: flex; flex-direction: column; align-items: flex-end; scrollbar-width: none; overscroll-behavior: contain; padding: 4px 0; }`,
                     `.gm-timeline-scroll-area::-webkit-scrollbar { display: none; }`,
-                    `.gm-timeline-row { display: flex; align-items: center; justify-content: flex-end; width: 100%; height: ${C.TIMELINE.ROW_HEIGHT}; padding-right: 8px; padding-left: 14px; cursor: pointer; user-select: none; flex-shrink: 0; white-space: nowrap; }`,
+                    `.gm-timeline-row { display: flex; align-items: center; justify-content: flex-end; width: 100%; height: ${C.TIMELINE.ROW_HEIGHT}; padding-right: 12px; padding-left: 16px; cursor: pointer; user-select: none; flex-shrink: 0; white-space: nowrap; }`,
                     `.gm-timeline-info { display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin-right: 12px; opacity: 0; transform: translateX(10px); transition: opacity 0.2s ease, transform 0.2s ease; pointer-events: none; }`,
                     `#gm-timeline-container:hover .gm-timeline-info { opacity: 1; transform: translateX(0); transition-delay: 0.05s; }`,
-                    `.gm-timeline-sort-btn { width: 24px; height: 24px; border-radius: 50%; background: transparent; border: none; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; margin-bottom: 4px; transition: transform 0.2s; opacity: 0.6; user-select: none; }`,
+                    `.gm-timeline-sort-btn { width: 28px; height: 28px; border-radius: 50%; background: transparent; border: none; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; margin-bottom: 0px; margin-top: 4px; transition: transform 0.2s; opacity: 0.6; user-select: none; color: #65676B; }`,
                     `.gm-timeline-sort-btn:hover { opacity: 1; background-color: rgba(0,0,0,0.05); transform: scale(1.1); }`,
                     `.gm-label-time { font-size: 11px; color: #65676B; font-weight: 400; letter-spacing: 0.3px; }`,
 
-                    `.gm-label-idx { font-size: 11px; color: #B0B3B8; min-width: 28px; text-align: right; font-variant-numeric: tabular-nums; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }`,
+                    `.gm-label-idx { font-size: 12px; color: #90949c; font-weight: normal; min-width: 28px; text-align: right; font-variant-numeric: tabular-nums; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }`,
                     `.gm-label-idx.milestone-text { color: #050505; font-weight: 700; font-size: 12px; }`,
                     `.gm-timeline-dot { width: ${C.TIMELINE.DOT_SIZE}; height: ${C.TIMELINE.DOT_SIZE}; border-radius: 50%; background-color: #B0B3B8; transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 0.2s; flex-shrink: 0; }`,
                     `.gm-timeline-row:hover .gm-timeline-dot { transform: scale(1.5); }`,
@@ -832,13 +903,15 @@
                     `.gm-timeline-row.active .gm-timeline-dot { transform: scale(1.4); border: 2px solid #ffffff; box-shadow: 0 0 0 2px #1877F2, 0 2px 6px rgba(0,0,0,0.3) !important; }`,
 
                     // --- Toolbar & Search ---
-                    `.gm-toolbar { position: fixed; top: 0; left: 0; width: 100%; padding: 4px 16px; background-color: #FFFFFF; z-index: ${C.UI.Z_INDEX.TOOLBAR}; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 5px rgba(0,0,0,0.2); box-sizing: border-box; transition: transform 0.3s ease-in-out; gap: 16px; }`,
-                    `.gm-button-group { display: flex; align-items: center; }`,
-                    `.gm-button-group button { background-color: #F0F2F5; border: 1px solid #CED0D4; padding: 0; height: 32px; width: 32px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background-color 0.2s; }`,
-                    `.gm-button-group button:hover { background-color: #E4E6EB; }`,
-                    `.gm-button-group button:not(:first-child) { margin-left: -1px; }`,
-                    `.gm-button-group button:first-child { border-radius: 6px 0 0 6px; }`,
-                    `.gm-button-group button:last-child { border-radius: 0 6px 6px 0; }`,
+                    `.gm-toolbar { position: fixed; top: 0; left: 0; width: 100%; padding: 8px 16px; background-color: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); z-index: ${C.UI.Z_INDEX.TOOLBAR}; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06); box-sizing: border-box; transition: transform 0.3s ease-in-out; gap: 16px; border-bottom: 1px solid rgba(0,0,0,0.05); }`,
+                    `.gm-button-group { display: flex; align-items: center; gap: 6px; }`,
+                    `.gm-button-group button { background-color: transparent; border: none; padding: 0; height: 36px; width: 36px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; border-radius: 50%; color: #65676B; }`,
+                    `.gm-button-group button:hover { background-color: rgba(0, 0, 0, 0.05); transform: translateY(-1px); }`,
+                    `.gm-button-group button:active { transform: scale(0.96); background-color: rgba(0, 0, 0, 0.1); }`,
+                    // Removed legacy joined-button styles
+                    // .gm-button-group button:not(:first-child) { margin-left: -1px; }
+                    // .gm-button-group button:first-child { border-radius: 6px 0 0 6px; }
+                    // .gm-button-group button:last-child { border-radius: 0 6px 6px 0; }
                     `.gm-button-group button svg { width: 20px; height: 20px; fill: #65676B; pointer-events: none; }`,
                     `.gm-button-group button.gm-pinned { background-color: #E7F3FF; }`,
                     `.gm-search-core-wrapper { flex-grow: 1; display: flex; justify-content: center; }`,
@@ -860,6 +933,7 @@
                     `.gm-toast-visible { opacity: 1; transform: translate(-50%, 0); }`,
                     `.gm-toast-success { background-color: rgba(24, 119, 242, 0.85); }`,
                     `.gm-toast-failure { background-color: rgba(220, 53, 69, 0.85); }`,
+                    `.gm-toast-info { background-color: rgba(50, 50, 50, 0.9); }`,
                     `.gm-toast a { color: white; text-decoration: underline; font-weight: 600; transition: opacity 0.2s; }`,
                     `.gm-toast a:hover { opacity: 0.8; }`,
 
@@ -873,7 +947,9 @@
                     `.gm-icon-wrapper svg { display: block; }`,
 
                     // --- Transparency Buttons ---
-                    `.gm-transparency-container { position: fixed; bottom: 20px; left: 20px; z-index: ${C.UI.Z_INDEX.TRANSPARENCY}; display: none; flex-direction: column; gap: 10px; }`,
+                    `.gm-transparency-container { position: fixed; bottom: 20px; left: 20px; z-index: ${C.UI.Z_INDEX.TRANSPARENCY}; display: none; flex-direction: column; gap: 10px; transition: opacity 0.3s; }`,
+                    `.gm-transparency-container[data-opacity="true"] { opacity: 0.5; }`,
+                    `.gm-transparency-container[data-opacity="true"]:hover { opacity: 1; }`,
                     `.gm-transparency-btn { width: 40px; height: 40px; border-radius: 50%; background-color: white; border: 1px solid #ddd; box-shadow: 0 2px 5px rgba(0,0,0,0.15); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; transition: transform 0.1s; }`,
                     `.gm-transparency-btn:hover { background-color: #f0f2f5; }`,
                     `.gm-transparency-btn:active { transform: scale(0.95); }`,
@@ -881,24 +957,83 @@
                     // --- Post Numbering ---
                     `.gm-post-number { position: absolute; top: -10px; left: -10px; background-color: #e4e6eb; color: #65676b; padding: 2px 6px; border-radius: 4px; font-size: 12px; font-weight: bold; z-index: 1; }`,
 
-                    // --- Settings Modal ---
-                    `.gm-settings-backdrop { position: fixed; inset: 0; background-color: rgba(0, 0, 0, 0.5); z-index: ${C.UI.Z_INDEX.MODAL_BACKDROP}; }`,
-                    `.gm-settings-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: ${C.UI.Z_INDEX.MODAL_FOREGROUND}; min-width: 600px; max-width: 90vw; display: flex; flex-direction: column; max-height: 85vh; }`,
-                    `.gm-settings-header { display: flex; justify-content: space-between; align-items: center; padding: 16px; border-bottom: 1px solid #ddd; }`,
-                    `.gm-settings-title { margin: 0; font-size: 18px; }`,
-                    `.gm-settings-close-btn { background: none; border: none; font-size: 24px; cursor: pointer; padding: 0 8px; }`,
-                    `.gm-settings-body { padding: 16px; overflow-y: auto; flex: 1; }`,
-                    `.gm-settings-footer { display: flex; justify-content: space-between; align-items: center; padding: 16px; border-top: 1px solid #ddd; }`,
-                    `.gm-col { flex: 1; min-width: 250px; }`,
-                    `.gm-col-header { margin-top: 0; border-bottom: 1px solid #eee; padding-bottom: 8px; }`,
-                    `.gm-setting-row { display: flex; align-items: center; margin-bottom: 12px; transition: opacity 0.2s; }`,
-                    `.gm-setting-label { margin-right: 8px; flex-shrink: 0; }`,
-                    `.gm-input-right { margin-left: auto; }`,
-                    `.gm-input-text { margin-left: auto; border: 1px solid #ccc; border-radius: 4px; padding: 4px 8px; width: 100px; }`,
-                    `.gm-input-select { margin-left: auto; border: 1px solid #ccc; border-radius: 4px; padding: 4px 8px; }`,
-                    `.gm-btn-save { padding: 8px 16px; border: 1px solid #1877F2; background-color: #1877F2; color: white; border-radius: 6px; cursor: pointer; }`,
-                    `.gm-btn-reset { padding: 8px 12px; border: 1px solid #d9534f; background-color: transparent; color: #d9534f; border-radius: 6px; cursor: pointer; transition: background-color 0.2s, color 0.2s; }`,
-                    `.gm-btn-reset:hover { background-color: #d9534f; color: white; }`
+                    // --- Settings Modal (Modern UI) ---
+                    `.gm-settings-backdrop { position: fixed; inset: 0; background-color: rgba(0, 0, 0, 0.4); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); z-index: ${C.UI.Z_INDEX.MODAL_BACKDROP}; opacity: 0; transition: opacity 0.3s ease; overscroll-behavior: contain; }`,
+                    `.gm-settings-backdrop.open { opacity: 1; }`,
+                    `.gm-settings-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.95); background-color: #FFFFFF; border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.12); z-index: ${C.UI.Z_INDEX.MODAL_FOREGROUND}; min-width: 680px; max-width: 90vw; display: flex; flex-direction: column; height: 85vh; max-height: 85vh; opacity: 0; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); overscroll-behavior: contain; }`,
+                    `.gm-settings-modal.open { transform: translate(-50%, -50%) scale(1); opacity: 1; }`,
+                    // Custom Scrollbar
+                    `.gm-settings-content::-webkit-scrollbar { width: 8px; }`,
+                    `.gm-settings-content::-webkit-scrollbar-track { background: transparent; }`,
+                    `.gm-settings-content::-webkit-scrollbar-thumb { background-color: #CED0D4; border-radius: 4px; border: 2px solid #FFFFFF; }`,
+                    `.gm-settings-content::-webkit-scrollbar-thumb:hover { background-color: #B0B3B8; }`,
+
+                    `.gm-settings-header { display: flex; justify-content: space-between; align-items: center; padding: 8px 24px; border-bottom: 1px solid #F0F2F5; }`,
+                    `.gm-settings-title { margin: 0; font-size: 20px; font-weight: 700; color: #050505; }`,
+                    `.gm-settings-close-btn { background: none; border: none; font-size: 24px; color: #65676B; cursor: pointer; padding: 4px; border-radius: 50%; transition: background-color 0.2s; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; }`,
+                    `.gm-settings-close-btn:hover { background-color: #F0F2F5; color: #050505; }`,
+
+                    `.gm-settings-body { padding: 24px; overflow-y: auto; flex: 1; background-color: #F7F8FA; display: flex; gap: 16px; align-items: flex-start; flex-wrap: wrap; }`,
+
+                    `.gm-col { flex: 1; min-width: 320px; background: white; border-radius: 12px; padding: 16px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); border: 1px solid #E4E6EB; }`,
+                    // Grid Layout for Content
+                    `.gm-col-content { display: flex; flex-direction: column; gap: 8px; }`,
+                    // Make full width for non-toggle inputs if needed, or keeping everything grid
+                    `.gm-setting-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0; padding: 4px 0; transition: opacity 0.2s; min-height: 32px; }`,
+                    `.gm-setting-row.full-width { width: 100%; }`,
+
+                    `.gm-col-header { margin-top: 0; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #F0F2F5; color: #65676B; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }`,
+
+                    `.gm-setting-label { margin-right: 12px; color: #050505; font-size: 13px; font-weight: 500; line-height: 1.3; }`,
+
+                    // Toggle Switch (Compact iOS Style)
+                    `.gm-switch { position: relative; display: inline-block; width: 36px; height: 20px; flex-shrink: 0; }`,
+                    `.gm-switch input { opacity: 0; width: 0; height: 0; }`,
+                    `.gm-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #CED0D4; transition: .4s; border-radius: 34px; }`,
+                    `.gm-slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }`,
+                    `input:checked + .gm-slider { background-color: #1877F2; }`,
+                    `input:checked + .gm-slider:before { transform: translateX(16px); }`,
+                    `input:disabled + .gm-slider { opacity: 0.5; cursor: not-allowed; }`,
+
+                    // Inputs (Compact)
+                    `.gm-input-text { border: 1px solid #CED0D4; border-radius: 6px; padding: 4px 8px; font-size: 13px; outline: none; transition: border-color 0.2s; background: #F0F2F5; color: #050505; width: 80px; text-align: right; }`,
+                    `.gm-input-text:focus { border-color: #1877F2; background: #FFFFFF; }`,
+                    `.gm-input-select { border: 1px solid #CED0D4; border-radius: 6px; padding: 4px 24px 4px 8px; font-size: 13px; outline: none; background: #F0F2F5; cursor: pointer; color: #050505; appearance: none; background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2365676B%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E"); background-repeat: no-repeat; background-position: right 8px top 50%; background-size: 8px; }`,
+
+                    // Collapsible Details
+                    `.gm-details { width: 100%; border: 1px solid #F0F2F5; border-radius: 8px; margin-top: 8px; }`,
+                    `.gm-summary { padding: 8px 12px; background-color: #F7F8FA; cursor: pointer; font-size: 13px; font-weight: 600; color: #65676B; display: flex; align-items: center; justify-content: space-between; user-select: none; }`,
+                    `.gm-summary:hover { background-color: #F0F2F5; color: #050505; }`,
+                    `.gm-summary::after { content: "▼"; font-size: 10px; transition: transform 0.2s; }`,
+                    `.gm-details[open] .gm-summary::after { transform: rotate(180deg); }`,
+                    `.gm-details-content { padding: 12px; display: flex; flex-direction: column; gap: 8px; background: #FFFFFF; border-top: 1px solid #F0F2F5; }`,
+
+                    `.gm-settings-footer { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-top: 1px solid #F0F2F5; background: #FFFFFF; }`,
+                    `.gm-btn-save { padding: 6px 20px; border: none; background-color: #1877F2; color: white; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; transition: background-color 0.2s; }`,
+                    `.gm-btn-save:hover { background-color: #166FE5; }`,
+                    `.gm-btn-reset { padding: 6px 12px; border: none; background-color: transparent; color: #DC2626; font-weight: 500; font-size: 13px; cursor: pointer; border-radius: 6px; transition: background 0.2s; }`,
+                    `.gm-btn-reset:hover { background-color: #FEF2F2; }`,
+
+                    // --- Sidebar Layout (New) ---
+                    `.gm-settings-body { display: flex; padding: 0; background-color: #F7F8FA; flex: 1; min-height: 0; position: relative; }`,
+                    `.gm-settings-sidebar { width: 140px; background-color: #FFFFFF; border-right: 1px solid #CED0D4; display: flex; flex-direction: column; padding: 12px 0; flex-shrink: 0; }`,
+                    `.gm-settings-content { flex: 1; padding: 12px 16px; overflow-y: scroll !important; display: flex; flex-direction: column; gap: 8px; height: 100%; max-height: 100%; }`,
+
+                    // Tab Buttons
+                    `.gm-tab-btn { padding: 10px 12px; border: none; background: transparent; text-align: left; cursor: pointer; border-radius: 8px; font-weight: 500; font-size: 14px; color: #65676B; transition: all 0.2s; margin-bottom: 2px; }`,
+                    `.gm-tab-btn:hover { background-color: #F0F2F5; color: #050505; }`,
+                    `.gm-tab-btn.active { background-color: #E7F3FF; color: #1877F2; font-weight: 600; }`,
+
+                    // Hybrid Grid Layout for Panels
+                    `.gm-panel { display: none; flex-direction: column; gap: 4px; animation: gm-fade-in 0.2s ease-out; }`,
+                    `.gm-panel.active { display: flex; }`,
+
+                    `.gm-grid-hybrid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 16px; align-items: center; }`,
+                    // Rows
+                    `.gm-setting-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0; padding: 2px 0; transition: opacity 0.2s; min-height: 28px; box-sizing: border-box; }`,
+                    `.gm-setting-row.span-2 { grid-column: span 2; width: 100%; }`,
+
+                    `@keyframes gm-fade-in { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }`
                 ].join('\n');
             },
             get HIDE_USELESS() {
@@ -1045,54 +1180,46 @@
              * Scrolls the window to the specified element, respecting user settings for alignment and animation.
              * @param {HTMLElement} element - The target element.
              * @param {boolean|null} [forceSmooth=null] - Force smooth scrolling if true/false, or use settings if null.
+             * @param {string|null} [alignmentOverride=null] - Override the default alignment (e.g. 'top', 'center', 'bottom').
              */
-            scrollToElement(element, forceSmooth = null) {
+            scrollToElement(element, forceSmooth = null, alignmentOverride = null) {
                 if (!element) return;
 
                 const settings = app.state.settings;
-                const alignCenter = settings.navigationScrollAlignment === 'center';
+                const alignment = alignmentOverride || settings.navigationScrollAlignment;
+                const alignCenter = alignment === 'center';
+                const alignBottom = alignment === 'bottom';
+
                 const isSmooth = forceSmooth !== null ? forceSmooth : settings.enableSmoothScrolling;
                 const behavior = isSmooth ? 'smooth' : 'auto';
 
+                const rect = element.getBoundingClientRect();
+                const currentScroll = window.scrollY || window.pageYOffset;
+                let targetY;
+
                 if (alignCenter) {
-                    element.scrollIntoView({ behavior, block: 'center' });
+                    // Center
+                    targetY = currentScroll + rect.top + (rect.height / 2) - (window.innerHeight / 2);
+                } else if (alignBottom) {
+                    // Bottom with minimal padding (10px) to match Top buffer
+                    targetY = currentScroll + rect.bottom - window.innerHeight + 10;
                 } else {
-                    // Top Alignment Logic
-                    let offset = 10; // Base buffer (px)
+                    // Top Alignment
+                    let offset = 10; // Base buffer
 
-                    // Determine if Toolbar is Pinned
-                    // The pinned state is NOT in app.state.settings, it resides in the searchBar module.
-                    let isPinned = true; // Default to true if unknown
-
-                    if (app.modules.searchBar && typeof app.modules.searchBar.state.isPinned !== 'undefined') {
-                        isPinned = app.modules.searchBar.state.isPinned;
-                    } else {
-                        // Fallback: Read directly from storage if module isn't ready
-                        isPinned = GM_getValue('isSearchBarPinned', true);
+                    // Dynamic Toolbar Check (Only if Pinned)
+                    // Note: FB Header is ignored as it is hidden by the script
+                    if (app.modules.searchBar && typeof app.modules.searchBar.getOccupiedHeight === 'function') {
+                        offset += app.modules.searchBar.getOccupiedHeight();
                     }
 
-                    // Only reserve space if the user has actually PINNED the toolbar.
-                    // If Unpinned, we ignore it (offset = 10), even if it's momentarily visible.
-                    if (isPinned) {
-                        const toolbar = document.querySelector('.gm-toolbar');
-                        // Use actual height if available, otherwise fallback to standard height (45px)
-                        // to prevent jumping if the DOM is rebuilding.
-                        if (toolbar && toolbar.offsetHeight > 0) {
-                            offset += toolbar.offsetHeight;
-                        } else {
-                            offset += 46; // Standard height fallback
-                        }
-                    }
-
-                    const elementRectTop = element.getBoundingClientRect().top;
-                    const absoluteElementTop = elementRectTop + window.pageYOffset;
-                    const targetScrollY = absoluteElementTop - offset;
-
-                    window.scrollTo({
-                        top: targetScrollY,
-                        behavior: behavior
-                    });
+                    targetY = currentScroll + rect.top - offset;
                 }
+
+                window.scrollTo({
+                    top: targetY,
+                    behavior: behavior
+                });
             },
 
             /**
@@ -1213,16 +1340,19 @@
                         { key: 'floatingNavEnabled', type: 'boolean', defaultValue: D.FLOATING_NAV, labelKey: 'floatingNavEnabled', group: 'navigation', instant: true },
                         { key: 'floatingNav_showAutoLoad', type: 'boolean', defaultValue: D.SHOW_AUTO_LOAD, labelKey: 'floatingNav_showAutoLoad', group: 'navigation', instant: true },
                         { key: 'floatingNav_showBatchCopy', type: 'boolean', defaultValue: D.SHOW_BATCH_COPY, labelKey: 'floatingNav_showBatchCopy', group: 'navigation', instant: true },
-                        { key: 'autoLoadBatchSize', type: 'range', defaultValue: D.BATCH_SIZE, labelKey: 'autoLoader_batchSize', options: { min: 10, max: 100, step: 5, unit: '' }, group: 'navigation' },
+                        { key: 'autoLoadBatchSize', type: 'range', defaultValue: D.BATCH_SIZE, labelKey: 'autoLoader_batchSize', options: { min: 10, max: 200, step: 5, unit: '' }, group: 'navigation' },
 
                         { key: 'timelineNavEnabled', type: 'boolean', defaultValue: D.TIMELINE_NAV, labelKey: 'timelineNavEnabled', group: 'navigation', instant: true },
                         { key: 'navHighlighterEnabled', type: 'boolean', defaultValue: D.NAV_HIGHLIGHTER, labelKey: 'navHighlighterEnabled', group: 'navigation' },
+                        { key: 'heatmapBorderEnabled', type: 'boolean', defaultValue: D.HEATMAP_BORDER, labelKey: 'heatmapBorderEnabled', group: 'navigation' },
                         { key: 'timelineHeatmapEnabled', type: 'boolean', defaultValue: D.TIMELINE_HEATMAP, labelKey: 'timelineHeatmapEnabled', group: 'navigation' },
 
                         { key: 'wheelNavEnabled', type: 'boolean', defaultValue: D.WHEEL_NAV, labelKey: 'wheelNavEnabled', group: 'navigation' },
                         { key: 'wheelNavModifier', type: 'select', defaultValue: D.WHEEL_MODIFIER, labelKey: 'wheelNavModifier', options: [{ value: 'altKey', labelKey: 'modifierAlt' }, { value: 'ctrlKey', labelKey: 'modifierCtrl' }, { value: 'shiftKey', labelKey: 'modifierShift' }, { value: 'none', labelKey: 'modifierNone' }], group: 'navigation' },
-                        { key: 'navigationScrollAlignment', type: 'select', defaultValue: D.SCROLL_ALIGNMENT, labelKey: 'navigationScrollAlignment', options: [{ value: 'center', labelKey: 'scrollAlignmentCenter' }, { value: 'top', labelKey: 'scrollAlignmentTop' }], group: 'navigation' },
+                        { key: 'navigationScrollAlignment', type: 'select', defaultValue: D.SCROLL_ALIGNMENT, labelKey: 'navigationScrollAlignment', options: [{ value: 'center', labelKey: 'scrollAlignmentCenter' }, { value: 'top', labelKey: 'scrollAlignmentTop' }, { value: 'bottom', labelKey: 'scrollAlignmentBottom' }], group: 'navigation' },
+                        { key: 'scrollRestorerAlignment', type: 'select', defaultValue: D.RESTORE_ALIGNMENT, labelKey: 'scrollRestorerAlignment', options: [{ value: 'center', labelKey: 'scrollAlignmentCenter' }, { value: 'top', labelKey: 'scrollAlignmentTop' }, { value: 'bottom', labelKey: 'scrollAlignmentBottom' }], group: 'navigation' },
                         { key: 'enableSmoothScrolling', type: 'boolean', defaultValue: D.SMOOTH_SCROLL, labelKey: 'enableSmoothScrolling', group: 'navigation' },
+                        { key: 'floatingNavOpacity', type: 'boolean', defaultValue: D.FLOATING_OPACITY, labelKey: 'floatingNav_opacity', group: 'navigation' },
                         { key: 'continuousNavInterval', type: 'range', defaultValue: D.NAV_INTERVAL, labelKey: 'continuousNavInterval', options: { min: 0, max: 1000, step: 50, unit: 'ms' }, group: 'navigation' },
                     ];
                     const toolsSettings = [
@@ -1323,6 +1453,9 @@
                                 FN.init(this.app);
                             }
                             break;
+                        case 'floatingNavOpacity':
+                            FN.updateOpacityState(newValue);
+                            break;
                         case 'hidePostStats':
                             SI.updateStatsBarVisibility(newValue);
                             break;
@@ -1359,27 +1492,117 @@
                 open() {
                     if (!this.modalContainer) this._createModal();
                     const T = this.app.state.T;
+                    const U = this.app.utils;
+
                     this.modalContainer.body.innerHTML = '';
-                    const layout = this.app.utils.createStyledElement('div', { display: 'flex', gap: '24px', flexWrap: 'wrap' }, {
-                        children: [
-                            this._createSettingsColumn(T.settingsColumnGeneral, 'general'),
-                            this._createSettingsColumn(T.settingsColumnNavigation, 'navigation'),
-                            this._createSettingsColumn(T.settingsColumnTools, 'tools')
-                        ]
+                    document.body.style.overflow = 'hidden'; // Prevent Background Scrolling
+
+                    // --- Sidebar & Content Layout ---
+                    const sidebar = U.createStyledElement('div', {}, { className: 'gm-settings-sidebar' });
+                    const contentContainer = U.createStyledElement('div', {}, { className: 'gm-settings-content' });
+
+                    const groups = [
+                        { id: 'general', title: T.settingsColumnGeneral, isGrid: true },
+                        { id: 'navigation', title: T.settingsColumnNavigation, isGrid: true },
+                        { id: 'tools', title: T.settingsColumnTools, isGrid: true }
+                    ];
+
+                    let activeTab = null;
+                    let activePanel = null;
+
+                    groups.forEach((group, index) => {
+                        // 1. Create Sidebar Tab
+                        const tabBtn = U.createStyledElement('button', {}, {
+                            className: 'gm-tab-btn',
+                            textContent: group.title,
+                            on: {
+                                click: () => {
+                                    if (activeTab) activeTab.classList.remove('active');
+                                    if (activePanel) activePanel.classList.remove('active');
+
+                                    tabBtn.classList.add('active');
+                                    panel.classList.add('active');
+
+                                    activeTab = tabBtn;
+                                    activePanel = panel;
+                                }
+                            }
+                        });
+                        sidebar.appendChild(tabBtn);
+
+                        // 2. Create Content Panel
+                        const panel = this._createSettingsPanel(group.title, group.id, group.isGrid);
+                        contentContainer.appendChild(panel);
+
+                        // Activate default (first one)
+                        if (index === 0) {
+                            tabBtn.classList.add('active');
+                            panel.classList.add('active');
+                            activeTab = tabBtn;
+                            activePanel = panel;
+                        }
                     });
-                    this.modalContainer.body.append(layout);
+
+                    this.modalContainer.body.append(sidebar, contentContainer);
                     this._setupDependentControls(this.modalContainer.body);
+
                     this.modalContainer.backdrop.style.display = 'block';
                     this.modalContainer.modal.style.display = 'flex';
+
+                    // Trigger Animation
+                    requestAnimationFrame(() => {
+                        this.modalContainer.backdrop.classList.add('open');
+                        this.modalContainer.modal.classList.add('open');
+                    });
                 },
-                _createSettingsColumn(title, group) {
-                    const children = [
-                        this.app.utils.createStyledElement('h4', {}, { className: 'gm-col-header', textContent: title }),
-                        ...this.app.modules.settingsManager.definitions.filter(def => def.group === group).map(def => this._createSettingRow(def))
-                    ];
-                    return this.app.utils.createStyledElement('div', {}, { className: 'gm-col', children });
+                _createSettingsPanel(title, group, isGrid = false) {
+                    const U = this.app.utils;
+                    const definitions = this.app.modules.settingsManager.definitions.filter(def => def.group === group);
+
+                    const panel = U.createStyledElement('div', {}, { className: 'gm-panel' });
+
+                    // Title Header
+                    panel.appendChild(U.createStyledElement('h3', { margin: '0 0 16px 0', fontSize: '18px', borderBottom: '1px solid #eee', paddingBottom: '8px' }, { textContent: title }));
+
+                    // Content Wrapper (Grid or Flex)
+                    const content = U.createStyledElement('div', {}, {
+                        className: isGrid ? 'gm-grid-hybrid' : 'gm-col-content' // 'gm-col-content' is flex-col
+                    });
+
+                    definitions.forEach(def => {
+                        // Special handling for Collapsible Groups (Metadata)
+                        if (def.key === 'copy_includeMetadata') {
+                            const metaKeys = ['copy_meta_url', 'copy_meta_order', 'copy_meta_author_name', 'copy_meta_author_link', 'copy_meta_date', 'copy_meta_stats', 'copy_meta_link_preview', 'copy_meta_image_count', 'copy_meta_video_duration', 'copy_meta_stats_total', 'copy_meta_stats_detailed'];
+
+                            // Create the main toggler row
+                            content.appendChild(this._createSettingRow(def, isGrid));
+
+                            // Create Details for children
+                            // Note: Details element breaks Grid flow if not careful, but usually it spans full width naturally in block context. 
+                            // In Grid, specific wrapper needed? We'll make details span-2.
+                            const details = U.createStyledElement('details', {}, { className: 'gm-details' });
+                            if (isGrid) details.classList.add('span-2'); // Should not happen for Metadata (Tools group), but safe to add
+
+                            const summary = U.createStyledElement('summary', {}, { className: 'gm-summary', textContent: this.app.state.T.settingsDetailsMetadata });
+                            const detailsContent = U.createStyledElement('div', {}, { className: 'gm-details-content' });
+
+                            definitions.filter(d => metaKeys.includes(d.key)).forEach(d => detailsContent.appendChild(this._createSettingRow(d, false))); // Children always list
+
+                            details.append(summary, detailsContent);
+                            content.appendChild(details);
+                            return;
+                        }
+                        if (['copy_meta_url', 'copy_meta_order', 'copy_meta_author_name', 'copy_meta_author_link', 'copy_meta_date', 'copy_meta_stats', 'copy_meta_link_preview', 'copy_meta_image_count', 'copy_meta_video_duration', 'copy_meta_stats_total', 'copy_meta_stats_detailed'].includes(def.key)) {
+                            return;
+                        }
+
+                        content.appendChild(this._createSettingRow(def, isGrid));
+                    });
+
+                    panel.appendChild(content);
+                    return panel;
                 },
-                _createSettingRow(def) {
+                _createSettingRow(def, isGrid) {
                     const U = this.app.utils;
                     const T = this.app.state.T;
                     const SM = this.app.modules.settingsManager;
@@ -1395,7 +1618,10 @@
 
                     switch (def.type) {
                         case 'boolean':
-                            inputElement = U.createStyledElement('input', {}, { className: 'gm-input-right', type: 'checkbox', id: `setting-${def.key}`, checked: currentValue, on: { input: handleInput } });
+                            inputElement = U.createStyledElement('label', {}, { className: 'gm-switch gm-input-right' });
+                            const checkbox = U.createStyledElement('input', {}, { type: 'checkbox', id: `setting-${def.key}`, checked: currentValue, on: { input: handleInput } });
+                            const slider = U.createStyledElement('span', {}, { className: 'gm-slider' });
+                            inputElement.append(checkbox, slider);
                             break;
                         case 'range':
                             valueSpan = U.createStyledElement('span', { marginLeft: '12px', minWidth: '45px', textAlign: 'right', fontSize: '13px' }, { textContent: `${currentValue}${def.options.unit || ''}` });
@@ -1419,12 +1645,26 @@
                     }
 
                     const wrapper = U.createStyledElement('div', {}, {
-                        className: 'gm-setting-row',
+                        className: `gm-setting-row`,
                         children: [
                             U.createStyledElement('label', {}, { className: 'gm-setting-label', htmlFor: `setting-${def.key}`, textContent: T[def.labelKey] }),
                             inputElement
                         ]
                     });
+
+                    // Hybrid Grid Logic
+                    if (isGrid) {
+                        // Booleans, Ranges, and Selects (Dropdowns) span 2 columns for better visibility
+                        if (def.type === 'boolean' || def.type === 'range' || def.type === 'select') wrapper.classList.add('span-2');
+
+                        // Special Handling for Floating Nav Sub-options (Long Buttons)
+                        if (['floatingNav_showAutoLoad', 'floatingNav_showBatchCopy'].includes(def.key)) {
+                            wrapper.classList.add('span-2');
+                        }
+                    } else {
+                        // Flex Column mode: specific controls full width?
+                        if (def.type !== 'boolean') wrapper.classList.add('full-width'); // Legacy logic, keeps inputs aligned right
+                    }
 
                     // --- Dependency & Layout Logic ---
                     if (def.key === 'autoUnmuteVolume') wrapper.dataset.controls = 'autoUnmuteEnabled';
@@ -1432,34 +1672,18 @@
                     if (def.key === 'copier_permalinkFormat') wrapper.dataset.controls = 'permalinkCopierEnabled';
                     if (def.key === 'idRevealerLinkFormat') wrapper.dataset.controls = 'idRevealerEnabled';
                     if (def.key === 'autoLoadBatchSize') wrapper.dataset.controls = 'floatingNavEnabled';
-
-                    // Metadata Group Indentation
-                    const metaKeys = [
-                        'copy_meta_url', 'copy_meta_order',
-                        'copy_meta_author_name', 'copy_meta_author_link',
-                        'copy_meta_date', 'copy_meta_stats',
-                        'copy_meta_link_preview', 'copy_meta_image_count', 'copy_meta_video_duration'
-                    ];
-                    if (metaKeys.includes(def.key)) {
-                        wrapper.dataset.controls = 'copy_includeMetadata';
-                        wrapper.style.paddingLeft = '16px';
-                        wrapper.style.fontSize = '0.92em';
-                        wrapper.style.borderLeft = '2px solid #eee';
-                    }
-
-                    // Stats Sub-Group Indentation
+                    const metaKeys = ['copy_meta_url', 'copy_meta_order', 'copy_meta_author_name', 'copy_meta_author_link', 'copy_meta_date', 'copy_meta_stats', 'copy_meta_link_preview', 'copy_meta_image_count', 'copy_meta_video_duration'];
+                    if (metaKeys.includes(def.key)) wrapper.dataset.controls = 'copy_includeMetadata';
                     if (['copy_meta_stats_total', 'copy_meta_stats_detailed'].includes(def.key)) {
                         wrapper.dataset.controls = 'copy_meta_stats';
-                        wrapper.style.paddingLeft = '32px';
-                        wrapper.style.fontSize = '0.9em';
+                        wrapper.style.paddingLeft = '16px';
                         wrapper.style.borderLeft = '2px solid #eee';
                     }
-
-                    // Floating Nav Sub-Group
                     if (['floatingNav_showAutoLoad', 'floatingNav_showBatchCopy'].includes(def.key)) {
                         wrapper.dataset.controls = 'floatingNavEnabled';
                         wrapper.style.paddingLeft = '16px';
                         wrapper.style.borderLeft = '2px solid #eee';
+                        if (isGrid) wrapper.classList.add('span-2'); // Force full width for sub-settings
                     }
 
                     return wrapper;
@@ -1476,18 +1700,12 @@
                     };
                     const toggleGroup = (controller, isEnabled) => {
                         container.querySelectorAll(`[data-controls="${controller.id.substring(8)}"]`).forEach(control => {
-                            // Don't hide completely to preserve layout, just disable
                             control.style.opacity = isEnabled ? '1' : '0.5';
                             const input = control.querySelector('input, select');
                             if (input) {
                                 input.disabled = !isEnabled;
-                                // Recursively handle nested dependencies (e.g. stats children)
                                 const nestedController = controllers[input.id.substring(8)];
-                                if (nestedController && !isEnabled) {
-                                    toggleGroup(nestedController, false);
-                                } else if (nestedController && isEnabled) {
-                                    toggleGroup(nestedController, input.checked);
-                                }
+                                if (nestedController) toggleGroup(nestedController, isEnabled && input.checked);
                             }
                         });
                     };
@@ -1495,14 +1713,9 @@
                     Object.values(controllers).forEach(c => c && c.addEventListener('input', updateAll));
                     updateAll();
                 },
-                /**
-                 * Creates and displays the settings modal.
-                 * @private
-                 */
                 _createModal() {
                     const T = this.app.state.T;
                     const U = this.app.utils;
-
                     const close = () => this.close();
                     const save = () => this.saveAndClose();
                     const reset = () => {
@@ -1512,16 +1725,13 @@
                             this.open();
                         }
                     };
-
                     const header = U.createStyledElement('div', {}, {
                         className: 'gm-settings-header', children: [
                             U.createStyledElement('h2', {}, { className: 'gm-settings-title', textContent: T.settingsTitle }),
                             U.createStyledElement('button', {}, { className: 'gm-settings-close-btn', innerHTML: '&times;', on: { click: close } })
                         ]
                     });
-
                     const body = U.createStyledElement('div', {}, { className: 'gm-settings-body' });
-
                     const footer = U.createStyledElement('div', {}, {
                         className: 'gm-settings-footer', children: [
                             U.createStyledElement('button', {}, { className: 'gm-btn-reset', textContent: T.resetSettings, on: { click: reset } }),
@@ -1532,28 +1742,31 @@
                             })
                         ]
                     });
-
                     const modal = U.createStyledElement('div', {}, { className: 'gm-settings-modal', children: [header, body, footer] });
                     const backdrop = U.createStyledElement('div', {}, { className: 'gm-settings-backdrop', on: { click: close } });
 
+                    // Prevent Background Scrolling (Robust)
+                    const preventDefault = (e) => { e.preventDefault(); e.stopPropagation(); };
+                    // Block wheel on backdrop
+                    backdrop.addEventListener('wheel', preventDefault, { passive: false });
+                    backdrop.addEventListener('touchmove', preventDefault, { passive: false });
+
                     document.body.append(backdrop, modal);
                     this.modalContainer = { backdrop, modal, body };
-                    this.close();
+                    backdrop.style.display = 'none';
+                    modal.style.display = 'none';
                 },
-
-                /**
-                 * Closes the settings modal.
-                 */
                 close() {
                     if (this.modalContainer) {
-                        this.modalContainer.backdrop.style.display = 'none';
-                        this.modalContainer.modal.style.display = 'none';
+                        this.modalContainer.backdrop.classList.remove('open');
+                        this.modalContainer.modal.classList.remove('open');
+                        document.body.style.overflow = ''; // Restore Scrolling
+                        setTimeout(() => {
+                            this.modalContainer.backdrop.style.display = 'none';
+                            this.modalContainer.modal.style.display = 'none';
+                        }, 300);
                     }
                 },
-
-                /**
-                 * Saves current settings and closes the modal, triggering reloads if necessary.
-                 */
                 saveAndClose() {
                     const needsReload = this.app.modules.settingsManager.definitions.some(def => def.needsReload && this.app.state.settings[def.key] !== GM_getValue(def.key));
                     if (needsReload) this.app.modules.toastNotifier.show(this.app.state.T.notificationSettingsReload, 'success');
@@ -1598,6 +1811,7 @@
 
             toastNotifier: {
                 app: null,
+                activeToasts: new Map(),
                 /**
                  * Initializes the toast notifier.
                  * @param {Object} app - The main application instance.
@@ -1607,28 +1821,124 @@
                 /**
                  * Shows a toast notification.
                  * @param {string} message - The message to display.
-                 * @param {string} [type='success'] - 'success' or 'failure'.
+                 * @param {string} [type='success'] - 'success', 'failure', or 'info'.
                  * @param {number} [duration=4000] - Duration in milliseconds.
+                 * @param {string} [id=null] - Optional ID for updating existing toast.
                  */
-                show(message, type = 'success', duration = 4000) {
+                show(message, type = 'success', duration = 4000, id = null) {
+                    // Update existing toast if ID matches
+                    if (id && this.activeToasts.has(id)) {
+                        const existing = this.activeToasts.get(id);
+                        if (existing.element && document.body.contains(existing.element)) {
+                            existing.element.querySelector('span').textContent = message;
+                            // Optionally update type styles if type changed (simplified here: assume consistent type for ID)
+                            clearTimeout(existing.timer);
+                            existing.timer = setTimeout(() => this.dismiss(id), duration);
+                            return { remove: () => this.dismiss(id) };
+                        } else {
+                            this.activeToasts.delete(id);
+                        }
+                    }
+
                     const toast = this.app.utils.createStyledElement('div', {}, {
                         className: `gm-toast gm-toast-${type}`,
                         innerHTML: `<span>${message}</span>`
                     });
                     document.body.append(toast);
-                    setTimeout(() => toast.classList.add('gm-toast-visible'), 10);
+
+                    // Force reflow for transition
+                    toast.getBoundingClientRect();
+                    toast.classList.add('gm-toast-visible');
 
                     const hideTimer = setTimeout(() => {
-                        toast.classList.remove('gm-toast-visible');
-                        setTimeout(() => toast.remove(), 500);
+                        this.dismiss(id, toast);
                     }, duration);
+
+                    if (id) {
+                        this.activeToasts.set(id, { element: toast, timer: hideTimer });
+                    }
 
                     return {
                         remove: () => {
                             clearTimeout(hideTimer);
-                            toast.remove();
+                            this.dismiss(id, toast);
                         }
                     };
+                },
+
+                dismiss(id, element) {
+                    let toast = element;
+                    if (id && this.activeToasts.has(id)) {
+                        const record = this.activeToasts.get(id);
+                        toast = record.element;
+                        this.activeToasts.delete(id);
+                    }
+                    if (toast) {
+                        toast.classList.remove('gm-toast-visible');
+                        setTimeout(() => { if (toast.parentNode) toast.remove(); }, 500);
+                    }
+                }
+            },
+
+            // =========================================================================
+            // Module: UI Cleaner (Hide useless UI elements)
+            // =========================================================================
+            uiCleaner: {
+                app: null,
+                observer: null,
+                init(app) {
+                    this.app = app;
+                    this.process();
+                    this.startObserver();
+                    window.addEventListener('historyChange', () => this.handleHistoryChange());
+                },
+
+                handleHistoryChange() {
+                    // Re-run process on navigation
+                    setTimeout(() => this.process(), 500);
+                },
+
+                startObserver() {
+                    if (this.observer) return;
+                    this.observer = new MutationObserver(this.app.utils.throttle(() => {
+                        this.process();
+                    }, 500));
+                    this.observer.observe(document.body, { childList: true, subtree: true });
+                },
+
+                process() {
+                    // Video Page Enhancements
+                    this.cleanVideoPageUI();
+                },
+
+                cleanVideoPageUI() {
+                    // 1. Unstick Toolbar
+                    const toolbarSelector = this.app.config.SELECTORS.GLOBAL.VIDEO_PAGE_TOOLBAR_ROOT;
+                    const toolbars = document.querySelectorAll(toolbarSelector);
+                    toolbars.forEach(el => {
+                        // Force absolute position to unstick from viewport top
+                        // Only apply if not already applied
+                        if (el.style.position !== 'absolute') {
+                            el.style.setProperty('position', 'absolute', 'important');
+                            el.style.setProperty('top', '0', 'important');
+                            el.style.setProperty('width', '100%', 'important');
+                            el.style.setProperty('z-index', '999', 'important');
+                        }
+                    });
+
+                    // 2. Hide Follow Button
+                    const followLabels = this.app.config.CONSTANTS.FOLLOW_BUTTON_LABELS;
+                    if (!followLabels) return;
+
+                    const buttons = document.querySelectorAll('[role="button"]');
+                    buttons.forEach(btn => {
+                        if (btn.style.display === 'none') return;
+
+                        const label = btn.getAttribute('aria-label');
+                        if (label && followLabels.includes(label)) {
+                            btn.style.setProperty('display', 'none', 'important');
+                        }
+                    });
                 }
             },
 
@@ -1694,7 +2004,70 @@
                     document.addEventListener('auxclick', this.handleClick.bind(this), true); // For middle-click
 
                     // Re-enable context menu (Right-click)
-                    document.addEventListener('contextmenu', (e) => e.stopPropagation(), true);
+                    document.addEventListener('contextmenu', (e) => {
+                        // Allow internal UI elements to handle their own context menu
+                        if (e.target.closest('.gm-floating-nav') || e.target.closest('.gm-transparency-btn')) return;
+                        e.stopPropagation();
+                    }, true);
+
+                    // --- Feature 0: History Interception (The "Nuclear Option" for Reels) ---
+                    // User report: Clicking Reel Overlay triggers a URL change to /reel/... and deadlocks the page.
+                    // Click interception is flaky due to cryptic DOM. Intercepting the Navigation itself is more robust.
+                    try {
+                        const originalPushState = history.pushState.bind(history);
+                        const originalReplaceState = history.replaceState.bind(history);
+
+                        const interceptNavigation = (original, state, title, url) => {
+                            if (false && this.app.state.settings.autoOpenMediaInNewTab && typeof url === 'string') {
+                                const isReelNav = url.includes('/reel/') || url.includes('/watch/');
+                                const isCurrentReel = location.pathname.includes('/reel/') || location.pathname.includes('/watch/');
+
+                                if (isReelNav && !isCurrentReel) {
+                                    console.log('Antigravity: Intercepted Reel Navigation (History):', url);
+                                    const fullUrl = url.startsWith('http') ? url : window.location.origin + (url.startsWith('/') ? '' : '/') + url;
+                                    window.open(fullUrl, '_blank');
+
+                                    // The React App might have already rendered the Overlay before calling pushState.
+                                    // We must attempt to close it to restore the Feed view.
+                                    const closeOverlay = () => {
+                                        // 1. Try generic Close button in Dialog
+                                        const closeBtn = document.querySelector(
+                                            'div[role="dialog"] div[aria-label="Close"], ' +
+                                            'div[role="dialog"] div[aria-label="關閉"], ' +
+                                            'div[role="dialog"] div[aria-label="閉じる"]'
+                                        );
+                                        if (closeBtn) {
+                                            closeBtn.click();
+                                            // console.log('Antigravity: Closed Reel Overlay via Button');
+                                            return true;
+                                        }
+
+                                        // 2. Try Escape Key (Standard for closing modals)
+                                        const escEvent = new KeyboardEvent('keydown', {
+                                            key: 'Escape', code: 'Escape',
+                                            keyCode: 27, charCode: 0,
+                                            bubbles: true, cancelable: true
+                                        });
+                                        document.dispatchEvent(escEvent);
+                                        // console.log('Antigravity: Dispatched Escape Key');
+                                    };
+
+                                    // Attempt immediately and repeatedly in case of render delay
+                                    setTimeout(closeOverlay, 0);
+                                    setTimeout(closeOverlay, 300);
+                                    setTimeout(closeOverlay, 1000);
+
+                                    return; // Block navigation (URL update)
+                                }
+                            }
+                            return original(state, title, url);
+                        };
+
+                        history.pushState = (state, title, url) => interceptNavigation(originalPushState, state, title, url);
+                        history.replaceState = (state, title, url) => interceptNavigation(originalReplaceState, state, title, url);
+                    } catch (e) {
+                        console.error('Antigravity: Failed to hook history API', e);
+                    }
                 },
 
                 /**
@@ -1709,10 +2082,129 @@
                     const target = event.target;
                     if (target.closest('[role="banner"], [role="navigation"], .gm-floating-nav')) return;
 
+                    const settings = this.app.state.settings;
+
+                    // --- Feature 0: Reel Overlay Prevention (Zone Defense v3: Semantic) ---
+                    // Block ALL clicks in Reel Media Container unless Whitelisted.
+                    if (settings.autoOpenMediaInNewTab && (event.type === 'click' || event.type === 'mousedown')) {
+                        // Broaden container detection to support Feed (article) ONLY.
+                        // REMOVED role="main" as it causes false positives on Profile/Watch pages.
+                        // REMOVED role="dialog" as requested by User (Reel Viewer should behave natively).
+                        const post = target.closest('div[role="article"]');
+
+                        if (post) {
+
+                            // Broaden search to include /videos/ and /watch/ as they often behave like Reels
+                            const reelLinks = Array.from(post.querySelectorAll('a[href*="/reel/"], a[href*="/watch/"], a[href*="/videos/"]'));
+                            const reelLink = reelLinks.find(a => !a.href.includes('comment_id') && !a.href.includes('reply_comment_id'));
+
+                            // Feature: Dead Zone Toggle & Expand Prevention
+                            // We proceed if we found a Link OR if there is a Video element (for Dead Zone toggle support)
+                            const hasVideo = post.querySelector('video');
+
+                            if (reelLink || hasVideo) {
+                                // 1. Check Whitelist (Controls & Social)
+                                const btn = target.closest('[role="button"], button, [role="link"], a');
+
+                                // Robust Whitelist:
+                                // 1.1 Script UI (Antigravity Buttons)
+                                const isTargetGm = (target.classList && target.classList.contains('gm-inject-btn')) || (typeof target.className === 'string' && target.className.includes('gm-'));
+                                const isBtnGm = btn && ((typeof btn.className === 'string' && btn.className.includes('gm-')) || (btn.classList && btn.classList.contains('gm-inject-btn')));
+                                if (isTargetGm || isBtnGm) return;
+
+                                // 3. REEL INTERCEPTION LOGIC (Semantic & Language Agnostic)
+
+                                // 3.1 Priority Check: "Click to expand" Button (Force Open New Tab)
+                                // We check aria-label (localized) as fallback, but rely on SVG Path (Language Agnostic).
+                                const label = btn ? (btn.getAttribute('aria-label') || btn.textContent || '').toLowerCase() : '';
+                                const expandPathSnippet = 'M16 5.414V8a1 1 0 1 0 2 0V4a2 2 0 0 0-2-2h-4';
+                                const hasExpandSvg = btn && btn.querySelector(`path[d*="${expandPathSnippet}"]`);
+                                const isClickToExpand = hasExpandSvg || label.includes('expand') || label.includes('點擊查看更多');
+
+                                if (isClickToExpand) {
+                                    if (event.type === 'click') {
+                                        event.preventDefault();
+                                        event.stopPropagation();
+                                        const cleanUrl = this.cleanUrl(reelLink ? reelLink.href : window.location.href);
+                                        this.app.utils.smartOpen(event, cleanUrl);
+                                        // console.log('Antigravity: Intercepted Expand Button -> New Tab');
+                                    }
+                                    return;
+                                }
+
+                                // 3.2 Semantic Whitelist: Allow Native Controls (Title, Settings, Like, etc.)
+                                // If it's an interactive element AND NOT the Expand button (handled above), we allow it.
+                                const isInteractive =
+                                    (btn) || // It's a button or link (Title, Profile, etc.)
+                                    (target.closest('input, select, textarea, [role="slider"], [role="progressbar"], [role="menuitem"], [role="menuitemradio"], [role="menu"], [role="listbox"], [role="option"], [aria-haspopup="true"]'));
+
+                                const isStructuralScope =
+                                    target.closest('[role="toolbar"]') || // Stats/Action Bar
+                                    target.closest('[role="banner"]') ||  // Header/Profile
+                                    target.closest('[role="contentinfo"]'); // Footer
+
+                                if (isInteractive || isStructuralScope) {
+                                    // CRITICAL FIX: If the interactive element is a MEDIA LINK/PHOTO, do NOT return logic here.
+                                    // We must allow it to fall through to the "Auto-Open in New Tab" logic below.
+                                    const link = target.closest('a');
+                                    if (link && /\/photo\/?\?|\/photos?\/|\/videos?\/|\/reel\/|\/watch\/|fbid=/.test(link.href)) {
+                                        // Do not return; let it fall through to "Auto-open Media" logic
+                                    } else {
+                                        return; // Allow native Facebook control for non-media interactions (Like, Comment, Settings)
+                                    }
+                                }
+
+                                // 3.3 Dead Zone: Background/Overlay Trigger -> Toggle Play/Pause
+                                // Any click NOT caught above is a background click.
+                                // We intercept this to prevent the Overlay from popping up, and instead Toggle Playback.
+                                const isLink = target.closest('a'); // Should be covered by isInteractive, but double check
+                                if (!isLink) {
+                                    // RESTRICT DEAD ZONE TO VIDEO CONTAINER ONLY
+                                    // We don't want to block clicks on text or white space outside the player.
+                                    const video = post.querySelector('video');
+                                    if (video) {
+                                        // DEAD ZONE REFINEMENT:
+                                        // 1. Exclude Text Leaves (already doing this)
+                                        // 2. Exclude Structural Containers (Header/Footer/Comments)
+                                        //    If the clicked target *contains* a Header or Footer element, it's likely the container of that section, NOT the video player.
+
+                                        // Check if target is a text node wrapper
+                                        const isText = target.closest('h2, h3, h4, span, p, [data-ad-rendering-role="story_message"]');
+                                        if (isText) return;
+
+                                        // Check if target is a Structural Container (Footer/Header/Comment Section)
+                                        // This prevents clicking the "div" background of comments/stats from toggling video.
+                                        // Note: We use querySelector because we are looking *down* from the target.
+                                        if (target.querySelector) {
+                                            const containsStructure = target.querySelector('h2, h3, h4') || // Header
+                                                target.querySelector('[role="toolbar"]') || // Stats
+                                                target.querySelector('[aria-label*="Comment"]') || // Comments
+                                                target.querySelector('[aria-label*="Reply"]') ||
+                                                target.querySelector('form'); // Input
+                                            if (containsStructure) return;
+                                        }
+
+                                        event.preventDefault();
+                                        event.stopPropagation();
+
+                                        if (event.type === 'click') {
+                                            if (video.paused) {
+                                                video.play();
+                                            } else {
+                                                video.pause();
+                                            }
+                                        }
+                                        return;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
                     const link = target.closest('a');
                     if (!link || !link.href) return;
 
-                    const settings = this.app.state.settings;
+                    // const settings = this.app.state.settings; // Already defined above
                     const isMedia = /\/photo\/?\?|\/photos?\/|\/videos?\/|\/reel\/|\/watch\/|fbid=/.test(link.href);
 
                     // Exclude album lists or profile tabs from being treated as single media
@@ -1854,6 +2346,10 @@
                             // Ensure visibility
                             if (btn.offsetParent === null) return;
 
+                            // FIX: Avoid clicking "See more" on Reels (causes unintended navigation)
+                            // Checks if the button is wrapped in a link to a Reel or Watch video
+                            if (btn.closest('a[href*="/reel/"]') || btn.closest('a[href*="/watch/"]')) return;
+
                             const text = btn.textContent.trim();
                             if (C.TARGETS.includes(text)) {
                                 btn.setAttribute(C.PROCESSED_ATTR, 'true');
@@ -1875,7 +2371,9 @@
                     isRunning: false,
                     targetCount: 0,
                     retryCount: 0,
-                    lastScrollTime: 0
+                    lastScrollTime: 0,
+                    mode: GM_getValue('autoLoadMode', 'incremental'), // 'incremental' or 'target'
+                    batchCopyMode: GM_getValue('batchCopyMode', 'clipboard') // 'clipboard' or 'download'
                 },
                 // Verified Selectors: Used to intelligently trigger loading
                 selectors: [
@@ -1893,6 +2391,37 @@
                 init(app) { this.app = app; },
 
                 /**
+                 * Toggles between incremental and target modes.
+                 */
+                toggleMode() {
+                    this.state.mode = this.state.mode === 'incremental' ? 'target' : 'incremental';
+                    GM_setValue('autoLoadMode', this.state.mode);
+
+                    const T = this.app.state.T;
+                    const batchSize = this.app.state.settings.autoLoadBatchSize || 20;
+                    const msg = this.state.mode === 'incremental'
+                        ? T.autoLoad_mode_incremental.replace('{n}', batchSize)
+                        : T.autoLoad_mode_target.replace('{n}', batchSize);
+
+                    this.app.modules.toastNotifier.show(msg, 'info');
+                    this.app.modules.floatingNavigator.updateButtonTooltip(); // Update tooltip immediately
+                },
+
+                /**
+                 * Toggles between clipboard and download modes for batch copy.
+                 */
+                toggleBatchCopyMode() {
+                    this.state.batchCopyMode = this.state.batchCopyMode === 'clipboard' ? 'download' : 'clipboard';
+                    GM_setValue('batchCopyMode', this.state.batchCopyMode);
+
+                    const T = this.app.state.T;
+                    const msg = this.state.batchCopyMode === 'clipboard' ? T.batchCopy_mode_clipboard : T.batchCopy_mode_download;
+
+                    this.app.modules.toastNotifier.show(msg, 'info');
+                    this.app.modules.floatingNavigator.updateBatchCopyTooltip(); // Update tooltip immediately
+                },
+
+                /**
                  * Starts the auto-loading process.
                  */
                 async start() {
@@ -1902,14 +2431,26 @@
                     const currentPosts = this.app.modules.postNavigatorCore.getSortedPosts().length;
                     const batchSize = this.app.state.settings.autoLoadBatchSize || 20;
 
+                    if (this.state.mode === 'target') {
+                        if (currentPosts >= batchSize) {
+                            this.app.modules.toastNotifier.show(T.autoLoad_target_reached.replace('{n}', batchSize), 'info');
+                            return;
+                        }
+                        this.state.targetCount = batchSize;
+                    } else {
+                        // Incremental
+                        this.state.targetCount = currentPosts + batchSize;
+                    }
+
                     this.state.isRunning = true;
                     this.state.retryCount = 0;
-                    this.state.targetCount = currentPosts + batchSize;
 
                     this.app.modules.floatingNavigator.updateButtonState('start');
                     this.app.modules.toastNotifier.show(
                         T.autoLoad_status_loading.replace('{current}', currentPosts).replace('{target}', this.state.targetCount),
-                        'success'
+                        'success',
+                        4000,
+                        'autoLoadStatus'
                     );
 
                     await this.loop();
@@ -1926,7 +2467,7 @@
                     if (reasonKey) {
                         const T = this.app.state.T;
                         const type = reasonKey.includes('success') ? 'success' : 'failure';
-                        this.app.modules.toastNotifier.show(T[reasonKey] || reasonKey, type);
+                        this.app.modules.toastNotifier.show(T[reasonKey] || reasonKey, type, 4000, 'autoLoadStatus');
                     }
                 },
 
@@ -1961,7 +2502,7 @@
                         // 3. Update UI
                         this.app.modules.toastNotifier.show(
                             T.autoLoad_status_loading.replace('{current}', currentCount).replace('{target}', this.state.targetCount),
-                            'success', 1000
+                            'success', 2000, 'autoLoadStatus'
                         );
 
                         window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
@@ -1979,7 +2520,7 @@
                             this.state.retryCount++;
                             this.app.modules.toastNotifier.show(
                                 T.autoLoad_status_retrying.replace('{count}', this.state.retryCount).replace('{max}', C.MAX_RETRIES),
-                                'failure', 1000
+                                'failure', 2000, 'autoLoadStatus'
                             );
 
                             if (this.state.retryCount >= C.MAX_RETRIES) {
@@ -2076,21 +2617,51 @@
                     }
 
                     let finalText = bodyText;
+                    // Determine Source Name for Header and Filename
+                    const pageTitle = document.title.replace(/ \| Facebook$/, '').replace(/^\(\d+\) /, '');
+
                     if (settings.batchCopy_includeHeader) {
                         const cleanUrl = window.location.origin + window.location.pathname;
-                        const pageTitle = document.title.replace(/ \| Facebook$/, '').replace(/^\(\d+\) /, '');
                         const now = new Date().toLocaleString(navigator.language, { hour12: false });
                         const header = `═══════════════════════════════════════════════════════════════\n【 BATCH EXPORT SUMMARY 】\nSource: ${pageTitle}\nURL:    ${cleanUrl}\nTime:   ${now}\nCount:  ${successCount} Posts\n═══════════════════════════════════════════════════════════════\n\n`;
                         finalText = header + bodyText;
                     }
 
                     try {
-                        await GM_setClipboard(finalText);
-
                         clearTimeout(progressTimer);
                         if (progressToast && typeof progressToast.remove === 'function') progressToast.remove();
 
-                        this.app.modules.toastNotifier.show(T.batchCopy_success.replace('{count}', successCount), 'success');
+                        if (this.state.batchCopyMode === 'download') {
+                            // Download Mode
+                            const blob = new Blob([finalText], { type: 'text/plain;charset=utf-8' });
+
+                            // Format: [PageName]_Batch_[YYYY-MM-DD].txt
+                            // Sanitize pageTitle for filename (remove invalid chars)
+                            const safeTitle = pageTitle.replace(/[\\/:*?"<>|]/g, '_').trim();
+                            const dateStr = new Date().toISOString().split('T')[0];
+                            const filename = `${safeTitle}_Batch_${dateStr}.txt`;
+
+                            const link = document.createElement('a');
+                            link.href = URL.createObjectURL(blob);
+                            link.download = filename;
+                            link.style.display = 'none';
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
+                            URL.revokeObjectURL(link.href);
+
+                            const msg = T.batchCopy_download_success
+                                .replace('{count}', successCount)
+                                .replace('{chars}', finalText.length);
+                            this.app.modules.toastNotifier.show(msg, 'success');
+                        } else {
+                            // Clipboard Mode
+                            await GM_setClipboard(finalText);
+                            const msg = T.batchCopy_success
+                                .replace('{count}', successCount)
+                                .replace('{chars}', finalText.length);
+                            this.app.modules.toastNotifier.show(msg, 'success');
+                        }
                     } catch (err) {
                         clearTimeout(progressTimer);
                         if (progressToast && typeof progressToast.remove === 'function') progressToast.remove();
@@ -2242,6 +2813,15 @@
                                 U.smartOpen(e, targetUrl);
                             }
                         });
+
+                        const _addContextBlock = (btn) => {
+                            btn.addEventListener('contextmenu', (e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                            });
+                        };
+                        _addContextBlock(btnAds);
+                        _addContextBlock(btnInt);
 
                         this.container = U.createStyledElement('div', {}, {
                             className: 'gm-transparency-container',
@@ -2787,6 +3367,15 @@
                     // Only add new highlight if setting is enabled
                     if (targetPost && settings.navHighlighterEnabled) {
                         targetPost.classList.add(C.SELECTORS.NAVIGATOR.HIGHLIGHT_CLASS);
+
+                        // Apply Heatmap Border if enabled
+                        if (settings.heatmapBorderEnabled && this.app.modules.timelineNavigator) {
+                            const heat = this.app.modules.timelineNavigator.getHeatLevel(targetPost);
+                            if (heat > 0) targetPost.dataset.heat = heat;
+                            else delete targetPost.dataset.heat;
+                        } else {
+                            delete targetPost.dataset.heat;
+                        }
                     }
 
                     // 2. Update Timeline UI (If module active)
@@ -3049,6 +3638,28 @@
                         this.scrollArea.appendChild(row);
                         if (this.observer && this.sortMode === 'time') this.observer.observe(post);
                     });
+                },
+
+                /**
+                 * Calculates the heat level (1-9) for a specific post based on current metrics.
+                 * @param {HTMLElement} post - The post element.
+                 * @returns {number} Heat level (1-9) or 0.
+                 */
+                getHeatLevel(post) {
+                    if (!this.app.state.settings.timelineHeatmapEnabled) return 0;
+                    if (this.cachedMaxLogScore <= 1) return 0; // Not enough data or low heat
+
+                    const score = this.getPostScore(post);
+                    if (score <= 0) return 0;
+
+                    const logScore = Math.log10(score + 1);
+                    const ratio = logScore / this.cachedMaxLogScore;
+                    const thresholds = this.app.config.UI.HEATMAP_THRESHOLDS;
+
+                    for (let i = 0; i < thresholds.length; i++) {
+                        if (ratio > thresholds[i]) return 9 - i;
+                    }
+                    return 1; // Minimum non-zero heat
                 },
 
                 /**
@@ -3393,10 +4004,11 @@
                     // Verify post still exists and is in DOM
                     if (lastPost && document.body.contains(lastPost)) {
                         // Restore instantly (false) to snap back to position
-                        // This will now use app.utils.scrollToElement which respects Alignment settings
-                        this.app.utils.scrollToElement(lastPost, false);
+                        // Pass 'scrollRestorerAlignment' to override the default navigation alignment
+                        this.app.utils.scrollToElement(lastPost, false, this.app.state.settings.scrollRestorerAlignment);
                     }
                 },
+
 
                 /**
                  * Handles user interactions that might close a modal.
@@ -3429,41 +4041,90 @@
                     this.app = app;
                     const nativeVolumeSetter = Object.getOwnPropertyDescriptor(HTMLMediaElement.prototype, 'volume').set;
                     const nativeMutedSetter = Object.getOwnPropertyDescriptor(HTMLMediaElement.prototype, 'muted').set;
+
+                    // Strategy A: Direct Property Manipulation (For Feed/Timeline)
                     const attemptUnmute = (video) => {
                         if (!this.app.state.settings.autoUnmuteEnabled) return;
                         if (video instanceof HTMLVideoElement && (video.muted || video.volume === 0)) {
                             const targetVolume = this.app.state.settings.autoUnmuteVolume / 100;
+                            // Use native setters to bypass potential proxy traps
                             nativeMutedSetter.call(video, false);
                             nativeVolumeSetter.call(video, targetVolume);
                             if (video.audioTracks?.length > 0) {
                                 for (let track of video.audioTracks) track.enabled = true;
                             }
-                            video.dispatchEvent(new Event('volumechange', {
-                                bubbles: true
-                            }));
+                            video.dispatchEvent(new Event('volumechange', { bubbles: true }));
                         }
                     };
-                    document.addEventListener('play', (e) => attemptUnmute(e.target), true);
-                    const observer = new MutationObserver(mutations => {
-                        mutations.forEach(mutation => mutation.addedNodes.forEach(node => {
-                            if (node.nodeName === 'VIDEO') attemptUnmute(node);
-                            else if (node.querySelectorAll) node.querySelectorAll('video').forEach(attemptUnmute);
-                        }));
-                    });
-                    observer.observe(document.body, {
-                        childList: true,
-                        subtree: true
-                    });
-                    document.addEventListener('click', (event) => {
-                        if (event.target.closest('[aria-label*="mute" i], [aria-label*="sound" i], [role="button"][aria-pressed]')) {
-                            setTimeout(() => document.querySelectorAll('video').forEach(attemptUnmute), 150);
+
+                    // Strategy B: UI Interaction (For Standalone Video Pages: Reels/Watch)
+                    // Uses SVG Fingerprinting to find the "Muted" icon and clicks the parent button.
+                    const clickUnmuteButton = () => {
+                        // SVG Path for "Muted Speaker" icon (Language Agnostic)
+                        const mutedIcon = document.querySelector('path[d^="M11.5 3.162"]');
+                        if (mutedIcon) {
+                            const btn = mutedIcon.closest('[role="button"], button');
+                            if (btn) {
+                                btn.click();
+                                // console.log('[FB Login Wall Remover] Auto-unmuted via UI Interaction');
+                            }
                         }
-                    }, true);
-                    const checkInterval = setInterval(() => document.querySelectorAll('video').forEach(attemptUnmute), 2000);
-                    window.addEventListener('beforeunload', () => {
-                        clearInterval(checkInterval);
-                        observer.disconnect();
-                    });
+                    };
+
+                    // --- Dispatcher ---
+                    const isVideoPage = /\/reel\/|\/watch\/|\/videos\//.test(window.location.pathname);
+
+                    if (isVideoPage) {
+                        // MODE 1: Standalone Video Pages
+                        // Fix for User Request: "Volume Preset Only". No Auto-Unmute, No Force Play.
+                        // We strictly respect Facebook's native behavior (Auto-play + Muted).
+                        // We only pre-set the volume so it's at the correct level *when* the user manually unmutes.
+
+                        const applyVolumePreset = () => {
+                            if (this.app.state.settings.autoUnmuteEnabled) {
+                                const targetVolume = this.app.state.settings.autoUnmuteVolume / 100;
+                                const video = document.querySelector('video');
+
+                                // Only apply volume if video exists.
+                                // CRITICAL: DO NOT touch 'muted' property.
+                                if (video && Math.abs(video.volume - targetVolume) > 0.01) {
+                                    video.volume = targetVolume;
+                                }
+                            }
+                        };
+
+                        // Check a few times to catch the video loading
+                        [500, 1500, 3000, 5000].forEach(delay => {
+                            setTimeout(applyVolumePreset, delay);
+                        });
+
+                    } else {
+                        // MODE 2: Feed / Timeline
+                        // 1. Use Polling + Direct Manipulation (Legacy robust method for Feed)
+                        document.addEventListener('play', (e) => attemptUnmute(e.target), true);
+
+                        const observer = new MutationObserver(mutations => {
+                            mutations.forEach(mutation => mutation.addedNodes.forEach(node => {
+                                if (node.nodeName === 'VIDEO') attemptUnmute(node);
+                                else if (node.querySelectorAll) node.querySelectorAll('video').forEach(attemptUnmute);
+                            }));
+                        });
+                        observer.observe(document.body, { childList: true, subtree: true });
+
+                        const checkInterval = setInterval(() => document.querySelectorAll('video').forEach(attemptUnmute), 2000);
+
+                        // Manual Mute Button Click Handling (Feed Only)
+                        document.addEventListener('click', (event) => {
+                            if (event.target.closest('[aria-label*="mute" i], [aria-label*="sound" i], [role="button"][aria-pressed]')) {
+                                setTimeout(() => document.querySelectorAll('video').forEach(attemptUnmute), 150);
+                            }
+                        }, true);
+
+                        window.addEventListener('beforeunload', () => {
+                            clearInterval(checkInterval);
+                            observer.disconnect();
+                        });
+                    }
                 }
             },
 
@@ -3982,17 +4643,46 @@
                     const getLoader = () => this.app.modules.contentAutoLoader;
 
                     this.container = U.createStyledElement('div', {}, { className: 'gm-floating-nav' });
+                    this.updateOpacityState(settings.floatingNavOpacity);
 
                     // --- Navigation Buttons ---
                     const prevButton = U.createStyledElement('button', {}, { title: T.floatingNavPrevTooltip });
                     prevButton.innerHTML = `<svg viewBox="0 0 24 24"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path></svg>`;
-                    prevButton.addEventListener('mousedown', () => { const c = getCore(); if (c) c.startContinuousNavigation('prev'); });
+                    prevButton.addEventListener('mousedown', (e) => {
+                        if (e.button !== 0) return; // Only Left Click
+                        const c = getCore(); if (c) c.startContinuousNavigation('prev');
+                    });
                     prevButton.addEventListener('mouseleave', () => { const c = getCore(); if (c) c.stopContinuousNavigation(); });
+                    prevButton.addEventListener('contextmenu', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        const c = getCore();
+                        const posts = c ? c.getSortedPosts() : [];
+                        console.log('[FB_Script] Floating Prev Right-Click:', posts.length);
+                        if (posts.length > 0) {
+                            // Force focus update (handles scrolling)
+                            c.updateActivePost(0, 'manual');
+                        }
+                    });
 
                     const nextButton = U.createStyledElement('button', {}, { title: T.floatingNavNextTooltip });
                     nextButton.innerHTML = `<svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"></path></svg>`;
-                    nextButton.addEventListener('mousedown', () => { const c = getCore(); if (c) c.startContinuousNavigation('next'); });
+                    nextButton.addEventListener('mousedown', (e) => {
+                        if (e.button !== 0) return; // Only Left Click
+                        const c = getCore(); if (c) c.startContinuousNavigation('next');
+                    });
                     nextButton.addEventListener('mouseleave', () => { const c = getCore(); if (c) c.stopContinuousNavigation(); });
+                    nextButton.addEventListener('contextmenu', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        const c = getCore();
+                        const posts = c ? c.getSortedPosts() : [];
+                        console.log('[FB_Script] Floating Next Right-Click:', posts.length);
+                        if (posts.length > 0) {
+                            // Force focus update (handles scrolling)
+                            c.updateActivePost(posts.length - 1, 'manual');
+                        }
+                    });
 
                     document.body.addEventListener('mouseup', () => { const c = getCore(); if (c) c.stopContinuousNavigation(); });
                     this.container.append(prevButton, nextButton);
@@ -4005,9 +4695,10 @@
 
                     // --- Auto-Load Button ---
                     if (settings.floatingNav_showAutoLoad) {
-                        this.btnAutoLoad = U.createStyledElement('button', {}, { title: T.tooltipAutoLoadStart });
+                        this.btnAutoLoad = U.createStyledElement('button', {}, {});
                         // Default Icon: Arrow Down
                         this.btnAutoLoad.innerHTML = `<svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path></svg>`;
+
                         this.btnAutoLoad.addEventListener('click', () => {
                             const loader = getLoader();
                             if (loader) {
@@ -4015,19 +4706,40 @@
                                 else loader.start();
                             }
                         });
+
+                        // Right-click: Toggle Mode
+                        this.btnAutoLoad.addEventListener('contextmenu', (e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            const loader = getLoader();
+                            if (loader) loader.toggleMode();
+                        });
+
                         this.container.appendChild(this.btnAutoLoad);
+                        this.updateButtonTooltip(); // Set initial tooltip
                     }
 
                     // --- Batch Copy Button ---
                     if (settings.floatingNav_showBatchCopy) {
-                        const btnBatchCopy = U.createStyledElement('button', {}, { title: T.tooltipBatchCopy });
+                        this.btnBatchCopy = U.createStyledElement('button', {}, {});
                         // Icon: Clipboard
-                        btnBatchCopy.innerHTML = `<svg viewBox="0 0 24 24"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"></path></svg>`;
-                        btnBatchCopy.addEventListener('click', () => {
+                        this.btnBatchCopy.innerHTML = `<svg viewBox="0 0 24 24"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"></path></svg>`;
+
+                        this.btnBatchCopy.addEventListener('click', () => {
                             const loader = getLoader();
                             if (loader) loader.copyAllPosts();
                         });
-                        this.container.appendChild(btnBatchCopy);
+
+                        // Right-click: Toggle Mode
+                        this.btnBatchCopy.addEventListener('contextmenu', (e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            const loader = getLoader();
+                            if (loader) loader.toggleBatchCopyMode();
+                        });
+
+                        this.container.appendChild(this.btnBatchCopy);
+                        this.updateBatchCopyTooltip();
                     }
 
                     document.body.appendChild(this.container);
@@ -4039,8 +4751,10 @@
                 deinit() {
                     if (this.container) {
                         this.container.remove();
+                        this.container.remove();
                         this.container = null;
                         this.btnAutoLoad = null;
+                        this.btnBatchCopy = null;
                     }
                     this.isInitialized = false;
                 },
@@ -4055,9 +4769,40 @@
                     } else {
                         // Revert to Start Icon (Arrow Down)
                         this.btnAutoLoad.innerHTML = `<svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path></svg>`;
-                        this.btnAutoLoad.title = T.tooltipAutoLoadStart;
+                        this.updateButtonTooltip(); // Restore tooltip with mode info
                         this.btnAutoLoad.style.borderColor = '#ddd';
                     }
+                },
+                updateButtonTooltip() {
+                    if (!this.btnAutoLoad) return;
+                    const T = this.app.state.T;
+                    const loader = this.app.modules.contentAutoLoader;
+                    const mode = loader ? loader.state.mode : 'incremental';
+                    const batchSize = this.app.state.settings.autoLoadBatchSize || 20;
+
+                    let tooltip = mode === 'incremental'
+                        ? T.autoLoad_tooltip_incremental.replace('{n}', batchSize)
+                        : T.autoLoad_tooltip_target.replace('{n}', batchSize);
+
+
+                    this.btnAutoLoad.title = tooltip;
+                },
+                updateBatchCopyTooltip() {
+                    if (!this.btnBatchCopy) return;
+                    const T = this.app.state.T;
+                    const loader = this.app.modules.contentAutoLoader;
+                    const mode = loader ? loader.state.batchCopyMode : 'clipboard';
+
+                    const modeLabel = mode === 'clipboard'
+                        ? (T.batchCopy_mode_clipboard || 'Clipboard')
+                        : (T.batchCopy_mode_download || 'Download');
+
+                    this.btnBatchCopy.title = `${T.tooltipBatchCopy}\n[${modeLabel}]`;
+                },
+                updateOpacityState(enabled) {
+                    if (this.container) this.container.dataset.opacity = enabled ? 'true' : 'false';
+                    const TActions = this.app.modules.transparencyActions;
+                    if (TActions && TActions.container) TActions.container.dataset.opacity = enabled ? 'true' : 'false';
                 },
                 updateVisibility() {
                     if (!this.container) return;
@@ -4239,7 +4984,8 @@
 
                         if (text) {
                             GM_setClipboard(text);
-                            this.app.modules.toastNotifier.show(T.copier_copyContentSuccess, 'success');
+                            const msg = T.copier_copyContentSuccess.replace('{count}', text.length);
+                            this.app.modules.toastNotifier.show(msg, 'success');
                             await this.animateButtonFeedback(button, 'success', originalContent);
                         } else {
                             this.app.modules.toastNotifier.show(T.copier_notificationContentNotFound, 'failure');
@@ -5099,7 +5845,7 @@
             },
         },
 
-        async handleWorkerTask() {
+        handleWorkerTask: async function () {
             const urlParams = new URLSearchParams(window.location.search);
             const taskId = urlParams.get(this.config.WORKER_PARAM);
             if (!taskId) return;
@@ -5209,6 +5955,7 @@
                             if (moduleName === 'errorRecovery' && !this.state.settings.errorRecoveryEnabled) continue;
                             if (moduleName === 'transparencyActions' && !this.state.settings.transparencyButtonsEnabled) continue;
                             if (moduleName === 'idRevealer' && !this.state.settings.idRevealerEnabled) continue;
+                            if (moduleName === 'uiCleaner' && !this.state.settings.hideUselessElements) continue;
                             if (moduleName === 'contentExpander' && !this.state.settings.expandContentEnabled) continue;
 
                             // Initialize the Link Intervention module

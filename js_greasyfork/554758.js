@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         QOJ Better
 // @namespace    http://tampermonkey.net/
-// @version      1.4
+// @version      1.5
 // @description  Make QOJ great again!
 // @match        https://qoj.ac/*
 // @match        https://jiang.ly/*
@@ -44,8 +44,8 @@ function switchDomain() {
         pathname.includes('/user') ||
         pathname.includes('/results');
     const domains = isContest
-        ? ['qoj.ac', 'jiang.ly', 'huang.lt', 'oj.qiuly.org', 'contest.ucup.ac']
-        : ['qoj.ac', 'jiang.ly', 'huang.lt', 'oj.qiuly.org'];
+        ? ['qoj.ac', 'jiang.ly', 'huang.lt', 'oj.qiuly.org', 'relia.uk', 'contest.ucup.ac']
+        : ['qoj.ac', 'jiang.ly', 'huang.lt', 'oj.qiuly.org', 'relia.uk'];
 
     // 构造域名切换内容
     const span = document.createElement('span');
@@ -158,6 +158,7 @@ function viewInContestLinks() {
 function addAcTag() {
     if (window.__qoj_fullscore_lock) return;
     window.__qoj_fullscore_lock = true;
+    if (window.__qoj_no_ac) return;
     const pid = getProblemId();
     const username = getUsername();
     if (!pid || !username) return;
@@ -181,23 +182,26 @@ function addAcTag() {
             .then(res => res.text())
             .then(html => {
                 const match = html.match(/<td><a href="(\/submission\/\d+)">/);
-                if (match) {
-                    const sub = match[1];
-                    const badge = document.createElement('a');
-                    badge.className = 'badge badge-success mr-1 badge-fullscore';
-                    badge.textContent = 'Accepted ✓';
-                    badge.href = `${sub}`;
-                    badge.target = '_blank';
-                    infoRow.appendChild(badge);
-                    const submitLink = document.querySelector('a.nav-link[href="#tab-submit-answer"]');
-                    if (!submitLink) return;
+                if (!match) {
+                    window.__qoj_no_ac = true;
+                    return;
+                }
+                const sub = match[1];
+                const badge = document.createElement('a');
+                badge.className = 'badge badge-success mr-1 badge-fullscore';
+                badge.textContent = 'Accepted ✓';
+                badge.href = `${sub}`;
+                badge.target = '_blank';
+                infoRow.appendChild(badge);
+                const submitLink = document.querySelector('a.nav-link[href="#tab-submit-answer"]');
+                if (!submitLink) return;
 
-                    if (submitLink.classList.contains('submit-green')) return;
+                if (submitLink.classList.contains('submit-green')) return;
 
-                    submitLink.classList.add('submit-green');
+                submitLink.classList.add('submit-green');
 
-                    const style = document.createElement('style');
-                    style.textContent = `
+                const style = document.createElement('style');
+                style.textContent = `
                         a.nav-link.submit-green {
                             color: #00cc00 !important;
                         }
@@ -205,8 +209,7 @@ function addAcTag() {
                             color: #00cc00 !important;
                         }
                     `;
-                    document.head.appendChild(style);
-                }
+                document.head.appendChild(style);
             })
             .catch(err => console.error('检测满分失败:', err))
             .finally(() => {

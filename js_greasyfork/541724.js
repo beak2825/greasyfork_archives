@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         (APP.trakt)TraktExternalProvider
 // @namespace    DK
-// @version      2.2.9
-// @description  Adds Torrent+Streaming websites
+// @version      2.3.0
+// @description  Adds Torrent+Streaming websites. Ublock origin interference
 // @match        https://app.trakt.tv/*
 // @match        https://trakt.tv/*
 // @grant        none
@@ -94,7 +94,7 @@
         }
     } else {
         // On other pages — title is in <h2> or <h3>
-        const selectors = ['h2', 'h3'];
+        const selectors = ['h2', 'h3','h1'];
         for (const sel of selectors) {
             const el = document.querySelector(sel);
             if (el && el.textContent.trim()) {

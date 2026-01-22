@@ -248,6 +248,15 @@ p a {
 	border-radius: 10px;
 }
 
+.subject-page-header__level-and-pagination * {
+	color: white;
+}
+
+.subject-page-header__level-and-pagination .subject-page-header__level:hover *,
+.subject-pager__items li:hover * {
+	color: lightgrey;
+}
+
 #timeline {
 	border-bottom: 0px solid #333333;
 	border-radius: 15px;
@@ -813,6 +822,10 @@ button.sitemap__section-header--help:focus{
 	color: lightgrey;
 }
 
+.wk-form__fieldset textarea {
+	color: #444444;
+}
+
 .wk-text--bottom-normal {
 	color: lightgrey !important;
 }
@@ -888,6 +901,10 @@ button.sitemap__section-header--help:focus{
 .user-synonyms__form_container {
 	background-color: #555555;
 	border: 3px solid grey;
+}
+
+.user-synonyms__form-input * {
+	color: #444444;
 }
 
 .user-synonyms__close-button{
@@ -990,6 +1007,14 @@ button.sitemap__section-header--help:focus{
 
 .subject-hint {
 	color: black;
+}
+
+.wk-hint__title {
+	color: #333333;
+}
+
+.wk-hint .wk-hint__text {
+	color: #555555;
 }
 
 .wk-hint {

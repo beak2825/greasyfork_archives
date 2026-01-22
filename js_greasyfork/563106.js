@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Gemini Deep Research Exporter
 // @namespace    http://tampermonkey.net/
-// @version      1.3
-// @description  Deep Research 导出最终极速版
+// @version      1.4
+// @description  Deep Research 导出
 // @author       Eddy
 // @match        https://gemini.google.com/*
 // @grant        GM_registerMenuCommand
@@ -242,7 +242,7 @@
 
             // 思考过程的参考文献
             if (thoughtRefs.length > 0) {
-                mdContent += "\n**思考过程参考文献**\n\n";
+                mdContent += "\n##  🔗 思考过程参考文献\n\n";
                 thoughtRefs.forEach(ref => {
                     mdContent += `[^${ref.id}]: [${ref.title}](${ref.url})\n\n`;
                 });

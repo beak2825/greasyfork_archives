@@ -5,7 +5,7 @@
 // @match        *://www.torn.com/page.php?sid=ItemMarket*
 // @grant        none
 // @license      no licence, private https://greasyfork.org/en/scripts/561439
-// @description  The Item Market goes by too quickly for me to read who is selling any item.  This script reads the Item Market and puts all the sellers, prices and quantities into a little box on the screen so I can read the text even once the item has been sold. 
+// @description  My eyes are not very good. The Item Market goes by too quickly for me to read.  This script reads the Item Market page that you are currently viewing and puts the details into a little box on the screen so you can read the little box.  This helps my eyes. 
 // @downloadURL https://update.greasyfork.org/scripts/561439/Torn%20Market%20-%20Auto-Scraper.user.js
 // @updateURL https://update.greasyfork.org/scripts/561439/Torn%20Market%20-%20Auto-Scraper.meta.js
 // ==/UserScript==
