@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DemonicScans Unified Automator
 // @namespace    https://github.com/wverri/autods
-// @version      0.11.2-alpha
+// @version      0.11.7-alpha
 // @description  Consolidated automation suite for DemonicScans: wave battles, PvP, farming, UI enhancements, and image blocking.
 // @author       Willian Verri
 // @match        https://demonicscans.org/*
@@ -185,6 +185,11 @@ var version = GM_info.script.version;
                 showFloating: true
             }
         },
+        eventPull: {
+            enabled: true,
+            maxPullDelayMs: 120,
+            parallelPulls: 10
+        },
         smartDamageCalc: {
             enabled: true,
             defenseValues: [0, 25, 50],
@@ -333,6 +338,25 @@ var version = GM_info.script.version;
         const max = base + delta;
         const value = Math.floor(Math.random() * (max - min + 1) + min);
         return sleep(value);
+    }
+
+    /**
+     * 🔄 Recarrega a página de forma síncrona (pausa o script até o reload)
+     * A Promise nunca resolve porque a página recarrega antes, assim a execução é bloqueada
+     * @param {number} delayBeforeReload - Delay em ms antes de iniciar o reload (padrão: 500)
+     * @returns {Promise} - Nunca resolve (página recarrega)
+     */
+    async function reloadPageSync(delayBeforeReload = 500) {
+        await sleep(delayBeforeReload);
+        return new Promise(() => {
+            // Esta Promise nunca resolve - a página recarrega e o script morre
+            // Isso garante que nenhum código posterior execute
+            window.location.href = window.location.href;
+            // Timeout de segurança: se por algum motivo o reload falhar, aguarda 10s antes de continuar
+            setTimeout(() => {
+                console.error('⚠️ reloadPageSync: Reload falhou após 10 segundos');
+            }, 10000);
+        });
     }
 
     // DEPRECATED: Legacy wrappers for backward compatibility
@@ -2308,7 +2332,7 @@ var version = GM_info.script.version;
                 
                 const text = await response.text();
                 const lower = text.trim().toLowerCase();
-                const success = lower.includes('success') || lower.includes('used');
+                const success = lower.includes('success') || lower.includes('used') || lower.includes('consumed') || lower.includes('successfully!');
                 
                 if (success) {
                     logger.info(`✅ ${itemName} usado com sucesso!`);
@@ -3266,6 +3290,73 @@ var version = GM_info.script.version;
                 return this.fetchGet('/inventory.php', {
                     parseJson: false
                 });
+            },
+
+            /**
+             * Event machine spin (pull)
+             * Uses multipart/form-data like the native form submission
+             * @param {string|number} machineId - Machine ID
+             * @param {string|number} eventId - Event ID
+             * @param {string} referrer - Page referrer (event page)
+             * @returns {Promise<Object>} Response object with success/data
+             */
+            async eventSpin(machineId, eventId, referrer = window.location.href) {
+                try {
+                    const formData = new FormData();
+                    formData.append('machine', String(machineId));
+                    formData.append('event', String(eventId));
+
+                    const response = await fetch(`${BASE_URL}/event_spin.php`, {
+                        method: 'POST',
+                        credentials: 'include',
+                        referrer,
+                        headers: {
+                            'User-Agent': navigator.userAgent,
+                            'Accept': '*/*',
+                            'Accept-Language': 'pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7',
+                            'Sec-GPC': '1',
+                            'Sec-Fetch-Dest': 'empty',
+                            'Sec-Fetch-Mode': 'cors',
+                            'Sec-Fetch-Site': 'same-origin',
+                            'Priority': 'u=0'
+                        },
+                        body: formData,
+                        signal: AbortSignal.timeout(15000)
+                    });
+
+                    if (!response.ok) {
+                        return {
+                            success: false,
+                            status: response.status,
+                            message: `HTTP ${response.status}: ${response.statusText}`
+                        };
+                    }
+
+                    const text = await response.text();
+
+                    try {
+                        const data = JSON.parse(text);
+                        const serverSuccess = data.status === 'success' || data.success === true || !data.status;
+                        return {
+                            success: serverSuccess,
+                            data,
+                            status: response.status,
+                            message: data.message || ''
+                        };
+                    } catch (error) {
+                        return {
+                            success: false,
+                            status: response.status,
+                            message: 'JSON parse error',
+                            raw: text
+                        };
+                    }
+                } catch (error) {
+                    return {
+                        success: false,
+                        message: error.message || 'Network error'
+                    };
+                }
             },
             
             // ========== OPTIMIZED FETCH METHODS (Cloudflare-proof) ==========
@@ -8240,10 +8331,10 @@ var version = GM_info.script.version;
                                     // Level up detectado! Stamina recuperou
                                     const newStamina = context.stamina.getCurrent();
                                     logger.info(`🎉 [LOOT DEAD] Level up detectado! Nova stamina: ${newStamina}`);
-                                    if (newStamina >= skillCost) {
+                                    // if (newStamina >= skillCost) {
                                         logger.info('🎉 Stamina recuperada após loot! Continuando wave farm...');
-                                        continue; // Continuar loop sem usar FSP
-                                    }
+                                        await reloadPageSync(2000);
+                                    // }
                                 }
                                 
                                 if (lootResult.count === 0) {
@@ -8270,8 +8361,7 @@ var version = GM_info.script.version;
                                 logger.info('💊 [FSP] FSP usada com sucesso! Recarregando página...');
                                 // Limpar flag ao usar FSP com sucesso (reset completo)
                                 sessionStorage.removeItem('autods_skip_loot_dead_use_fsp');
-                                await sleep(500);
-                                window.location.href = window.location.href;
+                                await reloadPageSync(2000);
                                 return;
                             } else {
                                 logger.info('💊 [FSP] Falha ao usar FSP ou sem FSP disponível.');
@@ -8303,16 +8393,14 @@ var version = GM_info.script.version;
                     await this.attackOngoingBattles(context, cfg);
                     
                     // Refresh to check for new targets
-                    await sleep(5000);
-                    window.location.href = window.location.href;
+                    await reloadPageSync(2000);
                     continue;
                 }
                 
                 // 5. If no targets at all, wait and refresh
                 if (newTargets.length === 0 && ongoingCount === 0) {
                     logger.debug('Nenhum alvo disponível. Aguardando 15s...');
-                    await sleep(15000);
-                    window.location.href = window.location.href;
+                    await reloadPageSync(2000);
                     continue;
                 }
                 
@@ -8328,8 +8416,7 @@ var version = GM_info.script.version;
                     }
                     
                     // Wait and reload to check if some battles completed
-                    await sleep(10000);
-                    window.location.href = window.location.href;
+                    await reloadPageSync(2000);
                     continue;
                 }
                 
@@ -8360,8 +8447,7 @@ var version = GM_info.script.version;
                 }
                 
                 // 9. Refresh page to continue loop
-                await sleep(2000);
-                window.location.href = window.location.href;
+                await reloadPageSync(2000);
             }
             
             // Log final stats
@@ -8961,11 +9047,11 @@ var version = GM_info.script.version;
                                 // Level up detectado! Stamina recuperou
                                 currentStamina = context.stamina.getCurrent();
                                 logger.info(`🎉 [LOOT DEAD] Level up detectado! Nova stamina: ${currentStamina}`);
-                                if (currentStamina >= skillCost) {
+                                // if (currentStamina >= skillCost) {
                                     logger.info(`🎉 Stamina recuperada (${currentStamina})! Continuando ataques...`);
                                     await this.ensureAliveMonstersView(context);
-                                    continue; // Continuar loop de ataques
-                                }
+                                    await reloadPageSync(2000);
+                                // }
                             }
                             
                             if (lootResult.count === 0) {
@@ -8995,8 +9081,7 @@ var version = GM_info.script.version;
                             if (fspUsed) {
                                 logger.info('💊 [FSP] FSP usada com sucesso! Recarregando página...');
                                 sessionStorage.removeItem('autods_skip_loot_dead_use_fsp');
-                                await sleep(500);
-                                window.location.href = window.location.href;
+                                await reloadPageSync(2000);
                                 return;
                             } else {
                                 logger.info('💊 [FSP] Falha ao usar FSP ou sem FSP disponível.');
@@ -9233,11 +9318,11 @@ var version = GM_info.script.version;
                                 // Level up detectado! Stamina recuperou
                                 const newStamina = context.stamina.getCurrent();
                                 logger.info(`🎉 [LOOT DEAD] Level up detectado! Nova stamina: ${newStamina}`);
-                                if (newStamina >= skillCost) {
+                                // if (newStamina >= skillCost) {
                                     logger.info(`🎉 Stamina recuperada (${newStamina})! Continuando ataques...`);
                                     await this.ensureAliveMonstersView(context);
                                     continue; // Continuar loop de ataques
-                                }
+                                // }
                             }
                             
                             if (lootResult.count === 0) {
@@ -9263,8 +9348,7 @@ var version = GM_info.script.version;
                         if (fspUsed) {
                             logger.info('💊 [FSP] FSP usada com sucesso! Recarregando página...');
                             sessionStorage.removeItem('autods_skip_loot_dead_use_fsp');
-                            await sleep(500);
-                            window.location.href = window.location.href;
+                            await reloadPageSync(2000);
                             return;
                         } else {
                             logger.info('💊 [FSP] Falha ao usar FSP ou sem FSP disponível.');
@@ -9951,7 +10035,7 @@ var version = GM_info.script.version;
                     this.state.lastCheckTime = Date.now();
                     await sleep(waitTime);
                     logger.info('👑 Recarregando página para verificar novamente...');
-                    window.location.href = window.location.href;
+                    await reloadPageSync(2000);
                     return;
                 }
 
@@ -9981,13 +10065,12 @@ var version = GM_info.script.version;
                     this.state.lastCheckTime = Date.now();
                     await sleep(waitTime);
                     logger.info('👑 Recarregando página para verificar novamente...');
-                    window.location.href = window.location.href;
+                    await reloadPageSync(2000);
                     return;
                 } else {
                     // Had work - reload quickly to check for more
                     logger.info('👑 Bosses processados. Recarregando para verificar novamente...');
-                    await sleep(2000);
-                    window.location.href = window.location.href;
+                    await reloadPageSync(2000);
                     return;
                 }
             }
@@ -10227,8 +10310,7 @@ var version = GM_info.script.version;
                                     this.state.stats.potionsUsed++;
                                     
                                     // Reload to sync stamina
-                                    await sleep(1000);
-                                    window.location.href = window.location.href;
+                                    await reloadPageSync(2000);
                                     return { hadWork: true };
                                 } else {
                                     logger.info('💊 [SPECIAL BOSS] Full Stamina Potion: Sem poções disponíveis ou erro');
@@ -10325,8 +10407,7 @@ var version = GM_info.script.version;
                 } else if (r.message && r.message.toLowerCase().includes('stamina')) {
                     // 🆕 Stamina insuficiente - recarregar página
                     logger.warn(`⚠️ [BossAttack] Stamina insuficiente! Recarregando página...`);
-                    await sleep(1000);
-                    window.location.href = window.location.href;
+                    await reloadPageSync(2000);
                     return { totalDamage, successCount, lastStamina };
                 }
             }
@@ -10445,7 +10526,7 @@ var version = GM_info.script.version;
                     this.state.lastCheckTime = Date.now();
                     await sleep(waitTime);
                     logger.info('🎲 Recarregando página para verificar novamente...');
-                    window.location.href = window.location.href;
+                    await reloadPageSync(2000);
                     return;
                 }
 
@@ -10467,13 +10548,12 @@ var version = GM_info.script.version;
                     this.state.lastCheckTime = Date.now();
                     await sleep(waitTime);
                     logger.info('🎲 Recarregando página para verificar novamente...');
-                    window.location.href = window.location.href;
+                    await reloadPageSync(2000);
                     return;
                 }
 
                 logger.info('🎲 Boss processado. Recarregando para verificar novamente...');
-                await sleep(2000);
-                window.location.href = window.location.href;
+                await reloadPageSync(2000);
                 return;
             }
         },
@@ -10612,8 +10692,7 @@ var version = GM_info.script.version;
                                 logger.info('✅ [RANDOM BOSS] Full Stamina Potion usada! Recarregando página...');
                                 bossState.potionsUsed++;
                                 this.state.stats.potionsUsed++;
-                                await sleep(1000);
-                                window.location.href = window.location.href;
+                                await reloadPageSync(2000);
                                 return { hadWork: true };
                             } else {
                                 logger.info('💊 [RANDOM BOSS] Sem poções disponíveis ou erro');
@@ -10689,8 +10768,7 @@ var version = GM_info.script.version;
                     if (r.stamina !== undefined) lastStamina = r.stamina;
                 } else if (r.message && r.message.toLowerCase().includes('stamina')) {
                     logger.warn('⚠️ [RandomBossAttack] Stamina insuficiente! Recarregando página...');
-                    await sleep(1000);
-                    window.location.href = window.location.href;
+                    await reloadPageSync(2000);
                     return { totalDamage, successCount, lastStamina };
                 }
             }
@@ -10825,8 +10903,7 @@ var version = GM_info.script.version;
                 logger.warn('⚠️ Nenhum slot disponível! Todas as batalhas já foram iniciadas.');
                 logger.info('💡 Aguarde completar algumas batalhas antes de iniciar Ultra Fast Farm.');
                 if (cfg.autoReturnToWave) {
-                    await sleep(2000);
-                    window.location.href = window.location.href;
+                    await reloadPageSync(2000);
                 }
                 return;
             }
@@ -10847,8 +10924,7 @@ var version = GM_info.script.version;
             if (targets.length === 0) {
                 logger.info('❌ Nenhum mob disponível para farm ultra rápido');
                 if (cfg.autoReturnToWave) {
-                    await sleep(2000);
-                    window.location.href = window.location.href;
+                    await reloadPageSync(2000);
                 }
                 return;
             }
@@ -11630,15 +11706,22 @@ var version = GM_info.script.version;
                     }
                 }
             }
+
+            // 🆕 LER CONTADOR DE UNCLAIMED KILLS (somente wave page)
+            const unclaimedCount = isWavePage ? this.getUnclaimedKillsCount(context) : null;
+            const hasMoreUnclaimed = Number.isFinite(unclaimedCount) && unclaimedCount > deadMonsters.length;
+            if (hasMoreUnclaimed) {
+                logger.info(`💀 [LootDeadMonsters] Unclaimed kills: ${unclaimedCount} > encontrados: ${deadMonsters.length}.`);
+            }
             
             if (deadMonsters.length === 0) {
                 logger.info('💀 [LootDeadMonsters] Nenhum dead monster elegível');
-                
-                // 🆕 VOLTAR PARA ALIVE VIEW SE ESTIVER EM WAVE PAGE
-                if (isWavePage) {
-                    await context.waveViewNavigation.switchToAliveMonstersView();
+                if (hasMoreUnclaimed) {
+                    logger.warn('🔄 [LootDeadMonsters] Nenhum mob detectado, mas há unclaimed. Recarregando para continuar loot...');
+                    // Recarregar de forma sincronizada
+                    await reloadPageSync(2000);
                 }
-                
+
                 return { looted: false, levelUp: false, summary: null, count: 0 };
             }
             
@@ -11666,11 +11749,6 @@ var version = GM_info.script.version;
             const userId = context.userSession.getUserId();
             if (!userId) {
                 logger.error('💀 [LootDeadMonsters] User ID não encontrado');
-                
-                // 🆕 VOLTAR PARA ALIVE VIEW SE ESTIVER EM WAVE PAGE
-                if (isWavePage) {
-                    await context.waveViewNavigation.switchToAliveMonstersView();
-                }
                 
                 return { looted: false, levelUp: false, summary: null, count: 0 };
             }
@@ -11734,11 +11812,27 @@ var version = GM_info.script.version;
                 }
             }
 
+            // 🆕 SE AINDA HÁ UNCLAIMED NÃO DETECTADOS, RECARREGAR APÓS LOOT DOS NORMAIS
+            // Prioriza mobs normais antes de tentar special bosses (limite de 200 cards na página)
+            const shouldReloadForNormals = !levelUpDetected && hasMoreUnclaimed && normalMonsters.length > 0;
+            if (shouldReloadForNormals) {
+                logger.warn('🔄 [LootDeadMonsters] Ainda há unclaimed não detectados. Recarregando para continuar loot de mobs normais...');
+                // Recarregar de forma sincronizada
+                await reloadPageSync(2000);
+                // ⚠️ IMPORTANTE: return para interromper execução enquanto página recarrega
+                return {
+                    looted: totalLooted > 0,
+                    levelUp: false,
+                    summary: summary,
+                    count: totalLooted
+                };
+            }
+
             // 🆕 PRIORIDADE 2: LOOTAR SPECIAL BOSSES UM POR UM (não em batch)
             // 🆕 SOMENTE SE A OPÇÃO lootSpecialBossBeforeFSP ESTIVER HABILITADA
             const lootSpecialBossConfig = context.config.get().ultraFastLoot?.lootSpecialBossBeforeFSP ?? true;
             
-            if (specialBosses.length > 0 && lootSpecialBossConfig) {
+            if (!shouldReloadForNormals && specialBosses.length > 0 && lootSpecialBossConfig) {
                 logger.info(`👑 [LootDeadMonsters] Looteando ${specialBosses.length} special boss(es) UM POR UM...`);
                 
                 for (const boss of specialBosses) {
@@ -11784,11 +11878,6 @@ var version = GM_info.script.version;
             
             logger.info(`✅ [LootDeadMonsters] Loot concluído: ${totalLooted}/${deadMonsters.length} monsters, ${numbers.format(summary.exp)} EXP, ${numbers.format(summary.gold)} Gold`);
             
-            // 🆕 VOLTAR PARA ALIVE VIEW SE ESTIVER EM WAVE PAGE
-            if (isWavePage) {
-                logger.debug('✅ [LootDeadMonsters] Voltando para alive monsters view...');
-                await context.waveViewNavigation.switchToAliveMonstersView();
-            }
             
             return {
                 looted: totalLooted > 0,
@@ -12159,6 +12248,15 @@ var version = GM_info.script.version;
                     });
                 }
             }
+        },
+
+        getUnclaimedKillsCount(context) {
+            const { dom, numbers } = context;
+            const countNode = dom.query('.unclaimed-pill .count');
+            if (!countNode) return null;
+
+            const parsed = numbers.parse(countNode.textContent || '');
+            return Number.isFinite(parsed) ? parsed : null;
         },
 
         cleanup() {
@@ -13362,7 +13460,7 @@ var version = GM_info.script.version;
                     
                     // Reload the page
                     logger.info('🔄 Recarregando página...');
-                    window.location.href = window.location.href;
+                    await reloadPageSync(0);
                     return;
                 }
                 
@@ -14200,6 +14298,555 @@ var version = GM_info.script.version;
                 el.style.opacity = '';
                 el.style.order = '';
             });
+        }
+    };
+
+    /**
+     * Event Machine Max Pull Module
+     * Adds a "Max Pull" button next to event machine pull button
+     */
+    const eventMachineMaxPullModule = {
+        id: 'eventMachineMaxPull',
+        match: () => true,
+        init(context) {
+            this.state = {
+                observer: null,
+                stylesInjected: false
+            };
+            context.logger.debug('eventMachineMaxPull module initialised');
+        },
+        activate(context) {
+            const cfg = context.config.get();
+            if (cfg.eventPull?.enabled === false) {
+                return;
+            }
+
+            this.injectStyles();
+            this.injectButtons(context);
+
+            if (!this.state.observer) {
+                this.state.observer = new MutationObserver(() => {
+                    this.injectButtons(context);
+                });
+                this.state.observer.observe(document.body, { childList: true, subtree: true });
+            }
+        },
+        cleanup() {
+            if (this.state.observer) {
+                this.state.observer.disconnect();
+                this.state.observer = null;
+            }
+        },
+        injectStyles() {
+            if (this.state.stylesInjected || document.getElementById('autods-event-pull-styles')) return;
+
+            const style = document.createElement('style');
+            style.id = 'autods-event-pull-styles';
+            style.textContent = `
+                .autods-max-pull-btn {
+                    margin-left: 8px !important;
+                    padding: 8px 14px !important;
+                    font-weight: 700 !important;
+                    border-radius: 10px !important;
+                    border: 1px solid rgba(132, 255, 212, 0.5) !important;
+                    background: linear-gradient(135deg, #5eead4 0%, #22c55e 100%) !important;
+                    color: #0b1b15 !important;
+                    box-shadow: 0 6px 18px rgba(34, 197, 94, 0.35) !important;
+                    transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease !important;
+                }
+                .autods-max-pull-btn:hover:not(:disabled) {
+                    transform: translateY(-1px) !important;
+                    box-shadow: 0 10px 24px rgba(34, 197, 94, 0.45) !important;
+                    filter: brightness(1.05) !important;
+                }
+                .autods-max-pull-btn:disabled {
+                    opacity: 0.7 !important;
+                    cursor: not-allowed !important;
+                }
+                .autods-max-pull-overlay {
+                    position: fixed;
+                    inset: 0;
+                    background: radial-gradient(circle at 20% 20%, rgba(34, 197, 94, 0.15), transparent 40%),
+                                rgba(8, 12, 18, 0.82);
+                    backdrop-filter: blur(6px);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 100000;
+                }
+                .autods-max-pull-modal {
+                    width: min(760px, 92vw);
+                    max-height: 90vh;
+                    overflow: hidden;
+                    border-radius: 18px;
+                    border: 1px solid rgba(140, 255, 214, 0.18);
+                    background: linear-gradient(160deg, #0f172a 0%, #0b1220 45%, #0f1a25 100%);
+                    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55), 0 0 40px rgba(34, 197, 94, 0.12);
+                    color: #e2e8f0;
+                    font-family: "Trebuchet MS", "Segoe UI", "Lucida Sans Unicode", sans-serif;
+                    animation: autods-max-pull-in 0.25s ease-out;
+                }
+                .autods-max-pull-header {
+                    padding: 20px 24px 16px;
+                    border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+                    display: flex;
+                    align-items: flex-start;
+                    justify-content: space-between;
+                    gap: 16px;
+                }
+                .autods-max-pull-title {
+                    font-size: 20px;
+                    font-weight: 800;
+                    letter-spacing: 0.4px;
+                    color: #a7f3d0;
+                }
+                .autods-max-pull-subtitle {
+                    font-size: 12px;
+                    color: rgba(226, 232, 240, 0.7);
+                    margin-top: 6px;
+                }
+                .autods-max-pull-close {
+                    background: transparent;
+                    border: 1px solid rgba(148, 163, 184, 0.25);
+                    color: rgba(226, 232, 240, 0.8);
+                    width: 32px;
+                    height: 32px;
+                    border-radius: 10px;
+                    cursor: pointer;
+                    transition: border-color 0.15s ease, color 0.15s ease;
+                }
+                .autods-max-pull-close:hover {
+                    border-color: rgba(165, 243, 208, 0.6);
+                    color: #a7f3d0;
+                }
+                .autods-max-pull-body {
+                    padding: 20px 24px 24px;
+                    overflow: auto;
+                    max-height: calc(90vh - 120px);
+                }
+                .autods-max-pull-summary {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+                    gap: 12px;
+                    margin-bottom: 20px;
+                }
+                .autods-max-pull-card {
+                    border-radius: 12px;
+                    padding: 12px 14px;
+                    background: rgba(15, 23, 42, 0.7);
+                    border: 1px solid rgba(148, 163, 184, 0.15);
+                }
+                .autods-max-pull-card-label {
+                    font-size: 11px;
+                    letter-spacing: 1px;
+                    text-transform: uppercase;
+                    color: rgba(226, 232, 240, 0.55);
+                }
+                .autods-max-pull-card-value {
+                    margin-top: 6px;
+                    font-size: 18px;
+                    font-weight: 700;
+                    color: #f8fafc;
+                }
+                .autods-max-pull-list {
+                    display: grid;
+                    gap: 10px;
+                }
+                .autods-max-pull-item {
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                    padding: 10px 12px;
+                    border-radius: 12px;
+                    background: rgba(15, 23, 42, 0.6);
+                    border: 1px solid rgba(148, 163, 184, 0.12);
+                }
+                .autods-max-pull-item img {
+                    width: 36px;
+                    height: 36px;
+                    border-radius: 8px;
+                    object-fit: cover;
+                    border: 1px solid rgba(148, 163, 184, 0.3);
+                    background: #0f172a;
+                }
+                .autods-max-pull-item-name {
+                    flex: 1 1 auto;
+                    font-size: 14px;
+                    font-weight: 600;
+                    color: #e2e8f0;
+                }
+                .autods-max-pull-item-count {
+                    padding: 4px 10px;
+                    border-radius: 999px;
+                    background: rgba(34, 197, 94, 0.2);
+                    border: 1px solid rgba(34, 197, 94, 0.5);
+                    font-size: 12px;
+                    font-weight: 700;
+                    color: #bbf7d0;
+                }
+                .autods-max-pull-errors {
+                    margin-top: 16px;
+                    padding: 12px 14px;
+                    border-radius: 12px;
+                    border: 1px solid rgba(248, 113, 113, 0.4);
+                    background: rgba(127, 29, 29, 0.2);
+                    color: #fecaca;
+                    font-size: 12px;
+                }
+                .autods-max-pull-footer {
+                    margin-top: 18px;
+                    display: flex;
+                    justify-content: flex-end;
+                }
+                .autods-max-pull-action {
+                    padding: 10px 18px;
+                    border-radius: 12px;
+                    border: 1px solid rgba(148, 163, 184, 0.3);
+                    background: rgba(15, 23, 42, 0.8);
+                    color: #e2e8f0;
+                    font-weight: 600;
+                    cursor: pointer;
+                }
+                .autods-max-pull-action:hover {
+                    border-color: rgba(167, 243, 208, 0.7);
+                    color: #a7f3d0;
+                }
+                @keyframes autods-max-pull-in {
+                    from {
+                        opacity: 0;
+                        transform: translateY(6px) scale(0.98);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0) scale(1);
+                    }
+                }
+            `;
+
+            document.head.appendChild(style);
+            this.state.stylesInjected = true;
+        },
+        injectButtons(context) {
+            const { dom, logger } = context;
+            const panels = dom.queryAll('#machinePanel, [id^="machinePanel"], .machine-panel');
+            if (!panels.length) return;
+
+            let added = 0;
+            panels.forEach(panel => {
+                const forms = panel.querySelectorAll('form#spinForm, form[action*="event_spin.php"]');
+                forms.forEach(form => {
+                    if (form.dataset.autodsMaxPullInjected === 'true') return;
+
+                    const spinBtn = form.querySelector('#spinBtn') || form.querySelector('button[type="submit"]');
+                    if (!spinBtn) return;
+
+                    const maxBtn = document.createElement('button');
+                    maxBtn.type = 'button';
+                    maxBtn.className = 'btn autods-max-pull-btn';
+                    maxBtn.textContent = 'Max Pull';
+                    maxBtn.title = 'Faz todos os pulls possíveis';
+
+                    spinBtn.insertAdjacentElement('afterend', maxBtn);
+                    form.dataset.autodsMaxPullInjected = 'true';
+
+                    maxBtn.addEventListener('click', () => {
+                        this.handleMaxPull(context, panel, form, spinBtn, maxBtn);
+                    });
+
+                    added += 1;
+                });
+            });
+
+            if (added > 0) {
+                logger.info(`[EventPull] ✅ Added ${added} Max Pull button(s)`);
+            }
+        },
+        getMachineData(panel, context) {
+            const { dom, numbers } = context;
+
+            const currencyCountEl = dom.query('#machineCurrencyCount', panel) || dom.query('[id*="machineCurrencyCount"]', panel);
+            let currencyCount = 0;
+            if (currencyCountEl) {
+                currencyCount = numbers.parse(currencyCountEl.textContent || '0');
+            }
+
+            if (!currencyCount) {
+                const haveLine = Array.from(panel.querySelectorAll('*')).find(el => /You have:/i.test(el.textContent || ''));
+                if (haveLine) {
+                    currencyCount = numbers.parse(haveLine.textContent || '0');
+                }
+            }
+
+            const currencyNameEl = dom.query('#machineCurrencyName', panel);
+            const currencyName = currencyNameEl?.textContent?.trim() || 'Currency';
+
+            let cost = 0;
+            const costRow = Array.from(panel.querySelectorAll('*')).find(el => /Cost:/i.test(el.textContent || ''));
+            if (costRow) {
+                const strong = costRow.querySelector('strong');
+                if (strong) {
+                    cost = numbers.parse(strong.textContent || '0');
+                }
+                if (!cost) {
+                    const match = (costRow.textContent || '').match(/Cost:\s*([\d,.]+)/i);
+                    if (match) {
+                        cost = numbers.parse(match[1]);
+                    }
+                }
+            }
+
+            return {
+                currencyCount,
+                currencyCountEl,
+                currencyName,
+                cost
+            };
+        },
+        async handleMaxPull(context, panel, form, spinBtn, maxBtn) {
+            const { logger, numbers, notifications, http } = context;
+
+            const machineId = form.querySelector('input[name="machine"]')?.value;
+            const eventId = form.querySelector('input[name="event"]')?.value;
+
+            if (!machineId || !eventId) {
+                notifications.error('Max Pull: machine/event inválido');
+                return;
+            }
+
+            const { currencyCount, currencyCountEl, currencyName, cost } = this.getMachineData(panel, context);
+
+            if (!cost || cost <= 0) {
+                notifications.error('Max Pull: custo não identificado');
+                return;
+            }
+
+            const maxPulls = Math.floor(currencyCount / cost);
+            if (maxPulls <= 0) {
+                notifications.warn('Sem moedas suficientes para pull');
+                return;
+            }
+
+            const originalText = maxBtn.textContent;
+            const originalSpinDisabled = spinBtn.disabled;
+
+            maxBtn.disabled = true;
+            spinBtn.disabled = true;
+
+            const cfg = context.config.get();
+            const delayMs = Number(cfg.eventPull?.maxPullDelayMs ?? 120);
+            const parallelPulls = Math.max(1, Number(cfg.eventPull?.parallelPulls ?? 5));
+
+            const rewards = new Map();
+            const errors = [];
+            let currencyLeft = currencyCount;
+            let completed = 0;
+
+            logger.info(`[EventPull] Starting max pull: ${maxPulls} pulls (cost ${cost})`);
+
+            for (let i = 0; i < maxPulls; i += parallelPulls) {
+                const batchSize = Math.min(parallelPulls, maxPulls - i);
+                maxBtn.textContent = `Max Pull ${i + batchSize}/${maxPulls}`;
+
+                const batch = Array.from({ length: batchSize }, () => http.eventSpin(machineId, eventId, window.location.href));
+                const results = await Promise.allSettled(batch);
+
+                for (const result of results) {
+                    if (result.status !== 'fulfilled') {
+                        errors.push('Erro ao fazer pull');
+                        continue;
+                    }
+
+                    const response = result.value;
+                    if (!response.success || !response.data) {
+                        errors.push(response.message || 'Erro ao fazer pull');
+                        continue;
+                    }
+
+                    const data = response.data || {};
+                    if (data.status && data.status !== 'success') {
+                        errors.push(data.message || 'Pull falhou');
+                        continue;
+                    }
+
+                    const itemName = data.item_name || 'Unknown Item';
+                    const itemImg = data.item_img || '';
+
+                    const current = rewards.get(itemName) || { name: itemName, img: itemImg, count: 0 };
+                    current.count += 1;
+                    if (!current.img && itemImg) current.img = itemImg;
+                    rewards.set(itemName, current);
+
+                    if (typeof data.currency_left === 'number') {
+                        currencyLeft = data.currency_left;
+                    }
+
+                    completed += 1;
+                }
+
+                if (errors.length > 0) {
+                    break;
+                }
+
+                if (delayMs > 0 && i + batchSize < maxPulls) {
+                    await new Promise(resolve => setTimeout(resolve, delayMs));
+                }
+            }
+
+            maxBtn.disabled = false;
+            spinBtn.disabled = originalSpinDisabled;
+            maxBtn.textContent = originalText;
+
+            if (currencyCountEl && Number.isFinite(currencyLeft)) {
+                currencyCountEl.textContent = numbers.format(currencyLeft);
+            }
+
+            if (completed > 0) {
+                notifications.success(`Max Pull concluído: ${completed} pull(s)`);
+            }
+
+            this.showResultsModal(context, {
+                currencyName,
+                cost,
+                pulls: completed,
+                currencyLeft,
+                rewards: Array.from(rewards.values()),
+                errors
+            });
+        },
+        showResultsModal(context, { currencyName, cost, pulls, currencyLeft, rewards, errors }) {
+            const { numbers } = context;
+
+            const existing = document.getElementById('autods-max-pull-overlay');
+            if (existing) existing.remove();
+
+            const overlay = document.createElement('div');
+            overlay.id = 'autods-max-pull-overlay';
+            overlay.className = 'autods-max-pull-overlay';
+            overlay.setAttribute('role', 'dialog');
+            overlay.setAttribute('aria-modal', 'true');
+
+            const modal = document.createElement('div');
+            modal.className = 'autods-max-pull-modal';
+
+            const header = document.createElement('div');
+            header.className = 'autods-max-pull-header';
+
+            const titleBlock = document.createElement('div');
+            const title = document.createElement('div');
+            title.className = 'autods-max-pull-title';
+            title.textContent = 'Max Pull Results';
+            const subtitle = document.createElement('div');
+            subtitle.className = 'autods-max-pull-subtitle';
+            subtitle.textContent = `Spent ${numbers.format(pulls * cost)} ${currencyName} • Left ${numbers.format(currencyLeft)}`;
+
+            titleBlock.appendChild(title);
+            titleBlock.appendChild(subtitle);
+
+            const closeBtn = document.createElement('button');
+            closeBtn.className = 'autods-max-pull-close';
+            closeBtn.setAttribute('aria-label', 'Close');
+            closeBtn.textContent = '✕';
+
+            header.appendChild(titleBlock);
+            header.appendChild(closeBtn);
+
+            const body = document.createElement('div');
+            body.className = 'autods-max-pull-body';
+
+            const summary = document.createElement('div');
+            summary.className = 'autods-max-pull-summary';
+
+            const summaryItems = [
+                { label: 'Pulls', value: pulls },
+                { label: 'Cost', value: `${numbers.format(cost)} ${currencyName}` },
+                { label: 'Spent', value: numbers.format(pulls * cost) },
+                { label: 'Left', value: numbers.format(currencyLeft) }
+            ];
+
+            summaryItems.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'autods-max-pull-card';
+                const label = document.createElement('div');
+                label.className = 'autods-max-pull-card-label';
+                label.textContent = item.label;
+                const value = document.createElement('div');
+                value.className = 'autods-max-pull-card-value';
+                value.textContent = item.value;
+                card.appendChild(label);
+                card.appendChild(value);
+                summary.appendChild(card);
+            });
+
+            const list = document.createElement('div');
+            list.className = 'autods-max-pull-list';
+
+            if (rewards.length === 0) {
+                const empty = document.createElement('div');
+                empty.className = 'autods-max-pull-card';
+                empty.textContent = 'Nenhum prêmio obtido.';
+                list.appendChild(empty);
+            } else {
+                const sorted = [...rewards].sort((a, b) => b.count - a.count);
+                sorted.forEach(item => {
+                    const row = document.createElement('div');
+                    row.className = 'autods-max-pull-item';
+
+                    if (item.img) {
+                        const img = document.createElement('img');
+                        const src = item.img.startsWith('http')
+                            ? item.img
+                            : `${window.location.origin}/${item.img.replace(/^\/+/, '')}`;
+                        img.src = src;
+                        img.alt = item.name;
+                        row.appendChild(img);
+                    }
+
+                    const name = document.createElement('div');
+                    name.className = 'autods-max-pull-item-name';
+                    name.textContent = item.name;
+
+                    const count = document.createElement('div');
+                    count.className = 'autods-max-pull-item-count';
+                    count.textContent = `x${numbers.format(item.count)}`;
+
+                    row.appendChild(name);
+                    row.appendChild(count);
+                    list.appendChild(row);
+                });
+            }
+
+            body.appendChild(summary);
+            body.appendChild(list);
+
+            if (errors && errors.length > 0) {
+                const errorBox = document.createElement('div');
+                errorBox.className = 'autods-max-pull-errors';
+                errorBox.textContent = `⚠️ ${errors.join(' | ')}`;
+                body.appendChild(errorBox);
+            }
+
+            const footer = document.createElement('div');
+            footer.className = 'autods-max-pull-footer';
+            const action = document.createElement('button');
+            action.className = 'autods-max-pull-action';
+            action.textContent = 'Fechar';
+            footer.appendChild(action);
+            body.appendChild(footer);
+
+            modal.appendChild(header);
+            modal.appendChild(body);
+            overlay.appendChild(modal);
+            document.body.appendChild(overlay);
+
+            const close = () => overlay.remove();
+            closeBtn.addEventListener('click', close);
+            action.addEventListener('click', close);
+            overlay.addEventListener('click', (event) => {
+                if (event.target === overlay) close();
+            });
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape') close();
+            }, { once: true });
         }
     };
 
@@ -16070,7 +16717,7 @@ var version = GM_info.script.version;
                 }
                 const lower = result.message.trim().toLowerCase();
 
-                if (lower.includes('success')) {
+                if (lower.includes('success') || lower.includes('used') || lower.includes('consumed') || lower.includes('successfully!')) {
                     context.logger.info('✅ EXP Potion usado com sucesso!');
 
                     // Notificar sucesso
@@ -20506,8 +21153,7 @@ Boss:100000000" rows="3"></textarea>
                         sessionStorage.setItem('UltraFastBoss_Progress', JSON.stringify(progress));
                         
                         // Wait for server to process, then reload
-                        await sleep(500);
-                        window.location.href = window.location.href;
+                        await reloadPageSync(2000);
                         return;
                     } else {
                         this.showToast(context, 'error', 'Ultra Fast Boss', 'HP zerado e sem Heal Potions!');
@@ -20561,11 +21207,12 @@ Boss:100000000" rows="3"></textarea>
                         sessionStorage.setItem('UltraFastBoss_Progress', JSON.stringify(progress));
                         
                         this.addLog('info', '🔄 Recarregando página para sincronizar stamina...');
-                        window.location.href = window.location.href;
+                        await reloadPageSync(2000);
                         return;
                     } else {
                         this.showToast(context, 'error', 'Ultra Fast Boss', 'Falha ao usar poção!');
                         state.running = false;
+                        await reloadPageSync(2000);
                         break;
                     }
                 }
@@ -24280,6 +24927,7 @@ Boss:100000000" rows="3"></textarea>
         moduleRegistry.register(directJoinButtonsModule);  // "Join Now" / "Fight Now" buttons (always visible)
         moduleRegistry.register(dungeonLootHelperModule);  // Loot buttons on dungeon locations
         moduleRegistry.register(collectionsOrganizerModule);  // Organize collections page (claimed at bottom)
+        moduleRegistry.register(eventMachineMaxPullModule);  // Event machine "Max Pull" button
         moduleRegistry.register(imageBlockModule);
         moduleRegistry.register(pvpModule);  // PvP - Ultra Fast automation via API direct attacks
         moduleRegistry.register(waveUiModule);  // Wave UI enhancements (independent of automation)
@@ -24295,7 +24943,7 @@ Boss:100000000" rows="3"></textarea>
         moduleRegistry.register(sideDrawerLinksModule);  // Side Drawer Links - custom navigation shortcuts
 
         moduleRegistry.initAll(context);
-        context.modulesCount = 20;  // Updated count after adding sideDrawerLinksModule
+        context.modulesCount = 21;  // Updated count after adding eventMachineMaxPullModule
         
         // Auto-detect user ID from cookie and start monitoring (Phase 3 service)
         context.userSession.ensureUserId();

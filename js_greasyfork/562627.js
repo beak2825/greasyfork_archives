@@ -1,20 +1,41 @@
 // ==UserScript==
-// @name         Bitcointalk BRDb Score 
+// @name         Bitcointalk BRDb Score (Profile + Threads) - Lazy Load + Cache + Fix URL + Auto-Refresh
 // @namespace    http://tampermonkey.net/
-// @version      0.9
-// @description  BRDb score + Dormant/Former/Reactivated + 120-day posts/merits chart + improved historical user filter
+// @version      0.14.0
+// @description  BRDb score + Dormant/Former/Reactivated + 120-day posts/merits chart (profile + threads) with lazy load, localStorage caching, URL fix, and auto-refresh
 // @author       Ace
-// @match        https://bitcointalk.org/index.php?action=profile;u=*
+// @match        https://bitcointalk.org/index.php?action=profile*
+// @match        https://bitcointalk.org/index.php?topic=*
 // @grant        GM_xmlhttpRequest
 // @connect      bitlist.co
+// @connect      bitcointalk.org
 // @license      MIT
-// @downloadURL https://update.greasyfork.org/scripts/562627/Bitcointalk%20BRDb%20Score.user.js
-// @updateURL https://update.greasyfork.org/scripts/562627/Bitcointalk%20BRDb%20Score.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/562627/Bitcointalk%20BRDb%20Score%20%28Profile%20%2B%20Threads%29%20-%20Lazy%20Load%20%2B%20Cache%20%2B%20Fix%20URL%20%2B%20Auto-Refresh.user.js
+// @updateURL https://update.greasyfork.org/scripts/562627/Bitcointalk%20BRDb%20Score%20%28Profile%20%2B%20Threads%29%20-%20Lazy%20Load%20%2B%20Cache%20%2B%20Fix%20URL%20%2B%20Auto-Refresh.meta.js
 // ==/UserScript==
-
 
 (function() {
 'use strict';
+
+/* ---------------- RATE LIMIT QUEUE ---------------- */
+const QUEUE = [];
+let RUNNING = false;
+const RATE_MS = 1100;
+
+function enqueue(fn) {
+  QUEUE.push(fn);
+  if (!RUNNING) runQueue();
+}
+
+async function runQueue() {
+  RUNNING = true;
+  while (QUEUE.length) {
+    const fn = QUEUE.shift();
+    try { await fn(); } catch (e) { console.error(e); }
+    await new Promise(r => setTimeout(r, RATE_MS));
+  }
+  RUNNING = false;
+}
 
 /* ---------------- DATE HELPERS ---------------- */
 function getDateNDaysAgo(n) {
@@ -25,29 +46,74 @@ function getDateNDaysAgo(n) {
 
 /* ---------------- EXTRACT USERID ---------------- */
 function extractUserIdFromPage() {
-  // 1) da URL
   let uid = location.search.match(/u=(\d+)/)?.[1];
   if (uid) return uid;
 
-  // 2) dal link Merit nella pagina profilo
   const meritLink = document.querySelector('a[href*="action=merit;u="]');
   if (meritLink) {
-    const href = meritLink.getAttribute('href'); // relativo
+    const href = meritLink.getAttribute('href');
     const match = href.match(/u=(\d+)/);
     if (match) return match[1];
   }
+
+  const profileLink = document.querySelector('a[href*="action=profile;u="]');
+  if (profileLink) {
+    const href = profileLink.getAttribute('href');
+    const match = href.match(/u=(\d+)/);
+    if (match) return match[1];
+  }
+
   return null;
 }
+
+function extractUserIdFromUrl(url) {
+  return url.match(/u=(\d+)/)?.[1] || null;
+}
+
+/* ---------------- FETCH PROFILE HTML (THREADS) ---------------- */
+function fetchProfileHTML(uid) {
+  return new Promise((resolve, reject) => {
+    GM_xmlhttpRequest({
+      method: 'GET',
+      url: `https://bitcointalk.org/index.php?action=profile;u=${uid}&_=${Date.now()}`,
+      onload: r => resolve(r.responseText),
+      onerror: reject
+    });
+  });
+}
+
+/* ---------------- PROFILE PARSING ---------------- */
+function getProfileNumberFromDoc(doc, label) {
+  for (const r of doc.querySelectorAll('tr')) {
+    const b = r.querySelector('td b');
+    if (b && b.textContent.includes(label)) {
+      const text = r.querySelectorAll('td')[1].textContent.trim();
+      const m = text.match(/(\d+)/);
+      return m ? parseInt(m[1], 10) : 0;
+    }
+  }
+  return 0;
+}
+
+function getProfileDateFromDoc(doc, label) {
+  for (const r of doc.querySelectorAll('tr')) {
+    const b = r.querySelector('td b');
+    if (b && b.textContent.includes(label)) {
+      const t = r.querySelectorAll('td')[1].textContent;
+      if (t && t !== '(Recently)') return new Date(t);
+    }
+  }
+  return new Date();
+}
+
+function getProfileNumber(label) { return getProfileNumberFromDoc(document, label); }
+function getProfileDate(label) { return getProfileDateFromDoc(document, label); }
 
 /* ---------------- FETCH 120D DATA ---------------- */
 async function fetchMeritsAndPosts120(userUid) {
   const dateMin = getDateNDaysAgo(120);
-
-  // extend max date by +1 day (UTC cutoff fix)
-  const dMax = new Date();
-  dMax.setDate(dMax.getDate() + 1);
+  const dMax = new Date(); dMax.setDate(dMax.getDate() + 1);
   const dateMax = dMax.toISOString().split('T')[0];
-
   const cacheBust = Date.now();
 
   const url = `https://bitlist.co/trpc/posts.posts_per_day_histogram,merits.user_merits_per_day_histogram,posts.top_boards_by_post_count?batch=1&input=${
@@ -65,14 +131,12 @@ async function fetchMeritsAndPosts120(userUid) {
       onload: r => {
         try {
           const d = JSON.parse(r.responseText);
-
           const postsHistogram = d[0]?.result?.data?.json?.histogram || [];
           const meritsHistogram = d[1]?.result?.data?.json?.histogram || [];
           const posts120 = d[2]?.result?.data?.json?.total_posts_count || 0;
 
           const postsLast120 = Array(120).fill(0);
           const meritsLast120 = Array(120).fill(0);
-
           const baseDate = new Date(dateMin);
 
           postsHistogram.forEach(day => {
@@ -81,50 +145,46 @@ async function fetchMeritsAndPosts120(userUid) {
             if (index >= 0 && index < 120) postsLast120[index] = day.doc_count || 0;
           });
 
-          // ✅ FIX: somma cumulativa + Math.round
           meritsHistogram.forEach(day => {
             const date = new Date(day.key_as_string);
             const index = Math.round((date - baseDate) / 86400000);
             if (index >= 0 && index < 120) {
-              meritsLast120[index] += day.merits_sum?.value || 0;
+              // Debug: log the day data to check structure
+              console.log("Merit day data:", day);
+              meritsLast120[index] += day.merits_sum?.value || day.value || day.sum || 0;
             }
           });
 
           const merit120 = meritsLast120.reduce((s, m) => s + m, 0);
-
           resolve({ merit120, posts120, postsLast120, meritsLast120 });
-        } catch (e) {
-          console.error("❌ Parsing API error:", e);
-          reject(e);
-        }
+        } catch (e) { reject(e); }
       },
       onerror: reject
     });
   });
 }
 
-/* ---------------- PROFILE PARSING ---------------- */
-function getProfileNumber(label) {
-  for (const r of document.querySelectorAll('tr')) {
-    const b = r.querySelector('td b');
-    if (b && b.textContent.includes(label)) {
-      const text = r.querySelectorAll('td')[1].textContent.trim();
-      const m = text.match(/(\d+)/);
-      return m ? parseInt(m[1], 10) : 0;
-    }
-  }
-  return 0;
+/* ---------------- LOCALSTORAGE CACHING ---------------- */
+function getCacheKey(uid) {
+  return `BRDb_${uid}`;
 }
 
-function getProfileDate(label) {
-  for (const r of document.querySelectorAll('tr')) {
-    const b = r.querySelector('td b');
-    if (b && b.textContent.includes(label)) {
-      const t = r.querySelectorAll('td')[1].textContent;
-      if (t && t !== '(Recently)') return new Date(t);
-    }
-  }
-  return new Date();
+function getCachedData(uid) {
+  const key = getCacheKey(uid);
+  const cached = localStorage.getItem(key);
+  return cached ? JSON.parse(cached) : null;
+}
+
+function setCachedData(uid, data) {
+  const key = getCacheKey(uid);
+  localStorage.setItem(key, JSON.stringify(data));
+}
+
+function isCacheValid(cachedData) {
+  if (!cachedData || !cachedData.timestamp) return false;
+  const now = Date.now();
+  const cacheAgeHours = (now - cachedData.timestamp) / (1000 * 60 * 60);
+  return cacheAgeHours < 1; // Cache valida per 1 ora
 }
 
 /* ---------------- FORMULAS ---------------- */
@@ -133,10 +193,7 @@ function calculateScores(posts, meritTotal, posts120, merit120, postsLast120, re
   const inactiveDays = Math.max((Date.now() - lastActiveDate) / 86400000, 0);
 
   const isHistoricalUser = ageDays > 365 * 10 && posts120 === 0 && merit120 === 0;
-  if (isHistoricalUser) {
-    postsLast120 = Array(120).fill(0);
-    merit120 = 0;
-  }
+  if (isHistoricalUser) { postsLast120 = Array(120).fill(0); merit120 = 0; }
 
   const Q_hist = (meritTotal / Math.max(posts, 1)) * Math.sqrt(posts);
   const Q_120 = (posts120 > 0) ? (merit120 / posts120) * Math.sqrt(posts120) : 0;
@@ -152,8 +209,7 @@ function calculateScores(posts, meritTotal, posts120, merit120, postsLast120, re
 
   const activeDays120 = postsLast120.filter(p => p > 0).length;
   if (badgeDormant && merit120 > 0 && activeDays120 >= 8 && !isHistoricalUser) {
-    badgeReactivated = true;
-    badgeDormant = false;
+    badgeReactivated = true; badgeDormant = false;
   }
 
   let FinalScore = Reputation * (0.4 + 0.6 * Reliability);
@@ -166,7 +222,6 @@ function calculateScores(posts, meritTotal, posts120, merit120, postsLast120, re
 
 function calcBRDb(Reputation, merit120, posts120, badgeFormer, isHistoricalUser) {
   if (isHistoricalUser) return 1;
-
   let base = Math.log10(Reputation + 1) * 3;
   const activityBoost = Math.min((merit120 + posts120 / 2) / 300, 1) * 2;
   let score = base + activityBoost;
@@ -193,7 +248,7 @@ function statusColor(s) {
   return '#999';
 }
 
-/* ---------------- UI INSERT ---------------- */
+/* ---------------- UI PROFILE ---------------- */
 function insertBRDbRow(data) {
   const meritLink = document.querySelector('a[href*="action=merit"]');
   if (!meritLink) return;
@@ -208,6 +263,15 @@ function insertBRDbRow(data) {
   baseRow.after(tr);
 
   attachDashboardTooltip(tr.querySelector('#brdb-cell'), data);
+}
+
+/* ---------------- UI THREAD ---------------- */
+function insertThreadBadge(nameEl, data) {
+  const s = document.createElement('span');
+  s.textContent = ` ⭐${data.BRDb.toFixed(1)}`;
+  s.style.cssText = `color:${data.color};font-weight:bold;margin-left:4px;cursor:pointer`;
+  nameEl.after(s);
+  attachDashboardTooltip(s, data);
 }
 
 /* ---------------- DASHBOARD TOOLTIP ---------------- */
@@ -338,12 +402,23 @@ function attachDashboardTooltip(td, data) {
   window.addEventListener('resize', hide);
 }
 
-/* ---------------- MAIN ---------------- */
-async function main() {
+/* ---------------- MAIN PROFILE (LAZY + CACHE + FIX URL) ---------------- */
+async function mainProfile() {
   try {
     const uid = extractUserIdFromPage();
-    if (!uid) return;
+    if (!uid) {
+      console.warn("BRDb: User ID not found in URL or page.");
+      return;
+    }
 
+    // Check cache
+    const cachedData = getCachedData(uid);
+    if (cachedData && isCacheValid(cachedData)) {
+      insertBRDbRow(cachedData);
+      return;
+    }
+
+    // Fetch fresh data
     const { merit120, posts120, postsLast120, meritsLast120 } = await fetchMeritsAndPosts120(uid);
 
     const posts = getProfileNumber('Posts');
@@ -355,25 +430,105 @@ async function main() {
     const BRDb = calcBRDb(r.Reputation, merit120, posts120, r.badgeFormer, r.isHistoricalUser);
     const status = statusLabel(r.promising, r.badgeDormant, r.badgeFormer, r.badgeReactivated, r.isHistoricalUser);
 
-    insertBRDbRow({
-      BRDb, status,
-      color: statusColor(status),
-      Reputation: r.Reputation,
-      Reliability: r.Reliability,
-      FinalScore: r.FinalScore,
+    const data = {
+      BRDb, status, color: statusColor(status),
+      Reputation: r.Reputation, Reliability: r.Reliability, FinalScore: r.FinalScore,
       posts120, merit120,
       avgAll: posts > 0 ? meritTotal / posts : 0,
       avg120: posts120 > 0 ? merit120 / posts120 : 0,
       impactAll: meritTotal * 1.5 + posts * 0.5,
       impact120: merit120 * 1.5 + posts120 * 0.5,
-      postsLast120, meritsLast120
-    });
+      postsLast120, meritsLast120,
+      timestamp: Date.now()
+    };
 
-  } catch (e) {
-    console.error("Errore BRDb:", e);
-  }
+    setCachedData(uid, data);
+    insertBRDbRow(data);
+
+  } catch (e) { console.error("BRDb error:", e); }
 }
 
-window.addEventListener('load', () => setTimeout(main, 800));
+/* ---------------- MAIN THREAD (LAZY + CACHE) ---------------- */
+function mainThread() {
+  const users = [...document.querySelectorAll('.poster_info b a[href*="action=profile;u="]')];
 
+  // Lazy load: process only visible users on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const a = entry.target;
+        const uid = extractUserIdFromUrl(a.href);
+        if (!uid) return;
+
+        enqueue(async () => {
+          const cachedData = getCachedData(uid);
+          if (cachedData && isCacheValid(cachedData)) {
+            insertThreadBadge(a, cachedData);
+            return;
+          }
+
+          const html = await fetchProfileHTML(uid);
+          const doc = new DOMParser().parseFromString(html, 'text/html');
+
+          const posts = getProfileNumberFromDoc(doc, 'Posts');
+          const meritTotal = getProfileNumberFromDoc(doc, 'Merit');
+          const regDate = getProfileDateFromDoc(doc, 'Date Registered');
+          const lastActiveDate = getProfileDateFromDoc(doc, 'Last Active');
+
+          const { merit120, posts120, postsLast120, meritsLast120 } = await fetchMeritsAndPosts120(uid);
+
+          const r = calculateScores(posts, meritTotal, posts120, merit120, postsLast120, regDate, lastActiveDate);
+          const BRDb = calcBRDb(r.Reputation, merit120, posts120, r.badgeFormer, r.isHistoricalUser);
+          const status = statusLabel(r.promising, r.badgeDormant, r.badgeFormer, r.badgeReactivated, r.isHistoricalUser);
+
+          const data = {
+            BRDb, status, color: statusColor(status),
+            Reputation: r.Reputation, Reliability: r.Reliability, FinalScore: r.FinalScore,
+            posts120, merit120,
+            avgAll: posts > 0 ? meritTotal / posts : 0,
+            avg120: posts120 > 0 ? merit120 / posts120 : 0,
+            impactAll: meritTotal * 1.5 + posts * 0.5,
+            impact120: merit120 * 1.5 + posts120 * 0.5,
+            postsLast120, meritsLast120,
+            timestamp: Date.now()
+          };
+
+          setCachedData(uid, data);
+          insertThreadBadge(a, data);
+        });
+
+        observer.unobserve(a);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  users.forEach(a => observer.observe(a));
+}
+
+/* ---------------- AUTO-REFRESH ---------------- */
+function setupAutoRefresh() {
+  setInterval(() => {
+    console.log("BRDb: Auto-refreshing data...");
+    if (location.search.includes('action=profile')) {
+      mainProfile();
+    } else if (location.search.includes('topic=')) {
+      const uid = extractUserIdFromPage();
+      if (uid) {
+        enqueue(async () => {
+          const { merit120, posts120, postsLast120, meritsLast120 } = await fetchMeritsAndPosts120(uid);
+          console.log("BRDb: Refreshed data - Merit120:", merit120, "Posts120:", posts120);
+        });
+      }
+    }
+  }, 1000 * 60 * 5); // 5 minutes
+}
+
+/* ---------------- START ---------------- */
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    if (location.search.includes('action=profile')) mainProfile();
+    else if (location.search.includes('topic=')) mainThread();
+    setupAutoRefresh();
+  }, 800);
+});
 })();

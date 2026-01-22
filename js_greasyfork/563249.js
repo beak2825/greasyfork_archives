@@ -1,16 +1,16 @@
 // ==UserScript==
-// @name         DMM Download Helper
+// @name         DMM Download Helper (Enhanced)
 // @namespace    http://tampermonkey.net/
-// @version      1.1
-// @description  Download your dmm video easily
+// @version      1.2
+// @description  Download your dmm video easily - Enhanced Hooking Version
 // @author       Ian Ho
 // @match        https://*.dmm.co.jp/*
 // @match        https://*.dmm.com/*
 // @grant        GM_setClipboard
 // @license      CC-BY-NC-SA-4.0
 // @run-at       document-start
-// @downloadURL https://update.greasyfork.org/scripts/563249/DMM%20Download%20Helper.user.js
-// @updateURL https://update.greasyfork.org/scripts/563249/DMM%20Download%20Helper.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/563249/DMM%20Download%20Helper%20%28Enhanced%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/563249/DMM%20Download%20Helper%20%28Enhanced%29.meta.js
 // ==/UserScript==
 
 (function() {
@@ -19,7 +19,9 @@
     let sessions = [];
     let isCollapsed = false;
 
-    // --- 工具函数 (保持不变) ---
+    console.log('%c[DMM Helper] Script Initialized', 'color: white; background: #007aff; padding: 4px; border-radius: 4px;');
+
+    // --- 工具函数 ---
     const base64ToHex = (str) => {
         try {
             const base64 = str.replace(/-/g, '+').replace(/_/g, '/');
@@ -41,25 +43,30 @@
 
     const generateNameByDate = () => {
         const now = new Date();
-
-        const year = now.getFullYear();
-        const month = String(now.getMonth() + 1).padStart(2, '0'); // 月份从0开始
-        const day = String(now.getDate()).padStart(2, '0');
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        const seconds = String(now.getSeconds()).padStart(2, '0');
-
-        return `${year}${month}${day}_${hours}${minutes}${seconds}`;
+        return `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}_${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}${String(now.getSeconds()).padStart(2, '0')}`;
     }
 
     const getTime = () => new Date().toLocaleTimeString('zh-CN', { hour12: false });
 
-    // --- 逻辑核心:强制分发机制 (保持不变) ---
+    const getVideoQuality = () => {
+        try {
+            const activeItem = document.querySelector('#quality-menu-expanded .submenu[role="menu"] div[role="menuitemradio"][aria-checked="true"] .menuitem-label');
+            return activeItem ? activeItem.textContent.trim() : "Unknown";
+        } catch (e) {
+            log.debug('[DMM Helper - Injected] Could not get quality:', e);
+            return "Unknown";
+        }
+    };
+
+    // --- 核心逻辑：处理捕获到的数据 ---
     function processMPD(url) {
         if (!url || typeof url !== 'string') return;
-        if (url.includes('.mpd') || (url.includes('/dash/') && url.includes('manifest'))) {
+        // 增加对 manifest 关键词的匹配，应对 DMM 复杂的参数
+        if (url.includes('.mpd') || url.includes('manifest')) {
             const cleanUrl = url.split('?')[0];
-            if (sessions.some(s => s.mpd === cleanUrl)) return;
+            // 防止重复记录相同的完整 URL
+            // if (sessions.some(s => s.fullMpd === url)) return;
+
             let target = sessions.find(s => s.mpd === null);
             if (target) {
                 target.mpd = cleanUrl;
@@ -68,6 +75,7 @@
                 sessions.unshift({
                     id: sessions.length + 1,
                     time: getTime(),
+                    quality: getVideoQuality(),
                     mpd: cleanUrl,
                     fullMpd: url,
                     keys: [],
@@ -95,6 +103,7 @@
                     sessions.unshift({
                         id: sessions.length + 1,
                         time: getTime(),
+                        quality: getVideoQuality(),
                         mpd: null,
                         fullMpd: null,
                         keys: parsedKeys,
@@ -106,42 +115,57 @@
         } catch (e) {}
     }
 
-    // --- 拦截器逻辑 (保持不变) ---
-    const originalOpen = XMLHttpRequest.prototype.open;
-    XMLHttpRequest.prototype.open = function(m, url) {
-        if (url.includes('.mpd')) {
-            console.log('[MPD Monitor] 检测到 .mpd XHR请求:', url);
+    // --- 强力拦截器 ---
+    function injectHooks() {
+        // 劫持 Fetch
+        if (!window.fetch.isHooked) {
+            const originalFetch = window.fetch;
+            window.fetch = function(...args) {
+                const url = (typeof args[0] === 'string') ? args[0] : (args[0]?.url || "");
+                processMPD(url);
+                return originalFetch.apply(this, args);
+            };
+            window.fetch.isHooked = true;
         }
-        processMPD(url);
-        return originalOpen.apply(this, arguments);
-    };
-    const originalFetch = window.fetch;
-    window.fetch = async function(...args) {
-        const url = (typeof args[0] === 'string') ? args[0] : (args[0]?.url || "");
 
-        if (url.includes('.mpd')) {
-            console.log('[MPD Monitor] 检测到 .mpd 请求:', url);
+        // 劫持 XHR
+        if (!XMLHttpRequest.prototype.open.isHooked) {
+            const originalOpen = XMLHttpRequest.prototype.open;
+            XMLHttpRequest.prototype.open = function(m, url) {
+                processMPD(url);
+                return originalOpen.apply(this, arguments);
+            };
+            XMLHttpRequest.prototype.open.isHooked = true;
+        }
 
-            try {
-                const response = await originalFetch.apply(this, args);
-                console.log(`[MPD Monitor] 响应状态码: ${response.status} - URL: ${url}`);
-                return response;
-            } catch (error) {
-                console.error('[MPD Monitor] 请求失败:', url, error);
-                throw error;
+        // 劫持 EME (解密密钥)
+        if (!MediaKeySession.prototype.update.isHooked) {
+            const originalUpdate = MediaKeySession.prototype.update;
+            MediaKeySession.prototype.update = function(data) {
+                processKey(data);
+                return originalUpdate.apply(this, arguments);
+            };
+            MediaKeySession.prototype.update.isHooked = true;
+        }
+    }
+
+    // 1. 立即注入
+    injectHooks();
+
+    // 2. 持续注入 (防止 DMM 动态重置环境)
+    setInterval(injectHooks, 2000);
+
+    // 3. 浏览器底层监控 (保底机制)
+    const observer = new PerformanceObserver((list) => {
+        list.getEntries().forEach((entry) => {
+            if (entry.name.includes('.mpd') || entry.name.includes('manifest')) {
+                processMPD(entry.name);
             }
-        }
+        });
+    });
+    observer.observe({ entryTypes: ['resource'] });
 
-        processMPD(url);
-        return originalFetch.apply(this, args);
-    };
-    const originalUpdate = MediaKeySession.prototype.update;
-    MediaKeySession.prototype.update = function(data) { processKey(data); return originalUpdate.apply(this, arguments); };
-    setInterval(() => {
-        performance.getEntriesByType('resource').forEach(entry => { processMPD(entry.name); });
-    }, 1000);
-
-    // --- UI 渲染 ---
+    // --- UI 渲染逻辑 (与原版一致) ---
     function updateUI() {
         let container = document.getElementById('apple-refined-v18');
         if (!container) {
@@ -196,13 +220,18 @@
         const list = document.getElementById('apple-content');
         list.innerHTML = sessions.map(s => {
             const keyArgs = s.keys.map(k => `--key ${k.kid}:${k.k32}`).join(' ');
-            const copyAllContent = s.mpd && s.keys.length > 0 ? `.\\\\N_m3u8DL-RE.exe ${s.fullMpd} ${keyArgs} --save-name ${generateNameByDate()} --decryption-engine SHAKA_PACKAGER` : '';
+            const copyAllContent = s.mpd && s.keys.length > 0 ? `.\\N_m3u8DL-RE.exe "${s.fullMpd}" ${keyArgs} --save-name ${generateNameByDate()} --decryption-engine SHAKA_PACKAGER` : '';
+            const encodedCmd = btoa(unescape(encodeURIComponent(copyAllContent)));
             return `
                 <div style="background:rgba(255,255,255,0.4); border-radius:28px; padding:24px; margin-bottom:24px; border:1px solid rgba(255,255,255,0.7); box-shadow:0 10px 30px rgba(0,0,0,0.02);">
                     <div style="display:flex; justify-content:space-between; margin-bottom:18px; align-items:center;">
-                        <div style="background:rgba(0,0,0,0.06); color:#1d1d1f; padding:5px 12px; border-radius:10px; font-size:11px; font-weight:700;">SESSION #${s.id}</div>
+                        <div style="background:rgba(0,0,0,0.06); color:#1d1d1f; padding:5px 12px; border-radius:10px; font-size:11px; font-weight:700;">#${s.id} ${s.quality}</div>
                         <div style="display:flex; gap:8px; align-items:center;">
-                            ${copyAllContent ? `<button onclick="const btn=this; navigator.clipboard.writeText('${copyAllContent.replace(/'/g, "\\'")}'); btn.innerText='Copied'; btn.style.transform='scale(0.95)'; setTimeout(()=>btn.style.transform='scale(1)', 200); setTimeout(()=>btn.innerText='Copy N_m3u8DL-RE Command', 2500);" style="border:none; background:#007aff; color:white; padding:6px 14px; border-radius:12px; font-size:11px; font-weight:600; cursor:pointer; transition: transform 0.2s ease-out, background 0.2s;">Copy N_m3u8DL-RE Command</button>` : ''}
+                            ${copyAllContent
+                                ? `<button
+                                    data-cmd="${encodedCmd}"
+                                    onclick="const btn=this; navigator.clipboard.writeText(decodeURIComponent(escape(atob(this.dataset.cmd)))); btn.innerText='Copied'; btn.style.transform='scale(0.95)'; setTimeout(()=>btn.style.transform='scale(1)', 200); setTimeout(()=>btn.innerText='Copy N_m3u8DL-RE Command', 2500);" style="border:none; background:#007aff; color:white; padding:6px 14px; border-radius:12px; font-size:11px; font-weight:600; cursor:pointer; transition: transform 0.2s ease-out, background 0.2s;">Copy N_m3u8DL-RE Command</button>`
+                                : ''}
                             <span style="font-size:12px; color:#aeaeb2; font-weight:500;">${s.time}</span>
                         </div>
                     </div>

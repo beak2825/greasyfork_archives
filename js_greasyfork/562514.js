@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         Phantom Portal v2.5.7
+// @name         Phantom Portal v2.5.9
 // @namespace    http://tampermonkey.net/
-// @version      2.5.7
+// @version      2.5.9
 // @description  Torn to Discord sync system with Glass Theme for My Faction and Allies
 // @author       Daturax
 // @license      GPLv3
@@ -17,8 +17,8 @@
 // @connect      *.supabase.co
 // @connect      cdn.pixabay.com
 // @run-at       document-end
-// @downloadURL https://update.greasyfork.org/scripts/562514/Phantom%20Portal%20v257.user.js
-// @updateURL https://update.greasyfork.org/scripts/562514/Phantom%20Portal%20v257.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/562514/Phantom%20Portal%20v259.user.js
+// @updateURL https://update.greasyfork.org/scripts/562514/Phantom%20Portal%20v259.meta.js
 // ==/UserScript==
 
 (function() {
@@ -26,11 +26,11 @@
 
     const TORN_API_KEY = '###PDA-APIKEY###';
 
-    if (window._phantomPortalV2_5_7) {
+    if (window._phantomPortalV2_5_8) {
         console.warn('[Phantom Portal] Already initialized');
         return;
     }
-    window._phantomPortalV2_5_7 = true;
+    window._phantomPortalV2_5_8 = true;
 
     // Safe GM Functions Wrapper
     const SafeGM = {
@@ -195,7 +195,7 @@
     // Main Phantom Portal Class
     class PhantomPortal {
         constructor() {
-            console.log('[Phantom Portal v2.5.7] Initializing');
+            console.log('[Phantom Portal v2.5.9] Initializing');
             
             this.supabaseUrl = 'https://gsxihumaebabhkvowqzs.supabase.co';
             this.supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdzeGlodW1hZWJhYmhrdm93cXpzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc3MDkzMzQsImV4cCI6MjA4MzI4NTMzNH0.OyOMGVdMEXlg6IiLKt1wElQ8AeVvVROr9YQI1-hwKlk';
@@ -215,7 +215,7 @@
                 selectedRoom: SafeGM.getValue('pp_selected_room', '1451524832767250543'),
                 buttonCooldowns: SafeGM.getValue('pp_button_cooldowns', {}),
                 messageCache: new Map(),
-                lastSync: 0,
+                lastSync: SafeGM.getValue('pp_last_sync', 0),
                 roomMessages: SafeGM.getValue('pp_room_messages', {}),
                 settings: SafeGM.getValue('pp_settings', {
                     showNotifications: false,
@@ -238,14 +238,27 @@
                 lastFactionCheck: SafeGM.getValue('pp_last_faction_check', 0),
                 pollingInterval: 3000,
                 refreshCooldown: 0,
-                lastOfflineTime: SafeGM.getValue('pp_last_offline_time', 0)
+                lastOnlineTime: SafeGM.getValue('pp_last_online_time', Date.now()),
+                roomScrollPositions: SafeGM.getValue('pp_room_scroll_positions', {}),
+                loadingOlderMessages: false,
+                hasMoreMessages: true
             };
 
+            // Ensure each room has message storage
             Object.keys(this.rooms).forEach(roomId => {
                 if (!this.state.roomMessages[roomId]) {
                     this.state.roomMessages[roomId] = [];
                 }
+                if (!this.state.roomScrollPositions[roomId]) {
+                    this.state.roomScrollPositions[roomId] = { top: 0, loadedCount: 0 };
+                }
             });
+
+            // Ensure selected room is accessible
+            if (!this.isRoomAccessible(this.state.selectedRoom)) {
+                this.state.selectedRoom = '1451524832767250543';
+                SafeGM.setValue('pp_selected_room', this.state.selectedRoom);
+            }
 
             this.themeManager = new NanoThemeManager();
             
@@ -266,7 +279,9 @@
             this.snapThreshold = 5;
             this.lastToastTime = 0;
             this.toastCooldown = 1000;
-            this.initialHistoryLoaded = false;
+            this.lastMessageFetch = {};
+            this.scrollDebounce = null;
+            this.loadingMessages = false;
             
             this.intervals = {
                 sync: null,
@@ -331,6 +346,10 @@
                 window.addEventListener('beforeunload', () => this.cleanup());
                 this.setupViewportHandling();
                 this.exposeNanoSnapAPI();
+                
+                // Save current online time
+                this.state.lastOnlineTime = Date.now();
+                SafeGM.setValue('pp_last_online_time', this.state.lastOnlineTime);
             } catch (error) {
                 console.error('[Phantom Portal] Partial initialization error');
             }
@@ -349,14 +368,28 @@
             
             if (this.longPressTimer) clearTimeout(this.longPressTimer);
             if (this.buttonObserver) this.buttonObserver.disconnect();
+            if (this.scrollDebounce) clearTimeout(this.scrollDebounce);
             
             delete window.PhantomPortalFAB;
+            
+            // Save scroll positions
+            if (this.domCache.messagesContainer && this.isOpen) {
+                const scrollTop = this.domCache.messagesContainer.scrollTop;
+                this.state.roomScrollPositions[this.state.selectedRoom] = {
+                    top: scrollTop,
+                    loadedCount: this.state.roomMessages[this.state.selectedRoom]?.length || 0
+                };
+                SafeGM.setValue('pp_room_scroll_positions', this.state.roomScrollPositions);
+            }
+            
+            // Save last sync time
+            SafeGM.setValue('pp_last_sync', this.state.lastSync);
         }
 
         exposeNanoSnapAPI() {
             window.PhantomPortalFAB = {
                 id: 'phantom-portal-fab',
-                version: '2.5.7',
+                version: '2.5.9',
                 
                 getPosition: () => {
                     if (!this.toggleBtn) return null;
@@ -616,6 +649,15 @@
 
         switchRoom(roomId) {
             const inputWasFocused = this.domCache.input && document.activeElement === this.domCache.input;
+            
+            // Save current scroll position
+            if (this.domCache.messagesContainer && this.isOpen) {
+                const scrollTop = this.domCache.messagesContainer.scrollTop;
+                this.state.roomScrollPositions[this.state.selectedRoom] = {
+                    top: scrollTop,
+                    loadedCount: this.state.roomMessages[this.state.selectedRoom]?.length || 0
+                };
+            }
             
             this.state.selectedRoom = roomId;
             SafeGM.setValue('pp_selected_room', roomId);
@@ -1029,45 +1071,98 @@
             }
         }
 
-        async fetchMessages(showToasts = false, forceRefresh = false) {
-            if (this.isPolling || !this.isRoomAccessible(this.state.selectedRoom)) {
-                this.isPolling = false;
-                return;
-            }
+        async loadRoomHistory(forceRefresh = false) {
+            this.updateDOMCache();
+            if (!this.domCache.messagesContainer) return;
 
-            this.isPolling = true;
+            // Clear container
+            this.domCache.messagesContainer.innerHTML = '';
+            
+            // Get room history
+            const roomHistory = this.state.roomMessages[this.state.selectedRoom] || [];
+            
+            // Sort messages by timestamp (oldest first for display)
+            const sortedHistory = [...roomHistory].sort((a, b) => 
+                new Date(a.created_at || 0).getTime() - new Date(b.created_at || 0).getTime()
+            );
+            
+            // Display stored messages
+            sortedHistory.forEach(msg => {
+                if (msg.room_id === this.state.selectedRoom || !msg.room_id) {
+                    this.addMessage(
+                        msg.message || '',
+                        msg.discord_name ? 'in' : 'out',
+                        msg.alert ? 'alert' : 'normal',
+                        msg.torn_profile_name || msg.discord_name || 'Unknown',
+                        msg.created_at || new Date().toISOString(),
+                        msg.sync_id
+                    );
+                    if (msg.sync_id) this.state.messageCache.set(msg.sync_id, true);
+                }
+            });
+            
+            // Load recent messages from server
+            await this.fetchRecentMessages(forceRefresh);
+            
+            // Set up infinite scroll
+            this.setupInfiniteScroll();
+            
+            // Restore scroll position if available
+            setTimeout(() => {
+                const savedPos = this.state.roomScrollPositions[this.state.selectedRoom];
+                if (savedPos && savedPos.top > 0 && this.domCache.messagesContainer) {
+                    this.domCache.messagesContainer.scrollTop = savedPos.top;
+                } else if (this.state.settings.autoScroll) {
+                    this.domCache.messagesContainer.scrollTop = this.domCache.messagesContainer.scrollHeight;
+                }
+            }, 100);
+        }
+
+        async fetchRecentMessages(forceRefresh = false) {
+            if (this.loadingMessages || !this.isRoomAccessible(this.state.selectedRoom)) return;
+            
+            this.loadingMessages = true;
             try {
                 const now = Date.now();
-                if (now - this.state.lastSync < 1000 && !forceRefresh) {
-                    this.isPolling = false;
+                const lastFetch = this.lastMessageFetch[this.state.selectedRoom] || 0;
+                
+                // Don't fetch too frequently
+                if (!forceRefresh && now - lastFetch < 2000) {
                     return;
                 }
-
-                // Calculate time window - include messages since last offline or last 5 minutes
-                let timeWindow = new Date(now - 5 * 60000); // Default: last 5 minutes
                 
-                // Check if we have offline time stored and need to get older messages
-                if (this.state.lastOfflineTime > 0 && !this.initialHistoryLoaded) {
-                    const offlineTime = new Date(this.state.lastOfflineTime);
-                    // Get messages from the later of: last offline time or 1 hour ago (to prevent loading too much)
-                    const oneHourAgo = new Date(now - 60 * 60000);
-                    timeWindow = new Date(Math.min(offlineTime.getTime(), oneHourAgo.getTime()));
-                    console.log('[Phantom Portal] Loading messages since last offline time:', timeWindow);
+                // Get timestamp of last message in room
+                const roomMessages = this.state.roomMessages[this.state.selectedRoom] || [];
+                let lastTimestamp = this.state.lastOnlineTime;
+                
+                if (roomMessages.length > 0) {
+                    // Get most recent message timestamp
+                    const sortedMessages = [...roomMessages].sort((a, b) => 
+                        new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime()
+                    );
+                    const latestMsgTime = new Date(sortedMessages[0].created_at || 0).getTime();
+                    lastTimestamp = Math.max(lastTimestamp, latestMsgTime);
                 }
                 
-                const timeWindowISO = timeWindow.toISOString();
+                // FIX: Handle invalid timestamps (0 or negative)
+                if (lastTimestamp <= 0) {
+                    lastTimestamp = Date.now() - 86400000; // 24 hours ago as fallback
+                }
                 
+                const lastTimestampISO = new Date(lastTimestamp).toISOString();
+                
+                // Fetch messages since last timestamp
                 const response = await this.supabaseRequest('GET',
                     `/rest/v1/portal_messages?room_id=eq.${this.state.selectedRoom}` +
-                    `&created_at=gt.${timeWindowISO}` +
-                    `&order=created_at.asc&limit=100` // Changed to asc to get messages in chronological order
+                    `&created_at=gt.${lastTimestampISO}` +
+                    `&order=created_at.asc&limit=50`
                 );
 
                 if (response && Array.isArray(response) && response.length > 0) {
-                    const messagesToAdd = [];
+                    const newMessages = [];
                     
                     for (const msg of response) {
-                        if (!this.isRoomAccessible(msg.room_id)) continue;
+                        if (this.state.messageCache.has(msg.sync_id)) continue;
 
                         let sanitizedMessage = this.sanitizeHTML(msg.message || '');
                         sanitizedMessage = this.cleanLink(sanitizedMessage);
@@ -1080,38 +1175,25 @@
                             msg.room_id
                         );
                         
-                        if (this.pendingMessages.has(msgHash) || this.state.messageCache.has(msg.sync_id)) {
-                            continue;
-                        }
+                        if (this.pendingMessages.has(msgHash)) continue;
 
-                        if (this.findExistingMessage(sanitizedMessage, new Date(msg.created_at).getTime(), sanitizedSender, msg.room_id)) {
-                            this.state.messageCache.set(msg.sync_id, true);
-                            continue;
-                        }
-
-                        if (msg.room_id === this.state.selectedRoom) {
-                            messagesToAdd.push({
-                                msg,
-                                sanitizedMessage,
-                                sanitizedSender,
-                                msgHash,
-                                sync_id: msg.sync_id
-                            });
-                        }
-
-                        this.state.messageCache.set(msg.sync_id, true);
+                        // Add to local storage (keep only last 30 messages per room)
                         this.addToRoomHistory({
                             ...msg,
                             message: sanitizedMessage,
                             torn_profile_name: sanitizedSender
                         });
 
+                        this.state.messageCache.set(msg.sync_id, true);
+                        newMessages.push(msg);
+
+                        // Update message stats
                         if (msg.discord_id) {
                             this.state.messageStats.received++;
                             this.state.messageStats.lastMessageTime = Date.now();
-                            SafeGM.setValue('pp_message_stats', this.state.messageStats);
                         }
 
+                        // Handle alerts
                         if (msg.alert && !msg.discord_id) {
                             const messageTime = new Date(msg.created_at || Date.now()).getTime();
                             if (now - messageTime < 300000 && !this.pendingNotifications.has(msg.sync_id)) {
@@ -1120,49 +1202,154 @@
                                 setTimeout(() => this.pendingNotifications.delete(msg.sync_id), 300000);
                             }
                         }
-
-                        if (showToasts && !msg.alert && msg.discord_id && now - new Date(msg.created_at).getTime() < 30000) {
-                            const shortMessage = sanitizedMessage.length > 50 
-                                ? sanitizedMessage.substring(0, 47) + '...' 
-                                : sanitizedMessage;
-                            this.showToast(`${sanitizedSender}: ${shortMessage}`, 'info');
-                        }
                     }
                     
-                    if (this.isOpen || forceRefresh) {
-                        messagesToAdd.forEach(({ msg, sanitizedMessage, sanitizedSender }) => {
+                    // Display new messages
+                    if (newMessages.length > 0 && this.isOpen) {
+                        newMessages.forEach(msg => {
                             this.addMessage(
-                                sanitizedMessage,
-                                msg.discord_id ? 'in' : 'out',
+                                msg.message || '',
+                                msg.discord_name ? 'in' : 'out',
                                 msg.alert ? 'alert' : 'normal',
-                                sanitizedSender,
+                                msg.torn_profile_name || msg.discord_name || 'Unknown',
                                 msg.created_at || new Date().toISOString(),
                                 msg.sync_id
                             );
                         });
+                        
+                        // Update unread count if window is closed
+                        if (!this.isOpen) {
+                            this.unreadMessages += newMessages.length;
+                            this.updateFABPulse();
+                            this.triggerFABPulse();
+                        }
                     }
                     
-                    if (!this.isOpen && messagesToAdd.length > 0 && !forceRefresh) {
-                        this.unreadMessages += messagesToAdd.length;
-                        this.updateFABPulse();
-                        if (!this.isOpen) this.triggerFABPulse();
-                    }
+                    this.lastMessageFetch[this.state.selectedRoom] = now;
                     
-                    // Mark initial history as loaded
-                    if (this.state.lastOfflineTime > 0 && !this.initialHistoryLoaded) {
-                        this.initialHistoryLoaded = true;
-                        this.state.lastOfflineTime = 0;
-                        SafeGM.setValue('pp_last_offline_time', 0);
-                    }
-                    
-                    this.cleanupMessageCache();
+                    // Clean up old messages (keep only last 30 per room)
+                    this.cleanupRoomMessages();
                 }
+                
                 this.state.lastSync = now;
+                SafeGM.setValue('pp_last_sync', now);
+                
             } catch (error) {
-                console.error('[Phantom Portal] Fetch messages error');
+                console.error('[Phantom Portal] Fetch recent messages error:', error);
             } finally {
-                this.isPolling = false;
+                this.loadingMessages = false;
             }
+        }
+
+        async fetchOlderMessages() {
+            if (this.state.loadingOlderMessages || !this.state.hasMoreMessages || !this.isRoomAccessible(this.state.selectedRoom)) {
+                return;
+            }
+            
+            this.state.loadingOlderMessages = true;
+            try {
+                const roomMessages = this.state.roomMessages[this.state.selectedRoom] || [];
+                
+                if (roomMessages.length === 0) {
+                    this.state.hasMoreMessages = false;
+                    return;
+                }
+                
+                // Get oldest message timestamp
+                const sortedMessages = [...roomMessages].sort((a, b) => 
+                    new Date(a.created_at || 0).getTime() - new Date(b.created_at || 0).getTime()
+                );
+                const oldestMsg = sortedMessages[0];
+                const oldestTimestamp = new Date(oldestMsg.created_at || 0).toISOString();
+                
+                // Fetch messages older than the oldest one we have
+                const response = await this.supabaseRequest('GET',
+                    `/rest/v1/portal_messages?room_id=eq.${this.state.selectedRoom}` +
+                    `&created_at=lt.${oldestTimestamp}` +
+                    `&order=created_at.desc&limit=30`
+                );
+
+                if (response && Array.isArray(response) && response.length > 0) {
+                    const olderMessages = [];
+                    const currentScrollTop = this.domCache.messagesContainer?.scrollTop || 0;
+                    const currentScrollHeight = this.domCache.messagesContainer?.scrollHeight || 0;
+                    
+                    for (const msg of response.reverse()) {
+                        if (this.state.messageCache.has(msg.sync_id)) continue;
+
+                        let sanitizedMessage = this.sanitizeHTML(msg.message || '');
+                        sanitizedMessage = this.cleanLink(sanitizedMessage);
+                        
+                        const sanitizedSender = this.sanitizeHTML(msg.torn_profile_name || msg.discord_name || 'Unknown');
+                        
+                        // Add to beginning of local storage
+                        this.addToRoomHistoryBeginning({
+                            ...msg,
+                            message: sanitizedMessage,
+                            torn_profile_name: sanitizedSender
+                        });
+
+                        this.state.messageCache.set(msg.sync_id, true);
+                        olderMessages.push(msg);
+                    }
+                    
+                    // Re-render messages with older ones prepended
+                    if (olderMessages.length > 0) {
+                        this.loadRoomHistory(true);
+                        
+                        // Restore scroll position to maintain user's place
+                        setTimeout(() => {
+                            if (this.domCache.messagesContainer) {
+                                const newScrollHeight = this.domCache.messagesContainer.scrollHeight;
+                                const scrollDifference = newScrollHeight - currentScrollHeight;
+                                this.domCache.messagesContainer.scrollTop = currentScrollTop + scrollDifference;
+                            }
+                        }, 100);
+                    } else {
+                        this.state.hasMoreMessages = false;
+                    }
+                } else {
+                    this.state.hasMoreMessages = false;
+                }
+                
+            } catch (error) {
+                console.error('[Phantom Portal] Fetch older messages error:', error);
+                this.state.hasMoreMessages = false;
+            } finally {
+                this.state.loadingOlderMessages = false;
+            }
+        }
+
+        setupInfiniteScroll() {
+            if (!this.domCache.messagesContainer) return;
+            
+            // Remove existing scroll listener
+            this.domCache.messagesContainer.removeEventListener('scroll', this.handleScroll);
+            
+            // Add new scroll listener
+            this.handleScroll = () => {
+                if (this.scrollDebounce) clearTimeout(this.scrollDebounce);
+                
+                this.scrollDebounce = setTimeout(() => {
+                    if (!this.domCache.messagesContainer) return;
+                    
+                    // Check if scrolled near top
+                    if (this.domCache.messagesContainer.scrollTop < 100 && 
+                        this.state.hasMoreMessages && 
+                        !this.state.loadingOlderMessages) {
+                        this.fetchOlderMessages();
+                    }
+                    
+                    // Save scroll position
+                    const scrollTop = this.domCache.messagesContainer.scrollTop;
+                    this.state.roomScrollPositions[this.state.selectedRoom] = {
+                        top: scrollTop,
+                        loadedCount: this.state.roomMessages[this.state.selectedRoom]?.length || 0
+                    };
+                }, 150);
+            };
+            
+            this.domCache.messagesContainer.addEventListener('scroll', this.handleScroll);
         }
 
         async startBackgroundPolling() {
@@ -1318,9 +1505,11 @@
             const exists = roomMessages.some(existing => existing.sync_id === msg.sync_id);
 
             if (!exists) {
-                if (roomMessages.length >= 200) {
-                    roomMessages.shift();
+                // Keep only last 30 messages per room in persistent storage
+                if (roomMessages.length >= 30) {
+                    roomMessages.shift(); // Remove oldest message
                 }
+                
                 roomMessages.push({
                     sync_id: msg.sync_id,
                     message: msg.message,
@@ -1335,43 +1524,44 @@
             }
         }
 
-        loadRoomHistory() {
-            this.updateDOMCache();
-            if (!this.domCache.messagesContainer) return;
+        addToRoomHistoryBeginning(msg) {
+            const roomId = msg.room_id || this.state.selectedRoom;
+            if (!this.state.roomMessages[roomId]) {
+                this.state.roomMessages[roomId] = [];
+            }
 
-            this.domCache.messagesContainer.innerHTML = '';
-            const roomHistory = this.state.roomMessages[this.state.selectedRoom] || [];
-            
-            roomHistory.forEach(msg => {
-                if (msg.room_id === this.state.selectedRoom || !msg.room_id) {
-                    this.addMessage(
-                        msg.message || '',
-                        msg.discord_name ? 'in' : 'out',
-                        msg.alert ? 'alert' : 'normal',
-                        msg.torn_profile_name || msg.discord_name || 'Unknown',
-                        msg.created_at || new Date().toISOString(),
-                        msg.sync_id
-                    );
-                    if (msg.sync_id) this.state.messageCache.set(msg.sync_id, true);
+            const roomMessages = this.state.roomMessages[roomId];
+            const exists = roomMessages.some(existing => existing.sync_id === msg.sync_id);
+
+            if (!exists) {
+                // Add to beginning
+                roomMessages.unshift({
+                    sync_id: msg.sync_id,
+                    message: msg.message,
+                    created_at: msg.created_at,
+                    torn_profile_name: msg.torn_profile_name,
+                    discord_name: msg.discord_name,
+                    alert: msg.alert,
+                    room_id: roomId
+                });
+
+                // Trim if too many messages (keep only last 200 for memory management)
+                if (roomMessages.length > 200) {
+                    roomMessages.splice(200, roomMessages.length - 200);
                 }
-            });
-            
-            // After loading local history, fetch any newer messages from server
-            this.fetchMessages(false, true);
+
+                SafeGM.setValue('pp_room_messages', this.state.roomMessages);
+            }
         }
 
-        cleanupMessageCache() {
-            if (this.state.messageCache.size > 500) {
-                const iterator = this.state.messageCache.keys();
-                let count = 0;
-                while (count < 200 && this.state.messageCache.size > 200) {
-                    const key = iterator.next().value;
-                    if (key) {
-                        this.state.messageCache.delete(key);
-                        count++;
-                    }
+        cleanupRoomMessages() {
+            Object.keys(this.rooms).forEach(roomId => {
+                if (this.state.roomMessages[roomId] && this.state.roomMessages[roomId].length > 30) {
+                    // Keep only last 30 messages for persistent storage
+                    this.state.roomMessages[roomId] = this.state.roomMessages[roomId].slice(-30);
                 }
-            }
+            });
+            SafeGM.setValue('pp_room_messages', this.state.roomMessages);
         }
 
         removeTemporaryMessage(tempId) {
@@ -1417,10 +1607,35 @@
 
             const timeEl = document.createElement('div');
             timeEl.className = 'message-time';
-            timeEl.textContent = new Date(timestamp || Date.now()).toLocaleTimeString([], {
-                hour: '2-digit',
-                minute: '2-digit'
-            });
+            
+            const msgDate = new Date(timestamp || Date.now());
+            const now = new Date();
+            const isSameDay = msgDate.getDate() === now.getDate() && 
+                             msgDate.getMonth() === now.getMonth() && 
+                             msgDate.getFullYear() === now.getFullYear();
+            const isYesterday = new Date(now.getTime() - 86400000).getDate() === msgDate.getDate() &&
+                               new Date(now.getTime() - 86400000).getMonth() === msgDate.getMonth() &&
+                               new Date(now.getTime() - 86400000).getFullYear() === msgDate.getFullYear();
+            
+            if (!isSameDay && !isYesterday) {
+                // Show date for messages older than yesterday
+                const dateStr = msgDate.toLocaleDateString([], { 
+                    month: 'short', 
+                    day: 'numeric',
+                    year: msgDate.getFullYear() !== now.getFullYear() ? 'numeric' : undefined
+                });
+                const timeStr = msgDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                timeEl.textContent = `${dateStr} ${timeStr}`;
+                timeEl.title = msgDate.toLocaleString();
+            } else if (isYesterday) {
+                const timeStr = msgDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                timeEl.textContent = `Yesterday ${timeStr}`;
+                timeEl.title = msgDate.toLocaleString();
+            } else {
+                timeEl.textContent = msgDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                timeEl.title = msgDate.toLocaleString();
+            }
+            
             msgEl.appendChild(timeEl);
 
             this.domCache.messagesContainer.appendChild(msgEl);
@@ -1431,10 +1646,14 @@
                 SafeGM.setValue('pp_message_stats', this.state.messageStats);
             }
 
-            if (this.state.settings.autoScroll) {
+            if (this.state.settings.autoScroll && direction === 'in' && this.isOpen) {
                 setTimeout(() => {
                     if (this.domCache.messagesContainer) {
-                        this.domCache.messagesContainer.scrollTop = this.domCache.messagesContainer.scrollHeight;
+                        const scrollThreshold = this.domCache.messagesContainer.scrollHeight - 
+                                              this.domCache.messagesContainer.clientHeight - 100;
+                        if (this.domCache.messagesContainer.scrollTop > scrollThreshold) {
+                            this.domCache.messagesContainer.scrollTop = this.domCache.messagesContainer.scrollHeight;
+                        }
                     }
                 }, 10);
             }
@@ -1570,7 +1789,7 @@
             modal.innerHTML = `
                 <div class="pp-settings-content">
                     <div class="pp-settings-header">
-                        <h3>Phantom Portal Settings v2.5.7</h3>
+                        <h3>Phantom Portal Settings v2.5.9</h3>
                         <button class="pp-settings-close">&times;</button>
                     </div>
                     <div class="pp-settings-body">
@@ -1607,6 +1826,10 @@
                             <div class="pp-info-item">
                                 <span class="pp-info-label">Last Message Latency:</span>
                                 <span class="pp-info-value ${latency < 10 ? 'access-granted' : latency < 30 ? '' : 'access-denied'}" id="pp-message-latency">${latency} seconds ago</span>
+                            </div>
+                            <div class="pp-info-item">
+                                <span class="pp-info-label">Unread Messages:</span>
+                                <span class="pp-info-value" id="pp-unread-messages">${this.unreadMessages}</span>
                             </div>
                         </div>
                         
@@ -1662,6 +1885,9 @@
                             </button>
                             <button class="pp-settings-btn" id="pp-reload-messages">
                                 📥 Reload Recent Messages
+                            </button>
+                            <button class="pp-settings-btn" id="pp-mark-read">
+                                📖 Mark All as Read
                             </button>
                         </div>
                     </div>
@@ -1769,13 +1995,17 @@
                 reloadBtn.disabled = true;
                 
                 try {
-                    // Force reload of recent messages
-                    this.state.lastOfflineTime = Date.now() - 60 * 60000; // Last hour
-                    this.initialHistoryLoaded = false;
-                    SafeGM.setValue('pp_last_offline_time', this.state.lastOfflineTime);
+                    // Reset last online time to force reload of recent messages
+                    this.state.lastOnlineTime = Date.now() - (24 * 60 * 60 * 1000);
+                    SafeGM.setValue('pp_last_online_time', this.state.lastOnlineTime);
                     
-                    await this.fetchMessages(false, true);
-                    this.showToast('Recent messages reloaded', 'success');
+                    // Clear message cache for current room
+                    this.state.roomMessages[this.state.selectedRoom] = [];
+                    this.state.messageCache.clear();
+                    this.state.hasMoreMessages = true;
+                    
+                    await this.loadRoomHistory(true);
+                    this.showToast('Messages reloaded', 'success');
                 } catch (error) {
                     console.error('[Phantom Portal] Message reload error');
                     this.showToast('Reload failed', 'error');
@@ -1783,6 +2013,14 @@
                     reloadBtn.textContent = '📥 Reload Recent Messages';
                     reloadBtn.disabled = false;
                 }
+            });
+
+            const markReadBtn = modal.querySelector('#pp-mark-read');
+            markReadBtn.addEventListener('click', () => {
+                this.unreadMessages = 0;
+                this.updateFABPulse();
+                this.showToast('All messages marked as read', 'success');
+                modal.remove();
             });
         }
 
@@ -1983,7 +2221,7 @@
         startSyncLoop() {
             if (this.intervals.sync) clearInterval(this.intervals.sync);
             this.intervals.sync = setInterval(() => {
-                if (this.isOpen) this.fetchMessages(true);
+                if (this.isOpen) this.fetchRecentMessages();
             }, this.state.pollingInterval);
         }
 
@@ -2046,7 +2284,7 @@
             this.toggleBtn = document.createElement('div');
             this.toggleBtn.className = 'pp-toggle';
             this.toggleBtn.innerHTML = '<img src="https://images2.imgbox.com/cc/75/V2yuzaa8_o.png" class="pp-toggle-icon" alt="PP">';
-            this.toggleBtn.title = 'Phantom Portal v2.5.7 - Long press to move, tap to open';
+            this.toggleBtn.title = 'Phantom Portal v2.5.9 - Long press to move, tap to open';
             
             this.toggleBtn.style.position = 'fixed';
             this.toggleBtn.style.left = `${this.state.fabPosition.x}px`;
@@ -2060,7 +2298,7 @@
                 <div class="pp-header">
                     <div class="pp-title">
                         <img src="https://images2.imgbox.com/cc/75/V2yuzaa8_o.png" class="pp-header-icon" alt="">
-                        Phantom Portal v2.5.7
+                        Phantom Portal v2.5.9
                     </div>
                     <div class="pp-header-right">
                         <div class="pp-profile-display">Loading...</div>
@@ -2221,11 +2459,21 @@
             this.container.style.display = this.isOpen ? 'flex' : 'none';
             if (this.isOpen) {
                 this.loadRoomHistory();
-                this.fetchMessages();
+                this.fetchRecentMessages();
                 this.toggleBtn.classList.remove('pulsing');
                 this.fabPulsing = false;
                 this.unreadMessages = 0;
                 this.adjustForKeyboard();
+            } else {
+                // Save scroll position when closing
+                if (this.domCache.messagesContainer) {
+                    const scrollTop = this.domCache.messagesContainer.scrollTop;
+                    this.state.roomScrollPositions[this.state.selectedRoom] = {
+                        top: scrollTop,
+                        loadedCount: this.state.roomMessages[this.state.selectedRoom]?.length || 0
+                    };
+                    SafeGM.setValue('pp_room_scroll_positions', this.state.roomScrollPositions);
+                }
             }
         }
 
@@ -2578,7 +2826,7 @@
                 }
 
                 .pp-send:hover {
-                    background: rgba(var(--nano-primary-r), var(--nano-primary-g), var(--nano-primary-b), 0.3);
+                    background: rgba(var(--nano-primary-r), var(--nano-primary-g), var(--nano-border-b), 0.3);
                     transform: scale(1.05);
                     box-shadow: 0 0 15px rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.5);
                 }
@@ -3016,7 +3264,7 @@
                 ::-webkit-scrollbar { width: 6px; }
                 ::-webkit-scrollbar-track { background: rgba(var(--nano-primary-r), var(--nano-primary-g), var(--nano-primary-b), 0.1); }
                 ::-webkit-scrollbar-thumb { background: rgba(var(--nano-primary-r), var(--nano-primary-g), var(--nano-primary-b), 0.3); border-radius: 3px; }
-                ::-webkit-scrollbar-thumb:hover { background: rgba(var(--nano-primary-r), var(--nano-primary-g), var(--nano-primary-b), 0.5); }
+                ::-webkit-scrollbar-thumb:hover { background: rgba(var(--nano-primary-r), var(--nano-primary-g), var(--nano-border-b), 0.5); }
 
                 @media (max-width: 768px) {
                     .pp-container {

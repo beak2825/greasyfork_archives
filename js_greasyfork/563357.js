@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name         Torn Mugger + Saved Hits + Quick Mug Calc (🔪) — min/typ/high only
+// @name         Torn Mugger + Saved Hits + Quick Mug Calc (🔪) — v2.6 (Watchlist Bridge)
 // @namespace    https://torn.tools/
-// @version      2.0
-// @description  Reduced-API mugger with saved hits, 1-minute API meter (color-coded Run), and a simplified Quick Mug Return calculator (Minimum/Typical/High). Supports negative tolerance (e.g., -10%) to find under-market items and ignores $1 items in bazaar totals. Includes "Session-Based" 7* Clothing Store Scraper.
-// @author       dirt-fairy
+// @version      2.6
+// @description  Reduced-API mugger. v2.6 sends data to the Watchlist v8.1 Bridge correctly.
+// @author       dirt-fairy, ChatGPT and Gemini
 // @match        https://www.torn.com/page.php?sid=UserList*
 // @match        https://www.torn.com/joblist.php*
 // @match        https://www.torn.com/*
@@ -12,8 +12,8 @@
 // @connect      www.torn.com
 // @grant        GM_xmlhttpRequest
 // @grant        GM_addStyle
-// @downloadURL https://update.greasyfork.org/scripts/563357/Torn%20Mugger%20%2B%20Saved%20Hits%20%2B%20Quick%20Mug%20Calc%20%28%F0%9F%94%AA%29%20%E2%80%94%20mintyphigh%20only.user.js
-// @updateURL https://update.greasyfork.org/scripts/563357/Torn%20Mugger%20%2B%20Saved%20Hits%20%2B%20Quick%20Mug%20Calc%20%28%F0%9F%94%AA%29%20%E2%80%94%20mintyphigh%20only.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/563357/Torn%20Mugger%20%2B%20Saved%20Hits%20%2B%20Quick%20Mug%20Calc%20%28%F0%9F%94%AA%29%20%E2%80%94%20v26%20%28Watchlist%20Bridge%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/563357/Torn%20Mugger%20%2B%20Saved%20Hits%20%2B%20Quick%20Mug%20Calc%20%28%F0%9F%94%AA%29%20%E2%80%94%20v26%20%28Watchlist%20Bridge%29.meta.js
 // ==/UserScript==
 (function () {
   'use strict';
@@ -23,13 +23,11 @@
     apiKey: 'tornApiKey',
     minMug: 'mugThreshold',
     tolerance: 'priceTolerance',
+    ignoredCats: 'mug_ignored_categories',
     uiPos: 'mugUI_pos',
     uiHidden: 'mugUI_hidden',
     marketCache: 'mug_market_cache',
     marketTs: 'mug_market_ts',
-    // Saved row render
-    lastResults: 'mug_last_results',
-    autoShowSaved: 'mug_auto_show_saved',
     // Hits
     hits: 'mug_hits',
     hitsTTLHours: 'mug_hits_ttl_hours',
@@ -44,7 +42,9 @@
     protectedCos: 'mug_protected_companies',
     scrapeTs: 'mug_scrape_ts',
     // New Session Data
-    scanSession: 'mug_scan_session'
+    scanSession: 'mug_scan_session',
+    // Bridge Key to talk to Watchlist
+    bridgeKey: 'TornWatchlist_Bridge'
   };
 
   const DEF = { minMug: 100000000, tolerance: 5 };
@@ -96,6 +96,9 @@
   #mugRunTop.warn   { background:#7a5d00; border-color:#9a7a00; color:#fff; }
   #mugRunTop.danger { background:#7a1a1a; border-color:#a11c1c; color:#fff; }
   #mugRunTop.ok:hover, #mugRunTop.warn:hover, #mugRunTop.danger:hover { filter:brightness(1.05); }
+
+  /* API Key Masking */
+  #mugApi { -webkit-text-security: disc; text-security: disc; }
 
   /* FAB (collapsed mug button) */
   #mugFab{position:fixed;top:84px;right:24px;z-index:999998;width:48px;height:48px;border-radius:50%;
@@ -237,10 +240,6 @@
     });
   }
 
-  // ---------- Saved Results (row icons) ----------
-  function loadSavedResults(){ try { return JSON.parse(localStorage.getItem(LS.lastResults) || '{}'); } catch { return {}; } }
-  function saveSavedResults(obj){ localStorage.setItem(LS.lastResults, JSON.stringify(obj||{})); }
-
   // ---------- Protected Companies (Scraper + Session) ----------
   function getProtectedCompanies(){
     try { return JSON.parse(localStorage.getItem(LS.protectedCos) || '[]'); } catch { return []; }
@@ -261,30 +260,20 @@
   }
 
   // ---------- Time / Stale Logic (Sunday 18:30 TCT) ----------
-  // Returns the timestamp (ms) of the MOST RECENT Sunday 18:30 TCT (UTC)
   function getLastSunday1830UTC() {
     const now = new Date();
-    // Get current time in UTC
     const currentUTC = now.getTime();
-
-    // Create a date object for "Today" but manipulate it to be Sunday 18:30 UTC
     const date = new Date();
     const day = date.getUTCDay(); // 0 = Sunday
-
-    // If it's Sunday...
     if (day === 0) {
-      // Set to 18:30 UTC today
       date.setUTCHours(18, 30, 0, 0);
-      // If we are currently PAST 18:30 UTC, then today IS the last update.
       if (currentUTC > date.getTime()) {
         return date.getTime();
       } else {
-        // If we are currently BEFORE 18:30 UTC, the last update was LAST Sunday (7 days ago).
         date.setUTCDate(date.getUTCDate() - 7);
         return date.getTime();
       }
     } else {
-      // If it's not Sunday (Mon-Sat), subtract 'day' to go back to Sunday
       date.setUTCDate(date.getUTCDate() - day);
       date.setUTCHours(18, 30, 0, 0);
       return date.getTime();
@@ -340,13 +329,13 @@
     return out.emoji || '';
   }
 
-  function addHit({xid, mugValue, lastAction, status, emoji, title}){
+  // Modified: Accepts 'hitsMap' to update in-memory (no save)
+  function addHit({xid, mugValue, lastAction, status, emoji, title, items}, hitsMap){
     if (!xid) return false;
-    const h = loadHits();
     const now = Date.now();
     const profileUrl = `/profiles.php?XID=${xid}`;
     const bazaarUrl = `/bazaar.php?userID=${xid}`;
-    const existing = h[xid];
+    const existing = hitsMap[xid];
 
     if (existing){
       existing.mugValue = Math.max(Number(existing.mugValue||0), Number(mugValue||0));
@@ -354,22 +343,21 @@
       existing.status = status || existing.status || '';
       existing.emoji  = emoji || existing.emoji || '';
       existing.title  = title || existing.title || '';
+      existing.items  = items || existing.items || [];
       existing.updatedAt = now;
       existing.seenCount = (existing.seenCount||0) + 1;
       existing.profileUrl = existing.profileUrl || profileUrl;
       existing.bazaarUrl = existing.bazaarUrl || bazaarUrl;
     } else {
-      h[xid] = {
+      hitsMap[xid] = {
         xid: String(xid), profileUrl, bazaarUrl,
         mugValue: Number(mugValue||0), lastAction: lastAction || '', status: status || '',
         emoji: emoji || '', title: title || '',
+        items: items || [],
         addedAt: now, updatedAt: now, seenCount: 1, pinned: false, note: '',
         src: location.pathname + location.search
       };
     }
-
-    pruneHits(h);
-    saveHits(h);
     return true;
   }
 
@@ -580,50 +568,37 @@
     return { emoji: '⚪', title: 'Skipped' };
   }
 
-  function bazaarTotal(user, marketMap, tolPct){
+  // Accepts blockedTypes array (exact category string match, case-insensitive)
+  function bazaarTotal(user, marketMap, tolPct, blockedTypes = []){
     const arr = Array.isArray(user.bazaar) ? user.bazaar : Object.values(user.bazaar || {});
-    if (!arr.length) return { total: 0, hadBazaar: false };
-    const tol = Math.max(-99, Math.min(200, Number(tolPct))) / 100; // allow under-market filters
+    if (!arr.length) return { total: 0, hadBazaar: false, items: [] };
+
+    const tol = Math.max(-99, Math.min(200, Number(tolPct))) / 100;
     let sum = 0;
+    const items = [];
+
     for (const it of arr){
+      // Check if category is blocked
+      if (it.type && blockedTypes.includes(it.type.toLowerCase())) continue;
+
       const mv = marketMap[it.ID] || 0;
       const price = Number(it.price || 0);
       const qty = Number(it.quantity || 1);
-      if (mv > 0 && price > 1 && price <= mv * (1 + tol)){ // ignore $1; honor negative tol
+      if (mv > 0 && price > 1 && price <= mv * (1 + tol)){
         sum += price * qty;
+        items.push({name: it.name, type: it.type, qty, price}); // Capture type
       }
     }
-    return { total: sum, hadBazaar: true };
-  }
-
-  // ---------- Render saved icons ----------
-  function renderFromSaved(){
-    clearIcons();
-    const saved = loadSavedResults();
-    const rows = getRows();
-    let shown = 0;
-
-    for (const [xid, obj] of rows){
-      const r = saved[xid];
-      if (!r) continue;
-      const suffix = r.lastAction ? ` • ${r.lastAction}` : ' • —';
-      const mv = (r.mugValue||0).toLocaleString();
-      const ageMin = Math.floor((Date.now() - (r.ts||0))/60000);
-      const ageStr = isFinite(ageMin) && ageMin>=0 ? ` • saved ${ageMin}m ago` : ' • saved';
-      placeIcon(obj.statusCell, r.emoji || '⚪', `${r.title || 'Saved'}${suffix} • $${mv}${ageStr}`);
-      shown++;
-    }
-    setStat(shown ? `Showing saved (${shown})` : 'No saved results');
+    return { total: sum, hadBazaar: true, items };
   }
 
   // ---------- Run button color ----------
   function estimateRunCalls(){
     const rows = getRows();
     let eligible = 0;
-    // We no longer skip clothing stores in the DOM automatically
     for (const [, r] of rows){ eligible++; }
-    let est = eligible; // one user call per eligible
-    if (eligible > 0 && !itemsCacheFresh()) est += 1; // items call if cache stale
+    let est = eligible;
+    if (eligible > 0 && !itemsCacheFresh()) est += 1;
     return est;
   }
   function setRunBtnState(state, tip){
@@ -639,7 +614,6 @@
     if (proj >= 100) setRunBtnState('danger', `Projected ${proj}/100 in last minute. Running now would exceed the limit.`);
     else if (proj >= 90) setRunBtnState('warn', `Projected ${proj}/100 in last minute.`);
     else {
-        // NEW: Check stale data logic for green state
         if (isDataStale()) {
             setRunBtnState('warn', `WARNING: Company data stale (Older than last Sunday 18:30 TCT). Update needed.`);
         } else {
@@ -654,7 +628,6 @@
   async function run(){
     if (RUNNING) return;
 
-    // NEW: Check Stale Data
     if (isDataStale()) {
         const proceed = confirm("⚠️ WARNING: Your protected company list is stale!\n\nIt is older than the last weekly update (Sunday 18:30 TCT).\nStar ratings may have changed, meaning you might mug a 7*+ store by accident.\n\nPlease go to the Job List and click 'Save High-Star Stores' first.\n\nContinue anyway?");
         if (!proceed) return;
@@ -680,24 +653,29 @@
     const apiKey = (localStorage.getItem(LS.apiKey) || $('#mugApi')?.value || '').trim();
     const minMug = parseCurrencyInput($('#mugMin').value || DEF.minMug);
     const tolerance = parseFloat($('#mugTol').value || DEF.tolerance);
-    const protectedCompanies = getProtectedCompanies(); // Get the list of 7* IDs
+    const protectedCompanies = getProtectedCompanies();
+    const blockedRaw = $('#mugBlockCat')?.value || '';
+    const blockedTypes = blockedRaw.split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
 
     save(LS.minMug, String(minMug));
     save(LS.tolerance, String(tolerance));
+    save(LS.ignoredCats, blockedRaw);
     if (apiKey) localStorage.setItem(LS.apiKey, apiKey);
     $('#mugMin').value = formatCurrency(minMug);
 
     const rows = getRows();
     if (rows.size === 0){ setStat('No bazaar rows'); RUNNING=false; return; }
 
-    const savedBag = {};
     const eligible = [];
     for (const [xid, obj] of rows){
         eligible.push([xid, obj]);
     }
 
+    // Optimization: Load Hits DB ONCE before the loop
+    const hitsDb = loadHits();
+    let dbDirty = false; // Track if we need to save
+
     if (eligible.length === 0){
-      saveSavedResults(savedBag);
       lastRunHitsDelta = 0; updateHitsCountBtn();
       setStat('Done • Hits unchanged');
       RUNNING = false; updateRunBtnColor(); return;
@@ -723,35 +701,22 @@
       }
       try{
         const data = await fetchUser(xid, apiKey);
-
         const companyType = data?.job?.company_type;
         const companyId = data?.job?.company_id;
 
-        // Check 1: Is it a Clothing Store?
         if (companyType === 5){
-          // Check 2: Is it in our 'Protected' list (7*+)?
           if (companyId && protectedCompanies.includes(Number(companyId))) {
             placeIcon(obj.statusCell, '⚪', 'Skipped • 7*+ Clothing Store');
-            savedBag[xid] = { emoji: '⚪', title: 'Skipped • 7*+ Clothing Store', mugValue: 0, lastAction: '', status: '', ts: Date.now() };
             continue;
           }
-          // If NOT in the protected list, we assume it's safe (low stars) and proceed to mug check.
         }
 
-        const { total: mugValue, hadBazaar } = bazaarTotal(data, market, tolerance);
+        const { total: mugValue, hadBazaar, items } = bazaarTotal(data, market, tolerance, blockedTypes);
         const isMugable = hadBazaar && mugValue >= minMug;
 
         if (!isMugable){
           const reason = !hadBazaar ? 'Skipped • no bazaar' : `Skipped • $${mugValue.toLocaleString()} < threshold`;
           placeIcon(obj.statusCell, '⚪', reason);
-          savedBag[xid] = {
-            emoji: '⚪',
-            title: reason,
-            mugValue,
-            lastAction: data.last_action?.relative || '',
-            status: data.status?.description || data.status?.state || '',
-            ts: Date.now()
-          };
           continue;
         }
 
@@ -760,25 +725,35 @@
         const {emoji, title} = determineEmoji(status, lastAction, data.revivable, isMugable, mugValue, minMug);
         placeIcon(obj.statusCell, emoji, `${title} • ${lastAction || '—'} • $${(mugValue||0).toLocaleString()}`);
 
-        savedBag[xid] = { emoji, title, mugValue, lastAction, status, ts: Date.now() };
+        // Optimization: Sort items by Total Value (Price * Qty) and keep only top 50 to prevent lag/storage overflow
+        const topItems = items
+            .sort((a,b) => (b.price * b.qty) - (a.price * a.qty))
+            .slice(0, 50);
 
-        if (addHit({xid, mugValue, lastAction, status, emoji, title})) hitsAddedThisRun++;
+        // Pass 'hitsDb' to addHit (in-memory update)
+        if (addHit({xid, mugValue, lastAction, status, emoji, title, items: topItems}, hitsDb)) {
+            hitsAddedThisRun++;
+            dbDirty = true;
+        }
       }catch(err){
         console.error('[MUG] user fetch fail', xid, err);
         placeIcon(obj.statusCell, '⚪', 'Error');
-        savedBag[xid] = { emoji: '⚪', title: 'Error', mugValue: 0, lastAction: '', status: '', ts: Date.now() };
       }
     }
 
-    saveSavedResults(savedBag);
+    // Optimization: Save Hits DB ONCE after the loop
+    if (dbDirty) {
+        pruneHits(hitsDb);
+        saveHits(hitsDb);
+    }
+
     lastRunHitsDelta = hitsAddedThisRun;
     updateHitsCountBtn();
-    setStat(`Hits total ${hitsCount()}${hitsAddedThisRun ? ` (+${hitsAddedThisRun})` : ''}`);
+    setStat(`Hits total ${hitsCount(hitsDb)}${hitsAddedThisRun ? ` (+${hitsAddedThisRun})` : ''}`);
     RUNNING = false;
     updateRunBtnColor();
   }
 
-  // Expose run on window
   window.__mugRun = run;
 
   // ---------- Scraper Logic (Session-Based) ----------
@@ -786,29 +761,22 @@
     const rows = $$('ul.company-list > li, .company-list > li, .list-company > li, .companies-list > li');
     if (!rows.length) { alert('No company list rows found! Please check you are on the "Job List" page.'); return; }
 
-    // 1. Identify Page Number
     let pageNum = 1;
     const activePageNode = document.querySelector('.pagination a.active, .pagination .current-page');
     if (activePageNode) {
         const txt = activePageNode.textContent.trim();
         pageNum = parseInt(txt) || 1;
     } else {
-        // Fallback: Check URL for 'start='
         const m = location.href.match(/start=(\d+)/);
         if (m) {
-            // Usually start=0 is page 1, start=20 is page 2
             const startVal = parseInt(m[1]);
-            // Attempt to guess page from start val (assuming 20 per page?)
-            // We'll just rely on "0" being page 1 for reset purposes
             if (startVal === 0) pageNum = 1;
-            else pageNum = (startVal / 20) + 1; // Rough guess if text fails
+            else pageNum = (startVal / 20) + 1;
         }
     }
 
-    // 2. Manage Session
     let session = getSession();
     if (pageNum === 1) {
-        // Reset session on Page 1
         session = { pages: [], ids: [] };
     }
 
@@ -817,17 +785,15 @@
     }
 
     let foundOnThisPage = 0;
-    let seenLowStar = false; // Flag if we see < 7*
+    let seenLowStar = false;
 
     for (const row of rows) {
-      // Find ID
       const link = row.querySelector('a[href*="ID="]');
       if (!link) continue;
       const m = link.href.match(/ID=(\d+)/);
       if (!m) continue;
       const id = Number(m[1]);
 
-      // Count Stars
       const ratingDiv = row.querySelector('[class*="rating"]') || row.querySelector('.ranks');
       let stars = 0;
       if (ratingDiv) {
@@ -840,7 +806,6 @@
              }
          });
          stars = activeStars;
-         // Fallback
          if (stars === 0) {
             const txt = ratingDiv.innerText || ratingDiv.getAttribute('aria-label') || '';
             const m2 = txt.match(/(\d+)/);
@@ -853,20 +818,16 @@
             session.ids.push(id);
         }
         foundOnThisPage++;
-        row.style.border = '2px solid green'; // Mark safe
+        row.style.border = '2px solid green';
       } else {
         seenLowStar = true;
-        row.style.border = '2px solid red'; // Mark unsafe trigger
+        row.style.border = '2px solid red';
       }
     }
 
     saveSession(session);
 
-    // 3. Logic Trigger
     if (seenLowStar) {
-        // We hit the end of the high-star list.
-        // Validate Continuity: Do we have pages 1..pageNum in the session?
-        // We sort the pages array and check if it matches the sequence
         session.pages.sort((a,b)=>a-b);
         const maxPage = session.pages[session.pages.length-1];
 
@@ -880,22 +841,17 @@
         }
 
         if (valid) {
-            // SUCCESS: Full chain verified.
             const oldLen = getProtectedCompanies().length;
             const newLen = session.ids.length;
-
             saveProtectedList(session.ids);
             localStorage.setItem(LS.scrapeTs, Date.now());
-            clearSession(); // Cleanup
-
+            clearSession();
             alert(`✅ FULL SCAN COMPLETE!\n\nVerified continuous scan from Page 1 to ${pageNum}.\nFound ${newLen} high-star stores.\nDatabase has been fully synchronized (Old count: ${oldLen}).\n\nYou are now safe.`);
         } else {
-            // FAILURE: Gaps detected
             alert(`⚠️ SCAN INCOMPLETE!\n\nWe found low-star stores, BUT you missed pages: ${missing.join(', ')}.\n\nYou MUST scan those pages to ensure you have the full list.\nGo back and click Save on the missing pages.`);
         }
 
     } else {
-        // No low stars yet. Keep going.
         alert(`Session Active (Page ${pageNum}).\nFound ${foundOnThisPage} high-star stores this page.\nTotal in session: ${session.ids.length}.\n\nKeep going until you see stores with fewer than 7 stars.`);
     }
   }
@@ -903,7 +859,6 @@
   let lastRunHitsDelta = 0;
 
   function makeUI(){
-    // If we are on the Job List page, add scraper button
     if (location.href.includes('joblist.php')) {
       const btn = document.createElement('button');
       btn.id = 'mugScrapeBtn';
@@ -933,7 +888,7 @@
         <button id="editKeyBtn" class="btn" type="button" title="Edit API Key">Edit API Key</button>
       </div>
       <label id="apiRow">API Key
-        <input id="mugApi" type="text" placeholder="Enter Torn API key">
+        <input id="mugApi" type="text" autocomplete="off" placeholder="Enter Torn API key">
         <button id="saveKeyBtn" class="btn small" type="button" style="margin-top:6px">Save Key</button>
       </label>
 
@@ -946,14 +901,9 @@
         </label>
       </div>
 
-      <label style="display:flex;align-items:center;gap:8px;margin-top:8px">
-        <input id="autoShowSaved" type="checkbox">
-        <span>Auto-show last results (no API)</span>
+      <label style="margin-top:8px">Block Categories (comma separated)
+        <input id="mugBlockCat" type="text" placeholder="e.g. Weapon, Armor, Flower">
       </label>
-      <div style="display:flex;gap:8px;margin-top:6px">
-        <button id="mugShowSaved" class="btn small" type="button" title="Render last saved icons without fetching">Show Saved</button>
-        <button id="mugClearSaved" class="btn small" type="button" title="Clear saved icons">Clear Saved</button>
-      </div>
 
       <details>
         <summary>Legend</summary>
@@ -1003,11 +953,12 @@
     const savedMin = load(LS.minMug, DEF.minMug);
     $('#mugMin').value = formatCurrency(savedMin);
     $('#mugTol').value = load(LS.tolerance, DEF.tolerance);
+    $('#mugBlockCat').value = load(LS.ignoredCats, '');
 
     if (savedKey) { $('#apiRow').style.display = 'none'; $('#apiMaskRow').style.display = 'block'; }
 
     // Enter key → run
-    ['mugApi','mugMin','mugTol'].forEach(id=>{
+    ['mugApi','mugMin','mugTol','mugBlockCat'].forEach(id=>{
       const inp = document.getElementById(id);
       if (!inp) return;
       inp.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); $('#mugRunTop').click(); }});
@@ -1044,11 +995,31 @@
       const act = btn.dataset.act;
       if (act==='profile'){ window.open(r.profileUrl, '_blank'); }
       else if (act==='bazaar'){ window.open(r.bazaarUrl, '_blank'); }
-      else if (act==='copy'){
-        try { await navigator.clipboard.writeText(xid); btn.textContent='Copied'; setTimeout(() => { btn.textContent='Copy XID'; }, 900); }
-        catch { prompt('Copy XID', xid); }
+      else if (act==='watch'){
+        // --- BRIDGE SENDER (UPDATED) ---
+        let list = [];
+        try { list = JSON.parse(localStorage.getItem(LS.bridgeKey) || '[]'); } catch(e){}
+        if (!Array.isArray(list)) list = [];
+
+        // Check against queue, not Watchlist (we can't see Watchlist)
+        if (!list.some(item => item.id == xid)) {
+            list.push({ id: xid, name: "Imported User" });
+            localStorage.setItem(LS.bridgeKey, JSON.stringify(list));
+            alert(`User ${xid} sent to Watchlist Queue.`);
+        } else {
+            alert(`User ${xid} is already queued for the Watchlist.`);
+        }
+        // -------------------------------
       }
       else if (act==='calc'){ openCalcWithAmount(Number(r.mugValue||0)); }
+      else if (act==='items'){
+        if (!r.items || !r.items.length) {
+          alert('No items saved for this hit.');
+        } else {
+          const list = r.items.map(i => `• ${i.name} [${i.type||'?'}] x${i.qty} @ $${i.price.toLocaleString()}`).join('\n');
+          alert(`Mug Items for ${r.xid}:\n\n${list}`);
+        }
+      }
       else if (act==='pin'){ r.pinned = !r.pinned; saveHits(h); renderHitsPanel(); }
       else if (act==='remove'){ delete h[xid]; saveHits(h); renderHitsPanel(); }
     });
@@ -1092,11 +1063,6 @@
 
   makeUI();
 
-  // Auto-show saved results on load (no API)
-  if (JSON.parse(localStorage.getItem(LS.autoShowSaved) || 'true')) {
-    setTimeout(renderFromSaved, 0);
-  }
-
   // ---------- Hits panel UI helpers ----------
   function updateHitsCountBtn(){
     const n = hitsCount();
@@ -1128,8 +1094,9 @@
       actions.innerHTML = `
         <button class="btn" data-act="profile">Profile</button>
         <button class="btn" data-act="bazaar">Bazaar</button>
-        <button class="btn" data-act="copy">Copy XID</button>
+        <button class="btn" data-act="watch">Watch</button>
         <button class="btn" data-act="calc">Calc</button>
+        <button class="btn" data-act="items">Items</button>
         <button class="btn" data-act="pin">${r.pinned ? 'Unpin' : 'Pin'}</button>
         <button class="btn" data-act="remove">Remove</button>
       `;

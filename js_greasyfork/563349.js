@@ -25,8 +25,8 @@
 // @grant GM_unregisterMenuCommand
 // @grant GM_setValue
 // @grant GM_getValue
-// @downloadURL https://update.greasyfork.org/scripts/563349/Pixiv%20%E5%9C%96%E7%89%87%E8%87%AA%E9%81%A9%E6%87%89%E8%AA%BF%E6%95%B4.user.js
-// @updateURL https://update.greasyfork.org/scripts/563349/Pixiv%20%E5%9C%96%E7%89%87%E8%87%AA%E9%81%A9%E6%87%89%E8%AA%BF%E6%95%B4.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/563349/Pixiv%20Image%20Auto%20Resize.user.js
+// @updateURL https://update.greasyfork.org/scripts/563349/Pixiv%20Image%20Auto%20Resize.meta.js
 // ==/UserScript==
 
 class ImageResizer {

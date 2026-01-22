@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Grepolympia Helper - Estadísticas y Optimización
 // @namespace    grepolympia.helper
-// @version      1.0.0
+// @version      1.2.0
 // @description  Calcula y muestra stats de suerte, score esperado y guía de entrenamiento óptimo para Grepolympia.
 // @match        https://*.grepolis.com/game/*
 // @match        http://*.grepolis.com/game/*
@@ -85,6 +85,26 @@
 /* training margins */
 .go_athlete .middle_box.training{ margin-top: 50px !important; }
 .go_athlete .skill_points_box{ margin-top: 50px !important; }
+
+/* export table button */
+.go_export_table_btn {
+  position: absolute;
+  top: 23px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 61px;
+  height: 52px;
+  background-image: url('https://i.imgur.com/9H5tcwS.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  z-index: 10;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+.go_export_table_btn:hover{
+  opacity: 1;
+}
 `;
         document.head.appendChild(st);
     }
@@ -230,6 +250,207 @@
         }
     }
 
+    // -------------------- Export optimal table to BBCode --------------------
+    function generateOptimalTableBBCode(disciplineId, maxLevel = 200) {
+        const discData = getDisciplinesData();
+        const discObj = discData?.[disciplineId];
+        const params = getParams(discObj);
+        if (!params) return null;
+
+        const disciplineName = discObj.title || disciplineId;
+        const skillNames = params.names || {
+            first_skill_points: 'Habilidad 1',
+            second_skill_points: 'Habilidad 2',
+            third_skill_points: 'Habilidad 3'
+        };
+
+        // Obtener tiers de recompensa
+        const scoreTiers = discObj.score_tier || [];
+
+        const rows = [];
+
+        // Header con columna de Tier
+        rows.push(`[**]Nivel[||]${skillNames.first_skill_points}[||]${skillNames.second_skill_points}[||]${skillNames.third_skill_points}[||]Estimado[||]Tier[/**]`);
+
+        // Data rows
+        let previousTier = -1;
+        for (let level = 1; level <= maxLevel; level++) {
+            const optimal = bruteBestSplit(level, params);
+            const expectedStr = optimal.expected.toFixed(params.decimals);
+            const safeScore = optimal.expected * 0.95; // Asumiendo máximo -5% mala suerte
+
+            // Determinar qué tier se alcanza con seguridad
+            let currentTier = 0;
+            for (let i = scoreTiers.length - 1; i >= 0; i--) {
+                if (safeScore >= scoreTiers[i]) {
+                    currentTier = i;
+                    break;
+                }
+            }
+
+            // Marcar en rojo si es un salto de tier
+            const isNewTier = currentTier > previousTier;
+            const tierText = isNewTier ? `[color=#FF0000]${currentTier}[/color]` : currentTier;
+            const levelText = isNewTier ? `[color=#FF0000][b]${level}[/b][/color]` : `[b]${level}[/b]`;
+
+            rows.push(`[*]${levelText}[|]${optimal.a}[|]${optimal.b}[|]${optimal.c}[|]${expectedStr}${params.unit}[|]${tierText}[/*]`);
+
+            previousTier = currentTier;
+        }
+
+        const fullTable = `[table]\n${rows.join('\n')}\n[/table]`;
+
+        // Fragmentar en spoilers de 50 niveles
+        const spoilers = [];
+        const rowsPerSpoiler = 50;
+
+        for (let start = 1; start <= maxLevel; start += rowsPerSpoiler) {
+            const end = Math.min(start + rowsPerSpoiler - 1, maxLevel);
+            const spoilerRows = [rows[0]]; // Header
+
+            for (let i = start; i <= end; i++) {
+                spoilerRows.push(rows[i]); // rows[i] porque rows[0] es header, rows[1] es nivel 1, etc.
+            }
+
+            const spoilerTable = `[table]\n${spoilerRows.join('\n')}\n[/table]`;
+            const spoilerTitle = `Niveles ${start} al ${end} - ${disciplineName}`;
+
+            spoilers.push({
+                title: spoilerTitle,
+                content: `[spoiler=${spoilerTitle}]${spoilerTable}[/spoiler]`
+            });
+        }
+
+        return { fullTable, spoilers, disciplineName };
+    }
+
+    function generateUnitsTableBBCode() {
+        const trainingData = getTrainingData();
+        if (!trainingData) return null;
+
+        const units = [];
+        for (const [unitName, data] of Object.entries(trainingData)) {
+            if (!Array.isArray(data) || data.length < 2) continue;
+            const pointsPerUnit = data[0];
+            const maxUnits = data[1];
+            const totalPoints = pointsPerUnit * maxUnits;
+            units.push({ unitName, pointsPerUnit, maxUnits, totalPoints });
+        }
+
+        // Ordenar de mayor a menor eficiencia
+        units.sort((a, b) => b.totalPoints - a.totalPoints);
+
+        const rows = [];
+        rows.push(`[**]Unidad[||]Puntos/unidad[||]Máx. unidades[||]Total puntos[||]Con +20%[/**]`);
+
+        for (const unit of units) {
+            rows.push(`[*]${uw.GameData.units[unit.unitName].name_plural}[|][center]${unit.pointsPerUnit}[/center][|][center]${unit.maxUnits}[/center][|][center][b]${unit.totalPoints}[/b][/center][|][center][b][color=#0101D6]${Math.round(unit.totalPoints * 1.2)}[/color][/b][/center][/*]`);
+        }
+
+        const table = `[table]\n${rows.join('\n')}\n[/table]`;
+        return { table, units };
+    }
+
+    function openTableExportWindow(disciplineId) {
+        const tableData = generateOptimalTableBBCode(disciplineId);
+        if (!tableData) {
+            uw.HumanMessage?.error?.('No se pudo generar la tabla');
+            return;
+        }
+
+        const unitsData = generateUnitsTableBBCode();
+        const unitsHTML = unitsData ? `
+            <div style="margin-bottom:12px;">
+                <div style="font-weight:bold;margin-bottom:4px;">Ranking de Unidades por Eficiencia</div>
+                <textarea id="units_table_textarea" style="width:100%;height:120px;font-family:monospace;font-size:11px;">${unitsData.table}</textarea>
+                <button class="button_new" id="copy_units_btn" style="margin-top:4px;">Copiar tabla de unidades</button>
+            </div>
+        ` : '';
+
+        const existing = Array.from(document.querySelectorAll('.ui-dialog-title'))
+            .some(t => t.textContent.trim() === 'Exportar Tabla Óptima');
+        if (existing) return;
+
+        const wnd = uw.Layout.wnd.Create(uw.Layout.wnd.TYPE_DIALOG, 'Exportar Tabla Óptima', { width: '620', height: '500' });
+        let dialog;
+        Array.from(document.querySelectorAll('.ui-dialog-title')).forEach(t => {
+            if (t.textContent.trim() === 'Exportar Tabla Óptima') dialog = t.closest('.ui-dialog');
+        });
+        if (!dialog) return;
+
+        const content = dialog.querySelector('.gpwindow_content') || dialog;
+        const box = document.createElement('div');
+        box.style.padding = '12px';
+
+        let spoilersHTML = '';
+        tableData.spoilers.forEach((spoiler, idx) => {
+            spoilersHTML += `
+                <div style="margin-bottom:12px;">
+                    <div style="font-weight:bold;margin-bottom:4px;">${spoiler.title}</div>
+                    <textarea class="spoiler_textarea" data-idx="${idx}" style="width:100%;height:80px;font-family:monospace;font-size:11px;">${spoiler.content}</textarea>
+                    <button class="button_new copy_spoiler_btn" data-idx="${idx}" style="margin-top:4px;">Copiar spoiler</button>
+                </div>
+            `;
+        });
+
+        box.innerHTML = `
+            <div style="margin-bottom:12px;font-weight:bold;">${tableData.disciplineName} - Tabla de niveles óptimos (1-200)</div>
+            <div style="max-height:340px;overflow-y:auto;border:1px solid #333;padding:8px;background:rgba(0,0,0,0.3);">
+                ${unitsHTML}
+                ${spoilersHTML}
+            </div>
+            <div style="margin-top:10px;display:flex;gap:8px;justify-content:flex-end;">
+                <button id="table_close" class="button_new">Cerrar</button>
+            </div>
+        `;
+
+        content.appendChild(box);
+
+        // Event listeners para copiar cada spoiler
+        box.querySelectorAll('.copy_spoiler_btn').forEach(btn => {
+            btn.onclick = () => {
+                const idx = btn.getAttribute('data-idx');
+                const textarea = box.querySelector(`textarea[data-idx="${idx}"]`);
+                textarea.select();
+                navigator.clipboard.writeText(textarea.value)
+                    .then(() => uw.HumanMessage?.success?.('Spoiler copiado al portapapeles'))
+                    .catch(() => uw.HumanMessage?.error?.('No se pudo copiar'));
+            };
+        });
+
+        const copyUnitsBtn = box.querySelector('#copy_units_btn');
+        if (copyUnitsBtn) {
+            copyUnitsBtn.onclick = () => {
+                const textarea = box.querySelector('#units_table_textarea');
+                textarea.select();
+                navigator.clipboard.writeText(textarea.value)
+                    .then(() => uw.HumanMessage?.success?.('Tabla de unidades copiada'))
+                    .catch(() => uw.HumanMessage?.error?.('No se pudo copiar'));
+            };
+        }
+
+        box.querySelector('#table_close').onclick = () => dialog.remove();
+    }
+
+    function addExportButton() {
+        const disciplineBox = qs('.go_info .discipline_box .content');
+        if (!disciplineBox) return false;
+
+        // Evitar duplicados
+        if (qs('.go_export_table_btn', disciplineBox)) return true;
+
+        const disciplineId = getDisciplineFromInfoDom();
+        if (!disciplineId) return false;
+
+        const btn = document.createElement('div');
+        btn.className = 'go_export_table_btn';
+        btn.title = 'Exportar tabla óptima a BBCode';
+        btn.onclick = () => openTableExportWindow(disciplineId);
+
+        disciplineBox.appendChild(btn);
+        return true;
+    }
+
     // -------------------- Render: Luck (Info tab) --------------------
     function renderLuck() {
         // Intenta renderizar suerte bajo current_best_score
@@ -252,20 +473,21 @@
 
         // Cargar datos guardados del último intento
         const savedData = loadAttemptSkills(disciplineId);
-        let skills = savedData?.skills || null;
+
+        // Priorizar expected guardado (del momento de la tirada)
         let expected = savedData?.expected || null;
 
-        // Si no hay datos guardados, usar skills actuales del atleta
-        if (!skills) {
-            const athlete = findAthleteByDiscipline(disciplineId);
-            skills = getSkills(athlete);
-        }
-        if (!skills) return false;
-
-        // Calcular expected si no estaba guardado
+        // Si no hay expected guardado, calcularlo con las skills actuales
         if (!expected || !Number.isFinite(expected)) {
+            let skills = savedData?.skills || null;
+            if (!skills) {
+                const athlete = findAthleteByDiscipline(disciplineId);
+                skills = getSkills(athlete);
+            }
+            if (!skills) return false;
             expected = expectedScore(params, skills[0], skills[1], skills[2]);
         }
+
         if (!Number.isFinite(expected) || expected <= 0) return false;
 
         const luckPct = (record / expected - 1) * 100;
@@ -285,6 +507,10 @@
             content.appendChild(line);
         }
         line.innerHTML = `<p>Esperado: <b>${expectedStr}</b></p><p>Suerte: <span class="${cls}">${txt}</span></p>`;
+
+        // Agregar botón de exportación
+        addExportButton();
+
         return true;
     }
 
@@ -390,6 +616,10 @@
         const anchor = root.querySelector('.middle_box.training .content') || root.querySelector('.middle_box.training') || root;
         anchor.appendChild(hint);
 
+        // Enganchar ordenamiento de tropas por eficiencia
+        unitPlusButtonsBound = false;
+        attachUnitPlusButtonHandlers();
+
         return true;
     }
 
@@ -426,6 +656,100 @@
             requestRender(tab);
         }
     }
+    // -------------------- Training: Auto-sort units by efficiency --------------------
+    let unitPlusButtonsBound = false;
+
+    function getTrainingData() {
+        try {
+            return uw.MM?.getModels?.().Grepolympia?.[uw.Game?.player_id]?.getTrainingData?.() || null;
+        } catch {
+            return null;
+        }
+    }
+
+    function sortUnitsByEfficiency(itemsContainer) {
+        if (!itemsContainer || !itemsContainer.children) return;
+
+        const trainingData = getTrainingData();
+        if (!trainingData) return;
+
+        const items = Array.from(itemsContainer.children);
+        const unitScores = [];
+
+        // Calcular eficiencia (puntos por slot) de cada unidad disponible
+        for (const item of items) {
+            const option = item.children[0];
+            if (!option) continue;
+
+            const unitName = option.getAttribute('name');
+            if (!unitName || !trainingData[unitName]) continue;
+
+            const [pointsPerUnit, maxUnits] = trainingData[unitName];
+            const efficiency = pointsPerUnit * maxUnits; // puntos totales por slot
+
+            unitScores.push({ item, option, unitName, efficiency });
+        }
+
+        // Ordenar por eficiencia descendente
+        unitScores.sort((a, b) => b.efficiency - a.efficiency);
+
+        // Reordenar elementos en el DOM
+        unitScores.forEach(({ item }) => {
+            itemsContainer.appendChild(item);
+        });
+
+        // Seleccionar la mejor opción (primera tras ordenar)
+        if (unitScores.length > 0) {
+            // Quitar selected de todas
+            unitScores.forEach(({ option }) => {
+                option.classList.remove('selected');
+            });
+            // Marcar la mejor como selected
+            unitScores[0].option.classList.add('selected');
+
+            // Disparar click en la mejor opción para que el juego actualice el item_count_selector
+            setTimeout(() => {
+                unitScores[0].option.click();
+            }, 10);
+        }
+    }
+
+    function attachUnitPlusButtonHandlers() {
+        if (unitPlusButtonsBound) return;
+
+        const units = uw.document.querySelector('.units');
+        if (!units) return;
+
+        // Buscar los slots de entrenamiento (li con data-details)
+        const slots = units.querySelectorAll('li[data-details]');
+        if (!slots || slots.length === 0) return;
+
+        for (const slot of slots) {
+            // Buscar el dropdown dentro del slot
+            const dropdown = slot.querySelector('.dropdown_units.train_unit');
+            if (!dropdown) continue;
+
+            const listId = dropdown.id + '_list';
+            if (!listId) continue;
+
+            // Enganchar el evento al slot completo (li[data-details])
+            slot.addEventListener('click', function() {
+                // Esperar a que se abra la lista
+                setTimeout(() => {
+                    const el = uw.document.getElementById(listId);
+                    if (!el) return;
+
+                    const itemsContainer = el.querySelector('.items');
+                    if (!itemsContainer) return;
+
+                    sortUnitsByEfficiency(itemsContainer);
+                }, 50);
+            });
+        }
+
+        unitPlusButtonsBound = true;
+    }
+
     // -------------------- Save skills on doAttempt --------------------
     function hookAjaxForAttempt() {
         // your proven hook

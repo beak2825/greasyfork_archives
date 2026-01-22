@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         OC Preferred Roles Highlighter
 // @namespace    http://torn.com/
-// @version      2.8
+// @version      3.2
 // @description  Highlights preferred roles in Organized Crimes with custom thresholds per role
 // @author       srsbsns
 // @match        https://www.torn.com/factions.php*
@@ -56,7 +56,12 @@
             "Cleaner": { min: 70, max: 100 },
             "Cat Burglar": { min: 70, max: 100 }
         },
-
+        "Snow Blind": {
+            "Muscle #2": { min: 0, max: 50 },
+            "Hustler": { min: 75, max: 100 },
+            "Imitator": { min: 70, max: 100 },
+            "Muscle #1": { min: 58, max: 100 }
+        },
         "Honey Trap": {
             "Muscle #1": { min: 70, max: 100 },
             "Muscle #2": { min: 75, max: 100 },
@@ -88,12 +93,14 @@
         .oc-preferred-role {
             background-color: rgba(0, 47, 255, 0.15) !important;
             border: 2px solid #002FFF !important;
+            position: relative !important;
         }
 
         /* Highlight filled roles that DO meet threshold in blue */
         .oc-good-role {
             background-color: rgba(0, 47, 255, 0.15) !important;
             border: 2px solid #002FFF !important;
+            position: relative !important;
         }
 
         /* Highlight filled roles that DON'T meet threshold in red */
@@ -134,6 +141,22 @@
             top: -13px !important;
             right: 2px !important;
             background: #ff8c00 !important;
+            color: #ffffff !important;
+            font-size: 9px !important;
+            font-weight: bold !important;
+            padding: 2px 4px !important;
+            border-radius: 3px !important;
+            z-index: 100 !important;
+            pointer-events: none !important;
+            white-space: nowrap !important;
+        }
+
+        /* Requirement badge for good roles (blue) */
+        .oc-requirement-badge-good {
+            position: absolute !important;
+            top: -13px !important;
+            right: 2px !important;
+            background: #002FFF !important;
             color: #ffffff !important;
             font-size: 9px !important;
             font-weight: bold !important;
@@ -234,6 +257,10 @@
                     const meetsThreshold = successChance >= roleConfig.min && successChance <= roleConfig.max;
                     const isLowRole = isLowThresholdRole(crimeName, roleName);
 
+                    // Remove any existing badges first
+                    const existingBadge = roleSlot.querySelector('.oc-requirement-badge, .oc-requirement-badge-low, .oc-requirement-badge-good');
+                    if (existingBadge) existingBadge.remove();
+
                     if (meetsThreshold) {
                         // Meets threshold - highlight BLUE (whether filled or available)
                         if (roleIsFilled) {
@@ -241,6 +268,25 @@
                         } else {
                             roleSlot.classList.add('oc-preferred-role');
                         }
+
+                        // Add blue badge with requirement info
+                        const badge = document.createElement('div');
+                        badge.className = 'oc-requirement-badge-good';
+
+                        // Format the requirement text
+                        let reqText = '';
+                        if (isLowRole) {
+                            reqText = `suitable below ${roleConfig.max}%`;
+                        } else if (roleConfig.min > 0 && roleConfig.max >= 100) {
+                            reqText = `suitable >${roleConfig.min}%`;
+                        } else if (roleConfig.min === 0 && roleConfig.max < 100) {
+                            reqText = `preferred <${roleConfig.max}%`;
+                        } else if (roleConfig.min > 0 && roleConfig.max < 100) {
+                            reqText = `preferred ${roleConfig.min}-${roleConfig.max}%`;
+                        }
+
+                        badge.textContent = reqText;
+                        roleSlot.appendChild(badge);
                     } else {
                         // Doesn't meet threshold
                         if (isLowRole) {
@@ -252,9 +298,6 @@
                         }
 
                         // Add requirement badge
-                        const existingBadge = roleSlot.querySelector('.oc-requirement-badge, .oc-requirement-badge-low');
-                        if (existingBadge) existingBadge.remove();
-
                         const badge = document.createElement('div');
                         badge.className = isLowRole ? 'oc-requirement-badge-low' : 'oc-requirement-badge';
 
@@ -262,7 +305,7 @@
                         let reqText = '';
                         if (isLowRole) {
                             // Special text for low threshold roles
-                            reqText = `leave for below ${roleConfig.max}%`;
+                            reqText = `not ideal: OK below ${roleConfig.max}%`;
                         } else if (roleConfig.min > 0 && roleConfig.max >= 100) {
                             reqText = `preferred >${roleConfig.min}%`;
                         } else if (roleConfig.min === 0 && roleConfig.max < 100) {

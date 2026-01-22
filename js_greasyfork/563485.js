@@ -1,10 +1,11 @@
 // ==UserScript==
-// @name         SOOP (숲) - 사이드바 UI 변경 260121 최종
-// @namespace    https://greasyfork.org/ko/scripts/484713
-// @version      20250801 260121 방송국 사이드바 최종
+// @name         SOOP (숲) - 사이드바 UI 변경(백업본)
+// @name:ko         SOOP (숲) - 사이드바 UI 변경(백업본)
+// @namespace    https://greasyfork.org/ko/scripts/551140
+// @version      20260120(08.01).ver2
 // @description  사이드바 UI 변경, 월별 리캡, 채팅 모아보기, 차단기능 등
 // @description:ko  사이드바 UI 변경, 월별 리캡, 채팅 모아보기, 차단기능 등
-// @author       askld(원제작자)
+// @author       askld / eldirna(복구)
 // @match        https://www.sooplive.co.kr/*
 // @match        https://play.sooplive.co.kr/*
 // @match        https://vod.sooplive.co.kr/player/*
@@ -17,15 +18,11 @@
 // @grant        GM_getValue
 // @grant        GM_registerMenuCommand
 // @grant        GM_unregisterMenuCommand
-// @grant        GM_openInTab
 // @connect      sooplive.co.kr
 // @run-at       document-end
-// @license
-// 수정 : 즐찾그룹오류, 19 썸네일 미리보기 on/off, 방송국 내 사이드바 제거 및 사이드바 게시글 팝업 UI, 글로벌 업뎃으로 인한 카테고리 차단 구조, 월별 리캡
-// 추가 : 방송목록 백그라운드로 새 탭 열기, 1440p에서 화질 내리기 삭제 및 선택한 화질 고정으로 수정, 호스트 스트리머 채팅 모아보기 무조건 포함
-// + 기타 @ (뭔가 고쳤는데 기억이 안남)
-// @downloadURL https://update.greasyfork.org/scripts/563236/SOOP%20%28%EC%88%B2%29%20-%20%EC%82%AC%EC%9D%B4%EB%93%9C%EB%B0%94%20UI%20%EB%B3%80%EA%B2%BD%20260121%20%EC%B5%9C%EC%A2%85.user.js
-// @updateURL https://update.greasyfork.org/scripts/563236/SOOP%20%28%EC%88%B2%29%20-%20%EC%82%AC%EC%9D%B4%EB%93%9C%EB%B0%94%20UI%20%EB%B3%80%EA%B2%BD%20260121%20%EC%B5%9C%EC%A2%85.meta.js
+// @license      MIT
+// @downloadURL https://update.greasyfork.org/scripts/563485/SOOP%20%28%EC%88%B2%29%20-%20%EC%82%AC%EC%9D%B4%EB%93%9C%EB%B0%94%20UI%20%EB%B3%80%EA%B2%BD%28%EB%B0%B1%EC%97%85%EB%B3%B8%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/563485/SOOP%20%28%EC%88%B2%29%20-%20%EC%82%AC%EC%9D%B4%EB%93%9C%EB%B0%94%20UI%20%EB%B3%80%EA%B2%BD%28%EB%B0%B1%EC%97%85%EB%B3%B8%29.meta.js
 // ==/UserScript==
 
 (function() {
@@ -171,9 +168,7 @@
     const targetUserIdSet = new Set([
         ...allFollowUserIds,
         ...selectedUsersArray,
-        ...(isCheckBestStreamersListEnabled ? bestStreamersList : []),
-        // [추가] 현재 주소창에서 아이디(방장)를 가져와 무조건 포함시킴
-        window.location.pathname.split('/')[1]
+        ...(isCheckBestStreamersListEnabled ? bestStreamersList : [])
     ]);
 
     // --- 리캡 관련 전역 변수 및 상수 --- //
@@ -1652,7 +1647,6 @@ body:not(.screen_mode):not(.fullScreen_mode):has(#sidebar.min) #webplayer_conten
 
 `;
 
-
     //======================================
     // 3. 함수 정의 (Function Definitions)
     //======================================
@@ -2864,25 +2858,27 @@ body:not(.screen_mode):not(.fullScreen_mode):has(#sidebar.min) #webplayer_conten
             }
         });
     };
+   // 카테고리 차단 메뉴 추가
+    function registerMenuBlockingCategory() {
+        // GM 메뉴에 카테고리 차단 등록 메뉴를 추가합니다.
+        GM_registerMenuCommand('카테고리 등록 | 카테고리에 포함시 차단', function() {
+            // 사용자에게 차단할 단어 입력을 요청
+            let word = prompt('차단할 카테고리 : ');
 
-    // 카테고리 차단 메뉴 추가 (함수 정의)
-function registerMenuBlockingCategory() {
-    // GM 메뉴에 카테고리 차단 등록 메뉴를 추가합니다.
-    GM_registerMenuCommand('카테고리 등록 | 카테고리에 포함시 차단', function() {
-        // 사용자에게 차단할 단어 입력을 요청
-        let word = prompt('차단할 카테고리 : ');
-        if (word.length < 1) {
-            alert("카테고리는 한 글자 이상이어야 합니다.");
-            return;
-        }
-        let catnum = getCategoryNo(word);
-        if (catnum === undefined) {
-            alert(`${word}(은)는 유효하지 않은 카테고리 입니다.`);
-            return;
-        }
-        blockCategory(word, catnum);
-    });
-};
+            if (word.length < 1) {
+                alert("카테고리는 한 글자 이상이어야 합니다.");
+                return;
+            }
+
+            let catnum = getCategoryNo(word);
+            if (catnum === undefined) {
+                alert(`${word}(은)는 유효하지 않은 카테고리 입니다.`);
+                return;
+            }
+
+            blockCategory(word, catnum);
+        });
+    };
 
     // =================================================================
     // 3.4. UI 생성 및 조작 함수 (UI Generation & Manipulation) - 개선안
@@ -2961,10 +2957,9 @@ function registerMenuBlockingCategory() {
         wrapper.appendChild(tabContainer);
         wrapper.appendChild(scrollRightBtn);
 
-        const topSection = sectionParent.querySelector('.top-section.follow');
-        if (topSection) {
-            // '즐겨찾기 채널' 제목 요소 바로 다음에 탭 그룹 삽입
-            topSection.insertAdjacentElement('afterend', wrapper);
+        const userSection = sectionParent.querySelector('.users-section.follow');
+        if (userSection) {
+            sectionParent.insertBefore(wrapper, userSection);
         }
 
         const updateScrollButtonsVisibility = () => {
@@ -3523,7 +3518,19 @@ function registerMenuBlockingCategory() {
         await initializeSidebar(false);
     };
 
- const makeTopNavbarAndSidebar = (page) => {
+   /* const makeTopNavbarAndSidebar = (page) => {
+        // .left_navbar를 찾거나 생성
+        let leftNavbar = document.body.querySelector('.left_navbar');
+        if (!leftNavbar) {
+            leftNavbar = document.createElement('div');
+            leftNavbar.className = 'left_navbar';
+
+            (async () => {
+                const serviceHeaderDiv = await waitForElementAsync('#serviceHeader');
+                serviceHeaderDiv.prepend(leftNavbar);
+            })()
+        }*/
+    const makeTopNavbarAndSidebar = (page) => {
         // [1] 확장프로그램용 왼쪽 사이드바(메뉴바) 관리
         let leftNavbar = document.body.querySelector('.left_navbar');
 
@@ -3572,7 +3579,7 @@ function registerMenuBlockingCategory() {
                 serviceHeaderDiv.prepend(leftNavbar);
             })();
 
-            // 1-3. [핵심] 방송국 vs 일반 페이지 레이아웃 관리자
+                // 1-3. [핵심] 방송국 vs 일반 페이지 레이아웃 관리자
             const maintainStationLayout = () => {
                 // (1) 왼쪽 강제 여백 제거 & 우측 사이드바 삭제
                 if (document.body.classList.contains('customSidebar')) {
@@ -3581,7 +3588,7 @@ function registerMenuBlockingCategory() {
                 const oldSidebar = document.getElementById('sidebar');
                 if (oldSidebar) oldSidebar.remove();
 
-                // (2) 중앙 레이아웃(메인) 강제 확장
+               // (2) 중앙 레이아웃(메인) 강제 확장
                 const stationMain = document.querySelector('div[class*="layout_stationMain"]');
                 if (stationMain) {
                     stationMain.style.setProperty('max-width', 'none', 'important');
@@ -3624,7 +3631,7 @@ function registerMenuBlockingCategory() {
                     logoWrap.style.removeProperty('margin-left'); // 원래대로
                 }
 
-                // 메뉴바 위치 원상복구
+            // 메뉴바 위치 원상복구
                 if (leftNavbar) {
                     leftNavbar.style.removeProperty('left');
                 }
@@ -3661,8 +3668,8 @@ function registerMenuBlockingCategory() {
                 const isStation = currentUrl.includes('/station/') || currentUrl.includes('ch.sooplive.co.kr');
 
                 if (isStation) {
-                    maintainStationLayout();
-                } else {
+               maintainStationLayout();
+           } else {
                     restoreDefaultLayout();
                 }
             });
@@ -3715,7 +3722,7 @@ function registerMenuBlockingCategory() {
         const isSubOnly = Number(subscription_only || 0) > 0;
         const playerLink = `https://play.sooplive.co.kr/${user_id}/${broad_no}`;
 
-       const userElement = document.createElement('a');
+        const userElement = document.createElement('a');
         userElement.className = 'user';
         if (isSmallUserLayoutEnabled) userElement.classList.add('small-user-layout');
 
@@ -3817,8 +3824,7 @@ function registerMenuBlockingCategory() {
         userElement.className = 'user';
         if (isSmallUserLayoutEnabled) userElement.classList.add('small-user-layout');
         userElement.href = playerLink;
-
-        // [수정] 브라우저가 화면을 강제로 넘기지 못하게 _self로 고정합니다.
+         // [수정] 브라우저가 화면을 강제로 넘기지 못하게 _self로 고정합니다.
         userElement.target = '_self';
 
         // [추가] 클릭 시 백그라운드에서 탭을 여는 로직
@@ -3974,8 +3980,6 @@ function registerMenuBlockingCategory() {
                     document.body.addEventListener('click', handleOutsideClick, { capture: true, once: true });
                 }, 0);
 
-
-
                 offlineUserModal.show();
             });
         } else {
@@ -4119,11 +4123,10 @@ function registerMenuBlockingCategory() {
 
                 if (element.getAttribute('data-hover-tooltip-id') !== uniqueId) return;
 
-                // ★ 설정이 꺼져있으면 썸네일을 로드하지 않도록 조건 추가
+               // 방송 시간 && 이미지 && !게시판이미지
                 if (isReplaceEmptyThumbnailEnabled && broadStart && imgSrc?.startsWith("http") && !imgSrc?.startsWith('https://stimg.')) {
                     imgSrc += `?${Math.floor(randomTimeCode / 10000)}`;
                 }
-                // [삭제됨] else if (!isReplaceEmptyThumbnailEnabled) { ... } 부분이 삭제되어 원래 이미지가 나옵니다.
 
                 let durationText = broadStart
                 ? getElapsedTime(broadStart, "HH:MM")
@@ -4145,17 +4148,11 @@ function registerMenuBlockingCategory() {
 
                 if (isTooltipVisible && isSameTooltip) {
                     const imgEl = tooltipContainer.querySelector('img');
-                    // [수정 1] 이미지가 있고 imgSrc도 있을 때만 업데이트, imgSrc가 없으면 이미지 제거
-                    if (imgSrc) {
-                        if (imgEl) {
-                            imgEl.src = imgSrc;
-                        } else {
-                            const newImg = document.createElement('img');
-                            newImg.src = imgSrc;
-                            tooltipContainer.prepend(newImg);
-                        }
-                    } else {
-                        if (imgEl) imgEl.remove(); // 이미지가 null이면 기존 이미지 태그 삭제
+                    if (imgEl) imgEl.src = imgSrc;
+                    else {
+                        const newImg = document.createElement('img');
+                        newImg.src = imgSrc;
+                        tooltipContainer.prepend(newImg);
                     }
 
                     const durationOverlay = tooltipContainer.querySelector('.duration-overlay');
@@ -4178,15 +4175,12 @@ function registerMenuBlockingCategory() {
                         tooltipContainer.appendChild(newText);
                     }
                 } else {
-                    // [수정 2] imgSrc가 있을 때만 img 태그 생성 문자열 추가
-                    let tooltipContent = '';
-                    if (imgSrc) {
-                        tooltipContent += `<img src="${imgSrc}">`;
-                    }
+                    let tooltipContent = `<img src="${imgSrc}">`;
 
                     if (durationText) {
                         tooltipContent += `<div class="duration-overlay">${durationText}</div>`;
                     }
+
                     tooltipContent += `<div class="tooltiptext">${tooltipText}</div>`;
                     tooltipContainer.innerHTML = tooltipContent;
                 }
@@ -4583,9 +4577,11 @@ function registerMenuBlockingCategory() {
                             <span class="slider_v8xK4z round"></span>
                         </label>
                     </div>
-                   <div class="option_v8xK4z" id="openBackgroundTabContainer" style="margin-left: 20px; font-size: 0.9em;">
+                    <div class="option_v8xK4z" id="openBackgroundTabContainer" style="margin-left: 20px; font-size: 0.9em;">
                       <label for="openBackgroundTab">ㄴ 백그라운드로 열기</label> <label class="switch_v8xK4z">
-                        <input type="checkbox" id="openBackgroundTab"> <span class="slider_v8xK4z round"></span> </label> </div>
+                        <input type="checkbox" id="openBackgroundTab"> <span class="slider_v8xK4z round"></span>
+                        </label>
+                    </div>
                 </section>
 
                 <div class="divider_v8xK4z"></div>
@@ -4642,12 +4638,11 @@ function registerMenuBlockingCategory() {
                     <div class="option_v8xK4z">
                         <label for="switchCaptureButton">[플레이어] LIVE / VOD 📸스크린샷 버튼</label>
                         <label class="switch_v8xK4z">
-                            <input type="checkbox" id="switchCaptureButton" ${GM_getValue("isCaptureButtonEnabled", false) ? "checked" : ""}>
+                            <input type="checkbox" id="switchCaptureButton">
                             <span class="slider_v8xK4z round"></span>
                         </label>
                     </div>
-
-                   <div class="option_v8xK4z">
+                    <div class="option_v8xK4z">
                             <label for="switchNo1440p"> [플레이어] 🔒화질 고정 (새로고침 시 유지)</label>
                             <label class="switch_v8xK4z">
                                 <input type="checkbox" id="switchNo1440p" ${isNo1440pEnabled ? "checked" : ""}>
@@ -4668,11 +4663,10 @@ function registerMenuBlockingCategory() {
                             </select>
                         </div>
                     </div>
-
                     <div class="option_v8xK4z">
                         <label for="switchPlayerAdvancedControlsLive">[플레이어] 영상 🎚️필터 LIVE</label>
                         <label class="switch_v8xK4z">
-                            <input type="checkbox" id="switchPlayerAdvancedControlsLive" ${GM_getValue("isPlayerAdvancedControlsLiveEnabled", false) ? "checked" : ""}>
+                            <input type="checkbox" id="switchPlayerAdvancedControlsLive">
                             <span class="slider_v8xK4z round"></span>
                         </label>
                     </div>
@@ -5040,10 +5034,8 @@ function registerMenuBlockingCategory() {
                 <footer class="modal-footer_v8xK4z">
                     <h3 id="management-title" class="section-title_v8xK4z">차단 관리 및 부가 설명</h3>
                     <p class="description_v8xK4z">⛔채널 차단: 본문 방송 목록 -> ⋮ 버튼 -> [이 브라우저에서 ... 숨기기]</p>
-                    <p class="description_v8xK4z">⛔단어 등록/해제 및 차단 관리: 확장프로그램 관리(Tamper/violen)아이콘을 눌러서 가능합니다.</p>
-                    <p class="description_v8xK4z">✅카테고리 탭 등록/해제 및 차단 관리: 확장프로그램 관리(Tamper/violen)아이콘을 눌러서 가능합니다.</p>
-                    <p class="description_v8xK4z">⚠️ 방송국 > 숲 홈페이지 이동 시 확장프로그램이 작동하지 않습니다.<br>
-                              (새로고침 F5 을 해주세요)</p>
+                    <p class="description_v8xK4z">⛔단어 등록/해제 및 차단 관리: Tampermonkey 아이콘을 눌러서 가능합니다.</p>
+                    <p class="description_v8xK4z">✅카테고리 탭 등록/해제 및 차단 관리: Tampermonkey 아이콘을 눌러서 가능합니다.</p>
                     <div class="divider_v8xK4z"></div>
                     <p class="description_v8xK4z">1) MY 페이지에서 스트리머 고정 버튼(📌)을 누르면 사이드바에 고정이 됩니다.</p>
                     <p class="description_v8xK4z">2) 즐겨찾기 채널 중에서만 이동. 커스텀은 고정->알림->일반 순. 열린 탭 체크 후 이동.</p>
@@ -5052,7 +5044,7 @@ function registerMenuBlockingCategory() {
                     <p class="description_v8xK4z">5) 'SOOP (숲) - 현재 방송을 보고 있는 스트리머' 실행 필요. 없을 시 0명으로 나옵니다</p>
                     <p class="description_v8xK4z">6) 상단 바의 프로필 사진을 클릭하면 메뉴가 보입니다</p>
 
-                    <p class="description_v8xK4z bug-report_v8xK4z">🐛버그 신고는 <a href="https://greasyfork.org/ko/scripts/484713" target="_blank">Greasy Fork</a>에서 가능합니다.</p>
+                    <p class="description_v8xK4z bug-report_v8xK4z">🐛버그 신고 혹은 수정 및 유용한 기능 추가 가능하신 능력자분이 계신다면 <a href="https://greasyfork.org/ko/scripts/551140" target="_blank">Greasy Fork</a>에서 확인 부탁드립니다.</p>
                 </footer>
             </div>
         </div>
@@ -5178,7 +5170,7 @@ function registerMenuBlockingCategory() {
         setCheckboxAndSaveValue("mutedInactiveTabs", isAutoChangeMuteEnabled, "isAutoChangeMuteEnabled");
         setCheckboxAndSaveValue("switchAutoChangeQuality", isAutoChangeQualityEnabled, "isAutoChangeQualityEnabled");
         setCheckboxAndSaveValue("switchNo1440p", isNo1440pEnabled, "isNo1440pEnabled");
-         const qualitySelector = document.getElementById('qualitySelector');
+        const qualitySelector = document.getElementById('qualitySelector');
             if (qualitySelector) {
                 qualitySelector.value = targetQuality;
                 qualitySelector.addEventListener('change', (e) => {
@@ -5508,7 +5500,7 @@ function registerMenuBlockingCategory() {
             resolve(dataURL); // 데이터 URL 반환
         });
     };
-    // [최종 수정] 마우스 오버 시 연령 제한 썸네일 로드 함수
+
 function replaceThumbnails() {
     // 1. 화면 내 '연령제한' 배지들을 모두 찾음
     const adultBadges = document.querySelectorAll('.status.adult');
@@ -5990,26 +5982,6 @@ function replaceThumbnails() {
             : '#chatMemo div.username > button > span.thumb';
             cssRules += `\n${thumbSpanSelector} { display: none !important; }`;
         }
-
-
-      // [새로운 전략] CSS 스위치 규칙 정의
-    GM_addStyle(`
-        /* 1. 기본적으로 사이드바는 숨김 상태로 시작 (깜빡임 방지) */
-        .left_navbar { display: none !important; }
-
-        /* 2. [홈 화면] 꼬리표가 'main'일 때만 보여줌 */
-        body[data-soop-page="main"] .left_navbar { display: flex !important; }
-
-        /* 3. [방송국] 꼬리표가 'station'이면 무조건 숨김 (여백 포함) */
-        body[data-soop-page="station"] .customSidebar { margin-left: 0 !important; padding-left: 0 !important; }
-        body[data-soop-page="station"] .left_navbar { display: none !important; }
-
-        /* 4. [팝업] 꼬리표가 'popup'이면 모든 UI 숨김 */
-        body[data-soop-page="popup"] #soop-gnb,
-        body[data-soop-page="popup"] .__soopui__Sidebar-module__Sidebar___CjdhU,
-        body[data-soop-page="popup"] #footer { display: none !important; }
-        body[data-soop-page="popup"] #main { width: 100% !important; padding: 0 !important; }
-    `);
 
         // CSS 규칙 한 번만 적용
         GM_addStyle(cssRules);
@@ -8431,30 +8403,31 @@ function replaceThumbnails() {
 
         // [수정 1] 숨기기 버튼 생성 (기존 유지)
         const createHideButton = (listItem, optionsLayer) => {
-            const hideButton = document.createElement('button');
+            const hideButton = document.createElement('button'); // "숨기기" 버튼 생성
             hideButton.type = 'button';
             const span = document.createElement('span');
             span.textContent = '이 브라우저에서 스트리머 숨기기';
             hideButton.appendChild(span);
 
+            // 클릭 이벤트 추가
             hideButton.addEventListener('click', () => {
-                const userNameElement = listItem.querySelector('a.nick > span');
-                const userIdElement = listItem.querySelector('.cBox-info > a');
+                const userNameElement = listItem.querySelector('a.nick > span'); // 사용자 이름 요소
+                const userIdElement = listItem.querySelector('.cBox-info > a'); // 사용자 ID 요소
 
                 if (userNameElement && userIdElement) {
-                    const userId = userIdElement.href.split('/')[4];
-                    const userName = userNameElement.innerText;
-                    customLog.log(`Blocking user: ${userName}, ID: ${userId}`);
+                    const userId = userIdElement.href.split('/')[4]; // 사용자 ID 추출
+                    const userName = userNameElement.innerText; // 사용자 이름 추출
+                    customLog.log(`Blocking user: ${userName}, ID: ${userId}`); // 로그 추가
 
                     if (userId && userName) {
-                        blockUser(userName, userId);
+                        blockUser(userName, userId); // 사용자 차단 함수 호출
                         listItem.style.display = 'none';
                     }
                 } else {
-                    customLog.log("User elements not found.");
+                    customLog.log("User elements not found."); // 요소가 없을 경우 로그 추가
                 }
             });
-            optionsLayer.appendChild(hideButton);
+            optionsLayer.appendChild(hideButton); // 옵션 레이어에 버튼 추가
         };
 
         // [수정 2] 카테고리 숨기기 버튼 (기능 끄기 위해 내용 비움 -> 에러 방지)
@@ -8489,13 +8462,13 @@ function replaceThumbnails() {
                     const listItem = activeButton ? activeButton.closest('li[data-type="cBox"]') : null;
 
                     if (listItem) {
-                        createHideButton(listItem, optionsLayer);     // OK (위에서 정의됨)
-                        createCategoryHideButton(listItem, optionsLayer); // OK (빈 함수 실행 -> 아무일 안함)
-                        createCategoryPinButton(listItem, optionsLayer);  // OK (빈 함수 실행 -> 아무일 안함)
-                        processedLayers.add(optionsLayer);
+                        createHideButton(listItem, optionsLayer); // 숨기기 버튼 생성
+                        createCategoryHideButton(listItem, optionsLayer);
+                        createCategoryPinButton(listItem, optionsLayer); // Add the pin button
+                        processedLayers.add(optionsLayer); // 이미 처리된 레이어로 추가
                     }
                 } else if (!optionsLayer) {
-                    processedLayers.clear();
+                    processedLayers.clear(); // 요소가 없을 때 처리된 레이어 초기화
                 }
 
                 // (B) 방송 목록 필터링
@@ -8504,7 +8477,7 @@ function replaceThumbnails() {
                 for (const listItem of cBoxListItems) {
                     listItem.classList.add('hide-checked');
 
-                    const userIdElement = listItem.querySelector('.cBox-info > a');
+                    const userIdElement = listItem.querySelector('.cBox-info > a'); // 사용자 ID 요소
                     const categoryElements = listItem.querySelectorAll('.cBox-info .tag_wrap a.category'); // 다중 카테고리
                     const tagElements = listItem.querySelectorAll('.cBox-info .tag_wrap a:not(.category)');
                     const titleElement = listItem.querySelector('.cBox-info .title a');
@@ -8513,8 +8486,9 @@ function replaceThumbnails() {
                     if (userIdElement) {
                         const userId = userIdElement.href.split('/')[4];
                         if (isUserBlocked(userId)) {
+                            // 차단된 사용자일 경우 li 삭제
                             listItem.style.display = 'none';
-                            customLog.log(`Removed blocked user with ID: ${userId}`);
+                            customLog.log(`Removed blocked user with ID: ${userId}`); // 로그 추가
                         }
                     }
 
@@ -8524,7 +8498,7 @@ function replaceThumbnails() {
                             const categoryName = categoryElement.textContent;
                             if (isCategoryBlocked(getCategoryNo(categoryName))) {
                                 listItem.style.display = 'none';
-                                customLog.log(`Removed blocked category with Name: ${categoryName}`);
+                                customLog.log(`Removed blocked category with Name: ${categoryName}`); // 로그 추가
                                 break;
                             }
                         }
@@ -8536,7 +8510,7 @@ function replaceThumbnails() {
                         for (const word of blockedWords) {
                             if (broadTitle.toLowerCase().includes(word.toLowerCase())) {
                                 listItem.style.display = 'none';
-                                customLog.log(`Removed item with blocked word in title: ${broadTitle}`);
+                                customLog.log(`Removed item with blocked word in title: ${broadTitle}`); // 로그 추가
                                 break;
                             }
                         }
@@ -8546,11 +8520,12 @@ function replaceThumbnails() {
                     if (tagElements) {
                         for (const tagElement of tagElements) {
                             const tagTitle = tagElement.textContent;
+                            // blockedWords에 포함된 단어가 broadTitle에 있는지 체크
                             for (const word of blockedWords) {
                                 if (tagTitle.toLowerCase().includes(word.toLowerCase())) {
                                     listItem.style.display = 'none';
-                                    customLog.log(`Removed item with blocked word in tag: ${tagTitle}`);
-                                    break;
+                                    customLog.log(`Removed item with blocked word in tag: ${tagTitle}`); // 로그 추가
+                                    break; // 하나의 차단 단어가 발견되면 더 이상 확인할 필요 없음
                                 }
                             }
                             if (listItem.style.display === 'none') break;
@@ -8565,13 +8540,13 @@ function replaceThumbnails() {
                 }
 
                 // [수정됨] 19금 썸네일 호출부
-if (isReplaceEmptyThumbnailEnabled) {
-    // 화면에 연령제한 배지가 하나라도 있으면 함수 실행
-    // (함수 내부에서 '마우스 오버 이벤트'를 부착하는 작업을 수행함)
-    if (document.querySelector('.status.adult')) {
-        replaceThumbnails();
-    }
-}
+                if (isReplaceEmptyThumbnailEnabled) {
+                    // 화면에 연령제한 배지가 하나라도 있으면 함수 실행
+                    // (함수 내부에서 '마우스 오버 이벤트'를 부착하는 작업을 수행함)
+                    if (document.querySelector('.status.adult')) {
+                        replaceThumbnails();
+                    }
+                }
 
                 // 새 탭 방지
                 if(!isOpenNewtabEnabled){
@@ -8580,10 +8555,11 @@ if (isReplaceEmptyThumbnailEnabled) {
             }
         };
 
-        const observer = new MutationObserver(handleDOMChange);
+        const observer = new MutationObserver(handleDOMChange); // DOM 변경 감지기
         const config = { childList: true, subtree: true };
         observer.observe(document.body, config);
     };
+
 
     /**
  * 채팅 메시지를 추적하고, 강퇴/지정 유저 메시지를 모달에 표시하는 함수
@@ -9499,7 +9475,7 @@ if (isReplaceEmptyThumbnailEnabled) {
             customLog.warn("[changeQualityLivePlayer] 변경 실패:", e);
         }
     };
-    // [기능 수정] 화질 고정 및 1440p 차단 통합 함수
+   // [기능 수정] 화질 고정 및 1440p 차단 통합 함수
     const downgradeFrom1440p = async () => {
         try {
             const livePlayer = await waitForLivePlayer();
@@ -9795,22 +9771,24 @@ if (isReplaceEmptyThumbnailEnabled) {
 
     // 3.6. 스크립트 실행 관리 함수 (Execution Management)
     const runCommonFunctions = () => {
-    if (isCustomSidebarEnabled) {
-        //orderSidebarSection();
-        hideUsersSection();
-        generateBroadcastElements(0);
-        checkSidebarVisibility();
-    }
-    setupSettingButtonTopbar();
-    if (isMonthlyRecapEnabled) observeAndAppendRecapButton();
 
-    registerMenuBlockingWord();      // 기존 코드
-    registerMenuBlockingCategory();  // [추가] 카테고리 차단 메뉴 등록 함수 실행!
+        if (isCustomSidebarEnabled) {
+            //orderSidebarSection();
+            hideUsersSection();
+            generateBroadcastElements(0);
+            checkSidebarVisibility();
+        }
+        setupSettingButtonTopbar();
 
-    blockedUsers.forEach(function(user) {
-        registerUnblockMenu(user);
-    });
-    // ... (이하 동일)
+
+        if (isMonthlyRecapEnabled) observeAndAppendRecapButton();
+
+        registerMenuBlockingWord();
+        registerMenuBlockingCategory();//[추가] 카테고리 차단 메뉴 등록 함수
+
+        blockedUsers.forEach(function(user) {
+            registerUnblockMenu(user);
+        });
 
         blockedCategories.forEach(function(category) {
             registerCategoryUnblockMenu(category);
@@ -11522,6 +11500,30 @@ if (isReplaceEmptyThumbnailEnabled) {
         }
     }
 
+    if (CURRENT_URL.startsWith("https://ch.sooplive.co.kr/")) {
+
+        if (window.location.search.includes('iframe=true')) {
+            GM_addStyle(`
+            #bs-navi, #af-header, .bs-infomation {
+                display: none !important;
+            }
+            #contents_wrap, #bs-contents, #bs-container {
+                width: 650px !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            #bs-container, #contents, .post_detail {
+                width: 650px !important;
+                max-width: 650px !important;
+            }
+            .post_detail * {
+                max-width: 650px !important;
+            }
+            `);
+            return;
+        }
+    }
 
 
-})(); // <--- 파일의 진짜 마지막 줄
+
+})();

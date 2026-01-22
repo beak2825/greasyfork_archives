@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Faction Vault - Member & Management Dev
 // @namespace    http://tampermonkey.net/
-// @version      5.9.2
+// @version      6.0
 // @description  Faction vault requests with management dashboard for bankers.
 // @author       Deviyl[3722358]
 // @icon         https://deviyl.github.io/icons/moneybag-green.png
@@ -48,7 +48,8 @@
 // Currently this vault request/fulfillment container injects into the armory page, the travel page, and the destination page.
 // So members can request money in torn through the faction armory, while traveling, and when in other cities.
 //
-// I hope everyone who uses this finds it useful and helps ease their journey through Torn. Always here to help, Deviyl[3722358]. <3
+// I hope everyone who uses this finds it useful and helps ease their journey through Torn.
+// Always here to help, Deviyl[3722358]. <3
 //
 
 
@@ -68,7 +69,7 @@
     const SETTINGS_KEY = "torn_vault_settings";
     const ACTIVE_REQ_KEY = "torn_vault_has_active";
     const currentTabId = Date.now() + Math.random();
-    const DEBUG_MODE = true; // toggle console logging
+    const DEBUG_MODE = false; // toggle console logging
     GM_setValue("current_tab_id_temp", currentTabId);
 
     function getSettings() {
@@ -96,6 +97,8 @@
     let tornValid = !!settings.tornApiKey;
     let firebaseValid = !!(settings.firebaseUrl && settings.firebaseApiKey);
     let hasActiveRequest = GM_getValue(ACTIVE_REQ_KEY, false);
+    let authorizedFactionId = "PENDING";
+    let discordAvailable = false;
     let activeData = null;
     let pollInterval = null;
     let timerInterval = null;
@@ -191,6 +194,17 @@
         validateAmount(numericVal);
     }
 
+    function validateAmount(amt) {
+        const bal = cachedApiData.faction_money_balance, sub = document.getElementById('vault-submit'), err = document.getElementById('vault-error');
+        if (!sub || !err) return;
+        if (amt > bal || amt <= 0) {
+            err.style.display = amt > bal ? 'inline-block' : 'none';
+            sub.disabled = true; sub.style.opacity = '0.5'; sub.style.cursor = 'not-allowed';
+        } else {
+            err.style.display = 'none'; sub.disabled = false; sub.style.opacity = '1'; sub.style.cursor = 'pointer';
+        }
+    }
+
     function getDbUrl(path, overrideMethod = null) {
         if (!settings.firebaseUrl || !settings.firebaseApiKey) return "";
         const base = settings.firebaseUrl.replace(/\/$/, "");
@@ -207,11 +221,11 @@
         return (url.includes('factions.php?step=your') && url.includes('tab=armoury')) || url.includes('sid=travel');
     }
 
-    function getStatusClass(lastActionTs) {
+    function getOnlineStatus(lastActionTs) {
         const diff = (Date.now() / 1000) - lastActionTs;
-        if (diff < 300) return 'status-online';
-        if (diff < 1800) return 'status-idle';
-        return 'status-offline';
+        if (diff < 300) return { class: 'status-online', label: 'Online' };
+        if (diff < 1800) return { class: 'status-idle', label: 'Idle' };
+        return { class: 'status-offline', label: 'Offline' };
     }
 
     function refreshUIDisplay() {
@@ -226,6 +240,77 @@
         updateStatusIcon();
     }
 
+    function resetUI() {
+        if(pollInterval) clearInterval(pollInterval); if(timerInterval) clearInterval(timerInterval);
+        const ia = document.getElementById('vault-input-area'), sa = document.getElementById('vault-status-area');
+        if (ia && sa) { ia.style.display = 'block'; sa.style.display = 'none'; }
+        updateShieldUI();
+    }
+
+    function refreshSettingsUI() {
+        const webhookInput = document.getElementById('set-discord-webhook');
+        const idInput = document.getElementById('set-discord-id');
+        const typeToggle = document.getElementById('set-discord-type');
+        const dot = document.getElementById('discord-status-dot');
+        const testBtn = document.getElementById('vault-test-discord');
+
+        if (webhookInput) {
+            webhookInput.value = settings.discordWebhook || "";
+            webhookInput.dispatchEvent(new Event('input'));
+        }
+
+        if (idInput) idInput.value = settings.discordPingID || "";
+        if (typeToggle) typeToggle.checked = (settings.discordPingType === 'user');
+
+        if (dot) {
+            dot.style.color = discordAvailable ? '#5cb85c' : '#d9534f';
+            dot.innerHTML = `● ${discordAvailable ? 'Discord Config Synced' : 'No Discord Config Found'}`;
+        }
+
+        if (testBtn) {
+            testBtn.style.display = settings.discordWebhook ? 'block' : 'none';
+        }
+    }
+
+    function updateUI(data) {
+        const ia = document.getElementById('vault-input-area'), sa = document.getElementById('vault-status-area');
+        if (!ia || !sa) return;
+        ia.style.display = 'none'; sa.style.display = 'block';
+        const timer = () => {
+            const limit = (data.timeout || 0) * 60 * 1000, elapsed = Date.now() - data.timestamp;
+            if (limit !== 0 && elapsed >= limit) { cancelRequest(false, true); } else {
+                let timeText = limit === 0 ? "No expiration" : "";
+                if (limit !== 0) {
+                    const rem = limit - elapsed, m = Math.floor(rem / 60000), s = Math.floor((rem % 60000) / 1000);
+                    timeText = `Expires in: ${m}m ${s}s`;
+                }
+                const st = document.getElementById('vault-status-text');
+                if (st) st.innerHTML = `Requesting: <span style="color: #6fb33d; font-weight: bold;">$${formatMoney(data.amount)}</span><br><span style="color: #aaa; font-size: 11px;">${timeText}</span>`;
+                updateStatusIcon();
+            }
+        };
+        if (pollInterval) clearInterval(pollInterval);
+        if (!data || !data.id) {
+            vLog("No active request data, skipping poll interval setup.");
+            return;
+        }
+        pollInterval = setInterval(() => {
+            if (!data || !data.id) {
+                clearInterval(pollInterval);
+                return;
+            }
+            const dbUrl = getDbUrl(`/vaultRequests/${data.id}`);
+            if (dbUrl) {
+                GM_xmlhttpRequest({ method: "GET", url: dbUrl, onload: (res) => {
+                    if (res.responseText === "null") {
+                        hasActiveRequest = false; GM_setValue(ACTIVE_REQ_KEY, false); activeData = null; resetUI(); updateStatusIcon(); clearInterval(pollInterval);
+                    }
+                }});
+            }
+        }, 20000);
+        if (timerInterval) clearInterval(timerInterval); timer(); timerInterval = setInterval(timer, 1000);
+    }
+
     function trackApiUsage() {
         const now = Date.now();
         let timestamps = GM_getValue("api_usage_timestamps", []);
@@ -237,6 +322,7 @@
     }
 
     function isLeader() {
+        // sets one tab as the leader so every tab doesn't poll api
         const now = Date.now();
         const lastHeartbeat = GM_getValue("leader_heartbeat", 0);
         const leaderTabId = String(GM_getValue("leader_tab_id", 0));
@@ -272,10 +358,10 @@
         const profileLink = `[${cachedApiData.name} [${cachedApiData.user_id}]](https://www.torn.com/profiles.php?XID=${cachedApiData.user_id})`;
         const armoryLink = `[Fulfill](https://www.torn.com/factions.php?step=your#/tab=armoury)`;
 
-        if (isTest) content = `${header}\n > ⚙️ **TEST PING** — ${customMsg}`;
+        if (isTest) content = `${header}\n > ⚙️ **TEST PING** — ${customMsg} — Sent by ${profileLink}`;
         else if (isCanceled) content = `${header}\n > 🔴 **CANCELED** — ${profileLink} cancelled their request.`;
         else if (isExpired) content = `${header}\n > 🟡 **EXPIRED** — ${profileLink} - the request expired.`;
-        else if (isFilled) content = `${header}\n > 🟢 **FILLED** — **${filledUser}'s** request for **$${formatMoney(filledAmount)}** was filled by ${profileLink}`;
+        else if (isFilled) content = `${header}\n > 🟢 **FILLED** — **${filledUser}'s** request for **$${formatMoney(filledAmount)}** is being filled by ${profileLink}`;
         else if (customMsg) content = `${header}\n > ${customMsg}`;
         else { //new request
             const amountStr = document.getElementById('vault-amount')?.value || "0";
@@ -303,9 +389,9 @@
             });
         };
 
-        // debounce for expired message
+        // debounce for expired message (so doesn't send twice if pda and pc open)
         if (isExpired) {
-            const baseUrl = `${settings.firebaseUrl.replace(/\/$/, "")}/last_ping.json?auth=${settings.firebaseApiKey}`;
+            const baseUrl = `${settings.firebaseUrl.replace(/\/$/, "")}/Management/last_ping.json?auth=${settings.firebaseApiKey}`;
             const jitter = Math.floor(Math.random() * 1000) + 500;
 
             setTimeout(() => {
@@ -317,7 +403,7 @@
                             const lastPing = response.responseText ? JSON.parse(response.responseText) : null;
                             const now = Date.now();
 
-                            if (lastPing && lastPing.content === content && Math.abs(now - lastPing.time) < 10000) {
+                            if (lastPing && lastPing.content === content && Math.abs(now - lastPing.time) < 15000) {
                                 vLog("Discord | Duplicate Expired ping blocked (Firebase).", 'color: orange;');
                                 return;
                             }
@@ -349,7 +435,7 @@
     }
 
     // -------------------------------------------------------------------------
-    // API AND DATA FETCHING
+    // API AND DATA FETCHING AND UPDATES
     // -------------------------------------------------------------------------
     async function syncAllData(force = false) {
         if (!settings.tornApiKey) tornValid = false;
@@ -378,12 +464,21 @@
             }
             return;
         }
-
         if (isSyncing) return;
 
         try {
             isSyncing = true;
             vLog("Syncing all data...");
+
+            const authRes = await new Promise((resolve) => {
+                GM_xmlhttpRequest({
+                    method: "GET",
+                    url: `${settings.firebaseUrl.replace(/\/$/, "")}/Management/authorized.json?auth=${settings.firebaseApiKey}`,
+                    onload: (r) => resolve(r.status === 200 ? JSON.parse(r.responseText) : null),
+                    onerror: () => resolve(null)
+                });
+            });
+            authorizedFactionId = authRes?.faction_id || null;
 
             // sync user info (name,id,factionid,position,isbanker,lastaction)
             const userRes = await new Promise((resolve) => {
@@ -396,6 +491,38 @@
             });
             if (userRes.error) throw new Error(userRes.error.error);
             tornValid = true;
+
+
+            const userPosition = userRes.faction?.position || "Member";
+            const isManagement = userPosition === "Leader" || userPosition === "Co-leader";
+
+            if (isManagement) {
+                const lastMgtSync = GM_getValue("last_mgt_sync", 0);
+                const now = Date.now();
+
+                // update faction_id in db for member auth
+                if (!authorizedFactionId || authorizedFactionId === "PENDING" || userRes.faction?.faction_id !== authorizedFactionId || (now - lastMgtSync > 3600000)) {
+                    vLog(`Management | Database is empty or expired. Establishing Faction Lock with faction ID ${userRes.faction?.faction_id}`);
+                    GM_xmlhttpRequest({
+                        method: "POST",
+                        url: `${settings.firebaseUrl.replace(/\/$/, "")}/Management/authorized.json?auth=${settings.firebaseApiKey}`,
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-HTTP-Method-Override": "PUT"
+                        },
+                        data: JSON.stringify({
+                            faction_id: userRes.faction?.faction_id || 0,
+                            updated_by: userRes.name,
+                            timestamp: now
+                        }),
+                        onload: () => {
+                            GM_setValue("last_mgt_sync", now);
+                            authorizedFactionId = userRes.faction?.faction_id;
+                            vLog(`Management | Authorized Faction ID updated to ${userRes.faction?.faction_id}.`);
+                        }
+                    });
+                }
+            }
 
             // sync faction vault balance (only ping if on armory page with vault request)
             let moneyRes = null;
@@ -446,10 +573,9 @@
                 vLog("Using cached faction positions.");
             }
 
-            const userPosition = userRes.faction?.position || "Member";
             let isbanker = 0;
             if (factionRes.positions && factionRes.positions[userPosition]) {
-                isbanker = factionRes.positions[userPosition].canUseMedicalItem || 0;
+                isbanker = factionRes.positions[userPosition].canGiveMoney || 0;
             }
 
             const updatedData = {
@@ -476,6 +602,45 @@
                 });
             });
             firebaseValid = fbCheck;
+
+            // auto sync discord settings to db values
+            if (firebaseValid) {
+                const discordRes = await new Promise((resolve) => {
+                    GM_xmlhttpRequest({
+                        method: "GET",
+                        url: `${settings.firebaseUrl.replace(/\/$/, "")}/Management/discord.json?auth=${settings.firebaseApiKey}`,
+                        onload: (r) => resolve(r.status === 200 ? JSON.parse(r.responseText) : null),
+                        onerror: () => resolve(null)
+                    });
+                });
+
+                if (discordRes && discordRes.webhook) {
+                    discordAvailable = true;
+                    if (!settings.discordWebhook || settings.discordWebhook !== discordRes.webhook) {
+                        settings.discordWebhook = discordRes.webhook;
+                        settings.discordPingID = discordRes.pingID || "";
+                        settings.discordPingType = discordRes.pingType || "role";
+                        GM_setValue(SETTINGS_KEY, settings);
+                        vLog("Discord | Settings auto-imported from Database.");
+                    }
+                } else {
+                    discordAvailable = false;
+                    if (!cachedApiData.isbanker && settings.discordWebhook) {
+                        settings.discordWebhook = "";
+                        settings.discordPingID = "";
+                        GM_setValue(SETTINGS_KEY, settings);
+                        vLog("Discord | Database is empty. Local settings cleared.");
+                    }
+                }
+                const dot = document.getElementById('discord-status-dot');
+                if (dot) {
+                    dot.style.color = discordAvailable ? '#5cb85c' : '#d9534f';
+                    dot.innerHTML = `● ${discordAvailable ? 'Discord Config Synced' : 'No Discord Config Found'}`;
+                }
+                const testBtn = document.getElementById('vault-test-discord');
+                if (testBtn) testBtn.style.display = settings.discordWebhook ? 'block' : 'none';
+                refreshSettingsUI();
+            }
 
             // pull any active requests
             const dbRes = await new Promise((resolve) => {
@@ -595,9 +760,9 @@
                     keys.sort((a, b) => (allReqs[a].timestamp || 0) - (allReqs[b].timestamp || 0))
                         .forEach(uid => {
                         const r = allReqs[uid];
-                        const statusClass = getStatusClass(r.lastAction || 0);
+                        const status = getOnlineStatus(r.lastAction || 0);
                         const isOnlinePref = (r.pref == 1 || r.pref === true || r.pref === "true");
-                        const prefText = isOnlinePref ? '<span style="color:#00ff00;">Online</span>' : '<span style="color:#ff4444;">Anytime</span>';
+                        const prefText = isOnlinePref ? '<span style="color:#00ff00;">Send when Online</span>' : '<span style="color:#ff4444;">Send Anytime</span>';
 
                         const startTime = parseInt(r.timestamp);
                         const timeoutMins = parseInt(r.timeout) || 0;
@@ -606,7 +771,7 @@
                         html += `
                             <div class="mgmt-card" style="display: flex; align-items: center; justify-content: space-between; background: #222; padding: 8px; border-radius: 3px; margin-bottom: 5px; border-left: 3px solid #444;">
                                 <div style="flex: 2;">
-                                    <span class="mgmt-status-dot ${statusClass}"></span>
+                                    <span class="mgmt-status-dot ${status.class}" title="${status.label}" style="cursor: pointer;"></span>
                                     <a href="/profiles.php?XID=${r.id}" class="mgmt-user" style="color:#fff; text-decoration:none; font-size:12px; font-weight: bold;">${r.name} [${r.id}]</a>
                                     <div style="font-size:10px; color:#888; margin-top:2px; padding-left:13px;">$${formatMoney(r.amount)}</div>
                                 </div>
@@ -672,96 +837,6 @@
         });
     }
 
-    async function fulfillRequest(userId, userName, amount) {
-        sendDiscordPing(null, false, false, false, true, userName, amount);
-        const deleteUrl = getDbUrl(`/vaultRequests/${userId}`, "DELETE");
-        if (!deleteUrl) return;
-
-        await new Promise((resolve) => {
-            GM_xmlhttpRequest({
-                method: "POST",
-                url: deleteUrl,
-                headers: { "X-HTTP-Method-Override": "DELETE" },
-                onload: () => resolve(),
-                onerror: () => resolve()
-            });
-        });
-        window.location.assign(`https://www.torn.com/factions.php?step=your#/tab=controls&option=give-to-user&giveMoneyTo=${userId}&money=${amount}`);
-    }
-
-    function purgeExpiredRequests() {
-        const btn = document.getElementById('vault-mgmt-purge');
-        if (!btn || btn.innerText === "PURGING...") return;
-
-        btn.innerText = "PURGING...";
-        btn.style.opacity = "0.7";
-
-        GM_xmlhttpRequest({
-            method: "GET",
-            url: getDbUrl("/vaultRequests"),
-            onload: (res) => {
-                try {
-                    const allReqs = JSON.parse(res.responseText);
-                    if (!allReqs) {
-                        btn.innerText = "PURGE EXPIRED";
-                        btn.style.opacity = "1";
-                        return;
-                    }
-
-                    const now = Date.now();
-                    const expiredUserLinks = [];
-                    const deleteExpired = [];
-
-                    Object.keys(allReqs).forEach(userId => {
-                        const data = allReqs[userId];
-                        const limit = (data.timeout || 0) * 60 * 1000;
-
-                        if (data.pref == 1 && limit > 0 && (now - data.timestamp) >= limit) {
-                            const profileLink = `[${data.name} [${data.id}]](https://www.torn.com/profiles.php?XID=${data.id})`;
-                            expiredUserLinks.push(profileLink);
-
-                            const action = new Promise((resolve) => {
-                                GM_xmlhttpRequest({
-                                    method: "POST",
-                                    url: getDbUrl(`/vaultRequests/${userId}`),
-                                    headers: { "X-HTTP-Method-Override": "DELETE" },
-                                    onload: () => resolve(),
-                                    onerror: () => {
-                                        vLog(`Failed to delete request for ${userId}`, null, 'warn');
-                                        resolve();
-                                    }
-                                });
-                            });
-                            deleteExpired.push(action);
-                        }
-                    });
-
-                    if (deleteExpired.length > 0) {
-                        Promise.all(deleteExpired).then(() => {
-                            const bankerLink = `[${cachedApiData.name} [${cachedApiData.user_id}]](https://www.torn.com/profiles.php?XID=${cachedApiData.user_id})`;
-                            const userList = expiredUserLinks.join(', ');
-                            const msg = `❌ **PURGED** — ${bankerLink} cleared ${expiredUserLinks.length} expired request(s): ${userList}`;
-
-                            sendDiscordPing(msg);
-
-                            btn.innerText = "PURGE EXPIRED";
-                            btn.style.opacity = "1";
-                            updateManagementList();
-                        });
-                    } else {
-                        btn.innerText = "PURGE EXPIRED";
-                        btn.style.opacity = "1";
-                        updateManagementList();
-                    }
-                } catch (e) {
-                    vLog("Purge failed", null, 'error', e);
-                    btn.innerText = "PURGE EXPIRED";
-                    btn.style.opacity = "1";
-                }
-            }
-        });
-    }
-
     // -------------------------------------------------------------------------
     // TOOLTIP AND ICON INJECTION
     // -------------------------------------------------------------------------
@@ -775,6 +850,7 @@
             el.innerHTML = `<b>${title}</b>${subtitle ? `<div>${subtitle}</div>` : ''}<div class="arrow___yUDKb top___klE_Y" style="left: 50%; transform: translateX(-50%);"><div class="arrowIcon___KHyjw"></div></div>`;
             return el;
         }
+
         function positionTooltip() {
             if (!tipEl) return;
             const r = anchor.getBoundingClientRect();
@@ -923,7 +999,9 @@
         shield.innerHTML = "";
         const tornIssues = !settings.tornApiKey || tornValid === false;
         const firebaseIssues = !settings.firebaseUrl || !settings.firebaseApiKey || firebaseValid === false;
-        if (!tornIssues && !firebaseIssues) {
+        const factionIssues = (!tornIssues && !firebaseIssues && authorizedFactionId !== "PENDING" && authorizedFactionId !== null && cachedApiData.faction_id !== authorizedFactionId);
+
+        if (!tornIssues && !firebaseIssues && !factionIssues) {
             shield.style.display = 'none';
             if (hasActiveRequest) { inputArea.style.display = 'none'; statusArea.style.display = 'block'; }
             else { inputArea.style.display = 'block'; statusArea.style.display = 'none'; }
@@ -939,6 +1017,11 @@
             const div = document.createElement('div'); div.className = 'vault-shield-msg';
             div.innerHTML = `Please enter a valid Firebase URL and Secret Key in <span class="vault-error-link" id="link-set-2">Settings</span>.`;
             shield.appendChild(div); document.getElementById('link-set-2')?.addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('vault-settings-trigger').click(); });
+        }
+        if (factionIssues) {
+            const div = document.createElement('div'); div.className = 'vault-shield-msg';
+            div.innerHTML = `<span style="color: #ff4444; font-weight: bold;">Security Error:</span><br>Incorrect Faction Database Information.`;
+            shield.appendChild(div);
         }
     }
 
@@ -1001,23 +1084,37 @@
                 <input type="text" id="set-fb-url" placeholder="Firebase URL" value="${settings.firebaseUrl}" style="width:100%; margin-bottom:8px; background: #111; color: #fff; border: 1px solid #444; padding: 4px;">
                 <label class="vault-setting-label">Firebase Secret Key:</label>
                 <input type="text" id="set-fb-key" placeholder="Firebase Secret Key" value="${settings.firebaseApiKey}" style="width:100%; margin-bottom:12px; background: #111; color: #fff; border: 1px solid #444; padding: 4px;">
+
                 <hr style="border: 0; border-top: 1px solid #444; margin: 10px 0;">
-                <label class="vault-setting-label">Discord Webhook (Optional):</label>
-                <input type="text" id="set-discord-webhook" placeholder="https://discord.com/api/webhooks/..." value="${settings.discordWebhook || ''}" style="width:100%; margin-bottom:8px; background: #111; color: #fff; border: 1px solid #444; padding: 4px;">
-                <div id="discord-extra-settings" style="display: ${settings.discordWebhook ? 'block' : 'none'};">
-                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
-                        <label class="vault-setting-label" style="margin: 0;">Ping User/Role ID (optional):</label>
-                        <label class="vault-switch">
-                            <input type="checkbox" id="set-discord-type" ${settings.discordPingType === 'user' ? 'checked' : ''}>
-                            <span class="vault-slider"></span>
-                            <div class="vault-switch-text"><span>ROLE</span><span>USER</span></div>
-                        </label>
+
+                <div id="banker-discord-section" style="display: ${cachedApiData.isbanker ? 'block' : 'none'};">
+                    <label class="vault-setting-label">Discord Webhook (Faction Wide):</label>
+                    <input type="text" id="set-discord-webhook" placeholder="https://discord.com/api/webhooks/..." value="${settings.discordWebhook || ''}" style="width:100%; margin-bottom:8px; background: #111; color: #fff; border: 1px solid #444; padding: 4px;">
+                    <div id="discord-extra-settings" style="display: ${settings.discordWebhook ? 'block' : 'none'};">
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                            <label class="vault-setting-label" style="margin: 0;">Ping User/Role ID:</label>
+                            <label class="vault-switch">
+                               <input type="checkbox" id="set-discord-type" ${settings.discordPingType === 'user' ? 'checked' : ''}>
+                               <span class="vault-slider"></span>
+                               <div class="vault-switch-text"><span>ROLE</span><span>USER</span></div>
+                            </label>
+                        </div>
+                        <input type="text" id="set-discord-id" placeholder="ID Number" value="${settings.discordPingID || ''}" style="width:100%; margin-bottom:12px; background: #111; color: #fff; border: 1px solid #444; padding: 4px;">
                     </div>
-                    <input type="text" id="set-discord-id" placeholder="ID Number" value="${settings.discordPingID || ''}" style="width:100%; margin-bottom:12px; background: #111; color: #fff; border: 1px solid #444; padding: 4px;">
-                    <button id="vault-test-discord" style="width: 100%; background: #444; color: #fff; border: 1px solid #555; padding: 4px; border-radius: 2px; cursor: pointer; margin-bottom: 12px; font-size: 10px;">TEST PING</button>
                 </div>
+
+                <div id="member-discord-section" style="display: ${!cachedApiData.isbanker ? 'block' : 'none'}; margin-bottom: 12px; padding: 5px; background: #1a1a1a; border-radius: 3px;">
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                        <span id="discord-status-dot" style="color: #aaa; font-size: 11px;">
+                            ● Checking Discord Config...
+                        </span>
+                    </div>
+                </div>
+                <button id="vault-test-discord" style="display: ${settings.discordWebhook ? 'block' : 'none'}; width: 100%; background: #444; color: #fff; border: 1px solid #555; padding: 4px; border-radius: 2px; cursor: pointer; margin-bottom: 12px; font-size: 10px;">TEST PING</button>
+                <button id="vault-sync-discord" style="width: 100%; background: #444; color: #fff; border: 1px solid #555; padding: 5px; border-radius: 2px; cursor: pointer; margin-bottom: 8px; font-size: 10px;">FETCH DISCORD SETTINGS</button>
                 <button id="vault-save-settings" style="width: 100%; background: #3777ce; color: #fff; border: none; padding: 5px; border-radius: 2px; cursor: pointer;">SAVE & VALIDATE</button>
             </div>
+
             <div id="vault-collapsible-content" style="display: ${isCollapsed ? 'none' : 'block'}; margin-top: 12px;">
                 <div id="vault-shield" style="display: none;"></div>
                 <div id="vault-input-area" style="display: none;">
@@ -1131,9 +1228,33 @@
 
             GM_setValue(SETTINGS_KEY, settings);
 
+            // if banker, upload discord settings to db
+            if (cachedApiData.isbanker && settings.discordWebhook && firebaseValid) {
+                vLog("Discord | Pushing Discord settings to Database...");
+                GM_xmlhttpRequest({
+                    method: "POST",
+                    url: `${settings.firebaseUrl.replace(/\/$/, "")}/Management/discord.json?auth=${settings.firebaseApiKey}`,
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-HTTP-Method-Override": "PUT"
+                    },
+                    data: JSON.stringify({
+                        webhook: settings.discordWebhook,
+                        pingID: settings.discordPingID,
+                        pingType: settings.discordPingType,
+                        updatedBy: cachedApiData.name,
+                        timestamp: Date.now()
+                    })
+                });
+            }
+
             syncAllData(true).then(() => {
                 btn.innerText = "SAVE & VALIDATE";
-                if (tornValid && firebaseValid) {
+                const testBtn = document.getElementById('vault-test-discord');
+                if (testBtn) testBtn.style.display = settings.discordWebhook ? 'block' : 'none';
+
+                const factionValid = !authorizedFactionId || cachedApiData.faction_id === authorizedFactionId;
+                if (tornValid && firebaseValid && factionValid) {
                     document.getElementById('vault-settings-modal').style.display = 'none';
                 }
             });
@@ -1190,22 +1311,32 @@
             const val = cachedApiData.faction_money_balance; document.getElementById('vault-amount').value = formatMoney(val); validateAmount(val);
         });
         validateAmount(0);
+
+        // manual fetch discord settings
+        const syncDiscordBtn = document.getElementById('vault-sync-discord');
+        if (syncDiscordBtn) {
+            syncDiscordBtn.addEventListener('click', async (e) => {
+                e.stopPropagation();
+                const originalText = syncDiscordBtn.innerText;
+                syncDiscordBtn.innerText = "FETCHING...";
+                settings.discordWebhook = "";
+                settings.discordPingID = "";
+                settings.discordPingType = "role";
+                refreshSettingsUI();
+                await syncAllData(true);
+                syncDiscordBtn.innerText = "SYNC COMPLETE!";
+
+                setTimeout(() => {
+                    syncDiscordBtn.innerText = originalText;
+                    refreshSettingsUI();
+                }, 1500);
+            });
+        }
     }
 
     // -------------------------------------------------------------------------
     // REQUEST HANDLING
     // -------------------------------------------------------------------------
-    function validateAmount(amt) {
-        const bal = cachedApiData.faction_money_balance, sub = document.getElementById('vault-submit'), err = document.getElementById('vault-error');
-        if (!sub || !err) return;
-        if (amt > bal || amt <= 0) {
-            err.style.display = amt > bal ? 'inline-block' : 'none';
-            sub.disabled = true; sub.style.opacity = '0.5'; sub.style.cursor = 'not-allowed';
-        } else {
-            err.style.display = 'none'; sub.disabled = false; sub.style.opacity = '1'; sub.style.cursor = 'pointer';
-        }
-    }
-
     async function submitRequest() {
         const amt = parseMoney(document.getElementById('vault-amount').value);
         if (amt <= 0) return;
@@ -1214,8 +1345,20 @@
         if (btn) { btn.innerText = "Submitting..."; btn.disabled = true; }
         await syncAllData(true);
 
+        // check user faction_id matches the db auth
+        if (authorizedFactionId && cachedApiData.faction_id !== authorizedFactionId) {
+            vLog("SECURITY | Submission blocked: Faction ID mismatch!", null, 'error');
+            if (btn) {
+                btn.innerText = "LOCKED";
+                btn.disabled = true;
+            }
+            const formContainer = document.getElementById('vault-input-area');
+            if (formContainer) formContainer.style.display = 'none';
+            return;
+        }
+
         const isPrefOnline = document.getElementById('vault-pref-online').checked;
-        const timeoutVal = parseInt(document.getElementById('vault-timeout-mins').value) || 0;
+        const timeoutVal = isPrefOnline ? (parseInt(document.getElementById('vault-timeout-mins').value) || 0) : 0;
         const data = {
             name: cachedApiData.name,
             id: cachedApiData.user_id,
@@ -1246,14 +1389,12 @@
                     sendDiscordPing();
                 } else {
                     vLog("Firebase Error:", null, 'error', res.responseText);
-                    //alert("Failed to submit request to database.");
                 }
                 if (btn) { btn.innerText = "Submit Request"; btn.disabled = false; }
             },
             onerror: () => {
                 if (btn) { btn.innerText = "Submit Request"; btn.disabled = false; }
                 vLog("Firebase Error: Failed to submit.", null, 'error');
-                //alert("Network error while submitting request.");
             }
         });
     }
@@ -1264,7 +1405,6 @@
             vLog("Cannot cancel: No User ID found.", null, 'error');
             return;
         }
-
         hasActiveRequest = false;
         GM_setValue(ACTIVE_REQ_KEY, false);
         activeData = null;
@@ -1292,50 +1432,94 @@
         });
     }
 
-    function resetUI() {
-        if(pollInterval) clearInterval(pollInterval); if(timerInterval) clearInterval(timerInterval);
-        const ia = document.getElementById('vault-input-area'), sa = document.getElementById('vault-status-area');
-        if (ia && sa) { ia.style.display = 'block'; sa.style.display = 'none'; }
-        updateShieldUI();
+    async function fulfillRequest(userId, userName, amount) {
+        sendDiscordPing(null, false, false, false, true, userName, amount);
+        const deleteUrl = getDbUrl(`/vaultRequests/${userId}`, "DELETE");
+        if (!deleteUrl) return;
+
+        await new Promise((resolve) => {
+            GM_xmlhttpRequest({
+                method: "POST",
+                url: deleteUrl,
+                headers: { "X-HTTP-Method-Override": "DELETE" },
+                onload: () => resolve(),
+                onerror: () => resolve()
+            });
+        });
+        window.location.assign(`https://www.torn.com/factions.php?step=your#/tab=controls&option=give-to-user&giveMoneyTo=${userId}&money=${amount}`);
     }
 
-    function updateUI(data) {
-        const ia = document.getElementById('vault-input-area'), sa = document.getElementById('vault-status-area');
-        if (!ia || !sa) return;
-        ia.style.display = 'none'; sa.style.display = 'block';
-        const timer = () => {
-            const limit = (data.timeout || 0) * 60 * 1000, elapsed = Date.now() - data.timestamp;
-            if (limit !== 0 && elapsed >= limit) { cancelRequest(false, true); } else {
-                let timeText = limit === 0 ? "No expiration" : "";
-                if (limit !== 0) {
-                    const rem = limit - elapsed, m = Math.floor(rem / 60000), s = Math.floor((rem % 60000) / 1000);
-                    timeText = `Expires in: ${m}m ${s}s`;
-                }
-                const st = document.getElementById('vault-status-text');
-                if (st) st.innerHTML = `Requesting: <span style="color: #6fb33d; font-weight: bold;">$${formatMoney(data.amount)}</span><br><span style="color: #aaa; font-size: 11px;">${timeText}</span>`;
-                updateStatusIcon();
-            }
-        };
-        if (pollInterval) clearInterval(pollInterval);
-        if (!data || !data.id) {
-            vLog("No active request data, skipping poll interval setup.");
-            return;
-        }
-        pollInterval = setInterval(() => {
-            if (!data || !data.id) {
-                clearInterval(pollInterval);
-                return;
-            }
-            const dbUrl = getDbUrl(`/vaultRequests/${data.id}`);
-            if (dbUrl) {
-                GM_xmlhttpRequest({ method: "GET", url: dbUrl, onload: (res) => {
-                    if (res.responseText === "null") {
-                        hasActiveRequest = false; GM_setValue(ACTIVE_REQ_KEY, false); activeData = null; resetUI(); updateStatusIcon(); clearInterval(pollInterval);
+    function purgeExpiredRequests() {
+        const btn = document.getElementById('vault-mgmt-purge');
+        if (!btn || btn.innerText === "PURGING...") return;
+
+        btn.innerText = "PURGING...";
+        btn.style.opacity = "0.7";
+
+        GM_xmlhttpRequest({
+            method: "GET",
+            url: getDbUrl("/vaultRequests"),
+            onload: (res) => {
+                try {
+                    const allReqs = JSON.parse(res.responseText);
+                    if (!allReqs) {
+                        btn.innerText = "PURGE EXPIRED";
+                        btn.style.opacity = "1";
+                        return;
                     }
-                }});
+
+                    const now = Date.now();
+                    const expiredUserLinks = [];
+                    const deleteExpired = [];
+
+                    Object.keys(allReqs).forEach(userId => {
+                        const data = allReqs[userId];
+                        const limit = (data.timeout || 0) * 60 * 1000;
+
+                        if (data.pref == 1 && limit > 0 && (now - data.timestamp) >= limit) {
+                            const profileLink = `[${data.name} [${data.id}]](https://www.torn.com/profiles.php?XID=${data.id})`;
+                            expiredUserLinks.push(profileLink);
+
+                            const action = new Promise((resolve) => {
+                                GM_xmlhttpRequest({
+                                    method: "POST",
+                                    url: getDbUrl(`/vaultRequests/${userId}`),
+                                    headers: { "X-HTTP-Method-Override": "DELETE" },
+                                    onload: () => resolve(),
+                                    onerror: () => {
+                                        vLog(`Failed to delete request for ${userId}`, null, 'warn');
+                                        resolve();
+                                    }
+                                });
+                            });
+                            deleteExpired.push(action);
+                        }
+                    });
+
+                    if (deleteExpired.length > 0) {
+                        Promise.all(deleteExpired).then(() => {
+                            const bankerLink = `[${cachedApiData.name} [${cachedApiData.user_id}]](https://www.torn.com/profiles.php?XID=${cachedApiData.user_id})`;
+                            const userList = expiredUserLinks.join(', ');
+                            const msg = `❌ **PURGED** — ${bankerLink} cleared ${expiredUserLinks.length} expired request(s): ${userList}`;
+
+                            sendDiscordPing(msg);
+
+                            btn.innerText = "PURGE EXPIRED";
+                            btn.style.opacity = "1";
+                            updateManagementList();
+                        });
+                    } else {
+                        btn.innerText = "PURGE EXPIRED";
+                        btn.style.opacity = "1";
+                        updateManagementList();
+                    }
+                } catch (e) {
+                    vLog("Purge failed", null, 'error', e);
+                    btn.innerText = "PURGE EXPIRED";
+                    btn.style.opacity = "1";
+                }
             }
-        }, 20000);
-        if (timerInterval) clearInterval(timerInterval); timer(); timerInterval = setInterval(timer, 1000);
+        });
     }
 
     // -------------------------------------------------------------------------

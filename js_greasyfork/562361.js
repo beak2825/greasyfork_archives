@@ -23,8 +23,8 @@
 // @grant        GM_info
 // @grant        GM_setValue
 // @grant        GM_getValue
-// @downloadURL https://update.greasyfork.org/scripts/562361/%E7%B6%B2%E9%A0%81%E9%8C%AF%E8%AA%A4%E8%99%95%E7%90%86.user.js
-// @updateURL https://update.greasyfork.org/scripts/562361/%E7%B6%B2%E9%A0%81%E9%8C%AF%E8%AA%A4%E8%99%95%E7%90%86.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/562361/Web%20Error%20Handler.user.js
+// @updateURL https://update.greasyfork.org/scripts/562361/Web%20Error%20Handler.meta.js
 // ==/UserScript==
 
 class Error404Handler {

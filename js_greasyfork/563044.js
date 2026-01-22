@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TORN War Overwatcher
 // @namespace    http://tampermonkey.net/
-// @version      1.1
+// @version      1.2
 // @description  Track enemy faction activity patterns during war - shows when enemies are most/least active
 // @author       Marko
 // @match        https://www.torn.com/*
@@ -191,11 +191,12 @@
 
         .ow-hour-bar {
             flex: 1;
-            background: #e94560;
             min-width: 8px;
             border-radius: 2px 2px 0 0;
             position: relative;
             cursor: pointer;
+            display: flex;
+            flex-direction: column-reverse;
         }
 
         .ow-hour-bar:hover::after {
@@ -211,6 +212,22 @@
             font-size: 10px;
             white-space: nowrap;
             z-index: 10;
+        }
+
+        .ow-bar-online {
+            background: #00ff88;
+            width: 100%;
+            border-radius: 0 0 0 0;
+        }
+
+        .ow-bar-idle {
+            background: #ffa502;
+            width: 100%;
+            border-radius: 2px 2px 0 0;
+        }
+
+        .ow-hour-bar .ow-bar-online:only-child {
+            border-radius: 2px 2px 0 0;
         }
 
         .ow-input-group {
@@ -677,6 +694,160 @@
             };
         }
 
+        getExtendedStats(factionId) {
+            const faction = this.data.factions[factionId];
+            if (!faction || !faction.snapshots || faction.snapshots.length === 0) return null;
+
+            const now = Date.now();
+            const oneDayAgo = now - (24 * 60 * 60 * 1000);
+
+            // Filter snapshots from last 24 hours
+            const recentSnapshots = faction.snapshots.filter(s => s.timestamp > oneDayAgo);
+            if (recentSnapshots.length === 0) return null;
+
+            // 1. Unique members who were online in last 24h
+            const uniqueOnlineMembers = new Set();
+            for (const snapshot of recentSnapshots) {
+                if (snapshot.members) {
+                    for (const [memberId, member] of Object.entries(snapshot.members)) {
+                        if (member.status === 'Online' || member.status === 'Idle') {
+                            uniqueOnlineMembers.add(memberId);
+                        }
+                    }
+                }
+            }
+
+            // 2. Peak online moment in last 24h
+            let peakOnline = 0;
+            let peakHour = 0;
+            for (const snapshot of recentSnapshots) {
+                const totalActive = snapshot.online + snapshot.idle;
+                if (totalActive > peakOnline) {
+                    peakOnline = totalActive;
+                    peakHour = snapshot.hour;
+                }
+            }
+
+            // 3. Average idle duration (estimate based on consecutive idle statuses)
+            let totalIdleStreaks = 0;
+            let idleStreakCount = 0;
+
+            for (const [memberId, member] of Object.entries(faction.members || {})) {
+                if (!member.activityHistory) continue;
+
+                const recentHistory = member.activityHistory.filter(h => h.timestamp > oneDayAgo);
+                let currentIdleStreak = 0;
+
+                for (const entry of recentHistory) {
+                    if (entry.status === 'Idle') {
+                        currentIdleStreak++;
+                    } else {
+                        if (currentIdleStreak > 0) {
+                            totalIdleStreaks += currentIdleStreak;
+                            idleStreakCount++;
+                        }
+                        currentIdleStreak = 0;
+                    }
+                }
+                // Don't forget last streak
+                if (currentIdleStreak > 0) {
+                    totalIdleStreaks += currentIdleStreak;
+                    idleStreakCount++;
+                }
+            }
+
+            // Convert streak count to approximate minutes (each sample is ~30 sec)
+            const avgIdleMinutes = idleStreakCount > 0
+                ? Math.round((totalIdleStreaks / idleStreakCount) * 0.5)
+                : 0;
+
+            let avgIdleDuration;
+            if (avgIdleMinutes < 1) {
+                avgIdleDuration = '< 1 min';
+            } else if (avgIdleMinutes < 60) {
+                avgIdleDuration = `~${avgIdleMinutes} min`;
+            } else {
+                const hours = Math.floor(avgIdleMinutes / 60);
+                const mins = avgIdleMinutes % 60;
+                avgIdleDuration = `~${hours}h ${mins}m`;
+            }
+
+            return {
+                uniqueOnline24h: uniqueOnlineMembers.size,
+                peakOnline24h: peakOnline,
+                peakHour24h: peakHour,
+                avgIdleDuration: avgIdleDuration
+            };
+        }
+
+        getMemberExtendedStats(factionId, memberId) {
+            const faction = this.data.factions[factionId];
+            if (!faction || !faction.members || !faction.members[memberId]) return null;
+
+            const member = faction.members[memberId];
+            if (!member.activityHistory || member.activityHistory.length === 0) return null;
+
+            const now = Date.now();
+            const oneDayAgo = now - (24 * 60 * 60 * 1000);
+
+            // Filter to last 24 hours
+            const recentHistory = member.activityHistory.filter(h => h.timestamp > oneDayAgo);
+            if (recentHistory.length === 0) return null;
+
+            // Count times they came online (transitions from offline/idle to online)
+            let timesOnline = 0;
+            let lastStatus = null;
+            for (const entry of recentHistory) {
+                if (entry.status === 'Online' && lastStatus !== 'Online') {
+                    timesOnline++;
+                }
+                lastStatus = entry.status;
+            }
+
+            // Calculate average session length
+            let totalSessionSamples = 0;
+            let sessionCount = 0;
+            let currentSession = 0;
+
+            for (const entry of recentHistory) {
+                if (entry.status === 'Online' || entry.status === 'Idle') {
+                    currentSession++;
+                } else {
+                    if (currentSession > 0) {
+                        totalSessionSamples += currentSession;
+                        sessionCount++;
+                    }
+                    currentSession = 0;
+                }
+            }
+            // Don't forget current session
+            if (currentSession > 0) {
+                totalSessionSamples += currentSession;
+                sessionCount++;
+            }
+
+            // Convert to minutes (each sample ~30 sec)
+            const avgSessionMinutes = sessionCount > 0
+                ? Math.round((totalSessionSamples / sessionCount) * 0.5)
+                : 0;
+
+            let avgSessionLength;
+            if (avgSessionMinutes < 1) {
+                avgSessionLength = '< 1 min';
+            } else if (avgSessionMinutes < 60) {
+                avgSessionLength = `~${avgSessionMinutes} min`;
+            } else {
+                const hours = Math.floor(avgSessionMinutes / 60);
+                const mins = avgSessionMinutes % 60;
+                avgSessionLength = `~${hours}h ${mins}m`;
+            }
+
+            return {
+                timesOnline24h: timesOnline,
+                avgSessionLength: avgSessionLength
+            };
+        }
+
         setApiKey(key) {
             this.data.settings.apiKey = key;
             this.save();
@@ -1070,6 +1241,7 @@
             for (const factionId of this.trackedFactions) {
                 const snapshot = this.dataStore.getLatestSnapshot(factionId);
                 const factionData = this.dataStore.data.factions[factionId];
+                const extendedStats = this.dataStore.getExtendedStats(factionId);
 
                 html += `<div class="ow-enemy-faction">`;
                 html += `<h5>${factionData?.name || `Faction ${factionId}`}</h5>`;
@@ -1096,6 +1268,20 @@
                             <span class="ow-stat-value">${activePercent}%</span>
                         </div>
                     `;
+
+                    // Extended stats section
+                    if (extendedStats) {
+                        html += `<div style="border-top: 1px solid #1a4a7a; margin-top: 8px; padding-top: 8px;">`;
+                        html += `<div class="ow-stat-row">
+                            <span class="ow-stat-label">📊 Unique online (24h):</span>
+                            <span class="ow-stat-value">${extendedStats.uniqueOnline24h}</span>
+                        </div>`;
+                        html += `<div class="ow-stat-row">
+                            <span class="ow-stat-label">📈 Peak online (24h):</span>
+                            <span class="ow-stat-value">${extendedStats.peakOnline24h} @ ${String(extendedStats.peakHour24h).padStart(2, '0')}:00 TCT</span>
+                        </div>`;
+                        html += `</div>`;
+                    }
 
                     // Member list - clickable for details
                     if (snapshot.members) {
@@ -1137,6 +1323,7 @@
 
         renderMemberDetail(factionId, memberId) {
             const memberStats = this.dataStore.getMemberHourlyStats(factionId, memberId);
+            const memberExtended = this.dataStore.getMemberExtendedStats(factionId, memberId);
             const currentTz = this.dataStore.getTimezone();
 
             if (!memberStats || memberStats.totalSamples < 2) {
@@ -1158,6 +1345,14 @@
 
             let html = `<div class="ow-member-detail">
                 <h5>📊 ${memberStats.name} <button class="close-btn" data-action="close-detail">✕</button></h5>`;
+
+            // Extended member stats
+            if (memberExtended) {
+                html += `<div style="display: flex; gap: 15px; margin-bottom: 10px; font-size: 11px;">`;
+                html += `<div><span style="color: #666;">Online 24h:</span> <span style="color: #00ff88;">${memberExtended.timesOnline24h}x</span></div>`;
+                html += `<div><span style="color: #666;">Avg session:</span> <span style="color: #00d9ff;">${memberExtended.avgSessionLength}</span></div>`;
+                html += `</div>`;
+            }
 
             // Peak activity times
             if (peakHours.length > 0 && peakHours[0].samples > 0) {
@@ -1252,7 +1447,7 @@
                         const displayHour = convertUTCHourToTimezone(h.hour, currentTz);
                         html += `<div class="ow-stat-row">
                             <span class="ow-stat-label">${String(displayHour).padStart(2, '0')}:00 ${currentTz}</span>
-                            <span class="ow-stat-value">~${h.avgOnline.toFixed(1)} online</span>
+                            <span class="ow-stat-value"><span style="color:#00ff88;">~${h.avgOnline.toFixed(1)}</span> + <span style="color:#ffa502;">~${h.avgIdle.toFixed(1)} idle</span></span>
                         </div>`;
                     }
                     html += `</div>`;
@@ -1263,17 +1458,21 @@
                         const displayHour = convertUTCHourToTimezone(h.hour, currentTz);
                         html += `<div class="ow-stat-row">
                             <span class="ow-stat-label">${String(displayHour).padStart(2, '0')}:00 ${currentTz}</span>
-                            <span class="ow-stat-value danger">~${h.avgOnline.toFixed(1)} online</span>
+                            <span class="ow-stat-value danger"><span style="color:#00ff88;">~${h.avgOnline.toFixed(1)}</span> + <span style="color:#ffa502;">~${h.avgIdle.toFixed(1)} idle</span></span>
                         </div>`;
                     }
                     html += `</div>`;
                 }
 
-                // Hourly chart
+                // Hourly chart with stacked bars
                 if (hourlyStats) {
                     const maxActivity = Math.max(...hourlyStats.map(h => h.avgOnline + h.avgIdle), 1);
                     html += `<div class="ow-section">`;
                     html += `<h4>📊 24h Activity Pattern (${currentTz})</h4>`;
+                    html += `<div style="display: flex; gap: 10px; font-size: 10px; margin-bottom: 5px;">
+                        <span><span style="color:#00ff88;">■</span> Online</span>
+                        <span><span style="color:#ffa502;">■</span> Idle</span>
+                    </div>`;
                     html += `<div class="ow-hour-chart">`;
 
                     // Reorder hours based on timezone offset
@@ -1283,9 +1482,19 @@
                     })).sort((a, b) => a.displayHour - b.displayHour);
 
                     for (const h of displayStats) {
-                        const height = ((h.avgOnline + h.avgIdle) / maxActivity * 100);
-                        const tooltip = `${String(h.displayHour).padStart(2, '0')}:00 ${currentTz} - Avg ${h.avgOnline.toFixed(1)} online (${h.samples} samples)`;
-                        html += `<div class="ow-hour-bar" style="height: ${Math.max(height, 2)}%;" data-tooltip="${tooltip}"></div>`;
+                        const totalHeight = ((h.avgOnline + h.avgIdle) / maxActivity * 100);
+                        const onlineHeight = h.avgOnline / maxActivity * 100;
+                        const idleHeight = h.avgIdle / maxActivity * 100;
+                        const tooltip = `${String(h.displayHour).padStart(2, '0')}:00 ${currentTz} - ${h.avgOnline.toFixed(1)} online + ${h.avgIdle.toFixed(1)} idle (${h.samples} samples)`;
+
+                        html += `<div class="ow-hour-bar" style="height: ${Math.max(totalHeight, 2)}%;" data-tooltip="${tooltip}">`;
+                        if (idleHeight > 0) {
+                            html += `<div class="ow-bar-idle" style="height: ${(idleHeight / totalHeight) * 100}%;"></div>`;
+                        }
+                        if (onlineHeight > 0) {
+                            html += `<div class="ow-bar-online" style="height: ${(onlineHeight / totalHeight) * 100}%;"></div>`;
+                        }
+                        html += `</div>`;
                     }
                     html += `</div>`;
                     html += `<div style="display: flex; justify-content: space-between; font-size: 10px; color: #666; margin-top: 3px;">

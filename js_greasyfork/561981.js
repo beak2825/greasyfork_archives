@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Jsoso
 // @namespace    Jsoso
-// @version      1.0.2
+// @version      1.0.3
 // @description  通用搜索框架 - 用于多个网站的自动外部资源搜索
 // @author       sexjpg
 // @grant        GM_xmlhttpRequest
@@ -16,6 +16,7 @@
 // @match        *://*.javdb.com/*
 // @match        *://*.xiaojiadianmovie.be/*
 // @match        *://*.javbus.com/*
+// @match        *://*supjav.com/*
 // @downloadURL https://update.greasyfork.org/scripts/561981/Jsoso.user.js
 // @updateURL https://update.greasyfork.org/scripts/561981/Jsoso.meta.js
 // ==/UserScript==
@@ -718,11 +719,20 @@ class Utils {
         return id;
     }
 
+    static checkCF(doc) {
+        //检查是否撞CF防火墙,如果是返回ture
+        const isnoscirpt = doc.querySelectorAll('noscript');
+        if (isnoscirpt.length > 0) {
+            return true;
+        }
+    }
+
 }
 
 
 
 const manager = new SearchManager();
+
 // 添加网站和解析结果
 manager.addSite(new Site(
     '123av',
@@ -784,6 +794,9 @@ manager.addSite(new Site(
         if (somethingFound) {
             previewData.url = `https://javfc2.xyz/search?q=${id}`;
         }
+        if (Utils.checkCF(doc)){
+            console.warn("遇到CF人工检测,请打开浏览器控制台查看",`https://javfc2.xyz/search?q=${id}`)
+        }
     },
     'bg-purple-500'
 ));
@@ -809,6 +822,9 @@ manager.addSite(new Site(
     (response, id, previewData) => {
         const parser = new DOMParser();
         const doc = parser.parseFromString(response.responseText, "text/html");
+        if (Utils.checkCF(doc)){
+            console.warn("遇到CF人工检测,请打开浏览器控制台查看",`https://supjav.com/?s=${id}`)
+        }
         const h1Element = doc.querySelector("h1");
         if (h1Element && h1Element.textContent.includes(`Search Result For: ${id}`)) {
             const resultCount = h1Element.textContent.match(/\((\d+)\)/);
@@ -930,14 +946,14 @@ const floatingMenu = new FloatingMenu("Jsoso");
 })();
 
 
-function JsosoConfig(){
+function JsosoConfig() {
     floatingMenu.menu.style.display = "block";
     floatingMenu.content.style.display = "block";
 }
 
 // 替换掉FC2PPVDB中无图片的图片
 function FC2DB_removeNoImage() {
-    if(!window.location.href.includes("fc2ppvdb.com"))return
+    if (!window.location.href.includes("fc2ppvdb.com")) return
     const ArticleImage = document.querySelectorAll("#ArticleImage");
     for (let i = 0; i < ArticleImage.length; i++) {
         ArticleImage[i].classList.remove("hidden");
@@ -1067,7 +1083,21 @@ function javbus_wall() {
     return items
 }
 
-
+function supjav_wall() {
+    const items = []
+    const items_ = document.querySelectorAll('.posts.clearfix div.post')
+    items_.forEach(item => {
+        const title = item.querySelector('a')?.title ?? ""
+        const ids = title.replace(/\[.*?\]/g, '').split(' ')
+        const id = ids[0].includes('FC2') ? ids[1] : ids[0]
+        const element = item
+        items.push({
+            id,
+            element
+        })
+    })
+    return items
+}
 
 function startSearch() {
     manager.SearchItems = [];
@@ -1079,6 +1109,7 @@ function startSearch() {
     manager.SearchItems.push(...FC2_singlepage());
     manager.SearchItems.push(...FC2_ranking());
     manager.SearchItems.push(...javbus_wall());
+    manager.SearchItems.push(...supjav_wall());
     console.log('准备开始搜索', manager.SearchItems);
     manager.initializeSearch();
     FC2DB_removeNoImage()
