@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Baidu Homepage Beautification
 // @namespace    http://tampermonkey.net/
-// @version      1.3.1
+// @version      1.3.2
 // @description  移除所有AI相关内容，只展示纯粹搜索工具
 // @author       GuoCS
 // @match        https://www.baidu.com/
@@ -57,7 +57,7 @@
             display: none !important;
         }
 
-    .chat-input-tool,.panel-list_8jHmm ,.ai-tools-container_S4Ind ,#bottom_layer { display: none !important; }
+    .chat-input-tool,.panel-list_8jHmm ,.dashboard_3d38h,#bottom_layer { display: none !important; }
 
   #chat-input-top-band{ padding:2px;}
 /* 搜索框&预测框背景透明

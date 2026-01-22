@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         [Pokechill] CN-SEARCH
 // @namespace    https://play-pokechill.github.io/
-// @version      2.6.0
-// @description  Pokechill搜索框 中文匹配 + 提示条 + Enter / ↑↓ / 数字键 / 鼠标 选择 + 输入框左键点击清空
+// @version      2.7.0
+// @description  Pokechill搜索框 中文模糊匹配 + 提示条 + Enter / ↑↓ / 数字键 / 鼠标 选择 + 输入框左键点击清空
 // @author       GPT-DiamondMoo
 // @license      MIT
 // @icon         https://play-pokechill.github.io/img/icons/icon.png
@@ -1209,6 +1209,12 @@
         "Flash Psycha": "超能引擎",
         "Flash Fae": "妖精引擎",
         "Flash Herba": "青草引擎",
+        "Flash Herba": "青草引擎",
+        "Clima Tact": "气候战术" ,
+        "Intangible": "无形体" ,
+        "Hyperconductor": "超导体" ,
+        "Fae Rush": "拨雾" ,
+        "Molt Shed": "蜕壳" ,
 
         //官方特性
         "Stench": "恶臭",

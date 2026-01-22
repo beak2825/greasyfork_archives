@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         [Pokechill] EN-CN
 // @namespace    https://play-pokechill.github.io/
-// @version      2.6.0
+// @version      2.7.0
 // @description  Pokechill 全页面离线简体中文汉化
 // @author       GPT-DiamondMoo
 // @license      MIT
@@ -173,8 +173,9 @@
         [/^Power increases by x(\d+\.?\d*)-(\d+\.?\d*) if (.+)\/(.+) is risen/i, '若$3或$4能力提升100%则招式威力乘以$2，提升50%则招式威力乘以$1'],
         [/^Attacks x(\d+\.?\d*) (\w+) than usual. Power increases by x(\d+\.?\d*)-(\d+\.?\d*) if (.+)\/(.+) is risen/i, '进攻速度变$2为原来的$1倍。若$5或$6能力提升100%则招式威力乘以$4，提升50%则招式威力乘以$3'],
         [/^Decreases enemy (.+) by (\d+)%. Power increases by x(\d+\.?\d*)-(\d+\.?\d*) if (.+)\/(.+) is risen/i, '敌人的$1降低$2%。若$5或$6能力提升100%则招式威力乘以$4，提升50%则招式威力乘以$3'],
+        [/^Received damage from non-(.+) moves? are reduced by (\d+)%/i, '受到的非$1伤害降低$2%'],
+        [/^Weather changed by the user is extended by (\d+) turns?/i, '引发的天气效果持续时间延长$1回合'],
         [/^/i, ''],
-
 
         //遗传辅助道具
         [/^(.+): Multiplies by (\d+) the chance to inherit (.+) Iv's/i,
@@ -1665,6 +1666,11 @@
         "Flash Psycha": "超能引擎",
         "Flash Fae": "妖精引擎",
         "Flash Herba": "青草引擎",
+        "Clima Tact": "气候战术" ,
+        "Intangible": "无形体" ,
+        "Hyperconductor": "超导体" ,
+        "Fae Rush": "拨雾" ,
+        "Molt Shed": "蜕壳" ,
 
         //官方特性
         "Stench": "恶臭",
@@ -3266,6 +3272,7 @@
         "Tatsugirinite": "米立龙进化石",
         "Glimmoranite": "晶光花进化石",
         "Raichunite": "雷丘进化石",
+
         // 持有道具
         "Exchange":"兑换",
         "Black Belt":"黑带",
@@ -3286,23 +3293,26 @@
         "Soft Sand":"柔软沙子",
         "Spell Tag":"咒术之符",
         "Twisted Spoon":"弯曲的汤匙",
+
         // 树果
-        "Occa Berry":"火之果",
-        "Passho Berry":"水之果",
-        "Wacan Berry":"电之果",
-        "Rindo Berry":"草之果",
-        "Yache Berry":"冰之果",
-        "Chople Berry":"格斗之果",
-        "Kebia Berry":"毒之果",
-        "Shuca Berry":"地面之果",
-        "Coba Berry":"飞行之果",
-        "Payapa Berry":"超能力之果",
-        "Tanga Berry":"虫之果",
-        "Charti Berry":"岩石之果",
-        "Kasib Berry":"幽灵之果",
-        "Haban Berry":"龙之果",
-        "Colbur Berry":"恶之果",
-        "Babiri Berry":"钢之果",
+        "Occa Berry":"巧可果-火",
+        "Passho Berry":"千香果-水",
+        "Wacan Berry":"烛木果-电",
+        "Rindo Berry":"罗子果-草",
+        "Yache Berry":"番荔果-冰",
+        "Chople Berry":"莲蒲果-格斗",
+        "Kebia Berry":"通通果-毒",
+        "Shuca Berry":"腰木果-地面",
+        "Coba Berry":"棱瓜果-飞行",
+        "Payapa Berry":"福禄果-超能力",
+        "Tanga Berry":"扁樱果-虫",
+        "Charti Berry":"草蚕果-岩石",
+        "Kasib Berry":"佛柑果-幽灵",
+        "Haban Berry":"莓榴果-龙",
+        "Colbur Berry":"刺耳果-恶",
+        "Babiri Berry":"霹霹果-钢",
+        "Roseli Berry":"洛玫果-妖精",
+
         // 特殊道具
         "Luck Incense":"幸运薰香",
         "Pure Incense":"洁净薰香",
@@ -3473,7 +3483,7 @@
         "Operator":"运算符",
         "Operators":"运算符",
         "![keyword]: Exclude from search":"![关键词]: 从搜索结果中排除该关键词。例：!water。",
-        "[keywordA] or [keywordB]: Search keywordA OR keywordB":"[关键词A] or 关键词B]: 搜索 关键词A 或 关键词B。例：water or fire",
+        "[keywordA] or [keywordB]: Search keywordA OR keywordB":"[关键词A] or [关键词B]: 搜索 关键词A 或 关键词B。例：water or fire",
         "[keywordA] [keywordB]: Search for keywordA AND keywordB":"[关键词A] [关键词B]：同时搜索 关键词A 和 关键词B。例：water fire",
         "shiny, pokerus, [type], [ability], [hidden ability], [level], [move]":"shiny, pokerus, [属性], [特性], [隐藏特性], [等级], [招式]",
         "unobtainable, wild, park, event, frontier, shiny, caught, [type], [hidden ability]":"unobtainable, wild, park, event, frontier, shiny, caught, [属性], [隐藏特性]",
@@ -3510,6 +3520,7 @@
         "Select a host Pokemon":"选择一只宿主宝可梦",
         "sample Pokemon":"样本宝可梦",
         "host Pokemon":"宿主宝可梦",
+        "Pokerus detected on the host! Genetic compatibility is increased by one level!":"在宿主宝可梦身上检测到宝可病毒！遗传兼容度提升一级！",
 
         "Select a Pokemon to use the":"选择一只宝可梦使用",
         "Select a Pokemon to teach":"选择一只宝可梦教学",
@@ -3697,6 +3708,7 @@
         "BST":"种族值",
         "IV's":"个体值",
         "IV":"个体值",
+        "Total":"总计",
         "below":"当低于",
         "HP":"生命",
         "none":"无",
@@ -3733,6 +3745,15 @@
         "Full Screen":"全屏",
         "Import":"导入",
         "Data":"数据",
+        "Data to Text":"数据转文本",
+        "This is your savefile code":"这是你的存档代码",
+        "You can copy or paste savefile codes here to export or import saves":"你可以在此复制或粘贴存档代码，以导出或导入存档",
+        "Load Code":"加载代码",
+        "Copy":"复制",
+        "Paste":"粘贴",
+        "Load":"加载",
+        "Code":"代码",
+        "Substract 1 to current Wild Area rotation:":"减1当前旷野地带轮次",
         "Theme":"主题",
         "Tutorial":"教程",
         "Tutorials":"教程",

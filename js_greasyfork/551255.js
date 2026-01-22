@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Decluttered YouTube Search
 // @namespace    http://github.com/dv-001
-// @version      0.1.1
+// @version      0.1.2
 // @description  Remove irrelevant/extraneous items from YouTube search results with a toggleable menu.
 // @author       dv-001
 // @match        https://www.youtube.com/*
@@ -97,10 +97,8 @@
 		gearButton.id = 'dyts-settings-button';
 
 
-		// Gear icon selector (so we don't have to store the path data ourselves)
-		const gearSelector = 'iron-iconset-svg #settings path';
-		const gearSvgPath = document.querySelector(gearSelector).getAttribute('d');
-
+		// Gear icon
+		const gearSvgPath = 'M12.844 1h-1.687a2 2 0 00-1.962 1.616 3 3 0 01-3.92 2.263 2 2 0 00-2.38.891l-.842 1.46a2 2 0 00.417 2.507 3 3 0 010 4.525 2 2 0 00-.417 2.507l.843 1.46a2 2 0 002.38.892 3.001 3.001 0 013.918 2.263A2 2 0 0011.157 23h1.686a2 2 0 001.963-1.615 3.002 3.002 0 013.92-2.263 2 2 0 002.38-.892l.842-1.46a2 2 0 00-.418-2.507 3 3 0 010-4.526 2 2 0 00.418-2.508l-.843-1.46a2 2 0 00-2.38-.891 3 3 0 01-3.919-2.263A2 2 0 0012.844 1Zm-1.767 2.347a6 6 0 00.08-.347h1.687a4.98 4.98 0 002.407 3.37 4.98 4.98 0 004.122.4l.843 1.46A4.98 4.98 0 0018.5 12a4.98 4.98 0 001.716 3.77l-.843 1.46a4.98 4.98 0 00-4.123.4A4.979 4.979 0 0012.843 21h-1.686a4.98 4.98 0 00-2.408-3.371 4.999 4.999 0 00-4.12-.399l-.844-1.46A4.979 4.979 0 005.5 12a4.98 4.98 0 00-1.715-3.77l.842-1.459a4.98 4.98 0 004.123-.399 4.981 4.981 0 002.327-3.025ZM16 12a4 4 0 11-7.999 0 4 4 0 018 0Zm-4 2a2 2 0 100-4 2 2 0 000 4Z';
 		const svgNS = 'http://www.w3.org/2000/svg';
 		const svg = document.createElementNS(svgNS, 'svg');
 		svg.setAttribute('viewBox', '0 0 24 24');
@@ -245,6 +243,11 @@
 
 	function addGlobalStyles() {
 		GM_addStyle(`
+			#dyts-settings-container {
+				margin-left: 8px;
+				border-radius: 50%;
+				background: var(--yt-spec-additive-background);
+			}
 			#dyts-settings-button {
 				background: none;
 				border: none;
@@ -252,18 +255,17 @@
 				width: 40px;
 				height: 40px;
 				padding: 8px;
-				margin-left: 8px;
 				border-radius: 50%;
-				fill: var(--yt-spec-icon-inactive);
+				fill: var(--yt-spec-inverted-background);
 			}
-				
+
 			#dyts-settings-button:hover {
-				background-color: var(--yt-spec-badge-chip-background);
+				background-color: var(--yt-spec-additive-background);
 			}
 
 			#dyts-settings-panel {
 				display: none;
-				
+
 				width: max-content;
 				position: absolute;
 				top: 5rem;
@@ -274,8 +276,8 @@
 				flex-wrap: nowrap;
 				row-gap: 1rem;
 
-				background-color: var(--yt-spec-overlay-additive-background);
-				border: 2px solid var(--yt-spec-grey-4);
+				background-color: color-mix(in srgb, var(--yt-spec-base-background), var(--yt-spec-additive-background));
+				border: 2px solid var(--yt-spec-grey-3);
 				border-radius: 1.5rem;
 				padding: 1rem;
 				box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
@@ -320,8 +322,8 @@
 				width: auto;
 				margin-left: 0.5rem;
 				margin-right: 0.5rem;
-				background-color: var(--yt-spec-badge-chip-background);
-				border: 1px solid var(--yt-spec-10-percent-layer);
+				background-color: var(--yt-spec-additive-background);
+    			border: 1px solid var(--yt-spec-additive-background);
 				color: var(--yt-spec-text-primary);
 				border-radius: 0.5rem;
 				padding: 0.25rem;

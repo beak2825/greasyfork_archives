@@ -1,0 +1,321 @@
+// ==UserScript==
+// @name         Site Redirector Pro
+// @name:zh-CN   网站重定向助手
+// @namespace    https://github.com/Jsaeron/site-redirector
+// @version      1.3.0
+// @description  Block distracting websites with a cooldown timer and redirect to productive sites
+// @description:zh-CN  拦截分心网站，冷静倒计时后重定向到指定网站，帮助你保持专注
+// @author       Daniel
+// @license      MIT
+// @homepage     https://github.com/Jsaeron/site-redirector
+// @supportURL   https://github.com/Jsaeron/site-redirector/issues
+// @match        *://*/*
+// @grant        GM_setValue
+// @grant        GM_getValue
+// @grant        GM_registerMenuCommand
+// @grant        GM_xmlhttpRequest
+// @connect      v1.hitokoto.cn
+// @run-at       document-start
+// @downloadURL https://update.greasyfork.org/scripts/563551/Site%20Redirector%20Pro.user.js
+// @updateURL https://update.greasyfork.org/scripts/563551/Site%20Redirector%20Pro.meta.js
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    // ============ 配置区域 ============
+    const DEFAULT_TARGET = 'https://claude.ai';
+    const DEFAULT_BLACKLIST = ['bilibili.com', 'douyin.com', 'weibo.com', 'x.com'];
+    const CONFIG = {
+        target: GM_getValue('redirectTarget', DEFAULT_TARGET),  // 重定向目标（可通过菜单修改）
+        cooldown: 30,                  // 冷静期秒数
+    };
+
+    // 获取黑名单
+    function getBlacklist() {
+        return GM_getValue('blacklist', DEFAULT_BLACKLIST);
+    }
+
+    // 检查当前网站是否在黑名单中
+    function isBlocked(hostname) {
+        const blacklist = getBlacklist();
+        return blacklist.some(site => hostname === site || hostname.endsWith('.' + site));
+    }
+
+    // 如果不在黑名单中，直接退出
+    if (!isBlocked(location.hostname)) {
+        return;
+    }
+
+    // 检查临时绕过（选择继续摸鱼后 5 分钟内不再拦截）
+    const bypassKey = 'bypass_' + location.hostname;
+    const bypassExpire = GM_getValue(bypassKey, 0);
+    if (Date.now() < bypassExpire) {
+        return;  // 在绕过期内，不拦截
+    }
+    // =================================
+
+    // 注册菜单命令：设置重定向目标
+    GM_registerMenuCommand('🎯 设置重定向目标', () => {
+        const current = GM_getValue('redirectTarget', DEFAULT_TARGET);
+        const newTarget = prompt('请输入重定向目标网址：', current);
+        if (newTarget && newTarget.trim()) {
+            try {
+                new URL(newTarget.trim());  // 验证 URL 格式
+                GM_setValue('redirectTarget', newTarget.trim());
+                alert(`重定向目标已设置为：${newTarget.trim()}`);
+            } catch (e) {
+                alert('无效的网址格式，请输入完整的 URL（如 https://example.com）');
+            }
+        }
+    });
+
+    // 注册菜单命令：查看黑名单
+    GM_registerMenuCommand('📋 查看黑名单', () => {
+        const blacklist = getBlacklist();
+        alert(`当前黑名单（${blacklist.length} 个网站）：\n\n${blacklist.join('\n')}`);
+    });
+
+    // 注册菜单命令：添加到黑名单
+    GM_registerMenuCommand('➕ 添加网站到黑名单', () => {
+        const site = prompt('请输入要拦截的域名（如 example.com）：', '');
+        if (site && site.trim()) {
+            const domain = site.trim().toLowerCase().replace(/^(https?:\/\/)?(www\.)?/, '').replace(/\/.*$/, '');
+            const blacklist = getBlacklist();
+            if (blacklist.includes(domain)) {
+                alert(`${domain} 已在黑名单中`);
+            } else {
+                blacklist.push(domain);
+                GM_setValue('blacklist', blacklist);
+                alert(`已添加 ${domain} 到黑名单`);
+            }
+        }
+    });
+
+    // 注册菜单命令：从黑名单移除
+    GM_registerMenuCommand('➖ 从黑名单移除网站', () => {
+        const blacklist = getBlacklist();
+        if (blacklist.length === 0) {
+            alert('黑名单为空');
+            return;
+        }
+        const site = prompt(`当前黑名单：\n${blacklist.join('\n')}\n\n请输入要移除的域名：`, '');
+        if (site && site.trim()) {
+            const domain = site.trim().toLowerCase();
+            const index = blacklist.indexOf(domain);
+            if (index > -1) {
+                blacklist.splice(index, 1);
+                GM_setValue('blacklist', blacklist);
+                alert(`已从黑名单移除 ${domain}`);
+            } else {
+                alert(`${domain} 不在黑名单中`);
+            }
+        }
+    });
+
+    // 注册菜单命令：编辑完整黑名单
+    GM_registerMenuCommand('✏️ 编辑完整黑名单', () => {
+        const blacklist = getBlacklist();
+        const input = prompt('编辑黑名单（每行一个域名，用换行或逗号分隔）：', blacklist.join(', '));
+        if (input !== null) {
+            const newList = input.split(/[,\n]/).map(s => s.trim().toLowerCase().replace(/^(https?:\/\/)?(www\.)?/, '').replace(/\/.*$/, '')).filter(s => s.length > 0);
+            GM_setValue('blacklist', newList);
+            alert(`黑名单已更新，共 ${newList.length} 个网站`);
+        }
+    });
+
+    // 注册菜单命令：重置黑名单
+    GM_registerMenuCommand('🔙 重置为默认黑名单', () => {
+        if (confirm(`确定要重置黑名单为默认设置吗？\n\n默认黑名单：\n${DEFAULT_BLACKLIST.join('\n')}`)) {
+            GM_setValue('blacklist', DEFAULT_BLACKLIST);
+            alert('黑名单已重置为默认设置');
+        }
+    });
+
+    // 注册菜单命令：重置计数
+    GM_registerMenuCommand('🔄 重置拦截计数', () => {
+        GM_setValue('blockCount', 0);
+        alert('拦截计数已重置！');
+    });
+
+    // 注册菜单命令：查看统计
+    GM_registerMenuCommand('📊 查看拦截统计', () => {
+        const count = GM_getValue('blockCount', 0);
+        const target = GM_getValue('redirectTarget', DEFAULT_TARGET);
+        const blacklist = getBlacklist();
+        alert(`累计拦截次数：${count}\n当前重定向目标：${target}\n黑名单网站数：${blacklist.length}`);
+    });
+
+    // 更新拦截计数
+    const count = GM_getValue('blockCount', 0) + 1;
+    GM_setValue('blockCount', count);
+
+    // 阻止原页面加载
+    document.documentElement.innerHTML = '';
+    document.head.innerHTML = `
+        <style>
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            body {
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+                color: #fff;
+            }
+            .container { text-align: center; padding: 20px; }
+            .icon { font-size: 64px; margin-bottom: 20px; }
+            .title { font-size: 28px; font-weight: 600; margin-bottom: 10px; }
+            .subtitle { color: #e94560; margin-bottom: 8px; font-size: 14px; }
+            .count { color: #888; margin-bottom: 40px; }
+            .timer {
+                font-size: 72px;
+                font-weight: 700;
+                color: #e94560;
+                margin-bottom: 20px;
+                font-variant-numeric: tabular-nums;
+            }
+            .hint { color: #666; font-size: 14px; }
+            .quote-container { margin-top: 40px; padding: 20px; max-width: 500px; }
+            .quote-text { color: #aaa; font-size: 16px; font-style: italic; line-height: 1.6; }
+            .quote-source { color: #666; font-size: 12px; margin-top: 10px; }
+            .actions { margin-top: 30px; display: flex; gap: 12px; justify-content: center; }
+            .btn {
+                padding: 10px 24px;
+                border-radius: 6px;
+                cursor: pointer;
+                transition: all 0.2s;
+                font-size: 14px;
+            }
+            .btn-primary {
+                background: #e94560;
+                border: none;
+                color: #fff;
+            }
+            .btn-primary:hover { background: #d63850; }
+            .btn-secondary {
+                background: transparent;
+                border: 1px solid #444;
+                color: #666;
+            }
+            .btn-secondary:hover { border-color: #888; color: #aaa; }
+            .choice-container { display: none; margin-top: 30px; }
+            .choice-title { font-size: 20px; margin-bottom: 20px; color: #aaa; }
+            .pills { display: flex; gap: 30px; justify-content: center; }
+            .pill {
+                padding: 20px 40px;
+                border-radius: 30px;
+                cursor: pointer;
+                transition: all 0.3s;
+                font-size: 16px;
+                font-weight: 600;
+                border: none;
+                min-width: 160px;
+            }
+            .pill-blue {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: #fff;
+                box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            }
+            .pill-blue:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6); }
+            .pill-red {
+                background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+                color: #fff;
+                box-shadow: 0 4px 15px rgba(245, 87, 108, 0.4);
+            }
+            .pill-red:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(245, 87, 108, 0.6); }
+            .pill-label { display: block; font-size: 12px; margin-top: 5px; opacity: 0.8; font-weight: normal; }
+        </style>
+    `;
+
+    document.body.innerHTML = `
+        <div class="container">
+            <div class="icon">🛑</div>
+            <div class="title">你确定要摸鱼吗？</div>
+            <div class="subtitle">${location.hostname}</div>
+            <div class="count">这是你第 <strong>${count}</strong> 次被拦截</div>
+            <div class="timer" id="countdown">${CONFIG.cooldown}</div>
+            <div class="hint" id="hint">${CONFIG.cooldown}秒冷静期后做出你的选择</div>
+            <div class="actions" id="actions">
+                <button class="btn btn-secondary" id="skip">算了，回去干活</button>
+            </div>
+            <div class="choice-container" id="choice">
+                <div class="choice-title">冷静期结束，做出你的选择</div>
+                <div class="pills">
+                    <button class="pill pill-blue" id="blue-pill">
+                        💼 回去干活
+                        <span class="pill-label">前往工作页面</span>
+                    </button>
+                    <button class="pill pill-red" id="red-pill">
+                        🎮 就要摸鱼
+                        <span class="pill-label">继续访问此网站</span>
+                    </button>
+                </div>
+            </div>
+            <div class="quote-container">
+                <div class="quote-text" id="quote">加载中...</div>
+                <div class="quote-source" id="quote-source"></div>
+            </div>
+        </div>
+    `;
+
+    // 获取一言语录
+    GM_xmlhttpRequest({
+        method: 'GET',
+        url: 'https://v1.hitokoto.cn/?c=d&c=h&c=i&c=k',  // d=哲学, h=影视, i=诗词, k=网易云热评
+        onload: function(response) {
+            try {
+                const data = JSON.parse(response.responseText);
+                document.getElementById('quote').textContent = `「${data.hitokoto}」`;
+                const source = data.from_who ? `—— ${data.from_who}「${data.from}」` : `—— ${data.from}`;
+                document.getElementById('quote-source').textContent = source;
+            } catch (e) {
+                document.getElementById('quote').textContent = '「自律给我自由」';
+                document.getElementById('quote-source').textContent = '—— 康德';
+            }
+        },
+        onerror: function() {
+            document.getElementById('quote').textContent = '「你的时间有限，不要浪费在别人的生活里」';
+            document.getElementById('quote-source').textContent = '—— 乔布斯';
+        }
+    });
+
+    // 倒计时
+    let remaining = CONFIG.cooldown;
+    const countdownEl = document.getElementById('countdown');
+    const timer = setInterval(() => {
+        remaining--;
+        countdownEl.textContent = remaining;
+        if (remaining <= 0) {
+            clearInterval(timer);
+            showChoice();
+        }
+    }, 1000);
+
+    // 显示选择界面
+    function showChoice() {
+        document.getElementById('countdown').textContent = '⏰';
+        document.getElementById('hint').textContent = '时间到！做出你的选择';
+        document.getElementById('actions').style.display = 'none';
+        document.getElementById('choice').style.display = 'block';
+    }
+
+    // 直接跳转按钮（冷静期内）
+    document.getElementById('skip').addEventListener('click', () => {
+        clearInterval(timer);
+        window.location.replace(CONFIG.target);
+    });
+
+    // 蓝色药丸：回去干活
+    document.getElementById('blue-pill').addEventListener('click', () => {
+        window.location.replace(CONFIG.target);
+    });
+
+    // 红色药丸：继续摸鱼（设置 5 分钟绕过）
+    document.getElementById('red-pill').addEventListener('click', () => {
+        const bypassKey = 'bypass_' + location.hostname;
+        GM_setValue(bypassKey, Date.now() + 5 * 60 * 1000);  // 5 分钟后过期
+        location.reload();
+    });
+})();

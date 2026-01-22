@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Linux Do 自定义类别
 // @namespace    ddc/linux-do-custom-categories
-// @version      0.0.6
+// @version      0.0.7
 // @author       DDC(NaiveMagic)
 // @description  Linux Do Custom Categories
 // @license      MIT
@@ -27,6 +27,7 @@
   const CATEGORY_METADATA_KEY = "categoryMetadataCache";
   const CATEGORY_PATH_KEY = "categoryPathCache";
   const TAG_ICON_CACHE_KEY = "tagIconCache";
+  const EMOJI_CACHE_KEY = "emojiCache";
   const REQUEST_CONTROL_KEY = "requestControlSettings";
   const OPEN_TOPIC_NEW_TAB_KEY = "customTopicOpenInNewTab";
   const DEFAULT_REQUEST_CONTROL_SETTINGS = {
@@ -95,6 +96,12 @@
   }
   function saveTagIconCache(cache) {
     _GM_setValue(TAG_ICON_CACHE_KEY, cache);
+  }
+  function getEmojiCache() {
+    return _GM_getValue(EMOJI_CACHE_KEY, null);
+  }
+  function saveEmojiCache(cache) {
+    _GM_setValue(EMOJI_CACHE_KEY, cache);
   }
   function getCategoryPathCache() {
     return _GM_getValue(CATEGORY_PATH_KEY, null);
@@ -1453,7 +1460,18 @@
   const CUSTOM_STYLE_ID = "custom-category-group-style";
   const ACTIVE_CLASS = "active";
   const LISTENER_ATTACHED_ATTR = "data-custom-group-listener";
+  const DRAG_LISTENER_ATTR = "data-custom-group-dnd";
+  const CUSTOM_DRAG_HANDLE_CLASS = "custom-category-drag-handle";
+  const CUSTOM_DRAGGING_CLASS = "custom-category-dragging";
+  const CUSTOM_DROP_TARGET_CLASS = "custom-category-drop-target";
+  const DROP_POSITION_ATTR = "data-drop-position";
   let activeGroupId = null;
+  let draggingGroupId = null;
+  let dropTargetId = null;
+  let isDragging = false;
+  let dropPosition = "before";
+  let activePointerId = null;
+  let activeTouchId = null;
   function buildCustomGroupHref(name) {
     const trimmed = name.trim();
     if (!trimmed) {
@@ -1565,6 +1583,47 @@
     .${CUSTOM_ITEM_CLASS} .${CUSTOM_ACTION_CLASS}:hover {
       background: var(--primary-low, rgba(0, 0, 0, 0.08));
     }
+
+    .${CUSTOM_ITEM_CLASS} .${CUSTOM_DRAG_HANDLE_CLASS} {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1em;
+      height: 1em;
+      opacity: 0;
+      pointer-events: none;
+      color: var(--primary-medium, #888);
+      cursor: grab;
+      touch-action: none;
+      transition: opacity 0.15s ease;
+    }
+
+    .mobile-view .${CUSTOM_ITEM_CLASS} .${CUSTOM_DRAG_HANDLE_CLASS} {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .${CUSTOM_ITEM_CLASS}:hover .${CUSTOM_DRAG_HANDLE_CLASS} {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .${CUSTOM_ITEM_CLASS}.${CUSTOM_DRAGGING_CLASS} {
+      opacity: 0.6;
+    }
+
+    .${CUSTOM_ITEM_CLASS}.${CUSTOM_DROP_TARGET_CLASS} {
+      background: var(--primary-low, rgba(0, 0, 0, 0.06));
+      border-radius: 6px;
+    }
+
+    .${CUSTOM_ITEM_CLASS}.${CUSTOM_DROP_TARGET_CLASS}[${DROP_POSITION_ATTR}="before"] {
+      box-shadow: inset 0 2px 0 var(--primary-medium, rgba(0, 0, 0, 0.2));
+    }
+
+    .${CUSTOM_ITEM_CLASS}.${CUSTOM_DROP_TARGET_CLASS}[${DROP_POSITION_ATTR}="after"] {
+      box-shadow: inset 0 -2px 0 var(--primary-medium, rgba(0, 0, 0, 0.2));
+    }
   `;
     const styleEl = createEl("style", { id: CUSTOM_STYLE_ID }, [styles]);
     document.head.appendChild(styleEl);
@@ -1607,6 +1666,22 @@
     });
     return action;
   }
+  function createDragHandle() {
+    const handle = createEl("span", {
+      class: CUSTOM_DRAG_HANDLE_CLASS,
+      draggable: "true",
+      role: "button",
+      tabindex: "0",
+      title: "拖拽排序",
+      "aria-label": "拖拽排序"
+    });
+    handle.appendChild(createIconSvg("grip-lines"));
+    handle.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+    });
+    return handle;
+  }
   function openCategoryEditModal() {
     const editButton = document.querySelector(
       `${CATEGORY_SECTION_SELECTOR} .sidebar-section-header-button`
@@ -1638,13 +1713,12 @@
       {
         class: "sidebar-section-link sidebar-row",
         href: buildCustomGroupHref(group.name),
+        draggable: "false",
         "data-custom-group-id": group.id
       },
       [
         createEl("span", { class: "sidebar-section-link-prefix icon" }, [
-          createEl("span", {
-            style: "width: 1em; height: 1em; display: inline-block;"
-          })
+          createDragHandle()
         ]),
         createEl("span", { class: "sidebar-section-link-content-text" }, [
           group.name
@@ -1654,6 +1728,9 @@
     );
     link.addEventListener("click", (e) => {
       e.preventDefault();
+      if (isDragging) {
+        return;
+      }
       onGroupClick(group);
     });
     const li = createEl("li", {
@@ -1663,9 +1740,308 @@
     li.appendChild(link);
     return li;
   }
+  function getCustomItemFromTarget(target) {
+    const element = target instanceof Element ? target : target instanceof Node ? target.parentElement : null;
+    if (!element) {
+      return null;
+    }
+    const item = element.closest(
+      `.${CUSTOM_ITEM_CLASS}[data-custom-group-id]`
+    );
+    return item ?? null;
+  }
+  function clearDropTarget(list) {
+    if (!dropTargetId) {
+      return;
+    }
+    const current = list.querySelector(
+      `.${CUSTOM_ITEM_CLASS}[data-custom-group-id="${dropTargetId}"]`
+    );
+    current?.classList.remove(CUSTOM_DROP_TARGET_CLASS);
+    if (current) {
+      delete current.dataset.dropPosition;
+    }
+    dropTargetId = null;
+    dropPosition = "before";
+  }
+  function setDropTarget(list, groupId, position) {
+    if (dropTargetId === groupId && dropPosition === position) {
+      return;
+    }
+    clearDropTarget(list);
+    const next = list.querySelector(
+      `.${CUSTOM_ITEM_CLASS}[data-custom-group-id="${groupId}"]`
+    );
+    if (next) {
+      next.classList.add(CUSTOM_DROP_TARGET_CLASS);
+      next.dataset.dropPosition = position;
+      dropTargetId = groupId;
+      dropPosition = position;
+    }
+  }
+  function reorderGroups(sourceId, targetId, position) {
+    if (sourceId === targetId) {
+      return false;
+    }
+    const groups = getCategoryGroups();
+    const fromIndex = groups.findIndex((group) => group.id === sourceId);
+    const toIndex = groups.findIndex((group) => group.id === targetId);
+    if (fromIndex < 0 || toIndex < 0 || fromIndex === toIndex) {
+      return false;
+    }
+    const nextGroups = [...groups];
+    const [moved] = nextGroups.splice(fromIndex, 1);
+    let insertIndex = position === "after" ? toIndex + 1 : toIndex;
+    if (fromIndex < insertIndex) {
+      insertIndex -= 1;
+    }
+    insertIndex = Math.max(0, Math.min(insertIndex, nextGroups.length));
+    nextGroups.splice(insertIndex, 0, moved);
+    saveCategoryGroups(nextGroups);
+    return true;
+  }
+  function resolveDropPosition(item, clientY) {
+    const rect = item.getBoundingClientRect();
+    const midpoint = rect.top + rect.height / 2;
+    return clientY > midpoint ? "after" : "before";
+  }
+  function startDragging(item, groupId) {
+    draggingGroupId = groupId;
+    isDragging = true;
+    item.classList.add(CUSTOM_DRAGGING_CLASS);
+  }
+  function finishDragging(list) {
+    if (draggingGroupId) {
+      const item = list.querySelector(
+        `.${CUSTOM_ITEM_CLASS}[data-custom-group-id="${draggingGroupId}"]`
+      );
+      item?.classList.remove(CUSTOM_DRAGGING_CLASS);
+    }
+    draggingGroupId = null;
+    isDragging = false;
+    clearDropTarget(list);
+  }
+  function applyDropIfNeeded(onRefresh) {
+    if (!draggingGroupId || !dropTargetId) {
+      return;
+    }
+    const didMove = reorderGroups(draggingGroupId, dropTargetId, dropPosition);
+    if (didMove) {
+      onRefresh();
+    }
+  }
+  function updateDropTargetFromPoint(list, clientX, clientY) {
+    if (!draggingGroupId) {
+      return;
+    }
+    const element = document.elementFromPoint(clientX, clientY);
+    const item = getCustomItemFromTarget(element);
+    if (!item) {
+      clearDropTarget(list);
+      return;
+    }
+    const groupId = item.getAttribute("data-custom-group-id");
+    if (!groupId || groupId === draggingGroupId) {
+      clearDropTarget(list);
+      return;
+    }
+    const position = resolveDropPosition(item, clientY);
+    setDropTarget(list, groupId, position);
+  }
+  function findTouchById(touches, id) {
+    for (let i = 0; i < touches.length; i += 1) {
+      const touch = touches.item(i);
+      if (touch && touch.identifier === id) {
+        return touch;
+      }
+    }
+    return null;
+  }
+  function ensureDragAndDrop(list, onRefresh) {
+    if (list.getAttribute(DRAG_LISTENER_ATTR) === "true") {
+      return;
+    }
+    list.setAttribute(DRAG_LISTENER_ATTR, "true");
+    list.addEventListener("dragstart", (event) => {
+      const target = event.target;
+      const handle = target instanceof Element ? target.closest(`.${CUSTOM_DRAG_HANDLE_CLASS}`) : null;
+      if (!handle) {
+        return;
+      }
+      const item = handle.closest(
+        `.${CUSTOM_ITEM_CLASS}[data-custom-group-id]`
+      );
+      if (!item) {
+        return;
+      }
+      const groupId = item.getAttribute("data-custom-group-id");
+      if (!groupId) {
+        return;
+      }
+      startDragging(item, groupId);
+      if (event.dataTransfer) {
+        event.dataTransfer.effectAllowed = "move";
+        event.dataTransfer.setData("text/plain", groupId);
+      }
+    });
+    list.addEventListener("dragend", () => {
+      finishDragging(list);
+    });
+    list.addEventListener("dragover", (event) => {
+      if (!draggingGroupId) {
+        return;
+      }
+      const item = getCustomItemFromTarget(event.target);
+      if (!item) {
+        clearDropTarget(list);
+        return;
+      }
+      const groupId = item.getAttribute("data-custom-group-id");
+      if (!groupId || groupId === draggingGroupId) {
+        clearDropTarget(list);
+        return;
+      }
+      event.preventDefault();
+      if (event.dataTransfer) {
+        event.dataTransfer.dropEffect = "move";
+      }
+      const position = resolveDropPosition(item, event.clientY);
+      setDropTarget(list, groupId, position);
+    });
+    list.addEventListener("drop", (event) => {
+      if (!draggingGroupId) {
+        return;
+      }
+      const item = getCustomItemFromTarget(event.target);
+      if (!item) {
+        return;
+      }
+      const groupId = item.getAttribute("data-custom-group-id");
+      if (!groupId || groupId === draggingGroupId) {
+        return;
+      }
+      event.preventDefault();
+      applyDropIfNeeded(onRefresh);
+      finishDragging(list);
+    });
+    const supportsPointer = "PointerEvent" in window;
+    if (supportsPointer) {
+      list.addEventListener("pointerdown", (event) => {
+        if (event.pointerType !== "touch") {
+          return;
+        }
+        const target = event.target;
+        const handle = target instanceof Element ? target.closest(`.${CUSTOM_DRAG_HANDLE_CLASS}`) : null;
+        if (!handle) {
+          return;
+        }
+        const item = handle.closest(
+          `.${CUSTOM_ITEM_CLASS}[data-custom-group-id]`
+        );
+        if (!item) {
+          return;
+        }
+        const groupId = item.getAttribute("data-custom-group-id");
+        if (!groupId) {
+          return;
+        }
+        event.preventDefault();
+        activePointerId = event.pointerId;
+        startDragging(item, groupId);
+        if (handle instanceof HTMLElement) {
+          handle.setPointerCapture(event.pointerId);
+        }
+        updateDropTargetFromPoint(list, event.clientX, event.clientY);
+      });
+      list.addEventListener("pointermove", (event) => {
+        if (event.pointerType !== "touch") {
+          return;
+        }
+        if (!draggingGroupId || activePointerId !== event.pointerId) {
+          return;
+        }
+        event.preventDefault();
+        updateDropTargetFromPoint(list, event.clientX, event.clientY);
+      });
+      const handlePointerEnd = (event) => {
+        if (event.pointerType !== "touch") {
+          return;
+        }
+        if (!draggingGroupId || activePointerId !== event.pointerId) {
+          return;
+        }
+        event.preventDefault();
+        applyDropIfNeeded(onRefresh);
+        activePointerId = null;
+        finishDragging(list);
+      };
+      list.addEventListener("pointerup", handlePointerEnd);
+      list.addEventListener("pointercancel", handlePointerEnd);
+      return;
+    }
+    list.addEventListener(
+      "touchstart",
+      (event) => {
+        const target = event.target;
+        const handle = target instanceof Element ? target.closest(`.${CUSTOM_DRAG_HANDLE_CLASS}`) : null;
+        if (!handle) {
+          return;
+        }
+        const item = handle.closest(
+          `.${CUSTOM_ITEM_CLASS}[data-custom-group-id]`
+        );
+        if (!item) {
+          return;
+        }
+        const groupId = item.getAttribute("data-custom-group-id");
+        if (!groupId) {
+          return;
+        }
+        const touch = event.touches.item(0);
+        if (!touch) {
+          return;
+        }
+        activeTouchId = touch.identifier;
+        startDragging(item, groupId);
+        updateDropTargetFromPoint(list, touch.clientX, touch.clientY);
+        event.preventDefault();
+      },
+      { passive: false }
+    );
+    list.addEventListener(
+      "touchmove",
+      (event) => {
+        if (!draggingGroupId || activeTouchId === null) {
+          return;
+        }
+        const touch = findTouchById(event.touches, activeTouchId);
+        if (!touch) {
+          return;
+        }
+        updateDropTargetFromPoint(list, touch.clientX, touch.clientY);
+        event.preventDefault();
+      },
+      { passive: false }
+    );
+    const handleTouchEnd = (event) => {
+      if (!draggingGroupId || activeTouchId === null) {
+        return;
+      }
+      const endedTouch = findTouchById(event.changedTouches, activeTouchId);
+      if (!endedTouch) {
+        return;
+      }
+      applyDropIfNeeded(onRefresh);
+      activeTouchId = null;
+      finishDragging(list);
+    };
+    list.addEventListener("touchend", handleTouchEnd);
+    list.addEventListener("touchcancel", handleTouchEnd);
+  }
   function renderCustomGroups(list, onGroupClick) {
     ensureCustomStyles();
     ensureListListener(list);
+    ensureDragAndDrop(list, () => refreshSidebar(onGroupClick));
     list.querySelectorAll(`.${CUSTOM_ITEM_CLASS}`).forEach((item) => item.remove());
     const groups = getCategoryGroups();
     if (groups.length === 0) {
@@ -1690,6 +2066,206 @@
     }
     renderCustomGroups(list, onGroupClick);
   }
+  const EMOJI_ENDPOINT = `${window.location.origin}/emojis.json`;
+  const CUSTOM_LIST_CONTAINER_ID$1 = "custom-topic-list-container";
+  const EMOJI_TEXT_ATTR = "data-emoji-text";
+  const EMOJI_RENDERED_ATTR = "data-emoji-rendered";
+  const EMOJI_IMAGE_CLASS = "emoji";
+  const EMOJI_PATTERN = /:([a-zA-Z0-9_+-]+):/g;
+  let emojiMap = null;
+  let emojiPromise = null;
+  function buildEmojiMap(entries) {
+    const map = new Map();
+    entries.forEach((entry) => {
+      if (!entry.name || !entry.url) {
+        return;
+      }
+      map.set(entry.name, entry.url);
+    });
+    return map;
+  }
+  function loadEmojiCache() {
+    if (emojiMap) {
+      return emojiMap;
+    }
+    const cache = getEmojiCache();
+    if (!cache || !Array.isArray(cache.entries) || typeof cache.updatedAt !== "number") {
+      return null;
+    }
+    emojiMap = buildEmojiMap(cache.entries);
+    return emojiMap;
+  }
+  function persistEmojiCache(map) {
+    emojiMap = map;
+    const entries = [];
+    map.forEach((url, name) => {
+      entries.push({ name, url });
+    });
+    const cache = {
+      updatedAt: Date.now(),
+      entries
+    };
+    saveEmojiCache(cache);
+  }
+  function normalizeEmojiUrl(url) {
+    try {
+      return new URL(url, window.location.origin).href;
+    } catch (error) {
+      return url;
+    }
+  }
+  function parseEmojiResponse(data) {
+    const entries = [];
+    Object.values(data).forEach((groupList) => {
+      if (!Array.isArray(groupList)) {
+        return;
+      }
+      groupList.forEach((entry) => {
+        if (!entry?.name || !entry.url) {
+          return;
+        }
+        entries.push({
+          name: entry.name,
+          url: normalizeEmojiUrl(entry.url)
+        });
+      });
+    });
+    return buildEmojiMap(entries);
+  }
+  async function fetchEmojiMap(signal) {
+    const response = await fetch(EMOJI_ENDPOINT, {
+      signal,
+      credentials: "same-origin"
+    });
+    if (!response.ok) {
+      return null;
+    }
+    const data = await response.json();
+    const map = parseEmojiResponse(data);
+    return map.size > 0 ? map : null;
+  }
+  function extractEmojiNames(text) {
+    const names = [];
+    EMOJI_PATTERN.lastIndex = 0;
+    let match;
+    while (match = EMOJI_PATTERN.exec(text)) {
+      names.push(match[1]);
+    }
+    return names;
+  }
+  function markEmojiText(span, text) {
+    const names = extractEmojiNames(text);
+    if (names.length === 0) {
+      return;
+    }
+    span.setAttribute(EMOJI_TEXT_ATTR, text);
+  }
+  function findMissingEmojiNames(texts, map) {
+    const missing = new Set();
+    for (const text of texts) {
+      const names = extractEmojiNames(text);
+      names.forEach((name) => {
+        if (!map || !map.has(name)) {
+          missing.add(name);
+        }
+      });
+    }
+    return Array.from(missing);
+  }
+  function getCachedEmojiMap() {
+    return loadEmojiCache();
+  }
+  function hasMissingEmojis(map, names) {
+    if (names.length === 0) {
+      return map === null;
+    }
+    if (!map) {
+      return true;
+    }
+    return names.some((name) => !map.has(name));
+  }
+  async function ensureEmojiMap(signal, missingNames = []) {
+    const cached = loadEmojiCache();
+    const shouldFetch = hasMissingEmojis(cached, missingNames);
+    if (!shouldFetch && cached) {
+      return cached;
+    }
+    if (emojiPromise) {
+      return emojiPromise;
+    }
+    const fetchPromise = (async () => {
+      const map = await fetchEmojiMap(signal);
+      if (map && map.size > 0) {
+        persistEmojiCache(map);
+        return map;
+      }
+      return cached ?? null;
+    })();
+    emojiPromise = fetchPromise;
+    try {
+      return await fetchPromise;
+    } catch (error) {
+      if (error instanceof DOMException && error.name === "AbortError") {
+        throw error;
+      }
+      console.warn("Failed to fetch emojis:", error);
+      return cached ?? null;
+    } finally {
+      if (emojiPromise === fetchPromise) {
+        emojiPromise = null;
+      }
+    }
+  }
+  function buildEmojiNodes(text, map) {
+    const nodes = [];
+    let lastIndex = 0;
+    let match;
+    EMOJI_PATTERN.lastIndex = 0;
+    while (match = EMOJI_PATTERN.exec(text)) {
+      const start = match.index;
+      if (start > lastIndex) {
+        nodes.push(document.createTextNode(text.slice(lastIndex, start)));
+      }
+      const name = match[1];
+      const url = map.get(name);
+      if (url) {
+        const img = document.createElement("img");
+        img.src = url;
+        img.width = 20;
+        img.height = 20;
+        img.alt = name;
+        img.title = name;
+        img.className = EMOJI_IMAGE_CLASS;
+        nodes.push(img);
+      } else {
+        nodes.push(document.createTextNode(match[0]));
+      }
+      lastIndex = start + match[0].length;
+    }
+    if (lastIndex < text.length) {
+      nodes.push(document.createTextNode(text.slice(lastIndex)));
+    }
+    return nodes;
+  }
+  function applyEmojiToCustomList(map) {
+    const container = document.getElementById(CUSTOM_LIST_CONTAINER_ID$1);
+    if (!container) {
+      return;
+    }
+    container.querySelectorAll(`span[${EMOJI_TEXT_ATTR}]`).forEach((span) => {
+      const rawText = span.getAttribute(EMOJI_TEXT_ATTR);
+      if (!rawText) {
+        return;
+      }
+      if (span.getAttribute(EMOJI_RENDERED_ATTR) === rawText) {
+        return;
+      }
+      const nodes = buildEmojiNodes(rawText, map);
+      span.textContent = "";
+      span.append(...nodes);
+      span.setAttribute(EMOJI_RENDERED_ATTR, rawText);
+    });
+  }
   const LOADING_INDICATOR_SELECTOR = ".loading-indicator-container";
   const LOADING_STATE_CLASSES = ["ready", "loading", "done"];
   const LOADING_READY_DELAY_MS = 400;
@@ -1711,6 +2287,7 @@
   const CATEGORY_ICON_CACHE = new Map();
   const TOPIC_LINK_REL = "noopener noreferrer";
   let isTagIconFetchPending = false;
+  let isEmojiFetchPending = false;
   let heatSettingsCache = null;
   function isMobileView() {
     return document.documentElement.classList.contains("mobile-view");
@@ -2250,6 +2827,7 @@
   function createTopicTitleLink(topic) {
     const titleText = getTopicTitle(topic);
     const titleSpan = createEl("span", { dir: "auto" }, [titleText]);
+    markEmojiText(titleSpan, titleText);
     const link = createEl(
       "a",
       {
@@ -2503,6 +3081,47 @@
       isTagIconFetchPending = false;
     });
   }
+  function collectEmojiTexts() {
+    const container = document.getElementById(CUSTOM_LIST_CONTAINER_ID);
+    if (!container) {
+      return [];
+    }
+    const texts = [];
+    container.querySelectorAll("span[data-emoji-text]").forEach((span) => {
+      const value = span.getAttribute("data-emoji-text");
+      if (value) {
+        texts.push(value);
+      }
+    });
+    return texts;
+  }
+  function updateEmojisIfNeeded() {
+    const texts = collectEmojiTexts();
+    if (texts.length === 0) {
+      return;
+    }
+    const cached = getCachedEmojiMap();
+    const missing = findMissingEmojiNames(texts, cached);
+    if (missing.length === 0 && cached) {
+      applyEmojiToCustomList(cached);
+      return;
+    }
+    if (isEmojiFetchPending) {
+      return;
+    }
+    isEmojiFetchPending = true;
+    ensureEmojiMap(void 0, missing).then((map) => {
+      if (map) {
+        applyEmojiToCustomList(map);
+      }
+    }).catch((error) => {
+      if (!(error instanceof DOMException && error.name === "AbortError")) {
+        console.warn("Failed to load emojis:", error);
+      }
+    }).finally(() => {
+      isEmojiFetchPending = false;
+    });
+  }
   function createRepliesCell(topic) {
     const replies = getReplyCount(topic);
     const link = createEl("a", {
@@ -2714,6 +3333,7 @@
       tbody.appendChild(row);
     });
     updateTagIconsIfNeeded();
+    updateEmojisIfNeeded();
   }
   function getLoadingAnchor() {
     const body = document.body;
@@ -3061,6 +3681,13 @@
     }
     return link.closest(".title") !== null;
   }
+  function resetUrlToHomeIfCustom() {
+    if (!window.location.pathname.startsWith(CUSTOM_URL_PREFIX)) {
+      return;
+    }
+    const homeUrl = new URL("/", window.location.origin);
+    window.history.replaceState(window.history.state, document.title, homeUrl.href);
+  }
   function redirectFromCustomUrlIfNeeded() {
     const customName = getCustomGroupNameFromPath(window.location.pathname);
     if (!customName) {
@@ -3302,6 +3929,7 @@ new Map(),
           return;
         }
         cancelActiveOperation();
+        resetUrlToHomeIfCustom();
       },
       true
     );

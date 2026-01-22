@@ -1818,6 +1818,7 @@
             this.characterHouseRooms = new Map();  // House room HRID -> {houseRoomHrid, level}
             this.actionTypeDrinkSlotsMap = new Map();  // Action type HRID -> array of drink items
             this.monsterSortIndexMap = new Map();  // Monster HRID -> combat zone sortIndex
+            this.battleData = null;  // Current battle data (for Combat Sim export on Steam)
 
             // Character tracking for switch detection
             this.currentCharacterId = null;
@@ -2006,6 +2007,7 @@
                     this.characterEquipment.clear();
                     this.characterHouseRooms.clear();
                     this.actionTypeDrinkSlotsMap.clear();
+                    this.battleData = null;
 
                     // Reset switching flag (cleanup complete, ready for re-init)
                     this.isCharacterSwitching = false;
@@ -2169,6 +2171,12 @@
                 }
 
                 this.emit('skills_updated', data);
+            });
+
+            // Handle new_battle (combat start - for Combat Sim export on Steam)
+            this.webSocketHook.on('new_battle', (data) => {
+                // Store battle data (includes party consumables)
+                this.battleData = data;
             });
         }
 
@@ -12167,14 +12175,30 @@
             for (const row of tbody.querySelectorAll('tr')) {
                 const rowInfo = this.extractRowInfo(row);
 
-                // Find matching listing
+                // Find matching listing with improved criteria
                 const matchedListing = listings.find(listing => {
                     if (used.has(listing.id)) return false;
 
-                    return listing.itemHrid === rowInfo.itemHrid &&
-                           listing.enhancementLevel === rowInfo.enhancementLevel &&
-                           listing.isSell === rowInfo.isSell &&
-                           (!rowInfo.price || Math.abs(listing.price - rowInfo.price) < 0.01);
+                    // Basic matching criteria
+                    const itemMatch = listing.itemHrid === rowInfo.itemHrid;
+                    const enhancementMatch = listing.enhancementLevel === rowInfo.enhancementLevel;
+                    const typeMatch = listing.isSell === rowInfo.isSell;
+                    const priceMatch = !rowInfo.price || Math.abs(listing.price - rowInfo.price) < 0.01;
+
+                    if (!itemMatch || !enhancementMatch || !typeMatch || !priceMatch) {
+                        return false;
+                    }
+
+                    // If quantity info is available from row, use it for precise matching
+                    if (rowInfo.filledQuantity !== null && rowInfo.orderQuantity !== null) {
+                        const quantityMatch = 
+                            listing.filledQuantity === rowInfo.filledQuantity &&
+                            listing.orderQuantity === rowInfo.orderQuantity;
+                        return quantityMatch;
+                    }
+
+                    // Fallback to basic match if no quantity info
+                    return true;
                 });
 
                 if (matchedListing) {
@@ -12234,6 +12258,19 @@
                 }
             }
 
+            // Extract quantity (3rd cell) - format: "filled / total"
+            let filledQuantity = null;
+            let orderQuantity = null;
+            const quantityCell = row.children[2];
+            if (quantityCell) {
+                const text = quantityCell.textContent.trim();
+                const match = text.match(/(\d+)\s*\/\s*(\d+)/);
+                if (match) {
+                    filledQuantity = Number(match[1]);
+                    orderQuantity = Number(match[2]);
+                }
+            }
+
             // Extract price (4th cell before our inserts)
             let price = NaN;
             const priceNode = row.querySelector('[class*="price"]') || row.children[3];
@@ -12257,7 +12294,7 @@
                 price = numStr ? Number(numStr) * multiplier : NaN;
             }
 
-            return { itemHrid, enhancementLevel, isSell, price };
+            return { itemHrid, enhancementLevel, isSell, price, filledQuantity, orderQuantity };
         }
 
         /**
@@ -13999,7 +14036,17 @@
     `;
 
         const label = document.createElement('span');
-        label.textContent = icon ? `${icon} ${title}` : title;
+        if (icon) {
+            // Emojis that need spacing fix (stopwatch has rendering issues in some browsers)
+            const needsSpacingFix = icon === '⏱';
+            if (needsSpacingFix) {
+                label.innerHTML = `<span style="display: inline-block; margin-right: 0.25em;">${icon}</span> ${title}`;
+            } else {
+                label.textContent = `${icon} ${title}`;
+            }
+        } else {
+            label.textContent = title;
+        }
 
         header.appendChild(arrow);
         header.appendChild(label);
@@ -16125,6 +16172,7 @@
             margin-top: 2px;
             line-height: 1.4;
             text-align: left;
+            white-space: pre-wrap;
         `;
 
             // Insert after action name
@@ -16333,6 +16381,12 @@
                 '/action_types/milking'
             ];
 
+            // Production action types that benefit from Gourmet Tea
+            const PRODUCTION_TYPES = [
+                '/action_types/brewing',
+                '/action_types/cooking'
+            ];
+
             if (actionDetails.dropTable && actionDetails.dropTable.length > 0 && GATHERING_TYPES.includes(actionDetails.type)) {
                 // Gathering action - use dropTable with gathering quantity bonus
                 const mainDrop = actionDetails.dropTable[0];
@@ -16363,6 +16417,17 @@
                 // Production action - use outputItems
                 const outputAmount = actionDetails.outputItems[0].count || 1;
                 itemsPerHour = baseActionsPerHour * outputAmount * avgActionsPerAttempt;
+
+                // Apply Gourmet bonus for brewing/cooking (extra items chance)
+                if (PRODUCTION_TYPES.includes(actionDetails.type)) {
+                    const activeDrinks = dataManager.getActionDrinkSlots(actionDetails.type);
+                    const drinkConcentration = getDrinkConcentration(equipment, itemDetailMap);
+                    const gourmetBonus = parseGourmetBonus(activeDrinks, itemDetailMap, drinkConcentration);
+
+                    // Gourmet gives a chance for extra items (e.g., 0.1344 = 13.44% more items)
+                    const gourmetBonusItems = itemsPerHour * gourmetBonus;
+                    itemsPerHour += gourmetBonusItems;
+                }
             } else {
                 // Fallback - no items produced
                 itemsPerHour = actionsPerHourWithEfficiency;
@@ -16484,7 +16549,7 @@
             // Show time info if we have a finite number of remaining actions
             // This includes both finite actions (hasMaxCount) and infinite actions with inventory count
             if (remainingActions !== Infinity && !isNaN(remainingActions) && remainingActions > 0) {
-                this.displayElement.innerHTML = `⏱ ${timeStr} → ${clockTime}`;
+                this.displayElement.innerHTML = `<span style="display: inline-block; margin-right: 0.25em;">⏱</span> ${timeStr} → ${clockTime}`;
             } else {
                 this.displayElement.innerHTML = '';
             }
@@ -17120,10 +17185,11 @@
      * Parse equipment wisdom bonus (skillingExperience stat)
      * @param {Map} equipment - Character equipment map
      * @param {Object} itemDetailMap - Item details from game data
-     * @returns {number} Wisdom percentage (e.g., 10 for 10%)
+     * @returns {Object} {total: number, breakdown: Array} Total wisdom and item breakdown
      */
     function parseEquipmentWisdom(equipment, itemDetailMap) {
         let totalWisdom = 0;
+        const breakdown = [];
 
         for (const [slot, item] of equipment) {
             const itemDetails = itemDetailMap[item.itemHrid];
@@ -17154,9 +17220,19 @@
             // Calculate total wisdom from this item
             const itemWisdom = (baseWisdom + (enhancementBonus * enhancementLevel * multiplier)) * 100;
             totalWisdom += itemWisdom;
+
+            // Add to breakdown
+            breakdown.push({
+                name: itemDetails.name,
+                value: itemWisdom,
+                enhancementLevel: enhancementLevel
+            });
         }
 
-        return totalWisdom;
+        return {
+            total: totalWisdom,
+            breakdown: breakdown
+        };
     }
 
     /**
@@ -17274,12 +17350,13 @@
             const itemDetails = itemDetailMap[drink.itemHrid];
             if (!itemDetails?.consumableDetail) continue;
 
-            // Check for wisdom buff (skillingExperience)
+            // Check for wisdom buff (typeHrid === "/buff_types/wisdom")
             const buffs = itemDetails.consumableDetail.buffs || [];
             for (const buff of buffs) {
-                if (buff.flatBoost?.skillingExperience) {
+                // Check if this is a wisdom buff by typeHrid
+                if (buff.typeHrid === '/buff_types/wisdom' && buff.flatBoost) {
                     // Base wisdom (e.g., 0.12 for 12%)
-                    const baseWisdom = buff.flatBoost.skillingExperience * 100;
+                    const baseWisdom = buff.flatBoost * 100;
 
                     // Scale with drink concentration
                     const scaledWisdom = baseWisdom * (1 + drinkConcentration / 100);
@@ -17310,7 +17387,8 @@
         const activeDrinks = dataManager.getActionDrinkSlots(actionTypeHrid);
 
         // Parse wisdom from all sources
-        const equipmentWisdom = parseEquipmentWisdom(equipment, itemDetailMap);
+        const equipmentWisdomData = parseEquipmentWisdom(equipment, itemDetailMap);
+        const equipmentWisdom = equipmentWisdomData.total;
         const houseWisdom = parseHouseRoomWisdom();
         const communityWisdom = parseCommunityBuffWisdom();
         const consumableWisdom = parseConsumableWisdom(activeDrinks, itemDetailMap, drinkConcentration);
@@ -17329,6 +17407,7 @@
             totalWisdom,
             charmExperience,
             charmBreakdown: charmData.breakdown,
+            wisdomBreakdown: equipmentWisdomData.breakdown,
             breakdown: {
                 equipmentWisdom,
                 houseWisdom,
@@ -18531,9 +18610,12 @@
                         }
                     }
 
-                    // Equipment wisdom (e.g., Philosopher's Necklace skillingExperience)
-                    if (xpData.breakdown.equipmentWisdom > 0) {
-                        lines.push(`    • Philosopher's Necklace: +${xpData.breakdown.equipmentWisdom.toFixed(1)}%`);
+                    // Equipment wisdom (e.g., Necklace Of Wisdom, Philosopher's Necklace skillingExperience)
+                    if (xpData.wisdomBreakdown && xpData.wisdomBreakdown.length > 0) {
+                        for (const item of xpData.wisdomBreakdown) {
+                            const enhText = item.enhancementLevel > 0 ? ` +${item.enhancementLevel}` : '';
+                            lines.push(`    • ${item.name}${enhText}: +${item.value.toFixed(1)}%`);
+                        }
                     }
 
                     // House rooms
@@ -21253,8 +21335,17 @@
                 return JSON.parse(data);
             }
 
-            // Steam: Use dataManager (RAM only, no GM storage available)
-            const characterData = dataManager.characterData;
+            // Steam: Try dataManager first
+            let characterData = dataManager.characterData;
+
+            // Fallback: Read directly from localStorage if dataManager is null
+            if (!characterData && typeof LZString !== 'undefined') {
+                const rawData = localStorage.getItem('character');
+                if (rawData) {
+                    characterData = JSON.parse(LZString.decompressFromUTF16(rawData));
+                }
+            }
+
             if (!characterData) {
                 console.error('[Combat Sim Export] No character data found. Please refresh game page.');
                 return null;
@@ -21272,12 +21363,21 @@
      */
     async function getBattleData() {
         try {
-            const data = await webSocketHook.loadFromStorage('toolasha_new_battle', null);
-            if (!data) {
-                return null; // No battle data (not in combat or solo)
+            // Tampermonkey: Use GM storage
+            if (hasScriptManager$1) {
+                const data = await webSocketHook.loadFromStorage('toolasha_new_battle', null);
+                if (!data) {
+                    return null; // No battle data (not in combat or solo)
+                }
+                return JSON.parse(data);
             }
 
-            return JSON.parse(data);
+            // Steam: Use dataManager (RAM only, no GM storage available)
+            const battleData = dataManager.battleData;
+            if (!battleData) {
+                return null; // No battle data (not in combat or solo)
+            }
+            return battleData;
         } catch (error) {
             console.error('[Combat Sim Export] Failed to get battle data:', error);
             return null;
@@ -21686,6 +21786,7 @@
         let isZoneDungeon = false;
         let difficultyTier = 0;
         let isParty = false;
+        let yourSlotIndex = 1; // Track which slot contains YOUR data (for party mode)
 
         // Check if in party
         const hasParty = characterObj.partyInfo?.partySlotMap;
@@ -21714,6 +21815,7 @@
                 if (member.characterID) {
                     if (member.characterID === characterObj.character.id) {
                         // This is you
+                        yourSlotIndex = slotIndex; // Remember your slot
                         exportObj[slotIndex] = JSON.stringify(constructSelfPlayer(characterObj, clientObj));
                         playerIDs[slotIndex - 1] = characterObj.character.name;
                         importedPlayerPositions[slotIndex - 1] = true;
@@ -21741,11 +21843,14 @@
 
         // If single-player format requested, return just the player object
         if (singlePlayerFormat && exportObj[1]) {
+            // In party mode, export YOUR data (not necessarily slot 1)
+            const slotToExport = isParty ? yourSlotIndex : 1;
+
             // Parse the player JSON string back to an object
-            const playerObj = JSON.parse(exportObj[1]);
+            const playerObj = JSON.parse(exportObj[slotToExport]);
 
             // Add name field and remove zone/simulationTime for single-player format
-            playerObj.name = playerIDs[0];
+            playerObj.name = playerIDs[slotToExport - 1];
             delete playerObj.zone;
             delete playerObj.simulationTime;
 
@@ -23142,6 +23247,7 @@
             this.unregisterHandlers = [];
             this.processedBars = new Set();
             this.isInitialized = false;
+            this.updateInterval = null;
         }
 
         /**
@@ -23183,6 +23289,11 @@
 
             // Initial update for existing skills
             this.updateAllSkills();
+
+            // Update every second to catch XP changes (matches remaining-xp behavior)
+            this.updateInterval = setInterval(() => {
+                this.updateAllSkills();
+            }, 1000);
 
             this.isInitialized = true;
         }
@@ -23275,6 +23386,12 @@
          * Disable the feature
          */
         disable() {
+            // Clear update interval
+            if (this.updateInterval) {
+                clearInterval(this.updateInterval);
+                this.updateInterval = null;
+            }
+
             // Remove all percentage spans
             document.querySelectorAll('.mwi-exp-percentage').forEach(span => span.remove());
 
@@ -24304,7 +24421,7 @@
             cursor: pointer;
             user-select: none;
         `;
-            profitLine.textContent = `💰 ${numberFormatter(profitData.totalProfit)} | ⏱ ${timeEstimate} ▸`;
+            profitLine.innerHTML = `💰 ${numberFormatter(profitData.totalProfit)} | <span style="display: inline-block; margin-right: 0.25em;">⏱</span> ${timeEstimate} ▸`;
 
             // Create breakdown section (hidden by default)
             const breakdownSection = document.createElement('div');
@@ -24351,7 +24468,7 @@
                 e.stopPropagation();
                 const isHidden = breakdownSection.style.display === 'none';
                 breakdownSection.style.display = isHidden ? 'block' : 'none';
-                profitLine.textContent = `💰 ${numberFormatter(profitData.totalProfit)} | ⏱ ${timeEstimate} ${isHidden ? '▾' : '▸'}`;
+                profitLine.innerHTML = `💰 ${numberFormatter(profitData.totalProfit)} | <span style="display: inline-block; margin-right: 0.25em;">⏱</span> ${timeEstimate} ${isHidden ? '▾' : '▸'}`;
             };
 
             profitLine.addEventListener('click', profitLineListener);

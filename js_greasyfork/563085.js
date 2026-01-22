@@ -12,7 +12,6 @@
 // @grant        GM_registerMenuCommand
 // @grant        GM_addStyle
 // @grant        GM_setClipboard
-// @grant        GM_getClipboard
 // @downloadURL https://update.greasyfork.org/scripts/563085/%E6%8F%90%E7%A4%BA%E8%AF%8D%E7%AE%A1%E7%90%86%E5%99%A8.user.js
 // @updateURL https://update.greasyfork.org/scripts/563085/%E6%8F%90%E7%A4%BA%E8%AF%8D%E7%AE%A1%E7%90%86%E5%99%A8.meta.js
 // ==/UserScript==

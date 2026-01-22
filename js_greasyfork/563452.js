@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ReadTheory AI Helper + OCR
 // @namespace    https://example.com/readtheory-openrouter
-// @version      3.0
+// @version      4.0
 // @description  Uses ARIA/DOM, and falls back to OCR via Tesseract.js to read blocked ReadTheory questions. No auto-answering.
 // @match        https://readtheoryapp.com/*
 // @license      MIT
@@ -11,9 +11,9 @@
 // @updateURL https://update.greasyfork.org/scripts/563452/ReadTheory%20AI%20Helper%20%2B%20OCR.meta.js
 // ==/UserScript==
 
-const OPENROUTER_API_KEY = "put your own api key from openrouter";
+const OPENROUTER_API_KEY = "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";
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
-const MODEL = "gpt-4o-mini";
+const MODEL = "xiaomi/mimo-v2-flash:free";
 
 // Load Tesseract.js dynamically
 function loadTesseract() {

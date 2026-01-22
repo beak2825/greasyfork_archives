@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         天大验证码识别
 // @namespace    http://tampermonkey.net/
-// @version      2025-03-05
-// @description  天津大学教育系统统一身份认证验证码识别脚本
+// @version      2026-01-22
+// @description  识别天津大学教育系统统一身份认证页面的验证码并登录
 // @author       口x口(Github:kly777)
 // @license      MIT
 // @match        https://sso.tju.edu.cn/cas/login*

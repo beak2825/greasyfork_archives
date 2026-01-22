@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         全能流媒体 ID & 链接提取工具 (Ultimate v3.0)
+// @name         全能流媒体 ID & 链接提取工具 (Ultimate v3.2)
 // @namespace    http://tampermonkey.net/
-// @version      3.0
-// @description  支持 Netflix, Disney+, 腾讯, 优酷, 爱奇艺, 芒果, NowPlayer, mewatch, LINE TV, myTV SUPER 提取ID；Viu, MyVideo, Hami, friDay 复制全链接。支持位置记忆。
+// @version      3.2
+// @description  支持 Netflix, Disney+, 腾讯, 优酷, 爱奇艺, 芒果, B站(内/外), LINE TV 等提取ID；Viu, MyVideo, Hami, friDay 复制全链接。支持位置记忆。
 // @author       Gemini
 // @match        https://www.netflix.com/*
 // @match        https://www.disneyplus.com/*
@@ -19,11 +19,13 @@
 // @match        https://www.viu.com/*
 // @match        https://www.linetv.tw/*
 // @match        https://www.mytvsuper.com/*
+// @match        https://www.bilibili.com/*
+// @match        https://www.bilibili.tv/*
 // @grant        GM_setClipboard
 // @grant        GM_setValue
 // @grant        GM_getValue
-// @downloadURL https://update.greasyfork.org/scripts/563546/%E5%85%A8%E8%83%BD%E6%B5%81%E5%AA%92%E4%BD%93%20ID%20%20%E9%93%BE%E6%8E%A5%E6%8F%90%E5%8F%96%E5%B7%A5%E5%85%B7%20%28Ultimate%20v30%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/563546/%E5%85%A8%E8%83%BD%E6%B5%81%E5%AA%92%E4%BD%93%20ID%20%20%E9%93%BE%E6%8E%A5%E6%8F%90%E5%8F%96%E5%B7%A5%E5%85%B7%20%28Ultimate%20v30%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/563546/%E5%85%A8%E8%83%BD%E6%B5%81%E5%AA%92%E4%BD%93%20ID%20%20%E9%93%BE%E6%8E%A5%E6%8F%90%E5%8F%96%E5%B7%A5%E5%85%B7%20%28Ultimate%20v32%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/563546/%E5%85%A8%E8%83%BD%E6%B5%81%E5%AA%92%E4%BD%93%20ID%20%20%E9%93%BE%E6%8E%A5%E6%8F%90%E5%8F%96%E5%B7%A5%E5%85%B7%20%28Ultimate%20v32%29.meta.js
 // ==/UserScript==
 
 (function() {
@@ -32,7 +34,7 @@
     let lastUrl = location.href;
     let currentContent = '';
 
-    // 1. 创建悬浮窗并加载保存的位置 (位置记忆核心)
+    // 1. 创建悬浮窗并加载保存的位置
     const btn = document.createElement('div');
     btn.id = 'media-id-fetcher';
     btn.innerHTML = '正在扫描...';
@@ -63,7 +65,7 @@
     });
     document.body.appendChild(btn);
 
-    // 2. 鼠标拖拽逻辑
+    // 2. 鼠标拖拽逻辑 (带位置记忆)
     let isDragging = false;
     let offsetX, offsetY;
 
@@ -89,7 +91,6 @@
         if (isDragging) {
             isDragging = false;
             btn.style.transition = 'background-color 0.2s, border 0.2s';
-            // 保存位置到 Tampermonkey 存储
             GM_setValue('btn_top', btn.style.top);
             GM_setValue('btn_left', btn.style.left);
         }
@@ -100,6 +101,18 @@
         const url = new URL(window.location.href);
         const path = url.pathname;
         const search = url.searchParams;
+
+        // Bilibili 国际版 (新增) - 提取 play/xxxx/YYYY 中的 YYYY 并加 ep
+        if (url.hostname.includes('bilibili.tv')) {
+            const match = path.match(/\/play\/\d+\/(\d+)/);
+            return match ? ('ep' + match[1]) : null;
+        }
+
+        // Bilibili 国内版
+        if (url.hostname.includes('bilibili.com')) {
+            const match = path.match(/\/(ep\d+)/);
+            return match ? (match[1] + '_tv') : null;
+        }
 
         // Netflix
         if (url.hostname.includes('netflix.com')) return search.get('jbv');
@@ -146,7 +159,7 @@
             return match ? match[1] : null;
         }
 
-        // myTV SUPER (新增) - 提取下划线后的数字
+        // myTV SUPER
         if (url.hostname.includes('mytvsuper.com')) {
             const match = path.match(/_(\d+)\//);
             return match ? match[1] : null;
@@ -203,7 +216,7 @@
         }
     });
 
-    // 6. 持续监听页面变化 (针对单页应用切换)
+    // 6. 持续监听页面变化
     setInterval(() => {
         if (lastUrl !== location.href) {
             lastUrl = location.href;
