@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Greasyfork Archives Viewer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Diff2Html CSS (nice diff UI) -->
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/diff2html/bundles/css/diff2html.min.css" />
+
+<script src="https://cdn.jsdelivr.net/npm/diff2html@3.4.52/bundles/js/diff2html-ui.min.js"></script>
+
+  <style>
+    :root {
+      --bg: #0f172a;
+      --bg-panel: #020617;
+      --accent: #38bdf8;
+      --accent-soft: rgba(56, 189, 248, 0.15);
+      --border: #1e293b;
+      --text-main: #e5e7eb;
+      --text-muted: #9ca3af;
+      --danger: #f97373;
+      --radius: 10px;
+      --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.85);
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+                   "Segoe UI", sans-serif;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 32px 16px 64px;
+      background: radial-gradient(circle at top, #1d283a 0, #020617 55%, #020617 100%);
+      color: var(--text-main);
+    }
+
+    .app {
+      width: 100%;
+      max-width: 1200px;
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.94), rgba(15, 23, 42, 0.99));
+      border-radius: 24px;
+      padding: 24px 24px 28px;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      backdrop-filter: blur(18px);
+    }
+
+    .app-header {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.28);
+      padding-bottom: 12px;
+    }
+
+    .app-title {
+      font-size: 20px;
+      letter-spacing: 0.04em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .app-title span.brand-pill {
+      padding: 3px 9px;
+      border-radius: 999px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      background: rgba(15, 23, 42, 0.92);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      color: #e0f2fe;
+    }
+
+    .app-subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .app-footer {
+      margin-top: 20px;
+      font-size: 11px;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      border-top: 1px dashed rgba(148, 163, 184, 0.4);
+      padding-top: 12px;
+    }
+
+    .app-footer a {
+      color: #93c5fd;
+      text-decoration: none;
+    }
+
+    .app-footer a:hover {
+      text-decoration: underline;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0, 320px) minmax(0, 1fr);
+      gap: 18px;
+      margin-top: 8px;
+    }
+
+    @media (max-width: 900px) {
+      .grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .panel {
+      background: radial-gradient(circle at top left,
+                rgba(15, 23, 42, 1) 0, rgba(15, 23, 42, 0.96) 45%, rgba(15, 23, 42, 1) 100%);
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      padding: 16px 16px 14px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top center,
+                  rgba(56, 189, 248, 0.1) 0, transparent 45%);
+      opacity: 0.8;
+      pointer-events: none;
+    }
+
+    .panel-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 10px;
+    }
+
+    .panel-title {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: #e5e7eb;
+    }
+
+    .panel-badge {
+      font-size: 11px;
+      padding: 2px 9px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.96);
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      color: #cbd5f5;
+    }
+
+    /* Input section */
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    label {
+      font-size: 12px;
+      color: #cbd5f5;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .input-row input {
+      flex: 1;
+    }
+
+    input[type="text"] {
+      padding: 9px 11px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text-main);
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+    }
+
+    input[type="text"]::placeholder {
+      color: rgba(148, 163, 184, 0.7);
+    }
+
+    input[type="text"]:focus {
+      border-color: rgba(56, 189, 248, 0.9);
+      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.65);
+      background: #020617;
+    }
+
+    button {
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      font-size: 13px;
+      padding: 8px 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: radial-gradient(circle at 0 0, #38bdf8 0, #0369a1 55%, #075985 100%);
+      color: #e0f2fe;
+      box-shadow: 0 14px 28px rgba(8, 47, 73, 0.85);
+      transition: transform 0.14s ease, box-shadow 0.14s ease, filter 0.14s ease, opacity 0.14s ease;
+      white-space: nowrap;
+    }
+
+    button.secondary {
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 1));
+      border: 1px solid rgba(148, 163, 184, 0.8);
+      color: #e5e7eb;
+      box-shadow: none;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.04);
+      box-shadow: 0 18px 40px rgba(8, 47, 73, 1);
+    }
+
+    button:active {
+      transform: translateY(0);
+      box-shadow: 0 8px 20px rgba(8, 47, 73, 0.9);
+    }
+
+    button:disabled {
+      opacity: 0.55;
+      cursor: default;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .status {
+      font-size: 12px;
+      color: var(--text-muted);
+      min-height: 16px;
+      margin-top: 2px;
+    }
+
+    .status.error {
+      color: var(--danger);
+    }
+
+    .status.ok {
+      color: #4ade80;
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .chip {
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+    }
+
+    /* History list */
+
+    .history-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .history-list {
+      border-radius: 12px;
+      border: 1px solid rgba(30, 64, 175, 0.7);
+      background: radial-gradient(circle at top left,
+                 rgba(15, 23, 42, 1) 0, rgba(15, 23, 42, 0.98) 40%, rgba(15, 23, 42, 1) 100%);
+      max-height: 370px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .history-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 10px;
+      border-bottom: 1px solid rgba(30, 64, 175, 0.7);
+      background: linear-gradient(90deg, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 1));
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .history-toolbar select {
+      background: rgba(15, 23, 42, 0.9);
+      border-radius: 999px;
+      padding: 3px 8px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      color: var(--text-main);
+      font-size: 11px;
+      outline: none;
+    }
+
+    .history-items {
+      overflow-y: auto;
+    }
+
+    .history-row {
+      display: grid;
+      grid-template-columns: auto auto 1fr;
+      column-gap: 10px;
+      row-gap: 2px;
+      padding: 8px 10px 7px;
+      font-size: 12px;
+      border-bottom: 1px solid rgba(30, 64, 175, 0.35);
+      cursor: pointer;
+      transition: background 0.15s ease;
+      align-items: center;
+    }
+
+    .history-row:hover {
+      background: rgba(15, 118, 110, 0.33);
+    }
+
+    .history-row.selected {
+      background: rgba(56, 189, 248, 0.14);
+    }
+
+    .history-row-main {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .history-sha {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 11px;
+      color: #a5b4fc;
+    }
+
+    .history-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 8px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .history-badge {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      color: #e5e7eb;
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    .history-compare-col {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .compare-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: rgba(148, 163, 184, 0.9);
+    }
+
+    .compare-tag {
+      padding: 2px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(56, 189, 248, 0.7);
+      color: #e0f2fe;
+      font-size: 10px;
+      background: rgba(8, 47, 73, 0.9);
+    }
+
+    /* Diff panel */
+
+    #diff-container {
+      border-radius: 13px;
+      border: 1px solid rgba(30, 64, 175, 0.9);
+      background: #020617;
+      max-height: 540px;
+      overflow: auto;
+    }
+
+    .diff-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 7px 10px;
+      border-bottom: 1px solid rgba(30, 64, 175, 0.9);
+      font-size: 11px;
+      color: var(--text-muted);
+      background: linear-gradient(90deg, rgba(15, 23, 42, 1), rgba(15, 23, 42, 0.95));
+    }
+
+    .diff-toolbar-left {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .pill {
+      border-radius: 999px;
+      padding: 2px 8px;
+      border: 1px solid rgba(148, 163, 184, 0.8);
+      background: rgba(15, 23, 42, 0.9);
+      font-size: 11px;
+      color: #e5e7eb;
+    }
+
+    .pill strong {
+      font-weight: 600;
+      color: #bfdbfe;
+    }
+
+    .d2h-wrapper,
+    .d2h-files-diff {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 11px;
+    }
+
+    .d2h-file-name-wrapper {
+      background: #020617 !important;
+    }
+
+    .d2h-file-side-diff {
+      background: #020617 !important;
+    }
+
+    .d2h-code-line-ctn {
+      background: #020617 !important;
+    }
+
+    .d2h-code-linenumber {
+      background: #020617 !important;
+      color: #6b7280 !important;
+    }
+
+    .d2h-ins {
+      background-color: rgba(22, 163, 74, 0.18) !important;
+    }
+
+    .d2h-del {
+      background-color: rgba(220, 38, 38, 0.2) !important;
+    }
+
+    .d2h-ins .d2h-code-line-prefix {
+      color: #4ade80 !important;
+    }
+
+    .d2h-del .d2h-code-line-prefix {
+      color: #fca5a5 !important;
+    }
+
+    .d2h-tag {
+      border-radius: 999px !important;
+      padding: 1px 8px !important;
+      font-size: 11px !important;
+    }
+
+    /* Scrollbars */
+
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #020617;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(30, 64, 175, 0.9);
+      border-radius: 999px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(37, 99, 235, 1);
+    }
+  </style>
+</head>
+
+<body>
+  <main class="app">
+    <header class="app-header">
+      <div>
+        <div class="app-title">
+          <span>Greasyfork Archives Viewer</span>
+          <span class="brand-pill">Greasyfork.org mirror</span>
+        </div>
+        <div class="app-subtitle">
+          Enter a Greasy Fork script ID to browse version history and view code diffs from this archive.
+        </div>
+      </div>
+      <div class="app-subtitle">
+        Repo: <a href="https://github.com/beak2825/greasyfork_archives" target="_blank" style="color:#93c5fd;text-decoration:none;">
+          beak2825/greasyfork_archives
+        </a>
+      </div>
+    </header>
+
+    <section class="grid">
+      <!-- Left: controls + history -->
+      <section class="panel">
+        <div class="panel-inner">
+          <div class="panel-header">
+            <div class="panel-title">Script selector</div>
+            <div class="panel-badge">Lookup by ID</div>
+          </div>
+
+          <div class="input-group">
+            <label for="script-id">Greasy Fork script ID</label>
+            <div class="input-row">
+              <input id="script-id" type="text" placeholder="e.g. 12345" />
+              <button id="load-btn" type="button">
+                <span>Load history</span>
+              </button>
+            </div>
+            <div id="status" class="status"></div>
+          </div>
+
+          <div class="chip-row">
+            <span class="chip">Source: update.greasyfork.org mirror</span>
+            <span class="chip">History from Git commits</span>
+            <span class="chip">Select two versions to diff</span>
+          </div>
+
+          <div class="history-header">
+            <span>Commit history</span>
+            <span id="history-count">No file loaded yet</span>
+          </div>
+
+          <div class="history-list">
+            <div class="history-toolbar">
+              <div>
+                <span style="margin-right:6px;">Sort by:</span>
+                <select id="sort-select">
+                  <option value="newest">Newest → Oldest</option>
+                  <option value="oldest">Oldest → Newest</option>
+                </select>
+              </div>
+              <div>Click rows to set “before” and “after” versions</div>
+            </div>
+            <div id="history-items" class="history-items"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right: diff -->
+      <section class="panel">
+        <div class="panel-inner">
+          <div class="panel-header">
+            <div class="panel-title">Code diff</div>
+            <div class="panel-badge">Side‑by‑side</div>
+          </div>
+
+          <div id="diff-container">
+            <div class="diff-toolbar">
+              <div class="diff-toolbar-left">
+                <span class="pill">
+                  <strong>Before</strong>
+                  <span id="before-label">not set</span>
+                </span>
+                <span class="pill">
+                  <strong>After</strong>
+                  <span id="after-label">not set</span>
+                </span>
+              </div>
+              <button id="swap-btn" class="secondary" type="button">
+                Swap versions
+              </button>
+            </div>
+            <div id="diff-view" style="padding:6px 8px 10px;font-size:12px;color:#9ca3af;">
+              Select two commits on the left to render a diff of <code>js_greasyfork/&lt;id&gt;.js</code>.
+            </div>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <footer class="app-footer">
+      <div>Archived with ❤️ for the userscript community.</div>
+      <div>Data from <code>js_greasyfork/&lt;id&gt;.js</code> file history in this repository.</div>
+    </footer>
+  </main>
+
+  <!-- Diff2Html JS + dependency -->
+  <script>
+    const GH_OWNER = "beak2825";
+    const GH_REPO = "greasyfork_archives";
+    const FILE_DIR = "js_greasyfork";
+
+    const scriptIdInput = document.getElementById("script-id");
+    const loadBtn      = document.getElementById("load-btn");
+    const statusEl     = document.getElementById("status");
+    const historyList  = document.getElementById("history-items");
+    const historyCount = document.getElementById("history-count");
+    const sortSelect   = document.getElementById("sort-select");
+    const beforeLabel  = document.getElementById("before-label");
+    const afterLabel   = document.getElementById("after-label");
+    const diffView     = document.getElementById("diff-view");
+    const swapBtn      = document.getElementById("swap-btn");
+
+    let commits = [];
+    let currentId = null;
+    let beforeCommit = null;
+    let afterCommit = null;
+
+    function setStatus(msg, type = "") {
+      statusEl.textContent = msg || "";
+      statusEl.className = "status" + (type ? " " + type : "");
+    }
+
+    async function ghJson(url) {
+      const res = await fetch(url, {
+        headers: { "Accept": "application/vnd.github+json" }
+      });
+      if (!res.ok) {
+        throw new Error("GitHub API error: " + res.status);
+      }
+      return res.json();
+    }
+
+    async function loadHistory(id) {
+      currentId = id;
+      beforeCommit = null;
+      afterCommit = null;
+      beforeLabel.textContent = "not set";
+      afterLabel.textContent = "not set";
+      diffView.innerHTML = "Select two commits on the left to render a diff of <code>js_greasyfork/" +
+        id + ".js</code>.";
+      historyList.innerHTML = "";
+      historyCount.textContent = "Loading…";
+
+      const filePath = encodeURIComponent(FILE_DIR + "/" + id + ".js");
+      const apiUrl =
+        `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/commits?path=${filePath}&per_page=100`;
+
+      const data = await ghJson(apiUrl);
+
+      commits = data.map(c => ({
+        sha: c.sha,
+        message: c.commit && c.commit.message ? c.commit.message.split("\n")[0] : "(no message)",
+        author: (c.commit && c.commit.author && c.commit.author.name) || "unknown",
+        date: (c.commit && c.commit.author && c.commit.author.date) || null,
+        url: c.html_url
+      }));
+
+      if (!commits.length) {
+        historyList.innerHTML = "";
+        historyCount.textContent = "No commits found for this file.";
+        setStatus("No history found for js_greasyfork/" + id + ".js", "error");
+        return;
+      }
+
+      sortAndRender();
+      setStatus("Loaded " + commits.length + " commit(s) for script " + id + ".", "ok");
+
+      // auto-select latest two for convenience
+      if (commits.length >= 2) {
+        afterCommit = commits[0];
+        beforeCommit = commits[1];
+        updateSelectionUI();
+        renderDiff();
+      }
+    }
+
+    function sortAndRender() {
+      const mode = sortSelect.value;
+      commits.sort((a, b) => {
+        const da = a.date ? new Date(a.date).getTime() : 0;
+        const db = b.date ? new Date(b.date).getTime() : 0;
+        return mode === "newest" ? db - da : da - db;
+      });
+      renderHistory();
+    }
+
+    function renderHistory() {
+      historyList.innerHTML = "";
+      historyCount.textContent = commits.length
+        ? commits.length + " commit(s)"
+        : "No commits to display";
+
+      commits.forEach((c, idx) => {
+        const row = document.createElement("div");
+        row.className = "history-row";
+        row.dataset.sha = c.sha;
+
+        const metaCol = document.createElement("div");
+        metaCol.className = "history-row-main";
+
+        const title = document.createElement("div");
+        title.textContent = c.message || "(no message)";
+
+        const sha = document.createElement("div");
+        sha.className = "history-sha";
+        sha.textContent = c.sha.substring(0, 10);
+
+        const metaLine = document.createElement("div");
+        metaLine.className = "history-meta";
+        if (c.author) {
+          const aSpan = document.createElement("span");
+          aSpan.textContent = c.author;
+          metaLine.appendChild(aSpan);
+        }
+        if (c.date) {
+          const dSpan = document.createElement("span");
+          const dt = new Date(c.date);
+          dSpan.textContent = dt.toLocaleString();
+          metaLine.appendChild(dSpan);
+        }
+
+        metaCol.appendChild(title);
+        metaCol.appendChild(sha);
+        metaCol.appendChild(metaLine);
+
+        const infoCol = document.createElement("div");
+        infoCol.className = "history-badge";
+        infoCol.textContent = idx === 0 ? "Latest" : "Rev " + (commits.length - idx);
+
+        const compareCol = document.createElement("div");
+        compareCol.className = "history-compare-col";
+
+        const beforeTag = document.createElement("div");
+        beforeTag.className = "compare-tag";
+        beforeTag.textContent = "Set as BEFORE";
+
+        const afterTag = document.createElement("div");
+        afterTag.className = "compare-tag";
+        afterTag.textContent = "Set as AFTER";
+
+        compareCol.appendChild(beforeTag);
+        compareCol.appendChild(afterTag);
+
+        row.appendChild(infoCol);
+        row.appendChild(metaCol);
+        row.appendChild(compareCol);
+
+        // click behavior: first click sets "after", second sets "before"
+        row.addEventListener("click", (e) => {
+          const sha = row.dataset.sha;
+          const commit = commits.find(x => x.sha === sha);
+          if (!commit) return;
+
+          const rect = row.getBoundingClientRect();
+          const mid = rect.left + rect.width / 2;
+          const clickedRight = e.clientX >= mid;
+
+          if (clickedRight) {
+            afterCommit = commit;
+          } else {
+            beforeCommit = commit;
+          }
+
+          // Do not allow identical before/after
+          if (beforeCommit && afterCommit && beforeCommit.sha === afterCommit.sha) {
+            afterCommit = null;
+          }
+
+          updateSelectionUI();
+          renderDiff();
+        });
+
+        historyList.appendChild(row);
+      });
+
+      updateSelectionUI();
+    }
+
+    function updateSelectionUI() {
+      Array.from(historyList.children).forEach(row => {
+        const sha = row.dataset.sha;
+        let selected = false;
+
+        if (beforeCommit && sha === beforeCommit.sha) {
+          selected = true;
+        }
+        if (afterCommit && sha === afterCommit.sha) {
+          selected = true;
+        }
+        row.classList.toggle("selected", selected);
+      });
+
+      beforeLabel.textContent = beforeCommit
+        ? beforeCommit.sha.substring(0, 10)
+        : "not set";
+      afterLabel.textContent = afterCommit
+        ? afterCommit.sha.substring(0, 10)
+        : "not set";
+    }
+
+    async function getFileAtCommit(id, sha) {
+      const path = encodeURIComponent(FILE_DIR + "/" + id + ".js");
+      const url =
+        `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${path}?ref=${sha}`;
+      const json = await ghJson(url);
+      if (!json.content) throw new Error("No content for that commit.");
+      const decoded = atob(json.content.replace(/\\n/g, ""));
+      return decoded;
+    }
+
+    async function renderDiff() {
+      if (!currentId || !beforeCommit || !afterCommit) {
+        return;
+      }
+      setStatus("Loading diff…", "ok");
+
+      try {
+        const [beforeText, afterText] = await Promise.all([
+          getFileAtCommit(currentId, beforeCommit.sha),
+          getFileAtCommit(currentId, afterCommit.sha)
+        ]);
+
+        const filePath = FILE_DIR + "/" + currentId + ".js";
+        const unified =
+          `diff --git a/${filePath} b/${filePath}\n` +
+          `--- a/${filePath}\n` +
+          `+++ b/${filePath}\n`;
+
+        const beforeLines = beforeText.split("\\n");
+        const afterLines = afterText.split("\\n");
+
+        let hunks = "";
+        const maxLines = Math.max(beforeLines.length, afterLines.length);
+        for (let i = 0; i < maxLines; i++) {
+          const a = beforeLines[i] ?? "";
+          const b = afterLines[i] ?? "";
+          if (a === b) {
+            hunks += " " + a + "\\n";
+          } else {
+            if (a) hunks += "-" + a + "\\n";
+            if (b) hunks += "+" + b + "\\n";
+          }
+        }
+
+        const unifiedDiff = unified + "@@ -1,0 +1,0 @@\\n" + hunks;
+
+        diffView.innerHTML = "";
+        const target = document.createElement("div");
+        diffView.appendChild(target);
+
+        const diff2htmlUi = new Diff2HtmlUI(target, unifiedDiff, {
+          drawFileList: false,
+          matching: "lines",
+          outputFormat: "side-by-side"
+        });
+        diff2htmlUi.draw();
+
+        setStatus("Diff rendered.", "ok");
+      } catch (err) {
+        console.error(err);
+        setStatus("Failed to render diff. Check console for details.", "error");
+      }
+    }
+
+    loadBtn.addEventListener("click", async () => {
+      const id = scriptIdInput.value.trim();
+      if (!id) {
+        setStatus("Enter a script ID.", "error");
+        return;
+      }
+      setStatus("Loading history…");
+      loadBtn.disabled = true;
+      try {
+        await loadHistory(id);
+      } catch (err) {
+        console.error(err);
+        setStatus("Error loading history. Possibly no such file js_greasyfork/" +
+          id + ".js or API limit.", "error");
+        historyList.innerHTML = "";
+        historyCount.textContent = "No commits.";
+      } finally {
+        loadBtn.disabled = false;
+      }
+    });
+
+    scriptIdInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        loadBtn.click();
+      }
+    });
+
+    sortSelect.addEventListener("change", () => {
+      if (!commits.length) return;
+      sortAndRender();
+    });
+
+    swapBtn.addEventListener("click", () => {
+      const tmp = beforeCommit;
+      beforeCommit = afterCommit;
+      afterCommit = tmp;
+      if (beforeCommit && afterCommit && beforeCommit.sha === afterCommit.sha) {
+        afterCommit = null;
+      }
+      updateSelectionUI();
+      renderDiff();
+    });
+  </script>
+</body>
+</html>
