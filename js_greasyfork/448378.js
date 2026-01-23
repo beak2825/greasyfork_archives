@@ -2,11 +2,9 @@
 // @name WME Permalink to several Maps DACH
 // @description WME PTSM für Deutschland Österreich Schweiz
 // @namespace https://greasyfork.org/de/users/863740-horst-wittlich
-// @version 2025.10.22
+// @version 2025.10.23
 // @match https://*.waze.com/editor*
 // @match https://*.waze.com/*/editor*
-// @match https://beta.waze.com/editor*
-// @match https://beta.waze.com/*/editor*
 // @icon https://i.ibb.co/ckSvk59/waze-icon.png
 // @grant none
 // @license MIT

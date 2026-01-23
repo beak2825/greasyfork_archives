@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         仿M浏览器元素审查
 // @namespace    https://viayoo.com/81gzxv
-// @version      4.8
+// @version      5.1
 // @description  利用AI模仿并生成M浏览器的元素审查（感谢M浏览器原生交互灵感），在脚本菜单开启元素审查，专注精准AD规则生成与编辑，支持DOM树浏览、实时编辑（文字/代码/删除/换图/撤销）、存储管理、JS终端等功能。
 // @author       Via && Gemini
 // @match        *://*/*
@@ -28,7 +28,10 @@
     let activePreviewStyle = null;
     let adUpdateTimer = null;
     let historyStack = [];
-
+    let searchResults = [];
+    let currentSearchIdx = -1;
+    
+    const DEFAULT_SVG = `<svg viewBox="0 0 24 24"> <rect x="6" y="6" width="14" height="14" rx="2.5" stroke="currentColor" stroke-width="1.8" fill="none" style="color:var(--mb-text); opacity:0.7;"/> <path d="M9 10h8M9 13h5M9 16h8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" style="color:var(--mb-text); opacity:0.4;"/><g transform="translate(2, 2)"><path d="M4.5 4.5l6.5 6.5M4.5 4.5v5.5M4.5 4.5h5.5" stroke="#007aff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></g></svg>`;
     const host = document.createElement('div');
     host.id = 'mb-debug-host';
     host.style.cssText = 'position:absolute;top:0;left:0;width:0;height:0;z-index:2147483647;';
@@ -444,8 +447,7 @@
         const tagName = el.tagName.toLowerCase();
         let rules = [];
         const isInvalid = (str) => !str || /^[:\d]/.test(str) || str.includes(':') || str.includes('(') || str.includes(')');
-        const adKeywords = /(?:(?:^|[-_ \b])(?:ad|popup|modal|gg|google|float|fixed|sticky|overlay|iframe|script)(?:$|[-_ \b]))|(?:ads|adv|banner|sponsor|推广|广告|棋牌|葡京|威尼斯|太阳城|新葡京|约炮|直播|成人|抖阴|黄播|博彩|体育|下注|开奖|娱乐城|美高梅|金沙|银河|皇冠|开元|利记|沙巴|亚星|迷情|春药)/i;
-
+        const adKeywords = /(?:(?:^|[-_ \b])(?:ad|popup|modal|gg|google|float|fixed|sticky|overlay|iframe|script|click|gtag)(?:$|[-_ \b]))|(?:ads|adv|banner|sponsor|推广|广告|棋牌|葡京|威尼斯|太阳城|新葡京|约炮|直播|成人|抖阴|黄播|博彩|体育|下注|开奖|娱乐城|美高梅|金沙|银河|皇冠|开元|利记|沙巴|亚星|迷情|春药|元|领|点击|图标|横幅|外接|同城)/i;
         const getAttr = (node, name) => node.getAttribute(name) || "";
         const hasAttr = (node, name) => node.hasAttribute(name);
 
@@ -491,27 +493,31 @@
             if (prevS && currS) rules.push(`${domain}##${prevS} + ${currS}`);
         }
 
-        if (el.parentElement && el.parentElement.id && el.parentElement.tagName !== 'BODY') {
+        let parentStr = "";
+        if (el.parentElement && el.parentElement.id && !isInvalid(el.parentElement.id) && el.parentElement.tagName !== 'BODY') {
             const currS = getBestSubSelector(el);
-            rules.push(`${domain}###${el.parentElement.id} > ${currS}`);
+            parentStr = `#${el.parentElement.id} > `;
+            rules.push(`${domain}##${parentStr}${currS}`);
         }
 
         let attrRules = [];
         let sizeBundle = "";
+        let smartAttrCount = 0;
         for (let attr of el.attributes) {
             let val = attr.value;
-            if (!val || ['id', 'class'].includes(attr.name)) continue;
+            const attrName = attr.name.toLowerCase();
+            if (!val || ['id', 'class'].includes(attrName)) continue;
 
-            if (['srcid', 'tpl', 'data-module'].includes(attr.name)) {
-                rules.push(`${domain}##${tagName}[${attr.name}="${val}"]`);
+            if (['srcid', 'tpl', 'data-module'].includes(attrName)) {
+                rules.push(`${domain}##${tagName}[${attrName}="${val}"]`);
             }
 
-            if (['width', 'height'].includes(attr.name)) {
-                sizeBundle += `[${attr.name}="${val}"]`;
+            if (['width', 'height'].includes(attrName)) {
+                sizeBundle += `[${attrName}="${val}"]`;
                 continue;
             }
 
-            if (attr.name === 'style') {
+            if (attrName === 'style') {
                 const isFixed = /fixed|sticky|absolute/.test(val);
                 const isHighZ = /z-index\s*:\s*(99\d+|2147483647)/.test(val);
                 if (isFixed || isHighZ) {
@@ -523,52 +529,96 @@
 
             if (val.startsWith('data:')) {
                 const b64 = val.match(/^data:[^;]+;base64,[A-Za-z0-9+/=]{20,50}/);
-                if (b64) attrRules.push(`${tagName}[${attr.name}^="${b64[0]}"]`);
+                if (b64) attrRules.push(`${domain}##${tagName}[${attrName}^="${b64[0]}"]`);
                 continue;
             }
 
-            if (attr.name.startsWith('data-') || ['src', 'href', 'title', 'alt', 'ref', 'rel', 'onclick', 'aria-label'].includes(attr.name)) {
-                if (adKeywords.test(attr.name) || adKeywords.test(val)) {
-                    rules.push(`${domain}##${tagName}[${attr.name}]`);
-                    if (val.length > 0 && val.length < 50) {
-                        const subVal = val.split('-')[0].split(' ')[0].substring(0, 20);
-                        rules.push(`${domain}##${tagName}[${attr.name}*="${subVal}"]`);
+            const isStandard = ['src', 'href', 'title', 'alt', 'ref', 'rel', 'onclick', 'aria-label', 'target'].includes(attrName);
+            if (!isStandard && !attrName.startsWith('data-') && smartAttrCount < 3 && val.length < 30) {
+                const currentSub = getBestSubSelector(el);
+                rules.push(`${domain}##${parentStr}${currentSub}[${attrName}="${val}"]`);
+                if (val.length > 3) {
+                    rules.push(`${domain}##${tagName}[${attrName}*="${val.substring(0, Math.floor(val.length/2))}"]`);
+                }
+                smartAttrCount++;
+            }
+
+            if (attrName.startsWith('data-') || isStandard) {
+                const isAdContent = adKeywords.test(attrName) || adKeywords.test(val);
+                if (isAdContent) {
+                    const subV = val.substring(0, 25);
+                    rules.push(`${domain}##${tagName}[${attrName}*="${subV}"]`);
+                    rules.push(`##${tagName}[${attrName}*="${subV}"]`);
+                    if (attrName === 'onclick') {
+                        const kws = val.match(new RegExp(adKeywords.source, 'gi'));
+                        if (kws && kws.length >= 2) rules.push(`##${tagName}[onclick*="${kws[0]}"][onclick*="${kws[1]}"]`);
                     }
                 }
-
                 if (/^(https?:|)\/\//.test(val)) {
                     const m = val.match(/^((?:https?:|)\/\/[^\/]+\/)/);
-                    if (m) attrRules.push(`${tagName}[${attr.name}^="${m[1]}"]`);
+                    if (m) {
+                        attrRules.push(`${domain}##${tagName}[${attrName}^="${m[1]}"]`);
+                        if (isAdContent) rules.push(`##${tagName}[${attrName}^="${m[1]}"]`);
+                    }
                 } else if (val.length > 0 && val.length < 100) {
-                    attrRules.push(`${tagName}[${attr.name}*="${val}"]`);
+                    if (attrName !== 'target') {
+                        attrRules.push(`${domain}##${tagName}[${attrName}*="${val}"]`);
+                    }
                 }
             }
         }
 
         if (tagName === 'a' || (tagName === 'img' && el.closest('a'))) {
             const anchor = tagName === 'a' ? el : el.closest('a');
+            const href = getAttr(anchor, 'href');
+            const target = getAttr(anchor, 'target');
+            const onclick = getAttr(anchor, 'onclick');
+            const rel = getAttr(anchor, 'rel');
+            if (href && !href.startsWith('javascript') && href !== '#') {
+                const isBlank = target === '_blank';
+                let part = href;
+                try {
+                    const url = new URL(href, window.location.href);
+                    part = url.hostname.replace('www.', '') + (url.pathname.length > 1 ? url.pathname.substring(0, 8) : "");
+                } catch(e) { part = href.substring(0, 12); }
+                const targetStr = isBlank ? '[target="_blank"]' : '';
+                rules.push(`${domain}##a[href*="${part}"]${targetStr}`);
+                if (adKeywords.test(href) || adKeywords.test(part)) rules.push(`##a[href*="${part}"]${targetStr}`);
+                if (onclick && adKeywords.test(onclick)) {
+                    const kw = (onclick.match(adKeywords) || [""])[0];
+                    if (kw) rules.push(`##a[href][target="_blank"][onclick*="${kw}"]`);
+                }
+            }
+
+            if (onclick && (href && href.includes('javascript'))) {
+                const funcName = onclick.split('(')[0].substring(0, 20);
+                if (funcName) rules.push(`##a[href^="javascript"][onclick*="${funcName}"]`);
+            }
+
+            if (rel === 'nofollow' && target === '_new' && anchor.querySelector('img')) {
+                rules.push(`##a[rel="nofollow"][target="_new"] > img[src]`);
+            }
+
             const img = anchor.querySelector('img');
             const aLabel = getAttr(anchor, 'aria-label') || getAttr(anchor, 'title');
             const imgAlt = img ? (getAttr(img, 'alt') || getAttr(img, 'aria-label')) : "";
             const keyLabel = (aLabel || imgAlt || "").split('-')[0].substring(0, 10);
-            
             const aOnclick = hasAttr(anchor, 'onclick');
             const aRef = getAttr(anchor, 'ref') || getAttr(anchor, 'rel');
-            
             if (aOnclick || adKeywords.test(aRef)) {
                 let base = aOnclick ? `a[onclick]` : `a[ref*="sponsored"]`;
                 if (keyLabel) {
                     rules.push(`${domain}##${base}[aria-label*="${keyLabel}"]`);
-                    if (img) rules.push(`${domain}##${base} > img[alt*="${keyLabel}"]`);
-                    if (img) rules.push(`${domain}##a[href] img[alt*="${keyLabel}"]`);
+                    if (img) {
+                        rules.push(`${domain}##${base} > img[alt*="${keyLabel}"]`);
+                        rules.push(`${domain}##a[href] img[alt*="${keyLabel}"]`);
+                    }
                 }
-                if (img && hasAttr(img, 'data-src')) rules.push(`${domain}##${base} img[data-src]`);
             }
         }
 
         if (sizeBundle) rules.push(`${domain}##${tagName}${sizeBundle}`);
-        attrRules.forEach(r => rules.push(`${domain}##${r}`));
-
+        attrRules.forEach(r => rules.push(r));
         const adTags = ['iframe', 'embed', 'ins', 'object'];
         if (adTags.includes(tagName)) rules.push(`${domain}##${tagName}`);
 
@@ -580,21 +630,24 @@
                 if (adKeywords.test(s)) return hasDomain ? 1 : 2;
                 if (s.includes('[onclick]') || s.includes('[srcid') || s.includes('[tpl') || s.includes('[ref*=')) return 2;
                 if (s.includes('###') || s.includes('##.')) return hasDomain ? 3 : 4;
-                if (s.includes('[width')) return 5;
-                if (s.includes(' > ')) return 6;
                 return 7;
             };
-            const wa = getWeight(a), wb = getWeight(b);
-            return wa !== wb ? wa - wb : a.length - b.length;
+            return getWeight(a) - getWeight(b) || a.length - b.length;
         });
+
         const genericTags = ['div', 'span', 'p', 'li', 'ul', 'ins', 'section', 'article'];
         return rules.filter(r => {
-            const selector = r.split(/###?/)[1];
-            if (selector.includes('[srcid') || selector.includes('[tpl') || r.includes(' + ')) return true;
-            return !genericTags.includes(selector);
+            const parts = r.split(/###?/);
+            const host = parts[0];
+            const selector = parts[1];
+            if (!selector) return false;
+            if (selector.includes('target=') && !selector.includes('href') && !selector.includes('onclick')) return false;
+            if (!host && selector === 'a') return false;
+            const hasSmartAttr = /\[(?!(?:style|width|height|class|id)\b)[^\]]+[\*^]?=/.test(selector);
+            if (selector.includes('[srcid') || selector.includes('[tpl') || r.includes(' + ') || hasSmartAttr || selector.startsWith('a[')) return true;
+            return !genericTags.includes(selector.split('[')[0]);
         });
     }
-
 
     function renderAdPage() {
         if (!adContent) return;
@@ -801,8 +854,6 @@
             dataContent.appendChild(box);
         });
     }
-    
-    const DEFAULT_SVG = `<svg viewBox="0 0 24 24"> <rect x="6" y="6" width="14" height="14" rx="2.5" stroke="currentColor" stroke-width="1.8" fill="none" style="color:var(--mb-text); opacity:0.7;"/> <path d="M9 10h8M9 13h5M9 16h8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" style="color:var(--mb-text); opacity:0.4;"/><g transform="translate(2, 2)"><path d="M4.5 4.5l6.5 6.5M4.5 4.5v5.5M4.5 4.5h5.5" stroke="#007aff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></g></svg>`;
 
     function renderIconPage() {
         iconContent.innerHTML = `
@@ -846,6 +897,85 @@
         };
     }
 
+    function renderSearchUI(bar) {
+        bar.innerHTML = `
+            <div style="display:flex; flex-direction:column; width:100%; gap:8px;" id="mb-search-container">
+                <div style="display:flex; align-items:center; gap:5px; width:100%;">
+                    <button class="edit-btn" id="btn-search-prev">◀</button>
+                    <input type="text" id="mb-search-input" placeholder="输入关键词..." style="flex:1; height:30px; padding:0 8px; border:1px solid var(--mb-border); background:var(--mb-bg); color:var(--mb-text); border-radius:4px; outline:none; font-size:13px;">
+                    <button class="edit-btn" id="btn-search-go" style="background:#3498db; color:#fff; border:none; padding:0 10px;">搜索</button>
+                    <button class="edit-btn" id="btn-search-next">▶</button>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; font-size:12px; opacity:0.8;">
+                    <span id="mb-search-count">就绪</span>
+                    <span class="edit-btn" id="btn-search-exit" style="color:#e74c3c; cursor:pointer;">退出搜索</span>
+                </div>
+            </div>
+        `;
+
+        const input = bar.querySelector('#mb-search-input');
+        const countLab = bar.querySelector('#mb-search-count');
+        const stopProp = (e) => e.stopPropagation();
+        const evTypes = ['keydown', 'keyup', 'keypress', 'input', 'touchstart', 'mousedown', 'click'];
+        const updateSelection = () => {
+            if (searchResults.length > 0) {
+                currentSearchIdx = (currentSearchIdx + searchResults.length) % searchResults.length;
+                const target = searchResults[currentSearchIdx];
+                if (currentTarget) currentTarget.classList.remove('mb-inspect-hl');
+                currentTarget = target;
+                currentTarget.classList.add('mb-inspect-hl');
+                const treeContainer = shadow.getElementById('mb-dom-tree');
+                if (treeContainer) {
+                    treeContainer.innerHTML = '';
+                    const parent = currentTarget.parentElement || currentTarget;
+                    treeContainer.appendChild(buildTree(parent, true));
+                    setTimeout(() => {
+                        const targetLine = treeContainer.querySelector('.mb-tree-line.active');
+                        if (targetLine) {
+                            targetLine.scrollIntoView({ behavior: 'auto', block: 'center' });
+                        }
+                    }, 100);
+                }
+                target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                countLab.innerText = `结果: ${currentSearchIdx + 1} / ${searchResults.length}`;
+            } else {
+                countLab.innerText = '未找到匹配';
+            }
+        };
+        const doSearch = () => {
+            const val = input.value.trim().toLowerCase();
+            if (!val) { countLab.innerText = '请输入内容'; return; }
+            input.blur(); 
+            searchResults = [];
+            currentSearchIdx = 0;
+            countLab.innerText = '搜索中...';
+            setTimeout(() => {
+                try {
+                    const selectorMatches = document.querySelectorAll(val);
+                    selectorMatches.forEach(el => {
+                        if (!host.contains(el) && el !== document.documentElement && el !== document.body) searchResults.push(el);
+                    });
+                } catch (e) {}
+                const allElements = document.querySelectorAll('*');
+                allElements.forEach(el => {
+                    if (host.contains(el) || searchResults.includes(el)) return;
+                    const matchTag = el.tagName.toLowerCase().includes(val);
+                    const matchText = Array.from(el.childNodes).some(n => n.nodeType === 3 && n.textContent.toLowerCase().includes(val));
+                    const matchAttr = Array.from(el.attributes).some(a => a.name.toLowerCase().includes(val) || a.value.toLowerCase().includes(val));
+                    if (matchTag || matchText || matchAttr) searchResults.push(el);
+                });
+                searchResults = [...new Set(searchResults)];
+                updateSelection();
+            }, 100);
+        };
+        evTypes.forEach(type => input.addEventListener(type, stopProp, { capture: true }));
+        bar.querySelector('#btn-search-go').onclick = (e) => { e.stopPropagation(); doSearch(); };
+        bar.querySelector('#btn-search-prev').onclick = (e) => { e.stopPropagation(); if (searchResults.length) { currentSearchIdx--; updateSelection(); } };
+        bar.querySelector('#btn-search-next').onclick = (e) => { e.stopPropagation(); if (searchResults.length) { currentSearchIdx++; updateSelection(); } };
+        bar.querySelector('#btn-search-exit').onclick = (e) => { e.stopPropagation(); evTypes.forEach(type => input.removeEventListener(type, stopProp, { capture: true })); searchResults = [];  currentSearchIdx = -1; bar.removeAttribute('data-mode'); renderDOM(); if (currentTarget) highlight(currentTarget); };
+        setTimeout(() => input.focus(), 100);
+    }
+
     const clearAllHighlights = () => {
         const highlighters = shadow.querySelectorAll('[id^="mb-highlighter"]');
         highlighters.forEach(el => el.remove());
@@ -869,28 +999,22 @@
         const actionsBar = shadow.getElementById('mb-node-actions');
         if (!currentTarget || !actionsBar) return;
         actionsBar.style.display = 'flex';
-        if (!shadow.getElementById('btn-hide-inspect')) {
-            const hideBtn = document.createElement('button');
-            hideBtn.className = 'edit-btn';
-            hideBtn.id = 'btn-hide-inspect';
-            hideBtn.style.cssText = 'color:#95a5a6; border-color:#95a5a6;';
-            hideBtn.innerText = '🚫隐藏选取';
-            actionsBar.appendChild(hideBtn);
+        const isSearching = actionsBar.getAttribute('data-mode') === 'search';
+
+        if (isSearching) {
+            renderSearchUI(actionsBar);
+            return;
         }
-        if (!shadow.getElementById('btn-undo-node')) {
-            const undoBtn = document.createElement('button');
-            undoBtn.className = 'edit-btn';
-            undoBtn.id = 'btn-undo-node';
-            undoBtn.style.cssText = 'color:#2ecc71; border-color:#2ecc71;';
-            undoBtn.innerText = '↩️撤销';
-            actionsBar.appendChild(undoBtn);
-        }
-        const btnHtml = shadow.getElementById('btn-edit-html');
-        const btnEdit = shadow.getElementById('btn-edit-node');
-        const btnImg = shadow.getElementById('btn-edit-img');
-        const btnDel = shadow.getElementById('btn-del-node');
-        const btnUndo = shadow.getElementById('btn-undo-node');
-        const btnHide = shadow.getElementById('btn-hide-inspect');
+
+        actionsBar.innerHTML = '';
+        const btnHtml = document.createElement('button'); btnHtml.className = 'edit-btn'; btnHtml.id = 'btn-edit-html'; actionsBar.appendChild(btnHtml);
+        const btnEdit = document.createElement('button'); btnEdit.className = 'edit-btn'; btnEdit.id = 'btn-edit-node'; actionsBar.appendChild(btnEdit);
+        const btnImg = document.createElement('button'); btnImg.className = 'edit-btn'; btnImg.id = 'btn-edit-img'; actionsBar.appendChild(btnImg);
+        const btnDel = document.createElement('button'); btnDel.className = 'edit-btn'; btnDel.id = 'btn-del-node'; btnDel.style.color = '#e74c3c'; btnDel.innerText = '✂️删除'; actionsBar.appendChild(btnDel);
+        const btnHide = document.createElement('button'); btnHide.className = 'edit-btn'; btnHide.id = 'btn-hide-inspect'; btnHide.style.cssText = 'color:#95a5a6; border-color:#95a5a6;'; btnHide.innerText = '🚫隐藏选取'; actionsBar.appendChild(btnHide);
+        const btnSearch = document.createElement('button'); btnSearch.className = 'edit-btn'; btnSearch.id = 'btn-search-node'; btnSearch.style.cssText = 'color:#3498db; border-color:#3498db;'; btnSearch.innerText = '🔍搜索元素'; actionsBar.appendChild(btnSearch);
+        const btnUndo = document.createElement('button'); btnUndo.className = 'edit-btn'; btnUndo.id = 'btn-undo-node'; btnUndo.style.cssText = 'color:#2ecc71; border-color:#2ecc71;'; btnUndo.innerText = '↩️撤销'; actionsBar.appendChild(btnUndo);
+
         const selectedRow = shadow.querySelector('.node-row.selected');
         const editArea = selectedRow ? selectedRow.querySelector('.html-edit-area') : null;
         const isHtmlEditing = editArea && editArea.style.display === 'block';
@@ -900,90 +1024,60 @@
         btnEdit.innerText = (currentTarget.contentEditable === 'true' || currentTarget.getAttribute('contenteditable') === 'true') ? '✅完成文字' : '📝文字模式';
         btnEdit.classList.toggle('active', (currentTarget.contentEditable === 'true' || currentTarget.getAttribute('contenteditable') === 'true'));
         btnUndo.style.display = historyStack.length > 0 ? 'block' : 'none';
-
         const isImg = currentTarget.tagName === 'IMG';
         const hasBg = window.getComputedStyle(currentTarget).backgroundImage !== 'none';
         btnImg.style.display = (isImg || hasBg) ? 'block' : 'none';
+        btnImg.innerText = '🖼️换图';
+
         const saveHistory = () => {
             const parent = currentTarget.parentElement;
             if (!parent) return;
             const index = Array.from(parent.children).indexOf(currentTarget);
-            historyStack.push({
-                parent: parent,
-                index: index,
-                outerHTML: currentTarget.outerHTML
-            });
+            historyStack.push({ parent, index, outerHTML: currentTarget.outerHTML });
         };
+
         const finishTextEdit = () => {
-            if (currentTarget.contentEditable === 'true' || currentTarget.getAttribute('contenteditable') === 'true') {
-                currentTarget.setAttribute('contenteditable', 'false');
-                currentTarget.style.outline = '';
-                currentTarget.style.backgroundColor = '';
-                currentTarget.onblur = null;
-                currentTarget.onkeydown = null;
-                ['click', 'mousedown', 'mouseup', 'submit'].forEach(evName => { document.removeEventListener(evName, preventInteraction, { capture: true }); });
-                isCollapsed = false;
-                updateFoldState();
-                startPicking();
-                clearAllHighlights();
-                renderDOM();
-                highlight(currentTarget);
-                updateNodeActions();
-            }
+            currentTarget.setAttribute('contenteditable', 'false');
+            currentTarget.style.outline = ''; currentTarget.style.backgroundColor = '';
+            currentTarget.onblur = null; currentTarget.onkeydown = null;
+            ['click', 'mousedown', 'mouseup', 'submit'].forEach(evName => { document.removeEventListener(evName, preventInteraction, { capture: true }); });
+            isCollapsed = false; updateFoldState(); startPicking(); clearAllHighlights(); renderDOM(); highlight(currentTarget); updateNodeActions();
         };
-        btnHide.onclick = (e) => {
-            e.stopPropagation();
-            clearAllHighlights();
-            currentTarget = null;
-            renderDOM();
-        };
+
+        btnSearch.onclick = (e) => { e.stopPropagation(); actionsBar.setAttribute('data-mode', 'search'); updateNodeActions(); };
+        btnHide.onclick = (e) => { e.stopPropagation(); clearAllHighlights(); currentTarget = null; renderDOM(); };
         btnHtml.onclick = (e) => {
-            e.stopPropagation();
-            if (!editArea) return;
+            e.stopPropagation(); if (!editArea) return;
             if (editArea.style.display !== 'block') {
-                saveHistory();
-                editArea.style.display = 'block';
+                saveHistory(); editArea.style.display = 'block';
                 const contentSpan = selectedRow.querySelector('.node-content');
                 if (contentSpan) contentSpan.style.display = 'none';
-                editArea.setAttribute('contenteditable', 'true');
-                editArea.innerText = currentTarget.innerHTML;
+                editArea.setAttribute('contenteditable', 'true'); editArea.innerText = currentTarget.innerHTML;
                 setTimeout(() => editArea.focus(), 50);
             } else {
                 currentTarget.innerHTML = editArea.innerText;
-                clearAllHighlights();
-                renderDOM();
-                highlight(currentTarget);
+                clearAllHighlights(); renderDOM(); highlight(currentTarget);
             }
             updateNodeActions();
         };
         btnEdit.onclick = (e) => {
             e.stopPropagation();
             if (currentTarget.contentEditable !== 'true' && currentTarget.getAttribute('contenteditable') !== 'true') {
-                saveHistory();
-                stopPicking();
+                saveHistory(); stopPicking();
                 ['click', 'mousedown', 'mouseup', 'submit'].forEach(evName => { document.addEventListener(evName, preventInteraction, { capture: true });});
-                isCollapsed = true;
-                updateFoldState();
+                isCollapsed = true; updateFoldState();
                 currentTarget.setAttribute('contenteditable', 'true');
                 currentTarget.style.outline = '2px dashed #ff4757';
                 setTimeout(() => {
                     currentTarget.focus();
                     try {
-                        const range = document.createRange();
-                        const sel = window.getSelection();
-                        range.selectNodeContents(currentTarget);
-                        range.collapse(false);
-                        sel.removeAllRanges();
-                        sel.addRange(range);
+                        const range = document.createRange(); const sel = window.getSelection();
+                        range.selectNodeContents(currentTarget); range.collapse(false);
+                        sel.removeAllRanges(); sel.addRange(range);
                     } catch (err) {}
                 }, 0);
                 currentTarget.onblur = () => finishTextEdit();
-                currentTarget.onkeydown = (ev) => {
-                    if (ev.key === 'Enter' && !ev.shiftKey) {
-                        ev.preventDefault();
-                        currentTarget.blur();
-                    }
-                };
+                currentTarget.onkeydown = (ev) => { if (ev.key === 'Enter' && !ev.shiftKey) { ev.preventDefault(); currentTarget.blur(); } };
             } else {
                 finishTextEdit();
             }
@@ -992,68 +1086,36 @@
         btnDel.onclick = (e) => {
             e.stopPropagation();
             if (confirm('确定删除该元素？')) {
-                saveHistory();
-                clearAllHighlights();
+                saveHistory(); clearAllHighlights();
                 const p = currentTarget.parentElement;
                 const nextTarget = currentTarget.nextElementSibling || currentTarget.previousElementSibling || p;
                 currentTarget.remove();
                 currentTarget = (nextTarget && nextTarget !== document.documentElement) ? nextTarget : null;
-                renderDOM();
-                if (currentTarget) highlight(currentTarget);
+                renderDOM(); if (currentTarget) highlight(currentTarget);
             }
         };
         btnImg.onclick = (e) => {
             e.stopPropagation();
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = 'image/*';
+            const input = document.createElement('input'); input.type = 'file'; input.accept = 'image/*';
             input.onchange = ev => {
-                const file = ev.target.files[0];
-                if (!file) return;
                 const reader = new FileReader();
-                reader.onload = (rev) => {
-                    saveHistory();
-                    clearAllHighlights();
-                    if (currentTarget.tagName === 'IMG') {
-                        currentTarget.src = rev.target.result;
-                    } else {
-                        currentTarget.style.backgroundImage = `url(${rev.target.result})`;
-                    }
-                    renderDOM();
-                    highlight(currentTarget);
-                };
-                reader.readAsDataURL(file);
+                reader.onload = (rev) => { saveHistory(); clearAllHighlights(); if (currentTarget.tagName === 'IMG') currentTarget.src = rev.target.result; else currentTarget.style.backgroundImage = `url(${rev.target.result})`; renderDOM(); highlight(currentTarget); };
+                reader.readAsDataURL(ev.target.files[0]);
             };
             input.click();
         };
         btnUndo.onclick = (e) => {
-            e.stopPropagation();
-            const last = historyStack.pop();
-            if (!last || !last.parent) return;
+            e.stopPropagation(); const last = historyStack.pop(); if (!last || !last.parent) return;
             if (currentTarget) {
-                currentTarget.setAttribute('contenteditable', 'false');
-                currentTarget.onblur = null;
-                currentTarget.onkeydown = null;
-                currentTarget.style.outline = '';
+                currentTarget.setAttribute('contenteditable', 'false'); currentTarget.onblur = null; currentTarget.onkeydown = null; currentTarget.style.outline = '';
                 ['click', 'mousedown', 'mouseup', 'submit'].forEach(evName => { document.removeEventListener(evName, preventInteraction, { capture: true }); });
-            }            
+            }
             clearAllHighlights();
-            const temp = document.createElement('div');
-            temp.innerHTML = last.outerHTML;
+            const temp = document.createElement('div'); temp.innerHTML = last.outerHTML;
             const restoredNode = temp.firstElementChild;
             const existingNode = last.parent.children[last.index];
-            if (existingNode) {
-                existingNode.replaceWith(restoredNode);
-            } else {
-                last.parent.appendChild(restoredNode);
-            }
-            currentTarget = restoredNode;
-            isCollapsed = false;
-            updateFoldState();
-            startPicking();
-            renderDOM();
-            highlight(currentTarget);
-            updateNodeActions();
+            if (existingNode) existingNode.replaceWith(restoredNode); else last.parent.appendChild(restoredNode);
+            currentTarget = restoredNode; isCollapsed = false; updateFoldState(); startPicking(); renderDOM(); highlight(currentTarget); updateNodeActions();
         };
     }
 

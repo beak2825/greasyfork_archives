@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Platesmania Lookup Toolbox
-// @version      1.14.1
+// @version      1.15
 // @description  Shows lookup buttons on Platesmania upload pages.
 // @match        https://platesmania.com/*/add*
 // @grant        GM_setValue
@@ -9,6 +9,8 @@
 // @connect      opendata.rdw.nl
 // @connect      motonet.fi
 // @connect      trodo.it
+// @connect      carbaba.co.uk
+// @connect      api.ipify.org
 // @license      MIT
 // @namespace    https://greasyfork.org/users/976031
 // @downloadURL https://update.greasyfork.org/scripts/524809/Platesmania%20Lookup%20Toolbox.user.js
@@ -199,6 +201,7 @@
             { name: 'checkhistory', base: 'https://checkhistory.uk/vehicle/' },
             { name: 'carcheck', base: 'https://www.carcheck.co.uk/sendnudes/' },
             { name: 'carhistorycheck', base: 'https://carhistorycheck.co.uk/confirm-vehicle/?vrm=' },
+            { name: 'carbaba (Site)', base: 'https://carbaba.co.uk/?reg=' },
         ],
         dk: [
             { name: 'digitalservicebog.dk', base: 'https://app.digitalservicebog.dk/search?country=dk&Registration=' },
@@ -1071,6 +1074,39 @@
         });
     }
 
+    function httpPost(url, headers, data) {
+        return new Promise((resolve, reject) => {
+            if (typeof GM_xmlhttpRequest === 'function') {
+                GM_xmlhttpRequest({
+                    method: 'POST',
+                    url,
+                    headers: headers,
+                    data: JSON.stringify(data),
+                    onload: (res) => {
+                        try { resolve(JSON.parse(res.responseText)); }
+                        catch (e) { reject(e); }
+                    },
+                    onerror: (e) => reject(e),
+                });
+            } else {
+                fetch(url, {
+                    method: 'POST',
+                    headers: headers,
+                    body: JSON.stringify(data)
+                }).then(r => r.json()).then(resolve).catch(reject);
+            }
+        });
+    }
+
+    async function getCurrentIPAddress() {
+        try {
+            const response = await httpGet('https://api.ipify.org?format=json');
+            return response.ip || '';
+        } catch {
+            return '';
+        }
+    }
+
     function onlyYear(yyyymmdd) {
         if (!yyyymmdd || typeof yyyymmdd !== 'string') return 'unknown';
         if (/^\d{8}$/.test(yyyymmdd)) return yyyymmdd.slice(0,4);
@@ -1245,6 +1281,789 @@
         };
 
         return info;
+    }
+
+    // Helper function to check if a field should be filtered out
+    function shouldFilterField(key) {
+        const filterPatterns = [
+            /_btn$/i,
+            /_captcha/i,
+            /captcha/i,
+            /^check list show data$/i,
+            /^vehicle_view_more_btn$/i,
+            /^vehicle_captcha_btn$/i,
+            /^checkListShowData$/i,
+            /^metadata$/i,
+            /^internal/i,
+            /^debug/i,
+            /^_/i  // Fields starting with underscore
+        ];
+        return filterPatterns.some(pattern => pattern.test(key));
+    }
+
+    // Helper function to clean up field names for display
+    function cleanFieldName(key) {
+        // Remove common prefixes/suffixes
+        let cleaned = String(key)
+            .replace(/^vehicle_/i, '')
+            .replace(/_btn$/i, '')
+            .replace(/_captcha$/i, '')
+            .replace(/^checkListShowData$/i, '')
+            .replace(/^check list show data$/i, '');
+
+        // Convert snake_case and camelCase to Title Case
+        cleaned = cleaned
+            .replace(/_/g, ' ')
+            .replace(/([a-z])([A-Z])/g, '$1 $2')
+            .replace(/\b\w/g, l => l.toUpperCase())
+            .trim();
+
+        // Special case mappings
+        const specialCases = {
+            'Mileage History': 'History',
+            'Mileagehistory': 'History',
+            'mileageHistory': 'History'
+        };
+
+        return specialCases[cleaned] || cleaned;
+    }
+
+    // Helper function to format values for display
+    function formatValue(value) {
+        if (value === null || value === undefined) return '';
+        if (typeof value === 'boolean') return value ? 'Yes' : 'No';
+        if (typeof value === 'object') {
+            if (Array.isArray(value)) {
+                return value.length > 0 ? value.join(', ') : '';
+            }
+            return JSON.stringify(value, null, 2);
+        }
+        return String(value);
+    }
+
+    // Helper function to extract plate history from data
+    function extractPlateHistory(data) {
+        // Map to store first occurrence of each plate: plate -> {plate, date, source}
+        const plateMap = new Map();
+
+        // Helper to add a plate with its date, keeping the earliest date if plate appears multiple times
+        function addPlate(plate, date, source) {
+            if (!plate || typeof plate !== 'string') return;
+
+            const cleanPlate = plate.trim().toUpperCase().replace(/\s+/g, '');
+            // Basic validation: UK plates are typically 2-10 characters (with spaces removed)
+            if (cleanPlate.length < 2 || cleanPlate.length > 10 || !/^[A-Z0-9-]+$/.test(cleanPlate)) {
+                return;
+            }
+
+            if (!plateMap.has(cleanPlate)) {
+                // First time seeing this plate
+                plateMap.set(cleanPlate, {
+                    plate: cleanPlate,
+                    date: date,
+                    source: source
+                });
+            } else {
+                // Plate already exists - keep the earliest date
+                const existing = plateMap.get(cleanPlate);
+                if (date) {
+                    if (existing.date) {
+                        // Both have dates - keep the earlier one
+                        const existingDate = new Date(existing.date);
+                        const newDate = new Date(date);
+                        if (!isNaN(newDate.getTime()) && !isNaN(existingDate.getTime()) && newDate < existingDate) {
+                            // New date is earlier, update it
+                            existing.date = date;
+                            existing.source = source;
+                        }
+                    } else {
+                        // Existing entry has no date, use the new one
+                        existing.date = date;
+                        existing.source = source;
+                    }
+                }
+                // If new date is null but existing has a date, keep the existing date
+            }
+        }
+
+        // FIRST: Add plates with first registration date (original plates)
+        // This ensures original plates keep their first registration date, not plate change dates
+        if (data.vehicleInformation) {
+            const firstRegDate = data.vehicleInformation.DateFirstRegisteredUk ||
+                               data.vehicleInformation.DateFirstRegistered;
+
+            // Current plate
+            const currentPlate = data.vehicleInformation.Vrm || data.vehicleInformation.vrm;
+            if (currentPlate && firstRegDate) {
+                addPlate(currentPlate, firstRegDate, 'vehicleInformation');
+            }
+
+            // Previous plate (original plate)
+            const prevPlate = data.vehicleInformation.PreviousVrmGb || data.vehicleInformation.previousVrmGb;
+            if (prevPlate && firstRegDate) {
+                addPlate(prevPlate, firstRegDate, 'vehicleInformation');
+            }
+        }
+
+        // Check vehicleData for previousVrmGb with first keeper date
+        if (data.vehicleData) {
+            const prevPlate = data.vehicleData.previousVrmGb || data.vehicleData.PreviousVrmGb;
+            if (prevPlate) {
+                // Try to find earliest date from keeper changes (first keeper = original registration)
+                let earliestDate = null;
+                if (data.vehicleData.keeperChanged && Array.isArray(data.vehicleData.keeperChanged) && data.vehicleData.keeperChanged.length > 0) {
+                    // Last item in array is usually the first keeper (oldest)
+                    const firstKeeper = data.vehicleData.keeperChanged[data.vehicleData.keeperChanged.length - 1];
+                    earliestDate = firstKeeper.date;
+                }
+                if (earliestDate) {
+                    addPlate(prevPlate, earliestDate, 'vehicleData');
+                }
+            }
+        }
+
+        // THEN: Process plate changes
+        // For "current" plates in changes, the change date is when they first appeared
+        // For "previous" plates, add them but don't use the change date (they existed before)
+
+        // Check mileageHistory array for plate changes
+        if (data.mileageHistory && Array.isArray(data.mileageHistory)) {
+            data.mileageHistory.forEach(entry => {
+                if (entry.type === 'plate') {
+                    const date = entry.date || entry.latest;
+                    // For previous plate: add it but without date (it existed before this change date)
+                    // If it's already in map with a date, that date will be kept (earlier)
+                    if (entry.previous) {
+                        addPlate(entry.previous, null, 'mileageHistory');
+                    }
+                    // For current plate: this is when it first appeared
+                    if (entry.current) {
+                        addPlate(entry.current, date, 'mileageHistory');
+                    }
+                }
+            });
+        }
+
+        // Check plateChange array
+        if (data.plateChange && Array.isArray(data.plateChange)) {
+            data.plateChange.forEach(entry => {
+                const date = entry.date || entry.latest;
+                // Similar logic: previous existed before, current first appeared on this date
+                if (entry.previous) {
+                    addPlate(entry.previous, null, 'plateChange');
+                }
+                if (entry.current) {
+                    addPlate(entry.current, date, 'plateChange');
+                }
+            });
+        }
+
+        // Check motlist_combine_plate_change array (combined MOT and plate change data)
+        if (data.motlist_combine_plate_change && Array.isArray(data.motlist_combine_plate_change)) {
+            data.motlist_combine_plate_change.forEach(entry => {
+                if (entry.listtype === 'platechange') {
+                    const date = entry.date || entry.latest;
+                    if (entry.previous) {
+                        addPlate(entry.previous, null, 'motlist_combine_plate_change');
+                    }
+                    if (entry.current) {
+                        addPlate(entry.current, date, 'motlist_combine_plate_change');
+                    }
+                }
+            });
+        }
+
+        // Convert map to array and sort by date
+        const plateEntries = Array.from(plateMap.values());
+        plateEntries.sort((a, b) => {
+            if (a.date && b.date) {
+                const dateA = new Date(a.date);
+                const dateB = new Date(b.date);
+                if (!isNaN(dateA.getTime()) && !isNaN(dateB.getTime())) {
+                    return dateA - dateB;
+                }
+            }
+            if (a.date) return -1;
+            if (b.date) return 1;
+            return 0;
+        });
+
+        return plateEntries;
+    }
+
+    // Helper function to check if data looks like chart/graph data or tabular data
+    function isChartData(data) {
+        if (!data || typeof data !== 'object') return false;
+        if (Array.isArray(data)) {
+            // Check if it's an array of objects that could be chart/table data
+            if (data.length === 0) return false;
+            // If all items are objects with consistent structure, treat as table data
+            const firstItem = data[0];
+            if (typeof firstItem === 'object' && firstItem !== null) {
+                const keys = Object.keys(firstItem);
+                // If items have consistent keys, treat as table (even single item)
+                if (keys.length > 0) {
+                    if (data.length > 1) {
+                        // Multiple items - check consistency
+                        return data.every(item =>
+                            typeof item === 'object' && item !== null &&
+                            Object.keys(item).length === keys.length &&
+                            keys.every(k => item.hasOwnProperty(k))
+                        );
+                    } else {
+                        // Single item - check if it has chart-like properties
+                        return keys.some(k =>
+                            /^(x|y|date|label|value|data|series)$/i.test(k)
+                        ) || (firstItem.x !== undefined || firstItem.date !== undefined || firstItem.label !== undefined);
+                    }
+                }
+            }
+        }
+        // Check for common chart data structures
+        return data.labels !== undefined || data.datasets !== undefined ||
+               data.data !== undefined || data.series !== undefined ||
+               (data.x !== undefined && data.y !== undefined);
+    }
+
+    // Helper function to create a table from chart/graph data
+    function createTableFromChartData(data) {
+        const table = document.createElement('table');
+        table.style.width = '100%';
+        table.style.borderCollapse = 'collapse';
+        table.style.marginTop = '8px';
+        table.style.fontSize = '11px';
+
+        if (Array.isArray(data) && data.length > 0) {
+            // Create header from first item's keys
+            const firstItem = data[0];
+            if (typeof firstItem === 'object' && firstItem !== null) {
+                const thead = document.createElement('thead');
+                const headerRow = document.createElement('tr');
+                headerRow.style.background = '#f5f5f5';
+                headerRow.style.borderBottom = '2px solid #ddd';
+
+                const keys = Object.keys(firstItem);
+                keys.forEach(key => {
+                    const th = document.createElement('th');
+                    th.textContent = cleanFieldName(key);
+                    th.style.padding = '6px 8px';
+                    th.style.textAlign = 'left';
+                    th.style.fontWeight = '600';
+                    th.style.border = '1px solid #ddd';
+                    headerRow.appendChild(th);
+                });
+                thead.appendChild(headerRow);
+                table.appendChild(thead);
+
+                // Create body
+                const tbody = document.createElement('tbody');
+                data.forEach((item, idx) => {
+                    const row = document.createElement('tr');
+                    row.style.background = idx % 2 === 0 ? '#fff' : '#f9f9f9';
+                    keys.forEach(key => {
+                        const td = document.createElement('td');
+                        td.textContent = formatValue(item[key]);
+                        td.style.padding = '6px 8px';
+                        td.style.border = '1px solid #ddd';
+                        td.style.wordBreak = 'break-word';
+                        row.appendChild(td);
+                    });
+                    tbody.appendChild(row);
+                });
+                table.appendChild(tbody);
+            }
+        } else if (data.labels && data.data) {
+            // Chart.js style data
+            const thead = document.createElement('thead');
+            const headerRow = document.createElement('tr');
+            headerRow.style.background = '#f5f5f5';
+            const th1 = document.createElement('th');
+            th1.textContent = 'Label';
+            th1.style.padding = '6px 8px';
+            const th2 = document.createElement('th');
+            th2.textContent = 'Value';
+            th2.style.padding = '6px 8px';
+            headerRow.appendChild(th1);
+            headerRow.appendChild(th2);
+            thead.appendChild(headerRow);
+            table.appendChild(thead);
+
+            const tbody = document.createElement('tbody');
+            const labels = Array.isArray(data.labels) ? data.labels : [];
+            const values = Array.isArray(data.data) ? data.data : [];
+            const maxLen = Math.max(labels.length, values.length);
+            for (let i = 0; i < maxLen; i++) {
+                const row = document.createElement('tr');
+                const td1 = document.createElement('td');
+                td1.textContent = formatValue(labels[i] || '');
+                td1.style.padding = '6px 8px';
+                const td2 = document.createElement('td');
+                td2.textContent = formatValue(values[i] || '');
+                td2.style.padding = '6px 8px';
+                row.appendChild(td1);
+                row.appendChild(td2);
+                tbody.appendChild(row);
+            }
+            table.appendChild(tbody);
+        }
+
+        return table;
+    }
+
+    // Helper function to create a collapsible section
+    function createSection(title, data, isExpanded = false) {
+        const section = document.createElement('div');
+        section.style.marginBottom = '8px';
+        section.style.border = '1px solid #e0e0e0';
+        section.style.borderRadius = '4px';
+        section.style.overflow = 'hidden';
+
+        const header = document.createElement('div');
+        header.style.padding = '8px 12px';
+        header.style.background = '#f5f5f5';
+        header.style.cursor = 'pointer';
+        header.style.display = 'flex';
+        header.style.alignItems = 'center';
+        header.style.justifyContent = 'space-between';
+        header.style.userSelect = 'none';
+        header.style.fontWeight = '600';
+        header.style.fontSize = '13px';
+        header.style.color = '#333';
+
+        const titleSpan = document.createElement('span');
+        titleSpan.textContent = title;
+        header.appendChild(titleSpan);
+
+        const toggle = document.createElement('span');
+        toggle.textContent = isExpanded ? '▼' : '▶';
+        toggle.style.marginLeft = '8px';
+        toggle.style.fontSize = '10px';
+        toggle.style.color = '#666';
+        toggle.style.flexShrink = '0';
+        header.appendChild(toggle);
+
+        const content = document.createElement('div');
+        content.style.display = isExpanded ? 'block' : 'none';
+        content.style.padding = '8px 12px';
+        content.style.background = '#fff';
+        content.style.maxHeight = '400px';
+        content.style.overflowY = 'auto';
+
+        let hasData = false;
+        if (data && typeof data === 'object' && !Array.isArray(data)) {
+            // Check if it's chart data
+            if (isChartData(data)) {
+                hasData = true;
+                const table = createTableFromChartData(data);
+                content.appendChild(table);
+            } else {
+                for (const [key, value] of Object.entries(data)) {
+                    // Filter out unwanted fields
+                    if (shouldFilterField(key)) continue;
+                    if (value !== null && value !== undefined && value !== '') {
+                        hasData = true;
+                        const row = createDataRow(key, value);
+                        content.appendChild(row);
+                    }
+                }
+            }
+        } else if (Array.isArray(data) && data.length > 0) {
+            // Check if array looks like chart data
+            if (isChartData(data)) {
+                hasData = true;
+                const table = createTableFromChartData(data);
+                content.appendChild(table);
+            } else {
+                hasData = true;
+                data.forEach((item, idx) => {
+                    if (item && typeof item === 'object') {
+                        const itemHeader = document.createElement('div');
+                        itemHeader.style.fontWeight = '600';
+                        itemHeader.style.marginTop = idx > 0 ? '12px' : '0';
+                        itemHeader.style.marginBottom = '6px';
+                        itemHeader.style.color = '#555';
+                        itemHeader.textContent = `Item ${idx + 1}`;
+                        content.appendChild(itemHeader);
+                        for (const [key, value] of Object.entries(item)) {
+                            // Filter out unwanted fields
+                            if (shouldFilterField(key)) continue;
+                            if (value !== null && value !== undefined && value !== '') {
+                                const row = createDataRow(key, value);
+                                content.appendChild(row);
+                            }
+                        }
+                    } else {
+                        const row = createDataRow(`Item ${idx + 1}`, item);
+                        content.appendChild(row);
+                    }
+                });
+            }
+        } else if (data !== null && data !== undefined && data !== '') {
+            hasData = true;
+            const row = createDataRow('Value', data);
+            content.appendChild(row);
+        }
+
+        if (!hasData) {
+            const emptyMsg = document.createElement('div');
+            emptyMsg.textContent = 'No data available';
+            emptyMsg.style.color = '#999';
+            emptyMsg.style.fontStyle = 'italic';
+            content.appendChild(emptyMsg);
+        }
+
+        header.onclick = () => {
+            const isNowExpanded = content.style.display !== 'none';
+            content.style.display = isNowExpanded ? 'none' : 'block';
+            toggle.textContent = isNowExpanded ? '▶' : '▼';
+        };
+
+        section.appendChild(header);
+        section.appendChild(content);
+        return section;
+    }
+
+    // Helper function to create a data row with copy functionality
+    function createDataRow(label, value) {
+        // Filter out unwanted fields
+        if (shouldFilterField(label)) {
+            return null;
+        }
+
+        const row = document.createElement('div');
+        row.style.display = 'flex';
+        row.style.alignItems = 'flex-start';
+        row.style.margin = '6px 0';
+        row.style.fontSize = '12px';
+        row.style.lineHeight = '1.6';
+        row.style.minHeight = '20px';
+
+        const cleanedLabel = cleanFieldName(label);
+        const labelDiv = document.createElement('div');
+        labelDiv.textContent = cleanedLabel + ':';
+        labelDiv.style.minWidth = '150px';
+        labelDiv.style.maxWidth = '150px';
+        labelDiv.style.fontWeight = '500';
+        labelDiv.style.color = '#555';
+        labelDiv.style.marginRight = '10px';
+        labelDiv.style.flexShrink = '0';
+        labelDiv.style.wordBreak = 'break-word';
+        labelDiv.style.overflowWrap = 'break-word';
+
+        const valueDiv = document.createElement('div');
+        valueDiv.style.flex = '1 1 auto';
+        valueDiv.style.minWidth = '0'; // Important for flexbox text wrapping
+        valueDiv.style.color = '#333';
+        valueDiv.style.wordBreak = 'break-word';
+        valueDiv.style.overflowWrap = 'break-word';
+        valueDiv.style.whiteSpace = 'pre-wrap'; // Preserve line breaks but allow wrapping
+
+        const formattedValue = formatValue(value);
+        if (typeof value === 'object' && !Array.isArray(value) && value !== null) {
+            // Check if it's chart data
+            if (isChartData(value)) {
+                const table = createTableFromChartData(value);
+                valueDiv.appendChild(table);
+            } else {
+                // For nested objects, create a nested structure
+                const nestedDiv = document.createElement('div');
+                nestedDiv.style.paddingLeft = '10px';
+                nestedDiv.style.borderLeft = '2px solid #e0e0e0';
+                nestedDiv.style.marginTop = '4px';
+                let hasNestedData = false;
+                for (const [nestedKey, nestedValue] of Object.entries(value)) {
+                    // Filter nested fields too
+                    if (shouldFilterField(nestedKey)) continue;
+                    if (nestedValue !== null && nestedValue !== undefined && nestedValue !== '') {
+                        hasNestedData = true;
+                        const nestedRow = createDataRow(nestedKey, nestedValue);
+                        if (nestedRow) {
+                            nestedRow.style.margin = '3px 0';
+                            nestedRow.style.fontSize = '11px';
+                            nestedDiv.appendChild(nestedRow);
+                        }
+                    }
+                }
+                if (hasNestedData) {
+                    valueDiv.appendChild(nestedDiv);
+                } else {
+                    valueDiv.textContent = formattedValue;
+                }
+            }
+        } else {
+            valueDiv.textContent = formattedValue;
+        }
+
+        const copyImg = document.createElement('img');
+        copyImg.src = 'https://i.imgur.com/RjmoRpu.png';
+        copyImg.alt = 'Copy';
+        copyImg.title = 'Copy';
+        copyImg.style.height = '14px';
+        copyImg.style.width = '14px';
+        copyImg.style.cursor = 'pointer';
+        copyImg.style.marginLeft = '8px';
+        copyImg.style.flexShrink = '0';
+        copyImg.style.marginTop = '2px';
+        copyImg.onclick = () => copyToClipboard(formattedValue);
+
+        row.appendChild(labelDiv);
+        row.appendChild(valueDiv);
+        row.appendChild(copyImg);
+        return row;
+    }
+
+    function showCarbabaWindow(info) {
+        const existing = document.getElementById('carbabaFloatWin');
+        if (existing) existing.remove();
+
+        const wrap = document.createElement('div');
+        wrap.id = 'carbabaFloatWin';
+        wrap.style.position = 'fixed';
+        wrap.style.top = '80px';
+        wrap.style.right = '40px';
+        wrap.style.zIndex = '99999';
+        wrap.style.background = '#fff';
+        wrap.style.border = '1px solid #ccc';
+        wrap.style.borderRadius = '6px';
+        wrap.style.boxShadow = '0 6px 18px rgba(0,0,0,0.18)';
+        wrap.style.minWidth = '320px';
+        wrap.style.maxWidth = '600px';
+        wrap.style.maxHeight = '85vh';
+        wrap.style.fontFamily = 'system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif';
+        wrap.style.display = 'flex';
+        wrap.style.flexDirection = 'column';
+
+        const header = document.createElement('div');
+        header.style.padding = '10px 12px';
+        header.style.borderBottom = '1px solid #eee';
+        header.style.display = 'flex';
+        header.style.alignItems = 'center';
+        header.style.justifyContent = 'space-between';
+        header.style.background = '#f8f9fa';
+        header.style.flexShrink = '0';
+
+        // Extract make/model for title
+        const data = info.fullData || {};
+        const vehicleInfo = data.vehicleInformation || {};
+        const smmtDetails = data.smmtDetails || {};
+        const make = vehicleInfo.Make || smmtDetails.Marque || '';
+        const model = vehicleInfo.Model || smmtDetails.ModelVariant || '';
+        const year = vehicleInfo.YearOfManufacture || (smmtDetails.VisibilityDate ? String(new Date(smmtDetails.VisibilityDate).getFullYear()) : '') || '';
+
+        const makeModel = `${make} ${model}`.trim().replace(/\s+/g, ' ');
+        const makeModelSpanHTML = makeModel ?
+              `<span style="border-bottom: 1px dotted;" onclick="$('#markamodtype').val('${escAttr(makeModel)}').autocomplete('search', '${escAttr(makeModel)}'); return false;">${escHtml(makeModel)}</span>` : '';
+        const y = year ? ` (${escHtml(year)})` : '';
+        const title = document.createElement('div');
+        title.innerHTML = (makeModelSpanHTML || 'Carbaba Lookup') + y;
+        title.style.fontWeight = '600';
+        title.style.fontSize = '14px';
+
+        const close = document.createElement('div');
+        close.textContent = '×';
+        close.title = 'Close';
+        close.style.cursor = 'pointer';
+        close.style.fontSize = '20px';
+        close.style.lineHeight = '20px';
+        close.style.marginLeft = '10px';
+        close.style.color = '#666';
+        close.onclick = () => wrap.remove();
+
+        header.appendChild(title);
+        header.appendChild(close);
+
+        const body = document.createElement('div');
+        body.style.padding = '10px 12px';
+        body.style.fontSize = '13px';
+        body.style.overflowY = 'auto';
+        body.style.flex = '1 1 auto';
+
+        // Display API status/message if available
+        if (info.message) {
+            const statusDiv = document.createElement('div');
+            statusDiv.style.padding = '8px';
+            statusDiv.style.marginBottom = '10px';
+            statusDiv.style.background = info.status ? '#d4edda' : '#f8d7da';
+            statusDiv.style.border = `1px solid ${info.status ? '#c3e6cb' : '#f5c6cb'}`;
+            statusDiv.style.borderRadius = '4px';
+            statusDiv.style.color = info.status ? '#155724' : '#721c24';
+            statusDiv.style.fontSize = '12px';
+            statusDiv.textContent = info.message;
+            body.appendChild(statusDiv);
+        }
+
+        // Extract plate history first
+        const plateHistory = extractPlateHistory(data);
+
+        // Organize data into logical sections
+        const sections = [];
+
+        // Vehicle Information (most important, expanded by default)
+        if (data.vehicleInformation) {
+            sections.push({ title: 'Vehicle Information', data: data.vehicleInformation, expanded: true });
+        }
+
+        // Plate History (special section)
+        if (plateHistory.length > 0) {
+            const plateHistoryData = plateHistory.map(entry => ({
+                'License Plate': entry.plate,
+                'Date': entry.date ? (new Date(entry.date).toLocaleDateString() || entry.date) : 'Unknown'
+            }));
+            sections.push({ title: 'Plate History', data: plateHistoryData, expanded: false });
+        }
+
+        // SMMT Details
+        if (data.smmtDetails) {
+            sections.push({ title: 'SMMT Details', data: data.smmtDetails, expanded: false });
+        }
+
+        // Engine Details
+        if (data.general && data.general.Engine) {
+            sections.push({ title: 'Engine Details', data: data.general.Engine, expanded: false });
+        }
+
+        // General Information (excluding Engine which is shown separately)
+        if (data.general) {
+            const generalWithoutEngine = { ...data.general };
+            delete generalWithoutEngine.Engine;
+            if (Object.keys(generalWithoutEngine).length > 0) {
+                sections.push({ title: 'General Information', data: generalWithoutEngine, expanded: false });
+            }
+        }
+
+        // Performance
+        if (data.performance) {
+            sections.push({ title: 'Performance', data: data.performance, expanded: false });
+        }
+
+        // MOT Data
+        if (data.motData || data.mot) {
+            sections.push({ title: 'MOT Data', data: data.motData || data.mot, expanded: false });
+        }
+
+        // History (mileage history renamed)
+        if (data.mileageHistory || data.mileagehistory || data.history) {
+            const historyData = data.mileageHistory || data.mileagehistory || data.history;
+            sections.push({ title: 'History', data: historyData, expanded: false });
+        }
+
+        // Tax Information
+        if (data.tax || data.taxInformation) {
+            sections.push({ title: 'Tax Information', data: data.tax || data.taxInformation, expanded: false });
+        }
+
+        // Insurance Group
+        if (data.insuranceGroup || data.insurance) {
+            sections.push({ title: 'Insurance', data: data.insuranceGroup || data.insurance, expanded: false });
+        }
+
+        // Valuation/Price Information
+        if (data.valuation || data.price || data.value) {
+            sections.push({ title: 'Valuation', data: data.valuation || data.price || data.value, expanded: false });
+        }
+
+        // Chart/Graph Data
+        if (data.chart || data.graph || data.chartData || data.graphData) {
+            const chartData = data.chart || data.graph || data.chartData || data.graphData;
+            sections.push({ title: 'Chart Data', data: chartData, expanded: false });
+        }
+
+        // Additional data sections (catch-all for any other top-level keys)
+        const displayedKeys = new Set([
+            'vehicleInformation', 'smmtDetails', 'general', 'performance',
+            'motData', 'mot', 'tax', 'taxInformation', 'insuranceGroup',
+            'insurance', 'valuation', 'price', 'value', 'mileageHistory',
+            'mileagehistory', 'history', 'chart', 'graph', 'chartData', 'graphData'
+        ]);
+
+        for (const [key, value] of Object.entries(data)) {
+            if (!displayedKeys.has(key) && value !== null && value !== undefined) {
+                // Skip if it's a filtered field
+                if (shouldFilterField(key)) continue;
+
+                const sectionTitle = cleanFieldName(key);
+                sections.push({ title: sectionTitle, data: value, expanded: false });
+            }
+        }
+
+        // Create sections
+        if (sections.length === 0) {
+            const noDataMsg = document.createElement('div');
+            noDataMsg.textContent = 'No data available';
+            noDataMsg.style.color = '#999';
+            noDataMsg.style.fontStyle = 'italic';
+            noDataMsg.style.padding = '20px';
+            noDataMsg.style.textAlign = 'center';
+            body.appendChild(noDataMsg);
+        } else {
+            sections.forEach(section => {
+                const sectionElement = createSection(section.title, section.data, section.expanded);
+                body.appendChild(sectionElement);
+            });
+        }
+
+        wrap.appendChild(header);
+        wrap.appendChild(body);
+        document.body.appendChild(wrap);
+        makeDraggable(wrap, header);
+    }
+
+    async function fetchCarbabaData(ukPlateRaw) {
+        const plate = String(ukPlateRaw || '').trim().toUpperCase().replace(/\s+/g, '');
+        if (!plate) throw new Error('Empty plate');
+
+        // Get current IP address
+        const ipAddress = await getCurrentIPAddress();
+
+        const url = 'https://carbaba.co.uk/api/vehicle/mot/data';
+        const headers = {
+            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:147.0) Gecko/20100101 Firefox/147.0',
+            'Accept': 'application/json, text/plain, */*',
+            'Accept-Language': 'en',
+            'Accept-Encoding': 'gzip, deflate, br, zstd',
+            'Content-Type': 'application/json',
+            'language': 'en',
+            'ip-address': ipAddress,
+            'platform': 'Linux',
+            'browser': 'Firefox',
+            'isMobile': 'no',
+            'Origin': 'https://carbaba.co.uk',
+            'Connection': 'keep-alive',
+            'Referer': 'https://carbaba.co.uk/',
+            'Cookie': 'cf_clearance=placeholder; cookieLimitSecondPage=50; isHit=true; cookieConsent=accepted; isHitSecond=true',
+            'Sec-Fetch-Dest': 'empty',
+            'Sec-Fetch-Mode': 'cors',
+            'Sec-Fetch-Site': 'same-origin',
+            'DNT': '1',
+            'Sec-GPC': '1',
+            'Priority': 'u=0',
+            'Pragma': 'no-cache',
+            'Cache-Control': 'no-cache',
+            'TE': 'trailers'
+        };
+
+        const payload = {
+            vrm: plate,
+            mileage: 8000
+        };
+
+        try {
+            const response = await httpPost(url, headers, payload);
+
+            if (!response || !response.data) {
+                throw new Error('Invalid response');
+            }
+
+            // Return the full response data structure for comprehensive display
+            return {
+                fullData: response.data,
+                status: response.status,
+                code: response.code,
+                message: response.message
+            };
+        } catch (error) {
+            throw error;
+        }
     }
 
     // --- UI Button Factory (supports Large/Small modes) ---
@@ -1668,6 +2487,32 @@
                 }
             }, fiIcon);
             container.appendChild(fiBtn);
+        }
+
+        // --- UK: Carbaba API lookup button that opens floating window ---
+        if (isPage('uk')) {
+            const carbabaIcon = isCompactMode() ? getFaviconConfigForUrl('https://carbaba.co.uk/') : null;
+            const carbabaBtn = makeBtn('carbaba (API)', !fieldsOk, async () => {
+                const plate = buildPlateForCurrentPage();
+                if (!plate) return;
+                carbabaBtn.disabled = true;
+                carbabaBtn.style.opacity = '0.7';
+                try {
+                    const info = await fetchCarbabaData(plate);
+                    showCarbabaWindow(info);
+                } catch (e) {
+                    showCarbabaWindow({
+                        status: false,
+                        code: 0,
+                        message: `Error: ${e.message || 'Failed to fetch data'}`,
+                        fullData: {}
+                    });
+                } finally {
+                    carbabaBtn.disabled = false;
+                    carbabaBtn.style.opacity = '1';
+                }
+            }, carbabaIcon);
+            container.appendChild(carbabaBtn);
         }
     }
 

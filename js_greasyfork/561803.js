@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         文本框优化-默认值填充
 // @namespace    http://tampermonkey.net/
-// @version      0.1.2
+// @version      0.1.3
 // @description  美化
 // @author       HK
 // @match      https://ai.zjw.hk/*
@@ -174,6 +174,7 @@
         document.getElementById("blank4").value = "data.dropna()";
         document.getElementById("blank5").value = "data.shape[0]";
         document.getElementById("blank6").value = "data.drop_duplicates()";
+        document.querySelector('body > table:nth-child(8) > tbody > tr:nth-child(1) > td').innerHTML += "<b> 不能复制doc里面的特征，必须复制excel中的 ['1.您的性别○男性   ○女性','2.您的年级○大一   ○大二   ○大三   ○大四','3.您的生源地○农村   ○城镇（乡镇）   ○地县级城市  ○省会城市及直辖市','4.您的月生活费○≦1,000元   ○1,001-2,000元   ○2,001-3,000元   ○≧3,001元','5.您进行过绿色低碳的相关生活方式吗?','6.您觉得“低碳”，与你的生活关系密切吗？','7.低碳生活是否会成为未来的主流生活方式？','8.您是否认为低碳生活会提高您的生活质量？'] </b>";
         document.getElementById("blank7").value = "scaler.fit_transform(data[numerical_features])";
         document.getElementById("blank8").value = "data[selected_features]";
         document.getElementById("blank9").value = "data['低碳行为积极性']";

@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Audio Master: Auto Mute & Resume
 // @namespace    https://greasyfork.org/en/users/670188-hacker09?sort=daily_installs
-// @version      2
-// @description  The ultimate audio manager. Automatically mutes background tabs when a new video/audio plays. Resumes the previous audio tab when you pause. "God Mode" detection captures videos, audios, Shadow DOM, and Web Audio (Games).
+// @version      3
+// @description  The ultimate audio manager. Mutes background tabs automatically. Prevents background auto-play from stealing focus ("God Mode"). Adds 🔇 only to playing background tabs.
 // @author       hacker09
 // @match        *://*/*
 // @tag          MINE!
@@ -22,46 +22,58 @@
   const TAB_ID = Math.random().toString(36).slice(2) + "-" + Date.now();
   let isScriptMuted = false;
 
-  // --- 1. EVENT LISTENERS (FIX FOR NATIVE PLAYERS) ---
-  // Captures events from native browser controls (like direct .mp4 files)
-  document.addEventListener('play', (e) => {
-    if (e.target instanceof HTMLMediaElement) {
-      claimPriority();
-    }
-  }, true);
+  // --- 1. EVENT LISTENERS ---
+  const events = ['play', 'playing']; // Capture start events
+  events.forEach(evt => {
+    document.addEventListener(evt, (e) => {
+      if (e.target instanceof HTMLMediaElement) {
+        handlePlayIntent();
+        updateTitle(); // Check if we need to show emoji
+      }
+    }, true);
+  });
 
   document.addEventListener('pause', (e) => {
     if (e.target instanceof HTMLMediaElement) {
       checkYielding(e.target);
+      updateTitle(); // Remove emoji if paused
     }
   }, true);
 
-  // --- 2. PROTOTYPE HIJACKING (GOD MODE DETECTION) ---
+  document.addEventListener('ended', () => updateTitle(), true); // Remove emoji if finished
+  document.addEventListener('enterpictureinpicture', claimPriority, true);
+
+  // --- 2. PROTOTYPE HIJACKING ---
   const originalPlay = HTMLMediaElement.prototype.play;
   const originalPause = HTMLMediaElement.prototype.pause;
 
-  // Trap video.play()
   HTMLMediaElement.prototype.play = function() {
-    claimPriority();
+    handlePlayIntent();
+    // We defer the title update slightly to ensure the property 'paused' is false
+    setTimeout(updateTitle, 0);
     return originalPlay.apply(this, arguments);
   };
 
-  // Trap video.pause()
   HTMLMediaElement.prototype.pause = function() {
     const result = originalPause.apply(this, arguments);
     checkYielding(this);
+    updateTitle();
     return result;
   };
 
-  // Shared Logic: Check if we should yield priority
+  function handlePlayIntent() {
+    if (!document.hidden) {
+      claimPriority();
+    } else {
+      checkGlobalState();
+    }
+  }
+
   function checkYielding(element) {
     if (element.paused) {
-      // Check if OTHER videos are still playing on this tab
       const stillPlaying = Array.from(document.querySelectorAll('video, audio'))
       .some(el => !el.paused && el !== element);
-      if (!stillPlaying) {
-        yieldPriority();
-      }
+      if (!stillPlaying) yieldPriority();
     }
   }
 
@@ -73,7 +85,8 @@
       const ctx = new OriginalAudioContext(...args);
       audioContexts.push(ctx);
       ctx.addEventListener('statechange', () => {
-        if (ctx.state === 'running') claimPriority();
+        if (ctx.state === 'running') handlePlayIntent();
+        updateTitle();
       });
       return ctx;
     };
@@ -84,9 +97,7 @@
   GM_registerMenuCommand("Set Stack Limit", () => {
     const currentLimit = GM_getValue('maxStackLimit', 20);
     const newLimit = prompt("Enter max number of audio tabs to remember (Default: 20):", currentLimit);
-    if (newLimit !== null && !isNaN(newLimit)) {
-      GM_setValue('maxStackLimit', parseInt(newLimit, 10));
-    }
+    if (newLimit !== null && !isNaN(newLimit)) GM_setValue('maxStackLimit', parseInt(newLimit, 10));
   });
 
   // --- STACK MANAGEMENT ---
@@ -111,6 +122,7 @@
 
   // --- MUTE LOGIC ---
   function applyMute(shouldMute) {
+    if (document.pictureInPictureElement) shouldMute = false;
     isScriptMuted = shouldMute;
 
     // 1. Standard Tags
@@ -131,6 +143,22 @@
         if (ctx.state === 'suspended') ctx.resume();
       }
     });
+
+    updateTitle();
+  }
+
+  // --- TITLE UI MANAGER ---
+  // Only adds emoji if script is Muted AND Media is actually Playing
+  function updateTitle() {
+    const isPlaying = Array.from(document.querySelectorAll('video, audio'))
+    .some(el => !el.paused && !el.ended);
+    const isWebAudioRunning = audioContexts.some(ctx => ctx.state === 'running');
+
+    if (isScriptMuted && (isPlaying || isWebAudioRunning)) {
+      if (!document.title.startsWith("🔇 ")) document.title = "🔇 " + document.title;
+    } else {
+      if (document.title.startsWith("🔇 ")) document.title = document.title.replace(/^🔇\s/, "");
+    }
   }
 
   function checkGlobalState() {
@@ -140,7 +168,7 @@
     applyMute(masterId !== TAB_ID);
   }
 
-  // --- LISTENERS (Backup only) ---
+  // --- LISTENERS ---
   window.addEventListener('focus', () => {
     const tagsActive = Array.from(document.querySelectorAll('video, audio'))
     .some(el => !el.paused && !el.ended);
@@ -151,12 +179,13 @@
   GM_addValueChangeListener('audioStack', () => checkGlobalState());
   window.addEventListener('beforeunload', () => yieldPriority());
 
-  // Deep Observer for new elements
+  // Observer for new elements
   new MutationObserver(() => {
     if (isScriptMuted) {
       document.querySelectorAll('video, audio').forEach(el => {
         if (!el.paused && !el.ended && !el.muted) el.muted = true;
       });
+      updateTitle();
     }
   }).observe(document, { childList: true, subtree: true });
 

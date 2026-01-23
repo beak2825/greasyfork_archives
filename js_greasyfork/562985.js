@@ -1,29 +1,31 @@
 // ==UserScript==
-// @name         AO3 Change Tag Separator ✨ (CSS-based)
+// @name         AO3 Change Tag Separator ✨
 // @namespace    https://aglioeollieo.neocities.org/misc#script
-// @version      1.0
-// @description  Replace AO3 tag separators with ✨ using CSS
+// @version      1.1
+// @description  Replace AO3 tag separators
+// @author       aglioeollieo
+// @icon         https://www.google.com/s2/favicons?domain=archiveofourown.org
 // @match        https://archiveofourown.org/*
 // @grant        GM_addStyle
 // @license MIT
-// @downloadURL https://update.greasyfork.org/scripts/562985/AO3%20Change%20Tag%20Separator%20%E2%9C%A8%20%28CSS-based%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/562985/AO3%20Change%20Tag%20Separator%20%E2%9C%A8%20%28CSS-based%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/562985/AO3%20Change%20Tag%20Separator%20%E2%9C%A8.user.js
+// @updateURL https://update.greasyfork.org/scripts/562985/AO3%20Change%20Tag%20Separator%20%E2%9C%A8.meta.js
 // ==/UserScript==
 
 GM_addStyle(`
 /* Standard tag lists */
 .taglist li:not(:last-child)::after {
-    content: " ✨";
+    content: " ★";
 }
 
 /* Search results & bookmarks */
 .tags li:not(:last-child)::after {
-    content: " ✨";
+    content: " ★";
 }
 
 /* Mobile layout */
 .blurb .taglist li:not(:last-child)::after {
-    content: " ✨";
+    content: " ★";
 }
 
 /* Remove default commas just in case */

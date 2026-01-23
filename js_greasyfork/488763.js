@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         【サポート終了】国立アイヌ民族博物館アイヌ語アーカイブの半角を小書きに
-// @namespace    http://lit.link/toracatman
-// @version      2025-11-23
+// @namespace    https://lit.link/toracatman
+// @version      2026-01-22
 // @description  「国立アイヌ民族博物館アイヌ語アーカイブ」という サイトの 半角カタカナを 小書きカタカナに します。
 // @author       トラネコマン
 // @match        https://ainugo.nam.go.jp/*

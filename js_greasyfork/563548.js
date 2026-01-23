@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MoDuL's: Racing Theme Changer
 // @namespace    modul.torn.racing
-// @version      1.2.1
+// @version      1.2.2
 // @description  Racing Theme Changer (PDA compatible)
 // @author       MoDuL, BrainSlug (Thanks for the idea buddy)
 // @match        https://www.torn.com/page.php?sid=racing*
@@ -197,7 +197,9 @@
 
     ul.style.fontSize = "12px";
     ul.style.lineHeight = "1";
-
+    if (window.innerWidth < 480) {
+      ul.style.fontSize = "11px";
+    }
     var names = ul.querySelectorAll(".pd-name");
     for (var i = 0; i < names.length; i++) {
       names[i].style.opacity = "0.7";

@@ -3,7 +3,7 @@
 // @namespace            https://github.com/utags
 // @homepageURL          https://github.com/utags/userscripts#readme
 // @supportURL           https://github.com/utags/userscripts/issues
-// @version              0.1.1
+// @version              0.3.0
 // @description          2Libra.com 增强工具
 // @icon                 https://2libra.com/favicon.ico
 // @author               Pipecraft
@@ -1236,7 +1236,257 @@
       subtree: true,
     })
   }
+  function debounce(fn, delay) {
+    let timer
+    return function (...args) {
+      clearTimeout(timer)
+      timer = setTimeout(() => {
+        fn.apply(this, args)
+      }, delay)
+    }
+  }
+  var CHECK_INTERVAL = 60 * 1e3
+  var LOCK_TIMEOUT = 20 * 1e3
+  var KEY_LOCK = 'check_lock'
+  var KEY_LAST_CHECK = 'last_check'
+  var KEY_UNREAD_COUNT = 'unread_count'
   var initialized = false
+  var currentUnreadCount = 0
+  var utagsHostObserver
+  var utagsShadowObserver
+  function startUtagsObserver() {
+    const onShadowMutation = (mutations) => {
+      let shouldUpdate = false
+      for (const mutation of mutations) {
+        if (mutation.type === 'childList') {
+          shouldUpdate = true
+          break
+        }
+      }
+      if (shouldUpdate) {
+        updateUtagsShortcuts(currentUnreadCount)
+      }
+    }
+    const onDocumentMutation = (mutations) => {
+      for (const mutation of mutations) {
+        for (const node of mutation.addedNodes) {
+          if (
+            node instanceof HTMLElement &&
+            node.dataset.ushortcutsHost === 'utags-shortcuts'
+          ) {
+            observeShadowRoot(node)
+            updateUtagsShortcuts(currentUnreadCount)
+          }
+        }
+      }
+    }
+    function observeShadowRoot(host2) {
+      if (utagsShadowObserver) utagsShadowObserver.disconnect()
+      if (!host2.shadowRoot) return
+      utagsShadowObserver = new MutationObserver(onShadowMutation)
+      utagsShadowObserver.observe(host2.shadowRoot, {
+        childList: true,
+        subtree: true,
+      })
+    }
+    const host = document.querySelector(
+      '[data-ushortcuts-host="utags-shortcuts"]'
+    )
+    if (host) {
+      observeShadowRoot(host)
+    }
+    utagsHostObserver = new MutationObserver(onDocumentMutation)
+    utagsHostObserver.observe(document.documentElement, {
+      childList: true,
+      subtree: true,
+    })
+  }
+  async function fetchUnreadCount() {
+    try {
+      const res = await fetch(
+        'https://2libra.com/api/notifications/unread-count'
+      )
+      const json = await res.json()
+      if (json.c === 0 && json.d) {
+        return json.d.unread_count
+      }
+    } catch (error) {
+      console.error('[2libra-plus] Failed to fetch unread count', error)
+    }
+    return void 0
+  }
+  var originalFavicon
+  function updateFavicon(count) {
+    const links = document.querySelectorAll('link[rel~="icon"]')
+    let link = links[0]
+    link.type = 'image/png'
+    if (links.length > 1) {
+      for (let i = 1; i < links.length; i++) {
+        links[i].remove()
+      }
+    }
+    if (!link) {
+      link = document.createElement('link')
+      link.rel = 'icon'
+      document.head.append(link)
+    }
+    if (originalFavicon === void 0) {
+      originalFavicon = '/favicon.ico'
+    }
+    if (count === 0) {
+      link.href = originalFavicon
+      document.head.append(link)
+      return
+    }
+    const canvas = document.createElement('canvas')
+    canvas.width = 32
+    canvas.height = 32
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+    const img = new Image()
+    img.crossOrigin = 'anonymous'
+    img.addEventListener('load', () => {
+      ctx.clearRect(0, 0, 32, 32)
+      ctx.drawImage(img, 0, 0, 32, 32)
+      ctx.beginPath()
+      ctx.arc(20, 12, 12, 0, 2 * Math.PI)
+      ctx.fillStyle = '#ff0000'
+      ctx.fill()
+      const text = count > 99 ? '99+' : count.toString()
+      ctx.font = count > 99 ? 'bold 12px sans-serif' : 'bold 16px sans-serif'
+      ctx.fillStyle = '#ffffff'
+      ctx.textAlign = 'center'
+      ctx.textBaseline = 'middle'
+      ctx.fillText(text, 20, 13)
+      if (link) {
+        link.href = canvas.toDataURL('image/png')
+        document.head.append(link)
+      }
+    })
+    img.src = originalFavicon
+  }
+  var updateUtagsShortcuts = debounce((count) => {
+    const host = document.querySelector(
+      '[data-ushortcuts-host="utags-shortcuts"]'
+    )
+    if (!host || !host.shadowRoot) return
+    const links = host.shadowRoot.querySelectorAll('a')
+    for (const link of links) {
+      try {
+        updateUtagsShortcutsLink(link, count)
+      } catch (e) {}
+    }
+  }, 200)
+  function updateUtagsShortcutsLink(link, count) {
+    const url = new URL(link.href)
+    if (url.origin !== location.origin || url.pathname !== '/notifications')
+      return
+    const textSpan = link.querySelector('.title-text')
+    if (!textSpan) return
+    if (count > 0) {
+      if (!textSpan.dataset.originalText) {
+        textSpan.dataset.originalText = textSpan.textContent || '\u901A\u77E5'
+      }
+      const newText = '\u901A\u77E5 ('.concat(count, ' \u6761\u6D88\u606F)')
+      if (textSpan.textContent !== newText) {
+        textSpan.textContent = newText
+      }
+      if (textSpan.style.fontWeight !== 'bold') {
+        textSpan.style.fontWeight = 'bold'
+      }
+      if (textSpan.style.color !== 'red') {
+        textSpan.style.color = 'red'
+      }
+    } else if (textSpan.dataset.originalText) {
+      if (textSpan.textContent !== textSpan.dataset.originalText) {
+        textSpan.textContent = textSpan.dataset.originalText
+      }
+      delete textSpan.dataset.originalText
+      if (textSpan.style.fontWeight !== '') {
+        textSpan.style.fontWeight = ''
+      }
+      if (textSpan.style.color !== '') {
+        textSpan.style.color = ''
+      }
+    }
+  }
+  function updateUI(count, getSettings) {
+    currentUnreadCount = count
+    const settings = getSettings()
+    if (!settings.enabled || !settings.checkUnreadNotifications) return
+    const element = document.querySelector(
+      '[data-right-sidebar="true"] .card-body a[href="/notifications"] > div'
+    )
+    if (element) {
+      element.textContent = ''.concat(count, ' \u6761\u6D88\u606F')
+      element.className = count > 0 ? 'text-primary' : ''
+    }
+    updateFavicon(count)
+    updateUtagsShortcuts(count)
+    const title = document.title
+    const prefixRegex = /^\(\d+\) /
+    if (count > 0) {
+      const newPrefix = '('.concat(count, ') ')
+      document.title = prefixRegex.test(title)
+        ? title.replace(prefixRegex, newPrefix)
+        : newPrefix + title
+    } else {
+      document.title = title.replace(prefixRegex, '')
+    }
+  }
+  async function check(getSettings, force = false) {
+    const settings = getSettings()
+    if (!settings.enabled || !settings.checkUnreadNotifications) return
+    const now = Date.now()
+    if (!force) {
+      const lastCheck = await getValue(KEY_LAST_CHECK, 0)
+      if (now - lastCheck < CHECK_INTERVAL) return
+    }
+    const lockTime = await getValue(KEY_LOCK, 0)
+    if (now - lockTime < LOCK_TIMEOUT) return
+    await setValue(KEY_LOCK, now)
+    const currentLock = await getValue(KEY_LOCK, 0)
+    if (currentLock !== now) return
+    try {
+      const count = await fetchUnreadCount()
+      if (count !== void 0) {
+        await setValue(KEY_UNREAD_COUNT, count)
+        await setValue(KEY_LAST_CHECK, Date.now())
+      }
+    } finally {
+      await setValue(KEY_LOCK, 0)
+    }
+  }
+  function initCheckNotifications(getSettings) {
+    if (initialized) return
+    initialized = true
+    startUtagsObserver()
+    void addValueChangeListener(KEY_UNREAD_COUNT, (_key, _old, newValue) => {
+      if (typeof newValue === 'number') {
+        updateUI(newValue, getSettings)
+      }
+    })
+    void (async () => {
+      const value = await getValue(KEY_UNREAD_COUNT)
+      if (typeof value === 'number') {
+        updateUI(value, getSettings)
+      }
+    })()
+    setInterval(() => {
+      void check(getSettings)
+    }, 10 * 1e3)
+    void check(getSettings)
+  }
+  function runCheckNotifications(getSettings) {
+    void check(getSettings)
+    void (async () => {
+      const value = await getValue(KEY_UNREAD_COUNT)
+      if (typeof value === 'number') {
+        updateUI(value, getSettings)
+      }
+    })()
+  }
+  var initialized2 = false
   var clickTimer
   function isNotificationsPage() {
     const loc = globalThis.location
@@ -1276,6 +1526,22 @@
     )
     btn.click()
   }
+  function bindMarkReadButton(getSettings) {
+    const settings = getSettings()
+    if (!settings.enabled) return
+    if (!isNotificationsPage()) return
+    const btn = document.querySelector(
+      'div[data-main-left] button.btn-primary:not(.btn-disabled)'
+    )
+    if (!btn) return
+    if (btn.dataset.listenClick === '1') return
+    btn.dataset.listenClick = '1'
+    btn.addEventListener('click', () => {
+      setTimeout(() => {
+        void check(getSettings, true)
+      }, 1e3)
+    })
+  }
   function scheduleClick(getSettings) {
     if (clickTimer !== void 0) {
       globalThis.clearTimeout(clickTimer)
@@ -1289,29 +1555,43 @@
     scheduleClick(getSettings)
   }
   function initAutoMarkNotificationsRead(getSettings) {
-    if (initialized) return
-    initialized = true
-    const check = () => {
+    if (initialized2) return
+    initialized2 = true
+    const check2 = () => {
+      bindMarkReadButton(getSettings)
       scheduleClick(getSettings)
     }
     if (document.readyState === 'loading') {
       document.addEventListener(
         'DOMContentLoaded',
         () => {
-          check()
+          check2()
         },
         { once: true }
       )
     } else {
-      check()
+      check2()
     }
-    onUrlChange(check)
-    onDomChange(check)
+    onUrlChange(check2)
+    onDomChange(check2)
   }
+  var STORAGE_KEY_SORT_MODE = '2libra_plus_sort_mode'
   var sortState = {
     mode: 'default',
   }
-  var initialized2 = false
+  var initialized3 = false
+  function saveSortMode(mode) {
+    try {
+      localStorage.setItem(STORAGE_KEY_SORT_MODE, mode)
+    } catch (e) {}
+  }
+  function loadSortMode() {
+    try {
+      return localStorage.getItem(STORAGE_KEY_SORT_MODE) || void 0
+    } catch (e) {
+      return void 0
+    }
+  }
   function getListContainer() {
     const list = document.querySelector('[data-main-left="true"] ul.card')
     return list || void 0
@@ -1449,7 +1729,7 @@
       }
     }
   }
-  function createSortControls() {
+  function createSortControls(getSettings) {
     const list = getListContainer()
     if (!list || list.children.length === 0) return void 0
     const root = list
@@ -1530,6 +1810,10 @@
       if (listEl && listEl.children.length > 0) {
         applySort(listEl)
       }
+      const settings = getSettings()
+      if (settings.rememberSortMode) {
+        saveSortMode(mode)
+      }
       closeMenu()
     })
     updateActiveButtons(sortContainer)
@@ -1596,7 +1880,7 @@
     liTitle.textContent = pageTitle
     ul.append(liTitle)
   }
-  function ensureControls() {
+  function ensureControls(getSettings) {
     const list = getListContainer()
     if (!list || list.children.length === 0) return
     list.dataset.libraPlusPostListSort = '1'
@@ -1606,12 +1890,20 @@
       updateActiveButtons(existing)
       return
     }
-    createSortControls()
+    createSortControls(getSettings)
   }
+  var modeRestored = false
   function runInternal(getSettings) {
     const settings = getSettings()
     if (!settings.enabled || !settings.postListSort) return
-    ensureControls()
+    if (!modeRestored && settings.rememberSortMode) {
+      const stored = loadSortMode()
+      if (stored) {
+        sortState.mode = stored
+      }
+      modeRestored = true
+    }
+    ensureControls(getSettings)
     const list = getListContainer()
     if (!list || list.children.length === 0) return
     applySort(list)
@@ -1620,13 +1912,19 @@
     runInternal(getSettings)
   }
   function initPostListSort(getSettings) {
-    if (initialized2) return
-    initialized2 = true
+    if (initialized3) return
+    initialized3 = true
     const run = () => {
       runInternal(getSettings)
     }
     const handleUrlChange = () => {
-      sortState.mode = 'default'
+      const currentSettings = getSettings()
+      if (currentSettings.rememberSortMode) {
+        const stored = loadSortMode()
+        sortState.mode = stored || 'default'
+      } else {
+        sortState.mode = 'default'
+      }
       runInternal(getSettings)
     }
     const handleDomChange = () => {
@@ -1650,7 +1948,7 @@
     onDomChange(handleDomChange)
   }
   var storageKey = '2libraPlus:lastHomeViewTime'
-  var initialized3 = false
+  var initialized4 = false
   var lastHomeViewBase
   function getListContainer2() {
     return document.querySelector('[data-main-left="true"] ul.card') || void 0
@@ -1789,8 +2087,8 @@
     updateReplyTimeColor(getSettings)
   }
   function initReplyTimeColor(getSettings) {
-    if (initialized3) return
-    initialized3 = true
+    if (initialized4) return
+    initialized4 = true
     const runUpdateColor = () => {
       updateReplyTimeColor(getSettings)
     }
@@ -1825,24 +2123,166 @@
     })
     onDomChange(runUpdateColor)
   }
+  var initialized5 = false
+  function applyHideEmail(cardBody, settings) {
+    const emailEl = cardBody.querySelector(':scope > h2 .text-gray-400')
+    if (!emailEl) return
+    if (settings.hideSidebarEmail) {
+      emailEl.style.display = 'none'
+    } else {
+      emailEl.style.removeProperty('display')
+    }
+  }
+  function applyHideExperience(h2, settings) {
+    const experienceEl = h2.nextElementSibling
+    if (!experienceEl) return
+    if (settings.hideSidebarExperience) {
+      experienceEl.style.display = 'none'
+    } else {
+      experienceEl.style.removeProperty('display')
+    }
+    return experienceEl
+  }
+  function applyHideActions(experienceEl, settings) {
+    var _a
+    const actionsContainer = experienceEl.nextElementSibling
+    if (!actionsContainer) return
+    const coinsLink = actionsContainer.querySelector('a[href="/coins"]')
+    const checkinBtn =
+      (_a = actionsContainer.querySelector('[data-tip*="\u7B7E\u5230"]')) ==
+      null
+        ? void 0
+        : _a.parentElement
+    const hideCoins = settings.hideSidebarCoins
+    const hideCheckin = settings.hideSidebarCheckin
+    const spans = Array.from(actionsContainer.querySelectorAll(':scope > span'))
+    if (hideCoins || hideCheckin) {
+      actionsContainer.style.justifyContent = 'space-between'
+      for (const span of spans) {
+        span.style.display = 'none'
+      }
+    } else {
+      actionsContainer.style.removeProperty('justify-content')
+      for (const span of spans) {
+        span.style.removeProperty('display')
+      }
+    }
+    if (coinsLink) {
+      if (hideCoins) {
+        coinsLink.style.display = 'none'
+      } else {
+        coinsLink.style.removeProperty('display')
+      }
+    }
+    if (checkinBtn) {
+      if (hideCheckin) {
+        checkinBtn.style.display = 'none'
+      } else {
+        checkinBtn.style.removeProperty('display')
+      }
+    }
+  }
+  function applySidebarHidden(getSettings) {
+    const settings = getSettings()
+    if (!settings.enabled) return
+    const cardBody = document.querySelector(
+      '[data-right-sidebar="true"] .card-body'
+    )
+    if (!cardBody) return
+    applyHideEmail(cardBody, settings)
+    const h2 = cardBody.querySelector(':scope > h2')
+    if (h2) {
+      const experienceEl = applyHideExperience(h2, settings)
+      if (experienceEl) {
+        applyHideActions(experienceEl, settings)
+      }
+    }
+  }
+  function runSidebarHidden(getSettings) {
+    applySidebarHidden(getSettings)
+  }
+  function initSidebarHidden(getSettings) {
+    if (initialized5) return
+    initialized5 = true
+    const run = () => {
+      applySidebarHidden(getSettings)
+    }
+    onDomChange(run)
+    onUrlChange(run)
+    run()
+  }
+  var initialized6 = false
+  function applyStickyHeader(getSettings) {
+    var _a, _b
+    const settings = getSettings()
+    const target =
+      (_b =
+        (_a = document.querySelector('.node-parent-tabs')) == null
+          ? void 0
+          : _a.parentElement) == null
+        ? void 0
+        : _b.parentElement
+    if (!target) return
+    if (settings.enabled && settings.stickyHeader) {
+      target.style.position = 'sticky'
+      target.style.top = '0'
+      target.style.zIndex = '1'
+    } else {
+      target.style.removeProperty('position')
+      target.style.removeProperty('top')
+      target.style.removeProperty('z-index')
+    }
+  }
+  function runStickyHeader(getSettings) {
+    applyStickyHeader(getSettings)
+  }
+  function initStickyHeader(getSettings) {
+    if (initialized6) return
+    initialized6 = true
+    const run = () => {
+      applyStickyHeader(getSettings)
+    }
+    onDomChange(run)
+    onUrlChange(run)
+    run()
+  }
   var DEFAULT_SETTINGS = {
     enabled: true,
     autoMarkNotificationsRead: true,
+    checkUnreadNotifications: true,
     replyTimeColor: true,
     postListSort: true,
+    rememberSortMode: false,
+    stickyHeader: false,
+    hideSidebarEmail: false,
+    hideSidebarExperience: false,
+    hideSidebarCoins: false,
+    hideSidebarCheckin: false,
   }
   var store = createSettingsStore('settings', DEFAULT_SETTINGS)
   var enabled = DEFAULT_SETTINGS.enabled
   var autoMarkNotificationsRead = DEFAULT_SETTINGS.autoMarkNotificationsRead
+  var checkUnreadNotifications = DEFAULT_SETTINGS.checkUnreadNotifications
   var replyTimeColor = DEFAULT_SETTINGS.replyTimeColor
   var postListSort = DEFAULT_SETTINGS.postListSort
+  var rememberSortMode = DEFAULT_SETTINGS.rememberSortMode
+  var stickyHeader = DEFAULT_SETTINGS.stickyHeader
+  var hideSidebarEmail = DEFAULT_SETTINGS.hideSidebarEmail
+  var hideSidebarExperience = DEFAULT_SETTINGS.hideSidebarExperience
+  var hideSidebarCoins = DEFAULT_SETTINGS.hideSidebarCoins
+  var hideSidebarCheckin = DEFAULT_SETTINGS.hideSidebarCheckin
   function buildSettingsSchema() {
-    const fields = [
+    const generalFields = [
       { type: 'toggle', key: 'enabled', label: '\u542F\u7528' },
       {
         type: 'toggle',
         key: 'autoMarkNotificationsRead',
         label: '\u81EA\u52A8\u5C06\u901A\u77E5\u9875\u8BBE\u4E3A\u5DF2\u8BFB',
+      },
+      {
+        type: 'toggle',
+        key: 'checkUnreadNotifications',
+        label: '\u5B9A\u65F6\u68C0\u67E5\u672A\u8BFB\u901A\u77E5',
       },
       {
         type: 'toggle',
@@ -1854,11 +2294,55 @@
         key: 'postListSort',
         label: '\u5F53\u524D\u9875\u5E16\u5B50\u5217\u8868\u6392\u5E8F',
       },
+      {
+        type: 'toggle',
+        key: 'rememberSortMode',
+        label:
+          '\u8BB0\u4F4F\u6392\u5E8F\u9009\u9879\uFF0C\u6BCF\u6B21\u81EA\u52A8\u6392\u5E8F',
+      },
+      {
+        type: 'toggle',
+        key: 'stickyHeader',
+        label: '\u9876\u90E8\u5BFC\u822A\u680F\u56FA\u5B9A\u663E\u793A',
+      },
+    ]
+    const sidebarFields = [
+      {
+        type: 'toggle',
+        key: 'hideSidebarEmail',
+        label: '\u9690\u85CF\u90AE\u7BB1',
+      },
+      {
+        type: 'toggle',
+        key: 'hideSidebarExperience',
+        label: '\u9690\u85CF\u7ECF\u9A8C\u503C',
+      },
+      {
+        type: 'toggle',
+        key: 'hideSidebarCoins',
+        label: '\u9690\u85CF\u91D1\u5E01\u6570\u91CF',
+      },
+      {
+        type: 'toggle',
+        key: 'hideSidebarCheckin',
+        label: '\u9690\u85CF\u7B7E\u5230',
+      },
     ]
     return {
       type: 'simple',
       title: '2Libra Plus \u8BBE\u7F6E',
-      fields,
+      groups: [
+        {
+          id: 'general',
+          title: '\u901A\u7528\u8BBE\u7F6E',
+          fields: generalFields,
+        },
+        {
+          id: 'sidebar',
+          title: '\u53F3\u4FA7\u680F\u4E2A\u4EBA\u5361\u7247\u8BBE\u7F6E',
+          fields: sidebarFields,
+        },
+      ],
     }
   }
   function openSettings() {
@@ -1897,14 +2381,24 @@
       const obj = await store.getAll()
       enabled = Boolean(obj.enabled)
       autoMarkNotificationsRead = Boolean(obj.autoMarkNotificationsRead)
+      checkUnreadNotifications = Boolean(obj.checkUnreadNotifications)
       replyTimeColor = Boolean(obj.replyTimeColor)
       postListSort = Boolean(obj.postListSort)
+      rememberSortMode = Boolean(obj.rememberSortMode)
+      stickyHeader = Boolean(obj.stickyHeader)
+      hideSidebarEmail = Boolean(obj.hideSidebarEmail)
+      hideSidebarExperience = Boolean(obj.hideSidebarExperience)
+      hideSidebarCoins = Boolean(obj.hideSidebarCoins)
+      hideSidebarCheckin = Boolean(obj.hideSidebarCheckin)
       if (!prevEnabled && enabled && !featuresInitialized) {
         initFeatures()
       } else if (featuresInitialized) {
         runAutoMarkNotificationsRead(getSettingsSnapshot)
+        runCheckNotifications(getSettingsSnapshot)
         runReplyTimeColor(getSettingsSnapshot)
         runPostListSort(getSettingsSnapshot)
+        runStickyHeader(getSettingsSnapshot)
+        runSidebarHidden(getSettingsSnapshot)
       }
     } catch (e) {}
   }
@@ -1912,8 +2406,15 @@
     return {
       enabled,
       autoMarkNotificationsRead,
+      checkUnreadNotifications,
       replyTimeColor,
       postListSort,
+      rememberSortMode,
+      stickyHeader,
+      hideSidebarEmail,
+      hideSidebarExperience,
+      hideSidebarCoins,
+      hideSidebarCheckin,
     }
   }
   var featuresInitialized = false
@@ -1921,8 +2422,11 @@
     if (featuresInitialized) return
     featuresInitialized = true
     initAutoMarkNotificationsRead(getSettingsSnapshot)
+    initCheckNotifications(getSettingsSnapshot)
     initReplyTimeColor(getSettingsSnapshot)
     initPostListSort(getSettingsSnapshot)
+    initStickyHeader(getSettingsSnapshot)
+    initSidebarHidden(getSettingsSnapshot)
   }
   function bootstrap() {
     const d = document.documentElement

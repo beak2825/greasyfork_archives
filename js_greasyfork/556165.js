@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Arson bang for buck
 // @namespace    Para_Thenics.torn.com
-// @version      1.00.011
+// @version      1.00.012
 // @description  Display profit per nerve and how to perform
 // @author       Para_Thenics, auboli77
 // @match        https://www.torn.com/page.php?sid=crimes*
@@ -574,10 +574,10 @@ async function getPricesFromAPI() {
     "Dampen: "
 ],
        [
-           "Payout: 53K",
+           "Payout: 100K",
     "Profit/Nerve: ",
     "Flamethrower: Yes",
-    "Place: 1 Gasoline",
+    "Place: 2 Gasoline",
     "Stoke: ",
     "Dampen: "
            ]
@@ -3268,25 +3268,45 @@ function saveItemValues() {
 loadItemValues();
 
 
+
+
 function calculateMaterialCost(lines) {
-    let total = 0;
+    let baseCost = 0;
+    let optionalCost = 0;
     const regex = /(\d+)\s+([A-Za-z]+(?:\s+[A-Za-z]+)*)/g;
 
     lines.forEach(line => {
+        // Regular items
         if (/^(Place|Stoke|Dampen|Evidence)/.test(line)) {
             let match;
             while ((match = regex.exec(line)) !== null) {
                 const qty = parseInt(match[1], 10);
-                const item = match[2].trim().replace(/\s+/g, ' ');
+                const item = match[2].trim();
                 const lookupKey = Object.keys(itemValues).find(k => k.toLowerCase() === item.toLowerCase());
                 if (lookupKey) {
-                    total += qty * parseValue(itemValues[lookupKey]);
+                    const cost = qty * parseValue(itemValues[lookupKey]);
+                    baseCost += cost;
+                    optionalCost += cost;
                 }
             }
         }
+
+        // Optional items (wrapped in ? ?)
+        const optionalRegex = /\?(\d+)\s+([A-Za-z]+(?:\s+[A-Za-z]+)*)\?/g;
+        let optMatch;
+        while ((optMatch = optionalRegex.exec(line)) !== null) {
+            const qty = parseInt(optMatch[1], 10);
+            const item = optMatch[2].trim();
+            const lookupKey = Object.keys(itemValues).find(k => k.toLowerCase() === item.toLowerCase());
+            if (lookupKey) {
+                optionalCost += qty * parseValue(itemValues[lookupKey]);
+            }
+        }
     });
-    return total;
+
+    return { baseCost, optionalCost };
 }
+
 
 
 
@@ -3320,38 +3340,63 @@ function calculateMaterialCost(lines) {
         return rounded >= 1000 ? `${(rounded / 1000).toFixed(1)}K` : rounded.toString();
     }
 
-    function calculateProfitPerNerve(lines) {
-        const payoutLine = lines.find(l => l.startsWith("Payout:"));
-        if (!payoutLine) return null;
 
-        const match = payoutLine.match(/([\d\.]+)\s*K?/i);
-        if (!match) return null;
 
-        let payout = parseFloat(match[1]);
-        if (/K/i.test(payoutLine)) payout *= 1000;
 
-        const materialCost = calculateMaterialCost(lines);
-        let itemCount = 0;
-        lines.forEach(line => {
-            if (/^(Place|Stoke|Dampen|Evidence)/.test(line)) {
-                const regex = /(\d+)\s+[A-Za-z]+/g;
-                let m;
-                while ((m = regex.exec(line)) !== null) itemCount += parseInt(m[1], 10);
-            }
-        });
+function calculateProfitPerNerve(lines) {
+    const payoutLine = lines.find(l => l.startsWith("Payout:"));
+    if (!payoutLine) return null;
 
-        const totalNerve = 10 + (itemCount * 5);
-        const result = (payout - materialCost) / totalNerve;
+    const match = payoutLine.match(/([\d\.]+)\s*K?/i);
+    if (!match) return null;
 
-        if (result >= 0) {
-            return formatProfitNerve(result);
-        } else {
-            const roundedNegative = Math.floor(result / 100) * 100;
-            return roundedNegative <= -1000
-                ? `-${(Math.abs(roundedNegative) / 1000).toFixed(1)}K`
-                : roundedNegative.toString();
+    let payout = parseFloat(match[1]);
+    if (/K/i.test(payoutLine)) payout *= 1000;
+
+    const { baseCost, optionalCost } = calculateMaterialCost(lines);
+
+    let itemCount = 0;
+    let optionalItemCount = 0;
+
+    lines.forEach(line => {
+        // Regular items
+        if (/^(Place|Stoke|Dampen|Evidence)/.test(line)) {
+            const regex = /(\d+)\s+[A-Za-z]+/g;
+            let m;
+            while ((m = regex.exec(line)) !== null) itemCount += parseInt(m[1], 10);
         }
-    }
+
+        // Optional full items
+        const optionalRegex = /\?(\d+)\s+[A-Za-z]+/g;
+        let optMatch;
+        while ((optMatch = optionalRegex.exec(line)) !== null) optionalItemCount += parseInt(optMatch[1], 10);
+
+        // Optional additions (+)
+        const optionalAddRegex = /\?\+(\d+)\s+[A-Za-z]+/g;
+        let optAddMatch;
+        while ((optAddMatch = optionalAddRegex.exec(line)) !== null) optionalItemCount += parseInt(optAddMatch[1], 10);
+    });
+
+    const baseNerve = 10 + (itemCount * 5);
+    const optionalNerve = baseNerve + (optionalItemCount * 5);
+
+    const baseProfit = (payout - baseCost) / baseNerve;
+    const optionalProfit = (payout - optionalCost) / optionalNerve;
+
+    const hasOptional = optionalItemCount > 0;
+
+    return {
+        profitText: hasOptional
+            ? `<span style="color: orange;">${formatProfitNerve(optionalProfit)}</span> – ${formatProfitNerve(baseProfit)}`
+            : formatProfitNerve(baseProfit),
+        nerveText: hasOptional
+            ? `${baseNerve} – <span style="color: orange;">${optionalNerve}</span>`
+            : `${baseNerve}`,
+        hasOptional
+    };
+}
+
+
 
     //  CSS for highlights (aligned colors)
 
@@ -3764,47 +3809,37 @@ function formatPlaceholders(text) {
     //  Tooltip creation + highlight logic
 
 
+
+
+
 function createTooltip(lines, section, highlightTarget) {
     const tooltip = document.createElement('div');
     tooltip.className = 'custom-tooltip';
-    let dynamicValue = null;
-    let totalNerve = null;
+    let ranges = null;
 
     lines.forEach(line => {
         const div = document.createElement('div');
         let content = line;
 
         if (line.startsWith("Profit/Nerve")) {
-            dynamicValue = calculateProfitPerNerve(lines);
-            if (dynamicValue) content = `Profit/Nerve: ${dynamicValue}`;
+            ranges = calculateProfitPerNerve(lines);
+            if (ranges) content = `Profit/Nerve: ${ranges.profitText}`;
         }
 
-        //  Apply orange highlight for placeholders
         div.innerHTML = `• ${formatPlaceholders(content)}`;
         tooltip.appendChild(div);
     });
 
-    // Add Total Nerve in the same style
-    const payoutLine = lines.find(l => l.startsWith("Payout:"));
-    if (payoutLine) {
-        let itemCount = 0;
-        lines.forEach(line => {
-            if (/^(Place|Stoke|Dampen|Evidence)/.test(line)) {
-                const regex = /(\d+)\s+[A-Za-z]+/g;
-                let m;
-                while ((m = regex.exec(line)) !== null) itemCount += parseInt(m[1], 10);
-            }
-        });
-        totalNerve = 10 + (itemCount * 5);
-
+    if (ranges) {
         const nerveDiv = document.createElement('div');
-        nerveDiv.innerHTML = `• Total Nerve: ${totalNerve}`;
+        nerveDiv.innerHTML = `• Total Nerve: ${ranges.nerveText}`;
         tooltip.appendChild(nerveDiv);
-    }
 
-    // Highlight logic
-    if (dynamicValue && highlightTarget) {
-        const numericValue = parseFloat(dynamicValue.replace(/K/i, '')) * (dynamicValue.includes('K') ? 1000 : 1);
+        // ✅ Always highlight based on base profit (even if optional exists)
+        const baseProfitValue = ranges.profitText.replace(/<[^>]*>/g, '') // remove HTML tags
+            .split('–').pop().trim(); // take the base value (right side)
+        const numericValue = parseFloat(baseProfitValue.replace(/K/i, '')) * (baseProfitValue.includes('K') ? 1000 : 1);
+
         if (numericValue <= 0) {
             highlightTarget.classList.add('highlight-negative');
         } else if (numericValue <= highlightValues.LowProfit) {
@@ -3819,6 +3854,8 @@ function createTooltip(lines, section, highlightTarget) {
     document.body.appendChild(tooltip);
     return tooltip;
 }
+
+
 
 
     function showTooltip(tooltip, target) {

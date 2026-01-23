@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         全能流媒体 ID & 链接提取工具 (Ultimate v3.2)
+// @name         全能流媒体 ID & 链接提取工具 (Ultimate v3.7)
 // @namespace    http://tampermonkey.net/
-// @version      3.2
-// @description  支持 Netflix, Disney+, 腾讯, 优酷, 爱奇艺, 芒果, B站(内/外), LINE TV 等提取ID；Viu, MyVideo, Hami, friDay 复制全链接。支持位置记忆。
+// @version      3.7
+// @description  支持全平台 ID 提取，识别成功后自动显示悬浮窗，支持位置记忆。
 // @author       Gemini
 // @match        https://www.netflix.com/*
 // @match        https://www.disneyplus.com/*
@@ -24,8 +24,8 @@
 // @grant        GM_setClipboard
 // @grant        GM_setValue
 // @grant        GM_getValue
-// @downloadURL https://update.greasyfork.org/scripts/563546/%E5%85%A8%E8%83%BD%E6%B5%81%E5%AA%92%E4%BD%93%20ID%20%20%E9%93%BE%E6%8E%A5%E6%8F%90%E5%8F%96%E5%B7%A5%E5%85%B7%20%28Ultimate%20v32%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/563546/%E5%85%A8%E8%83%BD%E6%B5%81%E5%AA%92%E4%BD%93%20ID%20%20%E9%93%BE%E6%8E%A5%E6%8F%90%E5%8F%96%E5%B7%A5%E5%85%B7%20%28Ultimate%20v32%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/563546/%E5%85%A8%E8%83%BD%E6%B5%81%E5%AA%92%E4%BD%93%20ID%20%20%E9%93%BE%E6%8E%A5%E6%8F%90%E5%8F%96%E5%B7%A5%E5%85%B7%20%28Ultimate%20v37%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/563546/%E5%85%A8%E8%83%BD%E6%B5%81%E5%AA%92%E4%BD%93%20ID%20%20%E9%93%BE%E6%8E%A5%E6%8F%90%E5%8F%96%E5%B7%A5%E5%85%B7%20%28Ultimate%20v37%29.meta.js
 // ==/UserScript==
 
 (function() {
@@ -34,11 +34,10 @@
     let lastUrl = location.href;
     let currentContent = '';
 
-    // 1. 创建悬浮窗并加载保存的位置
+    // 1. 创建悬浮窗（默认不显示）
     const btn = document.createElement('div');
     btn.id = 'media-id-fetcher';
-    btn.innerHTML = '正在扫描...';
-
+    
     const savedTop = GM_getValue('btn_top', '150px');
     const savedLeft = GM_getValue('btn_left', null);
 
@@ -47,182 +46,135 @@
         top: savedTop,
         left: savedLeft,
         right: savedLeft ? 'auto' : '20px',
-        zIndex: '999999',
+        zIndex: '2147483647',
         padding: '12px',
-        backgroundColor: 'rgba(34, 34, 34, 0.9)',
+        backgroundColor: 'rgba(34, 34, 34, 0.95)',
         color: '#fff',
-        cursor: 'move',
+        cursor: 'grab',
         borderRadius: '12px',
         fontWeight: 'bold',
-        boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
+        boxShadow: '0 8px 32px rgba(0,0,0,0.6)',
         fontSize: '13px',
-        border: '1px solid #444',
+        border: '1px solid #555',
         userSelect: 'none',
         textAlign: 'center',
         minWidth: '145px',
-        backdropFilter: 'blur(4px)',
-        transition: 'background-color 0.2s, border 0.2s'
+        backdropFilter: 'blur(8px)',
+        touchAction: 'none',
+        display: 'none' // 默认隐藏
     });
     document.body.appendChild(btn);
 
-    // 2. 鼠标拖拽逻辑 (带位置记忆)
+    // 2. 增强型拖拽逻辑
     let isDragging = false;
-    let offsetX, offsetY;
+    let startX, startY, initialX, initialY;
 
-    btn.addEventListener('mousedown', (e) => {
+    const startDrag = (e) => {
         isDragging = true;
-        offsetX = e.clientX - btn.getBoundingClientRect().left;
-        offsetY = e.clientY - btn.getBoundingClientRect().top;
+        btn.style.cursor = 'grabbing';
         btn.style.transition = 'none';
-    });
+        startX = e.clientX;
+        startY = e.clientY;
+        const rect = btn.getBoundingClientRect();
+        initialX = rect.left;
+        initialY = rect.top;
+        window.addEventListener('pointermove', doDrag, true);
+        window.addEventListener('pointerup', stopDrag, true);
+    };
 
-    document.addEventListener('mousemove', (e) => {
+    const doDrag = (e) => {
         if (!isDragging) return;
-        let x = e.clientX - offsetX;
-        let y = e.clientY - offsetY;
-        x = Math.max(0, Math.min(window.innerWidth - btn.offsetWidth, x));
-        y = Math.max(0, Math.min(window.innerHeight - btn.offsetHeight, y));
-        btn.style.left = x + 'px';
-        btn.style.top = y + 'px';
+        e.stopImmediatePropagation();
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+        let newX = initialX + dx;
+        let newY = initialY + dy;
+        newX = Math.max(0, Math.min(window.innerWidth - btn.offsetWidth, newX));
+        newY = Math.max(0, Math.min(window.innerHeight - btn.offsetHeight, newY));
+        btn.style.left = newX + 'px';
+        btn.style.top = newY + 'px';
         btn.style.right = 'auto';
-    });
+    };
 
-    document.addEventListener('mouseup', () => {
-        if (isDragging) {
-            isDragging = false;
-            btn.style.transition = 'background-color 0.2s, border 0.2s';
-            GM_setValue('btn_top', btn.style.top);
-            GM_setValue('btn_left', btn.style.left);
-        }
-    });
+    const stopDrag = (e) => {
+        if (!isDragging) return;
+        const moveDist = Math.sqrt(Math.pow(e.clientX - startX, 2) + Math.pow(e.clientY - startY, 2));
+        isDragging = false;
+        btn.style.cursor = 'grab';
+        GM_setValue('btn_top', btn.style.top);
+        GM_setValue('btn_left', btn.style.left);
+        window.removeEventListener('pointermove', doDrag, true);
+        window.removeEventListener('pointerup', stopDrag, true);
+        if (moveDist < 6) handleCopy();
+    };
 
-    // 3. 核心提取逻辑
+    btn.addEventListener('pointerdown', startDrag);
+
+    // 3. 提取逻辑
     function getIdentifier() {
         const url = new URL(window.location.href);
-        const path = url.pathname;
-        const search = url.searchParams;
+        const path = url.pathname, search = url.searchParams;
 
-        // Bilibili 国际版 (新增) - 提取 play/xxxx/YYYY 中的 YYYY 并加 ep
-        if (url.hostname.includes('bilibili.tv')) {
-            const match = path.match(/\/play\/\d+\/(\d+)/);
-            return match ? ('ep' + match[1]) : null;
-        }
-
-        // Bilibili 国内版
-        if (url.hostname.includes('bilibili.com')) {
-            const match = path.match(/\/(ep\d+)/);
-            return match ? (match[1] + '_tv') : null;
-        }
-
-        // Netflix
+        if (url.hostname.includes('bilibili.tv')) return path.match(/\/play\/\d+\/(\d+)/) ? 'ep' + path.match(/\/play\/\d+\/(\d+)/)[1] : null;
+        if (url.hostname.includes('bilibili.com')) return path.match(/\/(ep\d+)/)?.[1] ? path.match(/\/(ep\d+)/)[1] + '_tv' : null;
+        if (url.hostname.includes('mgtv.com')) return path.match(/\/b\/(\d+)/)?.[1];
+        if (url.hostname.includes('iqiyi.com')) return path.match(/\/(v_[^\.]+)\.html/)?.[1];
+        if (url.hostname.includes('iq.com')) return path.match(/-([a-z0-9]+)$/i)?.[1];
+        if (url.hostname.includes('v.qq.com')) return path.match(/\/cover\/([^\/]+)/)?.[1];
+        if (url.hostname.includes('v.youku.com')) return path.match(/\/id_([^\.]+)\.html/)?.[1];
         if (url.hostname.includes('netflix.com')) return search.get('jbv');
-
-        // Disney+
-        if (url.hostname.includes('disneyplus.com')) {
-            const match = path.match(/entity-[a-f0-9-]+/);
-            return match ? match[0] : null;
-        }
-
-        // 腾讯视频
-        if (url.hostname.includes('v.qq.com')) {
-            const match = path.match(/\/cover\/([^\/]+)/);
-            return match ? match[1] : null;
-        }
-
-        // 优酷
-        if (url.hostname.includes('v.youku.com')) {
-            const match = path.match(/\/id_([^\.]+)\.html/);
-            return match ? match[1] : null;
-        }
-
-        // 爱奇艺 (内)
-        if (url.hostname.includes('iqiyi.com')) {
-            const match = path.match(/\/(v_[^\.]+)\.html/);
-            return match ? match[1] : null;
-        }
-
-        // 爱奇艺国际版 (iq.com)
-        if (url.hostname.includes('iq.com')) {
-            const match = path.match(/-([a-z0-9]+)$/i);
-            return match ? match[1] : null;
-        }
-
-        // 芒果 TV
-        if (url.hostname.includes('mgtv.com')) {
-            const match = path.match(/\/b\/(\d+)/);
-            return match ? match[1] : null;
-        }
-
-        // LINE TV
-        if (url.hostname.includes('linetv.tw')) {
-            const match = path.match(/\/drama\/(\d+)/);
-            return match ? match[1] : null;
-        }
-
-        // myTV SUPER
-        if (url.hostname.includes('mytvsuper.com')) {
-            const match = path.match(/_(\d+)\//);
-            return match ? match[1] : null;
-        }
-
-        // Now Player
+        if (url.hostname.includes('disneyplus.com')) return path.match(/entity-[a-f0-9-]+/)?.[0];
+        if (url.hostname.includes('linetv.tw')) return path.match(/\/drama\/(\d+)/)?.[1];
+        if (url.hostname.includes('mytvsuper.com')) return path.match(/_(\d+)\//)?.[1];
         if (url.hostname.includes('now.com')) {
-            const id = search.get('id');
-            const type = search.get('type');
-            if (id && type) return `${url.origin}${url.pathname}?id=${id}&type=${type}`;
+            const id = search.get('id'), t = search.get('type');
+            return (id && t) ? `${url.origin}${url.pathname}?id=${id}&type=${t}` : null;
         }
+        if (url.hostname.includes('mewatch.sg')) return path.match(/-(\d+)$/)?.[1];
 
-        // mewatch
-        if (url.hostname.includes('mewatch.sg')) {
-            const match = path.match(/-(\d+)$/);
-            return match ? match[1] : null;
-        }
-
-        // --- 复制完整链接模式 ---
-        if (url.hostname.includes('viu.com') && path.includes('/vod/')) return window.location.href;
-        if (url.hostname.includes('myvideo.net.tw') && path.includes('details')) return window.location.href;
-        if (url.hostname.includes('hamivideo.hinet.net') && path.includes('product')) return window.location.href;
-        if (url.hostname.includes('friday.tw') && path.includes('detail')) return window.location.href;
+        const fullLinkSites = ['viu.com', 'myvideo.net.tw', 'hamivideo.hinet.net', 'video.friday.tw'];
+        const fullLinkPaths = ['/vod/', 'details', 'product', 'detail'];
+        if (fullLinkSites.some(s => url.hostname.includes(s)) && fullLinkPaths.some(p => path.includes(p))) return window.location.href;
 
         return null;
     }
 
-    // 4. UI 界面更新
+    // 4. UI 刷新（控制显示与隐藏）
     function refreshUI() {
         const content = getIdentifier();
         if (content) {
             currentContent = content;
             const isUrl = content.startsWith('http');
-            const displayText = isUrl ? '复制完整链接' : '点击复制 ID';
             let displayCode = isUrl ? (content.split('?')[0].split('/').filter(Boolean).pop()) : content;
             if (displayCode && displayCode.length > 15) displayCode = displayCode.substring(0, 12) + '...';
 
-            btn.innerHTML = `<div style="margin-bottom:4px; font-size:11px; color:#aaa;">${displayText}</div><code style="color:#ffd700; background:#000; padding:2px 4px; border-radius:4px; font-size:10px; display:block;">${displayCode || 'LINK'}</code>`;
+            btn.innerHTML = `<div style="margin-bottom:4px; font-size:11px; color:#aaa;">${isUrl ? '复制链接' : '复制 ID'}</div><code style="color:#ffd700; background:#000; padding:2px 4px; border-radius:4px; font-size:10px; display:block;">${displayCode || 'LINK'}</code>`;
             btn.style.borderLeft = '4px solid #E50914';
+            btn.style.display = 'block'; // 识别成功，显示
         } else {
             currentContent = '';
-            btn.innerHTML = '<span style="color:#666;">未检测到目标</span>';
-            btn.style.borderLeft = '4px solid #444';
+            btn.style.display = 'none'; // 识别失败，隐藏
         }
     }
 
-    // 5. 点击复制
-    btn.addEventListener('click', () => {
-        if (currentContent && !isDragging) {
+    // 5. 执行复制
+    function handleCopy() {
+        if (currentContent) {
             GM_setClipboard(currentContent);
             const oldHTML = btn.innerHTML;
-            btn.innerHTML = '<div style="color:#28a745; margin-top:5px;">✅ 已存入剪贴板</div>';
+            btn.innerHTML = '<div style="color:#28a745; margin-top:5px;">✅ 已复制</div>';
             setTimeout(() => { btn.innerHTML = oldHTML; }, 1200);
         }
-    });
+    }
 
-    // 6. 持续监听页面变化
+    // 监听 URL 变化
     setInterval(() => {
         if (lastUrl !== location.href) {
             lastUrl = location.href;
             refreshUI();
         }
-    }, 500);
+    }, 800);
 
+    // 初始执行
     refreshUI();
 })();

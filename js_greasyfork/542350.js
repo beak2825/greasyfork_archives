@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name            Bypass Paywalls Clean - de/at/ch
-// @version         4.2.8.0
+// @version         4.2.8.1
 // @description     Bypass Paywalls of news sites
 // @author          magnolia1234
 // @homepageURL     https://gitflic.ru/project/magnolia1234/bypass-paywalls-clean-filters
@@ -1436,7 +1436,7 @@ else if (matchDomain('spektrum.de')) {
     paywall.classList.remove('pw-premium');
 }
 
-else if (matchDomain(['spiegel.de', 'manager-magazin.de'])) {
+else if (matchDomain('spiegel.de')) {
   let url = window.location.href;
   func_post = function () {
     let failed_iframes = document.querySelectorAll('div > div[x-show="!iframeIsLoaded"]');
@@ -1732,19 +1732,35 @@ else if (matchDomain('weltkunst.de')) {
 else if (matchDomain('welt.de')) {
   func_post = function () {
     if (mobile) {
-      let headers = document.querySelectorAll('main header, main header ~ div');
-      for (let elem of headers)
-        elem.removeAttribute('style');
+      document.querySelectorAll('main header, main header ~ div').forEach(e => e.removeAttribute('style'));
       let main_divs = document.querySelectorAll('main div[style] > div > div[id]');
       for (let elem of main_divs) {
         if (elem.querySelector('img'))
           elem.parentNode.parentNode.removeAttribute('style');
       }
-      let lazy_images = document.querySelectorAll('main img[loading="lazy"][style]');
-      for (let elem of lazy_images)
-        elem.style = 'width: 95%;';
+      document.querySelectorAll('main img[loading="lazy"][style]').forEach(e => e.style = 'width: 95%;');
     }
     header_nofix('main header', 'img[alt^="WELTplus"][loading]', 'BPC > no archive-fix');
+    let podcast_sel = 'div[id^="pdg-"]';
+    if (!window.location.pathname.startsWith('/podcasts/')) {
+      let audio_tts = 'div:not([id]) > ' + podcast_sel;
+      hideDOMStyle(audio_tts, 2);
+      podcast_sel = 'div[id] > ' + podcast_sel;
+    }
+    let podcasts = document.querySelectorAll(podcast_sel);
+    for (let podcast of podcasts) {
+      let player = podcast.querySelector('div > button#play-button');
+      if (player) {
+        let src_doc = podcast.querySelector('a[href^="https://audio.podigee-cdn.net/"]');
+        if (src_doc) {
+          let audio_new = document.createElement('audio');
+          audio_new.src = src_doc.href;
+          audio_new.setAttribute('controls', '');
+          player.parentNode.parentNode.replaceChild(audio_new, player.parentNode);
+        }
+      } else
+        removeDOMElement(podcast)
+    }
     let ads = pageContains('span', 'Anzeige');
     removeDOMElement(...ads);
   }

@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Linux.do 自动跳转外部链接
 // @namespace    https://github.com/sxjeru
-// @version      0.2
-// @description  当 linux.do 出现“打开外部链接”弹窗时，自动点击继续按钮
+// @version      1.0
+// @description  当 linux.do 出现“打开外部链接”弹窗时，自动点击继续按钮（仅左键点击时生效）
 // @author       sxjeru
 // @match        https://linux.do/*
 // @grant        none
@@ -16,17 +16,32 @@
 
     const DEBUG = false;
 
-    // 预定义的类名，避免重复创建字符串
+    // 预定义的类名
     const TARGET_CLASS = 'd-modal';
     const TITLE_CLASS = '.d-modal__title-text';
     const CONFIRM_BTN_CLASS = '.d-modal__footer .btn-primary';
 
+    // 记录最后一次左键点击的时间戳
+    let lastLeftClickTime = 0;
+
+    // 监听全局点击事件（捕获阶段），只记录左键点击
+    document.addEventListener('click', (e) => {
+        // e.button === 0 代表左键
+        if (e.button === 0) {
+            lastLeftClickTime = Date.now();
+        }
+    }, true);
+
     // 具体的处理逻辑
     function checkAndClick(node) {
-        // 1. 检查节点本身是否是弹窗，或者节点内部包含弹窗
-        // Discourse 通常会插入一个包含 d-modal 的容器，或者直接插入 d-modal
-        let modal = null;
+        // 0. 安全检查：如果弹窗出现的时间距离上一次左键点击超过 500ms，说明可能不是左键触发的（例如右键、脚本或其他方式），则忽略
+        if (Date.now() - lastLeftClickTime > 500) {
+            if (DEBUG) console.log('检测到弹窗，但非左键点击触发，忽略。');
+            return;
+        }
 
+        // 1. 检查节点本身是否是弹窗，或者节点内部包含弹窗
+        let modal = null;
         if (node.classList && node.classList.contains(TARGET_CLASS)) {
             modal = node;
         } else if (node.querySelector) {
@@ -35,7 +50,7 @@
 
         if (!modal) return;
 
-        // 2. 验证标题（双重保险，防止误点其他确认框）
+        // 2. 验证标题
         const titleElement = modal.querySelector(TITLE_CLASS);
         if (titleElement && titleElement.innerText.trim() === '打开外部链接') {
             const confirmBtn = modal.querySelector(CONFIRM_BTN_CLASS);
@@ -49,9 +64,7 @@
     const observer = new MutationObserver((mutations) => {
         for (const mutation of mutations) {
             if (mutation.addedNodes.length > 0) {
-                // 遍历每一个新增的节点
                 for (const node of mutation.addedNodes) {
-                    // 只有当节点是元素节点 (Type 1) 时才处理
                     if (node.nodeType === 1) {
                         checkAndClick(node);
                     }
@@ -61,8 +74,8 @@
     });
 
     observer.observe(document.body, {
-        childList: true, // 监控子节点添加/删除
-        subtree: true, // 监控所有后代节点（必须开启，因为弹窗可能插入在深层容器中）
+        childList: true,
+        subtree: true,
     });
 
 })();

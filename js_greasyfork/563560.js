@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         excalidraw-file-previewer
 // @namespace    npm/vite-plugin-monkey
-// @version      0.0.3
+// @version      0.0.4
 // @description  A userscript that renders `.excalidraw` files directly in the browser.
 // @license      MIT
 // @icon         https://raw.githubusercontent.com/azzgo/excalidraw-file-previewer/d0812af94c620041090aebc5d2ca9b7fc058b244/src/assets/icon.svg
@@ -35,7 +35,8 @@
   let json;
   try {
     if (document.body.innerText.trim().startsWith("{")) {
-      json = JSON.parse(document.body.innerText);
+      let last = document.body.innerText.lastIndexOf("}");
+      json = JSON.parse(document.body.innerText.slice(0, last + 1));
     }
   } catch (e) {
     console.error("[Excalidraw] parse JSON failed:", e);

@@ -4,13 +4,15 @@
 // @name:ja      PikPak JAV リネームアシスタント
 // @name:zh-CN   PikPak 番号重命名助手
 // @namespace    https://github.com/CheerChen
-// @version      0.8.0
+// @version      0.8.1
 // @description  Adds a rename button next to input field in PikPak rename dialog. Click the button to fetch information from AV-wiki and auto-rename files. Supports file extension preservation and optimized number format matching.
 // @description:en Adds a rename button next to input field in PikPak rename dialog. Click the button to fetch information from AV-wiki and auto-rename files. Supports file extension preservation and optimized number format matching.
 // @description:ja PikPakのリネームダイアログの入力フィールドの横にリネームボタンを追加します。ボタンをクリックしてAV-wikiから情報を取得し、ファイルを自動リネームします。ファイル拡張子の保護と最適化された番号形式マッチングをサポート。
 // @description:zh-CN 在PikPak重命名对话框的输入框旁边添加重命名按钮。点击按钮从AV-wiki获取信息并自动重命名文件。支持文件扩展名保护和优化的番号格式匹配。
 // @author       cheerchen37
 // @match        *://*mypikpak.com/*
+// @match        *://*mypikpak.net/*
+// @match        *://*pikpak.me/*
 // @grant        GM_xmlhttpRequest
 // @grant        GM_openInTab
 // @connect      av-wiki.net
@@ -23,7 +25,7 @@
 // @updateURL https://update.greasyfork.org/scripts/511434/PikPak%20%E7%95%AA%E5%8F%B7%E9%87%8D%E5%91%BD%E5%90%8D%E5%8A%A9%E6%89%8B.meta.js
 // ==/UserScript==
 
-(function() {
+(function () {
     'use strict';
 
     console.log("脚本已加载");
@@ -108,15 +110,15 @@
         renameBtn.className = 'pikpak-rename-btn';
         renameBtn.innerHTML = '✨';
         renameBtn.title = '智能重命名';
-        
+
         // 添加点击事件
         renameBtn.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
-            
+
             const originalValue = input.value;
             const keyword = extractKeyword(originalValue);
-            
+
             if (!keyword) {
                 console.log("未能提取有效关键字");
                 alert("未能从文件名中提取有效的番号格式");
@@ -127,7 +129,7 @@
             renameBtn.disabled = true;
             renameBtn.innerHTML = '⋯';
             renameBtn.style.opacity = '0.5';
-            
+
             queryAVwiki(keyword, input, originalValue, renameBtn);
         });
 
@@ -144,20 +146,20 @@
             const cleanedNumber = match[2].replace(/^0+/, '') || '0';
             return `${match[1]}-${cleanedNumber}`;
         }
-        
+
         // 尝试匹配包含字母和数字的模式，忽略后面的字符
         match = text.match(/([a-zA-Z]+)-(\d+)/);
         if (match) {
             return match[0];
         }
-        
+
         // 处理没有连字符的情况，如 ABC0123 -> ABC-123
         match = text.match(/([a-zA-Z]+)0*(\d+)/);
         if (match) {
             const cleanedNumber = match[2].replace(/^0+/, '') || '0';
             return `${match[1]}-${cleanedNumber}`;
         }
-        
+
         // 通用匹配
         match = text.match(/([a-zA-Z]{3,})(\d+)/);
         if (match) {
@@ -177,7 +179,7 @@
         GM_xmlhttpRequest({
             method: "GET",
             url: url,
-            onload: function(response) {
+            onload: function (response) {
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(response.responseText, "text/html");
                 const listItems = doc.querySelectorAll('.post .archive-list .read-more a');
@@ -185,18 +187,18 @@
                 // 查找第一个有效链接
                 for (let item of listItems) {
                     if (item.href) {
-                        if (!keywordRegex.test(item.href)){
+                        if (!keywordRegex.test(item.href)) {
                             continue;
                         }
                         const detailUrl = item.href;
-                        console.log("detailUrl "+ detailUrl)
+                        console.log("detailUrl " + detailUrl)
                         GM_xmlhttpRequest({
                             method: "GET",
                             url: detailUrl,
-                            onload: function(response) {
+                            onload: function (response) {
                                 parseResponseWiki(response.responseText, input, originalValue, renameBtn);
                             },
-                            onerror: function(error) {
+                            onerror: function (error) {
                                 console.log("详情页请求出错: ", error);
                                 resetButton(renameBtn, "请求详情页错误");
                             }
@@ -207,7 +209,7 @@
                 // 如果没有找到有效链接，恢复按钮状态
                 resetButton(renameBtn, "未找到匹配的番号");
             },
-            onerror: function(error) {
+            onerror: function (error) {
                 console.log("请求出错: ", error);
                 resetButton(renameBtn, "网络请求错误");
             }
@@ -225,15 +227,15 @@
 
         // 清理名称中的特殊字符
         name = name.replace(/[\/:*?"<>|\x00-\x1F]/g, '_');
-        
+
         // 检查原始值是否包含文件扩展名
         const extensionMatch = originalValue.match(/(\.[^.]+)$/);
         const extension = extensionMatch ? extensionMatch[1] : '';
-        
+
         // 如果有扩展名，保留它；否则直接使用新名称
         input.value = extension ? `${name}${extension}` : `${name}`;
         triggerInputChange(input);
-        
+
         // 恢复按钮状态
         resetButton(renameBtn, "重命名成功", true);
     }
@@ -243,7 +245,7 @@
         renameBtn.disabled = false;
         renameBtn.innerHTML = '✨';
         renameBtn.style.opacity = '';
-        
+
         if (message) {
             // 显示消息提示
             if (isSuccess) {

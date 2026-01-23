@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         知乎AI总结助手
+// @name         知乎AI总结助手(by Summer121)
 // @namespace    http://tampermonkey.net/
-// @version      1.2.1
-// @description  为知乎文章、问题、回答添加AI总结功能，调用ChatGPT进行智能总结
+// @version      1.2.2
+// @description  为知乎文章、问题和回答提供 AI 智能总结功能，支持多账号管理和自动总结
 // @author       Summer121
 // @match        https://*.zhihu.com/*
 // @grant        GM_xmlhttpRequest
@@ -11,18 +11,15 @@
 // @license      MIT
 // @connect      *
 // @run-at       document-idle
-// @downloadURL https://update.greasyfork.org/scripts/559782/%E7%9F%A5%E4%B9%8EAI%E6%80%BB%E7%BB%93%E5%8A%A9%E6%89%8B.user.js
-// @updateURL https://update.greasyfork.org/scripts/559782/%E7%9F%A5%E4%B9%8EAI%E6%80%BB%E7%BB%93%E5%8A%A9%E6%89%8B.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/559782/%E7%9F%A5%E4%B9%8EAI%E6%80%BB%E7%BB%93%E5%8A%A9%E6%89%8B%28by%20Summer121%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/559782/%E7%9F%A5%E4%B9%8EAI%E6%80%BB%E7%BB%93%E5%8A%A9%E6%89%8B%28by%20Summer121%29.meta.js
 // ==/UserScript==
 
 (function() {
     'use strict';
 
     const STYLES = `
-        :root {
-            --zhihu-ai-primary-color: #667eea;
-            --zhihu-ai-secondary-color: #764ba2;
-        }
+        :root { --zhihu-ai-primary-color: #667eea; --zhihu-ai-secondary-color: #764ba2; }
         .Question-sideColumn--sticky { display: none !important; }
         .zhihu-ai-side-panel { left: 100%; margin-left: 30px; width: 400px; z-index: 1; background: white; border-radius: 8px; box-shadow: 0 2px 16px rgba(0, 0, 0, 0.1); transition: opacity 0.3s ease; }
         .zhihu-ai-side-panel.short { position: absolute; top: 0; height: 15vh; overflow-y: auto; }

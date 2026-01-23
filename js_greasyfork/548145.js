@@ -3,7 +3,7 @@
 // @name:en      Facebook Login Wall Remover
 // @name:zh-TW   Facebook 登入牆移除器
 // @name:ja      Facebook ログインウォールリムーバー
-// @version      0.8.2
+// @version      0.8.3
 // @description  This script improves the guest browsing experience on the Facebook desktop site. It aims to remove common interruptions and add helpful features for users who are not logged in.
 // @description:en This script improves the guest browsing experience on the Facebook desktop site. It aims to remove common interruptions and add helpful features for users who are not logged in.
 // @description:zh-TW 這個腳本的用途是改善在 Facebook 桌面版網站上未登入狀態的瀏覽體驗。它會移除一些常見的干擾，並加入一些方便的功能。
@@ -158,12 +158,22 @@
                     TEXT_BLOCKS: 'div[dir="auto"]'
                 }
             },
+
             CONSTANTS: {
-                SPRITE_OFFSETS: {
+                SPRITES: {
                     COMMENT: -1037,
                     SHARE: -1054,
-                    TOLERANCE: 10
+                    SHARE_ALT: -1071,
+                    TOLERANCE: 5
                 },
+                REGEX_PARTS: {
+                    UNIT_GROUP: '[KkMm萬億万\\u842c\\u5104\\u4e07]'
+                },
+                MEDIA_CONTROL_LABELS: [
+                    "放大", "縮小", "進入全螢幕模式", "上一張", "下一張", "關閉", "閉じる",
+                    "Zoom", "Fullscreen", "Previous", "Next", "Close",
+                    "拡大", "縮小", "全画面表示", "前へ", "次へ"
+                ],
                 OBSERVER: {
                     ROOT_MARGIN: '-45% 0px -45% 0px',
                     THRESHOLD: 0.01
@@ -259,11 +269,19 @@
                 META_STATS: true,
                 META_STATS_TOTAL: true,
                 META_STATS_DETAILED: true,
-                PERMALINK_FORMAT: 'author_id'
+                PERMALINK_FORMAT: 'author_id',
+                BATCH_EXPORT_FORMAT: 'json',
+                BATCH_COPY_MODE: 'file'
             },
             STRINGS: {
                 en: {
                     // --- General ---
+                    setting_batchCopyMode: 'Batch Copy Output Mode',
+                    batchCopyMode_file: 'Download as File',
+                    batchCopyMode_clipboard: 'Copy to Clipboard',
+                    batchCopyMode_locked_csv: 'CSV format requires Download mode.',
+                    batchCopy_file_success: 'Exported to file successfully.',
+
                     notificationDeadlock: 'A login prompt was hidden, but the feed can no longer load new content.\n[Tip] To prevent this, open links in a new tab (Middle-Click). Please reload to continue.',
                     notificationSettingsReload: 'Some settings updated. Please reload.',
                     resetSettings: 'Reset Settings',
@@ -339,7 +357,9 @@
                     settingsColumnGeneral: 'General',
                     settingsColumnNavigation: 'Navigation',
                     settingsColumnTools: 'Tools & Utilities',
-                    settingsDetailsMetadata: 'Advanced Metadata Options',
+                    keyBinderPress: 'Press any key...',
+                    keyBinderNone: '(None)',
+                    settingsDetailsMetadata: 'Advanced Metadata Settings',
                     setting_autoLoadEnabled: 'Auto Load Content',
 
                     // --- Navigation ---
@@ -416,6 +436,9 @@
                     batchCopy_empty: 'No posts available to copy.',
                     batchCopy_mode_clipboard: 'Batch Mode: Clipboard Copy',
                     batchCopy_mode_download: 'Batch Mode: Download as File',
+                    exportFormat_text: 'Plain Text (.txt)',
+                    exportFormat_json: 'JSON (.json)',
+                    exportFormat_csv: 'CSV (.csv)',
 
                     // --- Deadlock & Error Recovery ---
                     floatingNav_showAutoLoad: 'Show Auto-Load',
@@ -453,8 +476,14 @@
                     notificationReelSearchError: 'Page name not found',
                 },
                 'zh-TW': {
-                    // --- 一般設定 ---
-                    notificationDeadlock: '登入提示已隱藏，動態消息將無法載入新內容。\n【提示】為避免動態消息卡住，請養成用滑鼠中鍵在新分頁開啟連結的習慣。請重新整理頁面以繼續瀏覽。',
+                    // --- General ---
+                    setting_batchCopyMode: '批次複製輸出模式',
+                    batchCopyMode_file: '下載為檔案',
+                    batchCopyMode_clipboard: '複製到剪貼簿',
+                    batchCopyMode_locked_csv: 'CSV 格式僅支援下載模式。',
+                    batchCopy_file_success: '已成功匯出檔案。',
+
+                    notificationDeadlock: '登入提示已被隱藏，但動態無法再載入新內容。\n[提示] 為防止此情況，請在新分頁中開啟連結 (中鍵點擊)。請重新整理以繼續。',
                     notificationSettingsReload: '部分設定已更新，請重新整理頁面以完全生效。',
                     resetSettings: '重設設定',
                     resetSettingsConfirm: '您確定要將所有設定重設為預設值嗎？此操作無法復原。',
@@ -528,8 +557,10 @@
                     menuSettings: '⚙️ 設定',
                     settingsColumnGeneral: '一般設定',
                     settingsColumnNavigation: '導覽設定',
-                    settingsColumnTools: '工具與實用程式',
-                    settingsDetailsMetadata: '進階中繼資料選項',
+                    settingsColumnTools: '工具與其他設定',
+                    keyBinderPress: '請按任意鍵...',
+                    keyBinderNone: '(無)',
+                    settingsDetailsMetadata: '進階中繼資料設定',
                     setting_autoLoadEnabled: '自動載入內容',
 
                     // --- 導覽功能 ---
@@ -599,12 +630,18 @@
                     autoLoad_target_reached: '已達到目標數量 ({n})。',
                     autoLoad_tooltip_incremental: '自動載入 (+{n})\n右鍵：切換至目標模式',
                     autoLoad_tooltip_target: '自動載入 (達到 {n})\n右鍵：切換至遞增模式',
+
+                    setting_batchExportFormat: '批次匯出格式',
+                    tooltip_batchExportFormat: '選擇批次匯出（自動載入 > 複製）時的檔案格式。',
                     batchCopy_start: '正在處理 {count} 篇貼文...',
                     batchCopy_success: '已複製 {count} 篇貼文到剪貼簿！({chars} 字)',
-                    batchCopy_download_success: '已下載 {count} 篇貼文！({chars} 字)',
+                    batchCopy_download_success: '已下載 {count} 篇貼文！(共 {chars} 字)',
                     batchCopy_empty: '沒有可複製的貼文。',
                     batchCopy_mode_clipboard: '批次模式：複製到剪貼簿',
                     batchCopy_mode_download: '批次模式：下載為檔案',
+                    exportFormat_text: '純文字 (.txt)',
+                    exportFormat_json: 'JSON (.json)',
+                    exportFormat_csv: 'CSV (.csv)',
 
                     // --- Deadlock & Error Recovery ---
                     floatingNav_showAutoLoad: '顯示 自動載入按鈕',
@@ -721,8 +758,15 @@
                     settingsColumnGeneral: '一般',
                     settingsColumnNavigation: 'ナビ',
                     settingsColumnTools: 'ツールとユーティリティ',
+                    keyBinderPress: 'キーを押してください...',
+                    keyBinderNone: '(なし)',
                     settingsDetailsMetadata: '高度なメタデータ設定',
                     setting_autoLoadEnabled: 'コンテンツの自動読み込み',
+                    setting_batchCopyMode: '一括コピー出力モード',
+                    batchCopyMode_file: 'ファイルとしてダウンロード',
+                    batchCopyMode_clipboard: 'クリップボードにコピー',
+                    batchCopyMode_locked_csv: 'CSV形式はダウンロードモードのみ対応しています。',
+                    batchCopy_file_success: 'ファイルへのエクスポートが完了しました。',
 
                     // --- ナビゲーション ---
                     keyboardNavEnabled: 'キーボードナビゲーションを有効にする',
@@ -793,12 +837,18 @@
                     autoLoad_target_reached: '目標件数 ({n}) に到達済みです。',
                     autoLoad_tooltip_incremental: '自動読み込み (+{n})\n右クリック：目標モードへ切替',
                     autoLoad_tooltip_target: '自動読み込み (目標 {n})\n右クリック：増分モードへ切替',
+
+                    setting_batchExportFormat: '一括エクスポート形式',
+                    tooltip_batchExportFormat: '一括エクスポート（自動ロード > コピー）のファイル形式を選択します。',
                     batchCopy_start: '{count} 件の投稿を処理中...',
                     batchCopy_success: '{count} 件の投稿をクリップボードにコピーしました！ ({chars} 文字)',
-                    batchCopy_download_success: '{count} 件の投稿をダウンロードしました！ ({chars} 文字)',
+                    batchCopy_download_success: '{count}件の投稿をダウンロードしました！({chars}文字)',
                     batchCopy_empty: 'コピーできる投稿がありません。',
-                    batchCopy_mode_clipboard: '一括モード: クリップボードにコピー',
-                    batchCopy_mode_download: '一括モード: ファイルとしてダウンロード',
+                    batchCopy_mode_clipboard: 'バッチモード：クリップボードにコピー',
+                    batchCopy_mode_download: 'バッチモード：ファイルとして保存',
+                    exportFormat_text: 'プレーンテキスト (.txt)',
+                    exportFormat_json: 'JSON (.json)',
+                    exportFormat_csv: 'CSV (.csv)',
 
                     // --- Deadlock & Error Recovery ---
                     floatingNav_showAutoLoad: '自動読み込みボタンを表示',
@@ -841,6 +891,16 @@
         // --- STYLES ---
         styles: {
             get CORE() {
+                return [
+                    this.BASE,
+                    this.NAVIGATOR,
+                    this.TIMELINE,
+                    this.TOOLBAR,
+                    this.COMPONENTS,
+                    this.SETTINGS
+                ].join('\n');
+            },
+            get BASE() {
                 const C = app.config;
                 return [
                     // --- Base Hide Rules ---
@@ -856,7 +916,12 @@
                     `.${C.SELECTORS.NAVIGATOR.HIGHLIGHT_CLASS}[data-heat="6"] { outline-color: #FFEE58 !important; box-shadow: 0 0 15px rgba(255, 238, 88, 0.5) !important; }`,
                     `.${C.SELECTORS.NAVIGATOR.HIGHLIGHT_CLASS}[data-heat="7"] { outline-color: #FFCA28 !important; box-shadow: 0 0 15px rgba(255, 202, 40, 0.5) !important; }`,
                     `.${C.SELECTORS.NAVIGATOR.HIGHLIGHT_CLASS}[data-heat="8"] { outline-color: #FB8C00 !important; box-shadow: 0 0 15px rgba(251, 140, 0, 0.5) !important; }`,
-                    `.${C.SELECTORS.NAVIGATOR.HIGHLIGHT_CLASS}[data-heat="9"] { outline-color: #F44336 !important; box-shadow: 0 0 15px rgba(244, 67, 54, 0.5) !important; }`,
+                    `.${C.SELECTORS.NAVIGATOR.HIGHLIGHT_CLASS}[data-heat="9"] { outline-color: #F44336 !important; box-shadow: 0 0 15px rgba(244, 67, 54, 0.5) !important; }`
+                ].join('\n');
+            },
+            get NAVIGATOR() {
+                const C = app.config;
+                return [
                     // --- Floating Nav ---
                     `.gm-floating-nav { position: fixed; bottom: ${C.UI.DIMENSIONS.FLOATING_NAV_BOTTOM}; right: ${C.UI.DIMENSIONS.FLOATING_NAV_RIGHT}; z-index: ${C.UI.Z_INDEX.FLOATING_NAV}; display: flex; flex-direction: column; gap: 12px; transition: opacity 0.3s; }`,
                     `.gm-floating-nav[data-opacity="true"] { opacity: 0.1; }`,
@@ -864,8 +929,12 @@
                     `.gm-floating-nav button { background-color: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: none; border-radius: 50%; width: 44px; height: 44px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; color: #65676B; }`,
                     `.gm-floating-nav button:hover { background-color: #FFFFFF; transform: scale(1.1); box-shadow: 0 6px 16px rgba(0,0,0,0.2); }`,
                     `.gm-floating-nav button:active { transform: scale(0.95); }`,
-                    `.gm-floating-nav svg { width: 22px; height: 22px; fill: currentColor; }`,
-
+                    `.gm-floating-nav svg { width: 22px; height: 22px; fill: currentColor; }`
+                ].join('\n');
+            },
+            get TIMELINE() {
+                const C = app.config;
+                return [
                     // --- Timeline Navigator ---
                     `#gm-timeline-container { position: fixed; right: 0; top: 60px; bottom: 20px; z-index: ${C.UI.Z_INDEX.TIMELINE}; background: transparent; border-top-left-radius: 16px; border-bottom-left-radius: 16px; padding: 16px 0; backdrop-filter: none; -webkit-backdrop-filter: none; display: flex; flex-direction: column; align-items: flex-end; gap: 4px; width: fit-content; max-width: 32px; transition: max-width 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), background-color 0.2s, box-shadow 0.2s, backdrop-filter 0.2s; box-shadow: none; overflow: hidden; border-left: none; }`,
                     `@supports (-moz-appearance:none) { #gm-timeline-container { right: 8px !important; } }`,
@@ -900,18 +969,18 @@
                     `.gm-timeline-dot[data-heat="9"] { background-color: #F44336 !important; box-shadow: 0 0 4px rgba(244, 67, 54, 0.5); }`,
 
                     // --- Active State (Ring Style) ---
-                    `.gm-timeline-row.active .gm-timeline-dot { transform: scale(1.4); border: 2px solid #ffffff; box-shadow: 0 0 0 2px #1877F2, 0 2px 6px rgba(0,0,0,0.3) !important; }`,
-
+                    `.gm-timeline-row.active .gm-timeline-dot { transform: scale(1.4); border: 2px solid #ffffff; box-shadow: 0 0 0 2px #1877F2, 0 2px 6px rgba(0,0,0,0.3) !important; }`
+                ].join('\n');
+            },
+            get TOOLBAR() {
+                const C = app.config;
+                return [
                     // --- Toolbar & Search ---
                     `.gm-toolbar { position: fixed; top: 0; left: 0; width: 100%; padding: 8px 16px; background-color: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); z-index: ${C.UI.Z_INDEX.TOOLBAR}; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06); box-sizing: border-box; transition: transform 0.3s ease-in-out; gap: 16px; border-bottom: 1px solid rgba(0,0,0,0.05); }`,
                     `.gm-button-group { display: flex; align-items: center; gap: 6px; }`,
                     `.gm-button-group button { background-color: transparent; border: none; padding: 0; height: 36px; width: 36px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; border-radius: 50%; color: #65676B; }`,
                     `.gm-button-group button:hover { background-color: rgba(0, 0, 0, 0.05); transform: translateY(-1px); }`,
                     `.gm-button-group button:active { transform: scale(0.96); background-color: rgba(0, 0, 0, 0.1); }`,
-                    // Removed legacy joined-button styles
-                    // .gm-button-group button:not(:first-child) { margin-left: -1px; }
-                    // .gm-button-group button:first-child { border-radius: 6px 0 0 6px; }
-                    // .gm-button-group button:last-child { border-radius: 0 6px 6px 0; }
                     `.gm-button-group button svg { width: 20px; height: 20px; fill: #65676B; pointer-events: none; }`,
                     `.gm-button-group button.gm-pinned { background-color: #E7F3FF; }`,
                     `.gm-search-core-wrapper { flex-grow: 1; display: flex; justify-content: center; }`,
@@ -926,8 +995,12 @@
                     `.gm-search-button-integrated svg { width: 18px; height: 18px; fill: #1877F2; }`,
                     `.gm-hover-hint { position: fixed; top: 0; left: 50%; width: 40px; height: 4px; background-color: rgba(0, 0, 0, 0.25); border-radius: 2px; z-index: ${C.UI.Z_INDEX.HOVER_HINT}; opacity: 0; transform: translate(-50%, -12px); transition: opacity 0.2s ease-in-out, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: none; }`,
                     `.gm-hover-hint.gm-visible { opacity: 1; transform: translate(-50%, 8px); }`,
-                    `.gm-hover-trigger { position: fixed; top: 0; left: 0; width: 100%; height: 10px; z-index: ${C.UI.Z_INDEX.HOVER_TRIGGER}; }`,
-
+                    `.gm-hover-trigger { position: fixed; top: 0; left: 0; width: 100%; height: 10px; z-index: ${C.UI.Z_INDEX.HOVER_TRIGGER}; }`
+                ].join('\n');
+            },
+            get COMPONENTS() {
+                const C = app.config;
+                return [
                     // --- Toasts ---
                     `.gm-toast { position: fixed; top: 20px; left: 50%; transform: translate(-50%, -100px); padding: 12px 20px; border-radius: 8px; color: white; font-size: 14px; font-weight: bold; z-index: ${C.UI.Z_INDEX.TOAST}; opacity: 0; transition: transform 0.3s ease, opacity 0.3s ease; box-shadow: 0 4px 10px rgba(0,0,0,0.2); backdrop-filter: blur(5px); white-space: pre-wrap; }`,
                     `.gm-toast-visible { opacity: 1; transform: translate(-50%, 0); }`,
@@ -955,8 +1028,12 @@
                     `.gm-transparency-btn:active { transform: scale(0.95); }`,
 
                     // --- Post Numbering ---
-                    `.gm-post-number { position: absolute; top: -10px; left: -10px; background-color: #e4e6eb; color: #65676b; padding: 2px 6px; border-radius: 4px; font-size: 12px; font-weight: bold; z-index: 1; }`,
-
+                    `.gm-post-number { position: absolute; top: -10px; left: -10px; background-color: #e4e6eb; color: #65676b; padding: 2px 6px; border-radius: 4px; font-size: 12px; font-weight: bold; z-index: 1; }`
+                ].join('\n');
+            },
+            get SETTINGS() {
+                const C = app.config;
+                return [
                     // --- Settings Modal (Modern UI) ---
                     `.gm-settings-backdrop { position: fixed; inset: 0; background-color: rgba(0, 0, 0, 0.4); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); z-index: ${C.UI.Z_INDEX.MODAL_BACKDROP}; opacity: 0; transition: opacity 0.3s ease; overscroll-behavior: contain; }`,
                     `.gm-settings-backdrop.open { opacity: 1; }`,
@@ -998,6 +1075,12 @@
                     // Inputs (Compact)
                     `.gm-input-text { border: 1px solid #CED0D4; border-radius: 6px; padding: 4px 8px; font-size: 13px; outline: none; transition: border-color 0.2s; background: #F0F2F5; color: #050505; width: 80px; text-align: right; }`,
                     `.gm-input-text:focus { border-color: #1877F2; background: #FFFFFF; }`,
+
+                    // KeyBinder Button
+                    `.gm-keybinder-btn { min-width: 80px; padding: 6px 12px; border: 1px solid #CED0D4; border-radius: 6px; background: #FFFFFF; color: #050505; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; text-align: center; }`,
+                    `.gm-keybinder-btn:hover { border-color: #1877F2; background: #F0F2F5; }`,
+                    `.gm-keybinder-btn.recording { border-color: #F44336; color: #F44336; background: #FFF5F5; animation: gm-pulse 1.5s infinite; }`,
+                    `@keyframes gm-pulse { 0% { box-shadow: 0 0 0 0 rgba(244, 67, 54, 0.4); } 70% { box-shadow: 0 0 0 6px rgba(244, 67, 54, 0); } 100% { box-shadow: 0 0 0 0 rgba(244, 67, 54, 0); } }`,
                     `.gm-input-select { border: 1px solid #CED0D4; border-radius: 6px; padding: 4px 24px 4px 8px; font-size: 13px; outline: none; background: #F0F2F5; cursor: pointer; color: #050505; appearance: none; background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2365676B%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E"); background-repeat: no-repeat; background-position: right 8px top 50%; background-size: 8px; }`,
 
                     // Collapsible Details
@@ -1038,15 +1121,61 @@
             },
             get HIDE_USELESS() {
                 const C = app.config;
-                const toolbarRuleA = `div:has(> div > div > div[role="button"]:not([aria-haspopup]) > div > div > i[data-visualcompletion="css-img"])`;
-                const toolbarRuleB = `div:has(> div > div[role="button"]:not([aria-haspopup]) > div > div > i[data-visualcompletion="css-img"])`;
+
+                // Exclude media controls (Zoom, Fullscreen, Nav) from being hidden
+                const mediaLabels = C.CONSTANTS.MEDIA_CONTROL_LABELS || [];
+                const exclusion = mediaLabels.map(l => `:not([aria-label*="${l}"])`).join('');
+
+                const toolbarRuleA = `div:has(> div > div > div[role="button"]:not([aria-haspopup])${exclusion} > div > div > i[data-visualcompletion="css-img"])`;
+                const toolbarRuleB = `div:has(> div > div[role="button"]:not([aria-haspopup])${exclusion} > div > div > i[data-visualcompletion="css-img"])`;
+
                 const threeDotMenuSelector = `div[role="button"][aria-haspopup="menu"]:has(svg circle + circle + circle)`;
-                const stickyBannerSelector = 'div[style*="top:"][style*="z-index"]:has(div[role="tablist"])';
+
+                // Fix for Sticky Navigation / Login Prompt
+                // Adapted from user-provided uBlock Origin rules for maximum precision.
+
+                const mediaControlExclusions = mediaLabels.map(l => `:not(:has([aria-label*="${l}"]))`).join('');
+                const mediaViewerProtection = [
+                    mediaControlExclusions,
+                    ':not([data-pagelet="MediaViewerPhoto"])',
+                    ':not(:has([data-pagelet="MediaViewerPhoto"]))',
+                    ':not([style*="position: absolute"])' // Media Viewer is usually absolute
+                ].join('');
+
+                // 1. Floating Profile Tabs (Sticky header) -> Force Static (uBO Rule #8)
+                const stickyProfileTabs = 'div[role="banner"] + div div[style*="top"][style*="z-index"]' + mediaViewerProtection;
+
+                // 2. Login Banner (Top/Bottom) -> Force Absolute (uBO Rule #7)
+                const stickyLoginBanner = [
+                    'div[style*="z-index"]:has(a[href*="/login/"], form[action*="/login/"])', // Bottom
+                    'div[role="banner"] > div:not(:first-child):has([aria-label="Facebook"])'   // Top content
+                ].map(s => s + mediaViewerProtection).join(', ');
+
+                // 3. Generic "You must log in to continue" prompt (uBO Rule #2)
+                const genericLoginPrompt = 'div[id^="mount"] div:not([id]):not([class]):not([style]) > div[data-nosnippet]';
+
+                // 4. Blocking Login Dialogs (CSS-based instant hide)
+                // Targets: role="dialog" containing login forms
+                const loginPopupSelector = 'div[role="dialog"]:has(form[action*="/login/"], #login_popup_cta_form)' + mediaViewerProtection;
+
+                // 5. Reels Viewer Overlay (Invisible blocking layer on Photo Viewer)
+                // Targets container with "Close reels viewer" link.
+                // Includes localized labels (En, Zh-TW, Ja) and Sprite detection (-402px) for robustness.
+                const reelsViewerOverlaySelector = [
+                    'div:has(> div > span > a[aria-label="Close reels viewer and return to feed"])',
+                    'div:has(> div > span > a[aria-label="關閉 Reel 檢視畫面並返回動態消息"])',
+                    'div:has(> div > span > a[aria-label="リール動画のビューアーを閉じてフィードに戻る"])',
+                    'div:has(> div > span > a > i[style*="background-position: 0px -402px"])'
+                ].join(', ');
+
                 return [
+                    `${reelsViewerOverlaySelector} { display: none !important; }`,
                     `div[role="banner"]:has(${C.SELECTORS.GLOBAL.LOGIN_FORM}) { display: none !important; }`,
                     `${toolbarRuleA}, ${toolbarRuleB} { display: none !important; }`,
                     `${threeDotMenuSelector} { display: none !important; }`,
-                    `${stickyBannerSelector} { position: static !important; }`
+                    `${genericLoginPrompt}, ${loginPopupSelector} { display: none !important; }`,
+                    `${stickyProfileTabs} { position: static !important; }`,
+                    `${stickyLoginBanner} { position: absolute !important; }`
                 ].join('\n');
             },
             get HIDE_STATS() {
@@ -1333,13 +1462,31 @@
                     ];
                     const navigationSettings = [
                         { key: 'keyboardNavEnabled', type: 'boolean', defaultValue: D.KEY_NAV, labelKey: 'keyboardNavEnabled', group: 'navigation' },
-                        { key: 'keyNavNextPrimary', type: 'text', defaultValue: D.KEY_NEXT_PRI, labelKey: 'keyNavNextPrimary', group: 'navigation' },
-                        { key: 'keyNavPrevPrimary', type: 'text', defaultValue: D.KEY_PREV_PRI, labelKey: 'keyNavPrevPrimary', group: 'navigation' },
-                        { key: 'keyNavNextSecondary', type: 'text', defaultValue: D.KEY_NEXT_SEC, labelKey: 'keyNavNextSecondary', group: 'navigation' },
-                        { key: 'keyNavPrevSecondary', type: 'text', defaultValue: D.KEY_PREV_SEC, labelKey: 'keyNavPrevSecondary', group: 'navigation' },
+                        { key: 'keyNavNextPrimary', type: 'keybinder', defaultValue: D.KEY_NEXT_PRI, labelKey: 'keyNavNextPrimary', group: 'navigation' },
+                        { key: 'keyNavPrevPrimary', type: 'keybinder', defaultValue: D.KEY_PREV_PRI, labelKey: 'keyNavPrevPrimary', group: 'navigation' },
+                        { key: 'keyNavNextSecondary', type: 'keybinder', defaultValue: D.KEY_NEXT_SEC, labelKey: 'keyNavNextSecondary', group: 'navigation' },
+                        { key: 'keyNavPrevSecondary', type: 'keybinder', defaultValue: D.KEY_PREV_SEC, labelKey: 'keyNavPrevSecondary', group: 'navigation' },
                         { key: 'floatingNavEnabled', type: 'boolean', defaultValue: D.FLOATING_NAV, labelKey: 'floatingNavEnabled', group: 'navigation', instant: true },
                         { key: 'floatingNav_showAutoLoad', type: 'boolean', defaultValue: D.SHOW_AUTO_LOAD, labelKey: 'floatingNav_showAutoLoad', group: 'navigation', instant: true },
                         { key: 'floatingNav_showBatchCopy', type: 'boolean', defaultValue: D.SHOW_BATCH_COPY, labelKey: 'floatingNav_showBatchCopy', group: 'navigation', instant: true },
+                        {
+                            key: 'batchExportFormat', type: 'select', defaultValue: D.BATCH_EXPORT_FORMAT, labelKey: 'setting_batchExportFormat',
+                            options: [
+                                { value: 'text', labelKey: 'exportFormat_text' },
+                                { value: 'json', labelKey: 'exportFormat_json' },
+                                { value: 'csv', labelKey: 'exportFormat_csv' }
+                            ],
+                            tooltipKey: 'tooltip_batchExportFormat',
+                            group: 'navigation'
+                        },
+                        {
+                            key: 'batchCopyMode', type: 'select', defaultValue: D.BATCH_COPY_MODE, labelKey: 'setting_batchCopyMode',
+                            options: [
+                                { value: 'file', labelKey: 'batchCopyMode_file' },
+                                { value: 'clipboard', labelKey: 'batchCopyMode_clipboard' }
+                            ],
+                            group: 'navigation'
+                        },
                         { key: 'autoLoadBatchSize', type: 'range', defaultValue: D.BATCH_SIZE, labelKey: 'autoLoader_batchSize', options: { min: 10, max: 200, step: 5, unit: '' }, group: 'navigation' },
 
                         { key: 'timelineNavEnabled', type: 'boolean', defaultValue: D.TIMELINE_NAV, labelKey: 'timelineNavEnabled', group: 'navigation', instant: true },
@@ -1642,6 +1789,56 @@
                             });
                             inputElement.value = currentValue;
                             break;
+                        case 'keybinder':
+                            const formatKey = (k) => {
+                                const map = { ' ': 'Space', 'ArrowUp': '↑', 'ArrowDown': '↓', 'ArrowLeft': '←', 'ArrowRight': '→', 'Escape': 'Esc' };
+                                return map[k] || (k.length === 1 ? k.toUpperCase() : k);
+                            };
+                            inputElement = U.createStyledElement('button', {}, {
+                                className: 'gm-keybinder-btn',
+                                textContent: formatKey(currentValue),
+                                on: {
+                                    click: (e) => {
+                                        const btn = e.currentTarget;
+                                        btn.classList.add('recording');
+                                        btn.textContent = T.keyBinderPress;
+
+                                        const keyHandler = (ev) => {
+                                            ev.preventDefault();
+                                            ev.stopPropagation();
+
+                                            const key = ev.key;
+                                            // Cancel
+                                            if (key === 'Escape') {
+                                                document.removeEventListener('keydown', keyHandler, true);
+                                                btn.classList.remove('recording');
+                                                btn.textContent = formatKey(currentValue);
+                                                return;
+                                            }
+                                            // Clear (Backspace or Delete) - but not if it's the bound key itself?
+                                            // Let's assume Backspace/Delete are valid clears.
+                                            if (key === 'Backspace' || key === 'Delete') {
+                                                SM.updateSetting(def.key, '');
+                                                document.removeEventListener('keydown', keyHandler, true);
+                                                btn.classList.remove('recording');
+                                                btn.textContent = T.keyBinderNone;
+                                                return;
+                                            }
+                                            // Ignore modifiers alone
+                                            if (['Shift', 'Control', 'Alt', 'Meta', 'CapsLock'].includes(key)) return;
+
+                                            // Save
+                                            SM.updateSetting(def.key, key);
+                                            document.removeEventListener('keydown', keyHandler, true);
+                                            btn.classList.remove('recording');
+                                            btn.textContent = formatKey(key);
+                                        };
+
+                                        document.addEventListener('keydown', keyHandler, true);
+                                    }
+                                }
+                            });
+                            break;
                     }
 
                     const wrapper = U.createStyledElement('div', {}, {
@@ -1654,8 +1851,8 @@
 
                     // Hybrid Grid Logic
                     if (isGrid) {
-                        // Booleans, Ranges, and Selects (Dropdowns) span 2 columns for better visibility
-                        if (def.type === 'boolean' || def.type === 'range' || def.type === 'select') wrapper.classList.add('span-2');
+                        // Booleans, Ranges, Selects, and Keybinders span 2 columns for better visibility
+                        if (def.type === 'boolean' || def.type === 'range' || def.type === 'select' || def.type === 'keybinder') wrapper.classList.add('span-2');
 
                         // Special Handling for Floating Nav Sub-options (Long Buttons)
                         if (['floatingNav_showAutoLoad', 'floatingNav_showBatchCopy'].includes(def.key)) {
@@ -1688,6 +1885,7 @@
 
                     return wrapper;
                 },
+
                 _setupDependentControls(container) {
                     const controllers = {
                         autoUnmuteEnabled: container.querySelector('#setting-autoUnmuteEnabled'),
@@ -1712,6 +1910,34 @@
                     const updateAll = () => Object.values(controllers).forEach(c => c && toggleGroup(c, c.checked));
                     Object.values(controllers).forEach(c => c && c.addEventListener('input', updateAll));
                     updateAll();
+
+                    // --- Special Logic: Enforce CSV -> File Only in Settings UI ---
+                    const formatSelect = container.querySelector('#setting-batchExportFormat');
+                    const modeSelect = container.querySelector('#setting-batchCopyMode');
+
+                    if (formatSelect && modeSelect) {
+                        const checkConstraint = () => {
+                            if (formatSelect.value === 'csv') {
+                                modeSelect.value = 'file';
+                                modeSelect.disabled = true;
+                                modeSelect.title = 'CSV format requires Download mode';
+                                // Force update setting if it was clipboard - Trigger 'change' or update directly? 
+                                // Direct updating might not trigger save logic if not handled by standard change listener.
+                                // However, user will click Save which reads DOM values or state. 
+                                // Since settingsManager updates state on 'change' event of inputs (delegated or direct?), 
+                                // we should manually fire event or update state if we change value programmatically.
+                                if (this.app.state.settings.batchCopyMode !== 'file') {
+                                    this.app.modules.settingsManager.updateSetting('batchCopyMode', 'file');
+                                }
+                            } else {
+                                modeSelect.disabled = false;
+                                modeSelect.title = '';
+                            }
+                        };
+                        formatSelect.addEventListener('change', checkConstraint);
+                        // Run once init
+                        checkConstraint();
+                    }
                 },
                 _createModal() {
                     const T = this.app.state.T;
@@ -1830,8 +2056,8 @@
                     if (id && this.activeToasts.has(id)) {
                         const existing = this.activeToasts.get(id);
                         if (existing.element && document.body.contains(existing.element)) {
-                            existing.element.querySelector('span').textContent = message;
-                            // Optionally update type styles if type changed (simplified here: assume consistent type for ID)
+                            existing.element.querySelector('span').innerHTML = message;
+                            existing.element.className = `gm-toast gm-toast-${type} gm-toast-visible`;
                             clearTimeout(existing.timer);
                             existing.timer = setTimeout(() => this.dismiss(id), duration);
                             return { remove: () => this.dismiss(id) };
@@ -1916,6 +2142,13 @@
                     const toolbarSelector = this.app.config.SELECTORS.GLOBAL.VIDEO_PAGE_TOOLBAR_ROOT;
                     const toolbars = document.querySelectorAll(toolbarSelector);
                     toolbars.forEach(el => {
+                        // EXCLUSION: Skip Reels Viewer Overlay (Close Button)
+                        // If we force this to absolute/top=0, it overlays the photo viewer controls.
+                        if (el.querySelector('a[aria-label="Close reels viewer and return to feed"]') ||
+                            el.querySelector('a[aria-label="關閉 Reel 檢視畫面並返回動態消息"]') ||
+                            el.querySelector('a[aria-label="リール動画のビューアーを閉じてフィードに戻る"]') ||
+                            el.querySelector('i[style*="-402px"]')) return;
+
                         // Force absolute position to unstick from viewport top
                         // Only apply if not already applied
                         if (el.style.position !== 'absolute') {
@@ -2119,7 +2352,7 @@
                                 const label = btn ? (btn.getAttribute('aria-label') || btn.textContent || '').toLowerCase() : '';
                                 const expandPathSnippet = 'M16 5.414V8a1 1 0 1 0 2 0V4a2 2 0 0 0-2-2h-4';
                                 const hasExpandSvg = btn && btn.querySelector(`path[d*="${expandPathSnippet}"]`);
-                                const isClickToExpand = hasExpandSvg || label.includes('expand') || label.includes('點擊查看更多');
+                                const isClickToExpand = hasExpandSvg || label.includes('expand') || label.includes('點擊可展開');
 
                                 if (isClickToExpand) {
                                     if (event.type === 'click') {
@@ -2373,7 +2606,7 @@
                     retryCount: 0,
                     lastScrollTime: 0,
                     mode: GM_getValue('autoLoadMode', 'incremental'), // 'incremental' or 'target'
-                    batchCopyMode: GM_getValue('batchCopyMode', 'clipboard') // 'clipboard' or 'download'
+                    batchCopyMode: GM_getValue('batchCopyMode', 'file') // 'file' or 'clipboard'
                 },
                 // Verified Selectors: Used to intelligently trigger loading
                 selectors: [
@@ -2388,7 +2621,13 @@
                  * Initializes the content auto-loader.
                  * @param {Object} app - The main application instance.
                  */
-                init(app) { this.app = app; },
+                init(app) {
+                    this.app = app;
+                    // Sync with Settings (Single Source of Truth)
+                    if (this.app.state.settings.batchCopyMode) {
+                        this.state.batchCopyMode = this.app.state.settings.batchCopyMode;
+                    }
+                },
 
                 /**
                  * Toggles between incremental and target modes.
@@ -2411,11 +2650,28 @@
                  * Toggles between clipboard and download modes for batch copy.
                  */
                 toggleBatchCopyMode() {
-                    this.state.batchCopyMode = this.state.batchCopyMode === 'clipboard' ? 'download' : 'clipboard';
-                    GM_setValue('batchCopyMode', this.state.batchCopyMode);
-
                     const T = this.app.state.T;
-                    const msg = this.state.batchCopyMode === 'clipboard' ? T.batchCopy_mode_clipboard : T.batchCopy_mode_download;
+
+                    // Enforce File mode for CSV
+                    const currentFormat = this.app.state.settings.batchExportFormat;
+                    if (currentFormat === 'csv') {
+                        this.app.modules.toastNotifier.show(T.batchCopyMode_locked_csv || 'CSV format requires Download mode.', 'info');
+                        return;
+                    }
+
+                    // Normalize: 'download' was old, now 'file'
+                    let current = this.app.state.settings.batchCopyMode;
+                    if (current === 'download') current = 'file';
+
+                    const newMode = current === 'clipboard' ? 'file' : 'clipboard';
+
+                    // Update State & Settings & Storage
+                    this.state.batchCopyMode = newMode;
+                    this.app.state.settings.batchCopyMode = newMode;
+                    GM_setValue('batchCopyMode', newMode);
+
+                    // Ensure strings exist for these messages
+                    const msg = newMode === 'clipboard' ? (T.batchCopyMode_clipboard || 'Clipboard Mode') : (T.batchCopyMode_file || 'File Mode');
 
                     this.app.modules.toastNotifier.show(msg, 'info');
                     this.app.modules.floatingNavigator.updateBatchCopyTooltip(); // Update tooltip immediately
@@ -2444,6 +2700,7 @@
 
                     this.state.isRunning = true;
                     this.state.retryCount = 0;
+                    this.state.initialCount = currentPosts; // Track start point for progress ring
 
                     this.app.modules.floatingNavigator.updateButtonState('start');
                     this.app.modules.toastNotifier.show(
@@ -2466,6 +2723,7 @@
 
                     if (reasonKey) {
                         const T = this.app.state.T;
+                        // User Requirement: Success = Green, Stopped = Red (Failure)
                         const type = reasonKey.includes('success') ? 'success' : 'failure';
                         this.app.modules.toastNotifier.show(T[reasonKey] || reasonKey, type, 4000, 'autoLoadStatus');
                     }
@@ -2486,6 +2744,16 @@
                         }
 
                         const currentCount = this.app.modules.postNavigatorCore.getSortedPosts().length;
+
+                        // UI Update: Progress Ring
+                        // Logic: Calculate "Session Progress" instead of "Absolute Progress"
+                        // range = target - initial. progress = (current - initial) / range.
+                        const initial = this.state.initialCount || 0;
+                        const sessionTarget = this.state.targetCount;
+                        const progressCurrent = Math.max(0, currentCount - initial);
+                        const progressTotal = Math.max(1, sessionTarget - initial); // Prevent divide by zero
+
+                        this.app.modules.floatingNavigator.updateProgress(progressCurrent, progressTotal);
 
                         // Check if target reached
                         if (currentCount >= this.state.targetCount) {
@@ -2592,85 +2860,155 @@
                         return;
                     }
 
-                    // UX Improvement: Delayed "Processing" toast to prevent flashing on fast operations
+                    // UX Improvement: Delayed "Processing" toast
                     let progressToast = null;
                     const progressTimer = setTimeout(() => {
                         progressToast = this.app.modules.toastNotifier.show(T.batchCopy_start.replace('{count}', posts.length), 'success');
                     }, 500);
 
                     const PHT = this.app.modules.postHeaderTools;
-                    let bodyText = '';
+                    const exportFormat = settings.batchExportFormat || 'text';
+                    const collectedData = [];
+                    const textParts = [];
                     let successCount = 0;
                     const BATCH_SEPARATOR = '\n\n═══════════════════════════════════════════════════════════════\n\n';
 
+                    // 1. Extraction Loop
                     for (const post of posts) {
-                        const text = await PHT.extractPostMetadata(post, {
-                            forceRawLink: true,
+                        const data = await PHT.extractPostData(post, {
+                            forceRawLink: true, // Batch mode prefers speed over full async resolution per post? Or wait? 
+                            // PHT.extractPostData handles smart link fetch if settings enabled.
+                            // If user wants JSON, they probably want links.
+                            // But `extractPostData` does resolving if settings enabled.
+                            // We pass forceRawLink: true to speed up if 'text' usually?
+                            // Actually, original code had forceRawLink: true. Let's keep it for compatibility/speed unless refined.
+                            // Wait, if I want accurate IDs, I might need smart links.
+                            // But let's stick to original behavior: forceRawLink: true implies scraping what's there.
                             includeOrder: settings.copy_meta_order,
-                            isBatch: true
+                            isBatch: true // Hint for processing
                         });
 
-                        if (text) {
-                            bodyText += text + BATCH_SEPARATOR;
-                            successCount++;
+                        if (exportFormat === 'text') {
+                            const formatted = PHT.formatPostData(data, 'text');
+                            if (formatted) {
+                                textParts.push(formatted);
+                                successCount++;
+                            }
+                        } else {
+                            // JSON or CSV
+                            if (data) {
+                                if (exportFormat === 'csv') {
+                                    collectedData.push(PHT.formatPostData(data, 'csv'));
+                                } else {
+                                    collectedData.push(data);
+                                }
+                                successCount++;
+                            }
                         }
                     }
 
-                    let finalText = bodyText;
-                    // Determine Source Name for Header and Filename
+                    // 2. Formatting & Assembly
+                    let finalContent = '';
+                    let mimeType = 'text/plain;charset=utf-8';
+                    let extension = 'txt';
                     const pageTitle = document.title.replace(/ \| Facebook$/, '').replace(/^\(\d+\) /, '');
+                    const now = new Date();
+                    const year = now.getFullYear();
+                    const month = String(now.getMonth() + 1).padStart(2, '0');
+                    const day = String(now.getDate()).padStart(2, '0');
+                    const hour = String(now.getHours()).padStart(2, '0');
+                    const minute = String(now.getMinutes()).padStart(2, '0');
+                    const dateStr = `${year}-${month}-${day}_${hour}-${minute}`;
 
-                    if (settings.batchCopy_includeHeader) {
-                        const cleanUrl = window.location.origin + window.location.pathname;
-                        const now = new Date().toLocaleString(navigator.language, { hour12: false });
-                        const header = `═══════════════════════════════════════════════════════════════\n【 BATCH EXPORT SUMMARY 】\nSource: ${pageTitle}\nURL:    ${cleanUrl}\nTime:   ${now}\nCount:  ${successCount} Posts\n═══════════════════════════════════════════════════════════════\n\n`;
-                        finalText = header + bodyText;
+                    const safeTitle = pageTitle.replace(/[\\/:*?"<>|]/g, '_').trim();
+                    const filename = `${safeTitle}_Batch_${dateStr}`; // Extension added later
+
+                    if (exportFormat === 'text') {
+                        let bodyText = textParts.join(BATCH_SEPARATOR);
+
+                        if (settings.batchCopy_includeHeader) {
+                            const cleanUrl = window.location.origin + window.location.pathname;
+                            // Localized nice format for inside the file
+                            const nowStr = now.toLocaleString(navigator.language, { hour12: false });
+                            const header = `═══════════════════════════════════════════════════════════════\n【 BATCH EXPORT SUMMARY 】\nSource: ${pageTitle}\nURL:    ${cleanUrl}\nTime:   ${nowStr}\nCount:  ${successCount} Posts\n═══════════════════════════════════════════════════════════════\n\n`;
+                            finalContent = header + bodyText;
+                        } else {
+                            finalContent = bodyText;
+                        }
+                        extension = 'txt';
+                        mimeType = 'text/plain;charset=utf-8';
+                    } else if (exportFormat === 'json') {
+                        finalContent = JSON.stringify(collectedData, null, 2);
+                        mimeType = 'application/json;charset=utf-8';
+                        extension = 'json';
+                    } else if (exportFormat === 'csv') {
+                        // Simple CSV generation
+                        if (collectedData.length > 0) {
+                            const headers = Object.keys(collectedData[0]);
+                            const rows = collectedData.map(row => headers.map(fieldName => {
+                                let val = row[fieldName] || '';
+                                if (typeof val === 'string' && (val.includes(',') || val.includes('"') || val.includes('\n'))) {
+                                    val = `"${val.replace(/"/g, '""')}"`;
+                                }
+                                return val;
+                            }).join(','));
+                            // BOM for Excel
+                            finalContent = '\uFEFF' + headers.join(',') + '\n' + rows.join('\n');
+                        } else {
+                            finalContent = '';
+                        }
+                        mimeType = 'text/csv;charset=utf-8';
+                        extension = 'csv';
                     }
 
                     try {
                         clearTimeout(progressTimer);
                         if (progressToast && typeof progressToast.remove === 'function') progressToast.remove();
 
-                        if (this.state.batchCopyMode === 'download') {
-                            // Download Mode
-                            const blob = new Blob([finalText], { type: 'text/plain;charset=utf-8' });
+                        // 3. Output Action (Clipboard vs File)
+                        if (settings.batchCopyMode === 'file') {
+                            // ... File Download ...
+                            const BOM = (exportFormat === 'csv' || exportFormat === 'json' || exportFormat === 'text') ? '\uFEFF' : '';
+                            // Avoid double BOM if CSV logic already added it
+                            const contentBlob = finalContent.startsWith('\uFEFF') ? finalContent : (BOM + finalContent);
 
-                            // Format: [PageName]_Batch_[YYYY-MM-DD].txt
-                            // Sanitize pageTitle for filename (remove invalid chars)
-                            const safeTitle = pageTitle.replace(/[\\/:*?"<>|]/g, '_').trim();
-                            const dateStr = new Date().toISOString().split('T')[0];
-                            const filename = `${safeTitle}_Batch_${dateStr}.txt`;
+                            const blob = new Blob([contentBlob], { type: mimeType });
+                            const url = URL.createObjectURL(blob);
 
                             const link = document.createElement('a');
-                            link.href = URL.createObjectURL(blob);
-                            link.download = filename;
+                            link.href = url;
+                            link.download = `${filename}.${extension}`;
                             link.style.display = 'none';
                             document.body.appendChild(link);
                             link.click();
                             document.body.removeChild(link);
-                            URL.revokeObjectURL(link.href);
+                            setTimeout(() => URL.revokeObjectURL(url), 100);
 
-                            const msg = T.batchCopy_download_success
-                                .replace('{count}', successCount)
-                                .replace('{chars}', finalText.length);
+                            const msg = T.batchCopy_file_success || 'Exported to file successfully.';
                             this.app.modules.toastNotifier.show(msg, 'success');
                         } else {
-                            // Clipboard Mode
-                            await GM_setClipboard(finalText);
+                            // ... Clipboard Copy ...
+                            // Remove BOM for clipboard if present, as it's not needed for paste
+                            const contentToCopy = finalContent.startsWith('\uFEFF') ? finalContent.substring(1) : finalContent;
+
+                            if (typeof GM_setClipboard === 'function') {
+                                GM_setClipboard(contentToCopy);
+                            } else {
+                                // Fallback? 
+                                navigator.clipboard.writeText(contentToCopy);
+                            }
+
                             const msg = T.batchCopy_success
                                 .replace('{count}', successCount)
-                                .replace('{chars}', finalText.length);
+                                .replace('{chars}', finalContent.length);
                             this.app.modules.toastNotifier.show(msg, 'success');
                         }
-                    } catch (err) {
-                        clearTimeout(progressTimer);
-                        if (progressToast && typeof progressToast.remove === 'function') progressToast.remove();
-
-                        console.error(err);
-                        this.app.modules.toastNotifier.show(T.copier_failure, 'failure');
+                    } catch (error) {
+                        console.error(`${this.app.config.LOG_PREFIX} Batch Copy Error:`, error);
+                        this.app.modules.toastNotifier.show('Batch export failed.', 'failure');
                     }
                 },
-            },
+            }, // End contentAutoLoader
 
             errorRecovery: {
                 app: null,
@@ -3699,9 +4037,13 @@
 
                 /**
                  * Extracts total reaction count from the post footer.
+                 * Uses heuristics to find standalone numbers that look like metrics.
                  * @private
                  * @param {HTMLElement} postEl - The post element.
                  * @returns {number} The total reaction count.
+                 * @example
+                 * // Matches: "1.2K", "3,400", "5萬"
+                 * // Ignored: "2 Comments" (via Sprite check), "John Doe"
                  */
                 /**
                  * Extracts total reaction count from the post footer.
@@ -3730,8 +4072,11 @@
                                 const match = icon.style.backgroundPosition.match(/0px\s+(-?\d+)px/);
                                 if (match) {
                                     const yPos = parseInt(match[1], 10);
-                                    // -1037: Comment, -1054/-1071: Share
-                                    if (Math.abs(yPos - (-1037)) < 5 || Math.abs(yPos - (-1054)) < 5 || Math.abs(yPos - (-1071)) < 5) return;
+                                    const SPRITES = this.app.config.CONSTANTS.SPRITES;
+                                    // Uses defined offsets for Comment/Share buttons to exclude them from "Total" calculation
+                                    if (Math.abs(yPos - SPRITES.COMMENT) < SPRITES.TOLERANCE ||
+                                        Math.abs(yPos - SPRITES.SHARE) < SPRITES.TOLERANCE ||
+                                        Math.abs(yPos - SPRITES.SHARE_ALT) < SPRITES.TOLERANCE) return;
                                 }
                             }
                         }
@@ -3742,7 +4087,9 @@
                         // Check for specific keywords not normally in content
                         // e.g., "Comments", "Shares", "Reactions" (localized)
                         // This uses a looser heuristic: if it looks JUST like a metric
-                        if (/^[\d.,KkMm萬億万\s]+$/.test(text)) {
+                        const unitGroup = this.app.config.CONSTANTS.REGEX_PARTS.UNIT_GROUP;
+                        const metricRegex = new RegExp(`^[\\d.,${unitGroup.slice(1, -1)}\\s]+$`);
+                        if (metricRegex.test(text)) {
                             const val = this.parseMetric(text);
                             if (val > maxVal) maxVal = val;
                         }
@@ -3752,6 +4099,7 @@
 
                 /**
                  * Extracts deep interaction stats (comments/shares) using sprite position analysis.
+                 * Identifies Comment (-1037px) and Share (-1054px/-1071px) icons via background-position.
                  * @private
                  * @param {HTMLElement} postEl - The post element.
                  * @returns {object} The breakdown { comments, shares }.
@@ -3785,8 +4133,10 @@
                             const match = icon.style.backgroundPosition.match(/0px\s+(-?\d+)px/);
                             if (match) {
                                 const yPos = parseInt(match[1], 10);
-                                if (Math.abs(yPos - (-1037)) < 5) isComment = true;
-                                else if (Math.abs(yPos - (-1054)) < 5 || Math.abs(yPos - (-1071)) < 5) isShare = true;
+                                const SPRITES = this.app.config.CONSTANTS.SPRITES;
+                                if (Math.abs(yPos - SPRITES.COMMENT) < SPRITES.TOLERANCE) isComment = true;
+                                else if (Math.abs(yPos - SPRITES.SHARE) < SPRITES.TOLERANCE ||
+                                    Math.abs(yPos - SPRITES.SHARE_ALT) < SPRITES.TOLERANCE) isShare = true;
                             }
                         }
 
@@ -3797,7 +4147,10 @@
                         // Simple regex check: does it contain a number?
                         if (/\d/.test(text)) {
                             // Extract numbers
-                            const matches = text.match(/(\d+(?:[.,]\d+)?)\s*([KkMm萬億万]?)/g);
+                            const unitGroup = this.app.config.CONSTANTS.REGEX_PARTS.UNIT_GROUP;
+                            // Matches: "1.5K", "300"
+                            const extractRegex = new RegExp(`(\\d+(?:[.,]\\d+)?)\\s*(${unitGroup}?)`, 'g');
+                            const matches = text.match(extractRegex);
                             if (matches) {
                                 matches.forEach(m => {
                                     const val = this.parseMetric(m);
@@ -4645,6 +4998,14 @@
                     this.container = U.createStyledElement('div', {}, { className: 'gm-floating-nav' });
                     this.updateOpacityState(settings.floatingNavOpacity);
 
+                    // --- Icons ---
+                    this.icons = {
+                        arrowDown: `<svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path></svg>`,
+                        stop: `<svg viewBox="0 0 24 24" fill="#e02424"><path d="M6 6h12v12H6z"></path></svg>`,
+                        clipboard: `<svg viewBox="0 0 24 24"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"></path></svg>`,
+                        save: `<svg viewBox="0 0 24 24"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"></path></svg>`
+                    };
+
                     // --- Navigation Buttons ---
                     const prevButton = U.createStyledElement('button', {}, { title: T.floatingNavPrevTooltip });
                     prevButton.innerHTML = `<svg viewBox="0 0 24 24"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path></svg>`;
@@ -4695,9 +5056,25 @@
 
                     // --- Auto-Load Button ---
                     if (settings.floatingNav_showAutoLoad) {
-                        this.btnAutoLoad = U.createStyledElement('button', {}, {});
+
+                        this.btnAutoLoad = U.createStyledElement('button', {}, {
+                            className: 'gm-auto-load-btn', // Add class for targeting
+                            style: 'position: relative; display: flex; align-items: center; justify-content: center;'
+                        });
+
+                        // Progress Ring SVG
+                        // Button size is 44px. We match it.
+                        // Radius = 20 (Diameter 40), Stroke = 2 -> Total 42, plus padding fit in 44.
+                        // Center is 22, 22.
+                        const ringSvg = `
+                            <svg class="gm-progress-ring" viewBox="0 0 44 44" style="position: absolute; top: 0; left: 0; width: 44px; height: 44px; transform: rotate(-90deg); pointer-events: none; opacity: 0; transition: opacity 0.3s;">
+                                <circle cx="22" cy="22" r="20" fill="none" stroke="#ddd" stroke-width="2.5" style="opacity: 0.3;"></circle>
+                                <circle class="gm-progress-circle" cx="22" cy="22" r="20" fill="none" stroke="#1877F2" stroke-width="2.5" stroke-dasharray="125.66" stroke-dashoffset="125.66" stroke-linecap="round" style="transition: stroke-dashoffset 0.3s ease;"></circle>
+                            </svg>
+                        `;
+
                         // Default Icon: Arrow Down
-                        this.btnAutoLoad.innerHTML = `<svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path></svg>`;
+                        this.btnAutoLoad.innerHTML = `${ringSvg}<span class="gm-icon-wrapper" style="z-index: 1; display: flex;">${this.icons.arrowDown}</span>`;
 
                         this.btnAutoLoad.addEventListener('click', () => {
                             const loader = getLoader();
@@ -4722,8 +5099,7 @@
                     // --- Batch Copy Button ---
                     if (settings.floatingNav_showBatchCopy) {
                         this.btnBatchCopy = U.createStyledElement('button', {}, {});
-                        // Icon: Clipboard
-                        this.btnBatchCopy.innerHTML = `<svg viewBox="0 0 24 24"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"></path></svg>`;
+                        // Icon set by updateBatchCopyTooltip
 
                         this.btnBatchCopy.addEventListener('click', () => {
                             const loader = getLoader();
@@ -4761,17 +5137,60 @@
                 updateButtonState(state) {
                     if (!this.btnAutoLoad) return;
                     const T = this.app.state.T;
+                    const iconWrapper = this.btnAutoLoad.querySelector('.gm-icon-wrapper');
+                    const progressRing = this.btnAutoLoad.querySelector('.gm-progress-ring');
+
                     if (state === 'start') {
-                        // Change to Stop Icon (Square)
-                        this.btnAutoLoad.innerHTML = `<svg viewBox="0 0 24 24" fill="#e02424"><path d="M6 6h12v12H6z"></path></svg>`;
+                        // Change to Stop Icon
+                        if (iconWrapper) {
+                            iconWrapper.innerHTML = this.icons?.stop || `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h12v12H6z"></path></svg>`;
+                            iconWrapper.style.color = ''; // Keep default gray
+                        }
                         this.btnAutoLoad.title = T.tooltipAutoLoadStop;
-                        this.btnAutoLoad.style.borderColor = '#e02424';
+                        this.btnAutoLoad.style.borderColor = 'transparent';
+
+                        // Show Progress Ring
+                        if (progressRing) progressRing.style.opacity = '1';
+
+                        // Set "Running" state
+                        if (this.container) {
+                            this.container.classList.add('gm-running');
+                        }
                     } else {
-                        // Revert to Start Icon (Arrow Down)
-                        this.btnAutoLoad.innerHTML = `<svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path></svg>`;
-                        this.updateButtonTooltip(); // Restore tooltip with mode info
+                        // Revert to Start Icon
+                        if (iconWrapper) {
+                            iconWrapper.innerHTML = this.icons?.arrowDown || `<svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path></svg>`;
+                            iconWrapper.style.color = ''; // Reset to inherit (Gray)
+                        }
+                        this.updateButtonTooltip();
                         this.btnAutoLoad.style.borderColor = '#ddd';
+
+                        // Hide Progress Ring
+                        if (progressRing) progressRing.style.opacity = '0';
+
+                        // Remove "Running" state
+                        if (this.container) {
+                            this.container.classList.remove('gm-running');
+                        }
                     }
+                },
+                updateProgress(current, target) {
+                    if (!this.btnAutoLoad) return;
+                    const circle = this.btnAutoLoad.querySelector('.gm-progress-circle');
+                    if (!circle) return;
+
+                    // Circumference = 2 * PI * 20 ≈ 125.66
+                    const circumference = 125.66;
+                    let percent = 0;
+
+                    if (target > 0) {
+                        percent = Math.min(Math.max(current / target, 0), 1);
+                    } else {
+                        percent = 1;
+                    }
+
+                    const offset = circumference - (percent * circumference);
+                    circle.style.strokeDashoffset = offset;
                 },
                 updateButtonTooltip() {
                     if (!this.btnAutoLoad) return;
@@ -4794,13 +5213,33 @@
                     const mode = loader ? loader.state.batchCopyMode : 'clipboard';
 
                     const modeLabel = mode === 'clipboard'
-                        ? (T.batchCopy_mode_clipboard || 'Clipboard')
-                        : (T.batchCopy_mode_download || 'Download');
+                        ? (T.batchCopyMode_clipboard || 'Clipboard')
+                        : (T.batchCopyMode_file || 'Download as File');
 
                     this.btnBatchCopy.title = `${T.tooltipBatchCopy}\n[${modeLabel}]`;
+
+                    // Update Icon
+                    if (this.icons) {
+                        this.btnBatchCopy.innerHTML = mode === 'file' ? this.icons.save : this.icons.clipboard;
+                    }
                 },
                 updateOpacityState(enabled) {
-                    if (this.container) this.container.dataset.opacity = enabled ? 'true' : 'false';
+                    if (this.container) {
+                        this.container.dataset.opacity = enabled ? 'true' : 'false';
+                        // Add CSS rule injection for .gm-running override if not present
+                        if (!document.getElementById('gm-dynamic-styles-opacity')) {
+                            const style = document.createElement('style');
+                            style.id = 'gm-dynamic-styles-opacity';
+                            style.innerHTML = `
+                                .gm-floating-nav[data-opacity="true"] { opacity: 0.1; transition: opacity 0.3s; }
+                                .gm-floating-nav[data-opacity="true"]:hover { opacity: 1 !important; }
+                                .gm-floating-nav.gm-running { opacity: 1 !important; }
+                                /* When running, make non-hovered sibling buttons semi-transparent */
+                                .gm-floating-nav.gm-running button:not(.gm-auto-load-btn):not(:hover) { opacity: 0.4; filter: grayscale(0.5); }
+                            `;
+                            document.head.appendChild(style);
+                        }
+                    }
                     const TActions = this.app.modules.transparencyActions;
                     if (TActions && TActions.container) TActions.container.dataset.opacity = enabled ? 'true' : 'false';
                 },
@@ -4980,7 +5419,9 @@
                     if (iconWrapper) iconWrapper.innerHTML = this.icons.processing;
 
                     try {
-                        const text = await this.extractPostMetadata(postEl, { includeOrder: false });
+                        // Default to 'text' for single copy button
+                        const data = await this.extractPostData(postEl, { includeOrder: false });
+                        const text = this.formatPostData(data, 'text');
 
                         if (text) {
                             GM_setClipboard(text);
@@ -5002,38 +5443,419 @@
 
                 // --- Core Text Extraction Logic (Metadata + Topology) ---
                 /**
-                 * Extracts all metadata and content from a post element.
-                 * @param {HTMLElement} postEl - The post container element.
-                 * @param {Object} [options={}] - Extraction options.
-                 * @returns {Promise<string>} The formatted text content.
+                 * Legacy wrapper for backward compatibility or simple text extraction.
                  */
                 async extractPostMetadata(postEl, options = {}) {
-                    if (!postEl) return null;
-                    const C_TOOLS = this.app.config.SELECTORS.POST_TOOLS;
-                    const contentContainer = postEl.querySelector(C_TOOLS.CONTENT_BODY);
-
-                    // 1. Expand Content
-                    await this._expandReadMore(contentContainer);
-
-                    // 2. Build Metadata Header
-                    const metadataParts = await this._buildMetadataHeader(postEl, options);
-
-                    // 3. Process Content Body
-                    const bodyText = this._processContentBody(contentContainer);
-                    if (bodyText) metadataParts.push(bodyText);
-                    else metadataParts.push('[No Text Content]');
-
-                    // 4. Link Preview
-                    const previewText = this._extractLinkPreview(postEl);
-                    if (previewText) metadataParts.push(previewText);
-
-                    return metadataParts.join('\n');
+                    const data = await this.extractPostData(postEl, options);
+                    return this.formatPostData(data, 'text');
                 },
 
                 /**
-     * Expands "Read More" links to ensure full text availability.
-     * @private
-     */
+                 * Extracts structured data from a post element.
+                 * @param {HTMLElement} postEl - The post element.
+                 * @param {Object} options - Options { includeOrder: boolean, forceRawLink: boolean }
+                 * @returns {Promise<Object>}
+                 */
+                async extractPostData(postEl, options = {}) {
+                    if (!postEl) return null;
+                    const settings = this.app.state.settings;
+                    const T = this.app.state.T;
+                    const C_TOOLS = this.app.config.SELECTORS.POST_TOOLS;
+
+                    // 1. Expand Content
+                    const contentContainer = postEl.querySelector(C_TOOLS.CONTENT_BODY);
+                    await this._expandReadMore(contentContainer);
+
+                    const data = {
+                        meta: {
+                            id: null,
+                            url: null,
+                            order: options.includeOrder ? postEl.getAttribute('aria-posinset') : null,
+                            author: [],
+                            timestamp: null
+                        },
+                        content: '',
+                        stats: {
+                            reactions: { total: null, detailed: [] },
+                            comments: null,
+                            shares: null
+                        },
+                        media: {
+                            imageCount: 0,
+                            videoDuration: null,
+                            linkPreview: null
+                        }
+                    };
+
+                    // --- URL ---
+                    let linkUrl = null;
+                    if (!options.forceRawLink && settings.copier_useSmartLink) {
+                        const contentType = this.determinePostContentType(postEl);
+                        if (contentType === 'standard') {
+                            const result = await this.fetchPermalinkInBackground(postEl);
+                            if (result && result.url) linkUrl = result.url;
+                        }
+                    }
+                    if (!linkUrl) {
+                        const direct = this.getPermalinkDirectlyFromElement(postEl);
+                        linkUrl = direct.url;
+                    }
+                    data.meta.url = linkUrl;
+
+                    // --- ID ---
+                    if (linkUrl) {
+                        // Supports numeric IDs and new 'pfbid' alphanumeric IDs
+                        const match = linkUrl.match(/\/posts\/([a-zA-Z0-9]+)/) || linkUrl.match(/fbid=(\d+)/) || linkUrl.match(/\/videos\/(\d+)/) || linkUrl.match(/\/reel\/(\d+)/);
+                        if (match) data.meta.id = match[1];
+                    }
+
+                    // --- Author ---
+                    const authorEls = postEl.querySelectorAll('div[data-ad-rendering-role="profile_name"] h2 strong a, div[data-ad-rendering-role="profile_name"] h2 a');
+                    authorEls.forEach(el => {
+                        let link = el.href;
+                        try {
+                            const u = new URL(link);
+                            this.app.utils.cleanUrlParams(u);
+                            link = u.href.replace(/\/$/, '');
+                        } catch (e) { }
+                        data.meta.author.push({ name: el.textContent.trim(), link: link });
+                    });
+
+                    // --- Date ---
+                    const timeLink = this.findTimestampLink(postEl);
+                    if (timeLink) {
+                        data.meta.timestamp = timeLink.getAttribute('aria-label') || timeLink.textContent.trim();
+                        if (data.meta.timestamp && data.meta.timestamp.length > 50 && !/\d/.test(data.meta.timestamp)) data.meta.timestamp = null;
+                    }
+
+                    // --- Stats ---
+                    const toolbar = postEl.querySelector('[role="toolbar"]');
+                    if (toolbar) {
+                        const directContainer = toolbar.parentElement;
+                        const footerArea = toolbar.closest('div[role="article"] > div > div > div > div > div') || directContainer;
+                        const unitGroup = this.app.config.CONSTANTS.REGEX_PARTS.UNIT_GROUP;
+                        const numberPatternStr = `[\\d,.]+\\s*(${unitGroup})?(?:人)?`;
+                        const numberRegex = new RegExp(numberPatternStr);
+
+                        // Total Reactions
+                        const reactionKeywords = ['All reactions:', '所有心情：', 'すべてのリアクション:', 'All reactions'];
+                        const findTotalByLabel = (container) => {
+                            if (!container) return null;
+                            const candidates = Array.from(container.children);
+                            const label = candidates.find(el => reactionKeywords.some(kw => el.textContent.includes(kw)));
+                            if (label && label.nextElementSibling) return label.nextElementSibling.textContent.trim();
+                            return null;
+                        };
+                        let totalReactionText = findTotalByLabel(directContainer) || findTotalByLabel(footerArea);
+                        if (!totalReactionText && footerArea) {
+                            const reactionIcon = footerArea.querySelector('[aria-label*="reaction"], [aria-label*="心情"], [aria-label*="リアクション"]');
+                            if (reactionIcon && !reactionIcon.closest('div[role="article"] div[role="article"]')) {
+                                const containerText = reactionIcon.closest('div')?.textContent || '';
+                                const m = containerText.match(numberRegex);
+                                if (m) totalReactionText = m[0].replace(/\s+|人/g, '');
+                            }
+                        }
+                        data.stats.reactions.total = totalReactionText;
+
+                        // Detailed Reactions
+                        if (footerArea) {
+                            const reactionButtons = footerArea.querySelectorAll('[aria-label]');
+                            const reactionTerms = ['Like', 'Love', 'Care', 'Haha', 'Wow', 'Sad', 'Angry', '讚', '大心', '加油', '哈', '哇', '嗚', '怒', '超いいね！', 'いいね！', '大切だね', 'うけるね', 'すごいね', '悲しいね', 'ひどいね'];
+                            const reactionRegex = new RegExp(`(${reactionTerms.join('|')})[:：]\\s*(${numberPatternStr})`, 'i');
+                            const emojiMap = { 'like': '👍', '讚': '👍', 'love': '❤️', '大心': '❤️', 'care': '🫂', '加油': '🫂', 'haha': '😆', '哈': '😆', 'wow': '😮', '哇': '😮', 'sad': '😢', '嗚': '😢', 'angry': '😡', '怒': '😡', 'いいね！': '👍', '超いいね！': '❤️', '大切だね': '🫂', 'うけるね': '😆', 'すごいね': '😮', '悲しいね': '😢', 'ひどいね': '😡' };
+
+                            reactionButtons.forEach(btn => {
+                                const label = btn.getAttribute('aria-label');
+                                if (!label) return;
+                                const match = label.match(reactionRegex);
+                                if (match) {
+                                    const type = match[1];
+                                    const count = match[2].replace(/\s+|人/g, '');
+                                    let emoji = emojiMap[type] || emojiMap[type.toLowerCase()];
+                                    if (emoji) data.stats.reactions.detailed.push(`${emoji} ${count}`);
+                                }
+                            });
+                        }
+
+                        // Comments & Shares
+                        if (footerArea) {
+                            const icons = Array.from(footerArea.querySelectorAll('i[data-visualcompletion="css-img"]'));
+                            let commentCount = '', shareCount = '';
+                            const extractCountFromIcon = (icon) => {
+                                let current = icon.parentElement;
+                                for (let i = 0; i < 4; i++) {
+                                    if (!current) break;
+                                    const text = current.textContent.trim();
+                                    if (text && new RegExp(`^${numberPatternStr}$`).test(text)) return text.replace(/\s+|人/g, '');
+                                    const m = text.match(numberRegex); if (m) return m[0].replace(/\s+|人/g, '');
+                                    const numberSpan = current.querySelector('span:not(:has(*))');
+                                    if (numberSpan) { const mSpan = numberSpan.textContent.trim().match(numberRegex); if (mSpan) return mSpan[0].replace(/\s+|人/g, ''); }
+                                    current = current.parentElement;
+                                } return null;
+                            };
+                            for (const icon of icons) {
+                                const bgPos = icon.style.backgroundPosition; if (!bgPos) continue;
+                                const match = bgPos.match(/0px\s+(-?\d+)px/); if (!match) continue;
+                                const yPos = parseInt(match[1], 10);
+                                const SPRITES = this.app.config.CONSTANTS.SPRITES;
+                                if (Math.abs(yPos - SPRITES.COMMENT) < SPRITES.TOLERANCE && !commentCount) commentCount = extractCountFromIcon(icon);
+                                else if (Math.abs(yPos - SPRITES.SHARE) < SPRITES.TOLERANCE && !shareCount) shareCount = extractCountFromIcon(icon);
+                            }
+                            if (!commentCount || !shareCount) {
+                                const footerButtons = Array.from(footerArea.querySelectorAll('[role="button"]'));
+                                for (const btn of footerButtons) {
+                                    if (btn.closest('div[role="article"] div[role="article"]')) continue;
+                                    const txt = btn.textContent.trim();
+                                    if (txt && new RegExp(`^${numberPatternStr}$`).test(txt)) {
+                                        if (!commentCount) commentCount = txt.replace(/\s+|人/g, '');
+                                        else if (!shareCount) shareCount = txt.replace(/\s+|人/g, '');
+                                    }
+                                }
+                            }
+                            data.stats.comments = commentCount;
+                            data.stats.shares = shareCount;
+                        }
+                    }
+
+                    // --- Media: Image Count ---
+                    const uniqueImageIds = new Set();
+                    let extraHiddenImages = 0;
+                    const imageLinks = postEl.querySelectorAll('a[href*="/photo/"][href*="fbid="], a[href*="photo.php"][href*="fbid="]');
+                    imageLinks.forEach(link => {
+                        if (link.querySelector('img')) {
+                            const href = link.getAttribute('href');
+                            const fbidMatch = href.match(/fbid=(\d+)/);
+                            if (fbidMatch) uniqueImageIds.add(fbidMatch[1]);
+                            const candidates = link.querySelectorAll('div');
+                            for (const cand of candidates) {
+                                const txt = cand.textContent.trim();
+                                if (/^\+\d+$/.test(txt)) {
+                                    const num = parseInt(txt.substring(1), 10);
+                                    if (!isNaN(num)) extraHiddenImages = num;
+                                    break;
+                                }
+                            }
+                        }
+                    });
+                    const totalImages = uniqueImageIds.size + extraHiddenImages - (extraHiddenImages > 0 ? 1 : 0);
+                    data.media.imageCount = totalImages;
+
+                    // --- Media: Video Duration ---
+                    let duration = null;
+                    const reelLink = postEl.querySelector('a[href*="/reel/"]');
+                    const videoLink = postEl.querySelector('a[href*="/videos/"], a[href*="/watch/"]');
+
+                    const candidates = Array.from(postEl.querySelectorAll('div, span'));
+                    const playerTimePattern = /(\d+(?::\d+)+)\s*\/\s*(\d+(?::\d+)+)/;
+                    for (const el of candidates) {
+                        if (el.textContent.includes('/')) {
+                            const m = el.textContent.match(playerTimePattern);
+                            if (m) { duration = m[2]; break; }
+                        }
+                    }
+                    if (!duration && (reelLink || videoLink)) {
+                        const badgePattern = /^(\d+(?::\d+)+)$/;
+                        for (const el of candidates) {
+                            const txt = el.textContent.trim();
+                            if (el.closest(C_TOOLS.CONTENT_BODY)) continue;
+                            if (badgePattern.test(txt)) { duration = txt; break; }
+                        }
+                    }
+                    data.media.videoDuration = duration;
+
+                    // --- Link Preview ---
+                    data.media.linkPreview = this._extractLinkPreviewData(postEl);
+
+                    // --- Content Body ---
+                    data.content = this._processContentBody(contentContainer);
+                    if (!data.content) data.content = '';
+
+                    return data;
+                },
+
+                formatPostData(data, format = 'text') {
+                    if (!data) return '';
+                    const settings = this.app.state.settings;
+                    const T = this.app.state.T;
+
+                    if (format === 'json') return data;
+                    if (format === 'csv') {
+                        return {
+                            'Order': data.meta.order || '',
+                            'ID': data.meta.id || '',
+                            'URL': data.meta.url || '',
+                            'Author': data.meta.author.map(a => a.name).join('; '),
+                            'Author Link': data.meta.author.map(a => a.link).join('; '),
+                            'Time': data.meta.timestamp || '',
+                            'Content': data.content, // CSV supports newlines if quoted
+                            'Reactions': data.stats.reactions.total || '0',
+                            'Reactions (Details)': data.stats.reactions.detailed ? data.stats.reactions.detailed.join('; ') : '',
+                            'Comments': data.stats.comments || '0',
+                            'Shares': data.stats.shares || '0',
+                            'Image Count': data.media.imageCount || '0',
+                            'Video Duration': data.media.videoDuration || '',
+                            'Link Preview Title': data.media.linkPreview && data.media.linkPreview.title ? data.media.linkPreview.title : '',
+                            'Link Preview URL': data.media.linkPreview && data.media.linkPreview.url ? data.media.linkPreview.url : ''
+                        };
+                    }
+
+                    // --- Text Format (Legacy) ---
+                    const parts = [];
+                    // URL
+                    if (settings.copy_includeMetadata && settings.copy_meta_url && data.meta.url) {
+                        parts.push(data.meta.url + '\n');
+                    }
+                    // Author & Order
+                    if (settings.copy_includeMetadata) {
+                        let headerLine = '';
+                        if (data.meta.order) headerLine += `[#${data.meta.order}] `;
+                        if (settings.copy_meta_author_name && data.meta.author.length > 0) {
+                            const authorStrings = data.meta.author.map(a => {
+                                let s = a.name;
+                                if (settings.copy_meta_author_link && a.link) s += ` (${a.link})`;
+                                return s;
+                            });
+                            headerLine += authorStrings.join(' & ');
+                        }
+                        if (headerLine) parts.push(headerLine);
+                    }
+                    // Date & Stats
+                    if (settings.copy_includeMetadata) {
+                        let infoLine = '';
+                        if (settings.copy_meta_date && data.meta.timestamp) infoLine += data.meta.timestamp;
+
+                        // Stats
+                        const stats = [];
+                        if (settings.copy_meta_stats) {
+                            if (settings.copy_meta_stats_total && data.stats.reactions.total) {
+                                let s = `${data.stats.reactions.total} ${T.stats_label_reaction}`;
+                                if (settings.copy_meta_stats_detailed && data.stats.reactions.detailed.length > 0) {
+                                    s += ` (${data.stats.reactions.detailed.join(' | ')})`;
+                                }
+                                stats.push(s);
+                            } else if (data.stats.reactions.detailed.length > 0) {
+                                stats.push(data.stats.reactions.detailed.join(' | '));
+                            }
+                            if (data.stats.comments) stats.push(`💬 ${data.stats.comments}`);
+                            if (data.stats.shares) stats.push(`↗️ ${data.stats.shares}`);
+                        }
+                        if (stats.length > 0) infoLine += (infoLine ? ' • ' : '') + stats.join(' | ');
+
+                        // Image Count
+                        if (settings.copy_meta_image_count && data.media.imageCount > 0) {
+                            infoLine += (infoLine ? ' • ' : '') + `[${T.image_count_label}: ${data.media.imageCount}]`;
+                        }
+                        // Video Duration
+                        if (settings.copy_meta_video_duration && data.media.videoDuration) {
+                            const typeLabel = T.label_video || 'Video';
+                            infoLine += (infoLine ? ' • ' : '') + `[${typeLabel}: ${data.media.videoDuration}]`;
+                        }
+                        if (infoLine) parts.push(infoLine);
+                    }
+
+                    parts.push(data.content ? '\n-----------------------------------\n' : '');
+
+                    if (data.content) parts.push(data.content);
+                    else parts.push('[No Text Content]');
+
+                    if (data.media.linkPreview) {
+                        const lp = data.media.linkPreview;
+                        parts.push('\n-----------------------------------\n');
+                        if (lp.title) parts.push(`➤ ${T.preview_label_title}: ${lp.title}`);
+                        if (lp.source) parts.push(`➤ ${T.preview_label_source}: ${lp.source}`);
+                        if (lp.desc) parts.push(`➤ ${T.preview_label_desc}: ${lp.desc}`);
+                        if (lp.url) parts.push(`➤ ${T.preview_label_link}: ${lp.url}`);
+                    }
+
+                    return parts.join('\n');
+                },
+
+                /**
+                 * Extracts link preview data object.
+                 */
+                _extractLinkPreviewData(postEl) {
+                    const settings = this.app.state.settings;
+                    if (!settings.copy_includeMetadata || !settings.copy_meta_link_preview) return null;
+                    const T = this.app.state.T;
+                    const C_TOOLS = this.app.config.SELECTORS.POST_TOOLS;
+
+                    const previewLinks = Array.from(postEl.querySelectorAll('a[role="link"]'));
+                    let previewLink = null;
+                    const titleEl = postEl.querySelector('[data-ad-rendering-role="title"]');
+
+                    if (titleEl) {
+                        const contentContainer = titleEl.closest('div[id]');
+                        if (contentContainer) {
+                            const linkedAnchor = postEl.querySelector(`a[aria-labelledby="${contentContainer.id}"]`);
+                            if (linkedAnchor) previewLink = linkedAnchor;
+                        }
+                    }
+                    if (!previewLink && titleEl) {
+                        const container = titleEl.closest('div[class*="x"]');
+                        if (container && container.parentElement) {
+                            const overlay = container.parentElement.querySelector('a[href][role="link"]');
+                            if (overlay && overlay.getAttribute('href')) previewLink = overlay;
+                        }
+                    }
+                    if (!previewLink) {
+                        previewLink = previewLinks.find(a => a.querySelector('[data-ad-rendering-role="title"]') && !a.closest(C_TOOLS.CONTENT_BODY));
+                    }
+                    if (!previewLink) {
+                        previewLink = previewLinks.find(a => {
+                            if (a.closest(C_TOOLS.CONTENT_BODY)) return false;
+                            return a.querySelector('[style*="webkit-line-clamp"]');
+                        });
+                    }
+
+                    if (titleEl || previewLink) {
+                        let title = '';
+                        if (titleEl) title = titleEl.textContent.trim();
+                        else if (previewLink) {
+                            const styledTitle = previewLink.querySelector('[style*="webkit-line-clamp"]');
+                            if (styledTitle) title = styledTitle.textContent.trim();
+                        }
+
+                        let meta = '';
+                        const metaNode = postEl.querySelector('[data-ad-rendering-role="meta"]');
+                        if (metaNode) meta = metaNode.textContent.trim();
+                        else if (titleEl) {
+                            let curr = titleEl;
+                            for (let i = 0; i < 5; i++) {
+                                if (!curr || curr === postEl) break;
+                                const prev = curr.previousElementSibling;
+                                if (prev && prev.textContent.trim().length > 0 && !prev.querySelector('img')) {
+                                    meta = prev.textContent.trim();
+                                    break;
+                                }
+                                curr = curr.parentElement;
+                            }
+                        }
+                        if (meta.length > 30) meta = '';
+
+                        const descNode = postEl.querySelector('[data-ad-rendering-role="description"]');
+                        const desc = descNode ? descNode.textContent.trim() : '';
+
+                        let href = previewLink ? previewLink.getAttribute('href') : '';
+                        if (href) {
+                            try {
+                                const urlObj = new URL(href, window.location.origin);
+                                if (urlObj.hostname.includes('facebook.com') && urlObj.searchParams.has('u')) {
+                                    href = decodeURIComponent(urlObj.searchParams.get('u'));
+                                }
+                                const cleanUrlObj = new URL(href, window.location.origin);
+                                this.app.utils.cleanUrlParams(cleanUrlObj);
+                                href = cleanUrlObj.toString();
+                            } catch (e) { }
+                        }
+                        return { title, source: meta, desc, url: href };
+                    }
+                    return null;
+                },
+
+                /**
+                 * Expands "Read More" links to ensure full text availability.
+                 * @private
+                 */
                 async _expandReadMore(contentContainer) {
                     if (!contentContainer) return;
                     const C_TOOLS = this.app.config.SELECTORS.POST_TOOLS;
@@ -5046,292 +5868,6 @@
                             setTimeout(resolve, 150);
                         });
                     }
-                },
-
-                /**
-     * Builds the metadata header with author, date, and stats.
-     * @private
-     */
-                async _buildMetadataHeader(postEl, options) {
-                    const settings = this.app.state.settings;
-                    const T = this.app.state.T;
-                    const parts = [];
-                    const SECTION_SEPARATOR = options.isBatch ? '\n---\n' : '\n-----------------------------------\n';
-
-                    // [Meta] Post Link
-                    if (settings.copy_includeMetadata && settings.copy_meta_url) {
-                        let linkUrl = null;
-                        if (!options.forceRawLink && settings.copier_useSmartLink) {
-                            const contentType = this.determinePostContentType(postEl);
-                            if (contentType === 'standard') {
-                                const result = await this.fetchPermalinkInBackground(postEl);
-                                if (result && result.url) linkUrl = result.url;
-                            }
-                        }
-                        if (!linkUrl) {
-                            const direct = this.getPermalinkDirectlyFromElement(postEl);
-                            linkUrl = direct.url;
-                        }
-                        if (linkUrl) parts.push(linkUrl + '\n');
-                    }
-
-                    // [Meta] Order, Author Name, Author Link (Combined)
-                    if (settings.copy_includeMetadata) {
-                        let headerLine = '';
-
-                        // Order
-                        if (options.includeOrder) {
-                            const order = postEl.getAttribute('aria-posinset');
-                            if (order) headerLine += `[#${order}] `;
-                        }
-
-                        // Author Name & Link (Support Multiple Authors)
-                        // Selector: Find both strong>a (primary) and h2>a (secondary/backup)
-                        const authorEls = postEl.querySelectorAll('div[data-ad-rendering-role="profile_name"] h2 strong a, div[data-ad-rendering-role="profile_name"] h2 a');
-
-                        if (settings.copy_meta_author_name && authorEls.length > 0) {
-                            const authorStrings = [];
-                            authorEls.forEach(authorEl => {
-                                let part = authorEl.textContent.trim();
-
-                                if (settings.copy_meta_author_link && authorEl.href) {
-                                    try {
-                                        const authorUrlObj = new URL(authorEl.href);
-                                        this.app.utils.cleanUrlParams(authorUrlObj);
-                                        let authorUrl = authorUrlObj.href;
-                                        if (!authorUrl.includes('profile.php')) {
-                                            authorUrl = authorUrl.replace(/\/$/, '');
-                                        }
-                                        // Format: Name (Link)
-                                        part += ` (${authorUrl})`;
-                                    } catch (e) {
-                                        part += ` (${authorEl.href})`;
-                                    }
-                                }
-                                authorStrings.push(part);
-                            });
-
-                            if (authorStrings.length > 0) {
-                                headerLine += authorStrings.join(' & ');
-                            }
-                        }
-
-                        if (headerLine) parts.push(headerLine);
-                    }
-
-                    // [Meta] Date & Stats & Image Count & Video Duration
-                    if (settings.copy_includeMetadata) {
-                        let infoLine = '';
-
-                        // Date
-                        if (settings.copy_meta_date) {
-                            const timeLink = this.findTimestampLink(postEl);
-                            let dateText = '';
-                            if (timeLink) {
-                                dateText = timeLink.getAttribute('aria-label');
-                                if (!dateText) dateText = timeLink.textContent.trim();
-                                if (dateText && dateText.length > 30 && !/\d/.test(dateText)) dateText = '';
-                            }
-                            if (dateText) infoLine += dateText;
-                        }
-
-                        // Stats (Interactions)
-                        if (settings.copy_meta_stats) {
-                            const stats = [];
-                            const toolbar = postEl.querySelector('[role="toolbar"]');
-                            if (toolbar) {
-                                const directContainer = toolbar.parentElement;
-                                const footerArea = toolbar.closest('div[role="article"] > div > div > div > div > div') || directContainer;
-                                const unitGroup = '[KkMm萬億万\\u842c\\u5104\\u4e07]';
-                                const numberPatternStr = `[\\d,.]+\\s*(${unitGroup})?(?:人)?`;
-                                const numberRegex = new RegExp(numberPatternStr);
-
-                                // Total Reactions
-                                let totalReactionText = '';
-                                const reactionKeywords = ['All reactions:', '所有心情：', 'すべてのリアクション:', 'All reactions'];
-                                const findTotalByLabel = (container) => {
-                                    if (!container) return null;
-                                    const candidates = Array.from(container.children);
-                                    const label = candidates.find(el => reactionKeywords.some(kw => el.textContent.includes(kw)));
-                                    if (label && label.nextElementSibling) return label.nextElementSibling.textContent.trim();
-                                    return null;
-                                };
-                                totalReactionText = findTotalByLabel(directContainer) || findTotalByLabel(footerArea);
-                                if (!totalReactionText && footerArea) {
-                                    const reactionIcon = footerArea.querySelector('[aria-label*="reaction"], [aria-label*="心情"], [aria-label*="リアクション"]');
-                                    if (reactionIcon && !reactionIcon.closest('div[role="article"] div[role="article"]')) {
-                                        const containerText = reactionIcon.closest('div')?.textContent || '';
-                                        const m = containerText.match(numberRegex);
-                                        if (m) totalReactionText = m[0].replace(/\s+|人/g, '');
-                                    }
-                                }
-
-                                // Detailed Reactions
-                                const detailedStats = [];
-                                if (settings.copy_meta_stats_detailed && footerArea) {
-                                    const reactionButtons = footerArea.querySelectorAll('[aria-label]');
-                                    const reactionTerms = ['Like', 'Love', 'Care', 'Haha', 'Wow', 'Sad', 'Angry', '讚', '大心', '加油', '哈', '哇', '嗚', '怒', '超いいね！', 'いいね！', '大切だね', 'うけるね', 'すごいね', '悲しいね', 'ひどいね'];
-                                    const reactionRegex = new RegExp(`(${reactionTerms.join('|')})[:：]\\s*(${numberPatternStr})`, 'i');
-                                    const emojiMap = { 'like': '👍', '讚': '👍', 'love': '❤️', '大心': '❤️', 'care': '🫂', '加油': '🫂', 'haha': '😆', '哈': '😆', 'wow': '😮', '哇': '😮', 'sad': '😢', '嗚': '😢', 'angry': '😡', '怒': '😡', 'いいね！': '👍', '超いいね！': '❤️', '大切だね': '🫂', 'うけるね': '😆', 'すごいね': '😮', '悲しいね': '😢', 'ひどいね': '😡' };
-                                    reactionButtons.forEach(btn => {
-                                        const label = btn.getAttribute('aria-label');
-                                        if (!label) return;
-                                        const match = label.match(reactionRegex);
-                                        if (match) {
-                                            const type = match[1];
-                                            const count = match[2].replace(/\s+|人/g, '');
-                                            let emoji = emojiMap[type] || emojiMap[type.toLowerCase()];
-                                            if (emoji) detailedStats.push(`${emoji} ${count}`);
-                                        }
-                                    });
-                                }
-                                if (totalReactionText && settings.copy_meta_stats_total) {
-                                    let rStr = `${totalReactionText} ${T.stats_label_reaction}`;
-                                    if (detailedStats.length > 0) rStr += ` (${detailedStats.join(' | ')})`;
-                                    stats.push(rStr);
-                                } else if (detailedStats.length > 0) stats.push(detailedStats.join(' | '));
-
-                                // Comments & Shares
-                                if (footerArea) {
-                                    const icons = Array.from(footerArea.querySelectorAll('i[data-visualcompletion="css-img"]'));
-                                    let commentCount = '', shareCount = '';
-                                    const extractCountFromIcon = (icon) => {
-                                        let current = icon.parentElement;
-                                        for (let i = 0; i < 4; i++) {
-                                            if (!current) break;
-                                            const text = current.textContent.trim();
-                                            if (text && new RegExp(`^${numberPatternStr}$`).test(text)) return text.replace(/\s+|人/g, '');
-                                            const m = text.match(numberRegex); if (m) return m[0].replace(/\s+|人/g, '');
-                                            const numberSpan = current.querySelector('span:not(:has(*))');
-                                            if (numberSpan) { const mSpan = numberSpan.textContent.trim().match(numberRegex); if (mSpan) return mSpan[0].replace(/\s+|人/g, ''); }
-                                            current = current.parentElement;
-                                        } return null;
-                                    };
-                                    for (const icon of icons) {
-                                        const bgPos = icon.style.backgroundPosition; if (!bgPos) continue;
-                                        const match = bgPos.match(/0px\s+(-?\d+)px/); if (!match) continue;
-                                        const yPos = parseInt(match[1], 10);
-                                        if (Math.abs(yPos - (-1037)) < 5 && !commentCount) commentCount = extractCountFromIcon(icon);
-                                        else if (Math.abs(yPos - (-1054)) < 5 && !shareCount) shareCount = extractCountFromIcon(icon);
-                                    }
-                                    if (!commentCount || !shareCount) {
-                                        const footerButtons = Array.from(footerArea.querySelectorAll('[role="button"]'));
-                                        for (const btn of footerButtons) {
-                                            if (btn.closest('div[role="article"] div[role="article"]')) continue;
-                                            if (btn.hasAttribute('aria-label') && /Like|Love|讚|怒|いいね/.test(btn.getAttribute('aria-label'))) continue;
-
-                                            // Sprite Check for Fallback: Verify if this button contains a specific icon
-                                            let isCommentBtn = false;
-                                            let isShareBtn = false;
-                                            const btnIcon = btn.querySelector('i[data-visualcompletion="css-img"]');
-                                            if (btnIcon) {
-                                                const bgPos = btnIcon.style.backgroundPosition;
-                                                if (bgPos) {
-                                                    const match = bgPos.match(/0px\s+(-?\d+)px/);
-                                                    if (match) {
-                                                        const yPos = parseInt(match[1], 10);
-                                                        if (Math.abs(yPos - (-1037)) < 5) isCommentBtn = true;
-                                                        else if (Math.abs(yPos - (-1054)) < 5 || Math.abs(yPos - (-1071)) < 5) isShareBtn = true;
-                                                    }
-                                                }
-                                            }
-
-                                            const txt = btn.textContent.trim();
-                                            if (txt && new RegExp(`^${numberPatternStr}$`).test(txt)) {
-                                                // If we identified it as a comment button, ONLY assign to commentCount if empty
-                                                if (isCommentBtn) {
-                                                    if (!commentCount) commentCount = txt.replace(/\s+|人/g, '');
-                                                    // Do NOT let it pass to shareCount
-                                                    continue;
-                                                }
-                                                // If we identified it as a share button
-                                                if (isShareBtn) {
-                                                    if (!shareCount) shareCount = txt.replace(/\s+|人/g, '');
-                                                    continue;
-                                                }
-
-                                                // Original weak fallback (only if no sprite matched)
-                                                if (!commentCount) commentCount = txt.replace(/\s+|人/g, '');
-                                                else if (!shareCount) shareCount = txt.replace(/\s+|人/g, '');
-                                            }
-                                        }
-                                    }
-                                    if (commentCount) stats.push(`💬 ${commentCount}`);
-                                    if (shareCount) stats.push(`↗️ ${shareCount}`);
-                                }
-                            }
-                            if (stats.length > 0) infoLine += (infoLine ? ' • ' : '') + stats.join(' | ');
-                        }
-
-                        // --- Feature: Image Count (w/ +N fix) ---
-                        if (settings.copy_meta_image_count) {
-                            const uniqueImageIds = new Set();
-                            let extraHiddenImages = 0;
-                            const imageLinks = postEl.querySelectorAll('a[href*="/photo/"][href*="fbid="], a[href*="photo.php"][href*="fbid="]');
-                            imageLinks.forEach(link => {
-                                if (link.querySelector('img')) {
-                                    const href = link.getAttribute('href');
-                                    const fbidMatch = href.match(/fbid=(\d+)/);
-                                    if (fbidMatch) uniqueImageIds.add(fbidMatch[1]);
-                                    const candidates = link.querySelectorAll('div');
-                                    for (const cand of candidates) {
-                                        const txt = cand.textContent.trim();
-                                        if (/^\+\d+$/.test(txt)) {
-                                            const num = parseInt(txt.substring(1), 10);
-                                            if (!isNaN(num)) extraHiddenImages = num;
-                                            break;
-                                        }
-                                    }
-                                }
-                            });
-                            const totalImages = uniqueImageIds.size + extraHiddenImages - (extraHiddenImages > 0 ? 1 : 0);
-                            if (totalImages > 0) {
-                                const label = T.image_count_label || 'Images';
-                                infoLine += (infoLine ? ' • ' : '') + `[${label}: ${totalImages}]`;
-                            }
-                        }
-
-                        // --- Feature: Video/Reel Duration ---
-                        if (settings.copy_meta_video_duration) {
-                            let duration = null;
-                            let typeLabel = T.video_duration_label || 'Video';
-
-                            const reelLink = postEl.querySelector('a[href*="/reel/"]');
-                            const videoLink = postEl.querySelector('a[href*="/videos/"], a[href*="/watch/"]');
-                            if (reelLink) typeLabel = T.label_reel || 'Reel';
-                            else if (videoLink) typeLabel = T.label_video || 'Video';
-
-                            const candidates = Array.from(postEl.querySelectorAll('div, span'));
-
-                            // Strategy A: "Current / Total" (Player UI)
-                            const playerTimePattern = /(\d+(?::\d+)+)\s*\/\s*(\d+(?::\d+)+)/;
-                            for (const el of candidates) {
-                                if (el.textContent.includes('/')) {
-                                    const m = el.textContent.match(playerTimePattern);
-                                    if (m) { duration = m[2]; break; }
-                                }
-                            }
-
-                            // Strategy B: Standalone Badge (Thumbnail)
-                            if (!duration && (reelLink || videoLink)) {
-                                const badgePattern = /^(\d+(?::\d+)+)$/;
-                                for (const el of candidates) {
-                                    const txt = el.textContent.trim();
-                                    if (el.closest(this.app.config.SELECTORS.POST_TOOLS.CONTENT_BODY)) continue;
-                                    if (badgePattern.test(txt)) { duration = txt; break; }
-                                }
-                            }
-
-                            if (duration) {
-                                infoLine += (infoLine ? ' • ' : '') + `[${typeLabel}: ${duration}]`;
-                            }
-                        }
-
-                        if (infoLine) parts.push(infoLine);
-                    }
-
-                    if (parts.length > 0) parts.push(SECTION_SEPARATOR);
-                    return parts;
                 },
 
                 /**

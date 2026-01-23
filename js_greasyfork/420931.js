@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         Netflix 备份工具
 // @namespace    NetflixBackupTools
-// @version      1.0
+// @version      1.1
 // @description  快速备份和迁移 Netflix 账号内容
 // @author       TGSAN
-// @include      /https{0,1}\:\/\/www.netflix.com/.*/
+// @include      /https?\:\/\/www.netflix.com/.*/
 // @run-at       document-end
 // @grant        GM_unregisterMenuCommand
 // @grant        GM_registerMenuCommand
@@ -276,8 +276,97 @@
         // document.body.removeChild(fileInput);
     }
 
+    function clearAll() {
+        let userAuthURL;
+        try {
+            userAuthURL = unsafeWindow.netflix.reactContext.models.userInfo.data.authURL;
+        } catch {
+            alert("无法获取 Netflix API 验证密钥");
+            return;
+        }
+        if (!confirm("确定要清空播放列表吗？此操作不可撤销。")) {
+            return;
+        }
+        let body = "path=" +
+            encodeURIComponent(JSON.stringify([
+                "mylist",
+                {
+                    "from": 0,
+                    "to": 1000
+                }
+            ])) +
+            "&authURL=" +
+            encodeURIComponent(userAuthURL);
+        fetch(
+            netflixApi + "/pathEvaluator",
+            {
+                "body": body,
+                "method": "POST",
+                "mode": "cors",
+                "credentials": "include"
+            }
+        ).then(function (res) {
+            if (res.ok) {
+                res.json().then(function (jsonRes) {
+                    let mylist = new Array();
+                    if (jsonRes.value != undefined && jsonRes.value.mylist != undefined) {
+                        let jsonResList = jsonRes.value.mylist;
+                        for (const [key, value] of Object.entries(jsonResList)) {
+                            if (value != undefined) {
+                                if (value.length > 1) {
+                                    if (value[1] != undefined) {
+                                        mylist.push(value[1]);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (mylist.length < 1) {
+                        alert("播放列表为空");
+                        return;
+                    }
+                    let index = 0;
+                    let doFetch = function () {
+                        if (index < mylist.length) {
+                            showToast("正在清空播放列表（" + (index + 1) + "/" + mylist.length + "）");
+                            let body = {
+                                "operation": "remove",
+                                "videoId": mylist[index],
+                                "authURL": userAuthURL
+                            };
+                            fetch(
+                                netflixApi + "/playlistop",
+                                {
+                                    "body": JSON.stringify(body),
+                                    "method": "POST",
+                                    "mode": "cors",
+                                    "credentials": "include"
+                                }
+                            ).then(function () {
+                                index++;
+                                doFetch();
+                            }).catch(function () {
+                                alert("清空播放列表失败");
+                            });
+                        } else {
+                            alert("清空播放列表成功！（共移除 " + mylist.length + " 个剧集）");
+                        }
+                    };
+                    doFetch();
+                }).catch(function (err) {
+                    alert("无法获取播放列表（无法解析接口返回的结果），清空失败\n" + err);
+                })
+            } else {
+                alert("无法获取播放列表（接口访问失败），清空失败\nStatus: " + res.status);
+            }
+        }).catch(function (err) {
+            alert("无法获取播放列表，清空失败\n" + err);
+        });
+    }
+
     GM_registerMenuCommand("备份播放列表", backup);
     GM_registerMenuCommand("还原播放列表", restore);
+    GM_registerMenuCommand("清空播放列表", clearAll);
     let username = netflix?.reactContext?.models?.userInfo?.data?.name ?? netflix?.reactContext?.models?.profilesModel?.data?.active?.firstName;
     let switchProfile = async function () {
         let otherProfiles = netflix?.reactContext?.models?.profilesModel?.data?.others;

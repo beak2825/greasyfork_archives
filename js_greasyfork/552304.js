@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         Krunkax - levifrsn63
+// @name         Krunkax
 // @namespace    http://tampermonkey.net/
-// @version      0.6(Beta)
+// @version      0.7(beta)
 // @description  Locks aim to the nearest player in krunker.io and shows players behind walls. Also shows a line between you and them.
 // @author       levifrsn63
 // @match        *://krunker.io/*
@@ -13,8 +13,8 @@
 // @license      MIT
 // @run-at       document-start
 // @require      https://unpkg.com/three@0.150.0/build/three.min.js
-// @downloadURL https://update.greasyfork.org/scripts/552304/Krunkax%20-%20levifrsn63.user.js
-// @updateURL https://update.greasyfork.org/scripts/552304/Krunkax%20-%20levifrsn63.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/552304/Krunkax.user.js
+// @updateURL https://update.greasyfork.org/scripts/552304/Krunkax.meta.js
 // ==/UserScript==
 
 const THREE = window.THREE;

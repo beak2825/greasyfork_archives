@@ -1,13 +1,11 @@
 // ==UserScript==
 // @name WME Multi Map Overlay
 // @namespace https://greasyfork.org/de/users/863740-horst-wittlich
-// @version 2025.12.07
+// @version 2025.12.08
 // @description Erweiterte Version mit TopPlus, Dark Map, Basemap.de und allen DACH Geoportal Overlays - MIT GEO-LOKALISIERUNG
 // @author Hiwi234
 // @match https://www.waze.com/editor*
 // @match https://www.waze.com/*/editor*
-// @match https://beta.waze.com/editor*
-// @match https://beta.waze.com/*/editor*
 // @grant unsafeWindow
 // @grant GM_xmlhttpRequest
 // @grant GM_info

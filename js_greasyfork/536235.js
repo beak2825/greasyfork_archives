@@ -2,7 +2,7 @@
 // @name         FF Scouter V2 xentac edition
 // @namespace    Violentmonkey Scripts
 // @match        https://www.torn.com/*
-// @version      2.72xentac2
+// @version      2.72xentac3
 // @author       rDacted, Weav3r, xentac
 // @description  Shows the expected Fair Fight score against targets and faction war status
 // @grant        GM_xmlhttpRequest
@@ -18,7 +18,7 @@
 // @updateURL https://update.greasyfork.org/scripts/536235/FF%20Scouter%20V2%20xentac%20edition.meta.js
 // ==/UserScript==
 
-const FF_VERSION = "2.72xentac2";
+const FF_VERSION = "2.72xentac3";
 const API_INTERVAL = 30000;
 const FF_TARGET_STALENESS = 24 * 60 * 60 * 1000; // Refresh the target list every day
 const TARGET_KEY = "ffscouterv2-targets";
@@ -1659,8 +1659,13 @@ if (!singleton) {
       );
     }
 
+    if (!node?.parentNode?.querySelectorAll) {
+      return;
+    }
     var mini_profiles = Array.from(
-      node.querySelectorAll('[class^="profile-mini-_userProfileWrapper_"]'),
+      node.parentNode.querySelectorAll(
+        '[class^="profile-mini-_userProfileWrapper_"]',
+      ),
     );
     if (mini_profiles.length > 0) {
       for (const mini of mini_profiles) {

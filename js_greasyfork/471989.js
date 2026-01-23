@@ -1,14 +1,12 @@
 // ==UserScript==
 // @name         WME RTC Plus
 // @namespace    http://tampermonkey.net/
-// @version      2026.01.11
+// @version      2026.01.12
 // @description  RTC Management mit Kreisen, Perimeter-Sperrungen, GPX Import/Export
 // @namespace    https://greasyfork.org/de/users/863740-horst-wittlich
 // @author       Hiwi234
 // @match        https://*.waze.com/editor*
 // @match        https://*.waze.com/*/editor*
-// @match        https://beta.waze.com/editor*
-// @match        https://beta.waze.com/*/editor*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=waze.com
 // @grant        none
 // @license      MIT

@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         GreasyFork显示优化
 // @namespace    http://tampermonkey.net/
-// @version      2.7
-// @description  链接改为图标按钮，面板可折叠
+// @version      2.8
+// @description  链接改为图标按钮，顶部增加粘性导航栏，面板可折叠
 // @author       ssnangua
 // @match        https://greasyfork.org/*
 // @match        https://sleazyfork.org/*
@@ -131,14 +131,14 @@
 
   // 脚本面板移到用户面板下面
   const $aboutUser = $("#about-user");
-  const $sidebarred = $(".sidebarred");
-  if ($aboutUser && $sidebarred) {
-    $sidebarred.parentElement.insertBefore(
-      $sidebarred,
-      $aboutUser.nextElementSibling,
-    );
-    $sidebarred.parentElement.style.paddingBottom = "40px";
-  }
+  // const $sidebarred = $(".sidebarred");
+  // if ($aboutUser && $sidebarred) {
+  //   $sidebarred.parentElement.insertBefore(
+  //     $sidebarred,
+  //     $aboutUser.nextElementSibling,
+  //   );
+  //   $sidebarred.parentElement.style.paddingBottom = "40px";
+  // }
 
   // 折叠内容
   document
@@ -164,9 +164,76 @@
       $section.replaceWith($details);
     });
 
+  // 导航栏
+  const navIcon = {
+    "user-discussions-on-scripts-written": "💬",
+    "user-script-list-section": "📜",
+  };
+  const $nav = document.createElement("div");
+  $nav.classList.add("sticky-nav");
+  $nav.innerHTML =
+    '<a class="nav-item" href="javascript:;" data-target="top">⬆ TOP</a>' +
+    Array.from(document.querySelectorAll("details"))
+      .map(($details) => {
+        const id = $details.id;
+        const icon = navIcon[id] ? navIcon[id] + " " : "";
+        const text = $details.querySelector("summary").textContent.trim();
+        return `<a class="nav-item" href="javascript:;" data-target="${id}">${icon}${text}</a>`;
+      })
+      .join("");
+  $nav.onclick = (e) => {
+    const { target } = e.target.dataset;
+    if (target) {
+      if (target === "top") {
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth",
+        });
+      } else {
+        const $target = document.getElementById(target);
+        const topOffset = e.target.offsetHeight + 20;
+        window.scrollTo({
+          top: $target.offsetTop - topOffset,
+          behavior: "smooth",
+        });
+      }
+    }
+  };
+  $aboutUser.parentElement.insertBefore($nav, $aboutUser);
+
   GM_addStyle(`
     .ad-rb {
       display: none;
+    }
+
+    .sticky-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 0 5px var(--content-box-shadow-color);
+      border: 1px solid var(--content-border-color);
+      border-radius: 5px;
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+      border-top: 0;
+      background-color: var(--content-background-color);
+
+      display: flex;
+
+      & a.nav-item {
+        display: inline-block;
+        padding: 10px 20px;
+        border-right: 1px solid var(--content-border-color);
+        text-decoration: none;
+
+        &:hover {
+          background: linear-gradient(var(--list-option-background-color-gradient-1), var(--list-option-background-color-gradient-2));
+        }
+      }
+    }
+
+    #about-user {
+      margin-top: 20px;
     }
 
     a {

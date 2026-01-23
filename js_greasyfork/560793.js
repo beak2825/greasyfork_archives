@@ -1,12 +1,11 @@
 // ==UserScript==
 // @name         WME Map Comment Shapes
 // @namespace    https://greasyfork.org/de/users/863740-horst-wittlich
-// @version      2026.01.10
+// @version      2026.01.11
 // @author       Hiwi234
 // @description  Erstelle Map Comments mit vordefinierten Formen (Kreis, Quadrat, etc.) im Waze Map Editor
 // @include      https://www.waze.com/editor*
 // @include      https://www.waze.com/*/editor*
-// @include      https://beta.waze.com/*
 // @exclude      https://www.waze.com/user/editor*
 // @grant        none
 // @license      MIT

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         哔哩哔哩新版首页排版调整和去广告(bilibili)
 // @namespace    http://tampermonkey.net/
-// @version      2.2.1
+// @version      2.3.0
 // @author       Ling2Ling4
 // @description  调整B站首页每行的视频数, 可屏蔽首页和视频页的广告, 可自定义过滤视频
 // @license      MIT
@@ -1273,17 +1273,6 @@ ad_report: ".ad-report"
     script_homepage: "https://greasyfork.org/zh-CN/users/1196880-ling2ling4#user-script-list"
   };
   const DEFAULT_AD_RULES = {
-    common: [
-
-
-
-
-{
-        id: "live-room-inject",
-        name: "直播间相关广告注入",
-        selector: ".web-player-inject-wrap"
-      }
-    ],
     homepage: [
       {
         id: "home-video-ad",
@@ -1339,6 +1328,11 @@ selector: `#app ${SELECTORS.ad_report}`
         name: "评论区横幅通报",
         selector: "#app .bili-comments-header-renderer.reply-notice"
       },
+      {
+        id: "video-slide-ad",
+        name: "右侧列表顶部广告",
+        selector: "#app #slide_ad"
+      },
 
 
 
@@ -1352,6 +1346,17 @@ selector: `#app ${SELECTORS.ad_report}`
         id: "video-slide-ad",
         name: "右侧列表底部直播推荐",
         selector: "#app .pop-live-small-mode"
+      }
+    ],
+    common: [
+
+
+
+
+{
+        id: "live-room-inject",
+        name: "直播间相关广告注入",
+        selector: ".web-player-inject-wrap"
       }
     ]
   };
@@ -1375,7 +1380,9 @@ ${rules.map((r) => `  • ${r.name}`).join("\n")}`;
     videosPerRow: 5,
     enableCustomFilters: false,
     customFilterRules: "",
-    fillEmptySpace: true
+    fillEmptySpace: true,
+    customAdRulesJson: "",
+    showJsonHelp: false
   };
   const FILTER_HELP_TEXT = `每行一条规则（满足任意一条即过滤）。
 支持逻辑运算符：&& (与), || (或)。
@@ -1392,6 +1399,44 @@ t:震惊 && a:营销号    (屏蔽标题含"震惊"且作者含"营销号")
 d:0-60              (屏蔽时长在 0 到 60 秒之间的视频/短视频)
 d:1:00:00-9:00:00   (屏蔽时长超过1小时的视频)
 t:广告 || d:0-30      (屏蔽含"广告"或时长小于30秒的视频)`;
+  const AD_RULE_JSON_PLACEHOLDER = `[
+  {
+    "id": "my-rule-1",
+    "name": "屏蔽顶部横幅",
+    "selector": ".unknown-ad-banner"
+  },
+  {
+    "id": "my-rule-2",
+    "name": "屏蔽特定内容的卡片",
+    "selector": ".bili-video-card",
+    "contentCheck": {
+       "value": "推广",
+       "mode": "includes"
+    }
+  }
+]`;
+  const AD_RULE_DOCS = `类型定义 (TypeScript):
+interface AdRule {
+  id: string;           // 规则唯一标识 (必填)
+  name: string;         // 规则名称 (用于备注)
+  selector: string;     // CSS 选择器 (命中的元素将被隐藏)
+  contentCheck?: {      // (可选) 进一步检查内容
+    selector?: string;  // (可选) 在目标元素内查找子元素
+    value?: string;     // (可选) 匹配的文本值
+    mode: 'exact'       // 文本完全等于 value
+        | 'includes'    // 文本包含 value
+        | 'child-exists' // 存在指定子元素 (selector)
+        | 'child-exists-exact' // 子元素文本等于 value
+        | 'child-exists-includes'; // 子元素文本包含 value
+  }
+}
+
+模式(Mode)详解:
+- exact: 目标元素(selector)的文本必须完全等于 value。
+- includes: 目标元素(selector)的文本必须包含 value。
+- child-exists: 目标元素必须包含符合 contentCheck.selector 的子元素。
+- child-exists-exact: 子元素(contentCheck.selector)的文本必须完全等于 value。
+- child-exists-includes: 子元素(contentCheck.selector)的文本必须包含 value。`;
   const SETTINGS_CONFIG = {
     groups: [
       {
@@ -1491,6 +1536,55 @@ defaultCollapsed: true,
             defaultValue: FILTER_HELP_TEXT,
             style: { opacity: 0.8, fontSize: "11px", whiteSpace: "pre-wrap", fontFamily: "monospace", lineHeight: "1.4" },
             hidden: (data) => !data.enableCustomFilters
+          }
+        ]
+      },
+      {
+        id: "advanced",
+        title: "高级设置",
+        color: "#64748b",
+defaultCollapsed: true,
+        controls: [
+          {
+            key: "customAdRulesJson",
+            label: "自定义 CSS 屏蔽规则 (AdRule[])",
+            type: "textarea",
+            defaultValue: "",
+            fullWidth: true,
+            placeholder: AD_RULE_JSON_PLACEHOLDER,
+            description: "使用 JSON 格式编写 AdRule 数组。这些规则将合并到通用规则中，作用于所有页面。若格式错误将被忽略。",
+            style: { fontFamily: "monospace", fontSize: "11px" }
+          },
+          {
+            key: "json_valid_tip",
+            label: "状态",
+            type: "ui-computed-info",
+            getter: (data) => {
+              if (!data.customAdRulesJson) return "未设置";
+              try {
+                const res = JSON.parse(data.customAdRulesJson);
+                if (Array.isArray(res)) return `格式正确: 检测到 ${res.length} 条规则`;
+                return "格式错误: 必须是数组";
+              } catch (e) {
+                return "格式错误: 无效的 JSON";
+              }
+            },
+            style: { color: "#10b981" }
+          },
+          {
+            key: "showJsonHelp",
+            label: "查看规则格式说明",
+            type: "boolean",
+            defaultValue: false,
+            description: "显示 JSON 规则的高级编写文档。"
+          },
+          {
+            key: "json_help_doc",
+            label: "",
+            type: "ui-info-text",
+            defaultValue: AD_RULE_DOCS,
+            hidden: (data) => !data.showJsonHelp,
+            style: { fontSize: "10px", whiteSpace: "pre-wrap", fontFamily: "monospace", color: "#94a3b8", backgroundColor: "#1e293b", padding: "8px", borderRadius: "4px", border: "1px solid #334155" }
           }
         ]
       }
@@ -2156,7 +2250,28 @@ fresh_idx_1h: currentIdx
     };
     const getActiveRules = () => {
       const path = window.location.pathname;
-      const rules = [...DEFAULT_AD_RULES.common];
+      const currentSettings = settingsRef.current;
+      const commonRules = [...DEFAULT_AD_RULES.common];
+      if (currentSettings.customAdRulesJson) {
+        try {
+          const parsedRules = JSON.parse(currentSettings.customAdRulesJson);
+          if (Array.isArray(parsedRules)) {
+            parsedRules.forEach((rule) => {
+              if (rule && rule.selector) {
+                const ruleWithId = {
+                  ...rule,
+                  id: rule.id || `custom-${Math.random().toString(36).substr(2, 9)}`,
+                  _isCustom: true
+};
+                commonRules.push(ruleWithId);
+              }
+            });
+          }
+        } catch (e) {
+          console.error("[AdRemover] Failed to parse custom ad rules JSON:", e);
+        }
+      }
+      const rules = [...commonRules];
       if (isHomePage()) {
         rules.push(...DEFAULT_AD_RULES.homepage);
       } else if (path.startsWith("/video/")) {

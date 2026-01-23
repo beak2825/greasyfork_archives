@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Behandeling FR
 // @namespace    http://tampermonkey.net/
-// @version      1.1.18
+// @version      1.1.19
 // @description  Behandeling inladen voor FR
 // @match        *://*/*
 // @grant        GM_xmlhttpRequest
@@ -68,7 +68,7 @@
 
     }
 
-    sendFullDom()
+    //sendFullDom()
 
     function getPatientName() {
 

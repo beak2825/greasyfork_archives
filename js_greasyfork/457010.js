@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Annoying Ad blocker
 // @description Prevents annoying ads from displaying
-// @version     2017.08.55
+// @version     2017.08.57
 // @match     *://*.amazon.com/*
 // @match     *://*.bing.com/*
 // @match     *://*.alltrails.com/*
@@ -75,6 +75,9 @@ function bing()
 
 function ebay()
 {
+    $(".x-evo-btf-river").remove();
+    $(".x-rx-slot").remove();
+    //$(".d-vi-evo-region").remove();
 	$("[id^='wrapperDiv_rtm']").remove();
 	$("[id^='scandal']").remove();
 	$("[id^='rtm-mb']").remove();
@@ -86,6 +89,7 @@ function ebay()
 	{
 		$(this).parent().parent().parent().parent().parent().parent().remove();
 	});
+	
 }
 function youtube()
 {
@@ -93,7 +97,7 @@ function youtube()
 	//$("ytd-secondary-search-container-renderer").remove();
 	$("#main").remove();
 
-        $(".yt-mealbar-promo-renderer").remove();
+    //$(".yt-mealbar-promo-renderer").remove();
 }
 function stackoverflow()
 {

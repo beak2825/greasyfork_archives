@@ -2,7 +2,7 @@
 // @name         Embedded YouTube fix
 // @description  this monitors and auto-refreshes crashed embedded YouTube players in the background for a seamless viewing experience
 // @namespace    https://htsign.hateblo.jp
-// @version      0.4.0
+// @version      0.4.1
 // @author       htsign
 // @match        *://*/*
 // @match        https://www.youtube.com/embed/*
@@ -81,18 +81,12 @@
   }
 
   // inside of iframe
-  else {
+  else if (location.href.startsWith('https://www.youtube.com/embed/')) {
     window.addEventListener('message', ({ data, source, origin }) => {
-      if (location.origin !== 'https://www.youtube.com') return;
       if (data !== ID) return;
 
-      try {
-        if (document.querySelector('.ytp-error')) {
-          source.postMessage(ID, origin);
-        }
-      }
-      catch (e) {
-        console.error(e, { data, origin });
+      if (document.querySelector('.ytp-error')) {
+        source.postMessage(ID, origin);
       }
     });
   }

@@ -1,53 +1,171 @@
 // ==UserScript==
-// @name        ⭐️AI语言学习专家 (Deepseek驱动) - YouTube精准适配版
-// @namespace    http://tampermonkey.net/
-// @version      V3.9.2-Alt-Fix
-// @license      MIT
-// @description  全DeepSeek驱动的英语学习专家。1.适配YouTube动态加载，支持评论区/描述栏实时翻译；2.精准挂载DOM，不破坏原生按钮事件；3.右键任意停止输出。修复锁定模式下例句功能及查词竞态问题。输入框体验优化。修复“继续”按钮在已完成的面板上出现的Bug。优化Alt长按逻辑，避免误触。
-// @author       Gemini & 豆包编程助手
-// @match        *://*/*
-// @run-at       document-end
-// @grant        GM_addStyle
-// @grant        GM_xmlhttpRequest
-// @grant        GM_setValue
-// @grant        GM_getValue
-// @grant        GM_setClipboard
-// @connect      api.deepseek.com
-// @connect      api.dictionaryapi.dev
-// @downloadURL https://update.greasyfork.org/scripts/563162/%E2%AD%90%EF%B8%8FAI%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0%E4%B8%93%E5%AE%B6%20%28Deepseek%E9%A9%B1%E5%8A%A8%29%20-%20YouTube%E7%B2%BE%E5%87%86%E9%80%82%E9%85%8D%E7%89%88.user.js
-// @updateURL https://update.greasyfork.org/scripts/563162/%E2%AD%90%EF%B8%8FAI%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0%E4%B8%93%E5%AE%B6%20%28Deepseek%E9%A9%B1%E5%8A%A8%29%20-%20YouTube%E7%B2%BE%E5%87%86%E9%80%82%E9%85%8D%E7%89%88.meta.js
+// @name        AI语言学习专家
+// @namespace   http://tampermonkey.net/
+// @version     1.0
+// @license     MIT
+// @description 全DeepSeek驱动的英语学习专家。新增：侧边栏“挤压模式”开关（↔️），可选择覆盖网页或将网页挤开。纯原生DOM操作重构，彻底杜绝XSS风险。1.适配YouTube动态加载；2.精准挂载DOM；3.右键任意停止输出。快捷键更新：Alt+1切换高亮(添加/删除)；Alt+2切换侧边栏；双击Alt同步输入框。新增：自动复制开关。
+// @author      Gemini & 豆包编程助手
+// @match       *://*/*
+// @run-at      document-end
+// @grant       GM_addStyle
+// @grant       GM_xmlhttpRequest
+// @grant       GM_setValue
+// @grant       GM_getValue
+// @grant       GM_setClipboard
+// @connect     api.deepseek.com
+// @connect     api.dictionaryapi.dev
+// @downloadURL https://update.greasyfork.org/scripts/563162/AI%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0%E4%B8%93%E5%AE%B6.user.js
+// @updateURL https://update.greasyfork.org/scripts/563162/AI%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0%E4%B8%93%E5%AE%B6.meta.js
 // ==/UserScript==
 
 (function() {
     'use strict';
 
-    // ==================== 0. 安全DOM操作工具 (Trusted Types) ====================
-    const safeDOM = (function() {
-        let policy = null;
-        if (window.trustedTypes && window.trustedTypes.createPolicy) {
-            try {
-                policy = window.trustedTypes.createPolicy('ds-js-helper', {
-                    createHTML: (string) => string
+    // ==================== 0. DOM 构建工具 ====================
+    const UI = {
+        el: (tag, attrs = {}, children = []) => {
+            const element = document.createElement(tag);
+            Object.entries(attrs).forEach(([key, val]) => {
+                if (key === 'style' && typeof val === 'object') {
+                    Object.assign(element.style, val);
+                } else if (key.startsWith('data-')) {
+                    element.setAttribute(key, val);
+                } else if (key === 'className') {
+                    element.className = val;
+                } else if (key === 'onclick' && typeof val === 'function') {
+                    element.onclick = val;
+                } else if (key === 'checked') {
+                    element.checked = !!val;
+                } else if (key === 'type') {
+                    element.type = val;
+                } else {
+                    element[key] = val;
+                }
+            });
+            const appendChild = (child) => {
+                if (child === null || child === undefined) return;
+                if (typeof child === 'string' || typeof child === 'number') {
+                    element.appendChild(document.createTextNode(child));
+                } else if (child instanceof Node) {
+                    element.appendChild(child);
+                } else if (Array.isArray(child)) {
+                    child.forEach(appendChild);
+                }
+            };
+            if (Array.isArray(children)) children.forEach(appendChild);
+            else appendChild(children);
+            return element;
+        },
+        clear: (element) => {
+            if (element) element.textContent = '';
+        },
+        renderMarkdown: (container, text, highlightWord = null) => {
+            UI.clear(container);
+            if (!text) return;
+            const lines = text.split(/\n|\\n/);
+            lines.forEach((line, index) => {
+                if (index > 0) container.appendChild(document.createElement('br'));
+                if (!line) return;
+                const parts = line.split(/\*\*(.*?)\*\*/g);
+                parts.forEach((part, i) => {
+                    if (!part) return;
+                    let node;
+                    const isBold = (i % 2 === 1);
+                    if (highlightWord) {
+                        const regex = new RegExp(`(${highlightWord.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+                        const subParts = part.split(regex);
+                        const frag = document.createDocumentFragment();
+                        subParts.forEach((subPart, j) => {
+                            if (!subPart) return;
+                            if (j % 2 === 1) {
+                                const span = UI.el('span', {
+                                    className: 'ds-target-italic',
+                                    style: { color: '#1E90FF', fontWeight: 'bold', fontStyle: 'italic' }
+                                }, [subPart]);
+                                frag.appendChild(span);
+                            } else {
+                                frag.appendChild(document.createTextNode(subPart));
+                            }
+                        });
+                        if (isBold) {
+                            node = document.createElement('strong');
+                            node.appendChild(frag);
+                        } else {
+                            node = frag;
+                        }
+                    } else {
+                        if (isBold) {
+                            node = document.createElement('strong');
+                            node.textContent = part;
+                        } else {
+                            node = document.createTextNode(part);
+                        }
+                    }
+                    if (node instanceof DocumentFragment) container.appendChild(node);
+                    else container.appendChild(node);
                 });
-            } catch (e) {
-                console.warn('DeepSeek: TrustedTypes policy creation warning:', e);
+            });
+        },
+        renderDict: (container, text) => {
+            UI.clear(container);
+            const lines = text.split('\n').filter(l => l.trim() !== '');
+            if (lines.length === 0) return;
+            const headword = lines[0].replace(/\*\*/g, '').trim();
+            let ipa = "";
+            let defStartIndex = 1;
+            if (lines.length > 1 && (lines[1].trim().startsWith('/') || lines[1].trim().startsWith('['))) {
+                ipa = lines[1].trim();
+                defStartIndex = 2;
             }
+            const headRow = UI.el('div', { className: 'ds-head-row' }, [
+                UI.el('span', { className: 'ds-headword' }, headword),
+                ipa ? UI.el('span', { className: 'ds-clickable-ipa' }, ipa) : null
+            ]);
+            container.appendChild(headRow);
+            const grid = UI.el('div', { className: 'ds-dict-grid' });
+            let lastPos = "";
+            for (let i = defStartIndex; i < lines.length; i++) {
+                let lineText = lines[i].trim();
+                if (/^(Exchange|Tags)/i.test(lineText)) continue;
+                if (/^([a-z]+|[\u4e00-\u9fa5]+)\.$/i.test(lineText) && i + 1 < lines.length) {
+                    const nextLine = lines[i + 1].trim();
+                    if (!/^([a-z]+|[\u4e00-\u9fa5]+)\./i.test(nextLine) && !/^(Exchange|Tags)/i.test(nextLine)) {
+                        lineText += " " + nextLine;
+                        i++;
+                    }
+                }
+                const match = lineText.match(/^([a-z]+|[\u4e00-\u9fa5]+)\.\s*(.*)/i);
+                let pos = "";
+                let defText = lineText;
+                if (match) {
+                    pos = match[1].toLowerCase();
+                    defText = match[2];
+                }
+                let displayPos = pos;
+                if (pos && pos === lastPos) {
+                    displayPos = "";
+                } else {
+                    if (pos) lastPos = pos;
+                }
+                grid.appendChild(UI.el('div', { className: 'ds-pos-label' }, displayPos));
+                const segments = defText.split(/([;；])/);
+                const defContent = UI.el('div', { className: 'ds-def-content' });
+                segments.forEach(seg => {
+                    if (seg.match(/[;；]/)) {
+                        defContent.appendChild(UI.el('span', { style: { marginRight: '4px', color: '#999' } }, seg));
+                    } else if (seg.trim()) {
+                        defContent.appendChild(UI.el('span', {
+                            className: 'ds-def-split',
+                            'data-def': seg.trim(),
+                            title: '点击为此义项生成例句'
+                        }, seg.trim()));
+                    }
+                });
+                grid.appendChild(defContent);
+            }
+            container.appendChild(grid);
         }
-        return {
-            setHTML: (element, htmlString) => {
-                if (!element) return;
-                if (policy) element.innerHTML = policy.createHTML(htmlString);
-                else element.innerHTML = htmlString;
-            },
-            createWithHTML: (tagName, htmlString, className = '') => {
-                const el = document.createElement(tagName);
-                if (className) el.className = className;
-                if (policy) el.innerHTML = policy.createHTML(htmlString);
-                else el.innerHTML = htmlString;
-                return el;
-            }
-        };
-    })();
+    };
 
     // ==================== 1. 配置与状态管理 ====================
     const DEFAULT_PROMPTS = [
@@ -82,9 +200,13 @@
             popupWidth: GM_getValue('ds_popup_width', '600px'),
             popupHeight: GM_getValue('ds_popup_height', '350px'),
             autoImport: true,
+            autoCopy: GM_getValue('ds_auto_copy', false), // NEW: Auto copy setting, default false
             isDocked: GM_getValue('ds_is_docked', false),
+            pushMode: GM_getValue('ds_push_mode', false),
             customPrompts: parsePrompts(GM_getValue('ds_custom_prompts', DEFAULT_PROMPTS)),
-            fabPos: GM_getValue('ds_fab_pos', { side: 'right', top: '50%' })
+            disabledSites: GM_getValue('ds_disabled_sites', []),
+            fabPos: GM_getValue('ds_fab_pos', { side: 'right', top: '50%' }),
+            showFab: GM_getValue('ds_show_fab', true)
         },
         runtime: {
             activeTab: 'highlight',
@@ -112,10 +234,7 @@
             currentPopupTrigger: null,
             sidebarLockUntil: 0,
             lastAltUpTime: 0,
-            isAltDown: false,
             isRestoring: false,
-            altTimer: null,
-            ignoreAltUp: false,
             lastPopupParams: { left: null, right: null },
             isSwitchingContext: false
         },
@@ -131,30 +250,124 @@
 
     const DOM = { sidebar: null, popup: null, highlightContent: null, fab: null };
 
-    // ==================== 2. 样式定义 (Minified) ====================
+    // ==================== 2. 样式定义 ====================
     function injectStyles() {
-        const css = `:root{--ds-bg:#202328;--ds-text:#c0c4c9;--ds-msg-bg:#25282e;--ds-border:#3a3f47;--ds-user-bg:#c0c4c9;--ds-user-text:#1a1d21;--ds-header-bg:#2b3038;--ds-accent:#3a7bd5;--ds-highlight-bg:#8B0000;--ds-highlight-text:#ffffff;--ds-menu-bg:#202328;--ds-menu-active-bg:#353b45;--ds-tab-inactive-bg:#2a2f36;--ds-tab-active-bg:#4a5059;--ds-tab-inactive-text:#888;--ds-popup-bg:#202328;--ds-popup-border:#444;--ds-hover-bg:rgba(255,255,255,0.06);--ds-continue-color:#6db3f2;--ds-slider-off:#444;--ds-slider-on:#3a7bd5;--ds-modal-bg:rgba(32,35,40,0.98);--ds-scrollbar-thumb:#4a5059}.ds-scrollable::-webkit-scrollbar,#ds-chat-log::-webkit-scrollbar,#ds-highlight-log::-webkit-scrollbar,#ds-input::-webkit-scrollbar,#ds-popup-left-content::-webkit-scrollbar,#ds-popup-right-content::-webkit-scrollbar,.ds-docked-scroll::-webkit-scrollbar{width:6px;height:6px}.ds-scrollable::-webkit-scrollbar-thumb,#ds-chat-log::-webkit-scrollbar-thumb,#ds-highlight-log::-webkit-scrollbar-thumb,#ds-input::-webkit-scrollbar-thumb,#ds-popup-left-content::-webkit-scrollbar-thumb,#ds-popup-right-content::-webkit-scrollbar-thumb,.ds-docked-scroll::-webkit-scrollbar-thumb{background:var(--ds-scrollbar-thumb);border-radius:3px}.ds-scrollable::-webkit-scrollbar-track,#ds-chat-log::-webkit-scrollbar-track,#ds-highlight-log::-webkit-scrollbar-track,#ds-input::-webkit-scrollbar-track,#ds-popup-left-content::-webkit-scrollbar-track,#ds-popup-right-content::-webkit-scrollbar-track,.ds-docked-scroll::-webkit-scrollbar-track{background:0 0}#ds-sidebar{position:fixed;top:0;width:${DS_CONFIG.settings.sidebarWidth}px;height:100vh;background:var(--ds-bg)!important;z-index:2147483647;transition:right .3s cubic-bezier(.4,0,.2,1),left .3s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;color:var(--ds-text)!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;box-sizing:border-box!important;padding:0!important;box-shadow:0 0 20px rgba(0,0,0,.4)}#ds-resizer{position:absolute;width:10px;height:100%;z-index:2147483648;background:transparent;cursor:ew-resize;transition:background .2s}#ds-resizer:hover{background:rgba(58,123,213,.1)}#ds-header{padding:0 12px;background:var(--ds-header-bg)!important;display:flex;align-items:center;justify-content:space-between;position:relative;height:42px;flex-shrink:0;border-bottom:1px solid var(--ds-border);cursor:default}#ds-header-left,#ds-header-right{display:flex;gap:6px;align-items:center;z-index:2}#ds-tabs-wrapper{display:flex;gap:2px;align-items:center;height:100%;position:absolute;left:50%;transform:translateX(-50%);z-index:1}.ds-tab{width:32px;height:28px;cursor:pointer;font-size:15px;border-radius:6px;transition:background .2s,color .2s;color:var(--ds-tab-inactive-text);user-select:none;display:flex;align-items:center;justify-content:center;background:transparent!important;border:1px solid transparent!important}.ds-tab:hover{color:#eee;background:var(--ds-hover-bg)!important}.ds-tab.active{background:var(--ds-tab-active-bg)!important;color:#fff!important;font-weight:700;border:1px solid #555!important;box-shadow:0 1px 2px rgba(0,0,0,.2)}.header-action{cursor:pointer;font-size:15px;opacity:.6;transition:opacity .2s;width:22px;height:22px;display:flex;align-items:center;justify-content:center;border-radius:4px}.header-action:hover{opacity:1;background:var(--ds-hover-bg)}#ds-tab-content{flex:1;overflow:hidden;display:flex;flex-direction:column;position:relative}.tab-panel{display:none;flex-direction:column;height:100%;width:100%;overflow:hidden}.tab-panel.active{display:flex}#ds-ai-content{flex:1}#ds-chat-log{flex:1;overflow-y:auto;padding:15px;display:flex;flex-direction:column;gap:15px;margin:0;scroll-behavior:smooth}.ds-msg{padding:12px 16px;border-radius:8px;font-size:14.5px;line-height:1.6;max-width:94%;word-wrap:break-word}.user-msg{align-self:flex-end;background:var(--ds-user-bg)!important;color:var(--ds-user-text)!important;border-top-right-radius:2px}.ai-msg{align-self:flex-start;background:var(--ds-msg-bg)!important;color:var(--ds-text)!important;border:1px solid var(--ds-border);border-top-left-radius:2px;white-space:pre-wrap}.ds-continue-text{display:block;margin-top:12px;color:var(--ds-accent);font-weight:700;cursor:pointer;text-decoration:none!important;transition:all .2s;font-size:14px;padding:4px 0;opacity:.9;letter-spacing:.5px}.ds-continue-text:hover{opacity:1;filter:brightness(1.3)}.ds-instruction-text{color:var(--ds-text);font-weight:700;font-size:13px;margin-bottom:5px}.ds-instruction-highlight{color:#FFD700!important;font-weight:700}.highlight-word{color:#1E90FF!important;font-weight:700!important;text-decoration:none!important;background:rgba(30,144,255,.1);padding:0 2px;border-radius:2px}#ds-fn-bar{padding:8px 10px;display:flex;gap:6px;flex-wrap:wrap;border-top:1px solid var(--ds-border);background:var(--ds-bg);flex-shrink:0;max-height:120px;overflow-y:auto}.fn-btn{flex:1;min-width:60px;padding:6px 8px;text-align:center;border-radius:4px;cursor:pointer;font-size:12px;color:var(--ds-text)!important;background:var(--ds-menu-active-bg);border:1px solid var(--ds-border);transition:all .2s;white-space:nowrap;display:flex;align-items:center;justify-content:center}.fn-btn:hover{background:var(--ds-hover-bg);border-color:#666}.fn-btn:active{transform:scale(.98)}.custom-prompt-btn{flex:0 1 auto!important}#ds-input-area{padding:10px 10px 15px;background:var(--ds-bg);flex-shrink:0;box-sizing:border-box!important;width:100%;border-top:1px solid var(--ds-border)}#ds-input-wrapper{display:flex;flex-direction:column;gap:8px;width:100%;box-sizing:border-box}#ds-input{width:100%;height:96px!important;border-radius:6px;border:1px solid var(--ds-border);padding:8px;outline:0;box-sizing:border-box;background:var(--ds-msg-bg)!important;color:rgba(255,255,255,0.08)!important;font-family:inherit;resize:none;font-size:14px;line-height:1.5;margin:0;overflow-y:auto;transition:color .2s ease,border-color .2s ease}#ds-input:focus{border-color:var(--ds-accent);color:var(--ds-text)!important}#ds-send-row{display:flex;justify-content:space-between;align-items:center;margin-top:4px}.ds-action-btn{width:80px;padding:6px 0;border:0;border-radius:12px;background:var(--ds-accent)!important;color:#fff!important;cursor:pointer;font-size:13px;font-weight:700;transition:opacity .2s ease,transform .1s;text-align:center}.ds-action-btn:hover{opacity:.9}.ds-action-btn:active{transform:scale(.96)}#ds-config-panel,#ds-help-panel{position:absolute;top:0;left:0;width:100%;height:100%;background:var(--ds-bg);z-index:1001;padding:20px;box-sizing:border-box;display:none;flex-direction:column;overflow-y:auto}.cfg-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;font-size:14px}#cfg-api-key{width:100%;margin-top:5px;padding:8px;border-radius:4px;border:1px solid var(--ds-border);background:var(--ds-msg-bg);color:var(--ds-text);font-size:13px}#cfg-prompts{width:100%;height:120px;padding:8px;border-radius:4px;border:1px solid var(--ds-border);background:var(--ds-msg-bg);color:var(--ds-text);font-family:monospace;font-size:12px;resize:vertical;margin-top:5px;white-space:pre;overflow-x:auto}.ds-help-title,.ds-config-title{font-size:18px;font-weight:700;margin-bottom:20px;color:var(--ds-accent);border-bottom:1px solid var(--ds-border);padding-bottom:10px}.ds-help-item{margin-bottom:15px;display:flex;flex-direction:column;gap:5px}.ds-help-key{font-weight:700;color:var(--ds-text);font-family:monospace;background:var(--ds-msg-bg);padding:2px 6px;border-radius:4px;display:inline-block;width:fit-content}.ds-help-desc{font-size:13px;color:var(--ds-text);opacity:.8;line-height:1.4;white-space:pre-wrap}.ds-primary-btn{width:100%;padding:8px;background:var(--ds-accent);color:#fff;border:0;border-radius:4px;cursor:pointer;font-size:14px;transition:opacity .2s;text-align:center}.ds-primary-btn:hover{opacity:.9}#ds-help-close{margin-top:20px}#ds-highlight-content{flex:1}#ds-highlight-log{flex:1;overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:0;margin:0}.${DS_CONFIG.consts.HIGHLIGHT_CLASS}{background-color:var(--ds-highlight-bg)!important;color:var(--ds-highlight-text)!important;padding:0 2px!important;border-radius:2px;cursor:pointer;display:inline}.web-inline-trans{color:#1E90FF!important;font-size:.95em!important;font-weight:400!important;margin-left:0!important;display:block!important;background:0 0!important;box-shadow:none!important;border:0!important;padding:4px 0 8px!important}.web-inline-trans::before{content:""}.ds-inline-loading{animation:pulse 1.5s infinite}.ds-full-page-trans{color:#1E90FF!important;font-size:14px!important;font-weight:400!important;display:block!important;margin-top:4px!important;padding:2px 0 6px!important;line-height:1.5!important}.web-menu-item{display:flex!important;flex-direction:column!important;align-items:flex-start!important;padding:8px 12px!important;margin:0!important;background:var(--ds-menu-bg)!important;border-radius:0!important;cursor:default!important;transition:background-color .1s ease!important;border-bottom:1px solid rgba(255,255,255,.05)}.web-menu-item:hover{background:#353b45!important}.web-menu-header{display:flex;justify-content:flex-start;width:100%;align-items:baseline;gap:8px}.web-menu-word{font-weight:700!important;color:#1E90FF!important;font-size:15px!important;cursor:pointer!important}.web-menu-word:hover{text-decoration:none!important;color:var(--ds-accent)!important}.web-menu-ipa{font-family:"Lucida Sans Unicode","Arial Unicode MS",sans-serif;color:#777!important;font-size:13px!important}.web-menu-trans{display:block!important;margin-top:2px!important;color:#aaa!important;opacity:1;font-size:13px!important;line-height:1.4!important;white-space:pre-wrap!important;word-break:break-all!important;width:100%!important}#ds-confirm-modal{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);backdrop-filter:blur(2px);z-index:2000;display:none;align-items:center;justify-content:center;animation:fadeIn .2s ease}.ds-confirm-box{background:var(--ds-modal-bg);padding:25px 20px;border-radius:12px;width:75%;text-align:center;border:1px solid var(--ds-border);box-shadow:0 10px 30px rgba(0,0,0,.5);color:var(--ds-text)}.ds-confirm-text{font-size:15px;margin-bottom:20px;font-weight:500}.ds-confirm-btns{display:flex;gap:12px;justify-content:center}.ds-btn{padding:8px 20px;border-radius:6px;border:0;cursor:pointer;font-size:14px;font-weight:700;transition:transform .1s}.ds-btn:active{transform:scale(.95)}.ds-btn-yes{background:#ff3b30;color:#fff}.ds-btn-no{background:var(--ds-msg-bg);color:var(--ds-text);border:1px solid var(--ds-border)}@keyframes fadeIn{from{opacity:0}to{opacity:1}}#ds-popup{position:fixed;background:var(--ds-popup-bg);color:var(--ds-text);border:1px solid var(--ds-popup-border);border-radius:8px;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,.6);z-index:2147483650;display:none;flex-direction:column;min-width:400px;min-height:250px;max-width:90vw;max-height:80vh}.ds-resize-handle{position:absolute;z-index:100;opacity:0}.ds-resize-handle:hover{background:rgba(30,144,255,.2);opacity:1}.ds-rh-n{top:0;left:10px;right:10px;height:5px;cursor:ns-resize}.ds-rh-s{bottom:0;left:10px;right:10px;height:5px;cursor:ns-resize}.ds-rh-w{left:0;top:10px;bottom:10px;width:5px;cursor:ew-resize}.ds-rh-e{right:0;top:10px;bottom:10px;width:5px;cursor:ew-resize}.ds-rh-nw{top:0;left:0;width:10px;height:10px;cursor:nwse-resize;z-index:101}.ds-rh-ne{top:0;right:0;width:10px;height:10px;cursor:nesw-resize;z-index:101}.ds-rh-sw{bottom:0;left:0;width:10px;height:10px;cursor:nesw-resize;z-index:101}.ds-rh-se{bottom:0;right:0;width:10px;height:10px;cursor:nwse-resize;z-index:101}#ds-popup-header-bar{height:36px;width:100%;cursor:move;flex-shrink:0;display:flex;align-items:center;justify-content:flex-end;padding-right:18px;gap:6px;background:var(--ds-header-bg);border-bottom:1px solid var(--ds-border)}.ds-popup-icon{cursor:pointer;font-size:15px;opacity:.6;transition:opacity .2s;width:22px;height:22px;display:flex;align-items:center;justify-content:center;border-radius:4px;color:var(--ds-text)}.ds-popup-icon:hover{opacity:1;background:var(--ds-hover-bg)}#ds-popup-close-float{font-size:16px}#ds-popup-body{display:flex;flex:1;overflow:hidden;position:relative;padding:0;width:100%;height:100%;cursor:default}.ds-split-view{width:100%;height:100%;display:flex}.ds-split-left{flex:1;border-right:1px solid var(--ds-border);padding:16px;overflow-y:auto;background:var(--ds-popup-bg)}.ds-split-right{flex:1;padding:16px;overflow-y:auto;background:var(--ds-popup-bg)}#ds-docked-panel{flex-direction:column;background:var(--ds-bg)}.ds-docked-toolbar{padding:8px;border-bottom:1px solid var(--ds-border);display:flex;justify-content:center;align-items:center;background:#2f343c}.ds-docked-title{font-size:13px;font-weight:700;color:#aaa}#ds-undock-btn{padding:4px 12px;border:1px solid var(--ds-border);background:var(--ds-menu-bg);color:var(--ds-text);border-radius:4px;font-size:12px;cursor:pointer}#ds-undock-btn:hover{background:var(--ds-hover-bg);border-color:#666}.ds-docked-content{flex:1;overflow-y:auto;display:flex;flex-direction:column}.ds-docked-section{padding:15px;border-bottom:1px solid var(--ds-border)}.ds-docked-scroll{overflow-y:auto;max-height:50%}.ds-popup-title{font-size:14px;font-weight:700;margin-bottom:10px;color:var(--ds-accent);opacity:.9;letter-spacing:.5px;display:flex;align-items:center;gap:6px}.ds-popup-text{font-size:14px;line-height:1.6;white-space:pre-wrap;color:#ccc}.ds-popup-loading{color:#888;font-style:italic;animation:pulse 1.5s infinite}@keyframes pulse{0%{opacity:.5}50%{opacity:1}100%{opacity:.5}}.ds-target-italic{color:#1E90FF!important;font-weight:700;font-style:italic}.ds-head-row{display:flex;align-items:baseline;gap:10px;margin-bottom:8px;flex-wrap:wrap}.ds-headword{color:#1E90FF!important;font-weight:900;font-size:18px!important;display:inline-block}.ds-dict-grid{display:grid;grid-template-columns:45px 1fr;gap:4px 0;align-items:flex-start}.ds-pos-label{text-align:right;color:#777;font-style:italic;font-weight:700;font-size:12px;user-select:none;white-space:nowrap;overflow:visible;padding-right:8px;margin-top:3px}.ds-def-split{cursor:pointer;border-bottom:1px dashed transparent;transition:all .1s}.ds-def-split:hover{color:var(--ds-accent)}#ds-fab{position:fixed;width:25px;height:25px;background:var(--ds-accent);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;user-select:none;z-index:2147483648;box-shadow:0 2px 6px rgba(0,0,0,0.3);transition:transform .1s}#ds-fab:active{transform:scale(.9)}.ds-fab-left{left:0;border-radius:0 50% 50% 0}.ds-fab-right{right:0;border-radius:50% 0 0 50%}.ds-is-streaming .ds-def-split{pointer-events:none!important;cursor:wait}.ds-is-streaming{cursor:wait}#ds-input::placeholder{color:rgba(255,255,255,0.15)!important;opacity:1}`;
-        GM_addStyle(css);
+        const css = `:root{--ds-bg:#202328;--ds-text:#c0c4c9;--ds-msg-bg:#25282e;--ds-border:#3a3f47;--ds-user-bg:#c0c4c9;--ds-user-text:#1a1d21;--ds-header-bg:#2b3038;--ds-accent:#3a7bd5;--ds-highlight-bg:#8B0000;--ds-highlight-text:#ffffff;--ds-menu-bg:#202328;--ds-menu-active-bg:#353b45;--ds-tab-inactive-bg:#2a2f36;--ds-tab-active-bg:#4a5059;--ds-tab-inactive-text:#888;--ds-popup-bg:#202328;--ds-popup-border:#444;--ds-hover-bg:rgba(255,255,255,0.06);--ds-continue-color:#6db3f2;--ds-slider-off:#444;--ds-slider-on:#3a7bd5;--ds-modal-bg:rgba(32,35,40,0.98);--ds-scrollbar-thumb:#4a5059}.ds-scrollable::-webkit-scrollbar,#ds-chat-log::-webkit-scrollbar,#ds-highlight-log::-webkit-scrollbar,#ds-input::-webkit-scrollbar,#ds-popup-left-content::-webkit-scrollbar,#ds-popup-right-content::-webkit-scrollbar,.ds-docked-scroll::-webkit-scrollbar{width:6px;height:6px}.ds-scrollable::-webkit-scrollbar-thumb,#ds-chat-log::-webkit-scrollbar-thumb,#ds-highlight-log::-webkit-scrollbar-thumb,#ds-input::-webkit-scrollbar-thumb,#ds-popup-left-content::-webkit-scrollbar-thumb,#ds-popup-right-content::-webkit-scrollbar-thumb,.ds-docked-scroll::-webkit-scrollbar-thumb{background:var(--ds-scrollbar-thumb);border-radius:3px}.ds-scrollable::-webkit-scrollbar-track,#ds-chat-log::-webkit-scrollbar-track,#ds-highlight-log::-webkit-scrollbar-track,#ds-input::-webkit-scrollbar-track,#ds-popup-left-content::-webkit-scrollbar-track,#ds-popup-right-content::-webkit-scrollbar-track,.ds-docked-scroll::-webkit-scrollbar-track{background:0 0}
+
+        #ds-sidebar{position:fixed;top:0;width:${DS_CONFIG.settings.sidebarWidth}px;height:100vh;background:var(--ds-bg)!important;z-index:2147483647;transition:right .3s cubic-bezier(.4,0,.2,1),left .3s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:row;color:var(--ds-text)!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;box-sizing:border-box!important;padding:0!important;box-shadow:0 0 20px rgba(0,0,0,.4)}
+
+        #ds-vertical-toolbar{width:36px;background:var(--ds-header-bg);border-left:1px solid var(--ds-border);border-right:1px solid var(--ds-border);display:flex;flex-direction:column;align-items:center;padding-top:10px;gap:12px;z-index:10;flex-shrink:0}
+        .ds-v-icon{width:24px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:4px;cursor:pointer;color:var(--ds-text);opacity:0.7;font-size:16px;transition:all .2s;user-select:none}
+        .ds-v-icon:hover{opacity:1;background:var(--ds-hover-bg);color:#fff}
+        .ds-v-icon.active{color:var(--ds-accent);opacity:1}
+
+        #ds-main-panel{flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative}
+
+        #ds-resizer{position:absolute;width:10px;height:100%;z-index:2147483648;background:transparent;cursor:ew-resize;transition:background .2s}#ds-resizer:hover{background:rgba(58,123,213,.1)}
+
+        #ds-tab-header{height:42px;display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--ds-border);background:var(--ds-bg);padding:0 8px;flex-shrink:0}
+        #ds-tabs-wrapper{display:flex;gap:2px;align-items:center;height:100%;z-index:1}.ds-tab{width:32px;height:28px;cursor:pointer;font-size:15px;border-radius:6px;transition:background .2s,color .2s;color:var(--ds-tab-inactive-text);user-select:none;display:flex;align-items:center;justify-content:center;background:transparent!important;border:1px solid transparent!important}.ds-tab:hover{color:#eee;background:var(--ds-hover-bg)!important}.ds-tab.active{background:var(--ds-tab-active-bg)!important;color:#fff!important;font-weight:700;border:1px solid #555!important;box-shadow:0 1px 2px rgba(0,0,0,.2)}
+
+        #ds-tab-content{flex:1;overflow:hidden;display:flex;flex-direction:column;position:relative}.tab-panel{display:none;flex-direction:column;height:100%;width:100%;overflow:hidden}.tab-panel.active{display:flex}#ds-ai-content{flex:1}#ds-chat-log{flex:1;overflow-y:auto;padding:15px;display:flex;flex-direction:column;gap:15px;margin:0;scroll-behavior:smooth}.ds-msg{padding:12px 16px;border-radius:8px;font-size:14.5px;line-height:1.6;max-width:94%;word-wrap:break-word}.user-msg{align-self:flex-end;background:var(--ds-user-bg)!important;color:var(--ds-user-text)!important;border-top-right-radius:2px}.ai-msg{align-self:flex-start;background:var(--ds-msg-bg)!important;color:var(--ds-text)!important;border:1px solid var(--ds-border);border-top-left-radius:2px;white-space:pre-wrap}.ds-continue-text{display:block;margin-top:12px;color:var(--ds-accent);font-weight:700;cursor:pointer;text-decoration:none!important;transition:all .2s;font-size:14px;padding:4px 0;opacity:.9;letter-spacing:.5px}.ds-continue-text:hover{opacity:1;filter:brightness(1.3)}.ds-instruction-text{color:var(--ds-text);font-weight:700;font-size:13px;margin-bottom:5px}.ds-instruction-highlight{color:#FFD700!important;font-weight:700}.highlight-word{color:#1E90FF!important;font-weight:700!important;text-decoration:none!important;background:rgba(30,144,255,.1);padding:0 2px;border-radius:2px}#ds-fn-bar{padding:8px 10px;display:flex;gap:6px;flex-wrap:wrap;border-top:1px solid var(--ds-border);background:var(--ds-bg);flex-shrink:0;max-height:120px;overflow-y:auto}.fn-btn{flex:1;min-width:60px;padding:6px 8px;text-align:center;border-radius:4px;cursor:pointer;font-size:12px;color:var(--ds-text)!important;background:var(--ds-menu-active-bg);border:1px solid var(--ds-border);transition:all .2s;white-space:nowrap;display:flex;align-items:center;justify-content:center}.fn-btn:hover{background:var(--ds-hover-bg);border-color:#666}.fn-btn:active{transform:scale(.98)}.custom-prompt-btn{flex:0 1 auto!important}#ds-input-area{padding:10px 10px 15px;background:var(--ds-bg);flex-shrink:0;box-sizing:border-box!important;width:100%;border-top:1px solid var(--ds-border)}#ds-input-wrapper{display:flex;flex-direction:column;gap:8px;width:100%;box-sizing:border-box}#ds-input{width:100%;height:96px!important;border-radius:6px;border:1px solid var(--ds-border);padding:8px;outline:0;box-sizing:border-box;background:var(--ds-msg-bg)!important;color:rgba(255,255,255,0.08)!important;font-family:inherit;resize:none;font-size:14px;line-height:1.5;margin:0;overflow-y:auto;transition:color .2s ease,border-color .2s ease}#ds-input:focus{border-color:var(--ds-accent);color:var(--ds-text)!important}#ds-send-row{display:flex;justify-content:space-between;align-items:center;margin-top:4px}.ds-action-btn{width:80px;padding:6px 0;border:0;border-radius:12px;background:var(--ds-accent)!important;color:#fff!important;cursor:pointer;font-size:13px;font-weight:700;transition:opacity .2s ease,transform .1s;text-align:center}.ds-action-btn:hover{opacity:.9}.ds-action-btn:active{transform:scale(.96)}
+
+        #ds-config-panel,#ds-help-panel{position:absolute;top:0;left:0;width:100%;height:100%;background:var(--ds-bg);z-index:1001;padding:20px;box-sizing:border-box;display:none;flex-direction:column;overflow-y:auto}.cfg-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;font-size:14px}#cfg-api-key{width:100%;margin-top:5px;padding:8px;border-radius:4px;border:1px solid var(--ds-border);background:var(--ds-msg-bg);color:var(--ds-text);font-size:13px}.ds-cfg-textarea{width:100%;height:120px;padding:8px;border-radius:4px;border:1px solid var(--ds-border);background:var(--ds-msg-bg);color:var(--ds-text);font-family:monospace;font-size:12px;resize:vertical;margin-top:5px;white-space:pre-wrap;overflow-x:hidden;word-wrap:break-word}.ds-panel-header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--ds-border);padding-bottom:10px;margin-bottom:20px}.ds-panel-title{font-size:18px;font-weight:700;color:var(--ds-accent)}.ds-panel-top-btn{padding:4px 12px;background:var(--ds-accent);color:#fff;border-radius:4px;font-size:12px;cursor:pointer;border:none}.ds-panel-top-btn:hover{opacity:0.9}.ds-help-item{margin-bottom:15px;display:flex;flex-direction:column;gap:5px}.ds-help-key{font-weight:700;color:var(--ds-text);font-family:monospace;background:var(--ds-msg-bg);padding:2px 6px;border-radius:4px;display:inline-block;width:fit-content}.ds-help-desc{font-size:13px;color:var(--ds-text);opacity:.8;line-height:1.4;white-space:pre-wrap}.ds-primary-btn{width:100%;padding:8px;background:var(--ds-accent);color:#fff;border:0;border-radius:4px;cursor:pointer;font-size:14px;transition:opacity .2s;text-align:center}.ds-primary-btn:hover{opacity:.9}#ds-highlight-content{flex:1}#ds-highlight-log{flex:1;overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:0;margin:0}.${DS_CONFIG.consts.HIGHLIGHT_CLASS}{background-color:var(--ds-highlight-bg)!important;color:var(--ds-highlight-text)!important;padding:0 2px!important;border-radius:2px;cursor:pointer;display:inline}.web-inline-trans{color:#1E90FF!important;font-size:.95em!important;font-weight:400!important;margin-left:0!important;display:block!important;background:0 0!important;box-shadow:none!important;border:0!important;padding:4px 0 8px!important}.web-inline-trans::before{content:""}.ds-inline-loading{animation:pulse 1.5s infinite}.ds-full-page-trans{color:#1E90FF!important;font-size:14px!important;font-weight:400!important;display:block!important;margin-top:4px!important;padding:2px 0 6px!important;line-height:1.5!important}.web-menu-item{display:flex!important;flex-direction:column!important;align-items:flex-start!important;padding:8px 12px!important;margin:0!important;background:var(--ds-menu-bg)!important;border-radius:0!important;cursor:default!important;transition:background-color .1s ease!important;border-bottom:1px solid rgba(255,255,255,.05)}.web-menu-item:hover{background:#353b45!important}.web-menu-header{display:flex;justify-content:flex-start;width:100%;align-items:baseline;gap:8px}.web-menu-word{font-weight:700!important;color:#1E90FF!important;font-size:15px!important;cursor:pointer!important}.web-menu-word:hover{text-decoration:none!important;color:var(--ds-accent)!important}.web-menu-ipa{font-family:"Lucida Sans Unicode","Arial Unicode MS",sans-serif;color:#777!important;font-size:13px!important}.web-menu-trans{display:block!important;margin-top:2px!important;color:#aaa!important;opacity:1;font-size:13px!important;line-height:1.4!important;white-space:pre-wrap!important;word-break:break-all!important;width:100%!important}#ds-confirm-modal{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);backdrop-filter:blur(2px);z-index:2000;display:none;align-items:center;justify-content:center;animation:fadeIn .2s ease}.ds-confirm-box{background:var(--ds-modal-bg);padding:25px 20px;border-radius:12px;width:75%;text-align:center;border:1px solid var(--ds-border);box-shadow:0 10px 30px rgba(0,0,0,.5);color:var(--ds-text)}.ds-confirm-text{font-size:15px;margin-bottom:20px;font-weight:500}.ds-confirm-btns{display:flex;gap:12px;justify-content:center}.ds-btn{padding:8px 20px;border-radius:6px;border:0;cursor:pointer;font-size:14px;font-weight:700;transition:transform .1s}.ds-btn:active{transform:scale(.95)}.ds-btn-yes{background:#ff3b30;color:#fff}.ds-btn-no{background:var(--ds-msg-bg);color:var(--ds-text);border:1px solid var(--ds-border)}@keyframes fadeIn{from{opacity:0}to{opacity:1}}#ds-popup{position:fixed;background:var(--ds-popup-bg);color:var(--ds-text);border:1px solid var(--ds-popup-border);border-radius:8px;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,.6);z-index:2147483650;display:none;flex-direction:column;min-width:400px;min-height:250px;max-width:90vw;max-height:80vh}.ds-resize-handle{position:absolute;z-index:100;opacity:0}.ds-resize-handle:hover{background:rgba(30,144,255,.2);opacity:1}.ds-rh-n{top:0;left:10px;right:10px;height:5px;cursor:ns-resize}.ds-rh-s{bottom:0;left:10px;right:10px;height:5px;cursor:ns-resize}.ds-rh-w{left:0;top:10px;bottom:10px;width:5px;cursor:ew-resize}.ds-rh-e{right:0;top:10px;bottom:10px;width:5px;cursor:ew-resize}.ds-rh-nw{top:0;left:0;width:10px;height:10px;cursor:nwse-resize;z-index:101}.ds-rh-ne{top:0;right:0;width:10px;height:10px;cursor:nesw-resize;z-index:101}.ds-rh-sw{bottom:0;left:0;width:10px;height:10px;cursor:nesw-resize;z-index:101}.ds-rh-se{bottom:0;right:0;width:10px;height:10px;cursor:nwse-resize;z-index:101}#ds-popup-header-bar{height:36px;width:100%;cursor:move;flex-shrink:0;display:flex;align-items:center;justify-content:flex-end;padding-right:18px;gap:6px;background:var(--ds-header-bg);border-bottom:1px solid var(--ds-border)}.ds-popup-icon{cursor:pointer;font-size:15px;opacity:.6;transition:opacity .2s;width:22px;height:22px;display:flex;align-items:center;justify-content:center;border-radius:4px;color:var(--ds-text)}.ds-popup-icon:hover{opacity:1;background:var(--ds-hover-bg)}#ds-popup-close-float{font-size:16px}#ds-popup-body{display:flex;flex:1;overflow:hidden;position:relative;padding:0;width:100%;height:100%;cursor:default}.ds-split-view{width:100%;height:100%;display:flex}.ds-split-left{flex:1;border-right:1px solid var(--ds-border);padding:16px;overflow-y:auto;background:var(--ds-popup-bg)}.ds-split-right{flex:1;padding:16px;overflow-y:auto;background:var(--ds-popup-bg)}#ds-docked-panel{flex-direction:column;background:var(--ds-bg)}.ds-docked-toolbar{padding:8px;border-bottom:1px solid var(--ds-border);display:flex;justify-content:center;align-items:center;background:#2f343c}.ds-docked-title{font-size:13px;font-weight:700;color:#aaa}#ds-undock-btn{padding:4px 12px;border:1px solid var(--ds-border);background:var(--ds-menu-bg);color:var(--ds-text);border-radius:4px;font-size:12px;cursor:pointer}#ds-undock-btn:hover{background:var(--ds-hover-bg);border-color:#666}.ds-docked-content{flex:1;overflow-y:auto;display:flex;flex-direction:column}.ds-docked-section{padding:15px;border-bottom:1px solid var(--ds-border)}.ds-docked-scroll{overflow-y:auto;max-height:50%}.ds-popup-title{font-size:14px;font-weight:700;margin-bottom:10px;color:var(--ds-accent);opacity:.9;letter-spacing:.5px;display:flex;align-items:center;gap:6px}.ds-popup-text{font-size:14px;line-height:1.6;white-space:pre-wrap;color:#ccc}.ds-popup-loading{color:#888;font-style:italic;animation:pulse 1.5s infinite}@keyframes pulse{0%{opacity:.5}50%{opacity:1}100%{opacity:.5}}.ds-target-italic{color:#1E90FF!important;font-weight:700;font-style:italic}.ds-head-row{display:flex;align-items:baseline;gap:10px;margin-bottom:8px;flex-wrap:wrap}.ds-headword{color:#1E90FF!important;font-weight:900;font-size:18px!important;display:inline-block}.ds-dict-grid{display:grid;grid-template-columns:45px 1fr;gap:4px 0;align-items:flex-start}.ds-pos-label{text-align:right;color:#777;font-style:italic;font-weight:700;font-size:12px;user-select:none;white-space:nowrap;overflow:visible;padding-right:8px;margin-top:3px}.ds-def-split{cursor:pointer;border-bottom:1px dashed transparent;transition:all .1s}.ds-def-split:hover{color:var(--ds-accent)}#ds-fab{position:fixed;width:25px;height:25px;background:var(--ds-accent);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;user-select:none;z-index:2147483648;box-shadow:0 2px 6px rgba(0,0,0,0.3);transition:transform .1s}#ds-fab:active{transform:scale(.9)}.ds-fab-left{left:0;border-radius:0 50% 50% 0}.ds-fab-right{right:0;border-radius:50% 0 0 50%}.ds-is-streaming .ds-def-split{pointer-events:none!important;cursor:wait}.ds-is-streaming{cursor:wait}#ds-input::placeholder{color:rgba(255,255,255,0.15)!important;opacity:1}#ds-tab-docked{width:58px!important;justify-content:space-evenly!important;padding:0 2px!important}.ds-dock-lock{cursor:default}.ds-dock-restore{cursor:pointer;opacity:.6;transition:opacity .2s,background-color .2s;border-radius:4px;padding:0 4px;width:20px;text-align:center}.ds-dock-restore:hover{opacity:1;background:var(--ds-hover-bg)}`;
+        const switchCss = `.ds-switch{position:relative;display:inline-block;width:36px;height:20px}.ds-switch input{opacity:0;width:0;height:0}.ds-slider-btn{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background-color:var(--ds-slider-off);transition:.4s;border-radius:34px}.ds-slider-btn:before{position:absolute;content:"";height:14px;width:14px;left:3px;bottom:3px;background-color:#fff;transition:.4s;border-radius:50%}input:checked+.ds-slider-btn{background-color:var(--ds-slider-on)}input:checked+.ds-slider-btn:before{transform:translateX(16px)}`;
+        GM_addStyle(css + switchCss);
+    }
+
+// NEW: Update page layout based on push mode
+    function updatePageLayout() {
+        const sb = document.getElementById('ds-sidebar');
+        // 如果侧边栏不存在、隐藏或未开启挤压模式，清除所有样式
+        if (!sb || !isSidebarVisible() || !DS_CONFIG.settings.pushMode) {
+            document.body.style.marginLeft = '';
+            document.body.style.marginRight = '';
+            document.body.style.paddingLeft = ''; // 清除 padding
+            document.body.style.paddingRight = ''; // 清除 padding
+            document.body.style.overflowX = '';
+            document.body.style.transition = 'all 0.3s cubic-bezier(0.4,0,0.2,1)';
+            return;
+        }
+
+        const width = parseInt(DS_CONFIG.settings.sidebarWidth);
+        const side = DS_CONFIG.settings.sidebarSide;
+
+        // 这里设置你想要的文字间距 (12px)
+        const gap = 0;
+
+        // 计算总共需要的挤压距离 (侧边栏宽度 + 间距)
+        const totalDistance = width + gap;
+
+        // 强制隐藏水平滚动条
+        document.body.style.overflowX = 'hidden';
+
+        // 确保 box-sizing 正确，防止宽度溢出
+        document.body.style.boxSizing = 'border-box';
+        document.body.style.transition = 'all 0.3s cubic-bezier(0.4,0,0.2,1)';
+
+        // 先清除 Margin (防止旧样式残留)
+        document.body.style.marginLeft = '';
+        document.body.style.marginRight = '';
+
+        if (side === 'right') {
+            // 使用 Padding 而不是 Margin
+            // 侧边栏覆盖住前 width 像素，剩下的 gap 像素显示为网页背景
+            document.body.style.paddingRight = totalDistance + 'px';
+            document.body.style.paddingLeft = '';
+        } else {
+            document.body.style.paddingLeft = totalDistance + 'px';
+            document.body.style.paddingRight = '';
+        }
+    }
+    function toggleSidebarPushMode() {
+        DS_CONFIG.settings.pushMode = !DS_CONFIG.settings.pushMode;
+        GM_setValue('ds_push_mode', DS_CONFIG.settings.pushMode);
+
+        const btn = document.getElementById('ds-push-toggle');
+        if (btn) {
+            if (DS_CONFIG.settings.pushMode) btn.classList.add('active');
+            else btn.classList.remove('active');
+        }
+        updatePageLayout();
     }
 
     function updateSidebarPosition(animate = true) {
         const sb = document.getElementById('ds-sidebar');
         const resizer = document.getElementById('ds-resizer');
         const toggleBtn = document.getElementById('ds-side-toggle');
+        const verticalToolbar = document.getElementById('ds-vertical-toolbar');
+        const mainPanel = document.getElementById('ds-main-panel');
+
         if (!sb || !resizer) return;
         if (!animate) { sb.style.transition = 'none'; } else { sb.style.transition = 'right 0.3s cubic-bezier(0.4,0,0.2,1), left 0.3s cubic-bezier(0.4,0,0.2,1)'; }
-        sb.style.left = ''; sb.style.right = ''; sb.style.borderLeft = ''; sb.style.borderRight = ''; resizer.style.left = ''; resizer.style.right = '';
+
+        sb.style.left = ''; sb.style.right = '';
+        sb.style.borderLeft = ''; sb.style.borderRight = '';
+        resizer.style.left = ''; resizer.style.right = '';
+
         if (DS_CONFIG.settings.sidebarSide === 'right') {
+            // Sidebar on Right
             sb.style.right = isSidebarVisible() ? '0' : '-1200px';
             sb.style.borderLeft = '1px solid #3a3f47';
             resizer.style.left = '0';
             if (toggleBtn) { toggleBtn.innerText = '👈🏻'; toggleBtn.title = "切换至左侧"; }
+
+            // Reorder for Right Side: Content | Toolbar (screen edge)
+            if (verticalToolbar) { verticalToolbar.style.order = '2'; verticalToolbar.style.borderLeft = '1px solid var(--ds-border)'; verticalToolbar.style.borderRight = 'none'; }
+            if (mainPanel) { mainPanel.style.order = '1'; }
+
         } else {
+            // Sidebar on Left
             sb.style.left = isSidebarVisible() ? '0' : '-1200px';
             sb.style.borderRight = '1px solid #3a3f47';
             resizer.style.right = '0';
             if (toggleBtn) { toggleBtn.innerText = '👉🏻'; toggleBtn.title = "切换至右侧"; }
+
+            // Reorder for Left Side: Toolbar (screen edge) | Content
+            if (verticalToolbar) { verticalToolbar.style.order = '0'; verticalToolbar.style.borderRight = '1px solid var(--ds-border)'; verticalToolbar.style.borderLeft = 'none'; }
+            if (mainPanel) { mainPanel.style.order = '1'; }
         }
+        updatePageLayout();
     }
 
     function toggleSidebarSide() {
@@ -225,7 +438,6 @@
 
     function translatePageContent() {
         if (DS_CONFIG.runtime.inlineAbortCtrl) {
-            // Keep current controller to allow streaming
         } else {
              DS_CONFIG.runtime.inlineAbortCtrl = new AbortController();
         }
@@ -248,9 +460,7 @@
             const text = el.innerText.trim();
             if (text.length > 0 && !isChinese(text)) {
                 el.dataset.dsTranslated = "true";
-                const transDiv = document.createElement('div');
-                transDiv.className = 'ds-full-page-trans ds-inline-loading';
-                transDiv.textContent = 'DeepSeek 思考中...';
+                const transDiv = UI.el('div', { className: 'ds-full-page-trans ds-inline-loading' }, 'DeepSeek 思考中...');
 
                 if (el.id === 'content-text') {
                       el.parentElement.appendChild(transDiv);
@@ -416,95 +626,43 @@
 
     async function streamToElement(sysPrompt, userPrompt, targetElement, cacheCategory, cacheKey, highlightWord = null, mode = 'normal', signal = null) {
         if (cacheCategory && cacheKey && DS_CONFIG.runtime.popupCache[cacheCategory][cacheKey]) {
-            safeDOM.setHTML(targetElement, DS_CONFIG.runtime.popupCache[cacheCategory][cacheKey]);
+            if (mode === 'dict') UI.renderDict(targetElement, DS_CONFIG.runtime.popupCache[cacheCategory][cacheKey]);
+            else UI.renderMarkdown(targetElement, DS_CONFIG.runtime.popupCache[cacheCategory][cacheKey], highlightWord);
             return;
         }
         if (!DS_CONFIG.settings.apiKey) { targetElement.innerText = "请配置 API Key"; return; }
 
-        safeDOM.setHTML(targetElement, "<span class='ds-popup-loading'>DeepSeek Thinking...</span>");
+        UI.clear(targetElement);
+        targetElement.appendChild(UI.el('span', { className: 'ds-popup-loading' }, 'DeepSeek Thinking...'));
         targetElement.classList.add('ds-is-streaming');
 
-        // === 修复核心：引入局部变量标记当前流是否已自然结束 ===
         let isStreamFinished = false;
 
         await requestAI({
             messages: [{role:"system",content:sysPrompt},{role:"user",content:userPrompt}],
             signal: signal,
             onUpdate: (delta, fullText) => {
-                let finalHtml = "";
                 if (mode === 'dict') {
-                    const rawLines = fullText.split('\n').filter(l => l.trim() !== '');
-                    if (rawLines.length > 0) {
-                        let html = "";
-                        const headword = rawLines[0].replace(/\*\*/g, '').trim();
-                        let ipa = "";
-                        let defStartIndex = 1;
-                        if (rawLines.length > 1 && (rawLines[1].trim().startsWith('/') || rawLines[1].trim().startsWith('['))) {
-                            ipa = rawLines[1].trim(); defStartIndex = 2;
-                        }
-                        const ipaHtml = ipa ? `<span class="ds-clickable-ipa">${ipa}</span>` : '';
-                        html += `<div class="ds-head-row"><span class="ds-headword">${headword}</span>${ipaHtml}</div>`;
-                        html += `<div class="ds-dict-grid">`;
-                        let lastPos = "";
-                        for (let i = defStartIndex; i < rawLines.length; i++) {
-                            let lineText = rawLines[i].trim();
-                            if (/^(Exchange|Tags)/i.test(lineText)) continue;
-
-                            if (/^([a-z]+|[\u4e00-\u9fa5]+)\.$/i.test(lineText) && i + 1 < rawLines.length) {
-                                const nextLine = rawLines[i+1].trim();
-                                if (!/^([a-z]+|[\u4e00-\u9fa5]+)\./i.test(nextLine) && !/^(Exchange|Tags)/i.test(nextLine)) {
-                                    lineText += " " + nextLine; i++;
-                                }
-                            }
-                            const match = lineText.match(/^([a-z]+|[\u4e00-\u9fa5]+)\.\s*(.*)/i);
-                            let pos = ""; let defText = lineText;
-                            if (match) { pos = match[1].toLowerCase(); defText = match[2]; }
-                            let displayPos = pos;
-                            if (pos && pos === lastPos) { displayPos = ""; } else { if (pos) lastPos = pos; }
-
-                            const segments = defText.split(/([;；])/);
-                            let segHtml = "";
-                            segments.forEach(seg => {
-                                if (seg.match(/[;；]/)) { segHtml += `<span style="margin-right:4px;color:#999;">${seg}</span>`; }
-                                else if (seg.trim()) { segHtml += `<span class="ds-def-split" data-def="${encodeURIComponent(seg.trim())}" title="点击为此义项生成例句">${seg}</span>`; }
-                            });
-                            html += `<div class="ds-pos-label">${displayPos}</div>`;
-                            html += `<div class="ds-def-content">${segHtml}</div>`;
-                        }
-                        html += `</div>`;
-                        finalHtml = html;
-                    } else { finalHtml = "<span class='ds-popup-loading'>...</span>"; }
+                    UI.renderDict(targetElement, fullText);
                 } else {
-                    let safeHtml = fullText.replace(/\*\*(.*?)\*\*/g, "$1").replace(/\n/g, "<br>");
-                    if (highlightWord) {
-                        const safeReg = new RegExp(`(?<!<[^>]*)(\\b${escapeRegExp(highlightWord)}\\b)(?![^<]*>)`, 'gi');
-                        safeHtml = safeHtml.replace(safeReg, '<span class="ds-target-italic" style="color:#1E90FF!important;">$1</span>');
-                    }
-                    finalHtml = safeHtml;
+                    UI.renderMarkdown(targetElement, fullText, highlightWord);
                 }
-                safeDOM.setHTML(targetElement, finalHtml);
             },
             onFinish: (fullText) => {
-                // 标记流已正常结束
                 isStreamFinished = true;
                 targetElement.classList.remove('ds-is-streaming');
-                if (cacheCategory && cacheKey && targetElement.innerHTML) { DS_CONFIG.runtime.popupCache[cacheCategory][cacheKey] = targetElement.innerHTML; }
+                if (cacheCategory && cacheKey && fullText) { DS_CONFIG.runtime.popupCache[cacheCategory][cacheKey] = fullText; }
             },
             onError: (e) => {
                 targetElement.classList.remove('ds-is-streaming');
                 if(e.name === 'AbortError') {
-                    // 仅当流并未自然结束（即被用户手动中断），且不是因为切换上下文导致的中断时，才显示继续按钮
                     if (!DS_CONFIG.runtime.isSwitchingContext && !isStreamFinished) {
-                        // 判定当前是 Left 还是 Right，以便按钮点击事件能找到对应参数
                         let sideKey = null;
                         if (targetElement.closest('#ds-popup-left-content') || targetElement.closest('#ds-docked-left-content')) sideKey = 'left';
                         if (targetElement.closest('#ds-popup-right-content') || targetElement.closest('#ds-docked-right-content')) sideKey = 'right';
 
                         if (sideKey && !targetElement.querySelector('.ds-continue-text')) {
-                             const wrapper = document.createElement('div');
-                             wrapper.className = 'ds-continue-text';
-                             wrapper.dataset.side = sideKey;
-                             wrapper.textContent = '🖌️ 继续';
+                             const wrapper = UI.el('div', { className: 'ds-continue-text', 'data-side': sideKey }, '🖌️ 继续');
                              targetElement.appendChild(wrapper);
                         }
                     }
@@ -533,9 +691,12 @@
 
         rightHeader.innerText = "📖 例句示范";
         const cacheKey = word + "_" + defText;
-        if (DS_CONFIG.runtime.exampleCache[cacheKey]) { safeDOM.setHTML(rightBody, DS_CONFIG.runtime.exampleCache[cacheKey]); return; }
+        if (DS_CONFIG.runtime.exampleCache[cacheKey]) { UI.renderMarkdown(rightBody, DS_CONFIG.runtime.exampleCache[cacheKey], word); return; }
         DS_CONFIG.runtime.rightPanelAbortCtrl = new AbortController();
-        safeDOM.setHTML(rightBody, "<span class='ds-popup-loading'>Generating 2 examples...</span>");
+
+        UI.clear(rightBody);
+        rightBody.appendChild(UI.el('span', { className: 'ds-popup-loading' }, 'Generating 2 examples...'));
+
         let prompt = "";
         if (isChinese(word)) { prompt = `针对中文词汇 "${word}" 的特定含义："${defText}"，请生成 **2个** 包含该词的中文例句并附带英文翻译。要求：1. 必须提供2个不同场景的例句。2. 不要使用前缀标签。3. 中英文交替显示。`; }
         else { prompt = `针对单词 "${word}" 的特定含义："${defText}"，请生成 **2个** 地道的英文例句并附带中文翻译。要求：1. 必须提供2个不同场景的例句。2. **不要** 使用 "En:" 或 "Cn:" 等前缀。3. 第一行英文，第二行中文，依次排列。`; }
@@ -544,12 +705,9 @@
             messages: [{role:"system",content:prompt},{role:"user",content:word}],
             signal: DS_CONFIG.runtime.rightPanelAbortCtrl.signal,
             onUpdate: (delta, fullText) => {
-                let html = fullText.replace(/\n/g, "<br>");
-                const safeReg = new RegExp(`(?<!<[^>]*)(\\b${escapeRegExp(word)}\\b)(?![^<]*>)`, 'gi');
-                html = html.replace(safeReg, '<span class="ds-target-italic" style="color:#1E90FF!important;">$1</span>');
-                safeDOM.setHTML(rightBody, html);
+                UI.renderMarkdown(rightBody, fullText, word);
             },
-            onFinish: (fullText) => { if (fullText && rightBody.innerHTML) { DS_CONFIG.runtime.exampleCache[cacheKey] = rightBody.innerHTML; } },
+            onFinish: (fullText) => { if (fullText) { DS_CONFIG.runtime.exampleCache[cacheKey] = fullText; } },
             onError: (e) => { if(e.name !== 'AbortError') rightBody.innerText = "Error: " + e.message; }
         });
     };
@@ -568,14 +726,15 @@
         let uMsg, aiMsg;
         if (continueMessages) {
            messages = continueMessages; aiMsg = DS_CONFIG.runtime.currentAiContext.element;
-           const contSpan = document.createElement('div');
-           safeDOM.setHTML(contSpan, "<br><br><i>[Continuing...]</i><br>");
-           aiMsg.appendChild(contSpan);
+           aiMsg.appendChild(document.createElement('br'));
+           aiMsg.appendChild(document.createElement('br'));
+           aiMsg.appendChild(UI.el('i', {}, '[Continuing...]'));
+           aiMsg.appendChild(document.createElement('br'));
         } else {
-            uMsg = document.createElement('div'); uMsg.className = 'ds-msg user-msg';
+            uMsg = UI.el('div', { className: 'ds-msg user-msg' });
             let display = mode==="dict"?`📖 词典: ${targetWord}`:mode==="explain"?`🔍 沉浸: ${targetWord}`:mode==="summary"?"🧠 全文总结":mode==="custom"?"✨ "+query.substring(0,40):query.substring(0,40);
             uMsg.innerText = display; log.appendChild(uMsg);
-            aiMsg = document.createElement('div'); aiMsg.className = 'ds-msg ai-msg'; aiMsg.innerText = "...";
+            aiMsg = UI.el('div', { className: 'ds-msg ai-msg' }, '...');
             log.appendChild(aiMsg); log.scrollTop = log.scrollHeight;
             let sysPrompt = "你是一位专业的英语教育专家。";
             if (mode==="dict") sysPrompt += "请提供单词的词典释义。包含音标、词性、精准中文含义、不规则形式。严禁提供例句。";
@@ -590,32 +749,29 @@
             onUpdate: (delta, fullText) => {
                 DS_CONFIG.runtime.currentAiContext.generatedText = fullText;
                 if (!continueMessages && aiMsg.innerText === "...") aiMsg.innerText = "";
-                let html = fullText.replace(/\*\*(.*?)\*\*/g,"<strong>$1</strong>");
-                if (targetWord && mode!=="summary" && mode!=="custom") {
-                      const reg = new RegExp(`(${targetWord})`,'gi');
-                      html = html.replace(reg,"<span class=\"highlight-word\">$1</span>");
-                }
-                safeDOM.setHTML(aiMsg, html);
+
+                UI.renderMarkdown(aiMsg, fullText, (mode !== "summary" && mode !== "custom") ? targetWord : null);
+
                 const threshold = 150;
                 const isNearBottom = log.scrollHeight - log.scrollTop - log.clientHeight < threshold;
                 if (isNearBottom) { log.scrollTo({ top: log.scrollHeight, behavior: 'smooth' }); }
             },
             onError: (e) => {
                 if (e.name === 'AbortError') {
-                    const continueElem = document.createElement('div');
-                    continueElem.className = 'ds-continue-text';
-                    continueElem.innerText = '🖌️ 继续';
-                    continueElem.onclick = function() {
-                        this.remove();
-                        const newMessages = [...DS_CONFIG.runtime.currentAiContext.messages];
-                        if (newMessages[newMessages.length - 1].role !== 'assistant') { newMessages.push({role: "assistant", content: DS_CONFIG.runtime.currentAiContext.generatedText}); }
-                        else { newMessages[newMessages.length - 1].content = DS_CONFIG.runtime.currentAiContext.generatedText; }
-                        newMessages.push({role: "user", content: "请继续（Continue）"});
-                        askAI("", targetWord, mode, newMessages);
-                    };
+                    const continueElem = UI.el('div', {
+                        className: 'ds-continue-text',
+                        onclick: function() {
+                            this.remove();
+                            const newMessages = [...DS_CONFIG.runtime.currentAiContext.messages];
+                            if (newMessages[newMessages.length - 1].role !== 'assistant') { newMessages.push({role: "assistant", content: DS_CONFIG.runtime.currentAiContext.generatedText}); }
+                            else { newMessages[newMessages.length - 1].content = DS_CONFIG.runtime.currentAiContext.generatedText; }
+                            newMessages.push({role: "user", content: "请继续（Continue）"});
+                            askAI("", targetWord, mode, newMessages);
+                        }
+                    }, '🖌️ 继续');
                     aiMsg.appendChild(continueElem);
                     log.scrollTop = log.scrollHeight;
-                } else { aiMsg.innerText += "\n[请求失败: " + e.message + "]"; }
+                } else { aiMsg.appendChild(document.createTextNode("\n[请求失败: " + e.message + "]")); }
             }
         });
     }
@@ -674,24 +830,42 @@
         if (!DOM.highlightContent) return;
         const cache = JSON.parse(localStorage.getItem(DS_CONFIG.consts.VOCAB_CACHE_KEY) || '{}');
         const words = [...new Set(JSON.parse(localStorage.getItem(DS_CONFIG.consts.STORAGE_KEY) || '[]').map(h => h.text))];
-        safeDOM.setHTML(DOM.highlightContent, '<div id="ds-highlight-log"></div>');
-        const logEl = DOM.highlightContent.querySelector('#ds-highlight-log');
-        if (words.length === 0) { safeDOM.setHTML(logEl, '<div style="text-align:center;color:#666;margin-top:20px;font-size:13px;">暂无生词记录<br>Alt+1 添加</div>'); return; }
+
+        UI.clear(DOM.highlightContent);
+        const logEl = UI.el('div', { id: 'ds-highlight-log' });
+
+        if (words.length === 0) {
+            logEl.appendChild(UI.el('div', { style: { textAlign: 'center', color: '#666', marginTop: '20px', fontSize: '13px' } }, [
+                "暂无生词记录", document.createElement('br')
+            ]));
+            DOM.highlightContent.appendChild(logEl);
+            return;
+        }
+
         words.forEach(word => {
-            const item = document.createElement('div'); item.className = 'web-menu-item';
-            item.dataset.word = word;
             let ipa = "", definition = "..."; const cachedContent = cache[word];
-            let defHtml = "";
+            let defEl;
+
             if (cachedContent && cachedContent !== "..." && cachedContent !== "waiting") {
                 const match = cachedContent.match(/^(\[.*?\])\s*(.*)/s);
                 if (match) { ipa = match[1]; definition = match[2]; } else { definition = cachedContent; }
-                defHtml = `<div class="web-menu-trans">${definition}</div>`;
+                defEl = UI.el('div', { className: 'web-menu-trans' }, definition);
             } else {
-                defHtml = `<div class="web-menu-trans"><span class='ds-popup-loading' style="font-size:12px;">DeepSeek Thinking...</span></div>`;
+                defEl = UI.el('div', { className: 'web-menu-trans' }, [
+                    UI.el('span', { className: 'ds-popup-loading', style: { fontSize: '12px' } }, 'DeepSeek Thinking...')
+                ]);
             }
-            safeDOM.setHTML(item, `<div class="web-menu-header"><span class="web-menu-word">${word}</span><span class="web-menu-ipa">${ipa}</span></div>${defHtml}`);
+
+            const item = UI.el('div', { className: 'web-menu-item', 'data-word': word }, [
+                UI.el('div', { className: 'web-menu-header' }, [
+                    UI.el('span', { className: 'web-menu-word' }, word),
+                    UI.el('span', { className: 'web-menu-ipa' }, ipa)
+                ]),
+                defEl
+            ]);
             logEl.appendChild(item);
         });
+        DOM.highlightContent.appendChild(logEl);
     }
 
     const isSidebarVisible = () => {
@@ -705,6 +879,7 @@
             if (DS_CONFIG.settings.sidebarSide === 'right') { DOM.sidebar.style.right = '0'; DOM.sidebar.style.left = ''; }
             else { DOM.sidebar.style.left = '0'; DOM.sidebar.style.right = ''; }
         }
+        updatePageLayout();
     };
 
     const hideSidebar = () => {
@@ -715,6 +890,7 @@
         if (DS_CONFIG.runtime.abortCtrl) DS_CONFIG.runtime.abortCtrl.abort();
         const cp = document.getElementById('ds-config-panel'); if (cp) cp.style.display = 'none';
         const hp = document.getElementById('ds-help-panel'); if (hp) hp.style.display = 'none';
+        updatePageLayout();
     };
 
     const switchTab = (tabName) => {
@@ -780,7 +956,32 @@
             DOM.popup.style.display = 'flex';
             DS_CONFIG.runtime.currentPopupTrigger = targetHighlight;
 
-            safeDOM.setHTML(DOM.popup, `<div class="ds-resize-handle ds-rh-n" data-dir="n"></div><div class="ds-resize-handle ds-rh-s" data-dir="s"></div><div class="ds-resize-handle ds-rh-w" data-dir="w"></div><div class="ds-resize-handle ds-rh-e" data-dir="e"></div><div class="ds-resize-handle ds-rh-nw" data-dir="nw"></div><div class="ds-resize-handle ds-rh-ne" data-dir="ne"></div><div class="ds-resize-handle ds-rh-sw" data-dir="sw"></div><div class="ds-resize-handle ds-rh-se" data-dir="se"></div><div id="ds-popup-header-bar"><div id="ds-popup-full-trans" class="ds-popup-icon" title="网页正文全文翻译 (点击切换)">🌐</div><div id="ds-popup-lock" class="ds-popup-icon" title="锁定并吸附到侧边栏">🔓</div><div id="ds-popup-close-float" class="ds-popup-icon">✖</div></div><div id="ds-popup-body"><div class="ds-split-view"><div class="ds-split-left" id="ds-popup-left-content"><div class="ds-popup-title">🔤 词典解析</div><div class="ds-popup-text"></div></div><div class="ds-split-right" id="ds-popup-right-content"><div class="ds-popup-title">🔍 文中解析</div><div class="ds-popup-text"></div></div></div></div>`);
+            // Rebuild Popup Content securely
+            UI.clear(DOM.popup);
+            ['n', 's', 'w', 'e', 'nw', 'ne', 'sw', 'se'].forEach(dir => {
+                DOM.popup.appendChild(UI.el('div', { className: `ds-resize-handle ds-rh-${dir}`, 'data-dir': dir }));
+            });
+
+            const headerBar = UI.el('div', { id: 'ds-popup-header-bar' }, [
+                UI.el('div', { id: 'ds-popup-lock', className: 'ds-popup-icon', title: '锁定并吸附到侧边栏' }, '🔓'),
+                UI.el('div', { id: 'ds-popup-close-float', className: 'ds-popup-icon' }, '✖')
+            ]);
+            DOM.popup.appendChild(headerBar);
+
+            const body = UI.el('div', { id: 'ds-popup-body' }, [
+                UI.el('div', { className: 'ds-split-view' }, [
+                    UI.el('div', { className: 'ds-split-left', id: 'ds-popup-left-content' }, [
+                          UI.el('div', { className: 'ds-popup-title' }, '🔤 词典解析'),
+                          UI.el('div', { className: 'ds-popup-text' })
+                    ]),
+                    UI.el('div', { className: 'ds-split-right', id: 'ds-popup-right-content' }, [
+                          UI.el('div', { className: 'ds-popup-title' }, '🔍 文中解析'),
+                          UI.el('div', { className: 'ds-popup-text' })
+                    ])
+                ])
+            ]);
+            DOM.popup.appendChild(body);
+
             bindPopupEvents(text);
             leftEl = DOM.popup.querySelector('#ds-popup-left-content .ds-popup-text');
             rightEl = DOM.popup.querySelector('#ds-popup-right-content .ds-popup-text');
@@ -808,7 +1009,6 @@
                 const icon = e.target.closest('.ds-popup-icon');
                 if (!icon) return;
                 if (icon.id === 'ds-popup-close-float') { DOM.popup.style.display = 'none'; DS_CONFIG.runtime.currentPopupTrigger = null; }
-                else if (icon.id === 'ds-popup-full-trans') { togglePageTranslation(); }
                 else if (icon.id === 'ds-popup-lock') { toggleDockingMode(true); }
             });
         }
@@ -828,37 +1028,192 @@
         const isTopWindow = (window.self === window.top);
         if (!isTopWindow) return;
         if (document.getElementById('ds-sidebar')) return;
-        const container = document.createElement('div'); container.id = 'ds-sidebar';
+
+        // Container (Flex Row)
+        const container = UI.el('div', { id: 'ds-sidebar' });
         const promptString = DS_CONFIG.settings.customPrompts.map(p => `${p.name}=${p.template}`).join('\n');
+        const disabledSitesString = DS_CONFIG.settings.disabledSites.join('\n');
 
-        // Minified HTML Template
-        safeDOM.setHTML(container, `<div id="ds-resizer"></div><div id="ds-header"><div id="ds-header-left"><div id="ds-cfg-toggle" class="header-action" title="设置">⚙️</div><div id="ds-clear-cache" class="header-action" title="清除缓存">🗑️</div><div id="ds-help-btn" class="header-action" title="使用说明">💡</div></div><div id="ds-tabs-wrapper"><div class="ds-tab active" data-tab="highlight" title="生词本">📩</div><div class="ds-tab" data-tab="ai" title="AI 助手">💬</div><div class="ds-tab" id="ds-tab-docked" data-tab="docked" title="固定查词面板" style="display:none;">📖</div></div><div id="ds-header-right"><div id="ds-side-toggle" class="header-action" title="切换侧边栏方向">👈🏻</div><div id="ds-full-page-trans-btn" class="header-action" title="全文翻译开关">🌐</div><div id="ds-close" class="header-action" title="关闭">✖</div></div></div><div id="ds-confirm-modal"><div class="ds-confirm-box"><div class="ds-confirm-text">确定要清空所有生词和缓存吗？</div><div class="ds-confirm-btns"><button id="ds-confirm-yes" class="ds-btn ds-btn-yes">确定清空</button><button id="ds-confirm-no" class="ds-btn ds-btn-no">取消</button></div></div></div><div id="ds-config-panel"><div class="ds-config-title">⚙️ 设置</div><div class="cfg-row" style="flex-direction:column;align-items:flex-start;"><span>DeepSeek API Key:</span><input type="text" id="cfg-api-key" style="width:100%;margin-top:5px;padding:6px;" value="${DS_CONFIG.settings.apiKey}"></div><div class="cfg-row" style="flex-direction:column;align-items:flex-start;"><span class="ds-instruction-text">自定义Prompt格式：</span><span class="ds-instruction-text ds-instruction-highlight">按钮名=prompt具体指令</span><textarea id="cfg-prompts" placeholder="按钮名称=具体指令内容\\n每行一条...">${promptString}</textarea></div><button id="save-api-key" class="ds-primary-btn">保存并退出</button></div><div id="ds-help-panel"><div class="ds-help-title">💡 使用说明</div><div class="ds-help-item"><span class="ds-help-key">Alt + Alt</span><span class="ds-help-desc">快速双击 Alt，可对被鼠标所悬浮或被选中的文本进行查词。</span></div><div class="ds-help-item"><span class="ds-help-key">Alt</span><span class="ds-help-desc">关闭浮窗。</span></div><div class="ds-help-item"><span class="ds-help-key">Alt（长按）</span><span class="ds-help-desc">开启/关闭侧边栏。</span></div><div class="ds-help-item"><span class="ds-help-key">Alt + 1</span><span class="ds-help-desc">可对被鼠标所悬浮或被选中的文本进行高亮，并加入侧边栏高亮文本列表。</span></div><div class="ds-help-item"><span class="ds-help-key">Alt + 2 或 右键单击</span><span class="ds-help-desc">可对被鼠标所悬浮或被选中的文本移除高亮，并移出侧边栏高亮文本列表。</span></div><div class="ds-help-item"><span class="ds-help-key">Alt + 左键</span><span class="ds-help-desc">可对被鼠标所悬浮或被选中的段落进行文本翻译。</span></div><div class="ds-help-item"><span class="ds-help-key">🔒 锁定功能</span><span class="ds-help-desc">在浮窗点击🔒吸附后，浮窗将被锁定在侧边栏。<br>需再次点击侧边栏顶部的📖标签下的“🔑恢复浮窗”才可恢复。</span></div><button id="ds-help-close" class="ds-primary-btn">关闭说明</button></div><div id="ds-tab-content"><div class="tab-panel active" data-panel="highlight" id="ds-highlight-content"></div><div class="tab-panel" data-panel="ai" id="ds-ai-content"><div id="ds-chat-log"></div></div><div class="tab-panel" data-panel="docked" id="ds-docked-panel"><div class="ds-docked-toolbar" style="justify-content: center;"><button id="ds-undock-btn">🔑 恢复浮窗</button></div><div class="ds-docked-content"><div class="ds-docked-section ds-docked-scroll" id="ds-docked-left-content" style="flex:1;border-bottom:1px solid #444;"><div class="ds-popup-title">🔤 词典解析</div><div class="ds-popup-text"></div></div><div class="ds-docked-section ds-docked-scroll" id="ds-docked-right-content" style="flex:1;"><div class="ds-popup-title">🔍 文中解析</div><div class="ds-popup-text"></div></div></div></div></div><div id="ds-fn-bar"></div><div id="ds-input-area"><div id="ds-input-wrapper"><textarea id="ds-input" placeholder="DeepSeek AI 等待您的指令..."></textarea><div id="ds-send-row"><button id="ds-summary-btn" class="ds-action-btn">🧠 总结</button><button id="ds-send" class="ds-action-btn">🚀 发送</button></div></div></div>`);
+        // ============ 1. Vertical Toolbar ============
+        // Order: Close(✖) -> Switch(👈🏻) -> Trans(🌐) -> [Push] -> Help(💡) -> Clear(🗑️) -> Settings(⚙️)
+        const verticalToolbar = UI.el('div', { id: 'ds-vertical-toolbar' }, [
+            UI.el('div', { id: 'ds-close', className: 'ds-v-icon', title: '关闭' }, '✖'),
+            UI.el('div', { id: 'ds-side-toggle', className: 'ds-v-icon', title: '切换侧边栏方向' }, '👈🏻'),
+            UI.el('div', { id: 'ds-full-page-trans-btn', className: 'ds-v-icon', title: '全文翻译开关' }, '🌐'),
+            UI.el('div', { id: 'ds-push-toggle', className: `ds-v-icon ${DS_CONFIG.settings.pushMode ? 'active' : ''}`, title: '挤压模式：是否将网页内容挤开' }, '↔️'), // NEW BUTTON
+            UI.el('div', { id: 'ds-help-btn', className: 'ds-v-icon', title: '使用说明' }, '💡'),
+            UI.el('div', { id: 'ds-clear-cache', className: 'ds-v-icon', title: '清除缓存' }, '🗑️'),
+            UI.el('div', { id: 'ds-cfg-toggle', className: 'ds-v-icon', title: '设置' }, '⚙️'),
+        ]);
 
-        const popupEl = document.createElement('div'); popupEl.id = 'ds-popup';
-        popupEl.style.width = DS_CONFIG.settings.popupWidth; popupEl.style.height = DS_CONFIG.settings.popupHeight;
-        // Minified Popup HTML
-        safeDOM.setHTML(popupEl, `<div id="ds-popup-body"></div>`);
+        // ============ 2. Main Content Panel (New Wrapper) ============
+        const mainPanel = UI.el('div', { id: 'ds-main-panel' });
+
+        // Header for Tabs (Simplified)
+        const tabHeader = UI.el('div', { id: 'ds-tab-header' }, [
+            UI.el('div', { id: 'ds-tabs-wrapper' }, [
+                UI.el('div', { className: 'ds-tab active', 'data-tab': 'highlight', title: '生词本' }, '📩'),
+                UI.el('div', { className: 'ds-tab', 'data-tab': 'ai', title: 'AI 助手' }, '💬'),
+                UI.el('div', { className: 'ds-tab', id: 'ds-tab-docked', 'data-tab': 'docked', title: '固定模式', style: { display: 'none' } }, [
+                    UI.el('span', { className: 'ds-dock-lock', title: '已锁定' }, '🔒'),
+                    UI.el('span', { className: 'ds-dock-restore', title: '恢复浮窗' }, '✖')
+                ])
+            ])
+        ]);
+
+        // Confirm Modal (Inside main panel or sidebar, keeping absolute to cover main panel)
+        const confirmModal = UI.el('div', { id: 'ds-confirm-modal' }, [
+            UI.el('div', { className: 'ds-confirm-box' }, [
+                UI.el('div', { className: 'ds-confirm-text' }, '确定要清空所有生词和缓存吗？'),
+                UI.el('div', { className: 'ds-confirm-btns' }, [
+                    UI.el('button', { id: 'ds-confirm-yes', className: 'ds-btn ds-btn-yes' }, '确定清空'),
+                    UI.el('button', { id: 'ds-confirm-no', className: 'ds-btn ds-btn-no' }, '取消')
+                ])
+            ])
+        ]);
+
+        // Config Panel
+        const configPanel = UI.el('div', { id: 'ds-config-panel' }, [
+            UI.el('div', { className: 'ds-panel-header' }, [
+                UI.el('span', { className: 'ds-panel-title' }, '⚙️ 设置'),
+                UI.el('button', { id: 'save-api-key', className: 'ds-panel-top-btn' }, '保存并退出')
+            ]),
+            UI.el('div', { className: 'cfg-row' }, [
+                UI.el('span', { style: { fontWeight: 'bold' } }, '显示悬浮球 (🏠):'),
+                UI.el('label', { className: 'ds-switch' }, [
+                    UI.el('input', { type: 'checkbox', id: 'cfg-show-fab', checked: DS_CONFIG.settings.showFab }),
+                    UI.el('span', { className: 'ds-slider-btn' })
+                ])
+            ]),
+            // NEW: Auto Copy Switch
+            UI.el('div', { className: 'cfg-row' }, [
+                UI.el('span', { style: { fontWeight: 'bold' } }, '高亮/查询时自动复制:'),
+                UI.el('label', { className: 'ds-switch' }, [
+                    UI.el('input', { type: 'checkbox', id: 'cfg-auto-copy', checked: DS_CONFIG.settings.autoCopy }),
+                    UI.el('span', { className: 'ds-slider-btn' })
+                ])
+            ]),
+            UI.el('div', { className: 'cfg-row', style: { flexDirection: 'column', alignItems: 'flex-start' } }, [
+                UI.el('span', { style: { fontWeight: 'bold' } }, 'DeepSeek API Key:'),
+                UI.el('input', { type: 'password', id: 'cfg-api-key', style: { width: '100%', marginTop: '5px', padding: '6px' }, value: DS_CONFIG.settings.apiKey })
+            ]),
+            UI.el('div', { className: 'cfg-row', style: { flexDirection: 'column', alignItems: 'flex-start' } }, [
+                UI.el('span', { className: 'ds-instruction-text' }, '自定义Prompt格式（每行一个Prompt）：'),
+                UI.el('span', { className: 'ds-instruction-text', style: { fontWeight: 'normal', color: 'var(--ds-text)', opacity: 0.8 } }, '按钮名=prompt具体指令'),
+                UI.el('textarea', { id: 'cfg-prompts', className: 'ds-cfg-textarea', placeholder: '按钮名称=具体指令内容\n每行一条...', value: promptString })
+            ]),
+            UI.el('div', { className: 'cfg-row', style: { flexDirection: 'column', alignItems: 'flex-start' } }, [
+                UI.el('span', { className: 'ds-instruction-text' }, '禁用网站名单：'),
+                UI.el('textarea', { id: 'cfg-disabled-sites', className: 'ds-cfg-textarea', placeholder: 'example.com\nyoutube.com/shorts\n...', value: disabledSitesString })
+            ])
+        ]);
+
+        // Help Panel
+        const createHelpItem = (key, desc) => UI.el('div', { className: 'ds-help-item' }, [
+            UI.el('span', { className: 'ds-help-key' }, key),
+            UI.el('span', { className: 'ds-help-desc' }, desc)
+        ]);
+        const helpPanel = UI.el('div', { id: 'ds-help-panel' }, [
+            UI.el('div', { className: 'ds-panel-header' }, [
+                UI.el('span', { className: 'ds-panel-title' }, '💡 使用说明'),
+                UI.el('button', { id: 'ds-help-close', className: 'ds-panel-top-btn' }, '退出')
+            ]),
+            createHelpItem('Alt + Alt', '快速双击，调出浮窗对鼠标所指文本查词。'),
+            createHelpItem('Alt', '关闭浮窗。'),
+            createHelpItem('Alt + 1（可在系统中自定义快捷键）', '对鼠标所指文本切换高亮状态。'),
+            createHelpItem('Alt + 2（可在系统中自定义快捷键）', '开启/关闭侧边栏。'),
+            createHelpItem('Alt + 左键', '可对鼠标所指文本段落进行翻译。'),
+            createHelpItem('🔒 锁定功能', '在浮窗点击🔓后，浮窗将被锁定在侧边栏。\n需再次点击侧边栏顶部🔒标签旁的“✖”才可恢复。')
+        ]);
+
+        // Tab Content
+        const tabContent = UI.el('div', { id: 'ds-tab-content' }, [
+            UI.el('div', { className: 'tab-panel active', 'data-panel': 'highlight', id: 'ds-highlight-content' }),
+            UI.el('div', { className: 'tab-panel', 'data-panel': 'ai', id: 'ds-ai-content' }, [
+                UI.el('div', { id: 'ds-chat-log' })
+            ]),
+            UI.el('div', { className: 'tab-panel', 'data-panel': 'docked', id: 'ds-docked-panel' }, [
+                UI.el('div', { className: 'ds-docked-content' }, [
+                    UI.el('div', { className: 'ds-docked-section ds-docked-scroll', id: 'ds-docked-left-content', style: { flex: 1, borderBottom: '1px solid #444' } }, [
+                        UI.el('div', { className: 'ds-popup-title' }, '🔤 词典解析'),
+                        UI.el('div', { className: 'ds-popup-text' })
+                    ]),
+                    UI.el('div', { className: 'ds-docked-section ds-docked-scroll', id: 'ds-docked-right-content', style: { flex: 1 } }, [
+                        UI.el('div', { className: 'ds-popup-title' }, '🔍 文中解析'),
+                        UI.el('div', { className: 'ds-popup-text' })
+                    ])
+                ])
+            ])
+        ]);
+
+        // Input Area
+        const inputArea = UI.el('div', { id: 'ds-input-area' }, [
+            UI.el('div', { id: 'ds-input-wrapper' }, [
+                UI.el('textarea', { id: 'ds-input', placeholder: 'DeepSeek AI 等待您的指令...' }),
+                UI.el('div', { id: 'ds-send-row' }, [
+                    UI.el('button', { id: 'ds-summary-btn', className: 'ds-action-btn' }, '🧠 总结'),
+                    UI.el('button', { id: 'ds-send', className: 'ds-action-btn' }, '🚀 发送')
+                ])
+            ])
+        ]);
+
+        // Assemble Main Panel
+        mainPanel.appendChild(tabHeader);
+        mainPanel.appendChild(confirmModal);
+        mainPanel.appendChild(configPanel);
+        mainPanel.appendChild(helpPanel);
+        mainPanel.appendChild(tabContent);
+        mainPanel.appendChild(UI.el('div', { id: 'ds-fn-bar' }));
+        mainPanel.appendChild(inputArea);
+
+        // Assemble Sidebar
+        container.appendChild(UI.el('div', { id: 'ds-resizer' }));
+        container.appendChild(verticalToolbar);
+        container.appendChild(mainPanel);
+
+        // Popup & FAB
+        const popupEl = UI.el('div', { id: 'ds-popup', style: { width: DS_CONFIG.settings.popupWidth, height: DS_CONFIG.settings.popupHeight } });
         popupEl.addEventListener('mouseup', () => {
             GM_setValue('ds_popup_width', popupEl.style.width);
             GM_setValue('ds_popup_height', popupEl.style.height);
         });
 
-        const fab = document.createElement('div');
-        fab.id = 'ds-fab';
-        fab.innerText = '🏠';
-        fab.style.top = DS_CONFIG.settings.fabPos.top;
+        const fab = UI.el('div', { id: 'ds-fab', style: { top: DS_CONFIG.settings.fabPos.top } }, '🏠');
         if (DS_CONFIG.settings.fabPos.side === 'right') {
             fab.style.right = '0px'; fab.classList.add('ds-fab-right');
         } else {
             fab.style.left = '0px'; fab.classList.add('ds-fab-left');
         }
+        if (!DS_CONFIG.settings.showFab) { fab.style.display = 'none'; }
 
-        document.body.appendChild(container); document.body.appendChild(popupEl); document.body.appendChild(fab);
+        document.body.appendChild(container);
+        document.body.appendChild(popupEl);
+        document.body.appendChild(fab);
 
         DOM.sidebar = container;
         DOM.popup = popupEl;
         DOM.highlightContent = document.getElementById('ds-highlight-content');
         DOM.fab = fab;
+
+        const fabSwitch = document.getElementById('cfg-show-fab');
+        if (fabSwitch) {
+            fabSwitch.addEventListener('change', (e) => {
+                 const isChecked = e.target.checked;
+                 DS_CONFIG.settings.showFab = isChecked;
+                 GM_setValue('ds_show_fab', isChecked);
+                 if(DOM.fab) DOM.fab.style.display = isChecked ? 'flex' : 'none';
+            });
+        }
+
+        // NEW: Auto Copy Switch Event
+        const autoCopySwitch = document.getElementById('cfg-auto-copy');
+        if (autoCopySwitch) {
+            autoCopySwitch.addEventListener('change', (e) => {
+                 const isChecked = e.target.checked;
+                 DS_CONFIG.settings.autoCopy = isChecked;
+                 GM_setValue('ds_auto_copy', isChecked);
+            });
+        }
 
         renderCustomButtons();
         injectStyles();
@@ -870,20 +1225,22 @@
     }
 
     function renderCustomButtons() {
-        const bar = document.getElementById('ds-fn-bar'); if (!bar) return; bar.innerText = '';
+        const bar = document.getElementById('ds-fn-bar'); if (!bar) return;
+        UI.clear(bar);
         DS_CONFIG.settings.customPrompts.forEach(item => {
             if (!item.name || !item.template) return;
-            const btn = document.createElement('div');
-            btn.className = 'fn-btn custom-prompt-btn';
-            btn.innerText = item.name; btn.title = item.template;
-            btn.onclick = () => {
-                const input = document.getElementById('ds-input');
-                if (input) {
-                    const val = input.value.trim();
-                    if (!val) { return; }
-                    askAI(val, "", "custom", null, item.template);
+            const btn = UI.el('div', {
+                className: 'fn-btn custom-prompt-btn',
+                title: item.template,
+                onclick: () => {
+                    const input = document.getElementById('ds-input');
+                    if (input) {
+                        const val = input.value.trim();
+                        if (!val) { return; }
+                        askAI(val, "", "custom", null, item.template);
+                    }
                 }
-            };
+            }, item.name);
             bar.appendChild(btn);
         });
     }
@@ -893,8 +1250,6 @@
         if (DS_CONFIG.runtime.rightPanelAbortCtrl) { DS_CONFIG.runtime.rightPanelAbortCtrl.abort(); DS_CONFIG.runtime.rightPanelAbortCtrl = null; }
         if (DS_CONFIG.runtime.inlineAbortCtrl) { DS_CONFIG.runtime.inlineAbortCtrl.abort(); DS_CONFIG.runtime.inlineAbortCtrl = null; }
         if (DS_CONFIG.runtime.popupAbortCtrl) {
-            // 只调用abort，后续的UI渲染交给streamToElement中的onError处理
-            // 如果流已经结束，abort()不会触发onError，因此不会弹出按钮
             DS_CONFIG.runtime.popupAbortCtrl.abort();
             DS_CONFIG.runtime.popupAbortCtrl = null;
         }
@@ -913,7 +1268,7 @@
 
         document.addEventListener('click', (e) => {
              if (e.target && e.target.classList.contains('ds-def-split')) {
-                 const defText = decodeURIComponent(e.target.dataset.def);
+                 const defText = e.target.dataset.def;
                  const word = DS_CONFIG.runtime.lastPopupParams.left?.hw || "";
                  if(word) window.updateRightPanelExamples(defText, word);
              }
@@ -982,7 +1337,12 @@
                         let width;
                         if (DS_CONFIG.settings.sidebarSide === 'right') { width = window.innerWidth - e.clientX; }
                         else { width = e.clientX; }
-                        if (width > 300 && width < window.innerWidth * 0.9) { DOM.sidebar.style.width = width + 'px'; GM_setValue('sidebar_width', width); DS_CONFIG.settings.sidebarWidth = width; }
+                        if (width > 300 && width < window.innerWidth * 0.9) {
+                            DOM.sidebar.style.width = width + 'px';
+                            GM_setValue('sidebar_width', width);
+                            DS_CONFIG.settings.sidebarWidth = width;
+                            updatePageLayout(); // Update push margin in real-time
+                        }
                     }
                 }
                 if (DS_CONFIG.runtime.isDraggingPopup && DOM.popup) {
@@ -1010,7 +1370,7 @@
                     if (currentSide === 'right') { DOM.fab.style.right = '0px'; DOM.fab.classList.add('ds-fab-right'); }
                     else { DOM.fab.style.left = '0px'; DOM.fab.classList.add('ds-fab-left'); }
 
-                    if (isSidebarVisible()) { hideSidebar(); } else { setSidebarSide(currentSide); showSidebar(); }
+                    if (isSidebarVisible()) { hideSidebar(); } else { showSidebar(); }
                 } else {
                     const isRight = e.clientX > window.innerWidth / 2;
                     DOM.fab.style.left = ''; DOM.fab.style.right = '';
@@ -1030,42 +1390,43 @@
         document.addEventListener('keydown', (e) => {
             if (e.key !== 'Alt') { DS_CONFIG.runtime.lastAltUpTime = 0; }
 
-            // === 核心修复: 如果Alt正按着，但用户按了别的键，立刻取消长按计时 ===
-            if (DS_CONFIG.runtime.isAltDown && e.key !== 'Alt') {
-                if (DS_CONFIG.runtime.altTimer) {
-                    clearTimeout(DS_CONFIG.runtime.altTimer);
-                    DS_CONFIG.runtime.altTimer = null;
-                }
-            }
-            // ========================================================
-
-            if (e.key === 'Alt' && !DS_CONFIG.runtime.isAltDown) {
-                DS_CONFIG.runtime.isAltDown = true;
-                DS_CONFIG.runtime.altTimer = setTimeout(() => {
-                    if (isSidebarVisible()) hideSidebar(); else showSidebar();
-                    DS_CONFIG.runtime.ignoreAltUp = true;
-                }, 500);
-            }
-
             if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName) || document.activeElement.isContentEditable) return;
+
+            // Alt + 1: Toggle Highlight (Add/Remove)
             if (e.altKey && (e.key === '1' || e.code === 'Digit1')) {
-                e.preventDefault(); DS_CONFIG.runtime.sidebarLockUntil = Date.now() + 600;
-                const sel = window.getSelection(); let range = null;
-                if (sel.rangeCount && sel.toString().trim()) { range = sel.getRangeAt(0); }
-                else { const wordObj = getCurrentSentence(); if (wordObj) { range = document.createRange(); range.setStart(wordObj.node, wordObj.s); range.setEnd(wordObj.node, wordObj.e); } }
-                if (range) {
-                    const text = range.toString().trim();
-                    if (!range.commonAncestorContainer.parentElement.classList.contains(DS_CONFIG.consts.HIGHLIGHT_CLASS)) {
-                        copyToClip(text);
-                        const mark = document.createElement('mark'); mark.className = DS_CONFIG.consts.HIGHLIGHT_CLASS; mark.appendChild(range.extractContents()); range.insertNode(mark);
-                        saveHighlights(); sel.removeAllRanges(); getDeepSeekVocabDef(text);
+                e.preventDefault();
+                DS_CONFIG.runtime.sidebarLockUntil = Date.now() + 600;
+
+                // 1. Check if hovering over existing highlight
+                const el = document.elementFromPoint(DS_CONFIG.runtime.lastX, DS_CONFIG.runtime.lastY);
+                const existingHighlight = el ? el.closest(`.${DS_CONFIG.consts.HIGHLIGHT_CLASS}`) : null;
+
+                if (existingHighlight) {
+                    removeHighlight(existingHighlight);
+                } else {
+                    const sel = window.getSelection(); let range = null;
+                    if (sel.rangeCount && sel.toString().trim()) { range = sel.getRangeAt(0); }
+                    else { const wordObj = getCurrentSentence(); if (wordObj) { range = document.createRange(); range.setStart(wordObj.node, wordObj.s); range.setEnd(wordObj.node, wordObj.e); } }
+
+                    if (range) {
+                        const text = range.toString().trim();
+                        if (!range.commonAncestorContainer.parentElement.classList.contains(DS_CONFIG.consts.HIGHLIGHT_CLASS)) {
+                            // CHECK SETTING
+                            if (DS_CONFIG.settings.autoCopy) {
+                                copyToClip(text);
+                            }
+                            const mark = document.createElement('mark'); mark.className = DS_CONFIG.consts.HIGHLIGHT_CLASS; mark.appendChild(range.extractContents()); range.insertNode(mark);
+                            saveHighlights(); sel.removeAllRanges(); getDeepSeekVocabDef(text);
+                        }
                     }
                 }
             }
+
+            // Alt + 2: Toggle Sidebar
             if (e.altKey && (e.key === '2' || e.code === 'Digit2')) {
-                e.preventDefault(); DS_CONFIG.runtime.sidebarLockUntil = Date.now() + 600;
-                const el = document.elementFromPoint(DS_CONFIG.runtime.lastX, DS_CONFIG.runtime.lastY);
-                if (el) { const hl = el.closest(`.${DS_CONFIG.consts.HIGHLIGHT_CLASS}`); if (hl) { removeHighlight(hl); return; } }
+                e.preventDefault();
+                DS_CONFIG.runtime.sidebarLockUntil = Date.now() + 600;
+                if (isSidebarVisible()) hideSidebar(); else showSidebar();
             }
         }, true);
 
@@ -1073,29 +1434,45 @@
         if (isTopWindow) {
             document.addEventListener('keyup', (e) => {
                 if (e.key === 'Alt') {
-                    clearTimeout(DS_CONFIG.runtime.altTimer);
-                    DS_CONFIG.runtime.isAltDown = false;
                     if (DOM.popup.style.display !== 'none' && !DS_CONFIG.settings.isDocked) {
                         DOM.popup.style.display = 'none';
                         DS_CONFIG.runtime.currentPopupTrigger = null;
                         return;
                     }
-                    if (DS_CONFIG.runtime.ignoreAltUp) { DS_CONFIG.runtime.ignoreAltUp = false; return; }
+
                     const now = Date.now();
                     if (now < DS_CONFIG.runtime.sidebarLockUntil) { DS_CONFIG.runtime.lastAltUpTime = 0; return; }
 
                     if (now - DS_CONFIG.runtime.lastAltUpTime < 1000) {
                         const selText = window.getSelection().toString().trim();
                         if (selText.length > 0) {
-                            copyToClip(selText);
+                            // CHECK SETTING
+                            if (DS_CONFIG.settings.autoCopy) {
+                                copyToClip(selText);
+                            }
                             let context = ""; try { context = window.getSelection().getRangeAt(0).commonAncestorContainer.parentElement.innerText; } catch(e){}
+
+                            if (isSidebarVisible() && isTopWindow) {
+                                const input = document.getElementById('ds-input');
+                                if(input) input.value = selText;
+                            }
+
                             showSmartPopup(selText, null, context, true);
                         }
                         else {
                             const wordObj = getCurrentSentence();
                             if (wordObj && wordObj.text) {
-                                copyToClip(wordObj.text);
+                                // CHECK SETTING
+                                if (DS_CONFIG.settings.autoCopy) {
+                                    copyToClip(wordObj.text);
+                                }
                                 const context = wordObj.node.parentElement ? wordObj.node.parentElement.innerText : wordObj.text;
+
+                                if (isSidebarVisible() && isTopWindow) {
+                                    const input = document.getElementById('ds-input');
+                                    if(input) input.value = wordObj.text;
+                                }
+
                                 showSmartPopup(wordObj.text, null, context, false);
                             }
                         }
@@ -1107,12 +1484,11 @@
                 }
             }, true);
 
-            // ==================== 1. 光标自动定位到末尾 ====================
             const inputEl = document.getElementById('ds-input');
             inputEl?.addEventListener('focus', function(e) {
                  setTimeout(() => {
-                    this.selectionStart = this.selectionEnd = this.value.length;
-                    this.scrollTop = this.scrollHeight;
+                   this.selectionStart = this.selectionEnd = this.value.length;
+                   this.scrollTop = this.scrollHeight;
                  }, 0);
             });
         }
@@ -1121,6 +1497,13 @@
 
         if (isTopWindow) {
             DOM.sidebar.addEventListener('click', (e) => {
+                const dockRestore = e.target.closest('.ds-dock-restore');
+                if (dockRestore) {
+                    e.stopPropagation();
+                    toggleDockingMode(false);
+                    return;
+                }
+
                 const tab = e.target.closest('.ds-tab');
                 if (tab) { switchTab(tab.dataset.tab); return; }
 
@@ -1133,7 +1516,7 @@
                     for (let el of highlights) {
                         if (el.textContent.trim() === word) {
                             el.scrollIntoView({ behavior: 'auto', block: 'center' });
-                            el.style.transition = 'background-color 0.2s';
+                            el.style.transition = 'backgroundColor 0.2s';
                             el.style.backgroundColor = '#FFD700';
                             setTimeout(() => { el.style.backgroundColor = ''; }, 600);
                             break;
@@ -1142,7 +1525,7 @@
                     return;
                 }
 
-                const targetId = e.target.id || e.target.closest('.header-action')?.id || e.target.closest('button')?.id;
+                const targetId = e.target.id || e.target.closest('.ds-v-icon')?.id || e.target.closest('.header-action')?.id || e.target.closest('button')?.id;
                 if (!targetId) return;
 
                 if (targetId === 'ds-help-btn') { const hp = document.getElementById('ds-help-panel'); if (hp) hp.style.display = hp.style.display === 'flex' ? 'none' : 'flex'; }
@@ -1152,14 +1535,26 @@
                 else if (targetId === 'ds-cfg-toggle') { const cp = document.getElementById('ds-config-panel'); if (cp) cp.style.display = cp.style.display === 'flex' ? 'none' : 'flex'; }
                 else if (targetId === 'ds-close') { hideSidebar(); }
                 else if (targetId === 'ds-side-toggle') { toggleSidebarSide(); }
+                else if (targetId === 'ds-push-toggle') { toggleSidebarPushMode(); } // NEW CLICK HANDLER
                 else if (targetId === 'save-api-key') {
-                    const cfgApiKey = document.getElementById('cfg-api-key'); const cfgPrompts = document.getElementById('cfg-prompts');
+                    const cfgApiKey = document.getElementById('cfg-api-key');
+                    const cfgPrompts = document.getElementById('cfg-prompts');
+                    const cfgDisabled = document.getElementById('cfg-disabled-sites');
+
                     if (!cfgApiKey) return;
                     DS_CONFIG.settings.apiKey = cfgApiKey.value;
+
                     const rawLines = cfgPrompts.value.split('\n'); DS_CONFIG.settings.customPrompts = [];
                     rawLines.forEach(line => {
                         if (line.includes('=')) { const parts = line.split('='); if (parts.length >= 2) { const name = parts[0].trim(); const template = line.substring(line.indexOf('=') + 1).trim(); if(name && template) DS_CONFIG.settings.customPrompts.push({name, template}); } }
                     });
+
+                    if (cfgDisabled) {
+                        const sites = cfgDisabled.value.split('\n').map(s => s.trim()).filter(s => s !== '');
+                        DS_CONFIG.settings.disabledSites = sites;
+                        GM_setValue('ds_disabled_sites', sites);
+                    }
+
                     GM_setValue('ds_api_key', DS_CONFIG.settings.apiKey); GM_setValue('ds_custom_prompts', DS_CONFIG.settings.customPrompts);
                     renderCustomButtons();
                     document.getElementById('ds-config-panel').style.display = 'none';
@@ -1177,9 +1572,6 @@
                     location.reload();
                 }
                 else if (targetId === 'ds-confirm-no') { document.getElementById('ds-confirm-modal').style.display = 'none'; }
-                else if (targetId === 'ds-undock-btn') {
-                    toggleDockingMode(false);
-                }
             });
 
             document.getElementById('ds-chat-log')?.addEventListener('contextmenu', (e) => { e.preventDefault(); if (DS_CONFIG.runtime.abortCtrl) { DS_CONFIG.runtime.abortCtrl.abort(); } });
@@ -1223,9 +1615,7 @@
                 e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation(); clearAllInlineTranslations();
                 let sel = window.getSelection().toString().trim(); let container = e.target;
                 const renderTrans = (nodeToInsertAfter) => {
-                    const transSpan = document.createElement('div');
-                    transSpan.className = 'web-inline-trans';
-                    transSpan.textContent = "DeepSeek 思考中...";
+                    const transSpan = UI.el('div', { className: 'web-inline-trans' }, 'DeepSeek 思考中...');
                     nodeToInsertAfter.after(transSpan);
                     return transSpan;
                 };
@@ -1239,7 +1629,8 @@
                 else {
                     while (container && container !== document.body && window.getComputedStyle(container).display === 'inline') container = container.parentElement; const text = container.textContent.trim();
                     if (text.length > 2) {
-                        const tempSpan = document.createElement('div'); container.appendChild(tempSpan); tempSpan.className = 'web-inline-trans'; tempSpan.textContent = "DeepSeek 思考中...";
+                        const tempSpan = UI.el('div', { className: 'web-inline-trans' }, 'DeepSeek 思考中...');
+                        container.appendChild(tempSpan);
                         if (DS_CONFIG.runtime.inlineAbortCtrl) DS_CONFIG.runtime.inlineAbortCtrl.abort();
                         DS_CONFIG.runtime.inlineAbortCtrl = new AbortController();
                         streamDeepSeekInline(text, tempSpan, DS_CONFIG.runtime.inlineAbortCtrl.signal);
@@ -1250,7 +1641,10 @@
             if (targetHighlight && e.button === 0 && !e.altKey) {
                 e.preventDefault(); e.stopPropagation();
                 const text = targetHighlight.textContent.trim(); const parentBlock = targetHighlight.closest('p, div, li, h1, h2, h3') || targetHighlight.parentElement; const context = parentBlock ? parentBlock.innerText : text;
-                copyToClip(text);
+                // CHECK SETTING
+                if (DS_CONFIG.settings.autoCopy) {
+                    copyToClip(text);
+                }
                 if (isSidebarVisible() && isTopWindow) { const input = document.getElementById('ds-input'); if(input) { input.value = text; } }
                 const isWord = (text.split(/\s+/).length <= 3 && text.length < 30);
                 if (isWord) {
@@ -1265,9 +1659,7 @@
                 }
                 else {
                       clearAllInlineTranslations();
-                      const transSpan = document.createElement('div');
-                      transSpan.className = 'web-inline-trans';
-                      transSpan.textContent = "DeepSeek 思考中...";
+                      const transSpan = UI.el('div', { className: 'web-inline-trans' }, 'DeepSeek 思考中...');
                       if (targetHighlight.nextSibling) targetHighlight.parentNode.insertBefore(transSpan, targetHighlight.nextSibling); else targetHighlight.parentNode.appendChild(transSpan);
                       if (DS_CONFIG.runtime.inlineAbortCtrl) DS_CONFIG.runtime.inlineAbortCtrl.abort();
                       DS_CONFIG.runtime.inlineAbortCtrl = new AbortController();
@@ -1279,6 +1671,18 @@
 
     function initTimedTasks() { setInterval(() => { if (!DS_CONFIG.runtime.isRestoring && isSidebarVisible()) { applySavedHighlights(); } }, 2000); }
     async function init() {
+        const currentUrl = window.location.href;
+        const currentHost = window.location.hostname;
+        const isDisabled = DS_CONFIG.settings.disabledSites.some(site => {
+            if (!site) return false;
+            return currentUrl.toLowerCase().includes(site.toLowerCase()) || currentHost.toLowerCase().includes(site.toLowerCase());
+        });
+
+        if (isDisabled) {
+            console.log('[AI语言学习专家] 当前网站在黑名单中，脚本已停止运行。');
+            return;
+        }
+
         buildUI();
         bindEvents();
         initTimedTasks();

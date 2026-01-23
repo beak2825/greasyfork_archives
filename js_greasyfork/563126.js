@@ -1,9 +1,10 @@
 // ==UserScript==
 // @name         AO3 Hide Muted Users Notification
 // @namespace    https://aglioeollieo.neocities.org/misc#script
-// @version      1.0
+// @version      1.1
 // @description  Hides the "You have muted some users" notification on AO3
-// @author       You
+// @author       aglioeollieo
+// @icon         https://www.google.com/s2/favicons?domain=archiveofourown.org
 // @match        https://archiveofourown.org/*
 // @grant        none
 // @license MIT

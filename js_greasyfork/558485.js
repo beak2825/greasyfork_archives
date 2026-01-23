@@ -5707,9 +5707,11 @@
     'stackoverflow.com',
     'superuser.com',
     't.me',
+    'discord.com',
+    'wsrv.nl',
     'external-content.duckduckgo.com',
     'proxy.duckduckgo.com',
-    'wsrv.nl',
+    'images.unsplash.com',
   ])
   var BLACKLIST_URL_PATTERNS = /* @__PURE__ */ new Set([
     /^https:\/\/www\.google\.com\/search\?.*[&?]udm=50/,

@@ -1,16 +1,16 @@
 // ==UserScript==
-// @name         豆包网页性能优化脚本v1.2
+// @name         豆包网页性能优化脚本v1.3
 // @namespace    http://tampermonkey.net/
-// @version      1.2
-// @description  豆包网页版专属轻量化优化工具，聚焦滚动卡顿与渲染延迟，不干扰原生功能
-// @author       豆包和我
+// @version      1.3
+// @description  保留核心渲染优化+代码块浮动操作栏，解决豆包网页滚动/渲染卡顿问题
+// @author       元宝和豆包和我
 // @match        https://www.doubao.com/*
 // @match        https://doubao.com/*
 // @license      MIT
 // @grant        none
 // @run-at       document-start
-// @downloadURL https://update.greasyfork.org/scripts/559797/%E8%B1%86%E5%8C%85%E7%BD%91%E9%A1%B5%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E8%84%9A%E6%9C%ACv12.user.js
-// @updateURL https://update.greasyfork.org/scripts/559797/%E8%B1%86%E5%8C%85%E7%BD%91%E9%A1%B5%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E8%84%9A%E6%9C%ACv12.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/559797/%E8%B1%86%E5%8C%85%E7%BD%91%E9%A1%B5%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E8%84%9A%E6%9C%ACv13.user.js
+// @updateURL https://update.greasyfork.org/scripts/559797/%E8%B1%86%E5%8C%85%E7%BD%91%E9%A1%B5%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E8%84%9A%E6%9C%ACv13.meta.js
 // ==/UserScript==
 
 (function() {
@@ -29,7 +29,7 @@
         }
 
         init() {
-            console.log('🐰 豆包优化脚本启动中（仅保留渲染优化）...');
+            console.log('🐰 豆包优化脚本启动中（保留渲染优化+代码块操作栏）...');
             // 等待DOM加载完成后执行渲染优化
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', () => this.applyOptimizations());
@@ -41,28 +41,35 @@
         applyOptimizations() {
             if (this.optimizationsApplied) return;
             console.log('🔧 应用豆包渲染优化...');
-            
+
             // 仅执行渲染优化，删除所有其他逻辑
             this.optimizeRendering();
-            
+
             this.optimizationsApplied = true;
-            console.log('✅ 渲染优化完成（仅保留核心渲染优化）');
+            console.log('✅ 渲染优化完成（保留核心渲染+代码块操作栏）');
         }
 
         // 核心：渲染优化（GPU加速 + 滚动容器优化）
         optimizeRendering() {
-            // 1. GPU硬件加速（核心）
+            // 1. GPU硬件加速（核心：精准选择聊天容器，避开代码块操作栏）
             if (OPTIMIZATION_CONFIG.enableHardwareAcceleration) {
                 const style = document.createElement('style');
+                // 关键修改1：只针对聊天主容器/消息列表（排除代码块操作栏）
                 style.textContent = `
-                    .chat-container, .message-list, .scroll-container {
+                    /* 仅优化聊天核心容器，完全避开代码块操作栏 */
+                    .chat-container:not([class*="code"]):not([class*="header"]),
+                    .message-list:not([class*="code"]):not([class*="header"]),
+                    .scroll-container:not([class*="code"]):not([class*="header"]) {
                         transform: translateZ(0); // 触发GPU加速
                         backface-visibility: hidden; // 减少重绘
-                        perspective: 1000px; 
+                        perspective: 1000px;
                         will-change: transform; // 浏览器提前优化
                     }
-                    .message-item { contain: layout style paint; } // 隔离消息渲染
-                    .fixed-element { position: fixed; z-index: 1000; } // 减少重绘区域
+                    /* 仅优化消息项，排除代码块相关元素 */
+                    .message-item:not([class*="code"]):not([class*="header"]) {
+                        contain: layout style paint;
+                    }
+                    /* 移除可能干扰操作栏的fixed样式规则 */
                 `;
                 document.head.appendChild(style);
             }
@@ -86,6 +93,13 @@
             // 优化现有滚动容器
             const optimizeElement = (element) => {
                 if (element) {
+                    // 关键修改2：排除代码块操作栏相关元素
+                    if (element.classList.toString().includes('code') ||
+                        element.classList.toString().includes('header') ||
+                        element.closest('[class*="code"]') ||
+                        element.closest('[class*="header"]')) {
+                        return; // 跳过代码块操作栏元素
+                    }
                     element.style.webkitOverflowScrolling = 'touch'; // 流畅滚动
                     element.style.overflowScrolling = 'touch';
                     element.style.transform = 'translateZ(0)'; // 滚动容器GPU加速
@@ -126,5 +140,5 @@
     const optimizer = new DoubaoOptimizer();
     window.DoubaoOptimizer = optimizer;
 
-    console.log('🐰 豆包性能优化脚本加载完成（仅保留渲染优化）！');
+    console.log('🐰 豆包性能优化脚本加载完成（保留渲染优化+代码块操作栏）！');
 })();

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         全网通用返回顶部按钮
 // @namespace    http://tampermonkey.net/
-// @version      1.02
+// @version      1.03
 // @description  美化界面：在所有页面增加一个返回顶部按钮，位于右下角，支持平滑滚动。智能逻辑：如果检测到页面自带返回顶部按钮，则自动隐藏。
 // @author       Rcccccccc
 // @match        *://*/*
@@ -115,12 +115,19 @@
 
             // 针对特定网站补充的规则：
             '[class*="ontop"]',             // 匹配 class="float-btn ontop..."
-            '[class*="fbar_top"]',          // 匹配 class="tbui_aside_fbar_button tbui_fbar_top" (贴吧)
+            '[class*="fbar_top"]',          // 匹配 贴吧
+            '[class*="el-backtop"]',        // 匹配 Element UI 组件
+            '[class*="toolkit-item-back"]', // 匹配 淘宝/天猫 toolkit
+            '[class*="elevator_totop"]',    // 匹配 B站等电梯导航
+            '[data-name="backTop"]',        // 匹配 淘宝/天猫 toolkit data-name
+            '[data-label="回顶部"]',        // 匹配 淘宝/天猫 toolkit data-label
             '[data-original-title="返回顶部"]', // 匹配 Bootstrap 提示工具
             '[href*="scrollTo"]',           // 匹配 href="javascript:(scrollTo());"
 
             // 属性匹配
             '[title="返回顶部"]',
+            '[title="回到顶部"]',
+            '[title="回顶部"]',
             '[aria-label="返回顶部"]',
             '[title="Top"]'
         ];

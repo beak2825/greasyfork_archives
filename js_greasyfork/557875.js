@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MWCA-让微博重新干净（又卫生）
 // @namespace    http://tampermonkey.net/
-// @version      1.3
+// @version      1.4
 // @license      CC BY 4.0
 // @description  让微博重新干净（又卫生）
 // @author       qiqikuka
@@ -21,16 +21,41 @@
 
     // ======= 0. 设置项管理 =======
     let showSidebar = GM_getValue("mwca_show_sidebar", true);
+    let showPublishCard = GM_getValue("mwca_show_publish_card", false);
 
     GM_registerMenuCommand(showSidebar ? "🚫 隐藏首页左侧栏" : "✅ 显示首页左侧栏", () => {
         GM_setValue("mwca_show_sidebar", !showSidebar);
         location.reload();
     });
 
-   
+    GM_registerMenuCommand(showPublishCard ? "🚫 隐藏发微博模块" : "✅ 显示发微博模块", () => {
+        GM_setValue("mwca_show_publish_card", !showPublishCard);
+        location.reload();
+    });
+
 
     // ======= 2. 核心 CSS 布局 =======
     GM_addStyle(`
+/* 替换评论图标：仅隐藏原有字体图标，保留容器 */
+.woo-font.woo-font--comment._commentIcon_198pe_122::before {
+    content: none !important; /* 清除原有字体图标 */
+}
+/* 强制图标容器样式，保证SVG显示 */
+.woo-font.woo-font--comment._commentIcon_198pe_122 {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 1em !important;
+    height: 1em !important;
+    color: inherit !important; /* 继承父元素颜色 */
+}
+/* 强制SVG继承颜色，且不超出容器 */
+.woo-font.woo-font--comment._commentIcon_198pe_122 svg {
+    width: 100% !important;
+    height: 100% !important;
+    fill: currentColor !important; /* 关键：继承容器颜色 */
+    stroke: none !important;
+}
         /* [1] 物理中心锁定 */
         main.Main_wrap_2GRrG, [class*="Main_wrap"], [class*="Frame_main"] {
             display: flex !important;
@@ -57,6 +82,11 @@
             border: 1px solid rgba(0,0,0,0.06) !important;
             margin-bottom: 16px !important;
             box-sizing: border-box !important;
+        }
+        /* [3.1] 发微博模块圆角样式 */
+        [class*="_publishCard_gykin_"] {
+            border-radius: 20px !important;
+            display: ${showPublishCard ? "block" : "none"} !important;
         }
 
         /* --- 个人主页 (Profile) 深度定制 --- */
@@ -169,7 +199,6 @@ html[data-theme='dark'] [class*="_visable_r36s9_"] [class*="_btn_1v3kz_"],
         [class*="_emptyPic_"],
         [class*="_aria_pn2mr_"],
         [class*="_backTop_imrbt_"],
-        [class*="_publishCard_"],
         [class*="Main_side"],
         [class*="Frame_side"],
         [class*="Links_box"],
@@ -190,6 +219,66 @@ html[data-theme='dark'] [class*="_visable_r36s9_"] [class*="_btn_1v3kz_"],
         div[class*="BackTop_wrap"] {
             display: none !important;
         }
+/* ==================================================
+   MWCA 评论区稳定修复（只追加）
+   ================================================== */
+
+/* 1. 评论输入框：宽度 & 自动高度不炸 */
+.wbpro-form textarea,
+textarea#comment-textarea {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    resize: none !important;
+    min-height: 24px !important;
+    line-height: 24px !important;
+}
+
+/* 2. 评论工具栏整体横排 */
+._mar1_1n75r_2 > .woo-box-flex {
+    display: flex !important;
+    align-items: center !important;
+    flex-wrap: nowrap !important;
+    gap: 8px !important;
+}
+
+/* 3. 表情 / 图片 图标区 */
+._mar1_1n75r_2 ._iconbox2_1n75r_10 {
+    display: flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+}
+
+/* 4. “同时转发”修复（外层 + 本体） */
+._mar1_1n75r_2 > .woo-box-flex > .woo-box-item-flex {
+    min-width: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    flex: 0 0 auto !important;
+}
+
+._check_1n75r_18 {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    line-height: 1 !important;
+}
+
+._check_1n75r_18 .woo-checkbox-text {
+    white-space: nowrap !important;
+    writing-mode: horizontal-tb !important;
+}
+
+/* 5. 隐藏评论字数 */
+._mar1_1n75r_2 ._count_1n75r_33 {
+    display: none !important;
+}
+
+/* 6. 评论按钮靠右 */
+._mar1_1n75r_2 button.woo-button-main {
+    margin-left: auto !important;
+    flex-shrink: 0 !important;
+}
 
         /* ... 其余原有 CSS 保持不变 ... */
         [class*="_side_1ubn9_"] [class*="_main_mmtyp_"],
@@ -248,6 +337,29 @@ html[data-theme='dark'] [class*="_visable_r36s9_"] [class*="_btn_1v3kz_"],
             const pattern = /\/(mw690|mw1024|mw2000|orj360|orj480|thumbnail)\//;
             if (pattern.test(img.src)) { img.src = img.src.replace(pattern, '/large/'); img.dataset.processed = "true"; }
         });
+// 替换评论图标为新SVG（修正坐标+适配尺寸）
+document.querySelectorAll('.woo-font.woo-font--comment._commentIcon_198pe_122').forEach(iconEl => {
+    if (iconEl.dataset.svgReplaced) return; // 避免重复替换
+
+    // 创建新SVG元素
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('viewBox', '0 0 32 32');
+    svg.style.width = '100%';
+    svg.style.height = '100%';
+    svg.style.fill = 'currentColor'; // 继承原有颜色
+    svg.style.flex = 'none';
+
+    // 修正SVG路径（原坐标translate(-100,-255)，还原为0-32视口）
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', 'M16,26 C14.832,26 13.704,25.864 12.62,25.633 L7.912,28.463 L7.975,23.824 C4.366,21.654 2,18.066 2,14 C2,7.373 8.268,2 16,2 C23.732,2 30,7.373 30,14 C30,20.628 23.732,26 16,26 L16,26 Z M16,0 C7.164,0 0,6.269 0,14 C0,18.419 2.345,22.354 6,24.919 L6,32 L13.009,27.747 C13.979,27.907 14.977,28 16,28 C24.836,28 32,21.732 32,14 C32,6.269 24.836,0 16,0 L16,0 Z');
+    path.style.fill = 'currentColor';
+    svg.appendChild(path);
+
+    // 替换图标内容
+    iconEl.innerHTML = '';
+    iconEl.appendChild(svg);
+    iconEl.dataset.svgReplaced = 'true';
+});
         injectNewBackTop();
     }
 

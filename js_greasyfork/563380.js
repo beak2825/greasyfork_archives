@@ -1,15 +1,15 @@
 // ==UserScript==
-// @name         Reddit Mobile Smart Navbar 
+// @name         Reddit Mobile Smart Navbar (No Custom Buttons)
 // @namespace    https://www.reddit.com/user/legendary_warrior_1/
-// @version      9.4
-// @description  Applies Smart Navbar ONLY on Main Feeds. Adds Search & Chat buttons. Fixes layout on Subreddits.Fixes pause and mute vidios.
+// @version      9.5
+// @description  Applies Smart Navbar ONLY on Main Feeds. Fixes layout on Subreddits. Fixes pause and mute videos. (Search/Chat buttons removed).
 // @author       legendary_warrior_1
 // @match        https://www.reddit.com/*
 // @match        https://reddit.com/*
 // @grant        none
 // @license      MIT
-// @downloadURL https://update.greasyfork.org/scripts/563380/Reddit%20Mobile%20Smart%20Navbar.user.js
-// @updateURL https://update.greasyfork.org/scripts/563380/Reddit%20Mobile%20Smart%20Navbar.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/563380/Reddit%20Mobile%20Smart%20Navbar%20%28No%20Custom%20Buttons%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/563380/Reddit%20Mobile%20Smart%20Navbar%20%28No%20Custom%20Buttons%29.meta.js
 // ==/UserScript==
 (function() {
     'use strict';
@@ -27,15 +27,6 @@
             body.custom-layout-active header.nav-hidden { transform: translateY(-100%) !important; }
             body.custom-layout-active { padding-top: 58px !important; background-color: #000 !important; }
 
-            /* CUSTOM BUTTONS (SEARCH & CHAT) */
-            #custom-search-btn, #custom-chat-btn {
-                display: inline-flex !important; align-items: center; justify-content: center;
-                width: 32px; height: 32px; margin-right: 4px; border-radius: 50%;
-                color: #d7dadc; text-decoration: none; background: transparent;
-            }
-            #custom-search-btn:active, #custom-chat-btn:active { background-color: #333; }
-            #custom-search-btn svg, #custom-chat-btn svg { width: 20px; height: 20px; fill: currentColor; }
-            
             /* ADJUST RIGHT SIDE CONTAINER */
             body.custom-layout-active .right-side-actions { 
                 display: flex !important; flex-direction: row !important; align-items: center !important; white-space: nowrap !important; 
@@ -165,10 +156,7 @@
             injectCustomButtons();
         } else {
             if (body.classList.contains('custom-layout-active')) body.classList.remove('custom-layout-active');
-            const searchBtn = document.getElementById('custom-search-btn');
-            const chatBtn = document.getElementById('custom-chat-btn');
-            if (searchBtn) searchBtn.remove();
-            if (chatBtn) chatBtn.remove();
+            // Logic to remove custom buttons deleted here since they are no longer added
         }
     }
 
@@ -180,29 +168,8 @@
         if (createBtn) {
             const parentContainer = createBtn.parentNode;
             parentContainer.classList.add('right-side-actions');
-
-            // 1. Inject Search Button if missing
-            if (!document.getElementById('custom-search-btn')) {
-                const searchBtn = document.createElement('a');
-                searchBtn.id = 'custom-search-btn';
-                searchBtn.href = '/search'; 
-                searchBtn.innerHTML = `<svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M15.59,13.91l2.78,2.69a1.25,1.25,0,1,1-1.74,1.8l-2.82-2.73a8,8,0,1,1,1.78-1.76ZM13.5,8.5a5,5,0,1,0-5,5A5,5,0,0,0,13.5,8.5Z"/></svg>`;
-                parentContainer.insertBefore(searchBtn, createBtn);
-            }
-
-            // 2. Inject Chat Button if missing
-            if (!document.getElementById('custom-chat-btn')) {
-                const chatBtn = document.createElement('a');
-                chatBtn.id = 'custom-chat-btn';
-                chatBtn.href = '/chat'; 
-                chatBtn.innerHTML = `<svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M10 2C5.58 2 2 5.13 2 9c0 2.38 1.19 4.47 3.37 5.79-.1.88-.63 2.54-.7 2.74-.15.42.36.85.78.65 1.76-.83 3.44-1.84 3.96-2.16.2.01.39.03.59.03 4.42 0 8-3.13 8-7s-3.58-7-8-7z" fill="none" stroke="currentColor" stroke-width="1.5"/>
-                    <circle cx="6" cy="9" r="1" fill="currentColor"/>
-                    <circle cx="10" cy="9" r="1" fill="currentColor"/>
-                    <circle cx="14" cy="9" r="1" fill="currentColor"/>
-                </svg>`;
-                parentContainer.insertBefore(chatBtn, createBtn);
-            }
+            
+            // CUSTOM SEARCH AND CHAT BUTTON INJECTION REMOVED
         }
     }
 

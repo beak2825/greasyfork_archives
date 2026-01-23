@@ -2,8 +2,8 @@
 // @name           Bloqueador de localização
 // @description    Bloqueia o acesso de sites a sua localização automaticamente
 // @namespace      CowanLOCALIZAÇÃO 
-// @license        CowBas
-// @version        1.0
+// @license        GPL-3.0
+// @version        2.0
 // @author         Cowanbas
 // @match          *://*/*
 // @run-at         document-start
@@ -33,5 +33,6 @@
       });
     }
   };
+
 
 })();

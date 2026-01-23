@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Linux.do Assistant
 // @namespace    https://linux.do/
-// @version      6.1.0
+// @version      6.2.0
 // @description  Linux.do 仪表盘 - 信任级别进度 & 积分查看 & CDK社区分数 & 主页筛选工具 (支持全等级)
 // @author       Sauterne@Linux.do
 // @match        https://linux.do/*
@@ -630,10 +630,21 @@
             for (let i = 0; i < attempts; i++) {
                 try {
                     const res = await new Promise((resolve, reject) => {
+                        // 判断是否是主站 linux.do 请求（非子域名）
+                        const isMainSite = url.includes('linux.do') && 
+                            !url.includes('connect.linux.do') && 
+                            !url.includes('credit.linux.do') && 
+                            !url.includes('cdk.linux.do');
+                        
+                        // 主站请求需要添加 CSRF Token 和 Discourse headers
+                        const requestHeaders = isMainSite
+                            ? { ...Utils.getDiscourseHeaders(), 'Cache-Control': 'no-cache', ...headers }
+                            : { 'Cache-Control': 'no-cache', ...headers };
+                        
                         const reqConfig = {
                             method: 'GET',
                             url,
-                            headers: { 'Cache-Control': 'no-cache', ...headers },
+                            headers: requestHeaders,
                             anonymous: false, // 确保跨域请求发送 cookie
                             timeout,
                             ...validOptions,
@@ -642,7 +653,8 @@
                             ontimeout: () => reject(new Error('timeout'))
                         };
                         // Firefox + Tampermonkey 需要显式设置 withCredentials 以确保跨域 cookie 发送
-                        if (withCredentials) {
+                        // 主站请求也需要 withCredentials 以携带 cookie
+                        if (withCredentials || isMainSite) {
                             reqConfig.withCredentials = true;
                         }
                         GM_xmlhttpRequest(reqConfig);
@@ -679,6 +691,23 @@
         static html(strings, ...values) { return strings.reduce((r, s, i) => r + s + (values[i] || ''), ''); }
         static el(s, p = document) { return p.querySelector(s); }
         static els(s, p = document) { return p.querySelectorAll(s); }
+
+        // 获取 CSRF Token（从页面 meta 标签）
+        static getCsrfToken() {
+            const meta = document.querySelector('meta[name="csrf-token"]');
+            return meta?.getAttribute('content') || '';
+        }
+
+        // 获取主站请求的标准 headers（包含 CSRF Token）
+        static getDiscourseHeaders() {
+            return {
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                'Discourse-Logged-In': 'true',
+                'Discourse-Present': 'true',
+                'X-CSRF-Token': Utils.getCsrfToken()
+            };
+        }
 
         // 获取当前登录用户名（保留旧逻辑，作为兜底）
         static getCurrentUsername() {
@@ -739,12 +768,7 @@
             try {
                 const r = await fetch('/session/current', {
                     credentials: 'include',
-                    headers: {
-                        'Accept': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'Discourse-Logged-In': 'true',
-                        'Discourse-Present': 'true'
-                    }
+                    headers: Utils.getDiscourseHeaders()
                 });
                 // 429 处理：设置 session 分组锁
                 if (r.status === 429) {
@@ -896,7 +920,10 @@
             // 记录请求时间戳
             Utils.recordRequest('user');
             try {
-                const r = await fetch(CONFIG.API.USER_INFO(username), { credentials: 'include' });
+                const r = await fetch(CONFIG.API.USER_INFO(username), {
+                    credentials: 'include',
+                    headers: Utils.getDiscourseHeaders()
+                });
                 // 429 处理：设置 user 分组锁
                 if (r.status === 429) {
                     const retryAfter = parseInt(r.headers.get('Retry-After') || '60', 10);
@@ -926,7 +953,10 @@
             // 记录请求时间戳
             Utils.recordRequest('user');
             try {
-                const r = await fetch(CONFIG.API.USER_SUMMARY(username), { credentials: 'include' });
+                const r = await fetch(CONFIG.API.USER_SUMMARY(username), {
+                    credentials: 'include',
+                    headers: Utils.getDiscourseHeaders()
+                });
                 // 429 处理：设置 user 分组锁
                 if (r.status === 429) {
                     const retryAfter = parseInt(r.headers.get('Retry-After') || '60', 10);
@@ -990,12 +1020,8 @@
                         // 使用 Discourse 友好的请求方式，避免 429 限流
                         const r = await fetch(url, {
                             signal: controller.signal,
-                            headers: {
-                                'Accept': 'application/json',
-                                'X-Requested-With': 'XMLHttpRequest',
-                                'Discourse-Logged-In': 'true',
-                                'Discourse-Present': 'true'
-                            }
+                            credentials: 'include',
+                            headers: Utils.getDiscourseHeaders()
                         });
                         clearTimeout(timer);
                         // 4xx 熔断：客户端错误不重试

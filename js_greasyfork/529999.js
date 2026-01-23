@@ -1,14 +1,14 @@
 // ==UserScript==
-// @name          Anonimato
+// @name          Cowanimato
 // @description   Um UserScript que tenta fazer com que você fique anonimo ao maximo na internet.
 // @namespace     CowanNIMO
-// @license       CowBas
-// @version       1.0
+// @license       GPL-3.0
+// @version       2.0
 // @author        Cowanbas
 // @match         *://*/*
-// @run-at       document-start
-// @downloadURL https://update.greasyfork.org/scripts/529999/Anonimato.user.js
-// @updateURL https://update.greasyfork.org/scripts/529999/Anonimato.meta.js
+// @run-at        document-start
+// @downloadURL https://update.greasyfork.org/scripts/529999/Cowanimato.user.js
+// @updateURL https://update.greasyfork.org/scripts/529999/Cowanimato.meta.js
 // ==/UserScript==
 
 (function () {
@@ -73,5 +73,95 @@
     fakeWebGL(WebGL2RenderingContext.prototype);
   };
   blockFingerprinting();
+
+  // Função utilitária para redefinir propriedades de objetos (usada nas novas proteções)
+  function redefine(obj, prop, value) {
+    try {
+      Object.defineProperty(obj, prop, { get: () => value, set: () => { }, configurable: true });
+    } catch (e) { }
+  }
+
+  // Acrescenta propriedades extras ao navigator
+  redefine(navigator, 'languages', ['en-US', 'en']);
+  redefine(navigator, 'deviceMemory', 8);
+
+  // Canvas extra - Protege toDataURL e toBlob
+  if (window.CanvasRenderingContext2D) {
+    const ctxProto = CanvasRenderingContext2D.prototype;
+    if (!ctxProto._anonimato_patched) {
+      const scramble = str => str.split('').reverse().join('');
+      const origToDataURL = ctxProto.toDataURL;
+      ctxProto.toDataURL = function () {
+        return scramble(origToDataURL.apply(this, arguments));
+      };
+      const origToBlob = ctxProto.toBlob;
+      ctxProto.toBlob = function (callback, ...args) {
+        origToBlob.call(this, function (blob) {
+          callback(blob);
+        }, ...args);
+      };
+      ctxProto._anonimato_patched = true;
+    }
+  }
+
+  // Protege AudioContext (fingerprinting)
+  if (window.OfflineAudioContext) {
+    const origStartRendering = OfflineAudioContext.prototype.startRendering;
+    OfflineAudioContext.prototype.startRendering = function () {
+      this.oncomplete = null;
+      return origStartRendering.apply(this, arguments);
+    };
+  }
+
+  // Remove ou neutraliza APIs de rastreamento
+  const blockAPIs = [
+    'deviceorientation', 'devicemotion', 'geolocation', 'clipboard', 'bluetooth'
+  ];
+  blockAPIs.forEach(api => {
+    if (navigator[api]) redefine(navigator, api, undefined);
+  });
+
+  // Remove permissões de rastreamento (Geolocalização, etc)
+  if (navigator.permissions) {
+    const originalQuery = navigator.permissions.query;
+    navigator.permissions.query = function (parameters) {
+      if (parameters.name === 'geolocation') {
+        return Promise.resolve({ state: 'denied' });
+      }
+      return originalQuery.apply(this, arguments);
+    };
+  }
+
+  // Tenta bloquear WebRTC (vaza IP local)
+  if (window.RTCPeerConnection) {
+    window.RTCPeerConnection = function () {
+      throw new Error('WebRTC blocked');
+    };
+  }
+
+  // Limpa localStorage e sessionStorage
+  try { localStorage.clear(); } catch (e) { }
+  try { sessionStorage.clear(); } catch (e) { }
+
+  // Remove Service Workers
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then(function (registrations) {
+      for (let registration of registrations) {
+        registration.unregister();
+      }
+    });
+  }
+
+  // Remove event listeners suspeitos
+  window.addEventListener = function () { };
+  document.addEventListener = function () { };
+
+  // Remove métodos de fingerprinting conhecidos
+  if (window.Intl) window.Intl = undefined;
+  if (window.screen) {
+    redefine(window.screen, 'width', 1920);
+    redefine(window.screen, 'height', 1080);
+    redefine(window.screen, 'colorDepth', 24);
+  }
 
 })();

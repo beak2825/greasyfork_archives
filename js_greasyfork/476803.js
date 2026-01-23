@@ -621,7 +621,8 @@
 
     // 建立好評引導提示（含序號領額度）
     createRatingPrompt: (visitorId) => {
-      const shortCode = (visitorId || '').substring(0, 6).toUpperCase();
+      const parts = (visitorId || '').split('_');
+      const shortCode = (parts[2] || parts[1] || visitorId || '').substring(0, 6).toUpperCase();
       const prompt = document.createElement('div');
       prompt.className = 'lurlhub-rating-prompt';
       prompt.innerHTML = `

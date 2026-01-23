@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         自动输入二次确认文本
 // @namespace    npm/vite-plugin-monkey
-// @version      1.0.9
+// @version      1.0.11
 // @author       bmqy
 // @description  自动输入需要二次确认的文本
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IArs4c6QAAAcJJREFUeF7tWttxwjAQXDohnZBOoBJCJaSTpBPoBHIZG2SPjM6nEyNbqx8zg3QjrXfvYd0GjY9N4+cHASADGkeAEmicAHSClEDFEtgBOAKQ55zxC+D0t06eyVEzAy4AtskTxCfI4T81a9cKwBXAx9IB2HcSmMuC1Uhg6gXeRn9ksThrsYZiBeYQADJgiEAWi7MWF6C3xmQxCUjCcc6IvZrNa+dIGOu9ufwORwoAiRqSQEkUiQ2xd+gTpZABP4asS3sg67yvLqubA4C8xKnD93YeeUIIwBhZ66Y915UCQPb4f/aaAfjuqDoGVCMBYUGqhkgCUKuDTAEwK4F6xQAC4ClmR1tkgDETjAJHCQRoWqnlyG6VKes+yYCYdCgBSuCJgFVbKuE6TrLukz6APmCIAGuBVDXIWsDRcXmaohNkLRBxZgqKMQwyDDIMDhBgHsA8oOLP4iVvhnodJCWgiCzFp7z1YqSlq7FHD1GY71u7skrRQG6GpNvrbZejpQ7ibddaC0T3UWvF9wo0AmAshsiAGAKUgLeHcrRnjUqraZRkr3BGwxZ7hdfQLu/oTqZNLTEKuAJDAFzhXKAxMmCBL811y80z4A7Z+otB27V0OwAAAABJRU5ErkJggg==
@@ -72,7 +72,7 @@
             }
           }
           if (that.host === "vercel.com") {
-            if (element.target.nodeName.toLowerCase() == "reach-portal") {
+            if (element.target.nodeName.toLowerCase() == "div" && element.target.querySelector('div[role="dialog"]')) {
               let $modalInsetWrapper = document.querySelector("div[data-geist-modal-inset]");
               let $labelPB = $modalInsetWrapper.querySelectorAll("label p b");
               let $resourceName = $modalInsetWrapper.querySelector("input[name=resourceName]");
@@ -88,7 +88,7 @@
           if (that.host === "dash.cloudflare.com") {
             if (element.target.nodeName.toLowerCase() == "div" && element.target.querySelector("#focusFallback")) {
               let $focusFallback = element.target.querySelector("#focusFallback");
-              let $productionName = $focusFallback.querySelector("form>div strong>span");
+              let $productionName = $focusFallback.querySelector("form>div strong>span") || $focusFallback.querySelector("form>div span>p>strong");
               let $deletionChallenge = $focusFallback.querySelector("input[id=deletionChallenge]");
               if ($productionName) {
                 $deletionChallenge.value = $productionName.innerText;

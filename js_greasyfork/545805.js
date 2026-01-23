@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Portál Stavební Správy - Autofill
 // @namespace    http://tampermonkey.net/
-// @version      3.1
+// @version      4.0
 // @description  Automatické vyplňování na portálu stavební správy a plány BOZP s minimalistickým a funkčním rozhraním.
 // @author       Teodor Tomáš
 // @match        https://portal.stavebnisprava.gov.cz/*
@@ -11,6 +11,7 @@
 // @grant        GM_setValue
 // @run-at       document-idle
 // @license      GNU GPLv3
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=https://portal.stavebnisprava.gov.cz/
 // @downloadURL https://update.greasyfork.org/scripts/545805/Port%C3%A1l%20Stavebn%C3%AD%20Spr%C3%A1vy%20-%20Autofill.user.js
 // @updateURL https://update.greasyfork.org/scripts/545805/Port%C3%A1l%20Stavebn%C3%AD%20Spr%C3%A1vy%20-%20Autofill.meta.js
 // ==/UserScript==
@@ -35,6 +36,15 @@
     // =================================================================
     function runPortalStavebniSpravyScript() {
         const DB_KEY = 'autofillManagerSets';
+
+        // --- Configuration Variables ---
+        const CONFIG = {
+            SCROLL_DELAY: 100,       // Čas na scroll (ms)
+            ACTION_DELAY: 20,        // Základní prodleva mezi akcemi (ms)
+            ARES_POLL_INTERVAL: 10,  // Interval kontroly pole po kliknutí na ARES (ms)
+            RETRY_MULTIPLIER: 2      // Násobič času při opakování po chybě
+        };
+        let timeMult = 1; // Aktuální násobič času
 
         // --- Minimalist UI Styles ---
         const styles = `
@@ -76,19 +86,174 @@
             #creation-bar-input { font-size: 14px; padding: 8px 12px; border: 1px solid var(--ui-border); border-radius: var(--ui-radius); width: 280px; transition: all 0.2s ease; }
             #creation-bar-input:focus { border-color: var(--ui-accent); box-shadow: 0 0 0 3px rgba(3, 102, 214, 0.3); outline: none; }
             #creation-bar-files { margin-top: 16px; font-size: 14px; width: 600px; background: var(--ui-surface); padding: 16px; border-radius: var(--ui-radius); border: 1px solid var(--ui-border); display: flex; flex-direction: column; gap: 10px; }
-
-            /* --- OPRAVA ZAROVNÁNÍ SOUBORŮ --- */
             .file-creator-row { display: flex; justify-content: space-between; align-items: center; gap: 15px; }
             .file-title { flex-shrink: 0; }
             .file-controls { display: flex; align-items: center; gap: 10px; min-width: 0; }
             .file-status { color: var(--ui-text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-shrink: 1; }
+            /* Toasts */
+            #autofill-warning-toast { position: fixed; bottom: 20px; right: 20px; background: #fff3cd; color: #856404; border: 1px solid #ffeeba; padding: 12px 20px; border-radius: var(--ui-radius); box-shadow: var(--ui-shadow); z-index: 10003; font-family: var(--ui-font); font-size: 14px; display: none; align-items: center; gap: 10px; }
+            #autofill-success-toast { position: fixed; bottom: 20px; right: 20px; background: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 12px 20px; border-radius: var(--ui-radius); box-shadow: var(--ui-shadow); z-index: 10003; font-family: var(--ui-font); font-size: 14px; display: none; align-items: center; gap: 10px; }
+            #autofill-error-toast { position: fixed; bottom: 20px; right: 20px; background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; padding: 12px 20px; border-radius: var(--ui-radius); box-shadow: var(--ui-shadow); z-index: 10004; font-family: var(--ui-font); font-size: 14px; display: none; align-items: center; gap: 10px; }
         `;
         const styleSheet = document.createElement("style");
         styleSheet.innerText = styles;
         document.head.appendChild(styleSheet);
 
+        const warningToast = document.createElement('div');
+        warningToast.id = 'autofill-warning-toast';
+        warningToast.innerText = '⚠️ Validace selhala, opakuji vyplňování (pomaleji)...';
+        document.body.appendChild(warningToast);
+
+        const successToast = document.createElement('div');
+        successToast.id = 'autofill-success-toast';
+        successToast.innerText = '✅ Úspěšně vyplněno.';
+        document.body.appendChild(successToast);
+
+        const errorToast = document.createElement('div');
+        errorToast.id = 'autofill-error-toast';
+        errorToast.innerText = '❌ Bohužel se stále nedaří vyplnit. Vyplňte ručně zvýrazněná pole.';
+        document.body.appendChild(errorToast);
+
         class StorageManager { constructor() { this.key = DB_KEY; } async getSets() { return await GM_getValue(this.key, {}); } async saveSet(name, sequence) { const allSets = await this.getSets(); allSets[name] = sequence; await GM_setValue(this.key, allSets); } async deleteSet(name) { const allSets = await this.getSets(); if (allSets[name]) { delete allSets[name]; await GM_setValue(this.key, allSets); } } }
-        class SequenceEngine { async execute(sequence) { console.log("Spouštím scénář:", sequence); const toggleBtn = document.getElementById('autofill-manager-toggle'); toggleBtn.innerText = '⚙️'; let aresJustClicked = false; for (const step of sequence) { const element = this.findElement(step.selector); if (element) { try { element.scrollIntoView({ behavior: 'auto', block: 'center' }); await this.sleep(50); if (aresJustClicked && step.action === 'fill' && element.value) { console.log(`Přeskakuji pole ${step.selector}, bylo vyplněno z ARES.`); continue; } element.focus(); let sleepTime = 100; switch(step.action) { case 'click': element.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true })); if (element.type === 'radio') sleepTime = 700; aresJustClicked = false; break; case 'click-ares': element.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true })); sleepTime = 1500; aresJustClicked = true; break; case 'fill': case 'select': this.setNativeValue(element, step.value); if (step.action === 'select') element.dispatchEvent(new Event('change', { bubbles: true })); aresJustClicked = false; break; case 'upload': const file = this.base64ToFile(step.data, step.name, step.type); const dataTransfer = new DataTransfer(); dataTransfer.items.add(file); element.dispatchEvent(new DragEvent('drop', { dataTransfer, bubbles: true, cancelable: true })); sleepTime = 800; break; } await this.sleep(sleepTime); if (document.activeElement === element) element.blur(); await this.sleep(50); } catch (e) { console.error(`Chyba při kroku pro selector ${step.selector}:`, e); } } else { console.warn(`Element nenalezen:`, step); } } toggleBtn.innerText = '🛠️'; console.log("Scénář dokončen."); } generate(formContainer, fileData) { const sequence = []; const elements = Array.from(formContainer.querySelectorAll('input, select, textarea')); const icoFilled = new Set(); elements.sort((a, b) => (a.type === 'radio' ? 0 : 1) - (b.type === 'radio' ? 0 : 1)); elements.forEach(el => { const selector = this.getSelector(el); if (!selector) return; if (el.type === 'radio' && el.checked) { sequence.push({ action: 'click', selector }); } else if (el.type === 'checkbox' && el.checked) { sequence.push({ action: 'click', selector }); } else if (el.classList.contains('with-ico') && el.value && !icoFilled.has(selector)) { sequence.push({ action: 'fill', selector, value: el.value }); const aresButton = el.parentElement.querySelector('button.ico-btn'); if (aresButton) { const btnSelector = this.getSelector(aresButton); if(btnSelector) sequence.push({ action: 'click-ares', selector: btnSelector }); } icoFilled.add(selector); } else if ((el.type === 'text' || el.type === 'date' || el.tagName.toLowerCase() === 'textarea') && el.value && !el.classList.contains('with-ico')) { sequence.push({ action: 'fill', selector, value: el.value }); } else if (el.tagName.toLowerCase() === 'select' && el.value) { sequence.push({ action: 'select', selector, value: el.value }); } }); for (const selector in fileData) { sequence.push({ action: 'upload', selector, ...fileData[selector] }); } return sequence; } getSelector(el) { if (el.id && document.querySelectorAll(`#${CSS.escape(el.id)}`).length === 1) return `#${CSS.escape(el.id)}`; if (el.type === 'radio' && el.name && el.value) return `input[type="radio"][name="${CSS.escape(el.name)}"][value="${CSS.escape(el.value)}"]`; let path = ''; let current = el; while (current && current.nodeType === Node.ELEMENT_NODE && current.tagName.toLowerCase() !== 'body') { let segment = current.tagName.toLowerCase(); if (current.className && typeof current.className === 'string') { const classNames = current.className.trim().replace(/\s+/g, '.'); if(classNames) segment += '.' + classNames; } const siblings = Array.from(current.parentNode.children); const sameTagSiblings = siblings.filter(sibling => sibling.tagName === current.tagName); if (sameTagSiblings.length > 1) { segment += `:nth-of-type(${sameTagSiblings.indexOf(current) + 1})`; } path = segment + (path ? ' > ' + path : ''); if (current.parentElement && current.parentElement.id && document.querySelectorAll(`#${CSS.escape(current.parentElement.id)}`).length === 1) { path = '#' + CSS.escape(current.parentElement.id) + ' > ' + path; break; } current = current.parentElement; } return path; } base64ToFile(dataurl, filename, mimeType) { const arr=dataurl.split(','),bstr=atob(arr[1]);let n=bstr.length;const u8arr=new Uint8Array(n);while(n--){u8arr[n]=bstr.charCodeAt(n)}return new File([u8arr],filename,{type:mimeType}) } findElement(selector) { try { return document.querySelector(selector); } catch (e) { console.error(`Neplatný selector: "${selector}"`, e); return null; }} setNativeValue(element, value) { const s=Object.getOwnPropertyDescriptor(element.constructor.prototype,'value').set;s.call(element,value);element.dispatchEvent(new Event('input',{bubbles:true})); } sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); } }
+        class SequenceEngine {
+            async executeWithRetry(sequence) {
+                timeMult = 1;
+                // Vyčistit předchozí highlighty (pokud existují)
+                this.clearHighlights(sequence);
+
+                await this.execute(sequence);
+                if (this.validate(sequence)) {
+                    this.showSuccess(true);
+                    setTimeout(() => this.showSuccess(false), 3000);
+                    return;
+                }
+
+                // Pokud validace selže - pokus č. 2
+                this.showWarning(true);
+                console.log('Validace selhala, aktivuji bezpečný režim (4x pomaleji).');
+                timeMult = CONFIG.RETRY_MULTIPLIER;
+                await this.execute(sequence);
+                timeMult = 1;
+                this.showWarning(false);
+
+                if (this.validate(sequence)) {
+                    this.showSuccess(true);
+                    setTimeout(() => this.showSuccess(false), 3000);
+                } else {
+                    // FATÁLNÍ SELHÁNÍ
+                    console.log('Ani druhý pokus nevyšel. Zvýrazňuji chyby.');
+                    this.highlightErrors(sequence);
+                    this.showError(true);
+                    setTimeout(() => this.showError(false), 8000); // Zobrazit na 8s
+                }
+            }
+            validate(sequence) {
+                for (const step of sequence) {
+                    if (step.action === 'fill' || step.action === 'select') {
+                        const el = this.findElement(step.selector);
+                        if (!el || el.value != step.value) return false;
+                    }
+                }
+                return true;
+            }
+            highlightErrors(sequence) {
+                for (const step of sequence) {
+                    if (step.action === 'fill' || step.action === 'select') {
+                        const el = this.findElement(step.selector);
+                        if (el && el.value != step.value) {
+                             el.style.border = '2px solid var(--ui-danger)';
+                             el.style.boxShadow = '0 0 5px var(--ui-danger)';
+                        }
+                    }
+                }
+            }
+            clearHighlights(sequence) {
+                 for (const step of sequence) {
+                    if (step.action === 'fill' || step.action === 'select') {
+                        const el = this.findElement(step.selector);
+                        if (el) {
+                             el.style.border = '';
+                             el.style.boxShadow = '';
+                        }
+                    }
+                }
+            }
+            showWarning(show) { const t = document.getElementById('autofill-warning-toast'); if(t) t.style.display = show ? 'flex' : 'none'; }
+            showSuccess(show) { const t = document.getElementById('autofill-success-toast'); if(t) t.style.display = show ? 'flex' : 'none'; }
+            showError(show) { const t = document.getElementById('autofill-error-toast'); if(t) t.style.display = show ? 'flex' : 'none'; }
+
+            async execute(sequence) {
+                console.log("Spouštím scénář:", sequence, "Multiplikátor:", timeMult);
+                const toggleBtn = document.getElementById('autofill-manager-toggle');
+                toggleBtn.innerText = '⚙️';
+                let aresJustClicked = false;
+                for (let i = 0; i < sequence.length; i++) {
+                    const step = sequence[i];
+                    const element = this.findElement(step.selector);
+                    if (element) {
+                        try {
+                            element.scrollIntoView({ behavior: 'auto', block: 'center' });
+                            await this.sleep(CONFIG.SCROLL_DELAY * timeMult);
+
+                            if (aresJustClicked && step.action === 'fill' && element.value) {
+                                console.log(`Přeskakuji pole ${step.selector}, bylo vyplněno z ARES.`);
+                                continue;
+                            }
+                            element.focus();
+                            let sleepTime = CONFIG.ACTION_DELAY * timeMult;
+
+                            switch(step.action) {
+                                case 'click':
+                                    element.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true }));
+                                    if (element.type === 'radio') sleepTime = 700 * timeMult; // Rádia potřebují více času
+                                    aresJustClicked = false;
+                                    break;
+                                case 'click-ares':
+                                    element.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true }));
+                                    // Dynamická kontrola ARES
+                                    // Podíváme se na další krok ve scénáři, což je pravděpodobně Název firmy (fill)
+                                    if (sequence[i+1] && sequence[i+1].action === 'fill') {
+                                        const nextSelector = sequence[i+1].selector;
+                                        const nextEl = this.findElement(nextSelector);
+                                        if (nextEl) {
+                                            let checks = 0;
+                                            while(nextEl.value === '' && checks < 300) { // Max 3s (300 * 10ms)
+                                                await this.sleep(CONFIG.ARES_POLL_INTERVAL);
+                                                checks++;
+                                            }
+                                        } else {
+                                            await this.sleep(1500 * timeMult); // Fallback
+                                        }
+                                    } else {
+                                         await this.sleep(1500 * timeMult); // Fallback pokud není další krok
+                                    }
+                                    sleepTime = CONFIG.ACTION_DELAY * timeMult;
+                                    aresJustClicked = true;
+                                    break;
+                                case 'fill':
+                                case 'select':
+                                    this.setNativeValue(element, step.value);
+                                    if (step.action === 'select') element.dispatchEvent(new Event('change', { bubbles: true }));
+                                    aresJustClicked = false;
+                                    break;
+                                case 'upload':
+                                    const file = this.base64ToFile(step.data, step.name, step.type);
+                                    const dataTransfer = new DataTransfer();
+                                    dataTransfer.items.add(file);
+                                    element.dispatchEvent(new DragEvent('drop', { dataTransfer, bubbles: true, cancelable: true }));
+                                    sleepTime = 800 * timeMult;
+                                    break;
+                            }
+                            await this.sleep(sleepTime);
+                            if (document.activeElement === element) element.blur();
+                            await this.sleep(CONFIG.ACTION_DELAY * timeMult);
+                        } catch (e) { console.error(`Chyba při kroku pro selector ${step.selector}:`, e); }
+                    } else { console.warn(`Element nenalezen:`, step); }
+                }
+                toggleBtn.innerText = '🛠️';
+                console.log("Scénář dokončen.");
+            }
+            generate(formContainer, fileData) { const sequence = []; const elements = Array.from(formContainer.querySelectorAll('input, select, textarea')); const icoFilled = new Set(); elements.sort((a, b) => (a.type === 'radio' ? 0 : 1) - (b.type === 'radio' ? 0 : 1)); elements.forEach(el => { const selector = this.getSelector(el); if (!selector) return; if (el.type === 'radio' && el.checked) { sequence.push({ action: 'click', selector }); } else if (el.type === 'checkbox' && el.checked) { sequence.push({ action: 'click', selector }); } else if (el.classList.contains('with-ico') && el.value && !icoFilled.has(selector)) { sequence.push({ action: 'fill', selector, value: el.value }); const aresButton = el.parentElement.querySelector('button.ico-btn'); if (aresButton) { const btnSelector = this.getSelector(aresButton); if(btnSelector) sequence.push({ action: 'click-ares', selector: btnSelector }); } icoFilled.add(selector); } else if ((el.type === 'text' || el.type === 'date' || el.tagName.toLowerCase() === 'textarea') && el.value && !el.classList.contains('with-ico')) { sequence.push({ action: 'fill', selector, value: el.value }); } else if (el.tagName.toLowerCase() === 'select' && el.value) { sequence.push({ action: 'select', selector, value: el.value }); } }); for (const selector in fileData) { sequence.push({ action: 'upload', selector, ...fileData[selector] }); } return sequence; } getSelector(el) { if (el.id && document.querySelectorAll(`#${CSS.escape(el.id)}`).length === 1) return `#${CSS.escape(el.id)}`; if (el.type === 'radio' && el.name && el.value) return `input[type="radio"][name="${CSS.escape(el.name)}"][value="${CSS.escape(el.value)}"]`; let path = ''; let current = el; while (current && current.nodeType === Node.ELEMENT_NODE && current.tagName.toLowerCase() !== 'body') { let segment = current.tagName.toLowerCase(); if (current.className && typeof current.className === 'string') { const classNames = current.className.trim().replace(/\s+/g, '.'); if(classNames) segment += '.' + classNames; } const siblings = Array.from(current.parentNode.children); const sameTagSiblings = siblings.filter(sibling => sibling.tagName === current.tagName); if (sameTagSiblings.length > 1) { segment += `:nth-of-type(${sameTagSiblings.indexOf(current) + 1})`; } path = segment + (path ? ' > ' + path : ''); if (current.parentElement && current.parentElement.id && document.querySelectorAll(`#${CSS.escape(current.parentElement.id)}`).length === 1) { path = '#' + CSS.escape(current.parentElement.id) + ' > ' + path; break; } current = current.parentElement; } return path; } base64ToFile(dataurl, filename, mimeType) { const arr=dataurl.split(','),bstr=atob(arr[1]);let n=bstr.length;const u8arr=new Uint8Array(n);while(n--){u8arr[n]=bstr.charCodeAt(n)}return new File([u8arr],filename,{type:mimeType}) } findElement(selector) { try { return document.querySelector(selector); } catch (e) { console.error(`Neplatný selector: "${selector}"`, e); return null; }} setNativeValue(element, value) { const s=Object.getOwnPropertyDescriptor(element.constructor.prototype,'value').set;s.call(element,value);element.dispatchEvent(new Event('input',{bubbles:true})); } sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); } }
 
         class UIManager {
             constructor(storage, engine) { this.storage = storage; this.engine = engine; }
@@ -195,8 +360,8 @@
             exitCreationMode() { const e = document.getElementById('creation-bar'); if (e) e.remove(); this.renderListView(); }
             attachListListeners() {
                 document.getElementById('create-new-scenario-btn').onclick = () => this.enterCreationMode();
-                this.container.querySelectorAll('[data-run-scenario]').forEach(btn => { btn.onclick = async () => { const name = btn.dataset.runScenario; const sets = await this.storage.getSets(); if (sets[name]) { this.container.classList.remove('visible'); await this.engine.execute(sets[name]); } }; });
-                this.container.querySelectorAll('[data-edit-scenario]').forEach(btn => { btn.onclick = async () => { const name = btn.dataset.editScenario; const sets = await this.storage.getSets(); if (sets[name]) { this.container.classList.remove('visible'); await this.engine.execute(sets[name]); this.enterCreationMode(name, sets[name]); } }; });
+                this.container.querySelectorAll('[data-run-scenario]').forEach(btn => { btn.onclick = async () => { const name = btn.dataset.runScenario; const sets = await this.storage.getSets(); if (sets[name]) { this.container.classList.remove('visible'); await this.engine.executeWithRetry(sets[name]); } }; });
+                this.container.querySelectorAll('[data-edit-scenario]').forEach(btn => { btn.onclick = async () => { const name = btn.dataset.editScenario; const sets = await this.storage.getSets(); if (sets[name]) { this.container.classList.remove('visible'); await this.engine.executeWithRetry(sets[name]); this.enterCreationMode(name, sets[name]); } }; });
                 this.container.querySelectorAll('[data-delete-scenario]').forEach(btn => { btn.onclick = async () => { const name = btn.dataset.deleteScenario; if (confirm(`Opravdu chcete smazat scénář "${name}"?`)) { await this.storage.deleteSet(name); this.renderListView(); } }; });
             }
         }

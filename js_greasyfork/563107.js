@@ -1,8 +1,10 @@
 // ==UserScript==
 // @name         AO3 BTS Tag Abbreviator
 // @namespace    https://aglioeollieo.neocities.org/misc#script
-// @version      1.7
-// @description  Abbreviates BTS full names in all AO3 tags, including work pages and optional extra info
+// @version      1.9
+// @description  Abbreviates BTS full names in all AO3 tags
+// @author       aglioeollieo
+// @icon         https://www.google.com/s2/favicons?domain=archiveofourown.org
 // @match        https://archiveofourown.org/*
 // @grant        none
 // @license MIT
@@ -20,7 +22,8 @@
         "Kim Seokjin": "Seokjin",
         "Kim Taehyung": "Taehyung",
         "Min Yoongi": "Yoongi",
-        "Park Jimin": "Jimin"
+        "Park Jimin": "Jimin",
+        "Bangtan Boys": "BTS"
     };
 
     const processed = new WeakSet();
@@ -30,8 +33,10 @@
     }
 
     const patterns = Object.entries(nameMap).map(([full, short]) => {
-        // Match optional parentheses or pipe info after name
-        const regex = new RegExp(`${escapeRegex(full)}(?:\\s*\\([^)]+\\)|\\s*\\|\\s*[^)]+)?`, 'g');
+        const regex = new RegExp(
+            `${escapeRegex(full)}(?:\\s*\\(BTS\\)|\\s*\\|\\s*[A-Za-z.-]+)?`,
+            'g'
+        );
         return [regex, short];
     });
 
@@ -56,14 +61,11 @@
     }
 
     function scan(root = document) {
-        // Grab all <a class="tag"> elements anywhere
         root.querySelectorAll('a.tag').forEach(abbreviate);
     }
 
-    // Initial scan
     scan();
 
-    // Observe dynamically added nodes
     const observer = new MutationObserver(mutations => {
         for (const m of mutations) {
             for (const node of m.addedNodes) {

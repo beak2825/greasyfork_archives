@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         知乎美化
 // @namespace    http://tampermonkey.net/
-// @version      2026.1.20
+// @version      2026.1.22
 // @description  1.【重要更新】增加夜间模式按钮     2.知乎题目栏增加举报、匿名、问题日志、快捷键四个按钮     3.知乎按钮图标在鼠标悬停时变色(题目按钮、回答下方按钮、评论按钮等)     4.回答的发布时间移至顶部     5.图片原图显示     6.文字和卡片链接从知乎跳转链接改为直链     7.隐藏侧边栏     8.GIF图自动播放【默认不开启】     9.问题增加创建时间和最后编辑时间     10.鼠标悬停在回答时显示浅蓝色聚焦框    11.引用角标高亮    12.首页信息流增加不感兴趣按钮  13.【重要更新】增加设置界面    14.显示信息流标签【默认不开启】
 // @author       AN drew
 // @match        *://*.zhihu.com/*
@@ -59,7 +59,7 @@ class ZhihuConfig {
             { name: 'hideQuestionSidebar', label: '隐藏回答侧边栏', type: 'select', default: '1'},
             { name: 'hideSearchSideBar', label: '隐藏搜索侧边栏', type: 'select', default: '1'},
             { name: 'hideTopicSideBar', label: '隐藏话题侧边栏', type: 'select', default: '1'},
-            { name: 'hideCollectionSideBar', type: 'select', default: '1', label: '隐藏收藏侧边栏'},
+            { name: 'hideCollectionSideBar', label: '隐藏收藏侧边栏', type: 'select', default: '1'},
             /*
             { name: 'hideClubSideBar', label: '隐藏圈子侧边栏', type: 'select', default: '1'},
             { name: 'hideDraftSideBar', label: '隐藏草稿侧边栏', type: 'select', default: '1'},
@@ -14511,6 +14511,11 @@ function zhihu_settings()
 
 }
 
+function education()
+{
+
+}
+
 
 /*
 function printValue() {
@@ -15541,7 +15546,7 @@ html[data-theme=dark] #settingLayer #settings-close{
     }
     document.addEventListener('copy', addLink);
 
-    
+/*
     //每个页面对应的功能函数
     if (window.location.href.indexOf("/topic/") > -1) //话题页
         setInterval(topic, 300);
@@ -15587,6 +15592,250 @@ html[data-theme=dark] #settingLayer #settings-close{
         setInterval(zhihu_settings, 300);
     else
         setInterval(index, 300); //首页
+*/
 
+
+    /**
+     * ============================================================================
+     * 第二部分：页面观察基类 (PageObserver)
+     * 负责：URL 变更监测、DOM 节点监听、3 秒逻辑兜底
+     * ============================================================================
+     */
+    class PageObserver {
+        constructor() {
+            this.currentPath = ""; // 记录当前页面 URL，防止重复触发
+            this.observer = null;  // MutationObserver 实例
+            this.fallbackTimer = null; // 兜底定时器
+            this.initRouter();     // 初始化 URL 变更监听
+        }
+
+        /**
+         * 监听 URL 变化：适配知乎这种单页应用 (SPA)
+         * 劫持 pushState/replaceState 并监听 popstate 事件
+         */
+        initRouter() {
+            const self = this;
+            const _pushState = history.pushState;
+            const _replaceState = history.replaceState;
+
+            // 劫持跳转方法
+            history.pushState = function() {
+                _pushState.apply(this, arguments);
+                self.onUrlChange();
+            };
+            history.replaceState = function() {
+                _replaceState.apply(this, arguments);
+                self.onUrlChange();
+            };
+
+            // 监听浏览器前进/后退
+            window.addEventListener('popstate', () => self.onUrlChange());
+
+            // 脚本首次加载时手动执行一次
+            this.onUrlChange();
+        }
+
+        /**
+         * 当 URL 发生变化时的核心逻辑
+         */
+        onUrlChange() {
+            const path = window.location.href;
+            // 如果 URL 没变（仅仅是 hash 变化等），则不处理
+            if (path === this.currentPath) return;
+            this.currentPath = path;
+
+            // 切换页面时，必须断开之前的观察器并清除之前的兜底定时器
+            if (this.observer) {
+                this.observer.disconnect();
+                this.observer = null;
+            }
+            if (this.fallbackTimer) {
+                clearTimeout(this.fallbackTimer);
+                this.fallbackTimer = null;
+            }
+
+            // 执行子类实现的具体分发逻辑
+            this.run();
+        }
+
+        /**
+         * 增强版监听：
+         * @param {string} selector - 根容器选择器
+         * @param {function} callback - 执行函数
+         * @param {boolean} persistent - 是否持续监听（针对信息流页面）
+         */
+        observeSelector(selector, callback, persistent = false) {
+            let isFirstMatch = true;
+            let lastTriggerTime = 0; // 用于节流
+
+            const execute = () => {
+                // 简单的节流：防止 MutationObserver 在 100ms 内疯狂触发
+                const now = Date.now();
+                if (now - lastTriggerTime < 100) return;
+                lastTriggerTime = now;
+
+                callback();
+
+                // 如果不是持续监听，执行一次后就断开
+                if (!persistent) {
+                    if (this.observer) this.observer.disconnect();
+                    if (this.fallbackTimer) clearTimeout(this.fallbackTimer);
+                }
+            };
+
+            // 1. 立即检查
+            if (document.querySelector(selector)) {
+                execute();
+                if (!persistent) return;
+            }
+
+            // 2. 兜底（仅针对第一次进入页面）
+            this.fallbackTimer = setTimeout(() => {
+                if (isFirstMatch) {
+                    console.warn(`[兜底] 未监测到节点 ${selector}，已强制执行函数 ${callback}`);
+                    execute();
+                }
+            }, 3000);
+
+            // 3. 监听 DOM
+            this.observer = new MutationObserver((mutations) => {
+                if (document.querySelector(selector)) {
+                    isFirstMatch = false;
+                    execute();
+                }
+            });
+
+            this.observer.observe(document.body, { childList: true, subtree: true });
+        }
+    }
+
+    /**
+     * ============================================================================
+     * 第三部分：知乎逻辑分发类 (ZhihuPageHandler)
+     * 负责：定义所有知乎页面的 URL 匹配及对应的渲染函数
+     * ============================================================================
+     */
+    class ZhihuPageHandler extends PageObserver {
+        /**
+         * 核心分发逻辑：根据当前 URL 决定监听哪个节点，并触发哪个函数
+         */
+        run() {
+            const url = this.currentPath;
+
+            /*
+            // 全局操作：每当 URL 变化，优先注入一次通用样式
+            if (typeof addCommonCSS === 'function') {
+                addCommonCSS();
+            }
+            */
+
+            // --- 路由匹配分发 ---
+
+            // 1. 问题日志（Log）
+            if (url.includes("/log")) {
+                this.observeSelector('.zu-main-content', () => question_log(), true);
+            }
+
+            // 2. 回答详情页 (Question)
+            else if (url.includes("/question/")) {
+                this.observeSelector('.QuestionPage', () => question(), true);
+            }
+
+            // 3. 搜索结果页 (Search)
+            else if (url.includes("/search")) {
+                this.observeSelector('.SearchMain', () => search(), true);
+            }
+
+            // 4. 话题页 (Topic)
+            else if (url.includes("/topic/")) {
+                this.observeSelector('.TopicMain', () => topic(),true);
+            }
+
+            // 5. 收藏夹 (Collection)
+            else if (url.includes("/collection/") || url.includes("/collections/")) {
+                this.observeSelector('.CollectionsDetailPage, .Collections-container', () => collection(), true);
+            }
+
+            // 6. 专栏列表 (Column)
+            else if (url.includes("/column/")) {
+                this.observeSelector('.App-main', () => column(), true);
+            }
+
+            // 7. 专栏文章 (Zhuanlan)
+            else if (url.includes("zhuanlan.")) {
+                this.observeSelector('.Post-Row-Content', () => zhuanlan(), true);
+            }
+
+            // 8. 用户主页 / 机构号主页 (People / Org)
+            else if (url.includes("/people/") || url.includes("/org/")) {
+                this.observeSelector('.Profile-main', () => people(), true);
+            }
+
+            // 9. 想法页面 (Pin)
+            else if (url.includes("/pin/")) {
+                this.observeSelector('.PinDetail', () => pin(),true);
+            }
+
+            // 10. 圆桌（Roundtable）
+            else if (url.includes("/roundtable/")) {
+                this.observeSelector('ul[role="tablist"]', () => roundtable(), true);
+            }
+
+            // 11. 芝士平台（Cheese）
+            else if (url.includes("cheese.")) {
+                this.observeSelector('#root', () => cheese(), false);
+            }
+
+            // 12. 视频页（Zvideo）
+            else if (url.includes("/zvideo/")) {
+                this.observeSelector('.ZVideo', () => zvideo(), true);
+            }
+
+            // 13. 创作中心（Creator）
+            else if (url.includes("/creator")) {
+                this.observeSelector('.Creator', () => creator(), true);
+            }
+
+            // 14. 圈子(Ring)
+            else if (url.includes("/ring/") || url.includes("/ring-feeds")) {
+                this.observeSelector('.Topstory', () => ring(), true);
+            }
+
+            // 15. 讲座（Lives）
+            else if (url.includes("/lives")) {
+                this.observeSelector('[class*="LiveDetailsPage"]', () => lives(), true);
+            }
+
+            // 16. 无障碍说明（Wza）
+            else if (url.includes("/wza/")) {
+                this.observeSelector('.content', () => wza(), false);
+            }
+
+            // 17. 最近浏览（Recent）
+            else if (url.includes("/recent-viewed")) {
+                this.observeSelector('main', () => recent(), true);
+            }
+
+            // 18. 知乎设置（Settings）
+            else if (url.includes("/settings")) {
+                this.observeSelector('.SettingsMain', () => zhihu_settings(), false);
+            }
+
+            // 19. 知学堂（Education）
+            else if (url.includes("/education")) {
+                this.observeSelector('#app', () => education(), true);
+            }
+
+            // 20. 默认情况：首页 (Topstory)
+            else {
+                // 如果不在上述特定路径，则默认当作首页处理
+                // 监听 Topstory 类，确保首页逻辑 index() 执行
+                this.observeSelector('.Topstory', () => index(), true);
+            }
+        }
+    }
+
+    // 最后一步：实例化启动
+    const Handler = new ZhihuPageHandler();
 
 })();

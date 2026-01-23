@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SangTacViet Auto Collect & Treo Máy
-// @version      1.7.1
-// @description  (v1.7.1) Tự động nhặt bảo trên sangtacviet & có chế độ treo máy & có thể xem lịch sử và thống kê vật phẩm đã nhặt & có cài đặt tùy chỉnh theo ý muốn.
+// @version      1.8
+// @description  (v1.8) Tự động nhặt bảo trên sangtacviet & có chế độ treo máy & có thể xem lịch sử và thống kê vật phẩm đã nhặt & có cài đặt tùy chỉnh theo ý muốn.
 // @author       @AnotherLDK
 // @match        *://*.sangtacviet.app/*
 // @match        *://*.sangtacviet.me/*
@@ -47,7 +47,7 @@
     const STORAGE_KEY_TREO_MAY_ERROR_STATE = 'stv_treo_may_error_state';
 
     const STORAGE_KEY_HISTORY_LOG_V2 = 'stv_collect_history_v2';
-    const MAX_HISTORY_PER_DAY = 150;
+    const MAX_HISTORY_PER_DAY = 300;
     const MAX_HISTORY_DAYS = 2;
 
     const STORAGE_KEY_SCRIPT_ENABLED = 'stv_script_enabled_v1';
@@ -80,7 +80,8 @@
     let isDrugDetailsVisible = localStorage.getItem(STORAGE_KEY_DRUG_TOGGLE) === 'true';
 
     let lastCollectedItem = JSON.parse(localStorage.getItem(STORAGE_KEY_LAST_ITEM) || '{}');
-    const initialItemCounts = { 'CongPhap': 0, 'VoKy': 0, 'LinhThach': 0, 'LenhBaiUyVong': 0, 'DanDuoc': 0 };
+    // Cập nhật initialItemCounts thêm PhapTac
+    const initialItemCounts = { 'CongPhap': 0, 'VoKy': 0, 'LinhThach': 0, 'LenhBaiUyVong': 0, 'PhapTac': 0, 'DanDuoc': 0 };
     let itemCounts = { ...initialItemCounts, ...JSON.parse(localStorage.getItem(STORAGE_KEY_ITEM_COUNTS) || '{}') };
 
     const initialDrugDetails = {};
@@ -283,7 +284,7 @@
                 margin-bottom: 5px;
             }
             #cooldown-display {
-                font-size: 3.5em;
+                font-size: 2.7em;
                 font-weight: 900;
                 letter-spacing: 1px;
                 color: var(--text-light-primary);
@@ -505,6 +506,34 @@
             .btn-danger {
                 background-color: #EA4335;
                 color: white;
+            }
+
+            .quick-target-buttons {
+                display: flex;
+                gap: 5px;
+                margin-top: 10px;
+                width: 100%;
+            }
+            .btn-quick-target {
+                flex: 1;
+                padding: 5px;
+                font-size: 0.8em;
+                font-weight: 700;
+                cursor: pointer;
+                border-radius: 4px;
+                border: 1px solid var(--border-light);
+                background-color: var(--bg-light-header);
+                color: var(--text-light-primary);
+                transition: background 0.2s;
+            }
+            #stv-timer-popup:not(.light-theme) .btn-quick-target {
+                background-color: var(--bg-dark-header);
+                border-color: var(--border-dark);
+                color: var(--text-dark-primary);
+            }
+            .btn-quick-target:hover {
+                background-color: var(--blue-accent);
+                color: #202124;
             }
 
             #item-counts-list .count-item {
@@ -838,14 +867,21 @@
                             <span class="slider"></span>
                         </label>
                     </div>
-                    <div class="switch-item">
-                        <div>
-                            <div class="switch-item-label">Mục tiêu Nhặt (Session)</div>
-                            <div class="switch-item-desc" id="auto-reload-session-display-header">
-                                Đã nhặt: ${treoMaySessionCount.toLocaleString()} / ${treoMayTarget.toLocaleString()}
+                    <div class="switch-item" style="flex-direction: column; align-items: flex-start;">
+                        <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
+                            <div>
+                                <div class="switch-item-label">Mục tiêu Nhặt (Session)</div>
+                                <div class="switch-item-desc" id="auto-reload-session-display-header">
+                                    Đã nhặt: ${treoMaySessionCount.toLocaleString()} / ${treoMayTarget.toLocaleString()}
+                                </div>
                             </div>
+                            <input type="number" id="auto-reload-target" min="1" value="${initialTreoMayTarget}" style="width: 70px; text-align: center;">
                         </div>
-                        <input type="number" id="auto-reload-target" min="1" value="${initialTreoMayTarget}" style="width: 70px; text-align: center;">
+                        <div class="quick-target-buttons">
+                            <button class="btn-quick-target" data-value="250" title="Khuyến khích 700 vận khí trở lên">250</button>
+                            <button class="btn-quick-target" data-value="1000" title="Khuyến khích 3k vận khí trở lên">1.000</button>
+                            <button class="btn-quick-target" data-value="9999" title="Khuyến khích 30k vận khí trở lên">9.999</button>
+                        </div>
                     </div>
                     <div class="switch-item">
                          <button id="reset-session-btn" class="btn-primary" style="background-color: #f0ad4e; color: #333;">Reset Phiên Treo Máy</button>
@@ -1066,6 +1102,19 @@
             localStorage.setItem(STORAGE_KEY_TREO_MAY_TARGET, treoMayTarget);
             updateDynamicUI();
         });
+
+        // Event listeners cho các nút chọn mục tiêu nhanh
+        popup.querySelectorAll('.btn-quick-target').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const val = parseInt(e.target.dataset.value, 10);
+                treoMayTarget = val;
+                autoReloadTargetInput.value = val;
+                localStorage.setItem(STORAGE_KEY_TREO_MAY_TARGET, treoMayTarget);
+                updateDynamicUI();
+                if(window.ui && window.ui.notif) window.ui.notif(`Đã đặt mục tiêu nhặt: ${val.toLocaleString()}`);
+            });
+        });
+
         elResetSessionBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             if (window.confirm("Bạn có muốn reset số đếm của phiên treo máy này (ví dụ: 1/15 -> 0/15)?\n(Hành động này không reset Tổng số nhặt.)")) {
@@ -1298,11 +1347,35 @@
             displayDrugDetails = drugDetails;
         }
 
-        const itemMapping = { 'CongPhap': 'Công pháp', 'VoKy': 'Võ kỹ', 'LinhThach': 'Linh thạch', 'LenhBaiUyVong': 'Lệnh bài Uy Vọng', 'DanDuoc': 'Đan dược' };
+        // Cập nhật mapping hiển thị thêm Pháp Tắc
+        const itemMapping = {
+            'CongPhap': 'Công pháp',
+            'VoKy': 'Võ kỹ',
+            'LinhThach': 'Linh thạch',
+            'LenhBaiUyVong': 'Lệnh bài Uy Vọng',
+            'PhapTac': 'Pháp Tắc',
+            'DanDuoc': 'Đan dược'
+        };
         let countsHtml = '';
         const drugRenderResult = renderDrugDetails(displayDrugDetails);
         const drugDetailsHtml = drugRenderResult.html;
         displayCounts['DanDuoc'] = drugRenderResult.total;
+
+        // Tính tổng cộng tất cả các loại vật phẩm bao gồm cả Pháp Tắc theo yêu cầu
+        let totalStatsSum = (displayCounts['CongPhap'] || 0) +
+                            (displayCounts['VoKy'] || 0) +
+                            (displayCounts['LinhThach'] || 0) +
+                            (displayCounts['LenhBaiUyVong'] || 0) +
+                            (displayCounts['PhapTac'] || 0) +
+                            (displayCounts['DanDuoc'] || 0);
+
+        // Hiển thị dòng TỔNG CỘNG lên đầu danh sách thống kê
+        countsHtml += `
+            <div class="count-item" style="border-bottom: 2px solid var(--blue-accent); margin-bottom: 10px; padding-bottom: 10px;">
+                <span style="font-weight: 800; color: var(--blue-accent);">TỔNG CỘNG TẤT CẢ</span>
+                <span class="count-value" style="font-size: 1.1em; color: #FBBC04;">${totalStatsSum.toLocaleString()}</span>
+            </div>
+        `;
 
         const itemCountsList = elItemCountsList;
 
@@ -1765,14 +1838,46 @@
         }
     }
 
+    /**
+     * Logic phân loại vật phẩm được cập nhật theo yêu cầu mới nhất:
+     * - Pháp Tắc: Nhận diện chữ "Pháp Tắc".
+     * - Võ kỹ: Các loại đặc thù bao gồm cả "Luyện thể công pháp".
+     * - Công pháp: Chỉ duy nhất chữ "Công Pháp".
+     */
     function classifyItem(itemName) {
         if (!itemName) return null;
         itemName = itemName.toLowerCase().trim();
+
+        // 1. Kiểm tra Đan dược ưu tiên đầu tiên
         if (itemName.includes("đan") || itemName.includes("dược")) return "DanDuoc";
+
+        // 2. Kiểm tra Pháp Tắc (Mới)
+        if (itemName.includes("pháp tắc")) return "PhapTac";
+
+        // 3. Kiểm tra danh sách Võ kỹ theo yêu cầu (Có độ ưu tiên cao hơn Công pháp tổng quát)
+        const voKyStrictKeywords = [
+            "tinh thần bí pháp",
+            "luyện thể thần công",
+            "công kích bí kỹ",
+            "công kích vũ kỹ",
+            "phòng ngự vũ kỹ",
+            "luyện thể công pháp", // Theo yêu cầu, dù có chữ công pháp vẫn tính là võ kỹ
+            "thân pháp",
+            "tàn quyển"
+        ];
+
+        if (voKyStrictKeywords.some(kw => itemName.includes(kw))) return "VoKy";
+
+        // 4. Kiểm tra Công pháp (Chỉ khi không trùng với "luyện thể công pháp" đã check ở trên)
         if (itemName.includes("công pháp") || itemName.includes("cẩm nang")) return "CongPhap";
+
+        // 5. Kiểm tra các từ khóa Võ kỹ/Vũ kỹ bổ trợ khác (giữ cấu trúc gốc)
+        if (itemName.includes("vũ kỹ") || itemName.includes("võ kỹ") || itemName.includes("pháp") || itemName.includes("thuật") || itemName.includes("bí kíp")) return "VoKy";
+
+        // 6. Linh thạch và Lệnh bài
         if (itemName.includes("linh thạch") || itemName.includes("đá linh")) return "LinhThach";
         if (itemName.includes("lệnh bài uy vọng")) return "LenhBaiUyVong";
-        if (itemName.includes("vũ kỹ") || itemName.includes("võ kỹ") || itemName.includes("pháp") || itemName.includes("thuật") || itemName.includes("bí kíp")) return "VoKy";
+
         return null;
     }
 
@@ -1971,8 +2076,14 @@
             if (isTreoMayEnabled && isTargetReached) {
                 isTreoMayEnabled = false;
                 localStorage.setItem(STORAGE_KEY_TREO_MAY_TOGGLE, 'false');
-                setPageTitle('✅ ĐÃ XONG!');
-                alert(`Đã đạt mục tiêu nhặt ${treoMayTarget.toLocaleString()} lần. Treo Máy đã tự động tắt.`);
+
+                // Tự động reset mục tiêu nhặt về 0 khi hoàn thành
+                treoMaySessionCount = 0;
+                localStorage.setItem(STORAGE_KEY_TREO_MAY_SESSION_COUNT, '0');
+
+                setPageTitle('✅ ĐÃ HOÀN THÀNH!');
+                alert(`Đã đạt mục tiêu nhặt ${treoMayTarget.toLocaleString()} lần. Treo Máy đã tự động tắt và reset phiên.`);
+                updateDynamicUI();
             }
             return;
         }
@@ -2019,7 +2130,7 @@
 
         try {
             if (!uiMounted && window.ui && window.jQuery) {
-                window.console.log("STVAuto: Đã phát hiện window.ui & window.jQuery. Bắt đầu khởi tạo UI (v1.6)...");
+                window.console.log("STVAuto: Đã phát hiện window.ui & window.jQuery. Bắt đầu khởi tạo UI (v1.7.2)...");
                 injectGlobalUIStyles();
                 createTimerUI();
             }

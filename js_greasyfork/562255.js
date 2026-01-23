@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         yt-dlp Python-Downloader
 // @namespace    https://greasyfork.org/en/users/1462137-piknockyou
-// @version      9.8
+// @version      9.12
 // @author       Piknockyou (vibe-coded)
 // @license      AGPL-3.0
 // @description  Unified yt-dlp downloader - generates cross-platform Python scripts for video, audio, subtitles
@@ -9,6 +9,21 @@
 // ═══════════════════════════════════════════════════════════════
 // CHANGELOG
 // ═══════════════════════════════════════════════════════════════
+// v9.12
+// - Fixed: Audio-only .mp4 files (Twitter/X HLS) now correctly identified
+// - Fixed: Uses format_id hint ("audio" in filename) for stream detection
+// - Fixed: ffprobe now used for .mp4 files too (not just .webm)
+//
+// v9.11
+// - Changed: Thumbnails mode keeps original format (webp/jpg) instead of converting to PNG
+// - Changed: Cleaner thumbnail output messaging
+//
+// v9.10
+// - Fixed: Thumbnails mode now downloads only the best thumbnail (not all 42 variants)
+//
+// v9.9
+// - Added: Thumbnails Only mode - downloads all video thumbnails as PNG
+//
 // v9.8
 // - Cleanup: Removed unused run_command() from generated Python scripts
 // - Cleanup: Removed unused GM_setClipboard grant
@@ -1001,6 +1016,19 @@
             this.element.appendChild(commentsRow);
 
             // ─────────────────────────────────────────────────────────────
+            // THUMBNAILS ROW
+            // ─────────────────────────────────────────────────────────────
+            const thumbnailsRow = document.createElement('div');
+            thumbnailsRow.className = 'ytdlp-menu-row';
+            thumbnailsRow.textContent = '🖼️ Thumbnail';
+            thumbnailsRow.onclick = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onDownload('thumbnails');
+            };
+            this.element.appendChild(thumbnailsRow);
+
+            // ─────────────────────────────────────────────────────────────
             // DOWNLOAD BUTTON
             // ─────────────────────────────────────────────────────────────
             downloadBtn = document.createElement('div');
@@ -1187,8 +1215,9 @@ def wait_for_exit():
 
 def identify_file(filepath, has_ffprobe=False):
     """
-    Identify if a file is video, audio, or subtitle based on extension.
-    For ambiguous formats like .webm, uses ffprobe if available.
+    Identify if a file is video, audio, or subtitle based on extension and filename hints.
+    Uses format_id in filename (e.g., 'hls-audio-128000') to detect audio streams.
+    For ambiguous formats, uses ffprobe if available.
     Returns: 'video', 'audio', 'subtitle', or 'unknown'
     """
     path = Path(filepath)
@@ -1199,18 +1228,23 @@ def identify_file(filepath, has_ffprobe=False):
     if "_sub" in name:
         return "subtitle"
 
+    # Check for audio marker in format_id (e.g., "hls-audio-128000-Audio")
+    # This catches HLS audio streams that have .mp4 extension
+    if "audio" in name and "video" not in name:
+        return "audio"
+
     # Audio-only extensions
     audio_exts = {".m4a", ".mp3", ".opus", ".ogg", ".aac", ".flac", ".wav"}
     if ext in audio_exts:
         return "audio"
 
-    # Video extensions
-    video_exts = {".mp4", ".mkv", ".avi", ".mov", ".flv", ".ts", ".3gp"}
+    # Unambiguous video extensions
+    video_exts = {".mkv", ".avi", ".mov", ".flv", ".ts", ".3gp"}
     if ext in video_exts:
         return "video"
 
-    # Ambiguous extension (.webm can be video or audio)
-    if ext == ".webm":
+    # Ambiguous extensions (.webm and .mp4 can be video or audio-only)
+    if ext in {".webm", ".mp4"}:
         if has_ffprobe:
             try:
                 result = subprocess.run(
@@ -1356,6 +1390,95 @@ def main():
         sys.exit(1)
     else:
         print_status("SUCCESS", "Comments downloaded!")
+        wait_for_exit()
+
+if __name__ == "__main__":
+    main()
+`;
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // THUMBNAILS MODE
+        // ═══════════════════════════════════════════════════════════════
+        if (mode === 'thumbnails') {
+            return `${getPythonHeader()}
+# ════════════════════════════════════════════════════════════════════════════════
+# CONFIGURATION
+# ════════════════════════════════════════════════════════════════════════════════
+
+URL = "${url}"
+FILENAME = "${filename}"
+COOKIE_FILE = "${cookieFile}"
+OVERWRITE_FLAG = "${overwriteFlag}"
+
+# ════════════════════════════════════════════════════════════════════════════════
+# MAIN - Thumbnails Download
+# ════════════════════════════════════════════════════════════════════════════════
+
+def main():
+    # Change to script directory
+    os.chdir(Path(__file__).parent)
+
+    print_header("yt-dlp Thumbnail Downloader")
+
+    # Check for yt-dlp
+    if not check_command("yt-dlp"):
+        print_status("ERROR", "yt-dlp not found")
+        print("Install: pip install yt-dlp")
+        print("     or: brew install yt-dlp (Mac)")
+        print("     or: winget install yt-dlp (Windows)")
+        wait_for_exit()
+        sys.exit(1)
+
+    print_status("OK", "yt-dlp found")
+
+    # Build command
+    cmd = ["yt-dlp"]
+
+    if OVERWRITE_FLAG:
+        cmd.append(OVERWRITE_FLAG)
+
+    # Add cookies if file exists
+    if Path(COOKIE_FILE).exists():
+        print_status("OK", "Cookie file found")
+        cmd.extend(["--cookies", COOKIE_FILE])
+    else:
+        print_status("INFO", "No cookie file")
+
+    print()
+    print(f"URL: {URL}")
+    print()
+
+    # Add thumbnail extraction arguments
+    # Uses --write-thumbnail for best quality single thumbnail
+    # Keeps original format (webp/jpg) - no conversion needed
+    cmd.extend([
+        URL,
+        "--skip-download",
+        "--write-thumbnail",
+        "--no-playlist",
+        "-o", f"{FILENAME}.%(ext)s"
+    ])
+
+    print("Downloading best available thumbnail...")
+    print("(yt-dlp probes from highest to lowest quality)")
+    print()
+
+    # Run yt-dlp
+    result = subprocess.run(cmd)
+
+    print()
+    if result.returncode != 0:
+        print_status("ERROR", "Download failed")
+        wait_for_exit()
+        sys.exit(1)
+    else:
+        # Find the downloaded thumbnail (could be .webp, .jpg, .png)
+        thumbs = glob(f"{FILENAME}.webp") + glob(f"{FILENAME}.jpg") + glob(f"{FILENAME}.png")
+        if thumbs:
+            print_status("SUCCESS", f"Saved: {thumbs[0]}")
+        else:
+            print_status("WARNING", "Thumbnail file not found")
         wait_for_exit()
 
 if __name__ == "__main__":

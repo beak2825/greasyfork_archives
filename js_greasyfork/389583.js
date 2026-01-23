@@ -655,7 +655,9 @@ const placeholders = [
 	if (prefs.clone_submit_button && form != null) {
 		ref = document.createElement('DIV');
 		ref.className = 'form-submit';
-		ref.style = 'position: fixed; top: 10pt; right: 10pt; padding: 5pt; border-radius: 50%; z-index: 999;';
+		ref.style = 'position: fixed; top: 10pt; right: 10pt; padding: 5pt; border-radius: 50%; z-index: 999; transition: 1s ease-out;';
+		ref.style.opacity = 0;
+		ref.style.transform = `translateX(80px)`;
 		ref.style.backgroundColor = `#${isDarkTheme ? '2f4f4f' : 'b8860b'}80`;
 		const submitBtns = form.querySelectorAll('input[type="submit"]'), okButton = document.createElement('BUTTON');
 		okButton.id = 'form-submit';
@@ -773,6 +775,10 @@ Submit via API ${ajaxApiKey ? 'is active (Ctrl+click to enforce standard submit 
 				.observe(submitBtn, { attributes: true, attributeFilter: ['disabled'] });
 		ref.append(okButton);
 		document.body.append(ref);
+		setTimeout(function(elem) {
+			elem.style.transform = 'translateX(0)';
+			elem.style.opacity = 1;
+		}, 1000, ref);
 	}
 
 	for (let styleSheet of document.styleSheets) try {

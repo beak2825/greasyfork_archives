@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Torn Quick Deposit
 // @namespace    http://tampermonkey.net/
-// @version      1.3.4
+// @version      1.3.6
 // @description  Quick Deposit cash to Ghost Trade / Company Vault / Faction Vault
 // @author       e7cf09 [3441977]
 // @icon         https://editor.torn.com/cd385b6f-7625-47bf-88d4-911ee9661b52-3441977.png
@@ -22,6 +22,7 @@
     const CONFIG = {
         PANIC_THRESHOLD: 20000000, // Panic Threshold: Only triggers if balance exceeds this
         STRICT_GHOST_MODE: true, // Relaxed matching for Ghost trades (if false, any trade found is used)
+        PRIORITY: ["GHOST", "COMPANY", "FACTION"], // Order of preference for auto-deposit
         KEYS: {
             FACTION: [],
             GHOST: [],
@@ -67,8 +68,14 @@
     window.fetch = async (...args) => {
         const res = await origFetch(...args);
         const url = args[0]?.toString() || '';
-        if (url.match(/sidebar|user/)) {
-            res.clone().json().then(d => updateBalance(d?.user?.money || d?.sidebarData?.user?.money)).catch(()=>{});
+
+        // Only intercept specific JSON endpoints to avoid cloning heavy assets (images, scripts)
+        if (url.match(/sidebar|user/) && res.headers.get('content-type')?.includes('json')) {
+            try {
+                // If on Holdem, we STILL parse sidebar updates because they contain real user money
+                // The previous blockage was too aggressive. The fetch response for sidebar IS safe.
+                res.clone().json().then(d => updateBalance(d?.user?.money || d?.sidebarData?.user?.money)).catch(()=>{});
+            } catch (e) {}
         }
         return res;
     };
@@ -79,6 +86,16 @@
         const ws = new OrigWS(url, protocols);
         ws.addEventListener('message', e => {
             if (typeof e.data !== 'string') return;
+
+            // In Holdem page, only filter out game channels, but allow user updates (sidebar)
+            if (window.location.href.includes('sid=holdem')) {
+                try {
+                    const data = JSON.parse(e.data);
+                    // Filter out poker game channels
+                    if (data.push && data.push.channel && data.push.channel.includes('holdem')) return;
+                } catch (err) {}
+            }
+
             if (e.data.includes('attack-effects')) triggerPanic();
             const m = e.data.match(/"money"\s*:\s*(\d+)/);
             if (m) updateBalance(m[1]);
@@ -133,6 +150,7 @@
 
     function updateBalance(val) {
         if (!val) return;
+
         const num = parseInt(typeof val === 'object' ? val.value : val);
         if (isNaN(num)) return;
 
@@ -190,10 +208,12 @@
         // Determine Target Mode
         let target = mode;
         if (mode === 'auto') {
-            if (STATE.ghostID && status.ghost) target = 'ghost';
-            else if (status.company) target = 'company';
-            else if (status.faction) target = 'faction';
-            else return;
+            for (const type of CONFIG.PRIORITY) {
+                if (type === 'GHOST' && STATE.ghostID && status.ghost) { target = 'ghost'; break; }
+                if (type === 'COMPANY' && status.company) { target = 'company'; break; }
+                if (type === 'FACTION' && status.faction) { target = 'faction'; break; }
+            }
+            if (!target) return;
         }
 
         // Validate Target with strict mode checks
@@ -207,14 +227,27 @@
         }
         if (target === 'company' && !status.company) {
             if (mode !== 'auto') return; // Strict fail for manual mode
-            target = 'faction';
+            target = status.faction ? 'faction' : null;
         }
-        if (!target || (target === 'faction' && !status.faction)) return;
+        if (target === 'faction' && !status.faction) {
+             if (mode !== 'auto') return;
+             target = null;
+        }
+        if (!target) return;
 
         // EXECUTION
         const setVal = (input, val) => {
-            input.value = val;
-            ['input', 'change', 'blur'].forEach(e => input.dispatchEvent(new Event(e, { bubbles: true })));
+            // React Hack: Bypass internal value tracking to ensure state update
+            const setter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
+            if (setter) {
+                setter.call(input, val);
+            } else {
+                input.value = val;
+            }
+
+            input.dispatchEvent(new Event('input', { bubbles: true }));
+            input.dispatchEvent(new Event('change', { bubbles: true }));
+            input.dispatchEvent(new Event('blur', { bubbles: true }));
         };
 
         const jump = (url, msg) => {
@@ -355,8 +388,16 @@
             txt = "CONFIRM<br>DEPOSIT";
         } else {
             const s = getStatus();
+            let target = null;
 
-            if (STATE.ghostID && s.ghost) {
+            // Determine active target based on priority
+            for (const type of CONFIG.PRIORITY) {
+                if (type === 'GHOST' && STATE.ghostID && s.ghost) { target = 'GHOST'; break; }
+                if (type === 'COMPANY' && s.company) { target = 'COMPANY'; break; }
+                if (type === 'FACTION' && s.faction) { target = 'FACTION'; break; }
+            }
+
+            if (target === 'GHOST') {
                 // Ghost Logic
                 const hashParams = new URLSearchParams(window.location.hash.substring(1));
                 const searchParams = new URLSearchParams(window.location.search);
@@ -369,7 +410,7 @@
 
                 txt = onGhostPage ? `DEPOSIT<br>${fmt(STATE.balance)}<br><span style='font-size:10px'>GHOST</span>` : "JUMP TO<br>GHOST";
 
-            } else if (s.company) {
+            } else if (target === 'COMPANY') {
                 // Company Logic
                 const onCompanyPage = window.location.href.includes('companies.php') && window.location.href.includes('option=funds');
                 const container = qs('.funds-cont');
@@ -380,7 +421,7 @@
                 txt = ready ? `DEPOSIT<br>${fmt(STATE.balance)}<br><span style='font-size:10px'>COMPANY</span>` : "JUMP TO<br>COMPANY";
 
             } else {
-                // Faction Logic
+                // Faction Logic (Default)
                 const current = window.location.href;
                 const onFactionPage = current.includes('factions.php') && current.includes('step=your') && current.includes('type=1') && current.includes('tab=armoury');
                 const form = qs('.give-money-form');
@@ -423,13 +464,25 @@
         }
 
         const s = getStatus();
-        let txt, title;
-        if (STATE.ghostID) {
-            txt = '[ghost]';
-            title = `Ghost ID: ${STATE.ghostID}`;
-        } else {
-            txt = '[deposit]';
-            title = s.company ? "Company Vault" : "Faction Vault";
+        let txt = '[deposit]', title = 'Vault Deposit';
+
+        // Determine active target based on priority
+        for (const type of CONFIG.PRIORITY) {
+            if (type === 'GHOST' && STATE.ghostID) {
+                txt = '[ghost]';
+                title = `Ghost ID: ${STATE.ghostID}`;
+                break;
+            }
+            if (type === 'COMPANY' && s.company) {
+                txt = '[deposit]';
+                title = "Company Vault";
+                break;
+            }
+            if (type === 'FACTION' && s.faction) {
+                txt = '[deposit]';
+                title = "Faction Vault";
+                break;
+            }
         }
 
         if (STATE.els.btn.innerText !== txt) STATE.els.btn.innerText = txt;
@@ -490,7 +543,7 @@
         if (currentID) {
             const logs = qsa('ul.log .msg');
             let isGhost = false;
-            
+
             if (!CONFIG.STRICT_GHOST_MODE) {
                 // If not strict, ANY trade we visit is considered valid
                 isGhost = true;
@@ -524,6 +577,31 @@
         }
     };
 
+    // INIT
+    let mutationTimeout = null;
+    const observerCallback = (mutations) => {
+        let ignore = true;
+        for (const m of mutations) {
+            // Use nodeType check to ensure we only check Element properties
+            const isElement = m.target.nodeType === 1;
+            const targetId = isElement ? m.target.id : '';
+
+            if (!targetId?.includes('torn-') &&
+                (!isElement || !m.target.closest?.('#torn-tactical-deposit')) &&
+                (!isElement || !m.target.closest?.('#torn-panic-overlay'))) {
+                ignore = false;
+                break;
+            }
+        }
+        if (ignore) return;
+
+        if (mutationTimeout) clearTimeout(mutationTimeout);
+        mutationTimeout = setTimeout(() => {
+            injectBtn();
+            scanTrades();
+        }, 50); // Debounce 50ms
+    };
+
     let init = false;
     const start = () => {
         if (init) return;
@@ -537,34 +615,13 @@
         }
 
         // Observers
-        new MutationObserver((mutations) => {
-            let ignore = true;
-            for (const m of mutations) {
-                if (!m.target.id?.includes('torn-') &&
-                    !m.target.closest?.('#torn-tactical-deposit') &&
-                    !m.target.closest?.('#torn-panic-overlay')) {
-                    ignore = false;
-                    break;
-                }
-            }
-            if (ignore) return;
-
-            injectBtn();
-            scanTrades();
-            // Removed updateBalance(STATE.balance) to prevent loop
-        }).observe(document, { childList: true, subtree: true });
+        new MutationObserver(observerCallback).observe(document, { childList: true, subtree: true });
 
         // Early Init
         if (moneyEl) injectBtn();
     };
 
     if (document.readyState === 'loading') {
-        // Fast track
-        const early = new MutationObserver(() => {
-            if (qs('#user-money')) { injectBtn(); }
-            if (document.body) { start(); early.disconnect(); }
-        });
-        early.observe(document.documentElement, { childList: true, subtree: true });
         document.addEventListener('DOMContentLoaded', start);
     } else start();
 

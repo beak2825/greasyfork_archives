@@ -2,8 +2,8 @@
 // @name         Remover Aviso de erro, Bloquear Anúncios e Remover Shorts do YouTube
 // @description  Pula mensagem de erro por usar bloqueador de anúncios, remove anúncios e shorts do YouTube.
 // @namespace    CowanTUBE
-// @license      CowBas
-// @version      1.0
+// @license      GPL-3.0
+// @version      2.0
 // @author       Cowanbas
 // @match        *://*/*
 // @match        *://*.youtube.com/*
@@ -15,7 +15,6 @@
 (function () {
   'use strict';
 
-  // Funções e constantes do script de remover aviso de erro do YouTube
   function getAutoplayState() {
     return localStorage.getItem('autoplayNext') === 'true';
   }
@@ -380,4 +379,5 @@
   });
 
   observeShorts();
+
 })();

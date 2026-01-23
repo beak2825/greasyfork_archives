@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         YouTube Transcript/Caption/Subtitle Processor/Downloader powered by Gemini
+// @name          YouTube Transcript/Caption/Subtitle Processor/Downloader by Gemini/OpenRouter/Mistral/Groq/Cerebras
 // @namespace    https://greasyfork.org/en/users/1462137-piknockyou
-// @version      4.3
+// @version      4.7
 // @author       Piknockyou (vibe-coded)
 // @license      AGPL-3.0
 // @description  Professional transcript processor with Gemini AI. Drag, resize, download transcripts (TXT/SRT/JSON), and process with AI. Get your free API key at https://aistudio.google.com/app/apikey
@@ -12,9 +12,13 @@
 // @grant        GM_xmlhttpRequest
 // @grant        GM_addStyle
 // @connect      generativelanguage.googleapis.com
+// @connect      openrouter.ai
+// @connect      api.mistral.ai
+// @connect      api.groq.com
+// @connect      api.cerebras.ai
 // @require      https://cdn.jsdelivr.net/npm/marked@17.0.1/lib/marked.umd.js
-// @downloadURL https://update.greasyfork.org/scripts/563101/YouTube%20TranscriptCaptionSubtitle%20ProcessorDownloader%20powered%20by%20Gemini.user.js
-// @updateURL https://update.greasyfork.org/scripts/563101/YouTube%20TranscriptCaptionSubtitle%20ProcessorDownloader%20powered%20by%20Gemini.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/563101/YouTube%20TranscriptCaptionSubtitle%20ProcessorDownloader%20by%20GeminiOpenRouterMistralGroqCerebras.user.js
+// @updateURL https://update.greasyfork.org/scripts/563101/YouTube%20TranscriptCaptionSubtitle%20ProcessorDownloader%20by%20GeminiOpenRouterMistralGroqCerebras.meta.js
 // ==/UserScript==
 
 // INSPIRED by: greasyfork.org/en/scripts/538278-youtube-gemini-summarizer
@@ -64,8 +68,11 @@
     // Language selection is now done via YouTube's native transcript panel
 
     const PROVIDERS = [
-        { id: 'gemini', name: 'Google Gemini' }
-        // Future: OpenAI, Anthropic, etc.
+        { id: 'gemini', name: 'Google Gemini' },
+        { id: 'openrouter', name: 'OpenRouter' },
+        { id: 'mistral', name: 'Mistral AI' },
+        { id: 'groq', name: 'Groq' },
+        { id: 'cerebras', name: 'Cerebras' }
     ];
 
     // ============================================================
@@ -106,6 +113,7 @@
         apiKeys: Storage.get('api_keys', {}),
         selectedProvider: Storage.get('provider', 'gemini'),
         selectedModel: Storage.get('model', ''),
+        selectedModels: Storage.get('selected_models', {}), // provider -> modelId mapping
         prompt: Storage.get('prompt', ''),
         panelVisible: Storage.get('panel_visible', false),
         darkMode: Storage.get('dark_mode', false),
@@ -132,12 +140,23 @@
             Storage.set('api_keys', this.apiKeys);
             Storage.set('provider', this.selectedProvider);
             Storage.set('model', this.selectedModel);
+            Storage.set('selected_models', this.selectedModels);
             Storage.set('prompt', this.prompt);
             Storage.set('panel_visible', this.panelVisible);
             Storage.set('dark_mode', this.darkMode);
             Storage.set('panel_position', this.panelPosition);
             Storage.set('panel_size', this.panelSize);
             Storage.set('button_position', this.buttonPosition);
+        },
+
+        getSelectedModelForProvider(providerId) {
+            return this.selectedModels[providerId] || '';
+        },
+
+        setSelectedModelForProvider(providerId, modelId) {
+            this.selectedModels[providerId] = modelId;
+            this.selectedModel = modelId;
+            this.save();
         },
 
         getApiKey() {
@@ -838,31 +857,272 @@
     };
 
     // ============================================================
-    // SECTION 4: GEMINI API SERVICE
+    // SECTION 4: PROVIDER API SERVICE
     // ============================================================
-    const GeminiService = {
+
+    /**
+     * Unified Provider Service
+     * Supports: Gemini, OpenRouter, Mistral, Groq, Cerebras
+     */
+    const ProviderService = {
+        // Provider-specific configurations
+        configs: {
+            gemini: {
+                name: 'Google Gemini',
+                modelsUrl: CONFIG.GEMINI_API_BASE,
+                authType: 'query', // API key in query string
+                modelsMethod: 'GET',
+                generateMethod: 'POST',
+                getGenerateUrl: (modelId) => {
+                    const shortId = modelId.replace('models/', '');
+                    return `${CONFIG.GEMINI_API_BASE}/${shortId}:generateContent`;
+                },
+                getHeaders: () => ({ 'Content-Type': 'application/json' }),
+                getModelsUrl: (apiKey) => `${CONFIG.GEMINI_API_BASE}?key=${apiKey}`,
+                buildRequestBody: (prompt, transcript) => ({
+                    contents: [{
+                        parts: [{ text: ProviderService.buildFullPrompt(prompt, transcript) }]
+                    }],
+                    generationConfig: {
+                        temperature: 0.7,
+                        maxOutputTokens: 8192
+                    }
+                }),
+                parseModels: (data) => {
+                    if (!data.models || !Array.isArray(data.models)) {
+                        throw new Error('Invalid API response: no models');
+                    }
+                    return data.models
+                        .filter(m => m.supportedGenerationMethods?.includes('generateContent'))
+                        .map(m => ({
+                            id: m.name,
+                            name: m.displayName || m.name,
+                            shortId: m.name.replace('models/', '')
+                        }));
+                },
+                parseResponse: (data) => {
+                    if (data.promptFeedback?.blockReason) {
+                        throw new Error(`Content blocked: ${data.promptFeedback.blockReason}`);
+                    }
+                    const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                    if (!text) throw new Error('Empty response');
+                    return text;
+                },
+                parseError: (data) => data.error?.message || 'Unknown error'
+            },
+
+            openrouter: {
+                name: 'OpenRouter',
+                modelsUrl: 'https://openrouter.ai/api/v1/models',
+                generateUrl: 'https://openrouter.ai/api/v1/chat/completions',
+                authType: 'bearer',
+                modelsMethod: 'GET',
+                generateMethod: 'POST',
+                getGenerateUrl: () => 'https://openrouter.ai/api/v1/chat/completions',
+                getHeaders: (apiKey) => ({
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${apiKey}`,
+                    'HTTP-Referer': 'https://github.com/nicokempe/youtube-transcript-processor',
+                    'X-Title': 'YouTube Transcript Processor'
+                }),
+                getModelsUrl: () => 'https://openrouter.ai/api/v1/models',
+                buildRequestBody: (prompt, transcript, modelId) => ({
+                    model: modelId,
+                    messages: [{
+                        role: 'user',
+                        content: ProviderService.buildFullPrompt(prompt, transcript)
+                    }],
+                    temperature: 0.7,
+                    max_tokens: 8192
+                }),
+                parseModels: (data) => {
+                    if (!data.data || !Array.isArray(data.data)) {
+                        throw new Error('Invalid API response: no models');
+                    }
+                    return data.data
+                        .filter(m => m.architecture?.modality?.includes('text'))
+                        .map(m => ({
+                            id: m.id,
+                            name: m.name || m.id,
+                            shortId: m.id
+                        }));
+                },
+                parseResponse: (data) => {
+                    const text = data.choices?.[0]?.message?.content;
+                    if (!text) throw new Error('Empty response');
+                    return text;
+                },
+                parseError: (data) => data.error?.message || 'Unknown error'
+            },
+
+            mistral: {
+                name: 'Mistral AI',
+                modelsUrl: 'https://api.mistral.ai/v1/models',
+                generateUrl: 'https://api.mistral.ai/v1/chat/completions',
+                authType: 'bearer',
+                modelsMethod: 'GET',
+                generateMethod: 'POST',
+                getGenerateUrl: () => 'https://api.mistral.ai/v1/chat/completions',
+                getHeaders: (apiKey) => ({
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${apiKey}`
+                }),
+                getModelsUrl: () => 'https://api.mistral.ai/v1/models',
+                buildRequestBody: (prompt, transcript, modelId) => ({
+                    model: modelId,
+                    messages: [{
+                        role: 'user',
+                        content: ProviderService.buildFullPrompt(prompt, transcript)
+                    }],
+                    temperature: 0.7,
+                    max_tokens: 8192
+                }),
+                parseModels: (data) => {
+                    const models = data.data || data;
+                    if (!Array.isArray(models)) {
+                        throw new Error('Invalid API response: no models');
+                    }
+                    return models
+                        .filter(m => m.capabilities?.completion_chat !== false)
+                        .map(m => ({
+                            id: m.id,
+                            name: m.name || m.id,
+                            shortId: m.id
+                        }));
+                },
+                parseResponse: (data) => {
+                    const text = data.choices?.[0]?.message?.content;
+                    if (!text) throw new Error('Empty response');
+                    return text;
+                },
+                parseError: (data) => data.message || data.error?.message || 'Unknown error'
+            },
+
+            groq: {
+                name: 'Groq',
+                modelsUrl: 'https://api.groq.com/openai/v1/models',
+                generateUrl: 'https://api.groq.com/openai/v1/chat/completions',
+                authType: 'bearer',
+                modelsMethod: 'GET',
+                generateMethod: 'POST',
+                getGenerateUrl: () => 'https://api.groq.com/openai/v1/chat/completions',
+                getHeaders: (apiKey) => ({
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${apiKey}`
+                }),
+                getModelsUrl: () => 'https://api.groq.com/openai/v1/models',
+                buildRequestBody: (prompt, transcript, modelId) => ({
+                    model: modelId,
+                    messages: [{
+                        role: 'user',
+                        content: ProviderService.buildFullPrompt(prompt, transcript)
+                    }],
+                    temperature: 0.7,
+                    max_tokens: 8192
+                }),
+                parseModels: (data) => {
+                    if (!data.data || !Array.isArray(data.data)) {
+                        throw new Error('Invalid API response: no models');
+                    }
+                    return data.data
+                        .filter(m => m.active !== false)
+                        .map(m => ({
+                            id: m.id,
+                            name: m.id,
+                            shortId: m.id
+                        }));
+                },
+                parseResponse: (data) => {
+                    const text = data.choices?.[0]?.message?.content;
+                    if (!text) throw new Error('Empty response');
+                    return text;
+                },
+                parseError: (data) => data.error?.message || 'Unknown error'
+            },
+
+            cerebras: {
+                name: 'Cerebras',
+                modelsUrl: 'https://api.cerebras.ai/v1/models',
+                generateUrl: 'https://api.cerebras.ai/v1/chat/completions',
+                authType: 'bearer',
+                modelsMethod: 'GET',
+                generateMethod: 'POST',
+                getGenerateUrl: () => 'https://api.cerebras.ai/v1/chat/completions',
+                getHeaders: (apiKey) => ({
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${apiKey}`,
+                    'User-Agent': 'YouTube-Transcript-Processor/4.4'
+                }),
+                getModelsUrl: () => 'https://api.cerebras.ai/v1/models',
+                buildRequestBody: (prompt, transcript, modelId) => ({
+                    model: modelId,
+                    messages: [{
+                        role: 'user',
+                        content: ProviderService.buildFullPrompt(prompt, transcript)
+                    }],
+                    temperature: 0.7,
+                    max_tokens: 8192
+                }),
+                parseModels: (data) => {
+                    if (!data.data || !Array.isArray(data.data)) {
+                        throw new Error('Invalid API response: no models');
+                    }
+                    return data.data.map(m => ({
+                        id: m.id,
+                        name: m.id,
+                        shortId: m.id
+                    }));
+                },
+                parseResponse: (data) => {
+                    const text = data.choices?.[0]?.message?.content;
+                    if (!text) throw new Error('Empty response');
+                    return text;
+                },
+                parseError: (data) => data.error?.message || 'Unknown error'
+            }
+        },
+
         /**
-         * Fetch available models
+         * Build full prompt with transcript
          */
-        async fetchModels(apiKey) {
+        buildFullPrompt(prompt, transcript) {
+            return prompt
+                ? `${prompt}\n\nTranscript:\n${transcript}`
+                : `Summarize this video transcript. Use Markdown formatting.\n\nTranscript:\n${transcript}`;
+        },
+
+        /**
+         * Fetch available models for a provider
+         */
+        async fetchModels(providerId, apiKey) {
             return new Promise((resolve, reject) => {
                 if (!apiKey) {
                     reject(new Error('API key is required'));
                     return;
                 }
 
+                const config = this.configs[providerId];
+                if (!config) {
+                    reject(new Error(`Unknown provider: ${providerId}`));
+                    return;
+                }
+
+                const url = config.getModelsUrl(apiKey);
+                const headers = config.authType === 'bearer'
+                    ? { 'Authorization': `Bearer ${apiKey}` }
+                    : {};
+
                 GM_xmlhttpRequest({
-                    method: 'GET',
-                    url: `${CONFIG.GEMINI_API_BASE}?key=${apiKey}`,
+                    method: config.modelsMethod,
+                    url: url,
+                    headers: headers,
                     timeout: 15000,
                     onload: (response) => {
                         if (response.status !== 200) {
                             let errorMsg = `HTTP ${response.status}`;
                             try {
                                 const data = JSON.parse(response.responseText);
-                                if (data.error?.message) {
-                                    errorMsg = data.error.message;
-                                }
+                                errorMsg = config.parseError(data) || errorMsg;
                             } catch (e) { }
                             reject(new Error(errorMsg));
                             return;
@@ -870,19 +1130,7 @@
 
                         try {
                             const data = JSON.parse(response.responseText);
-
-                            if (!data.models || !Array.isArray(data.models)) {
-                                reject(new Error('Invalid API response: no models'));
-                                return;
-                            }
-
-                            const models = data.models
-                                .filter(m => m.supportedGenerationMethods?.includes('generateContent'))
-                                .map(m => ({
-                                    id: m.name,
-                                    name: m.displayName || m.name,
-                                    shortId: m.name.replace('models/', '')
-                                }));
+                            const models = config.parseModels(data);
 
                             if (models.length === 0) {
                                 reject(new Error('No compatible models found'));
@@ -906,45 +1154,43 @@
         },
 
         /**
-         * Process transcript with Gemini
+         * Process transcript with AI
          */
-        async process(apiKey, modelId, prompt, transcript) {
+        async process(providerId, apiKey, modelId, prompt, transcript) {
             return new Promise((resolve, reject) => {
                 if (!apiKey || !modelId) {
                     reject(new Error('API key and model are required'));
                     return;
                 }
 
-                const fullPrompt = prompt
-                    ? `${prompt}\n\nTranscript:\n${transcript}`
-                    : `Summarize this video transcript. Use Markdown formatting.\n\nTranscript:\n${transcript}`;
+                const config = this.configs[providerId];
+                if (!config) {
+                    reject(new Error(`Unknown provider: ${providerId}`));
+                    return;
+                }
 
-                const modelShortId = modelId.replace('models/', '');
+                let url = config.getGenerateUrl(modelId);
+                let headers = config.getHeaders(apiKey);
+
+                // For Gemini, add API key to URL
+                if (config.authType === 'query') {
+                    url += `?key=${apiKey}`;
+                }
+
+                const body = config.buildRequestBody(prompt, transcript, modelId);
 
                 GM_xmlhttpRequest({
-                    method: 'POST',
-                    url: `${CONFIG.GEMINI_API_BASE}/${modelShortId}:generateContent?key=${apiKey}`,
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    data: JSON.stringify({
-                        contents: [{
-                            parts: [{ text: fullPrompt }]
-                        }],
-                        generationConfig: {
-                            temperature: 0.7,
-                            maxOutputTokens: 8192
-                        }
-                    }),
-                    timeout: 60000,
+                    method: config.generateMethod,
+                    url: url,
+                    headers: headers,
+                    data: JSON.stringify(body),
+                    timeout: 120000, // 2 minutes for longer transcripts
                     onload: (response) => {
                         if (response.status !== 200) {
                             let errorMsg = `HTTP ${response.status}`;
                             try {
                                 const data = JSON.parse(response.responseText);
-                                if (data.error?.message) {
-                                    errorMsg = data.error.message;
-                                }
+                                errorMsg = config.parseError(data) || errorMsg;
                             } catch (e) { }
                             reject(new Error(errorMsg));
                             return;
@@ -952,36 +1198,30 @@
 
                         try {
                             const data = JSON.parse(response.responseText);
-
-                            // Check for blocked content
-                            if (data.promptFeedback?.blockReason) {
-                                reject(new Error(`Content blocked: ${data.promptFeedback.blockReason}`));
-                                return;
-                            }
-
-                            // Extract text from response
-                            const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
-
-                            if (!text) {
-                                reject(new Error('Empty response from Gemini'));
-                                return;
-                            }
+                            const text = config.parseResponse(data);
 
                             State.lastOutput = text;
                             resolve(text);
                         } catch (e) {
-                            reject(new Error('Failed to parse Gemini response: ' + e.message));
+                            reject(new Error(`Failed to parse response: ${e.message}`));
                         }
                     },
                     onerror: () => {
-                        reject(new Error('Network error contacting Gemini'));
+                        reject(new Error('Network error contacting AI provider'));
                     },
                     ontimeout: () => {
-                        reject(new Error('Timeout waiting for Gemini response'));
+                        reject(new Error('Timeout waiting for AI response'));
                     }
                 });
             });
         }
+    };
+
+    // Backward compatibility alias
+    const GeminiService = {
+        fetchModels: (apiKey) => ProviderService.fetchModels('gemini', apiKey),
+        process: (apiKey, modelId, prompt, transcript) =>
+            ProviderService.process('gemini', apiKey, modelId, prompt, transcript)
     };
 
     // ============================================================
@@ -1324,6 +1564,134 @@
                 min-width: 0;
                 padding-left: 6px;
                 padding-right: 6px;
+            }
+
+            /* ==================== SEARCHABLE DROPDOWN ==================== */
+            .yttp-model-search-container {
+                position: relative;
+                width: 100%;
+            }
+            .yttp-model-search-input {
+                width: 100%;
+                padding: 7px 30px 7px 10px;
+                border: 1px solid #ddd;
+                border-radius: 6px;
+                font-size: 12px;
+                font-family: inherit;
+                background: #fafafa;
+                transition: border-color 0.2s, box-shadow 0.2s;
+                box-sizing: border-box;
+                cursor: pointer;
+            }
+            .yttp-model-search-input:focus {
+                outline: none;
+                border-color: #667eea;
+                box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.15);
+                background: #fff;
+                cursor: text;
+            }
+            .yttp-model-search-input:disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
+                background: #f0f0f0;
+            }
+            .yttp-model-search-input::placeholder {
+                color: #999;
+            }
+            .yttp-model-dropdown-arrow {
+                position: absolute;
+                right: 10px;
+                top: 50%;
+                transform: translateY(-50%);
+                pointer-events: none;
+                font-size: 10px;
+                color: #666;
+            }
+            .yttp-model-dropdown {
+                position: fixed;
+                left: 0;
+                right: 0;
+                max-height: 60vh;
+                overflow-y: auto;
+                background: #fff;
+                border: 1px solid #ddd;
+                border-radius: 6px;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+                z-index: 2147483647;
+                display: none;
+            }
+            .yttp-model-dropdown.visible {
+                display: block;
+            }
+            .yttp-model-option {
+                padding: 6px 10px;
+                cursor: pointer;
+                font-size: 12px;
+                border-bottom: 1px solid #f0f0f0;
+                transition: background 0.1s;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            .yttp-model-option:last-child {
+                border-bottom: none;
+            }
+            .yttp-model-option:hover,
+            .yttp-model-option.highlighted {
+                background: #f0f4ff;
+            }
+            .yttp-model-option.selected {
+                background: #e0e7ff;
+                font-weight: 600;
+            }
+            .yttp-model-no-results {
+                padding: 12px 10px;
+                color: #888;
+                font-size: 12px;
+                text-align: center;
+            }
+            .yttp-model-loading {
+                padding: 12px 10px;
+                color: #666;
+                font-size: 12px;
+                text-align: center;
+            }
+
+            /* Dark mode for searchable dropdown */
+            #yttp-panel.dark-mode .yttp-model-search-input {
+                background: #2a2a2a;
+                border-color: #444;
+                color: #e0e0e0;
+            }
+            #yttp-panel.dark-mode .yttp-model-search-input:focus {
+                background: #333;
+                border-color: #667eea;
+            }
+            #yttp-panel.dark-mode .yttp-model-search-input:disabled {
+                background: #222;
+            }
+            #yttp-panel.dark-mode .yttp-model-search-input::placeholder {
+                color: #666;
+            }
+            #yttp-panel.dark-mode .yttp-model-dropdown-arrow {
+                color: #888;
+            }
+            #yttp-panel.dark-mode .yttp-model-dropdown {
+                background: #2a2a2a;
+                border-color: #444;
+            }
+            #yttp-panel.dark-mode .yttp-model-option {
+                border-bottom-color: #3a3a3a;
+            }
+            #yttp-panel.dark-mode .yttp-model-option:hover,
+            #yttp-panel.dark-mode .yttp-model-option.highlighted {
+                background: #3a3a55;
+            }
+            #yttp-panel.dark-mode .yttp-model-option.selected {
+                background: #4a4a6a;
+            }
+            #yttp-panel.dark-mode .yttp-model-option-id {
+                color: #777;
             }
 
             /* ==================== STATUS ==================== */
@@ -1736,7 +2104,6 @@
                         </div>
                         <div class="yttp-input-group">
                             <input type="password" class="yttp-input" id="yttp-api-key" placeholder="Enter API key...">
-                            <button class="yttp-btn yttp-btn-primary yttp-btn-sm" id="yttp-save-key">Save</button>
                             <button class="yttp-btn yttp-btn-primary yttp-btn-sm" id="yttp-fetch-models">Load Models</button>
                         </div>
                     </div>
@@ -1747,9 +2114,12 @@
                             Model
                             <span id="yttp-model-status" style="font-weight:normal; font-size: 11px; margin-left: 8px; color: #666;"></span>
                         </div>
-                        <select class="yttp-select" id="yttp-model" disabled>
-                            <option value="">Load models first...</option>
-                        </select>
+                        <div class="yttp-model-search-container">
+                            <input type="text" class="yttp-model-search-input" id="yttp-model-search" placeholder="Load models first..." disabled>
+                            <span class="yttp-model-dropdown-arrow">▼</span>
+                            <div class="yttp-model-dropdown" id="yttp-model-dropdown"></div>
+                        </div>
+                        <input type="hidden" id="yttp-model" value="">
                     </div>
 
                     <!-- Language Selection -->
@@ -1830,11 +2200,21 @@
                 provider: document.getElementById('yttp-provider'),
                 apiKey: document.getElementById('yttp-api-key'),
                 model: document.getElementById('yttp-model'),
+                modelSearch: document.getElementById('yttp-model-search'),
+                modelDropdown: document.getElementById('yttp-model-dropdown'),
                 prompt: document.getElementById('yttp-prompt'),
                 modelStatus: document.getElementById('yttp-model-status'),
                 output: document.getElementById('yttp-output'),
                 processBtn: document.getElementById('yttp-process'),
                 darkModeBtn: document.getElementById('yttp-dark-mode')
+            };
+
+            // Model search state
+            this.modelSearchState = {
+                models: [],
+                filteredModels: [],
+                highlightedIndex: -1,
+                isOpen: false
             };
 
             // Apply saved geometry
@@ -1870,14 +2250,11 @@
             this.elements.apiKey.value = State.getApiKey();
             this.elements.prompt.value = State.prompt;
 
-            // If we have a saved model, add it as an option
-            if (State.selectedModel) {
-                const opt = document.createElement('option');
-                opt.value = State.selectedModel;
-                opt.textContent = State.selectedModel.replace('models/', '');
-                this.elements.model.replaceChildren();
-                this.elements.model.appendChild(opt);
-                this.elements.model.value = State.selectedModel;
+            // If we have a saved model for this provider, show it in the search input
+            const savedModel = State.getSelectedModelForProvider(State.selectedProvider);
+            if (savedModel) {
+                this.elements.model.value = savedModel;
+                this.elements.modelSearch.value = savedModel.replace('models/', '');
             }
 
             this.updateProcessButton();
@@ -1906,14 +2283,12 @@
 
             // Prevent scroll propagation to page when hovering over panel
             this.panel.addEventListener('wheel', (e) => {
-                const target = e.target.closest('.yttp-tab-content, .yttp-output-content');
+                const target = e.target.closest('.yttp-tab-content, .yttp-output-content, .yttp-model-dropdown');
                 if (target) {
                     const isScrollable = target.scrollHeight > target.clientHeight;
                     const atTop = target.scrollTop === 0;
                     const atBottom = target.scrollTop + target.clientHeight >= target.scrollHeight - 1;
 
-                    // Only stop propagation if element is scrollable and not at boundary
-                    // or if scrolling would go "past" the boundary
                     if (isScrollable) {
                         if ((e.deltaY < 0 && atTop) || (e.deltaY > 0 && atBottom)) {
                             e.preventDefault();
@@ -1927,20 +2302,36 @@
             document.getElementById('yttp-tab-config').addEventListener('click', () => this.switchTab('config'));
             document.getElementById('yttp-tab-output').addEventListener('click', () => this.switchTab('output'));
 
-            // Form controls - save on change
-            document.getElementById('yttp-save-key').addEventListener('click', () => this.saveApiKey());
+            // Form controls
             document.getElementById('yttp-fetch-models').addEventListener('click', () => this.fetchModels());
 
+            // Auto-save API key on input (debounced)
+            let apiKeyDebounce = null;
+            this.elements.apiKey.addEventListener('input', (e) => {
+                clearTimeout(apiKeyDebounce);
+                apiKeyDebounce = setTimeout(() => {
+                    State.setApiKey(e.target.value.trim());
+                    this.updateProcessButton();
+                }, 300);
+            });
+
+            // Provider change - auto-load models if API key exists
             this.elements.provider.addEventListener('change', (e) => {
                 State.selectedProvider = e.target.value;
                 State.save();
-                this.elements.apiKey.value = State.getApiKey();
-                this.updateProcessButton();
-            });
 
-            this.elements.model.addEventListener('change', (e) => {
-                State.selectedModel = e.target.value;
-                State.save();
+                // Load API key for new provider
+                const apiKey = State.getApiKey();
+                this.elements.apiKey.value = apiKey;
+
+                // Reset model selection UI
+                this.resetModelDropdown();
+
+                // Auto-load models if API key exists
+                if (apiKey) {
+                    this.fetchModels();
+                }
+
                 this.updateProcessButton();
             });
 
@@ -1949,8 +2340,18 @@
                 State.save();
             });
 
+            // Setup searchable model dropdown
+            this.setupModelSearchDropdown();
+
             // Language selection - opens YouTube's transcript panel
             document.getElementById('yttp-select-language').addEventListener('click', () => this.openLanguageSelector());
+
+            // Close model dropdown when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.yttp-model-search-container')) {
+                    this.closeModelDropdown();
+                }
+            });
 
             // Transcript actions
             document.getElementById('yttp-copy-text').addEventListener('click', () => this.copyTranscriptText());
@@ -1971,6 +2372,245 @@
             // Smart Resize Observer for Config Tab
             // Monitors panel height to switch between "Grow" and "Scroll" modes
             this.setupConfigResizeObserver();
+        }
+
+        setupModelSearchDropdown() {
+            const input = this.elements.modelSearch;
+            const dropdown = this.elements.modelDropdown;
+
+            // Focus - open dropdown
+            input.addEventListener('focus', () => {
+                if (!input.disabled && this.modelSearchState.models.length > 0) {
+                    this.openModelDropdown();
+                }
+            });
+
+            // Click - toggle dropdown
+            input.addEventListener('click', (e) => {
+                if (!input.disabled && this.modelSearchState.models.length > 0) {
+                    if (this.modelSearchState.isOpen) {
+                        // Select all text for easy replacement
+                        input.select();
+                    } else {
+                        this.openModelDropdown();
+                    }
+                }
+            });
+
+            // Input - filter models
+            input.addEventListener('input', (e) => {
+                const query = e.target.value.toLowerCase().trim();
+                this.filterModels(query);
+                if (!this.modelSearchState.isOpen) {
+                    this.openModelDropdown();
+                }
+            });
+
+            // Keyboard navigation
+            input.addEventListener('keydown', (e) => {
+                if (!this.modelSearchState.isOpen) {
+                    if (e.key === 'ArrowDown' || e.key === 'Enter') {
+                        this.openModelDropdown();
+                        e.preventDefault();
+                    }
+                    return;
+                }
+
+                switch (e.key) {
+                    case 'ArrowDown':
+                        e.preventDefault();
+                        this.highlightNextModel(1);
+                        break;
+                    case 'ArrowUp':
+                        e.preventDefault();
+                        this.highlightNextModel(-1);
+                        break;
+                    case 'Enter':
+                        e.preventDefault();
+                        if (this.modelSearchState.highlightedIndex >= 0) {
+                            const model = this.modelSearchState.filteredModels[this.modelSearchState.highlightedIndex];
+                            if (model) this.selectModel(model);
+                        } else if (this.modelSearchState.filteredModels.length === 1) {
+                            this.selectModel(this.modelSearchState.filteredModels[0]);
+                        }
+                        break;
+                    case 'Escape':
+                        e.preventDefault();
+                        this.closeModelDropdown();
+                        break;
+                    case 'Tab':
+                        this.closeModelDropdown();
+                        break;
+                }
+            });
+        }
+
+        resetModelDropdown() {
+            this.modelSearchState.models = [];
+            this.modelSearchState.filteredModels = [];
+            this.modelSearchState.highlightedIndex = -1;
+            this.elements.modelSearch.value = '';
+            this.elements.modelSearch.placeholder = 'Load models first...';
+            this.elements.modelSearch.disabled = true;
+            this.elements.model.value = '';
+            this.closeModelDropdown();
+        }
+
+        openModelDropdown() {
+            if (this.modelSearchState.models.length === 0) return;
+
+            this.modelSearchState.isOpen = true;
+            this.elements.modelDropdown.classList.add('visible');
+
+            // Position dropdown below the input, spanning available width
+            const inputRect = this.elements.modelSearch.getBoundingClientRect();
+            const dropdown = this.elements.modelDropdown;
+
+            dropdown.style.top = (inputRect.bottom + 2) + 'px';
+            dropdown.style.left = inputRect.left + 'px';
+            dropdown.style.width = inputRect.width + 'px';
+            dropdown.style.maxHeight = (window.innerHeight - inputRect.bottom - 10) + 'px';
+
+            this.renderModelDropdown();
+        }
+
+        closeModelDropdown() {
+            this.modelSearchState.isOpen = false;
+            this.modelSearchState.highlightedIndex = -1;
+            this.elements.modelDropdown.classList.remove('visible');
+
+            // Restore selected model text if user didn't select
+            const currentModel = this.modelSearchState.models.find(m => m.id === this.elements.model.value);
+            if (currentModel) {
+                this.elements.modelSearch.value = currentModel.shortId || currentModel.id;
+            }
+        }
+
+        filterModels(query) {
+            if (!query) {
+                this.modelSearchState.filteredModels = [...this.modelSearchState.models];
+            } else {
+                this.modelSearchState.filteredModels = this.modelSearchState.models.filter(m => {
+                    const searchStr = `${m.name} ${m.id} ${m.shortId}`.toLowerCase();
+                    return searchStr.includes(query);
+                });
+            }
+            this.modelSearchState.highlightedIndex = -1;
+            this.renderModelDropdown();
+        }
+
+        highlightNextModel(direction) {
+            const count = this.modelSearchState.filteredModels.length;
+            if (count === 0) return;
+
+            let newIndex = this.modelSearchState.highlightedIndex + direction;
+            if (newIndex < 0) newIndex = count - 1;
+            if (newIndex >= count) newIndex = 0;
+
+            this.modelSearchState.highlightedIndex = newIndex;
+            this.renderModelDropdown();
+
+            // Scroll highlighted option into view
+            const highlighted = this.elements.modelDropdown.querySelector('.highlighted');
+            if (highlighted) {
+                highlighted.scrollIntoView({ block: 'nearest' });
+            }
+        }
+
+        renderModelDropdown() {
+            const dropdown = this.elements.modelDropdown;
+            const models = this.modelSearchState.filteredModels;
+            const selectedId = this.elements.model.value;
+
+            if (models.length === 0) {
+                const msg = this.modelSearchState.models.length === 0
+                    ? 'No models loaded'
+                    : 'No matching models';
+
+                if (trustedTypesPolicy) {
+                    dropdown.innerHTML = trustedTypesPolicy.createHTML(
+                        `<div class="yttp-model-no-results">${msg}</div>`
+                    );
+                } else {
+                    dropdown.innerHTML = `<div class="yttp-model-no-results">${msg}</div>`;
+                }
+                return;
+            }
+
+            const html = models.map((m, i) => {
+                const isSelected = m.id === selectedId;
+                const isHighlighted = i === this.modelSearchState.highlightedIndex;
+                const classes = [
+                    'yttp-model-option',
+                    isSelected ? 'selected' : '',
+                    isHighlighted ? 'highlighted' : ''
+                ].filter(Boolean).join(' ');
+
+                const displayText = m.shortId || m.id;
+
+                return `<div class="${classes}" data-model-id="${m.id}" data-index="${i}">${this.escapeHtml(displayText)}</div>`;
+            }).join('');
+
+            if (trustedTypesPolicy) {
+                dropdown.innerHTML = trustedTypesPolicy.createHTML(html);
+            } else {
+                dropdown.innerHTML = html;
+            }
+
+            // Add click handlers to options
+            dropdown.querySelectorAll('.yttp-model-option').forEach(option => {
+                option.addEventListener('click', (e) => {
+                    const modelId = option.dataset.modelId;
+                    const model = this.modelSearchState.models.find(m => m.id === modelId);
+                    if (model) this.selectModel(model);
+                });
+
+                option.addEventListener('mouseenter', () => {
+                    const index = parseInt(option.dataset.index, 10);
+                    this.modelSearchState.highlightedIndex = index;
+                    dropdown.querySelectorAll('.yttp-model-option').forEach((opt, i) => {
+                        opt.classList.toggle('highlighted', i === index);
+                    });
+                });
+            });
+        }
+
+        selectModel(model) {
+            this.elements.model.value = model.id;
+            this.elements.modelSearch.value = model.shortId || model.id;
+            State.setSelectedModelForProvider(State.selectedProvider, model.id);
+            this.closeModelDropdown();
+            this.updateProcessButton();
+        }
+
+        escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        populateModelDropdown(models) {
+            this.modelSearchState.models = models;
+            this.modelSearchState.filteredModels = [...models];
+            this.modelSearchState.highlightedIndex = -1;
+
+            this.elements.modelSearch.disabled = false;
+            this.elements.modelSearch.placeholder = 'Search or select model...';
+
+            // Try to restore previously selected model for this provider
+            const savedModelId = State.getSelectedModelForProvider(State.selectedProvider);
+            const savedModel = models.find(m => m.id === savedModelId);
+
+            if (savedModel) {
+                this.selectModel(savedModel);
+            } else {
+                // Select first model or a recommended one
+                const flashModel = models.find(m => m.shortId?.includes('flash'));
+                const toSelect = flashModel || models[0];
+                if (toSelect) {
+                    this.selectModel(toSelect);
+                }
+            }
         }
 
         setupConfigResizeObserver() {
@@ -2069,6 +2709,9 @@
             // Drag
             header.addEventListener('mousedown', (e) => {
                 if (e.target.closest('.yttp-header-buttons')) return;
+
+                // Close model dropdown when drag starts
+                this.closeModelDropdown();
 
                 this.isDragging = true;
                 const rect = this.panel.getBoundingClientRect();
@@ -2351,7 +2994,7 @@
 
         updateProcessButton() {
             const hasApiKey = !!State.getApiKey();
-            const hasModel = !!State.selectedModel && State.selectedModel !== '';
+            const hasModel = !!this.elements.model.value;
             this.elements.processBtn.disabled = !(hasApiKey && hasModel);
         }
 
@@ -2403,17 +3046,6 @@
 
         // ==================== Actions ====================
 
-        saveApiKey() {
-            const btn = document.getElementById('yttp-save-key');
-            const key = this.elements.apiKey.value.trim();
-            if (!key) {
-                this.showButtonFeedback(btn, 'Enter key first', 'error');
-                return;
-            }
-            State.setApiKey(key);
-            this.showButtonFeedback(btn, 'Saved!', 'success');
-        }
-
         async fetchModels() {
             const btn = document.getElementById('yttp-fetch-models');
             const apiKey = State.getApiKey();
@@ -2426,33 +3058,15 @@
             this.elements.modelStatus.style.color = '#666';
 
             try {
-                const models = await GeminiService.fetchModels(apiKey);
+                const models = await ProviderService.fetchModels(State.selectedProvider, apiKey);
 
-                this.elements.model.replaceChildren();
-                models.forEach(m => {
-                    const opt = document.createElement('option');
-                    opt.value = m.id;
-                    opt.textContent = `${m.name} (${m.shortId})`;
-                    this.elements.model.appendChild(opt);
-                });
-                this.elements.model.disabled = false;
-
-                // Select saved model or find a flash model
-                const savedModel = models.find(m => m.id === State.selectedModel);
-                const flashModel = models.find(m => m.shortId.includes('flash'));
-                const toSelect = savedModel || flashModel || models[0];
-
-                if (toSelect) {
-                    this.elements.model.value = toSelect.id;
-                    State.selectedModel = toSelect.id;
-                    State.save();
-                }
+                // Populate the searchable dropdown
+                this.populateModelDropdown(models);
 
                 this.updateProcessButton();
-                this.elements.modelStatus.textContent = `Loaded ${models.length} models`;
-                this.elements.modelStatus.style.color = '#2e7d32'; // Success green
+                this.elements.modelStatus.textContent = `${models.length} models`;
+                this.elements.modelStatus.style.color = '#2e7d32';
 
-                // Clear success message after 3 seconds
                 setTimeout(() => {
                     this.elements.modelStatus.textContent = '';
                 }, 3000);
@@ -2626,7 +3240,7 @@
         async processWithAI() {
             const btn = this.elements.processBtn;
             const apiKey = State.getApiKey();
-            const modelId = State.selectedModel;
+            const modelId = this.elements.model.value;
 
             if (!apiKey || !modelId) {
                 this.showButtonFeedback(btn, 'Configure API & Model first', 'error');
@@ -2638,9 +3252,10 @@
 
             try {
                 const data = await TranscriptService.fetch();
-                this.showButtonFeedback(btn, 'Processing...', 'info', 20000);
+                this.showButtonFeedback(btn, 'Processing...', 'info', 60000);
 
-                const result = await GeminiService.process(
+                const result = await ProviderService.process(
+                    State.selectedProvider,
                     apiKey,
                     modelId,
                     State.prompt,

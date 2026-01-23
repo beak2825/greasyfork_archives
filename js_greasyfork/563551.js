@@ -2,7 +2,7 @@
 // @name         Site Redirector Pro
 // @name:zh-CN   网站重定向助手
 // @namespace    https://github.com/Jsaeron/site-redirector
-// @version      1.3.0
+// @version      1.5.0
 // @description  Block distracting websites with a cooldown timer and redirect to productive sites
 // @description:zh-CN  拦截分心网站，冷静倒计时后重定向到指定网站，帮助你保持专注
 // @author       Daniel
@@ -30,6 +30,73 @@
         target: GM_getValue('redirectTarget', DEFAULT_TARGET),  // 重定向目标（可通过菜单修改）
         cooldown: 30,                  // 冷静期秒数
     };
+
+    // 主题配置
+    const THEMES = {
+        dark: {
+            bg: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)',
+            text: '#fff',
+            textMuted: '#888',
+            textHint: '#666',
+            accent: '#e94560',
+            quoteText: '#aaa',
+            btnBorder: '#444',
+            btnText: '#666',
+            btnHoverBorder: '#888',
+            btnHoverText: '#aaa',
+            choiceTitle: '#aaa'
+        },
+        light: {
+            bg: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
+            text: '#1a1a2e',
+            textMuted: '#666',
+            textHint: '#888',
+            accent: '#e94560',
+            quoteText: '#555',
+            btnBorder: '#ccc',
+            btnText: '#666',
+            btnHoverBorder: '#999',
+            btnHoverText: '#333',
+            choiceTitle: '#555'
+        }
+    };
+
+    // 获取当前主题模式
+    function getThemeMode() {
+        return GM_getValue('themeMode', 'auto');  // auto, light, dark
+    }
+
+    // 获取实际应用的主题
+    function getActiveTheme() {
+        const mode = getThemeMode();
+        if (mode === 'auto') {
+            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+        return mode;
+    }
+
+    const currentTheme = THEMES[getActiveTheme()];
+
+    // 随机标题文案（灵魂拷问 + 温和提醒）
+    const TITLES = [
+        // 灵魂拷问风格
+        '这真的是你想要的吗？',
+        '未来的你会感谢现在的决定',
+        '此刻的选择，定义你的一天',
+        '你的目标还记得吗？',
+        '时间正在流逝...',
+        '这是最好的时间利用方式吗？',
+        '你确定不会后悔吗？',
+        '想想你真正想成为的人',
+        // 温和提醒风格
+        '休息一下，想想再决定',
+        '深呼吸，冷静一下',
+        '给自己30秒思考时间',
+        '暂停一下，整理思绪',
+        '慢下来，听听内心的声音',
+        '这是一个选择的时刻',
+    ];
+    const randomTitle = TITLES[Math.floor(Math.random() * TITLES.length)];
 
     // 获取黑名单
     function getBlacklist() {
@@ -143,7 +210,30 @@
         const count = GM_getValue('blockCount', 0);
         const target = GM_getValue('redirectTarget', DEFAULT_TARGET);
         const blacklist = getBlacklist();
-        alert(`累计拦截次数：${count}\n当前重定向目标：${target}\n黑名单网站数：${blacklist.length}`);
+        const themeMode = getThemeMode();
+        const themeModeText = { auto: '跟随系统', light: '明亮模式', dark: '暗黑模式' }[themeMode];
+        alert(`累计拦截次数：${count}\n当前重定向目标：${target}\n黑名单网站数：${blacklist.length}\n当前主题：${themeModeText}`);
+    });
+
+    // 注册菜单命令：切换主题
+    GM_registerMenuCommand('🎨 切换主题模式', () => {
+        const current = getThemeMode();
+        const modes = ['auto', 'light', 'dark'];
+        const labels = { auto: '跟随系统', light: '明亮模式', dark: '暗黑模式' };
+        const currentLabel = labels[current];
+        const choice = prompt(`当前主题：${currentLabel}\n\n请输入主题模式：\n1. auto - 跟随系统\n2. light - 明亮模式\n3. dark - 暗黑模式\n\n输入 1、2、3 或 auto、light、dark：`, current);
+        if (choice !== null) {
+            let newMode = choice.trim().toLowerCase();
+            if (newMode === '1') newMode = 'auto';
+            else if (newMode === '2') newMode = 'light';
+            else if (newMode === '3') newMode = 'dark';
+            if (modes.includes(newMode)) {
+                GM_setValue('themeMode', newMode);
+                alert(`主题已切换为：${labels[newMode]}\n刷新页面后生效`);
+            } else {
+                alert('无效的选择');
+            }
+        }
     });
 
     // 更新拦截计数
@@ -160,26 +250,26 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+                background: ${currentTheme.bg};
                 font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-                color: #fff;
+                color: ${currentTheme.text};
             }
             .container { text-align: center; padding: 20px; }
             .icon { font-size: 64px; margin-bottom: 20px; }
             .title { font-size: 28px; font-weight: 600; margin-bottom: 10px; }
-            .subtitle { color: #e94560; margin-bottom: 8px; font-size: 14px; }
-            .count { color: #888; margin-bottom: 40px; }
+            .subtitle { color: ${currentTheme.accent}; margin-bottom: 8px; font-size: 14px; }
+            .count { color: ${currentTheme.textMuted}; margin-bottom: 40px; }
             .timer {
                 font-size: 72px;
                 font-weight: 700;
-                color: #e94560;
+                color: ${currentTheme.accent};
                 margin-bottom: 20px;
                 font-variant-numeric: tabular-nums;
             }
-            .hint { color: #666; font-size: 14px; }
+            .hint { color: ${currentTheme.textHint}; font-size: 14px; }
             .quote-container { margin-top: 40px; padding: 20px; max-width: 500px; }
-            .quote-text { color: #aaa; font-size: 16px; font-style: italic; line-height: 1.6; }
-            .quote-source { color: #666; font-size: 12px; margin-top: 10px; }
+            .quote-text { color: ${currentTheme.quoteText}; font-size: 16px; font-style: italic; line-height: 1.6; }
+            .quote-source { color: ${currentTheme.textHint}; font-size: 12px; margin-top: 10px; }
             .actions { margin-top: 30px; display: flex; gap: 12px; justify-content: center; }
             .btn {
                 padding: 10px 24px;
@@ -189,19 +279,19 @@
                 font-size: 14px;
             }
             .btn-primary {
-                background: #e94560;
+                background: ${currentTheme.accent};
                 border: none;
                 color: #fff;
             }
             .btn-primary:hover { background: #d63850; }
             .btn-secondary {
                 background: transparent;
-                border: 1px solid #444;
-                color: #666;
+                border: 1px solid ${currentTheme.btnBorder};
+                color: ${currentTheme.btnText};
             }
-            .btn-secondary:hover { border-color: #888; color: #aaa; }
+            .btn-secondary:hover { border-color: ${currentTheme.btnHoverBorder}; color: ${currentTheme.btnHoverText}; }
             .choice-container { display: none; margin-top: 30px; }
-            .choice-title { font-size: 20px; margin-bottom: 20px; color: #aaa; }
+            .choice-title { font-size: 20px; margin-bottom: 20px; color: ${currentTheme.choiceTitle}; }
             .pills { display: flex; gap: 30px; justify-content: center; }
             .pill {
                 padding: 20px 40px;
@@ -232,7 +322,7 @@
     document.body.innerHTML = `
         <div class="container">
             <div class="icon">🛑</div>
-            <div class="title">你确定要摸鱼吗？</div>
+            <div class="title">${randomTitle}</div>
             <div class="subtitle">${location.hostname}</div>
             <div class="count">这是你第 <strong>${count}</strong> 次被拦截</div>
             <div class="timer" id="countdown">${CONFIG.cooldown}</div>

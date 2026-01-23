@@ -1,162 +1,155 @@
 // ==UserScript==
 // @name StreamGrabber
 // @namespace https://github.com/streamgrabber-lite
-// @version 1.2.4
+// @version 1.2.6
 // @description Lightweight downloader for HLS (.m3u8 via m3u8 parser), video blobs, and direct videos. Mobile plus Desktop. Pause or Resume. AES 128. fMP4. Minimal UI.
 // @match *://*/*
-
 // --- Existing Social and Streaming Exclusions ---
- // @exclude *://*.youtube.com/*
- // @exclude *://*.youtu.be/*
- // @exclude *://*.x.com/*
- // @exclude *://*.twitch.tv/*
- // @exclude *://*.reddit.com/*
- // @exclude *://*.redd.it/*
- // @exclude *://*.facebook.com/*
- // @exclude *://*.instagram.com/*
- // @exclude *://*.tiktok.com/*
- // @exclude *://*.netflix.com/*
- // @exclude *://*.hulu.com/*
- // @exclude *://*.disneyplus.com/*
- // @exclude *://*.primevideo.com/*
- // @exclude *://*.spotify.com/*
-
+// @exclude *://*.youtube.com/*
+// @exclude *://*.youtu.be/*
+// @exclude *://*.x.com/*
+// @exclude *://*.twitch.tv/*
+// @exclude *://*.reddit.com/*
+// @exclude *://*.redd.it/*
+// @exclude *://*.facebook.com/*
+// @exclude *://*.instagram.com/*
+// @exclude *://*.tiktok.com/*
+// @exclude *://*.netflix.com/*
+// @exclude *://*.hulu.com/*
+// @exclude *://*.disneyplus.com/*
+// @exclude *://*.primevideo.com/*
+// @exclude *://*.spotify.com/*
 // --- Music and Audio Only ---
- // @exclude *://music.youtube.com/*
- // @exclude *://*.soundcloud.com/*
- // @exclude *://*.deezer.com/*
- // @exclude *://*.pandora.com/*
- // @exclude *://music.apple.com/*
- // @exclude *://*.tidal.com/*
- // @exclude *://*.gaana.com/*
- // @exclude *://*.jiosaavn.com/*
- // @exclude *://*.wynk.in/*
-
+// @exclude *://music.youtube.com/*
+// @exclude *://*.soundcloud.com/*
+// @exclude *://*.deezer.com/*
+// @exclude *://*.pandora.com/*
+// @exclude *://music.apple.com/*
+// @exclude *://*.tidal.com/*
+// @exclude *://*.gaana.com/*
+// @exclude *://*.jiosaavn.com/*
+// @exclude *://*.wynk.in/*
 // --- Productivity, Cloud and Office Suites ---
- // @exclude *://*.super-productivity.com/*
- // @exclude *://*.google.com/*
- // @exclude *://*.office.com/*
- // @exclude *://*.live.com/*
- // @exclude *://*.microsoft365.com/*
- // @exclude *://*.notion.so/*
- // @exclude *://*.trello.com/*
- // @exclude *://*.asana.com/*
- // @exclude *://*.atlassian.net/*
- // @exclude *://*.jira.com/*
- // @exclude *://*.monday.com/*
- // @exclude *://*.clickup.com/*
- // @exclude *://*.linear.app/*
- // @exclude *://*.miro.com/*
- // @exclude *://*.figma.com/*
- // @exclude *://*.canva.com/*
- // @exclude *://*.dropbox.com/*
- // @exclude *://*.box.com/*
- // @exclude *://*.evernote.com/*
- // @exclude *://*.onedrive.live.com/*
-
+// @exclude *://*.super-productivity.com/*
+// @exclude *://*.google.com/*
+// @exclude *://*.office.com/*
+// @exclude *://*.live.com/*
+// @exclude *://*.microsoft365.com/*
+// @exclude *://*.notion.so/*
+// @exclude *://*.trello.com/*
+// @exclude *://*.asana.com/*
+// @exclude *://*.atlassian.net/*
+// @exclude *://*.jira.com/*
+// @exclude *://*.monday.com/*
+// @exclude *://*.clickup.com/*
+// @exclude *://*.linear.app/*
+// @exclude *://*.miro.com/*
+// @exclude *://*.figma.com/*
+// @exclude *://*.canva.com/*
+// @exclude *://*.dropbox.com/*
+// @exclude *://*.box.com/*
+// @exclude *://*.evernote.com/*
+// @exclude *://*.onedrive.live.com/*
 // --- Cloud Consoles and DevOps ---
- // @exclude *://*.amazon.com/*
- // @exclude *://*.aws.amazon.com/*
- // @exclude *://*.azure.com/*
- // @exclude *://portal.azure.com/*
- // @exclude *://console.cloud.google.com/*
- // @exclude *://*.firebase.google.com/*
- // @exclude *://*.vercel.com/*
- // @exclude *://*.netlify.com/*
- // @exclude *://*.heroku.com/*
- // @exclude *://*.digitalocean.com/*
- // @exclude *://*.cloudflare.com/*
-
+// @exclude *://*.amazon.com/*
+// @exclude *://*.aws.amazon.com/*
+// @exclude *://*.azure.com/*
+// @exclude *://portal.azure.com/*
+// @exclude *://console.cloud.google.com/*
+// @exclude *://*.firebase.google.com/*
+// @exclude *://*.vercel.com/*
+// @exclude *://*.netlify.com/*
+// @exclude *://*.heroku.com/*
+// @exclude *://*.digitalocean.com/*
+// @exclude *://*.cloudflare.com/*
 // --- Communication and Chat ---
- // @exclude *://*.telegram.org/*
- // @exclude *://*.slack.com/*
- // @exclude *://app.slack.com/*
- // @exclude *://discord.com/*
- // @exclude *://web.whatsapp.com/*
- // @exclude *://teams.microsoft.com/*
- // @exclude *://zoom.us/*
- // @exclude *://web.skype.com/*
- // @exclude *://messenger.com/*
-
+// @exclude *://*.telegram.org/*
+// @exclude *://*.slack.com/*
+// @exclude *://app.slack.com/*
+// @exclude *://discord.com/*
+// @exclude *://web.whatsapp.com/*
+// @exclude *://teams.microsoft.com/*
+// @exclude *://zoom.us/*
+// @exclude *://web.skype.com/*
+// @exclude *://messenger.com/*
 // --- Search Engines ---
- // @exclude *://*.google.*/*
- // @exclude *://search.brave.com/*
- // @exclude *://*.bing.com/*
- // @exclude *://*.duckduckgo.com/*
- // @exclude *://*.yahoo.com/*
- // @exclude *://*.baidu.com/*
- // @exclude *://*.yandex.com/*
- // @exclude *://*.ecosia.org/*
- // @exclude *://*.startpage.com/*
-
+// @exclude *://*.google.*/*
+// @exclude *://search.brave.com/*
+// @exclude *://*.bing.com/*
+// @exclude *://*.duckduckgo.com/*
+// @exclude *://*.yahoo.com/*
+// @exclude *://*.baidu.com/*
+// @exclude *://*.yandex.com/*
+// @exclude *://*.ecosia.org/*
+// @exclude *://*.startpage.com/*
 // --- Developer Tools and Repositories ---
- // @exclude *://github.com/*
- // @exclude *://gitlab.com/*
- // @exclude *://bitbucket.org/*
- // @exclude *://stackoverflow.com/*
- // @exclude *://*.stackexchange.com/*
- // @exclude *://*.npmjs.com/*
- // @exclude *://pypi.org/*
- // @exclude *://*.w3schools.com/*
- // @exclude *://developer.mozilla.org/*
-
+// @exclude *://github.com/*
+// @exclude *://gitlab.com/*
+// @exclude *://bitbucket.org/*
+// @exclude *://stackoverflow.com/*
+// @exclude *://*.stackexchange.com/*
+// @exclude *://*.npmjs.com/*
+// @exclude *://pypi.org/*
+// @exclude *://*.w3schools.com/*
+// @exclude *://developer.mozilla.org/*
 // --- Wikipedia and Reference ---
- // @exclude *://*.wikipedia.org/*
- // @exclude *://*.wiktionary.org/*
-
+// @exclude *://*.wikipedia.org/*
+// @exclude *://*.wiktionary.org/*
 // --- Banking and Finance Global ---
- // @exclude *://*.paypal.com/*
- // @exclude *://*.stripe.com/*
- // @exclude *://*.wise.com/*
- // @exclude *://*.revolut.com/*
- // @exclude *://*.americanexpress.com/*
- // @exclude *://*.mastercard.com/*
- // @exclude *://*.visa.com/*
-
+// @exclude *://*.paypal.com/*
+// @exclude *://*.stripe.com/*
+// @exclude *://*.wise.com/*
+// @exclude *://*.revolut.com/*
+// @exclude *://*.americanexpress.com/*
+// @exclude *://*.mastercard.com/*
+// @exclude *://*.visa.com/*
 // --- Banking and Finance India ---
- // @exclude *://*.onlinesbi.sbi/*
- // @exclude *://retail.onlinesbi.com/*
- // @exclude *://*.hdfcbank.com/*
- // @exclude *://netbanking.hdfcbank.com/*
- // @exclude *://*.icicibank.com/*
- // @exclude *://infinity.icicibank.com/*
- // @exclude *://*.axisbank.com/*
- // @exclude *://*.kotak.com/*
- // @exclude *://*.pnbindia.in/*
- // @exclude *://*.bankofbaroda.in/*
- // @exclude *://*.canarabank.com/*
- // @exclude *://*.unionbankofindia.co.in/*
- // @exclude *://*.idfcfirstbank.com/*
- // @exclude *://*.indusind.com/*
- // @exclude *://*.yesbank.in/*
- // @exclude *://*.rblbank.com/*
- // @exclude *://*.idbibank.in/*
- // @exclude *://*.paytm.com/*
- // @exclude *://*.phonepe.com/*
- // @exclude *://*.razorpay.com/*
-
+// @exclude *://*.onlinesbi.sbi/*
+// @exclude *://retail.onlinesbi.com/*
+// @exclude *://*.hdfcbank.com/*
+// @exclude *://netbanking.hdfcbank.com/*
+// @exclude *://*.icicibank.com/*
+// @exclude *://infinity.icicibank.com/*
+// @exclude *://*.axisbank.com/*
+// @exclude *://*.kotak.com/*
+// @exclude *://*.pnbindia.in/*
+// @exclude *://*.bankofbaroda.in/*
+// @exclude *://*.canarabank.com/*
+// @exclude *://*.unionbankofindia.co.in/*
+// @exclude *://*.idfcfirstbank.com/*
+// @exclude *://*.indusind.com/*
+// @exclude *://*.yesbank.in/*
+// @exclude *://*.rblbank.com/*
+// @exclude *://*.idbibank.in/*
+// @exclude *://*.paytm.com/*
+// @exclude *://*.phonepe.com/*
+// @exclude *://*.razorpay.com/*
 // --- Government and Official India ---
- // @exclude *://*.gov.in/*
- // @exclude *://*.uidai.gov.in/*
- // @exclude *://*.incometax.gov.in/*
- // @exclude *://*.gst.gov.in/*
- // @exclude *://*.epfindia.gov.in/*
- // @exclude *://*.passportindia.gov.in/*
- // @exclude *://*.irctc.co.in/*
-
+// @exclude *://*.gov.in/*
+// @exclude *://*.uidai.gov.in/*
+// @exclude *://*.incometax.gov.in/*
+// @exclude *://*.gst.gov.in/*
+// @exclude *://*.epfindia.gov.in/*
+// @exclude *://*.passportindia.gov.in/*
+// @exclude *://*.irctc.co.in/*
 // --- Security and Password Managers ---
- // @exclude *://*.lastpass.com/*
- // @exclude *://*.1password.com/*
- // @exclude *://*.bitwarden.com/*
- // @exclude *://*.dashlane.com/*
+// @exclude *://*.lastpass.com/*
+// @exclude *://*.1password.com/*
+// @exclude *://*.bitwarden.com/*
+// @exclude *://*.dashlane.com/*
 
- // @run-at document-start
- // @grant GM_xmlhttpRequest
- // @grant GM_addStyle
- // @connect *
- // @license MIT
- // @require https://cdnjs.cloudflare.com/ajax/libs/m3u8-parser/7.2.0/m3u8-parser.min.js
- // @require https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js
+// @run-at       document-start
+// @grant        GM_xmlhttpRequest
+// @grant        GM_addStyle
+// @grant        GM_getValue
+// @grant        GM_setValue
+// @grant        GM_download
+// @grant        GM_notification
+// @grant        GM_registerMenuCommand
+// @grant        unsafeWindow
+// @connect      *
+// @license      MIT
+// @require      https://cdnjs.cloudflare.com/ajax/libs/m3u8-parser/7.2.0/m3u8-parser.min.js
 // @downloadURL https://update.greasyfork.org/scripts/554898/StreamGrabber.user.js
 // @updateURL https://update.greasyfork.org/scripts/554898/StreamGrabber.meta.js
 // ==/UserScript==
@@ -174,6 +167,7 @@
     MAN_MS: 30000,
     SMALL_BYTES: 1 * 1024 * 1024, // 1MB
     UI_IDLE_MS: 5000, // idle fade delay
+    IS_TOP: window.self === window.top,
   };
   const CACHE = {
     TEXT_MAX: 256,
@@ -185,7 +179,14 @@
   // =========================
   // State & caches
   // =========================
+  // DB items: { url, kind, label, size, type, origin, win? }
+  // We use Maps now to track metadata better
+  const STATE = {
+    items: new Map(), // url -> item (kept uniquely by url)
+  };
   const DB = {
+    // Deprecated old Sets, kept for legacy compat if referenced, 
+    // but we primarily use STATE.items now for the UI list.
     m3u8: new Set(),
     vid: new Set(),
   };
@@ -198,11 +199,9 @@
 
   // Settings
   const SETTINGS = {
-    excludeSmall: (() => {
-      try { const v = localStorage.getItem('sg_exclude_small'); return v == null ? true : v === 'true'; } catch { return true; }
-    })(),
+    excludeSmall: GM_getValue('sg_exclude_small', true)
   };
-  const setExcludeSmall = (v) => { SETTINGS.excludeSmall = !!v; try { localStorage.setItem('sg_exclude_small', String(!!v)); } catch { } };
+  const setExcludeSmall = (v) => { SETTINGS.excludeSmall = !!v; GM_setValue('sg_exclude_small', !!v); };
 
   // =========================
   // Utilities
@@ -212,7 +211,8 @@
   const isHttp = (u) => typeof u === 'string' && /^https?:/i.test(u);
   const isBlob = (u) => typeof u === 'string' && /^blob:/i.test(u);
   const isM3U8Url = (u) => /\.m3u8(\b|[?#]|$)/i.test(u || '');
-  const isVideoUrl = (u) => /\.(mp4|mkv|webm|avi|mov|m4v|ts|m2ts|flv|ogv|ogg)([?#]|$)/i.test(u || '');
+  const isVideoUrl = (u) => /\.(mp4|mkv|webm|avi|mov|m4v|flv|ogv|ogg)([?#]|$)/i.test(u || '');
+  const isSegmentUrl = (u) => /\.(m4s|init|seg|fmp4|ts|m2ts)([?#]|$)/i.test(u || '');
   const looksM3U8Type = (t = '') => /mpegurl|vnd\.apple\.mpegurl|application\/x-mpegurl/i.test(t);
   const looksVideoType = (t = '') => /^video\//i.test(t) || /(matroska|mp4|webm|quicktime)/i.test(t);
   const safeAbs = (u, b) => { try { return new URL(u, b).href; } catch { return u; } };
@@ -249,13 +249,22 @@
     return { start: +m[1], end: m[2] != null ? +m[2] : null };
   };
 
-  // bounded add helper for DB sets
-  function boundedAdd(set, value, max = CACHE.DB_MAX) {
-    if (set.has(value)) return false;
-    set.add(value);
-    while (set.size > max) {
-      const first = set.values().next().value;
-      set.delete(first);
+  // bounded add helper for STATE.items
+  function boundedAddItem(item, max = CACHE.DB_MAX) {
+    if (STATE.items.has(item.url)) return false;
+    STATE.items.set(item.url, item);
+    // keep syncing legacy sets for minimal breakage
+    if (item.kind === 'hls') DB.m3u8.add(item.url);
+    else DB.vid.add(item.url);
+
+    while (STATE.items.size > max) {
+      const first = STATE.items.keys().next().value;
+      const it = STATE.items.get(first);
+      STATE.items.delete(first);
+      if (it) {
+        DB.m3u8.delete(it.url);
+        DB.vid.delete(it.url);
+      }
     }
     return true;
   }
@@ -278,13 +287,17 @@
   }
   // passive cache trim (+prune revoked blobs)
   function trimCaches() {
-    while (DB.m3u8.size > CACHE.DB_MAX) DB.m3u8.delete(DB.m3u8.values().next().value);
-    while (DB.vid.size > CACHE.DB_MAX) DB.vid.delete(DB.vid.values().next().value);
+    // trim DB via bounded rule enforcement if needed, mostly handled on add
+    while (STATE.items.size > CACHE.DB_MAX) {
+      const k = STATE.items.keys().next().value;
+      STATE.items.delete(k);
+    }
     const now = Date.now();
     for (const [href, info] of BLOBS) {
       const idle = now - (info.ts || 0);
       if (info.revoked && idle > CACHE.CLEAR_MS) {
         BLOBS.delete(href);
+        STATE.items.delete(href);
         DB.m3u8.delete(href);
         DB.vid.delete(href);
       }
@@ -540,6 +553,7 @@
   const PROG_WRAP = TOAST;
 
   function mountUI() {
+    if (!CFG.IS_TOP) return; // Only Top Window mounts UI
     if (!document.body) { document.addEventListener('DOMContentLoaded', mountUI, { once: true }); return; }
     if (!FAB.parentNode) document.body.appendChild(FAB);
     if (!PANEL.parentNode) document.body.appendChild(PANEL);
@@ -555,11 +569,92 @@
   }
   mountUI();
 
+  // Menu commands (Top only)
+  if (CFG.IS_TOP) {
+    GM_registerMenuCommand('Show Download Panel', () => {
+      mountUI();
+      showFab();
+      FAB.click();
+    });
+    GM_registerMenuCommand('Clear Cache', () => {
+      STATE.items.clear();
+      DB.m3u8.clear();
+      DB.vid.clear();
+      BLOBS.clear();
+      setBadge();
+      alert('Cache cleared');
+    });
+  }
+
+  // Messaging (Top & Child)
+  window.addEventListener('message', (ev) => {
+    const d = ev.data;
+    if (!d || typeof d !== 'object') return;
+
+    // Child Logic
+    if (d.type === 'SG_CMD_DOWNLOAD') {
+      const { url, kind, variant } = d.payload || {};
+      if (kind === 'video') downloadDirect(url, true);
+      else if (kind === 'hls' || kind === 'variant') downloadHls(url, variant, true);
+    }
+    if (d.type === 'SG_CMD_PICK_RESULT') {
+      const { id, idx } = d.payload; // We send back index or null? Or full object?
+      // Sending index is safer to map back to local object list if we can.
+      // But we sent the full list.
+      // Let's expect the chosen ITEM back, or null.
+      const res = PICKER_REQS.get(id);
+      if (res) {
+        PICKER_REQS.delete(id);
+        res(d.payload.item); // item or null
+      }
+    }
+    // Control commands from Top
+    if (d.type === 'SG_CMD_CONTROL') {
+      const { id, action } = d.payload;
+      const ctrl = PICKER_REQS.get(id + '_ctrl'); // We reused this map for controls? hacky but works
+      if (ctrl) {
+        if (action === 'cancel') ctrl.onCancel?.();
+        if (action === 'stop') ctrl.onStop?.();
+      }
+    }
+
+    // Top Logic
+    if (!CFG.IS_TOP) return;
+
+    if (d.type === 'SG_DETECT' && d.item) {
+      const it = d.item;
+      // Attach remote source for callbacks
+      it.remoteWin = ev.source;
+      it.isRemote = true;
+      if (boundedAddItem(it)) {
+        showFab();
+        setBadge();
+      }
+    }
+    else if (d.type === 'SG_PROGRESS_START') {
+      // Create a proxy card
+      const { id, title, src, stoppable } = d.payload;
+      createRemoteCard(id, title, src, ev.source); // pass stoppable? in makeProgress options
+    }
+    else if (d.type === 'SG_PROGRESS_UPDATE') {
+      updateRemoteCard(d.payload);
+    }
+    else if (d.type === 'SG_PROGRESS_DONE') {
+      finishRemoteCard(d.payload);
+    }
+    else if (d.type === 'SG_CMD_PICK') {
+      const { id, items, title, filterable } = d.payload;
+      pickFromList(items, { title, filterable }).then(sel => {
+        ev.source.postMessage({ type: 'SG_CMD_PICK_RESULT', payload: { id, item: sel } }, '*');
+      });
+    }
+  });
+
   // Badge updates
   let lastBadgeCount = -1, badgeRaf = 0, badgeWanted = 0;
   function flushBadge() {
     badgeRaf = 0;
-    if (badgeWanted > 1) {
+    if (badgeWanted > 0) {
       BADGE.textContent = String(badgeWanted);
       BADGE.style.display = 'inline-block';
     } else {
@@ -567,7 +662,7 @@
     }
   }
   function setBadge() {
-    const n = DB.m3u8.size + DB.vid.size;
+    const n = STATE.items.size;
     if (n === lastBadgeCount) return;
     lastBadgeCount = n;
     badgeWanted = n;
@@ -577,7 +672,10 @@
   let idleT;
   function setIdle() { clearTimeout(idleT); idleT = setTimeout(() => FAB.classList.add('idle'), CFG.UI_IDLE_MS); }
   function clearIdle() { FAB.classList.remove('idle'); clearTimeout(idleT); }
-  function showFab() { mountUI(); FAB.classList.add('show'); setBadge(); clearIdle(); setIdle(); }
+  function showFab() {
+    if (!CFG.IS_TOP) return;
+    mountUI(); FAB.classList.add('show'); setBadge(); clearIdle(); setIdle();
+  }
   function closePanel() { PANEL.classList.remove('show'); }
   function setFabBusy(b) {
     if (b) { FAB.classList.add('busy'); FAB.disabled = true; }
@@ -627,17 +725,56 @@
   // =========================
   // Detection
   // =========================
-  function take(url) {
+  function take(url, metadata = {}) {
     try {
       if (!url || (!isHttp(url) && !isBlob(url))) return;
-      let changed = false;
-      if (isM3U8Url(url) || (isBlob(url) && BLOBS.get(url)?.kind === 'm3u8')) {
-        if (boundedAdd(DB.m3u8, url)) { showFab(); changed = true; }
-      } else if (isVideoUrl(url) || (isBlob(url) && BLOBS.get(url)?.kind === 'video')) {
-        if (boundedAdd(DB.vid, url)) { showFab(); changed = true; }
+      if (isSegmentUrl(url)) return; // Explicitly ignore segments
+
+      let size = metadata.size || null;
+      let type = metadata.type || null;
+
+      // Populate from BLOBS if missing
+      if (isBlob(url)) {
+        const info = BLOBS.get(url);
+        if (info) {
+          if (size == null) size = info.size;
+          if (type == null) type = info.type;
+        }
       }
-      if (changed) setBadge();
-    } catch { }
+
+      // Filter small video blobs (likely segments)
+      // 512KB min for blobs to be considered "Video"
+      if (isBlob(url) && size != null && size < 512 * 1024 && !isM3U8Url(url) && BLOBS.get(url)?.kind !== 'm3u8') {
+        return;
+      }
+
+      const kind = (isM3U8Url(url) || (isBlob(url) && BLOBS.get(url)?.kind === 'm3u8')) ? 'hls' :
+        (isVideoUrl(url) || (isBlob(url) && BLOBS.get(url)?.kind === 'video')) ? 'video' : null;
+
+      if (!kind) return;
+
+      const item = {
+        url,
+        kind,
+        label: kind === 'hls' ? 'HLS' : (guessExt(url, type).toUpperCase()),
+        size: size,
+        type: type,
+        origin: document.location.origin
+      };
+
+      if (!CFG.IS_TOP) {
+        // We are in iframe: send to Top
+        // We cannot send 'window' object, so we listen for commands
+        // We use the URL as ID. If blob, it's unique enough for this session reference.
+        window.top.postMessage({ type: 'SG_DETECT', item: JSON.parse(JSON.stringify(item)) }, '*');
+      } else {
+        // We are Top: Add locally
+        if (boundedAddItem(item)) {
+          showFab();
+          setBadge();
+        }
+      }
+    } catch (e) { err('take', e); }
   }
   // Hook: createObjectURL
   (() => {
@@ -785,7 +922,32 @@
     });
   }
   let resolvePicker = () => { };
+  // =========================
+  // UI interactions
+  // =========================
+  // Maps for async coordination
+  const REMOTE_JOBS = new Map(); // id -> { update, done, remove } (Top only)
+  const PICKER_REQS = new Map(); // id -> resolve (Child only)
+
+  function uid() { return Math.random().toString(36).slice(2) + Date.now().toString(36); }
+
   async function pickFromList(items, { title = 'Select Media', filterable = true } = {}) {
+    if (!CFG.IS_TOP) {
+      // Proxy to Top
+      const id = uid();
+      // We can't send complex objects (like functions) or self structures easily if they have cycles
+      // Items from DB are simple JSON-able, but if they came from *another* frame, they might be complex?
+      // Actually items in Slave are likely local structured ones.
+      // We strip non-clonable data just in case?
+      const safeItems = JSON.parse(JSON.stringify(items));
+      window.top.postMessage({
+        type: 'SG_CMD_PICK',
+        payload: { id, items: safeItems, title, filterable }
+      }, '*');
+      return new Promise(res => PICKER_REQS.set(id, res));
+    }
+
+    // Top Logic (Existing)
     return new Promise((resolve) => {
       resolvePicker = (v) => { closePanel(); resolve(v ?? null); };
       const ttl = PANEL.querySelector('.ttl');
@@ -844,6 +1006,29 @@
 
   // Progress card
   function makeProgress(title, src, { stoppable = false, onStop, onCancel, segs = 0 } = {}) {
+    if (!CFG.IS_TOP) {
+      // Proxy to Top
+      const id = uid();
+      const job = {
+        update(p, txt) {
+          window.top.postMessage({ type: 'SG_PROGRESS_UPDATE', payload: { id, p, txt } }, '*');
+        },
+        done(ok, msg) {
+          window.top.postMessage({ type: 'SG_PROGRESS_DONE', payload: { id, ok, msg } }, '*');
+        },
+        remove() { /* No op, done handles it? Or send explicit remove? */ }
+      };
+
+      // Register for control callbacks
+      PICKER_REQS.set(id + '_ctrl', { onStop, onCancel });
+
+      window.top.postMessage({
+        type: 'SG_PROGRESS_START',
+        payload: { id, title, src, stoppable } // 'segs' only used for UI text?
+      }, '*');
+      return job;
+    }
+
     const div = document.createElement('div');
     div.className = 'umdl-job';
     div.innerHTML = `
@@ -899,6 +1084,40 @@
       },
       remove() { div.remove(); }
     };
+  }
+
+  // Remote Card Helpers (Top)
+  function createRemoteCard(id, title, src, sourceWin) {
+    if (REMOTE_JOBS.has(id)) return;
+    const card = makeProgress(title, src, {
+      stoppable: true, // We assume stoppable if remote requests it? Or passed in payload?
+      onStop: () => {
+        sourceWin.postMessage({ type: 'SG_CMD_CONTROL', payload: { id, action: 'stop' } }, '*');
+        return 'paused'; // UI assumes paused immediately? Sync issue. 
+        // Actually Top UI updates button icon based on return value.
+        // We might need to handle async state or just toggle blindly.
+        // For now, let's toggle blindly.
+      },
+      onCancel: () => {
+        sourceWin.postMessage({ type: 'SG_CMD_CONTROL', payload: { id, action: 'cancel' } }, '*');
+        card.remove();
+        REMOTE_JOBS.delete(id);
+      }
+    });
+    // Extend card with ID ref if needed?
+    REMOTE_JOBS.set(id, card);
+  }
+  function updateRemoteCard({ id, p, txt }) {
+    const card = REMOTE_JOBS.get(id);
+    if (card) card.update(p, txt);
+  }
+  function finishRemoteCard({ id, ok, msg }) {
+    const card = REMOTE_JOBS.get(id);
+    if (card) {
+      card.done(ok, msg);
+      if (ok) setTimeout(() => REMOTE_JOBS.delete(id), 2500);
+      // On error/cancel, we might keep it or delete it. Done handles delete timeout.
+    }
   }
 
   // =========================
@@ -1030,45 +1249,52 @@
   // =========================
   // Build items
   // =========================
+  // =========================
+  // Build items
+  // =========================
   async function buildItems() {
-    const out = [];
-    // m3u8 sources
-    for (const u of DB.m3u8) {
-      const info = BLOBS.get(u);
-      try {
-        const mtxt = await getText(u);
-        const man = parseManifest(mtxt);
-        if (Array.isArray(man.playlists) && man.playlists.length > 0) {
-          out.push({ kind: 'hls', url: u, label: 'HLS', size: null });
-        } else if (Array.isArray(man.segments) && man.segments.length > 0) {
-          const est = estimateHlsFromManifest(man, u, null);
-          const size = est.bytes ?? null;
-          const label = `HLS${size ? ' • ~' + fmtBytes(size) : ''}`;
-          out.push({ kind: 'hls', url: u, label, size });
-        } else {
-          out.push({ kind: 'hls', url: u, label: 'HLS', size: info?.size ?? null });
-        }
-      } catch {
-        out.push({ kind: 'hls', url: u, label: 'HLS', size: info?.size ?? null });
-      }
-    }
-    // direct videos
-    for (const u of DB.vid) {
-      const info = BLOBS.get(u);
-      const ext = guessExt(u, info?.type).toUpperCase();
-      const size = info?.size ?? null;
-      out.push({ kind: 'video', url: u, label: `${ext}${size ? ' • ' + fmtBytes(size) : ''}`, size });
-    }
-    return out;
+    // Return unified list from STATE
+    // Sorting: Videos first? Or timestamp?
+    return Array.from(STATE.items.values()).reverse();
   }
+
   async function handleItem(it) {
+    if (it.isRemote && it.remoteWin) {
+      if (it.remoteWin.closed) { alert('Source frame is gone'); return; }
+      // Ask slave to download
+      // For HLS master playlist, we might want to ask slave to list variants?
+      // Currently implementing direct variant selection in slave logic or simple trigger.
+      // For simplicity: If it's a generic HLS, we trigger downloadHls on slave.
+      // Slave will do the variant fetching/prompting? 
+      // Wait, UI is on master. Slave can't prompt.
+      // If HLS, we might need to fetch variants via Master.
+      // Complex case: Remote HLS. Master parses manifest?
+      // If URL is Http, Master can fetch manifest. If Blob, Master can't.
+
+      if (it.kind === 'hls' && !isBlob(it.url)) {
+        // Master can handle it directly if public URL
+        return downloadHls(it.url);
+      }
+      if (it.kind === 'video' && !isBlob(it.url)) {
+        return downloadDirect(it.url);
+      }
+
+      // Blob or otherwise restricted: Send command
+      it.remoteWin.postMessage({
+        type: 'SG_CMD_DOWNLOAD',
+        payload: { url: it.url, kind: it.kind, variant: it.variant }
+      }, '*');
+      return;
+    }
+
+    // Local handling
     if (it.kind === 'video') return downloadDirect(it.url);
     if (it.kind === 'variant') return downloadHls(it.url, it.variant);
     if (it.kind === 'hls') return downloadHls(it.url);
   }
 
   // =========================
-  // Direct video download (FileSaver)
+  // Direct video download (GM_download)
   // =========================
   async function downloadDirect(url) {
     log('Direct:', url);
@@ -1076,39 +1302,40 @@
     const ext = guessExt(url, info?.type);
     const fn = `${cleanName(document.title)}.${ext}`;
 
-    // blob case
+    const card = makeProgress(fn, url, { onCancel: () => card.remove() }); // GM_download cancellation tricky, simple UI remove
+
+    let dlUrl = url;
+    let cleanup = () => { };
+
     if (info?.blob) {
-      const card = makeProgress(fn, url, { onCancel: () => card.remove() });
-      try {
-        window.saveAs(info.blob, fn);
-        card.update(100, ''); card.done(true);
-      } catch (e) {
-        card.done(false, e?.message);
-      }
-      return;
+      dlUrl = URL.createObjectURL(info.blob);
+      cleanup = () => URL.revokeObjectURL(dlUrl);
     }
 
-    let total = 0, req = null, cancelled = false;
-    const card = makeProgress(fn, url, { onCancel: () => { cancelled = true; try { req?.abort?.(); } catch { }; card.remove(); } });
-    try {
-      const meta = await headMeta(url);
-      total = meta.length || 0;
-      req = gmGet({
-        url, responseType: 'arraybuffer', timeout: CFG.REQ_MS,
-        onprogress: (e) => {
-          if (cancelled) return;
-          const loaded = e?.loaded || 0;
-          if (total > 0) card.update((loaded / total) * 100, `${fmtBytes(loaded)}/${fmtBytes(total)}`);
-          else card.update(0, `${fmtBytes(loaded)}`);
+    GM_download({
+      url: dlUrl,
+      name: fn,
+      onprogress: (e) => {
+        if (e.lengthComputable) {
+          card.update((e.loaded / e.total) * 100, `${fmtBytes(e.loaded)}/${fmtBytes(e.total)}`);
+        } else {
+          card.update(0, fmtBytes(e.loaded));
         }
-      });
-      const buf = await req; if (cancelled) return;
-      const blob = new Blob([buf], { type: meta.type || `video/${ext}` });
-      window.saveAs(blob, fn);
-      card.update(100, ''); card.done(true);
-    } catch (e) {
-      card.done(false, e?.message || 'Failed');
-    }
+      },
+      onload: () => {
+        card.update(100, ''); card.done(true);
+        cleanup();
+        GM_notification({ text: 'Download complete: ' + fn, title: 'StreamGrabber', timeout: 3000 });
+      },
+      onerror: (e) => {
+        card.done(false, 'Failed');
+        cleanup();
+      },
+      ontimeout: () => {
+        card.done(false, 'Timeout');
+        cleanup();
+      }
+    });
   }
 
   // =========================
@@ -1128,13 +1355,22 @@
         // fallthrough to in-memory
       }
     }
-    // Fallback: in-memory (FileSaver)
+    // Fallback: in-memory (GM_download)
     const chunks = [];
     return {
       write: (chunk) => { chunks.push(chunk); return Promise.resolve(); },
       close: () => {
         const blob = new Blob(chunks, { type: mime });
-        window.saveAs(blob, suggestedName);
+        const u = URL.createObjectURL(blob);
+        GM_download({
+          url: u,
+          name: suggestedName,
+          onload: () => {
+            URL.revokeObjectURL(u);
+            GM_notification({ text: 'Download complete: ' + suggestedName, title: 'StreamGrabber', timeout: 3000 });
+          },
+          onerror: () => URL.revokeObjectURL(u)
+        });
       },
       abort: () => { chunks.length = 0; }
     };

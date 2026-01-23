@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AnMe
 // @author       zjw
-// @version      9.7.7
+// @version      9.7.8
 // @namespace    https://github.com/Zhu-junwei/AnMe
 // @description  通用网站多账号切换器
 // @description:zh  通用网站多账号切换器
@@ -79,6 +79,7 @@
         }
 
         * { box-sizing: border-box; }
+        a { text-decoration:none; }
 
         #acc-mgr-fab, .acc-panel, .acc-dialog-mask { pointer-events: auto; }
         #acc-mgr-fab { padding: 10px;position: fixed; bottom: 100px; right: 30px; width: 44px; height: 44px; background: #2196F3; color: white; border-radius: 50%; display: none; align-items: center; justify-content: center; font-size: 20px; cursor: move; z-index: 1000000; box-shadow: 0 8px 30px rgba(0,0,0,0.25); user-select: none; border: none; touch-action: none; transition: transform 0.1s; }
@@ -100,6 +101,9 @@
         .acc-tab-btn.active { color: #2196F3; background: #f2f8fd }
         .acc-tab-btn.active::after { background-color: #2196F3; box-shadow: 0 -1px 4px rgba(33, 150, 243, 0.4); }
 
+        .acc-host-sel {flex:1; padding:6px; font-size:12px; border:1px solid #eee; border-radius:4px; outline:none; cursor:pointer; background:#fff; color:#333;}
+        .aac-btn-goto-host {width:30px; height:30px; border:1px solid #ddd; background:#fff; border-radius:4px; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; color:#555; font-size:16px;}
+
         .acc-scroll-area { flex: 1; overflow-y: auto; padding-right: 4px; margin-top: 2px; overscroll-behavior: contain;}
         .acc-scroll-area::-webkit-scrollbar { width: 4px; }
         .acc-scroll-area::-webkit-scrollbar-thumb { background: #ddd; border-radius: 10px; }
@@ -107,7 +111,7 @@
         /* --- Customized Elements --- */
         .acc-backup-row { display: flex; gap: 8px; margin-bottom: 10px; justify-content: space-between; }
         .acc-icon-btn { flex: 1; height: 38px; padding: 0; border-radius: 6px; border: 1px solid #eee; background: #f9f9f9; cursor: pointer; font-size: 18px; transition: 0.2s; display: flex; align-items: center; justify-content: center; color: #555; }
-        .acc-icon-btn:hover { background: #e3f2fd; border-color: #2196F3; }
+        .acc-icon-btn:hover,.aac-btn-goto-host:hover { background: #e3f2fd; border-color: #2196F3; color:#2196F3}
         .acc-icon-btn.danger:hover { background: #ffebee; border-color: #f44336; color: #f44336; }
 
         .acc-about-content { padding: 5px; color: #444 !important; font-size: 13px !important; line-height: 1.6 !important; text-align: left !important; }
@@ -133,6 +137,7 @@
         /* Others ... */
         .acc-switch-card { padding: 12px; border: 1px solid #eee; border-radius: 8px; margin-bottom: 8px; cursor: pointer; transition: 0.2s; position: relative; background: #fff; }
         .acc-switch-card:hover { border-color: #2196F3; background: #f7fbff; }
+        .acc-switch-card:hover svg {fill: #2196F3 !important;stroke: #2196F3 !important;transition: all 0.2s ease;}
         .acc-card-name { font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 6px; margin-bottom: 6px; color: #333; }
         .acc-card-meta { font-size: 10px; color: #999; display: flex; flex-wrap: wrap; gap: 4px; }
         .acc-mini-tag { background: #f0f0f0; padding: 1px 5px; border-radius: 3px; color: #777; transition: all 0.2s; border: 1px solid transparent; }
@@ -153,7 +158,7 @@
         .acc-row-btn { display: flex; gap: 8px; align-items: center; }
         .acc-input-text { flex: 1; width:100%; padding: 8px; margin-bottom:8px; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; box-sizing: border-box; background: #fff; color: #333; outline: none; transition: all 0.2s; }
         .acc-input-text:focus,.acc-mgr-input:focus { border-color: #2196F3; box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2); }
-        .acc-btn { border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 5px; transition: 0.2s; }
+        .acc-btn { border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 5px; transition: 0.2s; }
         .acc-btn-blue { flex: 1; background: #2196F3; color: white; }
         .acc-btn-plus { width: 38px; height: 38px; background: #fff; color: #666; border: 1px solid #ddd; font-size: 20px; }
         .acc-btn-plus:hover { border-color: #2196F3; color: #2196F3; }
@@ -168,7 +173,7 @@
         .acc-btn-active { background: #2196F3 !important; color: white !important; border-color: #2196F3 !important; }
         .acc-notice-content { line-height: 1.6; color: #444; font-size: 13px; }
         .acc-notice-content h4 { margin: 15px 0 8px 0; color: #333; border-left: 3px solid #2196F3; padding-left: 8px; }
-        .acc-link-btn { color: #2196F3; cursor: pointer; text-decoration: underline; font-size: 12px; }
+        .acc-link-btn { color: #2196F3; cursor: pointer; font-size: 12px; }
         .acc-select-ui { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; background: #fff; cursor: pointer; outline: none; color: #333; }
         .aac-chk {display:flex; align-items:center; flex-wrap:wrap; font-size:11px; color:#666; margin:10px 0;}
         .acc-chk-label { display: inline-flex !important; align-items: center !important; cursor: pointer !important; user-select: none; font-size: 12px; color: #666; }
@@ -239,7 +244,7 @@
                 cookies: []
             };
             if (options.ck) {
-                snapshot.cookies = await new Promise(res => GM_cookie.list({ url: window.location.href }, res));
+                snapshot.cookies = await new Promise(res => GM_cookie.list({}, res));
             }
 
             const hasCookies = snapshot.cookies && snapshot.cookies.length > 0;
@@ -265,12 +270,12 @@
             UI.toggleLoading(true, "Switching...");
             try {
                localStorage.clear(); sessionStorage.clear();
-               const ck = await new Promise(res => GM_cookie.list({ url: window.location.href }, res));
-               for (const c of (ck || [])) await new Promise(res => GM_cookie.delete({ url: window.location.href, name: c.name }, res));
+               const ck = await new Promise(res => GM_cookie.list({}, res));
+               for (const c of (ck || [])) await new Promise(res => GM_cookie.delete({name: c.name }, res));
                Object.entries(data.localStorage || {}).forEach(([k, v]) => localStorage.setItem(k, v));
                Object.entries(data.sessionStorage || {}).forEach(([k, v]) => sessionStorage.setItem(k, v));
                for (const c of (data.cookies || [])) {
-                   const d = { ...c, url: window.location.href }; delete d.hostOnly; delete d.session;
+                   const d = { ...c}; delete d.hostOnly; delete d.session;
                    await new Promise(res => GM_cookie.set(d, res));
                }
                location.reload();
@@ -284,8 +289,8 @@
         async cleanEnvironment() {
             UI.toggleLoading(true, "Cleaning...");
             localStorage.clear(); sessionStorage.clear();
-            const ck = await new Promise(res => GM_cookie.list({ url: window.location.href }, res));
-            for (const c of (ck || [])) await new Promise(res => GM_cookie.delete({ url: window.location.href, name: c.name }, res));
+            const ck = await new Promise(res => GM_cookie.list({}, res));
+            for (const c of (ck || [])) await new Promise(res => GM_cookie.delete({name: c.name }, res));
             location.reload();
         },
 
@@ -299,7 +304,8 @@
             if (content) {
                 const win = window.open("", "_blank");
                 if (win) {
-                    win.document.write(`<html><head><title>AnMe Inspector</title><style>body{font-family:monospace;padding:20px;background:#f5f5f5}pre{white-space:pre-wrap;word-wrap:break-word;background:#fff;padding:15px;border:1px solid #ddd;border-radius:5px}</style></head><body><h3>${Utils.extractName(key)} - ${type}</h3><pre>${JSON.stringify(content, null, 2)}</pre></body></html>`);
+                    win.document.write(`<html><head><title>AnMe Inspector</title><style>body{font-family:monospace;padding:20px;background:#f5f5f5}pre{white-space:pre-wrap;word-wrap:break-word;background:#fff;padding:15px;border:1px solid #ddd;border-radius:5px}</style></head>
+                                            <body><h3>${Utils.extractName(key)} - ${type}</h3><pre>${JSON.stringify(content, null, 2)}</pre></body></html>`);
                     win.document.close();
                 }
             }
@@ -345,7 +351,7 @@
             const blob = new Blob([JSON.stringify(exportObj, null, 2)], { type: "application/json" });
             const url = URL.createObjectURL(blob);
             const downsite = scope === 'current' ? CONST.HOST : 'All_Sites';
-            const a = document.createElement('a'); a.href = url; a.download = `${CONST.META.NAME}_Backup_${downsite}_${new Date().toISOString().slice(0, 10)}.json`; a.click(); URL.revokeObjectURL(url);
+            const a = document.createElement('a'); a.href = url; a.download = `${CONST.META.NAME}_Backup_${downsite}_${new Date().toLocaleString('sv-SE').replace(' ', '_').replace(/:/g, '-')}.json`; a.click(); URL.revokeObjectURL(url);
         },
 
         async importData(file) {
@@ -401,13 +407,16 @@
             <div class="acc-tab-content active" id="pg-switch"><div class="acc-scroll-area" id="switch-area"></div></div>
 
             <div class="acc-tab-content" id="pg-mgr">
-                <select id="host-sel" style="width:100%; padding:6px; margin-bottom:10px; font-size:12px; border:1px solid #eee; border-radius:4px; outline:none; cursor:pointer; background:#fff; color:#333;"></select>
+                <div style="display:flex; gap:5px; margin-bottom:10px; align-items:center;">
+                    <select class="acc-host-sel" id="host-sel"></select>
+                    <button class="aac-btn-goto-host" id="btn-goto-host">→</button>
+                </div>
                 <div class="acc-scroll-area" id="mgr-list-area"></div>
                 <div class="acc-action-fixed" id="mgr-fixed-actions">
                     <div class="acc-chk">
-                        <label class="acc-chk-label"><input type="checkbox" id="c-ck" class="acc-custom-chk" checked> Cookie</label>
-                        <label class="acc-chk-label"><input type="checkbox" id="c-ls" class="acc-custom-chk"> LS</label>
-                        <label class="acc-chk-label"><input type="checkbox" id="c-ss" class="acc-custom-chk"> SS</label>
+                        <label class="acc-chk-label" title="Cookie" ><input type="checkbox" id="c-ck" class="acc-custom-chk" checked> Cookie</label>
+                        <label class="acc-chk-label" title="LocalStorage"><input type="checkbox" id="c-ls" class="acc-custom-chk"> LS</label>
+                        <label class="acc-chk-label" title="SessionStorage"><input type="checkbox" id="c-ss" class="acc-custom-chk"> SS</label>
                         <span class="acc-help-tip" title="${Utils.t('tip_help')}">${CONST.ICONS.HELP}</span>
                         <span class="acc-lock-tip" title="${Utils.t('tip_lock')}">${CONST.ICONS.LOCK}</span>
                     </div>
@@ -468,7 +477,7 @@
                         <div class="acc-about-item"><span class="acc-about-label">License</span><span>MIT</span></div>
                         <div class="acc-about-item"><span class="acc-about-label">Github</span><a href="${CONST.META.LINKS.PROJECT}" target="_blank" style="color:#2196F3">View Repo</a></div>
                         <div style="text-align:center;margin-top:20px;">
-                            <a href="${CONST.META.LINKS.DONATE}" target="_blank" class="acc-btn acc-btn-blue" style="text-decoration:none; display:inline-flex; width:80%;">${CONST.ICONS.DONATE} ${Utils.t('donate')}</a>
+                            <a href="${CONST.META.LINKS.DONATE}" target="_blank" class="acc-btn acc-btn-blue" style="display:inline-flex; width:80%;">${CONST.ICONS.DONATE} ${Utils.t('donate')}</a>
                         </div>
                     </div>
                  </div>
@@ -490,9 +499,9 @@
                 <span class="acc-card-name">${CONST.ICONS.USER} ${Utils.extractName(key)}</span>
                 <div class="acc-card-meta">
                     <span class="acc-mini-tag">${Utils.formatTime(data.time)}</span>
-                    ${(data.cookies?.length || 0) ? `<span class="acc-mini-tag acc-click-tag" data-type="cookies">CK: ${data.cookies.length}</span>` : ''}
-                    ${Object.keys(data.localStorage || {}).length ? `<span class="acc-mini-tag acc-click-tag" data-type="localStorage">LS: ${Object.keys(data.localStorage).length}</span>` : ''}
-                    ${Object.keys(data.sessionStorage || {}).length ? `<span class="acc-mini-tag acc-click-tag" data-type="sessionStorage">SS: ${Object.keys(data.sessionStorage).length}</span>` : ''}
+                    ${(data.cookies?.length || 0) ? `<span class="acc-mini-tag acc-click-tag" title="Cookie"data-type="cookies">CK: ${data.cookies.length}</span>` : ''}
+                    ${Object.keys(data.localStorage || {}).length ? `<span class="acc-mini-tag acc-click-tag" title="LocalStorage" data-type="localStorage">LS: ${Object.keys(data.localStorage).length}</span>` : ''}
+                    ${Object.keys(data.sessionStorage || {}).length ? `<span class="acc-mini-tag acc-click-tag" title="SessionStorage" data-type="sessionStorage">SS: ${Object.keys(data.sessionStorage).length}</span>` : ''}
                 </div>
             </div>
         `,
@@ -632,7 +641,7 @@
             this.renderSwitchView();
             const hosts = Utils.listAllHosts();
             if (!hosts.includes(CONST.HOST)) hosts.push(CONST.HOST);
-            if (!hosts.includes(currentViewingHost)) {currentViewingHost = CONST.HOST;}
+            if (!hosts.includes(currentViewingHost)) { currentViewingHost = CONST.HOST; }
             const hostSel = this.qs('#host-sel');
             if (hostSel) hostSel.innerHTML = hosts.map(h => `<option value="${h}" ${h === currentViewingHost ? 'selected' : ''}>${h === CONST.HOST ? '📌 ' : '🌐 '}${h}</option>`).join('');
             this.renderMgrView();
@@ -643,6 +652,10 @@
             const isPanelOpen = panel.classList.contains('show');
             panel.querySelectorAll('.fab-mode-btn').forEach(btn => btn.classList.toggle('acc-btn-active', btn.dataset.val === fabMode));
             fab.style.display = (isPanelOpen || isForcedShow || (fabMode === 'show') || (fabMode === 'auto' && hasAccounts)) ? 'flex' : 'none';
+
+            const eyes = fab.querySelectorAll('path:nth-of-type(1), path:nth-of-type(4)');
+            if (hasAccounts) {eyes.forEach(path => {path.style.fill = '#555';});} else {eyes.forEach(path => {path.style.fill = 'none';});}
+
             this.updateSaveBtnState();
         },
 
@@ -810,6 +823,13 @@
                 }
             };
             $('#host-sel').onchange = (e) => { currentViewingHost = e.target.value; this.refresh(); };
+            $('#btn-goto-host').onclick = () => {
+                const host = $('#host-sel').value;
+                if (host) {
+                    // 默认使用 https 协议跳转
+                    window.open('https://' + host, '_blank');
+                }
+            };
 
             // Save & Clean Logic
             ['#c-ck', '#c-ls', '#c-ss'].forEach(id => $(id).addEventListener('change', this.updateSaveBtnState));

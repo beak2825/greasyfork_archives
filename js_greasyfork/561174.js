@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         YouTube 油管去广告 Pro(Firefox专用)
+// @name         YouTube 油管去广告 Pro
 // @version      3.6.3
 // @description  采用倍速快进跳过技术，避开检测（修复 document.body 为 null 问题）
 // @author       stephchow
@@ -8,8 +8,8 @@
 // @license      MIT
 // @namespace    https://greasyfork.org/users/1555314
 // @run-at       document-start
-// @downloadURL https://update.greasyfork.org/scripts/561174/YouTube%20%E6%B2%B9%E7%AE%A1%E5%8E%BB%E5%B9%BF%E5%91%8A%20Pro%28Firefox%E4%B8%93%E7%94%A8%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/561174/YouTube%20%E6%B2%B9%E7%AE%A1%E5%8E%BB%E5%B9%BF%E5%91%8A%20Pro%28Firefox%E4%B8%93%E7%94%A8%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/561174/YouTube%20%E6%B2%B9%E7%AE%A1%E5%8E%BB%E5%B9%BF%E5%91%8A%20Pro.user.js
+// @updateURL https://update.greasyfork.org/scripts/561174/YouTube%20%E6%B2%B9%E7%AE%A1%E5%8E%BB%E5%B9%BF%E5%91%8A%20Pro.meta.js
 // ==/UserScript==
 
 (function () {

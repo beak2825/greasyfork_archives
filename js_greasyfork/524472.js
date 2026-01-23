@@ -2,8 +2,8 @@
 // @name             Tela Cheia
 // @description      Deixa o navegador em tela cheia
 // @namespace        CowanSCREEN
-// @license          CowBas
-// @version          1.0
+// @license          GPL-3.0
+// @version          2.0
 // @author           Cowanbas
 // @match            *://*/*
 // @run-at           document-start
@@ -18,7 +18,6 @@
     const style = document.createElement('style');
 
     // Define o conteúdo CSS que será aplicado aos elementos da página
-    
     style.textContent = `
         div[tabindex="-1"].two {
             top: 0 !important;
@@ -36,6 +35,6 @@
         }
     `;
     // Adiciona o elemento <style> ao <head> do documento, aplicando os estilos definidos
-    
     document.head.appendChild(style);
+
 })();

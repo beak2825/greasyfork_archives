@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         元元大王直播间弹幕布局
-// @version      1.5
-// @description  1、自适应弹幕布局（按键 'B' 复位弹幕位置、按键 '0' 关闭或打开自适应功能）；2、弹幕画板可拖移；
+// @version      1.6
+// @description  1、自适应弹幕布局（按键 '0' 关闭或打开自适应弹幕）；2、弹幕画板可拖移；3、PK或连线状态变化时刷新视频画面（10秒冷却）避免音画不同步或画面卡顿
 // @match        https://live.douyin.com/*
 // @match        https://www.douyin.com/follow/live/*
 // @match        https://www.douyin.com/root/live/*

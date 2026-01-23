@@ -1,9 +1,10 @@
 // ==UserScript==
 // @name         AO3 No Mid-Tag Splits on New Line
 // @namespace    https://aglioeollieo.neocities.org/misc#script
-// @version      1.0
+// @version      1.1
 // @description  Prevent AO3 tags from splitting mid-word when wrapped
-// @author       You
+// @author       aglioeollieo
+// @icon         https://www.google.com/s2/favicons?domain=archiveofourown.org
 // @match        https://archiveofourown.org/*
 // @grant        none
 // @license MIT

@@ -3,8 +3,7 @@
 // @namespace   Violentmonkey Scripts
 // @include     *://*/*
 // @exclude     https://*svelte.dev*
-// @grant       none
-// @version     5.3
+// @version     5.4
 // @author      KraXen72
 // @description speed up video on any site
 // @grant       GM_registerMenuCommand

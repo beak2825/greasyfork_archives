@@ -1,11 +1,12 @@
 // ==UserScript==
 // @name         Haxball Room Search
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      2026-01-22
 // @description  Add a search box to filter Haxball rooms by name
 // @author       Kiwi
 // @license      GNU GPLv3
-// @match        https://www.haxball.com/play
+// @match        https://www.haxball.com/play*
+// @match        https://haxball.com/play*
 // @grant        GM_xmlhttpRequest
 // @connect      unicode.org
 // @downloadURL https://update.greasyfork.org/scripts/561441/Haxball%20Room%20Search.user.js

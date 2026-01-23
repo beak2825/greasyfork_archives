@@ -2,8 +2,8 @@
 // @name          Bloqueio de Rastreadores
 // @description   Bloquear rastreadores de dados pessoais em qualquer site, permitindo a pesquisa no Google
 // @namespace     CowanBlock
-// @license       CowBas
-// @version       2.0
+// @license       GPL-3.0
+// @version       3.0
 // @author        Cowanbas
 // @match         *://*/*
 // @run-at        document-start
@@ -128,3 +128,4 @@
   // Executar ao carregar
   document.addEventListener('DOMContentLoaded', cleanGoogleResults);
 })();
+

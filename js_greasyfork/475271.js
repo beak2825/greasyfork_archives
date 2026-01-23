@@ -2,8 +2,8 @@
 // @name            Twitter時計
 // @name:en         Twitter Clock
 // @name:ain        Twitter トケ
-// @namespace       http://lit.link/toracatman
-// @version         2026-01-15
+// @namespace       https://lit.link/toracatman
+// @version         2026-01-22
 // @description     Twitterに 時計を 表示します。
 // @description:en  Display a Clock on Twitter.
 // @description:ain Twitter タ トケ アヌ。

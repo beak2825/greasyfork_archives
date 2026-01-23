@@ -1,73 +1,58 @@
 // ==UserScript==
-// @name         Block Pulse Auto Claim Antibot
+// @name         BlockPulse Auto-Claimer
 // @namespace    https://tampermonkey.net/
-// @version      1.2
-// @description  Solves the antibot order, waits for Cloudflare Turnstile, then clicks Claim
+// @version      1.3
+// @description  Automatically clicks the claim button after Turnstile captcha is solved.
 // @author       Rubystance
 // @license      MIT
 // @match        https://blockpulse.fun/*
 // @grant        none
-// @downloadURL https://update.greasyfork.org/scripts/562391/Block%20Pulse%20Auto%20Claim%20Antibot.user.js
-// @updateURL https://update.greasyfork.org/scripts/562391/Block%20Pulse%20Auto%20Claim%20Antibot.meta.js
+// @run-at       document-idle
+// @downloadURL https://update.greasyfork.org/scripts/562391/BlockPulse%20Auto-Claimer.user.js
+// @updateURL https://update.greasyfork.org/scripts/562391/BlockPulse%20Auto-Claimer.meta.js
 // ==/UserScript==
 
 (function() {
     'use strict';
 
-    function solve() {
-        const header = document.querySelector('h6.text-white.fw-bold');
-        if (!header) return;
+    const REF_URL = "https://blockpulse.fun/?r=1929";
 
-        const sequence = header.innerText.split('•').map(s => s.trim());
-        const images = Array.from(document.querySelectorAll('img.antibot-item'));
+    const handleReferral = () => {
+        const hasRedirected = sessionStorage.getItem('refRedirected');
+        const currentUrl = window.location.href;
 
-        if (sequence.length > 0 && images.length > 0) {
-            console.log("Order detected:", sequence);
-
-            sequence.forEach((word, index) => {
-                setTimeout(() => {
-                    const targetImg = images.find(img => img.src.includes(`text=${word}`));
-
-                    if (targetImg) {
-                        console.log(`Clicking: ${word}`);
-                        targetImg.click();
-                    }
-
-                    if (index === sequence.length - 1) {
-                        console.log("Antibot finished. Waiting for Cloudflare Turnstile...");
-                        watchTurnstile();
-                    }
-                }, index * 600);
-            });
+        if (!hasRedirected && !currentUrl.includes('?r=1929')) {
+            sessionStorage.setItem('refRedirected', 'true');
+            window.location.href = REF_URL;
         }
-    }
+    };
 
-    function watchTurnstile() {
-        const turnstileCheck = setInterval(() => {
+    const startClaimProcess = () => {
+        const checkInterval = setInterval(() => {
 
-            const response = document.querySelector('[name="cf-turnstile-response"]');
+            const claimBtn = document.querySelector('button[name="start_shortlink"]');
 
-            if (response && response.value !== "") {
-                console.log("Cloudflare Turnstile solved detected!");
-                clearInterval(turnstileCheck);
-                setTimeout(submitForm, 500);
+            const turnstileResponse = document.querySelector('[name="cf-turnstile-response"]');
+
+            if (claimBtn && turnstileResponse) {
+
+                if (turnstileResponse.value.length > 0) {
+                    console.log("Turnstile solved! Preparing to claim...");
+
+                    clearInterval(checkInterval);
+
+                    const randomDelay = Math.floor(Math.random() * 1000) + 1500;
+
+                    setTimeout(() => {
+                        console.log("Button clicked.");
+                        claimBtn.click();
+                    }, randomDelay);
+                }
             }
         }, 1000);
-    }
+    };
 
-    function submitForm() {
-
-        const claimBtn = document.querySelector('button.btn-claim');
-
-        if (claimBtn) {
-            console.log("Submitting: EXECUTE CLAIM");
-            claimBtn.click();
-        }
-    }
-
-    window.addEventListener('load', () => {
-
-        setTimeout(solve, 2000);
-    });
+    handleReferral();
+    startClaimProcess();
 
 })();

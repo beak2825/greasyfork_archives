@@ -2,7 +2,7 @@
 // @name         MH Region Quick Travel
 // @author       Warden Slayer
 // @namespace    https://greasyfork.org/en/users/227259-wardenslayer
-// @version      1.6.9
+// @version      1.7
 // @description  Adds a travel toolbar to the HUD to make traveling between areas in the same region quicker and easier
 // @icon         https://www.mousehuntgame.com/images/items/weapons/974151e440f297f1b6d55385310ac63c.jpg?cv=2
 // @include      https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js
@@ -68,7 +68,7 @@ function buildTravelBar() {
     float: 'left',
     'text-align': 'left',
     width: '97%',
-    height: '25px',
+    height: '100%',
     margin: '5px',
     padding: '2px',
     background:
@@ -79,7 +79,7 @@ function buildTravelBar() {
   let properties = JSON.parse(localStorage.getItem('ws.mh.travel.props'));
   const regionAreas = getRegionLocations(
     properties.currentRegion,
-    properties.previousLocation
+    properties.previousLocation,
   );
   //console.log(regionAreas)
   regionAreas.forEach(function (array) {
@@ -99,7 +99,9 @@ function buildTravelBar() {
       });
       $(thisButton).css({
         padding: '2px',
+        marginBottom: '4px',
         marginRight: '4px',
+        marginTop: '4px',
         width: '12.5%',
       });
       $(thisButton).append(travelText);
@@ -216,6 +218,7 @@ function getRegionLocations(currentRegion) {
       'draconic_depths',
       'afterword_acres',
       'epilogue_falls',
+      'conclusion_cliffs',
     ];
   } else if (currentRegion == 'Rift Plane') {
     tags = [
@@ -304,6 +307,7 @@ function getLocationNames(tag) {
     draconic_depths: 'Draconic Depths',
     afterword_acres: 'Afterword Acres',
     epilogue_falls: 'Epilogue Falls',
+    conclusion_cliffs: 'Conclusion Cliffs',
     rift_gnawnia: 'Gnawnia Rift',
     rift_burroughs: 'Burroughs Rift',
     rift_whisker_woods: 'Whisker Woods Rift',

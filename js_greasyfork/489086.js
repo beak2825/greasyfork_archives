@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         「新しい日本語を作る会」コメントシステムの改良
-// @namespace    http://lit.link/toracatman
-// @version      2026-01-15
+// @namespace    https://lit.link/toracatman
+// @version      2026-01-22
 // @description  「新しい日本語を作る会」の コメントシステムを 改良します。
 // @author       トラネコマン
 // @match        http://www.tackns.net/*

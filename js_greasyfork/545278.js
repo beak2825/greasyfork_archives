@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            WME POI Shortcuts
 // @namespace       https://greasyfork.org/users/45389
-// @version         2026.01.08.01
+// @version         2026.01.22.01
 // @description     Various UI changes to make editing faster and easier.
 // @author          kid4rm90s & copilot
 // @include         /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -22,8 +22,7 @@ https: (function () {
   ('use strict');
 
   const updateMessage = `
-      <strong>Fixed :</strong><br> - Added GoStation brand<br>
-      <br>
+      <strong>Fixed :</strong><br> - Added Indian Petrol Stations<br> - Added Nepal Petrol station and charging station brands button names<br>- Minor bug fixes<br>
   `;
   const scriptName = GM_info.script.name;
   const scriptVersion = GM_info.script.version;
@@ -36,11 +35,29 @@ https: (function () {
       countryCode: 'NP',
       brandnames: [
         {
-          primaryName: 'NOC',
+          buttonLabel: 'NOC', primaryName: 'NOC',
           brand: 'Nepal Oil Corporation',
           aliases: ['NOC'],
           website: 'noc.org.np',
         },
+      ],
+    },
+    India: {
+      countryCode: 'IN',
+      brandnames: [
+        { buttonLabel: 'ADANI', primaryName: 'ADANI', brand: 'Adani CNG ', aliases: ['Adani'], },
+        { buttonLabel: 'BP', primaryName: 'Bharat Petroleum', brand: 'Bharat Petroleum', aliases: ['BP'],},
+        { buttonLabel: 'GO', primaryName: 'Go Gas CNG', brand: 'Go Gas CNG', aliases: [],},
+        { buttonLabel: 'GUJ', primaryName: 'Gujarat Gas CNG', brand: 'Gujarat Gas CNG', aliases: [], },
+        { buttonLabel: 'HP', primaryName: 'Hindustan Petroleum', brand: 'Hindustan Petroleum', aliases: ['HP'], },
+        { buttonLabel: 'IOC', primaryName: 'Indian Oil', brand: 'Indian Oil', aliases: ['IOC'], },
+        { buttonLabel: 'INDRA', primaryName: 'Indraprastha Gas', brand: 'Indraprastha Gas', aliases: [], },
+        { buttonLabel: 'JIO', primaryName: 'Jio - bp', brand: 'Jio - bp', aliases: [], },
+        { buttonLabel: 'MNGL', primaryName: 'MNGL CNG', brand: 'MNGL CNG ', aliases: [], },
+        { buttonLabel: 'NAYARA', primaryName: 'Nayara Energy', brand: 'Nayara Energy', aliases: ['Nayara'], },
+        { buttonLabel: 'ONGC', primaryName: 'ONGC', brand: 'ONGC', aliases: [], },
+        { buttonLabel: 'RELIANCE', primaryName: 'Reliance Petroleum', brand: 'Reliance Petroleum', aliases: [], },
+        { buttonLabel: 'SHELL', primaryName: 'Shell', brand: 'Shell', aliases: [], },
       ],
     },
     Pakistan: {
@@ -150,7 +167,8 @@ https: (function () {
       countryCode: 'NP',
       brandnames: [
         {
-          primaryName: 'BYD',
+          buttonLabel: 'BYD',
+          primaryName: 'BYD Charging Station',
           brand: 'BYD',
           networkName: 'BYD', // WME dropdown item-id
           costType: 'FEE', // FREE, FEE, or COST_TYPE_UNSPECIFIED
@@ -159,7 +177,8 @@ https: (function () {
           website: 'cimex.com.np/charging-stations',
         },
         {
-          primaryName: 'CG Motors',
+          buttonLabel: 'CG',
+          primaryName: 'CG Motors Charging Station',
           brand: 'CG Motors',
           networkName: 'CG Motors', // WME dropdown item-id
           costType: 'FEE', // FREE, FEE, or COST_TYPE_UNSPECIFIED
@@ -168,7 +187,8 @@ https: (function () {
           website: 'cg-ev.com/charger-station',
         },
         {
-          primaryName: 'MG Motors',
+          buttonLabel: 'MG',
+          primaryName: 'MG Motors Charging Station',
           brand: 'MG Motors',
           networkName: 'MG Motors', // WME dropdown item-id
           costType: 'FEE', // FREE, FEE, or COST_TYPE_UNSPECIFIED
@@ -177,7 +197,8 @@ https: (function () {
           website: 'mgmotors.com.np/locate-ev-charger',
         },
         {
-          primaryName: 'Tata Motors',
+          buttonLabel: 'Tata',
+          primaryName: 'Tata Motors Charging Station',
           brand: 'Tata Motors',
           networkName: 'Tata Motors', // WME dropdown item-id
           costType: 'FEE', // FREE, FEE, or COST_TYPE_UNSPECIFIED
@@ -186,7 +207,8 @@ https: (function () {
           website: 'tatacars.sipradi.com.np/vehicle/charginglocation',
         },
         {
-          primaryName: 'Hyundai Motors',
+          buttonLabel: 'Hyundai',
+          primaryName: 'Hyundai Motors Charging Station',
           brand: 'Hyundai Motors',
           networkName: 'Hyundai Motors', // WME dropdown item-id
           costType: 'FEE', // FREE, FEE, or COST_TYPE_UNSPECIFIED
@@ -195,7 +217,8 @@ https: (function () {
           website: 'laxmihyundai.com/charge-points',
         },
         {
-          primaryName: 'NEA',
+          buttonLabel: 'NEA',
+          primaryName: 'NEA Charging Station',
           brand: 'Nepal Electricity Authority',
           networkName: 'Nepal Electricity Authority', // WME dropdown item-id
           costType: 'FEE', // FREE, FEE, or COST_TYPE_UNSPECIFIED
@@ -204,7 +227,8 @@ https: (function () {
           website: 'nea.org.np',
         },
         {
-          primaryName: 'ElectriVa',
+          buttonLabel: 'ElectriVa',
+          primaryName: 'ElectriVa Charging Station',
           brand: 'ElectriVa Nepal',
           networkName: 'ElectriVa Nepal', // WME dropdown item-id
           costType: 'FEE', // FREE, FEE, or COST_TYPE_UNSPECIFIED
@@ -215,7 +239,8 @@ https: (function () {
           is24_7: true, // Flag for display purposes
         },
         {
-          primaryName: 'Yatri',
+          buttonLabel: 'Yatri',
+          primaryName: 'Yatri Charging Station',
           brand: 'Yatri',
           networkName: 'Yatri', // WME dropdown item-id
           costType: 'FEE', // FREE, FEE, or COST_TYPE_UNSPECIFIED
@@ -224,7 +249,8 @@ https: (function () {
           website: 'yatrienergy.com/',
         },
         {
-          primaryName: 'thee GO',
+          buttonLabel: 'thee GO',
+          primaryName: 'thee GO Charging Station',
           brand: 'thee GO',
           networkName: 'thee GO', // WME dropdown item-id
           costType: 'FEE', // FREE, FEE, or COST_TYPE_UNSPECIFIED
@@ -233,7 +259,8 @@ https: (function () {
           website: 'www.theego.com.np/thee-go-chargepoint/',
         },
         {
-          primaryName: 'MAW Vriddhi',
+          buttonLabel: 'MAW Vriddhi',
+          primaryName: 'MAW Vriddhi Charging Station',
           brand: 'Maw Vriddhi',
           networkName: 'Maw Vriddhi', // WME dropdown item-id
           costType: 'FEE', // FREE, FEE, or COST_TYPE_UNSPECIFIED
@@ -242,7 +269,8 @@ https: (function () {
           website: 'mawevcharging.com/',
         },
         {
-          primaryName: 'OmodaJaecoo',
+          buttonLabel: 'OmodaJaecoo',
+          primaryName: 'OmodaJaecoo Charging Station',
           brand: 'OmodaJaecoo',
           networkName: 'Omoda & Jaecoo', // WME dropdown item-id
           costType: 'FEE', // FREE, FEE, or COST_TYPE_UNSPECIFIED
@@ -251,7 +279,8 @@ https: (function () {
           website: 'omodajaecoonepal.com/charging-stations-in-nepal',
         },
         {
-          primaryName: 'GoStation',
+          buttonLabel: 'GoStation',
+          primaryName: 'GoStation Charging Station',
           brand: 'GoStation',
           networkName: 'GoStation', // WME dropdown item-id
           costType: 'FEE', // FREE, FEE, or COST_TYPE_UNSPECIFIED
@@ -262,12 +291,13 @@ https: (function () {
           is24_7: true, // Flag for display purposes
         },
         {
-          primaryName: 'Charging Station',
+          buttonLabel: 'Other',
+          primaryName: 'EV Charging Station',
           brand: '',
           networkName: '', // WME dropdown "Other" option
           costType: 'FEE', // FREE, FEE, or COST_TYPE_UNSPECIFIED
           paymentMethods: ['ONLINE_PAYMENT', 'OTHER', 'DEBIT'], // WME payment method item-ids
-          aliases: ['EV Charging Station'],
+          aliases: [],
           website: '',
         },
       ],
@@ -2927,12 +2957,13 @@ https: (function () {
 
     // Check if venue.categories (array) contains the gas station or charging station key and country is Nepal or Pakistan
     const isNepal = !!topCountry && (topCountry.name === 'Nepal' || topCountry.code === 'NP');
+    const isIndia = !!topCountry && (topCountry.name === 'India' || topCountry.code === 'IN');
     const isPakistan = !!topCountry && (topCountry.name === 'Pakistan' || topCountry.code === 'PK');
     const isGasStation = !!venue && Array.isArray(venue.categories) && venue.categories.includes(gasStationKey);
     const isChargingStation = !!venue && Array.isArray(venue.categories) && venue.categories.includes(chargingStationKey);
 
     // Only show buttons for Nepal gas/charging stations or Pakistan gas stations
-    if (!((isGasStation || isChargingStation) && isNepal) && !(isGasStation && isPakistan)) return;
+    if (!((isGasStation || isChargingStation) && isNepal) && !(isGasStation && isIndia) && !(isGasStation && isPakistan)) return;
 
     // Show brand buttons for Nepal and Pakistan gas stations, and Nepal charging stations
     function tryInjectBrandButtons(attemptCount = 0) {
@@ -2961,6 +2992,8 @@ https: (function () {
         categoryKey = gasStationKey;
         if (isNepal) {
           countryBrands = GAS_STATION_BRANDNAME.Nepal.brandnames;
+        } else if (isIndia) {
+          countryBrands = GAS_STATION_BRANDNAME.India.brandnames;
         } else if (isPakistan) {
           countryBrands = GAS_STATION_BRANDNAME.Pakistan.brandnames;
         }
@@ -2976,9 +3009,8 @@ https: (function () {
       // Build buttons for each brand
       let buttonsHtml = `<div class='form-group e85 e85-e85-14'><label class='control-label'>Set ${stationTypeName} Brand</label>`;
       countryBrands.forEach((brandObj) => {
-        buttonsHtml += `<button class='waze-btn waze-btn-small waze-btn-white e85 ${buttonClass}' style='border:2px solid #0078d7;border-radius:4px;margin:2px;' data-primary='${brandObj.primaryName}' data-brand='${brandObj.brand}' data-website='${
-          brandObj.website || ''
-        }' data-category='${categoryKey}'>${brandObj.primaryName}</button> `;
+      const btnLabel = brandObj.buttonLabel || brandObj.primaryName;
+      buttonsHtml += `<button class='waze-btn waze-btn-small waze-btn-white e85 ${buttonClass}' style='border:1px solid #0078d7;border-radius:4px;margin:2px;padding:4px 8px;font-size:11px;min-width:32px;' data-primary='${brandObj.primaryName}' data-brand='${brandObj.brand}' data-website='${brandObj.website || ''}' data-category='${categoryKey}'>${btnLabel}</button> `;
       });
       buttonsHtml += `</div>`;
       $catControl.after(buttonsHtml);
@@ -3113,6 +3145,10 @@ https: (function () {
   Logger.info(`${scriptName} initialized.`);
 
   /******************************************Changelogs***********************************************************
+    2026.01.22.01
+    - Added Indian Petrol Stations
+    - Added Nepal Petrol station and charging station brands button names
+    - Minor bug fixes
     2026.01.08.01
   - Added GoStation brand
   2025.12.27.01

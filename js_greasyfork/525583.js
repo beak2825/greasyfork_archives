@@ -2,8 +2,8 @@
 // @name           Privacidade e Bloqueio de Câmera
 // @description    Bloqueia o acesso de sites a sua localização, microfone e câmera automaticamente.
 // @namespace      CowanPRIV
-// @license        CowBas
-// @version        1.0
+// @license        GPL-3.0
+// @version        2.0
 // @author         Cowanbas
 // @match          *://*/*
 // @exclude        
@@ -64,4 +64,5 @@
       return originalGetUserMedia(constraints);
     };
   }
+
 })();

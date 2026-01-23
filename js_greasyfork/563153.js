@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MoDuL's: Restore OG Car Names
 // @namespace    torn.restore.og.cars
-// @version      1.2.9
+// @version      1.3.0
 // @description  Restores original car names from Torn fictional ones across Torn (Racing, Item Market, Items, Bazaar, Logs) including all descriptions/text. MoDuL's Race Filter & TornPDA Compatible.
 // @author       MoDuL
 // @license      MIT
@@ -14,6 +14,8 @@
 // @match        https://torn.com/item.php*
 // @match        https://www.torn.com/bazaar.php*
 // @match        https://torn.com/bazaar.php*
+// @match        https://www.torn.com/shops.php?step=docks*
+// @match        https://torn.com/shops.php?step=docks* 
 // @run-at       document-idle
 // @grant        none
 // @downloadURL https://update.greasyfork.org/scripts/563153/MoDuL%27s%3A%20Restore%20OG%20Car%20Names.user.js
@@ -39,15 +41,30 @@
     }
   }
 
-  function isTargetArea() {
-    const path = location.pathname.toLowerCase();
-    const sid = getSidLower();
+function isTargetArea() {
+  const path = location.pathname.toLowerCase();
+  const sid = getSidLower();
 
-    if (path.endsWith("/item.php") || path.endsWith("item.php")) return true;
-    if (path.endsWith("/bazaar.php") || path.endsWith("bazaar.php")) return true;
+  // Direct pages
+  if (path.endsWith("/item.php") || path.endsWith("item.php")) return true;
+  if (path.endsWith("/bazaar.php") || path.endsWith("bazaar.php")) return true;
 
-    return sid === "racing" || sid === "itemmarket" || sid === "log";
+  // Docks shop page
+  if (path.endsWith("/shops.php") || path.endsWith("shops.php")) {
+    let step = "";
+    try {
+      step = (new URL(location.href)).searchParams.get("step") || "";
+    } catch (_) {
+      const m = location.href.match(/[?&]step=([^&#]+)/i);
+      step = m ? decodeURIComponent(m[1]) : "";
+    }
+    if (step.toLowerCase() === "docks") return true;
   }
+
+  // Routed pages via page.php/loader.php
+  return sid === "racing" || sid === "itemmarket" || sid === "log";
+}
+
 function isInsideRaceFilterUI(nodeOrEl) {
   const el = nodeOrEl?.nodeType === 1 ? nodeOrEl : nodeOrEl?.parentElement;
   return !!(el && el.closest && el.closest("#modulRF"));

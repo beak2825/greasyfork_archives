@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name UltiMafia Translator
 // @namespace http://tampermonkey.net/
-// @version 2026-01-21
+// @version 2026-01-22
 // @description Translation.
 // @author You
 // @match https://ultimafia.com/*
@@ -14,7 +14,7 @@
 // @updateURL https://update.greasyfork.org/scripts/563530/UltiMafia%20Translator.meta.js
 // ==/UserScript==
 
-(function() {
+(function () {
     "use strict";
 
     class Config {
@@ -41,7 +41,7 @@
                 aes_start: "『",
                 aes_end: "』",
                 key_start: "【系统公告】",
-                key_end: "【END】"
+                key_end: ""
             };
         }
     }
@@ -72,30 +72,73 @@
             }
             return bytes.buffer;
         }
+
+        static concat_buffers(buf1, buf2) {
+            const b1 = new Uint8Array(buf1);
+            const b2 = new Uint8Array(buf2);
+            const res = new Uint8Array(b1.length + b2.length);
+            res.set(b1, 0);
+            res.set(b2, b1.length);
+            return res.buffer;
+        }
     }
 
     class StealthTranslator {
         constructor() {
-            this.base64_map = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
-            this.cjk_map = "的一是了我不人在他有这个上们来到时大地为子中你说生国年着就那和要她出也得里后自以会家可下而过天去能对小多然于心学之都好看起发当没成只如事把还用第样道想作种开美总。";
+            this.OFFSET = 0x4E00; // CJK Unified Ideographs
         }
 
-        to_foreign_text(base64_str) {
-            let result = "";
-            for (let i = 0; i < base64_str.length; i++) {
-                const index = this.base64_map.indexOf(base64_str[i]);
-                result += index !== -1 ? this.cjk_map[index] : base64_str[i];
+        to_foreign_text(buffer) {
+            const len = buffer.byteLength;
+            const rawBytes = new Uint8Array(buffer);
+            const bytes = new Uint8Array(rawBytes.length + 2);
+            bytes[0] = (len >> 8) & 0xFF;
+            bytes[1] = len & 0xFF;
+            bytes.set(rawBytes, 2);
+
+            let res = "";
+            let bitBuffer = 0;
+            let bitCount = 0;
+
+            for (let i = 0; i < bytes.length; i++) {
+                bitBuffer = (bitBuffer << 8) | bytes[i];
+                bitCount += 8;
+
+                while (bitCount >= 14) {
+                    const val = (bitBuffer >> (bitCount - 14)) & 0x3FFF;
+                    res += String.fromCharCode(this.OFFSET + val);
+                    bitCount -= 14;
+                }
             }
-            return result;
+
+            if (bitCount > 0) {
+                const val = (bitBuffer << (14 - bitCount)) & 0x3FFF;
+                res += String.fromCharCode(this.OFFSET + val);
+            }
+            return res;
         }
 
-        from_foreign_text(foreign_str) {
-            let result = "";
-            for (let i = 0; i < foreign_str.length; i++) {
-                const index = this.cjk_map.indexOf(foreign_str[i]);
-                result += index !== -1 ? this.base64_map[index] : foreign_str[i];
+        from_foreign_text(str) {
+            let bitBuffer = 0;
+            let bitCount = 0;
+            const result = [];
+
+            for (let i = 0; i < str.length; i++) {
+                const val = str.charCodeAt(i) - this.OFFSET;
+                bitBuffer = (bitBuffer << 14) | val;
+                bitCount += 14;
+
+                while (bitCount >= 8) {
+                    const byte = (bitBuffer >> (bitCount - 8)) & 0xFF;
+                    result.push(byte);
+                    bitCount -= 8;
+                }
             }
-            return result;
+
+            const fullBuf = new Uint8Array(result);
+            if (fullBuf.length < 2) return null;
+            const len = (fullBuf[0] << 8) | fullBuf[1];
+            return fullBuf.slice(2, 2 + len).buffer;
         }
     }
 
@@ -112,14 +155,19 @@
 
         encrypt_payload(plaintext) {
             if (!this.password) throw new Error("No Group Password set");
-            const raw_cipher = CryptoJS.AES.encrypt(plaintext, this.password).toString();
-            return this.translator.to_foreign_text(raw_cipher);
+            // CryptoJS output is Base64 default. Convert to Buffer.
+            const raw_cipher_obj = CryptoJS.AES.encrypt(plaintext, this.password);
+            const raw_cipher_b64 = raw_cipher_obj.toString();
+            const buf = DataConverter.base64_to_buffer(raw_cipher_b64);
+            return this.translator.to_foreign_text(buf);
         }
 
         decrypt_payload(cjk_cipher) {
             if (!this.password) return null;
             try {
-                const b64_cipher = this.translator.from_foreign_text(cjk_cipher);
+                const buf = this.translator.from_foreign_text(cjk_cipher);
+                if (!buf) return null;
+                const b64_cipher = DataConverter.buffer_to_base64(buf);
                 const bytes = CryptoJS.AES.decrypt(b64_cipher, this.password);
                 const original_text = bytes.toString(CryptoJS.enc.Utf8);
                 return original_text || null;
@@ -181,24 +229,23 @@
 
         async get_public_key_string() {
             await this.initialization_promise;
-            const pub_jwk = await window.crypto.subtle.exportKey("jwk", this.key_pair.publicKey);
-            const b64 = DataConverter.string_to_base64(JSON.stringify(pub_jwk));
-            return this.translator.to_foreign_text(b64);
+            const raw = await window.crypto.subtle.exportKey("raw", this.key_pair.publicKey);
+            return this.translator.to_foreign_text(raw);
         }
 
         async register_remote_key(player_id, obfuscated_key) {
             await this.initialization_promise;
             try {
-                const b64_key = this.translator.from_foreign_text(obfuscated_key);
-                const my_key_raw = await window.crypto.subtle.exportKey("jwk", this.key_pair.publicKey);
-                const my_key_b64 = DataConverter.string_to_base64(JSON.stringify(my_key_raw));
+                const raw_key = this.translator.from_foreign_text(obfuscated_key);
+                if (!raw_key) return false;
 
-                if (b64_key === my_key_b64) return false;
+                const my_key_raw = await window.crypto.subtle.exportKey("raw", this.key_pair.publicKey);
+                // Simple comparison of buffers
+                if (this.buffers_equal(raw_key, my_key_raw)) return false;
 
-                const jwk = JSON.parse(DataConverter.base64_to_string(b64_key));
                 const remote_public_key = await window.crypto.subtle.importKey(
-                    "jwk",
-                    jwk,
+                    "raw",
+                    raw_key,
                     { name: "ECDH", namedCurve: "P-256" },
                     false,
                     []
@@ -219,6 +266,16 @@
             }
         }
 
+        buffers_equal(buf1, buf2) {
+            if (buf1.byteLength !== buf2.byteLength) return false;
+            const a = new Uint8Array(buf1);
+            const b = new Uint8Array(buf2);
+            for (let i = 0; i < a.length; i++) {
+                if (a[i] !== b[i]) return false;
+            }
+            return true;
+        }
+
         async encrypt_for_player(player_id, text) {
             await this.initialization_promise;
             const shared_key = this.shared_keys.get(player_id);
@@ -232,8 +289,8 @@
                 encoder.encode(text)
             );
 
-            const cipher_base64 = `${DataConverter.buffer_to_base64(iv.buffer)}:${DataConverter.buffer_to_base64(ciphertext)}`;
-            const cipher_cjk = this.translator.to_foreign_text(cipher_base64);
+            const payload_buf = DataConverter.concat_buffers(iv.buffer, ciphertext);
+            const cipher_cjk = this.translator.to_foreign_text(payload_buf);
 
             this.local_cache.set(cipher_cjk, { text: text, target_id: player_id });
             return cipher_cjk;
@@ -251,20 +308,22 @@
                 };
             }
 
-            const payload = this.translator.from_foreign_text(obfuscated_payload);
+            const payload_buf = this.translator.from_foreign_text(obfuscated_payload);
+            if (!payload_buf) return null;
             const shared_key = this.shared_keys.get(sender_id);
 
             if (shared_key) {
                 try {
-                    const plain = await this.perform_decryption(shared_key, payload);
+                    const plain = await this.perform_decryption(shared_key, payload_buf);
                     return { type: "IN", text: plain, meta_name: sender_id };
-                } catch (e) {}
+                } catch (e) { }
             }
 
-            const parts = payload.split(":");
-            if (parts.length === 2) {
-                const iv = new Uint8Array(DataConverter.base64_to_buffer(parts[0]));
-                const ciphertext = DataConverter.base64_to_buffer(parts[1]);
+            // Fallback: try all keys
+            // Need to split payload_buf first to get IV
+            if (payload_buf.byteLength > 12) {
+                const iv = new Uint8Array(payload_buf.slice(0, 12));
+                const ciphertext = payload_buf.slice(12);
 
                 for (const [id, key] of this.shared_keys) {
                     try {
@@ -279,20 +338,22 @@
                             text: decoder.decode(decrypted),
                             meta_name: game_state.get_player_name(id)
                         };
-                    } catch (e) {}
+                    } catch (e) { }
                 }
             }
             return null;
         }
 
-        async perform_decryption(key, payload) {
-            const [iv_b64, cipher_b64] = payload.split(":");
-            const iv = new Uint8Array(DataConverter.base64_to_buffer(iv_b64));
-            const cipher_buf = DataConverter.base64_to_buffer(cipher_b64);
+        async perform_decryption(key, payload_buf) {
+            // payload_buf = IV(12) + Cipher(...)
+            if (payload_buf.byteLength <= 12) throw new Error("Invalid payload");
+            const iv = new Uint8Array(payload_buf.slice(0, 12));
+            const ciphertext = payload_buf.slice(12);
+
             const decrypted = await window.crypto.subtle.decrypt(
                 { name: "AES-GCM", iv: iv },
                 key,
-                cipher_buf
+                ciphertext
             );
             return new TextDecoder().decode(decrypted);
         }
@@ -326,6 +387,7 @@
             this.mode = "ECDH";
             this.target_player_id = "PUBLIC";
             this.is_broadcast_pending = false;
+            this.is_minimized = false;
             this.container = null;
             this.mode_select = null;
             this.content_area = null;
@@ -347,9 +409,11 @@
         `;
 
             const title = document.createElement("div");
-            title.innerHTML = "👲 Stealth Suite";
-            title.style.cssText = "color: #fff; font-size: 13px; font-weight: bold; margin-bottom: 8px; text-transform: uppercase; text-align: center;";
+            title.innerHTML = "👲 Stealth Suite <span id='ss-min-btn' style='float:right; cursor:pointer;'>[ - ]</span>";
+            title.style.cssText = "color: #fff; font-size: 13px; font-weight: bold; margin-bottom: 8px; text-transform: uppercase; text-align: center; user-select: none;";
             this.container.appendChild(title);
+
+            title.querySelector("#ss-min-btn").onclick = () => this.toggle_minimize();
 
             this.mode_select = document.createElement("select");
             this.mode_select.style.cssText = `width: 100%; background: #102027; color: white; border: 1px solid #37474f; padding: 4px; border-radius: 4px; margin-bottom: 8px; font-family: ${this.config.ui.font};`;
@@ -459,6 +523,22 @@
             });
             this.target_select.value = current;
         }
+
+        toggle_minimize() {
+            this.is_minimized = !this.is_minimized;
+            const btn = this.container.querySelector("#ss-min-btn");
+            if (this.is_minimized) {
+                this.content_area.style.display = "none";
+                this.mode_select.style.display = "none";
+                this.container.style.width = "180px";
+                if (btn) btn.innerText = "[ + ]";
+            } else {
+                this.content_area.style.display = "block";
+                this.mode_select.style.display = "block";
+                this.container.style.width = "230px";
+                if (btn) btn.innerText = "[ - ]";
+            }
+        }
     }
 
     class NetworkInterceptor {
@@ -476,9 +556,11 @@
             const content = json.content || "";
             const px = this.config.prefixes;
 
-            if (content.startsWith(px.key_start) && content.endsWith(px.key_end)) {
+            if (content.startsWith(px.key_start) && (px.key_end === "" || content.endsWith(px.key_end))) {
                 const sender = json.senderId || "Unknown";
-                const inner_key = content.slice(px.key_start.length, -px.key_end.length);
+                const inner_key = px.key_end === ""
+                    ? content.slice(px.key_start.length)
+                    : content.slice(px.key_start.length, -px.key_end.length);
                 const my_key = await this.private_cipher.get_public_key_string();
 
                 if (inner_key === my_key) {
@@ -506,6 +588,10 @@
                         json.content = `🔒 [Signed: ${result.meta_name}] ${result.text}`;
                         json.textColor = this.config.colors.ecdh_in;
                     }
+                } else {
+                    json.content = "🔒 ENCRYPTED MESSAGE";
+                    json.textColor = this.config.colors.system;
+                    json.opacity = 0.5;
                 }
             } else if (content.startsWith(px.aes_start) && content.endsWith(px.aes_end)) {
                 const payload = content.slice(px.aes_start.length, -px.aes_end.length);
@@ -534,11 +620,11 @@
 
         install_hook() {
             const self = this;
-            window.WebSocket = function(url, protocols) {
+            window.WebSocket = function (url, protocols) {
                 const ws = new self.native_websocket(url, protocols);
                 const original_send = ws.send;
 
-                ws.send = async function(data) {
+                ws.send = async function (data) {
                     if (typeof data === "string" && data.startsWith("speak:object:")) {
                         try {
                             const payload_str = data.slice("speak:object:".length);
@@ -562,15 +648,15 @@
                                 }
                             }
                             return original_send.call(this, "speak:object:" + JSON.stringify(obj));
-                        } catch (err) {}
+                        } catch (err) { }
                     }
                     return original_send.call(this, data);
                 };
 
                 const original_add_event_listener = ws.addEventListener;
-                ws.addEventListener = function(type, listener, options) {
+                ws.addEventListener = function (type, listener, options) {
                     if (type === "message") {
-                        const wrapped_listener = async function(event) {
+                        const wrapped_listener = async function (event) {
                             let new_data = event.data;
                             try {
                                 if (typeof event.data === "string") {
@@ -588,7 +674,7 @@
                                         new_data = "history:object:" + JSON.stringify(history);
                                     }
                                 }
-                            } catch (e) {}
+                            } catch (e) { }
 
                             const new_event = new MessageEvent("message", {
                                 data: new_data,

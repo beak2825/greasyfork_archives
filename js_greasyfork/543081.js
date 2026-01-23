@@ -1,13 +1,12 @@
 // ==UserScript==
 // @name         WME Level Highlighter
 // @namespace    https://greasyfork.org/de/users/863740-horst-wittlich
-// @version      2026.01.21
+// @version      2026.01.22
 // @description  Level highlighter for Waze Map Editor with multi-level selection and statistics
 // @icon         https://i.ibb.co/ckSvk59/waze-icon.png
 // @author       Assistant
 // @include      https://www.waze.com/editor*
 // @include      https://www.waze.com/*/editor*
-// @include      https://beta.waze.com/*
 // @exclude      https://www.waze.com/user/editor*
 // @grant        none
 // @license      MIT

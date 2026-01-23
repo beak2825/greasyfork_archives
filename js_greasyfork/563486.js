@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         隐藏网站碍眼元素
 // @namespace    http://tampermonkey.net
-// @version      0.3.0
+// @version      0.4.1
 // @author       Feny
 // @description  隐藏网站上的一些碍眼元素
 // @license      MIT
@@ -12,7 +12,6 @@
 // @grant        GM_registerMenuCommand
 // @grant        GM_setValue
 // @run-at       document-start
-// @noframes
 // @downloadURL https://update.greasyfork.org/scripts/563486/%E9%9A%90%E8%97%8F%E7%BD%91%E7%AB%99%E7%A2%8D%E7%9C%BC%E5%85%83%E7%B4%A0.user.js
 // @updateURL https://update.greasyfork.org/scripts/563486/%E9%9A%90%E8%97%8F%E7%BD%91%E7%AB%99%E7%A2%8D%E7%9C%BC%E5%85%83%E7%B4%A0.meta.js
 // ==/UserScript==
@@ -20,25 +19,46 @@
 (function () {
   'use strict';
 
+  const MSG_SOURCE = "GM_HIDE_SOME";
+  const cssText = "width:0!important;height:0!important;opacity:0!important;display:none!important;";
   const App = {
+    isTopWin: () => window === window.top,
+    getCache: () => GM_getValue(location.host),
+    setCache: (value) => GM_setValue(location.host, value),
+    postMessage: (win, data) => win?.postMessage({ source: MSG_SOURCE, ...data }, "*"),
     addStyle(id = "gm_hide_some") {
-      const cssText = "width:0!important;height:0!important;opacity:0!important;display:none!important;";
-      const value = this.getValue();
+      const selector = this.getCache();
       document.querySelector(`#${id}`)?.remove();
-      value && GM_addElement("style", { id, textContent: `${value}{${cssText}}` });
+      selector && GM_addElement("style", { id, textContent: `${selector}{${cssText}}` });
     },
-    getValue: () => GM_getValue(location.host),
-    setValue: (value) => GM_setValue(location.host, value),
     setupMenuCmds() {
+      if (!this.isTopWin()) return;
       const title = "此站要隐藏的元素";
       GM_registerMenuCommand(title, () => {
-        const input = prompt(title, this.getValue());
-        if (input !== null) this.setValue(input), this.addStyle();
+        const input = prompt(title, this.getCache());
+        if (input !== null) this.refreshStyle(input);
+      });
+    },
+    refreshStyle(value) {
+      this.setCache(value);
+      this.syncDataToIFrames(value);
+      Promise.resolve().then(() => this.addStyle());
+    },
+    syncDataToIFrames(selector) {
+      const iFrames = document.querySelectorAll("iframe");
+      iFrames.forEach((el) => this.postMessage(el?.contentWindow, { selector }));
+    },
+    setupEventListener() {
+      if (this.isTopWin()) return;
+      window.addEventListener("message", ({ data }) => {
+        if (!data?.source === MSG_SOURCE) return;
+        if ("selector" in data) this.refreshStyle(data.selector);
       });
     },
     init() {
       this.addStyle();
       this.setupMenuCmds();
+      this.setupEventListener();
     }
   };
   App.init();

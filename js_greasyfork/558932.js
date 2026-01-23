@@ -1,13 +1,11 @@
 // ==UserScript==
 // @name         WME Hide Follow Discussion
 // @namespace    https://greasyfork.org/users/wme-scripts
-// @version      1.0.0
+// @version      2026.01.23
 // @description  Blendet die "Diskussion verfolgen" Option im Waze Map Editor dauerhaft aus
 // @author       Hiwi234
 // @match        https://www.waze.com/editor*
 // @match        https://www.waze.com/*/editor*
-// @match        https://beta.waze.com/editor*
-// @match        https://beta.waze.com/*/editor*
 // @grant        GM_addStyle
 // @run-at       document-start
 // @license      MIT

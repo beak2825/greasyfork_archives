@@ -2,7 +2,7 @@
 // @name         UltraMegaHack
 // @namespace    http://tampermonkey.net/
 // @version      1
-// @description  This UltraMegaHack was hard to make (AND I DID IT ALL ALONE), but I stole a few hacks. I'll leave the names of the authors of     the hacks I stole: Chyppitau Coder, senka1, TSZYSK, jmatg1, KingBelisariusIV, Ghost972 (me), HappyProg, LCDAngel99, Business and fasf fasfg
+// @description  This UltraMegaHack was hard to make (AND I DID IT ALL ALONE), but I stole a few hacks. I'll leave the names of the authors of     the hacks I stole: Chyppitau Coder, senka1, TSZYSK, jmatg1, KingBelisariusIV, Ghost972 (me), HappyProg, LCDAngel99, Business and fasf fasfg(This script isn't working in EvoWorld at the moment. I'm doing everything I can to make it work. Please don't leave a bad review for this script. Thank you.)
 // @author       Ghost972
 // @match        https://evoworld.io/
 // @grant        none

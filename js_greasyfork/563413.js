@@ -1,13 +1,12 @@
 // ==UserScript==
 // @name         WME Segment Age Filter
 // @namespace    https://greasyfork.org/de/users/863740-horst-wittlich
-// @version      2026.01.23.4
+// @version      2026.01.23.5
 // @description  Level highlighter with age filter - Radius scan, Regierungsbezirke, Auto-scroll
 // @icon         https://i.ibb.co/ckSvk59/waze-icon.png
 // @author       Hiwi234
 // @include      https://www.waze.com/editor*
 // @include      https://www.waze.com/*/editor*
-// @include      https://beta.waze.com/*
 // @exclude      https://www.waze.com/user/editor*
 // @grant        none
 // @license      MIT

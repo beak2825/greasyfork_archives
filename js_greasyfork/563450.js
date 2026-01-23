@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         豆瓣信息自动填充 - 综合增强版(修复标点Bug)
 // @namespace    http://tampermonkey.net/
-// @version      3.4
+// @version      3.5
 // @description  中文名保留标点，英文名标点替换为空格
 // @author       Combined & Gemini
 // @match        *://ubweb.*/*

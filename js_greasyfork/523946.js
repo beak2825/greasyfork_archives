@@ -2,8 +2,8 @@
 // @name                   Remover GoogleHistory
 // @description            Remove em qual link foi clicado por último no Google
 // @namespace              CowanGOOGLE
-// @license                CowBas
-// @version                1.0
+// @license                GPL-3.0
+// @version                2.0
 // @author                 Cowanbas
 // @match                  *://*/*
 // @match                  *://*.google.tld/*

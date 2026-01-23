@@ -2,10 +2,10 @@
 // @name        Google Hit Hider by Domain (Search Filter / Block Sites)
 // @author      Jefferson "jscher2000" Scher
 // @namespace   JeffersonScher
-// @version     2.3.5
-// @copyright   Copyright 2025 Jefferson Scher
+// @version     2.3.6
+// @copyright   Copyright 2026 Jefferson Scher
 // @license     BSD-3-Clause
-// @description Block unwanted sites from your Google, DuckDuckGo, Startpage.com, Bing and Yahoo search results. v2.3.5 2025-03-21
+// @description Block unwanted sites from your Google, DuckDuckGo, Startpage.com, Bing and Yahoo search results. v2.3.6 2026-01-22
 // @include     http*://www.google.*/*
 // @exclude http*://www.google.com/recaptcha/*
 // @include     http*://www.google.co*.*/*
@@ -39,7 +39,7 @@
 // @grant       GM.deleteValue
 // @grant       GM_getResourceURL
 // @grant       GM.getResourceUrl
-// @resource    mycon https://www.jeffersonscher.com/gm/src/gfrk-GHHbD-ver235.png
+// @resource    mycon https://www.jeffersonscher.com/gm/src/gfrk-GHHbD-ver236.png
 // @downloadURL https://update.greasyfork.org/scripts/1682/Google%20Hit%20Hider%20by%20Domain%20%28Search%20Filter%20%20Block%20Sites%29.user.js
 // @updateURL https://update.greasyfork.org/scripts/1682/Google%20Hit%20Hider%20by%20Domain%20%28Search%20Filter%20%20Block%20Sites%29.meta.js
 // ==/UserScript==
@@ -114,10 +114,11 @@ function doSiteSpecific(){
         engine = 'Google';
         // Google: div#res > div#search > div > div#ires > div.srg | ol#rso | div._NId | div.bkWMgd > div.g > div.rc > h3.r > a
         //   3-21-2024 div#res > div#search > div > div#rso > div
+        //   1-22-2026 div#center_col > div > div#search > div > div#rso > div
         // Google in-depth articles: div#res > div#search > div#ires > ol#rso > div > li.g.card-section or li.g.ct-cs > div.rc > div > h3.r > a
         // Google Images (default): div#res > div#search > div > div#ires > div#rso > div#isr_mc > div > div#rg > div#rg_s > div.rg_di.rg_el.ivg-ig > a > img
         //   3-21-2024 div#res > div#search > div > div#rso > div h3 a g-img > img
-        GHHbD_addStyle("#res>#search>div>#rso>div>.ghhider.ghhd,#res>#search>div>#rso>div.ghh1time{margin-block:1em;};");
+        GHHbD_addStyle("#res>#search>div>#rso>div>.ghhider.ghhd,#res>#search>div>#rso>div.ghh1time,#center_col>div>#search>div>#rso>div>.ghhider.ghhd,#center_col>div>#search>div>#rso>div.ghh1time{margin-block:1em;};");
     }
     if (currentG.indexOf("bing.com") > -1){
         engine = 'Bing';
@@ -496,7 +497,7 @@ var parentcard;
 function hidehits(liels,ovrd){
     if (!liels){
         if (engine == 'Google'){
-            liels = document.querySelectorAll("#res li.g, #res div.srg div.g, #res div._NId div.g, #res div._bkWMgd div.g, #res #rso div.g, #res>#search>div>#rso>div, #res #GTR div.g, #res #isr_mc, g-section-with-header g-scrolling-carousel g-inner-card, g-card div.dbsr, g-card, [data-async-context^=\"query:\"] div.g");
+            liels = document.querySelectorAll("#res li.g, #res div.srg div.g, #res div._NId div.g, #res div._bkWMgd div.g, #res #rso div.g, #res>#search>div>#rso>div, #center_col>div>#search>div>#rso>div, #res #GTR div.g, #res #isr_mc, g-section-with-header g-scrolling-carousel g-inner-card, g-card div.dbsr, g-card, [data-async-context^=\"query:\"] div.g");
         } else {
             liels = document.querySelectorAll('div#results li, div#results > div.result, div#links > div.results_links_deep > div.links_main, div#links > div.nrn-react-div, div#b_content ol > li.b_algo, div#results div#web > ol > li, div#WS2m > div.w, div.sw-CardBase, div.serp-list > div.serp-item, ul.serp-list > li.serp-item, div#main_results > div.result, div.results-column div.result--web, div.results-column div.result--news, #content_left > div.result.c-container, #content_left > div.result-op.c-container, ol.list-flat > li, div.w-gl__result, div.w-gl > div.result, div.w-bg > div.result, div.css-ndwlbg > div.article, div.card-web div.card-mobile, ol.react-results--main > li');
             if (liels.length == 0 && engine == 'Ecosia'){
@@ -511,7 +512,7 @@ function hidehits(liels,ovrd){
         liels = document.querySelectorAll('div.rg_di, div.isv-r');
     } else if (liels.length==0){
         if (engine == 'Google'){
-            liels = document.querySelectorAll("#res li.g, #res div.srg div.g, #res div._NId div.g, #res div._bkWMgd div.g, #res #rso div.g, #res>#search>div>#rso>div, #res #GTR div.g, #res #isr_mc, g-section-with-header g-scrolling-carousel g-inner-card, g-card div.dbsr, g-card, [data-async-context^=\"query:\"] div.g");
+            liels = document.querySelectorAll("#res li.g, #res div.srg div.g, #res div._NId div.g, #res div._bkWMgd div.g, #res #rso div.g, #res>#search>div>#rso>div, #center_col>div>#search>div>#rso>div, #res #GTR div.g, #res #isr_mc, g-section-with-header g-scrolling-carousel g-inner-card, g-card div.dbsr, g-card, [data-async-context^=\"query:\"] div.g");
         } else {
             liels = document.querySelectorAll('div#results li, div#results > div.result, div#links > div.results_links_deep > div.links_main, div#links > div.nrn-react-div, div#b_content ol > li.b_algo, div#results div#web > ol > li, div#WS2m > div.w, div.sw-CardBase, div.serp-list > div.serp-item, ul.serp-list > li.serp-item, div#main_results > div.result, div.results-column div.result--web, div.results-column div.result--news, #content_left > div.result.c-container, #content_left > div.result-op.c-container, ol.list-flat > li, div.w-gl__result, div.w-gl > div.result, div.w-bg > div.result, div.css-ndwlbg > div.article, div.card-web div.card-mobile, ol.react-results--main > li');
         }

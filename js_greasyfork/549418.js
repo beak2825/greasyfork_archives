@@ -4,13 +4,15 @@
 // @name:ja      PikPak バッチJAV リネームアシスタント
 // @name:zh-CN   PikPak 批量番号重命名助手
 // @namespace    https://github.com/CheerChen
-// @version      0.0.30
+// @version      0.0.32
 // @description  Batch rename video files and folders with JAV codes in PikPak.
 // @description:en Batch rename video files and folders with JAV codes in PikPak.
 // @description:ja PikPakで品番付きの動画ファイルやフォルダを一括リネーム。
 // @description:zh-CN 在 PikPak 中批量重命名带有番号的视频文件或者文件夹。
 // @author       cheerchen37
 // @match        *://*mypikpak.com/*
+// @match        *://*mypikpak.net/*
+// @match        *://*pikpak.me/*
 // @require      https://unpkg.com/react@18/umd/react.production.min.js
 // @require      https://unpkg.com/react-dom@18/umd/react-dom.production.min.js
 // @grant        GM_xmlhttpRequest

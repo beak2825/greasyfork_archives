@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Geoguessr Better Breakdown UI
 // @namespace    https://greasyfork.org/users/1179204
-// @version      1.1.6
+// @version      1.1.7
 // @description  built-in StreetView Window to view where you guessed and the correct location
 // @author       KaKa, Alien Perfect
 // @match        https://www.geoguessr.com/*
@@ -55,7 +55,7 @@ const domCache = {
 function throttle(fn, delay) {
     let lastCall = 0;
     let timeoutId = null;
-    return function (...args) {
+    return function(...args) {
         const now = Date.now();
         const remaining = delay - (now - lastCall);
         if (remaining <= 0) {
@@ -78,14 +78,14 @@ function throttle(fn, delay) {
 const SELECTORS = {
     markerList: "[class*='map-pin_']:not([data-qa='correct-location-marker'])",
     roundMarker: "[data-qa='correct-location-marker']",
-    duelMarker: "[class*='result-map_roundPin']",
+    duelMarker:"[class*='result-map_roundPin']",
     roundEnd: "[data-qa='close-round-result']",
     gameEnd: "[data-qa='play-again-button']",
-    duelEnd: "[class*='game-summary']",
+    duelEnd:"[class*='game-summary']",
     roundNumber: "[data-qa='round-number']",
     guessMap: "[class*='guess-map_canvas']",
     resultMap: "[class*='coordinate-result-map_map']",
-    duelMap: "[class*='result-map_map']",
+    duelMap:"[class*='result-map_map']",
 };
 
 const SVG_SOURCE = {
@@ -93,9 +93,9 @@ const SVG_SOURCE = {
     LOADING: `<svg height="24" width="24" viewBox="0 0 24 24"><path d="M12,18A6,6 0 0,1 6,12C6,11 6.25,10.03 6.7,9.2L5.24,7.74C4.46,8.97 4,10.43 4,12A8,8 0 0,0 12,20V23L16,19L12,15M12,4V1L8,5L12,9V6A6,6 0 0,1 18,12C18,13 17.75,13.97 17.3,14.8L18.76,16.26C19.54,15.03 20,13.57 20,12A8,8 0 0,0 12,4Z" fill="currentColor"></path></svg>`,
     SUCCESS: `<svg height="24" width="24" viewBox="0 0 24 24"><path d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z" fill="currentColor"></path></svg>`,
     SAVE: `<svg viewBox="0 0 24 24" fill="none" width="24" height="24"> <path d="M9 6L12 3M12 3L15 6M12 3V13M7.00023 10C6.06835 10 5.60241 10 5.23486 10.1522C4.74481 10.3552 4.35523 10.7448 4.15224 11.2349C4 11.6024 4 12.0681 4 13V17.8C4 18.9201 4 19.4798 4.21799 19.9076C4.40973 20.2839 4.71547 20.5905 5.0918 20.7822C5.5192 21 6.07899 21 7.19691 21H16.8036C17.9215 21 18.4805 21 18.9079 20.7822C19.2842 20.5905 19.5905 20.2839 19.7822 19.9076C20 19.4802 20 18.921 20 17.8031V13C20 12.0681 19.9999 11.6024 19.8477 11.2349C19.6447 10.7448 19.2554 10.3552 18.7654 10.1522C18.3978 10 17.9319 10 17 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
-    SPAWN: `<svg height="24" width="24" viewBox="0 0 24 24"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" fill="currentColor"></path></svg>`,
-    PANEL: `<svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M3,9H17V7H3V9M3,13H17V11H3V13M3,17H17V15H3V17M19,17H21V15H19V17M19,7V9H21V7H19M19,13H21V11H19V13Z" /></svg>`,
-    CAMERA: `<svg height="24" width="24" viewBox="0 0 24 24"><path d="M4,4H7L9,2H15L17,4H20A2,2 0 0,1 22,6V18A2,2 0 0,1 20,20H4A2,2 0 0,1 2,18V6A2,2 0 0,1 4,4M12,7A5,5 0 0,0 7,12A5,5 0 0,0 12,17A5,5 0 0,0 17,12A5,5 0 0,0 12,7M12,9A3,3 0 0,1 15,12A3,3 0 0,1 12,15A3,3 0 0,1 9,12A3,3 0 0,1 12,9Z" fill="currentColor"></path></svg>`
+    SPAWN:`<svg height="24" width="24" viewBox="0 0 24 24"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" fill="currentColor"></path></svg>`,
+    PANEL:`<svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M3,9H17V7H3V9M3,13H17V11H3V13M3,17H17V15H3V17M19,17H21V15H19V17M19,7V9H21V7H19M19,13H21V11H19V13Z" /></svg>`,
+    CAMERA:`<svg height="24" width="24" viewBox="0 0 24 24"><path d="M4,4H7L9,2H15L17,4H20A2,2 0 0,1 22,6V18A2,2 0 0,1 20,20H4A2,2 0 0,1 2,18V6A2,2 0 0,1 4,4M12,7A5,5 0 0,0 7,12A5,5 0 0,0 12,17A5,5 0 0,0 17,12A5,5 0 0,0 12,7M12,9A3,3 0 0,1 15,12A3,3 0 0,1 12,15A3,3 0 0,1 9,12A3,3 0 0,1 12,9Z" fill="currentColor"></path></svg>`
 };
 
 let svs = null;
@@ -112,7 +112,6 @@ let coverageLayer = null;
 let markerObserver = null;
 let currentGameToken = null;
 let lastClickedCoords = null;
-let realTimePreviewTooltip = null;
 let movementPath = [];
 let pathPolyline = null;
 
@@ -122,7 +121,6 @@ let gameLoopRunning = false;
 let clickListenerAttached = false;
 
 let MAP_MAKING_API_KEY = GM_getValue("MAP_MAKING_API_KEY", "PASTE_YOUR_KEY_HERE");
-let isRealTimeTooltip = GM_getValue("realTimeTooltip", false);
 let MAP_LIST;
 let LOCATION;
 let previousMapId = JSON.parse(GM_getValue('previousMapId', null));
@@ -137,7 +135,7 @@ function getReactFiber(el) {
 function getGuessMapInstance(el) {
     const fiber = getReactFiber(el);
     try {
-        return fiber?.return?.memoizedState?.memoizedState?.current?.instance || fiber?.return?.updateQueue?.lastEffect?.deps?.[0] || null;
+        return fiber?.return?.memoizedState?.memoizedState?.current?.instance || fiber?.return?.updateQueue?.lastEffect?.deps?.[0]||null;
     } catch { return null; }
 }
 
@@ -149,7 +147,7 @@ function getRoundData() {
     } catch { return null; }
 }
 
-function getDuelData(marker) {
+function getDuelData(marker){
     const fiber = getReactFiber(marker);
     if (!fiber) return null;
     return fiber.return?.return?.return?.return?.memoizedProps?.round || fiber.return?.return?.return?.return?.pendingProps || null;
@@ -203,7 +201,7 @@ function fetchAnswerPanoFromRoundData() {
         location: { lat: data.lat, lng: data.lng },
         pitch: data.pitch,
         radius: 0,
-        zoom: data.zoom,
+        zoom:data.zoom,
         error: false
     }
 }
@@ -227,14 +225,9 @@ function attachClickListener(map) {
             lat: e.latLng.lat(),
             lng: e.latLng.lng()
         };
-
-        if (!document.querySelector(SELECTORS.roundEnd) &&
-            !document.querySelector(SELECTORS.gameEnd) && (!document.querySelector(SELECTORS.duelEnd))) {
-            const pano = await getNearestPano(lastClickedCoords);
-            const marker = document.querySelector(SELECTORS.markerList)
-            if (marker) updateRealtimePreview(marker, pano);
-        }
-        else {
+        if (document.querySelector(SELECTORS.roundEnd) ||
+            document.querySelector(SELECTORS.gameEnd)||
+            (document.querySelector(SELECTORS.duelEnd))){
             if (!isCoverageLayer) return
             const pano = await getNearestPano(lastClickedCoords);
             if (!pano || pano.error) return
@@ -251,7 +244,6 @@ function attachClickListener(map) {
                 });
             } else {
                 peekMarker.setPosition(pano.location);
-
             }
             openNativeStreetView(pano)
         }
@@ -322,15 +314,14 @@ function startMapObserver() {
 
     mapObserver = new MutationObserver((mutations) => {
         if (!mutations.some(m => m.addedNodes.length > 0)) return;
-
-        const mapEl = document.querySelector(SELECTORS.guessMap) || document.querySelector(SELECTORS.resultMap) || document.querySelector(SELECTORS.duelMap);
+        const duelMap = document.querySelector(SELECTORS.duelMap)
+        const mapEl = document.querySelector(SELECTORS.guessMap) || document.querySelector(SELECTORS.resultMap)|| duelMap;
         if (!mapEl) return;
-
         guessMap = getGuessMapInstance(mapEl);
         if (guessMap && !clickListenerAttached) {
             attachClickListener(guessMap);
             clickListenerAttached = true;
-            if (document.querySelector(SELECTORS.duelMap) && window.location.href.includes('summary')) makeMapResizable()
+            if(duelMap && window.location.href.includes('summary'))makeMapResizable()
             stopMapObserver();
         }
     });
@@ -375,12 +366,12 @@ function addCreditToPage() {
     element.id = 'peek-credit-container';
     element.className = 'peek-credit';
     element.innerHTML = `
-            <div class="peek-credit-title">GeoGuessr Better Breakddown UI</div>
-            <div class="peek-credit-subtitle">by <a href="https://greasyfork.org/users/1179204-kakageo/" target="_blank" rel="noopener noreferrer">kakageo</a>.</div>
-        `;
+		<div class="peek-credit-title">GeoGuessr Better Breakdown UI</div>
+		<div class="peek-credit-subtitle">by <a href="https://greasyfork.org/users/1179204-kakageo/" target="_blank" rel="noopener noreferrer">kakageo</a>.</div>
+	`;
     container.appendChild(element);
-    if (isDuelEnd) element.style.left = '4rem';
-    else element.style.left = '1rem';
+    if(isDuelEnd)element.style.left='4rem';
+    else element.style.left='1rem';
 }
 
 async function gameLoop() {
@@ -389,10 +380,10 @@ async function gameLoop() {
     const round = getCurrentRound();
     const roundEndEl = document.querySelector(SELECTORS.roundEnd);
     const gameEndEl = document.querySelector(SELECTORS.gameEnd);
-    const duelEndEl = document.querySelector(SELECTORS.duelMap)
+    const duelEndEl = document.querySelector(SELECTORS.duelEnd);
     const isRoundEnd = !!roundEndEl;
     const isGameEnd = !!gameEndEl;
-    const isDuelEnd = !!duelEndEl;
+    const isDuelEnd = !!duelEndEl
     const isRoundMarker = document.querySelector(SELECTORS.roundMarker);
 
     if ((!token || !round) && !isDuelEnd) return;
@@ -401,19 +392,19 @@ async function gameLoop() {
         toggleCoverageLayer("off");
     }
 
-    if (isRoundEnd || isGameEnd || isDuelEnd) {
+    if (isRoundEnd || isGameEnd||isDuelEnd) {
         addCreditToPage()
     }
-    if (isDuelEnd) {
+    if(isDuelEnd){
         const markers = document.querySelectorAll(SELECTORS.duelMarker);
         for (const marker of markers) {
             const data = getDuelData(marker);
-            if (!data) continue
+            if(!data) continue
             await applyPanoToDuelMarker(marker, data);
         }
-        if (window.location.href.includes('summary')) addDuelRoundsPanel();
+        if(window.location.href.includes('summary'))addDuelRoundsPanel();
     }
-    else {
+    else{
         if (token !== currentGameToken) {
             currentGameToken = token;
             committedRounds.clear();
@@ -518,45 +509,6 @@ function positionTooltip(marker, tooltip) {
     }
 }
 
-function updateRealtimePreview(marker, pano) {
-    marker.style.pointerEvents = "none";
-    if (!realTimePreviewTooltip) {
-        realTimePreviewTooltip = document.createElement("div");
-        realTimePreviewTooltip.className = "peek-realtime-tooltip";
-        realTimePreviewTooltip.style.display = isRealTimeTooltip ? 'block' : 'none';
-        realTimePreviewTooltip.innerHTML = `
-                <button class="peek-close-btn">×</button>
-                <div class="peek-body">
-                    <img class="peek-thumb" alt="Street View Preview" loading="lazy">
-                </div>
-                <div class="peek-error" style="display:none;">No Street View found within 250km</div>
-            `;
-        realTimePreviewTooltip.querySelector(".peek-close-btn")?.addEventListener("click", (e) => {
-            e.stopPropagation();
-            isRealTimeTooltip = false;
-            saveRealTimeTooltipState(false);
-            realTimePreviewTooltip.style.display = "none";
-        });
-    }
-
-    const imgEl = realTimePreviewTooltip.querySelector(".peek-thumb");
-    const peakBody = realTimePreviewTooltip.querySelector(".peek-body");
-    const peakError = realTimePreviewTooltip.querySelector(".peek-error");
-
-    if (pano.error) {
-        peakError.style.display = 'block';
-        peakBody.style.display = "none";
-    } else {
-        peakError.style.display = 'none';
-        peakBody.style.display = 'block';
-        imgEl.src = getStreetViewThumbUrl(pano);
-    }
-    positionTooltip(marker, realTimePreviewTooltip);
-    if (!marker.querySelector('.peek-realtime-tooltip')) {
-        marker.appendChild(realTimePreviewTooltip);
-    }
-}
-
 function applyPanoToGuessMarker(marker, pano, roundId) {
     const bindKey = `bound_${roundId}`;
     const markerData = markerDataMap.get(marker) || {};
@@ -580,14 +532,14 @@ function applyPanoToGuessMarker(marker, pano, roundId) {
         tooltip.innerHTML = `<div class="peek-error">No Street View found within 250km</div>`;
     } else {
         tooltip.innerHTML = `
-                <div class="peek-header">
-                    <span class="peek-dist">${formatDistance(pano.radius)}</span> away from nearest streetview
-                </div>
-                <div class="peek-body">
-                    <img src="${getStreetViewThumbUrl(pano)}" class="peek-thumb" alt="Preview">
-                </div>
-                <div class="peek-note">Click pin to view Street View</div>
-            `;
+            <div class="peek-header">
+                <span class="peek-dist">${formatDistance(pano.radius)}</span> away from the nearest street view
+            </div>
+            <div class="peek-body">
+                <img src="${getStreetViewThumbUrl(pano)}" class="peek-thumb" alt="Preview">
+            </div>
+            <div class="peek-note">Click pin to view Street View</div>
+        `;
 
         const clickHandler = (e) => {
             e.preventDefault();
@@ -608,6 +560,7 @@ function applyPanoToGuessMarker(marker, pano, roundId) {
     marker.appendChild(tooltip);
 }
 
+// WeakMap to track initialized containers
 const initializedContainers = new WeakMap();
 
 function addDuelRoundsPanel() {
@@ -618,12 +571,13 @@ function addDuelRoundsPanel() {
     mapContainer.style.position = 'relative';
     mapContainer.style.overflow = 'hidden';
 
-    const playedRounds = document.querySelectorAll('[class*="game-summary_playedRound"]');
+    const playedRounds = document.querySelectorAll('[class*="game-summary_playedRounds"]');
 
     if (!playedRounds.length) {
-        console.error('Duel rounds elements not found', { playedRounds });
+        console.error('Duel rounds elements not found', {playedRounds});
         return;
     }
+
     const toggleButton = document.createElement('button');
     toggleButton.className = 'peek-duel-rounds-button';
     toggleButton.innerHTML = SVG_SOURCE.PANEL;
@@ -642,7 +596,6 @@ function addDuelRoundsPanel() {
         const clonedRound = round.cloneNode(true);
         roundsContainer.appendChild(clonedRound);
     }
-
     const summaryTitle = document.querySelector('[class*="game-summary_summaryTitle"]');
     if (summaryTitle) summaryTitle.style.display = "none";
 
@@ -685,12 +638,28 @@ function addDuelRoundsPanel() {
         gameModeHeader.appendChild(gameModeContainer);
         panelContent.appendChild(gameModeHeader);
     }
-
     const clonedRoundElements = roundsContainer.querySelectorAll('[class*="game-summary_playedRound"]');
-    const originalRoundElements = document.querySelectorAll('[class*="game-summary_playedRound"]:not(.peek-duel-rounds-list) [class*="game-summary_playedRound"]');
+    const originalRoundElements = document.querySelectorAll('[class*="game-summary_playedRounds"]:not(.peek-duel-rounds-list) [class*="game-summary_playedRound"]');
 
     const getSelectedClass = (element) => {
         return Array.from(element.classList).find(cls => cls.includes('game-summary_selectedRound'));
+    };
+
+    const roundIndicator = document.createElement('div');
+    roundIndicator.className = 'peek-round-indicator';
+    roundIndicator.textContent = 'Round 1';
+    mapContainer.appendChild(roundIndicator);
+    const updateRoundIndicator = () => {
+        const selectedElement = roundsContainer.querySelector('[class*="game-summary_selectedRound"]');
+        if (selectedElement) {
+            const textElement = selectedElement.querySelector('[class*="game-summary_text__"]');
+            if (textElement) {
+                const match = textElement.textContent.match(/Round\s+(\d+)/i);
+                if (match) {
+                    roundIndicator.textContent = `Round ${match[1]}`;
+                }
+            }
+        }
     };
 
     clonedRoundElements.forEach((roundElement, index) => {
@@ -734,41 +703,40 @@ function addDuelRoundsPanel() {
                             roundElement.classList.add(selectedClass);
                         }
                     }
+                    // 更新回合指示器
+                    updateRoundIndicator();
                 }, 50); // Increase timeout to ensure proper state synchronization
             }
 
             if (closeControl) closeControl.click();
+            toggleCoverageLayer("off");
         });
     });
     panelContent.appendChild(roundsContainer);
     panel.appendChild(panelContent);
 
-    // Simple direct sync approach - add click listeners to original elements
     originalRoundElements.forEach((originalEl, index) => {
         const clonedEl = clonedRoundElements[index + 2];
         if (clonedEl) {
             originalEl.addEventListener('click', () => {
-                // Scroll to top when clicking original round elements
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
-
                 setTimeout(() => {
                     const selectedClass = getSelectedClass(originalEl);
                     if (selectedClass && originalEl.classList.contains(selectedClass)) {
-                        // Remove selected class from all cloned elements
                         clonedRoundElements.forEach(el => {
                             const cls = getSelectedClass(el);
                             if (cls) el.classList.remove(cls);
                         });
-                        // Add selected class to corresponding cloned element
                         clonedEl.classList.add(selectedClass);
+                        updateRoundIndicator();
                     }
                 }, 50);
             });
         }
+        originalEl.style.display='none'
     });
+
+    // 初始化回合指示器
+    updateRoundIndicator();
 
     const closeButton = document.createElement('button');
     closeButton.className = 'peek-duel-rounds-close';
@@ -778,6 +746,7 @@ function addDuelRoundsPanel() {
 
     mapContainer.appendChild(toggleButton);
     mapContainer.appendChild(panel);
+
 
     const togglePanel = () => {
         const isActive = panel.classList.toggle('active');
@@ -804,6 +773,10 @@ function addDuelRoundsPanel() {
 }
 
 function makeMapResizable() {
+    const summaryContainer =document.querySelector('[class^="game-summary_innerContainer"]');
+    const summaryBottom = document.querySelector('[class^="game-summary_bottom"]');
+    if(summaryContainer)summaryContainer.style.paddingBottom='0'
+    if(summaryBottom) summaryBottom.style.minHeight= '4rem'
     const mapContainer = document.querySelector('[class*="game-summary_mapContainer"]');
     if (!mapContainer) return;
 
@@ -817,11 +790,11 @@ function makeMapResizable() {
     const savedSize = GM_getValue('mapContainerSize', { width: null, height: null });
     if (savedSize.width && savedSize.height) {
         mapContainer.style.width = `${savedSize.width}px`;
-        mapContainer.style.height = `${savedSize.height}px`;
+        mapContainer.style.height = `${Math.min(window.innerHeight-160,savedSize.height)}px`;
     }
 
     const resizerStyle = {
-        position: 'absolute',
+        position: 'fixed',
         background: 'rgba(100, 100, 255, 0.3)',
         transition: 'background 0.2s',
         zIndex: 10010
@@ -902,7 +875,7 @@ function makeMapResizable() {
         const minWidth = 300;
         const maxWidth = window.innerWidth - 100;
         const minHeight = 250;
-        const maxHeight = window.innerHeight - 200;
+        const maxHeight = window.innerHeight-160;
 
         newWidth = Math.max(minWidth, Math.min(maxWidth, newWidth));
         newHeight = Math.max(minHeight, Math.min(maxHeight, newHeight));
@@ -931,51 +904,51 @@ function makeMapResizable() {
     });
 }
 
-async function applyPanoToDuelMarker(marker, data) {
+async function applyPanoToDuelMarker(marker, data){
     if (!data) return;
     let pano;
-    if (data.panorama) {
-        pano = {
-            panoId: convertPanoId(data.panorama.panoId),
-            location: { lat: data.panorama.lat, lng: data.panorama.lng },
-            heading: data.panorama.heading,
-            pitch: data.panorama.pitch,
-            zoom: data.panorama.zoom
+    if(data.panorama){
+        pano= {
+            panoId:convertPanoId(data.panorama.panoId),
+            location:{lat:data.panorama.lat,lng:data.panorama.lng},
+            heading:data.panorama.heading,
+            pitch:data.panorama.pitch,
+            zoom:data.panorama.zoom
         };
     }
-    else {
-        pano = await getNearestPano({ lat: data.lat, lng: data.lng });
+    else{
+        pano = await getNearestPano({lat:data.lat,lng:data.lng});
     }
     marker.style.cursor = "pointer";
     marker.style.pointerEvents = "auto";
     if (!data.panorama) marker.dataset.pano = pano.error ? "false" : "true";
 
-    if (marker.querySelector(".peek-duel-tooltip") || marker.querySelector(".peek-duel-answer-tooltip")) return;
+    if(marker.querySelector(".peek-duel-tooltip")||marker.querySelector(".peek-duel-answer-tooltip"))return;
 
     const tooltip = document.createElement("div");
     tooltip.className = "peek-duel-tooltip";
     if (pano.error) {
         tooltip.innerHTML = `<div class="peek-error">No Street View found within 250km</div>`;
     }
-    else if (data.panorama) {
+    else if (data.panorama){
         tooltip.className = "peek-duel-answer-tooltip";
         tooltip.innerHTML = `
-                <div class="peek-note">Click pin to view Street View</div>
-                <div class="peek-body">
-                    <img src="${getStreetViewThumbUrl(pano)}" class="peek-thumb">
-                </div>
-            `;
+            <div class="peek-note">Click pin to view Street View</div>
+            <div class="peek-body">
+                <img src="${getStreetViewThumbUrl(pano)}" class="peek-thumb">
+            </div>
+        `;
     }
     else {
         tooltip.innerHTML = `
-                <div class="peek-header">
-                    <span class="peek-dist">${formatDistance(pano.radius)}</span> away from nearest streetview
-                </div>
-                <div class="peek-body">
-                    <img src="${getStreetViewThumbUrl(pano)}" class="peek-thumb" alt="Preview">
-                </div>
-                <div class="peek-note">Click pin to view Street View</div>
-            `;
+            <div class="peek-header">
+                <span class="peek-dist">${formatDistance(pano.radius)}</span> away from the nearest street view
+            </div>
+            <div class="peek-body">
+                <img src="${getStreetViewThumbUrl(pano)}" class="peek-thumb" alt="Preview">
+            </div>
+            <div class="peek-note">Click pin to view Street View</div>
+        `;
     }
     const clickHandler = (e) => {
         e.preventDefault();
@@ -1013,11 +986,11 @@ function applyPanoToAnswerMarker(marker, pano, roundId) {
     const tooltip = document.createElement("div");
     tooltip.className = "peek-answer-tooltip";
     tooltip.innerHTML = `
-                <div class="peek-note">Click pin to view Street View</div>
-                <div class="peek-body">
-                    <img src="${getStreetViewThumbUrl(pano)}" class="peek-thumb">
-                </div>
-            `;
+            <div class="peek-note">Click pin to view Street View</div>
+            <div class="peek-body">
+                <img src="${getStreetViewThumbUrl(pano)}" class="peek-thumb">
+            </div>
+        `;
     marker.appendChild(tooltip);
     const clickHandler = (e) => {
         e.preventDefault();
@@ -1400,11 +1373,11 @@ function togglePhotoMode(photoControl, viewer) {
         photoControl.title = 'Exit Photo Mode';
 
         cleanStyle = GM_addStyle(`
-        .embed-controls {display: none !important}
-        .SLHIdE-sv-links-control {display: none !important}
-        [alt="Google"] {display: none !important}
-        [class$="gmnoprint"], [class$="gm-style-cc"], [class$="gm-compass"] {display: none !important}
-        `);
+      .embed-controls {display: none !important}
+      .SLHIdE-sv-links-control {display: none !important}
+      [alt="Google"] {display: none !important}
+      [class$="gmnoprint"], [class$="gm-style-cc"], [class$="gm-compass"] {display: none !important}
+    `);
     } else {
         for (const ctrl of controls) {
             ctrl.style.display = '';
@@ -1440,7 +1413,7 @@ function openNativeStreetView(pano) {
     if (shareDiv) shareDiv.style.display = 'none'
     const xpDiv = document.querySelector("[class*='level-up-xp-button']")
     if (xpDiv) xpDiv.style.opacity = '0'
-    const mapContainer = document.querySelector(SELECTORS.resultMap) || document.querySelector(SELECTORS.duelMap);
+    const mapContainer = document.querySelector(SELECTORS.resultMap)|| document.querySelector(SELECTORS.duelMap);
     const isDuelMode = !!document.querySelector(SELECTORS.duelMap);
     const actualContainer = isDuelMode ? mapContainer.parentElement : mapContainer;
 
@@ -1452,8 +1425,8 @@ function openNativeStreetView(pano) {
         coverageLayerControl.className = 'peek-map-control';
         coverageLayerControl.id = 'layer-toggle'
         coverageLayerControl.innerHTML = `
-                <img alt="Coverage Layer Toggle" loading="lazy" width="24" height="24" decoding="async" data-nimg="1" src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2023%2038%22%3E%3Cpath%20d%3D%22M16.6%2038.1h-5.5l-.2-2.9-.2%202.9h-5.5L5%2025.3l-.8%202a1.53%201.53%200%2001-1.9.9l-1.2-.4a1.58%201.58%200%2001-1-1.9v-.1c.3-.9%203.1-11.2%203.1-11.2a2.66%202.66%200%20012.3-2l.6-.5a6.93%206.93%200%20014.7-12%206.8%206.8%200%20014.9%202%207%207%200%20012%204.9%206.65%206.65%200%2001-2.2%205l.7.5a2.78%202.78%200%20012.4%202s2.9%2011.2%202.9%2011.3a1.53%201.53%200%2001-.9%201.9l-1.3.4a1.63%201.63%200%2001-1.9-.9l-.7-1.8-.1%2012.7zm-3.6-2h1.7L14.9%2020.3l1.9-.3%202.4%206.3.3-.1c-.2-.8-.8-3.2-2.8-10.9a.63.63%200%2000-.6-.5h-.6l-1.1-.9h-1.9l-.3-2a4.83%204.83%200%20003.5-4.7A4.78%204.78%200%200011%202.3H10.8a4.9%204.9%200%2000-1.4%209.6l-.3%202h-1.9l-1%20.9h-.6a.74.74%200%2000-.6.5c-2%207.5-2.7%2010-3%2010.9l.3.1L4.8%2020l1.9.3.2%2015.8h1.6l.6-8.4a1.52%201.52%200%20011.5-1.4%201.5%201.5%200%20011.5%201.4l.9%208.4zm-10.9-9.6zm17.5-.1z%22%20style%3D%22isolation%3Aisolate%22%20fill%3D%22%23333%22%20opacity%3D%22.7%22/%3E%3Cpath%20d%3D%22M5.9%2013.6l1.1-.9h7.8l1.2.9%22%20fill%3D%22%23ce592c%22/%3E%3Cellipse%20cx%3D%2210.9%22%20cy%3D%2213.1%22%20rx%3D%222.7%22%20ry%3D%22.3%22%20style%3D%22isolation%3Aisolate%22%20fill%3D%22%23ce592c%22%20opacity%3D%22.5%22/%3E%3Cpath%20d%3D%22M20.6%2026.1l-2.9-11.3a1.71%201.71%200%2000-1.6-1.2H5.699999999999999a1.69%201.69%200%2000-1.5%201.3l-3.1%2011.3a.61.61%200%2000.3.7l1.1.4a.61.61%200%2000.7-.3l2.7-6.7.2%2016.8h3.6l.6-9.3a.47.47%200%2001.44-.5h.06c.4%200%20.4.2.5.5l.6%209.3h3.6L15.7%2020.3l2.5%206.6a.52.52%200%2000.66.31l1.2-.4a.57.57%200%2000.5-.7z%22%20fill%3D%22%23fdbf2d%22/%3E%3Cpath%20d%3D%22M7%2013.6l3.9%206.7%203.9-6.7%22%20style%3D%22isolation%3Aisolate%22%20fill%3D%22%23cf572e%22%20opacity%3D%22.6%22/%3E%3Ccircle%20cx%3D%2210.9%22%20cy%3D%227%22%20r%3D%225.9%22%20fill%3D%22%23fdbf2d%22/%3E%3C/svg%3E" style="color: transparent;">
-            `;
+            <img alt="Coverage Layer Toggle" loading="lazy" width="24" height="24" decoding="async" data-nimg="1" src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2023%2038%22%3E%3Cpath%20d%3D%22M16.6%2038.1h-5.5l-.2-2.9-.2%202.9h-5.5L5%2025.3l-.8%202a1.53%201.53%200%2001-1.9.9l-1.2-.4a1.58%201.58%200%2001-1-1.9v-.1c.3-.9%203.1-11.2%203.1-11.2a2.66%202.66%200%20012.3-2l.6-.5a6.93%206.93%200%20014.7-12%206.8%206.8%200%20014.9%202%207%207%200%20012%204.9%206.65%206.65%200%2001-2.2%205l.7.5a2.78%202.78%200%20012.4%202s2.9%2011.2%202.9%2011.3a1.53%201.53%200%2001-.9%201.9l-1.3.4a1.63%201.63%200%2001-1.9-.9l-.7-1.8-.1%2012.7zm-3.6-2h1.7L14.9%2020.3l1.9-.3%202.4%206.3.3-.1c-.2-.8-.8-3.2-2.8-10.9a.63.63%200%2000-.6-.5h-.6l-1.1-.9h-1.9l-.3-2a4.83%204.83%200%20003.5-4.7A4.78%204.78%200%200011%202.3H10.8a4.9%204.9%200%2000-1.4%209.6l-.3%202h-1.9l-1%20.9h-.6a.74.74%200%2000-.6.5c-2%207.5-2.7%2010-3%2010.9l.3.1L4.8%2020l1.9.3.2%2015.8h1.6l.6-8.4a1.52%201.52%200%20011.5-1.4%201.5%201.5%200%20011.5%201.4l.9%208.4zm-10.9-9.6zm17.5-.1z%22%20style%3D%22isolation%3Aisolate%22%20fill%3D%22%23333%22%20opacity%3D%22.7%22/%3E%3Cpath%20d%3D%22M5.9%2013.6l1.1-.9h7.8l1.2.9%22%20fill%3D%22%23ce592c%22/%3E%3Cellipse%20cx%3D%2210.9%22%20cy%3D%2213.1%22%20rx%3D%222.7%22%20ry%3D%22.3%22%20style%3D%22isolation%3Aisolate%22%20fill%3D%22%23ce592c%22%20opacity%3D%22.5%22/%3E%3Cpath%20d%3D%22M20.6%2026.1l-2.9-11.3a1.71%201.71%200%2000-1.6-1.2H5.699999999999999a1.69%201.69%200%2000-1.5%201.3l-3.1%2011.3a.61.61%200%2000.3.7l1.1.4a.61.61%200%2000.7-.3l2.7-6.7.2%2016.8h3.6l.6-9.3a.47.47%200%2001.44-.5h.06c.4%200%20.4.2.5.5l.6%209.3h3.6L15.7%2020.3l2.5%206.6a.52.52%200%2000.66.31l1.2-.4a.57.57%200%2000.5-.7z%22%20fill%3D%22%23fdbf2d%22/%3E%3Cpath%20d%3D%22M7%2013.6l3.9%206.7%203.9-6.7%22%20style%3D%22isolation%3Aisolate%22%20fill%3D%22%23cf572e%22%20opacity%3D%22.6%22/%3E%3Ccircle%20cx%3D%2210.9%22%20cy%3D%227%22%20r%3D%225.9%22%20fill%3D%22%23fdbf2d%22/%3E%3C/svg%3E" style="color: transparent;">
+        `;
         mapContainer.appendChild(coverageLayerControl);
         coverageLayerControl.onclick = () => toggleCoverageLayer();
     }
@@ -1468,9 +1441,9 @@ function openNativeStreetView(pano) {
         splitContainer = document.createElement('div');
         splitContainer.className = 'peek-split-container';
         splitContainer.innerHTML = `
-                <div class="peek-split-resizer"></div>
-                <div class="peek-split-pano" id="peek-pano"></div>
-            `;
+            <div class="peek-split-resizer"></div>
+            <div class="peek-split-pano" id="peek-pano"></div>
+        `;
         actualContainer.appendChild(splitContainer);
 
         const resizer = splitContainer.querySelector('.peek-split-resizer');
@@ -1518,7 +1491,7 @@ function openNativeStreetView(pano) {
                 heading: pano.heading || 0,
                 pitch: pano.pitch || 0
             },
-            zoom: pano.zoom || 1,
+            zoom: pano.zoom||1,
             addressControl: true,
             showRoadLabels: false,
             enableCloseButton: false,
@@ -1526,10 +1499,10 @@ function openNativeStreetView(pano) {
             clickToGo: true
         })
 
-        pano.panoId ? viewer.setPano(pano.panoId) : viewer.setPosition(pano.location)
+        pano.panoId?viewer.setPano(pano.panoId):viewer.setPosition(pano.location)
 
         viewer.addListener("pano_changed", function () {
-            updatePanoSelector({ panoId: viewer.getPano() }, panoSelector)
+            updatePanoSelector({panoId:viewer.getPano()}, panoSelector)
         });
 
         viewer.addListener("position_changed", function () {
@@ -1545,9 +1518,9 @@ function openNativeStreetView(pano) {
             if (shareDiv) shareDiv.style.display = 'block';
             if (xpDiv) xpDiv.style.opacity = '1.0';
             splitContainer.classList.remove('active');
-            toggleCoverageLayer('off')
             removePeekMarker();
             clearMovementPath();
+            toggleCoverageLayer("off")
         };
         viewer.controls[google.maps.ControlPosition.RIGHT_TOP].push(closeControl);
 
@@ -1563,7 +1536,7 @@ function openNativeStreetView(pano) {
                     icon: 'warning',
                     title: 'API Key Required',
                     html: `To save locations to <strong>Map Making App</strong>, please enter your API key below.<br><br>
-            You can generate an API key <a href="https://map-making.app/keys" target="_blank" style="color: #007bff; text-decoration: none;"><strong>here</strong></a>.`,
+           You can generate an API key <a href="https://map-making.app/keys" target="_blank" style="color: #007bff; text-decoration: none;"><strong>here</strong></a>.`,
                     input: 'text',
                     inputPlaceholder: 'Enter your API key',
                     showCancelButton: true,
@@ -1618,16 +1591,16 @@ function openNativeStreetView(pano) {
         });
         viewer.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(copyControl);
 
-        const spawnControl = document.createElement('button')
+        const spawnControl=document.createElement('button')
         spawnControl.className = 'peek-control'
         spawnControl.id = 'peek-spawn'
         spawnControl.title = 'Back to Spawn'
         spawnControl.innerHTML = SVG_SOURCE.SPAWN
         spawnControl.addEventListener('click', async () => {
-            if (spawn && (spawn.panoId || spawn.location)) {
-                spawn.panoId ? viewer.setPano(spawn.panoId) : viewer.setPosition(spawn.location);
-                viewer.setPov({ heading: spawn.heading || 0, pitch: spawn.pitch || 0 });
-                viewer.setZoom(spawn.zoom || 1);
+            if(spawn &&(spawn.panoId||spawn.location)){
+                spawn.panoId?viewer.setPano(spawn.panoId):viewer.setPosition(spawn.location);
+                viewer.setPov({heading:spawn.heading||0,pitch:spawn.pitch||0});
+                viewer.setZoom(spawn.zoom||1);
             }
         });
         viewer.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(spawnControl);
@@ -1647,7 +1620,7 @@ function openNativeStreetView(pano) {
         });
         viewer.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(photoControl);
 
-        if (!panoSelector) panoSelector = document.createElement("select");
+        if(!panoSelector)panoSelector = document.createElement("select");
         panoSelector.id = "pano-select";
         panoSelector.addEventListener('change', function () {
             if (viewer) viewer.setPano(panoSelector.value);
@@ -1655,14 +1628,14 @@ function openNativeStreetView(pano) {
         viewer.controls[google.maps.ControlPosition.BOTTOM_CENTER].push(panoSelector);
     }
     else {
-        pano.panoId ? viewer.setPano(pano.panoId) : viewer.setPosition(pano.location)
-        if (pano.heading && pano.pitch) viewer.setPov({ heading: pano.heading || 0, pitch: pano.pitch || 0 })
-        if (pano.zoom) viewer.setZoom(pano.zoom);
+        pano.panoId? viewer.setPano(pano.panoId):viewer.setPosition(pano.location)
+        if(pano.heading&&pano.pitch)viewer.setPov({ heading: pano.heading||0, pitch: pano.pitch||0 })
+        if(pano.zoom)viewer.setZoom(pano.zoom);
 
     }
 
     requestAnimationFrame(() => {
-        spawn = pano;
+        spawn=pano;
         updatePanoSelector(pano, document.getElementById('pano-select'));
         clearMovementPath();
         splitContainer.classList.add('active');
@@ -1683,25 +1656,25 @@ function showMapList() {
         for (const m of PEEK_STATE.recentMaps) {
             if (m.archivedAt) continue;
             recentMapsArr.push(`<div class="map">
-                    <a href="https://map-making.app/maps/${m.id}" class="map-link">
-                        <span class="map-name">${m.name}</span>
-                    </a>
-                    <span class="map-buttons">
-                        <span class="map-add" data-id="${m.id}">ADD</span>
-                        <span class="map-added">ADDED</span>
-                    </span>
-                </div>`);
+                <a href="https://map-making.app/maps/${m.id}" class="map-link">
+				    <span class="map-name">${m.name}</span>
+                </a>
+				<span class="map-buttons">
+					<span class="map-add" data-id="${m.id}">ADD</span>
+					<span class="map-added">ADDED</span>
+				</span>
+			</div>`);
         }
 
         recentMapsSection = `
-                <h3>Recent Maps</h3>
+			<h3>Recent Maps</h3>
 
-                <div class="maps">
-                    ${recentMapsArr.join('')}
-                </div>
+			<div class="maps">
+				${recentMapsArr.join('')}
+			</div>
 
-                <br>
-            `;
+			<br>
+		`;
     }
 
     const mapsArr = [];
@@ -1719,39 +1692,39 @@ function showMapList() {
     for (const m of MAP_LIST) {
         if (m.archivedAt) continue;
         mapsArr.push(`<div class="map">
-                <a href="https://map-making.app/maps/${m.id}" class="map-link">
-                    <span class="map-name">${m.name}</span>
-                </a>
-                <span class="map-buttons">
-                    <span class="map-add" data-id="${m.id}">ADD</span>
-                    <span class="map-added">ADDED</span>
-                </span>
-            </div>`);
+            <a href="https://map-making.app/maps/${m.id}" class="map-link">
+			    <span class="map-name">${m.name}</span>
+            </a>
+			<span class="map-buttons">
+				<span class="map-add" data-id="${m.id}">ADD</span>
+				<span class="map-added">ADDED</span>
+			</span>
+		</div>`);
     }
 
     element.innerHTML = `
-        <div class="inner">
-            <h3>Tags (comma separated)</h3>
+	<div class="inner">
+		<h3>Tags (comma separated)</h3>
 
-            <input type="text" class="tag-input" id="peek-map-tags" />
+		<input type="text" class="tag-input" id="peek-map-tags" />
 
-            <div class="tag-buttons">
-                ${tagButtonsArr.join('')}
-            </div>
-
-            <br><br>
-
-            ${recentMapsSection}
-
-            <h3>All Maps</h3>
-
-            <div class="maps">
-                ${mapsArr.join('')}
-            </div>
+        <div class="tag-buttons">
+            ${tagButtonsArr.join('')}
         </div>
 
-        <div class="dim"></div>
-        `;
+		<br><br>
+
+		${recentMapsSection}
+
+		<h3>All Maps</h3>
+
+		<div class="maps">
+			${mapsArr.join('')}
+		</div>
+	</div>
+
+	<div class="dim"></div>
+	`;
 
     document.body.appendChild(element);
 
@@ -1889,9 +1862,9 @@ function showLoader() {
     element.id = 'peek-loader';
     element.className = 'peek-modal';
     element.innerHTML = `
-            <div class="text">LOADING...</div>
-            <div class="dim"></div>
-        `;
+		<div class="text">LOADING...</div>
+		<div class="dim"></div>
+	`;
     document.body.appendChild(element);
 }
 
@@ -1972,10 +1945,6 @@ async function commitRoundResult({
     committedRounds.add(commitKey);
 }
 
-function saveRealTimeTooltipState(state) {
-    GM_setValue("realTimeTooltip", state);
-}
-
 function updateHistory(token, listKey) {
     let list = GM_getValue(listKey, []);
     list = list.filter(t => t !== token);
@@ -2016,7 +1985,7 @@ function extractDate(entry) {
 }
 
 function convertPanoId(panoId) {
-    if (!panoId) return null;
+    if(!panoId) return null;
     try {
         const bytes = new Uint8Array(panoId.match(/.{1,2}/g).map(b => parseInt(b, 16)));
         return new TextDecoder("utf-8").decode(bytes);
@@ -2056,21 +2025,7 @@ function main() {
         startMapObserver();
         loadState();
     });
-    let onKeyDown = (e) => {
-        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) {
-            return;
-        }
-        if (e.key.toLowerCase() === 'p') {
-            isRealTimeTooltip = !isRealTimeTooltip;
-            if (realTimePreviewTooltip) {
-                realTimePreviewTooltip.style.display = isRealTimeTooltip ? 'block' : 'none';
-            }
-            saveRealTimeTooltipState(isRealTimeTooltip);
-        }
-        return
-    }
 
-    document.addEventListener("keydown", onKeyDown, true);
     GM_addStyle(`
     .peek-tooltip {
         display: none;
@@ -2085,14 +2040,10 @@ function main() {
         left: 50%;
         bottom: 45px;
         transform: translateX(-50%);
-        z-index: 9999;
+        z-index: 10000;
         pointer-events: none;
         text-align: center;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-    }
-
-    .peek-tooltip .peek-duel{
-        width:150px;
     }
 
     .peek-duel-tooltip {
@@ -2108,7 +2059,7 @@ function main() {
         left: 50%;
         bottom: 45px;
         transform: translateX(-50%);
-        z-index: 9999;
+        z-index: 10000;
         pointer-events: none;
         text-align: center;
         box-shadow: 0 3px 12px rgba(0, 0, 0, 0.6);
@@ -2157,20 +2108,6 @@ function main() {
         z-index: 10000;
         pointer-events: none;
         text-align: center;
-        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.65);
-        overflow: hidden;
-    }
-
-    .peek-realtime-tooltip {
-        position: absolute;
-        width: 300px;
-        background: rgba(30, 30, 35, 0.96);
-        color: white;
-        border: 1px solid #4ade80;
-        border-radius: 6px;
-        padding: 0;
-        z-index: 10002;
-        pointer-events: auto;
         box-shadow: 0 4px 18px rgba(0, 0, 0, 0.65);
         overflow: hidden;
     }
@@ -2536,16 +2473,14 @@ function main() {
 
     [data-pano="true"]> :first-child {
         cursor: pointer;
-        --border-color: #E91E63 !important;
-        --border-size-factor: 1.8 !important;
+        --border-size-factor: 1.5 !important;
     }
 
-    [class*='result-map_map'] [data-pano="true"]> :first-child {
-        --border-color: white !important;
-        --border-size-factor: 1 !important;
+    [data-pano="true"]:not([class^='result-map_map'])> :first-child {
+    --border-color: #E91E63 !important;
     }
 
-    [data-pano="false"]> :first-child {
+    [data-pano="false"]:not([class^='result-map_map'])> :first-child {
         cursor: initial;
         --border-color: #323232 !important;
         --border-size-factor: 1.5 !important;
@@ -2600,8 +2535,8 @@ function main() {
 
     .peek-duel-rounds-button {
         position: absolute;
-        top: 10px;
-        left: 10px;
+        top: 15px;
+        left: 15px;
         z-index: 10005;
         width: 44px;
         height: 44px;
@@ -2615,6 +2550,7 @@ function main() {
         justify-content: center;
         box-shadow: rgba(0, 0, 0, 0.3) 0px 2px 6px;
         transition: all 0.2s;
+        opacity:0.7;
     }
 
     .peek-duel-rounds-button:hover {
@@ -2690,6 +2626,7 @@ function main() {
         transform: scale(0.85);
         transform-origin: top left;
         width: 117.65%;
+        margin-bottom: -70%;
     }
 
     .peek-duel-rounds-content [class*="game-summary_playedRound"] {
@@ -2735,6 +2672,33 @@ function main() {
         transform: rotate(90deg);
     }
 
+    .peek-round-indicator {
+        position: absolute;
+        top: 15px;
+        right: 50%;
+        z-index: 10003;
+        background: linear-gradient(135deg, rgba(121, 80, 229, 0.95) 0%, rgba(74, 35, 153, 0.95) 100%);
+        backdrop-filter: blur(10px);
+        color: rgb(255, 255, 255);
+        padding: 0.5rem 1.25rem;
+        border-radius: 6px;
+        font-family: 'ggFont', sans-serif;
+        font-size: 1rem;
+        line-height: 1.25rem;
+        font-weight: 700;
+        font-style: italic;
+        box-shadow: 0 0.375rem 0.625rem rgb(26 26 26/30%), 0 0.125rem 1.25rem 0 rgb(26 26 26/20%);
+        border: 1px solid rgba(166, 133, 255, 0.3);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        pointer-events: none;
+        user-select: none;
+    }
+
+    .peek-round-indicator:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0.5rem 1rem rgb(26 26 26/40%), 0 0.25rem 1.5rem 0 rgb(26 26 26/30%);
+    }
+
     @media (max-width: 768px) {
         .peek-duel-rounds-panel {
             width: 100%;
@@ -2744,9 +2708,18 @@ function main() {
         .peek-duel-rounds-panel.active {
             left: 0;
         }
+
+        .peek-round-indicator {
+            top: 10px;
+            right: 10px;
+            padding: 0.4rem 1rem;
+            font-size: 0.875rem;
+            line-height: 1rem;
+        }
     }
     `)
 }
+
 
 
 main();

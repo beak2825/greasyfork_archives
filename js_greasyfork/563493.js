@@ -15724,6 +15724,26 @@
     if (!response.redirected) throw new Error(`이모티콘(${id})이 포함된 번들 페이지를 조회하는데 실패했습니다.`);
     return response.url.match(/[0-9]+$/)[0];
   }
+  var reactDomExports = requireReactDom();
+  function PortalAhead({ children, fragment, target, className, title, ...restProps }) {
+    const containerRef = reactExports.useRef(document.createElement(fragment || "div"));
+    reactExports.useLayoutEffect(() => {
+      const container = containerRef.current;
+      if (target && target.parentNode) {
+        target.parentNode.insertBefore(container, target);
+      }
+    }, [target]);
+    reactExports.useLayoutEffect(() => {
+      const container = containerRef.current;
+      if (className !== void 0) container.className = className;
+      if (title !== void 0) container.title = title;
+      Object.entries(restProps).forEach(([key, value]) => {
+        if (key.startsWith("data-")) container.setAttribute(key, value);
+      });
+    }, [className, title, ...Object.values(restProps)]);
+    if (!target) return null;
+    return reactDomExports.createPortal(children, containerRef.current);
+  }
   const arcaconIDBTable = getDatabase(STORAGE_ARCACON_DATA);
   const relatedIDBTable = [STORAGE_FAVORITE_DATA, STORAGE_MEMO_DATA].map(getDatabase);
   async function removeArcaconIfUnreferenced(id) {
@@ -15971,7 +15991,6 @@
     }, []);
     return null;
   }
-  var reactDomExports = requireReactDom();
   const overlayCss = ".arcacon-overlay-list{position:absolute;top:0;left:0;width:100%;display:flex;flex-direction:row-reverse}";
   importCSS(overlayCss);
   function ThumbnailOverlay() {
@@ -16084,33 +16103,8 @@ jsxRuntimeExports.jsx("div", { className: "thumbnails", children: items.map((fav
       }
     ) });
   }
-  function FirstChildPortal({
-    children,
-    fragment,
-    container,
-    className,
-    title,
-    ...restProps
-}) {
-    const mountNode = reactExports.useRef(document.createElement(fragment || "div"));
-    reactExports.useLayoutEffect(() => {
-      const node = mountNode.current;
-      if (className !== void 0) node.className = className;
-      if (title !== void 0) node.title = title;
-      Object.entries(restProps).forEach(([key, value]) => {
-        if (key.startsWith("data-")) node.setAttribute(key, value);
-      });
-      if (container && node.parentNode !== container) {
-        container.insertBefore(node, container.firstChild);
-      }
-      return () => {
-        if (container && node.parentNode === container) {
-          container.removeChild(node);
-        }
-      };
-    }, [container, className, title, ...Object.values(restProps)]);
-    return reactDomExports.createPortal(children, mountNode.current);
-  }
+  const ModalCss = ".microModal>div div[role=input]{width:320px;padding:2em;border-radius:16px;box-shadow:0 -3px 6px #00000029;background-color:var(--color-modal-bg);border:2px solid var(--color-modal-bd)}@media screen and (orientation:portrait)and (max-width:576px){.microModal>div div[role=input]{position:fixed;top:0;left:0;width:100%;border-top-left-radius:0;border-top-right-radius:0;animation-name:microModalSlideDownMobile;animation-duration:.3s}}@keyframes microModalSlideDownMobile{0%{transform:translateY(-100%)}to{transform:translateY(0)}}";
+  importCSS(ModalCss);
   function Modal({ children, id, onClickBackground }) {
     const downTarget = reactExports.useRef(null);
     const handleMouseDown = (e) => {
@@ -16121,7 +16115,7 @@ jsxRuntimeExports.jsx("div", { className: "thumbnails", children: items.map((fav
         onClickBackground();
       }
     };
-    return jsxRuntimeExports.jsx("div", { className: "microModal is-open is-last", "aria-hidden": "false", id: `modal_${id}`, children: jsxRuntimeExports.jsx("div", { tabIndex: "-1", onMouseDown: handleMouseDown, onMouseUp: handleMouseUp, children: jsxRuntimeExports.jsx("div", { role: "dialog", className: "arca-dialog", "aria-modal": "true", children }) }) });
+    return jsxRuntimeExports.jsx("div", { className: "microModal is-open is-last", "aria-hidden": "false", id: `modal_${id}`, children: jsxRuntimeExports.jsx("div", { tabIndex: "-1", onMouseDown: handleMouseDown, onMouseUp: handleMouseUp, children: jsxRuntimeExports.jsx("div", { role: "input", className: "arca-dialog", "aria-modal": "true", children }) }) });
   }
   function Title({ children }) {
     return jsxRuntimeExports.jsx("h1", { className: "microModal-title", children });
@@ -16151,10 +16145,10 @@ jsxRuntimeExports.jsx("div", { className: "thumbnails", children: items.map((fav
     return jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, {
 children: [
         pickers.map(
-          (picker) => picker.content && jsxRuntimeExports.jsx(
-            FirstChildPortal,
+          (picker) => picker.content?.firstChild && jsxRuntimeExports.jsx(
+            PortalAhead,
             {
-              container: picker.content,
+              target: picker.content.firstChild,
               className: "--package-wrap",
               "data-package-id": FAVORITE_PACKAGE_ID,
               children: jsxRuntimeExports.jsx(PackageContent, { items: favorites.map((fav) => getArcaconById(fav.id)), title: "즐겨찾기" })
@@ -16163,10 +16157,10 @@ children: [
           )
         ),
 pickers.map(
-          (picker) => picker.sidebar && jsxRuntimeExports.jsx(
-            FirstChildPortal,
+          (picker) => picker.sidebar?.firstChild && jsxRuntimeExports.jsx(
+            PortalAhead,
             {
-              container: picker.sidebar,
+              target: picker.sidebar.firstChild,
               className: "package-item",
               "data-package-id": FAVORITE_PACKAGE_ID,
               "data-package-name": "즐겨찾기",
@@ -16177,11 +16171,11 @@ pickers.map(
           )
         ),
 pickers.map(
-          (picker) => picker.optionsToolbar && jsxRuntimeExports.jsxs(
-            FirstChildPortal,
+          (picker) => picker.optionsToolbar?.firstChild && jsxRuntimeExports.jsxs(
+            PortalAhead,
             {
               fragment: "label",
-              container: picker.optionsToolbar,
+              target: picker.optionsToolbar.firstChild,
               className: "option-combo-emoticon visible",
               id: "favorite-toggle-button",
               children: [
@@ -16236,62 +16230,14 @@ jsxRuntimeExports.jsx(FavoriteController, { pickers, getToggleValue })
     ] });
   }
   function MemoController({ openMemo }) {
-    const timerRef = reactExports.useRef(null);
-    const longPressEventRef = reactExports.useRef(null);
     useEventListener(
       "contextmenu",
       (e) => {
-        if (e.button !== 2) return;
         const target = e.target.closest(".thumbnail-wrap");
         if (!target) return;
         e.preventDefault();
         const id = target.getAttribute("data-attachment-id");
         openMemo(id);
-      },
-      document,
-      true
-    );
-    useEventListener(
-      "touchstart",
-      (e) => {
-        const target = e.target.closest(".thumbnail-wrap");
-        if (!target) return;
-        timerRef.current = setTimeout(() => {
-          longPressEventRef.current = e;
-          const id = target.getAttribute("data-attachment-id");
-          const emoticonid = target.getAttribute("data-emoticon-id");
-          const imageUrl = target.getAttribute("data-src");
-          const type = target.getAttribute("data-type");
-          const poster = target.getAttribute("data-poster");
-          const orig = target.getAttribute("data-orig");
-          openMemo({ id, emoticonid, imageUrl, type, poster, orig });
-        }, 500);
-      },
-      document,
-      true
-    );
-    useEventListener(
-      "touchend",
-      (e) => {
-        clearTimeout(timerRef.current);
-        if (longPressEventRef.current) {
-          e.preventDefault();
-          e.stopPropagation();
-          longPressEventRef.current = null;
-        }
-      },
-      document,
-      true
-    );
-    useEventListener(
-      "touchcancel",
-      (e) => {
-        clearTimeout(timerRef.current);
-        if (longPressEventRef.current) {
-          e.preventDefault();
-          e.stopPropagation();
-          longPressEventRef.current = null;
-        }
       },
       document,
       true
@@ -16426,7 +16372,7 @@ jsxRuntimeExports.jsx(
 jsxRuntimeExports.jsx(MemoController, { openMemo })
     ] });
   }
-  const SearchInputFragmentCss = ".arcacon-search-input-clear{position:absolute;right:6px;top:50%;transform:translateY(-50%);background:transparent;border:none;padding:0;cursor:pointer;display:flex;align-items:center;z-index:1;transition:background .15s}.arcacon-search-input-clear:hover svg circle{fill:#d1d5db}.arcacon-search-input-container{position:relative;display:flex;align-items:center;margin-right:20px;height:40px;gap:8px}.arcacon-search-input{height:85%!important;padding:8px 28px 8px 12px;font-size:15px;border-radius:6px;border:1px solid #e0e0e0;outline:none;box-sizing:border-box;background:#fafbfc;box-shadow:inset 0 1px 2px #00000026}";
+  const SearchInputFragmentCss = ".arcacon-search-input-clear{position:absolute;right:6px;top:50%;transform:translateY(-50%);background:transparent;border:none;padding:0;cursor:pointer;display:flex;align-items:center;z-index:1;transition:background .15s}.arcacon-search-input-clear:hover svg circle{fill:#d1d5db}.arcacon-search-input-container{position:relative;display:flex;align-items:center;height:35px;gap:8px}.arcacon-search-input-container>span{white-space:nowrap}.arcacon-search-input{flex:1;height:30px;padding:8px 28px 8px 12px;font-size:15px;border-radius:6px;border:1px solid #e0e0e0;outline:none;box-sizing:border-box;background:#fafbfc;box-shadow:inset 0 1px 2px #00000026}";
   importCSS(SearchInputFragmentCss);
   const SvgClearIcon = (props) => reactExports.createElement("svg", { width: 18, height: 18, viewBox: "0 0 20 20", fill: "none", xmlns: "http://www.w3.org/2000/svg", ...props }, reactExports.createElement("circle", { cx: 10, cy: 10, r: 9, fill: "#e0e0e0" }), reactExports.createElement("path", { d: "M7 7l6 6M13 7l-6 6", stroke: "#888", strokeWidth: 1.5, strokeLinecap: "round" }));
   function SearchInputFragment({ value, onChange }) {
@@ -16466,25 +16412,17 @@ jsxRuntimeExports.jsx(
       pickers.map((picker) => {
         const node = picker.optionsToolbar;
         if (!node) return null;
-        return jsxRuntimeExports.jsx(
-          FirstChildPortal,
+        return jsxRuntimeExports.jsx(PortalAhead, { className: "arcacon-search-input-container", target: node, children: jsxRuntimeExports.jsx(
+          SearchInputFragment,
           {
-            className: "arcacon-search-input-container",
-            container: node,
-            children: jsxRuntimeExports.jsx(
-              SearchInputFragment,
-              {
-                value: getInputValue(picker.uid),
-                onChange: (e) => {
-                  const value = e.target.value;
-                  setInputValue(picker.uid, value);
-                  updateKeyword(picker.uid, value);
-                }
-              }
-            )
-          },
-          `arcacon-search-${picker.uid}`
-        );
+            value: getInputValue(picker.uid),
+            onChange: (e) => {
+              const value = e.target.value;
+              setInputValue(picker.uid, value);
+              updateKeyword(picker.uid, value);
+            }
+          }
+        ) }, `arcacon-search-${picker.uid}`);
       }),
 Object.entries(keyword).map(([uid, kw]) => {
         const picker = pickers.find((p) => p.uid === uid);
@@ -16493,22 +16431,16 @@ Object.entries(keyword).map(([uid, kw]) => {
         if (!picker) return null;
         picker.content.classList.add("search-only");
         const searchResult = memoItems.reduce((acc, item) => item.text.includes(kw) ? [...acc, item] : acc, []);
-        return jsxRuntimeExports.jsx(
-          FirstChildPortal,
-          {
-            container: picker.content,
-            className: "--package-wrap",
-            "data-package-id": SERACH_PACKAGE_ID,
-            children: jsxRuntimeExports.jsx(
-              PackageContent,
-              {
-                id: SERACH_PACKAGE_ID,
-                title: `검색 결과: ${kw}, 총 ${searchResult.length}개`,
-                items: searchResult.map((item) => getArcaconById(item.id))
-              }
-            )
-          },
-          `arcacon-search-result-${uid}`
+        return reactDomExports.createPortal(
+jsxRuntimeExports.jsx("div", { className: "--package-wrap", "data-package-id": SERACH_PACKAGE_ID, children: jsxRuntimeExports.jsx(
+            PackageContent,
+            {
+              id: SERACH_PACKAGE_ID,
+              title: `검색 결과: ${kw}, 총 ${searchResult.length}개`,
+              items: searchResult.map((item) => getArcaconById(item.id))
+            }
+          ) }, `arcacon-search-result-${uid}`),
+          picker.content
         );
       })
     ] });
@@ -16608,7 +16540,7 @@ jsxRuntimeExports.jsx(SearchModule, {}),
 jsxRuntimeExports.jsx(FixerModule, {})
     ] });
   }
-  const indexCss = '.thumbnail-wrap:hover:has(.arcacon-overlay){border-top-right-radius:0!important}.thumbnails{padding-top:.5rem}.option-combo-emoticon.visible{visibility:visible}.--arcacon-not-found{display:none}.arcacon-overlay{width:16px;height:16px;border-radius:0 0 6px 6px;box-shadow:0 2px 4px #00000080;display:flex;align-items:center;justify-content:center;pointer-events:auto;border-top:none}.content.search-only>.package-wrap[data-package-id]:not([data-package-id="-2"]),.content.search-only>.--package-wrap[data-package-id]:not([data-package-id="-2"]){display:none}';
+  const indexCss = '.thumbnail-wrap:hover:has(.arcacon-overlay){border-top-right-radius:0!important}.thumbnails{padding-top:.5rem}.option-combo-emoticon.visible{visibility:visible}.--arcacon-not-found{display:none}.arcacon-overlay{width:16px;height:16px;border-radius:0 0 6px 6px;box-shadow:0 2px 4px #00000080;display:flex;align-items:center;justify-content:center;pointer-events:auto;border-top:none}.content.search-only>.package-wrap[data-package-id]:not([data-package-id="-2"]),.content.search-only>.--package-wrap[data-package-id]:not([data-package-id="-2"]){display:none}.arcaconPicker .title-area{height:auto;display:flex;flex-wrap:wrap;justify-content:flex-end}.arcaconPicker .title-area>:first-child{margin-right:auto}.options-toolbar{margin-left:20px}';
   importCSS(indexCss);
   const origRemove = Node.prototype.removeChild;
   Node.prototype.removeChild = function(child) {

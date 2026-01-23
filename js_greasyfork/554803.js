@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Add/Edit: add Last Service button to some dates
 // @namespace    https://github.com/nate-kean/
-// @version      2026.1.11.1
+// @version      2026.1.22
 // @description  Add a button that sets its to the closest past Sunday or Wednesday, in the fields that are usually set to last service.
 // @author       Nate Kean
 // @match        https://jamesriver.fellowshiponego.com/members/edit/*

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube: Hide Watched Videos
 // @namespace    https://www.haus.gg/
-// @version      6.13
+// @version      6.14
 // @license      MIT
 // @description  Hides watched videos (and shorts) from your YouTube subscriptions page.
 // @author       Ev Haus
@@ -115,7 +115,7 @@ const REGEX_USER = /.*\/@.*/u;
 	background: transparent;
 	border: 0;
     border-radius: 40px;
-	color: var(--yt-spec-icon-inactive);
+	color: var(--yt-spec-text-primary);
 	cursor: pointer;
     display: flex;
 	height: 40px;
@@ -126,10 +126,10 @@ const REGEX_USER = /.*\/@.*/u;
 
 .YT-HWV-BUTTON:focus,
 .YT-HWV-BUTTON:hover {
-	background: var(--yt-spec-badge-chip-background);
+	background: var(--yt-spec-additive-background);
 }
 
-.YT-HWV-BUTTON-DISABLED { color: var(--yt-spec-icon-disabled) }
+.YT-HWV-BUTTON-DISABLED { color: var(--yt-spec-text-disabled) }
 
 .YT-HWV-MENU {
 	background: #F8F8F8;
@@ -301,12 +301,12 @@ const REGEX_USER = /.*\/@.*/u;
 
 	const updateClassOnWatchedItems = () => {
 		// Remove existing classes
-		document
-			.querySelectorAll('.YT-HWV-WATCHED-DIMMED')
-			.forEach((el) => el.classList.remove('YT-HWV-WATCHED-DIMMED'));
-		document
-			.querySelectorAll('.YT-HWV-WATCHED-HIDDEN')
-			.forEach((el) => el.classList.remove('YT-HWV-WATCHED-HIDDEN'));
+		document.querySelectorAll('.YT-HWV-WATCHED-DIMMED').forEach((el) => {
+			el.classList.remove('YT-HWV-WATCHED-DIMMED');
+		});
+		document.querySelectorAll('.YT-HWV-WATCHED-HIDDEN').forEach((el) => {
+			el.classList.remove('YT-HWV-WATCHED-HIDDEN');
+		});
 
 		// If we're on the History page -- do nothing. We don't want to hide
 		// watched videos here.
@@ -396,12 +396,12 @@ const REGEX_USER = /.*\/@.*/u;
 	const updateClassOnShortsItems = () => {
 		const section = determineYoutubeSection();
 
-		document
-			.querySelectorAll('.YT-HWV-SHORTS-DIMMED')
-			.forEach((el) => el.classList.remove('YT-HWV-SHORTS-DIMMED'));
-		document
-			.querySelectorAll('.YT-HWV-SHORTS-HIDDEN')
-			.forEach((el) => el.classList.remove('YT-HWV-SHORTS-HIDDEN'));
+		document.querySelectorAll('.YT-HWV-SHORTS-DIMMED').forEach((el) => {
+			el.classList.remove('YT-HWV-SHORTS-DIMMED');
+		});
+		document.querySelectorAll('.YT-HWV-SHORTS-HIDDEN').forEach((el) => {
+			el.classList.remove('YT-HWV-SHORTS-HIDDEN');
+		});
 
 		const state = localStorage[`YTHWV_STATE_SHORTS_${section}`];
 

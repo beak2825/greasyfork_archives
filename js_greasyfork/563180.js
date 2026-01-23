@@ -1,13 +1,11 @@
 // ==UserScript==
 // @name         WME Google Places Link Checker
 // @namespace    https://greasyfork.org/de/users/863740-horst-wittlich
-// @version      2026.01.22
+// @version      2026.01.23
 // @description  Prüft Places auf Google-Verknüpfungen und listet fehlende/doppelte Verknüpfungen tabellarisch auf. Mit Auto-Scroll für große Bereiche.
 // @author       Hiwi234
 // @match        https://www.waze.com/editor*
 // @match        https://www.waze.com/*/editor*
-// @match        https://beta.waze.com/editor*
-// @match        https://beta.waze.com/*/editor*
 // @grant        unsafeWindow
 // @run-at       document-end
 // @license      MIT

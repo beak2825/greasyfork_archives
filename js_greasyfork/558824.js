@@ -3,12 +3,14 @@
 // @name:en      PikPak Aria2 Helper
 // @name:zh-CN   PikPak Aria2 助手
 // @namespace    https://github.com/CheerChen
-// @version      0.0.1
+// @version      0.0.2
 // @description  Push PikPak files and folders to Aria2 for downloading.
 // @description:en Push PikPak files and folders to Aria2 for downloading.
 // @description:zh-CN 将 PikPak 文件和文件夹推送到 Aria2 进行下载。
 // @author       cheerchen37
 // @match        *://*mypikpak.com/*
+// @match        *://*mypikpak.net/*
+// @match        *://*pikpak.me/*
 // @require      https://unpkg.com/react@18/umd/react.production.min.js
 // @require      https://unpkg.com/react-dom@18/umd/react-dom.production.min.js
 // @grant        GM_xmlhttpRequest

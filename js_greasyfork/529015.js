@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         no * anywhere
-// @version      11
+// @version      14
 // @description  none
 // @run-at       document-start
 // @author       rssaromeo
@@ -208,6 +208,8 @@ dogshit
 fricking
 frick
 fricker
+niri
+rust
 webtoon`
   .toLowerCase()
   .split("\n")
@@ -222,15 +224,7 @@ webtoon`
     `${a}`,
   ])
 
-const replacementLookup = Object.fromEntries(
-  replace.map(([regex, replacement]) => [regex.source, replacement])
-)
-const combinedRegex = new RegExp(
-  replace.map(([regex]) => `(${regex.source})`).join("|"),
-  "gi"
-)
-//log(combinedRegex)
-replace = []
+
 //replace.push([/([a-z]+)\.([a-z]+)\.(?:([a-z]+)\.)?(?:([a-z]+)\.)?(?:([a-z]+)\.)?(?:([a-z]+)\.)?(?:([a-z]+)\.)?([a-z]+)/gi, "$1$2$3$4$5$6$7$8"])
 replace.push([/(?<=^|[^\d\w])\*(\w+( \w+)*)\*(?=[^\w\d]|$)/gi, "$1"])
 replace.push([/what( ?ever)? the duck/gi, "what$1 the fuck"])
@@ -245,13 +239,14 @@ replace.push([/(?<!\w)minf\*+ks(?!\w)/gi, "mindfucks"])
 replace.push([/(?<!\w)asspull(?!\w)/gi, "asshole"])
 replace.push([/\bfriggin\b/gi, "fucking"])
 replace.push([/(?<!\w)fupping(?!\w)/gi, "fucking"])
+replace.push([/(?<!\w)frigg(ing|er|ed)(s?)(?!\w)/gi, "fuck$1$2"])
 replace.push([/.*░.*/gi, ""])
 replace.push([/.*THIS IS BOB.*/gi, ""])
 replace.push([/F\**CK/gi, "fuck"])
 replace.push([/.*\@\#\$\&.*/gi, ""])
 replace.push([/(?<!\w)friking?(?!\w)/gi, "fucking"])
 replace.push([/(?<!\w)shyt(?!\w)/gi, "shit"])
-replace.push([/(?<!\w)arse?(?!\w)/gi, "ass"])
+replace.push([/(?<!\w)arse?(holes?)?(?!\w)/gi, "ass$1"])
 replace.push([/f\*ing(?!\w)/gi, "fucking"])
 replace.push([/motherf\*(?!\w)/gi, "motherfucker"])
 replace.push([/b\*\*\*/gi, "bitch"])
@@ -269,18 +264,11 @@ replace.push([/(?<!\w)(?:pron|p0rn)(?!\w)/gi, "porn"])
 replace.push([/(?<!\w)fricking(?!\w)/gi, "fucking"])
 replace.push([/(?<!\w)frick(?!\w)/gi, "fuck"])
 replace.push([/(?<!\w)fricker(?!\w)/gi, "fucker"])
+replace.push([/(?<!\w)HECKINg?(?!\w)/gi, "fucking"])
+replace.push([/(?<!\w)helling?(?!\w)/gi, "fucking"])
+replace.push([/(?<!\w)s\*\*tposts(?!\w)/gi, "shitposts"])
 
 function replaceText(text) {
-  text = text.replace(combinedRegex, (match) => {
-    for (const [source, replacement] of Object.entries(
-      replacementLookup
-    )) {
-      if (new RegExp(source, "i").test(match)) {
-        return replacement
-      }
-    }
-    return match // Fallback if no replacement found
-  })
   for (var r of replace) {
     text = text.replace(r[0], r[1])
   }

@@ -2,8 +2,8 @@
 // @name          Sem Som
 // @description   Remove o som do sites que você quiser
 // @namespace     CowanSOM
-// @license       CowBas
-// @version       1.0
+// @license       GPL-3.0
+// @version       2.0
 // @author        Cowanbas
 // @match         (Coloque a URL do site desejado)
 // @run-at        document-start
@@ -36,4 +36,5 @@
   });
 
   observer.observe(document.body, { childList: true, subtree: true });
+
 })();

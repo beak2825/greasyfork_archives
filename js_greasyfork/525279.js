@@ -2,8 +2,8 @@
 // @name           Desativar Microfone
 // @description    Desativa o acesso ao microfone aos sites.
 // @namespace      CowanSEMVOZ
-// @license        CowBas
-// @version        1.0
+// @license        GPL-3.0
+// @version        2.0
 // @author         Cowanbas
 // @match          *://*/*
 // @exclude        https://discord.com/*
@@ -29,4 +29,5 @@
 
   // Salva a função original para permitir acesso a outras mídias (como vídeo) se necessário
   navigator.mediaDevices.originalGetUserMedia = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
+
 })();

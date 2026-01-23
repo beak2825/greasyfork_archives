@@ -1,28 +1,70 @@
 // ==UserScript==
-// @name Yahoo Mail - New Design [2025.07] (USw) v.74
+// @name Yahoo Mail - New Design [2025.07] (USw) v.76
 // @namespace https://greasyfork.org/en/users/8-decembre
-// @version 74.0.0
+// @version 76.0.0
 // @description For Yahoo New Mail (2027.7)
 // @author decembre
 // @license unlicense
 // @grant GM_addStyle
 // @run-at document-start
 // @match *://*.mail.yahoo.com/*
-// @downloadURL https://update.greasyfork.org/scripts/412940/Yahoo%20Mail%20-%20New%20Design%20%5B202507%5D%20%28USw%29%20v74.user.js
-// @updateURL https://update.greasyfork.org/scripts/412940/Yahoo%20Mail%20-%20New%20Design%20%5B202507%5D%20%28USw%29%20v74.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/412940/Yahoo%20Mail%20-%20New%20Design%20%5B202507%5D%20%28USw%29%20v76.user.js
+// @updateURL https://update.greasyfork.org/scripts/412940/Yahoo%20Mail%20-%20New%20Design%20%5B202507%5D%20%28USw%29%20v76.meta.js
 // ==/UserScript==
 
 (function() {
 let css = `
 
-/* 0- Yahoo Mail - New Design [2025.07] (USw) v.74 (new74) NEWDESIGN */
+/* 0- Yahoo Mail - New Design [2025.07] (USw) v.76 (new76) NEWDESIGN */
+
+/* PREV VERSION ERREUR 2027 - since last @version   20271020.10.41 - Increment 1020 Jusqu'a 202711 */
 
 /* SUPP */
+#mail-reader-container  + div[data-test-id="leaderboard-ad"] ,
 a[href^="https://api.taboola.com/2.0/json/yahoo-mail/recommendations.notify-click?"] ,
 .ybar-menu-hover-open #ybar-inserted-content ,
 li[style="top: 0px;"] [aria-labelledby="list.banner-cue-title"] {
     display: none !important;
 }
+
+/* SPAM TO PROOF */
+[class*="elementToProof"] ~ div:has(font) font,
+[class*="elementToProof"]{
+  font-family: Calibri, Helvetica, sans-serif;
+  font-size: 12pt;
+  color: red !important;
+}
+/* SPAM TO PROOF - INDICATOR */
+[class*="elementToProof"]:before {
+    content: "Spam ?" !important;
+    position:  fixed  !important;
+    display: inline-block !important;
+    top: 8vh !important;
+    left: -2% !important;
+    padding: 2px 20px  !important;
+    font-size: 18pt;
+    border-radius: 5px  !important;
+    transform: rotate(-90deg) !important;
+    z-index: 500 !important;
+  color: white !important;
+background: red !important;
+} 
+/* REPLY */
+#compose-styler [class*="elementToProof"]:before {
+    content: "Spam ?" !important;
+    position:  fixed  !important;
+    display: inline-block !important;
+    top: 12vh !important;
+    left: unset !important;
+    padding: 2px 20px  !important;
+    font-size: 18pt;
+    border-radius: 5px  !important;
+    transform: unset !important;
+    z-index: 500 !important;
+  color: white !important;
+background: red !important;
+} 
+
 
 /* (new74) EMAIL OPEN - TOP TOOLBAR SMALL */
 #message-group-view > div[data-test-id="message-toolbar"]{

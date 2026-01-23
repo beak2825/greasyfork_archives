@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         おんJ広告削除
 // @namespace    https://open2ch.net/
-// @version      2.1
+// @version      2.2
 // @description  おんJの広告を自動で削除しやす
 // @license	     CC0-1.0
 // @match        *://*.open2ch.net/*

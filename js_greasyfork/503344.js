@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube - Force rounded corners + tweaks included
-// @version      2026.01.20
-// @description  This script forces the rounded version of the layout (which includes some fewer tweaks applied along with CSS fixes and disables most of experimental flags).
+// @version      2026.01.22.1
+// @description  This script forces the rounded version of the layout (which includes some fewer tweaks applied along with CSS tweaks/fixes and disables most of experimental flags).
 // @author       Joey_JTS (original author: xX_LegendCraftd_Xx)
 // @license MIT
 // @match        *://www.youtube.com/*
@@ -466,14 +466,13 @@ padding-right: var(--ytd-margin-6x) !important
 margin-left: var(--ytd-margin-6x) !important
 }
 
-#secondary.ytd-watch-grid {
+#secondary.ytd-watch-grid,
+#secondary.ytd-watch-flexy {
 width: 402px !important;
 min-width: 300px !important
 }
 
 h1.ytd-watch-metadata {
-font-family: "YouTube Sans","Roboto",sans-serif !important;
-font-weight: 600 !important;
 font-size: 2rem !important;
 line-height: 2.8rem !important
 }
@@ -644,7 +643,7 @@ padding-bottom: 0 !important
 flex-direction: row !important
 }
 
-/* More tweaks to be applied */
+/* More tweaks to be applied (main experimental flags to be disabled were included in this code) */
 #channel-header-links.style-scope.ytd-c4-tabbed-header-renderer,
 .page-header-view-model-wiz__page-header-attribution,
 .yt-page-header-view-model__page-header-attribution {
@@ -806,8 +805,8 @@ margin-right: 6px !important
 }
 
 ytd-watch-metadata[description-collapsed]:hover #description.ytd-watch-metadata:hover {
-opacity: 10 !important;
-background: var(--yt-spec-additive-background) !important}
+opacity: 1 !important;
+background: var(--yt-spec-additive-background) !important
 }
 
 ytd-browse[page-subtype="home"] yt-touch-feedback-shape {
@@ -816,43 +815,6 @@ display: none !important
 
 .ytp-delhi-modern .ytp-menuitem[aria-checked=true] .ytp-menuitem-toggle-checkbox, .ytp-delhi-modern.big-mode .ytp-menuitem[aria-checked=true] .ytp-menuitem-toggle-checkbox {
 background: var(--yt-spec-red-indicator, #e1002d) !important
-}
-
-/* Revert classic 'Subscribed' notifcation icon */
-yt-button-shape.style-scope.ytd-subscribe-button-renderer {
-display: flex !important
-}
-
-yt-smartimation.ytd-subscribe-button-renderer,
-.smartimation__content > __slot-el,
-.smartimation__content {
-display: flex !important
-}
-
-#notification-preference-toggle-button:not([hidden]) + yt-animated-action #notification-preference-button.ytd-subscribe-button-renderer[invisible],
-#subscribe-button-shape.ytd-subscribe-button-renderer[invisible] {
-pointer-events: auto;
-visibility: visible;
-position: static
-}
-
-#notification-preference-button > ytd-subscription-notification-toggle-button-renderer-next.style-scope.ytd-subscribe-button-renderer > yt-button-shape > .yt-spec-button-shape-next--size-m {
-background-color: transparent !important;
-border-radius: 16px !important;
-padding-left: 14px !important;
-padding-right: 2px !important;
-margin-left: 4px !important
-}
-
-#notification-preference-button .yt-spec-button-shape-next--button-text-content,
-#notification-preference-button .yt-spec-button-shape-next__secondary-icon,
-.yt-spec-button-shape-next.yt-spec-button-shape-next--tonal.yt-spec-button-shape-next--mono.yt-spec-button-shape-next--size-m.yt-spec-button-shape-next--icon-leading-trailing > .yt-spec-button-shape-next__button-text-content {
-display: none !important
-}
-
-.yt-flexible-actions-view-model-wiz__action #notification-preference-button .yt-spec-button-shape-next--button-text-content,
-.ytFlexibleActionsViewModelAction #notification-preference-button .yt-spec-button-shape-next--button-text-content {
-display: block !important
 }
 
 /* Revert giant search thumbnails back to normal size */
@@ -881,7 +843,7 @@ ytd-text-image-no-button-layout-renderer[use-bigger-thumbs][bigger-thumbs-style=
 max-width: 360px !important
 }
 
-/* Rename from 'Posts' to 'Community */
+/* Rename from 'Posts' to 'Community' */
 yt-tab-shape[tab-title="Posts"]  .yt-tab-shape-wiz__tab,
 yt-tab-shape[tab-title="Posts"]  .yt-tab-shape__tab {
 visibility: hidden !important;
@@ -942,7 +904,7 @@ ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(1) ytd-gui
 display: none !important
 }
 
-/* Other fixes */
+/* Other fixes (includes hiding 'Shorts' feed on most pages) */
 #background.ytd-masthead {
 opacity: 1 !important
 }
@@ -969,6 +931,15 @@ margin-top: 8px !important
 
 .ytSearchboxComponentDesktop .ytSearchboxComponentClearButtonIcon {
 color: var(--yt-spec-text-primary) !important
+}
+
+.ytGridShelfViewModelHost, .ytd-search ytd-shelf-renderer,
+[page-subtype='home'] ytd-reel-shelf-renderer,
+[page-subtype='subscriptions'] ytd-reel-shelf-renderer,
+[page-subtype='subscriptions'] ytd-rich-section-renderer,
+ytd-reel-shelf-renderer.ytd-watch-next-secondary-results-renderer.style-scope,
+#related ytd-compact-video-renderer:has(a[href^="/shorts"]) {
+display: none !important
 }`;
 if (typeof GM_addStyle !== "undefined") {
   GM_addStyle(css);

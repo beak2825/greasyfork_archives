@@ -2,9 +2,9 @@
 // @name         CDN & Server Info Displayer (UI Overhaul)
 // @name:en      CDN & Server Info Displayer (UI Overhaul)
 // @namespace    http://tampermonkey.net/
-// @version      7.53.0
-// @description  [v7.53.0] 新增知道创宇加速乐CDN检测支持,修复Fastly误判问题。智能DNS选择: 根据用户IP所在地区自动选择最优DNS服务器(中国大陆使用阿里DNS,其他地区使用Google DNS),解决国内外CDN分流和DNS污染问题,支持VPN分流场景实时切换。
-// @description:en [v7.53.0] Added KnowSec JiaSuLe CDN detection support, fixed Fastly false positive issue. Smart DNS Selection: Automatically choose optimal DNS server based on user's IP location (Alibaba DNS for mainland China, Google DNS for other regions), solving CDN geo-routing and DNS pollution issues, with real-time switching support for VPN split tunneling.
+// @version      7.54.0
+// @description  [v7.54.0] 新增RTL语言支持(阿拉伯语、希伯来语等右到左排版语言)。智能DNS选择: 根据用户IP所在地区自动选择最优DNS服务器(中国大陆使用阿里DNS,其他地区使用Google DNS),解决国内外CDN分流和DNS污染问题,支持VPN分流场景实时切换。
+// @description:en [v7.54.0] Added RTL (Right-to-Left) language support for Arabic, Hebrew, and other RTL languages. Smart DNS Selection: Automatically choose optimal DNS server based on user's IP location (Alibaba DNS for mainland China, Google DNS for other regions), solving CDN geo-routing and DNS pollution issues, with real-time switching support for VPN split tunneling.
 // @author       Zhou Sulong
 // @license      MIT
 // @match        *://*/*
@@ -12,7 +12,7 @@
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @grant        GM_getResourceText
-// @resource     cdn_rules https://raw.githubusercontent.com/zhousulong/cdn-server-info-userscript/main/cdn_rules.json?v=7.53.0
+// @resource     cdn_rules https://raw.githubusercontent.com/zhousulong/cdn-server-info-userscript/main/cdn_rules.json?v=7.54.0
 // @connect      dns.alidns.com
 // @connect      dns.google
 // @connect      1.1.1.1
@@ -1396,6 +1396,13 @@
 
     // --- UI & Execution Functions ---
 
+    // Detect if the user's language is RTL (Right-to-Left)
+    function isRTLLanguage() {
+        const lang = navigator.language || navigator.userLanguage || '';
+        const rtlLanguages = ['ar', 'he', 'fa', 'ur', 'yi', 'ji'];
+        return rtlLanguages.some(rtl => lang.toLowerCase().startsWith(rtl));
+    }
+
     // Detect if the current page is using dark or light theme
     function detectPageTheme() {
         try {
@@ -1544,9 +1551,10 @@
             font-size: 14px;
             font-style: normal;
             font-weight: normal;
-            text-align: left;
+            text-align: ${isRTLLanguage() ? 'right' : 'left'};
             text-decoration: none;
             text-transform: none;
+            direction: ${isRTLLanguage() ? 'rtl' : 'ltr'};
         }
 
         /* Ensure all children use border-box */
@@ -1592,8 +1600,8 @@
             line-height: 1 !important;
         }
 
-        button.close-btn { right: 12px !important; font-size: 16px !important; font-weight: 300 !important; line-height: 18px !important; }
-        button.theme-btn { right: 36px !important; font-size: 12px !important; line-height: 18px !important; }
+        button.close-btn { ${isRTLLanguage() ? 'left' : 'right'}: 12px !important; font-size: 16px !important; font-weight: 300 !important; line-height: 18px !important; }
+        button.theme-btn { ${isRTLLanguage() ? 'left' : 'right'}: 36px !important; font-size: 12px !important; line-height: 18px !important; }
 
         #cdn-info-panel-enhanced:hover button.icon-btn { opacity: 0.5 !important; }
         button.icon-btn:hover { opacity: 1 !important; transform: scale(1.1); }
@@ -1638,8 +1646,9 @@
             color: ${isDarkTheme ? 'rgba(255, 255, 255, 0.5)' : 'rgba(0, 0, 0, 0.5)'};
             letter-spacing: 0px;
             flex-shrink: 0; /* Protect label from squeezing */
-            margin-right: 8px;
+            ${isRTLLanguage() ? 'margin-left' : 'margin-right'}: 8px;
             width: 42px; /* Fixed width for labels */
+            text-align: ${isRTLLanguage() ? 'right' : 'left'};
         }
 
         .info-value {
@@ -1648,7 +1657,7 @@
             font-size: 11px;
             font-weight: 500;
             color: ${textColor};
-            text-align: right;
+            text-align: ${isRTLLanguage() ? 'left' : 'right'};
             opacity: 0.95;
             flex: 1; /* Occupy all remaining space */
             min-width: 0; /* Enable truncation in flex item */

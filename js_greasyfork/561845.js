@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Better Loot Tracker
 // @namespace    http://tampermonkey.net/
-// @version      1.1.0
+// @version      1.2.1
 // @description  计算并展示掉落记录中强化和炼金行动的部分信息
 // @author       PaperCat
 // @match        https://www.milkywayidle.com/*
@@ -95,7 +95,7 @@
             noMarketData: 'Market data not loaded, please ensure MWITools is installed'
         }
     };
-    
+
     const t = isZH ? i18n.zh : i18n.en;
     const DEBUG = {
         init: true,
@@ -198,17 +198,17 @@
 
     function getInitClientData() {
         if (_cachedInitClientData) return _cachedInitClientData;
-        
+
         const stored = localStorage.getItem("initClientData");
         if (!stored) return null;
-        
+
         // 解压缩
         const decompressed = decompressInitClientData(stored);
         if (decompressed) {
             _cachedInitClientData = decompressed;
             return decompressed;
         }
-        
+
         return null;
     }
 
@@ -1178,30 +1178,30 @@
                 itemHridToName[hrid] = item.name;
             }
         }
-        
+
         // 由 ZHItemNames 构建中文名映射（反转映射）
         for (const [hrid, zhName] of Object.entries(ZHItemNames)) {
             zhNameToHrid[zhName] = hrid;
         }
-        
+
         logInit('[Better Loot Tracker] 物品映射构建完成，英文', Object.keys(itemNameToHrid).length, '中文:', Object.keys(zhNameToHrid).length);
     }
-    
+
     // 根据物品名称获取HRID（支持中英文）
     function getItemHrid(itemName) {
         // 先去掉末尾的强化等级标记（如 "+1" 或 "+5"）
         const cleanName = itemName.replace(/\s*\+\d+$/, '').trim();
-        
+
         // 先尝试英文名
         if (itemNameToHrid[cleanName]) {
             return itemNameToHrid[cleanName];
         }
-        
+
         // 再尝试中文名
         if (zhNameToHrid[cleanName]) {
             return zhNameToHrid[cleanName];
         }
-        
+
         // 尝试用 itemDetailMap 动态查找（遍历所有物品）
         if (itemDetailMap) {
             for (const [hrid, item] of Object.entries(itemDetailMap)) {
@@ -1212,7 +1212,7 @@
                 }
             }
         }
-        
+
         // 通过 ZHItemNames 查找
         for (const [hrid, zhName] of Object.entries(ZHItemNames)) {
             if (zhName === cleanName) {
@@ -1220,7 +1220,7 @@
                 return hrid;
             }
         }
-        
+
         return null;
     }
 
@@ -1269,7 +1269,7 @@
                 return null;
             }
         }
-        
+
         const itemData = itemDetailMap[itemHRID];
         if (!itemData?.enhancementCosts) return null;
 
@@ -1285,14 +1285,14 @@
                 return [itemHRID, "/items/mirror_of_protection"];
             }
         }
-        
+
         const itemData = itemDetailMap[itemHRID];
         let protectHrids = [itemHRID, "/items/mirror_of_protection"];
-        
+
         if (itemData?.protectionItemHrids) {
             protectHrids = protectHrids.concat(itemData.protectionItemHrids);
         }
-        
+
         return protectHrids;
     }
 
@@ -1307,17 +1307,601 @@
     let characterHouseRoomMap = null;
     let itemDetailMap = null;
 
+    // 存储选择的强化记录（用于合并计算）
+    const selectedEnhancements = new Map();
+
+    // 合并计算选择的强化记录
+    function calculateMergedEnhancements() {
+        const marketData = getMarketData();
+        if (!marketData) {
+            alert(t.noMarketData);
+            return;
+        }
+
+        const selectedItems = [];
+        selectedEnhancements.forEach((data, element) => {
+            selectedItems.push(data);
+        });
+
+        if (selectedItems.length === 0) {
+            alert('请先选择要合并计算的强化记录');
+            return;
+        }
+
+        // 验证所有选择的记录是否是同一物品
+        const firstItemData = selectedItems[0].parsedData;
+        const firstItemName = firstItemData.itemName;
+
+        for (const item of selectedItems) {
+            // 由于我们已经在parseEnhancementLoot中统一了物品名称格式（去除了强化等级后缀）
+            // 所以现在可以直接比较itemName
+            if (item.parsedData.itemName !== firstItemName) {
+                alert('只能合并计算同一物品的强化记录');
+                return;
+            }
+        }
+
+        const firstItemHrid = firstItemData.itemHrid;
+
+        // 合并等级数量
+        const mergedDrops = {};
+        let totalEnhanceCount = 0;
+        let maxStartLevel = 0;
+        let totalDuration = 0;
+
+        for (const item of selectedItems) {
+            const { drops, enhanceCount, startLevel, duration } = item.parsedData;
+            totalEnhanceCount += enhanceCount;
+            maxStartLevel = Math.max(maxStartLevel, startLevel);
+            totalDuration += duration || 0;
+
+            for (const [level, count] of Object.entries(drops)) {
+                mergedDrops[level] = (mergedDrops[level] || 0) + count;
+            }
+        }
+
+        // 创建合并后的解析数据
+        const mergedParsedData = {
+            itemName: firstItemName,
+            itemHrid: firstItemHrid,
+            enhanceCount: totalEnhanceCount,
+            startLevel: maxStartLevel,
+            duration: totalDuration,
+            drops: mergedDrops
+        };
+
+        // 分析合并结果
+        const mergedAnalysis = analyzeEnhancementResult(mergedParsedData);
+
+        // 应用偏好等级判定（复用一般场景的逻辑）
+        const preferenceLevels = getGlobalPreferenceLevels();
+        const preferredAnalysis = applyPreferredTarget(mergedAnalysis, preferenceLevels);
+
+        // 使用偏好等级判定后的目标等级和成功状态
+        let targetLevel = preferredAnalysis.targetLevel;
+        let success = preferredAnalysis.success;
+
+        // 重新判断成功状态：合并后的掉落中有目标等级的物品
+        // 只要合并统计后有目标等级的掉落，就认为整体成功
+        if (targetLevel > maxStartLevel && mergedDrops[targetLevel] && mergedDrops[targetLevel] > 0) {
+            success = true;
+        }
+        const bestStrategy = findBestProtectLevel(firstItemHrid, targetLevel, marketData);
+        if (!bestStrategy) {
+            alert('无法计算最佳强化策略');
+            return;
+        }
+
+        const protectAt = bestStrategy.protectAt;
+        const sim = Enhancelate(firstItemHrid, targetLevel, protectAt);
+        const baseItemPrice = getMarketPrice(firstItemHrid, marketData);
+        const originalCost = baseItemPrice + getExpectedTotalCostToLevel(firstItemHrid, maxStartLevel, marketData);
+
+        const expectedMaterialCost = bestStrategy.perActionCost * sim.actions;
+        const expectedProtectCost = bestStrategy.minProtectCost * sim.protectCount;
+        const expectedTotalCost = expectedMaterialCost + expectedProtectCost + originalCost;
+
+        const actualMaterialCost = bestStrategy.perActionCost * totalEnhanceCount;
+        const actualProtectTargetLevel = targetLevel;
+        const actualProtectSuccess = success;
+        const actualProtectCount = calculateActualProtections(mergedDrops, protectAt, actualProtectTargetLevel, actualProtectSuccess);
+        const actualProtectCost = bestStrategy.minProtectCost * actualProtectCount;
+        const actualTotalCost = actualMaterialCost + actualProtectCost + originalCost;
+
+        const diff = actualTotalCost - expectedTotalCost;
+        const diffText = diff >= 0 ? `${t.aboveExpected}: ${formatNumber(diff)}` : `${t.belowExpected}: ${formatNumber(Math.abs(diff))}`;
+        const diffColor = diff >= 0 ? 'rgb(255, 100, 100)' : 'rgb(100, 255, 100)';
+
+        // 计算最终价值
+        let finalValue = baseItemPrice; // 默认值为基础物品价格
+
+        if (success && targetLevel > 0) {
+            // 尝试从市场数据中获取对应等级的ask价格
+            if (marketData?.marketData && marketData.marketData[firstItemHrid]) {
+                const marketRoot = marketData.marketData[firstItemHrid];
+                const levelKey = targetLevel.toString();
+
+                // 优先使用对应等级的ask价格
+                if (marketRoot[levelKey] && marketRoot[levelKey].a) {
+                    finalValue = marketRoot[levelKey].a;
+                } else {
+                    // 计算理论成本
+                    const theoreticalCost = baseItemPrice + getExpectedTotalCostToLevel(firstItemHrid, targetLevel, marketData);
+
+                    // 获取对应等级或基础等级的bid价格
+                    let bidPrice = baseItemPrice;
+                    if (marketRoot[levelKey] && marketRoot[levelKey].b) {
+                        bidPrice = marketRoot[levelKey].b;
+                    } else if (marketRoot["0"] && marketRoot["0"].b) {
+                        bidPrice = marketRoot["0"].b;
+                    }
+
+                    // 理论成本与bid价格取较高者
+                    finalValue = Math.max(theoreticalCost, bidPrice);
+                }
+            } else {
+                // 如果市场数据不可用，使用原来的计算方式
+                finalValue = baseItemPrice + getExpectedTotalCostToLevel(firstItemHrid, targetLevel, marketData);
+            }
+        }
+
+        // 确保finalValue不为负数或-1，如果为0或负数，使用预期成本
+        if (finalValue <= 0) {
+            finalValue = baseItemPrice + getExpectedTotalCostToLevel(firstItemHrid, targetLevel, marketData);
+        }
+        // 计算收益时考虑98%的交易手续费
+        const profit = (finalValue * 0.98) - actualTotalCost;
+        const profitColor = profit >= 0 ? 'rgb(100, 255, 100)' : 'rgb(255, 100, 100)';
+
+        // 计算预期收益
+        const expectedProfit = (finalValue * 0.98) - expectedTotalCost;
+
+        // 计算预期持续时间
+        const expectedDuration = totalEnhanceCount > 0 ? (sim.actions / totalEnhanceCount) * totalDuration : 0;
+
+        // 计算预期工时费（每小时收益）
+        const expectedHourlyWage = expectedDuration > 0 ? expectedProfit / (expectedDuration / 3600) : 0;
+
+        // 显示弹出框
+        showMergeResultPopup({
+            itemName: firstItemName,
+            itemHrid: firstItemHrid,
+            totalEnhanceCount,
+            maxStartLevel,
+            duration: totalDuration,
+            mergedDrops,
+            targetLevel,
+            success,
+            actualMaterialCost,
+            actualProtectCost,
+            actualProtectCount,
+            actualTotalCost,
+            expectedMaterialCost,
+            expectedProtectCost,
+            expectedProtectCount: sim.protectCount,
+            expectedTotalCost,
+            diffText,
+            diffColor,
+            originalCost,
+            finalValue,
+            profit,
+            profitColor,
+            expectedProfit,
+            expectedDuration,
+            expectedHourlyWage
+        });
+    }
+
+    // 显示合并结果弹出框
+    function showMergeResultPopup(initialData) {
+        // 使用闭包保存当前配置
+        let currentTargetLevel = initialData.targetLevel;
+        let currentSuccess = initialData.success;
+        let currentProtectAt = null; // null表示使用自动最优
+        
+        const marketData = getMarketData();
+        if (!marketData) {
+            alert(t.noMarketData);
+            return;
+        }
+        
+        // 创建更新函数
+        const updateDisplay = () => {
+            const data = recalculateMergeData(initialData, currentTargetLevel, currentSuccess, currentProtectAt, marketData);
+            renderMergePopup(data, currentTargetLevel, currentSuccess, currentProtectAt);
+        };
+        
+        // 初始渲染
+        updateDisplay();
+        
+        function recalculateMergeData(baseData, targetLevel, success, protectAt, marketData) {
+            const { itemHrid, totalEnhanceCount, maxStartLevel, mergedDrops } = baseData;
+            
+            const bestStrategy = findBestProtectLevel(itemHrid, targetLevel, marketData);
+            if (!bestStrategy) return baseData;
+            
+            const actualProtectAt = protectAt !== null ? Math.min(protectAt, targetLevel) : bestStrategy.protectAt;
+            const sim = Enhancelate(itemHrid, targetLevel, actualProtectAt);
+            const baseItemPrice = getMarketPrice(itemHrid, marketData);
+            const originalCost = baseItemPrice + getExpectedTotalCostToLevel(itemHrid, maxStartLevel, marketData);
+            
+            const expectedMaterialCost = bestStrategy.perActionCost * sim.actions;
+            const expectedProtectCost = bestStrategy.minProtectCost * sim.protectCount;
+            const expectedTotalCost = expectedMaterialCost + expectedProtectCost + originalCost;
+            
+            const actualMaterialCost = bestStrategy.perActionCost * totalEnhanceCount;
+            const actualProtectCount = calculateActualProtections(mergedDrops, actualProtectAt, targetLevel, success);
+            const actualProtectCost = bestStrategy.minProtectCost * actualProtectCount;
+            const actualTotalCost = actualMaterialCost + actualProtectCost + originalCost;
+            
+            const diff = actualTotalCost - expectedTotalCost;
+            const diffText = diff >= 0 ? `${t.aboveExpected}: ${formatNumber(diff)}` : `${t.belowExpected}: ${formatNumber(Math.abs(diff))}`;
+            const diffColor = diff >= 0 ? 'rgb(255, 100, 100)' : 'rgb(100, 255, 100)';
+            
+            let finalValue = baseItemPrice;
+            if (success && targetLevel > 0) {
+                if (marketData?.marketData && marketData.marketData[itemHrid]) {
+                    const marketRoot = marketData.marketData[itemHrid];
+                    const levelKey = targetLevel.toString();
+                    
+                    if (marketRoot[levelKey] && marketRoot[levelKey].a) {
+                        finalValue = marketRoot[levelKey].a;
+                    } else {
+                        const theoreticalCost = baseItemPrice + getExpectedTotalCostToLevel(itemHrid, targetLevel, marketData);
+                        let bidPrice = baseItemPrice;
+                        if (marketRoot[levelKey] && marketRoot[levelKey].b) {
+                            bidPrice = marketRoot[levelKey].b;
+                        } else if (marketRoot["0"] && marketRoot["0"].b) {
+                            bidPrice = marketRoot["0"].b;
+                        }
+                        finalValue = Math.max(theoreticalCost, bidPrice);
+                    }
+                } else {
+                    finalValue = baseItemPrice + getExpectedTotalCostToLevel(itemHrid, targetLevel, marketData);
+                }
+            }
+            
+            if (finalValue <= 0) {
+                finalValue = baseItemPrice + getExpectedTotalCostToLevel(itemHrid, targetLevel, marketData);
+            }
+            
+            const profit = (finalValue * 0.98) - actualTotalCost;
+            const profitColor = profit >= 0 ? 'rgb(100, 255, 100)' : 'rgb(255, 100, 100)';
+            const expectedProfit = (finalValue * 0.98) - expectedTotalCost;
+            const expectedDuration = totalEnhanceCount > 0 ? (sim.actions / totalEnhanceCount) * baseData.duration : 0;
+            const expectedHourlyWage = expectedDuration > 0 ? expectedProfit / (expectedDuration / 3600) : 0;
+            
+            return {
+                ...baseData,
+                targetLevel,
+                success,
+                actualMaterialCost,
+                actualProtectCost,
+                actualProtectCount,
+                actualTotalCost,
+                expectedMaterialCost,
+                expectedProtectCost,
+                expectedProtectCount: sim.protectCount,
+                expectedTotalCost,
+                diffText,
+                diffColor,
+                originalCost,
+                finalValue,
+                profit,
+                profitColor,
+                expectedProfit,
+                expectedDuration,
+                expectedHourlyWage,
+                bestStrategy,
+                actualProtectAt
+            };
+        }
+        
+        function renderMergePopup(data, targetLevel, success, protectAt) {
+            const {
+                itemName,
+                actualMaterialCost, actualProtectCost, actualProtectCount, actualTotalCost,
+                expectedMaterialCost, expectedProtectCost, expectedProtectCount, expectedTotalCost,
+                diffText, diffColor, originalCost, finalValue, profit, profitColor,
+                expectedProfit, expectedDuration, expectedHourlyWage, bestStrategy, actualProtectAt
+            } = data;
+
+            // 使用实际持续时间并格式化为标准格式
+            const durationSeconds = data.duration || 0;
+            const hours = Math.floor(durationSeconds / 3600);
+            const minutes = Math.floor((durationSeconds % 3600) / 60);
+            const seconds = durationSeconds % 60;
+
+            // 构建持续时间字符串：4h 28m 55s
+            let durationText = '';
+            if (hours > 0) {
+                durationText += `${hours}h `;
+            }
+            if (minutes > 0 || hours > 0) {
+                durationText += `${minutes}m `;
+            }
+            durationText += `${seconds}s`;
+            durationText = durationText.trim();
+
+            // 计算记录数量
+            const recordCount = selectedEnhancements.size;
+
+            // 移除旧的弹出框（如果存在）
+            const oldPopup = document.querySelector('.merge-result-popup');
+            const oldOverlay = document.querySelector('.merge-result-overlay');
+            if (oldPopup) oldPopup.remove();
+            if (oldOverlay) oldOverlay.remove();
+
+            // 创建弹出框
+            const popup = document.createElement('div');
+            popup.className = 'merge-result-popup';
+            popup.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: rgba(0, 0, 0, 0.9);
+                border: 1px solid #555;
+                border-radius: 10px;
+                padding: 20px;
+                width: 80%;
+                max-width: 600px;
+                max-height: 80vh;
+                overflow-y: auto;
+                z-index: 10000;
+                color: #e0e0e0;
+            `;
+
+            // 生成目标等级选项
+            let targetOptions = '';
+            for (let i = 1; i <= 20; i++) {
+                const selected = i === targetLevel ? 'selected' : '';
+                targetOptions += `<option value="${i}" ${selected}>+${i}</option>`;
+            }
+
+            // 生成保护等级选项
+            const autoProtectLabel = isZH ? `自动(+${bestStrategy.protectAt})` : `Auto(+${bestStrategy.protectAt})`;
+            let protectOptions = `<option value="auto">${autoProtectLabel}</option>`;
+            for (let i = 2; i <= targetLevel; i++) {
+                const selected = (protectAt !== null && i === actualProtectAt) ? 'selected' : '';
+                protectOptions += `<option value="${i}" ${selected}>+${i}</option>`;
+            }
+            if (protectAt === null) {
+                protectOptions = protectOptions.replace('value="auto"', 'value="auto" selected');
+            }
+
+            // 生成等级分布HTML（参考原行动记录的形式）
+        let dropsHtml = '<div style="margin-top: 15px; margin-bottom: 15px;"><strong>等级分布:</strong></div>';
+        dropsHtml += '<div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; padding: 10px; background: rgba(30,30,30,0.8); border-radius: 6px;">';
+
+        // 添加等级分布项（参考原行动记录的Item_itemContainer__x7kH1结构）
+        const sortedLevels = Object.keys(data.mergedDrops).map(Number).sort((a, b) => a - b);
+        for (const level of sortedLevels) {
+            const count = data.mergedDrops[level];
+
+            // 获取物品图标（使用第一个选择的记录的第二个图标，避免干扰）
+            let itemIconHtml = '';
+            selectedEnhancements.forEach((itemData, element) => {
+                const itemContainers = element.querySelectorAll('.Item_itemContainer__x7kH1');
+                if (itemContainers.length >= 2 && !itemIconHtml) {
+                    // 使用第二个物品容器（索引为1）
+                    const secondItemContainer = itemContainers[1];
+                    const itemElement = secondItemContainer.querySelector('.Item_item__2De2O');
+                    if (itemElement) {
+                        // 克隆整个物品元素的HTML结构
+                        const clonedElement = itemElement.cloneNode(true);
+                        // 更新数量
+                        const countDiv = clonedElement.querySelector('.Item_count__1HVvv');
+                        if (countDiv) {
+                            countDiv.textContent = count;
+                        }
+                        // 添加或更新强化等级
+                        if (level > 0) {
+                            let levelDiv = clonedElement.querySelector('.Item_enhancementLevel__19g-e');
+                            if (!levelDiv) {
+                                levelDiv = document.createElement('div');
+                                levelDiv.className = `Item_enhancementLevel__19g-e enhancementProcessed enhancementLevel_${level}`;
+                                clonedElement.appendChild(levelDiv);
+                            }
+                            levelDiv.textContent = `+${level}`;
+                        } else {
+                            // 移除强化等级（如果有）
+                            const levelDiv = clonedElement.querySelector('.Item_enhancementLevel__19g-e');
+                            if (levelDiv) {
+                                levelDiv.remove();
+                            }
+                        }
+                        itemIconHtml = clonedElement.outerHTML;
+                    }
+                }
+            });
+
+            if (itemIconHtml) {
+                dropsHtml += `<div class="Item_itemContainer__x7kH1" style="margin: 0;">${itemIconHtml}</div>`;
+            } else {
+                // 备用方案
+                dropsHtml += `<div style="display: flex; flex-direction: column; align-items: center; min-width: 60px;">
+                    <div style="width: 40px; height: 40px; background: rgba(50,50,50,0.8); border-radius: 4px; display: flex; align-items: center; justify-content: center; margin-bottom: 4px;">
+                        📦
+                        ${level > 0 ? `<div style="position: absolute; bottom: 0; right: 0; background: rgba(0,0,0,0.7); border-radius: 50%; width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #fff;">+${level}</div>` : ''}
+                    </div>
+                    <div style="font-size: 12px; text-align: center;">${count}</div>
+                </div>`;
+            }
+        }
+            dropsHtml += '</div>';
+
+            // 生成HTML内容
+            popup.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <h3 style="margin: 0; color: #fff; font-size: 17px;">合并${recordCount}行记录 强化 - ${itemName}</h3>
+                    <button class="merge-popup-close" style="
+                        background: rgba(255,100,100,0.5);
+                        border: 1px solid #666;
+                        border-radius: 4px;
+                        color: #fff;
+                        cursor: pointer;
+                        padding: 4px 8px;
+                        font-size: 12px;
+                    ">关闭</button>
+                </div>
+                
+                <!-- 配置控制区域 -->
+                <div style="margin-bottom: 12px; padding: 8px; background: rgba(30,30,30,0.8); border-radius: 6px; display: flex; align-items: center; flex-wrap: wrap; gap: 8px;">
+                    <label style="display: flex; align-items: center; gap: 4px;">
+                        ${t.target}:
+                        <select class="merge-target-select" style="background: rgba(50,50,50,0.8); color: #e0e0e0; border: 1px solid #555; border-radius: 4px; padding: 2px 4px; font-size: 11px;">
+                            ${targetOptions}
+                        </select>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 4px;">
+                        ${t.protectLevel}:
+                        <select class="merge-protect-select" style="background: rgba(50,50,50,0.8); color: #e0e0e0; border: 1px solid #555; border-radius: 4px; padding: 2px 4px; font-size: 11px;">
+                            ${protectOptions}
+                        </select>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 4px;">
+                        <input type="checkbox" class="merge-success-checkbox" ${success ? 'checked' : ''} style="margin: 0;">
+                        <span>${t.treatAsSuccess}</span>
+                    </label>
+                </div>
+                
+                <div style="font-size: 13px;">
+                    <div style="margin-bottom: 8px;">
+                        <span style="color: ${success ? 'rgb(100,255,100)' : 'rgb(255,100,100)' };">
+                            [${success ? t.success : t.failure}] 起始等级: +${data.maxStartLevel}   ---->  目标等级: +${targetLevel}
+                        </span>
+                    </div>
+                    <div style="margin-bottom: 8px; display: flex; justify-content: space-between;">
+                        <div><strong>总强化次数:</strong> ${data.totalEnhanceCount}</div>
+                        <div><strong>总持续时间:</strong> ${durationText}</div>
+                    </div>
+                    ${dropsHtml}
+                    <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid #555;">
+                        <strong>收益成本分析:</strong>
+                        <table style="width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 13px;">
+                            <tr>
+                                <th style="text-align: left; padding: 4px; border-bottom: 1px solid #555; color: #ccc; font-size: 12px;">项目</th>
+                                <th style="text-align: right; padding: 4px; border-bottom: 1px solid #555; color: #ccc; font-size: 12px;">实际</th>
+                                <th style="text-align: right; padding: 4px; border-bottom: 1px solid #555; color: #ccc; font-size: 12px;">预期</th>
+                            </tr>
+                            <tr>
+                                <td style="padding: 4px; color: #e0e0e0;">装备成本</td>
+                                <td style="text-align: right; padding: 4px; color: #e0e0e0;">${formatNumber(originalCost)}</td>
+                                <td style="text-align: right; padding: 4px; color: #e0e0e0;">-</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 4px; color: #e0e0e0;">材料成本</td>
+                                <td style="text-align: right; padding: 4px; color: #e0e0e0;">${formatNumber(actualMaterialCost)}</td>
+                                <td style="text-align: right; padding: 4px; color: #e0e0e0;">${formatNumber(expectedMaterialCost)}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 4px; color: #e0e0e0;">保护成本</td>
+                                <td style="text-align: right; padding: 4px; color: #e0e0e0;">${formatNumber(actualProtectCost)} / ${actualProtectCount || 0}个</td>
+                                <td style="text-align: right; padding: 4px; color: #e0e0e0;">${formatNumber(expectedProtectCost)} / ${(expectedProtectCount || 0).toFixed(2)}个</td>
+                            </tr>
+                            <tr style="font-weight: bold;">
+                                <td style="padding: 4px; color: #e0e0e0;">成本合计</td>
+                                <td style="text-align: right; padding: 4px; color: #e0e0e0;">${formatNumber(originalCost + actualMaterialCost + actualProtectCost)}</td>
+                                <td style="text-align: right; padding: 4px; color: #e0e0e0;">${formatNumber(expectedMaterialCost + expectedProtectCost + originalCost)}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 4px; color: ${diffColor}; font-weight: bold;">${diffText.includes(t.aboveExpected) ? t.aboveExpected : t.belowExpected}</td>
+                                <td style="text-align: right; padding: 4px; color: ${diffColor}; font-weight: bold;">${diffText.replace(t.aboveExpected + ': ', '').replace(t.belowExpected + ': ', '')}</td>
+                                <td style="text-align: right; padding: 4px; color: #e0e0e0;">-</td>
+                            </tr>
+                            <tr style="border-top: 1px solid #555;">
+                                <td style="padding: 4px; color: #e0e0e0;">最终价值</td>
+                                <td style="text-align: right; padding: 4px; color: #e0e0e0;">${formatNumber(finalValue)} (税后: ${formatNumber(finalValue * 0.98)})</td>
+                                <td style="text-align: right; padding: 4px; color: #e0e0e0;">-</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 4px; color: #e0e0e0;">收益</td>
+                                <td style="text-align: right; padding: 4px; color: ${profitColor}; font-weight: bold;">${formatNumber(profit)}</td>
+                                <td style="text-align: right; padding: 4px; color: #e0e0e0;">${formatNumber(expectedProfit)}</td>
+                            </tr>
+                            ${(() => {
+                                const durationSeconds = data.duration || 0;
+                                const hours = durationSeconds / 3600;
+                                let hourlyWage = 0;
+                                if (hours > 0) {
+                                    hourlyWage = profit / hours;
+                                }
+                                return `<tr>
+                                    <td style="padding: 4px; color: #e0e0e0;">工时费/h</td>
+                                    <td style="text-align: right; padding: 4px; color: #e0e0e0;">${formatNumber(hourlyWage)}</td>
+                                    <td style="text-align: right; padding: 4px; color: #e0e0e0;">${formatNumber(expectedHourlyWage)}</td>
+                                </tr>`;
+                            })()}
+                        </table>
+                    </div>
+                </div>
+            `;
+
+            // 添加点击外部关闭功能
+            const overlay = document.createElement('div');
+            overlay.className = 'merge-result-overlay';
+            overlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 9999;
+            `;
+            overlay.onclick = () => {
+                popup.remove();
+                overlay.remove();
+            };
+            document.body.appendChild(overlay);
+
+            // 添加到页面
+            document.body.appendChild(popup);
+
+            // 添加关闭按钮事件监听器
+            const closeButtons = popup.querySelectorAll('.merge-popup-close');
+            closeButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    popup.remove();
+                    overlay.remove();
+                });
+            });
+
+            // 添加控件事件监听器
+            const targetSelect = popup.querySelector('.merge-target-select');
+            const protectSelect = popup.querySelector('.merge-protect-select');
+            const successCheckbox = popup.querySelector('.merge-success-checkbox');
+
+            targetSelect.addEventListener('change', () => {
+                currentTargetLevel = parseInt(targetSelect.value);
+                updateDisplay();
+            });
+
+            protectSelect.addEventListener('change', () => {
+                const value = protectSelect.value;
+                currentProtectAt = value === 'auto' ? null : parseInt(value);
+                updateDisplay();
+            });
+
+            successCheckbox.addEventListener('change', () => {
+                currentSuccess = successCheckbox.checked;
+                updateDisplay();
+            });
+        }
+    }
+
     // Hook WebSocket消息获取数据
     function hookWebSocket() {
         logInit('[Better Loot Tracker] Starting WebSocket hook installation...');
-        
+
         try {
             const dataProperty = Object.getOwnPropertyDescriptor(MessageEvent.prototype, "data");
             if (!dataProperty) {
                 console.error('[Better Loot Tracker] Failed to get MessageEvent.prototype.data property');
                 return;
             }
-            
+
             const oriGet = dataProperty.get;
             if (!oriGet) {
                 console.error('[Better Loot Tracker] Failed to get original data getter');
@@ -1329,10 +1913,10 @@
                 if (!(socket instanceof WebSocket)) {
                     return oriGet.call(this);
                 }
-                
+
                 const url = socket.url;
                 logCalc('[Better Loot Tracker] WebSocket message from:', url);
-                
+
                 if (url.indexOf("api.milkywayidle.com/ws") <= -1 && url.indexOf("api-test.milkywayidle.com/ws") <= -1) {
                     return oriGet.call(this);
                 }
@@ -1343,7 +1927,7 @@
                 try {
                     const obj = JSON.parse(message);
                     logCalc('[Better Loot Tracker] WebSocket message type:', obj.type);
-                    
+
                     if (obj && obj.type === "init_character_data") {
                         logInit('[Better Loot Tracker] Received init_character_data');
                         characterItems = obj.characterItems;
@@ -1354,7 +1938,7 @@
                         logInit('[Better Loot Tracker] Updated characterBuffs:', !!characterBuffs, characterBuffs?.length);
                         logInit('[Better Loot Tracker] Updated characterSkills:', !!characterSkills, Object.keys(characterSkills || {}).length);
                         logInit('[Better Loot Tracker] Updated characterHouseRoomMap:', !!characterHouseRoomMap, Object.keys(characterHouseRoomMap || {}).length);
-                        
+
                         // 延迟调用调试函数，确保所有数据都已更新
                         setTimeout(() => {
                             debugShowAllData();
@@ -1391,7 +1975,7 @@
                 logCalc('[Better Loot Tracker] Found guzzling pouch:', item);
                 const itemDetail = itemDetailMap[item.itemHrid];
                 logCalc('[Better Loot Tracker] Guzzling pouch detail:', itemDetail);
-                
+
                 if (itemDetail?.equipmentDetail?.noncombatStats?.drinkConcentration) {
                     const enhanceBonus = 1 + (ITEM_ENHANCE_LEVEL_TO_BUFF_BONUS_MAP[item.enhancementLevel || 0] || 0) / 100;
                     const result = itemDetail.equipmentDetail.noncombatStats.drinkConcentration * enhanceBonus * 100;
@@ -1514,22 +2098,22 @@
     // ======================
     // 调试函数 - 显示所有获取到的数据
     // ======================
-    
+
     function debugShowAllData() {
         if (!DEBUG.calc) return;
         logCalc('=== [Better Loot Tracker] 调试信息 - 所有数据===');
-        
+
         // 基础数据
         logCalc('1. 基础数据状态');
         logCalc('   - itemDetailMap available:', !!itemDetailMap);
         logCalc('   - characterItems available:', !!characterItems);
         logCalc('   - characterBuffs available:', !!characterBuffs);
         logCalc('   - characterSkills available:', !!characterSkills);
-        
+
         if (itemDetailMap) {
             logCalc('   - itemDetailMap size:', Object.keys(itemDetailMap).length);
         }
-        
+
         if (characterSkills) {
             logCalc('   - characterSkills length:', characterSkills.length);
             const enhancingSkill = characterSkills.find(skill => skill.skillHrid === '/skills/enhancing');
@@ -1537,36 +2121,36 @@
             logCalc('   - 强化技能等级', enhancingSkill?.level || '未找到');
             logCalc('   - 天文台技能等级', observatorySkill?.level || '未找到');
         }
-        
+
         if (characterItems) {
             logCalc('   - characterItems length:', characterItems.length);
             logCalc('   - characterItems sample:', characterItems.slice(0, 3));
-            
+
             // 查找暴饮之囊
-            const guzzlingPouch = characterItems.find(item => 
-                item.itemLocationHrid === "/item_locations/pouch" && 
+            const guzzlingPouch = characterItems.find(item =>
+                item.itemLocationHrid === "/item_locations/pouch" &&
                 item.itemHrid === "/items/guzzling_pouch"
             );
             logCalc('   - 暴饮之囊:', guzzlingPouch);
-            
+
             // 查找强化器
-            const enhancers = characterItems.filter(item => 
-                item.itemLocationHrid && 
+            const enhancers = characterItems.filter(item =>
+                item.itemLocationHrid &&
                 item.itemLocationHrid !== "/item_locations/inventory" &&
                 itemDetailMap[item.itemHrid]?.equipmentDetail?.noncombatStats?.enhancingSuccess
             );
             logCalc('   - 强化器数量', enhancers.length);
             logCalc('   - 强化器列表', enhancers);
         }
-        
+
         if (characterBuffs) {
             logCalc('   - characterBuffs length:', characterBuffs.length);
             logCalc('   - characterBuffs sample:', characterBuffs.slice(0, 3));
-            
+
             // 查找茶类buff
-            const teaBuffs = characterBuffs.filter(buff => 
+            const teaBuffs = characterBuffs.filter(buff =>
                 buff.itemHrid && (
-                    buff.itemHrid.includes('tea') || 
+                    buff.itemHrid.includes('tea') ||
                     buff.itemHrid.includes('enhancing') ||
                     buff.itemHrid.includes('blessed')
                 )
@@ -1574,7 +2158,7 @@
             logCalc('   - 茶类buff数量:', teaBuffs.length);
             logCalc('   - 茶类buff列表:', teaBuffs);
         }
-        
+
         // 计算结果
         logCalc('2. 计算结果:');
         const playerParams = getPlayerEnhanceParams();
@@ -1593,13 +2177,13 @@
             ultraEnhancing: playerParams.tea_ultra_enhancing,
             blessed: playerParams.tea_blessed
         };
-        
+
         logCalc('   - 强化技能等级', enhancingLevel);
         logCalc('   - 天文台技能等级', observatoryLevel);
         logCalc('   - 暴饮之囊加成:', drinkBonus);
         logCalc('   - 强化器加成', enhancerBonus);
         logCalc('   - 茶效果', teaEffects);
-        
+
         // 测试强化计算
         logCalc('3. 测试强化计算 (以星空针+5为例):');
         const testItemHrid = '/items/celestial_needle';
@@ -1612,30 +2196,30 @@
         } else {
             logCalc('   - 测试物品不存在于itemDetailMap')
         }
-        
+
         logCalc('=== 调试信息结束 ===');
     }
 
     // 计算期望强化次数和保护次数
     function Enhancelate(itemHrid, stopAt, protectAt, overrideParams = null) {
         logCalc('[Better Loot Tracker] Enhancelate called with:', { itemHrid, stopAt, protectAt, overrideParams });
-        
+
         const itemLevel = getBaseItemLevel(itemHrid);
         logCalc('[Better Loot Tracker] Item level:', itemLevel);
         const playerParams = { ...getPlayerEnhanceParams(), ...(overrideParams || {}) };
-        
+
         // 获取实际的强化等级和天文台等级
         const actualEnhancingLevel = playerParams.enhancing_level;
         const actualObservatoryLevel = playerParams.laboratory_level;
-        
+
         logCalc('[Better Loot Tracker] Using enhancing level:', actualEnhancingLevel);
         logCalc('[Better Loot Tracker] Using observatory level:', actualObservatoryLevel);
-        
+
         // 获取暴饮之囊加成
         const drinkConcentrationBonus = playerParams.drink_concentration_bonus;
         const drinkConcentrationMultiplier = drinkConcentrationBonus ? (1 + drinkConcentrationBonus / 100) : 1;
         logCalc('[Better Loot Tracker] Drink concentration multiplier:', drinkConcentrationMultiplier);
-        
+
         // 获取茶效果
         const teaEffects = {
             enhancing: playerParams.tea_enhancing,
@@ -1643,17 +2227,17 @@
             ultraEnhancing: playerParams.tea_ultra_enhancing,
             blessed: playerParams.tea_blessed
         };
-        
+
         // 计算有效强化等级（包含茶的加成和暴饮之囊加成影响）
         const effectiveLevel = actualEnhancingLevel +
             (teaEffects.enhancing ? 3 * drinkConcentrationMultiplier : 0) +
             (teaEffects.superEnhancing ? 6 * drinkConcentrationMultiplier : 0) +
             (teaEffects.ultraEnhancing ? 8 * drinkConcentrationMultiplier : 0);
         logCalc('[Better Loot Tracker] Effective level:', effectiveLevel, 'base:', actualEnhancingLevel);
-        
+
         // 获取强化器加成
         const enhancerBonus = playerParams.enhancer_bonus;
-        
+
         // 计算总加成
         let totalBonus;
         if (effectiveLevel >= itemLevel) {
@@ -1668,7 +2252,7 @@
         for (let i = 0; i < stopAt; i++) {
             const successChance = (SUCCESS_RATE[i] / 100.0) * totalBonus;
             const destination = i >= protectAt ? i - 1 : 0;
-            
+
             if (teaEffects.blessed) {
                 // 祝福茶效果也受暴饮之囊加成影响
                 const blessedEffect = 0.01 * drinkConcentrationMultiplier;
@@ -1686,18 +2270,18 @@
         let Q = markov.subset(math.index(math.range(0, stopAt), math.range(0, stopAt)));
         const M = math.inv(math.subtract(math.identity(stopAt), Q));
         const attemptsArray = M.subset(math.index(math.range(0, 1), math.range(0, stopAt)));
-        const attempts = typeof attemptsArray === "number" 
-            ? attemptsArray 
+        const attempts = typeof attemptsArray === "number"
+            ? attemptsArray
             : math.flatten(math.row(attemptsArray, 0).valueOf()).reduce((a, b) => a + b, 0);
 
         // 计算期望保护次数
         let protects = 0;
         if (protectAt >= 1 && protectAt < stopAt) {
             const protectAttempts = M.subset(math.index(math.range(0, 1), math.range(protectAt, stopAt)));
-            const protectAttemptsArray = typeof protectAttempts === "number" 
-                ? [protectAttempts] 
+            const protectAttemptsArray = typeof protectAttempts === "number"
+                ? [protectAttempts]
                 : math.flatten(math.row(protectAttempts, 0).valueOf());
-            protects = protectAttemptsArray.map((a, i) => 
+            protects = protectAttemptsArray.map((a, i) =>
                 a * markov.get([i + protectAt, i + protectAt - 1])
             ).reduce((a, b) => a + b, 0);
         }
@@ -1736,11 +2320,11 @@
         // 遍历所有可能的保护等级找到最优
         let bestResult = null;
         const startProtect = targetLevel === 1 ? 1 : 2;
-        
+
         for (let protectAt = startProtect; protectAt <= targetLevel; protectAt++) {
             const sim = Enhancelate(itemHrid, targetLevel, protectAt);
             const totalCost = perActionCost * sim.actions + minProtectCost * sim.protectCount;
-            
+
             if (!bestResult || totalCost < bestResult.totalCost) {
                 bestResult = {
                     protectAt: protectAt,
@@ -1766,7 +2350,7 @@
         if (!titleSpan) return null;
 
         const titleText = titleSpan.textContent;
-        
+
         // 检查是否是强化行动
         if (!titleText.includes('强化') && !titleText.toLowerCase().includes('enhancing')) {
             return null;
@@ -1779,15 +2363,57 @@
         const startLevelMatch = titleText.match(/\+(\d+)\s*\(\d+\)\s*$/);
         const startLevel = startLevelMatch ? parseInt(startLevelMatch[1]) : 0;
 
+        // 解析持续时间
+        let duration = 0;
+
+        // 尝试从专门的持续时间元素中获取
+        const durationElement = lootElement.querySelector('div');
+        if (durationElement) {
+            // 查找包含"持续时间:"的div
+            let durationText = '';
+            const divs = lootElement.querySelectorAll('div');
+            for (const div of divs) {
+                if (div.textContent.includes('持续时间:')) {
+                    durationText = div.textContent;
+                    break;
+                }
+            }
+
+            if (durationText) {
+                // 解析完整格式：2h 10m 26s
+                const hoursMatch = durationText.match(/(\d+)\s*h/);
+                const minutesMatch = durationText.match(/(\d+)\s*m/);
+                const secondsMatch = durationText.match(/(\d+)\s*s/);
+
+                const hours = hoursMatch ? parseInt(hoursMatch[1]) : 0;
+                const minutes = minutesMatch ? parseInt(minutesMatch[1]) : 0;
+                const seconds = secondsMatch ? parseInt(secondsMatch[1]) : 0;
+
+                duration = hours * 3600 + minutes * 60 + seconds;
+            } else {
+                // 尝试从标题文本中获取
+                const durationMatch = titleText.match(/持续时间:\s*(\d+)\s*秒/);
+                if (!durationMatch) {
+                    // 尝试匹配其他格式
+                    const durationMatch2 = titleText.match(/(\d+)\s*秒/);
+                    if (durationMatch2) {
+                        duration = parseInt(durationMatch2[1]);
+                    }
+                } else {
+                    duration = parseInt(durationMatch[1]);
+                }
+            }
+        }
+
         // 解析物品名称 - 同时尝试中英文格式
         let itemName = null;
-        
+
         // 尝试中文格式
         const zhMatch = titleText.match(/强化\s*-\s*(.+?)\s*\(/);
         if (zhMatch) {
             itemName = zhMatch[1].trim();
         }
-        
+
         // 如果中文没匹配到，尝试英文格式
         if (!itemName) {
             const enMatch = titleText.match(/Enhancing\s*-\s*(.+?)\s*\(/i);
@@ -1795,8 +2421,11 @@
                 itemName = enMatch[1].trim();
             }
         }
-        
+
         if (!itemName) return null;
+
+        // 提取基础物品名称，去除强化等级后缀
+        itemName = itemName.replace(/ \+\d+$/, '').trim();
 
         // 获取物品HRID（支持中英文，自动去掉强化等级）
         const itemHrid = getItemHrid(itemName);
@@ -1808,20 +2437,20 @@
         // 解析各等级掉落
         const drops = {};
         const itemContainers = lootElement.querySelectorAll('.Item_itemContainer__x7kH1');
-        
+
         for (const container of itemContainers) {
             const countDiv = container.querySelector('.Item_count__1HVvv');
             const levelDiv = container.querySelector('.Item_enhancementLevel__19g-e');
-            
+
             if (countDiv) {
                 const count = parseInt(countDiv.textContent) || 0;
                 let level = 0;
-                
+
                 if (levelDiv) {
                     const levelMatch = levelDiv.textContent.match(/\+(\d+)/);
                     level = levelMatch ? parseInt(levelMatch[1]) : 0;
                 }
-                
+
                 // 检查是否是强化精华（排除它）
                 const itemIcon = container.querySelector('svg use');
                 if (itemIcon) {
@@ -1830,7 +2459,16 @@
                         continue; // 跳过强化精华
                     }
                 }
-                
+
+                // 检查是否是工匠匣（排除它）
+                const svg = container.querySelector('svg[aria-label]');
+                if (svg) {
+                    const ariaLabel = svg.getAttribute('aria-label') || '';
+                    if (ariaLabel.includes('工匠匣') || ariaLabel.includes('craftsman')) {
+                        continue; // 跳过工匠匣
+                    }
+                }
+
                 drops[level] = (drops[level] || 0) + count;
             }
         }
@@ -1840,6 +2478,7 @@
             itemHrid,
             enhanceCount,
             startLevel,
+            duration,
             drops
         };
     }
@@ -1895,11 +2534,11 @@
 
     function analyzeEnhancementResult(parsedData) {
         const { drops } = parsedData;
-        
+
         // 找到最高等级和其数量
         let maxLevel = 0;
         let maxLevelCount = 0;
-        
+
         for (const [levelStr, count] of Object.entries(drops)) {
             const level = parseInt(levelStr);
             if (level > maxLevel) {
@@ -1937,10 +2576,12 @@
 
     function applyPreferredTarget(analysisResult, preferenceLevels) {
         if (!preferenceLevels || preferenceLevels.length === 0) return analysisResult;
-        const { maxLevel } = analysisResult;
-        if (preferenceLevels.includes(maxLevel)) return analysisResult;
+        // 使用targetLevel而不是maxLevel来判断偏好等级
+        // 因为targetLevel是分析后的目标等级（例如有两个+8说明目标是+9）
+        const { targetLevel } = analysisResult;
+        if (preferenceLevels.includes(targetLevel)) return analysisResult;
 
-        const nextPreferred = preferenceLevels.find((level) => level > maxLevel);
+        const nextPreferred = preferenceLevels.find((level) => level > targetLevel);
         if (!nextPreferred) return analysisResult;
 
         return {
@@ -2046,7 +2687,13 @@
 
             wrapper.innerHTML = `
                 <button class="elt-global-settings-toggle" style="background: rgba(100,100,100,0.5); border: 1px solid #666; border-radius: 6px; color: #ddd; cursor: pointer; padding: 4px 10px; font-size: 12px;">
-                    ${t.globalSettings}
+                    ⚙️ ${t.globalSettings}
+                </button>
+                <button class="elt-global-calculate-merge" style="background: rgba(100,100,100,0.5); border: 1px solid #666; border-radius: 6px; color: #ddd; cursor: pointer; padding: 4px 10px; font-size: 12px;">
+                    🧮 合并计算
+                </button>
+                <button class="elt-global-clear-merge" style="background: rgba(100,100,100,0.5); border: 1px solid #666; border-radius: 6px; color: #ddd; cursor: pointer; padding: 4px 10px; font-size: 12px;">
+                    🗑️ 清除选择
                 </button>
                 <div class="enhancement-loot-tracker-global-settings" style="
                     padding: 8px 12px;
@@ -2089,6 +2736,30 @@
                     panel.style.display = panel.style.display === 'none' ? 'flex' : 'none';
                 }
             });
+
+            // 添加计算合并按钮点击事件
+            const calculateBtn = wrapper.querySelector('.elt-global-calculate-merge');
+            calculateBtn.addEventListener('click', () => {
+                calculateMergedEnhancements();
+            });
+
+            // 添加清除选择按钮点击事件
+            const clearBtn = wrapper.querySelector('.elt-global-clear-merge');
+            clearBtn.addEventListener('click', () => {
+                // 清空选择的记录
+                selectedEnhancements.forEach((data, element) => {
+                    const addBtn = element.querySelector('.enhancement-add-to-merge');
+                    if (addBtn) {
+                        addBtn.style.background = 'rgba(100,100,100,0.5)';
+                        addBtn.style.color = '#ccc';
+                    }
+                    // 移除高亮外框
+                    element.style.border = 'none';
+                    element.style.boxShadow = 'none';
+                    element.style.padding = '';
+                });
+                selectedEnhancements.clear();
+            });
         }
 
         const input = wrapper.querySelector('.elt-global-preference');
@@ -2130,15 +2801,15 @@
 
     /**
      * 计算实际保护次数
-     * 
+     *
      * 算法说明
      * 1. 从保护等级x开始，累加x, x+2, x+4...的掉落次数
      * 2. 如果成功，再减去保护等级和目标等级之间包含的"奇数位置"等级数量
      *    这里“奇数位置”是指：从protectAt开始数，第1个、第2个..等级
-     *    例如 protectAt=5, targetLevel=7: 
+     *    例如 protectAt=5, targetLevel=7:
      *    需要累加 +5 和 +7 的次数
      *    成功时减去（因为成功到达+7需要经过+5和+7这两个保护点各一次成功）
-     * 
+     *
      * @param {Object} drops - 各等级掉落数据{0: 46, 1: 27, 2: 12, ...}
      * @param {number} protectAt - 保护起始等级
      * @param {number} targetLevel - 目标等级
@@ -2154,7 +2825,7 @@
             if (level % 2 !== parity) continue;
             protectCount += (drops[level] || 0);
         }
-        
+
         // 成功时扣掉一路通过的保护位次数
         if (success) {
             let successPassCount = 0;
@@ -2164,7 +2835,7 @@
             }
             protectCount -= successPassCount;
         }
-        
+
         return Math.max(0, protectCount);
     }
 
@@ -2174,10 +2845,10 @@
 
     function formatNumber(num) {
         if (num === undefined || num === null || isNaN(num)) return '0';
-        
+
         const absNum = Math.abs(num);
         let formatted;
-        
+
         if (absNum >= 1e9) {
             formatted = (num / 1e9).toFixed(2) + 'B';
         } else if (absNum >= 1e6) {
@@ -2187,7 +2858,7 @@
         } else {
             formatted = Math.round(num).toString();
         }
-        
+
         return formatted;
     }
 
@@ -2200,12 +2871,12 @@
 
     function displayEnhancementInfo(lootElement, parsedData, analysisResult, marketData, customConfig = null) {
         logCalc('[Better Loot Tracker] displayEnhancementInfo called with:', parsedData);
-        
+
         const { itemHrid, enhanceCount, drops, startLevel } = parsedData;
         const defaultTargetLevel = analysisResult.targetLevel;
         const defaultSuccess = analysisResult.success;
         const baseItemPrice = getMarketPrice(itemHrid, marketData);
-        
+
         // 获取或初始化配置
         let config = customConfig || lootConfigs.get(lootElement);
         if (!config) {
@@ -2226,18 +2897,18 @@
         const success = config.hasCustomSuccess ? config.success : preferredAnalysis.success;
         if (!config.hasCustomTarget) config.targetLevel = targetLevel;
         if (!config.hasCustomSuccess) config.success = success;
-        
+
         logCalc('[Better Loot Tracker] Config:', config);
-        
+
         // 获取最佳强化策略
         const bestStrategy = findBestProtectLevel(itemHrid, targetLevel, marketData);
         if (!bestStrategy) {
             logCalc('[Better Loot Tracker] No best strategy found');
             return;
         }
-        
+
         logCalc('[Better Loot Tracker] Best strategy:', bestStrategy);
-        
+
         // 使用用户自定义保护等级或最佳保护等级
         const protectAt = config.protectAt !== null
             ? Math.min(config.protectAt, targetLevel)
@@ -2260,19 +2931,19 @@
                 superTargetLevel = 0;
             }
         }
-        
+
         // 重新计算使用用户选择的保护等级的期望值
         const sim = Enhancelate(itemHrid, targetLevel, protectAt);
         const expectedMaterialCost = bestStrategy.perActionCost * sim.actions;
         const expectedProtectCost = bestStrategy.minProtectCost * sim.protectCount;
         const expectedTotalCost = expectedMaterialCost + expectedProtectCost;
-        
+
         logCalc('[Better Loot Tracker] Expected costs:', {
             materialCost: expectedMaterialCost,
             protectCost: expectedProtectCost,
             totalCost: expectedTotalCost
         });
-        
+
         // 计算实际消耗
         const actualMaterialCost = bestStrategy.perActionCost * enhanceCount;
         const actualProtectTargetLevel = isSuperEnhance ? maxLevel : targetLevel;
@@ -2283,23 +2954,23 @@
         const actualProtectCount = calculateActualProtections(dropsForProtect, protectAt, actualProtectTargetLevel, actualProtectSuccess);
         const actualProtectCost = bestStrategy.minProtectCost * actualProtectCount;
         const actualTotalCost = actualMaterialCost + actualProtectCost;
-        
+
         logCalc('[Better Loot Tracker] Actual costs:', {
             materialCost: actualMaterialCost,
             protectCost: actualProtectCost,
             totalCost: actualTotalCost,
             protectCount: actualProtectCount
         });
-        
+
         // 计算比例
         const materialRatioNum = expectedMaterialCost > 0 ? actualMaterialCost / expectedMaterialCost : 0;
         const protectRatioNum = expectedProtectCost > 0 ? actualProtectCost / expectedProtectCost : 0;
         const totalRatioNum = expectedTotalCost > 0 ? actualTotalCost / expectedTotalCost : 0;
-        
+
         const materialRatio = materialRatioNum.toFixed(2);
         const protectRatio = protectRatioNum.toFixed(2);
         const totalRatio = totalRatioNum.toFixed(2);
-        
+
         // 根据比例决定颜色：>1红色、<1绿色、=1白色
         const getRatioColor = (ratio) => {
             if (ratio > 1) return 'rgb(255, 100, 100)';
@@ -2309,21 +2980,21 @@
         const materialColor = getRatioColor(materialRatioNum);
         const protectColor = getRatioColor(protectRatioNum);
         const totalColor = getRatioColor(totalRatioNum);
-        
+
         // 计算差值
         const diff = actualTotalCost - expectedTotalCost;
         const diffText = diff >= 0 ? `${t.aboveExpected}: ${formatNumber(diff)}` : `${t.belowExpected}: ${formatNumber(Math.abs(diff))}`;
         const diffColor = diff >= 0 ? 'rgb(255, 100, 100)' : 'rgb(100, 255, 100)';
-        
+
         // 成功/失败状态
         const statusText = isSuperEnhance ? (superSuccess ? t.success : t.failure) : (success ? t.success : t.failure);
         const statusColor = isSuperEnhance
             ? (superSuccess ? 'rgb(100, 255, 100)' : 'rgb(255, 100, 100)')
             : (success ? 'rgb(100, 255, 100)' : 'rgb(255, 100, 100)');
-        
+
         // 生成唯一ID
         const uniqueId = `elt-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-        
+
         // ========== 标题行信息（显示在标题后面） ==========
         const titleSpan = lootElement.querySelector('div > span:not(.loot-log-index)');
         if (titleSpan) {
@@ -2332,12 +3003,12 @@
             if (existingTitleInfo) {
                 existingTitleInfo.remove();
             }
-            
+
             // 创建标题行信息
             const titleInfo = document.createElement('span');
             titleInfo.className = 'enhancement-title-info';
             titleInfo.style.cssText = 'margin-left: 8px;';
-            
+
             // 只有成功时才显示差值信息
             const diffHtml = success ? `<span style="margin-left: 8px; color: ${diffColor}; font-weight: bold;">${diffText}</span>` : '';
             const superOriginalCost = baseItemPrice + getExpectedTotalCostToLevel(itemHrid, startLevel, marketData);
@@ -2365,12 +3036,13 @@
 
             titleInfo.innerHTML = `
                 ${isSuperEnhance ? superHtml : normalHtml}
-                <button class="enhancement-toggle-settings" style="margin-left: 8px; background: rgba(100,100,100,0.5); border: 1px solid #666; border-radius: 4px; color: #ccc; cursor: pointer; padding: 1px 6px; font-size: 12px;">⚙</button>
+                <button class="enhancement-toggle-settings" style="margin-left: 8px; background: rgba(100,100,100,0.5); border: 1px solid #666; border-radius: 4px; color: #ccc; cursor: pointer; padding: 1px 6px; font-size: 12px; width: 20px; height: 20px; display: inline-flex; align-items: center; justify-content: center; vertical-align: middle;">⚙</button>
+                <button class="enhancement-add-to-merge" style="margin-left: 4px; background: rgba(100,100,100,0.5); border: 1px solid #666; border-radius: 4px; color: #ccc; cursor: pointer; padding: 1px 6px; font-size: 12px; width: 20px; height: 20px; display: inline-flex; align-items: center; justify-content: center; vertical-align: middle;">+</button>
             `;
-            
+
             // 插入到标题后面
             titleSpan.after(titleInfo);
-            
+
             // 添加设置按钮点击事件
             const toggleBtn = titleInfo.querySelector('.enhancement-toggle-settings');
             toggleBtn.addEventListener('click', (e) => {
@@ -2380,8 +3052,61 @@
                     settingsPanel.style.display = settingsPanel.style.display === 'none' ? 'block' : 'none';
                 }
             });
+
+            // 添加加号选择按钮点击事件
+            const addBtn = titleInfo.querySelector('.enhancement-add-to-merge');
+            addBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isSelected = selectedEnhancements.has(lootElement);
+                if (isSelected) {
+                    selectedEnhancements.delete(lootElement);
+                    addBtn.style.background = 'rgba(100,100,100,0.5)';
+                    addBtn.style.color = '#ccc';
+                    // 移除高亮外框
+                    lootElement.style.border = 'none';
+                    lootElement.style.boxShadow = 'none';
+                } else {
+                    // 检查是否与之前选择的装备类型相同
+                    let sameItem = true;
+                    let firstItemName = null;
+
+                    // 获取第一个选择的装备名称
+                    selectedEnhancements.forEach((data, element) => {
+                        if (!firstItemName) {
+                            firstItemName = data.parsedData.itemName;
+                        }
+                    });
+
+                    // 检查当前装备是否与第一个选择的装备相同
+                    // 由于我们已经在parseEnhancementLoot中统一了物品名称格式（去除了强化等级后缀）
+                    // 所以现在可以直接比较itemName
+                    if (firstItemName && parsedData.itemName !== firstItemName) {
+                        sameItem = false;
+                    }
+
+                    if (sameItem) {
+                        selectedEnhancements.set(lootElement, { parsedData, analysisResult });
+                        addBtn.style.background = 'rgba(255,165,0,0.5)';
+                        addBtn.style.color = '#fff';
+                        // 添加高亮外框
+                        lootElement.style.border = '2px solid var(--color-orange-300)';
+                        lootElement.style.boxShadow = '0 0 10px rgba(255, 165, 0, 0.5)';
+                        lootElement.style.borderRadius = '6px';
+                        lootElement.style.padding = '6px';
+                    } else {
+                        // 直接忽略不同装备的选择，不显示弹窗
+                        // 可以在这里添加一个短暂的视觉反馈，比如按钮闪烁
+                        addBtn.style.background = 'rgba(255,100,100,0.5)';
+                        addBtn.style.color = '#fff';
+                        setTimeout(() => {
+                            addBtn.style.background = 'rgba(100,100,100,0.5)';
+                            addBtn.style.color = '#ccc';
+                        }, 500);
+                    }
+                }
+            });
         }
-        
+
         // ========== 底部配置区域（默认隐藏） ==========
         // 创建显示元素
         const infoSpan = document.createElement('div');
@@ -2395,14 +3120,14 @@
             color: #e0e0e0;
             display: none;
         `;
-        
+
         // 生成目标等级选项
         let targetOptions = '';
         for (let i = 1; i <= 20; i++) {
             const selected = i === targetLevel ? 'selected' : '';
             targetOptions += `<option value="${i}" ${selected}>+${i}</option>`;
         }
-        
+
         // 生成保护等级选项
         const autoProtectLabel = isZH ? `自动(+${bestStrategy.protectAt})` : `Auto(+${bestStrategy.protectAt})`;
         let protectOptions = `<option value="auto">${autoProtectLabel}</option>`;
@@ -2413,7 +3138,7 @@
         if (config.protectAt === null) {
             protectOptions = protectOptions.replace('value="auto"', 'value="auto" selected');
         }
-        
+
         infoSpan.innerHTML = `
             <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 8px;">
                 <label style="display: flex; align-items: center; gap: 4px;">
@@ -2437,13 +3162,13 @@
                 </span>
             </div>
         `;
-        
+
         // 检查是否已经添加过
         const existingInfo = lootElement.querySelector('.enhancement-loot-tracker-info');
         if (existingInfo) {
             existingInfo.remove();
         }
-        
+
         // 添加到掉落记录底部
         const dropsContainer = lootElement.querySelector('.LootLogPanel_itemDrops__2h0ov');
         if (dropsContainer) {
@@ -2451,12 +3176,12 @@
         } else {
             lootElement.prepend(infoSpan);
         }
-        
+
         // 添加事件监听器
         const targetSelect = infoSpan.querySelector(`#${uniqueId}-target`);
         const protectSelect = infoSpan.querySelector(`#${uniqueId}-protect`);
         const successCheckbox = infoSpan.querySelector(`#${uniqueId}-success`);
-        
+
         const updateDisplay = (options = {}) => {
             // 记住当前设置面板的显示状态
             const currentPanel = lootElement.querySelector('.enhancement-loot-tracker-info');
@@ -2475,7 +3200,7 @@
                 hasCustomTarget,
                 hasCustomSuccess
             };
-            
+
             // 如果目标等级改变，更新保护等级选项
             if (newConfig.targetLevel !== config.targetLevel) {
                 const refreshedBest = findBestProtectLevel(parsedData.itemHrid, newConfig.targetLevel, marketData) || { protectAt: 2 };
@@ -2487,10 +3212,10 @@
                 protectSelect.innerHTML = newProtectOptions;
                 newConfig.protectAt = null;
             }
-            
+
             lootConfigs.set(lootElement, newConfig);
             displayEnhancementInfo(lootElement, parsedData, analysisResult, marketData, newConfig);
-            
+
             // 恢复设置面板的显示状态
             if (wasVisible) {
                 const newPanel = lootElement.querySelector('.enhancement-loot-tracker-info');
@@ -2499,7 +3224,7 @@
                 }
             }
         };
-        
+
         targetSelect.addEventListener('change', () => updateDisplay({ targetChanged: true }));
         protectSelect.addEventListener('change', () => updateDisplay());
         successCheckbox.addEventListener('change', () => updateDisplay({ successChanged: true }));
@@ -2512,7 +3237,7 @@
     function processLootLogs(options = {}) {
         logCalc('[Better Loot Tracker] processLootLogs 开始执行..');
         const force = !!options.force;
-        
+
         const marketData = getMarketData();
         if (!marketData) {
             logCalc(`[Better Loot Tracker] ${t.noMarketData}`);
@@ -2531,7 +3256,7 @@
 
         const lootLogList = container.querySelectorAll(LOOT_LOG_ITEM_SELECTOR);
         logCalc('[Better Loot Tracker] 找到掉落记录数量:', lootLogList.length);
-        
+
         if (!lootLogList.length) {
             logCalc('[Better Loot Tracker] 没有找到掉落记录元素');
             return;
@@ -2544,16 +3269,16 @@
             if (!force && lootElement.dataset.eltProcessed === '1') {
                 return;
             }
-            
+
             // 解析掉落数据
             const parsedData = parseEnhancementLoot(lootElement);
             if (parsedData) {
                 logCalc(`[Better Loot Tracker] 第${index + 1}个记录是强化记录:`, parsedData);
-                
+
                 // 分析强化结果
                 const analysisResult = analyzeEnhancementResult(parsedData);
                 logCalc(`[Better Loot Tracker] 分析结果:`, analysisResult);
-                
+
                 // 显示信息
                 displayEnhancementInfo(lootElement, parsedData, analysisResult, marketData);
                 lootElement.dataset.eltProcessed = '1';
@@ -2572,7 +3297,7 @@
 
             logCalc(`[Better Loot Tracker] 第${index + 1}个记录不是强化或炼金记录`);
         });
-        
+
         logCalc(`[Better Loot Tracker] 处理完成，共处理${processedCount}个强化记录`);
     }
 
@@ -2582,10 +3307,10 @@
 
     function setupObserver() {
         logInit('[Better Loot Tracker] 设置DOM观察器..');
-        
+
         const observer = new MutationObserver((mutations) => {
             let shouldProcess = false;
-            
+
             for (const mutation of mutations) {
                 if (mutation.type === 'childList') {
                     for (const node of mutation.addedNodes) {
@@ -2602,9 +3327,24 @@
                 }
                 if (shouldProcess) break;
             }
-            
+
             if (shouldProcess) {
                 logCalc('[Better Loot Tracker] 延迟处理新的掉落记录...');
+
+                // 清除合并计算的选择缓存
+                selectedEnhancements.forEach((data, element) => {
+                    const addBtn = element.querySelector('.enhancement-add-to-merge');
+                    if (addBtn) {
+                        addBtn.style.background = 'rgba(100,100,100,0.5)';
+                        addBtn.style.color = '#ccc';
+                    }
+                    // 移除高亮外框
+                    element.style.border = 'none';
+                    element.style.boxShadow = 'none';
+                    element.style.padding = '';
+                });
+                selectedEnhancements.clear();
+
                 setTimeout(processLootLogs, 200);
             }
         });
@@ -2613,7 +3353,7 @@
             childList: true,
             subtree: true
         });
-        
+
         logInit('[Better Loot Tracker] DOM观察器已设置');
     }
 
@@ -2625,50 +3365,50 @@
         logInit('[Better Loot Tracker] 初始化开始..');
         logInit('[Better Loot Tracker] 当前URL:', window.location.href);
         logInit('[Better Loot Tracker] 用户代理:', navigator.userAgent);
-        
+
         // 安装WebSocket hook
         hookWebSocket();
-        
+
         // 等待initClientData加载
         let checkCount = 0;
         const checkData = setInterval(() => {
             checkCount++;
             const initData = getInitClientData();
             logCalc(`[Better Loot Tracker] 检查数据(${checkCount}/60):`, !!initData, !!initData?.itemDetailMap);
-            
+
             if (initData?.itemDetailMap) {
                 clearInterval(checkData);
-                
+
                 // 初始化itemDetailMap
                 itemDetailMap = initData.itemDetailMap;
-                
+
                 logInit('[Better Loot Tracker] InitData loaded, itemDetailMap size:', Object.keys(itemDetailMap).length);
                 logInit('[Better Loot Tracker] CharacterItems from WebSocket:', !!characterItems);
                 logInit('[Better Loot Tracker] CharacterBuffs from WebSocket:', !!characterBuffs);
                 logInit('[Better Loot Tracker] CharacterSkills from WebSocket:', !!characterSkills);
-                
+
                 buildItemMaps();
                 setupObserver();
-                
+
                 // 首次处理
                 setTimeout(() => {
                     logCalc('[Better Loot Tracker] 开始首次处理掉落记录..');
                     processLootLogs();
                 }, 1000);
-                
+
                 // 显示调试信息
                 setTimeout(() => {
                     logCalc('[Better Loot Tracker] 显示调试信息...');
                     debugShowAllData();
                 }, 2000);
-                
+
                 logInit('[Better Loot Tracker] 初始化完毕..');
             }
-            
+
             if (checkCount >= 60) {
                 clearInterval(checkData);
                 logInit('[Better Loot Tracker] 初始化超时，但继续尝试..');
-                
+
                 // 即使超时也尝试安装observer
                 setupObserver();
                 setTimeout(() => {

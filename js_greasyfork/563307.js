@@ -1,15 +1,15 @@
 // ==UserScript==
-// @name         Kill Animations + Auto Claim (No Adblock Trigger)
+// @name         Faucetra Kill Animations + Auto Claim (No Adblock Trigger)
 // @namespace    https://tampermonkey.net/
-// @version      1.2
+// @version      1.3
 // @description  Lightweight mode without triggering anti-adblock.
 // @author       Rubystance
 // @license      MIT
 // @match        https://faucetra.com/*
 // @grant        none
 // @run-at       document-start
-// @downloadURL https://update.greasyfork.org/scripts/563307/Kill%20Animations%20%2B%20Auto%20Claim%20%28No%20Adblock%20Trigger%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/563307/Kill%20Animations%20%2B%20Auto%20Claim%20%28No%20Adblock%20Trigger%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/563307/Faucetra%20Kill%20Animations%20%2B%20Auto%20Claim%20%28No%20Adblock%20Trigger%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/563307/Faucetra%20Kill%20Animations%20%2B%20Auto%20Claim%20%28No%20Adblock%20Trigger%29.meta.js
 // ==/UserScript==
 
 (function() {

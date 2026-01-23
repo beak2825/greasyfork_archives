@@ -3,7 +3,7 @@
 // @namespace    https://github.com/examplecode/useful-user-scripts
 // @homepageURL  https://scriptcat.org/zh-CN/users/157252
 // @author       examplecode && Aloazny && Gemini
-// @version      3.6
+// @version      4.1
 // @description  二改@examplecode的搜索脚本，感谢@examplecode，添加MD3配色+高斯模糊+编辑/添加搜索引擎功能+搜索栏切换顶部底部+搜索框，保留原本的X浏览器搜索引擎读取，排序等功能。
 // @match        *://*/*
 // @icon          data:image/png;base64,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
@@ -23,6 +23,8 @@
     const THEME_KEY = 'quick_search_theme_v2';
     const LAYOUT_KEY = 'quick_search_layout_v1';
     const queryParams = ["q", "s", "p", "wd", "word", "keyword", "text", "query", "key", "result", "searchWord", "search-result" ];
+    const longSignals = ['search', 'search-result', 'category', 'find', 'query', 'result', 'tags', 'tag'];
+    const strictSignals = ['s', 'k', 'p'];
 
     const defaultTheme = { primary: '#6750a4', opacity: 0.7, blur: 18, themeStyle: 'MIUIX' };
     const defaultLayout = { pos: 'bottom', offset: 24, autoHide: false, showInput: false, inputStyle: 1, shrinkMode: false };
@@ -46,7 +48,8 @@
                 order: engines.map(e => e.id),
                 hidden: engines.filter(e => !e.visible).map(e => e.id),
                 deleted: deletedIds || [],
-                cache: engines.map(e => ({ name: e.name, host: e.host, url: e.url, id: e.id, visible: e.visible }))
+                pathRules: saved.pathRules || {},
+                cache: engines.map(e => ({ name: e.name, host: e.host, url: e.url, id: e.id, visible: e.visible, pathRule: (saved.pathRules && saved.pathRules[e.host]) || '' }))
             };
             if (typeof GM_setValue !== 'undefined') GM_setValue(STORAGE_KEY, data);
             else localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
@@ -55,7 +58,7 @@
             let data;
             if (typeof GM_getValue !== 'undefined') data = GM_getValue(STORAGE_KEY);
             else { try { data = JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch(e) {} }
-            return data || { custom: [], order: [], hidden: [], deleted: [], cache: null };
+            return data || { custom: [], order: [], hidden: [], deleted: [], pathRules: {}, cache: null };
         },
         themeSave: (val) => {
             if (typeof GM_setValue !== 'undefined') GM_setValue(THEME_KEY, val);
@@ -391,10 +394,11 @@
         card.querySelector('#l-hide').onclick = () => { layout.autoHide = !layout.autoHide; if (layout.autoHide) layout.shrinkMode = false; storage.layoutSave(layout); updateLayoutBtn('#l-hide', layout.autoHide, ' 滑动隐藏'); updateLayoutBtn('#l-shrink', layout.shrinkMode, ' 贴边收缩模式'); };
         card.querySelector('#l-shrink').onclick = () => { layout.shrinkMode = !layout.shrinkMode; if (layout.shrinkMode) layout.autoHide = false; storage.layoutSave(layout); updateLayoutBtn('#l-shrink', layout.shrinkMode, ' 贴边收缩模式'); updateLayoutBtn('#l-hide', layout.autoHide, ' 滑动隐藏'); };
      
-        const render = () => {
+       const render = () => {
             const list = card.querySelector('#m-list');
             list.innerHTML = '';
             allEngines.forEach((e, i) => {
+                const currentRule = (saved.pathRules && saved.pathRules[e.host]) ? saved.pathRules[e.host] : '';
                 const container = document.createElement('div');
                 container.className = 'se-item-container';
                 container.innerHTML = `
@@ -414,6 +418,7 @@
                         <input class="ed-name qs-input-field" value="${e.name}" style="padding:8px;margin-bottom:8px;border-radius:8px;">
                         <input class="ed-host qs-input-field" value="${e.host}" style="padding:8px;margin-bottom:8px;border-radius:8px;">
                         <input class="ed-url qs-input-field" value="${e.url}" style="padding:8px;margin-bottom:8px;border-radius:8px;">
+                        <input class="ed-path qs-input-field" value="${currentRule}" placeholder="路径规则 (例如 /zidian/)" style="padding:8px;margin-bottom:8px;border-radius:8px;border-color:var(--qs-pri) !important;${currentRule ? '' : 'display:none;'}">
                         <button class="ed-save qs-btn qs-btn-active" style="width:100%;padding:10px;border-radius:8px;">保存修改</button>
                     </div>
                 `;
@@ -422,16 +427,16 @@
                 container.querySelector('.up').onclick = () => { if (i > 0) { [allEngines[i], allEngines[i - 1]] = [allEngines[i - 1], allEngines[i]]; storage.save(allEngines, saved.deleted); render(); } };
                 container.querySelector('.down').onclick = () => { if (i < allEngines.length - 1) { [allEngines[i], allEngines[i + 1]] = [allEngines[i + 1], allEngines[i]]; storage.save(allEngines, saved.deleted); render(); } };
                 container.querySelector('.del').onclick = () => { saved.deleted.push(e.id); allEngines.splice(i, 1); storage.save(allEngines, saved.deleted); render(); };
-                container.querySelector('.ed-save').onclick = () => { const n = container.querySelector('.ed-name').value.trim(); const h = container.querySelector('.ed-host').value.trim(); const u = normalizeUrl(container.querySelector('.ed-url').value.trim()); if (n && h && u.includes('%s')) { const newId = (n === e.name && h === e.host) ? e.id : storage.getStableId(n, h); Object.assign(e, { name: n, host: h, url: u, id: newId }); storage.save(allEngines, saved.deleted); render(); } else { alert('请检查输入'); }};
+                container.querySelector('.ed-save').onclick=()=>{const n=container.querySelector('.ed-name').value.trim(),h=container.querySelector('.ed-host').value.trim(),u=normalizeUrl(container.querySelector('.ed-url').value.trim()),p=container.querySelector('.ed-path').value.trim();if(n&&h&&u.includes('%s')){if(p){if(!saved.pathRules)saved.pathRules={};saved.pathRules[h]=p}else if(saved.pathRules){delete saved.pathRules[h]}const newId=(n===e.name&&h===e.host)?e.id:storage.getStableId(n,h);Object.assign(e,{name:n,host:h,url:u,id:newId});storage.save(allEngines,saved.deleted);render()}else{alert('请检查输入')}};
                 list.appendChild(container);
             });
         };
 
         const addForm = card.querySelector('#m-add-form'), inName = card.querySelector('#in-name'), inHost = card.querySelector('#in-host'), inUrl = card.querySelector('#in-url');
-        inUrl.oninput = () => { try { const u = inUrl.value.trim(); if (!u) return; const d = new URL(u.startsWith('http') ? u : 'https://' + u).hostname.replace('www.', ''); const p = d.split('.'); if (!inHost.value) inHost.value = p.slice(-2).join('.'); if (!inName.value) { const r = p[0]; inName.value = r.charAt(0).toUpperCase() + r.slice(1); } } catch(e){} };
+        inUrl.oninput=()=>{try{const u=inUrl.value.trim();if(!u)return;const f=new URL(u.startsWith('http')?u:'https://'+u).hostname.replace(/^www\./i,'');if(!inHost.value)inHost.value=f;if(!inName.value){const r=f.split('.')[0];inName.value=r.charAt(0).toUpperCase()+r.slice(1)}}catch(e){}};
+        card.querySelector('#in-confirm').onclick=()=>{const u=normalizeUrl(inUrl.value);let n=inName.value.trim(),h=inHost.value.trim();if(!u.includes('%s'))return alert('URL必须包含%s');if(allEngines.some(e=>e.host===h&&e.name===n))return alert('已存在');try{const p1=u.split('%s')[0],m=p1.match(/([\/|?|&][^\/|?|&]+)$/);if(m){const s=m[1];if(s.length>1&&!longSignals.some(l=>s.includes(l))&&!strictSignals.some(t=>s==='/'+t)){if(!saved.pathRules)saved.pathRules={};saved.pathRules[h]=s}}else{const tU=new URL(u.replace('%s','pk')),pA=tU.pathname.split('/'),i=pA.indexOf('pk');if(i>0){const s=pA[i-1];if(s&&!longSignals.includes(s)&&!strictSignals.includes(s)){if(!saved.pathRules)saved.pathRules={};saved.pathRules[h]='/'+s+'/'}}}}catch(e){}const ne={name:n,host:h,url:u,id:storage.getStableId(n,h),visible:true};if(h.startsWith('/')&&h.endsWith('/')){try{const p=h.slice(1,-1);ne._matchFn=s=>new RegExp(p,'i').test(s)}catch(e){ne._matchFn=s=>s.toLowerCase().includes(h.toLowerCase())}}else{ne._matchFn=s=>s.toLowerCase().includes(h.toLowerCase())}allEngines.push(ne);storage.save(allEngines,saved.deleted);addForm.style.display='none';render()};
         card.querySelector('#m-add-btn').onclick = () => { addForm.style.display = 'block'; inName.value = inHost.value = inUrl.value = ''; };
         card.querySelector('#in-cancel').onclick = () => addForm.style.display = 'none';
-        card.querySelector('#in-confirm').onclick=()=>{const u=normalizeUrl(inUrl.value);let n=inName.value.trim(),h=inHost.value.trim();if(!u.includes('%s'))return alert('URL必须包含%s');if(allEngines.some(e=>e.host===h&&e.name===n))return alert('已存在');const ne={name:n,host:h,url:u,id:storage.getStableId(n,h),visible:true};if(h.startsWith('/')&&h.endsWith('/')){try{const p=h.slice(1,-1);ne._matchFn=s=>new RegExp(p,'i').test(s)}catch(e){ne._matchFn=s=>s.toLowerCase().includes(h.toLowerCase())}}else{ne._matchFn=s=>s.toLowerCase().includes(h.toLowerCase())}allEngines.push(ne);saved.cache=null;storage.save(allEngines,saved.deleted);addForm.style.display='none';render()};
         card.querySelector('#m-reset-btn').onclick=()=>{if(confirm('确定还原？')){saved={custom:[],order:[],hidden:[],deleted:[]};allEngines=initEngines();storage.save(allEngines,[]);render()}};render();
         card.querySelector('#m-close').onclick=()=>{location.reload()};
         overlay.onclick = (e) => { if (e.target === overlay) overlay.remove(); };
@@ -445,49 +450,41 @@
         try {
             if (location.pathname === '/' && !location.search && !location.hash) return null;
             const url = new URL(location.href);
-            // 1. 参数提取逻辑，读取自queryParams
-            for (const p of queryParams) {
-                const reg = new RegExp(`[?&]${p}=([^&]+)`, 'i');
-                const match = (location.search + location.hash).match(reg);
-                if (match && match[1]) {
-                    return decodeURIComponent(match[1].replace(/\+/g, ' ')).trim();
-                }
-            }
-            // 2. 路径提取逻辑 (分级过滤)
-            // 长信号：可以稍微宽泛一点（允许结尾匹配）
-            const longSignals = ['search', 'search-result', 'category', 'find', 'query', 'result', 'tags', 'tag'];
-            // 短信号：必须严格匹配（必须前后都有斜杠，如 /s/ 或 /k/）
-            const strictSignals = ['s', 'k', 'p'];
-            const pathLower = url.pathname.toLowerCase();
-            // 判定逻辑：
-            // a. 包含任意长信号的层级（如 /search/ 或 /tag ）
-            // b. 或者【严格匹配】短信号（必须是 /s/ 这种独立层级）
-            const hasSearchSignal = 
-                longSignals.some(sig => pathLower.includes('/' + sig + '/') || pathLower.endsWith('/' + sig)) ||
-                strictSignals.some(sig => pathLower.includes('/' + sig + '/'));
-            if (hasSearchSignal) {
-                const pathParts = url.pathname.split('/').filter(p => p.length > 0);
-                if (pathParts.length > 0) {
-                    // 兼容处理：如果路径中包含信号词，优先取信号词后的第一段，否则取最后一段
-                    const allSignals = [...longSignals, ...strictSignals];
-                    const sigIdx = pathParts.findIndex(p => allSignals.includes(p.toLowerCase()));
-                    let targetPart = (sigIdx !== -1 && pathParts[sigIdx + 1]) ? pathParts[sigIdx + 1] : pathParts[pathParts.length - 1];
-                    // 提取最后一段并解码
-                    let lastPart = decodeURIComponent(targetPart).trim();
-                    // 核心修正：针对类似 /search/-keyword------------.html 的特殊路径进行清洗
-                    // 移除末尾.html等后缀，并去掉首尾多余的横杠
-                    lastPart = lastPart.replace(/\.(html|php|jsp|asp|htm)$/i, '').replace(/^-+|-+$/g, '');
-                    if (lastPart.length >= 1 && 
-                        !allSignals.includes(lastPart.toLowerCase()) && 
-                        !/^\d+$/.test(lastPart) && 
-                        !lastPart.includes('.')) {
-                        return lastPart;
+            const fullPath = url.pathname + url.search + url.hash;
+            const customRule = saved.pathRules ? saved.pathRules[currentEngine.host] : null;
+            if (customRule) {
+                const ruleIdx = fullPath.toLowerCase().indexOf(customRule.toLowerCase());
+                if (ruleIdx !== -1) {
+                    let part = fullPath.substring(ruleIdx + customRule.length).split(/[&?]/)[0];
+                    if (part) {
+                        if (part.includes('/')) {
+                            const allSignals = [...longSignals, ...strictSignals];
+                            const pieces = part.split('/').filter(p => p && !allSignals.includes(p.toLowerCase()));
+                            part = pieces[pieces.length - 1] || part;
+                        }
+                        let res = decodeURIComponent(part).replace(/^[?&=/]+/g, '').replace(/\.(html|php|jsp|asp|htm)$/i, '').replace(/^-+|-+$/g, '');
+                        if (res) return res;
                     }
                 }
             }
-        } catch (e) {
-            console.warn("关键词提取错误:", e);
-        }
+            for (const p of queryParams) {
+                const reg = new RegExp(`[?&]${p}=([^&]+)`, 'i');
+                const match = (location.search + location.hash).match(reg);
+                if (match && match[1]) return decodeURIComponent(match[1].replace(/\+/g, ' ')).trim();
+            }
+            const pathLower = url.pathname.toLowerCase();
+            const hasSearchSignal = longSignals.some(sig => pathLower.includes('/' + sig + '/') || pathLower.endsWith('/' + sig)) || strictSignals.some(sig => pathLower.includes('/' + sig + '/'));
+            if (hasSearchSignal) {
+                const pathParts = url.pathname.split('/').filter(p => p.length > 0);
+                if (pathParts.length > 0) {
+                    const allSignals = [...longSignals, ...strictSignals];
+                    const sigIdx = pathParts.findIndex(p => allSignals.includes(p.toLowerCase()));
+                    let targetPart = (sigIdx !== -1 && pathParts[sigIdx + 1]) ? pathParts[sigIdx + 1] : pathParts[pathParts.length - 1];
+                    let lastPart = decodeURIComponent(targetPart).trim().replace(/\.(html|php|jsp|asp|htm)$/i, '').replace(/^-+|-+$/g, '');
+                    if (lastPart.length >= 1 && !allSignals.includes(lastPart.toLowerCase()) && !/^\d+$/.test(lastPart) && !lastPart.includes('.')) return lastPart;
+                }
+            }
+        } catch (e) { console.warn("关键词提取错误:", e); }
         return null;
     })();
 

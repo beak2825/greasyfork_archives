@@ -13,11 +13,10 @@
 // @description:fr Naviguez facilement dans l'historique des cartes
 // @description:nl Navigeer gemakkelijk door de kaartgeschiedenis
 // @namespace https://greasyfork.org/de/users/863740-horst-wittlich
-// @version 2025.11.26
+// @version 2025.11.27
 // @author hiwi234
 // @include https://www.waze.com/editor*
 // @include https://www.waze.com/*/editor*
-// @include https://beta.waze.com/*
 // @exclude https://www.waze.com/user/*editor/*
 // @exclude https://www.waze.com/*/user/*editor/*
 // @grant none

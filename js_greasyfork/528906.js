@@ -2,8 +2,8 @@
 // @name          Atalho GPT
 // @description   Um atalho para o ChatGPT
 // @namespace     CowanGPT
-// @license       CowBas
-// @version       2.0
+// @license       GPL-3.0
+// @version       3.0
 // @author        Cowanbas
 // @match         *://*/*
 // @run-at        document-start

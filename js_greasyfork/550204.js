@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         AI Navigation Bar
 // @namespace    http://tampermonkey.net/
-// @version      3.0
-// @description  Automatically clicks the "Try GPT-5" button and adds navigation buttons to AI chat services
-// @author       You
+// @version      3.1
+// @description  Automatically clicks annoyance of M365 and adds navigation buttons to AI chat services
+// @author       Jerry
 // @match        https://m365.cloud.microsoft/*
 // @match        https://claude.ai/*
 // @match        https://chatgpt.com/*
@@ -196,6 +196,7 @@
     const editorDelay = 1000;
     let buttonClicked = false;
     let editorClicked = false;
+    let mobileAppPopupDismissed = false;
 
     function findAndClickButton() {
         if (buttonClicked) return;
@@ -237,6 +238,40 @@
             console.log("Chat editor element clicked successfully!");
         } else {
             console.log("Chat editor element not found yet");
+        }
+    }
+
+    function dismissMobileAppPopup() {
+        if (mobileAppPopupDismissed) return;
+
+        // Try multiple selectors to find the dismiss button
+        const selectors = [
+            'button[aria-label="Dismiss"]',
+            'button[aria-label="Got it"]',
+            'div[role="dialog"][aria-label="Tips"] button:has(div[aria-label="Got it"])',
+            '.fui-TeachingPopoverSurface button'
+        ];
+
+        for (const selector of selectors) {
+            const buttons = document.querySelectorAll(selector);
+            buttons.forEach(button => {
+                if ((button.getAttribute('aria-label') === 'Dismiss' ||
+                     button.textContent.includes('Got it')) &&
+                    !mobileAppPopupDismissed) {
+                    console.log("Found mobile app popup button, dismissing...");
+                    button.click();
+                    mobileAppPopupDismissed = true;
+                    console.log("Mobile app popup dismissed successfully!");
+                }
+            });
+        }
+
+        // Also try to hide the popup directly if dismiss doesn't work
+        const popup = document.querySelector('div[role="dialog"][aria-label="Tips"]');
+        if (popup && !mobileAppPopupDismissed) {
+            console.log("Hiding mobile app popup directly...");
+            popup.style.display = 'none';
+            mobileAppPopupDismissed = true;
         }
     }
 
@@ -301,6 +336,12 @@
                         if (node.nodeType === 1 && (node.tagName === 'BUTTON' || node.querySelector('button'))) {
                             setTimeout(findAndClickButton, 500);
                         }
+                        // Check for mobile app popup
+                        if (node.nodeType === 1 && node.querySelector &&
+                            (node.querySelector('div[role="dialog"][aria-label="Tips"]') ||
+                             node.getAttribute('role') === 'dialog')) {
+                            setTimeout(dismissMobileAppPopup, 300);
+                        }
                     });
                 }
             });
@@ -310,6 +351,11 @@
             childList: true,
             subtree: true
         });
+
+        // Initial check for mobile app popup
+        setTimeout(dismissMobileAppPopup, 1500);
+        setTimeout(dismissMobileAppPopup, 3000);
+        setTimeout(dismissMobileAppPopup, 5000);
 
         setTimeout(() => {
             observer.disconnect();

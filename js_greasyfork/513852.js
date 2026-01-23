@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           Bluesky media downloader
 // @description    Download media from Bluesky
-// @version        0.1.5
+// @version        0.1.6
 // @author         sanadan <jecy00@gmail.com>
 // @namespace      https://javelin.works
 // @match          https://bsky.app/*
@@ -63,7 +63,6 @@ const BMD = (function () {
       const source = sources.join(',')
       const imageId = sources[0].match(/plc:(.+?)@/)[1]
       const type = sources[0].split('@')[1]
-      // const author = article.querySelector('div[role="link"]').textContent
       const author = article.querySelector('div[dir="auto"]').textContent
       let postText = ''
       const post = article.children[1].children[0].children[0]
@@ -72,9 +71,14 @@ const BMD = (function () {
       }
       let date = ''
       const dateElement = article.querySelector('a[data-tooltip]')
-      if (dateElement) date = this.fromDate(dateElement.dataset.tooltip)
-      else date = this.fromDate(article.children[1].children[1].children[0].textContent)
-
+      if (dateElement) {
+        date = this.fromDate(dateElement.dataset.tooltip)
+      } else {
+        const dateElement2 = article.children[1].children[1].children[0].children[0].textContent
+        if (dateElement2) {
+          date = this.fromDate(dateElement2)
+        }
+      }
       const element = document.createElement('div')
       const postId = new URL(location.href).pathname.split('/').pop()
       element.innerHTML = history.includes(postId) ? this.check_svg : this.download_svg
@@ -95,7 +99,6 @@ const BMD = (function () {
       base.appendChild(element)
     },
     addButton2: function (article) {
-      // console.log(article.children.length)
       let base = article
       if (article.children.length >= 2) {
         base = article.children[1]
@@ -105,12 +108,10 @@ const BMD = (function () {
         if (element && element.role === 'link') return // 引用の画像に引っかかったので無視
       }
       const images = base.querySelectorAll('img[fetchpriority]')
-      // console.log(images)
 
       let sources = []
       images.forEach((img) => {
         const url = img.src.replace('/feed_thumbnail/', '/feed_fullsize/')
-        // console.log(url)
         sources.push(url)
       })
       let source = sources[0]
@@ -151,12 +152,14 @@ const BMD = (function () {
       return this.replace(str).match(/.+?([\n!！。？]|$)/)[0].split('\n')[0].substr(0, 64) // 64文字なのは適当／80文字はエラーになったので
     },
     fromDate: function (str) {
-      const items = str.split(/[\s年月日:]/)
+      const items = str.split(/[\s年月日:\/]/)
       const year = items[0]
       const month = ('0' + items[1]).slice(-2)
       const day = ('0' + items[2]).slice(-2)
-      const hour = this.zeroPadding(items[4])
-      const minute = items[5].slice(0, 2)
+      var i = items.length < 6 ? 3 : 4
+      const hour = this.zeroPadding(items[i])
+      const minute = this.zeroPadding(items[i + 1])
+
       return `${year}-${month}-${day}_${hour}-${minute}`
     },
     zeroPadding: function (str) {

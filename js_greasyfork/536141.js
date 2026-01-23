@@ -1,15 +1,13 @@
 // ==UserScript==
 // @name         WME Chat Plus
 // @name:en      WME Chat Plus
-// @version      2026.01.19
+// @version      2026.01.20
 // @description  Chat-Erweiterung: Auto-Sichtbarkeit, Bundesland-Navigation, Spracheingabe
 // @description:en  Chat enhancement: Auto-visibility, region navigation, speech-to-text
 // @description:es  Mejora del chat: Auto-visibilidad, navegación regional, voz a texto
 // @author       Hiwi234
 // @match        https://www.waze.com/editor*
 // @match        https://www.waze.com/*/editor*
-// @match        https://beta.waze.com/editor*
-// @match        https://beta.waze.com/*/editor*
 // @grant        none
 // @license      MIT
 // @namespace    https://greasyfork.org/de/users/863740-horst-wittlich

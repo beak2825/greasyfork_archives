@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         推特获取原图
 // @namespace    https://github.com/MuXia-0326/twitter-auto-original-picture
-// @version      1.18
+// @version      1.19
 // @description  推特在新标签页打开图片自动原图
 // @author       Mossia
 // @icon         https://raw.githubusercontent.com/MuXia-0326/drawio/master/angri.png
@@ -103,6 +103,14 @@
 
   function getUserName() {
     let divs = document.querySelectorAll('button[aria-label="账号菜单"]');
+
+    if (divs.length === 0) {
+      let mobileDivs = document.querySelectorAll('button[data-testid="DashButton_ProfileIcon_Link"]');
+      for (let mobileDiv of mobileDivs) {
+        let mobileName = mobileDiv.getAttribute('aria-label');
+        userName = mobileName.split(' ')[1];
+      }
+    }
 
     for (let div of divs) {
       if (div.children.length === 3) {

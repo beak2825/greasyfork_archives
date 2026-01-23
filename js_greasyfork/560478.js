@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bh3helper-enhancer
 // @namespace    4b8b542a-3500-49bd-b857-8d62413434c7
-// @version      1.3.1
+// @version      1.3.4
 // @description  在bh3helper（《崩坏3》剧情助手）上提供增强功能
 // @author       -
 // @match        https://bh3helper.xrysnow.xyz/*
@@ -18,15 +18,16 @@
 // @require      https://unpkg.com/vue@3.5.26/dist/vue.global.prod.js#sha256-tAgDTQf3yKkfEX+epicjVa5F9Vy9oaStBwStjXA5gJU=
 // @require      https://unpkg.com/@chcs1013/vue-expose-to-window@1.0.1/index.js#sha256-0zwVsGUKw70iQnySKWxo81tEXaVhqZg7rF2yBH+0wAg=
 // @require      https://unpkg.com/vue-dialog-view@1.7.1/dist/cssless.umd.js#sha256-cH5113wW7G1+ZShZmyVUL1FVmBUEHzCzTO/Qy7+gMDg=
-// @require      https://unpkg.com/vue3-tree@0.11.5/dist/vue3-tree.js#sha256-cUAWVV0/sMo44jc45yFH2uEv6+AkMGKZod8QdY/vMqA=
 // @require      https://unpkg.com/fflate@0.8.2/umd/index.js#sha256-w7NPLp9edNTX1k4BysegwBlUxsQGQU1CGFx7U9aHXd8=
 // @require      https://unpkg.com/add-css-constructed@1.1.1/dist/umd.js#sha256-d0FJH11iwMemcFgueP8rpxVl9RdFyd3V8WJXX9SmB5I=
 // @require      https://unpkg.com/lz-string@1.5.0/libs/lz-string.min.js#sha256-lfTRy/CZ9XFhtmS8BIQm7D35JjeAGkx5EW6DMVqnh+c=
+// @resource     treejs https://unpkg.com/vue3-tree@0.11.5/dist/vue3-tree.js#sha256-cUAWVV0/sMo44jc45yFH2uEv6+AkMGKZod8QdY/vMqA=
 // @resource     dialog_css https://unpkg.com/vue-dialog-view@1.7.1/dist/vue-dialog-view.css#sha256-HnPUNAFITfEE27CBFvnXJJBIw7snbNTkexmuZ95u160=
 // @resource     treeview_css https://unpkg.com/vue3-tree@0.11.5/dist/style.css#sha256-pMwswRTw7jawlpe60P8W2yItWloUeREwp4DwlZkp3OI=
-// @supportURL   https://github.com/shc0743/MyUtility/issues/new?title=bh3helper-enhancer:%20
 // @run-at       document-start
+// @sandbox      raw
 // @license      GPL-3.0
+// @supportURL   https://github.com/shc0743/MyUtility/issues/new?title=bh3helper-enhancer:%20
 // @downloadURL https://update.greasyfork.org/scripts/560478/bh3helper-enhancer.user.js
 // @updateURL https://update.greasyfork.org/scripts/560478/bh3helper-enhancer.meta.js
 // ==/UserScript==
@@ -54,7 +55,7 @@
 
     const PG_DOWNLOAD_STRUCT = {
         contentExtractRules: {
-            'dialog-step': '· {TEXT}',
+            //'dialog-step': '· {TEXT}',
             'dialog-synopsis-line': '> {TEXT}',
             'dialog-doc': '文档：{TEXT}',
             'default': '{TEXT}'
@@ -406,7 +407,10 @@ details[open] > .dlg-help-summary::before {
     display: flex;
     align-items: center;
     gap: 4px;
-    margin: 0;
+    margin: 0px;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    overflow: auto;
 }
 .checkbox-inline>input[type="checkbox"] {
     margin: 0;
@@ -676,8 +680,8 @@ details[open] > .dlg-help-summary::before {
         <dialog-view v-model="showDownloadRawDataDlg">
             <template #title>下载原始数据</template>
             <div style="margin-bottom: 0.5em;">
-                <b style="margin-bottom: 0.5em; display: block;">即将打包下载所有原始数据(js)文件。</b>
-                <label><input type="checkbox" v-model="dlOptions.autoParseLzJs">&nbsp;自动解析lz.js数据</label>
+                <b style="margin-bottom: 0.5em; display: block;">即将打包下载所有数据文件，可用于{{ dlOptions.autoParseLzJs ? '进行文本分析' : '离线访问该网站' }}。</b>
+                <label class=checkbox-inline><input type="checkbox" v-model="dlOptions.autoParseLzJs">&nbsp;自动解析lz数据<span v-if=dlOptions.autoParseLzJs>（若需要获取可以直接使用浏览器访问的数据包，请取消选中此选项）</span></label>
             </div>
             <div class="btn-group">
                 <button type="button" class="primary" @click="download_raw_data">立即下载</button>
@@ -801,7 +805,7 @@ details[open] > .dlg-help-summary::before {
             },
             components: {
                 DialogView: DialogView.DialogView,
-                Tree: Tree.default,
+                Tree: ((new window.Function('window', 'Vue', GM_getResourceText('treejs') + ";return Tree"))(context, Vue)).default,
             },
             mounted() {
                 const stateDlOpt = state.dlOptions;
@@ -1094,7 +1098,6 @@ details[open] > .dlg-help-summary::before {
                 break;
             
             case 'getWebStaticResources':
-                new Promise(r => setTimeout(r, 2000)).then(() => // 确保页面加载完成
                 source.postMessage({
                     rpc_invoker_nonce: data.rpc_invoke_nonce, // 新模式使用nonce进行识别，根本不需要action
                     password: state.rpc_password,
@@ -1105,7 +1108,7 @@ details[open] > .dlg-help-summary::before {
                         for (const i of document.querySelectorAll('script[src]')) ret.add(new URL(i.src, window.location.href).href); // JS
                         return ret;
                     })(),
-                }, origin));
+                }, origin);
                 break;
         }
 
@@ -1280,7 +1283,7 @@ details[open] > .dlg-help-summary::before {
                 if (closeButton) closeButton.click();
                 else contentDialog.style.display = 'none'; // 手动关闭
                 // 8. 冷却
-                await new Promise(resolve => setTimeout(resolve, CONFIG.DIALOG_SWITCH_CD_TIME)); // 处理速度太快会导致浏览器渲染跟不上😂，只能放慢一点了
+                await delay(CONFIG.DIALOG_SWITCH_CD_TIME); // 处理速度太快会导致浏览器渲染跟不上😂，只能放慢一点了
                 return title;
             };
 
@@ -1291,6 +1294,13 @@ details[open] > .dlg-help-summary::before {
             // 统计总数
             total = mainStoryElements.length + (includeCollections ? collectionElements.length : 0);
             updateProgress(0);
+            // 处理静态的前情提要
+            if (includeRecapitulation) {
+                const m = main_content.querySelectorAll('#前情提要 > .content > .md-content');
+                if (m.length === 1) {
+                    result.push(`【前情提要】\n${extractNodeText({ childNodes: m }, nodeTextExt).join('')}\n\n-----\n\n`);
+                }
+            }
             // 如果选择拆分收藏品，那么单独收集收藏品内容
             if (splitCollections) {
                 // 先处理其他内容
@@ -1349,9 +1359,9 @@ details[open] > .dlg-help-summary::before {
                     files[filename] = new Uint8Array((new TextEncoder()).encode(resource.content));
                 }
                 updateProgress(current, DLUI_TEXT.onBeforeZipStart);
-                await new Promise(resolve => setTimeout(resolve, 500));
+                await delay(500);
                 // 13. 压缩文件
-                const zipBlob = new Blob([fflate.zipSync(files)], { type: 'application/zip' });
+                const zipBlob = new Blob([await createZip(files)], { type: 'application/zip' });
                 updateProgress(current, '正在完成');
                 DownloadFile(URL.createObjectURL(zipBlob), `${document.title} - ${new Date().toLocaleString()}.zip`);
             } else {
@@ -1434,7 +1444,7 @@ details[open] > .dlg-help-summary::before {
                     password: state.rpc_password,
                 })
                 updateProgress(current, '正在等待');
-                await new Promise(resolve => setTimeout(resolve, 1500));
+                await delay(1500);
                 // 请求导出资源并等待完成
                 updateProgress(current, '正在获取数据');
                 const nonce = context.crypto.randomUUID();
@@ -1501,13 +1511,13 @@ details[open] > .dlg-help-summary::before {
                     zipEntries[filename] = data;
                 }
                 // cd
-                await new Promise(resolve => setTimeout(resolve, 1000));
+                await delay(1000);
             }
             if (win && !win.closed) win.close();
             // 下载 zip 文件
             updateProgress(current, DLUI_TEXT.onBeforeZipStart);
-            await new Promise(resolve => setTimeout(resolve, 500));
-            const zipBlob = new Blob([fflate.zipSync(zipEntries)], { type: 'application/zip' });
+            await delay(500);
+            const zipBlob = new Blob([await createZip(zipEntries)], { type: 'application/zip' });
             updateProgress(current, '正在完成');
             DownloadFile(URL.createObjectURL(zipBlob), `${document.title} - ${new Date().toLocaleString()}.zip`);
             setTimeout(() => {
@@ -1589,12 +1599,13 @@ details[open] > .dlg-help-summary::before {
             const frame = new EmbeddedFrame(ui.root);
             try {
                 frame.hide();
-                state.rpc_password = crypto.randomUUID();
+                state.rpc_password = context.crypto.randomUUID();
                 const pages = '/,/pages/common.html,/pages/search.html'.split(',');
                 for (const page of pages) {
                     ui.loading_indicator.innerText = `正在处理 ${page}`;
                     await frame.load(page, true);
                     ui.loading_indicator.innerText = `正在处理 ${page} 中的资源`;
+                    await delay(2000); // 确保页面加载完成
                     const resp = await frame.invoke('getWebStaticResources');
                     for (const i of resp.data) filelist.add(i);
                 }
@@ -1618,15 +1629,20 @@ details[open] > .dlg-help-summary::before {
                 const url = new URL(data, remoteBase.href);
                 updateProgress(i + 1, `正在下载 ${data}`);
                 const res = await LoadResource(new Request(url.href));
-                let d = null, parsed = false;
+                let d = null, parsed = false, isEntireLzJs = false;
                 if (options.autoParseLzJs && /\.js$/.test(url.href)) {
                     const text = await res.text(); d = text, parsed = false;
-                    if (/^\s*?LoadDataLZ\(/.test(text)) try {
+                    if (/LoadDataLZ\(.*?,/.test(text)) try {
                         // 疑似lzstring数据
-                        let lzText, loader = (name, _) => lzText = _[0];
-                        const f = new window.Function('LoadDataLZ', text); // dangerous,以后改
-                        f(loader);
-                        d = lz.decompressFromBase64(lzText);
+                        // let lzText, loader = (name, _) => lzText = _[0];
+                        // const f = new window.Function('LoadDataLZ', text); // dangerous,以后改
+                        // f(loader);
+                        // d = lz.decompressFromBase64(lzText);
+                        // 改为使用正则表达式提取，避免实际执行代码，增强安全性
+                        isEntireLzJs = /^LoadDataLZ\(.*?,.*\s*?$/.test(text);
+                        const regexp = /LoadDataLZ\s*?\(\s*?(.*?)\s*?,\s*?\[\s*?(".*?"|'.*?')\s*?\]\s*?\)/gm,
+                            replacer = (match, dataName, lzContent) => lz.decompressFromBase64(lzContent.slice(1, -1));
+                        d = d.replace(regexp, replacer);
                         parsed = true;
                     } catch (error) {
                         console.warn('[bh3helper-downloader] decompress lzstring failed for file:', data);
@@ -1637,13 +1653,13 @@ details[open] > .dlg-help-summary::before {
                 else d = new Uint8Array(await res.arrayBuffer());
                 // 解析文件名
                 let filename = url.pathname.substring(1); // 去掉开头的/
-                if (parsed) filename = filename.replace(/(\.lz)?\.js$/, '.json');
+                if (parsed) filename = filename.replace(/(\.lz)?\.js$/, isEntireLzJs ? '.json' : '.js');
                 files[filename] = d;
             }
             updateProgress(total, DLUI_TEXT.onBeforeZipStart);
-            await new Promise(resolve => setTimeout(resolve, 500));
+            await delay(500);
             // 创建压缩包
-            const zipBlob = new Blob([fflate.zipSync(files)], { type: 'application/zip' });
+            const zipBlob = new Blob([await createZip(files)], { type: 'application/zip' });
             updateProgress(total, '正在完成');
             DownloadFile(URL.createObjectURL(zipBlob), `${document.title} - 原始数据 - ${new Date().toLocaleString()}.zip`);
             setTimeout(() => {
@@ -1991,6 +2007,22 @@ details[open] > .dlg-help-summary::before {
     // ---------- //
 
     // Utils
+    
+    /**
+     * 创建一个延迟指定时间的 Promise
+     * @param {number} [time=0] - 延迟的时间（毫秒），默认为 0
+     * @returns {Promise<void>} 在指定时间后 resolve 的 Promise
+     */
+    function delay(time = 0) {
+        return new Promise(resolve => setTimeout(resolve, time));
+    }
+    
+    function nextAnimationFrame() {
+        return new Promise(resolve => requestAnimationFrame(resolve));
+    }
+    function nextIdleCallback() {
+        return new Promise(resolve => requestIdleCallback(resolve));
+    }
 
     /**
      * 替换类方法中的字符串
@@ -2287,7 +2319,7 @@ details[open] > .dlg-help-summary::before {
         load(url, expectLoadMessage = false, timeout = 10000) {
             const urlObj = new URL(url, window.location.href);
             const hashUrl = new URL(urlObj.hash.substring(1) || '/', urlObj.href);
-            const windowId = crypto.randomUUID();
+            const windowId = context.crypto.randomUUID();
             hashUrl.searchParams.set('__windowId', windowId);
             urlObj.hash = '#' + hashUrl.pathname + hashUrl.search;
             this.#el.src = urlObj.href;
@@ -2358,12 +2390,25 @@ details[open] > .dlg-help-summary::before {
         invoke(action, data, timeout = 10000) { 
             return new Promise((resolve, reject) => {
                 if (timeout) setTimeout(() => reject(new Error('Timeout')), timeout);
-                const nonce = crypto.randomUUID();
+                const nonce = context.crypto.randomUUID();
                 MessageHandler.registerResolver(nonce, resolve, timeout);
                 const req = Object.assign({ rpc_action: action, rpc_invoke_nonce: nonce, password: state.rpc_password }, data || {});
                 this.postMessage(req, window.location.origin);
             });
         }
+    }
+    
+    /**
+     * 将文件数据压缩为 ZIP 格式，基于 fflate 实现回调转 Promise 封装
+     * @param {Object} files - 待压缩的文件/文件夹结构对象
+     * @param {Uint8Array} files[key] - 文件路径作为 key，对应值为 UTF-8 编码的 Uint8Array 数据；
+     * @param {Object} [options={}] - fflate 压缩配置选项
+     * @param {number} [options.level=6] - 压缩级别，取值 0-9，0 为无压缩，9 为最高压缩（速度最慢）
+     * @param {number} [options.mem] - 压缩内存占用级别，影响压缩速度与内存消耗，取值建议参考 fflate 官方文档
+     * @returns {Promise<Uint8Array>} 成功返回压缩后的 ZIP 数据 Uint8Array，失败则 reject 抛出错误
+     */
+    function createZip(files, options = {}) {
+        return new Promise((resolve, reject) => fflate.zip(files, options, (err, out) => err ? reject(err) : resolve(out)));
     }
 
 })((typeof unsafeWindow !== "undefined" ? unsafeWindow : window), window))

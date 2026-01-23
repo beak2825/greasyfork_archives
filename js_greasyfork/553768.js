@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         純圖片檢視控制器
 // @namespace    http://tampermonkey.net/
-// @version      1.3.1
+// @version      1.4.1
 // @description  純圖片頁面開啟時可使用滑鼠控制圖片縮放與拖曳圖片位置
 // @author       shanlan(grok-4-fast-reasoning)
 // @match        *://*/*
@@ -15,7 +15,7 @@
 (function() {
   'use strict';
   document.head.appendChild(Object.assign(document.createElement('style'), {
-    textContent: "#tm-image-modal{position:fixed;top:0;left:0;right:0;bottom:0;background:#0E0E0E;z-index:9999}#tm-image-modal canvas{position:absolute;left:0;top:0;max-width:none;max-height:none;width:100vw;height:100vh;border:none;transform-origin:0 0;user-select:none;-webkit-user-drag:none;-khtml-user-drag:none;-moz-user-drag:none;-o-user-drag:none;cursor:move}#tm-image-modal .fit{position:absolute;top:10px;right:20px;color:#fff;font-size:24px;font-weight:bold;cursor:pointer;z-index:10000;line-height:1;padding:5px;background:rgba(0,0,0,0.5);border-radius:5px}#tm-image-modal .center{position:absolute;top:50px;right:20px;color:#fff;font-size:24px;font-weight:bold;cursor:pointer;z-index:10000;line-height:1;padding:5px;background:rgba(0,0,0,0.5);border-radius:5px}#tm-image-modal .reset{position:absolute;top:90px;right:20px;color:#fff;font-size:24px;font-weight:bold;cursor:pointer;z-index:10000;line-height:1;padding:5px;background:rgba(0,0,0,0.5);border-radius:5px}#tm-image-modal .interp{position:absolute;top:130px;right:20px;color:#fff;font-size:24px;font-weight:bold;cursor:pointer;z-index:10000;line-height:1;padding:5px;background:rgba(0,0,0,0.5);border-radius:5px}#tm-image-modal .download{position:absolute;top:170px;right:20px;color:#fff;font-size:24px;font-weight:bold;cursor:pointer;z-index:10000;line-height:1;padding:5px;background:rgba(0,0,0,0.5);border-radius:5px}"
+    textContent: "#tm-image-modal{position:fixed;top:0;left:0;right:0;bottom:0;background:#0E0E0E;z-index:9999}#tm-image-modal canvas{position:absolute;left:0;top:0;max-width:none;max-height:none;width:100vw;height:100vh;border:none;transform-origin:0 0;user-select:none;-webkit-user-drag:none;-khtml-user-drag:none;-moz-user-drag:none;-o-user-drag:none;cursor:move}#tm-image-modal .fit{position:absolute;top:10px;right:20px;color:#fff;font-size:24px;font-weight:bold;cursor:pointer;z-index:10000;line-height:1;padding:5px;background:rgba(0,0,0,0.5);border-radius:5px}#tm-image-modal .center{position:absolute;top:50px;right:20px;color:#fff;font-size:24px;font-weight:bold;cursor:pointer;z-index:10000;line-height:1;padding:5px;background:rgba(0,0,0,0.5);border-radius:5px}#tm-image-modal .reset{position:absolute;top:90px;right:20px;color:#fff;font-size:24px;font-weight:bold;cursor:pointer;z-index:10000;line-height:1;padding:5px;background:rgba(0,0,0,0.5);border-radius:5px}#tm-image-modal .interp{position:absolute;top:130px;right:20px;color:#fff;font-size:24px;font-weight:bold;cursor:pointer;z-index:10000;line-height:1;padding:5px;background:rgba(0,0,0,0.5);border-radius:5px}#tm-image-modal .download{position:absolute;top:170px;right:20px;color:#fff;font-size:24px;font-weight:bold;cursor:pointer;z-index:10000;line-height:1;padding:5px;background:rgba(0,0,0,0.5);border-radius:5px}#tm-image-modal .bg{position:absolute;top:210px;right:20px;color:#fff;font-size:24px;font-weight:bold;cursor:pointer;z-index:10000;line-height:1;padding:5px;background:rgba(0,0,0,0.5);border-radius:5px}#tm-image-modal .color-input{position:absolute;top:190px;right:20px;width:60px;height:60px;opacity:0;pointer-events:none;z-index:10002;border-radius:5px;cursor:pointer}"
   }));
 
   const getVisibleSrc = doc => {
@@ -38,6 +38,8 @@
     if (!src) return;
     const m = document.createElement("div");
     m.id = "tm-image-modal";
+    let bgColor = localStorage.getItem('tm-bg-color') || '#0E0E0E';
+    m.style.backgroundColor = bgColor;
     const resetBtn = document.createElement("span");
     let zoomLevel = 1;
     resetBtn.innerHTML = `${zoomLevel}x`; resetBtn.className = "reset";
@@ -49,6 +51,12 @@
     interpBtn.innerHTML = "插值"; interpBtn.className = "interp";
     const downloadBtn = document.createElement("span");
     downloadBtn.innerHTML = "💾"; downloadBtn.className = "download";
+    const bgBtn = document.createElement("span");
+    bgBtn.innerHTML = "🎨"; bgBtn.className = "bg";
+    const colorInput = document.createElement("input");
+    colorInput.type = "color";
+    colorInput.value = bgColor;
+    colorInput.className = "color-input";
     const canvas = document.createElement("canvas");
     const tempImg = new Image();
     tempImg.src = src;
@@ -78,7 +86,8 @@
       canvas.width = w;
       canvas.height = h;
       const ctx = canvas.getContext('2d', { alpha: false });
-      ctx.clearRect(0, 0, w, h);
+      ctx.fillStyle = bgColor;
+      ctx.fillRect(0, 0, w, h);
       const current = modes.find(m => m.value === interpMode);
       ctx.imageSmoothingEnabled = current ? current.enabled : true;
       if (ctx.imageSmoothingQuality !== undefined) {
@@ -131,7 +140,7 @@
       }
       GM_download(src, filename);
     };
-    m.append(resetBtn, fitBtn, centerBtn, interpBtn, downloadBtn, canvas);
+    m.append(resetBtn, fitBtn, centerBtn, interpBtn, downloadBtn, bgBtn, colorInput, canvas);
     document.body.appendChild(m);
     document.querySelectorAll('img').forEach(img => img.style.display = 'none');
     resetBtn.addEventListener('click', toggleZoom);
@@ -143,6 +152,16 @@
       updateInterp();
     });
     downloadBtn.addEventListener('click', downloadImage);
+    bgBtn.addEventListener('click', () => {
+      colorInput.click();
+    });
+    colorInput.addEventListener('input', (e) => {
+      bgColor = e.target.value;
+      localStorage.setItem('tm-bg-color', bgColor);
+      m.style.backgroundColor = bgColor;
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(updateDisplay);
+    });
     const handleMouseDown = e => {
       if (e.button !== 0) return;
       isDragging = true;

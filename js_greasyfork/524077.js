@@ -2,8 +2,8 @@
 // @name           Recarregar Páginas
 // @description    Recarrega páginas assim que voltam para o foco
 // @namespace      CowanPAGE
-// @license        CowBas
-// @version        1.0
+// @license        GPL-3.0
+// @version        2.0
 // @author         Cowanbas
 // @match          *://*/*
 // @exclude        *://*.youtube.com/*
@@ -21,4 +21,5 @@
     // Recarrega a página quando a janela ganha foco
     location.reload();
   });
+
 })();

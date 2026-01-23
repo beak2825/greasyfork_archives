@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         arte stream and download
 // @namespace    http://tampermonkey.net/
-// @version      4
+// @version      4.0.1
 // @description  get arte stream url with just one click (or none at all) or download seperate audio/video mp4
 // @author       mihau
 // @match        https://www.arte.tv/*/videos*
@@ -312,7 +312,6 @@ waitforit('video').then((elm) => {
       nix = self.__next_f[nextfid].toString();
     }
     if (mode == "live") {
-      alert("ibetterbehere");
       var mynewregex = new RegExp("m3u8.*", "gi");
       url = nix.match("https://artesimulcast\.akamaized\.net.*m3u8")[0];
       url = url.replace(mynewregex, "m3u8")
