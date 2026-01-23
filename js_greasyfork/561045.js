@@ -18,8 +18,8 @@
 // @match        https://home.gamer.com.tw/profile/notification.php
 // @grant        GM_addStyle
 // @run-at       document-end
-// @downloadURL https://update.greasyfork.org/scripts/561045/%E5%B7%B4%E5%93%88%E5%A7%86%E7%89%B9%E9%80%9A%E7%9F%A5%E6%A0%BC%E7%B7%9A%E4%BD%88%E5%B1%80.user.js
-// @updateURL https://update.greasyfork.org/scripts/561045/%E5%B7%B4%E5%93%88%E5%A7%86%E7%89%B9%E9%80%9A%E7%9F%A5%E6%A0%BC%E7%B7%9A%E4%BD%88%E5%B1%80.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/561045/Bahamut%20Notification%20Grid%20Layout.user.js
+// @updateURL https://update.greasyfork.org/scripts/561045/Bahamut%20Notification%20Grid%20Layout.meta.js
 // ==/UserScript==
 
 class BahamutGridLayout {

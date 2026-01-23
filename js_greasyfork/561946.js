@@ -2,7 +2,7 @@
 // @name         Galgame 跨站搜索跳转助手
 // @description  主要在 Galgame 数据库之间实现搜索跳转。
 // @namespace    http://tampermonkey.net/
-// @version      1.5
+// @version      1.7
 // @author       Orchids
 // @match        https://vndb.org/*
 // @match        https://www.moyu.moe/*
@@ -16,6 +16,7 @@
 // @match        https://galge.top/*
 // @match        https://e-hentai.org/*
 // @match        https://exhentai.org/*
+// @match        https://ex.moonchan.xyz/*
 // @match        https://seiya-saiga.com/*
 // @match        https://galge.seiya-saiga.com/*
 // @match        https://sagaoz.net/*
@@ -30,6 +31,7 @@
 // @match        https://www.dmm.co.jp/*
 // @match        https://sukebei.nyaa.si/*
 // @match        https://moepedia.net/*
+// @match        https://vgmdb.net/*
 // @match        https://www.google.com/search*
 // @grant        none
 // @license      MIT
@@ -83,6 +85,7 @@
     const ENGINE_SPECIFIC_RULES = {
         "hitomi": { keep: "×", replaceWith: " " },
         "eh": { keep: "×", replaceWith: " " },
+        "moonchan": { keep: "×・", replaceWith: " " },
         "vndb": { keep: "×", replaceWith: " " },
         "seiya": { keep: "×", replaceWith: " " },
         "seiyasave": { keep: "×", replaceWith: " " },
@@ -98,7 +101,8 @@
         "koko": { keep: "×", replaceWith: " " },
         "ggbase": { keep: "ALL", replaceWith: "" },
         "sukebei": { keep: "×", replaceWith: " " },
-        "moepedia": { keep: "×", replaceWith: " " }
+        "moepedia": { keep: "×", replaceWith: " " },
+        "vgmdb": { keep: "×", replaceWith: " " }
     };
  
     function toHalfWidth(str) {
@@ -138,7 +142,7 @@
         let kw = input.trim();
         kw = kw.replace(/[Ａ-Ｚａ-ｚ０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0));
         kw = kw.replace(/[\r\n\u200B-\u200D\uFEFF]/g, " ").replace(/\s+/g, " ");
-        
+        kw = kw.replace(/[@＠]/g, ' '); 
         kw = kw.replace(/[&?]_(?:gl|ga).*$/gi, '');
         kw = kw.replace(/[?&]utm_.*?=.*?(&|$)/gi, '');
         kw = kw.replace(/【.*?】|\[.*?\]|\(.*?\)|「.*?」|『.*?』/g, ' ');
@@ -165,6 +169,7 @@
  
     const ENGINES = {
         "hitomi":   { name: "Hitomi", bg: "#F06292", url: "https://hitomi.la/search.html?" },
+        "moonchan": { name: "Ex",   bg: "#424242", url: "https://ex.moonchan.xyz/?f_search=" },
         "eh":       { name: "EH",     bg: "#5C4033", url: "https://e-hentai.org/?f_search=" },
         "vndb":     { name: "VNDB",   bg: "#513535", url: "https://vndb.org/v?sq=" },
         "seiya":    { name: "Seiya攻略", bg: "#2196F3", url: "https://seiya-saiga.com/game/kouryaku.html?cgsearch=" },
@@ -181,7 +186,8 @@
         "koko":     { name: "kyara",   bg: "#455A64", url: "https://koko.kyara.top/kensaku.php?category=game&word_category=name&mode=normal&word=" },
         "ggbase":   { name: "GGbase", bg: "#FF9800", url: "https://ggbases.dlgal.com/search.so?title=" },
         "sukebei":  { name: "Nyaa",bg: "#3F51B5", url: "https://sukebei.nyaa.si/?f=0&c=0_0&q=" },
-        "moepedia": { name: "Moepedia", bg: "#FF69B4", url: "https://moepedia.net/search/result/?s=" }
+        "moepedia": { name: "Moepedia", bg: "#FF69B4", url: "https://moepedia.net/search/result/?s=" },
+        "vgmdb":    { name: "VGMdb", bg: "#263238", url: "https://vgmdb.net/search?q=" }
     };
  
     function createBtn(keyword, type) {
@@ -238,6 +244,7 @@
                 const span = document.createElement('span');
                 span.style.marginLeft = "10px";
                 span.appendChild(createBtn(searchRaw, 'hitomi'));
+                span.appendChild(createBtn(searchRaw, 'moonchan'));
                 span.appendChild(createBtn(searchRaw, 'eh'));
                 cell.appendChild(span);
                 bestRow.setAttribute('data-cg-deep-added', 'true');
@@ -273,6 +280,7 @@
                     p.scrollIntoView({ behavior: "smooth", block: "center" });
                     const span = document.createElement('span');
                     span.appendChild(createBtn(searchRaw, 'hitomi'));
+                    span.appendChild(createBtn(searchRaw, 'moonchan'));
                     span.appendChild(createBtn(searchRaw, 'eh'));
                     p.appendChild(span);
                     p.setAttribute('data-cg-deep-added', 'true');
@@ -360,6 +368,14 @@
             let kw = target.textContent.trim().replace(/攻略|全CG|Save|セーブ/gi, '').split('\n')[0].split('（')[0].split('(')[0].trim();
             if (kw.length < 2) return null;
             return { target: target.closest('table') || target, keyword: kw };
+        }},
+        { name: "VGMdb", check: () => location.hostname.includes('vgmdb.net') && (location.pathname.includes('album') || location.pathname.includes('product') || location.pathname.includes('artist')), run: () => {
+            const h1 = document.querySelector('h1');
+            if (!h1) return null;
+            let kw = h1.textContent.trim();
+            const jpSpan = h1.querySelector('span[lang="ja"]');
+            if (jpSpan) kw = jpSpan.textContent.trim();
+            return { target: h1, keyword: kw };
         }}
     ];
  
@@ -390,7 +406,8 @@
         
         if (site.name === "Bangumi") cont.style.marginLeft = "250px";
         
-        const targets = ['hitomi', 'eh', 'moepedia', 'vndb', 'bgm', 'erogame', 'koko', 'seiya', 'seiyasave', 'sagaoz', 'moyu', 'ai2', '2dfan', 'dlsite', 'dmm', 'fanza', 'ggbase', 'sukebei'];
+        // Added 'moonchan' between 'hitomi' and 'eh'
+        const targets = ['hitomi', 'moonchan', 'eh', 'moepedia', 'vndb', 'bgm', 'erogame', 'koko', 'seiya', 'seiyasave', 'sagaoz', 'moyu', 'ai2', '2dfan', 'dlsite', 'dmm', 'fanza', 'ggbase', 'sukebei', 'vgmdb'];
         
         targets.forEach(t => {
             const engine = ENGINES[t];
@@ -399,11 +416,13 @@
             if (t === 'seiya' && curH.includes('seiya-saiga.com') && (curP.includes('kouryaku.html') || curP.includes('galge.html'))) return;
             if (t === 'seiyasave' && curH.includes('seiya-saiga.com') && curP.includes('save.html')) return;
             if (t === 'sagaoz' && curH.includes('sagaoz.net')) return;
-            if (t !== 'seiya' && t !== 'seiyasave' && t !== 'sagaoz' && curH.includes(engine.name.toLowerCase())) return;
+            if (t === 'moonchan' && curH.includes('moonchan.xyz')) return;
+            if (t !== 'seiya' && t !== 'seiyasave' && t !== 'sagaoz' && t !== 'moonchan' && curH.includes(engine.name.toLowerCase())) return;
             if (t === 'eh' && /e-hentai|exhentai/.test(curH)) return;
             if (t === '2dfan' && /2dfan|2dfdf|2dfmax|fan2d|galge/.test(curH)) return;
             if ((t === 'erogame' || t === 'koko') && /erogamescape|kyara\.top/.test(curH)) return;
             if (t === 'bgm' && /bgm\.tv|bangumi\.tv/.test(curH)) return;
+            if (t === 'vgmdb' && curH.includes('vgmdb.net')) return;
  
             const btn = createBtn(item.keyword, t);
             if (btn) cont.appendChild(btn);

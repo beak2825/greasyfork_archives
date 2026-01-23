@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LIMS 메인 대시보드 - LRS 수행팀
 // @namespace    http://tampermonkey.net/
-// @version      1.2.5
+// @version      1.2.7
 // @description  LRS 수행팀 전용 (PacBio / ONT) 실시간 작업 현황 + 지능형 YLD 모니터링
 // @author       김재형
 // @match        https://lims3.macrogen.com/main.do*
@@ -18,7 +18,7 @@
 (function () {
     'use strict';
 
-    const VERSION = '1.2.5';
+    const VERSION = '1.2.7';
     const CACHE_KEY = 'LRS_STATUS_CACHE';
     const CACHE_TIME_KEY = 'LRS_STATUS_CACHE_TIME';
     const MONITOR_YLD_KEY = 'LRS_MONITOR_YLD_ACTIVE';
@@ -129,22 +129,22 @@
 
         const listContainer = exchangeBox.querySelector('.object-exchange-ul');
         if (listContainer) {
-            listContainer.style.cssText = 'display: grid; grid-template-columns: 0.5fr 0.5fr 3.0fr 0.5fr 0.8fr; gap: 4px; padding: 0; margin: 0; min-height: 68px;';
+            listContainer.style.cssText = 'display: grid; grid-template-columns: 0.5fr 0.5fr 3.0fr 0.5fr 0.5fr; gap: 4px; padding: 0; margin: 0; min-height: 68px;';
 
             const cellBaseStyle = 'display: flex; flex-direction: column; align-items: center; justify-content: center; background: #f8fbff; border: 1px solid #e2e8f0; border-radius: 8px; transition: 0.2s; height: 68px; box-sizing: border-box; overflow: hidden;';
-            const labelStyle = 'font-size: 8px; font-weight: 600; color: #64748b; white-space: nowrap;';
-            const valueStyle = 'font-size: 11px; font-weight: 900;';
+            const labelStyle = 'font-size: 11px; font-weight: 600; color: #64748b; white-space: nowrap;';
+            const valueStyle = 'font-size: 14px; font-weight: 900;';
 
             listContainer.innerHTML = `
                 <div class="stat-cell" style="${cellBaseStyle} cursor: pointer;" id="cell-prep" title="Prep (DNA/RNA)">
-                    <div style="font-size: 9px; font-weight: 800; color: #64748b; margin-bottom: 2px;">Prep</div>
+                    <div style="font-size: 12px; font-weight: 800; color: #64748b; margin-bottom: 2px;">Prep</div>
                     <div style="display: flex; width: 100%; justify-content: space-around; align-items: center; padding: 0 4px;">
                         <div style="display: flex; flex-direction: column; align-items: center;"><span style="${labelStyle}">D</span><span id="status-prep-dna" style="${valueStyle}">--</span></div>
                         <div style="display: flex; flex-direction: column; align-items: center;"><span style="${labelStyle}">R</span><span id="status-prep-rna" style="${valueStyle}">--</span></div>
                     </div>
                 </div>
                 <div class="stat-cell" style="${cellBaseStyle} cursor: pointer;" id="cell-sqc" title="SQC (DNA/RNA)">
-                    <div style="font-size: 9px; font-weight: 800; color: #64748b; margin-bottom: 2px;">SQC</div>
+                    <div style="font-size: 12px; font-weight: 800; color: #64748b; margin-bottom: 2px;">SQC</div>
                     <div style="display: flex; width: 100%; justify-content: space-around; align-items: center; padding: 0 4px;">
                         <div style="display: flex; flex-direction: column; align-items: center;"><span style="${labelStyle}">D</span><span id="status-sqc-dna" style="${valueStyle}">--</span></div>
                         <div style="display: flex; flex-direction: column; align-items: center;"><span style="${labelStyle}">R</span><span id="status-sqc-rna" style="${valueStyle}">--</span></div>
@@ -152,29 +152,29 @@
                 </div>
                 <div class="stat-cell" style="${cellBaseStyle} padding: 4px 8px; justify-content: space-between; align-items: stretch; background: #fff; cursor: pointer;" id="cell-lib">
                     <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #efefff; padding-bottom: 2px;">
-                        <span style="font-size: 10px; font-weight: 900; color: #4834d4;">LIB 대기 상세 (PBL)</span>
-                        <span id="status-lib-total" style="font-size: 14px; font-weight: 950; color: #4834d4;">--</span>
+                        <span style="font-size: 12px; font-weight: 900; color: #4834d4;">LIB 대기 상세 (PBL)</span>
+                        <span id="status-lib-total" style="font-size: 17px; font-weight: 950; color: #4834d4;">--</span>
                     </div>
                     <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px 4px; margin-top: 2px;">
-                        <div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 7px; color: #64748b;">MB:</span><span id="status-lib-mb" style="font-size: 10px; font-weight: 950;">--</span></div>
-                        <div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 7px; color: #64748b;">MSG:</span><span id="status-lib-msg" style="font-size: 10px; font-weight: 950;">--</span></div>
-                        <div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 7px; color: #64748b;">HiFi:</span><span id="status-lib-hifi" style="font-size: 10px; font-weight: 950;">--</span></div>
-                        <div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 7px; color: #64748b;">16s:</span><span id="status-lib-16s" style="font-size: 10px; font-weight: 950;">--</span></div>
-                        <div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 7px; color: #64748b;">Amp:</span><span id="status-lib-amp" style="font-size: 10px; font-weight: 950;">--</span></div>
-                        <div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 7px; color: #64748b;">KNX:</span><span id="status-lib-knx" style="font-size: 10px; font-weight: 950;">--</span></div>
-                        <div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 7px; color: #64748b;">ONT:</span><span id="status-lib-ont" style="font-size: 10px; font-weight: 950;">--</span></div>
-                        <div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 7px; color: #64748b;">Etc:</span><span id="status-lib-etc" style="font-size: 10px; font-weight: 950;">--</span></div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 10px; color: #64748b;">MB:</span><span id="status-lib-mb" style="font-size: 13px; font-weight: 950;">--</span></div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 10px; color: #64748b;">MSG:</span><span id="status-lib-msg" style="font-size: 13px; font-weight: 950;">--</span></div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 10px; color: #64748b;">HiFi:</span><span id="status-lib-hifi" style="font-size: 13px; font-weight: 950;">--</span></div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 10px; color: #64748b;">16s:</span><span id="status-lib-16s" style="font-size: 13px; font-weight: 950;">--</span></div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 10px; color: #64748b;">Amp:</span><span id="status-lib-amp" style="font-size: 13px; font-weight: 950;">--</span></div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 10px; color: #64748b;">KNX:</span><span id="status-lib-knx" style="font-size: 13px; font-weight: 950;">--</span></div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 10px; color: #64748b;">ONT:</span><span id="status-lib-ont" style="font-size: 13px; font-weight: 950;">--</span></div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 10px; color: #64748b;">Etc:</span><span id="status-lib-etc" style="font-size: 13px; font-weight: 950;">--</span></div>
                     </div>
                 </div>
                 <div class="stat-cell" style="${cellBaseStyle}; cursor: pointer;" id="cell-run" title="Revio Run">
                     <span style="${labelStyle} padding-top: 2px;">RUN</span>
-                    <span id="status-run-wait" style="font-size: 14px; font-weight: 900;">--</span>
+                    <span id="status-run-wait" style="font-size: 17px; font-weight: 900;">--</span>
                 </div>
                 <div class="stat-cell" style="${cellBaseStyle} background: #eff6ff; border-color: #bfdbfe; position: relative; cursor: pointer;" id="cell-yld" title="Yield Check 모니터링">
-                    <span id="yld-label" style="${labelStyle} color: #2563eb; position: absolute; top: 8px;">YLD</span>
+                    <span id="yld-label" style="${labelStyle} color: #2563eb; position: absolute; top: 4px;">YLD</span>
                     <span id="status-yld-count" style="font-size: 24px; font-weight: 900; color: #2563eb;">--</span>
                     <button id="yld-stop-btn" style="display: none; position: absolute; bottom: 4px; padding: 1px 4px; background: #fff; color: #ef4444; border: 1px solid #ef4444; border-radius: 4px; font-size: 8px; font-weight: 700; cursor: pointer;">종료</button>
-                    <span id="yld-wait-text" style="font-size: 8px; color: #94a3b8; position: absolute; bottom: 8px;">트리거 대기 중</span>
+                    <span id="yld-wait-text" style="font-size: 11px; color: #94a3b8; position: absolute; bottom: 4px;">트리거 대기 중</span>
                 </div>
             `;
 

@@ -1,13 +1,13 @@
 // ==UserScript==
 // @name         海角社区
-// @version      1.0.5
+// @version      1.0.7
 // @description  🔥 解锁海角社区全部付费视频（包括短视频,封禁用户视频），去弹窗、去广告、自动展开帖子，不限量观看、下载视频，可复制播放链接
 // @namespace    海角社区
 // @author       fanqiechaodan
 // @match        *://*/videoplay/*
 // @match        *://*/post/details/*
 // @match        *://*.haijiao.com/*
-// @match        *://hj251201*.*/*
+// @include      *://hj2512*.*/*
 // @grant        unsafeWindow
 // @grant        GM_addStyle
 // @grant        GM_setClipboard
@@ -148,7 +148,7 @@
             overflow-x: hidden;
             background-color: rgba(122, 122, 122, 0.5);
             z-index: 100000;
-            display: none; /* 默认隐藏，打开时设为flex */
+            display: none; 
             justify-content: center;
             align-items: center;
         }
@@ -583,7 +583,6 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwe6NimtgRabrvb66gFDFigTiaA5kDGsHLxzT
     }
     function playFirstM3u8() {
         if (foundUrl.length === 0) return;
-
         let m3u8Url = foundUrl;
         const videoContainer = document.createElement('div');
         videoContainer.style.cssText = `
@@ -603,7 +602,7 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwe6NimtgRabrvb66gFDFigTiaA5kDGsHLxzT
         flex-direction: column;
         align-items: center;
         overflow : auto;
-        box-sizing: border-box; /* 加上这句！ */
+        box-sizing: border-box;
     `;
         const closeButton = document.createElement('button');
         closeButton.innerHTML = '&times;';
@@ -644,16 +643,15 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwe6NimtgRabrvb66gFDFigTiaA5kDGsHLxzT
         video.controls = true;
         videoContainer.appendChild(video);
         videoContainer.appendChild(closeButton);
+        document.body.appendChild(videoContainer);
         if (Hls.isSupported()) {
             hlsInstance = new Hls();
             hlsInstance.loadSource(m3u8Url);
             hlsInstance.attachMedia(video);
             hlsInstance.on(Hls.Events.MANIFEST_PARSED, () => {
                 video.play().catch(() => {
-
                     document.body.addEventListener('click', () => {
                         video.play();
-
                     }, { once: true });
                 });
             });
@@ -681,32 +679,12 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwe6NimtgRabrvb66gFDFigTiaA5kDGsHLxzT
             video.play().catch(() => {
                 document.body.addEventListener('click', () => {
                     video.play();
-
                 }, { once: true });
             });
         } else {
             alert('当前浏览器不支持HLS播放，请使用支持HLS的播放器（如 Chrome、Edge、Safari）');
             return;
         }
-        const handleEscKey = (e) => {
-            if (e.key === 'Escape') {
-                if (hlsInstance) {
-                    hlsInstance.destroy();
-                    hlsInstance = null;
-                }
-                video.pause();
-                video.src = '';
-                document.getElementById('playBtn').disabled = false; document.body.removeChild(videoContainer);
-                document.removeEventListener('keydown', handleEscKey);
-            }
-        };
-        document.addEventListener('keydown', handleEscKey);
-        document.body.appendChild(videoContainer);
-        videoContainer.addEventListener('click', (e) => {
-            if (e.target === videoContainer) {
-
-            }
-        });
     }
 
     const BASE_URL = 'https://gqkl.yidajichang.top';
@@ -724,11 +702,10 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwe6NimtgRabrvb66gFDFigTiaA5kDGsHLxzT
             document.body.style.overflow = 'auto !important';
             pcDialog.remove();
         }
-
     }
     function removeAds() {
         const removeSelectors = {
-            multi: ['.page-container', '.containeradvertising', '.van-overlay', '.topbanmer', '.bannerliststyle', '.el-dialog__wrapper'],
+            multi: ['.page-container', '.containeradvertising', '.van-overlay', '.topbanmer', '.bannerliststyle'],
             single: ['.custom_carousel', '.btnbox', '.addbox','.html-bottom-box']
         };
         removeSelectors.multi.forEach(sel => document.querySelectorAll(sel).forEach(el => el.remove()));
@@ -737,7 +714,8 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwe6NimtgRabrvb66gFDFigTiaA5kDGsHLxzT
     }
     function startObserver() {
         const observer = new MutationObserver((mutations) => {
-            mutations.forEach(() => {removeAds(); removeDialog();});
+            mutations.forEach(() => {removeAds(); removeDialog();
+                                    });
         });
         observer.observe(document.body, { childList: true, subtree: true});
         removeAds();
@@ -769,9 +747,9 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwe6NimtgRabrvb66gFDFigTiaA5kDGsHLxzT
             updateStatus('复制失败，请手动复制');
         }
     }
-     setInterval(function() {
-         Function("debugger")();
-     }, 50);
+    setInterval(function() {
+        Function("debugger")();
+    }, 50);
     function updateStatus(message) {
         const statusEl = document.getElementById('detectionStatus');
         if (statusEl) {
@@ -844,9 +822,9 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwe6NimtgRabrvb66gFDFigTiaA5kDGsHLxzT
                 return originalXhrOpen.apply(this, args);
             }
             try {
-                const url = args[1] || this.url;
-                if (url && url.toLowerCase().endsWith('.m3u8')) {
-                    addUrlAndPlay(url);
+                this.url = args[1];
+                if (this.url && this.url.toLowerCase().endsWith('.m3u8')) {
+                    addUrlAndPlay(this.url);
                     detectionStopped = true;
                 }
             } catch (e) {

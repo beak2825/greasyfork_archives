@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DemonicScans Unified Automator
 // @namespace    https://github.com/wverri/autods
-// @version      0.11.7-alpha
+// @version      0.12.2-alpha
 // @description  Consolidated automation suite for DemonicScans: wave battles, PvP, farming, UI enhancements, and image blocking.
 // @author       Willian Verri
 // @match        https://demonicscans.org/*
@@ -285,7 +285,20 @@ var version = GM_info.script.version;
             checkInterval: 1800000
         },
         imageBlocker: {
-            enabled: false  // Block images to reduce bandwidth and improve performance
+            enabled: false,  // Block images to reduce bandwidth and improve performance
+            useCssToggle: true  // Use CSS class toggle (faster) vs element iteration
+        },
+        softRefresh: {
+            enabled: true,              // Enable soft refresh (no page reload)
+            autoRefreshInterval: 30000, // Auto-refresh interval in ms (0 = disabled)
+            showRefreshButton: true,    // Show manual refresh button
+            hideFlashDuringRefresh: true // Hide container during refresh to prevent flash
+        },
+        staminaTicker: {
+            enabled: true,              // Enable self-adjusting stamina ticker
+            updateInterval: 1000,       // Base update interval in ms
+            useRegexParsing: true,      // Use regex parsing (faster than DOM building)
+            visualFeedback: true        // Show visual feedback on update
         },
         merchantAutoBuy: {
             enabled: false,
@@ -441,8 +454,24 @@ var version = GM_info.script.version;
         const STAMINA_XPATH = [
             '//*[@id="discuscontainer"]/div[1]/div[1]/div[2]/span[1]/span'
         ];
+
+        // 🆕 Phase 6: Store context reference for soft refresh access
+        // Will be set later via setContext() after softRefresh is initialized
+        let _context = null;
+
+        // 🆕 Phase 6: Internal method to refresh stamina DOM before reading
+        const refreshStaminaIfAvailable = async () => {
+            if (_context?.softRefresh) {
+                await _context.softRefresh.refreshStamina();
+            }
+        };
         
         return {
+            // 🆕 Phase 6: Set context for soft refresh integration
+            setContext(ctx) {
+                _context = ctx;
+            },
+
             getCurrent() {
                 const data = readGauge(STAMINA_SELECTORS, {
                     xpath: STAMINA_XPATH,
@@ -473,6 +502,32 @@ var version = GM_info.script.version;
             
             hasEnough(required) {
                 return this.getCurrent() >= required;
+            },
+
+            // 🆕 Phase 6: Async version that refreshes stamina first
+            async getCurrentRefreshed() {
+                await refreshStaminaIfAvailable();
+                return this.getCurrent();
+            },
+
+            async getMaxRefreshed() {
+                await refreshStaminaIfAvailable();
+                return this.getMax();
+            },
+
+            async getPercentageRefreshed() {
+                await refreshStaminaIfAvailable();
+                return this.getPercentage();
+            },
+
+            async hasEnoughRefreshed(required) {
+                await refreshStaminaIfAvailable();
+                return this.getCurrent() >= required;
+            },
+
+            // 🆕 Manual refresh trigger
+            async refresh() {
+                await refreshStaminaIfAvailable();
             }
         };
     }
@@ -2929,6 +2984,14 @@ var version = GM_info.script.version;
         const { logger } = context;
         
         const BASE_URL = 'https://demonicscans.org';
+        let reloadScheduled = false;
+
+        function scheduleCloudflareReload(reason) {
+            if (reloadScheduled) return;
+            reloadScheduled = true;
+            logger.warn(`[HTTP:Direct] ${reason} - reloading page to bypass Cloudflare...`);
+            reloadPageSync(1500);
+        }
         
         /**
          * Make HTTP request using GM_xmlhttpRequest (bypasses CORS)
@@ -3089,6 +3152,9 @@ var version = GM_info.script.version;
                 if (!response.ok) {
                     logger.warn(`[HTTP] Response not OK: ${response.status} ${response.statusText}`);
                     const errorText = await response.text();
+                    if (/just a moment|cloudflare|cf-/.test(errorText.toLowerCase())) {
+                        scheduleCloudflareReload('Cloudflare challenge detected in error body');
+                    }
                     logger.warn(`[HTTP] Error response body: ${errorText.substring(0, 200)}`);
                     return {
                         success: false,
@@ -3415,6 +3481,7 @@ var version = GM_info.script.version;
                             };
                         } catch (e) {
                             logger.error('[HTTP:Direct] JSON parse error:', e);
+                            scheduleCloudflareReload('JSON parse error (possible Cloudflare)');
                             return {
                                 success: false,
                                 error: 'JSON parse error',
@@ -5231,6 +5298,596 @@ var version = GM_info.script.version;
             calculateDamageVsDefense(attack, defense) {
                 if (attack <= defense) return 0;
                 return Math.round(1000 * Math.pow(attack - defense, 0.25));
+            }
+        };
+    }
+
+    // ==================== SOFT REFRESH SERVICE ====================
+    // Extracted from Other_Addon/content.js - performSoftRefresh pattern
+    // Enables refreshing monster list without full page reload
+    // Prevents "Flash of Unfiltered Content" by hiding container during swap
+    
+    /**
+     * Create soft refresh service
+     * Fetches current page HTML, extracts monster container, and swaps content without navigation
+     * 
+     * @param {Object} context - Script context (logger, config, http, etc.)
+     * @returns {Object} Soft refresh service
+     * 
+     * Main methods:
+     * @returns {function(): Promise<boolean>} refresh - Perform soft refresh
+     * @returns {function(string): Promise<boolean>} refreshSelector - Refresh specific selector
+     * @returns {function(): void} startAutoRefresh - Start auto-refresh timer
+     * @returns {function(): void} stopAutoRefresh - Stop auto-refresh timer
+     * @returns {function(): boolean} isRefreshing - Check if currently refreshing
+     * 
+     * @example
+     * const softRefresh = context.softRefresh;
+     * 
+     * // Manual refresh
+     * await softRefresh.refresh();
+     * 
+     * // Refresh specific container
+     * await softRefresh.refreshSelector('.monster-list');
+     * 
+     * // Auto-refresh every 30s
+     * softRefresh.startAutoRefresh(30000);
+     */
+    function createSoftRefreshService(context) {
+        const { logger, config, events } = context;
+        
+        let isRefreshing = false;
+        let autoRefreshTimer = null;
+        let lastRefreshTime = 0;
+        
+        // Default selectors for monster containers
+        const MONSTER_CONTAINER_SELECTORS = [
+            '#monster-list',
+            '.monster-list',
+            '.monster-container',
+            '[data-monster-container]',
+            '#mobList',
+            '.mob-list'
+        ];
+
+        // Internal refresh function
+        const doRefresh = async () => {
+            if (isRefreshing) {
+                logger.debug('[SoftRefresh] Already refreshing, skipping...');
+                return false;
+            }
+            
+            const cfg = config.get().softRefresh || {};
+            isRefreshing = true;
+            
+            try {
+                logger.debug('[SoftRefresh] Starting soft refresh...');
+                events.emit('autods:softRefresh:start', { timestamp: Date.now() });
+                
+                // Find the container to refresh
+                let container = null;
+                for (const selector of MONSTER_CONTAINER_SELECTORS) {
+                    container = document.querySelector(selector);
+                    if (container) break;
+                }
+                
+                if (!container) {
+                    // Fallback: try to find container by content
+                    container = document.querySelector('.mon')?.parentElement;
+                }
+                
+                if (!container) {
+                    logger.warn('[SoftRefresh] No monster container found');
+                    return false;
+                }
+                
+                // [STEP A] Hide container to avoid "Flash of Unfiltered Content"
+                if (cfg.hideFlashDuringRefresh !== false) {
+                    container.style.visibility = 'hidden';
+                }
+                
+                // [STEP B] Fetch current page HTML
+                const response = await fetch(window.location.href, {
+                    credentials: 'include',
+                    cache: 'no-cache'
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const html = await response.text();
+                
+                // [STEP C] Parse HTML and extract new container content
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                
+                // Find matching container in fetched HTML
+                let newContainer = null;
+                for (const selector of MONSTER_CONTAINER_SELECTORS) {
+                    newContainer = doc.querySelector(selector);
+                    if (newContainer) break;
+                }
+                
+                if (!newContainer) {
+                    newContainer = doc.querySelector('.mon')?.parentElement;
+                }
+                
+                if (!newContainer) {
+                    logger.warn('[SoftRefresh] No monster container found in fetched HTML');
+                    container.style.visibility = 'visible';
+                    return false;
+                }
+                
+                // [STEP D] Swap innerHTML (instant)
+                container.innerHTML = newContainer.innerHTML;
+                
+                // [STEP E] Re-apply filters if filter button exists
+                const applyBtn = document.getElementById('applyFiltersBtn') || 
+                                document.querySelector('[data-filter-apply]');
+                if (applyBtn) {
+                    applyBtn.click();
+                }
+                
+                // [STEP F] Show container again
+                container.style.visibility = 'visible';
+                
+                lastRefreshTime = Date.now();
+                logger.info('[SoftRefresh] ✅ Soft refresh completed');
+                events.emit('autods:softRefresh:complete', { 
+                    timestamp: Date.now(),
+                    selector: container.className || container.id 
+                });
+                
+                return true;
+            } catch (error) {
+                logger.error(`[SoftRefresh] Failed: ${error.message}`);
+                events.emit('autods:softRefresh:error', { error: error.message });
+                
+                // Ensure container is visible on error
+                const container = document.querySelector(MONSTER_CONTAINER_SELECTORS.join(', '));
+                if (container) {
+                    container.style.visibility = 'visible';
+                }
+                
+                return false;
+            } finally {
+                isRefreshing = false;
+            }
+        };
+        
+        return {
+            /**
+             * Check if currently refreshing
+             * @returns {boolean}
+             */
+            isRefreshing() {
+                return isRefreshing;
+            },
+            
+            /**
+             * Get time since last refresh in ms
+             * @returns {number}
+             */
+            getTimeSinceLastRefresh() {
+                return lastRefreshTime > 0 ? Date.now() - lastRefreshTime : Infinity;
+            },
+            
+            /**
+             * Perform soft refresh of monster list
+             * @returns {Promise<boolean>} True if successful
+             */
+            refresh: doRefresh,
+            
+            /**
+             * Alias for refresh() - refresh monster list
+             * @returns {Promise<boolean>} True if successful
+             */
+            refreshMonsterList: doRefresh,
+            
+            /**
+             * Refresh specific selector
+             * @param {string} selector - CSS selector to refresh
+             * @returns {Promise<boolean>}
+             */
+            async refreshSelector(selector) {
+                if (isRefreshing) return false;
+                isRefreshing = true;
+                
+                const cfg = config.get().softRefresh || {};
+                
+                try {
+                    const container = document.querySelector(selector);
+                    if (!container) {
+                        logger.warn(`[SoftRefresh] Selector not found: ${selector}`);
+                        return false;
+                    }
+                    
+                    if (cfg.hideFlashDuringRefresh !== false) {
+                        container.style.visibility = 'hidden';
+                    }
+                    
+                    const response = await fetch(window.location.href, {
+                        credentials: 'include',
+                        cache: 'no-cache'
+                    });
+                    
+                    const html = await response.text();
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    
+                    const newContainer = doc.querySelector(selector);
+                    if (newContainer) {
+                        container.innerHTML = newContainer.innerHTML;
+                        logger.info(`[SoftRefresh] ✅ Refreshed: ${selector}`);
+                    }
+                    
+                    container.style.visibility = 'visible';
+                    lastRefreshTime = Date.now();
+                    
+                    return !!newContainer;
+                } catch (error) {
+                    logger.error(`[SoftRefresh] Failed to refresh ${selector}: ${error.message}`);
+                    return false;
+                } finally {
+                    isRefreshing = false;
+                }
+            },
+            
+            /**
+             * Refresh stamina display only (lightweight)
+             * Uses regex parsing instead of DOM building for performance
+             * @returns {Promise<{current: number, max: number}|null>}
+             */
+            async refreshStamina() {
+                try {
+                    const response = await fetch(window.location.href, {
+                        credentials: 'include',
+                        cache: 'no-cache'
+                    });
+                    
+                    const html = await response.text();
+                    
+                    // Use regex to extract stamina (faster than DOM parsing)
+                    const match = html.match(/<span id=["']stamina_span["']>([\d,]+)<\/span>/);
+                    
+                    if (match && match[1]) {
+                        const el = document.getElementById('stamina_span');
+                        if (el && el.textContent !== match[1]) {
+                            el.textContent = match[1];
+                            
+                            // Visual feedback
+                            const cfg = config.get().staminaTicker || {};
+                            if (cfg.visualFeedback !== false) {
+                                el.style.textShadow = '0 0 5px #00ff00';
+                                setTimeout(() => { el.style.textShadow = ''; }, 500);
+                            }
+                        }
+                        
+                        const current = parseInt(match[1].replace(/,/g, ''), 10);
+                        return { current, max: null };
+                    }
+                    
+                    return null;
+                } catch (error) {
+                    logger.debug(`[SoftRefresh] Stamina refresh failed: ${error.message}`);
+                    return null;
+                }
+            },
+            
+            /**
+             * Start auto-refresh timer
+             * @param {number} intervalMs - Interval in milliseconds (default from config)
+             */
+            startAutoRefresh(intervalMs) {
+                const cfg = config.get().softRefresh || {};
+                const interval = intervalMs || cfg.autoRefreshInterval || 30000;
+                
+                if (interval <= 0) {
+                    logger.debug('[SoftRefresh] Auto-refresh disabled (interval <= 0)');
+                    return;
+                }
+                
+                this.stopAutoRefresh();
+                
+                autoRefreshTimer = setInterval(() => {
+                    if (!isRefreshing) {
+                        this.refresh();
+                    }
+                }, interval);
+                
+                logger.info(`[SoftRefresh] Auto-refresh started (interval: ${interval}ms)`);
+            },
+            
+            /**
+             * Stop auto-refresh timer
+             */
+            stopAutoRefresh() {
+                if (autoRefreshTimer) {
+                    clearInterval(autoRefreshTimer);
+                    autoRefreshTimer = null;
+                    logger.debug('[SoftRefresh] Auto-refresh stopped');
+                }
+            },
+            
+            /**
+             * Create and inject refresh button into UI
+             * @param {HTMLElement} parentElement - Parent element to append button
+             * @returns {HTMLButtonElement}
+             */
+            createRefreshButton(parentElement) {
+                const btn = document.createElement('button');
+                btn.className = 'autods-soft-refresh-btn';
+                btn.innerHTML = '🔄';
+                btn.title = 'Soft Refresh (no page reload)';
+                btn.style.cssText = `
+                    background: #2a2a2a;
+                    border: 1px solid #444;
+                    border-radius: 4px;
+                    padding: 4px 8px;
+                    cursor: pointer;
+                    font-size: 14px;
+                    transition: all 0.2s;
+                `;
+                
+                btn.onmouseenter = () => { btn.style.background = '#3a3a3a'; };
+                btn.onmouseleave = () => { btn.style.background = '#2a2a2a'; };
+                
+                btn.onclick = async () => {
+                    btn.disabled = true;
+                    btn.innerHTML = '⏳';
+                    
+                    const success = await this.refresh();
+                    
+                    btn.innerHTML = success ? '✅' : '❌';
+                    setTimeout(() => {
+                        btn.innerHTML = '🔄';
+                        btn.disabled = false;
+                    }, 1000);
+                };
+                
+                if (parentElement) {
+                    parentElement.appendChild(btn);
+                }
+                
+                return btn;
+            }
+        };
+    }
+
+    // ==================== STAMINA TICKER SERVICE ====================
+    // Extracted from Other_Addon/content.js - self-adjusting timeout pattern
+    // Uses setTimeout instead of setInterval to prevent request stacking on slow networks
+    
+    /**
+     * Create stamina ticker service
+     * Self-adjusting timer that updates stamina display without request stacking
+     * 
+     * @param {Object} context - Script context (logger, config, etc.)
+     * @returns {Object} Stamina ticker service
+     * 
+     * Key Pattern: Uses setTimeout that schedules next update ONLY after current completes
+     * This prevents request stacking on slow networks (unlike setInterval)
+     * 
+     * @example
+     * const ticker = context.staminaTicker;
+     * 
+     * // Start ticker
+     * ticker.start();
+     * 
+     * // Stop ticker
+     * ticker.stop();
+     * 
+     * // Force immediate update
+     * await ticker.updateNow();
+     */
+    function createStaminaTickerService(context) {
+        const { logger, config, events } = context;
+        
+        let isRunning = false;
+        let isFetching = false;
+        let timeoutId = null;
+        let lastUpdate = 0;
+        let consecutiveErrors = 0;
+        const MAX_CONSECUTIVE_ERRORS = 5;
+        
+        /**
+         * Parse stamina from HTML text using regex (faster than DOM parsing)
+         * @param {string} html - HTML text
+         * @returns {{current: number, max: number}|null}
+         */
+        function parseStaminaFromHtml(html) {
+            // Strategy 1: stamina_span
+            let match = html.match(/<span id=["']stamina_span["']>([\d,]+)<\/span>/);
+            if (match) {
+                return { current: parseInt(match[1].replace(/,/g, ''), 10), max: null };
+            }
+            
+            // Strategy 2: data-player-stamina attribute
+            match = html.match(/data-player-stamina=["']([\d,]+)["']/);
+            if (match) {
+                return { current: parseInt(match[1].replace(/,/g, ''), 10), max: null };
+            }
+            
+            // Strategy 3: gtb-stat stamina
+            match = html.match(/gtb-stat[^>]*data-stat=["']stamina["'][^>]*>[\s\S]*?<[^>]*class=["'][^"']*gtb-value[^"']*["'][^>]*>([\d,]+)/);
+            if (match) {
+                return { current: parseInt(match[1].replace(/,/g, ''), 10), max: null };
+            }
+            
+            return null;
+        }
+        
+        /**
+         * Update stamina display in DOM
+         * @param {{current: number, max: number}} staminaData
+         */
+        function updateDomDisplay(staminaData) {
+            if (!staminaData || staminaData.current === null) return;
+            
+            const cfg = config.get().staminaTicker || {};
+            const el = document.getElementById('stamina_span');
+            
+            if (el) {
+                const formatted = staminaData.current.toLocaleString('en-US');
+                
+                if (el.textContent !== formatted) {
+                    el.textContent = formatted;
+                    
+                    // Visual feedback
+                    if (cfg.visualFeedback !== false) {
+                        el.style.textShadow = '0 0 5px #00ff00';
+                        setTimeout(() => { el.style.textShadow = ''; }, 500);
+                    }
+                    
+                    events.emit('autods:stamina:updated', {
+                        current: staminaData.current,
+                        timestamp: Date.now()
+                    });
+                }
+            }
+        }
+        
+        /**
+         * Perform single update (internal)
+         */
+        async function performUpdate() {
+            if (isFetching) return;
+            isFetching = true;
+            
+            try {
+                const cfg = config.get().staminaTicker || {};
+                
+                const response = await fetch(window.location.href, {
+                    credentials: 'include',
+                    cache: 'no-cache'
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
+                const html = await response.text();
+                
+                // Use regex parsing (configurable, default: true)
+                if (cfg.useRegexParsing !== false) {
+                    const staminaData = parseStaminaFromHtml(html);
+                    if (staminaData) {
+                        updateDomDisplay(staminaData);
+                        lastUpdate = Date.now();
+                        consecutiveErrors = 0;
+                    }
+                } else {
+                    // Fallback to DOM parsing (slower but more reliable)
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    const el = doc.getElementById('stamina_span');
+                    
+                    if (el) {
+                        const current = parseInt(el.textContent.replace(/,/g, ''), 10);
+                        if (!isNaN(current)) {
+                            updateDomDisplay({ current, max: null });
+                            lastUpdate = Date.now();
+                            consecutiveErrors = 0;
+                        }
+                    }
+                }
+            } catch (error) {
+                consecutiveErrors++;
+                logger.debug(`[StaminaTicker] Update failed (${consecutiveErrors}/${MAX_CONSECUTIVE_ERRORS}): ${error.message}`);
+                
+                if (consecutiveErrors >= MAX_CONSECUTIVE_ERRORS) {
+                    logger.warn('[StaminaTicker] Too many consecutive errors, stopping ticker');
+                    stop();
+                }
+            } finally {
+                isFetching = false;
+            }
+        }
+        
+        /**
+         * Schedule next update (self-adjusting pattern)
+         */
+        function scheduleNext() {
+            if (!isRunning) return;
+            
+            const cfg = config.get().staminaTicker || {};
+            const interval = cfg.updateInterval || 1000;
+            
+            // Self-adjusting: schedule ONLY after current completes
+            timeoutId = setTimeout(async () => {
+                await performUpdate();
+                scheduleNext(); // Schedule next after this one finishes
+            }, interval);
+        }
+        
+        /**
+         * Start the ticker
+         */
+        function start() {
+            if (isRunning) return;
+            
+            const cfg = config.get().staminaTicker || {};
+            if (!cfg.enabled) {
+                logger.debug('[StaminaTicker] Disabled in config');
+                return;
+            }
+            
+            isRunning = true;
+            consecutiveErrors = 0;
+            logger.info('[StaminaTicker] Started');
+            
+            // Perform immediate update, then schedule
+            performUpdate().then(scheduleNext);
+        }
+        
+        /**
+         * Stop the ticker
+         */
+        function stop() {
+            isRunning = false;
+            
+            if (timeoutId) {
+                clearTimeout(timeoutId);
+                timeoutId = null;
+            }
+            
+            logger.debug('[StaminaTicker] Stopped');
+        }
+        
+        return {
+            start,
+            stop,
+            
+            /**
+             * Force immediate update
+             * @returns {Promise<void>}
+             */
+            async updateNow() {
+                await performUpdate();
+            },
+            
+            /**
+             * Check if ticker is running
+             * @returns {boolean}
+             */
+            isRunning() {
+                return isRunning;
+            },
+            
+            /**
+             * Get time since last successful update
+             * @returns {number} Milliseconds since last update
+             */
+            getTimeSinceLastUpdate() {
+                return lastUpdate > 0 ? Date.now() - lastUpdate : Infinity;
+            },
+            
+            /**
+             * Reset error counter
+             */
+            resetErrors() {
+                consecutiveErrors = 0;
             }
         };
     }
@@ -8301,8 +8958,8 @@ var version = GM_info.script.version;
                     }
                 }
                 
-                // 1. Check stamina
-                const currentStamina = context.stamina.getCurrent();
+                // 1. Check stamina (use refreshed to get accurate value after soft refresh)
+                const currentStamina = await context.stamina.getCurrentRefreshed();
                 const skillId = cfg.wave.skillId ?? -2;
                 const skillCost = context.combat.getSkillCost(skillId);
                 
@@ -8329,7 +8986,7 @@ var version = GM_info.script.version;
                                 
                                 if (lootResult.levelUp) {
                                     // Level up detectado! Stamina recuperou
-                                    const newStamina = context.stamina.getCurrent();
+                                    const newStamina = await context.stamina.getCurrentRefreshed();
                                     logger.info(`🎉 [LOOT DEAD] Level up detectado! Nova stamina: ${newStamina}`);
                                     // if (newStamina >= skillCost) {
                                         logger.info('🎉 Stamina recuperada após loot! Continuando wave farm...');
@@ -8392,15 +9049,24 @@ var version = GM_info.script.version;
                     logger.info(`⚔️ ${ongoingCount} batalhas em andamento - atacando...`);
                     await this.attackOngoingBattles(context, cfg);
                     
-                    // Refresh to check for new targets
-                    await reloadPageSync(2000);
+                    // 🆕 Phase 6: Use soft refresh instead of page reload
+                    if (context.softRefresh) {
+                        await context.softRefresh.refreshMonsterList();
+                    } else {
+                        await reloadPageSync(2000);
+                    }
                     continue;
                 }
                 
                 // 5. If no targets at all, wait and refresh
                 if (newTargets.length === 0 && ongoingCount === 0) {
                     logger.debug('Nenhum alvo disponível. Aguardando 15s...');
-                    await reloadPageSync(2000);
+                    // 🆕 Phase 6: Use soft refresh instead of page reload
+                    if (context.softRefresh) {
+                        await context.softRefresh.refreshMonsterList();
+                    } else {
+                        await reloadPageSync(2000);
+                    }
                     continue;
                 }
                 
@@ -8409,14 +9075,21 @@ var version = GM_info.script.version;
                     logger.warn(`⚠️ MUITAS BATALHAS ATIVAS (${ongoingCount} > 10)! Modo seguro: apenas atacando batalhas em andamento.`);
                     logger.info('💡 Não será feito join em novos monstros para evitar sobrecarga do servidor.');
                     
-                    // Attack ongoing battles only, then reload
+                    // Attack ongoing battles only, then soft refresh
                     const ongoingBattles = this.getOngoingBattles(context);
                     if (ongoingBattles.length > 0) {
                         await this.attackUltraFastBattles(context, ongoingBattles, cfg);
                     }
+
+                    // Pause for 3 seconds before continue
+                    await sleep(3000);
                     
-                    // Wait and reload to check if some battles completed
-                    await reloadPageSync(2000);
+                    // 🆕 Phase 6: Use soft refresh instead of page reload
+                    if (context.softRefresh) {
+                        await context.softRefresh.refreshMonsterList();
+                    } else {
+                        await reloadPageSync(2000);
+                    }
                     continue;
                 }
                 
@@ -8446,8 +9119,12 @@ var version = GM_info.script.version;
                     }
                 }
                 
-                // 9. Refresh page to continue loop
-                await reloadPageSync(2000);
+                // 9. 🆕 Phase 6: Use soft refresh instead of page reload
+                if (context.softRefresh) {
+                    await context.softRefresh.refreshMonsterList();
+                } else {
+                    await reloadPageSync(2000);
+                }
             }
             
             // Log final stats
@@ -9023,8 +9700,8 @@ var version = GM_info.script.version;
             while (rounds < maxRounds) {
                 rounds++;
                 
-                // Check stamina (recalculate each round to account for attacks)
-                let currentStamina = context.stamina.getCurrent();
+                // Check stamina (use refreshed for accurate value, especially after soft refresh)
+                let currentStamina = await context.stamina.getCurrentRefreshed();
                 if (currentStamina < skillCost) {
                     logger.info(`⏳ Stamina insuficiente (${currentStamina}/${skillCost}). Tentando recuperar...`);
                     
@@ -9067,8 +9744,8 @@ var version = GM_info.script.version;
                         sessionStorage.removeItem('autods_skip_loot_dead_use_fsp');
                     }
                     
-                    // Re-check stamina after loot dead attempt
-                    currentStamina = context.stamina.getCurrent();
+                    // Re-check stamina after loot dead attempt (refreshed for accurate value)
+                    currentStamina = await context.stamina.getCurrentRefreshed();
                     
                     // Tentar usar FSP se stamina ainda insuficiente
                     if (currentStamina < skillCost) {
@@ -9295,7 +9972,7 @@ var version = GM_info.script.version;
             while (rounds < maxRounds) {
                 rounds++;
                 
-                const currentStamina = context.stamina.getCurrent();
+                const currentStamina = await context.stamina.getCurrentRefreshed();
                 if (currentStamina < skillCost) {
                     logger.info(`⏳ Stamina insuficiente (${currentStamina}/${skillCost}). Tentando recuperar...`);
                     
@@ -9316,7 +9993,7 @@ var version = GM_info.script.version;
                             
                             if (lootResult.levelUp) {
                                 // Level up detectado! Stamina recuperou
-                                const newStamina = context.stamina.getCurrent();
+                                const newStamina = await context.stamina.getCurrentRefreshed();
                                 logger.info(`🎉 [LOOT DEAD] Level up detectado! Nova stamina: ${newStamina}`);
                                 // if (newStamina >= skillCost) {
                                     logger.info(`🎉 Stamina recuperada (${newStamina})! Continuando ataques...`);
@@ -10034,9 +10711,16 @@ var version = GM_info.script.version;
                     logger.info(`👑 Nenhum boss especial disponível. Aguardando ${Math.round(waitTime / 60000)} minuto(s)...`);
                     this.state.lastCheckTime = Date.now();
                     await sleep(waitTime);
-                    logger.info('👑 Recarregando página para verificar novamente...');
-                    await reloadPageSync(2000);
-                    return;
+                    
+                    // 🆕 Phase 6: Use soft refresh instead of page reload
+                    logger.info('👑 Atualizando lista de monstros...');
+                    if (context.softRefresh) {
+                        await context.softRefresh.refreshMonsterList();
+                    } else {
+                        await reloadPageSync(2000);
+                        return;
+                    }
+                    continue; // Continue loop with refreshed data
                 }
 
                 logger.info(`👑 ${bosses.length} boss(es) especial(is) encontrado(s)!`);
@@ -10064,14 +10748,28 @@ var version = GM_info.script.version;
                     logger.info(`👑 Todos os bosses já completados. Aguardando ${Math.round(waitTime / 60000)} minuto(s)...`);
                     this.state.lastCheckTime = Date.now();
                     await sleep(waitTime);
-                    logger.info('👑 Recarregando página para verificar novamente...');
-                    await reloadPageSync(2000);
-                    return;
+                    
+                    // 🆕 Phase 6: Use soft refresh instead of page reload
+                    logger.info('👑 Atualizando lista de monstros...');
+                    if (context.softRefresh) {
+                        await context.softRefresh.refreshMonsterList();
+                    } else {
+                        await reloadPageSync(2000);
+                        return;
+                    }
+                    continue; // Continue loop with refreshed data
                 } else {
-                    // Had work - reload quickly to check for more
-                    logger.info('👑 Bosses processados. Recarregando para verificar novamente...');
-                    await reloadPageSync(2000);
-                    return;
+                    // Had work - soft refresh to check for more
+                    logger.info('👑 Bosses processados. Verificando novamente...');
+                    
+                    // 🆕 Phase 6: Use soft refresh instead of page reload
+                    if (context.softRefresh) {
+                        await context.softRefresh.refreshMonsterList();
+                    } else {
+                        await reloadPageSync(2000);
+                        return;
+                    }
+                    continue; // Continue loop with refreshed data
                 }
             }
         },
@@ -10267,8 +10965,8 @@ var version = GM_info.script.version;
                         break;
                     }
                     
-                    // Check stamina (MESMO PADRÃO DO WAVEMODULE)
-                    let currentStamina = context.stamina.getCurrent();
+                    // Check stamina (use refreshed for accurate value after soft refresh)
+                    let currentStamina = await context.stamina.getCurrentRefreshed();
                     
                     if (currentStamina < skillCost) {
                         logger.info(`⏳ Stamina insuficiente (${currentStamina}/${skillCost}) - tratando...`);
@@ -10283,7 +10981,7 @@ var version = GM_info.script.version;
                                 const lootResult = await lootModule.lootDeadMonsters(context);
                                 
                                 if (lootResult.looted) {
-                                    const newStamina = context.stamina.getCurrent();
+                                    const newStamina = await context.stamina.getCurrentRefreshed();
                                     logger.info(`💀 [SPECIAL BOSS] Loot concluído! Nova stamina: ${newStamina}`);
                                     
                                     if (lootResult.levelUp || newStamina >= skillCost) {
@@ -10305,13 +11003,21 @@ var version = GM_info.script.version;
                                 const fspUsed = await context.inventory.useFullStaminaPotion();
                                 
                                 if (fspUsed) {
-                                    logger.info('✅ [SPECIAL BOSS] Full Stamina Potion usada com sucesso! Recarregando página...');
+                                    logger.info('✅ [SPECIAL BOSS] Full Stamina Potion usada com sucesso!');
                                     bossState.potionsUsed++;
                                     this.state.stats.potionsUsed++;
                                     
-                                    // Reload to sync stamina
-                                    await reloadPageSync(2000);
-                                    return { hadWork: true };
+                                    // 🆕 Phase 6: Use soft refresh to update stamina instead of page reload
+                                    if (context.softRefresh) {
+                                        await context.softRefresh.refreshStamina();
+                                        logger.info('✅ [SPECIAL BOSS] Stamina atualizada via soft refresh. Continuando ataques...');
+                                        await reloadPageSync(2000);
+                                        continue; // Continue attacking this boss
+                                    } else {
+                                        // Fallback: reload page
+                                        await reloadPageSync(2000);
+                                        return { hadWork: true };
+                                    }
                                 } else {
                                     logger.info('💊 [SPECIAL BOSS] Full Stamina Potion: Sem poções disponíveis ou erro');
                                 }
@@ -10405,10 +11111,10 @@ var version = GM_info.script.version;
                     successCount++;
                     if (r.stamina !== undefined) lastStamina = r.stamina;
                 } else if (r.message && r.message.toLowerCase().includes('stamina')) {
-                    // 🆕 Stamina insuficiente - recarregar página
-                    logger.warn(`⚠️ [BossAttack] Stamina insuficiente! Recarregando página...`);
-                    await reloadPageSync(2000);
-                    return { totalDamage, successCount, lastStamina };
+                    // 🆕 Phase 6: Stamina insuficiente - apenas loga, loop principal tratará
+                    logger.warn(`⚠️ [BossAttack] Stamina insuficiente detectada. Loop principal tratará...`);
+                    // Don't reload - let the main loop handle stamina recovery
+                    break;
                 }
             }
             
@@ -10525,9 +11231,16 @@ var version = GM_info.script.version;
                     logger.info(`🎲 Nenhum Random Boss disponível. Aguardando ${Math.round(waitTime / 60000)} minuto(s)...`);
                     this.state.lastCheckTime = Date.now();
                     await sleep(waitTime);
-                    logger.info('🎲 Recarregando página para verificar novamente...');
-                    await reloadPageSync(2000);
-                    return;
+                    
+                    // 🆕 Phase 6: Use soft refresh instead of page reload
+                    logger.info('🎲 Atualizando página...');
+                    if (context.softRefresh) {
+                        await context.softRefresh.refresh();
+                    } else {
+                        await reloadPageSync(2000);
+                        return;
+                    }
+                    continue; // Continue loop with refreshed data
                 }
 
                 logger.info(`🎲 Boss encontrado: ${boss.name} (ID: ${boss.monsterId})`);
@@ -10547,14 +11260,27 @@ var version = GM_info.script.version;
                     logger.info(`🎲 Boss já completado. Aguardando ${Math.round(waitTime / 60000)} minuto(s)...`);
                     this.state.lastCheckTime = Date.now();
                     await sleep(waitTime);
-                    logger.info('🎲 Recarregando página para verificar novamente...');
+                    
+                    // 🆕 Phase 6: Use soft refresh instead of page reload
+                    logger.info('🎲 Atualizando página...');
+                    if (context.softRefresh) {
+                        await context.softRefresh.refresh();
+                    } else {
+                        await reloadPageSync(2000);
+                        return;
+                    }
+                    continue; // Continue loop with refreshed data
+                }
+
+                // 🆕 Phase 6: Use soft refresh instead of page reload
+                logger.info('🎲 Boss processado. Verificando novamente...');
+                if (context.softRefresh) {
+                    await context.softRefresh.refresh();
+                } else {
                     await reloadPageSync(2000);
                     return;
                 }
-
-                logger.info('🎲 Boss processado. Recarregando para verificar novamente...');
-                await reloadPageSync(2000);
-                return;
+                // Continue loop with refreshed data
             }
         },
 
@@ -10660,7 +11386,7 @@ var version = GM_info.script.version;
                     break;
                 }
 
-                let currentStamina = context.stamina.getCurrent();
+                let currentStamina = await context.stamina.getCurrentRefreshed();
 
                 if (currentStamina < skillCost) {
                     logger.info(`⏳ Stamina insuficiente (${currentStamina}/${skillCost}) - tratando...`);
@@ -10671,7 +11397,7 @@ var version = GM_info.script.version;
                         if (lootModule && typeof lootModule.lootDeadMonsters === 'function') {
                             const lootResult = await lootModule.lootDeadMonsters(context);
                             if (lootResult.looted) {
-                                const newStamina = context.stamina.getCurrent();
+                                const newStamina = await context.stamina.getCurrentRefreshed();
                                 logger.info(`💀 [RANDOM BOSS] Loot concluído! Nova stamina: ${newStamina}`);
                                 if (lootResult.levelUp || newStamina >= skillCost) {
                                     logger.info('🎉 [RANDOM BOSS] Stamina recuperada via loot! Continuando...');
@@ -10689,11 +11415,19 @@ var version = GM_info.script.version;
                         try {
                             const fspUsed = await context.inventory.useFullStaminaPotion();
                             if (fspUsed) {
-                                logger.info('✅ [RANDOM BOSS] Full Stamina Potion usada! Recarregando página...');
+                                logger.info('✅ [RANDOM BOSS] Full Stamina Potion usada!');
                                 bossState.potionsUsed++;
                                 this.state.stats.potionsUsed++;
-                                await reloadPageSync(2000);
-                                return { hadWork: true };
+                                
+                                // 🆕 Phase 6: Use soft refresh to update stamina instead of page reload
+                                if (context.softRefresh) {
+                                    await context.softRefresh.refreshStamina();
+                                    logger.info('✅ [RANDOM BOSS] Stamina atualizada via soft refresh. Continuando ataques...');
+                                    continue; // Continue attacking this boss
+                                } else {
+                                    await reloadPageSync(2000);
+                                    return { hadWork: true };
+                                }
                             } else {
                                 logger.info('💊 [RANDOM BOSS] Sem poções disponíveis ou erro');
                             }
@@ -10767,9 +11501,10 @@ var version = GM_info.script.version;
                     successCount++;
                     if (r.stamina !== undefined) lastStamina = r.stamina;
                 } else if (r.message && r.message.toLowerCase().includes('stamina')) {
-                    logger.warn('⚠️ [RandomBossAttack] Stamina insuficiente! Recarregando página...');
-                    await reloadPageSync(2000);
-                    return { totalDamage, successCount, lastStamina };
+                    // 🆕 Phase 6: Stamina insuficiente - apenas loga, loop principal tratará
+                    logger.warn('⚠️ [RandomBossAttack] Stamina insuficiente detectada. Loop principal tratará...');
+                    // Don't reload - let the main loop handle stamina recovery
+                    break;
                 }
             }
 
@@ -10903,7 +11638,12 @@ var version = GM_info.script.version;
                 logger.warn('⚠️ Nenhum slot disponível! Todas as batalhas já foram iniciadas.');
                 logger.info('💡 Aguarde completar algumas batalhas antes de iniciar Ultra Fast Farm.');
                 if (cfg.autoReturnToWave) {
-                    await reloadPageSync(2000);
+                    // 🆕 Phase 6: Use soft refresh instead of page reload
+                    if (context.softRefresh) {
+                        await context.softRefresh.refreshMonsterList();
+                    } else {
+                        await reloadPageSync(2000);
+                    }
                 }
                 return;
             }
@@ -10918,13 +11658,24 @@ var version = GM_info.script.version;
             //     logger.info(`⚙️ Ajustando batalhas paralelas: ${cfg.maxParallelBattles} → ${effectiveMaxBattles} (slots disponíveis)`);
             // }
 
+            // 🆕 Phase 6: Soft refresh monster list before scanning
+            if (context.softRefresh) {
+                logger.debug('🔄 Atualizando lista de monstros via soft refresh...');
+                await context.softRefresh.refreshMonsterList();
+            }
+
             // 1. Scan monsters from page
             const targets = await this.scanTargets(context);
             
             if (targets.length === 0) {
                 logger.info('❌ Nenhum mob disponível para farm ultra rápido');
                 if (cfg.autoReturnToWave) {
-                    await reloadPageSync(2000);
+                    // 🆕 Phase 6: Use soft refresh instead of page reload
+                    if (context.softRefresh) {
+                        await context.softRefresh.refreshMonsterList();
+                    } else {
+                        await reloadPageSync(2000);
+                    }
                 }
                 return;
             }
@@ -13138,8 +13889,8 @@ var version = GM_info.script.version;
 
             // Executar rodadas de ataque paralelo
             for (let round = 0; round < cfg.attacksPerMonster; round++) {
-                // Verificar stamina antes de cada rodada
-                const currentStamina = context.stamina.getCurrent();
+                // Verificar stamina antes de cada rodada (refreshed for accuracy)
+                const currentStamina = await context.stamina.getCurrentRefreshed();
                 if (currentStamina === 0) {
                     logger.warn(`⚠️ Stamina em 0! Parando ataques.`);
                     logger.info(`💡 Aguarde a Stamina regenerar ou use uma poção de Stamina.`);
@@ -14855,7 +15606,12 @@ var version = GM_info.script.version;
         match: () => true,
         init(context) {
             context.logger.debug('imageBlocker module initialised');
-            if (context.config.get().imageBlocker.enabled) {
+            
+            // OPTIMIZATION: Inject global CSS once for CSS class toggle pattern
+            // Extracted from Other_Addon - single class toggle vs iterating elements
+            this.injectGlobalStyles(context);
+            
+            if (context.config.get().imageBlocker?.enabled) {
                 this.enable(context);
             }
             // Remove background pattern from wave pages
@@ -14864,8 +15620,8 @@ var version = GM_info.script.version;
             this.hideGateInfo(context);
         },
         activate(context) {
-            const enabled = context.config.get().imageBlocker.enabled;
-            if (!enabled) {
+            const cfg = context.config.get().imageBlocker || {};
+            if (!cfg.enabled) {
                 this.disable(context);
                 return;
             }
@@ -14880,10 +15636,45 @@ var version = GM_info.script.version;
             // Hide gate-info divs on all pages
             this.hideGateInfo(context);
         },
+        /**
+         * OPTIMIZED: Inject global CSS for class-based image toggle
+         * Uses single body class toggle instead of iterating through all img elements
+         * Pattern extracted from Other_Addon/content.js
+         */
+        injectGlobalStyles(context) {
+            if (document.getElementById('autods-image-blocker-global')) return;
+            
+            const style = document.createElement('style');
+            style.id = 'autods-image-blocker-global';
+            style.textContent = `
+                /* CSS Class Toggle Pattern for Image Blocking */
+                /* Avoids iterating through elements - single class toggle on body */
+                body.autods-no-images img { display: none !important; }
+                body.autods-no-images .monster-img { display: none !important; }
+                body.autods-no-images .monster-frame { display: none !important; }
+                body.autods-no-images .avatar-img { display: none !important; }
+                body.autods-no-images [class*="image"] { display: none !important; }
+                body.autods-no-images .monster-card { min-height: auto !important; }
+                body.autods-no-images .mon { min-height: auto !important; }
+            `;
+            (document.head || document.documentElement).appendChild(style);
+            context.logger.debug('🎨 Image blocker global CSS injected (CSS toggle pattern)');
+        },
         enable(context) {
-            if (this.styleEl) return;
             if (!this.shouldBlockCurrentPath(context)) return;
-            context.logger.info('Enabling image blocking');
+            
+            const cfg = context.config.get().imageBlocker || {};
+            
+            // OPTIMIZED: Use CSS class toggle (faster than element iteration)
+            if (cfg.useCssToggle !== false) {
+                document.body.classList.add('autods-no-images');
+                context.logger.info('🖼️ Image blocking enabled (CSS class toggle)');
+                return;
+            }
+            
+            // LEGACY: Fallback to style injection for backwards compatibility
+            if (this.styleEl) return;
+            context.logger.info('Enabling image blocking (legacy style injection)');
             const style = document.createElement('style');
             style.id = 'autods-image-blocker';
             style.textContent = 'img { display: none !important; }';
@@ -14891,10 +15682,15 @@ var version = GM_info.script.version;
             this.styleEl = style;
         },
         disable(context) {
-            if (!this.styleEl) return;
-            context.logger.info('Disabling image blocking');
-            this.styleEl.remove();
-            this.styleEl = null;
+            // Remove CSS class toggle
+            document.body.classList.remove('autods-no-images');
+            
+            // Remove legacy style element
+            if (this.styleEl) {
+                this.styleEl.remove();
+                this.styleEl = null;
+            }
+            context.logger.debug('🖼️ Image blocking disabled');
         },
         removeWaveBackground(context) {
             const pathname = context.location?.pathname || window.location?.pathname || '';
@@ -15425,8 +16221,18 @@ var version = GM_info.script.version;
             }
 
             // Adicionar botão de Ultra Fast Stamina (sempre visível)
-            console.log('[FloatingHelpers] Adding stamina box (always visible)');
-            container.appendChild(this.createStaminaBox(context, cfg));
+            const isMangaPage = /manga\/One-Piece/.test(window.location.pathname);
+            if (isMangaPage) {
+                console.log('[FloatingHelpers] Adding stamina box (always visible)');
+                container.appendChild(this.createStaminaBox(context, cfg));
+            }
+
+            // 🆕 Phase 6: Adicionar botão de Soft Refresh (apenas em páginas de wave/dungeon)
+            const isWaveOrDungeonPage = /active_wave\.php|guild_dungeon_location\.php/i.test(window.location.pathname);
+            if (isWaveOrDungeonPage && cfg.softRefresh?.enabled !== false) {
+                console.log('[FloatingHelpers] Adding soft refresh box');
+                container.appendChild(this.createSoftRefreshBox(context, cfg));
+            }
 
             // Adicionar botão de Ultra Fast Attack
             if (cfg.ultraFastAttack?.enabled) {
@@ -15928,6 +16734,97 @@ var version = GM_info.script.version;
             box.addEventListener('mouseleave', () => {
                 box.style.transform = 'scale(1)';
                 box.style.boxShadow = 'none';
+                box.style.transform = 'scale(1)';
+                box.style.boxShadow = 'none';
+            });
+
+            return box;
+        },
+
+        // 🆕 Phase 6: Soft Refresh Button - refresh monster list without page reload
+        createSoftRefreshBox(context, cfg) {
+            const box = document.createElement('div');
+            box.className = 'refresh-box autods-floating-refresh-btn';
+            
+            const softRefreshEnabled = cfg.softRefresh?.enabled !== false;
+            
+            box.style.cssText = `
+                background: ${softRefreshEnabled ? 'linear-gradient(135deg, #94e2d5 0%, #89dceb 100%)' : 'rgba(50, 50, 70, 0.8)'};
+                border: 2px solid ${softRefreshEnabled ? '#94e2d5' : 'rgba(100, 100, 100, 0.5)'};
+                border-radius: 6px;
+                padding: 8px 12px;
+                color: ${softRefreshEnabled ? '#1e1e2e' : '#aaa'};
+                font-weight: bold;
+                cursor: pointer;
+                transition: all 0.2s;
+                font-size: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 4px;
+                min-height: 36px;
+                position: relative;
+            `;
+
+            const icon = document.createElement('div');
+            icon.style.cssText = 'font-size: clamp(18px, 5vw, 24px); line-height: 1;';
+            icon.textContent = '🔄';
+            icon.className = 'refresh-icon';
+
+            const label = document.createElement('div');
+            label.style.cssText = 'font-size: clamp(10px, 2vw, 12px); color: inherit; font-weight: bold;';
+            label.textContent = 'Refresh';
+            label.className = 'refresh-label';
+
+            box.appendChild(icon);
+            box.appendChild(label);
+
+            // State tracking
+            let isRefreshing = false;
+
+            box.addEventListener('click', async () => {
+                if (isRefreshing) return;
+                
+                isRefreshing = true;
+                label.textContent = 'Loading...';
+                icon.style.animation = 'spin 1s linear infinite';
+                
+                // Add spin animation if not exists
+                if (!document.getElementById('autods-spin-animation')) {
+                    const style = document.createElement('style');
+                    style.id = 'autods-spin-animation';
+                    style.textContent = '@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }';
+                    document.head.appendChild(style);
+                }
+                
+                try {
+                    if (context.softRefresh) {
+                        // Refresh both monster list and stamina
+                        await context.softRefresh.refreshMonsterList();
+                        await context.softRefresh.refreshStamina();
+                        context.logger.info('🔄 Soft refresh completo!');
+                        context.notifications?.success?.('Lista atualizada!');
+                    } else {
+                        context.logger.warn('Soft refresh service não disponível');
+                        context.notifications?.warn?.('Soft refresh não disponível');
+                    }
+                } catch (error) {
+                    context.logger.error('Erro no soft refresh:', error);
+                    context.notifications?.error?.('Erro ao atualizar lista');
+                } finally {
+                    isRefreshing = false;
+                    label.textContent = 'Refresh';
+                    icon.style.animation = '';
+                }
+            });
+
+            box.addEventListener('mouseenter', () => {
+                if (!isRefreshing) {
+                    box.style.transform = 'scale(1.05)';
+                    box.style.boxShadow = '0 4px 12px rgba(148, 226, 213, 0.4)';
+                }
+            });
+            box.addEventListener('mouseleave', () => {
                 box.style.transform = 'scale(1)';
                 box.style.boxShadow = 'none';
             });
@@ -19833,11 +20730,57 @@ Boss:100000000" rows="3"></textarea>
                                 </div>
                                 
                                 <div class="autods-subsection">
-                                    <h5>�️ Bloqueador de Imagens</h5>
+                                    <h5>🖼️ Bloqueador de Imagens</h5>
                                     <label class="autods-checkbox">
                                         <input type="checkbox" data-config="imageBlocker.enabled" data-label="Image Blocker" data-toast="0" />
                                         <span>Block images (improves performance)</span>
                                     </label>
+                                    <label class="autods-checkbox">
+                                        <input type="checkbox" data-config="imageBlocker.useCssToggle" data-label="CSS Toggle" data-toast="0" />
+                                        <span>Use CSS class toggle (faster)</span>
+                                    </label>
+                                </div>
+                                
+                                <div class="autods-subsection">
+                                    <h5>🔄 Soft Refresh (Phase 6)</h5>
+                                    <label class="autods-checkbox">
+                                        <input type="checkbox" data-config="softRefresh.enabled" data-label="Soft Refresh" data-toast="0" />
+                                        <span>Enable soft refresh (no page reload)</span>
+                                    </label>
+                                    <label class="autods-field autods-field-small">
+                                        <span>Auto-refresh interval (sec)</span>
+                                        <input type="number" data-config="softRefresh.autoRefreshInterval" data-config-format="int" data-label="Auto Interval" min="0" step="5" placeholder="0 = disabled" />
+                                    </label>
+                                    <label class="autods-field autods-field-small">
+                                        <span>Debounce time (ms)</span>
+                                        <input type="number" data-config="softRefresh.debounceMs" data-config-format="int" data-label="Debounce" min="50" step="50" />
+                                    </label>
+                                    <p class="autods-info" style="font-size: 10px; color: #94e2d5; margin-top: 4px;">
+                                        💡 Soft refresh atualiza a lista de monstros sem recarregar a página.
+                                    </p>
+                                </div>
+                                
+                                <div class="autods-subsection">
+                                    <h5>⏱️ Stamina Ticker (Phase 6)</h5>
+                                    <label class="autods-checkbox">
+                                        <input type="checkbox" data-config="staminaTicker.enabled" data-label="Stamina Ticker" data-toast="0" />
+                                        <span>Enable stamina auto-refresh</span>
+                                    </label>
+                                    <label class="autods-field autods-field-small">
+                                        <span>Update interval (sec)</span>
+                                        <input type="number" data-config="staminaTicker.intervalMs" data-config-format="seconds" data-label="Update Interval" min="1" step="1" />
+                                    </label>
+                                    <label class="autods-field autods-field-small">
+                                        <span>Min interval (sec)</span>
+                                        <input type="number" data-config="staminaTicker.minIntervalMs" data-config-format="seconds" data-label="Min Interval" min="1" step="1" />
+                                    </label>
+                                    <label class="autods-field autods-field-small">
+                                        <span>Max interval (sec)</span>
+                                        <input type="number" data-config="staminaTicker.maxIntervalMs" data-config-format="seconds" data-label="Max Interval" min="30" step="30" />
+                                    </label>
+                                    <p class="autods-info" style="font-size: 10px; color: #89dceb; margin-top: 4px;">
+                                        💡 Ticker usa setTimeout auto-ajustável para evitar acúmulo de requests.
+                                    </p>
                                 </div>
                                 
                                 <div class="autods-subsection">
@@ -20508,6 +21451,18 @@ Boss:100000000" rows="3"></textarea>
                     if (!Number.isFinite(minutes)) return '';
                     return minutes.toFixed(Math.max(0, precision));
                 }
+                case 'seconds': {
+                    // 🆕 Phase 6: Convert milliseconds to seconds for display
+                    const seconds = Number(value) / 1000;
+                    if (!Number.isFinite(seconds)) return '';
+                    return seconds.toFixed(Math.max(0, precision));
+                }
+                case 'hours': {
+                    // Convert milliseconds to hours for display
+                    const hours = Number(value) / 3600000;
+                    if (!Number.isFinite(hours)) return '';
+                    return hours.toFixed(Math.max(0, precision));
+                }
                 case 'csv':
                     if (Array.isArray(value)) {
                         return value.join('\n');
@@ -20665,6 +21620,29 @@ Boss:100000000" rows="3"></textarea>
                     }
                     return { value: fixed * 3600000 };  // Convert hours to milliseconds
                 }
+                case 'seconds': {
+                    // 🆕 Phase 6: Convert seconds to milliseconds for config storage
+                    const parsed = Number(normalised);
+                    if (!Number.isFinite(parsed)) {
+                        return { error: 'Valor em segundos inválido.' };
+                    }
+                    let fixed = Math.max(1, parsed);
+                    if (element instanceof HTMLInputElement) {
+                        if (element.min !== '') {
+                            const min = Number(element.min);
+                            if (Number.isFinite(min)) {
+                                fixed = Math.max(fixed, min);
+                            }
+                        }
+                        if (element.max !== '') {
+                            const max = Number(element.max);
+                            if (Number.isFinite(max)) {
+                                fixed = Math.min(fixed, max);
+                            }
+                        }
+                    }
+                    return { value: fixed * 1000 };  // Convert seconds to milliseconds
+                }
                 case 'string':
                 default:
                     return { value: raw };
@@ -20690,6 +21668,13 @@ Boss:100000000" rows="3"></textarea>
                     const minutes = Number(value) / 60000;
                     if (!Number.isFinite(minutes)) return '';
                     return `${minutes.toFixed(Math.max(0, precision))} min`;
+                }
+                case 'seconds': {
+                    // 🆕 Phase 6: Display milliseconds as seconds
+                    if (value == null) return '';
+                    const seconds = Number(value) / 1000;
+                    if (!Number.isFinite(seconds)) return '';
+                    return `${seconds.toFixed(Math.max(0, precision))} sec`;
                 }
                 case 'csv': {
                     if (!value || !value.length) return 'lista vazia';
@@ -22264,8 +23249,8 @@ Boss:100000000" rows="3"></textarea>
                     break;
                 }
 
-                // Get current stamina
-                const currentStamina = context.stamina.getCurrent();
+                // Get current stamina (refreshed for accurate value)
+                const currentStamina = await context.stamina.getCurrentRefreshed();
                 logger.debug(`⚡ AutoBoss: Stamina atual: ${currentStamina}`);
 
                 // Get all available attack buttons
@@ -24908,6 +25893,36 @@ Boss:100000000" rows="3"></textarea>
         // Initialize Profile Manager (Phase 4)
         context.profileManager = createProfileManager(context);
         
+        // ==================== NEW PHASE 6 SERVICES ====================
+        // Extracted from Other_Addon (Veyra extension) for performance improvements
+        
+        // Soft Refresh Service - refresh monster list without page reload
+        context.softRefresh = createSoftRefreshService(context);
+        
+        // 🆕 Set context on stamina reader for soft refresh integration
+        stamina.setContext(context);
+        
+        // Stamina Ticker Service - self-adjusting stamina updates
+        context.staminaTicker = createStaminaTickerService(context);
+        
+        // Start stamina ticker if enabled
+        if (cfg.staminaTicker?.enabled !== false) {
+            // Only start on pages with stamina display
+            if (document.getElementById('stamina_span')) {
+                context.staminaTicker.start();
+                logger.debug('⚡ Stamina ticker started');
+            }
+        }
+        
+        // Start auto-refresh if enabled and on wave/dungeon page
+        if (cfg.softRefresh?.enabled !== false && cfg.softRefresh?.autoRefreshInterval > 0) {
+            const pathname = window.location.pathname;
+            if (/active_wave\.php|guild_dungeon_location\.php/.test(pathname)) {
+                context.softRefresh.startAutoRefresh();
+                logger.debug('🔄 Auto-refresh started');
+            }
+        }
+        
         // Expose services globally for console testing
         // Use unsafeWindow to ensure it's accessible in browser console
         const globalWindow = typeof unsafeWindow !== 'undefined' ? unsafeWindow : window;
@@ -24915,6 +25930,8 @@ Boss:100000000" rows="3"></textarea>
             dataExtractor: context.dataExtractor,
             damageCalculator: context.damageCalculator,
             merchant: context.merchant,  // Expose merchant for testing
+            softRefresh: context.softRefresh,  // Expose soft refresh for testing
+            staminaTicker: context.staminaTicker,  // Expose stamina ticker
             context: context,  // Expose full context for debugging
             version: SCRIPT_VERSION
         };

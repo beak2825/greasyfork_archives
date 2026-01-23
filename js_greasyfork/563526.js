@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         nhentai Quick Peek
 // @namespace    http://tampermonkey.net/
-// @version      1.0.0
-// @description  Shows language, page count, and copyable manga code when hovering over thumbnails
+// @version      1.1.0
+// @description  Shows language, page count, artist, upload date, and copyable manga code when hovering over thumbnails
 // @author       Snow2122
 // @icon         https://nhentai.net/favicon.ico
 // @match        *://nhentai.net/*
@@ -139,6 +139,20 @@
             font-style: italic;
         }
 
+        .nhi-artist {
+            color: #ed9825;
+            font-weight: 600;
+            max-width: 140px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .nhi-date {
+            color: #aaa;
+            font-size: 11px;
+        }
+
         /* Ensure gallery has relative positioning for overlay */
         .gallery {
             position: relative !important;
@@ -194,16 +208,35 @@
     }
 
     /**
-     * Cache for page counts to avoid repeated API calls
+     * Cache for gallery info to avoid repeated API calls
      */
-    const pageCountCache = new Map();
+    const galleryInfoCache = new Map();
 
     /**
-     * Fetch page count from API or cache
+     * Format Unix timestamp to readable date
      */
-    async function getPageCount(mangaCode) {
-        if (pageCountCache.has(mangaCode)) {
-            return pageCountCache.get(mangaCode);
+    function formatDate(timestamp) {
+        if (!timestamp) return 'Unknown';
+        const date = new Date(timestamp * 1000);
+        const options = { year: 'numeric', month: 'short', day: 'numeric' };
+        return date.toLocaleDateString('en-US', options);
+    }
+
+    /**
+     * Extract artist name from tags
+     */
+    function extractArtist(tags) {
+        if (!tags || !Array.isArray(tags)) return null;
+        const artistTag = tags.find(tag => tag.type === 'artist');
+        return artistTag ? artistTag.name : null;
+    }
+
+    /**
+     * Fetch gallery info from API or cache
+     */
+    async function getGalleryInfo(mangaCode) {
+        if (galleryInfoCache.has(mangaCode)) {
+            return galleryInfoCache.get(mangaCode);
         }
 
         try {
@@ -211,13 +244,17 @@
             if (!response.ok) throw new Error('API request failed');
             
             const data = await response.json();
-            const pageCount = data.num_pages || data.images?.pages?.length || '?';
+            const info = {
+                pageCount: data.num_pages || data.images?.pages?.length || '?',
+                uploadDate: formatDate(data.upload_date),
+                artist: extractArtist(data.tags)
+            };
             
-            pageCountCache.set(mangaCode, pageCount);
-            return pageCount;
+            galleryInfoCache.set(mangaCode, info);
+            return info;
         } catch (error) {
-            console.error('[nhentai Hover Info] Failed to fetch page count:', error);
-            return '?';
+            console.error('[nhentai Hover Info] Failed to fetch gallery info:', error);
+            return { pageCount: '?', uploadDate: 'Unknown', artist: null };
         }
     }
 
@@ -263,6 +300,10 @@
         overlay.className = 'nhi-overlay';
         overlay.innerHTML = `
             <div class="nhi-row">
+                <span class="nhi-label">Artist</span>
+                <span class="nhi-value nhi-artist nhi-artist-name nhi-loading">Loading...</span>
+            </div>
+            <div class="nhi-row">
                 <span class="nhi-label">Language</span>
                 <span class="nhi-language">
                     <span class="nhi-flag">${language.flag}</span>
@@ -272,6 +313,10 @@
             <div class="nhi-row">
                 <span class="nhi-label">Pages</span>
                 <span class="nhi-value nhi-pages-count nhi-loading">Loading...</span>
+            </div>
+            <div class="nhi-row">
+                <span class="nhi-label">Uploaded</span>
+                <span class="nhi-value nhi-date nhi-upload-date nhi-loading">Loading...</span>
             </div>
             <div class="nhi-code-row" title="Click to copy manga code">
                 <span class="nhi-code-value">#${mangaCode}</span>
@@ -313,13 +358,32 @@
             gallery.appendChild(overlay);
         }
 
-        // Fetch page count asynchronously
-        const pageCount = await getPageCount(mangaCode);
+        // Fetch gallery info asynchronously
+        const info = await getGalleryInfo(mangaCode);
+        
+        // Update pages
         const pagesElement = overlay.querySelector('.nhi-pages-count');
         if (pagesElement) {
-            pagesElement.textContent = pageCount;
+            pagesElement.textContent = info.pageCount;
             pagesElement.classList.remove('nhi-loading');
             pagesElement.classList.add('nhi-pages-badge');
+        }
+
+        // Update artist
+        const artistElement = overlay.querySelector('.nhi-artist-name');
+        if (artistElement) {
+            artistElement.textContent = info.artist || 'Unknown';
+            artistElement.classList.remove('nhi-loading');
+            if (info.artist) {
+                artistElement.title = info.artist; // Full name on hover
+            }
+        }
+
+        // Update upload date
+        const dateElement = overlay.querySelector('.nhi-upload-date');
+        if (dateElement) {
+            dateElement.textContent = info.uploadDate;
+            dateElement.classList.remove('nhi-loading');
         }
     }
 

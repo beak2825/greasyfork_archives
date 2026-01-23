@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Grepolympia Helper - Estadísticas y Optimización
 // @namespace    grepolympia.helper
-// @version      1.2.0
+// @version      1.2.1
 // @description  Calcula y muestra stats de suerte, score esperado y guía de entrenamiento óptimo para Grepolympia.
 // @match        https://*.grepolis.com/game/*
 // @match        http://*.grepolis.com/game/*
@@ -111,6 +111,22 @@
 
     // -------------------- helpers --------------------
     function qs(sel, root = document) { return root.querySelector(sel); }
+
+    function shortenButtonTexts() {
+        // Acortar texto del botón "Participar" en tab Info
+        const attendBtn = qs('.btn_attend .caption span');
+        if (attendBtn && attendBtn.textContent.includes('a cambio de')) {
+            attendBtn.textContent = attendBtn.textContent
+                .replace('Participar a cambio de', 'Participar por')
+                .replace('monedas de oro', '');
+        }
+
+        // Acortar texto del botón "Restablecer" en tab Training
+        const resetBtn = qs('.btn_skill_reset .caption span');
+        if (resetBtn && resetBtn.textContent.includes('a cambio de')) {
+            resetBtn.textContent = resetBtn.textContent.replace('a cambio de', 'por');
+        }
+    }
 
     function readFirstNumber(text) {
         if (!text) return null;
@@ -251,7 +267,7 @@
     }
 
     // -------------------- Export optimal table to BBCode --------------------
-    function generateOptimalTableBBCode(disciplineId, maxLevel = 200) {
+    function generateOptimalTableBBCode(disciplineId, maxLevel = 250) {
         const discData = getDisciplinesData();
         const discObj = discData?.[disciplineId];
         const params = getParams(discObj);
@@ -293,7 +309,7 @@
             const tierText = isNewTier ? `[color=#FF0000]${currentTier}[/color]` : currentTier;
             const levelText = isNewTier ? `[color=#FF0000][b]${level}[/b][/color]` : `[b]${level}[/b]`;
 
-            rows.push(`[*]${levelText}[|]${optimal.a}[|]${optimal.b}[|]${optimal.c}[|]${expectedStr}${params.unit}[|]${tierText}[/*]`);
+            rows.push(`[*]${levelText}[|]${optimal.a}[|]${optimal.b}[|]${optimal.c}[|]${expectedStr}±${Math.round(parseInt(expectedStr)*0.05)}${params.unit}[|]${tierText}[/*]`);
 
             previousTier = currentTier;
         }
@@ -394,7 +410,7 @@
         });
 
         box.innerHTML = `
-            <div style="margin-bottom:12px;font-weight:bold;">${tableData.disciplineName} - Tabla de niveles óptimos (1-200)</div>
+            <div style="margin-bottom:12px;font-weight:bold;">${tableData.disciplineName} - Tabla de niveles óptimos (1-250)</div>
             <div style="max-height:340px;overflow-y:auto;border:1px solid #333;padding:8px;background:rgba(0,0,0,0.3);">
                 ${unitsHTML}
                 ${spoilersHTML}
@@ -511,6 +527,9 @@
         // Agregar botón de exportación
         addExportButton();
 
+        // Acortar textos de botones largos
+        shortenButtonTexts();
+
         return true;
     }
 
@@ -619,6 +638,9 @@
         // Enganchar ordenamiento de tropas por eficiencia
         unitPlusButtonsBound = false;
         attachUnitPlusButtonHandlers();
+
+        // Acortar textos de botones largos
+        shortenButtonTexts();
 
         return true;
     }

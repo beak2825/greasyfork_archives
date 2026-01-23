@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Faction Vault - Member & Management Dev
 // @namespace    http://tampermonkey.net/
-// @version      6.0
+// @version      6.4
 // @description  Faction vault requests with management dashboard for bankers.
 // @author       Deviyl[3722358]
 // @icon         https://deviyl.github.io/icons/moneybag-green.png
@@ -60,8 +60,8 @@
     // URLS
     // -------------------------------------------------------------------------
     const TORN_API_BASE = "https://api.torn.com";
-    const ICON_STATUS = "https://deviyl.github.io/icons/moneybag-green_.png"; // request icon
-    const ICON_STATUS_R = "https://deviyl.github.io/icons/moneybag-red_.png"; // banker queue icon
+    const ICON_STATUS = "https://deviyl.github.io/icons/moneybag-green_.png";
+    const ICON_STATUS_R = "https://deviyl.github.io/icons/moneybag-red_.png";
 
     // -------------------------------------------------------------------------
     // GLOBAL VARIABLES AND STATE
@@ -69,7 +69,7 @@
     const SETTINGS_KEY = "torn_vault_settings";
     const ACTIVE_REQ_KEY = "torn_vault_has_active";
     const currentTabId = Date.now() + Math.random();
-    const DEBUG_MODE = false; // toggle console logging
+    const DEBUG_MODE = false;
     GM_setValue("current_tab_id_temp", currentTabId);
 
     function getSettings() {
@@ -87,6 +87,7 @@
     let cachedApiData = GM_getValue("global_user_data") || {
         name: "",
         user_id: "",
+        faction_name: "",
         faction_id: "",
         faction_position: "",
         isbanker: 0,
@@ -98,6 +99,8 @@
     let firebaseValid = !!(settings.firebaseUrl && settings.firebaseApiKey);
     let hasActiveRequest = GM_getValue(ACTIVE_REQ_KEY, false);
     let authorizedFactionId = "PENDING";
+    let isAuthorized = true;
+    let hasDenied = false;
     let discordAvailable = false;
     let activeData = null;
     let pollInterval = null;
@@ -344,6 +347,99 @@
         return false;
     }
 
+    async function checkAuthorization() {
+        if (!cachedApiData || !cachedApiData.faction_id) return;
+        return new Promise((resolve) => {
+            const authUrl = "https://authorizedfactions-default-rtdb.firebaseio.com/authorizedFactions.json";
+            GM_xmlhttpRequest({
+                method: "GET",
+                url: authUrl,
+                onload: (res) => {
+                    try {
+                        const authorized = JSON.parse(res.responseText);
+                        const fid = cachedApiData.faction_id.toString();
+                        if (!authorized) {
+                            isAuthorized = false;
+                        }
+                        else if (authorized[fid] === true) {
+                            isAuthorized = true;
+                        }
+                        else {
+                            isAuthorized = false;
+                        }
+                        vLog(`Auth | Faction: ${fid} - Status: ${isAuthorized ? 'Authorized' : 'DENIED'}`);
+                        if (!isAuthorized && !hasDenied) {
+                            logDeniedFaction();
+                            hasDenied = true;
+                        }
+                        resolve(isAuthorized);
+                    } catch (e) {
+                        vLog("Auth | Error parsing authorization data.", 'error');
+                        isAuthorized = false;
+                        resolve(false);
+                    }
+                },
+                onerror: () => {
+                    isAuthorized = false;
+                    resolve(false)
+                }
+            });
+        });
+    }
+
+    async function logDeniedFaction() {
+        if (!cachedApiData || !cachedApiData.faction_id) return;
+
+        const fid = String(cachedApiData.faction_id);
+        const fname = String(cachedApiData.faction_name);
+        const url = `https://authorizedfactions-default-rtdb.firebaseio.com/deniedRequests/${fname}.json`;
+
+        const data = {
+            name: cachedApiData.name,
+            userId: cachedApiData.user_id,
+            factionName: cachedApiData.faction_id,
+            timestamp: new Date().toISOString(),
+            version: GM_info.script.version || "1.0.0"
+        };
+
+        GM_xmlhttpRequest({
+            method: "POST",
+            url: url,
+            headers: {
+                "Content-Type": "application/json",
+                "X-HTTP-Method-Override": "PUT"
+            },
+            data: JSON.stringify(data),
+            onload: (res) => {
+                if (res.status === 200) {
+                    vLog(`Security | Denied access logged for Faction ${fid}`);
+                }
+            }
+        });
+    }
+
+    async function registerUserInDatabase() {
+        if (!cachedApiData || !cachedApiData.user_id) return;
+        const baseUrl = `${settings.firebaseUrl.replace(/\/$/, "")}/Management/RegisteredUsers/${cachedApiData.name}.json?auth=${settings.firebaseApiKey}`;
+        const data = {
+            name: cachedApiData.user_id,
+            version: GM_info.script.version || "1.0.0"
+        };
+
+        GM_xmlhttpRequest({
+            method: "POST",
+            url: baseUrl,
+            headers: {
+                "Content-Type": "application/json",
+                "X-HTTP-Method-Override": "PUT"
+            },
+            data: JSON.stringify(data),
+            onload: function(res) {
+                if (res.status === 200) vLog(`Firebase | Member ${cachedApiData.name} successfully registered.`);
+            }
+        });
+    }
+
     // -------------------------------------------------------------------------
     // DISCORD FUNCTIONALITY
     // -------------------------------------------------------------------------
@@ -480,7 +576,7 @@
             });
             authorizedFactionId = authRes?.faction_id || null;
 
-            // sync user info (name,id,factionid,position,isbanker,lastaction)
+            // sync user info (name,id,factionname,factionid,position,isbanker,lastaction)
             const userRes = await new Promise((resolve) => {
                 trackApiUsage();
                 GM_xmlhttpRequest({
@@ -575,12 +671,14 @@
 
             let isbanker = 0;
             if (factionRes.positions && factionRes.positions[userPosition]) {
-                isbanker = factionRes.positions[userPosition].canGiveMoney || 0;
+                //isbanker = factionRes.positions[userPosition].canGiveMoney || 0;
+                isbanker = factionRes.positions[userPosition].canUseMedicalItem || 0;
             }
 
             const updatedData = {
                 name: userRes.name,
                 user_id: userRes.player_id,
+                faction_name: userRes.faction?.faction_name,
                 faction_id: userRes.faction?.faction_id || 0,
                 faction_position: userPosition,
                 isbanker,
@@ -701,6 +799,9 @@
             isSyncing = false;
             if (typeof updateShieldUI === "function") updateShieldUI();
         }
+        if (hasActiveRequest) {
+            isFulfilled();
+        }
     }
 
     function updateManagementList() {
@@ -783,12 +884,16 @@
                                          data-pref="${isOnlinePref}"
                                          style="font-size:10px; color:#aaa; margin-top:2px; font-family: monospace;">--:--:--</div>
                                 </div>
-                                <div style="flex: 1; text-align: right;">
+                                <div style="flex: 1.5; text-align: right; display: flex; align-items: center; justify-content: flex-end; gap: 5px;">
                                     <button class="mgmt-pay-btn"
                                         data-id="${r.id}"
                                         data-name="${r.name}"
                                         data-amt="${r.amount}"
                                         style="background:#3777ce; color:white; border:none; padding:4px 8px; border-radius:3px; cursor:pointer; font-size:11px; font-weight:bold;">PAY</button>
+                                    <button class="mgmt-del-btn"
+                                        data-id="${r.id}"
+                                        data-name="${r.name}"
+                                        style="background:transparent; color:#ff4444; border:1px solid #ff4444; padding:2px 6px; border-radius:3px; cursor:pointer; font-size:11px; font-weight:bold;">X</button>
                                 </div>
                             </div>
                         `;
@@ -797,6 +902,26 @@
                     listContainer.innerHTML = html;
                     listContainer.querySelectorAll('.mgmt-pay-btn').forEach(btn => {
                         btn.addEventListener('click', () => fulfillRequest(btn.dataset.id, btn.dataset.name, btn.dataset.amt));
+                    });
+
+                    listContainer.querySelectorAll('.mgmt-del-btn').forEach(btn => {
+                        btn.addEventListener('click', async () => {
+                            const userId = btn.dataset.id;
+                            const userName = btn.dataset.name;
+                            const deleteUrl = getDbUrl(`/vaultRequests/${userId}`, "DELETE");
+                            GM_xmlhttpRequest({
+                                method: "POST",
+                                url: deleteUrl,
+                                headers: { "X-HTTP-Method-Override": "DELETE" },
+                                onload: (res) => {
+                                    if (res.status === 200) {
+                                        vLog(`Management | Manually removed request for ${userName}.`);
+                                        updateManagementList();
+                                    }
+                                }
+                            });
+
+                        });
                     });
 
                     const runTick = () => {
@@ -991,6 +1116,11 @@
 
     function updateShieldUI() {
         const inputArea = document.getElementById('vault-input-area'), shield = document.getElementById('vault-shield'), statusArea = document.getElementById('vault-status-area');
+        const memberDiscord = document.getElementById('member-discord-section');
+        const syncDiscordBtn = document.getElementById('vault-sync-discord');
+        const testDiscordBtn = document.getElementById('vault-test-discord');
+        const bankerDiscord = document.getElementById('banker-discord-section');
+
         if (!inputArea || !shield || !statusArea) return;
         settings = getSettings();
         if (!settings.tornApiKey) tornValid = false;
@@ -999,9 +1129,19 @@
         shield.innerHTML = "";
         const tornIssues = !settings.tornApiKey || tornValid === false;
         const firebaseIssues = !settings.firebaseUrl || !settings.firebaseApiKey || firebaseValid === false;
+        const authIssues = (isAuthorized === false);
         const factionIssues = (!tornIssues && !firebaseIssues && authorizedFactionId !== "PENDING" && authorizedFactionId !== null && cachedApiData.faction_id !== authorizedFactionId);
 
-        if (!tornIssues && !firebaseIssues && !factionIssues) {
+        const hideDiscord = tornIssues || firebaseIssues || authIssues;
+        const discordDisplay = hideDiscord ? 'none' : 'block';
+        if (memberDiscord) memberDiscord.style.display = hideDiscord ? 'none' : (!cachedApiData.isbanker ? 'block' : 'none');
+        if (bankerDiscord) bankerDiscord.style.display = hideDiscord ? 'none' : (cachedApiData.isbanker ? 'block' : 'none');
+        if (syncDiscordBtn) syncDiscordBtn.style.display = discordDisplay;
+        if (testDiscordBtn) {
+            testDiscordBtn.style.display = (hideDiscord || !settings.discordWebhook) ? 'none' : 'block';
+        }
+
+        if (!tornIssues && !firebaseIssues && !authIssues && !factionIssues) {
             shield.style.display = 'none';
             if (hasActiveRequest) { inputArea.style.display = 'none'; statusArea.style.display = 'block'; }
             else { inputArea.style.display = 'block'; statusArea.style.display = 'none'; }
@@ -1017,6 +1157,11 @@
             const div = document.createElement('div'); div.className = 'vault-shield-msg';
             div.innerHTML = `Please enter a valid Firebase URL and Secret Key in <span class="vault-error-link" id="link-set-2">Settings</span>.`;
             shield.appendChild(div); document.getElementById('link-set-2')?.addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('vault-settings-trigger').click(); });
+        }
+        if (authIssues) {
+            const div = document.createElement('div'); div.className = 'vault-shield-msg';
+            div.innerHTML = `<span style="color: #ff4444; font-weight: bold;">Access Denied:</span><br>Faction [${cachedApiData.faction_id || '???'}] is not authorized to use this script.`;
+            shield.appendChild(div);
         }
         if (factionIssues) {
             const div = document.createElement('div'); div.className = 'vault-shield-msg';
@@ -1248,7 +1393,11 @@
                 });
             }
 
-            syncAllData(true).then(() => {
+            syncAllData(true).then(async () => {
+                await checkAuthorization();
+                if (tornValid && firebaseValid && isAuthorized) {
+                    registerUserInDatabase();
+                }
                 btn.innerText = "SAVE & VALIDATE";
                 const testBtn = document.getElementById('vault-test-discord');
                 if (testBtn) testBtn.style.display = settings.discordWebhook ? 'block' : 'none';
@@ -1363,6 +1512,7 @@
             name: cachedApiData.name,
             id: cachedApiData.user_id,
             amount: amt,
+            startingBalance: cachedApiData.faction_money_balance,
             pref: isPrefOnline ? 1 : 0,
             timeout: timeoutVal,
             timestamp: Date.now(),
@@ -1387,6 +1537,7 @@
                 if (res.status === 200) {
                     updateUI(data);
                     sendDiscordPing();
+                    vLog(`Request submitted. Starting balance: ${formatMoney(data.startingBalance)}`);
                 } else {
                     vLog("Firebase Error:", null, 'error', res.responseText);
                 }
@@ -1434,6 +1585,7 @@
 
     async function fulfillRequest(userId, userName, amount) {
         sendDiscordPing(null, false, false, false, true, userName, amount);
+        vLog(`Initiating payment for ${userName}. Redirecting to vault...`);
         const deleteUrl = getDbUrl(`/vaultRequests/${userId}`, "DELETE");
         if (!deleteUrl) return;
 
@@ -1447,6 +1599,38 @@
             });
         });
         window.location.assign(`https://www.torn.com/factions.php?step=your#/tab=controls&option=give-to-user&giveMoneyTo=${userId}&money=${amount}`);
+    }
+
+    function isFulfilled() {
+        if (!hasActiveRequest || !activeData || !activeData.startingBalance) return;
+        const currentBal = cachedApiData.faction_money_balance;
+        const startBal = activeData.startingBalance;
+        const amountRequested = activeData.amount;
+        const difference = startBal - currentBal;
+        const profileLink = `[${cachedApiData.name} [${cachedApiData.user_id}]](https://www.torn.com/profiles.php?XID=${cachedApiData.user_id})`;
+        vLog(`Start Balance - ${startBal}. Current Balance - ${currentBal}. Difference - ${difference}`);
+
+        if (difference >= amountRequested) {
+            vLog(`Payment detected for ($${difference.toLocaleString()}). Clearing local request.`);
+
+            const deleteUrl = getDbUrl(`/vaultRequests/${cachedApiData.user_id}`, "DELETE");
+            GM_xmlhttpRequest({
+                method: "POST",
+                url: deleteUrl,
+                headers: { "X-HTTP-Method-Override": "DELETE" },
+                onload: (res) => {
+                    if (res.status === 200) {
+                        vLog("Firebase | Request cleared successfully.");
+                        sendDiscordPing(`✅ **Request Auto Verified** -- ${profileLink} (**$${formatMoney(amountRequested)}**)-- Filled by someone not using the [Vault Script](https://greasyfork.org/en/scripts/562127-faction-vault-member-management)`);
+                        hasActiveRequest = false;
+                        activeData = null;
+                        GM_setValue(ACTIVE_REQ_KEY, false);
+                        updateStatusIcon();
+                        updateUI(null);
+                    }
+                }
+            });
+        }
     }
 
     function purgeExpiredRequests() {
@@ -1557,12 +1741,16 @@
 
     window.addEventListener('hashchange', () => {
         injectUI();
-        syncAllData(true);
+        syncAllData(true).then(() => checkAuthorization().then(() => updateShieldUI()));
     });
     window.addEventListener('popstate', injectUI);
 
     injectUI();
-    syncAllData(true);
+    syncAllData(true).then(() => {
+        checkAuthorization().then(() => {
+            updateShieldUI();
+        });
+    });
 
     setInterval(() => {
         const myId = String(currentTabId);
@@ -1576,7 +1764,13 @@
         }
     }, 1000);
     setInterval(injectUI, 2000);
-    setInterval(syncAllData, 30000);
+    setInterval(() => {
+        syncAllData().then(() => {
+            checkAuthorization().then(() => {
+                updateShieldUI();
+            });
+        });
+    }, 30000);
     setInterval(updateManagementList, 10000);
 
 })();

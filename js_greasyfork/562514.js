@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         Phantom Portal v2.5.9
+// @name         Phantom Portal v2.6.2
 // @namespace    http://tampermonkey.net/
-// @version      2.5.9
+// @version      2.6.2
 // @description  Torn to Discord sync system with Glass Theme for My Faction and Allies
 // @author       Daturax
 // @license      GPLv3
@@ -17,8 +17,8 @@
 // @connect      *.supabase.co
 // @connect      cdn.pixabay.com
 // @run-at       document-end
-// @downloadURL https://update.greasyfork.org/scripts/562514/Phantom%20Portal%20v259.user.js
-// @updateURL https://update.greasyfork.org/scripts/562514/Phantom%20Portal%20v259.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/562514/Phantom%20Portal%20v262.user.js
+// @updateURL https://update.greasyfork.org/scripts/562514/Phantom%20Portal%20v262.meta.js
 // ==/UserScript==
 
 (function() {
@@ -26,11 +26,11 @@
 
     const TORN_API_KEY = '###PDA-APIKEY###';
 
-    if (window._phantomPortalV2_5_8) {
+    if (window._phantomPortalV2_6_2) {
         console.warn('[Phantom Portal] Already initialized');
         return;
     }
-    window._phantomPortalV2_5_8 = true;
+    window._phantomPortalV2_6_2 = true;
 
     // Safe GM Functions Wrapper
     const SafeGM = {
@@ -195,7 +195,7 @@
     // Main Phantom Portal Class
     class PhantomPortal {
         constructor() {
-            console.log('[Phantom Portal v2.5.9] Initializing');
+            console.log('[Phantom Portal v2.6.2] Initializing');
             
             this.supabaseUrl = 'https://gsxihumaebabhkvowqzs.supabase.co';
             this.supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdzeGlodW1hZWJhYmhrdm93cXpzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc3MDkzMzQsImV4cCI6MjA4MzI4NTMzNH0.OyOMGVdMEXlg6IiLKt1wElQ8AeVvVROr9YQI1-hwKlk';
@@ -241,10 +241,12 @@
                 lastOnlineTime: SafeGM.getValue('pp_last_online_time', Date.now()),
                 roomScrollPositions: SafeGM.getValue('pp_room_scroll_positions', {}),
                 loadingOlderMessages: false,
-                hasMoreMessages: true
+                hasMoreMessages: true,
+                hasInitialized: SafeGM.getValue('pp_has_initialized', false),
+                unreadMessages: SafeGM.getValue('pp_unread_messages', 0)
             };
 
-            // Ensure each room has message storage
+            // Initialize room messages storage
             Object.keys(this.rooms).forEach(roomId => {
                 if (!this.state.roomMessages[roomId]) {
                     this.state.roomMessages[roomId] = [];
@@ -254,7 +256,7 @@
                 }
             });
 
-            // Ensure selected room is accessible
+            // Reset selected room if not accessible
             if (!this.isRoomAccessible(this.state.selectedRoom)) {
                 this.state.selectedRoom = '1451524832767250543';
                 SafeGM.setValue('pp_selected_room', this.state.selectedRoom);
@@ -267,7 +269,6 @@
             this.pendingMessages = new Set();
             this.pendingNotifications = new Set();
             this.fabPulsing = false;
-            this.unreadMessages = 0;
             this.isDragging = false;
             this.isLongPressing = false;
             this.longPressTimer = null;
@@ -282,6 +283,8 @@
             this.lastMessageFetch = {};
             this.scrollDebounce = null;
             this.loadingMessages = false;
+            this.touchScrollPrevented = false;
+            this.keyboardOpen = false;
             
             this.intervals = {
                 sync: null,
@@ -304,6 +307,11 @@
             this.alertSoundUrl = 'https://cdn.pixabay.com/download/audio/2025/07/20/376885_b3d2f14d7d.mp3?filename=notification-bell-sound-1-376885.mp3';
             this.audioCache = null;
             this.buttonObserver = null;
+
+            // Initialize unread messages from saved state
+            if (this.state.unreadMessages > 0) {
+                this.updateFABPulse();
+            }
 
             this.initWithRetry();
         }
@@ -337,6 +345,8 @@
                 await this.fetchProfile();
                 await this.checkFaction();
                 
+                this.updateUIBasedOnFaction();
+                
                 this.startSyncLoop();
                 this.startCooldownTicker();
                 this.startStatsUpdater();
@@ -346,10 +356,20 @@
                 window.addEventListener('beforeunload', () => this.cleanup());
                 this.setupViewportHandling();
                 this.exposeNanoSnapAPI();
+                this.setupScrollPrevention();
                 
                 // Save current online time
                 this.state.lastOnlineTime = Date.now();
                 SafeGM.setValue('pp_last_online_time', this.state.lastOnlineTime);
+                
+                // Mark as initialized
+                this.state.hasInitialized = true;
+                SafeGM.setValue('pp_has_initialized', true);
+                
+                // Load initial messages if not already loaded
+                if (!this.state.hasInitialized) {
+                    setTimeout(() => this.loadRoomHistory(true), 1000);
+                }
             } catch (error) {
                 console.error('[Phantom Portal] Partial initialization error');
             }
@@ -384,12 +404,36 @@
             
             // Save last sync time
             SafeGM.setValue('pp_last_sync', this.state.lastSync);
+            
+            // Save unread messages count
+            SafeGM.setValue('pp_unread_messages', this.state.unreadMessages);
+        }
+
+        setupScrollPrevention() {
+            const preventScroll = (e) => {
+                if (this.isOpen) {
+                    e.stopPropagation();
+                }
+            };
+
+            if (this.container) {
+                this.container.addEventListener('touchstart', preventScroll, { passive: false });
+                this.container.addEventListener('touchmove', preventScroll, { passive: false });
+            }
+
+            if (this.toggleBtn) {
+                this.toggleBtn.addEventListener('touchstart', (e) => {
+                    if (this.isLongPressing || this.isDragging) {
+                        e.stopPropagation();
+                    }
+                }, { passive: false });
+            }
         }
 
         exposeNanoSnapAPI() {
             window.PhantomPortalFAB = {
                 id: 'phantom-portal-fab',
-                version: '2.5.9',
+                version: '2.6.2',
                 
                 getPosition: () => {
                     if (!this.toggleBtn) return null;
@@ -424,11 +468,25 @@
                 window.visualViewport.addEventListener('resize', this.debounce(() => {
                     this.adjustForKeyboard();
                 }, 100));
+                
+                window.visualViewport.addEventListener('scroll', this.debounce(() => {
+                    this.adjustForKeyboard();
+                }, 100));
             }
             
             window.addEventListener('resize', this.debounce(() => {
                 this.adjustForKeyboard();
             }, 100));
+            
+            window.addEventListener('focusin', () => {
+                this.keyboardOpen = true;
+                setTimeout(() => this.adjustForKeyboard(), 100);
+            });
+            
+            window.addEventListener('focusout', () => {
+                this.keyboardOpen = false;
+                setTimeout(() => this.adjustForKeyboard(), 100);
+            });
         }
 
         debounce(func, wait) {
@@ -452,16 +510,31 @@
                 this.domCache.messagesContainer.style.paddingBottom = `${offset}px`;
             }
             
-            if (window.visualViewport && window.innerHeight > window.visualViewport.height) {
+            if (this.keyboardOpen && window.visualViewport && window.innerHeight > window.visualViewport.height) {
                 const keyboardHeight = window.innerHeight - window.visualViewport.height;
-                this.container.style.bottom = `${keyboardHeight + offset}px`;
-                this.container.style.transform = 'translate(-50%, 0)';
+                const containerHeight = this.container.offsetHeight;
+                const viewportHeight = window.visualViewport.height;
+                
+                this.container.style.position = 'fixed';
                 this.container.style.top = 'auto';
+                this.container.style.bottom = `${keyboardHeight + offset}px`;
+                this.container.style.left = '50%';
+                this.container.style.transform = 'translateX(-50%)';
+                this.container.style.maxHeight = `${viewportHeight - keyboardHeight - 20}px`;
+                
+                if (this.domCache.input) {
+                    this.domCache.input.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+                }
             } else {
-                this.container.style.bottom = 'auto';
-                this.container.style.transform = 'translate(-50%, -50%)';
+                this.container.style.position = 'fixed';
                 this.container.style.top = '50%';
+                this.container.style.bottom = 'auto';
+                this.container.style.left = '50%';
+                this.container.style.transform = 'translate(-50%, -50%)';
+                this.container.style.maxHeight = '800px';
             }
+            
+            this.container.offsetHeight;
         }
 
         async checkUserOverrides() {
@@ -643,14 +716,13 @@
                 if (this.domCache.messagesContainer) {
                     this.domCache.messagesContainer.innerHTML = '';
                 }
-                this.loadRoomHistory();
+                this.loadRoomHistory(true);
             }
         }
 
         switchRoom(roomId) {
             const inputWasFocused = this.domCache.input && document.activeElement === this.domCache.input;
             
-            // Save current scroll position
             if (this.domCache.messagesContainer && this.isOpen) {
                 const scrollTop = this.domCache.messagesContainer.scrollTop;
                 this.state.roomScrollPositions[this.state.selectedRoom] = {
@@ -674,12 +746,7 @@
                 this.domCache.messagesContainer.innerHTML = '';
             }
             
-            this.loadRoomHistory();
-            
-            if (this.unreadMessages > 0) {
-                this.unreadMessages = 0;
-                this.updateFABPulse();
-            }
+            this.loadRoomHistory(true);
             
             if (inputWasFocused && this.domCache.input) {
                 setTimeout(() => {
@@ -1075,18 +1142,14 @@
             this.updateDOMCache();
             if (!this.domCache.messagesContainer) return;
 
-            // Clear container
             this.domCache.messagesContainer.innerHTML = '';
             
-            // Get room history
             const roomHistory = this.state.roomMessages[this.state.selectedRoom] || [];
             
-            // Sort messages by timestamp (oldest first for display)
             const sortedHistory = [...roomHistory].sort((a, b) => 
                 new Date(a.created_at || 0).getTime() - new Date(b.created_at || 0).getTime()
             );
             
-            // Display stored messages
             sortedHistory.forEach(msg => {
                 if (msg.room_id === this.state.selectedRoom || !msg.room_id) {
                     this.addMessage(
@@ -1101,13 +1164,10 @@
                 }
             });
             
-            // Load recent messages from server
-            await this.fetchRecentMessages(forceRefresh);
+            await this.fetchRecentMessages(forceRefresh || !this.state.hasInitialized);
             
-            // Set up infinite scroll
             this.setupInfiniteScroll();
             
-            // Restore scroll position if available
             setTimeout(() => {
                 const savedPos = this.state.roomScrollPositions[this.state.selectedRoom];
                 if (savedPos && savedPos.top > 0 && this.domCache.messagesContainer) {
@@ -1126,32 +1186,29 @@
                 const now = Date.now();
                 const lastFetch = this.lastMessageFetch[this.state.selectedRoom] || 0;
                 
-                // Don't fetch too frequently
                 if (!forceRefresh && now - lastFetch < 2000) {
                     return;
                 }
                 
-                // Get timestamp of last message in room
                 const roomMessages = this.state.roomMessages[this.state.selectedRoom] || [];
                 let lastTimestamp = this.state.lastOnlineTime;
                 
-                if (roomMessages.length > 0) {
-                    // Get most recent message timestamp
+                if (roomMessages.length > 0 && !forceRefresh) {
                     const sortedMessages = [...roomMessages].sort((a, b) => 
                         new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime()
                     );
                     const latestMsgTime = new Date(sortedMessages[0].created_at || 0).getTime();
                     lastTimestamp = Math.max(lastTimestamp, latestMsgTime);
+                } else {
+                    lastTimestamp = Date.now() - 86400000;
                 }
                 
-                // FIX: Handle invalid timestamps (0 or negative)
                 if (lastTimestamp <= 0) {
-                    lastTimestamp = Date.now() - 86400000; // 24 hours ago as fallback
+                    lastTimestamp = Date.now() - 86400000;
                 }
                 
                 const lastTimestampISO = new Date(lastTimestamp).toISOString();
                 
-                // Fetch messages since last timestamp
                 const response = await this.supabaseRequest('GET',
                     `/rest/v1/portal_messages?room_id=eq.${this.state.selectedRoom}` +
                     `&created_at=gt.${lastTimestampISO}` +
@@ -1177,7 +1234,6 @@
                         
                         if (this.pendingMessages.has(msgHash)) continue;
 
-                        // Add to local storage (keep only last 30 messages per room)
                         this.addToRoomHistory({
                             ...msg,
                             message: sanitizedMessage,
@@ -1187,13 +1243,11 @@
                         this.state.messageCache.set(msg.sync_id, true);
                         newMessages.push(msg);
 
-                        // Update message stats
                         if (msg.discord_id) {
                             this.state.messageStats.received++;
                             this.state.messageStats.lastMessageTime = Date.now();
                         }
 
-                        // Handle alerts
                         if (msg.alert && !msg.discord_id) {
                             const messageTime = new Date(msg.created_at || Date.now()).getTime();
                             if (now - messageTime < 300000 && !this.pendingNotifications.has(msg.sync_id)) {
@@ -1204,8 +1258,7 @@
                         }
                     }
                     
-                    // Display new messages
-                    if (newMessages.length > 0 && this.isOpen) {
+                    if (newMessages.length > 0) {
                         newMessages.forEach(msg => {
                             this.addMessage(
                                 msg.message || '',
@@ -1217,9 +1270,9 @@
                             );
                         });
                         
-                        // Update unread count if window is closed
                         if (!this.isOpen) {
-                            this.unreadMessages += newMessages.length;
+                            this.state.unreadMessages += newMessages.length;
+                            SafeGM.setValue('pp_unread_messages', this.state.unreadMessages);
                             this.updateFABPulse();
                             this.triggerFABPulse();
                         }
@@ -1227,7 +1280,6 @@
                     
                     this.lastMessageFetch[this.state.selectedRoom] = now;
                     
-                    // Clean up old messages (keep only last 30 per room)
                     this.cleanupRoomMessages();
                 }
                 
@@ -1255,14 +1307,12 @@
                     return;
                 }
                 
-                // Get oldest message timestamp
                 const sortedMessages = [...roomMessages].sort((a, b) => 
                     new Date(a.created_at || 0).getTime() - new Date(b.created_at || 0).getTime()
                 );
                 const oldestMsg = sortedMessages[0];
                 const oldestTimestamp = new Date(oldestMsg.created_at || 0).toISOString();
                 
-                // Fetch messages older than the oldest one we have
                 const response = await this.supabaseRequest('GET',
                     `/rest/v1/portal_messages?room_id=eq.${this.state.selectedRoom}` +
                     `&created_at=lt.${oldestTimestamp}` +
@@ -1282,7 +1332,6 @@
                         
                         const sanitizedSender = this.sanitizeHTML(msg.torn_profile_name || msg.discord_name || 'Unknown');
                         
-                        // Add to beginning of local storage
                         this.addToRoomHistoryBeginning({
                             ...msg,
                             message: sanitizedMessage,
@@ -1293,11 +1342,9 @@
                         olderMessages.push(msg);
                     }
                     
-                    // Re-render messages with older ones prepended
                     if (olderMessages.length > 0) {
                         this.loadRoomHistory(true);
                         
-                        // Restore scroll position to maintain user's place
                         setTimeout(() => {
                             if (this.domCache.messagesContainer) {
                                 const newScrollHeight = this.domCache.messagesContainer.scrollHeight;
@@ -1323,24 +1370,20 @@
         setupInfiniteScroll() {
             if (!this.domCache.messagesContainer) return;
             
-            // Remove existing scroll listener
             this.domCache.messagesContainer.removeEventListener('scroll', this.handleScroll);
             
-            // Add new scroll listener
             this.handleScroll = () => {
                 if (this.scrollDebounce) clearTimeout(this.scrollDebounce);
                 
                 this.scrollDebounce = setTimeout(() => {
                     if (!this.domCache.messagesContainer) return;
                     
-                    // Check if scrolled near top
                     if (this.domCache.messagesContainer.scrollTop < 100 && 
                         this.state.hasMoreMessages && 
                         !this.state.loadingOlderMessages) {
                         this.fetchOlderMessages();
                     }
                     
-                    // Save scroll position
                     const scrollTop = this.domCache.messagesContainer.scrollTop;
                     this.state.roomScrollPositions[this.state.selectedRoom] = {
                         top: scrollTop,
@@ -1396,11 +1439,18 @@
                                         setTimeout(() => this.pendingNotifications.delete(msg.sync_id), 300000);
                                     }
                                 }
+                                
+                                if (!this.isOpen && this.state.selectedRoom !== roomId) {
+                                    this.state.unreadMessages++;
+                                    SafeGM.setValue('pp_unread_messages', this.state.unreadMessages);
+                                    this.updateFABPulse();
+                                    this.triggerFABPulse();
+                                }
                             }
                         }
                     }
                 } catch (error) {
-                    // Silent error - background polling failures shouldn't break the app
+                    // Silent error
                 }
             }, 5000);
         }
@@ -1505,9 +1555,8 @@
             const exists = roomMessages.some(existing => existing.sync_id === msg.sync_id);
 
             if (!exists) {
-                // Keep only last 30 messages per room in persistent storage
                 if (roomMessages.length >= 30) {
-                    roomMessages.shift(); // Remove oldest message
+                    roomMessages.shift();
                 }
                 
                 roomMessages.push({
@@ -1534,7 +1583,6 @@
             const exists = roomMessages.some(existing => existing.sync_id === msg.sync_id);
 
             if (!exists) {
-                // Add to beginning
                 roomMessages.unshift({
                     sync_id: msg.sync_id,
                     message: msg.message,
@@ -1545,7 +1593,6 @@
                     room_id: roomId
                 });
 
-                // Trim if too many messages (keep only last 200 for memory management)
                 if (roomMessages.length > 200) {
                     roomMessages.splice(200, roomMessages.length - 200);
                 }
@@ -1557,7 +1604,6 @@
         cleanupRoomMessages() {
             Object.keys(this.rooms).forEach(roomId => {
                 if (this.state.roomMessages[roomId] && this.state.roomMessages[roomId].length > 30) {
-                    // Keep only last 30 messages for persistent storage
                     this.state.roomMessages[roomId] = this.state.roomMessages[roomId].slice(-30);
                 }
             });
@@ -1618,7 +1664,6 @@
                                new Date(now.getTime() - 86400000).getFullYear() === msgDate.getFullYear();
             
             if (!isSameDay && !isYesterday) {
-                // Show date for messages older than yesterday
                 const dateStr = msgDate.toLocaleDateString([], { 
                     month: 'short', 
                     day: 'numeric',
@@ -1693,14 +1738,16 @@
             setTimeout(() => {
                 this.toggleBtn.classList.remove('pulsing');
                 this.fabPulsing = false;
+                if (this.state.unreadMessages > 0 && !this.isOpen) {
+                    this.triggerFABPulse();
+                }
             }, 10000);
         }
 
         updateFABPulse() {
-            if (this.unreadMessages > 0 && !this.isOpen) {
+            if (this.state.unreadMessages > 0 && !this.isOpen) {
                 if (!this.fabPulsing) {
-                    this.fabPulsing = true;
-                    this.toggleBtn.classList.add('pulsing');
+                    this.triggerFABPulse();
                 }
             } else {
                 this.fabPulsing = false;
@@ -1789,7 +1836,7 @@
             modal.innerHTML = `
                 <div class="pp-settings-content">
                     <div class="pp-settings-header">
-                        <h3>Phantom Portal Settings v2.5.9</h3>
+                        <h3>Phantom Portal Settings v2.6.2</h3>
                         <button class="pp-settings-close">&times;</button>
                     </div>
                     <div class="pp-settings-body">
@@ -1829,7 +1876,7 @@
                             </div>
                             <div class="pp-info-item">
                                 <span class="pp-info-label">Unread Messages:</span>
-                                <span class="pp-info-value" id="pp-unread-messages">${this.unreadMessages}</span>
+                                <span class="pp-info-value" id="pp-unread-messages">${this.state.unreadMessages}</span>
                             </div>
                         </div>
                         
@@ -1995,11 +2042,9 @@
                 reloadBtn.disabled = true;
                 
                 try {
-                    // Reset last online time to force reload of recent messages
                     this.state.lastOnlineTime = Date.now() - (24 * 60 * 60 * 1000);
                     SafeGM.setValue('pp_last_online_time', this.state.lastOnlineTime);
                     
-                    // Clear message cache for current room
                     this.state.roomMessages[this.state.selectedRoom] = [];
                     this.state.messageCache.clear();
                     this.state.hasMoreMessages = true;
@@ -2017,7 +2062,8 @@
 
             const markReadBtn = modal.querySelector('#pp-mark-read');
             markReadBtn.addEventListener('click', () => {
-                this.unreadMessages = 0;
+                this.state.unreadMessages = 0;
+                SafeGM.setValue('pp_unread_messages', 0);
                 this.updateFABPulse();
                 this.showToast('All messages marked as read', 'success');
                 modal.remove();
@@ -2284,7 +2330,7 @@
             this.toggleBtn = document.createElement('div');
             this.toggleBtn.className = 'pp-toggle';
             this.toggleBtn.innerHTML = '<img src="https://images2.imgbox.com/cc/75/V2yuzaa8_o.png" class="pp-toggle-icon" alt="PP">';
-            this.toggleBtn.title = 'Phantom Portal v2.5.9 - Long press to move, tap to open';
+            this.toggleBtn.title = 'Phantom Portal v2.6.2 - Long press to move, tap to open';
             
             this.toggleBtn.style.position = 'fixed';
             this.toggleBtn.style.left = `${this.state.fabPosition.x}px`;
@@ -2298,7 +2344,7 @@
                 <div class="pp-header">
                     <div class="pp-title">
                         <img src="https://images2.imgbox.com/cc/75/V2yuzaa8_o.png" class="pp-header-icon" alt="">
-                        Phantom Portal v2.5.9
+                        Phantom Portal v2.6.2
                     </div>
                     <div class="pp-header-right">
                         <div class="pp-profile-display">Loading...</div>
@@ -2322,27 +2368,9 @@
                 quickActionsEl.appendChild(this.createQuickActions());
             }
 
-            this.createRoomSelector();
-            this.setupEvents();
             this.updateDOMCache();
             this.updateProfileDisplay();
-        }
-
-        createRoomSelector() {
-            this.updateDOMCache();
-            if (!this.domCache.roomSelector) return;
-            
-            Object.entries(this.rooms).forEach(([id, room]) => {
-                if (room.type === 'general' || this.state.isInAllowedFaction) {
-                    const btn = document.createElement('button');
-                    btn.className = 'pp-room-btn';
-                    if (id === this.state.selectedRoom) btn.classList.add('active');
-                    btn.textContent = room.name;
-                    btn.dataset.roomId = id;
-                    btn.addEventListener('click', () => this.switchRoom(id));
-                    this.domCache.roomSelector.appendChild(btn);
-                }
-            });
+            this.setupEvents();
         }
 
         setupEvents() {
@@ -2361,8 +2389,9 @@
                     this.isLongPressing = true;
                     this.isDragging = false;
                     this.toggleBtn.classList.add('dragging');
+                    e.preventDefault();
                 }, 500);
-            });
+            }, { passive: false });
 
             this.toggleBtn.addEventListener('touchmove', (e) => {
                 if (e.touches.length > 1) return;
@@ -2401,8 +2430,10 @@
                     
                     this.state.fabPosition = { x: constrainedX, y: constrainedY };
                     this.isDragging = true;
+                    
+                    e.preventDefault();
                 }
-            });
+            }, { passive: false });
 
             this.toggleBtn.addEventListener('touchend', (e) => {
                 if (e.touches.length > 0) return;
@@ -2449,8 +2480,27 @@
                     }
                 });
                 
-                this.domCache.input.addEventListener('focus', () => this.adjustForKeyboard());
-                this.domCache.input.addEventListener('blur', () => this.adjustForKeyboard());
+                this.domCache.input.addEventListener('focus', () => {
+                    this.keyboardOpen = true;
+                    this.adjustForKeyboard();
+                });
+                this.domCache.input.addEventListener('blur', () => {
+                    this.keyboardOpen = false;
+                    setTimeout(() => this.adjustForKeyboard(), 100);
+                });
+            }
+            
+            // Prevent scroll propagation
+            if (this.container) {
+                this.container.addEventListener('wheel', (e) => {
+                    e.stopPropagation();
+                }, { passive: false });
+                
+                this.container.addEventListener('touchmove', (e) => {
+                    if (this.container.contains(e.target)) {
+                        e.stopPropagation();
+                    }
+                }, { passive: false });
             }
         }
 
@@ -2458,14 +2508,19 @@
             this.isOpen = !this.isOpen;
             this.container.style.display = this.isOpen ? 'flex' : 'none';
             if (this.isOpen) {
-                this.loadRoomHistory();
-                this.fetchRecentMessages();
+                this.loadRoomHistory(true);
                 this.toggleBtn.classList.remove('pulsing');
                 this.fabPulsing = false;
-                this.unreadMessages = 0;
+                this.state.unreadMessages = 0;
+                SafeGM.setValue('pp_unread_messages', 0);
                 this.adjustForKeyboard();
+                
+                setTimeout(() => {
+                    if (this.domCache.input) {
+                        this.domCache.input.focus();
+                    }
+                }, 100);
             } else {
-                // Save scroll position when closing
                 if (this.domCache.messagesContainer) {
                     const scrollTop = this.domCache.messagesContainer.scrollTop;
                     this.state.roomScrollPositions[this.state.selectedRoom] = {
@@ -2474,6 +2529,7 @@
                     };
                     SafeGM.setValue('pp_room_scroll_positions', this.state.roomScrollPositions);
                 }
+                this.keyboardOpen = false;
             }
         }
 
@@ -2523,6 +2579,7 @@
                     overflow: hidden;
                     color: rgba(255, 255, 255, var(--nano-content-opacity));
                     transition: bottom 0.3s ease, transform 0.3s ease, opacity 0.3s ease;
+                    touch-action: pan-y;
                 }
 
                 .pp-header {
@@ -2702,6 +2759,8 @@
                     padding: 10px;
                     background: rgba(0, 0, 0, 0.1);
                     transition: padding-bottom 0.3s ease;
+                    -webkit-overflow-scrolling: touch;
+                    touch-action: pan-y;
                 }
 
                 .pp-message {
@@ -2849,7 +2908,7 @@
                     border: 2px solid rgba(var(--nano-border-r), var(--nano-border-g), var(--nano-border-b), 0.6);
                     transition: transform 0.3s, box-shadow 0.3s, left 0.2s ease, top 0.2s ease;
                     user-select: none;
-                    touch-action: manipulation;
+                    touch-action: none;
                     -webkit-tap-highlight-color: transparent;
                     backdrop-filter: blur(var(--nano-frost-blur));
                     -webkit-backdrop-filter: blur(var(--nano-frost-blur));
@@ -3272,6 +3331,9 @@
                         height: 85vh;
                         min-height: 400px;
                         max-height: 90vh;
+                        top: 50%;
+                        bottom: auto;
+                        transform: translate(-50%, -50%);
                     }
                     
                     .pp-toggle {

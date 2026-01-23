@@ -1,13 +1,13 @@
 // ==UserScript==
 // @name         生意参谋全貌数据自动获取(含图片报表)
 // @namespace    http://tampermonkey.net/
-// @version      2.0
+// @version      2.21
 // @description  自动翻页获取生意参谋全部数据，并生成包含图片的可视化HTML报表
 // @author       Antigravity
 // @match        *://sycm.taobao.com/*
 // @grant        none
-// @license
 // @license MIT
+// @license
 // @downloadURL https://update.greasyfork.org/scripts/563367/%E7%94%9F%E6%84%8F%E5%8F%82%E8%B0%8B%E5%85%A8%E8%B2%8C%E6%95%B0%E6%8D%AE%E8%87%AA%E5%8A%A8%E8%8E%B7%E5%8F%96%28%E5%90%AB%E5%9B%BE%E7%89%87%E6%8A%A5%E8%A1%A8%29.user.js
 // @updateURL https://update.greasyfork.org/scripts/563367/%E7%94%9F%E6%84%8F%E5%8F%82%E8%B0%8B%E5%85%A8%E8%B2%8C%E6%95%B0%E6%8D%AE%E8%87%AA%E5%8A%A8%E8%8E%B7%E5%8F%96%28%E5%90%AB%E5%9B%BE%E7%89%87%E6%8A%A5%E8%A1%A8%29.meta.js
 // ==/UserScript==
@@ -29,47 +29,127 @@
     let isProcessing = false;
 
     // ────────────────────────────
-    // 历史记录管理
+    // IndexedDB 历史记录管理 (解决大数据存储问题)
     // ────────────────────────────
-    const HISTORY_KEY = 'sycm_scraper_history_v2';
+    const DB_NAME = 'SycmScraperDB_v2';
+    const DB_VERSION = 1;
 
-    function saveToHistory(data) {
+    const DB = {
+        open: () => {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(DB_NAME, DB_VERSION);
+                request.onerror = () => reject(request.error);
+                request.onsuccess = () => resolve(request.result);
+                request.onupgradeneeded = (e) => {
+                    const db = e.target.result;
+                    if (!db.objectStoreNames.contains('history')) {
+                        db.createObjectStore('history', { keyPath: 'id' });
+                    }
+                };
+            });
+        },
+        add: async (item) => {
+            const db = await DB.open();
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction('history', 'readwrite');
+                const store = tx.objectStore('history');
+                const request = store.add(item);
+                request.onsuccess = () => resolve();
+                request.onerror = () => reject(request.error);
+            });
+        },
+        // 获取所有记录的元数据 (不含详细 data)
+        getAllMeta: async () => {
+            const db = await DB.open();
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction('history', 'readonly');
+                const store = tx.objectStore('history');
+                const request = store.openCursor(null, 'prev'); // 倒序
+                const results = [];
+                request.onsuccess = (e) => {
+                    const cursor = e.target.result;
+                    if (cursor) {
+                        const { id, time, count } = cursor.value;
+                        results.push({ id, time, count });
+                        if (results.length < 20) { // 限制列表显示最近 20 条
+                            cursor.continue();
+                        } else {
+                            resolve(results);
+                        }
+                    } else {
+                        resolve(results);
+                    }
+                };
+                request.onerror = () => reject(request.error);
+            });
+        },
+        get: async (id) => {
+            const db = await DB.open();
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction('history', 'readonly');
+                const store = tx.objectStore('history');
+                const request = store.get(id);
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = () => reject(request.error);
+            });
+        },
+        cleanup: async (limit = 10) => {
+            const db = await DB.open();
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction('history', 'readwrite');
+                const store = tx.objectStore('history');
+                // 获取所有 Key (默认升序，即时间旧->新)
+                const keyReq = store.getAllKeys();
+                keyReq.onsuccess = () => {
+                    const keys = keyReq.result;
+                    if (keys.length > limit) {
+                        const keysToDelete = keys.slice(0, keys.length - limit);
+                        let deletedCount = 0;
+                        keysToDelete.forEach(k => {
+                            store.delete(k);
+                            deletedCount++;
+                        });
+                        console.log(`清理了 ${deletedCount} 条旧记录`);
+                    }
+                    resolve();
+                };
+                keyReq.onerror = () => reject(keyReq.error);
+            });
+        }
+    };
+
+    async function saveToHistory(data) {
         if (!data || data.length === 0) return;
         try {
-            const history = getHistory();
             const newItem = {
                 id: Date.now(),
                 time: new Date().toLocaleString(),
                 count: data.length,
                 data: data
             };
-            // 保留最近 10 条
-            history.unshift(newItem);
-            if (history.length > 10) history.pop();
-
-            localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+            await DB.add(newItem);
+            await DB.cleanup(10); // 保留最近 10 条
             updateHistoryUI();
         } catch (e) {
-            console.error('保存历史记录失败 (可能是存储空间不足):', e);
-            alert('保存历史记录失败，可能是数据量过大超过了浏览器限制。');
+            console.error('保存历史记录失败:', e);
+            alert('保存历史记录失败 (Into DB): ' + e.message);
         }
     }
 
-    function getHistory() {
+    async function loadHistoryItem(id) {
         try {
-            return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+            updateStatus('正在从数据库加载...', 0.5);
+            const item = await DB.get(id);
+            if (item) {
+                collectedData = item.data;
+                updateStatus(`已加载历史数据: ${item.time} (${item.count}条)`, 1);
+                document.getElementById('sycm-result-area').style.display = 'block';
+            } else {
+                alert('未找到该记录');
+            }
         } catch (e) {
-            return [];
-        }
-    }
-
-    function loadHistoryItem(id) {
-        const history = getHistory();
-        const item = history.find(h => h.id === id);
-        if (item) {
-            collectedData = item.data;
-            updateStatus(`已加载历史数据: ${item.time} (${item.count}条)`, 1);
-            document.getElementById('sycm-result-area').style.display = 'block';
+            console.error(e);
+            alert('读取记录失败');
         }
     }
 
@@ -77,7 +157,11 @@
     // 创建UI界面
     function createUI() {
         // 移除旧元素避免重复
-        if (document.getElementById('sycm-panel')) return;
+        const existingPanel = document.getElementById('sycm-panel');
+        if (existingPanel) {
+            existingPanel.style.display = 'block'; // 重新显示
+            return;
+        }
 
         const panel = document.createElement('div');
         panel.id = 'sycm-panel';
@@ -85,7 +169,7 @@
             position: fixed;
             top: 120px;
             right: 20px;
-            z-index: 10000;
+            z-index: 2147483647;
             background: white;
             padding: 16px;
             border: 1px solid #e8e8e8;
@@ -94,9 +178,11 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             width: 220px;
             text-align: left;
+            user-select: none;
         `;
+        // header 部分添加 cursor: move
         panel.innerHTML = `
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;border-bottom:1px solid #f0f0f0;padding-bottom:8px;">
+            <div id="sycm-drag-header" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;border-bottom:1px solid #f0f0f0;padding-bottom:8px;cursor:move;">
                 <h3 style="margin:0;font-size:16px;font-weight:600;color:#333;">📊 数据全貌采集</h3>
                 <span id="sycm-close" style="cursor:pointer;color:#999;font-size:18px;">&times;</span>
             </div>
@@ -194,10 +280,59 @@
         // 鼠标悬停效果
         const btns = panel.querySelectorAll('button');
         btns.forEach(btn => {
-            const originalBg = btn.style.background;
             btn.onmouseover = () => { if (!btn.disabled) btn.style.opacity = '0.8'; };
             btn.onmouseout = () => { if (!btn.disabled) btn.style.opacity = '1'; };
         });
+
+        // ────────────────────────────
+        // 拖拽功能实现
+        // ────────────────────────────
+        const header = document.getElementById('sycm-drag-header');
+        let isDragging = false;
+        let currentX;
+        let currentY;
+        let initialX;
+        let initialY;
+        let xOffset = 0;
+        let yOffset = 0;
+
+        header.addEventListener("mousedown", dragStart);
+        document.addEventListener("mouseup", dragEnd);
+        document.addEventListener("mousemove", drag);
+
+        function dragStart(e) {
+            initialX = e.clientX - xOffset;
+            initialY = e.clientY - yOffset;
+
+            if (e.target === header || header.contains(e.target)) {
+                // 避免关闭按钮触发拖拽
+                if (e.target.id === 'sycm-close') return;
+                isDragging = true;
+            }
+        }
+
+        function dragEnd(e) {
+            initialX = currentX;
+            initialY = currentY;
+            isDragging = false;
+        }
+
+        function drag(e) {
+            if (isDragging) {
+                e.preventDefault();
+                currentX = e.clientX - initialX;
+                currentY = e.clientY - initialY;
+
+                xOffset = currentX;
+                yOffset = currentY;
+
+                setTranslate(currentX, currentY, panel);
+            }
+        }
+
+        function setTranslate(xPos, yPos, el) {
+            el.style.transform = `translate3d(${xPos}px, ${yPos}px, 0)`;
+        }
     }
 
     function updateStatus(text, progress = 0) {
@@ -212,35 +347,40 @@
         }
     }
 
-    function updateHistoryUI() {
+    async function updateHistoryUI() {
         const list = document.getElementById('sycm-history-list');
         if (!list) return;
 
-        const history = getHistory();
-        if (history.length === 0) {
-            list.innerHTML = '<div style="padding:8px;color:#999;text-align:center;">暂无记录</div>';
-            return;
+        try {
+            const history = await DB.getAllMeta();
+            if (history.length === 0) {
+                list.innerHTML = '<div style="padding:8px;color:#999;text-align:center;">暂无记录</div>';
+                return;
+            }
+
+            let html = '';
+            history.forEach(item => {
+                html += `
+                    <div class="history-item" data-id="${item.id}" style="padding:6px 8px; border-bottom:1px solid #eee; cursor:pointer; font-size:12px; display:flex; justify-content:space-between;">
+                        <span style="color:#1890ff;">${item.time.split(' ')[0]}</span>
+                        <span>${item.count}条</span>
+                    </div>
+                `;
+            });
+            list.innerHTML = html;
+
+            list.querySelectorAll('.history-item').forEach(el => {
+                el.onclick = () => {
+                    loadHistoryItem(parseInt(el.dataset.id));
+                    list.style.display = 'none'; // 加载后关闭列表
+                };
+                el.onmouseover = () => el.style.background = '#e6f7ff';
+                el.onmouseout = () => el.style.background = 'transparent';
+            });
+        } catch (e) {
+            console.error('更新历史记录界面失败:', e);
+            list.innerHTML = '<div style="padding:8px;color:#f5222d;text-align:center;">读取历史记录失败</div>';
         }
-
-        let html = '';
-        history.forEach(item => {
-            html += `
-                <div class="history-item" data-id="${item.id}" style="padding:6px 8px; border-bottom:1px solid #eee; cursor:pointer; font-size:12px; display:flex; justify-content:space-between;">
-                    <span style="color:#1890ff;">${item.time.split(' ')[0]}</span>
-                    <span>${item.count}条</span>
-                </div>
-            `;
-        });
-        list.innerHTML = html;
-
-        list.querySelectorAll('.history-item').forEach(el => {
-            el.onclick = () => {
-                loadHistoryItem(parseInt(el.dataset.id));
-                list.style.display = 'none'; // 加载后关闭列表
-            };
-            el.onmouseover = () => el.style.background = '#e6f7ff';
-            el.onmouseout = () => el.style.background = 'transparent';
-        });
     }
 
     function sleep(ms) {
@@ -291,7 +431,7 @@
             }
 
             updateStatus(`采集完成! 共 ${collectedData.length} 条数据`, 1);
-            saveToHistory(collectedData); // 保存到历史
+            await saveToHistory(collectedData); // 保存到历史
             resultArea.style.display = 'block';
 
         } catch (e) {
@@ -344,6 +484,13 @@
                     // 注意：保留原图可能图片过大，这里看需求，暂时保留原样或者适当处理
                 }
 
+                // 提取链接 (新增)
+                let linkUrl = '';
+                const linkTag = cell.querySelector('a');
+                if (linkTag && linkTag.href && !linkTag.href.includes('javascript:')) {
+                    linkUrl = linkTag.href;
+                }
+
                 // 提取文本
                 let text = cell.innerText.replace(/[\r\n]+/g, ' ').trim();
 
@@ -353,7 +500,9 @@
                     rowObj[header] = {
                         type: 'mixed',
                         text: text,
-                        img: imgUrl
+                        text: text,
+                        img: imgUrl,
+                        url: linkUrl
                     };
                 } else {
                     rowObj[header] = {
@@ -437,8 +586,30 @@
         tr:hover { background: #e6f7ff; }
         
         /* 图片样式 */
-        .cell-img { width: 48px; height: 48px; object-fit: cover; border-radius: 4px; border: 1px solid #eee; display: block; margin-right: 12px; cursor: zoom-in; }
+        /* 图片样式 */
+        .cell-img { width: 48px; height: 48px; object-fit: cover; border-radius: 4px; border: 1px solid #eee; display: block; cursor: zoom-in; }
         .cell-content { display: flex; align-items: center; }
+        
+        .img-wrapper { position: relative; display: inline-block; margin-right: 12px; }
+        .img-wrapper:hover .copy-btn { display: block; }
+        .copy-btn {
+            display: none;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            border: none;
+            font-size: 10px;
+            padding: 2px 0;
+            text-align: center;
+            cursor: pointer;
+            z-index: 5;
+            border-bottom-left-radius: 4px;
+            border-bottom-right-radius: 4px;
+        }
+        .copy-btn:hover { background: rgba(0,0,0,0.8); }
         
         /* 榜单控件样式 */
         .rank-btn { padding: 4px 8px; font-size: 12px; border: 1px solid #d9d9d9; background: #fff; border-radius: 3px; cursor: pointer; margin-right: 4px; }
@@ -447,7 +618,7 @@
         
         /* 预览浮层 */
         #preview-popup { position: fixed; z-index: 10000; background: #fff; padding: 4px; border-radius: 4px; box-shadow: 0 6px 16px rgba(0,0,0,0.12); border: 1px solid #f0f0f0; display: none; pointer-events: none; }
-        #preview-popup img { max-width: 480px; max-height: 480px; display: block; border-radius: 2px; }
+        #preview-popup img { max-width: 800px; max-height: 800px; display: block; border-radius: 2px; box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
 
         /* 标签页导航 */
         .tabs { display: flex; padding: 0 24px; background: #fff; border-bottom: 1px solid #f0f0f0; margin-top: 1px; }
@@ -521,14 +692,22 @@
 
                 if (cell.type === 'mixed' && cell.img) {
                     const largeImg = cell.img.replace(/_\d+x\d+\.(jpg|png|webp|jpeg)$/i, '');
-                    html += `
-                        <td>
-                            <div class="cell-content">
-                                <img src="${cell.img}" class="cell-img" loading="lazy" data-large-src="${largeImg}">
-                                <span class="text-only">${cell.text}</span>
+                    // 构建内容HTML，存在链接则包裹a标签
+                    const contentHtml = `
+                        <div class="cell-content">
+                            <div class="img-wrapper">
+                                <img src="${cell.img}" class="cell-img" loading="lazy" crossorigin="anonymous" data-large-src="${largeImg}">
+                                <button class="copy-btn" onclick="event.preventDefault(); event.stopPropagation(); copyImage('${largeImg}')">复制图片</button>
                             </div>
-                        </td>
+                            <span class="text-only" style="${cell.url ? 'text-decoration:underline;color:#1890ff;' : ''}">${cell.text}</span>
+                        </div>
                     `;
+
+                    if (cell.url) {
+                        html += `<td><a href="${cell.url}" target="_blank" style="text-decoration:none; color:inherit; display:block;">${contentHtml}</a></td>`;
+                    } else {
+                        html += `<td>${contentHtml}</td>`;
+                    }
                 } else {
                     html += `<td class="text-only">${cell.text}</td>`;
                 }
@@ -615,15 +794,32 @@
 
             function movePopup(e) {
                 if (popup.style.display === 'block') {
-                    let top = e.clientY + offset;
-                    let left = e.clientX + offset;
+                    const offset = 20;
                     const pRect = popup.getBoundingClientRect();
                     const winW = window.innerWidth;
                     const winH = window.innerHeight;
 
-                    if (left + pRect.width > winW) left = e.clientX - pRect.width - offset;
-                    if (top + pRect.height > winH) top = e.clientY - pRect.height - offset;
+                    let left = e.clientX + offset;
+                    let top = e.clientY + offset;
+
+                    // 水平方向自适应：如果右侧超出，则显示在鼠标左侧
+                    if (left + pRect.width > winW - 10) {
+                        left = e.clientX - pRect.width - offset;
+                    }
+                    // 防止左侧溢出
+                    if (left < 10) left = 10;
+
+                    // 垂直方向自适应：如果底部超出，则显示在鼠标上方
+                    if (top + pRect.height > winH - 10) {
+                        top = e.clientY - pRect.height - offset;
+                    }
                     
+                    // 如果上方也超出（比如图片特别大，或者鼠标在屏幕中间但图片比剩余空间还大）
+                    // 尝试居中或者吸顶
+                    if (top < 10) {
+                         top = 10; // 简单吸顶，如果图片实在太高，可能需要缩放，但在CSS里已经限制了max-height
+                    }
+
                     popup.style.top = top + 'px';
                     popup.style.left = left + 'px';
                 }
@@ -646,7 +842,7 @@
 
             headers.forEach((h, i) => {
                 if (h.match(/商品|标题|名称|Title|Name/i)) titleColIndices.push(i);
-                if (h.match(/店铺|卖家|Shop|Seller/i)) shopColIndices.push(i);
+                if (h.match(/店铺|卖家|商家|品牌|Shop|Seller|Brand/i)) shopColIndices.push(i);
             });
             
             // 榜单数据状态
@@ -686,10 +882,13 @@
                         // 进度条颜色
                         const color = idx < 3 ? '#ff4d4f' : '#1890ff';
                         
+                        const safeShop = shop.replace(/'/g, "\\'");
                         shopHtml += \`
                             <tr>
                                 <td><span style="display:inline-block;width:24px;height:24px;line-height:24px;text-align:center;background:\${idx < 3 ? '#333' : '#f0f0f0'};color:\${idx < 3 ? '#fff' : '#666'};border-radius:4px;font-weight:bold;">\${idx + 1}</span></td>
-                                <td style="font-weight:500;">\${shop}</td>
+                                <td style="font-weight:500;">
+                                    <a href="javascript:;" onclick="viewShopDetails('\${safeShop}')" style="color:#1890ff;text-decoration:none;cursor:pointer;">\${shop}</a>
+                                </td>
                                 <td style="font-size:16px;font-weight:bold;">\${count}</td>
                                 <td>
                                     <div style="display:flex;align-items:center;">
@@ -700,7 +899,7 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <button onclick="viewShopDetails('\${shop}')" style="font-size:12px;color:#1890ff;border:1px solid #1890ff;background:#fff;padding:4px 12px;border-radius:4px;cursor:pointer;">查看商品</button>
+                                    <button onclick="viewShopDetails('\${safeShop}')" style="font-size:12px;color:#1890ff;border:1px solid #1890ff;background:#fff;padding:4px 12px;border-radius:4px;cursor:pointer;">查看商品</button>
                                 </td>
                             </tr>
                         \`;
@@ -797,12 +996,23 @@
             target.style.display = 'block';
             
             // 如果切换到大屏，触发图表重绘 (解决隐藏div导致图表尺寸不对的问题)
-            if (viewId === 'view-dashboard' && window.updateDashboardCharts) {
-                setTimeout(window.updateDashboardCharts, 100);
+            if (viewId === 'view-dashboard') {
+                if (!isChartsInitialized) {
+                    // 第一次切换时初始化
+                    // 给一个小延迟确保 display:block 渲染完成
+                    setTimeout(() => {
+                        initCharts();
+                        isChartsInitialized = true;
+                    }, 50);
+                } else if (window.updateDashboardCharts) {
+                    setTimeout(window.updateDashboardCharts, 100);
+                }
             }
         }
         
         // 4. 动态图表初始化
+        let isChartsInitialized = false;
+
         (function() {
             let myChartBar = null;
             let myChartPie = null;
@@ -816,8 +1026,8 @@
             // 监听窗口大小改变
             window.addEventListener('resize', window.updateDashboardCharts);
 
-            // 延时初始化 (等待数据计算完成)
-            setTimeout(initCharts, 800);
+            // 延时初始化 (已改为懒加载，此处移除自动初始化)
+            // setTimeout(initCharts, 800);
 
             function initCharts() {
                 // 确保有数据 (依赖于 sortShopNames 逻辑，这里重新计算一次以防万一或直接使用 global data)
@@ -830,7 +1040,7 @@
                 // 寻找店铺列
                 if(data.length > 0) {
                      const headers = Object.keys(data[0]);
-                     shopIdx = headers.findIndex(h => h.match(/店铺|卖家|Shop|Seller/i));
+                     shopIdx = headers.findIndex(h => h.match(/店铺|卖家|商家|品牌|Shop|Seller|Brand/i));
                      if(shopIdx === -1) return; // 没找到店铺列
 
                      const shopKey = headers[shopIdx];
@@ -957,6 +1167,90 @@
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+        };
+
+        // 4. 复制功能
+        // 4. 复制功能 (图片 Blob -> 失败降级为 ULR)
+        window.copyImage = async function(url) {
+             const toast = document.createElement('div');
+             toast.style.cssText = 'position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:rgba(0,0,0,0.8); color:#fff; padding:12px 24px; border-radius:4px; z-index:20000; font-size:14px; text-align:center; box-shadow:0 4px 12px rgba(0,0,0,0.3); transition: opacity 0.3s;';
+             document.body.appendChild(toast);
+
+             const showMsg = (msg, duration = 2000) => {
+                 toast.innerText = msg;
+                 setTimeout(() => {
+                     toast.style.opacity = '0';
+                     setTimeout(() => toast.remove(), 300);
+                 }, duration);
+             };
+
+             const copyUrlFallback = (originalUrl) => {
+                 navigator.clipboard.writeText(originalUrl).then(() => {
+                     showMsg('⚠️ 图片复制受限(跨域)，已复制图片链接');
+                 }).catch(() => {
+                     showMsg('❌ 复制失败，请手动右键图片复制');
+                 });
+             };
+
+             try {
+                if (!navigator.clipboard || !navigator.clipboard.write) {
+                    throw new Error('Clipboard API not supported');
+                }
+
+                toast.innerText = '⏳ 正在获取图片...';
+                
+                // 方式一：尝试直接 Fetch (需要 CORS 支持)
+                try {
+                    const response = await fetch(url, { mode: 'cors', credentials: 'omit' });
+                    if (response.ok) {
+                        const blob = await response.blob(); 
+                        const item = new ClipboardItem({ [blob.type]: blob });
+                        await navigator.clipboard.write([item]);
+                        showMsg('✅ 图片已复制！');
+                        return;
+                    }
+                } catch (e) {
+                    console.warn('Fetch copy failed, trying canvas...', e);
+                }
+
+                // 方式二：Canvas 绘图 (针对 data-large-src 可能已加载的情况，或者尝试重新加载)
+                // 注意：如果 new Image() 加载跨域图片未设置 crossOrigin，canvas 会被污染
+                const img = new Image();
+                img.crossOrigin = "anonymous";
+                img.src = url;
+                
+                await new Promise((resolve, reject) => {
+                    img.onload = resolve;
+                    img.onerror = reject;
+                    // 超时机制
+                    setTimeout(() => reject(new Error('Image load timeout')), 5000);
+                });
+
+                const canvas = document.createElement('canvas');
+                canvas.width = img.naturalWidth;
+                canvas.height = img.naturalHeight;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0);
+
+                canvas.toBlob(async (blob) => {
+                    if (!blob) {
+                        copyUrlFallback(url);
+                        return;
+                    }
+                    try {
+                        const item = new ClipboardItem({ [blob.type]: blob });
+                        await navigator.clipboard.write([item]);
+                        showMsg('✅ 图片已复制！');
+                    } catch (err) {
+                        console.error('Canvas write error:', err);
+                        copyUrlFallback(url);
+                    }
+                }, 'image/png');
+
+             } catch (err) {
+                 console.error('Copy Image Major Fail:', err);
+                 copyUrlFallback(url);
+             }
         };
     </script>
 </body>

@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name          Bazaar Scanner GOD MODE + Auto Monitor
+// @name          Bazaar Scanner GOD MODE non TORN API
 // @namespace     https://weav3r.dev/
 // @version       6.3
 // @description   Bazaar deals with NPC profit + background monitoring system
@@ -14,8 +14,8 @@
 // @connect       api.torn.com
 // @run-at        document-idle
 // @license       MIT
-// @downloadURL https://update.greasyfork.org/scripts/562860/Bazaar%20Scanner%20GOD%20MODE%20%2B%20Auto%20Monitor.user.js
-// @updateURL https://update.greasyfork.org/scripts/562860/Bazaar%20Scanner%20GOD%20MODE%20%2B%20Auto%20Monitor.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/562860/Bazaar%20Scanner%20GOD%20MODE%20non%20TORN%20API.user.js
+// @updateURL https://update.greasyfork.org/scripts/562860/Bazaar%20Scanner%20GOD%20MODE%20non%20TORN%20API.meta.js
 // ==/UserScript==
 
 (function() {
@@ -49,16 +49,21 @@
         lastSync: 'bz_monitor_last_sync'
     };
 
-    const MONITOR_CONFIG = {
+   const MONITOR_CONFIG = {
         maxItems: 10,
-        scanIntervalMin: 18000, // 18 seconds minimum (was 15)
-        scanIntervalMax: 30000, // 30 seconds maximum (was 25)
+        scanIntervalMin: 45000, // 45 seconds minimum
+        scanIntervalMax: 90000, // 90 seconds maximum
         lockDuration: 30000,
         defaultMinProfit: 1000
     };
 
-    // Helper function to get random interval
+    // Helper function to get random interval with occasional longer pauses
     function getRandomScanInterval() {
+        // 15% chance of longer pause (1-2 minutes) to seem more human
+        if (Math.random() < 0.15) {
+            return Math.floor(Math.random() * (120000 - 60000)) + 60000;
+        }
+        // Normal range: 45-90 seconds
         const min = MONITOR_CONFIG.scanIntervalMin;
         const max = MONITOR_CONFIG.scanIntervalMax;
         return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -71,7 +76,7 @@
         currentIndex: 0,
         foundDeals: [],
         isScanning: false
-    };
+    }
 
     GM_addStyle(`
         /* Existing styles... */
@@ -903,7 +908,7 @@
                 </div>
                 <div class="bz-listing ${visitedClass} profitable" data-player-id="${deal.listing.player_id}" data-url="${bazaarLink}">
                     ${profitHTML}
-                    <a href="${bazaarLink}" target="_blank" class="bz-player-name" onclick="event.stopPropagation()">
+                    <a href="${bazaarLink}" target="_blank" class="bz-player-name">
                         ${deal.listing.player_name || 'Unknown'}
                     </a>
                     <div class="bz-listing-details">
@@ -930,12 +935,10 @@
         });
 
         sidebar.querySelector('#bz-clear-monitor-deals').addEventListener('click', () => {
-            if (confirm('Clear all monitored deals?')) {
-                saveMonitorDeals([]);
-                updateFavoritesMonitorAlert();
-                sidebar.remove();
-            }
-        });
+    saveMonitorDeals([]);
+    updateFavoritesMonitorAlert();
+    sidebar.remove();
+});
 
         sidebar.querySelectorAll('.bz-scan-item-header').forEach(header => {
             header.addEventListener('click', function() {
@@ -956,7 +959,18 @@
                 window.open(url, '_blank');
             });
         });
-    }
+
+        // ==========================================
+        // ADDED THIS PART TO FIX THE CSP ERROR
+        // ==========================================
+        sidebar.querySelectorAll('.bz-player-name').forEach(link => {
+            link.addEventListener('click', (event) => {
+                event.stopPropagation();
+            });
+        });
+        // ==========================================
+
+    } // This is the final closing bracket of renderMonitorDealsInSidebar
 
     // ============================================================================
     // EXISTING FUNCTIONS (Unchanged)
@@ -974,6 +988,9 @@
         }
 
         return new Promise((resolve) => {
+            if (window.trackTornAPIRequest) {
+                window.trackTornAPIRequest('torn/?selections=items', 'NPC Catalog');
+            }
             GM_xmlhttpRequest({
                 method: 'GET',
                 url: `https://api.torn.com/torn/?selections=items&key=${key}`,
@@ -1004,93 +1021,103 @@
         });
     }
 
-    async function fetchTornItemValue(itemId) {
-        return new Promise((resolve) => {
-            const apiKey = GM_getValue(S_KEY, '');
-            if (!apiKey) {
-                resolve(null);
-                return;
-            }
+     async function fetchTornItemValue(itemId) {
+    return new Promise((resolve) => {
+        const apiKey = GM_getValue(S_KEY, '');
+        if (!apiKey) {
+            resolve(null);
+            return;
+        }
 
-            GM_xmlhttpRequest({
-                method: 'GET',
-                url: `https://api.torn.com/torn/${itemId}?selections=items&key=${apiKey}`,
-                onload: (response) => {
-                    try {
-                        const data = JSON.parse(response.responseText);
-                        if (data && data.items && data.items[itemId]) {
-                            const marketValue = data.items[itemId].market_value;
-                            resolve(marketValue);
-                        } else {
-                            resolve(null);
-                        }
-                    } catch (e) {
+        GM_xmlhttpRequest({
+            method: 'GET',
+            url: `https://api.torn.com/torn/${itemId}?selections=items&key=${apiKey}`,
+            onload: (response) => {
+                // The tracker is now here: only counts when the request is actually made and loaded
+                if (window.trackTornAPIRequest) {
+                    window.trackTornAPIRequest(`torn/${itemId}`, `Official API hit for item ${itemId}`);
+                }
+
+                try {
+                    const data = JSON.parse(response.responseText);
+                    if (data && data.items && data.items[itemId]) {
+                        const marketValue = data.items[itemId].market_value;
+                        resolve(marketValue);
+                    } else {
                         resolve(null);
                     }
-                },
-                onerror: () => resolve(null)
-            });
+                } catch (e) {
+                    resolve(null);
+                }
+            },
+            onerror: () => resolve(null)
         });
-    }
+    });
+}
 
-    async function fetchTornExchangeData(itemId, forceRefresh = false) {
-        return new Promise(async (resolve) => {
-            const cached = window._marketValueCache[itemId];
-            const now = Date.now();
+    async function fetchTornExchangeData(itemId, forceRefresh = false, useTornAPI = false) {
+    return new Promise(async (resolve) => {
+        const cached = window._marketValueCache[itemId];
+        const now = Date.now();
 
-            if (cached && !forceRefresh && (now - cached.timestamp) < CACHE_EXPIRATION_MS) {
-                resolve({ marketValue: cached.marketValue, bestBuyer: cached.bestBuyer });
-                return;
-            }
+        if (cached && !forceRefresh && (now - cached.timestamp) < CACHE_EXPIRATION_MS) {
+            resolve({ marketValue: cached.marketValue, bestBuyer: cached.bestBuyer });
+            return;
+        }
 
-            const [tornValue, tePrice, bestBuyer] = await Promise.all([
-                fetchTornItemValue(itemId),
-                new Promise(res => {
-                    GM_xmlhttpRequest({
-                        method: 'GET',
-                        url: `https://tornexchange.com/api/te_price?item_id=${itemId}`,
-                        onload: (response) => {
-                            try {
-                                const data = JSON.parse(response.responseText);
-                                if (data && data.status === 'success' && data.data && data.data.te_price) {
-                                    res(parseFloat(data.data.te_price));
-                                } else {
-                                    res(null);
-                                }
-                            } catch (e) {
+        // Only fetch from Torn API if explicitly requested (via Refresh button)
+        let tornValue = null;
+        if (useTornAPI && forceRefresh) {
+            tornValue = await fetchTornItemValue(itemId);
+        }
+
+        const [tePrice, bestBuyer] = await Promise.all([
+            new Promise(res => {
+                GM_xmlhttpRequest({
+                    method: 'GET',
+                    url: `https://tornexchange.com/api/te_price?item_id=${itemId}`,
+                    onload: (response) => {
+                        try {
+                            const data = JSON.parse(response.responseText);
+                            if (data && data.status === 'success' && data.data && data.data.te_price) {
+                                res(parseFloat(data.data.te_price));
+                            } else {
                                 res(null);
                             }
-                        },
-                        onerror: () => res(null)
-                    });
-                }),
-                new Promise(res => {
-                    GM_xmlhttpRequest({
-                        method: 'GET',
-                        url: `https://tornexchange.com/api/best_listing?item_id=${itemId}`,
-                        onload: (response) => {
-                            try {
-                                const data = JSON.parse(response.responseText);
-                                if (data && data.status === 'success' && data.data) {
-                                    res(data.data);
-                                } else {
-                                    res(null);
-                                }
-                            } catch (e) {
+                        } catch (e) {
+                            res(null);
+                        }
+                    },
+                    onerror: () => res(null)
+                });
+            }),
+            new Promise(res => {
+                GM_xmlhttpRequest({
+                    method: 'GET',
+                    url: `https://tornexchange.com/api/best_listing?item_id=${itemId}`,
+                    onload: (response) => {
+                        try {
+                            const data = JSON.parse(response.responseText);
+                            if (data && data.status === 'success' && data.data) {
+                                res(data.data);
+                            } else {
                                 res(null);
                             }
-                        },
-                        onerror: () => res(null)
-                    });
-                })
-            ]);
+                        } catch (e) {
+                            res(null);
+                        }
+                    },
+                    onerror: () => res(null)
+                });
+            })
+        ]);
 
-            const marketValue = tornValue || tePrice;
-            const result = { marketValue, bestBuyer, timestamp: Date.now() };
-            window._marketValueCache[itemId] = result;
-            resolve({ marketValue, bestBuyer });
-        });
-    }
+        const marketValue = tornValue || tePrice;
+        const result = { marketValue, bestBuyer, timestamp: Date.now() };
+        window._marketValueCache[itemId] = result;
+        resolve({ marketValue, bestBuyer });
+    });
+}
 
     async function fetchBazaarListings(itemId) {
         return new Promise((resolve) => {
@@ -1263,7 +1290,7 @@
                     listingsHTML += `
                         <div class="bz-listing ${visitedClass} ${profitableClass}" data-player-id="${listing.player_id}" data-url="${bazaarLink}">
                             ${profitHTML}
-                            <a href="${bazaarLink}" target="_blank" class="bz-player-name" onclick="event.stopPropagation()">
+                            <a href="${bazaarLink}" target="_blank" class="bz-player-name">
                                 ${listing.player_name || 'Unknown'}
                             </a>
                             <div class="bz-listing-details">
@@ -1290,6 +1317,14 @@
             if (listingsContainer) {
                 listingsContainer.innerHTML = listingsHTML;
 
+                // Fix for CSP violation: Handle stopPropagation via JS instead of inline onclick
+                listingsContainer.querySelectorAll('.bz-player-name').forEach(link => {
+                    link.addEventListener('click', (event) => {
+                        event.stopPropagation();
+                    });
+                });
+
+                // Handle clicking the listing row to open the bazaar
                 listingsContainer.querySelectorAll('.bz-listing').forEach(listing => {
                     listing.addEventListener('click', function() {
                         const playerId = this.dataset.playerId;
@@ -1384,15 +1419,15 @@
         updateListings();
 
         const refreshBtn = sidebar.querySelector('#bz-refresh-mv');
-        if (refreshBtn) {
-            refreshBtn.addEventListener('click', async () => {
-                refreshBtn.textContent = '⏳ Refreshing...';
-                refreshBtn.style.pointerEvents = 'none';
-                delete window._marketValueCache[itemId];
-                const teData = await fetchTornExchangeData(itemId, true);
-                renderSidebar(itemName, itemId, teData.marketValue, teData.bestBuyer, listings);
-            });
-        }
+if (refreshBtn) {
+    refreshBtn.addEventListener('click', async () => {
+        refreshBtn.textContent = '⏳ Refreshing...';
+        refreshBtn.style.pointerEvents = 'none';
+        delete window._marketValueCache[itemId];
+        const teData = await fetchTornExchangeData(itemId, true, true); // ← Add the third parameter
+        renderSidebar(itemName, itemId, teData.marketValue, teData.bestBuyer, listings);
+    });
+}
 
         const toggleInput = sidebar.querySelector('.bz-toggle-input');
         const toggleText = sidebar.querySelector('.bz-toggle-text');
@@ -1493,8 +1528,8 @@
                         </div>
                         <div class="bz-listing ${visitedClass} ${showNPCDeals ? 'profitable' : ''}" data-player-id="${deal.listing.player_id}" data-url="${bazaarLink}">
                             ${profitHTML}
-                            <a href="${bazaarLink}" target="_blank" class="bz-player-name" onclick="event.stopPropagation()">
-                                ${deal.listing.player_name || 'Unknown'}
+                            <a href="${bazaarLink}" target="_blank" class="bz-player-name">
+                            ${deal.listing.player_name || 'Unknown'}
                             </a>
                             <div class="bz-listing-details">
                                 <span class="bz-price">${formattedPrice}</span>
@@ -1530,12 +1565,15 @@
 
                     const updatedDeals = [];
                     for (const deal of dealsData) {
-                        const teData = await fetchTornExchangeData(deal.itemId, true);
-                        updatedDeals.push({
-                            ...deal,
-                            marketValue: teData.marketValue || 0
-                        });
-                    }
+    // We tell the fetcher to use Torn API (true, true)
+    const teData = await fetchTornExchangeData(deal.itemId, true, true);
+
+
+    updatedDeals.push({
+        ...deal,
+        marketValue: teData.marketValue || 0
+    });
+}
 
                     dealsData.length = 0;
                     dealsData.push(...updatedDeals);
@@ -1564,7 +1602,16 @@
                     window.open(url, '_blank');
                 });
             });
+// Find all the player name links we just created
+const playerLinks = document.querySelectorAll('.bz-player-name');
 
+playerLinks.forEach(link => {
+    link.addEventListener('click', (event) => {
+        // This does the exact same thing as the old onclick,
+        // but in a way that Torn's security allows.
+        event.stopPropagation();
+    });
+});
             sidebar.querySelector('.bz-close-btn').addEventListener('click', () => {
                 sidebar.remove();
             });
@@ -2320,7 +2367,10 @@
         }
 
         let html = `
-            <div id="bz-monitor-alert" class="bz-monitor-alert-btn">
+    <div id="bz-fav-api-counter" class="bz-fav-api-counter low">
+        📊 0/hr (0 total)
+    </div>
+    <div id="bz-monitor-alert" class="bz-monitor-alert-btn">
                 ${!settings.enabled ? '<span style="opacity: 0.5;">⏸️</span> Monitor Disabled' : '<span>🔍</span> No Deals Yet'}
             </div>
             <div id="bz-monitor-status" class="bz-monitor-status" style="color: ${initialStatusColor}">
@@ -2336,8 +2386,8 @@
                 </div>
             </div>
             <div style="margin-bottom: 8px;">
-                <div id="bz-scan-all" class="bz-ctrl-btn" style="width: 100%;">🔍 Scan ${selectedCategories.size > 0 ? 'Selected' : 'All'}</div>
-            </div>
+           <div id="bz-scan-all" class="bz-ctrl-btn" style="width: auto; padding: 4px 8px;">🔍 Scan ${selectedCategories.size > 0 ? 'Selected' : 'All'}</div>
+           </div>
         `;
 
         if (favs.length === 0) {
@@ -2739,4 +2789,1483 @@
 
     waitForBodyAndInit();
     window.BZ_FAVOURITES = { save, remove, getAll, getSelectedCategories };
+// ============================================================================
+// API REQUEST COUNTER MODULE (WITH PERSISTENT STORAGE)
+// ============================================================================
+(function() {
+    'use strict';
+
+    // Storage keys
+    const COUNTER_STORAGE = {
+        data: 'bz_api_counter_data',
+        lastReset: 'bz_api_counter_reset'
+    };
+
+    // Initialize or load counter from storage
+    function loadCounter() {
+        const saved = GM_getValue(COUNTER_STORAGE.data, null);
+        const lastReset = GM_getValue(COUNTER_STORAGE.lastReset, Date.now());
+        const now = Date.now();
+
+        // Check if we need to reset hourly counter
+        if (now - lastReset > 3600000) {
+            // Hour has passed, archive old data and reset
+            if (saved && saved.hourly > 0) {
+                const history = saved.history || [];
+                history.push({
+                    timestamp: lastReset,
+                    count: saved.hourly
+                });
+
+                // Keep only last 24 hours
+                const filtered = history.filter(h => now - h.timestamp < 86400000);
+
+                return {
+                    total: saved.total || 0,
+                    hourly: 0,
+                    lastReset: now,
+                    history: filtered
+                };
+            } else {
+                return {
+                    total: saved?.total || 0,
+                    hourly: 0,
+                    lastReset: now,
+                    history: saved?.history || []
+                };
+            }
+        }
+
+        // Return saved data or defaults
+        return saved || {
+            total: 0,
+            hourly: 0,
+            lastReset: now,
+            history: []
+        };
+    }
+
+    // Save counter to storage
+    function saveCounter(counter) {
+        GM_setValue(COUNTER_STORAGE.data, counter);
+        GM_setValue(COUNTER_STORAGE.lastReset, counter.lastReset);
+    }
+
+    // Initialize counter
+    window._tornAPICounter = loadCounter();
+
+    // Track Torn API requests
+    window.trackTornAPIRequest = function(url, reason = 'unknown') {
+        const counter = window._tornAPICounter;
+        const now = Date.now();
+
+        // Check if we need to reset hourly counter
+        if (now - counter.lastReset > 3600000) {
+            // Archive current hour
+            if (counter.hourly > 0) {
+                counter.history.push({
+                    timestamp: counter.lastReset,
+                    count: counter.hourly
+                });
+            }
+
+            counter.hourly = 0;
+            counter.lastReset = now;
+
+            // Keep only last 24 hours of history
+            counter.history = counter.history.filter(h => now - h.timestamp < 86400000);
+        }
+
+        counter.total++;
+        counter.hourly++;
+
+        console.log(`[API Counter] Request #${counter.total} (${counter.hourly}/hour) - ${reason}`);
+
+        // Save to storage
+        saveCounter(counter);
+
+        // Update UI if it exists
+        updateAPICounterDisplay();
+    };
+
+    // Update counter display
+    function updateAPICounterDisplay() {
+        const counter = window._tornAPICounter;
+
+        // Update main counter widget
+        let counterEl = document.getElementById('bz-api-counter');
+        if (counterEl) {
+            const hourlyRate = counter.hourly;
+            const colorClass = hourlyRate > 200 ? 'high' : hourlyRate > 100 ? 'medium' : 'low';
+
+            counterEl.className = `bz-api-counter ${colorClass}`;
+            counterEl.innerHTML = `
+                <div class="bz-api-counter-main">📊 API: ${counter.hourly}/hr</div>
+                <div class="bz-api-counter-detail">Total: ${counter.total} | Session</div>
+            `;
+        }
+
+        // Update favorites panel counter
+        let favCounterEl = document.getElementById('bz-fav-api-counter');
+        if (favCounterEl) {
+            const hourlyRate = counter.hourly;
+            const colorClass = hourlyRate > 200 ? 'high' : hourlyRate > 100 ? 'medium' : 'low';
+
+            favCounterEl.className = `bz-fav-api-counter ${colorClass}`;
+            favCounterEl.textContent = `📊 ${counter.hourly}/hr (${counter.total} total)`;
+        }
+    }
+
+    // Show detailed stats with reset option
+    function showAPIStats() {
+        const counter = window._tornAPICounter;
+        const avgPerHour = counter.history.length > 0
+            ? Math.round(counter.history.reduce((sum, h) => sum + h.count, 0) / counter.history.length)
+            : counter.hourly;
+
+        const historyText = counter.history.length > 0
+            ? counter.history.map(h => {
+                const date = new Date(h.timestamp);
+                const hours = date.getHours().toString().padStart(2, '0');
+                const minutes = date.getMinutes().toString().padStart(2, '0');
+                return `  ${hours}:${minutes} - ${h.count} requests`;
+            }).join('\n')
+            : '  No history yet';
+
+        // Create custom dialog
+        const overlay = document.createElement('div');
+        overlay.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 999999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        `;
+
+        const dialog = document.createElement('div');
+        dialog.style.cssText = `
+            background: #1a1a1a;
+            border: 2px solid #FFD700;
+            border-radius: 8px;
+            padding: 20px;
+            width: 400px;
+            max-width: 90%;
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
+            max-height: 80vh;
+            overflow-y: auto;
+        `;
+
+        const hourlyColor = counter.hourly > 200 ? '#e74c3c' : counter.hourly > 100 ? '#f39c12' : '#2ecc71';
+
+        dialog.innerHTML = `
+            <h3 style="margin: 0 0 15px 0; color: #FFD700; text-align: center; font-size: 18px;">
+                📊 Torn API Request Statistics
+            </h3>
+
+            <div style="background: #252525; padding: 15px; border-radius: 6px; margin-bottom: 15px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                    <span style="color: #aaa;">Current Hour:</span>
+                    <span style="color: ${hourlyColor}; font-weight: bold; font-size: 16px;">${counter.hourly} requests</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                    <span style="color: #aaa;">Session Total:</span>
+                    <span style="color: #00BFFF; font-weight: bold; font-size: 16px;">${counter.total} requests</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span style="color: #aaa;">Average/Hour:</span>
+                    <span style="color: #FFD700; font-weight: bold;">${avgPerHour} requests</span>
+                </div>
+            </div>
+
+            <div style="background: #252525; padding: 15px; border-radius: 6px; margin-bottom: 15px;">
+                <div style="font-weight: bold; color: #FFD700; margin-bottom: 8px;">⚠️ Warning Thresholds:</div>
+                <div style="font-size: 12px; line-height: 1.8;">
+                    <div style="color: #2ecc71;">🟢 Low: &lt;100/hr (Safe)</div>
+                    <div style="color: #f39c12;">🟡 Medium: 100-200/hr (Watch)</div>
+                    <div style="color: #e74c3c;">🔴 High: &gt;200/hr (Risky)</div>
+                </div>
+            </div>
+
+            ${counter.history.length > 0 ? `
+            <div style="background: #252525; padding: 15px; border-radius: 6px; margin-bottom: 15px;">
+                <div style="font-weight: bold; color: #FFD700; margin-bottom: 8px;">📅 Last 24 Hours History:</div>
+                <div style="font-size: 11px; font-family: monospace; color: #aaa; max-height: 150px; overflow-y: auto;">
+                    ${historyText.split('\n').map(line => `<div>${line}</div>`).join('')}
+                </div>
+            </div>
+            ` : ''}
+
+            <div style="background: #1a2a3a; padding: 12px; border-radius: 6px; margin-bottom: 15px; border-left: 3px solid #00BFFF;">
+                <div style="font-size: 11px; color: #aaa; line-height: 1.6;">
+                    💡 <strong style="color: #00BFFF;">Tips:</strong><br>
+                    • Counter persists across page refreshes<br>
+                    • Hourly counter resets every 60 minutes<br>
+                    • History shows last 24 hours of activity
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 10px;">
+                <button id="bz-reset-counter" style="
+                    flex: 1;
+                    padding: 10px;
+                    background: #e74c3c;
+                    color: #fff;
+                    border: none;
+                    border-radius: 4px;
+                    font-weight: bold;
+                    cursor: pointer;
+                    font-size: 13px;
+                    transition: all 0.2s;
+                ">
+                    🗑️ Reset Counter
+                </button>
+                <button id="bz-close-stats" style="
+                    flex: 1;
+                    padding: 10px;
+                    background: #555;
+                    color: #fff;
+                    border: none;
+                    border-radius: 4px;
+                    font-weight: bold;
+                    cursor: pointer;
+                    font-size: 13px;
+                    transition: all 0.2s;
+                ">
+                    Close
+                </button>
+            </div>
+        `;
+
+        overlay.appendChild(dialog);
+        document.body.appendChild(overlay);
+
+        // Reset button handler
+        dialog.querySelector('#bz-reset-counter').addEventListener('click', () => {
+            if (confirm('⚠️ Reset API Counter?\n\nThis will clear:\n• Current hourly count\n• Session total\n• 24-hour history\n\nThis cannot be undone.')) {
+                // Reset counter
+                window._tornAPICounter = {
+                    total: 0,
+                    hourly: 0,
+                    lastReset: Date.now(),
+                    history: []
+                };
+
+                // Save to storage
+                saveCounter(window._tornAPICounter);
+
+                // Update displays
+                updateAPICounterDisplay();
+
+                // Close dialog
+                overlay.remove();
+
+                console.log('[API Counter] Counter has been reset');
+            }
+        });
+
+        // Close button handler
+        dialog.querySelector('#bz-close-stats').addEventListener('click', () => {
+            overlay.remove();
+        });
+
+        // Click outside to close
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                overlay.remove();
+            }
+        });
+
+        // Hover effects for buttons
+        const resetBtn = dialog.querySelector('#bz-reset-counter');
+        const closeBtn = dialog.querySelector('#bz-close-stats');
+
+        resetBtn.addEventListener('mouseenter', () => {
+            resetBtn.style.background = '#c0392b';
+            resetBtn.style.transform = 'scale(1.05)';
+        });
+        resetBtn.addEventListener('mouseleave', () => {
+            resetBtn.style.background = '#e74c3c';
+            resetBtn.style.transform = 'scale(1)';
+        });
+
+        closeBtn.addEventListener('mouseenter', () => {
+            closeBtn.style.background = '#666';
+            closeBtn.style.transform = 'scale(1.05)';
+        });
+        closeBtn.addEventListener('mouseleave', () => {
+            closeBtn.style.background = '#555';
+            closeBtn.style.transform = 'scale(1)';
+        });
+    }
+
+    // Create counter widget
+    function createAPICounterWidget() {
+        const existing = document.getElementById('bz-api-counter');
+        if (existing) existing.remove();
+
+        const counter = document.createElement('div');
+        counter.id = 'bz-api-counter';
+        counter.className = 'bz-api-counter low';
+        counter.innerHTML = `
+            <div class="bz-api-counter-main">📊 API: 0/hr</div>
+            <div class="bz-api-counter-detail">Total: 0 | Session</div>
+        `;
+
+        counter.addEventListener('click', showAPIStats);
+        counter.style.cursor = 'pointer';
+        counter.title = 'Click for detailed API statistics';
+
+        document.body.appendChild(counter);
+        updateAPICounterDisplay();
+    }
+
+    // Add CSS styles
+    GM_addStyle(`
+        .bz-api-counter {
+            position: fixed;
+            right: 5px;
+            top: 5px;
+            background: #1a1a1a;
+            border: 2px solid #696969;
+            border-radius: 6px;
+            padding: 8px 12px;
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 11px;
+            z-index: 9998;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            min-width: 120px;
+            transition: all 0.3s;
+        }
+
+        .bz-api-counter:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        .bz-api-counter-main {
+            font-weight: bold;
+            font-size: 13px;
+            margin-bottom: 2px;
+        }
+
+        .bz-api-counter-detail {
+            font-size: 9px;
+            color: #888;
+        }
+
+        .bz-api-counter.low {
+            border-color: #2ecc71;
+        }
+
+        .bz-api-counter.low .bz-api-counter-main {
+            color: #2ecc71;
+        }
+
+        .bz-api-counter.medium {
+            border-color: #f39c12;
+        }
+
+        .bz-api-counter.medium .bz-api-counter-main {
+            color: #f39c12;
+        }
+
+        .bz-api-counter.high {
+            border-color: #e74c3c;
+            animation: pulse-warning 2s infinite;
+        }
+
+        .bz-api-counter.high .bz-api-counter-main {
+            color: #e74c3c;
+        }
+
+        @keyframes pulse-warning {
+            0%, 100% {
+                box-shadow: 0 2px 8px rgba(231, 76, 60, 0.3);
+            }
+            50% {
+                box-shadow: 0 2px 16px rgba(231, 76, 60, 0.6);
+            }
+        }
+
+        .bz-fav-api-counter {
+            font-size: 9px;
+            text-align: center;
+            padding: 4px;
+            background: #252525;
+            border-radius: 3px;
+            margin-bottom: 6px;
+            border: 1px solid #444;
+        }
+
+        .bz-fav-api-counter.low {
+            color: #2ecc71;
+            border-color: #2ecc71;
+        }
+
+        .bz-fav-api-counter.medium {
+            color: #f39c12;
+            border-color: #f39c12;
+        }
+
+        .bz-fav-api-counter.high {
+            color: #e74c3c;
+            border-color: #e74c3c;
+            animation: pulse-warning 2s infinite;
+        }
+    `);
+
+    // Wait for page to load, then initialize
+    function initCounter() {
+        if (document.body) {
+            createAPICounterWidget();
+            console.log('[API Counter] Initialized and ready');
+            console.log('[API Counter] Loaded from storage:', window._tornAPICounter);
+        } else {
+            setTimeout(initCounter, 500);
+        }
+    }
+
+    initCounter();
+
+    // Update display every 5 seconds
+    setInterval(updateAPICounterDisplay, 5000);
+
+})();
+// ============================================================================
+// END API REQUEST COUNTER MODULE
+// ============================================================================
+})();
+// =====================================================
+// DEAL SCANNER MODULE (Bottom-Left Panel)
+// =====================================================
+(function() {
+    'use strict';
+
+    // ===== DEAL SCANNER SETTINGS =====
+    const SCANNER_SETTINGS_KEY = 'bz_scanner_settings';
+    const SCANNER_RESULTS_KEY = 'bz_scanner_results';
+    const SCANNER_LOCK_KEY = 'bz_scanner_lock';
+    const SCANNER_LAST_SCAN_KEY = 'bz_scanner_last_scan';
+    const SCANNER_INDEX_KEY = 'bz_scanner_index';
+    const SCANNER_DISMISSED_KEY = 'bz_scanner_dismissed';
+    const SCANNER_MINIMIZED_KEY = 'bz_scanner_minimized';
+    const TAB_ID = `tab_${Date.now()}_${Math.random()}`;
+    const LOCK_DURATION_MS = 30000; // 30 seconds
+
+    let scannerInterval = null;
+
+    // Default scanner settings
+    const defaultScannerSettings = {
+        enabled: false,
+        minDiscountPercent: 20,
+        scanIntervalMinutes: 2,
+        itemsPerScan: 5,
+        scanMode: 'roundrobin',
+        categories: ['Uncategorized'],
+        notificationSound: false,
+        onlyShowProfitable: true,
+        delayBetweenItems: 1
+    };
+
+    function getScannerSettings() {
+        const saved = GM_getValue(SCANNER_SETTINGS_KEY, null);
+        return saved ? { ...defaultScannerSettings, ...saved } : defaultScannerSettings;
+    }
+
+    function saveScannerSettings(settings) {
+        GM_setValue(SCANNER_SETTINGS_KEY, settings);
+    }
+
+    function getScannerResults() {
+        return GM_getValue(SCANNER_RESULTS_KEY, []);
+    }
+
+    function saveScannerResults(results) {
+        GM_setValue(SCANNER_RESULTS_KEY, results);
+    }
+
+    // ===== DISMISSED DEALS MANAGEMENT =====
+    function getDismissedDeals() {
+        return GM_getValue(SCANNER_DISMISSED_KEY, {});
+    }
+
+    function dismissDeal(itemId, playerId, price) {
+        const dismissed = getDismissedDeals();
+        const key = `${itemId}-${playerId}-${price}`;
+        dismissed[key] = Date.now();
+        GM_setValue(SCANNER_DISMISSED_KEY, dismissed);
+        console.log(`[DEAL SCANNER] Dismissed deal: ${key}`);
+    }
+
+    function isDealDismissed(itemId, playerId, price) {
+        const dismissed = getDismissedDeals();
+        const key = `${itemId}-${playerId}-${price}`;
+        return !!dismissed[key];
+    }
+
+    function clearDismissedDeals() {
+        GM_setValue(SCANNER_DISMISSED_KEY, {});
+        console.log('[DEAL SCANNER] Cleared all dismissed deals');
+    }
+
+    // ===== TAB COORDINATION =====
+    function acquireScannerLock() {
+        const lock = GM_getValue(SCANNER_LOCK_KEY, null);
+        const now = Date.now();
+
+        if (!lock || (now - lock.timestamp) > LOCK_DURATION_MS) {
+            GM_setValue(SCANNER_LOCK_KEY, { tabId: TAB_ID, timestamp: now });
+            console.log(`[DEAL SCANNER] Tab ${TAB_ID} acquired scanner lock`);
+            return true;
+        }
+
+        if (lock.tabId === TAB_ID) {
+            GM_setValue(SCANNER_LOCK_KEY, { tabId: TAB_ID, timestamp: now });
+            return true;
+        }
+
+        console.log(`[DEAL SCANNER] Tab ${TAB_ID} waiting - another tab is scanning`);
+        return false;
+    }
+
+    function releaseScannerLock() {
+        const lock = GM_getValue(SCANNER_LOCK_KEY, null);
+        if (lock && lock.tabId === TAB_ID) {
+            GM_setValue(SCANNER_LOCK_KEY, null);
+            console.log(`[DEAL SCANNER] Tab ${TAB_ID} released scanner lock`);
+        }
+    }
+
+    function forceUnlock() {
+        GM_setValue(SCANNER_LOCK_KEY, null);
+        console.log(`[DEAL SCANNER] Force unlocked by tab ${TAB_ID}`);
+    }
+
+    function shouldScanNow() {
+        const settings = getScannerSettings();
+        const lastScan = GM_getValue(SCANNER_LAST_SCAN_KEY, 0);
+        const now = Date.now();
+        const timeSinceLastScan = now - lastScan;
+        const scanIntervalMs = settings.scanIntervalMinutes * 60 * 1000;
+        return timeSinceLastScan >= scanIntervalMs;
+    }
+
+    function updateLastScanTime() {
+        GM_setValue(SCANNER_LAST_SCAN_KEY, Date.now());
+    }
+
+    function getActiveTabInfo() {
+        const lock = GM_getValue(SCANNER_LOCK_KEY, null);
+        const lastScan = GM_getValue(SCANNER_LAST_SCAN_KEY, 0);
+        const settings = getScannerSettings();
+        const now = Date.now();
+
+        const isThisTabActive = lock && lock.tabId === TAB_ID;
+        const timeSinceLastScan = now - lastScan;
+        const scanIntervalMs = settings.scanIntervalMinutes * 60 * 1000;
+        const timeUntilNextScan = Math.max(0, scanIntervalMs - timeSinceLastScan);
+
+        return {
+            isThisTabActive,
+            hasActiveLock: !!lock,
+            activeTabId: lock ? lock.tabId.substring(0, 20) : null,
+            thisTabId: TAB_ID.substring(0, 20),
+            timeUntilNextScan,
+            lastScanTime: lastScan
+        };
+    }
+
+    // ===== LOCAL COPIES OF FETCH FUNCTIONS (FIX FOR THE ERROR) =====
+    // These are duplicates of the main script functions so the scanner module can access them
+
+    async function fetchTornExchangeData(itemId, forceRefresh = false) {
+        return new Promise(async (resolve) => {
+            const cached = window._marketValueCache[itemId];
+            const now = Date.now();
+            const CACHE_EXPIRATION_MS = 10 * 60 * 1000;
+
+            if (cached && !forceRefresh && (now - cached.timestamp) < CACHE_EXPIRATION_MS) {
+                resolve({ marketValue: cached.marketValue, bestBuyer: cached.bestBuyer });
+                return;
+            }
+
+            const [tePrice, bestBuyer] = await Promise.all([
+                new Promise(res => {
+                    GM_xmlhttpRequest({
+                        method: 'GET',
+                        url: `https://tornexchange.com/api/te_price?item_id=${itemId}`,
+                        onload: (response) => {
+                            try {
+                                const data = JSON.parse(response.responseText);
+                                if (data && data.status === 'success' && data.data && data.data.te_price) {
+                                    res(parseFloat(data.data.te_price));
+                                } else {
+                                    res(null);
+                                }
+                            } catch (e) {
+                                res(null);
+                            }
+                        },
+                        onerror: () => res(null)
+                    });
+                }),
+                new Promise(res => {
+                    GM_xmlhttpRequest({
+                        method: 'GET',
+                        url: `https://tornexchange.com/api/best_listing?item_id=${itemId}`,
+                        onload: (response) => {
+                            try {
+                                const data = JSON.parse(response.responseText);
+                                if (data && data.status === 'success' && data.data) {
+                                    res(data.data);
+                                } else {
+                                    res(null);
+                                }
+                            } catch (e) {
+                                res(null);
+                            }
+                        },
+                        onerror: () => res(null)
+                    });
+                })
+            ]);
+
+            const marketValue = tePrice;
+            const result = { marketValue, bestBuyer, timestamp: Date.now() };
+            window._marketValueCache[itemId] = result;
+            resolve({ marketValue, bestBuyer });
+        });
+    }
+
+    async function fetchBazaarListings(itemId) {
+        return new Promise((resolve) => {
+            GM_xmlhttpRequest({
+                method: 'GET',
+                url: `https://weav3r.dev/api/marketplace/${itemId}`,
+                onload: (res) => {
+                    try {
+                        const data = JSON.parse(res.responseText);
+                        if (data && data.listings) {
+                            resolve(data.listings);
+                        } else {
+                            resolve([]);
+                        }
+                    } catch (e) {
+                        resolve([]);
+                    }
+                },
+                onerror: () => resolve([])
+            });
+        });
+    }
+
+    // ===== SCANNER PANEL STYLES =====
+    GM_addStyle(`
+        #bz-scanner-panel {
+            position: fixed;
+            left: 10px;
+            bottom: 5px;
+            width: 180px;
+            background: #1a1a1a;
+            border: 2px solid #696969;
+            border-radius: 8px;
+            padding: 10px;
+            color: #fff;
+            z-index: 9998;
+            max-height: 400px;
+            overflow-y: auto;
+            box-shadow: 0 4px 12px rgba(0, 255, 0, 0.3);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        #bz-scanner-panel::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #bz-scanner-panel::-webkit-scrollbar-thumb {
+            background: #292929;
+            border-radius: 4px;
+        }
+
+        .bz-scanner-header {
+            font-size: 16px;
+            font-weight: bold;
+            color: #00FF00;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #00FF00;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .bz-scanner-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            padding: 8px;
+            background: #252525;
+            border-radius: 4px;
+        }
+
+        .bz-scanner-switch {
+            position: relative;
+            width: 50px;
+            height: 24px;
+        }
+
+        .bz-scanner-switch input {
+            display: none;
+        }
+
+        .bz-scanner-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #555;
+            border-radius: 12px;
+            transition: 0.3s;
+        }
+
+        .bz-scanner-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            border-radius: 50%;
+            transition: 0.3s;
+        }
+
+        .bz-scanner-switch input:checked + .bz-scanner-slider {
+            background-color: #00FF00;
+        }
+
+        .bz-scanner-switch input:checked + .bz-scanner-slider:before {
+            transform: translateX(26px);
+        }
+
+        .bz-scanner-status {
+            font-size: 12px;
+            color: #aaa;
+            margin-bottom: 8px;
+            padding: 6px;
+            background: #252525;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .bz-scanner-status.scanning {
+            color: #00FF00;
+            animation: pulse 1.5s infinite;
+        }
+
+        .bz-scanner-deal {
+            background: linear-gradient(135deg, #1a3d1a 0%, #252525 100%);
+            border: 2px solid #00FF00;
+            border-radius: 6px;
+            padding: 10px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .bz-scanner-deal:hover {
+            border-color: #FFD700;
+            transform: translateX(4px);
+        }
+
+        .bz-scanner-deal-header {
+            font-weight: bold;
+            color: #FFD700;
+            font-size: 13px;
+            margin-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .bz-scanner-deal-discount {
+            background: #00FF00;
+            color: #000;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .bz-scanner-deal-details {
+            font-size: 12px;
+            color: #aaa;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 4px;
+        }
+
+        .bz-scanner-deal-seller {
+            color: #1E90FF;
+            font-size: 11px;
+            margin-top: 4px;
+        }
+
+        .bz-scanner-settings {
+            background: #252525;
+            border-radius: 4px;
+            padding: 8px;
+            margin-bottom: 8px;
+        }
+
+        .bz-scanner-setting-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+            font-size: 12px;
+        }
+
+        .bz-scanner-setting-row label {
+            color: #aaa;
+        }
+
+        .bz-scanner-setting-row input[type="number"],
+        .bz-scanner-setting-row select {
+            width: 70px;
+            padding: 2px 4px;
+            background: #1a1a1a;
+            border: 1px solid #444;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 11px;
+        }
+
+        .bz-scanner-btn {
+            background: #1a4d6f;
+            border: 1px solid #2a5d7f;
+            color: #00BFFF;
+            padding: 6px 12px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 11px;
+            text-align: center;
+            transition: all 0.2s;
+            width: 100%;
+            margin-top: 8px;
+        }
+
+        .bz-scanner-btn:hover {
+            background: #2a5d7f;
+        }
+
+        .bz-scanner-minimize {
+            background: #434C66;
+            border: none;
+            color: white;
+            padding: 2px 8px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 11px;
+        }
+
+        #bz-scanner-float-btn {
+            position: fixed;
+            left: 10px;
+            bottom: 5px;
+            background: #1a1a1a;
+            border: 2px solid #00FF00;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 9997;
+            box-shadow: 0 4px 12px rgba(0, 255, 0, 0.4);
+            transition: all 0.2s;
+        }
+
+        #bz-scanner-float-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .bz-scanner-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #FF0000;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: bold;
+        }
+    `);
+
+    // ===== SCANNER FUNCTIONS =====
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    function getRandomScanItems() {
+        const settings = getScannerSettings();
+        const favs = window.BZ_FAVOURITES ? window.BZ_FAVOURITES.getAll() : {};
+        let allItems = Object.values(favs);
+
+        if (settings.categories && settings.categories.length > 0) {
+            allItems = allItems.filter(item => settings.categories.includes(item.category));
+        }
+
+        if (allItems.length === 0) return [];
+
+        allItems.sort((a, b) => a.name.localeCompare(b.name));
+
+        if (settings.scanMode === 'roundrobin') {
+            const currentIndex = GM_getValue(SCANNER_INDEX_KEY, 0);
+            const itemsToScan = [];
+
+            for (let i = 0; i < settings.itemsPerScan; i++) {
+                const index = (currentIndex + i) % allItems.length;
+                itemsToScan.push(allItems[index]);
+            }
+
+            const nextIndex = (currentIndex + settings.itemsPerScan) % allItems.length;
+            GM_setValue(SCANNER_INDEX_KEY, nextIndex);
+
+            console.log(`[DEAL SCANNER] Round-robin mode: scanning items ${currentIndex + 1}-${currentIndex + settings.itemsPerScan} of ${allItems.length}`);
+            if (nextIndex < currentIndex) {
+                console.log(`[DEAL SCANNER] ✅ Completed full cycle through all ${allItems.length} items!`);
+            }
+
+            return itemsToScan;
+        } else {
+            const shuffled = allItems.sort(() => Math.random() - 0.5);
+            console.log(`[DEAL SCANNER] Random mode: selected ${settings.itemsPerScan} random items`);
+            return shuffled.slice(0, settings.itemsPerScan);
+        }
+    }
+
+    async function scanItemForDeals(item) {
+        try {
+            console.log(`[DEAL SCANNER] Checking ${item.name}...`);
+            updateScannerStatus('Scanning...', item.name);
+
+            const [marketData, listings] = await Promise.all([
+                fetchTornExchangeData(item.id),
+                fetchBazaarListings(item.id)
+            ]);
+
+            if (!marketData.marketValue || listings.length === 0) {
+                return null;
+            }
+
+            const settings = getScannerSettings();
+            const deals = [];
+
+            listings.forEach(listing => {
+                const price = parseFloat(listing.price.toString().replace(/,/g, ''));
+                const discount = ((marketData.marketValue - price) / marketData.marketValue) * 100;
+
+                if (discount >= settings.minDiscountPercent) {
+                    deals.push({
+                        itemId: item.id,
+                        itemName: item.name,
+                        marketValue: marketData.marketValue,
+                        price: price,
+                        discount: discount,
+                        quantity: listing.quantity,
+                        playerName: listing.player_name,
+                        playerId: listing.player_id,
+                        timestamp: Date.now()
+                    });
+                }
+            });
+
+            if (deals.length > 0) {
+                deals.sort((a, b) => b.discount - a.discount);
+                console.log(`[DEAL SCANNER] ✅ Found ${deals.length} deal(s) for ${item.name}!`);
+                return deals[0];
+            }
+
+            return null;
+        } catch (error) {
+            console.error(`[DEAL SCANNER] Error scanning ${item.name}:`, error);
+            return null;
+        }
+    }
+
+    async function runScanner() {
+        const settings = getScannerSettings();
+        if (!settings.enabled) return;
+
+        if (!shouldScanNow()) {
+            const tabInfo = getActiveTabInfo();
+            const secondsRemaining = Math.ceil(tabInfo.timeUntilNextScan / 1000);
+            console.log(`[DEAL SCANNER] Too soon - waiting ${secondsRemaining}s until next scan`);
+            updateScannerStatus(`Next scan in ${secondsRemaining}s`);
+            return;
+        }
+
+        if (!acquireScannerLock()) {
+            const tabInfo = getActiveTabInfo();
+            console.log(`[DEAL SCANNER] Another tab (${tabInfo.activeTabId}) is currently scanning`);
+            updateScannerStatus(`Another tab is scanning...`);
+            return;
+        }
+
+        console.log('[DEAL SCANNER] Starting scan cycle...');
+        updateScannerStatus('Initializing scan...');
+
+        const itemsToScan = getRandomScanItems();
+        if (itemsToScan.length === 0) {
+            console.log('[DEAL SCANNER] No items to scan');
+            updateScannerStatus('No items in favorites');
+            releaseScannerLock();
+            return;
+        }
+
+        console.log(`[DEAL SCANNER] Will scan ${itemsToScan.length} items:`, itemsToScan.map(i => i.name).join(', '));
+
+        const newDeals = [];
+
+        for (let i = 0; i < itemsToScan.length; i++) {
+            const item = itemsToScan[i];
+            const delaySeconds = settings.delayBetweenItems || 1;
+            const delay = delaySeconds * 1000;
+
+            if (i > 0) {
+                console.log(`[DEAL SCANNER] Waiting ${delaySeconds}s before next item...`);
+                updateScannerStatus(`Waiting ${delaySeconds}s... (${i}/${itemsToScan.length} done)`);
+                await sleep(delay);
+            }
+
+            const deal = await scanItemForDeals(item);
+            if (deal) {
+                newDeals.push(deal);
+            }
+        }
+
+        if (newDeals.length > 0) {
+            const existingDeals = getScannerResults();
+            const allDeals = [...newDeals, ...existingDeals];
+
+            const uniqueDeals = [];
+            const seen = new Set();
+
+            for (const deal of allDeals) {
+                const key = `${deal.itemId}-${deal.playerId}-${deal.price}`;
+
+                if (seen.has(key) || isDealDismissed(deal.itemId, deal.playerId, deal.price) || uniqueDeals.length >= 50) {
+                    continue;
+                }
+
+                seen.add(key);
+                uniqueDeals.push(deal);
+            }
+
+            saveScannerResults(uniqueDeals);
+            console.log(`[DEAL SCANNER] ✅ Found ${newDeals.length} new deal(s)! Total deals: ${uniqueDeals.length}`);
+
+            renderScannerPanel();
+
+            if (settings.notificationSound) {
+                playNotificationSound();
+            }
+        } else {
+            console.log('[DEAL SCANNER] No profitable deals found this cycle');
+        }
+
+        updateLastScanTime();
+        releaseScannerLock();
+
+        const nextScanTime = new Date(Date.now() + settings.scanIntervalMinutes * 60 * 1000).toLocaleTimeString();
+        updateScannerStatus(`Last scan: ${new Date().toLocaleTimeString()} | Next: ${nextScanTime}`);
+    }
+
+    function startScanner() {
+        const settings = getScannerSettings();
+        if (scannerInterval) {
+            clearInterval(scannerInterval);
+        }
+
+        runScanner();
+
+        const intervalMs = settings.scanIntervalMinutes * 60 * 1000;
+        scannerInterval = setInterval(runScanner, intervalMs);
+
+        console.log(`[DEAL SCANNER] Started - scanning every ${settings.scanIntervalMinutes} minutes`);
+    }
+
+    function stopScanner() {
+        if (scannerInterval) {
+            clearInterval(scannerInterval);
+            scannerInterval = null;
+            console.log('[DEAL SCANNER] Stopped');
+        }
+        updateScannerStatus('Scanner stopped');
+    }
+
+    function updateScannerStatus(message, currentItem = null) {
+        const statusEl = document.querySelector('.bz-scanner-status');
+        if (statusEl) {
+            if (currentItem) {
+                statusEl.innerHTML = `<div style="color: #00FF00;">🔍 Scanning: <strong>${currentItem}</strong></div>`;
+                statusEl.classList.add('scanning');
+            } else {
+                statusEl.textContent = message;
+                statusEl.classList.remove('scanning');
+            }
+        }
+    }
+
+    function playNotificationSound() {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+
+        oscillator.frequency.value = 800;
+        oscillator.type = 'sine';
+
+        gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.5);
+    }
+
+    function createScannerPanel() {
+        if (document.getElementById('bz-scanner-panel')) return;
+
+        const panel = document.createElement('div');
+        panel.id = 'bz-scanner-panel';
+        document.body.appendChild(panel);
+
+        const floatBtn = document.createElement('div');
+        floatBtn.id = 'bz-scanner-float-btn';
+        floatBtn.innerHTML = '🔍<div class="bz-scanner-badge" style="display:none;">0</div>';
+        document.body.appendChild(floatBtn);
+
+        floatBtn.addEventListener('click', () => {
+            panel.style.display = 'block';
+            floatBtn.style.display = 'none';
+            GM_setValue(SCANNER_MINIMIZED_KEY, false);
+        });
+
+        const isMinimized = GM_getValue(SCANNER_MINIMIZED_KEY, false);
+        if (isMinimized) {
+            panel.style.display = 'none';
+            floatBtn.style.display = 'flex';
+        }
+
+        renderScannerPanel();
+    }
+
+    function renderScannerPanel() {
+        const panel = document.getElementById('bz-scanner-panel');
+        if (!panel) return;
+
+        const settings = getScannerSettings();
+        const deals = getScannerResults();
+        const floatBtn = document.getElementById('bz-scanner-float-btn');
+
+        let html = `
+            <div class="bz-scanner-header">
+                <span>🎯 Deal Scanner</span>
+                <button class="bz-scanner-minimize">−</button>
+            </div>
+
+            <div class="bz-scanner-toggle">
+                <label class="bz-scanner-switch">
+                    <input type="checkbox" id="bz-scanner-enable" ${settings.enabled ? 'checked' : ''}>
+                    <span class="bz-scanner-slider"></span>
+                </label>
+                <span style="flex: 1; font-size: 13px;">
+                    ${settings.enabled ? '🟢 Scanner Active' : '⚫ Scanner Off'}
+                </span>
+            </div>
+
+            <div class="bz-scanner-status">
+                ${settings.enabled ? 'Ready to scan...' : 'Enable scanner to start'}
+            </div>
+
+            <div class="bz-scanner-tab-info" style="font-size: 10px; color: #888; padding: 4px; background: #1a1a1a; border-radius: 3px; margin-bottom: 8px;">
+                <div id="bz-tab-status">Checking tab coordination...</div>
+            </div>
+
+            <div class="bz-scanner-settings" style="margin-bottom: 6px;">
+                <div class="bz-scanner-setting-row" style="margin-bottom: 4px;">
+                    <label style="font-size: 10px;">Mode:</label>
+                    <select id="bz-scan-mode" style="width: 80px; padding: 1px 3px; background: #1a1a1a; border: 1px solid #444; border-radius: 3px; color: #fff; font-size: 10px;">
+                        <option value="roundrobin" ${settings.scanMode === 'roundrobin' ? 'selected' : ''}>Round-Robin</option>
+                        <option value="random" ${settings.scanMode === 'random' ? 'selected' : ''}>Random</option>
+                    </select>
+                </div>
+                <div class="bz-scanner-setting-row" style="margin-bottom: 4px;">
+                    <label style="font-size: 10px;">Discount:</label>
+                    <input type="number" id="bz-min-discount" value="${settings.minDiscountPercent}" min="1" max="99" style="width: 40px; padding: 1px 3px; font-size: 10px;">
+                    <span style="margin-left: 2px; color: #aaa; font-size: 9px;">%</span>
+                </div>
+                <div class="bz-scanner-setting-row" style="margin-bottom: 4px;">
+                    <label style="font-size: 10px;">Every:</label>
+                    <input type="number" id="bz-scan-interval" value="${settings.scanIntervalMinutes}" min="1" max="60" style="width: 40px; padding: 1px 3px; font-size: 10px;">
+                    <span style="margin-left: 2px; color: #aaa; font-size: 9px;">min</span>
+                </div>
+                <div class="bz-scanner-setting-row" style="margin-bottom: 6px;">
+                    <label style="font-size: 10px;">Items:</label>
+                    <input type="number" id="bz-items-per-scan" value="${settings.itemsPerScan}" min="1" max="20" style="width: 40px; padding: 1px 3px; font-size: 10px;">
+                </div>
+
+                <button class="bz-scanner-btn" id="bz-save-settings" style="font-size: 9px; padding: 4px; margin-bottom: 3px;">💾 Save</button>
+                <button class="bz-scanner-btn" id="bz-scan-now" style="background: #00FF00; color: #000; font-size: 9px; padding: 4px;">▶ Scan Now</button>
+            </div>
+        `;
+
+        if (deals.length > 0) {
+            html += `<div class="bz-listings-title" style="font-size: 11px; margin: 8px 0 6px 0;">💰 ${deals.length} Deal${deals.length > 1 ? 's' : ''}</div>`;
+
+            deals.slice(0, 10).forEach((deal, index) => {
+                const bazaarLink = `https://www.torn.com/bazaar.php?userId=${deal.playerId}#/`;
+                html += `
+                    <div class="bz-scanner-deal" data-url="${bazaarLink}" data-deal-index="${index}" style="position: relative; padding: 6px; margin-bottom: 5px;">
+                        <button class="bz-deal-dismiss" data-deal-index="${index}" style="position: absolute; top: 3px; right: 3px; background: #A33C39; border: none; color: white; padding: 1px 5px; cursor: pointer; border-radius: 3px; font-size: 9px; font-weight: bold;">✕</button>
+                        <div class="bz-scanner-deal-header" style="padding-right: 25px;">
+                            <span style="font-size: 10px;">${deal.itemName}</span>
+                            <span class="bz-scanner-deal-discount" style="font-size: 9px;">-${deal.discount.toFixed(1)}%</span>
+                        </div>
+                        <div class="bz-scanner-deal-details" style="font-size: 9px;">
+                            <span style="color: #aaa;">MV: $${Math.round(deal.marketValue).toLocaleString()}</span>
+                            <span class="bz-price" style="font-size: 11px;">$${Math.round(deal.price).toLocaleString()}</span>
+                        </div>
+                        <div class="bz-scanner-deal-seller" style="font-size: 9px;">
+                            📍 ${deal.playerName || 'Unknown'} • Qty: ${deal.quantity}
+                        </div>
+                    </div>
+                `;
+            });
+
+            if (deals.length > 10) {
+                html += `<div class="bz-empty" style="font-size: 9px; padding: 8px;">+${deals.length - 10} more...</div>`;
+            }
+
+            html += `<button class="bz-scanner-btn" id="bz-clear-deals" style="font-size: 9px; padding: 4px; margin-top: 4px;">🗑️ Clear All</button>`;
+
+            const dismissedCount = Object.keys(getDismissedDeals()).length;
+            if (dismissedCount > 0) {
+                html += `
+                    <div style="font-size: 9px; color: #888; text-align: center; margin-top: 6px; padding: 4px; background: #1a1a1a; border-radius: 3px;">
+                        ${dismissedCount} deal${dismissedCount > 1 ? 's' : ''} dismissed
+                        <button id="bz-clear-dismissed" style="background: #434C66; border: none; color: white; padding: 2px 6px; cursor: pointer; border-radius: 3px; font-size: 8px; margin-left: 4px;">Clear Dismissed</button>
+                    </div>
+                `;
+            }
+
+            if (floatBtn) {
+                const badge = floatBtn.querySelector('.bz-scanner-badge');
+                if (badge) {
+                    badge.textContent = deals.length;
+                    badge.style.display = 'flex';
+                }
+            }
+        } else {
+            html += `<div class="bz-empty" style="font-size: 10px; padding: 12px;">No deals yet.<br><small>Scanner will check periodically</small></div>`;
+
+            if (floatBtn) {
+                const badge = floatBtn.querySelector('.bz-scanner-badge');
+                if (badge) badge.style.display = 'none';
+            }
+        }
+
+        panel.innerHTML = html;
+
+        // Event listeners
+        const enableCheckbox = panel.querySelector('#bz-scanner-enable');
+        if (enableCheckbox) {
+            enableCheckbox.addEventListener('change', function() {
+                settings.enabled = this.checked;
+                saveScannerSettings(settings);
+
+                if (settings.enabled) {
+                    startScanner();
+                } else {
+                    stopScanner();
+                }
+
+                renderScannerPanel();
+            });
+        }
+
+        const saveBtn = panel.querySelector('#bz-save-settings');
+        if (saveBtn) {
+            saveBtn.addEventListener('click', () => {
+                settings.scanMode = panel.querySelector('#bz-scan-mode').value;
+                settings.minDiscountPercent = parseInt(panel.querySelector('#bz-min-discount').value);
+                settings.scanIntervalMinutes = parseInt(panel.querySelector('#bz-scan-interval').value);
+                settings.itemsPerScan = parseInt(panel.querySelector('#bz-items-per-scan').value);
+
+                if (settings.scanMode === 'roundrobin') {
+                    GM_setValue(SCANNER_INDEX_KEY, 0);
+                }
+
+                saveScannerSettings(settings);
+
+                const modeText = settings.scanMode === 'roundrobin' ? 'Round-Robin' : 'Random';
+                alert(`Settings saved!\n\nMode: ${modeText}\nDiscount: ${settings.minDiscountPercent}%+\nInterval: ${settings.itemsPerScan} items / ${settings.scanIntervalMinutes} min`);
+
+                if (settings.enabled) {
+                    stopScanner();
+                    startScanner();
+                }
+            });
+        }
+
+        const scanNowBtn = panel.querySelector('#bz-scan-now');
+        if (scanNowBtn) {
+            scanNowBtn.addEventListener('click', () => {
+                runScanner();
+            });
+        }
+
+        const clearBtn = panel.querySelector('#bz-clear-deals');
+        if (clearBtn) {
+            clearBtn.addEventListener('click', () => {
+                saveScannerResults([]);
+                renderScannerPanel();
+            });
+        }
+
+        const clearDismissedBtn = panel.querySelector('#bz-clear-dismissed');
+        if (clearDismissedBtn) {
+            clearDismissedBtn.addEventListener('click', () => {
+                if (confirm('Clear all dismissed deals? They may reappear if still available.')) {
+                    clearDismissedDeals();
+                    renderScannerPanel();
+                }
+            });
+        }
+
+        panel.querySelectorAll('.bz-scanner-deal').forEach(dealEl => {
+            dealEl.addEventListener('click', function(e) {
+                if (e.target.classList.contains('bz-deal-dismiss')) return;
+                window.open(this.dataset.url, '_blank');
+            });
+        });
+
+        panel.querySelectorAll('.bz-deal-dismiss').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const dealIndex = parseInt(this.dataset.dealIndex);
+                const currentDeals = getScannerResults();
+                const deal = currentDeals[dealIndex];
+
+                if (deal) {
+                    dismissDeal(deal.itemId, deal.playerId, deal.price);
+                    console.log(`[DEAL SCANNER] Permanently dismissed: ${deal.itemName} from ${deal.playerName} at $${deal.price}`);
+                }
+
+                currentDeals.splice(dealIndex, 1);
+                saveScannerResults(currentDeals);
+                renderScannerPanel();
+            });
+        });
+
+        const minimizeBtn = panel.querySelector('.bz-scanner-minimize');
+        if (minimizeBtn) {
+            minimizeBtn.addEventListener('click', () => {
+                panel.style.display = 'none';
+                if (floatBtn) {
+                    floatBtn.style.display = 'flex';
+                }
+                GM_setValue(SCANNER_MINIMIZED_KEY, true);
+            });
+        }
+
+        function updateTabStatus() {
+    const tabStatusEl = panel.querySelector('#bz-tab-status');
+    if (!tabStatusEl) return;
+
+    const tabInfo = getActiveTabInfo();
+    const settings = getScannerSettings();
+
+    // Don't update if scanner is actively running
+    const statusEl = document.querySelector('.bz-scanner-status');
+    if (statusEl && statusEl.classList.contains('scanning')) {
+        // Scanner is actively scanning, don't overwrite the status
+        return;
+    }
+
+    if (!settings.enabled) {
+        tabStatusEl.innerHTML = '⚫ Scanner disabled';
+        tabStatusEl.style.color = '#888';
+    } else if (tabInfo.isThisTabActive) {
+        tabStatusEl.innerHTML = '🟢 <strong>This tab is scanning</strong>';
+        tabStatusEl.style.color = '#00FF00';
+    } else if (tabInfo.hasActiveLock) {
+        const lock = GM_getValue(SCANNER_LOCK_KEY, null);
+        const lockAge = lock ? Math.floor((Date.now() - lock.timestamp) / 1000) : 0;
+
+        if (lockAge > 30) {
+            tabStatusEl.innerHTML = `⚠️ Stale lock (${lockAge}s old) <button id="bz-force-unlock" style="background: #A33C39; border: none; color: white; padding: 2px 6px; cursor: pointer; border-radius: 3px; font-size: 9px; margin-left: 4px;">Force Unlock</button>`;
+            tabStatusEl.style.color = '#FFA500';
+
+            setTimeout(() => {
+                const unlockBtn = panel.querySelector('#bz-force-unlock');
+                if (unlockBtn) {
+                    unlockBtn.addEventListener('click', () => {
+                        forceUnlock();
+                        renderScannerPanel();
+                    });
+                }
+            }, 10);
+        } else {
+            tabStatusEl.innerHTML = '🟡 Another tab is scanning';
+            tabStatusEl.style.color = '#FFD700';
+        }
+    } else {
+        const secondsUntilNext = Math.ceil(tabInfo.timeUntilNextScan / 1000);
+        if (secondsUntilNext > 0) {
+            tabStatusEl.innerHTML = `⏱️ Next scan in ${secondsUntilNext}s`;
+            tabStatusEl.style.color = '#87CEEB';
+        } else {
+            tabStatusEl.innerHTML = '🔵 Ready to scan';
+            tabStatusEl.style.color = '#00BFFF';
+        }
+    }
+}
+
+        updateTabStatus();
+        setInterval(updateTabStatus, 2000);
+    }
+
+    // ===== INITIALIZATION =====
+    setTimeout(() => {
+        createScannerPanel();
+
+        const settings = getScannerSettings();
+        if (settings.enabled) {
+            startScanner();
+        }
+    }, 3000);
+
 })();

@@ -4,7 +4,7 @@
 // @author         Blaff, Rand0max, Atlantis
 // @namespace      TrapDesuAvisDiff
 // @license        MIT
-// @version        0.1.127.v111
+// @version        0.1.127.v118
 // @icon           https://images.emojiterra.com/google/noto-emoji/unicode-15.1/color/128px/1f7e9.png
 // @match          http://*.jeuxvideo.com/forums/42-*
 // @match          https://*.jeuxvideo.com/forums/42-*
@@ -559,7 +559,7 @@ label {
   margin-bottom: 0.35rem;
 }
 
-.jvchat-bloc-message:not(.fresh_edit--user) {
+.jvchat-bloc-message:not(.edit__user--no-anim) {
   animation-duration: 0.5s;
   animation-name: slidein;
 }
@@ -2147,12 +2147,7 @@ function getTopicId() {
 }
 
 function getForumId() {
-    const forumRegex = /^\/forums\/(?:0|1|42)-(?<forumid>[0-9]+)-[0-9]+-[0-9]+-0-[0-9]+-0-.*\.htm$/i;
-    const currentUrl = window.location.pathname;
-    const matches = forumRegex.exec(currentUrl);
-    if (!matches) return null;
-    const forumId = parseInt(matches.groups.forumid.trim());
-    return forumId;
+    return window.location.pathname.split('/').pop().split('-')[1] ?? null;
 }
 
 function getForumPayload() {
@@ -2207,24 +2202,24 @@ async function postJvcMessage() {
     formulaire.classList.add("jvchat-disabled-form");
     textarea.setAttribute("disabled", "true");
 
+    const forumPayload = freshPayload || getForumPayload();
+    const formSessionData = forumPayload.formSession;
+
     let formData = new FormData(freshForm);
 
     formData.set("text", textarea.value);
-    formData.set("topicId", getTopicId());
-    formData.set("forumId", getForumId());
+    formData.set("topicId", forumPayload.topicId);
+    formData.set("forumId", forumPayload.forumId);
     /* [RMV ModeColo]
     formData.set("group", "1");
     [RMV END] */
 
     /* [ADD ModeColo] */
-    let grpUser = document.querySelector('#form_alias_rang')?.value || "1";
-    formData.set("group", grpUser);
+    let aliasRang = document.getElementById('form_alias_rang');
+    formData.set("group", aliasRang?.value || "1");
     /* [ADD END] */
 
     formData.set("messageId", "undefined");
-
-    const forumPayload = freshPayload || getForumPayload();
-    const formSessionData = forumPayload.formSession;
 
     for (const key in formSessionData) {
         if (Object.hasOwnProperty.call(formSessionData, key)) {
@@ -2232,21 +2227,7 @@ async function postJvcMessage() {
         }
     }
 
-    let fs_custom_input = Array.from(freshForm.elements).find(e => /^fs_[a-f0-9]{40}$/i.test(e.name));
-    if (fs_custom_input && !formData.has(fs_custom_input.name)) {
-        formData.set(fs_custom_input.name, fs_custom_input.value);
-    }
-    if (!formData.has("ajax_hash")) {
-        let ajax_hash = freshForm.querySelector('input[name="ajax_hash"]')?.value || freshHash;
-        formData.set("ajax_hash", ajax_hash);
-    }
-
-    const boundary = "----geckoformboundary" + Math.random().toString(16).slice(2);
-    let body = "";
-    for (let [key, value] of formData.entries()) {
-        body += `--${boundary}\r\nContent-Disposition: form-data; name="${key}"\r\n\r\n${value}\r\n`;
-    }
-    body += `--${boundary}--\r\n`;
+    formData.set("ajax_hash", forumPayload.ajaxToken);
 
     let timeout = turboActivated ? 5000 : 20000;
     postingMessage = true;
@@ -2260,12 +2241,11 @@ async function postJvcMessage() {
                     "Accept": "application/json",
                     "Accept-Language": "fr",
                     "x-requested-with": "XMLHttpRequest",
-                    "Content-Type": `multipart/form-data; boundary=${boundary}`,
                     "Pragma": "no-cache",
                     "Cache-Control": "no-cache"
                 },
                 referrer: document.URL,
-                body: body,
+                body: formData,
                 mode: "cors"
             }),
             new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), timeout))
@@ -2410,8 +2390,8 @@ async function submitEditedMessage(messageBloc, messageId, newText, formSession,
     [RMV END] */
 
     /* [ADD ModeColo] */
-    let grpUser = document.querySelector('#form_alias_rang')?.value || "1";
-    formData.append("group", grpUser);
+    let aliasRang = document.getElementById('form_alias_rang');
+    formData.append("group", aliasRang?.value || "1");
     /* [ADD END] */
 
     for (const key in formSession) {
@@ -2451,14 +2431,11 @@ async function submitEditedMessage(messageBloc, messageId, newText, formSession,
         editionDiv.classList.add("jvchat-hide");
         editionDiv.innerHTML = '';
         originalContentDiv.classList.remove("jvchat-hide");
-        messageBloc.closest(".jvchat-bloc-message").classList.add('fresh_edit--user');
 
-        if (lastEditionTime && lastEditionTime[messageId]) {
-            lastEditionTime[messageId][0] = getTimestamp();
-            lastEditionTime[messageId][1] = "édité";
-        } else if (lastEditionTime) {
-            lastEditionTime[messageId] = [getTimestamp(), "édité", false];
-        }
+        //Flag edition
+        messageBloc.closest(".jvchat-bloc-message").classList.add('edit__user--no-anim');
+        const delState = lastEditionTime[messageId]?.[2]; 
+        lastEditionTime[messageId] = [getTimestamp(), "édité", delState || false];
 
         const eventDetail = { 'detail': { id: messageId, isEdit: true, newHtml: data.html } };
         const customEvent = new CustomEvent('jvchat:newmessage', eventDetail);
@@ -2854,11 +2831,16 @@ function addMessages(messages, editing, requestTimestamp) {
             let selector = `.jvchat-message[jvchat-id="${id}"]`;
             let oldBloc = main.querySelector(selector).closest(".jvchat-bloc-message");
             let isDown = isScrollDown();
-            let oldClasses = oldBloc.className;
 
+            let editByUser = oldBloc.classList.contains('edit__user--no-anim');
+            if (editByUser) {
+                newBloc = newBloc.replace(
+                  'class="jvchat-bloc-message"',
+                  'class="jvchat-bloc-message edit__user--no-anim"'
+                );
+            }
             oldBloc.outerHTML = newBloc;
-            let newBlocDom = main.querySelector(selector).closest(".jvchat-bloc-message");
-            newBlocDom.className = oldClasses;
+
 
             if (isDown) {
                 setScrollDown();
@@ -3416,40 +3398,10 @@ function decreaseUpdateInterval() {
 }
 
 function getPayload(doc) {
-    const scripts = doc.getElementsByTagName('script');
-    let rawPayloadString = null;
-
-    for (let i = 0; i < scripts.length; i++) {
-        const scriptContent = scripts[i].textContent || scripts[i].innerText; // textContent est préférable
-
-        if (scriptContent) {
-            const match = scriptContent.match(/window\.jvc\.forumsAppPayload\s*=\s*['"]([^'"]+)['"]/);
-            if (match && match[1]) {
-                rawPayloadString = match[1];
-                break;
-            }
-
-            const jvcVarMatch = scriptContent.match(/jvc\.forumsAppPayload\s*=\s*['"]([^'"]+)['"]/);
-            if (!rawPayloadString && jvcVarMatch && jvcVarMatch[1]) {
-                rawPayloadString = jvcVarMatch[1];
-                break;
-            }
-        }
-    }
-
-    if (rawPayloadString) {
-        try {
-            const decodedPayload = JSON.parse(atob(rawPayloadString));
-            return decodedPayload;
-        } catch (e) {
-            console.error("Erreur lors du décodage Base64 ou du parsing JSON du payload:", e);
-            console.error("Payload brut extrait", rawPayloadString); // Pour le débogage
-            return null;
-        }
-    } else {
-        console.warn("La variable window.jvc.forumsAppPayload n'a pas été trouvée dans les balises <script> du DOM fourni.");
-        return null;
-    }
+    const script = [...doc.scripts].find(s => s.textContent?.includes('forumsAppPayload'));
+    if (!script) return null;
+    const match = script.textContent.match(/forumsAppPayload\s*=\s*["']([^"']+)["']/);
+    return match ? JSON.parse(atob(match[1])) : null;
 }
 
 function parsePage(res, requestTimestamp) {

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Arson bang for buck custom underko
 // @namespace    custom.Para_Thenics.torn.com
-// @version      0.0.8
+// @version      0.0.10
 // @description  Display profit per nerve and how to perform
 // @author       Para_Thenics, auboli77
 // @match        https://www.torn.com/page.php?sid=crimes*
@@ -113,7 +113,7 @@
     {name: "Beat the Odds", payout: 330000, ignition: "flamethrower", materials: {gasoline: 4}},
     {name: "Beggars Can't be Choosers", payout: 480000, ignition: "flamethrower", materials: {gasoline: 5, thermite: 2}},
     {name: "Beyond Repair", payout: 93500, ignition: "flamethrower", materials: {gasoline: 4}, stoke: {flamethrower: 1}},
-    {name: "Blaze of Glory", payout: 110000, ignition: "flamethrower", materials: {gasoline: 2}, stoke: {flamethrower: 1}, evidence: {toothbrush: 1}},
+    {name: "Blaze of Glory", payout: 180000, ignition: "flamethrower", materials: {gasoline: 2}, stoke: {flamethrower: 1}, evidence: {toothbrush: 1}},
     {name: "Body of Evidence", payout: 105000, ignition: "flamethrower", materials: {gasoline: 5}},
     {name: "Body of Evidence", payout: 105000, ignition: "lighter", materials: {gasoline: 6}},
     {name: "Bone of Contention", payout: 43000, ignition: "lighter", materials: {gasoline: 1}, dampen: {blanket: 1}},
@@ -121,7 +121,7 @@
     {name: "Boom Industry", payout: 130000, ignition: "lighter", materials: {gasoline: 5}},
     {name: "Boxing Clever", payout: 335000, ignition: "flamethrower", materials: {gasoline: 2}},
     {name: "Bright Spark", payout: 290000, ignition: "lighter", materials: {hydrogenTank: 1}, stoke: {hydrogenTank: 2}},
-    {name: "Burn After Screening", payout: 53000, ignition: "flamethrower", materials: {gasoline: 1}},
+    {name: "Burn After Screening", payout: 100000, ignition: "flamethrower", materials: {gasoline: 2}},
     {name: "Burn After Screening", payout: 99000, ignition: "lighter", materials: {gasoline: 3}},
     {name: "Burn Notice", payout: 175000, ignition: "flamethrower", materials: {gasoline: 5}, stoke: {flamethrower: 1}},
     {name: "Burn Notice", payout: 175000, ignition: "lighter", materials: {gasoline: 4}, stoke: {gasoline: 3}},
@@ -250,6 +250,7 @@
     {name: "Hot Pursuit", payout: 50000, ignition: "flamethrower", materials: {gasoline: 2}},
     {name: "Hot Trend", payout: 54000, ignition: "lighter", materials: {kerosene: 1}},
     {name: "House Edge", payout: 130000, ignition: "flamethrower", materials: {gasoline: 3}},
+    {name: "House Edge", payout: 190000, ignition: "lighter", materials: {gasoline: 5}},
     {name: "House of Cards", payout: 610000, ignition: "lighter", materials: {hydrogenTank: 1}, stoke: {hydrogenTank: 2}},
     {name: "Igniting Curiosity", payout: 260000, ignition: "flamethrower", materials: {gasoline: 4}, evidence: {sumoDoll: 1}},
     {name: "Igniting Curiosity", payout: 100000, ignition: "lighter", materials: {gasoline: 3}, evidence: {sumoDoll: 1}},
@@ -404,7 +405,7 @@
     {name: "Where There's a Will", payout: 23000, ignition: "lighter", materials: {gasoline: 2}},
     {name: "Where There's a Will", payout: 52000, ignition: "flamethrower", materials: {gasoline: 3}},
     {name: "Whiskey Business", payout: 90000, ignition: "lighter", materials: {hydrogenTank: 1}, stoke: {hydrogenTank: 1}},
-    {name: "Wired for War", payout: 410000, ignition: "flamethrower", materials: {gasoline: 6}, stoke: {flamethrower: 1, hydrogenTank: 2}},
+    {name: "Wired for War", payout: 430000, ignition: "flamethrower", materials: {gasoline: 8}},
     {name: "Womb With a View", payout: 78500, ignition: "flamethrower", materials: {gasoline: 2}},
     {name: "Womb With a View", payout: 95000, ignition: "lighter", materials: {gasoline: 4}},
     {name: "Workplace Burnout", payout: 100000, ignition: "lighter", materials: {gasoline: 4}},

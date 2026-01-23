@@ -1,13 +1,13 @@
 // ==UserScript==
 // @name         LightLayer Refund Calculator
 // @namespace    https://account.lightlayer.net/
-// @version      2.6.0
+// @version      2.6.2
 // @include      https://account.lightlayer.net/syscontrol/*cmd=invoices&action=edit*
 // @include      https://account.lightlayer.net/syscontrol/index.php*cmd=invoices&action=edit*
 // @run-at       document-end
 // @grant        GM_xmlhttpRequest
 // @connect      account.lightlayer.net
-// @description 在 LightLayer 发票页面计算退款金额，并显示可复制公式
+// @description  在 LightLayer 发票页面计算退款金额，并显示可复制公式
 // @downloadURL https://update.greasyfork.org/scripts/563433/LightLayer%20Refund%20Calculator.user.js
 // @updateURL https://update.greasyfork.org/scripts/563433/LightLayer%20Refund%20Calculator.meta.js
 // ==/UserScript==
@@ -34,6 +34,14 @@
         if (m === 2) return 30;
         if ([1,3,5,7,8,10,12].includes(m)) return 30;
         return 29;
+    }
+
+    function getTotalDays(startDate, endDate) {
+        const monthDiff = (endDate.getFullYear() - startDate.getFullYear()) * 12 + (endDate.getMonth() - startDate.getMonth());
+        if (monthDiff === 3) return 90; // 季度
+        if (monthDiff === 6) return 150; // 半年
+        if (monthDiff === 12) return 300; // 年付
+        return getTotalDaysByMonth(startDate); // 默认月付逻辑
     }
 
     function showResult(fullText, formulaText) {
@@ -161,7 +169,7 @@
                 return;
             }
 
-            const totalDays = getTotalDaysByMonth(startDate);
+            const totalDays = getTotalDays(startDate, endDate);
             const btn = createButton();
 
             btn.onclick = () => {
@@ -223,7 +231,8 @@
                 remainDays = Math.max(0, remainDays);
 
                 const perDay = price / totalDays;
-                const refund = (perDay * remainDays).toFixed(2);
+                const rawRefund = perDay * remainDays;
+                const refund = (Math.round(rawRefund * 100) / 100).toFixed(2);
 
                 const modeDesc = mode === 'exclusive' ? '（不含结束日）' : '（含首尾日）';
                 const formulaText = `总价 ${price} ÷ ${totalDays}天 = 单日价 ${perDay.toFixed(6)}；剩余 ${remainDays} 天${modeDesc} → 结果：$${refund}`;

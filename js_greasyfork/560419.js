@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name ЗГА CHERRY
 // @namespace https://forum.blackrussia.online
-// @version 1.0.3
+// @version 1.0.4
 // @description Костелло
 // @author Rasul_Costello
 // @match https://forum.blackrussia.online/threads/*
@@ -26,6 +26,7 @@ const WATCHED_PREFIX = 9;
 const CLOSE_PREFIX = 7;
 const SA_PREFIX = 11;
 const TEXU_PREFIX = 13;
+const RM_GUIDE_PREFIX = 20; // Руководство модерации
 const buttons = [
 {
   title: 'Свой Ответ',
@@ -73,7 +74,7 @@ title: '𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩𓆩
     '[SIZE=4][FONT=Georgia][CENTER]Доброго времени суток, уважаемый {{ user.mention }}!<br><br>' +
     'Ваше обжалование будет передано Руководителю модераторов Forum/Discord на рассмотрение. Просьба не создавать подобных тем.' +
     '[/CENTER][/FONT][/SIZE]',
-  prefix: COMMAND_PREFIX,
+  prefix: RM_GUIDE_PREFIX,
   status: true,
 },
 
@@ -277,6 +278,7 @@ addButton(' Отказано ', 'unaccept');
 addButton(' ГА ', 'Ga');
 addButton(' Закрыто ', 'Zakrito');
 addButton(' Ответы ', 'selectAnswer');
+addButton(' Руководство модерации ', 'rmGuide');
  
 // Поиск информации о теме
 const threadData = getThreadData();
@@ -287,6 +289,7 @@ $('button#teamProject').click(() => editThreadData(COMMAND_PREFIX, true));
 $('button#unaccept').click(() => editThreadData(UNACCEPT_PREFIX, false));
 $('button#Zakrito').click(() => editThreadData(CLOSE_PREFIX, false));
 $('button#Ga').click(() => editThreadData(GA_PREFIX, true));
+$('button#rmGuide').click(() => editThreadData(RM_GUIDE_PREFIX, true));
 $(`button#selectAnswer`).click(() => {
 XF.alert(buttonsMarkup(buttons), null, 'Выберите ответ:');
 buttons.forEach((btn, id) => {

@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         Asylum Script
 // @namespace    http://tampermonkey.net/
-// @version      1.1
+// @version      1.2
 // @description  Helper script for Asylum members
 // @author       You
 // @match        https://www.torn.com/properties.php?step=rentalmarket*
+// @match        https://www.torn.com/page.php?sid=ItemMarket*
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_xmlhttpRequest
@@ -35,6 +36,19 @@
         }
         .asylum-btn:hover {
             background-color: #5500cc;
+        }
+        .mugbot-btn {
+            color: red;
+            font-weight: bold;
+            border: 1px solid red;
+            border-radius: 3px;
+            margin-right: 8px;
+            cursor: pointer;
+            font-size: 10px;
+            background: transparent;
+        }
+        .mugbot-btn:hover {
+            background: #ffe6e6;
         }
         .asylum-btn:disabled {
             background-color: #ccc;
@@ -201,7 +215,7 @@
     }
 
     function startScraping() {
-        if (confirm('This will clear the server and start scraping. Continue?')) {
+        if (confirm('This will clear the server and start scanning. Continue?')) {
             GM_setValue(SETTINGS_KEY_IS_SCRAPING, true);
             updateUIState(true);
             // First scrape clears the server
@@ -212,13 +226,13 @@
     function stopScraping() {
         GM_setValue(SETTINGS_KEY_IS_SCRAPING, false);
         updateUIState(false);
-        showToast('Scraping stopped.');
+        showToast('Scanning stopped.');
     }
 
     function updateUIState(isScraping) {
         const btn = document.getElementById('asylum-scrape-btn');
         if (btn) {
-            btn.textContent = isScraping ? 'Stop Scraping' : 'Start Scraping';
+            btn.textContent = isScraping ? 'Stop Scanning' : 'Start Scanning';
             btn.style.backgroundColor = isScraping ? '#ff4444' : '#6a00ff';
         }
     }
@@ -242,7 +256,7 @@
         scrapeBtn.className = 'asylum-btn';
         
         const isScraping = GM_getValue(SETTINGS_KEY_IS_SCRAPING, false);
-        scrapeBtn.textContent = isScraping ? 'Stop Scraping' : 'Start Scraping';
+        scrapeBtn.textContent = isScraping ? 'Stop Scanning' : 'Start Scanning';
         if (isScraping) scrapeBtn.style.backgroundColor = '#ff4444';
         
         scrapeBtn.addEventListener('click', () => {
@@ -350,6 +364,116 @@
     // Debounce helper
     let lastScrapeTime = 0;
     let lastScrapedDataSignature = ''; // Store signature of last sent data
+    let watchedItemsCache = []; // Cache for watched items
+    let lastWatchedFetchTime = 0;
+
+    // --- Watched Items Logic ---
+
+    function fetchWatchedItems(callback) {
+        const apiKey = getApiKey();
+        if (!apiKey) return;
+
+        // Throttle fetches (e.g., once every 30 seconds or only on page load/action)
+        const now = Date.now();
+        if (now - lastWatchedFetchTime < 30000 && watchedItemsCache.length > 0) {
+            if (callback) callback(watchedItemsCache);
+            return;
+        }
+
+        let url = getServerUrl();
+        // Construct endpoint based on server URL convention
+        if (url.endsWith('/property')) {
+            url = url.replace('/property', '/watched-items');
+        } else if (url.endsWith('/item')) {
+            url = url.replace('/item', '/watched-items');
+        } else {
+             // Fallback logic if URL is just the base
+             // Assuming default structure
+             url = url.replace(/\/external\/.*$/, '/external/watched-items');
+        }
+        
+        // If replacement failed to produce a valid-looking endpoint, append manually
+        if (!url.includes('watched-items')) {
+             if (url.endsWith('/')) url += 'watched-items';
+             else url += '/watched-items';
+        }
+
+        // Using GET with query params as per python sample
+        // Ensure proper separator if URL already has query params
+        const separator = url.includes('?') ? '&' : '?';
+        const fullUrl = `${url}${separator}apiKey=${encodeURIComponent(apiKey)}`;
+
+        console.log(`[Asylum] Fetching watched items from: ${fullUrl}`);
+
+        GM_xmlhttpRequest({
+            method: "GET",
+            url: fullUrl,
+            headers: {
+                // Some servers might expect it here too/instead
+                'Authorization': apiKey,
+                'X-Api-Key': apiKey
+            },
+            onload: function(response) {
+                try {
+                    const data = JSON.parse(response.responseText);
+                    if (data.success && data.listings) {
+                        watchedItemsCache = data.listings;
+                        lastWatchedFetchTime = Date.now();
+                        console.log(`[Asylum] Fetched ${watchedItemsCache.length} watched items.`);
+                        if (callback) callback(watchedItemsCache);
+                    } else {
+                        console.error('[Asylum] Failed to fetch watched items:', data.error);
+                    }
+                } catch (e) {
+                    console.error('[Asylum] Error parsing watched items response', e);
+                }
+            },
+            onerror: function(err) {
+                console.error('[Asylum] Network error fetching watched items', err);
+            }
+        });
+    }
+
+    function isItemWatched(sellerId, itemId, price, quality, armor) {
+        return watchedItemsCache.some(watched => {
+            // Mandatory checks: Seller, Type, Price
+            if (parseInt(watched.seller_id) !== parseInt(sellerId)) return false;
+            if (parseInt(watched.item_type) !== parseInt(itemId)) return false;
+            if (parseInt(watched.price) !== parseInt(price)) return false;
+            
+            // Optional checks: Quality/Armor
+            
+            // If quality is provided on screen, check against watched item
+            if (quality && watched.quality) {
+                 if (Math.abs(parseFloat(quality) - parseFloat(watched.quality)) > 0.01) return false;
+            }
+            
+            // Strict Armor Check requested:
+            // "if the server has null, that item shouldn't be highlighted" (if we are looking at an item with armor?)
+            // Interpretation: 
+            // 1. If screen item has armor, and watched item has NO armor (null), then return FALSE?
+            //    (Meaning a "generic" watch shouldn't match a specific armor item?)
+            //    OR
+            // 2. If screen item has armor, it must match watched armor.
+            
+            // Let's implement: If both have armor, must match. 
+            // If watched has armor but screen doesn't, fail? (Screen usually has armor for armor items).
+            // If screen has armor but watched is null -> User says "shouldn't be highlighted".
+            
+            if (armor) {
+                // If the item on screen has an armor value...
+                if (!watched.armor) {
+                    // ...and the watched item has NO armor value (null/undefined),
+                    // then we do NOT consider it a match (as per request).
+                    return false;
+                }
+                // If both have it, check value
+                if (Math.abs(parseFloat(armor) - parseFloat(watched.armor)) > 0.01) return false;
+            }
+            
+            return true;
+        });
+    }
 
     function checkAndScrape() {
         if (!GM_getValue(SETTINGS_KEY_IS_SCRAPING, false)) return;
@@ -412,9 +536,9 @@
                  console.log('Response:', response.status, response.responseText);
                  if ((response.status >= 200 && response.status < 300) || response.status === 409) {
                     if (shouldClear) {
-                        showToast(`Server cleared & ${properties.length} properties scraped. Please browse pages.`);
+                        showToast(`Server cleared & ${properties.length} properties scanned. Please browse pages.`);
                     } else {
-                         showToast(`Scraped ${properties.length} properties.`);
+                         showToast(`Scanned ${properties.length} properties.`);
                     }
                 } else {
                     console.error('Failed to update server: ' + response.statusText + ' (' + response.status + ')');
@@ -449,13 +573,249 @@
              // If clearing, we send even if empty
              sendBatchData([], true);
          } else {
-             showToast('No properties found to scrape.');
+            showToast('No properties found to scan.');
          }
+    }
+
+    // --- Mugbot Logic ---
+
+    function sendMugbotData(userId, itemId, price, btnElement, stats = {}) {
+        const apiKey = getApiKey();
+        
+        let url = getServerUrl();
+        if (url.endsWith('/property')) {
+            url = url.replace('/property', '/item');
+        }
+
+        const payload = {
+            apiKey: apiKey,
+            userId: parseInt(userId, 10),
+            itemType: parseInt(itemId, 10),
+            price: parseInt(price, 10),
+            quality: stats.quality || null,
+            armor: stats.armor || null,
+            damage: stats.damage || null,
+            accuracy: stats.accuracy || null
+        };
+        
+        console.log('[Asylum] Sending Payload:', payload);
+
+        // Visual feedback
+        btnElement.textContent = '...';
+        btnElement.disabled = true;
+
+        GM_xmlhttpRequest({
+            method: "POST",
+            url: url,
+            headers: { "Content-Type": "application/json" },
+            data: JSON.stringify(payload),
+            onload: function(response) {
+                let data = {};
+                try {
+                    data = JSON.parse(response.responseText);
+                } catch(e) {}
+
+                if (response.status >= 200 && response.status < 300 && data.success) {
+                    btnElement.textContent = 'Sent!';
+                    btnElement.style.color = 'green';
+                    btnElement.style.borderColor = 'green';
+                    console.log(`[Asylum] Success: ${data.message} (UID: ${data.listing_uid})`);
+                    
+                    // Update local cache to reflect this new watch
+                    // (Assuming the server response structure or just adding what we sent)
+                    // We can optimistically add it to avoid a refetch
+                    watchedItemsCache.push({
+                         seller_id: parseInt(userId),
+                         item_type: parseInt(itemId),
+                         price: parseInt(price),
+                         quality: stats.quality || null,
+                         armor: stats.armor || null
+                    });
+
+                } else {
+                    const errorMsg = data.error || response.responseText;
+                    console.error('[Asylum] Error:', errorMsg);
+                    btnElement.textContent = 'Error';
+                    btnElement.style.color = 'orange';
+                    btnElement.disabled = false;
+                }
+            },
+            onerror: function(err) {
+                console.error('Mugbot Network Error', err);
+                btnElement.textContent = 'Fail';
+                btnElement.disabled = false;
+            }
+        });
+    }
+
+    function injectMugbotButtons() {
+        // Only run if we are on the Defensive page
+        if (!window.location.hash.includes('categoryName=Defensive')) return;
+
+        const AUTO_MUGBOT_PRICE = 15000000;
+
+        const scrapeStatsForRow = (rowEl) => {
+            const s = {};
+            
+            // Try finding stats if they exist in this row context
+            // For items like weapons/armor, the stats are often in the parent Item Tile, not the seller row
+            
+            // Strategy: Find the Item Tile associated with this seller list.
+            // Structure: 
+            // <li (List Item for Item)>
+            //   <div class="itemTile... expanded..."> (CONTAINS STATS)
+            //   <li class="sellerListWrapper..."> (CONTAINS SELLERS)
+            //     <ul...>
+            //       <li...>
+            //         <div class="sellerRow..."> (OUR ROW)
+            
+            const sellerListWrapper = rowEl.closest('.sellerListWrapper___PN32N');
+            if (sellerListWrapper) {
+                // The item tile is a SIBLING of the seller list wrapper, usually preceding it.
+                // Sometimes there might be other elements, so we look for the specific class in siblings.
+                const parentLi = sellerListWrapper.parentElement;
+                if (parentLi) {
+                    // Find the itemTile within the parent LI
+                    const itemTile = parentLi.querySelector('.itemTile___cbw7w.expanded___xsZfG');
+                    
+                    if (itemTile) {
+                        // Method A: Look for value___cwqHv inside property___SHm8e (General properties)
+                        // There might be multiple properties (Accuracy, Damage, Armor).
+                        // We need to distinguish them.
+                        
+                        const props = itemTile.querySelectorAll('.property___SHm8e');
+                        props.forEach(p => {
+                            const valEl = p.querySelector('.value___cwqHv');
+                            const icon = p.querySelector('.icon___ThfN8 svg');
+                            
+                            if (valEl) {
+                                const val = valEl.textContent.trim();
+                                
+                                // Heuristic: Armor usually uses the shield icon or is the only property for Armor items
+                                // But we can also just default to mapping single values or checking page context
+                                
+                                // If we are on defensive page, primary value is armor.
+                                if (window.location.hash.includes('Defensive')) {
+                                    if (!s.armor) s.armor = val;
+                                }
+                                // If weapon, primary might be Damage/Accuracy.
+                                // For now, let's just grab the first value as Armor if it looks like a number
+                                // or try to find a specific distinction if possible.
+                                
+                                // In your snippet, there is only one property shown: 20.01.
+                                // So taking the first valid property value is a safe bet for now.
+                                if (!s.armor) s.armor = val;
+                            }
+                        });
+                        
+                        // Method B: Direct lookup if Method A failed (fallback)
+                        if (!s.armor) {
+                            const valEl = itemTile.querySelector('.value___cwqHv');
+                            if (valEl) s.armor = valEl.textContent.trim();
+                        }
+                        
+                        if (s.armor) {
+                            console.log('[Asylum] Found Armor/Stat via expanded item tile:', s.armor);
+                        }
+                    } else {
+                        console.log('[Asylum] Could not find expanded item tile sibling.');
+                    }
+                }
+            }
+            
+            return s;
+        };
+
+        // --- METHOD 3: Seller Row (Primary Method) ---
+        const sellerRows = document.querySelectorAll('.sellerRow___AI0m6');
+        sellerRows.forEach(row => {
+            if (row.querySelector('.mugbot-btn')) return;
+
+            // User ID - Try profile link
+            const profileLink = row.querySelector('a[href*="profiles.php?XID="], a[href*="profiles.php?step="]');
+            let userId = null;
+            if (profileLink) {
+                 const href = profileLink.getAttribute('href');
+                 const match = href.match(/XID=(\d+)/) || href.match(/ID=(\d+)/);
+                 if (match) userId = match[1];
+            }
+            if (!userId) return;
+
+            // Price
+            const priceEl = row.querySelector('.price___Uwiv2');
+            if (!priceEl) return;
+            const priceText = priceEl.textContent.trim();
+            const price = parseInt(priceText.replace(/[$,]/g, ''), 10);
+            if (isNaN(price)) return;
+
+            // Item ID
+            let itemId = null;
+            // 1. Try URL hash/query
+            const hashParams = new URLSearchParams(window.location.hash.replace('#/', '?'));
+            // URL format might be #/market/view?itemID=650
+            if (hashParams.has('itemID')) {
+                itemId = hashParams.get('itemID');
+            } else {
+                // Check normal query params
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.has('itemId')) itemId = urlParams.get('itemId');
+            }
+            
+            // 2. Try thumbnail image
+            if (!itemId) {
+                const img = row.querySelector('img[src*="/images/items/"]');
+                if (img) {
+                    const src = img.getAttribute('src');
+                    const match = src.match(/\/items\/(\d+)\//);
+                    if (match) itemId = match[1];
+                }
+            }
+            if (!itemId) return;
+
+            const btn = document.createElement('button');
+            btn.className = 'mugbot-btn';
+            btn.textContent = 'Mugbot';
+            btn.style.marginRight = '8px';
+            
+            btn.onclick = async (e) => {
+               e.preventDefault();
+               e.stopPropagation();
+               let currentStats = scrapeStatsForRow(row);
+               
+               sendMugbotData(userId, itemId, price, btn, currentStats);
+            };
+            
+            const isWatched = isItemWatched(userId, itemId, price, null, null);
+            if (isWatched) {
+               btn.textContent = 'Watched';
+               btn.style.color = 'green';
+               btn.style.borderColor = 'green';
+               btn.disabled = true;
+            }
+
+            if (priceEl.parentElement) {
+                priceEl.parentElement.insertBefore(btn, priceEl);
+            }
+
+            if (!isWatched && price > AUTO_MUGBOT_PRICE && !row.dataset.autoMugbotSent) {
+                row.dataset.autoMugbotSent = 'true';
+                const currentStats = scrapeStatsForRow(row);
+                sendMugbotData(userId, itemId, price, btn, currentStats);
+            }
+        });
     }
 
 
     function init() {
         createSettingsUI();
+        
+        // Fetch watched items immediately on load
+        fetchWatchedItems((items) => {
+            // If we are already on the item market, re-run injection to update buttons
+            if (window.location.href.includes('ItemMarket')) {
+                injectMugbotButtons();
+            }
+        });
         
         // Retry injection
         let attempts = 0;
@@ -492,6 +852,13 @@
                  if (mutations.length > 0) {
                       checkAndScrape();
                  }
+            }
+            
+            // Mugbot Injection Check
+            if (window.location.href.includes('ItemMarket')) {
+                // Ensure we have latest watched items periodically or if they might have changed
+                // For now, relies on the cached version or initial fetch
+                injectMugbotButtons();
             }
         });
 

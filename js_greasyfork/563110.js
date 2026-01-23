@@ -1,17 +1,18 @@
 // ==UserScript==
-// @name         气象继续教育
+// @name         气象继续教育（自动登录版）
 // @license      MIT
 // @namespace    http://tampermonkey.net/
-// @version      3.50
-// @description  气象学习综合工具：课程列表显示 + 视频播放控制 + 自动下一节 + 进度追踪
+// @version      3.61
+// @description  气象学习综合工具：课程列表显示 + 视频播放控制 + 自动下一节 + 进度追踪 + 自动登录 + 登录配置用户名校验 + 详细日志记录 + 入职时间显示
 // @author       You
 // @match        http://www.cmatc.cn/lms/app/lms/student/Userselectlesson/show.do*
 // @match        http://www.cmatc.cn/lms/app/lms/student/Learn/enter.do*
 // @grant        GM_getValue
 // @grant        GM_setValue
+// @grant        GM_xmlhttpRequest
 // @run-at       document-start
-// @downloadURL https://update.greasyfork.org/scripts/563110/%E6%B0%94%E8%B1%A1%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2.user.js
-// @updateURL https://update.greasyfork.org/scripts/563110/%E6%B0%94%E8%B1%A1%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/563110/%E6%B0%94%E8%B1%A1%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%EF%BC%88%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95%E7%89%88%EF%BC%89.user.js
+// @updateURL https://update.greasyfork.org/scripts/563110/%E6%B0%94%E8%B1%A1%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%EF%BC%88%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95%E7%89%88%EF%BC%89.meta.js
 // ==/UserScript==
 
 (function() {
@@ -25,8 +26,8 @@
         UPDATE_INTERVAL: 1000, // 倒计时更新间隔（毫秒）
 
         // 登录检测间隔（分钟）
-        SESSION_KEEPALIVE_MIN: GM_getValue('sessionKeepaliveMin', 3), // 最小间隔（分钟），从本地存储读取
-        SESSION_KEEPALIVE_MAX: GM_getValue('sessionKeepaliveMax', 5), // 最大间隔（分钟），从本地存储读取
+        SESSION_KEEPALIVE_MIN: GM_getValue('sessionKeepaliveMin', 5), // 最小间隔（分钟），从本地存储读取
+        SESSION_KEEPALIVE_MAX: GM_getValue('sessionKeepaliveMax', 8), // 最大间隔（分钟），从本地存储读取
 
         // 保持会话的请求URL列表，随机切换
         SESSION_KEEPALIVE_URLS: [
@@ -39,6 +40,7 @@
         // 日志显示配置
         LOG_LEVEL: GM_getValue('logLevel', 'simple'), // 日志级别，从本地存储读取
         SHOW_LEARN_TIME_LOGS: true, // 是否显示视频学习播放提交日志
+        LOG_RECORD_HOURS: 12, // 登录日志记录时长（小时），只保留最近N小时的记录
 
         // 自动播放配置
         AUTO_PLAY_NEXT: GM_getValue('autoPlayNext', true), // 是否自动播放下一节
@@ -46,7 +48,38 @@
         SKIP_COMPLETED: GM_getValue('skipCompleted', true), // 是否跳过已完成的视频
 
         // 调试配置
-        DEBUG_MODE: GM_getValue('debugMode', true) // 是否开启调试模式
+        DEBUG_MODE: GM_getValue('debugMode', false), // 是否开启调试模式
+
+        // 登录相关配置
+        CAS_LOGIN_URL: 'http://www.cmatc.cn/sso/login?service=http%3A%2F%2Fwww.cmatc.cn%2Flms%2Fj_spring_cas_security_check',
+        DEFAULT_TARGET_URL: 'http://www.cmatc.cn/lms/app/lms/student/Userdashboardinfo/show.do',
+        TARGET_URL: 'http://www.cmatc.cn/lms/app/lms/student/Userdashboardinfo/show.do',
+
+        // 加密配置
+        ENCRYPTION: {
+            AES_KEY: 'AESCODER20200917', // AES加密密钥
+            RSA_PUBLIC_KEY: '-----BEGIN PUBLIC KEY-----' +
+                            'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqCvtrtBBeP/LIO6VtFAUItx9Dwi9lXRX' +
+                            'sSHT8C9p/yQ9FaUjB8YQTI7FL/HxggTU+P61A3a17GK23Whm4VNkriIDJZVd7opqnGzGC0XAdeml' +
+                            'LCxmutZIypbUEhQmd68pZ+74e6QH2lu/lcukFFSdeI6p5IaWAUgvOjzPGUCZLKuABfhw8LoOmcFW' +
+                            'LgPMQy6BZheKBqiLvFTx5eX9VbzaPCfZsSCxPRXb4snL5QyIbtBppamPW5TkUcGPECMNdbpfbIoX' +
+                            'LBGhcxqrYEGNtXEwu47eOUBLbPPrE0o5KZ7sw3b1LepoxH3MXKpDHcBg1n3jUreE5ZfcNLX1GWKs' +
+                            'eyNQiQIDAQAB' +
+                            '-----END PUBLIC KEY-----'
+        },
+
+        // 默认登录参数
+        DEFAULT_LOGIN_PARAMS: {
+            lt: 'LT-13658691-nZXkDa1POWQLAxmEBreqde6DHjWYg1',
+            execution: 'e1s1',
+            _eventId: 'submit'
+        },
+
+        // 登录信息（明文，将在登录时进行加密）
+        LOGIN_INFO: {
+            username: GM_getValue('username', ''), // 用户ID（明文）
+            password: GM_getValue('password', '')  // 密码（明文）
+        }
     };
 
     // 全局变量
@@ -77,6 +110,13 @@
     let sessionStartTime = Date.now(); // 会话开始时间
     let isSessionExpired = false; // 会话是否已过期
 
+    // 学习进度管理变量
+    let isProgressReached100 = false; // 进度是否已达到100%
+
+    // 自动登录相关变量
+    let loginAttempted = false; // 是否已尝试登录
+    let isPanelCollapsed = false; // 面板是否折叠
+
     // 检测当前页面类型
     function detectPageType() {
         const currentUrl = window.location.href;
@@ -91,9 +131,878 @@
             return 'videoPlay';
         }
 
-
-
         return 'unknown';
+    }
+
+    // 加密功能实现
+    // AES加密相关函数
+    function hexToBytes(hex) {
+        const bytes = [];
+        for (let i = 0; i < hex.length; i += 2) {
+            bytes.push(parseInt(hex.substr(i, 2), 16));
+        }
+        return bytes;
+    }
+
+    function bytesToHex(bytes) {
+        const hex = [];
+        for (let i = 0; i < bytes.length; i++) {
+            const current = bytes[i] < 0 ? bytes[i] + 256 : bytes[i];
+            hex.push((current >>> 4).toString(16));
+            hex.push((current & 0xF).toString(16));
+        }
+        return hex.join('');
+    }
+
+    function pkcs7Pad(data, blockSize) {
+        const padLength = blockSize - (data.length % blockSize);
+        const pad = new Uint8Array(padLength).fill(padLength);
+        const result = new Uint8Array(data.length + padLength);
+        result.set(data);
+        result.set(pad, data.length);
+        return result;
+    }
+
+    // 简化的AES-ECB加密实现（使用CryptoJS的API风格）
+    function AesEcbEncrypt(text, key) {
+        // 这里使用window.CryptoJS，如果页面中没有加载，我们需要实现简单的AES加密
+        // 检查页面中是否有CryptoJS可用
+        if (typeof CryptoJS !== 'undefined') {
+            const keyBytes = CryptoJS.enc.Utf8.parse(key);
+            const textBytes = CryptoJS.enc.Utf8.parse(text);
+            const encrypted = CryptoJS.AES.encrypt(textBytes, keyBytes, {
+                mode: CryptoJS.mode.ECB,
+                padding: CryptoJS.pad.Pkcs7
+            });
+            return encrypted.toString();
+        } else {
+            log('页面中未找到CryptoJS，无法进行AES加密', 'error');
+            // 这里可以添加简单的AES实现，但考虑到复杂性，我们暂时返回原始文本
+            return text;
+        }
+    }
+
+    // RSA加密相关函数
+    function b64ToUint6(nChr) {
+        return nChr > 64 && nChr < 91 ? nChr - 65 : nChr > 96 && nChr < 123 ? nChr - 71 : nChr > 47 && nChr < 58 ? nChr + 4 : nChr === 43 ? 62 : nChr === 47 ? 63 : 0;
+    }
+
+    function base64DecToArr(sBase64, nBlocksSize) {
+        const sB64Enc = sBase64.replace(/[^A-Za-z0-9+/]/g, '');
+        const nInLen = sB64Enc.length;
+        const nOutLen = nBlocksSize ? Math.ceil((nInLen * 3 + 1 >> 2) / nBlocksSize) * nBlocksSize : nInLen * 3 + 1 >> 2;
+        const taBytes = new Uint8Array(nOutLen);
+        let nMod3, nMod4, nUint24 = 0, nOutIdx = 0, nInIdx = 0;
+        while (nInIdx < nInLen) {
+            nMod4 = nInIdx & 3;
+            nUint24 |= b64ToUint6(sB64Enc.charCodeAt(nInIdx++)) << 18 - 6 * nMod4;
+            if (nMod4 === 3 || nInLen - nInIdx === 0) {
+                nMod3 = 3 & nUint24;
+                nOutIdx += nMod3 + 1;
+                taBytes[nOutIdx - 3] = nUint24 >>> 16;
+                taBytes[nOutIdx - 2] = nUint24 >>> 8 & 0xFF;
+                taBytes[nOutIdx - 1] = nUint24 & 0xFF;
+                nUint24 = 0;
+            }
+        }
+        return taBytes;
+    }
+
+    // 简化的RSA加密实现
+    function RsaEncrypt(text, publicKey) {
+        // 检查页面中是否有JSEncrypt可用
+        if (typeof JSEncrypt !== 'undefined') {
+            const rsa = new JSEncrypt();
+            rsa.setPublicKey(publicKey);
+            return rsa.encrypt(text);
+        } else if (typeof RSAClient !== 'undefined') {
+            // 检查页面中是否有RSAClient可用
+            const rsaClient = new RSAClient();
+            return rsaClient.encrypt(text);
+        } else {
+            log('页面中未找到JSEncrypt或RSAClient，无法进行RSA加密', 'error');
+            // 这里可以添加简单的RSA实现，但考虑到复杂性，我们暂时返回原始文本
+            return text;
+        }
+    }
+
+    // 完整的登录参数加密流程
+    function encryptLoginParams(username, password) {
+        log('开始加密登录参数', 'info');
+
+        // 1. 使用AES加密用户名和密码
+        const encryptedUsername = AesEcbEncrypt(username, CONFIG.ENCRYPTION.AES_KEY);
+        const encryptedPassword = AesEcbEncrypt(password, CONFIG.ENCRYPTION.AES_KEY);
+
+        log('AES加密完成', 'info');
+
+        // 2. 使用RSA加密AES加密后的结果
+        const finalUsername = RsaEncrypt(encryptedUsername, CONFIG.ENCRYPTION.RSA_PUBLIC_KEY);
+        const finalPassword = RsaEncrypt(encryptedPassword, CONFIG.ENCRYPTION.RSA_PUBLIC_KEY);
+
+        log('RSA加密完成', 'info');
+
+        return { username: finalUsername, password: finalPassword };
+    }
+
+    // 日志函数
+    function log(message, type = 'info', showInPanel = false) {
+        const timestamp = new Date().toLocaleTimeString('zh-CN');
+        const prefix = {
+            'info': 'ℹ️',
+            'success': '✅',
+            'error': '❌',
+            'warn': '⚠️'
+        }[type] || 'ℹ️';
+
+        console.log(`${prefix} ${timestamp} - ${message}`);
+
+        // 只在关键步骤将日志显示到右侧面板日志
+        if (showInPanel) {
+            const logArea = document.getElementById('learn-time-log');
+            if (logArea) {
+                const logEntry = document.createElement('div');
+                logEntry.style.cssText = `
+                    margin: 2px 0;
+                    padding: 3px 6px;
+                    border-radius: 4px;
+                    background: rgba(255, 255, 255, 0.85);
+                    color: #333333;
+                    font-size: 9px;
+                    text-align: left;
+                    line-height: 1.4;
+                    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+                    transition: all 0.2s ease;
+                    max-width: 100%;
+                    overflow: hidden;
+                    word-wrap: break-word;
+                    white-space: normal;
+                `;
+                logEntry.textContent = `${timestamp} - ${prefix} ${message}`;
+
+                logArea.appendChild(logEntry);
+                logArea.scrollTop = logArea.scrollHeight;
+
+                // 限制日志数量，最多保留20条，保持面板简洁
+                const logEntries = logArea.querySelectorAll('div');
+                if (logEntries.length > 20) {
+                    logArea.removeChild(logEntries[0]);
+                }
+            }
+        }
+    }
+
+    // 检测登录状态
+    function checkLoginStatus() {
+        log('开始检测登录状态', 'info', true);
+
+        // 随机选择一个检测页面
+        const checkUrl = CONFIG.SESSION_KEEPALIVE_URLS[Math.floor(Math.random() * CONFIG.SESSION_KEEPALIVE_URLS.length)];
+        log(`检测登录状态，使用URL：${checkUrl}`, 'info', true);
+
+        GM_xmlhttpRequest({
+            method: 'GET',
+            url: checkUrl,
+            credentials: 'include',
+            onload: function(response) {
+                log(`检测响应状态码：${response.status}`, 'info', true);
+
+                // 检测会话是否过期
+                let sessionExpired = false;
+                let reason = '';
+
+                // 条件1: 响应状态为0
+                if (response.status === 0) {
+                    sessionExpired = true;
+                    reason = '响应状态码为0';
+                }
+
+                // 条件2: 检查响应内容
+                if (!sessionExpired && response.responseText) {
+                    const text = response.responseText;
+
+                    // 子条件1: title包含"登录入口"
+                    const titleMatch = text.match(/<title>(.*?)<\/title>/i);
+                    if (titleMatch && titleMatch[1].includes('登录入口')) {
+                        sessionExpired = true;
+                        reason = 'title包含"登录入口"';
+                    }
+
+                    // 子条件2: 包含登录字样
+                    const loginPatterns = ['用户ID登录', '身份证登录', '手机号登录'];
+                    for (const pattern of loginPatterns) {
+                        if (text.includes(pattern)) {
+                            sessionExpired = true;
+                            reason = `包含"${pattern}"字样`;
+                            break;
+                        }
+                    }
+
+                    // 子条件3: 匹配登录相关HTML结构
+                    const loginStructures = [
+                        /<li[^>]*>用户ID登录<\/li>/i,
+                        /<li[^>]*>身份证登录<\/li>/i,
+                        /<li[^>]*>手机号登录<\/li>/i
+                    ];
+
+                    for (const pattern of loginStructures) {
+                        if (pattern.test(text)) {
+                            sessionExpired = true;
+                            reason = '匹配登录相关HTML结构';
+                            break;
+                        }
+                    }
+                }
+
+                if (sessionExpired) {
+                    log(`登录已失效，原因：${reason}`, 'warn', true);
+                    isSessionExpired = true;
+                    handleLoginExpired();
+                } else {
+                    log('登录状态正常', 'success', true);
+                    isSessionExpired = false;
+                    loginAttempted = false;
+                }
+            },
+            onerror: function(error) {
+                log(`检测登录状态失败：${error.message}`, 'error', true);
+            }
+        });
+    }
+
+    // 保存当前进度到本地存储
+    function saveCurrentProgress() {
+        if (!videoElement) return;
+
+        // 获取当前视频的播放位置
+        const currentTime = videoElement.currentTime;
+
+        // 获取当前的学习时长
+        const courseIdentifier = parseCourseIdentifierFromUrl();
+        const uniqueKey = `courseProgress_${courseIdentifier.lessonId}_${courseIdentifier.coursewareId}_${courseIdentifier.lessonGkey}`;
+        const currentProgress = GM_getValue(uniqueKey, 0);
+
+        // 保存登录前的进度信息
+        const loginProgressKey = `loginBeforeProgress_${courseIdentifier.lessonId}_${courseIdentifier.coursewareId}_${courseIdentifier.lessonGkey}`;
+        const progressInfo = {
+            progress: currentProgress,
+            currentTime: currentTime,
+            totalLearntime: totalLearntime,
+            timestamp: Date.now()
+        };
+
+        GM_setValue(loginProgressKey, JSON.stringify(progressInfo));
+        log(`已保存登录前进度：${currentProgress}%，播放位置：${formatTime(currentTime)}`, 'info');
+    }
+
+    // 处理登录失效
+    function handleLoginExpired() {
+        // 保存当前进度
+        saveCurrentProgress();
+
+        log('登录已失效', 'warn', true);
+        // 自动尝试登录
+        attemptAutoLogin();
+    }
+
+    // 显示登录成功后10秒刷新页面的弹窗
+    function showLoginSuccessRefreshDialog() {
+        // 移除现有的任何弹窗
+        const existingDialog = document.getElementById('login-success-refresh-dialog');
+        if (existingDialog) {
+            existingDialog.remove();
+        }
+
+        // 创建弹框容器
+        const dialog = document.createElement('div');
+        dialog.id = 'login-success-refresh-dialog';
+        dialog.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.95);
+            color: #333333;
+            padding: 25px 30px;
+            border-radius: 15px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            z-index: 9999999;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(200, 200, 200, 0.3);
+            text-align: center;
+            min-width: 350px;
+            animation: entrance 0.5s ease-out;
+        `;
+
+        // 创建标题
+        const title = document.createElement('div');
+        title.style.cssText = `
+            font-size: 18px;
+            font-weight: 600;
+            color: #10b981;
+            margin-bottom: 15px;
+        `;
+        title.textContent = '✅ 登录成功';
+        dialog.appendChild(title);
+
+        // 创建刷新信息
+        const message = document.createElement('div');
+        message.style.cssText = `
+            font-size: 14px;
+            color: #4a5568;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        `;
+        dialog.appendChild(message);
+
+        // 创建倒计时显示
+        const countdown = document.createElement('div');
+        countdown.style.cssText = `
+            font-size: 24px;
+            font-weight: 700;
+            color: #3b82f6;
+            margin-bottom: 20px;
+        `;
+        dialog.appendChild(countdown);
+
+        // 创建刷新按钮
+        const refreshButton = document.createElement('button');
+        refreshButton.style.cssText = `
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+            margin-right: 10px;
+        `;
+        refreshButton.textContent = '立即刷新';
+        refreshButton.addEventListener('click', () => {
+            dialog.remove();
+            window.location.reload();
+        });
+        dialog.appendChild(refreshButton);
+
+        // 创建关闭按钮
+        const closeButton = document.createElement('button');
+        closeButton.style.cssText = `
+            background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e0 100%);
+            color: #4a5568;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 15px rgba(100, 100, 100, 0.1);
+        `;
+        closeButton.textContent = '稍后刷新';
+        closeButton.addEventListener('click', () => {
+            dialog.remove();
+        });
+        dialog.appendChild(closeButton);
+
+        // 添加到页面
+        document.body.appendChild(dialog);
+
+        // 开始倒计时
+        let seconds = 10;
+        message.textContent = `登录成功！页面将在 ${seconds} 秒后自动刷新。`;
+        countdown.textContent = `${seconds}`;
+
+        // 将定时器声明提升到函数作用域，确保按钮事件监听器可以访问到
+        let timer = setInterval(() => {
+            seconds--;
+            message.textContent = `登录成功！页面将在 ${seconds} 秒后自动刷新。`;
+            countdown.textContent = `${seconds}`;
+
+            if (seconds <= 0) {
+                clearInterval(timer);
+                dialog.remove();
+                window.location.reload();
+            }
+        }, 1000);
+
+        // 重新添加关闭按钮事件监听器，确保清除定时器
+        closeButton.removeEventListener('click', closeButton.onclick);
+        closeButton.addEventListener('click', () => {
+            clearInterval(timer);
+            dialog.remove();
+        });
+    }
+
+    // 获取当前登录用户信息
+    function getCurrentUserInfo(callback) {
+        // 记录开始请求用户信息
+        log('开始请求用户信息页获取当前登录用户信息', 'info', true);
+
+        GM_xmlhttpRequest({
+            method: 'GET',
+            url: 'http://www.cmatc.cn/lms/app/appsecurity/user/Student/self.do',
+            credentials: 'include',
+            onload: function(response) {
+                if (response.status !== 200) {
+                    const errorMsg = '获取个人信息失败，状态码：' + response.status;
+                    log(errorMsg, 'error', true);
+                    callback(null, errorMsg);
+                    return;
+                }
+
+                const html = response.responseText;
+
+                // 检查是否登录状态
+                if (html.includes('用户ID登录') || html.includes('身份证登录') || html.includes('手机号登录')) {
+                    const errorMsg = '当前未登录或登录已失效';
+                    log(errorMsg, 'warn', true);
+                    callback(null, errorMsg);
+                    return;
+                }
+
+                // 解析用户名
+                const usernameMatch = html.match(/<li><span>用户名<\/span>([^&]+)&nbsp;<\/li>/i);
+                if (!usernameMatch) {
+                    const errorMsg = '无法解析用户名';
+                    log(errorMsg, 'error', true);
+                    callback(null, errorMsg);
+                    return;
+                }
+
+                const username = usernameMatch[1].trim();
+
+                // 解析员工姓名
+                const employeeNameMatch = html.match(/<li><span>员工姓名<\/span>([^&]+)&nbsp;<\/li>/i);
+                const employeeName = employeeNameMatch ? employeeNameMatch[1].trim() : '';
+
+                // 解析入职时间
+                const hireDateMatch = html.match(/<li><span>入职时间<\/span>([^&]+)&nbsp;<\/li>/i);
+                const hireDate = hireDateMatch ? hireDateMatch[1].trim() : '';
+
+                // 记录解析结果到面板 - 这是关键日志，确保用户能看到
+                log(`✅ 获取到当前登录用户信息：员工姓名=${employeeName}，用户名=${username}，入职时间=${hireDate}`, 'success', true);
+
+                callback({ username: username, employeeName: employeeName }, null);
+            },
+            onerror: function(error) {
+                const errorMsg = '获取个人信息失败：' + error.message;
+                log(errorMsg, 'error', true);
+                callback(null, errorMsg);
+            }
+        });
+    }
+
+    // 尝试自动登录
+    function attemptAutoLogin() {
+        log('开始尝试自动登录', 'info', true);
+
+        // 从本地存储获取登录信息，如果本地存储没有则使用配置中的默认值
+        let username = GM_getValue('username', CONFIG.LOGIN_INFO.username);
+        let password = GM_getValue('password', CONFIG.LOGIN_INFO.password);
+
+        // 显示用户名和部分密码到日志面板
+        const maskedPassword = password.length > 4 ? password.substring(0, 2) + '*'.repeat(password.length - 4) + password.substring(password.length - 2) : password;
+        log(`使用用户名: ${username}，密码: ${maskedPassword} 进行登录`, 'info', true);
+
+        if (!username || !password) {
+            log('登录信息不完整，请先在配置中设置用户名和密码', 'error', true);
+            // 记录登录失败日志
+            recordLoginLog(false);
+            return;
+        }
+
+        // 检查当前页面是否是登录页面
+        const isLoginPage = window.location.href.includes('sso/login');
+
+        if (isLoginPage) {
+            // 已经在登录页面，直接执行登录操作
+            log('当前已是登录页面，开始执行登录操作', 'info');
+            performLoginOnLoginPage(username, password);
+        } else {
+            // 不是登录页面，动态加载加密库然后执行登录
+            log('当前不是登录页面，正在处理登录请求', 'info');
+
+            // 保存当前页面URL，登录成功后返回
+            CONFIG.TARGET_URL = window.location.href;
+            log(`已保存当前页面URL`, 'info');
+
+            // 动态加载加密库
+            loadEncryptionLibraries(function() {
+                log('加密库加载完成，开始执行登录操作', 'info');
+
+                // 1. 首先获取登录页面的HTML内容，提取必要的参数
+                GM_xmlhttpRequest({
+                    method: 'GET',
+                    url: CONFIG.CAS_LOGIN_URL,
+                    credentials: 'include',
+                    onload: function(response) {
+                        log('获取登录页面成功，开始处理登录请求', 'info');
+
+                        // 从登录页面HTML中提取必要的参数
+                        const html = response.responseText;
+
+                        // 提取lt参数
+                        const ltMatch = html.match(/name="lt"\s+value="([^"]+)"/i);
+                        let lt = ltMatch ? ltMatch[1] : '';
+
+                        // 提取execution参数
+                        const executionMatch = html.match(/name="execution"\s+value="([^"]+)"/i);
+                        let execution = executionMatch ? executionMatch[1] : 'e1s1';
+
+                        // 提取_eventId参数（通常固定为submit）
+                        const eventIdMatch = html.match(/name="_eventId"\s+value="([^"]+)"/i);
+                        const _eventId = eventIdMatch ? eventIdMatch[1] : 'submit';
+
+                        // 使用默认参数，如果提取失败
+                        if (!lt) {
+                            // 使用配置中的默认登录参数
+                            lt = CONFIG.DEFAULT_LOGIN_PARAMS.lt;
+                            execution = CONFIG.DEFAULT_LOGIN_PARAMS.execution;
+                            log(`未找到lt参数，使用默认值`, 'warn');
+                        }
+
+                        // 2. 动态加密登录参数
+                        const encryptedParams = encryptLoginParams(username, password);
+
+                        // 3. 构建登录请求参数
+                        const loginParams = new URLSearchParams();
+                        loginParams.append('username', encryptedParams.username);
+                        loginParams.append('password', encryptedParams.password);
+                        loginParams.append('lt', lt);
+                        loginParams.append('execution', execution);
+                        loginParams.append('_eventId', _eventId);
+
+                        // 4. 发送登录POST请求
+                        GM_xmlhttpRequest({
+                            method: 'POST',
+                            url: CONFIG.CAS_LOGIN_URL,
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                                'Referer': CONFIG.CAS_LOGIN_URL
+                            },
+                            data: loginParams.toString(),
+                            credentials: 'include',
+                            onload: function(loginResponse) {
+                                log(`登录请求响应状态：${loginResponse.status}`);
+                                log(`登录请求响应内容长度：${loginResponse.responseText.length}`, 'info');
+
+                                // 检查登录请求响应是否包含登录成功的指示
+                                const loginResponseText = loginResponse.responseText;
+                                let isLoginRequestSuccessful = false;
+
+                                // 检查响应状态码
+                                if (loginResponse.status === 302 || loginResponse.status === 301) {
+                                    // 重定向通常表示登录成功
+                                    isLoginRequestSuccessful = true;
+                                    log(`登录请求重定向，可能登录成功`, 'info');
+                                } else if (loginResponse.status === 200) {
+                                    // 检查响应内容是否包含登录成功的特征
+                                    const loginSuccessPatterns = ['登录成功', 'success', 'redirecting'];
+                                    for (const pattern of loginSuccessPatterns) {
+                                        if (loginResponseText.toLowerCase().includes(pattern)) {
+                                            isLoginRequestSuccessful = true;
+                                            log(`登录请求响应包含成功特征，可能登录成功`, 'info');
+                                            break;
+                                        }
+                                    }
+
+                                    // 检查响应内容是否不包含登录表单
+                                    if (!isLoginRequestSuccessful && !loginResponseText.includes('用户ID登录') && !loginResponseText.includes('密码')) {
+                                        isLoginRequestSuccessful = true;
+                                        log(`登录请求响应不包含登录表单，可能登录成功`, 'info');
+                                    }
+                                }
+
+                                log(`登录请求已发送，正在验证登录是否成功`, 'info');
+                                verifyLoginSuccess();
+                            },
+                            onerror: function(error) {
+                                log(`登录请求发生错误：${error.message}`, 'error');
+                                // 记录登录失败日志
+                                recordLoginLog(false);
+                                verifyLoginSuccess();
+                            }
+                        });
+                    },
+                    onerror: function(error) {
+                        log(`获取登录页面失败：${error.message}`, 'error');
+                        // 记录登录失败日志
+                        recordLoginLog(false);
+                    }
+                });
+            });
+        }
+    }
+
+    // 在登录页面执行登录
+    function performLoginOnLoginPage(username, password) {
+        // 等待页面加载完成，确保加密库已经加载
+        setTimeout(function() {
+            log('开始在登录页面上执行登录操作', 'info', true);
+
+            // 提取登录参数
+            const ltElement = document.querySelector('input[name="lt"]');
+            const executionElement = document.querySelector('input[name="execution"]');
+
+            if (!ltElement || !executionElement) {
+                log('未找到登录参数，可能页面未完全加载', 'error', true);
+                // 记录登录失败日志
+                recordLoginLog(false);
+                return;
+            }
+
+            // 填充用户名和密码
+            const usernameInput = document.querySelector('input[name="username"]');
+            const passwordInput = document.querySelector('input[name="password"]');
+
+            if (!usernameInput || !passwordInput) {
+                log('未找到用户名或密码输入框', 'error', true);
+                // 记录登录失败日志
+                recordLoginLog(false);
+                return;
+            }
+
+            usernameInput.value = username;
+            passwordInput.value = password;
+
+            log('已填充用户名和密码，准备触发登录', 'info', true);
+
+            // 触发登录
+            if (typeof dologin === 'function') {
+                log('找到dologin函数，正在调用', 'info');
+                dologin();
+            } else {
+                // 方法2：尝试点击登录按钮
+                const loginBtn = document.querySelector('.btn-submit');
+                if (loginBtn) {
+                    log('找到登录按钮，正在点击', 'info');
+                    loginBtn.click();
+                } else {
+                    // 方法3：尝试提交表单作为备选方案
+                    const loginForm = document.querySelector('form');
+                    if (loginForm) {
+                        log('找到登录表单，正在提交', 'info');
+                        loginForm.submit();
+                    } else {
+                        log('未找到登录按钮或表单，登录失败', 'error', true);
+                        // 记录登录失败日志
+                        recordLoginLog(false);
+                    }
+                }
+            }
+        }, 1000); // 等待1秒，确保页面完全加载
+    }
+
+    // 动态加载加密库
+    function loadEncryptionLibraries(callback) {
+        log('开始动态加载加密库');
+
+        // 加密库文件URL列表
+        const encryptionLibs = [
+            'http://www.cmatc.cn/sso/js/aes.js',
+            'http://www.cmatc.cn/sso/js/guard/rsa/jsencrypt.js',
+            'http://www.cmatc.cn/sso/js/guard/rsa/rsaClient.js',
+            'http://www.cmatc.cn/sso/js/cas.js'
+        ];
+
+        let loadedLibs = 0;
+        const totalLibs = encryptionLibs.length;
+
+        // 检查加密库是否已加载
+        function checkLibs() {
+            loadedLibs++;
+            log(`已加载${loadedLibs}/${totalLibs}个加密库`);
+
+            if (loadedLibs === totalLibs) {
+                log('所有加密库加载完成');
+                callback();
+            }
+        }
+
+        // 加载每个加密库
+        encryptionLibs.forEach(function(libUrl) {
+            log(`正在加载加密库：${libUrl}`);
+
+            const script = document.createElement('script');
+            script.src = libUrl;
+            script.onload = checkLibs;
+            script.onerror = function() {
+                log(`加载加密库失败：${libUrl}`, 'error');
+                checkLibs();
+            };
+
+            document.head.appendChild(script);
+        });
+    }
+
+    // 工具函数：获取当前日期（用于登录日志）
+    function getCurrentDate() {
+        // 使用toLocaleDateString获取本地日期，确保日期的准确性
+        const now = new Date();
+        return now.toLocaleDateString('zh-CN', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+        }).replace(/\//g, '-');
+    }
+
+    // 记录登录日志，只保留最近12小时的记录
+    function recordLoginLog(success) {
+        const now = new Date();
+        const timestamp = now.toLocaleTimeString('zh-CN');
+        const logMessage = `${timestamp} - 自动登录：${success ? '成功' : '失败'}`;
+
+        // 使用固定key存储登录日志
+        const loginLogKey = 'loginLogs';
+
+        // 从本地存储获取登录日志数组，如果不存在则使用空数组
+        const loginLogs = GM_getValue(loginLogKey, []);
+
+        // 确保loginLogs是数组格式
+        let logsArray = Array.isArray(loginLogs) ? loginLogs : [];
+
+        // 为每条日志添加时间戳，用于过滤
+        const logEntry = {
+            message: logMessage,
+            timestamp: now.getTime() // 使用时间戳便于比较
+        };
+
+        // 追加新的登录日志
+        logsArray.push(logEntry);
+
+        // 过滤掉超过LOG_RECORD_HOURS小时的日志
+        const logRecordHours = CONFIG.LOG_RECORD_HOURS;
+        const cutoffTime = now.getTime() - (logRecordHours * 60 * 60 * 1000);
+        logsArray = logsArray.filter(log => log.timestamp >= cutoffTime);
+
+        // 保存更新后的登录日志到GM_getValue
+        GM_setValue(loginLogKey, logsArray);
+        log(`已记录登录日志：${logMessage}`, 'info', true);
+        console.log(`登录日志已保存到GM_getValue，key: ${loginLogKey}，共${logsArray.length}条记录`);
+    }
+
+    // 加载登录日志到面板
+    function loadLoginLogToPanel() {
+        console.log('开始加载登录日志');
+
+        // 使用固定key获取登录日志
+        const loginLogKey = 'loginLogs';
+
+        // 从GM_getValue读取登录日志数组
+        const loginLogs = GM_getValue(loginLogKey, []);
+
+        console.log(`从GM_getValue读取登录日志，key: ${loginLogKey}，value: ${JSON.stringify(loginLogs)}`);
+
+        // 确保loginLogs是数组格式
+        let logsArray = Array.isArray(loginLogs) ? loginLogs : [];
+
+        // 过滤掉超过LOG_RECORD_HOURS小时的日志，确保配置修改后能立即生效
+        const now = new Date();
+        const logRecordHours = CONFIG.LOG_RECORD_HOURS;
+        const cutoffTime = now.getTime() - (logRecordHours * 60 * 60 * 1000);
+
+        const filteredLogs = logsArray.filter(log => log.timestamp >= cutoffTime);
+
+        // 如果过滤后的日志数量少于原数量，说明有日志被删除，需要保存回GM_getValue
+        if (filteredLogs.length < logsArray.length) {
+            console.log(`过滤掉了${logsArray.length - filteredLogs.length}条过期日志，当前配置保留${logRecordHours}小时`);
+            GM_setValue(loginLogKey, filteredLogs);
+            logsArray = filteredLogs;
+        }
+
+        if (logsArray.length > 0) {
+            // 显示所有登录日志到面板，按时间顺序排列
+            logsArray
+                .sort((a, b) => a.timestamp - b.timestamp) // 按时间戳升序排列
+                .forEach(logEntry => {
+                    if (logEntry && logEntry.message) {
+                        log(logEntry.message, 'info', true);
+                    }
+                });
+            console.log(`登录日志已显示到面板，共${logsArray.length}条记录`);
+        } else {
+            console.log('未找到登录日志');
+        }
+    }
+
+    // 验证登录是否成功
+    function verifyLoginSuccess() {
+        log('验证登录是否成功', 'info');
+
+        // 发送请求到目标页面，验证登录是否成功
+        GM_xmlhttpRequest({
+            method: 'GET',
+            url: CONFIG.TARGET_URL,
+            credentials: 'include',
+            onload: function(response) {
+                log(`目标页面响应状态：${response.status}`);
+
+                // 检测是否登录成功
+                const text = response.responseText;
+                let loginSuccess = false;
+
+                // 条件1: 响应状态为200
+                if (response.status === 200) {
+                    // 条件2: 不包含登录页面特征
+                    const loginPatterns = ['用户ID登录', '身份证登录', '手机号登录', '登录入口'];
+                    let containsLoginPattern = false;
+
+                    for (const pattern of loginPatterns) {
+                        if (text.includes(pattern)) {
+                            containsLoginPattern = true;
+                            break;
+                        }
+                    }
+
+                    // 条件3: 包含目标页面特征
+                    const targetPatterns = ['个人中心', '学员首页', '学习记录'];
+                    let containsTargetPattern = false;
+
+                    for (const pattern of targetPatterns) {
+                        if (text.includes(pattern)) {
+                            containsTargetPattern = true;
+                            break;
+                        }
+                    }
+
+                    // 登录成功条件：不包含登录页面特征，或者包含目标页面特征
+                    loginSuccess = !containsLoginPattern || containsTargetPattern;
+                }
+
+                if (loginSuccess) {
+                    log('登录成功！', 'success', true);
+                    isSessionExpired = false;
+                    loginAttempted = false;
+
+                    // 记录登录成功日志
+                    recordLoginLog(true);
+
+                    // 登录成功后，跳转到保存的URL或默认目标URL
+                    const redirectUrl = CONFIG.TARGET_URL;
+                    if (window.location.href !== redirectUrl) {
+                        log(`登录成功，正在返回之前的页面`, 'success');
+                        window.location.href = redirectUrl;
+                    } else {
+                        // 如果已经在目标页面，显示登录成功后10秒刷新页面的弹窗
+                        showLoginSuccessRefreshDialog();
+                    }
+                } else {
+                    log('登录失败，请手动登录', 'error', true);
+                    isSessionExpired = true;
+
+                    // 记录登录失败日志
+                    recordLoginLog(false);
+                }
+            },
+            onerror: function(error) {
+                log(`验证登录失败：${error.message}`, 'error', true);
+                isSessionExpired = true;
+            }
+        });
     }
 
     // 初始化广播频道
@@ -475,9 +1384,6 @@
         });
         countdownDialog.appendChild(cancelButton);
 
-        // 添加到页面
-        document.body.appendChild(countdownDialog);
-
         // 开始倒计时
         let remainingSeconds = delaySeconds;
         const countdownInterval = setInterval(() => {
@@ -500,6 +1406,9 @@
                 }, 100);
             }
         }, 1000);
+
+        // 添加到页面
+        document.body.appendChild(countdownDialog);
     }
 
     // 显示课程完成提示
@@ -618,7 +1527,7 @@
             color: #dc2626;
             margin-bottom: 15px;
         `;
-        title.textContent = '⚠️  会话已过期';
+        title.textContent = '⚠️  登录已失效';
         expiredDialog.appendChild(title);
 
         // 创建过期信息
@@ -629,7 +1538,7 @@
             margin-bottom: 25px;
             line-height: 1.5;
         `;
-        message.textContent = '您的登录会话已过期，请重新登录后继续学习！';
+        message.textContent = '您的登录已失效，请重新登录后学习！';
         expiredDialog.appendChild(message);
 
         // 创建刷新按钮
@@ -714,22 +1623,84 @@
             nextCourseIndex = 0;
         }
 
-        // 检查下一个课程索引是否有效
-        if (nextCourseIndex < 0 || nextCourseIndex >= courseList.length) {
-            nextCourseContent.innerHTML = '<div style="color: #666; font-style: italic;">暂无下一个视频</div>';
-            return;
+        // 更新显示内容 - 使用翻页按钮代替待播放文字
+
+        // 构建翻页按钮HTML
+        let prevBtnHtml = '';
+        let nextBtnHtml = '';
+
+        // 构建完整的HTML
+        let displayHtml = '';
+
+        // 只有当有当前课程时，才显示正在播放信息和翻页按钮
+        if (currentCourseIndex !== -1 && currentCourseIndex < courseList.length) {
+            const currentCourse = courseList[currentCourseIndex];
+
+            // 如果有上一个视频，显示上一页按钮
+            if (currentCourseIndex > 0) {
+                const prevCourse = courseList[currentCourseIndex - 1];
+                // 获取上一个视频的进度
+                const prevCourseProgress = GM_getValue(`courseProgress_${prevCourse.lessonId}_${prevCourse.coursewareId}_${prevCourse.lessonGkey}`, 0);
+                prevBtnHtml = `<button onclick="javascript:window.location.href='${prevCourse.playUrl}';" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 3px 8px; border-radius: 4px; cursor: pointer; font-size: 9px; margin-right: 8px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); transition: all 0.2s ease;">上一个 (${prevCourseProgress}%)</button>`;
+            }
+
+            // 如果有下一个视频，显示下一页按钮
+            if (currentCourseIndex < courseList.length - 1) {
+                // 如果启用了跳过已完成视频，寻找下一个未完成的视频
+                let actualNextIndex = currentCourseIndex + 1;
+                if (CONFIG.SKIP_COMPLETED) {
+                    for (let i = actualNextIndex; i < courseList.length; i++) {
+                        const courseProgress = GM_getValue(`courseProgress_${courseList[i].lessonId}_${courseList[i].coursewareId}_${courseList[i].lessonGkey}`, 0);
+                        if (courseProgress < 100) {
+                            actualNextIndex = i;
+                            break;
+                        }
+                    }
+                }
+
+                // 检查实际下一个索引是否有效
+                if (actualNextIndex < courseList.length) {
+                    const nextCourseToShow = courseList[actualNextIndex];
+                    // 获取下一个视频的进度
+                    const nextCourseProgress = GM_getValue(`courseProgress_${nextCourseToShow.lessonId}_${nextCourseToShow.coursewareId}_${nextCourseToShow.lessonGkey}`, 0);
+                    nextBtnHtml = `<button onclick="javascript:window.location.href='${nextCourseToShow.playUrl}';" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 3px 8px; border-radius: 4px; cursor: pointer; font-size: 9px; margin-left: 8px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); transition: all 0.2s ease;">下一个 (${nextCourseProgress}%) </button>`;
+                }
+            }
+
+            // 构建完整的HTML - 始终显示正在播放信息和可用的翻页按钮
+            displayHtml = `
+                <div style="display: flex; align-items: center; justify-content: center; margin: 5px 0; font-size: 10px;">
+                    ${prevBtnHtml}
+                    <div style="font-weight: 600; color: #48bb78; text-align: center;">正在播放：${currentCourse.title}(${currentCourseIndex + 1}/${courseList.length})</div>
+                    ${nextBtnHtml}
+                </div>
+            `;
+        } else {
+            // 如果没有当前课程信息，显示默认提示
+            displayHtml = '<div style="color: #666; font-style: italic;">暂无下一个视频</div>';
         }
 
-        // 获取下一个待播放视频信息
-        const nextCourse = courseList[nextCourseIndex];
-
-        // 更新显示内容
-        nextCourseContent.innerHTML = `
-            <div style="font-weight: 600; color: #2d3748;">待播放：${nextCourse.title}(${nextCourseIndex + 1}/${courseList.length})</div>
-        `;
+        nextCourseContent.innerHTML = displayHtml;
     }
 
     function createVideoUI() {
+        // 检查页面中是否存在id为"introdiv"的元素（章节目录容器），如果有则不展示面板
+        const introdiv = document.getElementById('introdiv');
+
+        // 使用纯JavaScript检查页面内容是否包含"章节目录"文字
+        const hasChapterCatalog = document.body.textContent.includes('章节目录') || document.body.innerText.includes('章节目录');
+
+        if (introdiv || hasChapterCatalog) {
+            console.log('页面包含章节目录容器，不展示右侧面板');
+            return;
+        }
+
+        // 检查是否存在视频元素，没有则不展示面板
+        if (!videoElement) {
+            console.log('未找到视频元素，不展示右侧面板');
+            return;
+        }
+
         // 创建左侧综合面板
         const combinedPanel = document.createElement('div');
         combinedPanel.id = 'combined-panel';
@@ -741,16 +1712,16 @@
             left: auto;
             background: white;
             color: #333333;
-            padding: 15px 20px;
-            border-radius: 15px;
-            font-size: 14px;
+            padding: 10px 15px;
+            border-radius: 12px;
+            font-size: 10px;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             z-index: 999998;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(200, 200, 200, 0.4);
-            width: 300px;
-            max-width: 300px;
+            width: 280px;
+            max-width: 280px;
             height: auto;
             max-height: calc(100vh - 20px);
             box-sizing: border-box;
@@ -911,12 +1882,12 @@
         let countdownHtml = `
             <div style="margin-bottom: 6px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                 <div style="display: flex; align-items: center; gap: 6px;">
-                    <span style="font-weight: 500; font-size: 11px;">延时设置：</span>
+                    <span style="font-weight: 500; font-size: 10px;">延时设置：</span>
                     <input type="number" id="delay-input" value="${delayMinutes}"
-                           min="0" max="120" style="width: 80px; background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(150, 150, 150, 0.3); color: #333333; border-radius: 4px; padding: 3px 5px; font-size: 11px; outline: none; transition: all 0.2s ease;">
-                    <span style="font-size: 11px;">分钟</span>
+                           min="0" max="120" style="width: 80px; background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(150, 150, 150, 0.3); color: #333333; border-radius: 4px; padding: 3px 5px; font-size: 10px; outline: none; transition: all 0.2s ease;">
+                    <span style="font-size: 10px;">分钟</span>
                 </div>
-                <div id="countdown-display" style="font-weight: 600; font-size: 12px; color: #2d3748;">延时倒计时：--:--:--</div>
+                <div id="countdown-display" style="font-weight: 600; font-size: 10px; color: #2d3748;">延时倒计时：--:--:--</div>
             </div>
         `;
 
@@ -931,7 +1902,7 @@
             padding: 8px;
             background: rgba(250, 250, 250, 0.75);
             border-radius: 6px;
-            font-size: 11px;
+            font-size: 10px;
             line-height: 1.4;
             box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
             text-align: center;
@@ -944,7 +1915,7 @@
         const learnTimeLog = document.createElement('div');
         learnTimeLog.id = 'learn-time-log';
         learnTimeLog.style.cssText = `
-            max-height: 500px;
+            max-height: 300px;
             min-height: 300px;
             overflow-y: auto;
             margin-top: 12px;
@@ -964,64 +1935,87 @@
         const otherSettings = document.createElement('div');
         let otherSettingsHtml = `
             <div style="margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
-                <span style="font-weight: 500; font-size: 11px;">日志显示设置：</span>
-                <select id="log-level-select" style="background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(150, 150, 150, 0.3); color: #333333; border-radius: 4px; padding: 3px 5px; font-size: 11px; outline: none; transition: all 0.2s ease; cursor: pointer;">
+                <span style="font-weight: 500; font-size: 10px;">日志显示设置：</span>
+                <select id="log-level-select" style="background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(150, 150, 150, 0.3); color: #333333; border-radius: 4px; padding: 3px 5px; font-size: 10px; outline: none; transition: all 0.2s ease; cursor: pointer;">
                     <option value="simple" ${CONFIG.LOG_LEVEL === 'simple' ? 'selected' : ''}>简单日志</option>
                     <option value="full" ${CONFIG.LOG_LEVEL === 'full' ? 'selected' : ''}>完整日志</option>
                 </select>
+                <button id="clear-log-btn" style="background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(150, 150, 150, 0.3); color: #333333; border-radius: 4px; padding: 3px 5px; font-size: 10px; outline: none; transition: all 0.2s ease; cursor: pointer;">清空日志</button>
+            </div>
+
+            <!-- 登录配置 -->
+            <div style="margin: 8px 0 6px 0; padding: 8px; background: rgba(240, 240, 240, 0.7); border-radius: 6px; font-size: 10px;">
+                <div style="margin-bottom: 6px; font-weight: 600; color: #4a5568; font-size: 10px;">自动登录配置</div>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <div>
+                        <div style="margin-bottom: 3px; font-size: 9px; color: #4a5568;">用户名</div>
+                        <input type="text" id="username-input" value="${GM_getValue('username', CONFIG.LOGIN_INFO.username)}"
+                               placeholder="请输入用户名" style="width: 100%; background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(150, 150, 150, 0.3); color: #333333; border-radius: 4px; padding: 5px 7px; font-size: 10px; outline: none; transition: all 0.2s ease;">
+                    </div>
+                    <div>
+                        <div style="margin-bottom: 3px; font-size: 9px; color: #4a5568;">密码</div>
+                        <input type="password" id="password-input" value="${GM_getValue('password', CONFIG.LOGIN_INFO.password)}"
+                               placeholder="请输入密码" style="width: 100%; background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(150, 150, 150, 0.3); color: #333333; border-radius: 4px; padding: 5px 7px; font-size: 10px; outline: none; transition: all 0.2s ease;">
+                    </div>
+                    <button id="save-login-btn" style="background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%); color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 9px; font-weight: 500; box-shadow: 0 2px 4px rgba(237, 137, 54, 0.3); transition: all 0.2s ease;">保存配置</button>
+                </div>
+            </div>
+
+            <!-- 调试和登录操作按钮 -->
+            <div style="margin: 8px 0 10px 0; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap;">
+                <button id="simulate-login-btn" style="background: linear-gradient(135deg, #48bb78 0%, #38a169 100%); color: white; border: none; padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 10px; font-weight: 500; box-shadow: 0 2px 6px rgba(72, 187, 120, 0.3); transition: all 0.2s ease;">登录</button>
+                <button id="check-login-btn" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 10px; font-weight: 500; box-shadow: 0 2px 6px rgba(102, 126, 234, 0.3); transition: all 0.2s ease;">检测登录状态</button>
+                <button id="end-countdown" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 10px; font-weight: 500; box-shadow: 0 2px 6px rgba(102, 126, 234, 0.3); transition: all 0.2s ease;">模拟结束</button>
+                <button id="debug-submit" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; border: none; padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 10px; font-weight: 500; box-shadow: 0 2px 6px rgba(245, 87, 108, 0.3); transition: all 0.2s ease;">模拟时长</button>
+                <button id="simulate-session-expired" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; border: none; padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 10px; font-weight: 500; box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3); transition: all 0.2s ease;">模拟登录过期</button>
             </div>
 
             <!-- 登录检测间隔配置 -->
-            <div style="margin: 8px 0 6px 0; padding: 8px; background: rgba(240, 240, 240, 0.7); border-radius: 6px; font-size: 11px;">
-                <div style="margin-bottom: 6px; font-weight: 600; color: #4a5568; font-size: 11px;">登录检测间隔（分钟）</div>
+            <div style="margin: 8px 0 6px 0; padding: 8px; background: rgba(240, 240, 240, 0.7); border-radius: 6px; font-size: 10px;">
+                <div style="margin-bottom: 6px; font-weight: 600; color: #4a5568; font-size: 10px;">登录检测间隔（分钟）</div>
                 <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                     <div style="display: flex; align-items: center; gap: 5px;">
-                        <span style="font-size: 11px;">最小间隔：</span>
+                        <span style="font-size: 10px;">最小间隔：</span>
                         <input type="number" id="session-min-input" value="${CONFIG.SESSION_KEEPALIVE_MIN}"
-                               min="1" max="30" style="width: 80px; background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(150, 150, 150, 0.3); color: #333333; border-radius: 4px; padding: 3px 5px; font-size: 11px; outline: none; transition: all 0.2s ease;">
-                        <span style="font-size: 11px;">分钟</span>
+                               min="1" max="30" style="width: 80px; background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(150, 150, 150, 0.3); color: #333333; border-radius: 4px; padding: 3px 5px; font-size: 10px; outline: none; transition: all 0.2s ease;">
+                        <span style="font-size: 10px;">分钟</span>
                     </div>
                     <div style="display: flex; align-items: center; gap: 5px;">
-                        <span style="font-size: 11px;">最大间隔：</span>
+                        <span style="font-size: 10px;">最大间隔：</span>
                         <input type="number" id="session-max-input" value="${CONFIG.SESSION_KEEPALIVE_MAX}"
-                               min="1" max="60" style="width: 80px; background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(150, 150, 150, 0.3); color: #333333; border-radius: 4px; padding: 3px 5px; font-size: 11px; outline: none; transition: all 0.2s ease;">
-                        <span style="font-size: 11px;">分钟</span>
+                               min="1" max="60" style="width: 80px; background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(150, 150, 150, 0.3); color: #333333; border-radius: 4px; padding: 3px 5px; font-size: 10px; outline: none; transition: all 0.2s ease;">
+                        <span style="font-size: 10px;">分钟</span>
                     </div>
                 </div>
             </div>
 
             <!-- 自动播放配置 -->
-            <div style="margin: 8px 0 6px 0; padding: 8px; background: rgba(240, 240, 240, 0.7); border-radius: 6px; font-size: 11px;">
-                <div style="margin-bottom: 6px; font-weight: 600; color: #4a5568; font-size: 11px;">自动播放配置</div>
+            <div style="margin: 8px 0 6px 0; padding: 8px; background: rgba(240, 240, 240, 0.7); border-radius: 6px; font-size: 10px;">
+                <div style="margin-bottom: 6px; font-weight: 600; color: #4a5568; font-size: 10px;">自动播放配置</div>
                 <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                     <div style="display: flex; align-items: center; gap: 6px;">
                         <input type="checkbox" id="auto-play-next" ${CONFIG.AUTO_PLAY_NEXT ? 'checked' : ''} style="width: 13px; height: 13px; cursor: pointer;">
-                        <label for="auto-play-next" style="cursor: pointer; font-size: 11px;">自动播放下一节</label>
+                        <label for="auto-play-next" style="cursor: pointer; font-size: 10px;">自动播放下一节</label>
                     </div>
                     <div style="display: flex; align-items: center; gap: 6px;">
                         <input type="checkbox" id="skip-completed" ${CONFIG.SKIP_COMPLETED ? 'checked' : ''} style="width: 13px; height: 13px; cursor: pointer;">
-                        <label for="skip-completed" style="cursor: pointer; font-size: 11px;">跳过已完成视频</label>
+                        <label for="skip-completed" style="cursor: pointer; font-size: 10px;">跳过已完成视频</label>
                     </div>
                     <div style="display: flex; align-items: center; gap: 6px; margin-top: 6px;">
-                        <span style="font-size: 11px;">播放延迟：</span>
+                        <span style="font-size: 10px;">播放下个视频延迟：</span>
                         <input type="number" id="auto-play-delay" value="${CONFIG.AUTO_PLAY_DELAY}"
-                               min="1" max="60" style="width: 80px; background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(150, 150, 150, 0.3); color: #333333; border-radius: 4px; padding: 3px 5px; font-size: 11px; outline: none; transition: all 0.2s ease;">
-                        <span style="font-size: 11px;">秒</span>
+                               min="1" max="60" style="width: 80px; background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(150, 150, 150, 0.3); color: #333333; border-radius: 4px; padding: 3px 5px; font-size: 10px; outline: none; transition: all 0.2s ease;">
+                        <span style="font-size: 10px;">秒</span>
                     </div>
                 </div>
-            </div>`;
+            </div>
 
-        // 根据DEBUG_MODE条件添加模拟按钮，放到配置区域下面，居中显示
-        if (CONFIG.DEBUG_MODE) {
-            otherSettingsHtml += `
-            <div style="margin: 8px 0 10px 0; display: flex; justify-content: center; gap: 8px;">
-                <button id="end-countdown" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 500; box-shadow: 0 2px 6px rgba(102, 126, 234, 0.3); transition: all 0.2s ease;">模拟结束</button>
-                <button id="debug-submit" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; border: none; padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 500; box-shadow: 0 2px 6px rgba(245, 87, 108, 0.3); transition: all 0.2s ease;">模拟时长</button>
-                <button id="simulate-session-expired" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; border: none; padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 500; box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3); transition: all 0.2s ease;">模拟登录过期</button>
-            </div>`;
-        } else {
-            otherSettingsHtml += `
-            <div style="margin-bottom: 15px;"></div>`;
+        `;
+
+        // 如果DEBUG_MODE为false，不显示调试按钮
+        if (!CONFIG.DEBUG_MODE) {
+            // 移除调试按钮部分
+            otherSettingsHtml = otherSettingsHtml.replace(/<!-- 调试和登录操作按钮 -->[\s\S]*?<\/div>/, '');
         }
 
         otherSettings.innerHTML = otherSettingsHtml;
@@ -1192,6 +2186,9 @@
         // 初始更新课程列表显示
         updateCourseListDisplay();
 
+        // 加载当天登录日志到面板
+        loadLoginLogToPanel();
+
         // 添加事件监听
 
         // 基础事件监听（始终添加）
@@ -1201,8 +2198,73 @@
             CONFIG.LOG_LEVEL = this.value;
             // 保存到本地存储
             GM_setValue('logLevel', CONFIG.LOG_LEVEL);
-            console.log(`日志级别已切换为：${CONFIG.LOG_LEVEL}`);
         });
+
+        // 登录相关事件监听
+        // 保存登录配置
+        document.getElementById('save-login-btn').addEventListener('click', function() {
+            const username = document.getElementById('username-input').value.trim();
+            const password = document.getElementById('password-input').value.trim();
+
+            if (!username || !password) {
+                // 获取当前登录用户信息，用于显示更准确的错误提示
+                getCurrentUserInfo(function(userInfo, error) {
+                    if (userInfo) {
+                        // 如果获取到了用户信息，显示包含当前登录用户姓名和用户名的提示
+                        log(`用户名和密码不能为空 请输入当前已登录-${userInfo.employeeName}的（用户名${userInfo.username}）和密码`, 'error', true);
+                    } else {
+                        // 如果获取失败，显示通用提示
+                        log('用户名和密码不能为空，请输入正确的登录信息', 'error', true);
+                    }
+                });
+                return;
+            }
+
+            // 获取当前登录用户信息进行校验
+            getCurrentUserInfo(function(userInfo, error) {
+                if (error) {
+                    log(`保存配置失败：${error}，请先登录后再保存配置`, 'error', true);
+                    return;
+                }
+
+                if (!userInfo) {
+                    log('保存配置失败：无法获取当前用户信息', 'error', true);
+                    return;
+                }
+
+                // 校验输入的用户名是否与当前登录的用户名一致
+                if (username !== userInfo.username) {
+                    log(`保存配置失败：用户名不一致，请输入当前登录的员工姓名的${userInfo.employeeName}（用户名${userInfo.username}）和密码`, 'error', true);
+                    return;
+                }
+
+                // 显示用户名和部分密码到日志面板
+                const maskedPassword = password.length > 4 ? password.substring(0, 2) + '*'.repeat(password.length - 4) + password.substring(password.length - 2) : password;
+                log(`保存登录配置: 用户名=${username}，密码=${maskedPassword}`, 'info', true);
+
+                GM_setValue('username', username);
+                GM_setValue('password', password);
+                log('登录配置已保存', 'success', true);
+            });
+        });
+
+        // 模拟登录按钮事件监听，只有当按钮存在时才添加
+        const simulateLoginBtn = document.getElementById('simulate-login-btn');
+        if (simulateLoginBtn) {
+            simulateLoginBtn.addEventListener('click', function() {
+                log('用户点击了模拟登录按钮', 'info', true);
+                attemptAutoLogin();
+            });
+        }
+
+        // 检测登录状态按钮事件监听，只有当按钮存在时才添加
+        const checkLoginBtn = document.getElementById('check-login-btn');
+        if (checkLoginBtn) {
+            checkLoginBtn.addEventListener('click', function() {
+                log('用户点击了检测登录状态按钮', 'info', true);
+                checkLoginStatus();
+            });
+        }
 
         // 登录检测最小间隔输入事件
         document.getElementById('session-min-input').addEventListener('input', function() {
@@ -1267,25 +2329,68 @@
             console.log(`自动播放延迟时间已更新为：${CONFIG.AUTO_PLAY_DELAY}秒`);
         });
 
+        // 清空日志按钮事件
+        const clearLogBtn = document.getElementById('clear-log-btn');
+        if (clearLogBtn) {
+            clearLogBtn.addEventListener('click', function() {
+                const logArea = document.getElementById('learn-time-log');
+                if (logArea) {
+                    logArea.innerHTML = '';
+                    console.log('日志已清空');
+                }
+            });
+        }
+
         // 根据DEBUG_MODE条件添加模拟按钮事件监听
         if (CONFIG.DEBUG_MODE) {
             // 模拟结束按钮事件
             const endCountdownBtn = document.getElementById('end-countdown');
             if (endCountdownBtn) {
-                endCountdownBtn.addEventListener('click', endCountdown);
+                endCountdownBtn.addEventListener('click', function() {
+                    console.log('模拟结束按钮被点击，显示10秒倒数计时弹窗');
+
+                    // 查找下一个课程
+                    const nextCourse = findNextCourse();
+                    if (nextCourse) {
+                        // 显示10秒自动播放弹窗
+                        showAutoPlayCountdown(nextCourse, CONFIG.AUTO_PLAY_DELAY);
+                    } else {
+                        console.log('已播放完所有课程或没有找到下一个未完成的课程');
+                        // 显示课程完成提示
+                        showCourseCompletedMessage();
+                    }
+                });
             }
 
             // 调试提交按钮事件 - 模拟本地提交功能（恢复到原始状态）
             const debugSubmitBtn = document.getElementById('debug-submit');
             if (debugSubmitBtn) {
                 debugSubmitBtn.addEventListener('click', function() {
+                    // 如果登录已失效，不允许模拟提交
+                    if (isSessionExpired) {
+                        console.log('调试提交：登录已失效，无法模拟提交学习记录');
+                        displayDebugLog('❌ 登录已失效，无法模拟提交学习记录');
+                        return;
+                    }
+
                     console.log('调试提交：开始模拟本地提交学习记录');
 
+
                     try {
-                        // 模拟生成一个随机时长（5-8分钟），与recordLearnTime.js一致
+                        // 计算模拟时长
+                    let simulatedLearnTime;
+                    if (videoDuration > 0 && videoDuration < 3600) { // 确保获取到有效时长且不是异常值
+                        // 如果获取到时长，每次添加大概三分之一的时长
+                        simulatedLearnTime = Math.floor(videoDuration / 3);
+                        // 添加一些随机波动，使时长更自然（±10%）
+                        const variation = Math.floor(simulatedLearnTime * 0.1);
+                        simulatedLearnTime += Math.floor(Math.random() * (variation * 2 + 1)) - variation;
+                    } else {
+                        // 如果没有视频时长或时长异常，使用5-20分钟的随机时长
                         const minSeconds = 300; // 5分钟
-                        const maxSeconds = 480; // 8分钟
-                        const simulatedLearnTime = Math.floor(Math.random() * (maxSeconds - minSeconds + 1)) + minSeconds;
+                        const maxSeconds = 1200; // 20分钟
+                        simulatedLearnTime = Math.floor(Math.random() * (maxSeconds - minSeconds + 1)) + minSeconds;
+                    }
 
                         // 更新累计学习时长
                         const newTotalTime = totalLearntime + simulatedLearnTime;
@@ -1307,17 +2412,22 @@
                             progress = Math.min(100, parseFloat(((newTotalTime / videoDuration) * 100).toFixed(2)));
                         }
 
-                        // 检查累计时长是否超过视频时长
-                        let logSuffix = '';
-                        if (videoDuration > 0 && newTotalTime >= videoDuration) {
-                            logSuffix = ' （视频已播放完毕，可以立即结束播放）';
+                        // 检查进度是否已达到100%，如果是则不显示日志
+                        if (isProgressReached100) {
+                            console.log('进度已达到100%，不再显示学习时长日志');
+                            return;
                         }
 
-                        // 构造日志内容，添加进度百分比
-                        const logContent = `提交学习时长 ${formatSeconds(simulatedLearnTime)}，累计 ${formatSeconds(newTotalTime)}，进度 ${progress}%${logSuffix}`;
+                        // 构造日志内容，添加进度百分比（不显示文本后缀，改为按钮）
+                        const logContent = `本次学习 ${formatSeconds(simulatedLearnTime)}，累计 ${formatSeconds(newTotalTime)}，当前进度 ${progress}%`;
 
                         // 更新累计时长
                         totalLearntime += simulatedLearnTime;
+
+                        // 更新进度状态
+                        if (progress >= 100) {
+                            isProgressReached100 = true;
+                        }
 
                         // 直接显示学习时长提交日志
                         displayDebugLog(logContent);
@@ -1345,19 +2455,11 @@
                     const sessionEndTime = Date.now();
                     const sessionDuration = Math.round((sessionEndTime - sessionStartTime) / (1000 * 60)); // 分钟
 
-                    // 显示到界面日志
-                    displayDebugLog(`⚠️  会话已过期！模拟登录过期`);
-                    displayDebugLog(`✅  会话开始时间：${new Date(sessionStartTime).toLocaleString()}`);
-                    displayDebugLog(`✅  会话结束时间：${new Date(sessionEndTime).toLocaleString()}`);
-                    displayDebugLog(`⏱️  会话持续时长：${sessionDuration}分钟`);
-                    displayDebugLog(`登录过期，先去登录`);
+                    // 显示到界面日志 - 只显示一条简化的会话过期日志
+                    displayDebugLog(`⚠️  登录已失效，请重新登录后学习！`);
 
                     // 同时显示到控制台
-                    console.log(`⚠️  会话已过期！模拟登录过期`);
-                    console.log(`✅  会话开始时间：${new Date(sessionStartTime).toLocaleString()}`);
-                    console.log(`✅  会话结束时间：${new Date(sessionEndTime).toLocaleString()}`);
-                    console.log(`⏱️  会话持续时长：${sessionDuration}分钟`);
-                    console.log(`登录过期，先去登录`);
+                    console.log(`⚠️  登录已失效，请重新登录后学习！`);
 
                     // 显示会话过期弹窗
                     showSessionExpiredMessage();
@@ -1365,7 +2467,7 @@
                     // 暂停视频播放
                     if (videoElement && !videoElement.paused) {
                         videoElement.pause();
-                        console.log('视频已暂停，因为会话已过期');
+                        console.log('视频已暂停，因为登录已失效');
                     }
 
                     console.log('模拟登录过期完成');
@@ -1399,8 +2501,8 @@
                 transition: all 0.2s ease;
                 max-width: 100%;
                 overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
+                word-wrap: break-word;
+                white-space: normal;
             `;
             logEntry.onmouseenter = function() {
                 this.style.background = 'rgba(245, 245, 245, 0.9)';
@@ -1410,8 +2512,24 @@
                 this.style.background = 'rgba(255, 255, 255, 0.85)';
             };
 
-            // 去掉"调试："前缀
-            logEntry.textContent = `${timeDisplay} - ${logContent}`;
+            // 检查是否为100%进度的学习时长日志，如果是则添加立即结束按钮
+            let is100Progress = false;
+            const progressMatch = logContent.match(/当前进度\s*(\d+(?:\.\d+)?)%/);
+            if (progressMatch && parseFloat(progressMatch[1]) >= 100) {
+                is100Progress = true;
+            }
+
+            if (is100Progress) {
+                // 100%进度的学习时长日志，添加立即结束按钮
+                logEntry.innerHTML = `${timeDisplay} - ${logContent.replace(/\s*[（(]立即结束[）)]/, '')} <button onclick="javascript:try {
+                    // 创建一个自定义事件来触发结束操作
+                    const endEvent = new CustomEvent('endCountdownEvent');
+                    window.dispatchEvent(endEvent);
+                } catch (e) { console.error('立即结束失败:', e); }" style="margin-left: 8px; padding: 1px 6px; font-size: 8px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 3px; cursor: pointer; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); transition: all 0.2s ease;">立即结束</button>`;
+            } else {
+                // 普通日志，使用textContent
+                logEntry.textContent = `${timeDisplay} - ${logContent}`;
+            }
             logArea.appendChild(logEntry);
             logArea.scrollTop = logArea.scrollHeight;
 
@@ -1596,12 +2714,20 @@
 
         // 计算当前进度百分比，始终显示两位小数
         let progress = "0.00";
+        let progressWidth = "0%";
         if (duration > 0) {
             progress = ((currentTime / duration) * 100).toFixed(2);
+            progressWidth = `${Math.min(100, parseFloat(progress))}%`;
         }
 
-        videoInfoElement.textContent =
-            `视频时长：${formatTime(currentTime)} / ${formatTime(duration)} (${progress}%)`;
+        // 使用进度条显示视频进度
+        videoInfoElement.innerHTML = `
+            <div style="margin-bottom: 5px;">视频时长：${formatTime(currentTime)} / ${formatTime(duration)}</div>
+            <div style="width: 100%; background-color: #e2e8f0; border-radius: 4px; height: 10px; overflow: hidden;">
+                <div style="width: ${progressWidth}; background: linear-gradient(90deg, #48bb78, #4299e1); height: 100%; border-radius: 4px; transition: width 0.3s ease;"></div>
+            </div>
+            <div style="text-align: right; font-size: 10px; color: #718096; margin-top: 2px;">${progress}%</div>
+        `;
 
         // 更新倒计时显示
         updateCountdown();
@@ -1910,12 +3036,12 @@
 
         // 开始倒计时
         let remainingSeconds = CONFIG.AUTO_PLAY_DELAY;
-        const localCountdownInterval = setInterval(() => {
+        const countdownInterval = setInterval(() => {
             remainingSeconds--;
             countdownDisplay.textContent = remainingSeconds;
 
             if (remainingSeconds <= 0) {
-                clearInterval(localCountdownInterval);
+                clearInterval(countdownInterval);
                 countdownDialog.remove();
                 // 倒计时结束，尝试打开下一个视频
                 setTimeout(() => {
@@ -1936,7 +3062,7 @@
     // 结束倒计时
     function endCountdown() {
         cancelCountdown();
-        console.log('倒计时结束，准备处理视频完成');
+        console.log('立即结束，跳过倒计时，准备处理视频完成');
 
         // 标记课程已完成
         isCourseCompleted = true;
@@ -1947,12 +3073,13 @@
         // 发送视频完成消息
         sendVideoCompletedMessage();
 
-        // 在视频播放页面显示下一节播放提示
+        // 在视频播放页面显示下一节播放提示，跳过倒计时直接跳转
         if (currentPageType === 'videoPlay') {
             const nextCourse = findNextCourse();
             if (nextCourse) {
-                console.log('将播放下一个课程：', nextCourse.title);
-                showVideoEndCountdown(nextCourse);
+                console.log('立即跳转到下一个课程：', nextCourse.title);
+                // 跳过倒计时，直接跳转到下一个视频
+                window.location.href = nextCourse.playUrl;
             } else {
                 console.log('已播放完所有课程或没有找到下一个未完成的课程');
                 // 显示课程完成提示
@@ -1965,6 +3092,9 @@
         // 重置视频结束标志，防止无限循环调用
         isVideoEnded = false;
     }
+
+    // 添加自定义事件监听器，用于处理立即结束按钮的点击
+    window.addEventListener('endCountdownEvent', endCountdown);
 
     // 格式化秒数为分钟和秒的格式
     function formatSeconds(seconds) {
@@ -1987,7 +3117,7 @@
 
     // 发送会话保持请求
     function sendSessionKeepaliveRequest(url, urlDesc) {
-        // 如果会话已过期，不再发送请求
+        // 如果登录已失效，不再发送请求
         if (isSessionExpired) {
             return;
         }
@@ -2033,34 +3163,8 @@
             // 检测会话是否过期
             if (response.status === 0) {
                 // 响应状态为0，判定会话过期
-                isSessionExpired = true;
-                const sessionEndTime = Date.now();
-                const sessionDuration = Math.round((sessionEndTime - sessionStartTime) / (1000 * 60)); // 分钟
-
-                // 显示到界面日志
-                displayDebugLog(`⚠️  会话已过期！响应状态为0`);
-                displayDebugLog(`✅  会话开始时间：${new Date(sessionStartTime).toLocaleString()}`);
-                displayDebugLog(`✅  会话结束时间：${new Date(sessionEndTime).toLocaleString()}`);
-                displayDebugLog(`⏱️  会话持续时长：${sessionDuration}分钟`);
-                displayDebugLog(`登录过期，先去登录`);
-
-                // 同时显示到控制台
-                console.log(`⚠️  会话已过期！响应状态为0`);
-                console.log(`✅  会话开始时间：${new Date(sessionStartTime).toLocaleString()}`);
-                console.log(`✅  会话结束时间：${new Date(sessionEndTime).toLocaleString()}`);
-                console.log(`⏱️  会话持续时长：${sessionDuration}分钟`);
-                console.log(`登录过期，先去登录`);
-
-                // 显示会话过期弹窗
-                showSessionExpiredMessage();
-
-                // 暂停视频播放
-                if (videoElement && !videoElement.paused) {
-                    videoElement.pause();
-                    console.log('视频已暂停，因为会话已过期');
-                }
-
-                // 不再启动下一次会话保持定时器
+                log(`登录已失效，原因：响应状态码为0`, 'warn', true);
+                handleLoginExpired();
                 return;
             }
 
@@ -2120,45 +3224,17 @@
 
                 if (isLoginPage) {
                     // 响应是登录页，判定会话过期
-                    isSessionExpired = true;
-                    const sessionEndTime = Date.now();
-                    const sessionDuration = Math.round((sessionEndTime - sessionStartTime) / (1000 * 60)); // 分钟
-
-                    // 显示到界面日志
-                    displayDebugLog(`⚠️  会话已过期！返回登录页内容`);
-                    displayDebugLog(`🔍  匹配条件：${matchedCondition}`);
-                    displayDebugLog(`✅  会话开始时间：${new Date(sessionStartTime).toLocaleString()}`);
-                    displayDebugLog(`✅  会话结束时间：${new Date(sessionEndTime).toLocaleString()}`);
-                    displayDebugLog(`⏱️  会话持续时长：${sessionDuration}分钟`);
-                    displayDebugLog(`登录过期，先去登录`);
-
-                    // 同时显示到控制台
-                    console.log(`⚠️  会话已过期！返回登录页内容`);
-                    console.log(`🔍  匹配条件：${matchedCondition}`);
-                    console.log(`✅  会话开始时间：${new Date(sessionStartTime).toLocaleString()}`);
-                    console.log(`✅  会话结束时间：${new Date(sessionEndTime).toLocaleString()}`);
-                    console.log(`⏱️  会话持续时长：${sessionDuration}分钟`);
-                    console.log(`登录过期，先去登录`);
-
-                    // 显示会话过期弹窗
-                    showSessionExpiredMessage();
-
-                    // 暂停视频播放
-                    if (videoElement && !videoElement.paused) {
-                        videoElement.pause();
-                        console.log('视频已暂停，因为会话已过期');
-                    }
-
-                    // 不再启动下一次会话保持定时器，直接返回
+                    log(`登录已失效，原因：${matchedCondition}`, 'warn', true);
+                    handleLoginExpired();
                     return;
                 }
 
                 // 只在会话未过期时显示成功/失败日志
                 if (!isSessionExpired) {
                     if (response.ok) {
-                        console.log(`✅  请求【${urlDesc}】成功`);
+                        log(`登录检测，【${urlDesc}】请求成功，登录未失效！`, 'success', true);
                     } else {
-                        console.log(`❌  请求【${urlDesc}】失败`);
+                        log(`登录检测，【${urlDesc}】请求失败`, 'error', true);
                     }
 
                     // 只有会话未过期时才启动下一次会话保持定时器
@@ -2174,7 +3250,7 @@
             }
 
             // 总是显示重要的错误日志
-            console.log(`❌  请求【${urlDesc}】发生错误：`, error);
+            log(`请求【${urlDesc}】发生错误`, 'error', true);
 
             // 只有会话未过期时才启动下一次会话保持定时器
             if (!isSessionExpired) {
@@ -2195,7 +3271,7 @@
 
         // 计算下次执行的具体时间
         const nextExecutionTime = new Date();
-        nextExecutionTime.setMilliseconds(nextExecutionTime.getMilliseconds() + intervalMs);
+        nextExecutionTime.setTime(nextExecutionTime.getTime() + intervalMs);
 
         // 格式化时间显示
         const timeStr = nextExecutionTime.toLocaleTimeString('zh-CN', {
@@ -2255,8 +3331,27 @@
                 // 标记事件监听器已添加
                 videoElement.hasEventListenersAdded = true;
 
-                // 监听视频加载完成事件，获取准确时长
+                // 监听视频元数据加载完成事件，获取准确时长
                 videoElement.addEventListener('loadedmetadata', () => {
+                    // 只更新视频时长和学习时长，不进行跳转
+                    if (!videoElement.hasLoadedMetadata) {
+                        videoElement.hasLoadedMetadata = true;
+                        videoDuration = videoElement.duration;
+
+                        // 计算初始学习时长
+                        const courseIdentifier = parseCourseIdentifierFromUrl();
+                        const uniqueKey = `courseProgress_${courseIdentifier.lessonId}_${courseIdentifier.coursewareId}_${courseIdentifier.lessonGkey}`;
+                        const initialProgress = GM_getValue(uniqueKey, 0);
+                        if (initialProgress > 0 && videoDuration > 0) {
+                            totalLearntime = Math.floor((initialProgress / 100) * videoDuration);
+                        } else {
+                            totalLearntime = 0;
+                        }
+                    }
+                });
+
+                // 监听视频数据加载完成事件，此时可以安全地设置currentTime
+                videoElement.addEventListener('loadeddata', () => {
                     handleVideoLoaded();
                 });
 
@@ -2319,23 +3414,113 @@
         // 视频加载完成后，根据初始进度和实际视频时长计算准确的学习时长
         const courseIdentifier = parseCourseIdentifierFromUrl();
         const uniqueKey = `courseProgress_${courseIdentifier.lessonId}_${courseIdentifier.coursewareId}_${courseIdentifier.lessonGkey}`;
-        const initialProgress = GM_getValue(uniqueKey, 0);
+        const loginProgressKey = `loginBeforeProgress_${courseIdentifier.lessonId}_${courseIdentifier.coursewareId}_${courseIdentifier.lessonGkey}`;
+
+        // 先获取列表页传过来的初始进度
+        let initialProgress = GM_getValue(uniqueKey, 0);
+        let loginBeforeProgress = null;
+
+        // 检查是否有登录前保存的进度
+        const loginBeforeProgressStr = GM_getValue(loginProgressKey, null);
+        if (loginBeforeProgressStr) {
+            try {
+                loginBeforeProgress = JSON.parse(loginBeforeProgressStr);
+                log(`发现登录前进度：${loginBeforeProgress.progress}%，优先使用`, 'info', true);
+
+                // 优先使用登录前的进度
+                initialProgress = loginBeforeProgress.progress;
+
+                // 使用登录前的学习时长
+                if (loginBeforeProgress.totalLearntime > 0) {
+                    totalLearntime = loginBeforeProgress.totalLearntime;
+                }
+
+                // 删除登录前进度，避免重复使用
+                try {
+                    if (typeof GM_deleteValue !== 'undefined') {
+                        GM_deleteValue(loginProgressKey);
+                    } else {
+                        // 如果 GM_deleteValue 不可用，使用 GM_setValue 设置为 null
+                        GM_setValue(loginProgressKey, null);
+                    }
+                } catch (error) {
+                    // 忽略删除值时的错误
+                    log(`删除登录前进度失败：${error.message}`, 'error', true);
+                }
+            } catch (error) {
+                log(`解析登录前进度失败：${error.message}`, 'error', true);
+            }
+        }
+
+        // 先更新视频信息和进度条，确保进度条显示正确
+        updateVideoInfo();
+
         if (initialProgress > 0 && videoDuration > 0) {
             // 根据实际视频时长和初始进度计算准确的学习时长
             totalLearntime = Math.floor((initialProgress / 100) * videoDuration);
 
-            // 根据初始进度计算对应的播放时间，自动跳转到该位置
-            const playPosition = (initialProgress / 100) * videoDuration;
+            // 如果初始进度为100%，直接设置视频结束，开始延时倒计时
+            if (initialProgress === 100) {
+                isVideoEnded = true;
+                countdownStartTime = Date.now();
+                isCourseCompleted = true;
 
-            // 检查当前播放位置是否与预期位置相差较大，如果是则跳转
-            if (Math.abs(videoElement.currentTime - playPosition) > 1) {
-                videoElement.currentTime = playPosition;
-                console.log(`视频已加载，根据初始进度 ${initialProgress}% 跳转到 ${formatTime(playPosition)} 位置播放`);
+                // 先强制更新视频进度到100%，确保进度条显示正确
+                videoElement.currentTime = videoElement.duration;
+                updateVideoInfo();
 
-                // 显示修正后的初始进度信息到日志面板
-                const logContent = `📊  初始进度：${initialProgress}%，对应学习时长：${formatSeconds(totalLearntime)}（视频时长：${formatTime(videoDuration)}）`;
-                displayDebugLog(logContent);
-                displayDebugLog(`⏯️  已自动跳转到视频 ${formatTime(playPosition)} 位置继续播放`);
+                // 添加延迟，让进度条先渲染完成
+                setTimeout(() => {
+                    // 显示初始进度为100%的信息到日志面板
+                    const logContent = `📊  初始进度：100%，对应学习时长：${formatSeconds(totalLearntime)}（视频时长：${formatTime(videoDuration)}）`;
+                    displayDebugLog(logContent);
+
+                    // 如果设置了自动播放下一节并且跳过已完成视频，则直接显示10秒自动播放弹窗，不需要等待8分钟延时
+                        if (CONFIG.AUTO_PLAY_NEXT && CONFIG.SKIP_COMPLETED) {
+                            console.log('视频初始进度为100%，且设置了自动播放和跳过已完成视频，将在渲染完日志和进度条后显示10秒自动播放弹窗');
+                            // 这条日志只显示到控制台，不显示到界面日志面板
+
+                        // 添加延迟，让程序先渲染完日志和进度条，再显示自动播放弹窗
+                        setTimeout(() => {
+                            // 查找下一个课程
+                            const nextCourse = findNextCourse();
+                            if (nextCourse) {
+                                // 显示10秒自动播放弹窗
+                                showAutoPlayCountdown(nextCourse, CONFIG.AUTO_PLAY_DELAY);
+                            } else {
+                                console.log('已播放完所有课程或没有找到下一个未完成的课程');
+                                // 显示课程完成提示
+                                showCourseCompletedMessage();
+                            }
+                        }, 1500); // 延迟1.5秒，确保日志和进度条渲染完成
+                    } else {
+                        console.log('视频初始进度为100%，直接开始延时倒计时');
+                        displayDebugLog(`⏭️  视频已完成，开始延时倒计时`);
+                    }
+                }, 500); // 延迟500毫秒，确保进度条先渲染完成
+            } else {
+                // 确定播放位置
+                let playPosition;
+
+                // 如果有登录前的播放位置，优先使用
+                if (loginBeforeProgress && loginBeforeProgress.currentTime > 0) {
+                    playPosition = loginBeforeProgress.currentTime;
+                    log(`使用登录前的播放位置：${formatTime(playPosition)}`, 'info', true);
+                } else {
+                    // 否则根据初始进度计算对应的播放时间
+                    playPosition = (initialProgress / 100) * videoDuration;
+                }
+
+                // 检查当前播放位置是否与预期位置相差较大，如果是则跳转
+                if (Math.abs(videoElement.currentTime - playPosition) > 1) {
+                    videoElement.currentTime = playPosition;
+                    console.log(`视频已加载，根据初始进度 ${initialProgress}% 跳转到 ${formatTime(playPosition)} 位置播放`);
+
+                    // 显示修正后的初始进度信息到日志面板
+                    const logContent = `📊  初始进度：${initialProgress}%，对应学习时长：${formatSeconds(totalLearntime)}（视频时长：${formatTime(videoDuration)}）`;
+                    displayDebugLog(logContent);
+                    displayDebugLog(`⏯️  已自动跳转到视频 ${formatTime(playPosition)} 位置继续播放`);
+                }
             }
         } else {
             // 如果初始进度为0，重置学习时长
@@ -2351,8 +3536,6 @@
         if (!isCountdownRunning) {
             startCountdown();
         }
-        // 更新视频信息显示
-        updateVideoInfo();
 
         // 只显示关键信息：视频查找成功、时长、静音状态
         console.log(`视频查找成功，时长：${formatTime(videoDuration)}，已设置静音`);
@@ -2372,6 +3555,15 @@
 
     // 显示日志到右侧日志框
     function displayConsoleLog(...args) {
+        // 如果登录已失效，不处理学习时长相关的日志
+        if (isSessionExpired) {
+            const logString = args.join(' ');
+            // 只处理登录相关的错误日志，跳过学习时长日志
+            if (logString.includes('_submitLearnTime') || logString.includes('completed')) {
+                return;
+            }
+        }
+
         // 获取当前时间
         const now = new Date();
         const timeDisplay = now.toLocaleTimeString('zh-CN', {
@@ -2386,8 +3578,15 @@
         // 移除日志末尾可能的行号信息（如：recordLearnTime.do:16:10）
         logString = logString.replace(/\s+\S+:\d+:\d+$/g, '');
 
+        // 检查是否为学习时长相关日志
+        let isLearnTimeLog = logString.includes('_submitLearnTime') || logString.includes('completed');
+
+        // 如果进度已达到100%，不再显示学习时长相关日志
+        if (isProgressReached100 && isLearnTimeLog) {
+            return;
+        }
+
         let finalLog = null;
-        let isLearnTimeLog = false;
         let seconds = 0;
 
         // 处理_submitLearnTime日志
@@ -2401,12 +3600,8 @@
                     // 计算进度百分比
                     const progress = Math.min(100, parseFloat(((newTotalTime / videoDuration) * 100).toFixed(2)));
 
-                    // 检查累计时长是否超过视频时长
-                    if (videoDuration > 0 && newTotalTime >= videoDuration) {
-                        // 移除自动发送视频完成消息的逻辑，只显示提示
-                        console.log('学习时长已超过视频总时长，但不会自动结束，等待倒计时或手动操作');
-                    }
-                    finalLog = `提交学习时长 ${formatSeconds(seconds)}，累计 ${formatSeconds(newTotalTime)}，进度 ${progress}%`;
+                    // 构造基础日志内容
+                    finalLog = `本次学习 ${formatSeconds(seconds)}，累计 ${formatSeconds(newTotalTime)}，当前进度 ${progress}%`;
                     isLearnTimeLog = true;
                 }
             }
@@ -2484,6 +3679,11 @@
             // 计算进度百分比
             const progress = Math.min(100, parseFloat(((totalLearntime / videoDuration) * 100).toFixed(2)));
 
+            // 检查进度是否已达到100%
+            if (progress >= 100) {
+                isProgressReached100 = true;
+            }
+
             // 每次进度更新时都保存进度到本地存储
             sendProgressUpdateMessage(progress);
 
@@ -2517,6 +3717,10 @@
             line-height: 1.4;
             box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
             transition: all 0.2s ease;
+            max-width: 100%;
+            overflow: hidden;
+            word-wrap: break-word;
+            white-space: normal;
         `;
 
         // 移除悬停效果，避免晃动
@@ -2528,7 +3732,26 @@
             this.style.background = 'rgba(255, 255, 255, 0.85)';
         };
 
-        logEntry.textContent = `${timeDisplay} - ${finalLog}`;
+        // 检查是否为100%进度的学习时长日志，如果是则添加立即结束按钮
+        let is100Progress = false;
+        if (isLearnTimeLog) {
+            const progressMatch = finalLog.match(/当前进度\s*(\d+(?:\.\d+)?)%/);
+            if (progressMatch && parseFloat(progressMatch[1]) >= 100) {
+                is100Progress = true;
+            }
+        }
+
+        if (is100Progress) {
+                // 100%进度的学习时长日志，添加立即结束按钮
+                logEntry.innerHTML = `${timeDisplay} - ${finalLog.replace(/\s*[（(]立即结束[）)]/, '')} <button onclick="javascript:try {
+                    // 创建一个自定义事件来触发结束操作
+                    const endEvent = new CustomEvent('endCountdownEvent');
+                    window.dispatchEvent(endEvent);
+                } catch (e) { console.error('立即结束失败:', e); }" style="margin-left: 8px; padding: 1px 6px; font-size: 8px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 3px; cursor: pointer; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); transition: all 0.2s ease;">立即结束</button>`;
+            } else {
+                // 普通日志，使用textContent
+                logEntry.textContent = `${timeDisplay} - ${finalLog}`;
+            }
 
         // 添加到日志区域
         logArea.appendChild(logEntry);
@@ -2638,13 +3861,19 @@
                                     // 计算进度百分比
                                     const progress = Math.min(100, Math.floor((totalLearntime / videoDuration) * 100));
 
-                                    // 检查累计时长是否超过视频时长
-                                    let logSuffix = '';
-                                    if (videoDuration > 0 && totalLearntime >= videoDuration) {
-                                        logSuffix = ' （视频已播放完毕，可以立即结束播放）';
+                                    // 检查进度是否已达到100%，如果是则不显示日志
+                                    if (isProgressReached100) {
+                                        console.log('进度已达到100%，不再显示学习时长日志');
+                                        return;
                                     }
-                                    // 构造日志内容，添加进度百分比
-                                    const logContent = `提交学习时长 ${formatSeconds(seconds)}，累计 ${formatSeconds(totalLearntime)}，进度 ${progress}%${logSuffix}`;
+
+                                    // 更新进度状态
+                                    if (progress >= 100) {
+                                        isProgressReached100 = true;
+                                    }
+
+                                    // 构造日志内容（不添加文本后缀，改为按钮）
+                                    const baseLogContent = `本次学习 ${formatSeconds(seconds)}，累计 ${formatSeconds(totalLearntime)}，当前进度 ${progress}%`;
 
                                     // 直接显示学习时长提交日志
                                     const now = new Date();
@@ -2678,7 +3907,19 @@
                                             this.style.background = 'linear-gradient(135deg, rgba(220, 218, 212, 0.8), rgba(200, 198, 192, 0.6))';
                                             this.style.transform = 'translateX(0)';
                                         };
-                                        logEntry.textContent = `${timeDisplay} - ${logContent}`;
+
+                                        // 如果进度达到100%，添加立即结束按钮
+                if (progress >= 100) {
+                    // 直接在onclick中实现结束逻辑，不依赖全局函数
+                    logEntry.innerHTML = `${timeDisplay} - ${baseLogContent} <button onclick="javascript:try {
+                        // 创建一个自定义事件来触发结束操作
+                        const endEvent = new CustomEvent('endCountdownEvent');
+                        window.dispatchEvent(endEvent);
+                    } catch (e) { console.error('立即结束失败:', e); }" style="margin-left: 8px; padding: 2px 8px; font-size: 9px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 4px; cursor: pointer; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); transition: all 0.2s ease;">立即结束</button>`;
+                } else {
+                    logEntry.textContent = `${timeDisplay} - ${baseLogContent}`;
+                }
+
                                         logArea.appendChild(logEntry);
                                         logArea.scrollTop = logArea.scrollHeight;
 
@@ -3387,18 +4628,20 @@
         // 等待DOM加载完成后再执行DOM相关操作
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => {
-                // 创建UI
-                createVideoUI();
-
                 // 初始化视频元素
                 initVideoElement();
 
-                // 如果没有找到视频元素，尝试定期查找
-                if (!videoElement) {
+                // 如果找到视频元素，创建UI
+                if (videoElement) {
+                    createVideoUI();
+                } else {
+                    // 如果没有找到视频元素，尝试定期查找
                     let searchAttempts = 0;
                     const maxAttempts = 20; // 最多尝试20次，每次间隔1秒
                     const videoCheckInterval = setInterval(() => {
                         searchAttempts++;
+
+                        console.log(`正在尝试查找视频元素 (${searchAttempts}/${maxAttempts})...`);
 
                         // 检查视频元素是否已经存在
                         if (videoElement) {
@@ -3417,9 +4660,13 @@
                         videoElement = findVideoElement();
                         if (videoElement) {
                             clearInterval(videoCheckInterval);
+                            console.log('找到视频元素，开始初始化');
 
                             // 直接调用initVideoElement函数，避免重复代码
                             initVideoElement();
+
+                            // 创建UI
+                            createVideoUI();
                         }
                     }, CONFIG.CHECK_INTERVAL);
                 }
@@ -3443,25 +4690,28 @@
             });
         } else {
             // DOM已加载完成，直接执行
-            // 创建UI
-            createVideoUI();
-
             // 初始化视频元素
             initVideoElement();
 
             // 启动视频元素变化监听
             addVideoMutationObserver();
 
-            // 如果没有找到视频元素，尝试定期查找
-            if (!videoElement) {
+            // 如果找到视频元素，创建UI
+            if (videoElement) {
+                createVideoUI();
+            } else {
+                // 如果没有找到视频元素，尝试定期查找
                 let searchAttempts = 0;
                 const maxAttempts = 20; // 最多尝试20次，每次间隔1秒
                 const videoCheckInterval = setInterval(() => {
                     searchAttempts++;
 
+                    console.log(`正在尝试查找视频元素 (${searchAttempts}/${maxAttempts})...`);
+
                     // 检查视频元素是否已经存在
                     if (videoElement) {
                         clearInterval(videoCheckInterval);
+                        console.log('视频元素已存在，停止定期查找');
                         return;
                     }
 
@@ -3475,9 +4725,13 @@
                     videoElement = findVideoElement();
                     if (videoElement) {
                         clearInterval(videoCheckInterval);
+                        console.log('找到视频元素，开始初始化');
 
                         // 直接调用initVideoElement函数，避免重复代码
                         initVideoElement();
+
+                        // 创建UI
+                        createVideoUI();
                     }
                 }, CONFIG.CHECK_INTERVAL);
             }
@@ -3504,6 +4758,9 @@
 
         // 初始化广播频道
         initBroadcastChannel();
+
+        // 加载当天登录日志到面板
+        loadLoginLogToPanel();
 
         // 等待DOM加载完成后再执行DOM相关操作
         if (document.readyState === 'loading') {
