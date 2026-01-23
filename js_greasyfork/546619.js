@@ -1,13 +1,13 @@
 // ==UserScript==
 // @name         ChatGPT, GROK, DEEPSEEK, Gemini, QWEN, Doubao AI WEB Chat Scroll Navigator Tool(AI网页聊天智能滚动导航工具)
 // @namespace    http://tampermonkey.net/
-// @version      0.29
-// @description  A unified interface for scrolling, navigation in Gemini, ChatGPT, GROK, DEEPSEEK, QWEN, Doubao AI chats with section navigation, multiple themes etc. 为常用AI聊天界面提供统一的滚动导航界面，支持滚动阅读，章节导航，和多种主题及图标风格和自定义设置。
+// @version      0.30
+// @description  A unified interface for scrolling, navigation in Gemini, ChatGPT, GROK, DEEPSEEK, QWEN, Doubao AI chats with section navigation, multiple themes etc. 为常用AI聊天界面提供统一的滚动导航界面，支持滚动阅读，公式显示, 章节导航，和多种主题及图标风格和自定义设置。
 // @author       Lepturus
 // @match        *://chatgpt.com/*
 // @match        *://chat.deepseek.com/*
 // @match        *://grok.com/*
-// @match        *://www.tongyi.com/*
+// @match        *://www.qianwen.com/*
 // @match        *://chat.qwen.ai/*
 // @match        *://gemini.google.com/*
 // @match        *://*.doubao.com/*
@@ -30,10 +30,10 @@
             chatgpt: { container: ' div.relative.flex.min-h-0.min-w-0.flex-1.flex-col, main div[class*="overflow-y-auto"]'},
             grok: { container: '.scrollbar-gutter-stable' },
             deepseek: { container: '.ds-scroll-area' },
-            tongyi:{ container: 'div[class^="contentWrapper--"]'},
-            qwen:{ container: '#messages-container'},
+            tongyi:{ container: 'div.message-list-scroll-container'},  // qianwen//
+            qwen:{ container: 'div#chat-messages-scroll-container'},
             gemini:{container: 'infinite-scroller.chat-history'},
-            doubao:{container: 'div.[class^="scrollable-"]'},
+            doubao:{container: 'div[class^="scrollable-"]'},
             generic: { container: 'html, body' }
         },
         defaults: {
@@ -364,7 +364,7 @@
         if (host.includes('chatgpt.com')) platform = 'chatgpt';
         else if (host.includes('grok.com')) platform = 'grok';
         else if (host.includes('deepseek.com')) platform = 'deepseek';
-        else if (host.includes('tongyi.com')) platform = 'tongyi';
+        else if (host.includes('qianwen.com')) platform = 'tongyi';
         else if (host.includes('qwen.ai')) platform = 'qwen';
         else if (host.includes('gemini')) platform = 'gemini';
         else if (host.includes('doubao')) platform = 'doubao';
@@ -376,7 +376,7 @@
             if (platform === 'deepseek' ){return containers[2]}
             return containers.length > 1 ? containers[1] : containers[0];
         }
-        console.log('Using selector for platform:', platform, selector,document.querySelector(selector));
+        // console.log('Using selector for platform:', platform, selector,document.querySelector(selector));
         return platform === 'generic' ? (document.scrollingElement || document.documentElement) : document.querySelector(selector);
     }
 
@@ -1182,10 +1182,15 @@
 }
 
 /* Style for the container of KaTeX elements */
-.katex-display {
+/* ds-deepseek*/
+.katex-display, .ds-markdown-math, .katex, .math-inline, .math-block {
     position: relative;
+    display: inline-block; /* Ensure inline wrappers can hold absolute buttons properly */
 }
-
+/* Specific fix for block containers to remain block-like */
+.katex-display, .ds-markdown-math, .math-block {
+    display: block;
+}
 /* Style for the new copy button */
 .katex-copy-btn {
     position: absolute;
@@ -1200,13 +1205,17 @@
     cursor: pointer;
     opacity: 0;
     transition: opacity 0.2s;
+    z-index: 10;
 }
 
 /* Show the button when hovering over the KaTeX element */
-.katex-display:hover .katex-copy-btn {
+.katex-display:hover > .katex-copy-btn,
+.ds-markdown-math:hover > .katex-copy-btn,
+.katex:hover > .katex-copy-btn,
+.math-inline:hover > .katex-copy-btn,
+.math-block:hover > .katex-copy-btn {
     opacity: 1;
 }
-
 /* Style for the button after the code has been copied */
 .katex-copy-btn.copied {
     background-color: #007AFF;
@@ -1416,6 +1425,7 @@
             <!-- Section Nav Panel -->
             <div id="enh-nav-section-panel" class="enh-nav-panel" enh-nav-pos-${STATE.settings.buttonPosition || 'bottom-right'}">
                  <span class="close-btn">✖️</span>
+                 <span id="enh-nav-collapse-toggle" title="Collapse/Expand Levels" style="position: absolute; top: 15px; right: 45px; cursor: pointer; font-size: 16px; user-select: none;">🔽</span>
                  <h3 data-i18n-key="navTitle">Page Navigation</h3>
                  <ul id="enh-nav-section-list"></ul>
             </div>
@@ -1493,18 +1503,11 @@
     /** Populates the section navigation panel */
     function updateSectionNav() {
         const list = document.getElementById('enh-nav-section-list');
-        const headings = document.querySelectorAll('h1, h2, h3, h4, h5, h6'); // 包含所有标题级别
+        // Scope heading search to the active scroll container instead of entire document
+        const root = STATE.scrollContainer || document;
+        const headings = root.querySelectorAll('h1, h2, h3, h4, h5, h6'); // 包含所有标题级别
 
         if (list) list.textContent = '';
-
-        const unwantedTexts = [
-            '脚本设置', 'Script Settings',
-            '页面导航', 'Section Navigation',
-            'Upgrade to SuperGrok',
-            'Chat history', 'Chats', 'You said:', 'ChatGPT said:',
-            '导航', 'Navigate',
-            '设置', 'Settings', '对话', '与 Gemini 对话',
-        ];
 
         if (headings.length === 0) {
             setSafeHTML(list, `<li data-i18n-key="noHeadings" style="opacity: 0.6; text-align: center; padding: 30px;">
@@ -1515,19 +1518,33 @@
 
         let hasValidHeadings = false;
         let index = 0;
+        // Reset collapse button state when refreshing
+        const collapseBtn = document.getElementById('enh-nav-collapse-toggle');
+        if (collapseBtn) collapseBtn.textContent = '🔽';
+
         headings.forEach(h => {
             const text = h.textContent.trim();
             // 简单的 ID 生成逻辑，避免特殊字符报错
             const id = h.id || h.textContent.toLowerCase().replace(/\s+/g, '-');
 
-            if (text === '' || unwantedTexts.includes(text)) return;
-
+            if (text === '') return;
+            if (h.className && typeof h.className === 'string') {
+                const cls = h.className.toLowerCase();
+                if (cls.includes('sr-only') ||
+                    cls.includes('visually-hidden') ||
+                    cls.includes('invisible') ||
+                    cls.includes('w-px') || // Tailwind often uses w-px h-px for sr-only
+                    cls.includes('h-px')) return;
+            }
             hasValidHeadings = true;
 
             const item = document.createElement('li');
             item.textContent = text;
 
             const level = parseInt(h.tagName.substring(1));
+            // Store level in dataset for filtering
+            item.dataset.level = level;
+
             item.style.paddingLeft = `${(level - 1) * 15 + 15}px`;
             item.style.fontSize = `${18 - level * 2}px`;
             item.style.fontWeight = level <= 2 ? 'bold' : 'normal';
@@ -1584,8 +1601,8 @@
     }
 
     function addCopyToKatexElements() {
-        // Find all KaTeX display elements on the page
-        const katexElements = document.querySelectorAll('.katex-display');
+        // Find all potential KaTeX containers: block display, inline, DeepSeek, and Gemini specific containers
+        const katexElements = document.querySelectorAll('.katex-display, .katex, .ds-markdown-math, .math-inline, .math-block');
 
         katexElements.forEach(el => {
             // Check if a button has already been added to this element
@@ -1593,26 +1610,42 @@
                 return;
             }
 
-            // Find the annotation tag which contains the raw LaTeX code
-            const annotation = el.querySelector('annotation[encoding="application/x-tex"]');
-            if (annotation) {
-                const latexCode = annotation.textContent;
+            // Avoid duplication: if this element is inside another recognized block/wrapper, let the parent handle it.
+            const parentBlock = el.parentElement.closest('.katex-display, .ds-markdown-math, .math-inline, .math-block');
+            if (parentBlock && parentBlock !== el) {
+                return;
+            }
 
+            // Strategy 1: Gemini/Google uses data-math attribute on the wrapper
+            let latexCode = el.getAttribute('data-math');
+
+            // Strategy 2: Standard KaTeX uses annotation tag
+            if (!latexCode) {
+                const annotation = el.querySelector('annotation[encoding="application/x-tex"]');
+                if (annotation) {
+                    latexCode = annotation.textContent;
+                }
+            }
+
+            if (latexCode) {
                 // Create the copy button
                 const copyBtn = document.createElement('button');
                 copyBtn.textContent = 'Copy';
                 copyBtn.className = 'katex-copy-btn';
 
                 // Add the click event listener to copy the code
-                copyBtn.addEventListener('click', () => {
+                copyBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation(); // Prevent affecting parent click events
                     navigator.clipboard.writeText(latexCode).then(() => {
                         // Provide feedback to the user
+                        const originalText = copyBtn.textContent;
                         copyBtn.textContent = 'Copied!';
                         copyBtn.classList.add('copied');
 
                         // Reset the button text after 2 seconds
                         setTimeout(() => {
-                            copyBtn.textContent = 'Copy';
+                            copyBtn.textContent = originalText;
                             copyBtn.classList.remove('copied');
                         }, 2000);
                     }).catch(err => {
@@ -1626,7 +1659,6 @@
             }
         });
     }
-
 
     /** Applies the selected theme style */
     function applyThemeStyle(themeId) {
@@ -1648,6 +1680,26 @@
         document.getElementById('enh-nav-settings-btn').addEventListener('click', () => togglePanel('enh-nav-settings-panel'));
         document.getElementById('enh-nav-section-btn').addEventListener('click', () => togglePanel('enh-nav-section-panel'));
 
+        // Collapse/Expand Toggle Logic
+        const collapseToggle = document.getElementById('enh-nav-collapse-toggle');
+        if (collapseToggle) {
+            collapseToggle.addEventListener('click', (e) => {
+                const btn = e.target;
+                const list = document.getElementById('enh-nav-section-list');
+                if (!list) return;
+
+                const isCurrentlyExpanded = btn.textContent === '🔽';
+                btn.textContent = isCurrentlyExpanded ? '▶️' : '🔽'; // Toggle Icon
+
+                Array.from(list.children).forEach(li => {
+                    // Always show Level 1 and Level 2 (H1, H2), toggle others
+                    const level = parseInt(li.dataset.level || 1);
+                    if (level > 2) {
+                        li.style.display = isCurrentlyExpanded ? 'none' : 'block';
+                    }
+                });
+            });
+        }
         // Close Panel Buttons
         document.querySelectorAll('.enh-nav-panel .close-btn').forEach(btn => {
             btn.addEventListener('click', (e) => e.currentTarget.parentElement.classList.remove('visible'));
@@ -1770,7 +1822,7 @@
                      // Re-bind scroll event if found later
                      STATE.scrollContainer.addEventListener('scroll', updateScrollState, { passive: true });
                  }
-             }, 1000);
+             }, 2000);
         } else {
              STATE.retryCount = 0;
         }
@@ -1791,7 +1843,7 @@
              scrollTarget.addEventListener('scroll', updateScrollState, { passive: true });
         }
 
-        // [MOD] Enhanced Observer: Keep UI alive and valid
+        // Enhanced Observer: Keep UI alive and valid
         const observer = new MutationObserver(() => {
             // 1. Handle Scroll Container updates (React re-renders)
             const currentContainer = findScrollContainer();
@@ -1802,7 +1854,7 @@
                 updateScrollState();
             }
 
-            // 2. [ADD] DOM Guardian: Ensure our UI container wasn't wiped by React
+            // 2.  DOM Guardian: Ensure our UI container wasn't wiped by React
             const uiContainer = document.getElementById('enh-nav-container');
             if (!uiContainer) {
                 console.log('UI Container vanished! Re-creating...');

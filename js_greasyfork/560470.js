@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name        Ficbook FB2 & EPUB Export
 // @namespace   http://tampermonkey.net/
-// @version     1.2.3
-// @build       2026-01-21 23:34
-// @description Download books from Ficbook in FB2 and EPUB formats
+// @version     1.2.4
+// @build       2026-01-23 04:54
+// @description Download books from Ficbook in FB2 & EPUB without registration or limits
 // @author      tsuki8neko
 // @match       https://ficbook.net/readfic/*
 // @grant       none
@@ -15,7 +15,12 @@
 
 ;// ./src/core/getTitle.js
 function getTitle() {
-    return document.querySelector("h1.heading[itemprop='name']")?.innerText.trim() || "Фанфик";
+    return (
+        document.querySelector("h1.heading[itemprop='name']")?.innerText.trim() ||
+        document.querySelector("h1.heading[itemprop='headline']")?.innerText.trim() ||
+        document.querySelector("h1.heading")?.innerText.trim() ||
+        "Фанфик"
+    );
 }
 
 ;// ./src/core/getAuthors.js

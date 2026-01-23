@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Toolasha
 // @namespace    http://tampermonkey.net/
-// @version      0.4.958
+// @version      0.4.959
 // @description  Toolasha - Enhanced tools for Milky Way Idle.
 // @author       Celasha and Claude, thank you to bot7420, DrDucky, Frotty, Truth_Light, AlphB, qu, and sentientmilk, for providing the basis for a lot of this. Thank you to Miku, Orvel, Jigglymoose, Incinarator, Knerd, and others for their time and help. Thank you to Steez for testing and helping me figure out where I'm wrong! Special thanks to Zaeter for the name.
 // @license      CC-BY-NC-SA-4.0
@@ -770,19 +770,6 @@
                         { value: 'hybrid', label: 'Hybrid (Ask/Ask - instant buy, patient sell)' },
                         { value: 'optimistic', label: 'Optimistic (Bid/Ask - patient trading)' }
                     ]
-                },
-                networth_pricingMode: {
-                    id: 'networth_pricingMode',
-                    label: 'Networth pricing mode',
-                    type: 'select',
-                    default: 'ask',
-                    options: [
-                        { value: 'ask', label: 'Ask (Replacement value - what you\'d pay to rebuy)' },
-                        { value: 'bid', label: 'Bid (Liquidation value - what you\'d get selling now)' },
-                        { value: 'average', label: 'Average (Middle ground between ask and bid)' }
-                    ],
-                    dependencies: ['networth'],
-                    help: 'Choose how to value items in networth calculations. Ask = insurance/replacement cost, Bid = quick-sale value, Average = balanced estimate.'
                 },
                 networth_highEnhancementUseCost: {
                     id: 'networth_highEnhancementUseCost',
@@ -6338,10 +6325,6 @@
                     default:
                         return 'ask';
                 }
-            }
-            case 'networth': {
-                const networthMode = config.getSettingValue('networth_pricingMode');
-                return networthMode || 'average';
             }
             default: {
                 const warningKey = `context:${context}`;
@@ -21136,6 +21119,98 @@
     }
 
     /**
+     * Get market price for an item with crafting cost fallback
+     * @param {string} itemHrid - Item HRID
+     * @param {number} enhancementLevel - Enhancement level
+     * @returns {number} Price per item (always uses ask price, falls back to crafting cost)
+     */
+    function getMarketPriceWithFallback(itemHrid, enhancementLevel = 0) {
+        const gameData = dataManager.getInitClientData();
+
+        // Try ask price first
+        const askPrice = getItemPrice(itemHrid, { enhancementLevel, mode: 'ask' });
+
+        if (askPrice && askPrice > 0) {
+            return askPrice;
+        }
+
+        // For base items (enhancement 0), try crafting cost fallback
+        if (enhancementLevel === 0 && gameData) {
+            // Find the action that produces this item
+            for (const action of Object.values(gameData.actionDetailMap || {})) {
+                if (action.outputItems) {
+                    for (const output of action.outputItems) {
+                        if (output.itemHrid === itemHrid) {
+                            // Found the crafting action, calculate material costs
+                            let inputCost = 0;
+
+                            // Add input items
+                            if (action.inputItems && action.inputItems.length > 0) {
+                                for (const input of action.inputItems) {
+                                    const inputPrice = getMarketPriceWithFallback(input.itemHrid, 0);
+                                    inputCost += inputPrice * input.count;
+                                }
+                            }
+
+                            // Apply Artisan Tea reduction (0.9x) to input materials
+                            inputCost *= 0.9;
+
+                            // Add upgrade item cost (not affected by Artisan Tea)
+                            let upgradeCost = 0;
+                            if (action.upgradeItemHrid) {
+                                const upgradePrice = getMarketPriceWithFallback(action.upgradeItemHrid, 0);
+                                upgradeCost = upgradePrice;
+                            }
+
+                            const totalCost = inputCost + upgradeCost;
+
+                            // Divide by output count to get per-item cost
+                            const perItemCost = totalCost / (output.count || 1);
+
+                            if (perItemCost > 0) {
+                                return perItemCost;
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Try shop cost as final fallback (for shop-only items)
+            const shopCost = getShopCost$1(itemHrid, gameData);
+            if (shopCost > 0) {
+                return shopCost;
+            }
+        }
+
+        return 0;
+    }
+
+    /**
+     * Get shop cost for an item (if purchaseable with coins)
+     * @param {string} itemHrid - Item HRID
+     * @param {Object} gameData - Game data object
+     * @returns {number} Coin cost, or 0 if not in shop or not purchaseable with coins
+     */
+    function getShopCost$1(itemHrid, gameData) {
+        if (!gameData) return 0;
+
+        // Find shop item for this itemHrid
+        for (const shopItem of Object.values(gameData.shopItemDetailMap || {})) {
+            if (shopItem.itemHrid === itemHrid) {
+                // Check if purchaseable with coins
+                if (shopItem.costs && shopItem.costs.length > 0) {
+                    const coinCost = shopItem.costs.find(cost => cost.itemHrid === '/items/coin');
+                    if (coinCost) {
+                        return coinCost.count;
+                    }
+                }
+            }
+        }
+
+        return 0;
+    }
+
+    /**
      * Calculate house score from battle houses
      * @param {Object} profileData - Profile data
      * @returns {Object} {score, breakdown}
@@ -21262,28 +21337,47 @@
             if (tokenValue > 0) {
                 itemCost = tokenValue;
             } else {
-                // Try market price (most items are purchased, not self-enhanced)
-                const marketPrice = getItemPrice(itemHrid, { enhancementLevel, mode: 'average' });
+                // Check if high enhancement cost mode is enabled
+                const useHighEnhancementCost = config.getSetting('networth_highEnhancementUseCost');
+                const minLevel = config.getSetting('networth_highEnhancementMinLevel') || 13;
 
-                if (marketPrice && marketPrice > 0) {
-                    // Good market data exists - use average price
-                    itemCost = marketPrice;
-                } else if (enhancementLevel > 1) {
-                    // No market data or illiquid - calculate enhancement cost
+                // For high enhancement levels, use cost instead of market price (if enabled)
+                if (enhancementLevel >= 1 && useHighEnhancementCost && enhancementLevel >= minLevel) {
+                    // Calculate enhancement cost (ignore market price)
                     const enhancementParams = getEnhancingParams();
                     const enhancementPath = calculateEnhancementPath(itemHrid, enhancementLevel, enhancementParams);
 
                     if (enhancementPath && enhancementPath.optimalStrategy) {
                         itemCost = enhancementPath.optimalStrategy.totalCost;
                     } else {
-                        // Fallback to base market price if enhancement calculation fails
-                        const basePrice = getItemPrice(itemHrid, { mode: 'average' }) || 0;
+                        // Enhancement calculation failed, fallback to base item price
+                        console.warn('[Combat Score] Enhancement calculation failed for:', itemHrid, '+' + enhancementLevel);
+                        const basePrice = getMarketPriceWithFallback(itemHrid, 0);
                         itemCost = basePrice;
                     }
                 } else {
-                    // Enhancement level 0 or 1, just use base market price
-                    const basePrice = getItemPrice(itemHrid, { mode: 'average' }) || 0;
-                    itemCost = basePrice;
+                    // Try market price first (ask price with crafting cost fallback)
+                    const marketPrice = getMarketPriceWithFallback(itemHrid, enhancementLevel);
+
+                    if (marketPrice && marketPrice > 0) {
+                        itemCost = marketPrice;
+                    } else if (enhancementLevel > 1) {
+                        // No market data - calculate enhancement cost
+                        const enhancementParams = getEnhancingParams();
+                        const enhancementPath = calculateEnhancementPath(itemHrid, enhancementLevel, enhancementParams);
+
+                        if (enhancementPath && enhancementPath.optimalStrategy) {
+                            itemCost = enhancementPath.optimalStrategy.totalCost;
+                        } else {
+                            // Fallback to base market price if enhancement calculation fails
+                            const basePrice = getMarketPriceWithFallback(itemHrid, 0);
+                            itemCost = basePrice;
+                        }
+                    } else {
+                        // Enhancement level 0 or 1, just use base market price with fallback
+                        const basePrice = getMarketPriceWithFallback(itemHrid, 0);
+                        itemCost = basePrice;
+                    }
                 }
             }
 
@@ -27212,11 +27306,10 @@
     /**
      * Calculate the value of a single item
      * @param {Object} item - Item data {itemHrid, enhancementLevel, count}
-     * @param {string} pricingMode - Pricing mode: 'ask', 'bid', or 'average'
      * @param {Map} priceCache - Optional price cache from getPricesBatch()
      * @returns {number} Total value in coins
      */
-    async function calculateItemValue(item, pricingMode = 'ask', priceCache = null) {
+    async function calculateItemValue(item, priceCache = null) {
         const { itemHrid, enhancementLevel = 0, count = 1 } = item;
 
         let itemValue = 0;
@@ -27245,12 +27338,12 @@
                     } else {
                         // Enhancement calculation failed, fallback to base item price
                         console.warn('[Networth] Enhancement calculation failed for:', itemHrid, '+' + enhancementLevel);
-                        itemValue = getMarketPrice(itemHrid, 0, pricingMode, priceCache);
+                        itemValue = getMarketPrice(itemHrid, 0, priceCache);
                     }
                 }
             } else {
                 // Normal logic for lower enhancement levels: try market price first, then calculate
-                const marketPrice = getMarketPrice(itemHrid, enhancementLevel, pricingMode, priceCache);
+                const marketPrice = getMarketPrice(itemHrid, enhancementLevel, priceCache);
 
                 if (marketPrice > 0) {
                     itemValue = marketPrice;
@@ -27268,14 +27361,14 @@
                             networthCache.set(itemHrid, enhancementLevel, itemValue);
                         } else {
                             console.warn('[Networth] Enhancement calculation failed for:', itemHrid, '+' + enhancementLevel);
-                            itemValue = getMarketPrice(itemHrid, 0, pricingMode, priceCache);
+                            itemValue = getMarketPrice(itemHrid, 0, priceCache);
                         }
                     }
                 }
             }
         } else {
             // Unenhanced items: use market price or crafting cost
-            itemValue = getMarketPrice(itemHrid, enhancementLevel, pricingMode, priceCache);
+            itemValue = getMarketPrice(itemHrid, enhancementLevel, priceCache);
         }
 
         return itemValue * count;
@@ -27285,11 +27378,10 @@
      * Get market price for an item
      * @param {string} itemHrid - Item HRID
      * @param {number} enhancementLevel - Enhancement level
-     * @param {string} pricingMode - Pricing mode: 'ask', 'bid', or 'average'
      * @param {Map} priceCache - Optional price cache from getPricesBatch()
-     * @returns {number} Price per item
+     * @returns {number} Price per item (always uses ask price)
      */
-    function getMarketPrice(itemHrid, enhancementLevel, pricingMode, priceCache = null) {
+    function getMarketPrice(itemHrid, enhancementLevel, priceCache = null) {
         // Special handling for currencies
         const currencyValue = calculateCurrencyValue(itemHrid);
         if (currencyValue !== null) {
@@ -27306,48 +27398,63 @@
             prices = getItemPrices(itemHrid, enhancementLevel);
         }
 
-        // If no market data, try fallbacks (only for base items)
-        if (!prices) {
-            // Only use fallbacks for base items (enhancementLevel = 0)
-            // Enhanced items should calculate via enhancement path, not crafting cost
-            if (enhancementLevel === 0) {
-                // Check if it's an openable container (crates, caches, chests)
-                const itemDetails = dataManager.getItemDetails(itemHrid);
-                if (itemDetails?.isOpenable && expectedValueCalculator.isInitialized) {
-                    const evData = expectedValueCalculator.calculateExpectedValue(itemHrid);
-                    if (evData && evData.expectedValue > 0) {
-                        return evData.expectedValue;
-                    }
-                }
+        // Try ask price first
+        const ask = prices?.ask;
+        if (ask && ask > 0) {
+            return ask;
+        }
 
-                // Try crafting cost as fallback
-                const craftingCost = calculateCraftingCost(itemHrid);
-                if (craftingCost > 0) {
-                    return craftingCost;
+        // No valid ask price - try fallbacks (only for base items)
+        // Enhanced items should calculate via enhancement path, not crafting cost
+        if (enhancementLevel === 0) {
+            // Check if it's an openable container (crates, caches, chests)
+            const itemDetails = dataManager.getItemDetails(itemHrid);
+            if (itemDetails?.isOpenable && expectedValueCalculator.isInitialized) {
+                const evData = expectedValueCalculator.calculateExpectedValue(itemHrid);
+                if (evData && evData.expectedValue > 0) {
+                    return evData.expectedValue;
                 }
             }
-            return 0;
+
+            // Try crafting cost as fallback
+            const craftingCost = calculateCraftingCost(itemHrid);
+            if (craftingCost > 0) {
+                return craftingCost;
+            }
+
+            // Try shop cost as final fallback (for shop-only items)
+            const shopCost = getShopCost(itemHrid);
+            if (shopCost > 0) {
+                return shopCost;
+            }
         }
 
-        let ask = prices.ask || 0;
-        let bid = prices.bid || 0;
+        return 0;
+    }
 
-        // Match MCS behavior: if one price is positive and other is negative, use positive for both
-        if (ask > 0 && bid < 0) {
-            bid = ask;
-        }
-        if (bid > 0 && ask < 0) {
-            ask = bid;
+    /**
+     * Get shop cost for an item (if purchaseable with coins)
+     * @param {string} itemHrid - Item HRID
+     * @returns {number} Coin cost, or 0 if not in shop or not purchaseable with coins
+     */
+    function getShopCost(itemHrid) {
+        const gameData = dataManager.getInitClientData();
+        if (!gameData) return 0;
+
+        // Find shop item for this itemHrid
+        for (const shopItem of Object.values(gameData.shopItemDetailMap || {})) {
+            if (shopItem.itemHrid === itemHrid) {
+                // Check if purchaseable with coins
+                if (shopItem.costs && shopItem.costs.length > 0) {
+                    const coinCost = shopItem.costs.find(cost => cost.itemHrid === '/items/coin');
+                    if (coinCost) {
+                        return coinCost.count;
+                    }
+                }
+            }
         }
 
-        // Return price based on pricing mode
-        if (pricingMode === 'ask') {
-            return ask;
-        } else if (pricingMode === 'bid') {
-            return bid;
-        } else { // 'average'
-            return (ask + bid) / 2;
-        }
+        return 0;
     }
 
     /**
@@ -27389,17 +27496,18 @@
 
         // Dungeon tokens: Best market value per token approach
         // Calculate based on best shop item value (similar to task tokens)
+        // Uses profitCalc_pricingMode which defaults to 'hybrid' (ask price)
         if (itemHrid === '/items/chimerical_token') {
-            return calculateDungeonTokenValue(itemHrid, 'networth_pricingMode', null) || 0;
+            return calculateDungeonTokenValue(itemHrid, 'profitCalc_pricingMode', null) || 0;
         }
         if (itemHrid === '/items/sinister_token') {
-            return calculateDungeonTokenValue(itemHrid, 'networth_pricingMode', null) || 0;
+            return calculateDungeonTokenValue(itemHrid, 'profitCalc_pricingMode', null) || 0;
         }
         if (itemHrid === '/items/enchanted_token') {
-            return calculateDungeonTokenValue(itemHrid, 'networth_pricingMode', null) || 0;
+            return calculateDungeonTokenValue(itemHrid, 'profitCalc_pricingMode', null) || 0;
         }
         if (itemHrid === '/items/pirate_token') {
-            return calculateDungeonTokenValue(itemHrid, 'networth_pricingMode', null) || 0;
+            return calculateDungeonTokenValue(itemHrid, 'profitCalc_pricingMode', null) || 0;
         }
 
         return null; // Not a currency
@@ -27426,7 +27534,7 @@
                         // Add input items
                         if (action.inputItems && action.inputItems.length > 0) {
                             for (const input of action.inputItems) {
-                                const inputPrice = getItemPrice(input.itemHrid, { mode: 'ask' }) || 0;
+                                const inputPrice = getMarketPrice(input.itemHrid, 0, null);
                                 inputCost += inputPrice * input.count;
                             }
                         }
@@ -27437,7 +27545,7 @@
                         // Add upgrade item cost (not affected by Artisan Tea)
                         let upgradeCost = 0;
                         if (action.upgradeItemHrid) {
-                            const upgradePrice = getItemPrice(action.upgradeItemHrid, { mode: 'ask' }) || 0;
+                            const upgradePrice = getMarketPrice(action.upgradeItemHrid, 0, null);
                             upgradeCost = upgradePrice;
                         }
 
@@ -27586,9 +27694,6 @@
         // Invalidate cache if market data changed (wrap for cache compatibility)
         networthCache.checkAndInvalidate({ marketData: marketAPI.marketData });
 
-        // Get pricing mode from settings
-        const pricingMode = config.getSettingValue('networth_pricingMode', 'ask');
-
         const characterItems = gameData.characterItems || [];
         const marketListings = gameData.myMarketListings || [];
         const characterHouseRooms = gameData.characterHouseRoomMap || {};
@@ -27618,7 +27723,7 @@
         for (const item of characterItems) {
             if (item.itemLocationHrid === '/item_locations/inventory') continue;
 
-            const value = await calculateItemValue(item, pricingMode, priceCache);
+            const value = await calculateItemValue(item, priceCache);
             equippedValue += value;
 
             // Add to breakdown
@@ -27646,7 +27751,7 @@
         for (const item of characterItems) {
             if (item.itemLocationHrid !== '/item_locations/inventory') continue;
 
-            const value = await calculateItemValue(item, pricingMode, priceCache);
+            const value = await calculateItemValue(item, priceCache);
 
             // Add to breakdown
             const itemDetails = gameData.itemDetailMap[item.itemHrid];
@@ -27712,7 +27817,6 @@
 
                 const value = await calculateItemValue(
                     { itemHrid: listing.itemHrid, enhancementLevel, count: quantity },
-                    pricingMode,
                     priceCache
                 );
 
@@ -27721,7 +27825,6 @@
                 // Buying: value is locked coins + unclaimed items
                 const unclaimedValue = await calculateItemValue(
                     { itemHrid: listing.itemHrid, enhancementLevel, count: listing.unclaimedItemCount },
-                    pricingMode,
                     priceCache
                 );
 
@@ -27746,7 +27849,6 @@
 
         return {
             totalNetworth,
-            pricingMode,
             currentAssets: {
                 total: currentAssetsTotal,
                 equipped: { value: equippedValue, breakdown: equippedBreakdown },
@@ -27776,7 +27878,6 @@
     function createEmptyNetworthData() {
         return {
             totalNetworth: 0,
-            pricingMode: 'ask',
             currentAssets: {
                 total: 0,
                 equipped: { value: 0, breakdown: [] },
@@ -28045,9 +28146,7 @@
                     <div style="cursor: pointer; margin-top: 4px;" id="mwi-equipment-toggle">
                         + Equipment value: ${networthFormatter(Math.round(networthData.currentAssets.equipped.value))}
                     </div>
-                    <div id="mwi-equipment-breakdown" style="display: none; margin-left: 20px; font-size: 0.8rem; color: #bbb;">
-                        ${this.renderEquipmentBreakdown(networthData.currentAssets.equipped.breakdown)}
-                    </div>
+                    <div id="mwi-equipment-breakdown" style="display: none; margin-left: 20px; font-size: 0.8rem; color: #bbb; white-space: pre-line;">${this.renderEquipmentBreakdown(networthData.currentAssets.equipped.breakdown)}</div>
 
                     <!-- Inventory Value -->
                     <div style="cursor: pointer; margin-top: 4px;" id="mwi-inventory-toggle">
@@ -28069,9 +28168,7 @@
                     <div style="cursor: pointer; margin-top: 4px;" id="mwi-houses-toggle">
                         + Houses: ${networthFormatter(Math.round(networthData.fixedAssets.houses.totalCost))}
                     </div>
-                    <div id="mwi-houses-breakdown" style="display: none; margin-left: 20px; font-size: 0.8rem; color: #bbb;">
-                        ${this.renderHousesBreakdown(networthData.fixedAssets.houses.breakdown)}
-                    </div>
+                    <div id="mwi-houses-breakdown" style="display: none; margin-left: 20px; font-size: 0.8rem; color: #bbb; white-space: pre-line;">${this.renderHousesBreakdown(networthData.fixedAssets.houses.breakdown)}</div>
 
                     <!-- Abilities -->
                     <div style="cursor: pointer; margin-top: 4px;" id="mwi-abilities-toggle">
@@ -28082,29 +28179,23 @@
                         <div style="cursor: pointer; margin-top: 4px;" id="mwi-equipped-abilities-toggle">
                             + Equipped (${networthData.fixedAssets.abilities.equippedBreakdown.length}): ${networthFormatter(Math.round(networthData.fixedAssets.abilities.equippedCost))}
                         </div>
-                        <div id="mwi-equipped-abilities-breakdown" style="display: none; margin-left: 20px; font-size: 0.8rem; color: #bbb;">
-                            ${this.renderAbilitiesBreakdown(networthData.fixedAssets.abilities.equippedBreakdown)}
-                        </div>
+                        <div id="mwi-equipped-abilities-breakdown" style="display: none; margin-left: 20px; font-size: 0.8rem; color: #bbb; white-space: pre-line;">${this.renderAbilitiesBreakdown(networthData.fixedAssets.abilities.equippedBreakdown)}</div>
 
                         <!-- Other Abilities -->
                         ${networthData.fixedAssets.abilities.otherBreakdown.length > 0 ? `
                             <div style="cursor: pointer; margin-top: 4px;" id="mwi-other-abilities-toggle">
-                                + Other Abilities: ${networthFormatter(Math.round(networthData.fixedAssets.abilities.totalCost - networthData.fixedAssets.abilities.equippedCost))}
+                                + Other (${networthData.fixedAssets.abilities.otherBreakdown.length}): ${networthFormatter(Math.round(networthData.fixedAssets.abilities.totalCost - networthData.fixedAssets.abilities.equippedCost))}
                             </div>
-                            <div id="mwi-other-abilities-breakdown" style="display: none; margin-left: 20px; font-size: 0.8rem; color: #bbb;">
-                                ${this.renderAbilitiesBreakdown(networthData.fixedAssets.abilities.otherBreakdown)}
-                            </div>
+                            <div id="mwi-other-abilities-breakdown" style="display: none; margin-left: 20px; font-size: 0.8rem; color: #bbb; white-space: pre-line;">${this.renderAbilitiesBreakdown(networthData.fixedAssets.abilities.otherBreakdown)}</div>
                         ` : ''}
                     </div>
 
                     <!-- Ability Books -->
                     ${networthData.fixedAssets.abilityBooks.breakdown.length > 0 ? `
                         <div style="cursor: pointer; margin-top: 4px;" id="mwi-ability-books-toggle">
-                            + Ability Books: ${networthFormatter(Math.round(networthData.fixedAssets.abilityBooks.totalCost))}
+                            + Ability Books (${networthData.fixedAssets.abilityBooks.breakdown.length}): ${networthFormatter(Math.round(networthData.fixedAssets.abilityBooks.totalCost))}
                         </div>
-                        <div id="mwi-ability-books-breakdown" style="display: none; margin-left: 20px; font-size: 0.8rem; color: #bbb;">
-                            ${this.renderAbilityBooksBreakdown(networthData.fixedAssets.abilityBooks.breakdown)}
-                        </div>
+                        <div id="mwi-ability-books-breakdown" style="display: none; margin-left: 20px; font-size: 0.8rem; color: #bbb; white-space: pre-line;">${this.renderAbilityBooksBreakdown(networthData.fixedAssets.abilityBooks.breakdown)}</div>
                     ` : ''}
                 </div>
             </div>
@@ -28141,10 +28232,9 @@
                 return '<div>No houses built</div>';
             }
 
-            return breakdown.map((house, index) => {
-                const houseText = `${house.name} ${house.level}: ${networthFormatter(Math.round(house.cost))}`;
-                return index < breakdown.length - 1 ? houseText + '<br>' : houseText;
-            }).join('');
+            return breakdown.map((house) => {
+                return `${house.name} ${house.level}: ${networthFormatter(Math.round(house.cost))}`;
+            }).join('\n');
         }
 
         /**
@@ -28157,10 +28247,9 @@
                 return '<div>No abilities</div>';
             }
 
-            return breakdown.map((ability, index) => {
-                const abilityText = `${ability.name}: ${networthFormatter(Math.round(ability.cost))}`;
-                return index < breakdown.length - 1 ? abilityText + '<br>' : abilityText;
-            }).join('');
+            return breakdown.map((ability) => {
+                return `${ability.name}: ${networthFormatter(Math.round(ability.cost))}`;
+            }).join('\n');
         }
 
         /**
@@ -28173,10 +28262,9 @@
                 return '<div>No ability books</div>';
             }
 
-            return breakdown.map((book, index) => {
-                const bookText = `${book.name} (${book.count}): ${networthFormatter(Math.round(book.value))}`;
-                return index < breakdown.length - 1 ? bookText + '<br>' : bookText;
-            }).join('');
+            return breakdown.map((book) => {
+                return `${book.name} (${book.count}): ${networthFormatter(Math.round(book.value))}`;
+            }).join('\n');
         }
 
         /**
@@ -28189,10 +28277,9 @@
                 return '<div>No equipment</div>';
             }
 
-            return breakdown.map((item, index) => {
-                const itemText = `${item.name}: ${networthFormatter(Math.round(item.value))}`;
-                return index < breakdown.length - 1 ? itemText + '<br>' : itemText;
-            }).join('');
+            return breakdown.map((item) => {
+                return `${item.name}: ${networthFormatter(Math.round(item.value))}`;
+            }).join('\n');
         }
 
         /**
@@ -28213,12 +28300,10 @@
                 const categoryId = `mwi-inventory-${categoryName.toLowerCase().replace(/\s+/g, '-')}`;
                 const categoryToggleId = `${categoryId}-toggle`;
 
-                // Build items HTML with explicit line breaks using BR tags
-                const itemsHTML = categoryData.items.map((item, index) => {
-                    const itemText = `${item.name} x${item.count}: ${networthFormatter(Math.round(item.value))}`;
-                    // Add BR after each item except the last one
-                    return index < categoryData.items.length - 1 ? itemText + '<br>' : itemText;
-                }).join('');
+                // Build items HTML with newlines
+                const itemsHTML = categoryData.items.map((item) => {
+                    return `${item.name} x${item.count}: ${networthFormatter(Math.round(item.value))}`;
+                }).join('\n');
 
                 return `
                 <div style="cursor: pointer; margin-top: 4px; font-size: 0.85rem;" id="${categoryToggleId}">
@@ -28385,7 +28470,6 @@
             this.isActive = false;
             this.updateInterval = null;
             this.currentData = null;
-            this.lastPricingMode = null;
         }
 
         /**
@@ -28393,11 +28477,6 @@
          */
         async initialize() {
             if (this.isActive) return;
-
-            // Register callback for pricing mode changes
-            config.onSettingChange('networth_pricingMode', () => {
-                this.forceRecalculate();
-            });
 
             // Initialize header display (always enabled with networth feature)
             if (config.isFeatureEnabled('networth')) {
@@ -28428,9 +28507,6 @@
                 const networthData = await calculateNetworth();
                 this.currentData = networthData;
 
-                // Track pricing mode for change detection
-                this.lastPricingMode = networthData.pricingMode;
-
                 // Update displays
                 if (config.isFeatureEnabled('networth')) {
                     networthHeaderDisplay.update(networthData);
@@ -28441,18 +28517,6 @@
                 }
             } catch (error) {
                 console.error('[Networth] Error calculating networth:', error);
-            }
-        }
-
-        /**
-         * Force immediate recalculation (called when settings change)
-         */
-        async forceRecalculate() {
-            const currentPricingMode = config.getSettingValue('networth_pricingMode', 'ask');
-
-            // Only recalculate if pricing mode actually changed
-            if (currentPricingMode !== this.lastPricingMode) {
-                await this.recalculate(true);
             }
         }
 
@@ -39809,7 +39873,7 @@
         const targetWindow = typeof unsafeWindow !== 'undefined' ? unsafeWindow : window;
 
         targetWindow.Toolasha = {
-            version: '0.4.958',
+            version: '0.4.959',
 
             // Feature toggle API (for users to manage settings via console)
             features: {
