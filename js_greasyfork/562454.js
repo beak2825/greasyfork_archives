@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         CRM Calls Tracker
 // @namespace    http://tampermonkey.net/
-// @version      22
-// @description  Дополнение к ЦРМ в виде статистики + мотивационные уведомления + детализация
+// @version      23
+// @description  Дополнение к ЦРМ в виде статистики
 // @author       voodoo_lT
 // @match        https://hgh03.mamoth.club/app/*
 // @license MIT
@@ -332,9 +332,43 @@ modal.querySelector('.modal-overlay').addEventListener('click', (e) => {
                 <div class="legend" id="legend"></div>
                 <div class="total">Всего: <b id="total-count">0</b></div>
             </div>
+            <svg id="liquid-glass-filter" xmlns="http://www.w3.org/2000/svg">
+  <filter id="liquidGlassFilter" x="-50%" y="-50%" width="200%" height="200%">
+    <feTurbulence
+      type="fractalNoise"
+      baseFrequency="0.025"
+      numOctaves="5"
+      seed="13"
+      result="turbulence"/>
+    <feDisplacementMap
+      in="SourceGraphic"
+      in2="turbulence"
+      scale="42"
+      xChannelSelector="R"
+      yChannelSelector="G"/>
+    <feGaussianBlur stdDeviation="1.5"/>
+  </filter>
+</svg>
         `;
 
         document.body.appendChild(widget);
+
+        // Добавляем SVG-фильтр один раз
+if (!document.getElementById('liquid-glass-filter')) {
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.id = "liquid-glass-filter";
+  svg.setAttribute("style", "position:absolute;width:0;height:0;");
+
+  svg.innerHTML = `
+    <filter id="liquidGlassFilter" x="-50%" y="-50%" width="200%" height="200%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.025" numOctaves="5" seed="13" result="turbulence"/>
+      <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="42" xChannelSelector="R" yChannelSelector="G"/>
+      <feGaussianBlur stdDeviation="1.5"/>
+    </filter>
+  `;
+
+  document.body.appendChild(svg);
+}
 
         const style = document.createElement('style');
         style.textContent = `
@@ -350,14 +384,47 @@ modal.querySelector('.modal-overlay').addEventListener('click', (e) => {
                 font-family: system-ui, sans-serif;
                 font-size: 11.5px;
                 z-index: 999999;
-                backdrop-filter: blur(20px);
+                backdrop-filter: blur(30px);
                 border: 1px solid rgba(255,255,255,0.1);
                 overflow: hidden;
                 transition:
                     max-height 0.4s cubic-bezier(0.25, 0.1, 0.25, 1),
                     height 0.4s cubic-bezier(0.25, 0.1, 0.25, 1),
                     opacity 0.2s ease;
+                box-shadow:
+    0 50px 50px rgba(0, 0, 0, 0.25),
+    inset 0 10px 20px rgba(255, 255, 255, 0.1);
+      opacity: 0;
+  transform: translateY(80px);
+  animation: appear 1s cubic-bezier(0.5, 1, 0.5, 1) forwards;
             }
+@keyframes appear {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  position: relative;
+  isolation: isolate;                /* важно для backdrop-filter */
+
+  /* Основной стеклянный стиль */
+  background: rgba(30, 30, 60, 0.28);
+  backdrop-filter:
+    blur(18px)                       /* основное размытие */
+    url(#liquid-glass-filter);       /* ← самое важное — наш фильтр! */
+  -webkit-backdrop-filter:
+    blur(18px)
+    url(#liquid-glass-filter);
+
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 16px;
+  box-shadow:
+    0 12px 40px rgba(0,0,0,0.4),
+    inset 0 0 30px rgba(255,255,255,0.12);
+
+  overflow: hidden;
+  transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
             #calls-tracker-small.collapsed {
                 max-height: 42px !important;
                 height: auto;
@@ -469,6 +536,7 @@ modal.querySelector('.modal-overlay').addEventListener('click', (e) => {
                 font-weight: 605;
                 padding: 4px;
                 border-radius: 4px;
+                transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
             }
             .legend-item {
     transition:
@@ -478,7 +546,10 @@ modal.querySelector('.modal-overlay').addEventListener('click', (e) => {
     transform-origin: center center;
 }
             .legend-item:hover {
-                background: rgba(255,255,255,0.05);
+                background: rgba(255,255,255,0.03);
+                transform: translateY(-3px) scale(1.05);
+  background: rgba(155, 155, 155, 0.05);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
             }
             .legend-item:hover,
 .legend-item.active {
@@ -521,6 +592,11 @@ modal.querySelector('.modal-overlay').addEventListener('click', (e) => {
                 font-weight: 500;
                 margin-top: 6px;
             }
+            #liquid-glass-filter {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
 
             /* Модальное окно */
             #status-details-modal {
@@ -543,7 +619,7 @@ modal.querySelector('.modal-overlay').addEventListener('click', (e) => {
                 opacity: 0;  /* полностью прозрачный */
             }
             .modal-overlay.show {
-                backdrop-filter: blur(40px);
+                backdrop-filter: blur(30px);
                 background: rgba(0, 0, 0, 0.2);
                 opacity: 1;
              }
@@ -668,6 +744,35 @@ modal.querySelector('.modal-overlay').addEventListener('click', (e) => {
 /* Опционально: если хотите, чтобы полоса занимала все место без отступов */
 ::-webkit-scrollbar-track-piece {
     background: transparent;
+}
+#liquid-glass-filter {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+#liquid-glass-filter feTurbulence {
+  /* baseFrequency — "размер волн", numOctaves — "детализация" */
+  baseFrequency="0.02 0.02"   /* 0.01–0.04 — самые красивые значения */
+  numOctaves="4"              /* 3–6 */
+  seed="7"                    /* меняйте для другого узора (1–999) */
+  type="fractalNoise"         /* fractalNoise или turbulence */
+  result="noise"/>
+
+#liquid-glass-filter feDisplacementMap {
+  in="SourceGraphic"          /* что искажаем — фон */
+  in2="noise"
+  scale="35"                  /* сила искажения: 20–60 */
+  xChannelSelector="R"
+  yChannelSelector="G"/>
+
+#liquid-glass-filter feGaussianBlur {
+  stdDeviation="1.2"          /* лёгкое размытие для мягкости */
+  result="blurred"/>
+
+#liquid-glass-filter feComposite {
+  in="blurred"
+  in2="SourceGraphic"
+  operator="over"/>
 }
         `;
         document.head.appendChild(style);
@@ -856,10 +961,10 @@ modal.querySelector('.modal-overlay').addEventListener('click', (e) => {
         const minutes = kyivTime.getMinutes();
 
         const reminderTimes = [
-            { hour: 9, minute: 59 },
-            { hour: 11, minute: 59 },
-            { hour: 15, minute: 59 },
-            { hour: 17, minute: 59 }
+            { hour: 9, minute: 58 },
+            { hour: 11, minute: 58 },
+            { hour: 15, minute: 58 },
+            { hour: 17, minute: 58 }
         ];
 
         reminderTimes.forEach(time => {
@@ -1003,5 +1108,5 @@ modal.querySelector('.modal-overlay').addEventListener('click', (e) => {
     updateWidget();
     setInterval(checkDayChange, 60000);
 
-    console.log('CRM Tracker v10 · детализация по категориям + мотивационные уведомления');
+    console.log('CRM Tracker v10');
 })();

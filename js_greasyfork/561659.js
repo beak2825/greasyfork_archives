@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         NeuraVeil Styles (Library)
 // @namespace    https://github.com/DREwX-code/neuraveil
-// @version      1.0.0
+// @version      1.0.1
 // @description  Styles CSS for NeuraVeil userscript
 // @author       Dℝ∃wX
 // @grant        none
@@ -811,6 +811,7 @@ window.NEURAVEIL_CSS = `
                 .nv-messages {
                     flex: 1;
                     overflow-y: auto;
+                    overflow-x: hidden;
                     padding: 16px;
                     display: flex;
                     flex-direction: column;
@@ -829,6 +830,9 @@ window.NEURAVEIL_CSS = `
                     word-break: break-word;
                     white-space: pre-wrap;
                     animation: slideIn 0.3s ease;
+                }
+                .nv-message-content {
+                    max-width: 100%;
                 }
                 @keyframes slideIn {
                     from { opacity: 0; transform: translateY(10px); }
@@ -909,12 +913,178 @@ window.NEURAVEIL_CSS = `
                 .nv-md-list li {
                     margin: 4px 0;
                 }
+                .nv-md-table-wrap {
+                    width: 100%;
+                    overflow: hidden;
+                    border: 1px solid rgba(255, 255, 255, 0.35);
+                    border-radius: 12px;
+                    background: rgba(12, 26, 46, 0.72);
+                    margin: 0 0 8px;
+                }
+                .nv-md-table-bar {
+                    display: flex;
+                    align-items: center;
+                    justify-content: flex-start;
+                    padding: 6px 10px;
+                    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+                    background: rgba(12, 26, 46, 0.72);
+                }
+                .nv-md-table-title {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 6px;
+                    font-size: 11px;
+                    letter-spacing: 0.04em;
+                    text-transform: uppercase;
+                    color: var(--nv-text-muted);
+                }
+                .nv-md-table-action {
+                    width: 24px;
+                    height: 24px;
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    border-radius: 4px;
+                    border: none;
+                    background: transparent;
+                    color: var(--nv-text-muted);
+                    cursor: pointer;
+                    transition: all 0.2s ease;
+                }
+                .nv-md-table-action:hover {
+                    color: #38bdf8;
+                    background: rgba(56, 189, 248, 0.12);
+                }
+                .nv-md-table-action.active {
+                    color: #38bdf8;
+                    background: rgba(56, 189, 248, 0.18);
+                }
+                .nv-md-table-action svg {
+                    width: 14px;
+                    height: 14px;
+                }
+                .nv-md-table-scroll {
+                    overflow-x: hidden;
+                    overflow-y: hidden;
+                }
+                .nv-md-table-wrap.nv-table-scroll-x .nv-md-table-scroll,
+                .nv-md-table-scroll.nv-table-scroll-x {
+                    overflow-x: auto;
+                }
+                .nv-md-table-scroll::-webkit-scrollbar {
+                    height: 8px;
+                }
+                .nv-md-table-scroll::-webkit-scrollbar-thumb {
+                    background: rgba(255, 255, 255, 0.2);
+                    border-radius: 8px;
+                }
+                .nv-md-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin: 0;
+                    font-size: 12px;
+                }
+                .nv-md-table-wrap.nv-table-scroll-x .nv-md-table,
+                .nv-md-table-scroll.nv-table-scroll-x .nv-md-table {
+                    min-width: max-content;
+                }
+                .nv-md-table th,
+                .nv-md-table td {
+                    border: 0.5px solid rgba(255, 255, 255, 0.4);
+                    padding: 6px 8px;
+                    text-align: left;
+                    vertical-align: top;
+                    white-space: normal;
+                    word-break: break-word;
+                }
+                .nv-md-table-wrap.nv-table-scroll-x .nv-md-table th,
+                .nv-md-table-wrap.nv-table-scroll-x .nv-md-table td,
+                .nv-md-table-scroll.nv-table-scroll-x .nv-md-table th,
+                .nv-md-table-scroll.nv-table-scroll-x .nv-md-table td {
+                    white-space: nowrap;
+                }
+                .nv-md-table th {
+                    background: rgba(255, 255, 255, 0.06);
+                    font-weight: 600;
+                }
+                .nv-md-table thead th {
+                    border-bottom: 1.5px solid rgba(255, 255, 255, 0.5);
+                }
+                .nv-table-modal {
+                    position: fixed;
+                    inset: 0;
+                    display: none;
+                    align-items: center;
+                    justify-content: center;
+                    background: rgba(8, 12, 20, 0.7);
+                    z-index: 2147483647;
+                }
+                .nv-table-modal.visible {
+                    display: flex;
+                }
+                .nv-table-modal-content {
+                    width: min(92vw, 980px);
+                    max-height: 85vh;
+                    display: flex;
+                    flex-direction: column;
+                    background: rgba(15, 23, 42, 0.9);
+                    border: 1px solid rgba(255, 255, 255, 0.35);
+                    border-radius: 14px;
+                    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+                    color: var(--nv-text);
+                }
+                .nv-table-modal-header {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding: 10px 12px;
+                    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+                }
+                .nv-table-modal-close {
+                    width: 32px;
+                    height: 32px;
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    border-radius: 8px;
+                    border: 1px solid rgba(255, 255, 255, 0.2);
+                    background: transparent;
+                    color: var(--nv-text-muted);
+                    cursor: pointer;
+                    transition: all 0.2s ease;
+                }
+                .nv-table-modal-close:hover {
+                    color: var(--nv-primary);
+                    border-color: var(--nv-primary);
+                    background: rgba(139, 92, 246, 0.12);
+                }
+                .nv-table-modal-close svg {
+                    width: 16px;
+                    height: 16px;
+                }
+                .nv-table-modal-body {
+                    padding: 12px;
+                    overflow: hidden;
+                }
+                .nv-md-table-scroll-lg {
+                    max-height: 65vh;
+                    overflow: auto;
+                }
                 .nv-md-quote {
                     margin: 0 0 8px;
                     padding: 6px 10px;
                     border-left: 2px solid var(--nv-primary);
                     background: rgba(255, 255, 255, 0.06);
                     border-radius: 8px;
+                }
+                .nv-md-math {
+                    margin: 6px 0;
+                }
+                .nv-md-math .katex-display {
+                    margin: 0;
+                }
+                .katex {
+                    color: var(--nv-text);
                 }
                 .nv-tool-attribution {
                     font-size: 11px;

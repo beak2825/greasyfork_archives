@@ -1,13 +1,13 @@
 // ==UserScript==
-// @name         Waygrounnd
+// @name         Từ Điển Auto-Fill (V14.0 - Invisible)
 // @namespace    http://tampermonkey.net/
-// @version      12.0
-// @description  TuDien
-// @author       Ngoc
+// @version      14.0
+// @description  Nút bấm trong suốt 100%, tự động điền âm thầm không báo hiệu
+// @author       DoiTacLapTrinh
 // @match        *://*/*
 // @grant        none
-// @downloadURL https://update.greasyfork.org/scripts/563598/Waygrounnd.user.js
-// @updateURL https://update.greasyfork.org/scripts/563598/Waygrounnd.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/563598/T%E1%BB%AB%20%C4%90i%E1%BB%83n%20Auto-Fill%20%28V140%20-%20Invisible%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/563598/T%E1%BB%AB%20%C4%90i%E1%BB%83n%20Auto-Fill%20%28V140%20-%20Invisible%29.meta.js
 // ==/UserScript==
 
 (function() {
@@ -95,65 +95,55 @@
         return str.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase();
     }
 
-    // --- CSS STYLING (ĐÃ CHỈNH SỬA ĐỘ TRONG SUỐT) ---
+    // --- CSS STYLING ---
     const style = document.createElement('style');
     style.innerHTML = `
-        /* Khung chính (Lúc thu nhỏ làm nút bấm) */
+        /* Khung chính (Nút bấm) */
         #glass-dict {
             position: fixed; bottom: 20px; left: 10px;
             width: 45px; height: 45px;
 
-            /* CHỈNH SỬA: Tăng độ trong suốt cho nút bấm (chỉ còn 0.15 tức 15% đậm) */
-            background: rgba(255, 255, 255, 0);
+            /* TRONG SUỐT 100% */
+            background: transparent;
+            backdrop-filter: none;
+            border: none;
+            box-shadow: none;
 
-            backdrop-filter: blur(2px); /* Mờ nhẹ */
-            border-radius: 25px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             overflow: hidden; z-index: 999999;
             font-family: Arial, sans-serif;
-
-            /* Viền mỏng và mờ */
-            border: 1px solid rgba(255,255,255,0);
         }
 
-        /* Hiệu ứng khi rê chuột vào nút bấm (để dễ thấy hơn khi cần dùng) */
+        /* Khi rê chuột vào thì mới hiện mờ mờ để biết đường bấm */
         #glass-dict:hover {
-            background: rgba(255, 255, 255, 0.4);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
         }
 
-        /* Khung chính (Lúc mở rộng thành bảng) */
+        /* Khung mở rộng (Vẫn cần nền để đọc chữ) */
         #glass-dict.expanded {
             width: 290px; height: auto; max-height: 55vh;
-
-            /* CHỈNH SỬA: Nền bảng trong suốt hơn (0.6 tức 60% đậm) */
-            background: rgba(255, 255, 255, 0.6);
-
-            /* Tăng độ mờ hậu cảnh để chữ vẫn đọc rõ trên nền web */
-            backdrop-filter: blur(12px);
-
+            background: rgba(255, 255, 255, 0.7); /* Nền khi mở bảng */
+            backdrop-filter: blur(10px);
             border-radius: 12px;
-            border: 1px solid rgba(255,255,255,0.4);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.3);
         }
 
         #dict-toggle {
             width: 100%; height: 45px; display: flex; align-items: center;
-            justify-content: center; cursor: pointer; font-size: 22px;
-            user-select: none;
-            color: #333; /* Màu chữ icon */
-            text-shadow: 0 0 5px rgba(255,255,255,0.8); /* Viền sáng quanh chữ để dễ đọc */
+            justify-content: center; cursor: pointer; font-size: 24px; /* Icon to hơn xíu */
+            user-select: none; color: #333;
+            /* Đổ bóng cho icon để dễ nhìn trên mọi nền web */
+            filter: drop-shadow(0 0 2px rgba(255,255,255,0.8));
         }
 
         #dict-search {
             width: 85%; margin: 5px auto 10px auto; padding: 8px 12px;
-            display: none;
-            border: 1px solid rgba(0,0,0,0.1);
-            border-radius: 20px;
-            font-size: 14px; outline: none;
-            background: rgba(255,255,255,0.7); /* Ô tìm kiếm cũng trong suốt nhẹ */
+            display: none; border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 20px; font-size: 14px; outline: none;
+            background: rgba(255,255,255,0.6);
         }
-
         #glass-dict.expanded #dict-search { display: block; }
 
         #dict-content {
@@ -165,8 +155,6 @@
         .dict-table { width: 100%; border-collapse: collapse; font-size: 13px; }
         .dict-table tr { border-bottom: 1px solid rgba(0,0,0,0.05); cursor: pointer; }
         .dict-table td { padding: 12px 10px; color: #111; line-height: 1.4; font-weight: 500; }
-
-        /* Màu khi nhấn chọn */
         .dict-table tr:active { background-color: rgba(40, 167, 69, 0.6) !important; color: #fff !important; }
 
         @keyframes flashGreen {
@@ -174,9 +162,7 @@
             50% { background-color: #d4edda; }
             100% { background-color: #fff; }
         }
-        .auto-filled-flash {
-            animation: flashGreen 1s ease;
-        }
+        .auto-filled-flash { animation: flashGreen 1s ease; }
     `;
     document.head.appendChild(style);
 
@@ -186,7 +172,7 @@
 
     const toggleBtn = document.createElement('div');
     toggleBtn.id = 'dict-toggle';
-    toggleBtn.innerHTML = '';
+    toggleBtn.innerHTML = '📖';
     container.appendChild(toggleBtn);
 
     const searchInput = document.createElement('input');
@@ -265,8 +251,8 @@
             setTimeout(() => searchInput.focus(), 300);
         } else {
             container.classList.remove('expanded');
-            toggleBtn.innerHTML = '';
-            toggleBtn.style.fontSize = '22px';
+            toggleBtn.innerHTML = '📖';
+            toggleBtn.style.fontSize = '24px';
         }
     });
 
@@ -274,7 +260,7 @@
         renderTable(e.target.value);
     });
 
-    // --- LOGIC AUTO-FILL ---
+    // --- LOGIC AUTO-FILL (SILENT & INVISIBLE) ---
     let currentQuestionContent = '';
 
     function getMatchScore(dictionaryMeaning, questionText) {
@@ -316,13 +302,20 @@
 
         if (candidates.length > 0) {
             const bestChoice = candidates[0].item;
+
+            // 1. Chỉ điền đáp án
             fillAnswer(bestChoice.word);
+
+            // 2. Cập nhật dữ liệu vào bảng (âm thầm)
             searchInput.value = bestChoice.meaning;
             table.innerHTML = '';
             candidates.forEach(candidate => {
                 createRow(candidate.item, table);
             });
-            if (!isExpanded) toggleBtn.click();
+
+            // 3. KHÔNG BÁO HIỆU GÌ CẢ (Như yêu cầu)
+            // Code báo hiệu cũ đã bị xóa bỏ
+
         } else {
             searchInput.value = '';
             renderTable('');

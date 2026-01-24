@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         Finviz Elite Refresh Overhaul
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.1
 // @description  Adds custom refresh buttons to finviz's screener. Handles both populated and empty screener table structures to allow faster refreshing.
 // @author       Game Abuse Studios
+// @license      MIT
 // @match        https://elite.finviz.com/screener.ashx*
-// @license MIT
 // @grant        none
 // @run-at       document-idle
 // @downloadURL https://update.greasyfork.org/scripts/563692/Finviz%20Elite%20Refresh%20Overhaul.user.js
@@ -75,10 +75,16 @@
     }
 
     function rebuildButtons(container) {
+        // UPDATED: Added 2s and 3s options here
         const allButtons = [
-            { text: '0.5s', value: '0.5' }, { text: '1s', value: '1' },
-            { text: '5s', value: '5' }, { text: '10s', value: '10' },
-            { text: '1min', value: '60' }, { text: 'off', value: null }
+            { text: '0.5s', value: '0.5' },
+            { text: '1s', value: '1' },
+            { text: '2s', value: '2' },
+            { text: '3s', value: '3' },
+            { text: '5s', value: '5' },
+            { text: '10s', value: '10' },
+            { text: '1min', value: '60' },
+            { text: 'off', value: null }
         ];
 
         let buttonHolder = container.querySelector('span[style*="white-space: nowrap"]');
@@ -127,9 +133,12 @@
             }
         });
 
+        // UPDATED: Added logic to trigger fast refresh for 2s and 3s
         const refreshValue = currentUrl.searchParams.get('ar');
         if (refreshValue === '0.5') { activateFastRefresh(500); }
         else if (refreshValue === '1') { activateFastRefresh(1000); }
+        else if (refreshValue === '2') { activateFastRefresh(2000); }
+        else if (refreshValue === '3') { activateFastRefresh(3000); }
         else if (refreshValue === '5') { activateFastRefresh(5000); }
         else { deactivateFastRefresh(); }
     }
@@ -137,6 +146,8 @@
     function checkAndRebuild() {
         const container = document.querySelector('#screener-fullview-links, .fullview-links');
 
+        // Note: This check ensures we only rebuild if we haven't already inserted our buttons.
+        // It checks for the 0.5s button to know if it's "our" bar.
         if (container && !container.querySelector('a[href*="&ar=0.5"]')) {
             rebuildButtons(container);
         }

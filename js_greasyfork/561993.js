@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         Sello leveranstid presets
 // @namespace    https://greasyfork.org/en/users/1513603-hobbypryl
-// @version      1.1
+// @version      1.2
 // @description  Lägger till leveranstid presets i sello ändra produkt rutan
 // @author       HobbyPryl
-// @match        https://ui.sello.io/inventory/list?*
+// @match        https://ui.sello.io/inventory*
 // @grant        none
 // @license      MIT
 // @downloadURL https://update.greasyfork.org/scripts/561993/Sello%20leveranstid%20presets.user.js

@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name         Torn Mugger + Saved Hits + Quick Mug Calc (🔪) — v2.6 (Watchlist Bridge)
+// @name         Torn Mugger + Saved Hits + Quick Mug Calc (🔪) — v3.0 
 // @namespace    https://torn.tools/
-// @version      2.6
-// @description  Reduced-API mugger. v2.6 sends data to the Watchlist v8.1 Bridge correctly.
-// @author       dirt-fairy, ChatGPT and Gemini
+// @version      3.0
+// @description  Reduced-API mugger. v3.0 
+// @author       dirt-fairy
 // @match        https://www.torn.com/page.php?sid=UserList*
 // @match        https://www.torn.com/joblist.php*
 // @match        https://www.torn.com/*
@@ -12,8 +12,8 @@
 // @connect      www.torn.com
 // @grant        GM_xmlhttpRequest
 // @grant        GM_addStyle
-// @downloadURL https://update.greasyfork.org/scripts/563357/Torn%20Mugger%20%2B%20Saved%20Hits%20%2B%20Quick%20Mug%20Calc%20%28%F0%9F%94%AA%29%20%E2%80%94%20v26%20%28Watchlist%20Bridge%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/563357/Torn%20Mugger%20%2B%20Saved%20Hits%20%2B%20Quick%20Mug%20Calc%20%28%F0%9F%94%AA%29%20%E2%80%94%20v26%20%28Watchlist%20Bridge%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/563357/Torn%20Mugger%20%2B%20Saved%20Hits%20%2B%20Quick%20Mug%20Calc%20%28%F0%9F%94%AA%29%20%E2%80%94%20v30.user.js
+// @updateURL https://update.greasyfork.org/scripts/563357/Torn%20Mugger%20%2B%20Saved%20Hits%20%2B%20Quick%20Mug%20Calc%20%28%F0%9F%94%AA%29%20%E2%80%94%20v30.meta.js
 // ==/UserScript==
 (function () {
   'use strict';
@@ -123,6 +123,7 @@
   .hitMain .val{font-weight:700}
   .hitMain .em{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;font-size:16px;transform:translateY(-2px);margin-right:4px}
   .hitMeta{opacity:.8}
+  .hitName{font-weight:bold; font-size: 13px; color: #ddd; margin-top: 2px;}
   .hitActions{display:flex;gap:6px;flex-wrap:wrap}
   .hitActions .btn{padding:2px 8px;border-radius:7px;border:1px solid #2e2e2e;background:#1d1d1d;color:#ddd;cursor:pointer}
   #hitsCfg{display:flex;gap:6px;align-items:center;margin-top:6px;opacity:.9}
@@ -329,8 +330,8 @@
     return out.emoji || '';
   }
 
-  // Modified: Accepts 'hitsMap' to update in-memory (no save)
-  function addHit({xid, mugValue, lastAction, status, emoji, title, items}, hitsMap){
+  // Modified: 'forceUpdate' param to overwrite drops in value
+  function addHit({xid, name, mugValue, lastAction, status, emoji, title, items}, hitsMap, forceUpdate = false){
     if (!xid) return false;
     const now = Date.now();
     const profileUrl = `/profiles.php?XID=${xid}`;
@@ -338,7 +339,14 @@
     const existing = hitsMap[xid];
 
     if (existing){
-      existing.mugValue = Math.max(Number(existing.mugValue||0), Number(mugValue||0));
+      existing.name = name || existing.name || '';
+      // CHANGE: if forceUpdate is true, take the new value even if lower. Otherwise keep max.
+      if (forceUpdate) {
+          existing.mugValue = Number(mugValue||0);
+      } else {
+          existing.mugValue = Math.max(Number(existing.mugValue||0), Number(mugValue||0));
+      }
+
       existing.lastAction= lastAction || existing.lastAction || '';
       existing.status = status || existing.status || '';
       existing.emoji  = emoji || existing.emoji || '';
@@ -350,7 +358,9 @@
       existing.bazaarUrl = existing.bazaarUrl || bazaarUrl;
     } else {
       hitsMap[xid] = {
-        xid: String(xid), profileUrl, bazaarUrl,
+        xid: String(xid),
+        name: name || '', // Save Name
+        profileUrl, bazaarUrl,
         mugValue: Number(mugValue||0), lastAction: lastAction || '', status: status || '',
         emoji: emoji || '', title: title || '',
         items: items || [],
@@ -361,10 +371,10 @@
     return true;
   }
 
-  function getHitsSorted(sort='value'){
+  function getHitsSorted(sort='recent'){
     const list = Object.values(loadHits());
-    if (sort==='recent') list.sort((a,b)=> (b.updatedAt||0)-(a.updatedAt||0));
-    else list.sort((a,b)=> Number(b.mugValue||0) - Number(a.mugValue||0));
+    if (sort==='value') list.sort((a,b)=> Number(b.mugValue||0) - Number(a.mugValue||0));
+    else list.sort((a,b)=> (b.updatedAt||0)-(a.updatedAt||0)); // Default Recent
     return list;
   }
 
@@ -701,6 +711,7 @@
       }
       try{
         const data = await fetchUser(xid, apiKey);
+        const name = data.name; // Capture Name from API
         const companyType = data?.job?.company_type;
         const companyId = data?.job?.company_id;
 
@@ -731,7 +742,7 @@
             .slice(0, 50);
 
         // Pass 'hitsDb' to addHit (in-memory update)
-        if (addHit({xid, mugValue, lastAction, status, emoji, title, items: topItems}, hitsDb)) {
+        if (addHit({xid, name, mugValue, lastAction, status, emoji, title, items: topItems}, hitsDb)) {
             hitsAddedThisRun++;
             dbDirty = true;
         }
@@ -921,12 +932,11 @@
           <div id="hitsControls">
             <label>Sort
               <select id="hitsSort">
-                <option value="value">Value (desc)</option>
                 <option value="recent">Most recent</option>
+                <option value="value">Value (desc)</option>
               </select>
             </label>
-            <button id="hitsExport" class="btn small" type="button">Export CSV</button>
-            <button id="hitsClearUnpinned" class="btn small" type="button" title="Remove all unpinned hits">Clear Unpinned</button>
+            <button id="hitsUpdateAll" class="btn small" type="button">Update All</button> <button id="hitsClearUnpinned" class="btn small" type="button" title="Remove all unpinned hits">Clear Unpinned</button>
             <button id="hitsClearAll" class="btn small" type="button">Clear All</button>
           </div>
 
@@ -996,20 +1006,46 @@
       if (act==='profile'){ window.open(r.profileUrl, '_blank'); }
       else if (act==='bazaar'){ window.open(r.bazaarUrl, '_blank'); }
       else if (act==='watch'){
-        // --- BRIDGE SENDER (UPDATED) ---
         let list = [];
         try { list = JSON.parse(localStorage.getItem(LS.bridgeKey) || '[]'); } catch(e){}
         if (!Array.isArray(list)) list = [];
-
-        // Check against queue, not Watchlist (we can't see Watchlist)
         if (!list.some(item => item.id == xid)) {
-            list.push({ id: xid, name: "Imported User" });
+            list.push({ id: xid, name: r.name || "Imported User" });
             localStorage.setItem(LS.bridgeKey, JSON.stringify(list));
             alert(`User ${xid} sent to Watchlist Queue.`);
         } else {
             alert(`User ${xid} is already queued for the Watchlist.`);
         }
-        // -------------------------------
+      }
+      else if (act==='update'){
+        btn.textContent = 'Updating...';
+        btn.disabled = true;
+        try {
+            const apiKey = (localStorage.getItem(LS.apiKey) || '').trim();
+            if (!apiKey) throw new Error("No API key");
+            const market = await getMarketMap(apiKey);
+            const data = await fetchUser(xid, apiKey);
+            const tolerance = parseFloat($('#mugTol').value || DEF.tolerance);
+            const blockedRaw = $('#mugBlockCat')?.value || '';
+            const blockedTypes = blockedRaw.split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
+            const { total: mugValue, hadBazaar, items } = bazaarTotal(data, market, tolerance, blockedTypes);
+            const status = data.status?.description || data.status?.state || '';
+            const lastAction = data.last_action?.relative || '';
+            const isMugable = hadBazaar;
+            const minMug = parseCurrencyInput($('#mugMin').value || DEF.minMug);
+            const {emoji, title} = determineEmoji(status, lastAction, data.revivable, isMugable, mugValue, minMug);
+            const topItems = items.sort((a,b) => (b.price * b.qty) - (a.price * a.qty)).slice(0, 50);
+            const singleH = loadHits();
+            // CHANGE: Added forceUpdate = true (last argument)
+            addHit({xid, name: data.name, mugValue, lastAction, status, emoji, title, items: topItems}, singleH, true);
+            saveHits(singleH);
+            renderHitsPanel();
+        } catch(err) {
+            console.error(err);
+            alert('Update failed: ' + err.message);
+            btn.textContent = 'Update';
+            btn.disabled = false;
+        }
       }
       else if (act==='calc'){ openCalcWithAmount(Number(r.mugValue||0)); }
       else if (act==='items'){
@@ -1023,23 +1059,68 @@
       else if (act==='pin'){ r.pinned = !r.pinned; saveHits(h); renderHitsPanel(); }
       else if (act==='remove'){ delete h[xid]; saveHits(h); renderHitsPanel(); }
     });
-    $('#hitsExport').addEventListener('click', ()=>{
-      const rows = getHitsSorted('value');
-      const csv = ['xid,profileUrl,bazaarUrl,mugValue,lastAction,status,emoji,title,addedAt,updatedAt,seenCount,pinned,note'].concat(
-        rows.map(r=>[
-          r.xid, `"${r.profileUrl}"`, `"${r.bazaarUrl}"`, r.mugValue,
-          `"${(r.lastAction||'').replace(/"/g,'""')}"`,
-          `"${(r.status||'').replace(/"/g,'""')}"`,
-          `"${(r.emoji||'').replace(/"/g,'""')}"`,
-          `"${(r.title||'').replace(/"/g,'""')}"`,
-          r.addedAt, r.updatedAt, r.seenCount||0, r.pinned?1:0, `"${(r.note||'').replace(/"/g,'""')}"`
-        ].join(','))
-      ).join('\n');
-      const blob = new Blob([csv], {type:'text/csv'});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a'); a.href=url; a.download='mug_hits.csv'; document.body.appendChild(a); a.click(); a.remove();
-      setTimeout(()=>URL.revokeObjectURL(url), 1000);
+
+    // --- UPDATE ALL LOGIC ---
+    $('#hitsUpdateAll').addEventListener('click', async () => {
+        const btn = $('#hitsUpdateAll');
+        if (btn.disabled) return;
+        const confirmUpdate = confirm("Are you sure you want to update ALL saved hits? This may take time.");
+        if (!confirmUpdate) return;
+
+        btn.disabled = true;
+        const hits = Object.values(loadHits());
+        const total = hits.length;
+        let processed = 0;
+
+        const apiKey = (localStorage.getItem(LS.apiKey) || '').trim();
+        if (!apiKey) { alert("No API Key"); btn.disabled = false; return; }
+
+        const market = await getMarketMap(apiKey);
+        const tolerance = parseFloat($('#mugTol').value || DEF.tolerance);
+        const blockedRaw = $('#mugBlockCat')?.value || '';
+        const blockedTypes = blockedRaw.split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
+        const minMug = parseCurrencyInput($('#mugMin').value || DEF.minMug);
+
+        const hitsDb = loadHits();
+        for (const hit of hits) {
+            processed++;
+            btn.textContent = `Updating ${processed}/${total}...`;
+
+            try {
+                await new Promise(r => setTimeout(r, 300));
+
+                const data = await fetchUser(hit.xid, apiKey);
+                const { total: mugValue, hadBazaar, items } = bazaarTotal(data, market, tolerance, blockedTypes);
+                const status = data.status?.description || data.status?.state || '';
+                const lastAction = data.last_action?.relative || '';
+                const isMugable = hadBazaar;
+                const {emoji, title} = determineEmoji(status, lastAction, data.revivable, isMugable, mugValue, minMug);
+                const topItems = items.sort((a,b) => (b.price * b.qty) - (a.price * a.qty)).slice(0, 50);
+
+                // CHANGE: Added forceUpdate = true
+                addHit({
+                    xid: hit.xid,
+                    name: data.name,
+                    mugValue,
+                    lastAction,
+                    status,
+                    emoji,
+                    title,
+                    items: topItems
+                }, hitsDb, true);
+
+            } catch(e) {
+                console.warn(`Failed to update ${hit.xid}`, e);
+            }
+        }
+
+        saveHits(hitsDb);
+        renderHitsPanel();
+        btn.textContent = "Update All";
+        btn.disabled = false;
+        alert(`Finished updating ${total} hits.`);
     });
+
     $('#hitsClearUnpinned').addEventListener('click', ()=>{ const h = loadHits(); for (const k of Object.keys(h)){ if (!h[k]?.pinned) delete h[k]; } saveHits(h); renderHitsPanel(); });
     $('#hitsClearAll').addEventListener('click', ()=>{ if (!confirm('Clear ALL hits?')) return; saveHits({}); renderHitsPanel(); });
     $('#hitsSaveCfg').addEventListener('click', ()=>{
@@ -1078,7 +1159,7 @@
     $('#hitsTTL').value = String(ttl);
     $('#hitsMax').value = String(max);
 
-    const sort = ($('#hitsSort')?.value)||'value';
+    const sort = ($('#hitsSort')?.value)||'recent'; // Default to Recent
     const list = getHitsSorted(sort);
     const cont = $('#hitsList'); cont.innerHTML = '';
 
@@ -1087,14 +1168,17 @@
       const row = document.createElement('div'); row.className = 'hitRow'; row.dataset.xid = r.xid;
       const main = document.createElement('div'); main.className = 'hitMain';
       main.innerHTML = `
-        <div><span class="em">${em}</span><span class="val">$${Number(r.mugValue||0).toLocaleString()}</span> • XID ${r.xid}</div>
+        <div style="display:flex;align-items:center;justify-content:space-between">
+           <div><span class="em">${em}</span><span class="val">$${Number(r.mugValue||0).toLocaleString()}</span></div>
+        </div>
+        <div class="hitName">${r.name || 'Unknown'} [${r.xid}]</div>
         <div class="hitMeta">${r.lastAction || '—'}${r.title ? ` • ${r.title}` : ''} • ${timeAgo(r.updatedAt)}${r.pinned ? ' • 📌' : ''}</div>
       `;
       const actions = document.createElement('div'); actions.className = 'hitActions';
       actions.innerHTML = `
         <button class="btn" data-act="profile">Profile</button>
         <button class="btn" data-act="bazaar">Bazaar</button>
-        <button class="btn" data-act="watch">Watch</button>
+        <button class="btn" data-act="update">Update</button> <button class="btn" data-act="watch">Watch</button>
         <button class="btn" data-act="calc">Calc</button>
         <button class="btn" data-act="items">Items</button>
         <button class="btn" data-act="pin">${r.pinned ? 'Unpin' : 'Pin'}</button>

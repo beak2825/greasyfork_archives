@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         Torn Mug & Profit Analyzer
 // @namespace    DFs Torn Mug & Profit Analyzer
-// @version      5.8
+// @version      5.9
 // @description  Mug profit analysis with v2 Market API and Weav3r Bazaar scraping. Optimized for Greasemonkey/Tampermonkey.
 // @author       Dirt-Fairy
-// @match        https://www.torn.com/page.php?sid=log
+// @match        https://www.torn.com/page.php?sid=log*
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_xmlhttpRequest

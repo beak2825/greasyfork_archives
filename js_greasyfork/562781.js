@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DemonicScans Unified Automator
 // @namespace    https://github.com/wverri/autods
-// @version      0.12.2-alpha
+// @version      0.12.5-alpha
 // @description  Consolidated automation suite for DemonicScans: wave battles, PvP, farming, UI enhancements, and image blocking.
 // @author       Willian Verri
 // @match        https://demonicscans.org/*
@@ -332,6 +332,13 @@ var version = GM_info.script.version;
                 { label: 'Black Merchant', icon: '🛒', url: 'https://demonicscans.org/black_merchant.php' },
                 { label: 'Stamina Farm', icon: '⛽', url: 'https://demonicscans.org/manga/One-Piece' }
             ]
+        },
+        verification: {
+            enabled: true,              // Enable verification page detection
+            autoSolve: false,           // Auto-solve simple math (future feature)
+            notifyUser: true,           // Show notification when verification detected
+            focusInput: true,           // Auto-focus answer input field
+            pauseAutomation: true       // Pause automation loops when detected
         }
     });
 
@@ -370,6 +377,122 @@ var version = GM_info.script.version;
                 console.error('⚠️ reloadPageSync: Reload falhou após 10 segundos');
             }, 10000);
         });
+    }
+
+    // ==================== VERIFICATION PAGE DETECTION ====================
+    // Detects anti-bot verification pages that can appear on ANY page load
+    // Shows simple math questions like "5+5=?" that require user input
+    
+    /**
+     * Global flag to track if verification page is currently active
+     * Modules can check this to pause automation
+     */
+    let isVerificationPageActive = false;
+    
+    /**
+     * Check if current page is a verification/anti-bot page
+     * Looks for form elements with anti_qid and anti_answer fields
+     * 
+     * @returns {boolean} True if verification page detected
+     */
+    function isVerificationPage() {
+        // Check for anti-bot form fields
+        const antiAnswer = document.querySelector('input[name="anti_answer"]');
+        const antiQid = document.querySelector('input[name="anti_qid"]');
+        
+        // Also check page title and content structure
+        const hasVerificationTitle = document.title.toLowerCase().includes('verification');
+        const hasQuickVerificationText = document.body?.textContent?.includes('Quick verification');
+        
+        return !!(antiAnswer || antiQid || (hasVerificationTitle && hasQuickVerificationText));
+    }
+    
+    /**
+     * Extract verification question from page
+     * @returns {Object|null} { qid: string, question: string } or null if not found
+     */
+    function extractVerificationQuestion() {
+        const antiQid = document.querySelector('input[name="anti_qid"]');
+        const questionEl = document.querySelector('.q') || document.querySelector('.card .q');
+        
+        if (!antiQid && !questionEl) return null;
+        
+        return {
+            qid: antiQid?.value || null,
+            question: questionEl?.textContent?.trim() || null
+        };
+    }
+    
+    /**
+     * Check if HTML string contains verification page content
+     * Used by HTTP service and soft refresh to detect verification in fetched content
+     * 
+     * @param {string} html - HTML string to check
+     * @returns {boolean} True if verification page detected
+     */
+    function htmlContainsVerification(html) {
+        if (!html || typeof html !== 'string') return false;
+        
+        return html.includes('name="anti_answer"') || 
+               html.includes('name="anti_qid"') ||
+               (html.includes('Quick verification') && html.includes('Your answer'));
+    }
+    
+    /**
+     * Handle verification page detection
+     * Shows notification and optionally focuses input
+     * 
+     * @param {Object} context - Script context (optional, uses console if not available)
+     * @param {Object} options - Options { source: 'bootstrap'|'http'|'softRefresh' }
+     */
+    function handleVerificationDetected(context, options = {}) {
+        isVerificationPageActive = true;
+        const source = options.source || 'unknown';
+        
+        const message = `🔒 Verification page detected (${source}) - Please solve the captcha manually`;
+        
+        // Log to console and logger if available
+        console.warn('[AutoDS] ' + message);
+        if (context?.logger) {
+            context.logger.warn(message);
+        }
+        
+        // Show notification if available
+        if (context?.notifications) {
+            context.notifications.warn('🔒 Verification Required', 10000);
+        }
+        
+        // Emit event for modules to react
+        if (context?.events) {
+            const questionData = extractVerificationQuestion();
+            context.events.emit('autods:verification:required', {
+                source,
+                qid: questionData?.qid,
+                question: questionData?.question,
+                timestamp: Date.now()
+            });
+        }
+        
+        // Auto-focus input field
+        const answerInput = document.querySelector('input[name="anti_answer"]');
+        if (answerInput) {
+            answerInput.focus();
+        }
+    }
+    
+    /**
+     * Clear verification state (called when verification is solved)
+     */
+    function clearVerificationState() {
+        isVerificationPageActive = false;
+    }
+    
+    /**
+     * Check if automation should be paused due to verification
+     * @returns {boolean} True if verification is active and automation should pause
+     */
+    function shouldPauseForVerification() {
+        return isVerificationPageActive;
     }
 
     // DEPRECATED: Legacy wrappers for backward compatibility
@@ -1427,7 +1550,7 @@ var version = GM_info.script.version;
      * @param {string} instanceId - Instance ID (for dungeons, optional)
      * @param {boolean} autoNavigate - Whether to navigate after successful join (default: true)
      */
-    function addDirectJoinButton(originalButton, monsterId, buttonLabel, context, instanceId = null, autoNavigate = false) {
+    function addDirectJoinButton(originalButton, monsterId, buttonLabel, context, instanceId = null, autoNavigate = true) {
         // Check if button already exists
         if (originalButton.nextElementSibling?.classList.contains('autods-direct-join')) {
             // context.logger.debug(`[DirectJoin] Button already exists for monster ${monsterId}`);
@@ -1553,9 +1676,8 @@ var version = GM_info.script.version;
                         }
                     } else {
                         // FALLBACK: Se API falhou, usar método tradicional
-                        context.logger.warn(`[DirectJoin] ⚠️ API join falhou: ${result.message}. Usando fallback (click).`);
-                        context.notifications.warn('API join failed, using traditional method...');
-                        originalButton.click();
+                        context.logger.warn(`[DirectJoin] ⚠️ API join falhou: ${result.message}.`);
+                        context.notifications.warn('Join failed.');
                     }
                 } else {
                     // Regular wave battle - using direct fetch to bypass Cloudflare
@@ -1607,9 +1729,8 @@ var version = GM_info.script.version;
                         }
                     } else {
                         // FALLBACK: Se não detectou sucesso, usar método tradicional
-                        context.logger.warn(`[DirectJoin] ⚠️ Join response não indicou sucesso: ${text}. Usando fallback (click).`);
-                        context.notifications.warn('Join response unclear, using traditional method...');
-                        originalButton.click();
+                        context.logger.warn(`[DirectJoin] ⚠️ Join response não indicou sucesso: ${text}.`);
+                        context.notifications.warn('Join failed.');
                     }
                 }
             } catch (error) {
@@ -2323,7 +2444,9 @@ var version = GM_info.script.version;
             FULL_STAMINA_POTION: 35,
             LARGE_STAMINA_POTION: 251,
             EXP_POTION: 97,
-            HEAL_POTION: 50
+            HEAL_POTION: 108,
+            MANA_POTION_S: 162,
+            MANA_POTION_L: 163
         };
 
         const healState = {
@@ -2335,6 +2458,53 @@ var version = GM_info.script.version;
         
         async function fetchInventoryData() {
             try {
+                const inventory = {};
+                
+                // Method 1: Try to read from battleDrawer (available on any page, most reliable)
+                const battleDrawer = document.querySelector('#battleDrawer');
+                if (battleDrawer) {
+                    const potionCards = battleDrawer.querySelectorAll('.potion-card');
+                    
+                    potionCards.forEach(card => {
+                        const invId = card.getAttribute('data-inv-id');
+                        const itemId = parseInt(card.getAttribute('data-item-id'), 10);
+                        const qtyElement = card.querySelector('.potion-qty-left');
+                        const quantity = qtyElement ? parseInt(qtyElement.textContent, 10) : 0;
+                        
+                        if (invId && quantity > 0) {
+                            if (itemId === ITEM_IDS.SMALL_STAMINA_POTION) {
+                                inventory.small = { invId, quantity, itemId };
+                                logger.debug(`Found SSP: ${quantity}x (inv_id: ${invId})`);
+                            } else if (itemId === ITEM_IDS.FULL_STAMINA_POTION) {
+                                inventory.full = { invId, quantity, itemId };
+                                logger.debug(`Found FSP: ${quantity}x (inv_id: ${invId})`);
+                            } else if (itemId === ITEM_IDS.LARGE_STAMINA_POTION) {
+                                inventory.large = { invId, quantity, itemId };
+                                logger.debug(`Found LSP: ${quantity}x (inv_id: ${invId})`);
+                            } else if (itemId === ITEM_IDS.EXP_POTION) {
+                                inventory.exp = { invId, quantity, itemId };
+                                logger.debug(`Found EXP Potion: ${quantity}x (inv_id: ${invId})`);
+                            } else if (itemId === ITEM_IDS.HEAL_POTION) {
+                                inventory.heal = { invId, quantity, itemId };
+                                logger.debug(`Found Heal Potion: ${quantity}x (inv_id: ${invId})`);
+                            } else if (itemId === ITEM_IDS.MANA_POTION_S) {
+                                inventory.manaS = { invId, quantity, itemId };
+                                logger.debug(`Found Mana Potion S: ${quantity}x (inv_id: ${invId})`);
+                            } else if (itemId === ITEM_IDS.MANA_POTION_L) {
+                                inventory.manaL = { invId, quantity, itemId };
+                                logger.debug(`Found Mana Potion L: ${quantity}x (inv_id: ${invId})`);
+                            }
+                        }
+                    });
+                    
+                    if (Object.keys(inventory).length > 0) {
+                        logger.debug('✅ Inventory loaded from battleDrawer');
+                        return inventory;
+                    }
+                }
+                
+                // Method 2: Fallback to fetching inventory.php
+                logger.debug('battleDrawer not found, fetching from inventory.php...');
                 const response = await fetch('https://demonicscans.org/inventory.php', {
                     credentials: 'include'
                 });
@@ -2342,7 +2512,7 @@ var version = GM_info.script.version;
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(html, 'text/html');
                 
-                const inventory = {};
+                // Parse buttons with useItem onclick (normal items)
                 const buttons = doc.querySelectorAll('button[onclick*="useItem"]');
                 
                 buttons.forEach(btn => {
@@ -2464,7 +2634,7 @@ var version = GM_info.script.version;
         return {
             fetchInventoryData,
             
-            async useLargeStaminaPotion() {
+            async useLargeStaminaPotion(ignoreReserve = false) {
                 const inv = await fetchInventoryData();
                 const lsp = inv.large;
 
@@ -2473,25 +2643,38 @@ var version = GM_info.script.version;
                     return false;
                 }
 
+                // Check reserve unless ignoreReserve is true
+                if (!ignoreReserve) {
+                    const minLsp = Math.max(0, config?.get()?.stamina?.minLargePotionReserve ?? 0);
+                    if (lsp.quantity <= minLsp) {
+                        logger.warn(`💊 LSP reservado (LSP: ${lsp.quantity}x, mínimo: ${minLsp}x). Não usando poção.`);
+                        return false;
+                    }
+                }
+
                 logger.info(`💊 LSP disponível: ${lsp.quantity}x (inv_id: ${lsp.invId})`);
                 return useItem(lsp.invId, 'Large Stamina Potion');
             },
 
-            async useFullStaminaPotion() {
+            async useFullStaminaPotion(ignoreReserve = false) {
                 const inv = await fetchInventoryData();
                 const preferLarge = config?.get()?.stamina?.useLargePotionBeforeFull ?? true;
-                const minLsp = Math.max(0, config?.get()?.stamina?.minLargePotionReserve ?? 0);
-                const minFsp = Math.max(0, config?.get()?.stamina?.minFullPotionReserve ?? 0);
+                const minLsp = ignoreReserve ? 0 : Math.max(0, config?.get()?.stamina?.minLargePotionReserve ?? 0);
+                const minFsp = ignoreReserve ? 0 : Math.max(0, config?.get()?.stamina?.minFullPotionReserve ?? 0);
 
                 if (preferLarge) {
                     const lsp = inv.large;
                     if (lsp?.invId && lsp.quantity > minLsp) {
-                        logger.info(`💊 Preferindo LSP antes do FSP (LSP: ${lsp.quantity}x, mínimo: ${minLsp}x)`);
+                        if (ignoreReserve) {
+                            logger.info(`💊 LSP disponível (ignorando reserva): ${lsp.quantity}x (inv_id: ${lsp.invId})`);
+                        } else {
+                            logger.info(`💊 Preferindo LSP antes do FSP (LSP: ${lsp.quantity}x, mínimo: ${minLsp}x)`);
+                        }
                         return useItem(lsp.invId, 'Large Stamina Potion');
                     }
-                    if (lsp?.invId && lsp.quantity <= minLsp) {
+                    if (lsp?.invId && lsp.quantity <= minLsp && !ignoreReserve) {
                         logger.info(`💊 LSP reservado (LSP: ${lsp.quantity}x, mínimo: ${minLsp}x). Tentando FSP...`);
-                    } else {
+                    } else if (!lsp?.invId || lsp.quantity === 0) {
                         logger.info('💊 LSP não disponível, tentando FSP...');
                     }
                 }
@@ -2503,12 +2686,12 @@ var version = GM_info.script.version;
                     return false;
                 }
 
-                if (fsp.quantity <= minFsp) {
+                if (fsp.quantity <= minFsp && !ignoreReserve) {
                     logger.warn(`💊 FSP reservado (FSP: ${fsp.quantity}x, mínimo: ${minFsp}x). Não usando poção.`);
                     return false;
                 }
                 
-                logger.info(`💊 FSP disponível: ${fsp.quantity}x (inv_id: ${fsp.invId})`);
+                logger.info(`💊 FSP disponível${ignoreReserve ? ' (ignorando reserva)' : ''}: ${fsp.quantity}x (inv_id: ${fsp.invId})`);
                 return useItem(fsp.invId, 'Full Stamina Potion');
             },
             
@@ -2553,6 +2736,40 @@ var version = GM_info.script.version;
                 
                 logger.info(`💊 Heal Potion disponível: ${heal.quantity}x`);
                 return useItem(heal.invId, 'Heal Potion');
+            },
+            
+            async useManaPotionS(quantity = 1) {
+                const inv = await fetchInventoryData();
+                const mana = inv.manaS;
+                
+                if (!mana || !mana.invId || !mana.quantity || mana.quantity < quantity) {
+                    logger.warn(`🔷 Sem Mana Potion S disponível (precisa: ${quantity}, tem: ${mana?.quantity || 0})`);
+                    return false;
+                }
+                
+                logger.info(`🔷 Mana Potion S disponível: ${mana.quantity}x - usando ${quantity}x`);
+                const results = await Promise.all(
+                    Array.from({ length: quantity }, () => useItem(mana.invId, 'Mana Potion S'))
+                );
+                
+                return results.every(r => r);
+            },
+            
+            async useManaPotionL(quantity = 1) {
+                const inv = await fetchInventoryData();
+                const mana = inv.manaL;
+                
+                if (!mana || !mana.invId || !mana.quantity || mana.quantity < quantity) {
+                    logger.warn(`🔷 Sem Mana Potion L disponível (precisa: ${quantity}, tem: ${mana?.quantity || 0})`);
+                    return false;
+                }
+                
+                logger.info(`🔷 Mana Potion L disponível: ${mana.quantity}x - usando ${quantity}x`);
+                const results = await Promise.all(
+                    Array.from({ length: quantity }, () => useItem(mana.invId, 'Mana Potion L'))
+                );
+                
+                return results.every(r => r);
             },
 
             useHealPotionDirect
@@ -3028,6 +3245,19 @@ var version = GM_info.script.version;
                     onload: (response) => {
                         const text = response.responseText || '';
                         
+                        // Check for verification page in response
+                        if (htmlContainsVerification(text)) {
+                            logger.warn('[HTTP:GM] ⚠️ Verification page returned instead of expected content');
+                            resolve({
+                                success: false,
+                                verificationRequired: true,
+                                message: 'Verification page detected - solve captcha and retry',
+                                raw: text,
+                                status: response.status
+                            });
+                            return;
+                        }
+                        
                         // Detect Cloudflare/403/500 errors
                         const isCloudflareBlock = text.includes('Cloudflare') || text.includes('cf-') || text.includes('Just a moment');
                         const is403Forbidden = response.status === 403;
@@ -3165,6 +3395,18 @@ var version = GM_info.script.version;
                 }
                 
                 const text = await response.text();
+                
+                // Check for verification page in response
+                if (htmlContainsVerification(text)) {
+                    logger.warn('[HTTP] ⚠️ Verification page returned instead of expected content');
+                    return {
+                        success: false,
+                        verificationRequired: true,
+                        message: 'Verification page detected - solve captcha and retry',
+                        raw: text,
+                        status: response.status
+                    };
+                }
                 
                 if (parseJson) {
                     try {
@@ -5398,6 +5640,18 @@ var version = GM_info.script.version;
                 
                 const html = await response.text();
                 
+                // [STEP B.1] Check for verification page in fetched content
+                if (htmlContainsVerification(html)) {
+                    logger.warn('[SoftRefresh] ⚠️ Verification page detected in fetched content');
+                    events.emit('autods:verification:required', {
+                        source: 'softRefresh',
+                        timestamp: Date.now()
+                    });
+                    // Don't replace DOM with verification page - keep current content
+                    container.style.visibility = 'visible';
+                    return false;
+                }
+                
                 // [STEP C] Parse HTML and extract new container content
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(html, 'text/html');
@@ -5431,6 +5685,16 @@ var version = GM_info.script.version;
                 
                 // [STEP F] Show container again
                 container.style.visibility = 'visible';
+                
+                // [STEP G] Apply wave UI enhancements (filters, sorting, etc.)
+                try {
+                    const waveUiModule = context.moduleRegistry?.getModule('waveUiEnhancements');
+                    if (waveUiModule && waveUiModule.initMonsterFilter) {
+                        waveUiModule.initMonsterSorting(context);
+                    }
+                } catch (err) {
+                    logger.debug('[SoftRefresh] Wave UI enhancements not available or failed', err);
+                }
                 
                 lastRefreshTime = Date.now();
                 logger.info('[SoftRefresh] ✅ Soft refresh completed');
@@ -5591,6 +5855,11 @@ var version = GM_info.script.version;
                 this.stopAutoRefresh();
                 
                 autoRefreshTimer = setInterval(() => {
+                    // Skip if verification page is active (don't refresh verification page)
+                    if (shouldPauseForVerification()) {
+                        logger.debug('[SoftRefresh] Skipping auto-refresh - verification active');
+                        return;
+                    }
                     if (!isRefreshing) {
                         this.refresh();
                     }
@@ -8888,6 +9157,12 @@ var version = GM_info.script.version;
                 return;
             }
             
+            // Skip automation if verification page is active
+            if (context.shouldPauseForVerification()) {
+                context.logger.warn('⚡ Ultra Fast Wave pausado - verificação ativa');
+                return;
+            }
+            
             if (!this.state) this.init(context);
             if (this.state.running) return;
             
@@ -8938,6 +9213,13 @@ var version = GM_info.script.version;
                 loopCount++;
                 if (loopCount === 1) {
                     logger.info(`✅ [UltraFastLoop] Entrou no while loop - INÍCIO`);
+                }
+                
+                // Pause if verification page is active
+                if (context.shouldPauseForVerification()) {
+                    logger.warn('⚡ Ultra Fast Wave pausado - aguardando verificação...');
+                    await sleep(5000);
+                    continue;
                 }
                 
                 const cfg = context.config.get();
@@ -9034,6 +9316,7 @@ var version = GM_info.script.version;
                     // Wait for stamina regen
                     logger.info(`⏳ Stamina baixa (${currentStamina}). Aguardando regeneração...`);
                     await sleep(30000); // 30s wait
+                    await reloadPageSync(2000);
                     continue;
                 }
                 
@@ -10668,6 +10951,12 @@ var version = GM_info.script.version;
                 return;
             }
 
+            // Skip automation if verification page is active
+            if (context.shouldPauseForVerification()) {
+                context.logger.warn('👑 Special Boss Farm pausado - verificação ativa');
+                return;
+            }
+
             if (!this.state) this.init(context);
             if (this.state.running) return;
 
@@ -10695,6 +10984,13 @@ var version = GM_info.script.version;
             while (/active_wave\.php/i.test(context.location.pathname)) {
                 const cfg = context.config.get();
                 
+                // Pause if verification page is active
+                if (context.shouldPauseForVerification()) {
+                    logger.warn('👑 Special Boss Farm pausado - aguardando verificação...');
+                    await sleep(5000);
+                    continue;
+                }
+                
                 if (!cfg.core.enabled || !cfg.specialBossFarm?.enabled) {
                     logger.info('👑 Special Boss Farm desativado via configuração.');
                     break;
@@ -10714,12 +11010,12 @@ var version = GM_info.script.version;
                     
                     // 🆕 Phase 6: Use soft refresh instead of page reload
                     logger.info('👑 Atualizando lista de monstros...');
-                    if (context.softRefresh) {
-                        await context.softRefresh.refreshMonsterList();
-                    } else {
+                    // if (context.softRefresh) {
+                    //     await context.softRefresh.refreshMonsterList();
+                    // } else {
                         await reloadPageSync(2000);
                         return;
-                    }
+                    // }
                     continue; // Continue loop with refreshed data
                 }
 
@@ -11000,7 +11296,7 @@ var version = GM_info.script.version;
                             logger.info('💊 [SPECIAL BOSS] Tentando usar Full Stamina Potion...');
                             
                             try {
-                                const fspUsed = await context.inventory.useFullStaminaPotion();
+                                const fspUsed = await context.inventory.useFullStaminaPotion(true);
                                 
                                 if (fspUsed) {
                                     logger.info('✅ [SPECIAL BOSS] Full Stamina Potion usada com sucesso!');
@@ -11191,6 +11487,12 @@ var version = GM_info.script.version;
                 return;
             }
 
+            // Skip automation if verification page is active
+            if (context.shouldPauseForVerification()) {
+                context.logger.warn('🎲 Random Boss Farm pausado - verificação ativa');
+                return;
+            }
+
             if (!this.state) this.init(context);
             if (this.state.running) return;
 
@@ -11217,6 +11519,13 @@ var version = GM_info.script.version;
 
             while (/random_boss_soon\.php/i.test(context.location.pathname)) {
                 const cfg = context.config.get();
+
+                // Pause if verification page is active
+                if (context.shouldPauseForVerification()) {
+                    logger.warn('🎲 Random Boss Farm pausado - aguardando verificação...');
+                    await sleep(5000);
+                    continue;
+                }
 
                 if (!cfg.core.enabled || !cfg.randomBossFarm?.enabled) {
                     logger.info('🎲 Random Boss Farm desativado via configuração.');
@@ -11413,7 +11722,7 @@ var version = GM_info.script.version;
                     if (cfg.autoStaminaPotion && currentStamina < (cfg.minStaminaForPotion || 100)) {
                         logger.info('💊 [RANDOM BOSS] Tentando usar Full Stamina Potion...');
                         try {
-                            const fspUsed = await context.inventory.useFullStaminaPotion();
+                            const fspUsed = await context.inventory.useFullStaminaPotion(true);
                             if (fspUsed) {
                                 logger.info('✅ [RANDOM BOSS] Full Stamina Potion usada!');
                                 bossState.potionsUsed++;
@@ -11579,6 +11888,13 @@ var version = GM_info.script.version;
         triggerManualRun(context) {
             const { logger } = context;
             const cfg = context.config.get().ultraFastAttack;
+            
+            // Skip if verification page is active
+            if (context.shouldPauseForVerification()) {
+                logger.warn('[UltraFastAttack] ⚠️ Pausado - verificação ativa');
+                context.notifications?.warn?.('🔒 Verificação ativa - resolve o captcha primeiro');
+                return;
+            }
             
             if (this.state.running) {
                 logger.warn('[UltraFastAttack] Já está rodando');
@@ -13442,11 +13758,18 @@ var version = GM_info.script.version;
     // ============================================================================
     const ultraFastDungeonModule = {
         id: 'ultraFastDungeon',
-        match: ({ location }) => /guild_dungeon_location\.php/i.test(location.pathname),
+        match: ({ location }) => /guild_dungeon_location\.php|guild_dungeon_instance\.php/i.test(location.pathname),
         
         init(context) {
             this.state = {
                 running: false,
+                currentLocation: null,
+                totalLocations: 0,
+                locationsProcessed: 0,
+                sessionReport: {
+                    startTime: null,
+                    locations: new Map() // location_id -> { monsters: [], totalDamageDealt: 0 }
+                },
                 stats: {
                     totalBatches: 0,
                     totalMonsters: 0,
@@ -13476,6 +13799,13 @@ var version = GM_info.script.version;
         triggerManualRun(context) {
             const { logger } = context;
             
+            // Skip if verification page is active
+            if (context.shouldPauseForVerification()) {
+                logger.warn('[UltraFastDungeon] ⚠️ Pausado - verificação ativa');
+                context.notifications?.warn?.('🔒 Verificação ativa - resolve o captcha primeiro');
+                return;
+            }
+            
             if (this.state.running) {
                 logger.warn('[UltraFastDungeon] Já está rodando');
                 return;
@@ -13488,7 +13818,18 @@ var version = GM_info.script.version;
             
             (async () => {
                 try {
-                    await this.runDungeonFarm(context);
+                    // Verificar se estamos em guild_dungeon_instance.php (página geral)
+                    const isInstancePage = /guild_dungeon_instance\.php/i.test(window.location.pathname);
+                    
+                    if (isInstancePage) {
+                        // Modo: Percorrer todas as locations
+                        logger.info('📍 Modo Instance (múltiplas locations)');
+                        await this.runMultiLocationFarm(context);
+                    } else {
+                        // Modo: Farm a location atual
+                        logger.info('📍 Modo Single Location');
+                        await this.runDungeonFarm(context);
+                    }
                 } catch (error) {
                     logger.error('[UltraFastDungeon] Erro fatal:', error);
                 } finally {
@@ -13497,28 +13838,139 @@ var version = GM_info.script.version;
             })();
         },
 
-        async runDungeonFarm(context) {
+        async runMultiLocationFarm(context) {
             const cfg = context.config.get().ultraFastDungeon;
             const { logger } = context;
 
-            logger.info(`📊 Config: ${cfg.maxParallelBattles} paralelos, ${cfg.attacksPerMonster} ataques/mob, Smart Damage: ${cfg.useSmartDamage ? 'ON' : 'OFF'}`);
+            // Extrair instanceId da URL
+            const url = new URL(window.location);
+            const instanceId = url.searchParams.get('instance_id') || url.searchParams.get('id');
 
-            // 1. Scan dungeon monsters
-            const targets = await this.scanDungeonTargets(context);
-            
-            if (targets.length === 0) {
-                logger.info('❌ Nenhum mob disponível para farm ultra rápido');
-                this.showResults(context);
+            if (!instanceId) {
+                logger.error('[UltraFastDungeon] Instance ID não encontrado na URL');
+                context.notifications.error('Instance ID não encontrado');
                 return;
             }
 
-            // 2. Group into batches
-            const batches = [];
-            for (let i = 0; i < targets.length; i += cfg.maxParallelBattles) {
-                batches.push(targets.slice(i, i + cfg.maxParallelBattles));
+            // Inicializar session report
+            this.state.sessionReport.startTime = Date.now();
+            this.state.sessionReport.locations = new Map();
+
+            logger.info(`[UltraFastDungeon] Iniciando farm multi-location para instance ${instanceId}`);
+            logger.info(`[UltraFastDungeon] Escaneando locations de 0 a 10...`);
+
+            // Escanear quais locations têm monstros
+            const validLocations = [];
+            for (let locationId = 0; locationId <= 10; locationId++) {
+                try {
+                    const locationUrl = `https://demonicscans.org/guild_dungeon_location.php?instance_id=${instanceId}&location_id=${locationId}`;
+                    logger.debug(`[UltraFastDungeon] Fetching location page: ${locationUrl}`);
+                    
+                    const response = await fetch(locationUrl, { credentials: 'include' });
+
+                    if (!response.ok) {
+                        logger.debug(`[UltraFastDungeon] Location ${locationId} returned ${response.status}`);
+                        continue;
+                    }
+
+                    const html = await response.text();
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    
+                    // Verificar se existem monstros (.mon elements)
+                    const monsterCards = doc.querySelectorAll('.mon');
+                    
+                    if (monsterCards.length > 0) {
+                        validLocations.push(locationId);
+                        // Inicializar location no report
+                        this.state.sessionReport.locations.set(locationId, {
+                            monsters: [],
+                            totalDamageDealt: 0
+                        });
+                        logger.debug(`[UltraFastDungeon] ✓ Location ${locationId}: ${monsterCards.length} monstros encontrados`);
+                    } else {
+                        logger.debug(`[UltraFastDungeon] Location ${locationId}: Nenhum monstro encontrado`);
+                    }
+                } catch (error) {
+                    logger.debug(`[UltraFastDungeon] Erro ao verificar location ${locationId}: ${error.message}`);
+                }
+
+                // Pequeno delay entre verificações
+                await sleep(100);
             }
 
-            logger.info(`🎯 ${targets.length} mobs encontrados → ${batches.length} lotes (${cfg.maxParallelBattles} mobs/lote)`);
+            if (validLocations.length === 0) {
+                logger.warn('[UltraFastDungeon] Nenhuma location com monstros encontrada');
+                context.notifications.warn('Nenhuma location com monstros');
+                return;
+            }
+
+            logger.info(`[UltraFastDungeon] Encontradas ${validLocations.length} locations com monstros: ${validLocations.join(', ')}`);
+            this.state.totalLocations = validLocations.length;
+
+            // Processar cada location
+            for (const locationId of validLocations) {
+                this.state.currentLocation = locationId;
+                this.state.locationsProcessed++;
+
+                logger.info(`\n⚡ LOCATION ${locationId} (${this.state.locationsProcessed}/${this.state.totalLocations})`);
+                logger.info(`════════════════════════════════════════════`);
+
+                try {
+                    // Fetch location HTML to pass to scanDungeonTargets
+                    const locationUrl = `https://demonicscans.org/guild_dungeon_location.php?instance_id=${instanceId}&location_id=${locationId}`;
+                    const response = await fetch(locationUrl, { credentials: 'include' });
+                    const locationHtml = response.ok ? await response.text() : null;
+                    
+                    await this.runDungeonFarmAtLocation(context, instanceId, locationId, locationHtml);
+                } catch (error) {
+                    logger.error(`[UltraFastDungeon] Erro ao processar location ${locationId}: ${error.message}`);
+                }
+
+                // Delay entre locations
+                if (locationId !== validLocations[validLocations.length - 1]) {
+                    logger.info(`⏳ Aguardando 2s antes da próxima location...`);
+                    await sleep(2000);
+                }
+            }
+
+            // Summary
+            const duration = Date.now() - this.state.stats.startTime;
+            logger.info(`\n✅ Farm Multi-Location concluído em ${(duration / 1000).toFixed(1)}s`);
+            logger.info(`📊 ${this.state.stats.totalAttacks} ataques, ${this.state.stats.monstersCompleted} mobs completados`);
+
+            // Mostrar relatório detalhado
+            this.showSessionReport(context);
+        },
+
+        async runDungeonFarmAtLocation(context, instanceId, locationId, locationHtml = null) {
+            const cfg = context.config.get().ultraFastDungeon;
+            const { logger } = context;
+
+            logger.info(`📊 Config: ${cfg.maxParallelBattles} paralelos, ${cfg.attacksPerMonster} ataques/mob`);
+
+            // 1. Scan dungeon monsters at this location
+            const targets = await this.scanDungeonTargets(context, instanceId, locationId, locationHtml);
+            
+            if (targets.length === 0) {
+                logger.info('❌ Nenhum mob disponível nesta location');
+                return;
+            }
+
+            // Inicializar tracking de dados para cada alvo
+            const targetData = targets.map(target => ({
+                ...target,
+                damageBeforeAttack: target.currentDamage,
+                damageSessionDealt: 0
+            }));
+
+            // 2. Group into batches
+            const batches = [];
+            for (let i = 0; i < targetData.length; i += cfg.maxParallelBattles) {
+                batches.push(targetData.slice(i, i + cfg.maxParallelBattles));
+            }
+
+            logger.info(`🎯 ${targetData.length} mobs encontrados → ${batches.length} lotes (${cfg.maxParallelBattles} mobs/lote)`);
 
             // 3. Process each batch
             for (let batchIndex = 0; batchIndex < batches.length; batchIndex++) {
@@ -13536,7 +13988,7 @@ var version = GM_info.script.version;
                 }
 
                 // Attack all battles respecting damage thresholds
-                await this.attackWithSmartDamage(context, joinedTargets);
+                await this.attackWithSmartDamage(context, joinedTargets, targetData);
 
                 // Delay between batches
                 if (batchIndex < batches.length - 1) {
@@ -13545,17 +13997,39 @@ var version = GM_info.script.version;
                 }
             }
 
-            // Summary
-            const duration = Date.now() - this.state.stats.startTime;
-            logger.info(`✅ Ultra Fast Dungeon concluído em ${(duration / 1000).toFixed(1)}s`);
-            logger.info(`📊 ${this.state.stats.totalAttacks} ataques, ${this.state.stats.monstersCompleted} mobs completados`);
+            // Registrar dados desta location no report
+            const locationReport = this.state.sessionReport.locations.get(locationId) || {
+                monsters: [],
+                totalDamageDealt: 0
+            };
 
-            this.showResults(context);
+            targetData.forEach(target => {
+                locationReport.monsters.push({
+                    name: target.name,
+                    dgmid: target.dgmid,
+                    maxHp: target.maxHp,
+                    damageBeforeAttack: target.damageBeforeAttack,
+                    damageSessionDealt: target.damageSessionDealt,
+                    damageFinal: target.damageBeforeAttack + target.damageSessionDealt
+                });
+                locationReport.totalDamageDealt += target.damageSessionDealt;
+            });
+
+            this.state.sessionReport.locations.set(locationId, locationReport);
+
+            logger.info(`✅ Location ${locationId} concluído - ${context.numbers.format(locationReport.totalDamageDealt)} dano causado`);
         },
 
-        async scanDungeonTargets(context) {
+        async scanDungeonTargets(context, instanceId, locationId, locationHtml = null) {
             const cfg = context.config.get().ultraFastDungeon;
             const { logger } = context;
+
+            // Se instanceId/locationId não fornecidos, extrair da URL atual
+            if (!instanceId || !locationId) {
+                const url = new URL(window.location);
+                instanceId = instanceId || url.searchParams.get('instance_id');
+                locationId = locationId !== undefined ? locationId : url.searchParams.get('location_id');
+            }
 
             // Extract filter names from CSV format (ultraFastDungeon.monsterNames)
             // Support both old and new formats for backward compatibility
@@ -13612,34 +14086,43 @@ var version = GM_info.script.version;
             }
             logger.debug(`[UltraFastDungeon] Monster filters:`, monsterFilters.map(f => f.customDamage ? `${f.name}:${f.customDamage}` : f.name));
 
-            // Use Monster Scanner Service
-            const scanFilters = {
-                minHp: cfg.minMobHp
-            };
+            // Parse monsters from locationHtml if provided, otherwise use page DOM (legacy)
+            let monsters = [];
             
-            // Only apply joined filters if explicitly enabled/disabled
-            if (cfg.checkJoined && !cfg.checkNotJoined) {
-                // Only joined monsters
-                logger.debug('[UltraFastDungeon] Filter: Only JOINED monsters');
-            } else if (cfg.checkNotJoined && !cfg.checkJoined) {
-                // Only not joined monsters
-                scanFilters.onlyNotJoined = true;
-                logger.debug('[UltraFastDungeon] Filter: Only NOT JOINED monsters');
+            if (locationHtml) {
+                logger.debug('[UltraFastDungeon] Parsing monsters from fetched location HTML...');
+                monsters = this.parseMonsterCardsFromHTML(context, locationHtml, instanceId, locationId);
+                logger.info(`[UltraFastDungeon] Parsed ${monsters.length} monsters from location HTML`);
             } else {
-                // Both (no filter)
-                logger.debug('[UltraFastDungeon] Filter: BOTH joined and not joined monsters');
-            }
+                logger.debug('[UltraFastDungeon] Using monsterScanner service (legacy fallback)...');
+                const scanFilters = {
+                    minHp: cfg.minMobHp
+                };
+                
+                // Only apply joined filters if explicitly enabled/disabled
+                if (cfg.checkJoined && !cfg.checkNotJoined) {
+                    // Only joined monsters
+                    logger.debug('[UltraFastDungeon] Filter: Only JOINED monsters');
+                } else if (cfg.checkNotJoined && !cfg.checkJoined) {
+                    // Only not joined monsters
+                    scanFilters.onlyNotJoined = true;
+                    logger.debug('[UltraFastDungeon] Filter: Only NOT JOINED monsters');
+                } else {
+                    // Both (no filter)
+                    logger.debug('[UltraFastDungeon] Filter: BOTH joined and not joined monsters');
+                }
 
-            // Extract just the names for scanner
-            if (monsterFilters.length > 0) {
-                scanFilters.monsterNames = monsterFilters.map(f => f.name);
-                logger.debug(`[UltraFastDungeon] Name filters: ${scanFilters.monsterNames.join(', ')}`);
-            } else {
-                logger.debug('[UltraFastDungeon] Name filters: ALL monsters');
-            }
+                // Extract just the names for scanner
+                if (monsterFilters.length > 0) {
+                    scanFilters.monsterNames = monsterFilters.map(f => f.name);
+                    logger.debug(`[UltraFastDungeon] Name filters: ${scanFilters.monsterNames.join(', ')}`);
+                } else {
+                    logger.debug('[UltraFastDungeon] Name filters: ALL monsters');
+                }
 
-            let monsters = context.monsterScanner.scanDungeonMonsters(scanFilters);
-            logger.info(`[UltraFastDungeon] Scanner found ${monsters.length} dungeon monsters`);
+                monsters = context.monsterScanner.scanDungeonMonsters(scanFilters);
+                logger.info(`[UltraFastDungeon] Scanner found ${monsters.length} dungeon monsters`);
+            }
 
             // Apply exclude filter as secondary filter
             if (excludeNames.length > 0) {
@@ -13727,6 +14210,141 @@ var version = GM_info.script.version;
             return filteredTargets;
         },
 
+        /**
+         * Parse monster cards directly from location HTML
+         * Used when locationHtml is provided to avoid DOM context issues
+         * @param {Object} context - Script context
+         * @param {string} html - Location HTML from fetch
+         * @param {string} instanceId - Dungeon instance ID
+         * @param {string} locationId - Location ID
+         * @returns {Array} Array of parsed monsters
+         */
+        parseMonsterCardsFromHTML(context, html, instanceId, locationId) {
+            const { logger } = context;
+            const monsters = [];
+            
+            try {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const cards = doc.querySelectorAll('.mon');
+                
+                logger.debug(`[parseMonsterCardsFromHTML] Found ${cards.length} .mon elements in HTML`);
+                
+                for (const card of cards) {
+                    const monster = this.parseSingleMonsterCard(context, card, instanceId, locationId);
+                    if (monster) {
+                        monsters.push(monster);
+                        logger.debug(`[parseMonsterCardsFromHTML] Parsed: ${monster.name} (HP: ${context.numbers.format(monster.hp)}/${context.numbers.format(monster.maxHp)}, Joined: ${monster.hasJoined})`);
+                    }
+                }
+            } catch (error) {
+                logger.error(`[parseMonsterCardsFromHTML] Error parsing HTML: ${error.message}`);
+            }
+            
+            return monsters;
+        },
+
+        /**
+         * Parse a single monster card element
+         * @param {Object} context - Script context
+         * @param {HTMLElement} card - Card element  
+         * @param {string} instanceId - Dungeon instance ID
+         * @param {string} locationId - Location ID
+         * @returns {Object|null} Parsed monster or null
+         */
+        parseSingleMonsterCard(context, card, instanceId, locationId) {
+            const { logger } = context;
+            
+            try {
+                // Structure:
+                // <div class="mon">
+                //   <img>
+                //   <div style="flex:1">
+                //     <div style="font-weight:700">
+                //       <div class="row"><span class="pill">status</span></div>
+                //       Monster Name
+                //     </div>
+                //     <div class="bar">...HP bar...</div>
+                //     <div class="muted">HP / Max HP</div>
+                //     ...
+                //     <a href="battle.php?dgmid=X&instance_id=Y">Fight</a>
+                //   </div>
+                // </div>
+
+                // Extract monster name from title div
+                const titleDiv = card.querySelector('div > div > div[style*="font-weight"]');
+                if (!titleDiv) {
+                    logger.debug('[parseSingleMonsterCard] Could not find title div');
+                    return null;
+                }
+                
+                let name = titleDiv.textContent.trim();
+                // Remove pill badges and extra whitespace
+                name = name.replace(/^(not joined|joined|dead|morto|alive)\s*/i, '').trim();
+                name = name.replace(/\s+(dead|morto|alive)\s*$/i, '').trim();
+                
+                if (!name || name.length < 2) {
+                    logger.debug(`[parseSingleMonsterCard] Invalid name: "${name}"`);
+                    return null;
+                }
+
+                // Extract dgmid from href in link
+                const link = card.querySelector('a[href*="battle.php"]');
+                if (!link) {
+                    logger.debug('[parseSingleMonsterCard] No battle link found');
+                    return null;
+                }
+                
+                const href = link.getAttribute('href') || '';
+                const dgmidMatch = href.match(/dgmid=([0-9]+)/);
+                const dgmid = dgmidMatch ? dgmidMatch[1] : null;
+                
+                if (!dgmid) {
+                    logger.warn(`[parseSingleMonsterCard] Could not extract dgmid from: ${href}`);
+                    return null;
+                }
+
+                // Extract HP values from .muted div (format: "1,234,567 / 5,000,000 HP")
+                let hp = 0;
+                let maxHp = 0;
+                const hpElements = card.querySelectorAll('.muted');
+                for (const el of hpElements) {
+                    const hpText = el.textContent.trim();
+                    // Look for "X,XXX / Y,YYY" pattern
+                    const hpMatch = hpText.match(/([0-9,]+)\s*\/\s*([0-9,]+)/);
+                    if (hpMatch) {
+                        hp = context.numbers.parse(hpMatch[1]);
+                        maxHp = context.numbers.parse(hpMatch[2]);
+                        break;
+                    }
+                }
+
+                if (hp <= 0 || maxHp <= 0) {
+                    logger.debug(`[parseSingleMonsterCard] Invalid HP: ${hp}/${maxHp}`);
+                    return null;
+                }
+
+                // Check if joined (look for pill with "joined" text)
+                const pillElement = card.querySelector('.pill');
+                const pillText = pillElement?.textContent.trim().toLowerCase() || '';
+                const hasJoined = pillText.includes('joined') && !pillText.includes('not');
+
+                return {
+                    dgmid,
+                    instanceId,
+                    name,
+                    hp,
+                    maxHp,
+                    currentDamage: 0,
+                    hasJoined,
+                    card
+                };
+            } catch (error) {
+                logger.warn(`[parseSingleMonsterCard] Error parsing card: ${error.message}`);
+                return null;
+            }
+        },
+
         async fetchCurrentDamages(context, targets) {
             const { logger } = context;
             const joinedTargets = targets.filter(t => t.hasJoined);
@@ -13761,14 +14379,14 @@ var version = GM_info.script.version;
                 // Parse damage from HTML: DMG: <span id="yourDamageValue">5,291,020</span>
                 const damageMatch = html.match(/DMG:\s*<span[^>]*>([0-9,]+)<\/span>/i);
                 if (damageMatch) {
-                    target.currentDamage = numberFromText(damageMatch[1]);
-                    logger.debug(`[Damage Fetch] ${target.name}: ${formatNumber(target.currentDamage)} dano`);
+                    target.currentDamage = context.numbers.parse(damageMatch[1]);
+                    logger.debug(`[Damage Fetch] ${target.name}: ${context.numbers.format(target.currentDamage)} dano`);
                 } else {
                     // Try alternative patterns
                     const altMatch = html.match(/yourDamageValue[^>]*>([0-9,]+)</i);
                     if (altMatch) {
-                        target.currentDamage = numberFromText(altMatch[1]);
-                        logger.debug(`[Damage Fetch] ${target.name}: ${formatNumber(target.currentDamage)} dano (alt)`);
+                        target.currentDamage = context.numbers.parse(altMatch[1]);
+                        logger.debug(`[Damage Fetch] ${target.name}: ${context.numbers.format(target.currentDamage)} dano (alt)`);
                     }
                 }
             } catch (error) {
@@ -13865,7 +14483,7 @@ var version = GM_info.script.version;
             return joinedTargets;
         },
 
-        async attackWithSmartDamage(context, targets) {
+        async attackWithSmartDamage(context, targets, targetDataList = null) {
             const cfg = context.config.get().ultraFastDungeon;
             const battleCfg = context.config.get().battle;
             const { logger } = context;
@@ -13876,14 +14494,19 @@ var version = GM_info.script.version;
             }
 
             // Inicializar estado de cada alvo
-            const targetStates = targets.map(target => ({
-                ...target,
-                attackCount: 0,
-                totalDamageDealt: 0,
-                currentDamage: target.currentDamage,
-                completed: false,
-                skillId: battleCfg.attackSkillId || 0
-            }));
+            const targetStates = targets.map(target => {
+                // Se targetDataList foi fornecido, usar para rastreamento
+                const trackingData = targetDataList?.find(td => td.dgmid === target.dgmid);
+                return {
+                    ...target,
+                    attackCount: 0,
+                    totalDamageDealt: 0,
+                    currentDamage: target.currentDamage,
+                    completed: false,
+                    skillId: battleCfg.attackSkillId || 0,
+                    trackingData: trackingData || null
+                };
+            });
 
             logger.info(`🚀 PRE-FLIGHT ATTACK: ${targets.length} monstros, ${cfg.attacksPerMonster} ataques cada`);
 
@@ -13925,7 +14548,7 @@ var version = GM_info.script.version;
                         const smartSkill = selectSmartSkill(targetState.currentDamage, targetState.maxDamage, skills);
                         if (smartSkill) {
                             targetState.skillId = smartSkill.skillId;
-                            logger.debug(`  🧠 ${targetState.name}: Smart damage selecionou ${smartSkill.name} (skillId: ${smartSkill.skillId}, limite: ${formatNumber(smartSkill.damageLimit)})`);
+                            logger.debug(`  🧠 ${targetState.name}: Smart damage selecionou ${smartSkill.name} (skillId: ${smartSkill.skillId}, limite: ${context.numbers.format(smartSkill.damageLimit)})`);
                         }
                     }
 
@@ -13970,13 +14593,18 @@ var version = GM_info.script.version;
                         this.state.stats.totalAttacks++;
                         successCount++;
                         
-                        logger.debug(`  ✓ ${targetState.name}: +${formatNumber(damageDealt)} dano (Total: ${formatNumber(targetState.currentDamage)}/${formatNumber(targetState.maxDamage)})`);
+                        // Rastrear dano da sessão se este target está sendo rastreado
+                        if (targetState.trackingData) {
+                            targetState.trackingData.damageSessionDealt += damageDealt;
+                        }
+                        
+                        logger.debug(`  ✓ ${targetState.name}: +${context.numbers.format(damageDealt)} dano (Total: ${context.numbers.format(targetState.currentDamage)}/${context.numbers.format(targetState.maxDamage)})`);
                         
                         // Verificar threshold
                         if (targetState.currentDamage >= targetState.maxDamage) {
                             targetState.completed = true;
                             thresholdCount++;
-                            logger.info(`  🎯 ${targetState.name}: Threshold atingido! (${formatNumber(targetState.currentDamage)}/${formatNumber(targetState.maxDamage)})`);
+                            logger.info(`  🎯 ${targetState.name}: Threshold atingido! (${context.numbers.format(targetState.currentDamage)}/${context.numbers.format(targetState.maxDamage)})`);
                         }
                     } else {
                         logger.warn(`  ⚠️ ${targetState.name}: Ataque falhou`);
@@ -13994,7 +14622,7 @@ var version = GM_info.script.version;
 
             // Resumo final
             for (const targetState of targetStates) {
-                logger.info(`✅ ${targetState.name}: ${targetState.attackCount} ataques, ${formatNumber(targetState.totalDamageDealt)} dano total`);
+                logger.info(`✅ ${targetState.name}: ${targetState.attackCount} ataques, ${context.numbers.format(targetState.totalDamageDealt)} dano total`);
                 this.state.stats.monstersCompleted++;
             }
         },
@@ -14016,6 +14644,220 @@ var version = GM_info.script.version;
                 case -3: return 2000000;   // Ultimate Slash
                 case -4: return 4000000;   // Legendary Slash
                 default: return 50000;
+            }
+        },
+
+        showSessionReport(context) {
+            const { logger, numbers } = context;
+            
+            const locations = Array.from(this.state.sessionReport.locations.entries())
+                .sort((a, b) => a[0] - b[0]); // Sort by location ID
+            
+            if (locations.length === 0) {
+                logger.warn('[UltraFastDungeon] Nenhuma location para exibir no relatório');
+                return;
+            }
+
+            // Create modal overlay
+            const overlay = document.createElement('div');
+            overlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.7);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 10001;
+            `;
+            
+            // Create modal content
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                background: #24263a;
+                border-radius: 8px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+                max-width: 1000px;
+                max-height: 85vh;
+                overflow-y: auto;
+                border: 1px solid #3a3d52;
+                padding: 25px;
+                color: #ddd;
+                font-family: Arial, sans-serif;
+            `;
+
+            // Header
+            const sessionDuration = Date.now() - this.state.sessionReport.startTime;
+            const header = `
+                <h2 style="margin-top: 0; color: #FFD700; border-bottom: 2px solid #FFD700; padding-bottom: 10px;">
+                    ⚡ Ultra Fast Dungeon Session Report
+                </h2>
+                <div style="font-size: 12px; color: #999; margin-bottom: 15px;">
+                    Duração: ${(sessionDuration / 1000).toFixed(1)}s | Locations: ${locations.length}
+                </div>
+            `;
+
+            // Calculate totals
+            let totalDamageDealt = 0;
+            let totalMonstersAttacked = 0;
+            
+            locations.forEach(([locId, locData]) => {
+                totalDamageDealt += locData.totalDamageDealt;
+                totalMonstersAttacked += locData.monsters.length;
+            });
+
+            // Summary stats
+            const stats = `
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 12px; margin-bottom: 20px;">
+                    <div style="background: #1a1b25; padding: 10px; border-radius: 4px; text-align: center;">
+                        <div style="color: #aaa; font-size: 10px; margin-bottom: 3px;">LOCATIONS</div>
+                        <div style="color: #FFD700; font-size: 16px; font-weight: bold;">${locations.length}</div>
+                    </div>
+                    <div style="background: #1a1b25; padding: 10px; border-radius: 4px; text-align: center;">
+                        <div style="color: #aaa; font-size: 10px; margin-bottom: 3px;">MONSTROS</div>
+                        <div style="color: #4CAF50; font-size: 16px; font-weight: bold;">${totalMonstersAttacked}</div>
+                    </div>
+                    <div style="background: #1a1b25; padding: 10px; border-radius: 4px; text-align: center;">
+                        <div style="color: #aaa; font-size: 10px; margin-bottom: 3px;">ATAQUES</div>
+                        <div style="color: #2196F3; font-size: 16px; font-weight: bold;">${this.state.stats.totalAttacks}</div>
+                    </div>
+                    <div style="background: #1a1b25; padding: 10px; border-radius: 4px; text-align: center;">
+                        <div style="color: #aaa; font-size: 10px; margin-bottom: 3px;">DANO TOTAL</div>
+                        <div style="color: #FF9800; font-size: 16px; font-weight: bold;">${numbers.format(totalDamageDealt)}</div>
+                    </div>
+                </div>
+            `;
+
+            // Location tabs
+            const locationTabs = locations.map(([locId, locData]) => {
+                const tableRows = locData.monsters.map((monster, idx) => `
+                    <tr style="border-bottom: 1px solid #3a3d52; ${idx % 2 === 0 ? 'background: #1a1b25;' : ''}">
+                        <td style="padding: 8px; text-align: left; font-size: 11px;"><span style="color: #999;">#${idx + 1}</span> ${monster.name}</td>
+                        <td style="padding: 8px; text-align: right; font-size: 11px; color: #999;">${numbers.format(monster.damageBeforeAttack)}</td>
+                        <td style="padding: 8px; text-align: right; font-size: 11px; color: #4CAF50; font-weight: bold;">${numbers.format(monster.damageSessionDealt)}</td>
+                        <td style="padding: 8px; text-align: right; font-size: 11px; color: #FF9800; font-weight: bold;">${numbers.format(monster.damageFinal)}</td>
+                    </tr>
+                `).join('');
+
+                return `
+                    <div class="location-tab" data-location-id="location-${locId}" style="display: none; margin-bottom: 20px;">
+                        <h3 style="color: #FFD700; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid #3a3d52;">
+                            Location ${locId} - ${locData.monsters.length} Monstros - ${numbers.format(locData.totalDamageDealt)} Dano
+                        </h3>
+                        <table style="width: 100%; border-collapse: collapse; font-size: 11px;">
+                            <thead style="background: #1a1b25;">
+                                <tr style="border-bottom: 2px solid #3a3d52;">
+                                    <th style="padding: 8px; text-align: left; color: #FFD700;">MONSTRO</th>
+                                    <th style="padding: 8px; text-align: right; color: #FFD700;">DANO ANTES</th>
+                                    <th style="padding: 8px; text-align: right; color: #FFD700;">DANO SESSÃO</th>
+                                    <th style="padding: 8px; text-align: right; color: #FFD700;">DANO FINAL</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${tableRows}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            }).join('');
+
+            // Location buttons
+            const locationButtons = locations.map(([locId, locData]) => `
+                <button class="location-btn" data-location-id="location-${locId}" style="padding: 8px 12px; margin: 5px; background: #3a4568; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 11px;">
+                    Loc ${locId} (${locData.monsters.length})
+                </button>
+            `).join('');
+
+            // Buttons
+            const buttons = `
+                <div style="display: flex; gap: 10px; margin-top: 20px; padding-top: 15px; border-top: 1px solid #3a3d52;">
+                    <button id="autods-report-csv-btn" style="flex: 1; padding: 12px; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">
+                        💾 CSV
+                    </button>
+                    <button id="autods-report-close-btn" style="flex: 1; padding: 12px; background: #3a4568; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">
+                        ✕ Close
+                    </button>
+                </div>
+            `;
+
+            modal.innerHTML = header + stats + `<div style="margin-bottom: 15px;">${locationButtons}</div>` + `<div id="location-content">${locationTabs}</div>` + buttons;
+            overlay.appendChild(modal);
+            document.body.appendChild(overlay);
+
+            // Show first location tab by default
+            if (locations.length > 0) {
+                const firstLocId = locations[0][0];
+                const firstTab = modal.querySelector(`[data-location-id="location-${firstLocId}"]`);
+                if (firstTab) firstTab.style.display = 'block';
+                
+                const firstBtn = modal.querySelector(`button[data-location-id="location-${firstLocId}"]`);
+                if (firstBtn) firstBtn.style.background = '#FF9800';
+            }
+
+            // Location tab switching
+            const locationBtns = modal.querySelectorAll('.location-btn');
+            const locationTabsElems = modal.querySelectorAll('.location-tab');
+            
+            locationBtns.forEach(btn => {
+                btn.onclick = (e) => {
+                    const locationId = e.target.getAttribute('data-location-id');
+                    
+                    // Update button styles
+                    locationBtns.forEach(b => b.style.background = '#3a4568');
+                    btn.style.background = '#FF9800';
+                    
+                    // Update tab visibility
+                    locationTabsElems.forEach(tab => {
+                        const tabLocationId = tab.getAttribute('data-location-id');
+                        tab.style.display = tabLocationId === locationId ? 'block' : 'none';
+                    });
+                };
+            });
+
+            // CSV button
+            const csvBtn = modal.querySelector('#autods-report-csv-btn');
+            csvBtn.onclick = () => {
+                this.downloadSessionCSV(context, locations);
+                context.notifications.success('CSV downloaded');
+            };
+
+            // Close button
+            const closeBtn = modal.querySelector('#autods-report-close-btn');
+            closeBtn.onclick = () => overlay.remove();
+
+            logger.info('[UltraFastDungeon] Session report displayed');
+        },
+
+        downloadSessionCSV(context, locations) {
+            const { numbers } = context;
+            try {
+                let csv = 'Ultra Fast Dungeon Session Report\n';
+                csv += `Generated: ${new Date().toLocaleString()}\n\n`;
+
+                locations.forEach(([locId, locData]) => {
+                    csv += `LOCATION ${locId}\n`;
+                    csv += 'INDEX,MONSTER,DAMAGE_BEFORE,DAMAGE_SESSION,DAMAGE_FINAL\n';
+                    
+                    locData.monsters.forEach((monster, idx) => {
+                        const name = monster.name.replace(/"/g, '""');
+                        csv += `${idx + 1},"${name}",${monster.damageBeforeAttack},${monster.damageSessionDealt},${monster.damageFinal}\n`;
+                    });
+                    
+                    csv += `\nLocation Total,${locData.totalDamageDealt}\n\n`;
+                });
+
+                // Download
+                const blob = new Blob([csv], { type: 'text/csv' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `ultra-fast-dungeon-report-${Date.now()}.csv`;
+                a.click();
+                window.URL.revokeObjectURL(url);
+            } catch (error) {
+                context.logger.error(`[UltraFastDungeon] Error downloading CSV: ${error.message}`);
             }
         },
 
@@ -20761,6 +21603,33 @@ Boss:100000000" rows="3"></textarea>
                                 </div>
                                 
                                 <div class="autods-subsection">
+                                    <h5>🔒 Verification Detection (Phase 7)</h5>
+                                    <label class="autods-checkbox">
+                                        <input type="checkbox" data-config="verification.enabled" data-label="Verification Detection" data-toast="0" />
+                                        <span>Enable verification page detection</span>
+                                    </label>
+                                    <label class="autods-checkbox">
+                                        <input type="checkbox" data-config="verification.notifyUser" data-label="Notify User" data-toast="0" />
+                                        <span>Show notification when detected</span>
+                                    </label>
+                                    <label class="autods-checkbox">
+                                        <input type="checkbox" data-config="verification.focusInput" data-label="Focus Input" data-toast="0" />
+                                        <span>Auto-focus answer input field</span>
+                                    </label>
+                                    <label class="autods-checkbox">
+                                        <input type="checkbox" data-config="verification.pauseAutomation" data-label="Pause Automation" data-toast="0" />
+                                        <span>Pause automation when detected</span>
+                                    </label>
+                                    <label class="autods-checkbox" style="opacity: 0.5;">
+                                        <input type="checkbox" data-config="verification.autoSolve" data-label="Auto Solve" data-toast="0" disabled />
+                                        <span>Auto-solve simple math (future)</span>
+                                    </label>
+                                    <p class="autods-info" style="font-size: 10px; color: #f9e2af; margin-top: 4px;">
+                                        🔐 Detecta páginas de verificação anti-bot (ex: "5+5=?") e pausa a automação.
+                                    </p>
+                                </div>
+                                
+                                <div class="autods-subsection">
                                     <h5>⏱️ Stamina Ticker (Phase 6)</h5>
                                     <label class="autods-checkbox">
                                         <input type="checkbox" data-config="staminaTicker.enabled" data-label="Stamina Ticker" data-toast="0" />
@@ -23272,7 +24141,7 @@ Boss:100000000" rows="3"></textarea>
                     // IMPORTANT: Stop trying to attack before using potion
                     await sleep(500); // Give time for any pending attacks to complete
 
-                    const potionUsed = await context.inventory.useFullStaminaPotion();
+                    const potionUsed = await context.inventory.useFullStaminaPotion(true);
 
                     if (!potionUsed) {
                         logger.error('❌ AutoBoss: Não foi possível usar poção. Encerrando.');
@@ -25729,6 +26598,25 @@ Boss:100000000" rows="3"></textarea>
     };
 
     function bootstrap() {
+        // ==================== EARLY VERIFICATION CHECK ====================
+        // Check for verification page BEFORE initializing services
+        // This prevents modules from activating on verification pages
+        if (isVerificationPage()) {
+            console.warn('[AutoDS] 🔒 Verification page detected at bootstrap - pausing script initialization');
+            
+            // Create minimal context for notification
+            const minimalContext = {
+                logger: { warn: (msg) => console.warn('[AutoDS]', msg) },
+                events: { emit: () => {} },
+                notifications: null
+            };
+            
+            handleVerificationDetected(minimalContext, { source: 'bootstrap' });
+            
+            // Continue with bootstrap but mark verification as active
+            // Modules will check shouldPauseForVerification() before automation
+        }
+        
         const storage = createStorage({ namespace: STORAGE_NAMESPACE });
         const events = createEventBus();
         const config = createConfig(storage, events);
@@ -25787,6 +26675,9 @@ Boss:100000000" rows="3"></textarea>
             // Phase 2 centralized services
             http,
             notifications,
+            // Verification utilities (modules can check before automation)
+            shouldPauseForVerification,
+            isVerificationPage,
             // Phase 3 utilities
         };
         
@@ -25915,9 +26806,10 @@ Boss:100000000" rows="3"></textarea>
         }
         
         // Start auto-refresh if enabled and on wave/dungeon page
+        // Skip if verification page is active (would refresh verification content)
         if (cfg.softRefresh?.enabled !== false && cfg.softRefresh?.autoRefreshInterval > 0) {
             const pathname = window.location.pathname;
-            if (/active_wave\.php|guild_dungeon_location\.php/.test(pathname)) {
+            if (/active_wave\.php|guild_dungeon_location\.php/.test(pathname) && !shouldPauseForVerification()) {
                 context.softRefresh.startAutoRefresh();
                 logger.debug('🔄 Auto-refresh started');
             }
@@ -25933,7 +26825,15 @@ Boss:100000000" rows="3"></textarea>
             softRefresh: context.softRefresh,  // Expose soft refresh for testing
             staminaTicker: context.staminaTicker,  // Expose stamina ticker
             context: context,  // Expose full context for debugging
-            version: SCRIPT_VERSION
+            version: SCRIPT_VERSION,
+            // Verification utilities
+            verification: {
+                isActive: () => isVerificationPageActive,
+                isVerificationPage,
+                shouldPauseForVerification,
+                clearVerificationState,
+                extractQuestion: extractVerificationQuestion
+            }
         };
         logger.info('✅ Services exposed globally: window.autoDSServices (version ' + SCRIPT_VERSION + ')');
 

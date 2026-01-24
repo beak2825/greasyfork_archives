@@ -1,12 +1,12 @@
 // ==UserScript==
-// @name         SN's GLB Skill Point Page Enhancer (v6.2)
+// @name         SN's GLB Skill Point Page Enhancer (v6.3.5)
 // @namespace    SeattleNiner
-// @description  v6.2: Progressive Loading to eliminate "White Screen" lag.
-// @version      6.2
+// @description  v6.3.5: Improved "High Contrast Heatmap" coloring for better readability.
+// @version      6.3.5
 // @match        https://glb.warriorgeneral.com/game/skill_points.pl?*
 // @grant        none
-// @downloadURL https://update.greasyfork.org/scripts/563625/SN%27s%20GLB%20Skill%20Point%20Page%20Enhancer%20%28v62%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/563625/SN%27s%20GLB%20Skill%20Point%20Page%20Enhancer%20%28v62%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/563768/SN%27s%20GLB%20Skill%20Point%20Page%20Enhancer%20%28v635%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/563768/SN%27s%20GLB%20Skill%20Point%20Page%20Enhancer%20%28v635%29.meta.js
 // ==/UserScript==
 
 (function () {
@@ -18,7 +18,7 @@
     const colorCapOK = '#17b51e';
 
     const physNames = ["Strength", "Speed", "Agility", "Jumping", "Stamina", "Vision", "Confidence"];
-    const skillNames = ["Blocking", "Tackling", "Throwing", "Catching", "Carrying", "Kicking", "Punter"];
+    const skillNames = ["Blocking", "Tackling", "Throwing", "Catching", "Carrying", "Kicking", "Punting"];
 
     let lastHoveredSkill = "";
     let currentTipContent = "";
@@ -108,9 +108,24 @@
         let mm = globalBuildData.affectedAtts[shortName] || 0, totalGain = (mm === 0) ? 0 : calcALG(globalLevel, mm, globalBuildData);
         let projected = Math.round((baseVal + totalGain) * 100) / 100;
         projCell.textContent = projected.toFixed(2);
+
+        // -- High Contrast Graduated Coloring --
         let diff = projected - goal;
-        if (goal === 0) { diffCell.textContent = "-"; diffCell.style.color = "#333"; }
-        else { diffCell.textContent = (diff >= 0 ? "+" : "") + diff.toFixed(2); diffCell.style.color = diff >= -0.01 ? "green" : "red"; }
+        if (goal === 0) {
+            diffCell.textContent = "-";
+            diffCell.style.color = "#333";
+        } else {
+            diffCell.textContent = (diff >= 0 ? "+" : "") + diff.toFixed(2);
+            if (diff >= -0.01) {
+                diffCell.style.color = "#008800"; // Dark Green (Goal Met)
+            } else if (diff >= -1.5) {
+                diffCell.style.color = "#B07D00"; // Dark Amber (Very Close) - Readable against grey
+            } else if (diff >= -4.0) {
+                diffCell.style.color = "#D35400"; // Burnt Orange (Progressing)
+            } else {
+                diffCell.style.color = "#C0392B"; // Dark Red (Far)
+            }
+        }
         localStorage.setItem("glb_planner_" + getPlayerId() + "_" + statName, goalInput.value);
     }
 
@@ -122,7 +137,6 @@
         let baseVal = parseFloat(valDiv.textContent.split('(')[0]);
         row.innerHTML = `<td><input type="text" class="sn_goal_input" value="${saved}"></td><td class="sn_proj_val">...</td><td class="sn_diff_val"></td>`;
         row.querySelector('input').addEventListener('input', () => updatePlannerRow(row, baseVal));
-        // Delayed calc via a small timeout to let globalLevel catch up if needed
         setTimeout(() => updatePlannerRow(row, baseVal), 10);
         return row;
     }
@@ -135,7 +149,6 @@
         const map = {};
         items.forEach(item => { const link = item.querySelector('.attribute_name a'); if (link) map[link.textContent.trim()] = item; });
 
-        // Start with default/No Archetype so UI builds INSTANTLY
         globalBuildData = new BuildData(["No Archetype", "", ""]);
 
         const wrapper = document.createElement('div'); wrapper.id = 'sn_main_wrapper';
@@ -147,7 +160,7 @@
                 <div id="sn_skill_body" class="sn_body"></div>
             </div>
             <div id="sn_right_col" class="sn_column">
-                <div class="sn_header"><table width="100%"><tr><td width="33%">GOAL</td><td width="33%">PROJ@79</td><td width="33%">+/-</td></tr></table></div>
+                <div class="sn_header"><table width="100%"><tr><td width="33%">GOAL</td><td width="33%">PROJ</td><td width="33%">+/-</td></tr></table></div>
                 <div class="sn_body"><table class="sn_planner_table" id="sn_phys_table"></table></div>
                 <div class="sn_header" style="border-top:none; margin-top:5px;">&nbsp;</div>
                 <div class="sn_body"><table class="sn_planner_table" id="sn_skill_table"></table></div>
@@ -162,8 +175,6 @@
             headerTitle.after(wrapper);
         }
         updateUI();
-
-        // Kick off the slow data fetch in the background
         fetchPlayerData();
     }
 
@@ -181,7 +192,6 @@
             if (archImg) { const tipText = archImg.getAttribute('onmouseover'); const match = tipText.match(/set_tip\s*\(\s*'([^']+)'/); if (match) archName = match[1]; }
             archName = archName.replace('Linebacker', 'LB').replace(' Receiver', ' Rec');
 
-            // Update globals and refresh math
             globalLevel = level;
             let builds = getBuilds(pos);
             globalBuildData = new BuildData(builds.find(b => b[0] === archName) || builds[0]);
@@ -189,7 +199,6 @@
             const badge = document.getElementById('sn_status_badge');
             if (badge) badge.textContent = ` [Lvl ${level} ${pos} | ${archName}]`;
 
-            // Trigger recalculation of all rows with new archetype data
             document.querySelectorAll('#sn_main_wrapper tr[data-stat]').forEach(row => {
                 const statName = row.dataset.stat;
                 const containers = document.querySelectorAll('.attribute_container');

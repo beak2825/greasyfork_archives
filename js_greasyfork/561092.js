@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         Lolz Part Check
 // @namespace    http://tampermonkey.net/
-// @version      1.2
+// @version      1.3
 // @description  Просто количество участий в розыгрышах
-// @author       MARYXANAX
+// @author       taskill
 // @license      MIT
 // @match        https://lolz.live/*
 // @match        https://zelenka.guru/*
@@ -20,120 +20,48 @@
 
     GM_addStyle(`
         @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap');
-
-        .limit-notif {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            background: #1a1a1a;
-            color: #efefef;
-            padding: 14px 20px;
-            border-radius: 6px;
-            z-index: 1000001;
-            font-family: 'Open Sans', sans-serif;
-            font-size: 14px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            min-width: 300px;
-            animation: slideInNotif 0.3s ease-out;
-            overflow: hidden;
-            border-left: 4px solid #ff4d4d;
-        }
-
-        @keyframes slideInNotif {
-            from { transform: translateX(-110%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-
-        .notif-close {
-            cursor: pointer;
-            color: #666;
-            margin-left: 20px;
-            display: flex;
-            transition: color 0.2s;
-        }
-
+        .limit-notif { position: fixed; bottom: 20px; left: 20px; background: #1a1a1a; color: #efefef; padding: 14px 20px; border-radius: 6px; z-index: 1000001; font-family: 'Open Sans', sans-serif; font-size: 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: space-between; min-width: 300px; animation: slideInNotif 0.3s ease-out; overflow: hidden; border-left: 4px solid #ff4d4d; }
+        @keyframes slideInNotif { from { transform: translateX(-110%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .notif-close { cursor: pointer; color: #666; margin-left: 20px; display: flex; transition: color 0.2s; }
         .notif-close:hover { color: #ff4d4d; }
-
-        .notif-progress-wrap {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        .notif-progress-fill {
-            height: 100%;
-            background: #ff4d4d;
-            width: 100%;
-        }
+        .notif-progress-wrap { position: absolute; bottom: 0; left: 0; width: 100%; height: 3px; background: rgba(255, 255, 255, 0.05); }
+        .notif-progress-fill { height: 100%; background: #ff4d4d; width: 100%; }
     `);
-
-    let notificationShown = false;
 
     function showLimitNotification() {
         if (document.getElementById('limit-alert')) return;
-
         const notif = document.createElement('div');
         notif.id = 'limit-alert';
         notif.className = 'limit-notif';
-        notif.innerHTML = `
-            <div style="font-weight: 600;">Достигнут лимит участий в розыгрышах</div>
-            <div class="notif-close" id="close-notif">
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M1 1L11 11M1 11L11 1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-            </div>
-            <div class="notif-progress-wrap">
-                <div class="notif-progress-fill" id="notif-bar"></div>
-            </div>
-        `;
+        notif.innerHTML = `<div style="font-weight: 600;">Достигнут лимит участий в розыгрышах</div><div class="notif-close" id="close-notif"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1L11 11M1 11L11 1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div><div class="notif-progress-wrap"><div class="notif-progress-fill" id="notif-bar"></div></div>`;
         document.body.appendChild(notif);
-
         const bar = notif.querySelector('#notif-bar');
         const duration = 5000;
         let start = Date.now();
-
         const timer = setInterval(() => {
             let elapsed = Date.now() - start;
             let progress = 100 - (elapsed / duration * 100);
             bar.style.width = progress + '%';
-            if (elapsed >= duration) {
-                clearInterval(timer);
-                notif.remove();
-            }
+            if (elapsed >= duration) { clearInterval(timer); notif.remove(); }
         }, 20);
-
-        notif.querySelector('#close-notif').onclick = () => {
-            clearInterval(timer);
-            notif.remove();
-        };
+        notif.querySelector('#close-notif').onclick = () => { clearInterval(timer); notif.remove(); };
     }
 
     function init() {
         const target = document.querySelector('.navTabs .account-links');
         if (!target || document.getElementById('live-limit-tracker')) return;
 
-        const posX = '505px';
-        const posY = '10px';
-
+        const savedPos = GM_getValue('widgetPosFix', { top: '10px', right: '481px' });
         const cachedData = GM_getValue('limitCache', { text: '0 / 0', width: '0%' });
         const sizes = GM_getValue('widgetSizes', { barWidth: 96, fontSize: 12, notifEnabled: true });
 
         const widget = document.createElement('div');
         widget.id = 'live-limit-tracker';
-        widget.style = `position: absolute; top: ${posY}; right: ${posX}; z-index: 9999; cursor: move; user-select: none; display: flex; flex-direction: column; align-items: center;`;
+        widget.style = `position: absolute; top: ${savedPos.top}; right: ${savedPos.right}; z-index: 9999; cursor: move; user-select: none; display: flex; flex-direction: column; align-items: center;`;
 
         const tooltip = document.createElement('div');
         tooltip.innerText = 'Лимит участий в розыгрышах';
         tooltip.style = `position: absolute; top: 32px; background: rgba(45, 45, 45, 0.9); color: #efefef; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; white-space: nowrap; opacity: 0; visibility: hidden; transform: translateY(-5px); transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.5); z-index: 1000000; pointer-events: none; border: 1px solid #444;`;
-        const arrow = document.createElement('div');
-        arrow.style = `position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); border: 5px solid transparent; border-bottom-color: #444;`;
-        tooltip.appendChild(arrow);
 
         const mainRow = document.createElement('div');
         mainRow.style = "display: flex; align-items: center; gap: 2px;";
@@ -163,23 +91,14 @@
                     <input type="range" id="range-font" min="8" max="14" value="${sizes.fontSize}" class="glow-slider">
                 </div>
                 <div style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid #333; padding-top: 5px;">
-                    <span style="font-size: 8px; color: #666; text-transform: uppercase;">Уведомления о лимите</span>
+                    <span style="font-size: 8px; color: #666; text-transform: uppercase;">Уведомления</span>
                     <input type="checkbox" id="check-notif" ${sizes.notifEnabled ? 'checked' : ''} style="cursor: pointer; accent-color: #2b8c5d; margin-right: -2px;">
                 </div>
             </div>
             <style>
                 .glow-slider { appearance: none; width: 100%; height: 2px; background: #333; outline: none; border-radius: 2px; }
-                .glow-slider::-webkit-slider-thumb {
-                    appearance: none; width: 10px; height: 10px; border-radius: 50%;
-                    background: #2b8c5d; cursor: pointer; border: none;
-                    box-shadow: 0 0 8px #2b8c5d, 0 0 12px rgba(43, 140, 93, 0.6);
-                    transition: transform 0.1s;
-                }
+                .glow-slider::-webkit-slider-thumb { appearance: none; width: 10px; height: 10px; border-radius: 50%; background: #2b8c5d; cursor: pointer; border: none; box-shadow: 0 0 8px #2b8c5d, 0 0 12px rgba(43, 140, 93, 0.6); transition: transform 0.1s; }
                 .glow-slider::-webkit-slider-thumb:hover { transform: scale(1.2); }
-                .glow-slider::-moz-range-thumb {
-                    width: 10px; height: 10px; border-radius: 50%; background: #2b8c5d;
-                    cursor: pointer; border: none; box-shadow: 0 0 8px #2b8c5d;
-                }
             </style>
         `;
 
@@ -206,9 +125,28 @@
         checkNotif.onchange = () => { sizes.notifEnabled = checkNotif.checked; GM_setValue('widgetSizes', sizes); };
 
         let isDragging = false, offset = { x: 0, y: 0 };
-        widget.onmousedown = (e) => { if (e.altKey) { isDragging = true; const rect = widget.getBoundingClientRect(); offset.x = rect.right - e.clientX; offset.y = e.clientY - rect.top; e.preventDefault(); } };
-        window.onmousemove = (e) => { if (isDragging) { const parentRect = target.getBoundingClientRect(); widget.style.right = (parentRect.right - e.clientX - offset.x) + 'px'; widget.style.top = (e.clientY - parentRect.top - offset.y) + 'px'; } };
-        window.onmouseup = () => { if (isDragging) { isDragging = false; GM_setValue('widgetPosFix', { top: widget.style.top, right: widget.style.right }); } };
+        widget.onmousedown = (e) => {
+            if (e.altKey) {
+                isDragging = true;
+                const rect = widget.getBoundingClientRect();
+                offset.x = rect.right - e.clientX;
+                offset.y = e.clientY - rect.top;
+                e.preventDefault();
+            }
+        };
+        window.onmousemove = (e) => {
+            if (isDragging) {
+                const parentRect = target.getBoundingClientRect();
+                widget.style.right = (parentRect.right - e.clientX - offset.x) + 'px';
+                widget.style.top = (e.clientY - parentRect.top - offset.y) + 'px';
+            }
+        };
+        window.onmouseup = () => {
+            if (isDragging) {
+                isDragging = false;
+                GM_setValue('widgetPosFix', { top: widget.style.top, right: widget.style.right });
+            }
+        };
     }
 
     function updateTextWithAnimation(newStr, animate = true) {
@@ -239,10 +177,18 @@
                     updateTextWithAnimation(counter.innerText, true);
                     const bgEl = document.getElementById('tracker-bg');
                     if (bgEl) bgEl.style.width = bg.style.width;
+
                     const savedSizes = GM_getValue('widgetSizes', { notifEnabled: true });
+                    const wasNotified = GM_getValue('alreadyNotified', false);
+
                     if (bg.style.width === "100%") {
-                        if (!notificationShown && savedSizes.notifEnabled) { showLimitNotification(); notificationShown = true; }
-                    } else { notificationShown = false; }
+                        if (!wasNotified && savedSizes.notifEnabled) {
+                            showLimitNotification();
+                            GM_setValue('alreadyNotified', true);
+                        }
+                    } else {
+                        GM_setValue('alreadyNotified', false);
+                    }
                     GM_setValue('limitCache', { text: counter.innerText, width: bg.style.width });
                 }
             }

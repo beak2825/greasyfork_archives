@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LightLayer Refund Calculator
 // @namespace    https://account.lightlayer.net/
-// @version      2.6.2
+// @version      2.6.5
 // @include      https://account.lightlayer.net/syscontrol/*cmd=invoices&action=edit*
 // @include      https://account.lightlayer.net/syscontrol/index.php*cmd=invoices&action=edit*
 // @run-at       document-end
@@ -39,8 +39,8 @@
     function getTotalDays(startDate, endDate) {
         const monthDiff = (endDate.getFullYear() - startDate.getFullYear()) * 12 + (endDate.getMonth() - startDate.getMonth());
         if (monthDiff === 3) return 90; // 季度
-        if (monthDiff === 6) return 150; // 半年
-        if (monthDiff === 12) return 300; // 年付
+        if (monthDiff === 6) return 180; // 半年
+        if (monthDiff === 12) return 365; // 年付
         return getTotalDaysByMonth(startDate); // 默认月付逻辑
     }
 

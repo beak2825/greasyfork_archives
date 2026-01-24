@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Platesmania Gallery Moderator Mode Toolbox
-// @version      2.1.1
+// @version      2.3.1
 // @description  Couple enhancements for moderator workflow.
 // @match        https://platesmania.com/*gallery*
 // @match        https://platesmania.com/*/nomer*
@@ -20,9 +20,6 @@
 
 // known Issues:
 // - Brand/model selection on /nomer pages not working correctly.
-
-// TOdo:
-// - Add lookup tools on /nomer pages
 
 
 (() => {
@@ -727,7 +724,11 @@
 
         const editForm = qs('form[action="/admin/edit_new.php"]', tile);
 
-        return { tile, href, country, photoId, username, userId, plate, mImg, mImgUrl, oImgUrl, editForm };
+        const tagsLi = qs('li.pull-right > i.fa.fa-tags.tooltips', tile);
+        const tagsTitle = tagsLi?.getAttribute("data-original-title") || tagsLi?.getAttribute("title") || "";
+        const hasNewLetterTag = tagsTitle.toLowerCase().includes("new letter combination");
+
+        return { tile, href, country, photoId, username, userId, plate, mImg, mImgUrl, oImgUrl, editForm, tagsLi, hasNewLetterTag };
     }
 
     function makeBtn(opts) {
@@ -739,6 +740,231 @@
         btn.innerHTML = opts.html || "";
         if (opts.onClick) btn.addEventListener("click", opts.onClick);
         return btn;
+    }
+
+    // New letter combination check functions
+    function isGermanOrDutchPage() {
+        const pathname = window.location.pathname || "";
+        const search = window.location.search || "";
+        
+        const deNlMatch = pathname.match(/^\/(de|nl)\//i);
+        if (deNlMatch) return deNlMatch[1].toLowerCase();
+        
+        const countryMatch = search.match(/country(?:\[0\]|%5B0%5D)=([0-9]+)/i);
+        if (countryMatch) {
+            const countryId = countryMatch[1];
+            if (countryId === "6") return "de";
+            if (countryId === "24") return "nl";
+        }
+        
+        try {
+            const searchParams = new URLSearchParams(search);
+            const countryParam = searchParams.get("country[0]");
+            if (countryParam === "6") return "de";
+            if (countryParam === "24") return "nl";
+        } catch (e) {}
+        
+        return null;
+    }
+
+    function extractPlateFromNomerPage() {
+        const h1 = qs("h1.pull-left");
+        if (!h1) return null;
+        return (h1.textContent || "").trim();
+    }
+
+    async function checkNewLetterCombination(nomerUrl) {
+        if (!nomerUrl) {
+            console.log("[New Letter Check] No nomer URL provided");
+            return null;
+        }
+        
+        const isCurrentPage = window.location.href === nomerUrl || window.location.href.replace(/\/$/, '') === nomerUrl.replace(/\/$/, '');
+        let nomerDoc;
+        
+        if (isCurrentPage) {
+            console.log("[New Letter Check] Using current page document (already on nomer page)");
+            nomerDoc = document;
+        } else {
+            console.log("[New Letter Check] Fetching nomer page:", nomerUrl);
+            try {
+                const nomerHtml = await httpGetText(nomerUrl);
+                console.log("[New Letter Check] Nomer page fetched, length:", nomerHtml.length);
+                
+                const nomerParser = new DOMParser();
+                nomerDoc = nomerParser.parseFromString(nomerHtml, "text/html");
+            } catch (e) {
+                console.error("[New Letter Check] Error fetching nomer page:", e);
+                return null;
+            }
+        }
+        
+        try {
+            const allTableIcons = nomerDoc.querySelectorAll('i.fa-table, i.fa.fa-table, i[class*="fa-table"]');
+            
+            if (allTableIcons.length === 0) {
+                console.log("[New Letter Check] No fa-table icon found on nomer page");
+                const fallbackLink = nomerDoc.querySelector('a[href*="result_"]');
+                if (fallbackLink) {
+                    console.log("[New Letter Check] Found fallback result link:", fallbackLink.getAttribute("href"));
+                    const tableHref = fallbackLink.getAttribute("href");
+                    const tableUrl = new URL(tableHref, nomerUrl).href;
+                    console.log("[New Letter Check] Using fallback table URL:", tableUrl);
+                    const tableHtml = await httpGetText(tableUrl);
+                    console.log("[New Letter Check] Table page fetched, length:", tableHtml.length);
+                    const tableParser = new DOMParser();
+                    const tableDoc = tableParser.parseFromString(tableHtml, "text/html");
+                    const numberElement = tableDoc.querySelector("span.text-highlights.text-highlights-light-green");
+                    const photoCount = numberElement ? parseInt(numberElement.textContent) : null;
+                    console.log("[New Letter Check] Photo count found:", photoCount);
+                    const isNewCombination = photoCount === 1;
+                    console.log("[New Letter Check] Is new combination:", isNewCombination);
+                    const fallbackTableName = (fallbackLink.textContent || "").trim().replace(/^Table of\s+/i, "").trim();
+                    return { isNewCombination, tableUrl, tableName: fallbackTableName };
+                }
+                return { error: "no_table" };
+            }
+            
+            console.log("[New Letter Check] Found", allTableIcons.length, "fa-table icon(s)");
+            
+            let tableLink = null;
+            
+            for (const tableIcon of allTableIcons) {
+                let candidateLink = null;
+                
+                const parent = tableIcon.parentElement;
+                if (parent) {
+                    candidateLink = parent.querySelector('a[href*="result"]');
+                }
+                
+                if (!candidateLink) {
+                    let next = tableIcon.nextElementSibling;
+                    while (next && (next.nodeType !== 1 || next.tagName !== 'A')) {
+                        if (next.tagName === 'A') {
+                            candidateLink = next;
+                            break;
+                        }
+                        next = next.nextElementSibling;
+                    }
+                    if (next && next.tagName === 'A') {
+                        candidateLink = next;
+                    }
+                }
+                
+                if (!candidateLink) {
+                    candidateLink = tableIcon.closest('a');
+                }
+                
+                if (candidateLink && candidateLink.tagName === 'A') {
+                    const href = candidateLink.getAttribute("href") || "";
+                    const hrefLower = href.toLowerCase();
+                    
+                    if (href.includes("result") || 
+                        (href.includes("series-") && !href.includes("series.php")) ||
+                        (href.match(/^[^\/]*-[^\/]+$/) && !href.includes("series.php"))) {
+                        tableLink = candidateLink;
+                        console.log("[New Letter Check] Found specific table link:", href);
+                        break;
+                    } else if (!tableLink && !href.includes("series.php")) {
+                        tableLink = candidateLink;
+                        console.log("[New Letter Check] Found potential table link:", href);
+                    }
+                }
+            }
+            
+            if (!tableLink || tableLink.tagName !== 'A') {
+                console.log("[New Letter Check] No valid table link found");
+                return { error: "no_table" };
+            }
+            
+            console.log("[New Letter Check] Found table link element:", tableLink.outerHTML?.substring(0, 200));
+            
+            const tableHref = tableLink.getAttribute("href");
+            if (!tableHref) {
+                console.log("[New Letter Check] Table link found but no href attribute");
+                return { error: "no_table" };
+            }
+            
+            console.log("[New Letter Check] Found table link href:", tableHref);
+            
+            const tableUrl = new URL(tableHref, nomerUrl).href;
+            console.log("[New Letter Check] Resolved table URL:", tableUrl);
+            
+            console.log("[New Letter Check] Fetching table page:", tableUrl);
+            const tableHtml = await httpGetText(tableUrl);
+            console.log("[New Letter Check] Table page fetched, length:", tableHtml.length);
+            
+            const tableParser = new DOMParser();
+            const tableDoc = tableParser.parseFromString(tableHtml, "text/html");
+            
+            const numberElement = tableDoc.querySelector("span.text-highlights.text-highlights-light-green");
+            const photoCount = numberElement ? parseInt(numberElement.textContent) : null;
+            
+            console.log("[New Letter Check] Photo count found:", photoCount);
+            
+            const isNewCombination = photoCount === 1;
+            console.log("[New Letter Check] Is new combination:", isNewCombination);
+            
+            const tableLinkText = (tableLink.textContent || "").trim();
+            const tableName = tableLinkText.replace(/^Table of\s+/i, "").trim();
+            
+            return { isNewCombination, tableUrl, tableName };
+        } catch (e) {
+            console.error("[New Letter Check] Error checking letter combination:", e);
+            console.error("[New Letter Check] Error stack:", e.stack);
+            return null;
+        }
+    }
+
+    function getUserInfo() {
+        const loginbar = qs("ul.loginbar");
+        if (!loginbar) return null;
+        
+        const userLink = qs('a[href^="/user"]', loginbar);
+        if (!userLink) return null;
+        
+        const userHref = userLink.getAttribute("href") || "";
+        const userId = (userHref.match(/^\/user(\d+)/) || [])[1] || "";
+        const username = (userLink.textContent || "").trim();
+        
+        return { username, userId };
+    }
+
+    function getTagsFromNomerPage() {
+        const tags = qsa('span.label.rounded.label-light > a[href*="tags="]');
+        const tagTexts = Array.from(tags).map(a => (a.textContent || "").trim().toLowerCase());
+        const hasInLabels = tagTexts.some(t => t.includes("new letter combination"));
+        
+        const tagsIcon = qs('i.fa.fa-tags.tooltips');
+        if (tagsIcon) {
+            const tooltip = (tagsIcon.getAttribute("data-original-title") || tagsIcon.getAttribute("title") || "").toLowerCase();
+            if (tooltip.includes("new letter combination")) return true;
+        }
+        
+        return hasInLabels;
+    }
+
+    async function updateTag(nomer, table, user, userid, shouldHaveTag) {
+        const url = "https://platesmania.com/admin/tags_edit_1b.php";
+        const data = {
+            nomer: nomer,
+            table: table,
+            user: user,
+            userid: userid
+        };
+        
+        if (shouldHaveTag) {
+            data["CheckBox[13]"] = "on";
+        }
+        // If shouldHaveTag is false, we don't include CheckBox[13] at all
+        
+        try {
+            const response = await httpPost(url, data);
+            return true;
+        } catch (e) {
+            console.error("Error updating tag:", e);
+            return false;
+        }
     }
 
     function injectForumWarningButton(tileInfo) {
@@ -808,6 +1034,326 @@
         icon.parentNode.insertBefore(a, icon);
         a.appendChild(icon);
 
+    }
+
+    function injectNewLetterCombinationCheckGallery(tileInfo) {
+        const tile = tileInfo.tile;
+        if (!tile) return;
+        
+        // Check if icon already exists
+        if (tile.querySelector(".pmx-newletter-check")) return;
+        
+        const listInline = qs("ul.list-inline", tile);
+        if (!listInline) return;
+        
+        const imgLink = qs('a[href*="/nomer"] > img.img-responsive.center-block', tile)?.closest('a[href*="/nomer"]');
+        if (!imgLink) {
+            console.log("[New Letter Check] No image link found in tile");
+            return;
+        }
+        
+        const nomerHref = imgLink.getAttribute("href");
+        if (!nomerHref) {
+            console.log("[New Letter Check] Image link found but no href attribute");
+            return;
+        }
+        
+        // Resolve to full URL
+        const nomerUrl = new URL(nomerHref, window.location.origin).href;
+        console.log("[New Letter Check] Extracted nomer URL from gallery tile:", nomerUrl);
+        
+        const photoId = tileInfo.photoId;
+        if (!photoId) return;
+        
+        const country = tileInfo.country;
+        
+        const li = document.createElement("li");
+        li.className = "pmx-newletter-check";
+        
+        const icon = document.createElement("i");
+        icon.className = "fa fa-check-circle tooltips";
+        icon.setAttribute("data-toggle", "tooltip");
+        icon.setAttribute("data-placement", "left");
+        icon.setAttribute("data-original-title", "Check if first in table");
+        icon.style.cursor = "pointer";
+        icon.style.color = "#999";
+        
+        const statusSpan = document.createElement("span");
+        statusSpan.className = "pmx-newletter-status";
+        statusSpan.style.marginLeft = "5px";
+        statusSpan.style.fontSize = "12px";
+        
+        let isChecking = false;
+        
+        icon.addEventListener("click", async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            if (isChecking) return;
+            isChecking = true;
+            
+            console.log("[New Letter Check] Starting check for gallery tile, nomerUrl:", nomerUrl);
+            
+            icon.style.color = "#999";
+            statusSpan.textContent = "Checking...";
+            statusSpan.style.color = "#999";
+            
+            const result = await checkNewLetterCombination(nomerUrl);
+            isChecking = false;
+            
+            if (result === null) {
+                statusSpan.textContent = "Error";
+                statusSpan.style.color = "#d9534f";
+                const existingFix = li.querySelector(".pmx-newletter-fix");
+                if (existingFix) existingFix.remove();
+                const existingTableLink = li.querySelector(".pmx-newletter-table-link");
+                if (existingTableLink) existingTableLink.remove();
+                return;
+            }
+            
+            if (result.error === "no_table") {
+                icon.style.color = "#d9534f";
+                statusSpan.textContent = "No letter combination table found.";
+                statusSpan.style.color = "#d9534f";
+                const existingFix = li.querySelector(".pmx-newletter-fix");
+                if (existingFix) existingFix.remove();
+                const existingTableLink = li.querySelector(".pmx-newletter-table-link");
+                if (existingTableLink) existingTableLink.remove();
+                return;
+            }
+            
+            const isNew = result.isNewCombination;
+            const tableUrl = result.tableUrl;
+            const tableName = result.tableName || "table";
+            const hasTag = tileInfo.hasNewLetterTag;
+            
+            if (isNew) {
+                icon.style.color = "#5cb85c";
+                statusSpan.textContent = `First in ${tableName} table`;
+                statusSpan.style.color = "#5cb85c";
+            } else {
+                icon.style.color = "#d9534f";
+                statusSpan.textContent = `Not first in ${tableName} table`;
+                statusSpan.style.color = "#d9534f";
+            }
+            
+            const existingFix = li.querySelector(".pmx-newletter-fix");
+            if (existingFix) existingFix.remove();
+            const existingTableLink = li.querySelector(".pmx-newletter-table-link");
+            if (existingTableLink) existingTableLink.remove();
+            
+            if (tableUrl) {
+                const tableLink = document.createElement("a");
+                tableLink.className = "pmx-newletter-table-link";
+                tableLink.href = tableUrl;
+                tableLink.target = "_blank";
+                tableLink.style.marginLeft = "8px";
+                tableLink.style.color = "#337ab7";
+                tableLink.style.textDecoration = "underline";
+                tableLink.style.cursor = "pointer";
+                tableLink.textContent = "⎘ Letter combination table";
+                li.appendChild(tableLink);
+            }
+            
+            if (isNew && !hasTag) {
+                const fixLink = document.createElement("a");
+                fixLink.className = "pmx-newletter-fix";
+                fixLink.href = "#";
+                fixLink.style.marginLeft = "8px";
+                fixLink.style.color = "#337ab7";
+                fixLink.style.textDecoration = "underline";
+                fixLink.style.cursor = "pointer";
+                fixLink.textContent = "Add new letter combination tag";
+                
+                fixLink.addEventListener("click", async (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    const userInfo = getUserInfo();
+                    if (!userInfo) {
+                        alert("Could not get user information");
+                        return;
+                    }
+                    
+                    fixLink.textContent = "Updating...";
+                    fixLink.style.pointerEvents = "none";
+                    
+                    const success = await updateTag(photoId, country, userInfo.username, userInfo.userId, true);
+                    
+                    if (success) {
+                        fixLink.textContent = "Updated!";
+                        fixLink.style.color = "#5cb85c";
+                        // Update the tag status in the tile info
+                        tileInfo.hasNewLetterTag = true;
+                        // Hide the fix link after a short delay
+                        setTimeout(() => {
+                            fixLink.style.display = "none";
+                        }, 2000);
+                    } else {
+                        fixLink.textContent = "Error";
+                        fixLink.style.color = "#d9534f";
+                        fixLink.style.pointerEvents = "auto";
+                    }
+                });
+                
+                li.appendChild(fixLink);
+            } else if (!isNew && hasTag) {
+                const messageSpan = document.createElement("span");
+                messageSpan.className = "pmx-newletter-fix";
+                messageSpan.style.marginLeft = "8px";
+                messageSpan.style.color = "#d9534f";
+                messageSpan.style.fontStyle = "italic";
+                messageSpan.textContent = `Not first in ${tableName} table, but tag has been set. Please manually check if this was the first photo of the table.`;
+                li.appendChild(messageSpan);
+            }
+        });
+        
+        li.appendChild(icon);
+        li.appendChild(statusSpan);
+        listInline.appendChild(li);
+    }
+
+    function injectNewLetterCombinationCheckNomer() {
+        const pageInfo = getCurrentPageInfo();
+        if (!pageInfo.isNomerPage || !pageInfo.id) return;
+        
+        const buttonContainer = qs("div.col-xs-8.no-padding");
+        if (!buttonContainer) return;
+        
+        if (buttonContainer.querySelector(".pmx-newletter-check-btn")) return;
+        
+        const nomerUrl = window.location.href;
+        
+        const button = document.createElement("button");
+        button.className = "btn-u pmx-newletter-check-btn";
+        button.type = "button";
+        button.innerHTML = '<i data-toggle="tooltip" class="fa fa-check-circle tooltips" data-original-title="Check if first in table"></i>';
+        
+        const statusSpan = document.createElement("span");
+        statusSpan.className = "pmx-newletter-status";
+        statusSpan.style.marginLeft = "8px";
+        statusSpan.style.fontSize = "12px";
+        
+        let isChecking = false;
+        
+        button.addEventListener("click", async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            if (isChecking) return;
+            isChecking = true;
+            
+            console.log("[New Letter Check] Starting check for nomer page, nomerUrl:", nomerUrl);
+            
+            statusSpan.textContent = "Checking...";
+            statusSpan.style.color = "#999";
+            
+            const result = await checkNewLetterCombination(nomerUrl);
+            isChecking = false;
+            
+            if (result === null) {
+                statusSpan.textContent = "Error";
+                statusSpan.style.color = "#d9534f";
+                const existingFix = buttonContainer.querySelector(".pmx-newletter-fix");
+                if (existingFix) existingFix.remove();
+                const existingTableLink = buttonContainer.querySelector(".pmx-newletter-table-link");
+                if (existingTableLink) existingTableLink.remove();
+                return;
+            }
+            
+            if (result.error === "no_table") {
+                statusSpan.textContent = "No letter combination table found.";
+                statusSpan.style.color = "#d9534f";
+                const existingFix = buttonContainer.querySelector(".pmx-newletter-fix");
+                if (existingFix) existingFix.remove();
+                const existingTableLink = buttonContainer.querySelector(".pmx-newletter-table-link");
+                if (existingTableLink) existingTableLink.remove();
+                return;
+            }
+            
+            const isNew = result.isNewCombination;
+            const tableUrl = result.tableUrl;
+            const tableName = result.tableName || "table";
+            const hasTag = getTagsFromNomerPage();
+            
+            if (isNew) {
+                statusSpan.textContent = `First in ${tableName} table`;
+                statusSpan.style.color = "#5cb85c";
+            } else {
+                statusSpan.textContent = `Not first in ${tableName} table`;
+                statusSpan.style.color = "#d9534f";
+            }
+            
+            const existingFix = buttonContainer.querySelector(".pmx-newletter-fix");
+            if (existingFix) existingFix.remove();
+            const existingTableLink = buttonContainer.querySelector(".pmx-newletter-table-link");
+            if (existingTableLink) existingTableLink.remove();
+            
+            if (tableUrl) {
+                const tableLink = document.createElement("a");
+                tableLink.className = "pmx-newletter-table-link";
+                tableLink.href = tableUrl;
+                tableLink.target = "_blank";
+                tableLink.style.marginLeft = "8px";
+                tableLink.style.color = "#337ab7";
+                tableLink.style.textDecoration = "underline";
+                tableLink.style.cursor = "pointer";
+                tableLink.textContent = "⎘ Letter combination table";
+                buttonContainer.appendChild(tableLink);
+            }
+            
+            if (isNew && !hasTag) {
+                const fixLink = document.createElement("a");
+                fixLink.className = "pmx-newletter-fix";
+                fixLink.href = "#";
+                fixLink.style.marginLeft = "8px";
+                fixLink.style.color = "#337ab7";
+                fixLink.style.textDecoration = "underline";
+                fixLink.style.cursor = "pointer";
+                fixLink.textContent = "Add new letter combination tag";
+                
+                fixLink.addEventListener("click", async (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    const userInfo = getUserInfo();
+                    if (!userInfo) {
+                        alert("Could not get user information");
+                        return;
+                    }
+                    
+                    fixLink.textContent = "Updating...";
+                    fixLink.style.pointerEvents = "none";
+                    
+                    const success = await updateTag(pageInfo.id, pageInfo.country, userInfo.username, userInfo.userId, true);
+                    
+                    if (success) {
+                        fixLink.textContent = "Updated!";
+                        fixLink.style.color = "#5cb85c";
+                        setTimeout(() => {
+                            fixLink.style.display = "none";
+                        }, 2000);
+                    } else {
+                        fixLink.textContent = "Error";
+                        fixLink.style.color = "#d9534f";
+                        fixLink.style.pointerEvents = "auto";
+                    }
+                });
+                
+                buttonContainer.appendChild(fixLink);
+            } else if (!isNew && hasTag) {
+                const messageSpan = document.createElement("span");
+                messageSpan.className = "pmx-newletter-fix";
+                messageSpan.style.marginLeft = "8px";
+                messageSpan.style.color = "#d9534f";
+                messageSpan.style.fontStyle = "italic";
+                messageSpan.textContent = `Not first in ${tableName} table, but tag has been set. Please manually check if this was the first photo of the table.`;
+                buttonContainer.appendChild(messageSpan);
+            }
+        });
+        
+        buttonContainer.appendChild(button);
+        buttonContainer.appendChild(statusSpan);
     }
 
 
@@ -1416,6 +1962,7 @@
 
             if (info.editForm) enhanceModeratorEditForm(info.editForm);
             injectDoubleSpotSearchLink(info);
+            injectNewLetterCombinationCheckGallery(info);
             return;
         }
 
@@ -1423,6 +1970,7 @@
 
         injectForumWarningButton(info);
         injectDoubleSpotSearchLink(info);
+        injectNewLetterCombinationCheckGallery(info);
 
         if (!info.editForm) {
             tile.dataset.pmxDone = "1";
@@ -1994,39 +2542,41 @@
             const zoom = 3;
 
             function move(e) {
-                const rect = mainImg.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
+                const imgRect = mainImg.getBoundingClientRect();
+                const wrapRect = wrap.getBoundingClientRect();
 
-                const displayedWidth = rect.width;
-                const displayedHeight = rect.height;
-                const naturalWidth = mainImg.naturalWidth || displayedWidth;
-                const naturalHeight = mainImg.naturalHeight || displayedHeight;
+                let cx = (typeof e.offsetX === "number") ? e.offsetX : (e.clientX - imgRect.left);
+                let cy = (typeof e.offsetY === "number") ? e.offsetY : (e.clientY - imgRect.top);
 
-                const scaleX = naturalWidth / displayedWidth;
-                const scaleY = naturalHeight / displayedHeight;
-
-                const cx = Math.max(0, Math.min(x, displayedWidth));
-                const cy = Math.max(0, Math.min(y, displayedHeight));
+                cx = Math.max(0, Math.min(cx, imgRect.width));
+                cy = Math.max(0, Math.min(cy, imgRect.height));
 
                 const lw = lens.offsetWidth || 140;
                 const lh = lens.offsetHeight || 140;
 
-                const wrapRect = wrap.getBoundingClientRect();
-                const left = e.clientX - wrapRect.left - lw / 2;
-                const top = e.clientY - wrapRect.top - lh / 2;
+                const imgOffsetX = imgRect.left - wrapRect.left;
+                const imgOffsetY = imgRect.top - wrapRect.top;
+
+                const gap = 14;
+                const left = imgOffsetX + cx + gap;
+                const top  = imgOffsetY + cy - lh / 2;
 
                 lens.style.left = `${left}px`;
-                lens.style.top = `${top}px`;
+                lens.style.top  = `${top}px`;
 
-                const bgW = naturalWidth * zoom;
-                const bgH = naturalHeight * zoom;
-                lens.style.backgroundSize = `${bgW}px ${bgH}px`;
+                const naturalWidth  = mainImg.naturalWidth  || imgRect.width;
+                const naturalHeight = mainImg.naturalHeight || imgRect.height;
+                const scaleX = naturalWidth / imgRect.width;
+                const scaleY = naturalHeight / imgRect.height;
+
+                const zoom = 3;
+                lens.style.backgroundSize = `${naturalWidth * zoom}px ${naturalHeight * zoom}px`;
 
                 const bx = -(cx * scaleX * zoom - lw / 2);
                 const by = -(cy * scaleY * zoom - lh / 2);
                 lens.style.backgroundPosition = `${bx}px ${by}px`;
             }
+
 
             function enter() {
                 lens.style.display = "block";
@@ -2061,6 +2611,7 @@
         injectMakeModelEditButton();
         injectPlateEditButton();
         applyZoomToNomerPage(!!gmGet(ZOOM_KEY, false));
+        injectNewLetterCombinationCheckNomer();
     }
 
     function teardownNomerPage() {
@@ -2089,10 +2640,32 @@
     const pageInfo = getCurrentPageInfo();
 
     if (pageInfo.isNomerPage) {
+        // Always inject new letter combination check on nomer pages
+        injectNewLetterCombinationCheckNomer();
         if (moderatorEnabled) {
             processNomerPage();
         }
     } else {
+        // For gallery pages, inject new letter combination check even without moderator mode
+        // Check each tile individually (they might be from different countries)
+        const tiles = qsa(".col-sm-6.col-xs-12");
+        for (const tile of tiles) {
+            const info = parseTile(tile);
+            injectNewLetterCombinationCheckGallery(info);
+        }
+        
+        // Also watch for new tiles
+        const moGallery = new MutationObserver(() => {
+            const tiles = qsa(".col-sm-6.col-xs-12");
+            for (const tile of tiles) {
+                if (!tile.querySelector(".pmx-newletter-check")) {
+                    const info = parseTile(tile);
+                    injectNewLetterCombinationCheckGallery(info);
+                }
+            }
+        });
+        moGallery.observe(document.documentElement, { childList: true, subtree: true });
+        
         if (!moderatorEnabled) return;
 
         runModeratorPass();

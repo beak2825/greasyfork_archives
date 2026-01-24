@@ -3,7 +3,7 @@
 // @namespace   Violentmonkey Scripts
 // @match       https://forum.blackrussia.online/*
 // @grant       none
-// @version     1.1
+// @version     1.2
 // @author      Sasha_Prishvin
 // @license     
 // @description 09.01.2026, 20:04:00
@@ -267,10 +267,10 @@ $(document).ready(() => {
         $(`body`).append(`<script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>`);
 
         // Добавление кнопок при загрузке страницы
-        addButton(`На рассмотрение`, `pin`);
-        addButton(`Одобрено`, `accepted`);
-        addButton(`Отказано`, `unaccept`);
-        addButton(`Закрыто`, `zakruto`);
+     //   addButton(`На рассмотрение`, `pin`);
+     //   addButton(`Одобрено`, `accepted`);
+     //   addButton(`Отказано`, `unaccept`);
+     //   addButton(`Закрыто`, `zakruto`);
 
 
         // Поиск информации о теме

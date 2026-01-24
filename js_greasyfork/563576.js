@@ -1,12 +1,18 @@
 // ==UserScript==
 // @name         JAV-FORUM
 // @description  Alt+左|右键 激活菜单; 支持以图识图、磁力聚合...
-// @version      0.0.3
+// @version      0.0.5
 // @author       JAV-FORUM
 // @namespace    JAV-FORUM
 // @license      MIT
 // @icon         https://cdn-icons-png.flaticon.com/512/6576/6576105.png
 // @include      *://*/*
+// @exclude      *://*sleazyfork.org/*
+// @exclude      *://*greasyfork.org/*
+// @exclude      *://*gemini.google.com/*
+// @exclude      *://*googletagmanager.com/*
+// @exclude      *://*ogs.google.com/*
+// @exclude      *://*javdb*.com/*
 // @require      https://update.greasyfork.org/scripts/515994/1478507/gh_2215_make_GM_xhr_more_parallel_again.js
 // @require      https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js
 // @require      https://cdn.jsdelivr.net/npm/layui-layer@1.0.9/dist/layer.min.js
@@ -19,6 +25,7 @@
 // @connect      btdig.com
 // @connect      cld139.buzz
 // @connect      bt4gprx.com
+// @connect      api.imgur.com
 // @connect      115.com
 // @connect      *
 // @grant        GM_xmlhttpRequest
@@ -26,6 +33,8 @@
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_deleteValue
+// @grant        GM_registerMenuCommand
+// @grant        GM_unregisterMenuCommand
 // @downloadURL https://update.greasyfork.org/scripts/563576/JAV-FORUM.user.js
 // @updateURL https://update.greasyfork.org/scripts/563576/JAV-FORUM.meta.js
 // ==/UserScript==
@@ -56,14 +65,14 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                 const result = await fun();
                 runCount > 0 && console.debug(`[重试] 成功，共发起 ${runCount + 1} 次。`);
                 return result;
-            } catch (e) {
-                let errorString = String(e);
+            } catch (e2) {
+                let errorString = String(e2);
                 errorString.startsWith("Error: ") && (errorString = errorString.replace("Error: ", ""));
-                if (errorString.includes("Just a moment") || errorString.includes("重定向") || errorString.toLowerCase().includes("404 page not found") || errorString.toLowerCase().includes("沒有您要的結果") || errorString.toLowerCase().includes("状态码:4") || errorString.toLowerCase().includes("404 not found")) throw e;
+                if (errorString.includes("Just a moment") || errorString.includes("重定向") || errorString.toLowerCase().includes("404 page not found") || errorString.toLowerCase().includes("沒有您要的結果") || errorString.toLowerCase().includes("状态码:4") || errorString.toLowerCase().includes("404 not found")) throw e2;
                 runCount++;
                 if (runCount === tryCount) {
-                    errorString.length > 200 ? console.debug(`[重试] 达到最大重试次数 (${tryCount})，最终失败`) : console.debug(`[重试] 达到最大重试次数 (${tryCount})，最终失败：`, e);
-                    throw e;
+                    errorString.length > 200 ? console.debug(`[重试] 达到最大重试次数 (${tryCount})，最终失败`) : console.debug(`[重试] 达到最大重试次数 (${tryCount})，最终失败：`, e2);
+                    throw e2;
                 }
                 errorString.length > 200 ? console.debug(`[重试] 准备第 ${runCount + 1} 次重试`) : console.debug(`[重试] 准备第 ${runCount + 1} 次重试, 错误信息: ${errorString}`);
             }
@@ -73,10 +82,12 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
         constructor() {
             __publicField(this, "image_recognition_site_key", "jhs_image_recognition_site");
             __publicField(this, "image_recognition_history_key", "jhs_image_recognition_history");
+            __publicField(this, "image_recognition_auto_open_key", "jhs_image_recognition_auto_open");
             __publicField(this, "magnetHubSortType_key", "jhs_magnetHubSortType");
             __publicField(this, "magnetHubEngines_key", "jhs_magnetHubEngines");
             __publicField(this, "magnetHubHistory_key", "jhs_magnetHistory");
             __publicField(this, "magnetExtractorCollapsed_key", "jhs_magnetExtractorCollapsed");
+            __publicField(this, "menuSetting_key", "jhs_menuSetting");
         }
         setItem(key, value) {
             try {
@@ -106,7 +117,7 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
             if (null === rawData) return defaultValue;
             try {
                 return JSON.parse(rawData);
-            } catch (e) {
+            } catch (e2) {
                 return rawData;
             }
         }
@@ -118,52 +129,42 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
         }
     };
     window.gmHttp = new class {
-        async get(url, params = {}, headers = {}, noRedirect) {
-            return this.gmRequest("GET", url, null, params, headers, noRedirect);
+        async get(url, headers = {}, options = {}) {
+            options.headers = headers;
+            return this.gmRequest("GET", url, null, options);
         }
-        post(url, data = {}, headers = {}) {
-            headers = {
-                "Content-Type": "application/json",
-                ...headers
-            };
+        postJson(url, data = {}, headers = {}, options = {}) {
             let jsonData = JSON.stringify(data);
-            return this.gmRequest("POST", url, jsonData, null, headers);
+            options.headers = {
+                "Content-Type": "application/json",
+                ...options.headers
+            };
+            return this.gmRequest("POST", url, jsonData, options);
         }
-        postForm(url, data = {}, headers = {}) {
-            headers || (headers = {});
-            headers["Content-Type"] || (headers["Content-Type"] = "application/x-www-form-urlencoded");
-            let body = "";
-            data && Object.keys(data).length > 0 && (body = Object.entries(data).map((([key, value]) => `${key}=${value}`)).join("&"));
-            return this.gmRequest("POST", url, body, null, headers);
+        postFormData(url, formData, headers = {}, options = {
+            timeout: 1e4,
+            retryCount: 2
+        }) {
+            if (!(formData instanceof FormData)) throw new Error("参数类型错误 需为 FormData 实例");
+            options.headers = headers;
+            return this.gmRequest("POST", url, formData, options);
         }
-        postFileFormData(url, data = {}, headers = {}) {
-            headers || (headers = {});
-            const boundary = `----WebKitFormBoundary${Math.random().toString(36).substring(2)}`;
-            headers["Content-Type"] = `multipart/form-data; boundary=${boundary}`;
-            let body = "";
-            data && Object.keys(data).length > 0 && (body = Object.entries(data).map((([key, value]) => `--${boundary}\r\nContent-Disposition: form-data; name="${key}"\r\n\r\n${value}\r\n`)).join(""));
-            body += `--${boundary}--`;
-            return this.gmRequest("POST", url, body, null, headers);
-        }
-        async gmRequest(method, url, data = {}, params = {}, headers = {}, noRedirect = !1) {
-            if (params && Object.keys(params).length) {
-                const queryString = new URLSearchParams(params).toString();
-                url += (url.includes("?") ? "&" : "?") + queryString;
-            }
+        async gmRequest(method, url, data, options = {}) {
+            const {headers: headers = {}, noRedirect: noRedirect = !1, timeout: timeout = null, retryCount: retryCount = null} = options, httpTimeout = timeout || 2e3, httpRetryCount = retryCount || 5;
             data || (data = void 0);
             return await NetUtil.retry((() => new Promise(((resolve, reject) => {
                 GM_xmlhttpRequest({
                     method: method,
                     url: url,
                     headers: headers,
-                    timeout: 2e3,
+                    timeout: httpTimeout,
                     data: data,
                     onload: response => {
                         try {
                             noRedirect && response.finalUrl !== url && reject(`请求被重定向了, URL是: ${response.finalUrl} 内容:${response.responseText}`);
                             if (response.status >= 200 && response.status < 300) if (response.responseText) try {
                                 resolve(JSON.parse(response.responseText));
-                            } catch (e) {
+                            } catch (e2) {
                                 resolve(response.responseText);
                             } else resolve(response.responseText || response); else {
                                 console.error("请求失败,状态码:", response.status, url);
@@ -180,8 +181,8 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                                     reject(new Error(finalMsg || `请求发生错误 ${response.status}`));
                                 } else reject(new Error(`请求发生错误 ${response.status}`));
                             }
-                        } catch (e) {
-                            reject(e);
+                        } catch (e2) {
+                            reject(e2);
                         }
                     },
                     onerror: error => {
@@ -192,10 +193,10 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                         reject(new Error("请求超时: " + url));
                     }
                 });
-            }))), 5);
+            }))), httpRetryCount);
         }
     };
-    class DomUtil {
+    const _DomUtil = class {
         constructor() {
             throw new Error("工具类不可实例化");
         }
@@ -216,8 +217,8 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
             const parser = new DOMParser;
             return $(parser.parseFromString(html, "text/html"));
         }
-    }
-    __publicField(DomUtil, "insertStyle", ((css, id) => {
+    };
+    __publicField(_DomUtil, "insertStyle", ((css, id) => {
         if (!css) return;
         if (id && $(`#${id}`).length > 0) {
             console.warn(`[insertStyle] 插入失败：ID 为 "${id}" 的样式表已存在。`);
@@ -226,6 +227,14 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
         const finalCss = `<style${id ? ` id="${id}"` : ""}>${css.replace(/<\/?style>/gi, "")}</style>`;
         $("head").append(finalCss);
     }));
+    __publicField(_DomUtil, "debounce", ((func, delay) => {
+        let timeout;
+        return (...args) => {
+            clearTimeout(timeout);
+            timeout = setTimeout((() => func.apply(_DomUtil, args)), delay);
+        };
+    }));
+    let DomUtil = _DomUtil;
     const btnCss = `\n<style>\n    jhs-btn {\n        min-width: 80px;\n        display: inline-flex;\n        align-items: center;\n        justify-content: center;\n        padding: 7px 15px;\n        margin-right: 5px;\n        border-radius: 7px;\n        text-decoration: none;\n        font-weight: bold;\n        font-size: 12px;\n        transition: all 0.1s ease-in;\n        cursor: pointer;\n        white-space: nowrap;\n        box-sizing: border-box;\n        color: white; /* 默认字体颜色 */\n        box-shadow: 0 2px 3px rgba(0, 0, 0, 0.15);\n    }\n\n    jhs-btn:hover {\n        transform: translateY(-1px);\n        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);\n    }\n    \n    /* --- 内部 a 标签处理 --- */\n    jhs-btn a,\n    jhs-btn a:visited{\n        text-decoration: none; \n        color: inherit !important; \n    }\n    jhs-btn a:hover {\n        color: white;\n    }\n    \n    /* --- 动态生成的配色 --- */\n    ${Object.entries({
         aliceBlue: {
             background: "#f0f9ff",
@@ -306,7 +315,7 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                     if (part instanceof Error) return part.message;
                     if ("object" == typeof part && null !== part) try {
                         return JSON.stringify(part);
-                    } catch (e) {}
+                    } catch (e2) {}
                     return String(part);
                 })).join(" ");
                 msg.length > 500 && (msg = msg.substring(0, 500) + "... (内容超长已省略)");
@@ -421,8 +430,8 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                     prev: 1,
                     next: 1
                 },
-                render: function(e) {
-                    const $scrollBtn = $(e.currentTarget).find(".viewer-scrollDown");
+                render: function(e2) {
+                    const $scrollBtn = $(e2.currentTarget).find(".viewer-scrollDown");
                     $scrollBtn.html("↓");
                     $scrollBtn.attr("title", "向下滚动");
                 },
@@ -465,17 +474,17 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
             };
             this.viewerInstance = new Viewer(this.$container[0], options);
         }
-        _handleWheel(e) {
-            if (!e.ctrlKey) return;
-            e.preventDefault();
+        _handleWheel(e2) {
+            if (!e2.ctrlKey) return;
+            e2.preventDefault();
             const now = Date.now();
             if (this._lastZoomTime && now - this._lastZoomTime < 50) return;
             this._lastZoomTime = now;
-            const ratio = e.deltaY < 0 ? .1 : -.1;
+            const ratio = e2.deltaY < 0 ? .1 : -.1;
             requestAnimationFrame((() => {
                 this.viewerInstance.zoom(ratio, !0, {
-                    x: e.pageX,
-                    y: e.pageY
+                    x: e2.pageX,
+                    y: e2.pageY
                 });
             }));
         }
@@ -490,9 +499,9 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                 document.documentElement.style.overflow = hasShade ? "hidden" : "";
             }), waitTime);
         }
-        _handleKeydown(e) {
-            if ("Escape" === e.key || " " === e.key) {
-                e.preventDefault();
+        _handleKeydown(e2) {
+            if ("Escape" === e2.key || " " === e2.key) {
+                e2.preventDefault();
                 this.close();
             }
         }
@@ -556,12 +565,12 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                         name: name2,
                         status: "skipped"
                     };
-                } catch (e) {
-                    console.error(`插件 ${name2} 加载 CSS 失败`, e);
+                } catch (e2) {
+                    console.error(`插件 ${name2} 加载 CSS 失败`, e2);
                     return {
                         name: name2,
                         status: "rejected",
-                        error: e
+                        error: e2
                     };
                 }
             })))).filter((r => "rejected" === r.status));
@@ -571,8 +580,8 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
             await Promise.all(Array.from(this.plugins).map((async ([name2, instance]) => {
                 try {
                     "function" == typeof instance.handle && await instance.handle();
-                } catch (e) {
-                    console.error(`插件 ${name2} 执行失败`, e);
+                } catch (e2) {
+                    console.error(`插件 ${name2} 执行失败`, e2);
                 }
             })));
         }
@@ -802,14 +811,14 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                     this.searchAllSelected($container, newKeyword);
                 } else $resultsContainer.html('<div class="magnet-loading">请输入关键词进行搜索</div>');
             };
-            $container.on("click", ".history-item", (e => {
-                const $target = $(e.currentTarget);
+            $container.on("click", ".history-item", (e2 => {
+                const $target = $(e2.currentTarget);
                 $searchInput.val($target.data("val"));
                 performSearch();
             }));
-            $container.on("click", ".history-del-btn", (e => {
-                e.stopPropagation();
-                const valToRemove = $(e.currentTarget).parent().data("val");
+            $container.on("click", ".history-del-btn", (e2 => {
+                e2.stopPropagation();
+                const valToRemove = $(e2.currentTarget).parent().data("val");
                 let history = cacheManager.getItem(cacheManager.magnetHubHistory_key, []);
                 history = history.filter((item => item !== valToRemove));
                 cacheManager.setItem(cacheManager.magnetHubHistory_key, history);
@@ -820,11 +829,11 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                 renderHistory();
             }));
             $container.find(".search-submit-btn").on("click", performSearch);
-            $searchInput.on("keypress", (e => {
-                13 === e.which && performSearch();
+            $searchInput.on("keypress", (e2 => {
+                13 === e2.which && performSearch();
             }));
-            $container.on("click", ".sort-item", (e => {
-                const $target = $(e.target);
+            $container.on("click", ".sort-item", (e2 => {
+                const $target = $(e2.target);
                 this.currentSort = $target.data("sort");
                 cacheManager.setItem(cacheManager.magnetHubSortType_key, this.currentSort);
                 $container.find(".sort-item").removeClass("active");
@@ -842,8 +851,8 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
             renderHistory();
             performSearch();
             $hubContainer.append($container);
-            $container.off("click.copy").on("click.copy", ".magnet-copy-btn", (function(e) {
-                e.preventDefault();
+            $container.off("click.copy").on("click.copy", ".magnet-copy-btn", (function(e2) {
+                e2.preventDefault();
                 const $btn = $(this), magnet = $btn.data("magnet");
                 CommonUtil.copyToClipboard(magnet, (() => {
                     const originalText = $btn.text();
@@ -853,9 +862,9 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                     }), 1e3);
                 }));
             }));
-            $container.off("click.preview").on("click.preview", ".magnet-preview-btn", (async e => {
-                e.preventDefault();
-                const magnet = $(e.currentTarget).data("magnet"), cacheKey = "whatslink_" + magnet, cacheData = tempCacheManager.getItem(cacheKey, []);
+            $container.off("click.preview").on("click.preview", ".magnet-preview-btn", (async e2 => {
+                e2.preventDefault();
+                const magnet = $(e2.currentTarget).data("magnet"), cacheKey = "whatslink_" + magnet, cacheData = tempCacheManager.getItem(cacheKey, []);
                 if (CommonUtil.isNotNull(cacheData)) {
                     window.viewerManager.showImageViewer(cacheData, {
                         toTop: !1,
@@ -881,17 +890,17 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                         toTop: !1,
                         initZoom: !1
                     });
-                } catch (e2) {
-                    show.error(e2);
-                    console.error(e2);
+                } catch (e3) {
+                    show.error(e3);
+                    console.error(e3);
                 } finally {
                     loadObj.close();
                 }
             }));
-            $container.on("contextmenu", ".engine-label-text", (e => {
-                let targetUrl = $(e.currentTarget).attr("data-url");
+            $container.on("contextmenu", ".engine-label-text", (e2 => {
+                let targetUrl = $(e2.currentTarget).attr("data-url");
                 if (!targetUrl) return;
-                e.preventDefault();
+                e2.preventDefault();
                 const currentKw = $searchInput.val().trim();
                 targetUrl = currentKw ? targetUrl.replace("{keyword}", encodeURIComponent(currentKw)) : targetUrl.replace("{keyword}", "");
                 window.open(targetUrl, "_blank");
@@ -910,7 +919,7 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
             $resultsContainer.html('<div class="magnet-loading">正在聚合搜索中...</div>');
             let allResults = [], duplicateCount = 0;
             const searchPromises = selectedIds.map((async id => {
-                const engine = this.engineConfig.find((e => e.id === id)), $engineWrapper = $container.find(`.engine-checkbox-wrapper[data-engine-id="${id}"]`);
+                const engine = this.engineConfig.find((e2 => e2.id === id)), $engineWrapper = $container.find(`.engine-checkbox-wrapper[data-engine-id="${id}"]`);
                 $engineWrapper.addClass("engine-loading");
                 try {
                     const cacheKey = `${engine.id}_${keyword}`;
@@ -940,9 +949,9 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                     }));
                     $engineWrapper.removeClass("engine-loading").addClass("engine-success");
                     this.displayResults($resultsContainer, allResults, duplicateCount);
-                } catch (e) {
-                    console.error(`${engine.label} 搜索失败:`, e);
-                    const errorMessage = e.message || "未知错误（可能是跨域或网络问题）";
+                } catch (e2) {
+                    console.error(`${engine.label} 搜索失败:`, e2);
+                    const errorMessage = e2.message || "未知错误（可能是跨域或网络问题）";
                     $engineWrapper.removeClass("engine-loading").addClass("engine-error").attr("title", `错误详情: ${errorMessage}`);
                 }
             }));
@@ -1000,7 +1009,7 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
         async parseBTSOW(url, keyword) {
             const data = [ {
                 search: keyword
-            }, 50, 1 ], dataList = (await gmHttp.post(url, data)).data, baseUrl = NetUtil.getBaseUrl(url), results = [];
+            }, 50, 1 ], dataList = (await gmHttp.postJson(url, data)).data, baseUrl = NetUtil.getBaseUrl(url), results = [];
             for (let i = 0; i < dataList.length; i++) {
                 let item = dataList[i];
                 const size = (item.size / 1073741824).toFixed(2) + " GB", detailPageUrl = `${baseUrl}/magnet/detail/${item.hash}`;
@@ -1087,7 +1096,7 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
             if (!dateStr) return 0;
             try {
                 return DateUtil.toTimestamp(dateStr);
-            } catch (e) {}
+            } catch (e2) {}
             const match = dateStr.match(/^(\d+)(年|个月|周|天|小时|分钟)前$/);
             if (match) {
                 const value = parseInt(match[1]), unit = match[2], now = Date.now();
@@ -1121,9 +1130,81 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
             return strUpper.includes("G") ? 1024 * num * 1024 * 1024 : strUpper.includes("M") ? 1024 * num * 1024 : strUpper.includes("K") ? 1024 * num : num;
         }
     }
+    const _HotkeyManager = class {
+        constructor() {
+            throw new Error("工具类不可实例化");
+        }
+        static registerHotkey(hotkeyString, callback, keyupCallback = null) {
+            if (Array.isArray(hotkeyString)) {
+                let id_list = [];
+                hotkeyString.forEach((hotkey => {
+                    if (!this.isHotkeyFormat(hotkey)) throw new Error("快捷键格式错误");
+                    let id = this.recordHotkey(hotkey, callback, keyupCallback);
+                    id_list.push(id);
+                }));
+                return id_list;
+            }
+            if (!this.isHotkeyFormat(hotkeyString)) throw new Error("快捷键格式错误");
+            return this.recordHotkey(hotkeyString, callback, keyupCallback);
+        }
+        static recordHotkey(hotkeyString, callback, keyupCallback) {
+            let id = Math.random().toString(36).substr(2);
+            this.registerHotKeyMap.set(id, {
+                hotkeyString: hotkeyString,
+                callback: callback,
+                keyupCallback: keyupCallback
+            });
+            return id;
+        }
+        static unregisterHotkey(id) {
+            this.registerHotKeyMap.has(id) && this.registerHotKeyMap.delete(id);
+        }
+        static isHotkeyFormat(hotkeyString) {
+            return hotkeyString.toLowerCase().split("+").map((k => k.trim())).every((k => [ "ctrl", "shift", "alt" ].includes(k) || 1 === k.length));
+        }
+        static judgeHotkey(hotkeyString, event) {
+            const keyList = hotkeyString.toLowerCase().split("+").map((k => k.trim())), mods_ctrl = keyList.includes("ctrl"), mods_shift = keyList.includes("shift"), mods_alt = keyList.includes("alt"), mainKey = (keyList.includes("meta") || keyList.includes("command"), 
+            keyList.find((k => ![ "ctrl", "shift", "alt", "meta", "command" ].includes(k))));
+            if (!mainKey) {
+                const keyName = event.key.toLowerCase();
+                return !(!keyList.includes("alt") || "alt" !== keyName) || (!(!keyList.includes("ctrl") || "control" !== keyName) || !(!keyList.includes("shift") || "shift" !== keyName));
+            }
+            const ctrlMatch = (this.isMac ? event.metaKey : event.ctrlKey) === mods_ctrl, shiftMatch = event.shiftKey === mods_shift, altMatch = event.altKey === mods_alt, keyMatch = event.key.toLowerCase() === mainKey.toLowerCase();
+            return ctrlMatch && shiftMatch && altMatch && keyMatch;
+        }
+    };
+    __publicField(_HotkeyManager, "isMac", 0 === navigator.platform.indexOf("Mac"));
+    __publicField(_HotkeyManager, "registerHotKeyMap", new Map);
+    __publicField(_HotkeyManager, "handleKeydown", (event => {
+        const activeElement = document.activeElement;
+        if (!("INPUT" === activeElement.tagName || "TEXTAREA" === activeElement.tagName || activeElement.isContentEditable)) for (const [id, data] of _HotkeyManager.registerHotKeyMap) {
+            let hotkeyString = data.hotkeyString, callback = data.callback;
+            _HotkeyManager.judgeHotkey(hotkeyString, event) && callback(event);
+        }
+    }));
+    __publicField(_HotkeyManager, "handleKeyup", (event => {
+        for (const [id, data] of _HotkeyManager.registerHotKeyMap) {
+            let hotkeyString = data.hotkeyString, keyupCallback = data.keyupCallback;
+            keyupCallback && (_HotkeyManager.judgeHotkey(hotkeyString, event) && keyupCallback(event));
+        }
+    }));
+    let HotkeyManager = _HotkeyManager;
+    document.addEventListener("keydown", (event => {
+        HotkeyManager.handleKeydown(event);
+    }));
+    document.addEventListener("keyup", (event => {
+        HotkeyManager.handleKeyup(event);
+    }));
     class MenuPlugin extends BasePlugin {
         constructor() {
             super(...arguments);
+            __publicField(this, "settings", {
+                triggerHotkey: "Q"
+            });
+            __publicField(this, "mousePos", {
+                x: 0,
+                y: 0
+            });
             __publicField(this, "$menu", null);
             __publicField(this, "$currentTarget", null);
             __publicField(this, "menuConfig", [ {
@@ -1163,12 +1244,93 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
         getRegisterCondition() {
             return !0;
         }
-        async initCss() {
-            return "\n        <style>\n            .plugin-alt-menu, .plugin-submenu {\n                position: fixed; \n                z-index: 10001; \n                background: rgba(255, 255, 255, 0.85); /* 半透明背景 */\n                backdrop-filter: blur(12px); /* 毛玻璃特效 */\n                -webkit-backdrop-filter: blur(12px);\n                border: 1px solid rgba(255, 255, 255, 0.3); /* 柔和边框 */\n                border-radius: 10px; /* 大圆角 */\n                box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.12), \n                            0 1px 2px 0 rgba(0, 0, 0, 0.05); /* 层次感阴影 */\n                display: none; \n                list-style: none; \n                padding: 6px; \n                margin: 0;\n                min-width: 180px; \n                font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif;\n                user-select: none;\n                animation: menu-fade-in 0.15s ease-out; /* 弹出动画 */\n            }\n\n            @keyframes menu-fade-in {\n                from { opacity: 0; transform: translateY(5px) scale(0.98); }\n                to { opacity: 1; transform: translateY(0) scale(1); }\n            }\n\n            .plugin-alt-menu li {\n                position: relative; \n                padding: 10px 14px; \n                font-size: 14px;\n                color: #303133; \n                cursor: pointer; \n                white-space: nowrap;\n                display: flex; \n                justify-content: space-between; \n                align-items: center;\n                border-radius: 6px; /* 每一项也有圆角 */\n                transition: all 0.2s ease;\n                margin-bottom: 2px;\n            }\n\n            .plugin-alt-menu li:last-child { margin-bottom: 0; }\n\n            .plugin-alt-menu li:hover { \n                background-color: rgba(64, 158, 255, 0.1); /* 轻微蓝色背景 */\n                color: #409eff; \n                padding-left: 18px; /* 悬停时的小位移 */\n            }\n\n            /* 带有二级菜单的箭头样式 */\n            .has-children::after { \n                content: ''; /* 使用细体箭头符号或图标 */\n                font-family: serif;\n                font-size: 12px; \n                color: #909399; \n                opacity: 0.6;\n            }\n\n            .plugin-alt-menu li:hover > .plugin-submenu {\n                display: block; \n                position: absolute; \n                left: calc(100% + 4px); \n                top: -6px;\n            }\n\n            /* 分隔线优化 */\n            .menu-divider { \n                height: 1px; \n                background: linear-gradient(to right, transparent, rgba(0,0,0,0.06), transparent);\n                margin: 6px 10px; \n            }\n\n            /* 响应式：暗色模式适配（可选） */\n            @media (prefers-color-scheme: dark) {\n                .plugin-alt-menu, .plugin-submenu {\n                    background: rgba(40, 44, 52, 0.8);\n                    border: 1px solid rgba(255, 255, 255, 0.1);\n                    color: #e0e0e0;\n                }\n                .plugin-alt-menu li { color: #e0e0e0; }\n                .plugin-alt-menu li:hover { background-color: rgba(255, 255, 255, 0.1); }\n                .menu-divider { background: rgba(255,255,255,0.1); }\n            }\n        </style>\n    ";
-        }
         async handle() {
+            await this.loadSettings();
+            this.registerGMMenu();
+            this.refreshHotkey();
             this.render();
             this.bindEvents();
+        }
+        async loadSettings() {
+            const saved = await cacheManager.getItem(cacheManager.menuSetting_key);
+            saved && (this.settings = saved);
+        }
+        refreshHotkey() {
+            this.hotkeyId && HotkeyManager.unregisterHotkey(this.hotkeyId);
+            this.hotkeyId = HotkeyManager.recordHotkey(this.settings.triggerHotkey, (event => {
+                if (this.$menu && this.$menu.is(":visible")) {
+                    const elementAtMouse = document.elementFromPoint(this.mousePos.x, this.mousePos.y), $hoveredItem = $(elementAtMouse).closest(".plugin-alt-menu li");
+                    if ($hoveredItem.length > 0) {
+                        $hoveredItem.click();
+                        return;
+                    }
+                    this.hideMenu();
+                } else {
+                    event.preventDefault();
+                    this.hideMenu();
+                    this.showMenu(this.mousePos.x, this.mousePos.y);
+                }
+            }));
+        }
+        registerGMMenu() {
+            this.gmMenuId && GM_unregisterMenuCommand(this.gmMenuId);
+            this.gmMenuId = GM_registerMenuCommand(`⚙️ 设置触发快捷键 (当前: ${this.settings.triggerHotkey})`, (() => {
+                this.openHotkeySetter();
+            }));
+        }
+        openHotkeySetter() {
+            const content = `\n            <style>\n                .hotkey-container {\n                    padding: 24px;\n                    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;\n                    background-color: #fff;\n                }\n                .hotkey-label {\n                    margin-bottom: 12px;\n                    color: #8c8c8c;\n                    font-size: 13px;\n                    line-height: 1.5;\n                }\n                .hotkey-input-group {\n                    display: flex;\n                    align-items: center;\n                    gap: 12px;\n                }\n                #triggerHotkey {\n                    flex: 1;\n                    height: 40px;\n                    text-align: center;\n                    font-weight: 600;\n                    font-size: 14px;\n                    color: #409eff;\n                    background-color: #f5f7fa;\n                    border: 1px solid #dcdfe6;\n                    border-radius: 6px;\n                    cursor: pointer;\n                    transition: all 0.2s cubic-bezier(.645,.045,.355,1);\n                    outline: none;\n                }\n                #triggerHotkey:hover {\n                    border-color: #c0c4cc;\n                }\n                #triggerHotkey:focus {\n                    border-color: #409eff;\n                    background-color: #ecf5ff;\n                    box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.2);\n                }\n                #triggerHotkey::placeholder {\n                    color: #a8abb2;\n                    font-weight: normal;\n                }\n                #clearHotkey {\n                    height: 40px;\n                    padding: 0 16px;\n                    font-size: 13px;\n                    color: #606266;\n                    background: #fff;\n                    border: 1px solid #dcdfe6;\n                    border-radius: 6px;\n                    cursor: pointer;\n                    transition: all 0.2s;\n                }\n                #clearHotkey:hover {\n                    color: #ff4d4f;\n                    border-color: #ff4d4f;\n                    background-color: #fff1f0;\n                }\n                #clearHotkey:active {\n                    background-color: #ffccc7;\n                }\n            </style>\n            <div class="hotkey-container">\n                <div class="hotkey-label">\n                    快捷键录入：请直接在方框内按下组合键<br>\n                    <span style="font-size: 11px; color: #c0c4cc;">支持 Ctrl, Shift, Alt, Meta 与普通键组合</span>\n                </div>\n                <div class="hotkey-input-group">\n                    <input type="text" id="triggerHotkey" \n                        value="${this.settings.triggerHotkey}" \n                        readonly \n                        placeholder="点击此处按下按键..."\n                        autocomplete="off">\n                    <button type="button" id="clearHotkey">清空</button>\n                </div>\n            </div>\n        `;
+            layer.open({
+                type: 1,
+                title: "⚙️ 设置触发快捷键",
+                area: [ "400px", "250px" ],
+                content: content,
+                btn: [ "确定", "取消" ],
+                success: (layero, index) => {
+                    const $input = layero.find("#triggerHotkey"), $clearBtn = layero.find("#clearHotkey");
+                    $input.focus();
+                    $clearBtn.on("click", (() => $input.val("")));
+                    $input.on("keydown", (event => {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        const hotkey = this.parseHotkey(event);
+                        /[\u4e00-\u9fa5]/.test(hotkey) ? show.error("非法输入：不能输入中文或输入法转换错误") : $input.val(hotkey);
+                    }));
+                },
+                yes: (index, layero) => {
+                    const newKey = layero.find("#triggerHotkey").val();
+                    if (newKey) {
+                        this.settings.triggerHotkey = newKey;
+                        cacheManager.setItem(cacheManager.menuSetting_key, this.settings);
+                        this.refreshHotkey();
+                        this.registerGMMenu();
+                        layer.close(index);
+                        show.ok("设置已生效");
+                    } else show.error("快捷键不能为空");
+                }
+            });
+        }
+        parseHotkey(event) {
+            if ("Backspace" === event.key || "Process" === event.key) return "";
+            const keys = [];
+            event.ctrlKey && keys.push("Ctrl");
+            event.shiftKey && keys.push("Shift");
+            event.altKey && keys.push("Alt");
+            event.metaKey && keys.push("Cmd");
+            const key = {
+                " ": "Space",
+                Control: "Ctrl",
+                Meta: "Cmd",
+                ArrowUp: "Up",
+                ArrowDown: "Down",
+                ArrowLeft: "Left",
+                ArrowRight: "Right"
+            }[event.key] || (event.key.length > 1 ? event.key.replace("Arrow", "") : event.key.toUpperCase());
+            [ "Control", "Shift", "Alt", "Meta" ].includes(event.key) || keys.includes(key) || keys.push(key);
+            return keys.join("+");
+        }
+        async initCss() {
+            return "\n        <style>\n            .plugin-alt-menu, .plugin-submenu {\n                position: fixed; \n                z-index: 10001; \n                background: rgba(255, 255, 255, 0.85); /* 半透明背景 */\n                backdrop-filter: blur(12px); /* 毛玻璃特效 */\n                -webkit-backdrop-filter: blur(12px);\n                border: 1px solid rgba(255, 255, 255, 0.3); /* 柔和边框 */\n                border-radius: 10px; /* 大圆角 */\n                box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.12), \n                            0 1px 2px 0 rgba(0, 0, 0, 0.05); /* 层次感阴影 */\n                display: none; \n                list-style: none; \n                padding: 6px; \n                margin: 0;\n                min-width: 180px; \n                font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif;\n                user-select: none;\n                animation: menu-fade-in 0.15s ease-out; /* 弹出动画 */\n            }\n\n            @keyframes menu-fade-in {\n                from { opacity: 0; transform: translateY(5px) scale(0.98); }\n                to { opacity: 1; transform: translateY(0) scale(1); }\n            }\n\n            .plugin-alt-menu li {\n                position: relative; \n                padding: 10px 14px; \n                font-size: 14px;\n                color: #303133; \n                cursor: pointer; \n                white-space: nowrap;\n                display: flex; \n                justify-content: space-between; \n                align-items: center;\n                border-radius: 6px; /* 每一项也有圆角 */\n                transition: all 0.2s ease;\n                margin-bottom: 2px;\n            }\n\n            .plugin-alt-menu li:last-child { margin-bottom: 0; }\n\n            .plugin-alt-menu li:hover { \n                background-color: rgba(64, 158, 255, 0.1); /* 轻微蓝色背景 */\n                color: #409eff; \n                padding-left: 18px; /* 悬停时的小位移 */\n            }\n\n            /* 带有二级菜单的箭头样式 */\n            .has-children::after { \n                content: ''; /* 使用细体箭头符号或图标 */\n                font-family: serif;\n                font-size: 12px; \n                color: #909399; \n                opacity: 0.6;\n            }\n\n            .plugin-alt-menu li:hover > .plugin-submenu {\n                display: block; \n                position: absolute; \n                left: calc(100% + 4px); \n                top: -6px;\n            }\n\n            /* 分隔线优化 */\n            .menu-divider { \n                height: 1px; \n                background: linear-gradient(to right, transparent, rgba(0,0,0,0.06), transparent);\n                margin: 6px 10px; \n            }\n\n            /* 响应式：暗色模式适配（可选） */\n            @media (prefers-color-scheme: dark) {\n                .plugin-alt-menu, .plugin-submenu {\n                    background: rgba(40, 44, 52, 0.8);\n                    border: 1px solid rgba(255, 255, 255, 0.1);\n                    color: #e0e0e0;\n                }\n                .plugin-alt-menu li { color: #e0e0e0; }\n                .plugin-alt-menu li:hover { background-color: rgba(255, 255, 255, 0.1); }\n                .menu-divider { background: rgba(255,255,255,0.1); }\n            }\n        </style>\n    ";
         }
         renderMenu($container, items) {
             items.forEach((item => {
@@ -1194,30 +1356,32 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
             }
         }
         bindEvents() {
-            const handleTrigger = e => {
-                if (e.altKey) {
-                    e.preventDefault();
-                    e.stopImmediatePropagation();
-                    e.stopPropagation();
-                    this.$currentTarget = $(e.target);
-                    this.showMenu(e.clientX, e.clientY);
-                    return !0;
+            let ticking = !1;
+            $(document).on("mousemove", (e2 => {
+                if (!ticking) {
+                    window.requestAnimationFrame((() => {
+                        this.mousePos.x = e2.clientX;
+                        this.mousePos.y = e2.clientY;
+                        ticking = !1;
+                    }));
+                    ticking = !0;
                 }
-                return !1;
-            };
-            $(document).on("contextmenu", (e => {
-                handleTrigger(e);
             }));
-            document.addEventListener("mousedown", (e => {
-                if (!$(e.target).closest(".plugin-alt-menu").length) {
-                    this.hideMenu();
-                    0 === e.button && e.altKey && handleTrigger(e);
-                }
-            }), {
-                capture: !0
-            });
-            $(document).on("mouseup", (e => {
-                $(e.target).closest(".plugin-alt-menu").length || setTimeout((() => {
+            const debouncedEntry = DomUtil.debounce((e2 => {
+                const $target = $(e2.target);
+                $target.closest(".plugin-alt-menu").length || (this.$currentTarget = $target);
+            }), 200);
+            $(document).on("mouseenter", "*", (e2 => {
+                e2.stopPropagation();
+                debouncedEntry(e2);
+            })).on("mouseleave", "*", (() => {
+                $(e.target).closest(".plugin-alt-menu").length || (this.$currentTarget = null);
+            }));
+            document.addEventListener("mousedown", (e2 => {
+                $(e2.target).closest(".plugin-alt-menu").length || this.hideMenu();
+            }));
+            $(document).on("mouseup", (e2 => {
+                $(e2.target).closest(".plugin-alt-menu").length || setTimeout((() => {
                     const selection = window.getSelection();
                     if (selection.toString().trim() && selection.rangeCount > 0) {
                         const rect = selection.getRangeAt(0).getBoundingClientRect();
@@ -1227,9 +1391,9 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                     }
                 }), 10);
             }));
-            this.$menu.off("click").on("click", "li", (e => {
-                e.stopPropagation();
-                const handler = $(e.currentTarget).data("menu-handler");
+            this.$menu.off("click").on("click", "li", (e2 => {
+                e2.stopPropagation();
+                const handler = $(e2.currentTarget).data("menu-handler");
                 if (handler && "function" == typeof handler) {
                     handler();
                     this.hideMenu();
@@ -1277,6 +1441,7 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
             this.$menu && this.$menu.hide();
         }
     }
+    const currentHref = window.location.href;
     class ImageRecognitionPlugin extends BasePlugin {
         constructor() {
             super(...arguments);
@@ -1295,6 +1460,7 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
             } ]);
             __publicField(this, "isUploading", !1);
             __publicField(this, "MAX_HISTORY", 12);
+            __publicField(this, "autoOpenEnabled", cacheManager.getItem(cacheManager.image_recognition_auto_open_key, "yes"));
         }
         getName() {
             return "ImageRecognitionPlugin";
@@ -1303,7 +1469,7 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
             return !0;
         }
         async initCss() {
-            return "\n            <style>\n                #upload-area {\n                    border: 2px dashed #85af68;\n                    border-radius: 8px;\n                    padding: 40px;\n                    text-align: center;\n                    margin-bottom: 20px;\n                    transition: all 0.3s;\n                    background-color: #f9f9f9;\n                }\n                #upload-area:hover {\n                    border-color: #76b947;\n                    background-color: #f0f0f0;\n                }\n                /* 拖拽进入 */\n                #upload-area.highlight {\n                    border-color: #2196F3;\n                    background-color: #e3f2fd;\n                }\n                \n                \n                #select-image-btn {\n                    background-color: #4CAF50;\n                    color: white;\n                    border: none;\n                    padding: 10px 20px;\n                    border-radius: 4px;\n                    cursor: pointer;\n                    font-size: 16px;\n                    transition: background-color 0.3s;\n                }\n                #select-image-btn:hover {\n                    background-color: #45a049;\n                }\n                \n                .search-img-site-btns-container {\n                    display: flex;\n                    flex-wrap: wrap;\n                    gap: 10px;\n                    margin-top: 15px;\n                }\n                .search-img-site-btn {\n                    display: flex;\n                    align-items: center;\n                    padding: 8px 12px;\n                    background-color: #f5f5f5;\n                    border-radius: 4px;\n                    text-decoration: none;\n                    color: #333;\n                    transition: all 0.2s;\n                    font-size: 14px;\n                    border: 1px solid #ddd;\n                }\n                .search-img-site-btn:hover {\n                    background-color: #e0e0e0;\n                    transform: translateY(-2px);\n                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);\n                }\n                .search-img-site-btn img {\n                    width: 16px;\n                    height: 16px;\n                    margin-right: 6px;\n                }\n                .search-img-site-btn span {\n                    white-space: nowrap;\n                }\n                \n                .history-title { font-weight: bold; margin-bottom: 10px; display: flex; justify-content: space-between; }\n\n                .history-container { \n                    margin-top: 25px; \n                    border-top: 1px solid #eee; \n                    padding-top: 15px; \n                }\n                .history-title {\n                    font-weight: bold;\n                    font-size: 15px;\n                    color: #333;\n                    margin-bottom: 15px;\n                    display: flex;\n                    justify-content: space-between;\n                    align-items: center;\n                }\n                .history-list { \n                    display: grid;\n                    grid-template-columns: repeat(4, 1fr); \n                    gap: 10px; /* 图片之间的间距 */\n                }\n                .recognition-history-item { \n                    aspect-ratio: 1 / 1; /* 保持正方形 */\n                    border-radius: 8px; \n                    cursor: pointer; \n                    border: 1px solid #ddd; \n                    background-color: #f9f9f9; \n                    overflow: hidden; \n                    transition: all 0.2s ease-in-out;\n                    display: flex;\n                    align-items: center;\n                    justify-content: center;\n                    position: relative;\n                }\n                .recognition-history-item:hover { \n                    border-color: #2196F3; \n                    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.2);\n                    transform: translateY(-3px);\n                }\n                .recognition-history-item img { \n                    width: 100%; \n                    height: 100%; \n                    object-fit: contain; /* 保证图片完整显示 */\n                    display: block;\n                }\n                .delete-recognition-history-item {\n                    position: absolute;\n                    top: 2px;\n                    right: 2px;\n                    width: 20px;\n                    height: 20px;\n                    background: rgba(0, 0, 0, 0.5);\n                    color: white;\n                    border-radius: 50%;\n                    display: flex;\n                    align-items: center;\n                    justify-content: center;\n                    font-size: 16px;\n                    line-height: 1;\n                    cursor: pointer;\n                    opacity: 0;\n                    transition: opacity 0.2s;\n                    z-index: 10;\n                }\n                .recognition-history-item:hover .delete-recognition-history-item {\n                    opacity: 1;\n                }\n                .delete-recognition-history-item:hover {\n                    background: #f44336;\n                }\n                .clear-history {\n                    color: #f44336;\n                    cursor: pointer;\n                    font-size: 13px;\n                    font-weight: normal;\n                    padding: 2px 8px;\n                    border-radius: 4px;\n                }\n                .clear-history:hover {\n                    background-color: #ffebee;\n                }\n            </style>\n        ";
+            return "\n            <style>\n                #upload-area {\n                    border: 2px dashed #85af68;\n                    border-radius: 8px;\n                    padding: 40px;\n                    text-align: center;\n                    margin-bottom: 20px;\n                    transition: all 0.3s;\n                    background-color: #f9f9f9;\n                }\n                #upload-area:hover {\n                    border-color: #76b947;\n                    background-color: #f0f0f0;\n                }\n                /* 拖拽进入 */\n                #upload-area.highlight {\n                    border-color: #2196F3;\n                    background-color: #e3f2fd;\n                }\n                \n                \n                #select-image-btn {\n                    background-color: #4CAF50;\n                    color: white;\n                    border: none;\n                    padding: 10px 20px;\n                    border-radius: 4px;\n                    cursor: pointer;\n                    font-size: 16px;\n                    transition: background-color 0.3s;\n                }\n                #select-image-btn:hover {\n                    background-color: #45a049;\n                }\n                \n                .search-img-site-btns-container {\n                    display: flex;\n                    flex-wrap: wrap;\n                    gap: 10px;\n                    margin-top: 15px;\n                }\n                .search-img-site-btn {\n                    display: flex;\n                    align-items: center;\n                    padding: 8px 12px;\n                    background-color: #f5f5f5;\n                    border-radius: 4px;\n                    text-decoration: none;\n                    color: #333;\n                    transition: all 0.2s;\n                    font-size: 14px;\n                    border: 1px solid #ddd;\n                }\n                .search-img-site-btn:hover {\n                    background-color: #e0e0e0;\n                    transform: translateY(-2px);\n                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);\n                }\n                .search-img-site-btn img {\n                    width: 16px;\n                    height: 16px;\n                    margin-right: 6px;\n                }\n                .search-img-site-btn span {\n                    white-space: nowrap;\n                }\n                \n                .history-title { font-weight: bold; margin-bottom: 10px; display: flex; justify-content: space-between; }\n\n                .history-container { \n                    margin-top: 25px; \n                    border-top: 1px solid #eee; \n                    padding-top: 15px; \n                }\n                .history-title {\n                    font-weight: bold;\n                    font-size: 15px;\n                    color: #333;\n                    margin-bottom: 15px;\n                    display: flex;\n                    justify-content: space-between;\n                    align-items: center;\n                }\n                .history-list { \n                    display: grid;\n                    grid-template-columns: repeat(4, 1fr); \n                    gap: 10px; /* 图片之间的间距 */\n                }\n                .recognition-history-item { \n                    aspect-ratio: 1 / 1; /* 保持正方形 */\n                    border-radius: 8px; \n                    cursor: pointer; \n                    border: 1px solid #ddd; \n                    background-color: #f9f9f9; \n                    overflow: hidden; \n                    transition: all 0.2s ease-in-out;\n                    display: flex;\n                    align-items: center;\n                    justify-content: center;\n                    position: relative;\n                }\n                .recognition-history-item:hover { \n                    border-color: #2196F3; \n                    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.2);\n                    transform: translateY(-3px);\n                }\n                .recognition-history-item img { \n                    width: 100%; \n                    height: 100%; \n                    object-fit: contain; /* 保证图片完整显示 */\n                    display: block;\n                }\n                .delete-recognition-history-item {\n                    position: absolute;\n                    top: 2px;\n                    right: 2px;\n                    width: 20px;\n                    height: 20px;\n                    background: rgba(0, 0, 0, 0.5);\n                    color: white;\n                    border-radius: 50%;\n                    display: flex;\n                    align-items: center;\n                    justify-content: center;\n                    font-size: 16px;\n                    line-height: 1;\n                    cursor: pointer;\n                    opacity: 0;\n                    transition: opacity 0.2s;\n                    z-index: 10;\n                }\n                .recognition-history-item:hover .delete-recognition-history-item {\n                    opacity: 1;\n                }\n                .delete-recognition-history-item:hover {\n                    background: #f44336;\n                }\n                .clear-history {\n                    color: #f44336;\n                    cursor: pointer;\n                    font-size: 13px;\n                    font-weight: normal;\n                    padding: 2px 8px;\n                    border-radius: 4px;\n                }\n                .clear-history:hover {\n                    background-color: #ffebee;\n                }\n                \n                #search-results {\n                    margin-top: 20px;\n                    padding: 15px;\n                    background: #fcfcfc;\n                    border-radius: 8px;\n                    border: 1px solid #eee;\n                }\n                .search-header {\n                    display: flex;\n                    justify-content: space-between;\n                    align-items: center;\n                    margin-bottom: 12px;\n                    padding: 0 5px;\n                }\n                .search-header-title {\n                    font-size: 14px;\n                    color: #666;\n                    font-weight: 500;\n                }\n                #openAll {\n                    color: #2196F3;\n                    font-size: 13px;\n                    text-decoration: none;\n                    padding: 4px 10px;\n                    border: 1px solid #2196F3;\n                    border-radius: 4px;\n                    transition: all 0.2s;\n                }\n                #openAll:hover {\n                    background-color: #2196F3;\n                    color: #fff !important;\n                }\n                .search-img-site-btn {\n                    user-select: none;\n                }\n                .site-checkbox {\n                    cursor: pointer;\n                    width: 14px;\n                    height: 14px;\n                    margin-right: 5px;\n                    accent-color: #2196F3; /* 现代浏览器自定义勾选颜色 */\n                }\n                \n                .auto-open-wrapper {\n                    display: flex;\n                    align-items: center;\n                    cursor: pointer;\n                    user-select: none;\n                    font-size: 13px;\n                    color: #666;\n                    margin-right: 12px;\n                }\n                .auto-open-wrapper input {\n                    cursor: pointer;\n                    width: 14px;\n                    height: 14px;\n                    margin-right: 5px;\n                    accent-color: #2196F3; /* 现代浏览器自定义勾选颜色 */\n                }\n                .auto-open-wrapper:hover {\n                    color: #2196F3;\n                }\n            </style>\n        ";
         }
         getFullUrl(path) {
             if (!path) return "";
@@ -1312,10 +1478,11 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
             return window.location.href.substring(0, window.location.href.lastIndexOf("/") + 1) + path;
         }
         openRecognition(imgSrc) {
+            let html = `\n            <div style="padding: 20px">\n                <div id="upload-area">\n                    <div style="color: #555;margin-bottom: 15px;">\n                        <p>拖拽图片到此处 或 点击按钮选择图片</p>\n                        <p>也可以直接 Ctrl+V 粘贴图片</p>\n                    </div>\n                    <button id="select-image-btn">选择图片</button>\n                    <input type="file" style="display: none" id="image-file" accept="image/*">\n                </div>\n                \n                <div style="text-align: center;">\n                    <img id="preview-image" alt="" src="" style="max-width: 100%; max-height: 300px; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">\n                    \n                    <div id="error-area" style="display: none; margin-top: 15px; padding: 10px; background: #fff1f0; border: 1px solid #ffa39e; border-radius: 4px;">\n                        <p id="error-message" style="color: #f5222d; margin-bottom: 10px; font-size: 14px;"></p>\n                        <button id="retry-btn" style="background-color: #faad14; color: white; border: none; padding: 5px 15px; border-radius: 4px; cursor: pointer;">重新尝试</button>\n                    </div>\n                    \n                    <div id="search-results" style="display: none;">\n                        <div class="search-header">\n                            <span class="search-header-title">选择识图网站</span>\n                            <div style="display: flex; align-items: center; gap: 10px;">\n                                <label class="auto-open-wrapper">\n                                    <input type="checkbox" id="auto-open-toggle" ${"yes" === this.autoOpenEnabled ? "checked" : ""} >\n                                    <span>完成后自动打开</span>\n                                </label>\n                                <a id="openAll" title="打开所有已勾选的引擎">全部打开</a>\n                            </div>\n                        </div>\n                        <div class="search-img-site-btns-container" id="search-img-site-btns-container"></div>\n                    </div>\n                </div>\n                \n                <div class="history-container" id="history-container" style="display: none;">\n                    <div class="history-title">\n                        最近搜索\n                        <span class="clear-history" id="clear-history">清空</span>\n                    </div>\n                    <div class="history-list" id="history-list"></div>\n                </div>  \n                \n            </div>\n        `;
             layer.open({
                 type: 1,
                 title: "以图识图",
-                content: '\n            <div style="padding: 20px">\n                <div id="upload-area">\n                    <div style="color: #555;margin-bottom: 15px;">\n                        <p>拖拽图片到此处 或 点击按钮选择图片</p>\n                        <p>也可以直接 Ctrl+V 粘贴图片</p>\n                    </div>\n                    <button id="select-image-btn">选择图片</button>\n                    <input type="file" style="display: none" id="image-file" accept="image/*">\n                </div>\n                \n                <div style="text-align: center;">\n                    <img id="preview-image" alt="" src="" style="max-width: 100%; max-height: 300px; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">\n                    \n                    <div id="error-area" style="display: none; margin-top: 15px; padding: 10px; background: #fff1f0; border: 1px solid #ffa39e; border-radius: 4px;">\n                        <p id="error-message" style="color: #f5222d; margin-bottom: 10px; font-size: 14px;"></p>\n                        <button id="retry-btn" style="background-color: #faad14; color: white; border: none; padding: 5px 15px; border-radius: 4px; cursor: pointer;">重新尝试</button>\n                    </div>\n                    \n                    <div id="search-results" style="display: none;">\n                        <p style="margin: 20px auto">请选择识图网站：<a id="openAll" style="cursor: pointer">全部打开</a></p>\n                        <div class="search-img-site-btns-container" id="search-img-site-btns-container"></div>\n                    </div>\n                </div>\n                \n                <div class="history-container" id="history-container" style="display: none;">\n                    <div class="history-title">\n                        最近搜索\n                        <span class="clear-history" id="clear-history">清空</span>\n                    </div>\n                    <div class="history-list" id="history-list"></div>\n                </div>  \n                \n            </div>\n        ',
+                content: html,
                 area: [ "50%", "95%" ],
                 shadeClose: !0,
                 scrollbar: !1,
@@ -1336,25 +1503,25 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
         }
         initEventListeners($layero) {
             const $fileInput = $("#image-file");
-            $layero.on("dragover", "#upload-area", (e => {
-                e.preventDefault();
-                $(e.currentTarget).addClass("highlight");
+            $layero.on("dragover", "#upload-area", (e2 => {
+                e2.preventDefault();
+                $(e2.currentTarget).addClass("highlight");
             }));
-            $layero.on("dragleave drop", "#upload-area", (e => {
-                e.preventDefault();
-                $(e.currentTarget).removeClass("highlight");
-                if ("drop" === e.type) {
-                    const files = e.originalEvent.dataTransfer.files;
+            $layero.on("dragleave drop", "#upload-area", (e2 => {
+                e2.preventDefault();
+                $(e2.currentTarget).removeClass("highlight");
+                if ("drop" === e2.type) {
+                    const files = e2.originalEvent.dataTransfer.files;
                     files && files[0] && this.handleImageFile(files[0]);
                 }
             }));
-            $layero.on("click", (e => {
-                const $target = $(e.target).closest("button, a, #clear-history, #retry-btn, #select-image-btn, #openAll");
+            $layero.on("click", (e2 => {
+                const $target = $(e2.target).closest("button, a, #clear-history, #retry-btn, #select-image-btn, #openAll");
                 if (!$target.length) return;
                 const id = $target.attr("id");
                 if ("select-image-btn" === id) $fileInput.trigger("click"); else if ("openAll" === id) {
                     let firstTabOpened = !1;
-                    $(".search-img-site-btn").each((function() {
+                    $layero.find(".search-img-site-btn").each((function() {
                         if ($(this).find(".site-checkbox").is(":checked")) {
                             const url = $(this).attr("href");
                             if (firstTabOpened) GM_openInTab(url, {
@@ -1363,15 +1530,14 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                             }); else {
                                 GM_openInTab(url, {
                                     insert: 0,
-                                    active: !0,
-                                    setParent: !0
+                                    active: !0
                                 });
                                 firstTabOpened = !0;
                             }
                         }
                     }));
                 } else if ("clear-history" === id) {
-                    e.stopPropagation();
+                    e2.stopPropagation();
                     layer.confirm("确认清空所有搜索历史吗？", {
                         icon: 3,
                         title: "提示"
@@ -1382,16 +1548,20 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                     }));
                 } else "retry-btn" === id && this.searchByImage().then();
             }));
-            $layero.on("change", "#image-file", (e => {
-                e.target.files && e.target.files[0] && this.handleImageFile(e.target.files[0]);
+            $layero.on("change", "#image-file", (e2 => {
+                e2.target.files && e2.target.files[0] && this.handleImageFile(e2.target.files[0]);
             }));
-            $(document).off("paste.searchImg").on("paste.searchImg", (async e => {
-                const items = e.originalEvent.clipboardData.items;
+            $(document).off("paste.searchImg").on("paste.searchImg", (async e2 => {
+                const items = e2.originalEvent.clipboardData.items;
                 for (let i = 0; i < items.length; i++) if (-1 !== items[i].type.indexOf("image")) {
                     const blob = items[i].getAsFile();
                     this.handleImageFile(blob);
                     break;
                 }
+            }));
+            $layero.on("change", "#auto-open-toggle", (e2 => {
+                this.autoOpenEnabled = $(e2.target).is(":checked") ? "yes" : "no";
+                cacheManager.setItem(cacheManager.image_recognition_auto_open_key, this.autoOpenEnabled);
             }));
         }
         handleImageFile(file) {
@@ -1401,9 +1571,9 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                 return;
             }
             const reader = new FileReader;
-            reader.onload = e => {
-                $previewImage.attr("src", e.target.result);
-                $previewImage.attr("data-original", e.target.result);
+            reader.onload = e2 => {
+                $previewImage.attr("src", e2.target.result);
+                $previewImage.attr("data-original", e2.target.result);
                 this.searchByImage().then();
             };
             reader.readAsDataURL(file);
@@ -1431,23 +1601,19 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                     show.info("开始上传图片...");
                     finalImgUrl = await async function(base64Data) {
                         var _a;
-                        const matches = base64Data.match(/^data:(.+);base64,(.+)$/);
-                        if (!matches || matches.length < 3) throw new Error("无效的Base64图片数据");
-                        const mimeType = matches[1], imageData = matches[2], byteCharacters = atob(imageData), byteNumbers = new Array(byteCharacters.length);
-                        for (let i = 0; i < byteCharacters.length; i++) byteNumbers[i] = byteCharacters.charCodeAt(i);
-                        const byteArray = new Uint8Array(byteNumbers), blob = new Blob([ byteArray ], {
-                            type: mimeType
-                        }), formData = new FormData;
-                        formData.append("image", blob);
-                        const response = await NetUtil.retry((async () => await fetch("https://api.imgur.com/3/image", {
-                            method: "POST",
-                            headers: {
-                                Authorization: "Client-ID d70305e7c3ac5c6"
-                            },
-                            body: formData
-                        })), 3), data = await response.json();
-                        if (data.success && data.data && data.data.link) return data.data.link;
-                        throw new Error((null == (_a = data.data) ? void 0 : _a.error) || "上传到Imgur失败");
+                        if ("string" != typeof base64Data || !base64Data.includes(";base64,")) {
+                            console.error("无效的 Base64 数据");
+                            return null;
+                        }
+                        const cleanBase64 = base64Data.replace(/^data:image\/\w+;base64,/, ""), formData = new FormData;
+                        formData.append("image", cleanBase64);
+                        formData.append("type", "base64");
+                        formData.append("name", "image.png");
+                        const data = await gmHttp.postFormData("https://api.imgur.com/3/upload?client_id=d70305e7c3ac5c6", formData, {
+                            Referer: "https://imgur.com/"
+                        });
+                        if (data && data.success) return data.data.link;
+                        throw new Error((null == (_a = data.data) ? void 0 : _a.error) || "上传失败");
                     }(uploadData);
                 }
                 if (!finalImgUrl) throw new Error("图床接口返回地址为空!");
@@ -1459,12 +1625,15 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                     const siteUrl = site.url.replace("{占位符}", encodeURIComponent(finalImgUrl)), isChecked = !1 !== selectedSites[site.name], $btn = $(`\n                <a href="${siteUrl}" class="search-img-site-btn" target="_blank" title="${site.name}">\n                    <input type="checkbox" class="site-checkbox" data-site-name="${site.name}" \n                           style="margin-right: 5px" ${isChecked ? "checked" : ""}>\n                    <img src="${site.ico}" alt="${site.name}">\n                    <span>${site.name}</span>\n                </a>\n            `);
                     $siteBtnsContainer.append($btn);
                 }));
-                $siteBtnsContainer.off("change").on("change", ".site-checkbox", (function(e) {
-                    e.stopPropagation();
+                $siteBtnsContainer.off("change").on("change", ".site-checkbox", (function(e2) {
+                    e2.stopPropagation();
                     const siteName = $(this).data("site-name"), currentSelected = cacheManager.getItem(cacheManager.image_recognition_site_key, {});
                     currentSelected[siteName] = $(this).is(":checked");
                     cacheManager.setItem(cacheManager.image_recognition_site_key, currentSelected);
                 }));
+                "yes" === this.autoOpenEnabled && setTimeout((() => {
+                    $("#openAll").trigger("click");
+                }), 200);
                 return finalImgUrl;
             } catch (error) {
                 show.error(error);
@@ -1529,8 +1698,8 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                         $("#preview-image").attr("src", item.uploaded).attr("data-original", item.original);
                         this.searchByImage().then();
                     }));
-                    $item.find(".delete-recognition-history-item").on("click", (e => {
-                        e.stopPropagation();
+                    $item.find(".delete-recognition-history-item").on("click", (e2 => {
+                        e2.stopPropagation();
                         this.deleteHistoryItem(item);
                     }));
                     $list.append($item);
@@ -1550,7 +1719,6 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
             }));
         }
     }
-    const currentHref = window.location.href;
     class SeHuaTangPlugin extends BasePlugin {
         constructor() {
             super(...arguments);
@@ -1623,8 +1791,8 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                         allArticleImages[articleUrl] = fullHTML;
                         localStorage.setItem("articleImagesCache", JSON.stringify(allArticleImages));
                         $tbody.append(fullHTML);
-                    } catch (e) {
-                        console.error("Error:", articleUrl, e);
+                    } catch (e2) {
+                        console.error("Error:", articleUrl, e2);
                     }
                 }
             }));
@@ -1680,9 +1848,9 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                 let loadObj = loading();
                 try {
                     await this.handleAddTask(magnet);
-                } catch (e) {
-                    show.error("发生错误:" + e);
-                    console.error(e);
+                } catch (e2) {
+                    show.error("发生错误:" + e2);
+                    console.error(e2);
                 } finally {
                     loadObj.close();
                 }
@@ -1711,25 +1879,23 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
             let result;
             const isBatch = magnets.length > 1;
             result = isBatch ? await (async (magnets, wp_path_id = "", uid, sign, time) => {
-                const data = {
-                    wp_path_id: wp_path_id,
-                    uid: uid,
-                    sign: sign,
-                    time: time
-                };
+                const formData = new FormData;
+                formData.append("wp_path_id", wp_path_id);
+                formData.append("uid", uid);
+                formData.append("sign", sign);
+                formData.append("time", time);
                 magnets.forEach(((url, index) => {
-                    data[`url[${index}]`] = encodeURIComponent(url);
+                    formData.append(`url[${index}]`, url);
                 }));
-                return await gmHttp.postForm("https://115.com/web/lixian/?ct=lixian&ac=add_task_urls", data);
+                return await gmHttp.postFormData("https://115.com/web/lixian/?ct=lixian&ac=add_task_urls", formData);
             })(magnets, userId, "", sign, time) : await (async (magnet, wp_path_id = "", uid, sign, time) => {
-                const data = {
-                    url: encodeURIComponent(magnet),
-                    wp_path_id: "",
-                    uid: uid,
-                    sign: sign,
-                    time: time
-                };
-                return await gmHttp.postForm("https://115.com/web/lixian/?ct=lixian&ac=add_task_url", data);
+                const formData = new FormData;
+                formData.append("url", magnet);
+                formData.append("wp_path_id", wp_path_id);
+                formData.append("uid", uid);
+                formData.append("sign", sign);
+                formData.append("time", time);
+                return await gmHttp.postFormData("https://115.com/web/lixian/?ct=lixian&ac=add_task_url", formData);
             })(magnets[0], userId, sign, time);
             console.log(isBatch ? "批量离线返回值:" : "单条离线返回值:", result);
             if (!1 === result.state) {
@@ -1751,17 +1917,15 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
             {
                 show.info("没有默认离线目录, 正在创建中...");
                 const dirId = (await (async (dirName, pid = 0) => {
-                    const data = {
-                        pid: pid,
-                        cname: dirName
-                    };
-                    return await gmHttp.postFileFormData("https://webapi.115.com/files/add", data);
+                    const formData = new FormData;
+                    formData.append("pid", pid);
+                    formData.append("cname", dirName);
+                    return await gmHttp.postFormData("https://webapi.115.com/files/add", formData);
                 })("云下载")).file_id;
                 await (async dirId => {
-                    const data = {
-                        file_id: dirId
-                    };
-                    return await gmHttp.postFileFormData("https://webapi.115.com/offine/downpath", data);
+                    const formData = new FormData;
+                    formData.append("file_id", dirId);
+                    return await gmHttp.postFormData("https://webapi.115.com/offine/downpath", formData);
                 })(dirId);
                 show.info("创建完成, 开始执行离线下载");
                 downPathList = await getDownPathList();
@@ -1771,13 +1935,12 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
         }
         async getFileId(userId, sign, time, infoHash) {
             const taskList = await (async (uid, sign, time) => {
-                const data = {
-                    page: 1,
-                    uid: uid,
-                    sign: sign,
-                    time: time
-                };
-                return (await gmHttp.postForm("https://115.com/web/lixian/?ct=lixian&ac=task_lists", data)).tasks;
+                const formData = new FormData;
+                formData.append("page", "1");
+                formData.append("uid", uid);
+                formData.append("sign", sign);
+                formData.append("time", time);
+                return (await gmHttp.postFormData("https://115.com/web/lixian/?ct=lixian&ac=task_lists", formData)).tasks;
             })(userId, sign, time);
             let fileId = null;
             for (let i = 0; i < taskList.length; i++) {
@@ -1879,19 +2042,19 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                 $panel.toggleClass("collapsed", this.isCollapsed);
                 $panel.find(".magnet-toggle-btn").html(this.isCollapsed ? ICON_UNFOLD : ICON_FOLD);
             };
-            $panel.find(".magnet-toggle-btn").on("click", (e => {
-                e.stopPropagation();
+            $panel.find(".magnet-toggle-btn").on("click", (e2 => {
+                e2.stopPropagation();
                 toggleFold();
             }));
             $panel.on("click", ".go-115-btn", (() => {
                 window.open("https://115.com/?cid=0&offset=0&mode=wangpan", "_blank");
             }));
-            $panel.find(".magnet-close").on("click", (e => {
-                e.stopPropagation();
+            $panel.find(".magnet-close").on("click", (e2 => {
+                e2.stopPropagation();
                 $panel.remove();
             }));
-            $panel.on("click", ".m-btn-locate", (e => {
-                const idx = $(e.currentTarget).data("index"), target = this.links[idx].element;
+            $panel.on("click", ".m-btn-locate", (e2 => {
+                const idx = $(e2.currentTarget).data("index"), target = this.links[idx].element;
                 if (target) {
                     target.scrollIntoView({
                         behavior: "smooth",
@@ -1901,15 +2064,15 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                     setTimeout((() => $(target).removeClass("magnet-target-highlight")), 2e3);
                 }
             }));
-            $panel.on("click", ".m-btn-copy", (e => {
-                const $btn = $(e.currentTarget);
+            $panel.on("click", ".m-btn-copy", (e2 => {
+                const $btn = $(e2.currentTarget);
                 this.copyToClipboard(this.links[$btn.data("index")].url);
                 const originalText = $btn.text();
                 $btn.text("已复制 ✅");
                 setTimeout((() => $btn.text(originalText)), 1500);
             }));
-            $panel.on("click", ".copy-all-btn", (e => {
-                const $btn = $(e.currentTarget);
+            $panel.on("click", ".copy-all-btn", (e2 => {
+                const $btn = $(e2.currentTarget);
                 this.copyToClipboard(this.links.map((m => m.url)).join("\n"));
                 const originalText = $btn.text();
                 $btn.text("全部复制成功！ ✅");
@@ -1922,13 +2085,13 @@ getter ? getter.call(obj) : member.get(obj)), __privateAdd = (obj, member, value
                 x: 0,
                 y: 0
             };
-            $header.on("mousedown", (e => {
-                if ($(e.target).closest(".magnet-controls").length) return;
+            $header.on("mousedown", (e2 => {
+                if ($(e2.target).closest(".magnet-controls").length) return;
                 isDragging = !0;
                 const rect = $panel[0].getBoundingClientRect();
                 offset = {
-                    x: e.clientX - rect.left,
-                    y: e.clientY - rect.top
+                    x: e2.clientX - rect.left,
+                    y: e2.clientY - rect.top
                 };
                 $(document).on("mousemove.magnet_drag", (de => {
                     if (!isDragging) return;

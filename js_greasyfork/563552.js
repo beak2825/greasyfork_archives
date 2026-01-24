@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Torn Market Listing Binder
 // @namespace    torn-mugging-bot
-// @version      1.9.3
+// @version      1.9.4
 // @description  Sends market listing data to mugging bot server when viewing items
 // @author       BaM
 // @license      All Rights Reserved
@@ -21,7 +21,7 @@
 
     const SERVER_URL = 'http://157.180.17.47:3000';
     const BINDING_ENDPOINT = SERVER_URL + '/api/listing-binding';
-    const SCRIPT_VERSION = '1.9.3';
+    const SCRIPT_VERSION = '1.9.4';
 
     const MONITORED_ITEMS = new Set([
         1118, 1119, 1120, 1121, 1122,
@@ -40,14 +40,16 @@
         675, 676, 677, 678, 679,
         680, 681, 682, 683, 684,
         1307, 1308, 1309, 1310, 1311,
-        1355, 1356, 1357, 1358, 1359
+        1355, 1356, 1357, 1358, 1359,
+        366, 532, 533, 554, 555
     ]);
 
     const NON_UID_ITEMS = new Set([
         1118, 1119, 1120, 1121, 1122,
         453, 455, 456, 457, 458, 459,
         103, 283, 367, 428,
-        106, 329, 330, 331, 421
+        106, 329, 330, 331, 421,
+        366, 532, 533, 554, 555
     ]);
 
     let isEnabled = GM_getValue('binderEnabled', true);

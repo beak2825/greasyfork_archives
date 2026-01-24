@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT User Anchors
 // @namespace    https://github.com/Galkoff
-// @version      0.0.3
+// @version      0.0.4
 // @description  Navigation menu for user messages in ChatGPT chats
 // @author       Galkoff
 // @match        https://chatgpt.com/*
@@ -16,18 +16,21 @@
     'use strict';
 
     const MENU_ID = 'cgpt-user-anchor-menu';
+    const TOGGLE_ID = 'cgpt-user-anchor-toggle';
+    const STORAGE_KEY = 'cgpt-user-anchor-menu-visible';
     const HEADER_OFFSET = 16;
     const ACTIVE_ZONE_RATIO = 0.35;
-    const STORAGE_KEY = 'cgpt-user-anchor-menu-visible';
 
     let lastCount = -1;
     let activeItem = null;
     let pairs = [];
     let scrollContainer = null;
+    let hadTurns = false;
+    let lastPath = location.pathname;
 
     let ignoreSpy = false;
     let ticking = false;
-    let hadTurns = false;
+    let debounceTimer = null;
 
     function isMenuVisible() {
         return localStorage.getItem(STORAGE_KEY) !== '0';
@@ -36,9 +39,7 @@
     function setMenuVisible(visible) {
         localStorage.setItem(STORAGE_KEY, visible ? '1' : '0');
         const menu = document.getElementById(MENU_ID);
-        if (menu) {
-            menu.style.display = visible ? '' : 'none';
-        }
+        if (menu) menu.style.display = visible ? '' : 'none';
     }
 
     function getScrollParent(el) {
@@ -61,11 +62,59 @@
         activeItem = null;
         pairs = [];
         scrollContainer = null;
-        ignoreSpy = false;
-        ticking = false;
+        hadTurns = false;
 
         const menu = document.getElementById(MENU_ID);
         if (menu) menu.remove();
+    }
+
+    function ensureToggle() {
+        if (document.getElementById(TOGGLE_ID)) return;
+
+        const btn = document.createElement('button');
+        btn.id = TOGGLE_ID;
+        btn.innerHTML = `
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+  <path d="M4 6h16M4 12h16M4 18h16"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"/>
+</svg>
+`;
+
+        btn.style.cssText = `
+position: fixed;
+top: 9px;
+right: 170px;
+width: 36px;
+height: 36px;
+display: flex;
+align-items: center;
+justify-content: center;
+border-radius: 10px;
+border: none;
+background: transparent;
+color: var(--text-secondary, #aaa);
+cursor: pointer;
+z-index: 100000;
+transition: background-color .15s ease, color .15s ease;
+`;
+
+        btn.addEventListener('mouseenter', () => {
+            btn.style.backgroundColor = 'rgba(255,255,255,0.08)';
+            btn.style.color = '#fff';
+        });
+
+        btn.addEventListener('mouseleave', () => {
+            btn.style.backgroundColor = 'transparent';
+            btn.style.color = 'var(--text-secondary, #aaa)';
+        });
+
+        btn.addEventListener('click', () => {
+            setMenuVisible(!isMenuVisible());
+        });
+
+        document.body.appendChild(btn);
     }
 
     function ensureMenu() {
@@ -79,8 +128,8 @@
 <style>
 #${MENU_ID} {
   position: fixed;
-  top: 65px;
-  right: 18px;
+  top: 50px;
+  right: 20px;
   width: 340px;
   max-height: 70vh;
   overflow-y: auto;
@@ -92,8 +141,9 @@
   z-index: 99999;
   font-family: system-ui, -apple-system, BlinkMacSystemFont;
   color: #e8e8e8;
-  box-shadow: 0 10px 30px rgba(0,0,0,.45),
-              inset 0 1px 0 rgba(255,255,255,.04);
+  box-shadow:
+    0 10px 30px rgba(0,0,0,.45),
+    inset 0 1px 0 rgba(255,255,255,.04);
 }
 #${MENU_ID} .title {
   font-size: 11px;
@@ -165,10 +215,8 @@
 
         if (hadTurns && userTurns.length === 0) {
             resetState();
-            hadTurns = false;
             return;
         }
-
         if (userTurns.length === 0) return;
         hadTurns = true;
 
@@ -182,6 +230,7 @@
         if (userTurns.length === lastCount) return;
         lastCount = userTurns.length;
 
+        ensureToggle();
         const menu = ensureMenu();
         const existing = menu.querySelectorAll('.item').length;
 
@@ -192,11 +241,7 @@
             );
             if (!textNode) continue;
 
-            const text = textNode.innerText
-                .trim()
-                .replace(/\n+/g, ' ')
-                .slice(0, 140);
-
+            const text = textNode.innerText.trim().replace(/\n+/g, ' ').slice(0, 140);
             const item = document.createElement('div');
             item.className = 'item';
             item.innerHTML = `<div class="num">${i + 1}</div><div class="text">${text}</div>`;
@@ -223,8 +268,8 @@
     function updateActiveByScroll() {
         if (!scrollContainer) return;
 
-        const containerRect = scrollContainer.getBoundingClientRect();
-        const activeLine = containerRect.top + containerRect.height * ACTIVE_ZONE_RATIO;
+        const rect = scrollContainer.getBoundingClientRect();
+        const activeLine = rect.top + rect.height * ACTIVE_ZONE_RATIO;
 
         let best = null;
         let bestDist = Infinity;
@@ -237,7 +282,6 @@
                 best = p;
             }
         }
-
         if (best) setActive(best.item);
     }
 
@@ -246,23 +290,31 @@
         if (activeItem) activeItem.classList.remove('active');
         item.classList.add('active');
         activeItem = item;
-
-        const menu = document.getElementById(MENU_ID);
-        if (menu) item.scrollIntoView({ block: 'nearest' });
+        item.scrollIntoView({ block: 'nearest' });
     }
 
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Control') {
-            e.preventDefault();
-            setMenuVisible(!isMenuVisible());
+    function watchNavigation() {
+        if (location.pathname !== lastPath) {
+            lastPath = location.pathname;
+            resetState();
+            setTimeout(updateMenu, 500);
+            setTimeout(updateMenu, 1500);
         }
+    }
+
+    const observer = new MutationObserver(() => {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+            watchNavigation();
+            updateMenu();
+        }, 600);
+    });
+
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
     });
 
     setTimeout(updateMenu, 600);
     setTimeout(updateMenu, 1500);
-
-    new MutationObserver(updateMenu).observe(document.body, {
-        childList: true,
-        subtree: true
-    });
 })();
